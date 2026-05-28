@@ -1,0 +1,25 @@
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+  3xl: 1920px,
+  4xl: 2160px,
+  5xl: 2560px,
+  6xl: 3840px,
+);
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px,
+  3xl: 1408px,
+  4xl: 1536px,
+  5xl: 1800px
+);
+
+@import "./bootstrap.scss";

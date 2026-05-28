@@ -1,0 +1,86 @@
+dataType = 
+[
+	{
+		'data': 'article',
+		'field':
+		{
+			'id',
+			'title',
+			'content',
+			'thumb_s',
+			'thumb_l',
+			'author',
+			'updated_at',
+			'created_at'
+		},
+		'categories':
+		{
+			'uncategorized',
+			'daily',
+			'weekly',
+			'monthly'
+		},
+		'status':
+		{
+			'publish',
+			'private'
+		},
+		'detailUrl': siteUrl+'articles/detail/'
+	},
+	{
+		'data': 'event',
+		'field':
+		{
+			'id',
+			'title',
+			'content',
+			'thumb_s',
+			'thumb_l',
+			'location',
+			'author',
+			'start_date',
+			'end_date',
+			'updated_at',
+			'created_at'
+		},
+		'categories':
+		{
+			'uncategorized',
+			'today',
+			'ongoing',
+			'upcoming'
+		},
+		'status':
+		{
+			'publish',
+			'private'
+		},
+		'detailUrl': siteUrl+'events/detail/'
+	},
+	{
+		'data': 'testimoni',
+		'field':
+		{
+			'id',
+			'title',
+			'content',
+			'thumb_s',
+			'thumb_l',
+			'position',
+			'updated_at',
+			'created_at'
+		},
+		'categories':
+		{
+			'uncategorized',
+			'google',
+			'facebook',
+			'instagram'
+		},
+		'status':
+		{
+			'publish'
+		},
+		'detailUrl': ''
+	}
+];

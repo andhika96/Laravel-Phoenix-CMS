@@ -1,0 +1,1783 @@
+	/* =========================================
+	   1. VARIABLES & THEME CONFIGURATION
+	   ========================================= */
+	:root {
+		/* Fonts & Dimensions */
+		--font-main: 'Inter', sans-serif;
+		--sidebar-width: 280px;
+		--prop-sidebar-width: 425px;
+
+		/* Colors - Light Theme (Default) */
+		--builder-bg: #f8fafc;
+		--sidebar-bg: #ffffff;
+		--sidebar-border: #e2e8f0;
+		--text-primary: #334155;
+		--text-secondary: #64748b;
+		--accent-color: #3b82f6;
+
+		/* UI Builder Specific Colors */
+		--ui-container-border: #10b981;
+		--ui-container-bg: #ffffff;
+		--ui-row-border: #3b82f6;
+		--ui-row-bg: #f1f5f9;
+		--ui-col-border: #cbd5e1;
+		--ui-widget-hover: #f59e0b;
+	}
+
+	[data-bs-theme="dark"] {
+		/* Colors - Dark Theme */
+		--builder-bg: #0f172a;
+		--sidebar-bg: #1e293b;
+		--sidebar-border: #334155;
+		--text-primary: #f1f5f9;
+		--text-secondary: #94a3b8;
+
+		/* UI Builder Specific Colors - Dark */
+		--ui-container-bg: #1e293b;
+		--ui-row-bg: #334155;
+		--ui-col-border: #475569;
+	}
+
+
+	/* =========================================
+	   2. GLOBAL RESETS & BOOTSTRAP OVERRIDES
+	   ========================================= */
+	body {
+		background-color: var(--builder-bg);
+		font-size: 14px;
+		font-family: var(--font-main);
+		color: var(--text-primary);
+		overflow: hidden;
+		margin: 0;
+	}
+
+	/* Scrollbar Styles */
+	.sidebar-left,
+	.sidebar-right,
+	.widget-picker-modal,
+	.overflow-y-scroll,
+	.popup-body {
+		scrollbar-width: thin;
+		scrollbar-color: var(--text-secondary) transparent;
+	}
+
+	.popup-body::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.popup-body::-webkit-scrollbar-thumb {
+		background: #ccc;
+		border-radius: 3px;
+	}
+
+	/* Bootstrap Dark Mode Overrides */
+	[data-bs-theme="dark"] .form-control,
+	[data-bs-theme="dark"] .form-select,
+	[data-bs-theme="dark"] .form-control-modern {
+		background-color: #1e293b;
+		border-color: #475569;
+		color: #f1f5f9;
+	}
+
+	[data-bs-theme="dark"] .form-control:focus,
+	[data-bs-theme="dark"] .form-control-modern:focus {
+		border-color: var(--accent-color);
+		background-color: #0f172a;
+		color: white;
+	}
+
+	/* Fix Background Helpers in Dark Mode */
+	[data-bs-theme="dark"] .bg-light {
+		background-color: #334155 !important;
+		color: #f1f5f9 !important;
+		border-color: #475569 !important;
+	}
+
+	[data-bs-theme="dark"] .bg-white {
+		background-color: var(--sidebar-bg) !important;
+		color: var(--text-primary) !important;
+	}
+
+
+	/* =========================================
+	   3. CUSTOM 4K GRID SYSTEM (3XL)
+	   ========================================= */
+	.container-3xl {
+		max-width: 2400px;
+		width: 100%;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.col-3xl-1 {
+		flex: 0 0 auto;
+		width: 8.33333333%;
+	}
+
+	.col-3xl-2 {
+		flex: 0 0 auto;
+		width: 16.66666667%;
+	}
+
+	.col-3xl-3 {
+		flex: 0 0 auto;
+		width: 25%;
+	}
+
+	.col-3xl-4 {
+		flex: 0 0 auto;
+		width: 33.33333333%;
+	}
+
+	.col-3xl-5 {
+		flex: 0 0 auto;
+		width: 41.66666667%;
+	}
+
+	.col-3xl-6 {
+		flex: 0 0 auto;
+		width: 50%;
+	}
+
+	.col-3xl-7 {
+		flex: 0 0 auto;
+		width: 58.33333333%;
+	}
+
+	.col-3xl-8 {
+		flex: 0 0 auto;
+		width: 66.66666667%;
+	}
+
+	.col-3xl-9 {
+		flex: 0 0 auto;
+		width: 75%;
+	}
+
+	.col-3xl-10 {
+		flex: 0 0 auto;
+		width: 83.33333333%;
+	}
+
+	.col-3xl-11 {
+		flex: 0 0 auto;
+		width: 91.66666667%;
+	}
+
+	.col-3xl-12 {
+		flex: 0 0 auto;
+		width: 100%;
+	}
+
+	.col-3xl-auto {
+		flex: 0 0 auto;
+		width: auto;
+	}
+
+	/* Grid Utilities */
+	.w-3xl-25 {
+		width: 25% !important;
+	}
+
+	.w-3xl-50 {
+		width: 50% !important;
+	}
+
+	.w-3xl-75 {
+		width: 75% !important;
+	}
+
+	.w-3xl-100 {
+		width: 100% !important;
+	}
+
+	.w-3xl-auto {
+		width: auto !important;
+	}
+
+	.g-3xl-0 {
+		--bs-gutter-x: 0;
+	}
+
+	.g-3xl-1 {
+		--bs-gutter-x: 0.25rem;
+	}
+
+	.g-3xl-2 {
+		--bs-gutter-x: 0.5rem;
+	}
+
+	.g-3xl-3 {
+		--bs-gutter-x: 1rem;
+	}
+
+	.g-3xl-4 {
+		--bs-gutter-x: 1.5rem;
+	}
+
+	.g-3xl-5 {
+		--bs-gutter-x: 3rem;
+	}
+
+	/* Standard Responsive Utilities Overrides */
+	@media (min-width: 768px) {
+		.w-md-25 {
+			width: 25% !important;
+		}
+
+		.w-md-50 {
+			width: 50% !important;
+		}
+
+		.w-md-75 {
+			width: 75% !important;
+		}
+
+		.w-md-100 {
+			width: 100% !important;
+		}
+
+		.w-md-auto {
+			width: auto !important;
+		}
+	}
+
+	@media (min-width: 1200px) {
+		.w-xl-25 {
+			width: 25% !important;
+		}
+
+		.w-xl-50 {
+			width: 50% !important;
+		}
+
+		.w-xl-75 {
+			width: 75% !important;
+		}
+
+		.w-xl-100 {
+			width: 100% !important;
+		}
+
+		.w-xl-auto {
+			width: auto !important;
+		}
+	}
+
+	@media (min-width: 1400px) {
+		.w-xxl-25 {
+			width: 25% !important;
+		}
+
+		.w-xxl-50 {
+			width: 50% !important;
+		}
+
+		.w-xxl-75 {
+			width: 75% !important;
+		}
+
+		.w-xxl-100 {
+			width: 100% !important;
+		}
+
+		.w-xxl-auto {
+			width: auto !important;
+		}
+	}
+
+
+	/* =========================================
+	   4. MAIN BUILDER LAYOUT
+	   ========================================= */
+	.builder-layout {
+		display: flex;
+		height: calc(100vh - 60px);
+		width: 100%;
+		position: relative;
+	}
+
+	/* Canvas Area (Editor) */
+	.canvas-area {
+		flex-grow: 1;
+		background-color: var(--builder-bg);
+		background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+		background-size: 24px 24px;
+		overflow-y: auto;
+		overflow-x: auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		transition: all 0.3s ease;
+		position: relative;
+		padding: 0;
+	}
+
+	/* Frame full-width (desktop/FHD/4K) — stretch penuh tanpa jarak */
+	.wysiwyg-frame[style*="width: 100%"],
+	.wysiwyg-frame[style*="width:100%"] {
+		align-self: stretch !important;
+		box-shadow: none !important;
+		margin: 0 !important;
+	}
+	/* Bootstrap .container di wysiwyg-frame: pastikan selalu margin auto (center) */
+	.wysiwyg-frame .container-ui.container,
+	.wysiwyg-frame .container-ui.container-sm,
+	.wysiwyg-frame .container-ui.container-md,
+	.wysiwyg-frame .container-ui.container-lg,
+	.wysiwyg-frame .container-ui.container-xl,
+	.wysiwyg-frame .container-ui.container-xxl {
+		margin-left: auto !important;
+		margin-right: auto !important;
+	}
+
+	/* Frame fixed-width (mobile/tablet) — centered dengan margin auto */
+	.wysiwyg-frame:not([style*="width: 100%"]):not([style*="width:100%"]) {
+		margin: 30px auto 60px;
+		align-self: center;
+	}
+
+	/* ── WYSIWYG Frame ── */
+	.wysiwyg-frame {
+		background-color: #ffffff;
+		transform-origin: top center;
+		transition: width 0.3s ease, transform 0.3s ease;
+		flex-shrink: 0;
+		min-height: calc(100vh - 120px);
+		overflow: visible;
+	}
+	[data-bs-theme="dark"] .wysiwyg-frame { background-color: #0f172a; }
+
+	/* ── Container / Row / Col: border + overflow visible ── */
+	.wysiwyg-frame .ui-box {
+		border: 1px solid transparent !important;
+		border-radius: 0 !important;
+		margin-top: 0 !important;
+		margin-bottom: 0 !important;
+		position: relative !important;
+		box-shadow: none !important;
+		overflow: visible !important;
+	}
+	/* Bootstrap .container: biarkan margin-left/right auto agar tetap center */
+	.wysiwyg-frame .row-ui,
+	.wysiwyg-frame .col-ui {
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+	.wysiwyg-frame .ui-box:hover  { border: 1px dashed rgba(59,130,246,0.35) !important; }
+	.wysiwyg-frame .ui-box.active { border: 2px solid var(--accent-color) !important; }
+	.wysiwyg-frame .container-ui:hover  { border: 1px dashed var(--ui-container-border) !important; }
+	.wysiwyg-frame .container-ui.active { border: 2px solid var(--ui-container-border) !important; }
+	.wysiwyg-frame .row-ui:hover  { border: 1px dashed var(--ui-row-border) !important; }
+	.wysiwyg-frame .row-ui.active { border: 2px solid var(--ui-row-border) !important; }
+
+	/* ══════════════════════════════════════════════════════════════
+	   WYSIWYG Hover Toolbars
+	   Toolbar menempel DI DALAM elemen pojok kiri/kanan atas.
+	   Setiap parent level punya padding-top agar toolbar child
+	   punya ruang tersendiri dan tidak bertumpuk.
+	   Z-index: container(201) < row(202) < col(210) < widget(220)
+	   ══════════════════════════════════════════════════════════════ */
+
+	/* Base ui-header — menempel pojok kiri-atas DALAM border */
+	.wysiwyg-frame .ui-header {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 26px;
+		width: auto;
+		min-width: 70px;
+		z-index: 201;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.12s ease;
+		background: rgba(15,23,42,0.92);
+		border: none;
+		border-radius: 0 0 4px 0;
+		display: flex !important;
+		align-items: center;
+		padding: 0 8px;
+		gap: 5px;
+		white-space: nowrap;
+	}
+
+	/* Container header — biru, pojok kiri-atas container */
+	.wysiwyg-frame .container-ui > .ui-header {
+		background: rgba(30,64,175,0.95);
+		z-index: 201;
+		top: 0;
+		left: 0;
+	}
+
+	/* Row header — hijau, pojok kiri-atas row
+	   Row berada di dalam container yg punya padding-top:32px,
+	   jadi toolbar row muncul 32px di bawah toolbar container */
+	.wysiwyg-frame .row-ui > .ui-header {
+		background: rgba(21,128,61,0.95);
+		z-index: 202;
+		top: 0;
+		left: 0;
+	}
+
+	/* Show on hover/active — direct child only, tidak cascade ke nested */
+	.wysiwyg-frame .container-ui:hover > .ui-header,
+	.wysiwyg-frame .container-ui.active > .ui-header { opacity: 1; pointer-events: auto; }
+	.wysiwyg-frame .row-ui:hover > .ui-header,
+	.wysiwyg-frame .row-ui.active > .ui-header { opacity: 1; pointer-events: auto; }
+
+	/* Saat container di-hover, JANGAN tampilkan toolbar row yg ada di dalamnya */
+	.wysiwyg-frame .container-ui:hover .row-ui:not(:hover) > .ui-header { opacity: 0; pointer-events: none; }
+
+	/* ui-header typography & actions */
+	.wysiwyg-frame .ui-header .ui-label {
+		background: transparent !important;
+		color: #f1f5f9 !important;
+		font-size: 11px;
+		font-weight: 600;
+		padding: 0;
+		white-space: nowrap;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+	}
+	.wysiwyg-frame .ui-header .ui-actions {
+		opacity: 1 !important;
+		margin-left: 4px;
+		display: flex;
+		gap: 3px;
+	}
+	.wysiwyg-frame .action-btn {
+		width: 20px; height: 20px;
+		background: rgba(255,255,255,0.15);
+		border-color: rgba(255,255,255,0.2);
+		color: #e2e8f0;
+		border-radius: 3px;
+	}
+	.wysiwyg-frame .action-btn:hover {
+		background: var(--accent-color);
+		border-color: var(--accent-color);
+		color: white;
+	}
+	.wysiwyg-frame .action-btn.danger:hover { background: #ef4444; border-color: #ef4444; }
+
+	/* ── ui-body & row-ui ── */
+	.wysiwyg-frame .ui-body { padding: 0 !important; min-height: 0 !important; overflow: visible !important; }
+	.wysiwyg-frame .row-ui  { background: transparent !important; }
+
+	/* Container body: padding-top 32px → toolbar container di atas, row mulai 32px ke bawah */
+	.wysiwyg-frame .container-ui > .ui-body {
+		padding-top: 32px !important;
+	}
+
+	/* ── col-ui ── */
+	.wysiwyg-frame .col-ui {
+		border: 1px solid transparent !important;
+		background: transparent !important;
+		min-height: 40px !important;
+		overflow: visible !important;
+		position: relative !important;
+	}
+	.wysiwyg-frame .col-ui:hover  { border: 1px dashed rgba(203,213,225,0.6) !important; }
+	.wysiwyg-frame .col-ui.active { border: 1px dashed var(--accent-color) !important; }
+
+	/* col-handle: pojok kiri-atas col */
+	.wysiwyg-frame .col-handle {
+		position: absolute !important;
+		top: 0 !important;
+		left: 0 !important;
+		z-index: 210 !important;
+		height: 26px !important;
+		line-height: 26px !important;
+		padding: 0 8px !important;
+		border-radius: 0 0 4px 0 !important;
+		border: none !important;
+		box-shadow: none !important;
+		background: rgba(100,116,139,0.92) !important;
+		color: #f1f5f9 !important;
+		font-weight: 600 !important;
+		font-size: 11px !important;
+		opacity: 0 !important;
+		pointer-events: none !important;
+		transition: opacity 0.12s ease !important;
+	}
+	.wysiwyg-frame .col-ui:hover > .col-handle,
+	.wysiwyg-frame .col-ui.active > .col-handle {
+		opacity: 1 !important;
+		pointer-events: auto !important;
+	}
+	/* Sembunyikan col-handle saat widget di dalamnya di-hover */
+	.wysiwyg-frame .col-ui:hover:has(.widget-ui:hover) > .col-handle {
+		opacity: 0 !important;
+		pointer-events: none !important;
+	}
+
+	/* col-actions: pojok kanan-atas col */
+	.wysiwyg-frame .col-actions {
+		position: absolute !important;
+		top: 0 !important;
+		right: 0 !important;
+		left: auto !important;
+		z-index: 210 !important;
+		height: 26px !important;
+		align-items: center !important;
+		padding: 2px 4px !important;
+		border-radius: 0 0 0 4px !important;
+		border: none !important;
+		box-shadow: none !important;
+		background: rgba(100,116,139,0.92) !important;
+		opacity: 0 !important;
+		pointer-events: none !important;
+		transition: opacity 0.12s ease !important;
+	}
+	.wysiwyg-frame .col-ui:hover > .col-actions,
+	.wysiwyg-frame .col-ui.active > .col-actions {
+		opacity: 1 !important;
+		pointer-events: auto !important;
+	}
+	/* Sembunyikan col-actions saat widget di dalamnya di-hover */
+	.wysiwyg-frame .col-ui:hover:has(.widget-ui:hover) > .col-actions {
+		opacity: 0 !important;
+		pointer-events: none !important;
+	}
+
+	/* Row drop-zone: padding-top agar toolbar col punya ruang */
+	.wysiwyg-frame .row-ui > .ui-body > .row-drop-zone {
+		padding-top: 30px !important;
+	}
+
+	/* ── Widget UI ── */
+	.wysiwyg-frame .widget-ui {
+		margin: 0 !important;
+		padding: 0 !important;
+		border: 1px solid transparent !important;
+		overflow: visible !important;
+		position: relative !important;
+	}
+	.wysiwyg-frame .widget-ui:hover  { border: 1px dashed var(--ui-widget-hover) !important; }
+	.wysiwyg-frame .widget-ui.active { outline: 2px solid var(--ui-widget-hover) !important; border-color: transparent !important; }
+
+	/* widget-overlay: pojok kanan-atas widget */
+	.wysiwyg-frame .widget-overlay {
+		position: absolute !important;
+		top: 0 !important;
+		right: 0 !important;
+		left: auto !important;
+		z-index: 220 !important;
+		height: 26px !important;
+		align-items: center !important;
+		padding: 0 8px !important;
+		border-radius: 0 0 0 4px !important;
+		font-size: 11px !important;
+		font-weight: 600 !important;
+	}
+
+	/* widget-drop-zone: padding-top agar widget-overlay punya ruang */
+	.wysiwyg-frame .col-ui > .widget-drop-zone {
+		padding-top: 30px !important;
+	}
+
+	/* Pensil edit button — widget (widget-btn-edit) */
+	.wysiwyg-frame .widget-btn-edit {
+		background: var(--accent-color) !important;
+		color: white !important;
+	}
+	.wysiwyg-frame .widget-btn-edit:hover { background: #1d4ed8 !important; }
+
+	/* Pensil edit button — container/row/col (action-btn-edit) */
+	.wysiwyg-frame .action-btn-edit {
+		background: var(--accent-color) !important;
+		border-color: var(--accent-color) !important;
+		color: white !important;
+	}
+	.wysiwyg-frame .action-btn-edit:hover {
+		background: #1d4ed8 !important;
+		border-color: #1d4ed8 !important;
+	}
+
+	/* ── Drop zones ── */
+	.wysiwyg-frame .widget-drop-zone {
+		min-height: 16px;
+		padding: 0 !important;
+		overflow: visible !important;
+	}
+	.wysiwyg-frame .widget-drop-zone:empty {
+		min-height: 40px;
+		background-color: rgba(59,130,246,0.03);
+		background-image: url("data:image/svg+xml;utf8,<svg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'><rect width='100%25' height='100%25' style='fill:none;stroke:%23cbd5e1;stroke-width:1;stroke-dasharray:4,4'/></svg>");
+	}
+	.wysiwyg-frame .drop-zone-root   { min-height: 200px; padding-bottom: 0 !important; overflow: visible !important; }
+	.wysiwyg-frame .row-drop-zone    { min-height: 40px; overflow: visible !important; }
+
+	/* Pastikan row Bootstrap di dalam frame tidak clip children */
+	.wysiwyg-frame .row { overflow: visible !important; }
+
+	/* Preview / Viewer Styles */
+	.preview-container {
+		flex-grow: 1;
+		background-color: var(--builder-bg);
+		overflow-y: auto;
+		overflow-x: hidden;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding-top: 20px;
+		height: calc(100vh - 60px);
+		transition: background-color 0.3s ease;
+	}
+
+	.preview-frame {
+		min-height: 100%;
+		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+	}
+
+
+	/* =========================================
+	   5. SIDEBARS
+	   ========================================= */
+
+	/* --- Sidebar Left (Components) --- */
+	.sidebar-left {
+		width: var(--sidebar-width);
+		background: var(--sidebar-bg);
+		border-right: 1px solid var(--sidebar-border);
+		overflow-y: auto;
+		flex-shrink: 0;
+		padding: 15px;
+		z-index: 20;
+		transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+		overflow-x: hidden;
+		white-space: nowrap;
+	}
+
+	.sidebar-left.collapsed {
+		width: 0 !important;
+		padding: 15px 0 !important;
+		border-right: none;
+	}
+
+	.sidebar-category-title {
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		font-weight: 700;
+		color: var(--text-secondary);
+		margin: 20px 0 10px 0;
+		letter-spacing: 0.5px;
+	}
+
+	.sidebar-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+	}
+
+	/* Sidebar Item (Draggable) */
+	.draggable-item {
+		cursor: grab;
+		background: white;
+		border: 1px solid #e2e8f0;
+		border-radius: 6px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 80px;
+		transition: all 0.2s;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+		text-align: center;
+		padding: 5px;
+	}
+
+	.draggable-item:hover {
+		border-color: var(--accent-color);
+		color: var(--accent-color);
+		transform: translateY(-2px);
+		box-shadow: 0 4px 8px rgba(59, 130, 246, 0.1);
+	}
+
+	.draggable-item i {
+		font-size: 20px;
+		margin-bottom: 8px;
+		color: var(--text-secondary);
+	}
+
+	.draggable-item:hover i {
+		color: var(--accent-color);
+	}
+
+	.draggable-item span {
+		font-size: 11px;
+		font-weight: 500;
+	}
+
+	/* Dark Mode: Sidebar Items */
+	[data-bs-theme="dark"] .draggable-item {
+		background-color: #1e293b;
+		border-color: #475569;
+		color: #cbd5e1;
+		box-shadow: none;
+	}
+
+	[data-bs-theme="dark"] .draggable-item:hover {
+		border-color: var(--accent-color);
+		color: var(--accent-color);
+		background-color: #0f172a;
+	}
+
+	/* --- Sidebar Right (Floating Properties Popup) --- */
+	.sidebar-right {
+		position: fixed;
+		width: var(--prop-sidebar-width);
+		max-height: 82.5vh;
+		background: var(--sidebar-bg);
+		border: 1px solid var(--sidebar-border) !important;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+		border-radius: 12px;
+		z-index: 1050;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		transition: opacity 0.2s ease;
+	}
+
+	.popup-header {
+		color: var(--text-primary);
+		background: var(--ui-row-bg);
+		padding: 10px 15px;
+		border-bottom: 1px solid var(--sidebar-border);
+		cursor: grab;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		user-select: none;
+	}
+
+	.popup-header:active {
+		cursor: grabbing;
+	}
+
+	.popup-body {
+		padding: 15px;
+		overflow-y: auto;
+		flex-grow: 1;
+	}
+
+	/* Sidebar Settings Animation */
+	.slider-settings-enter-active,
+	.slider-settings-leave-active {
+		transition: all 0.3s ease-in-out;
+		max-height: 500px;
+		opacity: 1;
+		overflow: hidden;
+	}
+
+	.slider-settings-enter-from,
+	.slider-settings-leave-to {
+		max-height: 0;
+		opacity: 0;
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+		margin-top: 0 !important;
+		margin-bottom: 0 !important;
+	}
+
+
+	/* =========================================
+	   6. UI BUILDER COMPONENTS (THE BOX MODEL)
+	   ========================================= */
+
+	/* --- Base UI Box --- */
+	.ui-box {
+		position: relative;
+		background: var(--ui-container-bg);
+		border: 1px solid #e2e8f0;
+		border-radius: 6px;
+		margin-top: 24px;
+		margin-bottom: 24px;
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+		transition: all 0.2s ease;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.ui-box.active {
+		border: 2px solid var(--accent-color);
+		z-index: 10;
+		box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+	}
+
+	.ui-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0 10px;
+		height: 32px;
+		border-bottom: 1px solid #e2e8f0;
+		border-radius: 5px 5px 0 0;
+		background: #f8fafc;
+		user-select: none;
+	}
+
+	[data-bs-theme="dark"] .ui-header {
+		background: #334155;
+		border-color: #475569;
+	}
+
+	.ui-label {
+		font-size: 11px;
+		font-weight: 700;
+		text-transform: uppercase;
+		color: white;
+		padding: 3px 8px;
+		border-radius: 3px;
+		letter-spacing: 0.5px;
+		line-height: 1;
+	}
+
+	.ui-body {
+		padding: 20px;
+		min-height: 80px;
+		height: 100%;
+		border-radius: 0 0 6px 6px;
+	}
+
+	/* Actions (Edit/Delete Buttons) */
+	.ui-actions {
+		display: flex;
+		gap: 4px;
+		opacity: 0.7;
+	}
+
+	.ui-box:hover .ui-actions {
+		opacity: 1;
+	}
+
+	.action-btn {
+		width: 22px;
+		height: 22px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid #cbd5e1;
+		background: white;
+		color: #64748b;
+		border-radius: 4px;
+		font-size: 10px;
+		cursor: pointer;
+		transition: all 0.1s;
+	}
+
+	.action-btn:hover {
+		background: var(--accent-color);
+		color: white;
+		border-color: var(--accent-color);
+	}
+
+	.action-btn.danger:hover {
+		background: #ef4444;
+		border-color: #ef4444;
+		color: white;
+	}
+
+	/* --- Container UI --- */
+	.container-ui {
+		border-top: 4px solid var(--ui-container-border);
+	}
+
+	.container-ui > .ui-header .ui-label {
+		background: var(--ui-container-border);
+	}
+
+	/* --- Row UI --- */
+	.row-ui {
+		border-top: 4px solid var(--ui-row-border);
+		background-color: var(--ui-row-bg);
+		margin-bottom: 15px;
+	}
+
+	.row-ui > .ui-header .ui-label {
+		background: var(--ui-row-border);
+	}
+
+	.row-ui > .ui-body {
+		padding: 28px 15px;
+	}
+
+	/* Nested Row Fixes */
+	.nested-row {
+		border-top-color: #8b5cf6 !important;
+		background: white;
+	}
+
+	.nested-row .ui-label {
+		background: #8b5cf6 !important;
+	}
+
+	[data-bs-theme="dark"] .nested-row {
+		background: var(--ui-row-bg) !important;
+		border-color: #475569 !important;
+	}
+
+	/* --- Column UI --- */
+	.col-ui {
+		border: 1px dashed #cbd5e1;
+		background: rgba(255, 255, 255, 0.5);
+		height: 100%;
+		position: relative;
+		min-height: 60px;
+		border-radius: 4px;
+		transition: background 0.2s;
+	}
+
+	.col-ui:hover {
+		background: #fff;
+		border-color: var(--text-secondary);
+	}
+
+	.col-ui.active {
+		border: 2px solid var(--text-secondary);
+		background: white;
+	}
+
+	/* Dark Mode: Column UI */
+	[data-bs-theme="dark"] .col-ui {
+		background: rgba(30, 41, 59, 0.3); /* Slate-800 transparent */
+		border-color: #475569;
+		color: #e2e8f0;
+	}
+
+	[data-bs-theme="dark"] .col-ui:hover {
+		background: #1e293b;
+		border-color: #94a3b8;
+	}
+
+	[data-bs-theme="dark"] .col-ui.active {
+		background: #0f172a;
+		border-color: var(--accent-color);
+	}
+
+	/* Column Handles & Actions */
+	.col-handle {
+		position: absolute;
+		top: -16px;
+		left: 0px;
+		background: white;
+		border: 1px solid #cbd5e1;
+		color: var(--text-primary);
+		font-size: 10px;
+		font-weight: 700;
+		padding: 1px 6px;
+		border-radius: 3px;
+		z-index: 5;
+		cursor: grab;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+		opacity: 0;
+		transition: opacity 0.12s ease;
+	}
+	.col-ui:hover > .col-handle { opacity: 1; }
+	.col-ui:hover:has(.widget-ui:hover) > .col-handle { opacity: 0; }
+
+	[data-bs-theme="dark"] .col-handle {
+		background: #334155;
+		border-color: #475569;
+		color: #cbd5e1;
+	}
+
+	.col-actions {
+		position: absolute;
+		top: -25px;
+		left: auto;
+		right: 0px;
+		display: none;
+		background: white;
+		padding: 2px;
+		border-radius: 3px;
+		border: 1px solid #e2e8f0;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		z-index: 90;
+	}
+
+	.col-ui:hover > .col-actions,
+	.col-ui.active > .col-actions {
+		display: flex;
+		gap: 3px;
+	}
+	.col-ui:hover:has(.widget-ui:hover) > .col-actions { display: none; }
+
+	/* --- Widget UI --- */
+	.widget-ui {
+		position: relative;
+		margin-top: 8px;
+		margin-bottom: 8px;
+		border: 1px solid transparent;
+		padding: 2px;
+	}
+
+	.widget-ui:hover {
+		border: 1px dashed var(--ui-widget-hover);
+	}
+
+	.widget-ui.active {
+		outline: 2px solid var(--ui-widget-hover);
+		z-index: 2;
+	}
+
+	/* Widget Overlay (Hover Menu) */
+	.widget-overlay {
+		position: absolute;
+		top: -22px;
+		left: auto;
+		right: 0px;
+		background: var(--ui-widget-hover);
+		color: white;
+		border-radius: 4px 4px 0 0;
+		padding: 2px 6px;
+		display: none;
+		align-items: center;
+		gap: 6px;
+		font-size: 10px;
+		font-weight: 600;
+		z-index: 100;
+		text-transform: uppercase;
+	}
+
+	.widget-ui:hover > .widget-overlay,
+	.widget-ui.active > .widget-overlay {
+		display: flex;
+	}
+
+	.widget-btn {
+		background: rgba(255, 255, 255, 0.2);
+		border: none;
+		color: white;
+		width: 16px;
+		height: 16px;
+		border-radius: 2px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		pointer-events: auto;
+	}
+
+	.widget-btn:hover {
+		background: rgba(255, 255, 255, 0.4);
+	}
+
+	/* Dark Mode: Widget UI Fixes */
+	[data-bs-theme="dark"] .widget-ui .text-dark {
+		color: #f1f5f9 !important;
+	}
+
+	[data-bs-theme="dark"] .widget-ui .text-muted {
+		color: #94a3b8 !important;
+	}
+
+	[data-bs-theme="dark"] .widget-ui .bg-white,
+	[data-bs-theme="dark"] .widget-ui .card {
+		background-color: #1e293b !important;
+		border-color: #475569 !important;
+		color: #f1f5f9 !important;
+	}
+
+	[data-bs-theme="dark"] .widget-ui .bg-light {
+		background-color: rgba(255, 255, 255, 0.1) !important;
+		border-color: rgba(255, 255, 255, 0.1) !important;
+	}
+
+	/* Widget Placeholders (Empty State) */
+	[data-bs-theme="dark"] .bg-light {
+		background-color: rgba(255, 255, 255, 0.05) !important;
+		border-color: #475569 !important;
+	}
+
+
+	/* =========================================
+	   7. DROP ZONES & PLACEHOLDERS
+	   ========================================= */
+	/* Root Drop Zone */
+	.drop-zone-root {
+		min-height: 600px;
+		padding-bottom: 100px;
+	}
+
+	.drop-zone-root .ui-box:first-child {
+		margin-top: 0 !important;
+	}
+
+	.drop-zone-root .ui-box:last-child {
+		margin-bottom: 0 !important;
+	}
+
+	.drop-zone-root:empty:before {
+		content: "Drag and Drop Layouts Here";
+		display: block;
+		text-align: center;
+		margin-top: 100px;
+		color: var(--text-secondary);
+		font-weight: 500;
+	}
+
+	/* Row Drop Zone */
+	.row-drop-zone {
+		min-height: 60px;
+		border-radius: 4px;
+		transition: background-color 0.2s;
+	}
+
+	.row-drop-zone:empty {
+		background-color: rgba(59, 130, 246, 0.05);
+		border: 1px dashed #cbd5e1;
+	}
+
+	/* Widget Drop Zone (Inside Column) */
+	.widget-drop-zone {
+		min-height: 50px;
+		height: 100%;
+		border-radius: 4px;
+		padding-top: 1.8rem;
+	}
+
+	.widget-drop-zone:empty {
+		background-color: rgba(241, 245, 249, 0.6);
+		background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" style="fill:none;stroke:%23cbd5e1;stroke-width:1;stroke-dasharray:4,4" /></svg>');
+	}
+
+	/* Dark Mode: Widget Drop Zone */
+	[data-bs-theme="dark"] .widget-drop-zone:empty {
+		background-color: rgba(30, 41, 59, 0.3);
+		background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" style="fill:none;stroke:%23475569;stroke-width:1;stroke-dasharray:4,4" /></svg>');
+	}
+
+	/* Add Widget Button Fixes (Dark Mode) */
+	[data-bs-theme="dark"] .widget-drop-zone + div {
+		background-color: rgba(255, 255, 255, 0.05) !important;
+		border-color: #475569 !important;
+		color: #94a3b8 !important;
+	}
+
+	[data-bs-theme="dark"] .widget-drop-zone + div:hover {
+		background-color: rgba(255, 255, 255, 0.1) !important;
+		border-color: var(--accent-color) !important;
+		color: var(--accent-color) !important;
+	}
+
+	/* Clickable "Add Widget" Area Fix */
+	[data-bs-theme="dark"] div[onclick*="openWidgetPicker"] {
+		background-color: rgba(255, 255, 255, 0.08) !important;
+		border-color: rgba(255, 255, 255, 0.3) !important;
+		color: rgba(255, 255, 255, 0.9) !important;
+	}
+
+	[data-bs-theme="dark"] div[onclick*="openWidgetPicker"]:hover {
+		background-color: rgba(255, 255, 255, 0.15) !important;
+		border-color: var(--accent-color) !important;
+		color: var(--accent-color) !important;
+	}
+
+
+	/* =========================================
+	   8. PROPERTY PANEL COMPONENTS
+	   ========================================= */
+	.prop-header {
+		padding: 15px;
+		border-bottom: 1px solid var(--sidebar-border);
+		background: #f8fafc;
+		font-weight: 600;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 50px;
+	}
+
+	.prop-body {
+		padding: 20px;
+		flex-grow: 1;
+		overflow-y: auto;
+	}
+
+	.prop-group {
+		margin-bottom: 24px;
+	}
+
+	.prop-label {
+		font-size: 11px;
+		font-weight: 600;
+		color: var(--text-secondary);
+		margin-bottom: 8px;
+		text-transform: uppercase;
+	}
+
+	/* Form Controls */
+	.form-control-modern {
+		border: 1px solid #e2e8f0;
+		border-radius: 4px;
+		font-size: 13px;
+		padding: 8px 10px;
+		background: white;
+		color: var(--text-primary);
+		width: 100%;
+		display: block;
+	}
+
+	.form-control-modern:focus {
+		border-color: var(--accent-color);
+		outline: none;
+		box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+	}
+
+	.ck-editor__editable {
+		min-height: 120px;
+		background-color: white !important;
+		color: black !important;
+	}
+
+	.ck.ck-toolbar {
+		flex-wrap: wrap !important;
+	}
+
+	/* Responsive Switcher (5-Tier) */
+	.resp-switcher {
+		display: flex;
+		background: #e2e8f0;
+		padding: 2px;
+		border-radius: 6px;
+		margin-bottom: 10px;
+	}
+
+	[data-bs-theme="dark"] .resp-switcher {
+		background: #334155;
+	}
+
+	.resp-btn {
+		flex: 1;
+		border: none;
+		background: transparent;
+		padding: 6px 4px;
+		font-size: 12px;
+		border-radius: 4px;
+		color: #64748b;
+		cursor: pointer;
+		transition: 0.2s;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	[data-bs-theme="dark"] .resp-btn {
+		color: #cbd5e1;
+	}
+
+	.resp-btn.active {
+		background: white;
+		color: var(--accent-color);
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+		font-weight: 700;
+	}
+
+	[data-bs-theme="dark"] .resp-btn.active {
+		background: #0f172a;
+		color: var(--accent-color);
+	}
+
+	.resp-btn:hover {
+		color: var(--accent-color);
+	}
+
+	/* Sidebar Right Specific Inputs */
+	.sidebar-right .form-check-input {
+		height: 1.25em;
+	}
+
+	.sidebar-right .form-switch .form-check-input {
+		width: 2.25em;
+		border-radius: 2.25em;
+		margin-right: .5em;
+	}
+
+	/* Preview Button Group */
+	.preview-btn-group button {
+		padding: 4px 8px;
+		font-size: 12px;
+	}
+
+	.preview-btn-group button i {
+		margin-right: 4px;
+	}
+
+	/* =========================================
+	   9. MODALS & OVERLAYS
+	   ========================================= */
+
+	/* Widget Picker Modal */
+	.widget-picker-modal {
+		background: var(--sidebar-bg) !important;
+		color: var(--text-primary);
+		border: 1px solid var(--sidebar-border);
+	}
+
+	.widget-picker-btn {
+		background: var(--ui-container-bg);
+		border: 1px solid var(--sidebar-border);
+		color: var(--text-primary) !important;
+		transition: all 0.2s;
+	}
+
+	.widget-picker-btn:hover {
+		border-color: var(--accent-color);
+		background: var(--ui-row-bg);
+		color: var(--accent-color) !important;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	.widget-picker-btn i {
+		color: var(--accent-color);
+	}
+
+	[data-bs-theme="dark"] .widget-picker-btn i {
+		color: #60a5fa;
+	}
+
+	/* Mobile Warning Overlay */
+	.mobile-warning-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background-color: var(--builder-bg);
+		z-index: 99999;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		padding: 40px;
+	}
+
+	.mw-icon {
+		font-size: 64px;
+		color: var(--text-secondary);
+		margin-bottom: 20px;
+	}
+
+	.mw-title {
+		font-size: 24px;
+		font-weight: 700;
+		color: var(--text-primary);
+		margin-bottom: 10px;
+	}
+
+	.mw-text {
+		font-size: 14px;
+		color: var(--text-secondary);
+		max-width: 400px;
+		line-height: 1.6;
+	}
+
+	/* =========================================
+	   10. WIDGET SPECIFIC STYLES
+	   ========================================= */
+
+	/* Media List Widget */
+	.media-list-item {
+		position: relative;
+		overflow: hidden;
+		height: 100%;
+		transition: transform 0.2s;
+	}
+
+	.media-list-item:hover {
+		z-index: 2;
+	}
+
+	.media-wrapper {
+		position: relative;
+		width: 100%;
+		overflow: hidden;
+	}
+
+	.media-overlay-content {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		padding: 15px;
+		z-index: 10;
+		transition: background-color 0.3s;
+	}
+
+	.media-list-video-container {
+		width: 100%;
+		aspect-ratio: 16/9;
+	}
+
+	.media-list-video-container iframe,
+	.media-list-video-container video {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.hover-fade {
+		opacity: 0;
+		transition: opacity 0.3s ease-in-out;
+	}
+
+	.media-list-item:hover .hover-fade {
+		opacity: 1;
+	}
+
+	/* =========================================
+	   11. UTILITIES & HELPERS
+	   ========================================= */
+	[v-cloak] {
+		display: none !important;
+	}
+
+	.font-size-inherit {
+		font-size: inherit;
+	}
+
+	.font-size-10px {
+		font-size: 10px;
+	}
+
+	.font-size-12px {
+		font-size: 12px;
+	}
+
+	.font-size-14px {
+		font-size: 14px;
+	}
+
+	/* Custom Collapse Up */
+	.collapse-up {
+		position: absolute;
+		bottom: 100%;
+		margin-bottom: 0.5rem;
+		width: 100%;
+		z-index: 10;
+	}
+
+	/* Animations for Collapse Content */
+	.anim-fadeIn { animation: fadeIn 0.5s ease-in-out; }
+	.anim-bounce { animation: bounce 0.5s ease-in-out; }
+	.anim-pulse { animation: pulse 0.5s ease-in-out; }
+	.anim-flip { animation: flip 0.6s ease-in-out; }
+	.anim-rotate { animation: rotate 0.5s ease-in-out; }
+
+	@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+	@keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-15px); } 60% { transform: translateY(-7px); } }
+	@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+	@keyframes flip { from { transform: perspective(400px) rotate3d(1, 0, 0, 90deg); animation-timing-function: ease-in; opacity: 0; } 40% { transform: perspective(400px) rotate3d(1, 0, 0, -20deg); animation-timing-function: ease-in; } 60% { transform: perspective(400px) rotate3d(1, 0, 0, 10deg); opacity: 1; } 80% { transform: perspective(400px) rotate3d(1, 0, 0, -5deg); } to { transform: perspective(400px); } }
+	@keyframes rotate { from { transform: rotate(-10deg); opacity: 0; } to { transform: rotate(0); opacity: 1; } }
+	
+	/* Custom utility untuk menyembunyikan nomor pada list-group-numbered */
+	.list-group-numbered > .list-group-item.hide-marker-ol::before {
+		display: none !important;
+	}
+
+	/* Fix nav-tabs hover border on inactive items */
+	.nav-tabs .nav-link:not(.active):hover 
+	{
+		border-bottom-color: transparent !important;
+	}
+
+	/* Nav Tabs: mobile horizontal scroll */
+	.nav-scroll-mobile {
+		-webkit-overflow-scrolling: touch;
+		max-width: 100%;
+		padding-bottom: 8px;
+	}
+
+	@media (max-width: 767.98px) {
+		.nav-scroll-mobile {
+			overflow-x: auto;
+		}
+		.nav-scroll-mobile .nav {
+			flex-wrap: nowrap !important;
+		}
+		.nav-scroll-mobile .nav-link {
+			white-space: nowrap;
+		}
+	}
+
+	/* =========================================
+	   CSS EDITOR MODAL
+	   ========================================= */
+	.css-editor-modal {
+		position: fixed;
+		top: 0; left: 0;
+		width: 100%; height: 100%;
+		background: rgba(0, 0, 0, 0.5);
+		z-index: 9998;
+		display: flex;
+		align-items: flex-start;
+		justify-content: center;
+		padding-top: 60px;
+	}
+
+	.css-editor-panel {
+		background: var(--sidebar-bg);
+		border: 1px solid var(--sidebar-border);
+		border-radius: 10px;
+		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		transition: width 0.25s ease, height 0.25s ease, top 0.25s ease, border-radius 0.25s ease;
+		width: 520px;
+		max-height: calc(100vh - 80px);
+	}
+
+	.css-editor-panel.fullscreen {
+		position: fixed;
+		top: 60px; left: 0;
+		width: 100vw !important;
+		height: calc(100vh - 60px) !important;
+		max-height: none;
+		border-radius: 0;
+		z-index: 9999;
+		margin: 0;
+	}
+
+	.css-editor-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 10px 15px;
+		background: var(--ui-row-bg);
+		border-bottom: 1px solid var(--sidebar-border);
+		flex-shrink: 0;
+		user-select: none;
+	}
+
+	.css-editor-header .editor-title {
+		font-size: 13px;
+		font-weight: 700;
+		color: var(--text-primary);
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.css-editor-header .editor-title i {
+		color: #3b82f6;
+	}
+
+	.css-editor-body {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		padding: 12px;
+		gap: 10px;
+	}
+
+	.css-editor-hint {
+		font-size: 11px;
+		color: var(--text-secondary);
+		background: var(--ui-row-bg);
+		border: 1px solid var(--sidebar-border);
+		border-radius: 6px;
+		padding: 8px 12px;
+		line-height: 1.5;
+		flex-shrink: 0;
+	}
+
+	.css-editor-hint code {
+		background: rgba(59, 130, 246, 0.1);
+		color: #3b82f6;
+		padding: 1px 5px;
+		border-radius: 3px;
+		font-size: 11px;
+	}
+
+	.css-editor-textarea {
+		flex: 1;
+		width: 100%;
+		min-height: 200px;
+		padding: 14px;
+		font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+		font-size: 13px;
+		line-height: 1.6;
+		resize: none;
+		border: 1px solid var(--sidebar-border);
+		border-radius: 6px;
+		background: #0f172a;
+		color: #e2e8f0;
+		outline: none;
+		tab-size: 2;
+		transition: border-color 0.2s;
+	}
+
+	.css-editor-textarea:focus {
+		border-color: var(--accent-color);
+		box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+	}
+
+	[data-bs-theme="light"] .css-editor-textarea {
+		background: #1e293b;
+		color: #e2e8f0;
+	}
+
+	.css-editor-footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 10px 12px;
+		border-top: 1px solid var(--sidebar-border);
+		flex-shrink: 0;
+		background: var(--ui-row-bg);
+	}
+
+	.css-char-count {
+		font-size: 11px;
+		color: var(--text-secondary);
+	}
+
+	.btn-css-apply {
+		background: #3b82f6;
+		color: white;
+		border: none;
+		padding: 6px 16px;
+		border-radius: 6px;
+		font-size: 12px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: background 0.2s;
+	}
+
+	.btn-css-apply:hover {
+		background: #2563eb;
+	}
+
+	.btn-css-clear {
+		background: transparent;
+		color: #ef4444;
+		border: 1px solid #ef4444;
+		padding: 5px 12px;
+		border-radius: 6px;
+		font-size: 12px;
+		font-weight: 500;
+		cursor: pointer;
+		transition: all 0.2s;
+	}
+
+	.btn-css-clear:hover {
+		background: #ef4444;
+		color: white;
+	}
+
+	/* =========================================
+	   HOVER ISOLATION — hanya level terdalam yang aktif
+	   :has() membatalkan highlight parent saat child di-hover
+	   Prioritas: widget > col > row > container
+	   ========================================= */
+
+	/* Container: hilang saat row/col/widget di dalamnya di-hover */
+	.wysiwyg-frame .container-ui:hover:has(.row-ui:hover),
+	.wysiwyg-frame .container-ui:hover:has(.col-ui:hover),
+	.wysiwyg-frame .container-ui:hover:has(.widget-ui:hover) {
+		border-color: transparent !important;
+	}
+	.wysiwyg-frame .container-ui:hover:has(.row-ui:hover) > .ui-header,
+	.wysiwyg-frame .container-ui:hover:has(.col-ui:hover) > .ui-header,
+	.wysiwyg-frame .container-ui:hover:has(.widget-ui:hover) > .ui-header {
+		opacity: 0 !important;
+		pointer-events: none !important;
+	}
+
+	/* Row: hilang saat col/widget di dalamnya di-hover */
+	.wysiwyg-frame .row-ui:hover:has(.col-ui:hover),
+	.wysiwyg-frame .row-ui:hover:has(.widget-ui:hover) {
+		border-color: transparent !important;
+	}
+	.wysiwyg-frame .row-ui:hover:has(.col-ui:hover) > .ui-header,
+	.wysiwyg-frame .row-ui:hover:has(.widget-ui:hover) > .ui-header {
+		opacity: 0 !important;
+		pointer-events: none !important;
+	}
+
+	/* Col: hilang saat widget di dalamnya di-hover */
+	.wysiwyg-frame .col-ui:hover:has(.widget-ui:hover) {
+		border-color: transparent !important;
+		background: transparent !important;
+	}
+
+	/* Widget: selalu tampil saat di-hover (override semua) */
+	.wysiwyg-frame .widget-ui:hover {
+		border: 1px dashed var(--ui-widget-hover) !important;
+	}
+
+	/* ── Add Widget Button — hanya muncul saat col di-hover/active ── */
+	.col-add-widget {
+		cursor: pointer;
+		background-color: rgba(0, 0, 0, 0.02);
+		border-color: rgba(0, 0, 0, 0.1) !important;
+		transition: opacity 0.15s ease, background-color 0.2s ease;
+		opacity: 0;
+		pointer-events: none;
+	}
+	/* Muncul saat hover/active di col — pakai descendant selector (bukan >) karena ada Vue slot wrapper */
+	.col-ui:hover .col-add-widget,
+	.col-ui.active .col-add-widget {
+		opacity: 1;
+		pointer-events: auto;
+	}
+	.col-add-widget:hover {
+		background-color: rgba(0, 0, 0, 0.05) !important;
+	}
+	/* Sembunyikan saat widget di dalam col di-hover */
+	.col-ui:hover:has(.widget-ui:hover) .col-add-widget {
+		opacity: 0;
+		pointer-events: none;
+	}
+	[data-bs-theme="dark"] .col-add-widget {
+		background-color: rgba(255, 255, 255, 0.02);
+		border-color: rgba(255, 255, 255, 0.1) !important;
+	}
+	[data-bs-theme="dark"] .col-add-widget:hover {
+		background-color: rgba(255, 255, 255, 0.06) !important;
+	}
+
+/* ── Page Builder Toast Notification ── */
+.ph-notice .toast-container { z-index: 9999 !important; }
+.ph-notice .ph-notice-toast { min-width: 280px; border: none; box-shadow: 0 8px 24px rgba(0,0,0,0.15); border-radius: 8px; overflow: hidden; }
+.ph-notice .ph-notice-toast.bg-success { background: #f0fdf4 !important; }
+.ph-notice .ph-notice-toast.bg-danger  { background: #fef2f2 !important; }
+.ph-notice .toast-header.bg-success { background: transparent !important; color: #15803d; }
+.ph-notice .toast-header.bg-danger  { background: transparent !important; color: #b91c1c; }
+.ph-notice .toast-body { color: #374151; font-size: 13px; }
+[data-bs-theme="dark"] .ph-notice .ph-notice-toast.bg-success { background: #052e16 !important; }
+[data-bs-theme="dark"] .ph-notice .ph-notice-toast.bg-danger  { background: #450a0a !important; }
+[data-bs-theme="dark"] .ph-notice .toast-body { color: #e5e7eb; }
+
+/* ── Section Wrapper: full-width background container ── */
+.pb-section-wrapper {
+	width: 100%;
+	position: relative;
+}
+/* Preview juga perlu full-width */
+.preview-frame .pb-section-wrapper,
+.preview-container .pb-section-wrapper {
+	width: 100%;
+}
+
+/* ── pb-section-wrapper: full-width section wrapper ── */
+.pb-section-wrapper {
+	display: block;
+	width: 100%;
+	position: relative;
+}
+.drop-zone-root .pb-section-wrapper:first-child .ui-box {
+	margin-top: 0 !important;
+}
+.drop-zone-root .pb-section-wrapper:last-child .ui-box {
+	margin-bottom: 0 !important;
+}
+.preview-frame .pb-section-wrapper,
+.preview-container .pb-section-wrapper {
+	display: block;
+	width: 100%;
+}

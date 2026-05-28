@@ -1,0 +1,1281 @@
+:root 
+{
+	--ph-font-size: 14px;
+
+	/* VARIABLE DINAMIS */
+	--ph-theme-primary: #1FA675;
+
+	/* Base Settings */
+	--ph-sidebar-width-collapsed: 68px;
+	--ph-sidebar-width-expanded: 260px;
+	--ph-top-bar-height: 60px;
+
+	/* OTOMATISASI WARNA */
+	--ph-theme-primary-hover: color-mix(in srgb, var(--ph-theme-primary), black 10%);
+	--ph-theme-primary-subtle: color-mix(in srgb, var(--ph-theme-primary), transparent 85%);
+	--ph-theme-primary-border-subtle: color-mix(in srgb, var(--ph-theme-primary), transparent 70%);
+
+	--ph-text-main: #ffffff;
+	--ph-text-muted: #a3a3a3;
+	--ph-text-emphasis: color-mix(in srgb, var(--ph-theme-primary), white 40%);
+
+	--ph-border-color: rgba(255, 255, 255, 0.08);
+	--ph-border-color-popover: #0000002D;
+	--ph-shadow-color: rgba(0, 0, 0, 0.5);
+	--ph-scrollbar-thumb: rgba(255, 255, 255, 0.3);
+
+	/* DEFAULT SETTINGS */
+	--ph-pattern-opacity: 0.5;
+	--ph-pattern-blend-mode: overlay; 
+	--ph-pattern-blur: 0px; 
+
+	/* DEFAULT PATTERN VARS */
+	--ph-pattern-top: none; 
+	--ph-pattern-bottom: none; 
+	
+	/* LOGIC DISPLAY: Mengontrol apakah layer bawah (after) muncul atau tidak */
+	--ph-after-display: none; 
+
+	/* Variable Masking Winter (Default) */
+	--ph-mask-repeat: repeat;      
+	--ph-mask-size: 400px 400px;   
+	--ph-mask-composite: source-in;
+}
+
+/* TEMA LIGHT */
+[data-bs-theme=light] 
+{
+	--ph-bg-body: #f5f5f5;
+	
+	/*--ph-bg-gradient: linear-gradient(135deg, color-mix(in srgb, var(--ph-theme-primary), white 90%) 0%, #f5f5f5 100%); */
+
+	/* 1. BACKGROUND COLOR BODY: Disesuaikan dengan color theme (soft tint) */
+	/* Campuran 90% Putih + 10% Warna Tema. Jadi backgroundnya tidak putih polos, tapi agak kehijauan/keunguan soft */
+	--ph-bg-gradient: linear-gradient(135deg, color-mix(in srgb, var(--ph-theme-primary), white 90%) 0%, #ffffff 100%); 
+	
+	/* 2. BLEND MODE: MULTIPLY (Kunci agar warna tema terlihat di background terang) */
+	/* Multiply membuat warna tema 'menyatu' dengan background putih, hasilnya warna pastel soft */
+	--ph-pattern-blend-mode: multiply; 
+	
+	/* 3. OPACITY: Diatur rendah agar terlihat sebagai watermark background */
+	--ph-pattern-opacity: 0.15; 
+	
+	/* 4. BLUR: Sedikit saja (0.5px) untuk menghilangkan kesan tajam vector, tapi tidak sampai blur total */
+	--ph-pattern-blur: 0; 
+	
+	--ph-bg-sidebar-expanded: transparent;
+	--ph-bg-panel: rgba(255, 255, 255, 0.7);
+	--ph-bg-card: #ffffff;
+	--ph-bg-popover: #ffffff;
+	--ph-bg-input: #ffffff;
+	--ph-bg-hover: rgba(0, 0, 0, 0.05);
+	--ph-theme-primary-subtle: color-mix(in srgb, var(--ph-theme-primary), transparent 90%);
+
+	/* Untuk Light Mode: Campur warna tema dengan 60% Hitam. 
+       Ini membuat warna tema menjadi "versi gelapnya" agar kontras di background putih. */
+	--ph-theme-text-accessible: color-mix(in srgb, var(--ph-theme-primary), black 50%);
+
+	--ph-text-main: #242424;
+	--ph-text-muted: #616161;
+	--ph-text-emphasis: color-mix(in srgb, var(--ph-theme-text-accessible), black 20%);
+	--ph-border-color: rgba(0, 0, 0, 0.1);
+	--ph-shadow-color: rgba(0, 0, 0, 0.1);
+	--ph-scrollbar-thumb: rgba(0, 0, 0, 0.2);
+
+	--ph-pagination-color: var(--ph-theme-primary);
+	--ph-pagination-bg: color-mix(in srgb, var(--ph-theme-primary), transparent 85%);
+
+	--ph-content-bg: #FFFFFF;
+
+	/* Callout Toast */
+
+	--ph-callout-bg: #FFFFFF;
+	--ph-callout-color: #000000;
+
+	--ph-callout-success-color: #04BB7B;
+	--ph-callout-danger-color: #DC3545;
+	--ph-callout-info-color: #0DCAF0;
+	--ph-callout-warning-color: #FFC107;
+
+	/* Default Modal CRUD  */
+
+	--ph-modal-create-width: 500px;
+	--ph-modal-read-width: 500px;
+	--ph-modal-update-width: 500px;
+	--ph-modal-delete-width: 425px;
+
+	/* Toast */
+
+	--ph-toast-success: #04bb7b;
+	--ph-toast-success-rgb: 4, 187, 123;
+	--ph-toast-danger: #dc3545;
+	--ph-toast-danger-rgb: 220, 53, 69;
+	--ph-toast-info: #0dcaf0;
+	--ph-toast-info-rgb: 13, 202, 240;
+	--ph-toast-warning: #ffc107;
+	--ph-toast-warning-rgb: 255, 193, 7;
+
+	/* Other Variable CSS */
+
+	--vs-selected-bg: #F0F0F0;
+	--vs-controls-color: rgba(60, 60, 60, 0.5);
+
+	--vs-dropdown-bg: #FFFFFF;
+	--vs-dropdown-color: #000000;
+	--vs-dropdown-option-color: #000000;
+
+	--vs-dropdown-option--active-bg: var(--ph-theme-primary);
+	--vs-dropdown-option--active-color: #EEEEEE;
+}
+
+[data-bs-theme=dark] 
+{
+	/* TEMA DARK */
+	--ph-bg-body: #000000;
+	
+	--ph-bg-gradient: radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--ph-theme-primary), black 55%) 0%, #11100d 60%),
+					  radial-gradient(circle at 10% 90%, color-mix(in srgb, var(--ph-theme-primary), black 85%) 0%, #000000 60%);
+	
+	--ph-bg-sidebar-expanded: transparent;
+	--ph-bg-panel: rgba(32, 31, 31, 0.6);
+	--ph-bg-card: #1f1f1f;
+	--ph-bg-popover: #292929; /* Background untuk Dropdown & Tooltip */
+	--ph-bg-input: rgba(255, 255, 255, 0.08);
+	--ph-bg-hover: rgba(255, 255, 255, 0.1);
+
+	/* Untuk Dark Mode: Campur warna tema dengan 20% putih agar lebih "pop" tapi tetap terbaca */
+	/* --ph-theme-text-accessible: color-mix(in srgb, var(--ph-theme-primary), white 20%); */
+	--ph-theme-text-accessible: #FFFFFF;
+
+	--ph-content-bg: #212529;
+
+	--ph-pagination-color: var(--ph-theme-primary);
+	--ph-pagination-bg: color-mix(in srgb, var(--ph-theme-primary), transparent 85%);
+
+	/* Overlay di dark mode membuat efek glowing */
+	--ph-pattern-blend-mode: overlay;
+	--ph-pattern-opacity: 1;
+	--ph-pattern-blur: 0; 
+
+	/* Callout Toast */
+
+	--ph-callout-bg: #000000;
+	--ph-callout-color: #FFFFFF;
+
+	--ph-callout-success-color: #04BB7B;
+	--ph-callout-danger-color: #DC3545;
+	--ph-callout-info-color: #0DCAF0;
+	--ph-callout-warning-color: #FFC107;
+
+	/* Toast */
+
+	--ph-toast-success: #04bb7b;
+	--ph-toast-success-rgb: 4, 187, 123;
+	--ph-toast-danger: #dc3545;
+	--ph-toast-danger-rgb: 220, 53, 69;
+	--ph-toast-info: #0dcaf0;
+	--ph-toast-info-rgb: 13, 202, 240;
+	--ph-toast-warning: #ffc107;
+	--ph-toast-warning-rgb: 255, 193, 7;
+
+	/* Other Variable CSS */
+
+	--vs-selected-bg: #676767;
+	--vs-controls-color: rgba(255, 255, 255, 0.5);
+
+	--vs-dropdown-bg: #282C34;
+	--vs-dropdown-color: #FFFFFF;
+	--vs-dropdown-option-color: #FFFFFF;
+
+	--vs-dropdown-option--active-bg: var(--ph-theme-primary);
+	--vs-dropdown-option--active-color: #EEEEEE;
+}
+
+body 
+{
+	font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-size: var(--ph-font-size);
+	background-color: var(--ph-bg-body);
+	background-image: var(--ph-bg-gradient);
+	color: var(--ph-text-main);
+	height: 100vh;
+	overflow: hidden;
+	margin: 0;
+	transition: background 0.3s, color 0.3s;
+	position: relative;
+}
+
+/* SHARED STYLE */
+body::before, body::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	width: 100%;
+	pointer-events: none;
+	z-index: 0;
+	background-color: var(--ph-theme-primary);
+	mix-blend-mode: var(--ph-pattern-blend-mode); 
+	/*filter: blur(var(--ph-pattern-blur));*/
+	opacity: var(--ph-pattern-opacity);
+	transition: none; 
+
+	transform: translateZ(0);
+	will-change: opacity;
+}
+
+/* 1. LAYER ATAS (Winter Full / Header Theme) */
+body::before {
+	top: 0;
+	height: 100%;
+	
+	-webkit-mask-image: 
+		linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%),
+		var(--ph-pattern-top);
+	mask-image: 
+		linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%),
+		var(--ph-pattern-top);
+
+	-webkit-mask-composite: var(--ph-mask-composite);
+	mask-composite: intersect;
+
+	-webkit-mask-repeat: no-repeat, var(--ph-mask-repeat);
+	mask-repeat: no-repeat, var(--ph-mask-repeat);
+
+	-webkit-mask-size: 100% 100%, var(--ph-mask-size);
+	mask-size: 100% 100%, var(--ph-mask-size);
+
+	-webkit-mask-position: 0 0, top left;
+	mask-position: 0 0, top left;
+}
+
+/* 2. LAYER BAWAH (Hanya muncul jika variable display = block) */
+body::after {
+	bottom: 0;
+	height: 200px;
+	
+	/* INI PERBAIKAN BUG WINTER: */
+	/* Jika Winter, variable ini bernilai 'none', maka elemen hilang. */
+	display: var(--ph-after-display); 
+
+	-webkit-mask-image: var(--ph-pattern-bottom);
+	mask-image: var(--ph-pattern-bottom);
+	
+	-webkit-mask-repeat: repeat-x;
+	mask-repeat: repeat-x;
+	
+	-webkit-mask-position: bottom left;
+	mask-position: bottom left;
+
+	-webkit-mask-size: auto 150px;
+	mask-size: auto 150px;
+}
+
+/* Pastikan konten lain berada di atas background pattern */
+.d-flex.w-100.h-100 {
+	position: relative;
+	z-index: 1;
+}
+
+a,
+a:hover
+{
+	color: var(--ph-theme-text-accessible);
+}
+
+::selection 
+{
+	color: #FFFFFF;
+	background-color: var(--ph-theme-primary);
+}
+
+.ph-content
+{
+	color: var(--ph-theme-text-accessible);
+	background-color: transparent;
+	/* background-color: var(--ph-content-bg); */
+	/* box-shadow: var(--bs-box-shadow-sm) !important; */
+	border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+}
+
+/* UTILITY */
+.ph-no-transition,
+.ph-no-transition * {
+	transition: none !important;
+}
+
+.ph-text-theme 
+{
+	color: var(--ph-theme-primary) !important;
+}
+
+/* COLOR SWITCH */
+.ph-color-switch 
+{
+	width: 100%;
+	height: 40px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: transform 0.2s, box-shadow 0.2s;
+	border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.ph-color-switch:hover 
+{
+	transform: scale(1.1);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+	border-color: white;
+}
+
+/* BUTTONS */
+.ph-btn-theme 
+{
+	background-color: var(--ph-theme-primary);
+	border: 1px solid var(--ph-theme-primary);
+	color: #ffffff;
+	font-weight: 500;
+	transition: all 0.2s;
+}
+
+.ph-btn-theme:hover 
+{
+	background-color: var(--ph-theme-primary-hover);
+	border-color: var(--ph-theme-primary-hover);
+	color: #ffffff;
+}
+
+.ph-btn-theme-outline 
+{
+	background-color: transparent;
+	border: 1px solid var(--ph-theme-primary);
+	color: var(--ph-theme-primary);
+	font-weight: 500;
+	transition: all 0.2s;
+}
+
+.ph-btn-theme-outline:hover 
+{
+	background-color: var(--ph-theme-primary);
+	color: #ffffff;
+}
+
+.ph-box-theme-subtle 
+{
+	background-color: var(--ph-theme-primary-subtle);
+	color: var(--ph-text-emphasis);
+	border: 1px solid var(--ph-theme-primary-border-subtle);
+	border-radius: 8px;
+	padding: 1rem;
+	margin-top: 1rem;
+}
+
+/* SIDEBAR STYLING */
+.ph-sidebar 
+{
+	width: var(--ph-sidebar-width-collapsed);
+	background-color: transparent;
+	backdrop-filter: blur(10px);
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	flex-shrink: 0;
+	transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	border-right: none;
+	z-index: 1000;
+	padding-top: 0;
+	overflow: visible !important;
+}
+
+.ph-sidebar.ph-expanded 
+{
+	width: var(--ph-sidebar-width-expanded);
+	background-color: var(--ph-bg-sidebar-expanded);
+	backdrop-filter: blur(10px);
+}
+
+.ph-sidebar-logo-container 
+{
+	height: var(--ph-top-bar-height);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 10px;
+	margin-bottom: 0;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	flex-shrink: 0;
+}
+
+.ph-sidebar.ph-expanded .ph-sidebar-logo-container 
+{
+	justify-content: flex-start;
+	padding-left: 20px;
+}
+
+.ph-app-logo-icon 
+{
+	font-size: 1.8rem;
+	color: var(--ph-theme-primary);
+	min-width: 40px;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+}
+
+.ph-app-logo-text 
+{
+	margin-left: 10px;
+	font-size: 1.2rem;
+	font-weight: 700;
+	color: var(--ph-text-main);
+	white-space: nowrap;
+	opacity: 0;
+	display: none;
+	transform: translateX(-10px);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 180px;
+}
+
+.ph-sidebar.ph-expanded .ph-app-logo-text 
+{
+	display: block;
+	opacity: 1;
+	transform: translateX(0);
+}
+
+/* SCROLL CONFIG */
+#sidebar-scroll-content 
+{
+	flex-grow: 1;
+	min-height: 0;
+	padding-top: 10px;
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto !important;
+	overflow-x: hidden !important;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+#sidebar-scroll-content::-webkit-scrollbar 
+{
+	display: none;
+}
+
+.simplebar-scrollbar::before 
+{
+	background-color: var(--ph-scrollbar-thumb);
+	width: 4px;
+}
+
+.ph-sidebar-footer 
+{
+	flex-shrink: 0;
+	padding-bottom: 15px;
+	padding-top: 5px;
+}
+
+/* LIST GROUP & NAV ITEMS */
+.ph-list-group-wrapper 
+{
+	width: 100%;
+	padding: 0 5px;
+	margin-bottom: 4px;
+	position: relative;
+	flex-shrink: 0;
+}
+
+.ph-sidebar.ph-expanded .ph-list-group-wrapper 
+{
+	width: 100%;
+	padding: 0 .75rem;
+	margin-bottom: 4px;
+	position: relative;
+	flex-shrink: 0;
+}
+
+.ph-sidebar .list-group-item 
+{
+	background: transparent;
+	border: none;
+	color: var(--ph-text-muted);
+	height: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border-radius: 8px;
+	transition: all 0.2s;
+}
+
+.ph-sidebar.ph-expanded .list-group-item 
+{
+	justify-content: flex-start;
+	padding-left: 10px;
+}
+
+.ph-sidebar .list-group-item-action:hover,
+.ph-sidebar .list-group-item-action:focus 
+{
+	background-color: var(--ph-bg-hover);
+	color: var(--ph-text-main);
+	border: none;
+}
+
+/* Active State */
+.ph-sidebar .list-group-item.active 
+{
+	background-color: var(--ph-theme-primary-subtle);
+	color: var(--ph-theme-primary);
+	border: none;
+	font-weight: 500;
+	z-index: auto;
+}
+
+.ph-sidebar .list-group-item.active .ph-nav-text 
+{
+	font-weight: 600;
+}
+
+.ph-nav-icon 
+{
+	font-size: 1rem;
+	width: 24px;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+.ph-nav-text 
+{
+	margin-left: 0.45rem;
+	margin-right: 0.75rem;
+	font-size: .875rem;
+	font-weight: 500;
+	white-space: nowrap;
+	opacity: 0;
+	display: none;
+	transform: translateX(-10px);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex: 1;
+	min-width: 0;
+}
+
+.ph-sidebar.ph-expanded .ph-nav-text 
+{
+	display: block;
+	opacity: 1;
+	transform: translateX(0);
+}
+
+/* SUBMENU & ARROW */
+.ph-arrow-icon 
+{
+	font-size: 0.8rem;
+	transition: transform 0.3s ease;
+	margin-right: 15px;
+	display: none;
+	flex-shrink: 0;
+}
+
+.ph-sidebar.ph-expanded .ph-arrow-icon 
+{
+	display: block;
+}
+
+.list-group-item[aria-expanded="true"] .ph-arrow-icon 
+{
+	transform: rotate(180deg);
+}
+
+.ph-submenu-container 
+{
+	background-color: transparent;
+	margin-top: 4px;
+	border-radius: 0;
+	overflow: hidden;
+}
+
+.ph-submenu-link 
+{
+	display: flex;
+	align-items: center;
+	padding: .85rem 1rem;
+	padding-left: 2.5rem;
+	color: var(--ph-text-muted);
+	text-decoration: none;
+	font-size: 0.85rem;
+	transition: all 0.2s;
+	border-radius: 8px;
+	margin-bottom: 2px;
+}
+
+.ph-submenu-link:hover 
+{
+	color: var(--ph-text-main);
+	background-color: var(--ph-bg-hover);
+}
+
+.ph-submenu-icon 
+{
+	font-size: .875rem;
+	margin-right: 10px;
+	width: 15px;
+	text-align: center;
+	flex-shrink: 0;
+}
+
+.ph-submenu-link span 
+{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex: 1;
+	min-width: 0;
+}
+
+.ph-sidebar:not(.ph-expanded) .ph-submenu-container 
+{
+	display: none !important;
+}
+
+/* FLOATING POPOVER & TOOLTIP */
+.ph-floating-submenu 
+{
+	position: fixed;
+	left: 70px;
+	top: 0;
+	background-color: var(--ph-bg-popover);
+	border: 1px solid var(--ph-border-color-popover);
+	border-radius: 8px;
+	min-width: 220px;
+	max-width: 300px;
+	box-shadow: var(--bs-box-shadow-sm) !important;
+	z-index: 9999;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition: opacity 0.2s, visibility 0.2s;
+	display: flex;
+	flex-direction: column;
+	padding-bottom: 8px;
+}
+
+.ph-floating-submenu.ph-show-popover 
+{
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+}
+
+.ph-floating-submenu::before 
+{
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: -23px;
+	width: 25px;
+	background: transparent;
+}
+
+.ph-floating-submenu::after 
+{
+	content: "";
+	position: absolute;
+	z-index: 1;
+	width: 1rem;
+	height: 1rem;
+	background: inherit;
+	top: 1rem;
+	left: -8.5px;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+	border-bottom-left-radius: 0.125rem;
+	border-width: 0px 0 1px 1px;
+	border-style: solid;
+	border-color: #0000002D;
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: .1s;
+}
+
+.ph-floating-header 
+{
+	padding: 1rem;
+	font-weight: 700;
+	color: var(--ph-text-main);
+	border-bottom: 1px solid var(--ph-border-color);
+	margin-bottom: .55rem;
+	font-size: .875rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ph-floating-link 
+{
+	display: flex;
+	align-items: center;
+	padding: 1rem;
+	color: var(--ph-text-muted);
+	text-decoration: none;
+	font-size: .875rem;
+	transition: background 0.2s;
+}
+
+.ph-floating-link:hover 
+{
+	background-color: var(--ph-bg-hover);
+	color: var(--ph-text-main);
+}
+
+.ph-floating-link span 
+{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex: 1;
+	min-width: 0;
+}
+
+/* TOOLTIP */
+.ph-custom-tooltip 
+{
+	position: fixed;
+	left: 70px;
+	top: 0;
+	background-color: var(--ph-bg-popover);
+	color: var(--ph-text-main);
+	padding: 8px 14px;
+	border-radius: 6px;
+	font-size: .875rem;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	z-index: 9999;
+	box-shadow: var(--bs-box-shadow-sm) !important;
+	border: 1px solid var(--ph-border-color-popover);
+	transition: opacity 0.2s, visibility 0.2s;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 180px;
+	overflow: visible !important;
+}
+
+.ph-custom-tooltip span 
+{
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ph-custom-tooltip.ph-show-tooltip 
+{
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+}
+
+/* =========================================
+   UPDATE PARTIAL: TOOLTIP STYLING
+   ========================================= */
+
+/* Container Tooltip */
+.ph-custom-tooltip 
+{
+	position: fixed;
+	left: 70px;
+	top: 0;
+	background-color: var(--ph-bg-popover);
+	color: var(--ph-text-main);
+	width: 300px;
+	padding: 1rem;
+	border-radius: .5rem;
+	font-size: 0.85rem;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	z-index: 9999;
+	box-shadow: 0 4px 15px var(--ph-shadow-color);
+	border: 1px solid #0000002D;
+	transition: opacity 0.2s, visibility 0.2s;
+	white-space: nowrap;
+	max-width: 300px;
+	
+	/* PENTING: Agar segitiga yang keluar dari kotak tidak terpotong */
+	overflow: visible !important; 
+}
+
+.ph-custom-tooltip span 
+{
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ph-custom-tooltip.ph-show-tooltip 
+{
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+}
+
+/* 1. SEGITIGA LUAR (Border Arrow) 
+   Ukurannya 7px (sedikit lebih besar dari inner) untuk membentuk efek border.
+   Posisinya digeser ke kiri sejauh -7px.
+*/
+.ph-custom-tooltip::before 
+{
+	content: "";
+	position: absolute;
+	z-index: 1;
+	width: 1rem;
+	height: 1rem;
+	background: inherit;
+	top: 1rem;
+	left: -8.5px;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+	border-bottom-left-radius: 0.125rem;
+	border-width: 0px 0 1px 1px;
+	border-style: solid;
+	border-color: #0000002D;
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: .1s;
+}
+
+/* 2. SEGITIGA DALAM (Background Arrow) 
+   Ukurannya 6px.
+   Posisinya di -5px (bukan -6px) agar dasarnya menimpa border kotak utama (1px overlap).
+   Ini kuncinya agar panah terlihat "seamless" (menyatu).
+*/
+.ph-custom-tooltip::after 
+{
+	top: 0;
+	width: 100%;
+	height: 100%;
+	content: '';
+	padding: 1rem;
+	right: 1.3rem;
+	position: absolute;
+	display: block;
+}
+
+.ph-sidebar.ph-expanded .ph-floating-submenu 
+{
+	display: none !important;
+}
+
+.ph-sidebar.ph-expanded .ph-custom-tooltip 
+{
+	display: none !important;
+}
+
+/* CATEGORY */
+.ph-nav-category 
+{
+	margin: 15px 14px;
+	transition: all 0.3s;
+	height: 1px;
+	background-color: var(--ph-border-color);
+	color: transparent;
+	overflow: hidden;
+	flex-shrink: 0;
+}
+
+.ph-sidebar.ph-expanded .ph-nav-category 
+{
+	height: auto;
+	background-color: transparent;
+	color: var(--ph-text-muted);
+	font-size: 0.75rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	margin: 20px 24px 8px 24px;
+	letter-spacing: 0.5px;
+}
+
+/* LAYOUT KANAN */
+.ph-layout-right 
+{
+	min-width: 0;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	padding-right: 12px;
+	padding-bottom: 12px;
+	padding-left: 0;
+	overflow: visible !important;
+	position: relative;
+}
+
+.ph-top-bar 
+{
+	height: var(--ph-top-bar-height);
+	display: flex;
+	align-items: center;
+	padding: 0 20px;
+	flex-shrink: 0;
+	position: relative;
+}
+
+.ph-header-btn 
+{
+	color: var(--ph-text-muted);
+	font-size: 1.2rem;
+	cursor: pointer;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 6px;
+	margin-right: 15px;
+	transition: all 0.2s;
+}
+
+.ph-header-btn:hover 
+{
+	background-color: var(--ph-bg-hover);
+	color: var(--ph-text-main);
+}
+
+.ph-search-container 
+{
+	background-color: var(--ph-bg-input);
+	border-radius: 6px;
+	padding: 0 15px;
+	height: 32px;
+	width: 450px;
+	display: flex;
+	align-items: center;
+	border: 1px solid var(--ph-border-color);
+	box-shadow: 0 2px 5px var(--ph-shadow-color);
+	margin-right: auto;
+}
+
+.ph-search-container:focus-within 
+{
+	border-color: var(--ph-theme-primary);
+}
+
+.ph-search-input 
+{
+	background: transparent;
+	border: none;
+	color: var(--ph-text-main);
+	width: 100%;
+	outline: none;
+	font-size: 0.85rem;
+	margin-left: 10px;
+}
+
+.ph-custom-dropdown-toggle 
+{
+	cursor: pointer;
+	padding: 5px;
+	border-radius: 50%;
+	transition: background 0.2s;
+	background: none;
+	border: none;
+	color: var(--ph-text-main);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.ph-custom-dropdown-toggle:hover 
+{
+	background-color: var(--ph-bg-hover);
+}
+
+.ph-custom-dropdown-toggle::after 
+{
+	display: none;
+}
+
+/* DROPDOWN MENU ALIGNMENT & ARROW */
+.ph-top-bar .dropdown-menu 
+{
+	margin-top: 12px !important;
+	background-color: var(--ph-bg-popover);
+	border: 1px solid var(--ph-border-color);
+	box-shadow: 0 8px 24px var(--ph-shadow-color);
+	color: var(--ph-text-main);
+	border-radius: 8px;
+	min-width: 200px;
+	overflow: visible !important;
+}
+
+/* Panah Segitiga Dropdown (Border) */
+.ph-top-bar .dropdown-menu::before 
+{
+	content: "";
+	position: absolute;
+	top: -9px;
+	z-index: -1;
+	border-style: solid;
+	border-width: 0 9px 9px 9px;
+	border-color: transparent transparent var(--ph-border-color) transparent;
+}
+
+/* Panah Segitiga Dropdown (Fill) - Warna mengikuti variabel BG Popover */
+.ph-top-bar .dropdown-menu::after 
+{
+	content: "";
+	position: absolute;
+	top: -8px;
+	z-index: 1;
+	border-style: solid;
+	border-width: 0 9px 9px 9px;
+	/* FIX: Pastikan warna ini sama dengan background dropdown */
+	border-color: transparent transparent var(--ph-bg-popover) transparent;
+}
+
+/* Posisi Panah Kiri */
+.ph-top-bar .dropdown-menu:not(.dropdown-menu-end)::before,
+.ph-top-bar .dropdown-menu:not(.dropdown-menu-end)::after 
+{
+	left: 7px;
+	right: auto;
+}
+
+/* Posisi Panah Kanan */
+.ph-top-bar .dropdown-menu.dropdown-menu-end::before,
+.ph-top-bar .dropdown-menu.dropdown-menu-end::after 
+{
+	right: 7px;
+	left: auto;
+}
+
+.ph-dropdown-menu-teams .dropdown-item 
+{
+	color: var(--ph-text-main);
+	padding: 8px 16px;
+	font-size: 0.9rem;
+}
+
+.ph-dropdown-menu-teams .dropdown-item:hover 
+{
+	background-color: var(--ph-bg-hover);
+	color: var(--ph-text-main);
+}
+
+.ph-profile-card 
+{
+	width: 340px;
+	padding: 20px;
+	border-radius: 8px;
+	/* background-color: var(--ph-bg-card); */
+}
+
+.ph-profile-card-header 
+{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 15px;
+}
+
+.ph-role-badge 
+{
+	font-weight: 600;
+	font-size: 0.95rem;
+	color: var(--ph-text-main);
+}
+
+.ph-profile-card-body 
+{
+	display: flex;
+	align-items: center;
+	gap: 15px;
+}
+
+.ph-profile-avatar-lg 
+{
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	background-color: #d8e5cd;
+	color: #2b3a1f;
+	font-size: 1.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+}
+
+.ph-profile-info h5 
+{
+	font-size: 1rem;
+	font-weight: 700;
+	margin-bottom: 2px;
+	color: var(--ph-text-main);
+}
+
+.ph-profile-info p 
+{
+	font-size: 0.85rem;
+	color: var(--ph-text-muted);
+	margin-bottom: 4px;
+}
+
+.ph-ms-account-link 
+{
+	font-size: 0.8rem;
+	color: var(--ph-text-muted);
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.ph-ms-account-link:hover 
+{
+	text-decoration: underline;
+	color: var(--ph-text-main);
+}
+
+.ph-main-panel 
+{
+	min-width: 0;
+	background-color: var(--ph-bg-panel);
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	flex-grow: 1;
+	border-radius: 8px;
+	border: 1px solid var(--ph-border-color);
+	box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.12);
+	overflow: hidden;
+	position: relative;
+	contain: strict;
+	transform: translateZ(0);
+}
+
+.ph-main-panel .list-group-item
+{
+	background-color: inherit;
+}
+
+.ph-scrollable-content 
+{
+	width: 100%;
+	height: 100%;
+	max-width: 100%;
+	padding: 1.5rem;
+	overflow: auto;
+	color: var(--ph-text-main);
+	will-change: scroll-position;
+	-webkit-overflow-scrolling: touch;
+	text-rendering: optimizeSpeed;
+	/* content-visibility: auto; */
+	contain-intrinsic-size: 1000px;
+}
+
+.ph-text-info-custom 
+{
+	color: var(--ph-theme-primary) !important;
+}
+
+/* --- HEADER ACTION BUTTONS (Update) --- */
+.ph-header-actions 
+{
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+/* 1. Settings Icon (Titik Tiga) */
+.ph-btn-action-icon 
+{
+	width: 34px;
+	height: 34px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px; /* Kotak tumpul sesuai gambar */
+	color: var(--ph-text-main);
+	background: transparent;
+	border: 1px solid transparent; /* Default bersih */
+	transition: all 0.2s ease;
+	cursor: pointer;
+}
+
+/* Hover State: Muncul background & border putih (atau mengikuti tema) */
+.ph-btn-action-icon:hover,
+.ph-btn-action-icon[aria-expanded="true"] 
+{
+	background-color: var(--ph-bg-card); /* Background card/putih */
+	border-color: var(--ph-border-color);
+	box-shadow: 0 2px 8px var(--ph-shadow-color);
+	color: var(--ph-theme-primary);
+}
+
+/* 2. Profile Icon Wrapper */
+.ph-btn-profile-wrapper 
+{
+	position: relative;
+	padding: 0;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+}
+
+/* Lingkaran Inisial */
+.ph-profile-initials 
+{
+	width: 38px;
+	height: 38px;
+	background-color: #E0E5D7; /* Warna sage/abu muda sesuai gambar */
+	color: #2F3825;
+	font-weight: 700;
+	font-size: 0.95rem;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Indikator Status (Centang Hijau) */
+.ph-status-badge 
+{
+	position: absolute;
+	bottom: -2px;
+	right: -2px;
+	width: 18px;
+	height: 18px;
+	background-color: #22c55e; /* Hijau sukses */
+	border: 2px solid var(--ph-bg-body); /* Border luar agar terlihat terpotong */
+	border-radius: 50%;
+	color: white;
+	font-size: 0.6rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.simplebar-track.simplebar-vertical 
+{
+	width: 0;
+}		
+
+.ph-sidebar.ph-expanded .simplebar-track.simplebar-vertical 
+{
+	width: 11px !important;
+}

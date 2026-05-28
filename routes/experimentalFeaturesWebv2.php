@@ -1,0 +1,79 @@
+<?php
+
+/* New Page Builder (Legacy) */
+
+Route::controller(App\Http\Controllers\Web\PageBuilder\PageBuilder_Controller::class)->group(function()
+{
+	Route::get('/pagebuilder', 'index')->name('cms.core.pagebuilder');
+	
+	Route::get('/pagebuilder/create', 'create')->name('cms.core.pagebuilder.create');
+	Route::post('/pagebuilder/store', 'store')->name('cms.core.pagebuilder.store');
+
+	Route::get('/pagebuilder/edit/{idOrSlug}', 'edit')->name('cms.core.pagebuilder.edit');
+	Route::post('/pagebuilder/update/{idOrSlug}', 'update')->name('cms.core.pagebuilder.update');
+
+	Route::get('/pagebuilder/data/{idOrSlug}', 'getData')->name('cms.core.pagebuilder.data');
+	Route::get('/pagebuilder/ads', 'ads')->name('cms.core.pagebuilder.asd');
+});
+
+/* New Page Builder Elementor Style (Isolated) */
+
+Route::controller(App\Http\Controllers\Web\PageBuilderElementor\PageBuilderElementor_Controller::class)->group(function()
+{
+	Route::get('/pagebuilder-elementor/create', 'create')->name('cms.core.pagebuilder_elementor.create');
+	Route::post('/pagebuilder-elementor/store', 'store')->name('cms.core.pagebuilder_elementor.store');
+
+	Route::get('/pagebuilder-elementor/edit/{idOrSlug}', 'edit')->name('cms.core.pagebuilder_elementor.edit');
+	Route::post('/pagebuilder-elementor/update/{idOrSlug}', 'update')->name('cms.core.pagebuilder_elementor.update');
+
+	Route::get('/pagebuilder-elementor/data/{idOrSlug}', 'getData')->name('cms.core.pagebuilder_elementor.data');
+
+	Route::get('/pagebuilder-elementor/preview/{idOrSlug}', 'preview')->name('cms.core.pagebuilder_elementor.preview');
+});
+
+/* New Arunika Themes */
+
+Route::controller(App\Http\Controllers\Web\Themes\Themes_Controller::class)->group(function()
+{
+	Route::get('/arunika', 'index')->name('cms.core.arunika_themes');
+	Route::get('/arunika/v1', 'index')->name('cms.core.arunika_themes.v1');
+	Route::get('/arunika/v1/gemini', 'gemini')->name('cms.core.arunika_themes.v1.gemini');
+});
+
+
+/* File Manager v2 */
+// Bisa diakses tanpa session (standalone dengan API key)
+// Session auth juga tetap bekerja untuk akses internal
+Route::get('/filemanager', function () 
+{
+	return view('filemanager.filemanager');
+
+})->name('filemanager');
+
+Route::get('/filemanager/thumbnail', [\App\Http\Controllers\Api\V1\FileManagerController::class, 'imagePreview'])->middleware('auth')->name('filemanager.thumbnail');
+
+/* Installation Setup */
+
+Route::controller(App\Http\Controllers\Web\Setup\Setup_Controller::class)->group(function()
+{
+	Route::get('/setup', 'index')->name('cms.core.setup');
+	Route::get('/setup/success', 'setup_success')->name('cms.core.setup_success');
+	Route::post('setup/process', 'process')->name('cms.core.auth.setup.process');
+	// Route::post('setup/process', 'process')->name('cms.core.auth.setup.process');
+});
+
+
+/* Testing */
+
+Route::name('cms.core.')
+	->prefix('testing')
+	->namespace('App\Http\Controllers\Web\Testing')
+	->group(function() 
+	{
+		Route::controller(\Testing_Controller::class)->group(function()
+		{
+			// Route::get('/', 'index')->name('testing')->middleware('auth', 'permission:read data');
+			// Route::get('/add', 'add')->name('testing.add')->middleware('auth', 'permission:submit data');
+			Route::get('/benchmark-db', 'benchmark')->name('testing.benchmark');
+		});
+	});

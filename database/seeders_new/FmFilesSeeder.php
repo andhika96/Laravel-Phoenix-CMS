@@ -1,0 +1,146 @@
+<?php
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class FmFilesSeeder extends Seeder
+{
+    public function run(): void
+    {
+        DB::table('fm_files')->insert([
+        [
+            'id' => 1,
+            'folder_id' => null,
+            'user_id' => 1,
+            'original_name' => 'WhatsApp Image 2026-03-24 at 19.18.36.jpeg',
+            'name' => '3b6a406d-a22e-40c8-8435-c2e71ee59ce2.jpeg',
+            'path' => 'filemanager/3b6a406d-a22e-40c8-8435-c2e71ee59ce2.jpeg',
+            'url' => 'https://laravel-12-phoenix.aruna/storage/filemanager/3b6a406d-a22e-40c8-8435-c2e71ee59ce2.jpeg',
+            'mime_type' => 'image/jpeg',
+            'extension' => 'jpeg',
+            'file_type' => 'image',
+            'size' => 169182,
+            'disk' => 'public',
+            'is_public' => 1,
+            'meta' => null,
+            'created_at' => '2026-03-27 21:27:08',
+            'updated_at' => '2026-03-27 21:28:26',
+            'deleted_at' => '2026-03-27 21:28:26'
+        ],
+        [
+            'id' => 2,
+            'folder_id' => 1,
+            'user_id' => 1,
+            'original_name' => 'WhatsApp Image 2026-03-24 at 19.18.36.jpeg',
+            'name' => 'd836ba78-c22c-4081-b78b-acdeac9c224c.jpeg',
+            'path' => 'filemanager/testing/d836ba78-c22c-4081-b78b-acdeac9c224c.jpeg',
+            'url' => 'https://laravel-12-phoenix.aruna/storage/filemanager/testing/d836ba78-c22c-4081-b78b-acdeac9c224c.jpeg',
+            'mime_type' => 'image/jpeg',
+            'extension' => 'jpeg',
+            'file_type' => 'image',
+            'size' => 169182,
+            'disk' => 'public',
+            'is_public' => 1,
+            'meta' => null,
+            'created_at' => '2026-03-27 21:28:33',
+            'updated_at' => '2026-03-27 21:37:49',
+            'deleted_at' => null
+        ],
+        [
+            'id' => 3,
+            'folder_id' => null,
+            'user_id' => 1,
+            'original_name' => 'WhatsApp Image 2026-03-24 at 19.18.36.jpeg',
+            'name' => 'cbd3dfcc-86df-4347-949f-bf97d6926eed.jpeg',
+            'path' => 'filemanager/cbd3dfcc-86df-4347-949f-bf97d6926eed.jpeg',
+            'url' => null,
+            'mime_type' => 'image/jpeg',
+            'extension' => 'jpeg',
+            'file_type' => 'image',
+            'size' => 169182,
+            'disk' => 's3',
+            'is_public' => 1,
+            'meta' => null,
+            'created_at' => '2026-03-27 21:31:57',
+            'updated_at' => '2026-03-27 21:51:32',
+            'deleted_at' => '2026-03-27 21:51:32'
+        ],
+        [
+            'id' => 4,
+            'folder_id' => null,
+            'user_id' => 1,
+            'original_name' => 'Rectangle.png',
+            'name' => '0d060412-7f25-40a7-b62d-636c0a249d90.png',
+            'path' => 'filemanager/0d060412-7f25-40a7-b62d-636c0a249d90.png',
+            'url' => null,
+            'mime_type' => 'image/png',
+            'extension' => 'png',
+            'file_type' => 'image',
+            'size' => 614488,
+            'disk' => 's3',
+            'is_public' => 1,
+            'meta' => null,
+            'created_at' => '2026-03-27 21:38:55',
+            'updated_at' => '2026-03-27 21:51:28',
+            'deleted_at' => '2026-03-27 21:51:28'
+        ],
+        [
+            'id' => 5,
+            'folder_id' => 1,
+            'user_id' => 1,
+            'original_name' => 'Rectangle.png',
+            'name' => 'da621e07-21a0-4450-8316-69f0ae130e61.png',
+            'path' => 'filemanager/testing/da621e07-21a0-4450-8316-69f0ae130e61.png',
+            'url' => 'https://laravel-12-phoenix.aruna/storage/filemanager/testing/da621e07-21a0-4450-8316-69f0ae130e61.png',
+            'mime_type' => 'image/png',
+            'extension' => 'png',
+            'file_type' => 'image',
+            'size' => 614488,
+            'disk' => 'public',
+            'is_public' => 1,
+            'meta' => null,
+            'created_at' => '2026-03-27 21:51:36',
+            'updated_at' => '2026-03-27 21:51:45',
+            'deleted_at' => null
+        ],
+        [
+            'id' => 6,
+            'folder_id' => 1,
+            'user_id' => 1,
+            'original_name' => 'WhatsApp Image 2026-03-16 at 12.47.54.jpeg',
+            'name' => '270e4176-a2e7-4a87-9f8b-8f547fc03728.jpeg',
+            'path' => 'filemanager/testing/270e4176-a2e7-4a87-9f8b-8f547fc03728.jpeg',
+            'url' => '/storage/filemanager/testing/270e4176-a2e7-4a87-9f8b-8f547fc03728.jpeg',
+            'mime_type' => 'image/jpeg',
+            'extension' => 'jpeg',
+            'file_type' => 'image',
+            'size' => 235059,
+            'disk' => 's3',
+            'is_public' => 1,
+            'meta' => null,
+            'created_at' => '2026-03-27 21:51:55',
+            'updated_at' => '2026-03-27 21:52:10',
+            'deleted_at' => null
+        ],
+        [
+            'id' => 7,
+            'folder_id' => null,
+            'user_id' => 1,
+            'original_name' => 'WhatsApp Image 2026-03-24 at 19.18.36.jpeg',
+            'name' => '8d6b4de0-d349-42c4-8ca0-b1f1299d820d.jpeg',
+            'path' => 'filemanager/8d6b4de0-d349-42c4-8ca0-b1f1299d820d.jpeg',
+            'url' => 'https://laravel-12-phoenix.aruna/storage/filemanager/8d6b4de0-d349-42c4-8ca0-b1f1299d820d.jpeg',
+            'mime_type' => 'image/jpeg',
+            'extension' => 'jpeg',
+            'file_type' => 'image',
+            'size' => 169182,
+            'disk' => 'public',
+            'is_public' => 1,
+            'meta' => null,
+            'created_at' => '2026-03-27 22:03:07',
+            'updated_at' => '2026-03-27 22:03:07',
+            'deleted_at' => null
+        ]
+        ]);
+    }
+}

@@ -1,0 +1,555 @@
+		/* --- THEME VARIABLES --- */
+		:root {
+			--font-main: 'Inter', sans-serif;
+			--builder-bg: #f8fafc;
+			--sidebar-bg: #ffffff;
+			--sidebar-width: 280px;
+			--prop-sidebar-width: 320px;
+			--sidebar-border: #e2e8f0;
+			--text-primary: #334155;
+			--text-secondary: #64748b;
+			--accent-color: #3b82f6;
+			
+			/* UI Structure Colors */
+			--ui-container-border: #10b981; 
+			--ui-container-bg: #ffffff;
+			--ui-row-border: #3b82f6;        
+			--ui-row-bg: #f1f5f9;
+			--ui-col-border: #cbd5e1;        
+			--ui-widget-hover: #f59e0b;      
+		}
+
+		[data-bs-theme="dark"] {
+			--builder-bg: #0f172a;
+			--sidebar-bg: #1e293b;
+			--sidebar-border: #334155;
+			--text-primary: #f1f5f9;
+			--text-secondary: #94a3b8;
+			--ui-container-bg: #1e293b;
+			--ui-row-bg: #334155;
+			--ui-col-border: #475569;
+		}
+
+		/* --- GLOBAL --- */
+		body 
+		{ 
+			background-color: var(--builder-bg); 
+			font-size: 14px;
+			font-family: var(--font-main); 
+			color: var(--text-primary); 
+			overflow: hidden; 
+			margin: 0; 
+		}
+
+		[data-bs-theme="dark"] .form-control,
+		[data-bs-theme="dark"] .form-select,
+		[data-bs-theme="dark"] .form-control-modern {
+			background-color: #1e293b;
+			border-color: #475569;
+			color: #f1f5f9;
+		}
+
+		[data-bs-theme="dark"] .form-control:focus,
+		[data-bs-theme="dark"] .form-control-modern:focus {
+			border-color: var(--accent-color);
+			background-color: #0f172a;
+			color: white;
+		}
+
+		/* 4. Fix Background Light (agar tidak putih terang di dark mode) */
+		[data-bs-theme="dark"] .bg-light {
+			background-color: #334155 !important; /* Warna abu gelap */
+			color: #f1f5f9 !important;
+			border-color: #475569 !important;
+		}
+
+		/* 5. Fix Background White (agar mengikuti tema sidebar di dark mode) */
+		[data-bs-theme="dark"] .bg-white {
+			background-color: var(--sidebar-bg) !important;
+			color: var(--text-primary) !important;
+		}
+		
+		[data-bs-theme="dark"] .widget-picker-btn i {
+			color: #60a5fa; /* Biru lebih terang untuk dark mode */
+		}
+
+/* --- DARK MODE CANVAS & COLUMN FIXES --- */
+
+/* 1. Fix Background Column (Area putih besar di screenshot) */
+[data-bs-theme="dark"] .col-ui {
+	background: rgba(30, 41, 59, 0.3); /* Slate-800 transparan */
+	border-color: #475569; /* Slate-600 */
+	color: #e2e8f0;
+}
+
+[data-bs-theme="dark"] .col-ui:hover {
+	background: #1e293b; /* Slate-800 solid saat hover */
+	border-color: #94a3b8;
+}
+
+[data-bs-theme="dark"] .col-ui.active {
+	background: #0f172a; /* Slate-900 saat aktif */
+	border-color: var(--accent-color);
+}
+
+/* 2. Fix Nested Row (Row di dalam Column) */
+/* CSS bawaan memaksakan background: white, kita override */
+[data-bs-theme="dark"] .nested-row {
+	background: var(--ui-row-bg) !important; 
+	border-color: #475569 !important;
+}
+
+/* 3. Fix Tombol "+ Add Widget" */
+/* Menggunakan selector spesifik untuk menimpa inline-style */
+[data-bs-theme="dark"] .widget-drop-zone + div {
+	background-color: rgba(255, 255, 255, 0.05) !important; /* Putih transparan tipis */
+	border-color: #475569 !important;
+	color: #94a3b8 !important;
+}
+
+[data-bs-theme="dark"] .widget-drop-zone + div:hover {
+	background-color: rgba(255, 255, 255, 0.1) !important;
+	border-color: var(--accent-color) !important;
+	color: var(--accent-color) !important;
+}
+
+/* 4. Fix Drop Zone Kosong (Area garis putus-putus) */
+[data-bs-theme="dark"] .widget-drop-zone:empty {
+	background-color: rgba(30, 41, 59, 0.3);
+	/* Mengganti warna stroke SVG pattern menjadi abu-abu gelap (%23475569) */
+	background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" style="fill:none;stroke:%23475569;stroke-width:1;stroke-dasharray:4,4" /></svg>');
+}
+
+/* 5. Fix Label Handle Column (Label kecil "Column" di pojok kiri atas) */
+[data-bs-theme="dark"] .col-handle {
+	background: #334155;
+	border-color: #475569;
+	color: #cbd5e1;
+}
+
+/* 6. Fix Widget Placeholders (Saat widget belum diisi konten/image) */
+[data-bs-theme="dark"] .bg-light {
+	background-color: rgba(255, 255, 255, 0.05) !important;
+	border-color: #475569 !important;
+}
+
+/* --- DARK MODE SIDEBAR & CONTENT FIXES --- */
+
+/* 1. Fix Sidebar Left Items (Kotak-kotak Container, Grid, Widget) */
+[data-bs-theme="dark"] .draggable-item {
+	background-color: #1e293b; /* Warna latar gelap */
+	border-color: #475569;     /* Warna border abu gelap */
+	color: #cbd5e1;            /* Warna teks terang */
+	box-shadow: none;
+}
+
+[data-bs-theme="dark"] .draggable-item:hover {
+	border-color: var(--accent-color);
+	color: var(--accent-color);
+	background-color: #0f172a; /* Lebih gelap saat hover */
+}
+
+/* 2. Fix Tombol "+ Add Widget" di Canvas (Agar lebih kontras/jelas) */
+/* Menggunakan selector atribut onclick agar target lebih spesifik & kuat */
+[data-bs-theme="dark"] div[onclick*="openWidgetPicker"] {
+	background-color: rgba(255, 255, 255, 0.08) !important; /* Background agak terang */
+	border-color: rgba(255, 255, 255, 0.3) !important;      /* Border lebih tegas */
+	color: rgba(255, 255, 255, 0.9) !important;             /* Teks putih hampir solid */
+}
+
+[data-bs-theme="dark"] div[onclick*="openWidgetPicker"]:hover {
+	background-color: rgba(255, 255, 255, 0.15) !important;
+	border-color: var(--accent-color) !important;
+	color: var(--accent-color) !important;
+}
+
+/* 3. Fix Warna Teks Widget (Mengatasi tulisan hitam 'text-dark') */
+/* Kita paksa class .text-dark milik Bootstrap berubah jadi putih di dalam canvas */
+[data-bs-theme="dark"] .widget-ui .text-dark {
+	color: #f1f5f9 !important; 
+}
+
+/* Mencerahkan text-muted agar lebih terbaca di background gelap */
+[data-bs-theme="dark"] .widget-ui .text-muted {
+	color: #94a3b8 !important; 
+}
+
+/* 4. Fix Widget Cards & Containers Background */
+/* Mengubah background putih pada card/list widget menjadi gelap */
+[data-bs-theme="dark"] .widget-ui .bg-white,
+[data-bs-theme="dark"] .widget-ui .card {
+	background-color: #1e293b !important;
+	border-color: #475569 !important;
+	color: #f1f5f9 !important;
+}
+
+/* Fix icon wrapper background di dalam widget (kotak ikon kecil) */
+[data-bs-theme="dark"] .widget-ui .bg-light {
+	background-color: rgba(255, 255, 255, 0.1) !important;
+	border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+		.builder-layout { display: flex; height: calc(100vh - 60px); width: 100%; position: relative; }
+
+		/* UPDATE CSS SIDEBAR LEFT */
+		.sidebar-left 
+		{ 
+			width: var(--sidebar-width); 
+			background: var(--sidebar-bg); 
+			border-right: 1px solid var(--sidebar-border); 
+			overflow-y: auto; 
+			flex-shrink: 0; 
+			padding: 15px; 
+			z-index: 20; 
+			/* Tambahan untuk animasi slide */
+			transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease; 
+			overflow-x: hidden;
+			white-space: nowrap;
+		}
+
+		/* Class baru untuk menyembunyikan sidebar kiri */
+		.sidebar-left.collapsed 
+		{ 
+			width: 0 !important; 
+			padding: 15px 0 !important; /* Hilangkan padding horizontal */
+			border-right: none;
+		}
+		
+		/* --- CUSTOM 4K GRID SYSTEM --- */
+		.container-3xl { max-width: 2400px; width: 100%; margin-right: auto; margin-left: auto; }
+		
+		.col-3xl-1 { flex: 0 0 auto; width: 8.33333333%; }
+		.col-3xl-2 { flex: 0 0 auto; width: 16.66666667%; }
+		.col-3xl-3 { flex: 0 0 auto; width: 25%; }
+		.col-3xl-4 { flex: 0 0 auto; width: 33.33333333%; }
+		.col-3xl-5 { flex: 0 0 auto; width: 41.66666667%; }
+		.col-3xl-6 { flex: 0 0 auto; width: 50%; }
+		.col-3xl-7 { flex: 0 0 auto; width: 58.33333333%; }
+		.col-3xl-8 { flex: 0 0 auto; width: 66.66666667%; }
+		.col-3xl-9 { flex: 0 0 auto; width: 75%; }
+		.col-3xl-10 { flex: 0 0 auto; width: 83.33333333%; }
+		.col-3xl-11 { flex: 0 0 auto; width: 91.66666667%; }
+		.col-3xl-12 { flex: 0 0 auto; width: 100%; }
+		.col-3xl-auto { flex: 0 0 auto; width: auto; }
+
+		.w-3xl-25 { width: 25% !important; }
+		.w-3xl-50 { width: 50% !important; }
+		.w-3xl-75 { width: 75% !important; }
+		.w-3xl-100 { width: 100% !important; }
+		.w-3xl-auto { width: auto !important; }
+
+		.g-3xl-0 { --bs-gutter-x: 0; }
+		.g-3xl-1 { --bs-gutter-x: 0.25rem; }
+		.g-3xl-2 { --bs-gutter-x: 0.5rem; }
+		.g-3xl-3 { --bs-gutter-x: 1rem; }
+		.g-3xl-4 { --bs-gutter-x: 1.5rem; }
+		.g-3xl-5 { --bs-gutter-x: 3rem; }
+
+		@media (min-width: 768px) { .w-md-25 { width: 25% !important; } .w-md-50 { width: 50% !important; } .w-md-75 { width: 75% !important; } .w-md-100 { width: 100% !important; } .w-md-auto { width: auto !important; } }
+		@media (min-width: 1200px) { .w-xl-25 { width: 25% !important; } .w-xl-50 { width: 50% !important; } .w-xl-75 { width: 75% !important; } .w-xl-100 { width: 100% !important; } .w-xl-auto { width: auto !important; } }
+		@media (min-width: 1400px) { .w-xxl-25 { width: 25% !important; } .w-xxl-50 { width: 50% !important; } .w-xxl-75 { width: 75% !important; } .w-xxl-100 { width: 100% !important; } .w-xxl-auto { width: auto !important; } }
+
+		/* --- CANVAS AREA (EDITOR ONLY) --- */
+		.canvas-area {
+			flex-grow: 1;
+			background-color: var(--builder-bg);
+			background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+			background-size: 24px 24px;
+			overflow-y: auto;
+			overflow-x: hidden;
+			display: flex;
+			flex-direction: column;
+			align-items: stretch; 
+			transition: all 0.3s ease;
+			position: relative;
+			box-shadow: none !important;
+			padding: 40px;
+		}
+
+		/* --- PREVIEW VIEWER STYLES (For the Component) --- */
+		/* FIX: Menggunakan variabel tema untuk background */
+		.preview-container {
+			flex-grow: 1;
+			background-color: var(--builder-bg); /* Gunakan warna background tema */
+			overflow-y: auto;
+			overflow-x: hidden;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding-top: 20px;
+			height: calc(100vh - 60px);
+			transition: background-color 0.3s ease;
+		}
+
+		/* FIX: Width sekarang ditangani oleh JS, CSS ini disederhanakan */
+		.preview-frame {
+			/* background: var(--ui-container-bg);  <-- Dipindah ke JS agar lebih kuat */
+			min-height: 100%;
+			box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+			/* transition dan transform-origin ditangani di JS dynamic style */
+		}
+		
+		/* CSS untuk lebar preview dihapus karena sudah ditangani JS */
+
+		/* --- UI CARD SYSTEM (EDITOR ONLY) --- */
+		.ui-box { position: relative; background: var(--ui-container-bg); border: 1px solid #e2e8f0; border-radius: 6px; margin-top: 24px; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: all 0.2s ease; display: flex; flex-direction: column; }
+		.ui-box.active { border: 2px solid var(--accent-color); z-index: 10; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+		.ui-header { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; height: 32px; border-bottom: 1px solid #e2e8f0; border-radius: 5px 5px 0 0; background: #f8fafc; user-select: none; }
+		[data-bs-theme="dark"] .ui-header { background: #334155; border-color: #475569; }
+		.ui-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: white; padding: 3px 8px; border-radius: 3px; letter-spacing: 0.5px; line-height: 1; }
+		.ui-actions { display: flex; gap: 4px; opacity: 0.7; }
+		.ui-box:hover .ui-actions { opacity: 1; }
+		.action-btn { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border: 1px solid #cbd5e1; background: white; color: #64748b; border-radius: 4px; font-size: 10px; cursor: pointer; transition: all 0.1s; }
+		.action-btn:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+		.action-btn.danger:hover { background: #ef4444; border-color: #ef4444; color: white; }
+		.ui-body { padding: 20px; min-height: 80px; height: 100%; border-radius: 0 0 6px 6px; }
+
+		/* --- COMPONENT STYLES --- */
+		.container-ui { border-top: 4px solid var(--ui-container-border); } .container-ui > .ui-header .ui-label { background: var(--ui-container-border); }
+		.row-ui { border-top: 4px solid var(--ui-row-border); background-color: var(--ui-row-bg); margin-bottom: 15px; } .row-ui > .ui-header .ui-label { background: var(--ui-row-border); } .row-ui > .ui-body { padding: 28px 15px; }
+		.row-drop-zone { min-height: 60px; border-radius: 4px; transition: background-color 0.2s; } .row-drop-zone:empty { background-color: rgba(59, 130, 246, 0.05); border: 1px dashed #cbd5e1; }
+		.nested-row .ui-label { background: #8b5cf6 !important; } .nested-row { border-top-color: #8b5cf6 !important; background: white; }
+		.col-ui { border: 1px dashed #cbd5e1; background: rgba(255, 255, 255, 0.5); height: 100%; position: relative; min-height: 60px; border-radius: 4px; transition: background 0.2s; }
+		.col-ui:hover { background: #fff; border-color: var(--text-secondary); } .col-ui.active { border: 2px solid var(--text-secondary); background: white; }
+		.col-handle { position: absolute; top: -16px; left: 0px; background: white; border: 1px solid #cbd5e1; color: var(--text-primary); font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; z-index: 5; cursor: grab; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+		.col-actions { position: absolute; top: -25px; left: auto; right: 0px; display: none; background: white; padding: 2px; border-radius: 3px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 90; }
+		.col-ui:hover .col-actions, .col-ui.active .col-actions { display: flex; gap: 3px; }
+		.widget-ui { position: relative; margin-top: 8px; margin-bottom: 8px; border: 1px solid transparent; padding: 2px; } .widget-ui:hover { border: 1px dashed var(--ui-widget-hover); } .widget-ui.active { outline: 2px solid var(--ui-widget-hover); z-index: 2; }
+		.widget-overlay { position: absolute; top: -22px; left: auto; right: 0px; background: var(--ui-widget-hover); color: white; border-radius: 4px 4px 0 0; padding: 2px 6px; display: none; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; z-index: 100; text-transform: uppercase; }
+		.widget-ui:hover .widget-overlay, .widget-ui.active .widget-overlay { display: flex; }
+		.widget-btn { background: rgba(255,255,255,0.2); border: none; color: white; width: 16px; height: 16px; border-radius: 2px; display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; }
+		.widget-btn:hover { background: rgba(255,255,255,0.4); }
+		.drop-zone-root { min-height: 600px; padding-bottom: 100px; }
+		.drop-zone-root .ui-box:first-child { margin-top: 0 !important; }
+		.drop-zone-root .ui-box:last-child { margin-bottom: 0 !important; }
+		.drop-zone-root:empty:before { content: "Drag and Drop Layouts Here"; display: block; text-align: center; margin-top: 100px; color: var(--text-secondary); font-weight: 500; }
+		.widget-drop-zone { min-height: 50px; height: 100%; border-radius: 4px; padding-top: 1.8rem; }
+		.widget-drop-zone:empty { background-color: rgba(241, 245, 249, 0.6); background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" style="fill:none;stroke:%23cbd5e1;stroke-width:1;stroke-dasharray:4,4" /></svg>'); }
+
+.widget-picker-modal {
+	background: var(--sidebar-bg) !important;
+	color: var(--text-primary);
+	border: 1px solid var(--sidebar-border);
+}
+
+.widget-picker-btn {
+	background: var(--ui-container-bg);
+	border: 1px solid var(--sidebar-border);
+	color: var(--text-primary) !important;
+	transition: all 0.2s;
+}
+
+.widget-picker-btn:hover {
+	border-color: var(--accent-color);
+	background: var(--ui-row-bg);
+	color: var(--accent-color) !important;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.widget-picker-btn i {
+	color: var(--accent-color);
+}
+
+		/* SIDEBARS */
+		/*.sidebar-right { width: var(--prop-sidebar-width); background: var(--sidebar-bg); border-left: 1px solid var(--sidebar-border); overflow-y: auto; flex-shrink: 0; padding: 0; display: flex; flex-direction: column; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; white-space: nowrap; z-index: 20; }
+		.sidebar-right.collapsed { width: 0 !important; border: none; }*/
+		
+		/* UPDATE CSS SIDEBAR RIGHT (FLOATING POPUP) */
+		.sidebar-right {
+			/* Posisi awal fixed, bukan flex item lagi */
+			position: fixed; 
+			width: 425px; /* Lebar tetap popup */
+			max-height: 82.5vh; /* Tinggi maksimal agar tidak kepotong */
+			background: var(--sidebar-bg); 
+			border: 1px solid var(--sidebar-border) !important;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* Shadow lebih tebal agar terlihat melayang */
+			border-radius: 12px;
+			z-index: 1050; /* Di atas canvas */
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			transition: opacity 0.2s ease; /* Hanya transisi opacity, jangan transisi posisi saat drag */
+		}
+
+		.sidebar-right .form-check-input
+		{
+			height: 1.25em;
+		}
+
+		.sidebar-right .form-switch .form-check-input
+		{
+			width: 2.25em;
+			border-radius: 2.25em;
+			margin-right: .5em;
+		}
+
+		.sidebar-right, .widget-picker-modal, .overflow-y-scroll 
+		{
+			scrollbar-width: thin;
+			scrollbar-color: var(--text-secondary) transparent;
+		}
+
+		/* Header Popup (Handle untuk Drag) */
+		.popup-header 
+		{
+			color: var(--text-primary);
+			background: var(--ui-row-bg); 
+			padding: 10px 15px;
+			border-bottom: 1px solid var(--sidebar-border);
+			cursor: grab; /* Kursor tangan */
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			user-select: none;
+		}
+
+		.popup-header:active 
+		{
+			cursor: grabbing; /* Kursor mencengkeram saat klik */
+		}
+
+		/* Body Popup (Scrollable) */
+		.popup-body 
+		{
+			padding: 15px;
+			overflow-y: auto;
+			flex-grow: 1;
+		}
+
+		/* Scrollbar halus untuk popup */
+		.popup-body::-webkit-scrollbar { width: 6px; }
+		.popup-body::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+		.sidebar-category-title { font-size: 0.7rem; text-transform: uppercase; font-weight: 700; color: var(--text-secondary); margin: 20px 0 10px 0; letter-spacing: 0.5px; }
+		.sidebar-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+		.draggable-item { cursor: grab; background: white; border: 1px solid #e2e8f0; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.02); text-align: center; padding: 5px; }
+		.draggable-item:hover { border-color: var(--accent-color); color: var(--accent-color); transform: translateY(-2px); box-shadow: 0 4px 8px rgba(59, 130, 246, 0.1); }
+		.draggable-item i { font-size: 20px; margin-bottom: 8px; color: var(--text-secondary); }
+		.draggable-item:hover i { color: var(--accent-color); }
+		.draggable-item span { font-size: 11px; font-weight: 500; }
+		.prop-header { padding: 15px; border-bottom: 1px solid var(--sidebar-border); background: #f8fafc; font-weight: 600; display: flex; justify-content: space-between; align-items: center; height: 50px; }
+		.prop-body { padding: 20px; flex-grow: 1; overflow-y: auto; }
+		.prop-group { margin-bottom: 24px; }
+		.prop-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; }
+		.form-control-modern { border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; padding: 8px 10px; background: white; color: var(--text-primary); width: 100%; display: block; }
+		.form-control-modern:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1); }
+		.ck-editor__editable { min-height: 120px; background-color: white !important; color: black !important; }
+		.ck.ck-toolbar { flex-wrap: wrap !important; }
+		
+		/* 5-Tier Switcher */
+		.resp-switcher { display: flex; background: #e2e8f0; padding: 2px; border-radius: 6px; margin-bottom: 10px; }
+		[data-bs-theme="dark"] .resp-switcher { background: #334155; }
+		.resp-btn { flex: 1; border: none; background: transparent; padding: 6px 4px; font-size: 12px; border-radius: 4px; color: #64748b; cursor: pointer; transition: 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+		[data-bs-theme="dark"] .resp-btn { color: #cbd5e1; }
+		.resp-btn.active { background: white; color: var(--accent-color); box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-weight: 700; }
+		[data-bs-theme="dark"] .resp-btn.active { background: #0f172a; color: var(--accent-color); }
+		.resp-btn:hover { color: var(--accent-color); }
+
+		/* Preview Button Group */
+		.preview-btn-group button { padding: 4px 8px; font-size: 12px; }
+		.preview-btn-group button i { margin-right: 4px; }
+
+		/* --- MOBILE WARNING OVERLAY --- */
+		.mobile-warning-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background-color: var(--builder-bg);
+			z-index: 99999; /* Paling atas */
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			padding: 40px;
+		}
+		.mw-icon { font-size: 64px; color: var(--text-secondary); margin-bottom: 20px; }
+		.mw-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+		.mw-text { font-size: 14px; color: var(--text-secondary); max-width: 400px; line-height: 1.6; }
+
+/* --- NEW MEDIA LIST WIDGET STYLES --- */
+.media-list-item {
+	position: relative;
+	overflow: hidden;
+	height: 100%;
+	transition: transform 0.2s;
+}
+.media-list-item:hover {
+	z-index: 2;
+}
+.media-wrapper {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+.media-overlay-content {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	padding: 15px;
+	z-index: 10;
+	transition: background-color 0.3s;
+}
+/* Agar video fit di grid */
+.media-list-video-container {
+	width: 100%;
+	aspect-ratio: 16/9;
+}
+.media-list-video-container iframe,
+.media-list-video-container video {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* --- MEDIA LIST ANIMATION --- */
+.hover-fade { opacity: 0; transition: opacity 0.3s ease-in-out; }
+.media-list-item:hover .hover-fade { opacity: 1; }
+
+/* Animasi Scroll Down untuk Sidebar Settings */
+.slider-settings-enter-active,
+.slider-settings-leave-active {
+  transition: all 0.3s ease-in-out;
+  max-height: 500px; /* Nilai max-height cukup besar */
+  opacity: 1;
+  overflow: hidden;
+}
+.slider-settings-enter-from,
+.slider-settings-leave-to {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+		/* --- TAMBAHKAN CSS INI (ANTI FLICKER) --- */
+		[v-cloak] 
+		{
+			display: none !important;
+		}
+
+		.font-size-inherit
+		{
+			font-size: inherit;
+		}
+
+		.font-size-10px
+		{
+			font-size: 10px;
+		}
+
+		.font-size-12px
+		{
+			font-size: 12px;
+		}
+
+		.font-size-14px
+		{
+			font-size: 14px;
+		}

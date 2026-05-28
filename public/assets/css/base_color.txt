@@ -1,0 +1,34 @@
+/** Base colors */
+--ph-dark-a0: #000000;
+--ph-light-a0: #ffffff;
+
+/** Theme primary colors */
+--ph-primary-a0: #e01d24;
+--ph-primary-a10: #e8463a;
+--ph-primary-a20: #ef6250;
+--ph-primary-a30: #f57a67;
+--ph-primary-a40: #fb927f;
+--ph-primary-a50: #fea897;
+
+/** Theme surface colors */
+--ph-surface-a0: #000000;
+--ph-surface-a10: #1e1e1e;
+--ph-surface-a20: #353535;
+--ph-surface-a30: #4e4e4e;
+--ph-surface-a40: #696969;
+--ph-surface-a50: #858585;
+
+/** Theme tonal surface colors */
+--ph-surface-tonal-a0: #1d0c06;
+--ph-surface-tonal-a10: #312321;
+--ph-surface-tonal-a20: #483b38;
+--ph-surface-tonal-a30: #5f5351;
+--ph-surface-tonal-a40: #786e6b;
+--ph-surface-tonal-a50: #928987;
+
+/** Examples */
+.bg-primary 
+{
+	color: var(--ph-primary-a50);
+	background-color: var(--ph-surface-a0);
+}
