@@ -945,23 +945,20 @@
 						v-for="(col, ci) in (node.columns || [])"
 						:key="col.id"
 						class="el-grid-col pb-grid-col"
-						:data-col-index="ci"
 						:style="contColStyle(col)"
 					>
 						<draggable
 							v-model="col.children"
 							item-key="id"
 							:group="colGroup"
-							:data-col-index="ci"
 							:style="contDropzoneStyle(col)"
 							:class="['pb-dropzone', 'pb-dropzone-col', {
 								'is-empty': !col.children || col.children.length === 0,
-								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading'),
-								'is-sequential-locked': isSequentialColumnLocked(ci)
+								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading')
 							}]"
 							ghost-class="pb-ghost"
 							dragover-class="is-drop-hover"
-							@add="(e) => onAddCol(e, col, ci, node)"
+							@add="(e) => onAddCol(e, col)"
 							@start="onDragStart"
 							@end="onDragEnd"
 						>
@@ -973,12 +970,11 @@
 							</template>
 							<template #footer>
 								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">
-									<button v-if="!isSequentialColumnLocked(ci)" type="button" class="pb-inline-add" @click.stop.prevent="onShowToolbox()">
+									<button type="button" class="pb-inline-add" @click.stop.prevent="onShowToolbox()">
 										<i class="fa-solid fa-plus"></i>
 										<span>Add</span>
 									</button>
-									<div v-else class="pb-dropzone-lock-text">Fill previous column first</div>
-									<div class="pb-dropzone-empty-text">{{ isSequentialColumnLocked(ci) ? 'Locked' : 'Drop here' }}</div>
+									<div class="pb-dropzone-empty-text">Drop here</div>
 								</div>
 							</template>
 						</draggable>
@@ -991,20 +987,18 @@
 		<template v-else-if="isGrid">
 			<component :is="loadWidget(node.type)" :item="node">
 				<div class="el-grid-columns" :style="gridStyle">
-					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col" :data-col-index="ci">
+					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col">
 						<draggable
 							v-model="col.children"
 							item-key="id"
 							:group="colGroup"
-							:data-col-index="ci"
 							:class="['pb-dropzone', 'pb-dropzone-col', {
 								'is-empty': !col.children || col.children.length === 0,
-								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading'),
-								'is-sequential-locked': isSequentialColumnLocked(ci)
+								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading')
 							}]"
 							ghost-class="pb-ghost"
 							dragover-class="is-drop-hover"
-							@add="(e) => onAddCol(e, col, ci, node)"
+							@add="(e) => onAddCol(e, col)"
 							@start="onDragStart"
 							@end="onDragEnd"
 						>
@@ -1016,12 +1010,11 @@
 							</template>
 							<template #footer>
 								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">
-									<button v-if="!isSequentialColumnLocked(ci)" type="button" class="pb-inline-add" @click.stop.prevent="onShowToolbox()">
+									<button type="button" class="pb-inline-add" @click.stop.prevent="onShowToolbox()">
 										<i class="fa-solid fa-plus"></i>
 										<span>Add</span>
 									</button>
-									<div v-else class="pb-dropzone-lock-text">Fill previous column first</div>
-									<div class="pb-dropzone-empty-text">{{ isSequentialColumnLocked(ci) ? 'Locked' : 'Drop here' }}</div>
+									<div class="pb-dropzone-empty-text">Drop here</div>
 								</div>
 							</template>
 						</draggable>
@@ -1899,7 +1892,7 @@
 				console.log('[PB] onAddContainer, item:', item?.type, 'idx:', idx);
 				if (!item) return;
 
-				// Widget masuk container -> bungkus dalam grid 1 kolom
+				// Widget masuk container → bungkus dalam grid 1 kolom
 				if (isWgt(item.type)) {
 					nextTick(() => {
 						const live = findById([containerNode], item.id) !== null
@@ -1913,31 +1906,15 @@
 					});
 					return;
 				}
-				// Grid -> OK, biarkan
-				// Container -> tidak harusnya masuk, tapi kalau masuk hapus
+				// Grid → OK, biarkan
+				// Container → tidak harusnya masuk, tapi kalau masuk hapus
 				if (isCont(item.type)) { containerNode.children.splice(idx, 1); }
 			}
 
-			function columnHasChildrenForSequential(col, ignoreNodeId = '') {
-				if (!col || !Array.isArray(col.children) || col.children.length === 0) return false;
-				if (!ignoreNodeId) return true;
-				return col.children.some((child) => child && child.id !== ignoreNodeId);
-			}
-			function isSequentialColumnLockedForNode(node, colIndex, ignoreNodeId = '') {
-				const cols = Array.isArray(node && node.columns) ? node.columns : [];
-				const idx = Number(colIndex);
-				if (!Number.isFinite(idx) || idx < 0 || idx >= cols.length) return false;
-				if (columnHasChildrenForSequential(cols[idx], ignoreNodeId)) return false;
-				for (let i = 0; i < idx; i++) {
-					if (!columnHasChildrenForSequential(cols[i], ignoreNodeId)) return true;
-				}
-				return false;
-			}
-
 			// onAddCol: dipanggil saat item di-drop ke grid column
-			function onAddCol(evt, col, colIndex, parentNode) {
+			function onAddCol(evt, col) {
 				const idx  = evt.newIndex;
-				// vuedraggable@4.1.0: item ada di _underlying_vm_
+				// vuedraggable@4.1.0: item ada di _underlying_vm_ 
 				// Tapi array sudah diupdate, cari item yang cocok
 				const vmData = evt.item && evt.item._underlying_vm_;
 				// Cari item di col.children berdasarkan id dari vm, atau pakai newIndex
@@ -1949,25 +1926,8 @@
 				}
 				console.log('[PB] onAddCol idx:', idx, 'col.len:', col.children.length, 'item:', item?.type);
 				if (!item) return;
-
-				// Safety guard: cegah bypass lock berurutan walau ada jalur drop yang lolos put().
-				const targetIndex = Number(colIndex);
-				if (parentNode && Number.isFinite(targetIndex) && isSequentialColumnLockedForNode(parentNode, targetIndex, item.id)) {
-					const targetPos = col.children.indexOf(item);
-					if (targetPos >= 0) col.children.splice(targetPos, 1);
-					const fromEl = evt.from;
-					const cameFromColumn = !!(fromEl && fromEl.classList && fromEl.classList.contains('pb-dropzone-col'));
-					const fromList = fromEl && fromEl.__draggable_component__ ? fromEl.__draggable_component__.realList : null;
-					if (cameFromColumn && Array.isArray(fromList) && !fromList.some((child) => child && child.id === item.id)) {
-						const oldIndex = Number(evt.oldIndex);
-						if (Number.isFinite(oldIndex) && oldIndex >= 0 && oldIndex <= fromList.length) fromList.splice(oldIndex, 0, item);
-						else fromList.push(item);
-					}
-					return;
-				}
-
-				// Grid atau widget -> OK
-				// Container -> hapus
+				// Grid atau widget → OK
+				// Container → hapus
 				if (isCont(item.type)) { col.children.splice(col.children.indexOf(item), 1); }
 			}
 

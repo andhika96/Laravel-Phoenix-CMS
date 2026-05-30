@@ -156,30 +156,6 @@
 	function responsiveKey(base, device) {
 		return base + responsiveSuffix(device);
 	}
-	function cloneSettingValue(value) {
-		if (Array.isArray(value) || (value && typeof value === 'object')) return jclone(value);
-		return value;
-	}
-	function seedResponsiveSettings(settings, force = false) {
-		if (!settings || typeof settings !== 'object') return;
-		const bases = new Set();
-		Object.keys(settings).forEach((key) => {
-			if (key.endsWith('Tablet')) bases.add(key.slice(0, -6));
-			if (key.endsWith('Mobile')) bases.add(key.slice(0, -6));
-		});
-		bases.forEach((base) => {
-			if (!Object.prototype.hasOwnProperty.call(settings, base)) return;
-			const baseValue = settings[base];
-			['Tablet', 'Mobile'].forEach((suffix) => {
-				const key = base + suffix;
-				if (!Object.prototype.hasOwnProperty.call(settings, key)) return;
-				const current = settings[key];
-				if (force || current === '' || current === null || current === undefined) {
-					settings[key] = cloneSettingValue(baseValue);
-				}
-			});
-		});
-	}
 	function containerDefaults(type = 'container') {
 		const isFluid = type === 'container_fluid';
 		return {
@@ -648,7 +624,6 @@
 			onDragStart:    { type: Function, required: true },
 			onDragEnd:      { type: Function, required: true },
 			onOpenModal:    { type: Function, required: true },
-			onShowToolbox:  { type: Function, required: true },
 		},
 		emits: [],
 		computed: {
@@ -741,8 +716,6 @@
 						const nodeType = el && el.dataset && el.dataset.nodeType;
 						// Tolak jika yang di-drag adalah container
 						if (nodeType && isCont(nodeType)) return false;
-						const targetIndex = this.getTargetColumnIndexFromDropzone(to);
-						if (targetIndex >= 0 && this.isSequentialColumnLocked(targetIndex)) return false;
 						// Terima dari sesama pb-col (reorder + pindah antar kolom)
 						// Terima dari pb-container (widget yang ada di container)
 						return true;
@@ -763,7 +736,6 @@
 					onDragStart:    this.onDragStart,
 					onDragEnd:      this.onDragEnd,
 					onOpenModal:    this.onOpenModal,
-					onShowToolbox:  this.onShowToolbox,
 				};
 			},
 			contColStyle(col) {
@@ -834,29 +806,6 @@
 				};
 				const alignItems = String(this.nodeResponsiveValue('gridAlignItems', s.gridAlignItems || 'start') || 'start').toLowerCase();
 				return { ...base, justifyContent: mapMain[alignItems] || 'flex-start' };
-			},
-			columnHasChildren(col) {
-				return Array.isArray(col && col.children) && col.children.length > 0;
-			},
-			isSequentialColumnLocked(colIndex) {
-				const cols = Array.isArray(this.node.columns) ? this.node.columns : [];
-				const idx = Number(colIndex);
-				if (!Number.isFinite(idx) || idx < 0 || idx >= cols.length) return false;
-				const target = cols[idx];
-				// Kolom yang sudah terisi tetap bisa dipakai; lock hanya untuk kolom kosong.
-				if (this.columnHasChildren(target)) return false;
-				for (let i = 0; i < idx; i++) {
-					if (!this.columnHasChildren(cols[i])) return true;
-				}
-				return false;
-			},
-			getTargetColumnIndexFromDropzone(sortableRef) {
-				const el = sortableRef && sortableRef.el ? sortableRef.el : null;
-				if (!el) return -1;
-				const host = el.closest('[data-col-index]');
-				if (!host) return -1;
-				const raw = Number(host.dataset.colIndex);
-				return Number.isFinite(raw) ? raw : -1;
 			},
 			contGridNodeStyle(col) {
 				const s = this.node.settings || {};
@@ -945,23 +894,20 @@
 						v-for="(col, ci) in (node.columns || [])"
 						:key="col.id"
 						class="el-grid-col pb-grid-col"
-						:data-col-index="ci"
 						:style="contColStyle(col)"
 					>
 						<draggable
 							v-model="col.children"
 							item-key="id"
 							:group="colGroup"
-							:data-col-index="ci"
 							:style="contDropzoneStyle(col)"
 							:class="['pb-dropzone', 'pb-dropzone-col', {
 								'is-empty': !col.children || col.children.length === 0,
-								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading'),
-								'is-sequential-locked': isSequentialColumnLocked(ci)
+								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading')
 							}]"
 							ghost-class="pb-ghost"
 							dragover-class="is-drop-hover"
-							@add="(e) => onAddCol(e, col, ci, node)"
+							@add="(e) => onAddCol(e, col)"
 							@start="onDragStart"
 							@end="onDragEnd"
 						>
@@ -973,12 +919,7 @@
 							</template>
 							<template #footer>
 								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">
-									<button v-if="!isSequentialColumnLocked(ci)" type="button" class="pb-inline-add" @click.stop.prevent="onShowToolbox()">
-										<i class="fa-solid fa-plus"></i>
-										<span>Add</span>
-									</button>
-									<div v-else class="pb-dropzone-lock-text">Fill previous column first</div>
-									<div class="pb-dropzone-empty-text">{{ isSequentialColumnLocked(ci) ? 'Locked' : 'Drop here' }}</div>
+									<div class="pb-dropzone-empty-text">Drop here</div>
 								</div>
 							</template>
 						</draggable>
@@ -991,20 +932,18 @@
 		<template v-else-if="isGrid">
 			<component :is="loadWidget(node.type)" :item="node">
 				<div class="el-grid-columns" :style="gridStyle">
-					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col" :data-col-index="ci">
+					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col">
 						<draggable
 							v-model="col.children"
 							item-key="id"
 							:group="colGroup"
-							:data-col-index="ci"
 							:class="['pb-dropzone', 'pb-dropzone-col', {
 								'is-empty': !col.children || col.children.length === 0,
-								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading'),
-								'is-sequential-locked': isSequentialColumnLocked(ci)
+								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading')
 							}]"
 							ghost-class="pb-ghost"
 							dragover-class="is-drop-hover"
-							@add="(e) => onAddCol(e, col, ci, node)"
+							@add="(e) => onAddCol(e, col)"
 							@start="onDragStart"
 							@end="onDragEnd"
 						>
@@ -1016,12 +955,7 @@
 							</template>
 							<template #footer>
 								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">
-									<button v-if="!isSequentialColumnLocked(ci)" type="button" class="pb-inline-add" @click.stop.prevent="onShowToolbox()">
-										<i class="fa-solid fa-plus"></i>
-										<span>Add</span>
-									</button>
-									<div v-else class="pb-dropzone-lock-text">Fill previous column first</div>
-									<div class="pb-dropzone-empty-text">{{ isSequentialColumnLocked(ci) ? 'Locked' : 'Drop here' }}</div>
+									<div class="pb-dropzone-empty-text">Drop here</div>
 								</div>
 							</template>
 						</draggable>
@@ -1114,84 +1048,6 @@
 				{ value: 'mobile', label: 'Mobile', menuLabel: 'Mobile Portrait', icon: 'fa-solid fa-mobile-screen-button' },
 			];
 			const controlResponsiveMenu = ref('');
-			const responsiveColumnsCache = new WeakMap();
-			function normalizeResponsiveDevice(device = 'desktop') {
-				return (device === 'tablet' || device === 'mobile') ? device : 'desktop';
-			}
-			function cloneColumnsState(columns) {
-				if (!Array.isArray(columns)) return [];
-				return columns.map((col) => ({
-					id: (col && col.id) ? col.id : uid('c'),
-					flexBasis: col && Object.prototype.hasOwnProperty.call(col, 'flexBasis') ? col.flexBasis : undefined,
-					children: Array.isArray(col && col.children) ? col.children.slice() : [],
-				}));
-			}
-			function getResponsiveColumnsState(node) {
-				if (!node || typeof node !== 'object') return null;
-				let state = responsiveColumnsCache.get(node);
-				if (!state) {
-					state = {
-						activeDevice: '',
-						snapshots: {
-							desktop: [],
-							tablet: [],
-							mobile: [],
-						},
-					};
-					responsiveColumnsCache.set(node, state);
-				}
-				return state;
-			}
-			function resolveColumnsSnapshotForDevice(state, device) {
-				if (!state || !state.snapshots) return [];
-				const safeDevice = normalizeResponsiveDevice(device);
-				const direct = state.snapshots[safeDevice];
-				if (Array.isArray(direct) && direct.length) return direct;
-				if (safeDevice === 'mobile') {
-					const tablet = state.snapshots.tablet;
-					if (Array.isArray(tablet) && tablet.length) return tablet;
-				}
-				if (safeDevice !== 'desktop') {
-					const desktop = state.snapshots.desktop;
-					if (Array.isArray(desktop) && desktop.length) return desktop;
-				}
-				return [];
-			}
-			function collectColumnChildren(columns) {
-				const out = [];
-				if (!Array.isArray(columns)) return out;
-				columns.forEach((col) => {
-					if (!col || !Array.isArray(col.children)) return;
-					col.children.forEach((child) => {
-						if (child && child.id) out.push(child);
-					});
-				});
-				return out;
-			}
-			function reconcileColumnsContent(sourceColumns, targetColumns) {
-				if (!Array.isArray(targetColumns) || !targetColumns.length) return;
-				const sourceChildren = collectColumnChildren(sourceColumns);
-				const sourceIds = new Set(sourceChildren.map((child) => child.id));
-
-				targetColumns.forEach((col) => {
-					if (!Array.isArray(col.children)) col.children = [];
-					col.children = col.children.filter((child) => child && child.id && sourceIds.has(child.id));
-				});
-
-				const existingIds = new Set();
-				targetColumns.forEach((col) => {
-					(col.children || []).forEach((child) => {
-						if (child && child.id) existingIds.add(child.id);
-					});
-				});
-
-				const missing = sourceChildren.filter((child) => child && child.id && !existingIds.has(child.id));
-				if (!missing.length) return;
-				const receiver = targetColumns[0];
-				if (!receiver) return;
-				if (!Array.isArray(receiver.children)) receiver.children = [];
-				missing.forEach((child) => receiver.children.push(child));
-			}
 
 			function responsiveMeta(device = responsiveDevice.value) {
 				return responsiveDevices.find((entry) => entry.value === device) || responsiveDevices[0];
@@ -1218,9 +1074,8 @@
 				return controlResponsiveMenu.value === String(key || '');
 			}
 			function setResponsiveDevice(device) {
-				const safeDevice = normalizeResponsiveDevice(device);
-				if (responsiveDevice.value !== safeDevice) {
-					responsiveDevice.value = safeDevice;
+				if (device === 'desktop' || device === 'tablet' || device === 'mobile') {
+					responsiveDevice.value = device;
 				}
 			}
 			function applyResponsiveDevice(key, device) {
@@ -1348,9 +1203,6 @@
 						while (c.columns.length < tcCont) c.columns.push({ id: uid('c'), children: [] });
 						if (c.columns.length > tcCont) { const last=c.columns[tcCont-1]; c.columns.slice(tcCont).forEach(col=>(col.children||[]).forEach(ch=>last.children.push(ch))); c.columns=c.columns.slice(0,tcCont); }
 					}
-					if (c.settings && typeof c.settings === 'object') {
-						seedResponsiveSettings(c.settings);
-					}
 					if (Array.isArray(c.children)) c.children = norm(c.children);
 					return c;
 				});
@@ -1379,68 +1231,39 @@
 			const selectedType = computed(() => selectedNode.value?.type || '');
 
 			// ── Column sync ───────────────────────────────────────────────────
-			function syncCols(node, forceCount, device = 'desktop') {
+			function syncCols(node, forceCount) {
 				if (!node) return;
-				const currentDevice = (device === 'tablet' || device === 'mobile') ? device : 'desktop';
 				const isContNode = isCont(node.type);
 				const isGridNode = isGrid(node.type);
 				if (!isContNode && !isGridNode) return;
-				const state = getResponsiveColumnsState(node);
-				const s = node.settings || {};
-				const colSetting = isContNode
-					? getResponsiveSettingForDevice(s, 'gridColumns', currentDevice, s.gridColumns || 3)
-					: getResponsiveSettingForDevice(s, 'columns', currentDevice, s.columns || 1);
+				const colSetting = isContNode ? (node.settings.gridColumns || 3) : (node.settings.columns || 1);
 				const baseCols = forceCount != null ? clamp(Number(forceCount), 1, 12) : clamp(Number(colSetting), 1, 12);
 				let t = baseCols;
-				if (isContNode && (s.displayType || 'flex') === 'grid') {
-					const rowsValue = getResponsiveSettingForDevice(s, 'gridRows', currentDevice, s.gridRows || '1');
-					const rows = containerGridRowsCount(rowsValue);
+				if (isContNode && (node.settings.displayType || 'flex') === 'grid') {
+					const rows = containerGridRowsCount(node.settings.gridRows);
 					t = Math.max(1, baseCols * rows);
 				}
 				if (!Array.isArray(node.columns)) node.columns = [];
-
-				// Preserve each device layout snapshot so responsive column changes do not overwrite other devices.
-				if (state && state.activeDevice && state.activeDevice !== currentDevice) {
-					const sourceColumns = cloneColumnsState(node.columns);
-					state.snapshots[state.activeDevice] = sourceColumns;
-					const restored = resolveColumnsSnapshotForDevice(state, currentDevice);
-					if (Array.isArray(restored) && restored.length) {
-						node.columns = cloneColumnsState(restored);
-						// Content is global across devices. Keep target snapshot in sync with latest source content.
-						reconcileColumnsContent(sourceColumns, node.columns);
-					}
-				}
-
 				while (node.columns.length < t) node.columns.push({id:uid('c'),children:[]});
 				if (node.columns.length > t) {
 					const last = node.columns[t-1];
 					node.columns.slice(t).forEach(col => (col.children||[]).forEach(c => last.children.push(c)));
 					node.columns = node.columns.slice(0, t);
 				}
-
-				if (state) {
-					state.snapshots[currentDevice] = cloneColumnsState(node.columns);
-					state.activeDevice = currentDevice;
-				}
 			}
 			function activeResponsiveKey(base) {
-				return responsiveKey(base, normalizeResponsiveDevice(responsiveDevice.value));
+				return responsiveKey(base, responsiveDevice.value);
 			}
-			function getResponsiveSettingForDevice(settings, base, device = 'desktop', fallback = '') {
+			function getResponsiveSetting(settings, base, fallback = '') {
 				if (!settings) return fallback;
-				const safeDevice = (device === 'tablet' || device === 'mobile') ? device : 'desktop';
-				const key = responsiveKey(base, safeDevice);
+				const key = activeResponsiveKey(base);
 				const value = settings[key];
-				if (safeDevice !== 'desktop' && (value === '' || value === null || value === undefined)) {
+				if (responsiveDevice.value !== 'desktop' && (value === '' || value === null || value === undefined)) {
 					const desktopValue = settings[base];
 					return (desktopValue === '' || desktopValue === null || desktopValue === undefined) ? fallback : desktopValue;
 				}
 				if (value === '' || value === null || value === undefined) return fallback;
 				return value;
-			}
-			function getResponsiveSetting(settings, base, fallback = '') {
-				if (!settings) return fallback;
-				return getResponsiveSettingForDevice(settings, base, normalizeResponsiveDevice(responsiveDevice.value), fallback);
 			}
 			function setResponsiveSetting(settings, base, value) {
 				if (!settings) return;
@@ -1563,10 +1386,9 @@
 			}
 			function setContainerGridColumnsValue(node, next) {
 				if (!node || !node.settings) return;
-				const device = normalizeResponsiveDevice(responsiveDevice.value);
 				const value = clamp(Number(next) || 1, 1, 12);
-				node.settings[responsiveKey('gridColumns', device)] = value;
-				syncCols(node, null, device);
+				setContainerResponsiveSetting(node.settings, 'gridColumns', value);
+				if (responsiveDevice.value === 'desktop') syncCols(node);
 			}
 			function containerGridRowsValue(node) {
 				if (!node || !node.settings) return 1;
@@ -1577,7 +1399,7 @@
 				if (!node || !node.settings) return;
 				const value = clamp(Number(next) || 1, 1, 12);
 				setContainerResponsiveSetting(node.settings, 'gridRows', String(value));
-				syncCols(node, null, responsiveDevice.value);
+				if (responsiveDevice.value === 'desktop') syncCols(node);
 			}
 			function syncContainerGap(settings, source) {
 				if (!settings || !settings.containerGapLinked) return;
@@ -1680,63 +1502,25 @@
 				}
 			}
 			function syncGridColumnsForDevice(node) {
-				syncCols(node, null, responsiveDevice.value);
+				if (responsiveDevice.value === 'desktop') syncCols(node);
 			}
-			function syncSelectedNodeGridCells() {
-				const node = selectedNode.value;
-				if (!node) return;
-				if (isCont(node.type) || isGrid(node.type)) {
-					syncCols(node, null, responsiveDevice.value);
-				}
-			}
-			function walkNodes(nodes, handler) {
-				if (!Array.isArray(nodes) || typeof handler !== 'function') return;
-				nodes.forEach((node) => {
-					if (!node) return;
-					handler(node);
-					if (Array.isArray(node.children) && node.children.length) {
-						walkNodes(node.children, handler);
-					}
-					if (Array.isArray(node.columns) && node.columns.length) {
-						node.columns.forEach((col) => {
-							if (Array.isArray(col && col.children) && col.children.length) {
-								walkNodes(col.children, handler);
-							}
-						});
-					}
-				});
-			}
-			function syncAllGridCellsForDevice(device = responsiveDevice.value) {
-				const safeDevice = normalizeResponsiveDevice(device);
-				walkNodes(rootNodes.value, (node) => {
-					if (isCont(node.type) || isGrid(node.type)) {
-						syncCols(node, null, safeDevice);
-					}
-				});
-			}
-			watch(selectedNode, n => { if (n && isGrid(n.type)) syncCols(n, null, responsiveDevice.value); }, { deep: true });
-			// Sync jumlah cell saat Grid Container settings berubah.
+			watch(selectedNode, n => { if (n && isGrid(n.type)) syncCols(n); }, { deep: true });
+			// Sync jumlah cell saat Grid Container desktop settings berubah.
 			watch(
 				() => [
 					selectedNode.value?.settings?.displayType,
 					selectedNode.value?.settings?.gridColumns,
-					selectedNode.value?.settings?.gridColumnsTablet,
-					selectedNode.value?.settings?.gridColumnsMobile,
 					selectedNode.value?.settings?.gridRows,
-					selectedNode.value?.settings?.gridRowsTablet,
-					selectedNode.value?.settings?.gridRowsMobile,
 				],
 				() => {
 					const node = selectedNode.value;
-					if (node && isCont(node.type)) syncCols(node, null, responsiveDevice.value);
+					if (node && isCont(node.type)) syncCols(node);
 				}
 			);
-			watch(responsiveDevice, () => {
-				syncAllGridCellsForDevice();
-			});
 			watch(selectedNode, n => { if (n?.type==='video') n.settings.youtubeEmbed = toEmbed(n.settings.youtubeUrl||''); }, { deep: true });
 			watch(selectedId, () => {
 				settingsTab.value = 'layout';
+				responsiveDevice.value = 'desktop';
 				closeControlResponsiveMenu();
 			});
 
@@ -1771,20 +1555,6 @@
 			function dupNode(id)    { dupIn(rootNodes.value, id); }
 			function selectNode(n)  { selectedId.value = n.id; }
 			function clearSel()     { selectedId.value = ''; }
-			function showToolboxPanel() {
-				selectedId.value = '';
-				closeControlResponsiveMenu();
-				nextTick(() => {
-					const leftPanel = document.querySelector('.pb-panel.left');
-					if (!leftPanel) return;
-					leftPanel.scrollTo({ top: 0, behavior: 'smooth' });
-					const titles = Array.from(leftPanel.querySelectorAll('.pb-panel-title'));
-					const layoutTitle = titles.find((el) => String(el.textContent || '').trim().toLowerCase() === 'layout');
-					if (layoutTitle) {
-						layoutTitle.scrollIntoView({ behavior: 'smooth', block: 'center' });
-					}
-				});
-			}
 			function openCkFinder(targetObj, propName) {
 				if (!targetObj || !propName) return false;
 				const ckf = window.CKFinder;
@@ -1899,7 +1669,7 @@
 				console.log('[PB] onAddContainer, item:', item?.type, 'idx:', idx);
 				if (!item) return;
 
-				// Widget masuk container -> bungkus dalam grid 1 kolom
+				// Widget masuk container → bungkus dalam grid 1 kolom
 				if (isWgt(item.type)) {
 					nextTick(() => {
 						const live = findById([containerNode], item.id) !== null
@@ -1913,31 +1683,15 @@
 					});
 					return;
 				}
-				// Grid -> OK, biarkan
-				// Container -> tidak harusnya masuk, tapi kalau masuk hapus
+				// Grid → OK, biarkan
+				// Container → tidak harusnya masuk, tapi kalau masuk hapus
 				if (isCont(item.type)) { containerNode.children.splice(idx, 1); }
 			}
 
-			function columnHasChildrenForSequential(col, ignoreNodeId = '') {
-				if (!col || !Array.isArray(col.children) || col.children.length === 0) return false;
-				if (!ignoreNodeId) return true;
-				return col.children.some((child) => child && child.id !== ignoreNodeId);
-			}
-			function isSequentialColumnLockedForNode(node, colIndex, ignoreNodeId = '') {
-				const cols = Array.isArray(node && node.columns) ? node.columns : [];
-				const idx = Number(colIndex);
-				if (!Number.isFinite(idx) || idx < 0 || idx >= cols.length) return false;
-				if (columnHasChildrenForSequential(cols[idx], ignoreNodeId)) return false;
-				for (let i = 0; i < idx; i++) {
-					if (!columnHasChildrenForSequential(cols[i], ignoreNodeId)) return true;
-				}
-				return false;
-			}
-
 			// onAddCol: dipanggil saat item di-drop ke grid column
-			function onAddCol(evt, col, colIndex, parentNode) {
+			function onAddCol(evt, col) {
 				const idx  = evt.newIndex;
-				// vuedraggable@4.1.0: item ada di _underlying_vm_
+				// vuedraggable@4.1.0: item ada di _underlying_vm_ 
 				// Tapi array sudah diupdate, cari item yang cocok
 				const vmData = evt.item && evt.item._underlying_vm_;
 				// Cari item di col.children berdasarkan id dari vm, atau pakai newIndex
@@ -1949,25 +1703,8 @@
 				}
 				console.log('[PB] onAddCol idx:', idx, 'col.len:', col.children.length, 'item:', item?.type);
 				if (!item) return;
-
-				// Safety guard: cegah bypass lock berurutan walau ada jalur drop yang lolos put().
-				const targetIndex = Number(colIndex);
-				if (parentNode && Number.isFinite(targetIndex) && isSequentialColumnLockedForNode(parentNode, targetIndex, item.id)) {
-					const targetPos = col.children.indexOf(item);
-					if (targetPos >= 0) col.children.splice(targetPos, 1);
-					const fromEl = evt.from;
-					const cameFromColumn = !!(fromEl && fromEl.classList && fromEl.classList.contains('pb-dropzone-col'));
-					const fromList = fromEl && fromEl.__draggable_component__ ? fromEl.__draggable_component__.realList : null;
-					if (cameFromColumn && Array.isArray(fromList) && !fromList.some((child) => child && child.id === item.id)) {
-						const oldIndex = Number(evt.oldIndex);
-						if (Number.isFinite(oldIndex) && oldIndex >= 0 && oldIndex <= fromList.length) fromList.splice(oldIndex, 0, item);
-						else fromList.push(item);
-					}
-					return;
-				}
-
-				// Grid atau widget -> OK
-				// Container -> hapus
+				// Grid atau widget → OK
+				// Container → hapus
 				if (isCont(item.type)) { col.children.splice(col.children.indexOf(item), 1); }
 			}
 
@@ -1993,7 +1730,6 @@
 				// Panggil openModal SYNCHRONOUSLY (tanpa nextTick) agar vuedraggable
 				// bisa menyelesaikan animasi drop sebelum Vue re-render menghapus elemen DOM.
 				if (isCont(item.type)) {
-					if (item.settings) seedResponsiveSettings(item.settings);
 					openModal(item.type, 'root', { containerNode: item, list: rootNodes.value });
 					return;
 				}
@@ -2022,7 +1758,6 @@
 						c.settings.gridRowGap = gs.rowGap || gs.gridRowGap || c.settings.gridRowGap;
 						c.settings.gridAlignItems = gs.gridAlignItems || c.settings.gridAlignItems || 'start';
 						c.settings.autoFlow = gs.autoFlow || c.settings.autoFlow;
-						seedResponsiveSettings(c.settings, true);
 
 						const sourceColumns = Array.isArray(live.columns) ? live.columns : [];
 						c.columns = Array.from({ length: cols }, (_, colIdx) => {
@@ -2056,7 +1791,6 @@
 						const saved = jclone(live); saved.id = live.id;
 						const c = makeNode('container');
 						c.settings.displayType = 'block'; c.settings.gridColumns = 1;
-						seedResponsiveSettings(c.settings, true);
 						c.columns = [{ id: uid('c'), children: [saved] }];
 						rootNodes.value.splice(realIdx, 1, c);
 					});
@@ -2110,7 +1844,6 @@
 								c.columns = Array.from({length:cols}, () => ({id:uid('c'),children:[]}));
 							}
 						}
-						seedResponsiveSettings(c.settings, true);
 						return c;
 					}
 					if (zone === 'root' && list && list.containerNode) {
@@ -2129,7 +1862,6 @@
 						node.settings.displayType = 'grid'; node.settings.gridColumns = cols;
 						node.settings.gridColumnGap = '20px'; node.settings.gridRowGap = '20px';
 						node.settings.gridAlignItems = 'start';
-						seedResponsiveSettings(node.settings, true);
 						node.columns = Array.from({length:cols}, () => ({id:uid('c'),children:[]}));
 						selectedId.value = node.id; closeModal(); return;
 					}
@@ -2138,7 +1870,6 @@
 					c.settings.displayType = 'grid'; c.settings.gridColumns = cols;
 					c.settings.gridColumnGap = '20px'; c.settings.gridRowGap = '20px';
 					c.settings.gridAlignItems = 'start';
-					seedResponsiveSettings(c.settings, true);
 					c.columns = Array.from({length:cols}, () => ({id:uid('c'),children:[]}));
 					list.push(c); selectedId.value = c.id; closeModal();
 				}
@@ -2220,7 +1951,7 @@
 				containerGridRowsValue, setContainerGridRowsValue, syncContainerGap,
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
 				displayNodeLabel,
-				selectNode, clearSel, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
+				selectNode, clearSel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
 				pageName, pageStatus, customCss, savePage, saveState, saveMsg,
 				toastVisible, responseStatusToast, isArrayMessageAfterSubmit, responseMessageAfterSubmit, closeToast,
 				onDragStart, onDragEnd,
@@ -3151,7 +2882,7 @@
 								<div class="pb-label-row">
 									<div class="pb-prop-section-title mb-0">Grid Layout</div>
 									<div class="pb-responsive-switch">
-										<button v-for="device in responsiveDevices" :key="device.value" class="pb-device-btn" :class="{active:responsiveDevice===device.value}" @click="setResponsiveDevice(device.value)"><i :class="device.icon"></i><span>{{ device.label }}</span></button>
+										<button v-for="device in responsiveDevices" :key="device.value" class="pb-device-btn" :class="{active:responsiveDevice===device.value}" @click="responsiveDevice=device.value"><i :class="device.icon"></i><span>{{ device.label }}</span></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
@@ -3192,7 +2923,7 @@
 								<div class="pb-label-row">
 									<div class="pb-prop-section-title mb-0">Spacing</div>
 									<div class="pb-responsive-switch">
-										<button v-for="device in responsiveDevices" :key="device.value" class="pb-device-btn" :class="{active:responsiveDevice===device.value}" @click="setResponsiveDevice(device.value)"><i :class="device.icon"></i><span>{{ device.label }}</span></button>
+										<button v-for="device in responsiveDevices" :key="device.value" class="pb-device-btn" :class="{active:responsiveDevice===device.value}" @click="responsiveDevice=device.value"><i :class="device.icon"></i><span>{{ device.label }}</span></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
@@ -3605,7 +3336,6 @@
 								:on-drag-start="onDragStart"
 								:on-drag-end="onDragEnd"
 								:on-open-modal="openModal"
-								:on-show-toolbox="showToolboxPanel"
 							/>
 						</template>
 						<template #footer>
