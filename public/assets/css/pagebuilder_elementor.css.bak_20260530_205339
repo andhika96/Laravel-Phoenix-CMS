@@ -271,7 +271,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	gap: 10px;
-	padding: 10px 14px 8px;
+	padding: 14px 16px 8px;
 	background: linear-gradient(180deg, #f4f6fa 0%, #eef1f6 100%);
 }
 
@@ -2539,77 +2539,6 @@ body {
 	font-weight: 600;
 }
 
-.pb-label-tools {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-}
-
-.pb-control-device-wrap {
-	position: relative;
-	display: inline-flex;
-	align-items: center;
-}
-
-.pb-control-device-btn {
-	width: 28px;
-	height: 28px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 6px;
-	border: 1px solid #3a4254;
-	background: #1c2230;
-	color: #ced6e8;
-	cursor: pointer;
-}
-
-.pb-control-device-btn:hover {
-	background: #2b3343;
-	color: #ffffff;
-}
-
-.pb-control-device-menu {
-	position: absolute;
-	top: calc(100% + 6px);
-	left: 0;
-	min-width: 128px;
-	padding: 6px;
-	border-radius: 8px;
-	border: 1px solid #3a4254;
-	background: #171d2a;
-	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
-	z-index: 30;
-	display: grid;
-	gap: 4px;
-}
-
-.pb-control-device-item {
-	height: 30px;
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	padding: 0 8px;
-	border-radius: 6px;
-	border: 1px solid transparent;
-	background: transparent;
-	color: #d8e0f2;
-	font-size: 12px;
-	text-align: left;
-	cursor: pointer;
-}
-
-.pb-control-device-item:hover {
-	background: #252f43;
-	color: #ffffff;
-}
-
-.pb-control-device-item.active {
-	background: #2f3a52;
-	border-color: #495578;
-	color: #ffffff;
-}
-
 .pb-mini-unit {
 	height: 32px;
 	border-radius: 6px;
@@ -2836,43 +2765,11 @@ body {
 	color: #455673;
 }
 
-.pb-panel.left .pb-control-device-btn {
-	background: #ffffff;
-	border-color: #ccd7ec;
-	color: #455673;
-}
-
 .pb-panel.left .pb-seg-btn:hover,
 .pb-panel.left .pb-device-btn:hover,
 .pb-panel.left .pb-link-btn:hover {
 	background: #eef3ff;
 	color: #243047;
-}
-
-.pb-panel.left .pb-control-device-btn:hover {
-	background: #eef3ff;
-	color: #243047;
-}
-
-.pb-panel.left .pb-control-device-menu {
-	background: #ffffff;
-	border-color: #d4deef;
-	box-shadow: 0 10px 20px rgba(33, 43, 67, 0.12);
-}
-
-.pb-panel.left .pb-control-device-item {
-	color: #44546f;
-}
-
-.pb-panel.left .pb-control-device-item:hover {
-	background: #eef3ff;
-	color: #233657;
-}
-
-.pb-panel.left .pb-control-device-item.active {
-	background: #e6edff;
-	border-color: #b9c9f5;
-	color: #213c85;
 }
 
 .pb-panel.left .pb-seg-btn.active,
@@ -2996,43 +2893,4 @@ body {
 
 [data-bs-theme="dark"] .pb-panel.left .pb-prop-section-title {
 	color: #f7f9ff !important;
-}
-
-/* =============================================
-   RESPONSIVE CONTROL ALIGNMENT (Elementor-like)
-   Menempatkan icon device di samping label opsi.
-   ============================================= */
-.pb-label-row.pb-label-row-device {
-	justify-content: flex-start;
-	gap: 6px;
-	position: relative;
-	overflow: visible;
-}
-
-.pb-label-row.pb-label-row-device > .pb-form-label {
-	margin-bottom: 0;
-}
-
-.pb-label-row.pb-label-row-device > .pb-control-device-wrap {
-	margin-left: 4px;
-}
-
-.pb-label-row.pb-label-row-device > .pb-label-tools {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	flex: 1 1 auto;
-	min-width: 0;
-	margin-left: 4px;
-}
-
-.pb-label-row.pb-label-row-device > .pb-label-tools .pb-control-unit-wrap {
-	margin-left: auto;
-	padding-left: 6px;
-}
-
-.pb-control-device-menu {
-	min-width: 152px;
-	max-width: min(220px, calc(100vw - 44px));
-	white-space: nowrap;
 }

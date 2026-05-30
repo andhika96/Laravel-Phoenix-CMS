@@ -271,7 +271,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	gap: 10px;
-	padding: 10px 14px 8px;
+	padding: 14px 16px 8px;
 	background: linear-gradient(180deg, #f4f6fa 0%, #eef1f6 100%);
 }
 
@@ -2996,43 +2996,4 @@ body {
 
 [data-bs-theme="dark"] .pb-panel.left .pb-prop-section-title {
 	color: #f7f9ff !important;
-}
-
-/* =============================================
-   RESPONSIVE CONTROL ALIGNMENT (Elementor-like)
-   Menempatkan icon device di samping label opsi.
-   ============================================= */
-.pb-label-row.pb-label-row-device {
-	justify-content: flex-start;
-	gap: 6px;
-	position: relative;
-	overflow: visible;
-}
-
-.pb-label-row.pb-label-row-device > .pb-form-label {
-	margin-bottom: 0;
-}
-
-.pb-label-row.pb-label-row-device > .pb-control-device-wrap {
-	margin-left: 4px;
-}
-
-.pb-label-row.pb-label-row-device > .pb-label-tools {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	flex: 1 1 auto;
-	min-width: 0;
-	margin-left: 4px;
-}
-
-.pb-label-row.pb-label-row-device > .pb-label-tools .pb-control-unit-wrap {
-	margin-left: auto;
-	padding-left: 6px;
-}
-
-.pb-control-device-menu {
-	min-width: 152px;
-	max-width: min(220px, calc(100vw - 44px));
-	white-space: nowrap;
 }

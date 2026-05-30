@@ -1043,9 +1043,9 @@
 			const responsiveDevice = ref('desktop');
 			const rootNodes   = ref([]);
 			const responsiveDevices = [
-				{ value: 'desktop', label: 'Desktop', menuLabel: 'Desktop', icon: 'fa-solid fa-desktop' },
-				{ value: 'tablet', label: 'Tablet', menuLabel: 'Tablet Portrait', icon: 'fa-solid fa-tablet-screen-button' },
-				{ value: 'mobile', label: 'Mobile', menuLabel: 'Mobile Portrait', icon: 'fa-solid fa-mobile-screen-button' },
+				{ value: 'desktop', label: 'Desktop', icon: 'fa-solid fa-desktop' },
+				{ value: 'tablet', label: 'Tablet', icon: 'fa-solid fa-tablet-screen-button' },
+				{ value: 'mobile', label: 'Mobile', icon: 'fa-solid fa-mobile-screen-button' },
 			];
 			const controlResponsiveMenu = ref('');
 
@@ -1056,12 +1056,7 @@
 				return responsiveMeta(device).icon;
 			}
 			function responsiveDeviceLabel(device = responsiveDevice.value) {
-				const meta = responsiveMeta(device);
-				return meta.menuLabel || meta.label || '';
-			}
-			function deviceOptionLabel(device) {
-				if (!device || typeof device !== 'object') return '';
-				return device.menuLabel || device.label || '';
+				return responsiveMeta(device).label;
 			}
 			function openControlResponsiveMenu(key) {
 				const safeKey = String(key || '');
@@ -1940,7 +1935,7 @@
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
 				selectedId, settingsTab, selectedNode, selectedType,
 				responsiveDevice, responsiveDevices, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
-				controlResponsiveMenu, responsiveDeviceIcon, responsiveDeviceLabel, deviceOptionLabel,
+				controlResponsiveMenu, responsiveDeviceIcon, responsiveDeviceLabel,
 				openControlResponsiveMenu, closeControlResponsiveMenu, isControlResponsiveMenuOpen,
 				setResponsiveDevice, applyResponsiveDevice,
 				containerResponsiveValue, setContainerResponsiveSetting,
@@ -2094,14 +2089,14 @@
 									</select>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Width</label>
 										<div class="pb-control-device-wrap">
 											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-width')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
 											<div v-if="isControlResponsiveMenuOpen('container-width')" class="pb-control-device-menu">
 												<button v-for="device in responsiveDevices" :key="'container-width-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-width', device.value)">
 													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
+													<span>{{ device.label }}</span>
 												</button>
 											</div>
 										</div>
@@ -2119,14 +2114,14 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Min Height</label>
 										<div class="pb-control-device-wrap">
 											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-min-height')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
 											<div v-if="isControlResponsiveMenuOpen('container-min-height')" class="pb-control-device-menu">
 												<button v-for="device in responsiveDevices" :key="'container-min-height-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-min-height', device.value)">
 													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
+													<span>{{ device.label }}</span>
 												</button>
 											</div>
 										</div>
@@ -2149,14 +2144,14 @@
 								<summary>Items</summary>
 								<div class="pb-collapsible-body">
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Direction</label>
 										<div class="pb-control-device-wrap">
 											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-direction')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
 											<div v-if="isControlResponsiveMenuOpen('container-direction')" class="pb-control-device-menu">
 												<button v-for="device in responsiveDevices" :key="'container-direction-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-direction', device.value)">
 													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
+													<span>{{ device.label }}</span>
 												</button>
 											</div>
 										</div>
@@ -2169,14 +2164,14 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Justify Content</label>
 										<div class="pb-control-device-wrap">
 											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-justify-content')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
 											<div v-if="isControlResponsiveMenuOpen('container-justify-content')" class="pb-control-device-menu">
 												<button v-for="device in responsiveDevices" :key="'container-justify-content-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-justify-content', device.value)">
 													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
+													<span>{{ device.label }}</span>
 												</button>
 											</div>
 										</div>
@@ -2191,14 +2186,14 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Align Items</label>
 										<div class="pb-control-device-wrap">
 											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-align-items')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
 											<div v-if="isControlResponsiveMenuOpen('container-align-items')" class="pb-control-device-menu">
 												<button v-for="device in responsiveDevices" :key="'container-align-items-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-align-items', device.value)">
 													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
+													<span>{{ device.label }}</span>
 												</button>
 											</div>
 										</div>
@@ -2211,7 +2206,7 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label">Gaps</label>
 										<div class="pb-label-tools">
 											<div class="pb-control-device-wrap">
@@ -2219,7 +2214,7 @@
 												<div v-if="isControlResponsiveMenuOpen('container-gaps')" class="pb-control-device-menu">
 													<button v-for="device in responsiveDevices" :key="'container-gaps-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-gaps', device.value)">
 														<i :class="device.icon"></i>
-														<span>{{ deviceOptionLabel(device) }}</span>
+														<span>{{ device.label }}</span>
 													</button>
 												</div>
 											</div>
@@ -2233,14 +2228,14 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Wrap</label>
 										<div class="pb-control-device-wrap">
 											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-wrap')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
 											<div v-if="isControlResponsiveMenuOpen('container-wrap')" class="pb-control-device-menu">
 												<button v-for="device in responsiveDevices" :key="'container-wrap-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-wrap', device.value)">
 													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
+													<span>{{ device.label }}</span>
 												</button>
 											</div>
 										</div>
@@ -2252,14 +2247,14 @@
 									<div class="pb-form-note">Items within the container can stay in a single line (No wrap), or break into multiple lines (Wrap).</div>
 								</div>
 								<div class="pb-form-group" v-if="containerResponsiveValue(selectedNode.settings,'flexWrap','nowrap')==='wrap' || containerResponsiveValue(selectedNode.settings,'flexWrap','nowrap')==='wrap-reverse'">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Align Content</label>
 										<div class="pb-control-device-wrap">
 											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-align-content')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
 											<div v-if="isControlResponsiveMenuOpen('container-align-content')" class="pb-control-device-menu">
 												<button v-for="device in responsiveDevices" :key="'container-align-content-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-align-content', device.value)">
 													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
+													<span>{{ device.label }}</span>
 												</button>
 											</div>
 										</div>
@@ -2282,7 +2277,7 @@
 									<div class="pb-label-row"><label class="pb-form-label mb-0">Grid Outline</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'containerGridOutline-' + selectedNode.id" v-model="selectedNode.settings.gridOutline"><label :for="'containerGridOutline-' + selectedNode.id"></label></div></div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Columns</label>
 										<div class="pb-label-tools">
 											<div class="pb-control-device-wrap">
@@ -2290,7 +2285,7 @@
 												<div v-if="isControlResponsiveMenuOpen('container-grid-columns')" class="pb-control-device-menu">
 													<button v-for="device in responsiveDevices" :key="'container-grid-columns-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-grid-columns', device.value)">
 														<i :class="device.icon"></i>
-														<span>{{ deviceOptionLabel(device) }}</span>
+														<span>{{ device.label }}</span>
 													</button>
 												</div>
 											</div>
@@ -2303,7 +2298,7 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Rows</label>
 										<div class="pb-label-tools">
 											<div class="pb-control-device-wrap">
@@ -2311,7 +2306,7 @@
 												<div v-if="isControlResponsiveMenuOpen('container-grid-rows')" class="pb-control-device-menu">
 													<button v-for="device in responsiveDevices" :key="'container-grid-rows-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-grid-rows', device.value)">
 														<i :class="device.icon"></i>
-														<span>{{ deviceOptionLabel(device) }}</span>
+														<span>{{ device.label }}</span>
 													</button>
 												</div>
 											</div>
@@ -2324,7 +2319,7 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label">Gaps</label>
 										<div class="pb-label-tools">
 											<div class="pb-control-device-wrap">
@@ -2332,7 +2327,7 @@
 												<div v-if="isControlResponsiveMenuOpen('container-grid-gaps')" class="pb-control-device-menu">
 													<button v-for="device in responsiveDevices" :key="'container-grid-gaps-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-grid-gaps', device.value)">
 														<i :class="device.icon"></i>
-														<span>{{ deviceOptionLabel(device) }}</span>
+														<span>{{ device.label }}</span>
 													</button>
 												</div>
 											</div>
@@ -2346,14 +2341,14 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Auto Flow</label>
 										<div class="pb-control-device-wrap">
 											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-grid-auto-flow')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
 											<div v-if="isControlResponsiveMenuOpen('container-grid-auto-flow')" class="pb-control-device-menu">
 												<button v-for="device in responsiveDevices" :key="'container-grid-auto-flow-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-grid-auto-flow', device.value)">
 													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
+													<span>{{ device.label }}</span>
 												</button>
 											</div>
 										</div>
@@ -2365,14 +2360,14 @@
 									</select>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Justify Items</label>
 										<div class="pb-control-device-wrap">
 											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-grid-justify-items')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
 											<div v-if="isControlResponsiveMenuOpen('container-grid-justify-items')" class="pb-control-device-menu">
 												<button v-for="device in responsiveDevices" :key="'container-grid-justify-items-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-grid-justify-items', device.value)">
 													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
+													<span>{{ device.label }}</span>
 												</button>
 											</div>
 										</div>
@@ -2385,14 +2380,14 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Align Items</label>
 										<div class="pb-control-device-wrap">
 											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-grid-align-items')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
 											<div v-if="isControlResponsiveMenuOpen('container-grid-align-items')" class="pb-control-device-menu">
 												<button v-for="device in responsiveDevices" :key="'container-grid-align-items-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-grid-align-items', device.value)">
 													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
+													<span>{{ device.label }}</span>
 												</button>
 											</div>
 										</div>
@@ -3297,6 +3292,23 @@
 
 		<div class="pb-canvas-wrap" @click="clearSel">
 			<div class="pb-stage-window" @click.stop>
+				<div class="pb-stage-chrome">
+					<div class="pb-stage-chrome-left">
+						<span class="pb-stage-dot is-red"></span>
+						<span class="pb-stage-dot is-yellow"></span>
+						<span class="pb-stage-dot is-green"></span>
+					</div>
+					<div class="pb-stage-address">
+						<i class="fa-solid fa-lock"></i>
+						<span>Non code website builder</span>
+					</div>
+					<div class="pb-stage-chrome-right">
+						<button class="pb-stage-icon-btn" type="button" title="Share"><i class="fa-solid fa-arrow-up-from-bracket"></i></button>
+						<button class="pb-stage-icon-btn" type="button" title="Add"><i class="fa-solid fa-plus"></i></button>
+						<button class="pb-stage-icon-btn" type="button" title="Copy"><i class="fa-regular fa-copy"></i></button>
+					</div>
+				</div>
+
 				<div class="pb-stage-toolbar">
 					<div class="pb-stage-device-group">
 						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='mobile' }" @click="setResponsiveDevice('mobile')" title="Mobile"><i class="fa-solid fa-mobile-screen-button"></i></button>
@@ -3406,4 +3418,3 @@
 		`,
 	}).mount('#pbElementorApp');
 })();
-

@@ -13,6 +13,10 @@ export default {
 			type: Object,
 			required: true,
 		},
+		responsiveDevice: {
+			type: String,
+			default: 'desktop',
+		},
 	},
 	computed: {
 		settings() {
@@ -128,13 +132,16 @@ export default {
 		containerStyle() {
 			const s = this.settings;
 			const fullMode = this.item.type === 'container_fluid' || s.contentWidth === 'full' || s.contentWidth === 'fluid';
+			const widthValue = this.responsiveSetting('containerWidth', s.containerWidth || '100%');
+			const maxWidthValue = this.responsiveSetting('maxWidth', s.maxWidth || 'auto');
+			const minHeightValue = this.responsiveSetting('minHeight', s.minHeight || 'auto');
 			// Arsitektur baru: Container adalah wrapper block-level.
 			// Display/flex/grid layout diterapkan di el-cont-columns (inner div) via contColumnsStyle di BuilderNode.
 			// Container sendiri hanya menangani: background, border, shadow, padding, margin, min-height, width.
 			const style = {
 				display: 'block',
 				boxSizing: 'border-box',
-				width: fullMode ? this.toCssSize(s.containerWidth || '100%', '100%') : '100%',
+				width: fullMode ? this.toCssSize(widthValue, '100%') : '100%',
 			};
 
 			Object.assign(style, this.backgroundStyles(s, ''));
@@ -145,18 +152,18 @@ export default {
 
 			style.borderRadius = this.borderRadius(s);
 			style.boxShadow = this.shadowValue(s);
-			style.paddingTop = this.toCssSize(s.paddingTop, '0');
-			style.paddingRight = this.toCssSize(s.paddingRight, '0');
-			style.paddingBottom = this.toCssSize(s.paddingBottom, '0');
-			style.paddingLeft = this.toCssSize(s.paddingLeft, '0');
-			style.marginTop = this.toCssSpace(s.marginTop, '0');
-			style.marginRight = this.toCssSpace(s.marginRight, '0');
-			style.marginBottom = this.toCssSpace(s.marginBottom, '0');
-			style.marginLeft = this.toCssSpace(s.marginLeft, '0');
-			style.minHeight = this.toCssSize(s.minHeight, 'auto');
+			style.paddingTop = this.toCssSize(this.responsiveSetting('paddingTop', s.paddingTop), '0');
+			style.paddingRight = this.toCssSize(this.responsiveSetting('paddingRight', s.paddingRight), '0');
+			style.paddingBottom = this.toCssSize(this.responsiveSetting('paddingBottom', s.paddingBottom), '0');
+			style.paddingLeft = this.toCssSize(this.responsiveSetting('paddingLeft', s.paddingLeft), '0');
+			style.marginTop = this.toCssSpace(this.responsiveSetting('marginTop', s.marginTop), '0');
+			style.marginRight = this.toCssSpace(this.responsiveSetting('marginRight', s.marginRight), '0');
+			style.marginBottom = this.toCssSpace(this.responsiveSetting('marginBottom', s.marginBottom), '0');
+			style.marginLeft = this.toCssSpace(this.responsiveSetting('marginLeft', s.marginLeft), '0');
+			style.minHeight = this.toCssSize(minHeightValue, 'auto');
 
 			if (!fullMode) {
-				style.maxWidth = this.toCssSize(s.maxWidth, 'auto');
+				style.maxWidth = this.toCssSize(maxWidthValue, 'auto');
 			}
 
 			this.applyAdvancedLayoutStyle(style, s);
@@ -176,8 +183,22 @@ export default {
 			if (device === 'mobile') return 'Mobile';
 			return '';
 		},
-		responsiveSetting(base, device) {
+		responsiveSettingForDevice(base, device) {
 			return this.settings[base + this.responsiveSuffix(device)];
+		},
+		responsiveSetting(base, fallback = '') {
+			const device = this.responsiveDevice || 'desktop';
+			const key = base + this.responsiveSuffix(device);
+			const value = this.settings[key];
+			if (device !== 'desktop' && (value === '' || value === null || value === undefined)) {
+				const desktopValue = this.settings[base];
+				return desktopValue === null || desktopValue === undefined || desktopValue === '' ? fallback : desktopValue;
+			}
+			if (value === '' || value === null || value === undefined) {
+				const desktopValue = this.settings[base];
+				return desktopValue === null || desktopValue === undefined || desktopValue === '' ? fallback : desktopValue;
+			}
+			return value;
 		},
 		appendResponsiveEdgeRules(rules, cssPrefix, settingPrefix, device, allowAuto) {
 			[
@@ -186,7 +207,7 @@ export default {
 				['bottom', 'Bottom'],
 				['left', 'Left'],
 			].forEach(([cssSide, settingSide]) => {
-				const raw = this.responsiveSetting(settingPrefix + settingSide, device);
+				const raw = this.responsiveSettingForDevice(settingPrefix + settingSide, device);
 
 				if (raw === '' || raw == null) return;
 
@@ -490,4 +511,3 @@ export default {
 	},
 };
 </script>
-

@@ -3297,6 +3297,23 @@
 
 		<div class="pb-canvas-wrap" @click="clearSel">
 			<div class="pb-stage-window" @click.stop>
+				<div class="pb-stage-chrome">
+					<div class="pb-stage-chrome-left">
+						<span class="pb-stage-dot is-red"></span>
+						<span class="pb-stage-dot is-yellow"></span>
+						<span class="pb-stage-dot is-green"></span>
+					</div>
+					<div class="pb-stage-address">
+						<i class="fa-solid fa-lock"></i>
+						<span>Non code website builder</span>
+					</div>
+					<div class="pb-stage-chrome-right">
+						<button class="pb-stage-icon-btn" type="button" title="Share"><i class="fa-solid fa-arrow-up-from-bracket"></i></button>
+						<button class="pb-stage-icon-btn" type="button" title="Add"><i class="fa-solid fa-plus"></i></button>
+						<button class="pb-stage-icon-btn" type="button" title="Copy"><i class="fa-regular fa-copy"></i></button>
+					</div>
+				</div>
+
 				<div class="pb-stage-toolbar">
 					<div class="pb-stage-device-group">
 						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='mobile' }" @click="setResponsiveDevice('mobile')" title="Mobile"><i class="fa-solid fa-mobile-screen-button"></i></button>

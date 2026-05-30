@@ -164,24 +164,10 @@
 			containerWidth: '100%',
 			maxWidth: 'auto',
 			minHeight: 'auto',
-			containerWidthTablet: '',
-			containerWidthMobile: '',
-			maxWidthTablet: '',
-			maxWidthMobile: '',
-			minHeightTablet: '',
-			minHeightMobile: '',
 			direction: 'row',
-			directionTablet: '',
-			directionMobile: '',
 			justifyContent: 'flex-start',
-			justifyContentTablet: '',
-			justifyContentMobile: '',
 			alignItems: 'flex-start',
-			alignItemsTablet: '',
-			alignItemsMobile: '',
 			alignContent: 'stretch',
-			alignContentTablet: '',
-			alignContentMobile: '',
 			alignSelf: 'auto',
 			order: '',
 			sizeMode: 'default',
@@ -189,35 +175,15 @@
 			flexRowGap: '0',
 			flexColumnGap: '0',
 			flexWrap: 'nowrap',
-			flexRowGapTablet: '',
-			flexRowGapMobile: '',
-			flexColumnGapTablet: '',
-			flexColumnGapMobile: '',
-			flexWrapTablet: '',
-			flexWrapMobile: '',
 			containerGapLinked: true,
 			gridColumns: 3,
-			gridColumnsTablet: '',
-			gridColumnsMobile: '',
 			gridRows: '1',
-			gridRowsTablet: '',
-			gridRowsMobile: '',
 			gridColumnGap: '10px',
 			gridRowGap: '10px',
-			gridColumnGapTablet: '',
-			gridColumnGapMobile: '',
-			gridRowGapTablet: '',
-			gridRowGapMobile: '',
 			gridOutline: true,
 			gridJustifyItems: 'stretch',
 			gridAlignItems: 'start',
-			gridJustifyItemsTablet: '',
-			gridJustifyItemsMobile: '',
-			gridAlignItemsTablet: '',
-			gridAlignItemsMobile: '',
 			autoFlow: 'row',
-			autoFlowTablet: '',
-			autoFlowMobile: '',
 			overflow: 'default',
 			htmlTag: 'default',
 			position: 'default',
@@ -614,7 +580,6 @@
 		props: {
 			node:        { type: Object,   required: true },
 			selectedId:  { type: String,   default: '' },
-			responsiveDevice: { type: String, default: 'desktop' },
 			// Handlers dari app
 			onAddContainer: { type: Function, required: true },
 			onAddCol:       { type: Function, required: true },
@@ -635,17 +600,13 @@
 			gridCols() { return this.node.settings?.gridTemplateColumns || 'repeat(' + clamp(Number(this.node.settings?.columns || 2), 1, 12) + ', minmax(0, 1fr))'; },
 			gridStyle() {
 				const s = this.node.settings || {};
-				const columnGap = this.nodeResponsiveValue('columnGap', s.columnGap || s.gap || '');
-				const rowGap = this.nodeResponsiveValue('rowGap', s.rowGap || s.gap || '');
-				const autoFlow = this.nodeResponsiveValue('autoFlow', s.autoFlow || 'row') || 'row';
-				const rowsValue = this.nodeResponsiveValue('gridRows', s.gridRows);
 				const style = {
 					gridTemplateColumns: this.gridCols,
-					columnGap: cssSize(columnGap, '20px'),
-					rowGap: cssSize(rowGap, '20px'),
-					gridAutoFlow: autoFlow,
+					columnGap: cssSize(s.columnGap || s.gap, '20px'),
+					rowGap: cssSize(s.rowGap || s.gap, '20px'),
+					gridAutoFlow: s.autoFlow || 'row',
 				};
-				const rows = gridRowsTemplate(rowsValue);
+				const rows = gridRowsTemplate(s.gridRows);
 				if (rows) style.gridTemplateRows = rows;
 				if (s.gridAutoHeight === false || s.gridAutoHeight === 'false' || s.gridAutoHeight === 0) {
 					style.gridAutoRows = '1fr';
@@ -671,39 +632,24 @@
 				const s = this.node.settings || {};
 				const dt = s.displayType || 'flex';
 				if (dt === 'grid') {
-					const responsiveCols = clamp(Number(this.nodeResponsiveValue('gridColumns', s.gridColumns || 3) || (s.gridColumns || 3)), 1, 12);
-					const useTemplate = (this.responsiveDevice || 'desktop') === 'desktop' && String(s.gridTemplateColumns || '').trim() !== '';
-					const cols = useTemplate ? s.gridTemplateColumns : ('repeat(' + responsiveCols + ', minmax(0, 1fr))');
-					const gridColumnGap = this.nodeResponsiveValue('gridColumnGap', s.gridColumnGap);
-					const gridRowGap = this.nodeResponsiveValue('gridRowGap', s.gridRowGap);
-					const autoFlow = this.nodeResponsiveValue('autoFlow', s.autoFlow || 'row') || 'row';
-					const justifyItems = this.nodeResponsiveValue('gridJustifyItems', s.gridJustifyItems || 'stretch') || 'stretch';
-					const alignItems = this.nodeResponsiveValue('gridAlignItems', s.gridAlignItems || 'start') || 'start';
-					const rowsValue = this.nodeResponsiveValue('gridRows', s.gridRows);
+					const cols = s.gridTemplateColumns || ('repeat(' + clamp(Number(s.gridColumns || 3), 1, 12) + ', minmax(0, 1fr))');
 					const style = {
 						display: 'grid',
 						gridTemplateColumns: cols,
-						columnGap: cssSize(gridColumnGap, '20px'),
-						rowGap: cssSize(gridRowGap, '20px'),
-						gridAutoFlow: autoFlow,
-						justifyItems,
-						alignItems,
+						columnGap: cssSize(s.gridColumnGap, '20px'),
+						rowGap: cssSize(s.gridRowGap, '20px'),
+						gridAutoFlow: s.autoFlow || 'row',
+						justifyItems: s.gridJustifyItems || 'stretch',
+						alignItems: s.gridAlignItems || 'start',
 						width: '100%',
 					};
-					const rows = containerGridRowsTemplate(rowsValue); if (rows) style.gridTemplateRows = rows;
+					const rows = containerGridRowsTemplate(s.gridRows); if (rows) style.gridTemplateRows = rows;
 					return style;
 				}
 				if (dt === 'flex') {
-					const direction = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-					const flexWrap = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
-					const justifyContent = this.nodeResponsiveValue('justifyContent', s.justifyContent || 'flex-start') || 'flex-start';
-					const alignItems = this.nodeResponsiveValue('alignItems', s.alignItems || 'flex-start') || 'flex-start';
-					const alignContent = this.nodeResponsiveValue('alignContent', s.alignContent || 'stretch') || 'stretch';
-					const rowGap = this.nodeResponsiveValue('flexRowGap', s.flexRowGap || s.gap || '0');
-					const columnGap = this.nodeResponsiveValue('flexColumnGap', s.flexColumnGap || s.gap || '0');
-					return { display:'flex', flexDirection:direction, flexWrap,
-						justifyContent, alignItems, alignContent,
-						gap:cssSize(s.gap,'0'), rowGap:cssSize(rowGap,'0'), columnGap:cssSize(columnGap,'0'), width:'100%' };
+					return { display:'flex', flexDirection:s.direction||'row', flexWrap:s.flexWrap||'nowrap',
+						justifyContent:s.justifyContent||'flex-start', alignItems:s.alignItems||'flex-start', alignContent:s.alignContent||'stretch',
+						gap:cssSize(s.gap,'0'), rowGap:cssSize(s.flexRowGap||s.gap,'0'), columnGap:cssSize(s.flexColumnGap||s.gap,'0'), width:'100%' };
 				}
 				return { display:'block', width:'100%' };
 			},
@@ -727,7 +673,6 @@
 			passdown() {
 				return {
 					selectedId:     this.selectedId,
-					responsiveDevice: this.responsiveDevice,
 					onAddContainer: this.onAddContainer,
 					onAddCol:       this.onAddCol,
 					onSelect:       this.onSelect,
@@ -745,9 +690,9 @@
 				const hasBasis = rawBasis !== '';
 
 				if (dt === 'flex') {
-					const dir = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
+					const dir = s.direction || 'row';
 					const isColumnDir = dir === 'column' || dir === 'column-reverse';
-					const wrapMode = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
+					const wrapMode = s.flexWrap || 'nowrap';
 					const isWrapMode = wrapMode === 'wrap' || wrapMode === 'wrap-reverse';
 
 					if (hasBasis) {
@@ -804,14 +749,14 @@
 					end: 'flex-end',
 					stretch: 'flex-start',
 				};
-				const alignItems = String(this.nodeResponsiveValue('gridAlignItems', s.gridAlignItems || 'start') || 'start').toLowerCase();
+				const alignItems = String(s.gridAlignItems || 'start').toLowerCase();
 				return { ...base, justifyContent: mapMain[alignItems] || 'flex-start' };
 			},
 			contGridNodeStyle(col) {
 				const s = this.node.settings || {};
 				if ((s.displayType || 'flex') !== 'grid') return {};
 
-				const justifyItems = String(this.nodeResponsiveValue('gridJustifyItems', s.gridJustifyItems || 'stretch') || 'stretch').toLowerCase();
+				const justifyItems = String(s.gridJustifyItems || 'stretch').toLowerCase();
 				const style = {
 					maxWidth: '100%',
 					marginTop: '0',
@@ -837,7 +782,7 @@
 				}
 
 				// Vertical placement applies only when a cell has one widget.
-				const alignItems = String(this.nodeResponsiveValue('gridAlignItems', s.gridAlignItems || 'start') || 'start').toLowerCase();
+				const alignItems = String(s.gridAlignItems || 'start').toLowerCase();
 				const childCount = Array.isArray(col?.children) ? col.children.length : 0;
 				if (childCount <= 1) {
 					if (alignItems === 'center') {
@@ -850,18 +795,6 @@
 				}
 
 				return style;
-			},
-			nodeResponsiveValue(base, fallback = '') {
-				const s = this.node.settings || {};
-				const device = this.responsiveDevice || 'desktop';
-				const key = responsiveKey(base, device);
-				const value = s[key];
-				if (device !== 'desktop' && (value === '' || value === null || value === undefined)) {
-					const desktopValue = s[base];
-					return (desktopValue === null || desktopValue === undefined || desktopValue === '') ? fallback : desktopValue;
-				}
-				if (value === null || value === undefined || value === '') return fallback;
-				return value;
 			},
 			loadWidget,
 		},
@@ -888,7 +821,7 @@
 		<!-- CONTAINER -->
 		<!-- CONTAINER: merender columns sesuai displayType -->
 		<template v-if="isCont">
-			<component :is="loadWidget(node.type)" :item="node" :responsive-device="responsiveDevice">
+			<component :is="loadWidget(node.type)" :item="node">
 				<div class="el-cont-columns" :style="contColumnsStyle">
 					<div
 						v-for="(col, ci) in (node.columns || [])"
@@ -1043,45 +976,10 @@
 			const responsiveDevice = ref('desktop');
 			const rootNodes   = ref([]);
 			const responsiveDevices = [
-				{ value: 'desktop', label: 'Desktop', menuLabel: 'Desktop', icon: 'fa-solid fa-desktop' },
-				{ value: 'tablet', label: 'Tablet', menuLabel: 'Tablet Portrait', icon: 'fa-solid fa-tablet-screen-button' },
-				{ value: 'mobile', label: 'Mobile', menuLabel: 'Mobile Portrait', icon: 'fa-solid fa-mobile-screen-button' },
+				{ value: 'desktop', label: 'Desktop', icon: 'fa-solid fa-desktop' },
+				{ value: 'tablet', label: 'Tablet', icon: 'fa-solid fa-tablet-screen-button' },
+				{ value: 'mobile', label: 'Mobile', icon: 'fa-solid fa-mobile-screen-button' },
 			];
-			const controlResponsiveMenu = ref('');
-
-			function responsiveMeta(device = responsiveDevice.value) {
-				return responsiveDevices.find((entry) => entry.value === device) || responsiveDevices[0];
-			}
-			function responsiveDeviceIcon(device = responsiveDevice.value) {
-				return responsiveMeta(device).icon;
-			}
-			function responsiveDeviceLabel(device = responsiveDevice.value) {
-				const meta = responsiveMeta(device);
-				return meta.menuLabel || meta.label || '';
-			}
-			function deviceOptionLabel(device) {
-				if (!device || typeof device !== 'object') return '';
-				return device.menuLabel || device.label || '';
-			}
-			function openControlResponsiveMenu(key) {
-				const safeKey = String(key || '');
-				controlResponsiveMenu.value = controlResponsiveMenu.value === safeKey ? '' : safeKey;
-			}
-			function closeControlResponsiveMenu() {
-				controlResponsiveMenu.value = '';
-			}
-			function isControlResponsiveMenuOpen(key) {
-				return controlResponsiveMenu.value === String(key || '');
-			}
-			function setResponsiveDevice(device) {
-				if (device === 'desktop' || device === 'tablet' || device === 'mobile') {
-					responsiveDevice.value = device;
-				}
-			}
-			function applyResponsiveDevice(key, device) {
-				setResponsiveDevice(device);
-				closeControlResponsiveMenu();
-			}
 
 			// ── History ───────────────────────────────────────────────────────
 			const hist    = ref([]);
@@ -1254,27 +1152,6 @@
 			function activeResponsiveKey(base) {
 				return responsiveKey(base, responsiveDevice.value);
 			}
-			function getResponsiveSetting(settings, base, fallback = '') {
-				if (!settings) return fallback;
-				const key = activeResponsiveKey(base);
-				const value = settings[key];
-				if (responsiveDevice.value !== 'desktop' && (value === '' || value === null || value === undefined)) {
-					const desktopValue = settings[base];
-					return (desktopValue === '' || desktopValue === null || desktopValue === undefined) ? fallback : desktopValue;
-				}
-				if (value === '' || value === null || value === undefined) return fallback;
-				return value;
-			}
-			function setResponsiveSetting(settings, base, value) {
-				if (!settings) return;
-				settings[activeResponsiveKey(base)] = value;
-			}
-			function containerResponsiveValue(settings, base, fallback = '') {
-				return getResponsiveSetting(settings, base, fallback);
-			}
-			function setContainerResponsiveSetting(settings, base, value) {
-				setResponsiveSetting(settings, base, value);
-			}
 			function syncResponsiveSides(settings, base, side, linked) {
 				if (!linked) return;
 				const sourceKey = activeResponsiveKey(base + side);
@@ -1311,7 +1188,7 @@
 				if (!node || !node.settings) return '';
 				const s = node.settings;
 				const boxedMode = s.contentWidth === 'boxed';
-				return boxedMode ? getResponsiveSetting(s, 'maxWidth', '') : getResponsiveSetting(s, 'containerWidth', '');
+				return boxedMode ? (s.maxWidth || '') : (s.containerWidth || '');
 			}
 			function containerWidthValue(node) {
 				const parsed = parseNumberUnit(containerWidthSource(node), '%', ['px', '%', 'vw']);
@@ -1327,8 +1204,8 @@
 				const s = node.settings;
 				const unit = containerWidthUnit(node);
 				const token = toSizeToken(next, unit, s.contentWidth === 'boxed' ? 'auto' : '100%');
-				if (s.contentWidth === 'boxed') setResponsiveSetting(s, 'maxWidth', token);
-				else setResponsiveSetting(s, 'containerWidth', token);
+				if (s.contentWidth === 'boxed') s.maxWidth = token;
+				else s.containerWidth = token;
 			}
 			function setContainerWidthUnit(node, unit) {
 				if (!node || !node.settings) return;
@@ -1337,76 +1214,60 @@
 				const value = containerWidthValue(node);
 				setContainerWidthValue(node, value);
 				if (node.settings.contentWidth === 'boxed') {
-					setResponsiveSetting(node.settings, 'maxWidth', toSizeToken(value, safe, 'auto'));
+					node.settings.maxWidth = toSizeToken(value, safe, 'auto');
 				} else {
-					setResponsiveSetting(node.settings, 'containerWidth', toSizeToken(value, safe, '100%'));
+					node.settings.containerWidth = toSizeToken(value, safe, '100%');
 				}
 			}
 			function onContainerContentWidthChange(node) {
 				if (!node || !node.settings) return;
 				const s = node.settings;
 				if (s.contentWidth === 'boxed') {
-					const maxWidth = getResponsiveSetting(s, 'maxWidth', '');
-					if (!maxWidth || String(maxWidth).trim() === '') {
-						setResponsiveSetting(s, 'maxWidth', getResponsiveSetting(s, 'containerWidth', '100%') || '100%');
+					if (!s.maxWidth || String(s.maxWidth).trim() === '') {
+						s.maxWidth = s.containerWidth || '100%';
 					}
 					return;
 				}
-				const containerWidth = getResponsiveSetting(s, 'containerWidth', '');
-				if (!containerWidth || String(containerWidth).trim() === '' || containerWidth === 'auto') {
-					const maxWidth = getResponsiveSetting(s, 'maxWidth', '');
-					setResponsiveSetting(s, 'containerWidth', (maxWidth && maxWidth !== 'auto') ? maxWidth : '100%');
+				if (!s.containerWidth || String(s.containerWidth).trim() === '' || s.containerWidth === 'auto') {
+					s.containerWidth = (s.maxWidth && s.maxWidth !== 'auto') ? s.maxWidth : '100%';
 				}
 			}
 			function minHeightValue(node) {
 				if (!node || !node.settings) return '';
-				const parsed = parseNumberUnit(getResponsiveSetting(node.settings, 'minHeight', ''), 'px', ['px', 'vh']);
+				const parsed = parseNumberUnit(node.settings.minHeight, 'px', ['px', 'vh']);
 				return parsed.value;
 			}
 			function minHeightUnit(node) {
 				if (!node || !node.settings) return 'px';
-				const parsed = parseNumberUnit(getResponsiveSetting(node.settings, 'minHeight', ''), 'px', ['px', 'vh']);
+				const parsed = parseNumberUnit(node.settings.minHeight, 'px', ['px', 'vh']);
 				return parsed.unit;
 			}
 			function setMinHeightValue(node, next) {
 				if (!node || !node.settings) return;
 				const unit = minHeightUnit(node);
-				setResponsiveSetting(node.settings, 'minHeight', toSizeToken(next, unit, 'auto'));
+				node.settings.minHeight = toSizeToken(next, unit, 'auto');
 			}
 			function setMinHeightUnit(node, unit) {
 				if (!node || !node.settings) return;
 				const safe = ['px', 'vh'].includes(unit) ? unit : 'px';
 				const value = minHeightValue(node);
-				setResponsiveSetting(node.settings, 'minHeight', toSizeToken(value, safe, 'auto'));
-			}
-			function containerGridColumnsValue(node) {
-				if (!node || !node.settings) return 1;
-				const current = containerResponsiveValue(node.settings, 'gridColumns', node.settings.gridColumns || 3);
-				return clamp(Number(current) || Number(node.settings.gridColumns) || 3, 1, 12);
-			}
-			function setContainerGridColumnsValue(node, next) {
-				if (!node || !node.settings) return;
-				const value = clamp(Number(next) || 1, 1, 12);
-				setContainerResponsiveSetting(node.settings, 'gridColumns', value);
-				if (responsiveDevice.value === 'desktop') syncCols(node);
+				node.settings.minHeight = toSizeToken(value, safe, 'auto');
 			}
 			function containerGridRowsValue(node) {
 				if (!node || !node.settings) return 1;
-				const current = containerResponsiveValue(node.settings, 'gridRows', node.settings.gridRows || '1');
-				return containerGridRowsCount(current);
+				return containerGridRowsCount(node.settings.gridRows);
 			}
 			function setContainerGridRowsValue(node, next) {
 				if (!node || !node.settings) return;
 				const value = clamp(Number(next) || 1, 1, 12);
-				setContainerResponsiveSetting(node.settings, 'gridRows', String(value));
-				if (responsiveDevice.value === 'desktop') syncCols(node);
+				node.settings.gridRows = String(value);
 			}
 			function syncContainerGap(settings, source) {
 				if (!settings || !settings.containerGapLinked) return;
-				if (source === 'column') setResponsiveSetting(settings, 'flexRowGap', getResponsiveSetting(settings, 'flexColumnGap', settings.flexColumnGap || ''));
-				if (source === 'row') setResponsiveSetting(settings, 'flexColumnGap', getResponsiveSetting(settings, 'flexRowGap', settings.flexRowGap || ''));
-				if (source === 'gridColumn') setResponsiveSetting(settings, 'gridRowGap', getResponsiveSetting(settings, 'gridColumnGap', settings.gridColumnGap || ''));
-				if (source === 'gridRow') setResponsiveSetting(settings, 'gridColumnGap', getResponsiveSetting(settings, 'gridRowGap', settings.gridRowGap || ''));
+				if (source === 'column') settings.flexRowGap = settings.flexColumnGap;
+				if (source === 'row') settings.flexColumnGap = settings.flexRowGap;
+				if (source === 'gridColumn') settings.gridRowGap = settings.gridColumnGap;
+				if (source === 'gridRow') settings.gridColumnGap = settings.gridRowGap;
 			}
 			function bgStateSuffix(node) {
 				const state = String(node?.settings?.bgState || 'normal').toLowerCase();
@@ -1450,27 +1311,12 @@
 				const dt = s.displayType || 'flex';
 
 				if (dt === 'flex') {
-					const nextRow = firstGapValue(
-						getResponsiveSetting(s, 'gridRowGap', ''),
-						s.rowGap,
-						getResponsiveSetting(s, 'gridColumnGap', ''),
-						s.columnGap,
-						s.gap,
-						'0'
-					);
-					const nextCol = firstGapValue(
-						getResponsiveSetting(s, 'gridColumnGap', ''),
-						s.columnGap,
-						getResponsiveSetting(s, 'gridRowGap', ''),
-						s.rowGap,
-						s.gap,
-						nextRow,
-						'0'
-					);
+					const nextRow = firstGapValue(s.gridRowGap, s.rowGap, s.gridColumnGap, s.columnGap, s.gap, '0');
+					const nextCol = firstGapValue(s.gridColumnGap, s.columnGap, s.gridRowGap, s.rowGap, s.gap, nextRow, '0');
 
 					// Selalu sinkron saat switch mode agar user melihat value yang konsisten.
-					setResponsiveSetting(s, 'flexRowGap', nextRow);
-					setResponsiveSetting(s, 'flexColumnGap', nextCol);
+					s.flexRowGap = nextRow;
+					s.flexColumnGap = nextCol;
 					s.rowGap = nextRow;
 					s.columnGap = nextCol;
 					s.gap = nextRow === nextCol ? nextCol : '0';
@@ -1478,25 +1324,12 @@
 				}
 
 				if (dt === 'grid') {
-					const nextRow = firstGapValue(
-						getResponsiveSetting(s, 'flexRowGap', ''),
-						s.rowGap,
-						s.gap,
-						getResponsiveSetting(s, 'flexColumnGap', ''),
-						'10px'
-					);
-					const nextCol = firstGapValue(
-						getResponsiveSetting(s, 'flexColumnGap', ''),
-						s.columnGap,
-						s.gap,
-						getResponsiveSetting(s, 'flexRowGap', ''),
-						nextRow,
-						'10px'
-					);
+					const nextRow = firstGapValue(s.flexRowGap, s.rowGap, s.gap, s.flexColumnGap, '10px');
+					const nextCol = firstGapValue(s.flexColumnGap, s.columnGap, s.gap, s.flexRowGap, nextRow, '10px');
 
 					// Selalu sinkron saat switch mode agar user melihat value yang konsisten.
-					setResponsiveSetting(s, 'gridRowGap', nextRow);
-					setResponsiveSetting(s, 'gridColumnGap', nextCol);
+					s.gridRowGap = nextRow;
+					s.gridColumnGap = nextCol;
 					s.rowGap = nextRow;
 					s.columnGap = nextCol;
 				}
@@ -1518,11 +1351,7 @@
 				}
 			);
 			watch(selectedNode, n => { if (n?.type==='video') n.settings.youtubeEmbed = toEmbed(n.settings.youtubeUrl||''); }, { deep: true });
-			watch(selectedId, () => {
-				settingsTab.value = 'layout';
-				responsiveDevice.value = 'desktop';
-				closeControlResponsiveMenu();
-			});
+			watch(selectedId, () => { settingsTab.value = 'layout'; responsiveDevice.value = 'desktop'; });
 
 			// ── Remove / Dup ──────────────────────────────────────────────────
 			function delFrom(nodes, id) {
@@ -1940,14 +1769,9 @@
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
 				selectedId, settingsTab, selectedNode, selectedType,
 				responsiveDevice, responsiveDevices, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
-				controlResponsiveMenu, responsiveDeviceIcon, responsiveDeviceLabel, deviceOptionLabel,
-				openControlResponsiveMenu, closeControlResponsiveMenu, isControlResponsiveMenuOpen,
-				setResponsiveDevice, applyResponsiveDevice,
-				containerResponsiveValue, setContainerResponsiveSetting,
 				onContainerDisplayTypeChange, onContainerContentWidthChange,
 				containerWidthValue, containerWidthUnit, setContainerWidthValue, setContainerWidthUnit,
 				minHeightValue, minHeightUnit, setMinHeightValue, setMinHeightUnit,
-				containerGridColumnsValue, setContainerGridColumnsValue,
 				containerGridRowsValue, setContainerGridRowsValue, syncContainerGap,
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
 				displayNodeLabel,
@@ -2094,18 +1918,7 @@
 									</select>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Width</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-width')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-width')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-width-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-width', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
+									<label class="pb-form-label">Width</label>
 									<div class="pb-range-value-row">
 										<input type="range" class="pb-range" min="0" max="2000" step="1" :value="containerWidthValue(selectedNode)" @input="setContainerWidthValue(selectedNode, $event.target.value)">
 										<div class="pb-value-with-unit">
@@ -2119,18 +1932,7 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Min Height</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-min-height')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-min-height')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-min-height-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-min-height', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
+									<label class="pb-form-label">Min Height</label>
 									<div class="pb-range-value-row">
 										<input type="range" class="pb-range" min="0" max="1000" step="1" :value="minHeightValue(selectedNode) || 0" @input="setMinHeightValue(selectedNode, $event.target.value)">
 										<div class="pb-value-with-unit">
@@ -2149,128 +1951,62 @@
 								<summary>Items</summary>
 								<div class="pb-collapsible-body">
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Direction</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-direction')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-direction')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-direction-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-direction', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
+									<label class="pb-form-label">Direction</label>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'direction','row')==='row'}"            @click="setContainerResponsiveSetting(selectedNode.settings,'direction','row')"            title="Row"><i class="fa-solid fa-arrow-right"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'direction','row')==='column'}"         @click="setContainerResponsiveSetting(selectedNode.settings,'direction','column')"         title="Column"><i class="fa-solid fa-arrow-down"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'direction','row')==='row-reverse'}"    @click="setContainerResponsiveSetting(selectedNode.settings,'direction','row-reverse')"    title="Row Reverse"><i class="fa-solid fa-arrow-left"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'direction','row')==='column-reverse'}" @click="setContainerResponsiveSetting(selectedNode.settings,'direction','column-reverse')" title="Col Reverse"><i class="fa-solid fa-arrow-up"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.direction==='row'}"            @click="selectedNode.settings.direction='row'"            title="Row"><i class="fa-solid fa-arrow-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.direction==='column'}"         @click="selectedNode.settings.direction='column'"         title="Column"><i class="fa-solid fa-arrow-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.direction==='row-reverse'}"    @click="selectedNode.settings.direction='row-reverse'"    title="Row Reverse"><i class="fa-solid fa-arrow-left"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.direction==='column-reverse'}" @click="selectedNode.settings.direction='column-reverse'" title="Col Reverse"><i class="fa-solid fa-arrow-up"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Justify Content</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-justify-content')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-justify-content')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-justify-content-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-justify-content', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
+									<label class="pb-form-label">Justify Content</label>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='flex-start'}"    @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','flex-start')"    title="Start"><i class="fa-solid fa-align-left"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='center'}"        @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','center')"        title="Center"><i class="fa-solid fa-align-center"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='flex-end'}"      @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','flex-end')"      title="End"><i class="fa-solid fa-align-right"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='space-between'}" @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','space-between')" title="Space Between"><i class="fa-solid fa-arrows-left-right-to-line"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='space-around'}"  @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','space-around')"  title="Space Around"><i class="fa-solid fa-grip-lines-vertical"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='space-evenly'}"  @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','space-evenly')"  title="Space Evenly"><i class="fa-solid fa-grip"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.justifyContent==='flex-start'}"    @click="selectedNode.settings.justifyContent='flex-start'"    title="Start"><i class="fa-solid fa-align-left"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.justifyContent==='center'}"        @click="selectedNode.settings.justifyContent='center'"        title="Center"><i class="fa-solid fa-align-center"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.justifyContent==='flex-end'}"      @click="selectedNode.settings.justifyContent='flex-end'"      title="End"><i class="fa-solid fa-align-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.justifyContent==='space-between'}" @click="selectedNode.settings.justifyContent='space-between'" title="Space Between"><i class="fa-solid fa-arrows-left-right-to-line"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.justifyContent==='space-around'}"  @click="selectedNode.settings.justifyContent='space-around'"  title="Space Around"><i class="fa-solid fa-grip-lines-vertical"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.justifyContent==='space-evenly'}"  @click="selectedNode.settings.justifyContent='space-evenly'"  title="Space Evenly"><i class="fa-solid fa-grip"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Align Items</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-align-items')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-align-items')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-align-items-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-align-items', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
+									<label class="pb-form-label">Align Items</label>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignItems','flex-start')==='flex-start'}" @click="setContainerResponsiveSetting(selectedNode.settings,'alignItems','flex-start')" title="Start"><i class="fa-solid fa-arrow-up"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignItems','flex-start')==='center'}"    @click="setContainerResponsiveSetting(selectedNode.settings,'alignItems','center')"    title="Center"><i class="fa-solid fa-arrows-up-down"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignItems','flex-start')==='flex-end'}"  @click="setContainerResponsiveSetting(selectedNode.settings,'alignItems','flex-end')"  title="End"><i class="fa-solid fa-arrow-down"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignItems','flex-start')==='stretch'}"   @click="setContainerResponsiveSetting(selectedNode.settings,'alignItems','stretch')"   title="Stretch"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignItems==='flex-start'}" @click="selectedNode.settings.alignItems='flex-start'" title="Start"><i class="fa-solid fa-arrow-up"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignItems==='center'}"    @click="selectedNode.settings.alignItems='center'"    title="Center"><i class="fa-solid fa-arrows-up-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignItems==='flex-end'}"  @click="selectedNode.settings.alignItems='flex-end'"  title="End"><i class="fa-solid fa-arrow-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignItems==='stretch'}"   @click="selectedNode.settings.alignItems='stretch'"   title="Stretch"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label">Gaps</label>
-										<div class="pb-label-tools">
-											<div class="pb-control-device-wrap">
-												<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-gaps')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-												<div v-if="isControlResponsiveMenuOpen('container-gaps')" class="pb-control-device-menu">
-													<button v-for="device in responsiveDevices" :key="'container-gaps-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-gaps', device.value)">
-														<i :class="device.icon"></i>
-														<span>{{ deviceOptionLabel(device) }}</span>
-													</button>
-												</div>
-											</div>
-											<div class="pb-control-unit-wrap">px</div>
-										</div>
+										<div class="pb-control-unit-wrap">px</div>
 									</div>
 									<div class="pb-gap-row pb-gap-row-with-link">
-										<div class="pb-gap-field"><input class="pb-input" :value="containerResponsiveValue(selectedNode.settings,'flexColumnGap',selectedNode.settings.flexColumnGap || '0')" @input="setContainerResponsiveSetting(selectedNode.settings,'flexColumnGap',$event.target.value); syncContainerGap(selectedNode.settings, 'column')" placeholder="20px"><span>Column</span></div>
-										<div class="pb-gap-field"><input class="pb-input" :value="containerResponsiveValue(selectedNode.settings,'flexRowGap',selectedNode.settings.flexRowGap || '0')" @input="setContainerResponsiveSetting(selectedNode.settings,'flexRowGap',$event.target.value); syncContainerGap(selectedNode.settings, 'row')" placeholder="20px"><span>Row</span></div>
+										<div class="pb-gap-field"><input class="pb-input" v-model="selectedNode.settings.flexColumnGap" @input="syncContainerGap(selectedNode.settings, 'column')" placeholder="20px"><span>Column</span></div>
+										<div class="pb-gap-field"><input class="pb-input" v-model="selectedNode.settings.flexRowGap" @input="syncContainerGap(selectedNode.settings, 'row')" placeholder="20px"><span>Row</span></div>
 										<button class="pb-link-btn" @click="selectedNode.settings.containerGapLinked=!selectedNode.settings.containerGapLinked" :title="selectedNode.settings.containerGapLinked?'Unlink':'Link'"><i :class="selectedNode.settings.containerGapLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Wrap</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-wrap')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-wrap')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-wrap-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-wrap', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
+									<label class="pb-form-label">Wrap</label>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'flexWrap','nowrap')==='nowrap'}" @click="setContainerResponsiveSetting(selectedNode.settings,'flexWrap','nowrap')" title="No Wrap"><i class="fa-solid fa-right-long"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'flexWrap','nowrap')==='wrap'}" @click="setContainerResponsiveSetting(selectedNode.settings,'flexWrap','wrap')" title="Wrap"><i class="fa-solid fa-turn-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.flexWrap==='nowrap'}" @click="selectedNode.settings.flexWrap='nowrap'" title="No Wrap"><i class="fa-solid fa-right-long"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.flexWrap==='wrap'}" @click="selectedNode.settings.flexWrap='wrap'" title="Wrap"><i class="fa-solid fa-turn-down"></i></button>
 									</div>
 									<div class="pb-form-note">Items within the container can stay in a single line (No wrap), or break into multiple lines (Wrap).</div>
 								</div>
-								<div class="pb-form-group" v-if="containerResponsiveValue(selectedNode.settings,'flexWrap','nowrap')==='wrap' || containerResponsiveValue(selectedNode.settings,'flexWrap','nowrap')==='wrap-reverse'">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Align Content</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-align-content')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-align-content')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-align-content-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-align-content', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
+								<div class="pb-form-group" v-if="selectedNode.settings.flexWrap==='wrap' || selectedNode.settings.flexWrap==='wrap-reverse'">
+									<label class="pb-form-label">Align Content</label>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='flex-start'}"    @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','flex-start')"    title="Start"><i class="fa-solid fa-align-left"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='center'}"        @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','center')"        title="Center"><i class="fa-solid fa-align-center"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='flex-end'}"      @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','flex-end')"      title="End"><i class="fa-solid fa-align-right"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='space-between'}" @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','space-between')" title="Space Between"><i class="fa-solid fa-arrows-left-right-to-line"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='space-around'}"  @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','space-around')"  title="Space Around"><i class="fa-solid fa-grip-lines-vertical"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='stretch'}"       @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','stretch')"       title="Stretch"><i class="fa-solid fa-left-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignContent==='flex-start'}"    @click="selectedNode.settings.alignContent='flex-start'"    title="Start"><i class="fa-solid fa-align-left"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignContent==='center'}"        @click="selectedNode.settings.alignContent='center'"        title="Center"><i class="fa-solid fa-align-center"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignContent==='flex-end'}"      @click="selectedNode.settings.alignContent='flex-end'"      title="End"><i class="fa-solid fa-align-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignContent==='space-between'}" @click="selectedNode.settings.alignContent='space-between'" title="Space Between"><i class="fa-solid fa-arrows-left-right-to-line"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignContent==='space-around'}"  @click="selectedNode.settings.alignContent='space-around'"  title="Space Around"><i class="fa-solid fa-grip-lines-vertical"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignContent==='stretch'}"       @click="selectedNode.settings.alignContent='stretch'"       title="Stretch"><i class="fa-solid fa-left-right"></i></button>
 									</div>
 								</div>
 								</div>
@@ -2282,41 +2018,19 @@
 									<div class="pb-label-row"><label class="pb-form-label mb-0">Grid Outline</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'containerGridOutline-' + selectedNode.id" v-model="selectedNode.settings.gridOutline"><label :for="'containerGridOutline-' + selectedNode.id"></label></div></div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Columns</label>
-										<div class="pb-label-tools">
-											<div class="pb-control-device-wrap">
-												<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-grid-columns')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-												<div v-if="isControlResponsiveMenuOpen('container-grid-columns')" class="pb-control-device-menu">
-													<button v-for="device in responsiveDevices" :key="'container-grid-columns-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-grid-columns', device.value)">
-														<i :class="device.icon"></i>
-														<span>{{ deviceOptionLabel(device) }}</span>
-													</button>
-												</div>
-											</div>
-											<div class="pb-control-unit-wrap">fr</div>
-										</div>
+										<div class="pb-control-unit-wrap">fr</div>
 									</div>
 									<div class="pb-range-value-row">
-										<input type="range" class="pb-range" min="1" max="12" step="1" :value="containerGridColumnsValue(selectedNode)" @input="setContainerGridColumnsValue(selectedNode, $event.target.value)">
-										<input class="pb-input pb-input-compact" type="number" min="1" max="12" step="1" :value="containerGridColumnsValue(selectedNode)" @input="setContainerGridColumnsValue(selectedNode, $event.target.value)">
+										<input type="range" class="pb-range" min="1" max="12" step="1" :value="selectedNode.settings.gridColumns || 3" @input="selectedNode.settings.gridColumns=Number($event.target.value)">
+										<input class="pb-input pb-input-compact" type="number" min="1" max="12" step="1" :value="selectedNode.settings.gridColumns || 3" @input="selectedNode.settings.gridColumns=Number($event.target.value)">
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Rows</label>
-										<div class="pb-label-tools">
-											<div class="pb-control-device-wrap">
-												<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-grid-rows')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-												<div v-if="isControlResponsiveMenuOpen('container-grid-rows')" class="pb-control-device-menu">
-													<button v-for="device in responsiveDevices" :key="'container-grid-rows-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-grid-rows', device.value)">
-														<i :class="device.icon"></i>
-														<span>{{ deviceOptionLabel(device) }}</span>
-													</button>
-												</div>
-											</div>
-											<div class="pb-control-unit-wrap">rows</div>
-										</div>
+										<div class="pb-control-unit-wrap">rows</div>
 									</div>
 									<div class="pb-range-value-row">
 										<input type="range" class="pb-range" min="1" max="12" step="1" :value="containerGridRowsValue(selectedNode)" @input="setContainerGridRowsValue(selectedNode, $event.target.value)">
@@ -2324,84 +2038,40 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
+									<div class="pb-label-row">
 										<label class="pb-form-label">Gaps</label>
-										<div class="pb-label-tools">
-											<div class="pb-control-device-wrap">
-												<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-grid-gaps')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-												<div v-if="isControlResponsiveMenuOpen('container-grid-gaps')" class="pb-control-device-menu">
-													<button v-for="device in responsiveDevices" :key="'container-grid-gaps-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-grid-gaps', device.value)">
-														<i :class="device.icon"></i>
-														<span>{{ deviceOptionLabel(device) }}</span>
-													</button>
-												</div>
-											</div>
-											<div class="pb-control-unit-wrap">px</div>
-										</div>
+										<div class="pb-control-unit-wrap">px</div>
 									</div>
 									<div class="pb-gap-row pb-gap-row-with-link">
-										<div class="pb-gap-field"><input class="pb-input" :value="containerResponsiveValue(selectedNode.settings,'gridColumnGap',selectedNode.settings.gridColumnGap || '10px')" @input="setContainerResponsiveSetting(selectedNode.settings,'gridColumnGap',$event.target.value); syncContainerGap(selectedNode.settings, 'gridColumn')" placeholder="20px"><span>Column</span></div>
-										<div class="pb-gap-field"><input class="pb-input" :value="containerResponsiveValue(selectedNode.settings,'gridRowGap',selectedNode.settings.gridRowGap || '10px')" @input="setContainerResponsiveSetting(selectedNode.settings,'gridRowGap',$event.target.value); syncContainerGap(selectedNode.settings, 'gridRow')" placeholder="20px"><span>Row</span></div>
+										<div class="pb-gap-field"><input class="pb-input" v-model="selectedNode.settings.gridColumnGap" @input="syncContainerGap(selectedNode.settings, 'gridColumn')" placeholder="20px"><span>Column</span></div>
+										<div class="pb-gap-field"><input class="pb-input" v-model="selectedNode.settings.gridRowGap" @input="syncContainerGap(selectedNode.settings, 'gridRow')" placeholder="20px"><span>Row</span></div>
 										<button class="pb-link-btn" @click="selectedNode.settings.containerGapLinked=!selectedNode.settings.containerGapLinked" :title="selectedNode.settings.containerGapLinked?'Unlink':'Link'"><i :class="selectedNode.settings.containerGapLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Auto Flow</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-grid-auto-flow')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-grid-auto-flow')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-grid-auto-flow-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-grid-auto-flow', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
-									<select class="pb-select" :value="containerResponsiveValue(selectedNode.settings,'autoFlow',selectedNode.settings.autoFlow || 'row')" @change="setContainerResponsiveSetting(selectedNode.settings,'autoFlow',$event.target.value)">
+									<label class="pb-form-label">Auto Flow</label>
+									<select class="pb-select" v-model="selectedNode.settings.autoFlow">
 										<option value="row">Row</option>
 										<option value="column">Column</option>
 										<option value="dense">Dense</option>
 									</select>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Justify Items</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-grid-justify-items')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-grid-justify-items')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-grid-justify-items-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-grid-justify-items', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
+									<label class="pb-form-label">Justify Items</label>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridJustifyItems','stretch')==='start'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridJustifyItems','start')" title="Start"><i class="fa-solid fa-align-left"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridJustifyItems','stretch')==='center'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridJustifyItems','center')" title="Center"><i class="fa-solid fa-align-center"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridJustifyItems','stretch')==='end'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridJustifyItems','end')" title="End"><i class="fa-solid fa-align-right"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridJustifyItems','stretch')==='stretch'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridJustifyItems','stretch')" title="Stretch"><i class="fa-solid fa-left-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.gridJustifyItems==='start'}" @click="selectedNode.settings.gridJustifyItems='start'" title="Start"><i class="fa-solid fa-align-left"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.gridJustifyItems==='center'}" @click="selectedNode.settings.gridJustifyItems='center'" title="Center"><i class="fa-solid fa-align-center"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.gridJustifyItems==='end'}" @click="selectedNode.settings.gridJustifyItems='end'" title="End"><i class="fa-solid fa-align-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.gridJustifyItems==='stretch'}" @click="selectedNode.settings.gridJustifyItems='stretch'" title="Stretch"><i class="fa-solid fa-left-right"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Align Items</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-grid-align-items')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-grid-align-items')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-grid-align-items-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-grid-align-items', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
+									<label class="pb-form-label">Align Items</label>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridAlignItems','start')==='start'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridAlignItems','start')" title="Start"><i class="fa-solid fa-arrow-up"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridAlignItems','start')==='center'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridAlignItems','center')" title="Center"><i class="fa-solid fa-arrows-up-down"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridAlignItems','start')==='end'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridAlignItems','end')" title="End"><i class="fa-solid fa-arrow-down"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridAlignItems','start')==='stretch'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridAlignItems','stretch')" title="Stretch"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.gridAlignItems==='start'}" @click="selectedNode.settings.gridAlignItems='start'" title="Start"><i class="fa-solid fa-arrow-up"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.gridAlignItems==='center'}" @click="selectedNode.settings.gridAlignItems='center'" title="Center"><i class="fa-solid fa-arrows-up-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.gridAlignItems==='end'}" @click="selectedNode.settings.gridAlignItems='end'" title="End"><i class="fa-solid fa-arrow-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.gridAlignItems==='stretch'}" @click="selectedNode.settings.gridAlignItems='stretch'" title="Stretch"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
 									</div>
 								</div>
 								</div>
@@ -3297,11 +2967,28 @@
 
 		<div class="pb-canvas-wrap" @click="clearSel">
 			<div class="pb-stage-window" @click.stop>
+				<div class="pb-stage-chrome">
+					<div class="pb-stage-chrome-left">
+						<span class="pb-stage-dot is-red"></span>
+						<span class="pb-stage-dot is-yellow"></span>
+						<span class="pb-stage-dot is-green"></span>
+					</div>
+					<div class="pb-stage-address">
+						<i class="fa-solid fa-lock"></i>
+						<span>Non code website builder</span>
+					</div>
+					<div class="pb-stage-chrome-right">
+						<button class="pb-stage-icon-btn" type="button" title="Share"><i class="fa-solid fa-arrow-up-from-bracket"></i></button>
+						<button class="pb-stage-icon-btn" type="button" title="Add"><i class="fa-solid fa-plus"></i></button>
+						<button class="pb-stage-icon-btn" type="button" title="Copy"><i class="fa-regular fa-copy"></i></button>
+					</div>
+				</div>
+
 				<div class="pb-stage-toolbar">
 					<div class="pb-stage-device-group">
-						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='mobile' }" @click="setResponsiveDevice('mobile')" title="Mobile"><i class="fa-solid fa-mobile-screen-button"></i></button>
-						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='tablet' }" @click="setResponsiveDevice('tablet')" title="Tablet"><i class="fa-solid fa-tablet-screen-button"></i></button>
-						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='desktop' }" @click="setResponsiveDevice('desktop')" title="Desktop"><i class="fa-solid fa-desktop"></i></button>
+						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='mobile' }" @click="responsiveDevice='mobile'" title="Mobile"><i class="fa-solid fa-mobile-screen-button"></i></button>
+						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='tablet' }" @click="responsiveDevice='tablet'" title="Tablet"><i class="fa-solid fa-tablet-screen-button"></i></button>
+						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='desktop' }" @click="responsiveDevice='desktop'" title="Desktop"><i class="fa-solid fa-desktop"></i></button>
 					</div>
 					<div class="pb-stage-width-pill">
 						<i class="fa-solid fa-arrows-left-right"></i>
@@ -3327,7 +3014,6 @@
 							<BuilderNode
 								:node="element"
 								:selected-id="selectedId"
-								:responsive-device="responsiveDevice"
 								:on-add-container="onAddContainer"
 								:on-add-col="onAddCol"
 								:on-select="selectNode"
@@ -3406,4 +3092,3 @@
 		`,
 	}).mount('#pbElementorApp');
 })();
-

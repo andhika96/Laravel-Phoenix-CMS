@@ -610,62 +610,9 @@
 			$responsive_side_rules($s, 'Mobile', 'padding', fn ($value) => $css_value($value, '0')),
 			$responsive_side_rules($s, 'Mobile', 'margin', fn ($value) => $css_space($value, '0'))
 		);
-		if (($s['minHeightTablet'] ?? '') !== '') $tabletRules[] = 'min-height:' . $css_value($s['minHeightTablet'], 'auto');
-		if (($s['minHeightMobile'] ?? '') !== '') $mobileRules[] = 'min-height:' . $css_value($s['minHeightMobile'], 'auto');
-		if ($fullMode) {
-			if (($s['containerWidthTablet'] ?? '') !== '') $tabletRules[] = 'width:' . $css_value($s['containerWidthTablet'], '100%');
-			if (($s['containerWidthMobile'] ?? '') !== '') $mobileRules[] = 'width:' . $css_value($s['containerWidthMobile'], '100%');
-		} else {
-			if (($s['maxWidthTablet'] ?? '') !== '') $tabletRules[] = 'max-width:' . $css_value($s['maxWidthTablet'], 'auto');
-			if (($s['maxWidthMobile'] ?? '') !== '') $mobileRules[] = 'max-width:' . $css_value($s['maxWidthMobile'], 'auto');
-		}
-
-		$tabletColsRules = [];
-		$mobileColsRules = [];
-		if ($display === 'flex') {
-			if (($s['directionTablet'] ?? '') !== '') $tabletColsRules[] = 'flex-direction:' . $s['directionTablet'];
-			if (($s['directionMobile'] ?? '') !== '') $mobileColsRules[] = 'flex-direction:' . $s['directionMobile'];
-			if (($s['justifyContentTablet'] ?? '') !== '') $tabletColsRules[] = 'justify-content:' . $s['justifyContentTablet'];
-			if (($s['justifyContentMobile'] ?? '') !== '') $mobileColsRules[] = 'justify-content:' . $s['justifyContentMobile'];
-			if (($s['alignItemsTablet'] ?? '') !== '') $tabletColsRules[] = 'align-items:' . $s['alignItemsTablet'];
-			if (($s['alignItemsMobile'] ?? '') !== '') $mobileColsRules[] = 'align-items:' . $s['alignItemsMobile'];
-			if (($s['alignContentTablet'] ?? '') !== '') $tabletColsRules[] = 'align-content:' . $s['alignContentTablet'];
-			if (($s['alignContentMobile'] ?? '') !== '') $mobileColsRules[] = 'align-content:' . $s['alignContentMobile'];
-			if (($s['flexWrapTablet'] ?? '') !== '') $tabletColsRules[] = 'flex-wrap:' . $s['flexWrapTablet'];
-			if (($s['flexWrapMobile'] ?? '') !== '') $mobileColsRules[] = 'flex-wrap:' . $s['flexWrapMobile'];
-			if (($s['flexColumnGapTablet'] ?? '') !== '') $tabletColsRules[] = 'column-gap:' . $css_value($s['flexColumnGapTablet'], '0');
-			if (($s['flexColumnGapMobile'] ?? '') !== '') $mobileColsRules[] = 'column-gap:' . $css_value($s['flexColumnGapMobile'], '0');
-			if (($s['flexRowGapTablet'] ?? '') !== '') $tabletColsRules[] = 'row-gap:' . $css_value($s['flexRowGapTablet'], '0');
-			if (($s['flexRowGapMobile'] ?? '') !== '') $mobileColsRules[] = 'row-gap:' . $css_value($s['flexRowGapMobile'], '0');
-		} elseif ($display === 'grid') {
-			if (($s['gridColumnGapTablet'] ?? '') !== '') $tabletColsRules[] = 'column-gap:' . $css_value($s['gridColumnGapTablet'], '20px');
-			if (($s['gridColumnGapMobile'] ?? '') !== '') $mobileColsRules[] = 'column-gap:' . $css_value($s['gridColumnGapMobile'], '20px');
-			if (($s['gridRowGapTablet'] ?? '') !== '') $tabletColsRules[] = 'row-gap:' . $css_value($s['gridRowGapTablet'], '20px');
-			if (($s['gridRowGapMobile'] ?? '') !== '') $mobileColsRules[] = 'row-gap:' . $css_value($s['gridRowGapMobile'], '20px');
-			if (($s['autoFlowTablet'] ?? '') !== '') $tabletColsRules[] = 'grid-auto-flow:' . $s['autoFlowTablet'];
-			if (($s['autoFlowMobile'] ?? '') !== '') $mobileColsRules[] = 'grid-auto-flow:' . $s['autoFlowMobile'];
-			if (($s['gridJustifyItemsTablet'] ?? '') !== '') $tabletColsRules[] = 'justify-items:' . $s['gridJustifyItemsTablet'];
-			if (($s['gridJustifyItemsMobile'] ?? '') !== '') $mobileColsRules[] = 'justify-items:' . $s['gridJustifyItemsMobile'];
-			if (($s['gridAlignItemsTablet'] ?? '') !== '') $tabletColsRules[] = 'align-items:' . $s['gridAlignItemsTablet'];
-			if (($s['gridAlignItemsMobile'] ?? '') !== '') $mobileColsRules[] = 'align-items:' . $s['gridAlignItemsMobile'];
-			if (($s['gridColumnsTablet'] ?? '') !== '') $tabletColsRules[] = 'grid-template-columns:' . $grid_columns_template($s['gridColumnsTablet']);
-			if (($s['gridColumnsMobile'] ?? '') !== '') $mobileColsRules[] = 'grid-template-columns:' . $grid_columns_template($s['gridColumnsMobile']);
-			if (($s['gridRowsTablet'] ?? '') !== '') $tabletColsRules[] = 'grid-template-rows:' . ($container_grid_rows_template($s['gridRowsTablet']) ?: 'none');
-			if (($s['gridRowsMobile'] ?? '') !== '') $mobileColsRules[] = 'grid-template-rows:' . ($container_grid_rows_template($s['gridRowsMobile']) ?: 'none');
-		}
 		$styleBlocks = [];
-		if ($tabletRules || $tabletColsRules) {
-			$css = [];
-			if ($tabletRules) $css[] = '#' . $nodeDomId . '{' . implode(';', $tabletRules) . '}';
-			if ($tabletColsRules) $css[] = '#' . $nodeDomId . ' > .el-cont-columns{' . implode(';', $tabletColsRules) . '}';
-			$styleBlocks[] = '@media (max-width: 1024px){' . implode('', $css) . '}';
-		}
-		if ($mobileRules || $mobileColsRules) {
-			$css = [];
-			if ($mobileRules) $css[] = '#' . $nodeDomId . '{' . implode(';', $mobileRules) . '}';
-			if ($mobileColsRules) $css[] = '#' . $nodeDomId . ' > .el-cont-columns{' . implode(';', $mobileColsRules) . '}';
-			$styleBlocks[] = '@media (max-width: 767px){' . implode('', $css) . '}';
-		}
+		if ($tabletRules) $styleBlocks[] = '@media (max-width: 1024px){#' . $nodeDomId . '{' . implode(';', $tabletRules) . '}}';
+		if ($mobileRules) $styleBlocks[] = '@media (max-width: 767px){#' . $nodeDomId . '{' . implode(';', $mobileRules) . '}}';
 
 		$hoverStyles = $background_styles($s, 'Hover');
 		if ($hoverStyles) {
