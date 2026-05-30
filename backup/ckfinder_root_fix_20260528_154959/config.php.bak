@@ -66,17 +66,6 @@ ini_set('display_errors', 0);
 
 $config = array();
 
-/**
- * Important for environments without symlink support (e.g. exFAT portable SSD):
- * force CKFinder local backend root to Laravel storage/app/public/ckfinder
- * so it does not depend on public/storage symlink.
- */
-$ckfinderStorageRoot = rtrim(str_replace('public\\assets\\plugins\\ckfinder', '', __DIR__), "\\/")
-    . DIRECTORY_SEPARATOR . 'storage'
-    . DIRECTORY_SEPARATOR . 'app'
-    . DIRECTORY_SEPARATOR . 'public'
-    . DIRECTORY_SEPARATOR . 'ckfinder';
-
 /*============================ Enable PHP Connector HERE ==============================*/
 // https://ckeditor.com/docs/ckfinder/ckfinder3-php/configuration.html#configuration_options_authentication
 
@@ -115,7 +104,7 @@ $config['backends'][] = array(
     'name'                  => 'default',
     'adapter'               => 'local',
     'baseUrl'               => '/storage/ckfinder/',
-    'root'                  => $ckfinderStorageRoot,
+    // 'root'               => '', // Can be used to explicitly set the CKFinder user files directory.
     'chmodFiles'            => 0777,
     'chmodFolders'          => 0755,
     'filesystemEncoding'    => 'UTF-8',
