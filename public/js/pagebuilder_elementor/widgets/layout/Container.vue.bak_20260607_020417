@@ -495,24 +495,7 @@ export default {
 				|| document.querySelector(deviceClass)
 				|| document.querySelector('.pb-canvas');
 			if (!canvas || typeof canvas.getBoundingClientRect !== 'function') return null;
-			const rect = canvas.getBoundingClientRect();
-			const styles = window.getComputedStyle(canvas);
-			const leftInset = (parseFloat(styles.borderLeftWidth) || 0) + (parseFloat(styles.paddingLeft) || 0);
-			const rightInset = (parseFloat(styles.borderRightWidth) || 0) + (parseFloat(styles.paddingRight) || 0);
-			const topInset = (parseFloat(styles.borderTopWidth) || 0) + (parseFloat(styles.paddingTop) || 0);
-			const bottomInset = (parseFloat(styles.borderBottomWidth) || 0) + (parseFloat(styles.paddingBottom) || 0);
-			const contentLeft = rect.left + leftInset;
-			const contentTop = rect.top + topInset;
-			const contentRight = rect.right - rightInset;
-			const contentBottom = rect.bottom - bottomInset;
-			return {
-				left: contentLeft,
-				top: contentTop,
-				right: contentRight,
-				bottom: contentBottom,
-				width: Math.max(0, contentRight - contentLeft),
-				height: Math.max(0, contentBottom - contentTop),
-			};
+			return canvas.getBoundingClientRect();
 		},
 		updateEditorCanvasMetrics() {
 			const rect = this.resolveEditorCanvasRect();
@@ -703,61 +686,29 @@ export default {
 			}
 			if (style.position === 'fixed') {
 				const canvasWidth = this.previewCanvasWidth || this.resolveEditorCanvasRect()?.width || 0;
-				const canvasHeight = this.previewCanvasHeight || this.resolveEditorCanvasRect()?.height || 0;
 				const canvasLeft = this.previewCanvasLeft || this.resolveEditorCanvasRect()?.left || 0;
 				const canvasTop = this.previewCanvasTop || this.resolveEditorCanvasRect()?.top || 0;
 				const canvasRightOffset = this.previewCanvasRightOffset || Math.max(0, window.innerWidth - (this.resolveEditorCanvasRect()?.right || window.innerWidth));
 				const canvasBottomOffset = this.previewCanvasBottomOffset || Math.max(0, window.innerHeight - (this.resolveEditorCanvasRect()?.bottom || window.innerHeight));
 				const widthPx = this.resolvePreviewLength(style.width, canvasWidth);
 				const maxWidthPx = this.resolvePreviewLength(style.maxWidth, canvasWidth);
-				const leftInsetPx = this.resolvePreviewLength(style.left, canvasWidth);
-				const rightInsetPx = this.resolvePreviewLength(style.right, canvasWidth);
-				const topInsetPx = this.resolvePreviewLength(style.top, canvasHeight);
-				const bottomInsetPx = this.resolvePreviewLength(style.bottom, canvasHeight);
-				const hasExplicitHorizontalInset = leftInsetPx != null || rightInsetPx != null;
-				const hasExplicitVerticalInset = topInsetPx != null || bottomInsetPx != null;
-				if (!hasExplicitHorizontalInset && !hasExplicitVerticalInset) {
-					style.position = 'absolute';
-					style.left = '0px';
-					style.right = 'auto';
-					style.top = '0px';
-					style.bottom = 'auto';
-				} else {
-				let resolvedWidthPx = widthPx;
-				if (leftInsetPx != null && rightInsetPx != null) {
-					resolvedWidthPx = canvasWidth - leftInsetPx - rightInsetPx;
-				} else if (resolvedWidthPx == null) {
-					if (leftInsetPx != null && rightInsetPx == null) resolvedWidthPx = canvasWidth - leftInsetPx;
-					else if (rightInsetPx != null && leftInsetPx == null) resolvedWidthPx = canvasWidth - rightInsetPx;
-					else resolvedWidthPx = canvasWidth;
+				if (widthPx != null) {
+					style.width = Math.max(0, maxWidthPx != null ? Math.min(widthPx, maxWidthPx) : widthPx) + 'px';
 				}
-				if (maxWidthPx != null) {
-					resolvedWidthPx = Math.min(resolvedWidthPx, maxWidthPx);
-				}
-				style.width = Math.max(0, resolvedWidthPx) + 'px';
 				if (maxWidthPx != null) {
 					style.maxWidth = Math.max(0, maxWidthPx) + 'px';
 				}
-				if (leftInsetPx != null) {
-					style.left = (canvasLeft + leftInsetPx) + 'px';
-					style.right = 'auto';
-				} else if (rightInsetPx != null) {
-					style.left = Math.max(0, canvasLeft + canvasWidth - rightInsetPx - resolvedWidthPx) + 'px';
-					style.right = 'auto';
-				} else {
-					style.left = canvasLeft + 'px';
-					style.right = 'auto';
+				if (style.left && style.left !== 'auto') {
+					style.left = 'calc(' + canvasLeft + 'px + ' + style.left + ')';
 				}
-				if (topInsetPx != null) {
-					style.top = (canvasTop + topInsetPx) + 'px';
-					style.bottom = 'auto';
-				} else if (bottomInsetPx != null) {
-					style.top = 'auto';
+				if (style.right && style.right !== 'auto') {
+					style.right = 'calc(' + canvasRightOffset + 'px + ' + style.right + ')';
+				}
+				if (style.top && style.top !== 'auto') {
+					style.top = 'calc(' + canvasTop + 'px + ' + style.top + ')';
+				}
+				if (style.bottom && style.bottom !== 'auto') {
 					style.bottom = 'calc(' + canvasBottomOffset + 'px + ' + style.bottom + ')';
-				} else {
-					style.top = canvasTop + 'px';
-					style.bottom = 'auto';
-				}
 				}
 			}
 

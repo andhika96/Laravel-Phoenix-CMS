@@ -29,7 +29,6 @@ body {
 	display: flex;
 	flex-direction: column;
 	height: 100vh;
-	min-height: 0;
 }
 
 .pb-topbar {
@@ -110,17 +109,12 @@ body {
 	grid-template-columns: 320px 1fr;
 	gap: 0;
 	flex: 1;
-	min-height: 0;
-	min-width: 0;
 	overflow: hidden;
 }
 
 .pb-panel {
 	background: var(--pb-panel);
-	min-height: 0;
-	min-width: 0;
 	overflow: auto;
-	overscroll-behavior: contain;
 }
 
 .pb-panel.left {
@@ -130,7 +124,6 @@ body {
 }
 
 .pb-props {
-	min-height: 0;
 	padding-bottom: 14px;
 }
 
@@ -170,8 +163,6 @@ body {
 }
 
 .pb-canvas-wrap {
-	min-height: 0;
-	min-width: 0;
 	overflow: auto;
 	padding: 28px 24px 44px;
 	background:
@@ -1008,11 +999,6 @@ body {
 	color: #842029;
 }
 
-.ph-callout-info {
-	background: #e9f7fb;
-	color: #055160;
-}
-
 .toast-header.ph-callout-success {
 	background: #d1e7dd;
 	color: #0f5132;
@@ -1021,11 +1007,6 @@ body {
 .toast-header.ph-callout-danger {
 	background: #f8d7da;
 	color: #842029;
-}
-
-.toast-header.ph-callout-info {
-	background: #cff4fc;
-	color: #055160;
 }
 
 @media (max-width: 1280px) {
@@ -1850,12 +1831,7 @@ body {
 }
 
 .pb-toggle {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 1px;
-	height: 1px;
-	margin: 0;
+	position: absolute;
 	opacity: 0;
 	pointer-events: none;
 }
@@ -1990,6 +1966,11 @@ body {
 
 .pb-motion-scroll {
 	will-change: transform, opacity;
+}
+
+.pb-motion-ai {
+	outline: 1px dashed rgba(91, 108, 255, 0.35);
+	outline-offset: 2px;
 }
 
 .pb-entrance-anim {
@@ -2812,19 +2793,6 @@ body {
 	gap: 8px;
 }
 
-.pb-inline-action-row {
-	display: flex;
-	align-items: center;
-	min-height: 32px;
-	cursor: pointer;
-}
-
-.pb-inline-action-row:focus-visible {
-	outline: 2px solid rgba(109, 127, 255, 0.4);
-	outline-offset: 2px;
-	border-radius: 4px;
-}
-
 .pb-toggle-state {
 	display: inline-flex;
 	align-items: center;
@@ -3084,10 +3052,6 @@ body {
 .pb-panel.left .pb-toggle-state {
 	background: #e8eefb;
 	color: #5f6f8e;
-}
-
-.pb-panel.left .pb-inline-action-row:hover .pb-form-label {
-	color: #213c85;
 }
 
 .pb-panel.left .pb-field-action-btn {

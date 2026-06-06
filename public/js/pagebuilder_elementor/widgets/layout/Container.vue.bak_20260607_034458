@@ -714,15 +714,6 @@ export default {
 				const rightInsetPx = this.resolvePreviewLength(style.right, canvasWidth);
 				const topInsetPx = this.resolvePreviewLength(style.top, canvasHeight);
 				const bottomInsetPx = this.resolvePreviewLength(style.bottom, canvasHeight);
-				const hasExplicitHorizontalInset = leftInsetPx != null || rightInsetPx != null;
-				const hasExplicitVerticalInset = topInsetPx != null || bottomInsetPx != null;
-				if (!hasExplicitHorizontalInset && !hasExplicitVerticalInset) {
-					style.position = 'absolute';
-					style.left = '0px';
-					style.right = 'auto';
-					style.top = '0px';
-					style.bottom = 'auto';
-				} else {
 				let resolvedWidthPx = widthPx;
 				if (leftInsetPx != null && rightInsetPx != null) {
 					resolvedWidthPx = canvasWidth - leftInsetPx - rightInsetPx;
@@ -757,7 +748,6 @@ export default {
 				} else {
 					style.top = canvasTop + 'px';
 					style.bottom = 'auto';
-				}
 				}
 			}
 

@@ -45,6 +45,8 @@ export default {
 				if (this.isDisabled(this.settings.stickyOnTablet)) classes.push('pb-sticky-off-tablet');
 				if (this.isDisabled(this.settings.stickyOnMobile)) classes.push('pb-sticky-off-mobile');
 			}
+			if (this.isTruthy(this.settings.animateWithAI)) classes.push('pb-motion-ai');
+
 			return classes;
 		},
 		customAttrs() {

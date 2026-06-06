@@ -120,7 +120,6 @@ body {
 	min-height: 0;
 	min-width: 0;
 	overflow: auto;
-	overscroll-behavior: contain;
 }
 
 .pb-panel.left {
@@ -1850,12 +1849,7 @@ body {
 }
 
 .pb-toggle {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 1px;
-	height: 1px;
-	margin: 0;
+	position: absolute;
 	opacity: 0;
 	pointer-events: none;
 }

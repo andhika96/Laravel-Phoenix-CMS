@@ -15,12 +15,7 @@
 
 	const sfcOptions = {
 		moduleCache: { vue: Vue },
-		getFile(url) {
-			return fetch(url, { cache: 'no-store' }).then(r => {
-				if (!r.ok) throw new Error(url);
-				return r.text();
-			});
-		},
+		getFile(url) { return fetch(url).then(r => { if (!r.ok) throw new Error(url); return r.text(); }); },
 		addStyle(css) {
 			const s = Object.assign(document.createElement('style'), { textContent: css });
 			document.head.insertBefore(s, document.head.querySelector('style'));
@@ -677,25 +672,6 @@
 			onShowToolbox:  { type: Function, required: true },
 		},
 		emits: [],
-		data() {
-			return {
-				outOfFlowShellHeight: 0,
-				outOfFlowShellTarget: null,
-				outOfFlowShellObserver: null,
-				outOfFlowShellRaf: 0,
-			};
-		},
-		mounted() {
-			this.syncOutOfFlowShellPlaceholder();
-		},
-		updated() {
-			this.$nextTick(() => {
-				this.syncOutOfFlowShellPlaceholder();
-			});
-		},
-		beforeUnmount() {
-			this.teardownOutOfFlowShellPlaceholder();
-		},
 		computed: {
 			isCont()  { return isCont(this.node.type); },
 			isGrid()  { return isGrid(this.node.type); },
@@ -714,20 +690,6 @@
 			isToolbarVisible() {
 				const focusId = this.hoveredId || this.selectedId || '';
 				return focusId === this.node.id;
-			},
-			isOutOfFlowLayoutNode() {
-				const settings = this.node && this.node.settings ? this.node.settings : {};
-				const stickyMode = String(settings.sticky || 'none').trim().toLowerCase();
-				const chosenPosition = String(settings.position || 'default').trim().toLowerCase();
-				return (this.isCont || this.isGrid)
-					&& stickyMode === 'none'
-					&& (chosenPosition === 'absolute' || chosenPosition === 'fixed');
-			},
-			contentShellStyle() {
-				if (!this.isOutOfFlowLayoutNode || !(this.outOfFlowShellHeight > 0)) return {};
-				return {
-					minHeight: this.outOfFlowShellHeight + 'px',
-				};
 			},
 			gridCols() { return this.node.settings?.gridTemplateColumns || 'repeat(' + clamp(Number(this.node.settings?.columns || 2), 1, 12) + ', minmax(0, 1fr))'; },
 			gridStyle() {
@@ -837,69 +799,6 @@
 			},
 		},
 		methods: {
-			queueOutOfFlowShellMeasure() {
-				if (this.outOfFlowShellRaf) cancelAnimationFrame(this.outOfFlowShellRaf);
-				this.outOfFlowShellRaf = requestAnimationFrame(() => {
-					this.outOfFlowShellRaf = 0;
-					this.measureOutOfFlowShellHeight();
-				});
-			},
-			teardownOutOfFlowShellPlaceholder() {
-				if (this.outOfFlowShellRaf) {
-					cancelAnimationFrame(this.outOfFlowShellRaf);
-					this.outOfFlowShellRaf = 0;
-				}
-				if (this.outOfFlowShellObserver) {
-					this.outOfFlowShellObserver.disconnect();
-					this.outOfFlowShellObserver = null;
-				}
-				this.outOfFlowShellTarget = null;
-				this.outOfFlowShellHeight = 0;
-			},
-			resolveOutOfFlowShellTarget() {
-				if (!this.$el || typeof this.$el.querySelector !== 'function') return null;
-				return this.$el.querySelector('.pb-node-content > .el-layout-container, .pb-node-content > .el-layout-container-fluid, .pb-node-content > .el-layout-grid, .pb-node-content > .el-layout-row-grid');
-			},
-			measureOutOfFlowShellHeight() {
-				if (!this.isOutOfFlowLayoutNode) {
-					this.outOfFlowShellHeight = 0;
-					return;
-				}
-				const target = this.resolveOutOfFlowShellTarget();
-				if (!target) return;
-				const rect = typeof target.getBoundingClientRect === 'function' ? target.getBoundingClientRect() : null;
-				const height = Math.max(
-					rect ? rect.height : 0,
-					target.offsetHeight || 0,
-					target.scrollHeight || 0
-				);
-				this.outOfFlowShellHeight = Math.max(0, Math.ceil(height));
-			},
-			syncOutOfFlowShellPlaceholder() {
-				if (!this.isOutOfFlowLayoutNode) {
-					if (this.outOfFlowShellObserver) {
-						this.outOfFlowShellObserver.disconnect();
-						this.outOfFlowShellObserver = null;
-					}
-					this.outOfFlowShellTarget = null;
-					this.outOfFlowShellHeight = 0;
-					return;
-				}
-				const target = this.resolveOutOfFlowShellTarget();
-				if (!target) return;
-				if (target !== this.outOfFlowShellTarget) {
-					if (this.outOfFlowShellObserver) {
-						this.outOfFlowShellObserver.disconnect();
-						this.outOfFlowShellObserver = null;
-					}
-					this.outOfFlowShellTarget = target;
-					if (typeof ResizeObserver === 'function') {
-						this.outOfFlowShellObserver = new ResizeObserver(() => this.queueOutOfFlowShellMeasure());
-						this.outOfFlowShellObserver.observe(target);
-					}
-				}
-				this.queueOutOfFlowShellMeasure();
-			},
 			passdown() {
 				return {
 					selectedId:     this.selectedId,
@@ -1192,7 +1091,7 @@
 		</div>
 	</div>
 
-	<div class="pb-node-content" :style="contentShellStyle" @click.stop="onSelect(node)">
+	<div class="pb-node-content" @click.stop="onSelect(node)">
 
 		<!-- CONTAINER -->
 		<!-- CONTAINER: merender columns sesuai displayType -->
@@ -1319,35 +1218,6 @@
 			const isArrayMessageAfterSubmit = ref(0);
 			const responseMessageAfterSubmit = ref('');
 			let toastTimer = null;
-			let windowScrollLockFrame = 0;
-
-			function lockWindowScrollPosition() {
-				if (windowScrollLockFrame) cancelAnimationFrame(windowScrollLockFrame);
-				windowScrollLockFrame = requestAnimationFrame(() => {
-					windowScrollLockFrame = 0;
-					if (window.scrollX !== 0 || window.scrollY !== 0) {
-						window.scrollTo(0, 0);
-					}
-				});
-			}
-			function keepFocusedEditorControlInPanel(event) {
-				const target = event && event.target;
-				const panel = document.querySelector('.pb-panel.left');
-				if (!(target instanceof HTMLElement) || !panel || !panel.contains(target)) {
-					lockWindowScrollPosition();
-					return;
-				}
-				requestAnimationFrame(() => {
-					const targetRect = target.getBoundingClientRect();
-					const panelRect = panel.getBoundingClientRect();
-					if (targetRect.top < panelRect.top) {
-						panel.scrollTop -= (panelRect.top - targetRect.top) + 16;
-					} else if (targetRect.bottom > panelRect.bottom) {
-						panel.scrollTop += (targetRect.bottom - panelRect.bottom) + 16;
-					}
-					lockWindowScrollPosition();
-				});
-			}
 
 			function collectMessageLines(payload, bucket) {
 				if (payload === null || payload === undefined) return;
@@ -1396,16 +1266,8 @@
 				const message = detail || (label + ' belum didukung di builder ini.');
 				showSaveToast('info', message);
 			}
-			onMounted(() => {
-				lockWindowScrollPosition();
-				window.addEventListener('scroll', lockWindowScrollPosition, { passive: true });
-				window.addEventListener('focusin', keepFocusedEditorControlInPanel);
-			});
 			onBeforeUnmount(() => {
 				if (toastTimer) clearTimeout(toastTimer);
-				if (windowScrollLockFrame) cancelAnimationFrame(windowScrollLockFrame);
-				window.removeEventListener('scroll', lockWindowScrollPosition);
-				window.removeEventListener('focusin', keepFocusedEditorControlInPanel);
 			});
 			const selectedId  = ref('');
 			const hoveredId   = ref('');

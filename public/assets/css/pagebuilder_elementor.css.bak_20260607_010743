@@ -29,7 +29,6 @@ body {
 	display: flex;
 	flex-direction: column;
 	height: 100vh;
-	min-height: 0;
 }
 
 .pb-topbar {
@@ -110,17 +109,12 @@ body {
 	grid-template-columns: 320px 1fr;
 	gap: 0;
 	flex: 1;
-	min-height: 0;
-	min-width: 0;
 	overflow: hidden;
 }
 
 .pb-panel {
 	background: var(--pb-panel);
-	min-height: 0;
-	min-width: 0;
 	overflow: auto;
-	overscroll-behavior: contain;
 }
 
 .pb-panel.left {
@@ -130,7 +124,6 @@ body {
 }
 
 .pb-props {
-	min-height: 0;
 	padding-bottom: 14px;
 }
 
@@ -170,8 +163,6 @@ body {
 }
 
 .pb-canvas-wrap {
-	min-height: 0;
-	min-width: 0;
 	overflow: auto;
 	padding: 28px 24px 44px;
 	background:
@@ -1850,12 +1841,7 @@ body {
 }
 
 .pb-toggle {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 1px;
-	height: 1px;
-	margin: 0;
+	position: absolute;
 	opacity: 0;
 	pointer-events: none;
 }

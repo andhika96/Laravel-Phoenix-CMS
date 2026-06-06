@@ -7,7 +7,7 @@
 
 <script>
 export default {
-	name: 'LayoutGrid',
+	name: 'LayoutRowGrid',
 	props: {
 		item: {
 			type: Object,
@@ -22,7 +22,7 @@ export default {
 			return 'pb-node-' + (this.item.id || '');
 		},
 		rootClass() {
-			const classes = ['el-layout-grid'];
+			const classes = ['el-layout-row-grid'];
 			if (this.settings.cssClass) classes.push(this.settings.cssClass);
 			if (this.isTruthy(this.settings.hideDesktop)) classes.push('pb-hide-desktop');
 			if (this.isTruthy(this.settings.hideTablet)) classes.push('pb-hide-tablet');
@@ -45,6 +45,8 @@ export default {
 				if (this.isDisabled(this.settings.stickyOnTablet)) classes.push('pb-sticky-off-tablet');
 				if (this.isDisabled(this.settings.stickyOnMobile)) classes.push('pb-sticky-off-mobile');
 			}
+			if (this.isTruthy(this.settings.animateWithAI)) classes.push('pb-motion-ai');
+
 			return classes;
 		},
 		customAttrs() {
@@ -110,8 +112,6 @@ export default {
 			const s = this.settings;
 			const style = {
 				width: '100%',
-				flex: '1 1 100%',
-				minWidth: '0',
 				boxSizing: 'border-box',
 				paddingTop: this.toCssSize(s.paddingTop, '0'),
 				paddingRight: this.toCssSize(s.paddingRight, '0'),

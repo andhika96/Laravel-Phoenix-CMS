@@ -254,6 +254,11 @@
 	will-change: transform, opacity;
 }
 
+.pb-motion-ai {
+	outline: 1px dashed rgba(91, 108, 255, 0.35);
+	outline-offset: 2px;
+}
+
 .pb-entrance-anim {
 	animation-duration: 0.7s;
 	animation-fill-mode: both;

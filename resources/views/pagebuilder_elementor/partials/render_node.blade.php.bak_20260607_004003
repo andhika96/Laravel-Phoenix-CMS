@@ -128,6 +128,7 @@
 			if (!$is_truthy($s['stickyOnTablet'] ?? true)) $classes[] = 'pb-sticky-off-tablet';
 			if (!$is_truthy($s['stickyOnMobile'] ?? true)) $classes[] = 'pb-sticky-off-mobile';
 		}
+		if ($is_truthy($s['animateWithAI'] ?? false)) $classes[] = 'pb-motion-ai';
 		return $classes;
 	};
 

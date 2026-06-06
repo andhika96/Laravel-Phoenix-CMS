@@ -22,6 +22,8 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/.kiro
+/.playwright-cli
 
 **/caddy
 frankenphp

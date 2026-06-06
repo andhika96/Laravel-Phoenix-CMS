@@ -7,7 +7,7 @@
 
 <script>
 export default {
-	name: 'LayoutContainer',
+	name: 'LayoutContainerFluid',
 	props: {
 		item: {
 			type: Object,
@@ -24,12 +24,6 @@ export default {
 			mousePreviewX: 0,
 			mousePreviewY: 0,
 			mousePreviewActive: false,
-			previewCanvasLeft: 0,
-			previewCanvasTop: 0,
-			previewCanvasRightOffset: 0,
-			previewCanvasBottomOffset: 0,
-			previewCanvasWidth: 0,
-			previewCanvasHeight: 0,
 			previewViewportTarget: null,
 			previewScrollHandler: null,
 			previewResizeHandler: null,
@@ -63,7 +57,7 @@ export default {
 			return allowed.includes(raw) ? raw : 'div';
 		},
 		rootClass() {
-			const classes = ['el-layout-container'];
+			const classes = ['el-layout-container-fluid'];
 			if (this.settings.cssClass) classes.push(this.settings.cssClass);
 			if (this.isTruthy(this.settings.hideDesktop)) classes.push('pb-hide-desktop');
 			if (this.isTruthy(this.settings.hideTablet)) classes.push('pb-hide-tablet');
@@ -86,6 +80,8 @@ export default {
 				if (this.isDisabled(this.settings.stickyOnTablet)) classes.push('pb-sticky-off-tablet');
 				if (this.isDisabled(this.settings.stickyOnMobile)) classes.push('pb-sticky-off-mobile');
 			}
+			if (this.isTruthy(this.settings.animateWithAI)) classes.push('pb-motion-ai');
+
 			return classes;
 		},
 		customAttrs() {
@@ -160,13 +156,12 @@ export default {
 		},
 		containerStyle() {
 			const s = this.settings;
-			const fullMode = this.item.type === 'container_fluid' || s.contentWidth === 'full' || s.contentWidth === 'fluid';
+			const fullMode = s.contentWidth === 'full' || s.contentWidth === 'fluid';
 			const widthValue = this.responsiveSetting('containerWidth', s.containerWidth || '100%');
 			const maxWidthValue = this.responsiveSetting('maxWidth', s.maxWidth || 'auto');
 			const minHeightValue = this.responsiveSetting('minHeight', s.minHeight || 'auto');
-			// Arsitektur baru: Container adalah wrapper block-level.
-			// Display/flex/grid layout diterapkan di el-cont-columns (inner div) via contColumnsStyle di BuilderNode.
-			// Container sendiri hanya menangani: background, border, shadow, padding, margin, min-height, width.
+			// Arsitektur baru: Container Fluid adalah wrapper block-level.
+			// Layout flex/grid diterapkan di el-cont-columns (slot inner) via contColumnsStyle di BuilderNode.
 			const style = {
 				display: 'block',
 				boxSizing: 'border-box',
@@ -190,7 +185,6 @@ export default {
 			style.marginBottom = this.toCssSpace(this.responsiveSetting('marginBottom', s.marginBottom), '0');
 			style.marginLeft = this.toCssSpace(this.responsiveSetting('marginLeft', s.marginLeft), '0');
 			style.minHeight = this.toCssSize(minHeightValue, 'auto');
-
 			if (!fullMode) {
 				style.maxWidth = this.toCssSize(maxWidthValue, 'auto');
 			}
@@ -487,57 +481,6 @@ export default {
 				? (this.$el.closest('.pb-canvas-wrap') || window)
 				: window;
 		},
-		resolveEditorCanvasRect() {
-			const deviceClass = '.pb-canvas.is-' + this.currentDevice();
-			const canvas = (this.$el && typeof this.$el.closest === 'function'
-				? this.$el.closest('.pb-canvas')
-				: null)
-				|| document.querySelector(deviceClass)
-				|| document.querySelector('.pb-canvas');
-			if (!canvas || typeof canvas.getBoundingClientRect !== 'function') return null;
-			const rect = canvas.getBoundingClientRect();
-			const styles = window.getComputedStyle(canvas);
-			const leftInset = (parseFloat(styles.borderLeftWidth) || 0) + (parseFloat(styles.paddingLeft) || 0);
-			const rightInset = (parseFloat(styles.borderRightWidth) || 0) + (parseFloat(styles.paddingRight) || 0);
-			const topInset = (parseFloat(styles.borderTopWidth) || 0) + (parseFloat(styles.paddingTop) || 0);
-			const bottomInset = (parseFloat(styles.borderBottomWidth) || 0) + (parseFloat(styles.paddingBottom) || 0);
-			const contentLeft = rect.left + leftInset;
-			const contentTop = rect.top + topInset;
-			const contentRight = rect.right - rightInset;
-			const contentBottom = rect.bottom - bottomInset;
-			return {
-				left: contentLeft,
-				top: contentTop,
-				right: contentRight,
-				bottom: contentBottom,
-				width: Math.max(0, contentRight - contentLeft),
-				height: Math.max(0, contentBottom - contentTop),
-			};
-		},
-		updateEditorCanvasMetrics() {
-			const rect = this.resolveEditorCanvasRect();
-			if (!rect) return;
-			this.previewCanvasLeft = rect.left;
-			this.previewCanvasTop = rect.top;
-			this.previewCanvasWidth = rect.width;
-			this.previewCanvasHeight = rect.height;
-			this.previewCanvasRightOffset = Math.max(0, window.innerWidth - rect.right);
-			this.previewCanvasBottomOffset = Math.max(0, window.innerHeight - rect.bottom);
-		},
-		resolvePreviewLength(value, base) {
-			const raw = String(value == null ? '' : value).trim().toLowerCase();
-			if (!raw || raw === 'auto') return null;
-			if (/^-?\d+(\.\d+)?%$/.test(raw)) {
-				return (Number(base) || 0) * (parseFloat(raw) / 100);
-			}
-			if (/^-?\d+(\.\d+)?px$/.test(raw)) {
-				return parseFloat(raw);
-			}
-			if (/^-?\d+(\.\d+)?$/.test(raw)) {
-				return parseFloat(raw);
-			}
-			return null;
-		},
 		teardownPreviewBindings() {
 			if (this.previewRaf) {
 				cancelAnimationFrame(this.previewRaf);
@@ -569,19 +512,6 @@ export default {
 		syncPreviewBindings() {
 			this.teardownPreviewBindings();
 			if (!this.$el) return;
-			this.updateEditorCanvasMetrics();
-
-			this.previewResizeHandler = () => {
-				if (this.previewRaf) cancelAnimationFrame(this.previewRaf);
-				this.previewRaf = requestAnimationFrame(() => {
-					this.previewRaf = 0;
-					this.updateEditorCanvasMetrics();
-					if (this.isScrollActiveForCurrentDevice()) {
-						this.updateScrollPreview();
-					}
-				});
-			};
-			window.addEventListener('resize', this.previewResizeHandler, { passive: true });
 
 			if (this.isScrollActiveForCurrentDevice()) {
 				this.previewViewportTarget = this.resolveScrollViewport();
@@ -592,8 +522,10 @@ export default {
 						this.updateScrollPreview();
 					});
 				};
+				this.previewResizeHandler = this.previewScrollHandler;
 				const scrollTarget = this.previewViewportTarget === window ? window : this.previewViewportTarget;
 				scrollTarget.addEventListener('scroll', this.previewScrollHandler, { passive: true });
+				window.addEventListener('resize', this.previewResizeHandler, { passive: true });
 				this.updateScrollPreview();
 			}
 
@@ -700,65 +632,6 @@ export default {
 			if (this.isHiddenOnCurrentDevice(settings)) {
 				style.display = 'none';
 				return;
-			}
-			if (style.position === 'fixed') {
-				const canvasWidth = this.previewCanvasWidth || this.resolveEditorCanvasRect()?.width || 0;
-				const canvasHeight = this.previewCanvasHeight || this.resolveEditorCanvasRect()?.height || 0;
-				const canvasLeft = this.previewCanvasLeft || this.resolveEditorCanvasRect()?.left || 0;
-				const canvasTop = this.previewCanvasTop || this.resolveEditorCanvasRect()?.top || 0;
-				const canvasRightOffset = this.previewCanvasRightOffset || Math.max(0, window.innerWidth - (this.resolveEditorCanvasRect()?.right || window.innerWidth));
-				const canvasBottomOffset = this.previewCanvasBottomOffset || Math.max(0, window.innerHeight - (this.resolveEditorCanvasRect()?.bottom || window.innerHeight));
-				const widthPx = this.resolvePreviewLength(style.width, canvasWidth);
-				const maxWidthPx = this.resolvePreviewLength(style.maxWidth, canvasWidth);
-				const leftInsetPx = this.resolvePreviewLength(style.left, canvasWidth);
-				const rightInsetPx = this.resolvePreviewLength(style.right, canvasWidth);
-				const topInsetPx = this.resolvePreviewLength(style.top, canvasHeight);
-				const bottomInsetPx = this.resolvePreviewLength(style.bottom, canvasHeight);
-				const hasExplicitHorizontalInset = leftInsetPx != null || rightInsetPx != null;
-				const hasExplicitVerticalInset = topInsetPx != null || bottomInsetPx != null;
-				if (!hasExplicitHorizontalInset && !hasExplicitVerticalInset) {
-					style.position = 'absolute';
-					style.left = '0px';
-					style.right = 'auto';
-					style.top = '0px';
-					style.bottom = 'auto';
-				} else {
-				let resolvedWidthPx = widthPx;
-				if (leftInsetPx != null && rightInsetPx != null) {
-					resolvedWidthPx = canvasWidth - leftInsetPx - rightInsetPx;
-				} else if (resolvedWidthPx == null) {
-					if (leftInsetPx != null && rightInsetPx == null) resolvedWidthPx = canvasWidth - leftInsetPx;
-					else if (rightInsetPx != null && leftInsetPx == null) resolvedWidthPx = canvasWidth - rightInsetPx;
-					else resolvedWidthPx = canvasWidth;
-				}
-				if (maxWidthPx != null) {
-					resolvedWidthPx = Math.min(resolvedWidthPx, maxWidthPx);
-				}
-				style.width = Math.max(0, resolvedWidthPx) + 'px';
-				if (maxWidthPx != null) {
-					style.maxWidth = Math.max(0, maxWidthPx) + 'px';
-				}
-				if (leftInsetPx != null) {
-					style.left = (canvasLeft + leftInsetPx) + 'px';
-					style.right = 'auto';
-				} else if (rightInsetPx != null) {
-					style.left = Math.max(0, canvasLeft + canvasWidth - rightInsetPx - resolvedWidthPx) + 'px';
-					style.right = 'auto';
-				} else {
-					style.left = canvasLeft + 'px';
-					style.right = 'auto';
-				}
-				if (topInsetPx != null) {
-					style.top = (canvasTop + topInsetPx) + 'px';
-					style.bottom = 'auto';
-				} else if (bottomInsetPx != null) {
-					style.top = 'auto';
-					style.bottom = 'calc(' + canvasBottomOffset + 'px + ' + style.bottom + ')';
-				} else {
-					style.top = canvasTop + 'px';
-					style.bottom = 'auto';
-				}
-				}
 			}
 
 			const transforms = [];
