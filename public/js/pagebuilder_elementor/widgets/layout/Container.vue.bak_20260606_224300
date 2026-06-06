@@ -18,31 +18,6 @@ export default {
 			default: 'desktop',
 		},
 	},
-	data() {
-		return {
-			scrollPreviewProgress: 1,
-			mousePreviewX: 0,
-			mousePreviewY: 0,
-			mousePreviewActive: false,
-			previewViewportTarget: null,
-			previewScrollHandler: null,
-			previewResizeHandler: null,
-			previewMouseMoveHandler: null,
-			previewMouseLeaveHandler: null,
-			previewRaf: 0,
-		};
-	},
-	mounted() {
-		this.syncPreviewBindings();
-	},
-	updated() {
-		this.$nextTick(() => {
-			this.syncPreviewBindings();
-		});
-	},
-	beforeUnmount() {
-		this.teardownPreviewBindings();
-	},
 	computed: {
 		settings() {
 			return this.item.settings || {};
@@ -195,7 +170,6 @@ export default {
 			if (this.hasAnyShapeDivider(s) && (!style.position || style.position === 'static')) {
 				style.position = 'relative';
 			}
-			this.applyEditorPreviewEffects(style, s);
 
 			return style;
 		},
@@ -443,221 +417,6 @@ export default {
 		isDisabled(value) {
 			return value === false || value === 'false' || value === 0 || value === '0';
 		},
-		currentDevice() {
-			const device = String(this.responsiveDevice || 'desktop').toLowerCase();
-			return ['desktop', 'tablet', 'mobile'].includes(device) ? device : 'desktop';
-		},
-		currentDeviceSuffix() {
-			const device = this.currentDevice();
-			if (device === 'tablet') return 'Tablet';
-			if (device === 'mobile') return 'Mobile';
-			return 'Desktop';
-		},
-		deviceToggleEnabled(settings, prefix, fallback = true) {
-			const value = settings[prefix + this.currentDeviceSuffix()];
-			if (value === '' || value === null || value === undefined) return fallback;
-			return !this.isDisabled(value);
-		},
-		isHiddenOnCurrentDevice(settings = this.settings) {
-			return this.isTruthy(settings['hide' + this.currentDeviceSuffix()]);
-		},
-		isStickyActiveForCurrentDevice(settings = this.settings) {
-			return (settings.sticky || 'none') !== 'none' && this.deviceToggleEnabled(settings, 'stickyOn', true);
-		},
-		isScrollActiveForCurrentDevice(settings = this.settings) {
-			return this.isTruthy(settings.scrollingEffects) && this.deviceToggleEnabled(settings, 'scrollApply', true);
-		},
-		isMouseActiveForCurrentDevice(settings = this.settings) {
-			return this.isTruthy(settings.mouseEffects) && this.deviceToggleEnabled(settings, 'mouseApply', true);
-		},
-		clampRatio(value, min = 0, max = 1) {
-			const numeric = Number(value);
-			if (!Number.isFinite(numeric)) return min;
-			return Math.min(max, Math.max(min, numeric));
-		},
-		resolveScrollViewport(settings = this.settings) {
-			if (String(settings.scrollRelativeTo || 'default').toLowerCase() === 'viewport') {
-				return window;
-			}
-			return this.$el && typeof this.$el.closest === 'function'
-				? (this.$el.closest('.pb-canvas-wrap') || window)
-				: window;
-		},
-		teardownPreviewBindings() {
-			if (this.previewRaf) {
-				cancelAnimationFrame(this.previewRaf);
-				this.previewRaf = 0;
-			}
-			if (this.previewViewportTarget && this.previewScrollHandler) {
-				const scrollTarget = this.previewViewportTarget === window ? window : this.previewViewportTarget;
-				scrollTarget.removeEventListener('scroll', this.previewScrollHandler);
-			}
-			if (this.previewResizeHandler) {
-				window.removeEventListener('resize', this.previewResizeHandler);
-			}
-			if (this.$el && this.previewMouseMoveHandler) {
-				this.$el.removeEventListener('mousemove', this.previewMouseMoveHandler);
-			}
-			if (this.$el && this.previewMouseLeaveHandler) {
-				this.$el.removeEventListener('mouseleave', this.previewMouseLeaveHandler);
-			}
-			this.previewViewportTarget = null;
-			this.previewScrollHandler = null;
-			this.previewResizeHandler = null;
-			this.previewMouseMoveHandler = null;
-			this.previewMouseLeaveHandler = null;
-			this.scrollPreviewProgress = 1;
-			this.mousePreviewX = 0;
-			this.mousePreviewY = 0;
-			this.mousePreviewActive = false;
-		},
-		syncPreviewBindings() {
-			this.teardownPreviewBindings();
-			if (!this.$el) return;
-
-			if (this.isScrollActiveForCurrentDevice()) {
-				this.previewViewportTarget = this.resolveScrollViewport();
-				this.previewScrollHandler = () => {
-					if (this.previewRaf) cancelAnimationFrame(this.previewRaf);
-					this.previewRaf = requestAnimationFrame(() => {
-						this.previewRaf = 0;
-						this.updateScrollPreview();
-					});
-				};
-				this.previewResizeHandler = this.previewScrollHandler;
-				const scrollTarget = this.previewViewportTarget === window ? window : this.previewViewportTarget;
-				scrollTarget.addEventListener('scroll', this.previewScrollHandler, { passive: true });
-				window.addEventListener('resize', this.previewResizeHandler, { passive: true });
-				this.updateScrollPreview();
-			}
-
-			if (this.isMouseActiveForCurrentDevice()) {
-				this.previewMouseMoveHandler = (event) => this.updateMousePreview(event);
-				this.previewMouseLeaveHandler = () => {
-					this.mousePreviewX = 0;
-					this.mousePreviewY = 0;
-					this.mousePreviewActive = false;
-				};
-				this.$el.addEventListener('mousemove', this.previewMouseMoveHandler);
-				this.$el.addEventListener('mouseleave', this.previewMouseLeaveHandler);
-			}
-		},
-		updateScrollPreview() {
-			if (!this.$el || !this.isScrollActiveForCurrentDevice()) {
-				this.scrollPreviewProgress = 1;
-				return;
-			}
-
-			const target = this.previewViewportTarget || this.resolveScrollViewport();
-			const rect = this.$el.getBoundingClientRect();
-			const viewportRect = target === window
-				? { top: 0, height: window.innerHeight }
-				: target.getBoundingClientRect();
-			const elementCenter = (rect.top - viewportRect.top) + (rect.height / 2);
-			const rawProgress = elementCenter / Math.max(1, viewportRect.height);
-			const start = this.clampRatio(Number(this.settings.scrollViewportStart ?? 0) / 100, 0, 1);
-			const end = this.clampRatio(Number(this.settings.scrollViewportEnd ?? 100) / 100, 0, 1);
-			const range = Math.max(0.01, end - start);
-			this.scrollPreviewProgress = this.clampRatio((rawProgress - start) / range, 0, 1);
-		},
-		updateMousePreview(event) {
-			if (!this.$el || !this.isMouseActiveForCurrentDevice()) return;
-
-			const relativeTo = String(this.settings.mouseRelativeTo || 'default').toLowerCase();
-			const directionFactor = String(this.settings.mouseDirection || 'direct').toLowerCase() === 'opposite' ? -1 : 1;
-			let normalizedX = 0;
-			let normalizedY = 0;
-
-			if (relativeTo === 'viewport') {
-				normalizedX = ((event.clientX / Math.max(1, window.innerWidth)) - 0.5) * 2;
-				normalizedY = ((event.clientY / Math.max(1, window.innerHeight)) - 0.5) * 2;
-			} else {
-				const rect = this.$el.getBoundingClientRect();
-				normalizedX = (((event.clientX - rect.left) / Math.max(1, rect.width)) - 0.5) * 2;
-				normalizedY = (((event.clientY - rect.top) / Math.max(1, rect.height)) - 0.5) * 2;
-			}
-
-			this.mousePreviewX = this.clampRatio(normalizedX * directionFactor, -1, 1);
-			this.mousePreviewY = this.clampRatio(normalizedY * directionFactor, -1, 1);
-			this.mousePreviewActive = true;
-		},
-		buildScrollPreviewStyle(settings) {
-			if (!this.isScrollActiveForCurrentDevice(settings)) return {};
-
-			const type = String(settings.scrollEffectType || 'vertical').toLowerCase();
-			const direction = String(settings.scrollDirection || 'up').toLowerCase();
-			const speed = this.clamp(Number(settings.scrollSpeed) || 0, 0, 10);
-			const progress = this.clampRatio(this.scrollPreviewProgress, 0, 1);
-			const dynamicIntensity = (1 - progress) * speed;
-			const previewIntensity = speed * 0.35;
-			const intensity = type === 'transparency' ? dynamicIntensity : Math.max(dynamicIntensity, previewIntensity);
-			const sign = (direction === 'down' || direction === 'right' || direction === 'out') ? 1 : -1;
-
-			if (type === 'horizontal') {
-				return { transform: 'translateX(' + (sign * intensity * 8) + 'px)' };
-			}
-			if (type === 'transparency') {
-				return { opacity: direction === 'in' ? this.clampRatio(progress, 0.12, 1) : this.clampRatio(1 - progress * 0.88, 0.12, 1) };
-			}
-			if (type === 'blur') {
-				const blur = Math.max(direction === 'in' ? (progress * speed * 1.6) : (intensity * 1.6), speed * 0.45);
-				return { filter: 'blur(' + blur.toFixed(2) + 'px)' };
-			}
-			if (type === 'rotate') {
-				return { transform: 'rotate(' + (sign * intensity * 6) + 'deg)' };
-			}
-			if (type === 'scale') {
-				const delta = intensity * 0.018;
-				return { transform: 'scale(' + (direction === 'in' ? (1 - delta) : (1 + delta)).toFixed(4) + ')' };
-			}
-
-			return { transform: 'translateY(' + (sign * intensity * 8) + 'px)' };
-		},
-		buildMousePreviewStyle(settings) {
-			if (!this.isMouseActiveForCurrentDevice(settings) || !this.mousePreviewActive) return {};
-
-			const type = String(settings.mouseEffectType || 'track').toLowerCase();
-			const speed = this.clamp(Number(settings.mouseSpeed) || 0, 0, 10);
-			const x = this.mousePreviewX;
-			const y = this.mousePreviewY;
-
-			if (type === 'tilt') {
-				return { transform: 'perspective(1000px) rotateX(' + (-y * speed * 2.2).toFixed(2) + 'deg) rotateY(' + (x * speed * 2.2).toFixed(2) + 'deg)' };
-			}
-			if (type === 'parallax') {
-				return { transform: 'translate(' + (x * speed * 4).toFixed(2) + 'px, ' + (y * speed * 4).toFixed(2) + 'px) scale(1.01)' };
-			}
-
-			return { transform: 'translate(' + (x * speed * 3).toFixed(2) + 'px, ' + (y * speed * 3).toFixed(2) + 'px)' };
-		},
-		applyEditorPreviewEffects(style, settings) {
-			if (this.isHiddenOnCurrentDevice(settings)) {
-				style.display = 'none';
-				return;
-			}
-
-			const transforms = [];
-			if (style.transform && style.transform !== 'none') transforms.push(style.transform);
-
-			const scrollPreview = this.buildScrollPreviewStyle(settings);
-			const mousePreview = this.buildMousePreviewStyle(settings);
-
-			if (scrollPreview.transform) transforms.push(scrollPreview.transform);
-			if (mousePreview.transform) transforms.push(mousePreview.transform);
-			if (scrollPreview.opacity !== undefined) style.opacity = String(scrollPreview.opacity);
-
-			const filters = [];
-			if (style.filter && style.filter !== 'none') filters.push(style.filter);
-			if (scrollPreview.filter) filters.push(scrollPreview.filter);
-			if (mousePreview.filter) filters.push(mousePreview.filter);
-
-			if (transforms.length) style.transform = transforms.join(' ');
-			if (filters.length) style.filter = filters.join(' ');
-
-			if (this.isScrollActiveForCurrentDevice(settings) || this.isMouseActiveForCurrentDevice(settings)) {
-				style.transition = 'transform 180ms ease, opacity 180ms ease, filter 180ms ease, box-shadow 180ms ease, background-color 180ms ease';
-			}
-		},
 		buildTransform(settings) {
 			const transforms = [];
 			const offsetX = this.toCssSpace(settings.transformOffsetX, '');
@@ -678,15 +437,11 @@ export default {
 		applyPosition(style, settings) {
 			const stickyMode = settings.sticky || 'none';
 			const chosenPosition = settings.position || 'default';
-			if (stickyMode !== 'none' && this.isStickyActiveForCurrentDevice(settings)) {
+			if (stickyMode !== 'none') {
 				style.position = 'sticky';
 				const stickyOffset = this.toCssSpace(settings.stickyOffset, '0');
-				const stickyEffectsOffset = this.toCssSpace(settings.stickyEffectsOffset, '0');
-				const finalStickyOffset = stickyEffectsOffset && stickyEffectsOffset !== '0'
-					? 'calc(' + (stickyOffset || '0') + ' + ' + stickyEffectsOffset + ')'
-					: (stickyOffset || '0');
-				if (stickyMode === 'top') style.top = finalStickyOffset;
-				if (stickyMode === 'bottom') style.bottom = finalStickyOffset;
+				if (stickyMode === 'top') style.top = stickyOffset || '0';
+				if (stickyMode === 'bottom') style.bottom = stickyOffset || '0';
 				return;
 			}
 

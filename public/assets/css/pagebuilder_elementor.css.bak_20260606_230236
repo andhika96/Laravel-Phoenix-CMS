@@ -899,7 +899,7 @@ body {
 .pb-node.pb-node-button .pb-preview > .pb-preview-inner > *,
 .pb-node.pb-node-divider .pb-preview > .pb-preview-inner > *,
 .pb-node.pb-node-spacer .pb-preview > .pb-preview-inner > * {
-	width: var(--pb-widget-content-width, 100%);
+	width: 100%;
 	max-width: 100%;
 	min-width: 0;
 }

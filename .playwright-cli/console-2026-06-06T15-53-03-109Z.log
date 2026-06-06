@@ -1,0 +1,109 @@
+[    1099ms] [LOG] [PB] app.js loaded v3-refactor - 2026-06-06T15:53:04.200Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor/app.js?v=1780758554:2
+[  188249ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  477719ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  715540ms] [LOG] [PB] app.js loaded v3-refactor - 2026-06-06T16:04:58.642Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor/app.js?v=1780761861:2
+[  843956ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  844102ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  844249ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  844383ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  844532ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  844683ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  873337ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  873471ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  873613ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  873748ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  899296ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  926643ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  926722ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  926804ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  926871ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[  951409ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[ 1034330ms] [LOG] [PB] app.js loaded v3-refactor - 2026-06-06T16:10:17.432Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor/app.js?v=1780761861:2
+[ 1141168ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[ 1141228ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[ 1141309ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[ 1141376ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[ 1217902ms] [LOG] [PB] app.js loaded v3-refactor - 2026-06-06T16:13:21.011Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor/app.js?v=1780761861:2
+[ 1321965ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[ 1322042ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[ 1322124ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[ 1322207ms] Uncaught (in promise) TypeError: this.$el.getBoundingClientRect is not a function
+    at updateScrollPreview (:2:18157)
+    at syncPreviewBindings (:2:17524)
+    at eval (:2:543)
+[ 1519868ms] [LOG] [PB] app.js loaded v3-refactor - 2026-06-06T16:18:22.976Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor/app.js?v=1780761861:2
