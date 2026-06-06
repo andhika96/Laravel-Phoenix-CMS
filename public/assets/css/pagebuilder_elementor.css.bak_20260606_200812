@@ -854,16 +854,6 @@ body {
 	min-width: 0;
 }
 
-.pb-node.pb-node-widget .pb-preview {
-	justify-content: var(--pb-widget-shell-justify, flex-start);
-}
-
-.pb-node.pb-node-widget .pb-preview-inner {
-	width: var(--pb-widget-inner-width, 100%);
-	max-width: 100%;
-	min-width: 0;
-}
-
 .pb-node.pb-node-heading .pb-preview,
 .pb-node.pb-node-button .pb-preview,
 .pb-node.pb-node-divider .pb-preview,
@@ -895,10 +885,10 @@ body {
 	padding: 0 18px;
 }
 
-.pb-node.pb-node-heading .pb-preview > .pb-preview-inner > *,
-.pb-node.pb-node-button .pb-preview > .pb-preview-inner > *,
-.pb-node.pb-node-divider .pb-preview > .pb-preview-inner > *,
-.pb-node.pb-node-spacer .pb-preview > .pb-preview-inner > * {
+.pb-node.pb-node-heading .pb-preview > *,
+.pb-node.pb-node-button .pb-preview > *,
+.pb-node.pb-node-divider .pb-preview > *,
+.pb-node.pb-node-spacer .pb-preview > * {
 	width: 100%;
 	max-width: 100%;
 	min-width: 0;

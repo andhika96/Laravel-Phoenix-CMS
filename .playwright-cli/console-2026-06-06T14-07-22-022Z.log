@@ -1,0 +1,2 @@
+[   19061ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://127.0.0.1:8020/assets/plugins/fontawesome/6.5.1/css/all.min.css?v=1701771179:0
+[   19827ms] [LOG] [PB] app.js loaded v3-refactor - 2026-06-06T14:07:41.843Z @ http://127.0.0.1:8020/js/pagebuilder_elementor/app.js?v=1780754611:2

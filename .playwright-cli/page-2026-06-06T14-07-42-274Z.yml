@@ -1,0 +1,49 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: PB
+      - generic [ref=e7]: Create Page Builder - Elementor Style
+    - generic [ref=e8]:
+      - button "Undo" [disabled] [ref=e9]
+      - button "Redo" [disabled] [ref=e10]
+      - button "Save" [ref=e11] [cursor=pointer]: Save
+  - generic [ref=e12]:
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]: Page
+        - generic [ref=e17]:
+          - generic [ref=e18]: Page Name
+          - textbox [ref=e19]: Untitled Page
+        - generic [ref=e20]:
+          - generic [ref=e21]: Status
+          - combobox [ref=e22]:
+            - option "Publish"
+            - option "Draft" [selected]
+            - option "Not Active"
+        - generic [ref=e23]:
+          - generic [ref=e24]: Custom CSS
+          - textbox [ref=e25]
+      - generic [ref=e26]:
+        - generic [ref=e27]: Layout
+        - generic [ref=e28]:
+          - generic [ref=e30]: Container
+          - generic [ref=e32]: Container Fluid
+          - generic [ref=e34]: Grid
+      - generic [ref=e35]:
+        - generic [ref=e36]: Basic
+        - generic [ref=e37]:
+          - generic [ref=e39]: Heading
+          - generic [ref=e41]: Text Editor
+          - generic [ref=e43]: Image
+          - generic [ref=e45]: Video
+          - generic [ref=e47]: Button
+          - generic [ref=e49]: Divider
+          - generic [ref=e51]: Spacer
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - button "Mobile" [ref=e56] [cursor=pointer]
+          - button "Tablet" [ref=e57] [cursor=pointer]
+          - button "Desktop" [ref=e58] [cursor=pointer]
+        - generic [ref=e60]: 1096px
+      - generic [ref=e65]: Drag Container, Grid, or Widget to start building

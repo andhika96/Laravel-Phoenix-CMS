@@ -540,20 +540,6 @@
 		spacer: 'Spacer',
 	});
 
-	const NODE_LABEL_ICONS = Object.freeze({
-		container: 'fa-solid fa-cube',
-		container_fluid: 'fa-solid fa-cube',
-		row_grid: 'fa-solid fa-table-cells-large',
-		grid: 'fa-solid fa-table-cells-large',
-		heading: 'fa-solid fa-heading',
-		text_editor: 'fa-solid fa-pen-to-square',
-		image: 'fa-regular fa-image',
-		video: 'fa-solid fa-video',
-		button: 'fa-solid fa-link',
-		divider: 'fa-solid fa-minus',
-		spacer: 'fa-solid fa-arrows-up-down',
-	});
-
 	function baseNodeLabel(type, fallback = 'Widget') {
 		return BASE_NODE_LABELS[type] || fallback;
 	}
@@ -563,10 +549,6 @@
 		const base = baseNodeLabel(node.type, String(node.label || 'Widget').trim() || 'Widget');
 		const suffix = String(node.labelSuffix || '').trim();
 		return suffix ? (base + ' ' + suffix) : base;
-	}
-
-	function nodeLabelIcon(type) {
-		return NODE_LABEL_ICONS[type] || 'fa-solid fa-cube';
 	}
 
 	function makeNode(type) {
@@ -656,14 +638,11 @@
 		props: {
 			node:        { type: Object,   required: true },
 			selectedId:  { type: String,   default: '' },
-			hoveredId:   { type: String,   default: '' },
 			responsiveDevice: { type: String, default: 'desktop' },
 			// Handlers dari app
 			onAddContainer: { type: Function, required: true },
 			onAddCol:       { type: Function, required: true },
 			onSelect:       { type: Function, required: true },
-			onSetHover:     { type: Function, required: true },
-			onClearHover:   { type: Function, required: true },
 			onRemove:       { type: Function, required: true },
 			onDuplicate:    { type: Function, required: true },
 			onDragStart:    { type: Function, required: true },
@@ -675,21 +654,8 @@
 		computed: {
 			isCont()  { return isCont(this.node.type); },
 			isGrid()  { return isGrid(this.node.type); },
-			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
 				return displayNodeLabel(this.node);
-			},
-			labelIcon() {
-				return nodeLabelIcon(this.node.type);
-			},
-			isVisualActive() {
-				const hovered = String(this.hoveredId || '').trim();
-				if (hovered && hovered !== this.node.id) return false;
-				return this.selectedId === this.node.id;
-			},
-			isToolbarVisible() {
-				const focusId = this.hoveredId || this.selectedId || '';
-				return focusId === this.node.id;
 			},
 			gridCols() { return this.node.settings?.gridTemplateColumns || 'repeat(' + clamp(Number(this.node.settings?.columns || 2), 1, 12) + ', minmax(0, 1fr))'; },
 			gridStyle() {
@@ -752,22 +718,17 @@
 					const rows = containerGridRowsTemplate(rowsValue); if (rows) style.gridTemplateRows = rows;
 					return style;
 				}
-			if (dt === 'flex') {
-				const direction = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-				const flexWrap = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
-				const justifyContent = this.nodeResponsiveValue('justifyContent', s.justifyContent || 'flex-start') || 'flex-start';
-				const requestedAlignItems = this.nodeResponsiveValue('alignItems', s.alignItems || 'flex-start') || 'flex-start';
-				const isRowDir = direction === 'row' || direction === 'row-reverse';
-				const alignItems = isRowDir ? 'stretch' : requestedAlignItems;
-				const alignContent = this.nodeResponsiveValue('alignContent', s.alignContent || 'stretch') || 'stretch';
-				const rowGap = this.nodeResponsiveValue('flexRowGap', s.flexRowGap || s.gap || '0');
-				const columnGap = this.nodeResponsiveValue('flexColumnGap', s.flexColumnGap || s.gap || '0');
-				const style = { display:'flex', flexDirection:direction, flexWrap,
-					justifyContent, alignItems, alignContent,
-					gap:cssSize(s.gap,'0'), rowGap:cssSize(rowGap,'0'), columnGap:cssSize(columnGap,'0'), width:'100%' };
-				style.minHeight = 'inherit';
-				style.height = '100%';
-					return style;
+				if (dt === 'flex') {
+					const direction = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
+					const flexWrap = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
+					const justifyContent = this.nodeResponsiveValue('justifyContent', s.justifyContent || 'flex-start') || 'flex-start';
+					const alignItems = this.nodeResponsiveValue('alignItems', s.alignItems || 'flex-start') || 'flex-start';
+					const alignContent = this.nodeResponsiveValue('alignContent', s.alignContent || 'stretch') || 'stretch';
+					const rowGap = this.nodeResponsiveValue('flexRowGap', s.flexRowGap || s.gap || '0');
+					const columnGap = this.nodeResponsiveValue('flexColumnGap', s.flexColumnGap || s.gap || '0');
+					return { display:'flex', flexDirection:direction, flexWrap,
+						justifyContent, alignItems, alignContent,
+						gap:cssSize(s.gap,'0'), rowGap:cssSize(rowGap,'0'), columnGap:cssSize(columnGap,'0'), width:'100%' };
 				}
 				return { display:'block', width:'100%' };
 			},
@@ -777,20 +738,11 @@
 					name: 'pb-col',
 					put: (to, from, el) => {
 						// el = elemen yang di-drag, cek nodeType-nya
-						const nodeType = String((el && el.dataset && el.dataset.nodeType) || '').trim();
-						const isExistingCanvasNode = !!nodeType;
+						const nodeType = el && el.dataset && el.dataset.nodeType;
 						// Tolak jika yang di-drag adalah container
 						if (nodeType && isCont(nodeType)) return false;
-						const sourceParentNodeType = this.getParentNodeTypeFromSortable(from);
-						const targetParentNodeType = this.getParentNodeTypeFromSortable(to);
-						if (isExistingCanvasNode && sourceParentNodeType && targetParentNodeType) {
-							const sameOwnerFamily =
-								(isCont(sourceParentNodeType) && isCont(targetParentNodeType))
-								|| (isGrid(sourceParentNodeType) && isGrid(targetParentNodeType));
-							if (!sameOwnerFamily) return false;
-						}
 						const targetIndex = this.getTargetColumnIndexFromDropzone(to);
-						if (!isExistingCanvasNode && targetIndex >= 0 && this.isSequentialColumnLocked(targetIndex)) return false;
+						if (targetIndex >= 0 && this.isSequentialColumnLocked(targetIndex)) return false;
 						// Terima dari sesama pb-col (reorder + pindah antar kolom)
 						// Terima dari pb-container (widget yang ada di container)
 						return true;
@@ -802,13 +754,10 @@
 			passdown() {
 				return {
 					selectedId:     this.selectedId,
-					hoveredId:      this.hoveredId,
 					responsiveDevice: this.responsiveDevice,
 					onAddContainer: this.onAddContainer,
 					onAddCol:       this.onAddCol,
 					onSelect:       this.onSelect,
-					onSetHover:     this.onSetHover,
-					onClearHover:   this.onClearHover,
 					onRemove:       this.onRemove,
 					onDuplicate:    this.onDuplicate,
 					onDragStart:    this.onDragStart,
@@ -840,18 +789,13 @@
 								boxSizing: 'border-box',
 							};
 						}
-						const rowStyle = {
+						return {
 							flex: '0 0 ' + rawBasis,
 							width: rawBasis,
 							minWidth: rawBasis,
 							maxWidth: rawBasis,
-							height: 'auto',
-							alignSelf: 'stretch',
-							display: 'flex',
-							flexDirection: 'column',
 							boxSizing: 'border-box',
 						};
-						return rowStyle;
 					}
 
 					if (isColumnDir) {
@@ -864,46 +808,23 @@
 						};
 					}
 
-					const rowStyle = {
+					return {
 						flex: '1 1 0',
 						width: 'auto',
 						minWidth: isWrapMode ? '220px' : '0',
-						height: 'auto',
-						alignSelf: 'stretch',
-						display: 'flex',
-						flexDirection: 'column',
 						boxSizing: 'border-box',
 					};
-					return rowStyle;
 				}
 
 				return {};
 			},
 			contDropzoneStyle(col) {
 				const s = this.node.settings || {};
+				if ((s.displayType || 'flex') !== 'grid') return {};
 				const childCount = Array.isArray(col?.children) ? col.children.length : 0;
-				const dt = s.displayType || 'flex';
-				const base = { flex: '1 1 auto' };
-
-				if (dt === 'flex') {
-					const dir = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-					const isRowDir = dir === 'row' || dir === 'row-reverse';
-					if (!isRowDir) return {};
-					const alignItems = String(this.nodeResponsiveValue('alignItems', s.alignItems || 'flex-start') || 'flex-start').toLowerCase();
-					const mapMain = {
-						'flex-start': 'flex-start',
-						center: 'center',
-						'flex-end': 'flex-end',
-						stretch: 'flex-start',
-					};
-					const style = { ...base, minHeight: childCount === 0 ? '68px' : '100%' };
-					if (childCount > 0) style.justifyContent = mapMain[alignItems] || 'flex-start';
-					return style;
-				}
-
-				if (dt !== 'grid') return {};
 				// Keep empty-column placeholders (Column label + Drop here) fixed in place.
 				if (childCount === 0) return {};
+				const base = { flex: '1 1 auto' };
 
 				const mapMain = {
 					start: 'flex-start',
@@ -937,62 +858,33 @@
 				const raw = Number(host.dataset.colIndex);
 				return Number.isFinite(raw) ? raw : -1;
 			},
-			getParentNodeTypeFromSortable(sortableRef) {
-				const el = sortableRef && sortableRef.el ? sortableRef.el : null;
-				if (!el || typeof el.closest !== 'function') return '';
-				const parentNode = el.closest('[data-parent-node-type]');
-				if (parentNode) return String(parentNode.getAttribute('data-parent-node-type') || '').trim();
-				const hostNode = el.closest('[data-node-id]');
-				return hostNode ? String(hostNode.getAttribute('data-node-type') || '').trim() : '';
-			},
-			contGridNodeStyle(col, childNode = null) {
+			contGridNodeStyle(col) {
 				const s = this.node.settings || {};
 				if ((s.displayType || 'flex') !== 'grid') return {};
 
 				const justifyItems = String(this.nodeResponsiveValue('gridJustifyItems', s.gridJustifyItems || 'stretch') || 'stretch').toLowerCase();
 				const style = {
 					maxWidth: '100%',
-					minWidth: '0',
 					marginTop: '0',
 					marginBottom: '0',
 				};
-				const isWidgetChild = !!childNode && !isCont(childNode.type) && !isGrid(childNode.type);
 
-				// Keep the Balanced shell for the default "stretch" mode, but let
-				// justify-items start/center/end position widgets again.
-				if (isWidgetChild) {
-					const shellJustifyMap = {
-						start: 'flex-start',
-						center: 'center',
-						end: 'flex-end',
-						stretch: 'flex-start',
-					};
-					const widgetType = String(childNode?.type || '').trim();
-					const shrinkableWidgetTypes = new Set(['heading', 'button']);
+				if (justifyItems === 'center') {
+					style.width = 'fit-content';
+					style.marginLeft = 'auto';
+					style.marginRight = 'auto';
+				} else if (justifyItems === 'end') {
+					style.width = 'fit-content';
+					style.marginLeft = 'auto';
+					style.marginRight = '0';
+				} else if (justifyItems === 'start') {
+					style.width = 'fit-content';
+					style.marginLeft = '0';
+					style.marginRight = 'auto';
+				} else {
 					style.width = '100%';
 					style.marginLeft = '0';
 					style.marginRight = '0';
-					style.alignSelf = 'stretch';
-					style['--pb-widget-shell-justify'] = shellJustifyMap[justifyItems] || 'flex-start';
-					style['--pb-widget-inner-width'] = (justifyItems === 'stretch' || !shrinkableWidgetTypes.has(widgetType)) ? '100%' : 'fit-content';
-				} else {
-					if (justifyItems === 'center') {
-						style.width = 'fit-content';
-						style.marginLeft = 'auto';
-						style.marginRight = 'auto';
-					} else if (justifyItems === 'end') {
-						style.width = 'fit-content';
-						style.marginLeft = 'auto';
-						style.marginRight = '0';
-					} else if (justifyItems === 'start') {
-						style.width = 'fit-content';
-						style.marginLeft = '0';
-						style.marginRight = 'auto';
-					} else {
-						style.width = '100%';
-						style.marginLeft = '0';
-						style.marginRight = '0';
-					}
 				}
 
 				// Vertical placement applies only when a cell has one widget.
@@ -1009,52 +901,6 @@
 				}
 
 				return style;
-			},
-			contFlexNodeStyle(childNode = null) {
-				const s = this.node.settings || {};
-				if ((s.displayType || 'flex') !== 'flex') return {};
-				const dir = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-				const isRowDir = dir === 'row' || dir === 'row-reverse';
-				if (!isRowDir) return {};
-
-				const justifyContent = String(this.nodeResponsiveValue('justifyContent', s.justifyContent || 'flex-start') || 'flex-start').toLowerCase();
-				const isWidgetChild = !!childNode && !isCont(childNode.type) && !isGrid(childNode.type);
-				const style = {
-					maxWidth: '100%',
-					minWidth: '0',
-				};
-
-				if (!isWidgetChild) return style;
-
-				const shellJustifyMap = {
-					'flex-start': 'flex-start',
-					center: 'center',
-					'flex-end': 'flex-end',
-					'space-between': 'flex-start',
-					'space-around': 'flex-start',
-					'space-evenly': 'flex-start',
-					stretch: 'flex-start',
-				};
-				const widgetType = String(childNode?.type || '').trim();
-				const shrinkableWidgetTypes = new Set(['heading', 'button']);
-				const canShrink = (justifyContent === 'flex-start' || justifyContent === 'center' || justifyContent === 'flex-end')
-					&& shrinkableWidgetTypes.has(widgetType);
-
-				style.width = '100%';
-				style.marginLeft = '0';
-				style.marginRight = '0';
-				style.alignSelf = 'stretch';
-				style['--pb-widget-shell-justify'] = shellJustifyMap[justifyContent] || 'flex-start';
-				style['--pb-widget-inner-width'] = canShrink ? 'fit-content' : '100%';
-
-				return style;
-			},
-			contChildNodeStyle(col, childNode = null) {
-				const s = this.node.settings || {};
-				const dt = s.displayType || 'flex';
-				if (dt === 'grid') return this.contGridNodeStyle(col, childNode);
-				if (dt === 'flex') return this.contFlexNodeStyle(childNode);
-				return {};
 			},
 			nodeResponsiveValue(base, fallback = '') {
 				const s = this.node.settings || {};
@@ -1073,16 +919,15 @@
 		template: `
 <div
 	class="pb-node"
-	:class="['pb-node-' + node.type, { active: isVisualActive, 'is-toolbar-visible': isToolbarVisible, 'pb-grid-outline-enabled': !!node.settings?.gridOutline, 'pb-node-widget': isWidgetNode }]"
+	:class="['pb-node-' + node.type, { active: selectedId === node.id, 'pb-grid-outline-enabled': !!node.settings?.gridOutline }]"
 	:data-hover-label="label"
 	:data-node-type="node.type"
 	:data-node-id="node.id"
-	@mouseenter.stop="onSetHover(node.id)"
-	@mouseleave.stop="onClearHover(node.id, $event)"
 >
 	<div class="pb-node-toolbar" @click.stop>
-		<div class="pb-node-label" @click.stop="onSelect(node)"><i :class="labelIcon"></i> {{ label }}</div>
-		<div class="pb-node-actions" @click.stop="onSelect(node)">
+		<div class="pb-node-label"><i class="fa-solid fa-cube"></i> {{ label }}</div>
+		<span class="pb-node-label-sep"></span>
+		<div class="pb-node-actions">
 			<button v-if="isCont" class="pb-node-btn" @click.stop="onOpenModal(node.type, 'root', { containerNode: node, list: [] })" title="Structure"><i class="fa-solid fa-table-columns"></i></button>
 			<button class="pb-node-btn" @click.stop="onDuplicate(node.id)" title="Duplicate"><i class="fa-regular fa-copy"></i></button>
 			<button class="pb-node-btn remove" @click.stop="onRemove(node.id)" title="Delete"><i class="fa-solid fa-trash"></i></button>
@@ -1108,8 +953,6 @@
 							item-key="id"
 							:group="colGroup"
 							:data-col-index="ci"
-							:data-parent-node-id="node.id"
-							:data-parent-node-type="node.type"
 							:style="contDropzoneStyle(col)"
 							:class="['pb-dropzone', 'pb-dropzone-col', {
 								'is-empty': !col.children || col.children.length === 0,
@@ -1122,8 +965,11 @@
 							@start="onDragStart"
 							@end="onDragEnd"
 						>
+							<template #header>
+								<div v-if="!col.children || col.children.length === 0" class="pb-grid-col-label pb-grid-col-label-inside">Column {{ ci + 1 }}</div>
+							</template>
 							<template #item="{ element }">
-								<BuilderNode :node="element" :style="contChildNodeStyle(col, element)" v-bind="passdown()" />
+								<BuilderNode :node="element" :style="contGridNodeStyle(col)" v-bind="passdown()" />
 							</template>
 							<template #footer>
 								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">
@@ -1151,8 +997,6 @@
 							item-key="id"
 							:group="colGroup"
 							:data-col-index="ci"
-							:data-parent-node-id="node.id"
-							:data-parent-node-type="node.type"
 							:class="['pb-dropzone', 'pb-dropzone-col', {
 								'is-empty': !col.children || col.children.length === 0,
 								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading'),
@@ -1164,6 +1008,9 @@
 							@start="onDragStart"
 							@end="onDragEnd"
 						>
+							<template #header>
+								<div v-if="!col.children || col.children.length === 0" class="pb-grid-col-label pb-grid-col-label-inside">Column {{ ci + 1 }}</div>
+							</template>
 							<template #item="{ element }">
 								<BuilderNode :node="element" v-bind="passdown()" />
 							</template>
@@ -1186,9 +1033,7 @@
 		<!-- WIDGET -->
 		<template v-else>
 			<div class="pb-preview">
-				<div class="pb-preview-inner">
-					<component :is="loadWidget(node.type)" :item="node" />
-				</div>
+				<component :is="loadWidget(node.type)" :item="node" />
 			</div>
 		</template>
 
@@ -1260,7 +1105,6 @@
 				if (toastTimer) clearTimeout(toastTimer);
 			});
 			const selectedId  = ref('');
-			const hoveredId   = ref('');
 			const settingsTab = ref('layout'); // 'layout' | 'style' | 'advanced'
 			const responsiveDevice = ref('desktop');
 			const rootNodes   = ref([]);
@@ -1923,24 +1767,7 @@
 				}
 				return false;
 			}
-			function resolveRelatedHoverNodeId(event) {
-				const nextTarget = event && event.relatedTarget;
-				if (!nextTarget || typeof nextTarget.closest !== 'function') return '';
-				const nextNode = nextTarget.closest('[data-node-id]');
-				return nextNode ? String(nextNode.getAttribute('data-node-id') || '').trim() : '';
-			}
-			function setHoveredNode(id) {
-				hoveredId.value = String(id || '').trim();
-			}
-			function clearHoveredNode(id, event) {
-				if (hoveredId.value !== String(id || '').trim()) return;
-				hoveredId.value = resolveRelatedHoverNodeId(event);
-			}
-			function removeNode(id) {
-				delFrom(rootNodes.value, id);
-				if (selectedId.value === id) selectedId.value = '';
-				if (hoveredId.value === id) hoveredId.value = '';
-			}
+			function removeNode(id) { delFrom(rootNodes.value, id); if (selectedId.value===id) selectedId.value=''; }
 			function dupNode(id)    { dupIn(rootNodes.value, id); }
 			function selectNode(n)  { selectedId.value = n.id; }
 			function clearSel()     { selectedId.value = ''; }
@@ -2021,7 +1848,6 @@
 				document.querySelectorAll('.pb-grid-col.is-drag-over-col').forEach(el => el.classList.remove('is-drag-over-col'));
 			}
 			function onDragStart() {
-				hoveredId.value = '';
 				document.body.classList.add('pb-is-dragging');
 				nextTick(() => {
 					document.querySelectorAll('.pb-dropzone').forEach(el => {
@@ -2111,8 +1937,6 @@
 			// onAddCol: dipanggil saat item di-drop ke grid column
 			function onAddCol(evt, col, colIndex, parentNode) {
 				const idx  = evt.newIndex;
-				const draggedNodeType = String((evt.item && evt.item.dataset && evt.item.dataset.nodeType) || '').trim();
-				const isExistingCanvasNode = !!draggedNodeType;
 				// vuedraggable@4.1.0: item ada di _underlying_vm_
 				// Tapi array sudah diupdate, cari item yang cocok
 				const vmData = evt.item && evt.item._underlying_vm_;
@@ -2128,7 +1952,7 @@
 
 				// Safety guard: cegah bypass lock berurutan walau ada jalur drop yang lolos put().
 				const targetIndex = Number(colIndex);
-				if (!isExistingCanvasNode && parentNode && Number.isFinite(targetIndex) && isSequentialColumnLockedForNode(parentNode, targetIndex, item.id)) {
+				if (parentNode && Number.isFinite(targetIndex) && isSequentialColumnLockedForNode(parentNode, targetIndex, item.id)) {
 					const targetPos = col.children.indexOf(item);
 					if (targetPos >= 0) col.children.splice(targetPos, 1);
 					const fromEl = evt.from;
@@ -2231,15 +2055,14 @@
 						const realIdx = rootNodes.value.indexOf(live);
 						const saved = jclone(live); saved.id = live.id;
 						const c = makeNode('container');
-						if (!c) return;
-						c.settings.displayType = 'grid';
-						c.settings.gridColumns = 1;
-						c.settings.gridRows = '1';
-						c.settings.gridColumnGap = '20px';
-						c.settings.gridRowGap = '20px';
-						c.settings.gridAlignItems = 'start';
+						const g = makeNode('grid');
+						if (!c || !g) return;
+						c.settings.displayType = 'block'; c.settings.gridColumns = 1;
 						seedResponsiveSettings(c.settings, true);
-						c.columns = [{ id: uid('c'), children: [saved] }];
+						g.settings.columns = 1;
+						seedResponsiveSettings(g.settings, true);
+						g.columns = [{ id: uid('c'), children: [saved] }];
+						c.columns = [{ id: uid('c'), children: [g] }];
 						rootNodes.value.splice(realIdx, 1, c);
 					});
 					return;
@@ -2333,9 +2156,6 @@
 				function rootCanAcceptDirectWidgetDrop() {
 					return rootNodes.value.length === 0 || !rootHasLayoutNodes();
 				}
-				function isSidebarWidgetDrag(el) {
-					return !String(el?.dataset?.nodeType || '').trim();
-				}
 
 				const sidebarContGroup = { name:'pb-root',      pull:'clone', put:false };
 				const sidebarGridGroup = { name:'pb-container', pull:'clone', put:false };
@@ -2345,10 +2165,7 @@
 					name: 'pb-root',
 					put: (to, from, el) => {
 						const fromGroup = from.options && from.options.group && from.options.group.name;
-						if (fromGroup === 'pb-col') {
-							if (isSidebarWidgetDrag(el)) return true;
-							return rootCanAcceptDirectWidgetDrop();
-						}
+						if (fromGroup === 'pb-col') return rootCanAcceptDirectWidgetDrop();
 						return true;
 					},
 				};
@@ -2401,7 +2218,7 @@
 			return {
 				appTitle, toolbox, rootNodes, loadWidget,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
-				selectedId, hoveredId, settingsTab, selectedNode, selectedType,
+				selectedId, settingsTab, selectedNode, selectedType,
 				responsiveDevice, responsiveDevices, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
 				controlResponsiveMenu, responsiveDeviceIcon, responsiveDeviceLabel, deviceOptionLabel,
 				openControlResponsiveMenu, closeControlResponsiveMenu, isControlResponsiveMenuOpen,
@@ -2414,7 +2231,7 @@
 				containerGridRowsValue, setContainerGridRowsValue, syncContainerGap,
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
 				displayNodeLabel,
-				selectNode, clearSel, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
+				selectNode, clearSel, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
 				pageName, pageStatus, customCss, savePage, saveState, saveMsg,
 				toastVisible, responseStatusToast, isArrayMessageAfterSubmit, responseMessageAfterSubmit, closeToast,
 				onDragStart, onDragEnd,
@@ -3790,13 +3607,10 @@
 							<BuilderNode
 								:node="element"
 								:selected-id="selectedId"
-								:hovered-id="hoveredId"
 								:responsive-device="responsiveDevice"
 								:on-add-container="onAddContainer"
 								:on-add-col="onAddCol"
 								:on-select="selectNode"
-								:on-set-hover="setHoveredNode"
-								:on-clear-hover="clearHoveredNode"
 								:on-remove="removeNode"
 								:on-duplicate="dupNode"
 								:on-drag-start="onDragStart"

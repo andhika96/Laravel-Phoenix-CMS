@@ -1010,52 +1010,6 @@
 
 				return style;
 			},
-			contFlexNodeStyle(childNode = null) {
-				const s = this.node.settings || {};
-				if ((s.displayType || 'flex') !== 'flex') return {};
-				const dir = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-				const isRowDir = dir === 'row' || dir === 'row-reverse';
-				if (!isRowDir) return {};
-
-				const justifyContent = String(this.nodeResponsiveValue('justifyContent', s.justifyContent || 'flex-start') || 'flex-start').toLowerCase();
-				const isWidgetChild = !!childNode && !isCont(childNode.type) && !isGrid(childNode.type);
-				const style = {
-					maxWidth: '100%',
-					minWidth: '0',
-				};
-
-				if (!isWidgetChild) return style;
-
-				const shellJustifyMap = {
-					'flex-start': 'flex-start',
-					center: 'center',
-					'flex-end': 'flex-end',
-					'space-between': 'flex-start',
-					'space-around': 'flex-start',
-					'space-evenly': 'flex-start',
-					stretch: 'flex-start',
-				};
-				const widgetType = String(childNode?.type || '').trim();
-				const shrinkableWidgetTypes = new Set(['heading', 'button']);
-				const canShrink = (justifyContent === 'flex-start' || justifyContent === 'center' || justifyContent === 'flex-end')
-					&& shrinkableWidgetTypes.has(widgetType);
-
-				style.width = '100%';
-				style.marginLeft = '0';
-				style.marginRight = '0';
-				style.alignSelf = 'stretch';
-				style['--pb-widget-shell-justify'] = shellJustifyMap[justifyContent] || 'flex-start';
-				style['--pb-widget-inner-width'] = canShrink ? 'fit-content' : '100%';
-
-				return style;
-			},
-			contChildNodeStyle(col, childNode = null) {
-				const s = this.node.settings || {};
-				const dt = s.displayType || 'flex';
-				if (dt === 'grid') return this.contGridNodeStyle(col, childNode);
-				if (dt === 'flex') return this.contFlexNodeStyle(childNode);
-				return {};
-			},
 			nodeResponsiveValue(base, fallback = '') {
 				const s = this.node.settings || {};
 				const device = this.responsiveDevice || 'desktop';
@@ -1123,7 +1077,7 @@
 							@end="onDragEnd"
 						>
 							<template #item="{ element }">
-								<BuilderNode :node="element" :style="contChildNodeStyle(col, element)" v-bind="passdown()" />
+								<BuilderNode :node="element" :style="contGridNodeStyle(col, element)" v-bind="passdown()" />
 							</template>
 							<template #footer>
 								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">

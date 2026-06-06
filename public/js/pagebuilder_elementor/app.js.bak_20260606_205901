@@ -752,22 +752,17 @@
 					const rows = containerGridRowsTemplate(rowsValue); if (rows) style.gridTemplateRows = rows;
 					return style;
 				}
-			if (dt === 'flex') {
-				const direction = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-				const flexWrap = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
-				const justifyContent = this.nodeResponsiveValue('justifyContent', s.justifyContent || 'flex-start') || 'flex-start';
-				const requestedAlignItems = this.nodeResponsiveValue('alignItems', s.alignItems || 'flex-start') || 'flex-start';
-				const isRowDir = direction === 'row' || direction === 'row-reverse';
-				const alignItems = isRowDir ? 'stretch' : requestedAlignItems;
-				const alignContent = this.nodeResponsiveValue('alignContent', s.alignContent || 'stretch') || 'stretch';
-				const rowGap = this.nodeResponsiveValue('flexRowGap', s.flexRowGap || s.gap || '0');
-				const columnGap = this.nodeResponsiveValue('flexColumnGap', s.flexColumnGap || s.gap || '0');
-				const style = { display:'flex', flexDirection:direction, flexWrap,
-					justifyContent, alignItems, alignContent,
-					gap:cssSize(s.gap,'0'), rowGap:cssSize(rowGap,'0'), columnGap:cssSize(columnGap,'0'), width:'100%' };
-				style.minHeight = 'inherit';
-				style.height = '100%';
-					return style;
+				if (dt === 'flex') {
+					const direction = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
+					const flexWrap = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
+					const justifyContent = this.nodeResponsiveValue('justifyContent', s.justifyContent || 'flex-start') || 'flex-start';
+					const alignItems = this.nodeResponsiveValue('alignItems', s.alignItems || 'flex-start') || 'flex-start';
+					const alignContent = this.nodeResponsiveValue('alignContent', s.alignContent || 'stretch') || 'stretch';
+					const rowGap = this.nodeResponsiveValue('flexRowGap', s.flexRowGap || s.gap || '0');
+					const columnGap = this.nodeResponsiveValue('flexColumnGap', s.flexColumnGap || s.gap || '0');
+					return { display:'flex', flexDirection:direction, flexWrap,
+						justifyContent, alignItems, alignContent,
+						gap:cssSize(s.gap,'0'), rowGap:cssSize(rowGap,'0'), columnGap:cssSize(columnGap,'0'), width:'100%' };
 				}
 				return { display:'block', width:'100%' };
 			},
@@ -840,18 +835,13 @@
 								boxSizing: 'border-box',
 							};
 						}
-						const rowStyle = {
+						return {
 							flex: '0 0 ' + rawBasis,
 							width: rawBasis,
 							minWidth: rawBasis,
 							maxWidth: rawBasis,
-							height: 'auto',
-							alignSelf: 'stretch',
-							display: 'flex',
-							flexDirection: 'column',
 							boxSizing: 'border-box',
 						};
-						return rowStyle;
 					}
 
 					if (isColumnDir) {
@@ -864,46 +854,23 @@
 						};
 					}
 
-					const rowStyle = {
+					return {
 						flex: '1 1 0',
 						width: 'auto',
 						minWidth: isWrapMode ? '220px' : '0',
-						height: 'auto',
-						alignSelf: 'stretch',
-						display: 'flex',
-						flexDirection: 'column',
 						boxSizing: 'border-box',
 					};
-					return rowStyle;
 				}
 
 				return {};
 			},
 			contDropzoneStyle(col) {
 				const s = this.node.settings || {};
+				if ((s.displayType || 'flex') !== 'grid') return {};
 				const childCount = Array.isArray(col?.children) ? col.children.length : 0;
-				const dt = s.displayType || 'flex';
-				const base = { flex: '1 1 auto' };
-
-				if (dt === 'flex') {
-					const dir = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-					const isRowDir = dir === 'row' || dir === 'row-reverse';
-					if (!isRowDir) return {};
-					const alignItems = String(this.nodeResponsiveValue('alignItems', s.alignItems || 'flex-start') || 'flex-start').toLowerCase();
-					const mapMain = {
-						'flex-start': 'flex-start',
-						center: 'center',
-						'flex-end': 'flex-end',
-						stretch: 'flex-start',
-					};
-					const style = { ...base, minHeight: childCount === 0 ? '68px' : '100%' };
-					if (childCount > 0) style.justifyContent = mapMain[alignItems] || 'flex-start';
-					return style;
-				}
-
-				if (dt !== 'grid') return {};
 				// Keep empty-column placeholders (Column label + Drop here) fixed in place.
 				if (childCount === 0) return {};
+				const base = { flex: '1 1 auto' };
 
 				const mapMain = {
 					start: 'flex-start',
@@ -1010,52 +977,6 @@
 
 				return style;
 			},
-			contFlexNodeStyle(childNode = null) {
-				const s = this.node.settings || {};
-				if ((s.displayType || 'flex') !== 'flex') return {};
-				const dir = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-				const isRowDir = dir === 'row' || dir === 'row-reverse';
-				if (!isRowDir) return {};
-
-				const justifyContent = String(this.nodeResponsiveValue('justifyContent', s.justifyContent || 'flex-start') || 'flex-start').toLowerCase();
-				const isWidgetChild = !!childNode && !isCont(childNode.type) && !isGrid(childNode.type);
-				const style = {
-					maxWidth: '100%',
-					minWidth: '0',
-				};
-
-				if (!isWidgetChild) return style;
-
-				const shellJustifyMap = {
-					'flex-start': 'flex-start',
-					center: 'center',
-					'flex-end': 'flex-end',
-					'space-between': 'flex-start',
-					'space-around': 'flex-start',
-					'space-evenly': 'flex-start',
-					stretch: 'flex-start',
-				};
-				const widgetType = String(childNode?.type || '').trim();
-				const shrinkableWidgetTypes = new Set(['heading', 'button']);
-				const canShrink = (justifyContent === 'flex-start' || justifyContent === 'center' || justifyContent === 'flex-end')
-					&& shrinkableWidgetTypes.has(widgetType);
-
-				style.width = '100%';
-				style.marginLeft = '0';
-				style.marginRight = '0';
-				style.alignSelf = 'stretch';
-				style['--pb-widget-shell-justify'] = shellJustifyMap[justifyContent] || 'flex-start';
-				style['--pb-widget-inner-width'] = canShrink ? 'fit-content' : '100%';
-
-				return style;
-			},
-			contChildNodeStyle(col, childNode = null) {
-				const s = this.node.settings || {};
-				const dt = s.displayType || 'flex';
-				if (dt === 'grid') return this.contGridNodeStyle(col, childNode);
-				if (dt === 'flex') return this.contFlexNodeStyle(childNode);
-				return {};
-			},
 			nodeResponsiveValue(base, fallback = '') {
 				const s = this.node.settings || {};
 				const device = this.responsiveDevice || 'desktop';
@@ -1123,7 +1044,7 @@
 							@end="onDragEnd"
 						>
 							<template #item="{ element }">
-								<BuilderNode :node="element" :style="contChildNodeStyle(col, element)" v-bind="passdown()" />
+								<BuilderNode :node="element" :style="contGridNodeStyle(col, element)" v-bind="passdown()" />
 							</template>
 							<template #footer>
 								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">

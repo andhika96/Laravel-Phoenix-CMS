@@ -853,39 +853,6 @@
 							<div style="{{ $childWrapperStyle }}">
 								@include('pagebuilder_elementor.partials.render_node', ['node' => $child])
 							</div>
-						@elseif($display === 'flex' && $isRowDir)
-							@php
-								$childType = strtolower(trim((string) ($child['type'] ?? '')));
-								$isLayoutChild = in_array($childType, ['container', 'container_fluid', 'grid', 'row_grid'], true);
-								$isWidgetChild = $childType !== '' && !$isLayoutChild;
-								$justifyContent = strtolower(trim((string) ($s['justifyContent'] ?? 'flex-start')));
-								$childWrapperClasses = ['el-flex-row-justify-item'];
-								$childWrapperStyles = [
-									'width:100%',
-									'max-width:100%',
-									'min-width:0',
-									'margin-top:0',
-									'margin-bottom:0',
-								];
-
-								if ($isWidgetChild) {
-									$childWrapperStyles[] = 'margin-left:0';
-									$childWrapperStyles[] = 'margin-right:0';
-
-									if (in_array($justifyContent, ['flex-start', 'center', 'flex-end'], true)) {
-										$childWrapperStyles[] = 'display:flex';
-										$childWrapperStyles[] = 'justify-content:' . $justifyContent;
-										if (in_array($childType, ['heading', 'button'], true)) {
-											$childWrapperClasses[] = 'is-shrink';
-										}
-									}
-								}
-
-								$childWrapperStyle = implode(';', array_filter($childWrapperStyles));
-							@endphp
-							<div class="{{ implode(' ', array_filter($childWrapperClasses)) }}" style="{{ $childWrapperStyle }}">
-								@include('pagebuilder_elementor.partials.render_node', ['node' => $child])
-							</div>
 						@else
 							@include('pagebuilder_elementor.partials.render_node', ['node' => $child])
 						@endif

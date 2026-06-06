@@ -529,13 +529,9 @@
 		$rootTag = $resolve_html_tag($s);
 
 		$containerColumns = is_array($columns) ? $columns : [];
-		$targetCols = $display === 'grid'
-			? max(1, min(12, (int) ($s['gridColumns'] ?? 1)))
-			: max(1, min(12, count($containerColumns) > 0 ? count($containerColumns) : (int) ($s['gridColumns'] ?? 1)));
+		$targetCols = max(1, min(12, (int) ($s['gridColumns'] ?? 1)));
 		$targetRows = $display === 'grid' ? $container_grid_rows_count($s['gridRows'] ?? null) : 1;
-		$targetCells = $display === 'grid'
-			? max(1, min(144, $targetCols * $targetRows))
-			: $targetCols;
+		$targetCells = max(1, min(144, $targetCols * $targetRows));
 		if (count($containerColumns) === 0) {
 			if (count($children) > 0) {
 				$containerColumns = [['id' => 'legacy-col', 'children' => $children]];
@@ -589,23 +585,22 @@
 			}
 		} elseif ($display === 'flex') {
 			$gap = $css_value($s['gap'] ?? null, '0');
-			$direction = $s['direction'] ?? 'row';
-			$isRowDir = in_array($direction, ['row', 'row-reverse'], true);
-			$requestedAlignItems = $s['alignItems'] ?? 'stretch';
 			$contColumnsStyles = [
 				'display:flex',
-				'flex-direction:' . $direction,
+				'flex-direction:' . ($s['direction'] ?? 'row'),
 				'flex-wrap:' . ($s['flexWrap'] ?? 'nowrap'),
 				'justify-content:' . ($s['justifyContent'] ?? 'flex-start'),
-				'align-items:' . ($isRowDir ? 'stretch' : $requestedAlignItems),
+				'align-items:' . ($s['alignItems'] ?? 'stretch'),
 				'align-content:' . ($s['alignContent'] ?? 'stretch'),
 				'gap:' . $gap,
 				'row-gap:' . $css_value($s['flexRowGap'] ?? null, $gap),
 				'column-gap:' . $css_value($s['flexColumnGap'] ?? null, $gap),
 				'width:100%',
-				'min-height:inherit',
-				'height:100%',
 			];
+			if (in_array(($s['direction'] ?? 'row'), ['column', 'column-reverse'], true)) {
+				$contColumnsStyles[] = 'min-height:inherit';
+				$contColumnsStyles[] = 'height:100%';
+			}
 		} else {
 			$contColumnsStyles = ['display:block', 'width:100%'];
 		}
@@ -708,16 +703,8 @@
 						$hasBasis = $rawBasis !== '';
 						$dir = $s['direction'] ?? 'row';
 						$isColumnDir = in_array($dir, ['column', 'column-reverse'], true);
-						$isRowDir = in_array($dir, ['row', 'row-reverse'], true);
 						$wrapMode = $s['flexWrap'] ?? 'nowrap';
 						$isWrapMode = in_array($wrapMode, ['wrap', 'wrap-reverse'], true);
-						$flexAlignItems = strtolower(trim((string) ($s['alignItems'] ?? 'flex-start')));
-						$flexJustifyMap = [
-							'flex-start' => 'flex-start',
-							'center' => 'center',
-							'flex-end' => 'flex-end',
-							'stretch' => 'flex-start',
-						];
 
 						if ($hasBasis) {
 							if ($isColumnDir) {
@@ -735,10 +722,6 @@
 									'width:' . $rawBasis,
 									'min-width:' . $rawBasis,
 									'max-width:' . $rawBasis,
-									'height:auto',
-									'align-self:stretch',
-									'display:flex',
-									'flex-direction:column',
 									'box-sizing:border-box',
 								];
 							}
@@ -755,15 +738,8 @@
 								'flex:1 1 0',
 								'width:auto',
 								'min-width:' . ($isWrapMode ? '220px' : '0'),
-								'height:auto',
-								'align-self:stretch',
-								'display:flex',
-								'flex-direction:column',
 								'box-sizing:border-box',
 							];
-						}
-						if ($isRowDir && $childCount > 0) {
-							$colStyles[] = 'justify-content:' . ($flexJustifyMap[$flexAlignItems] ?? 'flex-start');
 						}
 					} elseif ($display === 'grid') {
 						$colStyles = [
@@ -851,39 +827,6 @@
 								$childWrapperStyle = implode(';', array_filter($childWrapperStyles));
 							@endphp
 							<div style="{{ $childWrapperStyle }}">
-								@include('pagebuilder_elementor.partials.render_node', ['node' => $child])
-							</div>
-						@elseif($display === 'flex' && $isRowDir)
-							@php
-								$childType = strtolower(trim((string) ($child['type'] ?? '')));
-								$isLayoutChild = in_array($childType, ['container', 'container_fluid', 'grid', 'row_grid'], true);
-								$isWidgetChild = $childType !== '' && !$isLayoutChild;
-								$justifyContent = strtolower(trim((string) ($s['justifyContent'] ?? 'flex-start')));
-								$childWrapperClasses = ['el-flex-row-justify-item'];
-								$childWrapperStyles = [
-									'width:100%',
-									'max-width:100%',
-									'min-width:0',
-									'margin-top:0',
-									'margin-bottom:0',
-								];
-
-								if ($isWidgetChild) {
-									$childWrapperStyles[] = 'margin-left:0';
-									$childWrapperStyles[] = 'margin-right:0';
-
-									if (in_array($justifyContent, ['flex-start', 'center', 'flex-end'], true)) {
-										$childWrapperStyles[] = 'display:flex';
-										$childWrapperStyles[] = 'justify-content:' . $justifyContent;
-										if (in_array($childType, ['heading', 'button'], true)) {
-											$childWrapperClasses[] = 'is-shrink';
-										}
-									}
-								}
-
-								$childWrapperStyle = implode(';', array_filter($childWrapperStyles));
-							@endphp
-							<div class="{{ implode(' ', array_filter($childWrapperClasses)) }}" style="{{ $childWrapperStyle }}">
 								@include('pagebuilder_elementor.partials.render_node', ['node' => $child])
 							</div>
 						@else

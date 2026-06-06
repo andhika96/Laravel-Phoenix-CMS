@@ -164,22 +164,6 @@
 	box-sizing: border-box;
 }
 
-.el-flex-row-justify-item {
-	width: 100%;
-	max-width: 100%;
-	min-width: 0;
-}
-
-.el-flex-row-justify-item > * {
-	max-width: 100%;
-	min-width: 0;
-}
-
-.el-flex-row-justify-item.is-shrink > .el-widget-heading {
-	width: auto;
-	max-width: 100%;
-}
-
 /* Advanced: responsive visibility + motion */
 @media (min-width: 1025px) {
 	.pb-hide-desktop {

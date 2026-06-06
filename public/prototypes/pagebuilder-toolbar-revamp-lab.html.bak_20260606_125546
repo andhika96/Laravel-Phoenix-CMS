@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Page Builder Toolbar Revamp Lab</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="../assets/plugins/fontawesome/6.5.1/css/all.min.css" rel="stylesheet">
+	<style>
+		:root {
+			--lab-bg: #eef2f8;
+			--lab-surface: rgba(255, 255, 255, 0.88);
+			--lab-card: #ffffff;
+			--lab-border: #d7dfef;
+			--lab-border-strong: #b9c5de;
+			--lab-text: #162033;
+			--lab-muted: #61708e;
+			--lab-primary: #5a6ff5;
+			--lab-primary-soft: rgba(90, 111, 245, 0.12);
+			--lab-accent: #ec7fff;
+			--lab-shadow: 0 24px 50px rgba(42, 61, 99, 0.12);
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			font-family: "Inter", sans-serif;
+			color: var(--lab-text);
+			background:
+				radial-gradient(circle at top left, rgba(133, 164, 255, 0.28), transparent 30%),
+				radial-gradient(circle at top right, rgba(236, 127, 255, 0.18), transparent 24%),
+				linear-gradient(180deg, #f5f8fd 0%, #eef2f8 100%);
+		}
+
+		[v-cloak] {
+			display: none;
+		}
+
+		.lab-shell {
+			max-width: 1520px;
+			margin: 0 auto;
+			padding: 28px 22px 42px;
+		}
+
+		.lab-hero {
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 20px;
+			padding: 24px 26px;
+			border: 1px solid rgba(215, 223, 239, 0.8);
+			border-radius: 26px;
+			background: var(--lab-surface);
+			backdrop-filter: blur(14px);
+			box-shadow: var(--lab-shadow);
+			margin-bottom: 24px;
+		}
+
+		.lab-kicker {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 7px 12px;
+			border-radius: 999px;
+			background: #ffffff;
+			border: 1px solid #dde4f2;
+			color: #5b6c8c;
+			font-size: 12px;
+			font-weight: 700;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+			margin-bottom: 14px;
+		}
+
+		.lab-title {
+			margin: 0 0 10px;
+			font-size: clamp(28px, 3vw, 42px);
+			line-height: 1.02;
+			letter-spacing: -0.04em;
+			font-weight: 800;
+			max-width: 760px;
+		}
+
+		.lab-subtitle {
+			margin: 0;
+			max-width: 760px;
+			color: var(--lab-muted);
+			font-size: 15px;
+			line-height: 1.7;
+		}
+
+		.lab-hero-panel {
+			width: min(360px, 100%);
+			padding: 18px;
+			border-radius: 22px;
+			border: 1px solid #dde4f2;
+			background: linear-gradient(180deg, #ffffff 0%, #f7f9fe 100%);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+		}
+
+		.lab-hero-panel h2 {
+			margin: 0 0 12px;
+			font-size: 15px;
+			font-weight: 700;
+		}
+
+		.lab-chip-list {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+
+		.lab-chip {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 11px;
+			border-radius: 999px;
+			background: #f2f5fc;
+			border: 1px solid #dde5f4;
+			font-size: 12px;
+			font-weight: 600;
+			color: #48587a;
+		}
+
+		.lab-card {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			padding: 18px;
+			border-radius: 28px;
+			border: 1px solid rgba(215, 223, 239, 0.96);
+			background: rgba(255, 255, 255, 0.88);
+			box-shadow: 0 24px 40px rgba(34, 50, 82, 0.08);
+			backdrop-filter: blur(12px);
+		}
+
+		.lab-card.is-selected {
+			border-color: rgba(90, 111, 245, 0.5);
+			box-shadow: 0 24px 48px rgba(54, 74, 126, 0.16);
+		}
+
+		.lab-card-head {
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 16px;
+			margin-bottom: 16px;
+		}
+
+		.lab-card-title {
+			margin: 0 0 6px;
+			font-size: 24px;
+			font-weight: 800;
+			letter-spacing: -0.04em;
+		}
+
+		.lab-card-desc {
+			margin: 0;
+			color: var(--lab-muted);
+			font-size: 14px;
+			line-height: 1.62;
+		}
+
+		.lab-badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 12px;
+			border-radius: 999px;
+			background: #ffffff;
+			border: 1px solid #dfe6f4;
+			font-size: 12px;
+			font-weight: 700;
+			color: #455472;
+			flex-shrink: 0;
+		}
+
+		.lab-note {
+			margin: 14px 0 0;
+			padding: 12px 14px;
+			border-radius: 18px;
+			background: #f6f8fd;
+			border: 1px solid #e2e8f5;
+			font-size: 13px;
+			line-height: 1.6;
+			color: #4c5c7e;
+		}
+
+		.lab-control-row {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			margin-bottom: 14px;
+		}
+
+		.lab-control-stack {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+
+		.lab-stage {
+			position: relative;
+			padding: 18px;
+			border-radius: 24px;
+			border: 1px solid #d9dfec;
+			background:
+				radial-gradient(800px 240px at 50% -40px, rgba(255, 255, 255, 0.92), transparent 62%),
+				linear-gradient(180deg, #edf1f7 0%, #e8edf5 100%);
+			overflow: hidden;
+			min-height: 430px;
+		}
+
+		.stage-toolbar {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			padding: 7px 10px;
+			border-radius: 18px;
+			background: rgba(255, 255, 255, 0.82);
+			border: 1px solid rgba(218, 226, 241, 0.95);
+			box-shadow: 0 12px 26px rgba(44, 62, 98, 0.08);
+			margin: 0 auto 18px;
+			position: relative;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+
+		.stage-toolbar-pill {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 10px 14px;
+			border-radius: 999px;
+			background: #ffffff;
+			border: 1px solid #dde4f2;
+			font-size: 13px;
+			font-weight: 700;
+			color: #556585;
+		}
+
+		.demo-surface {
+			padding: 28px 24px 34px;
+			border-radius: 22px;
+			background: rgba(255, 255, 255, 0.92);
+			border: 1px solid rgba(225, 232, 244, 0.95);
+			min-height: 320px;
+		}
+
+		.demo-node {
+			--node-accent: #b8c8ee;
+			--node-fill: rgba(248, 250, 255, 0.78);
+			position: relative;
+			border: 1px dashed var(--node-accent);
+			border-radius: 18px;
+			background: var(--node-fill);
+			padding: 16px;
+			transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease, background-color 140ms ease;
+			cursor: pointer;
+		}
+
+		.demo-node + .demo-node {
+			margin-top: 14px;
+		}
+
+		.demo-node.kind-container {
+			--node-accent: #c9d4ee;
+			--node-fill: rgba(245, 247, 253, 0.92);
+		}
+
+		.demo-node.kind-grid {
+			--node-accent: #c1cff1;
+			--node-fill: rgba(249, 251, 255, 0.98);
+			margin-top: 14px;
+		}
+
+		.demo-node.kind-widget {
+			--node-accent: #b7c7f1;
+			--node-fill: #ffffff;
+			margin-top: 14px;
+			padding: 18px 18px 20px;
+		}
+
+		.demo-node.is-visible {
+			border-style: solid;
+			border-color: #98aae5;
+			box-shadow: 0 0 0 3px rgba(122, 145, 228, 0.12);
+			background: rgba(252, 253, 255, 0.96);
+			z-index: 2;
+		}
+
+		.demo-node.is-selected {
+			border-color: #6c85e8;
+			box-shadow: 0 0 0 4px rgba(90, 111, 245, 0.16);
+			z-index: 3;
+		}
+
+		.demo-node.is-winner {
+			outline: 2px solid rgba(236, 127, 255, 0.45);
+			outline-offset: 3px;
+		}
+
+		.demo-node-content {
+			position: relative;
+			z-index: 1;
+		}
+
+		.demo-node.has-inset-toolbar .demo-node-content {
+			padding-top: 34px;
+		}
+
+		.demo-col-note {
+			padding: 10px 12px;
+			border-radius: 12px;
+			background: rgba(246, 249, 255, 0.9);
+			border: 1px dashed rgba(188, 201, 232, 0.9);
+			font-size: 12px;
+			font-weight: 700;
+			color: #7d8cab;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+		}
+
+		.demo-heading {
+			min-height: 70px;
+			display: flex;
+			align-items: center;
+			padding: 8px 2px 4px;
+			font-size: clamp(28px, 2.4vw, 46px);
+			line-height: 1.05;
+			letter-spacing: -0.05em;
+			font-weight: 700;
+			color: #112347;
+		}
+
+		.node-toolbar {
+			pointer-events: none;
+			opacity: 0;
+			transition: opacity 120ms ease, transform 120ms ease;
+		}
+
+		.node-toolbar.is-visible {
+			opacity: 1;
+			pointer-events: auto;
+		}
+
+		.toolbar-label,
+		.toolbar-actions,
+		.inset-strip {
+			border: 1px solid rgba(215, 142, 243, 0.72);
+			background: rgba(255, 255, 255, 0.96);
+			box-shadow: 0 10px 24px rgba(57, 42, 102, 0.12);
+			backdrop-filter: blur(8px);
+		}
+
+		.toolbar-label {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 12px;
+			border-radius: 999px;
+			font-size: 13px;
+			font-weight: 700;
+			color: #5c3f8e;
+			white-space: nowrap;
+		}
+
+		.toolbar-actions {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			padding: 6px;
+			border-radius: 999px;
+		}
+
+		.toolbar-btn {
+			width: 30px;
+			height: 30px;
+			border: 0;
+			border-radius: 50%;
+			background: transparent;
+			color: #4e4372;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			transition: background-color 120ms ease, color 120ms ease, transform 120ms ease;
+		}
+
+		.toolbar-btn:hover {
+			background: rgba(232, 121, 249, 0.14);
+			color: #1f2554;
+			transform: translateY(-1px);
+		}
+
+		.toolbar-btn.remove {
+			color: #933050;
+		}
+
+		.toolbar--split {
+			position: absolute;
+			inset: 0;
+			z-index: 4;
+		}
+
+		.toolbar--split .toolbar-label {
+			position: absolute;
+			top: calc(-16px + (var(--depth) * 6px));
+			left: 14px;
+		}
+
+		.toolbar--split .toolbar-actions {
+			position: absolute;
+			top: calc(-16px + (var(--depth) * 6px));
+			right: 14px;
+		}
+
+		.toolbar--sidecar {
+			position: absolute;
+			inset: 0;
+			z-index: 4;
+		}
+
+		.toolbar--sidecar .toolbar-label {
+			position: absolute;
+			top: calc(-16px + (var(--depth) * 8px));
+			left: calc(14px + (var(--depth) * 6px));
+			border-radius: 14px 14px 14px 4px;
+		}
+
+		.toolbar--sidecar .toolbar-actions {
+			position: absolute;
+			right: 12px;
+			top: 50%;
+			transform: translateY(-50%);
+			flex-direction: column;
+			gap: 4px;
+			padding: 6px 5px;
+			border-radius: 16px;
+		}
+
+		.toolbar--inset {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			right: 10px;
+			z-index: 4;
+			transform: translateY(-2px);
+		}
+
+		.toolbar--inset.is-visible {
+			transform: translateY(0);
+		}
+
+		.inset-strip {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			padding: 8px 8px 8px 12px;
+			border-radius: 12px;
+		}
+
+		.inset-strip .toolbar-label {
+			padding: 0;
+			border: 0;
+			box-shadow: none;
+			background: transparent;
+		}
+
+		.inset-strip .toolbar-actions {
+			padding: 0;
+			border: 0;
+			box-shadow: none;
+			background: transparent;
+		}
+
+		.variant-picks {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			flex-wrap: wrap;
+			margin-top: 14px;
+		}
+
+		.variant-picks .btn {
+			border-radius: 999px;
+			font-weight: 700;
+			padding-inline: 14px;
+		}
+
+		.variant-picks .btn-outline-secondary {
+			--bs-btn-border-color: #cfd8eb;
+			--bs-btn-color: #50607d;
+			--bs-btn-hover-bg: #eef2fb;
+			--bs-btn-hover-border-color: #b9c8e2;
+			--bs-btn-hover-color: #243552;
+		}
+
+		.variant-picks .btn-primary {
+			--bs-btn-bg: #5a6ff5;
+			--bs-btn-border-color: #5a6ff5;
+			--bs-btn-hover-bg: #4960ef;
+			--bs-btn-hover-border-color: #4960ef;
+			--bs-btn-active-bg: #3f57eb;
+			--bs-btn-active-border-color: #3f57eb;
+		}
+
+		.selection-banner {
+			margin-top: 26px;
+			padding: 18px 22px;
+			border-radius: 24px;
+			border: 1px solid rgba(90, 111, 245, 0.28);
+			background: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(245, 248, 255, 0.94) 100%);
+			box-shadow: 0 16px 34px rgba(51, 74, 133, 0.08);
+		}
+
+		.selection-banner strong {
+			font-size: 15px;
+		}
+
+		.selection-banner p {
+			margin: 6px 0 0;
+			color: #5a6a89;
+			font-size: 14px;
+			line-height: 1.65;
+		}
+
+		@media (max-width: 1199px) {
+			.lab-hero {
+				flex-direction: column;
+			}
+
+			.lab-hero-panel {
+				width: 100%;
+			}
+		}
+
+		@media (max-width: 767px) {
+			.lab-shell {
+				padding-inline: 14px;
+			}
+
+			.lab-hero,
+			.lab-card {
+				border-radius: 22px;
+			}
+
+			.demo-surface {
+				padding: 20px 16px 24px;
+			}
+
+			.stage-toolbar {
+				transform: none;
+				left: 0;
+				margin-left: 0;
+			}
+
+			.toolbar--split .toolbar-actions {
+				max-width: calc(100% - 28px);
+			}
+
+			.toolbar--sidecar .toolbar-actions {
+				right: 8px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div id="toolbarLabApp" v-cloak class="lab-shell">
+		<header class="lab-hero">
+			<div>
+				<div class="lab-kicker">
+					<i class="fa-solid fa-sparkles"></i>
+					Toolbar Revamp Lab
+				</div>
+				<h1 class="lab-title">Three cleaner toolbar directions for nested container, grid, and widget states.</h1>
+				<p class="lab-subtitle">
+					Each concept keeps the same builder stack, but fixes the overlap problem in a different way.
+					Hover any layer, click to pin it active, and compare how the label plus action buttons behave when nested nodes compete for the same corner.
+				</p>
+			</div>
+			<aside class="lab-hero-panel">
+				<h2>Prototype framing</h2>
+				<div class="lab-chip-list">
+					<span class="lab-chip"><i class="fa-brands fa-vuejs"></i> Vue 3 CDN</span>
+					<span class="lab-chip"><i class="fa-brands fa-bootstrap"></i> Bootstrap 5</span>
+					<span class="lab-chip"><i class="fa-solid fa-layer-group"></i> Nested node demo</span>
+					<span class="lab-chip"><i class="fa-solid fa-hand-pointer"></i> Hover + pinned active</span>
+					<span class="lab-chip"><i class="fa-solid fa-wand-magic-sparkles"></i> Pre-implementation lab</span>
+				</div>
+			</aside>
+		</header>
+
+		<div class="row g-4">
+			<div class="col-12 col-xl-4" v-for="variant in variants" :key="variant.id">
+				<section class="lab-card" :class="{ 'is-selected': selectedVariantId === variant.id }">
+					<div class="lab-card-head">
+						<div>
+							<h2 class="lab-card-title">{{ variant.name }}</h2>
+							<p class="lab-card-desc">{{ variant.description }}</p>
+						</div>
+						<div class="lab-badge">
+							<i :class="variant.badgeIcon"></i>
+							<span>{{ variant.badgeLabel }}</span>
+						</div>
+					</div>
+
+					<div class="lab-control-row">
+						<div class="lab-control-stack">
+							<button type="button" class="btn btn-sm btn-outline-secondary" @click="pinNode(variant, 'container')">Pin Container</button>
+							<button type="button" class="btn btn-sm btn-outline-secondary" @click="pinNode(variant, 'grid')">Pin Grid</button>
+							<button type="button" class="btn btn-sm btn-outline-secondary" @click="pinNode(variant, 'heading')">Pin Heading</button>
+						</div>
+						<button type="button" class="btn btn-sm btn-light border" @click="clearPinned(variant)">Clear</button>
+					</div>
+
+					<div class="lab-stage">
+						<div class="stage-toolbar">
+							<div class="stage-toolbar-pill"><i class="fa-solid fa-desktop"></i> Desktop</div>
+							<div class="stage-toolbar-pill"><i class="fa-solid fa-arrows-left-right"></i> 1096px <i class="fa-solid fa-chevron-down"></i></div>
+						</div>
+
+						<div class="demo-surface">
+							<div
+								class="demo-node kind-container"
+								:class="nodeClasses(variant, 'container')"
+								@mouseenter="setHover(variant, 'container')"
+								@mouseleave="clearHover(variant, 'container')"
+								@click="pinNode(variant, 'container')"
+							>
+								<div class="node-toolbar"
+									:class="[toolbarModeClass(variant.id), { 'is-visible': isToolbarVisible(variant, 'container') }]"
+									:style="{ '--depth': 0 }">
+									<template v-if="variant.id === 'sidecar'">
+										<div v-show="isSidecarLabelVisible(variant, 'container')" class="toolbar-label"><i class="fa-solid fa-cube"></i> Container</div>
+										<div v-show="isSidecarActionsVisible(variant, 'container')" class="toolbar-actions">
+											<button class="toolbar-btn" @click.stop><i class="fa-solid fa-table-columns"></i></button>
+											<button class="toolbar-btn" @click.stop><i class="fa-regular fa-copy"></i></button>
+											<button class="toolbar-btn remove" @click.stop><i class="fa-solid fa-trash"></i></button>
+										</div>
+									</template>
+									<template v-else-if="variant.id !== 'inset'">
+										<div class="toolbar-label"><i class="fa-solid fa-cube"></i> Container</div>
+										<div class="toolbar-actions">
+											<button class="toolbar-btn" @click.stop><i class="fa-solid fa-table-columns"></i></button>
+											<button class="toolbar-btn" @click.stop><i class="fa-regular fa-copy"></i></button>
+											<button class="toolbar-btn remove" @click.stop><i class="fa-solid fa-trash"></i></button>
+										</div>
+									</template>
+									<template v-else>
+										<div class="inset-strip">
+											<div class="toolbar-label"><i class="fa-solid fa-cube"></i> Container</div>
+											<div class="toolbar-actions">
+												<button class="toolbar-btn" @click.stop><i class="fa-solid fa-table-columns"></i></button>
+												<button class="toolbar-btn" @click.stop><i class="fa-regular fa-copy"></i></button>
+												<button class="toolbar-btn remove" @click.stop><i class="fa-solid fa-trash"></i></button>
+											</div>
+										</div>
+									</template>
+								</div>
+
+								<div class="demo-node-content">
+									<div v-if="variant.id !== 'sidecar'" class="demo-col-note">Container area</div>
+
+									<div
+										class="demo-node kind-grid"
+										:class="nodeClasses(variant, 'grid')"
+										@mouseenter.stop="setHover(variant, 'grid')"
+										@mouseleave.stop="clearHover(variant, 'grid')"
+										@click.stop="pinNode(variant, 'grid')"
+									>
+										<div class="node-toolbar"
+											:class="[toolbarModeClass(variant.id), { 'is-visible': isToolbarVisible(variant, 'grid') }]"
+											:style="{ '--depth': 1 }">
+											<template v-if="variant.id === 'sidecar'">
+												<div v-show="isSidecarLabelVisible(variant, 'grid')" class="toolbar-label"><i class="fa-solid fa-table-cells-large"></i> Grid</div>
+												<div v-show="isSidecarActionsVisible(variant, 'grid')" class="toolbar-actions">
+													<button class="toolbar-btn" @click.stop><i class="fa-solid fa-grip"></i></button>
+													<button class="toolbar-btn" @click.stop><i class="fa-regular fa-copy"></i></button>
+													<button class="toolbar-btn remove" @click.stop><i class="fa-solid fa-trash"></i></button>
+												</div>
+											</template>
+											<template v-else-if="variant.id !== 'inset'">
+												<div class="toolbar-label"><i class="fa-solid fa-table-cells-large"></i> Grid</div>
+												<div class="toolbar-actions">
+													<button class="toolbar-btn" @click.stop><i class="fa-solid fa-grip"></i></button>
+													<button class="toolbar-btn" @click.stop><i class="fa-regular fa-copy"></i></button>
+													<button class="toolbar-btn remove" @click.stop><i class="fa-solid fa-trash"></i></button>
+												</div>
+											</template>
+											<template v-else>
+												<div class="inset-strip">
+													<div class="toolbar-label"><i class="fa-solid fa-table-cells-large"></i> Grid</div>
+													<div class="toolbar-actions">
+														<button class="toolbar-btn" @click.stop><i class="fa-solid fa-grip"></i></button>
+														<button class="toolbar-btn" @click.stop><i class="fa-regular fa-copy"></i></button>
+														<button class="toolbar-btn remove" @click.stop><i class="fa-solid fa-trash"></i></button>
+													</div>
+												</div>
+											</template>
+										</div>
+
+										<div class="demo-node-content">
+											<div v-if="variant.id !== 'sidecar'" class="demo-col-note">Column 1</div>
+
+											<div
+												class="demo-node kind-widget"
+												:class="nodeClasses(variant, 'heading')"
+												@mouseenter.stop="setHover(variant, 'heading')"
+												@mouseleave.stop="clearHover(variant, 'heading')"
+												@click.stop="pinNode(variant, 'heading')"
+											>
+												<div class="node-toolbar"
+													:class="[toolbarModeClass(variant.id), { 'is-visible': isToolbarVisible(variant, 'heading') }]"
+													:style="{ '--depth': 2 }">
+													<template v-if="variant.id === 'sidecar'">
+														<div v-show="isSidecarLabelVisible(variant, 'heading')" class="toolbar-label"><i class="fa-solid fa-heading"></i> Heading 1</div>
+														<div v-show="isSidecarActionsVisible(variant, 'heading')" class="toolbar-actions">
+															<button class="toolbar-btn" @click.stop><i class="fa-solid fa-gear"></i></button>
+															<button class="toolbar-btn" @click.stop><i class="fa-regular fa-copy"></i></button>
+															<button class="toolbar-btn remove" @click.stop><i class="fa-solid fa-trash"></i></button>
+														</div>
+													</template>
+													<template v-else-if="variant.id !== 'inset'">
+														<div class="toolbar-label"><i class="fa-solid fa-heading"></i> Heading 1</div>
+														<div class="toolbar-actions">
+															<button class="toolbar-btn" @click.stop><i class="fa-solid fa-gear"></i></button>
+															<button class="toolbar-btn" @click.stop><i class="fa-regular fa-copy"></i></button>
+															<button class="toolbar-btn remove" @click.stop><i class="fa-solid fa-trash"></i></button>
+														</div>
+													</template>
+													<template v-else>
+														<div class="inset-strip">
+															<div class="toolbar-label"><i class="fa-solid fa-heading"></i> Heading 1</div>
+															<div class="toolbar-actions">
+																<button class="toolbar-btn" @click.stop><i class="fa-solid fa-gear"></i></button>
+																<button class="toolbar-btn" @click.stop><i class="fa-regular fa-copy"></i></button>
+																<button class="toolbar-btn remove" @click.stop><i class="fa-solid fa-trash"></i></button>
+															</div>
+														</div>
+													</template>
+												</div>
+
+												<div class="demo-node-content">
+													<div class="demo-heading">Add your heading text</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="lab-note">
+						<strong>{{ variant.whyTitle }}</strong><br>
+						{{ variant.why }}
+					</div>
+
+					<div class="variant-picks">
+						<button type="button" class="btn btn-primary btn-sm" @click="selectedVariantId = variant.id">
+							<i class="fa-solid fa-check"></i>
+							Pick this direction
+						</button>
+						<span class="text-secondary small">Pinned: <strong>{{ pinnedLabel(variant.activeNodeId) }}</strong></span>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<footer class="selection-banner" v-if="selectedVariant">
+			<strong>Current favorite: {{ selectedVariant.name }}</strong>
+			<p>{{ selectedVariant.selectionNote }}</p>
+		</footer>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue@3.4.38/dist/vue.global.prod.js"></script>
+	<script>
+		(function () {
+			const { createApp, computed } = Vue;
+
+			createApp({
+				setup() {
+					const variants = Vue.reactive([
+						{
+							id: 'split',
+							name: 'Split Capsules',
+							description: 'Label and actions become two separate pills, so the toolbar stops acting like one long object fighting for the same top-right lane.',
+							badgeIcon: 'fa-solid fa-grip-lines',
+							badgeLabel: 'Closest to current builder',
+							whyTitle: 'Best when you want the smallest code shock.',
+							why: 'This keeps the existing top-edge behavior, but splits the payload into a label chip on the left and an action pill on the right. It feels familiar while reducing toolbar pile-up.',
+							selectionNote: 'Good if you want a safer refactor path with minimal behavioral change. The visual language stays closest to the current builder.',
+							activeNodeId: 'container',
+							hoverNodeId: '',
+						},
+						{
+							id: 'sidecar',
+							name: 'Sidecar Rail',
+							description: 'The name chip stays near the top edge, but the action buttons move into a compact vertical rail on the side, freeing the collision-heavy corner.',
+							badgeIcon: 'fa-solid fa-up-right-and-down-left-from-center',
+							badgeLabel: 'Most collision-proof',
+							whyTitle: 'Best when nested states are the real problem.',
+							why: 'The action cluster leaves the top edge entirely, so container, grid, and widget labels can coexist without stacking into one messy corner.',
+							selectionNote: 'Best if your priority is structural clarity under heavy nesting. It is the strongest answer to repeated overlap.',
+							activeNodeId: 'container',
+							hoverNodeId: '',
+						},
+						{
+							id: 'inset',
+							name: 'Inset Strip',
+							description: 'The toolbar becomes an internal header strip inside the node boundary, so there is no outside overlay to crash into neighboring toolbars.',
+							badgeIcon: 'fa-solid fa-bars-staggered',
+							badgeLabel: 'Cleanest visual rhythm',
+							whyTitle: 'Best when you want the UI to feel calmer.',
+							why: 'This is the only direction that removes the overlap issue by eliminating outside floating chrome. It trades a little canvas space for much better visual order.',
+							selectionNote: 'Best if you want a more polished, product-like editor surface and are comfortable spending a little inner padding for the toolbar.',
+							activeNodeId: 'container',
+							hoverNodeId: '',
+						},
+					]);
+
+					const selectedVariantId = Vue.ref('sidecar');
+
+					function setHover(variant, nodeId) {
+						variant.hoverNodeId = nodeId;
+					}
+
+					function clearHover(variant, nodeId) {
+						if (variant.hoverNodeId === nodeId) {
+							variant.hoverNodeId = '';
+						}
+					}
+
+					function pinNode(variant, nodeId) {
+						variant.activeNodeId = variant.activeNodeId === nodeId ? '' : nodeId;
+					}
+
+					function clearPinned(variant) {
+						variant.activeNodeId = '';
+					}
+
+					function sidecarForegroundNodeId(variant) {
+						return variant.hoverNodeId || variant.activeNodeId || '';
+					}
+
+					function isSidecarLabelVisible(variant, nodeId) {
+						return variant.activeNodeId === nodeId || variant.hoverNodeId === nodeId;
+					}
+
+					function isSidecarActionsVisible(variant, nodeId) {
+						return sidecarForegroundNodeId(variant) === nodeId;
+					}
+
+					function isToolbarVisible(variant, nodeId) {
+						if (variant.id === 'sidecar') {
+							return isSidecarLabelVisible(variant, nodeId) || isSidecarActionsVisible(variant, nodeId);
+						}
+						return variant.activeNodeId === nodeId || variant.hoverNodeId === nodeId;
+					}
+
+					function nodeClasses(variant, nodeId) {
+						return {
+							'is-visible': isToolbarVisible(variant, nodeId),
+							'is-selected': variant.activeNodeId === nodeId,
+							'has-inset-toolbar': variant.id === 'inset' && isToolbarVisible(variant, nodeId),
+							'is-winner': selectedVariantId.value === variant.id,
+						};
+					}
+
+					function toolbarModeClass(variantId) {
+						if (variantId === 'sidecar') return 'toolbar--sidecar';
+						if (variantId === 'inset') return 'toolbar--inset';
+						return 'toolbar--split';
+					}
+
+					function pinnedLabel(nodeId) {
+						if (nodeId === 'container') return 'Container';
+						if (nodeId === 'grid') return 'Grid';
+						if (nodeId === 'heading') return 'Heading 1';
+						return 'None';
+					}
+
+					const selectedVariant = computed(() => {
+						return variants.find((variant) => variant.id === selectedVariantId.value) || null;
+					});
+
+					return {
+						variants,
+						selectedVariantId,
+						selectedVariant,
+						setHover,
+						clearHover,
+						pinNode,
+						clearPinned,
+						isSidecarLabelVisible,
+						isSidecarActionsVisible,
+						isToolbarVisible,
+						nodeClasses,
+						toolbarModeClass,
+						pinnedLabel,
+					};
+				},
+			}).mount('#toolbarLabApp');
+		})();
+	</script>
+</body>
+</html>
