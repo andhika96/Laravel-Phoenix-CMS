@@ -820,8 +820,6 @@
 				const style = { display:'flex', flexDirection:direction, flexWrap,
 					justifyContent, alignItems, alignContent,
 					gap:cssSize(s.gap,'0'), rowGap:cssSize(rowGap,'0'), columnGap:cssSize(columnGap,'0'), width:'100%' };
-				style['--pb-flex-column-gap'] = cssSize(columnGap, '0');
-				style['--pb-col-resizer-size'] = '28px';
 				style.minHeight = 'inherit';
 				style.height = '100%';
 					return style;
@@ -941,25 +939,11 @@
 					onShowToolbox:  this.onShowToolbox,
 				};
 			},
-			flexPercentBasis(rawBasis) {
+			flexPresetGrow(rawBasis) {
 				const match = String(rawBasis == null ? '' : rawBasis).trim().match(/^(\d+(?:\.\d+)?)%$/);
 				if (!match) return null;
-				const percent = Number(match[1]);
-				return Number.isFinite(percent) && percent > 0 ? percent : null;
-			},
-			flexPercentBasisToken(percent) {
-				const safePercent = clamp(Number(percent) || 0, 0, 100);
-				const s = this.node.settings || {};
-				const columnGap = this.nodeResponsiveValue('flexColumnGap', s.flexColumnGap || s.gap || '0');
-				const gapToken = cssSize(columnGap, '0');
-				const gapMatch = String(gapToken || '').trim().match(/^(\d+(?:\.\d+)?)px$/i);
-				const colCount = Array.isArray(this.node.columns) ? this.node.columns.length : 1;
-				if (gapMatch && colCount > 1 && safePercent > 0) {
-					const totalGapPx = Number(gapMatch[1]) * (colCount - 1);
-					const gapSharePx = Math.round(totalGapPx * (safePercent / 100) * 1000) / 1000;
-					if (gapSharePx > 0) return 'calc(' + safePercent + '% - ' + gapSharePx + 'px)';
-				}
-				return safePercent + '%';
+				const grow = Number(match[1]);
+				return Number.isFinite(grow) && grow > 0 ? grow : null;
 			},
 			contColStyle(col) {
 				const s = this.node.settings || {};
@@ -972,11 +956,6 @@
 					const isColumnDir = dir === 'column' || dir === 'column-reverse';
 					const wrapMode = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
 					const isWrapMode = wrapMode === 'wrap' || wrapMode === 'wrap-reverse';
-					const stableRowMinWidth = isWrapMode
-						? '220px'
-						: ((this.responsiveDevice || 'desktop') === 'mobile'
-							? '56px'
-							: ((this.responsiveDevice || 'desktop') === 'tablet' ? '72px' : '96px'));
 
 					if (hasBasis) {
 						if (isColumnDir) {
@@ -989,14 +968,12 @@
 								boxSizing: 'border-box',
 							};
 						}
-						const percentBasis = this.flexPercentBasis(rawBasis);
-						if (percentBasis != null) {
-							const basisToken = this.flexPercentBasisToken(percentBasis);
+						const presetGrow = this.flexPresetGrow(rawBasis);
+						if (presetGrow != null) {
 							return {
-								flex: '0 0 ' + basisToken,
-								flexBasis: basisToken,
-								width: basisToken,
-								minWidth: stableRowMinWidth,
+								flex: presetGrow + ' 1 0px',
+								width: 'auto',
+								minWidth: isWrapMode ? '220px' : '0',
 								maxWidth: '100%',
 								height: 'auto',
 								alignSelf: 'stretch',
@@ -1008,7 +985,7 @@
 						const rowStyle = {
 							flex: '0 0 ' + rawBasis,
 							width: rawBasis,
-							minWidth: stableRowMinWidth,
+							minWidth: rawBasis,
 							maxWidth: rawBasis,
 							height: 'auto',
 							alignSelf: 'stretch',
@@ -1032,7 +1009,7 @@
 					const rowStyle = {
 						flex: '1 1 0',
 						width: 'auto',
-						minWidth: stableRowMinWidth,
+						minWidth: isWrapMode ? '220px' : '0',
 						height: 'auto',
 						alignSelf: 'stretch',
 						display: 'flex',
@@ -1289,7 +1266,6 @@
 							'has-resize-handle': showColumnResizeHandle(ci)
 						}]"
 						:data-col-index="ci"
-						:data-parent-node-id="node.id"
 						:style="contColStyle(col)"
 					>
 						<button
@@ -2004,27 +1980,7 @@
 				if (index > 0) return index - 1;
 				return -1;
 			}
-			function resolveColumnPairMinPercent(node, index, pairIndex, pairTotal, fallbackPercent = null) {
-				const fallback = Number.isFinite(Number(fallbackPercent))
-					? Number(fallbackPercent)
-					: Math.max(4, Math.min(14, pairTotal * 0.18));
-				try {
-					const currentEl = document.querySelector('.pb-grid-col[data-col-index="' + index + '"][data-parent-node-id="' + node.id + '"]');
-					const pairEl = document.querySelector('.pb-grid-col[data-col-index="' + pairIndex + '"][data-parent-node-id="' + node.id + '"]');
-					if (!currentEl || !pairEl) return fallback;
-					const currentRect = currentEl.getBoundingClientRect();
-					const pairRect = pairEl.getBoundingClientRect();
-					const pairWidth = currentRect.width + pairRect.width;
-					if (!(pairWidth > 0)) return fallback;
-					const idealMinPx = Math.min(160, Math.max(110, pairWidth * 0.18));
-					const maxAllowedMinPx = Math.max(48, (pairWidth / 2) - 24);
-					const minPx = Math.max(48, Math.min(idealMinPx, maxAllowedMinPx));
-					return Math.max(4, roundColumnPercent((minPx / pairWidth) * pairTotal));
-				} catch (error) {
-					return fallback;
-				}
-			}
-			function applyColumnPairWidths(node, index, nextPercent, pairIndex = companionColumnIndex(node, index), options = {}) {
+			function applyColumnPairWidths(node, index, nextPercent, pairIndex = companionColumnIndex(node, index)) {
 				if (!node || !Array.isArray(node.columns) || index < 0 || index >= node.columns.length) return;
 				const safeIndex = Number(index);
 				if (!Number.isFinite(safeIndex)) return;
@@ -2034,15 +1990,7 @@
 				}
 				const percents = getFlexColumnPercentages(node);
 				const pairTotal = (percents[safeIndex] || 0) + (percents[pairIndex] || 0);
-				const requestedMinPercent = Number(options.minPercent);
-				const rawMinPercent = resolveColumnPairMinPercent(
-					node,
-					safeIndex,
-					pairIndex,
-					pairTotal,
-					Number.isFinite(requestedMinPercent) ? requestedMinPercent : null
-				);
-				const minPercent = clamp(rawMinPercent, 4, Math.max(4, (pairTotal / 2) - 0.5));
+				const minPercent = Math.max(1, Math.min(5, pairTotal / 4));
 				const safeCurrent = clamp(Number(nextPercent) || 0, minPercent, Math.max(minPercent, pairTotal - minPercent));
 				const adjustedCurrent = roundColumnPercent(safeCurrent);
 				node.columns[safeIndex].flexBasis = formatColumnPercent(adjustedCurrent);
@@ -2096,10 +2044,7 @@
 				const pairTotalPercent = (percents[index] || 0) + (percents[pairIndex] || 0);
 				const startX = Number(event.clientX) || 0;
 				const startCurrentWidth = currentRect.width;
-				const idealMinPx = Math.min(160, Math.max(110, pairWidth * 0.18));
-				const maxAllowedMinPx = Math.max(48, (pairWidth / 2) - 24);
-				const minPx = Math.max(48, Math.min(idealMinPx, maxAllowedMinPx));
-				const dragMinPercent = roundColumnPercent((minPx / pairWidth) * pairTotalPercent);
+				const minPx = Math.max(64, Math.min(160, pairWidth * 0.12));
 
 				selectColumn(node, col);
 				suppressHistory.value = true;
@@ -2123,7 +2068,7 @@
 					const deltaX = (Number(moveEvent.clientX) || 0) - startX;
 					const nextCurrentWidth = clamp(startCurrentWidth + deltaX, minPx, pairWidth - minPx);
 					const nextCurrentPercent = roundColumnPercent((nextCurrentWidth / pairWidth) * pairTotalPercent);
-					applyColumnPairWidths(node, index, nextCurrentPercent, pairIndex, { minPercent: dragMinPercent });
+					applyColumnPairWidths(node, index, nextCurrentPercent, pairIndex);
 					setColumnResizeOverlay(true, formatColumnPercent(columnWidthValue({ node, column: col, index })), (Number(moveEvent.clientX) || 0) + 18, currentRect.top + 24);
 				};
 
@@ -2138,59 +2083,33 @@
 				const boxedMode = s.contentWidth === 'boxed';
 				return boxedMode ? getResponsiveSetting(s, 'maxWidth', '') : getResponsiveSetting(s, 'containerWidth', '');
 			}
-			const containerWidthUnits = ['px', '%', 'em', 'vw'];
-			function containerWidthMaxForUnit(unit) {
-				if (unit === '%') return 100;
-				if (unit === 'vw') return 100;
-				if (unit === 'em') return 10;
-				return 1600;
-			}
 			function containerWidthValue(node) {
-				const parsed = parseNumberUnit(containerWidthSource(node), '%', containerWidthUnits);
+				const parsed = parseNumberUnit(containerWidthSource(node), '%', ['px', '%', 'vw']);
 				if (parsed.value === '') return 100;
-				return normalizedContainerWidthValue(parsed.value, parsed.unit);
+				return parsed.value;
 			}
 			function containerWidthUnit(node) {
-				const parsed = parseNumberUnit(containerWidthSource(node), '%', containerWidthUnits);
+				const parsed = parseNumberUnit(containerWidthSource(node), '%', ['px', '%', 'vw']);
 				return parsed.unit;
-			}
-			function containerWidthMax(node) {
-				return containerWidthMaxForUnit(containerWidthUnit(node));
-			}
-			function containerWidthStep(node) {
-				return containerWidthUnit(node) === 'em' ? 0.1 : 1;
-			}
-			function normalizedContainerWidthValue(value, unit) {
-				const num = Number(value);
-				if (!Number.isFinite(num)) return '';
-				return clamp(num, 0, containerWidthMaxForUnit(unit));
-			}
-			function containerWidthToken(value, unit, emptyValue) {
-				return toSizeToken(normalizedContainerWidthValue(value, unit), unit, emptyValue);
 			}
 			function setContainerWidthValue(node, next) {
 				if (!node || !node.settings) return;
 				const s = node.settings;
 				const unit = containerWidthUnit(node);
-				const token = containerWidthToken(next, unit, s.contentWidth === 'boxed' ? 'auto' : '100%');
+				const token = toSizeToken(next, unit, s.contentWidth === 'boxed' ? 'auto' : '100%');
 				if (s.contentWidth === 'boxed') setResponsiveSetting(s, 'maxWidth', token);
 				else setResponsiveSetting(s, 'containerWidth', token);
 			}
-			function onContainerWidthInput(node, event) {
-				if (!event || !event.target) return;
-				setContainerWidthValue(node, event.target.value);
-				nextTick(() => {
-					event.target.value = String(containerWidthValue(node));
-				});
-			}
 			function setContainerWidthUnit(node, unit) {
 				if (!node || !node.settings) return;
-				const safe = containerWidthUnits.includes(unit) ? unit : '%';
-				const value = normalizedContainerWidthValue(containerWidthValue(node), safe);
+				const allowed = ['px', '%', 'vw'];
+				const safe = allowed.includes(unit) ? unit : '%';
+				const value = containerWidthValue(node);
+				setContainerWidthValue(node, value);
 				if (node.settings.contentWidth === 'boxed') {
-					setResponsiveSetting(node.settings, 'maxWidth', containerWidthToken(value, safe, 'auto'));
+					setResponsiveSetting(node.settings, 'maxWidth', toSizeToken(value, safe, 'auto'));
 				} else {
-					setResponsiveSetting(node.settings, 'containerWidth', containerWidthToken(value, safe, '100%'));
+					setResponsiveSetting(node.settings, 'containerWidth', toSizeToken(value, safe, '100%'));
 				}
 			}
 			function onContainerContentWidthChange(node) {
@@ -2940,7 +2859,7 @@
 				setResponsiveDevice, applyResponsiveDevice, toggleWidthPreviewMenu, closeWidthPreviewMenu, selectDesktopPreviewWidth,
 				containerResponsiveValue, setContainerResponsiveSetting,
 				onContainerDisplayTypeChange, onContainerContentWidthChange,
-				containerWidthValue, containerWidthUnit, containerWidthMax, containerWidthStep, onContainerWidthInput, setContainerWidthValue, setContainerWidthUnit,
+				containerWidthValue, containerWidthUnit, setContainerWidthValue, setContainerWidthUnit,
 				columnWidthValue, setSelectedColumnWidthValue, columnResizeOverlay,
 				minHeightValue, minHeightUnit, setMinHeightValue, setMinHeightUnit,
 				containerGridColumnsValue, setContainerGridColumnsValue,
@@ -3141,13 +3060,12 @@
 										</div>
 									</div>
 									<div class="pb-range-value-row">
-										<input type="range" class="pb-range" min="0" :max="containerWidthMax(selectedNode)" :step="containerWidthStep(selectedNode)" :value="containerWidthValue(selectedNode)" @input="onContainerWidthInput(selectedNode, $event)">
+										<input type="range" class="pb-range" min="0" max="2000" step="1" :value="containerWidthValue(selectedNode)" @input="setContainerWidthValue(selectedNode, $event.target.value)">
 										<div class="pb-value-with-unit">
-											<input class="pb-input pb-input-compact" type="number" min="0" :max="containerWidthMax(selectedNode)" :step="containerWidthStep(selectedNode)" :value="containerWidthValue(selectedNode)" @input="onContainerWidthInput(selectedNode, $event)">
+											<input class="pb-input pb-input-compact" type="number" min="0" max="2000" step="1" :value="containerWidthValue(selectedNode)" @input="setContainerWidthValue(selectedNode, $event.target.value)">
 											<select class="pb-mini-unit" :value="containerWidthUnit(selectedNode)" @change="setContainerWidthUnit(selectedNode, $event.target.value)">
 												<option value="px">px</option>
 												<option value="%">%</option>
-												<option value="em">em</option>
 												<option value="vw">vw</option>
 											</select>
 										</div>

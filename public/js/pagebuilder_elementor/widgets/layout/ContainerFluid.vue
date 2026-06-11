@@ -189,8 +189,11 @@ export default {
 			style.marginBottom = this.toCssSpace(this.responsiveSetting('marginBottom', s.marginBottom), '0');
 			style.marginLeft = this.toCssSpace(this.responsiveSetting('marginLeft', s.marginLeft), '0');
 			style.minHeight = this.toCssSize(minHeightValue, 'auto');
-			if (!fullMode) {
-				style.maxWidth = this.toCssSize(maxWidthValue, 'auto');
+			if (fullMode) {
+				style.maxWidth = '100%';
+			} else {
+				const maxWidthCss = this.toCssSize(maxWidthValue, 'auto');
+				style.maxWidth = maxWidthCss === 'auto' ? 'auto' : 'min(' + maxWidthCss + ', 100%)';
 			}
 
 			this.applyAdvancedLayoutStyle(style, s);

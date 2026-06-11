@@ -7,7 +7,7 @@
 
 <script>
 export default {
-	name: 'LayoutContainer',
+	name: 'LayoutContainerFluid',
 	props: {
 		item: {
 			type: Object,
@@ -63,7 +63,7 @@ export default {
 			return allowed.includes(raw) ? raw : 'div';
 		},
 		rootClass() {
-			const classes = ['el-layout-container'];
+			const classes = ['el-layout-container-fluid'];
 			if (this.settings.cssClass) classes.push(this.settings.cssClass);
 			if (this.isTruthy(this.settings.hideDesktop)) classes.push('pb-hide-desktop');
 			if (this.isTruthy(this.settings.hideTablet)) classes.push('pb-hide-tablet');
@@ -160,13 +160,12 @@ export default {
 		},
 		containerStyle() {
 			const s = this.settings;
-			const fullMode = this.item.type === 'container_fluid' || s.contentWidth === 'full' || s.contentWidth === 'fluid';
+			const fullMode = s.contentWidth === 'full' || s.contentWidth === 'fluid';
 			const widthValue = this.responsiveSetting('containerWidth', s.containerWidth || '100%');
 			const maxWidthValue = this.responsiveSetting('maxWidth', s.maxWidth || 'auto');
 			const minHeightValue = this.responsiveSetting('minHeight', s.minHeight || 'auto');
-			// Arsitektur baru: Container adalah wrapper block-level.
-			// Display/flex/grid layout diterapkan di el-cont-columns (inner div) via contColumnsStyle di BuilderNode.
-			// Container sendiri hanya menangani: background, border, shadow, padding, margin, min-height, width.
+			// Arsitektur baru: Container Fluid adalah wrapper block-level.
+			// Layout flex/grid diterapkan di el-cont-columns (slot inner) via contColumnsStyle di BuilderNode.
 			const style = {
 				display: 'block',
 				boxSizing: 'border-box',
@@ -190,12 +189,8 @@ export default {
 			style.marginBottom = this.toCssSpace(this.responsiveSetting('marginBottom', s.marginBottom), '0');
 			style.marginLeft = this.toCssSpace(this.responsiveSetting('marginLeft', s.marginLeft), '0');
 			style.minHeight = this.toCssSize(minHeightValue, 'auto');
-
-			if (fullMode) {
-				style.maxWidth = '100%';
-			} else {
-				const maxWidthCss = this.toCssSize(maxWidthValue, 'auto');
-				style.maxWidth = maxWidthCss === 'auto' ? 'auto' : 'min(' + maxWidthCss + ', 100%)';
+			if (!fullMode) {
+				style.maxWidth = this.toCssSize(maxWidthValue, 'auto');
 			}
 
 			this.applyAdvancedLayoutStyle(style, s);

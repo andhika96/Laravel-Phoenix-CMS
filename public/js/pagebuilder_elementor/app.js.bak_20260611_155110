@@ -941,25 +941,11 @@
 					onShowToolbox:  this.onShowToolbox,
 				};
 			},
-			flexPercentBasis(rawBasis) {
+			flexPresetGrow(rawBasis) {
 				const match = String(rawBasis == null ? '' : rawBasis).trim().match(/^(\d+(?:\.\d+)?)%$/);
 				if (!match) return null;
-				const percent = Number(match[1]);
-				return Number.isFinite(percent) && percent > 0 ? percent : null;
-			},
-			flexPercentBasisToken(percent) {
-				const safePercent = clamp(Number(percent) || 0, 0, 100);
-				const s = this.node.settings || {};
-				const columnGap = this.nodeResponsiveValue('flexColumnGap', s.flexColumnGap || s.gap || '0');
-				const gapToken = cssSize(columnGap, '0');
-				const gapMatch = String(gapToken || '').trim().match(/^(\d+(?:\.\d+)?)px$/i);
-				const colCount = Array.isArray(this.node.columns) ? this.node.columns.length : 1;
-				if (gapMatch && colCount > 1 && safePercent > 0) {
-					const totalGapPx = Number(gapMatch[1]) * (colCount - 1);
-					const gapSharePx = Math.round(totalGapPx * (safePercent / 100) * 1000) / 1000;
-					if (gapSharePx > 0) return 'calc(' + safePercent + '% - ' + gapSharePx + 'px)';
-				}
-				return safePercent + '%';
+				const grow = Number(match[1]);
+				return Number.isFinite(grow) && grow > 0 ? grow : null;
 			},
 			contColStyle(col) {
 				const s = this.node.settings || {};
@@ -972,11 +958,6 @@
 					const isColumnDir = dir === 'column' || dir === 'column-reverse';
 					const wrapMode = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
 					const isWrapMode = wrapMode === 'wrap' || wrapMode === 'wrap-reverse';
-					const stableRowMinWidth = isWrapMode
-						? '220px'
-						: ((this.responsiveDevice || 'desktop') === 'mobile'
-							? '56px'
-							: ((this.responsiveDevice || 'desktop') === 'tablet' ? '72px' : '96px'));
 
 					if (hasBasis) {
 						if (isColumnDir) {
@@ -989,14 +970,12 @@
 								boxSizing: 'border-box',
 							};
 						}
-						const percentBasis = this.flexPercentBasis(rawBasis);
-						if (percentBasis != null) {
-							const basisToken = this.flexPercentBasisToken(percentBasis);
+						const presetGrow = this.flexPresetGrow(rawBasis);
+						if (presetGrow != null) {
 							return {
-								flex: '0 0 ' + basisToken,
-								flexBasis: basisToken,
-								width: basisToken,
-								minWidth: stableRowMinWidth,
+								flex: presetGrow + ' 1 0px',
+								width: 'auto',
+								minWidth: isWrapMode ? '220px' : '0',
 								maxWidth: '100%',
 								height: 'auto',
 								alignSelf: 'stretch',
@@ -1008,7 +987,7 @@
 						const rowStyle = {
 							flex: '0 0 ' + rawBasis,
 							width: rawBasis,
-							minWidth: stableRowMinWidth,
+							minWidth: rawBasis,
 							maxWidth: rawBasis,
 							height: 'auto',
 							alignSelf: 'stretch',
@@ -1032,7 +1011,7 @@
 					const rowStyle = {
 						flex: '1 1 0',
 						width: 'auto',
-						minWidth: stableRowMinWidth,
+						minWidth: isWrapMode ? '220px' : '0',
 						height: 'auto',
 						alignSelf: 'stretch',
 						display: 'flex',
@@ -2138,59 +2117,33 @@
 				const boxedMode = s.contentWidth === 'boxed';
 				return boxedMode ? getResponsiveSetting(s, 'maxWidth', '') : getResponsiveSetting(s, 'containerWidth', '');
 			}
-			const containerWidthUnits = ['px', '%', 'em', 'vw'];
-			function containerWidthMaxForUnit(unit) {
-				if (unit === '%') return 100;
-				if (unit === 'vw') return 100;
-				if (unit === 'em') return 10;
-				return 1600;
-			}
 			function containerWidthValue(node) {
-				const parsed = parseNumberUnit(containerWidthSource(node), '%', containerWidthUnits);
+				const parsed = parseNumberUnit(containerWidthSource(node), '%', ['px', '%', 'vw']);
 				if (parsed.value === '') return 100;
-				return normalizedContainerWidthValue(parsed.value, parsed.unit);
+				return parsed.value;
 			}
 			function containerWidthUnit(node) {
-				const parsed = parseNumberUnit(containerWidthSource(node), '%', containerWidthUnits);
+				const parsed = parseNumberUnit(containerWidthSource(node), '%', ['px', '%', 'vw']);
 				return parsed.unit;
-			}
-			function containerWidthMax(node) {
-				return containerWidthMaxForUnit(containerWidthUnit(node));
-			}
-			function containerWidthStep(node) {
-				return containerWidthUnit(node) === 'em' ? 0.1 : 1;
-			}
-			function normalizedContainerWidthValue(value, unit) {
-				const num = Number(value);
-				if (!Number.isFinite(num)) return '';
-				return clamp(num, 0, containerWidthMaxForUnit(unit));
-			}
-			function containerWidthToken(value, unit, emptyValue) {
-				return toSizeToken(normalizedContainerWidthValue(value, unit), unit, emptyValue);
 			}
 			function setContainerWidthValue(node, next) {
 				if (!node || !node.settings) return;
 				const s = node.settings;
 				const unit = containerWidthUnit(node);
-				const token = containerWidthToken(next, unit, s.contentWidth === 'boxed' ? 'auto' : '100%');
+				const token = toSizeToken(next, unit, s.contentWidth === 'boxed' ? 'auto' : '100%');
 				if (s.contentWidth === 'boxed') setResponsiveSetting(s, 'maxWidth', token);
 				else setResponsiveSetting(s, 'containerWidth', token);
 			}
-			function onContainerWidthInput(node, event) {
-				if (!event || !event.target) return;
-				setContainerWidthValue(node, event.target.value);
-				nextTick(() => {
-					event.target.value = String(containerWidthValue(node));
-				});
-			}
 			function setContainerWidthUnit(node, unit) {
 				if (!node || !node.settings) return;
-				const safe = containerWidthUnits.includes(unit) ? unit : '%';
-				const value = normalizedContainerWidthValue(containerWidthValue(node), safe);
+				const allowed = ['px', '%', 'vw'];
+				const safe = allowed.includes(unit) ? unit : '%';
+				const value = containerWidthValue(node);
+				setContainerWidthValue(node, value);
 				if (node.settings.contentWidth === 'boxed') {
-					setResponsiveSetting(node.settings, 'maxWidth', containerWidthToken(value, safe, 'auto'));
+					setResponsiveSetting(node.settings, 'maxWidth', toSizeToken(value, safe, 'auto'));
 				} else {
-					setResponsiveSetting(node.settings, 'containerWidth', containerWidthToken(value, safe, '100%'));
+					setResponsiveSetting(node.settings, 'containerWidth', toSizeToken(value, safe, '100%'));
 				}
 			}
 			function onContainerContentWidthChange(node) {
@@ -2940,7 +2893,7 @@
 				setResponsiveDevice, applyResponsiveDevice, toggleWidthPreviewMenu, closeWidthPreviewMenu, selectDesktopPreviewWidth,
 				containerResponsiveValue, setContainerResponsiveSetting,
 				onContainerDisplayTypeChange, onContainerContentWidthChange,
-				containerWidthValue, containerWidthUnit, containerWidthMax, containerWidthStep, onContainerWidthInput, setContainerWidthValue, setContainerWidthUnit,
+				containerWidthValue, containerWidthUnit, setContainerWidthValue, setContainerWidthUnit,
 				columnWidthValue, setSelectedColumnWidthValue, columnResizeOverlay,
 				minHeightValue, minHeightUnit, setMinHeightValue, setMinHeightUnit,
 				containerGridColumnsValue, setContainerGridColumnsValue,
@@ -3141,13 +3094,12 @@
 										</div>
 									</div>
 									<div class="pb-range-value-row">
-										<input type="range" class="pb-range" min="0" :max="containerWidthMax(selectedNode)" :step="containerWidthStep(selectedNode)" :value="containerWidthValue(selectedNode)" @input="onContainerWidthInput(selectedNode, $event)">
+										<input type="range" class="pb-range" min="0" max="2000" step="1" :value="containerWidthValue(selectedNode)" @input="setContainerWidthValue(selectedNode, $event.target.value)">
 										<div class="pb-value-with-unit">
-											<input class="pb-input pb-input-compact" type="number" min="0" :max="containerWidthMax(selectedNode)" :step="containerWidthStep(selectedNode)" :value="containerWidthValue(selectedNode)" @input="onContainerWidthInput(selectedNode, $event)">
+											<input class="pb-input pb-input-compact" type="number" min="0" max="2000" step="1" :value="containerWidthValue(selectedNode)" @input="setContainerWidthValue(selectedNode, $event.target.value)">
 											<select class="pb-mini-unit" :value="containerWidthUnit(selectedNode)" @change="setContainerWidthUnit(selectedNode, $event.target.value)">
 												<option value="px">px</option>
 												<option value="%">%</option>
-												<option value="em">em</option>
 												<option value="vw">vw</option>
 											</select>
 										</div>

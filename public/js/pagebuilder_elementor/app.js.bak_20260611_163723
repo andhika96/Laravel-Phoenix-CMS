@@ -2138,32 +2138,22 @@
 				const boxedMode = s.contentWidth === 'boxed';
 				return boxedMode ? getResponsiveSetting(s, 'maxWidth', '') : getResponsiveSetting(s, 'containerWidth', '');
 			}
-			const containerWidthUnits = ['px', '%', 'em', 'vw'];
-			function containerWidthMaxForUnit(unit) {
-				if (unit === '%') return 100;
-				if (unit === 'vw') return 100;
-				if (unit === 'em') return 10;
-				return 1600;
-			}
 			function containerWidthValue(node) {
-				const parsed = parseNumberUnit(containerWidthSource(node), '%', containerWidthUnits);
+				const parsed = parseNumberUnit(containerWidthSource(node), '%', ['px', '%', 'vw']);
 				if (parsed.value === '') return 100;
-				return normalizedContainerWidthValue(parsed.value, parsed.unit);
+				return parsed.unit === '%' ? clamp(parsed.value, 0, 100) : parsed.value;
 			}
 			function containerWidthUnit(node) {
-				const parsed = parseNumberUnit(containerWidthSource(node), '%', containerWidthUnits);
+				const parsed = parseNumberUnit(containerWidthSource(node), '%', ['px', '%', 'vw']);
 				return parsed.unit;
 			}
 			function containerWidthMax(node) {
-				return containerWidthMaxForUnit(containerWidthUnit(node));
-			}
-			function containerWidthStep(node) {
-				return containerWidthUnit(node) === 'em' ? 0.1 : 1;
+				return containerWidthUnit(node) === '%' ? 100 : 2000;
 			}
 			function normalizedContainerWidthValue(value, unit) {
 				const num = Number(value);
 				if (!Number.isFinite(num)) return '';
-				return clamp(num, 0, containerWidthMaxForUnit(unit));
+				return unit === '%' ? clamp(num, 0, 100) : Math.max(0, num);
 			}
 			function containerWidthToken(value, unit, emptyValue) {
 				return toSizeToken(normalizedContainerWidthValue(value, unit), unit, emptyValue);
@@ -2176,16 +2166,10 @@
 				if (s.contentWidth === 'boxed') setResponsiveSetting(s, 'maxWidth', token);
 				else setResponsiveSetting(s, 'containerWidth', token);
 			}
-			function onContainerWidthInput(node, event) {
-				if (!event || !event.target) return;
-				setContainerWidthValue(node, event.target.value);
-				nextTick(() => {
-					event.target.value = String(containerWidthValue(node));
-				});
-			}
 			function setContainerWidthUnit(node, unit) {
 				if (!node || !node.settings) return;
-				const safe = containerWidthUnits.includes(unit) ? unit : '%';
+				const allowed = ['px', '%', 'vw'];
+				const safe = allowed.includes(unit) ? unit : '%';
 				const value = normalizedContainerWidthValue(containerWidthValue(node), safe);
 				if (node.settings.contentWidth === 'boxed') {
 					setResponsiveSetting(node.settings, 'maxWidth', containerWidthToken(value, safe, 'auto'));
@@ -2940,7 +2924,7 @@
 				setResponsiveDevice, applyResponsiveDevice, toggleWidthPreviewMenu, closeWidthPreviewMenu, selectDesktopPreviewWidth,
 				containerResponsiveValue, setContainerResponsiveSetting,
 				onContainerDisplayTypeChange, onContainerContentWidthChange,
-				containerWidthValue, containerWidthUnit, containerWidthMax, containerWidthStep, onContainerWidthInput, setContainerWidthValue, setContainerWidthUnit,
+				containerWidthValue, containerWidthUnit, containerWidthMax, setContainerWidthValue, setContainerWidthUnit,
 				columnWidthValue, setSelectedColumnWidthValue, columnResizeOverlay,
 				minHeightValue, minHeightUnit, setMinHeightValue, setMinHeightUnit,
 				containerGridColumnsValue, setContainerGridColumnsValue,
@@ -3141,13 +3125,12 @@
 										</div>
 									</div>
 									<div class="pb-range-value-row">
-										<input type="range" class="pb-range" min="0" :max="containerWidthMax(selectedNode)" :step="containerWidthStep(selectedNode)" :value="containerWidthValue(selectedNode)" @input="onContainerWidthInput(selectedNode, $event)">
+										<input type="range" class="pb-range" min="0" :max="containerWidthMax(selectedNode)" step="1" :value="containerWidthValue(selectedNode)" @input="setContainerWidthValue(selectedNode, $event.target.value)">
 										<div class="pb-value-with-unit">
-											<input class="pb-input pb-input-compact" type="number" min="0" :max="containerWidthMax(selectedNode)" :step="containerWidthStep(selectedNode)" :value="containerWidthValue(selectedNode)" @input="onContainerWidthInput(selectedNode, $event)">
+											<input class="pb-input pb-input-compact" type="number" min="0" :max="containerWidthMax(selectedNode)" step="1" :value="containerWidthValue(selectedNode)" @input="setContainerWidthValue(selectedNode, $event.target.value)">
 											<select class="pb-mini-unit" :value="containerWidthUnit(selectedNode)" @change="setContainerWidthUnit(selectedNode, $event.target.value)">
 												<option value="px">px</option>
 												<option value="%">%</option>
-												<option value="em">em</option>
 												<option value="vw">vw</option>
 											</select>
 										</div>

@@ -760,27 +760,27 @@ body {
 
 .pb-grid-col-label {
 	font-size: 11px;
-	color: #6f4aa0;
+	color: #8c96ac;
 	margin-bottom: 0;
-	padding: 6px 12px;
+	padding: 5px 10px;
 	font-weight: 600;
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
-	gap: 7px;
+	gap: 6px;
 	min-height: 0;
 	user-select: none;
 	position: absolute;
-	top: -13px;
-	left: 12px;
-	z-index: 9;
-	border: 1px solid #e3a6ff;
-	background: #fff;
-	border-radius: 14px 14px 14px 4px;
-	box-shadow: 0 10px 24px rgba(57, 42, 102, 0.12);
+	top: 8px;
+	left: 10px;
+	z-index: 5;
+	border: 1px solid #d7def0;
+	background: rgba(255, 255, 255, 0.96);
+	border-radius: 999px;
+	box-shadow: 0 8px 16px rgba(30, 41, 59, 0.08);
 	opacity: 0;
 	pointer-events: none;
-	transform: translateY(2px);
+	transform: translateY(-4px);
 	transition: opacity 120ms ease, transform 120ms ease, border-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
 }
 
@@ -789,7 +789,7 @@ body {
 }
 
 .pb-grid-col-label-button:hover {
-	transform: translateY(0);
+	transform: translateY(-1px);
 }
 
 .pb-grid-col-label-badge {
@@ -901,7 +901,7 @@ body {
 }
 
 .pb-grid-col.has-flex-col-controls > .pb-dropzone-col {
-	padding-top: 0;
+	padding-top: 38px;
 }
 
 .pb-grid-col .pb-dropzone-stack {
@@ -991,7 +991,7 @@ body {
 .pb-grid-col.is-drag-over-col > .pb-grid-col-label {
 	opacity: 1;
 	pointer-events: auto;
-	transform: translateY(-1px);
+	transform: translateY(0);
 }
 
 .pb-grid-col:hover .pb-grid-col-label,

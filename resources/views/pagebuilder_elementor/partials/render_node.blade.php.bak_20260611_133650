@@ -477,11 +477,8 @@
 		$styles[] = 'margin-left:' . $css_space($s['marginLeft'] ?? null, '0');
 		$styles[] = 'min-height:' . $css_value($s['minHeight'] ?? null, 'auto');
 
-		if ($fullMode) {
-			$styles[] = 'max-width:100%';
-		} else {
-			$maxWidthCss = $css_value($s['maxWidth'] ?? null, 'auto');
-			$styles[] = 'max-width:' . ($maxWidthCss === 'auto' ? 'auto' : 'min(' . $maxWidthCss . ', 100%)');
+		if (!$fullMode) {
+			$styles[] = 'max-width:' . $css_value($s['maxWidth'] ?? null, 'auto');
 		}
 
 		if (!empty($s['alignSelf']) && $s['alignSelf'] !== 'auto') {
@@ -732,53 +729,17 @@
 									'box-sizing:border-box',
 								];
 							} else {
-								$percentBasis = null;
-								$basisToken = $rawBasis;
-								if (preg_match('/^(\d+(?:\.\d+)?)%$/', $rawBasis, $basisMatches)) {
-									$numericPercent = (float) $basisMatches[1];
-									if ($numericPercent > 0) {
-										$percentBasis = $numericPercent;
-										$percentText = rtrim(rtrim(sprintf('%.4F', $numericPercent), '0'), '.');
-										$basisToken = $percentText . '%';
-										$baseGapToken = $css_value($s['gap'] ?? null, '0');
-										$columnGapToken = $css_value($s['flexColumnGap'] ?? null, $baseGapToken);
-										if (preg_match('/^(\d+(?:\.\d+)?)px$/i', $columnGapToken, $gapMatches)) {
-											$totalGapPx = (float) $gapMatches[1] * max(0, count($normalizedColumns) - 1);
-											$gapSharePx = round($totalGapPx * ($numericPercent / 100), 3);
-											if ($gapSharePx > 0) {
-												$gapShareText = rtrim(rtrim(sprintf('%.3F', $gapSharePx), '0'), '.');
-												$basisToken = 'calc(' . $percentText . '% - ' . $gapShareText . 'px)';
-											}
-										}
-									}
-								}
-
-								if ($percentBasis !== null) {
-									$colStyles = [
-										'flex:0 0 ' . $basisToken,
-										'flex-basis:' . $basisToken,
-										'width:' . $basisToken,
-										'min-width:' . ($isWrapMode ? '220px' : '0'),
-										'max-width:100%',
-										'height:auto',
-										'align-self:stretch',
-										'display:flex',
-										'flex-direction:column',
-										'box-sizing:border-box',
-									];
-								} else {
-									$colStyles = [
-										'flex:0 0 ' . $rawBasis,
-										'width:' . $rawBasis,
-										'min-width:' . $rawBasis,
-										'max-width:' . $rawBasis,
-										'height:auto',
-										'align-self:stretch',
-										'display:flex',
-										'flex-direction:column',
-										'box-sizing:border-box',
-									];
-								}
+								$colStyles = [
+									'flex:0 0 ' . $rawBasis,
+									'width:' . $rawBasis,
+									'min-width:' . $rawBasis,
+									'max-width:' . $rawBasis,
+									'height:auto',
+									'align-self:stretch',
+									'display:flex',
+									'flex-direction:column',
+									'box-sizing:border-box',
+								];
 							}
 						} elseif ($isColumnDir) {
 							$colStyles = [

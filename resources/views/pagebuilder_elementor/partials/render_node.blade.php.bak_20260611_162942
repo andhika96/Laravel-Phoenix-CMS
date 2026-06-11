@@ -477,11 +477,8 @@
 		$styles[] = 'margin-left:' . $css_space($s['marginLeft'] ?? null, '0');
 		$styles[] = 'min-height:' . $css_value($s['minHeight'] ?? null, 'auto');
 
-		if ($fullMode) {
-			$styles[] = 'max-width:100%';
-		} else {
-			$maxWidthCss = $css_value($s['maxWidth'] ?? null, 'auto');
-			$styles[] = 'max-width:' . ($maxWidthCss === 'auto' ? 'auto' : 'min(' . $maxWidthCss . ', 100%)');
+		if (!$fullMode) {
+			$styles[] = 'max-width:' . $css_value($s['maxWidth'] ?? null, 'auto');
 		}
 
 		if (!empty($s['alignSelf']) && $s['alignSelf'] !== 'auto') {

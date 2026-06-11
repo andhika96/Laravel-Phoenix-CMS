@@ -661,22 +661,18 @@
 		props: {
 			node:        { type: Object,   required: true },
 			selectedId:  { type: String,   default: '' },
-			selectedColumnNodeId: { type: String, default: '' },
-			selectedColumnId: { type: String, default: '' },
 			hoveredId:   { type: String,   default: '' },
 			responsiveDevice: { type: String, default: 'desktop' },
 			// Handlers dari app
 			onAddContainer: { type: Function, required: true },
 			onAddCol:       { type: Function, required: true },
 			onSelect:       { type: Function, required: true },
-			onSelectColumn: { type: Function, required: true },
 			onSetHover:     { type: Function, required: true },
 			onClearHover:   { type: Function, required: true },
 			onRemove:       { type: Function, required: true },
 			onDuplicate:    { type: Function, required: true },
 			onDragStart:    { type: Function, required: true },
 			onDragEnd:      { type: Function, required: true },
-			onStartColumnResize: { type: Function, required: true },
 			onOpenModal:    { type: Function, required: true },
 			onShowToolbox:  { type: Function, required: true },
 		},
@@ -718,19 +714,6 @@
 			isToolbarVisible() {
 				const focusId = this.hoveredId || this.selectedId || '';
 				return focusId === this.node.id;
-			},
-			isFlexColumnEditor() {
-				const s = this.node.settings || {};
-				if (!this.isCont || (s.displayType || 'flex') !== 'flex') return false;
-				const direction = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-				return direction === 'row' || direction === 'row-reverse';
-			},
-			isFlexRowResizable() {
-				const s = this.node.settings || {};
-				if (!this.isFlexColumnEditor) return false;
-				const direction = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-				const flexWrap = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
-				return direction === 'row' && flexWrap === 'nowrap' && Array.isArray(this.node.columns) && this.node.columns.length > 1;
 			},
 			isOutOfFlowLayoutNode() {
 				const settings = this.node && this.node.settings ? this.node.settings : {};
@@ -820,8 +803,6 @@
 				const style = { display:'flex', flexDirection:direction, flexWrap,
 					justifyContent, alignItems, alignContent,
 					gap:cssSize(s.gap,'0'), rowGap:cssSize(rowGap,'0'), columnGap:cssSize(columnGap,'0'), width:'100%' };
-				style['--pb-flex-column-gap'] = cssSize(columnGap, '0');
-				style['--pb-col-resizer-size'] = '28px';
 				style.minHeight = 'inherit';
 				style.height = '100%';
 					return style;
@@ -922,44 +903,20 @@
 			passdown() {
 				return {
 					selectedId:     this.selectedId,
-					selectedColumnNodeId: this.selectedColumnNodeId,
-					selectedColumnId: this.selectedColumnId,
 					hoveredId:      this.hoveredId,
 					responsiveDevice: this.responsiveDevice,
 					onAddContainer: this.onAddContainer,
 					onAddCol:       this.onAddCol,
 					onSelect:       this.onSelect,
-					onSelectColumn: this.onSelectColumn,
 					onSetHover:     this.onSetHover,
 					onClearHover:   this.onClearHover,
 					onRemove:       this.onRemove,
 					onDuplicate:    this.onDuplicate,
 					onDragStart:    this.onDragStart,
 					onDragEnd:      this.onDragEnd,
-					onStartColumnResize: this.onStartColumnResize,
 					onOpenModal:    this.onOpenModal,
 					onShowToolbox:  this.onShowToolbox,
 				};
-			},
-			flexPercentBasis(rawBasis) {
-				const match = String(rawBasis == null ? '' : rawBasis).trim().match(/^(\d+(?:\.\d+)?)%$/);
-				if (!match) return null;
-				const percent = Number(match[1]);
-				return Number.isFinite(percent) && percent > 0 ? percent : null;
-			},
-			flexPercentBasisToken(percent) {
-				const safePercent = clamp(Number(percent) || 0, 0, 100);
-				const s = this.node.settings || {};
-				const columnGap = this.nodeResponsiveValue('flexColumnGap', s.flexColumnGap || s.gap || '0');
-				const gapToken = cssSize(columnGap, '0');
-				const gapMatch = String(gapToken || '').trim().match(/^(\d+(?:\.\d+)?)px$/i);
-				const colCount = Array.isArray(this.node.columns) ? this.node.columns.length : 1;
-				if (gapMatch && colCount > 1 && safePercent > 0) {
-					const totalGapPx = Number(gapMatch[1]) * (colCount - 1);
-					const gapSharePx = Math.round(totalGapPx * (safePercent / 100) * 1000) / 1000;
-					if (gapSharePx > 0) return 'calc(' + safePercent + '% - ' + gapSharePx + 'px)';
-				}
-				return safePercent + '%';
 			},
 			contColStyle(col) {
 				const s = this.node.settings || {};
@@ -972,11 +929,6 @@
 					const isColumnDir = dir === 'column' || dir === 'column-reverse';
 					const wrapMode = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
 					const isWrapMode = wrapMode === 'wrap' || wrapMode === 'wrap-reverse';
-					const stableRowMinWidth = isWrapMode
-						? '220px'
-						: ((this.responsiveDevice || 'desktop') === 'mobile'
-							? '56px'
-							: ((this.responsiveDevice || 'desktop') === 'tablet' ? '72px' : '96px'));
 
 					if (hasBasis) {
 						if (isColumnDir) {
@@ -989,26 +941,10 @@
 								boxSizing: 'border-box',
 							};
 						}
-						const percentBasis = this.flexPercentBasis(rawBasis);
-						if (percentBasis != null) {
-							const basisToken = this.flexPercentBasisToken(percentBasis);
-							return {
-								flex: '0 0 ' + basisToken,
-								flexBasis: basisToken,
-								width: basisToken,
-								minWidth: stableRowMinWidth,
-								maxWidth: '100%',
-								height: 'auto',
-								alignSelf: 'stretch',
-								display: 'flex',
-								flexDirection: 'column',
-								boxSizing: 'border-box',
-							};
-						}
 						const rowStyle = {
 							flex: '0 0 ' + rawBasis,
 							width: rawBasis,
-							minWidth: stableRowMinWidth,
+							minWidth: rawBasis,
 							maxWidth: rawBasis,
 							height: 'auto',
 							alignSelf: 'stretch',
@@ -1032,7 +968,7 @@
 					const rowStyle = {
 						flex: '1 1 0',
 						width: 'auto',
-						minWidth: stableRowMinWidth,
+						minWidth: isWrapMode ? '220px' : '0',
 						height: 'auto',
 						alignSelf: 'stretch',
 						display: 'flex',
@@ -1081,23 +1017,6 @@
 			},
 			columnHasChildren(col) {
 				return Array.isArray(col && col.children) && col.children.length > 0;
-			},
-			columnLabel(ci) {
-				return 'Column ' + (Number(ci) + 1);
-			},
-			isColumnSelected(col) {
-				return this.selectedColumnNodeId === this.node.id && this.selectedColumnId === String(col && col.id || '');
-			},
-			showColumnResizeHandle(ci) {
-				return this.isFlexRowResizable && Number(ci) < ((this.node.columns || []).length - 1);
-			},
-			selectColumn(col) {
-				if (!col) return;
-				this.onSelectColumn(this.node, col);
-			},
-			startColumnResize(event, col, ci) {
-				if (!col) return;
-				this.onStartColumnResize(event, this.node, col, ci);
 			},
 			isSequentialColumnLocked(colIndex) {
 				const cols = Array.isArray(this.node.columns) ? this.node.columns : [];
@@ -1283,35 +1202,10 @@
 					<div
 						v-for="(col, ci) in (node.columns || [])"
 						:key="col.id"
-						:class="['el-grid-col', 'pb-grid-col', {
-							'is-selected-col': isColumnSelected(col),
-							'has-flex-col-controls': isFlexColumnEditor,
-							'has-resize-handle': showColumnResizeHandle(ci)
-						}]"
+						class="el-grid-col pb-grid-col"
 						:data-col-index="ci"
-						:data-parent-node-id="node.id"
 						:style="contColStyle(col)"
 					>
-						<button
-							v-if="isFlexColumnEditor"
-							type="button"
-							class="pb-grid-col-label pb-grid-col-label-button"
-							:class="{ 'is-active': isColumnSelected(col) }"
-							@click.stop="selectColumn(col)"
-						>
-							<span class="pb-grid-col-label-badge"><i class="fa-regular fa-square"></i></span>
-							<span>{{ columnLabel(ci) }}</span>
-						</button>
-						<button
-							v-if="showColumnResizeHandle(ci)"
-							type="button"
-							class="pb-col-resizer"
-							title="Drag to resize columns"
-							@click.stop
-							@mousedown.stop.prevent="startColumnResize($event, col, ci)"
-						>
-							<i class="fa-solid fa-left-right"></i>
-						</button>
 						<draggable
 							v-model="col.children"
 							item-key="id"
@@ -1510,38 +1404,23 @@
 			onBeforeUnmount(() => {
 				if (toastTimer) clearTimeout(toastTimer);
 				if (windowScrollLockFrame) cancelAnimationFrame(windowScrollLockFrame);
-				if (typeof activeColumnResizeCleanup === 'function') activeColumnResizeCleanup();
 				window.removeEventListener('scroll', lockWindowScrollPosition);
 				window.removeEventListener('focusin', keepFocusedEditorControlInPanel);
 			});
 			const selectedId  = ref('');
-			const selectedColumnNodeId = ref('');
-			const selectedColumnId = ref('');
 			const hoveredId   = ref('');
 			const settingsTab = ref('layout'); // 'layout' | 'style' | 'advanced'
 			const responsiveDevice = ref('desktop');
-			const desktopPreviewWidth = ref('1140');
-			const widthPreviewMenuOpen = ref(false);
-			const suppressHistory = ref(false);
-			const columnResizeOverlay = ref({ visible: false, text: '', x: 0, y: 0 });
-			let activeColumnResizeCleanup = null;
 			const rootNodes   = ref([]);
 			const responsiveDevices = [
 				{ value: 'desktop', label: 'Desktop', menuLabel: 'Desktop', icon: 'fa-solid fa-desktop' },
 				{ value: 'tablet', label: 'Tablet', menuLabel: 'Tablet Portrait', icon: 'fa-solid fa-tablet-screen-button' },
 				{ value: 'mobile', label: 'Mobile', menuLabel: 'Mobile Portrait', icon: 'fa-solid fa-mobile-screen-button' },
 			];
-			const desktopPreviewWidths = [
-				{ value: '1140', label: '1140px' },
-				{ value: '1320', label: '1320px' },
-			];
 			const controlResponsiveMenu = ref('');
 			const responsiveColumnsCache = new WeakMap();
 			function normalizeResponsiveDevice(device = 'desktop') {
 				return (device === 'tablet' || device === 'mobile') ? device : 'desktop';
-			}
-			function normalizeDesktopPreviewWidth(value = '1140') {
-				return String(value) === '1320' ? '1320' : '1140';
 			}
 			function cloneColumnsState(columns) {
 				if (!Array.isArray(columns)) return [];
@@ -1628,28 +1507,6 @@
 				const meta = responsiveMeta(device);
 				return meta.menuLabel || meta.label || '';
 			}
-			function previewCanvasWidthLabel() {
-				if (responsiveDevice.value === 'tablet') return '720px';
-				if (responsiveDevice.value === 'mobile') return '540px';
-				return normalizeDesktopPreviewWidth(desktopPreviewWidth.value) + 'px';
-			}
-			function previewCanvasStyle() {
-				if (responsiveDevice.value !== 'desktop') return null;
-				return {
-					maxWidth: normalizeDesktopPreviewWidth(desktopPreviewWidth.value) + 'px',
-				};
-			}
-			function toggleWidthPreviewMenu() {
-				if (responsiveDevice.value !== 'desktop') return;
-				widthPreviewMenuOpen.value = !widthPreviewMenuOpen.value;
-			}
-			function closeWidthPreviewMenu() {
-				widthPreviewMenuOpen.value = false;
-			}
-			function selectDesktopPreviewWidth(value) {
-				desktopPreviewWidth.value = normalizeDesktopPreviewWidth(value);
-				widthPreviewMenuOpen.value = false;
-			}
 			function deviceOptionLabel(device) {
 				if (!device || typeof device !== 'object') return '';
 				return device.menuLabel || device.label || '';
@@ -1666,7 +1523,6 @@
 			}
 			function setResponsiveDevice(device) {
 				const safeDevice = normalizeResponsiveDevice(device);
-				if (safeDevice !== 'desktop') closeWidthPreviewMenu();
 				if (responsiveDevice.value !== safeDevice) {
 					responsiveDevice.value = safeDevice;
 				}
@@ -1682,7 +1538,7 @@
 			const traveling = ref(false);
 
 			function snap() {
-				if (traveling.value || suppressHistory.value) return;
+				if (traveling.value) return;
 				const s = JSON.stringify(rootNodes.value);
 				if (histIdx.value >= 0 && hist.value[histIdx.value] === s) return;
 				hist.value = hist.value.slice(0, histIdx.value + 1);
@@ -1827,30 +1683,6 @@
 
 			const selectedNode = computed(() => selectedId.value ? findById(rootNodes.value, selectedId.value) : null);
 			const selectedType = computed(() => selectedNode.value?.type || '');
-			const selectedColumnContext = computed(() => {
-				const nodeId = String(selectedColumnNodeId.value || selectedId.value || '').trim();
-				const colId = String(selectedColumnId.value || '').trim();
-				if (!nodeId || !colId) return null;
-				const node = findById(rootNodes.value, nodeId);
-				if (!node || !isCont(node.type) || !Array.isArray(node.columns)) return null;
-				const index = node.columns.findIndex((col) => col && col.id === colId);
-				if (index < 0) return null;
-				const settings = node.settings || {};
-				const displayType = settings.displayType || 'flex';
-				const direction = getResponsiveSetting(settings, 'direction', settings.direction || 'row') || 'row';
-				const flexWrap = getResponsiveSetting(settings, 'flexWrap', settings.flexWrap || 'nowrap') || 'nowrap';
-				return {
-					node,
-					column: node.columns[index],
-					index,
-					total: node.columns.length,
-					displayType,
-					direction,
-					flexWrap,
-					canEditWidth: displayType === 'flex' && (direction === 'row' || direction === 'row-reverse'),
-					canDragResize: displayType === 'flex' && direction === 'row' && flexWrap === 'nowrap' && node.columns.length > 1,
-				};
-			});
 
 			// ── Column sync ───────────────────────────────────────────────────
 			function syncCols(node, forceCount, device = 'desktop') {
@@ -1958,239 +1790,39 @@
 				if (!Number.isFinite(num) || num <= 0) return emptyValue;
 				return String(num) + unit;
 			}
-			function roundColumnPercent(value) {
-				return Math.round((Number(value) + Number.EPSILON) * 10) / 10;
-			}
-			function formatColumnPercent(value) {
-				const safe = roundColumnPercent(value);
-				return safe.toFixed(1).replace(/\.0$/, '') + '%';
-			}
-			function getFlexColumnPercentages(node) {
-				if (!node || !Array.isArray(node.columns) || !node.columns.length) return [];
-				const percents = Array.from({ length: node.columns.length }, () => 0);
-				let specifiedTotal = 0;
-				const fallbackIndexes = [];
-				node.columns.forEach((col, index) => {
-					const raw = String(col && col.flexBasis != null ? col.flexBasis : '').trim();
-					const match = raw.match(/^(\d+(?:\.\d+)?)%$/);
-					if (match) {
-						const value = Math.max(0, Number(match[1]) || 0);
-						percents[index] = value;
-						specifiedTotal += value;
-						return;
-					}
-					fallbackIndexes.push(index);
-				});
-				if (fallbackIndexes.length) {
-					const remaining = Math.max(0, 100 - specifiedTotal);
-					const share = fallbackIndexes.length ? remaining / fallbackIndexes.length : 0;
-					fallbackIndexes.forEach((index) => {
-						percents[index] = share;
-					});
-				}
-				const total = percents.reduce((sum, value) => sum + value, 0);
-				if (!(total > 0)) {
-					const equal = 100 / node.columns.length;
-					return percents.map(() => equal);
-				}
-				if (Math.abs(total - 100) > 0.05) {
-					return percents.map((value) => (value / total) * 100);
-				}
-				return percents;
-			}
-			function companionColumnIndex(node, index) {
-				if (!node || !Array.isArray(node.columns)) return -1;
-				if (index < node.columns.length - 1) return index + 1;
-				if (index > 0) return index - 1;
-				return -1;
-			}
-			function resolveColumnPairMinPercent(node, index, pairIndex, pairTotal, fallbackPercent = null) {
-				const fallback = Number.isFinite(Number(fallbackPercent))
-					? Number(fallbackPercent)
-					: Math.max(4, Math.min(14, pairTotal * 0.18));
-				try {
-					const currentEl = document.querySelector('.pb-grid-col[data-col-index="' + index + '"][data-parent-node-id="' + node.id + '"]');
-					const pairEl = document.querySelector('.pb-grid-col[data-col-index="' + pairIndex + '"][data-parent-node-id="' + node.id + '"]');
-					if (!currentEl || !pairEl) return fallback;
-					const currentRect = currentEl.getBoundingClientRect();
-					const pairRect = pairEl.getBoundingClientRect();
-					const pairWidth = currentRect.width + pairRect.width;
-					if (!(pairWidth > 0)) return fallback;
-					const idealMinPx = Math.min(160, Math.max(110, pairWidth * 0.18));
-					const maxAllowedMinPx = Math.max(48, (pairWidth / 2) - 24);
-					const minPx = Math.max(48, Math.min(idealMinPx, maxAllowedMinPx));
-					return Math.max(4, roundColumnPercent((minPx / pairWidth) * pairTotal));
-				} catch (error) {
-					return fallback;
-				}
-			}
-			function applyColumnPairWidths(node, index, nextPercent, pairIndex = companionColumnIndex(node, index), options = {}) {
-				if (!node || !Array.isArray(node.columns) || index < 0 || index >= node.columns.length) return;
-				const safeIndex = Number(index);
-				if (!Number.isFinite(safeIndex)) return;
-				if (pairIndex < 0 || pairIndex >= node.columns.length || pairIndex === safeIndex) {
-					node.columns[safeIndex].flexBasis = formatColumnPercent(clamp(Number(nextPercent) || 0, 1, 100));
-					return;
-				}
-				const percents = getFlexColumnPercentages(node);
-				const pairTotal = (percents[safeIndex] || 0) + (percents[pairIndex] || 0);
-				const requestedMinPercent = Number(options.minPercent);
-				const rawMinPercent = resolveColumnPairMinPercent(
-					node,
-					safeIndex,
-					pairIndex,
-					pairTotal,
-					Number.isFinite(requestedMinPercent) ? requestedMinPercent : null
-				);
-				const minPercent = clamp(rawMinPercent, 4, Math.max(4, (pairTotal / 2) - 0.5));
-				const safeCurrent = clamp(Number(nextPercent) || 0, minPercent, Math.max(minPercent, pairTotal - minPercent));
-				const adjustedCurrent = roundColumnPercent(safeCurrent);
-				node.columns[safeIndex].flexBasis = formatColumnPercent(adjustedCurrent);
-				node.columns[pairIndex].flexBasis = formatColumnPercent(pairTotal - adjustedCurrent);
-			}
-			function columnWidthValue(ctx) {
-				if (!ctx || !ctx.node || !ctx.column) return 0;
-				const parsed = parseNumberUnit(ctx.column.flexBasis, '%', ['%']);
-				if (parsed.value !== '') return parsed.value;
-				const percents = getFlexColumnPercentages(ctx.node);
-				return roundColumnPercent(percents[ctx.index] || 0);
-			}
-			function setSelectedColumnWidthValue(ctx, next) {
-				if (!ctx || !ctx.node || !ctx.column || !ctx.canEditWidth) return;
-				applyColumnPairWidths(ctx.node, ctx.index, Number(next) || 0);
-			}
-			function setColumnResizeOverlay(visible, text = '', x = 0, y = 0) {
-				columnResizeOverlay.value = { visible, text, x, y };
-			}
-			function clearSelectedColumn() {
-				selectedColumnNodeId.value = '';
-				selectedColumnId.value = '';
-			}
-			function selectColumn(node, col) {
-				if (!node || !col) return;
-				selectedId.value = node.id;
-				selectedColumnNodeId.value = node.id;
-				selectedColumnId.value = col.id;
-				settingsTab.value = 'layout';
-			}
-			function startColumnResize(event, node, col, index) {
-				if (!event || !node || !col || !Array.isArray(node.columns)) return;
-				const settings = node.settings || {};
-				const displayType = settings.displayType || 'flex';
-				const direction = getResponsiveSetting(settings, 'direction', settings.direction || 'row') || 'row';
-				const flexWrap = getResponsiveSetting(settings, 'flexWrap', settings.flexWrap || 'nowrap') || 'nowrap';
-				if (displayType !== 'flex' || direction !== 'row' || flexWrap !== 'nowrap') return;
-				const pairIndex = companionColumnIndex(node, index);
-				if (pairIndex < 0) return;
-				const handleEl = event.currentTarget;
-				const currentColEl = handleEl && typeof handleEl.closest === 'function' ? handleEl.closest('.pb-grid-col') : null;
-				const nextColEl = currentColEl && currentColEl.nextElementSibling && currentColEl.nextElementSibling.classList.contains('pb-grid-col')
-					? currentColEl.nextElementSibling
-					: null;
-				if (!currentColEl || !nextColEl) return;
-				const currentRect = currentColEl.getBoundingClientRect();
-				const nextRect = nextColEl.getBoundingClientRect();
-				const pairWidth = currentRect.width + nextRect.width;
-				if (!(pairWidth > 0)) return;
-				const percents = getFlexColumnPercentages(node);
-				const pairTotalPercent = (percents[index] || 0) + (percents[pairIndex] || 0);
-				const startX = Number(event.clientX) || 0;
-				const startCurrentWidth = currentRect.width;
-				const idealMinPx = Math.min(160, Math.max(110, pairWidth * 0.18));
-				const maxAllowedMinPx = Math.max(48, (pairWidth / 2) - 24);
-				const minPx = Math.max(48, Math.min(idealMinPx, maxAllowedMinPx));
-				const dragMinPercent = roundColumnPercent((minPx / pairWidth) * pairTotalPercent);
-
-				selectColumn(node, col);
-				suppressHistory.value = true;
-				document.body.classList.add('pb-is-resizing-columns');
-				setColumnResizeOverlay(true, formatColumnPercent(percents[index] || 0), startX + 18, currentRect.top + 24);
-
-				let finished = false;
-				const stop = () => {
-					if (finished) return;
-					finished = true;
-					window.removeEventListener('mousemove', onMove);
-					window.removeEventListener('mouseup', stop);
-					window.removeEventListener('blur', stop);
-					activeColumnResizeCleanup = null;
-					suppressHistory.value = false;
-					document.body.classList.remove('pb-is-resizing-columns');
-					setColumnResizeOverlay(false);
-					snap();
-				};
-				const onMove = (moveEvent) => {
-					const deltaX = (Number(moveEvent.clientX) || 0) - startX;
-					const nextCurrentWidth = clamp(startCurrentWidth + deltaX, minPx, pairWidth - minPx);
-					const nextCurrentPercent = roundColumnPercent((nextCurrentWidth / pairWidth) * pairTotalPercent);
-					applyColumnPairWidths(node, index, nextCurrentPercent, pairIndex, { minPercent: dragMinPercent });
-					setColumnResizeOverlay(true, formatColumnPercent(columnWidthValue({ node, column: col, index })), (Number(moveEvent.clientX) || 0) + 18, currentRect.top + 24);
-				};
-
-				activeColumnResizeCleanup = stop;
-				window.addEventListener('mousemove', onMove);
-				window.addEventListener('mouseup', stop);
-				window.addEventListener('blur', stop);
-			}
 			function containerWidthSource(node) {
 				if (!node || !node.settings) return '';
 				const s = node.settings;
 				const boxedMode = s.contentWidth === 'boxed';
 				return boxedMode ? getResponsiveSetting(s, 'maxWidth', '') : getResponsiveSetting(s, 'containerWidth', '');
 			}
-			const containerWidthUnits = ['px', '%', 'em', 'vw'];
-			function containerWidthMaxForUnit(unit) {
-				if (unit === '%') return 100;
-				if (unit === 'vw') return 100;
-				if (unit === 'em') return 10;
-				return 1600;
-			}
 			function containerWidthValue(node) {
-				const parsed = parseNumberUnit(containerWidthSource(node), '%', containerWidthUnits);
+				const parsed = parseNumberUnit(containerWidthSource(node), '%', ['px', '%', 'vw']);
 				if (parsed.value === '') return 100;
-				return normalizedContainerWidthValue(parsed.value, parsed.unit);
+				return parsed.value;
 			}
 			function containerWidthUnit(node) {
-				const parsed = parseNumberUnit(containerWidthSource(node), '%', containerWidthUnits);
+				const parsed = parseNumberUnit(containerWidthSource(node), '%', ['px', '%', 'vw']);
 				return parsed.unit;
-			}
-			function containerWidthMax(node) {
-				return containerWidthMaxForUnit(containerWidthUnit(node));
-			}
-			function containerWidthStep(node) {
-				return containerWidthUnit(node) === 'em' ? 0.1 : 1;
-			}
-			function normalizedContainerWidthValue(value, unit) {
-				const num = Number(value);
-				if (!Number.isFinite(num)) return '';
-				return clamp(num, 0, containerWidthMaxForUnit(unit));
-			}
-			function containerWidthToken(value, unit, emptyValue) {
-				return toSizeToken(normalizedContainerWidthValue(value, unit), unit, emptyValue);
 			}
 			function setContainerWidthValue(node, next) {
 				if (!node || !node.settings) return;
 				const s = node.settings;
 				const unit = containerWidthUnit(node);
-				const token = containerWidthToken(next, unit, s.contentWidth === 'boxed' ? 'auto' : '100%');
+				const token = toSizeToken(next, unit, s.contentWidth === 'boxed' ? 'auto' : '100%');
 				if (s.contentWidth === 'boxed') setResponsiveSetting(s, 'maxWidth', token);
 				else setResponsiveSetting(s, 'containerWidth', token);
 			}
-			function onContainerWidthInput(node, event) {
-				if (!event || !event.target) return;
-				setContainerWidthValue(node, event.target.value);
-				nextTick(() => {
-					event.target.value = String(containerWidthValue(node));
-				});
-			}
 			function setContainerWidthUnit(node, unit) {
 				if (!node || !node.settings) return;
-				const safe = containerWidthUnits.includes(unit) ? unit : '%';
-				const value = normalizedContainerWidthValue(containerWidthValue(node), safe);
+				const allowed = ['px', '%', 'vw'];
+				const safe = allowed.includes(unit) ? unit : '%';
+				const value = containerWidthValue(node);
+				setContainerWidthValue(node, value);
 				if (node.settings.contentWidth === 'boxed') {
-					setResponsiveSetting(node.settings, 'maxWidth', containerWidthToken(value, safe, 'auto'));
+					setResponsiveSetting(node.settings, 'maxWidth', toSizeToken(value, safe, 'auto'));
 				} else {
-					setResponsiveSetting(node.settings, 'containerWidth', containerWidthToken(value, safe, '100%'));
+					setResponsiveSetting(node.settings, 'containerWidth', toSizeToken(value, safe, '100%'));
 				}
 			}
 			function onContainerContentWidthChange(node) {
@@ -2407,17 +2039,11 @@
 			);
 			watch(responsiveDevice, () => {
 				syncAllGridCellsForDevice();
-				closeWidthPreviewMenu();
 			});
 			watch(selectedNode, n => { if (n?.type==='video') n.settings.youtubeEmbed = toEmbed(n.settings.youtubeUrl||''); }, { deep: true });
-			watch(selectedId, (nextId) => {
+			watch(selectedId, () => {
 				settingsTab.value = 'layout';
 				closeControlResponsiveMenu();
-				closeWidthPreviewMenu();
-				if (!nextId || nextId !== selectedColumnNodeId.value) clearSelectedColumn();
-			});
-			watch(selectedColumnContext, (ctx) => {
-				if (!ctx && selectedColumnId.value) clearSelectedColumn();
 			});
 
 			// ── Remove / Dup ──────────────────────────────────────────────────
@@ -2463,21 +2089,12 @@
 			function removeNode(id) {
 				delFrom(rootNodes.value, id);
 				if (selectedId.value === id) selectedId.value = '';
-				if (selectedColumnNodeId.value === id) clearSelectedColumn();
 				if (hoveredId.value === id) hoveredId.value = '';
 			}
 			function dupNode(id)    { dupIn(rootNodes.value, id); }
-			function selectNode(n)  { clearSelectedColumn(); selectedId.value = n.id; }
-			function clearSel()     { clearSelectedColumn(); selectedId.value = ''; }
-			function clearCurrentSelection() {
-				if (selectedColumnContext.value) {
-					clearSelectedColumn();
-					return;
-				}
-				clearSel();
-			}
+			function selectNode(n)  { selectedId.value = n.id; }
+			function clearSel()     { selectedId.value = ''; }
 			function showToolboxPanel() {
-				clearSelectedColumn();
 				selectedId.value = '';
 				closeControlResponsiveMenu();
 				nextTick(() => {
@@ -2817,11 +2434,11 @@
 						} else {
 							c.settings.displayType = 'flex'; c.settings.direction = p.direction||'row';
 							c.settings.alignItems = 'flex-start'; c.settings.flexColumnGap = '20px';
-							c.settings.gridColumns = cols;
-							c.settings.gridTemplateColumns = '';
 							if (p.flexWidths && p.flexWidths.length) {
+								c.settings.gridTemplateColumns = p.flexWidths.join(' ');
 								c.columns = p.flexWidths.map(w => ({id:uid('c'),flexBasis:w,children:[]}));
 							} else {
+								c.settings.gridColumns = cols;
 								c.columns = Array.from({length:cols}, () => ({id:uid('c'),children:[]}));
 							}
 						}
@@ -2933,21 +2550,20 @@
 			return {
 				appTitle, toolbox, rootNodes, loadWidget,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
-				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, selectedNode, selectedType,
-				responsiveDevice, responsiveDevices, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
+				selectedId, hoveredId, settingsTab, selectedNode, selectedType,
+				responsiveDevice, responsiveDevices, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
 				controlResponsiveMenu, responsiveDeviceIcon, responsiveDeviceLabel, deviceOptionLabel,
 				openControlResponsiveMenu, closeControlResponsiveMenu, isControlResponsiveMenuOpen,
-				setResponsiveDevice, applyResponsiveDevice, toggleWidthPreviewMenu, closeWidthPreviewMenu, selectDesktopPreviewWidth,
+				setResponsiveDevice, applyResponsiveDevice,
 				containerResponsiveValue, setContainerResponsiveSetting,
 				onContainerDisplayTypeChange, onContainerContentWidthChange,
-				containerWidthValue, containerWidthUnit, containerWidthMax, containerWidthStep, onContainerWidthInput, setContainerWidthValue, setContainerWidthUnit,
-				columnWidthValue, setSelectedColumnWidthValue, columnResizeOverlay,
+				containerWidthValue, containerWidthUnit, setContainerWidthValue, setContainerWidthUnit,
 				minHeightValue, minHeightUnit, setMinHeightValue, setMinHeightUnit,
 				containerGridColumnsValue, setContainerGridColumnsValue,
 				containerGridRowsValue, setContainerGridRowsValue, syncContainerGap,
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
 				displayNodeLabel,
-				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
+				selectNode, clearSel, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
 				pageName, pageStatus, customCss, savePage, saveState, saveMsg,
 				toastVisible, responseStatusToast, isArrayMessageAfterSubmit, responseMessageAfterSubmit, closeToast, showUnsupportedControlNotice,
 				onDragStart, onDragEnd,
@@ -3050,47 +2666,9 @@
 			</div>
 
 						<div v-else>
-				<div class="pb-section" v-if="selectedColumnContext">
+				<div class="pb-section">
 					<div class="pb-props-header">
-						<button class="pb-btn icon-sm" @click="clearCurrentSelection" title="Back"><i class="fa-solid fa-chevron-left"></i></button>
-						<div class="pb-props-type-badge">
-							<i class="fa-regular fa-square"></i>
-							<span>Column {{ selectedColumnContext.index + 1 }}</span>
-						</div>
-					</div>
-					<div class="pb-form-note mt-2 mb-3">Inside {{ displayNodeLabel(selectedColumnContext.node) }}</div>
-					<details class="pb-collapsible" open>
-						<summary>Layout</summary>
-						<div class="pb-collapsible-body">
-							<div class="pb-form-group">
-								<div class="pb-label-row pb-label-row-device">
-									<label class="pb-form-label mb-0">Width</label>
-									<div class="pb-label-tools">
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('column-width')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('column-width')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'column-width-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('column-width', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-										<div class="pb-control-unit-wrap">%</div>
-									</div>
-								</div>
-								<div class="pb-range-value-row">
-									<input type="range" class="pb-range" min="1" max="99" step="0.5" :value="columnWidthValue(selectedColumnContext)" @input="setSelectedColumnWidthValue(selectedColumnContext, $event.target.value)">
-									<input class="pb-input pb-input-compact" type="number" min="1" max="99" step="0.1" :value="columnWidthValue(selectedColumnContext)" @input="setSelectedColumnWidthValue(selectedColumnContext, $event.target.value)">
-								</div>
-								<div class="pb-form-note" v-if="selectedColumnContext.canDragResize">Tip: you can also drag the divider handle on the canvas.</div>
-								<div class="pb-form-note" v-else>Direct drag resize is available for flex row containers without wrap.</div>
-							</div>
-						</div>
-					</details>
-				</div>
-				<div class="pb-section" v-else>
-					<div class="pb-props-header">
-						<button class="pb-btn icon-sm" @click="clearCurrentSelection" title="Back"><i class="fa-solid fa-chevron-left"></i></button>
+						<button class="pb-btn icon-sm" @click="clearSel" title="Back"><i class="fa-solid fa-chevron-left"></i></button>
 						<div class="pb-props-type-badge">
 							<i :class="selectedType==='container'?'fa-regular fa-square-full':selectedType==='container_fluid'?'fa-solid fa-grip-lines-vertical':selectedType==='grid'||selectedType==='row_grid'?'fa-solid fa-table-cells-large':'fa-solid fa-cube'"></i>
 							<span>{{ displayNodeLabel(selectedNode) }}</span>
@@ -3141,13 +2719,12 @@
 										</div>
 									</div>
 									<div class="pb-range-value-row">
-										<input type="range" class="pb-range" min="0" :max="containerWidthMax(selectedNode)" :step="containerWidthStep(selectedNode)" :value="containerWidthValue(selectedNode)" @input="onContainerWidthInput(selectedNode, $event)">
+										<input type="range" class="pb-range" min="0" max="2000" step="1" :value="containerWidthValue(selectedNode)" @input="setContainerWidthValue(selectedNode, $event.target.value)">
 										<div class="pb-value-with-unit">
-											<input class="pb-input pb-input-compact" type="number" min="0" :max="containerWidthMax(selectedNode)" :step="containerWidthStep(selectedNode)" :value="containerWidthValue(selectedNode)" @input="onContainerWidthInput(selectedNode, $event)">
+											<input class="pb-input pb-input-compact" type="number" min="0" max="2000" step="1" :value="containerWidthValue(selectedNode)" @input="setContainerWidthValue(selectedNode, $event.target.value)">
 											<select class="pb-mini-unit" :value="containerWidthUnit(selectedNode)" @change="setContainerWidthUnit(selectedNode, $event.target.value)">
 												<option value="px">px</option>
 												<option value="%">%</option>
-												<option value="em">em</option>
 												<option value="vw">vw</option>
 											</select>
 										</div>
@@ -4438,30 +4015,22 @@
 			</div>
 		</div>
 
-		<div class="pb-canvas-wrap" @click="clearSel(); closeWidthPreviewMenu()">
-			<div class="pb-stage-window" @click.stop="closeWidthPreviewMenu()">
+		<div class="pb-canvas-wrap" @click="clearSel">
+			<div class="pb-stage-window" @click.stop>
 				<div class="pb-stage-toolbar">
 					<div class="pb-stage-device-group">
 						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='mobile' }" @click="setResponsiveDevice('mobile')" title="Mobile"><i class="fa-solid fa-mobile-screen-button"></i></button>
 						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='tablet' }" @click="setResponsiveDevice('tablet')" title="Tablet"><i class="fa-solid fa-tablet-screen-button"></i></button>
 						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='desktop' }" @click="setResponsiveDevice('desktop')" title="Desktop"><i class="fa-solid fa-desktop"></i></button>
 					</div>
-					<div class="pb-stage-width-control" @click.stop>
-						<button type="button" class="pb-stage-width-pill" :class="{ 'is-interactive': responsiveDevice==='desktop', 'is-menu-open': widthPreviewMenuOpen }" :title="responsiveDevice==='desktop' ? 'Choose desktop preview width' : 'Preview width'" @click="toggleWidthPreviewMenu">
+					<div class="pb-stage-width-pill">
 						<i class="fa-solid fa-arrows-left-right"></i>
-						<span>{{ previewCanvasWidthLabel() }}</span>
+						<span>{{ responsiveDevice==='desktop' ? '1096px' : (responsiveDevice==='tablet' ? '820px' : '430px') }}</span>
 						<i class="fa-solid fa-chevron-down"></i>
-						</button>
-						<div v-if="responsiveDevice==='desktop' && widthPreviewMenuOpen" class="pb-stage-width-menu">
-							<button v-for="option in desktopPreviewWidths" :key="'desktop-width-'+option.value" type="button" class="pb-stage-width-option" :class="{ active: desktopPreviewWidth===option.value }" @click="selectDesktopPreviewWidth(option.value)">
-								<span>{{ option.label }}</span>
-								<i v-if="desktopPreviewWidth===option.value" class="fa-solid fa-check"></i>
-							</button>
-						</div>
 					</div>
 				</div>
 
-				<div class="pb-canvas" :class="'is-' + responsiveDevice" :style="previewCanvasStyle()" @click="clearSel">
+				<div class="pb-canvas" :class="'is-' + responsiveDevice" @click="clearSel">
 					<draggable
 						v-model="rootNodes"
 						item-key="id"
@@ -4478,21 +4047,17 @@
 							<BuilderNode
 								:node="element"
 								:selected-id="selectedId"
-								:selected-column-node-id="selectedColumnNodeId"
-								:selected-column-id="selectedColumnId"
 								:hovered-id="hoveredId"
 								:responsive-device="responsiveDevice"
 								:on-add-container="onAddContainer"
 								:on-add-col="onAddCol"
 								:on-select="selectNode"
-								:on-select-column="selectColumn"
 								:on-set-hover="setHoveredNode"
 								:on-clear-hover="clearHoveredNode"
 								:on-remove="removeNode"
 								:on-duplicate="dupNode"
 								:on-drag-start="onDragStart"
 								:on-drag-end="onDragEnd"
-								:on-start-column-resize="startColumnResize"
 								:on-open-modal="openModal"
 								:on-show-toolbox="showToolboxPanel"
 							/>
@@ -4508,8 +4073,6 @@
 			</div>
 		</div>
 	</div>
-
-	<div v-if="columnResizeOverlay.visible" class="pb-col-resize-overlay" :style="{ left: columnResizeOverlay.x + 'px', top: columnResizeOverlay.y + 'px' }">{{ columnResizeOverlay.text }}</div>
 
 	<teleport to="body">
 		<div v-if="modal.visible" class="pb-modal-backdrop" @click.self="closeModal">

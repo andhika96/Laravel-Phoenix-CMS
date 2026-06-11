@@ -191,11 +191,8 @@ export default {
 			style.marginLeft = this.toCssSpace(this.responsiveSetting('marginLeft', s.marginLeft), '0');
 			style.minHeight = this.toCssSize(minHeightValue, 'auto');
 
-			if (fullMode) {
-				style.maxWidth = '100%';
-			} else {
-				const maxWidthCss = this.toCssSize(maxWidthValue, 'auto');
-				style.maxWidth = maxWidthCss === 'auto' ? 'auto' : 'min(' + maxWidthCss + ', 100%)';
+			if (!fullMode) {
+				style.maxWidth = this.toCssSize(maxWidthValue, 'auto');
 			}
 
 			this.applyAdvancedLayoutStyle(style, s);
