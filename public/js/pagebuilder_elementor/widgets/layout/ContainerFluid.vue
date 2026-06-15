@@ -821,23 +821,28 @@ export default {
 			}
 		},
 		applyAdvancedLayoutStyle(style, settings) {
-			if (settings.alignSelf && settings.alignSelf !== 'auto') {
-				style.alignSelf = settings.alignSelf;
+			const alignSelf = this.responsiveSetting('alignSelf', settings.alignSelf || 'auto');
+			if (alignSelf && alignSelf !== 'auto') {
+				style.alignSelf = alignSelf;
 			}
 
-			if (settings.order !== '' && settings.order != null) {
-				const order = Number(settings.order);
+			const orderValue = this.responsiveSetting('order', settings.order ?? '');
+			if (orderValue !== '' && orderValue != null) {
+				const order = Number(orderValue);
 				if (Number.isFinite(order)) {
 					style.order = order;
 				}
 			}
 
-			if (settings.sizeMode === 'grow') {
+			const sizeMode = this.responsiveSetting('sizeMode', settings.sizeMode || 'default');
+			if (sizeMode === 'grow') {
 				style.flex = '1 1 0';
-			} else if (settings.sizeMode === 'shrink') {
+			} else if (sizeMode === 'shrink') {
 				style.flex = '0 1 auto';
-			} else if (settings.sizeMode === 'custom') {
-				style.flex = '0 0 ' + this.toCssSize(settings.containerWidth || settings.maxWidth, 'auto');
+			} else if (sizeMode === 'custom') {
+				const customBasis = this.responsiveSetting('containerWidth', settings.containerWidth)
+					|| this.responsiveSetting('maxWidth', settings.maxWidth);
+				style.flex = '0 0 ' + this.toCssSize(customBasis, 'auto');
 			}
 
 			if (settings.overflow && settings.overflow !== 'default') {

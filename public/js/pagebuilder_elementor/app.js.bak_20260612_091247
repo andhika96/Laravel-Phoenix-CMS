@@ -212,14 +212,8 @@
 			alignContentTablet: '',
 			alignContentMobile: '',
 			alignSelf: 'auto',
-			alignSelfTablet: '',
-			alignSelfMobile: '',
 			order: '',
-			orderTablet: '',
-			orderMobile: '',
 			sizeMode: 'default',
-			sizeModeTablet: '',
-			sizeModeMobile: '',
 			gap: '0',
 			flexRowGap: '0',
 			flexColumnGap: '0',
@@ -693,24 +687,18 @@
 				outOfFlowShellTarget: null,
 				outOfFlowShellObserver: null,
 				outOfFlowShellRaf: 0,
-				columnLabelOffsetRaf: 0,
-				columnLabelResizeObserver: null,
-				columnLabelWindowResizeHandler: null,
 			};
 		},
 		mounted() {
 			this.syncOutOfFlowShellPlaceholder();
-			this.syncColumnLabelOffsetBinding();
 		},
 		updated() {
 			this.$nextTick(() => {
 				this.syncOutOfFlowShellPlaceholder();
-				this.syncColumnLabelOffsetBinding();
 			});
 		},
 		beforeUnmount() {
 			this.teardownOutOfFlowShellPlaceholder();
-			this.teardownColumnLabelOffsetBinding();
 		},
 		computed: {
 			isCont()  { return isCont(this.node.type); },
@@ -930,86 +918,6 @@
 					}
 				}
 				this.queueOutOfFlowShellMeasure();
-			},
-			queueColumnLabelOffsetSync() {
-				if (this.columnLabelOffsetRaf) cancelAnimationFrame(this.columnLabelOffsetRaf);
-				this.columnLabelOffsetRaf = requestAnimationFrame(() => {
-					this.columnLabelOffsetRaf = 0;
-					this.syncColumnLabelOffsets();
-				});
-			},
-			syncColumnLabelOffsetBinding() {
-				if (!this.isFlexColumnEditor) {
-					this.teardownColumnLabelOffsetBinding();
-					return;
-				}
-				if (!this.columnLabelWindowResizeHandler) {
-					this.columnLabelWindowResizeHandler = () => this.queueColumnLabelOffsetSync();
-					window.addEventListener('resize', this.columnLabelWindowResizeHandler);
-				}
-				if (!this.columnLabelResizeObserver && typeof ResizeObserver === 'function' && this.$el) {
-					this.columnLabelResizeObserver = new ResizeObserver(() => this.queueColumnLabelOffsetSync());
-					this.columnLabelResizeObserver.observe(this.$el);
-				}
-				this.queueColumnLabelOffsetSync();
-			},
-			teardownColumnLabelOffsetBinding() {
-				if (this.columnLabelOffsetRaf) {
-					cancelAnimationFrame(this.columnLabelOffsetRaf);
-					this.columnLabelOffsetRaf = 0;
-				}
-				if (this.columnLabelResizeObserver) {
-					this.columnLabelResizeObserver.disconnect();
-					this.columnLabelResizeObserver = null;
-				}
-				if (this.columnLabelWindowResizeHandler) {
-					window.removeEventListener('resize', this.columnLabelWindowResizeHandler);
-					this.columnLabelWindowResizeHandler = null;
-				}
-				this.resetColumnLabelOffsets();
-			},
-			resolveColumnLabelElements() {
-				if (!this.$el || typeof this.$el.querySelector !== 'function') {
-					return { containerLabel: null, columnLabels: [] };
-				}
-				const containerLabel = this.$el.querySelector(':scope > .pb-node-toolbar > .pb-node-label');
-				const content = this.$el.querySelector(':scope > .pb-node-content');
-				const columnsRoot = content
-					? content.querySelector(':scope > .el-layout-container > .el-cont-columns, :scope > .el-layout-container-fluid > .el-cont-columns')
-					: null;
-				const columnLabels = columnsRoot
-					? Array.from(columnsRoot.querySelectorAll(':scope > .pb-grid-col > .pb-grid-col-label'))
-					: [];
-				return { containerLabel, columnLabels };
-			},
-			resetColumnLabelOffsets() {
-				const { columnLabels } = this.resolveColumnLabelElements();
-				columnLabels.forEach((label) => {
-					label.style.removeProperty('--pb-col-label-offset-x');
-					label.classList.remove('is-auto-shifted');
-				});
-			},
-			syncColumnLabelOffsets() {
-				const { containerLabel, columnLabels } = this.resolveColumnLabelElements();
-				columnLabels.forEach((label) => {
-					label.style.removeProperty('--pb-col-label-offset-x');
-					label.classList.remove('is-auto-shifted');
-				});
-				if (!containerLabel || !columnLabels.length || !this.isFlexColumnEditor) return;
-				const containerRect = containerLabel.getBoundingClientRect();
-				const guard = 10;
-				columnLabels.forEach((label) => {
-					const rect = label.getBoundingClientRect();
-					const overlaps =
-						rect.left < containerRect.right + guard &&
-						rect.right > containerRect.left - guard &&
-						rect.top < containerRect.bottom + guard &&
-						rect.bottom > containerRect.top - guard;
-					if (!overlaps) return;
-					const offset = Math.min(260, Math.max(0, Math.ceil(containerRect.right - rect.left + guard)));
-					label.style.setProperty('--pb-col-label-offset-x', offset + 'px');
-					label.classList.add('is-auto-shifted');
-				});
 			},
 			passdown() {
 				return {
@@ -1510,13 +1418,6 @@
 			const pageName   = ref(pd?.page_name || 'Untitled Page');
 			const pageStatus = ref(pd?.status || 'draft');
 			const customCss  = ref(pd?.custom_css || '');
-			const showCssEditor = ref(false);
-			const cssEditorFullscreen = ref(false);
-			const customCssEditorTextarea = ref(null);
-			const customCssEditorGutter = ref(null);
-			const customCssGotoLine = ref('');
-			const customCssSearchQuery = ref('');
-			const customCssActiveLine = ref(0);
 			const saveState  = ref('idle');
 			const saveMsg    = ref('');
 			const toastVisible = ref(false);
@@ -1525,7 +1426,6 @@
 			const responseMessageAfterSubmit = ref('');
 			let toastTimer = null;
 			let windowScrollLockFrame = 0;
-			let customCssSearchTimer = null;
 
 			function lockWindowScrollPosition() {
 				if (windowScrollLockFrame) cancelAnimationFrame(windowScrollLockFrame);
@@ -1602,123 +1502,6 @@
 				const message = detail || (label + ' belum didukung di builder ini.');
 				showSaveToast('info', message);
 			}
-			function customCssLines() {
-				return String(customCss.value || '').split('\n');
-			}
-			const customCssCharCount = computed(() => String(customCss.value || '').length);
-			const customCssLineCount = computed(() => customCssLines().length);
-			const customCssLineNumbers = computed(() => Array.from({ length: customCssLineCount.value }, (_, index) => index + 1));
-			const customCssSummary = computed(() => {
-				if (!customCssCharCount.value) return 'Empty';
-				return customCssCharCount.value + ' chars / ' + customCssLineCount.value + ' lines';
-			});
-			function syncCustomCssEditorScroll() {
-				const textarea = customCssEditorTextarea.value;
-				const gutter = customCssEditorGutter.value;
-				if (!textarea || !gutter) return;
-				gutter.scrollTop = textarea.scrollTop;
-			}
-			function customCssLineStartIndex(lineNumber) {
-				const lines = customCssLines();
-				const safeLine = Math.max(1, Math.min(Number(lineNumber) || 1, lines.length));
-				let index = 0;
-				for (let i = 0; i < safeLine - 1; i++) {
-					index += lines[i].length + 1;
-				}
-				return index;
-			}
-			function customCssLineEndIndex(lineNumber) {
-				const lines = customCssLines();
-				const safeLine = Math.max(1, Math.min(Number(lineNumber) || 1, lines.length));
-				return customCssLineStartIndex(safeLine) + lines[safeLine - 1].length;
-			}
-			function customCssLineFromIndex(index) {
-				const before = String(customCss.value || '').slice(0, Math.max(0, index));
-				return before.split('\n').length;
-			}
-			function selectCustomCssRange(start, end, lineNumber) {
-				const textarea = customCssEditorTextarea.value;
-				customCssActiveLine.value = Number(lineNumber) || 0;
-				if (!textarea) return;
-				nextTick(() => {
-					const lineHeight = parseFloat(window.getComputedStyle(textarea).lineHeight) || 21;
-					const targetScroll = Math.max(0, (customCssActiveLine.value - 1) * lineHeight - (textarea.clientHeight / 2) + (lineHeight * 2));
-					textarea.focus();
-					textarea.scrollTop = targetScroll;
-					textarea.setSelectionRange(start, Math.max(start, end));
-					syncCustomCssEditorScroll();
-				});
-			}
-			function goToCustomCssLine() {
-				const requested = Number.parseInt(String(customCssGotoLine.value || '').trim(), 10);
-				if (!Number.isFinite(requested) || requested < 1 || requested > customCssLineCount.value) {
-					customCssActiveLine.value = 0;
-					showSaveToast('info', 'Line code tidak ditemukan. Total line: ' + customCssLineCount.value + '.');
-					return;
-				}
-				selectCustomCssRange(customCssLineStartIndex(requested), customCssLineEndIndex(requested), requested);
-			}
-			function searchCustomCssCode(showNotFoundNotice = true) {
-				const query = String(customCssSearchQuery.value || '');
-				if (!query.trim()) {
-					customCssActiveLine.value = 0;
-					return;
-				}
-				const source = String(customCss.value || '');
-				const index = source.toLowerCase().indexOf(query.toLowerCase());
-				if (index < 0) {
-					customCssActiveLine.value = 0;
-					if (showNotFoundNotice) showSaveToast('info', 'Kode "' + query + '" tidak ditemukan di Custom CSS.');
-					return;
-				}
-				const line = customCssLineFromIndex(index);
-				selectCustomCssRange(index, index + query.length, line);
-			}
-			function scheduleCustomCssSearch(showNotFoundNotice = true) {
-				if (customCssSearchTimer) clearTimeout(customCssSearchTimer);
-				customCssSearchTimer = setTimeout(() => {
-					customCssSearchTimer = null;
-					searchCustomCssCode(showNotFoundNotice);
-				}, 500);
-			}
-			function openCustomCssEditor() {
-				showCssEditor.value = true;
-				nextTick(() => {
-					if (customCssEditorTextarea.value && typeof customCssEditorTextarea.value.focus === 'function') {
-						customCssEditorTextarea.value.focus();
-					}
-					syncCustomCssEditorScroll();
-				});
-			}
-			function closeCustomCssEditor() {
-				showCssEditor.value = false;
-			}
-			function clearCustomCss() {
-				customCss.value = '';
-				customCssActiveLine.value = 0;
-				nextTick(() => {
-					if (customCssEditorTextarea.value && typeof customCssEditorTextarea.value.focus === 'function') {
-						customCssEditorTextarea.value.focus();
-					}
-				});
-			}
-			function handleCustomCssTab(event) {
-				const textarea = event && event.target;
-				if (!textarea || typeof textarea.selectionStart !== 'number') return;
-				const start = textarea.selectionStart;
-				const end = textarea.selectionEnd;
-				const insert = '  ';
-				customCss.value = String(customCss.value || '').slice(0, start) + insert + String(customCss.value || '').slice(end);
-				nextTick(() => {
-					textarea.selectionStart = textarea.selectionEnd = start + insert.length;
-					syncCustomCssEditorScroll();
-				});
-			}
-			watch(customCssSearchQuery, () => scheduleCustomCssSearch(true));
-			watch(customCss, () => {
-				nextTick(syncCustomCssEditorScroll);
-				if (String(customCssSearchQuery.value || '').trim()) scheduleCustomCssSearch(false);
-			});
 			onMounted(() => {
 				lockWindowScrollPosition();
 				window.addEventListener('scroll', lockWindowScrollPosition, { passive: true });
@@ -1726,7 +1509,6 @@
 			});
 			onBeforeUnmount(() => {
 				if (toastTimer) clearTimeout(toastTimer);
-				if (customCssSearchTimer) clearTimeout(customCssSearchTimer);
 				if (windowScrollLockFrame) cancelAnimationFrame(windowScrollLockFrame);
 				if (typeof activeColumnResizeCleanup === 'function') activeColumnResizeCleanup();
 				window.removeEventListener('scroll', lockWindowScrollPosition);
@@ -1738,7 +1520,7 @@
 			const hoveredId   = ref('');
 			const settingsTab = ref('layout'); // 'layout' | 'style' | 'advanced'
 			const responsiveDevice = ref('desktop');
-			const desktopPreviewWidth = ref('1320');
+			const desktopPreviewWidth = ref('1140');
 			const widthPreviewMenuOpen = ref(false);
 			const suppressHistory = ref(false);
 			const columnResizeOverlay = ref({ visible: false, text: '', x: 0, y: 0 });
@@ -1758,8 +1540,8 @@
 			function normalizeResponsiveDevice(device = 'desktop') {
 				return (device === 'tablet' || device === 'mobile') ? device : 'desktop';
 			}
-			function normalizeDesktopPreviewWidth(value = '1320') {
-				return String(value) === '1140' ? '1140' : '1320';
+			function normalizeDesktopPreviewWidth(value = '1140') {
+				return String(value) === '1320' ? '1320' : '1140';
 			}
 			function cloneColumnsState(columns) {
 				if (!Array.isArray(columns)) return [];
@@ -2921,7 +2703,7 @@
 				// bisa menyelesaikan animasi drop sebelum Vue re-render menghapus elemen DOM.
 				if (isCont(item.type)) {
 					if (item.settings) seedResponsiveSettings(item.settings);
-					openModal(item.type, 'root', { containerNode: item, list: rootNodes.value }, { discardOnClose: true, pendingNodeId: item.id });
+					openModal(item.type, 'root', { containerNode: item, list: rootNodes.value });
 					return;
 				}
 
@@ -3000,45 +2782,11 @@
 			}
 
 			// ── Structure modal ───────────────────────────────────────────────
-			function emptyModalState() {
-				return {
-					visible: false,
-					step: 1,
-					layoutType: '',
-					zone: '',
-					list: null,
-					discardOnClose: false,
-					pendingNodeId: '',
-				};
+			const modal = ref({ visible:false, step:1, layoutType:'', zone:'', list:null });
+			function openModal(layoutType, zone, list) {
+				modal.value = { visible:true, step: (layoutType==='container'||layoutType==='container_fluid')?1:2, layoutType, zone, list };
 			}
-			const modal = ref(emptyModalState());
-			function openModal(layoutType, zone, list, options = {}) {
-				modal.value = {
-					visible: true,
-					step: (layoutType === 'container' || layoutType === 'container_fluid') ? 1 : 2,
-					layoutType,
-					zone,
-					list,
-					discardOnClose: options.discardOnClose === true,
-					pendingNodeId: String(options.pendingNodeId || ''),
-				};
-			}
-			function discardPendingModalNode() {
-				const current = modal.value || {};
-				if (!current.discardOnClose || !current.pendingNodeId) return;
-				const liveList = current.list && Array.isArray(current.list.list) ? current.list.list : null;
-				if (!liveList) return;
-				const idx = liveList.findIndex((node) => node && node.id === current.pendingNodeId);
-				if (idx < 0) return;
-				liveList.splice(idx, 1);
-				if (selectedId.value === current.pendingNodeId) selectedId.value = '';
-				if (selectedColumnNodeId.value === current.pendingNodeId) clearSelectedColumn();
-				if (hoveredId.value === current.pendingNodeId) hoveredId.value = '';
-			}
-			function closeModal() {
-				discardPendingModalNode();
-				modal.value = emptyModalState();
-			}
+			function closeModal() { modal.value.visible = false; }
 			function pickLayout(type) { modal.value.layoutType = type; modal.value.step = 2; }
 
 			const cPresets = [
@@ -3082,7 +2830,6 @@
 					}
 					if (zone === 'root' && list && list.containerNode) {
 						configureContainer(list.containerNode, layoutType === 'container_grid');
-						modal.value.discardOnClose = false;
 						selectedId.value = list.containerNode.id; closeModal(); return;
 					}
 					if (!Array.isArray(list)) { closeModal(); return; }
@@ -3099,7 +2846,6 @@
 						node.settings.gridAlignItems = 'start';
 						seedResponsiveSettings(node.settings, true);
 						node.columns = Array.from({length:cols}, () => ({id:uid('c'),children:[]}));
-						modal.value.discardOnClose = false;
 						selectedId.value = node.id; closeModal(); return;
 					}
 					if (!Array.isArray(list)) { closeModal(); return; }
@@ -3202,9 +2948,7 @@
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
 				displayNodeLabel,
 				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
-				pageName, pageStatus, customCss, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
-				customCssGotoLine, customCssSearchQuery, customCssActiveLine, customCssCharCount, customCssLineCount, customCssLineNumbers, customCssSummary,
-				openCustomCssEditor, closeCustomCssEditor, clearCustomCss, handleCustomCssTab, syncCustomCssEditorScroll, goToCustomCssLine, searchCustomCssCode, savePage, saveState, saveMsg,
+				pageName, pageStatus, customCss, savePage, saveState, saveMsg,
 				toastVisible, responseStatusToast, isArrayMessageAfterSubmit, responseMessageAfterSubmit, closeToast, showUnsupportedControlNotice,
 				onDragStart, onDragEnd,
 				onAddContainer, onAddCol, onRootAdd,
@@ -3265,16 +3009,7 @@
 							<option value="publish">Publish</option><option value="draft">Draft</option><option value="not_active">Not Active</option>
 						</select>
 					</div>
-					<div class="pb-form-group mt-3">
-						<div class="pb-label-row">
-							<label class="pb-form-label mb-0">Custom CSS</label>
-							<span class="pb-css-editor-summary">{{ customCssSummary }}</span>
-						</div>
-						<button type="button" class="pb-css-editor-trigger" @click="openCustomCssEditor">
-							<span class="pb-css-editor-trigger-main"><i class="fa-solid fa-code"></i> Custom CSS Editor</span>
-							<span class="pb-css-editor-trigger-action"><i class="fa-solid fa-up-right-from-square"></i></span>
-						</button>
-					</div>
+					<div class="pb-form-group mt-3"><label class="pb-form-label">Custom CSS</label><textarea class="pb-textarea" v-model="customCss"></textarea></div>
 				</div>
 
 				<div class="pb-section">
@@ -3995,20 +3730,9 @@
 								<summary>Layout</summary>
 								<div class="pb-collapsible-body">
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Margin</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-margin')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-margin')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-margin-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-margin', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-										<div class="pb-label-tools">
-											<div class="pb-control-unit-wrap">px</div>
-										</div>
+									<div class="pb-label-row">
+										<label class="pb-form-label">Margin</label>
+										<div class="pb-control-unit-wrap">px</div>
 									</div>
 									<div class="pb-label-row">
 										<div></div>
@@ -4022,20 +3746,9 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Padding</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-padding')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-padding')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-padding-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-padding', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-										<div class="pb-label-tools">
-											<div class="pb-control-unit-wrap">px</div>
-										</div>
+									<div class="pb-label-row">
+										<label class="pb-form-label">Padding</label>
+										<div class="pb-control-unit-wrap">px</div>
 									</div>
 									<div class="pb-label-row">
 										<div></div>
@@ -4049,65 +3762,32 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Align Self</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-align-self')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-align-self')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-align-self-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-align-self', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
+									<label class="pb-form-label">Align Self</label>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='auto'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'auto')" title="Auto"><i class="fa-solid fa-minus"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='flex-start'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'flex-start')" title="Start"><i class="fa-solid fa-arrow-up"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='center'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'center')" title="Center"><i class="fa-solid fa-arrows-up-down"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='flex-end'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'flex-end')" title="End"><i class="fa-solid fa-arrow-down"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='stretch'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'stretch')" title="Stretch"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:!selectedNode.settings.alignSelf||selectedNode.settings.alignSelf==='auto'}" @click="selectedNode.settings.alignSelf='auto'" title="Auto"><i class="fa-solid fa-minus"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignSelf==='flex-start'}" @click="selectedNode.settings.alignSelf='flex-start'" title="Start"><i class="fa-solid fa-arrow-up"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignSelf==='center'}" @click="selectedNode.settings.alignSelf='center'" title="Center"><i class="fa-solid fa-arrows-up-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignSelf==='flex-end'}" @click="selectedNode.settings.alignSelf='flex-end'" title="End"><i class="fa-solid fa-arrow-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignSelf==='stretch'}" @click="selectedNode.settings.alignSelf='stretch'" title="Stretch"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
 									</div>
 									<div class="pb-form-note">This control will affect contained elements only.</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Order</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-order')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-order')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-order-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-order', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
+									<label class="pb-form-label">Order</label>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'order', '')==='-1'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'order', '-1')" title="Start"><i class="fa-solid fa-arrow-left"></i></button>
-										<button class="pb-seg-btn" :class="{active:['', null, 'default'].includes(containerResponsiveValue(selectedNode.settings, 'order', ''))}" @click="setContainerResponsiveSetting(selectedNode.settings, 'order', 'default')" title="Default"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'order', '')==='1'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'order', '1')" title="End"><i class="fa-solid fa-arrow-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.order==='-1'}" @click="selectedNode.settings.order='-1'" title="Start"><i class="fa-solid fa-arrow-left"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.order===''||selectedNode.settings.order==null}" @click="selectedNode.settings.order=''" title="Default"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.order==='1'}" @click="selectedNode.settings.order='1'" title="End"><i class="fa-solid fa-arrow-right"></i></button>
 									</div>
 									<div class="pb-form-note">This control will affect contained elements only.</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device">
-										<label class="pb-form-label mb-0">Size</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('container-size')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('container-size')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'container-size-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('container-size', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-									</div>
+									<label class="pb-form-label">Size</label>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'sizeMode', 'default')==='default'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'sizeMode', 'default')" title="Default"><i class="fa-solid fa-ban"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'sizeMode', 'default')==='grow'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'sizeMode', 'grow')" title="Grow"><i class="fa-solid fa-arrows-left-right"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'sizeMode', 'default')==='shrink'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'sizeMode', 'shrink')" title="Shrink"><i class="fa-solid fa-compress"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'sizeMode', 'default')==='custom'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'sizeMode', 'custom')" title="Custom"><i class="fa-solid fa-ellipsis"></i></button>
+										<button class="pb-seg-btn" :class="{active:!selectedNode.settings.sizeMode||selectedNode.settings.sizeMode==='default'}" @click="selectedNode.settings.sizeMode='default'" title="Default"><i class="fa-solid fa-ban"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.sizeMode==='grow'}" @click="selectedNode.settings.sizeMode='grow'" title="Grow"><i class="fa-solid fa-arrows-left-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.sizeMode==='shrink'}" @click="selectedNode.settings.sizeMode='shrink'" title="Shrink"><i class="fa-solid fa-compress"></i></button>
+										<button class="pb-seg-btn" :class="{active:selectedNode.settings.sizeMode==='custom'}" @click="selectedNode.settings.sizeMode='custom'" title="Custom"><i class="fa-solid fa-ellipsis"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
@@ -4822,10 +4502,6 @@
 								<i class="fa-solid fa-plus"></i>
 								<div class="mt-3">Drag Container, Grid, or Widget to start building</div>
 							</div>
-							<div v-else class="pb-root-followup-hint">
-								<i class="fa-solid fa-plus"></i>
-								<div class="pb-root-followup-text">Drag Container, Grid, or Widget here to continue building</div>
-							</div>
 						</template>
 					</draggable>
 				</div>
@@ -4834,78 +4510,6 @@
 	</div>
 
 	<div v-if="columnResizeOverlay.visible" class="pb-col-resize-overlay" :style="{ left: columnResizeOverlay.x + 'px', top: columnResizeOverlay.y + 'px' }">{{ columnResizeOverlay.text }}</div>
-
-	<teleport to="body">
-		<div v-if="showCssEditor" class="pb-css-editor-modal" @click.self="closeCustomCssEditor">
-			<div class="pb-css-editor-panel" :class="{ fullscreen: cssEditorFullscreen }">
-				<div class="pb-css-editor-header">
-					<div class="pb-css-editor-title"><i class="fa-solid fa-code"></i><span>Custom CSS Editor</span></div>
-					<div class="pb-css-editor-actions">
-						<button type="button" class="pb-css-editor-icon-btn" :title="cssEditorFullscreen ? 'Exit fullscreen' : 'Fullscreen'" @click="cssEditorFullscreen = !cssEditorFullscreen">
-							<i class="fa-solid" :class="cssEditorFullscreen ? 'fa-compress' : 'fa-expand'"></i>
-						</button>
-						<button type="button" class="pb-css-editor-icon-btn danger" title="Close" @click="closeCustomCssEditor"><i class="fa-solid fa-xmark"></i></button>
-					</div>
-				</div>
-				<div class="pb-css-editor-body">
-					<div class="pb-css-editor-hint">
-						<i class="fa-solid fa-circle-info"></i>
-						<span>Tulis CSS kustom di sini. Gunakan <code>.class-name</code> atau <code>#id-name</code> dari field CSS ID / CSS Class pada widget, column, atau container.</span>
-					</div>
-					<div class="pb-css-editor-toolbar">
-						<form class="pb-css-editor-tool" @submit.prevent="goToCustomCssLine">
-							<label>Line</label>
-							<input class="pb-css-editor-tool-input is-line" type="number" min="1" :max="customCssLineCount" v-model="customCssGotoLine" placeholder="Line">
-							<button type="submit" class="pb-css-editor-tool-btn" title="Go to line"><i class="fa-solid fa-arrow-down-short-wide"></i></button>
-						</form>
-						<div class="pb-css-editor-tool is-search">
-							<label>Search</label>
-							<input class="pb-css-editor-tool-input" type="search" v-model="customCssSearchQuery" placeholder="Search code...">
-							<button type="button" class="pb-css-editor-tool-btn" title="Find now" @click="searchCustomCssCode(true)"><i class="fa-solid fa-magnifying-glass"></i></button>
-						</div>
-					</div>
-					<div class="pb-css-editor-code-shell">
-						<div ref="customCssEditorGutter" class="pb-css-editor-gutter">
-							<button
-								v-for="line in customCssLineNumbers"
-								:key="'custom-css-line-'+line"
-								type="button"
-								class="pb-css-editor-line-number"
-								:class="{ active: customCssActiveLine===line }"
-								@click="customCssGotoLine = line; goToCustomCssLine()"
-							>{{ line }}</button>
-						</div>
-						<textarea
-							ref="customCssEditorTextarea"
-							class="pb-css-editor-textarea"
-							v-model="customCss"
-							placeholder=".my-custom-class {
-  color: #333;
-  font-size: 18px;
-}
-
-#my-section {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  padding: 60px 0;
-}"
-							@keydown.tab.prevent="handleCustomCssTab"
-							@keydown.esc="closeCustomCssEditor"
-							@scroll="syncCustomCssEditorScroll"
-							spellcheck="false"
-							autocomplete="off"
-						></textarea>
-					</div>
-				</div>
-				<div class="pb-css-editor-footer">
-					<div class="pb-css-editor-count"><i class="fa-solid fa-code"></i> {{ customCssCharCount }} chars / {{ customCssLineCount }} lines</div>
-					<div class="pb-css-editor-footer-actions">
-						<button type="button" class="pb-css-editor-btn danger" @click="clearCustomCss"><i class="fa-solid fa-trash"></i> Clear</button>
-						<button type="button" class="pb-css-editor-btn primary" @click="closeCustomCssEditor"><i class="fa-solid fa-check"></i> Apply & Close</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</teleport>
 
 	<teleport to="body">
 		<div v-if="modal.visible" class="pb-modal-backdrop" @click.self="closeModal">

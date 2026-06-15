@@ -1360,7 +1360,7 @@ body {
 }
 
 .pb-toast-container {
-	z-index: 10040;
+	z-index: 1085;
 	pointer-events: none;
 }
 

@@ -1513,10 +1513,6 @@
 			const showCssEditor = ref(false);
 			const cssEditorFullscreen = ref(false);
 			const customCssEditorTextarea = ref(null);
-			const customCssEditorGutter = ref(null);
-			const customCssGotoLine = ref('');
-			const customCssSearchQuery = ref('');
-			const customCssActiveLine = ref(0);
 			const saveState  = ref('idle');
 			const saveMsg    = ref('');
 			const toastVisible = ref(false);
@@ -1525,7 +1521,6 @@
 			const responseMessageAfterSubmit = ref('');
 			let toastTimer = null;
 			let windowScrollLockFrame = 0;
-			let customCssSearchTimer = null;
 
 			function lockWindowScrollPosition() {
 				if (windowScrollLockFrame) cancelAnimationFrame(windowScrollLockFrame);
@@ -1602,92 +1597,18 @@
 				const message = detail || (label + ' belum didukung di builder ini.');
 				showSaveToast('info', message);
 			}
-			function customCssLines() {
-				return String(customCss.value || '').split('\n');
-			}
 			const customCssCharCount = computed(() => String(customCss.value || '').length);
-			const customCssLineCount = computed(() => customCssLines().length);
-			const customCssLineNumbers = computed(() => Array.from({ length: customCssLineCount.value }, (_, index) => index + 1));
+			const customCssLineCount = computed(() => String(customCss.value || '').split('\n').length);
 			const customCssSummary = computed(() => {
 				if (!customCssCharCount.value) return 'Empty';
 				return customCssCharCount.value + ' chars / ' + customCssLineCount.value + ' lines';
 			});
-			function syncCustomCssEditorScroll() {
-				const textarea = customCssEditorTextarea.value;
-				const gutter = customCssEditorGutter.value;
-				if (!textarea || !gutter) return;
-				gutter.scrollTop = textarea.scrollTop;
-			}
-			function customCssLineStartIndex(lineNumber) {
-				const lines = customCssLines();
-				const safeLine = Math.max(1, Math.min(Number(lineNumber) || 1, lines.length));
-				let index = 0;
-				for (let i = 0; i < safeLine - 1; i++) {
-					index += lines[i].length + 1;
-				}
-				return index;
-			}
-			function customCssLineEndIndex(lineNumber) {
-				const lines = customCssLines();
-				const safeLine = Math.max(1, Math.min(Number(lineNumber) || 1, lines.length));
-				return customCssLineStartIndex(safeLine) + lines[safeLine - 1].length;
-			}
-			function customCssLineFromIndex(index) {
-				const before = String(customCss.value || '').slice(0, Math.max(0, index));
-				return before.split('\n').length;
-			}
-			function selectCustomCssRange(start, end, lineNumber) {
-				const textarea = customCssEditorTextarea.value;
-				customCssActiveLine.value = Number(lineNumber) || 0;
-				if (!textarea) return;
-				nextTick(() => {
-					const lineHeight = parseFloat(window.getComputedStyle(textarea).lineHeight) || 21;
-					const targetScroll = Math.max(0, (customCssActiveLine.value - 1) * lineHeight - (textarea.clientHeight / 2) + (lineHeight * 2));
-					textarea.focus();
-					textarea.scrollTop = targetScroll;
-					textarea.setSelectionRange(start, Math.max(start, end));
-					syncCustomCssEditorScroll();
-				});
-			}
-			function goToCustomCssLine() {
-				const requested = Number.parseInt(String(customCssGotoLine.value || '').trim(), 10);
-				if (!Number.isFinite(requested) || requested < 1 || requested > customCssLineCount.value) {
-					customCssActiveLine.value = 0;
-					showSaveToast('info', 'Line code tidak ditemukan. Total line: ' + customCssLineCount.value + '.');
-					return;
-				}
-				selectCustomCssRange(customCssLineStartIndex(requested), customCssLineEndIndex(requested), requested);
-			}
-			function searchCustomCssCode(showNotFoundNotice = true) {
-				const query = String(customCssSearchQuery.value || '');
-				if (!query.trim()) {
-					customCssActiveLine.value = 0;
-					return;
-				}
-				const source = String(customCss.value || '');
-				const index = source.toLowerCase().indexOf(query.toLowerCase());
-				if (index < 0) {
-					customCssActiveLine.value = 0;
-					if (showNotFoundNotice) showSaveToast('info', 'Kode "' + query + '" tidak ditemukan di Custom CSS.');
-					return;
-				}
-				const line = customCssLineFromIndex(index);
-				selectCustomCssRange(index, index + query.length, line);
-			}
-			function scheduleCustomCssSearch(showNotFoundNotice = true) {
-				if (customCssSearchTimer) clearTimeout(customCssSearchTimer);
-				customCssSearchTimer = setTimeout(() => {
-					customCssSearchTimer = null;
-					searchCustomCssCode(showNotFoundNotice);
-				}, 500);
-			}
 			function openCustomCssEditor() {
 				showCssEditor.value = true;
 				nextTick(() => {
 					if (customCssEditorTextarea.value && typeof customCssEditorTextarea.value.focus === 'function') {
 						customCssEditorTextarea.value.focus();
 					}
-					syncCustomCssEditorScroll();
 				});
 			}
 			function closeCustomCssEditor() {
@@ -1695,7 +1616,6 @@
 			}
 			function clearCustomCss() {
 				customCss.value = '';
-				customCssActiveLine.value = 0;
 				nextTick(() => {
 					if (customCssEditorTextarea.value && typeof customCssEditorTextarea.value.focus === 'function') {
 						customCssEditorTextarea.value.focus();
@@ -1711,14 +1631,8 @@
 				customCss.value = String(customCss.value || '').slice(0, start) + insert + String(customCss.value || '').slice(end);
 				nextTick(() => {
 					textarea.selectionStart = textarea.selectionEnd = start + insert.length;
-					syncCustomCssEditorScroll();
 				});
 			}
-			watch(customCssSearchQuery, () => scheduleCustomCssSearch(true));
-			watch(customCss, () => {
-				nextTick(syncCustomCssEditorScroll);
-				if (String(customCssSearchQuery.value || '').trim()) scheduleCustomCssSearch(false);
-			});
 			onMounted(() => {
 				lockWindowScrollPosition();
 				window.addEventListener('scroll', lockWindowScrollPosition, { passive: true });
@@ -1726,7 +1640,6 @@
 			});
 			onBeforeUnmount(() => {
 				if (toastTimer) clearTimeout(toastTimer);
-				if (customCssSearchTimer) clearTimeout(customCssSearchTimer);
 				if (windowScrollLockFrame) cancelAnimationFrame(windowScrollLockFrame);
 				if (typeof activeColumnResizeCleanup === 'function') activeColumnResizeCleanup();
 				window.removeEventListener('scroll', lockWindowScrollPosition);
@@ -3202,9 +3115,8 @@
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
 				displayNodeLabel,
 				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
-				pageName, pageStatus, customCss, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
-				customCssGotoLine, customCssSearchQuery, customCssActiveLine, customCssCharCount, customCssLineCount, customCssLineNumbers, customCssSummary,
-				openCustomCssEditor, closeCustomCssEditor, clearCustomCss, handleCustomCssTab, syncCustomCssEditorScroll, goToCustomCssLine, searchCustomCssCode, savePage, saveState, saveMsg,
+				pageName, pageStatus, customCss, customCssEditorTextarea, showCssEditor, cssEditorFullscreen, customCssCharCount, customCssLineCount, customCssSummary,
+				openCustomCssEditor, closeCustomCssEditor, clearCustomCss, handleCustomCssTab, savePage, saveState, saveMsg,
 				toastVisible, responseStatusToast, isArrayMessageAfterSubmit, responseMessageAfterSubmit, closeToast, showUnsupportedControlNotice,
 				onDragStart, onDragEnd,
 				onAddContainer, onAddCol, onRootAdd,
@@ -4852,34 +4764,11 @@
 						<i class="fa-solid fa-circle-info"></i>
 						<span>Tulis CSS kustom di sini. Gunakan <code>.class-name</code> atau <code>#id-name</code> dari field CSS ID / CSS Class pada widget, column, atau container.</span>
 					</div>
-					<div class="pb-css-editor-toolbar">
-						<form class="pb-css-editor-tool" @submit.prevent="goToCustomCssLine">
-							<label>Line</label>
-							<input class="pb-css-editor-tool-input is-line" type="number" min="1" :max="customCssLineCount" v-model="customCssGotoLine" placeholder="Line">
-							<button type="submit" class="pb-css-editor-tool-btn" title="Go to line"><i class="fa-solid fa-arrow-down-short-wide"></i></button>
-						</form>
-						<div class="pb-css-editor-tool is-search">
-							<label>Search</label>
-							<input class="pb-css-editor-tool-input" type="search" v-model="customCssSearchQuery" placeholder="Search code...">
-							<button type="button" class="pb-css-editor-tool-btn" title="Find now" @click="searchCustomCssCode(true)"><i class="fa-solid fa-magnifying-glass"></i></button>
-						</div>
-					</div>
-					<div class="pb-css-editor-code-shell">
-						<div ref="customCssEditorGutter" class="pb-css-editor-gutter">
-							<button
-								v-for="line in customCssLineNumbers"
-								:key="'custom-css-line-'+line"
-								type="button"
-								class="pb-css-editor-line-number"
-								:class="{ active: customCssActiveLine===line }"
-								@click="customCssGotoLine = line; goToCustomCssLine()"
-							>{{ line }}</button>
-						</div>
-						<textarea
-							ref="customCssEditorTextarea"
-							class="pb-css-editor-textarea"
-							v-model="customCss"
-							placeholder=".my-custom-class {
+					<textarea
+						ref="customCssEditorTextarea"
+						class="pb-css-editor-textarea"
+						v-model="customCss"
+						placeholder=".my-custom-class {
   color: #333;
   font-size: 18px;
 }
@@ -4888,13 +4777,11 @@
   background: linear-gradient(135deg, #667eea, #764ba2);
   padding: 60px 0;
 }"
-							@keydown.tab.prevent="handleCustomCssTab"
-							@keydown.esc="closeCustomCssEditor"
-							@scroll="syncCustomCssEditorScroll"
-							spellcheck="false"
-							autocomplete="off"
-						></textarea>
-					</div>
+						@keydown.tab.prevent="handleCustomCssTab"
+						@keydown.esc="closeCustomCssEditor"
+						spellcheck="false"
+						autocomplete="off"
+					></textarea>
 				</div>
 				<div class="pb-css-editor-footer">
 					<div class="pb-css-editor-count"><i class="fa-solid fa-code"></i> {{ customCssCharCount }} chars / {{ customCssLineCount }} lines</div>

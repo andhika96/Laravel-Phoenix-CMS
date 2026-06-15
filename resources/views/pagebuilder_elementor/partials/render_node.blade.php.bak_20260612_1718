@@ -431,17 +431,6 @@
 		return $rules;
 	};
 
-	$responsive_setting_value = function (array $s, string $baseKey, string $deviceSuffix, $default = '') {
-		$responsiveKey = $baseKey . $deviceSuffix;
-		$value = $s[$responsiveKey] ?? '';
-		if ($value === '' || $value === null) {
-			$desktopValue = $s[$baseKey] ?? $default;
-			return ($desktopValue === '' || $desktopValue === null) ? $default : $desktopValue;
-		}
-
-		return $value;
-	};
-
 	$resolve_html_tag = function (array $s) {
 		$raw = strtolower(trim((string) ($s['htmlTag'] ?? 'default')));
 		$allowed = ['div', 'section', 'header', 'main', 'article', 'aside', 'footer', 'nav'];
@@ -640,38 +629,6 @@
 		} else {
 			if (($s['maxWidthTablet'] ?? '') !== '') $tabletRules[] = 'max-width:' . $css_value($s['maxWidthTablet'], 'auto');
 			if (($s['maxWidthMobile'] ?? '') !== '') $mobileRules[] = 'max-width:' . $css_value($s['maxWidthMobile'], 'auto');
-		}
-		if (($s['alignSelfTablet'] ?? '') !== '') $tabletRules[] = 'align-self:' . $s['alignSelfTablet'];
-		if (($s['alignSelfMobile'] ?? '') !== '') $mobileRules[] = 'align-self:' . $s['alignSelfMobile'];
-		if (($s['orderTablet'] ?? '') !== '' && is_numeric($s['orderTablet'])) $tabletRules[] = 'order:' . (int) $s['orderTablet'];
-		if (($s['orderMobile'] ?? '') !== '' && is_numeric($s['orderMobile'])) $mobileRules[] = 'order:' . (int) $s['orderMobile'];
-		if (($s['sizeModeTablet'] ?? '') !== '') {
-			if ($s['sizeModeTablet'] === 'grow') {
-				$tabletRules[] = 'flex:1 1 0';
-			} elseif ($s['sizeModeTablet'] === 'shrink') {
-				$tabletRules[] = 'flex:0 1 auto';
-			} elseif ($s['sizeModeTablet'] === 'custom') {
-				$tabletCustomBasis = $css_value(
-					$responsive_setting_value($s, 'containerWidth', 'Tablet', $s['maxWidth'] ?? 'auto')
-						?: $responsive_setting_value($s, 'maxWidth', 'Tablet', 'auto'),
-					'auto'
-				);
-				$tabletRules[] = 'flex:0 0 ' . $tabletCustomBasis;
-			}
-		}
-		if (($s['sizeModeMobile'] ?? '') !== '') {
-			if ($s['sizeModeMobile'] === 'grow') {
-				$mobileRules[] = 'flex:1 1 0';
-			} elseif ($s['sizeModeMobile'] === 'shrink') {
-				$mobileRules[] = 'flex:0 1 auto';
-			} elseif ($s['sizeModeMobile'] === 'custom') {
-				$mobileCustomBasis = $css_value(
-					$responsive_setting_value($s, 'containerWidth', 'Mobile', $s['maxWidth'] ?? 'auto')
-						?: $responsive_setting_value($s, 'maxWidth', 'Mobile', 'auto'),
-					'auto'
-				);
-				$mobileRules[] = 'flex:0 0 ' . $mobileCustomBasis;
-			}
 		}
 
 		$tabletColsRules = [];
