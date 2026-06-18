@@ -1512,8 +1512,6 @@
 			const customCss  = ref(pd?.custom_css || '');
 			const showCssEditor = ref(false);
 			const cssEditorFullscreen = ref(false);
-			const showTextEditorModal = ref(false);
-			const textEditorModalFullscreen = ref(false);
 			const customCssEditorTextarea = ref(null);
 			const customCssEditorGutter = ref(null);
 			const customCssGotoLine = ref('');
@@ -2047,28 +2045,6 @@
 
 			const selectedNode = computed(() => selectedId.value ? findById(rootNodes.value, selectedId.value) : null);
 			const selectedType = computed(() => selectedNode.value?.type || '');
-			const textEditorModalSummary = computed(() => {
-				const html = selectedType.value === 'text_editor' ? String(selectedNode.value?.settings?.html || '') : '';
-				const text = html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
-				if (!text.length) return 'Empty';
-				return text.length + ' chars';
-			});
-			function setTextEditorHtml(value) {
-				if (selectedType.value !== 'text_editor' || !selectedNode.value) return;
-				if (!selectedNode.value.settings) selectedNode.value.settings = {};
-				selectedNode.value.settings.html = value || '';
-			}
-			function openTextEditorModal() {
-				if (selectedType.value !== 'text_editor') return;
-				showTextEditorModal.value = true;
-			}
-			function closeTextEditorModal() {
-				showTextEditorModal.value = false;
-				textEditorModalFullscreen.value = false;
-			}
-			watch(selectedType, (type) => {
-				if (type !== 'text_editor' && showTextEditorModal.value) closeTextEditorModal();
-			});
 			const selectedColumnContext = computed(() => {
 				const nodeId = String(selectedColumnNodeId.value || selectedId.value || '').trim();
 				const colId = String(selectedColumnId.value || '').trim();
@@ -3227,7 +3203,6 @@
 				displayNodeLabel,
 				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
 				pageName, pageStatus, customCss, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
-				showTextEditorModal, textEditorModalFullscreen, textEditorModalSummary, setTextEditorHtml, openTextEditorModal, closeTextEditorModal,
 				customCssGotoLine, customCssSearchQuery, customCssActiveLine, customCssCharCount, customCssLineCount, customCssLineNumbers, customCssSummary,
 				openCustomCssEditor, closeCustomCssEditor, clearCustomCss, handleCustomCssTab, syncCustomCssEditorScroll, goToCustomCssLine, searchCustomCssCode, savePage, saveState, saveMsg,
 				toastVisible, responseStatusToast, isArrayMessageAfterSubmit, responseMessageAfterSubmit, closeToast, showUnsupportedControlNotice,
@@ -4733,16 +4708,7 @@
 						<div class="pb-form-group"><label class="pb-form-label">Color</label><input class="pb-input" v-model="selectedNode.settings.color"></div>
 					</template>
 					<template v-if="selectedType==='text_editor'">
-						<div class="pb-form-group">
-							<div class="pb-label-row">
-								<label class="pb-form-label mb-0">Content</label>
-								<button type="button" class="pb-editor-expand-btn" title="Expand editor" @click="openTextEditorModal">
-									<i class="fa-solid fa-up-right-and-down-left-from-center"></i>
-									<span>Expand</span>
-								</button>
-							</div>
-							<CkEditorField v-model="selectedNode.settings.html" />
-						</div>
+						<div class="pb-form-group"><label class="pb-form-label">Content</label><CkEditorField v-model="selectedNode.settings.html" /></div>
 					</template>
 					<template v-if="selectedType==='image'">
 						<div class="pb-form-group">
@@ -4935,37 +4901,6 @@
 					<div class="pb-css-editor-footer-actions">
 						<button type="button" class="pb-css-editor-btn danger" @click="clearCustomCss"><i class="fa-solid fa-trash"></i> Clear</button>
 						<button type="button" class="pb-css-editor-btn primary" @click="closeCustomCssEditor"><i class="fa-solid fa-check"></i> Apply & Close</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</teleport>
-
-	<teleport to="body">
-		<div v-if="showTextEditorModal && selectedType==='text_editor' && selectedNode" class="pb-rte-editor-modal" @click.self="closeTextEditorModal">
-			<div class="pb-rte-editor-panel" :class="{ fullscreen: textEditorModalFullscreen }">
-				<div class="pb-rte-editor-header">
-					<div class="pb-rte-editor-title"><i class="fa-solid fa-pen-to-square"></i><span>Text Editor</span></div>
-					<div class="pb-rte-editor-actions">
-						<button type="button" class="pb-rte-editor-icon-btn" :title="textEditorModalFullscreen ? 'Exit fullscreen' : 'Fullscreen'" @click="textEditorModalFullscreen = !textEditorModalFullscreen">
-							<i class="fa-solid" :class="textEditorModalFullscreen ? 'fa-compress' : 'fa-expand'"></i>
-						</button>
-						<button type="button" class="pb-rte-editor-icon-btn danger" title="Close" @click="closeTextEditorModal"><i class="fa-solid fa-xmark"></i></button>
-					</div>
-				</div>
-				<div class="pb-rte-editor-body">
-					<div class="pb-rte-editor-hint">
-						<i class="fa-solid fa-circle-info"></i>
-						<span>Edit konten teks dengan ruang yang lebih luas. Perubahan langsung tersinkron ke preview dan editor sidebar.</span>
-					</div>
-					<div class="pb-rte-editor-field">
-						<CkEditorField :model-value="selectedNode.settings.html" @update:modelValue="setTextEditorHtml" />
-					</div>
-				</div>
-				<div class="pb-rte-editor-footer">
-					<div class="pb-rte-editor-count"><i class="fa-solid fa-font"></i> {{ textEditorModalSummary }}</div>
-					<div class="pb-rte-editor-footer-actions">
-						<button type="button" class="pb-rte-editor-btn primary" @click="closeTextEditorModal"><i class="fa-solid fa-check"></i> Apply & Close</button>
 					</div>
 				</div>
 			</div>

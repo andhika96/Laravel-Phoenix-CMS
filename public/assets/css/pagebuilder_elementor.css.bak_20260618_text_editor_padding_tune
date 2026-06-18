@@ -4215,7 +4215,7 @@ body {
 	flex: 1 1 auto;
 	min-height: 360px;
 	max-height: none;
-	padding: 10px 14px;
+	padding: 18px 20px;
 	font-size: 15px;
 	line-height: 1.65;
 }
