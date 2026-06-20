@@ -359,7 +359,6 @@
 			shapeDividerTopWidth: '100%',
 			shapeDividerTopHeight: '60px',
 			shapeDividerTopFlip: false,
-			shapeDividerTopNegative: false,
 			shapeDividerTopFront: false,
 			shapeDividerBottomEnabled: false,
 			shapeDividerBottomType: 'none',
@@ -367,7 +366,6 @@
 			shapeDividerBottomWidth: '100%',
 			shapeDividerBottomHeight: '60px',
 			shapeDividerBottomFlip: false,
-			shapeDividerBottomNegative: false,
 			shapeDividerBottomFront: false,
 			shapeDividerSide: 'top',
 			borderType: 'none',
@@ -2453,92 +2451,6 @@
 					setResponsiveSetting(s, 'containerWidth', (maxWidth && maxWidth !== 'auto') ? maxWidth : '100%');
 				}
 			}
-			const shapeDividerTypeOptions = [
-				{ value: 'none', label: 'None' },
-				{ value: 'mountains', label: 'Mountains' },
-				{ value: 'drops', label: 'Drops' },
-				{ value: 'clouds', label: 'Clouds' },
-				{ value: 'zigzag', label: 'Zigzag' },
-				{ value: 'pyramids', label: 'Pyramids' },
-				{ value: 'triangle', label: 'Triangle' },
-				{ value: 'triangle-asymmetrical', label: 'Triangle Asymmetrical' },
-				{ value: 'tilt', label: 'Tilt' },
-				{ value: 'opacity-tilt', label: 'Tilt Opacity' },
-				{ value: 'opacity-fan', label: 'Fan Opacity' },
-				{ value: 'curve', label: 'Curve' },
-				{ value: 'curve-asymmetrical', label: 'Curve Asymmetrical' },
-				{ value: 'waves', label: 'Waves' },
-				{ value: 'wave-brush', label: 'Waves Brush' },
-				{ value: 'waves-pattern', label: 'Waves Pattern' },
-				{ value: 'arrow', label: 'Arrow' },
-				{ value: 'split', label: 'Split' },
-				{ value: 'book', label: 'Book' },
-			];
-			const shapeDividerWidthTypes = new Set(['mountains', 'zigzag', 'pyramids', 'triangle', 'triangle-asymmetrical', 'opacity-tilt', 'opacity-fan', 'curve', 'curve-asymmetrical', 'waves', 'wave-brush', 'waves-pattern', 'arrow', 'split', 'book']);
-			const shapeDividerFlipTypes = new Set(['mountains', 'drops', 'clouds', 'pyramids', 'triangle-asymmetrical', 'tilt', 'opacity-tilt', 'curve-asymmetrical', 'waves', 'wave-brush', 'waves-pattern']);
-			const shapeDividerInvertTypes = new Set(['drops', 'clouds', 'pyramids', 'triangle', 'triangle-asymmetrical', 'curve', 'curve-asymmetrical', 'waves', 'arrow', 'split', 'book']);
-			function normalizeShapeDividerType(type) {
-				const raw = String(type || 'none').trim();
-				if (!raw || raw === 'none') return 'none';
-				if (raw === 'tilt-opacity') return 'opacity-tilt';
-				if (raw === 'fan-opacity') return 'opacity-fan';
-				if (raw === 'waves-brush') return 'wave-brush';
-				return raw;
-			}
-			function shapeDividerPrefix(node) {
-				const side = node?.settings?.shapeDividerSide === 'bottom' ? 'Bottom' : 'Top';
-				return 'shapeDivider' + side;
-			}
-			function shapeDividerSetting(node, suffix, fallback = '') {
-				if (!node || !node.settings) return fallback;
-				const key = shapeDividerPrefix(node) + suffix;
-				const value = node.settings[key];
-				return value === '' || value === null || value === undefined ? fallback : value;
-			}
-			function setShapeDividerSetting(node, suffix, value) {
-				if (!node || !node.settings) return;
-				node.settings[shapeDividerPrefix(node) + suffix] = value;
-			}
-			function shapeDividerActiveType(node) {
-				return normalizeShapeDividerType(shapeDividerSetting(node, 'Type', 'none'));
-			}
-			function shapeDividerHasWidth(node) {
-				return shapeDividerWidthTypes.has(shapeDividerActiveType(node));
-			}
-			function shapeDividerHasFlip(node) {
-				return shapeDividerFlipTypes.has(shapeDividerActiveType(node));
-			}
-			function shapeDividerHasInvert(node) {
-				return shapeDividerInvertTypes.has(shapeDividerActiveType(node));
-			}
-			function shapeDividerWidthValue(node) {
-				const parsed = parseNumberUnit(shapeDividerSetting(node, 'Width', '100%'), '%', ['%']);
-				return parsed.value === '' ? 100 : clamp(Number(parsed.value) || 0, 0, 300);
-			}
-			function shapeDividerWidthUnit() {
-				return '%';
-			}
-			function setShapeDividerWidthValue(node, next) {
-				const value = clamp(Number(next) || 0, 0, 300);
-				setShapeDividerSetting(node, 'Width', value + '%');
-			}
-			function setShapeDividerWidthUnit(node) {
-				setShapeDividerWidthValue(node, shapeDividerWidthValue(node));
-			}
-			function shapeDividerHeightValue(node) {
-				const parsed = parseNumberUnit(shapeDividerSetting(node, 'Height', '60px'), 'px', ['px']);
-				return parsed.value === '' ? 60 : clamp(Number(parsed.value) || 0, 0, 500);
-			}
-			function shapeDividerHeightUnit() {
-				return 'px';
-			}
-			function setShapeDividerHeightValue(node, next) {
-				const value = clamp(Number(next) || 0, 0, 500);
-				setShapeDividerSetting(node, 'Height', value + 'px');
-			}
-			function setShapeDividerHeightUnit(node) {
-				setShapeDividerHeightValue(node, shapeDividerHeightValue(node));
-			}
 			function minHeightValue(node) {
 				if (!node || !node.settings) return '';
 				const parsed = parseNumberUnit(getResponsiveSetting(node.settings, 'minHeight', ''), 'px', ['px', 'vh']);
@@ -3309,9 +3221,6 @@
 				containerWidthValue, containerWidthUnit, containerWidthMax, containerWidthStep, onContainerWidthInput, setContainerWidthValue, setContainerWidthUnit,
 				columnWidthValue, setSelectedColumnWidthValue, columnResizeOverlay,
 				minHeightValue, minHeightUnit, setMinHeightValue, setMinHeightUnit,
-				shapeDividerTypeOptions, shapeDividerHasWidth, shapeDividerHasFlip, shapeDividerHasInvert,
-				shapeDividerWidthValue, shapeDividerWidthUnit, setShapeDividerWidthValue, setShapeDividerWidthUnit,
-				shapeDividerHeightValue, shapeDividerHeightUnit, setShapeDividerHeightValue, setShapeDividerHeightUnit,
 				containerGridColumnsValue, setContainerGridColumnsValue,
 				containerGridRowsValue, setContainerGridRowsValue, syncContainerGap,
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
@@ -4071,7 +3980,10 @@
 									<div class="pb-form-group">
 										<label class="pb-form-label">Type</label>
 										<select class="pb-select" v-model="selectedNode.settings[(selectedNode.settings.shapeDividerSide==='bottom'?'shapeDividerBottomType':'shapeDividerTopType')]">
-											<option v-for="option in shapeDividerTypeOptions" :key="'shape-divider-' + option.value" :value="option.value">{{ option.label }}</option>
+											<option value="none">None</option>
+											<option value="tilt">Tilt</option>
+											<option value="curve">Curve</option>
+											<option value="triangle">Triangle</option>
 										</select>
 									</div>
 									<template v-if="selectedNode.settings[(selectedNode.settings.shapeDividerSide==='bottom'?'shapeDividerBottomType':'shapeDividerTopType')]!=='none'">
@@ -4082,37 +3994,17 @@
 												<input class="pb-input" v-model="selectedNode.settings[(selectedNode.settings.shapeDividerSide==='bottom'?'shapeDividerBottomColor':'shapeDividerTopColor')]">
 											</div>
 										</div>
-										<div class="pb-form-group" v-if="shapeDividerHasWidth(selectedNode)">
+										<div class="pb-form-group">
 											<label class="pb-form-label">Width</label>
-											<div class="pb-range-value-row">
-												<input type="range" class="pb-range" min="0" max="300" step="1" :value="shapeDividerWidthValue(selectedNode)" @input="setShapeDividerWidthValue(selectedNode, $event.target.value)">
-												<div class="pb-value-with-unit">
-													<input class="pb-input pb-input-compact" type="number" min="0" max="300" step="1" :value="shapeDividerWidthValue(selectedNode)" @input="setShapeDividerWidthValue(selectedNode, $event.target.value)">
-													<select class="pb-mini-unit" :value="shapeDividerWidthUnit(selectedNode)" @change="setShapeDividerWidthUnit(selectedNode, $event.target.value)">
-														<option value="%">%</option>
-													</select>
-												</div>
-											</div>
+											<input class="pb-input" v-model="selectedNode.settings[(selectedNode.settings.shapeDividerSide==='bottom'?'shapeDividerBottomWidth':'shapeDividerTopWidth')]" placeholder="100%">
 										</div>
 										<div class="pb-form-group">
 											<label class="pb-form-label">Height</label>
-											<div class="pb-range-value-row">
-												<input type="range" class="pb-range" min="0" max="500" step="1" :value="shapeDividerHeightValue(selectedNode)" @input="setShapeDividerHeightValue(selectedNode, $event.target.value)">
-												<div class="pb-value-with-unit">
-													<input class="pb-input pb-input-compact" type="number" min="0" max="500" step="1" :value="shapeDividerHeightValue(selectedNode)" @input="setShapeDividerHeightValue(selectedNode, $event.target.value)">
-													<select class="pb-mini-unit" :value="shapeDividerHeightUnit(selectedNode)" @change="setShapeDividerHeightUnit(selectedNode, $event.target.value)">
-														<option value="px">px</option>
-													</select>
-												</div>
-											</div>
+											<input class="pb-input" v-model="selectedNode.settings[(selectedNode.settings.shapeDividerSide==='bottom'?'shapeDividerBottomHeight':'shapeDividerTopHeight')]" placeholder="60px">
 										</div>
-										<div class="pb-form-group pb-toggle-label-row" v-if="shapeDividerHasFlip(selectedNode)">
-											<label class="pb-form-label mb-0">Flip</label>
-											<div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'shapeDividerFlip-' + selectedNode.id" v-model="selectedNode.settings[(selectedNode.settings.shapeDividerSide==='bottom'?'shapeDividerBottomFlip':'shapeDividerTopFlip')]"><label :for="'shapeDividerFlip-' + selectedNode.id"></label></div>
-										</div>
-										<div class="pb-form-group pb-toggle-label-row" v-if="shapeDividerHasInvert(selectedNode)">
+										<div class="pb-form-group pb-toggle-label-row">
 											<label class="pb-form-label mb-0">Invert</label>
-											<div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'shapeDividerInvert-' + selectedNode.id" v-model="selectedNode.settings[(selectedNode.settings.shapeDividerSide==='bottom'?'shapeDividerBottomNegative':'shapeDividerTopNegative')]"><label :for="'shapeDividerInvert-' + selectedNode.id"></label></div>
+											<div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'shapeDividerFlip-' + selectedNode.id" v-model="selectedNode.settings[(selectedNode.settings.shapeDividerSide==='bottom'?'shapeDividerBottomFlip':'shapeDividerTopFlip')]"><label :for="'shapeDividerFlip-' + selectedNode.id"></label></div>
 										</div>
 										<div class="pb-form-group pb-toggle-label-row">
 											<label class="pb-form-label mb-0">Bring to Front</label>

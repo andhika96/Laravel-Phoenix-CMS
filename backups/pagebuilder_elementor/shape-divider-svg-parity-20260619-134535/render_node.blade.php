@@ -433,97 +433,6 @@
 		return implode(';', $rules);
 	};
 
-	$shape_divider_shapes_path = resource_path('data/pagebuilder_elementor_shapes.json');
-	$shape_divider_shapes = is_file($shape_divider_shapes_path)
-		? (json_decode(file_get_contents($shape_divider_shapes_path), true) ?: [])
-		: [];
-	$shape_divider_width_types = ['mountains', 'zigzag', 'pyramids', 'triangle', 'triangle-asymmetrical', 'opacity-tilt', 'opacity-fan', 'curve', 'curve-asymmetrical', 'waves', 'wave-brush', 'waves-pattern', 'arrow', 'split', 'book'];
-	$shape_divider_flip_types = ['mountains', 'drops', 'clouds', 'pyramids', 'triangle-asymmetrical', 'tilt', 'opacity-tilt', 'curve-asymmetrical', 'waves', 'wave-brush', 'waves-pattern'];
-	$shape_divider_invert_types = ['drops', 'clouds', 'pyramids', 'triangle', 'triangle-asymmetrical', 'curve', 'curve-asymmetrical', 'waves', 'arrow', 'split', 'book'];
-	$normalize_shape_divider_type = function ($type) {
-		$raw = strtolower(trim((string) ($type ?? 'none')));
-		if ($raw === '' || $raw === 'none') return 'none';
-		if ($raw === 'tilt-opacity') return 'opacity-tilt';
-		if ($raw === 'fan-opacity') return 'opacity-fan';
-		if ($raw === 'waves-brush') return 'wave-brush';
-		return $raw;
-	};
-	$shape_divider_type = function (array $s, string $side) use ($normalize_shape_divider_type) {
-		$prefix = $side === 'bottom' ? 'shapeDividerBottom' : 'shapeDividerTop';
-		return $normalize_shape_divider_type($s[$prefix . 'Type'] ?? 'none');
-	};
-	$shape_divider_supports_width = fn (string $type) => in_array($normalize_shape_divider_type($type), $shape_divider_width_types, true);
-	$shape_divider_supports_flip = fn (string $type) => in_array($normalize_shape_divider_type($type), $shape_divider_flip_types, true);
-	$shape_divider_supports_invert = fn (string $type) => in_array($normalize_shape_divider_type($type), $shape_divider_invert_types, true);
-	$shape_divider_css_size = function ($value, string $fallback, string $unit) {
-		$raw = trim((string) ($value ?? ''));
-		if ($raw === '') return $fallback;
-		return preg_match('/^-?\d+(\.\d+)?$/', $raw) ? $raw . $unit : $raw;
-	};
-	$shape_divider_escape_attr = fn ($value) => htmlspecialchars((string) ($value ?? ''), ENT_QUOTES, 'UTF-8', false);
-	$shape_divider_layer_rule = function (array $s, string $side) use ($is_truthy, $shape_divider_type, $shape_divider_supports_invert) {
-		$prefix = $side === 'bottom' ? 'shapeDividerBottom' : 'shapeDividerTop';
-		$type = $shape_divider_type($s, $side);
-		$negative = $shape_divider_supports_invert($type) && $is_truthy($s[$prefix . 'Negative'] ?? false);
-		$shouldRotate = ($side === 'top' && $negative) || ($side === 'bottom' && !$negative);
-		$rules = [
-			'position:absolute',
-			'left:0',
-			$side === 'top' ? 'top:-1px' : 'bottom:-1px',
-			'width:100%',
-			'line-height:0',
-			'overflow:hidden',
-			'pointer-events:none',
-			'direction:ltr',
-			'z-index:' . ($is_truthy($s[$prefix . 'Front'] ?? false) ? '2' : '0'),
-		];
-		if ($shouldRotate) $rules[] = 'transform:rotate(180deg)';
-		return implode(';', $rules);
-	};
-	$shape_divider_svg = function (array $s, string $side) use ($shape_divider_shapes, $shape_divider_type, $shape_divider_supports_width, $shape_divider_supports_flip, $shape_divider_supports_invert, $shape_divider_css_size, $shape_divider_escape_attr, $is_truthy) {
-		$prefix = $side === 'bottom' ? 'shapeDividerBottom' : 'shapeDividerTop';
-		$type = $shape_divider_type($s, $side);
-		if ($type === 'none' || !isset($shape_divider_shapes[$type]) || !is_array($shape_divider_shapes[$type])) {
-			return '';
-		}
-		$negative = $shape_divider_supports_invert($type) && $is_truthy($s[$prefix . 'Negative'] ?? false);
-		$shape = ($negative && isset($shape_divider_shapes[$type]['negative']) && is_array($shape_divider_shapes[$type]['negative']))
-			? $shape_divider_shapes[$type]['negative']
-			: $shape_divider_shapes[$type];
-		$svgAttrs = is_array($shape['svgAttrs'] ?? null) ? $shape['svgAttrs'] : [];
-		$paths = is_array($shape['paths'] ?? null) ? $shape['paths'] : [];
-		if (empty($paths)) return '';
-
-		$color = trim((string) ($s[$prefix . 'Color'] ?? '#ffffff')) ?: '#ffffff';
-		$width = $shape_divider_supports_width($type) ? $shape_divider_css_size($s[$prefix . 'Width'] ?? '', '100%', '%') : '100%';
-		$height = $shape_divider_css_size($s[$prefix . 'Height'] ?? '', '60px', 'px');
-		$flip = $shape_divider_supports_flip($type) && $is_truthy($s[$prefix . 'Flip'] ?? false);
-		$svgTransform = $flip ? 'translateX(-50%) rotateY(180deg)' : 'translateX(-50%)';
-		$attrs = [
-			'xmlns="http://www.w3.org/2000/svg"',
-			'viewBox="' . $shape_divider_escape_attr($svgAttrs['viewBox'] ?? '0 0 1000 100') . '"',
-			'preserveAspectRatio="' . $shape_divider_escape_attr($svgAttrs['preserveAspectRatio'] ?? 'none') . '"',
-			'aria-hidden="true"',
-			'focusable="false"',
-			'style="display:block;left:50%;position:relative;transform:' . $shape_divider_escape_attr($svgTransform) . ';width:calc(' . $shape_divider_escape_attr($width) . ' + 1.3px);height:' . $shape_divider_escape_attr($height) . ';"',
-		];
-		$pathHtml = '';
-		foreach ($paths as $path) {
-			if (!is_array($path)) continue;
-			$style = 'fill:' . $color . ';' . (string) ($path['style'] ?? '');
-			$pathAttrs = [
-				'class="elementor-shape-fill"',
-				'd="' . $shape_divider_escape_attr($path['d'] ?? '') . '"',
-				'style="' . $shape_divider_escape_attr($style) . '"',
-			];
-			if (($path['opacity'] ?? '') !== '') {
-				$pathAttrs[] = 'opacity="' . $shape_divider_escape_attr($path['opacity']) . '"';
-			}
-			$pathHtml .= '<path ' . implode(' ', $pathAttrs) . '></path>';
-		}
-		return '<svg ' . implode(' ', $attrs) . '>' . $pathHtml . '</svg>';
-	};
-
 	$attribute_pairs = function ($attrs) {
 		$out = [];
 
@@ -865,13 +774,21 @@
 			$styleBlocks[] = '#' . $nodeDomId . ':hover{' . $style_with_important($hoverStyles) . '}';
 		}
 
-		$topShapeSvg = $shape_divider_svg($s, 'top');
-		if ($topShapeSvg !== '') {
-			$styleBlocks[] = '#' . $nodeDomId . ' > .pb-shape-divider-top{' . $shape_divider_layer_rule($s, 'top') . '}';
+		$topShapeRule = $shape_divider_rule($s, 'top');
+		if ($topShapeRule !== '') {
+			$topShapeLayerZ = $is_truthy($s['shapeDividerTopFront'] ?? false) ? 4 : 0;
+			$topShapeRawHeight = trim((string) ($s['shapeDividerTopHeight'] ?? ''));
+			$topShapeLayerHeight = $topShapeRawHeight !== '' ? (preg_match('/^-?\d+(\.\d+)?$/', $topShapeRawHeight) ? $topShapeRawHeight . 'px' : $topShapeRawHeight) : '60px';
+			$styleBlocks[] = '#' . $nodeDomId . ' > .pb-shape-divider-top{position:absolute;left:0;top:0;width:100%;height:' . $topShapeLayerHeight . ';overflow:hidden;pointer-events:none;z-index:' . $topShapeLayerZ . '}';
+			$styleBlocks[] = '#' . $nodeDomId . ' > .pb-shape-divider-top::before{' . $topShapeRule . '}';
 		}
-		$bottomShapeSvg = $shape_divider_svg($s, 'bottom');
-		if ($bottomShapeSvg !== '') {
-			$styleBlocks[] = '#' . $nodeDomId . ' > .pb-shape-divider-bottom{' . $shape_divider_layer_rule($s, 'bottom') . '}';
+		$bottomShapeRule = $shape_divider_rule($s, 'bottom');
+		if ($bottomShapeRule !== '') {
+			$bottomShapeLayerZ = $is_truthy($s['shapeDividerBottomFront'] ?? false) ? 4 : 0;
+			$bottomShapeRawHeight = trim((string) ($s['shapeDividerBottomHeight'] ?? ''));
+			$bottomShapeLayerHeight = $bottomShapeRawHeight !== '' ? (preg_match('/^-?\d+(\.\d+)?$/', $bottomShapeRawHeight) ? $bottomShapeRawHeight . 'px' : $bottomShapeRawHeight) : '60px';
+			$styleBlocks[] = '#' . $nodeDomId . ' > .pb-shape-divider-bottom{position:absolute;left:0;bottom:0;width:100%;height:' . $bottomShapeLayerHeight . ';overflow:hidden;pointer-events:none;z-index:' . $bottomShapeLayerZ . '}';
+			$styleBlocks[] = '#' . $nodeDomId . ' > .pb-shape-divider-bottom::after{' . $bottomShapeRule . '}';
 		}
 
 		$customScopedCss = $scoped_css($node['id'] ?? null, $s['customCssCode'] ?? '');
@@ -882,11 +799,11 @@
 			{{ $attrName }}="{{ e($attrValue) }}"
 		@endforeach
 	>
-		@if($topShapeSvg !== '')
-			<div class="pb-shape-divider-layer pb-shape-divider-top" aria-hidden="true">{!! $topShapeSvg !!}</div>
+		@if($topShapeRule !== '')
+			<div class="pb-shape-divider-layer pb-shape-divider-top" aria-hidden="true"></div>
 		@endif
-		@if($bottomShapeSvg !== '')
-			<div class="pb-shape-divider-layer pb-shape-divider-bottom" aria-hidden="true">{!! $bottomShapeSvg !!}</div>
+		@if($bottomShapeRule !== '')
+			<div class="pb-shape-divider-layer pb-shape-divider-bottom" aria-hidden="true"></div>
 		@endif
 		<div class="el-cont-columns" style="{{ $contColumnsStyle }}">
 			@foreach($normalizedColumns as $col)

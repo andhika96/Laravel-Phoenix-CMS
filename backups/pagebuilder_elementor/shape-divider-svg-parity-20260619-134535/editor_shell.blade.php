@@ -22,7 +22,6 @@
 			csrfToken: @json(csrf_token()),
 			pageData: @json($pageData),
 		};
-		window.PB_ELEMENTOR_SHAPES = @json(json_decode(file_get_contents(resource_path('data/pagebuilder_elementor_shapes.json')), true));
 	</script>
 
 	<script src="https://cdn.jsdelivr.net/npm/vue@3.4.38/dist/vue.global.prod.js"></script>

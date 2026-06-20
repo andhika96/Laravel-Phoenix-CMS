@@ -1,7 +1,7 @@
 <template>
 	<component :is="rootTag" :id="domId" :class="rootClass" :style="containerStyle" v-bind="customAttrs">
-		<div v-if="shapeDividerType(settings, 'top') !== 'none'" class="pb-shape-divider-layer pb-shape-divider-top" aria-hidden="true" v-html="shapeDividerSvg(settings, 'top')"></div>
-		<div v-if="shapeDividerType(settings, 'bottom') !== 'none'" class="pb-shape-divider-layer pb-shape-divider-bottom" aria-hidden="true" v-html="shapeDividerSvg(settings, 'bottom')"></div>
+		<div v-if="shapeDividerType(settings, 'top') !== 'none'" class="pb-shape-divider-layer pb-shape-divider-top" aria-hidden="true"></div>
+		<div v-if="shapeDividerType(settings, 'bottom') !== 'none'" class="pb-shape-divider-layer pb-shape-divider-bottom" aria-hidden="true"></div>
 		<slot></slot>
 	</component>
 	<component :is="'style'" v-if="styleBlock">{{ styleBlock }}</component>
@@ -9,7 +9,7 @@
 
 <script>
 export default {
-	name: 'LayoutContainer',
+	name: 'LayoutContainerFluid',
 	props: {
 		item: {
 			type: Object,
@@ -65,7 +65,7 @@ export default {
 			return allowed.includes(raw) ? raw : 'div';
 		},
 		rootClass() {
-			const classes = ['el-layout-container'];
+			const classes = ['el-layout-container-fluid'];
 			if (this.settings.cssClass) classes.push(this.settings.cssClass);
 			if (this.isTruthy(this.settings.hideDesktop)) classes.push('pb-hide-desktop');
 			if (this.isTruthy(this.settings.hideTablet)) classes.push('pb-hide-tablet');
@@ -151,26 +151,29 @@ export default {
 			if (!this.item.id) return '';
 
 			const selector = '#' + this.domId;
+			const topRule = this.buildShapeDividerRule('top');
+			const bottomRule = this.buildShapeDividerRule('bottom');
 			const rules = [];
 
-			if (this.shapeDividerType(this.settings, 'top') !== 'none') {
+			if (topRule) {
 				rules.push(selector + ' > .pb-shape-divider-top{' + this.shapeDividerLayerRule('top') + '}');
+				rules.push(selector + ' > .pb-shape-divider-top::before{' + topRule + '}');
 			}
-			if (this.shapeDividerType(this.settings, 'bottom') !== 'none') {
+			if (bottomRule) {
 				rules.push(selector + ' > .pb-shape-divider-bottom{' + this.shapeDividerLayerRule('bottom') + '}');
+				rules.push(selector + ' > .pb-shape-divider-bottom::after{' + bottomRule + '}');
 			}
 
 			return rules.join('\n');
 		},
 		containerStyle() {
 			const s = this.settings;
-			const fullMode = this.item.type === 'container_fluid' || s.contentWidth === 'full' || s.contentWidth === 'fluid';
+			const fullMode = s.contentWidth === 'full' || s.contentWidth === 'fluid';
 			const widthValue = this.responsiveSetting('containerWidth', s.containerWidth || '100%');
 			const maxWidthValue = this.responsiveSetting('maxWidth', s.maxWidth || 'auto');
 			const minHeightValue = this.responsiveSetting('minHeight', s.minHeight || 'auto');
-			// Arsitektur baru: Container adalah wrapper block-level.
-			// Display/flex/grid layout diterapkan di el-cont-columns (inner div) via contColumnsStyle di BuilderNode.
-			// Container sendiri hanya menangani: background, border, shadow, padding, margin, min-height, width.
+			// Arsitektur baru: Container Fluid adalah wrapper block-level.
+			// Layout flex/grid diterapkan di el-cont-columns (slot inner) via contColumnsStyle di BuilderNode.
 			const style = {
 				display: 'block',
 				boxSizing: 'border-box',
@@ -194,7 +197,6 @@ export default {
 			style.marginBottom = this.toCssSpace(this.responsiveSetting('marginBottom', s.marginBottom), '0');
 			style.marginLeft = this.toCssSpace(this.responsiveSetting('marginLeft', s.marginLeft), '0');
 			style.minHeight = this.toCssSize(minHeightValue, 'auto');
-
 			if (fullMode) {
 				style.maxWidth = '100%';
 			} else {
@@ -322,103 +324,127 @@ export default {
 		},
 		shapeDividerType(settings, side) {
 			const prefix = side === 'bottom' ? 'shapeDividerBottom' : 'shapeDividerTop';
-			return this.normalizeShapeDividerType(settings[prefix + 'Type']);
-		},
-		normalizeShapeDividerType(type) {
-			const raw = String(type || 'none').trim().toLowerCase();
-			if (!raw || raw === 'none') return 'none';
-			if (raw === 'tilt-opacity') return 'opacity-tilt';
-			if (raw === 'fan-opacity') return 'opacity-fan';
-			if (raw === 'waves-brush') return 'wave-brush';
-			return raw;
+			return String(settings[prefix + 'Type'] || 'none').toLowerCase();
 		},
 		hasAnyShapeDivider(settings) {
 			return this.shapeDividerType(settings, 'top') !== 'none' || this.shapeDividerType(settings, 'bottom') !== 'none';
 		},
-		shapeDividerSvgData(type, negative = false) {
-			const shapes = window.PB_ELEMENTOR_SHAPES || {};
-			const shape = shapes[this.normalizeShapeDividerType(type)] || null;
-			if (!shape) return null;
-			return negative && shape.negative ? shape.negative : shape;
-		},
-		shapeDividerSupportsWidth(type) {
-			return ['mountains', 'zigzag', 'pyramids', 'triangle', 'triangle-asymmetrical', 'opacity-tilt', 'opacity-fan', 'curve', 'curve-asymmetrical', 'waves', 'wave-brush', 'waves-pattern', 'arrow', 'split', 'book'].includes(this.normalizeShapeDividerType(type));
-		},
-		shapeDividerSupportsFlip(type) {
-			return ['mountains', 'drops', 'clouds', 'pyramids', 'triangle-asymmetrical', 'tilt', 'opacity-tilt', 'curve-asymmetrical', 'waves', 'wave-brush', 'waves-pattern'].includes(this.normalizeShapeDividerType(type));
-		},
-		shapeDividerSupportsInvert(type) {
-			return ['drops', 'clouds', 'pyramids', 'triangle', 'triangle-asymmetrical', 'curve', 'curve-asymmetrical', 'waves', 'arrow', 'split', 'book'].includes(this.normalizeShapeDividerType(type));
-		},
-		shapeDividerCssSize(value, fallback, unit) {
-			const raw = String(value == null ? '' : value).trim();
-			if (!raw) return fallback;
-			return /^-?\d+(\.\d+)?$/.test(raw) ? raw + unit : raw;
-		},
-		escapeShapeAttr(value) {
-			return String(value == null ? '' : value)
-				.replace(/&/g, '&amp;')
-				.replace(/"/g, '&quot;')
-				.replace(/</g, '&lt;')
-				.replace(/>/g, '&gt;');
-		},
 		shapeDividerLayerRule(side) {
 			const settings = this.settings || {};
 			const prefix = side === 'bottom' ? 'shapeDividerBottom' : 'shapeDividerTop';
-			const type = this.shapeDividerType(settings, side);
-			const zIndex = this.isTruthy(settings[prefix + 'Front']) ? 2 : 0;
-			const negative = this.shapeDividerSupportsInvert(type) && this.isTruthy(settings[prefix + 'Negative']);
-			const shouldRotate = (side === 'top' && negative) || (side === 'bottom' && !negative);
+			const zIndex = this.isTruthy(settings[prefix + 'Front']) ? 4 : 0;
+			const rawHeight = String(settings[prefix + 'Height'] == null ? '' : settings[prefix + 'Height']).trim();
+			const height = rawHeight
+				? (/^-?\d+(\.\d+)?$/.test(rawHeight) ? rawHeight + 'px' : rawHeight)
+				: '60px';
 
 			return [
 				'position:absolute',
 				'left:0',
-				side === 'top' ? 'top:-1px' : 'bottom:-1px',
+				side === 'top' ? 'top:0' : 'bottom:0',
 				'width:100%',
-				'line-height:0',
+				'height:' + height,
 				'overflow:hidden',
 				'pointer-events:none',
-				'direction:ltr',
 				'z-index:' + zIndex,
-				shouldRotate ? 'transform:rotate(180deg)' : '',
-			].filter(Boolean).join(';');
+			].join(';');
 		},
-		shapeDividerSvg(settings, side) {
+		shapeDividerClipPath(type, side, invert = false) {
+			const topPaths = {
+				mountains: 'polygon(0 0, 100% 0, 100% 48%, 88% 28%, 76% 62%, 63% 25%, 50% 68%, 37% 35%, 24% 72%, 12% 40%, 0 64%)',
+				drops: 'polygon(0 0, 100% 0, 100% 68%, 92% 55%, 85% 74%, 76% 50%, 66% 78%, 56% 52%, 46% 74%, 35% 51%, 24% 70%, 12% 54%, 0 75%)',
+				clouds: 'polygon(0 0, 100% 0, 100% 62%, 90% 54%, 80% 66%, 70% 54%, 60% 66%, 50% 55%, 40% 66%, 30% 54%, 20% 66%, 10% 55%, 0 62%)',
+				zigzag: 'polygon(0 0, 100% 0, 100% 75%, 90% 45%, 80% 75%, 70% 45%, 60% 75%, 50% 45%, 40% 75%, 30% 45%, 20% 75%, 10% 45%, 0 75%)',
+				pyramids: 'polygon(0 0, 100% 0, 100% 78%, 87.5% 45%, 75% 78%, 62.5% 45%, 50% 78%, 37.5% 45%, 25% 78%, 12.5% 45%, 0 78%)',
+				triangle: 'polygon(0 0, 100% 0, 50% 100%)',
+				'triangle-asymmetrical': 'polygon(0 0, 100% 0, 25% 100%)',
+				tilt: 'polygon(0 0, 100% 0, 100% 55%, 0 100%)',
+				'tilt-opacity': 'polygon(0 0, 100% 0, 100% 55%, 0 100%)',
+				'fan-opacity': 'polygon(0 0, 100% 0, 100% 82%, 50% 22%, 0 82%)',
+				curve: 'polygon(0 0, 100% 0, 100% 64%, 84% 78%, 66% 88%, 50% 92%, 34% 88%, 16% 78%, 0 64%)',
+				'curve-asymmetrical': 'polygon(0 0, 100% 0, 100% 45%, 78% 70%, 55% 84%, 32% 88%, 12% 78%, 0 68%)',
+				waves: 'polygon(0 0, 100% 0, 100% 70%, 88% 60%, 75% 70%, 63% 80%, 50% 70%, 38% 60%, 25% 70%, 13% 80%, 0 70%)',
+				'waves-brush': 'polygon(0 0, 100% 0, 100% 64%, 92% 56%, 84% 70%, 76% 58%, 68% 72%, 60% 58%, 52% 74%, 44% 60%, 36% 76%, 28% 62%, 20% 74%, 10% 58%, 0 70%)',
+				'waves-pattern': 'polygon(0 0, 100% 0, 100% 72%, 93% 58%, 86% 72%, 79% 58%, 72% 72%, 65% 58%, 58% 72%, 51% 58%, 44% 72%, 37% 58%, 30% 72%, 23% 58%, 16% 72%, 8% 58%, 0 72%)',
+				arrow: 'polygon(0 0, 100% 0, 100% 52%, 60% 52%, 50% 100%, 40% 52%, 0 52%)',
+				split: 'polygon(0 0, 100% 0, 100% 66%, 50% 42%, 0 66%)',
+				book: 'polygon(0 0, 100% 0, 100% 62%, 75% 78%, 50% 62%, 25% 78%, 0 62%)',
+			};
+			const topInvertPaths = {
+				triangle: 'polygon(0 0, 100% 0, 100% 100%, 50% 0, 0 100%)',
+				'triangle-asymmetrical': 'polygon(0 0, 100% 0, 100% 100%, 25% 0, 0 100%)',
+				arrow: 'polygon(0 0, 100% 0, 100% 100%, 60% 100%, 50% 52%, 40% 100%, 0 100%)',
+				split: 'polygon(0 0, 100% 0, 100% 100%, 50% 66%, 0 100%)',
+			};
+			if (side === 'top') {
+				return (invert && topInvertPaths[type]) ? topInvertPaths[type] : (topPaths[type] || topPaths.tilt);
+			}
+			const bottomPaths = {
+				mountains: 'polygon(0 36%, 12% 60%, 24% 28%, 37% 65%, 50% 32%, 63% 75%, 76% 38%, 88% 72%, 100% 52%, 100% 100%, 0 100%)',
+				drops: 'polygon(0 25%, 12% 46%, 24% 30%, 35% 49%, 46% 26%, 56% 48%, 66% 22%, 76% 50%, 85% 26%, 92% 45%, 100% 32%, 100% 100%, 0 100%)',
+				clouds: 'polygon(0 38%, 10% 45%, 20% 34%, 30% 46%, 40% 34%, 50% 45%, 60% 34%, 70% 46%, 80% 34%, 90% 46%, 100% 38%, 100% 100%, 0 100%)',
+				zigzag: 'polygon(0 25%, 10% 55%, 20% 25%, 30% 55%, 40% 25%, 50% 55%, 60% 25%, 70% 55%, 80% 25%, 90% 55%, 100% 25%, 100% 100%, 0 100%)',
+				pyramids: 'polygon(0 22%, 12.5% 55%, 25% 22%, 37.5% 55%, 50% 22%, 62.5% 55%, 75% 22%, 87.5% 55%, 100% 22%, 100% 100%, 0 100%)',
+				triangle: 'polygon(0 100%, 100% 100%, 50% 0)',
+				'triangle-asymmetrical': 'polygon(0 100%, 100% 100%, 75% 0)',
+				tilt: 'polygon(0 45%, 100% 0, 100% 100%, 0 100%)',
+				'tilt-opacity': 'polygon(0 45%, 100% 0, 100% 100%, 0 100%)',
+				'fan-opacity': 'polygon(0 18%, 50% 78%, 100% 18%, 100% 100%, 0 100%)',
+				curve: 'polygon(0 36%, 16% 22%, 34% 12%, 50% 8%, 66% 12%, 84% 22%, 100% 36%, 100% 100%, 0 100%)',
+				'curve-asymmetrical': 'polygon(0 32%, 12% 22%, 32% 12%, 55% 16%, 78% 30%, 100% 55%, 100% 100%, 0 100%)',
+				waves: 'polygon(0 30%, 13% 20%, 25% 30%, 38% 40%, 50% 30%, 63% 20%, 75% 30%, 88% 40%, 100% 30%, 100% 100%, 0 100%)',
+				'waves-brush': 'polygon(0 30%, 10% 42%, 20% 26%, 28% 38%, 36% 24%, 44% 40%, 52% 26%, 60% 42%, 68% 28%, 76% 42%, 84% 30%, 92% 44%, 100% 36%, 100% 100%, 0 100%)',
+				'waves-pattern': 'polygon(0 28%, 8% 42%, 16% 28%, 23% 42%, 30% 28%, 37% 42%, 44% 28%, 51% 42%, 58% 28%, 65% 42%, 72% 28%, 79% 42%, 86% 28%, 93% 42%, 100% 28%, 100% 100%, 0 100%)',
+				arrow: 'polygon(0 48%, 40% 48%, 50% 0, 60% 48%, 100% 48%, 100% 100%, 0 100%)',
+				split: 'polygon(0 34%, 50% 58%, 100% 34%, 100% 100%, 0 100%)',
+				book: 'polygon(0 38%, 25% 22%, 50% 38%, 75% 22%, 100% 38%, 100% 100%, 0 100%)',
+			};
+			const bottomInvertPaths = {
+				triangle: 'polygon(0 0, 50% 100%, 100% 0, 100% 100%, 0 100%)',
+				'triangle-asymmetrical': 'polygon(0 0, 75% 100%, 100% 0, 100% 100%, 0 100%)',
+				arrow: 'polygon(0 0, 40% 0, 50% 48%, 60% 0, 100% 0, 100% 100%, 0 100%)',
+				split: 'polygon(0 0, 50% 34%, 100% 0, 100% 100%, 0 100%)',
+			};
+			return (invert && bottomInvertPaths[type]) ? bottomInvertPaths[type] : (bottomPaths[type] || bottomPaths.tilt);
+		},
+		buildShapeDividerRule(side) {
+			const settings = this.settings || {};
 			const prefix = side === 'bottom' ? 'shapeDividerBottom' : 'shapeDividerTop';
 			const type = this.shapeDividerType(settings, side);
+
 			if (type === 'none') return '';
-			const negative = this.shapeDividerSupportsInvert(type) && this.isTruthy(settings[prefix + 'Negative']);
-			const shape = this.shapeDividerSvgData(type, negative);
-			if (!shape) return '';
 
 			const color = String(settings[prefix + 'Color'] || '#ffffff').trim() || '#ffffff';
-			const width = this.shapeDividerSupportsWidth(type) ? this.shapeDividerCssSize(settings[prefix + 'Width'], '100%', '%') : '100%';
-			const height = this.shapeDividerCssSize(settings[prefix + 'Height'], '60px', 'px');
-			const flip = this.shapeDividerSupportsFlip(type) && this.isTruthy(settings[prefix + 'Flip']);
-			const svgTransform = flip ? 'translateX(-50%) rotateY(180deg)' : 'translateX(-50%)';
-			const svgAttrs = shape.svgAttrs || {};
-			const attrs = [
-				'xmlns="http://www.w3.org/2000/svg"',
-				'viewBox="' + this.escapeShapeAttr(svgAttrs.viewBox || '0 0 1000 100') + '"',
-				'preserveAspectRatio="' + this.escapeShapeAttr(svgAttrs.preserveAspectRatio || 'none') + '"',
-				'aria-hidden="true"',
-				'focusable="false"',
-				'style="display:block;left:50%;position:relative;transform:' + this.escapeShapeAttr(svgTransform) + ';width:calc(' + this.escapeShapeAttr(width) + ' + 1.3px);height:' + this.escapeShapeAttr(height) + ';"',
+			const rawWidth = String(settings[prefix + 'Width'] == null ? '' : settings[prefix + 'Width']).trim();
+			const rawHeight = String(settings[prefix + 'Height'] == null ? '' : settings[prefix + 'Height']).trim();
+			const width = rawWidth
+				? (/^-?\d+(\.\d+)?$/.test(rawWidth) ? rawWidth + '%' : rawWidth)
+				: '100%';
+			const height = rawHeight
+				? (/^-?\d+(\.\d+)?$/.test(rawHeight) ? rawHeight + 'px' : rawHeight)
+				: '60px';
+			const invert = this.isTruthy(settings[prefix + 'Flip']);
+			const bringToFront = this.isTruthy(settings[prefix + 'Front']);
+			const clipPath = this.shapeDividerClipPath(type, side, invert);
+			const transform = 'translateX(-50%)';
+			const shapeOpacity = type.indexOf('opacity') !== -1 ? '0.55' : '';
+
+			const rules = [
+				'content:""',
+				'position:absolute',
+				'left:50%',
+				side === 'top' ? 'top:0' : 'bottom:0',
+				'width:' + width,
+				'height:' + height,
+				'background:' + color,
+				'pointer-events:none',
+				'transform:' + transform,
+				'transform-origin:center center',
+				'clip-path:' + clipPath,
+				'z-index:' + (bringToFront ? 4 : 0),
 			];
-			const paths = (shape.paths || []).map((path) => {
-				const style = 'fill:' + color + ';' + (path.style || '');
-				const pathAttrs = [
-					'class="elementor-shape-fill"',
-					'd="' + this.escapeShapeAttr(path.d || '') + '"',
-					'style="' + this.escapeShapeAttr(style) + '"',
-				];
-				if (path.opacity) pathAttrs.push('opacity="' + this.escapeShapeAttr(path.opacity) + '"');
-				return '<path ' + pathAttrs.join(' ') + '></path>';
-			}).join('');
-			return '<svg ' + attrs.join(' ') + '>' + paths + '</svg>';
-		},
-		buildShapeDividerRule() {
-			return '';
+			if (shapeOpacity) rules.push('opacity:' + shapeOpacity);
+			return rules.join(';');
 		},
 		stateSetting(settings, base, suffix = '') {
 			const key = base + suffix;
