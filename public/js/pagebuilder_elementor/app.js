@@ -63,6 +63,55 @@
 		const m = url.match(/youtu\.be\/([^?&]+)/) || url.match(/[?&]v=([^&]+)/);
 		return m ? 'https://www.youtube.com/embed/' + m[1] : url;
 	}
+	function normalizeVideoSourceType(value) {
+		const raw = String(value || '').trim().toLowerCase();
+		if (raw === 'file') return 'self_hosted';
+		return ['youtube', 'vimeo', 'dailymotion', 'self_hosted', 'videopress'].includes(raw) ? raw : 'youtube';
+	}
+	function isHostedVideoSourceType(value) {
+		const source = normalizeVideoSourceType(value);
+		return source === 'self_hosted' || source === 'videopress';
+	}
+	function toPositiveInteger(value) {
+		if (value === '' || value === null || value === undefined) return '';
+		const num = Number(value);
+		if (!Number.isFinite(num) || num < 0) return '';
+		return Math.round(num);
+	}
+	function videoDefaults() {
+		return {
+			sourceType: 'youtube',
+			youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+			youtubeEmbed: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+			vimeoUrl: 'https://vimeo.com/235215203',
+			dailymotionUrl: 'https://www.dailymotion.com/video/x84sh87',
+			fileUrl: '',
+			externalUrl: false,
+			startTime: '',
+			endTime: '',
+			autoplay: false,
+			mute: false,
+			loop: false,
+			playerControls: true,
+			captions: false,
+			privacyMode: false,
+			lazyLoad: false,
+			suggestedVideos: 'current_channel',
+			introTitle: true,
+			introPortrait: true,
+			introByline: true,
+			controlsColor: '',
+			videoInfo: true,
+			logo: true,
+			downloadButton: true,
+			preload: 'metadata',
+			poster: '',
+			imageOverlay: false,
+			overlayImage: '',
+			ratio: '16/9',
+			cssClass: '',
+		};
+	}
 	function clamp(v, min, max) {
 		return Math.min(max, Math.max(min, v));
 	}
@@ -353,6 +402,7 @@
 			bgOverlayRepeatHover: 'no-repeat',
 			bgOverlayAttachmentHover: 'scroll',
 			bgOverlayBlendModeHover: 'normal',
+			borderHoverInitialized: false,
 			shapeDividerTopEnabled: false,
 			shapeDividerTopType: 'none',
 			shapeDividerTopColor: '#ffffff',
@@ -373,11 +423,15 @@
 			borderType: 'none',
 			borderWidth: '1',
 			borderColor: '#000000',
+			borderTypeHover: '',
+			borderWidthHover: '',
+			borderColorHover: '',
 			borderRadiusTL: '0',
 			borderRadiusTR: '0',
 			borderRadiusBR: '0',
 			borderRadiusBL: '0',
 			borderRadiusLinked: false,
+			shadowHoverInitialized: false,
 			shadowEnabled: false,
 			shadowH: '0',
 			shadowV: '0',
@@ -385,6 +439,13 @@
 			shadowSpread: '0',
 			shadowColor: '#000000',
 			shadowOpacity: 0.3,
+			shadowEnabledHover: '',
+			shadowHHover: '',
+			shadowVHover: '',
+			shadowBlurHover: '',
+			shadowSpreadHover: '',
+			shadowColorHover: '',
+			shadowOpacityHover: '',
 			paddingTop: '0',
 			paddingRight: '0',
 			paddingBottom: '0',
@@ -611,13 +672,13 @@
 				return { id, type, label:'Grid', labelSuffix:'', settings:s,
 					columns: Array.from({length: cols}, () => ({id:uid('c'), children:[]})) };
 			}
-			case 'heading':        return { id, type, label:'Heading', labelSuffix:'',        settings:{ text:'Add your heading text', tag:'h2', align:'left', color:'#101828' } };
-			case 'text_editor':    return { id, type, label:'Text Editor', labelSuffix:'',    settings:{ html:'<p>Edit this text.</p>' } };
-			case 'image':          return { id, type, label:'Image', labelSuffix:'',          settings:{ src:'https://placehold.co/640x360', alt:'Image', width:'100%', height:'auto' } };
-			case 'video':          return { id, type, label:'Video', labelSuffix:'',          settings:{ sourceType:'youtube', youtubeUrl:'https://www.youtube.com/watch?v=dQw4w9WgXcQ', youtubeEmbed:'https://www.youtube.com/embed/dQw4w9WgXcQ', fileUrl:'', ratio:'16/9' } };
+			case 'heading':        return { id, type, label:'Heading', labelSuffix:'',        settings:{ text:'Add your heading text', tag:'h2', align:'left', color:'#101828', cssClass:'' } };
+			case 'text_editor':    return { id, type, label:'Text Editor', labelSuffix:'',    settings:{ html:'<p>Edit this text.</p>', cssClass:'' } };
+			case 'image':          return { id, type, label:'Image', labelSuffix:'',          settings:{ src:'https://placehold.co/640x360', alt:'Image', width:'100%', height:'auto', cssClass:'' } };
+			case 'video':          return { id, type, label:'Video', labelSuffix:'',          settings:videoDefaults() };
 			case 'button':         return { id, type, label:'Button', labelSuffix:'',         settings:{ text:'Click here', url:'#', newTab:false, align:'left', className:'btn btn-primary' } };
-			case 'divider':        return { id, type, label:'Divider', labelSuffix:'',        settings:{ style:'solid', width:'100%', thickness:2, color:'#d0d7e6' } };
-			case 'spacer':         return { id, type, label:'Spacer', labelSuffix:'',         settings:{ height:'32px' } };
+			case 'divider':        return { id, type, label:'Divider', labelSuffix:'',        settings:{ style:'solid', width:'100%', thickness:2, color:'#d0d7e6', cssClass:'' } };
+			case 'spacer':         return { id, type, label:'Spacer', labelSuffix:'',         settings:{ height:'32px', cssClass:'' } };
 			default: return null;
 		}
 	}
@@ -753,6 +814,61 @@
 				return (this.isCont || this.isGrid)
 					&& stickyMode === 'none'
 					&& (chosenPosition === 'absolute' || chosenPosition === 'fixed');
+			},
+			nodeShellId() {
+				if (!this.isCont) return null;
+				const raw = String(this.node?.settings?.cssId || '').trim();
+				return raw || null;
+			},
+			nodeShellStyle() {
+				if (!this.isCont) return {};
+
+				const s = this.node.settings || {};
+				const device = this.responsiveDevice || 'desktop';
+				const currentHideValue = device === 'tablet'
+					? s.hideTablet
+					: (device === 'mobile' ? s.hideMobile : s.hideDesktop);
+				const isCurrentDeviceHidden = currentHideValue === true
+					|| currentHideValue === 'true'
+					|| currentHideValue === 1
+					|| currentHideValue === '1';
+				const style = {
+					marginTop: cssSpace(this.nodeResponsiveValue('marginTop', s.marginTop), '0'),
+					marginRight: cssSpace(this.nodeResponsiveValue('marginRight', s.marginRight), '0'),
+					marginBottom: cssSpace(this.nodeResponsiveValue('marginBottom', s.marginBottom), '0'),
+					marginLeft: cssSpace(this.nodeResponsiveValue('marginLeft', s.marginLeft), '0'),
+				};
+
+				if (isCurrentDeviceHidden) {
+					style.display = 'none';
+					return style;
+				}
+
+				const alignSelf = this.nodeResponsiveValue('alignSelf', s.alignSelf || 'auto');
+				if (alignSelf && alignSelf !== 'auto') {
+					style.alignSelf = alignSelf;
+				}
+
+				const orderValue = this.nodeResponsiveValue('order', s.order ?? '');
+				if (orderValue !== '' && orderValue != null) {
+					const order = Number(orderValue);
+					if (Number.isFinite(order)) {
+						style.order = order;
+					}
+				}
+
+				const sizeMode = this.nodeResponsiveValue('sizeMode', s.sizeMode || 'default');
+				if (sizeMode === 'grow') {
+					style.flex = '1 1 0';
+				} else if (sizeMode === 'shrink') {
+					style.flex = '0 1 auto';
+				} else if (sizeMode === 'custom') {
+					const customBasis = this.nodeResponsiveValue('containerWidth', s.containerWidth)
+						|| this.nodeResponsiveValue('maxWidth', s.maxWidth);
+					style.flex = '0 0 ' + cssSize(customBasis, 'auto');
+				}
+
+				return style;
 			},
 			contentShellStyle() {
 				if (!this.isOutOfFlowLayoutNode || !(this.outOfFlowShellHeight > 0)) return {};
@@ -1351,7 +1467,9 @@
 		template: `
 <div
 	class="pb-node"
+	:id="nodeShellId || null"
 	:class="['pb-node-' + node.type, { active: isVisualActive, 'is-toolbar-visible': isToolbarVisible, 'pb-grid-outline-enabled': !!node.settings?.gridOutline, 'pb-node-widget': isWidgetNode }]"
+	:style="nodeShellStyle"
 	:data-hover-label="label"
 	:data-node-type="node.type"
 	:data-node-id="node.id"
@@ -1490,7 +1608,7 @@
 		<template v-else>
 			<div class="pb-preview">
 				<div class="pb-preview-inner">
-					<component :is="loadWidget(node.type)" :item="node" />
+					<component :is="loadWidget(node.type)" :item="node" :responsive-device="responsiveDevice" />
 				</div>
 			</div>
 		</template>
@@ -1697,6 +1815,34 @@
 			function closeCustomCssEditor() {
 				showCssEditor.value = false;
 			}
+			function normalizeCustomCssBeforeApply(source) {
+				const original = String(source || '');
+				let value = original;
+				const notices = [];
+				if (/\b1important\b/i.test(value)) {
+					value = value.replace(/\b1important\b/gi, '!important');
+					notices.push('Typo CSS diperbaiki: gunakan "!important", bukan "1important".');
+				}
+				if (/\!\s+important\b/i.test(value)) {
+					value = value.replace(/\!\s+important\b/gi, '!important');
+					notices.push('Spasi pada "!important" dirapikan otomatis.');
+				}
+				return {
+					value,
+					changed: value !== original,
+					notices,
+				};
+			}
+			function applyCustomCssEditorChanges() {
+				const normalized = normalizeCustomCssBeforeApply(customCss.value);
+				if (normalized.changed) {
+					customCss.value = normalized.value;
+				}
+				closeCustomCssEditor();
+				if (normalized.notices.length) {
+					showSaveToast('info', normalized.notices.join(' '));
+				}
+			}
 			function clearCustomCss() {
 				customCss.value = '';
 				customCssActiveLine.value = 0;
@@ -1718,6 +1864,21 @@
 					syncCustomCssEditorScroll();
 				});
 			}
+			function initColorisPlugin() {
+				if (typeof window.Coloris !== 'function') return;
+				window.Coloris({
+					el: '.pb-coloris-input',
+					theme: 'pill',
+					formatToggle: true,
+					closeButton: true,
+					clearButton: true,
+				});
+			}
+			function scheduleColorisInit() {
+				nextTick(() => {
+					initColorisPlugin();
+				});
+			}
 			watch(customCssSearchQuery, () => scheduleCustomCssSearch(true));
 			watch(customCss, () => {
 				nextTick(syncCustomCssEditorScroll);
@@ -1727,6 +1888,7 @@
 				lockWindowScrollPosition();
 				window.addEventListener('scroll', lockWindowScrollPosition, { passive: true });
 				window.addEventListener('focusin', keepFocusedEditorControlInPanel);
+				scheduleColorisInit();
 			});
 			onBeforeUnmount(() => {
 				if (toastTimer) clearTimeout(toastTimer);
@@ -2019,6 +2181,10 @@
 						}
 						while (c.columns.length < tcCont) c.columns.push({ id: uid('c'), children: [] });
 						if (c.columns.length > tcCont) { const last=c.columns[tcCont-1]; c.columns.slice(tcCont).forEach(col=>(col.children||[]).forEach(ch=>last.children.push(ch))); c.columns=c.columns.slice(0,tcCont); }
+					}
+					if (c.type === 'video') {
+						c.settings = { ...videoDefaults(), ...(c.settings || {}) };
+						normalizeVideoNodeSettings(c.settings);
 					}
 					if (c.settings && typeof c.settings === 'object') {
 						seedResponsiveSettings(c.settings);
@@ -2382,12 +2548,281 @@
 				const boxedMode = s.contentWidth === 'boxed';
 				return boxedMode ? getResponsiveSetting(s, 'maxWidth', '') : getResponsiveSetting(s, 'containerWidth', '');
 			}
-			const containerWidthUnits = ['px', '%', 'em', 'vw'];
-			function containerWidthMaxForUnit(unit) {
-				if (unit === '%') return 100;
-				if (unit === 'vw') return 100;
-				if (unit === 'em') return 10;
+			const sizeControlUnits = ['px', 'pt', 'em', 'rem', '%'];
+			const videoAspectRatioOptions = [
+				{ value: '16/9', label: '16:9 (Widescreen)' },
+				{ value: '4/3', label: '4:3 (Standard)' },
+				{ value: '1/1', label: '1:1 (Square)' },
+				{ value: '3/2', label: '3:2 (Photo)' },
+				{ value: '21/9', label: '21:9 (Ultrawide)' },
+				{ value: '9/16', label: '9:16 (Vertical)' },
+				{ value: '4/5', label: '4:5 (Portrait)' },
+			];
+			const videoAspectRatioValues = new Set(videoAspectRatioOptions.map((option) => option.value));
+			function normalizeVideoAspectRatio(value) {
+				const ratio = String(value || '').trim();
+				return videoAspectRatioValues.has(ratio) ? ratio : '16/9';
+			}
+			function videoAspectRatioValue(node) {
+				if (!node || !node.settings) return '16/9';
+				return normalizeVideoAspectRatio(getResponsiveSetting(node.settings, 'ratio', node.settings.ratio || '16/9'));
+			}
+			function setVideoAspectRatioValue(node, value) {
+				if (!node || !node.settings) return;
+				setResponsiveSetting(node.settings, 'ratio', normalizeVideoAspectRatio(value));
+			}
+			const videoSourceOptions = [
+				{ value: 'youtube', label: 'YouTube' },
+				{ value: 'vimeo', label: 'Vimeo' },
+				{ value: 'dailymotion', label: 'Dailymotion' },
+				{ value: 'self_hosted', label: 'Self Hosted' },
+				{ value: 'videopress', label: 'VideoPress' },
+			];
+			const videoSuggestedVideoOptions = [
+				{ value: 'current_channel', label: 'Current Video Channel' },
+				{ value: 'any_video', label: 'Any Video' },
+			];
+			const videoPreloadOptions = [
+				{ value: 'metadata', label: 'Metadata' },
+				{ value: 'auto', label: 'Auto' },
+				{ value: 'none', label: 'None' },
+			];
+			const videoToggleOptionsBySource = {
+				youtube: [
+					{ key: 'autoplay', label: 'Autoplay', state: 'on_off' },
+					{ key: 'mute', label: 'Mute', state: 'on_off' },
+					{ key: 'loop', label: 'Loop', state: 'on_off' },
+					{ key: 'playerControls', label: 'Player Controls', state: 'show_hide' },
+					{ key: 'captions', label: 'Captions', state: 'on_off' },
+					{ key: 'privacyMode', label: 'Privacy Mode', state: 'on_off' },
+					{ key: 'lazyLoad', label: 'Lazy Load', state: 'on_off' },
+				],
+				vimeo: [
+					{ key: 'autoplay', label: 'Autoplay', state: 'on_off' },
+					{ key: 'mute', label: 'Mute', state: 'on_off' },
+					{ key: 'loop', label: 'Loop', state: 'on_off' },
+					{ key: 'privacyMode', label: 'Privacy Mode', state: 'on_off' },
+					{ key: 'introTitle', label: 'Intro Title', state: 'show_hide' },
+					{ key: 'introPortrait', label: 'Intro Portrait', state: 'show_hide' },
+					{ key: 'introByline', label: 'Intro Byline', state: 'show_hide' },
+				],
+				dailymotion: [
+					{ key: 'autoplay', label: 'Autoplay', state: 'on_off' },
+					{ key: 'mute', label: 'Mute', state: 'on_off' },
+					{ key: 'playerControls', label: 'Player Controls', state: 'show_hide' },
+					{ key: 'videoInfo', label: 'Video Info', state: 'show_hide' },
+					{ key: 'logo', label: 'Logo', state: 'show_hide' },
+				],
+				self_hosted: [
+					{ key: 'autoplay', label: 'Autoplay', state: 'on_off' },
+					{ key: 'mute', label: 'Mute', state: 'on_off' },
+					{ key: 'loop', label: 'Loop', state: 'on_off' },
+					{ key: 'playerControls', label: 'Player Controls', state: 'show_hide' },
+					{ key: 'downloadButton', label: 'Download Button', state: 'show_hide' },
+				],
+				videopress: [
+					{ key: 'autoplay', label: 'Autoplay', state: 'on_off' },
+					{ key: 'mute', label: 'Mute', state: 'on_off' },
+					{ key: 'loop', label: 'Loop', state: 'on_off' },
+					{ key: 'playerControls', label: 'Player Controls', state: 'show_hide' },
+				],
+			};
+			function normalizeVideoNodeSettings(settings) {
+				if (!settings || typeof settings !== 'object') return;
+				const defaults = videoDefaults();
+				Object.keys(defaults).forEach((key) => {
+					if (!Object.prototype.hasOwnProperty.call(settings, key)) {
+						settings[key] = cloneSettingValue(defaults[key]);
+					}
+				});
+				settings.sourceType = normalizeVideoSourceType(settings.sourceType);
+				settings.youtubeEmbed = toEmbed(settings.youtubeUrl || '');
+				settings.ratio = normalizeVideoAspectRatio(settings.ratio);
+				if (settings.ratioTablet !== '' && settings.ratioTablet !== null && settings.ratioTablet !== undefined) {
+					settings.ratioTablet = normalizeVideoAspectRatio(settings.ratioTablet);
+				}
+				if (settings.ratioMobile !== '' && settings.ratioMobile !== null && settings.ratioMobile !== undefined) {
+					settings.ratioMobile = normalizeVideoAspectRatio(settings.ratioMobile);
+				}
+				settings.externalUrl = !!settings.externalUrl;
+				settings.startTime = toPositiveInteger(settings.startTime);
+				settings.endTime = toPositiveInteger(settings.endTime);
+				settings.autoplay = !!settings.autoplay;
+				settings.mute = !!settings.mute;
+				settings.loop = !!settings.loop;
+				settings.playerControls = settings.playerControls !== false;
+				settings.captions = !!settings.captions;
+				settings.privacyMode = !!settings.privacyMode;
+				settings.lazyLoad = !!settings.lazyLoad;
+				settings.suggestedVideos = settings.suggestedVideos === 'any_video' ? 'any_video' : 'current_channel';
+				settings.introTitle = settings.introTitle !== false;
+				settings.introPortrait = settings.introPortrait !== false;
+				settings.introByline = settings.introByline !== false;
+				settings.controlsColor = String(settings.controlsColor || '').trim();
+				settings.videoInfo = settings.videoInfo !== false;
+				settings.logo = settings.logo !== false;
+				settings.downloadButton = settings.downloadButton !== false;
+				settings.preload = ['metadata', 'auto', 'none'].includes(String(settings.preload || '').toLowerCase())
+					? String(settings.preload).toLowerCase()
+					: 'metadata';
+				settings.poster = String(settings.poster || '').trim();
+				settings.imageOverlay = !!settings.imageOverlay;
+				settings.overlayImage = String(settings.overlayImage || '').trim();
+				settings.cssClass = String(settings.cssClass || '').trim();
+			}
+			function videoCurrentSource(node) {
+				return normalizeVideoSourceType(node?.settings?.sourceType);
+			}
+			function setVideoSourceType(node, value) {
+				if (!node || !node.settings) return;
+				node.settings.sourceType = normalizeVideoSourceType(value);
+				normalizeVideoNodeSettings(node.settings);
+			}
+			function videoLinkField(node) {
+				const source = videoCurrentSource(node);
+				if (source === 'youtube') return { key: 'youtubeUrl', label: 'Link', placeholder: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' };
+				if (source === 'vimeo') return { key: 'vimeoUrl', label: 'Link', placeholder: 'https://vimeo.com/235215203' };
+				if (source === 'dailymotion') return { key: 'dailymotionUrl', label: 'Link', placeholder: 'https://www.dailymotion.com/video/x84sh87' };
+				if (isHostedVideoSourceType(source) && node?.settings?.externalUrl) {
+					return { key: 'fileUrl', label: 'External URL', placeholder: 'https://example.com/video.mp4' };
+				}
+				return null;
+			}
+			function videoUsesHostedPicker(node) {
+				return isHostedVideoSourceType(videoCurrentSource(node));
+			}
+			function videoShowsEndTime(node) {
+				const source = videoCurrentSource(node);
+				return source === 'youtube' || source === 'self_hosted';
+			}
+			function videoShowsPoster(node) {
+				return videoCurrentSource(node) === 'self_hosted';
+			}
+			function videoShowsOverlay(node) {
+				const source = videoCurrentSource(node);
+				return source === 'self_hosted' || source === 'videopress';
+			}
+			function videoUsesControlsColor(node) {
+				const source = videoCurrentSource(node);
+				return source === 'vimeo' || source === 'dailymotion';
+			}
+			function videoToggleOptions(node) {
+				return videoToggleOptionsBySource[videoCurrentSource(node)] || videoToggleOptionsBySource.youtube;
+			}
+			function videoSelectOptions(node) {
+				const source = videoCurrentSource(node);
+				if (source === 'youtube') {
+					return [
+						{ key: 'suggestedVideos', label: 'Suggested Videos', options: videoSuggestedVideoOptions },
+					];
+				}
+				if (source === 'self_hosted') {
+					return [
+						{ key: 'preload', label: 'Preload', options: videoPreloadOptions },
+					];
+				}
+				return [];
+			}
+			function videoToggleStateLabel(option, value) {
+				if (option?.state === 'show_hide') return value ? 'Show' : 'Hide';
+				return value ? 'On' : 'Off';
+			}
+			const sizeControlLegacyUnits = ['px', 'pt', 'em', 'rem', '%', 'vw'];
+			function sizeControlMaxForUnit(unit) {
+				if (unit === '%' || unit === 'vw') return 100;
+				if (unit === 'em' || unit === 'rem') return 30;
+				if (unit === 'pt') return 720;
 				return 1600;
+			}
+			function sizeControlStepForUnit(unit) {
+				return unit === 'em' || unit === 'rem' ? 0.1 : 1;
+			}
+			function sizeControlSource(node, base, fallback = '') {
+				if (!node || !node.settings) return fallback;
+				return getResponsiveSetting(node.settings, base, node.settings[base] || fallback);
+			}
+			function sizeControlParsed(node, base, fallback = '', fallbackUnit = 'px', allowedUnits = sizeControlUnits) {
+				return parseNumberUnit(sizeControlSource(node, base, fallback), fallbackUnit, allowedUnits);
+			}
+			function normalizedSizeControlValue(value, unit, emptyValue = '') {
+				if (value === '' || value === null || value === undefined) return emptyValue;
+				const num = Number(value);
+				if (!Number.isFinite(num)) return emptyValue;
+				return clamp(num, 0, sizeControlMaxForUnit(unit));
+			}
+			function sizeControlDisplayValue(node, base, fallback = '', options = {}) {
+				const parsed = sizeControlParsed(
+					node,
+					base,
+					fallback,
+					options.fallbackUnit || 'px',
+					options.allowedUnits || sizeControlUnits
+				);
+				if (parsed.value === '') return '';
+				return normalizedSizeControlValue(parsed.value, parsed.unit, '');
+			}
+			function sizeControlUnit(node, base, fallback = '', options = {}) {
+				const fallbackUnit = options.fallbackUnit || 'px';
+				const parsed = sizeControlParsed(
+					node,
+					base,
+					fallback,
+					fallbackUnit,
+					options.allowedUnits || sizeControlUnits
+				);
+				return sizeControlUnits.includes(parsed.unit) ? parsed.unit : fallbackUnit;
+			}
+			function sizeControlMax(node, base, fallback = '', options = {}) {
+				return sizeControlMaxForUnit(sizeControlUnit(node, base, fallback, options));
+			}
+			function sizeControlStep(node, base, fallback = '', options = {}) {
+				return sizeControlStepForUnit(sizeControlUnit(node, base, fallback, options));
+			}
+			function sizeControlToken(value, unit, emptyToken = 'auto') {
+				if (value === '' || value === null || value === undefined) return emptyToken;
+				const num = Number(value);
+				if (!Number.isFinite(num)) return emptyToken;
+				if (num <= 0) return '0' + unit;
+				return String(num) + unit;
+			}
+			function setSizeControlValue(node, base, next, options = {}) {
+				if (!node || !node.settings) return;
+				const allowEmpty = !!options.allowEmpty;
+				const emptyToken = options.emptyToken || 'auto';
+				const raw = String(next ?? '').trim();
+				if (allowEmpty && raw === '') {
+					setResponsiveSetting(node.settings, base, emptyToken);
+					return;
+				}
+				const unit = sizeControlUnit(node, base, options.fallback || '', options);
+				const value = normalizedSizeControlValue(raw, unit, allowEmpty ? '' : 0);
+				if (allowEmpty && value === '') {
+					setResponsiveSetting(node.settings, base, emptyToken);
+					return;
+				}
+				setResponsiveSetting(node.settings, base, sizeControlToken(value, unit, emptyToken));
+			}
+			function onSizeControlInput(node, base, event, options = {}) {
+				if (!event || !event.target) return;
+				setSizeControlValue(node, base, event.target.value, options);
+				nextTick(() => {
+					event.target.value = String(sizeControlDisplayValue(node, base, options.fallback || '', options));
+				});
+			}
+			function setSizeControlUnit(node, base, unit, options = {}) {
+				if (!node || !node.settings) return;
+				const safe = sizeControlUnits.includes(unit) ? unit : (options.fallbackUnit || 'px');
+				const current = sizeControlDisplayValue(node, base, options.fallback || '', options);
+				if (current === '' && options.allowEmpty) {
+					setResponsiveSetting(node.settings, base, options.emptyToken || 'auto');
+					return;
+				}
+				const value = normalizedSizeControlValue(current, safe, options.allowEmpty ? '' : 0);
+				setResponsiveSetting(node.settings, base, sizeControlToken(value, safe, options.emptyToken || 'auto'));
+			}
+			const containerWidthUnits = sizeControlLegacyUnits;
+			function containerWidthMaxForUnit(unit) {
+				return sizeControlMaxForUnit(unit);
 			}
 			function containerWidthValue(node) {
 				const parsed = parseNumberUnit(containerWidthSource(node), '%', containerWidthUnits);
@@ -2396,13 +2831,13 @@
 			}
 			function containerWidthUnit(node) {
 				const parsed = parseNumberUnit(containerWidthSource(node), '%', containerWidthUnits);
-				return parsed.unit;
+				return sizeControlUnits.includes(parsed.unit) ? parsed.unit : '%';
 			}
 			function containerWidthMax(node) {
 				return containerWidthMaxForUnit(containerWidthUnit(node));
 			}
 			function containerWidthStep(node) {
-				return containerWidthUnit(node) === 'em' ? 0.1 : 1;
+				return sizeControlStepForUnit(containerWidthUnit(node));
 			}
 			function normalizedContainerWidthValue(value, unit) {
 				const num = Number(value);
@@ -2560,6 +2995,59 @@
 				const value = minHeightValue(node);
 				setResponsiveSetting(node.settings, 'minHeight', toSizeToken(value, safe, 'auto'));
 			}
+			const spacerHeightUnits = sizeControlUnits;
+			function spacerHeightMaxForUnit(unit) {
+				return sizeControlMaxForUnit(unit);
+			}
+			function spacerHeightSource(node) {
+				if (!node || !node.settings) return '32px';
+				return getResponsiveSetting(node.settings, 'height', node.settings.height || '32px');
+			}
+			function normalizedSpacerHeightValue(value, unit) {
+				const num = Number(value);
+				if (!Number.isFinite(num)) return 32;
+				return clamp(num, 0, spacerHeightMaxForUnit(unit));
+			}
+			function spacerHeightValue(node) {
+				const parsed = parseNumberUnit(spacerHeightSource(node), 'px', spacerHeightUnits);
+				if (parsed.value === '') return 32;
+				return normalizedSpacerHeightValue(parsed.value, parsed.unit);
+			}
+			function spacerHeightUnit(node) {
+				const parsed = parseNumberUnit(spacerHeightSource(node), 'px', spacerHeightUnits);
+				return parsed.unit;
+			}
+			function spacerHeightMax(node) {
+				return spacerHeightMaxForUnit(spacerHeightUnit(node));
+			}
+			function spacerHeightStep(node) {
+				return sizeControlStepForUnit(spacerHeightUnit(node));
+			}
+			function spacerHeightToken(value, unit) {
+				const num = Number(value);
+				if (!Number.isFinite(num)) return '32px';
+				if (num <= 0) return '0' + unit;
+				return String(num) + unit;
+			}
+			function setSpacerHeightValue(node, next) {
+				if (!node || !node.settings) return;
+				const unit = spacerHeightUnit(node);
+				const value = normalizedSpacerHeightValue(next, unit);
+				setResponsiveSetting(node.settings, 'height', spacerHeightToken(value, unit));
+			}
+			function onSpacerHeightInput(node, event) {
+				if (!event || !event.target) return;
+				setSpacerHeightValue(node, event.target.value);
+				nextTick(() => {
+					event.target.value = String(spacerHeightValue(node));
+				});
+			}
+			function setSpacerHeightUnit(node, unit) {
+				if (!node || !node.settings) return;
+				const safe = spacerHeightUnits.includes(unit) ? unit : 'px';
+				const value = normalizedSpacerHeightValue(spacerHeightValue(node), safe);
+				setResponsiveSetting(node.settings, 'height', spacerHeightToken(value, safe));
+			}
 			function containerGridColumnsValue(node) {
 				if (!node || !node.settings) return 1;
 				const current = containerResponsiveValue(node.settings, 'gridColumns', node.settings.gridColumns || 3);
@@ -2597,9 +3085,32 @@
 			function bgStateKey(node, base) {
 				return base + bgStateSuffix(node);
 			}
+			function initContainerHoverStyleState(node) {
+				if (!node || !node.settings) return;
+				const settings = node.settings;
+				if (!settings.borderHoverInitialized) {
+					settings.borderTypeHover = String(settings.borderType || 'none');
+					settings.borderWidthHover = String(settings.borderWidth ?? '1');
+					settings.borderColorHover = String(settings.borderColor || '#000000');
+					settings.borderHoverInitialized = true;
+				}
+				if (!settings.shadowHoverInitialized) {
+					settings.shadowEnabledHover = !!settings.shadowEnabled;
+					settings.shadowHHover = String(settings.shadowH ?? '0');
+					settings.shadowVHover = String(settings.shadowV ?? '0');
+					settings.shadowBlurHover = String(settings.shadowBlur ?? '0');
+					settings.shadowSpreadHover = String(settings.shadowSpread ?? '0');
+					settings.shadowColorHover = String(settings.shadowColor || '#000000');
+					settings.shadowOpacityHover = settings.shadowOpacity == null ? 0.3 : settings.shadowOpacity;
+					settings.shadowHoverInitialized = true;
+				}
+			}
 			function setBgState(node, state) {
 				if (!node || !node.settings) return;
 				node.settings.bgState = String(state || 'normal').toLowerCase() === 'hover' ? 'hover' : 'normal';
+				if (node.settings.bgState === 'hover') {
+					initContainerHoverStyleState(node);
+				}
 			}
 			function isBgHoverState(node) {
 				return bgStateSuffix(node) === 'Hover';
@@ -2739,11 +3250,28 @@
 				syncAllGridCellsForDevice();
 				closeWidthPreviewMenu();
 			});
-			watch(selectedNode, n => { if (n?.type==='video') n.settings.youtubeEmbed = toEmbed(n.settings.youtubeUrl||''); }, { deep: true });
+			watch(settingsTab, scheduleColorisInit);
+			watch(
+				() => [
+					selectedType.value,
+					selectedNode.value?.settings?.bgType,
+					selectedNode.value?.settings?.bgOverlayType,
+					selectedNode.value?.settings?.bgState,
+					selectedNode.value?.settings?.shapeDividerTopType,
+					selectedNode.value?.settings?.shapeDividerBottomType,
+				],
+				scheduleColorisInit
+			);
+			watch(selectedNode, n => {
+				if (n?.type === 'video') {
+					normalizeVideoNodeSettings(n.settings);
+				}
+			}, { deep: true });
 			watch(selectedId, (nextId) => {
 				settingsTab.value = 'layout';
 				closeControlResponsiveMenu();
 				closeWidthPreviewMenu();
+				scheduleColorisInit();
 				if (!nextId || nextId !== selectedColumnNodeId.value) clearSelectedColumn();
 			});
 			watch(selectedColumnContext, (ctx) => {
@@ -3274,8 +3802,12 @@
 				saveState.value = 'saving';
 				saveMsg.value = 'Saving...';
 				try {
+					const normalizedCustomCss = normalizeCustomCssBeforeApply(customCss.value);
+					if (normalizedCustomCss.changed) {
+						customCss.value = normalizedCustomCss.value;
+					}
 					const res = await axios.post(saveUrl.value,
-						{ pageName:pageName.value, pageStatus:pageStatus.value, customCss:customCss.value, layout:rootNodes.value },
+						{ pageName:pageName.value, pageStatus:pageStatus.value, customCss:normalizedCustomCss.value, layout:rootNodes.value },
 						{ headers:{ 'X-CSRF-TOKEN':PBC.csrfToken, 'X-Requested-With':'XMLHttpRequest', Accept:'application/json' } }
 					);
 					const successMessage = res.data?.message || 'Saved';
@@ -3306,9 +3838,11 @@
 				setResponsiveDevice, applyResponsiveDevice, toggleWidthPreviewMenu, closeWidthPreviewMenu, selectDesktopPreviewWidth,
 				containerResponsiveValue, setContainerResponsiveSetting,
 				onContainerDisplayTypeChange, onContainerContentWidthChange,
+				sizeControlUnits, videoAspectRatioOptions, videoAspectRatioValue, setVideoAspectRatioValue, videoSourceOptions, videoSuggestedVideoOptions, videoPreloadOptions, videoCurrentSource, setVideoSourceType, videoLinkField, videoUsesHostedPicker, videoShowsEndTime, videoShowsPoster, videoShowsOverlay, videoUsesControlsColor, videoToggleOptions, videoSelectOptions, videoToggleStateLabel, sizeControlDisplayValue, sizeControlUnit, sizeControlMax, sizeControlStep, onSizeControlInput, setSizeControlUnit,
 				containerWidthValue, containerWidthUnit, containerWidthMax, containerWidthStep, onContainerWidthInput, setContainerWidthValue, setContainerWidthUnit,
 				columnWidthValue, setSelectedColumnWidthValue, columnResizeOverlay,
 				minHeightValue, minHeightUnit, setMinHeightValue, setMinHeightUnit,
+				spacerHeightValue, spacerHeightUnit, spacerHeightMax, spacerHeightStep, onSpacerHeightInput, setSpacerHeightValue, setSpacerHeightUnit,
 				shapeDividerTypeOptions, shapeDividerHasWidth, shapeDividerHasFlip, shapeDividerHasInvert,
 				shapeDividerWidthValue, shapeDividerWidthUnit, setShapeDividerWidthValue, setShapeDividerWidthUnit,
 				shapeDividerHeightValue, shapeDividerHeightUnit, setShapeDividerHeightValue, setShapeDividerHeightUnit,
@@ -3320,7 +3854,7 @@
 				pageName, pageStatus, customCss, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
 				showTextEditorModal, textEditorModalFullscreen, textEditorModalSummary, setTextEditorHtml, openTextEditorModal, closeTextEditorModal,
 				customCssGotoLine, customCssSearchQuery, customCssActiveLine, customCssCharCount, customCssLineCount, customCssLineNumbers, customCssSummary,
-				openCustomCssEditor, closeCustomCssEditor, clearCustomCss, handleCustomCssTab, syncCustomCssEditorScroll, goToCustomCssLine, searchCustomCssCode, savePage, saveState, saveMsg,
+				openCustomCssEditor, closeCustomCssEditor, applyCustomCssEditorChanges, clearCustomCss, handleCustomCssTab, syncCustomCssEditorScroll, goToCustomCssLine, searchCustomCssCode, savePage, saveState, saveMsg,
 				toastVisible, responseStatusToast, isArrayMessageAfterSubmit, responseMessageAfterSubmit, closeToast, showUnsupportedControlNotice,
 				onDragStart, onDragEnd,
 				onAddContainer, onAddCol, onRootAdd,
@@ -3526,10 +4060,7 @@
 										<div class="pb-value-with-unit">
 											<input class="pb-input pb-input-compact" type="number" min="0" :max="containerWidthMax(selectedNode)" :step="containerWidthStep(selectedNode)" :value="containerWidthValue(selectedNode)" @input="onContainerWidthInput(selectedNode, $event)">
 											<select class="pb-mini-unit" :value="containerWidthUnit(selectedNode)" @change="setContainerWidthUnit(selectedNode, $event.target.value)">
-												<option value="px">px</option>
-												<option value="%">%</option>
-												<option value="em">em</option>
-												<option value="vw">vw</option>
+												<option v-for="unit in sizeControlUnits" :key="'container-width-unit-' + unit" :value="unit">{{ unit }}</option>
 											</select>
 										</div>
 									</div>
@@ -3883,7 +4414,7 @@
 										<label class="pb-form-label">Color</label>
 										<div class="pb-color-row">
 											<input type="color" class="pb-color-swatch" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgColor')]">
-											<input class="pb-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgColor')]" placeholder="#ffffff">
+											<input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgColor')]" placeholder="#ffffff">
 										</div>
 									</div>
 									<div class="pb-form-group">
@@ -3907,14 +4438,14 @@
 										<label class="pb-form-label">Start Color</label>
 										<div class="pb-color-row">
 											<input type="color" class="pb-color-swatch" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgGradientStart')]">
-											<input class="pb-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgGradientStart')]">
+											<input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgGradientStart')]">
 										</div>
 									</div>
 									<div class="pb-form-group">
 										<label class="pb-form-label">End Color</label>
 										<div class="pb-color-row">
 											<input type="color" class="pb-color-swatch" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgGradientEnd')]">
-											<input class="pb-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgGradientEnd')]">
+											<input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgGradientEnd')]">
 										</div>
 									</div>
 									<div class="pb-form-group">
@@ -3944,11 +4475,19 @@
 									<div class="pb-form-group"><label class="pb-form-label">Background Repeat</label><select class="pb-select" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgRepeat')]"><option value="no-repeat">No Repeat</option><option value="repeat">Repeat</option><option value="repeat-x">Repeat X</option><option value="repeat-y">Repeat Y</option></select></div>
 									<div class="pb-form-group"><label class="pb-form-label">Attachment</label><select class="pb-select" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgAttachment')]"><option value="scroll">Scroll</option><option value="fixed">Fixed</option></select></div>
 								</template>
+								<div class="pb-form-group" v-if="isBgHoverState(selectedNode)">
+									<label class="pb-form-label">Transition Duration <span class="pb-form-hint">{{ selectedNode.settings.bgTransitionDuration ?? 300 }}ms</span></label>
+									<input type="range" class="pb-range" min="0" max="3000" step="50" v-model.number="selectedNode.settings.bgTransitionDuration">
+								</div>
 								</div>
 							</details>
 							<details class="pb-collapsible">
 								<summary>Background Overlay</summary>
 								<div class="pb-collapsible-body">
+									<div class="pb-mini-tab-nav">
+										<button class="pb-mini-tab" :class="{active:(selectedNode.settings.bgState||'normal')==='normal'}" @click.prevent="setBgState(selectedNode, 'normal')">Normal</button>
+										<button class="pb-mini-tab" :class="{active:selectedNode.settings.bgState==='hover'}" @click.prevent="setBgState(selectedNode, 'hover')">Hover</button>
+									</div>
 									<div class="pb-form-group">
 										<label class="pb-form-label">Background Type</label>
 										<div class="pb-btn-group pb-icon-btn-group">
@@ -3963,7 +4502,7 @@
 											<label class="pb-form-label">Color</label>
 											<div class="pb-color-row">
 												<input type="color" class="pb-color-swatch" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayColor')]">
-												<input class="pb-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayColor')]" placeholder="#000000">
+												<input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayColor')]" placeholder="#000000">
 											</div>
 										</div>
 									</template>
@@ -3983,14 +4522,14 @@
 											<label class="pb-form-label">Start Color</label>
 											<div class="pb-color-row">
 												<input type="color" class="pb-color-swatch" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayGradientStart')]">
-												<input class="pb-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayGradientStart')]">
+												<input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayGradientStart')]">
 											</div>
 										</div>
 										<div class="pb-form-group">
 											<label class="pb-form-label">End Color</label>
 											<div class="pb-color-row">
 												<input type="color" class="pb-color-swatch" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayGradientEnd')]">
-												<input class="pb-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayGradientEnd')]">
+												<input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayGradientEnd')]">
 											</div>
 										</div>
 										<div class="pb-form-group">
@@ -4042,10 +4581,14 @@
 							<details class="pb-collapsible">
 								<summary>Border</summary>
 								<div class="pb-collapsible-body">
-									<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="selectedNode.settings.borderType"><option value="none">None</option><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="dotted">Dotted</option><option value="double">Double</option></select></div>
-									<template v-if="selectedNode.settings.borderType!=='none'">
-										<div class="pb-form-group"><label class="pb-form-label">Border Width</label><input class="pb-input" v-model="selectedNode.settings.borderWidth" placeholder="1px"></div>
-										<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings.borderColor"><input class="pb-input" v-model="selectedNode.settings.borderColor"></div></div>
+									<div class="pb-mini-tab-nav">
+										<button class="pb-mini-tab" :class="{active:(selectedNode.settings.bgState||'normal')==='normal'}" @click.prevent="setBgState(selectedNode, 'normal')">Normal</button>
+										<button class="pb-mini-tab" :class="{active:selectedNode.settings.bgState==='hover'}" @click.prevent="setBgState(selectedNode, 'hover')">Hover</button>
+									</div>
+									<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="selectedNode.settings[bgStateKey(selectedNode,'borderType')]"><option value="none">None</option><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="dotted">Dotted</option><option value="double">Double</option></select></div>
+									<template v-if="selectedNode.settings[bgStateKey(selectedNode,'borderType')]!=='none'">
+										<div class="pb-form-group"><label class="pb-form-label">Border Width</label><input class="pb-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'borderWidth')]" placeholder="1px"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings[bgStateKey(selectedNode,'borderColor')]"><input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'borderColor')]"></div></div>
 									</template>
 									<div class="pb-form-group">
 										<div class="pb-label-row"><label class="pb-form-label">Border Radius</label><button class="pb-link-btn" @click="selectedNode.settings.borderRadiusLinked=!selectedNode.settings.borderRadiusLinked" :title="selectedNode.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="selectedNode.settings.borderRadiusLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button></div>
@@ -4056,6 +4599,26 @@
 											<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings.borderRadiusBL" @input="selectedNode.settings.borderRadiusLinked&&(selectedNode.settings.borderRadiusTL=selectedNode.settings.borderRadiusTR=selectedNode.settings.borderRadiusBR=selectedNode.settings.borderRadiusBL)" placeholder="0"><span>Left</span></div>
 										</div>
 									</div>
+								</div>
+							</details>
+							<details class="pb-collapsible">
+								<summary>Box Shadow</summary>
+								<div class="pb-collapsible-body">
+									<div class="pb-mini-tab-nav">
+										<button class="pb-mini-tab" :class="{active:(selectedNode.settings.bgState||'normal')==='normal'}" @click.prevent="setBgState(selectedNode, 'normal')">Normal</button>
+										<button class="pb-mini-tab" :class="{active:selectedNode.settings.bgState==='hover'}" @click.prevent="setBgState(selectedNode, 'hover')">Hover</button>
+									</div>
+									<div class="pb-label-row"><label class="pb-form-label mb-0">Enable Box Shadow</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'containerShadowEnable-' + selectedNode.id + '-' + (selectedNode.settings.bgState==='hover' ? 'hover' : 'normal')" v-model="selectedNode.settings[bgStateKey(selectedNode,'shadowEnabled')]"><label :for="'containerShadowEnable-' + selectedNode.id + '-' + (selectedNode.settings.bgState==='hover' ? 'hover' : 'normal')"></label></div></div>
+									<template v-if="selectedNode.settings[bgStateKey(selectedNode,'shadowEnabled')]">
+										<div class="pb-four-sides mt-2">
+											<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'shadowH')]" placeholder="0"><span>H</span></div>
+											<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'shadowV')]" placeholder="0"><span>V</span></div>
+											<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'shadowBlur')]" placeholder="0"><span>Blur</span></div>
+											<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'shadowSpread')]" placeholder="0"><span>Spread</span></div>
+										</div>
+										<div class="pb-form-group mt-2"><label class="pb-form-label">Shadow Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings[bgStateKey(selectedNode,'shadowColor')]"><input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'shadowColor')]"></div></div>
+										<div class="pb-form-group"><label class="pb-form-label">Shadow Opacity <span class="pb-form-hint">{{ Math.round((selectedNode.settings[bgStateKey(selectedNode,'shadowOpacity')] ?? 0.3)*100) }}%</span></label><input type="range" class="pb-range" min="0" max="1" step="0.01" v-model.number="selectedNode.settings[bgStateKey(selectedNode,'shadowOpacity')]"></div>
+									</template>
 								</div>
 							</details>
 							<details class="pb-collapsible">
@@ -4079,7 +4642,7 @@
 											<label class="pb-form-label">Color</label>
 											<div class="pb-color-row">
 												<input type="color" class="pb-color-swatch" v-model="selectedNode.settings[(selectedNode.settings.shapeDividerSide==='bottom'?'shapeDividerBottomColor':'shapeDividerTopColor')]">
-												<input class="pb-input" v-model="selectedNode.settings[(selectedNode.settings.shapeDividerSide==='bottom'?'shapeDividerBottomColor':'shapeDividerTopColor')]">
+												<input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings[(selectedNode.settings.shapeDividerSide==='bottom'?'shapeDividerBottomColor':'shapeDividerTopColor')]">
 											</div>
 										</div>
 										<div class="pb-form-group" v-if="shapeDividerHasWidth(selectedNode)">
@@ -4201,7 +4764,7 @@
 										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='flex-end'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'flex-end')" title="End"><i class="fa-solid fa-arrow-down"></i></button>
 										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='stretch'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'stretch')" title="Stretch"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
 									</div>
-									<div class="pb-form-note">This control will affect contained elements only.</div>
+									<div class="pb-form-note">This control affects this container inside its parent layout.</div>
 								</div>
 								<div class="pb-form-group">
 									<div class="pb-label-row pb-label-row-device">
@@ -4221,7 +4784,7 @@
 										<button class="pb-seg-btn" :class="{active:['', null, 'default'].includes(containerResponsiveValue(selectedNode.settings, 'order', ''))}" @click="setContainerResponsiveSetting(selectedNode.settings, 'order', 'default')" title="Default"><i class="fa-solid fa-ellipsis-vertical"></i></button>
 										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'order', '')==='1'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'order', '1')" title="End"><i class="fa-solid fa-arrow-right"></i></button>
 									</div>
-									<div class="pb-form-note">This control will affect contained elements only.</div>
+									<div class="pb-form-note">This control affects this container inside its parent layout.</div>
 								</div>
 								<div class="pb-form-group">
 									<div class="pb-label-row pb-label-row-device">
@@ -4551,14 +5114,14 @@
 									</div>
 								</div>
 								<template v-if="selectedNode.settings.bgType==='color'">
-									<div class="pb-form-group"><label class="pb-form-label">Background Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings.bgColor"><input class="pb-input" v-model="selectedNode.settings.bgColor" placeholder="#ffffff"></div></div>
+									<div class="pb-form-group"><label class="pb-form-label">Background Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings.bgColor"><input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings.bgColor" placeholder="#ffffff"></div></div>
 									<div class="pb-form-group"><label class="pb-form-label">Opacity <span class="pb-form-hint">{{ Math.round((selectedNode.settings.bgOpacity ?? 1)*100) }}%</span></label><input type="range" class="pb-range" min="0" max="1" step="0.01" v-model.number="selectedNode.settings.bgOpacity"></div>
 								</template>
 								<template v-if="selectedNode.settings.bgType==='gradient'">
 									<div class="pb-form-group"><label class="pb-form-label">Gradient Type</label><div class="pb-btn-group"><button class="pb-seg-btn" :class="{active:selectedNode.settings.bgGradientType==='linear'}" @click="selectedNode.settings.bgGradientType='linear'">Linear</button><button class="pb-seg-btn" :class="{active:selectedNode.settings.bgGradientType==='radial'}" @click="selectedNode.settings.bgGradientType='radial'">Radial</button></div></div>
 									<div class="pb-form-group" v-if="selectedNode.settings.bgGradientType==='linear'"><label class="pb-form-label">Angle <span class="pb-form-hint">{{ selectedNode.settings.bgGradientAngle ?? 90 }}&deg;</span></label><input type="range" class="pb-range" min="0" max="360" step="1" v-model.number="selectedNode.settings.bgGradientAngle"></div>
-									<div class="pb-form-group"><label class="pb-form-label">Start Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings.bgGradientStart"><input class="pb-input" v-model="selectedNode.settings.bgGradientStart"></div></div>
-									<div class="pb-form-group"><label class="pb-form-label">End Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings.bgGradientEnd"><input class="pb-input" v-model="selectedNode.settings.bgGradientEnd"></div></div>
+									<div class="pb-form-group"><label class="pb-form-label">Start Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings.bgGradientStart"><input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings.bgGradientStart"></div></div>
+									<div class="pb-form-group"><label class="pb-form-label">End Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings.bgGradientEnd"><input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings.bgGradientEnd"></div></div>
 									<div class="pb-form-group"><label class="pb-form-label">Position <span class="pb-form-hint">{{ selectedNode.settings.bgGradientPosition ?? 50 }}%</span></label><input type="range" class="pb-range" min="0" max="100" step="1" v-model.number="selectedNode.settings.bgGradientPosition"></div>
 								</template>
 								<template v-if="selectedNode.settings.bgType==='image'">
@@ -4589,7 +5152,7 @@
 								<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="selectedNode.settings.borderType"><option value="none">None</option><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="dotted">Dotted</option><option value="double">Double</option></select></div>
 								<template v-if="selectedNode.settings.borderType!=='none'">
 									<div class="pb-form-group"><label class="pb-form-label">Border Width</label><input class="pb-input" v-model="selectedNode.settings.borderWidth" placeholder="1px"></div>
-									<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings.borderColor"><input class="pb-input" v-model="selectedNode.settings.borderColor"></div></div>
+									<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings.borderColor"><input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings.borderColor"></div></div>
 								</template>
 								<div class="pb-form-group">
 									<div class="pb-label-row"><label class="pb-form-label">Border Radius</label><button class="pb-link-btn" @click="selectedNode.settings.borderRadiusLinked=!selectedNode.settings.borderRadiusLinked" :title="selectedNode.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="selectedNode.settings.borderRadiusLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button></div>
@@ -4610,7 +5173,7 @@
 										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings.shadowBlur" placeholder="0"><span>Blur</span></div>
 										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings.shadowSpread" placeholder="0"><span>Spread</span></div>
 									</div>
-									<div class="pb-form-group mt-2"><label class="pb-form-label">Shadow Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings.shadowColor"><input class="pb-input" v-model="selectedNode.settings.shadowColor"></div></div>
+									<div class="pb-form-group mt-2"><label class="pb-form-label">Shadow Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings.shadowColor"><input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings.shadowColor"></div></div>
 									<div class="pb-form-group"><label class="pb-form-label">Shadow Opacity <span class="pb-form-hint">{{ Math.round((selectedNode.settings.shadowOpacity ?? 0.3)*100) }}%</span></label><input type="range" class="pb-range" min="0" max="1" step="0.01" v-model.number="selectedNode.settings.shadowOpacity"></div>
 								</template>
 							</div>
@@ -4839,6 +5402,7 @@
 						<div class="pb-form-group"><label class="pb-form-label">Tag</label><select class="pb-select" v-model="selectedNode.settings.tag"><option>h1</option><option>h2</option><option>h3</option><option>h4</option><option>h5</option><option>h6</option></select></div>
 						<div class="pb-form-group"><label class="pb-form-label">Align</label><select class="pb-select" v-model="selectedNode.settings.align"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></div>
 						<div class="pb-form-group"><label class="pb-form-label">Color</label><input class="pb-input" v-model="selectedNode.settings.color"></div>
+						<div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="selectedNode.settings.cssClass" placeholder="custom-heading"></div>
 					</template>
 					<template v-if="selectedType==='text_editor'">
 						<div class="pb-form-group">
@@ -4851,6 +5415,7 @@
 							</div>
 							<CkEditorField v-model="selectedNode.settings.html" />
 						</div>
+						<div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="selectedNode.settings.cssClass" placeholder="custom-text"></div>
 					</template>
 					<template v-if="selectedType==='image'">
 						<div class="pb-form-group">
@@ -4871,35 +5436,269 @@
 						</div>
 						<div class="pb-form-group"><label class="pb-form-label">Image URL</label><input class="pb-input" v-model="selectedNode.settings.src"></div>
 						<div class="pb-form-group"><label class="pb-form-label">Alt</label><input class="pb-input" v-model="selectedNode.settings.alt"></div>
-						<div class="pb-form-group"><label class="pb-form-label">Width</label><input class="pb-input" v-model="selectedNode.settings.width"></div>
-						<div class="pb-form-group"><label class="pb-form-label">Height</label><input class="pb-input" v-model="selectedNode.settings.height"></div>
+						<div class="pb-form-group">
+							<div class="pb-label-row pb-label-row-device">
+								<label class="pb-form-label mb-0">Width</label>
+								<div class="pb-control-device-wrap">
+									<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('image-width')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
+									<div v-if="isControlResponsiveMenuOpen('image-width')" class="pb-control-device-menu">
+										<button v-for="device in responsiveDevices" :key="'image-width-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('image-width', device.value)">
+											<i :class="device.icon"></i>
+											<span>{{ deviceOptionLabel(device) }}</span>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="pb-range-value-row">
+								<input type="range" class="pb-range" min="0" :max="sizeControlMax(selectedNode, 'width', '100%')" :step="sizeControlStep(selectedNode, 'width', '100%')" :value="sizeControlDisplayValue(selectedNode, 'width', '100%') || 0" @input="onSizeControlInput(selectedNode, 'width', $event, { fallback: '100%', emptyToken: '100%' })">
+								<div class="pb-value-with-unit">
+									<input class="pb-input pb-input-compact" type="number" min="0" :max="sizeControlMax(selectedNode, 'width', '100%')" :step="sizeControlStep(selectedNode, 'width', '100%')" :value="sizeControlDisplayValue(selectedNode, 'width', '100%')" @input="onSizeControlInput(selectedNode, 'width', $event, { fallback: '100%', emptyToken: '100%' })">
+									<select class="pb-mini-unit" :value="sizeControlUnit(selectedNode, 'width', '100%')" @change="setSizeControlUnit(selectedNode, 'width', $event.target.value, { fallback: '100%', emptyToken: '100%' })">
+										<option v-for="unit in sizeControlUnits" :key="'image-width-unit-' + unit" :value="unit">{{ unit }}</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="pb-form-group">
+							<div class="pb-label-row pb-label-row-device">
+								<label class="pb-form-label mb-0">Height</label>
+								<div class="pb-control-device-wrap">
+									<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('image-height')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
+									<div v-if="isControlResponsiveMenuOpen('image-height')" class="pb-control-device-menu">
+										<button v-for="device in responsiveDevices" :key="'image-height-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('image-height', device.value)">
+											<i :class="device.icon"></i>
+											<span>{{ deviceOptionLabel(device) }}</span>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="pb-range-value-row">
+								<input type="range" class="pb-range" min="0" :max="sizeControlMax(selectedNode, 'height', 'auto')" :step="sizeControlStep(selectedNode, 'height', 'auto')" :value="sizeControlDisplayValue(selectedNode, 'height', 'auto', { allowEmpty: true }) || 0" @input="onSizeControlInput(selectedNode, 'height', $event, { fallback: 'auto', allowEmpty: true, emptyToken: 'auto' })">
+								<div class="pb-value-with-unit">
+									<input class="pb-input pb-input-compact" type="number" min="0" :max="sizeControlMax(selectedNode, 'height', 'auto')" :step="sizeControlStep(selectedNode, 'height', 'auto')" :value="sizeControlDisplayValue(selectedNode, 'height', 'auto', { allowEmpty: true })" @input="onSizeControlInput(selectedNode, 'height', $event, { fallback: 'auto', allowEmpty: true, emptyToken: 'auto' })" placeholder="auto">
+									<select class="pb-mini-unit" :value="sizeControlUnit(selectedNode, 'height', 'auto')" @change="setSizeControlUnit(selectedNode, 'height', $event.target.value, { fallback: 'auto', allowEmpty: true, emptyToken: 'auto' })">
+										<option v-for="unit in sizeControlUnits" :key="'image-height-unit-' + unit" :value="unit">{{ unit }}</option>
+									</select>
+								</div>
+							</div>
+							<div class="pb-form-note">Leave empty to keep auto height.</div>
+						</div>
+						<div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="selectedNode.settings.cssClass" placeholder="custom-image"></div>
 					</template>
 					<template v-if="selectedType==='video'">
-						<div class="pb-form-group"><label class="pb-form-label">Source</label><select class="pb-select" v-model="selectedNode.settings.sourceType"><option value="youtube">YouTube</option><option value="file">File URL</option></select></div>
-						<div class="pb-form-group" v-if="selectedNode.settings.sourceType==='youtube'"><label class="pb-form-label">YouTube URL</label><input class="pb-input" v-model="selectedNode.settings.youtubeUrl"></div>
-						<div class="pb-form-group" v-if="selectedNode.settings.sourceType==='file'"><label class="pb-form-label">File URL</label><input class="pb-input" v-model="selectedNode.settings.fileUrl"></div>
-						<div class="pb-form-group"><label class="pb-form-label">Aspect Ratio</label><input class="pb-input" v-model="selectedNode.settings.ratio"></div>
+						<div class="pb-form-group">
+							<label class="pb-form-label">Source</label>
+							<select class="pb-select" :value="videoCurrentSource(selectedNode)" @change="setVideoSourceType(selectedNode, $event.target.value)">
+								<option v-for="option in videoSourceOptions" :key="'video-source-' + option.value" :value="option.value">{{ option.label }}</option>
+							</select>
+						</div>
+						<div class="pb-form-group pb-toggle-label-row" v-if="videoUsesHostedPicker(selectedNode)">
+							<label class="pb-form-label mb-0">External URL</label>
+							<div class="pb-toggle-switch-wrap">
+								<div class="pb-toggle-wrap">
+									<input :id="'video-external-url-' + selectedNode.id" type="checkbox" class="pb-toggle" v-model="selectedNode.settings.externalUrl">
+									<label :for="'video-external-url-' + selectedNode.id"></label>
+								</div>
+								<span class="pb-toggle-state">{{ selectedNode.settings.externalUrl ? 'On' : 'Off' }}</span>
+							</div>
+						</div>
+						<div class="pb-form-group" v-if="videoLinkField(selectedNode)">
+							<label class="pb-form-label">{{ videoLinkField(selectedNode).label }}</label>
+							<input class="pb-input" v-model="selectedNode.settings[videoLinkField(selectedNode).key]" :placeholder="videoLinkField(selectedNode).placeholder">
+						</div>
+						<div class="pb-form-group" v-if="videoUsesHostedPicker(selectedNode) && !selectedNode.settings.externalUrl">
+							<label class="pb-form-label">Choose Video File</label>
+							<div class="pb-bg-media-field" :class="{ 'has-image': !!selectedNode.settings.fileUrl }">
+								<div class="pb-bg-media-preview">
+									<button type="button" class="pb-bg-media-center-btn" :title="selectedNode.settings.fileUrl ? 'Change Video' : 'Choose Video'" @click="chooseMedia(selectedNode.settings, 'fileUrl', 'Paste video URL')">
+										<i :class="selectedNode.settings.fileUrl ? 'fa-solid fa-pen' : 'fa-solid fa-plus'"></i>
+									</button>
+								</div>
+								<div class="pb-bg-media-actions">
+									<button type="button" class="pb-bg-media-choose" @click="chooseMedia(selectedNode.settings, 'fileUrl', 'Paste video URL')">Choose Video</button>
+									<button type="button" class="pb-bg-media-remove" :disabled="!selectedNode.settings.fileUrl" title="Remove Video" @click="clearMedia(selectedNode.settings, 'fileUrl')">
+										<i class="fa-solid fa-trash-can"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="pb-form-group">
+							<label class="pb-form-label">Start Time</label>
+							<input class="pb-input" type="number" min="0" v-model.number="selectedNode.settings.startTime" placeholder="0">
+							<div class="pb-form-note">Specify a start time in seconds.</div>
+						</div>
+						<div class="pb-form-group" v-if="videoShowsEndTime(selectedNode)">
+							<label class="pb-form-label">End Time</label>
+							<input class="pb-input" type="number" min="0" v-model.number="selectedNode.settings.endTime" placeholder="0">
+							<div class="pb-form-note">Specify an end time in seconds.</div>
+						</div>
+						<div class="pb-form-group">
+							<div class="pb-label-row pb-label-row-device">
+								<label class="pb-form-label mb-0">Aspect Ratio</label>
+								<div class="pb-control-device-wrap">
+									<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('video-ratio')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
+									<div v-if="isControlResponsiveMenuOpen('video-ratio')" class="pb-control-device-menu">
+										<button v-for="device in responsiveDevices" :key="'video-ratio-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('video-ratio', device.value)">
+											<i :class="device.icon"></i>
+											<span>{{ deviceOptionLabel(device) }}</span>
+										</button>
+									</div>
+								</div>
+							</div>
+							<select class="pb-select" :value="videoAspectRatioValue(selectedNode)" @change="setVideoAspectRatioValue(selectedNode, $event.target.value)"><option v-for="option in videoAspectRatioOptions" :key="'video-ratio-option-' + option.value" :value="option.value">{{ option.label }}</option></select>
+						</div>
+						<div class="pb-prop-section">
+							<div class="pb-prop-section-title mb-0">Video Options</div>
+						</div>
+						<div class="pb-form-group pb-toggle-label-row" v-for="option in videoToggleOptions(selectedNode)" :key="'video-toggle-' + option.key">
+							<label class="pb-form-label mb-0">{{ option.label }}</label>
+							<div class="pb-toggle-switch-wrap">
+								<div class="pb-toggle-wrap">
+									<input :id="'video-toggle-' + option.key + '-' + selectedNode.id" type="checkbox" class="pb-toggle" v-model="selectedNode.settings[option.key]">
+									<label :for="'video-toggle-' + option.key + '-' + selectedNode.id"></label>
+								</div>
+								<span class="pb-toggle-state">{{ videoToggleStateLabel(option, selectedNode.settings[option.key]) }}</span>
+							</div>
+						</div>
+						<div class="pb-form-note" v-if="videoToggleOptions(selectedNode).some(option => option.key === 'autoplay')">Autoplay can still be affected by browser policy, especially when audio is enabled.</div>
+						<div class="pb-form-group" v-for="field in videoSelectOptions(selectedNode)" :key="'video-select-' + field.key">
+							<label class="pb-form-label">{{ field.label }}</label>
+							<select class="pb-select" v-model="selectedNode.settings[field.key]">
+								<option v-for="option in field.options" :key="'video-select-option-' + field.key + '-' + option.value" :value="option.value">{{ option.label }}</option>
+							</select>
+						</div>
+						<div class="pb-form-group" v-if="videoUsesControlsColor(selectedNode)">
+							<label class="pb-form-label">Controls Color</label>
+							<input class="pb-input" v-model="selectedNode.settings.controlsColor" placeholder="#ff3366">
+						</div>
+						<div class="pb-form-group" v-if="videoShowsPoster(selectedNode)">
+							<label class="pb-form-label">Poster</label>
+							<div class="pb-bg-media-field" :class="{ 'has-image': !!selectedNode.settings.poster }">
+								<div class="pb-bg-media-preview" :style="selectedNode.settings.poster ? { backgroundImage: 'url(' + selectedNode.settings.poster + ')' } : {}">
+									<button type="button" class="pb-bg-media-center-btn" :title="selectedNode.settings.poster ? 'Change Poster' : 'Choose Poster'" @click="chooseMedia(selectedNode.settings, 'poster', 'Paste image URL')">
+										<i :class="selectedNode.settings.poster ? 'fa-solid fa-pen' : 'fa-solid fa-plus'"></i>
+									</button>
+								</div>
+								<div class="pb-bg-media-actions">
+									<button type="button" class="pb-bg-media-choose" @click="chooseMedia(selectedNode.settings, 'poster', 'Paste image URL')">Choose Image</button>
+									<button type="button" class="pb-bg-media-remove" :disabled="!selectedNode.settings.poster" title="Remove Poster" @click="clearMedia(selectedNode.settings, 'poster')">
+										<i class="fa-solid fa-trash-can"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="pb-prop-section" v-if="videoShowsOverlay(selectedNode)">
+							<div class="pb-prop-section-title mb-0">Image Overlay</div>
+						</div>
+						<div class="pb-form-group pb-toggle-label-row" v-if="videoShowsOverlay(selectedNode)">
+							<label class="pb-form-label mb-0">Image Overlay</label>
+							<div class="pb-toggle-switch-wrap">
+								<div class="pb-toggle-wrap">
+									<input :id="'video-image-overlay-' + selectedNode.id" type="checkbox" class="pb-toggle" v-model="selectedNode.settings.imageOverlay">
+									<label :for="'video-image-overlay-' + selectedNode.id"></label>
+								</div>
+								<span class="pb-toggle-state">{{ selectedNode.settings.imageOverlay ? 'Show' : 'Hide' }}</span>
+							</div>
+						</div>
+						<div class="pb-form-group" v-if="videoShowsOverlay(selectedNode) && selectedNode.settings.imageOverlay">
+							<div class="pb-bg-media-field" :class="{ 'has-image': !!selectedNode.settings.overlayImage }">
+								<div class="pb-bg-media-preview" :style="selectedNode.settings.overlayImage ? { backgroundImage: 'url(' + selectedNode.settings.overlayImage + ')' } : {}">
+									<button type="button" class="pb-bg-media-center-btn" :title="selectedNode.settings.overlayImage ? 'Change Overlay Image' : 'Choose Overlay Image'" @click="chooseMedia(selectedNode.settings, 'overlayImage', 'Paste image URL')">
+										<i :class="selectedNode.settings.overlayImage ? 'fa-solid fa-pen' : 'fa-solid fa-plus'"></i>
+									</button>
+								</div>
+								<div class="pb-bg-media-actions">
+									<button type="button" class="pb-bg-media-choose" @click="chooseMedia(selectedNode.settings, 'overlayImage', 'Paste image URL')">Choose Image</button>
+									<button type="button" class="pb-bg-media-remove" :disabled="!selectedNode.settings.overlayImage" title="Remove Overlay Image" @click="clearMedia(selectedNode.settings, 'overlayImage')">
+										<i class="fa-solid fa-trash-can"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="selectedNode.settings.cssClass" placeholder="custom-video"></div>
 					</template>
 					<template v-if="selectedType==='button'">
 						<div class="pb-form-group"><label class="pb-form-label">Text</label><input class="pb-input" v-model="selectedNode.settings.text"></div>
 						<div class="pb-form-group"><label class="pb-form-label">URL</label><input class="pb-input" v-model="selectedNode.settings.url"></div>
 						<div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="selectedNode.settings.className"></div>
 						<div class="pb-form-group"><label class="pb-form-label">Align</label><select class="pb-select" v-model="selectedNode.settings.align"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></div>
-						<div class="form-check"><input class="form-check-input" id="newTab" type="checkbox" v-model="selectedNode.settings.newTab"><label class="form-check-label" for="newTab">Open in new tab</label></div>
+						<div class="pb-form-group pb-toggle-label-row">
+							<label class="pb-form-label mb-0">Open New Tab</label>
+							<div class="pb-toggle-switch-wrap">
+								<div class="pb-toggle-wrap">
+									<input :id="'button-new-tab-' + selectedNode.id" type="checkbox" class="pb-toggle" v-model="selectedNode.settings.newTab">
+									<label :for="'button-new-tab-' + selectedNode.id"></label>
+								</div>
+								<span class="pb-toggle-state">{{ selectedNode.settings.newTab ? 'on' : 'off' }}</span>
+							</div>
+						</div>
 					</template>
 					<template v-if="selectedType==='divider'">
 						<div class="pb-form-group"><label class="pb-form-label">Style</label><select class="pb-select" v-model="selectedNode.settings.style"><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="dotted">Dotted</option></select></div>
-						<div class="pb-form-group"><label class="pb-form-label">Width</label><input class="pb-input" v-model="selectedNode.settings.width"></div>
+						<div class="pb-form-group">
+							<div class="pb-label-row pb-label-row-device">
+								<label class="pb-form-label mb-0">Width</label>
+								<div class="pb-control-device-wrap">
+									<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('divider-width')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
+									<div v-if="isControlResponsiveMenuOpen('divider-width')" class="pb-control-device-menu">
+										<button v-for="device in responsiveDevices" :key="'divider-width-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('divider-width', device.value)">
+											<i :class="device.icon"></i>
+											<span>{{ deviceOptionLabel(device) }}</span>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="pb-range-value-row">
+								<input type="range" class="pb-range" min="0" :max="sizeControlMax(selectedNode, 'width', '100%')" :step="sizeControlStep(selectedNode, 'width', '100%')" :value="sizeControlDisplayValue(selectedNode, 'width', '100%') || 0" @input="onSizeControlInput(selectedNode, 'width', $event, { fallback: '100%', emptyToken: '100%' })">
+								<div class="pb-value-with-unit">
+									<input class="pb-input pb-input-compact" type="number" min="0" :max="sizeControlMax(selectedNode, 'width', '100%')" :step="sizeControlStep(selectedNode, 'width', '100%')" :value="sizeControlDisplayValue(selectedNode, 'width', '100%')" @input="onSizeControlInput(selectedNode, 'width', $event, { fallback: '100%', emptyToken: '100%' })">
+									<select class="pb-mini-unit" :value="sizeControlUnit(selectedNode, 'width', '100%')" @change="setSizeControlUnit(selectedNode, 'width', $event.target.value, { fallback: '100%', emptyToken: '100%' })">
+										<option v-for="unit in sizeControlUnits" :key="'divider-width-unit-' + unit" :value="unit">{{ unit }}</option>
+									</select>
+								</div>
+							</div>
+						</div>
 						<div class="pb-form-group"><label class="pb-form-label">Thickness</label><input class="pb-input" v-model.number="selectedNode.settings.thickness" type="number"></div>
-						<div class="pb-form-group"><label class="pb-form-label">Color</label><input class="pb-input" v-model="selectedNode.settings.color"></div>
+						<div class="pb-form-group">
+							<label class="pb-form-label">Color</label>
+							<div class="pb-color-row">
+								<input type="color" class="pb-color-swatch" v-model="selectedNode.settings.color">
+								<input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings.color" placeholder="#d0d7e6">
+							</div>
+						</div>
+						<div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="selectedNode.settings.cssClass" placeholder="custom-divider"></div>
 					</template>
 					<template v-if="selectedType==='spacer'">
-						<div class="pb-form-group"><label class="pb-form-label">Height</label><input class="pb-input" v-model="selectedNode.settings.height"></div>
+						<div class="pb-form-group">
+							<div class="pb-label-row pb-label-row-device">
+								<label class="pb-form-label mb-0">Height</label>
+								<div class="pb-control-device-wrap">
+									<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('spacer-height')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
+									<div v-if="isControlResponsiveMenuOpen('spacer-height')" class="pb-control-device-menu">
+										<button v-for="device in responsiveDevices" :key="'spacer-height-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('spacer-height', device.value)">
+											<i :class="device.icon"></i>
+											<span>{{ deviceOptionLabel(device) }}</span>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="pb-range-value-row">
+								<input type="range" class="pb-range" min="0" :max="spacerHeightMax(selectedNode)" :step="spacerHeightStep(selectedNode)" :value="spacerHeightValue(selectedNode)" @input="onSpacerHeightInput(selectedNode, $event)">
+								<div class="pb-value-with-unit">
+									<input class="pb-input pb-input-compact" type="number" min="0" :max="spacerHeightMax(selectedNode)" :step="spacerHeightStep(selectedNode)" :value="spacerHeightValue(selectedNode)" @input="onSpacerHeightInput(selectedNode, $event)">
+									<select class="pb-mini-unit" :value="spacerHeightUnit(selectedNode)" @change="setSpacerHeightUnit(selectedNode, $event.target.value)">
+										<option v-for="unit in sizeControlUnits" :key="'spacer-height-unit-' + unit" :value="unit">{{ unit }}</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="selectedNode.settings.cssClass" placeholder="custom-spacer"></div>
 					</template>
 				</div>
 			</div>
 		</div>
 
+		<component v-if="customCss" :is="'style'">{{ customCss }}</component>
 		<div class="pb-canvas-wrap" @click="clearSel(); closeWidthPreviewMenu()">
 			<div class="pb-stage-window" @click.stop="closeWidthPreviewMenu()">
 				<div class="pb-stage-toolbar">
@@ -5042,7 +5841,7 @@
 					<div class="pb-css-editor-count"><i class="fa-solid fa-code"></i> {{ customCssCharCount }} chars / {{ customCssLineCount }} lines</div>
 					<div class="pb-css-editor-footer-actions">
 						<button type="button" class="pb-css-editor-btn danger" @click="clearCustomCss"><i class="fa-solid fa-trash"></i> Clear</button>
-						<button type="button" class="pb-css-editor-btn primary" @click="closeCustomCssEditor"><i class="fa-solid fa-check"></i> Apply & Close</button>
+						<button type="button" class="pb-css-editor-btn primary" @click="applyCustomCssEditorChanges"><i class="fa-solid fa-check"></i> Apply & Close</button>
 					</div>
 				</div>
 			</div>

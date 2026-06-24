@@ -2514,6 +2514,23 @@ body {
 	flex: 1;
 }
 
+.pb-color-row .clr-field {
+	flex: 1;
+	width: 100%;
+}
+
+.pb-color-row .clr-field .pb-input {
+	width: 100%;
+	padding-right: 44px;
+}
+
+.pb-color-row .clr-field button {
+	top: 50%;
+	transform: translateY(-50%);
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
 /* ── Four-sides input (Padding / Margin) ──────────────── */
 .pb-four-sides {
 	display: grid;

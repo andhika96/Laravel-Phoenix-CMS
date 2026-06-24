@@ -1,0 +1,43 @@
+<template>
+	<div :class="customClass" :style="wrapStyle">
+		<hr :style="lineStyle">
+	</div>
+</template>
+
+<script>
+export default {
+	name: 'BasicDivider',
+	props: {
+		item: {
+			type: Object,
+			required: true,
+		},
+	},
+	computed: {
+		customClass() {
+			const value = String(this.item.settings?.cssClass ?? '').trim();
+			if (!value) return '';
+			return value
+				.split(/\s+/)
+				.map((token) => token.replace(/^\.+/, '').trim())
+				.filter(Boolean)
+				.join(' ');
+		},
+		wrapStyle() {
+			return {
+				textAlign: this.item.settings?.align || 'center',
+			};
+		},
+		lineStyle() {
+			const styleType = this.item.settings?.style || 'solid';
+			return {
+				margin: 0,
+				border: 'none',
+				borderTop: (this.item.settings?.thickness || 2) + 'px ' + styleType + ' ' + (this.item.settings?.color || '#d0d7e6'),
+				width: this.item.settings?.width || '100%',
+				display: 'inline-block',
+			};
+		},
+	},
+};
+</script>

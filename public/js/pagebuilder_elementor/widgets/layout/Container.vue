@@ -140,11 +140,16 @@ export default {
 		},
 		hoverCss() {
 			if (!this.item.id) return '';
-			const hoverStyle = this.backgroundStyles(this.settings, 'Hover');
+			const hoverStyle = Object.assign(
+				{},
+				this.backgroundStyles(this.settings, 'Hover'),
+				this.borderHoverStyles(this.settings),
+				this.shadowHoverStyles(this.settings)
+			);
 			if (!Object.keys(hoverStyle).length) return '';
 			const transitionDuration = Math.max(0, Number(this.settings.bgTransitionDuration || 300));
 			const selector = '#' + this.domId;
-			return selector + '{transition:background-color ' + transitionDuration + 'ms ease, opacity ' + transitionDuration + 'ms ease;}\n'
+			return selector + '{transition:background-color ' + transitionDuration + 'ms ease, opacity ' + transitionDuration + 'ms ease, border-color ' + transitionDuration + 'ms ease, border-width ' + transitionDuration + 'ms ease, box-shadow ' + transitionDuration + 'ms ease;}\n'
 				+ selector + ':hover{' + this.styleObjectToCss(hoverStyle, true) + '}';
 		},
 		shapeDividerCss() {
@@ -168,9 +173,10 @@ export default {
 			const widthValue = this.responsiveSetting('containerWidth', s.containerWidth || '100%');
 			const maxWidthValue = this.responsiveSetting('maxWidth', s.maxWidth || 'auto');
 			const minHeightValue = this.responsiveSetting('minHeight', s.minHeight || 'auto');
-			// Arsitektur baru: Container adalah wrapper block-level.
-			// Display/flex/grid layout diterapkan di el-cont-columns (inner div) via contColumnsStyle di BuilderNode.
-			// Container sendiri hanya menangani: background, border, shadow, padding, margin, min-height, width.
+			// Margin dan item-layout editor dipasang di shell luar BuilderNode
+			// supaya canvas mengikuti parent layout dengan benar.
+			// Elemen container sendiri fokus ke background, border, shadow,
+			// padding, min-height, posisi, transform, dan width kontennya.
 			const style = {
 				display: 'block',
 				boxSizing: 'border-box',
@@ -179,9 +185,7 @@ export default {
 
 			Object.assign(style, this.backgroundStyles(s, ''));
 
-			if (s.borderType && s.borderType !== 'none') {
-				style.border = this.toCssSize(s.borderWidth, '1px') + ' ' + s.borderType + ' ' + (s.borderColor || '#000000');
-			}
+			Object.assign(style, this.borderStyleRules(s));
 
 			style.borderRadius = this.borderRadius(s);
 			style.boxShadow = this.shadowValue(s);
@@ -189,10 +193,6 @@ export default {
 			style.paddingRight = this.toCssSize(this.responsiveSetting('paddingRight', s.paddingRight), '0');
 			style.paddingBottom = this.toCssSize(this.responsiveSetting('paddingBottom', s.paddingBottom), '0');
 			style.paddingLeft = this.toCssSize(this.responsiveSetting('paddingLeft', s.paddingLeft), '0');
-			style.marginTop = this.toCssSpace(this.responsiveSetting('marginTop', s.marginTop), '0');
-			style.marginRight = this.toCssSpace(this.responsiveSetting('marginRight', s.marginRight), '0');
-			style.marginBottom = this.toCssSpace(this.responsiveSetting('marginBottom', s.marginBottom), '0');
-			style.marginLeft = this.toCssSpace(this.responsiveSetting('marginLeft', s.marginLeft), '0');
 			style.minHeight = this.toCssSize(minHeightValue, 'auto');
 
 			if (fullMode) {
@@ -311,6 +311,24 @@ export default {
 				style.backgroundBlendMode = overlay.blendMode + ', normal';
 			}
 			return style;
+		},
+		borderStyleRules(settings, suffix = '') {
+			const type = String(this.stateSetting(settings, 'borderType', suffix) || 'none').toLowerCase();
+			if (!type || type === 'none') {
+				return {
+					borderStyle: 'none',
+					borderWidth: '0',
+				};
+			}
+			return {
+				borderStyle: type,
+				borderWidth: this.toCssSize(this.stateSetting(settings, 'borderWidth', suffix), '1px'),
+				borderColor: this.stateSetting(settings, 'borderColor', suffix) || '#000000',
+			};
+		},
+		borderHoverStyles(settings) {
+			if (!settings.borderHoverInitialized) return {};
+			return this.borderStyleRules(settings, 'Hover');
 		},
 		styleObjectToCss(style, important = false) {
 			return Object.entries(style)
@@ -477,18 +495,25 @@ export default {
 				this.toCssSize(settings.borderRadiusBL, '0'),
 			].join(' ');
 		},
-		shadowValue(settings) {
-			if (settings.shadowEnabled) {
+		shadowValue(settings, suffix = '') {
+			const enabled = suffix ? this.stateSetting(settings, 'shadowEnabled', suffix) : settings.shadowEnabled;
+			if (this.isTruthy(enabled)) {
 				return [
-					this.toCssSize(settings.shadowH, '0'),
-					this.toCssSize(settings.shadowV, '0'),
-					this.toCssSize(settings.shadowBlur, '0'),
-					this.toCssSize(settings.shadowSpread, '0'),
-					this.colorWithOpacity(settings.shadowColor || '#000000', settings.shadowOpacity == null ? 0.3 : settings.shadowOpacity),
+					this.toCssSize(this.stateSetting(settings, 'shadowH', suffix), '0'),
+					this.toCssSize(this.stateSetting(settings, 'shadowV', suffix), '0'),
+					this.toCssSize(this.stateSetting(settings, 'shadowBlur', suffix), '0'),
+					this.toCssSize(this.stateSetting(settings, 'shadowSpread', suffix), '0'),
+					this.colorWithOpacity(this.stateSetting(settings, 'shadowColor', suffix) || '#000000', this.stateSetting(settings, 'shadowOpacity', suffix) == null ? 0.3 : this.stateSetting(settings, 'shadowOpacity', suffix)),
 				].join(' ');
 			}
 
-			return settings.boxShadow || 'none';
+			return suffix ? 'none' : (settings.boxShadow || 'none');
+		},
+		shadowHoverStyles(settings) {
+			if (!settings.shadowHoverInitialized) return {};
+			return {
+				boxShadow: this.shadowValue(settings, 'Hover'),
+			};
 		},
 		isTruthy(value) {
 			return value === true || value === 'true' || value === 1 || value === '1';

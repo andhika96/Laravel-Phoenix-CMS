@@ -9,6 +9,7 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="{{ asset('assets/plugins/fontawesome/6.5.1/css/all.min.css') }}?v={{ @filemtime(public_path('assets/plugins/fontawesome/6.5.1/css/all.min.css')) }}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link href="{{ asset('assets/vendor/pb-picker/picker.min.css') }}?v={{ @filemtime(public_path('assets/vendor/pb-picker/picker.min.css')) }}" rel="stylesheet">
 	<link href="{{ asset('assets/css/frontend_elementor.css') }}?v={{ @filemtime(public_path('assets/css/frontend_elementor.css')) }}" rel="stylesheet">
 	<link href="{{ asset('assets/css/pagebuilder_elementor.css') }}?v={{ @filemtime(public_path('assets/css/pagebuilder_elementor.css')) }}" rel="stylesheet">
 </head>
@@ -29,6 +30,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/axios@1.7.4/dist/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vuedraggable@4.1.0/dist/vuedraggable.umd.min.js"></script>
+	<script src="{{ asset('assets/vendor/pb-picker/picker.min.js') }}?v={{ @filemtime(public_path('assets/vendor/pb-picker/picker.min.js')) }}"></script>
 	<script src="{{ asset('assets/plugins/ckfinder/ckfinder.js') }}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-build-classic@41.4.2/build/ckeditor.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>

@@ -44,6 +44,24 @@
 		return in_array($value, [true, 'true', 1, '1'], true);
 	};
 
+	$normalize_class_tokens = function ($value) {
+		$raw = trim((string) ($value ?? ''));
+
+		if ($raw === '') {
+			return '';
+		}
+
+		$tokens = preg_split('/\s+/', $raw) ?: [];
+		$tokens = array_values(array_filter(array_map(function ($token) {
+			$token = trim((string) $token);
+			$token = preg_replace('/^\.+/', '', $token);
+
+			return $token === '' ? null : $token;
+		}, $tokens)));
+
+		return implode(' ', $tokens);
+	};
+
 	$state_setting = function (array $s, string $base, string $suffix = '') {
 		$key = $base . $suffix;
 
@@ -178,18 +196,45 @@
 		]);
 	};
 
-	$shadow_value = function (array $s) use ($css_value, $color_with_opacity) {
-		if (!empty($s['shadowEnabled'])) {
+	$border_style_rules = function (array $s, string $suffix = '', bool $respectHoverInit = false) use ($state_setting, $css_value) {
+		if ($respectHoverInit && empty($s['borderHoverInitialized'])) {
+			return [];
+		}
+
+		$type = strtolower(trim((string) ($state_setting($s, 'borderType', $suffix) ?? 'none')));
+
+		if ($type === '' || $type === 'none') {
+			return [
+				'border-style:none',
+				'border-width:0',
+			];
+		}
+
+		return [
+			'border-style:' . $type,
+			'border-width:' . $css_value($state_setting($s, 'borderWidth', $suffix) ?? null, '1px'),
+			'border-color:' . ($state_setting($s, 'borderColor', $suffix) ?? '#000000'),
+		];
+	};
+
+	$shadow_value = function (array $s, string $suffix = '', bool $respectHoverInit = false) use ($css_value, $color_with_opacity, $state_setting, $is_truthy) {
+		if ($respectHoverInit && empty($s['shadowHoverInitialized'])) {
+			return null;
+		}
+
+		$enabled = $suffix !== '' ? $state_setting($s, 'shadowEnabled', $suffix) : ($s['shadowEnabled'] ?? false);
+
+		if ($is_truthy($enabled)) {
 			return implode(' ', [
-				$css_value($s['shadowH'] ?? null, '0'),
-				$css_value($s['shadowV'] ?? null, '0'),
-				$css_value($s['shadowBlur'] ?? null, '0'),
-				$css_value($s['shadowSpread'] ?? null, '0'),
-				$color_with_opacity($s['shadowColor'] ?? '#000000', $s['shadowOpacity'] ?? 0.3),
+				$css_value($state_setting($s, 'shadowH', $suffix) ?? null, '0'),
+				$css_value($state_setting($s, 'shadowV', $suffix) ?? null, '0'),
+				$css_value($state_setting($s, 'shadowBlur', $suffix) ?? null, '0'),
+				$css_value($state_setting($s, 'shadowSpread', $suffix) ?? null, '0'),
+				$color_with_opacity($state_setting($s, 'shadowColor', $suffix) ?? '#000000', $state_setting($s, 'shadowOpacity', $suffix) ?? 0.3),
 			]);
 		}
 
-		return $s['boxShadow'] ?? 'none';
+		return $suffix !== '' ? 'none' : ($s['boxShadow'] ?? 'none');
 	};
 
 	$grid_rows_template = function ($value) {
@@ -608,10 +653,7 @@
 		];
 
 		$styles = array_merge($styles, $background_styles($s));
-
-		if (!empty($s['borderType']) && $s['borderType'] !== 'none') {
-			$styles[] = 'border:' . $css_value($s['borderWidth'] ?? null, '1px') . ' ' . $s['borderType'] . ' ' . ($s['borderColor'] ?? '#000000');
-		}
+		$styles = array_merge($styles, $border_style_rules($s));
 
 		$styles[] = 'border-radius:' . $border_radius_value($s);
 		$styles[] = 'box-shadow:' . $shadow_value($s);
@@ -671,7 +713,7 @@
 
 		$style = implode(';', array_filter($styles));
 		$baseClass = $type === 'container_fluid' ? 'el-layout-container-fluid' : 'el-layout-container';
-		$classTokens = array_filter(array_merge([$baseClass, trim((string) ($s['cssClass'] ?? ''))], $layout_effect_classes($s)));
+		$classTokens = array_filter(array_merge([$baseClass, $normalize_class_tokens($s['cssClass'] ?? '')], $layout_effect_classes($s)));
 		$classes = trim(implode(' ', $classTokens));
 		$attrBag = $attribute_pairs($s['attributes'] ?? []);
 		if (!empty($s['cssId'])) $attrBag['data-css-id'] = (string) $s['cssId'];
@@ -858,10 +900,17 @@
 			$styleBlocks[] = '@media (max-width: 767px){' . implode('', $css) . '}';
 		}
 
-		$hoverStyles = $background_styles($s, 'Hover');
+		$hoverStyles = array_merge(
+			$background_styles($s, 'Hover'),
+			$border_style_rules($s, 'Hover', true)
+		);
+		$hoverShadowValue = $shadow_value($s, 'Hover', true);
+		if ($hoverShadowValue !== null) {
+			$hoverStyles[] = 'box-shadow:' . $hoverShadowValue;
+		}
 		if ($hoverStyles) {
 			$transitionDuration = max(0, (int) ($s['bgTransitionDuration'] ?? 300));
-			$styleBlocks[] = '#' . $nodeDomId . '{transition:background-color ' . $transitionDuration . 'ms ease, opacity ' . $transitionDuration . 'ms ease;}';
+			$styleBlocks[] = '#' . $nodeDomId . '{transition:background-color ' . $transitionDuration . 'ms ease, opacity ' . $transitionDuration . 'ms ease, border-color ' . $transitionDuration . 'ms ease, border-width ' . $transitionDuration . 'ms ease, box-shadow ' . $transitionDuration . 'ms ease;}';
 			$styleBlocks[] = '#' . $nodeDomId . ':hover{' . $style_with_important($hoverStyles) . '}';
 		}
 
@@ -1190,7 +1239,7 @@
 		}
 
 		$baseGridClass = ($type === 'grid' ? 'el-layout-grid' : 'el-layout-row-grid');
-		$classTokens = array_filter(array_merge([$baseGridClass, trim((string) ($s['cssClass'] ?? ''))], $layout_effect_classes($s)));
+		$classTokens = array_filter(array_merge([$baseGridClass, $normalize_class_tokens($s['cssClass'] ?? '')], $layout_effect_classes($s)));
 		$wrapClass = trim(implode(' ', $classTokens));
 		$wrapStyle = implode(';', array_filter($wrapStyles));
 		$gridStyle = implode(';', array_filter($gridStyles));
@@ -1257,53 +1306,298 @@
 @elseif($type === 'heading')
 	@php
 		$tag = in_array($settings['tag'] ?? 'h2', ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div'], true) ? $settings['tag'] : 'h2';
+		$customClass = $normalize_class_tokens($settings['cssClass'] ?? '');
 		$style = implode(';', array_filter([
 			'text-align:' . ($settings['align'] ?? 'left'),
 			'color:' . ($settings['color'] ?? '#101828'),
 			!empty($settings['fontSize']) ? 'font-size:' . $settings['fontSize'] : '',
 			!empty($settings['fontWeight']) ? 'font-weight:' . $settings['fontWeight'] : '',
 		]));
+		$className = trim(implode(' ', array_filter(['el-widget-heading', $customClass])));
 	@endphp
-	<{{ $tag }} class="el-widget-heading" style="{{ $style }}">
+	<{{ $tag }} class="{{ $className }}" style="{{ $style }}">
 		{!! $settings['text'] ?? '' !!}
 	</{{ $tag }}>
 
 @elseif($type === 'text_editor')
-	<div class="el-widget-text-editor">
+	@php
+		$customClass = $normalize_class_tokens($settings['cssClass'] ?? '');
+		$className = trim(implode(' ', array_filter(['el-widget-text-editor', $customClass])));
+	@endphp
+	<div class="{{ $className }}">
 		{!! $settings['html'] ?? '' !!}
 	</div>
 
 @elseif($type === 'image')
 	@php
+		$nodeId = trim((string) ($node['id'] ?? ''));
+		$nodeDomId = $nodeId !== '' ? 'pb-node-' . $nodeId : '';
+		$customClass = $normalize_class_tokens($settings['cssClass'] ?? '');
 		$imgStyle = implode(';', array_filter([
 			'width:' . ($settings['width'] ?? '100%'),
 			'height:' . ($settings['height'] ?? 'auto'),
 		]));
+		$className = trim(implode(' ', array_filter(['el-widget-image', $customClass])));
+		$tabletRules = [];
+		$mobileRules = [];
+		if (($settings['widthTablet'] ?? '') !== '') $tabletRules[] = 'width:' . $css_value($settings['widthTablet'], '100%');
+		if (($settings['widthMobile'] ?? '') !== '') $mobileRules[] = 'width:' . $css_value($settings['widthMobile'], '100%');
+		if (($settings['heightTablet'] ?? '') !== '') $tabletRules[] = 'height:' . $css_value($settings['heightTablet'], 'auto');
+		if (($settings['heightMobile'] ?? '') !== '') $mobileRules[] = 'height:' . $css_value($settings['heightMobile'], 'auto');
+		$styleBlocks = [];
+		if ($nodeDomId !== '' && $tabletRules) $styleBlocks[] = '@media (max-width: 1024px){#' . $nodeDomId . ' > img{' . implode(';', $tabletRules) . '}}';
+		if ($nodeDomId !== '' && $mobileRules) $styleBlocks[] = '@media (max-width: 767px){#' . $nodeDomId . ' > img{' . implode(';', $mobileRules) . '}}';
 	@endphp
-	<div class="el-widget-image">
-		<img src="{{ $settings['src'] ?? '' }}" alt="{{ $settings['alt'] ?? '' }}" style="{{ $imgStyle }}">
+	<div @if($nodeDomId !== '') id="{{ $nodeDomId }}" @endif class="{{ $className }}">
+		<img src="{{ $settings['src'] ?? '' }}" alt="{{ $settings['alt'] ?? '' }}" @if($customClass !== '') class="{{ $customClass }}" @endif style="{{ $imgStyle }}">
 	</div>
+	@if($styleBlocks)
+		<style>{!! implode("\n", $styleBlocks) !!}</style>
+	@endif
 
 @elseif($type === 'video')
 	@php
-		$ratio = $settings['ratio'] ?? '16/9';
-		$parts = explode('/', str_replace(' ', '', $ratio));
-		$w = (float) ($parts[0] ?? 16);
-		$h = (float) ($parts[1] ?? 9);
-		$paddingPct = ($w > 0 ? round(($h / $w) * 100, 4) : 56.25) . '%';
-		$src = ($settings['sourceType'] ?? 'youtube') === 'youtube' ? ($settings['youtubeEmbed'] ?? '') : ($settings['fileUrl'] ?? '');
+		$nodeId = trim((string) ($node['id'] ?? ''));
+		$nodeDomId = $nodeId !== '' ? 'pb-node-' . $nodeId : '';
+		$customClass = $normalize_class_tokens($settings['cssClass'] ?? '');
+		$sourceTypeRaw = strtolower(trim((string) ($settings['sourceType'] ?? 'youtube')));
+		$sourceType = $sourceTypeRaw === 'file' ? 'self_hosted' : $sourceTypeRaw;
+		if (!in_array($sourceType, ['youtube', 'vimeo', 'dailymotion', 'self_hosted', 'videopress'], true)) {
+			$sourceType = 'youtube';
+		}
+		$allowedVideoRatios = ['16/9', '4/3', '1/1', '3/2', '21/9', '9/16', '4/5'];
+		$video_padding_pct = function ($ratio) use ($allowedVideoRatios) {
+			$safeRatio = trim((string) ($ratio ?? '16/9'));
+			if (!in_array($safeRatio, $allowedVideoRatios, true)) {
+				$safeRatio = '16/9';
+			}
+			$parts = explode('/', str_replace(' ', '', $safeRatio));
+			$w = (float) ($parts[0] ?? 16);
+			$h = (float) ($parts[1] ?? 9);
+
+			return ($w > 0 ? round(($h / $w) * 100, 4) : 56.25) . '%';
+		};
+		$positiveInt = function ($value) {
+			if ($value === '' || $value === null) {
+				return null;
+			}
+			if (!is_numeric($value)) {
+				return null;
+			}
+			$num = (int) round((float) $value);
+
+			return $num < 0 ? null : $num;
+		};
+		$sanitizeHex = function ($value) {
+			$raw = preg_replace('/[^0-9a-f]/i', '', (string) $value);
+			if (strlen($raw) === 3 || strlen($raw) === 6) {
+				return strtolower($raw);
+			}
+
+			return '';
+		};
+		$extractYoutubeId = function ($url) {
+			$value = trim((string) $url);
+			if ($value === '') {
+				return '';
+			}
+			if (preg_match('/embed\/([^?&\/]+)/', $value, $match)) {
+				return $match[1];
+			}
+			if (preg_match('/youtu\.be\/([^?&\/]+)/', $value, $match)) {
+				return $match[1];
+			}
+			if (preg_match('/[?&]v=([^&]+)/', $value, $match)) {
+				return $match[1];
+			}
+
+			return '';
+		};
+		$extractVimeoId = function ($url) {
+			$value = trim((string) $url);
+			if ($value === '') {
+				return '';
+			}
+			if (preg_match('/(?:video\/|vimeo\.com\/)(\d+)/', $value, $match)) {
+				return $match[1];
+			}
+			$digits = preg_replace('/\D+/', '', $value);
+
+			return $digits ?: '';
+		};
+		$extractDailymotionId = function ($url) {
+			$value = trim((string) $url);
+			if ($value === '') {
+				return '';
+			}
+			if (preg_match('/video\/([^_?&\/]+)/', $value, $match)) {
+				return $match[1];
+			}
+			if (preg_match('/dai\.ly\/([^_?&\/]+)/', $value, $match)) {
+				return $match[1];
+			}
+
+			return $value;
+		};
+		$buildTimeFragment = function ($start, $end) {
+			$parts = [];
+			if ($start !== null) {
+				$parts[] = $start;
+			}
+			if ($end !== null) {
+				$parts[] = $end;
+			}
+
+			return $parts ? '#t=' . implode(',', $parts) : '';
+		};
+		$paddingPct = $video_padding_pct($settings['ratio'] ?? '16/9');
+		$startTime = $positiveInt($settings['startTime'] ?? null);
+		$endTime = $positiveInt($settings['endTime'] ?? null);
+		$autoplay = !empty($settings['autoplay']);
+		$mute = !empty($settings['mute']);
+		$loop = !empty($settings['loop']);
+		$playerControls = array_key_exists('playerControls', $settings) ? (bool) $settings['playerControls'] : true;
+		$captions = !empty($settings['captions']);
+		$privacyMode = !empty($settings['privacyMode']);
+		$lazyLoad = !empty($settings['lazyLoad']);
+		$suggestedVideos = ($settings['suggestedVideos'] ?? 'current_channel') === 'any_video' ? 'any_video' : 'current_channel';
+		$introTitle = array_key_exists('introTitle', $settings) ? (bool) $settings['introTitle'] : true;
+		$introPortrait = array_key_exists('introPortrait', $settings) ? (bool) $settings['introPortrait'] : true;
+		$introByline = array_key_exists('introByline', $settings) ? (bool) $settings['introByline'] : true;
+		$controlsColor = $sanitizeHex($settings['controlsColor'] ?? '');
+		$videoInfo = array_key_exists('videoInfo', $settings) ? (bool) $settings['videoInfo'] : true;
+		$logo = array_key_exists('logo', $settings) ? (bool) $settings['logo'] : true;
+		$downloadButton = array_key_exists('downloadButton', $settings) ? (bool) $settings['downloadButton'] : true;
+		$preload = strtolower(trim((string) ($settings['preload'] ?? 'metadata')));
+		if (!in_array($preload, ['metadata', 'auto', 'none'], true)) {
+			$preload = 'metadata';
+		}
+		$poster = trim((string) ($settings['poster'] ?? ''));
+		$overlayImage = trim((string) ($settings['overlayImage'] ?? ''));
+		$overlayEnabled = !empty($settings['imageOverlay']) && $overlayImage !== '';
+		$effectiveAutoplay = $autoplay || $overlayEnabled;
+		$isIframeSource = in_array($sourceType, ['youtube', 'vimeo', 'dailymotion'], true);
+		$mediaSrc = '';
+		if ($sourceType === 'youtube') {
+			$youtubeId = $extractYoutubeId($settings['youtubeUrl'] ?? ($settings['youtubeEmbed'] ?? ''));
+			if ($youtubeId !== '') {
+				$query = [];
+				if ($effectiveAutoplay) $query['autoplay'] = 1;
+				if ($mute) $query['mute'] = 1;
+				if ($loop) {
+					$query['loop'] = 1;
+					$query['playlist'] = $youtubeId;
+				}
+				if (!$playerControls) $query['controls'] = 0;
+				if ($captions) $query['cc_load_policy'] = 1;
+				if ($suggestedVideos === 'current_channel') $query['rel'] = 0;
+				if ($startTime !== null) $query['start'] = $startTime;
+				if ($endTime !== null) $query['end'] = $endTime;
+				$baseYoutube = $privacyMode ? 'https://www.youtube-nocookie.com/embed/' . $youtubeId : 'https://www.youtube.com/embed/' . $youtubeId;
+				$mediaSrc = $query ? $baseYoutube . '?' . http_build_query($query) : $baseYoutube;
+			}
+		} elseif ($sourceType === 'vimeo') {
+			$vimeoId = $extractVimeoId($settings['vimeoUrl'] ?? '');
+			if ($vimeoId !== '') {
+				$query = [];
+				if ($effectiveAutoplay) $query['autoplay'] = 1;
+				if ($mute) $query['muted'] = 1;
+				if ($loop) $query['loop'] = 1;
+				if ($privacyMode) $query['dnt'] = 1;
+				if (!$introTitle) $query['title'] = 0;
+				if (!$introPortrait) $query['portrait'] = 0;
+				if (!$introByline) $query['byline'] = 0;
+				if ($controlsColor !== '') $query['color'] = $controlsColor;
+				$mediaSrc = 'https://player.vimeo.com/video/' . $vimeoId;
+				if ($query) {
+					$mediaSrc .= '?' . http_build_query($query);
+				}
+				if ($startTime !== null) {
+					$mediaSrc .= '#t=' . $startTime . 's';
+				}
+			}
+		} elseif ($sourceType === 'dailymotion') {
+			$dailymotionId = $extractDailymotionId($settings['dailymotionUrl'] ?? '');
+			if ($dailymotionId !== '') {
+				$query = [];
+				if ($effectiveAutoplay) $query['autoplay'] = 1;
+				if ($mute) $query['mute'] = 1;
+				if (!$playerControls) $query['controls'] = 0;
+				if (!$videoInfo) $query['ui-start-screen-info'] = 0;
+				if (!$logo) $query['logo'] = 0;
+				if ($controlsColor !== '') $query['ui-highlight'] = $controlsColor;
+				if ($startTime !== null) $query['start'] = $startTime;
+				$mediaSrc = 'https://www.dailymotion.com/embed/video/' . $dailymotionId;
+				if ($query) {
+					$mediaSrc .= '?' . http_build_query($query);
+				}
+			}
+		} else {
+			$baseFileUrl = trim((string) ($settings['fileUrl'] ?? ''));
+			if ($baseFileUrl !== '') {
+				$mediaSrc = $baseFileUrl . $buildTimeFragment($startTime, $endTime);
+			}
+		}
+		$mediaHtml = '';
+		if ($mediaSrc !== '') {
+			if ($isIframeSource) {
+				$mediaHtml = '<iframe src="' . e($mediaSrc) . '" title="Video" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen' . ($lazyLoad ? ' loading="lazy"' : '') . '></iframe>';
+			} else {
+				$videoAttrs = [
+					'src="' . e($mediaSrc) . '"',
+					'playsinline',
+				];
+				if ($playerControls) $videoAttrs[] = 'controls';
+				if ($effectiveAutoplay) $videoAttrs[] = 'autoplay';
+				if ($mute) $videoAttrs[] = 'muted';
+				if ($loop) $videoAttrs[] = 'loop';
+				if ($sourceType === 'self_hosted') $videoAttrs[] = 'preload="' . e($preload) . '"';
+				if ($poster !== '') $videoAttrs[] = 'poster="' . e($poster) . '"';
+				if ($sourceType === 'self_hosted' && !$downloadButton) $videoAttrs[] = 'controlslist="nodownload"';
+				$mediaHtml = '<video ' . implode(' ', $videoAttrs) . '></video>';
+			}
+		}
+		$className = trim(implode(' ', array_filter(['el-widget-video', $customClass])));
+		$styleBlocks = [];
+		if (($settings['ratioTablet'] ?? '') !== '' && $nodeDomId !== '') {
+			$styleBlocks[] = '@media (max-width: 1024px){#' . $nodeDomId . ' > .el-widget-video-wrapper{padding-bottom:' . $video_padding_pct($settings['ratioTablet']) . '}}';
+		}
+		if (($settings['ratioMobile'] ?? '') !== '' && $nodeDomId !== '') {
+			$styleBlocks[] = '@media (max-width: 767px){#' . $nodeDomId . ' > .el-widget-video-wrapper{padding-bottom:' . $video_padding_pct($settings['ratioMobile']) . '}}';
+		}
 	@endphp
-	<div class="el-widget-video">
+	<div @if($nodeDomId !== '') id="{{ $nodeDomId }}" @endif class="{{ $className }}">
 		<div class="el-widget-video-wrapper" style="padding-bottom:{{ $paddingPct }}">
-			@if($src)
-				@if(($settings['sourceType'] ?? 'youtube') === 'youtube')
-					<iframe src="{{ $src }}" allowfullscreen></iframe>
-				@else
-					<video src="{{ $src }}" controls></video>
-				@endif
+			@if($overlayEnabled && $overlayImage !== '' && $mediaHtml !== '')
+				<button type="button" class="el-video-overlay" style="background-image:url('{{ e($overlayImage) }}')" data-video-html="{{ e($mediaHtml) }}">
+					<span class="el-video-overlay-play" aria-hidden="true"></span>
+				</button>
+			@elseif($mediaHtml !== '')
+				{!! $mediaHtml !!}
 			@endif
 		</div>
 	</div>
+	@if($styleBlocks)
+		<style>{!! implode("\n", $styleBlocks) !!}</style>
+	@endif
+	@if($overlayEnabled && $overlayImage !== '' && $mediaHtml !== '' && $nodeDomId !== '')
+		<script>
+			(function () {
+				const root = document.getElementById(@json($nodeDomId));
+				if (!root) return;
+				const overlay = root.querySelector('.el-video-overlay[data-video-html]');
+				if (!overlay || overlay.dataset.bound === '1') return;
+				overlay.dataset.bound = '1';
+				overlay.addEventListener('click', function () {
+					const wrapper = overlay.parentElement;
+					const html = overlay.getAttribute('data-video-html') || '';
+					if (!wrapper || !html) return;
+					overlay.remove();
+					wrapper.insertAdjacentHTML('beforeend', html);
+				});
+			})();
+		</script>
+	@endif
 
 @elseif($type === 'button')
 	@php
@@ -1318,15 +1612,45 @@
 
 @elseif($type === 'divider')
 	@php
+		$nodeId = trim((string) ($node['id'] ?? ''));
+		$nodeDomId = $nodeId !== '' ? 'pb-node-' . $nodeId : '';
+		$customClass = $normalize_class_tokens($settings['cssClass'] ?? '');
 		$hrStyle = implode(';', [
 			'border-top:' . ($settings['thickness'] ?? 2) . 'px ' . ($settings['style'] ?? 'solid') . ' ' . ($settings['color'] ?? '#d0d7e6'),
 			'width:' . ($settings['width'] ?? '100%'),
 		]);
+		$className = trim(implode(' ', array_filter(['el-widget-divider', $customClass])));
+		$tabletRules = [];
+		$mobileRules = [];
+		if (($settings['widthTablet'] ?? '') !== '') $tabletRules[] = 'width:' . $css_value($settings['widthTablet'], '100%');
+		if (($settings['widthMobile'] ?? '') !== '') $mobileRules[] = 'width:' . $css_value($settings['widthMobile'], '100%');
+		$styleBlocks = [];
+		if ($nodeDomId !== '' && $tabletRules) $styleBlocks[] = '@media (max-width: 1024px){#' . $nodeDomId . ' > hr{' . implode(';', $tabletRules) . '}}';
+		if ($nodeDomId !== '' && $mobileRules) $styleBlocks[] = '@media (max-width: 767px){#' . $nodeDomId . ' > hr{' . implode(';', $mobileRules) . '}}';
 	@endphp
-	<div class="el-widget-divider">
+	<div @if($nodeDomId !== '') id="{{ $nodeDomId }}" @endif class="{{ $className }}">
 		<hr style="{{ $hrStyle }}">
 	</div>
+	@if($styleBlocks)
+		<style>{!! implode("\n", $styleBlocks) !!}</style>
+	@endif
 
 @elseif($type === 'spacer')
-	<div class="el-widget-spacer" style="height:{{ $settings['height'] ?? '32px' }}"></div>
+	@php
+		$nodeId = trim((string) ($node['id'] ?? ''));
+		$nodeDomId = $nodeId !== '' ? 'pb-node-' . $nodeId : '';
+		$customClass = $normalize_class_tokens($settings['cssClass'] ?? '');
+		$className = trim(implode(' ', array_filter(['el-widget-spacer', $customClass])));
+		$tabletRules = [];
+		$mobileRules = [];
+		if (($settings['heightTablet'] ?? '') !== '') $tabletRules[] = 'height:' . $css_value($settings['heightTablet'], '32px');
+		if (($settings['heightMobile'] ?? '') !== '') $mobileRules[] = 'height:' . $css_value($settings['heightMobile'], '32px');
+		$styleBlocks = [];
+		if ($nodeDomId !== '' && $tabletRules) $styleBlocks[] = '@media (max-width: 1024px){#' . $nodeDomId . '{' . implode(';', $tabletRules) . '}}';
+		if ($nodeDomId !== '' && $mobileRules) $styleBlocks[] = '@media (max-width: 767px){#' . $nodeDomId . '{' . implode(';', $mobileRules) . '}}';
+	@endphp
+	<div @if($nodeDomId !== '') id="{{ $nodeDomId }}" @endif class="{{ $className }}" style="height:{{ $settings['height'] ?? '32px' }}"></div>
+	@if($styleBlocks)
+		<style>{!! implode("\n", $styleBlocks) !!}</style>
+	@endif
 @endif

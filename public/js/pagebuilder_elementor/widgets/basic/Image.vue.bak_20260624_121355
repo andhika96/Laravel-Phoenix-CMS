@@ -1,0 +1,33 @@
+<template>
+	<img :src="src" :alt="alt" :class="customClass" :style="imageStyle">
+</template>
+
+<script>
+export default {
+	name: 'BasicImage',
+	props: {
+		item: {
+			type: Object,
+			required: true,
+		},
+	},
+	computed: {
+		customClass() {
+			return this.item.settings?.cssClass || '';
+		},
+		src() {
+			return this.item.settings?.src || 'https://placehold.co/640x360';
+		},
+		alt() {
+			return this.item.settings?.alt || 'Image';
+		},
+		imageStyle() {
+			return {
+				width: this.item.settings?.width || '100%',
+				height: this.item.settings?.height || 'auto',
+				display: 'block',
+			};
+		},
+	},
+};
+</script>
