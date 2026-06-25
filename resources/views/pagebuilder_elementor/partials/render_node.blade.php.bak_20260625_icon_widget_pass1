@@ -1599,69 +1599,6 @@
 		</script>
 	@endif
 
-@elseif($type === 'icon')
-	@php
-		$customClass = $normalize_class_tokens($settings['cssClass'] ?? '');
-		$iconClass = $normalize_class_tokens($settings['iconClass'] ?? '');
-		if ($iconClass === '') {
-			$iconClass = 'far fa-star';
-		}
-		$view = strtolower(trim((string) ($settings['view'] ?? 'default')));
-		if (!in_array($view, ['default', 'stacked', 'framed'], true)) {
-			$view = 'default';
-		}
-		$shape = strtolower(trim((string) ($settings['shape'] ?? 'circle')));
-		if (!in_array($shape, ['circle', 'rounded', 'square'], true)) {
-			$shape = 'circle';
-		}
-		$link = trim((string) ($settings['link'] ?? ''));
-		$openInNewWindow = $is_truthy($settings['openInNewWindow'] ?? false);
-		$nofollow = $is_truthy($settings['nofollow'] ?? false);
-		$relTokens = [];
-		if ($openInNewWindow) {
-			$relTokens[] = 'noopener';
-			$relTokens[] = 'noreferrer';
-		}
-		if ($nofollow) {
-			$relTokens[] = 'nofollow';
-		}
-		$relAttr = implode(' ', array_values(array_unique($relTokens)));
-		$attrBag = $attribute_pairs($settings['attributes'] ?? []);
-		$className = trim(implode(' ', array_filter([
-			'el-widget-icon',
-			'is-view-' . $view,
-			$view !== 'default' ? 'is-shape-' . $shape : '',
-			$customClass,
-		])));
-	@endphp
-	<div class="{{ $className }}">
-		@if($link !== '')
-			<a href="{{ $link }}" class="el-widget-icon-link" @if($openInNewWindow) target="_blank" @endif @if($relAttr !== '') rel="{{ $relAttr }}" @endif
-				@foreach($attrBag as $attrName => $attrValue)
-					{{ $attrName }}="{{ e($attrValue) }}"
-				@endforeach
-			>
-				@if($view !== 'default')
-					<span class="el-widget-icon-box"><i class="{{ $iconClass }}" aria-hidden="true"></i></span>
-				@else
-					<i class="{{ $iconClass }}" aria-hidden="true"></i>
-				@endif
-			</a>
-		@else
-			<span class="el-widget-icon-link"
-				@foreach($attrBag as $attrName => $attrValue)
-					{{ $attrName }}="{{ e($attrValue) }}"
-				@endforeach
-			>
-				@if($view !== 'default')
-					<span class="el-widget-icon-box"><i class="{{ $iconClass }}" aria-hidden="true"></i></span>
-				@else
-					<i class="{{ $iconClass }}" aria-hidden="true"></i>
-				@endif
-			</span>
-		@endif
-	</div>
-
 @elseif($type === 'button')
 	@php
 		$align = $settings['align'] ?? 'left';

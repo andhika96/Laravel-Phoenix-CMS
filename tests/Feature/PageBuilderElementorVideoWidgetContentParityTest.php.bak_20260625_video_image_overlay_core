@@ -42,17 +42,6 @@ class PageBuilderElementorVideoWidgetContentParityTest extends TestCase
         $this->assertStringContainsString("@click=\"chooseMedia(selectedNode.settings, 'overlayImage', 'Paste image URL')\"", $appJs);
     }
 
-    public function test_editor_exposes_image_overlay_for_iframe_video_sources(): void
-    {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
-
-        $this->assertIsString($appJs);
-        $this->assertStringContainsString(
-            "return source === 'youtube' || source === 'vimeo' || source === 'dailymotion' || source === 'self_hosted' || source === 'videopress';",
-            $appJs
-        );
-    }
-
     public function test_video_widget_preview_supports_iframe_and_hosted_sources(): void
     {
         $videoVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/Video.vue'));

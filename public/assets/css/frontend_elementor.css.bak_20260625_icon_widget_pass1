@@ -185,68 +185,6 @@
 	border-color: transparent transparent transparent #111827;
 }
 
-.el-widget-icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: flex-start;
-	max-width: 100%;
-	box-sizing: border-box;
-}
-
-.el-widget-icon-link {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	color: #6f7f94;
-	text-decoration: none;
-}
-
-.el-widget-icon-link:hover {
-	color: #54657d;
-	text-decoration: none;
-}
-
-.el-widget-icon > .el-widget-icon-link > i,
-.el-widget-icon .el-widget-icon-box > i {
-	font-size: 52px;
-	line-height: 1;
-}
-
-.el-widget-icon .el-widget-icon-box {
-	width: 104px;
-	height: 104px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 999px;
-}
-
-.el-widget-icon.is-view-default .el-widget-icon-link {
-	padding: 0;
-}
-
-.el-widget-icon.is-view-stacked .el-widget-icon-link {
-	color: #ffffff;
-}
-
-.el-widget-icon.is-view-stacked .el-widget-icon-box {
-	background: #7b8796;
-}
-
-.el-widget-icon.is-view-framed .el-widget-icon-box {
-	border: 3px solid #7b8796;
-	color: #7b8796;
-	background: transparent;
-}
-
-.el-widget-icon.is-shape-rounded .el-widget-icon-box {
-	border-radius: 18px;
-}
-
-.el-widget-icon.is-shape-square .el-widget-icon-box {
-	border-radius: 0;
-}
-
 .el-widget-button {
 	box-sizing: border-box;
 	display: inline-flex;

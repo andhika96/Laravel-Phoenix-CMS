@@ -37,7 +37,6 @@
 		text_editor:    '/js/pagebuilder_elementor/widgets/basic/TextEditor.vue',
 		image:          '/js/pagebuilder_elementor/widgets/basic/Image.vue',
 		video:          '/js/pagebuilder_elementor/widgets/basic/Video.vue',
-		icon:           '/js/pagebuilder_elementor/widgets/basic/Icon.vue',
 		button:         '/js/pagebuilder_elementor/widgets/basic/Button.vue',
 		divider:        '/js/pagebuilder_elementor/widgets/basic/Divider.vue',
 		spacer:         '/js/pagebuilder_elementor/widgets/basic/Spacer.vue',
@@ -112,133 +111,6 @@
 			ratio: '16/9',
 			cssClass: '',
 		};
-	}
-	const FONT_AWESOME_5_ICON_METADATA_URL = '/assets/plugins/fontawesome/5.15.3/metadata/icons.json';
-	const FONT_AWESOME_5_ICON_GROUPS = Object.freeze([
-		{ key: 'all', label: 'All Icons', style: null, icon: 'fas fa-bars' },
-		{ key: 'regular', label: 'Font Awesome - Regular', style: 'regular', icon: 'far fa-image' },
-		{ key: 'solid', label: 'Font Awesome - Solid', style: 'solid', icon: 'fas fa-star' },
-		{ key: 'brands', label: 'Font Awesome - Brands', style: 'brands', icon: 'fab fa-font-awesome-flag' },
-		{ key: 'light', label: 'Font Awesome - Light', style: 'light', icon: 'fal fa-star' },
-		{ key: 'duotone', label: 'Font Awesome - Duotone', style: 'duotone', icon: 'fad fa-star' },
-	]);
-	const FONT_AWESOME_5_STYLE_LABELS = Object.freeze({
-		regular: 'Regular',
-		solid: 'Solid',
-		brands: 'Brands',
-		light: 'Light',
-		duotone: 'Duotone',
-	});
-	const ICON_WIDGET_VIEW_OPTIONS = Object.freeze([
-		{ value: 'default', label: 'Default' },
-		{ value: 'stacked', label: 'Stacked' },
-		{ value: 'framed', label: 'Framed' },
-	]);
-	const ICON_WIDGET_SHAPE_OPTIONS = Object.freeze([
-		{ value: 'circle', label: 'Circle' },
-		{ value: 'rounded', label: 'Rounded' },
-		{ value: 'square', label: 'Square' },
-	]);
-	function fontAwesomeStylePrefix(style) {
-		if (style === 'brands') return 'fab';
-		if (style === 'light') return 'fal';
-		if (style === 'duotone') return 'fad';
-		if (style === 'solid') return 'fas';
-		return 'far';
-	}
-	function fontAwesomeStyleLabel(style) {
-		return FONT_AWESOME_5_STYLE_LABELS[String(style || '').trim().toLowerCase()] || 'Regular';
-	}
-	function humanizeIconName(name) {
-		const raw = String(name || '').trim();
-		if (!raw) return 'Star';
-		return raw
-			.split('-')
-			.filter(Boolean)
-			.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-			.join(' ');
-	}
-	function iconWidgetDefaults() {
-		return {
-			iconStyle: 'regular',
-			iconName: 'star',
-			iconClass: 'far fa-star',
-			view: 'default',
-			shape: 'circle',
-			link: '',
-			openInNewWindow: false,
-			nofollow: false,
-			attributes: [],
-			cssClass: '',
-		};
-	}
-	function parseIconWidgetClassParts(iconClass) {
-		const tokens = String(iconClass || '').trim().split(/\s+/).filter(Boolean);
-		let style = '';
-		let name = '';
-		tokens.forEach((token) => {
-			if (token === 'fas') style = 'solid';
-			else if (token === 'far') style = 'regular';
-			else if (token === 'fab') style = 'brands';
-			else if (token === 'fal') style = 'light';
-			else if (token === 'fad') style = 'duotone';
-			else if (token.startsWith('fa-')) name = token.slice(3);
-		});
-		return { style, name };
-	}
-	function iconWidgetClassName(style, name) {
-		const iconName = String(name || '').trim() || 'star';
-		return fontAwesomeStylePrefix(style) + ' fa-' + iconName;
-	}
-	function normalizeIconWidgetSettings(settings) {
-		if (!settings || typeof settings !== 'object') return;
-		const defaults = iconWidgetDefaults();
-		Object.keys(defaults).forEach((key) => {
-			if (settings[key] === undefined) settings[key] = cloneSettingValue(defaults[key]);
-		});
-		const parsed = parseIconWidgetClassParts(settings.iconClass);
-		const style = String(settings.iconStyle || parsed.style || defaults.iconStyle).trim().toLowerCase();
-		const allowedStyle = ['regular', 'solid', 'brands', 'light', 'duotone'].includes(style) ? style : defaults.iconStyle;
-		const name = String(settings.iconName || parsed.name || defaults.iconName).trim().toLowerCase().replace(/^fa-/, '') || defaults.iconName;
-		const view = String(settings.view || defaults.view).trim().toLowerCase();
-		const shape = String(settings.shape || defaults.shape).trim().toLowerCase();
-		settings.iconStyle = allowedStyle;
-		settings.iconName = name;
-		settings.iconClass = iconWidgetClassName(allowedStyle, name);
-		settings.view = ['default', 'stacked', 'framed'].includes(view) ? view : defaults.view;
-		settings.shape = ['circle', 'rounded', 'square'].includes(shape) ? shape : defaults.shape;
-		settings.link = String(settings.link || '').trim();
-		settings.openInNewWindow = !!settings.openInNewWindow;
-		settings.nofollow = !!settings.nofollow;
-		settings.attributes = normalizeAttributes(settings.attributes);
-		settings.cssClass = String(settings.cssClass || '').trim();
-	}
-	function buildFontAwesomeIconLibrary(metadata) {
-		const out = [];
-		if (!metadata || typeof metadata !== 'object') return out;
-		Object.entries(metadata).forEach(([name, meta]) => {
-			if (!meta || typeof meta !== 'object') return;
-			const styles = Array.isArray(meta.styles) ? meta.styles : [];
-			styles.forEach((style) => {
-				const safeStyle = String(style || '').trim().toLowerCase();
-				if (!['regular', 'solid', 'brands', 'light', 'duotone'].includes(safeStyle)) return;
-				const safeName = String(name || '').trim().toLowerCase();
-				if (!safeName) return;
-				const label = String(meta.label || '').trim() || humanizeIconName(safeName);
-				out.push({
-					id: safeStyle + ':' + safeName,
-					style: safeStyle,
-					name: safeName,
-					label,
-					className: iconWidgetClassName(safeStyle, safeName),
-					searchText: (label + ' ' + safeName + ' ' + safeStyle).toLowerCase(),
-				});
-			});
-		});
-		return out.sort((a, b) => {
-			if (a.label === b.label) return a.style.localeCompare(b.style);
-			return a.label.localeCompare(b.label);
-		});
 	}
 	function clamp(v, min, max) {
 		return Math.min(max, Math.max(min, v));
@@ -738,24 +610,22 @@
 		image: 'Image',
 		video: 'Video',
 		button: 'Button',
-		icon: 'Icon',
 		divider: 'Divider',
 		spacer: 'Spacer',
 	});
 
 	const NODE_LABEL_ICONS = Object.freeze({
-		container: 'fas fa-cube',
-		container_fluid: 'fas fa-cube',
-		row_grid: 'fas fa-th-large',
-		grid: 'fas fa-th-large',
-		heading: 'fas fa-heading',
-		text_editor: 'fas fa-edit',
-		image: 'far fa-image',
-		video: 'fas fa-video',
-		button: 'fas fa-link',
-		icon: 'far fa-star',
-		divider: 'fas fa-minus',
-		spacer: 'fas fa-arrows-alt-v',
+		container: 'fa-solid fa-cube',
+		container_fluid: 'fa-solid fa-cube',
+		row_grid: 'fa-solid fa-table-cells-large',
+		grid: 'fa-solid fa-table-cells-large',
+		heading: 'fa-solid fa-heading',
+		text_editor: 'fa-solid fa-pen-to-square',
+		image: 'fa-regular fa-image',
+		video: 'fa-solid fa-video',
+		button: 'fa-solid fa-link',
+		divider: 'fa-solid fa-minus',
+		spacer: 'fa-solid fa-arrows-up-down',
 	});
 
 	function baseNodeLabel(type, fallback = 'Widget') {
@@ -770,7 +640,7 @@
 	}
 
 	function nodeLabelIcon(type) {
-		return NODE_LABEL_ICONS[type] || 'fas fa-cube';
+		return NODE_LABEL_ICONS[type] || 'fa-solid fa-cube';
 	}
 
 	function makeNode(type) {
@@ -807,7 +677,6 @@
 			case 'image':          return { id, type, label:'Image', labelSuffix:'',          settings:{ src:'https://placehold.co/640x360', alt:'Image', width:'100%', height:'auto', cssClass:'' } };
 			case 'video':          return { id, type, label:'Video', labelSuffix:'',          settings:videoDefaults() };
 			case 'button':         return { id, type, label:'Button', labelSuffix:'',         settings:{ text:'Click here', url:'#', newTab:false, align:'left', className:'btn btn-primary' } };
-			case 'icon':           return { id, type, label:'Icon', labelSuffix:'',           settings:iconWidgetDefaults() };
 			case 'divider':        return { id, type, label:'Divider', labelSuffix:'',        settings:{ style:'solid', width:'100%', thickness:2, color:'#d0d7e6', cssClass:'' } };
 			case 'spacer':         return { id, type, label:'Spacer', labelSuffix:'',         settings:{ height:'32px', cssClass:'' } };
 			default: return null;
@@ -1610,9 +1479,9 @@
 	<div class="pb-node-toolbar" @click.stop>
 		<div class="pb-node-label" @click.stop="onSelect(node)"><i :class="labelIcon"></i> {{ label }}</div>
 		<div class="pb-node-actions" @click.stop="onSelect(node)">
-			<button v-if="isCont" class="pb-node-btn" @click.stop="onOpenModal(node.type, 'root', { containerNode: node, list: [] })" title="Structure"><i class="fas fa-columns"></i></button>
-			<button class="pb-node-btn" @click.stop="onDuplicate(node.id)" title="Duplicate"><i class="far fa-copy"></i></button>
-			<button class="pb-node-btn remove" @click.stop="onRemove(node.id)" title="Delete"><i class="fas fa-trash"></i></button>
+			<button v-if="isCont" class="pb-node-btn" @click.stop="onOpenModal(node.type, 'root', { containerNode: node, list: [] })" title="Structure"><i class="fa-solid fa-table-columns"></i></button>
+			<button class="pb-node-btn" @click.stop="onDuplicate(node.id)" title="Duplicate"><i class="fa-regular fa-copy"></i></button>
+			<button class="pb-node-btn remove" @click.stop="onRemove(node.id)" title="Delete"><i class="fa-solid fa-trash"></i></button>
 		</div>
 	</div>
 
@@ -1642,7 +1511,7 @@
 							:class="{ 'is-active': isColumnSelected(col) }"
 							@click.stop="selectColumn(col)"
 						>
-							<span class="pb-grid-col-label-badge"><i class="far fa-square"></i></span>
+							<span class="pb-grid-col-label-badge"><i class="fa-regular fa-square"></i></span>
 							<span>{{ columnLabel(ci) }}</span>
 						</button>
 						<button
@@ -1653,7 +1522,7 @@
 							@click.stop
 							@mousedown.stop.prevent="startColumnResize($event, col, ci)"
 						>
-							<i class="fas fa-arrows-alt-h"></i>
+							<i class="fa-solid fa-left-right"></i>
 						</button>
 						<draggable
 							v-model="col.children"
@@ -1680,7 +1549,7 @@
 							<template #footer>
 								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">
 									<button v-if="!isSequentialColumnLocked(ci)" type="button" class="pb-inline-add" @click.stop.prevent="onShowToolbox()">
-										<i class="fas fa-plus"></i>
+										<i class="fa-solid fa-plus"></i>
 										<span>Add</span>
 									</button>
 									<div v-else class="pb-dropzone-lock-text">Fill previous column first</div>
@@ -1722,7 +1591,7 @@
 							<template #footer>
 								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">
 									<button v-if="!isSequentialColumnLocked(ci)" type="button" class="pb-inline-add" @click.stop.prevent="onShowToolbox()">
-										<i class="fas fa-plus"></i>
+										<i class="fa-solid fa-plus"></i>
 										<span>Add</span>
 									</button>
 									<div v-else class="pb-dropzone-lock-text">Fill previous column first</div>
@@ -2042,9 +1911,9 @@
 			let activeColumnResizeCleanup = null;
 			const rootNodes   = ref([]);
 			const responsiveDevices = [
-				{ value: 'desktop', label: 'Desktop', menuLabel: 'Desktop', icon: 'fas fa-desktop' },
-				{ value: 'tablet', label: 'Tablet', menuLabel: 'Tablet Portrait', icon: 'fas fa-tablet-alt' },
-				{ value: 'mobile', label: 'Mobile', menuLabel: 'Mobile Portrait', icon: 'fas fa-mobile-alt' },
+				{ value: 'desktop', label: 'Desktop', menuLabel: 'Desktop', icon: 'fa-solid fa-desktop' },
+				{ value: 'tablet', label: 'Tablet', menuLabel: 'Tablet Portrait', icon: 'fa-solid fa-tablet-screen-button' },
+				{ value: 'mobile', label: 'Mobile', menuLabel: 'Mobile Portrait', icon: 'fa-solid fa-mobile-screen-button' },
 			];
 			const desktopPreviewWidths = [
 				{ value: '1140', label: '1140px' },
@@ -2317,10 +2186,6 @@
 						c.settings = { ...videoDefaults(), ...(c.settings || {}) };
 						normalizeVideoNodeSettings(c.settings);
 					}
-					if (c.type === 'icon') {
-						c.settings = { ...iconWidgetDefaults(), ...(c.settings || {}) };
-						normalizeIconWidgetSettings(c.settings);
-					}
 					if (c.settings && typeof c.settings === 'object') {
 						seedResponsiveSettings(c.settings);
 					}
@@ -2371,108 +2236,7 @@
 			}
 			watch(selectedType, (type) => {
 				if (type !== 'text_editor' && showTextEditorModal.value) closeTextEditorModal();
-				if (type !== 'icon') iconLinkOptionsOpenFor.value = '';
 			});
-			const iconLibraryGroups = FONT_AWESOME_5_ICON_GROUPS;
-			const showIconLibraryModal = ref(false);
-			const iconLibraryGroup = ref('all');
-			const iconLibrarySearch = ref('');
-			const iconLibraryIcons = ref([]);
-			const iconLibrarySelected = ref(null);
-			const iconLibraryTargetNodeId = ref('');
-			const iconLibraryLoading = ref(false);
-			const iconLibraryLoaded = ref(false);
-			const iconLibraryError = ref('');
-			const iconLinkOptionsOpenFor = ref('');
-			const filteredIconLibraryIcons = computed(() => {
-				const query = String(iconLibrarySearch.value || '').trim().toLowerCase();
-				const groupKey = String(iconLibraryGroup.value || 'all').trim().toLowerCase();
-				return iconLibraryIcons.value.filter((item) => {
-					if (!item || typeof item !== 'object') return false;
-					if (groupKey !== 'all' && item.style !== groupKey) return false;
-					if (!query) return true;
-					return String(item.searchText || '').includes(query);
-				});
-			});
-			function iconWidgetUsesShape(node = selectedNode.value) {
-				const view = String(node?.settings?.view || 'default').trim().toLowerCase();
-				return view === 'stacked' || view === 'framed';
-			}
-			function iconWidgetCurrentLabel(node = selectedNode.value) {
-				const settings = node && node.settings ? node.settings : {};
-				return humanizeIconName(settings.iconName || parseIconWidgetClassParts(settings.iconClass).name || 'star');
-			}
-			function iconWidgetCurrentStyleLabel(node = selectedNode.value) {
-				const settings = node && node.settings ? node.settings : {};
-				const parsed = parseIconWidgetClassParts(settings.iconClass);
-				return fontAwesomeStyleLabel(settings.iconStyle || parsed.style || 'regular');
-			}
-			function isIconLinkOptionsOpen(node = selectedNode.value) {
-				return !!node && String(iconLinkOptionsOpenFor.value || '') === String(node.id || '');
-			}
-			function toggleIconLinkOptions(node = selectedNode.value) {
-				if (!node || node.type !== 'icon') return;
-				iconLinkOptionsOpenFor.value = isIconLinkOptionsOpen(node) ? '' : String(node.id || '');
-			}
-			async function ensureIconLibraryLoaded() {
-				if (iconLibraryLoaded.value || iconLibraryLoading.value) return;
-				iconLibraryLoading.value = true;
-				iconLibraryError.value = '';
-				try {
-					const response = await fetch(FONT_AWESOME_5_ICON_METADATA_URL, { cache: 'no-store' });
-					if (!response.ok) throw new Error('HTTP ' + response.status);
-					const payload = await response.json();
-					iconLibraryIcons.value = buildFontAwesomeIconLibrary(payload);
-					iconLibraryLoaded.value = true;
-				} catch (error) {
-					console.error('[PB] failed to load icon library metadata', error);
-					iconLibraryIcons.value = [];
-					iconLibraryError.value = 'Icon library tidak berhasil dimuat dari paket lokal Font Awesome.';
-				} finally {
-					iconLibraryLoading.value = false;
-				}
-			}
-			function syncIconLibrarySelectionFromNode(node) {
-				if (!node || node.type !== 'icon') {
-					iconLibrarySelected.value = null;
-					return;
-				}
-				normalizeIconWidgetSettings(node.settings || (node.settings = {}));
-				const targetStyle = String(node.settings.iconStyle || '').trim().toLowerCase();
-				const targetName = String(node.settings.iconName || '').trim().toLowerCase();
-				iconLibrarySelected.value = iconLibraryIcons.value.find((item) => item.style === targetStyle && item.name === targetName) || null;
-			}
-			async function openIconLibrary(node = selectedNode.value) {
-				if (!node || node.type !== 'icon') return;
-				await ensureIconLibraryLoaded();
-				iconLibraryTargetNodeId.value = String(node.id || '');
-				iconLibraryGroup.value = 'all';
-				iconLibrarySearch.value = '';
-				syncIconLibrarySelectionFromNode(node);
-				showIconLibraryModal.value = true;
-			}
-			function closeIconLibrary() {
-				showIconLibraryModal.value = false;
-				iconLibraryGroup.value = 'all';
-				iconLibrarySearch.value = '';
-				iconLibrarySelected.value = null;
-				iconLibraryTargetNodeId.value = '';
-			}
-			function selectIconLibraryItem(item) {
-				iconLibrarySelected.value = item || null;
-			}
-			function insertSelectedIcon() {
-				if (!iconLibrarySelected.value) return;
-				const nodeId = String(iconLibraryTargetNodeId.value || '');
-				const node = nodeId ? findById(rootNodes.value, nodeId) : selectedNode.value;
-				if (!node || node.type !== 'icon') return;
-				if (!node.settings || typeof node.settings !== 'object') node.settings = {};
-				node.settings.iconStyle = iconLibrarySelected.value.style;
-				node.settings.iconName = iconLibrarySelected.value.name;
-				node.settings.iconClass = iconLibrarySelected.value.className;
-				normalizeIconWidgetSettings(node.settings);
-				closeIconLibrary();
-			}
 			const selectedColumnContext = computed(() => {
 				const nodeId = String(selectedColumnNodeId.value || selectedId.value || '').trim();
 				const colId = String(selectedColumnId.value || '').trim();
@@ -4018,18 +3782,17 @@
 
 				const toolbox = {
 				layout: [
-					{ type:'container',       label:'Container',       icon:'far fa-square' },
-					{ type:'grid',            label:'Grid',            icon:'fas fa-th-large' },
+					{ type:'container',       label:'Container',       icon:'fa-regular fa-square-full' },
+					{ type:'grid',            label:'Grid',            icon:'fa-solid fa-table-cells-large' },
 				],
 				basic: [
-					{ type:'heading',     label:'Heading',     icon:'fas fa-heading' },
-					{ type:'text_editor', label:'Text Editor', icon:'fas fa-edit' },
-					{ type:'image',       label:'Image',       icon:'far fa-image' },
-					{ type:'video',       label:'Video',       icon:'fas fa-video' },
-					{ type:'button',      label:'Button',      icon:'fas fa-link' },
-					{ type:'icon',        label:'Icon',        icon:'far fa-star' },
-					{ type:'divider',     label:'Divider',     icon:'fas fa-minus' },
-					{ type:'spacer',      label:'Spacer',      icon:'fas fa-arrows-alt-v' },
+					{ type:'heading',     label:'Heading',     icon:'fa-solid fa-heading' },
+					{ type:'text_editor', label:'Text Editor', icon:'fa-solid fa-pen-to-square' },
+					{ type:'image',       label:'Image',       icon:'fa-regular fa-image' },
+					{ type:'video',       label:'Video',       icon:'fa-solid fa-video' },
+					{ type:'button',      label:'Button',      icon:'fa-solid fa-link' },
+					{ type:'divider',     label:'Divider',     icon:'fa-solid fa-minus' },
+					{ type:'spacer',      label:'Spacer',      icon:'fa-solid fa-arrows-up-down' },
 				],
 			};
 
@@ -4086,12 +3849,8 @@
 				containerGridColumnsValue, setContainerGridColumnsValue,
 				containerGridRowsValue, setContainerGridRowsValue, syncContainerGap,
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
-				displayNodeLabel, nodeLabelIcon,
+				displayNodeLabel,
 				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
-				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
-				openIconLibrary, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
-				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
-				iconWidgetViewOptions: ICON_WIDGET_VIEW_OPTIONS, iconWidgetShapeOptions: ICON_WIDGET_SHAPE_OPTIONS,
 				pageName, pageStatus, customCss, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
 				showTextEditorModal, textEditorModalFullscreen, textEditorModalSummary, setTextEditorHtml, openTextEditorModal, closeTextEditorModal,
 				customCssGotoLine, customCssSearchQuery, customCssActiveLine, customCssCharCount, customCssLineCount, customCssLineNumbers, customCssSummary,
@@ -4109,15 +3868,15 @@
 	<div class="pb-topbar">
 		<div class="pb-brand"><span class="pb-brand-badge">PB</span><span>{{ appTitle }} - Elementor Style</span></div>
 		<div class="pb-top-actions">
-			<button class="pb-btn icon" :disabled="!canUndo" @click="undo" title="Undo"><i class="fas fa-undo"></i></button>
-			<button class="pb-btn icon" :disabled="!canRedo" @click="redo" title="Redo"><i class="fas fa-redo"></i></button>
+			<button class="pb-btn icon" :disabled="!canUndo" @click="undo" title="Undo"><i class="fa-solid fa-rotate-left"></i></button>
+			<button class="pb-btn icon" :disabled="!canRedo" @click="redo" title="Redo"><i class="fa-solid fa-rotate-right"></i></button>
 			<button class="pb-btn primary" :class="{ 'is-loading': saveState==='saving' }" :disabled="saveState==='saving'" @click="savePage">
 				<template v-if="saveState==='saving'">
 					Saving
 					<span class="spinner-border spinner-border-sm text-light ms-1" role="status" aria-hidden="true"></span>
 				</template>
 				<template v-else>
-					<i class="fas fa-save"></i> Save
+					<i class="fa-solid fa-floppy-disk"></i> Save
 				</template>
 			</button>
 		</div>
@@ -4162,8 +3921,8 @@
 							<span class="pb-css-editor-summary">{{ customCssSummary }}</span>
 						</div>
 						<button type="button" class="pb-css-editor-trigger" @click="openCustomCssEditor">
-							<span class="pb-css-editor-trigger-main"><i class="fas fa-code"></i> Custom CSS Editor</span>
-							<span class="pb-css-editor-trigger-action"><i class="fas fa-external-link-alt"></i></span>
+							<span class="pb-css-editor-trigger-main"><i class="fa-solid fa-code"></i> Custom CSS Editor</span>
+							<span class="pb-css-editor-trigger-action"><i class="fa-solid fa-up-right-from-square"></i></span>
 						</button>
 					</div>
 				</div>
@@ -4208,9 +3967,9 @@
 						<div v-else>
 				<div class="pb-section" v-if="selectedColumnContext">
 					<div class="pb-props-header">
-						<button class="pb-btn icon-sm" @click="clearCurrentSelection" title="Back"><i class="fas fa-chevron-left"></i></button>
+						<button class="pb-btn icon-sm" @click="clearCurrentSelection" title="Back"><i class="fa-solid fa-chevron-left"></i></button>
 						<div class="pb-props-type-badge">
-							<i class="far fa-square"></i>
+							<i class="fa-regular fa-square"></i>
 							<span>Column {{ selectedColumnContext.index + 1 }}</span>
 						</div>
 					</div>
@@ -4246,9 +4005,9 @@
 				</div>
 				<div class="pb-section" v-else>
 					<div class="pb-props-header">
-						<button class="pb-btn icon-sm" @click="clearCurrentSelection" title="Back"><i class="fas fa-chevron-left"></i></button>
+						<button class="pb-btn icon-sm" @click="clearCurrentSelection" title="Back"><i class="fa-solid fa-chevron-left"></i></button>
 						<div class="pb-props-type-badge">
-							<i :class="nodeLabelIcon(selectedType)"></i>
+							<i :class="selectedType==='container'?'fa-regular fa-square-full':selectedType==='container_fluid'?'fa-solid fa-grip-lines-vertical':selectedType==='grid'||selectedType==='row_grid'?'fa-solid fa-table-cells-large':'fa-solid fa-cube'"></i>
 							<span>{{ displayNodeLabel(selectedNode) }}</span>
 						</div>
 					</div>
@@ -4261,9 +4020,9 @@
 					<template v-if="selectedType==='container'||selectedType==='container_fluid'">
 						<div class="pb-layout-settings pb-layout-settings--container">
 							<div class="pb-tab-nav">
-								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='layout'}" @click="settingsTab='layout'"><i class="far fa-square"></i><span>Layout</span></button>
-								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='style'}" @click="settingsTab='style'"><i class="fas fa-adjust"></i><span>Style</span></button>
-								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='advanced'}" @click="settingsTab='advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
+								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='layout'}" @click="settingsTab='layout'"><i class="fa-regular fa-square"></i><span>Layout</span></button>
+								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='style'}" @click="settingsTab='style'"><i class="fa-solid fa-circle-half-stroke"></i><span>Style</span></button>
+								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='advanced'}" @click="settingsTab='advanced'"><i class="fa-solid fa-gear"></i><span>Advanced</span></button>
 							</div>
 						<!-- TAB LAYOUT -->
 						<div v-show="settingsTab==='layout'" class="pb-tab-content pb-layout-settings__tab">
@@ -4351,10 +4110,10 @@
 										</div>
 									</div>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'direction','row')==='row'}"            @click="setContainerResponsiveSetting(selectedNode.settings,'direction','row')"            title="Row"><i class="fas fa-arrow-right"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'direction','row')==='column'}"         @click="setContainerResponsiveSetting(selectedNode.settings,'direction','column')"         title="Column"><i class="fas fa-arrow-down"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'direction','row')==='row-reverse'}"    @click="setContainerResponsiveSetting(selectedNode.settings,'direction','row-reverse')"    title="Row Reverse"><i class="fas fa-arrow-left"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'direction','row')==='column-reverse'}" @click="setContainerResponsiveSetting(selectedNode.settings,'direction','column-reverse')" title="Col Reverse"><i class="fas fa-arrow-up"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'direction','row')==='row'}"            @click="setContainerResponsiveSetting(selectedNode.settings,'direction','row')"            title="Row"><i class="fa-solid fa-arrow-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'direction','row')==='column'}"         @click="setContainerResponsiveSetting(selectedNode.settings,'direction','column')"         title="Column"><i class="fa-solid fa-arrow-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'direction','row')==='row-reverse'}"    @click="setContainerResponsiveSetting(selectedNode.settings,'direction','row-reverse')"    title="Row Reverse"><i class="fa-solid fa-arrow-left"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'direction','row')==='column-reverse'}" @click="setContainerResponsiveSetting(selectedNode.settings,'direction','column-reverse')" title="Col Reverse"><i class="fa-solid fa-arrow-up"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
@@ -4371,12 +4130,12 @@
 										</div>
 									</div>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='flex-start'}"    @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','flex-start')"    title="Start"><i class="fas fa-align-left"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='center'}"        @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','center')"        title="Center"><i class="fas fa-align-center"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='flex-end'}"      @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','flex-end')"      title="End"><i class="fas fa-align-right"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='space-between'}" @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','space-between')" title="Space Between"><i class="fas fa-arrows-alt-h"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='space-around'}"  @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','space-around')"  title="Space Around"><i class="fas fa-grip-lines-vertical"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='space-evenly'}"  @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','space-evenly')"  title="Space Evenly"><i class="fas fa-grip-lines"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='flex-start'}"    @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','flex-start')"    title="Start"><i class="fa-solid fa-align-left"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='center'}"        @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','center')"        title="Center"><i class="fa-solid fa-align-center"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='flex-end'}"      @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','flex-end')"      title="End"><i class="fa-solid fa-align-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='space-between'}" @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','space-between')" title="Space Between"><i class="fa-solid fa-arrows-left-right-to-line"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='space-around'}"  @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','space-around')"  title="Space Around"><i class="fa-solid fa-grip-lines-vertical"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'justifyContent','flex-start')==='space-evenly'}"  @click="setContainerResponsiveSetting(selectedNode.settings,'justifyContent','space-evenly')"  title="Space Evenly"><i class="fa-solid fa-grip"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
@@ -4393,10 +4152,10 @@
 										</div>
 									</div>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignItems','flex-start')==='flex-start'}" @click="setContainerResponsiveSetting(selectedNode.settings,'alignItems','flex-start')" title="Start"><i class="fas fa-arrow-up"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignItems','flex-start')==='center'}"    @click="setContainerResponsiveSetting(selectedNode.settings,'alignItems','center')"    title="Center"><i class="fas fa-arrows-alt-v"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignItems','flex-start')==='flex-end'}"  @click="setContainerResponsiveSetting(selectedNode.settings,'alignItems','flex-end')"  title="End"><i class="fas fa-arrow-down"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignItems','flex-start')==='stretch'}"   @click="setContainerResponsiveSetting(selectedNode.settings,'alignItems','stretch')"   title="Stretch"><i class="fas fa-expand-arrows-alt"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignItems','flex-start')==='flex-start'}" @click="setContainerResponsiveSetting(selectedNode.settings,'alignItems','flex-start')" title="Start"><i class="fa-solid fa-arrow-up"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignItems','flex-start')==='center'}"    @click="setContainerResponsiveSetting(selectedNode.settings,'alignItems','center')"    title="Center"><i class="fa-solid fa-arrows-up-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignItems','flex-start')==='flex-end'}"  @click="setContainerResponsiveSetting(selectedNode.settings,'alignItems','flex-end')"  title="End"><i class="fa-solid fa-arrow-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignItems','flex-start')==='stretch'}"   @click="setContainerResponsiveSetting(selectedNode.settings,'alignItems','stretch')"   title="Stretch"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
@@ -4418,7 +4177,7 @@
 									<div class="pb-gap-row pb-gap-row-with-link">
 										<div class="pb-gap-field"><input class="pb-input" :value="containerResponsiveValue(selectedNode.settings,'flexColumnGap',selectedNode.settings.flexColumnGap || '0')" @input="setContainerResponsiveSetting(selectedNode.settings,'flexColumnGap',$event.target.value); syncContainerGap(selectedNode.settings, 'column')" placeholder="20px"><span>Column</span></div>
 										<div class="pb-gap-field"><input class="pb-input" :value="containerResponsiveValue(selectedNode.settings,'flexRowGap',selectedNode.settings.flexRowGap || '0')" @input="setContainerResponsiveSetting(selectedNode.settings,'flexRowGap',$event.target.value); syncContainerGap(selectedNode.settings, 'row')" placeholder="20px"><span>Row</span></div>
-										<button class="pb-link-btn" @click="selectedNode.settings.containerGapLinked=!selectedNode.settings.containerGapLinked" :title="selectedNode.settings.containerGapLinked?'Unlink':'Link'"><i :class="selectedNode.settings.containerGapLinked?'fas fa-link':'fas fa-unlink'"></i></button>
+										<button class="pb-link-btn" @click="selectedNode.settings.containerGapLinked=!selectedNode.settings.containerGapLinked" :title="selectedNode.settings.containerGapLinked?'Unlink':'Link'"><i :class="selectedNode.settings.containerGapLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
@@ -4435,8 +4194,8 @@
 										</div>
 									</div>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'flexWrap','nowrap')==='nowrap'}" @click="setContainerResponsiveSetting(selectedNode.settings,'flexWrap','nowrap')" title="No Wrap"><i class="fas fa-long-arrow-alt-right"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'flexWrap','nowrap')==='wrap'}" @click="setContainerResponsiveSetting(selectedNode.settings,'flexWrap','wrap')" title="Wrap"><i class="fas fa-level-down-alt"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'flexWrap','nowrap')==='nowrap'}" @click="setContainerResponsiveSetting(selectedNode.settings,'flexWrap','nowrap')" title="No Wrap"><i class="fa-solid fa-right-long"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'flexWrap','nowrap')==='wrap'}" @click="setContainerResponsiveSetting(selectedNode.settings,'flexWrap','wrap')" title="Wrap"><i class="fa-solid fa-turn-down"></i></button>
 									</div>
 									<div class="pb-form-note">Items within the container can stay in a single line (No wrap), or break into multiple lines (Wrap).</div>
 								</div>
@@ -4454,12 +4213,12 @@
 										</div>
 									</div>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='flex-start'}"    @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','flex-start')"    title="Start"><i class="fas fa-align-left"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='center'}"        @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','center')"        title="Center"><i class="fas fa-align-center"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='flex-end'}"      @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','flex-end')"      title="End"><i class="fas fa-align-right"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='space-between'}" @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','space-between')" title="Space Between"><i class="fas fa-arrows-alt-h"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='space-around'}"  @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','space-around')"  title="Space Around"><i class="fas fa-grip-lines-vertical"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='stretch'}"       @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','stretch')"       title="Stretch"><i class="fas fa-arrows-alt-h"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='flex-start'}"    @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','flex-start')"    title="Start"><i class="fa-solid fa-align-left"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='center'}"        @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','center')"        title="Center"><i class="fa-solid fa-align-center"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='flex-end'}"      @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','flex-end')"      title="End"><i class="fa-solid fa-align-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='space-between'}" @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','space-between')" title="Space Between"><i class="fa-solid fa-arrows-left-right-to-line"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='space-around'}"  @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','space-around')"  title="Space Around"><i class="fa-solid fa-grip-lines-vertical"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'alignContent','stretch')==='stretch'}"       @click="setContainerResponsiveSetting(selectedNode.settings,'alignContent','stretch')"       title="Stretch"><i class="fa-solid fa-left-right"></i></button>
 									</div>
 								</div>
 								</div>
@@ -4531,7 +4290,7 @@
 									<div class="pb-gap-row pb-gap-row-with-link">
 										<div class="pb-gap-field"><input class="pb-input" :value="containerResponsiveValue(selectedNode.settings,'gridColumnGap',selectedNode.settings.gridColumnGap || '10px')" @input="setContainerResponsiveSetting(selectedNode.settings,'gridColumnGap',$event.target.value); syncContainerGap(selectedNode.settings, 'gridColumn')" placeholder="20px"><span>Column</span></div>
 										<div class="pb-gap-field"><input class="pb-input" :value="containerResponsiveValue(selectedNode.settings,'gridRowGap',selectedNode.settings.gridRowGap || '10px')" @input="setContainerResponsiveSetting(selectedNode.settings,'gridRowGap',$event.target.value); syncContainerGap(selectedNode.settings, 'gridRow')" placeholder="20px"><span>Row</span></div>
-										<button class="pb-link-btn" @click="selectedNode.settings.containerGapLinked=!selectedNode.settings.containerGapLinked" :title="selectedNode.settings.containerGapLinked?'Unlink':'Link'"><i :class="selectedNode.settings.containerGapLinked?'fas fa-link':'fas fa-unlink'"></i></button>
+										<button class="pb-link-btn" @click="selectedNode.settings.containerGapLinked=!selectedNode.settings.containerGapLinked" :title="selectedNode.settings.containerGapLinked?'Unlink':'Link'"><i :class="selectedNode.settings.containerGapLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
@@ -4567,10 +4326,10 @@
 										</div>
 									</div>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridJustifyItems','stretch')==='start'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridJustifyItems','start')" title="Start"><i class="fas fa-align-left"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridJustifyItems','stretch')==='center'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridJustifyItems','center')" title="Center"><i class="fas fa-align-center"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridJustifyItems','stretch')==='end'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridJustifyItems','end')" title="End"><i class="fas fa-align-right"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridJustifyItems','stretch')==='stretch'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridJustifyItems','stretch')" title="Stretch"><i class="fas fa-arrows-alt-h"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridJustifyItems','stretch')==='start'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridJustifyItems','start')" title="Start"><i class="fa-solid fa-align-left"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridJustifyItems','stretch')==='center'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridJustifyItems','center')" title="Center"><i class="fa-solid fa-align-center"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridJustifyItems','stretch')==='end'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridJustifyItems','end')" title="End"><i class="fa-solid fa-align-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridJustifyItems','stretch')==='stretch'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridJustifyItems','stretch')" title="Stretch"><i class="fa-solid fa-left-right"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
@@ -4587,10 +4346,10 @@
 										</div>
 									</div>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridAlignItems','start')==='start'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridAlignItems','start')" title="Start"><i class="fas fa-arrow-up"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridAlignItems','start')==='center'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridAlignItems','center')" title="Center"><i class="fas fa-arrows-alt-v"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridAlignItems','start')==='end'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridAlignItems','end')" title="End"><i class="fas fa-arrow-down"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridAlignItems','start')==='stretch'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridAlignItems','stretch')" title="Stretch"><i class="fas fa-expand-arrows-alt"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridAlignItems','start')==='start'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridAlignItems','start')" title="Start"><i class="fa-solid fa-arrow-up"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridAlignItems','start')==='center'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridAlignItems','center')" title="Center"><i class="fa-solid fa-arrows-up-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridAlignItems','start')==='end'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridAlignItems','end')" title="End"><i class="fa-solid fa-arrow-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings,'gridAlignItems','start')==='stretch'}" @click="setContainerResponsiveSetting(selectedNode.settings,'gridAlignItems','stretch')" title="Stretch"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
 									</div>
 								</div>
 								</div>
@@ -4638,16 +4397,16 @@
 									<label class="pb-form-label">Background Type</label>
 									<div class="pb-btn-group pb-icon-btn-group" :class="{ 'pb-icon-btn-group-hover': isBgHoverState(selectedNode) }">
 										<button class="pb-seg-btn pb-icon-btn" :class="{active:selectedNode.settings[bgStateKey(selectedNode,'bgType')]==='color'}" @click.prevent="setBgTypeForState(selectedNode, 'color')" title="Classic">
-											<i class="fas fa-brush"></i>
+											<i class="fa-solid fa-brush"></i>
 										</button>
 										<button class="pb-seg-btn pb-icon-btn" :class="{active:selectedNode.settings[bgStateKey(selectedNode,'bgType')]==='gradient'}" @click.prevent="setBgTypeForState(selectedNode, 'gradient')" title="Gradient">
-											<i class="fas fa-fill-drip"></i>
+											<i class="fa-solid fa-fill-drip"></i>
 										</button>
 										<button v-if="!isBgHoverState(selectedNode)" class="pb-seg-btn pb-icon-btn" :class="{active:selectedNode.settings[bgStateKey(selectedNode,'bgType')]==='image'}" @click.prevent="setBgTypeForState(selectedNode, 'image')" title="Image">
-											<i class="far fa-image"></i>
+											<i class="fa-regular fa-image"></i>
 										</button>
 										<button v-if="!isBgHoverState(selectedNode)" class="pb-seg-btn pb-icon-btn" :class="{active:selectedNode.settings[bgStateKey(selectedNode,'bgType')]==='none'}" @click.prevent="setBgTypeForState(selectedNode, 'none')" title="None">
-											<i class="fas fa-ban"></i>
+											<i class="fa-solid fa-ban"></i>
 										</button>
 									</div>
 								</div>
@@ -4701,13 +4460,13 @@
 										<div class="pb-bg-media-field" :class="{ 'has-image': !!selectedNode.settings[bgStateKey(selectedNode,'bgImage')] }">
 											<div class="pb-bg-media-preview" :style="selectedNode.settings[bgStateKey(selectedNode,'bgImage')] ? { backgroundImage: 'url(' + selectedNode.settings[bgStateKey(selectedNode,'bgImage')] + ')' } : {}">
 												<button type="button" class="pb-bg-media-center-btn" :title="selectedNode.settings[bgStateKey(selectedNode,'bgImage')] ? 'Change Image' : 'Choose Image'" @click="chooseBgImage(selectedNode, bgStateKey(selectedNode,'bgImage'))">
-													<i :class="selectedNode.settings[bgStateKey(selectedNode,'bgImage')] ? 'fas fa-pen' : 'fas fa-plus'"></i>
+													<i :class="selectedNode.settings[bgStateKey(selectedNode,'bgImage')] ? 'fa-solid fa-pen' : 'fa-solid fa-plus'"></i>
 												</button>
 											</div>
 											<div class="pb-bg-media-actions">
 												<button type="button" class="pb-bg-media-choose" @click="chooseBgImage(selectedNode, bgStateKey(selectedNode,'bgImage'))">Choose Image</button>
 												<button type="button" class="pb-bg-media-remove" :disabled="!selectedNode.settings[bgStateKey(selectedNode,'bgImage')]" title="Remove Image" @click="clearBgImage(selectedNode, bgStateKey(selectedNode,'bgImage'))">
-													<i class="fas fa-trash-alt"></i>
+													<i class="fa-solid fa-trash-can"></i>
 												</button>
 											</div>
 										</div>
@@ -4733,10 +4492,10 @@
 									<div class="pb-form-group">
 										<label class="pb-form-label">Background Type</label>
 										<div class="pb-btn-group pb-icon-btn-group">
-											<button class="pb-seg-btn pb-icon-btn" :class="{active:selectedNode.settings[bgStateKey(selectedNode,'bgOverlayType')]==='color'}" @click.prevent="setBgOverlayTypeForState(selectedNode, 'color')" title="Classic"><i class="fas fa-brush"></i></button>
-											<button class="pb-seg-btn pb-icon-btn" :class="{active:selectedNode.settings[bgStateKey(selectedNode,'bgOverlayType')]==='gradient'}" @click.prevent="setBgOverlayTypeForState(selectedNode, 'gradient')" title="Gradient"><i class="fas fa-fill-drip"></i></button>
-											<button class="pb-seg-btn pb-icon-btn" :class="{active:selectedNode.settings[bgStateKey(selectedNode,'bgOverlayType')]==='image'}" @click.prevent="setBgOverlayTypeForState(selectedNode, 'image')" title="Image"><i class="far fa-image"></i></button>
-											<button class="pb-seg-btn pb-icon-btn" :class="{active:selectedNode.settings[bgStateKey(selectedNode,'bgOverlayType')]==='none'}" @click.prevent="setBgOverlayTypeForState(selectedNode, 'none')" title="None"><i class="fas fa-ban"></i></button>
+											<button class="pb-seg-btn pb-icon-btn" :class="{active:selectedNode.settings[bgStateKey(selectedNode,'bgOverlayType')]==='color'}" @click.prevent="setBgOverlayTypeForState(selectedNode, 'color')" title="Classic"><i class="fa-solid fa-brush"></i></button>
+											<button class="pb-seg-btn pb-icon-btn" :class="{active:selectedNode.settings[bgStateKey(selectedNode,'bgOverlayType')]==='gradient'}" @click.prevent="setBgOverlayTypeForState(selectedNode, 'gradient')" title="Gradient"><i class="fa-solid fa-fill-drip"></i></button>
+											<button class="pb-seg-btn pb-icon-btn" :class="{active:selectedNode.settings[bgStateKey(selectedNode,'bgOverlayType')]==='image'}" @click.prevent="setBgOverlayTypeForState(selectedNode, 'image')" title="Image"><i class="fa-regular fa-image"></i></button>
+											<button class="pb-seg-btn pb-icon-btn" :class="{active:selectedNode.settings[bgStateKey(selectedNode,'bgOverlayType')]==='none'}" @click.prevent="setBgOverlayTypeForState(selectedNode, 'none')" title="None"><i class="fa-solid fa-ban"></i></button>
 										</div>
 									</div>
 									<template v-if="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayType')]==='color'">
@@ -4785,12 +4544,12 @@
 											<div class="pb-bg-media-field" :class="{ 'has-image': !!selectedNode.settings[bgStateKey(selectedNode,'bgOverlayImage')] }">
 												<div class="pb-bg-media-preview" :style="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayImage')] ? { backgroundImage: 'url(' + selectedNode.settings[bgStateKey(selectedNode,'bgOverlayImage')] + ')' } : {}">
 													<button type="button" class="pb-bg-media-center-btn" :title="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayImage')] ? 'Change Image' : 'Choose Image'" @click="chooseBgImage(selectedNode, bgStateKey(selectedNode,'bgOverlayImage'))">
-														<i :class="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayImage')] ? 'fas fa-pen' : 'fas fa-plus'"></i>
+														<i :class="selectedNode.settings[bgStateKey(selectedNode,'bgOverlayImage')] ? 'fa-solid fa-pen' : 'fa-solid fa-plus'"></i>
 													</button>
 												</div>
 												<div class="pb-bg-media-actions">
 													<button type="button" class="pb-bg-media-choose" @click="chooseBgImage(selectedNode, bgStateKey(selectedNode,'bgOverlayImage'))">Choose Image</button>
-													<button type="button" class="pb-bg-media-remove" :disabled="!selectedNode.settings[bgStateKey(selectedNode,'bgOverlayImage')]" title="Remove Image" @click="clearBgImage(selectedNode, bgStateKey(selectedNode,'bgOverlayImage'))"><i class="fas fa-trash-alt"></i></button>
+													<button type="button" class="pb-bg-media-remove" :disabled="!selectedNode.settings[bgStateKey(selectedNode,'bgOverlayImage')]" title="Remove Image" @click="clearBgImage(selectedNode, bgStateKey(selectedNode,'bgOverlayImage'))"><i class="fa-solid fa-trash-can"></i></button>
 												</div>
 											</div>
 										</div>
@@ -4833,7 +4592,7 @@
 										<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings[bgStateKey(selectedNode,'borderColor')]"><input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings[bgStateKey(selectedNode,'borderColor')]"></div></div>
 									</template>
 									<div class="pb-form-group">
-										<div class="pb-label-row"><label class="pb-form-label">Border Radius</label><button class="pb-link-btn" @click="selectedNode.settings.borderRadiusLinked=!selectedNode.settings.borderRadiusLinked" :title="selectedNode.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="selectedNode.settings.borderRadiusLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
+										<div class="pb-label-row"><label class="pb-form-label">Border Radius</label><button class="pb-link-btn" @click="selectedNode.settings.borderRadiusLinked=!selectedNode.settings.borderRadiusLinked" :title="selectedNode.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="selectedNode.settings.borderRadiusLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button></div>
 										<div class="pb-four-sides">
 											<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings.borderRadiusTL" @input="selectedNode.settings.borderRadiusLinked&&(selectedNode.settings.borderRadiusTR=selectedNode.settings.borderRadiusBR=selectedNode.settings.borderRadiusBL=selectedNode.settings.borderRadiusTL)" placeholder="0"><span>Top</span></div>
 											<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings.borderRadiusTR" @input="selectedNode.settings.borderRadiusLinked&&(selectedNode.settings.borderRadiusTL=selectedNode.settings.borderRadiusBR=selectedNode.settings.borderRadiusBL=selectedNode.settings.borderRadiusTR)" placeholder="0"><span>Right</span></div>
@@ -4950,7 +4709,7 @@
 									</div>
 									<div class="pb-label-row">
 										<div></div>
-										<button class="pb-link-btn" @click="selectedNode.settings.marginLinked=!selectedNode.settings.marginLinked" :title="selectedNode.settings.marginLinked?'Unlink':'Link'"><i :class="selectedNode.settings.marginLinked?'fas fa-link':'fas fa-unlink'"></i></button>
+										<button class="pb-link-btn" @click="selectedNode.settings.marginLinked=!selectedNode.settings.marginLinked" :title="selectedNode.settings.marginLinked?'Unlink':'Link'"><i :class="selectedNode.settings.marginLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button>
 									</div>
 									<div class="pb-four-sides mt-1">
 										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('marginTop')]" @input="syncResponsiveSides(selectedNode.settings, 'margin', 'Top', selectedNode.settings.marginLinked)" placeholder=""><span>Top</span></div>
@@ -4977,7 +4736,7 @@
 									</div>
 									<div class="pb-label-row">
 										<div></div>
-										<button class="pb-link-btn" @click="selectedNode.settings.paddingLinked=!selectedNode.settings.paddingLinked" :title="selectedNode.settings.paddingLinked?'Unlink':'Link'"><i :class="selectedNode.settings.paddingLinked?'fas fa-link':'fas fa-unlink'"></i></button>
+										<button class="pb-link-btn" @click="selectedNode.settings.paddingLinked=!selectedNode.settings.paddingLinked" :title="selectedNode.settings.paddingLinked?'Unlink':'Link'"><i :class="selectedNode.settings.paddingLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button>
 									</div>
 									<div class="pb-four-sides mt-1">
 										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('paddingTop')]" @input="syncResponsiveSides(selectedNode.settings, 'padding', 'Top', selectedNode.settings.paddingLinked)" placeholder=""><span>Top</span></div>
@@ -5000,11 +4759,11 @@
 										</div>
 									</div>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='auto'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'auto')" title="Auto"><i class="fas fa-minus"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='flex-start'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'flex-start')" title="Start"><i class="fas fa-arrow-up"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='center'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'center')" title="Center"><i class="fas fa-arrows-alt-v"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='flex-end'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'flex-end')" title="End"><i class="fas fa-arrow-down"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='stretch'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'stretch')" title="Stretch"><i class="fas fa-expand-arrows-alt"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='auto'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'auto')" title="Auto"><i class="fa-solid fa-minus"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='flex-start'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'flex-start')" title="Start"><i class="fa-solid fa-arrow-up"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='center'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'center')" title="Center"><i class="fa-solid fa-arrows-up-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='flex-end'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'flex-end')" title="End"><i class="fa-solid fa-arrow-down"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'alignSelf', 'auto')==='stretch'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'alignSelf', 'stretch')" title="Stretch"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
 									</div>
 									<div class="pb-form-note">This control affects this container inside its parent layout.</div>
 								</div>
@@ -5022,9 +4781,9 @@
 										</div>
 									</div>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'order', '')==='-1'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'order', '-1')" title="Start"><i class="fas fa-arrow-left"></i></button>
-										<button class="pb-seg-btn" :class="{active:['', null, 'default'].includes(containerResponsiveValue(selectedNode.settings, 'order', ''))}" @click="setContainerResponsiveSetting(selectedNode.settings, 'order', 'default')" title="Default"><i class="fas fa-ellipsis-v"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'order', '')==='1'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'order', '1')" title="End"><i class="fas fa-arrow-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'order', '')==='-1'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'order', '-1')" title="Start"><i class="fa-solid fa-arrow-left"></i></button>
+										<button class="pb-seg-btn" :class="{active:['', null, 'default'].includes(containerResponsiveValue(selectedNode.settings, 'order', ''))}" @click="setContainerResponsiveSetting(selectedNode.settings, 'order', 'default')" title="Default"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'order', '')==='1'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'order', '1')" title="End"><i class="fa-solid fa-arrow-right"></i></button>
 									</div>
 									<div class="pb-form-note">This control affects this container inside its parent layout.</div>
 								</div>
@@ -5042,10 +4801,10 @@
 										</div>
 									</div>
 									<div class="pb-btn-group">
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'sizeMode', 'default')==='default'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'sizeMode', 'default')" title="Default"><i class="fas fa-ban"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'sizeMode', 'default')==='grow'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'sizeMode', 'grow')" title="Grow"><i class="fas fa-arrows-alt-h"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'sizeMode', 'default')==='shrink'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'sizeMode', 'shrink')" title="Shrink"><i class="fas fa-compress"></i></button>
-										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'sizeMode', 'default')==='custom'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'sizeMode', 'custom')" title="Custom"><i class="fas fa-ellipsis-h"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'sizeMode', 'default')==='default'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'sizeMode', 'default')" title="Default"><i class="fa-solid fa-ban"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'sizeMode', 'default')==='grow'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'sizeMode', 'grow')" title="Grow"><i class="fa-solid fa-arrows-left-right"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'sizeMode', 'default')==='shrink'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'sizeMode', 'shrink')" title="Shrink"><i class="fa-solid fa-compress"></i></button>
+										<button class="pb-seg-btn" :class="{active:containerResponsiveValue(selectedNode.settings, 'sizeMode', 'default')==='custom'}" @click="setContainerResponsiveSetting(selectedNode.settings, 'sizeMode', 'custom')" title="Custom"><i class="fa-solid fa-ellipsis"></i></button>
 									</div>
 								</div>
 								<div class="pb-form-group">
@@ -5076,7 +4835,7 @@
 								<div class="pb-form-group">
 									<div class="pb-label-row">
 										<label class="pb-form-label mb-0">Display Conditions</label>
-										<button class="pb-field-action-btn" type="button" title="Display Conditions" @click="showUnsupportedControlNotice('Display Conditions', 'Display Conditions panel belum tersedia di builder ini. Untuk saat ini yang aktif baru hide per device.')"><i class="fas fa-sitemap"></i></button>
+										<button class="pb-field-action-btn" type="button" title="Display Conditions" @click="showUnsupportedControlNotice('Display Conditions', 'Display Conditions panel belum tersedia di builder ini. Untuk saat ini yang aktif baru hide per device.')"><i class="fa-solid fa-sitemap"></i></button>
 									</div>
 									<div class="pb-advanced-switch-grid">
 										<div class="pb-form-group">
@@ -5273,9 +5032,9 @@
 					<template v-if="selectedType==='grid'||selectedType==='row_grid'">
 						<div class="pb-grid-settings pb-grid-settings--layout">
 							<div class="pb-tab-nav">
-								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='layout'}"   @click="settingsTab='layout'"><i class="fas fa-th-large"></i><span>Layout</span></button>
-								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='style'}"    @click="settingsTab='style'"><i class="fas fa-adjust"></i><span>Style</span></button>
-								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='advanced'}" @click="settingsTab='advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
+								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='layout'}"   @click="settingsTab='layout'"><i class="fa-solid fa-table-cells-large"></i><span>Layout</span></button>
+								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='style'}"    @click="settingsTab='style'"><i class="fa-solid fa-circle-half-stroke"></i><span>Style</span></button>
+								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='advanced'}" @click="settingsTab='advanced'"><i class="fa-solid fa-gear"></i><span>Advanced</span></button>
 							</div>
 						<!-- TAB LAYOUT (GRID) -->
 						<div v-show="settingsTab==='layout'" class="pb-tab-content pb-grid-settings__tab">
@@ -5302,7 +5061,7 @@
 									<input class="pb-input" v-model="selectedNode.settings.gridTemplateColumns" placeholder="repeat(3, minmax(0, 1fr))">
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row"><label class="pb-form-label mb-0">Column / Row Gap</label><button class="pb-link-btn" @click="selectedNode.settings.gapLinked=!selectedNode.settings.gapLinked" :title="selectedNode.settings.gapLinked?'Unlink':'Link'"><i :class="selectedNode.settings.gapLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
+									<div class="pb-label-row"><label class="pb-form-label mb-0">Column / Row Gap</label><button class="pb-link-btn" @click="selectedNode.settings.gapLinked=!selectedNode.settings.gapLinked" :title="selectedNode.settings.gapLinked?'Unlink':'Link'"><i :class="selectedNode.settings.gapLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button></div>
 									<div class="pb-gap-row mt-1">
 										<div class="pb-gap-field"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('columnGap')]" @input="syncGridGap(selectedNode.settings, 'columnGap')" placeholder="20px"><span>Column</span></div>
 										<div class="pb-gap-field"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('rowGap')]" @input="syncGridGap(selectedNode.settings, 'rowGap')" placeholder="20px"><span>Row</span></div>
@@ -5328,7 +5087,7 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row"><label class="pb-form-label">Padding</label><button class="pb-link-btn" @click="selectedNode.settings.paddingLinked=!selectedNode.settings.paddingLinked" :title="selectedNode.settings.paddingLinked?'Unlink':'Link'"><i :class="selectedNode.settings.paddingLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
+									<div class="pb-label-row"><label class="pb-form-label">Padding</label><button class="pb-link-btn" @click="selectedNode.settings.paddingLinked=!selectedNode.settings.paddingLinked" :title="selectedNode.settings.paddingLinked?'Unlink':'Link'"><i :class="selectedNode.settings.paddingLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button></div>
 									<div class="pb-four-sides mt-1">
 										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('paddingTop')]" @input="syncResponsiveSides(selectedNode.settings, 'padding', 'Top', selectedNode.settings.paddingLinked)" placeholder="0"><span>Top</span></div>
 										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('paddingRight')]" @input="syncResponsiveSides(selectedNode.settings, 'padding', 'Right', selectedNode.settings.paddingLinked)" placeholder="0"><span>Right</span></div>
@@ -5337,7 +5096,7 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row"><label class="pb-form-label">Margin</label><button class="pb-link-btn" @click="selectedNode.settings.marginLinked=!selectedNode.settings.marginLinked" :title="selectedNode.settings.marginLinked?'Unlink':'Link'"><i :class="selectedNode.settings.marginLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
+									<div class="pb-label-row"><label class="pb-form-label">Margin</label><button class="pb-link-btn" @click="selectedNode.settings.marginLinked=!selectedNode.settings.marginLinked" :title="selectedNode.settings.marginLinked?'Unlink':'Link'"><i :class="selectedNode.settings.marginLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button></div>
 									<div class="pb-four-sides mt-1">
 										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('marginTop')]" @input="syncResponsiveSides(selectedNode.settings, 'margin', 'Top', selectedNode.settings.marginLinked)" placeholder="0"><span>Top</span></div>
 										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('marginRight')]" @input="syncResponsiveSides(selectedNode.settings, 'margin', 'Right', selectedNode.settings.marginLinked)" placeholder="0"><span>Right</span></div>
@@ -5374,13 +5133,13 @@
 										<div class="pb-bg-media-field" :class="{ 'has-image': !!selectedNode.settings.bgImage }">
 											<div class="pb-bg-media-preview" :style="selectedNode.settings.bgImage ? { backgroundImage: 'url(' + selectedNode.settings.bgImage + ')' } : {}">
 												<button type="button" class="pb-bg-media-center-btn" :title="selectedNode.settings.bgImage ? 'Change Image' : 'Choose Image'" @click="chooseBgImage(selectedNode)">
-													<i :class="selectedNode.settings.bgImage ? 'fas fa-pen' : 'fas fa-plus'"></i>
+													<i :class="selectedNode.settings.bgImage ? 'fa-solid fa-pen' : 'fa-solid fa-plus'"></i>
 												</button>
 											</div>
 											<div class="pb-bg-media-actions">
 												<button type="button" class="pb-bg-media-choose" @click="chooseBgImage(selectedNode)">Choose Image</button>
 												<button type="button" class="pb-bg-media-remove" :disabled="!selectedNode.settings.bgImage" title="Remove Image" @click="clearBgImage(selectedNode)">
-													<i class="fas fa-trash-alt"></i>
+													<i class="fa-solid fa-trash-can"></i>
 												</button>
 											</div>
 										</div>
@@ -5399,7 +5158,7 @@
 									<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="selectedNode.settings.borderColor"><input class="pb-input coloris pb-coloris-input" v-model="selectedNode.settings.borderColor"></div></div>
 								</template>
 								<div class="pb-form-group">
-									<div class="pb-label-row"><label class="pb-form-label">Border Radius</label><button class="pb-link-btn" @click="selectedNode.settings.borderRadiusLinked=!selectedNode.settings.borderRadiusLinked" :title="selectedNode.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="selectedNode.settings.borderRadiusLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
+									<div class="pb-label-row"><label class="pb-form-label">Border Radius</label><button class="pb-link-btn" @click="selectedNode.settings.borderRadiusLinked=!selectedNode.settings.borderRadiusLinked" :title="selectedNode.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="selectedNode.settings.borderRadiusLinked?'fa-solid fa-link':'fa-solid fa-link-slash'"></i></button></div>
 									<div class="pb-four-sides">
 										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings.borderRadiusTL" @input="selectedNode.settings.borderRadiusLinked&&(selectedNode.settings.borderRadiusTR=selectedNode.settings.borderRadiusBR=selectedNode.settings.borderRadiusBL=selectedNode.settings.borderRadiusTL)" placeholder="0"><span>TL</span></div>
 										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings.borderRadiusTR" @input="selectedNode.settings.borderRadiusLinked&&(selectedNode.settings.borderRadiusTL=selectedNode.settings.borderRadiusBR=selectedNode.settings.borderRadiusBL=selectedNode.settings.borderRadiusTR)" placeholder="0"><span>TR</span></div>
@@ -5632,11 +5391,11 @@
 								<div class="pb-form-group"><label class="pb-form-label">Custom CSS</label><textarea class="pb-textarea pb-code-editor" v-model="selectedNode.settings.customCssCode" placeholder="selector { property: value; }"></textarea></div>
 							</div>
 							<div class="pb-prop-section pb-grid-settings__group">
-								<div class="pb-label-row"><div class="pb-prop-section-title mb-0">Custom Attributes</div><button class="pb-seg-btn pb-mini-btn" @click="selectedNode.settings.attributes=(selectedNode.settings.attributes||[]).concat({name:'',value:''})"><i class="fas fa-plus"></i></button></div>
+								<div class="pb-label-row"><div class="pb-prop-section-title mb-0">Custom Attributes</div><button class="pb-seg-btn pb-mini-btn" @click="selectedNode.settings.attributes=(selectedNode.settings.attributes||[]).concat({name:'',value:''})"><i class="fa-solid fa-plus"></i></button></div>
 								<div v-for="(attr,i) in (selectedNode.settings.attributes||[])" :key="i" class="pb-attr-row">
 									<input class="pb-input" v-model="attr.name"  placeholder="name">
 									<input class="pb-input" v-model="attr.value" placeholder="value">
-									<button class="pb-btn icon-sm" @click="selectedNode.settings.attributes.splice(i,1)"><i class="fas fa-trash"></i></button>
+									<button class="pb-btn icon-sm" @click="selectedNode.settings.attributes.splice(i,1)"><i class="fa-solid fa-trash"></i></button>
 								</div>
 							</div>
 						</div>
@@ -5662,7 +5421,7 @@
 									<div class="pb-label-row pb-widget-settings__label-row">
 										<label class="pb-form-label mb-0">Content</label>
 										<button type="button" class="pb-editor-expand-btn" title="Expand editor" @click="openTextEditorModal">
-											<i class="fas fa-expand-alt"></i>
+											<i class="fa-solid fa-up-right-and-down-left-from-center"></i>
 											<span>Expand</span>
 										</button>
 									</div>
@@ -5682,13 +5441,13 @@
 									<div class="pb-bg-media-field pb-widget-settings__media-field" :class="{ 'has-image': !!selectedNode.settings.src }">
 										<div class="pb-bg-media-preview" :style="selectedNode.settings.src ? { backgroundImage: 'url(' + selectedNode.settings.src + ')' } : {}">
 											<button type="button" class="pb-bg-media-center-btn" :title="selectedNode.settings.src ? 'Change Image' : 'Choose Image'" @click="chooseMedia(selectedNode.settings, 'src')">
-												<i :class="selectedNode.settings.src ? 'fas fa-pen' : 'fas fa-plus'"></i>
+												<i :class="selectedNode.settings.src ? 'fa-solid fa-pen' : 'fa-solid fa-plus'"></i>
 											</button>
 										</div>
 										<div class="pb-bg-media-actions">
 											<button type="button" class="pb-bg-media-choose" @click="chooseMedia(selectedNode.settings, 'src')">Choose Image</button>
 											<button type="button" class="pb-bg-media-remove" :disabled="!selectedNode.settings.src" title="Remove Image" @click="clearMedia(selectedNode.settings, 'src')">
-												<i class="fas fa-trash-alt"></i>
+												<i class="fa-solid fa-trash-can"></i>
 											</button>
 										</div>
 									</div>
@@ -5779,13 +5538,13 @@
 									<div class="pb-bg-media-field pb-video-settings__media-field" :class="{ 'has-image': !!selectedNode.settings.fileUrl }">
 										<div class="pb-bg-media-preview">
 											<button type="button" class="pb-bg-media-center-btn" :title="selectedNode.settings.fileUrl ? 'Change Video' : 'Choose Video'" @click="chooseMedia(selectedNode.settings, 'fileUrl', 'Paste video URL')">
-												<i :class="selectedNode.settings.fileUrl ? 'fas fa-pen' : 'fas fa-plus'"></i>
+												<i :class="selectedNode.settings.fileUrl ? 'fa-solid fa-pen' : 'fa-solid fa-plus'"></i>
 											</button>
 										</div>
 										<div class="pb-bg-media-actions">
 											<button type="button" class="pb-bg-media-choose" @click="chooseMedia(selectedNode.settings, 'fileUrl', 'Paste video URL')">Choose Video</button>
 											<button type="button" class="pb-bg-media-remove" :disabled="!selectedNode.settings.fileUrl" title="Remove Video" @click="clearMedia(selectedNode.settings, 'fileUrl')">
-												<i class="fas fa-trash-alt"></i>
+												<i class="fa-solid fa-trash-can"></i>
 											</button>
 										</div>
 									</div>
@@ -5859,13 +5618,13 @@
 									<div class="pb-bg-media-field pb-video-settings__media-field" :class="{ 'has-image': !!selectedNode.settings.poster }">
 										<div class="pb-bg-media-preview" :style="selectedNode.settings.poster ? { backgroundImage: 'url(' + selectedNode.settings.poster + ')' } : {}">
 											<button type="button" class="pb-bg-media-center-btn" :title="selectedNode.settings.poster ? 'Change Poster' : 'Choose Poster'" @click="chooseMedia(selectedNode.settings, 'poster', 'Paste image URL')">
-												<i :class="selectedNode.settings.poster ? 'fas fa-pen' : 'fas fa-plus'"></i>
+												<i :class="selectedNode.settings.poster ? 'fa-solid fa-pen' : 'fa-solid fa-plus'"></i>
 											</button>
 										</div>
 										<div class="pb-bg-media-actions">
 											<button type="button" class="pb-bg-media-choose" @click="chooseMedia(selectedNode.settings, 'poster', 'Paste image URL')">Choose Image</button>
 											<button type="button" class="pb-bg-media-remove" :disabled="!selectedNode.settings.poster" title="Remove Poster" @click="clearMedia(selectedNode.settings, 'poster')">
-												<i class="fas fa-trash-alt"></i>
+												<i class="fa-solid fa-trash-can"></i>
 											</button>
 										</div>
 									</div>
@@ -5887,13 +5646,13 @@
 									<div class="pb-bg-media-field pb-video-settings__media-field" :class="{ 'has-image': !!selectedNode.settings.overlayImage }">
 										<div class="pb-bg-media-preview" :style="selectedNode.settings.overlayImage ? { backgroundImage: 'url(' + selectedNode.settings.overlayImage + ')' } : {}">
 											<button type="button" class="pb-bg-media-center-btn" :title="selectedNode.settings.overlayImage ? 'Change Overlay Image' : 'Choose Overlay Image'" @click="chooseMedia(selectedNode.settings, 'overlayImage', 'Paste image URL')">
-												<i :class="selectedNode.settings.overlayImage ? 'fas fa-pen' : 'fas fa-plus'"></i>
+												<i :class="selectedNode.settings.overlayImage ? 'fa-solid fa-pen' : 'fa-solid fa-plus'"></i>
 											</button>
 										</div>
 										<div class="pb-bg-media-actions">
 											<button type="button" class="pb-bg-media-choose" @click="chooseMedia(selectedNode.settings, 'overlayImage', 'Paste image URL')">Choose Image</button>
 											<button type="button" class="pb-bg-media-remove" :disabled="!selectedNode.settings.overlayImage" title="Remove Overlay Image" @click="clearMedia(selectedNode.settings, 'overlayImage')">
-												<i class="fas fa-trash-alt"></i>
+												<i class="fa-solid fa-trash-can"></i>
 											</button>
 										</div>
 									</div>
@@ -5903,70 +5662,6 @@
 								<div class="pb-form-group">
 									<label class="pb-form-label">CSS Class</label>
 									<input class="pb-input" v-model="selectedNode.settings.cssClass" placeholder="custom-video">
-								</div>
-							</div>
-						</div>
-					</template>
-					<template v-if="selectedType==='icon'">
-						<div class="pb-widget-settings pb-widget-settings--basic pb-widget-settings--icon">
-							<div class="pb-widget-settings__group">
-								<div class="pb-widget-settings__section-title">Icon</div>
-								<div class="pb-form-group">
-									<label class="pb-form-label">Icon</label>
-									<button type="button" class="pb-icon-picker-field" @click="openIconLibrary(selectedNode)">
-										<div class="pb-icon-picker-preview">
-											<i :class="selectedNode.settings.iconClass || 'far fa-star'"></i>
-										</div>
-										<div class="pb-icon-picker-copy">
-											<div class="pb-icon-picker-name">{{ iconWidgetCurrentLabel(selectedNode) }}</div>
-											<div class="pb-icon-picker-style">{{ iconWidgetCurrentStyleLabel(selectedNode) }}</div>
-										</div>
-										<i class="fas fa-chevron-right"></i>
-									</button>
-								</div>
-								<div class="pb-form-group">
-									<label class="pb-form-label">View</label>
-									<select class="pb-select" v-model="selectedNode.settings.view">
-										<option v-for="option in iconWidgetViewOptions" :key="'icon-view-' + option.value" :value="option.value">{{ option.label }}</option>
-									</select>
-								</div>
-								<div class="pb-form-group" v-if="iconWidgetUsesShape(selectedNode)">
-									<label class="pb-form-label">Shape</label>
-									<select class="pb-select" v-model="selectedNode.settings.shape">
-										<option v-for="option in iconWidgetShapeOptions" :key="'icon-shape-' + option.value" :value="option.value">{{ option.label }}</option>
-									</select>
-								</div>
-								<div class="pb-form-group">
-									<label class="pb-form-label">Link</label>
-									<div class="pb-input-with-action">
-										<input class="pb-input" v-model="selectedNode.settings.link" placeholder="Paste URL or type">
-										<button type="button" class="pb-field-action-btn" title="Link Options" @click="toggleIconLinkOptions(selectedNode)">
-											<i class="fas fa-cog"></i>
-										</button>
-									</div>
-								</div>
-								<div v-if="isIconLinkOptionsOpen(selectedNode)" class="pb-icon-link-options">
-									<label class="pb-icon-link-check">
-										<input type="checkbox" v-model="selectedNode.settings.openInNewWindow">
-										<span>Open in new window</span>
-									</label>
-									<label class="pb-icon-link-check">
-										<input type="checkbox" v-model="selectedNode.settings.nofollow">
-										<span>Add nofollow</span>
-									</label>
-									<div class="pb-form-group">
-										<div class="pb-label-row">
-											<label class="pb-form-label mb-0">Custom Attributes</label>
-											<button class="pb-seg-btn pb-mini-btn" @click="selectedNode.settings.attributes=(selectedNode.settings.attributes||[]).concat({name:'',value:''})">
-												<i class="fas fa-plus"></i>
-											</button>
-										</div>
-										<div v-for="(attr,i) in (selectedNode.settings.attributes||[])" :key="'icon-attr-'+i" class="pb-attr-row">
-											<input class="pb-input" v-model="attr.name" placeholder="key">
-											<input class="pb-input" v-model="attr.value" placeholder="value">
-											<button class="pb-btn icon-sm" @click="selectedNode.settings.attributes.splice(i,1)"><i class="fas fa-trash"></i></button>
-										</div>
-									</div>
 								</div>
 							</div>
 						</div>
@@ -6078,20 +5773,20 @@
 			<div class="pb-stage-window" @click.stop="closeWidthPreviewMenu()">
 				<div class="pb-stage-toolbar">
 					<div class="pb-stage-device-group">
-						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='mobile' }" @click="setResponsiveDevice('mobile')" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='tablet' }" @click="setResponsiveDevice('tablet')" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='desktop' }" @click="setResponsiveDevice('desktop')" title="Desktop"><i class="fas fa-desktop"></i></button>
+						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='mobile' }" @click="setResponsiveDevice('mobile')" title="Mobile"><i class="fa-solid fa-mobile-screen-button"></i></button>
+						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='tablet' }" @click="setResponsiveDevice('tablet')" title="Tablet"><i class="fa-solid fa-tablet-screen-button"></i></button>
+						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='desktop' }" @click="setResponsiveDevice('desktop')" title="Desktop"><i class="fa-solid fa-desktop"></i></button>
 					</div>
 					<div class="pb-stage-width-control" @click.stop>
 						<button type="button" class="pb-stage-width-pill" :class="{ 'is-interactive': responsiveDevice==='desktop', 'is-menu-open': widthPreviewMenuOpen }" :title="responsiveDevice==='desktop' ? 'Choose desktop preview width' : 'Preview width'" @click="toggleWidthPreviewMenu">
-						<i class="fas fa-arrows-alt-h"></i>
+						<i class="fa-solid fa-arrows-left-right"></i>
 						<span>{{ previewCanvasWidthLabel() }}</span>
-						<i class="fas fa-chevron-down"></i>
+						<i class="fa-solid fa-chevron-down"></i>
 						</button>
 						<div v-if="responsiveDevice==='desktop' && widthPreviewMenuOpen" class="pb-stage-width-menu">
 							<button v-for="option in desktopPreviewWidths" :key="'desktop-width-'+option.value" type="button" class="pb-stage-width-option" :class="{ active: desktopPreviewWidth===option.value }" @click="selectDesktopPreviewWidth(option.value)">
 								<span>{{ option.label }}</span>
-								<i v-if="desktopPreviewWidth===option.value" class="fas fa-check"></i>
+								<i v-if="desktopPreviewWidth===option.value" class="fa-solid fa-check"></i>
 							</button>
 						</div>
 					</div>
@@ -6135,11 +5830,11 @@
 						</template>
 						<template #footer>
 							<div v-if="rootNodes.length===0" class="pb-empty-root">
-								<i class="fas fa-plus"></i>
+								<i class="fa-solid fa-plus"></i>
 								<div class="mt-3">Drag Container, Grid, or Widget to start building</div>
 							</div>
 							<div v-else class="pb-root-followup-hint">
-								<i class="fas fa-plus"></i>
+								<i class="fa-solid fa-plus"></i>
 								<div class="pb-root-followup-text">Drag Container, Grid, or Widget here to continue building</div>
 							</div>
 						</template>
@@ -6155,29 +5850,29 @@
 		<div v-if="showCssEditor" class="pb-css-editor-modal" @click.self="closeCustomCssEditor">
 			<div class="pb-css-editor-panel" :class="{ fullscreen: cssEditorFullscreen }">
 				<div class="pb-css-editor-header">
-					<div class="pb-css-editor-title"><i class="fas fa-code"></i><span>Custom CSS Editor</span></div>
+					<div class="pb-css-editor-title"><i class="fa-solid fa-code"></i><span>Custom CSS Editor</span></div>
 					<div class="pb-css-editor-actions">
 						<button type="button" class="pb-css-editor-icon-btn" :title="cssEditorFullscreen ? 'Exit fullscreen' : 'Fullscreen'" @click="cssEditorFullscreen = !cssEditorFullscreen">
-							<i class="fas" :class="cssEditorFullscreen ? 'fa-compress' : 'fa-expand'"></i>
+							<i class="fa-solid" :class="cssEditorFullscreen ? 'fa-compress' : 'fa-expand'"></i>
 						</button>
-						<button type="button" class="pb-css-editor-icon-btn danger" title="Close" @click="closeCustomCssEditor"><i class="fas fa-times"></i></button>
+						<button type="button" class="pb-css-editor-icon-btn danger" title="Close" @click="closeCustomCssEditor"><i class="fa-solid fa-xmark"></i></button>
 					</div>
 				</div>
 				<div class="pb-css-editor-body">
 					<div class="pb-css-editor-hint">
-						<i class="fas fa-info-circle"></i>
+						<i class="fa-solid fa-circle-info"></i>
 						<span>Tulis CSS kustom di sini. Gunakan <code>.class-name</code> atau <code>#id-name</code> dari field CSS ID / CSS Class pada widget, column, atau container.</span>
 					</div>
 					<div class="pb-css-editor-toolbar">
 						<form class="pb-css-editor-tool" @submit.prevent="goToCustomCssLine">
 							<label>Line</label>
 							<input class="pb-css-editor-tool-input is-line" type="number" min="1" :max="customCssLineCount" v-model="customCssGotoLine" placeholder="Line">
-							<button type="submit" class="pb-css-editor-tool-btn" title="Go to line"><i class="fas fa-arrow-down"></i></button>
+							<button type="submit" class="pb-css-editor-tool-btn" title="Go to line"><i class="fa-solid fa-arrow-down-short-wide"></i></button>
 						</form>
 						<div class="pb-css-editor-tool is-search">
 							<label>Search</label>
 							<input class="pb-css-editor-tool-input" type="search" v-model="customCssSearchQuery" placeholder="Search code...">
-							<button type="button" class="pb-css-editor-tool-btn" title="Find now" @click="searchCustomCssCode(true)"><i class="fas fa-search"></i></button>
+							<button type="button" class="pb-css-editor-tool-btn" title="Find now" @click="searchCustomCssCode(true)"><i class="fa-solid fa-magnifying-glass"></i></button>
 						</div>
 					</div>
 					<div class="pb-css-editor-code-shell">
@@ -6213,10 +5908,10 @@
 					</div>
 				</div>
 				<div class="pb-css-editor-footer">
-					<div class="pb-css-editor-count"><i class="fas fa-code"></i> {{ customCssCharCount }} chars / {{ customCssLineCount }} lines</div>
+					<div class="pb-css-editor-count"><i class="fa-solid fa-code"></i> {{ customCssCharCount }} chars / {{ customCssLineCount }} lines</div>
 					<div class="pb-css-editor-footer-actions">
-						<button type="button" class="pb-css-editor-btn danger" @click="clearCustomCss"><i class="fas fa-trash"></i> Clear</button>
-						<button type="button" class="pb-css-editor-btn primary" @click="applyCustomCssEditorChanges"><i class="fas fa-check"></i> Apply & Close</button>
+						<button type="button" class="pb-css-editor-btn danger" @click="clearCustomCss"><i class="fa-solid fa-trash"></i> Clear</button>
+						<button type="button" class="pb-css-editor-btn primary" @click="applyCustomCssEditorChanges"><i class="fa-solid fa-check"></i> Apply & Close</button>
 					</div>
 				</div>
 			</div>
@@ -6227,17 +5922,17 @@
 		<div v-if="showTextEditorModal && selectedType==='text_editor' && selectedNode" class="pb-rte-editor-modal" @click.self="closeTextEditorModal">
 			<div class="pb-rte-editor-panel" :class="{ fullscreen: textEditorModalFullscreen }">
 				<div class="pb-rte-editor-header">
-					<div class="pb-rte-editor-title"><i class="fas fa-edit"></i><span>Text Editor</span></div>
+					<div class="pb-rte-editor-title"><i class="fa-solid fa-pen-to-square"></i><span>Text Editor</span></div>
 					<div class="pb-rte-editor-actions">
 						<button type="button" class="pb-rte-editor-icon-btn" :title="textEditorModalFullscreen ? 'Exit fullscreen' : 'Fullscreen'" @click="textEditorModalFullscreen = !textEditorModalFullscreen">
-							<i class="fas" :class="textEditorModalFullscreen ? 'fa-compress' : 'fa-expand'"></i>
+							<i class="fa-solid" :class="textEditorModalFullscreen ? 'fa-compress' : 'fa-expand'"></i>
 						</button>
-						<button type="button" class="pb-rte-editor-icon-btn danger" title="Close" @click="closeTextEditorModal"><i class="fas fa-times"></i></button>
+						<button type="button" class="pb-rte-editor-icon-btn danger" title="Close" @click="closeTextEditorModal"><i class="fa-solid fa-xmark"></i></button>
 					</div>
 				</div>
 				<div class="pb-rte-editor-body">
 					<div class="pb-rte-editor-hint">
-						<i class="fas fa-info-circle"></i>
+						<i class="fa-solid fa-circle-info"></i>
 						<span>Edit konten teks dengan ruang yang lebih luas. Perubahan langsung tersinkron ke preview dan editor sidebar.</span>
 					</div>
 					<div class="pb-rte-editor-field">
@@ -6245,69 +5940,9 @@
 					</div>
 				</div>
 				<div class="pb-rte-editor-footer">
-					<div class="pb-rte-editor-count"><i class="fas fa-font"></i> {{ textEditorModalSummary }}</div>
+					<div class="pb-rte-editor-count"><i class="fa-solid fa-font"></i> {{ textEditorModalSummary }}</div>
 					<div class="pb-rte-editor-footer-actions">
-						<button type="button" class="pb-rte-editor-btn primary" @click="closeTextEditorModal"><i class="fas fa-check"></i> Apply & Close</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</teleport>
-
-	<teleport to="body">
-		<div v-if="showIconLibraryModal" class="pb-icon-library-modal" @click.self="closeIconLibrary">
-			<div class="pb-icon-library-panel">
-				<div class="pb-icon-library-header">
-					<div class="pb-icon-library-title"><i class="fab fa-font-awesome-flag"></i><span>ICON LIBRARY</span></div>
-					<button type="button" class="pb-icon-library-close" title="Close" @click="closeIconLibrary"><i class="fas fa-times"></i></button>
-				</div>
-				<div class="pb-icon-library-body">
-					<aside class="pb-icon-library-sidebar">
-						<button
-							v-for="group in iconLibraryGroups"
-							:key="'icon-group-' + group.key"
-							type="button"
-							class="pb-icon-library-group"
-							:class="{ active: iconLibraryGroup===group.key }"
-							@click="iconLibraryGroup=group.key"
-						>
-							<i :class="group.icon"></i>
-							<span>{{ group.label }}</span>
-						</button>
-					</aside>
-					<div class="pb-icon-library-content">
-						<div class="pb-icon-library-search">
-							<input class="pb-input" type="search" v-model="iconLibrarySearch" placeholder="Filter by name...">
-							<i class="fas fa-search"></i>
-						</div>
-						<div v-if="iconLibraryLoading" class="pb-icon-library-state">Loading local Font Awesome library...</div>
-						<div v-else-if="iconLibraryError" class="pb-icon-library-state is-error">{{ iconLibraryError }}</div>
-						<div v-else-if="!filteredIconLibraryIcons.length" class="pb-icon-library-state">No icons match this filter.</div>
-						<div v-else class="pb-icon-library-grid">
-							<button
-								v-for="item in filteredIconLibraryIcons"
-								:key="item.id"
-								type="button"
-								class="pb-icon-library-item"
-								:class="{ active: iconLibrarySelected && iconLibrarySelected.id===item.id }"
-								@click="selectIconLibraryItem(item)"
-								@dblclick="selectIconLibraryItem(item); insertSelectedIcon()"
-							>
-								<i :class="item.className"></i>
-								<span>{{ item.label }}</span>
-							</button>
-						</div>
-					</div>
-				</div>
-				<div class="pb-icon-library-footer">
-					<div class="pb-icon-library-footer-copy" v-if="iconLibrarySelected">
-						<span>{{ iconLibrarySelected.label }}</span>
-						<small>{{ fontAwesomeStyleLabel(iconLibrarySelected.style) }}</small>
-					</div>
-					<div class="pb-icon-library-footer-copy" v-else>Select an icon from the local library.</div>
-					<div class="pb-icon-library-footer-actions">
-						<button type="button" class="pb-icon-library-btn" @click="closeIconLibrary">Close</button>
-						<button type="button" class="pb-icon-library-btn primary" :disabled="!iconLibrarySelected" @click="insertSelectedIcon">Insert</button>
+						<button type="button" class="pb-rte-editor-btn primary" @click="closeTextEditorModal"><i class="fa-solid fa-check"></i> Apply & Close</button>
 					</div>
 				</div>
 			</div>
@@ -6317,7 +5952,7 @@
 	<teleport to="body">
 		<div v-if="modal.visible" class="pb-modal-backdrop" @click.self="closeModal">
 			<div class="pb-modal">
-				<div class="pb-modal-header"><button class="pb-modal-close" @click="closeModal"><i class="fas fa-times"></i></button></div>
+				<div class="pb-modal-header"><button class="pb-modal-close" @click="closeModal"><i class="fa-solid fa-xmark"></i></button></div>
 				<div class="pb-modal-body">
 					<template v-if="modal.step===1">
 						<div class="pb-modal-title">Which layout would you like to use?</div>
@@ -6359,7 +5994,7 @@
 							</div>
 						</template>
 						<button v-if="modal.layoutType==='container_flex'||modal.layoutType==='container_grid'" class="pb-modal-back" @click="modal.step=1">
-							<i class="fas fa-arrow-left"></i> Back
+							<i class="fa-solid fa-arrow-left"></i> Back
 						</button>
 					</template>
 				</div>

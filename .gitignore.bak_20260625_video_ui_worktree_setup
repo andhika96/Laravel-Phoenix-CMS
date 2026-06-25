@@ -24,7 +24,6 @@ yarn-error.log
 /.vscode
 /.kiro
 /.playwright-cli
-/.worktrees
 
 **/caddy
 frankenphp
