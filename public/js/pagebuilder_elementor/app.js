@@ -41,6 +41,7 @@
 		button:         '/js/pagebuilder_elementor/widgets/basic/Button.vue',
 		divider:        '/js/pagebuilder_elementor/widgets/basic/Divider.vue',
 		spacer:         '/js/pagebuilder_elementor/widgets/basic/Spacer.vue',
+		tabs:           '/js/pagebuilder_elementor/widgets/general/Tabs.vue',
 	};
 
 	const _wcache = {};
@@ -58,6 +59,7 @@
 	function jclone(v)    { return JSON.parse(JSON.stringify(v)); }
 	function isCont(t)    { return t === 'container' || t === 'container_fluid'; }
 	function isGrid(t)    { return t === 'row_grid' || t === 'grid'; }
+	function isTabs(t)    { return t === 'tabs'; }
 	function isWgt(t)     { return !isCont(t) && !isGrid(t); }
 	function toEmbed(url) {
 		if (!url || url.includes('embed/')) return url || '';
@@ -139,6 +141,12 @@
 		{ value: 'rounded', label: 'Rounded' },
 		{ value: 'square', label: 'Square' },
 	]);
+	const TABS_WIDGET_BREAKPOINT_OPTIONS = Object.freeze([
+		{ value: 'mobile', label: 'Mobile Portrait (< 767px)' },
+		{ value: 'tablet', label: 'Tablet Portrait (< 1024px)' },
+		{ value: 'none', label: 'None' },
+	]);
+	const TABS_WIDGET_WIDTH_UNITS = Object.freeze(['px', '%']);
 	function fontAwesomeStylePrefix(style) {
 		if (style === 'brands') return 'fab';
 		if (style === 'light') return 'fal';
@@ -239,6 +247,73 @@
 			if (a.label === b.label) return a.style.localeCompare(b.style);
 			return a.label.localeCompare(b.label);
 		});
+	}
+	function tabsItemDefaults(index = 0) {
+		return {
+			id: uid('tab'),
+			title: 'Tab #' + (index + 1),
+			iconClass: '',
+			activeIconClass: '',
+			cssId: '',
+			children: [],
+		};
+	}
+	function tabsWidgetDefaultItems() {
+		return [tabsItemDefaults(0), tabsItemDefaults(1), tabsItemDefaults(2)];
+	}
+	function tabsWidgetDefaults() {
+		return {
+			direction: 'row',
+			justify: 'flex-start',
+			alignTitle: 'center',
+			tabWidth: '',
+			tabWidthUnit: 'px',
+			horizontalScroll: false,
+			breakpoint: 'mobile',
+			activeTabId: '',
+			cssClass: '',
+		};
+	}
+	function normalizeTabsDirection(value) {
+		const raw = String(value || '').trim().toLowerCase();
+		return ['row', 'row-reverse', 'column', 'column-reverse'].includes(raw) ? raw : 'row';
+	}
+	function normalizeTabsJustify(value) {
+		const raw = String(value || '').trim().toLowerCase();
+		return ['flex-start', 'center', 'flex-end', 'stretch'].includes(raw) ? raw : 'flex-start';
+	}
+	function normalizeTabsAlignTitle(value) {
+		const raw = String(value || '').trim().toLowerCase();
+		return ['left', 'center', 'right'].includes(raw) ? raw : 'center';
+	}
+	function normalizeTabsBreakpoint(value) {
+		const raw = String(value || '').trim().toLowerCase();
+		return ['mobile', 'tablet', 'none'].includes(raw) ? raw : 'mobile';
+	}
+	function normalizeTabsWidthUnit(value) {
+		const raw = String(value || '').trim().toLowerCase();
+		return raw === '%' ? '%' : 'px';
+	}
+	function normalizeTabsItemClass(value) {
+		return String(value || '').trim();
+	}
+	function normalizeTabsCssId(value) {
+		return String(value || '').trim().replace(/\s+/g, '-');
+	}
+	function normalizeTabsWidthValue(value) {
+		if (value === '' || value === null || value === undefined) return '';
+		const num = Number(value);
+		if (!Number.isFinite(num) || num <= 0) return '';
+		return String(Math.round(num * 100) / 100);
+	}
+	function tabsRowDirection(value) {
+		const direction = normalizeTabsDirection(value);
+		return direction === 'row' || direction === 'row-reverse';
+	}
+	function tabsIconClassForItem(item, active = false) {
+		if (!item || typeof item !== 'object') return '';
+		if (active && String(item.activeIconClass || '').trim()) return String(item.activeIconClass || '').trim();
+		return String(item.iconClass || '').trim();
 	}
 	function clamp(v, min, max) {
 		return Math.min(max, Math.max(min, v));
@@ -741,6 +816,7 @@
 		icon: 'Icon',
 		divider: 'Divider',
 		spacer: 'Spacer',
+		tabs: 'Tabs',
 	});
 
 	const NODE_LABEL_ICONS = Object.freeze({
@@ -756,6 +832,7 @@
 		icon: 'far fa-star',
 		divider: 'fas fa-minus',
 		spacer: 'fas fa-arrows-alt-v',
+		tabs: 'far fa-folder',
 	});
 
 	function baseNodeLabel(type, fallback = 'Widget') {
@@ -810,6 +887,12 @@
 			case 'icon':           return { id, type, label:'Icon', labelSuffix:'',           settings:iconWidgetDefaults() };
 			case 'divider':        return { id, type, label:'Divider', labelSuffix:'',        settings:{ style:'solid', width:'100%', thickness:2, color:'#d0d7e6', cssClass:'' } };
 			case 'spacer':         return { id, type, label:'Spacer', labelSuffix:'',         settings:{ height:'32px', cssClass:'' } };
+			case 'tabs': {
+				const settings = tabsWidgetDefaults();
+				const tabItems = tabsWidgetDefaultItems();
+				settings.activeTabId = tabItems[0].id;
+				return { id, type, label:'Tabs', labelSuffix:'', settings, tabItems };
+			}
 			default: return null;
 		}
 	}
@@ -909,6 +992,7 @@
 		computed: {
 			isCont()  { return isCont(this.node.type); },
 			isGrid()  { return isGrid(this.node.type); },
+			isTabsNode() { return isTabs(this.node.type); },
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
 				return displayNodeLabel(this.node);
@@ -1103,8 +1187,8 @@
 						const targetParentNodeType = this.getParentNodeTypeFromSortable(to);
 						if (isExistingCanvasNode && sourceParentNodeType && targetParentNodeType) {
 							const sameOwnerFamily =
-								(isCont(sourceParentNodeType) && isCont(targetParentNodeType))
-								|| (isGrid(sourceParentNodeType) && isGrid(targetParentNodeType));
+								((isCont(sourceParentNodeType) || isGrid(sourceParentNodeType) || isTabs(sourceParentNodeType))
+									&& (isCont(targetParentNodeType) || isGrid(targetParentNodeType) || isTabs(targetParentNodeType)));
 							if (!sameOwnerFamily) return false;
 						}
 						const targetIndex = this.getTargetColumnIndexFromDropzone(to);
@@ -1259,6 +1343,19 @@
 					label.style.setProperty('--pb-col-label-offset-x', offset + 'px');
 					label.classList.add('is-auto-shifted');
 				});
+			},
+			tabsItemsList() {
+				return Array.isArray(this.node.tabItems) ? this.node.tabItems : [];
+			},
+			activeTabsItem() {
+				const items = this.tabsItemsList();
+				if (!items.length) return null;
+				const activeId = String(this.node?.settings?.activeTabId || '').trim();
+				return items.find((item) => item && String(item.id || '') === activeId) || items[0];
+			},
+			activeTabsChildren() {
+				const item = this.activeTabsItem();
+				return item && Array.isArray(item.children) ? item.children : [];
 			},
 			passdown() {
 				return {
@@ -1733,6 +1830,41 @@
 					</div>
 				</div>
 			</component>
+		</template>
+
+		<!-- TABS -->
+		<template v-else-if="isTabsNode">
+			<div class="pb-preview pb-preview-tabs">
+				<div class="pb-preview-inner">
+					<component :is="loadWidget(node.type)" :item="node" :responsive-device="responsiveDevice">
+						<draggable
+							:list="activeTabsChildren()"
+							item-key="id"
+							:group="colGroup"
+							data-parent-node-type="tabs"
+							:class="['pb-dropzone', 'pb-dropzone-tab', { 'is-empty': activeTabsChildren().length === 0 }]"
+							ghost-class="pb-ghost"
+							dragover-class="is-drop-hover"
+							@add="(e) => onAddCol(e, { children: activeTabsChildren() }, -1, null)"
+							@start="onDragStart"
+							@end="onDragEnd"
+						>
+							<template #item="{ element }">
+								<BuilderNode :node="element" v-bind="passdown()" />
+							</template>
+							<template #footer>
+								<div v-if="activeTabsChildren().length === 0" class="pb-dropzone-empty pb-tabs-empty-hint">
+									<button type="button" class="pb-inline-add" @click.stop.prevent="onShowToolbox()">
+										<i class="fas fa-plus"></i>
+										<span>Add</span>
+									</button>
+									<div class="pb-dropzone-empty-text">Drop here</div>
+								</div>
+							</template>
+						</draggable>
+					</component>
+				</div>
+			</div>
 		</template>
 
 		<!-- WIDGET -->
@@ -2321,6 +2453,35 @@
 						c.settings = { ...iconWidgetDefaults(), ...(c.settings || {}) };
 						normalizeIconWidgetSettings(c.settings);
 					}
+					if (c.type === 'tabs') {
+						c.settings = { ...tabsWidgetDefaults(), ...(c.settings || {}) };
+						c.settings.direction = normalizeTabsDirection(c.settings.direction);
+						c.settings.justify = normalizeTabsJustify(c.settings.justify);
+						c.settings.alignTitle = normalizeTabsAlignTitle(c.settings.alignTitle);
+						c.settings.tabWidth = normalizeTabsWidthValue(c.settings.tabWidth);
+						c.settings.tabWidthUnit = normalizeTabsWidthUnit(c.settings.tabWidthUnit);
+						c.settings.horizontalScroll = !!c.settings.horizontalScroll;
+						c.settings.breakpoint = normalizeTabsBreakpoint(c.settings.breakpoint);
+						c.settings.cssClass = String(c.settings.cssClass || '').trim();
+						const rawItems = Array.isArray(c.tabItems) && c.tabItems.length
+							? c.tabItems
+							: tabsWidgetDefaultItems();
+						c.tabItems = rawItems.map((item, index) => ({
+							id: item && item.id ? item.id : uid('tab'),
+							title: String(item && item.title ? item.title : ('Tab #' + (index + 1))).trim() || ('Tab #' + (index + 1)),
+							iconClass: normalizeTabsItemClass(item && item.iconClass),
+							activeIconClass: normalizeTabsItemClass(item && item.activeIconClass),
+							cssId: normalizeTabsCssId(item && item.cssId),
+							children: norm((item && item.children) || []),
+						}));
+						if (!c.tabItems.length) {
+							c.tabItems = [tabsItemDefaults(0)];
+						}
+						const activeTabId = String(c.settings.activeTabId || '').trim();
+						c.settings.activeTabId = c.tabItems.some((item) => String(item.id || '') === activeTabId)
+							? activeTabId
+							: c.tabItems[0].id;
+					}
 					if (c.settings && typeof c.settings === 'object') {
 						seedResponsiveSettings(c.settings);
 					}
@@ -2344,6 +2505,7 @@
 					if (n.id === id) return n;
 					if (n.children) { const r = findById(n.children, id); if (r) return r; }
 					if (n.columns) for (const col of n.columns) { const r = findById(col.children||[], id); if (r) return r; }
+					if (n.tabItems) for (const item of n.tabItems) { const r = findById(item.children||[], id); if (r) return r; }
 				}
 				return null;
 			}
@@ -2373,6 +2535,72 @@
 				if (type !== 'text_editor' && showTextEditorModal.value) closeTextEditorModal();
 				if (type !== 'icon') iconLinkOptionsOpenFor.value = '';
 			});
+			function tabsItemsForNode(node = selectedNode.value) {
+				if (!node || node.type !== 'tabs') return [];
+				if (!Array.isArray(node.tabItems) || !node.tabItems.length) {
+					node.tabItems = tabsWidgetDefaultItems();
+				}
+				const activeTabId = String(node.settings?.activeTabId || '').trim();
+				if (!node.tabItems.some((item) => String(item.id || '') === activeTabId)) {
+					if (!node.settings || typeof node.settings !== 'object') node.settings = {};
+					node.settings.activeTabId = node.tabItems[0].id;
+				}
+				return node.tabItems;
+			}
+			function tabsActiveItem(node = selectedNode.value) {
+				const items = tabsItemsForNode(node);
+				if (!items.length) return null;
+				const activeTabId = String(node?.settings?.activeTabId || '').trim();
+				return items.find((item) => String(item.id || '') === activeTabId) || items[0];
+			}
+			function selectTabsItem(node, itemId) {
+				if (!node || node.type !== 'tabs') return;
+				const items = tabsItemsForNode(node);
+				const match = items.find((item) => String(item.id || '') === String(itemId || ''));
+				if (!match) return;
+				if (!node.settings || typeof node.settings !== 'object') node.settings = {};
+				node.settings.activeTabId = match.id;
+			}
+			function addTabsItem(node = selectedNode.value) {
+				if (!node || node.type !== 'tabs') return;
+				const items = tabsItemsForNode(node);
+				const next = tabsItemDefaults(items.length);
+				items.push(next);
+				if (!node.settings || typeof node.settings !== 'object') node.settings = {};
+				node.settings.activeTabId = next.id;
+			}
+			function duplicateTabsItem(node = selectedNode.value, itemId = '') {
+				if (!node || node.type !== 'tabs') return;
+				const items = tabsItemsForNode(node);
+				const index = items.findIndex((item) => String(item.id || '') === String(itemId || ''));
+				if (index < 0) return;
+				const copy = jclone(items[index]);
+				copy.id = uid('tab');
+				copy.title = String(copy.title || ('Tab #' + (index + 1))).trim() || ('Tab #' + (index + 1));
+				copy.children = norm(copy.children || []);
+				(copy.children || []).forEach(regenIds);
+				items.splice(index + 1, 0, copy);
+				if (!node.settings || typeof node.settings !== 'object') node.settings = {};
+				node.settings.activeTabId = copy.id;
+			}
+			function removeTabsItem(node = selectedNode.value, itemId = '') {
+				if (!node || node.type !== 'tabs') return;
+				const items = tabsItemsForNode(node);
+				if (items.length <= 1) return;
+				const index = items.findIndex((item) => String(item.id || '') === String(itemId || ''));
+				if (index < 0) return;
+				items.splice(index, 1);
+				const fallbackIndex = Math.max(0, index - 1);
+				if (!node.settings || typeof node.settings !== 'object') node.settings = {};
+				node.settings.activeTabId = items[fallbackIndex].id;
+			}
+			function tabsItemSummary(item, index) {
+				if (!item) return 'Tab #' + (index + 1);
+				return String(item.title || '').trim() || ('Tab #' + (index + 1));
+			}
+			function tabsSelectedRowDirection(node = selectedNode.value) {
+				return tabsRowDirection(node?.settings?.direction);
+			}
 			const iconLibraryGroups = FONT_AWESOME_5_ICON_GROUPS;
 			const showIconLibraryModal = ref(false);
 			const iconLibraryGroup = ref('all');
@@ -3455,6 +3683,13 @@
 							}
 						});
 					}
+					if (Array.isArray(node.tabItems) && node.tabItems.length) {
+						node.tabItems.forEach((item) => {
+							if (Array.isArray(item && item.children) && item.children.length) {
+								walkNodes(item.children, handler);
+							}
+						});
+					}
 				});
 			}
 			function syncAllGridCellsForDevice(device = responsiveDevice.value) {
@@ -3521,6 +3756,7 @@
 					const n = nodes[i];
 					if (n.children && delFrom(n.children, id)) return true;
 					if (n.columns) for (const col of n.columns) if (delFrom(col.children||[], id)) return true;
+					if (n.tabItems) for (const item of n.tabItems) if (delFrom(item.children||[], id)) return true;
 				}
 				return false;
 			}
@@ -3528,6 +3764,15 @@
 				node.id = uid('n');
 				if (node.children) node.children.forEach(regenIds);
 				if (node.columns) node.columns.forEach(col => { col.id=uid('c'); (col.children||[]).forEach(regenIds); });
+				if (node.tabItems) node.tabItems.forEach((item, index) => {
+					item.id = uid('tab');
+					if (!item.title) item.title = 'Tab #' + (index + 1);
+					(item.children || []).forEach(regenIds);
+				});
+				if (node.type === 'tabs' && node.settings) {
+					const firstItem = Array.isArray(node.tabItems) && node.tabItems.length ? node.tabItems[0] : null;
+					node.settings.activeTabId = firstItem ? firstItem.id : '';
+				}
 			}
 			function dupIn(nodes, id) {
 				for (let i=0; i<nodes.length; i++) {
@@ -3538,6 +3783,7 @@
 					const n = nodes[i];
 					if (n.children && dupIn(n.children, id)) return true;
 					if (n.columns) for (const col of n.columns) if (dupIn(col.children||[], id)) return true;
+					if (n.tabItems) for (const item of n.tabItems) if (dupIn(item.children||[], id)) return true;
 				}
 				return false;
 			}
@@ -4031,6 +4277,9 @@
 					{ type:'divider',     label:'Divider',     icon:'fas fa-minus' },
 					{ type:'spacer',      label:'Spacer',      icon:'fas fa-arrows-alt-v' },
 				],
+				general: [
+					{ type:'tabs',        label:'Tabs',        icon:'far fa-folder' },
+				],
 			};
 
 			// ── Save ──────────────────────────────────────────────────────────
@@ -4091,6 +4340,8 @@
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
 				openIconLibrary, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
+				tabsItemsForNode, tabsActiveItem, selectTabsItem, addTabsItem, duplicateTabsItem, removeTabsItem, tabsItemSummary, tabsSelectedRowDirection,
+				tabsBreakpointOptions: TABS_WIDGET_BREAKPOINT_OPTIONS, tabsWidthUnits: TABS_WIDGET_WIDTH_UNITS,
 				iconWidgetViewOptions: ICON_WIDGET_VIEW_OPTIONS, iconWidgetShapeOptions: ICON_WIDGET_SHAPE_OPTIONS,
 				pageName, pageStatus, customCss, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
 				showTextEditorModal, textEditorModalFullscreen, textEditorModalSummary, setTextEditorHtml, openTextEditorModal, closeTextEditorModal,
@@ -4190,6 +4441,24 @@
 					<div class="pb-panel-title">Basic</div>
 					<draggable
 						:list="toolbox.basic"
+						:group="sidebarWgtGroup"
+						:clone="toolClone"
+						item-key="type"
+						class="pb-tool-grid"
+						:sort="false"
+						@start="onDragStart"
+						@end="onDragEnd"
+					>
+						<template #item="{ element }">
+							<div class="pb-tool-item"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
+						</template>
+					</draggable>
+				</div>
+
+				<div class="pb-section">
+					<div class="pb-panel-title">General</div>
+					<draggable
+						:list="toolbox.general"
 						:group="sidebarWgtGroup"
 						:clone="toolClone"
 						item-key="type"
@@ -5905,6 +6174,121 @@
 									<input class="pb-input" v-model="selectedNode.settings.cssClass" placeholder="custom-video">
 								</div>
 							</div>
+						</div>
+					</template>
+					<template v-if="selectedType==='tabs'">
+						<div class="pb-tabs-settings">
+							<details class="pb-collapsible" open>
+								<summary>Tabs</summary>
+								<div class="pb-collapsible-body">
+									<div class="pb-form-group">
+										<div class="pb-label-row">
+											<label class="pb-form-label mb-0">Tabs Items</label>
+										</div>
+										<div class="pb-tabs-items-list">
+											<div
+												v-for="(item, index) in tabsItemsForNode(selectedNode)"
+												:key="item.id"
+												class="pb-tabs-item-row"
+												:class="{ active: selectedNode.settings.activeTabId===item.id }"
+											>
+												<button type="button" class="pb-tabs-item-main" @click="selectTabsItem(selectedNode, item.id)">
+													<span>{{ tabsItemSummary(item, index) }}</span>
+												</button>
+												<button type="button" class="pb-tabs-item-action" title="Duplicate Tab" @click="duplicateTabsItem(selectedNode, item.id)">
+													<i class="far fa-copy"></i>
+												</button>
+												<button type="button" class="pb-tabs-item-action" title="Delete Tab" :disabled="tabsItemsForNode(selectedNode).length<=1" @click="removeTabsItem(selectedNode, item.id)">
+													<i class="fas fa-times"></i>
+												</button>
+											</div>
+										</div>
+										<button type="button" class="pb-btn pb-tabs-add-btn" @click="addTabsItem(selectedNode)">
+											<i class="fas fa-plus"></i>
+											<span>Add Tab</span>
+										</button>
+									</div>
+
+									<div v-if="tabsActiveItem(selectedNode)" class="pb-tabs-item-fields">
+										<div class="pb-form-group">
+											<label class="pb-form-label">Title</label>
+											<input class="pb-input" v-model="tabsActiveItem(selectedNode).title" placeholder="Tab title">
+										</div>
+										<div class="pb-form-group">
+											<label class="pb-form-label">Icon Class</label>
+											<input class="pb-input" v-model="tabsActiveItem(selectedNode).iconClass" placeholder="far fa-star">
+										</div>
+										<div class="pb-form-group">
+											<label class="pb-form-label">Active Icon Class</label>
+											<input class="pb-input" v-model="tabsActiveItem(selectedNode).activeIconClass" placeholder="fas fa-star">
+										</div>
+										<div class="pb-form-group">
+											<label class="pb-form-label">CSS ID</label>
+											<input class="pb-input" v-model="tabsActiveItem(selectedNode).cssId" placeholder="tab-one">
+										</div>
+									</div>
+
+									<div class="pb-form-group">
+										<label class="pb-form-label">Direction</label>
+										<div class="pb-seg-group">
+											<button class="pb-seg-btn" :class="{active:selectedNode.settings.direction==='row'}" @click="selectedNode.settings.direction='row'" title="Row"><i class="fas fa-arrow-right"></i></button>
+											<button class="pb-seg-btn" :class="{active:selectedNode.settings.direction==='column'}" @click="selectedNode.settings.direction='column'" title="Column"><i class="fas fa-arrow-down"></i></button>
+											<button class="pb-seg-btn" :class="{active:selectedNode.settings.direction==='row-reverse'}" @click="selectedNode.settings.direction='row-reverse'" title="Row Reverse"><i class="fas fa-arrow-left"></i></button>
+											<button class="pb-seg-btn" :class="{active:selectedNode.settings.direction==='column-reverse'}" @click="selectedNode.settings.direction='column-reverse'" title="Column Reverse"><i class="fas fa-arrow-up"></i></button>
+										</div>
+									</div>
+									<div class="pb-form-group" v-if="tabsSelectedRowDirection(selectedNode)">
+										<label class="pb-form-label">Width</label>
+										<div class="pb-value-with-unit">
+											<input class="pb-input pb-input-compact" type="number" min="1" v-model="selectedNode.settings.tabWidth" placeholder="180">
+											<select class="pb-mini-unit" v-model="selectedNode.settings.tabWidthUnit">
+												<option v-for="unit in tabsWidthUnits" :key="'tabs-width-unit-' + unit" :value="unit">{{ unit }}</option>
+											</select>
+										</div>
+									</div>
+									<div class="pb-form-group">
+										<label class="pb-form-label">Justify</label>
+										<div class="pb-seg-group">
+											<button class="pb-seg-btn" :class="{active:selectedNode.settings.justify==='flex-start'}" @click="selectedNode.settings.justify='flex-start'" title="Start"><i class="fas fa-align-left"></i></button>
+											<button class="pb-seg-btn" :class="{active:selectedNode.settings.justify==='center'}" @click="selectedNode.settings.justify='center'" title="Center"><i class="fas fa-align-center"></i></button>
+											<button class="pb-seg-btn" :class="{active:selectedNode.settings.justify==='flex-end'}" @click="selectedNode.settings.justify='flex-end'" title="End"><i class="fas fa-align-right"></i></button>
+											<button class="pb-seg-btn" :class="{active:selectedNode.settings.justify==='stretch'}" @click="selectedNode.settings.justify='stretch'" title="Stretch"><i class="fas fa-align-justify"></i></button>
+										</div>
+									</div>
+									<div class="pb-form-group">
+										<label class="pb-form-label">Align Title</label>
+										<div class="pb-seg-group">
+											<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignTitle==='left'}" @click="selectedNode.settings.alignTitle='left'" title="Left"><i class="fas fa-align-left"></i></button>
+											<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignTitle==='center'}" @click="selectedNode.settings.alignTitle='center'" title="Center"><i class="fas fa-align-center"></i></button>
+											<button class="pb-seg-btn" :class="{active:selectedNode.settings.alignTitle==='right'}" @click="selectedNode.settings.alignTitle='right'" title="Right"><i class="fas fa-align-right"></i></button>
+										</div>
+									</div>
+									<div class="pb-form-group">
+										<label class="pb-form-label">CSS Class</label>
+										<input class="pb-input" v-model="selectedNode.settings.cssClass" placeholder="custom-tabs">
+									</div>
+								</div>
+							</details>
+							<details class="pb-collapsible" open>
+								<summary>Additional Settings</summary>
+								<div class="pb-collapsible-body">
+									<div class="pb-form-group">
+										<label class="pb-form-label">Horizontal Scroll</label>
+										<select class="pb-select" v-model="selectedNode.settings.horizontalScroll">
+											<option :value="false">Disable</option>
+											<option :value="true">Enable</option>
+										</select>
+										<div class="pb-form-note">Scroll tabs if they don't fit into their parent container.</div>
+									</div>
+									<div class="pb-form-group">
+										<label class="pb-form-label">Breakpoint</label>
+										<select class="pb-select" v-model="selectedNode.settings.breakpoint">
+											<option v-for="option in tabsBreakpointOptions" :key="'tabs-breakpoint-' + option.value" :value="option.value">{{ option.label }}</option>
+										</select>
+										<div class="pb-form-note">Choose at which breakpoint tabs will automatically switch to a vertical ('accordion') layout.</div>
+									</div>
+								</div>
+							</details>
 						</div>
 					</template>
 					<template v-if="selectedType==='icon'">

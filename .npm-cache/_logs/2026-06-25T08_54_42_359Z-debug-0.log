@@ -1,0 +1,79 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.12.1
+2 info using node@v24.15.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:E:\Apps\Laragon\www\laravel-13-phoenix\.npmrc
+5 silly config load:file:C:\Users\CAHYO\.npmrc
+6 silly config load:file:C:\Users\CAHYO\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm exec playwright-cli --session tabsdemo eval (() => { const w = window.elementor?.widgetsCache?.tabs; if (!w) return 'NO_TABS_WIDGET'; return JSON.stringify({ title: w.title, categories: w.categories, controlCount: Object.keys(w.controls || {}).length, tabsControlKeys: Object.keys(w.tabs_controls || {}), firstControlKeys: Object.keys(w.controls || {}).slice(0, 80) }, null, 2); })()
+8 verbose argv "exec" "--cache" "E:\\Apps\\Laragon\\www\\laravel-13-phoenix\\.npm-cache" "--yes" "--package" "@playwright/cli" "--" "playwright-cli" "--session" "tabsdemo" "eval" "(() => { const w = window.elementor?.widgetsCache?.tabs; if (!w) return 'NO_TABS_WIDGET'; return JSON.stringify({ title: w.title, categories: w.categories, controlCount: Object.keys(w.controls || {}).length, tabsControlKeys: Object.keys(w.tabs_controls || {}), firstControlKeys: Object.keys(w.controls || {}).slice(0, 80) }, null, 2); })()"
+9 verbose logfile logs-max:10 dir:E:\Apps\Laragon\www\laravel-13-phoenix\.npm-cache\_logs\2026-06-25T08_54_42_359Z-
+10 verbose logfile E:\Apps\Laragon\www\laravel-13-phoenix\.npm-cache\_logs\2026-06-25T08_54_42_359Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 http fetch GET 200 https://registry.npmjs.org/npm 120ms
+14 http fetch GET 200 https://registry.npmjs.org/@playwright%2fcli 137ms (cache miss)
+15 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+16 silly idealTree buildDeps
+17 silly fetch manifest @playwright/cli@0.1.14
+18 silly packumentCache full:https://registry.npmjs.org/@playwright%2fcli cache-miss
+19 http fetch GET 200 https://registry.npmjs.org/@playwright%2fcli 505ms (cache miss)
+20 silly packumentCache full:https://registry.npmjs.org/@playwright%2fcli set size:undefined disposed:false
+21 silly placeDep ROOT @playwright/cli@0.1.14 OK for:  want: 0.1.14
+22 silly fetch manifest playwright@1.61.0-alpha-1781023400000
+23 silly packumentCache full:https://registry.npmjs.org/playwright cache-miss
+24 silly fetch manifest playwright-core@1.61.0-alpha-1781023400000
+25 silly packumentCache full:https://registry.npmjs.org/playwright-core cache-miss
+26 http fetch GET 200 https://registry.npmjs.org/playwright 502ms (cache miss)
+27 silly packumentCache full:https://registry.npmjs.org/playwright set size:undefined disposed:false
+28 http fetch GET 200 https://registry.npmjs.org/playwright-core 974ms (cache miss)
+29 silly packumentCache full:https://registry.npmjs.org/playwright-core set size:undefined disposed:false
+30 silly placeDep ROOT playwright@1.61.0-alpha-1781023400000 OK for: @playwright/cli@0.1.14 want: 1.61.0-alpha-1781023400000
+31 silly placeDep ROOT playwright-core@1.61.0-alpha-1781023400000 OK for: @playwright/cli@0.1.14 want: 1.61.0-alpha-1781023400000
+32 silly fetch manifest fsevents@2.3.2
+33 silly packumentCache full:https://registry.npmjs.org/fsevents cache-miss
+34 http fetch GET 200 https://registry.npmjs.org/fsevents 72ms (cache miss)
+35 silly packumentCache full:https://registry.npmjs.org/fsevents set size:undefined disposed:false
+36 silly placeDep ROOT fsevents@2.3.2 OK for: playwright@1.61.0-alpha-1781023400000 want: 2.3.2
+37 silly reify moves {}
+38 silly audit bulk request {
+38 silly audit   '@playwright/cli': [ '0.1.14' ],
+38 silly audit   playwright: [ '1.61.0-alpha-1781023400000' ],
+38 silly audit   'playwright-core': [ '1.61.0-alpha-1781023400000' ],
+38 silly audit   fsevents: [ '2.3.2' ]
+38 silly audit }
+39 http cache playwright-core@https://registry.npmjs.org/playwright-core/-/playwright-core-1.61.0-alpha-1781023400000.tgz 0ms (cache hit)
+40 http cache playwright@https://registry.npmjs.org/playwright/-/playwright-1.61.0-alpha-1781023400000.tgz 0ms (cache hit)
+41 http cache @playwright/cli@https://registry.npmjs.org/@playwright/cli/-/cli-0.1.14.tgz 0ms (cache hit)
+42 silly tarball no local data for playwright-core@https://registry.npmjs.org/playwright-core/-/playwright-core-1.61.0-alpha-1781023400000.tgz. Extracting by manifest.
+43 silly tarball no local data for playwright@https://registry.npmjs.org/playwright/-/playwright-1.61.0-alpha-1781023400000.tgz. Extracting by manifest.
+44 silly tarball no local data for @playwright/cli@https://registry.npmjs.org/@playwright/cli/-/cli-0.1.14.tgz. Extracting by manifest.
+45 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 241ms
+46 silly audit report {}
+47 http fetch GET 200 https://registry.npmjs.org/@playwright/cli/-/cli-0.1.14.tgz 593ms (cache miss)
+48 http fetch GET 200 https://registry.npmjs.org/playwright/-/playwright-1.61.0-alpha-1781023400000.tgz 1096ms (cache miss)
+49 verbose stack Error: Lock compromised
+49 verbose stack     at AbortSignal.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\libnpmexec\lib\with-lock.js:53:30)
+49 verbose stack     at [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+49 verbose stack     at AbortSignal.dispatchEvent (node:internal/event_target:776:26)
+49 verbose stack     at runAbort (node:internal/abort_controller:488:10)
+49 verbose stack     at abortSignal (node:internal/abort_controller:459:3)
+49 verbose stack     at AbortController.abort (node:internal/abort_controller:507:5)
+49 verbose stack     at Timeout.touchLock (C:\Program Files\nodejs\node_modules\npm\node_modules\libnpmexec\lib\with-lock.js:164:18)
+50 error code ECOMPROMISED
+51 error Lock compromised
+52 silly unfinished npm timer reify 1782377683282
+53 silly unfinished npm timer reify:unpack 1782377685012
+54 silly unfinished npm timer reifyNode:node_modules/playwright-core 1782377685012
+55 verbose cwd E:\Apps\Laragon\www\laravel-13-phoenix
+56 verbose os Windows_NT 10.0.26200
+57 verbose node v24.15.0
+58 verbose npm  v11.12.1
+59 notice
+59 notice New minor version of npm available! 11.12.1 -> 11.17.0
+59 notice Changelog: https://github.com/npm/cli/releases/tag/v11.17.0
+59 notice To update run: npm install -g npm@11.17.0
+59 notice  { force: true, Symbol(proc-log.meta): true }
+60 verbose exit 1
+61 verbose code 1
+62 error A complete log of this run can be found in: E:\Apps\Laragon\www\laravel-13-phoenix\.npm-cache\_logs\2026-06-25T08_54_42_359Z-debug-0.log

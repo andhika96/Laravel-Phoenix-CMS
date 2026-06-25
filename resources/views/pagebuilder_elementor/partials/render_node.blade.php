@@ -1599,6 +1599,135 @@
 		</script>
 	@endif
 
+@elseif($type === 'tabs')
+	@php
+		$nodeId = trim((string) ($node['id'] ?? ''));
+		$nodeDomId = $nodeId !== '' ? 'pb-node-' . $nodeId : '';
+		$customClass = $normalize_class_tokens($settings['cssClass'] ?? '');
+		$direction = strtolower(trim((string) ($settings['direction'] ?? 'row')));
+		if (!in_array($direction, ['row', 'row-reverse', 'column', 'column-reverse'], true)) {
+			$direction = 'row';
+		}
+		$justify = strtolower(trim((string) ($settings['justify'] ?? 'flex-start')));
+		if (!in_array($justify, ['flex-start', 'center', 'flex-end', 'stretch'], true)) {
+			$justify = 'flex-start';
+		}
+		$alignTitle = strtolower(trim((string) ($settings['alignTitle'] ?? 'center')));
+		if (!in_array($alignTitle, ['left', 'center', 'right'], true)) {
+			$alignTitle = 'center';
+		}
+		$breakpoint = strtolower(trim((string) ($settings['breakpoint'] ?? 'mobile')));
+		if (!in_array($breakpoint, ['mobile', 'tablet', 'none'], true)) {
+			$breakpoint = 'mobile';
+		}
+		$horizontalScroll = $is_truthy($settings['horizontalScroll'] ?? false);
+		$tabWidthRaw = trim((string) ($settings['tabWidth'] ?? ''));
+		$tabWidthUnit = trim((string) ($settings['tabWidthUnit'] ?? 'px')) === '%' ? '%' : 'px';
+		$tabWidthCss = ($tabWidthRaw !== '' && is_numeric($tabWidthRaw) && (float) $tabWidthRaw > 0)
+			? (((float) $tabWidthRaw + 0) . $tabWidthUnit)
+			: '';
+		$rawTabItems = is_array($node['tabItems'] ?? null) && count($node['tabItems'])
+			? $node['tabItems']
+			: [[
+				'id' => 'tab-fallback',
+				'title' => 'Tab #1',
+				'iconClass' => '',
+				'activeIconClass' => '',
+				'cssId' => '',
+				'children' => [],
+			]];
+		$tabItems = array_values(array_map(function ($item, $index) use ($normalize_class_tokens) {
+			return [
+				'id' => trim((string) ($item['id'] ?? ('tab-' . ($index + 1)))) ?: ('tab-' . ($index + 1)),
+				'title' => trim((string) ($item['title'] ?? ('Tab #' . ($index + 1)))) ?: ('Tab #' . ($index + 1)),
+				'iconClass' => trim((string) ($item['iconClass'] ?? '')),
+				'activeIconClass' => trim((string) ($item['activeIconClass'] ?? '')),
+				'cssId' => trim((string) ($item['cssId'] ?? '')),
+				'children' => is_array($item['children'] ?? null) ? $item['children'] : [],
+			];
+		}, $rawTabItems, array_keys($rawTabItems)));
+		$activeTabId = trim((string) ($settings['activeTabId'] ?? ''));
+		if ($activeTabId === '' || !collect($tabItems)->contains(fn ($item) => $item['id'] === $activeTabId)) {
+			$activeTabId = $tabItems[0]['id'];
+		}
+		$className = trim(implode(' ', array_filter([
+			'el-widget-tabs',
+			'is-direction-' . $direction,
+			'is-breakpoint-' . $breakpoint,
+			$horizontalScroll ? 'is-scroll-enabled' : '',
+			$justify === 'stretch' ? 'is-justify-stretch' : '',
+			'align-title-' . $alignTitle,
+			$customClass,
+		])));
+		$navStyle = $justify !== 'stretch' ? 'justify-content:' . $justify . ';' : '';
+	@endphp
+	<div @if($nodeDomId !== '') id="{{ $nodeDomId }}" @endif class="{{ $className }}" data-tabs-root="1">
+		<div class="el-widget-tabs__nav" style="{{ $navStyle }}">
+			@foreach($tabItems as $item)
+				@php
+					$isActive = $item['id'] === $activeTabId;
+					$iconClass = $isActive && $item['activeIconClass'] !== '' ? $item['activeIconClass'] : $item['iconClass'];
+					$safeCssId = preg_match('/^[A-Za-z][A-Za-z0-9_-]*$/', $item['cssId']) ? $item['cssId'] : '';
+					$buttonStyle = '';
+					if ($tabWidthCss !== '' && in_array($direction, ['row', 'row-reverse'], true)) {
+						$buttonStyle = 'flex:0 0 ' . $tabWidthCss . ';width:' . $tabWidthCss . ';';
+					}
+					$buttonStyle .= 'text-align:' . $alignTitle . ';';
+				@endphp
+				<button
+					type="button"
+					class="el-widget-tabs__tab{{ $isActive ? ' is-active' : '' }}{{ $iconClass !== '' ? ' has-icon' : '' }}"
+					data-tab-id="{{ $item['id'] }}"
+					@if($safeCssId !== '') id="{{ $safeCssId }}" @endif
+					style="{{ $buttonStyle }}"
+					aria-selected="{{ $isActive ? 'true' : 'false' }}"
+				>
+					@if($iconClass !== '')
+						<i class="{{ $iconClass }}" aria-hidden="true"></i>
+					@endif
+					<span>{{ $item['title'] }}</span>
+				</button>
+			@endforeach
+		</div>
+		@foreach($tabItems as $item)
+			@php $isActive = $item['id'] === $activeTabId; @endphp
+			<div class="el-widget-tabs__pane{{ $isActive ? ' is-active' : '' }}" data-tab-panel="{{ $item['id'] }}" @if(!$isActive) hidden @endif>
+				@foreach($item['children'] as $child)
+					@include('pagebuilder_elementor.partials.render_node', ['node' => $child])
+				@endforeach
+			</div>
+		@endforeach
+	</div>
+	@if($nodeDomId !== '')
+		<script>
+			(function () {
+				const root = document.getElementById(@json($nodeDomId));
+				if (!root || root.dataset.tabsBound === '1') return;
+				root.dataset.tabsBound = '1';
+				const tabs = Array.from(root.querySelectorAll('.el-widget-tabs__tab[data-tab-id]'));
+				const panels = Array.from(root.querySelectorAll('.el-widget-tabs__pane[data-tab-panel]'));
+				const setActive = function (tabId) {
+					tabs.forEach((tab) => {
+						const active = tab.getAttribute('data-tab-id') === tabId;
+						tab.classList.toggle('is-active', active);
+						tab.setAttribute('aria-selected', active ? 'true' : 'false');
+					});
+					panels.forEach((panel) => {
+						const active = panel.getAttribute('data-tab-panel') === tabId;
+						panel.classList.toggle('is-active', active);
+						if (active) panel.removeAttribute('hidden');
+						else panel.setAttribute('hidden', 'hidden');
+					});
+				};
+				tabs.forEach((tab) => {
+					tab.addEventListener('click', function () {
+						setActive(tab.getAttribute('data-tab-id') || '');
+					});
+				});
+			})();
+		</script>
+	@endif
+
 @elseif($type === 'icon')
 	@php
 		$customClass = $normalize_class_tokens($settings['cssClass'] ?? '');
