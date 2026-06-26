@@ -1288,24 +1288,11 @@ body {
 }
 
 .pb-node.pb-node-tabs .pb-preview,
+.pb-node.pb-node-tabs .pb-preview *,
 .pb-node.pb-node-tabs .pb-preview-inner,
 .pb-node.pb-node-tabs .pb-dropzone-tab,
-.pb-node.pb-node-tabs [data-pb-interactive="true"],
-.pb-node.pb-node-tabs [data-pb-nested-dropzone="true"] {
+.pb-node.pb-node-tabs .pb-dropzone-tab * {
 	pointer-events: auto;
-}
-
-.pb-node.pb-node-tabs .pb-dropzone-empty,
-.pb-node.pb-node-tabs .pb-grid-col-empty-hint,
-.pb-node.pb-node-tabs .pb-tabs-empty-hint {
-	pointer-events: none;
-}
-
-.pb-node.pb-node-tabs .pb-grid-col-empty-hint .pb-inline-add,
-.pb-node.pb-node-tabs .pb-tabs-empty-hint .pb-inline-add {
-	pointer-events: auto;
-	position: relative;
-	z-index: 2;
 }
 
 .pb-node.pb-node-widget .pb-preview-inner {
@@ -5399,95 +5386,4 @@ body {
 .pb-panel.left .pb-grid-settings .pb-attr-row {
 	gap: 8px;
 	margin-top: 8px;
-}
-
-/* ── Targeted Insert & Pending Notices ── */
-.pb-pending-insert-notice {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	background: #f4effa;
-	border-left: 4px solid #7a57b2;
-	padding: 10px 14px;
-	margin: 10px;
-	border-radius: 4px;
-	color: #613e99;
-	font-size: 12px;
-	font-weight: 500;
-	animation: slideDownInsertNotice 0.25s ease-out;
-}
-
-.pb-pending-insert-text {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-}
-
-.pb-pending-insert-text i {
-	color: #7a57b2;
-	font-size: 13px;
-}
-
-.pb-pending-insert-cancel {
-	background: transparent;
-	border: none;
-	color: #b59bdc;
-	cursor: pointer;
-	padding: 2px 6px;
-	font-size: 13px;
-	transition: color 0.15s ease;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.pb-pending-insert-cancel:hover {
-	color: #7a57b2;
-}
-
-/* Glowing Pulse Highlight for Targeted Columns and Tabs */
-.pb-dropzone.is-pending-insert-target {
-	border: 2px dashed #7a57b2 !important;
-	background-color: rgba(122, 87, 178, 0.03) !important;
-	animation: pulsePendingBorder 2s infinite ease-in-out !important;
-	border-radius: 6px;
-}
-
-.pb-dropzone.is-pending-insert-target .pb-inline-add {
-	animation: bouncePendingAdd 1.5s infinite ease-in-out !important;
-	border-color: #7a57b2 !important;
-	background: #7a57b2 !important;
-	color: #fff !important;
-	box-shadow: 0 4px 10px rgba(122, 87, 178, 0.3) !important;
-}
-
-@keyframes slideDownInsertNotice {
-	from {
-		opacity: 0;
-		transform: translateY(-8px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-@keyframes pulsePendingBorder {
-	0%, 100% {
-		box-shadow: 0 0 0 0 rgba(122, 87, 178, 0.3);
-		border-color: rgba(122, 87, 178, 0.6);
-	}
-	50% {
-		box-shadow: 0 0 12px 2px rgba(122, 87, 178, 0.2);
-		border-color: rgba(122, 87, 178, 1);
-	}
-}
-
-@keyframes bouncePendingAdd {
-	0%, 100% {
-		transform: translateY(0);
-	}
-	50% {
-		transform: translateY(-3px);
-	}
 }

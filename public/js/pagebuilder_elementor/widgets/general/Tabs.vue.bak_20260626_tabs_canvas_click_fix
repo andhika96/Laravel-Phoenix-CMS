@@ -1,6 +1,6 @@
 <template>
 	<div :class="rootClass">
-		<div class="el-widget-tabs__nav" :style="navStyle" data-pb-interactive="true" @click.stop>
+		<div class="el-widget-tabs__nav" :style="navStyle">
 			<button
 				v-for="tab in tabItems"
 				:key="tab.id"
@@ -8,14 +8,13 @@
 				class="el-widget-tabs__tab"
 				:class="{ 'is-active': activeTab && activeTab.id===tab.id, 'has-icon': !!iconClassFor(tab, activeTab && activeTab.id===tab.id) }"
 				:style="tabButtonStyle"
-				data-pb-interactive="true"
-				@click.stop="activateTab(tab.id)"
+				@click="activateTab(tab.id)"
 			>
 				<i v-if="iconClassFor(tab, activeTab && activeTab.id===tab.id)" :class="iconClassFor(tab, activeTab && activeTab.id===tab.id)" aria-hidden="true"></i>
 				<span>{{ tab.title || 'Tab' }}</span>
 			</button>
 		</div>
-		<div class="el-widget-tabs__pane" :data-tab-panel="activeTab ? activeTab.id : ''" data-pb-interactive="true" @click.stop>
+		<div class="el-widget-tabs__pane" :data-tab-panel="activeTab ? activeTab.id : ''">
 			<slot></slot>
 		</div>
 	</div>

@@ -323,25 +323,6 @@
 		if (!target || typeof target.closest !== 'function') return false;
 		return !!target.closest('[data-pb-nested-dropzone="true"]');
 	}
-	function findNestedCanvasDropTargetFromEvent(event, parentEl = null) {
-		const target = event && event.target && typeof event.target.closest === 'function'
-			? event.target.closest('[data-pb-nested-dropzone="true"]')
-			: null;
-		if (target && (!parentEl || (target !== parentEl && parentEl.contains(target)))) return target;
-
-		const x = Number(event && event.clientX);
-		const y = Number(event && event.clientY);
-		if (!Number.isFinite(x) || !Number.isFinite(y) || !document.elementsFromPoint) return null;
-
-		const elements = document.elementsFromPoint(x, y);
-		for (const el of elements) {
-			if (!el || el === parentEl || typeof el.closest !== 'function') continue;
-			const nested = el.closest('[data-pb-nested-dropzone="true"]');
-			if (!nested || nested === parentEl) continue;
-			if (!parentEl || parentEl.contains(nested)) return nested;
-		}
-		return null;
-	}
 	function clamp(v, min, max) {
 		return Math.min(max, Math.max(min, v));
 	}
@@ -991,7 +972,6 @@
 			onShowToolbox:  { type: Function, required: true },
 			pendingInsertTarget: { type: Object, default: null },
 			onRerouteTabsDrop: { type: Function, default: null },
-			onTrackDropzonePointer: { type: Function, default: null },
 		},
 		emits: [],
 		data() {
@@ -1413,7 +1393,6 @@
 					onShowToolbox:  this.onShowToolbox,
 					pendingInsertTarget: this.pendingInsertTarget,
 					onRerouteTabsDrop: this.onRerouteTabsDrop,
-					onTrackDropzonePointer: this.onTrackDropzonePointer,
 				};
 			},
 			flexPercentBasis(rawBasis) {
@@ -1575,12 +1554,7 @@
 				this.onStartColumnResize(event, this.node, col, ci);
 			},
 			onTabDropzoneMove(evt) {
-				const originalEvent = evt && evt.originalEvent ? evt.originalEvent : null;
-				const parentEl = evt && evt.to ? evt.to : null;
-				const trackedDropzone = this.onTrackDropzonePointer ? this.onTrackDropzonePointer(originalEvent) : null;
-				if (trackedDropzone && parentEl && trackedDropzone !== parentEl && parentEl.contains(trackedDropzone)) return false;
-				if (findNestedCanvasDropTargetFromEvent(originalEvent, parentEl)) return false;
-				const target = originalEvent ? originalEvent.target : null;
+				const target = evt && evt.originalEvent ? evt.originalEvent.target : null;
 				return !isNestedCanvasDropTarget(target);
 			},
 			onAddActiveTabChild(evt) {
@@ -1809,10 +1783,6 @@
 							:group="colGroup"
 							data-pb-interactive="true"
 							data-pb-nested-dropzone="true"
-							:fallback-on-body="true"
-							:dragover-bubble="false"
-							:swap-threshold="0.65"
-							:empty-insert-threshold="30"
 							:data-col-index="ci"
 							:data-parent-node-id="node.id"
 							:data-parent-node-type="node.type"
@@ -1859,10 +1829,6 @@
 							:group="colGroup"
 							data-pb-interactive="true"
 							data-pb-nested-dropzone="true"
-							:fallback-on-body="true"
-							:dragover-bubble="false"
-							:swap-threshold="0.65"
-							:empty-insert-threshold="30"
 							:data-col-index="ci"
 							:data-parent-node-id="node.id"
 							:data-parent-node-type="node.type"
@@ -1907,10 +1873,6 @@
 							item-key="id"
 							:group="colGroup"
 							:move="onTabDropzoneMove"
-							:fallback-on-body="true"
-							:dragover-bubble="false"
-							:swap-threshold="0.65"
-							:empty-insert-threshold="30"
 							data-parent-node-type="tabs"
 							:class="['pb-dropzone', 'pb-dropzone-tab', {
 								'is-empty': activeTabsChildren().length === 0,
@@ -1927,7 +1889,7 @@
 							</template>
 							<template #footer>
 								<div v-if="activeTabsChildren().length === 0" class="pb-dropzone-empty pb-tabs-empty-hint">
-									<button type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onOpenModal('container', 'tabs', activeTabsChildren())">
+									<button type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox({ type: 'tab', nodeId: node.id, tabId: activeTabsItem() ? activeTabsItem().id : null })">
 										<i class="fas fa-plus"></i>
 										<span>Add</span>
 									</button>
@@ -4005,7 +3967,6 @@
 
 			// ── Drag state ─────────────────────────────────────────────────────
 			let _dropzoneListeners = [];
-			let _dropzonePointerListeners = [];
 			let lastHoveredDropzoneEl = null;
 			function _clearDropzoneListeners() {
 				_dropzoneListeners.forEach(({ el, enter, leave }) => {
@@ -4013,50 +3974,20 @@
 					el.removeEventListener('dragleave', leave);
 				});
 				_dropzoneListeners = [];
-				_dropzonePointerListeners.forEach(({ type, handler }) => {
-					document.removeEventListener(type, handler, true);
-				});
-				_dropzonePointerListeners = [];
 				lastHoveredDropzoneEl = null;
 				document.querySelectorAll('.pb-dropzone.is-drop-hover').forEach(el => el.classList.remove('is-drop-hover'));
 				document.querySelectorAll('.pb-node.is-drag-over').forEach(el => el.classList.remove('is-drag-over'));
 				document.querySelectorAll('.pb-grid-col.is-drag-over-col').forEach(el => el.classList.remove('is-drag-over-col'));
 			}
-			function trackDropzonePointerFromEvent(event) {
-				if (!event) return null;
-				const x = Number(event.clientX);
-				const y = Number(event.clientY);
-				if (!Number.isFinite(x) || !Number.isFinite(y) || !document.elementsFromPoint) return null;
-				const elements = document.elementsFromPoint(x, y);
-				let fallbackDropzone = null;
-				for (const el of elements) {
-					if (!el || typeof el.closest !== 'function') continue;
-					const nestedColumn = el.closest('[data-pb-nested-dropzone="true"].pb-dropzone-col');
-					if (nestedColumn) {
-						lastHoveredDropzoneEl = nestedColumn;
-						return nestedColumn;
-					}
-					if (!fallbackDropzone) fallbackDropzone = el.closest('.pb-dropzone');
-				}
-				if (fallbackDropzone) lastHoveredDropzoneEl = fallbackDropzone;
-				return fallbackDropzone;
-			}
 			function onDragStart() {
-				clearPendingInsertTarget();
 				hoveredId.value = '';
 				document.body.classList.add('pb-is-dragging');
-				const pointerTracker = (event) => { trackDropzonePointerFromEvent(event); };
-				['pointermove', 'mousemove', 'dragover'].forEach((type) => {
-					document.addEventListener(type, pointerTracker, true);
-					_dropzonePointerListeners.push({ type, handler: pointerTracker });
-				});
 				nextTick(() => {
 					document.querySelectorAll('.pb-dropzone').forEach(el => {
 						const parentNode = el.closest('.pb-node');
 						const parentCol  = el.closest('.pb-grid-col');
 						const enter = (e) => {
 							e.stopPropagation();
-							trackDropzonePointerFromEvent(e);
 							// Bersihkan semua highlight sebelumnya
 							document.querySelectorAll('.pb-dropzone.is-drop-hover').forEach(z => z.classList.remove('is-drop-hover'));
 							document.querySelectorAll('.pb-node.is-drag-over').forEach(n => n.classList.remove('is-drag-over'));
@@ -4137,9 +4068,8 @@
 				return false;
 			}
 			function rerouteTabsDropToNestedColumn(evt, tabChildren) {
+				const hoveredEl = lastHoveredDropzoneEl;
 				const parentEl = evt && evt.to ? evt.to : null;
-				const originalEvent = evt && evt.originalEvent ? evt.originalEvent : null;
-				const hoveredEl = findNestedCanvasDropTargetFromEvent(originalEvent, parentEl) || lastHoveredDropzoneEl;
 				if (!hoveredEl || !parentEl || hoveredEl === parentEl) return false;
 				if (!parentEl.contains(hoveredEl) || !hoveredEl.classList || !hoveredEl.classList.contains('pb-dropzone-col')) return false;
 
@@ -4541,7 +4471,7 @@
 				onAddContainer, onAddCol, onRootAdd,
 				modal, cPresets, gPresets, applyContPreset, applyGridPreset, closeModal, pickLayout, openModal,
 				canUndo, canRedo, undo, redo,
-				onToolboxItemClick, pendingInsertTarget, clearPendingInsertTarget, rerouteTabsDropToNestedColumn, trackDropzonePointerFromEvent,
+				onToolboxItemClick, pendingInsertTarget, clearPendingInsertTarget, rerouteTabsDropToNestedColumn,
 			};
 		},
 
@@ -6717,7 +6647,6 @@
 								:on-show-toolbox="showToolboxPanel"
 								:pending-insert-target="pendingInsertTarget"
 								:on-reroute-tabs-drop="rerouteTabsDropToNestedColumn"
-								:on-track-dropzone-pointer="trackDropzonePointerFromEvent"
 							/>
 						</template>
 						<template #footer>

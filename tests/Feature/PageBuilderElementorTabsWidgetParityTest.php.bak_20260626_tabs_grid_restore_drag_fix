@@ -69,11 +69,10 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringContainsString('let lastHoveredDropzoneEl = null;', $appJs);
         $this->assertStringContainsString('function rerouteTabsDropToNestedColumn(evt, tabChildren)', $appJs);
         $this->assertStringContainsString(':fallback-on-body="true"', $appJs);
-        $this->assertStringNotContainsString(':force-fallback="true"', $appJs);
+        $this->assertStringContainsString(':force-fallback="true"', $appJs);
         $this->assertStringContainsString(':dragover-bubble="false"', $appJs);
         $this->assertStringContainsString(':swap-threshold="0.65"', $appJs);
         $this->assertStringContainsString(':empty-insert-threshold="30"', $appJs);
-        $this->assertStringContainsString("onOpenModal('container', 'tabs', activeTabsChildren())", $appJs);
         $this->assertStringContainsString('[data-pb-nested-dropzone="true"]', $builderCss);
     }
 
@@ -147,7 +146,7 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringContainsString('onToolboxItemClick', $appJs);
         $this->assertStringContainsString('insertToolIntoPendingTarget', $appJs);
         $this->assertStringContainsString("type: 'column'", $appJs);
-        $this->assertStringContainsString("onOpenModal('container', 'tabs', activeTabsChildren())", $appJs);
+        $this->assertStringContainsString("type: 'tab'", $appJs);
         $this->assertStringContainsString('pb-pending-insert-notice', $appJs);
         $this->assertStringContainsString('is-pending-insert-target', $appJs);
         $this->assertStringContainsString('@click="onToolboxItemClick(element)"', $appJs);

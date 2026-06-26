@@ -1810,6 +1810,7 @@
 							data-pb-interactive="true"
 							data-pb-nested-dropzone="true"
 							:fallback-on-body="true"
+							:force-fallback="true"
 							:dragover-bubble="false"
 							:swap-threshold="0.65"
 							:empty-insert-threshold="30"
@@ -1860,6 +1861,7 @@
 							data-pb-interactive="true"
 							data-pb-nested-dropzone="true"
 							:fallback-on-body="true"
+							:force-fallback="true"
 							:dragover-bubble="false"
 							:swap-threshold="0.65"
 							:empty-insert-threshold="30"
@@ -1908,6 +1910,7 @@
 							:group="colGroup"
 							:move="onTabDropzoneMove"
 							:fallback-on-body="true"
+							:force-fallback="true"
 							:dragover-bubble="false"
 							:swap-threshold="0.65"
 							:empty-insert-threshold="30"
@@ -1927,7 +1930,7 @@
 							</template>
 							<template #footer>
 								<div v-if="activeTabsChildren().length === 0" class="pb-dropzone-empty pb-tabs-empty-hint">
-									<button type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onOpenModal('container', 'tabs', activeTabsChildren())">
+									<button type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox({ type: 'tab', nodeId: node.id, tabId: activeTabsItem() ? activeTabsItem().id : null })">
 										<i class="fas fa-plus"></i>
 										<span>Add</span>
 									</button>

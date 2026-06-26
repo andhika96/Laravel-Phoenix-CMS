@@ -65,15 +65,12 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringContainsString(':move="onTabDropzoneMove"', $appJs);
         $this->assertStringContainsString('function isNestedCanvasDropTarget(target)', $appJs);
         $this->assertStringContainsString('function findNestedCanvasDropTargetFromEvent(event, parentEl = null)', $appJs);
-        $this->assertStringContainsString('function trackDropzonePointerFromEvent(event)', $appJs);
         $this->assertStringContainsString('let lastHoveredDropzoneEl = null;', $appJs);
         $this->assertStringContainsString('function rerouteTabsDropToNestedColumn(evt, tabChildren)', $appJs);
         $this->assertStringContainsString(':fallback-on-body="true"', $appJs);
-        $this->assertStringNotContainsString(':force-fallback="true"', $appJs);
         $this->assertStringContainsString(':dragover-bubble="false"', $appJs);
         $this->assertStringContainsString(':swap-threshold="0.65"', $appJs);
         $this->assertStringContainsString(':empty-insert-threshold="30"', $appJs);
-        $this->assertStringContainsString("onOpenModal('container', 'tabs', activeTabsChildren())", $appJs);
         $this->assertStringContainsString('[data-pb-nested-dropzone="true"]', $builderCss);
     }
 
@@ -147,7 +144,7 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringContainsString('onToolboxItemClick', $appJs);
         $this->assertStringContainsString('insertToolIntoPendingTarget', $appJs);
         $this->assertStringContainsString("type: 'column'", $appJs);
-        $this->assertStringContainsString("onOpenModal('container', 'tabs', activeTabsChildren())", $appJs);
+        $this->assertStringContainsString("type: 'tab'", $appJs);
         $this->assertStringContainsString('pb-pending-insert-notice', $appJs);
         $this->assertStringContainsString('is-pending-insert-target', $appJs);
         $this->assertStringContainsString('@click="onToolboxItemClick(element)"', $appJs);
@@ -155,8 +152,6 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         // Verify CSS contains targeted notice styling and premium glowing animations
         $this->assertStringContainsString('.pb-pending-insert-notice', $builderCss);
         $this->assertStringContainsString('.pb-dropzone.is-pending-insert-target', $builderCss);
-        $this->assertStringContainsString('.pb-node.pb-node-tabs .pb-grid-col-empty-hint .pb-inline-add', $builderCss);
-        $this->assertStringNotContainsString(".pb-node.pb-node-tabs .pb-dropzone-tab * {\n\tpointer-events: auto;", $builderCss);
         $this->assertStringContainsString('pulsePendingBorder', $builderCss);
         $this->assertStringContainsString('bouncePendingAdd', $builderCss);
     }

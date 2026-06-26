@@ -1288,24 +1288,16 @@ body {
 }
 
 .pb-node.pb-node-tabs .pb-preview,
+.pb-node.pb-node-tabs .pb-preview *,
 .pb-node.pb-node-tabs .pb-preview-inner,
 .pb-node.pb-node-tabs .pb-dropzone-tab,
-.pb-node.pb-node-tabs [data-pb-interactive="true"],
-.pb-node.pb-node-tabs [data-pb-nested-dropzone="true"] {
+.pb-node.pb-node-tabs .pb-dropzone-tab * {
 	pointer-events: auto;
 }
 
-.pb-node.pb-node-tabs .pb-dropzone-empty,
-.pb-node.pb-node-tabs .pb-grid-col-empty-hint,
-.pb-node.pb-node-tabs .pb-tabs-empty-hint {
-	pointer-events: none;
-}
-
-.pb-node.pb-node-tabs .pb-grid-col-empty-hint .pb-inline-add,
-.pb-node.pb-node-tabs .pb-tabs-empty-hint .pb-inline-add {
+.pb-node.pb-node-tabs [data-pb-nested-dropzone="true"],
+.pb-node.pb-node-tabs [data-pb-nested-dropzone="true"] * {
 	pointer-events: auto;
-	position: relative;
-	z-index: 2;
 }
 
 .pb-node.pb-node-widget .pb-preview-inner {

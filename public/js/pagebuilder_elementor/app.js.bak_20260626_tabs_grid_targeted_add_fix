@@ -323,25 +323,6 @@
 		if (!target || typeof target.closest !== 'function') return false;
 		return !!target.closest('[data-pb-nested-dropzone="true"]');
 	}
-	function findNestedCanvasDropTargetFromEvent(event, parentEl = null) {
-		const target = event && event.target && typeof event.target.closest === 'function'
-			? event.target.closest('[data-pb-nested-dropzone="true"]')
-			: null;
-		if (target && (!parentEl || (target !== parentEl && parentEl.contains(target)))) return target;
-
-		const x = Number(event && event.clientX);
-		const y = Number(event && event.clientY);
-		if (!Number.isFinite(x) || !Number.isFinite(y) || !document.elementsFromPoint) return null;
-
-		const elements = document.elementsFromPoint(x, y);
-		for (const el of elements) {
-			if (!el || el === parentEl || typeof el.closest !== 'function') continue;
-			const nested = el.closest('[data-pb-nested-dropzone="true"]');
-			if (!nested || nested === parentEl) continue;
-			if (!parentEl || parentEl.contains(nested)) return nested;
-		}
-		return null;
-	}
 	function clamp(v, min, max) {
 		return Math.min(max, Math.max(min, v));
 	}
@@ -989,9 +970,6 @@
 			onStartColumnResize: { type: Function, required: true },
 			onOpenModal:    { type: Function, required: true },
 			onShowToolbox:  { type: Function, required: true },
-			pendingInsertTarget: { type: Object, default: null },
-			onRerouteTabsDrop: { type: Function, default: null },
-			onTrackDropzonePointer: { type: Function, default: null },
 		},
 		emits: [],
 		data() {
@@ -1411,9 +1389,6 @@
 					onStartColumnResize: this.onStartColumnResize,
 					onOpenModal:    this.onOpenModal,
 					onShowToolbox:  this.onShowToolbox,
-					pendingInsertTarget: this.pendingInsertTarget,
-					onRerouteTabsDrop: this.onRerouteTabsDrop,
-					onTrackDropzonePointer: this.onTrackDropzonePointer,
 				};
 			},
 			flexPercentBasis(rawBasis) {
@@ -1575,17 +1550,12 @@
 				this.onStartColumnResize(event, this.node, col, ci);
 			},
 			onTabDropzoneMove(evt) {
-				const originalEvent = evt && evt.originalEvent ? evt.originalEvent : null;
-				const parentEl = evt && evt.to ? evt.to : null;
-				const trackedDropzone = this.onTrackDropzonePointer ? this.onTrackDropzonePointer(originalEvent) : null;
-				if (trackedDropzone && parentEl && trackedDropzone !== parentEl && parentEl.contains(trackedDropzone)) return false;
-				if (findNestedCanvasDropTargetFromEvent(originalEvent, parentEl)) return false;
-				const target = originalEvent ? originalEvent.target : null;
+				const target = evt && evt.originalEvent ? evt.originalEvent.target : null;
 				return !isNestedCanvasDropTarget(target);
 			},
 			onAddActiveTabChild(evt) {
 				const children = this.activeTabsChildren();
-				if (this.onRerouteTabsDrop && this.onRerouteTabsDrop(evt, children)) return;
+				if (rerouteTabsDropToNestedColumn(evt, children)) return;
 				this.onAddCol(evt, { children }, -1, null);
 			},
 			isSequentialColumnLocked(colIndex) {
@@ -1809,10 +1779,6 @@
 							:group="colGroup"
 							data-pb-interactive="true"
 							data-pb-nested-dropzone="true"
-							:fallback-on-body="true"
-							:dragover-bubble="false"
-							:swap-threshold="0.65"
-							:empty-insert-threshold="30"
 							:data-col-index="ci"
 							:data-parent-node-id="node.id"
 							:data-parent-node-type="node.type"
@@ -1820,8 +1786,7 @@
 							:class="['pb-dropzone', 'pb-dropzone-col', {
 								'is-empty': !col.children || col.children.length === 0,
 								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading'),
-								'is-sequential-locked': isSequentialColumnLocked(ci),
-								'is-pending-insert-target': pendingInsertTarget && pendingInsertTarget.type === 'column' && pendingInsertTarget.nodeId === node.id && pendingInsertTarget.colId === col.id
+								'is-sequential-locked': isSequentialColumnLocked(ci)
 							}]"
 							ghost-class="pb-ghost"
 							dragover-class="is-drop-hover"
@@ -1834,7 +1799,7 @@
 							</template>
 							<template #footer>
 								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">
-									<button v-if="!isSequentialColumnLocked(ci)" type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox({ type: 'column', nodeId: node.id, colId: col.id })">
+									<button v-if="!isSequentialColumnLocked(ci)" type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox()">
 										<i class="fas fa-plus"></i>
 										<span>Add</span>
 									</button>
@@ -1859,18 +1824,13 @@
 							:group="colGroup"
 							data-pb-interactive="true"
 							data-pb-nested-dropzone="true"
-							:fallback-on-body="true"
-							:dragover-bubble="false"
-							:swap-threshold="0.65"
-							:empty-insert-threshold="30"
 							:data-col-index="ci"
 							:data-parent-node-id="node.id"
 							:data-parent-node-type="node.type"
 							:class="['pb-dropzone', 'pb-dropzone-col', {
 								'is-empty': !col.children || col.children.length === 0,
 								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading'),
-								'is-sequential-locked': isSequentialColumnLocked(ci),
-								'is-pending-insert-target': pendingInsertTarget && pendingInsertTarget.type === 'column' && pendingInsertTarget.nodeId === node.id && pendingInsertTarget.colId === col.id
+								'is-sequential-locked': isSequentialColumnLocked(ci)
 							}]"
 							ghost-class="pb-ghost"
 							dragover-class="is-drop-hover"
@@ -1883,7 +1843,7 @@
 							</template>
 							<template #footer>
 								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">
-									<button v-if="!isSequentialColumnLocked(ci)" type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox({ type: 'column', nodeId: node.id, colId: col.id })">
+									<button v-if="!isSequentialColumnLocked(ci)" type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox()">
 										<i class="fas fa-plus"></i>
 										<span>Add</span>
 									</button>
@@ -1907,15 +1867,8 @@
 							item-key="id"
 							:group="colGroup"
 							:move="onTabDropzoneMove"
-							:fallback-on-body="true"
-							:dragover-bubble="false"
-							:swap-threshold="0.65"
-							:empty-insert-threshold="30"
 							data-parent-node-type="tabs"
-							:class="['pb-dropzone', 'pb-dropzone-tab', {
-								'is-empty': activeTabsChildren().length === 0,
-								'is-pending-insert-target': pendingInsertTarget && pendingInsertTarget.type === 'tab' && pendingInsertTarget.nodeId === node.id && pendingInsertTarget.tabId === (activeTabsItem() ? activeTabsItem().id : null)
-							}]"
+							:class="['pb-dropzone', 'pb-dropzone-tab', { 'is-empty': activeTabsChildren().length === 0 }]"
 							ghost-class="pb-ghost"
 							dragover-class="is-drop-hover"
 							@add="onAddActiveTabChild"
@@ -1927,7 +1880,7 @@
 							</template>
 							<template #footer>
 								<div v-if="activeTabsChildren().length === 0" class="pb-dropzone-empty pb-tabs-empty-hint">
-									<button type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onOpenModal('container', 'tabs', activeTabsChildren())">
+									<button type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox()">
 										<i class="fas fa-plus"></i>
 										<span>Add</span>
 									</button>
@@ -2244,7 +2197,6 @@
 			const widthPreviewMenuOpen = ref(false);
 			const suppressHistory = ref(false);
 			const columnResizeOverlay = ref({ visible: false, text: '', x: 0, y: 0 });
-			const pendingInsertTarget = ref(null);
 			let activeColumnResizeCleanup = null;
 			const rootNodes   = ref([]);
 			const responsiveDevices = [
@@ -2626,53 +2578,6 @@
 				if (!items.length) return null;
 				const activeTabId = String(node?.settings?.activeTabId || '').trim();
 				return items.find((item) => String(item.id || '') === activeTabId) || items[0];
-			}
-			function clearPendingInsertTarget() {
-				pendingInsertTarget.value = null;
-			}
-			function setPendingInsertTarget(target = null) {
-				pendingInsertTarget.value = target && typeof target === 'object' ? jclone(target) : null;
-			}
-			function findColumnById(node, colId) {
-				if (!node || !Array.isArray(node.columns)) return null;
-				return node.columns.find((col) => String(col && col.id || '') === String(colId || '')) || null;
-			}
-			function insertToolIntoPendingTarget(toolDef, target = pendingInsertTarget.value) {
-				if (!toolDef || !target) return false;
-				const item = toolClone(toolDef);
-				if (!item) return false;
-				if (isCont(item.type)) {
-					showUnsupportedControlNotice('Container', 'Container belum bisa dimasukkan langsung ke target + Add ini. Gunakan Grid atau widget biasa.');
-					return false;
-				}
-				if (target.type === 'column') {
-					const ownerNode = findById(rootNodes.value, target.nodeId);
-					const targetColumn = findColumnById(ownerNode, target.colId);
-					const targetIndex = Array.isArray(ownerNode && ownerNode.columns) ? ownerNode.columns.findIndex((col) => String(col && col.id || '') === String(target.colId || '')) : -1;
-					if (!ownerNode || !targetColumn || !Array.isArray(targetColumn.children)) return false;
-					if (Number.isFinite(targetIndex) && isSequentialColumnLockedForNode(ownerNode, targetIndex)) return false;
-					targetColumn.children.push(item);
-					selectedId.value = item.id;
-					clearPendingInsertTarget();
-					return true;
-				}
-				if (target.type === 'tab') {
-					const tabsNode = findById(rootNodes.value, target.nodeId);
-					if (!tabsNode || tabsNode.type !== 'tabs' || !Array.isArray(tabsNode.tabItems)) return false;
-					const targetTab = tabsNode.tabItems.find((tab) => String(tab && tab.id || '') === String(target.tabId || ''));
-					if (!targetTab || !Array.isArray(targetTab.children)) return false;
-					if (!tabsNode.settings || typeof tabsNode.settings !== 'object') tabsNode.settings = {};
-					tabsNode.settings.activeTabId = targetTab.id;
-					targetTab.children.push(item);
-					selectedId.value = item.id;
-					clearPendingInsertTarget();
-					return true;
-				}
-				return false;
-			}
-			function onToolboxItemClick(toolDef) {
-				if (!pendingInsertTarget.value) return;
-				insertToolIntoPendingTarget(toolDef, pendingInsertTarget.value);
 			}
 			function selectTabsItem(node, itemId) {
 				if (!node || node.type !== 'tabs') return;
@@ -3928,8 +3833,8 @@
 				if (hoveredId.value === id) hoveredId.value = '';
 			}
 			function dupNode(id)    { dupIn(rootNodes.value, id); }
-			function selectNode(n)  { clearPendingInsertTarget(); clearSelectedColumn(); selectedId.value = n.id; }
-			function clearSel()     { clearPendingInsertTarget(); clearSelectedColumn(); selectedId.value = ''; }
+			function selectNode(n)  { clearSelectedColumn(); selectedId.value = n.id; }
+			function clearSel()     { clearSelectedColumn(); selectedId.value = ''; }
 			function clearCurrentSelection() {
 				if (selectedColumnContext.value) {
 					clearSelectedColumn();
@@ -3937,10 +3842,9 @@
 				}
 				clearSel();
 			}
-			function showToolboxPanel(target = null) {
+			function showToolboxPanel() {
 				clearSelectedColumn();
 				selectedId.value = '';
-				setPendingInsertTarget(target);
 				closeControlResponsiveMenu();
 				nextTick(() => {
 					const leftPanel = document.querySelector('.pb-panel.left');
@@ -4005,7 +3909,6 @@
 
 			// ── Drag state ─────────────────────────────────────────────────────
 			let _dropzoneListeners = [];
-			let _dropzonePointerListeners = [];
 			let lastHoveredDropzoneEl = null;
 			function _clearDropzoneListeners() {
 				_dropzoneListeners.forEach(({ el, enter, leave }) => {
@@ -4013,50 +3916,20 @@
 					el.removeEventListener('dragleave', leave);
 				});
 				_dropzoneListeners = [];
-				_dropzonePointerListeners.forEach(({ type, handler }) => {
-					document.removeEventListener(type, handler, true);
-				});
-				_dropzonePointerListeners = [];
 				lastHoveredDropzoneEl = null;
 				document.querySelectorAll('.pb-dropzone.is-drop-hover').forEach(el => el.classList.remove('is-drop-hover'));
 				document.querySelectorAll('.pb-node.is-drag-over').forEach(el => el.classList.remove('is-drag-over'));
 				document.querySelectorAll('.pb-grid-col.is-drag-over-col').forEach(el => el.classList.remove('is-drag-over-col'));
 			}
-			function trackDropzonePointerFromEvent(event) {
-				if (!event) return null;
-				const x = Number(event.clientX);
-				const y = Number(event.clientY);
-				if (!Number.isFinite(x) || !Number.isFinite(y) || !document.elementsFromPoint) return null;
-				const elements = document.elementsFromPoint(x, y);
-				let fallbackDropzone = null;
-				for (const el of elements) {
-					if (!el || typeof el.closest !== 'function') continue;
-					const nestedColumn = el.closest('[data-pb-nested-dropzone="true"].pb-dropzone-col');
-					if (nestedColumn) {
-						lastHoveredDropzoneEl = nestedColumn;
-						return nestedColumn;
-					}
-					if (!fallbackDropzone) fallbackDropzone = el.closest('.pb-dropzone');
-				}
-				if (fallbackDropzone) lastHoveredDropzoneEl = fallbackDropzone;
-				return fallbackDropzone;
-			}
 			function onDragStart() {
-				clearPendingInsertTarget();
 				hoveredId.value = '';
 				document.body.classList.add('pb-is-dragging');
-				const pointerTracker = (event) => { trackDropzonePointerFromEvent(event); };
-				['pointermove', 'mousemove', 'dragover'].forEach((type) => {
-					document.addEventListener(type, pointerTracker, true);
-					_dropzonePointerListeners.push({ type, handler: pointerTracker });
-				});
 				nextTick(() => {
 					document.querySelectorAll('.pb-dropzone').forEach(el => {
 						const parentNode = el.closest('.pb-node');
 						const parentCol  = el.closest('.pb-grid-col');
 						const enter = (e) => {
 							e.stopPropagation();
-							trackDropzonePointerFromEvent(e);
 							// Bersihkan semua highlight sebelumnya
 							document.querySelectorAll('.pb-dropzone.is-drop-hover').forEach(z => z.classList.remove('is-drop-hover'));
 							document.querySelectorAll('.pb-node.is-drag-over').forEach(n => n.classList.remove('is-drag-over'));
@@ -4137,9 +4010,8 @@
 				return false;
 			}
 			function rerouteTabsDropToNestedColumn(evt, tabChildren) {
+				const hoveredEl = lastHoveredDropzoneEl;
 				const parentEl = evt && evt.to ? evt.to : null;
-				const originalEvent = evt && evt.originalEvent ? evt.originalEvent : null;
-				const hoveredEl = findNestedCanvasDropTargetFromEvent(originalEvent, parentEl) || lastHoveredDropzoneEl;
 				if (!hoveredEl || !parentEl || hoveredEl === parentEl) return false;
 				if (!parentEl.contains(hoveredEl) || !hoveredEl.classList || !hoveredEl.classList.contains('pb-dropzone-col')) return false;
 
@@ -4541,7 +4413,6 @@
 				onAddContainer, onAddCol, onRootAdd,
 				modal, cPresets, gPresets, applyContPreset, applyGridPreset, closeModal, pickLayout, openModal,
 				canUndo, canRedo, undo, redo,
-				onToolboxItemClick, pendingInsertTarget, clearPendingInsertTarget, rerouteTabsDropToNestedColumn, trackDropzonePointerFromEvent,
 			};
 		},
 
@@ -4589,16 +4460,6 @@
 	<div class="pb-main">
 		<div class="pb-panel left">
 			<div v-if="!selectedNode">
-				<div v-if="pendingInsertTarget" class="pb-pending-insert-notice">
-					<div class="pb-pending-insert-text">
-						<i class="fas fa-plus-circle animate-pulse"></i>
-						<span>Click widget to insert to target</span>
-					</div>
-					<button type="button" class="pb-pending-insert-cancel" @click="clearPendingInsertTarget">
-						<i class="fas fa-times"></i>
-					</button>
-				</div>
-
 				<div class="pb-section">
 					<div class="pb-panel-title">Page</div>
 					<div class="pb-form-group"><label class="pb-form-label">Page Name</label><input class="pb-input" v-model="pageName"></div>
@@ -4632,7 +4493,7 @@
 						@end="onDragEnd"
 					>
 						<template #item="{ element }">
-							<div class="pb-tool-item" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
+							<div class="pb-tool-item"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
 						</template>
 					</draggable>
 				</div>
@@ -4650,7 +4511,7 @@
 						@end="onDragEnd"
 					>
 						<template #item="{ element }">
-							<div class="pb-tool-item" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
+							<div class="pb-tool-item"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
 						</template>
 					</draggable>
 				</div>
@@ -4668,7 +4529,7 @@
 						@end="onDragEnd"
 					>
 						<template #item="{ element }">
-							<div class="pb-tool-item" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
+							<div class="pb-tool-item"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
 						</template>
 					</draggable>
 				</div>
@@ -6715,9 +6576,6 @@
 								:on-start-column-resize="startColumnResize"
 								:on-open-modal="openModal"
 								:on-show-toolbox="showToolboxPanel"
-								:pending-insert-target="pendingInsertTarget"
-								:on-reroute-tabs-drop="rerouteTabsDropToNestedColumn"
-								:on-track-dropzone-pointer="trackDropzonePointerFromEvent"
 							/>
 						</template>
 						<template #footer>
