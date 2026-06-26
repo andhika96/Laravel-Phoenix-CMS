@@ -15,10 +15,14 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringContainsString("{ type:'tabs',", $appJs);
         $this->assertStringContainsString("label:'Tabs'", $appJs);
         $this->assertStringContainsString("selectedType==='tabs'", $appJs);
+        $this->assertStringContainsString('pb-tabs-settings pb-widget-settings pb-widget-settings--tabs', $appJs);
         $this->assertStringContainsString('Tabs Items', $appJs);
         $this->assertStringContainsString('Add Tab', $appJs);
         $this->assertStringContainsString('Horizontal Scroll', $appJs);
         $this->assertStringContainsString('Breakpoint', $appJs);
+        $this->assertStringContainsString('pb-tabs-width-control', $appJs);
+        $this->assertStringContainsString('tabsWidthValue(selectedNode)', $appJs);
+        $this->assertStringContainsString('onTabsWidthInput(selectedNode, $event)', $appJs);
     }
 
     public function test_tabs_preview_component_exists_and_renders_nested_tab_shell(): void
@@ -34,6 +38,30 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringContainsString('el-widget-tabs', $tabsVue);
         $this->assertStringContainsString('activeTab()', $tabsVue);
         $this->assertStringContainsString('tabItems()', $tabsVue);
+        $this->assertStringContainsString('isAccordionPreview()', $tabsVue);
+        $this->assertStringContainsString('el-widget-tabs__accordion', $tabsVue);
+    }
+
+    public function test_tabs_breakpoint_controls_switch_editor_and_frontend_to_vertical_layout(): void
+    {
+        $tabsVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/Tabs.vue'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
+
+        $this->assertIsString($tabsVue);
+        $this->assertIsString($builderCss);
+        $this->assertIsString($frontendCss);
+        $this->assertStringContainsString("this.breakpoint === 'tablet'", $tabsVue);
+        $this->assertStringContainsString("device === 'tablet' || device === 'mobile'", $tabsVue);
+        $this->assertStringContainsString('pb-canvas.is-mobile .el-widget-tabs.is-breakpoint-mobile', $builderCss);
+        $this->assertStringContainsString('pb-canvas.is-tablet .el-widget-tabs.is-breakpoint-tablet', $builderCss);
+        $this->assertStringContainsString('flex-direction: column;', $frontendCss);
+        $this->assertStringContainsString('width: 100% !important;', $frontendCss);
+        $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-tabs-item-main', $builderCss);
+        $this->assertStringContainsString('font-weight: 400;', $builderCss);
+        $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-seg-group', $builderCss);
+        $this->assertStringContainsString('gap: 7px;', $builderCss);
+        $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-tabs-item-fields + .pb-form-group', $builderCss);
     }
 
     public function test_tabs_canvas_preview_marks_interactive_areas_to_avoid_parent_selection_clicks(): void

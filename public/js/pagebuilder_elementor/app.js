@@ -2722,6 +2722,40 @@
 			function tabsSelectedRowDirection(node = selectedNode.value) {
 				return tabsRowDirection(node?.settings?.direction);
 			}
+			function tabsWidthUnit(node = selectedNode.value) {
+				return TABS_WIDGET_WIDTH_UNITS.includes(node?.settings?.tabWidthUnit) ? node.settings.tabWidthUnit : 'px';
+			}
+			function tabsWidthMax(node = selectedNode.value) {
+				return tabsWidthUnit(node) === '%' ? 100 : 1200;
+			}
+			function tabsWidthStep(node = selectedNode.value) {
+				return tabsWidthUnit(node) === '%' ? 1 : 1;
+			}
+			function tabsWidthValue(node = selectedNode.value) {
+				const raw = normalizeTabsWidthValue(node?.settings?.tabWidth);
+				if (raw === '') return tabsWidthUnit(node) === '%' ? 25 : 180;
+				return clamp(Number(raw), 1, tabsWidthMax(node));
+			}
+			function setTabsWidthValue(node = selectedNode.value, next = '') {
+				if (!node || node.type !== 'tabs') return;
+				if (!node.settings || typeof node.settings !== 'object') node.settings = {};
+				const num = Number(next);
+				node.settings.tabWidth = Number.isFinite(num) ? String(clamp(num, 1, tabsWidthMax(node))) : '';
+			}
+			function onTabsWidthInput(node, event) {
+				if (!event || !event.target) return;
+				setTabsWidthValue(node, event.target.value);
+				nextTick(() => {
+					event.target.value = String(tabsWidthValue(node));
+				});
+			}
+			function setTabsWidthUnit(node = selectedNode.value, unit = 'px') {
+				if (!node || node.type !== 'tabs') return;
+				if (!node.settings || typeof node.settings !== 'object') node.settings = {};
+				const safe = TABS_WIDGET_WIDTH_UNITS.includes(unit) ? unit : 'px';
+				node.settings.tabWidthUnit = safe;
+				setTabsWidthValue(node, tabsWidthValue(node));
+			}
 			const iconLibraryGroups = FONT_AWESOME_5_ICON_GROUPS;
 			const showIconLibraryModal = ref(false);
 			const iconLibraryGroup = ref('all');
@@ -4530,6 +4564,7 @@
 				openIconLibrary, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
 				tabsItemsForNode, tabsActiveItem, selectTabsItem, addTabsItem, duplicateTabsItem, removeTabsItem, tabsItemSummary, tabsSelectedRowDirection,
+				tabsWidthValue, tabsWidthUnit, tabsWidthMax, tabsWidthStep, onTabsWidthInput, setTabsWidthValue, setTabsWidthUnit,
 				tabsBreakpointOptions: TABS_WIDGET_BREAKPOINT_OPTIONS, tabsWidthUnits: TABS_WIDGET_WIDTH_UNITS,
 				iconWidgetViewOptions: ICON_WIDGET_VIEW_OPTIONS, iconWidgetShapeOptions: ICON_WIDGET_SHAPE_OPTIONS,
 				pageName, pageStatus, customCss, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
@@ -6377,7 +6412,7 @@
 						</div>
 					</template>
 					<template v-if="selectedType==='tabs'">
-						<div class="pb-tabs-settings">
+						<div class="pb-tabs-settings pb-widget-settings pb-widget-settings--tabs">
 							<details class="pb-collapsible" open>
 								<summary>Tabs</summary>
 								<div class="pb-collapsible-body">
@@ -6437,13 +6472,16 @@
 											<button class="pb-seg-btn" :class="{active:selectedNode.settings.direction==='column-reverse'}" @click="selectedNode.settings.direction='column-reverse'" title="Column Reverse"><i class="fas fa-arrow-up"></i></button>
 										</div>
 									</div>
-									<div class="pb-form-group" v-if="tabsSelectedRowDirection(selectedNode)">
+									<div class="pb-form-group pb-tabs-width-control" v-if="tabsSelectedRowDirection(selectedNode)">
 										<label class="pb-form-label">Width</label>
-										<div class="pb-value-with-unit">
-											<input class="pb-input pb-input-compact" type="number" min="1" v-model="selectedNode.settings.tabWidth" placeholder="180">
-											<select class="pb-mini-unit" v-model="selectedNode.settings.tabWidthUnit">
+										<div class="pb-range-value-row">
+											<input type="range" class="pb-range" min="1" :max="tabsWidthMax(selectedNode)" :step="tabsWidthStep(selectedNode)" :value="tabsWidthValue(selectedNode)" @input="onTabsWidthInput(selectedNode, $event)">
+											<div class="pb-value-with-unit">
+												<input class="pb-input pb-input-compact" type="number" min="1" :max="tabsWidthMax(selectedNode)" :step="tabsWidthStep(selectedNode)" :value="tabsWidthValue(selectedNode)" @input="onTabsWidthInput(selectedNode, $event)">
+												<select class="pb-mini-unit" :value="tabsWidthUnit(selectedNode)" @change="setTabsWidthUnit(selectedNode, $event.target.value)">
 												<option v-for="unit in tabsWidthUnits" :key="'tabs-width-unit-' + unit" :value="unit">{{ unit }}</option>
-											</select>
+												</select>
+											</div>
 										</div>
 									</div>
 									<div class="pb-form-group">

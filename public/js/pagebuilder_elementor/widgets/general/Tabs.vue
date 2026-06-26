@@ -1,6 +1,24 @@
 <template>
 	<div :class="rootClass">
-		<div class="el-widget-tabs__nav" :style="navStyle" data-pb-interactive="true" @click.stop>
+		<div v-if="isAccordionPreview" class="el-widget-tabs__accordion" data-pb-interactive="true" @click.stop>
+			<template v-for="tab in tabItems" :key="'accordion-' + tab.id">
+				<button
+					type="button"
+					class="el-widget-tabs__tab el-widget-tabs__accordion-title"
+					:class="{ 'is-active': activeTab && activeTab.id===tab.id, 'has-icon': !!iconClassFor(tab, activeTab && activeTab.id===tab.id) }"
+					:style="tabButtonStyle"
+					data-pb-interactive="true"
+					@click.stop="activateTab(tab.id)"
+				>
+					<i v-if="iconClassFor(tab, activeTab && activeTab.id===tab.id)" :class="iconClassFor(tab, activeTab && activeTab.id===tab.id)" aria-hidden="true"></i>
+					<span>{{ tab.title || 'Tab' }}</span>
+				</button>
+				<div v-if="activeTab && activeTab.id===tab.id" class="el-widget-tabs__pane el-widget-tabs__pane--accordion" :data-tab-panel="tab.id" data-pb-interactive="true" @click.stop>
+					<slot></slot>
+				</div>
+			</template>
+		</div>
+		<div v-else class="el-widget-tabs__nav" :style="navStyle" data-pb-interactive="true" @click.stop>
 			<button
 				v-for="tab in tabItems"
 				:key="tab.id"
@@ -15,7 +33,7 @@
 				<span>{{ tab.title || 'Tab' }}</span>
 			</button>
 		</div>
-		<div class="el-widget-tabs__pane" :data-tab-panel="activeTab ? activeTab.id : ''" data-pb-interactive="true" @click.stop>
+		<div v-if="!isAccordionPreview" class="el-widget-tabs__pane" :data-tab-panel="activeTab ? activeTab.id : ''" data-pb-interactive="true" @click.stop>
 			<slot></slot>
 		</div>
 	</div>
@@ -62,6 +80,12 @@ export default {
 			const raw = String(this.settings.breakpoint || 'mobile').trim().toLowerCase();
 			return ['mobile', 'tablet', 'none'].includes(raw) ? raw : 'mobile';
 		},
+		isAccordionPreview() {
+			const device = String(this.responsiveDevice || 'desktop').trim().toLowerCase();
+			if (this.breakpoint === 'none') return false;
+			if (this.breakpoint === 'tablet') return device === 'tablet' || device === 'mobile';
+			return device === 'mobile';
+		},
 		tabWidthCss() {
 			const raw = String(this.settings.tabWidth || '').trim();
 			if (!raw) return '';
@@ -85,6 +109,7 @@ export default {
 				'is-direction-' + this.direction,
 				'is-breakpoint-' + this.breakpoint,
 				this.settings.horizontalScroll ? 'is-scroll-enabled' : '',
+				this.isAccordionPreview ? 'is-accordion-preview' : '',
 				this.justify === 'stretch' ? 'is-justify-stretch' : '',
 				'align-title-' + this.alignTitle,
 				this.customClass,
