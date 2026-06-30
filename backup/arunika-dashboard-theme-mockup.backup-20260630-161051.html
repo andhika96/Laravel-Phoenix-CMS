@@ -1,0 +1,1561 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Arunika SaaS Dashboard Theme Mockup</title>
+	<link href="/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/plugins/fontawesome/5.15.3/css/all.min.css" rel="stylesheet">
+	<style>
+		@font-face {
+			font-family: "Nunito";
+			src: url("/assets/fonts/nunito/woff2/Nunito-Regular.woff2") format("woff2");
+			font-weight: 400;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: "Nunito";
+			src: url("/assets/fonts/nunito/woff2/Nunito-SemiBold.woff2") format("woff2");
+			font-weight: 700;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: "Nunito";
+			src: url("/assets/fonts/nunito/woff2/Nunito-Bold.woff2") format("woff2");
+			font-weight: 900;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		:root {
+			--ph-theme-primary: #13956f;
+			--ph-theme-primary-rgb: 19, 149, 111;
+			--ph-theme-primary-soft: rgba(var(--ph-theme-primary-rgb), .11);
+			--ph-theme-primary-hover: #0d7658;
+			--ph-bg-body: #f4f6f3;
+			--ph-bg-app: #f8faf7;
+			--ph-bg-panel: #ffffff;
+			--ph-bg-muted: #eef3ef;
+			--ph-bg-hover: rgba(15, 23, 42, .055);
+			--ph-border-color: #dfe7e2;
+			--ph-border-strong: #cbd8d1;
+			--ph-text-main: #10231b;
+			--ph-text-muted: #6b7b73;
+			--ph-text-subtle: #94a29a;
+			--ph-shadow-soft: 0 18px 45px rgba(26, 44, 37, .08);
+			--ph-shadow-popover: 0 16px 36px rgba(15, 23, 42, .16);
+			--ph-radius: 12px;
+			--ph-radius-sm: 8px;
+			--ph-sidebar-icon-width: 72px;
+			--ph-sidebar-menu-width: 238px;
+			--ph-top-bar-height: 64px;
+			--ph-font-size: 14px;
+			--ph-blue: #4768e8;
+			--ph-amber: #f2a33a;
+			--ph-danger: #d94f5d;
+		}
+
+		[data-theme="dark"] {
+			--ph-bg-body: #101614;
+			--ph-bg-app: #141d19;
+			--ph-bg-panel: #1a2420;
+			--ph-bg-muted: #22302b;
+			--ph-bg-hover: rgba(255, 255, 255, .07);
+			--ph-border-color: #2d4038;
+			--ph-border-strong: #3a5148;
+			--ph-text-main: #edf7f2;
+			--ph-text-muted: #9cafaa;
+			--ph-text-subtle: #78908a;
+			--ph-shadow-soft: 0 18px 45px rgba(0, 0, 0, .22);
+			--ph-shadow-popover: 0 16px 36px rgba(0, 0, 0, .32);
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-height: 100vh;
+			margin: 0;
+			background: var(--ph-bg-body);
+			color: var(--ph-text-main);
+			font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+			font-size: var(--ph-font-size);
+			overflow: hidden;
+		}
+
+		button,
+		input,
+		select {
+			font: inherit;
+		}
+
+		.mock-app {
+			width: 100vw;
+			height: 100vh;
+			display: flex;
+			background:
+				linear-gradient(120deg, rgba(var(--ph-theme-primary-rgb), .08), transparent 36%),
+				var(--ph-bg-app);
+		}
+
+		.ph-icon-rail {
+			width: var(--ph-sidebar-icon-width);
+			height: 100vh;
+			flex: 0 0 var(--ph-sidebar-icon-width);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 18px 12px;
+			border-right: 1px solid var(--ph-border-color);
+			background: rgba(255, 255, 255, .42);
+		}
+
+		[data-theme="dark"] .ph-icon-rail {
+			background: rgba(16, 22, 20, .64);
+		}
+
+		.ph-logo-mark {
+			width: 40px;
+			height: 40px;
+			border-radius: 14px;
+			background: var(--ph-theme-primary);
+			color: #fff;
+			display: grid;
+			place-items: center;
+			box-shadow: 0 12px 28px rgba(var(--ph-theme-primary-rgb), .28);
+			margin-bottom: 28px;
+		}
+
+		.ph-rail-group {
+			display: grid;
+			gap: 10px;
+			width: 100%;
+			justify-items: center;
+		}
+
+		.ph-rail-spacer {
+			flex: 1;
+		}
+
+		.ph-rail-btn,
+		.ph-icon-btn {
+			width: 38px;
+			height: 38px;
+			border: 1px solid transparent;
+			border-radius: 12px;
+			background: transparent;
+			color: var(--ph-text-muted);
+			display: grid;
+			place-items: center;
+			cursor: pointer;
+			transition: .18s ease;
+		}
+
+		.ph-rail-btn:hover,
+		.ph-icon-btn:hover,
+		.ph-rail-btn.active {
+			background: var(--ph-theme-primary-soft);
+			color: var(--ph-theme-primary);
+			border-color: rgba(var(--ph-theme-primary-rgb), .16);
+		}
+
+		.ph-sidebar {
+			width: var(--ph-sidebar-menu-width);
+			flex: 0 0 var(--ph-sidebar-menu-width);
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+			padding: 22px 14px 16px;
+			border-right: 1px solid var(--ph-border-color);
+			background: rgba(255, 255, 255, .62);
+			transition: width .24s ease, flex-basis .24s ease, padding .24s ease;
+		}
+
+		[data-theme="dark"] .ph-sidebar {
+			background: rgba(20, 29, 25, .76);
+		}
+
+		.mock-app.sidebar-compact {
+			--ph-sidebar-menu-width: 0px;
+		}
+
+		.mock-app.sidebar-compact .ph-sidebar {
+			padding-left: 0;
+			padding-right: 0;
+			overflow: hidden;
+			border-right-color: transparent;
+		}
+
+		.mock-app.sidebar-compact .ph-sidebar > * {
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		.ph-brand-row {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			min-width: 205px;
+			padding: 0 8px 18px;
+			border-bottom: 1px solid var(--ph-border-color);
+		}
+
+		.ph-brand-copy strong {
+			display: block;
+			font-size: 16px;
+			line-height: 1.1;
+			letter-spacing: .01em;
+		}
+
+		.ph-brand-copy span {
+			display: block;
+			color: var(--ph-text-muted);
+			font-size: 12px;
+			margin-top: 2px;
+		}
+
+		.ph-sidebar-section {
+			padding: 18px 0 4px;
+		}
+
+		.ph-sidebar-label {
+			color: var(--ph-text-subtle);
+			font-size: 11px;
+			font-weight: 800;
+			letter-spacing: .08em;
+			text-transform: uppercase;
+			padding: 0 13px 8px;
+		}
+
+		.ph-nav-list {
+			display: grid;
+			gap: 3px;
+		}
+
+		.ph-nav-item {
+			width: 100%;
+			height: 40px;
+			border: 0;
+			border-radius: 10px;
+			background: transparent;
+			color: var(--ph-text-muted);
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 0 12px;
+			text-align: left;
+			cursor: pointer;
+			transition: .18s ease;
+		}
+
+		.ph-nav-item i {
+			width: 18px;
+			text-align: center;
+			font-size: 14px;
+		}
+
+		.ph-nav-item span {
+			flex: 1;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			font-weight: 700;
+			font-size: 13px;
+		}
+
+		.ph-nav-item:hover {
+			background: var(--ph-bg-hover);
+			color: var(--ph-text-main);
+		}
+
+		.ph-nav-item.active {
+			background: var(--ph-theme-primary-soft);
+			color: var(--ph-theme-primary);
+		}
+
+		.ph-user-card {
+			margin-top: auto;
+			min-width: 205px;
+			border: 1px solid var(--ph-border-color);
+			border-radius: var(--ph-radius);
+			background: var(--ph-bg-panel);
+			padding: 10px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.ph-avatar {
+			width: 34px;
+			height: 34px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, #e1f5ed, #bfded0);
+			color: #0d5c45;
+			display: grid;
+			place-items: center;
+			font-weight: 900;
+			flex: 0 0 auto;
+		}
+
+		.ph-user-meta {
+			min-width: 0;
+			flex: 1;
+		}
+
+		.ph-user-meta strong,
+		.ph-user-meta span {
+			display: block;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.ph-user-meta strong {
+			font-size: 12px;
+			line-height: 1.2;
+		}
+
+		.ph-user-meta span {
+			font-size: 11px;
+			color: var(--ph-text-muted);
+		}
+
+		.ph-layout-right {
+			flex: 1;
+			min-width: 0;
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.ph-top-bar {
+			height: var(--ph-top-bar-height);
+			flex: 0 0 var(--ph-top-bar-height);
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 0 24px;
+			border-bottom: 1px solid var(--ph-border-color);
+			background: rgba(255, 255, 255, .52);
+		}
+
+		[data-theme="dark"] .ph-top-bar {
+			background: rgba(20, 29, 25, .68);
+		}
+
+		.ph-search {
+			width: min(430px, 44vw);
+			height: 38px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			background: var(--ph-bg-panel);
+			border: 1px solid var(--ph-border-color);
+			border-radius: 12px;
+			padding: 0 13px;
+			color: var(--ph-text-muted);
+		}
+
+		.ph-search input {
+			border: 0;
+			outline: 0;
+			background: transparent;
+			color: var(--ph-text-main);
+			width: 100%;
+			min-width: 0;
+		}
+
+		.ph-search input::placeholder {
+			color: var(--ph-text-subtle);
+		}
+
+		.ph-top-spacer {
+			flex: 1;
+		}
+
+		.ph-segmented {
+			display: inline-flex;
+			align-items: center;
+			gap: 3px;
+			padding: 3px;
+			border: 1px solid var(--ph-border-color);
+			border-radius: 12px;
+			background: var(--ph-bg-panel);
+		}
+
+		.ph-segmented button {
+			height: 30px;
+			border: 0;
+			border-radius: 9px;
+			background: transparent;
+			color: var(--ph-text-muted);
+			padding: 0 10px;
+			font-size: 12px;
+			font-weight: 800;
+			cursor: pointer;
+		}
+
+		.ph-segmented button.active {
+			background: var(--ph-theme-primary);
+			color: #fff;
+		}
+
+		.ph-color-dot {
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			border: 2px solid var(--ph-bg-panel);
+			box-shadow: 0 0 0 1px var(--ph-border-strong);
+			background: var(--dot);
+			cursor: pointer;
+		}
+
+		.ph-color-dot.active {
+			box-shadow: 0 0 0 2px var(--ph-theme-primary);
+		}
+
+		.ph-dropdown {
+			position: relative;
+		}
+
+		.ph-popover {
+			position: absolute;
+			right: 0;
+			top: calc(100% + 12px);
+			width: 310px;
+			background: var(--ph-bg-panel);
+			border: 1px solid var(--ph-border-color);
+			border-radius: var(--ph-radius);
+			box-shadow: var(--ph-shadow-popover);
+			padding: 14px;
+			z-index: 30;
+			display: none;
+		}
+
+		.ph-popover.open {
+			display: block;
+		}
+
+		.ph-popover h6 {
+			font-size: 13px;
+			font-weight: 900;
+			margin: 0 0 10px;
+		}
+
+		.ph-main-panel {
+			min-height: 0;
+			flex: 1;
+			overflow: auto;
+			padding: 24px;
+		}
+
+		.ph-dashboard {
+			max-width: 1320px;
+			margin: 0 auto;
+		}
+
+		.ph-page-head {
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 18px;
+			margin-bottom: 20px;
+		}
+
+		.ph-page-kicker {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			color: var(--ph-theme-primary);
+			font-weight: 900;
+			font-size: 12px;
+			letter-spacing: .06em;
+			text-transform: uppercase;
+			margin-bottom: 7px;
+		}
+
+		.ph-page-head h1 {
+			font-size: 27px;
+			line-height: 1.15;
+			font-weight: 900;
+			letter-spacing: 0;
+			margin: 0;
+		}
+
+		.ph-page-head p {
+			color: var(--ph-text-muted);
+			margin: 6px 0 0;
+			max-width: 560px;
+		}
+
+		.ph-actions {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+		}
+
+		.ph-btn-theme,
+		.ph-btn-theme-outline {
+			height: 38px;
+			border-radius: 10px;
+			padding: 0 14px;
+			border: 1px solid var(--ph-theme-primary);
+			font-weight: 800;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			cursor: pointer;
+		}
+
+		.ph-btn-theme {
+			background: var(--ph-theme-primary);
+			color: #fff;
+		}
+
+		.ph-btn-theme:hover {
+			background: var(--ph-theme-primary-hover);
+			border-color: var(--ph-theme-primary-hover);
+		}
+
+		.ph-btn-theme-outline {
+			background: var(--ph-bg-panel);
+			color: var(--ph-theme-primary);
+		}
+
+		.ph-btn-theme-outline:hover {
+			background: var(--ph-theme-primary-soft);
+		}
+
+		.ph-stat-strip {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr)) 92px;
+			gap: 12px;
+			margin-bottom: 14px;
+		}
+
+		.ph-content {
+			background: var(--ph-bg-panel);
+			border: 1px solid var(--ph-border-color);
+			border-radius: var(--ph-radius);
+			box-shadow: none;
+			min-width: 0;
+		}
+
+		.ph-stat {
+			min-height: 82px;
+			padding: 14px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.ph-stat-top {
+			display: flex;
+			align-items: center;
+			gap: 7px;
+			color: var(--ph-text-muted);
+			font-size: 12px;
+			font-weight: 800;
+		}
+
+		.ph-stat-value {
+			font-size: 23px;
+			font-weight: 900;
+			letter-spacing: -.01em;
+		}
+
+		.ph-trend {
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			font-size: 12px;
+			font-weight: 900;
+			color: var(--ph-theme-primary);
+		}
+
+		.ph-trend.down {
+			color: var(--ph-danger);
+		}
+
+		.ph-add-card {
+			display: grid;
+			place-items: center;
+			border-style: dashed;
+			color: var(--ph-text-muted);
+			cursor: pointer;
+			min-height: 82px;
+			font-weight: 800;
+			gap: 4px;
+		}
+
+		.ph-grid-main {
+			display: grid;
+			grid-template-columns: minmax(0, 1.45fr) minmax(320px, .55fr);
+			gap: 14px;
+			margin-bottom: 14px;
+		}
+
+		.ph-panel-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			padding: 16px 16px 8px;
+		}
+
+		.ph-panel-title {
+			margin: 0;
+			font-size: 16px;
+			font-weight: 900;
+		}
+
+		.ph-panel-subtitle {
+			margin: 3px 0 0;
+			color: var(--ph-text-muted);
+			font-size: 12px;
+		}
+
+		.ph-legend {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			color: var(--ph-text-muted);
+			font-size: 12px;
+			font-weight: 800;
+		}
+
+		.ph-legend span {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.ph-legend-dot {
+			width: 7px;
+			height: 7px;
+			border-radius: 50%;
+			background: var(--dot);
+		}
+
+		.ph-chart {
+			height: 302px;
+			padding: 0 8px 8px;
+		}
+
+		.ph-workflow {
+			padding: 14px 16px 16px;
+		}
+
+		.ph-workflow-grid {
+			display: grid;
+			gap: 10px;
+		}
+
+		.ph-workflow-row {
+			display: grid;
+			grid-template-columns: 34px minmax(0, 1fr) auto;
+			align-items: center;
+			gap: 10px;
+			padding: 10px 0;
+			border-bottom: 1px solid var(--ph-border-color);
+		}
+
+		.ph-workflow-row:last-child {
+			border-bottom: 0;
+		}
+
+		.ph-workflow-icon {
+			width: 32px;
+			height: 32px;
+			border-radius: 10px;
+			display: grid;
+			place-items: center;
+			background: var(--ph-bg-muted);
+			color: var(--ph-theme-primary);
+		}
+
+		.ph-workflow-meta strong,
+		.ph-workflow-meta span {
+			display: block;
+		}
+
+		.ph-workflow-meta strong {
+			font-size: 13px;
+			font-weight: 900;
+		}
+
+		.ph-workflow-meta span {
+			color: var(--ph-text-muted);
+			font-size: 12px;
+		}
+
+		.ph-pill {
+			border: 1px solid var(--ph-border-color);
+			border-radius: 999px;
+			padding: 5px 9px;
+			background: var(--ph-bg-panel);
+			color: var(--ph-text-muted);
+			font-size: 12px;
+			font-weight: 900;
+		}
+
+		.ph-bottom-grid {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) minmax(300px, .44fr);
+			gap: 14px;
+		}
+
+		.ph-table-wrap {
+			overflow-x: auto;
+		}
+
+		.ph-data-table {
+			width: 100%;
+			border-collapse: collapse;
+			min-width: 700px;
+		}
+
+		.ph-data-table th,
+		.ph-data-table td {
+			padding: 13px 16px;
+			border-bottom: 1px solid var(--ph-border-color);
+			vertical-align: middle;
+		}
+
+		.ph-data-table th {
+			color: var(--ph-text-muted);
+			font-size: 11px;
+			font-weight: 900;
+			letter-spacing: .06em;
+			text-transform: uppercase;
+			background: color-mix(in srgb, var(--ph-bg-muted), transparent 35%);
+		}
+
+		.ph-data-table tr:last-child td {
+			border-bottom: 0;
+		}
+
+		.ph-data-table tbody tr {
+			cursor: pointer;
+		}
+
+		.ph-data-table tbody tr:hover {
+			background: var(--ph-bg-hover);
+		}
+
+		.ph-title-cell {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			min-width: 0;
+		}
+
+		.ph-doc-icon {
+			width: 32px;
+			height: 32px;
+			border-radius: 10px;
+			background: var(--ph-theme-primary-soft);
+			color: var(--ph-theme-primary);
+			display: grid;
+			place-items: center;
+			flex: 0 0 auto;
+		}
+
+		.ph-title-cell strong,
+		.ph-title-cell span {
+			display: block;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.ph-title-cell strong {
+			font-size: 13px;
+			font-weight: 900;
+		}
+
+		.ph-title-cell span {
+			color: var(--ph-text-muted);
+			font-size: 12px;
+		}
+
+		.ph-status {
+			display: inline-flex;
+			align-items: center;
+			border-radius: 999px;
+			padding: 5px 9px;
+			font-size: 12px;
+			font-weight: 900;
+			background: var(--ph-bg-muted);
+			color: var(--ph-text-muted);
+		}
+
+		.ph-status.live {
+			background: var(--ph-theme-primary-soft);
+			color: var(--ph-theme-primary);
+		}
+
+		.ph-status.review {
+			background: rgba(242, 163, 58, .15);
+			color: #a56814;
+		}
+
+		.ph-status.draft {
+			background: rgba(71, 104, 232, .12);
+			color: var(--ph-blue);
+		}
+
+		.ph-side-stack {
+			display: grid;
+			gap: 14px;
+			min-width: 0;
+		}
+
+		.ph-mini-chart {
+			height: 195px;
+			padding: 0 8px 8px;
+		}
+
+		.ph-activity-list {
+			padding: 0 16px 12px;
+		}
+
+		.ph-activity {
+			display: grid;
+			grid-template-columns: 28px minmax(0, 1fr);
+			gap: 10px;
+			padding: 10px 0;
+			border-bottom: 1px solid var(--ph-border-color);
+		}
+
+		.ph-activity:last-child {
+			border-bottom: 0;
+		}
+
+		.ph-activity-dot {
+			width: 28px;
+			height: 28px;
+			border-radius: 50%;
+			display: grid;
+			place-items: center;
+			background: var(--ph-theme-primary-soft);
+			color: var(--ph-theme-primary);
+			font-size: 11px;
+		}
+
+		.ph-activity strong,
+		.ph-activity span {
+			display: block;
+		}
+
+		.ph-activity strong {
+			font-size: 13px;
+			font-weight: 900;
+		}
+
+		.ph-activity span {
+			color: var(--ph-text-muted);
+			font-size: 12px;
+			line-height: 1.35;
+		}
+
+		.ph-toast {
+			position: fixed;
+			right: 24px;
+			bottom: 24px;
+			z-index: 80;
+			background: var(--ph-bg-panel);
+			border: 1px solid var(--ph-border-color);
+			border-radius: 14px;
+			box-shadow: var(--ph-shadow-popover);
+			padding: 12px 14px;
+			display: none;
+			align-items: center;
+			gap: 10px;
+			max-width: min(360px, calc(100vw - 32px));
+		}
+
+		.ph-toast.show {
+			display: flex;
+		}
+
+		.ph-toast i {
+			color: var(--ph-theme-primary);
+		}
+
+		.ph-toast strong {
+			font-size: 13px;
+			display: block;
+		}
+
+		.ph-toast span {
+			font-size: 12px;
+			color: var(--ph-text-muted);
+		}
+
+		@media (max-width: 1180px) {
+			.ph-stat-strip {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			.ph-add-card {
+				grid-column: span 2;
+			}
+
+			.ph-grid-main,
+			.ph-bottom-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media (max-width: 860px) {
+			body {
+				overflow: auto;
+			}
+
+			.mock-app {
+				width: 100%;
+				min-height: 100vh;
+				height: auto;
+				overflow-x: hidden;
+			}
+
+			.ph-icon-rail {
+				width: 58px;
+				flex-basis: 58px;
+				padding-left: 8px;
+				padding-right: 8px;
+			}
+
+			.ph-sidebar {
+				display: none;
+			}
+
+			.ph-layout-right {
+				height: auto;
+				min-height: 100vh;
+				width: calc(100vw - 58px);
+				max-width: calc(100vw - 58px);
+			}
+
+			.ph-top-bar {
+				padding: 0 14px;
+				position: sticky;
+				top: 0;
+				z-index: 20;
+			}
+
+			.ph-search {
+				display: none;
+			}
+
+			#notifyBtn,
+			#profileBtn {
+				display: none;
+			}
+
+			.ph-top-spacer {
+				display: none;
+			}
+
+			.ph-main-panel {
+				padding: 16px;
+				overflow: visible;
+				max-width: 100%;
+			}
+
+			.ph-page-head {
+				display: block;
+			}
+
+			.ph-actions {
+				justify-content: flex-start;
+				margin-top: 14px;
+			}
+
+			.ph-stat-strip {
+				grid-template-columns: 1fr;
+			}
+
+			.ph-add-card {
+				grid-column: auto;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="mock-app" id="mockApp">
+		<aside class="ph-icon-rail" aria-label="Primary">
+			<div class="ph-logo-mark" title="LaraPhoenix">
+				<i class="fas fa-leaf"></i>
+			</div>
+
+			<div class="ph-rail-group">
+				<button class="ph-rail-btn active" title="Dashboard" data-rail="Dashboard"><i class="fas fa-th-large"></i></button>
+				<button class="ph-rail-btn" title="Articles" data-rail="Articles"><i class="fas fa-file-alt"></i></button>
+				<button class="ph-rail-btn" title="Media" data-rail="Media"><i class="fas fa-photo-video"></i></button>
+				<button class="ph-rail-btn" title="Menus" data-rail="Menus"><i class="fas fa-sitemap"></i></button>
+				<button class="ph-rail-btn" title="Users" data-rail="Users"><i class="fas fa-users"></i></button>
+			</div>
+
+			<div class="ph-rail-spacer"></div>
+
+			<div class="ph-rail-group">
+				<button class="ph-rail-btn" title="Awesome Admin" data-rail="Awesome Admin"><i class="fas fa-user-secret"></i></button>
+				<button class="ph-rail-btn" title="Settings" data-rail="Settings"><i class="fas fa-cog"></i></button>
+			</div>
+		</aside>
+
+		<aside class="ph-sidebar" aria-label="CMS menu">
+			<div class="ph-brand-row">
+				<div class="ph-logo-mark mb-0">
+					<i class="fas fa-leaf"></i>
+				</div>
+				<div class="ph-brand-copy">
+					<strong>Phoenix CMS</strong>
+					<span>Arunika SaaS theme</span>
+				</div>
+			</div>
+
+			<div class="ph-sidebar-section">
+				<div class="ph-sidebar-label">Marketing</div>
+				<div class="ph-nav-list">
+					<button class="ph-nav-item active" data-page="Dashboard"><i class="fas fa-th-large"></i><span>Dashboard</span></button>
+					<button class="ph-nav-item" data-page="Articles"><i class="fas fa-file-alt"></i><span>Articles</span></button>
+					<button class="ph-nav-item" data-page="Pages"><i class="fas fa-copy"></i><span>Pages</span></button>
+					<button class="ph-nav-item" data-page="Media"><i class="fas fa-photo-video"></i><span>Media Library</span></button>
+					<button class="ph-nav-item" data-page="Cover Images"><i class="fas fa-images"></i><span>Cover Images</span></button>
+				</div>
+			</div>
+
+			<div class="ph-sidebar-section">
+				<div class="ph-sidebar-label">System</div>
+				<div class="ph-nav-list">
+					<button class="ph-nav-item" data-page="Menus"><i class="fas fa-sitemap"></i><span>Menu Builder</span></button>
+					<button class="ph-nav-item" data-page="Users"><i class="fas fa-users"></i><span>Users & Roles</span></button>
+					<button class="ph-nav-item" data-page="Awesome Admin"><i class="fas fa-user-secret"></i><span>Awesome Admin</span></button>
+					<button class="ph-nav-item" data-page="Settings"><i class="fas fa-cog"></i><span>Settings</span></button>
+				</div>
+			</div>
+
+			<div class="ph-user-card">
+				<div class="ph-avatar">CA</div>
+				<div class="ph-user-meta">
+					<strong>Cahyo Andhika</strong>
+					<span>Super Admin</span>
+				</div>
+				<i class="fas fa-chevron-up text-muted"></i>
+			</div>
+		</aside>
+
+		<div class="ph-layout-right">
+			<header class="ph-top-bar">
+				<button class="ph-icon-btn" id="sidebarToggle" title="Toggle sidebar"><i class="fas fa-bars"></i></button>
+
+				<label class="ph-search">
+					<i class="fas fa-search"></i>
+					<input type="search" placeholder="Search article, menu, user">
+				</label>
+
+				<div class="ph-top-spacer"></div>
+
+				<div class="ph-segmented" aria-label="Range">
+					<button class="range-btn active" data-range="7d">7D</button>
+					<button class="range-btn" data-range="30d">30D</button>
+					<button class="range-btn" data-range="90d">90D</button>
+				</div>
+
+				<div class="ph-dropdown">
+					<button class="ph-icon-btn" id="paletteToggle" title="Theme color"><i class="fas fa-palette"></i></button>
+					<div class="ph-popover" id="palettePopover">
+						<h6>Brand color</h6>
+						<div class="d-flex align-items-center gap-2 mb-3">
+							<button class="ph-color-dot active" style="--dot: #13956f" data-color="#13956f" data-rgb="19, 149, 111" title="Arunika green"></button>
+							<button class="ph-color-dot" style="--dot: #0f8e8e" data-color="#0f8e8e" data-rgb="15, 142, 142" title="Teal"></button>
+							<button class="ph-color-dot" style="--dot: #4768e8" data-color="#4768e8" data-rgb="71, 104, 232" title="Blue"></button>
+							<button class="ph-color-dot" style="--dot: #c47a2c" data-color="#c47a2c" data-rgb="196, 122, 44" title="Amber"></button>
+						</div>
+						<h6>Dashboard style</h6>
+						<div class="ph-segmented w-100">
+							<button class="density-btn active flex-fill" data-density="calm">Calm</button>
+							<button class="density-btn flex-fill" data-density="compact">Compact</button>
+						</div>
+					</div>
+				</div>
+
+				<button class="ph-icon-btn" id="themeToggle" title="Switch theme"><i class="fas fa-moon"></i></button>
+				<button class="ph-icon-btn" id="notifyBtn" title="Notifications"><i class="fas fa-bell"></i></button>
+				<button class="ph-icon-btn" id="profileBtn" title="Profile"><i class="fas fa-ellipsis-h"></i></button>
+			</header>
+
+			<main class="ph-main-panel">
+				<section class="ph-dashboard">
+					<div class="ph-page-head">
+						<div>
+							<div class="ph-page-kicker"><i class="fas fa-circle"></i> CMS Overview</div>
+							<h1 id="pageTitle">Dashboard</h1>
+							<p>Track publishing health, content operations, menu updates, and user activity across the Laravel CMS.</p>
+						</div>
+
+						<div class="ph-actions">
+							<button class="ph-btn-theme-outline" id="exportBtn"><i class="fas fa-download"></i> Export</button>
+							<button class="ph-btn-theme" id="newPostBtn"><i class="fas fa-plus"></i> Add Post</button>
+						</div>
+					</div>
+
+					<div class="ph-stat-strip">
+						<div class="ph-content ph-stat">
+							<div class="ph-stat-top"><i class="fas fa-users"></i> Total visitors</div>
+							<div>
+								<div class="ph-stat-value" data-stat="visitors">567,899</div>
+								<span class="ph-trend"><i class="fas fa-arrow-up"></i> 2.5%</span>
+							</div>
+						</div>
+
+						<div class="ph-content ph-stat">
+							<div class="ph-stat-top"><i class="fas fa-newspaper"></i> Published posts</div>
+							<div>
+								<div class="ph-stat-value" data-stat="posts">1,136</div>
+								<span class="ph-trend"><i class="fas fa-arrow-up"></i> 0.9%</span>
+							</div>
+						</div>
+
+						<div class="ph-content ph-stat">
+							<div class="ph-stat-top"><i class="fas fa-layer-group"></i> Draft queue</div>
+							<div>
+								<div class="ph-stat-value" data-stat="drafts">43</div>
+								<span class="ph-trend down"><i class="fas fa-arrow-down"></i> 1.2%</span>
+							</div>
+						</div>
+
+						<div class="ph-content ph-stat">
+							<div class="ph-stat-top"><i class="fas fa-user-shield"></i> Active roles</div>
+							<div>
+								<div class="ph-stat-value" data-stat="roles">18</div>
+								<span class="ph-trend"><i class="fas fa-arrow-up"></i> 0.3%</span>
+							</div>
+						</div>
+
+						<button class="ph-content ph-add-card" id="addWidgetBtn">
+							<i class="fas fa-plus-square"></i>
+							<span>Add data</span>
+						</button>
+					</div>
+
+					<div class="ph-grid-main">
+						<div class="ph-content">
+							<div class="ph-panel-header">
+								<div>
+									<h2 class="ph-panel-title">Content performance</h2>
+									<p class="ph-panel-subtitle">Visits and publishing velocity</p>
+								</div>
+								<div class="ph-legend">
+									<span><i class="ph-legend-dot" style="--dot: var(--ph-blue)"></i> Visitors</span>
+									<span><i class="ph-legend-dot" style="--dot: var(--ph-amber)"></i> Posts</span>
+								</div>
+							</div>
+							<div class="ph-chart" id="contentChart"></div>
+						</div>
+
+						<div class="ph-content">
+							<div class="ph-panel-header">
+								<div>
+									<h2 class="ph-panel-title">Workflow</h2>
+									<p class="ph-panel-subtitle">CMS operations today</p>
+								</div>
+								<span class="ph-pill">Live</span>
+							</div>
+							<div class="ph-workflow">
+								<div class="ph-workflow-grid">
+									<div class="ph-workflow-row">
+										<div class="ph-workflow-icon"><i class="fas fa-pen"></i></div>
+										<div class="ph-workflow-meta"><strong>Review articles</strong><span>8 items waiting approval</span></div>
+										<span class="ph-pill">8</span>
+									</div>
+									<div class="ph-workflow-row">
+										<div class="ph-workflow-icon"><i class="fas fa-images"></i></div>
+										<div class="ph-workflow-meta"><strong>Media cleanup</strong><span>124 unused files detected</span></div>
+										<span class="ph-pill">124</span>
+									</div>
+									<div class="ph-workflow-row">
+										<div class="ph-workflow-icon"><i class="fas fa-sitemap"></i></div>
+										<div class="ph-workflow-meta"><strong>Menu changes</strong><span>Frontend menu updated</span></div>
+										<span class="ph-pill">2</span>
+									</div>
+									<div class="ph-workflow-row">
+										<div class="ph-workflow-icon"><i class="fas fa-user-lock"></i></div>
+										<div class="ph-workflow-meta"><strong>Permission audit</strong><span>Role matrix synced</span></div>
+										<span class="ph-pill">OK</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="ph-bottom-grid">
+						<div class="ph-content">
+							<div class="ph-panel-header">
+								<div>
+									<h2 class="ph-panel-title">Recent content</h2>
+									<p class="ph-panel-subtitle">Latest CMS entries and editorial states</p>
+								</div>
+								<button class="ph-btn-theme-outline" id="reviewBtn"><i class="fas fa-eye"></i> Review</button>
+							</div>
+							<div class="ph-table-wrap">
+								<table class="ph-data-table">
+									<thead>
+										<tr>
+											<th>Title</th>
+											<th>Type</th>
+											<th>Owner</th>
+											<th>Status</th>
+											<th>Updated</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr data-toast="Homepage sections opened">
+											<td>
+												<div class="ph-title-cell">
+													<div class="ph-doc-icon"><i class="fas fa-home"></i></div>
+													<div><strong>Homepage content sections</strong><span>/manage_content_pages</span></div>
+												</div>
+											</td>
+											<td>Page</td>
+											<td>Admin</td>
+											<td><span class="ph-status live">Live</span></td>
+											<td>12 min ago</td>
+										</tr>
+										<tr data-toast="Article draft opened">
+											<td>
+												<div class="ph-title-cell">
+													<div class="ph-doc-icon"><i class="fas fa-newspaper"></i></div>
+													<div><strong>Product launch article</strong><span>/manage_article/edit/128</span></div>
+												</div>
+											</td>
+											<td>Article</td>
+											<td>Editor</td>
+											<td><span class="ph-status review">Review</span></td>
+											<td>38 min ago</td>
+										</tr>
+										<tr data-toast="Media item opened">
+											<td>
+												<div class="ph-title-cell">
+													<div class="ph-doc-icon"><i class="fas fa-image"></i></div>
+													<div><strong>Campaign hero cover</strong><span>/manage_coverimage</span></div>
+												</div>
+											</td>
+											<td>Media</td>
+											<td>Designer</td>
+											<td><span class="ph-status draft">Draft</span></td>
+											<td>1 hour ago</td>
+										</tr>
+										<tr data-toast="Menu builder opened">
+											<td>
+												<div class="ph-title-cell">
+													<div class="ph-doc-icon"><i class="fas fa-sitemap"></i></div>
+													<div><strong>Header navigation update</strong><span>/awesome_admin/menu/fe</span></div>
+												</div>
+											</td>
+											<td>Menu</td>
+											<td>Super Admin</td>
+											<td><span class="ph-status live">Live</span></td>
+											<td>2 hours ago</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="ph-side-stack">
+							<div class="ph-content">
+								<div class="ph-panel-header">
+									<div>
+										<h2 class="ph-panel-title">Content mix</h2>
+										<p class="ph-panel-subtitle">By module</p>
+									</div>
+								</div>
+								<div class="ph-mini-chart" id="mixChart"></div>
+							</div>
+
+							<div class="ph-content">
+								<div class="ph-panel-header">
+									<div>
+										<h2 class="ph-panel-title">Activity</h2>
+										<p class="ph-panel-subtitle">Latest admin events</p>
+									</div>
+								</div>
+								<div class="ph-activity-list">
+									<div class="ph-activity">
+										<div class="ph-activity-dot"><i class="fas fa-check"></i></div>
+										<div><strong>Role permission saved</strong><span>Super Admin updated Manage Article access</span></div>
+									</div>
+									<div class="ph-activity">
+										<div class="ph-activity-dot"><i class="fas fa-upload"></i></div>
+										<div><strong>Media uploaded</strong><span>5 new cover images added to library</span></div>
+									</div>
+									<div class="ph-activity">
+										<div class="ph-activity-dot"><i class="fas fa-globe"></i></div>
+										<div><strong>Frontend menu synced</strong><span>Main navigation published successfully</span></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</main>
+		</div>
+	</div>
+
+	<div class="ph-toast" id="toast">
+		<i class="fas fa-check-circle"></i>
+		<div>
+			<strong id="toastTitle">Updated</strong>
+			<span id="toastMessage">Dashboard preview changed.</span>
+		</div>
+	</div>
+
+	<script src="/assets/plugins/echarts/5.5.1/dist/echarts.min.js"></script>
+	<script>
+		(function () {
+			const app = document.getElementById('mockApp');
+			const html = document.documentElement;
+			const sidebarToggle = document.getElementById('sidebarToggle');
+			const themeToggle = document.getElementById('themeToggle');
+			const paletteToggle = document.getElementById('paletteToggle');
+			const palettePopover = document.getElementById('palettePopover');
+			const toast = document.getElementById('toast');
+			const toastTitle = document.getElementById('toastTitle');
+			const toastMessage = document.getElementById('toastMessage');
+			let toastTimer = null;
+			let currentRange = '7d';
+
+			const rangeData = {
+				'7d': {
+					labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+					visitors: [28, 34, 31, 46, 42, 55, 63],
+					posts: [12, 16, 15, 22, 18, 24, 27],
+					stats: ['567,899', '1,136', '43', '18']
+				},
+				'30d': {
+					labels: ['W1', 'W2', 'W3', 'W4'],
+					visitors: [132, 148, 173, 198],
+					posts: [58, 66, 75, 82],
+					stats: ['612,430', '1,284', '37', '19']
+				},
+				'90d': {
+					labels: ['Apr', 'May', 'Jun'],
+					visitors: [410, 452, 521],
+					posts: [190, 216, 241],
+					stats: ['742,180', '1,602', '29', '21']
+				}
+			};
+
+			const contentChart = echarts.init(document.getElementById('contentChart'));
+			const mixChart = echarts.init(document.getElementById('mixChart'));
+
+			function showToast(title, message) {
+				toastTitle.textContent = title;
+				toastMessage.textContent = message;
+				toast.classList.add('show');
+				clearTimeout(toastTimer);
+				toastTimer = setTimeout(() => toast.classList.remove('show'), 2300);
+			}
+
+			function cssVar(name) {
+				return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+			}
+
+			function renderContentChart() {
+				const data = rangeData[currentRange];
+				contentChart.setOption({
+					grid: { left: 42, right: 18, top: 24, bottom: 34 },
+					tooltip: {
+						trigger: 'axis',
+						backgroundColor: cssVar('--ph-bg-panel'),
+						borderColor: cssVar('--ph-border-color'),
+						textStyle: { color: cssVar('--ph-text-main'), fontFamily: 'Nunito' }
+					},
+					xAxis: {
+						type: 'category',
+						data: data.labels,
+						axisLine: { lineStyle: { color: cssVar('--ph-border-color') } },
+						axisTick: { show: false },
+						axisLabel: { color: cssVar('--ph-text-muted'), fontFamily: 'Nunito' }
+					},
+					yAxis: {
+						type: 'value',
+						splitLine: { lineStyle: { color: cssVar('--ph-border-color') } },
+						axisLabel: { color: cssVar('--ph-text-muted'), fontFamily: 'Nunito' }
+					},
+					series: [
+						{
+							name: 'Visitors',
+							type: 'bar',
+							barWidth: 14,
+							itemStyle: { color: cssVar('--ph-blue'), borderRadius: [4, 4, 0, 0] },
+							data: data.visitors
+						},
+						{
+							name: 'Posts',
+							type: 'bar',
+							barWidth: 14,
+							itemStyle: { color: cssVar('--ph-amber'), borderRadius: [4, 4, 0, 0] },
+							data: data.posts
+						}
+					]
+				});
+			}
+
+			function renderMixChart() {
+				mixChart.setOption({
+					tooltip: {
+						trigger: 'item',
+						backgroundColor: cssVar('--ph-bg-panel'),
+						borderColor: cssVar('--ph-border-color'),
+						textStyle: { color: cssVar('--ph-text-main'), fontFamily: 'Nunito' }
+					},
+					series: [{
+						type: 'pie',
+						radius: ['52%', '78%'],
+						center: ['50%', '50%'],
+						avoidLabelOverlap: true,
+						itemStyle: {
+							borderRadius: 8,
+							borderColor: cssVar('--ph-bg-panel'),
+							borderWidth: 3
+						},
+						label: { show: false },
+						data: [
+							{ value: 36, name: 'Articles', itemStyle: { color: cssVar('--ph-theme-primary') } },
+							{ value: 24, name: 'Pages', itemStyle: { color: cssVar('--ph-blue') } },
+							{ value: 18, name: 'Media', itemStyle: { color: '#66d6bf' } },
+							{ value: 12, name: 'Menus', itemStyle: { color: cssVar('--ph-amber') } },
+							{ value: 10, name: 'Users', itemStyle: { color: '#8d6ff0' } }
+						]
+					}]
+				});
+			}
+
+			function refreshStats() {
+				const data = rangeData[currentRange].stats;
+				document.querySelector('[data-stat="visitors"]').textContent = data[0];
+				document.querySelector('[data-stat="posts"]').textContent = data[1];
+				document.querySelector('[data-stat="drafts"]').textContent = data[2];
+				document.querySelector('[data-stat="roles"]').textContent = data[3];
+			}
+
+			function refreshCharts() {
+				renderContentChart();
+				renderMixChart();
+			}
+
+			sidebarToggle.addEventListener('click', () => {
+				app.classList.toggle('sidebar-compact');
+				showToast('Sidebar changed', app.classList.contains('sidebar-compact') ? 'Compact rail preview enabled.' : 'Expanded menu preview enabled.');
+				setTimeout(() => contentChart.resize(), 260);
+			});
+
+			themeToggle.addEventListener('click', () => {
+				const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+				html.setAttribute('data-theme', next);
+				themeToggle.innerHTML = next === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+				refreshCharts();
+				showToast('Theme mode', next === 'dark' ? 'Dark preview enabled.' : 'Light preview enabled.');
+			});
+
+			paletteToggle.addEventListener('click', (event) => {
+				event.stopPropagation();
+				palettePopover.classList.toggle('open');
+			});
+
+			document.addEventListener('click', (event) => {
+				if (!palettePopover.contains(event.target) && event.target !== paletteToggle) {
+					palettePopover.classList.remove('open');
+				}
+			});
+
+			document.querySelectorAll('.ph-color-dot').forEach((button) => {
+				button.addEventListener('click', () => {
+					document.querySelectorAll('.ph-color-dot').forEach(item => item.classList.remove('active'));
+					button.classList.add('active');
+					html.style.setProperty('--ph-theme-primary', button.dataset.color);
+					html.style.setProperty('--ph-theme-primary-rgb', button.dataset.rgb);
+					refreshCharts();
+					showToast('Brand color', 'Dashboard accent updated.');
+				});
+			});
+
+			document.querySelectorAll('.range-btn').forEach((button) => {
+				button.addEventListener('click', () => {
+					document.querySelectorAll('.range-btn').forEach(item => item.classList.remove('active'));
+					button.classList.add('active');
+					currentRange = button.dataset.range;
+					refreshStats();
+					renderContentChart();
+					showToast('Range changed', currentRange.toUpperCase() + ' dashboard data loaded.');
+				});
+			});
+
+			document.querySelectorAll('.density-btn').forEach((button) => {
+				button.addEventListener('click', () => {
+					document.querySelectorAll('.density-btn').forEach(item => item.classList.remove('active'));
+					button.classList.add('active');
+					document.documentElement.style.setProperty('--ph-font-size', button.dataset.density === 'compact' ? '13px' : '14px');
+					showToast('Density changed', button.dataset.density === 'compact' ? 'Compact CMS rhythm applied.' : 'Calm CMS rhythm applied.');
+					setTimeout(() => {
+						contentChart.resize();
+						mixChart.resize();
+					}, 80);
+				});
+			});
+
+			document.querySelectorAll('.ph-nav-item').forEach((button) => {
+				button.addEventListener('click', () => {
+					document.querySelectorAll('.ph-nav-item').forEach(item => item.classList.remove('active'));
+					button.classList.add('active');
+					document.getElementById('pageTitle').textContent = button.dataset.page;
+					showToast(button.dataset.page, 'Preview state switched.');
+				});
+			});
+
+			document.querySelectorAll('.ph-rail-btn').forEach((button) => {
+				button.addEventListener('click', () => {
+					document.querySelectorAll('.ph-rail-btn').forEach(item => item.classList.remove('active'));
+					button.classList.add('active');
+					showToast(button.dataset.rail, 'Rail shortcut selected.');
+				});
+			});
+
+			document.querySelectorAll('.ph-data-table tbody tr').forEach((row) => {
+				row.addEventListener('click', () => showToast('Opened', row.dataset.toast));
+			});
+
+			[
+				['exportBtn', 'Export queued', 'The report export has been prepared.'],
+				['newPostBtn', 'Create post', 'New article action opened.'],
+				['addWidgetBtn', 'Widget added', 'A new dashboard data slot was added.'],
+				['reviewBtn', 'Review mode', 'Editorial review queue opened.'],
+				['notifyBtn', 'Notifications', 'No critical alerts right now.'],
+				['profileBtn', 'Profile menu', 'Account actions previewed.']
+			].forEach(([id, title, message]) => {
+				document.getElementById(id).addEventListener('click', () => showToast(title, message));
+			});
+
+			window.addEventListener('resize', () => {
+				contentChart.resize();
+				mixChart.resize();
+			});
+
+			refreshStats();
+			refreshCharts();
+		})();
+	</script>
+</body>
+</html>
