@@ -1,4 +1,4 @@
-@include('themes.arunika_v1.components.menu')
+@include('themes.arunika_v2.components.menu')
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +16,7 @@
 		<link href="{{ url('assets/plugins/fontawesome/5.15.3/css/all.min.css') }}" rel="stylesheet">
 
 		<!-- Font -->
-		<link href="{{ asset('storage/fonts/nunito/fonts.css?v=').time() }}" rel="stylesheet">	
+		<link href="{{ asset('storage/fonts/nunito/fonts.css?v=').time() }}" rel="stylesheet">
 
 		<!-- Vue Select CSS --->
 		<link rel="stylesheet" href="{{ url('assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css') }}">
@@ -26,24 +26,24 @@
 
 		<!-- Custom CSS -->
 		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">
-		<link href="{{ asset('assets/css/themes/arunika_v1/arunika_v1.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/themes/arunika_v2/arunika_v2.css?v=').time() }}" rel="stylesheet">
 
 		@stack('css')
 
-		<title>Arunika Themes v1</title>
+		<title>Arunika Themes v2</title>
 
 		<script>
-		(function() 
+		(function()
 		{
 			// 1. Ambil Tema
-			const savedTheme = localStorage.getItem('theme') || 'dark';
+			const savedTheme = localStorage.getItem('theme') || 'light';
 			// Kita pasang di documentElement (tag <html>) karena body belum ready
 			document.documentElement.setAttribute('data-bs-theme', savedTheme);
 
 			// 2. Ambil Warna
 			const savedColor = localStorage.getItem('theme-color');
-			
-			if (savedColor) 
+
+			if (savedColor)
 			{
 				document.documentElement.style.setProperty('--ph-theme-primary', savedColor);
 			}
@@ -57,8 +57,12 @@
 			<div class="ph-sidebar ph-no-transition" id="sidebar">
 
 				<script> if (localStorage.getItem('sidebar-state') === 'expanded') { document.getElementById('sidebar').classList.add('ph-expanded'); } </script>
-				
-				<div class="ph-sidebar-logo-container" onclick="toggleSidebar()">
+
+				<button class="ph-sidebar-toggle" id="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="false" title="Toggle sidebar">
+					<i class="fas fa-chevron-right" id="sidebar-toggle-icon"></i>
+				</button>
+
+				<div class="ph-sidebar-logo-container">
 					<div class="ph-app-logo-icon">
 						<img src="{{ asset('assets/logos/laraphoenix_onlybird_colored_2.png') }}" style="width: 30px">
 					</div>
@@ -67,8 +71,13 @@
 				</div>
 
 				<div id="sidebar-scroll-content">
-					
+
 					<div class="list-group list-group-flush w-100">
+
+						<div class="ph-nav-category ph-static-nav-category">
+							<span class="ph-nav-category-initial">M</span>
+							<span class="ph-nav-category-label">{{ t('Main') }}</span>
+						</div>
 
 						<div class="ph-list-group-wrapper">
 							<a href="{{ url('/') }}" class="list-group-item list-group-item-action" target="_blank">
@@ -78,14 +87,14 @@
 								<div class="ph-custom-tooltip"><span>{{ t('Visit Site') }}</span></div>
 							</a>
 
-							<a href="{{ url('dashboard') }}" class="list-group-item list-group-item-action">
-								<div class="ph-nav-icon"><i class="fal fa-home fa-fw"></i></i></div>
+							<a href="{{ url('dashboard') }}" class="list-group-item list-group-item-action{{ request()->is('dashboard') ? ' active' : '' }}">
+								<div class="ph-nav-icon"><i class="fal fa-home fa-fw"></i></div>
 								<span class="ph-nav-text">{{ t('Dashboard') }}</span>
 
 								<div class="ph-custom-tooltip"><span>{{ t('Dashboard') }}</span></div>
 							</a>
 
-							<a href="{{ url('chat') }}" class="list-group-item list-group-item-action">
+							<a href="{{ url('chat') }}" class="list-group-item list-group-item-action{{ request()->is('chat*') ? ' active' : '' }}">
 								<div class="ph-nav-icon"><i class="fal fa-comments fa-fw"></i></div>
 								<span class="ph-nav-text">{{ t('Messages') }}</span>
 								<div class="ph-custom-tooltip"><span>{{ t('Messages') }}</span></div>
@@ -106,17 +115,35 @@
 							<div class="ph-custom-tooltip"><span>{{ t('Awesome Admin') }}</span></div>
 						</a>
 					</div>
+
+					<div class="ph-sidebar-user-panel">
+						<a href="{{ url('profile') }}" class="ph-sidebar-user-card">
+							<div class="ph-sidebar-user-avatar">
+								{!! get_avatar('frame', 'rounded-circle',  30) !!}
+							</div>
+
+							<div class="ph-sidebar-user-meta">
+								<strong>{{ auth()->user()->fullname }}</strong>
+								<span>{{ current_role() }}</span>
+							</div>
+						</a>
+
+						<a href="{{ url('auth/logout') }}" class="ph-sidebar-logout" title="{{ t('Logout') }}">
+							<i class="fad fa-sign-out-alt"></i>
+							<span>{{ t('Logout') }}</span>
+						</a>
+					</div>
 				</div>
 
 			</div>
 
 			<div class="ph-layout-right" id="ph-layout-right">
 				<div class="ph-top-bar" id="ph-top-bar">
-					<div class="ph-header-btn" onclick="toggleSidebar()" title="Toggle Sidebar"><i class="fas fa-bars"></i></div>
-					
+					<div class="ph-header-btn ph-mobile-sidebar-trigger" onclick="toggleSidebar()" title="Toggle Sidebar"><i class="fas fa-bars"></i></div>
+
 					<div class="dropdown">
 						<div class="ph-header-btn" data-bs-toggle="dropdown" title="Change Theme Color"><i class="fas fa-palette"></i></div>
-						
+
 						<div class="dropdown-menu p-3" style="min-width: 260px;">
 							<h6 class="dropdown-header px-0 text-start" style="color: var(--ph-text-muted);">Choose Theme Color</h6>
 							<div class="row g-2" id="color-picker-container"></div>
@@ -124,7 +151,7 @@
 							<hr class="dropdown-divider bg-secondary opacity-25">
 
 							<h6 class="dropdown-header px-0 text-start" style="color: var(--ph-text-muted);">Background Pattern</h6>
-							
+
 							<div class="d-flex gap-2">
 								<button class="btn btn-sm btn-outline-secondary flex-fill" onclick="changePattern('none')" title="No Pattern">
 									<i class="fas fa-ban"></i>
@@ -133,11 +160,11 @@
 								<button class="btn btn-sm btn-outline-secondary flex-fill" onclick="changePattern('winter')" title="Winter Snow">
 									<i class="far fa-snowflake"></i>
 								</button>
-								
+
 								<button class="btn btn-sm btn-outline-secondary flex-fill" onclick="changePattern('christmas')" title="Christmas">
 									<i class="fas fa-gift"></i>
 								</button>
-								
+
 								<button class="btn btn-sm btn-outline-secondary flex-fill" onclick="changePattern('eid')" title="Idul Fitri">
 									<i class="fas fa-star-and-crescent"></i>
 								</button>
@@ -178,7 +205,7 @@
 						        <button class="ph-btn-action-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 						            <i class="fas fa-ellipsis-h"></i>
 						        </button>
-						        
+
 						        <ul class="dropdown-menu ph-dropdown-menu-teams dropdown-menu-end">
 						            <li><a class="dropdown-item" href="{{ url('account') }}"><i class="fad fa-cog me-2"></i> {{ t('Account Settings') }}</a></li>
 						            <li><hr class="dropdown-divider"></li>
@@ -191,7 +218,7 @@
 						            <div class="ph-profile-initials">
 						            	{!! get_avatar('frame', 'rounded-circle',  38) !!}
 						            </div>
-						            
+
 						            <div class="ph-status-badge">
 						            	<i class="fas fa-check"></i>
 						            </div>
@@ -202,7 +229,7 @@
 						                <div class="ph-profile-card-header">
 						                	<span class="ph-role-badge">{{ current_role() }}</span>
 						                </div>
-						                
+
 						                <div class="ph-profile-card-body">
 						                    <div class="ph-profile-avatar-lg">
 						                    	{!! get_avatar('frame', 'rounded-circle',  64) !!}
@@ -252,6 +279,6 @@
 
 		@stack('js')
 
-		<script src="{{ url('assets/js/themes/arunika_v1/arunika_v1.js?v=').time() }}"></script>
+		<script src="{{ url('assets/js/themes/arunika_v2/arunika_v2.js?v=').time() }}"></script>
 	</body>
 </html>

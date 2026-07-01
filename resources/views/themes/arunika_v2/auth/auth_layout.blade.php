@@ -73,6 +73,6 @@
 
 			@stack('js')
 
-			<script src="{{ url('assets/js/c/vue3/vueV3-auth-2025.js?v=').time() }}"></script>
+			<script src="{{ url('assets/js/vue3/auth/vueV3-auth-2026.js?v=').time() }}"></script>
 	</body>
 </html>

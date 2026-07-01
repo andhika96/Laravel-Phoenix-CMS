@@ -180,12 +180,12 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringContainsString('is-pending-insert-target', $appJs);
         $this->assertStringContainsString('@click="onToolboxItemClick(element)"', $appJs);
 
-        // Verify CSS keeps targeted notice styling without bouncing the + Add button
+        // Verify CSS contains targeted notice styling and premium glowing animations
         $this->assertStringContainsString('.pb-pending-insert-notice', $builderCss);
         $this->assertStringContainsString('.pb-dropzone.is-pending-insert-target', $builderCss);
         $this->assertStringContainsString('.pb-node.pb-node-tabs .pb-grid-col-empty-hint .pb-inline-add', $builderCss);
         $this->assertStringNotContainsString(".pb-node.pb-node-tabs .pb-dropzone-tab * {\n\tpointer-events: auto;", $builderCss);
         $this->assertStringContainsString('pulsePendingBorder', $builderCss);
-        $this->assertStringNotContainsString('bouncePendingAdd', $builderCss);
+        $this->assertStringContainsString('bouncePendingAdd', $builderCss);
     }
 }

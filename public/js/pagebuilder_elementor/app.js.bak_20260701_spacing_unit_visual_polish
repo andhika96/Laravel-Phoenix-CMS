@@ -5512,7 +5512,7 @@
 							<details class="pb-collapsible" open>
 								<summary>Layout</summary>
 								<div class="pb-collapsible-body">
-								<div class="pb-form-group pb-spacing-control-group">
+								<div class="pb-form-group">
 									<div class="pb-label-row pb-label-row-device">
 										<label class="pb-form-label mb-0">Margin</label>
 										<div class="pb-control-device-wrap">
@@ -5530,15 +5530,18 @@
 											</select>
 										</div>
 									</div>
-									<div class="pb-four-sides pb-four-sides-with-link mt-1">
+									<div class="pb-label-row">
+										<div></div>
+										<button class="pb-link-btn" @click="selectedNode.settings.marginLinked=!selectedNode.settings.marginLinked" :title="selectedNode.settings.marginLinked?'Unlink':'Link'"><i :class="selectedNode.settings.marginLinked?'fas fa-link':'fas fa-unlink'"></i></button>
+									</div>
+									<div class="pb-four-sides mt-1">
 										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'margin', 'Top')" @input="onSpacingSideInput(selectedNode, 'margin', 'Top', $event)" placeholder=""><span>Top</span></div>
 										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'margin', 'Right')" @input="onSpacingSideInput(selectedNode, 'margin', 'Right', $event)" placeholder=""><span>Right</span></div>
 										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'margin', 'Bottom')" @input="onSpacingSideInput(selectedNode, 'margin', 'Bottom', $event)" placeholder=""><span>Bottom</span></div>
 										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'margin', 'Left')" @input="onSpacingSideInput(selectedNode, 'margin', 'Left', $event)" placeholder=""><span>Left</span></div>
-										<div class="pb-side-link-cell"><button class="pb-link-btn" @click="selectedNode.settings.marginLinked=!selectedNode.settings.marginLinked" :title="selectedNode.settings.marginLinked?'Unlink':'Link'"><i :class="selectedNode.settings.marginLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
 									</div>
 								</div>
-								<div class="pb-form-group pb-spacing-control-group">
+								<div class="pb-form-group">
 									<div class="pb-label-row pb-label-row-device">
 										<label class="pb-form-label mb-0">Padding</label>
 										<div class="pb-control-device-wrap">
@@ -5556,12 +5559,15 @@
 											</select>
 										</div>
 									</div>
-									<div class="pb-four-sides pb-four-sides-with-link mt-1">
+									<div class="pb-label-row">
+										<div></div>
+										<button class="pb-link-btn" @click="selectedNode.settings.paddingLinked=!selectedNode.settings.paddingLinked" :title="selectedNode.settings.paddingLinked?'Unlink':'Link'"><i :class="selectedNode.settings.paddingLinked?'fas fa-link':'fas fa-unlink'"></i></button>
+									</div>
+									<div class="pb-four-sides mt-1">
 										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'padding', 'Top')" @input="onSpacingSideInput(selectedNode, 'padding', 'Top', $event)" placeholder=""><span>Top</span></div>
 										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'padding', 'Right')" @input="onSpacingSideInput(selectedNode, 'padding', 'Right', $event)" placeholder=""><span>Right</span></div>
 										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'padding', 'Bottom')" @input="onSpacingSideInput(selectedNode, 'padding', 'Bottom', $event)" placeholder=""><span>Bottom</span></div>
 										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'padding', 'Left')" @input="onSpacingSideInput(selectedNode, 'padding', 'Left', $event)" placeholder=""><span>Left</span></div>
-										<div class="pb-side-link-cell"><button class="pb-link-btn" @click="selectedNode.settings.paddingLinked=!selectedNode.settings.paddingLinked" :title="selectedNode.settings.paddingLinked?'Unlink':'Link'"><i :class="selectedNode.settings.paddingLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
 									</div>
 								</div>
 								<div class="pb-form-group">

@@ -688,9 +688,6 @@
 			paddingRightMobile: '',
 			paddingBottomMobile: '',
 			paddingLeftMobile: '',
-			paddingUnit: '',
-			paddingUnitTablet: '',
-			paddingUnitMobile: '',
 			paddingLinked: false,
 			marginTop: '0',
 			marginRight: '0',
@@ -704,9 +701,6 @@
 			marginRightMobile: '',
 			marginBottomMobile: '',
 			marginLeftMobile: '',
-			marginUnit: '',
-			marginUnitTablet: '',
-			marginUnitMobile: '',
 			marginLinked: false,
 			zIndex: '',
 			cssClass: '',
@@ -815,9 +809,6 @@
 			paddingRightMobile: '',
 			paddingBottomMobile: '',
 			paddingLeftMobile: '',
-			paddingUnit: '',
-			paddingUnitTablet: '',
-			paddingUnitMobile: '',
 			paddingLinked: false,
 			marginTop: '0',
 			marginRight: '0',
@@ -831,9 +822,6 @@
 			marginRightMobile: '',
 			marginBottomMobile: '',
 			marginLeftMobile: '',
-			marginUnit: '',
-			marginUnitTablet: '',
-			marginUnitMobile: '',
 			marginLinked: false,
 			zIndex: '',
 			cssClass: '',
@@ -3358,70 +3346,7 @@
 				if (option?.state === 'show_hide') return value ? 'Show' : 'Hide';
 				return value ? 'On' : 'Off';
 			}
-			const spacingControlUnits = ['px', '%', 'em', 'rem', 'vw'];
 			const sizeControlLegacyUnits = ['px', 'pt', 'em', 'rem', '%', 'vw'];
-			const spacingSides = ['Top', 'Right', 'Bottom', 'Left'];
-			function normalizeSpacingUnit(unit) {
-				const safe = String(unit || '').trim().toLowerCase();
-				return spacingControlUnits.includes(safe) ? safe : 'px';
-			}
-			function spacingRawUnit(node, base) {
-				if (!node || !node.settings) return '';
-				return String(getResponsiveSetting(node.settings, base + 'Unit', '') || '').trim().toLowerCase();
-			}
-			function spacingUnit(node, base) {
-				if (!node || !node.settings) return 'px';
-				const rawUnit = spacingRawUnit(node, base);
-				if (rawUnit !== '') return normalizeSpacingUnit(rawUnit);
-				for (const side of spacingSides) {
-					const parsed = parseNumberUnit(getResponsiveSetting(node.settings, base + side, ''), 'px', spacingControlUnits);
-					if (parsed.value !== '') return normalizeSpacingUnit(parsed.unit);
-				}
-				return 'px';
-			}
-			function spacingToken(value, unit) {
-				const raw = String(value ?? '').trim();
-				if (raw === '') return '';
-				const num = Number(raw);
-				if (!Number.isFinite(num)) return '';
-				return String(num) + normalizeSpacingUnit(unit);
-			}
-			function spacingSideValue(node, base, side) {
-				if (!node || !node.settings) return '';
-				const parsed = parseNumberUnit(getResponsiveSetting(node.settings, base + side, ''), spacingUnit(node, base), spacingControlUnits);
-				return parsed.value === '' ? '' : parsed.value;
-			}
-			function setSpacingSideValue(node, base, side, value) {
-				if (!node || !node.settings) return;
-				const token = spacingToken(value, spacingUnit(node, base));
-				setResponsiveSetting(node.settings, base + side, token);
-				if (node.settings[base + 'Linked']) {
-					spacingSides.forEach((targetSide) => {
-						if (targetSide !== side) setResponsiveSetting(node.settings, base + targetSide, token);
-					});
-				}
-			}
-			function onSpacingSideInput(node, base, side, event) {
-				if (!event || !event.target) return;
-				setSpacingSideValue(node, base, side, event.target.value);
-				nextTick(() => {
-					event.target.value = String(spacingSideValue(node, base, side));
-				});
-			}
-			function setSpacingUnit(node, base, unit) {
-				if (!node || !node.settings) return;
-				const safe = normalizeSpacingUnit(unit);
-				const currentValues = {};
-				spacingSides.forEach((side) => {
-					currentValues[side] = spacingSideValue(node, base, side);
-				});
-				setResponsiveSetting(node.settings, base + 'Unit', safe);
-				spacingSides.forEach((side) => {
-					if (currentValues[side] !== '') {
-						setResponsiveSetting(node.settings, base + side, spacingToken(currentValues[side], safe));
-					}
-				});
-			}
 			function sizeControlMaxForUnit(unit) {
 				if (unit === '%' || unit === 'vw') return 100;
 				if (unit === 'em' || unit === 'rem') return 30;
@@ -4622,7 +4547,6 @@
 				setResponsiveDevice, applyResponsiveDevice, toggleWidthPreviewMenu, closeWidthPreviewMenu, selectDesktopPreviewWidth,
 				containerResponsiveValue, setContainerResponsiveSetting,
 				onContainerDisplayTypeChange, onContainerContentWidthChange,
-				spacingControlUnits, spacingUnit, spacingSideValue, onSpacingSideInput, setSpacingUnit,
 				sizeControlUnits, videoAspectRatioOptions, videoAspectRatioValue, setVideoAspectRatioValue, videoSourceOptions, videoSuggestedVideoOptions, videoPreloadOptions, videoCurrentSource, setVideoSourceType, videoLinkField, videoUsesHostedPicker, videoShowsEndTime, videoShowsPoster, videoShowsOverlay, videoUsesControlsColor, videoToggleOptions, videoSelectOptions, videoToggleStateLabel, sizeControlDisplayValue, sizeControlUnit, sizeControlMax, sizeControlStep, onSizeControlInput, setSizeControlUnit,
 				containerWidthValue, containerWidthUnit, containerWidthMax, containerWidthStep, onContainerWidthInput, setContainerWidthValue, setContainerWidthUnit,
 				columnWidthValue, setSelectedColumnWidthValue, columnResizeOverlay,
@@ -5512,7 +5436,7 @@
 							<details class="pb-collapsible" open>
 								<summary>Layout</summary>
 								<div class="pb-collapsible-body">
-								<div class="pb-form-group pb-spacing-control-group">
+								<div class="pb-form-group">
 									<div class="pb-label-row pb-label-row-device">
 										<label class="pb-form-label mb-0">Margin</label>
 										<div class="pb-control-device-wrap">
@@ -5525,20 +5449,21 @@
 											</div>
 										</div>
 										<div class="pb-label-tools">
-											<select class="pb-mini-unit pb-edge-unit-select" :value="spacingUnit(selectedNode, 'margin')" @change="setSpacingUnit(selectedNode, 'margin', $event.target.value)">
-												<option v-for="unit in spacingControlUnits" :key="'container-margin-unit-' + unit" :value="unit">{{ unit }}</option>
-											</select>
+											<div class="pb-control-unit-wrap">px</div>
 										</div>
 									</div>
-									<div class="pb-four-sides pb-four-sides-with-link mt-1">
-										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'margin', 'Top')" @input="onSpacingSideInput(selectedNode, 'margin', 'Top', $event)" placeholder=""><span>Top</span></div>
-										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'margin', 'Right')" @input="onSpacingSideInput(selectedNode, 'margin', 'Right', $event)" placeholder=""><span>Right</span></div>
-										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'margin', 'Bottom')" @input="onSpacingSideInput(selectedNode, 'margin', 'Bottom', $event)" placeholder=""><span>Bottom</span></div>
-										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'margin', 'Left')" @input="onSpacingSideInput(selectedNode, 'margin', 'Left', $event)" placeholder=""><span>Left</span></div>
-										<div class="pb-side-link-cell"><button class="pb-link-btn" @click="selectedNode.settings.marginLinked=!selectedNode.settings.marginLinked" :title="selectedNode.settings.marginLinked?'Unlink':'Link'"><i :class="selectedNode.settings.marginLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
+									<div class="pb-label-row">
+										<div></div>
+										<button class="pb-link-btn" @click="selectedNode.settings.marginLinked=!selectedNode.settings.marginLinked" :title="selectedNode.settings.marginLinked?'Unlink':'Link'"><i :class="selectedNode.settings.marginLinked?'fas fa-link':'fas fa-unlink'"></i></button>
+									</div>
+									<div class="pb-four-sides mt-1">
+										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('marginTop')]" @input="syncResponsiveSides(selectedNode.settings, 'margin', 'Top', selectedNode.settings.marginLinked)" placeholder=""><span>Top</span></div>
+										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('marginRight')]" @input="syncResponsiveSides(selectedNode.settings, 'margin', 'Right', selectedNode.settings.marginLinked)" placeholder=""><span>Right</span></div>
+										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('marginBottom')]" @input="syncResponsiveSides(selectedNode.settings, 'margin', 'Bottom', selectedNode.settings.marginLinked)" placeholder=""><span>Bottom</span></div>
+										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('marginLeft')]" @input="syncResponsiveSides(selectedNode.settings, 'margin', 'Left', selectedNode.settings.marginLinked)" placeholder=""><span>Left</span></div>
 									</div>
 								</div>
-								<div class="pb-form-group pb-spacing-control-group">
+								<div class="pb-form-group">
 									<div class="pb-label-row pb-label-row-device">
 										<label class="pb-form-label mb-0">Padding</label>
 										<div class="pb-control-device-wrap">
@@ -5551,17 +5476,18 @@
 											</div>
 										</div>
 										<div class="pb-label-tools">
-											<select class="pb-mini-unit pb-edge-unit-select" :value="spacingUnit(selectedNode, 'padding')" @change="setSpacingUnit(selectedNode, 'padding', $event.target.value)">
-												<option v-for="unit in spacingControlUnits" :key="'container-padding-unit-' + unit" :value="unit">{{ unit }}</option>
-											</select>
+											<div class="pb-control-unit-wrap">px</div>
 										</div>
 									</div>
-									<div class="pb-four-sides pb-four-sides-with-link mt-1">
-										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'padding', 'Top')" @input="onSpacingSideInput(selectedNode, 'padding', 'Top', $event)" placeholder=""><span>Top</span></div>
-										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'padding', 'Right')" @input="onSpacingSideInput(selectedNode, 'padding', 'Right', $event)" placeholder=""><span>Right</span></div>
-										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'padding', 'Bottom')" @input="onSpacingSideInput(selectedNode, 'padding', 'Bottom', $event)" placeholder=""><span>Bottom</span></div>
-										<div class="pb-side-input"><input class="pb-input" :value="spacingSideValue(selectedNode, 'padding', 'Left')" @input="onSpacingSideInput(selectedNode, 'padding', 'Left', $event)" placeholder=""><span>Left</span></div>
-										<div class="pb-side-link-cell"><button class="pb-link-btn" @click="selectedNode.settings.paddingLinked=!selectedNode.settings.paddingLinked" :title="selectedNode.settings.paddingLinked?'Unlink':'Link'"><i :class="selectedNode.settings.paddingLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
+									<div class="pb-label-row">
+										<div></div>
+										<button class="pb-link-btn" @click="selectedNode.settings.paddingLinked=!selectedNode.settings.paddingLinked" :title="selectedNode.settings.paddingLinked?'Unlink':'Link'"><i :class="selectedNode.settings.paddingLinked?'fas fa-link':'fas fa-unlink'"></i></button>
+									</div>
+									<div class="pb-four-sides mt-1">
+										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('paddingTop')]" @input="syncResponsiveSides(selectedNode.settings, 'padding', 'Top', selectedNode.settings.paddingLinked)" placeholder=""><span>Top</span></div>
+										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('paddingRight')]" @input="syncResponsiveSides(selectedNode.settings, 'padding', 'Right', selectedNode.settings.paddingLinked)" placeholder=""><span>Right</span></div>
+										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('paddingBottom')]" @input="syncResponsiveSides(selectedNode.settings, 'padding', 'Bottom', selectedNode.settings.paddingLinked)" placeholder=""><span>Bottom</span></div>
+										<div class="pb-side-input"><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('paddingLeft')]" @input="syncResponsiveSides(selectedNode.settings, 'padding', 'Left', selectedNode.settings.paddingLinked)" placeholder=""><span>Left</span></div>
 									</div>
 								</div>
 								<div class="pb-form-group">

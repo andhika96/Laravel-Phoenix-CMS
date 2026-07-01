@@ -4068,22 +4068,6 @@ body {
 	background: #eef2ff;
 }
 
-.pb-panel.left .pb-tab-btn.pb-tab-btn-icon {
-	min-height: 48px;
-	justify-content: center;
-	gap: 4px;
-	padding: 9px 4px 6px;
-}
-
-.pb-panel.left .pb-tab-btn-icon i {
-	line-height: 1;
-}
-
-.pb-panel.left .pb-tab-btn-icon span {
-	display: block;
-	line-height: 1.25;
-}
-
 .pb-panel.left .pb-tool-item {
 	background: #f9fbff;
 	border-color: #dbe4f4;
@@ -5351,7 +5335,7 @@ body {
 
 .pb-panel.left .pb-layout-settings .pb-tab-content,
 .pb-panel.left .pb-grid-settings .pb-tab-content {
-	padding-top: 10px;
+	padding-top: 2px;
 }
 
 .pb-panel.left .pb-layout-settings .pb-form-group,
@@ -5499,39 +5483,33 @@ body {
 }
 
 .pb-panel.left .pb-layout-settings .pb-spacing-control-group .pb-label-row.pb-label-row-device {
-	display: flex;
-	width: 100%;
-	justify-content: flex-start;
 	margin-bottom: 6px;
 	gap: 6px;
 }
 
 .pb-panel.left .pb-layout-settings .pb-spacing-control-group .pb-label-tools {
-	flex: 0 0 auto;
 	margin-left: auto;
-	justify-content: flex-end;
 }
 
 .pb-panel.left .pb-layout-settings .pb-edge-unit-select {
-	width: 54px;
-	min-width: 54px;
-	height: 24px;
-	min-height: 24px;
-	padding: 0 7px;
-	border: 1px solid #cfd6e3;
-	border-radius: 6px;
-	background: #ffffff;
+	width: auto;
+	min-width: 36px;
+	height: 20px;
+	min-height: 20px;
+	padding: 0 2px;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
 	color: #516078;
 	font-size: 11px;
 	font-weight: 500;
-	line-height: 22px;
+	line-height: 20px;
 	box-shadow: none;
 }
 
 .pb-panel.left .pb-layout-settings .pb-edge-unit-select:focus {
 	outline: none;
-	border-color: #8fa0ff;
-	box-shadow: 0 0 0 2px rgba(91, 108, 255, 0.12);
+	box-shadow: none;
 }
 
 .pb-panel.left .pb-layout-settings .pb-four-sides-with-link {
@@ -5595,8 +5573,8 @@ body {
 }
 
 .pb-panel.left .pb-layout-settings .pb-collapsible {
-	margin: 0;
-	padding: 0;
+	margin: 0 0 16px;
+	padding: 0 0 16px;
 	border: 0;
 	border-bottom: 1px solid #e6ebf4;
 	border-radius: 0;
@@ -5606,14 +5584,12 @@ body {
 
 .pb-panel.left .pb-layout-settings .pb-collapsible:last-child {
 	margin-bottom: 0;
+	padding-bottom: 0;
 	border-bottom: none;
 }
 
 .pb-panel.left .pb-layout-settings .pb-collapsible summary {
-	min-height: 48px;
-	display: flex;
-	align-items: center;
-	padding: 0;
+	padding: 0 0 12px;
 	font-size: 14px;
 	font-weight: 600;
 	line-height: 1.3;
@@ -5621,13 +5597,11 @@ body {
 }
 
 .pb-panel.left .pb-layout-settings .pb-collapsible summary::before {
-	flex: 0 0 auto;
 	color: #6d7a90;
-	transform: none;
 }
 
 .pb-panel.left .pb-layout-settings .pb-collapsible-body {
-	padding: 8px 0 4px;
+	padding: 2px 0 0;
 }
 
 .pb-panel.left .pb-layout-settings .pb-advanced-switch-grid {

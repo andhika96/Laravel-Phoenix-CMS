@@ -1291,9 +1291,9 @@ a:hover
 	--ph-sidebar-toggle-bg: #ffffff;
 	--ph-sidebar-toggle-border: #eef2ef;
 	--ph-text-main: #0c2b22;
-	--ph-text-muted: #64736d;
-	--ph-bg-hover: #f2f8f5;
-	--ph-theme-primary-subtle: #e7f6f0;
+	--ph-text-muted: #6f7f79;
+	--ph-bg-hover: #eff6f3;
+	--ph-theme-primary-subtle: #dff5ed;
 	--ph-border-color: rgba(21, 45, 38, 0.09);
 }
 
@@ -1312,9 +1312,6 @@ a:hover
 	position: relative;
 	width: var(--ph-sidebar-width-collapsed);
 	height: 100vh;
-	display: flex;
-	flex-direction: column;
-	flex-shrink: 0;
 	margin: 0;
 	padding: 0;
 	background: var(--ph-sidebar-surface);
@@ -1418,8 +1415,8 @@ a:hover
 	margin-left: 10px;
 	max-width: 148px;
 	color: var(--ph-text-main);
-	font-size: 14px;
-	font-weight: 700;
+	font-size: 1rem;
+	font-weight: 800;
 	line-height: 1.2;
 	white-space: nowrap;
 	overflow: hidden;
@@ -1439,11 +1436,7 @@ a:hover
 
 #sidebar-scroll-content
 {
-	flex: 1 1 auto;
-	min-height: 0;
 	padding: 4px 0 8px;
-	display: flex;
-	flex-direction: column;
 	overflow-y: auto !important;
 	overflow-x: hidden !important;
 }
@@ -1452,9 +1445,7 @@ a:hover
 {
 	display: grid;
 	gap: 10px;
-	margin-top: auto;
 	padding: 8px 0 24px;
-	flex: 0 0 auto;
 }
 
 .ph-sidebar-user-panel
@@ -1469,7 +1460,7 @@ a:hover
 .ph-sidebar.ph-expanded .ph-sidebar-user-panel
 {
 	justify-items: stretch;
-	padding: 0 14px;
+	padding: 0 16px;
 }
 
 .ph-sidebar-user-card
@@ -1489,10 +1480,9 @@ a:hover
 .ph-sidebar.ph-expanded .ph-sidebar-user-card
 {
 	width: 100%;
-	min-height: 35px;
-	height: 35px;
+	height: auto;
 	justify-content: flex-start;
-	padding: 0 7px;
+	padding: 0 6px;
 }
 
 .ph-sidebar-user-avatar
@@ -1544,7 +1534,7 @@ a:hover
 .ph-sidebar-user-meta strong
 {
 	color: var(--ph-text-main);
-	font-size: 11px;
+	font-size: 0.68rem;
 	font-weight: 700;
 	line-height: 1.2;
 }
@@ -1552,7 +1542,7 @@ a:hover
 .ph-sidebar-user-meta span
 {
 	color: var(--ph-text-muted);
-	font-size: 10px;
+	font-size: 0.62rem;
 	line-height: 1.2;
 }
 
@@ -1578,8 +1568,8 @@ a:hover
 	height: 35px;
 	justify-content: flex-start;
 	gap: 8px;
-	padding: 0 7px;
-	font-size: 11.5px;
+	padding: 0 6px;
+	font-size: 0.72rem;
 }
 
 .ph-sidebar:not(.ph-expanded) .ph-sidebar-logout
@@ -1643,17 +1633,10 @@ a:hover
 	border-radius: 5px;
 	background: transparent;
 	color: var(--ph-text-muted);
-	font-size: 12.5px;
+	font-size: 0.82rem;
 	line-height: 1.1;
 	text-decoration: none;
 	transition: background-color 0.18s ease, color 0.18s ease, width 0.18s ease;
-}
-
-.ph-sidebar button.list-group-item
-{
-	font-family: inherit;
-	appearance: none;
-	cursor: pointer;
 }
 
 .ph-sidebar.ph-expanded .list-group-item
@@ -1681,62 +1664,6 @@ a:hover
 	font-weight: 700;
 }
 
-.ph-sidebar .list-group-item.active .ph-nav-text
-{
-	font-weight: 700;
-}
-
-.ph-sidebar-theme-wrapper
-{
-	margin-top: 2px;
-}
-
-.ph-sidebar-theme-toggle
-{
-	position: relative;
-}
-
-.ph-sidebar-theme-switch
-{
-	width: 28px;
-	height: 16px;
-	flex: 0 0 28px;
-	display: none;
-	align-items: center;
-	padding: 2px;
-	border-radius: 999px;
-	background: #e8efec;
-	transition: background-color 0.18s ease;
-}
-
-.ph-sidebar-theme-switch::after
-{
-	content: "";
-	width: 12px;
-	height: 12px;
-	display: block;
-	border-radius: 50%;
-	background: #ffffff;
-	box-shadow: 0 1px 3px rgba(15, 35, 29, 0.16);
-	transition: transform 0.18s ease;
-}
-
-.ph-sidebar.ph-expanded .ph-sidebar-theme-switch
-{
-	display: inline-flex;
-	margin-left: auto;
-}
-
-.ph-sidebar-theme-toggle.is-dark .ph-sidebar-theme-switch
-{
-	background: var(--ph-theme-primary);
-}
-
-.ph-sidebar-theme-toggle.is-dark .ph-sidebar-theme-switch::after
-{
-	transform: translateX(12px);
-}
-
 .ph-nav-icon
 {
 	width: 18px;
@@ -1745,7 +1672,7 @@ a:hover
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 12.5px;
+	font-size: 0.86rem;
 	line-height: 1;
 	color: currentColor;
 }
@@ -1770,7 +1697,7 @@ a:hover
 	min-width: 0;
 	margin: 0 8px 0 9px;
 	color: currentColor;
-	font-size: 12.5px;
+	font-size: 0.78rem;
 	font-weight: 500;
 	line-height: 1.25;
 	white-space: nowrap;
@@ -1816,7 +1743,6 @@ a:hover
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: transparent;
 	color: #9aa6a2;
 	font-size: 0.66rem;
 	font-weight: 800;
@@ -1851,9 +1777,9 @@ a:hover
 {
 	justify-content: flex-start;
 	height: auto;
-	margin: 18px 22px 9px;
+	margin: 18px 22px 8px;
 	color: #94a19c;
-	font-size: 9.5px;
+	font-size: 0.66rem;
 }
 
 .arv7-initial-menu-name
@@ -1869,11 +1795,6 @@ a:hover
 }
 
 .ph-sidebar.ph-expanded .ph-nav-category-initial
-{
-	display: none;
-}
-
-.ph-mobile-sidebar-trigger
 {
 	display: none;
 }
@@ -1982,14 +1903,12 @@ a:hover
 .ph-layout-right
 {
 	padding: 18px 18px 18px 14px;
-	flex: 1 1 0;
-	overflow-x: hidden !important;
 }
 
 .ph-top-bar
 {
 	height: 56px;
-	padding: 0 10px 0 0;
+	padding: 0 10px 0 12px;
 }
 
 .ph-main-panel
@@ -1999,18 +1918,8 @@ a:hover
 	box-shadow: 0 18px 45px rgba(27, 39, 54, 0.08);
 }
 
-.ph-scrollable-content
-{
-	overflow-x: hidden !important;
-}
-
 @media (max-width: 768px)
 {
-	.ph-mobile-sidebar-trigger
-	{
-		display: flex;
-	}
-
 	.ph-sidebar
 	{
 		position: fixed;

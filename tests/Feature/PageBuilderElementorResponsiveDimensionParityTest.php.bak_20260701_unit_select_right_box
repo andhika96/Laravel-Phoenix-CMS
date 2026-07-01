@@ -51,50 +51,8 @@ class PageBuilderElementorResponsiveDimensionParityTest extends TestCase
         $this->assertStringContainsString('pb-four-sides-with-link', $appJs);
         $this->assertStringContainsString('pb-side-link-cell', $appJs);
         $this->assertStringContainsString('.pb-panel.left .pb-layout-settings .pb-edge-unit-select', $builderCss);
-        $this->assertStringContainsString('width: 54px;', $builderCss);
-        $this->assertStringContainsString('border: 1px solid #cfd6e3;', $builderCss);
-        $this->assertStringContainsString('border-radius: 6px;', $builderCss);
-        $this->assertStringContainsString('justify-content: flex-end;', $builderCss);
         $this->assertStringContainsString('grid-template-columns: repeat(4, minmax(0, 1fr)) 28px;', $builderCss);
         $this->assertStringContainsString('.pb-panel.left .pb-layout-settings .pb-side-link-cell .pb-link-btn', $builderCss);
-    }
-
-    public function test_editor_centers_sidebar_tab_icon_labels(): void
-    {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
-
-        $this->assertIsString($builderCss);
-        $this->assertStringContainsString('.pb-panel.left .pb-tab-btn.pb-tab-btn-icon', $builderCss);
-        $this->assertStringContainsString('min-height: 48px;', $builderCss);
-        $this->assertStringContainsString('justify-content: center;', $builderCss);
-        $this->assertStringContainsString('padding: 9px 4px 6px;', $builderCss);
-        $this->assertStringContainsString('.pb-panel.left .pb-tab-btn-icon span', $builderCss);
-        $this->assertStringContainsString('line-height: 1.25;', $builderCss);
-    }
-
-    public function test_editor_adds_breathing_room_between_sidebar_tabs_and_first_group_label(): void
-    {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
-
-        $this->assertIsString($builderCss);
-        $this->assertMatchesRegularExpression(
-            '/\\.pb-panel\\.left \\.pb-layout-settings \\.pb-tab-content,\\s*\\.pb-panel\\.left \\.pb-grid-settings \\.pb-tab-content \\{\\s*padding-top: 10px;/s',
-            $builderCss
-        );
-    }
-
-    public function test_editor_centers_layout_accordion_labels_and_open_content_spacing(): void
-    {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
-
-        $this->assertIsString($builderCss);
-        $this->assertStringContainsString('.pb-panel.left .pb-layout-settings .pb-collapsible summary', $builderCss);
-        $this->assertStringContainsString('min-height: 48px;', $builderCss);
-        $this->assertStringContainsString('display: flex;', $builderCss);
-        $this->assertStringContainsString('align-items: center;', $builderCss);
-        $this->assertStringContainsString('padding: 0;', $builderCss);
-        $this->assertStringContainsString('.pb-panel.left .pb-layout-settings .pb-collapsible-body', $builderCss);
-        $this->assertStringContainsString('padding: 8px 0 4px;', $builderCss);
     }
 
     public function test_frontend_renderer_accepts_elementor_like_spacing_units_for_layout_nodes(): void

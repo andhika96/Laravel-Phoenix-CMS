@@ -1816,7 +1816,6 @@ a:hover
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: transparent;
 	color: #9aa6a2;
 	font-size: 0.66rem;
 	font-weight: 800;
@@ -1982,8 +1981,6 @@ a:hover
 .ph-layout-right
 {
 	padding: 18px 18px 18px 14px;
-	flex: 1 1 0;
-	overflow-x: hidden !important;
 }
 
 .ph-top-bar
@@ -1997,11 +1994,6 @@ a:hover
 	border-radius: 14px;
 	border-color: var(--ph-border-color);
 	box-shadow: 0 18px 45px rgba(27, 39, 54, 0.08);
-}
-
-.ph-scrollable-content
-{
-	overflow-x: hidden !important;
 }
 
 @media (max-width: 768px)
