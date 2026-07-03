@@ -23,10 +23,6 @@
 			--mock-shadow-sm: 0 1px 2px rgba(16, 24, 40, .04);
 			--mock-shadow-md: 0 12px 30px rgba(17, 24, 39, .08);
 			--mock-shadow-lg: 0 18px 50px rgba(17, 24, 39, .12);
-			--mock-sidebar-min: 430px;
-			--mock-sidebar-width: 460px;
-			--box-input-height: 35px;
-			--box-label-height: 22px;
 			--header-bg: #ffffff;
 			--header-text: #101828;
 			--link-color: #273142;
@@ -120,18 +116,6 @@
 			font-weight: 700;
 			white-space: nowrap;
 			box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7);
-		}
-
-		.mock-workspace-grid {
-			display: grid;
-			grid-template-columns: minmax(var(--mock-sidebar-min), var(--mock-sidebar-width)) minmax(0, 1fr);
-			gap: 16px;
-			align-items: start;
-		}
-
-		.mock-control-pane,
-		.mock-preview-pane {
-			min-width: 0;
 		}
 
 		.control-scroll {
@@ -429,7 +413,6 @@
 			display: grid;
 			grid-template-columns: 32px minmax(0, 1fr) 32px;
 			align-items: stretch;
-			min-width: 0;
 			height: 36px;
 			border: 1px solid var(--mock-border);
 			border-radius: 7px;
@@ -502,160 +485,56 @@
 
 		.box-control {
 			display: grid;
-			gap: 8px;
+			gap: 10px;
 		}
 
 		.box-control-header {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			gap: 8px;
+			gap: 10px;
 		}
 
 		.box-control-header .form-label {
-			display: inline-flex;
-			align-items: center;
-			color: #344054;
-			font-size: 12px;
-			font-weight: 700;
-			line-height: 1;
 			margin-bottom: 0;
 		}
 
 		.box-unit-select {
-			width: 64px;
-			height: var(--box-input-height);
-			min-height: var(--box-input-height);
-			border: 1px solid var(--mock-border);
-			border-radius: 7px;
-			background-color: #fff;
-			background-position: right 9px center;
-			background-size: 10px 8px;
-			box-shadow: var(--mock-shadow-sm);
-			color: #273142;
-			font-size: 13px;
-			line-height: 1.2;
-			padding: 4px 26px 4px 10px;
-		}
-
-		.box-unit-select:focus {
-			border-color: var(--mock-primary);
-			background-color: #fff;
-			box-shadow: 0 0 0 2px var(--mock-ring);
-		}
-
-		.box-unit-select option {
-			font-size: 13px;
-		}
-
-		.responsive-mode-control {
-			display: inline-grid;
-			grid-template-columns: 34px repeat(3, 26px);
-			gap: 2px;
-			align-items: center;
-			margin-left: auto;
-			padding: 2px;
-			border: 1px solid var(--mock-border-soft);
-			border-radius: 7px;
-			background: #f8fafc;
-		}
-
-		.responsive-mode-control button {
-			position: relative;
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			width: 100%;
-			height: 26px;
-			border: 1px solid transparent;
-			border-radius: 5px;
-			background: transparent;
-			color: #667085;
-			font-size: 11px;
-			font-weight: 700;
-			line-height: 1;
-			transition: background .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease;
-		}
-
-		.responsive-mode-control button:hover,
-		.responsive-mode-control button:focus {
-			background: #fff;
-			border-color: var(--mock-border);
-			color: var(--mock-primary);
-			outline: 0;
-		}
-
-		.responsive-mode-control button.is-active {
-			background: #fff;
-			border-color: var(--mock-primary);
-			color: var(--mock-primary);
-			box-shadow: 0 4px 12px rgba(224, 29, 36, .12);
-		}
-
-		.responsive-mode-control button.has-override::after {
-			position: absolute;
-			top: 3px;
-			right: 3px;
-			width: 5px;
-			height: 5px;
-			content: "";
-			border-radius: 50%;
-			background: var(--mock-primary);
+			width: 74px;
+			min-height: 31px;
+			font-size: 12px;
+			padding-top: 4px;
+			padding-bottom: 4px;
 		}
 
 		.box-control-row {
 			display: grid;
-			grid-template-columns: repeat(4, minmax(0, 1fr)) 30px;
-			grid-template-rows: var(--box-input-height) var(--box-label-height);
+			grid-template-columns: repeat(4, minmax(0, 1fr)) 36px;
 			gap: 0;
-			background: transparent;
-			box-shadow: none;
-			overflow: visible;
+			border: 1px solid var(--mock-border);
+			border-radius: 7px;
+			background: #fff;
+			box-shadow: var(--mock-shadow-sm);
+			overflow: hidden;
 		}
 
 		.box-side {
-			display: contents;
+			display: grid;
+			grid-template-rows: auto auto;
+			min-width: 0;
+			border-right: 1px solid #eef2f6;
+			background: #fff;
 		}
 
 		.box-side-stepper {
 			display: grid;
-			grid-template-columns: minmax(0, 1fr);
-			grid-row: 1;
-			min-height: var(--box-input-height);
-			min-width: 0;
-			border-top: 1px solid var(--mock-border);
-			border-bottom: 1px solid var(--mock-border);
-			border-left: 1px solid var(--mock-border);
-			background: #fff;
-			box-shadow: var(--mock-shadow-sm);
-		}
-
-		.box-side:nth-child(1) .box-side-stepper,
-		.box-side:nth-child(1) .box-side-label {
-			grid-column: 1;
-		}
-
-		.box-side:nth-child(2) .box-side-stepper,
-		.box-side:nth-child(2) .box-side-label {
-			grid-column: 2;
-		}
-
-		.box-side:nth-child(3) .box-side-stepper,
-		.box-side:nth-child(3) .box-side-label {
-			grid-column: 3;
-		}
-
-		.box-side:nth-child(4) .box-side-stepper,
-		.box-side:nth-child(4) .box-side-label {
-			grid-column: 4;
-		}
-
-		.box-side:nth-child(1) .box-side-stepper {
-			border-radius: 7px 0 0 7px;
+			grid-template-columns: 22px minmax(0, 1fr) 22px;
+			min-height: 34px;
+			border-bottom: 1px solid #f1f4f8;
 		}
 
 		.box-stepper-btn {
-			display: none;
+			display: inline-flex;
 			align-items: center;
 			justify-content: center;
 			border: 0;
@@ -688,104 +567,63 @@
 
 		.box-side input {
 			width: 100%;
-			height: var(--box-input-height);
+			height: 34px;
 			border: 0;
 			border-radius: 0;
 			box-shadow: none;
 			background: transparent;
-			color: #101828;
 			text-align: center;
-			font-size: 13px;
-			line-height: 1.2;
-			padding: 2px 4px;
+			font-size: 12px;
+			padding: 4px 3px;
 		}
 
 		.box-side input:focus {
 			outline: 0;
-			background: #fff;
 			box-shadow: inset 0 0 0 2px var(--mock-ring);
 		}
 
 		.box-side input[type="number"] {
-			appearance: auto;
-			-moz-appearance: auto;
+			appearance: textfield;
+			-moz-appearance: textfield;
 		}
 
 		.box-side input[type="number"]::-webkit-outer-spin-button,
 		.box-side input[type="number"]::-webkit-inner-spin-button {
-			-webkit-appearance: auto;
-			opacity: 1;
+			-webkit-appearance: none;
 			margin: 0;
 		}
 
 		.box-side-label {
 			display: block;
-			grid-row: 2;
-			min-height: var(--box-label-height);
-			padding: 6px 2px 0;
+			padding: 7px 2px 8px;
 			color: #667085;
-			font-size: 9px;
+			font-size: 10px;
 			line-height: 1;
 			text-align: center;
-			white-space: nowrap;
 		}
 
 		.box-link-toggle {
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
-			grid-column: 5;
-			grid-row: 1;
-			width: 30px;
-			height: var(--box-input-height);
-			min-height: var(--box-input-height);
-			border: 1px solid var(--mock-border);
-			border-radius: 0 7px 7px 0;
+			width: 36px;
+			min-height: 100%;
+			border: 0;
 			background: #f7f9fc;
 			color: #475467;
-			box-shadow: var(--mock-shadow-sm);
 			transition: background .18s ease, color .18s ease;
-		}
-
-		.box-link-toggle i {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			width: 100%;
-			height: var(--box-input-height);
 		}
 
 		.box-link-toggle:hover,
 		.box-link-toggle:focus {
+			background: #fff3f4;
 			color: var(--mock-primary);
 			outline: 0;
 		}
 
-		.box-link-toggle:hover i,
-		.box-link-toggle:focus i {
-			background: transparent;
-		}
-
 		.box-link-toggle.is-active {
 			background: var(--mock-primary);
-			border-color: var(--mock-primary);
 			color: #fff;
-		}
-
-		.box-link-toggle.is-active i {
-			background: transparent;
-		}
-
-		.link-color-control .box-link-toggle {
-			grid-column: auto;
-			grid-row: auto;
-			width: 36px;
-			height: auto;
-			min-height: 100%;
-			border: 0;
-			border-left: 1px solid var(--mock-border-soft);
-			border-radius: 0;
-			box-shadow: none;
 		}
 
 		.segmented {
@@ -1225,10 +1063,6 @@
 		}
 
 		@media (max-width: 1180px) {
-			.mock-workspace-grid {
-				grid-template-columns: 1fr;
-			}
-
 			.preview-card {
 				position: relative;
 				top: 0;
@@ -1236,11 +1070,6 @@
 		}
 
 		@media (max-width: 760px) {
-			:root {
-				--mock-sidebar-min: 0px;
-				--mock-sidebar-width: 100%;
-			}
-
 			.mock-shell {
 				padding: 10px;
 			}
@@ -1334,8 +1163,8 @@
 			</div>
 		</div>
 
-		<div class="mock-workspace-grid">
-			<div class="mock-control-pane">
+		<div class="row g-3">
+			<div class="col-xl-4">
 				<div class="ph-content rounded p-3 control-scroll">
 					<div class="control-section">
 						<div class="section-title">Source</div>
@@ -1623,12 +1452,6 @@
 								<div class="box-control" data-box-control="headerRadius">
 									<div class="box-control-header">
 										<label class="form-label">Header radius</label>
-										<div class="responsive-mode-control" data-responsive-control="headerRadius" role="group" aria-label="Header radius responsive mode">
-											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
-											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-										</div>
 										<select id="headerRadiusUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
 											<option value="%">%</option>
@@ -1679,12 +1502,6 @@
 								<div class="box-control" data-box-control="headerPadding">
 									<div class="box-control-header">
 										<label class="form-label">Header padding</label>
-										<div class="responsive-mode-control" data-responsive-control="headerPadding" role="group" aria-label="Header padding responsive mode">
-											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
-											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-										</div>
 										<select id="headerPaddingUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
 											<option value="%">%</option>
@@ -1732,31 +1549,9 @@
 							</div>
 
 							<div class="col-12">
-								<label class="form-label">Link shape</label>
-								<div class="segmented two" data-control="linkShape">
-									<button type="button" data-value="default" class="is-active">Default</button>
-									<button type="button" data-value="leaf">Leaf</button>
-								</div>
-							</div>
-
-							<div id="leafDirectionControl" class="col-12" hidden>
-								<label class="form-label">Leaf direction</label>
-								<div class="segmented two" data-control="leafDirection">
-									<button type="button" data-value="forward" class="is-active">Forward</button>
-									<button type="button" data-value="reverse">Reverse</button>
-								</div>
-							</div>
-
-							<div class="col-12">
 								<div class="box-control" data-box-control="navRadius">
 									<div class="box-control-header">
 										<label class="form-label">Link radius</label>
-										<div class="responsive-mode-control" data-responsive-control="navRadius" role="group" aria-label="Link radius responsive mode">
-											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
-											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-										</div>
 										<select id="navRadiusUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
 											<option value="%">%</option>
@@ -1768,35 +1563,35 @@
 									<div class="box-control-row">
 										<div class="box-side">
 											<div class="box-side-stepper">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusTop" data-box-stepper-delta="-1" aria-label="Decrease link radius top left"><i class="fas fa-minus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusTop" data-box-stepper-delta="-1" aria-label="Decrease link radius top"><i class="fas fa-minus"></i></button>
 												<input id="navRadiusTop" type="number" value="0" step="1" inputmode="decimal">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusTop" data-box-stepper-delta="1" aria-label="Increase link radius top left"><i class="fas fa-plus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusTop" data-box-stepper-delta="1" aria-label="Increase link radius top"><i class="fas fa-plus"></i></button>
 											</div>
-											<label class="box-side-label" for="navRadiusTop">Top Left</label>
+											<label class="box-side-label" for="navRadiusTop">Top</label>
 										</div>
 										<div class="box-side">
 											<div class="box-side-stepper">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusRight" data-box-stepper-delta="-1" aria-label="Decrease link radius top right"><i class="fas fa-minus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusRight" data-box-stepper-delta="-1" aria-label="Decrease link radius right"><i class="fas fa-minus"></i></button>
 												<input id="navRadiusRight" type="number" value="0" step="1" inputmode="decimal">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusRight" data-box-stepper-delta="1" aria-label="Increase link radius top right"><i class="fas fa-plus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusRight" data-box-stepper-delta="1" aria-label="Increase link radius right"><i class="fas fa-plus"></i></button>
 											</div>
-											<label class="box-side-label" for="navRadiusRight">Top Right</label>
+											<label class="box-side-label" for="navRadiusRight">Right</label>
 										</div>
 										<div class="box-side">
 											<div class="box-side-stepper">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusBottom" data-box-stepper-delta="-1" aria-label="Decrease link radius bottom right"><i class="fas fa-minus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusBottom" data-box-stepper-delta="-1" aria-label="Decrease link radius bottom"><i class="fas fa-minus"></i></button>
 												<input id="navRadiusBottom" type="number" value="0" step="1" inputmode="decimal">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusBottom" data-box-stepper-delta="1" aria-label="Increase link radius bottom right"><i class="fas fa-plus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusBottom" data-box-stepper-delta="1" aria-label="Increase link radius bottom"><i class="fas fa-plus"></i></button>
 											</div>
-											<label class="box-side-label" for="navRadiusBottom">Bottom Right</label>
+											<label class="box-side-label" for="navRadiusBottom">Bottom</label>
 										</div>
 										<div class="box-side">
 											<div class="box-side-stepper">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusLeft" data-box-stepper-delta="-1" aria-label="Decrease link radius bottom left"><i class="fas fa-minus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusLeft" data-box-stepper-delta="-1" aria-label="Decrease link radius left"><i class="fas fa-minus"></i></button>
 												<input id="navRadiusLeft" type="number" value="0" step="1" inputmode="decimal">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusLeft" data-box-stepper-delta="1" aria-label="Increase link radius bottom left"><i class="fas fa-plus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusLeft" data-box-stepper-delta="1" aria-label="Increase link radius left"><i class="fas fa-plus"></i></button>
 											</div>
-											<label class="box-side-label" for="navRadiusLeft">Bottom Left</label>
+											<label class="box-side-label" for="navRadiusLeft">Left</label>
 										</div>
 										<button id="navRadiusLinked" type="button" class="box-link-toggle is-active" aria-label="Link nav radius values" aria-pressed="true"><i class="fas fa-link"></i></button>
 									</div>
@@ -1807,12 +1602,6 @@
 								<div class="box-control" data-box-control="containerMargin">
 									<div class="box-control-header">
 										<label class="form-label">Container margin</label>
-										<div class="responsive-mode-control" data-responsive-control="containerMargin" role="group" aria-label="Container margin responsive mode">
-											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
-											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-										</div>
 										<select id="containerMarginUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
 											<option value="%">%</option>
@@ -1868,7 +1657,7 @@
 				</div>
 			</div>
 
-			<div class="mock-preview-pane">
+			<div class="col-xl-8">
 				<div class="ph-content rounded preview-card">
 					<div class="preview-toolbar">
 						<div>
@@ -1922,9 +1711,7 @@
 			menuPosition: 'left',
 			containerMode: 'container',
 			headerBehavior: 'stay',
-			transparentColorMode: 'auto',
-			linkShape: 'default',
-			leafDirection: 'forward'
+			transparentColorMode: 'auto'
 		};
 
 		const els = {
@@ -1988,7 +1775,6 @@
 			navRadiusLeft: document.getElementById('navRadiusLeft'),
 			navRadiusUnit: document.getElementById('navRadiusUnit'),
 			navRadiusLinked: document.getElementById('navRadiusLinked'),
-			leafDirectionControl: document.getElementById('leafDirectionControl'),
 			containerMarginTop: document.getElementById('containerMarginTop'),
 			containerMarginRight: document.getElementById('containerMarginRight'),
 			containerMarginBottom: document.getElementById('containerMarginBottom'),
@@ -2051,16 +1837,6 @@
 			}
 		};
 
-		const linkRadiusProfiles = {
-			default: null,
-			leafForward: null,
-			leafReverse: null
-		};
-
-		const responsiveModes = ['all', 'desktop', 'tablet', 'mobile'];
-		const responsiveDeviceModes = ['desktop', 'tablet', 'mobile'];
-		const responsiveBoxProfiles = {};
-
 		function setVariable(name, value) {
 			els.root.style.setProperty(name, value);
 		}
@@ -2071,129 +1847,29 @@
 			return `${numberValue}${unit}`;
 		}
 
-		function cloneBoxProfile(profile) {
-			return {
-				values: profile.values.slice(),
-				unit: profile.unit,
-				linked: profile.linked
-			};
-		}
-
-		function createBoxProfile(name, values = boxControls[name].defaults, unit = 'px', linked = isBoxLinked(name)) {
-			return {
-				values: values.slice(),
-				unit,
-				linked
-			};
-		}
-
-		function readBoxProfileFromControls(name) {
-			const config = boxControls[name];
-			return {
-				values: config.sides.map((id, index) => controls[id].value === '' ? config.defaults[index] : controls[id].value),
-				unit: controls[config.unit].value,
-				linked: isBoxLinked(name)
-			};
-		}
-
-		function writeBoxProfileToControls(name, profile) {
-			controls[boxControls[name].unit].value = profile.unit;
-			setBoxLinked(name, profile.linked);
-			setBoxValues(name, profile.values);
-		}
-
-		function createResponsiveBoxState(profile, mode = 'all') {
-			return {
-				mode,
-				all: cloneBoxProfile(profile),
-				desktop: null,
-				tablet: null,
-				mobile: null
-			};
-		}
-
-		function cloneResponsiveBoxState(stateValue) {
-			return {
-				mode: stateValue.mode || 'all',
-				all: cloneBoxProfile(stateValue.all),
-				desktop: stateValue.desktop ? cloneBoxProfile(stateValue.desktop) : null,
-				tablet: stateValue.tablet ? cloneBoxProfile(stateValue.tablet) : null,
-				mobile: stateValue.mobile ? cloneBoxProfile(stateValue.mobile) : null
-			};
-		}
-
-		function initResponsiveBoxProfiles() {
-			Object.keys(boxControls).forEach(name => {
-				responsiveBoxProfiles[name] = createResponsiveBoxState(readBoxProfileFromControls(name));
-				syncResponsiveBoxButtons(name);
-			});
-		}
-
-		function activeResponsiveMode(name) {
-			return responsiveBoxProfiles[name]?.mode || 'all';
-		}
-
-		function saveActiveBoxProfile(name) {
-			const store = responsiveBoxProfiles[name];
-			if (!store) return;
-			store[store.mode] = readBoxProfileFromControls(name);
-			syncResponsiveBoxButtons(name);
-		}
-
-		function profileForMode(name, mode) {
-			const store = responsiveBoxProfiles[name];
-			if (!store) return readBoxProfileFromControls(name);
-			return store[mode] || store.all;
-		}
-
-		function effectiveBoxProfile(name, device = controls.deviceMode.value) {
-			const mode = responsiveDeviceModes.includes(device) ? device : 'all';
-			return profileForMode(name, mode);
-		}
-
-		function profileCssValues(name, profile) {
-			const config = boxControls[name];
-			return config.sides.map((id, index) => {
-				const value = profile.values[index] === '' ? config.defaults[index] : profile.values[index];
-				return `${value}${profile.unit}`;
-			});
-		}
-
 		function boxControlValues(name) {
-			return profileCssValues(name, effectiveBoxProfile(name));
+			const config = boxControls[name];
+			const unit = controls[config.unit].value;
+			return config.sides.map((id, index) => {
+				const value = controls[id].value === '' ? config.defaults[index] : controls[id].value;
+				return `${value}${unit}`;
+			});
 		}
 
 		function boxControlCss(name) {
 			return boxControlValues(name).join(' ');
 		}
 
-		function boxProfileJson(name, profile) {
-			if (!profile) return null;
-			const [top, right, bottom, left] = profileCssValues(name, profile);
+		function boxControlJson(name) {
+			const [top, right, bottom, left] = boxControlValues(name);
+			const config = boxControls[name];
 			return {
 				top,
 				right,
 				bottom,
 				left,
-				unit: profile.unit,
-				linked: profile.linked
-			};
-		}
-
-		function boxControlJson(name) {
-			const effective = effectiveBoxProfile(name);
-			const effectiveJson = boxProfileJson(name, effective);
-			const store = responsiveBoxProfiles[name];
-			return {
-				...effectiveJson,
-				mode: activeResponsiveMode(name),
-				preview_device: controls.deviceMode.value,
-				responsive: {
-					all: boxProfileJson(name, store?.all),
-					desktop: boxProfileJson(name, store?.desktop),
-					tablet: boxProfileJson(name, store?.tablet),
-					mobile: boxProfileJson(name, store?.mobile)
-				}
+				unit: controls[config.unit].value,
+				linked: controls[config.linked].classList.contains('is-active')
 			};
 		}
 
@@ -2216,112 +1892,6 @@
 			boxControls[name].sides.forEach(id => {
 				if (id !== sourceId) controls[id].value = sourceValue;
 			});
-		}
-
-		function setBoxValues(name, values) {
-			boxControls[name].sides.forEach((id, index) => {
-				controls[id].value = values[index];
-			});
-		}
-
-		function setBoxLinked(name, active) {
-			const button = controls[boxControls[name].linked];
-			button.classList.toggle('is-active', active);
-			button.setAttribute('aria-pressed', String(active));
-			const icon = button.querySelector('i');
-			if (icon) {
-				icon.classList.toggle('fa-link', active);
-				icon.classList.toggle('fa-unlink', !active);
-			}
-		}
-
-		function syncResponsiveBoxButtons(name) {
-			const store = responsiveBoxProfiles[name];
-			if (!store) return;
-
-			document.querySelectorAll(`.responsive-mode-control[data-responsive-control="${name}"] button[data-responsive-mode]`).forEach(button => {
-				const mode = button.dataset.responsiveMode;
-				const active = store.mode === mode;
-				const hasOverride = mode !== 'all' && Boolean(store[mode]);
-				button.classList.toggle('is-active', active);
-				button.classList.toggle('has-override', hasOverride);
-				button.setAttribute('aria-pressed', String(active));
-			});
-		}
-
-		function switchResponsiveBoxMode(name, mode) {
-			if (!responsiveModes.includes(mode)) return;
-			saveActiveBoxProfile(name);
-			responsiveBoxProfiles[name].mode = mode;
-			writeBoxProfileToControls(name, profileForMode(name, mode));
-			if (mode !== 'all') {
-				controls.deviceMode.value = mode;
-			} else {
-				controls.deviceMode.value = 'desktop';
-			}
-			if (name === 'navRadius') syncCurrentLinkRadiusProfile();
-			syncResponsiveBoxButtons(name);
-		}
-
-		function currentLinkRadiusProfileKey(shape = state.linkShape, direction = state.leafDirection) {
-			if (shape !== 'leaf') return 'default';
-			return direction === 'reverse' ? 'leafReverse' : 'leafForward';
-		}
-
-		function readLinkRadiusProfile() {
-			saveActiveBoxProfile('navRadius');
-			return cloneResponsiveBoxState(responsiveBoxProfiles.navRadius);
-		}
-
-		function defaultLinkRadiusProfile(key) {
-			if (key === 'leafReverse') {
-				return createResponsiveBoxState(createBoxProfile('navRadius', ['28', '0', '28', '0'], 'px', false));
-			}
-
-			if (key === 'leafForward') {
-				return createResponsiveBoxState(createBoxProfile('navRadius', ['0', '28', '0', '28'], 'px', false));
-			}
-
-			return createResponsiveBoxState(createBoxProfile('navRadius', ['0', '0', '0', '0'], 'px', true));
-		}
-
-		function writeLinkRadiusProfile(profile) {
-			responsiveBoxProfiles.navRadius = cloneResponsiveBoxState(profile);
-			const mode = activeResponsiveMode('navRadius');
-			writeBoxProfileToControls('navRadius', profileForMode('navRadius', mode));
-			syncResponsiveBoxButtons('navRadius');
-		}
-
-		function saveCurrentLinkRadiusProfile() {
-			linkRadiusProfiles[currentLinkRadiusProfileKey()] = readLinkRadiusProfile();
-		}
-
-		function loadLinkRadiusProfile(key = currentLinkRadiusProfileKey()) {
-			if (!linkRadiusProfiles[key]) {
-				linkRadiusProfiles[key] = defaultLinkRadiusProfile(key);
-			}
-			writeLinkRadiusProfile(linkRadiusProfiles[key]);
-		}
-
-		function syncCurrentLinkRadiusProfile() {
-			saveActiveBoxProfile('navRadius');
-			linkRadiusProfiles[currentLinkRadiusProfileKey()] = cloneResponsiveBoxState(responsiveBoxProfiles.navRadius);
-		}
-
-		function switchLinkRadiusProfile(nextShape, nextDirection = state.leafDirection) {
-			saveCurrentLinkRadiusProfile();
-			state.linkShape = nextShape;
-			state.leafDirection = nextDirection;
-			loadLinkRadiusProfile();
-			syncLinkShapeControls();
-		}
-
-		function applyLinkShapePreset() {
-			loadLinkRadiusProfile();
-		}
-
-		function syncLinkShapeControls() {
-			controls.leafDirectionControl.hidden = state.linkShape !== 'leaf';
 		}
 
 		function colorValue(inputId, fallback = '#000000') {
@@ -2827,8 +2397,6 @@
 					height: unitValue('headerHeight', '76'),
 					header_radius: boxControlJson('headerRadius'),
 					header_padding: boxControlJson('headerPadding'),
-					link_shape: state.linkShape,
-					leaf_direction: state.linkShape === 'leaf' ? state.leafDirection : null,
 					link_radius: boxControlJson('navRadius'),
 					container_margin: boxControlJson('containerMargin')
 				}
@@ -2873,42 +2441,21 @@
 					const input = controls[id];
 					input.addEventListener('input', () => {
 						syncLinkedBoxValues(name, id);
-						saveActiveBoxProfile(name);
-						if (name === 'navRadius') syncCurrentLinkRadiusProfile();
 						updateAll();
 					});
 					input.addEventListener('change', () => {
 						syncLinkedBoxValues(name, id);
-						saveActiveBoxProfile(name);
-						if (name === 'navRadius') syncCurrentLinkRadiusProfile();
 						updateAll();
 					});
 				});
 
-				controls[config.unit].addEventListener('change', () => {
-					saveActiveBoxProfile(name);
-					if (name === 'navRadius') syncCurrentLinkRadiusProfile();
-					updateAll();
-				});
+				controls[config.unit].addEventListener('change', updateAll);
 				controls[config.linked].addEventListener('click', () => {
 					const button = controls[config.linked];
 					const active = !button.classList.contains('is-active');
-					setBoxLinked(name, active);
+					button.classList.toggle('is-active', active);
+					button.setAttribute('aria-pressed', String(active));
 					if (active) syncLinkedBoxValues(name, config.sides[0]);
-					saveActiveBoxProfile(name);
-					if (name === 'navRadius') syncCurrentLinkRadiusProfile();
-					updateAll();
-				});
-			});
-		}
-
-		function initResponsiveBoxModeControls() {
-			document.querySelectorAll('.responsive-mode-control[data-responsive-control]').forEach(group => {
-				group.addEventListener('click', event => {
-					const button = event.target.closest('button[data-responsive-mode]');
-					if (!button) return;
-					const name = group.dataset.responsiveControl;
-					switchResponsiveBoxMode(name, button.dataset.responsiveMode);
 					updateAll();
 				});
 			});
@@ -2962,7 +2509,6 @@
 
 		function updateAll() {
 			updateMenuCount();
-			syncLinkShapeControls();
 			applyColorsAndSizes();
 			updateHeaderClasses();
 			renderHeader();
@@ -2976,13 +2522,7 @@
 				if (!button) return;
 				group.querySelectorAll('button').forEach(item => item.classList.remove('is-active'));
 				button.classList.add('is-active');
-				if (group.dataset.control === 'linkShape') {
-					switchLinkRadiusProfile(button.dataset.value, state.leafDirection);
-				} else if (group.dataset.control === 'leafDirection') {
-					switchLinkRadiusProfile(state.linkShape, button.dataset.value);
-				} else {
-					state[group.dataset.control] = button.dataset.value;
-				}
+				state[group.dataset.control] = button.dataset.value;
 				updateAll();
 			});
 		});
@@ -2999,11 +2539,9 @@
 			controls[id].addEventListener('change', updateAll);
 		});
 
-		initResponsiveBoxProfiles();
 		initNumberSteppers();
 		initBoxSteppers();
 		initBoxControls();
-		initResponsiveBoxModeControls();
 		initLinkedColorControls();
 		initColorisPicker();
 

@@ -23,34 +23,14 @@
 			--mock-shadow-sm: 0 1px 2px rgba(16, 24, 40, .04);
 			--mock-shadow-md: 0 12px 30px rgba(17, 24, 39, .08);
 			--mock-shadow-lg: 0 18px 50px rgba(17, 24, 39, .12);
-			--mock-sidebar-min: 430px;
-			--mock-sidebar-width: 460px;
-			--box-input-height: 35px;
-			--box-label-height: 22px;
 			--header-bg: #ffffff;
 			--header-text: #101828;
 			--link-color: #273142;
 			--link-hover: #e01d24;
-			--link-hover-text: #ffffff;
 			--link-focus: #c4121a;
-			--link-focus-text: #ffffff;
 			--link-active: #e01d24;
-			--link-active-text: #ffffff;
-			--link-hover-border: #e01d24;
-			--link-focus-border: #c4121a;
-			--link-active-border: #e01d24;
+			--link-border: #273142;
 			--link-active-shadow: none;
-			--transparent-header-text: #ffffff;
-			--transparent-link-color: #ffffff;
-			--transparent-hover-bg: #e01d24;
-			--transparent-hover-text: #ffffff;
-			--transparent-hover-border: #e01d24;
-			--transparent-focus-bg: #c4121a;
-			--transparent-focus-text: #ffffff;
-			--transparent-focus-border: #c4121a;
-			--transparent-active-bg: #e01d24;
-			--transparent-active-text: #ffffff;
-			--transparent-active-border: #e01d24;
 			--scrolled-bg: #ffffff;
 			--header-height: 76px;
 			--header-radius: 18px 18px 18px 18px;
@@ -120,18 +100,6 @@
 			font-weight: 700;
 			white-space: nowrap;
 			box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7);
-		}
-
-		.mock-workspace-grid {
-			display: grid;
-			grid-template-columns: minmax(var(--mock-sidebar-min), var(--mock-sidebar-width)) minmax(0, 1fr);
-			gap: 16px;
-			align-items: start;
-		}
-
-		.mock-control-pane,
-		.mock-preview-pane {
-			min-width: 0;
 		}
 
 		.control-scroll {
@@ -312,69 +280,6 @@
 			border-left: 1px solid var(--mock-border-soft);
 		}
 
-		.shadow-control {
-			display: grid;
-			gap: 10px;
-			padding: 10px;
-			border: 1px solid var(--mock-border);
-			border-radius: 8px;
-			background: #fff;
-			box-shadow: var(--mock-shadow-sm);
-		}
-
-		.shadow-control-header {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			gap: 10px;
-		}
-
-		.shadow-control-row {
-			grid-template-columns: repeat(4, minmax(0, 1fr));
-			box-shadow: none;
-		}
-
-		.shadow-control-meta {
-			display: grid;
-			grid-template-columns: minmax(0, 1fr) auto;
-			gap: 10px;
-			align-items: end;
-		}
-
-		.shadow-control.is-disabled .shadow-control-row,
-		.shadow-control.is-disabled .shadow-control-meta {
-			opacity: .56;
-		}
-
-		.shadow-inset-check {
-			min-height: 36px;
-			display: flex;
-			align-items: center;
-			margin-bottom: 0;
-			white-space: nowrap;
-		}
-
-		.transparent-color-panel {
-			display: grid;
-			gap: 10px;
-			margin: -2px 0 14px 28px;
-			padding: 10px;
-			border: 1px solid var(--mock-border-soft);
-			border-radius: 8px;
-			background: #f8fafc;
-		}
-
-		.transparent-color-panel[hidden],
-		.transparent-custom-fields[hidden] {
-			display: none !important;
-		}
-
-		.transparent-custom-fields {
-			display: grid;
-			gap: 10px;
-			padding-top: 2px;
-		}
-
 		.form-range:disabled {
 			opacity: .45;
 		}
@@ -429,7 +334,6 @@
 			display: grid;
 			grid-template-columns: 32px minmax(0, 1fr) 32px;
 			align-items: stretch;
-			min-width: 0;
 			height: 36px;
 			border: 1px solid var(--mock-border);
 			border-radius: 7px;
@@ -502,160 +406,56 @@
 
 		.box-control {
 			display: grid;
-			gap: 8px;
+			gap: 10px;
 		}
 
 		.box-control-header {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			gap: 8px;
+			gap: 10px;
 		}
 
 		.box-control-header .form-label {
-			display: inline-flex;
-			align-items: center;
-			color: #344054;
-			font-size: 12px;
-			font-weight: 700;
-			line-height: 1;
 			margin-bottom: 0;
 		}
 
 		.box-unit-select {
-			width: 64px;
-			height: var(--box-input-height);
-			min-height: var(--box-input-height);
-			border: 1px solid var(--mock-border);
-			border-radius: 7px;
-			background-color: #fff;
-			background-position: right 9px center;
-			background-size: 10px 8px;
-			box-shadow: var(--mock-shadow-sm);
-			color: #273142;
-			font-size: 13px;
-			line-height: 1.2;
-			padding: 4px 26px 4px 10px;
-		}
-
-		.box-unit-select:focus {
-			border-color: var(--mock-primary);
-			background-color: #fff;
-			box-shadow: 0 0 0 2px var(--mock-ring);
-		}
-
-		.box-unit-select option {
-			font-size: 13px;
-		}
-
-		.responsive-mode-control {
-			display: inline-grid;
-			grid-template-columns: 34px repeat(3, 26px);
-			gap: 2px;
-			align-items: center;
-			margin-left: auto;
-			padding: 2px;
-			border: 1px solid var(--mock-border-soft);
-			border-radius: 7px;
-			background: #f8fafc;
-		}
-
-		.responsive-mode-control button {
-			position: relative;
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			width: 100%;
-			height: 26px;
-			border: 1px solid transparent;
-			border-radius: 5px;
-			background: transparent;
-			color: #667085;
-			font-size: 11px;
-			font-weight: 700;
-			line-height: 1;
-			transition: background .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease;
-		}
-
-		.responsive-mode-control button:hover,
-		.responsive-mode-control button:focus {
-			background: #fff;
-			border-color: var(--mock-border);
-			color: var(--mock-primary);
-			outline: 0;
-		}
-
-		.responsive-mode-control button.is-active {
-			background: #fff;
-			border-color: var(--mock-primary);
-			color: var(--mock-primary);
-			box-shadow: 0 4px 12px rgba(224, 29, 36, .12);
-		}
-
-		.responsive-mode-control button.has-override::after {
-			position: absolute;
-			top: 3px;
-			right: 3px;
-			width: 5px;
-			height: 5px;
-			content: "";
-			border-radius: 50%;
-			background: var(--mock-primary);
+			width: 74px;
+			min-height: 31px;
+			font-size: 12px;
+			padding-top: 4px;
+			padding-bottom: 4px;
 		}
 
 		.box-control-row {
 			display: grid;
-			grid-template-columns: repeat(4, minmax(0, 1fr)) 30px;
-			grid-template-rows: var(--box-input-height) var(--box-label-height);
+			grid-template-columns: repeat(4, minmax(0, 1fr)) 36px;
 			gap: 0;
-			background: transparent;
-			box-shadow: none;
-			overflow: visible;
+			border: 1px solid var(--mock-border);
+			border-radius: 7px;
+			background: #fff;
+			box-shadow: var(--mock-shadow-sm);
+			overflow: hidden;
 		}
 
 		.box-side {
-			display: contents;
+			display: grid;
+			grid-template-rows: auto auto;
+			min-width: 0;
+			border-right: 1px solid #eef2f6;
+			background: #fff;
 		}
 
 		.box-side-stepper {
 			display: grid;
-			grid-template-columns: minmax(0, 1fr);
-			grid-row: 1;
-			min-height: var(--box-input-height);
-			min-width: 0;
-			border-top: 1px solid var(--mock-border);
-			border-bottom: 1px solid var(--mock-border);
-			border-left: 1px solid var(--mock-border);
-			background: #fff;
-			box-shadow: var(--mock-shadow-sm);
-		}
-
-		.box-side:nth-child(1) .box-side-stepper,
-		.box-side:nth-child(1) .box-side-label {
-			grid-column: 1;
-		}
-
-		.box-side:nth-child(2) .box-side-stepper,
-		.box-side:nth-child(2) .box-side-label {
-			grid-column: 2;
-		}
-
-		.box-side:nth-child(3) .box-side-stepper,
-		.box-side:nth-child(3) .box-side-label {
-			grid-column: 3;
-		}
-
-		.box-side:nth-child(4) .box-side-stepper,
-		.box-side:nth-child(4) .box-side-label {
-			grid-column: 4;
-		}
-
-		.box-side:nth-child(1) .box-side-stepper {
-			border-radius: 7px 0 0 7px;
+			grid-template-columns: 22px minmax(0, 1fr) 22px;
+			min-height: 34px;
+			border-bottom: 1px solid #f1f4f8;
 		}
 
 		.box-stepper-btn {
-			display: none;
+			display: inline-flex;
 			align-items: center;
 			justify-content: center;
 			border: 0;
@@ -680,112 +480,65 @@
 			outline: 0;
 		}
 
-		.box-stepper-btn:disabled {
-			color: #98a2b3;
-			background: #f2f4f7;
-			cursor: not-allowed;
-		}
-
 		.box-side input {
 			width: 100%;
-			height: var(--box-input-height);
+			height: 34px;
 			border: 0;
 			border-radius: 0;
 			box-shadow: none;
 			background: transparent;
-			color: #101828;
 			text-align: center;
-			font-size: 13px;
-			line-height: 1.2;
-			padding: 2px 4px;
+			font-size: 12px;
+			padding: 4px 3px;
 		}
 
 		.box-side input:focus {
 			outline: 0;
-			background: #fff;
 			box-shadow: inset 0 0 0 2px var(--mock-ring);
 		}
 
 		.box-side input[type="number"] {
-			appearance: auto;
-			-moz-appearance: auto;
+			appearance: textfield;
+			-moz-appearance: textfield;
 		}
 
 		.box-side input[type="number"]::-webkit-outer-spin-button,
 		.box-side input[type="number"]::-webkit-inner-spin-button {
-			-webkit-appearance: auto;
-			opacity: 1;
+			-webkit-appearance: none;
 			margin: 0;
 		}
 
 		.box-side-label {
 			display: block;
-			grid-row: 2;
-			min-height: var(--box-label-height);
-			padding: 6px 2px 0;
+			padding: 7px 2px 8px;
 			color: #667085;
-			font-size: 9px;
+			font-size: 10px;
 			line-height: 1;
 			text-align: center;
-			white-space: nowrap;
 		}
 
 		.box-link-toggle {
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
-			grid-column: 5;
-			grid-row: 1;
-			width: 30px;
-			height: var(--box-input-height);
-			min-height: var(--box-input-height);
-			border: 1px solid var(--mock-border);
-			border-radius: 0 7px 7px 0;
+			width: 36px;
+			min-height: 100%;
+			border: 0;
 			background: #f7f9fc;
 			color: #475467;
-			box-shadow: var(--mock-shadow-sm);
 			transition: background .18s ease, color .18s ease;
-		}
-
-		.box-link-toggle i {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			width: 100%;
-			height: var(--box-input-height);
 		}
 
 		.box-link-toggle:hover,
 		.box-link-toggle:focus {
+			background: #fff3f4;
 			color: var(--mock-primary);
 			outline: 0;
 		}
 
-		.box-link-toggle:hover i,
-		.box-link-toggle:focus i {
-			background: transparent;
-		}
-
 		.box-link-toggle.is-active {
 			background: var(--mock-primary);
-			border-color: var(--mock-primary);
 			color: #fff;
-		}
-
-		.box-link-toggle.is-active i {
-			background: transparent;
-		}
-
-		.link-color-control .box-link-toggle {
-			grid-column: auto;
-			grid-row: auto;
-			width: 36px;
-			height: auto;
-			min-height: 100%;
-			border: 0;
-			border-left: 1px solid var(--mock-border-soft);
-			border-radius: 0;
-			box-shadow: none;
 		}
 
 		.segmented {
@@ -1029,50 +782,21 @@
 		}
 
 		.header-menu a:hover {
-			color: var(--link-hover-text);
-			background: var(--link-hover);
-			border-color: var(--link-hover-border);
+			color: var(--link-hover);
+			background: color-mix(in srgb, var(--link-hover) 12%, transparent);
 		}
 
 		.header-menu a:focus {
-			color: var(--link-focus-text);
-			background: var(--link-focus);
-			border-color: var(--link-focus-border);
-			outline: 0;
+			color: var(--link-focus);
+			outline: 2px solid color-mix(in srgb, var(--link-focus) 45%, transparent);
+			outline-offset: 2px;
 		}
 
 		.header-menu a.is-active {
-			color: var(--link-active-text);
-			background: var(--link-active);
-			border-color: var(--link-active-border);
+			color: var(--link-active);
+			background: color-mix(in srgb, var(--link-active) 12%, white);
+			border-color: var(--link-border);
 			box-shadow: var(--link-active-shadow);
-		}
-
-		.site-header.is-transparent:not(.is-scrolled) .header-logo,
-		.site-header.is-transparent:not(.is-scrolled) .hamburger {
-			color: var(--transparent-header-text);
-		}
-
-		.site-header.is-transparent:not(.is-scrolled) .header-menu a {
-			color: var(--transparent-link-color);
-		}
-
-		.site-header.is-transparent:not(.is-scrolled) .header-menu a:hover {
-			color: var(--transparent-hover-text);
-			background: var(--transparent-hover-bg);
-			border-color: var(--transparent-hover-border);
-		}
-
-		.site-header.is-transparent:not(.is-scrolled) .header-menu a:focus {
-			color: var(--transparent-focus-text);
-			background: var(--transparent-focus-bg);
-			border-color: var(--transparent-focus-border);
-		}
-
-		.site-header.is-transparent:not(.is-scrolled) .header-menu a.is-active {
-			color: var(--transparent-active-text);
-			background: var(--transparent-active-bg);
-			border-color: var(--transparent-active-border);
 		}
 
 		.header-actions {
@@ -1225,10 +949,6 @@
 		}
 
 		@media (max-width: 1180px) {
-			.mock-workspace-grid {
-				grid-template-columns: 1fr;
-			}
-
 			.preview-card {
 				position: relative;
 				top: 0;
@@ -1236,11 +956,6 @@
 		}
 
 		@media (max-width: 760px) {
-			:root {
-				--mock-sidebar-min: 0px;
-				--mock-sidebar-width: 100%;
-			}
-
 			.mock-shell {
 				padding: 10px;
 			}
@@ -1334,8 +1049,8 @@
 			</div>
 		</div>
 
-		<div class="mock-workspace-grid">
-			<div class="mock-control-pane">
+		<div class="row g-3">
+			<div class="col-xl-4">
 				<div class="ph-content rounded p-3 control-scroll">
 					<div class="control-section">
 						<div class="section-title">Source</div>
@@ -1384,125 +1099,45 @@
 								</div>
 							</div>
 							<div class="col-6">
-								<label class="form-label" for="linkColor">Link</label>
+								<label class="form-label" for="linkActive">Active link</label>
 								<div class="coloris-control">
-									<input id="linkColor" data-coloris value="#273142" class="form-control form-control-sm coloris-field">
+									<input id="linkActive" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
 								</div>
 							</div>
 							<div class="col-12">
-								<label class="form-label">Active link & border</label>
+								<label class="form-label">Link color & border</label>
 								<div class="link-color-control">
 									<div class="link-color-field">
-										<label class="link-color-label" for="linkActive">Active</label>
+										<label class="link-color-label" for="linkColor">Link</label>
 										<div class="coloris-control">
-											<input id="linkActive" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+											<input id="linkColor" data-coloris value="#273142" class="form-control form-control-sm coloris-field">
 										</div>
 									</div>
 									<div class="link-color-field">
-										<label class="link-color-label" for="linkActiveBorder">Border</label>
+										<label class="link-color-label" for="linkBorder">Border</label>
 										<div class="coloris-control">
-											<input id="linkActiveBorder" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+											<input id="linkBorder" data-coloris value="#273142" class="form-control form-control-sm coloris-field">
 										</div>
 									</div>
-									<button id="linkActiveBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="active" aria-label="Unlink active border color from active link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+									<button id="linkBorderLinked" type="button" class="box-link-toggle is-active" aria-label="Link border color to link color" aria-pressed="true"><i class="fas fa-link"></i></button>
 								</div>
 							</div>
 							<div class="col-12">
-								<label class="form-label">Hover link & border</label>
-								<div class="link-color-control">
-									<div class="link-color-field">
-										<label class="link-color-label" for="linkHover">Hover</label>
-										<div class="coloris-control">
-											<input id="linkHover" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
-										</div>
-									</div>
-									<div class="link-color-field">
-										<label class="link-color-label" for="linkHoverBorder">Border</label>
-										<div class="coloris-control">
-											<input id="linkHoverBorder" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
-										</div>
-									</div>
-									<button id="linkHoverBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="hover" aria-label="Unlink hover border color from hover link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+								<div class="form-check form-switch mb-0">
+									<input id="linkShadowEnabled" class="form-check-input" type="checkbox">
+									<label class="form-check-label" for="linkShadowEnabled">Link shadow</label>
 								</div>
 							</div>
-							<div class="col-12">
-								<label class="form-label">Focus link & border</label>
-								<div class="link-color-control">
-									<div class="link-color-field">
-										<label class="link-color-label" for="linkFocus">Focus</label>
-										<div class="coloris-control">
-											<input id="linkFocus" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
-										</div>
-									</div>
-									<div class="link-color-field">
-										<label class="link-color-label" for="linkFocusBorder">Border</label>
-										<div class="coloris-control">
-											<input id="linkFocusBorder" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
-										</div>
-									</div>
-									<button id="linkFocusBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="focus" aria-label="Unlink focus border color from focus link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+							<div class="col-6">
+								<label class="form-label" for="linkHover">Hover link</label>
+								<div class="coloris-control">
+									<input id="linkHover" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
 								</div>
 							</div>
-							<div class="col-12">
-								<div class="shadow-control">
-									<div class="shadow-control-header">
-										<div class="form-check form-switch mb-0">
-											<input id="linkShadowEnabled" class="form-check-input" type="checkbox">
-											<label class="form-check-label" for="linkShadowEnabled">Link shadow</label>
-										</div>
-										<select id="linkShadowUnit" class="form-select form-select-sm box-unit-select">
-											<option value="px" selected>px</option>
-											<option value="em">em</option>
-											<option value="rem">rem</option>
-											<option value="pt">pt</option>
-										</select>
-									</div>
-									<div class="box-control-row shadow-control-row">
-										<div class="box-side">
-											<div class="box-side-stepper">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowX" data-box-stepper-delta="-1" aria-label="Decrease link shadow x"><i class="fas fa-minus"></i></button>
-												<input id="linkShadowX" type="number" value="0" step="1" inputmode="decimal">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowX" data-box-stepper-delta="1" aria-label="Increase link shadow x"><i class="fas fa-plus"></i></button>
-											</div>
-											<label class="box-side-label" for="linkShadowX">X</label>
-										</div>
-										<div class="box-side">
-											<div class="box-side-stepper">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowY" data-box-stepper-delta="-1" aria-label="Decrease link shadow y"><i class="fas fa-minus"></i></button>
-												<input id="linkShadowY" type="number" value="8" step="1" inputmode="decimal">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowY" data-box-stepper-delta="1" aria-label="Increase link shadow y"><i class="fas fa-plus"></i></button>
-											</div>
-											<label class="box-side-label" for="linkShadowY">Y</label>
-										</div>
-										<div class="box-side">
-											<div class="box-side-stepper">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowBlur" data-box-stepper-delta="-1" aria-label="Decrease link shadow blur"><i class="fas fa-minus"></i></button>
-												<input id="linkShadowBlur" type="number" value="18" min="0" step="1" inputmode="decimal">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowBlur" data-box-stepper-delta="1" aria-label="Increase link shadow blur"><i class="fas fa-plus"></i></button>
-											</div>
-											<label class="box-side-label" for="linkShadowBlur">Blur</label>
-										</div>
-										<div class="box-side">
-											<div class="box-side-stepper">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowSpread" data-box-stepper-delta="-1" aria-label="Decrease link shadow spread"><i class="fas fa-minus"></i></button>
-												<input id="linkShadowSpread" type="number" value="0" step="1" inputmode="decimal">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowSpread" data-box-stepper-delta="1" aria-label="Increase link shadow spread"><i class="fas fa-plus"></i></button>
-											</div>
-											<label class="box-side-label" for="linkShadowSpread">Spread</label>
-										</div>
-									</div>
-									<div class="shadow-control-meta">
-										<div>
-											<label class="form-label" for="linkShadowColor">Shadow color</label>
-											<div class="coloris-control">
-												<input id="linkShadowColor" data-coloris value="#e01d242e" class="form-control form-control-sm coloris-field">
-											</div>
-										</div>
-										<div class="form-check form-switch shadow-inset-check">
-											<input id="linkShadowInset" class="form-check-input" type="checkbox">
-											<label class="form-check-label" for="linkShadowInset">Inset</label>
-										</div>
-									</div>
+							<div class="col-6">
+								<label class="form-label" for="linkFocus">Focus link</label>
+								<div class="coloris-control">
+									<input id="linkFocus" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
 								</div>
 							</div>
 						</div>
@@ -1553,43 +1188,6 @@
 							<input id="transparentStart" class="form-check-input" type="checkbox">
 							<label class="form-check-label" for="transparentStart">Transparent sebelum discroll</label>
 						</div>
-						<div id="transparentColorPanel" class="transparent-color-panel" hidden>
-							<div>
-								<label class="form-label">Transparent color mode</label>
-								<div class="segmented two" data-control="transparentColorMode">
-									<button type="button" data-value="auto" class="is-active">Auto</button>
-									<button type="button" data-value="custom">Custom</button>
-								</div>
-							</div>
-							<div id="transparentCustomFields" class="transparent-custom-fields" hidden>
-								<div class="row g-2">
-									<div class="col-6">
-										<label class="form-label" for="transparentText">Text/link</label>
-										<div class="coloris-control">
-											<input id="transparentText" data-coloris value="#ffffff" class="form-control form-control-sm coloris-field">
-										</div>
-									</div>
-									<div class="col-6">
-										<label class="form-label" for="transparentHover">Hover</label>
-										<div class="coloris-control">
-											<input id="transparentHover" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
-										</div>
-									</div>
-									<div class="col-6">
-										<label class="form-label" for="transparentFocus">Focus</label>
-										<div class="coloris-control">
-											<input id="transparentFocus" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
-										</div>
-									</div>
-									<div class="col-6">
-										<label class="form-label" for="transparentActive">Active</label>
-										<div class="coloris-control">
-											<input id="transparentActive" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
 						<div class="form-check form-switch mb-3">
 							<input id="animateScroll" class="form-check-input" type="checkbox">
 							<label class="form-check-label" for="animateScroll">Animasi berubah saat discroll</label>
@@ -1623,12 +1221,6 @@
 								<div class="box-control" data-box-control="headerRadius">
 									<div class="box-control-header">
 										<label class="form-label">Header radius</label>
-										<div class="responsive-mode-control" data-responsive-control="headerRadius" role="group" aria-label="Header radius responsive mode">
-											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
-											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-										</div>
 										<select id="headerRadiusUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
 											<option value="%">%</option>
@@ -1679,12 +1271,6 @@
 								<div class="box-control" data-box-control="headerPadding">
 									<div class="box-control-header">
 										<label class="form-label">Header padding</label>
-										<div class="responsive-mode-control" data-responsive-control="headerPadding" role="group" aria-label="Header padding responsive mode">
-											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
-											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-										</div>
 										<select id="headerPaddingUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
 											<option value="%">%</option>
@@ -1732,31 +1318,9 @@
 							</div>
 
 							<div class="col-12">
-								<label class="form-label">Link shape</label>
-								<div class="segmented two" data-control="linkShape">
-									<button type="button" data-value="default" class="is-active">Default</button>
-									<button type="button" data-value="leaf">Leaf</button>
-								</div>
-							</div>
-
-							<div id="leafDirectionControl" class="col-12" hidden>
-								<label class="form-label">Leaf direction</label>
-								<div class="segmented two" data-control="leafDirection">
-									<button type="button" data-value="forward" class="is-active">Forward</button>
-									<button type="button" data-value="reverse">Reverse</button>
-								</div>
-							</div>
-
-							<div class="col-12">
 								<div class="box-control" data-box-control="navRadius">
 									<div class="box-control-header">
 										<label class="form-label">Link radius</label>
-										<div class="responsive-mode-control" data-responsive-control="navRadius" role="group" aria-label="Link radius responsive mode">
-											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
-											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-										</div>
 										<select id="navRadiusUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
 											<option value="%">%</option>
@@ -1768,35 +1332,35 @@
 									<div class="box-control-row">
 										<div class="box-side">
 											<div class="box-side-stepper">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusTop" data-box-stepper-delta="-1" aria-label="Decrease link radius top left"><i class="fas fa-minus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusTop" data-box-stepper-delta="-1" aria-label="Decrease link radius top"><i class="fas fa-minus"></i></button>
 												<input id="navRadiusTop" type="number" value="0" step="1" inputmode="decimal">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusTop" data-box-stepper-delta="1" aria-label="Increase link radius top left"><i class="fas fa-plus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusTop" data-box-stepper-delta="1" aria-label="Increase link radius top"><i class="fas fa-plus"></i></button>
 											</div>
-											<label class="box-side-label" for="navRadiusTop">Top Left</label>
+											<label class="box-side-label" for="navRadiusTop">Top</label>
 										</div>
 										<div class="box-side">
 											<div class="box-side-stepper">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusRight" data-box-stepper-delta="-1" aria-label="Decrease link radius top right"><i class="fas fa-minus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusRight" data-box-stepper-delta="-1" aria-label="Decrease link radius right"><i class="fas fa-minus"></i></button>
 												<input id="navRadiusRight" type="number" value="0" step="1" inputmode="decimal">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusRight" data-box-stepper-delta="1" aria-label="Increase link radius top right"><i class="fas fa-plus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusRight" data-box-stepper-delta="1" aria-label="Increase link radius right"><i class="fas fa-plus"></i></button>
 											</div>
-											<label class="box-side-label" for="navRadiusRight">Top Right</label>
+											<label class="box-side-label" for="navRadiusRight">Right</label>
 										</div>
 										<div class="box-side">
 											<div class="box-side-stepper">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusBottom" data-box-stepper-delta="-1" aria-label="Decrease link radius bottom right"><i class="fas fa-minus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusBottom" data-box-stepper-delta="-1" aria-label="Decrease link radius bottom"><i class="fas fa-minus"></i></button>
 												<input id="navRadiusBottom" type="number" value="0" step="1" inputmode="decimal">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusBottom" data-box-stepper-delta="1" aria-label="Increase link radius bottom right"><i class="fas fa-plus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusBottom" data-box-stepper-delta="1" aria-label="Increase link radius bottom"><i class="fas fa-plus"></i></button>
 											</div>
-											<label class="box-side-label" for="navRadiusBottom">Bottom Right</label>
+											<label class="box-side-label" for="navRadiusBottom">Bottom</label>
 										</div>
 										<div class="box-side">
 											<div class="box-side-stepper">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusLeft" data-box-stepper-delta="-1" aria-label="Decrease link radius bottom left"><i class="fas fa-minus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusLeft" data-box-stepper-delta="-1" aria-label="Decrease link radius left"><i class="fas fa-minus"></i></button>
 												<input id="navRadiusLeft" type="number" value="0" step="1" inputmode="decimal">
-												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusLeft" data-box-stepper-delta="1" aria-label="Increase link radius bottom left"><i class="fas fa-plus"></i></button>
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusLeft" data-box-stepper-delta="1" aria-label="Increase link radius left"><i class="fas fa-plus"></i></button>
 											</div>
-											<label class="box-side-label" for="navRadiusLeft">Bottom Left</label>
+											<label class="box-side-label" for="navRadiusLeft">Left</label>
 										</div>
 										<button id="navRadiusLinked" type="button" class="box-link-toggle is-active" aria-label="Link nav radius values" aria-pressed="true"><i class="fas fa-link"></i></button>
 									</div>
@@ -1807,12 +1371,6 @@
 								<div class="box-control" data-box-control="containerMargin">
 									<div class="box-control-header">
 										<label class="form-label">Container margin</label>
-										<div class="responsive-mode-control" data-responsive-control="containerMargin" role="group" aria-label="Container margin responsive mode">
-											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
-											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-										</div>
 										<select id="containerMarginUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
 											<option value="%">%</option>
@@ -1868,7 +1426,7 @@
 				</div>
 			</div>
 
-			<div class="mock-preview-pane">
+			<div class="col-xl-8">
 				<div class="ph-content rounded preview-card">
 					<div class="preview-toolbar">
 						<div>
@@ -1921,10 +1479,7 @@
 			logoPosition: 'left',
 			menuPosition: 'left',
 			containerMode: 'container',
-			headerBehavior: 'stay',
-			transparentColorMode: 'auto',
-			linkShape: 'default',
-			leafDirection: 'forward'
+			headerBehavior: 'stay'
 		};
 
 		const els = {
@@ -1941,31 +1496,14 @@
 			scrolledBg: document.getElementById('scrolledBg'),
 			headerText: document.getElementById('headerText'),
 			linkColor: document.getElementById('linkColor'),
-			linkHover: document.getElementById('linkHover'),
-			linkHoverBorder: document.getElementById('linkHoverBorder'),
-			linkHoverBorderLinked: document.getElementById('linkHoverBorderLinked'),
-			linkFocus: document.getElementById('linkFocus'),
-			linkFocusBorder: document.getElementById('linkFocusBorder'),
-			linkFocusBorderLinked: document.getElementById('linkFocusBorderLinked'),
-			linkActive: document.getElementById('linkActive'),
-			linkActiveBorder: document.getElementById('linkActiveBorder'),
-			linkActiveBorderLinked: document.getElementById('linkActiveBorderLinked'),
+			linkBorder: document.getElementById('linkBorder'),
+			linkBorderLinked: document.getElementById('linkBorderLinked'),
 			linkShadowEnabled: document.getElementById('linkShadowEnabled'),
-			linkShadowUnit: document.getElementById('linkShadowUnit'),
-			linkShadowX: document.getElementById('linkShadowX'),
-			linkShadowY: document.getElementById('linkShadowY'),
-			linkShadowBlur: document.getElementById('linkShadowBlur'),
-			linkShadowSpread: document.getElementById('linkShadowSpread'),
-			linkShadowColor: document.getElementById('linkShadowColor'),
-			linkShadowInset: document.getElementById('linkShadowInset'),
+			linkHover: document.getElementById('linkHover'),
+			linkFocus: document.getElementById('linkFocus'),
+			linkActive: document.getElementById('linkActive'),
 			innerBg: document.getElementById('innerBg'),
 			transparentStart: document.getElementById('transparentStart'),
-			transparentColorPanel: document.getElementById('transparentColorPanel'),
-			transparentCustomFields: document.getElementById('transparentCustomFields'),
-			transparentText: document.getElementById('transparentText'),
-			transparentHover: document.getElementById('transparentHover'),
-			transparentFocus: document.getElementById('transparentFocus'),
-			transparentActive: document.getElementById('transparentActive'),
 			animateScroll: document.getElementById('animateScroll'),
 			scrollSim: document.getElementById('scrollSim'),
 			headerHeight: document.getElementById('headerHeight'),
@@ -1988,7 +1526,6 @@
 			navRadiusLeft: document.getElementById('navRadiusLeft'),
 			navRadiusUnit: document.getElementById('navRadiusUnit'),
 			navRadiusLinked: document.getElementById('navRadiusLinked'),
-			leafDirectionControl: document.getElementById('leafDirectionControl'),
 			containerMarginTop: document.getElementById('containerMarginTop'),
 			containerMarginRight: document.getElementById('containerMarginRight'),
 			containerMarginBottom: document.getElementById('containerMarginBottom'),
@@ -2027,40 +1564,6 @@
 			}
 		};
 
-		const linkedColorControls = {
-			active: {
-				source: 'linkActive',
-				target: 'linkActiveBorder',
-				linked: 'linkActiveBorderLinked',
-				fallback: '#e01d24',
-				label: 'active'
-			},
-			hover: {
-				source: 'linkHover',
-				target: 'linkHoverBorder',
-				linked: 'linkHoverBorderLinked',
-				fallback: '#e01d24',
-				label: 'hover'
-			},
-			focus: {
-				source: 'linkFocus',
-				target: 'linkFocusBorder',
-				linked: 'linkFocusBorderLinked',
-				fallback: '#c4121a',
-				label: 'focus'
-			}
-		};
-
-		const linkRadiusProfiles = {
-			default: null,
-			leafForward: null,
-			leafReverse: null
-		};
-
-		const responsiveModes = ['all', 'desktop', 'tablet', 'mobile'];
-		const responsiveDeviceModes = ['desktop', 'tablet', 'mobile'];
-		const responsiveBoxProfiles = {};
-
 		function setVariable(name, value) {
 			els.root.style.setProperty(name, value);
 		}
@@ -2071,129 +1574,29 @@
 			return `${numberValue}${unit}`;
 		}
 
-		function cloneBoxProfile(profile) {
-			return {
-				values: profile.values.slice(),
-				unit: profile.unit,
-				linked: profile.linked
-			};
-		}
-
-		function createBoxProfile(name, values = boxControls[name].defaults, unit = 'px', linked = isBoxLinked(name)) {
-			return {
-				values: values.slice(),
-				unit,
-				linked
-			};
-		}
-
-		function readBoxProfileFromControls(name) {
-			const config = boxControls[name];
-			return {
-				values: config.sides.map((id, index) => controls[id].value === '' ? config.defaults[index] : controls[id].value),
-				unit: controls[config.unit].value,
-				linked: isBoxLinked(name)
-			};
-		}
-
-		function writeBoxProfileToControls(name, profile) {
-			controls[boxControls[name].unit].value = profile.unit;
-			setBoxLinked(name, profile.linked);
-			setBoxValues(name, profile.values);
-		}
-
-		function createResponsiveBoxState(profile, mode = 'all') {
-			return {
-				mode,
-				all: cloneBoxProfile(profile),
-				desktop: null,
-				tablet: null,
-				mobile: null
-			};
-		}
-
-		function cloneResponsiveBoxState(stateValue) {
-			return {
-				mode: stateValue.mode || 'all',
-				all: cloneBoxProfile(stateValue.all),
-				desktop: stateValue.desktop ? cloneBoxProfile(stateValue.desktop) : null,
-				tablet: stateValue.tablet ? cloneBoxProfile(stateValue.tablet) : null,
-				mobile: stateValue.mobile ? cloneBoxProfile(stateValue.mobile) : null
-			};
-		}
-
-		function initResponsiveBoxProfiles() {
-			Object.keys(boxControls).forEach(name => {
-				responsiveBoxProfiles[name] = createResponsiveBoxState(readBoxProfileFromControls(name));
-				syncResponsiveBoxButtons(name);
-			});
-		}
-
-		function activeResponsiveMode(name) {
-			return responsiveBoxProfiles[name]?.mode || 'all';
-		}
-
-		function saveActiveBoxProfile(name) {
-			const store = responsiveBoxProfiles[name];
-			if (!store) return;
-			store[store.mode] = readBoxProfileFromControls(name);
-			syncResponsiveBoxButtons(name);
-		}
-
-		function profileForMode(name, mode) {
-			const store = responsiveBoxProfiles[name];
-			if (!store) return readBoxProfileFromControls(name);
-			return store[mode] || store.all;
-		}
-
-		function effectiveBoxProfile(name, device = controls.deviceMode.value) {
-			const mode = responsiveDeviceModes.includes(device) ? device : 'all';
-			return profileForMode(name, mode);
-		}
-
-		function profileCssValues(name, profile) {
-			const config = boxControls[name];
-			return config.sides.map((id, index) => {
-				const value = profile.values[index] === '' ? config.defaults[index] : profile.values[index];
-				return `${value}${profile.unit}`;
-			});
-		}
-
 		function boxControlValues(name) {
-			return profileCssValues(name, effectiveBoxProfile(name));
+			const config = boxControls[name];
+			const unit = controls[config.unit].value;
+			return config.sides.map((id, index) => {
+				const value = controls[id].value === '' ? config.defaults[index] : controls[id].value;
+				return `${value}${unit}`;
+			});
 		}
 
 		function boxControlCss(name) {
 			return boxControlValues(name).join(' ');
 		}
 
-		function boxProfileJson(name, profile) {
-			if (!profile) return null;
-			const [top, right, bottom, left] = profileCssValues(name, profile);
+		function boxControlJson(name) {
+			const [top, right, bottom, left] = boxControlValues(name);
+			const config = boxControls[name];
 			return {
 				top,
 				right,
 				bottom,
 				left,
-				unit: profile.unit,
-				linked: profile.linked
-			};
-		}
-
-		function boxControlJson(name) {
-			const effective = effectiveBoxProfile(name);
-			const effectiveJson = boxProfileJson(name, effective);
-			const store = responsiveBoxProfiles[name];
-			return {
-				...effectiveJson,
-				mode: activeResponsiveMode(name),
-				preview_device: controls.deviceMode.value,
-				responsive: {
-					all: boxProfileJson(name, store?.all),
-					desktop: boxProfileJson(name, store?.desktop),
-					tablet: boxProfileJson(name, store?.tablet),
-					mobile: boxProfileJson(name, store?.mobile)
-				}
+				unit: controls[config.unit].value,
+				linked: controls[config.linked].classList.contains('is-active')
 			};
 		}
 
@@ -2218,112 +1621,6 @@
 			});
 		}
 
-		function setBoxValues(name, values) {
-			boxControls[name].sides.forEach((id, index) => {
-				controls[id].value = values[index];
-			});
-		}
-
-		function setBoxLinked(name, active) {
-			const button = controls[boxControls[name].linked];
-			button.classList.toggle('is-active', active);
-			button.setAttribute('aria-pressed', String(active));
-			const icon = button.querySelector('i');
-			if (icon) {
-				icon.classList.toggle('fa-link', active);
-				icon.classList.toggle('fa-unlink', !active);
-			}
-		}
-
-		function syncResponsiveBoxButtons(name) {
-			const store = responsiveBoxProfiles[name];
-			if (!store) return;
-
-			document.querySelectorAll(`.responsive-mode-control[data-responsive-control="${name}"] button[data-responsive-mode]`).forEach(button => {
-				const mode = button.dataset.responsiveMode;
-				const active = store.mode === mode;
-				const hasOverride = mode !== 'all' && Boolean(store[mode]);
-				button.classList.toggle('is-active', active);
-				button.classList.toggle('has-override', hasOverride);
-				button.setAttribute('aria-pressed', String(active));
-			});
-		}
-
-		function switchResponsiveBoxMode(name, mode) {
-			if (!responsiveModes.includes(mode)) return;
-			saveActiveBoxProfile(name);
-			responsiveBoxProfiles[name].mode = mode;
-			writeBoxProfileToControls(name, profileForMode(name, mode));
-			if (mode !== 'all') {
-				controls.deviceMode.value = mode;
-			} else {
-				controls.deviceMode.value = 'desktop';
-			}
-			if (name === 'navRadius') syncCurrentLinkRadiusProfile();
-			syncResponsiveBoxButtons(name);
-		}
-
-		function currentLinkRadiusProfileKey(shape = state.linkShape, direction = state.leafDirection) {
-			if (shape !== 'leaf') return 'default';
-			return direction === 'reverse' ? 'leafReverse' : 'leafForward';
-		}
-
-		function readLinkRadiusProfile() {
-			saveActiveBoxProfile('navRadius');
-			return cloneResponsiveBoxState(responsiveBoxProfiles.navRadius);
-		}
-
-		function defaultLinkRadiusProfile(key) {
-			if (key === 'leafReverse') {
-				return createResponsiveBoxState(createBoxProfile('navRadius', ['28', '0', '28', '0'], 'px', false));
-			}
-
-			if (key === 'leafForward') {
-				return createResponsiveBoxState(createBoxProfile('navRadius', ['0', '28', '0', '28'], 'px', false));
-			}
-
-			return createResponsiveBoxState(createBoxProfile('navRadius', ['0', '0', '0', '0'], 'px', true));
-		}
-
-		function writeLinkRadiusProfile(profile) {
-			responsiveBoxProfiles.navRadius = cloneResponsiveBoxState(profile);
-			const mode = activeResponsiveMode('navRadius');
-			writeBoxProfileToControls('navRadius', profileForMode('navRadius', mode));
-			syncResponsiveBoxButtons('navRadius');
-		}
-
-		function saveCurrentLinkRadiusProfile() {
-			linkRadiusProfiles[currentLinkRadiusProfileKey()] = readLinkRadiusProfile();
-		}
-
-		function loadLinkRadiusProfile(key = currentLinkRadiusProfileKey()) {
-			if (!linkRadiusProfiles[key]) {
-				linkRadiusProfiles[key] = defaultLinkRadiusProfile(key);
-			}
-			writeLinkRadiusProfile(linkRadiusProfiles[key]);
-		}
-
-		function syncCurrentLinkRadiusProfile() {
-			saveActiveBoxProfile('navRadius');
-			linkRadiusProfiles[currentLinkRadiusProfileKey()] = cloneResponsiveBoxState(responsiveBoxProfiles.navRadius);
-		}
-
-		function switchLinkRadiusProfile(nextShape, nextDirection = state.leafDirection) {
-			saveCurrentLinkRadiusProfile();
-			state.linkShape = nextShape;
-			state.leafDirection = nextDirection;
-			loadLinkRadiusProfile();
-			syncLinkShapeControls();
-		}
-
-		function applyLinkShapePreset() {
-			loadLinkRadiusProfile();
-		}
-
-		function syncLinkShapeControls() {
-			controls.leafDirectionControl.hidden = state.linkShape !== 'leaf';
-		}
-
 		function colorValue(inputId, fallback = '#000000') {
 			const value = controls[inputId].value.trim();
 			if (value === '') return 'transparent';
@@ -2331,199 +1628,6 @@
 			const isFunctional = /^(rgb|rgba|hsl|hsla)\(/i.test(value);
 			const isKeyword = value.toLowerCase() === 'transparent';
 			return isHex || isFunctional || isKeyword ? value : fallback;
-		}
-
-		function clampNumber(value, min, max) {
-			return Math.min(max, Math.max(min, value));
-		}
-
-		function parseAlpha(value) {
-			if (!value) return 1;
-			const normalized = value.trim();
-			if (normalized.endsWith('%')) return clampNumber(Number(normalized.slice(0, -1)) / 100, 0, 1);
-			return clampNumber(Number(normalized), 0, 1);
-		}
-
-		function parseColorChannel(value) {
-			const normalized = value.trim();
-			if (normalized.endsWith('%')) return Math.round(clampNumber(Number(normalized.slice(0, -1)), 0, 100) * 2.55);
-			return clampNumber(Number(normalized), 0, 255);
-		}
-
-		function hslToRgb(hue, saturation, lightness) {
-			const normalizedHue = (((hue % 360) + 360) % 360) / 360;
-			const s = clampNumber(saturation, 0, 100) / 100;
-			const l = clampNumber(lightness, 0, 100) / 100;
-
-			if (s === 0) {
-				const channel = Math.round(l * 255);
-				return { r: channel, g: channel, b: channel };
-			}
-
-			const hueToChannel = (p, q, t) => {
-				let next = t;
-				if (next < 0) next += 1;
-				if (next > 1) next -= 1;
-				if (next < 1 / 6) return p + (q - p) * 6 * next;
-				if (next < 1 / 2) return q;
-				if (next < 2 / 3) return p + (q - p) * (2 / 3 - next) * 6;
-				return p;
-			};
-
-			const q = l < .5 ? l * (1 + s) : l + s - (l * s);
-			const p = (2 * l) - q;
-			return {
-				r: Math.round(hueToChannel(p, q, normalizedHue + 1 / 3) * 255),
-				g: Math.round(hueToChannel(p, q, normalizedHue) * 255),
-				b: Math.round(hueToChannel(p, q, normalizedHue - 1 / 3) * 255)
-			};
-		}
-
-		function parseCssColor(value) {
-			const normalized = value.trim().toLowerCase();
-			if (normalized === 'transparent') return { r: 255, g: 255, b: 255, a: 0 };
-
-			const hex = normalized.match(/^#([0-9a-f]{6})([0-9a-f]{2})?$/i);
-			if (hex) {
-				return {
-					r: parseInt(hex[1].slice(0, 2), 16),
-					g: parseInt(hex[1].slice(2, 4), 16),
-					b: parseInt(hex[1].slice(4, 6), 16),
-					a: hex[2] ? parseInt(hex[2], 16) / 255 : 1
-				};
-			}
-
-			const rgb = normalized.match(/^rgba?\((.+)\)$/i);
-			if (rgb) {
-				const parts = rgb[1].replace(/\//g, ',').split(',').map(part => part.trim()).filter(Boolean);
-				if (parts.length >= 3) {
-					return {
-						r: parseColorChannel(parts[0]),
-						g: parseColorChannel(parts[1]),
-						b: parseColorChannel(parts[2]),
-						a: parseAlpha(parts[3])
-					};
-				}
-			}
-
-			const hsl = normalized.match(/^hsla?\((.+)\)$/i);
-			if (hsl) {
-				const parts = hsl[1].replace(/\//g, ',').split(',').map(part => part.trim()).filter(Boolean);
-				if (parts.length >= 3) {
-					const rgbColor = hslToRgb(Number(parts[0].replace('deg', '')), Number(parts[1].replace('%', '')), Number(parts[2].replace('%', '')));
-					return { ...rgbColor, a: parseAlpha(parts[3]) };
-				}
-			}
-
-			return { r: 224, g: 29, b: 36, a: 1 };
-		}
-
-		function compositeOnWhite(color) {
-			if (color.a >= 1) return color;
-			return {
-				r: Math.round((color.r * color.a) + (255 * (1 - color.a))),
-				g: Math.round((color.g * color.a) + (255 * (1 - color.a))),
-				b: Math.round((color.b * color.a) + (255 * (1 - color.a))),
-				a: 1
-			};
-		}
-
-		function relativeLuminance(color) {
-			const channel = value => {
-				const normalized = value / 255;
-				return normalized <= .03928 ? normalized / 12.92 : ((normalized + .055) / 1.055) ** 2.4;
-			};
-
-			return (.2126 * channel(color.r)) + (.7152 * channel(color.g)) + (.0722 * channel(color.b));
-		}
-
-		function contrastRatio(a, b) {
-			const lighter = Math.max(a, b);
-			const darker = Math.min(a, b);
-			return (lighter + .05) / (darker + .05);
-		}
-
-		function readableTextColor(background) {
-			const bg = compositeOnWhite(parseCssColor(background));
-			const bgLuminance = relativeLuminance(bg);
-			const whiteContrast = contrastRatio(1, bgLuminance);
-			const darkContrast = contrastRatio(relativeLuminance({ r: 16, g: 24, b: 40 }), bgLuminance);
-			return whiteContrast >= darkContrast ? '#ffffff' : '#101828';
-		}
-
-		function transparentModeIsCustom() {
-			return state.transparentColorMode === 'custom';
-		}
-
-		function transparentTextValue() {
-			return transparentModeIsCustom()
-				? colorValue('transparentText', '#ffffff')
-				: '#ffffff';
-		}
-
-		function transparentStateColor(stateName) {
-			const map = {
-				hover: { custom: 'transparentHover', source: 'linkHover', fallback: '#e01d24' },
-				focus: { custom: 'transparentFocus', source: 'linkFocus', fallback: '#c4121a' },
-				active: { custom: 'transparentActive', source: 'linkActive', fallback: '#e01d24' }
-			};
-			const config = map[stateName];
-			const inputId = transparentModeIsCustom() ? config.custom : config.source;
-			return colorValue(inputId, config.fallback);
-		}
-
-		function transparentColorConfig() {
-			const hover = transparentStateColor('hover');
-			const focus = transparentStateColor('focus');
-			const active = transparentStateColor('active');
-			return {
-				mode: state.transparentColorMode,
-				header_text: transparentTextValue(),
-				link: transparentTextValue(),
-				hover,
-				hover_text: readableTextColor(hover),
-				hover_border: hover,
-				focus,
-				focus_text: readableTextColor(focus),
-				focus_border: focus,
-				active,
-				active_text: readableTextColor(active),
-				active_border: active
-			};
-		}
-
-		function applyTransparentColors() {
-			const transparent = transparentColorConfig();
-			setVariable('--transparent-header-text', transparent.header_text);
-			setVariable('--transparent-link-color', transparent.link);
-			setVariable('--transparent-hover-bg', transparent.hover);
-			setVariable('--transparent-hover-text', transparent.hover_text);
-			setVariable('--transparent-hover-border', transparent.hover_border);
-			setVariable('--transparent-focus-bg', transparent.focus);
-			setVariable('--transparent-focus-text', transparent.focus_text);
-			setVariable('--transparent-focus-border', transparent.focus_border);
-			setVariable('--transparent-active-bg', transparent.active);
-			setVariable('--transparent-active-text', transparent.active_text);
-			setVariable('--transparent-active-border', transparent.active_border);
-		}
-
-		function syncTransparentColorControls() {
-			const enabled = scrollEffectsEnabled() && controls.transparentStart.checked;
-			const custom = enabled && transparentModeIsCustom();
-			controls.transparentColorPanel.hidden = !enabled;
-			controls.transparentCustomFields.hidden = !custom;
-
-			controls.transparentColorPanel.querySelectorAll('[data-control="transparentColorMode"] button').forEach(button => {
-				button.disabled = !enabled;
-				button.setAttribute('aria-disabled', String(!enabled));
-			});
-
-			[
-				'transparentText',
-				'transparentHover',
-				'transparentFocus',
-				'transparentActive'
-			].forEach(id => setControlDisabled(controls[id], !custom));
 		}
 
 		function isTransparentColor(inputId) {
@@ -2534,6 +1638,10 @@
 				|| value === 'hsla(0,0%,0%,0)';
 		}
 
+		function isLinkBorderLinked() {
+			return controls.linkBorderLinked.classList.contains('is-active');
+		}
+
 		function updateColorisThumbnail(input) {
 			const swatch = input.closest('.clr-field')?.querySelector('button');
 			if (!swatch) return;
@@ -2541,90 +1649,34 @@
 			swatch.style.color = input.value || 'transparent';
 		}
 
-		function isLinkedColor(name) {
-			return controls[linkedColorControls[name].linked].classList.contains('is-active');
-		}
-
-		function syncLinkedColorControl(name) {
-			const config = linkedColorControls[name];
-			const linked = isLinkedColor(name);
+		function syncLinkBorderControl() {
+			const linked = isLinkBorderLinked();
 			if (linked) {
-				controls[config.target].value = controls[config.source].value;
-				updateColorisThumbnail(controls[config.target]);
+				controls.linkBorder.value = controls.linkColor.value;
+				updateColorisThumbnail(controls.linkBorder);
 			}
 
-			setControlDisabled(controls[config.target], linked);
-			controls[config.linked].setAttribute('aria-pressed', String(linked));
-			controls[config.linked].setAttribute('aria-label', linked
-				? `Unlink ${config.label} border color from ${config.label} link color`
-				: `Link ${config.label} border color to ${config.label} link color`);
+			setControlDisabled(controls.linkBorder, linked);
+			controls.linkBorderLinked.setAttribute('aria-pressed', String(linked));
+			controls.linkBorderLinked.setAttribute('aria-label', linked ? 'Unlink border color from link color' : 'Link border color to link color');
 
-			const icon = controls[config.linked].querySelector('i');
+			const icon = controls.linkBorderLinked.querySelector('i');
 			if (icon) {
 				icon.classList.toggle('fa-link', linked);
 				icon.classList.toggle('fa-unlink', !linked);
 			}
 		}
 
-		function syncLinkedColorControls() {
-			Object.keys(linkedColorControls).forEach(syncLinkedColorControl);
-		}
-
-		function linkedColorValue(name) {
-			const config = linkedColorControls[name];
-			return isLinkedColor(name)
-				? colorValue(config.source, config.fallback)
-				: colorValue(config.target, config.fallback);
-		}
-
-		function shadowUnitValue(inputId, fallback = '0') {
-			const value = controls[inputId].value === '' ? fallback : controls[inputId].value;
-			return `${value}${controls.linkShadowUnit.value}`;
+		function linkBorderValue() {
+			return isLinkBorderLinked()
+				? colorValue('linkColor', '#273142')
+				: colorValue('linkBorder', '#273142');
 		}
 
 		function linkShadowValue() {
-			if (!controls.linkShadowEnabled.checked) return 'none';
-
-			const inset = controls.linkShadowInset.checked ? 'inset ' : '';
-			return `${inset}${shadowUnitValue('linkShadowX')} ${shadowUnitValue('linkShadowY', '8')} ${shadowUnitValue('linkShadowBlur', '18')} ${shadowUnitValue('linkShadowSpread')} ${colorValue('linkShadowColor', '#e01d242e')}`;
-		}
-
-		function syncLinkShadowControls() {
-			const disabled = !controls.linkShadowEnabled.checked;
-			controls.linkShadowEnabled.closest('.shadow-control')?.classList.toggle('is-disabled', disabled);
-			[
-				'linkShadowUnit',
-				'linkShadowX',
-				'linkShadowY',
-				'linkShadowBlur',
-				'linkShadowSpread',
-				'linkShadowColor',
-				'linkShadowInset'
-			].forEach(id => setControlDisabled(controls[id], disabled));
-			[
-				'linkShadowX',
-				'linkShadowY',
-				'linkShadowBlur',
-				'linkShadowSpread'
-			].forEach(id => {
-				document.querySelectorAll(`.box-stepper-btn[data-box-stepper-target="${id}"]`).forEach(button => {
-					button.disabled = disabled;
-					button.setAttribute('aria-disabled', String(disabled));
-				});
-			});
-		}
-
-		function linkShadowJson() {
-			return {
-				enabled: controls.linkShadowEnabled.checked,
-				x: shadowUnitValue('linkShadowX'),
-				y: shadowUnitValue('linkShadowY', '8'),
-				blur: shadowUnitValue('linkShadowBlur', '18'),
-				spread: shadowUnitValue('linkShadowSpread'),
-				color: colorValue('linkShadowColor', '#e01d242e'),
-				inset: controls.linkShadowInset.checked,
-				value: linkShadowValue()
-			};
+			return controls.linkShadowEnabled.checked
+				? '0 8px 18px color-mix(in srgb, var(--link-active) 18%, transparent)'
+				: 'none';
 		}
 
 		function scrollEffectsEnabled() {
@@ -2656,7 +1708,6 @@
 			setControlDisabled(controls.transparentStart, !canUseScrolledState);
 			setControlDisabled(controls.scrolledBg, !canUseScrolledState);
 			controls.scrollSim.disabled = !canUseScrolledState;
-			syncTransparentColorControls();
 
 			if (!canUseScrolledState) {
 				controls.scrollSim.value = 0;
@@ -2751,23 +1802,16 @@
 		}
 
 		function applyColorsAndSizes() {
-			syncLinkedColorControls();
-			syncLinkShadowControls();
+			syncLinkBorderControl();
 			setVariable('--header-bg', colorValue('headerBg', '#ffffff'));
 			setVariable('--scrolled-bg', colorValue('scrolledBg', '#ffffff'));
 			setVariable('--header-text', colorValue('headerText', '#101828'));
 			setVariable('--link-color', colorValue('linkColor', '#273142'));
+			setVariable('--link-border', linkBorderValue());
 			setVariable('--link-hover', colorValue('linkHover', '#e01d24'));
-			setVariable('--link-hover-text', readableTextColor(colorValue('linkHover', '#e01d24')));
-			setVariable('--link-hover-border', linkedColorValue('hover'));
 			setVariable('--link-focus', colorValue('linkFocus', '#c4121a'));
-			setVariable('--link-focus-text', readableTextColor(colorValue('linkFocus', '#c4121a')));
-			setVariable('--link-focus-border', linkedColorValue('focus'));
 			setVariable('--link-active', colorValue('linkActive', '#e01d24'));
-			setVariable('--link-active-text', readableTextColor(colorValue('linkActive', '#e01d24')));
-			setVariable('--link-active-border', linkedColorValue('active'));
 			setVariable('--link-active-shadow', linkShadowValue());
-			applyTransparentColors();
 			setVariable('--header-height', unitValue('headerHeight', '76'));
 			setVariable('--header-radius', boxControlCss('headerRadius'));
 			setVariable('--header-padding', boxControlCss('headerPadding'));
@@ -2792,19 +1836,11 @@
 					scrolled_background: colorValue('scrolledBg', '#ffffff'),
 					header_text: colorValue('headerText', '#101828'),
 					link: colorValue('linkColor', '#273142'),
+					link_border: linkBorderValue(),
+					link_border_linked: isLinkBorderLinked(),
 					link_hover: colorValue('linkHover', '#e01d24'),
-					link_hover_text: readableTextColor(colorValue('linkHover', '#e01d24')),
-					link_hover_border: linkedColorValue('hover'),
-					link_hover_border_linked: isLinkedColor('hover'),
 					link_focus: colorValue('linkFocus', '#c4121a'),
-					link_focus_text: readableTextColor(colorValue('linkFocus', '#c4121a')),
-					link_focus_border: linkedColorValue('focus'),
-					link_focus_border_linked: isLinkedColor('focus'),
-					link_active: colorValue('linkActive', '#e01d24'),
-					link_active_text: readableTextColor(colorValue('linkActive', '#e01d24')),
-					link_active_border: linkedColorValue('active'),
-					link_active_border_linked: isLinkedColor('active'),
-					transparent: transparentColorConfig()
+					link_active: colorValue('linkActive', '#e01d24')
 				},
 				layout: {
 					logo_position: state.logoPosition,
@@ -2816,19 +1852,16 @@
 				behavior: {
 					position: state.headerBehavior,
 					transparent_before_scroll: controls.transparentStart.checked,
-					transparent_color_mode: state.transparentColorMode,
 					animate_on_scroll: controls.animateScroll.checked,
 					uses_scrolled_background: scrollEffectsEnabled()
 				},
 				effects: {
-					link_shadow: linkShadowJson()
+					link_shadow: controls.linkShadowEnabled.checked
 				},
 				sizing: {
 					height: unitValue('headerHeight', '76'),
 					header_radius: boxControlJson('headerRadius'),
 					header_padding: boxControlJson('headerPadding'),
-					link_shape: state.linkShape,
-					leaf_direction: state.linkShape === 'leaf' ? state.leafDirection : null,
 					link_radius: boxControlJson('navRadius'),
 					container_margin: boxControlJson('containerMargin')
 				}
@@ -2837,7 +1870,7 @@
 		}
 
 		function stepNumericInput(input, delta) {
-			if (!input || input.disabled) return;
+			if (!input) return;
 
 			const step = Number(input.step) || 1;
 			const current = Number(input.value || 0);
@@ -2873,58 +1906,35 @@
 					const input = controls[id];
 					input.addEventListener('input', () => {
 						syncLinkedBoxValues(name, id);
-						saveActiveBoxProfile(name);
-						if (name === 'navRadius') syncCurrentLinkRadiusProfile();
 						updateAll();
 					});
 					input.addEventListener('change', () => {
 						syncLinkedBoxValues(name, id);
-						saveActiveBoxProfile(name);
-						if (name === 'navRadius') syncCurrentLinkRadiusProfile();
 						updateAll();
 					});
 				});
 
-				controls[config.unit].addEventListener('change', () => {
-					saveActiveBoxProfile(name);
-					if (name === 'navRadius') syncCurrentLinkRadiusProfile();
-					updateAll();
-				});
+				controls[config.unit].addEventListener('change', updateAll);
 				controls[config.linked].addEventListener('click', () => {
 					const button = controls[config.linked];
 					const active = !button.classList.contains('is-active');
-					setBoxLinked(name, active);
+					button.classList.toggle('is-active', active);
+					button.setAttribute('aria-pressed', String(active));
 					if (active) syncLinkedBoxValues(name, config.sides[0]);
-					saveActiveBoxProfile(name);
-					if (name === 'navRadius') syncCurrentLinkRadiusProfile();
-					updateAll();
-				});
-			});
-		}
-
-		function initResponsiveBoxModeControls() {
-			document.querySelectorAll('.responsive-mode-control[data-responsive-control]').forEach(group => {
-				group.addEventListener('click', event => {
-					const button = event.target.closest('button[data-responsive-mode]');
-					if (!button) return;
-					const name = group.dataset.responsiveControl;
-					switchResponsiveBoxMode(name, button.dataset.responsiveMode);
 					updateAll();
 				});
 			});
 		}
 
 		function initLinkedColorControls() {
-			Object.entries(linkedColorControls).forEach(([name, config]) => {
-				controls[config.linked].addEventListener('click', () => {
-					const active = !controls[config.linked].classList.contains('is-active');
-					controls[config.linked].classList.toggle('is-active', active);
-					if (active) {
-						controls[config.target].value = controls[config.source].value;
-						updateColorisThumbnail(controls[config.target]);
-					}
-					updateAll();
-				});
+			controls.linkBorderLinked.addEventListener('click', () => {
+				const active = !controls.linkBorderLinked.classList.contains('is-active');
+				controls.linkBorderLinked.classList.toggle('is-active', active);
+				if (active) {
+					controls.linkBorder.value = controls.linkColor.value;
+					updateColorisThumbnail(controls.linkBorder);
+				}
+				updateAll();
 			});
 		}
 
@@ -2945,7 +1955,6 @@
 					'#101828',
 					'#273142',
 					'#e01d24',
-					'#e01d242e',
 					'#c4121a',
 					'#667085',
 					'#f8fafc',
@@ -2962,7 +1971,6 @@
 
 		function updateAll() {
 			updateMenuCount();
-			syncLinkShapeControls();
 			applyColorsAndSizes();
 			updateHeaderClasses();
 			renderHeader();
@@ -2976,34 +1984,23 @@
 				if (!button) return;
 				group.querySelectorAll('button').forEach(item => item.classList.remove('is-active'));
 				button.classList.add('is-active');
-				if (group.dataset.control === 'linkShape') {
-					switchLinkRadiusProfile(button.dataset.value, state.leafDirection);
-				} else if (group.dataset.control === 'leafDirection') {
-					switchLinkRadiusProfile(state.linkShape, button.dataset.value);
-				} else {
-					state[group.dataset.control] = button.dataset.value;
-				}
+				state[group.dataset.control] = button.dataset.value;
 				updateAll();
 			});
 		});
 
 		[
-			'headerBg', 'scrolledBg', 'headerText', 'linkColor', 'linkHover', 'linkHoverBorder',
-			'linkFocus', 'linkFocusBorder', 'linkActive', 'linkActiveBorder', 'linkShadowEnabled',
-			'linkShadowUnit', 'linkShadowX', 'linkShadowY', 'linkShadowBlur', 'linkShadowSpread',
-			'linkShadowColor', 'linkShadowInset', 'innerBg', 'transparentStart', 'transparentText',
-			'transparentHover', 'transparentFocus', 'transparentActive', 'animateScroll', 'scrollSim',
-			'headerHeight', 'headerHeightUnit', 'menuCount', 'deviceMode', 'menuSource'
+			'headerBg', 'scrolledBg', 'headerText', 'linkColor', 'linkBorder', 'linkHover', 'linkFocus',
+			'linkActive', 'linkShadowEnabled', 'innerBg', 'transparentStart', 'animateScroll', 'scrollSim', 'headerHeight',
+			'headerHeightUnit', 'menuCount', 'deviceMode', 'menuSource'
 		].forEach(id => {
 			controls[id].addEventListener('input', updateAll);
 			controls[id].addEventListener('change', updateAll);
 		});
 
-		initResponsiveBoxProfiles();
 		initNumberSteppers();
 		initBoxSteppers();
 		initBoxControls();
-		initResponsiveBoxModeControls();
 		initLinkedColorControls();
 		initColorisPicker();
 

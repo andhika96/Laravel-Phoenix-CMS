@@ -25,8 +25,6 @@
 			--mock-shadow-lg: 0 18px 50px rgba(17, 24, 39, .12);
 			--mock-sidebar-min: 430px;
 			--mock-sidebar-width: 460px;
-			--box-input-height: 35px;
-			--box-label-height: 22px;
 			--header-bg: #ffffff;
 			--header-text: #101828;
 			--link-color: #273142;
@@ -502,7 +500,11 @@
 
 		.box-control {
 			display: grid;
-			gap: 8px;
+			gap: 6px;
+			padding: 8px 8px 7px;
+			border-radius: 6px;
+			background: #1f2329;
+			color: #e8edf5;
 		}
 
 		.box-control-header {
@@ -510,148 +512,76 @@
 			align-items: center;
 			justify-content: space-between;
 			gap: 8px;
+			min-height: 18px;
 		}
 
 		.box-control-header .form-label {
 			display: inline-flex;
 			align-items: center;
-			color: #344054;
+			gap: 8px;
+			color: #f3f6fb;
 			font-size: 12px;
-			font-weight: 700;
+			font-weight: 500;
 			line-height: 1;
 			margin-bottom: 0;
 		}
 
+		.box-control-header .form-label::after {
+			content: "\f108";
+			display: inline-block;
+			color: #c9d4e5;
+			font-family: "Font Awesome 5 Free";
+			font-size: 10px;
+			font-weight: 900;
+			line-height: 1;
+			transform: translateY(1px);
+		}
+
 		.box-unit-select {
-			width: 64px;
-			height: var(--box-input-height);
-			min-height: var(--box-input-height);
-			border: 1px solid var(--mock-border);
-			border-radius: 7px;
-			background-color: #fff;
-			background-position: right 9px center;
-			background-size: 10px 8px;
-			box-shadow: var(--mock-shadow-sm);
-			color: #273142;
-			font-size: 13px;
-			line-height: 1.2;
-			padding: 4px 26px 4px 10px;
+			width: 42px;
+			min-height: 18px;
+			border: 0;
+			border-radius: 3px;
+			background-color: transparent;
+			background-position: right 2px center;
+			background-size: 9px 7px;
+			box-shadow: none;
+			color: #f3f6fb;
+			font-size: 10px;
+			line-height: 1;
+			padding: 1px 12px 1px 2px;
 		}
 
 		.box-unit-select:focus {
-			border-color: var(--mock-primary);
-			background-color: #fff;
-			box-shadow: 0 0 0 2px var(--mock-ring);
-		}
-
-		.box-unit-select option {
-			font-size: 13px;
-		}
-
-		.responsive-mode-control {
-			display: inline-grid;
-			grid-template-columns: 34px repeat(3, 26px);
-			gap: 2px;
-			align-items: center;
-			margin-left: auto;
-			padding: 2px;
-			border: 1px solid var(--mock-border-soft);
-			border-radius: 7px;
-			background: #f8fafc;
-		}
-
-		.responsive-mode-control button {
-			position: relative;
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			width: 100%;
-			height: 26px;
-			border: 1px solid transparent;
-			border-radius: 5px;
-			background: transparent;
-			color: #667085;
-			font-size: 11px;
-			font-weight: 700;
-			line-height: 1;
-			transition: background .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease;
-		}
-
-		.responsive-mode-control button:hover,
-		.responsive-mode-control button:focus {
-			background: #fff;
-			border-color: var(--mock-border);
-			color: var(--mock-primary);
-			outline: 0;
-		}
-
-		.responsive-mode-control button.is-active {
-			background: #fff;
-			border-color: var(--mock-primary);
-			color: var(--mock-primary);
-			box-shadow: 0 4px 12px rgba(224, 29, 36, .12);
-		}
-
-		.responsive-mode-control button.has-override::after {
-			position: absolute;
-			top: 3px;
-			right: 3px;
-			width: 5px;
-			height: 5px;
-			content: "";
-			border-radius: 50%;
-			background: var(--mock-primary);
+			background-color: #252b33;
+			box-shadow: none;
 		}
 
 		.box-control-row {
 			display: grid;
 			grid-template-columns: repeat(4, minmax(0, 1fr)) 30px;
-			grid-template-rows: var(--box-input-height) var(--box-label-height);
 			gap: 0;
-			background: transparent;
+			border: 1px solid #3d4652;
+			border-radius: 3px;
+			background: #22272e;
 			box-shadow: none;
-			overflow: visible;
+			overflow: hidden;
 		}
 
 		.box-side {
-			display: contents;
+			display: grid;
+			grid-template-rows: auto auto;
+			min-width: 0;
+			border-right: 1px solid #3d4652;
+			background: #22272e;
 		}
 
 		.box-side-stepper {
+			position: relative;
 			display: grid;
 			grid-template-columns: minmax(0, 1fr);
-			grid-row: 1;
-			min-height: var(--box-input-height);
-			min-width: 0;
-			border-top: 1px solid var(--mock-border);
-			border-bottom: 1px solid var(--mock-border);
-			border-left: 1px solid var(--mock-border);
-			background: #fff;
-			box-shadow: var(--mock-shadow-sm);
-		}
-
-		.box-side:nth-child(1) .box-side-stepper,
-		.box-side:nth-child(1) .box-side-label {
-			grid-column: 1;
-		}
-
-		.box-side:nth-child(2) .box-side-stepper,
-		.box-side:nth-child(2) .box-side-label {
-			grid-column: 2;
-		}
-
-		.box-side:nth-child(3) .box-side-stepper,
-		.box-side:nth-child(3) .box-side-label {
-			grid-column: 3;
-		}
-
-		.box-side:nth-child(4) .box-side-stepper,
-		.box-side:nth-child(4) .box-side-label {
-			grid-column: 4;
-		}
-
-		.box-side:nth-child(1) .box-side-stepper {
-			border-radius: 7px 0 0 7px;
+			min-height: 24px;
+			border-bottom: 0;
 		}
 
 		.box-stepper-btn {
@@ -688,42 +618,60 @@
 
 		.box-side input {
 			width: 100%;
-			height: var(--box-input-height);
+			height: 24px;
 			border: 0;
 			border-radius: 0;
 			box-shadow: none;
 			background: transparent;
-			color: #101828;
+			color: #f4f7fb;
 			text-align: center;
-			font-size: 13px;
-			line-height: 1.2;
-			padding: 2px 4px;
+			font-size: 10px;
+			padding: 2px 16px 2px 4px;
 		}
 
 		.box-side input:focus {
 			outline: 0;
-			background: #fff;
-			box-shadow: inset 0 0 0 2px var(--mock-ring);
+			background: #2a3039;
+			box-shadow: inset 0 0 0 1px #6c7a91;
 		}
 
 		.box-side input[type="number"] {
-			appearance: auto;
-			-moz-appearance: auto;
+			appearance: textfield;
+			-moz-appearance: textfield;
 		}
 
 		.box-side input[type="number"]::-webkit-outer-spin-button,
 		.box-side input[type="number"]::-webkit-inner-spin-button {
-			-webkit-appearance: auto;
-			opacity: 1;
+			-webkit-appearance: none;
 			margin: 0;
+		}
+
+		.box-side-stepper::before,
+		.box-side-stepper::after {
+			position: absolute;
+			right: 5px;
+			width: 0;
+			height: 0;
+			content: "";
+			pointer-events: none;
+			border-left: 3px solid transparent;
+			border-right: 3px solid transparent;
+		}
+
+		.box-side-stepper::before {
+			top: 6px;
+			border-bottom: 4px solid #8f99aa;
+		}
+
+		.box-side-stepper::after {
+			bottom: 6px;
+			border-top: 4px solid #8f99aa;
 		}
 
 		.box-side-label {
 			display: block;
-			grid-row: 2;
-			min-height: var(--box-label-height);
-			padding: 6px 2px 0;
-			color: #667085;
+			padding: 5px 2px 6px;
+			color: #aeb8c8;
 			font-size: 9px;
 			line-height: 1;
 			text-align: center;
@@ -734,58 +682,25 @@
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
-			grid-column: 5;
-			grid-row: 1;
 			width: 30px;
-			height: var(--box-input-height);
-			min-height: var(--box-input-height);
-			border: 1px solid var(--mock-border);
-			border-radius: 0 7px 7px 0;
-			background: #f7f9fc;
-			color: #475467;
-			box-shadow: var(--mock-shadow-sm);
+			min-height: 100%;
+			border: 0;
+			border-left: 1px solid #3d4652;
+			background: #2f3742;
+			color: #d9e2f2;
 			transition: background .18s ease, color .18s ease;
-		}
-
-		.box-link-toggle i {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			width: 100%;
-			height: var(--box-input-height);
 		}
 
 		.box-link-toggle:hover,
 		.box-link-toggle:focus {
-			color: var(--mock-primary);
+			background: #3a4451;
+			color: #ffffff;
 			outline: 0;
 		}
 
-		.box-link-toggle:hover i,
-		.box-link-toggle:focus i {
-			background: transparent;
-		}
-
 		.box-link-toggle.is-active {
-			background: var(--mock-primary);
-			border-color: var(--mock-primary);
+			background: #3f6fd9;
 			color: #fff;
-		}
-
-		.box-link-toggle.is-active i {
-			background: transparent;
-		}
-
-		.link-color-control .box-link-toggle {
-			grid-column: auto;
-			grid-row: auto;
-			width: 36px;
-			height: auto;
-			min-height: 100%;
-			border: 0;
-			border-left: 1px solid var(--mock-border-soft);
-			border-radius: 0;
-			box-shadow: none;
 		}
 
 		.segmented {
@@ -1623,12 +1538,6 @@
 								<div class="box-control" data-box-control="headerRadius">
 									<div class="box-control-header">
 										<label class="form-label">Header radius</label>
-										<div class="responsive-mode-control" data-responsive-control="headerRadius" role="group" aria-label="Header radius responsive mode">
-											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
-											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-										</div>
 										<select id="headerRadiusUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
 											<option value="%">%</option>
@@ -1679,12 +1588,6 @@
 								<div class="box-control" data-box-control="headerPadding">
 									<div class="box-control-header">
 										<label class="form-label">Header padding</label>
-										<div class="responsive-mode-control" data-responsive-control="headerPadding" role="group" aria-label="Header padding responsive mode">
-											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
-											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-										</div>
 										<select id="headerPaddingUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
 											<option value="%">%</option>
@@ -1751,12 +1654,6 @@
 								<div class="box-control" data-box-control="navRadius">
 									<div class="box-control-header">
 										<label class="form-label">Link radius</label>
-										<div class="responsive-mode-control" data-responsive-control="navRadius" role="group" aria-label="Link radius responsive mode">
-											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
-											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-										</div>
 										<select id="navRadiusUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
 											<option value="%">%</option>
@@ -1807,12 +1704,6 @@
 								<div class="box-control" data-box-control="containerMargin">
 									<div class="box-control-header">
 										<label class="form-label">Container margin</label>
-										<div class="responsive-mode-control" data-responsive-control="containerMargin" role="group" aria-label="Container margin responsive mode">
-											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
-											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-										</div>
 										<select id="containerMarginUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
 											<option value="%">%</option>
@@ -2057,10 +1948,6 @@
 			leafReverse: null
 		};
 
-		const responsiveModes = ['all', 'desktop', 'tablet', 'mobile'];
-		const responsiveDeviceModes = ['desktop', 'tablet', 'mobile'];
-		const responsiveBoxProfiles = {};
-
 		function setVariable(name, value) {
 			els.root.style.setProperty(name, value);
 		}
@@ -2071,129 +1958,29 @@
 			return `${numberValue}${unit}`;
 		}
 
-		function cloneBoxProfile(profile) {
-			return {
-				values: profile.values.slice(),
-				unit: profile.unit,
-				linked: profile.linked
-			};
-		}
-
-		function createBoxProfile(name, values = boxControls[name].defaults, unit = 'px', linked = isBoxLinked(name)) {
-			return {
-				values: values.slice(),
-				unit,
-				linked
-			};
-		}
-
-		function readBoxProfileFromControls(name) {
-			const config = boxControls[name];
-			return {
-				values: config.sides.map((id, index) => controls[id].value === '' ? config.defaults[index] : controls[id].value),
-				unit: controls[config.unit].value,
-				linked: isBoxLinked(name)
-			};
-		}
-
-		function writeBoxProfileToControls(name, profile) {
-			controls[boxControls[name].unit].value = profile.unit;
-			setBoxLinked(name, profile.linked);
-			setBoxValues(name, profile.values);
-		}
-
-		function createResponsiveBoxState(profile, mode = 'all') {
-			return {
-				mode,
-				all: cloneBoxProfile(profile),
-				desktop: null,
-				tablet: null,
-				mobile: null
-			};
-		}
-
-		function cloneResponsiveBoxState(stateValue) {
-			return {
-				mode: stateValue.mode || 'all',
-				all: cloneBoxProfile(stateValue.all),
-				desktop: stateValue.desktop ? cloneBoxProfile(stateValue.desktop) : null,
-				tablet: stateValue.tablet ? cloneBoxProfile(stateValue.tablet) : null,
-				mobile: stateValue.mobile ? cloneBoxProfile(stateValue.mobile) : null
-			};
-		}
-
-		function initResponsiveBoxProfiles() {
-			Object.keys(boxControls).forEach(name => {
-				responsiveBoxProfiles[name] = createResponsiveBoxState(readBoxProfileFromControls(name));
-				syncResponsiveBoxButtons(name);
-			});
-		}
-
-		function activeResponsiveMode(name) {
-			return responsiveBoxProfiles[name]?.mode || 'all';
-		}
-
-		function saveActiveBoxProfile(name) {
-			const store = responsiveBoxProfiles[name];
-			if (!store) return;
-			store[store.mode] = readBoxProfileFromControls(name);
-			syncResponsiveBoxButtons(name);
-		}
-
-		function profileForMode(name, mode) {
-			const store = responsiveBoxProfiles[name];
-			if (!store) return readBoxProfileFromControls(name);
-			return store[mode] || store.all;
-		}
-
-		function effectiveBoxProfile(name, device = controls.deviceMode.value) {
-			const mode = responsiveDeviceModes.includes(device) ? device : 'all';
-			return profileForMode(name, mode);
-		}
-
-		function profileCssValues(name, profile) {
-			const config = boxControls[name];
-			return config.sides.map((id, index) => {
-				const value = profile.values[index] === '' ? config.defaults[index] : profile.values[index];
-				return `${value}${profile.unit}`;
-			});
-		}
-
 		function boxControlValues(name) {
-			return profileCssValues(name, effectiveBoxProfile(name));
+			const config = boxControls[name];
+			const unit = controls[config.unit].value;
+			return config.sides.map((id, index) => {
+				const value = controls[id].value === '' ? config.defaults[index] : controls[id].value;
+				return `${value}${unit}`;
+			});
 		}
 
 		function boxControlCss(name) {
 			return boxControlValues(name).join(' ');
 		}
 
-		function boxProfileJson(name, profile) {
-			if (!profile) return null;
-			const [top, right, bottom, left] = profileCssValues(name, profile);
+		function boxControlJson(name) {
+			const [top, right, bottom, left] = boxControlValues(name);
+			const config = boxControls[name];
 			return {
 				top,
 				right,
 				bottom,
 				left,
-				unit: profile.unit,
-				linked: profile.linked
-			};
-		}
-
-		function boxControlJson(name) {
-			const effective = effectiveBoxProfile(name);
-			const effectiveJson = boxProfileJson(name, effective);
-			const store = responsiveBoxProfiles[name];
-			return {
-				...effectiveJson,
-				mode: activeResponsiveMode(name),
-				preview_device: controls.deviceMode.value,
-				responsive: {
-					all: boxProfileJson(name, store?.all),
-					desktop: boxProfileJson(name, store?.desktop),
-					tablet: boxProfileJson(name, store?.tablet),
-					mobile: boxProfileJson(name, store?.mobile)
-				}
+				unit: controls[config.unit].value,
+				linked: controls[config.linked].classList.contains('is-active')
 			};
 		}
 
@@ -2235,61 +2022,35 @@
 			}
 		}
 
-		function syncResponsiveBoxButtons(name) {
-			const store = responsiveBoxProfiles[name];
-			if (!store) return;
-
-			document.querySelectorAll(`.responsive-mode-control[data-responsive-control="${name}"] button[data-responsive-mode]`).forEach(button => {
-				const mode = button.dataset.responsiveMode;
-				const active = store.mode === mode;
-				const hasOverride = mode !== 'all' && Boolean(store[mode]);
-				button.classList.toggle('is-active', active);
-				button.classList.toggle('has-override', hasOverride);
-				button.setAttribute('aria-pressed', String(active));
-			});
-		}
-
-		function switchResponsiveBoxMode(name, mode) {
-			if (!responsiveModes.includes(mode)) return;
-			saveActiveBoxProfile(name);
-			responsiveBoxProfiles[name].mode = mode;
-			writeBoxProfileToControls(name, profileForMode(name, mode));
-			if (mode !== 'all') {
-				controls.deviceMode.value = mode;
-			} else {
-				controls.deviceMode.value = 'desktop';
-			}
-			if (name === 'navRadius') syncCurrentLinkRadiusProfile();
-			syncResponsiveBoxButtons(name);
-		}
-
 		function currentLinkRadiusProfileKey(shape = state.linkShape, direction = state.leafDirection) {
 			if (shape !== 'leaf') return 'default';
 			return direction === 'reverse' ? 'leafReverse' : 'leafForward';
 		}
 
 		function readLinkRadiusProfile() {
-			saveActiveBoxProfile('navRadius');
-			return cloneResponsiveBoxState(responsiveBoxProfiles.navRadius);
+			return {
+				values: boxControls.navRadius.sides.map(id => controls[id].value),
+				unit: controls.navRadiusUnit.value,
+				linked: isBoxLinked('navRadius')
+			};
 		}
 
 		function defaultLinkRadiusProfile(key) {
 			if (key === 'leafReverse') {
-				return createResponsiveBoxState(createBoxProfile('navRadius', ['28', '0', '28', '0'], 'px', false));
+				return { values: ['28', '0', '28', '0'], unit: 'px', linked: false };
 			}
 
 			if (key === 'leafForward') {
-				return createResponsiveBoxState(createBoxProfile('navRadius', ['0', '28', '0', '28'], 'px', false));
+				return { values: ['0', '28', '0', '28'], unit: 'px', linked: false };
 			}
 
-			return createResponsiveBoxState(createBoxProfile('navRadius', ['0', '0', '0', '0'], 'px', true));
+			return { values: ['0', '0', '0', '0'], unit: 'px', linked: true };
 		}
 
 		function writeLinkRadiusProfile(profile) {
-			responsiveBoxProfiles.navRadius = cloneResponsiveBoxState(profile);
-			const mode = activeResponsiveMode('navRadius');
-			writeBoxProfileToControls('navRadius', profileForMode('navRadius', mode));
-			syncResponsiveBoxButtons('navRadius');
+			controls.navRadiusUnit.value = profile.unit;
+			setBoxLinked('navRadius', profile.linked);
+			setBoxValues('navRadius', profile.values);
 		}
 
 		function saveCurrentLinkRadiusProfile() {
@@ -2304,8 +2065,7 @@
 		}
 
 		function syncCurrentLinkRadiusProfile() {
-			saveActiveBoxProfile('navRadius');
-			linkRadiusProfiles[currentLinkRadiusProfileKey()] = cloneResponsiveBoxState(responsiveBoxProfiles.navRadius);
+			linkRadiusProfiles[currentLinkRadiusProfileKey()] = readLinkRadiusProfile();
 		}
 
 		function switchLinkRadiusProfile(nextShape, nextDirection = state.leafDirection) {
@@ -2873,20 +2633,17 @@
 					const input = controls[id];
 					input.addEventListener('input', () => {
 						syncLinkedBoxValues(name, id);
-						saveActiveBoxProfile(name);
 						if (name === 'navRadius') syncCurrentLinkRadiusProfile();
 						updateAll();
 					});
 					input.addEventListener('change', () => {
 						syncLinkedBoxValues(name, id);
-						saveActiveBoxProfile(name);
 						if (name === 'navRadius') syncCurrentLinkRadiusProfile();
 						updateAll();
 					});
 				});
 
 				controls[config.unit].addEventListener('change', () => {
-					saveActiveBoxProfile(name);
 					if (name === 'navRadius') syncCurrentLinkRadiusProfile();
 					updateAll();
 				});
@@ -2895,20 +2652,7 @@
 					const active = !button.classList.contains('is-active');
 					setBoxLinked(name, active);
 					if (active) syncLinkedBoxValues(name, config.sides[0]);
-					saveActiveBoxProfile(name);
 					if (name === 'navRadius') syncCurrentLinkRadiusProfile();
-					updateAll();
-				});
-			});
-		}
-
-		function initResponsiveBoxModeControls() {
-			document.querySelectorAll('.responsive-mode-control[data-responsive-control]').forEach(group => {
-				group.addEventListener('click', event => {
-					const button = event.target.closest('button[data-responsive-mode]');
-					if (!button) return;
-					const name = group.dataset.responsiveControl;
-					switchResponsiveBoxMode(name, button.dataset.responsiveMode);
 					updateAll();
 				});
 			});
@@ -2999,11 +2743,9 @@
 			controls[id].addEventListener('change', updateAll);
 		});
 
-		initResponsiveBoxProfiles();
 		initNumberSteppers();
 		initBoxSteppers();
 		initBoxControls();
-		initResponsiveBoxModeControls();
 		initLinkedColorControls();
 		initColorisPicker();
 
