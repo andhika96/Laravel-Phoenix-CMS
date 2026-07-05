@@ -673,26 +673,20 @@ const ManageParentMenuVue3 = createApp(
 			const bootstrapConfig = this.dropdownConfig.config_json.bootstrap;
 			const align = dropdownConfig.align || 'center';
 			const parentName = (this.dropdownParentMenu.parent_name || 'Parent Menu').toString();
-			const stageWidth = 1180;
-			const safeInset = 24;
-			const configuredWidth = (this.dropdownConfig.dropdown_type == 'bootstrap') ? (parseInt(bootstrapConfig.width) || 260) : (parseInt(dropdownConfig.width) || 760);
-			const dropdownWidth = Math.min(configuredWidth, stageWidth - (safeInset * 2));
-			const anchorCenter = Math.round(stageWidth / 2);
 			const anchorOffset = Math.round(Math.min(220, Math.max(116, (parentName.length * 9) + 54)) / 2);
-			const minLeft = safeInset;
-			const maxLeft = Math.max(minLeft, stageWidth - dropdownWidth - safeInset);
-			let dropdownLeft = Math.round(anchorCenter - (dropdownWidth / 2));
+			let shellTransform = 'translateX(-50%)';
+			let arrowLeft = '50%';
 
 			if (align == 'start')
 			{
-				dropdownLeft = anchorCenter - anchorOffset;
+				shellTransform = 'translateX(calc(-1 * var(--ph-preview-dropdown-anchor-offset)))';
+				arrowLeft = 'var(--ph-preview-dropdown-anchor-offset)';
 			}
 			else if (align == 'end')
 			{
-				dropdownLeft = anchorCenter + anchorOffset - dropdownWidth;
+				shellTransform = 'translateX(calc(-100% + var(--ph-preview-dropdown-anchor-offset)))';
+				arrowLeft = 'calc(100% - var(--ph-preview-dropdown-anchor-offset))';
 			}
-
-			dropdownLeft = Math.min(maxLeft, Math.max(minLeft, Math.round(dropdownLeft)));
 
 			return {
 				'--ph-preview-dropdown-margin': (parseInt(dropdownConfig.margin_top) || 0)+'px',
@@ -700,8 +694,8 @@ const ManageParentMenuVue3 = createApp(
 				'--ph-preview-bootstrap-width': (parseInt(bootstrapConfig.width) || 260)+'px',
 				'--ph-preview-dropdown-arrow-size': (parseInt(dropdownConfig.arrow_size) || 0)+'px',
 				'--ph-preview-dropdown-anchor-offset': anchorOffset+'px',
-				'--ph-preview-dropdown-left': dropdownLeft+'px',
-				'--ph-preview-dropdown-arrow-left': (anchorCenter - dropdownLeft)+'px'
+				'--ph-preview-dropdown-transform': shellTransform,
+				'--ph-preview-dropdown-arrow-left': arrowLeft
 			};
 		},
 		dropdownPreviewArrowStyle: function()

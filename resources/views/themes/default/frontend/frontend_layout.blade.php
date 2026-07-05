@@ -17,6 +17,7 @@
 		<!-- Custom CSS -->
 		<link href="{{ asset('assets/css/themes/default/phoenix-cms-default.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">	
+		<link href="{{ asset('assets/css/frontend-menu-dropdown.css?v=').time() }}" rel="stylesheet">
 
 		@stack('css')
 
@@ -24,6 +25,8 @@
 	</head>
 	
 	<body>
+		@include('themes.partials.frontend_menu_dropdown')
+
 		@yield('content')
 		
 		<script src="{{ url('assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js') }}" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

@@ -1,0 +1,1832 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Frontend Menu Dropdown Modal Mockup</title>
+	<link href="/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/plugins/fontawesome/5.15.3/css/all.min.css" rel="stylesheet">
+	<style>
+		:root {
+			--cms-page: #eef8f3;
+			--cms-panel: rgba(255, 255, 255, .88);
+			--cms-border: #d7e0dc;
+			--cms-border-soft: #edf3f0;
+			--cms-text: #202733;
+			--cms-muted: #66746f;
+			--cms-green: #115b42;
+			--cms-green-2: #18895f;
+			--cms-green-soft: #e9f6f0;
+			--cms-red: #ff2a35;
+			--cms-red-soft: #fff1f2;
+			--cms-shadow: 0 18px 52px rgba(35, 56, 48, .11);
+			--cms-shadow-sm: 0 6px 18px rgba(35, 56, 48, .08);
+			--font-main: "Inter", "Segoe UI", Arial, Helvetica, sans-serif;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-height: 100vh;
+			margin: 0;
+			color: var(--cms-text);
+			background:
+				radial-gradient(circle at 15% 18%, rgba(31, 160, 112, .08) 0 1px, transparent 2px),
+				radial-gradient(circle at 74% 10%, rgba(31, 160, 112, .08) 0 2px, transparent 3px),
+				linear-gradient(180deg, #ecfaf5 0%, #f8fbfa 45%, #edf5f2 100%);
+			font-family: var(--font-main);
+			font-size: 15px;
+			line-height: 1.5;
+		}
+
+		a {
+			color: var(--cms-green);
+		}
+
+		.mock-leftbar {
+			position: fixed;
+			z-index: 20;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			width: 94px;
+			background: rgba(237, 250, 246, .88);
+			border-right: 1px solid rgba(17, 91, 66, .08);
+			backdrop-filter: blur(16px);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 24px 18px;
+			gap: 28px;
+		}
+
+		.mock-logo {
+			width: 42px;
+			height: 42px;
+			border-radius: 50%;
+			display: grid;
+			place-items: center;
+			color: #fff;
+			background: conic-gradient(from 210deg, #ff3039, #ff8c1a, #15b6b0, #1a7dff, #ff3039);
+			box-shadow: 0 8px 18px rgba(17, 91, 66, .18);
+			font-size: 19px;
+		}
+
+		.mock-rail-link {
+			width: 42px;
+			height: 42px;
+			border: 0;
+			background: transparent;
+			color: #4c5b55;
+			border-radius: 8px;
+			display: grid;
+			place-items: center;
+			font-size: 18px;
+		}
+
+		.mock-rail-link.is-active {
+			color: var(--cms-green);
+			background: #ffffff;
+			box-shadow: var(--cms-shadow-sm);
+		}
+
+		.mock-topbar {
+			position: sticky;
+			z-index: 15;
+			top: 0;
+			margin-left: 94px;
+			min-height: 86px;
+			background: rgba(239, 250, 246, .86);
+			border-bottom: 1px solid rgba(17, 91, 66, .08);
+			backdrop-filter: blur(15px);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0 32px;
+		}
+
+		.mock-topbar-left,
+		.mock-topbar-right {
+			display: flex;
+			align-items: center;
+			gap: 28px;
+		}
+
+		.mock-icon-button {
+			width: 40px;
+			height: 40px;
+			border: 0;
+			border-radius: 8px;
+			background: transparent;
+			color: #606963;
+			display: grid;
+			place-items: center;
+			font-size: 18px;
+		}
+
+		.mock-icon-button:hover,
+		.mock-icon-button:focus {
+			color: var(--cms-green);
+			background: #ffffff;
+			outline: none;
+		}
+
+		.mock-content {
+			margin-left: 94px;
+			padding: 32px;
+		}
+
+		.ph-content {
+			background: var(--cms-panel);
+			border: 1px solid var(--cms-border);
+			box-shadow: var(--cms-shadow);
+			backdrop-filter: blur(12px);
+		}
+
+		.ph-content.rounded {
+			border-radius: 8px !important;
+		}
+
+		.mock-breadcrumb {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin: 6px 0 22px;
+			color: #59635f;
+			font-size: 18px;
+		}
+
+		.mock-breadcrumb strong {
+			color: var(--cms-green);
+			font-weight: 500;
+		}
+
+		.page-title {
+			color: var(--cms-green);
+			font-size: 34px;
+			font-weight: 700;
+			letter-spacing: 0;
+			margin: 0;
+		}
+
+		.panel-heading {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			color: var(--cms-green);
+			font-size: 28px;
+			font-weight: 700;
+			letter-spacing: 0;
+			padding-bottom: 20px;
+			margin-bottom: 22px;
+			border-bottom: 1px solid var(--cms-border);
+		}
+
+		.parent-row {
+			border-bottom: 1px solid var(--cms-border-soft);
+			padding: 18px 0;
+		}
+
+		.parent-row:last-child {
+			border-bottom: 0;
+		}
+
+		.parent-name {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			min-width: 0;
+			font-size: 18px;
+			color: #2e3338;
+		}
+
+		.parent-name i {
+			color: #2d3338;
+			width: 18px;
+			text-align: center;
+		}
+
+		.drag-handle {
+			color: #2d3338;
+			margin-right: 4px;
+		}
+
+		.parent-actions {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			flex-wrap: wrap;
+			gap: 8px;
+			font-size: 17px;
+		}
+
+		.parent-actions .divider {
+			color: #30343a;
+		}
+
+		.link-action {
+			border: 0;
+			background: transparent;
+			color: var(--cms-red);
+			text-decoration: underline;
+			padding: 0;
+			font: inherit;
+		}
+
+		.link-action.dropdown-action {
+			color: var(--cms-green);
+			text-decoration-color: rgba(17, 91, 66, .42);
+		}
+
+		.link-action:hover,
+		.link-action:focus {
+			color: #b81922;
+			outline: none;
+		}
+
+		.link-action.dropdown-action:hover,
+		.link-action.dropdown-action:focus {
+			color: var(--cms-green-2);
+		}
+
+		.status-badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 7px;
+			min-height: 30px;
+			border-radius: 999px;
+			padding: 5px 10px;
+			font-size: 12px;
+			font-weight: 700;
+			border: 1px solid var(--cms-border);
+			color: #53615b;
+			background: #ffffff;
+			white-space: nowrap;
+		}
+
+		.status-badge.is-bootstrap {
+			color: #17689b;
+			border-color: #b9def1;
+			background: #edf8fe;
+		}
+
+		.status-badge.is-mega {
+			color: var(--cms-green);
+			border-color: #bde5d4;
+			background: var(--cms-green-soft);
+		}
+
+		.status-badge.is-none {
+			color: #747a80;
+			background: #f6f7f8;
+		}
+
+		.detail-strip {
+			border-radius: 8px;
+			background: rgba(33, 40, 45, .12);
+			margin-top: 12px;
+			padding: 18px 22px;
+		}
+
+		.form-label {
+			color: var(--cms-green);
+			font-weight: 500;
+			font-size: 17px;
+			margin-bottom: 8px;
+		}
+
+		.form-control,
+		.form-select {
+			border-color: #d5dfdb;
+			border-radius: 8px;
+			min-height: 46px;
+			font-size: 17px;
+		}
+
+		.form-control:focus,
+		.form-select:focus {
+			border-color: #85c6aa;
+			box-shadow: 0 0 0 .2rem rgba(24, 137, 95, .13);
+		}
+
+		.ph-btn-theme {
+			border: 0;
+			background: #1ca36f;
+			color: #fff;
+			border-radius: 8px;
+			min-height: 46px;
+			font-weight: 600;
+			padding-inline: 18px;
+		}
+
+		.ph-btn-theme:hover,
+		.ph-btn-theme:focus {
+			background: #16865d;
+			color: #fff;
+		}
+
+		.builder-layer {
+			position: fixed;
+			z-index: 1000;
+			inset: 0;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: 24px;
+			background: rgba(12, 23, 20, .46);
+		}
+
+		.builder-layer.is-open {
+			display: flex;
+		}
+
+		.builder-dialog {
+			width: min(1480px, calc(100vw - 48px));
+			height: min(840px, calc(100vh - 48px));
+			background: #ffffff;
+			border: 1px solid rgba(255, 255, 255, .72);
+			border-radius: 8px;
+			box-shadow: 0 28px 80px rgba(10, 28, 22, .28);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+		}
+
+		.builder-layer.is-fullscreen {
+			padding: 12px;
+		}
+
+		.builder-layer.is-fullscreen .builder-dialog {
+			width: calc(100vw - 24px);
+			height: calc(100vh - 24px);
+		}
+
+		.builder-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 18px;
+			border-bottom: 1px solid var(--cms-border);
+			padding: 18px 22px;
+			background: linear-gradient(180deg, #ffffff 0%, #fbfdfc 100%);
+		}
+
+		.builder-title-group {
+			display: flex;
+			align-items: center;
+			gap: 14px;
+			min-width: 0;
+		}
+
+		.builder-title-icon {
+			width: 44px;
+			height: 44px;
+			border-radius: 8px;
+			display: grid;
+			place-items: center;
+			color: var(--cms-green);
+			background: var(--cms-green-soft);
+			font-size: 19px;
+		}
+
+		.builder-title {
+			margin: 0;
+			color: var(--cms-green);
+			font-size: 22px;
+			font-weight: 700;
+			letter-spacing: 0;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.builder-kicker {
+			margin: 2px 0 0;
+			color: var(--cms-muted);
+			font-size: 13px;
+		}
+
+		.builder-header-actions {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+		}
+
+		.builder-icon-btn {
+			width: 38px;
+			height: 38px;
+			border: 1px solid var(--cms-border);
+			background: #ffffff;
+			color: #47524d;
+			border-radius: 8px;
+			display: grid;
+			place-items: center;
+		}
+
+		.builder-icon-btn:hover,
+		.builder-icon-btn:focus {
+			border-color: #a8d2c1;
+			color: var(--cms-green);
+			background: #f7fcfa;
+			outline: none;
+		}
+
+		.builder-body {
+			min-height: 0;
+			flex: 1;
+			display: grid;
+			grid-template-columns: minmax(360px, 430px) minmax(0, 1fr);
+		}
+
+		.builder-settings {
+			min-width: 0;
+			overflow: auto;
+			padding: 20px 22px;
+			border-right: 1px solid var(--cms-border);
+			background: #ffffff;
+		}
+
+		.builder-preview {
+			min-width: 0;
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+			background: linear-gradient(180deg, #f7fbf9 0%, #eef6f3 100%);
+		}
+
+		.setting-section {
+			border-bottom: 1px solid var(--cms-border-soft);
+			padding-bottom: 18px;
+			margin-bottom: 18px;
+		}
+
+		.setting-section:last-child {
+			border-bottom: 0;
+			margin-bottom: 0;
+		}
+
+		.section-label {
+			color: #24362f;
+			font-size: 12px;
+			font-weight: 800;
+			letter-spacing: .04em;
+			text-transform: uppercase;
+			margin: 0 0 10px;
+		}
+
+		.segmented {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 0;
+			border: 1px solid #d8e1dd;
+			border-radius: 8px;
+			padding: 5px;
+			background: #f8fbfa;
+		}
+
+		.segmented button {
+			min-width: 0;
+			min-height: 40px;
+			border: 1px solid transparent;
+			border-radius: 7px;
+			background: transparent;
+			color: #22342d;
+			font-size: 13px;
+			font-weight: 700;
+		}
+
+		.segmented button.is-active {
+			color: var(--cms-red);
+			background: #ffffff;
+			border-color: var(--cms-red);
+			box-shadow: 0 8px 18px rgba(255, 42, 53, .10);
+		}
+
+		.choice-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 10px;
+		}
+
+		.layout-choice {
+			text-align: left;
+			border: 1px solid #dbe4df;
+			border-radius: 8px;
+			background: #ffffff;
+			padding: 12px;
+			color: #25332f;
+			min-height: 86px;
+		}
+
+		.layout-choice:hover,
+		.layout-choice:focus {
+			border-color: #9ed4bd;
+			outline: none;
+		}
+
+		.layout-choice.is-active {
+			border-color: var(--cms-green-2);
+			background: var(--cms-green-soft);
+			box-shadow: inset 0 0 0 1px rgba(24, 137, 95, .18);
+		}
+
+		.layout-choice strong {
+			display: block;
+			color: var(--cms-green);
+			font-size: 13px;
+			margin-bottom: 5px;
+		}
+
+		.layout-choice span {
+			display: block;
+			color: #66746f;
+			font-size: 12px;
+			line-height: 1.35;
+		}
+
+		.control-row {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 12px;
+		}
+
+		.mini-label {
+			display: block;
+			color: var(--cms-green);
+			font-size: 13px;
+			font-weight: 600;
+			margin-bottom: 7px;
+		}
+
+		.form-select-sm,
+		.form-control-sm {
+			min-height: 38px;
+			border-radius: 8px;
+			font-size: 13px;
+		}
+
+		.toggle-row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			border: 1px solid var(--cms-border-soft);
+			border-radius: 8px;
+			padding: 10px 12px;
+			margin-bottom: 9px;
+			background: #fbfdfc;
+		}
+
+		.toggle-row span {
+			color: #2c3a34;
+			font-size: 13px;
+			font-weight: 600;
+		}
+
+		.item-editor {
+			display: grid;
+			gap: 9px;
+		}
+
+		.editor-row {
+			display: grid;
+			grid-template-columns: 34px minmax(0, 1fr) auto;
+			gap: 10px;
+			align-items: center;
+			border: 1px solid var(--cms-border-soft);
+			background: #fbfdfc;
+			border-radius: 8px;
+			padding: 9px;
+		}
+
+		.editor-row i {
+			color: var(--cms-green);
+			text-align: center;
+		}
+
+		.editor-text strong {
+			display: block;
+			color: #27342f;
+			font-size: 13px;
+		}
+
+		.editor-text small {
+			color: var(--cms-muted);
+			font-size: 12px;
+		}
+
+		.editor-action {
+			width: 30px;
+			height: 30px;
+			border: 1px solid #dbe4df;
+			border-radius: 7px;
+			background: #ffffff;
+			color: var(--cms-green);
+		}
+
+		.preview-toolbar {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			padding: 18px 20px;
+			border-bottom: 1px solid #dce6e1;
+			background: rgba(255, 255, 255, .76);
+		}
+
+		.preview-title {
+			color: #1e2e28;
+			font-size: 17px;
+			font-weight: 800;
+			margin: 0;
+		}
+
+		.device-control {
+			display: inline-flex;
+			border: 1px solid #d8e1dd;
+			background: #ffffff;
+			border-radius: 8px;
+			padding: 4px;
+		}
+
+		.device-control button {
+			border: 0;
+			background: transparent;
+			color: #52645d;
+			border-radius: 7px;
+			padding: 7px 11px;
+			font-size: 13px;
+			font-weight: 700;
+		}
+
+		.device-control button.is-active {
+			color: #ffffff;
+			background: var(--cms-green);
+		}
+
+		.preview-stage {
+			min-height: 0;
+			flex: 1;
+			overflow: auto;
+			padding: 26px;
+		}
+
+		.preview-canvas {
+			width: min(100%, 960px);
+			min-height: 620px;
+			margin: 0 auto;
+			border: 1px solid #d8e1dd;
+			border-radius: 8px;
+			background: #ffffff;
+			box-shadow: 0 18px 42px rgba(18, 40, 32, .12);
+			overflow: hidden;
+			transition: width .2s ease;
+		}
+
+		.preview-canvas.is-tablet {
+			width: min(100%, 740px);
+		}
+
+		.preview-canvas.is-mobile {
+			width: min(100%, 390px);
+		}
+
+		.site-hero {
+			height: 150px;
+			background:
+				linear-gradient(90deg, rgba(17, 91, 66, .88), rgba(23, 63, 80, .66)),
+				url("/assets/images/background/landing-page-background.png");
+			background-size: cover;
+			color: #ffffff;
+			display: flex;
+			align-items: flex-end;
+			padding: 24px;
+		}
+
+		.preview-nav {
+			position: relative;
+			z-index: 2;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 20px;
+			min-height: 76px;
+			padding: 0 24px;
+			border-bottom: 1px solid #e4ebe7;
+			background: #ffffff;
+		}
+
+		.preview-brand {
+			color: var(--cms-green);
+			font-size: 20px;
+			font-weight: 800;
+			white-space: nowrap;
+		}
+
+		.preview-links {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			gap: 8px;
+			min-width: 0;
+		}
+
+		.preview-link {
+			border: 0;
+			border-radius: 8px;
+			background: transparent;
+			color: #26342f;
+			padding: 10px 13px;
+			font-size: 14px;
+			font-weight: 700;
+			white-space: nowrap;
+		}
+
+		.preview-link.is-active {
+			color: #ffffff;
+			background: var(--cms-green);
+		}
+
+		.preview-canvas.is-mobile .preview-links {
+			display: none;
+		}
+
+		.mobile-menu-button {
+			display: none;
+			width: 40px;
+			height: 40px;
+			border: 1px solid #dbe4df;
+			border-radius: 8px;
+			background: #ffffff;
+			color: var(--cms-green);
+		}
+
+		.preview-canvas.is-mobile .mobile-menu-button {
+			display: grid;
+			place-items: center;
+		}
+
+		.dropdown-surface {
+			margin: -1px 24px 0 auto;
+			border: 1px solid #dbe4df;
+			border-radius: 8px;
+			background: #ffffff;
+			box-shadow: 0 18px 38px rgba(18, 40, 32, .14);
+			overflow: hidden;
+		}
+
+		.bootstrap-dropdown {
+			width: 260px;
+			padding: 8px;
+		}
+
+		.bootstrap-dropdown.align-left {
+			margin-left: 210px;
+			margin-right: auto;
+		}
+
+		.dropdown-item-preview {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			min-height: 42px;
+			color: #2c3431;
+			border-radius: 7px;
+			padding: 9px 10px;
+			font-size: 14px;
+			font-weight: 600;
+		}
+
+		.dropdown-item-preview:hover {
+			background: var(--cms-green-soft);
+			color: var(--cms-green);
+		}
+
+		.mega-dropdown {
+			width: min(860px, calc(100% - 48px));
+			padding: 22px;
+		}
+
+		.mega-grid {
+			display: grid;
+			gap: 18px;
+		}
+
+		.mega-grid.cols-3 {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		.mega-grid.cols-4 {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+
+		.mega-column-title {
+			color: var(--cms-green);
+			font-size: 13px;
+			font-weight: 800;
+			text-transform: uppercase;
+			margin-bottom: 10px;
+		}
+
+		.mega-link {
+			display: block;
+			border-radius: 8px;
+			color: #2e3a35;
+			padding: 8px 9px;
+			font-size: 14px;
+			text-decoration: none;
+		}
+
+		.mega-link strong {
+			display: block;
+			font-size: 14px;
+		}
+
+		.mega-link small {
+			display: block;
+			color: var(--cms-muted);
+			font-size: 12px;
+			margin-top: 2px;
+		}
+
+		.mega-link:hover {
+			background: var(--cms-green-soft);
+			color: var(--cms-green);
+		}
+
+		.mega-card-grid {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 12px;
+		}
+
+		.mega-card-item {
+			border: 1px solid #dbe4df;
+			border-radius: 8px;
+			padding: 14px;
+			color: #2d3834;
+			background: #fbfdfc;
+			min-height: 118px;
+		}
+
+		.mega-card-item i {
+			color: var(--cms-green);
+			font-size: 20px;
+			margin-bottom: 12px;
+		}
+
+		.mega-featured {
+			display: grid;
+			grid-template-columns: 280px minmax(0, 1fr);
+			gap: 20px;
+		}
+
+		.feature-tile {
+			min-height: 220px;
+			border-radius: 8px;
+			padding: 18px;
+			color: #ffffff;
+			background: linear-gradient(135deg, #115b42, #1d8860);
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+		}
+
+		.feature-tile strong {
+			font-size: 20px;
+			line-height: 1.25;
+		}
+
+		.category-grid {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 12px;
+		}
+
+		.category-tile {
+			border: 1px solid #dbe4df;
+			border-radius: 8px;
+			background: #fbfdfc;
+			padding: 16px 12px;
+			text-align: center;
+			color: #2d3834;
+		}
+
+		.category-tile i {
+			display: block;
+			color: var(--cms-green);
+			font-size: 22px;
+			margin-bottom: 10px;
+		}
+
+		.preview-content {
+			padding: 42px 34px;
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 16px;
+		}
+
+		.content-box {
+			min-height: 130px;
+			border: 1px solid #dfe7e3;
+			border-radius: 8px;
+			padding: 20px;
+			background: #ffffff;
+		}
+
+		.content-box h3 {
+			font-size: 19px;
+			margin: 0 0 12px;
+			color: #0d1b2a;
+		}
+
+		.content-box p {
+			color: #64716c;
+			font-size: 14px;
+			margin: 0;
+		}
+
+		.empty-dropdown {
+			margin: 24px;
+			border: 1px dashed #cbd8d2;
+			border-radius: 8px;
+			padding: 28px;
+			color: var(--cms-muted);
+			text-align: center;
+			background: #fbfdfc;
+		}
+
+		.builder-footer {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 14px;
+			border-top: 1px solid var(--cms-border);
+			padding: 15px 22px;
+			background: #ffffff;
+		}
+
+		.footer-left,
+		.footer-right {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			flex-wrap: wrap;
+		}
+
+		.btn-outline-soft {
+			border: 1px solid #d9e3de;
+			background: #ffffff;
+			color: #34433d;
+			border-radius: 8px;
+			min-height: 40px;
+			padding: 8px 14px;
+			font-weight: 600;
+		}
+
+		.btn-outline-soft:hover,
+		.btn-outline-soft:focus {
+			border-color: #9acfb8;
+			color: var(--cms-green);
+			background: #f8fcfa;
+		}
+
+		.btn-danger-soft {
+			border: 1px solid #ffc7cb;
+			background: var(--cms-red-soft);
+			color: var(--cms-red);
+			border-radius: 8px;
+			min-height: 40px;
+			padding: 8px 14px;
+			font-weight: 600;
+		}
+
+		.body-lock {
+			overflow: hidden;
+		}
+
+		@media (max-width: 1200px) {
+			.builder-body {
+				grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
+			}
+
+			.preview-content {
+				grid-template-columns: 1fr;
+			}
+
+			.mega-card-grid,
+			.category-grid,
+			.mega-grid.cols-4 {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
+
+		@media (max-width: 900px) {
+			.mock-leftbar {
+				display: none;
+			}
+
+			.mock-topbar,
+			.mock-content {
+				margin-left: 0;
+			}
+
+			.mock-content {
+				padding: 18px;
+			}
+
+			.builder-layer {
+				padding: 10px;
+			}
+
+			.builder-dialog {
+				width: calc(100vw - 20px);
+				height: calc(100vh - 20px);
+			}
+
+			.builder-body {
+				grid-template-columns: 1fr;
+				grid-template-rows: auto minmax(420px, 1fr);
+				overflow: auto;
+			}
+
+			.builder-settings {
+				border-right: 0;
+				border-bottom: 1px solid var(--cms-border);
+				overflow: visible;
+			}
+
+			.builder-preview {
+				min-height: 520px;
+			}
+		}
+
+		@media (max-width: 640px) {
+			.page-title {
+				font-size: 26px;
+			}
+
+			.panel-heading {
+				font-size: 22px;
+			}
+
+			.parent-actions {
+				justify-content: flex-start;
+			}
+
+			.builder-header {
+				align-items: flex-start;
+				flex-direction: column;
+			}
+
+			.builder-header-actions {
+				width: 100%;
+				justify-content: space-between;
+			}
+
+			.control-row,
+			.choice-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.mega-featured,
+			.mega-card-grid,
+			.category-grid,
+			.mega-grid.cols-3,
+			.mega-grid.cols-4 {
+				grid-template-columns: 1fr;
+			}
+		}
+	</style>
+</head>
+<body>
+	<aside class="mock-leftbar" aria-label="Awesome Admin sidebar">
+		<div class="mock-logo"><i class="fas fa-fire"></i></div>
+		<button class="mock-rail-link"><i class="fas fa-link"></i></button>
+		<button class="mock-rail-link"><i class="fas fa-home"></i></button>
+		<button class="mock-rail-link"><i class="far fa-comments"></i></button>
+		<button class="mock-rail-link is-active"><i class="far fa-newspaper"></i></button>
+		<button class="mock-rail-link"><i class="fas fa-puzzle-piece"></i></button>
+		<button class="mock-rail-link"><i class="far fa-file-alt"></i></button>
+	</aside>
+
+	<header class="mock-topbar">
+		<div class="mock-topbar-left">
+			<button class="mock-icon-button" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+			<button class="mock-icon-button" aria-label="Theme"><i class="fas fa-palette"></i></button>
+			<button class="mock-icon-button" aria-label="Settings"><i class="fas fa-sun"></i></button>
+		</div>
+		<div class="mock-topbar-right">
+			<button class="mock-icon-button" aria-label="Notifications"><i class="fas fa-bell"></i></button>
+			<button class="mock-icon-button" aria-label="More"><i class="fas fa-ellipsis-h"></i></button>
+			<div class="mock-logo" aria-label="Profile"><i class="fas fa-fire"></i></div>
+		</div>
+	</header>
+
+	<main class="mock-content">
+		<nav class="mock-breadcrumb" aria-label="Breadcrumb">
+			<strong>Awesome Admin</strong>
+			<i class="fas fa-chevron-right fa-xs"></i>
+			<strong>Menus</strong>
+			<i class="fas fa-chevron-right fa-xs"></i>
+			<strong>Frontend</strong>
+			<i class="fas fa-chevron-right fa-xs"></i>
+			<span>Parent Menus</span>
+		</nav>
+
+		<section class="ph-content rounded p-3 mb-4">
+			<h1 class="page-title">Manage Frontend Parent Menus</h1>
+		</section>
+
+		<div class="row g-4">
+			<div class="col-xl-6">
+				<section class="ph-content rounded p-4">
+					<div class="panel-heading"><i class="fas fa-list-ul"></i> Parent Menu List</div>
+					<div id="parentMenuList"></div>
+					<div class="text-end mt-4">
+						<button class="ph-btn-theme" type="button"><i class="fas fa-save me-2"></i>Save</button>
+					</div>
+				</section>
+			</div>
+
+			<div class="col-xl-6">
+				<section class="ph-content rounded p-4">
+					<div class="panel-heading"><i class="fas fa-plus"></i> Add Parent Menu</div>
+					<div class="row g-3">
+						<div class="col-12">
+							<label class="form-label">Menu Category</label>
+							<select class="form-select">
+								<option>Select Menu Category</option>
+								<option>Main Frontend Menu</option>
+							</select>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label">Menu Type</label>
+							<select class="form-select">
+								<option>Select Menu Type</option>
+								<option>Page</option>
+								<option>Custom Link</option>
+							</select>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label">Set as Parent?</label>
+							<select class="form-select">
+								<option>Select</option>
+								<option>Parent Menu</option>
+								<option>Single Menu</option>
+							</select>
+						</div>
+						<div class="col-12">
+							<label class="form-label">Menu Name</label>
+							<input class="form-control" type="text">
+						</div>
+						<div class="col-12">
+							<label class="form-label">Menu Link</label>
+							<input class="form-control" type="text">
+						</div>
+						<div class="col-12 text-end">
+							<button class="ph-btn-theme" type="button"><i class="fas fa-plus me-2"></i>Create</button>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</main>
+
+	<div class="builder-layer" id="dropdownBuilderLayer" aria-hidden="true">
+		<section class="builder-dialog" role="dialog" aria-modal="true" aria-labelledby="builderTitle">
+			<header class="builder-header">
+				<div class="builder-title-group">
+					<div class="builder-title-icon"><i class="fas fa-layer-group"></i></div>
+					<div class="min-w-0">
+						<h2 class="builder-title" id="builderTitle">Configure Dropdown</h2>
+						<p class="builder-kicker" id="builderKicker">Parent Menu</p>
+					</div>
+				</div>
+				<div class="builder-header-actions">
+					<span class="status-badge" id="builderStatus"><i class="fas fa-circle"></i> No Dropdown</span>
+					<button class="builder-icon-btn" id="toggleFullscreen" type="button" aria-label="Toggle fullscreen"><i class="fas fa-expand-alt"></i></button>
+					<button class="builder-icon-btn" id="closeBuilderTop" type="button" aria-label="Close"><i class="fas fa-times"></i></button>
+				</div>
+			</header>
+
+			<div class="builder-body">
+				<aside class="builder-settings">
+					<div class="setting-section">
+						<p class="section-label">Dropdown Type</p>
+						<div class="segmented" id="dropdownTypeGroup">
+							<button type="button" data-type="none">None</button>
+							<button type="button" data-type="bootstrap">Bootstrap 5</button>
+							<button type="button" data-type="mega">Mega Menu</button>
+						</div>
+					</div>
+
+					<div class="setting-section" id="bootstrapSettings">
+						<p class="section-label">Bootstrap Settings</p>
+						<div class="control-row">
+							<div>
+								<label class="mini-label" for="bootstrapSource">Item Source</label>
+								<select class="form-select form-select-sm" id="bootstrapSource">
+									<option value="submenu">Existing Submenus</option>
+									<option value="manual">Manual Items</option>
+								</select>
+							</div>
+							<div>
+								<label class="mini-label" for="bootstrapAlign">Alignment</label>
+								<select class="form-select form-select-sm" id="bootstrapAlign">
+									<option value="right">Right</option>
+									<option value="left">Left</option>
+								</select>
+							</div>
+							<div>
+								<label class="mini-label" for="bootstrapTrigger">Open Behavior</label>
+								<select class="form-select form-select-sm" id="bootstrapTrigger">
+									<option value="hover">Hover</option>
+									<option value="click">Click</option>
+								</select>
+							</div>
+							<div>
+								<label class="mini-label" for="bootstrapWidth">Width</label>
+								<select class="form-select form-select-sm" id="bootstrapWidth">
+									<option value="260">260px</option>
+									<option value="300">300px</option>
+									<option value="340">340px</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="setting-section" id="megaSettings">
+						<p class="section-label">Mega Layout</p>
+						<div class="choice-grid" id="megaLayoutGroup">
+							<button class="layout-choice" type="button" data-layout="columns">
+								<strong>Columns</strong>
+								<span>Menu link dikelompokkan dalam beberapa kolom.</span>
+							</button>
+							<button class="layout-choice" type="button" data-layout="cards">
+								<strong>Cards</strong>
+								<span>Konten menu tampil sebagai grid item visual.</span>
+							</button>
+							<button class="layout-choice" type="button" data-layout="featured">
+								<strong>Featured + Links</strong>
+								<span>Satu area highlight dan daftar link di sampingnya.</span>
+							</button>
+							<button class="layout-choice" type="button" data-layout="category">
+								<strong>Category Grid</strong>
+								<span>Kategori ringkas untuk banyak area konten.</span>
+							</button>
+						</div>
+
+						<div class="control-row mt-3">
+							<div>
+								<label class="mini-label" for="megaColumns">Columns</label>
+								<select class="form-select form-select-sm" id="megaColumns">
+									<option value="3">3 Columns</option>
+									<option value="4">4 Columns</option>
+								</select>
+							</div>
+							<div>
+								<label class="mini-label" for="megaWidth">Menu Width</label>
+								<select class="form-select form-select-sm" id="megaWidth">
+									<option value="contained">Contained</option>
+									<option value="wide">Wide</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="setting-section" id="displaySettings">
+						<p class="section-label">Display Options</p>
+						<label class="toggle-row">
+							<span>Show icons</span>
+							<input class="form-check-input m-0" id="showIcons" type="checkbox" checked>
+						</label>
+						<label class="toggle-row">
+							<span>Show descriptions</span>
+							<input class="form-check-input m-0" id="showDescriptions" type="checkbox" checked>
+						</label>
+						<label class="toggle-row">
+							<span>Highlight active parent</span>
+							<input class="form-check-input m-0" id="highlightParent" type="checkbox" checked>
+						</label>
+					</div>
+
+					<div class="setting-section">
+						<p class="section-label">Menu Items</p>
+						<div class="item-editor" id="itemEditor"></div>
+						<button class="btn-outline-soft w-100 mt-3" id="addMockItem" type="button"><i class="fas fa-plus me-2"></i>Add sample item</button>
+					</div>
+				</aside>
+
+				<section class="builder-preview">
+					<div class="preview-toolbar">
+						<h3 class="preview-title">Live Preview</h3>
+						<div class="device-control" id="deviceGroup" aria-label="Preview device">
+							<button type="button" data-device="desktop">Desktop</button>
+							<button type="button" data-device="tablet">Tablet</button>
+							<button type="button" data-device="mobile">Mobile</button>
+						</div>
+					</div>
+					<div class="preview-stage">
+						<div class="preview-canvas" id="previewCanvas"></div>
+					</div>
+				</section>
+			</div>
+
+			<footer class="builder-footer">
+				<div class="footer-left">
+					<button class="btn-outline-soft" id="closeBuilderBottom" type="button">Cancel</button>
+					<button class="btn-danger-soft" id="resetBuilder" type="button"><i class="fas fa-undo me-2"></i>Reset</button>
+				</div>
+				<div class="footer-right">
+					<button class="btn-outline-soft" type="button"><i class="fas fa-eye me-2"></i>Preview in Header Settings</button>
+					<button class="ph-btn-theme" id="saveBuilder" type="button"><i class="fas fa-save me-2"></i>Save Dropdown</button>
+				</div>
+			</footer>
+		</section>
+	</div>
+
+	<script>
+		const menus = [
+			{
+				id: 'articles',
+				name: 'Manage Articles',
+				icon: 'far fa-newspaper',
+				status: 'bootstrap',
+				config: {
+					type: 'bootstrap',
+					layout: 'columns',
+					device: 'desktop',
+					bootstrapAlign: 'right',
+					bootstrapSource: 'submenu',
+					bootstrapTrigger: 'hover',
+					bootstrapWidth: '260',
+					megaColumns: '3',
+					megaWidth: 'contained',
+					showIcons: true,
+					showDescriptions: true,
+					highlightParent: true,
+					items: [
+						{ title: 'All Articles', desc: 'List and editorial archive', icon: 'far fa-newspaper' },
+						{ title: 'Create Article', desc: 'Start a new article entry', icon: 'fas fa-pen-nib' },
+						{ title: 'Categories', desc: 'Article grouping', icon: 'fas fa-folder-open' }
+					]
+				}
+			},
+			{
+				id: 'cover',
+				name: 'Manage Cover Image',
+				icon: 'fas fa-puzzle-piece',
+				status: 'mega',
+				config: {
+					type: 'mega',
+					layout: 'featured',
+					device: 'desktop',
+					bootstrapAlign: 'right',
+					bootstrapSource: 'submenu',
+					bootstrapTrigger: 'hover',
+					bootstrapWidth: '260',
+					megaColumns: '3',
+					megaWidth: 'contained',
+					showIcons: true,
+					showDescriptions: true,
+					highlightParent: true,
+					items: [
+						{ title: 'Hero Covers', desc: 'Landing page visuals', icon: 'far fa-image' },
+						{ title: 'Campaign Banners', desc: 'Promotional areas', icon: 'fas fa-bullhorn' },
+						{ title: 'Media Library', desc: 'Reusable upload assets', icon: 'fas fa-photo-video' },
+						{ title: 'Display Rules', desc: 'Visibility and placement', icon: 'fas fa-sliders-h' }
+					]
+				}
+			},
+			{
+				id: 'files',
+				name: 'File Manager',
+				icon: 'far fa-file-alt',
+				status: 'none',
+				config: {
+					type: 'mega',
+					layout: 'columns',
+					device: 'desktop',
+					bootstrapAlign: 'right',
+					bootstrapSource: 'submenu',
+					bootstrapTrigger: 'hover',
+					bootstrapWidth: '260',
+					megaColumns: '3',
+					megaWidth: 'contained',
+					showIcons: true,
+					showDescriptions: true,
+					highlightParent: true,
+					items: [
+						{ title: 'Documents', desc: 'PDF and document files', icon: 'far fa-file-alt' },
+						{ title: 'Images', desc: 'Uploaded image assets', icon: 'far fa-images' },
+						{ title: 'Downloads', desc: 'Public downloadable files', icon: 'fas fa-download' },
+						{ title: 'Storage Settings', desc: 'Path and driver rules', icon: 'fas fa-hdd' }
+					]
+				}
+			}
+		];
+
+		let activeMenu = menus[2];
+		let draft = cloneConfig(activeMenu.config);
+
+		const parentMenuList = document.getElementById('parentMenuList');
+		const layer = document.getElementById('dropdownBuilderLayer');
+		const builderTitle = document.getElementById('builderTitle');
+		const builderKicker = document.getElementById('builderKicker');
+		const builderStatus = document.getElementById('builderStatus');
+		const previewCanvas = document.getElementById('previewCanvas');
+		const itemEditor = document.getElementById('itemEditor');
+
+		const fields = {
+			bootstrapSource: document.getElementById('bootstrapSource'),
+			bootstrapAlign: document.getElementById('bootstrapAlign'),
+			bootstrapTrigger: document.getElementById('bootstrapTrigger'),
+			bootstrapWidth: document.getElementById('bootstrapWidth'),
+			megaColumns: document.getElementById('megaColumns'),
+			megaWidth: document.getElementById('megaWidth'),
+			showIcons: document.getElementById('showIcons'),
+			showDescriptions: document.getElementById('showDescriptions'),
+			highlightParent: document.getElementById('highlightParent')
+		};
+
+		function cloneConfig(config) {
+			return JSON.parse(JSON.stringify(config));
+		}
+
+		function statusText(type) {
+			if (type === 'bootstrap') return 'Bootstrap Dropdown';
+			if (type === 'mega') return 'Mega Menu';
+			return 'No Dropdown';
+		}
+
+		function renderParentMenuList() {
+			parentMenuList.innerHTML = menus.map(menu => `
+				<div class="parent-row" data-menu-row="${menu.id}">
+					<div class="row g-2 align-items-center">
+						<div class="col-lg-5">
+							<div class="parent-name">
+								<i class="fas fa-arrows-alt-v drag-handle"></i>
+								<span>|</span>
+								<i class="${menu.icon}"></i>
+								<span>${menu.name}</span>
+							</div>
+						</div>
+						<div class="col-lg-3">
+							${renderStatusBadge(menu.config.type)}
+						</div>
+						<div class="col-lg-4">
+							<div class="parent-actions">
+								<button class="link-action" type="button">View detail</button>
+								<span class="divider">|</span>
+								<button class="link-action dropdown-action" type="button" data-open-builder="${menu.id}">Dropdown</button>
+								<span class="divider">|</span>
+								<button class="link-action" type="button">Remove</button>
+							</div>
+						</div>
+					</div>
+					${menu.id === 'files' ? renderDetailStrip(menu) : ''}
+				</div>
+			`).join('');
+
+			document.querySelectorAll('[data-open-builder]').forEach(button => {
+				button.addEventListener('click', () => {
+					const menu = menus.find(item => item.id === button.dataset.openBuilder);
+					openBuilder(menu);
+				});
+			});
+		}
+
+		function renderStatusBadge(type) {
+			return `<span class="status-badge is-${type}"><i class="fas fa-circle"></i>${statusText(type)}</span>`;
+		}
+
+		function renderDetailStrip(menu) {
+			return `
+				<div class="detail-strip">
+					<div class="row g-3">
+						<div class="col-12">
+							<label class="form-label">Category Menu</label>
+							<select class="form-select"><option>Main Frontend Menu</option></select>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label">Parent Menu Name</label>
+							<input class="form-control" type="text" value="${menu.name}">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label">Parent Menu Link</label>
+							<input class="form-control" type="text" value="filemanager">
+						</div>
+					</div>
+				</div>
+			`;
+		}
+
+		function openBuilder(menu) {
+			activeMenu = menu;
+			draft = cloneConfig(menu.config);
+			syncControlsFromDraft();
+			layer.classList.add('is-open');
+			layer.setAttribute('aria-hidden', 'false');
+			document.body.classList.add('body-lock');
+			renderBuilder();
+		}
+
+		function closeBuilder() {
+			layer.classList.remove('is-open', 'is-fullscreen');
+			layer.setAttribute('aria-hidden', 'true');
+			document.body.classList.remove('body-lock');
+		}
+
+		function syncControlsFromDraft() {
+			Object.entries(fields).forEach(([key, field]) => {
+				if (field.type === 'checkbox') {
+					field.checked = Boolean(draft[key]);
+				} else {
+					field.value = draft[key];
+				}
+			});
+		}
+
+		function syncDraftFromControls() {
+			Object.entries(fields).forEach(([key, field]) => {
+				draft[key] = field.type === 'checkbox' ? field.checked : field.value;
+			});
+		}
+
+		function renderBuilder() {
+			syncDraftFromControls();
+			builderTitle.textContent = `Configure Dropdown - ${activeMenu.name}`;
+			builderKicker.textContent = `Parent Menu: ${activeMenu.name}`;
+			builderStatus.className = `status-badge is-${draft.type}`;
+			builderStatus.innerHTML = `<i class="fas fa-circle"></i>${statusText(draft.type)}`;
+
+			document.querySelectorAll('#dropdownTypeGroup button').forEach(button => {
+				button.classList.toggle('is-active', button.dataset.type === draft.type);
+			});
+
+			document.querySelectorAll('#megaLayoutGroup button').forEach(button => {
+				button.classList.toggle('is-active', button.dataset.layout === draft.layout);
+			});
+
+			document.getElementById('bootstrapSettings').style.display = draft.type === 'bootstrap' ? 'block' : 'none';
+			document.getElementById('megaSettings').style.display = draft.type === 'mega' ? 'block' : 'none';
+			document.getElementById('displaySettings').style.display = draft.type === 'none' ? 'none' : 'block';
+
+			document.querySelectorAll('#deviceGroup button').forEach(button => {
+				button.classList.toggle('is-active', button.dataset.device === draft.device);
+			});
+
+			renderItemEditor();
+			renderPreview();
+		}
+
+		function renderItemEditor() {
+			itemEditor.innerHTML = draft.items.map((item, index) => `
+				<div class="editor-row">
+					<i class="${item.icon}"></i>
+					<div class="editor-text">
+						<strong>${item.title}</strong>
+						<small>${item.desc}</small>
+					</div>
+					<button class="editor-action" type="button" data-remove-item="${index}" aria-label="Remove item"><i class="fas fa-times"></i></button>
+				</div>
+			`).join('');
+
+			document.querySelectorAll('[data-remove-item]').forEach(button => {
+				button.addEventListener('click', () => {
+					if (draft.items.length <= 1) return;
+					draft.items.splice(Number(button.dataset.removeItem), 1);
+					renderBuilder();
+				});
+			});
+		}
+
+		function renderPreview() {
+			previewCanvas.className = `preview-canvas is-${draft.device}`;
+			const dropdownMarkup = getDropdownMarkup();
+
+			previewCanvas.innerHTML = `
+				<div class="site-hero">
+					<div>
+						<div class="fw-bold fs-4">Arunika Frontend</div>
+						<div class="opacity-75">Header navigation preview</div>
+					</div>
+				</div>
+				<nav class="preview-nav">
+					<div class="preview-brand">Arunika</div>
+					<div class="preview-links">
+						<button class="preview-link" type="button">Homepage</button>
+						<button class="preview-link" type="button">Products</button>
+						<button class="preview-link ${draft.highlightParent ? 'is-active' : ''}" type="button">${activeMenu.name} <i class="fas fa-chevron-down fa-xs ms-1"></i></button>
+						<button class="preview-link" type="button">Contact</button>
+					</div>
+					<button class="mobile-menu-button" type="button"><i class="fas fa-bars"></i></button>
+				</nav>
+				${dropdownMarkup}
+				<div class="preview-content">
+					<div class="content-box">
+						<h3>Homepage</h3>
+						<p>Parent menu dapat tetap dipakai sebagai link utama.</p>
+					</div>
+					<div class="content-box">
+						<h3>Products</h3>
+						<p>Dropdown mengambil struktur dari menu frontend.</p>
+					</div>
+					<div class="content-box">
+						<h3>Contact</h3>
+						<p>State hover dan active terlihat di header preview.</p>
+					</div>
+				</div>
+			`;
+		}
+
+		function getDropdownMarkup() {
+			if (draft.type === 'none') {
+				return `<div class="empty-dropdown">Dropdown belum aktif untuk parent menu ini.</div>`;
+			}
+
+			if (draft.type === 'bootstrap') {
+				return `
+					<div class="dropdown-surface bootstrap-dropdown align-${draft.bootstrapAlign}" style="width: ${draft.bootstrapWidth}px">
+						${draft.items.map(item => `
+							<a class="dropdown-item-preview" href="#">
+								${draft.showIcons ? `<i class="${item.icon}"></i>` : ''}
+								<span>${item.title}</span>
+							</a>
+						`).join('')}
+					</div>
+				`;
+			}
+
+			const wideStyle = draft.megaWidth === 'wide' ? 'width: calc(100% - 48px);' : '';
+			return `<div class="dropdown-surface mega-dropdown" style="${wideStyle}">${getMegaMarkup()}</div>`;
+		}
+
+		function itemLink(item) {
+			return `
+				<a class="mega-link" href="#">
+					<strong>${draft.showIcons ? `<i class="${item.icon} me-2"></i>` : ''}${item.title}</strong>
+					${draft.showDescriptions ? `<small>${item.desc}</small>` : ''}
+				</a>
+			`;
+		}
+
+		function getMegaMarkup() {
+			if (draft.layout === 'cards') {
+				return `
+					<div class="mega-card-grid">
+						${draft.items.map(item => `
+							<div class="mega-card-item">
+								${draft.showIcons ? `<i class="${item.icon}"></i>` : ''}
+								<strong class="d-block mb-1">${item.title}</strong>
+								${draft.showDescriptions ? `<small class="text-muted">${item.desc}</small>` : ''}
+							</div>
+						`).join('')}
+					</div>
+				`;
+			}
+
+			if (draft.layout === 'featured') {
+				return `
+					<div class="mega-featured">
+						<div class="feature-tile">
+							<small class="text-uppercase opacity-75 mb-2">Featured</small>
+							<strong>${activeMenu.name}</strong>
+							<span class="mt-2 opacity-75">Kelola konten utama langsung dari navigation menu.</span>
+						</div>
+						<div class="mega-grid cols-2">
+							<div>
+								<div class="mega-column-title">Quick Access</div>
+								${draft.items.slice(0, 3).map(itemLink).join('')}
+							</div>
+							<div>
+								<div class="mega-column-title">Management</div>
+								${draft.items.slice(3).concat(draft.items.slice(0, 1)).map(itemLink).join('')}
+							</div>
+						</div>
+					</div>
+				`;
+			}
+
+			if (draft.layout === 'category') {
+				return `
+					<div class="category-grid">
+						${draft.items.map(item => `
+							<a class="category-tile text-decoration-none" href="#">
+								${draft.showIcons ? `<i class="${item.icon}"></i>` : ''}
+								<strong>${item.title}</strong>
+							</a>
+						`).join('')}
+					</div>
+				`;
+			}
+
+			const columnClass = draft.megaColumns === '4' ? 'cols-4' : 'cols-3';
+			const groups = splitItems(draft.items, Number(draft.megaColumns));
+			return `
+				<div class="mega-grid ${columnClass}">
+					${groups.map((group, index) => `
+						<div>
+							<div class="mega-column-title">Column ${index + 1}</div>
+							${group.map(itemLink).join('')}
+						</div>
+					`).join('')}
+				</div>
+			`;
+		}
+
+		function splitItems(items, count) {
+			const groups = Array.from({ length: count }, () => []);
+			items.forEach((item, index) => groups[index % count].push(item));
+			return groups;
+		}
+
+		document.getElementById('dropdownTypeGroup').addEventListener('click', event => {
+			const button = event.target.closest('[data-type]');
+			if (!button) return;
+			draft.type = button.dataset.type;
+			renderBuilder();
+		});
+
+		document.getElementById('megaLayoutGroup').addEventListener('click', event => {
+			const button = event.target.closest('[data-layout]');
+			if (!button) return;
+			draft.layout = button.dataset.layout;
+			renderBuilder();
+		});
+
+		document.getElementById('deviceGroup').addEventListener('click', event => {
+			const button = event.target.closest('[data-device]');
+			if (!button) return;
+			draft.device = button.dataset.device;
+			renderBuilder();
+		});
+
+		Object.values(fields).forEach(field => {
+			field.addEventListener('input', renderBuilder);
+			field.addEventListener('change', renderBuilder);
+		});
+
+		document.getElementById('addMockItem').addEventListener('click', () => {
+			draft.items.push({
+				title: `Menu Item ${draft.items.length + 1}`,
+				desc: 'Sample dropdown link',
+				icon: 'fas fa-link'
+			});
+			renderBuilder();
+		});
+
+		document.getElementById('resetBuilder').addEventListener('click', () => {
+			draft = cloneConfig({
+				type: 'none',
+				layout: 'columns',
+				device: 'desktop',
+				bootstrapAlign: 'right',
+				bootstrapSource: 'submenu',
+				bootstrapTrigger: 'hover',
+				bootstrapWidth: '260',
+				megaColumns: '3',
+				megaWidth: 'contained',
+				showIcons: true,
+				showDescriptions: true,
+				highlightParent: true,
+				items: activeMenu.config.items
+			});
+			syncControlsFromDraft();
+			renderBuilder();
+		});
+
+		document.getElementById('saveBuilder').addEventListener('click', () => {
+			syncDraftFromControls();
+			activeMenu.config = cloneConfig(draft);
+			activeMenu.status = draft.type;
+			renderParentMenuList();
+			closeBuilder();
+		});
+
+		document.getElementById('toggleFullscreen').addEventListener('click', () => {
+			layer.classList.toggle('is-fullscreen');
+		});
+
+		document.getElementById('closeBuilderTop').addEventListener('click', closeBuilder);
+		document.getElementById('closeBuilderBottom').addEventListener('click', closeBuilder);
+
+		layer.addEventListener('click', event => {
+			if (event.target === layer) closeBuilder();
+		});
+
+		document.addEventListener('keydown', event => {
+			if (event.key === 'Escape' && layer.classList.contains('is-open')) closeBuilder();
+		});
+
+		renderParentMenuList();
+		openBuilder(menus[2]);
+	</script>
+</body>
+</html>

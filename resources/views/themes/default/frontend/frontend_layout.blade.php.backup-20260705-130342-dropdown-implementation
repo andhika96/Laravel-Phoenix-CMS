@@ -2,50 +2,31 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		
 		@stack('meta')
-
 		@yield('csrf')
 
-		<meta name="csrf-token" content="{{ csrf_token() }}">
+		<meta name="csrf-token" content="{{ csrf_token() }}" />
 
 		<link href="{{ url('assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css') }}" rel="stylesheet">
 
-		<!-- Custom CSS -->
-		<link href="{{ asset('storage/fonts/nunito/fonts.css?v=').time() }}" rel="stylesheet">	
+		<!-- Nunito Lato CSS -->
+		<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"> -->
 
-		<link href="{{ asset('assets/css/extending-css-bootstrap-5.css?v=').time() }}" rel="stylesheet">
-		<link href="{{ asset('assets/css/themes/calm_green/phoenix-cms-calm-green.css?v=').time() }}" rel="stylesheet">
+		<!-- Custom CSS -->
+		<link href="{{ asset('assets/css/themes/default/phoenix-cms-default.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">	
-		<link href="{{ asset('assets/css/frontend-menu-dropdown.css?v=').time() }}" rel="stylesheet">
 
 		@stack('css')
 
 		<title>{{ site_config()->site_name }} | @yield('title')</title>
-
-		<style>
-			.ph-header ul.ph-first-list-menu li a,
-			.ph-header ul.ph-second-list-menu li a 
-			{
-				margin: 0px 2.5px 0px 2.5px;
-			}
-
-			.ph-header ul.ph-first-list-menu li a.btn,
-			.ph-header ul.ph-second-list-menu li a.btn
-			{
-				padding-left: 1rem;
-				padding-right: 1rem;
-			}
-		</style>
 	</head>
-
+	
 	<body>
-		@include('themes.partials.frontend_menu_dropdown')
-
 		@yield('content')
 		
-		<script src="{{ url('assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js') }}"></script>
+		<script src="{{ url('assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js') }}" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 		<script src="{{ url('assets/plugins/fontawesome/5.15.3/js/all.min.js') }}"></script>
 
 		<script src="{{ url('assets/plugins/axios/v1/1.7.7.js') }}"></script>
@@ -63,5 +44,7 @@
 		</script>
 
 		@stack('js')
+
+		<script src="{{ url('assets/js/vueV3-auth-2025.js?v=').time() }}"></script>
 	</body>
 </html>

@@ -364,7 +364,6 @@ Route::name('cms.admin.')
 			Route::post('/menu/fe/delete_submenu_detail', 'delete_submenu_detail')->name('awesome_admin.menu.fe.delete_submenu_detail')->middleware('auth', 'checkSuspended');
 			
 			Route::post('/menu/fe/update_parentmenu', 'update_parentmenu')->name('awesome_admin.menu.fe.update_parentmenu')->middleware('auth', 'checkSuspended');
-			Route::post('/menu/fe/update_parentmenu/dropdown', 'update_parentmenu_dropdown')->name('awesome_admin.menu.fe.update_parentmenu.dropdown')->middleware('auth', 'checkSuspended');
 			Route::post('/menu/fe/delete_parentmenu', 'delete_parentmenu')->name('awesome_admin.menu.fe.delete_parentmenu')->middleware('auth', 'checkSuspended');
 
 			Route::post('/menu/fe/update_categorymenu', 'update_categorymenu')->name('awesome_admin.menu.fe.update_categorymenu')->middleware('auth', 'checkSuspended');
@@ -374,7 +373,6 @@ Route::name('cms.admin.')
 			Route::get('/menu/fe/listdata/categorymenu', 'listDataCategoryMenu')->name('awesome_admin.menu.fe.listdata.categorymenu')->middleware('auth', 'checkSuspended');
 
 			Route::get('/menu/fe/listdata/parentmenu', 'listDataParentMenu')->name('awesome_admin.menu.fe.listdata.parentmenu')->middleware('auth', 'checkSuspended');
-			Route::get('/menu/fe/listdata/parentmenu/dropdown/{parentCode}', 'listDataParentMenuDropdown')->name('awesome_admin.menu.fe.listdata.parentmenu.dropdown')->middleware('auth', 'checkSuspended');
 			Route::get('/menu/fe/listdata/parentmenuforsubmenu', 'listDataParentMenuForSubmenu')->name('awesome_admin.menu.fe.listdata.parentmenuforsubmenu')->middleware('auth', 'checkSuspended');
 			Route::get('/menu/fe/listdata/categorymenuforparentmenu', 'listDataCategoryMenuForParentMenu')->name('awesome_admin.menu.fe.listdata.categorymenuforparentmenu')->middleware('auth', 'checkSuspended');
 

@@ -23,15 +23,10 @@
 			--mock-shadow-sm: 0 1px 2px rgba(16, 24, 40, .04);
 			--mock-shadow-md: 0 12px 30px rgba(17, 24, 39, .08);
 			--mock-shadow-lg: 0 18px 50px rgba(17, 24, 39, .12);
-			--mock-sidebar-min: 380px;
-			--mock-sidebar-width: 380px;
-			--mock-panel-height: calc(100vh - 137px);
-			--mock-control-height: 34px;
-			--mock-control-font-size: 12.5px;
-			--mock-label-font-size: 12px;
-			--mock-label-color: #2f3f56;
-			--box-input-height: 34px;
-			--box-label-height: 20px;
+			--mock-sidebar-min: 430px;
+			--mock-sidebar-width: 460px;
+			--box-input-height: 35px;
+			--box-label-height: 22px;
 			--header-bg: #ffffff;
 			--header-text: #101828;
 			--link-color: #273142;
@@ -140,12 +135,9 @@
 		}
 
 		.control-scroll {
-			color: #253247;
-			font-family: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
-			font-size: var(--mock-control-font-size);
-			height: var(--mock-panel-height);
-			line-height: 1.38;
+			max-height: calc(100vh - 154px);
 			overflow: auto;
+			padding-right: 8px !important;
 			scrollbar-color: #c7d0dd transparent;
 			scrollbar-width: thin;
 		}
@@ -174,8 +166,8 @@
 
 		.control-section {
 			border-bottom: 1px solid var(--mock-border-soft);
-			padding-bottom: 18px;
-			margin-bottom: 18px;
+			padding-bottom: 20px;
+			margin-bottom: 20px;
 		}
 
 		.control-section:last-child {
@@ -185,49 +177,30 @@
 		}
 
 		.section-title {
-			display: flex;
-			align-items: center;
-			min-height: 16px;
-			font-size: 12px;
+			font-size: 13px;
 			font-weight: 800;
-			line-height: 1.2;
 			text-transform: uppercase;
 			letter-spacing: 0;
 			color: var(--mock-heading);
-			margin: 0 0 13px;
+			margin-bottom: 12px;
 		}
 
 		.form-label {
-			display: block;
-			font-size: var(--mock-label-font-size);
-			font-weight: 600;
-			line-height: 1.25;
-			color: var(--mock-label-color);
+			font-size: 12px;
+			font-weight: 700;
+			color: #344054;
 			margin-bottom: 6px;
 		}
 
 		.form-control,
 		.form-select {
-			font-size: var(--mock-control-font-size);
-			font-weight: 500;
-			line-height: 1.25;
+			font-size: 13px;
 			border-color: var(--mock-border);
 			border-radius: 7px;
 			color: var(--mock-ink);
 			box-shadow: var(--mock-shadow-sm);
-			min-height: var(--mock-control-height);
+			min-height: 35px;
 			transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
-		}
-
-		.control-scroll .form-control,
-		.control-scroll .form-select,
-		.control-scroll .form-control-sm,
-		.control-scroll .form-select-sm,
-		.control-scroll .input-group-sm > .form-control,
-		.control-scroll .input-group-sm > .btn {
-			font-size: var(--mock-control-font-size);
-			font-weight: 500;
-			line-height: 1.25;
 		}
 
 		.form-control:focus,
@@ -238,7 +211,7 @@
 
 		.input-group-sm > .form-control,
 		.input-group-sm > .btn {
-			min-height: var(--mock-control-height);
+			min-height: 35px;
 		}
 
 		.btn-outline-danger {
@@ -277,9 +250,9 @@
 
 		.coloris-control .clr-field input {
 			width: 100%;
-			height: var(--mock-control-height);
-			padding-left: 42px;
-			font-size: var(--mock-control-font-size);
+			height: 36px;
+			padding-left: 46px;
+			font-size: 13px;
 			border-color: var(--mock-border);
 			border-radius: 7px;
 			box-shadow: var(--mock-shadow-sm);
@@ -288,8 +261,8 @@
 		.coloris-control .clr-field button {
 			left: 6px;
 			right: auto;
-			width: 24px;
-			height: 24px;
+			width: 26px;
+			height: 26px;
 			border-radius: var(--coloris-thumbnail-radius);
 			transform: translateY(-50%);
 			box-shadow: inset 0 0 0 1px rgba(16, 24, 40, .08);
@@ -298,27 +271,6 @@
 		.coloris-control.is-disabled,
 		.form-check.is-disabled {
 			opacity: .56;
-		}
-
-		.control-scroll .form-check.form-switch {
-			display: flex;
-			align-items: center;
-			gap: 10px;
-			min-height: 28px;
-			padding-left: 0;
-		}
-
-		.control-scroll .form-check-input {
-			flex: 0 0 auto;
-			margin-left: 0;
-			margin-top: 0;
-		}
-
-		.control-scroll .form-check-label {
-			color: #2d3b4f;
-			font-size: 13px;
-			font-weight: 400;
-			line-height: 1.3;
 		}
 
 		.coloris-control.is-disabled .clr-field button {
@@ -470,15 +422,15 @@
 
 		.unit-control input,
 		.unit-control select {
-			height: var(--mock-control-height);
+			height: 35px;
 		}
 
 		.number-stepper {
 			display: grid;
-			grid-template-columns: 30px minmax(0, 1fr) 30px;
+			grid-template-columns: 32px minmax(0, 1fr) 32px;
 			align-items: stretch;
 			min-width: 0;
-			height: var(--mock-control-height);
+			height: 36px;
 			border: 1px solid var(--mock-border);
 			border-radius: 7px;
 			background: #fff;
@@ -493,7 +445,7 @@
 		}
 
 		.number-stepper .form-control {
-			height: calc(var(--mock-control-height) - 2px);
+			height: 33px;
 			border: 0;
 			border-radius: 0;
 			box-shadow: none;
@@ -563,10 +515,10 @@
 		.box-control-header .form-label {
 			display: inline-flex;
 			align-items: center;
-			color: var(--mock-label-color);
-			font-size: var(--mock-label-font-size);
-			font-weight: 600;
-			line-height: 1.2;
+			color: #344054;
+			font-size: 12px;
+			font-weight: 700;
+			line-height: 1;
 			margin-bottom: 0;
 		}
 
@@ -581,8 +533,7 @@
 			background-size: 10px 8px;
 			box-shadow: var(--mock-shadow-sm);
 			color: #273142;
-			font-size: var(--mock-control-font-size);
-			font-weight: 500;
+			font-size: 13px;
 			line-height: 1.2;
 			padding: 4px 26px 4px 10px;
 		}
@@ -598,39 +549,50 @@
 		}
 
 		.responsive-mode-control {
+			display: inline-grid;
+			grid-template-columns: 34px repeat(3, 26px);
+			gap: 2px;
+			align-items: center;
+			margin-left: auto;
+			padding: 2px;
+			border: 1px solid var(--mock-border-soft);
+			border-radius: 7px;
+			background: #f8fafc;
+		}
+
+		.responsive-mode-control button {
 			position: relative;
 			display: inline-flex;
 			align-items: center;
-			margin-left: auto;
-		}
-
-		.responsive-mode-trigger {
-			display: inline-flex;
-			align-items: center;
 			justify-content: center;
-			width: 36px;
-			height: var(--box-input-height);
-			border: 1px solid var(--mock-border);
-			border-radius: 7px;
-			background: #fff;
+			width: 100%;
+			height: 26px;
+			border: 1px solid transparent;
+			border-radius: 5px;
+			background: transparent;
 			color: #667085;
-			font-size: 12px;
+			font-size: 11px;
+			font-weight: 700;
 			line-height: 1;
-			box-shadow: var(--mock-shadow-sm);
 			transition: background .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease;
 		}
 
-		.responsive-mode-trigger:hover,
-		.responsive-mode-trigger:focus,
-		.responsive-mode-control.is-open .responsive-mode-trigger {
+		.responsive-mode-control button:hover,
+		.responsive-mode-control button:focus {
 			background: #fff;
-			border-color: var(--mock-primary);
+			border-color: var(--mock-border);
 			color: var(--mock-primary);
-			box-shadow: 0 0 0 2px var(--mock-ring);
 			outline: 0;
 		}
 
-		.responsive-mode-trigger.has-override::after {
+		.responsive-mode-control button.is-active {
+			background: #fff;
+			border-color: var(--mock-primary);
+			color: var(--mock-primary);
+			box-shadow: 0 4px 12px rgba(224, 29, 36, .12);
+		}
+
+		.responsive-mode-control button.has-override::after {
 			position: absolute;
 			top: 3px;
 			right: 3px;
@@ -639,65 +601,6 @@
 			content: "";
 			border-radius: 50%;
 			background: var(--mock-primary);
-		}
-
-		.responsive-mode-menu {
-			position: absolute;
-			top: calc(100% + 6px);
-			right: 0;
-			z-index: 35;
-			display: grid;
-			min-width: 154px;
-			gap: 4px;
-			padding: 6px;
-			border: 1px solid #d4deef;
-			border-radius: 8px;
-			background: #fff;
-			box-shadow: 0 10px 20px rgba(33, 43, 67, .12);
-		}
-
-		.responsive-mode-menu[hidden] {
-			display: none;
-		}
-
-		.responsive-mode-option {
-			position: relative;
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			width: 100%;
-			height: 30px;
-			padding: 0 8px;
-			border: 1px solid transparent;
-			border-radius: 6px;
-			background: #fff;
-			color: #44546f;
-			font-size: 12px;
-			font-weight: 500;
-			line-height: 1.15;
-			text-align: left;
-			white-space: nowrap;
-			transition: background .18s ease, border-color .18s ease, color .18s ease;
-		}
-
-		.responsive-mode-option i {
-			width: 12px;
-			font-size: 12px;
-			line-height: 1;
-			text-align: center;
-		}
-
-		.responsive-mode-option:hover,
-		.responsive-mode-option:focus {
-			background: #eef3ff;
-			color: #233657;
-			outline: 0;
-		}
-
-		.responsive-mode-option.is-active {
-			background: #e6edff;
-			border-color: #b9c9f5;
-			color: #213c85;
 		}
 
 		.box-control-row {
@@ -792,8 +695,7 @@
 			background: transparent;
 			color: #101828;
 			text-align: center;
-			font-size: var(--mock-control-font-size);
-			font-weight: 500;
+			font-size: 13px;
 			line-height: 1.2;
 			padding: 2px 4px;
 		}
@@ -820,11 +722,10 @@
 			display: block;
 			grid-row: 2;
 			min-height: var(--box-label-height);
-			padding: 5px 2px 0;
-			color: #6b778c;
-			font-size: 10px;
-			font-weight: 500;
-			line-height: 1.1;
+			padding: 6px 2px 0;
+			color: #667085;
+			font-size: 9px;
+			line-height: 1;
 			text-align: center;
 			white-space: nowrap;
 		}
@@ -889,7 +790,7 @@
 
 		.segmented {
 			display: grid;
-			gap: 4px;
+			gap: 6px;
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 			padding: 4px;
 			border: 1px solid var(--mock-border-soft);
@@ -902,15 +803,13 @@
 		}
 
 		.segmented button {
-			min-height: 34px;
-			padding: 0 10px;
+			min-height: 36px;
 			border: 1px solid transparent;
 			background: transparent;
 			color: #344054;
 			border-radius: 6px;
-			font-weight: 600;
+			font-weight: 700;
 			font-size: 12px;
-			line-height: 1.15;
 			transition: background .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease;
 		}
 
@@ -925,14 +824,10 @@
 			border-color: var(--mock-primary);
 			color: var(--mock-primary);
 			background: #fff;
-			font-weight: 700;
-			box-shadow: 0 2px 8px rgba(224, 29, 36, .12);
+			box-shadow: 0 4px 12px rgba(224, 29, 36, .12);
 		}
 
 		.preview-card {
-			display: flex;
-			flex-direction: column;
-			height: var(--mock-panel-height);
 			position: sticky;
 			top: 18px;
 			overflow: hidden;
@@ -954,8 +849,8 @@
 		}
 
 		.preview-frame {
-			flex: 1 1 auto;
-			min-height: 0;
+			height: calc(100vh - 206px);
+			min-height: 570px;
 			background: #dfe6ef;
 			overflow: hidden;
 			position: relative;
@@ -1728,13 +1623,11 @@
 								<div class="box-control" data-box-control="headerRadius">
 									<div class="box-control-header">
 										<label class="form-label">Header radius</label>
-										<div class="responsive-mode-control" data-responsive-control="headerRadius">
-											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
-											<div class="responsive-mode-menu" role="listbox" hidden>
-												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
-												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
-												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
-											</div>
+										<div class="responsive-mode-control" data-responsive-control="headerRadius" role="group" aria-label="Header radius responsive mode">
+											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
+											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
+											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
+											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
 										</div>
 										<select id="headerRadiusUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
@@ -1786,13 +1679,11 @@
 								<div class="box-control" data-box-control="headerPadding">
 									<div class="box-control-header">
 										<label class="form-label">Header padding</label>
-										<div class="responsive-mode-control" data-responsive-control="headerPadding">
-											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
-											<div class="responsive-mode-menu" role="listbox" hidden>
-												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
-												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
-												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
-											</div>
+										<div class="responsive-mode-control" data-responsive-control="headerPadding" role="group" aria-label="Header padding responsive mode">
+											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
+											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
+											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
+											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
 										</div>
 										<select id="headerPaddingUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
@@ -1860,13 +1751,11 @@
 								<div class="box-control" data-box-control="navRadius">
 									<div class="box-control-header">
 										<label class="form-label">Link radius</label>
-										<div class="responsive-mode-control" data-responsive-control="navRadius">
-											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
-											<div class="responsive-mode-menu" role="listbox" hidden>
-												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
-												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
-												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
-											</div>
+										<div class="responsive-mode-control" data-responsive-control="navRadius" role="group" aria-label="Link radius responsive mode">
+											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
+											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
+											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
+											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
 										</div>
 										<select id="navRadiusUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
@@ -1918,13 +1807,11 @@
 								<div class="box-control" data-box-control="containerMargin">
 									<div class="box-control-header">
 										<label class="form-label">Container margin</label>
-										<div class="responsive-mode-control" data-responsive-control="containerMargin">
-											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
-											<div class="responsive-mode-menu" role="listbox" hidden>
-												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
-												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
-												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
-											</div>
+										<div class="responsive-mode-control" data-responsive-control="containerMargin" role="group" aria-label="Container margin responsive mode">
+											<button type="button" data-responsive-mode="all" class="is-active" title="All devices">All</button>
+											<button type="button" data-responsive-mode="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
+											<button type="button" data-responsive-mode="tablet" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
+											<button type="button" data-responsive-mode="mobile" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
 										</div>
 										<select id="containerMarginUnit" class="form-select form-select-sm box-unit-select">
 											<option value="px" selected>px</option>
@@ -2170,15 +2057,8 @@
 			leafReverse: null
 		};
 
-		const responsiveModes = ['desktop', 'tablet', 'mobile'];
-		const responsiveDeviceModes = responsiveModes;
-		const responsiveDeviceMeta = {
-			desktop: { icon: 'fas fa-desktop', label: 'Desktop' },
-			tablet: { icon: 'fas fa-tablet-alt', label: 'Tablet Portrait' },
-			mobile: { icon: 'fas fa-mobile-alt', label: 'Mobile Portrait' }
-		};
-		let globalResponsiveMode = 'desktop';
-		let openResponsiveMenu = null;
+		const responsiveModes = ['all', 'desktop', 'tablet', 'mobile'];
+		const responsiveDeviceModes = ['desktop', 'tablet', 'mobile'];
 		const responsiveBoxProfiles = {};
 
 		function setVariable(name, value) {
@@ -2222,17 +2102,9 @@
 			setBoxValues(name, profile.values);
 		}
 
-		function normalizeResponsiveMode(mode) {
-			return responsiveModes.includes(mode) ? mode : 'desktop';
-		}
-
-		function responsiveModeMeta(mode = globalResponsiveMode) {
-			return responsiveDeviceMeta[normalizeResponsiveMode(mode)] || responsiveDeviceMeta.desktop;
-		}
-
-		function createResponsiveBoxState(profile, mode = globalResponsiveMode) {
+		function createResponsiveBoxState(profile, mode = 'all') {
 			return {
-				mode: normalizeResponsiveMode(mode),
+				mode,
 				all: cloneBoxProfile(profile),
 				desktop: null,
 				tablet: null,
@@ -2242,7 +2114,7 @@
 
 		function cloneResponsiveBoxState(stateValue) {
 			return {
-				mode: normalizeResponsiveMode(stateValue.mode),
+				mode: stateValue.mode || 'all',
 				all: cloneBoxProfile(stateValue.all),
 				desktop: stateValue.desktop ? cloneBoxProfile(stateValue.desktop) : null,
 				tablet: stateValue.tablet ? cloneBoxProfile(stateValue.tablet) : null,
@@ -2253,32 +2125,29 @@
 		function initResponsiveBoxProfiles() {
 			Object.keys(boxControls).forEach(name => {
 				responsiveBoxProfiles[name] = createResponsiveBoxState(readBoxProfileFromControls(name));
+				syncResponsiveBoxButtons(name);
 			});
-			syncAllResponsiveBoxControls();
 		}
 
 		function activeResponsiveMode(name) {
-			return normalizeResponsiveMode(responsiveBoxProfiles[name]?.mode || globalResponsiveMode);
+			return responsiveBoxProfiles[name]?.mode || 'all';
 		}
 
 		function saveActiveBoxProfile(name) {
 			const store = responsiveBoxProfiles[name];
 			if (!store) return;
-			const mode = activeResponsiveMode(name);
-			store.mode = mode;
-			store[mode] = readBoxProfileFromControls(name);
-			syncResponsiveBoxControl(name);
+			store[store.mode] = readBoxProfileFromControls(name);
+			syncResponsiveBoxButtons(name);
 		}
 
 		function profileForMode(name, mode) {
 			const store = responsiveBoxProfiles[name];
 			if (!store) return readBoxProfileFromControls(name);
-			const safeMode = normalizeResponsiveMode(mode);
-			return store[safeMode] || store.all;
+			return store[mode] || store.all;
 		}
 
 		function effectiveBoxProfile(name, device = controls.deviceMode.value) {
-			const mode = responsiveDeviceModes.includes(device) ? device : globalResponsiveMode;
+			const mode = responsiveDeviceModes.includes(device) ? device : 'all';
 			return profileForMode(name, mode);
 		}
 
@@ -2366,76 +2235,32 @@
 			}
 		}
 
-		function syncResponsiveBoxControl(name) {
+		function syncResponsiveBoxButtons(name) {
 			const store = responsiveBoxProfiles[name];
 			if (!store) return;
 
-			const activeMode = activeResponsiveMode(name);
-			const meta = responsiveModeMeta(activeMode);
-			const isOpen = openResponsiveMenu === name;
-
-			document.querySelectorAll(`.responsive-mode-control[data-responsive-control="${name}"]`).forEach(group => {
-				group.classList.toggle('is-open', isOpen);
-
-				const trigger = group.querySelector('[data-responsive-trigger]');
-				if (trigger) {
-					const icon = trigger.querySelector('i');
-					if (icon) icon.className = meta.icon;
-					trigger.classList.toggle('has-override', Boolean(store[activeMode]));
-					trigger.setAttribute('aria-expanded', String(isOpen));
-					trigger.setAttribute('aria-label', `Responsive device: ${meta.label}`);
-					trigger.setAttribute('title', `Responsive: ${meta.label}`);
-				}
-
-				const menu = group.querySelector('.responsive-mode-menu');
-				if (menu) menu.hidden = !isOpen;
-
-				group.querySelectorAll('button[data-responsive-mode]').forEach(button => {
-					const mode = normalizeResponsiveMode(button.dataset.responsiveMode);
-					const active = activeMode === mode;
-					const hasOverride = Boolean(store[mode]);
-					button.classList.toggle('is-active', active);
-					button.classList.toggle('has-override', hasOverride);
-					button.setAttribute('aria-selected', String(active));
-				});
+			document.querySelectorAll(`.responsive-mode-control[data-responsive-control="${name}"] button[data-responsive-mode]`).forEach(button => {
+				const mode = button.dataset.responsiveMode;
+				const active = store.mode === mode;
+				const hasOverride = mode !== 'all' && Boolean(store[mode]);
+				button.classList.toggle('is-active', active);
+				button.classList.toggle('has-override', hasOverride);
+				button.setAttribute('aria-pressed', String(active));
 			});
-		}
-
-		function syncAllResponsiveBoxControls() {
-			Object.keys(boxControls).forEach(syncResponsiveBoxControl);
-		}
-
-		function closeResponsiveBoxMenu() {
-			if (!openResponsiveMenu) return;
-			openResponsiveMenu = null;
-			syncAllResponsiveBoxControls();
-		}
-
-		function toggleResponsiveBoxMenu(name) {
-			openResponsiveMenu = openResponsiveMenu === name ? null : name;
-			syncAllResponsiveBoxControls();
-		}
-
-		function saveAllActiveBoxProfiles() {
-			Object.keys(boxControls).forEach(saveActiveBoxProfile);
-			if (responsiveBoxProfiles.navRadius) {
-				linkRadiusProfiles[currentLinkRadiusProfileKey()] = cloneResponsiveBoxState(responsiveBoxProfiles.navRadius);
-			}
 		}
 
 		function switchResponsiveBoxMode(name, mode) {
-			const nextMode = normalizeResponsiveMode(mode);
-			saveAllActiveBoxProfiles();
-			globalResponsiveMode = nextMode;
-			controls.deviceMode.value = nextMode;
-			Object.keys(boxControls).forEach(controlName => {
-				const store = responsiveBoxProfiles[controlName];
-				if (!store) return;
-				store.mode = nextMode;
-				writeBoxProfileToControls(controlName, profileForMode(controlName, nextMode));
-			});
-			openResponsiveMenu = null;
-			syncAllResponsiveBoxControls();
+			if (!responsiveModes.includes(mode)) return;
+			saveActiveBoxProfile(name);
+			responsiveBoxProfiles[name].mode = mode;
+			writeBoxProfileToControls(name, profileForMode(name, mode));
+			if (mode !== 'all') {
+				controls.deviceMode.value = mode;
+			} else {
+				controls.deviceMode.value = 'desktop';
+			}
+			if (name === 'navRadius') syncCurrentLinkRadiusProfile();
+			syncResponsiveBoxButtons(name);
 		}
 
 		function currentLinkRadiusProfileKey(shape = state.linkShape, direction = state.leafDirection) {
@@ -2464,7 +2289,7 @@
 			responsiveBoxProfiles.navRadius = cloneResponsiveBoxState(profile);
 			const mode = activeResponsiveMode('navRadius');
 			writeBoxProfileToControls('navRadius', profileForMode('navRadius', mode));
-			syncResponsiveBoxControl('navRadius');
+			syncResponsiveBoxButtons('navRadius');
 		}
 
 		function saveCurrentLinkRadiusProfile() {
@@ -3080,29 +2905,12 @@
 		function initResponsiveBoxModeControls() {
 			document.querySelectorAll('.responsive-mode-control[data-responsive-control]').forEach(group => {
 				group.addEventListener('click', event => {
-					const trigger = event.target.closest('[data-responsive-trigger]');
-					if (trigger) {
-						event.stopPropagation();
-						toggleResponsiveBoxMenu(group.dataset.responsiveControl);
-						return;
-					}
-
 					const button = event.target.closest('button[data-responsive-mode]');
 					if (!button) return;
-					event.stopPropagation();
 					const name = group.dataset.responsiveControl;
 					switchResponsiveBoxMode(name, button.dataset.responsiveMode);
 					updateAll();
 				});
-			});
-
-			document.addEventListener('click', event => {
-				if (event.target.closest('.responsive-mode-control')) return;
-				closeResponsiveBoxMenu();
-			});
-
-			document.addEventListener('keydown', event => {
-				if (event.key === 'Escape') closeResponsiveBoxMenu();
 			});
 		}
 
@@ -3185,15 +2993,10 @@
 			'linkShadowUnit', 'linkShadowX', 'linkShadowY', 'linkShadowBlur', 'linkShadowSpread',
 			'linkShadowColor', 'linkShadowInset', 'innerBg', 'transparentStart', 'transparentText',
 			'transparentHover', 'transparentFocus', 'transparentActive', 'animateScroll', 'scrollSim',
-			'headerHeight', 'headerHeightUnit', 'menuCount', 'menuSource'
+			'headerHeight', 'headerHeightUnit', 'menuCount', 'deviceMode', 'menuSource'
 		].forEach(id => {
 			controls[id].addEventListener('input', updateAll);
 			controls[id].addEventListener('change', updateAll);
-		});
-
-		controls.deviceMode.addEventListener('change', () => {
-			switchResponsiveBoxMode(null, controls.deviceMode.value);
-			updateAll();
 		});
 
 		initResponsiveBoxProfiles();

@@ -18,7 +18,6 @@
 		<link href="{{ asset('assets/css/extending-css-bootstrap-5.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/themes/calm_green/phoenix-cms-calm-green.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">	
-		<link href="{{ asset('assets/css/frontend-menu-dropdown.css?v=').time() }}" rel="stylesheet">
 
 		@stack('css')
 
@@ -41,7 +40,49 @@
 	</head>
 
 	<body>
-		@include('themes.partials.frontend_menu_dropdown')
+		<header class="navbar navbar-expand-lg ph-header bg-body-tertiary d-none">
+			<div class="container">
+				<a class="navbar-brand" href="#">LaraPhoenix CMS</a>
+				
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				
+				<div class="collapse navbar-collapse ph-first-list-menu d-md-flex justify-content-lg-center" id="navbarNav">
+					<ul class="navbar-nav">
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="#">Home</a>
+						</li>
+				
+						<li class="nav-item">
+							<a class="nav-link" href="#">Features</a>
+						</li>
+				
+						<li class="nav-item">
+							<a class="nav-link" href="#">Pricing</a>
+						</li>
+				
+						<li class="nav-item">
+							<a class="nav-link disabled" aria-disabled="true">Disabled</a>
+						</li>
+					</ul>
+				</div>
+
+				<ul class="navbar-nav ph-second-list-menu d-none d-md-flex flex-row flex-wrap">
+					<li class="nav-item">
+						<a class="nav-link" href="#!">Link 1</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="btn btn-larapx" href="#!">Link 2</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link" href="#!">Link 3</a>
+					</li>
+				</ul>
+			</div>
+		</header>
 
 		@yield('content')
 		

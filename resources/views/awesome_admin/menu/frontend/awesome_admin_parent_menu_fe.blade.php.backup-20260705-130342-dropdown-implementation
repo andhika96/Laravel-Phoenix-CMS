@@ -20,7 +20,7 @@
 
 		<div class="row g-4">
 			<div class="col-md-6">
-				<div class="ph-content rounded p-4 ph-fetch-listdata-parentmenu" id="ph-fetch-listdata-parentmenu" data-url="{{ url('awesome_admin/menu/fe/listdata/parentmenu') }}" data-dropdown-detail-url="{{ url('awesome_admin/menu/fe/listdata/parentmenu/dropdown') }}" data-dropdown-update-url="{{ route('cms.admin.awesome_admin.menu.fe.update_parentmenu.dropdown') }}">
+				<div class="ph-content rounded p-4 ph-fetch-listdata-parentmenu" id="ph-fetch-listdata-parentmenu" data-url="{{ url('awesome_admin/menu/fe/listdata/parentmenu') }}">
 					<div class="h5 border-bottom pb-3 mb-4"><i class="fad fa-list-ul fa-fw me-1"></i> {{ t('Parent Menu List') }}</div>
 
 					<div v-if="loading" class="text-center p-5">
@@ -46,7 +46,7 @@
 												<small>{{ t('just now') }}</small>
 												<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="margin-right: calc(-.1 * var(--bs-toast-padding-x));"></button>
 											</div>
-
+										
 											<div class="toast-body p-3 text-start">
 												<div v-if="isArrayMessageAfterSubmit == 1">
 													<ul class="ps-3 m-0">
@@ -91,14 +91,10 @@
 															</span>
 															
 															@{{ element.parent_name }}
-															<span v-if="element.dropdown_type !== undefined && element.dropdown_type !== '' && element.dropdown_type !== 'none'" class="badge rounded-pill text-bg-light border ms-2 fw-semibold">
-																@{{ dropdownTypeLabel(element.dropdown_type) }}
-															</span>
 														</span>
 													</div>
 
 													<div class="col-md-6 d-flex align-items-center justify-content-end">
-														<a href="javascript:void(0)" class="btn btn-link text-danger font-size-inherit" v-on:click="openDropdownModalParentMenu(element, index)">{{ t('Dropdown') }}</a> |
 														<a href="javascript:void(0)" class="btn btn-link text-danger font-size-inherit" v-on:click="collapseParentMenu($event, 'collapseHeaderMenu'+index, index)" aria-expanded="false" aria-controls="collapseHeaderMenu">{{ t('View detail') }}</a> |
 														<a href="javascript:void(0)" class="btn btn-link text-danger ar-alert-bootbox font-size-inherit" v-on:click="openDeleteModalParentMenu(element, index, element.parent_icon_path)">{{ t('Remove') }}</a>
 													</div>
@@ -241,7 +237,7 @@
 												<small>{{ t('just now') }}</small>
 												<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="margin-right: calc(-.1 * var(--bs-toast-padding-x));"></button>
 											</div>
-
+										
 											<div class="toast-body p-3 text-start">
 												<div v-if="isArrayMessageAfterSubmit == 1">
 													<ul class="ps-3 m-0">
@@ -376,315 +372,6 @@
 			</div>
 		</div>
 
-		<!-- Modal Manage Dropdown Parent Menu -->
-		<Teleport to="body">
-			<div class="modal ph-modal-dropdown fade" id="modalDropdownParentMenu" tabindex="-1" aria-labelledby="modalDropdownParentMenuLabel" aria-hidden="true">
-				<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-					<div class="modal-content" id="ph-form-dropdown-parentmenu">
-						<form action="{{ route('cms.admin.awesome_admin.menu.fe.update_parentmenu.dropdown') }}" method="post" auto-refresh="false" auto-lock-button="false" custom-button-value="{{ t('Save Dropdown') }}" ref="formHTMLDropdown" @submit.prevent="submitDataDropdown($event)">
-							<div class="ph-notice" style="display: none">
-								<div aria-live="polite" aria-atomic="true" class="position-relative">
-									<div class="toast-container position-fixed top-0 end-0 p-3">
-										<div :class="'toast ph-notice-toast ph-callout-no-border '+responseStatusToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
-											<div :class="'toast-header '+responseStatusToast+' pe-3 pt-3 pb-1 border-0'">
-												<strong class="toast-header-title toast-header-icon me-auto">{{ t('Notice') }}</strong>
-												<small>{{ t('just now') }}</small>
-												<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="margin-right: calc(-.1 * var(--bs-toast-padding-x));"></button>
-											</div>
-
-											<div class="toast-body p-3 text-start">
-												<div v-if="isArrayMessageAfterSubmit == 1">
-													<ul class="ps-3 m-0">
-														<li v-for="(item, index) in responseMessageAfterSubmit">
-															@{{ item[0] }}
-														</li>
-													</ul>
-												</div>
-
-												<div v-else>
-													@{{ responseMessageAfterSubmit }}
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="modal-header px-4 py-3">
-								<div class="d-flex align-items-center gap-3">
-									<div class="ph-dropdown-modal-icon">
-										<i class="fad fa-layer-group fa-fw"></i>
-									</div>
-
-									<div>
-										<h5 class="modal-title mb-1" id="modalDropdownParentMenuLabel">{{ t('Manage Dropdown Menu') }}</h5>
-										<div class="text-muted small">
-											@{{ dropdownParentMenu.parent_name || 'Parent Menu' }}
-										</div>
-									</div>
-								</div>
-
-								<button type="button" class="btn-close" aria-label="Close" v-on:click="closeDropdownModalParentMenu"></button>
-							</div>
-
-							<div class="modal-body p-0">
-								<div v-if="dropdownModalLoading" class="text-center p-5">
-									<div class="spinner-border text-primary mb-3" role="status">
-										<span class="sr-only"></span>
-									</div>
-
-									<div class="h6 mb-0">{{ t('Loading') }} ...</div>
-								</div>
-
-								<div v-else class="row g-0 ph-dropdown-builder">
-									<div class="col-lg-5 ph-dropdown-builder-sidebar">
-										<div class="ph-dropdown-section">
-											<div class="ph-dropdown-section-title">{{ t('Dropdown Type') }}</div>
-											<div class="btn-group w-100 ph-segmented-control" role="group" aria-label="Dropdown Type">
-												<input type="radio" class="btn-check" id="dropdownTypeNone" value="none" v-model="dropdownConfig.dropdown_type">
-												<label class="btn btn-outline-primary" for="dropdownTypeNone">{{ t('None') }}</label>
-
-												<input type="radio" class="btn-check" id="dropdownTypeBootstrap" value="bootstrap" v-model="dropdownConfig.dropdown_type">
-												<label class="btn btn-outline-primary" for="dropdownTypeBootstrap">Bootstrap 5</label>
-
-												<input type="radio" class="btn-check" id="dropdownTypeMega" value="mega" v-model="dropdownConfig.dropdown_type">
-												<label class="btn btn-outline-primary" for="dropdownTypeMega">{{ t('Mega Menu') }}</label>
-											</div>
-										</div>
-
-										<div v-if="dropdownConfig.dropdown_type !== 'none'" class="ph-dropdown-section">
-											<div class="ph-dropdown-section-title">{{ t('Dropdown Box') }}</div>
-
-											<div class="row g-3">
-												<div class="col-12">
-													<div class="form-check form-switch">
-														<input class="form-check-input" type="checkbox" role="switch" id="dropdownShowArrow" v-model="dropdownConfig.config_json.dropdown.show_arrow">
-														<label class="form-check-label" for="dropdownShowArrow">{{ t('Show arrow pointer') }}</label>
-													</div>
-												</div>
-
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Margin to menu') }}</label>
-													<div class="input-group">
-														<input type="number" min="0" max="80" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.dropdown.margin_top">
-														<span class="input-group-text">px</span>
-													</div>
-												</div>
-
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Arrow size') }}</label>
-													<div class="input-group">
-														<input type="number" min="0" max="32" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.dropdown.arrow_size">
-														<span class="input-group-text">px</span>
-													</div>
-												</div>
-
-												<div class="col-md-6" v-if="dropdownConfig.dropdown_type == 'mega'">
-													<label class="form-label">{{ t('Dropdown width') }}</label>
-													<div class="input-group">
-														<input type="number" min="240" max="1440" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.dropdown.width">
-														<span class="input-group-text">px</span>
-													</div>
-												</div>
-
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Dropdown align') }}</label>
-													<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.dropdown.align">
-														<option value="start">{{ t('Left') }}</option>
-														<option value="center">{{ t('Center') }}</option>
-														<option value="end">{{ t('Right') }}</option>
-													</select>
-												</div>
-											</div>
-										</div>
-
-										<div v-if="dropdownConfig.dropdown_type == 'bootstrap'" class="ph-dropdown-section">
-											<div class="ph-dropdown-section-title">Bootstrap 5</div>
-
-											<div class="row g-3">
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Menu width') }}</label>
-													<div class="input-group">
-														<input type="number" min="160" max="520" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.bootstrap.width">
-														<span class="input-group-text">px</span>
-													</div>
-												</div>
-											</div>
-										</div>
-
-										<div v-if="dropdownConfig.dropdown_type == 'mega'" class="ph-dropdown-section">
-											<div class="ph-dropdown-section-title">{{ t('Mega Menu Layout') }}</div>
-
-											<div class="row g-2 mb-3">
-												<div class="col-6">
-													<input type="radio" class="btn-check" id="megaLayoutColumns" value="columns" v-model="dropdownConfig.mega_layout">
-													<label class="btn btn-outline-primary w-100 ph-layout-choice" for="megaLayoutColumns"><i class="fad fa-columns fa-fw me-1"></i> {{ t('Columns') }}</label>
-												</div>
-
-												<div class="col-6">
-													<input type="radio" class="btn-check" id="megaLayoutCards" value="cards" v-model="dropdownConfig.mega_layout">
-													<label class="btn btn-outline-primary w-100 ph-layout-choice" for="megaLayoutCards"><i class="fad fa-th-large fa-fw me-1"></i> {{ t('Cards') }}</label>
-												</div>
-
-												<div class="col-6">
-													<input type="radio" class="btn-check" id="megaLayoutFeatured" value="featured" v-model="dropdownConfig.mega_layout">
-													<label class="btn btn-outline-primary w-100 ph-layout-choice" for="megaLayoutFeatured"><i class="fad fa-star fa-fw me-1"></i> {{ t('Featured') }}</label>
-												</div>
-
-												<div class="col-6">
-													<input type="radio" class="btn-check" id="megaLayoutCategory" value="category_grid" v-model="dropdownConfig.mega_layout">
-													<label class="btn btn-outline-primary w-100 ph-layout-choice" for="megaLayoutCategory"><i class="fad fa-grid-2 fa-fw me-1"></i> {{ t('Category Grid') }}</label>
-												</div>
-											</div>
-
-											<div class="row g-3">
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Columns') }}</label>
-													<input type="number" min="1" max="6" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.mega.columns">
-												</div>
-
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Max items') }}</label>
-													<input type="number" min="1" max="24" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.mega.max_items">
-												</div>
-
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Image position') }}</label>
-													<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.mega.image_position">
-														<option value="left">{{ t('Left') }}</option>
-														<option value="center">{{ t('Center') }}</option>
-														<option value="right">{{ t('Right') }}</option>
-													</select>
-												</div>
-
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Title position') }}</label>
-													<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.mega.title_position">
-														<option value="left">{{ t('Left') }}</option>
-														<option value="center">{{ t('Center') }}</option>
-														<option value="right">{{ t('Right') }}</option>
-													</select>
-												</div>
-
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Description position') }}</label>
-													<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.mega.description_position">
-														<option value="left">{{ t('Left') }}</option>
-														<option value="center">{{ t('Center') }}</option>
-														<option value="right">{{ t('Right') }}</option>
-													</select>
-												</div>
-
-												<div class="col-md-6" v-if="dropdownConfig.mega_layout == 'featured'">
-													<label class="form-label">{{ t('Featured item') }}</label>
-													<input type="number" min="0" max="23" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.mega.featured_index">
-												</div>
-
-												<div class="col-md-6">
-													<div class="form-check form-switch">
-														<input class="form-check-input" type="checkbox" role="switch" id="dropdownShowImages" v-model="dropdownConfig.config_json.mega.show_images">
-														<label class="form-check-label" for="dropdownShowImages">{{ t('Show images') }}</label>
-													</div>
-												</div>
-
-												<div class="col-md-6">
-													<div class="form-check form-switch">
-														<input class="form-check-input" type="checkbox" role="switch" id="dropdownShowDescription" v-model="dropdownConfig.config_json.mega.show_description">
-														<label class="form-check-label" for="dropdownShowDescription">{{ t('Show description') }}</label>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-
-									<div class="col-lg-7 ph-dropdown-preview">
-										<div class="ph-dropdown-preview-header">
-											<div>
-												<div class="ph-dropdown-section-title mb-1">{{ t('Live Preview') }}</div>
-												<div class="text-muted small">@{{ limitedDropdownSubmenus().length }} {{ t('submenu items') }}</div>
-											</div>
-
-											<span class="badge rounded-pill text-bg-light border">@{{ dropdownTypeLabel(dropdownConfig.dropdown_type) }}</span>
-										</div>
-
-										<div class="ph-dropdown-preview-canvas">
-											<div class="ph-dropdown-preview-stage">
-												<ul class="navbar-nav ph-dropdown-preview-nav">
-													<li class="nav-item"><a href="javascript:void(0)" class="nav-link">{{ t('Products') }}</a></li>
-													<li class="nav-item dropdown">
-														<a href="javascript:void(0)" class="nav-link dropdown-toggle active">@{{ dropdownParentMenu.parent_name || 'Parent Menu' }}</a>
-													</li>
-													<li class="nav-item"><a href="javascript:void(0)" class="nav-link">{{ t('Contact') }}</a></li>
-												</ul>
-
-												<div v-if="dropdownConfig.dropdown_type == 'none'" class="ph-dropdown-empty-state">
-													<i class="fad fa-ban fa-fw mb-2"></i>
-													<div>{{ t('Dropdown disabled for this parent menu') }}</div>
-												</div>
-
-												<div v-else :class="'ph-preview-dropdown-shell is-'+dropdownConfig.dropdown_type" :style="dropdownPreviewShellStyle()">
-													<span v-if="dropdownConfig.config_json.dropdown.show_arrow" class="ph-preview-dropdown-arrow" :style="dropdownPreviewArrowStyle()"></span>
-
-													<div v-if="dropdownConfig.dropdown_type == 'bootstrap'" class="ph-preview-bootstrap-dropdown" :style="bootstrapPreviewStyle()">
-														<a v-for="(item, index) in limitedDropdownSubmenus()" href="javascript:void(0)" class="dropdown-item ph-preview-bootstrap-item">
-															<span :class="{ 'is-empty': item.submenu_icon_url === undefined || item.submenu_icon_url === '' }" class="ph-preview-bootstrap-icon-slot">
-																<img v-if="item.submenu_icon_url !== undefined && item.submenu_icon_url !== ''" :src="item.submenu_icon_url" alt="">
-															</span>
-															<span class="ph-preview-bootstrap-label">@{{ item.submenu_name || 'Submenu' }}</span>
-														</a>
-
-														<div v-if="limitedDropdownSubmenus().length < 1" class="dropdown-item text-muted">{{ t('No submenu') }}</div>
-													</div>
-
-													<div v-else :class="'ph-preview-mega-dropdown ph-preview-mega-'+dropdownConfig.mega_layout">
-														<div v-if="dropdownConfig.mega_layout == 'featured' && featuredDropdownItem() !== null" class="ph-preview-featured-item">
-															<div v-if="dropdownConfig.config_json.mega.show_images" class="ph-preview-featured-media">
-																<img v-if="featuredDropdownItem().submenu_icon_url !== undefined && featuredDropdownItem().submenu_icon_url !== ''" :src="featuredDropdownItem().submenu_icon_url" alt="">
-																<i v-else class="fad fa-link fa-fw"></i>
-															</div>
-
-															<div>
-																<div :class="'ph-preview-item-title '+dropdownTextAlign(dropdownConfig.config_json.mega.title_position)">@{{ featuredDropdownItem().submenu_name || 'Featured submenu' }}</div>
-																<div v-if="dropdownConfig.config_json.mega.show_description" :class="'ph-preview-item-description '+dropdownTextAlign(dropdownConfig.config_json.mega.description_position)">@{{ dropdownItemDescription(featuredDropdownItem()) }}</div>
-															</div>
-														</div>
-
-														<div class="ph-preview-mega-grid" :style="megaPreviewGridStyle()">
-															<a v-for="(item, index) in limitedDropdownSubmenus()" href="javascript:void(0)" :class="'ph-preview-mega-item ph-image-'+dropdownConfig.config_json.mega.image_position">
-																<div v-if="dropdownConfig.config_json.mega.show_images" class="ph-preview-menu-thumb">
-																	<img v-if="item.submenu_icon_url !== undefined && item.submenu_icon_url !== ''" :src="item.submenu_icon_url" alt="">
-																	<i v-else class="fad fa-link fa-fw"></i>
-																</div>
-
-																<div class="ph-preview-item-body">
-																	<div :class="'ph-preview-item-title '+dropdownTextAlign(dropdownConfig.config_json.mega.title_position)">@{{ item.submenu_name || 'Submenu' }}</div>
-																	<div v-if="dropdownConfig.config_json.mega.show_description" :class="'ph-preview-item-description '+dropdownTextAlign(dropdownConfig.config_json.mega.description_position)">@{{ dropdownItemDescription(item) }}</div>
-																</div>
-															</a>
-
-															<div v-if="limitedDropdownSubmenus().length < 1" class="ph-dropdown-empty-state py-4">{{ t('No submenu') }}</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="modal-footer px-4 py-3">
-								<input type="hidden" name="menu_page" value="awesome_admin">
-								<input type="hidden" name="parent_code" :value="dropdownParentMenu.parent_code">
-
-								<button type="button" class="btn btn-secondary font-size-inherit" v-on:click="closeDropdownModalParentMenu">{{ t('Cancel') }}</button>
-								<button type="submit" class="btn ph-btn-theme btn-submit-data font-size-inherit">{{ t('Save Dropdown') }}</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</Teleport>
-
 		<!-- Modal Delete Parent Menu -->
 		<Teleport to="body">
 			<div class="modal ph-modal-delete fade" id="modalDeleteParentMenu" tabindex="-1" aria-labelledby="modalDeleteParentMenuLabel" aria-hidden="true">
@@ -760,10 +447,6 @@
 		</Teleport>
 	</div>
 @endsection
-
-@pushonce('css')
-	<link href="{{ asset('assets/css/frontend-menu-dropdown.css?v=').time() }}" rel="stylesheet">
-@endpushonce
 
 @pushonce('js')
 	<script src="{{ url('assets/js/vue3/manage_menu/fe/vueV3-manage-frontend-parent-menu-2026.js?v=').time() }}"></script>

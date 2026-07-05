@@ -669,39 +669,26 @@ const ManageParentMenuVue3 = createApp(
 		},
 		dropdownPreviewShellStyle: function()
 		{
-			const dropdownConfig = this.dropdownConfig.config_json.dropdown;
-			const bootstrapConfig = this.dropdownConfig.config_json.bootstrap;
-			const align = dropdownConfig.align || 'center';
-			const parentName = (this.dropdownParentMenu.parent_name || 'Parent Menu').toString();
-			const stageWidth = 1180;
-			const safeInset = 24;
-			const configuredWidth = (this.dropdownConfig.dropdown_type == 'bootstrap') ? (parseInt(bootstrapConfig.width) || 260) : (parseInt(dropdownConfig.width) || 760);
-			const dropdownWidth = Math.min(configuredWidth, stageWidth - (safeInset * 2));
-			const anchorCenter = Math.round(stageWidth / 2);
-			const anchorOffset = Math.round(Math.min(220, Math.max(116, (parentName.length * 9) + 54)) / 2);
-			const minLeft = safeInset;
-			const maxLeft = Math.max(minLeft, stageWidth - dropdownWidth - safeInset);
-			let dropdownLeft = Math.round(anchorCenter - (dropdownWidth / 2));
+			const config = this.dropdownConfig.config_json.dropdown;
+			const align = config.align || 'center';
+			let marginLeft = 'auto';
+			let marginRight = 'auto';
 
 			if (align == 'start')
 			{
-				dropdownLeft = anchorCenter - anchorOffset;
+				marginLeft = '16px';
 			}
 			else if (align == 'end')
 			{
-				dropdownLeft = anchorCenter + anchorOffset - dropdownWidth;
+				marginRight = '16px';
 			}
 
-			dropdownLeft = Math.min(maxLeft, Math.max(minLeft, Math.round(dropdownLeft)));
-
 			return {
-				'--ph-preview-dropdown-margin': (parseInt(dropdownConfig.margin_top) || 0)+'px',
-				'--ph-preview-dropdown-width': (parseInt(dropdownConfig.width) || 760)+'px',
-				'--ph-preview-bootstrap-width': (parseInt(bootstrapConfig.width) || 260)+'px',
-				'--ph-preview-dropdown-arrow-size': (parseInt(dropdownConfig.arrow_size) || 0)+'px',
-				'--ph-preview-dropdown-anchor-offset': anchorOffset+'px',
-				'--ph-preview-dropdown-left': dropdownLeft+'px',
-				'--ph-preview-dropdown-arrow-left': (anchorCenter - dropdownLeft)+'px'
+				'--ph-preview-dropdown-margin': (parseInt(config.margin_top) || 0)+'px',
+				'--ph-preview-dropdown-width': (parseInt(config.width) || 760)+'px',
+				'--ph-preview-dropdown-arrow-size': (parseInt(config.arrow_size) || 0)+'px',
+				'--ph-preview-dropdown-margin-left': marginLeft,
+				'--ph-preview-dropdown-margin-right': marginRight
 			};
 		},
 		dropdownPreviewArrowStyle: function()
@@ -714,8 +701,26 @@ const ManageParentMenuVue3 = createApp(
 		},
 		bootstrapPreviewStyle: function()
 		{
+			const config = this.dropdownConfig.config_json.bootstrap;
+			const align = config.align || 'start';
+			let marginLeft = '0';
+			let marginRight = 'auto';
+
+			if (align == 'center')
+			{
+				marginLeft = 'auto';
+				marginRight = 'auto';
+			}
+			else if (align == 'end')
+			{
+				marginLeft = 'auto';
+				marginRight = '0';
+			}
+
 			return {
-				width: '100%'
+				width: 'min(100%, '+(parseInt(config.width) || 260)+'px)',
+				marginLeft: marginLeft,
+				marginRight: marginRight
 			};
 		},
 		megaPreviewGridStyle: function()

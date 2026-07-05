@@ -12,8 +12,6 @@ use App\Models\Awesome_Admin\Custom_Permissions;
 use App\Models\Awesome_Admin\Sub_Menu_FE_JSON;
 use App\Models\Awesome_Admin\Parent_Menu_FE_JSON;
 use App\Models\Awesome_Admin\Category_Menu_FE_JSON;
-use App\Models\Awesome_Admin\Parent_Menu_FE_Dropdown_Config;
-use App\Support\FrontendMenuDropdownConfigNormalizer;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -573,7 +571,6 @@ class Awesome_Admin_Menu_FE_Controller extends Controller
 			}
 
 			Custom_Permissions::where('menu_code', $request->input('menu_code'))->delete();
-			Parent_Menu_FE_Dropdown_Config::where('menu_page', 'awesome_admin')->where('parent_code', $request->input('menu_code'))->delete();
 
 			// DB Commit if data successfully saved
 			DB::commit();
@@ -962,10 +959,7 @@ class Awesome_Admin_Menu_FE_Controller extends Controller
 
 	public function listDataParentMenu()
 	{
-		$menu_parentlist 	= Parent_Menu_FE_JSON::where('menu_page', 'awesome_admin')->get();
-		$dropdownConfigs 	= Parent_Menu_FE_Dropdown_Config::where('menu_page', 'awesome_admin')->get()->keyBy('parent_code');
-		$menu_vars_decode 	= [];
-		$menu_vars_decode2 	= [];
+		$menu_parentlist = Parent_Menu_FE_JSON::where('menu_page', 'awesome_admin')->get();
 
 		foreach ($menu_parentlist as $key0 => $value0) 
 		{
@@ -984,8 +978,6 @@ class Awesome_Admin_Menu_FE_Controller extends Controller
 			foreach ($menu_vars_decode as $key => $value) 
 			{
 				$menu_vars_decode2[$key] = $value;
-				$parentCode = isset($menu_vars_decode2[$key]['parent_code']) ? $menu_vars_decode2[$key]['parent_code'] : '';
-				$dropdownConfig = ($parentCode !== '' && isset($dropdownConfigs[$parentCode])) ? $dropdownConfigs[$parentCode] : null;
 
 				if (isset($menu_vars_decode2[$key]['parent_icon_path']) && $menu_vars_decode2[$key]['parent_icon_path'] !== '')
 				{
@@ -996,9 +988,6 @@ class Awesome_Admin_Menu_FE_Controller extends Controller
 					$menu_vars_decode2[$key]['parent_icon_url'] = '';
 					$menu_vars_decode2[$key]['parent_icon_path'] = '';
 				}
-
-				$menu_vars_decode2[$key]['dropdown_config'] = $this->formatDropdownConfig($dropdownConfig);
-				$menu_vars_decode2[$key]['dropdown_type'] = $menu_vars_decode2[$key]['dropdown_config']['dropdown_type'];
 			}
 		}
 		else
@@ -1007,189 +996,6 @@ class Awesome_Admin_Menu_FE_Controller extends Controller
 		}
 
 		return response()->json($menu_vars_decode2);
-	}
-
-	public function listDataParentMenuDropdown(Request $request)
-	{
-		$menuPage 	= $request->input('menu_page', 'awesome_admin');
-		$parentCode = $request->route('parentCode');
-		$parentMenu = $this->findFrontendParentMenuByCode($parentCode, $menuPage);
-
-		if ( ! $parentMenu)
-		{
-			return response()->json(
-			[
-				'success' 	=> false,
-				'status' 	=> 'failed',
-				'message' 	=> t('Data not found')
-			], 404);
-		}
-
-		$dropdownConfig = Parent_Menu_FE_Dropdown_Config::where('menu_page', $menuPage)->where('parent_code', $parentCode)->first();
-
-		return response()->json(
-		[
-			'success' 	=> true,
-			'status' 	=> 'success',
-			'message' 	=> t('Data found'),
-			'data' 		=>
-			[
-				'parent_menu' 		=> $parentMenu,
-				'submenus' 			=> $this->getFrontendSubmenuVars($parentCode),
-				'dropdown_config' 	=> $this->formatDropdownConfig($dropdownConfig)
-			]
-		]);
-	}
-
-	public function update_parentmenu_dropdown(Request $request)
-	{
-		DB::beginTransaction();
-
-		try
-		{
-			$menuPage 	= $request->input('menu_page', 'awesome_admin');
-			$parentCode = $request->input('parent_code');
-
-			if ( ! is_string($parentCode) || trim($parentCode) == '')
-			{
-				throw new \Exception(t('Parent menu code is required'));
-			}
-
-			$parentMenu = $this->findFrontendParentMenuByCode($parentCode, $menuPage);
-
-			if ( ! $parentMenu)
-			{
-				throw new \Exception(t('Parent menu not found'));
-			}
-
-			$configJson = $request->input('config_json', []);
-			$normalized = FrontendMenuDropdownConfigNormalizer::normalize(
-			[
-				'dropdown_type' => $request->input('dropdown_type', 'none'),
-				'mega_layout' => $request->input('mega_layout', 'columns'),
-				'config_json' => $configJson
-			]);
-
-			Parent_Menu_FE_Dropdown_Config::updateOrCreate(
-			[
-				'menu_page' => $menuPage,
-				'parent_code' => $parentCode
-			],
-			[
-				'dropdown_type' => $normalized['dropdown_type'],
-				'mega_layout' => $normalized['mega_layout'],
-				'config_json' => $normalized['config_json']
-			]);
-
-			DB::commit();
-
-			$response = response()->json(
-			[
-				'success' 	=> true,
-				'status' 	=> 'success',
-				'message' 	=> t('Data successfully updated'),
-				'data' 		=> $normalized
-			]);
-		}
-		catch (\Throwable $th)
-		{
-			DB::rollBack();
-
-			$response = response()->json(
-			[
-				'success' 	=> false,
-				'status' 	=> 'failed',
-				'message' 	=> $th->getMessage()
-			], 500);
-		}
-		finally
-		{
-			return $response;
-		}
-	}
-
-	protected function formatDropdownConfig($dropdownConfig = null): array
-	{
-		if ($dropdownConfig)
-		{
-			return FrontendMenuDropdownConfigNormalizer::normalize(
-			[
-				'dropdown_type' => $dropdownConfig->dropdown_type,
-				'mega_layout' => $dropdownConfig->mega_layout,
-				'config_json' => $dropdownConfig->config_json
-			]);
-		}
-
-		return FrontendMenuDropdownConfigNormalizer::defaultConfig();
-	}
-
-	protected function getFrontendParentMenuVars(string $menuPage = 'awesome_admin'): array
-	{
-		$parentMenu = Parent_Menu_FE_JSON::where('menu_page', $menuPage)->first();
-
-		if ( ! $parentMenu || $parentMenu->menu_vars === 'null')
-		{
-			return [];
-		}
-
-		$decoded = json_decode($parentMenu->menu_vars, true);
-
-		return is_array($decoded) ? $decoded : [];
-	}
-
-	protected function findFrontendParentMenuByCode(string $parentCode, string $menuPage = 'awesome_admin'): ?array
-	{
-		foreach ($this->getFrontendParentMenuVars($menuPage) as $value)
-		{
-			if (isset($value['parent_code']) && $value['parent_code'] === $parentCode)
-			{
-				if (isset($value['parent_icon_path']) && $value['parent_icon_path'] !== '')
-				{
-					$value['parent_icon_url'] = url($this->getImageURL($value['parent_icon_path']));
-				}
-				else
-				{
-					$value['parent_icon_url'] = '';
-					$value['parent_icon_path'] = '';
-				}
-
-				return $value;
-			}
-		}
-
-		return null;
-	}
-
-	protected function getFrontendSubmenuVars(string $parentCode): array
-	{
-		$submenuList = Sub_Menu_FE_JSON::where('parent_code', $parentCode)->first();
-
-		if ( ! $submenuList || $submenuList->menu_vars === 'null')
-		{
-			return [];
-		}
-
-		$decoded = json_decode($submenuList->menu_vars, true);
-
-		if ( ! is_array($decoded))
-		{
-			return [];
-		}
-
-		foreach ($decoded as $key => $value)
-		{
-			if (isset($decoded[$key]['submenu_icon_path']) && $decoded[$key]['submenu_icon_path'] !== '')
-			{
-				$decoded[$key]['submenu_icon_url'] = url($this->getImageURL($decoded[$key]['submenu_icon_path'], 'icons/sub_menu'));
-			}
-			else
-			{
-				$decoded[$key]['submenu_icon_url'] = '';
-				$decoded[$key]['submenu_icon_path'] = '';
-			}
-		}
-
-		return array_values($decoded);
 	}
 
 	public function listDataParentMenuForSubmenu()
