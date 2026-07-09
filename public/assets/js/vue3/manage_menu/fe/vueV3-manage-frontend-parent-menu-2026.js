@@ -16,7 +16,7 @@ const ManageParentMenuVue3 = createApp(
 				mega_layout: 'columns',
 				config_json:
 				{
-					dropdown: { show_arrow: true, margin_top: 12, arrow_size: 12, width: 760, align: 'center' },
+					dropdown: { show_arrow: true, margin_top: 12, arrow_size: 12, width: 760, width_mode: 'container', align: 'center', toggle_icon_type: '', toggle_icon_path: '', toggle_icon_url: '', toggle_icon_custom: '' },
 					bootstrap: { width: 260, align: 'start' },
 					mega: { columns: 3, max_items: 12, image_position: 'left', title_position: 'left', description_position: 'left', show_images: true, show_description: true, featured_index: 0 }
 				}
@@ -427,7 +427,7 @@ const ManageParentMenuVue3 = createApp(
 				mega_layout: 'columns',
 				config_json:
 				{
-					dropdown: { show_arrow: true, margin_top: 12, arrow_size: 12, width: 760, align: 'center' },
+					dropdown: { show_arrow: true, margin_top: 12, arrow_size: 12, width: 760, width_mode: 'container', align: 'center', toggle_icon_type: '', toggle_icon_path: '', toggle_icon_url: '', toggle_icon_custom: '' },
 					bootstrap: { width: 260, align: 'start' },
 					mega: { columns: 3, max_items: 12, image_position: 'left', title_position: 'left', description_position: 'left', show_images: true, show_description: true, featured_index: 0 }
 				}
@@ -639,6 +639,69 @@ const ManageParentMenuVue3 = createApp(
 
 			return items[index];
 		},
+		dropdownItemIconUrl: function(item)
+		{
+			if (item === null || item === undefined)
+			{
+				return '';
+			}
+
+			if (item.submenu_icon_url !== undefined && item.submenu_icon_url !== '')
+			{
+				return item.submenu_icon_url;
+			}
+
+			return '';
+		},
+		dropdownItemIconHtml: function(item)
+		{
+			if (item === null || item === undefined)
+			{
+				return '';
+			}
+
+			if (item.submenu_icon_custom !== undefined && item.submenu_icon_custom !== '')
+			{
+				return item.submenu_icon_custom;
+			}
+
+			if (item.icon_html !== undefined && item.icon_html !== '')
+			{
+				return item.icon_html;
+			}
+
+			return '';
+		},
+		dropdownItemHasIcon: function(item)
+		{
+			return this.dropdownItemIconUrl(item) !== '' || this.dropdownItemIconHtml(item) !== '';
+		},
+		dropdownToggleIconUrl: function()
+		{
+			const config = this.dropdownConfig.config_json.dropdown;
+
+			if (config.toggle_icon_type == 'upload_file' && config.toggle_icon_url !== undefined && config.toggle_icon_url !== '')
+			{
+				return config.toggle_icon_url;
+			}
+
+			return '';
+		},
+		dropdownToggleIconHtml: function()
+		{
+			const config = this.dropdownConfig.config_json.dropdown;
+
+			if (config.toggle_icon_type == 'custom_input' && config.toggle_icon_custom !== undefined && config.toggle_icon_custom !== '')
+			{
+				return config.toggle_icon_custom;
+			}
+
+			return '';
+		},
+		dropdownToggleHasIcon: function()
+		{
+			return this.dropdownToggleIconUrl() !== '' || this.dropdownToggleIconHtml() !== '';
+		},
 		dropdownItemDescription: function(item)
 		{
 			if (item.submenu_description !== undefined && item.submenu_description !== '')
@@ -651,7 +714,7 @@ const ManageParentMenuVue3 = createApp(
 				return item.description;
 			}
 
-			return item.submenu_link || 'Public link';
+			return '';
 		},
 		dropdownTextAlign: function(position)
 		{
@@ -672,10 +735,12 @@ const ManageParentMenuVue3 = createApp(
 			const dropdownConfig = this.dropdownConfig.config_json.dropdown;
 			const bootstrapConfig = this.dropdownConfig.config_json.bootstrap;
 			const align = dropdownConfig.align || 'center';
+			const widthMode = dropdownConfig.width_mode || 'container';
 			const parentName = (this.dropdownParentMenu.parent_name || 'Parent Menu').toString();
 			const stageWidth = 1180;
-			const safeInset = 24;
-			const configuredWidth = (this.dropdownConfig.dropdown_type == 'bootstrap') ? (parseInt(bootstrapConfig.width) || 260) : (parseInt(dropdownConfig.width) || 760);
+			const safeInset = 96;
+			const isMegaFullWidth = this.dropdownConfig.dropdown_type == 'mega' && widthMode != 'custom';
+			const configuredWidth = (this.dropdownConfig.dropdown_type == 'bootstrap') ? (parseInt(bootstrapConfig.width) || 260) : (isMegaFullWidth ? stageWidth - (safeInset * 2) : (parseInt(dropdownConfig.width) || 760));
 			const dropdownWidth = Math.min(configuredWidth, stageWidth - (safeInset * 2));
 			const anchorCenter = Math.round(stageWidth / 2);
 			const anchorOffset = Math.round(Math.min(220, Math.max(116, (parentName.length * 9) + 54)) / 2);
@@ -697,6 +762,8 @@ const ManageParentMenuVue3 = createApp(
 			return {
 				'--ph-preview-dropdown-margin': (parseInt(dropdownConfig.margin_top) || 0)+'px',
 				'--ph-preview-dropdown-width': (parseInt(dropdownConfig.width) || 760)+'px',
+				'--ph-preview-dropdown-width-mode': widthMode,
+				'--ph-preview-dropdown-safe-space': (safeInset * 2)+'px',
 				'--ph-preview-bootstrap-width': (parseInt(bootstrapConfig.width) || 260)+'px',
 				'--ph-preview-dropdown-arrow-size': (parseInt(dropdownConfig.arrow_size) || 0)+'px',
 				'--ph-preview-dropdown-anchor-offset': anchorOffset+'px',

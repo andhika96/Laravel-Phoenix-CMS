@@ -4,8 +4,8 @@ const ManageSubmenuVue3 = createApp(
 	{
 		return {
 			responseDataMenu : [],
-			responseDataSubmenu: [{ parent_code: '', submenu_type: '', submenu_name: '', submenu_link: '', submenu_icon_type: '', submenu_icon: '', submenu_icon_url: '', submenu_icon_path: '', submenu_icon_custom: '', submenu_roles: [], submenu_permissions: '' }],
-			responseNewDataSubmenu: { parent_code: '', submenu_type: '', submenu_name: '', submenu_link: '', submenu_icon_type: '', submenu_icon: '', submenu_icon_url: '', submenu_icon_path: '', submenu_icon_custom: '', submenu_roles: [], submenu_permissions: '' },
+			responseDataSubmenu: [{ parent_code: '', submenu_type: '', submenu_name: '', submenu_link: '', submenu_description: '', submenu_icon_type: '', submenu_icon: '', submenu_icon_url: '', submenu_icon_path: '', submenu_icon_custom: '', submenu_roles: [], submenu_permissions: '' }],
+			responseNewDataSubmenu: { parent_code: '', submenu_type: '', submenu_name: '', submenu_link: '', submenu_description: '', submenu_icon_type: '', submenu_icon: '', submenu_icon_url: '', submenu_icon_path: '', submenu_icon_custom: '', submenu_roles: [], submenu_permissions: '' },
 			responseDataParentMenu : [],
 			responseDataRoutes: [],
 			responseDataRoles: [],
@@ -1138,7 +1138,7 @@ const ManageSubmenuVue3 = createApp(
 				}.bind(this), 300);
 
 				// Reset form add new menu
-				this.responseNewDataSubmenu = { parent_code: '', parent_name: '', submenu_type: '', submenu_name: '', submenu_link: '', submenu_icon_type: '', submenu_icon: '', submenu_icon_url: '', submenu_icon_path: '', submenu_icon_custom: '', submenu_roles: '', submenu_permissions: '' };
+				this.responseNewDataSubmenu = { parent_code: '', parent_name: '', submenu_type: '', submenu_name: '', submenu_link: '', submenu_description: '', submenu_icon_type: '', submenu_icon: '', submenu_icon_url: '', submenu_icon_path: '', submenu_icon_custom: '', submenu_roles: '', submenu_permissions: '' };
 
 				// console.log(this.responseDataMenuParent);
 			}
@@ -1283,7 +1283,7 @@ const ManageSubmenuVue3 = createApp(
 					}.bind(this), 300);
 
 					// Reset form add new menu
-					this.responseNewDataSubmenu = { parent_code: '', parent_name: '', submenu_type: '', submenu_name: '', submenu_link: '', submenu_icon_type: '', submenu_icon: '', submenu_icon_url: '', submenu_icon_path: '', submenu_icon_custom: '', submenu_roles: '', submenu_permissions: '' };
+					this.responseNewDataSubmenu = { parent_code: '', parent_name: '', submenu_type: '', submenu_name: '', submenu_link: '', submenu_description: '', submenu_icon_type: '', submenu_icon: '', submenu_icon_url: '', submenu_icon_path: '', submenu_icon_custom: '', submenu_roles: '', submenu_permissions: '' };
 				}
 				else if (response.data.status == 'failed') 
 				{

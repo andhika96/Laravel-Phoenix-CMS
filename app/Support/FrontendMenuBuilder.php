@@ -28,6 +28,7 @@ class FrontendMenuBuilder
 				'mega_layout' => $configs[$parentCode]->mega_layout,
 				'config_json' => $configs[$parentCode]->config_json,
 			]) : FrontendMenuDropdownConfigNormalizer::defaultConfig();
+			$dropdownConfig = self::withDropdownToggleIconAssets($dropdownConfig);
 
 			$items[] = [
 				'parent_code' => $parentCode,
@@ -85,6 +86,31 @@ class FrontendMenuBuilder
 		}
 
 		return '<i class="'.e($class).'"></i>';
+	}
+
+	protected static function withDropdownToggleIconAssets(array $dropdownConfig): array
+	{
+		$dropdown = $dropdownConfig['config_json']['dropdown'];
+
+		if ($dropdown['toggle_icon_type'] == 'upload_file')
+		{
+			$dropdown['toggle_icon_url'] = self::imageUrl($dropdown['toggle_icon_path'], 'icons/dropdown_toggle');
+			$dropdown['toggle_icon_html'] = '';
+		}
+		else if ($dropdown['toggle_icon_type'] == 'custom_input')
+		{
+			$dropdown['toggle_icon_url'] = '';
+			$dropdown['toggle_icon_html'] = self::safeIconHtml($dropdown['toggle_icon_custom']);
+		}
+		else
+		{
+			$dropdown['toggle_icon_url'] = '';
+			$dropdown['toggle_icon_html'] = '';
+		}
+
+		$dropdownConfig['config_json']['dropdown'] = $dropdown;
+
+		return $dropdownConfig;
 	}
 
 	protected static function submenusForParent($submenuRow): array

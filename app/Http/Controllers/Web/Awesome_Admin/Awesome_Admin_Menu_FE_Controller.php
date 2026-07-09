@@ -402,6 +402,11 @@ class Awesome_Admin_Menu_FE_Controller extends Controller
 					$getJSONDecodeMenuVars[$i]['submenu_icon_type'] = '';
 				}
 
+				if ( ! isset($getJSONDecodeMenuVars[$i]['submenu_description']))
+				{
+					$getJSONDecodeMenuVars[$i]['submenu_description'] = '';
+				}
+
 				if ( ! isset($getJSONDecodeMenuVars[$i]['submenu_icon_custom']))
 				{
 					$getJSONDecodeMenuVars[$i]['submenu_icon_custom'] = str_replace('"', "'", $getJSONDecodeMenuVars[$i]['submenu_icon_custom_default']);
@@ -1063,12 +1068,16 @@ class Awesome_Admin_Menu_FE_Controller extends Controller
 			}
 
 			$configJson = $request->input('config_json', []);
+			$existingConfig = Parent_Menu_FE_Dropdown_Config::where('menu_page', $menuPage)
+				->where('parent_code', $parentCode)
+				->first();
 			$normalized = FrontendMenuDropdownConfigNormalizer::normalize(
 			[
 				'dropdown_type' => $request->input('dropdown_type', 'none'),
 				'mega_layout' => $request->input('mega_layout', 'columns'),
 				'config_json' => $configJson
 			]);
+			$normalized = $this->storeDropdownToggleIcon($request, $normalized, $this->formatDropdownConfig($existingConfig));
 
 			Parent_Menu_FE_Dropdown_Config::updateOrCreate(
 			[
@@ -1112,15 +1121,97 @@ class Awesome_Admin_Menu_FE_Controller extends Controller
 	{
 		if ($dropdownConfig)
 		{
-			return FrontendMenuDropdownConfigNormalizer::normalize(
+			$config = FrontendMenuDropdownConfigNormalizer::normalize(
 			[
 				'dropdown_type' => $dropdownConfig->dropdown_type,
 				'mega_layout' => $dropdownConfig->mega_layout,
 				'config_json' => $dropdownConfig->config_json
 			]);
+
+			return $this->withDropdownToggleIconUrl($config);
 		}
 
-		return FrontendMenuDropdownConfigNormalizer::defaultConfig();
+		return $this->withDropdownToggleIconUrl(FrontendMenuDropdownConfigNormalizer::defaultConfig());
+	}
+
+	protected function storeDropdownToggleIcon(Request $request, array $config, array $existingConfig): array
+	{
+		$dropdownConfig = $config['config_json']['dropdown'];
+		$existingDropdownConfig = $existingConfig['config_json']['dropdown'] ?? [];
+		$existingIconPath = $existingDropdownConfig['toggle_icon_path'] ?? '';
+		$iconType = $dropdownConfig['toggle_icon_type'];
+
+		if ($iconType == 'upload_file')
+		{
+			if ($request->hasFile('dropdown_toggle_icon'))
+			{
+				$file = $request->file('dropdown_toggle_icon');
+
+				if (formatSizeUnitsOnlyNumber($file->getSize()) > $this->max_file_size)
+				{
+					$size = Number::fileSize($this->max_file_size * 1024);
+
+					throw new \Exception('File size is larger than allowed (Max '.$size.')');
+				}
+
+				if ( ! in_array($file->getMimeType(), $this->mime_types))
+				{
+					throw new \Exception('Format file or mime type invalid');
+				}
+
+				if ($existingIconPath !== '' && Storage::disk('public')->exists('icons/dropdown_toggle/'.$existingIconPath))
+				{
+					$this->deleteFile($existingIconPath, 'icons/dropdown_toggle');
+				}
+
+				$dropdownConfig['toggle_icon_path'] = $this->uploadFile($file, 'dropdown_toggle');
+			}
+			else
+			{
+				$dropdownConfig['toggle_icon_path'] = $existingIconPath;
+			}
+
+			$dropdownConfig['toggle_icon_custom'] = '';
+		}
+		else
+		{
+			if ($existingIconPath !== '' && Storage::disk('public')->exists('icons/dropdown_toggle/'.$existingIconPath))
+			{
+				$this->deleteFile($existingIconPath, 'icons/dropdown_toggle');
+			}
+
+			$dropdownConfig['toggle_icon_path'] = '';
+			$dropdownConfig['toggle_icon_custom'] = ($iconType == 'custom_input') ? $dropdownConfig['toggle_icon_custom'] : '';
+		}
+
+		$config['config_json']['dropdown'] = $dropdownConfig;
+
+		return $this->withDropdownToggleIconUrl($config);
+	}
+
+	protected function withDropdownToggleIconUrl(array $config): array
+	{
+		$dropdownConfig = $config['config_json']['dropdown'];
+
+		if ($dropdownConfig['toggle_icon_type'] == 'upload_file')
+		{
+			$iconUrl = $this->getImageURL($dropdownConfig['toggle_icon_path'], 'icons/dropdown_toggle');
+			$dropdownConfig['toggle_icon_url'] = $iconUrl ? url($iconUrl) : '';
+			$dropdownConfig['toggle_icon_custom'] = '';
+		}
+		else
+		{
+			$dropdownConfig['toggle_icon_url'] = '';
+
+			if ($dropdownConfig['toggle_icon_type'] != 'custom_input')
+			{
+				$dropdownConfig['toggle_icon_custom'] = '';
+			}
+		}
+
+		$config['config_json']['dropdown'] = $dropdownConfig;
+
+		return $config;
 	}
 
 	protected function getFrontendParentMenuVars(string $menuPage = 'awesome_admin'): array
@@ -1186,6 +1277,11 @@ class Awesome_Admin_Menu_FE_Controller extends Controller
 			{
 				$decoded[$key]['submenu_icon_url'] = '';
 				$decoded[$key]['submenu_icon_path'] = '';
+			}
+
+			if ( ! isset($decoded[$key]['submenu_description']))
+			{
+				$decoded[$key]['submenu_description'] = '';
 			}
 		}
 
@@ -1326,6 +1422,11 @@ class Awesome_Admin_Menu_FE_Controller extends Controller
 				{
 					$menu_vars_decode2[$key]['submenu_icon_url'] = '';
 					$menu_vars_decode2[$key]['submenu_icon_path'] = '';
+				}
+
+				if ( ! isset($menu_vars_decode2[$key]['submenu_description']))
+				{
+					$menu_vars_decode2[$key]['submenu_description'] = '';
 				}
 			}
 		}

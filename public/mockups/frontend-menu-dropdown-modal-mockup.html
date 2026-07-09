@@ -446,9 +446,31 @@
 		.builder-settings {
 			min-width: 0;
 			overflow: auto;
-			padding: 20px 22px;
 			border-right: 1px solid var(--cms-border);
 			background: #ffffff;
+		}
+
+		.settings-type-region {
+			position: sticky;
+			top: 0;
+			z-index: 2;
+			padding: 20px 22px 18px;
+			border-bottom: 1px solid var(--cms-border);
+			background: #ffffff;
+		}
+
+		.settings-type-caption {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 10px;
+			color: var(--cms-muted);
+			font-size: 12px;
+			margin: 0 0 12px;
+		}
+
+		.settings-scroll {
+			padding: 2px 22px 24px;
 		}
 
 		.builder-preview {
@@ -501,10 +523,130 @@
 		}
 
 		.segmented button.is-active {
-			color: var(--cms-red);
-			background: #ffffff;
-			border-color: var(--cms-red);
-			box-shadow: 0 8px 18px rgba(255, 42, 53, .10);
+			color: #ffffff;
+			background: #0d6efd;
+			border-color: #0d6efd;
+			box-shadow: 0 8px 18px rgba(13, 110, 253, .18);
+		}
+
+		.settings-accordion {
+			display: grid;
+			gap: 16px;
+			padding-top: 16px;
+			border-top: 0;
+		}
+
+		.settings-accordion-item {
+			border: 0;
+		}
+
+		.settings-accordion-toggle {
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			padding: 16px 0;
+			border: 0;
+			border-bottom: 1px solid var(--cms-border-soft);
+			background: transparent;
+			color: #21322d;
+			font-size: 14px;
+			font-weight: 800;
+			text-align: left;
+		}
+
+		.settings-accordion-toggle:hover,
+		.settings-accordion-toggle:focus {
+			color: var(--cms-green);
+			outline: none;
+		}
+
+		.settings-accordion-title {
+			display: inline-flex;
+			align-items: center;
+			gap: 9px;
+		}
+
+		.settings-accordion-title i:first-child {
+			width: 18px;
+			color: var(--cms-green);
+			text-align: center;
+		}
+
+		.settings-accordion-chevron {
+			color: #76817d;
+			font-size: 12px;
+			transition: transform .18s ease;
+		}
+
+		.settings-accordion-toggle[aria-expanded="true"] .settings-accordion-chevron {
+			transform: rotate(180deg);
+		}
+
+		.settings-accordion-panel {
+			padding: 12px 0 18px;
+		}
+
+		.settings-accordion-panel[hidden] {
+			display: none !important;
+		}
+
+		.settings-panel-note {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			color: var(--cms-muted);
+			font-size: 12px;
+			margin: 0 0 14px;
+		}
+
+		.settings-panel-note strong {
+			color: #32443d;
+			font-size: 12px;
+		}
+
+		.caret-icon-fields {
+			display: grid;
+			gap: 12px;
+			margin-top: 12px;
+		}
+
+		.caret-icon-file-status {
+			display: block;
+			min-height: 17px;
+			color: var(--cms-muted);
+			font-size: 11px;
+			margin-top: 6px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.settings-accordion-panel .toggle-row {
+			border-width: 0 0 1px;
+			border-radius: 0;
+			padding: 9px 0;
+			background: transparent;
+		}
+
+		.settings-accordion-panel .toggle-row:last-child {
+			border-bottom: 0;
+		}
+
+		.dropdown-toggle-icon {
+			display: inline-block;
+			min-width: 12px;
+			margin-left: 7px;
+			text-align: center;
+		}
+
+		img.dropdown-toggle-icon {
+			width: 14px;
+			height: 14px;
+			object-fit: contain;
+			vertical-align: -2px;
 		}
 
 		.choice-grid {
@@ -740,7 +882,7 @@
 			z-index: 2;
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
+			justify-content: center;
 			gap: 20px;
 			min-height: 76px;
 			padding: 0 24px;
@@ -758,7 +900,7 @@
 		.preview-links {
 			display: flex;
 			align-items: center;
-			justify-content: flex-end;
+			justify-content: center;
 			gap: 8px;
 			min-width: 0;
 		}
@@ -834,6 +976,11 @@
 
 		.bootstrap-dropdown.align-left {
 			margin-left: 210px;
+			margin-right: auto;
+		}
+
+		.bootstrap-dropdown.align-center {
+			margin-left: auto;
 			margin-right: auto;
 		}
 
@@ -1460,7 +1607,7 @@
 				<div class="builder-title-group">
 					<div class="builder-title-icon"><i class="fas fa-layer-group"></i></div>
 					<div class="min-w-0">
-						<h2 class="builder-title" id="builderTitle">Configure Dropdown</h2>
+						<h2 class="builder-title" id="builderTitle">Manage Dropdown Menu</h2>
 						<p class="builder-kicker" id="builderKicker">Parent Menu</p>
 					</div>
 				</div>
@@ -1473,8 +1620,9 @@
 
 			<div class="builder-body">
 				<aside class="builder-settings">
-					<div class="setting-section">
-						<p class="section-label">Dropdown Type</p>
+					<div class="settings-type-region">
+						<p class="section-label mb-2">Dropdown Type</p>
+						<p class="settings-type-caption"><span id="submenuCount">2 submenu items</span><span id="settingsMode">Mega Menu</span></p>
 						<div class="segmented" id="dropdownTypeGroup">
 							<button type="button" data-type="none">None</button>
 							<button type="button" data-type="bootstrap">Bootstrap 5</button>
@@ -1482,149 +1630,148 @@
 						</div>
 					</div>
 
-					<div class="setting-section" id="bootstrapSettings">
-						<p class="section-label">Bootstrap Settings</p>
-						<div class="control-row">
-							<div>
-								<label class="mini-label" for="bootstrapSource">Item Source</label>
-								<select class="form-select form-select-sm" id="bootstrapSource">
-									<option value="submenu">Existing Submenus</option>
-									<option value="manual">Manual Items</option>
-								</select>
-							</div>
-							<div>
-								<label class="mini-label" for="bootstrapAlign">Alignment</label>
-								<select class="form-select form-select-sm" id="bootstrapAlign">
-									<option value="right">Right</option>
-									<option value="left">Left</option>
-								</select>
-							</div>
-							<div>
-								<label class="mini-label" for="bootstrapTrigger">Open Behavior</label>
-								<select class="form-select form-select-sm" id="bootstrapTrigger">
-									<option value="hover">Hover</option>
-									<option value="click">Click</option>
-								</select>
-							</div>
-							<div>
-								<label class="mini-label" for="bootstrapWidth">Width</label>
-								<select class="form-select form-select-sm" id="bootstrapWidth">
-									<option value="260">260px</option>
-									<option value="300">300px</option>
-									<option value="340">340px</option>
-								</select>
-							</div>
+					<div class="settings-scroll">
+						<div class="settings-accordion" id="settingsAccordion">
+							<section class="settings-accordion-item" id="dropdownBoxSettings">
+								<button class="settings-accordion-toggle" type="button" data-accordion-toggle="appearance" aria-expanded="true" aria-controls="appearancePanel">
+									<span class="settings-accordion-title"><i class="fas fa-magic"></i>Appearance &amp; Indicator</span>
+									<i class="fas fa-chevron-down settings-accordion-chevron"></i>
+								</button>
+								<div class="settings-accordion-panel" id="appearancePanel">
+									<div class="control-row">
+										<div>
+											<label class="mini-label" for="dropdownMarginTop">Margin to menu</label>
+											<select class="form-select form-select-sm" id="dropdownMarginTop">
+												<option value="0">0px</option>
+												<option value="8">8px</option>
+												<option value="12">12px</option>
+												<option value="16">16px</option>
+												<option value="24">24px</option>
+												<option value="32">32px</option>
+											</select>
+										</div>
+										<div>
+											<label class="mini-label" for="arrowSize">Arrow size</label>
+											<select class="form-select form-select-sm" id="arrowSize">
+												<option value="8">Small</option>
+												<option value="10">Medium</option>
+												<option value="14">Large</option>
+											</select>
+										</div>
+									</div>
+									<label class="toggle-row">
+										<span>Show arrow pointer</span>
+										<input class="form-check-input m-0" id="showArrow" type="checkbox" checked>
+									</label>
+									<div class="caret-icon-fields">
+										<div>
+											<label class="mini-label" for="toggleIconType">Dropdown icon type</label>
+											<select class="form-select form-select-sm" id="toggleIconType">
+												<option value="default">Default</option>
+												<option value="upload">Upload File</option>
+												<option value="custom">Custom Input</option>
+											</select>
+										</div>
+										<div id="toggleIconUploadWrapper" hidden>
+											<label class="mini-label" for="toggleIconFile">Dropdown icon upload</label>
+											<input class="form-control form-control-sm" id="toggleIconFile" type="file" accept="image/*,.svg">
+											<span class="caret-icon-file-status" id="toggleIconFileName">No file selected</span>
+										</div>
+										<div id="toggleIconCustomWrapper" hidden>
+											<label class="mini-label" for="toggleIconCustom">Dropdown icon custom</label>
+											<input class="form-control form-control-sm" id="toggleIconCustom" type="text" value="fas fa-chevron-down">
+										</div>
+									</div>
+								</div>
+							</section>
+
+							<section class="settings-accordion-item" id="placementSettings">
+								<button class="settings-accordion-toggle" type="button" data-accordion-toggle="placement" aria-expanded="true" aria-controls="placementPanel">
+									<span class="settings-accordion-title"><i class="fas fa-arrows-alt-h"></i>Placement &amp; Size</span>
+									<i class="fas fa-chevron-down settings-accordion-chevron"></i>
+								</button>
+								<div class="settings-accordion-panel" id="placementPanel">
+									<div id="bootstrapSettings">
+										<div class="control-row">
+											<div>
+												<label class="mini-label" for="bootstrapAlign">Dropdown align</label>
+												<select class="form-select form-select-sm" id="bootstrapAlign">
+													<option value="right">Right</option>
+													<option value="center">Center</option>
+													<option value="left">Left</option>
+												</select>
+											</div>
+											<div>
+												<label class="mini-label" for="bootstrapWidth">Menu width</label>
+												<select class="form-select form-select-sm" id="bootstrapWidth">
+													<option value="260">260px</option>
+													<option value="300">300px</option>
+													<option value="340">340px</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div id="megaSettings">
+										<label class="mini-label" for="megaWidth">Width mode</label>
+										<select class="form-select form-select-sm" id="megaWidth">
+											<option value="contained">Container</option>
+											<option value="wide">Wide</option>
+											<option value="full">Full width</option>
+										</select>
+									</div>
+								</div>
+							</section>
+
+							<section class="settings-accordion-item" id="layoutSettings">
+								<button class="settings-accordion-toggle" type="button" data-accordion-toggle="layout" aria-expanded="false" aria-controls="layoutPanel">
+									<span class="settings-accordion-title"><i class="fas fa-th-large"></i>Mega Menu Layout</span>
+									<i class="fas fa-chevron-down settings-accordion-chevron"></i>
+								</button>
+								<div class="settings-accordion-panel" id="layoutPanel" hidden>
+									<div id="megaLayoutSettings">
+										<div class="choice-grid" id="megaLayoutGroup">
+											<button class="layout-choice" type="button" data-layout="columns"><strong>Columns</strong><span>Menu link dikelompokkan dalam beberapa kolom.</span></button>
+											<button class="layout-choice" type="button" data-layout="cards"><strong>Cards</strong><span>Konten menu tampil sebagai grid item visual.</span></button>
+											<button class="layout-choice" type="button" data-layout="featured"><strong>Featured + Links</strong><span>Satu area highlight dan daftar link di sampingnya.</span></button>
+											<button class="layout-choice" type="button" data-layout="category"><strong>Category Grid</strong><span>Kategori ringkas untuk banyak area konten.</span></button>
+										</div>
+										<div class="mt-3" id="layoutOptionSettings"></div>
+										<div class="mt-3" id="displaySettings">
+											<p class="section-label">Display Options</p>
+											<div class="control-row mb-3">
+												<div>
+													<label class="mini-label" for="imagePosition">Image/Icon Position</label>
+													<select class="form-select form-select-sm" id="imagePosition"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select>
+												</div>
+												<div>
+													<label class="mini-label" for="titlePosition">Title Position</label>
+													<select class="form-select form-select-sm" id="titlePosition"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select>
+												</div>
+												<div>
+													<label class="mini-label" for="descriptionPosition">Description Position</label>
+													<select class="form-select form-select-sm" id="descriptionPosition"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select>
+												</div>
+											</div>
+											<label class="toggle-row"><span>Show icons</span><input class="form-check-input m-0" id="showIcons" type="checkbox" checked></label>
+											<label class="toggle-row"><span>Show descriptions</span><input class="form-check-input m-0" id="showDescriptions" type="checkbox" checked></label>
+											<label class="toggle-row"><span>Highlight active parent</span><input class="form-check-input m-0" id="highlightParent" type="checkbox" checked></label>
+										</div>
+									</div>
+								</div>
+							</section>
+
+							<section class="settings-accordion-item" id="submenuSettings">
+								<button class="settings-accordion-toggle" type="button" data-accordion-toggle="items" aria-expanded="false" aria-controls="submenuPanel">
+									<span class="settings-accordion-title"><i class="fas fa-list-ul"></i>Submenu Items</span>
+									<i class="fas fa-chevron-down settings-accordion-chevron"></i>
+								</button>
+								<div class="settings-accordion-panel" id="submenuPanel" hidden>
+									<p class="settings-panel-note"><span>Current submenu list</span><strong id="submenuPanelCount">2 items</strong></p>
+									<div class="item-editor" id="itemEditor"></div>
+									<button class="btn-outline-soft w-100 mt-3" id="addMockItem" type="button"><i class="fas fa-plus me-2"></i>Add sample item</button>
+								</div>
+							</section>
 						</div>
-					</div>
-
-					<div class="setting-section" id="megaSettings">
-						<p class="section-label">Mega Layout</p>
-						<div class="choice-grid" id="megaLayoutGroup">
-							<button class="layout-choice" type="button" data-layout="columns">
-								<strong>Columns</strong>
-								<span>Menu link dikelompokkan dalam beberapa kolom.</span>
-							</button>
-							<button class="layout-choice" type="button" data-layout="cards">
-								<strong>Cards</strong>
-								<span>Konten menu tampil sebagai grid item visual.</span>
-							</button>
-							<button class="layout-choice" type="button" data-layout="featured">
-								<strong>Featured + Links</strong>
-								<span>Satu area highlight dan daftar link di sampingnya.</span>
-							</button>
-							<button class="layout-choice" type="button" data-layout="category">
-								<strong>Category Grid</strong>
-								<span>Kategori ringkas untuk banyak area konten.</span>
-							</button>
-						</div>
-
-						<div class="mt-3">
-							<label class="mini-label" for="megaWidth">Menu Width</label>
-							<select class="form-select form-select-sm" id="megaWidth">
-								<option value="contained">Contained</option>
-								<option value="wide">Wide</option>
-								<option value="full">Full Width</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="setting-section" id="layoutOptionSettings"></div>
-
-					<div class="setting-section" id="dropdownBoxSettings">
-						<p class="section-label">Dropdown Box</p>
-						<div class="control-row mb-3">
-							<div>
-								<label class="mini-label" for="dropdownMarginTop">Box Margin Top</label>
-								<select class="form-select form-select-sm" id="dropdownMarginTop">
-									<option value="0">0px</option>
-									<option value="8">8px</option>
-									<option value="12">12px</option>
-									<option value="16">16px</option>
-									<option value="24">24px</option>
-									<option value="32">32px</option>
-								</select>
-							</div>
-							<div>
-								<label class="mini-label" for="arrowSize">Arrow Size</label>
-								<select class="form-select form-select-sm" id="arrowSize">
-									<option value="8">Small</option>
-									<option value="10">Medium</option>
-									<option value="14">Large</option>
-								</select>
-							</div>
-						</div>
-						<label class="toggle-row">
-							<span>Show arrow pointer</span>
-							<input class="form-check-input m-0" id="showArrow" type="checkbox" checked>
-						</label>
-					</div>
-
-					<div class="setting-section" id="displaySettings">
-						<p class="section-label">Display Options</p>
-						<div class="control-row mb-3">
-							<div>
-								<label class="mini-label" for="imagePosition">Image/Icon Position</label>
-								<select class="form-select form-select-sm" id="imagePosition">
-									<option value="left">Left</option>
-									<option value="center">Center</option>
-									<option value="right">Right</option>
-								</select>
-							</div>
-							<div>
-								<label class="mini-label" for="titlePosition">Title Position</label>
-								<select class="form-select form-select-sm" id="titlePosition">
-									<option value="left">Left</option>
-									<option value="center">Center</option>
-									<option value="right">Right</option>
-								</select>
-							</div>
-							<div>
-								<label class="mini-label" for="descriptionPosition">Description Position</label>
-								<select class="form-select form-select-sm" id="descriptionPosition">
-									<option value="left">Left</option>
-									<option value="center">Center</option>
-									<option value="right">Right</option>
-								</select>
-							</div>
-						</div>
-						<label class="toggle-row">
-							<span>Show icons</span>
-							<input class="form-check-input m-0" id="showIcons" type="checkbox" checked>
-						</label>
-						<label class="toggle-row">
-							<span>Show descriptions</span>
-							<input class="form-check-input m-0" id="showDescriptions" type="checkbox" checked>
-						</label>
-						<label class="toggle-row">
-							<span>Highlight active parent</span>
-							<input class="form-check-input m-0" id="highlightParent" type="checkbox" checked>
-						</label>
-					</div>
-
-					<div class="setting-section">
-						<p class="section-label">Menu Items</p>
-						<div class="item-editor" id="itemEditor"></div>
-						<button class="btn-outline-soft w-100 mt-3" id="addMockItem" type="button"><i class="fas fa-plus me-2"></i>Add sample item</button>
 					</div>
 				</aside>
 
@@ -1684,28 +1831,27 @@
 				}
 			},
 			{
-				id: 'cover',
-				name: 'Manage Cover Image',
-				icon: 'fas fa-puzzle-piece',
+				id: 'about-us',
+				name: 'About Us',
+				icon: 'fas fa-info-circle',
 				status: 'mega',
 				config: {
 					type: 'mega',
-					layout: 'featured',
+					layout: 'cards',
 					device: 'desktop',
 					bootstrapAlign: 'right',
 					bootstrapSource: 'submenu',
 					bootstrapTrigger: 'hover',
 					bootstrapWidth: '260',
 					megaColumns: '3',
+					cardColumns: '2',
 					megaWidth: 'contained',
 					showIcons: true,
 					showDescriptions: true,
 					highlightParent: true,
 					items: [
-						{ title: 'Hero Covers', desc: 'Landing page visuals', icon: 'far fa-image' },
-						{ title: 'Campaign Banners', desc: 'Promotional areas', icon: 'fas fa-bullhorn' },
-						{ title: 'Media Library', desc: 'Reusable upload assets', icon: 'fas fa-photo-video' },
-						{ title: 'Display Rules', desc: 'Visibility and placement', icon: 'fas fa-sliders-h' }
+						{ title: 'About Us 1', desc: 'Company profile and introduction', icon: 'fas fa-plus' },
+						{ title: 'About Us 2', desc: 'Team, values, and company story', icon: 'fas fa-users' }
 					]
 				}
 			},
@@ -1737,7 +1883,7 @@
 			}
 		];
 
-		let activeMenu = menus[2];
+		let activeMenu = menus[1];
 		let draft = cloneConfig(activeMenu.config);
 
 		const parentMenuList = document.getElementById('parentMenuList');
@@ -1748,16 +1894,29 @@
 		const previewCanvas = document.getElementById('previewCanvas');
 		const itemEditor = document.getElementById('itemEditor');
 		const layoutOptionSettings = document.getElementById('layoutOptionSettings');
+		const submenuCount = document.getElementById('submenuCount');
+		const submenuPanelCount = document.getElementById('submenuPanelCount');
+		const settingsMode = document.getElementById('settingsMode');
+		const toggleIconFile = document.getElementById('toggleIconFile');
+		const toggleIconFileName = document.getElementById('toggleIconFileName');
+		const toggleIconUploadWrapper = document.getElementById('toggleIconUploadWrapper');
+		const toggleIconCustomWrapper = document.getElementById('toggleIconCustomWrapper');
+		const accordionState = {
+			appearance: true,
+			placement: true,
+			layout: false,
+			items: false
+		};
 
 		const fields = {
-			bootstrapSource: document.getElementById('bootstrapSource'),
 			bootstrapAlign: document.getElementById('bootstrapAlign'),
-			bootstrapTrigger: document.getElementById('bootstrapTrigger'),
 			bootstrapWidth: document.getElementById('bootstrapWidth'),
 			megaWidth: document.getElementById('megaWidth'),
 			dropdownMarginTop: document.getElementById('dropdownMarginTop'),
 			arrowSize: document.getElementById('arrowSize'),
 			showArrow: document.getElementById('showArrow'),
+			toggleIconType: document.getElementById('toggleIconType'),
+			toggleIconCustom: document.getElementById('toggleIconCustom'),
 			imagePosition: document.getElementById('imagePosition'),
 			titlePosition: document.getElementById('titlePosition'),
 			descriptionPosition: document.getElementById('descriptionPosition'),
@@ -1780,6 +1939,10 @@
 				dropdownMarginTop: '12',
 				arrowSize: '10',
 				showArrow: true,
+				toggleIconType: 'default',
+				toggleIconCustom: 'fas fa-chevron-down',
+				toggleIconFileName: '',
+				toggleIconUploadPreview: '',
 				imagePosition: 'left',
 				titlePosition: 'left',
 				descriptionPosition: 'left',
@@ -1908,12 +2071,26 @@
 			});
 		}
 
+		function syncSettingsAccordion() {
+			Object.entries(accordionState).forEach(([key, isOpen]) => {
+				const button = document.querySelector(`[data-accordion-toggle="${key}"]`);
+				const panel = document.getElementById(`${key === 'items' ? 'submenu' : key}Panel`);
+				if (!button || !panel) return;
+				button.setAttribute('aria-expanded', String(isOpen));
+				panel.hidden = !isOpen;
+			});
+		}
+
 		function renderBuilder() {
 			syncDraftFromControls();
-			builderTitle.textContent = `Configure Dropdown - ${activeMenu.name}`;
-			builderKicker.textContent = `Parent Menu: ${activeMenu.name}`;
+			builderTitle.textContent = 'Manage Dropdown Menu';
+			builderKicker.textContent = activeMenu.name;
 			builderStatus.className = `status-badge is-${draft.type}`;
 			builderStatus.innerHTML = `<i class="fas fa-circle"></i>${statusText(draft.type)}`;
+			const itemCountLabel = `${draft.items.length} submenu item${draft.items.length === 1 ? '' : 's'}`;
+			submenuCount.textContent = itemCountLabel;
+			submenuPanelCount.textContent = `${draft.items.length} item${draft.items.length === 1 ? '' : 's'}`;
+			settingsMode.textContent = draft.type === 'bootstrap' ? 'Bootstrap 5' : draft.type === 'mega' ? 'Mega Menu' : 'None';
 
 			document.querySelectorAll('#dropdownTypeGroup button').forEach(button => {
 				button.classList.toggle('is-active', button.dataset.type === draft.type);
@@ -1923,11 +2100,17 @@
 				button.classList.toggle('is-active', button.dataset.layout === draft.layout);
 			});
 
+			document.getElementById('dropdownBoxSettings').style.display = draft.type === 'none' ? 'none' : 'block';
+			document.getElementById('placementSettings').style.display = draft.type === 'none' ? 'none' : 'block';
 			document.getElementById('bootstrapSettings').style.display = draft.type === 'bootstrap' ? 'block' : 'none';
 			document.getElementById('megaSettings').style.display = draft.type === 'mega' ? 'block' : 'none';
+			document.getElementById('layoutSettings').style.display = draft.type === 'mega' ? 'block' : 'none';
 			layoutOptionSettings.style.display = draft.type === 'mega' ? 'block' : 'none';
-			document.getElementById('dropdownBoxSettings').style.display = draft.type === 'none' ? 'none' : 'block';
-			document.getElementById('displaySettings').style.display = draft.type === 'none' ? 'none' : 'block';
+			document.getElementById('displaySettings').style.display = draft.type === 'mega' ? 'block' : 'none';
+			toggleIconUploadWrapper.hidden = draft.toggleIconType !== 'upload';
+			toggleIconCustomWrapper.hidden = draft.toggleIconType !== 'custom';
+			toggleIconFileName.textContent = draft.toggleIconFileName || 'No file selected';
+			syncSettingsAccordion();
 
 			document.querySelectorAll('#deviceGroup button').forEach(button => {
 				button.classList.toggle('is-active', button.dataset.device === draft.device);
@@ -2097,23 +2280,34 @@
 			});
 		}
 
+		function dropdownToggleIconMarkup() {
+			if (draft.toggleIconType === 'upload' && draft.toggleIconUploadPreview) {
+				return `<img class="dropdown-toggle-icon" src="${draft.toggleIconUploadPreview}" alt="">`;
+			}
+
+			let iconClass = 'fas fa-chevron-down';
+			if (draft.toggleIconType === 'upload' && draft.toggleIconFileName) {
+				iconClass = 'far fa-image';
+			} else if (draft.toggleIconType === 'custom') {
+				const rawValue = String(draft.toggleIconCustom || '');
+				const classMatch = rawValue.match(/class\s*=\s*["']([^"']+)["']/i);
+				const normalized = (classMatch ? classMatch[1] : rawValue).replace(/[^a-zA-Z0-9\-\s]/g, ' ').trim();
+				iconClass = normalized || iconClass;
+			}
+
+			return `<i class="${iconClass} dropdown-toggle-icon" aria-hidden="true"></i>`;
+		}
+
 		function renderPreview() {
 			previewCanvas.className = `preview-canvas is-${draft.device}`;
 			const dropdownMarkup = getDropdownMarkup();
 
 			previewCanvas.innerHTML = `
-				<div class="site-hero">
-					<div>
-						<div class="fw-bold fs-4">Arunika Frontend</div>
-						<div class="opacity-75">Header navigation preview</div>
-					</div>
-				</div>
 				<nav class="preview-nav">
-					<div class="preview-brand">Arunika</div>
 					<div class="preview-links">
 						<button class="preview-link" type="button">Homepage</button>
 						<button class="preview-link" type="button">Products</button>
-						<button class="preview-link ${draft.highlightParent ? 'is-active' : ''}" data-dropdown-anchor type="button">${activeMenu.name} <i class="fas fa-chevron-down fa-xs ms-1"></i></button>
+						<button class="preview-link ${draft.highlightParent ? 'is-active' : ''}" data-dropdown-anchor type="button">${activeMenu.name}${dropdownToggleIconMarkup()}</button>
 						<button class="preview-link" type="button">Contact</button>
 					</div>
 					<button class="mobile-menu-button" data-mobile-dropdown-anchor type="button"><i class="fas fa-bars"></i></button>
@@ -2317,6 +2511,14 @@
 			renderBuilder();
 		});
 
+		document.getElementById('settingsAccordion').addEventListener('click', event => {
+			const button = event.target.closest('[data-accordion-toggle]');
+			if (!button) return;
+			const section = button.dataset.accordionToggle;
+			accordionState[section] = !accordionState[section];
+			syncSettingsAccordion();
+		});
+
 		document.getElementById('megaLayoutGroup').addEventListener('click', event => {
 			const button = event.target.closest('[data-layout]');
 			if (!button) return;
@@ -2348,6 +2550,23 @@
 		Object.values(fields).forEach(field => {
 			field.addEventListener('input', renderBuilder);
 			field.addEventListener('change', renderBuilder);
+		});
+
+		toggleIconFile.addEventListener('change', () => {
+			const file = toggleIconFile.files && toggleIconFile.files[0];
+			draft.toggleIconFileName = file ? file.name : '';
+			draft.toggleIconUploadPreview = '';
+			if (!file || !file.type.startsWith('image/')) {
+				renderBuilder();
+				return;
+			}
+
+			const reader = new FileReader();
+			reader.addEventListener('load', () => {
+				draft.toggleIconUploadPreview = String(reader.result || '');
+				renderBuilder();
+			});
+			reader.readAsDataURL(file);
 		});
 
 		document.getElementById('addMockItem').addEventListener('click', () => {
@@ -2395,7 +2614,7 @@
 		window.addEventListener('resize', () => requestAnimationFrame(positionDropdownArrow));
 
 		renderParentMenuList();
-		openBuilder(menus[2]);
+		openBuilder(menus[1]);
 	</script>
 </body>
 </html>

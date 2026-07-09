@@ -156,6 +156,11 @@
 															<input type="text" name="submenu_icon_custom_default" class="form-control font-size-inherit" v-model="element.submenu_icon_custom">
 														</div>
 
+														<div class="col-12 form-group mb-3">
+															<label class="form-label">{{ t('Description') }}</label>
+															<textarea name="submenu_description" class="form-control font-size-inherit" rows="4" v-model="element.submenu_description"></textarea>
+														</div>
+
 													@if (site_config()->management_menu == 'v1')
 
 														<div class="col-12">
@@ -278,6 +283,11 @@
 										<option value="upload_file">{{ t('Upload File') }}</option>
 										<option value="custom_input">{{ t('Input Custom Icon') }}</option>
 									</select>
+								</div>
+
+								<div class="col-12 form-group">
+									<label class="form-label">{{ t('Description') }}</label>
+									<textarea name="submenu_description" class="form-control font-size-inherit" rows="4" v-model="responseNewDataSubmenu.submenu_description"></textarea>
 								</div>
 
 								<div v-if="responseNewDataSubmenu.submenu_icon_type == 'upload_file'" class="col-12 form-group" v-cloak>

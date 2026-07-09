@@ -438,7 +438,7 @@
 
 								<div v-else class="row g-0 ph-dropdown-builder">
 									<div class="col-lg-5 ph-dropdown-builder-sidebar">
-										<div class="ph-dropdown-section">
+										<div class="ph-dropdown-type-section">
 											<div class="ph-dropdown-section-title">{{ t('Dropdown Type') }}</div>
 											<div class="btn-group w-100 ph-segmented-control" role="group" aria-label="Dropdown Type">
 												<input type="radio" class="btn-check" id="dropdownTypeNone" value="none" v-model="dropdownConfig.dropdown_type">
@@ -452,148 +452,205 @@
 											</div>
 										</div>
 
-										<div v-if="dropdownConfig.dropdown_type !== 'none'" class="ph-dropdown-section">
-											<div class="ph-dropdown-section-title">{{ t('Dropdown Box') }}</div>
+										<div v-if="dropdownConfig.dropdown_type !== 'none'" class="ph-dropdown-settings-accordion">
+											<details class="ph-dropdown-setting-group" open>
+												<summary class="ph-dropdown-setting-summary">
+													<span class="ph-dropdown-setting-summary-title">
+														<i class="fad fa-sliders-h fa-fw" aria-hidden="true"></i>
+														<span>{{ t('Appearance & Indicator') }}</span>
+													</span>
+													<i class="fal fa-angle-down ph-dropdown-setting-summary-chevron" aria-hidden="true"></i>
+												</summary>
 
-											<div class="row g-3">
-												<div class="col-12">
-													<div class="form-check form-switch">
-														<input class="form-check-input" type="checkbox" role="switch" id="dropdownShowArrow" v-model="dropdownConfig.config_json.dropdown.show_arrow">
-														<label class="form-check-label" for="dropdownShowArrow">{{ t('Show arrow pointer') }}</label>
+												<div class="ph-dropdown-setting-panel">
+													<div class="row g-3">
+														<div class="col-12">
+															<div class="form-check form-switch">
+																<input class="form-check-input" type="checkbox" role="switch" id="dropdownShowArrow" v-model="dropdownConfig.config_json.dropdown.show_arrow">
+																<label class="form-check-label" for="dropdownShowArrow">{{ t('Show arrow pointer') }}</label>
+															</div>
+														</div>
+
+														<div class="col-md-6">
+															<label class="form-label">{{ t('Margin to menu') }}</label>
+															<div class="input-group">
+																<input type="number" min="0" max="80" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.dropdown.margin_top">
+																<span class="input-group-text">px</span>
+															</div>
+														</div>
+
+														<div class="col-md-6">
+															<label class="form-label">{{ t('Arrow size') }}</label>
+															<div class="input-group">
+																<input type="number" min="0" max="32" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.dropdown.arrow_size">
+																<span class="input-group-text">px</span>
+															</div>
+														</div>
+
+														<div class="col-md-6">
+															<label class="form-label">{{ t('Dropdown Icon Type') }}</label>
+															<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.dropdown.toggle_icon_type">
+																<option value="">{{ t('Default') }}</option>
+																<option value="upload_file">{{ t('Upload File') }}</option>
+																<option value="custom_input">{{ t('Custom Input') }}</option>
+															</select>
+														</div>
+
+														<div v-if="dropdownConfig.config_json.dropdown.toggle_icon_type == 'upload_file'" class="col-md-6">
+															<label class="form-label">{{ t('Dropdown Icon') }}</label>
+															<div class="input-group">
+																<input type="file" name="dropdown_toggle_icon" accept="image/png,image/jpeg" class="form-control font-size-inherit">
+																<a :href="dropdownConfig.config_json.dropdown.toggle_icon_url" v-if="dropdownConfig.config_json.dropdown.toggle_icon_path !== '' && dropdownConfig.config_json.dropdown.toggle_icon_url !== ''" class="btn btn-outline-secondary font-size-inherit" target="_blank">{{ t('View image') }}</a>
+															</div>
+														</div>
+
+														<div v-else-if="dropdownConfig.config_json.dropdown.toggle_icon_type == 'custom_input'" class="col-md-6">
+															<label class="form-label">{{ t('Dropdown Icon Custom') }}</label>
+															<input type="text" class="form-control font-size-inherit" v-model="dropdownConfig.config_json.dropdown.toggle_icon_custom">
+														</div>
 													</div>
 												</div>
+											</details>
 
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Margin to menu') }}</label>
-													<div class="input-group">
-														<input type="number" min="0" max="80" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.dropdown.margin_top">
-														<span class="input-group-text">px</span>
+											<details class="ph-dropdown-setting-group" open>
+												<summary class="ph-dropdown-setting-summary">
+													<span class="ph-dropdown-setting-summary-title">
+														<i class="fad fa-arrows-alt-h fa-fw" aria-hidden="true"></i>
+														<span>{{ t('Placement & Size') }}</span>
+													</span>
+													<i class="fal fa-angle-down ph-dropdown-setting-summary-chevron" aria-hidden="true"></i>
+												</summary>
+
+												<div class="ph-dropdown-setting-panel">
+													<div class="row g-3">
+														<div v-if="dropdownConfig.dropdown_type == 'bootstrap'" class="col-md-6">
+															<label class="form-label">{{ t('Menu width') }}</label>
+															<div class="input-group">
+																<input type="number" min="160" max="520" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.bootstrap.width">
+																<span class="input-group-text">px</span>
+															</div>
+														</div>
+
+														<div v-if="dropdownConfig.dropdown_type == 'mega'" class="col-12">
+															<label class="form-label">{{ t('Width mode') }}</label>
+															<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.dropdown.width_mode">
+																<option value="container">{{ t('Container') }}</option>
+																<option value="full">{{ t('Full') }}</option>
+																<option value="custom">{{ t('Custom') }}</option>
+															</select>
+														</div>
+
+														<div v-if="dropdownConfig.dropdown_type == 'mega' && dropdownConfig.config_json.dropdown.width_mode == 'custom'" class="col-md-6">
+															<label class="form-label">{{ t('Dropdown width') }}</label>
+															<div class="input-group">
+																<input type="number" min="240" max="1440" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.dropdown.width">
+																<span class="input-group-text">px</span>
+															</div>
+														</div>
+
+														<div v-if="dropdownConfig.dropdown_type == 'bootstrap' || dropdownConfig.config_json.dropdown.width_mode == 'custom'" class="col-md-6">
+															<label class="form-label">{{ t('Dropdown align') }}</label>
+															<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.dropdown.align">
+																<option value="start">{{ t('Left') }}</option>
+																<option value="center">{{ t('Center') }}</option>
+																<option value="end">{{ t('Right') }}</option>
+															</select>
+														</div>
 													</div>
 												</div>
+											</details>
 
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Arrow size') }}</label>
-													<div class="input-group">
-														<input type="number" min="0" max="32" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.dropdown.arrow_size">
-														<span class="input-group-text">px</span>
+											<details v-if="dropdownConfig.dropdown_type == 'mega'" class="ph-dropdown-setting-group">
+												<summary class="ph-dropdown-setting-summary">
+													<span class="ph-dropdown-setting-summary-title">
+														<i class="fad fa-th-large fa-fw" aria-hidden="true"></i>
+														<span>{{ t('Mega Menu Layout') }}</span>
+													</span>
+													<i class="fal fa-angle-down ph-dropdown-setting-summary-chevron" aria-hidden="true"></i>
+												</summary>
+
+												<div class="ph-dropdown-setting-panel">
+													<div class="row g-2 mb-3">
+														<div class="col-6">
+															<input type="radio" class="btn-check" id="megaLayoutColumns" value="columns" v-model="dropdownConfig.mega_layout">
+															<label class="btn btn-outline-primary w-100 ph-layout-choice" for="megaLayoutColumns"><i class="fad fa-columns fa-fw me-1"></i> {{ t('Columns') }}</label>
+														</div>
+
+														<div class="col-6">
+															<input type="radio" class="btn-check" id="megaLayoutCards" value="cards" v-model="dropdownConfig.mega_layout">
+															<label class="btn btn-outline-primary w-100 ph-layout-choice" for="megaLayoutCards"><i class="fad fa-th-large fa-fw me-1"></i> {{ t('Cards') }}</label>
+														</div>
+
+														<div class="col-6">
+															<input type="radio" class="btn-check" id="megaLayoutFeatured" value="featured" v-model="dropdownConfig.mega_layout">
+															<label class="btn btn-outline-primary w-100 ph-layout-choice" for="megaLayoutFeatured"><i class="fad fa-star fa-fw me-1"></i> {{ t('Featured') }}</label>
+														</div>
+
+														<div class="col-6">
+															<input type="radio" class="btn-check" id="megaLayoutCategory" value="category_grid" v-model="dropdownConfig.mega_layout">
+															<label class="btn btn-outline-primary w-100 ph-layout-choice" for="megaLayoutCategory"><i class="fad fa-grid-2 fa-fw me-1"></i> {{ t('Category Grid') }}</label>
+														</div>
+													</div>
+
+													<div class="row g-3">
+														<div class="col-md-6">
+															<label class="form-label">{{ t('Columns') }}</label>
+															<input type="number" min="1" max="6" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.mega.columns">
+														</div>
+
+														<div class="col-md-6">
+															<label class="form-label">{{ t('Max items') }}</label>
+															<input type="number" min="1" max="24" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.mega.max_items">
+														</div>
+
+														<div class="col-md-6">
+															<label class="form-label">{{ t('Image position') }}</label>
+															<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.mega.image_position">
+																<option value="left">{{ t('Left') }}</option>
+																<option value="center">{{ t('Center') }}</option>
+																<option value="right">{{ t('Right') }}</option>
+															</select>
+														</div>
+
+														<div class="col-md-6">
+															<label class="form-label">{{ t('Title position') }}</label>
+															<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.mega.title_position">
+																<option value="left">{{ t('Left') }}</option>
+																<option value="center">{{ t('Center') }}</option>
+																<option value="right">{{ t('Right') }}</option>
+															</select>
+														</div>
+
+														<div class="col-md-6">
+															<label class="form-label">{{ t('Description position') }}</label>
+															<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.mega.description_position">
+																<option value="left">{{ t('Left') }}</option>
+																<option value="center">{{ t('Center') }}</option>
+																<option value="right">{{ t('Right') }}</option>
+															</select>
+														</div>
+
+														<div class="col-md-6" v-if="dropdownConfig.mega_layout == 'featured'">
+															<label class="form-label">{{ t('Featured item') }}</label>
+															<input type="number" min="0" max="23" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.mega.featured_index">
+														</div>
+
+														<div class="col-md-6">
+															<div class="form-check form-switch">
+																<input class="form-check-input" type="checkbox" role="switch" id="dropdownShowImages" v-model="dropdownConfig.config_json.mega.show_images">
+																<label class="form-check-label" for="dropdownShowImages">{{ t('Show images') }}</label>
+															</div>
+														</div>
+
+														<div class="col-md-6">
+															<div class="form-check form-switch">
+																<input class="form-check-input" type="checkbox" role="switch" id="dropdownShowDescription" v-model="dropdownConfig.config_json.mega.show_description">
+																<label class="form-check-label" for="dropdownShowDescription">{{ t('Show description') }}</label>
+															</div>
+														</div>
 													</div>
 												</div>
-
-												<div class="col-md-6" v-if="dropdownConfig.dropdown_type == 'mega'">
-													<label class="form-label">{{ t('Dropdown width') }}</label>
-													<div class="input-group">
-														<input type="number" min="240" max="1440" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.dropdown.width">
-														<span class="input-group-text">px</span>
-													</div>
-												</div>
-
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Dropdown align') }}</label>
-													<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.dropdown.align">
-														<option value="start">{{ t('Left') }}</option>
-														<option value="center">{{ t('Center') }}</option>
-														<option value="end">{{ t('Right') }}</option>
-													</select>
-												</div>
-											</div>
-										</div>
-
-										<div v-if="dropdownConfig.dropdown_type == 'bootstrap'" class="ph-dropdown-section">
-											<div class="ph-dropdown-section-title">Bootstrap 5</div>
-
-											<div class="row g-3">
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Menu width') }}</label>
-													<div class="input-group">
-														<input type="number" min="160" max="520" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.bootstrap.width">
-														<span class="input-group-text">px</span>
-													</div>
-												</div>
-											</div>
-										</div>
-
-										<div v-if="dropdownConfig.dropdown_type == 'mega'" class="ph-dropdown-section">
-											<div class="ph-dropdown-section-title">{{ t('Mega Menu Layout') }}</div>
-
-											<div class="row g-2 mb-3">
-												<div class="col-6">
-													<input type="radio" class="btn-check" id="megaLayoutColumns" value="columns" v-model="dropdownConfig.mega_layout">
-													<label class="btn btn-outline-primary w-100 ph-layout-choice" for="megaLayoutColumns"><i class="fad fa-columns fa-fw me-1"></i> {{ t('Columns') }}</label>
-												</div>
-
-												<div class="col-6">
-													<input type="radio" class="btn-check" id="megaLayoutCards" value="cards" v-model="dropdownConfig.mega_layout">
-													<label class="btn btn-outline-primary w-100 ph-layout-choice" for="megaLayoutCards"><i class="fad fa-th-large fa-fw me-1"></i> {{ t('Cards') }}</label>
-												</div>
-
-												<div class="col-6">
-													<input type="radio" class="btn-check" id="megaLayoutFeatured" value="featured" v-model="dropdownConfig.mega_layout">
-													<label class="btn btn-outline-primary w-100 ph-layout-choice" for="megaLayoutFeatured"><i class="fad fa-star fa-fw me-1"></i> {{ t('Featured') }}</label>
-												</div>
-
-												<div class="col-6">
-													<input type="radio" class="btn-check" id="megaLayoutCategory" value="category_grid" v-model="dropdownConfig.mega_layout">
-													<label class="btn btn-outline-primary w-100 ph-layout-choice" for="megaLayoutCategory"><i class="fad fa-grid-2 fa-fw me-1"></i> {{ t('Category Grid') }}</label>
-												</div>
-											</div>
-
-											<div class="row g-3">
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Columns') }}</label>
-													<input type="number" min="1" max="6" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.mega.columns">
-												</div>
-
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Max items') }}</label>
-													<input type="number" min="1" max="24" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.mega.max_items">
-												</div>
-
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Image position') }}</label>
-													<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.mega.image_position">
-														<option value="left">{{ t('Left') }}</option>
-														<option value="center">{{ t('Center') }}</option>
-														<option value="right">{{ t('Right') }}</option>
-													</select>
-												</div>
-
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Title position') }}</label>
-													<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.mega.title_position">
-														<option value="left">{{ t('Left') }}</option>
-														<option value="center">{{ t('Center') }}</option>
-														<option value="right">{{ t('Right') }}</option>
-													</select>
-												</div>
-
-												<div class="col-md-6">
-													<label class="form-label">{{ t('Description position') }}</label>
-													<select class="form-select font-size-inherit" v-model="dropdownConfig.config_json.mega.description_position">
-														<option value="left">{{ t('Left') }}</option>
-														<option value="center">{{ t('Center') }}</option>
-														<option value="right">{{ t('Right') }}</option>
-													</select>
-												</div>
-
-												<div class="col-md-6" v-if="dropdownConfig.mega_layout == 'featured'">
-													<label class="form-label">{{ t('Featured item') }}</label>
-													<input type="number" min="0" max="23" class="form-control font-size-inherit" v-model.number="dropdownConfig.config_json.mega.featured_index">
-												</div>
-
-												<div class="col-md-6">
-													<div class="form-check form-switch">
-														<input class="form-check-input" type="checkbox" role="switch" id="dropdownShowImages" v-model="dropdownConfig.config_json.mega.show_images">
-														<label class="form-check-label" for="dropdownShowImages">{{ t('Show images') }}</label>
-													</div>
-												</div>
-
-												<div class="col-md-6">
-													<div class="form-check form-switch">
-														<input class="form-check-input" type="checkbox" role="switch" id="dropdownShowDescription" v-model="dropdownConfig.config_json.mega.show_description">
-														<label class="form-check-label" for="dropdownShowDescription">{{ t('Show description') }}</label>
-													</div>
-												</div>
-											</div>
+											</details>
 										</div>
 									</div>
 
@@ -611,9 +668,15 @@
 											<div class="ph-dropdown-preview-stage">
 												<ul class="navbar-nav ph-dropdown-preview-nav">
 													<li class="nav-item"><a href="javascript:void(0)" class="nav-link">{{ t('Products') }}</a></li>
-													<li class="nav-item dropdown">
-														<a href="javascript:void(0)" class="nav-link dropdown-toggle active">@{{ dropdownParentMenu.parent_name || 'Parent Menu' }}</a>
-													</li>
+														<li class="nav-item dropdown">
+															<a href="javascript:void(0)" :class="'nav-link dropdown-toggle active '+(dropdownToggleHasIcon() ? 'ph-preview-link-custom-caret' : '')">
+																<span>@{{ dropdownParentMenu.parent_name || 'Parent Menu' }}</span>
+																<span v-if="dropdownToggleHasIcon()" class="ph-preview-toggle-icon" aria-hidden="true">
+																	<img v-if="dropdownToggleIconUrl() !== ''" :src="dropdownToggleIconUrl()" alt="">
+																	<span v-else v-html="dropdownToggleIconHtml()"></span>
+																</span>
+															</a>
+														</li>
 													<li class="nav-item"><a href="javascript:void(0)" class="nav-link">{{ t('Contact') }}</a></li>
 												</ul>
 
@@ -622,13 +685,14 @@
 													<div>{{ t('Dropdown disabled for this parent menu') }}</div>
 												</div>
 
-												<div v-else :class="'ph-preview-dropdown-shell is-'+dropdownConfig.dropdown_type" :style="dropdownPreviewShellStyle()">
+												<div v-else :class="'ph-preview-dropdown-shell is-'+dropdownConfig.dropdown_type+' width-'+(dropdownConfig.config_json.dropdown.width_mode || 'container')" :style="dropdownPreviewShellStyle()">
 													<span v-if="dropdownConfig.config_json.dropdown.show_arrow" class="ph-preview-dropdown-arrow" :style="dropdownPreviewArrowStyle()"></span>
 
 													<div v-if="dropdownConfig.dropdown_type == 'bootstrap'" class="ph-preview-bootstrap-dropdown" :style="bootstrapPreviewStyle()">
 														<a v-for="(item, index) in limitedDropdownSubmenus()" href="javascript:void(0)" class="dropdown-item ph-preview-bootstrap-item">
-															<span :class="{ 'is-empty': item.submenu_icon_url === undefined || item.submenu_icon_url === '' }" class="ph-preview-bootstrap-icon-slot">
-																<img v-if="item.submenu_icon_url !== undefined && item.submenu_icon_url !== ''" :src="item.submenu_icon_url" alt="">
+															<span v-if="dropdownItemHasIcon(item)" class="ph-preview-bootstrap-icon-slot">
+																<img v-if="dropdownItemIconUrl(item) !== ''" :src="dropdownItemIconUrl(item)" alt="">
+																<span v-else v-html="dropdownItemIconHtml(item)"></span>
 															</span>
 															<span class="ph-preview-bootstrap-label">@{{ item.submenu_name || 'Submenu' }}</span>
 														</a>
@@ -638,27 +702,27 @@
 
 													<div v-else :class="'ph-preview-mega-dropdown ph-preview-mega-'+dropdownConfig.mega_layout">
 														<div v-if="dropdownConfig.mega_layout == 'featured' && featuredDropdownItem() !== null" class="ph-preview-featured-item">
-															<div v-if="dropdownConfig.config_json.mega.show_images" class="ph-preview-featured-media">
-																<img v-if="featuredDropdownItem().submenu_icon_url !== undefined && featuredDropdownItem().submenu_icon_url !== ''" :src="featuredDropdownItem().submenu_icon_url" alt="">
-																<i v-else class="fad fa-link fa-fw"></i>
+															<div v-if="dropdownConfig.config_json.mega.show_images && dropdownItemHasIcon(featuredDropdownItem())" class="ph-preview-featured-media">
+																<img v-if="dropdownItemIconUrl(featuredDropdownItem()) !== ''" :src="dropdownItemIconUrl(featuredDropdownItem())" alt="">
+																<span v-else v-html="dropdownItemIconHtml(featuredDropdownItem())"></span>
 															</div>
 
 															<div>
 																<div :class="'ph-preview-item-title '+dropdownTextAlign(dropdownConfig.config_json.mega.title_position)">@{{ featuredDropdownItem().submenu_name || 'Featured submenu' }}</div>
-																<div v-if="dropdownConfig.config_json.mega.show_description" :class="'ph-preview-item-description '+dropdownTextAlign(dropdownConfig.config_json.mega.description_position)">@{{ dropdownItemDescription(featuredDropdownItem()) }}</div>
+																<div v-if="dropdownConfig.config_json.mega.show_description && dropdownItemDescription(featuredDropdownItem()) !== ''" :class="'ph-preview-item-description '+dropdownTextAlign(dropdownConfig.config_json.mega.description_position)">@{{ dropdownItemDescription(featuredDropdownItem()) }}</div>
 															</div>
 														</div>
 
 														<div class="ph-preview-mega-grid" :style="megaPreviewGridStyle()">
 															<a v-for="(item, index) in limitedDropdownSubmenus()" href="javascript:void(0)" :class="'ph-preview-mega-item ph-image-'+dropdownConfig.config_json.mega.image_position">
-																<div v-if="dropdownConfig.config_json.mega.show_images" class="ph-preview-menu-thumb">
-																	<img v-if="item.submenu_icon_url !== undefined && item.submenu_icon_url !== ''" :src="item.submenu_icon_url" alt="">
-																	<i v-else class="fad fa-link fa-fw"></i>
+																<div v-if="dropdownConfig.config_json.mega.show_images && dropdownItemHasIcon(item)" class="ph-preview-menu-thumb">
+																	<img v-if="dropdownItemIconUrl(item) !== ''" :src="dropdownItemIconUrl(item)" alt="">
+																	<span v-else v-html="dropdownItemIconHtml(item)"></span>
 																</div>
 
 																<div class="ph-preview-item-body">
 																	<div :class="'ph-preview-item-title '+dropdownTextAlign(dropdownConfig.config_json.mega.title_position)">@{{ item.submenu_name || 'Submenu' }}</div>
-																	<div v-if="dropdownConfig.config_json.mega.show_description" :class="'ph-preview-item-description '+dropdownTextAlign(dropdownConfig.config_json.mega.description_position)">@{{ dropdownItemDescription(item) }}</div>
+																	<div v-if="dropdownConfig.config_json.mega.show_description && dropdownItemDescription(item) !== ''" :class="'ph-preview-item-description '+dropdownTextAlign(dropdownConfig.config_json.mega.description_position)">@{{ dropdownItemDescription(item) }}</div>
 																</div>
 															</a>
 

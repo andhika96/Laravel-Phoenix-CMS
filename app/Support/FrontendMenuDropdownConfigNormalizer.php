@@ -10,7 +10,11 @@ class FrontendMenuDropdownConfigNormalizer
 
 	protected static array $alignments = ['start', 'center', 'end'];
 
+	protected static array $widthModes = ['container', 'full', 'custom'];
+
 	protected static array $positions = ['left', 'center', 'right'];
+
+	protected static array $toggleIconTypes = ['', 'upload_file', 'custom_input'];
 
 	public static function defaultConfig(): array
 	{
@@ -25,7 +29,12 @@ class FrontendMenuDropdownConfigNormalizer
 					'margin_top' => 12,
 					'arrow_size' => 12,
 					'width' => 760,
+					'width_mode' => 'container',
 					'align' => 'center',
+					'toggle_icon_type' => '',
+					'toggle_icon_path' => '',
+					'toggle_icon_url' => '',
+					'toggle_icon_custom' => '',
 				],
 				'bootstrap' =>
 				[
@@ -63,7 +72,12 @@ class FrontendMenuDropdownConfigNormalizer
 					'margin_top' => self::integerRange($configJson['dropdown']['margin_top'] ?? $default['config_json']['dropdown']['margin_top'], 0, 80, $default['config_json']['dropdown']['margin_top']),
 					'arrow_size' => self::integerRange($configJson['dropdown']['arrow_size'] ?? $default['config_json']['dropdown']['arrow_size'], 0, 32, $default['config_json']['dropdown']['arrow_size']),
 					'width' => self::integerRange($configJson['dropdown']['width'] ?? $default['config_json']['dropdown']['width'], 240, 1440, $default['config_json']['dropdown']['width']),
+					'width_mode' => self::allowedString($configJson['dropdown']['width_mode'] ?? $default['config_json']['dropdown']['width_mode'], self::$widthModes, $default['config_json']['dropdown']['width_mode']),
 					'align' => self::allowedString($configJson['dropdown']['align'] ?? $default['config_json']['dropdown']['align'], self::$alignments, $default['config_json']['dropdown']['align']),
+					'toggle_icon_type' => self::allowedString($configJson['dropdown']['toggle_icon_type'] ?? $default['config_json']['dropdown']['toggle_icon_type'], self::$toggleIconTypes, $default['config_json']['dropdown']['toggle_icon_type']),
+					'toggle_icon_path' => self::stringValue($configJson['dropdown']['toggle_icon_path'] ?? $default['config_json']['dropdown']['toggle_icon_path']),
+					'toggle_icon_url' => self::stringValue($configJson['dropdown']['toggle_icon_url'] ?? $default['config_json']['dropdown']['toggle_icon_url']),
+					'toggle_icon_custom' => self::stringValue($configJson['dropdown']['toggle_icon_custom'] ?? $default['config_json']['dropdown']['toggle_icon_custom']),
 				],
 				'bootstrap' =>
 				[
@@ -105,6 +119,11 @@ class FrontendMenuDropdownConfigNormalizer
 		}
 
 		return in_array($value, $allowed, true) ? $value : $fallback;
+	}
+
+	protected static function stringValue(mixed $value, string $fallback = ''): string
+	{
+		return is_string($value) ? $value : $fallback;
 	}
 
 	protected static function integerRange(mixed $value, int $min, int $max, int $fallback): int
