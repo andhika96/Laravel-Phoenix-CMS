@@ -1,69 +1,17 @@
 @php
 	$frontendMenuItems = \App\Support\FrontendMenuBuilder::items();
-	$headerNavigationSetting = \App\Support\FrontendHeaderNavigationConfigNormalizer::current();
-	$headerNavigationActive = $headerNavigationSetting['is_active'];
-	$headerNavigationConfig = $headerNavigationSetting['config_json'];
-	$headerNavigationLayout = $headerNavigationConfig['layout'];
-	$headerNavigationBehavior = $headerNavigationConfig['behavior'];
-	$headerNavigationDesktopVariables = \App\Support\FrontendHeaderNavigationConfigNormalizer::cssVariables($headerNavigationConfig, 'desktop');
-	$headerNavigationTabletVariables = \App\Support\FrontendHeaderNavigationConfigNormalizer::cssVariables($headerNavigationConfig, 'tablet');
-	$headerNavigationMobileVariables = \App\Support\FrontendHeaderNavigationConfigNormalizer::cssVariables($headerNavigationConfig, 'mobile');
-	$headerNavigationVariableString = function (array $variables)
-	{
-		return collect($variables)->map(function ($value, $name)
-		{
-			return $name.': '.$value.';';
-		})->implode(' ');
-	};
-	$headerNavigationClasses = $headerNavigationActive
-		? implode(' ',
-		[
-			'ph-fe-header-configured',
-			'ph-fe-header-position-'.$headerNavigationBehavior['position'],
-			'ph-fe-layout-logo-'.$headerNavigationLayout['logo_position'],
-			'ph-fe-layout-menu-'.$headerNavigationLayout['menu_position'],
-			$headerNavigationLayout['background_follows_container'] ? 'ph-fe-header-inner-bg' : 'ph-fe-header-full-bg',
-			$headerNavigationBehavior['transparent_before_scroll'] ? 'ph-fe-header-transparent-start' : '',
-			$headerNavigationBehavior['animate_on_scroll'] ? 'ph-fe-header-animated' : '',
-			$headerNavigationConfig['sizing']['link_shape'] == 'leaf' ? 'ph-fe-link-shape-leaf ph-fe-link-leaf-'.$headerNavigationConfig['sizing']['leaf_direction'] : 'ph-fe-link-shape-default'
-		])
-		: 'bg-body-tertiary';
-	$headerNavigationContainerClass = $headerNavigationActive && $headerNavigationLayout['container'] == 'fluid' ? 'container-fluid' : 'container';
-	$headerNavigationSplitIndex = $headerNavigationActive && $headerNavigationLayout['logo_position'] == 'center' && $headerNavigationLayout['menu_position'] == 'center'
-		? (int) floor(count($frontendMenuItems) / 2)
-		: -1;
 @endphp
 
-@if ($headerNavigationActive)
-	<style>
-		@media (max-width: 991.98px)
-		{
-			.ph-fe-header-configured
-			{
-				{{ $headerNavigationVariableString($headerNavigationTabletVariables) }}
-			}
-		}
-
-		@media (max-width: 575.98px)
-		{
-			.ph-fe-header-configured
-			{
-				{{ $headerNavigationVariableString($headerNavigationMobileVariables) }}
-			}
-		}
-	</style>
-@endif
-
-<header class="navbar navbar-expand-lg ph-header ph-fe-header {{ $headerNavigationClasses }}" @if ($headerNavigationActive) data-header-navigation="active" style="{{ $headerNavigationVariableString($headerNavigationDesktopVariables) }}" @endif>
-	<div class="{{ $headerNavigationContainerClass }} ph-fe-header-container">
+<header class="navbar navbar-expand-lg ph-header ph-fe-header bg-body-tertiary">
+	<div class="container">
 		<a class="navbar-brand ph-fe-brand" href="{{ url('/') }}">{{ site_config()->site_name }}</a>
 		
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#frontendHeaderMenu" aria-controls="frontendHeaderMenu" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		
-		<div class="collapse navbar-collapse ph-fe-navbar-collapse" id="frontendHeaderMenu">
-			<ul class="navbar-nav ph-fe-navbar {{ $headerNavigationActive ? '' : 'ms-auto' }}">
+		<div class="collapse navbar-collapse" id="frontendHeaderMenu">
+			<ul class="navbar-nav ph-fe-navbar ms-auto">
 				@foreach ($frontendMenuItems as $item)
 					@php
 						$dropdownConfig = $item['dropdown_config'];
@@ -81,11 +29,10 @@
 						$toggleIconHtml = $dropdownBox['toggle_icon_html'] ?? '';
 						$hasToggleIcon = ($toggleIconType == 'upload_file' && $toggleIconUrl !== '') || ($toggleIconType == 'custom_input' && $toggleIconHtml !== '');
 						$toggleIconClass = $hasToggleIcon ? ' ph-fe-link-custom-caret' : '';
-						$splitClass = $loop->index === $headerNavigationSplitIndex ? 'ph-fe-menu-split-before' : '';
 					@endphp
 
 					@if ($hasDropdown && $dropdownType == 'bootstrap')
-						<li class="nav-item dropdown ph-fe-menu-item {{ $splitClass }}" style="--ph-fe-dropdown-margin: {{ (int) $dropdownBox['margin_top'] }}px;">
+						<li class="nav-item dropdown ph-fe-menu-item" style="--ph-fe-dropdown-margin: {{ (int) $dropdownBox['margin_top'] }}px;">
 							<a class="nav-link dropdown-toggle ph-fe-link{{ $toggleIconClass }}" href="{{ $item['parent_url'] }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 								@include('themes.partials.frontend_menu_icon', ['iconUrl' => $item['icon_url'], 'iconHtml' => $item['icon_html'], 'className' => 'ph-fe-parent-icon'])
 								<span>{{ $item['parent_name'] }}</span>
@@ -122,7 +69,7 @@
 							</ul>
 						</li>
 					@elseif ($hasDropdown && $dropdownType == 'mega')
-						<li class="nav-item dropdown ph-fe-menu-item ph-fe-mega-menu-item ph-fe-mega-width-{{ $megaWidthMode }} {{ $splitClass }}" style="--ph-fe-dropdown-margin: {{ (int) $dropdownBox['margin_top'] }}px;">
+						<li class="nav-item dropdown ph-fe-menu-item ph-fe-mega-menu-item ph-fe-mega-width-{{ $megaWidthMode }}" style="--ph-fe-dropdown-margin: {{ (int) $dropdownBox['margin_top'] }}px;">
 							<a class="nav-link dropdown-toggle ph-fe-link{{ $toggleIconClass }}" href="{{ $item['parent_url'] }}" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
 								@include('themes.partials.frontend_menu_icon', ['iconUrl' => $item['icon_url'], 'iconHtml' => $item['icon_html'], 'className' => 'ph-fe-parent-icon'])
 								<span>{{ $item['parent_name'] }}</span>
@@ -188,7 +135,7 @@
 							</div>
 						</li>
 					@else
-						<li class="nav-item ph-fe-menu-item {{ $splitClass }}">
+						<li class="nav-item ph-fe-menu-item">
 							<a class="nav-link ph-fe-link" href="{{ $item['parent_url'] }}">
 								@include('themes.partials.frontend_menu_icon', ['iconUrl' => $item['icon_url'], 'iconHtml' => $item['icon_html'], 'className' => 'ph-fe-parent-icon'])
 								<span>{{ $item['parent_name'] }}</span>
@@ -206,33 +153,6 @@
 		(function()
 		{
 			const desktopQuery = window.matchMedia('(min-width: 992px)');
-			const configuredHeader = document.querySelector('.ph-fe-header-configured');
-
-			function isTransparentColor(value)
-			{
-				const normalized = String(value || '').replace(/\s+/g, '').toLowerCase();
-
-				return normalized === 'transparent'
-					|| normalized === '#00000000'
-					|| normalized === 'rgba(0,0,0,0)'
-					|| normalized === 'hsla(0,0%,0%,0)';
-			}
-
-			function updateHeaderNavigationScrollState()
-			{
-				if (!configuredHeader)
-				{
-					return;
-				}
-
-				const canAnimate = configuredHeader.classList.contains('ph-fe-header-animated')
-					&& ! configuredHeader.classList.contains('ph-fe-header-position-stay');
-				const scrolled = canAnimate && window.scrollY > 32;
-				const scrolledBackground = getComputedStyle(configuredHeader).getPropertyValue('--ph-fe-scrolled-background');
-
-				configuredHeader.classList.toggle('is-scrolled', scrolled);
-				configuredHeader.classList.toggle('is-scrolled-transparent', scrolled && isTransparentColor(scrolledBackground));
-			}
 
 			function resetMenu(menu)
 			{
@@ -365,8 +285,6 @@
 
 			window.addEventListener('resize', updateOpenDropdowns, { passive: true });
 			window.addEventListener('scroll', updateOpenDropdowns, { passive: true });
-			window.addEventListener('scroll', updateHeaderNavigationScrollState, { passive: true });
-			updateHeaderNavigationScrollState();
 		})();
 	</script>
 @endonce

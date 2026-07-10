@@ -238,13 +238,6 @@ Route::name('cms.admin.')
 			Route::get('/', 'index')->name('awesome_admin')->middleware('auth', 'checkSuspended');
 		});
 
-		Route::controller(\Awesome_Admin_Header_Navigation_Controller::class)->group(function()
-		{
-			Route::get('/header-navigation', 'index')->name('awesome_admin.header_navigation')->middleware('auth', 'checkSuspended');
-			Route::get('/header-navigation/preview-data', 'previewData')->name('awesome_admin.header_navigation.preview_data')->middleware('auth', 'checkSuspended');
-			Route::post('/header-navigation', 'update')->name('awesome_admin.header_navigation.update')->middleware('auth', 'checkSuspended');
-		});
-
 		Route::controller(\Awesome_Admin_Config_Controller::class)->group(function()
 		{
 			Route::get('/config', 'index')->name('awesome_admin.config')->middleware('auth', 'checkSuspended');

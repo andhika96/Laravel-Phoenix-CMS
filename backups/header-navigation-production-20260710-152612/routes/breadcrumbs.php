@@ -16,13 +16,6 @@ Breadcrumbs::for('awesome_admin', function (BreadcrumbTrail $trail)
 	$trail->push(t('Awesome Admin'), route('cms.admin.awesome_admin'));
 });
 
-// Awesome Admin > Header Navigation
-Breadcrumbs::for('awesome_admin.header_navigation', function (BreadcrumbTrail $trail)
-{
-	$trail->parent('awesome_admin');
-	$trail->push(t('Manage Header Navigation'), route('cms.admin.awesome_admin.header_navigation'));
-});
-
 // Awesome Admin > Config
 Breadcrumbs::for('awesome_admin.config', function (BreadcrumbTrail $trail) 
 {
