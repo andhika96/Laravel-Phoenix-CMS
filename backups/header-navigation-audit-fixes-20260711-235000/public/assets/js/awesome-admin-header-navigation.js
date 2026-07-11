@@ -809,7 +809,7 @@ const editor = document.getElementById('headerNavigationEditor');
 
 		function safePreviewUrl(value) {
 			const url = String(value || '').trim();
-			return /^(#|\/|https?:\/\/|mailto:|tel:)/i.test(url) ? url : '#';
+			return /^(#|\/|https?:\/\/)/i.test(url) ? url : '#';
 		}
 
 		function safePreviewImageUrl(value) {
@@ -993,6 +993,7 @@ const editor = document.getElementById('headerNavigationEditor');
 				: { logo_between_menu: false };
 
 			const config = {
+				source: editorOptions.previewUrl,
 				colors: {
 					header_background: colorValue('headerBg', '#ffffff'),
 					scrolled_background: colorValue('scrolledBg', '#ffffff'),

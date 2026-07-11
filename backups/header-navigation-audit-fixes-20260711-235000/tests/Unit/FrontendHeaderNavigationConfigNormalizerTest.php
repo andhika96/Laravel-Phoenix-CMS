@@ -11,7 +11,7 @@ class FrontendHeaderNavigationConfigNormalizerTest extends TestCase
 	{
 		$config = FrontendHeaderNavigationConfigNormalizer::defaultConfig();
 
-		$this->assertArrayNotHasKey('source', $config);
+		$this->assertSame('/awesome_admin/header-navigation/preview-data', $config['source']);
 		$this->assertSame('left', $config['layout']['logo_position']);
 		$this->assertSame('stay', $config['behavior']['position']);
 		$this->assertSame('76px', $config['sizing']['height']);
@@ -23,7 +23,7 @@ class FrontendHeaderNavigationConfigNormalizerTest extends TestCase
 	{
 		$config = FrontendHeaderNavigationConfigNormalizer::normalize(
 		[
-			'source' => 'https://legacy.example.test/menu.json',
+			'source' => 'javascript:alert(1)',
 			'colors' =>
 			[
 				'header_background' => 'red;display:none',
@@ -45,7 +45,7 @@ class FrontendHeaderNavigationConfigNormalizerTest extends TestCase
 			]
 		]);
 
-		$this->assertArrayNotHasKey('source', $config);
+		$this->assertSame('/awesome_admin/header-navigation/preview-data', $config['source']);
 		$this->assertSame('#ffffff', $config['colors']['header_background']);
 		$this->assertSame('rgba(10, 20, 30, .5)', $config['colors']['link_hover']);
 		$this->assertSame('left', $config['layout']['logo_position']);

@@ -84,28 +84,6 @@ class HeaderNavigationSettingsTest extends TestCase
 		$this->assertSame(1, substr_count($script, "\t\tloadPreviewMenus();"));
 	}
 
-	public function test_editor_preview_preserves_safe_email_and_phone_links_without_persisting_a_source_url(): void
-	{
-		$script = file_get_contents(public_path('assets/js/awesome-admin-header-navigation.js'));
-
-		$this->assertStringContainsString('https?:\\/\\/|mailto:|tel:', $script);
-		$this->assertStringNotContainsString('source: editorOptions.previewUrl', $script);
-	}
-
-	public function test_header_navigation_updates_use_atomic_persistence_and_generic_failure_messages(): void
-	{
-		$controller = file_get_contents(app_path('Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Header_Navigation_Controller.php'));
-		$request = file_get_contents(app_path('Http/Requests/Awesome_Admin/HeaderNavigationRequest.php'));
-
-		$this->assertStringContainsString("DB::table('header_navigation_settings')->upsert", $controller);
-		$this->assertStringContainsString('JSON_THROW_ON_ERROR', $controller);
-		$this->assertStringContainsString('report($th);', $controller);
-		$this->assertStringContainsString("t('Failed to update header navigation settings')", $controller);
-		$this->assertStringNotContainsString('updateOrCreate(', $controller);
-		$this->assertStringNotContainsString('$th->getMessage()', $controller);
-		$this->assertStringNotContainsString('config_json.source', $request);
-	}
-
 	public function test_editor_uses_awesome_admin_outer_spacing_without_mock_shell_styles(): void
 	{
 		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));

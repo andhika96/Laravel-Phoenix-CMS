@@ -80,26 +80,19 @@ class Awesome_Admin_Header_Navigation_Controller extends Controller
 		try
 		{
 			$config = FrontendHeaderNavigationConfigNormalizer::normalize($request->input('config_json', []));
-			$timestamp = now();
 
-			DB::table('header_navigation_settings')->upsert(
+			$setting = Header_Navigation_Setting::updateOrCreate(
 			[
-				[
-					'menu_page' => 'awesome_admin',
-					'is_active' => $request->boolean('is_active'),
-					'config_json' => json_encode($config, JSON_THROW_ON_ERROR),
-					'created_at' => $timestamp,
-					'updated_at' => $timestamp
-				]
+				'menu_page' => 'awesome_admin'
 			],
-			['menu_page'],
-			['is_active', 'config_json', 'updated_at']);
-
-			$setting = Header_Navigation_Setting::where('menu_page', 'awesome_admin')->firstOrFail();
+			[
+				'is_active' => $request->boolean('is_active'),
+				'config_json' => $config
+			]);
 
 			DB::commit();
 
-			return response()->json(
+			$response = response()->json(
 			[
 				'success' => true,
 				'status' => 'success',
@@ -115,14 +108,17 @@ class Awesome_Admin_Header_Navigation_Controller extends Controller
 		catch (\Throwable $th)
 		{
 			DB::rollBack();
-			report($th);
 
-			return response()->json(
+			$response = response()->json(
 			[
 				'success' => false,
 				'status' => 'failed',
-				'message' => t('Failed to update header navigation settings')
+				'message' => $th->getMessage()
 			], 500);
+		}
+		finally
+		{
+			return $response;
 		}
 	}
 }

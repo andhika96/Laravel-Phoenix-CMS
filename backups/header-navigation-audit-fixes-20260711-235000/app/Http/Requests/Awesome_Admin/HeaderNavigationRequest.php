@@ -26,6 +26,7 @@ class HeaderNavigationRequest extends FormRequest
 		return [
 			'is_active' => 'required|boolean',
 			'config_json' => 'required|array',
+			'config_json.source' => 'required|string|max:255',
 			'config_json.colors' => 'required|array',
 			'config_json.layout' => 'required|array',
 			'config_json.behavior' => 'required|array',

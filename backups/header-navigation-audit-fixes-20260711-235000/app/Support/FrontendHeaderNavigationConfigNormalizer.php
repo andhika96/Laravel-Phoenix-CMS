@@ -18,6 +18,7 @@ class FrontendHeaderNavigationConfigNormalizer
 	public static function defaultConfig(): array
 	{
 		return [
+			'source' => '/awesome_admin/header-navigation/preview-data',
 			'colors' =>
 			[
 				'header_background' => '#ffffff',
@@ -107,6 +108,7 @@ class FrontendHeaderNavigationConfigNormalizer
 
 	public static function normalize(array $config): array
 	{
+		$defaults = self::defaultConfig();
 		$colors = is_array($config['colors'] ?? null) ? $config['colors'] : [];
 		$transparent = is_array($colors['transparent'] ?? null) ? $colors['transparent'] : [];
 		$layout = is_array($config['layout'] ?? null) ? $config['layout'] : [];
@@ -115,11 +117,23 @@ class FrontendHeaderNavigationConfigNormalizer
 		$shadow = is_array($effects['link_shadow'] ?? null) ? $effects['link_shadow'] : [];
 		$sizing = is_array($config['sizing'] ?? null) ? $config['sizing'] : [];
 
+		$source = is_string($config['source'] ?? null) ? trim($config['source']) : $defaults['source'];
+		if ($source === '/awesome_admin/menu/fe/listdata/parentmenu')
+		{
+			$source = $defaults['source'];
+		}
+
+		if ($source === '' || strlen($source) > 255 || ! preg_match('/^(\/|https?:\/\/)/i', $source))
+		{
+			$source = $defaults['source'];
+		}
+
 		$linkShape = self::choice($sizing['link_shape'] ?? null, self::LINK_SHAPES, 'default');
 		$leafDirection = self::choice($sizing['leaf_direction'] ?? null, self::LEAF_DIRECTIONS, 'forward');
 		$transparentMode = self::choice($transparent['mode'] ?? ($behavior['transparent_color_mode'] ?? null), self::TRANSPARENT_COLOR_MODES, 'auto');
 
 		$normalized = [
+			'source' => $source,
 			'colors' =>
 			[
 				'header_background' => self::color($colors['header_background'] ?? null, '#ffffff'),
