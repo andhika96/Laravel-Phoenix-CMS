@@ -378,7 +378,10 @@ if ( ! function_exists('menu_v2'))
 				if (isset($value0['parent_menu']))
 				{
 					$output .= '
-					<div class="ph-nav-category">'.$value0['category_name'].'</div>
+					<div class="ph-nav-category">
+						<span class="ph-nav-category-label">'.$value0['category_name'].'</span>
+						<span class="ph-nav-category-initial">'.mb_substr($value0['category_name'], 0, 1).'</span>
+					</div>
 
 					<div class="ph-list-group-wrapper">';
 
@@ -541,7 +544,10 @@ if ( ! function_exists('menu_v2'))
 			count(get_menus_with_category_v2()['uncategorized']) > 0)
 		{
 			$output .= '
-			<div class="ph-nav-category">'.t('Uncategorized').'</div>
+			<div class="ph-nav-category">
+				<span class="ph-nav-category-label">'.t('Uncategorized').'</span>
+				<span class="ph-nav-category-initial">'.mb_substr(t('Uncategorized'), 0, 1).'</span>
+			</div>
 
 			<div class="ph-list-group-wrapper">';
 

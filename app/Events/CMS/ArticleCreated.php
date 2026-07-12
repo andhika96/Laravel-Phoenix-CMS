@@ -58,6 +58,6 @@ class ArticleCreated implements ShouldBroadcastNow
 
 	public function broadcastConnection(): string
 	{
-		return 'reverb';
+		return config('reverb.enabled', false) ? 'reverb' : 'null';
 	}
 }

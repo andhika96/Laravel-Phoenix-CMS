@@ -1255,6 +1255,7 @@
 </div>{{-- #fm-app --}}
 
 {{-- Pusher.js CDN — untuk Reverb FM App 2 (File Manager) --}}
+@if(config('reverb.enabled', false))
 <script src="https://cdn.jsdelivr.net/npm/pusher-js@8/dist/web/pusher.min.js"></script>
 
 <script>
@@ -1281,6 +1282,9 @@ fmReverb.connection.bind('error', function(err) {
 // Expose ke window agar vueV3-filemanager-2026.js bisa akses
 window.fmReverb = fmReverb;
 </script>
+@else
+<script>window.fmReverb = null;</script>
+@endif
 
 {{-- JS: pakai asset lokal Arunika --}}
 <script src="{{ url('assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js') }}"></script>

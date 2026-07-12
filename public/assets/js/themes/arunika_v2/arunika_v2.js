@@ -67,13 +67,16 @@ const patterns = {
 	}
 };
 
-colorMainList.forEach(color =>
+if (pickerContainer)
 {
-	const col = document.createElement('div');
-	col.className = 'col-3';
-	col.innerHTML = `<div class="ph-color-switch" style="background-color: ${color};" onclick="changeMainColor('${color}')" title="${color}"></div>`;
-	pickerContainer.appendChild(col);
-});
+	colorMainList.forEach(color =>
+	{
+		const col = document.createElement('div');
+		col.className = 'col-3';
+		col.innerHTML = `<div class="ph-color-switch" style="background-color: ${color};" onclick="changeMainColor('${color}')" title="${color}"></div>`;
+		pickerContainer.appendChild(col);
+	});
+}
 
 function changeMainColor(color)
 {
@@ -85,7 +88,6 @@ function changeMainColor(color)
 const sidebar = document.getElementById('sidebar');
 const scrollContent = document.getElementById('sidebar-scroll-content');
 const sidebarToggle = document.getElementById('sidebar-toggle');
-const sidebarToggleIcon = document.getElementById('sidebar-toggle-icon');
 let sbInstance = null;
 
 function initSimpleBar()
@@ -153,10 +155,6 @@ function updateSidebarToggleState()
 		sidebarToggle.title = isExpanded ? 'Collapse sidebar' : 'Expand sidebar';
 	}
 
-	if (sidebarToggleIcon)
-	{
-		sidebarToggleIcon.className = isExpanded ? 'fas fa-chevron-left' : 'fas fa-chevron-right';
-	}
 }
 
 function normalizeSidebarPath(url)
@@ -324,24 +322,18 @@ navLinkItems.forEach(item =>
 function syncThemeControls(theme)
 {
 	const isDark = theme === 'dark';
-	const topbarIcon = document.getElementById('theme-icon');
-	const sidebarThemeToggle = document.querySelector('.ph-sidebar-theme-toggle');
-	const sidebarThemeIcon = document.querySelector('.ph-sidebar-theme-icon');
+	const themeToggle = document.querySelector('.ph-theme-toggle');
+	const themeIcon = document.querySelector('.ph-theme-icon');
 
-	if (topbarIcon)
+	if (themeIcon)
 	{
-		topbarIcon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+		themeIcon.className = isDark ? 'fas fa-moon ph-theme-icon' : 'fas fa-sun ph-theme-icon';
 	}
 
-	if (sidebarThemeIcon)
+	if (themeToggle)
 	{
-		sidebarThemeIcon.className = isDark ? 'fas fa-moon ph-sidebar-theme-icon' : 'fas fa-sun ph-sidebar-theme-icon';
-	}
-
-	if (sidebarThemeToggle)
-	{
-		sidebarThemeToggle.classList.toggle('is-dark', isDark);
-		sidebarThemeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+		themeToggle.classList.toggle('is-dark', isDark);
+		themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
 	}
 }
 
@@ -385,8 +377,8 @@ document.addEventListener('DOMContentLoaded', () =>
 	const savedTheme = localStorage.getItem('theme') || 'light';
 	syncThemeControls(savedTheme);
 
-	// Load Pattern tersimpan (default winter jika tidak ada)
-	const savedPattern = localStorage.getItem('theme-pattern') || 'winter';
+	// Arunika v2 memakai shell bersih seperti referensi panel.
+	const savedPattern = localStorage.getItem('theme-pattern') || 'none';
 	changePattern(savedPattern);
 
 	// 2. Sidebar State
@@ -403,5 +395,28 @@ document.addEventListener('DOMContentLoaded', () =>
 		{
 			sidebar.classList.remove('ph-no-transition'); // UPDATE
 		}, 100);
+	});
+});
+
+// Fokus pencarian global mengikuti shortcut visual pada header.
+document.addEventListener('keydown', (event) =>
+{
+	if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k')
+	{
+		event.preventDefault();
+		document.getElementById('ph-global-search')?.focus();
+	}
+});
+
+// Pada layar kecil, navigasi menutup setelah pengguna memilih menu.
+document.querySelectorAll('.ph-sidebar a[href]:not([href^="javascript"])').forEach((link) =>
+{
+	link.addEventListener('click', () =>
+	{
+		if (window.innerWidth <= 768 && sidebar.classList.contains('ph-expanded'))
+		{
+			sidebar.classList.remove('ph-expanded');
+			updateSidebarToggleState();
+		}
 	});
 });

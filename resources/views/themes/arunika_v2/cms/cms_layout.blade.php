@@ -1,4 +1,4 @@
-@include('themes.arunika_v1.components.menu')
+@include('themes.arunika_v2.components.menu')
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,17 +26,17 @@
 
 		<!-- Custom CSS -->
 		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">
-		<link href="{{ asset('assets/css/themes/arunika_v1/arunika_v1.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/themes/arunika_v2/arunika_v2.css?v=').time() }}" rel="stylesheet">
 
 		@stack('css')
 
-		<title>Arunika Themes v1</title>
+		<title>@yield('title', site_config()->site_name) - {{ site_config()->site_name }}</title>
 
 		<script>
 		(function() 
 		{
 			// 1. Ambil Tema
-			const savedTheme = localStorage.getItem('theme') || 'dark';
+			const savedTheme = localStorage.getItem('theme') || 'light';
 			// Kita pasang di documentElement (tag <html>) karena body belum ready
 			document.documentElement.setAttribute('data-bs-theme', savedTheme);
 
@@ -53,23 +53,42 @@
 
 	<body>
 
-		<div class="d-flex w-100 h-100">
+		<div class="ph-app-shell d-flex w-100 h-100">
 			<div class="ph-sidebar ph-no-transition" id="sidebar">
 
-				<script> if (localStorage.getItem('sidebar-state') === 'expanded') { document.getElementById('sidebar').classList.add('ph-expanded'); } </script>
+				<script>
+				(function()
+				{
+					const savedSidebarState = localStorage.getItem('sidebar-state');
+					const shouldExpand = window.innerWidth > 768 && savedSidebarState !== 'collapsed';
+
+					if (shouldExpand)
+					{
+						document.getElementById('sidebar').classList.add('ph-expanded');
+					}
+				})();
+				</script>
 				
-				<div class="ph-sidebar-logo-container" onclick="toggleSidebar()">
+				<div class="ph-sidebar-logo-container" aria-label="{{ site_config()->site_name }}">
 					<div class="ph-app-logo-icon">
-						<img src="{{ asset('assets/logos/laraphoenix_onlybird_colored_2.png') }}" style="width: 30px">
+						<img src="{{ asset('assets/logos/laraphoenix_onlybird_colored_2.png') }}" alt="{{ site_config()->site_name }}">
 					</div>
 
+					<span class="ph-app-logo-initial" aria-hidden="true">{{ mb_strtoupper(mb_substr(trim(site_config()->site_name), 0, 1)) }}</span>
 					<span class="ph-app-logo-text">{{ site_config()->site_name }}</span>
 				</div>
+
+				<button class="ph-sidebar-toggle" id="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="true">
+					<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+						<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
+						<path d="M8.25 3.25V20.75"></path>
+						<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
+					</svg>
+				</button>
 
 				<div id="sidebar-scroll-content">
 					
 					<div class="list-group list-group-flush w-100">
-
 						<div class="ph-list-group-wrapper">
 							<a href="{{ url('/') }}" class="list-group-item list-group-item-action" target="_blank">
 								<div class="ph-nav-icon"><i class="fal fa-link fa-fw"></i></div>
@@ -98,12 +117,19 @@
 				</div>
 
 				<div class="ph-sidebar-footer">
-					<div class="ph-list-group-wrapper">
-						<a href="{{ url('awesome_admin') }}" class="list-group-item list-group-item-action">
-							<div class="ph-nav-icon"><i class="fad fa-user-secret"></i></div>
-							<span class="ph-nav-text">{{ t('Awesome Admin') }}</span>
+					<div class="ph-sidebar-user-panel">
+						<a href="{{ url('profile') }}" class="ph-sidebar-user-card">
+							<span class="ph-sidebar-user-avatar">{!! get_avatar('frame', 'rounded-circle', 38) !!}</span>
+							<span class="ph-sidebar-user-meta">
+								<strong>{{ auth()->user()->fullname }}</strong>
+								<span>{{ auth()->user()->email }}</span>
+							</span>
+							<i class="fas fa-chevron-right ph-sidebar-user-chevron"></i>
+						</a>
 
-							<div class="ph-custom-tooltip"><span>{{ t('Awesome Admin') }}</span></div>
+						<a href="{{ url('auth/logout') }}" class="ph-sidebar-logout" title="{{ t('Logout') }}">
+							<i class="fal fa-sign-out-alt fa-fw"></i>
+							<span>{{ t('Logout') }}</span>
 						</a>
 					</div>
 				</div>
@@ -112,113 +138,41 @@
 
 			<div class="ph-layout-right" id="ph-layout-right">
 				<div class="ph-top-bar" id="ph-top-bar">
-					<div class="ph-header-btn" onclick="toggleSidebar()" title="Toggle Sidebar"><i class="fas fa-bars"></i></div>
-					
-					<div class="dropdown">
-						<div class="ph-header-btn" data-bs-toggle="dropdown" title="Change Theme Color"><i class="fas fa-palette"></i></div>
-						
-						<div class="dropdown-menu p-3" style="min-width: 260px;">
-							<h6 class="dropdown-header px-0 text-start" style="color: var(--ph-text-muted);">Choose Theme Color</h6>
-							<div class="row g-2" id="color-picker-container"></div>
+					<button class="ph-mobile-sidebar-trigger" type="button" onclick="toggleSidebar()" aria-label="Open navigation">
+						<i class="fas fa-bars"></i>
+					</button>
 
-							<hr class="dropdown-divider bg-secondary opacity-25">
-
-							<h6 class="dropdown-header px-0 text-start" style="color: var(--ph-text-muted);">Background Pattern</h6>
-							
-							<div class="d-flex gap-2">
-								<button class="btn btn-sm btn-outline-secondary flex-fill" onclick="changePattern('none')" title="No Pattern">
-									<i class="fas fa-ban"></i>
-								</button>
-
-								<button class="btn btn-sm btn-outline-secondary flex-fill" onclick="changePattern('winter')" title="Winter Snow">
-									<i class="far fa-snowflake"></i>
-								</button>
-								
-								<button class="btn btn-sm btn-outline-secondary flex-fill" onclick="changePattern('christmas')" title="Christmas">
-									<i class="fas fa-gift"></i>
-								</button>
-								
-								<button class="btn btn-sm btn-outline-secondary flex-fill" onclick="changePattern('eid')" title="Idul Fitri">
-									<i class="fas fa-star-and-crescent"></i>
-								</button>
-
-								<button class="btn btn-sm btn-outline-secondary flex-fill" onclick="changePattern('newyear')" title="New Year">
-									<i class="fas fa-glass-cheers"></i>
-								</button>
-
-								<button class="btn btn-sm btn-outline-secondary flex-fill" onclick="changePattern('valentine')" title="Valentine">
-									<i class="fas fa-heart text-danger"></i>
-								</button>
-
-								<button class="btn btn-sm btn-outline-secondary flex-fill" onclick="changePattern('imlek')" title="Imlek">
-									<i class="fas fa-coins text-warning"></i>
-								</button>
-
-								<button class="btn btn-sm btn-outline-secondary flex-fill" onclick="changePattern('independence')" title="Independence Day">
-									<i class="fas fa-flag text-danger"></i>
-								</button>
-							</div>
-						</div>
+					<div class="ph-header-welcome">
+						<span>{{ t('Welcome') }},</span>
+						<strong>{{ auth()->user()->fullname }}</strong>
 					</div>
 
-					<div class="ph-header-btn" onclick="toggleTheme()" title="Switch Theme"><i class="fas fa-moon" id="theme-icon"></i></div>
+					<label class="ph-search-container" for="ph-global-search">
+						<i class="fal fa-search"></i>
+						<input type="search" class="ph-search-input" id="ph-global-search" placeholder="{{ t('Find something') }}" autocomplete="off">
+						<span class="ph-search-shortcut"><i class="fal fa-command"></i> K</span>
+					</label>
 
-					<div class="ph-search-container d-none">
-						<i class="fas fa-search text-secondary" style="font-size: 0.8rem;"></i>
-						<input type="text" class="ph-search-input" placeholder="Search">
-					</div>
+					<div class="ph-header-actions">
+						<button class="ph-btn-action-icon ph-theme-toggle" type="button" onclick="toggleTheme()" title="{{ t('Dark Mode') }}" aria-label="{{ t('Dark Mode') }}" aria-pressed="false">
+							<i class="fas fa-sun ph-theme-icon"></i>
+						</button>
 
-					<div class="d-flex align-items-center ms-auto gap-3">
-						<div class="ph-header-actions">
+						{{-- Help button is temporarily hidden. --}}
+						{{--
+						<a href="{{ url('awesome_admin') }}" class="ph-btn-action-icon ph-header-help" title="{{ t('Help') }}" aria-label="{{ t('Help') }}">
+							<i class="fal fa-question-circle"></i>
+						</a>
+						--}}
 
-							{{-- Real-time Notification Bell --}}
-							@include('components.cms-realtime-notification')
+						{{-- Real-time notification bell is temporarily hidden. --}}
+						{{-- @include('components.cms-realtime-notification') --}}
 
-						    <div class="dropdown">
-						        <button class="ph-btn-action-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-						            <i class="fas fa-ellipsis-h"></i>
-						        </button>
-						        
-						        <ul class="dropdown-menu ph-dropdown-menu-teams dropdown-menu-end">
-						            <li><a class="dropdown-item" href="{{ url('account') }}"><i class="fad fa-cog me-2"></i> {{ t('Account Settings') }}</a></li>
-						            <li><hr class="dropdown-divider"></li>
-						            <li><a class="dropdown-item text-danger" href="{{ url('auth/logout') }}"><i class="fad fa-sign-out-alt me-2"></i> {{ t('Logout') }}</a></li>
-						        </ul>
-						    </div>
-
-						    <div class="dropdown">
-						        <button class="ph-btn-profile-wrapper" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-						            <div class="ph-profile-initials">
-						            	{!! get_avatar('frame', 'rounded-circle',  38) !!}
-						            </div>
-						            
-						            <div class="ph-status-badge">
-						            	<i class="fas fa-check"></i>
-						            </div>
-						        </button>
-
-						        <div class="dropdown-menu ph-dropdown-menu-teams dropdown-menu-end p-0">
-						            <div class="ph-profile-card">
-						                <div class="ph-profile-card-header">
-						                	<span class="ph-role-badge">{{ current_role() }}</span>
-						                </div>
-						                
-						                <div class="ph-profile-card-body">
-						                    <div class="ph-profile-avatar-lg">
-						                    	{!! get_avatar('frame', 'rounded-circle',  64) !!}
-						                    </div>
-
-						                    <div class="ph-profile-info">
-						                        <h5 class="mb-1">{{ auth()->user()->fullname }}</h5>
-						                        <p>{{ auth()->user()->email }}</p>
-						                        <a href="{{ url('profile') }}" class="ph-ms-account-link">My Profile <i class="fas fa-external-link-alt" style="font-size: 0.7em;"></i></a>
-						                    </div>
-						                </div>
-						            </div>
-						        </div>
-						    </div>
-
-						</div>
+						@if(checkIsAdmin())
+							<a href="{{ url('awesome_admin') }}" class="ph-btn-action-icon ph-header-settings" title="{{ t('Admin Panel') }}" aria-label="{{ t('Admin Panel') }}">
+								<i class="fas fa-user-secret"></i>
+							</a>
+						@endif
 					</div>
 				</div>
 
@@ -252,6 +206,6 @@
 
 		@stack('js')
 
-		<script src="{{ url('assets/js/themes/arunika_v1/arunika_v1.js?v=').time() }}"></script>
+		<script src="{{ url('assets/js/themes/arunika_v2/arunika_v2.js?v=').time() }}"></script>
 	</body>
 </html>

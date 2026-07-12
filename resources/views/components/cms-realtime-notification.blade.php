@@ -157,6 +157,7 @@
 </style>
 
 {{-- ====== JS: Pusher.js CDN + Realtime Logic ====== --}}
+@if(config('reverb.enabled', false))
 <script src="https://cdn.jsdelivr.net/npm/pusher-js@8/dist/web/pusher.min.js"></script>
 <script>
 (function() {
@@ -344,3 +345,4 @@
 
 })();
 </script>
+@endif

@@ -732,7 +732,9 @@
 @endpush
 
 @push('js')
+@if(config('reverb.enabled', false))
 <script src="https://cdn.jsdelivr.net/npm/pusher-js@8/dist/web/pusher.min.js"></script>
+@endif
 <script>
 (function() {
 'use strict';
@@ -748,6 +750,7 @@ const REVERB_KEY    = '{{ env("REVERB_APP_KEY", "cms-main-key") }}';
 const REVERB_HOST   = '{{ env("REVERB_HOST", "laravel-12-phoenix.aruna") }}';
 const REVERB_PORT   = {{ $reverbPort }};
 const REVERB_TLS    = '{{ $reverbScheme }}' === 'https';
+const REALTIME_ENABLED = {{ config('reverb.enabled', false) ? 'true' : 'false' }};
 const API_BASE      = '{{ url("chat/api") }}';
 const CSRF_TOKEN    = document.querySelector('meta[name="csrf-token"]')?.content || '';
 const CURRENT_USER  = {
@@ -825,7 +828,7 @@ createApp({
 		let searchDebounce= null;
 
 		// reverb — mirror config dari filemanager.blade.php (forceTLS + wss)
-		const reverb = new Pusher(REVERB_KEY, {
+		const reverb = REALTIME_ENABLED ? new Pusher(REVERB_KEY, {
 			wsHost:            REVERB_HOST,
 			wsPort:            REVERB_PORT,
 			wssPort:           REVERB_PORT,
@@ -833,10 +836,12 @@ createApp({
 			disableStats:      true,
 			enabledTransports: REVERB_TLS ? ['wss'] : ['ws'],
 			cluster:           '',
-		});
+		}) : null;
 
-		reverb.connection.bind('connected', () => console.log('✅ Chat Reverb connected'));
-		reverb.connection.bind('error', err  => console.warn('❌ Chat Reverb error', err));
+		if (reverb) {
+			reverb.connection.bind('connected', () => console.log('✅ Chat Reverb connected'));
+			reverb.connection.bind('error', err  => console.warn('❌ Chat Reverb error', err));
+		}
 
 		// ── Computed ──────────────────────────────────────
 		const filteredConversations = computed(() => {
@@ -877,7 +882,7 @@ createApp({
 			if (activeConversation.value?.id === conv.id) return;
 
 			// Unsubscribe dari channel lama
-			if (currentChannel) {
+			if (currentChannel && reverb) {
 				reverb.unsubscribe('chat.' + (activeConversation.value?.id));
 				currentChannel = null;
 			}
@@ -931,6 +936,7 @@ createApp({
 		}
 
 		function subscribeToConversation(convId) {
+			if (!reverb) return;
 			currentChannel = reverb.subscribe('chat.' + convId);
 
 			currentChannel.bind('message.sent', (data) => {
@@ -1025,7 +1031,7 @@ createApp({
 		}
 
 		async function sendTyping(isTyping) {
-			if (!activeConversation.value) return;
+			if (!REALTIME_ENABLED || !activeConversation.value) return;
 			try {
 				await api('POST', `/conversations/${activeConversation.value.id}/typing`, { is_typing: isTyping });
 			} catch (e) {}
@@ -1153,7 +1159,7 @@ createApp({
 		});
 
 		onBeforeUnmount(() => {
-			reverb.disconnect();
+			reverb?.disconnect();
 		});
 
 		return {

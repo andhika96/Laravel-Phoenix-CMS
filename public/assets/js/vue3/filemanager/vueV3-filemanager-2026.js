@@ -1311,9 +1311,10 @@
                     const res = await http.post(endpoint, payload);
                     const data = res.data.data;
 
-                    if (isBulk && data.job_id) {
+                    if (isBulk && data.job_id && window.fmReverb) {
                         this._subscribeBulkProgress(data.job_id);
                     } else {
+						this.bulkProgress.active = false;
                         this.addNotice('success', res.data.message ?? 'Permission berhasil diperbarui');
                         bootstrap.Modal.getInstance(document.getElementById('modalPermission'))?.hide();
                     }
@@ -1388,9 +1389,10 @@
                     const res  = await http.post(endpoint, payload);
                     const data = res.data.data;
 
-                    if (isFolder && data.job_id) {
+                    if (isFolder && data.job_id && window.fmReverb) {
                         this._subscribeBulkProgress(data.job_id);
                     } else {
+						this.bulkProgress.active = false;
                         this.addNotice('success', res.data.message ?? 'Metadata berhasil diperbarui');
                         bootstrap.Modal.getInstance(document.getElementById('modalMetadata'))?.hide();
                     }
@@ -1405,6 +1407,11 @@
             // ─── Reverb bulk progress listener ─────────────
 
             _subscribeBulkProgress(jobId) {
+				if (!window.fmReverb) {
+					this.bulkProgress.active = false;
+					return;
+				}
+
                 // Unsubscribe channel lama jika masih aktif
                 if (this.bulkProgress._channel) {
                     try { window.fmReverb.unsubscribe('fm-bulk-progress.' + this.bulkProgress.jobId); } catch (_) {}
