@@ -272,17 +272,3 @@ final result: blocked
 - Full-view and focused-region visual comparison: blocked because an authenticated implementation capture at the source state is unavailable.
 
 final result: blocked
-
-## 2026-07-14 - Arunika V2 solid category separator and full-width submenu hover
-
-- Source visual truth: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-02c2fa37-52c9-4e4e-bb6a-d48f3d2fd3e8.png` for the current Arunika V2 state and `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-7c197de6-0789-4599-87df-7e371b723b5e.png` for the Arunika V1 width reference.
-- Intended viewport/state: desktop, light theme, expanded CMS sidebar, expanded parent menu, and hovered first submenu.
-- Category correction: remove the left-edge gradient pseudo-element and restore a solid one-pixel `--ph-sidebar-border` separator across the complete category width.
-- Submenu correction: remove horizontal margins and padding from the submenu container so the hover background spans the same row width as its parent menu.
-- Hierarchy preservation: move the former outer indentation into the submenu link's left padding; submenu icons and labels remain visually indented even though the hover surface is full width.
-- Typography, truncation, icons, colors, dynamic menu names, and Laravel menu behavior remain unchanged.
-- Focused red-green static regressions: passed (`tests/arunika-v2-profile-category-static.test.mjs` and `tests/arunika-v2-submenu-layout-static.test.mjs`).
-- Implementation screenshot: unavailable because authenticated CMS routes redirect the Product Design browser to `/auth/login`; no credentials were submitted.
-- Full-view and focused-region visual comparison: blocked until an authenticated post-patch capture is available.
-
-final result: blocked

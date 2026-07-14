@@ -431,8 +431,8 @@ if ( ! function_exists('menu_v2'))
 								{
 									$output .= '
 									<a href="javascript:void(0);" class="list-group-item list-group-item-action collapsed" data-bs-toggle="collapse" data-bs-target="#collapse'.$value1['parent_code'].'" aria-expanded="false">
-										<div class="ph-nav-icon">'.$parent_menu_icon.'</div>
-										<span class="ph-nav-text '.$is_with_icon_margin.'">'.$value1['parent_name'].'</span>
+										<div class="ph-nav-icon '.$is_with_icon_margin.'">'.$parent_menu_icon.'</div>
+										<span class="ph-nav-text">'.$value1['parent_name'].'</span>
 										<i class="fas fa-chevron-down ms-auto ph-arrow-icon"></i>
 									</a>
 
@@ -461,7 +461,7 @@ if ( ! function_exists('menu_v2'))
 											$output .= '
 											<a href="'.url($value2['submenu_link']).'" class="ph-submenu-link">
 												'.$submenu_icon.'
-												<span class="ph-submenu-label">'.$value2['submenu_name'].'</span>
+												<span>'.$value2['submenu_name'].'</span>
 											</a>';
 										}
 											
@@ -496,7 +496,7 @@ if ( ! function_exists('menu_v2'))
 											$output .= '
 											<a href="'.url($value2['submenu_link']).'" class="ph-floating-link">
 												'.$submenu_icon.'
-												<span class="ph-submenu-label">'.$value2['submenu_name'].'</span>
+												<span>'.$value2['submenu_name'].'</span>
 											</a>';
 										}
 
@@ -625,7 +625,7 @@ if ( ! function_exists('menu_v2'))
 								$output .= '
 								<a href="'.url($value2['submenu_link']).'" class="ph-submenu-link">
 									'.$submenu_icon.'
-									<span class="ph-submenu-label">'.$value2['submenu_name'].'</span>
+									<span>'.$value2['submenu_name'].'</span>
 								</a>';
 							}
 								
@@ -661,7 +661,7 @@ if ( ! function_exists('menu_v2'))
 								$output .= '
 								<a href="'.url($value2['submenu_link']).'" class="ph-floating-link">
 									'.$submenu_icon.'
-									<span class="ph-submenu-label">'.$value2['submenu_name'].'</span>
+									<span>'.$value2['submenu_name'].'</span>
 								</a>';
 							}
 

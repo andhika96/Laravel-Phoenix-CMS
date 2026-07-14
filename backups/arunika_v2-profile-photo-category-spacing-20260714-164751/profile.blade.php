@@ -152,5 +152,5 @@
 
 @pushonce('js')
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
-	<script src="{{ url('assets/js/vue3/account/vueV3-account-2026.js?v=').time() }}"></script>
+	<script src="{{ url('assets/js/c/vue3/vueV3-account-2025.js?v=').time() }}"></script>
 @endpushonce

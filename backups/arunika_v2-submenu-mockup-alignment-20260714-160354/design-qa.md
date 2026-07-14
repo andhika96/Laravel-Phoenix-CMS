@@ -195,41 +195,6 @@ final result: passed
 
 final result: blocked
 
-## 2026-07-14 - Arunika V2 unified lavender menu hover
-
-- Light-theme sidebar hover token increased from `#ebe7f2` to `#e4dcf4` so the lavender state is more visible.
-- Main menu and submenu hover/focus states both consume the same shared `--ph-bg-hover` token.
-- Active state, dark-mode tokens, submenu truncation, and submenu layout are unchanged.
-- Static hover/layout regression: passed (`tests/arunika-v2-submenu-layout-static.test.mjs`).
-- Browser visual comparison remains blocked behind the authenticated CMS route; no stored credentials were submitted.
-
-final result: blocked
-
-## 2026-07-14 - User-directed submenu margin and left nudge
-
-- Requested margin applied exactly: `.ph-submenu-container { margin: 0 4px 8px 20px; }`.
-- The submenu list content is shifted `4px` further left by reducing its inner left padding from `6px` to `2px`.
-- Semantic label targeting, fixed `21px` icon column, `10px` icon-label gap, and single-line ellipsis remain unchanged.
-- Visual capture remains pending because the authenticated Chrome capture path is unavailable.
-
-final result: blocked
-
-## 2026-07-14 - Product Design QA: submenu mockup alignment
-
-- Source visual truth: `C:\Users\CAHYO\.codex\visualizations\2026\07\14\019f5f40-b6ee-7383-b328-8d0299ba6eb5\submenu-layout-left-shift-mockup.html` in Proposed state.
-- Latest available implementation evidence before this patch: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-ad96dd7b-bce6-4047-81c6-5d1b0bacd222.png`.
-- Evidence viewport/crop: `255 x 175`, light theme, sidebar expanded, `Parent Menu Test 1` expanded.
-- Full-view comparison finding: the pre-patch implementation placed the submenu icon almost level with the parent icon and the submenu label left of the parent label; the source mockup specifies a `20px` outer indent plus `6px` inner indent.
-- Focused-region finding: semantic label targeting and one-line truncation are correct; the remaining P2 mismatch was parent-child horizontal hierarchy.
-- Patch made: restore `20px + 6px` submenu indentation, use `11px` row-side padding to match the parent row, retain the mockup's `10px` icon-label gap, and set submenu icons to the same fixed `21px` column used by parent icons.
-- Typography: existing Arunika V2 `12.5px/600` submenu type retained; truncation remains single-line ellipsis.
-- Colors/tokens: existing theme tokens retained; no new color drift introduced.
-- Image/assets: existing Font Awesome and uploaded/custom menu icon sources retained; no substitute assets introduced.
-- Copy/content: dynamic Laravel submenu names remain unchanged.
-- Latest rendered implementation capture: blocked because the ChatGPT Chrome Extension is unavailable for the authenticated CMS session. Product Design browser order requires explicit user approval before Playwright fallback.
-
-final result: blocked
-
 ## 2026-07-14 - Arunika V2 semantic submenu label fix
 
 - Screenshot evidence: submenu icon is now left-shifted, but the label still begins much too far right.
@@ -253,36 +218,5 @@ final result: blocked
 - Blade compilation: passed.
 - Browser visual comparison remains blocked behind the authenticated CMS route; no stored credentials were submitted.
 - Automated suite: 59 passed, 2 unrelated database-schema failures caused by missing `lr_header_navigation_settings` and `lr_menu_fe_parentmenu_dropdown_configs` tables.
-
-final result: blocked
-
-## 2026-07-14 - Arunika V2 profile photo action and category rhythm
-
-- Source visual truth: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-af03ecd4-6043-4825-a43c-943ddf3c113a.png` for the profile photo action and `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-2011be8e-4cc5-4025-9c79-09ea3dff3e4b.png` for the expanded sidebar categories.
-- Intended viewport/state: desktop, light theme, authenticated profile and expanded CMS sidebar.
-- Root-cause patch: the profile view now loads the existing `assets/js/vue3/account/vueV3-account-2026.js` controller instead of the missing legacy asset that returned HTTP 404.
-- Sidebar patch: every expanded category receives a consistent `12px` outer top gap; the hard top border is replaced by a one-pixel separator that fades from transparent at the left edge to the existing sidebar-border token at `32px`.
-- Fonts and typography: existing category label family, size, weight, casing, and menu typography are unchanged.
-- Spacing and layout rhythm: only category-to-previous-group spacing changes; menu-row geometry and submenu spacing remain unchanged.
-- Colors and tokens: the separator continues to use `--ph-sidebar-border`, including dark-mode token behavior.
-- Image quality and assets: the existing avatar, Phoenix logo, Font Awesome camera icon, and menu icon sources are unchanged.
-- Copy and content: dynamic category and menu names are unchanged.
-- Focused static regression: passed (`tests/arunika-v2-profile-category-static.test.mjs`).
-- Implementation screenshot: unavailable. Both `/dashboard` and `/profile` redirect the Product Design browser to `/auth/login`; no credentials were submitted.
-- Full-view and focused-region visual comparison: blocked because an authenticated implementation capture at the source state is unavailable.
-
-final result: blocked
-
-## 2026-07-14 - Arunika V2 solid category separator and full-width submenu hover
-
-- Source visual truth: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-02c2fa37-52c9-4e4e-bb6a-d48f3d2fd3e8.png` for the current Arunika V2 state and `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-7c197de6-0789-4599-87df-7e371b723b5e.png` for the Arunika V1 width reference.
-- Intended viewport/state: desktop, light theme, expanded CMS sidebar, expanded parent menu, and hovered first submenu.
-- Category correction: remove the left-edge gradient pseudo-element and restore a solid one-pixel `--ph-sidebar-border` separator across the complete category width.
-- Submenu correction: remove horizontal margins and padding from the submenu container so the hover background spans the same row width as its parent menu.
-- Hierarchy preservation: move the former outer indentation into the submenu link's left padding; submenu icons and labels remain visually indented even though the hover surface is full width.
-- Typography, truncation, icons, colors, dynamic menu names, and Laravel menu behavior remain unchanged.
-- Focused red-green static regressions: passed (`tests/arunika-v2-profile-category-static.test.mjs` and `tests/arunika-v2-submenu-layout-static.test.mjs`).
-- Implementation screenshot: unavailable because authenticated CMS routes redirect the Product Design browser to `/auth/login`; no credentials were submitted.
-- Full-view and focused-region visual comparison: blocked until an authenticated post-patch capture is available.
 
 final result: blocked

@@ -629,7 +629,7 @@ a:hover
 	flex-shrink: 0;
 }
 
-.ph-submenu-link > .ph-submenu-label
+.ph-submenu-link span
 {
 	white-space: nowrap;
 	overflow: hidden;
@@ -737,7 +737,7 @@ a:hover
 	color: var(--ph-text-main);
 }
 
-.ph-floating-link > .ph-submenu-label
+.ph-floating-link span
 {
 	white-space: nowrap;
 	overflow: hidden;
@@ -1913,7 +1913,7 @@ a:hover
 	color: var(--ph-text-main);
 }
 
-.ph-submenu-link > .ph-submenu-label
+.ph-submenu-link span
 {
 	display: block;
 	min-width: 0;
@@ -2041,7 +2041,7 @@ a:hover
 	--ph-top-bar-height: 72px;
 	--ph-shell-border: #e9e7e8;
 	--ph-shell-soft: #f7f6f8;
-	--ph-shell-hover: #e4dcf4;
+	--ph-shell-hover: #ebe7f2;
 	--ph-shell-shadow: 0 8px 24px rgba(38, 31, 52, 0.06);
 }
 
@@ -2371,7 +2371,7 @@ body::after
 .ph-nav-text
 {
 	margin: 0 8px 0 9px;
-	font-size: 14px;
+	font-size: 12.5px;
 	font-weight: 500;
 }
 
@@ -2389,7 +2389,7 @@ body::after
 {
 	height: auto;
 	width: 100%;
-	margin: 12px 0 10px;
+	margin: 0 0 10px;
 	padding: 18px 28px 0;
 	justify-content: flex-start;
 	border-top: 1px solid var(--ph-sidebar-border);
@@ -2445,8 +2445,8 @@ body::after
 
 .ph-submenu-container
 {
-	margin: 0 0 8px;
-	padding: 2px 0 4px;
+	margin: 0 16px 8px 20px;
+	padding: 2px 0 4px 6px;
 	min-width: 0;
 	overflow: hidden;
 	border-left: 0;
@@ -2456,25 +2456,10 @@ body::after
 {
 	min-width: 0;
 	min-height: 35px;
-	gap: 10px;
-	padding: 7px 11px 7px 34px;
+	padding: 7px 10px;
 	border-radius: 8px;
-	font-size: 14px;
+	font-size: 12.5px;
 	font-weight: 600;
-}
-
-.ph-submenu-link > i,
-.ph-submenu-link > .ph-submenu-icon
-{
-	width: 21px !important;
-	min-width: 21px;
-	height: 21px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	flex: 0 0 21px;
-	margin-right: 0 !important;
-	object-fit: contain;
 }
 
 .ph-floating-submenu,
@@ -2581,9 +2566,9 @@ body::after
 .ph-sidebar.ph-expanded .ph-sidebar-user-card
 {
 	width: 100%;
-	height: 65px;
-	min-height: 65px;
-	padding: 1rem .75rem;
+	height: 58px;
+	min-height: 58px;
+	padding: 7px 9px;
 	gap: 10px;
 	border: 1px solid var(--ph-sidebar-border);
 	border-radius: 11px;
@@ -2603,13 +2588,13 @@ body::after
 
 .ph-sidebar-user-meta strong
 {
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: 800;
 }
 
 .ph-sidebar-user-meta span
 {
-	font-size: 12.5px;
+	font-size: 10.5px;
 }
 
 .ph-sidebar-user-chevron
@@ -2636,7 +2621,7 @@ body::after
 .ph-sidebar.ph-expanded .ph-sidebar-logout
 {
 	width: 100%;
-	height: 45px;
+	height: 42px;
 	justify-content: flex-start;
 	gap: 10px;
 	padding: 0 12px;
@@ -2649,7 +2634,7 @@ body::after
 .ph-sidebar.ph-expanded .ph-sidebar-logout span
 {
 	display: inline;
-	font-size: 14px;
+	font-size: 12.5px;
 	font-weight: 700;
 }
 
