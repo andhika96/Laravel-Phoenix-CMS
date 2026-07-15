@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class Awesome_Admin_Config_Controller extends Controller
 {
@@ -70,6 +71,32 @@ class Awesome_Admin_Config_Controller extends Controller
      */
 	public function update(Request $request)
 	{
+		$logoWidthUnit = $request->input('site_logo_width_unit', '%');
+		$logoWidthMax = $logoWidthUnit === '%' ? 100 : 500;
+		$fontSizeUnit = $request->input('font_size_unit', 'px');
+		$fontSizeMin = $fontSizeUnit === 'px' ? 8 : .5;
+		$fontSizeMax = $fontSizeUnit === 'px' ? 72 : 4.5;
+		$availableFontFamilies = collect(Storage::directories('public/fonts'))
+			->map(fn ($directory) => Str::afterLast($directory, '/'))
+			->filter(fn ($fontFamily) => Storage::exists('public/fonts/'.$fontFamily.'/fonts.css'))
+			->values()
+			->all();
+
+		$request->validate([
+			'file' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
+			'site_logo' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
+			'site_logo_width_value' => ['sometimes', 'required', 'numeric', 'min:1', 'max:'.$logoWidthMax],
+			'site_logo_width_unit' => ['sometimes', 'required', Rule::in(['%', 'px', 'em', 'rem', 'pt'])],
+			'remove_site_logo' => ['sometimes', 'boolean'],
+			'font_family' => ['sometimes', 'required', 'string', 'max:32', Rule::in($availableFontFamilies)],
+			'font_size' => ['sometimes', 'required', 'numeric', 'min:'.$fontSizeMin, 'max:'.$fontSizeMax],
+			'font_size_unit' => ['sometimes', 'required', Rule::in(['px', 'em', 'rem'])],
+		]);
+
+		$newLogoFile = null;
+		$oldLogoFile = null;
+		$deleteOldLogoAfterCommit = false;
+
 		// We use DB transaction for safety
 		DB::beginTransaction();	
 
@@ -79,9 +106,23 @@ class Awesome_Admin_Config_Controller extends Controller
 
 			if ($getDetailSiteConfig)
 			{
-				$getRequest = $request->all();			
+				$getRequest = $request->except('remove_site_logo');
 				$getRequest['enable_ratelimit_login'] = $request->has('enable_ratelimit_login') ? 0 : 1;
 				$getRequest['enable_ratelimit_signup'] = $request->has('enable_ratelimit_signup') ? 0 : 1;
+
+				$oldLogoFile = $getDetailSiteConfig->site_logo;
+
+				if ($request->boolean('remove_site_logo'))
+				{
+					$getRequest['site_logo'] = null;
+					$deleteOldLogoAfterCommit = ! empty($oldLogoFile);
+				}
+				elseif ($request->hasFile('site_logo'))
+				{
+					$newLogoFile = $this->uploadFile($request->file('site_logo'), 'site-logo');
+					$getRequest['site_logo'] = $newLogoFile;
+					$deleteOldLogoAfterCommit = ! empty($oldLogoFile);
+				}
 
 				// If you upload a file we can detect
 				if ( ! empty($getRequest['file']))
@@ -103,8 +144,13 @@ class Awesome_Admin_Config_Controller extends Controller
 
 				if ($getDetailSiteConfig->save())
 				{
-				    // DB Commit if data successfully saved
-				    DB::commit();
+					// DB Commit if data successfully saved
+					DB::commit();
+
+					if ($deleteOldLogoAfterCommit)
+					{
+						$this->deleteFile($oldLogoFile, 'site-logo');
+					}
 				
 					if ($request->wantsJson()) 
 					{
@@ -156,6 +202,16 @@ class Awesome_Admin_Config_Controller extends Controller
 		}
 		catch (\Throwable $th) 
 		{
+			if (DB::transactionLevel() > 0)
+			{
+				DB::rollBack();
+			}
+
+			if ($newLogoFile)
+			{
+				$this->deleteFile($newLogoFile, 'site-logo');
+			}
+
 			if ($request->wantsJson()) 
 			{
 				$response = response()->json(
@@ -184,6 +240,15 @@ class Awesome_Admin_Config_Controller extends Controller
 		$getDetailSiteConfig = Site_Config::find(1);
 
 		return response()->json(['success' => true, 'status' => 'success', 'data' => $getDetailSiteConfig]);
+	}
+
+	public function siteLogo($fileName)
+	{
+		$filePath = 'site-logo/'.$fileName;
+
+		abort_unless(basename($fileName) === $fileName && Storage::disk('public')->exists($filePath), 404);
+
+		return Storage::disk('public')->response($filePath);
 	}
 
 	public function listDataFonts()

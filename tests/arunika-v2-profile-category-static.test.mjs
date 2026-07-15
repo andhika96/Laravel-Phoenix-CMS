@@ -21,7 +21,7 @@ const finalExpandedCategoryRule = expandedCategoryRules.filter(([, body]) => /pa
 assert.match(finalExpandedCategoryRule, /margin:\s*12px 0 10px;/, 'each category should have consistent top separation');
 assert.match(
   finalExpandedCategoryRule,
-  /border-top:\s*1px solid var\(--ph-sidebar-border\);/,
+  /border-top:\s*1px solid var\(--ph-sidebar-category-border\);/,
   'category separator should remain solid from the left edge',
 );
 assert.doesNotMatch(

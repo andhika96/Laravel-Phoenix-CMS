@@ -1,5 +1,6 @@
 :root
 {
+	--ph-font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	--ph-font-size: 14px;
 
 	/* VARIABLE DINAMIS */
@@ -193,7 +194,7 @@
 
 body
 {
-	font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-family: var(--ph-font-family);
 	font-size: var(--ph-font-size);
 	background-color: var(--ph-bg-body);
 	background-image: var(--ph-bg-gradient);
@@ -2058,6 +2059,7 @@ a:hover
 	--ph-sidebar-surface: radial-gradient(ellipse 112% 42% at -8% 20%, rgba(231, 234, 247, 0.75) 0%, rgba(231, 234, 247, 0) 72%), radial-gradient(ellipse 104% 20% at -6% 40%, rgba(216, 226, 249, 0.34) 0%, rgba(216, 226, 249, 0) 72%), radial-gradient(ellipse 116% 48% at -5% 56%, rgba(230, 214, 239, 0.72) 0%, rgba(230, 214, 239, 0) 72%), radial-gradient(ellipse 112% 38% at -3% 91%, rgba(245, 226, 234, 0.58) 0%, rgba(245, 226, 234, 0) 74%), linear-gradient(180deg, #f7f8f8 0%, #f2f2f6 31%, #f5eff5 63%, #fcf9fa 100%);
 	--ph-header-surface: radial-gradient(circle at 62% 0%, rgba(248, 225, 238, 0.6) 0%, rgba(248, 225, 238, 0) 43%), radial-gradient(circle at 35% 100%, rgba(228, 225, 253, 0.42) 0%, rgba(228, 225, 253, 0) 40%), #ffffff;
 	--ph-sidebar-border: var(--ph-shell-border);
+	--ph-sidebar-category-border: #d8d3dc;
 	--ph-text-main: #17151a;
 	--ph-text-muted: #69666f;
 	--ph-theme-text-accessible: #17151a;
@@ -2078,6 +2080,7 @@ a:hover
 	--ph-sidebar-surface: radial-gradient(ellipse at 50% 60%, rgba(94, 67, 157, 0.1) 0%, rgba(94, 67, 157, 0) 78%), radial-gradient(ellipse at 70% 100%, rgba(126, 55, 81, 0.09) 0%, rgba(126, 55, 81, 0) 70%), #1b1a1e;
 	--ph-header-surface: radial-gradient(circle at 62% 0%, rgba(126, 55, 81, 0.18) 0%, rgba(126, 55, 81, 0) 43%), radial-gradient(circle at 35% 100%, rgba(94, 67, 157, 0.18) 0%, rgba(94, 67, 157, 0) 40%), #1d1c20;
 	--ph-sidebar-border: #343238;
+	--ph-sidebar-category-border: #46424b;
 	--ph-text-main: #f7f6f8;
 	--ph-text-muted: #aaa6b0;
 	--ph-theme-text-accessible: #f7f6f8;
@@ -2152,13 +2155,38 @@ body::after
 .ph-app-logo-icon
 {
 	display: none;
+	width: auto;
+	min-width: 0;
+	height: 50px;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 auto;
 }
 
-.ph-app-logo-icon img
+.ph-sidebar-logo-container.has-logo .ph-app-logo-icon
 {
-	width: 25px !important;
-	height: 25px;
-	filter: brightness(0) invert(1);
+	display: inline-flex;
+	margin-right: 10px;
+	padding: 0;
+	color: inherit;
+	font-size: inherit;
+	text-align: initial;
+	transition: none;
+	transform: none;
+	opacity: 1;
+	pointer-events: auto;
+	visibility: visible;
+}
+
+.ph-sidebar-logo-container.has-logo .ph-app-logo-icon img
+{
+	display: block;
+	width: var(--ph-site-logo-width, 34px) !important;
+	height: auto;
+	max-width: 96px;
+	max-height: 50px;
+	object-fit: contain;
+	filter: none;
 }
 
 .ph-app-logo-initial
@@ -2185,6 +2213,21 @@ body::after
 	transform: translate(-50%, -50%);
 }
 
+.ph-sidebar:not(.ph-expanded) .ph-sidebar-logo-container.has-logo .ph-app-logo-initial
+{
+	display: none;
+}
+
+.ph-sidebar:not(.ph-expanded) .ph-sidebar-logo-container.has-logo .ph-app-logo-icon
+{
+	margin-right: 0;
+}
+
+.ph-sidebar:not(.ph-expanded) .ph-sidebar-logo-container.has-logo .ph-app-logo-icon img
+{
+	max-width: 56px;
+}
+
 .ph-sidebar.ph-expanded .ph-app-logo-initial
 {
 	display: none;
@@ -2197,6 +2240,12 @@ body::after
 	font-size: 16px;
 	font-weight: 800;
 	letter-spacing: -0.03em;
+}
+
+.ph-sidebar-logo-container.has-logo .ph-app-logo-text
+{
+	margin-left: 0;
+	max-width: 122px;
 }
 
 .ph-sidebar-toggle
@@ -2278,7 +2327,7 @@ body::after
 .ph-sidebar.ph-expanded .ph-list-group-wrapper
 {
 	width: 100%;
-	margin: 0 0 5px;
+	margin: 0 0 15px;
 	padding: 0 14px;
 }
 
@@ -2392,7 +2441,7 @@ body::after
 	margin: 12px 0 10px;
 	padding: 18px 28px 0;
 	justify-content: flex-start;
-	border-top: 1px solid var(--ph-sidebar-border);
+	border-top: 1px solid var(--ph-sidebar-category-border);
 	color: #343238;
 	font-size: 11px;
 	font-weight: 800;
@@ -2866,6 +2915,11 @@ body::after
 	.ph-sidebar-toggle
 	{
 		display: none;
+	}
+
+	.ph-sidebar.ph-expanded .ph-sidebar-toggle
+	{
+		display: inline-flex;
 	}
 
 	.ph-sidebar

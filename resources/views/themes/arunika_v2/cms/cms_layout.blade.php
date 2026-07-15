@@ -1,7 +1,37 @@
 @include('themes.arunika_v2.components.menu')
 
+@php
+	$siteConfig = site_config();
+	$siteName = $siteConfig->site_name;
+	$siteFontFamilyCode = strtolower(str_replace([' ', '-'], '_', trim($siteConfig->font_family ?? 'nunito')));
+	$siteFontFamilyCode = preg_match('/^[a-z0-9_]+$/', $siteFontFamilyCode) === 1 && Storage::exists('public/fonts/'.$siteFontFamilyCode.'/fonts.css')
+		? $siteFontFamilyCode
+		: 'nunito';
+	$siteFontFamilyName = ucwords(str_replace('_', ' ', $siteFontFamilyCode));
+	$siteFontSizeUnit = in_array($siteConfig->font_size_unit ?? 'px', ['px', 'em', 'rem'], true)
+		? $siteConfig->font_size_unit
+		: 'px';
+	$siteFontSizeMin = $siteFontSizeUnit === 'px' ? 8 : .5;
+	$siteFontSizeMax = $siteFontSizeUnit === 'px' ? 72 : 4.5;
+	$siteFontSizeValue = is_numeric($siteConfig->font_size ?? null) ? (float) $siteConfig->font_size : ($siteFontSizeUnit === 'px' ? 14 : .875);
+	$siteFontSizeValue = min($siteFontSizeMax, max($siteFontSizeMin, $siteFontSizeValue));
+	$siteFontSize = rtrim(rtrim(number_format($siteFontSizeValue, 3, '.', ''), '0'), '.').$siteFontSizeUnit;
+	$hasCustomSiteLogo = filled($siteConfig->site_logo);
+	$siteLogoWidthUnit = in_array($siteConfig->site_logo_width_unit ?? '%', ['%', 'px', 'em', 'rem', 'pt'], true)
+		? $siteConfig->site_logo_width_unit
+		: '%';
+	$siteLogoWidthMax = $siteLogoWidthUnit === '%' ? 100 : 500;
+	$siteLogoWidthValue = min($siteLogoWidthMax, max(1, (float) ($siteConfig->site_logo_width_value ?? 100)));
+	$siteLogoCssWidth = $siteLogoWidthUnit === '%'
+		? round(34 * ($siteLogoWidthValue / 100), 2).'px'
+		: rtrim(rtrim(number_format($siteLogoWidthValue, 2, '.', ''), '0'), '.').$siteLogoWidthUnit;
+	$siteLogoUrl = $hasCustomSiteLogo
+		? route('cms.admin.awesome_admin.config.logo', ['fileName' => $siteConfig->site_logo])
+		: '';
+@endphp
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="--ph-font-family: '{{ $siteFontFamilyName }}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --ph-font-size: {{ $siteFontSize }};">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +46,7 @@
 		<link href="{{ url('assets/plugins/fontawesome/5.15.3/css/all.min.css') }}" rel="stylesheet">
 
 		<!-- Font -->
-		<link href="{{ asset('storage/fonts/nunito/fonts.css?v=').time() }}" rel="stylesheet">	
+		<link id="arunikaActiveFontStylesheet" data-font-base-url="{{ asset('storage/fonts') }}" href="{{ asset('storage/fonts/'.$siteFontFamilyCode.'/fonts.css?v=').time() }}" rel="stylesheet">
 
 		<!-- Vue Select CSS --->
 		<link rel="stylesheet" href="{{ url('assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css') }}">
@@ -52,7 +82,6 @@
 	</head>
 
 	<body>
-
 		<div class="ph-app-shell d-flex w-100 h-100">
 			<div class="ph-sidebar ph-no-transition" id="sidebar">
 
@@ -69,13 +98,13 @@
 				})();
 				</script>
 				
-				<div class="ph-sidebar-logo-container" aria-label="{{ site_config()->site_name }}">
+				<div class="ph-sidebar-logo-container{{ $hasCustomSiteLogo ? ' has-logo' : '' }}" aria-label="{{ $siteName }}" style="--ph-site-logo-width: {{ $siteLogoCssWidth }}">
 					<div class="ph-app-logo-icon">
-						<img src="{{ asset('assets/logos/laraphoenix_onlybird_colored_2.png') }}" alt="{{ site_config()->site_name }}">
+						<img @if($hasCustomSiteLogo) src="{{ $siteLogoUrl }}" @endif alt="{{ $siteName }}">
 					</div>
 
-					<span class="ph-app-logo-initial" aria-hidden="true">{{ mb_strtoupper(mb_substr(trim(site_config()->site_name), 0, 1)) }}</span>
-					<span class="ph-app-logo-text">{{ site_config()->site_name }}</span>
+					<span class="ph-app-logo-initial" aria-hidden="true">{{ mb_strtoupper(mb_substr(trim($siteName), 0, 1)) }}</span>
+					<span class="ph-app-logo-text">{{ $siteName }}</span>
 				</div>
 
 				<button class="ph-sidebar-toggle" id="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="true">

@@ -23,8 +23,12 @@ return new class extends Migration
             $table->string('site_keyword', 155)->nullable();
             $table->string('site_description', 155)->nullable();
             $table->string('site_thumbnail', 255)->nullable();
+			$table->string('site_logo', 255)->nullable();
+			$table->decimal('site_logo_width_value', 8, 2)->default(100);
+			$table->string('site_logo_width_unit', 4)->default('%');
             $table->string('font_family', 32)->default('Nunito');
-            $table->integer('font_size')->default(14);
+			$table->decimal('font_size', 8, 3)->default(14);
+			$table->string('font_size_unit', 4)->default('px');
             $table->text('footer_message1');
             $table->text('footer_message2');
             $table->tinyInteger('signup_closed')->default(1);

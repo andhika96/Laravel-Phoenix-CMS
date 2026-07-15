@@ -1,0 +1,851 @@
+@extends('themes.'.custom_theme('cms'))
+
+@section('title')
+	{{ t('Manage Site Config') }}
+@endsection
+
+@push('css')
+	@foreach($getListFontCss as $fontCss)
+		{!! nl2br($fontCss) !!}
+	@endforeach
+
+	<style>
+	.vs__dropdown-toggle
+	{
+		padding: 0 0 2px;
+	}
+
+	.vs__selected,
+	.vs__search,
+	.vs__actions
+	{
+		margin: 0;
+	}
+
+	.site-logo-settings-grid
+	{
+		align-items: start;
+	}
+
+	.site-logo-upload-zone
+	{
+		display: grid;
+		grid-template-columns: 82px minmax(0, 1fr);
+		gap: 18px;
+		align-items: center;
+		min-height: 130px;
+		padding: 19px;
+		border: 1.5px dashed #c9c1d2;
+		border-radius: 12px;
+		background: #fbfafd;
+		cursor: pointer;
+		transition: border-color .16s ease, background-color .16s ease, box-shadow .16s ease;
+	}
+
+	.site-logo-upload-zone:hover,
+	.site-logo-upload-zone.is-dragging,
+	.site-logo-upload-zone:focus-visible
+	{
+		border-color: var(--ph-theme-primary);
+		background: #f8f5ff;
+		box-shadow: 0 0 0 3px rgba(101, 66, 215, .09);
+		outline: none;
+	}
+
+	.site-logo-upload-visual
+	{
+		display: grid;
+		place-items: center;
+		width: 82px;
+		height: 82px;
+		overflow: hidden;
+		border: 1px solid #ded8e5;
+		border-radius: 12px;
+		background: #fff;
+	}
+
+	.site-logo-upload-placeholder
+	{
+		color: var(--ph-theme-primary);
+		font-size: 25px;
+	}
+
+	.site-logo-upload-preview
+	{
+		display: block;
+		width: 100%;
+		height: 100%;
+		padding: 10px;
+		object-fit: contain;
+	}
+
+	.site-logo-upload-copy strong
+	{
+		display: block;
+		margin-bottom: 5px;
+		font-size: 14px;
+	}
+
+	.site-logo-upload-copy span
+	{
+		display: block;
+		color: var(--bs-secondary-color);
+		font-size: 12px;
+		line-height: 1.55;
+	}
+
+	.site-logo-upload-actions
+	{
+		display: flex;
+		flex-wrap: wrap;
+		gap: 9px;
+		margin-top: 14px;
+	}
+
+	.site-logo-file-meta
+	{
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 12px;
+		align-items: center;
+		margin-top: 13px;
+		padding: 11px 13px;
+		border: 1px solid #e5e1e8;
+		border-radius: 9px;
+		background: #faf9fb;
+		font-size: 12px;
+	}
+
+	.site-logo-file-meta strong
+	{
+		display: block;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.site-logo-resize-card
+	{
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(210px, 260px);
+		gap: 18px;
+		align-items: center;
+		margin-top: 14px;
+		padding: 14px;
+		border: 1px solid #e3dfe7;
+		border-radius: 10px;
+		background: #faf9fc;
+	}
+
+	.site-logo-resize-copy strong
+	{
+		display: block;
+		margin-bottom: 4px;
+		font-size: 13px;
+	}
+
+	.site-logo-resize-copy span
+	{
+		display: block;
+		color: var(--bs-secondary-color);
+		font-size: 12px;
+		line-height: 1.45;
+	}
+
+	.site-logo-resize-fields
+	{
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 84px;
+		gap: 8px;
+	}
+
+	.site-logo-width-readout
+	{
+		grid-column: 1 / -1;
+		color: #5f5668;
+		font-size: 11px;
+		font-weight: 700;
+		text-align: right;
+	}
+
+	.site-logo-preview-panel
+	{
+		position: sticky;
+		top: 24px;
+		overflow: hidden;
+		border: 1px solid #ded9e2;
+		border-radius: 12px;
+		background: #fff;
+		box-shadow: 0 16px 45px rgba(42, 33, 54, .055);
+	}
+
+	.site-logo-preview-toolbar
+	{
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 20px;
+		padding: 24px 26px 20px;
+		border-bottom: 1px solid #ece9ee;
+	}
+
+	.site-logo-preview-controls
+	{
+		display: inline-flex;
+		padding: 3px;
+		border: 1px solid #ddd8e2;
+		border-radius: 9px;
+		background: #f5f3f7;
+	}
+
+	.site-logo-preview-controls button
+	{
+		min-height: 31px;
+		padding: 5px 10px;
+		border: 0;
+		border-radius: 6px;
+		color: var(--bs-secondary-color);
+		background: transparent;
+		font-size: 12px;
+		font-weight: 800;
+	}
+
+	.site-logo-preview-controls button.is-active
+	{
+		color: var(--bs-body-color);
+		background: #fff;
+		box-shadow: 0 1px 5px rgba(41, 33, 51, .1);
+	}
+
+	.site-logo-preview-stage
+	{
+		display: grid;
+		place-items: center;
+		min-height: 590px;
+		padding: 24px;
+		background: #27242c;
+	}
+
+	.site-logo-sidebar-preview
+	{
+		width: 256px;
+		height: 540px;
+		overflow: hidden;
+		border-right: 1px solid #d9d5dd;
+		border-radius: 2px;
+		background: linear-gradient(180deg, #f7f8fc 0%, #f5edf7 100%);
+		box-shadow: 0 20px 50px rgba(0, 0, 0, .24);
+		transition: width .22s ease;
+	}
+
+	.site-logo-sidebar-preview.is-collapsed
+	{
+		width: 76px;
+	}
+
+	.site-logo-sidebar-brand
+	{
+		display: flex;
+		height: 76px;
+		align-items: center;
+		gap: 10px;
+		padding: 0 22px;
+		border-bottom: 1px solid rgba(216, 211, 220, .25);
+	}
+
+	.site-logo-sidebar-preview.is-collapsed .site-logo-sidebar-brand
+	{
+		justify-content: center;
+		padding: 0;
+	}
+
+	.site-logo-sidebar-image
+	{
+		display: block;
+		flex: 0 0 auto;
+		width: 34px;
+		height: auto;
+		max-width: 96px;
+		max-height: 50px;
+		object-fit: contain;
+		transition: width .18s ease;
+	}
+
+	.site-logo-sidebar-name
+	{
+		min-width: 0;
+		overflow: hidden;
+		color: var(--bs-body-color);
+		font-size: 15px;
+		font-weight: 800;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.site-logo-sidebar-preview.is-collapsed .site-logo-sidebar-name
+	{
+		display: none;
+	}
+
+	.site-logo-sidebar-preview.is-collapsed .site-logo-sidebar-image
+	{
+		max-width: 56px;
+		max-height: 50px;
+	}
+
+	.site-logo-sidebar-menu
+	{
+		padding: 20px 0;
+	}
+
+	.site-logo-sidebar-menu-item
+	{
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		min-height: 42px;
+		margin: 0 14px 6px;
+		padding: 0 14px;
+		border-radius: 9px;
+		color: var(--bs-body-color);
+		font-size: 14px;
+	}
+
+	.site-logo-sidebar-menu-item.is-active
+	{
+		color: var(--ph-theme-primary);
+		background: rgba(255, 255, 255, .86);
+		box-shadow: 0 5px 16px rgba(60, 44, 78, .05);
+	}
+
+	.site-logo-sidebar-menu-item i
+	{
+		width: 17px;
+		text-align: center;
+		font-size: 15px;
+	}
+
+	.site-logo-sidebar-category
+	{
+		margin: 16px 0 15px;
+		padding: 15px 28px 8px;
+		border-top: 1px solid #d8d3dc;
+		font-size: 11px;
+		font-weight: 900;
+		letter-spacing: .03em;
+		text-transform: uppercase;
+	}
+
+	.site-logo-sidebar-preview.is-collapsed .site-logo-sidebar-menu-item
+	{
+		justify-content: center;
+		width: 48px;
+		margin-inline: auto;
+		padding: 0;
+	}
+
+	.site-logo-sidebar-preview.is-collapsed .site-logo-sidebar-menu-item span,
+	.site-logo-sidebar-preview.is-collapsed .site-logo-sidebar-category
+	{
+		display: none;
+	}
+
+	.site-logo-preview-note
+	{
+		padding: 14px 18px;
+		border-top: 1px solid #ece9ee;
+		color: var(--bs-secondary-color);
+		background: #fff;
+		font-size: 12px;
+	}
+
+	.site-logo-preview-note strong
+	{
+		color: var(--bs-body-color);
+	}
+
+	@media (max-width: 991.98px)
+	{
+		.site-logo-preview-panel
+		{
+			position: static;
+		}
+	}
+
+	@media (max-width: 575.98px)
+	{
+		.site-logo-upload-zone
+		{
+			grid-template-columns: 60px minmax(0, 1fr);
+			gap: 13px;
+			padding: 14px;
+		}
+
+		.site-logo-upload-visual
+		{
+			width: 60px;
+			height: 60px;
+		}
+
+		.site-logo-resize-card
+		{
+			grid-template-columns: 1fr;
+			gap: 11px;
+		}
+
+		.site-logo-preview-toolbar
+		{
+			flex-direction: column;
+			padding-inline: 18px;
+		}
+
+		.site-logo-preview-stage
+		{
+			min-height: 570px;
+			padding: 15px;
+		}
+	}
+	</style>
+@endpush('css')
+
+@section('content')
+	<div>
+		<div class="mb-3">
+			{{ Breadcrumbs::render('awesome_admin.config') }}
+		</div>
+
+		<div class="ph-content rounded p-3 mb-3">
+			<div class="row g-3">
+				<div class="col-md-6 d-flex align-items-center">
+					<h4 class="mb-0">{{ t('Site Settings') }}</h4>
+				</div>
+			</div>
+		</div>
+
+		<div id="ph-app-site-config">
+			<div class="ph-fetch-listdata" id="ph-form-config-data" data-url="{{ url('awesome_admin/config/listdata') }}">
+				<form action="{{ route('cms.admin.awesome_admin.config.update') }}" method="post" ref="formHTML" @submit.prevent="submitData">
+					
+					<div class="ph-notice" v-cloak>
+						<div aria-live="polite" aria-atomic="true" class="position-relative">
+							<div class="toast-container position-fixed top-0 end-0 p-3">
+								<div :class="'toast ph-notice-toast ph-callout-no-border '+responseStatus" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+									<div :class="'toast-header '+responseStatus+' pe-3 pt-3 pb-1 border-0'">
+										<strong class="toast-header-title toast-header-icon me-auto">Notice</strong>
+										<small>just now</small>
+										<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="margin-right: calc(-.1 * var(--bs-toast-padding-x));"></button>
+									</div>
+								
+									<div class="toast-body p-3 text-start">
+										<div v-if="isArrayMessageAfterSubmit == 1">
+											<ul class="ps-3 m-0">
+												<li v-for="(item, index) in responseMessageAfterSubmit">
+													@{{ item[0] }}
+												</li>
+											</ul>
+										</div>
+
+										<div v-else>
+											@{{ responseMessageAfterSubmit }}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="generalSettingsSection" class="ph-content rounded p-4 mb-4">
+						<div class="border-bottom pb-3 mb-4">
+							<h5><i class="fas fa-cog fa-fw me-1"></i> {{ t('General Settings') }}</h5>
+						</div>
+
+						<div>
+							<div class="row g-5">
+								<div class="col-lg-6">
+									<div class="row g-3">
+										<div class="col-12">
+											<label class="form-label">{{ t('Site Name') }}</label>
+											<input type="text" name="site_name" ref="siteName" class="form-control font-size-inherit" value="{{ $data->site_name }}" v-on:input="updateSiteLogoName($event)">
+										</div>
+
+										<div class="col-12">
+											<label class="form-label">{{ t('Site Slogan') }}</label>
+											<input type="text" name="site_slogan" class="form-control font-size-inherit" value="{{ $data->site_slogan }}">
+										</div>
+
+										<div class="col-12">
+											<label class="form-label">{{ t('Site Keyword') }}</label>
+											<input type="text" name="site_keyword" class="form-control font-size-inherit" value="{{ $data->site_keyword }}">
+										</div>
+
+										<div class="col-12">
+											<label class="form-label">{{ t('Site Description') }}</label>
+											<textarea name="site_description" class="form-control font-size-inherit" rows="3">{{ $data->site_description }}</textarea>
+										</div>
+
+										<div class="col-md-6 ph-fetch-listdata-font" data-url="{{ url('awesome_admin/config/listdata/fonts') }}">
+											<label class="form-label">{{ t('Font Family') }}</label>
+
+											<v-select label="name" :reduce="name => name.code" v-model="responseData.font_family" :options="responseDataFont" :components="{Deselect}">
+												<template #open-indicator="{ attributes }">
+													<span v-bind="attributes"><i class="fal fa-angle-down fa-lg mx-1" style="font-size: 1.5rem;vertical-align: top;"></i></span>
+												</template>
+
+												<template #selected-option="{ name, data }">
+													<span :style="'font-family: '+name+''">@{{ name }}</span>
+												</template>
+
+												<template #option="{ data, name }">
+													<span :style="'font-family: '+name+''">@{{ name }}</span>
+												</template>
+
+												<template #no-options="{ search, searching, loading }">
+													<div class="px-3 py-2 text-center">Data not found.</div>
+												</template>
+											</v-select>
+
+											<input type="hidden" name="font_family" class="form-control font-size-inherit" :value="responseData.font_family">
+										</div>
+
+										<div class="col-md-6">
+											<label class="form-label">{{ t('Font Size') }}</label>
+											<input type="text" name="font_size" class="form-control font-size-inherit" value="{{ $data->font_size }}">
+										</div>
+									</div>
+								</div>
+
+								<div class="col-lg-6">
+									<div class="row g-3">
+										<div class="col-12">
+											<label class="form-label">{{ t('Site Thumbnail') }}</label>
+												<img src="{{ asset('assets/images/aruna_card_1200.jpg') }}" class="img-fluid rounded mb-3">
+
+											  <input class="form-control font-size-inherit" type="file" name="file" id="formFile">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					@php
+						$hasCustomSiteLogo = filled($data->site_logo);
+						$siteLogoUrl = $hasCustomSiteLogo
+							? route('cms.admin.awesome_admin.config.logo', ['fileName' => $data->site_logo])
+							: asset('assets/logos/laraphoenix_onlybird_colored_2.png');
+						$siteLogoWidthValue = old('site_logo_width_value', $data->site_logo_width_value ?? 100);
+						$siteLogoWidthUnit = old('site_logo_width_unit', $data->site_logo_width_unit ?? '%');
+					@endphp
+
+					<div id="logoSettingsSection" class="ph-content rounded p-4 mb-4">
+						<div class="border-bottom pb-3 mb-4">
+							<h5><i class="fas fa-image fa-fw me-1"></i> {{ t('Logo Settings') }}</h5>
+						</div>
+
+						<div id="siteLogoSettings"
+							ref="siteLogoSettings"
+							data-logo-url="{{ $siteLogoUrl }}"
+							data-default-logo-url="{{ asset('assets/logos/laraphoenix_onlybird_colored_2.png') }}"
+							data-logo-name="{{ $hasCustomSiteLogo ? $data->site_logo : '' }}"
+							data-logo-width-value="{{ $siteLogoWidthValue }}"
+							data-logo-width-unit="{{ $siteLogoWidthUnit }}"
+							data-has-custom-logo="{{ $hasCustomSiteLogo ? '1' : '0' }}">
+							<div class="row g-5 site-logo-settings-grid">
+								<div class="col-lg-6">
+									<label class="form-label fw-semibold">{{ t('Site Logo') }} <span class="text-secondary fw-normal">({{ t('optional') }})</span></label>
+									<input id="siteLogoInput" ref="siteLogoInput" type="file" name="site_logo" accept="image/png,image/jpeg,image/webp" hidden v-on:change="handleSiteLogoInput($event)">
+									<input id="removeSiteLogoInput" type="hidden" name="remove_site_logo" :value="siteLogo.remove">
+
+									<div id="siteLogoDropZone" class="site-logo-upload-zone" :class="{'is-dragging': siteLogo.isDragging}" role="button" tabindex="0" aria-controls="siteLogoInput" v-on:click="chooseSiteLogo" v-on:dragenter.prevent="siteLogo.isDragging = true" v-on:dragover.prevent="siteLogo.isDragging = true" v-on:dragleave.prevent="siteLogo.isDragging = false" v-on:drop.prevent.stop="handleSiteLogoDrop($event)" v-on:keydown.enter.prevent="chooseSiteLogo" v-on:keydown.space.prevent="chooseSiteLogo">
+										<div class="site-logo-upload-visual">
+											<img id="siteLogoUploadPreview" class="site-logo-upload-preview" :src="siteLogo.src" alt="{{ t('Site logo preview') }}">
+										</div>
+										<div class="site-logo-upload-copy">
+											<strong>{{ t('Drop your logo here or browse') }}</strong>
+											<span>PNG, JPG, or WebP · maximum 5 MB<br>{{ t('Recommended: square or horizontal logo with a transparent background.') }}</span>
+										</div>
+									</div>
+
+									<div class="site-logo-upload-actions">
+										<button id="chooseSiteLogo" type="button" class="btn ph-btn-theme font-size-inherit" v-on:click="chooseSiteLogo">
+											<i class="fal fa-upload me-1"></i> {{ t('Choose Logo') }}
+										</button>
+										<button id="removeSiteLogo" type="button" class="btn btn-outline-danger font-size-inherit" :disabled="! siteLogo.hasCustomLogo" v-on:click="removeSiteLogo">
+											<i class="fal fa-trash-alt me-1"></i> {{ t('Remove Logo') }}
+										</button>
+									</div>
+
+									<div id="siteLogoFileMeta" class="site-logo-file-meta" aria-live="polite">
+										<div>
+											<strong id="siteLogoFileName">@{{ siteLogo.name }}</strong>
+											<span id="siteLogoFileDetails" class="text-body-secondary">@{{ siteLogo.details }}</span>
+										</div>
+										<span>@{{ siteLogo.hasCustomLogo ? 'Custom' : 'Default' }}</span>
+									</div>
+
+									<div id="siteLogoResizeCard" class="site-logo-resize-card">
+										<div class="site-logo-resize-copy">
+											<strong>{{ t('Logo Width') }}</strong>
+											<span>{{ t("100% follows the logo's original sidebar width and is the maximum percentage value.") }}</span>
+										</div>
+										<div class="site-logo-resize-fields">
+											<input id="siteLogoWidthValue" type="number" name="site_logo_width_value" class="form-control font-size-inherit" aria-label="{{ t('Logo width value') }}" v-model.number="siteLogo.widthValue" min="1" :max="logoWidthMaxForUnit(siteLogo.widthUnit)" :step="['em', 'rem'].includes(siteLogo.widthUnit) ? '0.1' : '1'" v-on:input="normalizeSiteLogoWidth">
+											<select id="siteLogoWidthUnit" name="site_logo_width_unit" class="form-select font-size-inherit" aria-label="{{ t('Logo width unit') }}" v-model="siteLogo.widthUnit" v-on:change="normalizeSiteLogoWidth">
+												@foreach(['%', 'px', 'em', 'rem', 'pt'] as $unit)
+													<option value="{{ $unit }}">{{ $unit }}</option>
+												@endforeach
+											</select>
+											<span id="siteLogoWidthReadout" class="site-logo-width-readout">@{{ siteLogo.widthValue }}@{{ siteLogo.widthUnit }} · @{{ siteLogoCssWidth() }} preview</span>
+										</div>
+									</div>
+
+									<p class="form-text mt-3 mb-0">{{ t('When no custom logo is uploaded, Arunika v2 uses the default Phoenix logo.') }}</p>
+								</div>
+
+								<div class="col-lg-6">
+									<div class="site-logo-preview-panel">
+										<div class="site-logo-preview-toolbar">
+											<div>
+												<strong class="d-block">{{ t('Sidebar Preview') }}</strong>
+												<span class="text-body-secondary small">{{ t('Review the logo in both Arunika v2 states.') }}</span>
+											</div>
+											<div class="site-logo-preview-controls" aria-label="{{ t('Sidebar preview width') }}">
+												<button id="expandedSiteLogoPreview" type="button" :class="{'is-active': ! siteLogo.isCollapsed}" :aria-pressed="! siteLogo.isCollapsed" v-on:click="setSiteLogoPreviewMode(false)">{{ t('Expanded') }}</button>
+												<button id="collapsedSiteLogoPreview" type="button" :class="{'is-active': siteLogo.isCollapsed}" :aria-pressed="siteLogo.isCollapsed" v-on:click="setSiteLogoPreviewMode(true)">{{ t('Collapsed') }}</button>
+											</div>
+										</div>
+
+										<div class="site-logo-preview-stage">
+											<div id="siteLogoSidebarPreview" class="site-logo-sidebar-preview" :class="{'is-collapsed': siteLogo.isCollapsed}">
+												<div id="siteLogoSidebarBrand" class="site-logo-sidebar-brand has-logo">
+													<img id="siteLogoSidebarImage" class="site-logo-sidebar-image" :src="siteLogo.src" :style="{'width': siteLogoCssWidth()}" alt="{{ t('Sidebar logo preview') }}">
+													<span id="siteLogoSidebarName" class="site-logo-sidebar-name">@{{ siteLogo.siteName }}</span>
+												</div>
+												<div class="site-logo-sidebar-menu" aria-hidden="true">
+													<div class="site-logo-sidebar-menu-item"><i class="fas fa-link"></i><span>{{ t('Visit Site') }}</span></div>
+													<div class="site-logo-sidebar-menu-item is-active"><i class="fas fa-home"></i><span>{{ t('Dashboard') }}</span></div>
+													<div class="site-logo-sidebar-menu-item"><i class="far fa-comments"></i><span>{{ t('Messages') }}</span></div>
+													<div class="site-logo-sidebar-category">{{ t('All Menus') }}</div>
+													<div class="site-logo-sidebar-menu-item"><i class="far fa-newspaper"></i><span>{{ t('Manage Articles') }}</span></div>
+													<div class="site-logo-sidebar-menu-item"><i class="fas fa-puzzle-piece"></i><span>{{ t('Manage Cover Image') }}</span></div>
+													<div class="site-logo-sidebar-menu-item"><i class="far fa-file-alt"></i><span>{{ t('File Manager') }}</span></div>
+													<div class="site-logo-sidebar-category">{{ t('Advanced Menus') }}</div>
+													<div class="site-logo-sidebar-menu-item"><i class="far fa-star"></i><span>{{ t('Log') }}</span></div>
+												</div>
+											</div>
+										</div>
+										<div class="site-logo-preview-note"><strong>{{ t('Active logo:') }}</strong> @{{ siteLogo.hasCustomLogo ? 'custom upload' : 'default Phoenix logo' }}.</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="ph-content rounded p-4 mb-4">
+						<div class="border-bottom pb-3 mb-4">
+							<h5><i class="fas fa-shield fa-fw me-1"></i> {{ t('Privacy & Security Settings') }}</h5>
+						</div>
+
+						<div>
+							<div class="row g-5">
+								<div class="col-lg-6">
+									<div class="row g-3">
+										<div class="col-12">
+											<label class="form-label">{{ t('Management Menu Version') }}</label>
+
+											<div class="input-group">
+												<select name="management_menu" class="form-select font-size-inherit" aria-label="Default select example">
+													<option selected>{{ t('Select Version') }}</option>
+													<option value="v1" @if ($data->management_menu == 'v1') selected @endif>{{ t('Management Menu v1') }}</option>
+													<option value="v2" @if ($data->management_menu == 'v2') selected @endif>{{ t('Management Menu v2') }}</option>
+												</select>
+
+												<button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#informationManagementMenuModal"><i class="fas fa-info-circle fa-fw fa-lg"></i></button>
+											</div>
+
+											<!-- Management Menu Modal -->
+											<div class="modal fade" id="informationManagementMenuModal" tabindex="-1" aria-labelledby="informationManagementMenuModalLabel" aria-hidden="true">
+												<div class="modal-dialog ph-modal-dialog modal-dialog-centered modal-dialog-scrollable">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h1 class="modal-title fs-5" id="informationManagementMenuModalLabel"><i class="fas fa-info-circle fa-fw fa-lg me-1"></i> {{ t('Information') }}</h1>
+															<a href="javascript:void(0)" class="text-secondary ms-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fal fa-times-circle fs-4"></i></a>
+														</div>
+
+														<div class="modal-body">
+															<div class="bg-body-secondary p-3 rounded">
+																<div class="mb-4">
+																	<h6>{{ t('Management Menu v1') }}</h6>
+																	<p>{{ t('Management Menu v1 uses the built-in feature of Spatie Laravel Permission, where permissions must be assigned to Roles first for Menus and Users.') }}</p>
+																</div>
+
+																<div>
+																	<h6>{{ t('Management Menu v2') }}</h6>
+																	<p>{{ t('Management Menu v2 is a custom feature that allows permissions to be directly assigned to the menu when creating a Role.') }}</p>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
+										</div>
+
+										<div class="col-12">
+											<label class="form-label">{{ t('Site Registration Settings') }}</label>
+
+											<select name="signup_closed" class="form-select font-size-inherit" aria-label="Default select example">
+												<option selected>{{ t('Select') }}</option>
+												<option value="0" @if ($data->signup_closed == 0) selected @endif>Open - Accepting new members</option>
+												<option value="1" @if ($data->signup_closed == 1) selected @endif>Close - Not accepting new members</option>
+											</select>
+										</div>
+
+										<div class="col-12">
+											<label class="form-label">{{ t('Site Maintenance Settings') }}</label>
+
+											<select name="offline_mode" class="form-select font-size-inherit" aria-label="Default select example" v-on:change="offlineReasonForm($event)">
+												<option selected>{{ t('Select') }}</option>
+												<option value="0" @if ($data->offline_mode == 0) selected @endif>Active</option>
+												<option value="1" @if ($data->offline_mode == 1) selected @endif>Inactive</option>
+											</select>
+
+											<div class="ph-box-offline-reason">
+												<div class="mt-3">
+													<label class="form-label">{{ t('Offline Reason') }}</label>
+													<textarea name="offline_reason" rows="5" placeholder="Offline Reason" class="form-control font-size-inherit" :disabled="showForm.offlineReasonForm == true ? false : true">{{ $data->offline_reason }}</textarea>
+												</div>
+											</div>
+										</div>
+
+										
+									</div>
+								</div>
+
+								<div class="col-lg-6">
+									<div class="row g-3">
+										<div class="col-12">
+											<label class="form-label">{{ t('Time Rate Limit Global in Second') }}</label>
+
+											<input type="text" name="time_ratelimit_global" class="form-control" placeholder="{{ t('Please input time in second') }}" v-on:keypress="inputOnlyNumber" value="{{ $data->time_ratelimit_global }}" aria-label="Text input for time rate limit global in second">
+
+											<div id="rateLimitLoginHelpBlock" class="form-text">
+												{{ t('You can set time in second for duration rate limit') }}
+											</div>
+										</div>
+
+										<div class="col-12">
+											<label class="form-label">{{ t('Enable Rate Limit Login') }}</label>
+
+											<div class="input-group">
+												<div class="input-group-text">
+													<input name="enable_ratelimit_login" class="form-check-input mt-0" type="checkbox" id="checkEnableRateLimitLogin" @if ($data->enable_ratelimit_login == 0) checked @endif aria-label="Checkbox for enable rate limit login">
+												
+													<label class="form-check-label font-size-normal ms-2" for="checkEnableRateLimitLogin">
+														{{ t('Enable') }}
+													</label>
+												</div>
+	
+												<input type="text" name="amount_ratelimit_login" class="form-control" placeholder="{{ t('Please input integer 10-999 or until 3 digits') }}" v-on:keypress="inputOnlyNumber" value="{{ $data->amount_ratelimit_login }}" aria-label="Text input with checkbox and type integer, etc. 10-99">
+											</div>
+
+											<div id="rateLimitLoginHelpBlock" class="form-text">
+												{{ t('You can limit login requests per IP Address per minute if a user fails to login') }}
+											</div>
+										</div>
+
+										<div class="col-12">
+											<label class="form-label">{{ t('Enable Rate Limit Signup') }}</label>
+
+											<div class="input-group">
+												<div class="input-group-text">
+													<input name="enable_ratelimit_signup" class="form-check-input mt-0" type="checkbox" value="" id="checkEnableRateLimitSignup" @if ($data->enable_ratelimit_signup == 0) checked @endif aria-label="Checkbox for enable rate limit signup">
+												
+													<label class="form-check-label font-size-normal ms-2" for="checkEnableRateLimitSignup">
+														{{ t('Enable') }}
+													</label>
+												</div>
+	
+												<input type="text" name="amount_ratelimit_signup" class="form-control" placeholder="{{ t('Please input integer 10-999 or until 3 digits') }}" v-on:keypress="inputOnlyNumber" value="{{ $data->amount_ratelimit_signup }}" aria-label="Text input with checkbox and type integer, etc. 10-99">
+											</div>
+
+											<div id="rateLimitSignupHelpBlock" class="form-text">
+												{{ t('You can limit signup requests per IP Address per minute if a user fails to login') }}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="ph-content rounded p-4">
+						<div class="border-bottom pb-3 mb-4">
+							<h5><i class="fas fa-user-lock fa-fw me-1"></i> {{ t('reCAPTCHA Settings') }}</h5>
+						</div>
+
+						<div>
+							<div class="row g-5">
+								<div class="col-lg-6">
+									<div class="row g-3">
+										<div class="col-12">
+											<label class="form-label">{{ t('reCAPTCHA Site Key') }}</label>
+											<input type="text" name="recaptcha_site_key" class="form-control font-size-inherit" placeholder="{{ t('Please input reCAPTCHA Site Key') }}" value="{{ $data->recaptcha_site_key }}">
+										</div>
+
+										<div class="col-12">
+											<label class="form-label">{{ t('reCAPTCHA Secret Key') }}</label>
+											<input type="text" name="recaptcha_secret_key" class="form-control font-size-inherit" placeholder="{{ t('Please input reCAPTCHA Secret Key') }}" value="{{ $data->recaptcha_secret_key }}">
+										</div>
+										
+									</div>
+								</div>
+
+								<div class="col-lg-6">
+									<div class="row g-3">
+
+										<div class="col-12">
+											<label class="form-label">{{ t('Enable reCAPTCHA Login') }}</label>
+
+											<select name="enable_recaptcha_signin" class="form-select font-size-inherit" aria-label="Select enable reCAPTCHA signin">
+												<option selected>{{ t('Select') }}</option>
+												<option value="0" @if ($data->enable_recaptcha_signin == 0) selected @endif>Active</option>
+												<option value="1" @if ($data->enable_recaptcha_signin == 1) selected @endif>Inactive</option>
+											</select>
+
+											<div id="enableRECAPTCHASigninHelpBlock" class="form-text">
+												{{ t('You must setup reCAPTCHA key first before activate this option') }}
+											</div>
+										</div>
+
+										<div class="col-12">
+											<label class="form-label">{{ t('Enable reCAPTCHA Signup') }}</label>
+
+											<select name="enable_recaptcha_signup" class="form-select font-size-inherit" aria-label="Select enable reCAPTCHA signup">
+												<option selected>{{ t('Select') }}</option>
+												<option value="0" @if ($data->enable_recaptcha_signup == 0) selected @endif>Active</option>
+												<option value="1" @if ($data->enable_recaptcha_signup == 1) selected @endif>Inactive</option>
+											</select>
+
+											<div id="enableRECAPTCHASignupHelpBlock" class="form-text">
+												{{ t('You must setup reCAPTCHA key first before activate this option') }}
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-12 mt-3 text-end">
+									<input type="submit" class="btn ph-btn-theme btn-submit-data font-size-inherit" value="{{ t('Submit') }}">
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+@endsection
+
+@pushonce('js')
+	<script src="{{ url('assets/js/vue3/manage_config/vueV3-manage-config-2026.js?v=').time() }}"></script>
+@endpushonce

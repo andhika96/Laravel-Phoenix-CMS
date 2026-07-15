@@ -249,6 +249,7 @@ Route::name('cms.admin.')
 		{
 			Route::get('/config', 'index')->name('awesome_admin.config')->middleware('auth', 'checkSuspended');
 			Route::post('/config', 'update')->name('awesome_admin.config.update')->middleware('auth', 'checkSuspended');
+			Route::get('/config/logo/{fileName}', 'siteLogo')->where('fileName', '[A-Za-z0-9._-]+')->name('awesome_admin.config.logo')->middleware('auth', 'checkSuspended');
 
 			Route::get('/config/listdata', 'listData')->name('awesome_admin.config.listdata')->middleware('auth', 'checkSuspended');
 			Route::get('/config/listdata/fonts', 'listDataFonts')->name('awesome_admin.config.listdata.fonts')->middleware('auth', 'checkSuspended');

@@ -183,6 +183,23 @@
 
 final result: passed
 
+## 2026-07-15 - Arunika V2 production typography settings
+
+- Source visual truth: approved `site-general-settings-balanced-layout-mockup.html` and `C:\Users\CAHYO\AppData\Local\Temp\arunika-v2-balanced-general-settings-desktop.png`.
+- Production URL: `https://laravel-13-phoenix.aruna/awesome_admin/config`.
+- Production desktop capture: `C:\Users\CAHYO\AppData\Local\Temp\arunika-v2-site-config-production-desktop.png`.
+- Full-view comparison: the production General Settings surface follows the approved information/thumbnail upper grid, with matching section hierarchy, compact thumbnail card, overlay action, and existing Arunika spacing and border tokens.
+- Typography behavior: the existing Vue Select remains the font-family control; the size control supports `px`, `em`, and `rem`; the preview updates before saving.
+- Persistence proof: a real form save changed the database to `fira_sans / 15px`, updated the active stylesheet and root CSS variables without reloading, and server-rendered the same values on `/dashboard`.
+- Restore proof: a second real form save restored `nunito / 14px`; the database, root CSS variables, and active Nunito stylesheet all matched after the response.
+- Responsive finding [P2]: grid children retained their intrinsic minimum width on narrow content areas, allowing form controls to overflow their intended column.
+- Responsive patch: `.site-information-grid > section { min-width: 0; }` lets both information and thumbnail sections shrink within the existing `991.98px` single-column breakpoint.
+- Regression coverage: the focused feature test now asserts the shrink-safe grid contract in addition to layout markers, allowed units, Vue behavior, persistence validation, and global CSS variables.
+- Browser viewport note: the in-app browser viewport override continued reporting `1280px` through DOM metrics after a `375px` request, so its narrow screenshot was not treated as fidelity evidence. The approved `375px` prototype captures and the production responsive CSS contract were used for the narrow-layout check.
+- No actionable P0, P1, or P2 findings remain after the responsive patch.
+
+final result: passed
+
 ## 2026-07-14 - Arunika V2 submenu left shift and truncation
 
 - Selected source: approved interactive mockup `submenu-layout-left-shift-mockup.html`.
@@ -286,3 +303,40 @@ final result: blocked
 - Full-view and focused-region visual comparison: blocked until an authenticated post-patch capture is available.
 
 final result: blocked
+
+## 2026-07-15 - Balanced General Settings interactive mockup
+
+- Source visual truth: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-62e5abf5-ce0e-4fd6-a498-e9580d46fe19.png` plus the approved full-width Typography Settings layout direction.
+- Implementation URL: `https://laravel-13-phoenix.aruna/mockups/site-general-settings-balanced-layout-mockup.html`.
+- Desktop implementation screenshot: `C:\Users\CAHYO\AppData\Local\Temp\arunika-v2-balanced-general-settings-desktop.png`.
+- Mobile implementation screenshots: `C:\Users\CAHYO\AppData\Local\Temp\arunika-v2-balanced-general-settings-mobile-top.png` and `C:\Users\CAHYO\AppData\Local\Temp\arunika-v2-balanced-general-settings-mobile-typography.png`.
+- Viewport and state: desktop browser viewport `1265px` wide in `Fira Sans · 15px`; mobile responsive viewport `375px` wide in default `Nunito · 14px`.
+- Native-size note: the in-app browser clamped a newly opened desktop tab to `1265px` despite a requested `1920px` override, so the final screenshot uses the actual browser viewport. The earlier `1920px` check and CSS geometry both confirmed the two-column desktop grid.
+- Full-view comparison evidence: the supplied production screenshot and the latest desktop prototype screenshot were opened together. The site-information form and 16:9 thumbnail now finish as one upper band; Typography Settings begins on a full-width lower band instead of ending only under the left column.
+- Focused-region evidence: separate mobile captures verify the information/thumbnail stack and the full-width typography controls/preview without horizontal overflow. A focused crop was unnecessary because both regions are readable in those viewport captures.
+
+### Fidelity surfaces
+
+- Fonts and typography: the shell retains Nunito and repository font files; each font option renders in its own family; the preview correctly rendered `Fira Sans · 0.875rem`, reset to `Nunito · 14px`, and rendered the final `Fira Sans · 15px` state.
+- Spacing and layout rhythm: the upper two-column grid aligns information with a compact thumbnail card, and a full-width divider creates a clear typography band. At `375px`, both grids collapse to one column and document width equals viewport width.
+- Colors and visual tokens: the prototype preserves the existing Arunika purple accent, white settings surface, pale sidebar gradient, neutral borders, and blue Phoenix thumbnail.
+- Image quality and asset fidelity: the production `/assets/images/aruna_card_1200.jpg` asset is used directly with a fixed 16:9 crop; no placeholder or code-drawn image replaces it.
+- Copy and content: production field labels and sample values are preserved. Design-rationale helper text found in the first QA pass was replaced with administrator-facing guidance.
+- Icons: the existing Font Awesome family is used for the settings, sidebar, upload, reset, preview, and save actions.
+
+### Interaction proof
+
+- Existing-plugin-style font combobox opens and selects Fira Sans.
+- Unit conversion preserves visual size from `14px` to `0.875rem`.
+- Reset restores `Nunito · 14px`.
+- Thumbnail browse, drag/drop, validation, preview, and reset handlers are wired.
+- Save Settings shows a prototype-only status and never stores data.
+- Desktop and mobile console checks returned no warnings or errors.
+
+### Findings and patches
+
+- No actionable P0, P1, or P2 findings remain.
+- [P3] The prototype adds purposeful Site Information and Typography Settings subheadings that are not present in the current production screenshot. This is the approved hierarchy change and can be adjusted during user review.
+- Patch made after comparison: replace layout-rationale copy with product-facing thumbnail, typography, and font-selection guidance.
+
+final result: passed

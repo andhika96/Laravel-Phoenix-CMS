@@ -1,3 +1,14 @@
+const ALLOWED_LOGO_UNITS = ['%', 'px', 'em', 'rem', 'pt'];
+const ALLOWED_LOGO_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
+const DEFAULT_LOGO_WIDTH_PX = 34;
+const MAX_LOGO_FILE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_FONT_SIZE_UNITS = ['px', 'em', 'rem'];
+const DEFAULT_FONT_FAMILY_CODE = 'nunito';
+const DEFAULT_FONT_FAMILY = 'Nunito';
+const DEFAULT_FONT_SIZE = 14;
+const DEFAULT_FONT_SIZE_UNIT = 'px';
+const ROOT_FONT_SIZE_PX = 16;
+
 const SiteConfigVue3 = createApp(
 {
 	data() 
@@ -14,6 +25,36 @@ const SiteConfigVue3 = createApp(
 			showForm:
 			{
 				offlineReasonForm: false
+			},
+			siteLogo:
+			{
+				hasLogo: true,
+				hasCustomLogo: false,
+				src: '',
+				defaultSrc: '',
+				name: '',
+				details: '',
+				widthValue: 100,
+				widthUnit: '%',
+				remove: 0,
+				isDragging: false,
+				isCollapsed: false,
+				objectUrl: '',
+				siteName: 'LaraPhoenix CMS'
+			},
+			siteTypography:
+			{
+				activeUnit: DEFAULT_FONT_SIZE_UNIT
+			},
+			siteThumbnail:
+			{
+				src: '',
+				defaultSrc: '',
+				name: '',
+				defaultName: '',
+				isDragging: false,
+				isNew: false,
+				objectUrl: ''
 			},
 			fontFamilySelected: '',
 			Deselect: h('span', { class: 'fal fa-times fa-lg' }),
@@ -74,6 +115,8 @@ const SiteConfigVue3 = createApp(
 					}
 
 					this.responseMessageAfterSubmit = response.data.message;
+					this.applySiteTypographySettings();
+					this.commitSiteThumbnailPreview();
 
 					if ( ! response.data.redirect_url)
 					{
@@ -201,6 +244,7 @@ const SiteConfigVue3 = createApp(
 					this.responseData 		= response.data.data;
 					this.responseStatus 	= response.data.status;
 					this.responseMessage 	= response.data.message;
+					this.initSiteTypographySettings();
 
 					if (this.responseData.offline_mode == 0)
 					{
@@ -301,6 +345,367 @@ const SiteConfigVue3 = createApp(
 
 				return true;			
 			}
+		},
+		initSiteTypographySettings: function()
+		{
+			if (this.responseData === '' || this.responseData === null)
+			{
+				return;
+			}
+
+			this.responseData.font_family = this.responseData.font_family || DEFAULT_FONT_FAMILY_CODE;
+			this.responseData.font_size_unit = ALLOWED_FONT_SIZE_UNITS.includes(this.responseData.font_size_unit)
+				? this.responseData.font_size_unit
+				: DEFAULT_FONT_SIZE_UNIT;
+			this.responseData.font_size = this.siteTypographyFontSize(this.responseData.font_size_unit);
+			this.siteTypography.activeUnit = this.responseData.font_size_unit;
+		},
+		siteTypographyFontSizeLimits: function(unit)
+		{
+			return unit === 'px'
+				? { min: 8, max: 72, step: 1 }
+				: { min: .5, max: 4.5, step: .001 };
+		},
+		siteTypographyFontSize: function(unit)
+		{
+			let selectedUnit = ALLOWED_FONT_SIZE_UNITS.includes(unit) ? unit : DEFAULT_FONT_SIZE_UNIT;
+			let limits = this.siteTypographyFontSizeLimits(selectedUnit);
+			let value = Number.parseFloat(this.responseData.font_size);
+
+			if ( ! Number.isFinite(value))
+			{
+				value = selectedUnit === 'px' ? DEFAULT_FONT_SIZE : DEFAULT_FONT_SIZE / ROOT_FONT_SIZE_PX;
+			}
+
+			return Math.min(limits.max, Math.max(limits.min, value));
+		},
+		siteTypographyFontFamily: function()
+		{
+			let fontFamilyCode = this.responseData.font_family || DEFAULT_FONT_FAMILY_CODE;
+			let fontOption = Array.isArray(this.responseDataFont)
+				? this.responseDataFont.find((item) => item.code === fontFamilyCode)
+				: null;
+
+			if (fontOption !== null && fontOption !== undefined)
+			{
+				return fontOption.name;
+			}
+
+			return fontFamilyCode
+				.replaceAll('_', ' ')
+				.replace(/\b\w/g, (character) => character.toUpperCase()) || DEFAULT_FONT_FAMILY;
+		},
+		siteTypographyPreviewStyle: function()
+		{
+			let unit = ALLOWED_FONT_SIZE_UNITS.includes(this.responseData.font_size_unit)
+				? this.responseData.font_size_unit
+				: DEFAULT_FONT_SIZE_UNIT;
+
+			return {
+				'--site-typography-font-family': '"'+this.siteTypographyFontFamily()+'", sans-serif',
+				'--site-typography-font-size': this.siteTypographyFontSize(unit)+unit
+			};
+		},
+		siteTypographyMeta: function()
+		{
+			let unit = ALLOWED_FONT_SIZE_UNITS.includes(this.responseData.font_size_unit)
+				? this.responseData.font_size_unit
+				: DEFAULT_FONT_SIZE_UNIT;
+			let value = Number(this.siteTypographyFontSize(unit).toFixed(3));
+
+			return this.siteTypographyFontFamily()+' · '+value+unit;
+		},
+		handleSiteTypographyUnitChange: function()
+		{
+			let oldUnit = ALLOWED_FONT_SIZE_UNITS.includes(this.siteTypography.activeUnit)
+				? this.siteTypography.activeUnit
+				: DEFAULT_FONT_SIZE_UNIT;
+			let newUnit = ALLOWED_FONT_SIZE_UNITS.includes(this.responseData.font_size_unit)
+				? this.responseData.font_size_unit
+				: DEFAULT_FONT_SIZE_UNIT;
+			let oldValue = this.siteTypographyFontSize(oldUnit);
+			let sizeInPixels = oldUnit === 'px' ? oldValue : oldValue * ROOT_FONT_SIZE_PX;
+			let convertedValue = newUnit === 'px' ? sizeInPixels : sizeInPixels / ROOT_FONT_SIZE_PX;
+			let limits = this.siteTypographyFontSizeLimits(newUnit);
+
+			convertedValue = Math.min(limits.max, Math.max(limits.min, convertedValue));
+			this.responseData.font_size = Number(convertedValue.toFixed(newUnit === 'px' ? 2 : 3));
+			this.responseData.font_size_unit = newUnit;
+			this.siteTypography.activeUnit = newUnit;
+		},
+		resetSiteTypographyPreview: function()
+		{
+			this.responseData.font_family = DEFAULT_FONT_FAMILY_CODE;
+			this.responseData.font_size = DEFAULT_FONT_SIZE;
+			this.responseData.font_size_unit = DEFAULT_FONT_SIZE_UNIT;
+			this.siteTypography.activeUnit = DEFAULT_FONT_SIZE_UNIT;
+		},
+		applySiteTypographySettings: function()
+		{
+			if (this.responseData === '' || this.responseData === null)
+			{
+				return;
+			}
+
+			let unit = ALLOWED_FONT_SIZE_UNITS.includes(this.responseData.font_size_unit)
+				? this.responseData.font_size_unit
+				: DEFAULT_FONT_SIZE_UNIT;
+			let fontFamilyCode = this.responseData.font_family || DEFAULT_FONT_FAMILY_CODE;
+			let fontFamily = this.siteTypographyFontFamily();
+			let stylesheet = document.getElementById('arunikaActiveFontStylesheet');
+
+			document.documentElement.style.setProperty('--ph-font-family', '"'+fontFamily+'", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif');
+			document.documentElement.style.setProperty('--ph-font-size', this.siteTypographyFontSize(unit)+unit);
+
+			if (stylesheet !== null && stylesheet.dataset.fontBaseUrl !== undefined)
+			{
+				let fontBaseUrl = stylesheet.dataset.fontBaseUrl.replace(/\/$/, '');
+				stylesheet.href = fontBaseUrl+'/'+encodeURIComponent(fontFamilyCode)+'/fonts.css?v='+Date.now();
+			}
+		},
+		initSiteThumbnailSettings: function()
+		{
+			if (this.$refs.siteThumbnailSettings === undefined)
+			{
+				return;
+			}
+
+			this.siteThumbnail.defaultSrc = this.$refs.siteThumbnailSettings.dataset.thumbnailUrl;
+			this.siteThumbnail.defaultName = this.$refs.siteThumbnailSettings.dataset.thumbnailName;
+			this.siteThumbnail.src = this.siteThumbnail.defaultSrc;
+			this.siteThumbnail.name = this.siteThumbnail.defaultName;
+		},
+		chooseSiteThumbnail: function()
+		{
+			this.$refs.siteThumbnailInput.click();
+		},
+		handleSiteThumbnailInput: function(event)
+		{
+			this.setSiteThumbnailPreview(event.target.files[0]);
+		},
+		handleSiteThumbnailDrop: function(event)
+		{
+			this.siteThumbnail.isDragging = false;
+
+			if (event.dataTransfer.files.length === 0)
+			{
+				return;
+			}
+
+			this.$refs.siteThumbnailInput.files = event.dataTransfer.files;
+			this.setSiteThumbnailPreview(event.dataTransfer.files[0]);
+		},
+		setSiteThumbnailPreview: function(file)
+		{
+			if (file === undefined || ! ALLOWED_LOGO_TYPES.includes(file.type) || file.size > MAX_LOGO_FILE_SIZE)
+			{
+				this.responseStatus = 'ph-callout-danger';
+				this.responseMessageAfterSubmit = 'Choose a PNG, JPG, or WebP image with maximum file size 5 MB.';
+				this.isArrayMessageAfterSubmit = 0;
+				return;
+			}
+
+			this.revokeSiteThumbnailObjectUrl();
+			this.siteThumbnail.objectUrl = URL.createObjectURL(file);
+			this.siteThumbnail.src = this.siteThumbnail.objectUrl;
+			this.siteThumbnail.name = file.name;
+			this.siteThumbnail.isNew = true;
+		},
+		resetSiteThumbnailPreview: function()
+		{
+			this.revokeSiteThumbnailObjectUrl();
+			this.$refs.siteThumbnailInput.value = '';
+			this.siteThumbnail.src = this.siteThumbnail.defaultSrc;
+			this.siteThumbnail.name = this.siteThumbnail.defaultName;
+			this.siteThumbnail.isNew = false;
+		},
+		commitSiteThumbnailPreview: function()
+		{
+			if ( ! this.siteThumbnail.isNew)
+			{
+				return;
+			}
+
+			this.siteThumbnail.defaultSrc = this.siteThumbnail.src;
+			this.siteThumbnail.defaultName = this.siteThumbnail.name;
+			this.siteThumbnail.isNew = false;
+		},
+		revokeSiteThumbnailObjectUrl: function()
+		{
+			if (this.siteThumbnail.objectUrl !== '')
+			{
+				URL.revokeObjectURL(this.siteThumbnail.objectUrl);
+				this.siteThumbnail.objectUrl = '';
+			}
+		},
+		initSiteLogoSettings: function()
+		{
+			if (this.$refs.siteLogoSettings === undefined)
+			{
+				return;
+			}
+
+			this.siteLogo.hasCustomLogo = this.$refs.siteLogoSettings.dataset.hasCustomLogo === '1';
+			this.siteLogo.defaultSrc = this.$refs.siteLogoSettings.dataset.defaultLogoUrl;
+			this.siteLogo.src = this.siteLogo.hasCustomLogo
+				? this.$refs.siteLogoSettings.dataset.logoUrl
+				: this.siteLogo.defaultSrc;
+			this.siteLogo.name = this.siteLogo.hasCustomLogo
+				? this.$refs.siteLogoSettings.dataset.logoName
+				: 'Phoenix default logo';
+			this.siteLogo.details = this.siteLogo.hasCustomLogo ? 'Saved logo' : 'Used until a custom logo is uploaded';
+			this.siteLogo.widthValue = Number.parseFloat(this.$refs.siteLogoSettings.dataset.logoWidthValue) || 100;
+			this.siteLogo.widthUnit = ALLOWED_LOGO_UNITS.includes(this.$refs.siteLogoSettings.dataset.logoWidthUnit)
+				? this.$refs.siteLogoSettings.dataset.logoWidthUnit
+				: '%';
+			this.siteLogo.siteName = this.$refs.siteName.value.trim() || 'LaraPhoenix CMS';
+
+			this.normalizeSiteLogoWidth();
+		},
+		logoWidthMaxForUnit: function(unit)
+		{
+			return unit === '%' ? 100 : 500;
+		},
+		siteLogoCssWidth: function()
+		{
+			let value = Number.parseFloat(this.siteLogo.widthValue);
+			let unit = ALLOWED_LOGO_UNITS.includes(this.siteLogo.widthUnit) ? this.siteLogo.widthUnit : '%';
+			let maxValue = this.logoWidthMaxForUnit(unit);
+
+			value = Number.isFinite(value) ? Math.min(maxValue, Math.max(1, value)) : 100;
+
+			if (unit === '%')
+			{
+				return Number((DEFAULT_LOGO_WIDTH_PX * (value / 100)).toFixed(2))+'px';
+			}
+
+			return value+unit;
+		},
+		normalizeSiteLogoWidth: function()
+		{
+			let maxValue = this.logoWidthMaxForUnit(this.siteLogo.widthUnit);
+			let value = Number.parseFloat(this.siteLogo.widthValue);
+
+			if (Number.isFinite(value))
+			{
+				this.siteLogo.widthValue = Math.min(maxValue, Math.max(1, value));
+			}
+
+			this.renderLiveSiteLogo();
+		},
+		chooseSiteLogo: function()
+		{
+			this.$refs.siteLogoInput.click();
+		},
+		handleSiteLogoInput: function(event)
+		{
+			if (event.target.files && event.target.files[0])
+			{
+				this.applySiteLogoFile(event.target.files[0]);
+			}
+		},
+		handleSiteLogoDrop: function(event)
+		{
+			this.siteLogo.isDragging = false;
+
+			if (event.dataTransfer.files && event.dataTransfer.files[0])
+			{
+				let transfer = new DataTransfer();
+				transfer.items.add(event.dataTransfer.files[0]);
+				this.$refs.siteLogoInput.files = transfer.files;
+				this.applySiteLogoFile(event.dataTransfer.files[0]);
+			}
+		},
+		applySiteLogoFile: function(file)
+		{
+			let validationMessage = '';
+
+			if ( ! ALLOWED_LOGO_TYPES.includes(file.type))
+			{
+				validationMessage = 'Choose a PNG, JPG, or WebP image.';
+			}
+			else if (file.size > MAX_LOGO_FILE_SIZE)
+			{
+				validationMessage = 'The logo file may not be greater than 5 MB.';
+			}
+
+			if (validationMessage !== '')
+			{
+				this.$refs.siteLogoInput.setCustomValidity(validationMessage);
+				this.$refs.siteLogoInput.reportValidity();
+
+				return;
+			}
+
+			this.$refs.siteLogoInput.setCustomValidity('');
+			this.revokeSiteLogoObjectUrl();
+			this.siteLogo.objectUrl = URL.createObjectURL(file);
+			this.siteLogo.hasLogo = true;
+			this.siteLogo.hasCustomLogo = true;
+			this.siteLogo.src = this.siteLogo.objectUrl;
+			this.siteLogo.name = file.name;
+			this.siteLogo.details = Math.max(1, Math.round(file.size / 1024))+' KB · Ready to upload';
+			this.siteLogo.remove = 0;
+
+			this.renderLiveSiteLogo();
+		},
+		removeSiteLogo: function()
+		{
+			this.revokeSiteLogoObjectUrl();
+			this.siteLogo.hasLogo = true;
+			this.siteLogo.hasCustomLogo = false;
+			this.siteLogo.src = this.siteLogo.defaultSrc;
+			this.siteLogo.name = 'Phoenix default logo';
+			this.siteLogo.details = 'Used until a custom logo is uploaded';
+			this.siteLogo.remove = 1;
+			this.$refs.siteLogoInput.value = '';
+
+			this.renderLiveSiteLogo();
+		},
+		updateSiteLogoName: function(event)
+		{
+			this.siteLogo.siteName = event.target.value.trim() || 'LaraPhoenix CMS';
+
+			this.renderLiveSiteLogo();
+		},
+		setSiteLogoPreviewMode: function(isCollapsed)
+		{
+			this.siteLogo.isCollapsed = isCollapsed;
+		},
+		renderLiveSiteLogo: function()
+		{
+			let brand = document.querySelector('#sidebar > .ph-sidebar-logo-container');
+
+			if (brand === null)
+			{
+				return;
+			}
+
+			let image = brand.querySelector('.ph-app-logo-icon img');
+			let name = brand.querySelector('.ph-app-logo-text');
+			let initial = brand.querySelector('.ph-app-logo-initial');
+
+			brand.classList.toggle('has-logo', this.siteLogo.hasCustomLogo);
+			brand.style.setProperty('--ph-site-logo-width', this.siteLogoCssWidth());
+			name.textContent = this.siteLogo.siteName;
+			initial.textContent = this.siteLogo.siteName.charAt(0).toUpperCase();
+
+			if (this.siteLogo.hasCustomLogo)
+			{
+				image.src = this.siteLogo.src;
+			}
+			else
+			{
+				image.removeAttribute('src');
+			}
+		},
+		revokeSiteLogoObjectUrl: function()
+		{
+			if (this.siteLogo.objectUrl !== '')
+			{
+				URL.revokeObjectURL(this.siteLogo.objectUrl);
+				this.siteLogo.objectUrl = '';
+			}
 		}
 	},
 	mounted()
@@ -310,6 +715,10 @@ const SiteConfigVue3 = createApp(
 		this.listDataFont();
 
 		this.loadToastComplete();
+
+		this.initSiteLogoSettings();
+
+		this.initSiteThumbnailSettings();
 
 		window.setTimeout(function() 
 		{
@@ -321,5 +730,10 @@ const SiteConfigVue3 = createApp(
 				}
 			}
 		}, 1);
+	},
+	beforeUnmount()
+	{
+		this.revokeSiteThumbnailObjectUrl();
+		this.revokeSiteLogoObjectUrl();
 	}
 }).mount('#ph-app-site-config');

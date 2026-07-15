@@ -1,0 +1,112 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Awesome_Admin\Account;
+use App\Models\Awesome_Admin\Site_Config;
+
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+
+use Tests\TestCase;
+
+class SiteLogoSettingsTest extends TestCase
+{
+	use DatabaseTransactions;
+
+	public function test_real_site_config_page_contains_interactive_logo_settings_below_general_settings(): void
+	{
+		$view = file_get_contents(resource_path('views/awesome_admin/awesome_admin_config.blade.php'));
+		$script = file_get_contents(public_path('assets/js/vue3/manage_config/site-logo-settings.js'));
+
+		$generalPosition = strpos($view, 'id="generalSettingsSection"');
+		$logoPosition = strpos($view, 'id="logoSettingsSection"');
+
+		$this->assertNotFalse($generalPosition);
+		$this->assertNotFalse($logoPosition);
+		$this->assertGreaterThan($generalPosition, $logoPosition);
+		$this->assertStringContainsString('name="site_logo"', $view);
+		$this->assertStringContainsString('name="site_logo_width_value"', $view);
+		$this->assertStringContainsString('name="site_logo_width_unit"', $view);
+		$this->assertStringContainsString('name="remove_site_logo"', $view);
+		$this->assertStringContainsString("const ALLOWED_LOGO_UNITS = ['%', 'px', 'em', 'rem', 'pt'];", $script);
+		$this->assertStringContainsString("return unit === '%' ? 100 : 500;", $script);
+	}
+
+	public function test_admin_can_upload_resize_and_remove_the_site_logo(): void
+	{
+		$this->actingAsAdministrator();
+		Storage::fake('public');
+
+		$uploadResponse = $this->postJson(route('cms.admin.awesome_admin.config.update'), [
+			'site_logo' => UploadedFile::fake()->image('arunika-logo.png', 180, 60),
+			'site_logo_width_value' => 72,
+			'site_logo_width_unit' => '%',
+		]);
+
+		$uploadResponse->assertOk()->assertJson([
+			'success' => true,
+			'status' => 'success',
+		]);
+
+		$config = Site_Config::findOrFail(1);
+		$this->assertNotNull($config->site_logo);
+		$this->assertSame(72.0, (float) $config->site_logo_width_value);
+		$this->assertSame('%', $config->site_logo_width_unit);
+		Storage::disk('public')->assertExists('site-logo/'.$config->site_logo);
+
+		$uploadedLogo = $config->site_logo;
+		$removeResponse = $this->postJson(route('cms.admin.awesome_admin.config.update'), [
+			'remove_site_logo' => 1,
+			'site_logo_width_value' => 100,
+			'site_logo_width_unit' => '%',
+		]);
+
+		$removeResponse->assertOk()->assertJson([
+			'success' => true,
+			'status' => 'success',
+		]);
+
+		$this->assertNull(Site_Config::findOrFail(1)->site_logo);
+		Storage::disk('public')->assertMissing('site-logo/'.$uploadedLogo);
+	}
+
+	public function test_logo_percent_width_cannot_exceed_one_hundred(): void
+	{
+		$this->actingAsAdministrator();
+
+		$this->postJson(route('cms.admin.awesome_admin.config.update'), [
+			'site_logo_width_value' => 101,
+			'site_logo_width_unit' => '%',
+		])->assertUnprocessable()->assertJsonValidationErrors('site_logo_width_value');
+	}
+
+	public function test_arunika_v2_sidebar_uses_uploaded_logo_with_site_name_and_fallback_initial(): void
+	{
+		$layout = file_get_contents(resource_path('views/themes/arunika_v2/cms/cms_layout.blade.php'));
+		$styles = file_get_contents(public_path('assets/css/themes/arunika_v2/arunika_v2.css'));
+
+		$this->assertStringContainsString("filled($siteConfig->site_logo)", $layout);
+		$this->assertStringContainsString("asset('storage/site-logo/'", $layout);
+		$this->assertStringContainsString('ph-sidebar-logo-container has-logo', $layout);
+		$this->assertStringContainsString('ph-app-logo-text', $layout);
+		$this->assertStringContainsString('ph-app-logo-initial', $layout);
+		$this->assertStringContainsString('--ph-site-logo-width', $styles);
+		$this->assertStringContainsString('.ph-sidebar-logo-container.has-logo .ph-app-logo-icon', $styles);
+	}
+
+	protected function actingAsAdministrator(): Account
+	{
+		$account = Account::role('Super Admin')->first() ?? Account::role('Administrator')->first();
+
+		if ( ! $account)
+		{
+			$this->markTestSkipped('An administrator account is required for the Site Config feature test.');
+		}
+
+		$this->actingAs($account);
+
+		return $account;
+	}
+}
