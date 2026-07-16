@@ -183,6 +183,17 @@
 					</label>
 
 					<div class="ph-header-actions">
+						<div class="dropdown ph-theme-color-picker">
+							<button class="ph-btn-action-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ t('Change Theme Color') }}" aria-label="{{ t('Change Theme Color') }}">
+								<i class="fas fa-palette"></i>
+							</button>
+
+							<div class="dropdown-menu dropdown-menu-end ph-theme-color-menu">
+								<h6 class="ph-theme-color-title">{{ t('Choose Theme Color') }}</h6>
+								<div class="row g-2" id="color-picker-container"></div>
+							</div>
+						</div>
+
 						<button class="ph-btn-action-icon ph-theme-toggle" type="button" onclick="toggleTheme()" title="{{ t('Dark Mode') }}" aria-label="{{ t('Dark Mode') }}" aria-pressed="false">
 							<i class="fas fa-sun ph-theme-icon"></i>
 						</button>

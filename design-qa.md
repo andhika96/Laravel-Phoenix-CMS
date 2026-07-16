@@ -183,6 +183,79 @@
 
 final result: passed
 
+## 2026-07-16 - Arunika V3 dashboard shell
+
+- Source visual truth: `C:\Users\CAHYO\Downloads\Dashboard crop rapat ke body.png` (`852 x 693`).
+- Latest user-supplied runtime evidence after the unified-shell correction and before the sidebar-color correction: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-d201fec7-1037-49e2-913e-c2aeb0b74b89.png` (`1920 x 1032`).
+- Collapsed-menu bug evidence: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-424a95ad-3382-4ea6-9062-fc59c18e80c9.png` and `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-e80b3c01-1d13-445f-99c9-8deecd8b3e6a.png`.
+- Scope: isolated Arunika V3 sidebar, header, content surface, Theme Manager registration, collapsed parent-menu popover behavior, and preservation of existing Laravel page content.
+
+### Findings and corrections
+
+- [P2] A collapsed single menu item could open its own tooltip and a later parent menu's floating submenu. Root cause: `getPopover()` compared DOM `tagName` with lowercase `'a'`, so traversal never stopped at the next anchor. Fix: stop on `nextEl.matches('a.list-group-item')` and make tooltip/popover display mutually exclusive.
+- [P2] The implementation content surface sampled at `#FAFBF8`, while the reference blank content surface sampled at `#FEFEFC`. Fix: use `#FEFEFC` for the V3 content surface.
+- [P2] Desktop content gutters were `18px 16px 28px`, visibly looser than the reference's approximately `8-10px` inset. Fix: use `10px 8px 18px` without changing `@yield('content')` or any page-specific content.
+- [P2] The right content panel still had square outer corners and no visible frame gap. Fix: give `.ph-main-panel` a `12px` radius with an `8px 8px 8px 0` outer margin, keep the left edge aligned to the sidebar, and expose a neutral shell-gutter surface around the top, right, and bottom edges.
+- [P2] The latest runtime screenshot still showed a divider on the sidebar/content boundary that is absent from the selected reference treatment. Root cause: the V3-specific sidebar rule explicitly set `border-right: 1px solid var(--ph-v3-border)`, while the outer content frame also drew a left border below the header. Fix: use `border-right: 0` on the V3 sidebar and `border-left: 0` on the V3 content frame so neither layer redraws the divider.
+- [P2] The latest screenshot showed the header outside the rounded content canvas, producing an `8px` gray strip between the header and the page while the reference keeps both surfaces inside one continuous right-side shell. Fix: move the `8px 8px 8px 0` gutter, `12px` radius, clipping, and content surface to `.ph-layout-right`; restore `.ph-main-panel` to zero margin, border, radius, and shadow.
+- [P2] The latest sidebar surface was visibly too white. Four blank implementation samples were exactly `#F8F8F6`, while four equivalent reference samples were exactly `#EFEFED`. Fix: change only the light-theme `--ph-v3-sidebar-surface` token to `#EFEFED`; preserve widths, spacing, active states, dark mode, and dynamic menu output.
+- Header search, notification bell, profile menu, theme controls, dynamic sidebar menu, logo, typography, role guard, dark mode, Settings, profile, logout, responsive behavior, and existing page content remain functional and data-driven.
+
+### Verification
+
+- V3 static and focused regression tests: 8 passed.
+- Latest V3 focused regression after the outer-frame correction: 9 passed; the new frame test was observed failing before the CSS change and passing afterward.
+- Latest V3 focused regression after removing the sidebar divider: 10 passed; the dedicated borderless-edge test was observed failing before the CSS change and passing afterward.
+- Latest V3 focused regression after removing both divider contributors: 11 passed; the content-frame edge test was also observed failing before the CSS change and passing afterward.
+- Latest unified-shell regression: 11 passed; the updated frame assertions failed against the split header/main-panel structure and passed after moving the frame to `.ph-layout-right`.
+- Sidebar-surface regression: the token assertion failed against `#F8F8F6`, then passed after the production token changed to `#EFEFED`; the complete V3 Node suite remains 11 passed.
+- Combined V2/V3/Theme Manager Node regressions: 18 passed.
+- A broader current Node sweep reports 29 passed and one unrelated pre-existing V2 assertion failure (`id="sidebar-toggle-icon"`); all V3 tests pass.
+- Theme Manager feature test: 3 passed, 15 assertions.
+- PHP syntax: passed for controller, seeder, and migration.
+- Blade compilation: passed.
+- Theme database registration and activation: `arunika_v3`, theme ID `7`.
+- Post-color-correction authenticated screenshot comparison is still pending. The controlled browser redirects to `/auth/login`, and the authenticated Chrome extension session is unavailable. The served stylesheet returns HTTP `200` and contains `--ph-v3-sidebar-surface: #efefed`; no stored credentials were submitted.
+
+final result: blocked
+
+## 2026-07-16 - Theme Manager production implementation
+
+- Approved source: `https://laravel-13-phoenix.aruna/mockups/theme-manager-interactive-mockup.html`, `C:\Users\CAHYO\Downloads\original-3b79913c7fcab11e97b641433dd794a3234234.jpg`, and `C:\Users\CAHYO\.codex\visualizations\2026\07\15\019f650f-158c-7d53-803a-f9bbc15833f2\theme-manager-mockup-initial.png`.
+- Production URL: `https://laravel-13-phoenix.aruna/awesome_admin/themes`.
+- Production screenshot: `C:\Users\CAHYO\.codex\visualizations\2026\07\15\019f650f-158c-7d53-803a-f9bbc15833f2\theme-manager-production-arunika-v2-20260716.png`.
+- Viewport and state: `1280 x 720`, authenticated Arunika V2 shell, Arunika V2 active, two installed theme choices, and disabled Cancel/Save actions when no selection is pending.
+- Full-view comparison evidence: the approved mockup screenshot and production screenshot were opened together at original resolution. The content panel keeps the same compact Appearance header, two-column settings composition, two preview cards, selected outline/check, status badges, and neutral footer treatment. The CMS sidebar, header, and breadcrumb are intentional production-shell additions requested after mockup approval.
+- Focused-region evidence: the theme-card region remains readable at original resolution in both captures. Card image crop, name/status row, description, divider, version, CMS marker, purple selected border, and green Active state match the approved source treatment.
+- Awesome Admin integration was verified at `/awesome_admin`: `Manage Themes` is present and links to `/awesome_admin/themes`.
+- Responsive browser inspection at `375 x 812` reports `document.documentElement.scrollWidth === 375`, one `294px` grid track, two radio choices, an off-canvas sidebar at `x = -268.8px`, and content positioned at `x = 14px` with `332px` width. A mobile raster capture showed compositor artifacts and was not used as fidelity evidence.
+
+### Required fidelity surfaces
+
+- Fonts and typography: production retains the CMS Nunito typography, compact uppercase eyebrow, strong page and card headings, muted helper copy, and readable version metadata used by the approved mockup.
+- Spacing and layout rhythm: the content panel preserves the source's header/content/footer separation and label-to-card relationship. The additional vertical space consumed by the CMS header and breadcrumb is intentional; the page scrolls to its footer actions without horizontal overflow.
+- Colors and visual tokens: the production page reuses Arunika's purple accent, neutral borders, white panel surface, lavender installed-count badge, green Active state, and subdued Available state.
+- Image quality and asset fidelity: both theme cards use the same dedicated PNG preview assets as the approved mockup, with consistent crop and no stretched or code-drawn substitute.
+- Copy and content: theme names, descriptions, versions, CMS labels, installed count, and save guidance match the approved content. `Browse installed themes` is intentionally absent per the user's explicit removal request.
+
+### Interaction and persistence proof
+
+- Selecting Arunika V1 enables the pending Save/Cancel state; Cancel restores Arunika V2 without persistence.
+- Live Preview opens the selected theme preview and Escape closes it.
+- A real save from Arunika V2 to Arunika V1 persisted through the existing `theme_settings` row and reloaded the CMS into the Arunika V1 shell.
+- A second real save restored Arunika V2; the active badge, selected radio, CMS shell, and database value all returned to Arunika V2.
+- No new migration or database table was introduced. The page reads `themes` and updates the existing `theme_settings` record.
+
+### Findings and patches
+
+- [P1] The first production load mounted an empty Vue root because production compiler error 56 was triggered by `v-text` directives. Replacing those directives with interpolation restored the complete screen; a static regression now rejects future `v-text` usage in this view.
+- [P1] Activating Arunika V1 exposed pre-existing submenu variable shadowing that produced `Undefined array key "parent_name"`. The categorized submenu loops now use separate key/value variables and have dedicated static regression coverage.
+- No actionable P0, P1, or P2 findings remain after the patches.
+- [P3] Preview images are the current repository screenshots and are intentionally temporary until replacement images are supplied.
+- 2026-07-16 QA patch: the previously missing desktop production raster was captured successfully and compared with the approved mockup in the same visual input. No production code change was needed.
+
+final result: passed
+
 ## 2026-07-15 - Arunika V2 production typography settings
 
 - Source visual truth: approved `site-general-settings-balanced-layout-mockup.html` and `C:\Users\CAHYO\AppData\Local\Temp\arunika-v2-balanced-general-settings-desktop.png`.
@@ -338,5 +411,39 @@ final result: blocked
 - No actionable P0, P1, or P2 findings remain.
 - [P3] The prototype adds purposeful Site Information and Typography Settings subheadings that are not present in the current production screenshot. This is the approved hierarchy change and can be adjusted during user review.
 - Patch made after comparison: replace layout-rationale copy with product-facing thumbnail, typography, and font-selection guidance.
+
+final result: passed
+
+## 2026-07-15 - Theme Manager interactive mockup
+
+- Source visual truth: `C:\Users\CAHYO\Downloads\original-3b79913c7fcab11e97b641433dd794a3234234.jpg` and the existing Awesome Admin appearance page composition.
+- Implementation URL: `https://laravel-13-phoenix.aruna/mockups/theme-manager-interactive-mockup.html`.
+- Implementation screenshot: `C:\Users\CAHYO\.codex\visualizations\2026\07\15\019f650f-158c-7d53-803a-f9bbc15833f2\theme-manager-mockup-initial.png`.
+- Viewport and state: desktop initial state with Arunika V2 active; responsive DOM check at `375px` with a one-column theme grid and no horizontal overflow.
+- Full-view comparison evidence: both views use a restrained white settings surface, compact heading and helper copy, label/description rows on the left, visual selection cards on the right, and bottom-aligned Cancel/Save actions.
+- Focused-region evidence: the selected-card treatment, status badges, theme screenshots, and pending-versus-active state were inspected independently through browser interaction.
+
+### Fidelity surfaces
+
+- Typography and hierarchy: compact settings typography and muted helper text mirror the supplied reference while making theme names and state immediately scannable.
+- Spacing and layout rhythm: desktop rows retain the reference's label-to-control relationship; the larger theme cards deliberately provide enough room to judge dashboard screenshots.
+- Colors and tokens: neutral borders and surfaces are paired with the application's purple accent for selection, focus, buttons, and active state.
+- Image quality: Arunika V1 and Arunika V2 use real screenshots captured from the repository's existing public theme mockups, stored as dedicated PNG preview assets.
+- Responsive behavior: the theme card grid collapses to one column at mobile width; measured document width matched the `375px` viewport.
+- Accessibility: theme cards are keyboard-selectable with Enter or Space, radio semantics remain available, modal focus is directed to Close, and Escape closes the preview.
+
+### Interaction proof
+
+- Initial load selects and labels Arunika V2 as Active; Save and Cancel are disabled.
+- Selecting Arunika V1 creates a pending state while Arunika V2 remains Active; Save and Cancel become enabled.
+- Cancel restores the saved Arunika V2 selection.
+- Save promotes the pending theme to Active and displays confirmation feedback without writing to the database.
+- Live Preview opens the correct theme image in a modal and closes through Close or Escape.
+
+### Findings and patches
+
+- No actionable P0, P1, or P2 findings remain.
+- [P3] Preview images currently come from the repository's existing public theme mockups because the authenticated production dashboard was login-gated. They can be replaced later with authenticated runtime captures without changing the layout.
+- No Laravel controller, route, database, or production appearance file was modified by this prototype.
 
 final result: passed

@@ -435,30 +435,30 @@ if ( ! function_exists('menu_v2'))
 
 									<div class="collapse ph-submenu-container" id="collapse'.$value1['parent_code'].'">';
 
-										foreach ($value1['parent_submenu']['list'] as $key1 => $value1) 
+										foreach ($value1['parent_submenu']['list'] as $key2 => $value2)
 										{
 											$submenu_icon = '<i class="fad fa-circle-notch me-2 ph-text-info-custom"></i>';
 
-											if (isset($value1['submenu_icon_type']) && $value1['submenu_icon_type'] == 'upload_file')
+											if (isset($value2['submenu_icon_type']) && $value2['submenu_icon_type'] == 'upload_file')
 											{
-												if (isset($value1['submenu_icon_path']) && $value1['submenu_icon_path'] !== '')
+												if (isset($value2['submenu_icon_path']) && $value2['submenu_icon_path'] !== '')
 												{
-													$submenu_icon = '<img src="'.url(getImageURL($value1['submenu_icon_path'], 'icons/parent_menu')).'" class="img-fluid ph-submenu-icon" style="width: 25px">';
+													$submenu_icon = '<img src="'.url(getImageURL($value2['submenu_icon_path'], 'icons/parent_menu')).'" class="img-fluid ph-submenu-icon" style="width: 25px">';
 												}
 											}
-											elseif (isset($value1['submenu_icon_type']) && $value1['submenu_icon_type'] == 'custom_input')
+											elseif (isset($value2['submenu_icon_type']) && $value2['submenu_icon_type'] == 'custom_input')
 											{
-												if (isset($value1['submenu_icon_custom']) && $value1['submenu_icon_custom'] !== '')
+												if (isset($value2['submenu_icon_custom']) && $value2['submenu_icon_custom'] !== '')
 												{
 													$is_submenu_icon_exist = 'ph-list-group-item-with-icon';
-													$submenu_icon = '<span class="ph-submenu-icon">'.$value1['submenu_icon_custom'].'</span>';
+													$submenu_icon = '<span class="ph-submenu-icon">'.$value2['submenu_icon_custom'].'</span>';
 												}
 											}
 
 											$output .= '
-											<a href="'.url($value1['submenu_link']).'" class="ph-submenu-link">
+											<a href="'.url($value2['submenu_link']).'" class="ph-submenu-link">
 												'.$submenu_icon.'
-												<span>'.$value1['submenu_name'].'</span>
+												<span>'.$value2['submenu_name'].'</span>
 											</a>';
 										}
 											
@@ -470,30 +470,30 @@ if ( ! function_exists('menu_v2'))
 										
 										<div class="floating-body">';
 
-										foreach ($value1['parent_submenu']['list'] as $key1 => $value1) 
+										foreach ($value1['parent_submenu']['list'] as $key2 => $value2)
 										{
 											$submenu_icon = '<i class="fad fa-circle-notch me-2 ph-text-info-custom"></i>';
 
-											if (isset($value1['submenu_icon_type']) && $value1['submenu_icon_type'] == 'upload_file')
+											if (isset($value2['submenu_icon_type']) && $value2['submenu_icon_type'] == 'upload_file')
 											{
-												if (isset($value1['submenu_icon_path']) && $value1['submenu_icon_path'] !== '')
+												if (isset($value2['submenu_icon_path']) && $value2['submenu_icon_path'] !== '')
 												{
-													$submenu_icon = '<img src="'.url(getImageURL($value1['submenu_icon_path'], 'icons/parent_menu')).'" class="img-fluid ph-text-info-custom" style="width: 25px">';
+													$submenu_icon = '<img src="'.url(getImageURL($value2['submenu_icon_path'], 'icons/parent_menu')).'" class="img-fluid ph-text-info-custom" style="width: 25px">';
 												}
 											}
-											elseif (isset($value1['submenu_icon_type']) && $value1['submenu_icon_type'] == 'custom_input')
+											elseif (isset($value2['submenu_icon_type']) && $value2['submenu_icon_type'] == 'custom_input')
 											{
-												if (isset($value1['submenu_icon_custom']) && $value1['submenu_icon_custom'] !== '')
+												if (isset($value2['submenu_icon_custom']) && $value2['submenu_icon_custom'] !== '')
 												{
 													$is_submenu_icon_exist = 'ph-list-group-item-with-icon';
-													$submenu_icon = '<span class="ph-text-info-custom">'.$value1['submenu_icon_custom'].'</span>';
+													$submenu_icon = '<span class="ph-text-info-custom">'.$value2['submenu_icon_custom'].'</span>';
 												}
 											}
 
 											$output .= '
-											<a href="'.url($value1['submenu_link']).'" class="ph-floating-link">
+											<a href="'.url($value2['submenu_link']).'" class="ph-floating-link">
 												'.$submenu_icon.'
-												<span>'.$value1['submenu_name'].'</span>
+												<span>'.$value2['submenu_name'].'</span>
 											</a>';
 										}
 

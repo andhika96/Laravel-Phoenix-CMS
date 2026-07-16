@@ -2042,7 +2042,7 @@ a:hover
 	--ph-top-bar-height: 72px;
 	--ph-shell-border: #e9e7e8;
 	--ph-shell-soft: #f7f6f8;
-	--ph-shell-hover: #e4dcf4;
+	--ph-shell-hover: color-mix(in srgb, var(--ph-theme-primary), white 84%);
 	--ph-shell-shadow: 0 8px 24px rgba(38, 31, 52, 0.06);
 }
 
@@ -2056,8 +2056,8 @@ a:hover
 	--ph-bg-input: #ffffff;
 	--ph-bg-hover: var(--ph-shell-hover);
 	--ph-content-bg: #ffffff;
-	--ph-sidebar-surface: radial-gradient(ellipse 112% 42% at -8% 20%, rgba(231, 234, 247, 0.75) 0%, rgba(231, 234, 247, 0) 72%), radial-gradient(ellipse 104% 20% at -6% 40%, rgba(216, 226, 249, 0.34) 0%, rgba(216, 226, 249, 0) 72%), radial-gradient(ellipse 116% 48% at -5% 56%, rgba(230, 214, 239, 0.72) 0%, rgba(230, 214, 239, 0) 72%), radial-gradient(ellipse 112% 38% at -3% 91%, rgba(245, 226, 234, 0.58) 0%, rgba(245, 226, 234, 0) 74%), linear-gradient(180deg, #f7f8f8 0%, #f2f2f6 31%, #f5eff5 63%, #fcf9fa 100%);
-	--ph-header-surface: radial-gradient(circle at 62% 0%, rgba(248, 225, 238, 0.6) 0%, rgba(248, 225, 238, 0) 43%), radial-gradient(circle at 35% 100%, rgba(228, 225, 253, 0.42) 0%, rgba(228, 225, 253, 0) 40%), #ffffff;
+	--ph-sidebar-surface: radial-gradient(ellipse 112% 42% at -8% 20%, color-mix(in srgb, var(--ph-theme-primary), transparent 86%) 0%, transparent 72%), radial-gradient(ellipse 104% 20% at -6% 40%, color-mix(in srgb, var(--ph-theme-primary), transparent 92%) 0%, transparent 72%), radial-gradient(ellipse 116% 48% at -5% 56%, color-mix(in srgb, var(--ph-theme-primary), transparent 84%) 0%, transparent 72%), radial-gradient(ellipse 112% 38% at -3% 91%, color-mix(in srgb, var(--ph-theme-primary), transparent 88%) 0%, transparent 74%), linear-gradient(180deg, #f7f8f8 0%, #f2f2f6 31%, #f5eff5 63%, #fcf9fa 100%);
+	--ph-header-surface: radial-gradient(circle at 62% 0%, color-mix(in srgb, var(--ph-theme-primary), transparent 88%) 0%, transparent 43%), radial-gradient(circle at 35% 100%, color-mix(in srgb, var(--ph-theme-primary), transparent 91%) 0%, transparent 40%), #ffffff;
 	--ph-sidebar-border: var(--ph-shell-border);
 	--ph-sidebar-category-border: #d8d3dc;
 	--ph-text-main: #17151a;
@@ -2077,8 +2077,8 @@ a:hover
 	--ph-bg-input: #242328;
 	--ph-bg-hover: #2b2930;
 	--ph-content-bg: #242328;
-	--ph-sidebar-surface: radial-gradient(ellipse at 50% 60%, rgba(94, 67, 157, 0.1) 0%, rgba(94, 67, 157, 0) 78%), radial-gradient(ellipse at 70% 100%, rgba(126, 55, 81, 0.09) 0%, rgba(126, 55, 81, 0) 70%), #1b1a1e;
-	--ph-header-surface: radial-gradient(circle at 62% 0%, rgba(126, 55, 81, 0.18) 0%, rgba(126, 55, 81, 0) 43%), radial-gradient(circle at 35% 100%, rgba(94, 67, 157, 0.18) 0%, rgba(94, 67, 157, 0) 40%), #1d1c20;
+	--ph-sidebar-surface: radial-gradient(ellipse at 50% 60%, color-mix(in srgb, var(--ph-theme-primary), transparent 90%) 0%, transparent 78%), radial-gradient(ellipse at 70% 100%, color-mix(in srgb, var(--ph-theme-primary), transparent 91%) 0%, transparent 70%), #1b1a1e;
+	--ph-header-surface: radial-gradient(circle at 62% 0%, color-mix(in srgb, var(--ph-theme-primary), transparent 82%) 0%, transparent 43%), radial-gradient(circle at 35% 100%, color-mix(in srgb, var(--ph-theme-primary), transparent 82%) 0%, transparent 40%), #1d1c20;
 	--ph-sidebar-border: #343238;
 	--ph-sidebar-category-border: #46424b;
 	--ph-text-main: #f7f6f8;
@@ -2820,6 +2820,26 @@ body::after
 	display: flex;
 	align-items: center;
 	gap: 10px;
+}
+
+.ph-theme-color-menu
+{
+	width: 260px;
+	padding: 16px;
+}
+
+.ph-theme-color-title
+{
+	margin: 0 0 12px;
+	color: var(--ph-text-main);
+	font-size: 13px;
+	font-weight: 800;
+}
+
+.ph-theme-color-picker .ph-btn-action-icon[aria-expanded=true]
+{
+	background: var(--ph-theme-primary-subtle);
+	color: var(--ph-theme-primary);
 }
 
 .ph-theme-toggle.is-dark

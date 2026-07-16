@@ -519,6 +519,12 @@ Route::name('cms.admin.')
 			Route::get('/appearance/listdata/pagetheme/{idOrSlug}', 'listDataPageTheme')->name('awesome_admin.appearance.listdata.pagetheme')->middleware('auth', 'checkSuspended');
 		});
 
+		Route::controller(\Awesome_Admin_Themes_Controller::class)->group(function()
+		{
+			Route::get('/themes', 'index')->name('awesome_admin.themes')->middleware('auth', 'checkSuspended');
+			Route::post('/themes/update', 'update')->name('awesome_admin.themes.update')->middleware('auth', 'checkSuspended');
+		});
+
 		Route::controller(\Awesome_Admin_File_Manager_Controller::class)->group(function()
 		{
 			Route::get('/filemanager', 'index')->name('awesome_admin.file_manager')->middleware('auth', 'checkSuspended');

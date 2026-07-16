@@ -35,8 +35,8 @@ const finalNavTextRule = navTextRules.filter(([, body]) => /font-size:/.test(bod
 
 assert.match(
   css,
-  /--ph-shell-hover:\s*#e4dcf4;/,
-  'light sidebar hover should use the stronger lavender token',
+  /--ph-shell-hover:\s*color-mix\(in srgb, var\(--ph-theme-primary\), white 84%\);/,
+  'light sidebar hover should derive its soft tint from the selected theme color',
 );
 assert.match(
   css,
