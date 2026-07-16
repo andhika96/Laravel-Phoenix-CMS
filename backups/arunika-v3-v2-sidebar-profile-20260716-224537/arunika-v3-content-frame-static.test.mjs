@@ -20,10 +20,10 @@ test('Arunika V3 wraps the header and page content in one rounded right canvas',
   );
 });
 
-test('Arunika V3 uses the Arunika V2 sidebar surface and edge border', () => {
+test('Arunika V3 keeps the sidebar edge borderless like the reference', () => {
   assert.match(
     css,
-    /\.ph-theme-arunika-v3\s+\.ph-sidebar,\s*\.ph-theme-arunika-v3\s+\.ph-sidebar\.ph-expanded\s*\{[^}]*background:\s*var\(--ph-sidebar-surface\);[^}]*border-right:\s*1px\s+solid\s+var\(--ph-sidebar-border\);/s,
+    /\.ph-theme-arunika-v3\s+\.ph-sidebar,\s*\.ph-theme-arunika-v3\s+\.ph-sidebar\.ph-expanded\s*\{[^}]*border-right:\s*0;/s,
   );
 });
 

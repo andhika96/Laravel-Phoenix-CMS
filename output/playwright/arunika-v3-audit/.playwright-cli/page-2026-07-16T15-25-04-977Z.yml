@@ -1,0 +1,20 @@
+- generic [ref=f6e6]:
+  - generic [ref=f6e9]:
+    - generic [ref=f6e10]:
+      - heading "Log In" [level=4] [ref=f6e11]
+      - paragraph [ref=f6e12]: Enter your email address and password to the dashboard.
+    - generic [ref=f6e13]:
+      - img [ref=f6e15]: 
+      - textbox "Enter your email" [ref=f6e17]
+    - generic [ref=f6e18]:
+      - img [ref=f6e20]: 
+      - textbox "Enter your password" [ref=f6e22]
+    - generic [ref=f6e24]:
+      - checkbox "Remember me" [ref=f6e25]
+      - generic [ref=f6e26]: Remember me
+    - button "Log In" [ref=f6e28] [cursor=pointer]
+  - generic [ref=f6e29]:
+    - link "Create an account" [ref=f6e31] [cursor=pointer]:
+      - /url: http://laravel-13-phoenix.aruna/auth/signup
+    - link "Forgot Password" [ref=f6e33] [cursor=pointer]:
+      - /url: http://laravel-13-phoenix.aruna/auth/forgotpassword

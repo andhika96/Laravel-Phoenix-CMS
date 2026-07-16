@@ -227,37 +227,34 @@ final result: passed
 - Focused-region evidence: `arunika-v3-after-profile-menu.png` verifies the simplified right header and relocated appearance controls; `arunika-v3-after-collapsed.png` verifies the stable header toggle in collapsed state; `arunika-v3-after-mobile.png` and `arunika-v3-after-mobile-nav.png` verify the narrow shell and mobile drawer.
 - Follow-up scale/padding evidence: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-8a39910b-d1b1-4dff-9c3f-8dbc73f345dd.png` is the user-reported inconsistent-scale state; `C:\Users\aruna\.codex\visualizations\2026\07\16\019f6b4e-fae7-7f40-8fdb-0a7f83a5161a\arunika-v3-scale-padding-fixed.png` is the authenticated `1536 x 704` post-fix state with the profile menu open.
 - Sidebar/divider follow-up evidence: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-fc55738b-bd60-4554-9c6e-179214f07850.png` is the user-reported uneven divider state; `C:\Users\aruna\.codex\visualizations\2026\07\16\019f6b4e-fae7-7f40-8fdb-0a7f83a5161a\arunika-v3-sidebar-divider-fixed.png` is the authenticated `852 x 693` post-fix state.
-- Final V2-sidebar follow-up evidence: `arunika-v3-v2-sidebar-expanded.png` and `arunika-v3-v2-sidebar-collapsed.png` verify the production `256px`/`76px` sidebar states; `arunika-v3-v2-sidebar-profile-open.png` verifies the relocated complete profile menu; `arunika-v3-v2-sidebar-mobile.png` verifies the profile menu contained inside the `256px` mobile drawer. All files are under `C:\Users\aruna\.codex\visualizations\2026\07\16\019f6b4e-fae7-7f40-8fdb-0a7f83a5161a`.
 - State matching note: the source shows an Automations page while the implementation shows the dynamic Laravel Manage Article page. The fidelity judgment is intentionally limited to the approved sidebar/header/content shell; page-specific cards, tables, copy, and menu names are not literal clone targets.
 
 #### Comparison history and fixes
 
 - Earlier [P1] shell proportion mismatch: the reference pass reduced the desktop sidebar from `256px` to `160px`. The user subsequently requested exact Arunika V2 parity, so the final expanded desktop width is restored to `256px`; collapsed desktop remains `76px` and the mobile drawer remains `256px`.
 - Earlier [P1] control-placement mismatch: collapse lived inside the sidebar. Fix: the same accessible toggle now lives in `.ph-header-nav-control` before search, with a `24px` vertical divider; its expanded/collapsed chevron state remains connected through the sidebar sibling selector.
-- Earlier [P1] right-header mismatch: palette and dark mode crowded the primary header while profile name and role disappeared at the comparison viewport. The first fix placed notification plus full profile in the header; the final user-approved correction keeps only notification in the header and moves the same complete profile dropdown to the bottom of the sidebar.
+- Earlier [P1] right-header mismatch: palette and dark mode crowded the primary header while profile name and role disappeared at the comparison viewport. Fix: the primary row is now notification plus full profile; Appearance, dark mode, and seven theme swatches live in the profile dropdown.
 - Earlier [P2] density mismatch: the header was `60px` and search was `320 x 36px`. Fix: header is `52px` and desktop search is `220 x 32px`.
 - Follow-up [P2] scale mismatch from the user's `1920 x 1008` Chrome screenshot: the profile area mixed `9-10px` labels, `11/9px` identity text, Bootstrap's default `16px` menu items, and a `28px` page heading. Fix: use a coherent `10px` micro-label, `12px` navigation/identity, `13px` menu/body, and `22px` page-heading scale; align menu icons and rows to the same `34px` rhythm.
 - Follow-up [P2] cramped content inset: remove both desktop and mobile `.ph-theme-arunika-v3 .ph-scrollable-content` padding declarations so the shared shell padding controls spacing at every breakpoint.
 - Follow-up [P2] uneven header-divider rhythm: runtime geometry measured `15px` from the visible collapse icon to the divider but only `8px` from the divider to search. Fix: add `7px` right margin to the divider so both visible gaps measure exactly `15px`.
-- Final [P1] sidebar consistency correction: replace V3's compressed `34px`/`12px` navigation with Arunika V2's `42px`/`14px` row contract, V2 padding/category/submenu rhythm, surface, border, active state, and footer user card. Remove the standalone sidebar Settings shortcut; Settings remains available exactly once inside the relocated profile menu.
-- Post-fix inspection found no remaining actionable P0/P1/P2 issue in the selected shell scope. The dynamic Manage Article content remains intentionally denser/larger than the Automations reference content.
+- Post-fix full-view comparison found no remaining actionable P0/P1/P2 mismatch in the selected shell scope. The dynamic Manage Article content remains intentionally denser/larger than the Automations reference content.
 
 #### Required fidelity surfaces
 
-- Fonts and typography: the existing Nunito family remains intact; final sidebar labels use Arunika V2's `14px` scale, category labels use `11px`, profile identity uses `14/12.5px`, profile menu rows remain `13px`, and the Theme Manager heading is capped at `22px`. Truncation protects longer dynamic menu names.
-- Spacing and layout rhythm: Arunika V2-aligned `256px` expanded sidebar, `76px` collapsed sidebar, `42px` navigation rows, `65px` expanded profile card, `52px` header, `220px` search, equal `15px` visible gaps around the divider, `8px` outer canvas gutter, `12px` canvas radius, and inherited content padding (`24px 22px 32px` desktop; `18px 14px 28px` responsive) are verified from runtime DOM measurements.
-- Colors and visual tokens: the final sidebar intentionally follows Arunika V2's `--ph-sidebar-surface`, border, hover, panel, and active-state tokens; the `#FEFEFC` V3 content surface remains unchanged. The saved light theme was restored after interaction testing.
+- Fonts and typography: the existing Nunito family remains intact; sidebar labels remain `12px`, profile identity is `12/10px`, profile menu rows are `13px`, and the Theme Manager heading is capped at `22px`. Truncation protects longer dynamic menu names.
+- Spacing and layout rhythm: Arunika V2-aligned `256px` sidebar, `52px` header, `220px` search, equal `15px` visible gaps around the divider, `8px` outer canvas gutter, `12px` canvas radius, and inherited content padding (`24px 22px 32px` desktop; `18px 14px 28px` responsive) are verified from runtime DOM measurements.
+- Colors and visual tokens: source-matched `#EFEFED` sidebar and `#FEFEFC` content surfaces remain unchanged; the saved purple theme color was restored after interaction testing.
 - Image quality and assets: existing uploaded site logo/avatar and Font Awesome icons are retained; no placeholder, code-drawn replacement, or generated asset was introduced.
 - Copy and content: authenticated name/role, dynamic Laravel menu labels, notifications, and page content remain server-driven. Appearance labels describe real working controls.
 
 #### Interaction and responsive proof
 
 - Desktop collapse changed the measured sidebar from `256px` to `76px` while the toggle remained in the header; expanding restored `256px`.
-- The relocated sidebar profile dropdown exposed Appearance, Dark Mode, seven theme swatches, Profile, Settings, and Logout. In expanded desktop it measured inside the viewport at `x=249.33`, `y=566.17`, `220 x 319.83`; in collapsed desktop it remained visible to the right of the `76px` sidebar. Dark Mode changed `data-bs-theme` to `dark` and was restored to `light`.
-- Mobile at `390 x 844` measured document/body scroll width exactly `390px`; the existing hamburger opened the `256px` drawer. The dropdown stayed inside the drawer at `x=14`, `y=437.17`, `227.33 x 319.83`, immediately above the profile card, with no horizontal overflow.
+- Profile dropdown exposed Appearance, Dark Mode, seven theme swatches, Profile, Settings, and Logout. Dark Mode changed `data-bs-theme` to `dark` and was restored to `light`; a swatch changed local storage to `#1FA675` and was restored to the user's prior `#9D00FF`.
+- Mobile at `390 x 844` measured document/body scroll width exactly `390px`; the existing hamburger opened the `256px` drawer. The desktop collapse group and profile metadata correctly hide at the mobile breakpoint.
 - Browser console after the interaction loop: `0` errors and `0` warnings.
-- Focused theme static regressions for the final sidebar/profile hierarchy: `8 passed`, `0 failed`.
-- Complete Arunika V3 Node regressions: `15 passed`, `0 failed`.
+- Focused Arunika V3 Node regressions: `13 passed`, `0 failed`.
 - Full Laravel suite: `72 passed`, `525 assertions`.
 - Blade clear/cache and `git diff --check`: passed.
 

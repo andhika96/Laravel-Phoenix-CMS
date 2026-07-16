@@ -108,6 +108,14 @@
 					<span class="ph-app-logo-text">{{ $siteName }}</span>
 				</div>
 
+				<button class="ph-sidebar-toggle" id="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="true">
+					<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+						<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
+						<path d="M8.25 3.25V20.75"></path>
+						<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
+					</svg>
+				</button>
+
 				<div id="sidebar-scroll-content">
 					
 					<div class="list-group list-group-flush w-100">
@@ -139,30 +147,68 @@
 				</div>
 
 				<div class="ph-sidebar-footer">
-					<div class="ph-sidebar-user-panel">
-						<div class="dropdown ph-sidebar-profile">
-							<button class="ph-sidebar-user-card" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" aria-label="{{ t('Open profile menu') }}">
-								<span class="ph-sidebar-user-avatar">{!! get_avatar('frame', 'rounded-circle', 38) !!}</span>
-								<span class="ph-sidebar-user-meta">
+					<a href="{{ checkIsAdmin() ? url('awesome_admin') : url('profile') }}" class="ph-sidebar-settings-link" title="{{ t('Settings') }}">
+						<span class="ph-nav-icon"><i class="fal fa-cog fa-fw"></i></span>
+						<span class="ph-nav-text">{{ t('Settings') }}</span>
+						<span class="ph-custom-tooltip"><span>{{ t('Settings') }}</span></span>
+					</a>
+				</div>
+
+			</div>
+
+			<div class="ph-layout-right" id="ph-layout-right">
+				<div class="ph-top-bar" id="ph-top-bar">
+					<button class="ph-mobile-sidebar-trigger" type="button" onclick="toggleSidebar()" aria-label="Open navigation">
+						<i class="fas fa-bars"></i>
+					</button>
+
+					<div class="ph-header-welcome">
+						<span>{{ t('Welcome') }},</span>
+						<strong>{{ auth()->user()->fullname }}</strong>
+					</div>
+
+					<label class="ph-search-container" for="ph-global-search">
+						<i class="fal fa-search"></i>
+						<input type="search" class="ph-search-input" id="ph-global-search" placeholder="{{ t('Find something') }}" autocomplete="off">
+						<span class="ph-search-shortcut"><i class="fal fa-command"></i> K</span>
+					</label>
+
+					<div class="ph-header-actions">
+						<div class="dropdown ph-theme-color-picker">
+							<button class="ph-btn-action-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ t('Change Theme Color') }}" aria-label="{{ t('Change Theme Color') }}">
+								<i class="fas fa-palette"></i>
+							</button>
+
+							<div class="dropdown-menu dropdown-menu-end ph-theme-color-menu">
+								<h6 class="ph-theme-color-title">{{ t('Choose Theme Color') }}</h6>
+								<div class="row g-2" id="color-picker-container"></div>
+							</div>
+						</div>
+
+						<button class="ph-btn-action-icon ph-theme-toggle" type="button" onclick="toggleTheme()" title="{{ t('Dark Mode') }}" aria-label="{{ t('Dark Mode') }}" aria-pressed="false">
+							<i class="fas fa-sun ph-theme-icon"></i>
+						</button>
+
+						{{-- Help button is temporarily hidden. --}}
+						{{--
+						<a href="{{ url('awesome_admin') }}" class="ph-btn-action-icon ph-header-help" title="{{ t('Help') }}" aria-label="{{ t('Help') }}">
+							<i class="fal fa-question-circle"></i>
+						</a>
+						--}}
+
+						@include('components.cms-realtime-notification')
+
+						<div class="dropdown ph-header-profile">
+							<button class="ph-header-profile-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ t('Open profile menu') }}">
+								<span class="ph-header-profile-avatar">{!! get_avatar('frame', 'rounded-circle', 34) !!}</span>
+								<span class="ph-header-profile-meta">
 									<strong>{{ auth()->user()->fullname }}</strong>
 									<span>{{ $currentUserRole }}</span>
 								</span>
-								<i class="fal fa-chevron-right ph-sidebar-user-chevron"></i>
+								<i class="fal fa-chevron-down ph-header-profile-chevron"></i>
 							</button>
 
-							<div class="dropdown-menu ph-header-profile-menu ph-sidebar-profile-menu">
-								<div class="ph-profile-appearance">
-									<h6 class="ph-theme-color-title">{{ t('Appearance') }}</h6>
-									<button class="dropdown-item ph-profile-theme-toggle ph-theme-toggle" type="button" onclick="toggleTheme()" aria-label="{{ t('Dark Mode') }}" aria-pressed="false">
-										<i class="fas fa-sun fa-fw ph-theme-icon"></i>
-										<span>{{ t('Dark Mode') }}</span>
-									</button>
-									<div class="ph-profile-color-section">
-										<span class="ph-profile-color-label">{{ t('Choose Theme Color') }}</span>
-										<div class="row g-2" id="color-picker-container"></div>
-									</div>
-								</div>
-								<div class="dropdown-divider"></div>
+							<div class="dropdown-menu dropdown-menu-end ph-header-profile-menu">
 								<a class="dropdown-item" href="{{ url('profile') }}">
 									<i class="fal fa-user-circle fa-fw"></i>
 									<span>{{ t('Profile') }}</span>
@@ -182,48 +228,6 @@
 								</a>
 							</div>
 						</div>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="ph-layout-right" id="ph-layout-right">
-				<div class="ph-top-bar" id="ph-top-bar">
-					<button class="ph-mobile-sidebar-trigger" type="button" onclick="toggleSidebar()" aria-label="Open navigation">
-						<i class="fas fa-bars"></i>
-					</button>
-
-					<div class="ph-header-nav-control">
-						<button class="ph-sidebar-toggle" id="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="true">
-							<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
-								<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
-								<path d="M8.25 3.25V20.75"></path>
-								<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
-							</svg>
-						</button>
-						<span class="ph-header-divider" aria-hidden="true"></span>
-					</div>
-
-					<div class="ph-header-welcome">
-						<span>{{ t('Welcome') }},</span>
-						<strong>{{ auth()->user()->fullname }}</strong>
-					</div>
-
-					<label class="ph-search-container" for="ph-global-search">
-						<i class="fal fa-search"></i>
-						<input type="search" class="ph-search-input" id="ph-global-search" placeholder="{{ t('Find something') }}" autocomplete="off">
-						<span class="ph-search-shortcut"><i class="fal fa-command"></i> K</span>
-					</label>
-
-					<div class="ph-header-actions">
-						{{-- Help button is temporarily hidden. --}}
-						{{--
-						<a href="{{ url('awesome_admin') }}" class="ph-btn-action-icon ph-header-help" title="{{ t('Help') }}" aria-label="{{ t('Help') }}">
-							<i class="fal fa-question-circle"></i>
-						</a>
-						--}}
-
-						@include('components.cms-realtime-notification')
 					</div>
 				</div>
 

@@ -1,0 +1,81 @@
+- generic [ref=f14e2]:
+  - generic [ref=f14e3]:
+    - generic "LaraPhoenix CMS" [ref=f14e4]: L
+    - region "scrollable content" [ref=f14e10]:
+      - generic [ref=f14e12]:
+        - generic [ref=f14e13]:
+          - link "" [ref=f14e14] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna
+          - link "" [ref=f14e17] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/dashboard
+          - link "" [ref=f14e20] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/chat
+        - generic [ref=f14e24]:
+          - link "" [ref=f14e25] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/manage_article
+          - link "" [ref=f14e28] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/manage_coverimage
+          - link "" [ref=f14e31] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/filemanager
+    - generic [ref=f14e36]:
+      - button "Open profile menu" [ref=f14e37] [cursor=pointer]:
+        - img "Current avatar image" [ref=f14e39]
+        - generic:
+          - strong: Administrator
+          - generic: Super Admin
+        - text: 
+      - text:    
+  - generic [ref=f14e40]:
+    - generic [ref=f14e41]:
+      - button "Open navigation" [ref=f14e42] [cursor=pointer]:
+        - generic [ref=f14e43]: 
+      - generic [ref=f14e44]:
+        - generic [ref=f14e45]: 
+        - searchbox "" [ref=f14e46]
+      - generic:  
+    - generic [ref=f14e52]:
+      - generic [ref=f14e54]:
+        - heading "Manage Article" [level=4] [ref=f14e56]
+        - generic [ref=f14e58]:
+          - textbox "Search article by Title" [ref=f14e61]
+          - generic [ref=f14e62]:
+            - link " Add Post" [ref=f14e63] [cursor=pointer]:
+              - /url: http://laravel-13-phoenix.aruna/manage_article/add
+              - generic [ref=f14e64]: 
+              - text: Add Post
+            - link "Category List" [ref=f14e65] [cursor=pointer]:
+              - /url: javascript:void(0)
+      - generic [ref=f14e67]:
+        - generic [ref=f14e69]:
+          - generic [ref=f14e71]:
+            - generic [ref=f14e72]: Change Status
+            - combobox [ref=f14e73]:
+              - option "All" [selected]
+              - option "Publish"
+              - option "Draft"
+              - option "Pending"
+          - button "Submit" [ref=f14e75] [cursor=pointer]
+        - generic [ref=f14e76]:
+          - generic [ref=f14e77]: Filter By Status
+          - combobox [ref=f14e78]:
+            - option "All" [selected]
+            - option "Publish"
+            - option "Draft"
+            - option "Pending"
+        - generic [ref=f14e79]:
+          - generic [ref=f14e80]: Filter By Category
+          - combobox [ref=f14e81]:
+            - option "All" [selected]
+            - option "Uncategorized"
+            - option "Test 3 Edited"
+            - option "Test 4"
+            - option "Test 5"
+        - generic [ref=f14e82]:
+          - generic [ref=f14e83]: Filter By Scheduled
+          - combobox [ref=f14e84]:
+            - option "All" [selected]
+            - option "Scheduled"
+            - option "No Scheduled"
+      - generic [ref=f14e86]:
+        - status [ref=f14e87]
+        - generic [ref=f14e89]: Loading ...

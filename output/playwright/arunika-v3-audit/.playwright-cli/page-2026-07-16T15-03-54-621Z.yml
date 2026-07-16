@@ -1,0 +1,101 @@
+- generic [ref=f4e2]:
+  - generic [ref=f4e3]:
+    - generic "LaraPhoenix CMS" [ref=f4e4]
+    - region "scrollable content" [ref=f4e10]:
+      - generic [ref=f4e12]:
+        - generic [ref=f4e13]:
+          - link " Visit Site" [ref=f4e14] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna
+            - generic [ref=f4e15]: 
+            - generic [ref=f4e17]: Visit Site
+          - link " Dashboard" [ref=f4e18] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/dashboard
+            - generic [ref=f4e19]: 
+            - generic [ref=f4e21]: Dashboard
+          - link " Messages" [ref=f4e22] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/chat
+            - generic [ref=f4e23]: 
+            - generic [ref=f4e25]: Messages
+        - generic [ref=f4e26]: All Menus
+        - generic [ref=f4e28]:
+          - link " Manage Articles" [ref=f4e29] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/manage_article
+            - generic [ref=f4e30]: 
+            - generic [ref=f4e32]: Manage Articles
+          - link " Manage Cover Image" [ref=f4e33] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/manage_coverimage
+            - generic [ref=f4e34]: 
+            - generic [ref=f4e36]: Manage Cover Image
+          - link " File Manager" [ref=f4e37] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/filemanager
+            - generic [ref=f4e38]: 
+            - generic [ref=f4e40]: File Manager
+    - link " Settings" [ref=f4e42] [cursor=pointer]:
+      - /url: https://laravel-13-phoenix.aruna/awesome_admin
+      - generic [ref=f4e43]: 
+      - generic [ref=f4e45]: Settings
+  - generic [ref=f4e46]:
+    - generic [ref=f4e47]:
+      - text: 
+      - button "Toggle sidebar" [expanded] [ref=f4e49] [cursor=pointer]
+      - generic [ref=f4e54]:
+        - generic [ref=f4e55]: 
+        - searchbox "" [ref=f4e56]
+      - generic [ref=f4e57]:
+        - generic [ref=f4e58]:
+          - button "" [ref=f4e59] [cursor=pointer]
+          - text: 
+        - generic [ref=f4e61]:
+          - button "Open profile menu" [ref=f4e62] [cursor=pointer]:
+            - img "Current avatar image" [ref=f4e64]
+            - generic [ref=f4e65]:
+              - strong [ref=f4e66]: Administrator
+              - generic [ref=f4e67]: Super Admin
+            - generic [ref=f4e68]: 
+          - text:    
+    - generic [ref=f4e74]:
+      - generic [ref=f4e76]:
+        - heading "Manage Article" [level=4] [ref=f4e78]
+        - generic [ref=f4e80]:
+          - textbox "Search article by Title" [ref=f4e83]
+          - generic [ref=f4e84]:
+            - link " Add Post" [ref=f4e85] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/manage_article/add
+              - generic [ref=f4e86]: 
+              - text: Add Post
+            - link "Category List" [ref=f4e87] [cursor=pointer]:
+              - /url: javascript:void(0)
+      - generic [ref=f4e89]:
+        - generic [ref=f4e91]:
+          - generic [ref=f4e93]:
+            - generic [ref=f4e94]: Change Status
+            - combobox [ref=f4e95]:
+              - option "All" [selected]
+              - option "Publish"
+              - option "Draft"
+              - option "Pending"
+          - button "Submit" [ref=f4e97] [cursor=pointer]
+        - generic [ref=f4e98]:
+          - generic [ref=f4e99]: Filter By Status
+          - combobox [ref=f4e100]:
+            - option "All" [selected]
+            - option "Publish"
+            - option "Draft"
+            - option "Pending"
+        - generic [ref=f4e101]:
+          - generic [ref=f4e102]: Filter By Category
+          - combobox [ref=f4e103]:
+            - option "All" [selected]
+            - option "Uncategorized"
+            - option "Test 3 Edited"
+            - option "Test 4"
+            - option "Test 5"
+        - generic [ref=f4e104]:
+          - generic [ref=f4e105]: Filter By Scheduled
+          - combobox [ref=f4e106]:
+            - option "All" [selected]
+            - option "Scheduled"
+            - option "No Scheduled"
+      - generic [ref=f4e108]:
+        - status [ref=f4e109]
+        - generic [ref=f4e111]: Loading ...

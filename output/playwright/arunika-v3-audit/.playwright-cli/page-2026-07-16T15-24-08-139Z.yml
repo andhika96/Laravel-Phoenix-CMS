@@ -1,0 +1,26 @@
+- generic [ref=e6]:
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - heading "Log In" [level=4] [ref=e11]
+      - paragraph [ref=e12]: Enter your email address and password to the dashboard.
+      - alert [ref=e34]:
+        - generic [ref=e35]:
+          - strong [ref=e36]:  Notice 􏁗
+          - generic [ref=e37]: just now
+          - button "Close" [ref=e38] [cursor=pointer]
+        - generic [ref=e39]: CSRF token mismatch.
+    - generic [ref=e13]:
+      - img [ref=e15]: 
+      - textbox "Enter your email" [ref=e17]: "[redacted]"
+    - generic [ref=e18]:
+      - img [ref=e20]: 
+      - textbox "Enter your password" [ref=e22]: "[redacted]"
+    - generic [ref=e24]:
+      - checkbox "Remember me" [ref=e25]
+      - generic [ref=e26]: Remember me
+    - button "Log In" [ref=e41] [cursor=pointer]
+  - generic [ref=e29]:
+    - link "Create an account" [ref=e31] [cursor=pointer]:
+      - /url: http://laravel-13-phoenix.aruna/auth/signup
+    - link "Forgot Password" [ref=e33] [cursor=pointer]:
+      - /url: http://laravel-13-phoenix.aruna/auth/forgotpassword

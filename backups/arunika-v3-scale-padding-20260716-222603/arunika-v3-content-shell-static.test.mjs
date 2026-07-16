@@ -12,14 +12,9 @@ test('Arunika V3 uses the reference content surface color', () => {
   assert.match(css, /--ph-v3-content-surface:\s*#fefefc/i);
 });
 
-test('Arunika V3 inherits the roomy base content padding', () => {
+test('Arunika V3 keeps the dashboard content shell tight to the body', () => {
   assert.match(
     css,
-    /\.ph-scrollable-content\s*\{[^}]*padding:\s*24px\s+22px\s+32px;/s,
-  );
-
-  assert.doesNotMatch(
-    css,
-    /\.ph-theme-arunika-v3\s+\.ph-scrollable-content\s*\{[^}]*padding:/s,
+    /\.ph-theme-arunika-v3\s+\.ph-scrollable-content\s*\{[^}]*padding:\s*8px\s+8px\s+18px;/s,
   );
 });

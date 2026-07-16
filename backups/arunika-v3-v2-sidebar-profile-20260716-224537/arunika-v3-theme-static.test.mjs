@@ -52,24 +52,6 @@ test('Arunika V3 places desktop navigation and appearance controls in the approv
   assert.doesNotMatch(layout, /class="dropdown ph-theme-color-picker"/);
 });
 
-test('Arunika V3 uses the approved V2-style sidebar profile hierarchy', () => {
-  const layout = read(layoutPath);
-  const footerIndex = layout.indexOf('class="ph-sidebar-footer"');
-  const sidebarProfileIndex = layout.indexOf('class="dropdown ph-sidebar-profile"');
-  const profileMenuIndex = layout.indexOf('ph-sidebar-profile-menu');
-  const layoutRightIndex = layout.indexOf('class="ph-layout-right"');
-  const topBarIndex = layout.indexOf('class="ph-top-bar"');
-  const headerActionsIndex = layout.indexOf('class="ph-header-actions"');
-
-  assert.ok(footerIndex >= 0, 'Missing sidebar footer');
-  assert.ok(sidebarProfileIndex > footerIndex, 'Profile trigger must live inside the sidebar footer');
-  assert.ok(profileMenuIndex > sidebarProfileIndex, 'Profile dropdown must follow its sidebar trigger');
-  assert.ok(profileMenuIndex < layoutRightIndex, 'Profile dropdown must stay inside the sidebar');
-  assert.ok(headerActionsIndex > topBarIndex, 'Header actions must remain in the top bar');
-  assert.doesNotMatch(layout, /ph-sidebar-settings-link/);
-  assert.doesNotMatch(layout, /class="dropdown ph-header-profile"/);
-});
-
 test('Arunika V3 stylesheet contains the approved dashboard-shell tokens', () => {
   const css = read(cssPath);
   const shellCss = css.slice(css.indexOf('ARUNIKA V3 DASHBOARD SHELL'));
@@ -96,16 +78,6 @@ test('Arunika V3 uses one compact typography scale across the page and profile m
   assert.match(css, /\.ph-theme-arunika-v3\s+\.ph-header-profile-menu\s+\.dropdown-item\s*\{[^}]*font-size:\s*13px;/s);
   assert.match(css, /\.ph-theme-arunika-v3\s+\.ph-profile-appearance\s+\.ph-theme-color-title\s*\{[^}]*font-size:\s*10px;/s);
   assert.match(css, /\.ph-theme-arunika-v3\s+\.theme-manager-heading\s+h1\s*\{[^}]*font-size:\s*22px;/s);
-});
-
-test('Arunika V3 sidebar follows the Arunika V2 navigation and footer contract', () => {
-  const css = read(cssPath);
-
-  assert.match(css, /\.ph-theme-arunika-v3\s+#sidebar-scroll-content\s*\{[^}]*padding:\s*13px\s+0\s+12px;/s);
-  assert.match(css, /\.ph-theme-arunika-v3\s+\.ph-sidebar\s+\.list-group-item,[\s\S]*?min-height:\s*42px;[\s\S]*?border-radius:\s*9px;[\s\S]*?font-size:\s*14px;/);
-  assert.match(css, /\.ph-theme-arunika-v3\s+\.ph-nav-text\s*\{[^}]*font-size:\s*14px;/s);
-  assert.match(css, /\.ph-theme-arunika-v3\s+\.ph-sidebar\.ph-expanded\s+\.ph-nav-category\s*\{[^}]*border-top:\s*1px\s+solid\s+var\(--ph-sidebar-category-border\);[^}]*font-size:\s*11px;/s);
-  assert.match(css, /\.ph-theme-arunika-v3\s+\.ph-sidebar-profile-menu\s*\{[^}]*left:\s*calc\(100%\s*\+\s*8px\)\s*!important;/s);
 });
 
 test('Theme Manager and seed data register Arunika V3', () => {

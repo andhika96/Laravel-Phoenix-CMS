@@ -139,50 +139,11 @@
 				</div>
 
 				<div class="ph-sidebar-footer">
-					<div class="ph-sidebar-user-panel">
-						<div class="dropdown ph-sidebar-profile">
-							<button class="ph-sidebar-user-card" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" aria-label="{{ t('Open profile menu') }}">
-								<span class="ph-sidebar-user-avatar">{!! get_avatar('frame', 'rounded-circle', 38) !!}</span>
-								<span class="ph-sidebar-user-meta">
-									<strong>{{ auth()->user()->fullname }}</strong>
-									<span>{{ $currentUserRole }}</span>
-								</span>
-								<i class="fal fa-chevron-right ph-sidebar-user-chevron"></i>
-							</button>
-
-							<div class="dropdown-menu ph-header-profile-menu ph-sidebar-profile-menu">
-								<div class="ph-profile-appearance">
-									<h6 class="ph-theme-color-title">{{ t('Appearance') }}</h6>
-									<button class="dropdown-item ph-profile-theme-toggle ph-theme-toggle" type="button" onclick="toggleTheme()" aria-label="{{ t('Dark Mode') }}" aria-pressed="false">
-										<i class="fas fa-sun fa-fw ph-theme-icon"></i>
-										<span>{{ t('Dark Mode') }}</span>
-									</button>
-									<div class="ph-profile-color-section">
-										<span class="ph-profile-color-label">{{ t('Choose Theme Color') }}</span>
-										<div class="row g-2" id="color-picker-container"></div>
-									</div>
-								</div>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="{{ url('profile') }}">
-									<i class="fal fa-user-circle fa-fw"></i>
-									<span>{{ t('Profile') }}</span>
-								</a>
-
-								@if(checkIsAdmin())
-									<a class="dropdown-item" href="{{ url('awesome_admin') }}">
-										<i class="fal fa-cog fa-fw"></i>
-										<span>{{ t('Settings') }}</span>
-									</a>
-								@endif
-
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item text-danger" href="{{ url('auth/logout') }}">
-									<i class="fal fa-sign-out-alt fa-fw"></i>
-									<span>{{ t('Logout') }}</span>
-								</a>
-							</div>
-						</div>
-					</div>
+					<a href="{{ checkIsAdmin() ? url('awesome_admin') : url('profile') }}" class="ph-sidebar-settings-link" title="{{ t('Settings') }}">
+						<span class="ph-nav-icon"><i class="fal fa-cog fa-fw"></i></span>
+						<span class="ph-nav-text">{{ t('Settings') }}</span>
+						<span class="ph-custom-tooltip"><span>{{ t('Settings') }}</span></span>
+					</a>
 				</div>
 
 			</div>
@@ -224,6 +185,49 @@
 						--}}
 
 						@include('components.cms-realtime-notification')
+
+						<div class="dropdown ph-header-profile">
+							<button class="ph-header-profile-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ t('Open profile menu') }}">
+								<span class="ph-header-profile-avatar">{!! get_avatar('frame', 'rounded-circle', 34) !!}</span>
+								<span class="ph-header-profile-meta">
+									<strong>{{ auth()->user()->fullname }}</strong>
+									<span>{{ $currentUserRole }}</span>
+								</span>
+								<i class="fal fa-chevron-down ph-header-profile-chevron"></i>
+							</button>
+
+							<div class="dropdown-menu dropdown-menu-end ph-header-profile-menu">
+								<div class="ph-profile-appearance">
+									<h6 class="ph-theme-color-title">{{ t('Appearance') }}</h6>
+									<button class="dropdown-item ph-profile-theme-toggle ph-theme-toggle" type="button" onclick="toggleTheme()" aria-label="{{ t('Dark Mode') }}" aria-pressed="false">
+										<i class="fas fa-sun fa-fw ph-theme-icon"></i>
+										<span>{{ t('Dark Mode') }}</span>
+									</button>
+									<div class="ph-profile-color-section">
+										<span class="ph-profile-color-label">{{ t('Choose Theme Color') }}</span>
+										<div class="row g-2" id="color-picker-container"></div>
+									</div>
+								</div>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="{{ url('profile') }}">
+									<i class="fal fa-user-circle fa-fw"></i>
+									<span>{{ t('Profile') }}</span>
+								</a>
+
+								@if(checkIsAdmin())
+									<a class="dropdown-item" href="{{ url('awesome_admin') }}">
+										<i class="fal fa-cog fa-fw"></i>
+										<span>{{ t('Settings') }}</span>
+									</a>
+								@endif
+
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item text-danger" href="{{ url('auth/logout') }}">
+									<i class="fal fa-sign-out-alt fa-fw"></i>
+									<span>{{ t('Logout') }}</span>
+								</a>
+							</div>
+						</div>
 					</div>
 				</div>
 
