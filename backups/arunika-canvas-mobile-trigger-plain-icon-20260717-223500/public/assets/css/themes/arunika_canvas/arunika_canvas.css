@@ -3170,12 +3170,6 @@ html[data-bs-theme=dark] .ph-theme-arunika-canvas
 	width: 36px;
 	height: 36px;
 	flex: 0 0 36px;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    cursor: pointer;
 }
 
 .ph-theme-arunika-canvas .ph-mobile-sidebar-close
@@ -3216,7 +3210,7 @@ html[data-bs-theme=dark] .ph-theme-arunika-canvas
 	height: 18px;
 }
 
-.ph-theme-arunika-canvas .ph-sidebar:not(.ph-expanded) + .ph-layout-right .ph-mobile-sidebar-trigger .ph-sidebar-toggle-chevron
+.ph-theme-arunika-canvas .ph-sidebar:not(.ph-expanded) + .ph-layout-right .ph-sidebar-toggle-chevron
 {
 	transform: rotate(180deg);
 }

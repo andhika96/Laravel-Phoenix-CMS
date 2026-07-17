@@ -26,11 +26,6 @@ assert.match(
     /\.ph-mobile-sidebar-trigger\s*\{[^}]*width:\s*36px;[^}]*height:\s*36px;[^}]*padding:\s*0;[^}]*border:\s*0;[^}]*border-radius:\s*0;[^}]*background:\s*transparent;[^}]*box-shadow:\s*none;/s,
     'the mobile sidebar trigger should expose only its icon without a visual button shell',
 );
-assert.match(
-    css,
-    /\.ph-sidebar:not\(\.ph-expanded\) \+ \.ph-layout-right \.ph-mobile-sidebar-trigger \.ph-sidebar-toggle-chevron\s*\{[^}]*transform:\s*rotate\(180deg\);/s,
-    'the closed mobile trigger should show the desktop panel chevron as an arrow right',
-);
 
 const mobileMediaQueries = [...css.matchAll(/@media \(max-width: 768px\)\s*\{([\s\S]*?)(?=\n\})\n\}/g)];
 assert.ok(mobileMediaQueries.length > 0, 'the mobile sidebar media query should exist');

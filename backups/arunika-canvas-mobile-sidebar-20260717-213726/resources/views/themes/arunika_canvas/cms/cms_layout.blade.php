@@ -119,13 +119,6 @@
 
 					<span class="ph-app-logo-initial" aria-hidden="true">{{ mb_strtoupper(mb_substr(trim($siteName), 0, 1)) }}</span>
 					<span class="ph-app-logo-text">{{ $siteName }}</span>
-					<button class="ph-mobile-sidebar-close" type="button" onclick="toggleSidebar()" aria-label="{{ t('Close navigation') }}">
-						<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
-							<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
-							<path d="M8.25 3.25V20.75"></path>
-							<path d="M16 8.75L12.75 12L16 15.25"></path>
-						</svg>
-					</button>
 				</div>
 
 				<div id="sidebar-scroll-content">
@@ -227,12 +220,8 @@
 
 			<div class="ph-layout-right" id="ph-layout-right">
 				<div class="ph-top-bar" id="ph-top-bar">
-					<button class="ph-mobile-sidebar-trigger" type="button" onclick="toggleSidebar()" aria-label="Open navigation" aria-expanded="false">
-						<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
-							<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
-							<path d="M8.25 3.25V20.75"></path>
-							<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
-						</svg>
+					<button class="ph-mobile-sidebar-trigger" type="button" onclick="toggleSidebar()" aria-label="Open navigation">
+						<i class="fas fa-bars"></i>
 					</button>
 
 					<div class="ph-header-nav-control">

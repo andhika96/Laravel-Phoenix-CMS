@@ -3216,7 +3216,7 @@ html[data-bs-theme=dark] .ph-theme-arunika-canvas
 	height: 18px;
 }
 
-.ph-theme-arunika-canvas .ph-sidebar:not(.ph-expanded) + .ph-layout-right .ph-mobile-sidebar-trigger .ph-sidebar-toggle-chevron
+.ph-theme-arunika-canvas .ph-sidebar:not(.ph-expanded) + .ph-layout-right .ph-sidebar-toggle-chevron
 {
 	transform: rotate(180deg);
 }

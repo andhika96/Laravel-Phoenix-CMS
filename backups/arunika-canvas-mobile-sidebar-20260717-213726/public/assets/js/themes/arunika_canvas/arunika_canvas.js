@@ -109,9 +109,6 @@ function changeMainColor(color)
 const sidebar = document.getElementById('sidebar');
 const scrollContent = document.getElementById('sidebar-scroll-content');
 const sidebarToggle = document.getElementById('sidebar-toggle');
-const mobileSidebarTrigger = document.querySelector('.ph-mobile-sidebar-trigger');
-const MOBILE_SIDEBAR_BREAKPOINT = 768;
-let sidebarWasMobile = window.innerWidth <= MOBILE_SIDEBAR_BREAKPOINT;
 let sbInstance = null;
 
 function initSimpleBar()
@@ -132,12 +129,7 @@ function toggleSidebar()
 	// UPDATE: Class updated to 'ph-expanded'
 	sidebar.classList.toggle('ph-expanded');
 	const isExpanded = sidebar.classList.contains('ph-expanded');
-
-	if (window.innerWidth > MOBILE_SIDEBAR_BREAKPOINT)
-	{
-		localStorage.setItem('sidebar-state', isExpanded ? 'expanded' : 'collapsed');
-	}
-
+	localStorage.setItem('sidebar-state', isExpanded ? 'expanded' : 'collapsed');
 	updateSidebarToggleState();
 	notifyLayoutResize();
 
@@ -184,39 +176,7 @@ function updateSidebarToggleState()
 		sidebarToggle.title = isExpanded ? 'Collapse sidebar' : 'Expand sidebar';
 	}
 
-	if (mobileSidebarTrigger)
-	{
-		mobileSidebarTrigger.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-	}
-
 }
-
-function syncSidebarForViewport()
-{
-	const isMobile = window.innerWidth <= MOBILE_SIDEBAR_BREAKPOINT;
-
-	if (isMobile === sidebarWasMobile)
-	{
-		return;
-	}
-
-	sidebarWasMobile = isMobile;
-
-	if (isMobile)
-	{
-		sidebar.classList.remove('ph-expanded');
-	}
-	else
-	{
-		const savedSidebarState = localStorage.getItem('sidebar-state');
-		sidebar.classList.toggle('ph-expanded', savedSidebarState !== 'collapsed');
-	}
-
-	updateSidebarToggleState();
-	notifyLayoutResize();
-}
-
-window.addEventListener('resize', syncSidebarForViewport);
 
 function normalizeSidebarPath(url)
 {

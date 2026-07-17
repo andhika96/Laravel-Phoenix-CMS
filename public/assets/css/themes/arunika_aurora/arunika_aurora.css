@@ -2889,14 +2889,17 @@ body::after
 
 .ph-mobile-sidebar-trigger
 {
-	width: 40px;
-	height: 40px;
+	width: 36px;
+	height: 36px;
 	align-items: center;
 	justify-content: center;
-	border: 1px solid var(--ph-border-color);
-	border-radius: 9px;
-	background: var(--ph-bg-panel);
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
 	color: var(--ph-text-main);
+	box-shadow: none;
+	cursor: pointer;
 }
 
 .ph-main-panel
@@ -2993,7 +2996,12 @@ body::after
 	.ph-mobile-sidebar-trigger
 	{
 		display: inline-flex;
-		flex: 0 0 40px;
+		flex: 0 0 36px;
+	}
+
+	.ph-sidebar:not(.ph-expanded) + .ph-layout-right .ph-mobile-sidebar-trigger .ph-sidebar-toggle-chevron
+	{
+		transform: rotate(180deg);
 	}
 
 	.ph-header-welcome
