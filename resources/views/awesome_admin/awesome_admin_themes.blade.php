@@ -123,8 +123,9 @@
 		.theme-manager-grid
 		{
 			display: grid;
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			gap: 18px;
+			grid-template-columns: repeat(auto-fill, minmax(200px, 240px));
+			gap: 14px;
+			justify-content: start;
 		}
 
 		.theme-manager-card
@@ -162,7 +163,8 @@
 		.theme-manager-preview
 		{
 			position: relative;
-			aspect-ratio: 16 / 9;
+			height: 130px;
+			aspect-ratio: auto;
 			overflow: hidden;
 			border-bottom: 1px solid var(--theme-manager-border);
 			background: var(--ph-bg-hover, #eceaef);

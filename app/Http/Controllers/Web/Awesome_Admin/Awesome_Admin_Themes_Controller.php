@@ -15,9 +15,9 @@ use Illuminate\View\View;
 class Awesome_Admin_Themes_Controller extends Controller
 {
 	private const MANAGEABLE_THEME_CODES = [
-		'arunika_v1',
-		'arunika_v2',
-		'arunika_v3',
+		'arunika_mosaic',
+		'arunika_aurora',
+		'arunika_canvas',
 	];
 
 	public function __construct(Account $user)
@@ -31,26 +31,26 @@ class Awesome_Admin_Themes_Controller extends Controller
 	public function index(): View
 	{
 		$themeMetadata = [
-			'arunika_v1' => [
-				'display_name' => 'Arunika V1',
-				'preview_image' => 'assets/images/themes/previews/arunika-v1-theme-preview.png',
+			'arunika_mosaic' => [
+				'display_name' => 'Arunika Mosaic',
+				'preview_image' => 'assets/images/themes/previews/arunika-mosaic-theme-preview.png',
 				'description' => 'The original Arunika experience with a light green navigation system and compact dashboard rhythm.',
 			],
-			'arunika_v2' => [
-				'display_name' => 'Arunika V2',
-				'preview_image' => 'assets/images/themes/previews/arunika-v2-theme-preview.png',
+			'arunika_aurora' => [
+				'display_name' => 'Arunika Aurora',
+				'preview_image' => 'assets/images/themes/previews/arunika-aurora-theme-preview.png',
 				'description' => 'A refined Arunika interface with stronger typography, improved navigation, and modern responsive controls.',
 			],
-			'arunika_v3' => [
-				'display_name' => 'Arunika V3',
-				'preview_image' => 'assets/images/themes/previews/arunika-v3-theme-preview.png',
+			'arunika_canvas' => [
+				'display_name' => 'Arunika Canvas',
+				'preview_image' => 'assets/images/themes/previews/arunika-canvas-theme-preview.png',
 				'description' => 'A calm commerce-inspired dashboard shell with compact navigation, focused search, and a clean profile header.',
 			],
 		];
 
 		$themes = Themes::query()
 			->whereIn('theme_code', self::MANAGEABLE_THEME_CODES)
-			->orderByRaw("CASE theme_code WHEN 'arunika_v1' THEN 1 WHEN 'arunika_v2' THEN 2 WHEN 'arunika_v3' THEN 3 ELSE 4 END")
+			->orderByRaw("CASE theme_code WHEN 'arunika_mosaic' THEN 1 WHEN 'arunika_aurora' THEN 2 WHEN 'arunika_canvas' THEN 3 ELSE 4 END")
 			->get()
 			->map(function (Themes $theme) use ($themeMetadata): array
 			{

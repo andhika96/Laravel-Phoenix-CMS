@@ -1,114 +1,271 @@
-# Arunika V2 Panel Shell - Design QA
-
-## Comparison Target
-
-- Source visual truth: `C:\Users\aruna\Downloads\original-f8e8b14fc45fcda1c783f3331f9087db-resaved-cropped.png`
-- Gradient-focused source visual truth: `D:\Laragon\www\laravel-13-phoenix\output\qa\sidebar-gradient-reference.png`
-- Implementation URL: `https://laravel-13-phoenix.aruna/dashboard`
-- Gradient implementation screenshot: `D:\Laragon\www\laravel-13-phoenix\output\qa\sidebar-gradient-pass3.png`
-- Collapsed gradient screenshot: `D:\Laragon\www\laravel-13-phoenix\output\qa\sidebar-gradient-collapsed.png`
-- Gradient comparison evidence: `D:\Laragon\www\laravel-13-phoenix\output\qa\sidebar-gradient-comparison-pass3-small.png`
-- Desktop implementation screenshot: `D:\Laragon\www\laravel-13-phoenix\output\playwright\arunika-v2-panel-qa\.playwright-cli\page-2026-07-12T11-16-52-216Z.png`
-- Mobile implementation screenshot: `D:\Laragon\www\laravel-13-phoenix\output\playwright\arunika-v2-panel-qa\.playwright-cli\page-2026-07-12T11-15-32-168Z.png`
-- Mobile expanded-sidebar screenshot: `D:\Laragon\www\laravel-13-phoenix\output\playwright\arunika-v2-panel-qa\.playwright-cli\page-2026-07-12T11-16-07-740Z.png`
-- Re-audit expanded-sidebar screenshot: `D:\Laragon\www\laravel-13-phoenix\output\playwright\arunika-v2-sidebar-reaudit\.playwright-cli\page-2026-07-12T11-29-56-732Z.png`
-- Re-audit collapsed-sidebar screenshot: `D:\Laragon\www\laravel-13-phoenix\output\playwright\arunika-v2-sidebar-reaudit\.playwright-cli\page-2026-07-12T11-30-33-117Z.png`
-- Tooltip arrow screenshot (Manage Articles): `D:\Laragon\www\laravel-13-phoenix\output\playwright\arunika-v2-tooltip-arrow-qa\.playwright-cli\page-2026-07-12T11-39-00-124Z.png`
-- Tooltip arrow screenshot (Dashboard): `D:\Laragon\www\laravel-13-phoenix\output\playwright\arunika-v2-tooltip-arrow-qa\.playwright-cli\page-2026-07-12T11-39-42-503Z.png`
-- Arunika v1-sized tooltip body screenshot: `D:\Laragon\www\laravel-13-phoenix\output\playwright\arunika-v2-tooltip-body-qa\.playwright-cli\page-2026-07-12T12-17-07-656Z.png`
-- Side-by-side evidence: `D:\Laragon\www\laravel-13-phoenix\output\playwright\arunika-v2-panel-qa\reference-vs-arunika-v2.png`
-- Desktop viewport: `1320 x 936`
-- Gradient QA viewport: `1440 x 900`; normalized sidebar comparison: `202 x 726`.
-- Mobile viewport: `430 x 932`
-- State: authenticated dashboard, light theme, desktop sidebar expanded.
-- Scope: sidebar, top header, right-side content shell, and responsive behavior. The Kanban content in the source is intentionally replaced by the existing Laravel CMS page content.
-
-## Findings
-
-- No actionable P0, P1, or P2 findings remain.
-- [P3] Navigation labels, logo, avatar, and right-side page content differ from the source. These are intentional product-data differences: the implementation preserves the existing Laravel menu functions, site identity, authenticated user, and `@yield('content')` output.
-
-## Full-View Comparison Evidence
-
-- The source and implementation were combined at native resolution in `reference-vs-arunika-v2.png` and inspected together.
-- The gradient-focused source and final sidebar were also normalized to `202 x 726` and combined in `sidebar-gradient-comparison-pass3-small.png` for a same-crop comparison.
-- Thirteen blank-surface sample points across the top, middle, and bottom produced a final mean absolute channel error of `0.82`, down from the visibly washed-out earlier implementation.
-- Major shell anchors match: sidebar `256px`, header `72px`, search `640 x 40px`, right content origin `(256, 72)`, and full viewport height `936px`.
-- Both implementations use a pale left rail, thin vertical divider, white header, compact rounded active navigation item, greeting block, centered search, circular utility buttons, bottom settings/profile region, and a free-form right content surface.
-- The final implementation has no horizontal viewport overflow at desktop or mobile.
-
-## Focused Region Evidence
-
-- A separate crop was not required because the native `2640 x 936` side-by-side comparison keeps the entire `256px` sidebar and `72px` header legible at original resolution.
-- A focused sidebar crop was required for the gradient pass because the requested change concerned subtle color distribution. The focused evidence confirms the source progression from blue-gray (`#f1f3f7`) through lavender (`#e7e5f5`) to pink (`#f5e8f2`) is reproduced while the right edge remains lighter.
-- Additional focused measurement confirmed the final logo text is not truncated: `scrollWidth 127px`, `clientWidth 127px`.
-- Mobile screenshots separately verify the closed and expanded sidebar states at `430 x 932`.
-
-## Required Fidelity Surfaces
-
-- Fonts and typography: Nunito is intentionally retained from the CMS. Hierarchy, weights, compact navigation labels, greeting, placeholder, and profile metadata follow the source's density. No final truncation remains.
-- Spacing and layout rhythm: sidebar/header dimensions match the reference anchors; navigation spacing, active radius, dividers, footer placement, search centering, and content padding remain visually consistent.
-- Colors and tokens: the light sidebar token now uses four directional radial layers over a vertical neutral base, reproducing the source's blue-gray upper-left, lavender center-left, pink lower-left, and brighter right edge. Near-black text, purple active state, neutral borders, and restrained elevation remain token driven.
-- Image quality and assets: the existing LaraPhoenix logo and real authenticated avatar are used. No placeholder raster, CSS drawing, handcrafted SVG, or generated substitute was introduced.
-- Copy and content: application-specific menu labels, account data, and page content are intentionally preserved. Shell copy such as `Welcome`, `Find something`, and `Dark Mode` follows the reference; the temporary `Appearance` control has been removed as requested.
-- Icons: existing Font Awesome assets are used consistently for navigation and utility controls.
-- Responsiveness and accessibility: semantic buttons/links, labels, alt text, keyboard search shortcut, active state, desktop collapse, mobile drawer, and tap-sized controls were verified.
-
-## Comparison History
-
-### Pass 1
-
-- Earlier finding: [P2] the longer application name `LaraPhoenix CMS` was visibly truncated in the expanded sidebar.
-- Fix made: reduced the brand label from `19px` to `16px` and constrained it to the available `140px` slot without changing the application name.
-- Post-fix evidence: final desktop screenshot shows the complete brand; browser measurement reports equal `scrollWidth` and `clientWidth` of `127px`.
-
-### Pass 2
-
-- Re-captured at `1320 x 936` and compared side by side with the source.
-- No remaining actionable P0/P1/P2 differences were found within the requested shell scope.
-
-### Pass 3 - Collapsed navigation and profile footer re-audit
-
-- Earlier finding: [P2] collapsed category initials `W/A` added visual noise and the hidden menu text/margin remained capable of affecting icon alignment.
-- Fix made: hide the first category in collapsed state, replace later category names with a `28 x 1px` divider, remove collapsed text/arrow layout participation, and reset every icon margin.
-- Post-fix evidence: all nine measured navigation icon centers are exactly `37.7px`; measured spread is `0px`.
-- Earlier finding: [P2] the expanded profile card shared a grid row with the logout icon, reducing the profile width and drifting from the source layout.
-- Fix made: stack the footer in one column, render the profile at `227.3 x 58px`, and place a full-width `227.3 x 42px` logout card directly below it.
-- Post-fix evidence: expanded and collapsed screenshots were inspected at original resolution; console remains at `0` errors and `0` warnings.
-
-### Pass 4 - Collapsed tooltip arrow alignment
-
-- Earlier finding: [P2] Arunika v2 retained Arunika v1's fixed tooltip arrow offset (`top: 1rem`) after making the tooltip bubble more compact, causing the arrow to sit below center for some menu labels.
-- Fix made: preserve the Arunika v1 rotated-square arrow shape and border treatment while anchoring it to `top: 50%` with `translateY(-50%)`.
-- Post-fix evidence: `Manage Articles` and `Dashboard` both render `33.77px`-high bubbles with a `16 x 16px` arrow at the exact vertical center. Both screenshots were inspected at original resolution; console remains at `0` errors and `0` warnings.
-
-### Pass 5 - Tooltip body parity with Arunika v1
-
-- Earlier finding: [P2] the tooltip arrow was aligned, but the v2 body still used compact overrides (`9px 12px` padding, `10px` radius, `0.82rem/700` type, auto width/max `220px`) instead of the requested Arunika v1 body.
-- Fix made: apply the complete Arunika v1 body contract: `300px` width/max-width, `1rem` padding, `.5rem` radius, `.85rem/400` type, `1.5` line-height, v1 border, background, and shadow declarations. The approved centered arrow formula remains.
-- Post-fix evidence: browser computed style reports `300 x 53.74px`, `16px` padding on every side, `8px` radius, `13.6px/400` type, `20.4px` line-height, and a centered `16 x 16px` arrow. Screenshot was inspected at original resolution; console remains at `0` errors and `0` warnings.
-
-### Pass 6 - Sidebar toggle, header utilities, and gradient surface
-
-- Earlier finding: [P2] the collapse control still used the earlier compact circular-arrow treatment, while Settings, Appearance, and Dark Mode remained grouped in the sidebar footer and the sidebar surface was nearly flat.
-- Fix made: render a `34 x 34px`, `9px`-radius bordered collapse button with the installed Font Awesome chevron; move Dark Mode, Help, Bell, and Settings into that exact header order; remove Appearance; and add subtle lavender/pink radial color washes to the sidebar surface.
-- Post-fix evidence: browser computed style reports a `34 x 34px` button, `9px` radius, purple `rgb(101, 66, 215)` chevron, and the two requested radial gradients. DOM checks confirm Appearance and sidebar Settings are absent. Desktop expanded/collapsed, dark mode, and `430 x 932` mobile screenshots were inspected; mobile document width equals viewport width (`430px`) and console remains at `0` errors and `0` warnings.
-
-### Pass 7 - Exact toggle crop and compact menu typography
-
-- Earlier finding: [P2] the `34 x 34px`, `9px`-radius toggle remained visibly smaller and sharper than the latest selected crop, and the final sidebar override had enlarged menu labels to `14px/600`.
-- Fix made: match the selected crop with a `44 x 44px` toggle, `12px` radius, `14px` solid Font Awesome chevron, bright purple `#9d00ff`, and a `16px` expanded right inset. Restore the original compact menu contract from the first v2 backup: `12.5px/500`, with `700` reserved for the active item.
-- Post-fix evidence: browser computed style confirms `44 x 44px`, `12px`, `rgb(157, 0, 255)`, a `16.67px` rendered right gap, and menu type at `12.5px/500`. Expanded, focused-toggle, and collapsed captures were inspected against the selected crop; console remains at `0` errors and `0` warnings.
-
-### Pass 8 - Panel-style sidebar SVG icon
-
-- Earlier finding: [P2] the previous interpretation reproduced a rounded button containing a standalone chevron, while the clarified target is a panel/sidebar icon with its own rounded outline, left separator, and internal directional chevron.
-- Fix made: replace the Font Awesome chevron with a dedicated `24 x 24px` inline SVG using the target panel geometry. Keep the outer button visually transparent, preserve a `40 x 40px` hit area, and rotate only the chevron in collapsed state so the left panel separator remains fixed.
-- Post-fix evidence: focused captures confirm the expanded icon uses the left-facing panel-close glyph and the collapsed icon uses the right-facing panel-open glyph. Both retain the target dark-gray stroke after interaction; the toggle still updates `aria-expanded`, layout state, and saved sidebar state. Browser console remains at `0` errors and `0` warnings.
-
-### Pass 9 - Compact toggle, footer typography, and menu-group rhythm
-
-- Earlier finding: [P2] the clarified panel SVG rendered at `24px`, profile/footer labels felt undersized beside the `12.5px` navigation, and the active item plus the hovered item below it had too little vertical separation.
+- generic [ref=f2e2]:
+  - generic [ref=f2e3]:
+    - generic "LaraPhoenix CMS" [ref=f2e4]
+    - region "scrollable content" [ref=f2e10]:
+      - generic [ref=f2e12]:
+        - generic [ref=f2e13]:
+          - link " Visit Site" [ref=f2e14] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna
+            - generic [ref=f2e15]: 
+            - generic [ref=f2e17]: Visit Site
+          - link " Dashboard" [ref=f2e18] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/dashboard
+            - generic [ref=f2e19]: 
+            - generic [ref=f2e21]: Dashboard
+          - link " Messages" [ref=f2e22] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/chat
+            - generic [ref=f2e23]: 
+            - generic [ref=f2e25]: Messages
+        - generic [ref=f2e26]: All Menus
+        - generic [ref=f2e28]:
+          - link " Manage Articles" [ref=f2e29] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/manage_article
+            - generic [ref=f2e30]: 
+            - generic [ref=f2e32]: Manage Articles
+          - link " Manage Cover Image" [ref=f2e33] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/manage_coverimage
+            - generic [ref=f2e34]: 
+            - generic [ref=f2e36]: Manage Cover Image
+          - link " File Manager" [ref=f2e37] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/filemanager
+            - generic [ref=f2e38]: 
+            - generic [ref=f2e40]: File Manager
+    - link " Settings" [ref=f2e42] [cursor=pointer]:
+      - /url: https://laravel-13-phoenix.aruna/awesome_admin
+      - generic [ref=f2e43]: 
+      - generic [ref=f2e45]: Settings
+  - generic [ref=f2e46]:
+    - generic [ref=f2e47]:
+      - text: 
+      - button "Toggle sidebar" [expanded] [ref=f2e49] [cursor=pointer]
+      - generic [ref=f2e54]:
+        - generic [ref=f2e55]: 
+        - searchbox "" [ref=f2e56]
+      - generic [ref=f2e57]:
+        - generic [ref=f2e58]:
+          - button "" [ref=f2e59] [cursor=pointer]
+          - text: 
+        - generic [ref=f2e61]:
+          - button "Open profile menu" [expanded] [active] [ref=f2e62] [cursor=pointer]:
+            - img "Current avatar image" [ref=f2e64]
+            - generic [ref=f2e65]:
+              - strong [ref=f2e66]: Administrator
+              - generic [ref=f2e67]: Super Admin
+            - generic [ref=f2e68]: 
+          - generic [ref=f2e382]:
+            - generic [ref=f2e383]:
+              - heading "Appearance" [level=6] [ref=f2e384]
+              - button "Dark Mode" [ref=f2e385] [cursor=pointer]:
+                - generic [ref=f2e386]: 
+              - generic [ref=f2e388]:
+                - generic [ref=f2e389]: Choose Theme Color
+                - generic [ref=f2e390]:
+                  - generic "#1FA675" [ref=f2e392] [cursor=pointer]
+                  - generic "#9D00FF" [ref=f2e394] [cursor=pointer]
+                  - generic "#1DA1F2" [ref=f2e396] [cursor=pointer]
+                  - generic "#FF5733" [ref=f2e398] [cursor=pointer]
+                  - generic "#FFC107" [ref=f2e400] [cursor=pointer]
+                  - generic "#E91E63" [ref=f2e402] [cursor=pointer]
+                  - generic "#6C5CE7" [ref=f2e404] [cursor=pointer]
+            - link " Profile" [ref=f2e406] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/profile
+              - generic [ref=f2e407]: 
+              - generic [ref=f2e408]: Profile
+            - link " Settings" [ref=f2e409] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/awesome_admin
+              - generic [ref=f2e410]: 
+              - generic [ref=f2e411]: Settings
+            - link " Logout" [ref=f2e413] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/auth/logout
+              - generic [ref=f2e414]: 
+              - generic [ref=f2e415]: Logout
+    - generic [ref=f2e74]:
+      - generic [ref=f2e76]:
+        - heading "Manage Article" [level=4] [ref=f2e78]
+        - generic [ref=f2e80]:
+          - textbox "Search article by Title" [ref=f2e83]
+          - generic [ref=f2e84]:
+            - link " Add Post" [ref=f2e85] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/manage_article/add
+              - generic [ref=f2e86]: 
+              - text: Add Post
+            - link "Category List" [ref=f2e87] [cursor=pointer]:
+              - /url: javascript:void(0)
+      - generic [ref=f2e89]:
+        - generic [ref=f2e91]:
+          - generic [ref=f2e93]:
+            - generic [ref=f2e94]: Change Status
+            - combobox [ref=f2e95]:
+              - option "All" [selected]
+              - option "Publish"
+              - option "Draft"
+              - option "Pending"
+          - button "Submit" [ref=f2e97] [cursor=pointer]
+        - generic [ref=f2e98]:
+          - generic [ref=f2e99]: Filter By Status
+          - combobox [ref=f2e100]:
+            - option "All" [selected]
+            - option "Publish"
+            - option "Draft"
+            - option "Pending"
+        - generic [ref=f2e101]:
+          - generic [ref=f2e102]: Filter By Category
+          - combobox [ref=f2e103]:
+            - option "All" [selected]
+            - option "Uncategorized"
+            - option "Test 3 Edited"
+            - option "Test 4"
+            - option "Test 5"
+        - generic [ref=f2e104]:
+          - generic [ref=f2e105]: Filter By Scheduled
+          - combobox [ref=f2e106]:
+            - option "All" [selected]
+            - option "Scheduled"
+            - option "No Scheduled"
+      - generic [ref=f2e112]:
+        - table [ref=f2e115]:
+          - rowgroup [ref=f2e116]:
+            - row [ref=f2e117]:
+              - columnheader [ref=f2e118]:
+                - checkbox [ref=f2e121]
+              - columnheader "Title" [ref=f2e122]
+              - columnheader "Author" [ref=f2e123]
+              - columnheader "Scheduled" [ref=f2e124]
+              - columnheader "Status" [ref=f2e125]
+          - rowgroup [ref=f2e126]:
+            - row [ref=f2e127]:
+              - cell [ref=f2e128]:
+                - checkbox [ref=f2e131]
+              - cell "Testing" [ref=f2e132] [cursor=pointer]
+              - cell "testing_account101" [ref=f2e136]
+              - cell "Scheduled" [ref=f2e137]
+              - cell "Publish" [ref=f2e139]
+              - text:  
+            - row [ref=f2e143]:
+              - cell [ref=f2e144]:
+                - checkbox [ref=f2e147]
+              - cell "Testing 2" [ref=f2e148] [cursor=pointer]
+              - cell "testing_account101" [ref=f2e152]
+              - cell "Scheduled" [ref=f2e153]
+              - cell "Publish" [ref=f2e155]
+              - text:  
+            - row [ref=f2e159]:
+              - cell [ref=f2e160]:
+                - checkbox [ref=f2e163]
+              - cell "Testing 2" [ref=f2e164] [cursor=pointer]
+              - cell "testing_account101" [ref=f2e168]
+              - cell "No Scheduled" [ref=f2e169]
+              - cell "Pending" [ref=f2e171]
+              - text:  
+            - row [ref=f2e175]:
+              - cell [ref=f2e176]:
+                - checkbox [ref=f2e179]
+              - cell "Testing 3" [ref=f2e180] [cursor=pointer]
+              - cell "testing_account101" [ref=f2e184]
+              - cell "No Scheduled" [ref=f2e185]
+              - cell "Pending" [ref=f2e187]
+              - text:  
+            - row [ref=f2e191]:
+              - cell [ref=f2e192]:
+                - checkbox [ref=f2e195]
+              - cell "Testing 4" [ref=f2e196] [cursor=pointer]
+              - cell "Administrator" [ref=f2e200]
+              - cell "Scheduled" [ref=f2e201]
+              - cell "Publish" [ref=f2e203]
+              - text:  
+            - row [ref=f2e207]:
+              - cell [ref=f2e208]:
+                - checkbox [ref=f2e211]
+              - cell "Testing 4" [ref=f2e212] [cursor=pointer]
+              - cell "Administrator" [ref=f2e216]
+              - cell "No Scheduled" [ref=f2e217]
+              - cell "Publish" [ref=f2e219]
+              - text:  
+            - row [ref=f2e223]:
+              - cell [ref=f2e224]:
+                - checkbox [ref=f2e227]
+              - cell "Testing 4" [ref=f2e228] [cursor=pointer]
+              - cell "Administrator" [ref=f2e232]
+              - cell "Scheduled" [ref=f2e233]
+              - cell "Publish" [ref=f2e235]
+              - text:  
+            - row [ref=f2e239]:
+              - cell [ref=f2e240]:
+                - checkbox [ref=f2e243]
+              - cell "Testing 4" [ref=f2e244] [cursor=pointer]
+              - cell "Administrator" [ref=f2e248]
+              - cell "Scheduled" [ref=f2e249]
+              - cell "Publish" [ref=f2e251]
+              - text:  
+            - row [ref=f2e255]:
+              - cell [ref=f2e256]:
+                - checkbox [ref=f2e259]
+              - cell "Testing Testing" [ref=f2e260] [cursor=pointer]
+              - cell "Administrator" [ref=f2e264]
+              - cell "No Scheduled" [ref=f2e265]
+              - cell "Publish" [ref=f2e267]
+              - text:  
+            - row [ref=f2e271]:
+              - cell [ref=f2e272]:
+                - checkbox [ref=f2e275]
+              - cell "Testing Testing" [ref=f2e276] [cursor=pointer]
+              - cell "Administrator" [ref=f2e280]
+              - cell "No Scheduled" [ref=f2e281]
+              - cell "Publish" [ref=f2e283]
+              - text:  
+            - row [ref=f2e287]:
+              - cell [ref=f2e288]:
+                - checkbox [ref=f2e291]
+              - cell "Testing Testing" [ref=f2e292] [cursor=pointer]
+              - cell "Administrator" [ref=f2e296]
+              - cell "No Scheduled" [ref=f2e297]
+              - cell "Publish" [ref=f2e299]
+              - text:  
+            - row [ref=f2e303]:
+              - cell [ref=f2e304]:
+                - checkbox [ref=f2e307]
+              - cell "Testing Testing" [ref=f2e308] [cursor=pointer]
+              - cell "Administrator" [ref=f2e312]
+              - cell "No Scheduled" [ref=f2e313]
+              - cell "Publish" [ref=f2e315]
+              - text:  
+            - row [ref=f2e319]:
+              - cell [ref=f2e320]:
+                - checkbox [ref=f2e323]
+              - cell "AWDAWD" [ref=f2e324] [cursor=pointer]
+              - cell "Administrator" [ref=f2e328]
+              - cell "No Scheduled" [ref=f2e329]
+              - cell "Publish" [ref=f2e331]
+              - text:  
+            - row [ref=f2e335]:
+              - cell [ref=f2e336]:
+                - checkbox [ref=f2e339]
+              - cell "AWDASDAWDW" [ref=f2e340] [cursor=pointer]
+              - cell "Administrator" [ref=f2e344]
+              - cell "No Scheduled" [ref=f2e345]
+              - cell "Publish" [ref=f2e347]
+              - text:  
+            - row [ref=f2e351]:
+              - cell [ref=f2e352]:
+                - checkbox [ref=f2e355]
+              - cell "AWDASDAWDW" [ref=f2e356] [cursor=pointer]
+              - cell "Administrator" [ref=f2e360]
+              - cell "No Scheduled" [ref=f2e361]
+              - cell "Publish" [ref=f2e363]
+              - text:  
+        - generic [ref=f2e368]:
+          - generic [ref=f2e369]: "Total Data: 40"
+          - list [ref=f2e371]:
+            - listitem [ref=f2e372]:
+              - generic: 
+            - listitem [ref=f2e373]:
+              - generic [ref=f2e374] [cursor=pointer]: "1"
+            - listitem [ref=f2e375]:
+              - generic [ref=f2e376] [cursor=pointer]: "2"
+            - listitem [ref=f2e377]:
+              - generic [ref=f2e378] [cursor=pointer]: "3"
+            - listitem [ref=f2e379]:
+              - generic [ref=f2e380] [cursor=pointer]:                                                                                                                                                                                                                                                                                                                                                                                                                                              cal separation.
 - Fix made: reduce the SVG to `20 x 20px`; set profile name/email/logout to `13px`, `10.5px`, and `12.5px`; increase expanded item spacing to `6px`; and apply `4px` top / `8px` bottom group edges through `:first-child` and `:last-child`.
 - Post-fix evidence: computed styles confirm every requested value. The expanded sidebar, focused footer crop, and `Messages` hover immediately below active `Dashboard` were visually inspected; backgrounds remain separated and the menu-group edges are balanced. Browser console remains at `0` errors and `0` warnings.
 
@@ -194,7 +351,7 @@ final result: passed
 
 - [P2] A collapsed single menu item could open its own tooltip and a later parent menu's floating submenu. Root cause: `getPopover()` compared DOM `tagName` with lowercase `'a'`, so traversal never stopped at the next anchor. Fix: stop on `nextEl.matches('a.list-group-item')` and make tooltip/popover display mutually exclusive.
 - [P2] The implementation content surface sampled at `#FAFBF8`, while the reference blank content surface sampled at `#FEFEFC`. Fix: use `#FEFEFC` for the V3 content surface.
-- [P2] Desktop content gutters were initially `18px 16px 28px`, then over-corrected to a V3-specific `8px 8px 18px` inset that looked cramped on the user's laptop. Final fix: remove the V3 padding override entirely so the established base spacing applies (`24px 22px 32px` desktop and `18px 14px 28px` responsive) without changing `@yield('content')` or page-specific content.
+- [P2] Desktop content gutters were `18px 16px 28px`, visibly looser than the reference's approximately `8-10px` inset. Fix: use `10px 8px 18px` without changing `@yield('content')` or any page-specific content.
 - [P2] The right content panel still had square outer corners and no visible frame gap. Fix: give `.ph-main-panel` a `12px` radius with an `8px 8px 8px 0` outer margin, keep the left edge aligned to the sidebar, and expose a neutral shell-gutter surface around the top, right, and bottom edges.
 - [P2] The latest runtime screenshot still showed a divider on the sidebar/content boundary that is absent from the selected reference treatment. Root cause: the V3-specific sidebar rule explicitly set `border-right: 1px solid var(--ph-v3-border)`, while the outer content frame also drew a left border below the header. Fix: use `border-right: 0` on the V3 sidebar and `border-left: 0` on the V3 content frame so neither layer redraws the divider.
 - [P2] The latest screenshot showed the header outside the rounded content canvas, producing an `8px` gray strip between the header and the page while the reference keeps both surfaces inside one continuous right-side shell. Fix: move the `8px 8px 8px 0` gutter, `12px` radius, clipping, and content surface to `.ph-layout-right`; restore `.ph-main-panel` to zero margin, border, radius, and shadow.
@@ -217,51 +374,7 @@ final result: passed
 - Theme database registration and activation: `arunika_v3`, theme ID `7`.
 - Post-color-correction authenticated screenshot comparison is still pending. The controlled browser redirects to `/auth/login`, and the authenticated Chrome extension session is unavailable. The served stylesheet returns HTTP `200` and contains `--ph-v3-sidebar-surface: #efefed`; no stored credentials were submitted.
 
-### Authenticated header-fidelity pass
-
-- Current source visual truth: `C:\Users\aruna\Downloads\Dashboard crop rapat ke body.png`, copied to `D:\Laragon\www\laravel-13-phoenix\artifacts\design-audit\arunika-v3-20260716\00-reference-dashboard.png` (`852 x 693`).
-- Production route: `https://laravel-13-phoenix.aruna/manage_article`.
-- Browser path: Playwright CLI using the authenticated local Chrome-compatible session previously approved by the user after the in-app Browser path was blocked by Windows sandboxing.
-- Latest expanded implementation: `C:\Users\aruna\.codex\visualizations\2026\07\16\019f6b4e-fae7-7f40-8fdb-0a7f83a5161a\arunika-v3-after-expanded.png` (`852 x 693`, light theme, sidebar expanded).
-- Combined full-view comparison: `C:\Users\aruna\.codex\visualizations\2026\07\16\019f6b4e-fae7-7f40-8fdb-0a7f83a5161a\arunika-v3-reference-vs-after.png`. The reference and implementation were placed in one `1704 x 693` image before the final visual judgment.
-- Focused-region evidence: `arunika-v3-after-profile-menu.png` verifies the simplified right header and relocated appearance controls; `arunika-v3-after-collapsed.png` verifies the stable header toggle in collapsed state; `arunika-v3-after-mobile.png` and `arunika-v3-after-mobile-nav.png` verify the narrow shell and mobile drawer.
-- Follow-up scale/padding evidence: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-8a39910b-d1b1-4dff-9c3f-8dbc73f345dd.png` is the user-reported inconsistent-scale state; `C:\Users\aruna\.codex\visualizations\2026\07\16\019f6b4e-fae7-7f40-8fdb-0a7f83a5161a\arunika-v3-scale-padding-fixed.png` is the authenticated `1536 x 704` post-fix state with the profile menu open.
-- Sidebar/divider follow-up evidence: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-fc55738b-bd60-4554-9c6e-179214f07850.png` is the user-reported uneven divider state; `C:\Users\aruna\.codex\visualizations\2026\07\16\019f6b4e-fae7-7f40-8fdb-0a7f83a5161a\arunika-v3-sidebar-divider-fixed.png` is the authenticated `852 x 693` post-fix state.
-- Final V2-sidebar follow-up evidence: `arunika-v3-v2-sidebar-expanded.png` and `arunika-v3-v2-sidebar-collapsed.png` verify the production `256px`/`76px` sidebar states; `arunika-v3-v2-sidebar-profile-open.png` verifies the relocated complete profile menu; `arunika-v3-v2-sidebar-mobile.png` verifies the profile menu contained inside the `256px` mobile drawer. All files are under `C:\Users\aruna\.codex\visualizations\2026\07\16\019f6b4e-fae7-7f40-8fdb-0a7f83a5161a`.
-- State matching note: the source shows an Automations page while the implementation shows the dynamic Laravel Manage Article page. The fidelity judgment is intentionally limited to the approved sidebar/header/content shell; page-specific cards, tables, copy, and menu names are not literal clone targets.
-
-#### Comparison history and fixes
-
-- Earlier [P1] shell proportion mismatch: the reference pass reduced the desktop sidebar from `256px` to `160px`. The user subsequently requested exact Arunika V2 parity, so the final expanded desktop width is restored to `256px`; collapsed desktop remains `76px` and the mobile drawer remains `256px`.
-- Earlier [P1] control-placement mismatch: collapse lived inside the sidebar. Fix: the same accessible toggle now lives in `.ph-header-nav-control` before search, with a `24px` vertical divider; its expanded/collapsed chevron state remains connected through the sidebar sibling selector.
-- Earlier [P1] right-header mismatch: palette and dark mode crowded the primary header while profile name and role disappeared at the comparison viewport. The first fix placed notification plus full profile in the header; the final user-approved correction keeps only notification in the header and moves the same complete profile dropdown to the bottom of the sidebar.
-- Earlier [P2] density mismatch: the header was `60px` and search was `320 x 36px`. Fix: header is `52px` and desktop search is `220 x 32px`.
-- Follow-up [P2] scale mismatch from the user's `1920 x 1008` Chrome screenshot: the profile area mixed `9-10px` labels, `11/9px` identity text, Bootstrap's default `16px` menu items, and a `28px` page heading. Fix: use a coherent `10px` micro-label, `12px` navigation/identity, `13px` menu/body, and `22px` page-heading scale; align menu icons and rows to the same `34px` rhythm.
-- Follow-up [P2] cramped content inset: remove both desktop and mobile `.ph-theme-arunika-v3 .ph-scrollable-content` padding declarations so the shared shell padding controls spacing at every breakpoint.
-- Follow-up [P2] uneven header-divider rhythm: runtime geometry measured `15px` from the visible collapse icon to the divider but only `8px` from the divider to search. Fix: add `7px` right margin to the divider so both visible gaps measure exactly `15px`.
-- Final [P1] sidebar consistency correction: replace V3's compressed `34px`/`12px` navigation with Arunika V2's `42px`/`14px` row contract, V2 padding/category/submenu rhythm, surface, border, active state, and footer user card. Remove the standalone sidebar Settings shortcut; Settings remains available exactly once inside the relocated profile menu.
-- Post-fix inspection found no remaining actionable P0/P1/P2 issue in the selected shell scope. The dynamic Manage Article content remains intentionally denser/larger than the Automations reference content.
-
-#### Required fidelity surfaces
-
-- Fonts and typography: the existing Nunito family remains intact; final sidebar labels use Arunika V2's `14px` scale, category labels use `11px`, profile identity uses `14/12.5px`, profile menu rows remain `13px`, and the Theme Manager heading is capped at `22px`. Truncation protects longer dynamic menu names.
-- Spacing and layout rhythm: Arunika V2-aligned `256px` expanded sidebar, `76px` collapsed sidebar, `42px` navigation rows, `65px` expanded profile card, `52px` header, `220px` search, equal `15px` visible gaps around the divider, `8px` outer canvas gutter, `12px` canvas radius, and inherited content padding (`24px 22px 32px` desktop; `18px 14px 28px` responsive) are verified from runtime DOM measurements.
-- Colors and visual tokens: the final sidebar intentionally follows Arunika V2's `--ph-sidebar-surface`, border, hover, panel, and active-state tokens; the `#FEFEFC` V3 content surface remains unchanged. The saved light theme was restored after interaction testing.
-- Image quality and assets: existing uploaded site logo/avatar and Font Awesome icons are retained; no placeholder, code-drawn replacement, or generated asset was introduced.
-- Copy and content: authenticated name/role, dynamic Laravel menu labels, notifications, and page content remain server-driven. Appearance labels describe real working controls.
-
-#### Interaction and responsive proof
-
-- Desktop collapse changed the measured sidebar from `256px` to `76px` while the toggle remained in the header; expanding restored `256px`.
-- The relocated sidebar profile dropdown exposed Appearance, Dark Mode, seven theme swatches, Profile, Settings, and Logout. In expanded desktop it measured inside the viewport at `x=249.33`, `y=566.17`, `220 x 319.83`; in collapsed desktop it remained visible to the right of the `76px` sidebar. Dark Mode changed `data-bs-theme` to `dark` and was restored to `light`.
-- Mobile at `390 x 844` measured document/body scroll width exactly `390px`; the existing hamburger opened the `256px` drawer. The dropdown stayed inside the drawer at `x=14`, `y=437.17`, `227.33 x 319.83`, immediately above the profile card, with no horizontal overflow.
-- Browser console after the interaction loop: `0` errors and `0` warnings.
-- Focused theme static regressions for the final sidebar/profile hierarchy: `8 passed`, `0 failed`.
-- Complete Arunika V3 Node regressions: `15 passed`, `0 failed`.
-- Full Laravel suite: `72 passed`, `525 assertions`.
-- Blade clear/cache and `git diff --check`: passed.
-
-final result: passed
+final result: blocked
 
 ## 2026-07-16 - Theme Manager production implementation
 
@@ -491,3 +604,43 @@ final result: passed
 - No Laravel controller, route, database, or production appearance file was modified by this prototype.
 
 final result: passed
+
+## 2026-07-17 - Arunika V3 profile dropdown reference card
+
+- Source visual truth: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-bbb57529-a1e5-41e8-9715-c4f9159c0781.png`.
+- Current-state screenshot supplied by the user: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-fc4c5a4d-0aa9-4717-9fae-ab9cb5587429.png`.
+- Intended viewport/state: desktop, light theme, expanded Arunika V3 sidebar, and open sidebar profile dropdown.
+- Implemented structure: dynamic user summary, Profile, administrator-only Settings, Dark Mode with switch, collapsible Theme Color with the existing seven swatches, and separated Logout.
+- Implemented visual contract: `240px` card, `14px` radius, theme-aware surface and border, soft elevation, `58px` user summary, and `40px` action rows.
+- Interaction contract: Bootstrap dropdown uses outside-only auto-close; Dark Mode retains `toggleTheme()` and its existing state synchronization; Theme Color retains `#color-picker-container` and existing color persistence.
+- Focused static verification: passed (`6/6` in `tests/arunika-v3-header-actions-static.test.mjs`).
+- Laravel verification: passed (`72` tests and `520` assertions).
+- Served asset verification: local CSS returned HTTP `200` and contained the new profile summary and Dark Mode switch selectors.
+- Refinement from the user's latest screenshot: removed the trailing profile-summary chevron and removed the divider directly below the summary; the divider before Logout remains intact.
+- Menu-row spacing refinement: direct child actions now use `3px` vertical margins, with `:first-child` and `:last-child` edge resets so adjacent hover surfaces no longer touch.
+- Implementation screenshot: unavailable. The Product Design browser redirected `http://laravel-13-phoenix.aruna/dashboard` to `/auth/login`, and no credentials were submitted.
+- Combined source-and-implementation comparison: blocked because the required authenticated open-dropdown screenshot could not be captured in the available browser session.
+
+## 2026-07-17 - Arunika V3 sidebar hover contrast
+
+- Source visual truth: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-26d0ce7e-f7fd-4baf-9e74-cf52af633b7f.png`.
+- Preserved the existing continuous, theme-responsive sidebar gradient without changing its color stops or composition.
+- Decoupled hover feedback from the ambient gradient through dedicated Arunika V3 tokens: a subtle `94%` white mix in light mode and `rgba(255, 255, 255, 0.09)` in dark mode.
+- Added a restrained hover shadow so the menu row remains legible over both lighter and stronger portions of the gradient.
+- Kept the existing active navigation state unchanged and visually stronger than hover.
+- Focused static verification: passed (`2/2` in `tests/arunika-v3-sidebar-shell-surface-static.test.mjs`).
+- Implementation screenshot: unavailable because the dashboard remains gated by `/auth/login` in the available browser session.
+- Combined source-and-implementation comparison: blocked pending a fresh authenticated screenshot after `Ctrl+F5`.
+
+## 2026-07-17 - Arunika V3 collapsed logo and compact theme previews
+
+- Source visual truth: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-43c76e8c-00ec-41f3-984d-1fe1a63cf80c.png`.
+- Collapsed-logo correction: the V3 logo container now owns the positioning context, and the site-name initial is centered at `50% / 50%` inside the same `15px`-offset container used by the expanded logo.
+- Theme-preview reference: the existing Manage Appearance `.radio-card` contract uses a `130px` preview height and compact multi-column layout.
+- Theme Manager correction: preview height is now `130px`; desktop cards auto-fill from `200px` to `240px` and remain aligned to the start edge instead of stretching across two oversized columns.
+- Interaction scope preserved: Active/Selected states, keyboard selection, Live Preview, Save/Cancel, theme metadata, and the single-column mobile layout remain unchanged.
+- Focused static verification: passed (`4/4` Arunika V3 content-frame checks and `3/3` Theme Manager production checks).
+- Implementation screenshots: unavailable because the required authenticated Dashboard and Manage Themes states cannot be captured in the available browser session without login credentials.
+- Combined source-and-implementation comparison: blocked pending fresh authenticated screenshots after `Ctrl+F5`.
+
+final result: blocked

@@ -16,7 +16,7 @@
 
 	<!-- Custom CSS -->
 	<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">
-	<link href="{{ asset('assets/css/themes/arunika_v1/arunika_v1.css?v=').time() }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/themes/arunika_mosaic/arunika_mosaic.css?v=').time() }}" rel="stylesheet">
 
 	{{-- Bootstrap Icons via CDN (tidak ada di asset lokal) --}}
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">

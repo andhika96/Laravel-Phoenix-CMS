@@ -1004,7 +1004,7 @@
 										<span class="site-typography-heading-icon"><i class="fas fa-font-case" aria-hidden="true"></i></span>
 										<div>
 											<strong id="typographySettingsTitle">{{ t('Typography Settings') }}</strong>
-											<span>{{ t('Choose the default font family and base size for Arunika v2.') }}</span>
+											<span>{{ t('Choose the default font family and base size for Arunika Aurora.') }}</span>
 										</div>
 									</div>
 									<span class="badge rounded-pill text-bg-light border"><i class="far fa-eye me-1"></i> {{ t('Live preview') }}</span>
@@ -1069,7 +1069,7 @@
 
 												<div class="site-typography-preview-canvas">
 													<div class="site-typography-preview-copy">
-														<p class="site-typography-preview-eyebrow">Arunika v2 typography</p>
+														<p class="site-typography-preview-eyebrow">Arunika Aurora typography</p>
 														<h6>{{ t('Simple, beautiful, and comfortable to read.') }}</h6>
 														<p>{{ t('Preview how headings, body text, navigation labels, and interface actions feel together before saving the global site typography.') }}</p>
 
@@ -1164,7 +1164,7 @@
 										</div>
 									</div>
 
-									<p class="form-text mt-3 mb-0">{{ t('When no custom logo is uploaded, Arunika v2 uses the default Phoenix logo.') }}</p>
+									<p class="form-text mt-3 mb-0">{{ t('When no custom logo is uploaded, Arunika Aurora uses the default Phoenix logo.') }}</p>
 								</div>
 
 								<div class="col-lg-6">
@@ -1172,7 +1172,7 @@
 										<div class="site-logo-preview-toolbar">
 											<div>
 												<strong class="d-block">{{ t('Sidebar Preview') }}</strong>
-												<span class="text-body-secondary small">{{ t('Review the logo in both Arunika v2 states.') }}</span>
+												<span class="text-body-secondary small">{{ t('Review the logo in both Arunika Aurora states.') }}</span>
 											</div>
 											<div class="site-logo-preview-controls" aria-label="{{ t('Sidebar preview width') }}">
 												<button id="expandedSiteLogoPreview" type="button" :class="{'is-active': ! siteLogo.isCollapsed}" :aria-pressed="! siteLogo.isCollapsed" v-on:click="setSiteLogoPreviewMode(false)">{{ t('Expanded') }}</button>

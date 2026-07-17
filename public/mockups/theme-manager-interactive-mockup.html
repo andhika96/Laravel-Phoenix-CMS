@@ -531,17 +531,17 @@
                 </div>
 
                 <div id="theme-grid" class="theme-grid" role="radiogroup" aria-label="Installed CMS themes">
-                    <article class="theme-card" data-theme-code="arunika_v1" role="radio" aria-checked="false" tabindex="0">
+                    <article class="theme-card" data-theme-code="arunika_mosaic" role="radio" aria-checked="false" tabindex="0">
                         <div class="theme-preview">
-                            <img src="assets/theme-manager/arunika-v1-theme-preview.png" alt="Arunika V1 dashboard theme preview">
+                            <img src="assets/theme-manager/arunika-mosaic-theme-preview.png" alt="Arunika Mosaic dashboard theme preview">
                             <span class="selection-mark" aria-hidden="true"><i class="fas fa-check"></i></span>
-                            <button class="preview-button" type="button" data-preview-theme="arunika_v1" aria-label="Open Arunika V1 live preview">
+                            <button class="preview-button" type="button" data-preview-theme="arunika_mosaic" aria-label="Open Arunika Mosaic live preview">
                                 <i class="fas fa-expand-alt" aria-hidden="true"></i> Live preview
                             </button>
                         </div>
                         <div class="theme-card-body">
                             <div class="theme-title-line">
-                                <h3 class="theme-title">Arunika V1</h3>
+                                <h3 class="theme-title">Arunika Mosaic</h3>
                                 <span class="theme-status"><span class="status-dot"></span><span class="status-copy">Available</span></span>
                             </div>
                             <p class="theme-description">The original Arunika experience with a light green navigation system and compact dashboard rhythm.</p>
@@ -552,17 +552,17 @@
                         </div>
                     </article>
 
-                    <article class="theme-card is-selected is-active" data-theme-code="arunika_v2" role="radio" aria-checked="true" tabindex="0">
+                    <article class="theme-card is-selected is-active" data-theme-code="arunika_aurora" role="radio" aria-checked="true" tabindex="0">
                         <div class="theme-preview">
-                            <img src="assets/theme-manager/arunika-v2-theme-preview.png" alt="Arunika V2 dashboard theme preview">
+                            <img src="assets/theme-manager/arunika-aurora-theme-preview.png" alt="Arunika Aurora dashboard theme preview">
                             <span class="selection-mark" aria-hidden="true"><i class="fas fa-check"></i></span>
-                            <button class="preview-button" type="button" data-preview-theme="arunika_v2" aria-label="Open Arunika V2 live preview">
+                            <button class="preview-button" type="button" data-preview-theme="arunika_aurora" aria-label="Open Arunika Aurora live preview">
                                 <i class="fas fa-expand-alt" aria-hidden="true"></i> Live preview
                             </button>
                         </div>
                         <div class="theme-card-body">
                             <div class="theme-title-line">
-                                <h3 class="theme-title">Arunika V2</h3>
+                                <h3 class="theme-title">Arunika Aurora</h3>
                                 <span class="theme-status"><span class="status-dot"></span><span class="status-copy">Active</span></span>
                             </div>
                             <p class="theme-description">A refined Arunika interface with stronger typography, improved navigation, and modern responsive controls.</p>
@@ -587,38 +587,38 @@
 
     <div id="themeSuccessToast" class="toast" role="status" aria-live="polite" aria-atomic="true">
         <span class="toast-icon"><i class="fas fa-check" aria-hidden="true"></i></span>
-        <div><strong>Theme updated</strong><span id="toastMessage">Arunika V2 is now active.</span></div>
+        <div><strong>Theme updated</strong><span id="toastMessage">Arunika Aurora is now active.</span></div>
     </div>
 
     <dialog id="themePreviewDialog" class="preview-dialog" aria-labelledby="previewDialogTitle">
         <header class="preview-dialog-header">
             <div class="preview-dialog-title">
-                <strong id="previewDialogTitle">Arunika V2 preview</strong>
+                <strong id="previewDialogTitle">Arunika Aurora preview</strong>
                 <span id="previewDialogMeta">Version 1.0.0 · CMS dashboard</span>
             </div>
             <button id="closeThemePreview" class="dialog-close" type="button" aria-label="Close theme preview"><i class="fas fa-times" aria-hidden="true"></i></button>
         </header>
         <div class="preview-dialog-stage">
-            <img id="previewDialogImage" src="assets/theme-manager/arunika-v2-theme-preview.png" alt="Arunika V2 enlarged dashboard preview">
+            <img id="previewDialogImage" src="assets/theme-manager/arunika-aurora-theme-preview.png" alt="Arunika Aurora enlarged dashboard preview">
         </div>
     </dialog>
 
     <script>
         const themeManagerState = {
-            activeThemeCode: 'arunika_v2',
-            pendingThemeCode: 'arunika_v2',
+            activeThemeCode: 'arunika_aurora',
+            pendingThemeCode: 'arunika_aurora',
         };
 
         const themeCatalog = {
-            arunika_v1: {
-                name: 'Arunika V1',
-                image: 'assets/theme-manager/arunika-v1-theme-preview.png',
-                alt: 'Arunika V1 enlarged dashboard preview',
+            arunika_mosaic: {
+                name: 'Arunika Mosaic',
+                image: 'assets/theme-manager/arunika-mosaic-theme-preview.png',
+                alt: 'Arunika Mosaic enlarged dashboard preview',
             },
-            arunika_v2: {
-                name: 'Arunika V2',
-                image: 'assets/theme-manager/arunika-v2-theme-preview.png',
-                alt: 'Arunika V2 enlarged dashboard preview',
+            arunika_aurora: {
+                name: 'Arunika Aurora',
+                image: 'assets/theme-manager/arunika-aurora-theme-preview.png',
+                alt: 'Arunika Aurora enlarged dashboard preview',
             },
         };
 

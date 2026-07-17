@@ -43,6 +43,21 @@ test('Awesome Admin menu and temporary production previews are present', () => {
     assert.match(menu, /cms\.admin\.awesome_admin\.themes/);
     assert.match(menu, /Manage Themes/);
     assert.doesNotMatch(mockup, /Browse installed themes/);
-    assert.equal(existsSync('public/assets/images/themes/previews/arunika-v1-theme-preview.png'), true);
-    assert.equal(existsSync('public/assets/images/themes/previews/arunika-v2-theme-preview.png'), true);
+    assert.equal(existsSync('public/assets/images/themes/previews/arunika-mosaic-theme-preview.png'), true);
+    assert.equal(existsSync('public/assets/images/themes/previews/arunika-aurora-theme-preview.png'), true);
+});
+
+test('production theme previews use the compact Manage Appearance sizing contract', () => {
+    const view = readFileSync(viewPath, 'utf8');
+
+    assert.match(
+        view,
+        /\.theme-manager-grid\s*\{[^}]*grid-template-columns:\s*repeat\(auto-fill,\s*minmax\(200px,\s*240px\)\);[^}]*gap:\s*14px;[^}]*justify-content:\s*start;/s,
+        'Theme cards should form a compact multi-column list instead of two oversized columns.',
+    );
+    assert.match(
+        view,
+        /\.theme-manager-preview\s*\{[^}]*height:\s*130px;[^}]*aspect-ratio:\s*auto;/s,
+        'Theme preview images should match the 130px preview height used by Manage Appearance.',
+    );
 });

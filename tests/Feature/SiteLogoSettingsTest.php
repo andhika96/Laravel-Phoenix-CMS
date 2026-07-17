@@ -103,10 +103,10 @@ class SiteLogoSettingsTest extends TestCase
 		])->assertUnprocessable()->assertJsonValidationErrors('site_logo_width_value');
 	}
 
-	public function test_arunika_v2_sidebar_only_uses_custom_logo_and_keeps_live_width_in_sync(): void
+	public function test_arunika_aurora_sidebar_only_uses_custom_logo_and_keeps_live_width_in_sync(): void
 	{
-		$layout = file_get_contents(resource_path('views/themes/arunika_v2/cms/cms_layout.blade.php'));
-		$styles = file_get_contents(public_path('assets/css/themes/arunika_v2/arunika_v2.css'));
+		$layout = file_get_contents(resource_path('views/themes/arunika_aurora/cms/cms_layout.blade.php'));
+		$styles = file_get_contents(public_path('assets/css/themes/arunika_aurora/arunika_aurora.css'));
 		$script = file_get_contents(public_path('assets/js/vue3/manage_config/vueV3-manage-config-2026.js'));
 
 		$this->assertStringContainsString('filled($siteConfig->site_logo)', $layout);

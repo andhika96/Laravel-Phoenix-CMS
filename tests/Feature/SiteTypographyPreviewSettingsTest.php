@@ -17,7 +17,7 @@ class SiteTypographyPreviewSettingsTest extends TestCase
 
 		$view = file_get_contents(resource_path('views/awesome_admin/awesome_admin_config.blade.php'));
 		$script = file_get_contents(public_path('assets/js/vue3/manage_config/vueV3-manage-config-2026.js'));
-		$styles = file_get_contents(public_path('assets/css/themes/arunika_v2/arunika_v2.css'));
+		$styles = file_get_contents(public_path('assets/css/themes/arunika_aurora/arunika_aurora.css'));
 		$migrationPath = database_path('migrations/2026_07_15_133500_add_typography_units_to_site_config_table.php');
 		$response = $this->get(route('cms.admin.awesome_admin.config'));
 
@@ -114,7 +114,7 @@ class SiteTypographyPreviewSettingsTest extends TestCase
 		}
 	}
 
-	public function test_saved_typography_is_rendered_as_global_arunika_v2_css_variables(): void
+	public function test_saved_typography_is_rendered_as_global_arunika_aurora_css_variables(): void
 	{
 		$this->actingAsAdministrator();
 		$originalConfig = Site_Config::findOrFail(1)->getAttributes();

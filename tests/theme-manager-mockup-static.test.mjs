@@ -13,16 +13,16 @@ test('theme manager mockup exposes the approved theme selection contract', () =>
 
     const html = readFileSync(mockupPath, 'utf8');
 
-    assert.match(html, /data-theme-code="arunika_v1"/);
-    assert.match(html, /data-theme-code="arunika_v2"/);
-    assert.match(html, /assets\/theme-manager\/arunika-v1-theme-preview\.png/);
-    assert.match(html, /assets\/theme-manager\/arunika-v2-theme-preview\.png/);
+    assert.match(html, /data-theme-code="arunika_mosaic"/);
+    assert.match(html, /data-theme-code="arunika_aurora"/);
+    assert.match(html, /assets\/theme-manager\/arunika-mosaic-theme-preview\.png/);
+    assert.match(html, /assets\/theme-manager\/arunika-aurora-theme-preview\.png/);
     assert.match(html, /id="cancelThemeChanges"/);
     assert.match(html, /id="saveThemeChanges"/);
     assert.match(html, /id="themePreviewDialog"/);
     assert.match(html, /id="themeSuccessToast"/);
-    assert.match(html, /activeThemeCode:\s*'arunika_v2'/);
-    assert.match(html, /pendingThemeCode:\s*'arunika_v2'/);
+    assert.match(html, /activeThemeCode:\s*'arunika_aurora'/);
+    assert.match(html, /pendingThemeCode:\s*'arunika_aurora'/);
     assert.match(html, /function saveThemeChanges\(\)/);
     assert.match(html, /function cancelThemeChanges\(\)/);
     assert.match(html, /function openThemePreview\(themeCode\)/);
@@ -30,8 +30,8 @@ test('theme manager mockup exposes the approved theme selection contract', () =>
 
 test('theme manager preview assets exist', () => {
     const assets = [
-        'public/mockups/assets/theme-manager/arunika-v1-theme-preview.png',
-        'public/mockups/assets/theme-manager/arunika-v2-theme-preview.png',
+        'public/mockups/assets/theme-manager/arunika-mosaic-theme-preview.png',
+        'public/mockups/assets/theme-manager/arunika-aurora-theme-preview.png',
     ];
 
     for (const asset of assets) {

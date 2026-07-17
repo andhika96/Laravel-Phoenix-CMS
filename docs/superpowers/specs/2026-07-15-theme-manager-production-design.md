@@ -38,3 +38,8 @@ Add a real Awesome Admin page for choosing the active CMS theme. The content are
 - Save updates `theme_settings` without creating a table and reloads into the selected CMS shell.
 - The page remains usable at desktop and mobile widths and has no actionable P0, P1, or P2 visual issues.
 
+## 2026-07-17 compact preview refinement
+
+- Match the existing Manage Appearance preview density by using a `130px` preview height.
+- Replace the two oversized equal columns with a compact auto-filling grid of `200px` to `240px` cards aligned from the start edge.
+- Preserve theme selection, Active/Selected status, Live Preview, Save/Cancel behavior, theme metadata, and the existing single-column mobile layout.

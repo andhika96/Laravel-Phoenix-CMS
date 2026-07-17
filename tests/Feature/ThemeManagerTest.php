@@ -22,9 +22,9 @@ class ThemeManagerTest extends TestCase
 		$this->get(route('cms.admin.awesome_admin.themes'))
 			->assertOk()
 			->assertSee('id="ph-app-theme-manager"', false)
-			->assertSee('Arunika V1')
-			->assertSee('Arunika V2')
-			->assertSee('Arunika V3')
+			->assertSee('Arunika Mosaic')
+			->assertSee('Arunika Aurora')
+			->assertSee('Arunika Canvas')
 			->assertDontSee('Browse installed themes');
 	}
 
@@ -32,7 +32,7 @@ class ThemeManagerTest extends TestCase
 	{
 		$this->actingAsAdministrator();
 		$originalSetting = DB::table('theme_settings')->where('id', 1)->first();
-		$targetThemeCode = $originalSetting?->theme_code === 'arunika_v3' ? 'arunika_v2' : 'arunika_v3';
+		$targetThemeCode = $originalSetting?->theme_code === 'arunika_canvas' ? 'arunika_aurora' : 'arunika_canvas';
 		$targetTheme = DB::table('themes')->where('theme_code', $targetThemeCode)->firstOrFail();
 
 		try

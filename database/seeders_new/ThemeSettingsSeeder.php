@@ -11,8 +11,8 @@ class ThemeSettingsSeeder extends Seeder
         [
             'id' => 1,
             'theme_id' => 5,
-            'theme_code' => 'arunika_v1',
-            'theme_name' => 'Arunika v1 Theme'
+            'theme_code' => 'arunika_mosaic',
+            'theme_name' => 'Arunika Mosaic'
         ]
         ]);
     }

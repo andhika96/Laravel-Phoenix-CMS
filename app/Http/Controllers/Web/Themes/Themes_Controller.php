@@ -9,12 +9,12 @@ class Themes_Controller extends Controller
 {
 	public function index()
 	{
-		return view('arunika_themes.arunika_v1');
+		return view('arunika_themes.arunika_mosaic');
 	}
 
 	public function gemini()
 	{
-		return view('arunika_themes.arunika_v1_gemini_extends');
+		return view('arunika_themes.arunika_mosaic_gemini_extends');
 	}
 }
 
