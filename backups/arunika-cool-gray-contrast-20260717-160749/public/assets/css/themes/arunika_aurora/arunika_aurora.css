@@ -5,7 +5,6 @@
 
 	/* VARIABLE DINAMIS */
 	--ph-theme-primary: #1FA675;
-	--ph-theme-surface-tint: var(--ph-theme-primary);
 
 	/* Base Settings */
 	--ph-sidebar-width-collapsed: 72px;
@@ -14,7 +13,7 @@
 
 	/* OTOMATISASI WARNA */
 	--ph-theme-primary-hover: color-mix(in srgb, var(--ph-theme-primary), black 10%);
-	--ph-theme-primary-subtle: var(--ph-theme-hover-surface, color-mix(in srgb, var(--ph-theme-primary), transparent 85%));
+	--ph-theme-primary-subtle: color-mix(in srgb, var(--ph-theme-primary), transparent 85%);
 	--ph-theme-primary-border-subtle: color-mix(in srgb, var(--ph-theme-primary), transparent 70%);
 
 	--ph-text-main: #ffffff;
@@ -44,16 +43,6 @@
 	--ph-mask-composite: source-in;
 }
 
-html[data-bs-theme=light][data-ph-theme-color="cool-gray"]
-{
-	--ph-theme-hover-surface: #E4E7EC;
-}
-
-html[data-bs-theme=dark][data-ph-theme-color="cool-gray"]
-{
-	--ph-theme-hover-surface: rgba(199, 204, 216, 0.16);
-}
-
 /* TEMA LIGHT */
 [data-bs-theme=light]
 {
@@ -63,7 +52,7 @@ html[data-bs-theme=dark][data-ph-theme-color="cool-gray"]
 
 	/* 1. BACKGROUND COLOR BODY: Disesuaikan dengan color theme (soft tint) */
 	/* Campuran 90% Putih + 10% Warna Tema. Jadi backgroundnya tidak putih polos, tapi agak kehijauan/keunguan soft */
-	--ph-bg-gradient: linear-gradient(135deg, color-mix(in srgb, var(--ph-theme-surface-tint), white 90%) 0%, #ffffff 100%);
+	--ph-bg-gradient: linear-gradient(135deg, color-mix(in srgb, var(--ph-theme-primary), white 90%) 0%, #ffffff 100%);
 
 	/* 2. BLEND MODE: MULTIPLY (Kunci agar warna tema terlihat di background terang) */
 	/* Multiply membuat warna tema 'menyatu' dengan background putih, hasilnya warna pastel soft */
@@ -81,7 +70,7 @@ html[data-bs-theme=dark][data-ph-theme-color="cool-gray"]
 	--ph-bg-popover: #ffffff;
 	--ph-bg-input: #ffffff;
 	--ph-bg-hover: rgba(0, 0, 0, 0.05);
-	--ph-theme-primary-subtle: var(--ph-theme-hover-surface, color-mix(in srgb, var(--ph-theme-primary), transparent 90%));
+	--ph-theme-primary-subtle: color-mix(in srgb, var(--ph-theme-primary), transparent 90%);
 
 	/* Untuk Light Mode: Campur warna tema dengan 60% Hitam.
        Ini membuat warna tema menjadi "versi gelapnya" agar kontras di background putih. */
@@ -145,8 +134,8 @@ html[data-bs-theme=dark][data-ph-theme-color="cool-gray"]
 	/* TEMA DARK */
 	--ph-bg-body: #000000;
 
-	--ph-bg-gradient: radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--ph-theme-surface-tint), black 55%) 0%, #11100d 60%),
-					  radial-gradient(circle at 10% 90%, color-mix(in srgb, var(--ph-theme-surface-tint), black 85%) 0%, #000000 60%);
+	--ph-bg-gradient: radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--ph-theme-primary), black 55%) 0%, #11100d 60%),
+					  radial-gradient(circle at 10% 90%, color-mix(in srgb, var(--ph-theme-primary), black 85%) 0%, #000000 60%);
 
 	--ph-bg-sidebar-expanded: transparent;
 	--ph-bg-panel: rgba(32, 31, 31, 0.6);
@@ -225,7 +214,7 @@ body::before, body::after {
 	width: 100%;
 	pointer-events: none;
 	z-index: 0;
-	background-color: var(--ph-theme-surface-tint);
+	background-color: var(--ph-theme-primary);
 	mix-blend-mode: var(--ph-pattern-blend-mode);
 	/*filter: blur(var(--ph-pattern-blur));*/
 	opacity: var(--ph-pattern-opacity);
@@ -2053,7 +2042,7 @@ a:hover
 	--ph-top-bar-height: 72px;
 	--ph-shell-border: #e9e7e8;
 	--ph-shell-soft: #f7f6f8;
-	--ph-shell-hover: var(--ph-theme-hover-surface, color-mix(in srgb, var(--ph-theme-primary), white 84%));
+	--ph-shell-hover: color-mix(in srgb, var(--ph-theme-primary), white 84%);
 	--ph-shell-shadow: 0 8px 24px rgba(38, 31, 52, 0.06);
 }
 
@@ -2067,14 +2056,14 @@ a:hover
 	--ph-bg-input: #ffffff;
 	--ph-bg-hover: var(--ph-shell-hover);
 	--ph-content-bg: #ffffff;
-	--ph-sidebar-surface: radial-gradient(ellipse 112% 42% at -8% 20%, color-mix(in srgb, var(--ph-theme-surface-tint), transparent 86%) 0%, transparent 72%), radial-gradient(ellipse 104% 20% at -6% 40%, color-mix(in srgb, var(--ph-theme-surface-tint), transparent 92%) 0%, transparent 72%), radial-gradient(ellipse 116% 48% at -5% 56%, color-mix(in srgb, var(--ph-theme-surface-tint), transparent 84%) 0%, transparent 72%), radial-gradient(ellipse 112% 38% at -3% 91%, color-mix(in srgb, var(--ph-theme-surface-tint), transparent 88%) 0%, transparent 74%), linear-gradient(180deg, #f7f8f8 0%, #f2f2f6 31%, #f5eff5 63%, #fcf9fa 100%);
-	--ph-header-surface: radial-gradient(circle at 62% 0%, color-mix(in srgb, var(--ph-theme-surface-tint), transparent 88%) 0%, transparent 43%), radial-gradient(circle at 35% 100%, color-mix(in srgb, var(--ph-theme-surface-tint), transparent 91%) 0%, transparent 40%), #ffffff;
+	--ph-sidebar-surface: radial-gradient(ellipse 112% 42% at -8% 20%, color-mix(in srgb, var(--ph-theme-primary), transparent 86%) 0%, transparent 72%), radial-gradient(ellipse 104% 20% at -6% 40%, color-mix(in srgb, var(--ph-theme-primary), transparent 92%) 0%, transparent 72%), radial-gradient(ellipse 116% 48% at -5% 56%, color-mix(in srgb, var(--ph-theme-primary), transparent 84%) 0%, transparent 72%), radial-gradient(ellipse 112% 38% at -3% 91%, color-mix(in srgb, var(--ph-theme-primary), transparent 88%) 0%, transparent 74%), linear-gradient(180deg, #f7f8f8 0%, #f2f2f6 31%, #f5eff5 63%, #fcf9fa 100%);
+	--ph-header-surface: radial-gradient(circle at 62% 0%, color-mix(in srgb, var(--ph-theme-primary), transparent 88%) 0%, transparent 43%), radial-gradient(circle at 35% 100%, color-mix(in srgb, var(--ph-theme-primary), transparent 91%) 0%, transparent 40%), #ffffff;
 	--ph-sidebar-border: var(--ph-shell-border);
 	--ph-sidebar-category-border: #d8d3dc;
 	--ph-text-main: #17151a;
 	--ph-text-muted: #69666f;
 	--ph-theme-text-accessible: #17151a;
-	--ph-theme-primary-subtle: var(--ph-theme-hover-surface, color-mix(in srgb, var(--ph-theme-primary), white 90%));
+	--ph-theme-primary-subtle: color-mix(in srgb, var(--ph-theme-primary), white 90%);
 	--ph-border-color: var(--ph-shell-border);
 }
 
@@ -2086,16 +2075,16 @@ a:hover
 	--ph-bg-card: #242328;
 	--ph-bg-popover: #242328;
 	--ph-bg-input: #242328;
-	--ph-bg-hover: var(--ph-theme-hover-surface, #2b2930);
+	--ph-bg-hover: #2b2930;
 	--ph-content-bg: #242328;
-	--ph-sidebar-surface: radial-gradient(ellipse at 50% 60%, color-mix(in srgb, var(--ph-theme-surface-tint), transparent 90%) 0%, transparent 78%), radial-gradient(ellipse at 70% 100%, color-mix(in srgb, var(--ph-theme-surface-tint), transparent 91%) 0%, transparent 70%), #1b1a1e;
-	--ph-header-surface: radial-gradient(circle at 62% 0%, color-mix(in srgb, var(--ph-theme-surface-tint), transparent 82%) 0%, transparent 43%), radial-gradient(circle at 35% 100%, color-mix(in srgb, var(--ph-theme-surface-tint), transparent 82%) 0%, transparent 40%), #1d1c20;
+	--ph-sidebar-surface: radial-gradient(ellipse at 50% 60%, color-mix(in srgb, var(--ph-theme-primary), transparent 90%) 0%, transparent 78%), radial-gradient(ellipse at 70% 100%, color-mix(in srgb, var(--ph-theme-primary), transparent 91%) 0%, transparent 70%), #1b1a1e;
+	--ph-header-surface: radial-gradient(circle at 62% 0%, color-mix(in srgb, var(--ph-theme-primary), transparent 82%) 0%, transparent 43%), radial-gradient(circle at 35% 100%, color-mix(in srgb, var(--ph-theme-primary), transparent 82%) 0%, transparent 40%), #1d1c20;
 	--ph-sidebar-border: #343238;
 	--ph-sidebar-category-border: #46424b;
 	--ph-text-main: #f7f6f8;
 	--ph-text-muted: #aaa6b0;
 	--ph-theme-text-accessible: #f7f6f8;
-	--ph-theme-primary-subtle: var(--ph-theme-hover-surface, color-mix(in srgb, var(--ph-theme-primary), transparent 82%));
+	--ph-theme-primary-subtle: color-mix(in srgb, var(--ph-theme-primary), transparent 82%);
 	--ph-border-color: #343238;
 }
 

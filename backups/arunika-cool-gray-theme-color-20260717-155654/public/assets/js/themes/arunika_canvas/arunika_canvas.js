@@ -1,7 +1,5 @@
 // --- 1. SETUP COLOR PICKER ---
-let colorMainList = ['#1FA675', '#9D00FF', '#1DA1F2', '#FF5733', '#FFC107', '#E91E63', '#6C5CE7', '#C7CCD8'];
-const coolGrayThemeColor = '#C7CCD8';
-const coolGrayInteractiveColor = '#667085';
+let colorMainList = ['#1FA675', '#9D00FF', '#1DA1F2', '#FF5733', '#FFC107', '#E91E63', '#6C5CE7', '#6B7280'];
 const pickerContainer = document.getElementById('color-picker-container');
 
 const patterns = {
@@ -10,12 +8,12 @@ const patterns = {
 		// SVG Kosong 1x1 pixel agar masking membuat layer jadi invisible
 		top: `url("data:image/svg+xml,%3Csvg width='1' height='1' viewBox='0 0 1 1' xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E")`,
 		bottom: 'none',
-		repeat: 'repeat', 
-		size: 'auto', 
-		composite: 'source-in', 
+		repeat: 'repeat',
+		size: 'auto',
+		composite: 'source-in',
 		display: 'none'
 	},
-	
+
 	// 1. WINTER (Snowflakes - Full Screen)
 	'winter': {
 		top: `url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Csymbol id='f1' viewBox='0 0 24 24'%3E%3Cpath d='M12 2v20M2 12h20M4.9 4.9l14.2 14.2M4.9 19.1L19.1 4.9' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M12 6l-2-2M12 6l2-2M12 18l-2 2M12 18l2 2M6 12l-2-2M6 12l-2 2M18 12l2-2M18 12l2 2' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3C/symbol%3E%3Csymbol id='f2' viewBox='0 0 24 24'%3E%3Cpath d='M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z' fill='black'/%3E%3C/symbol%3E%3C/defs%3E%3Cuse href='%23f1' x='20' y='20' width='40' height='40' /%3E%3Cuse href='%23f1' x='150' y='50' width='30' height='30' opacity='0.8'/%3E%3Cuse href='%23f1' x='300' y='10' width='50' height='50' /%3E%3Cuse href='%23f1' x='80' y='120' width='25' height='25' opacity='0.7'/%3E%3Cuse href='%23f1' x='350' y='150' width='35' height='35' /%3E%3Cuse href='%23f2' x='100' y='10' width='15' height='15' /%3E%3Cuse href='%23f2' x='250' y='80' width='20' height='20' opacity='0.6'/%3E%3Cuse href='%23f2' x='20' y='180' width='15' height='15' /%3E%3Cuse href='%23f2' x='200' y='200' width='20' height='20' opacity='0.5'/%3E%3Cuse href='%23f2' x='50' y='300' width='15' height='15' opacity='0.4'/%3E%3Ccircle cx='50' cy='60' r='2' fill='black'/%3E%3Ccircle cx='120' cy='180' r='3' fill='black'/%3E%3Ccircle cx='280' cy='50' r='2' fill='black'/%3E%3Ccircle cx='380' cy='280' r='3' fill='black' opacity='0.5'/%3E%3Ccircle cx='10' cy='100' r='2' fill='black'/%3E%3Ccircle cx='220' cy='120' r='1.5' fill='black'/%3E%3Ccircle cx='320' cy='220' r='2' fill='black' opacity='0.6'/%3E%3Ccircle cx='160' cy='30' r='1' fill='black'/%3E%3Ccircle cx='90' cy='250' r='2' fill='black' opacity='0.4'/%3E%3C/svg%3E")`,
@@ -69,72 +67,131 @@ const patterns = {
 	}
 };
 
-colorMainList.forEach(color => 
+if (pickerContainer)
 {
-	const col = document.createElement('div');
-	col.className = 'col-3'; 
-	col.innerHTML = `<div class="ph-color-switch" style="background-color: ${color};" onclick="changeMainColor('${color}')" title="${color}"></div>`;
-	pickerContainer.appendChild(col);
-});
-
-function applyMainColor(color)
-{
-	const normalizedColor = color.toUpperCase();
-	const isCoolGray = normalizedColor === coolGrayThemeColor;
-	const colorRoot = document.documentElement;
-
-	colorRoot.style.setProperty('--ph-theme-primary', isCoolGray ? coolGrayInteractiveColor : color);
-	colorRoot.style.setProperty('--ph-theme-surface-tint', color);
-
-	if (isCoolGray)
+	colorMainList.forEach(color =>
 	{
-		colorRoot.dataset.phThemeColor = 'cool-gray';
-	}
-	else
-	{
-		delete colorRoot.dataset.phThemeColor;
-	}
+		const col = document.createElement('div');
+		col.className = 'col-3';
+		col.innerHTML = `<div class="ph-color-switch" style="background-color: ${color};" onclick="changeMainColor('${color}')" title="${color}"></div>`;
+		pickerContainer.appendChild(col);
+	});
 }
 
-function changeMainColor(color) 
+function changeMainColor(color)
 {
-	applyMainColor(color);
+	document.documentElement.style.setProperty('--ph-theme-primary', color);
 	localStorage.setItem('theme-color', color);
 }
 
 // --- 2. SIDEBAR & SCROLLBAR LOGIC ---
 const sidebar = document.getElementById('sidebar');
 const scrollContent = document.getElementById('sidebar-scroll-content');
+const sidebarToggle = document.getElementById('sidebar-toggle');
 let sbInstance = null;
 
-function initSimpleBar() 
+function initSimpleBar()
 {
-	if ( ! sbInstance) 
+	if ( ! sbInstance)
 	{
-		sbInstance = new SimpleBar(scrollContent, 
-		{ 
+		sbInstance = new SimpleBar(scrollContent,
+		{
 			autoHide: true,
-			scrollbarMinSize: 30, 
+			scrollbarMinSize: 30,
 			clickOnTrack: false
 		});
 	}
 }
 
-function toggleSidebar() 
+function toggleSidebar()
 {
 	// UPDATE: Class updated to 'ph-expanded'
 	sidebar.classList.toggle('ph-expanded');
 	const isExpanded = sidebar.classList.contains('ph-expanded');
 	localStorage.setItem('sidebar-state', isExpanded ? 'expanded' : 'collapsed');
+	updateSidebarToggleState();
+	notifyLayoutResize();
 
-	if (sbInstance) 
+	if (sbInstance)
 	{
 		setTimeout(() =>
 		{
 			sbInstance.recalculate();
 
-		}, 350); 
+		}, 350);
 	}
+}
+
+function notifyLayoutResize()
+{
+	const runResize = () =>
+	{
+		window.dispatchEvent(new Event('resize'));
+
+		if (window.echarts)
+		{
+			document.querySelectorAll('[_echarts_instance_]').forEach((chart) =>
+			{
+				const chartInstance = window.echarts.getInstanceByDom(chart);
+				if (chartInstance)
+				{
+					chartInstance.resize();
+				}
+			});
+		}
+	};
+
+	runResize();
+	setTimeout(runResize, 280);
+}
+
+function updateSidebarToggleState()
+{
+	const isExpanded = sidebar.classList.contains('ph-expanded');
+
+	if (sidebarToggle)
+	{
+		sidebarToggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+		sidebarToggle.title = isExpanded ? 'Collapse sidebar' : 'Expand sidebar';
+	}
+
+}
+
+function normalizeSidebarPath(url)
+{
+	try
+	{
+		const parsed = new URL(url, window.location.origin);
+		return parsed.pathname.replace(/\/+$/, '') || '/';
+	}
+	catch (error)
+	{
+		return '';
+	}
+}
+
+function syncSidebarActiveLinks()
+{
+	const currentPath = normalizeSidebarPath(window.location.href);
+
+	navLinkItems.forEach(link =>
+	{
+		const linkPath = normalizeSidebarPath(link.href);
+
+		if (linkPath === '')
+		{
+			return;
+		}
+
+		const isActive = linkPath === currentPath;
+
+		link.classList.toggle('active', isActive);
+
+		if (isActive)
+		{
+			link.classList.add('active');
+		}
+	});
 }
 
 // --- 3. TOOLTIP & POPOVER LOGIC (INSTANT SWITCH FIX) ---
@@ -142,52 +199,56 @@ function toggleSidebar()
 const navLinkItems = document.querySelectorAll('.ph-sidebar .list-group-item');
 
 // Helper 1: Cari elemen popover (sibling)
-function getPopover(currentItem) 
+function getPopover(currentItem)
 {
 	let nextEl = currentItem.nextElementSibling;
-	while (nextEl) 
+	while (nextEl)
 	{
 		// UPDATE: Selector updated to 'ph-floating-submenu'
 		if (nextEl.classList.contains('ph-floating-submenu')) return nextEl;
-		if (nextEl.tagName === 'a') return null; 
+
+		// Jangan menyeberang ke item menu berikutnya. DOM tagName selalu uppercase,
+		// sehingga perbandingan lama dengan string 'a' tidak pernah menghentikan loop.
+		if (nextEl.matches('a.list-group-item')) return null;
+
 		nextEl = nextEl.nextElementSibling;
 	}
 	return null;
 }
 
 // Helper 2: Tutup paksa semua popover LAIN yang sedang terbuka
-function closeAllOtherPopovers(exceptPopover) 
+function closeAllOtherPopovers(exceptPopover)
 {
 	// UPDATE: Selector updated
 	const allPopovers = document.querySelectorAll('.ph-floating-submenu.ph-show-popover');
-	
-	allPopovers.forEach(p => 
+
+	allPopovers.forEach(p =>
 	{
-		if (p !== exceptPopover) 
+		if (p !== exceptPopover)
 		{
 			p.classList.remove('ph-show-popover'); // UPDATE: Selector updated
-			
-			if (p.dataset.timeoutId) 
+
+			if (p.dataset.timeoutId)
 			{
-				clearTimeout(parseInt(p.dataset.timeoutId)); 
+				clearTimeout(parseInt(p.dataset.timeoutId));
 				p.dataset.timeoutId = '';
 			}
 		}
 	});
-	
+
 	// Opsional: Tutup juga semua tooltip lain agar bersih
 	const allTooltips = document.querySelectorAll('.ph-custom-tooltip.ph-show-tooltip');
 	allTooltips.forEach(t => t.classList.remove('ph-show-tooltip'));
 }
 
-navLinkItems.forEach(item => 
+navLinkItems.forEach(item =>
 {
 	// --- 1. MOUSE ENTER (MASUK) ---
-	item.addEventListener('mouseenter', function() 
+	item.addEventListener('mouseenter', function()
 	{
 		if (sidebar.classList.contains('ph-expanded')) return; // UPDATE: ph-expanded
-		
-		const rect = this.getBoundingClientRect(); 
+
+		const rect = this.getBoundingClientRect();
 		const tooltip = this.querySelector('.ph-custom-tooltip'); // UPDATE
 		const popover = getPopover(this);
 
@@ -195,33 +256,33 @@ navLinkItems.forEach(item =>
 		closeAllOtherPopovers(popover);
 
 		// B. LOGIC TOOLTIP
-		if (tooltip) 
+		if (tooltip && ! popover)
 		{
 			const topPos = rect.top + (rect.height / 2) - (tooltip.offsetHeight / 2);
 			tooltip.style.top = topPos + 'px';
-			tooltip.style.left = (rect.right + 10) + 'px'; 
+			tooltip.style.left = (rect.right + 10) + 'px';
 			tooltip.classList.add('ph-show-tooltip'); // UPDATE
 		}
 
 		// C. LOGIC POPOVER
-		if (popover) 
+		if (popover)
 		{
 			// Reset timer popover sendiri
-			if (popover.dataset.timeoutId) 
+			if (popover.dataset.timeoutId)
 			{
 				clearTimeout(parseInt(popover.dataset.timeoutId));
 				popover.dataset.timeoutId = '';
 			}
 
 			// Tampilkan
-			popover.style.top = rect.top + 'px'; 
+			popover.style.top = rect.top + 'px';
 			popover.style.left = (rect.right + 10) + 'px';
 			popover.classList.add('ph-show-popover'); // UPDATE
 
 			// Setup listener pada popover (Hanya sekali per elemen)
-			if ( ! popover.dataset.hasListener) 
+			if ( ! popover.dataset.hasListener)
 			{
-				popover.addEventListener('mouseenter', function() 
+				popover.addEventListener('mouseenter', function()
 				{
 					if (this.dataset.timeoutId) {
 						clearTimeout(parseInt(this.dataset.timeoutId));
@@ -229,7 +290,7 @@ navLinkItems.forEach(item =>
 					}
 				});
 
-				popover.addEventListener('mouseleave', function() 
+				popover.addEventListener('mouseleave', function()
 				{
 					this.classList.remove('ph-show-popover'); // UPDATE
 				});
@@ -240,7 +301,7 @@ navLinkItems.forEach(item =>
 	});
 
 	// --- 2. MOUSE LEAVE (KELUAR) ---
-	item.addEventListener('mouseleave', function() 
+	item.addEventListener('mouseleave', function()
 	{
 		 const tooltip = this.querySelector('.ph-custom-tooltip');
 		 const popover = getPopover(this);
@@ -249,81 +310,117 @@ navLinkItems.forEach(item =>
 		 if (tooltip) tooltip.classList.remove('ph-show-tooltip'); // UPDATE
 
 		 // Popover hilang pakai DELAY
-		 if (popover) 
+		 if (popover)
 		 {
-			const timeoutId = setTimeout(() => 
+			const timeoutId = setTimeout(() =>
 			{
 				popover.classList.remove('ph-show-popover'); // UPDATE
 			}, 300);
-			
+
 			popover.dataset.timeoutId = timeoutId;
 		 }
 	});
 });
 
 // --- 4. THEME & INIT ---
-function toggleTheme() 
+function syncThemeControls(theme)
+{
+	const isDark = theme === 'dark';
+	const themeToggle = document.querySelector('.ph-theme-toggle');
+	const themeIcon = document.querySelector('.ph-theme-icon');
+
+	if (themeIcon)
+	{
+		themeIcon.className = isDark ? 'fas fa-moon ph-theme-icon' : 'fas fa-sun ph-theme-icon';
+	}
+
+	if (themeToggle)
+	{
+		themeToggle.classList.toggle('is-dark', isDark);
+		themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+	}
+}
+
+function toggleTheme()
 {
 	const htmlTag = document.documentElement;
 	const currentTheme = htmlTag.getAttribute('data-bs-theme'); // Bootstrap 5.3 uses data-bs-theme
 	const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-	
+
 	htmlTag.setAttribute('data-bs-theme', newTheme);
-	
-	const icon = document.getElementById('theme-icon');
-	icon.className = newTheme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-	
 	localStorage.setItem('theme', newTheme);
+	syncThemeControls(newTheme);
 }
 
 // --- FUNCTION CHANGE PATTERN ---
-function changePattern(type) 
+function changePattern(type)
 {
-	if (patterns[type]) 
+	if (patterns[type])
 	{
 		const p = patterns[type];
-		
+
 		// Set Variable Utama
 		document.documentElement.style.setProperty('--ph-pattern-top', p.top);
 		document.documentElement.style.setProperty('--ph-pattern-bottom', p.bottom);
-		
+
 		// Set Variable Setting
 		document.documentElement.style.setProperty('--ph-mask-repeat', p.repeat);
 		document.documentElement.style.setProperty('--ph-mask-size', p.size);
 		document.documentElement.style.setProperty('--ph-mask-composite', p.composite);
-		
+
 		// FIX: Set Display After (Untuk sembunyikan bawah saat Winter)
 		document.documentElement.style.setProperty('--ph-after-display', p.display);
-		
+
 		localStorage.setItem('theme-pattern', type);
 	}
 }
 
-document.addEventListener('DOMContentLoaded', () => 
+document.addEventListener('DOMContentLoaded', () =>
 {
 	// 1. Load Theme
-	const savedTheme = localStorage.getItem('theme') || 'dark';
-	const icon = document.getElementById('theme-icon');
-	if (icon) 
-	{
-		icon.className = savedTheme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-	}
+	const savedTheme = localStorage.getItem('theme') || 'light';
+	syncThemeControls(savedTheme);
 
-	// Load Pattern tersimpan (default winter jika tidak ada)
-	const savedPattern = localStorage.getItem('theme-pattern') || 'winter';
+	// Arunika Aurora memakai shell bersih seperti referensi panel.
+	const savedPattern = localStorage.getItem('theme-pattern') || 'none';
 	changePattern(savedPattern);
 
 	// 2. Sidebar State
 	// Perbaikan: Class sidebar ada di HTML statis, pengecekan dilakukan di inline script atas untuk mencegah FOUC
 	// tapi kita pastikan SimpleBar di-init
+	updateSidebarToggleState();
+	syncSidebarActiveLinks();
 	initSimpleBar();
 
 	// 3. Smooth Animation Fix
-	requestAnimationFrame(() => 
+	requestAnimationFrame(() =>
 	{
-		setTimeout(() => 
+		setTimeout(() =>
 		{
 			sidebar.classList.remove('ph-no-transition'); // UPDATE
 		}, 100);
+	});
+});
+
+// Fokus pencarian global mengikuti shortcut visual pada header.
+document.addEventListener('keydown', (event) =>
+{
+	if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k')
+	{
+		event.preventDefault();
+		document.getElementById('ph-global-search')?.focus();
+	}
+});
+
+// Pada layar kecil, navigasi menutup setelah pengguna memilih menu.
+document.querySelectorAll('.ph-sidebar a[href]:not([href^="javascript"])').forEach((link) =>
+{
+	link.addEventListener('click', () =>
+	{
+		if (window.innerWidth <= 768 && sidebar.classList.contains('ph-expanded'))
+		{
+			sidebar.classList.remove('ph-expanded');
+			updateSidebarToggleState();
+		}
 	});
 });

@@ -45,20 +45,7 @@
 			
 			if (savedColor) 
 			{
-				const isCoolGray = savedColor.toUpperCase() === '#C7CCD8';
-				const colorRoot = document.documentElement;
-
-				colorRoot.style.setProperty('--ph-theme-primary', isCoolGray ? '#667085' : savedColor);
-				colorRoot.style.setProperty('--ph-theme-surface-tint', savedColor);
-
-				if (isCoolGray)
-				{
-					colorRoot.dataset.phThemeColor = 'cool-gray';
-				}
-				else
-				{
-					delete colorRoot.dataset.phThemeColor;
-				}
+				document.documentElement.style.setProperty('--ph-theme-primary', savedColor);
 			}
 		})();
 		</script>

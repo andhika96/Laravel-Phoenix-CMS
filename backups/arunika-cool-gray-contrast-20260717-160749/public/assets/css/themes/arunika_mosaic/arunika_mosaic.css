@@ -4,7 +4,6 @@
 
 	/* VARIABLE DINAMIS */
 	--ph-theme-primary: #1FA675;
-	--ph-theme-surface-tint: var(--ph-theme-primary);
 
 	/* Base Settings */
 	--ph-sidebar-width-collapsed: 68px;
@@ -13,7 +12,7 @@
 
 	/* OTOMATISASI WARNA */
 	--ph-theme-primary-hover: color-mix(in srgb, var(--ph-theme-primary), black 10%);
-	--ph-theme-primary-subtle: var(--ph-theme-hover-surface, color-mix(in srgb, var(--ph-theme-primary), transparent 85%));
+	--ph-theme-primary-subtle: color-mix(in srgb, var(--ph-theme-primary), transparent 85%);
 	--ph-theme-primary-border-subtle: color-mix(in srgb, var(--ph-theme-primary), transparent 70%);
 
 	--ph-text-main: #ffffff;
@@ -43,16 +42,6 @@
 	--ph-mask-composite: source-in;
 }
 
-html[data-bs-theme=light][data-ph-theme-color="cool-gray"]
-{
-	--ph-theme-hover-surface: #E4E7EC;
-}
-
-html[data-bs-theme=dark][data-ph-theme-color="cool-gray"]
-{
-	--ph-theme-hover-surface: rgba(199, 204, 216, 0.16);
-}
-
 /* TEMA LIGHT */
 [data-bs-theme=light] 
 {
@@ -62,7 +51,7 @@ html[data-bs-theme=dark][data-ph-theme-color="cool-gray"]
 
 	/* 1. BACKGROUND COLOR BODY: Disesuaikan dengan color theme (soft tint) */
 	/* Campuran 90% Putih + 10% Warna Tema. Jadi backgroundnya tidak putih polos, tapi agak kehijauan/keunguan soft */
-	--ph-bg-gradient: linear-gradient(135deg, color-mix(in srgb, var(--ph-theme-surface-tint), white 90%) 0%, #ffffff 100%);
+	--ph-bg-gradient: linear-gradient(135deg, color-mix(in srgb, var(--ph-theme-primary), white 90%) 0%, #ffffff 100%); 
 	
 	/* 2. BLEND MODE: MULTIPLY (Kunci agar warna tema terlihat di background terang) */
 	/* Multiply membuat warna tema 'menyatu' dengan background putih, hasilnya warna pastel soft */
@@ -80,7 +69,7 @@ html[data-bs-theme=dark][data-ph-theme-color="cool-gray"]
 	--ph-bg-popover: #ffffff;
 	--ph-bg-input: #ffffff;
 	--ph-bg-hover: rgba(0, 0, 0, 0.05);
-	--ph-theme-primary-subtle: var(--ph-theme-hover-surface, color-mix(in srgb, var(--ph-theme-primary), transparent 90%));
+	--ph-theme-primary-subtle: color-mix(in srgb, var(--ph-theme-primary), transparent 90%);
 
 	/* Untuk Light Mode: Campur warna tema dengan 60% Hitam. 
        Ini membuat warna tema menjadi "versi gelapnya" agar kontras di background putih. */
@@ -144,8 +133,8 @@ html[data-bs-theme=dark][data-ph-theme-color="cool-gray"]
 	/* TEMA DARK */
 	--ph-bg-body: #000000;
 	
-	--ph-bg-gradient: radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--ph-theme-surface-tint), black 55%) 0%, #11100d 60%),
-					  radial-gradient(circle at 10% 90%, color-mix(in srgb, var(--ph-theme-surface-tint), black 85%) 0%, #000000 60%);
+	--ph-bg-gradient: radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--ph-theme-primary), black 55%) 0%, #11100d 60%),
+					  radial-gradient(circle at 10% 90%, color-mix(in srgb, var(--ph-theme-primary), black 85%) 0%, #000000 60%);
 	
 	--ph-bg-sidebar-expanded: transparent;
 	--ph-bg-panel: rgba(32, 31, 31, 0.6);
@@ -224,7 +213,7 @@ body::before, body::after {
 	width: 100%;
 	pointer-events: none;
 	z-index: 0;
-	background-color: var(--ph-theme-surface-tint);
+	background-color: var(--ph-theme-primary);
 	mix-blend-mode: var(--ph-pattern-blend-mode); 
 	/*filter: blur(var(--ph-pattern-blur));*/
 	opacity: var(--ph-pattern-opacity);

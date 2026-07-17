@@ -1,7 +1,5 @@
 // --- 1. SETUP COLOR PICKER ---
-let colorMainList = ['#1FA675', '#9D00FF', '#1DA1F2', '#FF5733', '#FFC107', '#E91E63', '#6C5CE7', '#C7CCD8'];
-const coolGrayThemeColor = '#C7CCD8';
-const coolGrayInteractiveColor = '#667085';
+let colorMainList = ['#1FA675', '#9D00FF', '#1DA1F2', '#FF5733', '#FFC107', '#E91E63', '#6C5CE7', '#6B7280'];
 const pickerContainer = document.getElementById('color-picker-container');
 
 const patterns = {
@@ -77,28 +75,9 @@ colorMainList.forEach(color =>
 	pickerContainer.appendChild(col);
 });
 
-function applyMainColor(color)
-{
-	const normalizedColor = color.toUpperCase();
-	const isCoolGray = normalizedColor === coolGrayThemeColor;
-	const colorRoot = document.documentElement;
-
-	colorRoot.style.setProperty('--ph-theme-primary', isCoolGray ? coolGrayInteractiveColor : color);
-	colorRoot.style.setProperty('--ph-theme-surface-tint', color);
-
-	if (isCoolGray)
-	{
-		colorRoot.dataset.phThemeColor = 'cool-gray';
-	}
-	else
-	{
-		delete colorRoot.dataset.phThemeColor;
-	}
-}
-
 function changeMainColor(color) 
 {
-	applyMainColor(color);
+	document.documentElement.style.setProperty('--ph-theme-primary', color);
 	localStorage.setItem('theme-color', color);
 }
 
