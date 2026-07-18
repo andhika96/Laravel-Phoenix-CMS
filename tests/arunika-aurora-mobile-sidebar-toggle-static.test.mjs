@@ -9,6 +9,10 @@ const css = readFileSync(
     'public/assets/css/themes/arunika_aurora/arunika_aurora.css',
     'utf8',
 );
+const js = readFileSync(
+    'public/assets/js/themes/arunika_aurora/arunika_aurora.js',
+    'utf8',
+);
 
 assert.match(
     layout,
@@ -30,6 +34,11 @@ assert.match(
     css,
     /\.ph-sidebar:not\(\.ph-expanded\) \+ \.ph-layout-right \.ph-mobile-sidebar-trigger \.ph-sidebar-toggle-chevron\s*\{[^}]*transform:\s*rotate\(180deg\);/s,
     'the closed mobile trigger should show the desktop panel chevron as an arrow right',
+);
+assert.match(
+    js,
+    /function toggleSidebar\(\)[\s\S]*?if \(window\.innerWidth > 768\)\s*\{\s*notifyLayoutResize\(\);\s*\}/,
+    'mobile Aurora drawer toggles should not broadcast a synthetic layout resize',
 );
 
 const mobileMediaQueries = [...css.matchAll(/@media \(max-width: 768px\)\s*\{([\s\S]*?)(?=\n\})\n\}/g)];

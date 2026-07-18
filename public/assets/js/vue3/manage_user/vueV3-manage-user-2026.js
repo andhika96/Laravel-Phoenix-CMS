@@ -1681,9 +1681,14 @@ const ListUserVue3 =  createApp(
 		{
 			const wrapper = document.getElementById('ph-user-table-wrapper');
 
-			if (wrapper && wrapper.offsetWidth > 0)
+			if (wrapper)
 			{
-				return wrapper.offsetWidth;
+				// clientWidth adalah area yang benar-benar tersedia untuk isi tabel.
+				// offsetWidth ikut menghitung border / scrollbar gutter dan hasilnya
+				// berbeda antar-browser (Chrome vs Firefox).
+				const usableWidth = wrapper.clientWidth || wrapper.offsetWidth;
+
+				if (usableWidth > 0) return usableWidth;
 			}
 
 			return window.innerWidth;
@@ -1714,7 +1719,13 @@ const ListUserVue3 =  createApp(
 				const widths = {};
 				ths.forEach((th, i) =>
 				{
-					widths[i] = th.offsetWidth || 80;
+					// Simpan nilai pecahan agar pembulatan offsetWidth per kolom tidak
+					// terakumulasi menjadi false overflow pada kolom terakhir.
+					const rectWidth = typeof th.getBoundingClientRect === 'function'
+						? th.getBoundingClientRect().width
+						: 0;
+
+					widths[i] = rectWidth || th.offsetWidth || 80;
 				});
 
 				this._colNaturalWidths = widths;
@@ -1759,10 +1770,13 @@ const ListUserVue3 =  createApp(
 
 			const hidden = [];
 			let bail = false;
+			const widthTolerance = 1;
 
 			flexCols.forEach((col) =>
 			{
-				if (bail || remaining - col.minWidth < 0)
+				// Abaikan selisih sub-pixel maksimal 1px. Tanpa toleransi ini,
+				// perbedaan rounding browser dapat menyembunyikan satu kolom penuh.
+				if (bail || remaining - col.minWidth < -widthTolerance)
 				{
 					hidden.push(col.idx);
 					bail = true;

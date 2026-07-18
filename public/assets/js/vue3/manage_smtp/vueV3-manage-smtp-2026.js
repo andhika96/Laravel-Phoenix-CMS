@@ -3,7 +3,7 @@ const ListDataSMTPVue3 = createApp(
 	data() 
 	{
 		return {
-			reponseData: '',
+			responseData: [],
 			responseDetailData: '',
 			responseDetailDataSetService: '',
 			responseDetailDataSetService2: '',
@@ -34,12 +34,24 @@ const ListDataSMTPVue3 = createApp(
 			autoBlockButtonMobile: '',
 			showModalAddUser: false,
 			customButtonValue: 'Submit',
-			getLengthTableTh: ''
+			getLengthTableTh: '',
+			responsiveHiddenCols: [],
+			responsiveExpandedRows: {},
 		}
 	},
 	components:
 	{
 		paginate: VuejsPaginateNext
+	},
+	computed:
+	{
+		responsiveVisibleColCount: function()
+		{
+			const ths = document.querySelectorAll('#ph-smtp-table-wrapper thead tr th[data-col-idx]');
+			const total = ths.length || 10;
+
+			return total - this.responsiveHiddenCols.length;
+		}
 	},
 	methods:
 	{
@@ -459,8 +471,9 @@ const ListDataSMTPVue3 = createApp(
 		{
 			this.loading = false;
 			this.loadingNextPage = false;
+			this.responsiveExpandedRows = {};
 
-			window.setTimeout(function() 
+			window.setTimeout(() =>
 			{
 				if (document.querySelector(".ph-data-load-status") !== null) 
 				{
@@ -477,6 +490,13 @@ const ListDataSMTPVue3 = createApp(
 						document.querySelector(".ph-data-load-content").style.display = 'block';
 					}
 				}
+
+				// Ukur kolom setelah wrapper kembali visible. Mengukur saat parent
+				// masih display:none menghasilkan width 0 dan prioritas yang keliru.
+				this.$nextTick(() =>
+				{
+					this.setupResponsiveTable();
+				});
 			}, 1);
 		},
 		loadToastComplete: function(idSubmit)
@@ -558,10 +578,181 @@ const ListDataSMTPVue3 = createApp(
 				})
 				.finally(() => 
 				{
-					this.loading = false;
-					this.loadingNextPage = false;
+					this.loadDataComplete();
 				});
 			}
+		},
+		// ============================================================
+		// Responsive Table
+		// ============================================================
+		setupResponsiveTable: function()
+		{
+			if (this._resizeObserver)
+			{
+				this._resizeObserver.disconnect();
+				this._resizeObserver = null;
+			}
+
+			if (this._responsiveResizeHandler)
+			{
+				window.removeEventListener('resize', this._responsiveResizeHandler);
+				this._responsiveResizeHandler = null;
+			}
+
+			const wrapper = document.getElementById('ph-smtp-table-wrapper');
+			if (!wrapper) return;
+
+			const refreshColumns = () =>
+			{
+				this.responsiveHiddenCols = [];
+				this._colNaturalWidths = null;
+
+				this.$nextTick(() =>
+				{
+					this.measureColWidths(() =>
+					{
+						this.recalcResponsive();
+					});
+				});
+			};
+
+			refreshColumns();
+
+			if (typeof ResizeObserver !== 'undefined')
+			{
+				let resizeTimer = null;
+
+				this._resizeObserver = new ResizeObserver(() =>
+				{
+					clearTimeout(resizeTimer);
+					resizeTimer = setTimeout(refreshColumns, 1);
+				});
+
+				this._resizeObserver.observe(wrapper);
+			}
+			else
+			{
+				this._responsiveResizeHandler = refreshColumns;
+				window.addEventListener('resize', this._responsiveResizeHandler);
+			}
+		},
+		getTableWidth: function()
+		{
+			const wrapper = document.getElementById('ph-smtp-table-wrapper');
+
+			if (wrapper)
+			{
+				const usableWidth = wrapper.clientWidth || wrapper.offsetWidth;
+
+				if (usableWidth > 0) return usableWidth;
+			}
+
+			return window.innerWidth;
+		},
+		measureColWidths: function(callback)
+		{
+			requestAnimationFrame(() =>
+			{
+				const table = document.querySelector('#ph-smtp-table-wrapper table');
+
+				if (!table) { if (callback) callback(); return; }
+
+				const ths = table.querySelectorAll('thead tr th[data-col-idx]');
+
+				if (!ths.length) { if (callback) callback(); return; }
+				if (this.responsiveHiddenCols.length > 0) { if (callback) callback(); return; }
+
+				const widths = {};
+
+				ths.forEach((th, index) =>
+				{
+					const rectWidth = typeof th.getBoundingClientRect === 'function'
+						? th.getBoundingClientRect().width
+						: 0;
+
+					widths[index] = rectWidth || th.offsetWidth || 80;
+				});
+
+				this._colNaturalWidths = widths;
+				if (callback) callback();
+			});
+		},
+		recalcResponsive: function()
+		{
+			if (!this._colNaturalWidths)
+			{
+				this.measureColWidths(() => { this.recalcResponsive(); });
+				return;
+			}
+
+			const ths = document.querySelectorAll('#ph-smtp-table-wrapper thead tr th[data-col-idx]');
+			if (!ths.length) return;
+
+			const naturalWidths = this._colNaturalWidths;
+			const columns = [];
+
+			ths.forEach((th, domPosition) =>
+			{
+				const index = parseInt(th.getAttribute('data-col-idx'));
+				const priorityAttribute = th.getAttribute('data-col-priority');
+				const priority = priorityAttribute === 'all' ? 'all' : parseInt(priorityAttribute);
+				const minWidth = naturalWidths[domPosition] || 80;
+
+				columns.push({ index, priority, minWidth });
+			});
+
+			let remaining = this.getTableWidth();
+
+			columns.forEach((column) =>
+			{
+				if (column.priority === 'all') remaining -= column.minWidth;
+			});
+
+			const flexibleColumns = columns
+				.filter(column => column.priority !== 'all')
+				.sort((a, b) => a.priority - b.priority);
+			const hidden = [];
+			const widthTolerance = 1;
+			let bail = false;
+
+			flexibleColumns.forEach((column) =>
+			{
+				if (bail || remaining - column.minWidth < -widthTolerance)
+				{
+					hidden.push(column.index);
+					bail = true;
+				}
+				else
+				{
+					remaining -= column.minWidth;
+				}
+			});
+
+			this.responsiveHiddenCols = hidden;
+
+			if (hidden.length === 0)
+			{
+				this.responsiveExpandedRows = {};
+			}
+		},
+		toggleExpandRow: function(id)
+		{
+			const now = Date.now();
+
+			if (this._lastToggleTime && (now - this._lastToggleTime) < 80)
+			{
+				return;
+			}
+
+			this._lastToggleTime = now;
+
+			const next = Object.assign({}, this.responsiveExpandedRows);
+			next[id] = !next[id];
+			this.responsiveExpandedRows = next;
+		},
+		isColHidden: function(index)
+		{
+			return this.responsiveHiddenCols.includes(index);
 		},
 		openModdalAddSMTP: function()
 		{
@@ -905,5 +1096,17 @@ const ListDataSMTPVue3 = createApp(
 		this.listDetailDataSMTPSetService();
 
 		this.loadToastComplete('ph-form-app-data-setsmtpservice');
+	},
+	beforeUnmount()
+	{
+		if (this._resizeObserver)
+		{
+			this._resizeObserver.disconnect();
+		}
+
+		if (this._responsiveResizeHandler)
+		{
+			window.removeEventListener('resize', this._responsiveResizeHandler);
+		}
 	}
 }).mount('#ph-app-data-smtp');

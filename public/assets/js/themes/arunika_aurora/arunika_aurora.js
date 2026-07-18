@@ -131,7 +131,11 @@ function toggleSidebar()
 	const isExpanded = sidebar.classList.contains('ph-expanded');
 	localStorage.setItem('sidebar-state', isExpanded ? 'expanded' : 'collapsed');
 	updateSidebarToggleState();
-	notifyLayoutResize();
+
+	if (window.innerWidth > 768)
+	{
+		notifyLayoutResize();
+	}
 
 	if (sbInstance)
 	{

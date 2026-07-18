@@ -69,7 +69,12 @@
 		<div class="d-flex w-100 h-100">
 			<div class="ph-sidebar ph-no-transition" id="sidebar">
 
-				<script> if (localStorage.getItem('sidebar-state') === 'expanded') { document.getElementById('sidebar').classList.add('ph-expanded'); } </script>
+				<script>
+				if (window.innerWidth > 768 && localStorage.getItem('sidebar-state') === 'expanded')
+				{
+					document.getElementById('sidebar').classList.add('ph-expanded');
+				}
+				</script>
 				
 				<div class="ph-sidebar-logo-container" onclick="toggleSidebar()">
 					<div class="ph-app-logo-icon">
@@ -77,6 +82,10 @@
 					</div>
 
 					<span class="ph-app-logo-text">{{ site_config()->site_name }}</span>
+
+					<button class="ph-mobile-sidebar-close" type="button" onclick="event.stopPropagation(); toggleSidebar()" aria-label="{{ t('Close navigation') }}">
+						<i class="fas fa-bars" aria-hidden="true"></i>
+					</button>
 				</div>
 
 				<div id="sidebar-scroll-content">
@@ -123,9 +132,13 @@
 
 			</div>
 
+			<button class="ph-mobile-sidebar-backdrop" type="button" onclick="toggleSidebar()" aria-label="{{ t('Close navigation') }}" tabindex="-1"></button>
+
 			<div class="ph-layout-right" id="ph-layout-right">
 				<div class="ph-top-bar" id="ph-top-bar">
-					<div class="ph-header-btn" onclick="toggleSidebar()" title="Toggle Sidebar"><i class="fas fa-bars"></i></div>
+					<button class="ph-header-btn ph-mobile-sidebar-trigger" id="sidebar-toggle" type="button" onclick="toggleSidebar()" title="Toggle Sidebar" aria-label="{{ t('Open navigation') }}" aria-expanded="false">
+						<i class="fas fa-bars"></i>
+					</button>
 					
 					<div class="dropdown">
 						<div class="ph-header-btn" data-bs-toggle="dropdown" title="Change Theme Color"><i class="fas fa-palette"></i></div>

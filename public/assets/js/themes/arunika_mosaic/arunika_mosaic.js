@@ -105,7 +105,10 @@ function changeMainColor(color)
 // --- 2. SIDEBAR & SCROLLBAR LOGIC ---
 const sidebar = document.getElementById('sidebar');
 const scrollContent = document.getElementById('sidebar-scroll-content');
+const sidebarToggle = document.getElementById('sidebar-toggle');
+const MOBILE_SIDEBAR_BREAKPOINT = 768;
 let sbInstance = null;
+let isMobileSidebarMode = window.innerWidth <= MOBILE_SIDEBAR_BREAKPOINT;
 
 function initSimpleBar() 
 {
@@ -125,7 +128,13 @@ function toggleSidebar()
 	// UPDATE: Class updated to 'ph-expanded'
 	sidebar.classList.toggle('ph-expanded');
 	const isExpanded = sidebar.classList.contains('ph-expanded');
-	localStorage.setItem('sidebar-state', isExpanded ? 'expanded' : 'collapsed');
+
+	if (! isMobileSidebarViewport())
+	{
+		localStorage.setItem('sidebar-state', isExpanded ? 'expanded' : 'collapsed');
+	}
+
+	updateSidebarToggleState();
 
 	if (sbInstance) 
 	{
@@ -135,6 +144,53 @@ function toggleSidebar()
 
 		}, 350); 
 	}
+}
+
+function isMobileSidebarViewport()
+{
+	return window.innerWidth <= MOBILE_SIDEBAR_BREAKPOINT;
+}
+
+function updateSidebarToggleState()
+{
+	const isExpanded = sidebar.classList.contains('ph-expanded');
+	const isMobile = isMobileSidebarViewport();
+
+	if (sidebarToggle)
+	{
+		sidebarToggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+		sidebarToggle.setAttribute('aria-label', isMobile && isExpanded ? 'Close navigation' : (isMobile ? 'Open navigation' : 'Toggle sidebar'));
+	}
+
+	document.body.classList.toggle('ph-mobile-sidebar-open', isMobile && isExpanded);
+}
+
+function syncSidebarForViewport()
+{
+	const shouldUseMobileSidebar = isMobileSidebarViewport();
+
+	if (shouldUseMobileSidebar === isMobileSidebarMode)
+	{
+		updateSidebarToggleState();
+		return;
+	}
+
+	isMobileSidebarMode = shouldUseMobileSidebar;
+
+	if (shouldUseMobileSidebar)
+	{
+		sidebar.classList.remove('ph-expanded');
+	}
+	else if (localStorage.getItem('sidebar-state') === 'expanded')
+	{
+		sidebar.classList.add('ph-expanded');
+	}
+	else
+	{
+		sidebar.classList.remove('ph-expanded');
+	}
+
+	updateSidebarToggleState();
 }
 
 // --- 3. TOOLTIP & POPOVER LOGIC (INSTANT SWITCH FIX) ---
@@ -317,6 +373,17 @@ document.addEventListener('DOMContentLoaded', () =>
 	// Perbaikan: Class sidebar ada di HTML statis, pengecekan dilakukan di inline script atas untuk mencegah FOUC
 	// tapi kita pastikan SimpleBar di-init
 	initSimpleBar();
+	updateSidebarToggleState();
+	window.addEventListener('resize', syncSidebarForViewport);
+
+	document.addEventListener('keydown', (event) =>
+	{
+		if (event.key === 'Escape' && isMobileSidebarViewport() && sidebar.classList.contains('ph-expanded'))
+		{
+			toggleSidebar();
+			sidebarToggle?.focus();
+		}
+	});
 
 	// 3. Smooth Animation Fix
 	requestAnimationFrame(() => 
