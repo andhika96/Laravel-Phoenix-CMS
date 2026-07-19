@@ -4,6 +4,32 @@
 	$children = $node['children'] ?? [];
 	$columns = $node['columns'] ?? [];
 
+	$__pbRequest = request();
+	$__pbUser = $__pbRequest->user();
+	$__pbConditionGroups = is_array($settings['displayConditions'] ?? null) ? $settings['displayConditions'] : [];
+	$__pbConditionEvaluator = app(\App\Support\PageBuilderElementor\WidgetDisplayConditionEvaluator::class);
+	if (!$__pbConditionEvaluator->allows($__pbConditionGroups, $__pbRequest, $__pbUser)) {
+		return;
+	}
+
+	if ($type === 'accordion' && ($settings['cacheMode'] ?? 'default') === 'active') {
+		$__pbRoles = [];
+		if ($__pbUser && method_exists($__pbUser, 'getRoleNames')) {
+			$__pbRoles = collect($__pbUser->getRoleNames())->map(fn ($role) => (string) $role)->all();
+		} elseif ($__pbUser && isset($__pbUser->role)) {
+			$__pbRoles = [(string) $__pbUser->role];
+		}
+		$__pbContext = [
+			'page_id' => $__pbRequest->attributes->get('pagebuilder_page_id') ?? $__pbRequest->route('page') ?? $__pbRequest->route('id'),
+			'page_slug' => $__pbRequest->attributes->get('pagebuilder_page_slug') ?? $__pbRequest->route('slug') ?? basename(trim($__pbRequest->path(), '/')),
+			'auth' => $__pbUser ? 'authenticated' : 'guest',
+			'roles' => $__pbRoles,
+		];
+		$__pbFragmentCache = app(\App\Support\PageBuilderElementor\WidgetFragmentCache::class);
+		echo $__pbFragmentCache->remember($node, $__pbContext, fn () => view('pagebuilder_elementor.partials.render_accordion', ['node' => $node])->render());
+		return;
+	}
+
 	$css_value = function ($value, $fallback = '') {
 		if ($value === null || $value === '') {
 			return $fallback;

@@ -2,6 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Support\PageBuilderElementor\WidgetDisplayConditionEvaluator;
+use App\Support\PageBuilderElementor\WidgetFragmentCache;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
@@ -141,6 +146,86 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertSourceContains("requestAnimationFrame(updateMotion)", $runtime);
         $this->assertSourceContains("window.addEventListener('pointermove'", $runtime);
         $this->assertSourceContains('prefersReducedMotion()', $runtime);
+    }
+
+    public function test_display_conditions_use_and_inside_groups_and_or_between_groups(): void
+    {
+        $evaluator = app(WidgetDisplayConditionEvaluator::class);
+        $request = Request::create('/docs/getting-started', 'GET');
+        $request->attributes->set('pagebuilder_page_id', 42);
+        $request->attributes->set('pagebuilder_page_slug', 'getting-started');
+
+        $groups = [[
+            'rules' => [
+                ['effect' => 'include', 'source' => 'page-id', 'operator' => 'is', 'value' => '42'],
+                ['effect' => 'include', 'source' => 'auth-state', 'operator' => 'is', 'value' => 'guest'],
+            ],
+        ]];
+
+        $this->assertTrue($evaluator->allows($groups, $request, null));
+        $groups[0]['rules'][0]['value'] = '99';
+        $this->assertFalse($evaluator->allows($groups, $request, null));
+        $groups[] = ['rules' => [[
+            'effect' => 'include', 'source' => 'page-slug', 'operator' => 'is', 'value' => 'getting-started',
+        ]]];
+        $this->assertTrue($evaluator->allows($groups, $request, null));
+        $this->assertTrue($evaluator->allows([], $request, null));
+        $this->assertFalse($evaluator->allows([['rules' => [['source' => 'unknown', 'value' => 'x']]]], $request, null));
+    }
+
+    public function test_display_conditions_cover_roles_dates_devices_and_exclusions(): void
+    {
+        $evaluator = app(WidgetDisplayConditionEvaluator::class);
+        $request = Request::create('/account', 'GET', [], [], [], ['HTTP_USER_AGENT' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)']);
+        $request->attributes->set('pagebuilder_now', '2026-07-19 12:00:00');
+        $user = new class implements Authenticatable {
+            public function getAuthIdentifierName() { return 'id'; }
+            public function getAuthIdentifier() { return 7; }
+            public function getAuthPasswordName() { return 'password'; }
+            public function getAuthPassword() { return ''; }
+            public function getRememberToken() { return null; }
+            public function setRememberToken($value) {}
+            public function getRememberTokenName() { return ''; }
+            public function getRoleNames() { return collect(['editor']); }
+        };
+
+        $this->assertTrue($evaluator->allows([['rules' => [
+            ['effect' => 'include', 'source' => 'user-role', 'operator' => 'is', 'value' => 'editor'],
+            ['effect' => 'include', 'source' => 'date-range', 'operator' => 'is', 'value' => '2026-07-19 00:00:00|2026-07-20 00:00:00'],
+            ['effect' => 'include', 'source' => 'device', 'operator' => 'is', 'value' => 'mobile'],
+            ['effect' => 'exclude', 'source' => 'page-slug', 'operator' => 'is', 'value' => 'admin'],
+        ]]], $request, $user));
+    }
+
+    public function test_fragment_cache_bypasses_inactive_reuses_active_and_hashes_context(): void
+    {
+        Cache::clear();
+        $cache = app(WidgetFragmentCache::class);
+        $counter = 0;
+        $inactive = ['id' => 'one', 'type' => 'accordion', 'settings' => ['cacheMode' => 'inactive']];
+        $active = ['id' => 'one', 'type' => 'accordion', 'settings' => ['cacheMode' => 'active']];
+        $context = ['page_id' => 42, 'page_slug' => 'docs', 'auth' => 'guest', 'roles' => []];
+
+        $cache->remember($inactive, $context, function () use (&$counter) { return 'inactive-' . ++$counter; });
+        $cache->remember($inactive, $context, function () use (&$counter) { return 'inactive-' . ++$counter; });
+        $this->assertSame(2, $counter);
+
+        $first = $cache->remember($active, $context, function () use (&$counter) { return 'active-' . ++$counter; });
+        $second = $cache->remember($active, $context, function () use (&$counter) { return 'active-' . ++$counter; });
+        $this->assertSame($first, $second);
+        $this->assertSame(3, $counter);
+        $this->assertNotSame($cache->key($active, $context), $cache->key($active, [...$context, 'page_id' => 43]));
+        $this->assertNotSame($cache->key($active, $context), $cache->key([...$active, 'label' => 'changed'], $context));
+    }
+
+    public function test_renderer_integrates_conditions_before_fragment_cache(): void
+    {
+        $blade = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_node.blade.php'));
+
+        $this->assertSourceContains('WidgetDisplayConditionEvaluator::class', $blade);
+        $this->assertSourceContains('WidgetFragmentCache::class', $blade);
+        $this->assertSourceContains("\$__pbConditionEvaluator->allows", $blade);
+        $this->assertSourceContains("\$__pbFragmentCache->remember", $blade);
     }
 
     private function assertSourceContains(string $needle, string $source): void
