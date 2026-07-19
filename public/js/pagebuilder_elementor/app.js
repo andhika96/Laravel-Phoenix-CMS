@@ -27,6 +27,10 @@
 		},
 		log(type, msg) { console[type](msg); },
 	};
+	const WidgetAdvancedControls = defineAsyncComponent(() => loader.loadModule(
+		'/js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue',
+		sfcOptions
+	));
 
 	const widgetMap = {
 		container:      '/js/pagebuilder_elementor/widgets/layout/Container.vue',
@@ -287,8 +291,73 @@
 	function accordionWidgetDefaultItems() {
 		return [accordionItemDefaults(0), accordionItemDefaults(1), accordionItemDefaults(2)];
 	}
+	function widgetAdvancedDefaults() {
+		const defaults = {
+			widthMode: 'default',
+			position: 'default', horizontalOrientation: 'left', verticalOrientation: 'top',
+			cssId: '', cssClass: '',
+			displayConditions: [], cacheMode: 'default',
+			animateWithAI: false,
+			scrollingEffects: false,
+			verticalScrollEnabled: false, verticalScrollDirection: 'up', verticalScrollSpeed: 4, verticalScrollViewportStart: 0, verticalScrollViewportEnd: 100,
+			horizontalScrollEnabled: false, horizontalScrollDirection: 'left', horizontalScrollSpeed: 4, horizontalScrollViewportStart: 0, horizontalScrollViewportEnd: 100,
+			transparencyEnabled: false, transparencyDirection: 'fade-in', transparencyLevel: 5, transparencyViewportStart: 0, transparencyViewportEnd: 100,
+			blurEnabled: false, blurDirection: 'fade-in', blurLevel: 5, blurViewportStart: 0, blurViewportEnd: 100,
+			rotateEnabled: false, rotateDirection: 'left', rotateSpeed: 4, rotateViewportStart: 0, rotateViewportEnd: 100,
+			scaleEnabled: false, scaleDirection: 'up', scaleSpeed: 4, scaleViewportStart: 0, scaleViewportEnd: 100,
+			scrollApplyDesktop: true, scrollApplyTablet: true, scrollApplyMobile: true, effectsRelativeTo: 'default',
+			mouseEffects: false, mouseTrackEnabled: false, mouseTrackDirection: 'direct', mouseTrackSpeed: 1,
+			tilt3dEnabled: false, tilt3dDirection: 'direct', tilt3dSpeed: 1,
+			sticky: 'none', stickyOnDesktop: true, stickyOnTablet: true, stickyOnMobile: true, stickyEffectsOffset: 0, stickyAnchorOffset: 0, stickyStayInColumn: false,
+			entranceAnimation: '', entranceDuration: 'normal', entranceDelay: 0,
+			transformState: 'normal', transformRotate: '0deg', transformRotateX: '0deg', transformRotateY: '0deg', transformPerspective: '0px', transformScale: 1,
+			transformSkewX: '0deg', transformSkewY: '0deg', transformFlipHorizontal: false, transformFlipVertical: false,
+			transformRotateHover: '0deg', transformRotateXHover: '0deg', transformRotateYHover: '0deg', transformPerspectiveHover: '0px', transformScaleHover: 1,
+			transformSkewXHover: '0deg', transformSkewYHover: '0deg', transformFlipHorizontalHover: false, transformFlipVerticalHover: false,
+			transformOriginX: 'center', transformOriginY: 'center', transformHoverDuration: 0.3,
+			advancedBackgroundType: 'none', advancedBackgroundColor: '', advancedBackgroundImage: '', advancedBackgroundPosition: 'center center', advancedBackgroundAttachment: 'scroll', advancedBackgroundRepeat: 'no-repeat', advancedBackgroundSize: 'cover',
+			advancedGradientColorOne: '#ffffff', advancedGradientLocationOne: 0, advancedGradientColorTwo: '#000000', advancedGradientLocationTwo: 100, advancedGradientType: 'linear', advancedGradientAngle: 180, advancedGradientPosition: 'center center',
+			advancedBackgroundTypeHover: 'none', advancedBackgroundColorHover: '', advancedBackgroundImageHover: '', advancedBackgroundPositionHover: 'center center', advancedBackgroundAttachmentHover: 'scroll', advancedBackgroundRepeatHover: 'no-repeat', advancedBackgroundSizeHover: 'cover',
+			advancedGradientColorOneHover: '#ffffff', advancedGradientLocationOneHover: 0, advancedGradientColorTwoHover: '#000000', advancedGradientLocationTwoHover: 100, advancedGradientTypeHover: 'linear', advancedGradientAngleHover: 180, advancedGradientPositionHover: 'center center', advancedBackgroundHoverDuration: 0.3,
+			advancedBorderType: 'none', advancedBorderWidth: '0px', advancedBorderColor: '#000000', advancedBoxShadowEnabled: false, advancedBoxShadowColor: 'rgba(0,0,0,.2)', advancedBoxShadowX: '0px', advancedBoxShadowY: '4px', advancedBoxShadowBlur: '16px', advancedBoxShadowSpread: '0px', advancedBoxShadowInset: false,
+			advancedBorderTypeHover: 'none', advancedBorderWidthHover: '0px', advancedBorderColorHover: '#000000', advancedBoxShadowEnabledHover: false, advancedBoxShadowColorHover: 'rgba(0,0,0,.2)', advancedBoxShadowXHover: '0px', advancedBoxShadowYHover: '4px', advancedBoxShadowBlurHover: '16px', advancedBoxShadowSpreadHover: '0px', advancedBoxShadowInsetHover: false, advancedBorderHoverDuration: 0.3,
+			maskEnabled: false, maskShape: 'circle', maskCustomImage: '', maskCustomSvg: '',
+			attributes: [], customCssCode: '',
+			hideDesktop: false, hideTablet: false, hideMobile: false,
+		};
+		const responsiveDefaults = {
+			marginTop: '0px', marginRight: '0px', marginBottom: '0px', marginLeft: '0px',
+			paddingTop: '0px', paddingRight: '0px', paddingBottom: '0px', paddingLeft: '0px',
+			customWidth: '', alignSelf: 'auto', orderMode: 'default', order: '', sizeMode: 'none', flexGrow: 0, flexShrink: 1,
+			positionX: '0px', positionY: '0px', zIndex: '', stickyOffset: '0px',
+			transformOffsetX: '0px', transformOffsetY: '0px', transformOffsetXHover: '0px', transformOffsetYHover: '0px',
+			advancedBorderRadius: '0px', advancedBorderRadiusHover: '0px',
+			maskSize: 'fit', maskScale: 100, maskPosition: 'center center', maskPositionX: '50%', maskPositionY: '50%', maskRepeat: 'no-repeat',
+		};
+		Object.entries(responsiveDefaults).forEach(([key, value]) => {
+			defaults[key] = value;
+			defaults[key + 'Tablet'] = '';
+			defaults[key + 'Mobile'] = '';
+		});
+		return defaults;
+	}
+	function normalizeWidgetAdvancedSettings(settings) {
+		if (!settings || typeof settings !== 'object') return settings;
+		const defaults = widgetAdvancedDefaults();
+		Object.keys(defaults).forEach((key) => {
+			if (settings[key] === undefined) settings[key] = cloneSettingValue(defaults[key]);
+		});
+		settings.displayConditions = Array.isArray(settings.displayConditions) ? settings.displayConditions : [];
+		settings.attributes = normalizeAttributes(settings.attributes);
+		settings.cacheMode = ['default', 'inactive', 'active'].includes(settings.cacheMode) ? settings.cacheMode : 'default';
+		settings.widthMode = ['default', 'full', 'inline', 'custom'].includes(settings.widthMode) ? settings.widthMode : 'default';
+		settings.position = ['default', 'absolute', 'fixed'].includes(settings.position) ? settings.position : 'default';
+		settings.animateWithAI = false;
+		return settings;
+	}
 	function accordionWidgetDefaults() {
 		return {
+			...widgetAdvancedDefaults(),
 			itemPosition: 'stretch',
 			itemPositionTablet: '',
 			itemPositionMobile: '',
@@ -2177,7 +2246,7 @@
 	const PBC = window.PAGE_BUILDER_ELEMENTOR_CONTEXT || {};
 
 	createApp({
-		components: { draggable, BuilderNode, CkEditorField },
+		components: { draggable, BuilderNode, CkEditorField, WidgetAdvancedControls },
 		setup() {
 			const mode       = ref(PBC.mode || 'create');
 			const saveUrl    = ref(PBC.saveUrl || '');
@@ -2779,8 +2848,9 @@
 							? activeTabId
 							: c.tabItems[0].id;
 					}
-					if (c.type === 'accordion') {
+			if (c.type === 'accordion') {
 						c.settings = { ...accordionWidgetDefaults(), ...(c.settings || {}) };
+						normalizeWidgetAdvancedSettings(c.settings);
 						c.settings.faqSchema = !!c.settings.faqSchema;
 						c.settings.defaultState = c.settings.defaultState === 'all-collapsed' ? 'all-collapsed' : 'first-expanded';
 						c.settings.maxExpanded = c.settings.maxExpanded === 'multiple' ? 'multiple' : 'one';
@@ -7125,6 +7195,14 @@
 										<div class="pb-form-group"><label class="pb-form-label">Padding</label><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('contentPadding')]" placeholder="20px"></div>
 									</div>
 								</details>
+							</div>
+
+							<div v-show="settingsTab==='advanced'" class="pb-tab-content pb-accordion-advanced-settings">
+								<WidgetAdvancedControls
+									:node="selectedNode"
+									:responsive-device="responsiveDevice"
+									@unavailable-ai="showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')"
+								/>
 							</div>
 						</div>
 					</template>
