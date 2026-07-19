@@ -42,6 +42,7 @@
 		divider:        '/js/pagebuilder_elementor/widgets/basic/Divider.vue',
 		spacer:         '/js/pagebuilder_elementor/widgets/basic/Spacer.vue',
 		tabs:           '/js/pagebuilder_elementor/widgets/general/Tabs.vue',
+		accordion:      '/js/pagebuilder_elementor/widgets/advanced/Accordion.vue',
 	};
 
 	const _wcache = {};
@@ -60,6 +61,7 @@
 	function isCont(t)    { return t === 'container' || t === 'container_fluid'; }
 	function isGrid(t)    { return t === 'row_grid' || t === 'grid'; }
 	function isTabs(t)    { return t === 'tabs'; }
+	function isAccordion(t) { return t === 'accordion'; }
 	function isWgt(t)     { return !isCont(t) && !isGrid(t); }
 	function toEmbed(url) {
 		if (!url || url.includes('embed/')) return url || '';
@@ -271,6 +273,39 @@
 			horizontalScroll: false,
 			breakpoint: 'mobile',
 			activeTabId: '',
+			cssClass: '',
+		};
+	}
+	function accordionItemDefaults(index = 0) {
+		return {
+			id: uid('accordion_item'),
+			title: 'Item #' + (index + 1),
+			cssId: '',
+			children: [],
+		};
+	}
+	function accordionWidgetDefaultItems() {
+		return [accordionItemDefaults(0), accordionItemDefaults(1), accordionItemDefaults(2)];
+	}
+	function accordionWidgetDefaults() {
+		return {
+			itemPosition: 'stretch',
+			itemPositionTablet: '',
+			itemPositionMobile: '',
+			iconPosition: 'start',
+			iconPositionTablet: '',
+			iconPositionMobile: '',
+			expandIconSource: 'library',
+			expandIconClass: 'fas fa-plus',
+			expandIconSvg: '',
+			collapseIconSource: 'library',
+			collapseIconClass: 'fas fa-minus',
+			collapseIconSvg: '',
+			titleTag: 'div',
+			faqSchema: false,
+			defaultState: 'first-expanded',
+			maxExpanded: 'one',
+			animationDuration: 400,
 			cssClass: '',
 		};
 	}
@@ -856,6 +891,7 @@
 		divider: 'Divider',
 		spacer: 'Spacer',
 		tabs: 'Tabs',
+		accordion: 'Accordion',
 	});
 
 	const NODE_LABEL_ICONS = Object.freeze({
@@ -872,6 +908,7 @@
 		divider: 'fas fa-minus',
 		spacer: 'fas fa-arrows-alt-v',
 		tabs: 'far fa-folder',
+		accordion: 'fas fa-bars',
 	});
 
 	function baseNodeLabel(type, fallback = 'Widget') {
@@ -932,6 +969,15 @@
 				settings.activeTabId = tabItems[0].id;
 				return { id, type, label:'Tabs', labelSuffix:'', settings, tabItems };
 			}
+			case 'accordion':
+				return {
+					id,
+					type,
+					label: 'Accordion',
+					labelSuffix: '',
+					settings: accordionWidgetDefaults(),
+					accordionItems: accordionWidgetDefaultItems(),
+				};
 			default: return null;
 		}
 	}
@@ -2568,6 +2614,28 @@
 							? activeTabId
 							: c.tabItems[0].id;
 					}
+					if (c.type === 'accordion') {
+						c.settings = { ...accordionWidgetDefaults(), ...(c.settings || {}) };
+						c.settings.faqSchema = !!c.settings.faqSchema;
+						c.settings.defaultState = c.settings.defaultState === 'all-collapsed' ? 'all-collapsed' : 'first-expanded';
+						c.settings.maxExpanded = c.settings.maxExpanded === 'multiple' ? 'multiple' : 'one';
+						c.settings.animationDuration = clamp(Number(c.settings.animationDuration) || 400, 0, 5000);
+						c.settings.cssClass = String(c.settings.cssClass || '').trim();
+						const rawItems = Array.isArray(c.accordionItems) && c.accordionItems.length
+							? c.accordionItems
+							: accordionWidgetDefaultItems();
+						c.accordionItems = rawItems.map((rawItem, index) => {
+							const item = {
+								id: rawItem && rawItem.id ? rawItem.id : uid('accordion_item'),
+								title: String(rawItem && rawItem.title ? rawItem.title : ('Item #' + (index + 1))).trim() || ('Item #' + (index + 1)),
+								cssId: normalizeTabsCssId(rawItem && rawItem.cssId),
+								children: (rawItem && rawItem.children) || [],
+							};
+							item.children = norm(item.children || []);
+							return item;
+						});
+						if (!c.accordionItems.length) c.accordionItems = [accordionItemDefaults(0)];
+					}
 					if (c.settings && typeof c.settings === 'object') {
 						seedResponsiveSettings(c.settings);
 					}
@@ -2592,6 +2660,7 @@
 					if (n.children) { const r = findById(n.children, id); if (r) return r; }
 					if (n.columns) for (const col of n.columns) { const r = findById(col.children||[], id); if (r) return r; }
 					if (n.tabItems) for (const item of n.tabItems) { const r = findById(item.children||[], id); if (r) return r; }
+					if (n.accordionItems) for (const item of n.accordionItems) { const r = findById(item.children||[], id); if (r) return r; }
 				}
 				return null;
 			}
@@ -3920,6 +3989,13 @@
 							}
 						});
 					}
+					if (Array.isArray(node.accordionItems) && node.accordionItems.length) {
+						node.accordionItems.forEach((item) => {
+							if (Array.isArray(item && item.children) && item.children.length) {
+								walkNodes(item.children, handler);
+							}
+						});
+					}
 				});
 			}
 			function syncAllGridCellsForDevice(device = responsiveDevice.value) {
@@ -3987,6 +4063,7 @@
 					if (n.children && delFrom(n.children, id)) return true;
 					if (n.columns) for (const col of n.columns) if (delFrom(col.children||[], id)) return true;
 					if (n.tabItems) for (const item of n.tabItems) if (delFrom(item.children||[], id)) return true;
+					if (n.accordionItems) for (const item of n.accordionItems) if (delFrom(item.children||[], id)) return true;
 				}
 				return false;
 			}
@@ -3997,6 +4074,11 @@
 				if (node.tabItems) node.tabItems.forEach((item, index) => {
 					item.id = uid('tab');
 					if (!item.title) item.title = 'Tab #' + (index + 1);
+					(item.children || []).forEach(regenIds);
+				});
+				(node.accordionItems || []).forEach((item, index) => {
+					item.id = uid('accordion_item');
+					if (!item.title) item.title = 'Item #' + (index + 1);
 					(item.children || []).forEach(regenIds);
 				});
 				if (node.type === 'tabs' && node.settings) {
@@ -4014,6 +4096,7 @@
 					if (n.children && dupIn(n.children, id)) return true;
 					if (n.columns) for (const col of n.columns) if (dupIn(col.children||[], id)) return true;
 					if (n.tabItems) for (const item of n.tabItems) if (dupIn(item.children||[], id)) return true;
+					if (n.accordionItems) for (const item of n.accordionItems) if (dupIn(item.children||[], id)) return true;
 				}
 				return false;
 			}
@@ -4578,6 +4661,9 @@
 				general: [
 					{ type:'tabs',        label:'Tabs',        icon:'far fa-folder' },
 				],
+				advanced: [
+					{ type:'accordion',   label:'Accordion',   icon:'fas fa-bars' },
+				],
 			};
 
 			// ── Save ──────────────────────────────────────────────────────────
@@ -4770,6 +4856,24 @@
 					<div class="pb-panel-title">General</div>
 					<draggable
 						:list="toolbox.general"
+						:group="sidebarWgtGroup"
+						:clone="toolClone"
+						item-key="type"
+						class="pb-tool-grid"
+						:sort="false"
+						@start="onDragStart"
+						@end="onDragEnd"
+					>
+						<template #item="{ element }">
+							<div class="pb-tool-item" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
+						</template>
+					</draggable>
+				</div>
+
+				<div class="pb-section">
+					<div class="pb-panel-title">Advanced</div>
+					<draggable
+						:list="toolbox.advanced"
 						:group="sidebarWgtGroup"
 						:clone="toolClone"
 						item-key="type"
