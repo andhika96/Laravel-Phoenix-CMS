@@ -132,6 +132,78 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertSourceContains("--accordion-content-padding", $component);
     }
 
+    public function test_frontend_renders_semantic_nested_accordion_and_safe_faq_schema(): void
+    {
+        $html = view('pagebuilder_elementor.partials.render_node', ['node' => [
+            'id' => 'accordion-main',
+            'type' => 'accordion',
+            'settings' => [
+                'defaultState' => 'first-expanded',
+                'maxExpanded' => 'one',
+                'animationDuration' => 400,
+                'faqSchema' => true,
+                'titleTag' => 'h3',
+                'expandIconSource' => 'library',
+                'expandIconClass' => 'fas fa-plus',
+                'collapseIconSource' => 'library',
+                'collapseIconClass' => 'fas fa-minus',
+            ],
+            'accordionItems' => [
+                [
+                    'id' => 'first',
+                    'title' => 'First question?',
+                    'cssId' => 'first-question',
+                    'children' => [[
+                        'id' => 'answer-heading',
+                        'type' => 'heading',
+                        'settings' => ['tag' => 'h4', 'text' => 'First answer'],
+                    ]],
+                ],
+                [
+                    'id' => 'second',
+                    'title' => 'Second question?',
+                    'cssId' => 'invalid id',
+                    'children' => [[
+                        'id' => 'answer-text',
+                        'type' => 'text_editor',
+                        'settings' => ['html' => '<p>Second <strong>answer</strong></p>'],
+                    ]],
+                ],
+            ],
+        ]])->render();
+
+        $this->assertStringContainsString('data-accordion-root="1"', $html);
+        $this->assertSame(2, substr_count($html, '<details'));
+        $this->assertStringContainsString('data-max-expanded="one"', $html);
+        $this->assertStringContainsString('data-animation-duration="400"', $html);
+        $this->assertStringContainsString('id="first-question"', $html);
+        $this->assertStringNotContainsString('id="invalid id"', $html);
+        $this->assertStringContainsString('pb-accordion-summary-accordion-main-first', $html);
+        $this->assertStringContainsString('aria-expanded="true"', $html);
+        $this->assertStringContainsString('<h4 class="el-widget-heading"', $html);
+        $this->assertStringContainsString('"@type":"FAQPage"', $html);
+        $this->assertStringContainsString('First question?', $html);
+        $this->assertStringContainsString('Second answer', $html);
+    }
+
+    public function test_frontend_runtime_is_shared_by_editor_and_renderer_shells(): void
+    {
+        $runtimePath = public_path('js/pagebuilder_elementor/frontend-runtime.js');
+        $this->assertFileExists($runtimePath);
+
+        $runtime = file_get_contents($runtimePath);
+        $editorShell = file_get_contents(resource_path('views/pagebuilder_elementor/editor_shell.blade.php'));
+        $frontendShell = file_get_contents(resource_path('views/pagebuilder_elementor/frontend_renderer.blade.php'));
+
+        $this->assertSourceContains('window.PageBuilderElementorRuntime', $runtime);
+        $this->assertSourceContains("querySelectorAll('[data-accordion-root]')", $runtime);
+        $this->assertSourceContains("case 'ArrowDown'", $runtime);
+        $this->assertSourceContains("case 'Home'", $runtime);
+        $this->assertSourceContains('prefers-reduced-motion: reduce', file_get_contents(public_path('assets/css/frontend_elementor.css')));
+        $this->assertSourceContains('frontend-runtime.js', $editorShell);
+        $this->assertSourceContains('frontend-runtime.js', $frontendShell);
+    }
+
     private function assertSourceContains(string $needle, string $source): void
     {
         $this->assertTrue(str_contains($source, $needle), 'Missing source marker: '.$needle);

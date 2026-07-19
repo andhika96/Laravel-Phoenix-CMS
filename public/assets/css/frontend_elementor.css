@@ -645,7 +645,7 @@
 	border-color: var(--accordion-border-color-active, var(--accordion-border-color-normal, #d5dae3));
 }
 
-.el-widget-accordion__heading { margin: 0; font: inherit; }
+.el-widget-accordion__heading { flex: 1 1 auto; margin: 0; font: inherit; }
 .el-widget-accordion__header,
 .el-widget-accordion__summary {
 	appearance: none;
@@ -699,6 +699,11 @@
 	color: var(--accordion-header-normal-icon-color, currentColor);
 }
 .el-widget-accordion__icon img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.el-widget-accordion__icon-collapse { display: none; }
+.el-widget-accordion__item.is-active .el-widget-accordion__icon-expand,
+.el-widget-accordion__item[open] .el-widget-accordion__icon-expand { display: none; }
+.el-widget-accordion__item.is-active .el-widget-accordion__icon-collapse,
+.el-widget-accordion__item[open] .el-widget-accordion__icon-collapse { display: inline-block; }
 .el-widget-accordion__item:hover .el-widget-accordion__icon { color: var(--accordion-header-hover-icon-color, var(--accordion-header-normal-icon-color, currentColor)); }
 .el-widget-accordion__item.is-active .el-widget-accordion__icon,
 .el-widget-accordion__item[open] .el-widget-accordion__icon { color: var(--accordion-header-active-icon-color, var(--accordion-header-normal-icon-color, currentColor)); }

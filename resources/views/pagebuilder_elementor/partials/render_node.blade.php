@@ -1599,6 +1599,9 @@
 		</script>
 	@endif
 
+@elseif($type === 'accordion')
+	@include('pagebuilder_elementor.partials.render_accordion', ['node' => $node])
+
 @elseif($type === 'tabs')
 	@php
 		$nodeId = trim((string) ($node['id'] ?? ''));

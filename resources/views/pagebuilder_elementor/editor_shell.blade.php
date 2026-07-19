@@ -34,6 +34,7 @@
 	<script src="{{ asset('assets/plugins/ckfinder/ckfinder.js') }}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-build-classic@41.4.2/build/ckeditor.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
+	<script src="{{ asset('js/pagebuilder_elementor/frontend-runtime.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor/frontend-runtime.js')) }}"></script>
 	<script src="{{ asset('js/pagebuilder_elementor/app.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor/app.js')) }}"></script>
 </body>
 </html>
