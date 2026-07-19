@@ -1049,6 +1049,9 @@
 			onShowToolbox:  { type: Function, required: true },
 			pendingInsertTarget: { type: Object, default: null },
 			onRerouteTabsDrop: { type: Function, default: null },
+			onAccordionRuntimeForNode: { type: Function, default: null },
+			onToggleAccordionItem: { type: Function, default: null },
+			onRerouteAccordionDrop: { type: Function, default: null },
 			onTrackDropzonePointer: { type: Function, default: null },
 		},
 		emits: [],
@@ -1081,6 +1084,7 @@
 			isCont()  { return isCont(this.node.type); },
 			isGrid()  { return isGrid(this.node.type); },
 			isTabsNode() { return isTabs(this.node.type); },
+			isAccordionNode() { return isAccordion(this.node.type); },
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
 				return displayNodeLabel(this.node);
@@ -1445,6 +1449,18 @@
 				const item = this.activeTabsItem();
 				return item && Array.isArray(item.children) ? item.children : [];
 			},
+			accordionItemsList() {
+				return Array.isArray(this.node.accordionItems) ? this.node.accordionItems : [];
+			},
+			accordionExpandedItemIds() {
+				if (!this.onAccordionRuntimeForNode) return [];
+				const runtime = this.onAccordionRuntimeForNode(this.node);
+				return Array.isArray(runtime?.expandedItemIds) ? runtime.expandedItemIds : [];
+			},
+			accordionItemChildren(itemId) {
+				const item = this.accordionItemsList().find((entry) => String(entry?.id || '') === String(itemId || ''));
+				return item && Array.isArray(item.children) ? item.children : [];
+			},
 			onNodeContentClick(node, event) {
 				if (isInteractiveCanvasTarget(event && event.target)) return;
 				this.onSelect(node);
@@ -1471,6 +1487,9 @@
 					onShowToolbox:  this.onShowToolbox,
 					pendingInsertTarget: this.pendingInsertTarget,
 					onRerouteTabsDrop: this.onRerouteTabsDrop,
+					onAccordionRuntimeForNode: this.onAccordionRuntimeForNode,
+					onToggleAccordionItem: this.onToggleAccordionItem,
+					onRerouteAccordionDrop: this.onRerouteAccordionDrop,
 					onTrackDropzonePointer: this.onTrackDropzonePointer,
 				};
 			},
@@ -1645,6 +1664,17 @@
 				const children = this.activeTabsChildren();
 				if (this.onRerouteTabsDrop && this.onRerouteTabsDrop(evt, children)) return;
 				this.onAddCol(evt, { children }, -1, null);
+			},
+			onAccordionDropzoneMove(evt) {
+				return this.onTabDropzoneMove(evt);
+			},
+			onAddAccordionItemChild(evt, item) {
+				const children = this.accordionItemChildren(item?.id);
+				if (this.onRerouteAccordionDrop && this.onRerouteAccordionDrop(evt, children)) return;
+				this.onAddCol(evt, { children }, -1, null);
+			},
+			toggleAccordionItemFromPreview(itemId) {
+				if (this.onToggleAccordionItem) this.onToggleAccordionItem(this.node, itemId);
 			},
 			isSequentialColumnLocked(colIndex) {
 				const cols = Array.isArray(this.node.columns) ? this.node.columns : [];
@@ -1993,6 +2023,60 @@
 								</div>
 							</template>
 						</draggable>
+					</component>
+				</div>
+			</div>
+		</template>
+
+		<!-- ACCORDION -->
+		<template v-else-if="isAccordionNode">
+			<div class="pb-preview pb-preview-accordion">
+				<div class="pb-preview-inner">
+					<component
+						:is="loadWidget(node.type)"
+						:item="node"
+						:expanded-item-ids="accordionExpandedItemIds()"
+						:responsive-device="responsiveDevice"
+						@toggle-item="toggleAccordionItemFromPreview"
+					>
+						<template #panel="{ item, expanded }">
+							<draggable
+								v-show="expanded"
+								:list="accordionItemChildren(item.id)"
+								item-key="id"
+								:group="colGroup"
+								:move="onAccordionDropzoneMove"
+								:fallback-on-body="true"
+								:dragover-bubble="false"
+								:swap-threshold="0.65"
+								:empty-insert-threshold="30"
+								data-parent-node-type="accordion"
+								:data-parent-node-id="node.id"
+								:data-accordion-item-id="item.id"
+								:class="['pb-dropzone', 'pb-dropzone-accordion', {
+									'is-empty': accordionItemChildren(item.id).length === 0,
+									'is-pending-insert-target': pendingInsertTarget && pendingInsertTarget.type === 'accordion' && pendingInsertTarget.nodeId === node.id && pendingInsertTarget.itemId === item.id
+								}]"
+								ghost-class="pb-ghost"
+								dragover-class="is-drop-hover"
+								@add="(event) => onAddAccordionItemChild(event, item)"
+								@start="onDragStart"
+								@end="onDragEnd"
+							>
+								<template #item="{ element }">
+									<BuilderNode :node="element" v-bind="passdown()" />
+								</template>
+								<template #footer>
+									<div v-if="accordionItemChildren(item.id).length === 0" class="pb-dropzone-empty pb-accordion-empty-hint">
+										<button type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox({ type: 'accordion', nodeId: node.id, itemId: item.id })">
+											<i class="fas fa-plus"></i>
+											<span>Add</span>
+										</button>
+										<div class="pb-dropzone-empty-text">Drop here</div>
+									</div>
+								</template>
+							</draggable>
+						</template>
 					</component>
 				</div>
 			</div>
@@ -2746,6 +2830,22 @@
 					if (!tabsNode.settings || typeof tabsNode.settings !== 'object') tabsNode.settings = {};
 					tabsNode.settings.activeTabId = targetTab.id;
 					targetTab.children.push(item);
+					selectedId.value = item.id;
+					clearPendingInsertTarget();
+					return true;
+				}
+				if (target.type === 'accordion') {
+					const accordionNode = findById(rootNodes.value, target.nodeId);
+					if (!accordionNode || accordionNode.type !== 'accordion' || !Array.isArray(accordionNode.accordionItems)) return false;
+					const targetItem = accordionNode.accordionItems.find((entry) => String(entry?.id || '') === String(target.itemId || ''));
+					if (!targetItem || !Array.isArray(targetItem.children)) return false;
+					const runtime = accordionRuntimeForNode(accordionNode);
+					if (!runtime.expandedItemIds.includes(String(targetItem.id))) {
+						runtime.expandedItemIds = accordionNode.settings?.maxExpanded === 'multiple'
+							? runtime.expandedItemIds.concat(String(targetItem.id))
+							: [String(targetItem.id)];
+					}
+					targetItem.children.push(item);
 					selectedId.value = item.id;
 					clearPendingInsertTarget();
 					return true;
@@ -4463,6 +4563,9 @@
 				targetChildren.push(item);
 				return true;
 			}
+			function rerouteAccordionDropToNestedColumn(evt, itemChildren) {
+				return rerouteTabsDropToNestedColumn(evt, itemChildren);
+			}
 
 			// onAddCol: dipanggil saat item di-drop ke grid column
 			function onAddCol(evt, col, colIndex, parentNode) {
@@ -4842,7 +4945,7 @@
 				onAddContainer, onAddCol, onRootAdd,
 				modal, cPresets, gPresets, applyContPreset, applyGridPreset, closeModal, pickLayout, openModal,
 				canUndo, canRedo, undo, redo,
-				onToolboxItemClick, pendingInsertTarget, clearPendingInsertTarget, rerouteTabsDropToNestedColumn, trackDropzonePointerFromEvent,
+				onToolboxItemClick, pendingInsertTarget, clearPendingInsertTarget, rerouteTabsDropToNestedColumn, rerouteAccordionDropToNestedColumn, trackDropzonePointerFromEvent,
 			};
 		},
 
@@ -7106,6 +7209,9 @@
 								:on-show-toolbox="showToolboxPanel"
 								:pending-insert-target="pendingInsertTarget"
 								:on-reroute-tabs-drop="rerouteTabsDropToNestedColumn"
+								:on-accordion-runtime-for-node="accordionRuntimeForNode"
+								:on-toggle-accordion-item="toggleAccordionItem"
+								:on-reroute-accordion-drop="rerouteAccordionDropToNestedColumn"
 								:on-track-dropzone-pointer="trackDropzonePointerFromEvent"
 							/>
 						</template>

@@ -54,6 +54,31 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertSourceContains('Animation Duration', $appJs);
     }
 
+    public function test_accordion_preview_component_renders_accessible_animated_headers(): void
+    {
+        $componentPath = public_path('js/pagebuilder_elementor/widgets/advanced/Accordion.vue');
+
+        $this->assertFileExists($componentPath);
+
+        $component = file_get_contents($componentPath);
+        $this->assertSourceContains("name: 'AdvancedAccordion'", $component);
+        $this->assertSourceContains(':aria-expanded="isExpanded(item.id) ? \'true\' : \'false\'"', $component);
+        $this->assertSourceContains("this.\$emit('toggle-item', item.id)", $component);
+        $this->assertSourceContains('prefers-reduced-motion: reduce', $component);
+    }
+
+    public function test_editor_renders_targeted_nested_dropzones_for_each_expanded_item(): void
+    {
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertSourceContains('isAccordionNode() { return isAccordion(this.node.type); }', $appJs);
+        $this->assertSourceContains('data-parent-node-type="accordion"', $appJs);
+        $this->assertSourceContains("pendingInsertTarget.type === 'accordion'", $appJs);
+        $this->assertSourceContains("onShowToolbox({ type: 'accordion', nodeId: node.id, itemId: item.id })", $appJs);
+        $this->assertSourceContains("if (target.type === 'accordion')", $appJs);
+        $this->assertSourceContains('function rerouteAccordionDropToNestedColumn(evt, itemChildren)', $appJs);
+    }
+
     private function assertSourceContains(string $needle, string $source): void
     {
         $this->assertTrue(str_contains($source, $needle), 'Missing source marker: '.$needle);
