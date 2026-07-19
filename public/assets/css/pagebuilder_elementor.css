@@ -1693,6 +1693,14 @@ body {
 	min-width: 0;
 }
 
+.pb-node.pb-has-advanced:hover {
+	background: var(--pb-advanced-hover-background, transparent);
+	border-style: var(--pb-advanced-hover-border-style, inherit);
+	border-width: var(--pb-advanced-hover-border-width, inherit);
+	border-color: var(--pb-advanced-hover-border-color, inherit);
+	transform: var(--pb-advanced-hover-transform, var(--pb-advanced-transform, none));
+}
+
 .pb-node.pb-node-heading .pb-preview,
 .pb-node.pb-node-button .pb-preview,
 .pb-node.pb-node-divider .pb-preview,

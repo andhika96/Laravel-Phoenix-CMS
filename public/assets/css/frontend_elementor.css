@@ -615,6 +615,26 @@
 }
 
 /* Advanced Accordion widget */
+.pb-advanced-widget {
+	transform: var(--pb-advanced-transform, none) var(--pb-motion-transform, translate3d(0, 0, 0)) var(--pb-mouse-transform, translate3d(0, 0, 0));
+	will-change: transform, opacity, filter;
+}
+
+.pb-advanced-entrance {
+	opacity: 0;
+	animation-play-state: paused;
+}
+
+.pb-advanced-entrance.is-visible {
+	opacity: 1;
+	animation-play-state: running;
+	animation-duration: .8s;
+	animation-fill-mode: both;
+}
+
+.pb-advanced-entrance[data-entrance-duration="slow"] { animation-duration: 1.2s; }
+.pb-advanced-entrance[data-entrance-duration="fast"] { animation-duration: .45s; }
+
 .el-widget-accordion {
 	width: 100%;
 	padding: var(--accordion-padding, 0);

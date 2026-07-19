@@ -355,6 +355,106 @@
 		settings.animateWithAI = false;
 		return settings;
 	}
+	function widgetAdvancedPreviewStyle(settings, device) {
+		const s = settings || {};
+		const safeDevice = device === 'tablet' || device === 'mobile' ? device : 'desktop';
+		const get = (base, fallback = '') => {
+			const key = responsiveKey(base, safeDevice);
+			const value = s[key];
+			if (safeDevice !== 'desktop' && (value === '' || value == null)) return s[base] ?? fallback;
+			return value === '' || value == null ? fallback : value;
+		};
+		const style = {
+			marginTop: cssSpace(get('marginTop', '0px'), '0'), marginRight: cssSpace(get('marginRight', '0px'), '0'),
+			marginBottom: cssSpace(get('marginBottom', '0px'), '0'), marginLeft: cssSpace(get('marginLeft', '0px'), '0'),
+			paddingTop: cssSpace(get('paddingTop', '0px'), '0'), paddingRight: cssSpace(get('paddingRight', '0px'), '0'),
+			paddingBottom: cssSpace(get('paddingBottom', '0px'), '0'), paddingLeft: cssSpace(get('paddingLeft', '0px'), '0'),
+			alignSelf: get('alignSelf', 'auto'),
+			borderRadius: cssSize(get('advancedBorderRadius', '0px'), '0'),
+			transition: `background ${Number(s.advancedBackgroundHoverDuration) || 0.3}s ease, border ${Number(s.advancedBorderHoverDuration) || 0.3}s ease, box-shadow ${Number(s.advancedBorderHoverDuration) || 0.3}s ease, transform ${Number(s.transformHoverDuration) || 0.3}s ease`,
+		};
+		const hidden = safeDevice === 'desktop' ? s.hideDesktop : (safeDevice === 'tablet' ? s.hideTablet : s.hideMobile);
+		if (hidden === true || hidden === 'true' || hidden === 1 || hidden === '1') style.display = 'none';
+		if (s.widthMode === 'full') style.width = '100%';
+		if (s.widthMode === 'inline') style.width = 'fit-content';
+		if (s.widthMode === 'custom') style.width = cssSize(get('customWidth', ''), 'auto');
+		const orderMode = get('orderMode', 'default');
+		if (orderMode === 'start') style.order = -9999;
+		if (orderMode === 'end') style.order = 9999;
+		if (orderMode === 'custom' && Number.isFinite(Number(get('order', '')))) style.order = Number(get('order'));
+		const sizeMode = get('sizeMode', 'none');
+		if (sizeMode === 'grow') style.flex = '1 1 0';
+		if (sizeMode === 'shrink') style.flex = '0 1 auto';
+		if (sizeMode === 'custom') style.flex = `${Number(get('flexGrow', 0)) || 0} ${Number(get('flexShrink', 1)) || 1} auto`;
+		if (['absolute', 'fixed'].includes(s.position)) {
+			style.position = s.position;
+			style[s.horizontalOrientation === 'right' ? 'right' : 'left'] = cssSpace(get('positionX', '0px'), '0');
+			style[s.verticalOrientation === 'bottom' ? 'bottom' : 'top'] = cssSpace(get('positionY', '0px'), '0');
+		}
+		if (s.sticky === 'top' || s.sticky === 'bottom') {
+			style.position = 'sticky';
+			style[s.sticky] = cssSpace(get('stickyOffset', '0px'), '0');
+		}
+		if (get('zIndex', '') !== '') style.zIndex = Number(get('zIndex')) || 0;
+		const backgroundValue = (hover = false) => {
+			const suffix = hover ? 'Hover' : '';
+			const type = s['advancedBackgroundType' + suffix] || 'none';
+			if (type === 'classic') {
+				const image = String(s['advancedBackgroundImage' + suffix] || '').trim();
+				if (image) return `url("${image.replace(/["\\]/g, '')}")`;
+				return String(s['advancedBackgroundColor' + suffix] || 'transparent');
+			}
+			if (type === 'gradient') {
+				const one = s['advancedGradientColorOne' + suffix] || '#fff';
+				const two = s['advancedGradientColorTwo' + suffix] || '#000';
+				const oneLoc = clamp(Number(s['advancedGradientLocationOne' + suffix]) || 0, 0, 100);
+				const twoLoc = clamp(Number(s['advancedGradientLocationTwo' + suffix]) || 100, 0, 100);
+				return s['advancedGradientType' + suffix] === 'radial'
+					? `radial-gradient(circle, ${one} ${oneLoc}%, ${two} ${twoLoc}%)`
+					: `linear-gradient(${clamp(Number(s['advancedGradientAngle' + suffix]) || 180, 0, 360)}deg, ${one} ${oneLoc}%, ${two} ${twoLoc}%)`;
+			}
+			return 'none';
+		};
+		const normalBackground = backgroundValue(false);
+		if (normalBackground !== 'none') {
+			if (String(normalBackground).startsWith('#') || String(normalBackground).startsWith('rgb') || normalBackground === 'transparent') style.backgroundColor = normalBackground;
+			else style.backgroundImage = normalBackground;
+		}
+		style['--pb-advanced-hover-background'] = backgroundValue(true);
+		const borderType = ['solid', 'double', 'dotted', 'dashed', 'groove'].includes(s.advancedBorderType) ? s.advancedBorderType : 'none';
+		style.borderStyle = borderType;
+		style.borderWidth = borderType === 'none' ? '0' : cssSize(s.advancedBorderWidth, '1px');
+		style.borderColor = String(s.advancedBorderColor || 'transparent');
+		if (s.advancedBoxShadowEnabled) style.boxShadow = `${cssSize(s.advancedBoxShadowX, '0')} ${cssSize(s.advancedBoxShadowY, '0')} ${cssSize(s.advancedBoxShadowBlur, '0')} ${cssSize(s.advancedBoxShadowSpread, '0')} ${s.advancedBoxShadowColor || 'rgba(0,0,0,.2)'}${s.advancedBoxShadowInset ? ' inset' : ''}`;
+		const transform = [
+			`perspective(${cssSize(s.transformPerspective, '0px')})`, `translate(${cssSpace(get('transformOffsetX', '0px'), '0')}, ${cssSpace(get('transformOffsetY', '0px'), '0')})`,
+			`rotate(${cssSize(s.transformRotate, '0deg')})`, `rotateX(${cssSize(s.transformRotateX, '0deg')})`, `rotateY(${cssSize(s.transformRotateY, '0deg')})`,
+			`scale(${Number(s.transformScale) || 1})`, `skew(${cssSize(s.transformSkewX, '0deg')}, ${cssSize(s.transformSkewY, '0deg')})`,
+			s.transformFlipHorizontal ? 'scaleX(-1)' : '', s.transformFlipVertical ? 'scaleY(-1)' : '',
+		].filter(Boolean).join(' ');
+		style['--pb-advanced-transform'] = transform;
+		style.transform = 'var(--pb-advanced-transform)';
+		const hoverTransform = [
+			`perspective(${cssSize(s.transformPerspectiveHover, '0px')})`, `translate(${cssSpace(get('transformOffsetXHover', '0px'), '0')}, ${cssSpace(get('transformOffsetYHover', '0px'), '0')})`,
+			`rotate(${cssSize(s.transformRotateHover, '0deg')})`, `rotateX(${cssSize(s.transformRotateXHover, '0deg')})`, `rotateY(${cssSize(s.transformRotateYHover, '0deg')})`,
+			`scale(${Number(s.transformScaleHover) || 1})`, `skew(${cssSize(s.transformSkewXHover, '0deg')}, ${cssSize(s.transformSkewYHover, '0deg')})`,
+			s.transformFlipHorizontalHover ? 'scaleX(-1)' : '', s.transformFlipVerticalHover ? 'scaleY(-1)' : '',
+		].filter(Boolean).join(' ');
+		style['--pb-advanced-hover-transform'] = hoverTransform;
+		style['--pb-advanced-hover-border-style'] = ['solid', 'double', 'dotted', 'dashed', 'groove'].includes(s.advancedBorderTypeHover) ? s.advancedBorderTypeHover : 'none';
+		style['--pb-advanced-hover-border-width'] = cssSize(s.advancedBorderWidthHover, '0');
+		style['--pb-advanced-hover-border-color'] = String(s.advancedBorderColorHover || 'transparent');
+		style.transformOrigin = `${s.transformOriginX || 'center'} ${s.transformOriginY || 'center'}`;
+		if (s.maskEnabled) {
+			const maskImage = s.maskShape === 'custom' && s.maskCustomImage ? `url("${String(s.maskCustomImage).replace(/["\\]/g, '')}")` : 'radial-gradient(circle, #000 60%, transparent 61%)';
+			style.maskImage = maskImage; style.WebkitMaskImage = maskImage;
+			const maskSize = get('maskSize', 'fit');
+			style.maskSize = style.WebkitMaskSize = maskSize === 'fill' ? 'cover' : (maskSize === 'custom' ? `${Number(get('maskScale', 100)) || 100}%` : 'contain');
+			style.maskPosition = style.WebkitMaskPosition = get('maskPosition', 'center center') === 'custom' ? `${get('maskPositionX', '50%')} ${get('maskPositionY', '50%')}` : get('maskPosition', 'center center');
+			style.maskRepeat = style.WebkitMaskRepeat = get('maskRepeat', 'no-repeat');
+		}
+		return style;
+	}
 	function accordionWidgetDefaults() {
 		return {
 			...widgetAdvancedDefaults(),
@@ -1269,15 +1369,29 @@
 					&& (chosenPosition === 'absolute' || chosenPosition === 'fixed');
 			},
 			nodeShellId() {
-				if (!this.isCont) return null;
 				const raw = String(this.node?.settings?.cssId || '').trim();
+				if (this.isAccordionNode && /^[A-Za-z][A-Za-z0-9_-]*$/.test(raw)) return raw;
+				if (!this.isCont) return null;
 				return raw || null;
 			},
+			nodeAdvancedClasses() {
+				if (!this.isAccordionNode) return [];
+				const s = this.node.settings || {};
+				const classes = ['pb-has-advanced'];
+				String(s.cssClass || '').trim().split(/\s+/).filter(Boolean).forEach((token) => {
+					const safe = token.replace(/[^A-Za-z0-9_-]/g, '');
+					if (safe) classes.push(safe);
+				});
+				if (s.entranceAnimation) classes.push('pb-advanced-entrance', 'pb-anim-' + String(s.entranceAnimation).replace(/[^A-Za-z0-9_-]/g, ''));
+				if (s.scrollingEffects) classes.push('pb-motion-scroll');
+				if (s.mouseEffects) classes.push('pb-motion-mouse');
+				return classes;
+			},
 			nodeShellStyle() {
-				if (!this.isCont) return {};
-
 				const s = this.node.settings || {};
 				const device = this.responsiveDevice || 'desktop';
+				if (this.isAccordionNode) return widgetAdvancedPreviewStyle(s, device);
+				if (!this.isCont) return {};
 				const currentHideValue = device === 'tablet'
 					? s.hideTablet
 					: (device === 'mobile' ? s.hideMobile : s.hideDesktop);
@@ -1981,7 +2095,7 @@
 <div
 	class="pb-node"
 	:id="nodeShellId || null"
-	:class="['pb-node-' + node.type, { active: isVisualActive, 'is-toolbar-visible': isToolbarVisible, 'pb-grid-outline-enabled': !!node.settings?.gridOutline, 'pb-node-widget': isWidgetNode }]"
+	:class="['pb-node-' + node.type, nodeAdvancedClasses, { active: isVisualActive, 'is-toolbar-visible': isToolbarVisible, 'pb-grid-outline-enabled': !!node.settings?.gridOutline, 'pb-node-widget': isWidgetNode }]"
 	:style="nodeShellStyle"
 	:data-hover-label="label"
 	:data-node-type="node.type"
