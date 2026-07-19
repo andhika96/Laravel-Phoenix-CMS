@@ -2303,6 +2303,7 @@
 			const suppressHistory = ref(false);
 			const columnResizeOverlay = ref({ visible: false, text: '', x: 0, y: 0 });
 			const pendingInsertTarget = ref(null);
+			const accordionRuntimeState = ref({});
 			let activeColumnResizeCleanup = null;
 			const rootNodes   = ref([]);
 			const responsiveDevices = [
@@ -2802,6 +2803,107 @@
 			}
 			function tabsSelectedRowDirection(node = selectedNode.value) {
 				return tabsRowDirection(node?.settings?.direction);
+			}
+			function accordionItemsForNode(node = selectedNode.value) {
+				if (!node || node.type !== 'accordion') return [];
+				if (!Array.isArray(node.accordionItems) || !node.accordionItems.length) {
+					node.accordionItems = [accordionItemDefaults(0)];
+				}
+				return node.accordionItems;
+			}
+			function accordionRuntimeForNode(node) {
+				if (!node || node.type !== 'accordion') {
+					return { editingItemId: '', expandedItemIds: [], transitioningItemIds: [] };
+				}
+				const items = accordionItemsForNode(node);
+				const validIds = items.map((item) => String(item.id || '')).filter(Boolean);
+				let runtime = accordionRuntimeState.value[node.id];
+				if (!runtime) {
+					runtime = {
+						editingItemId: validIds[0] || '',
+						expandedItemIds: node.settings?.defaultState === 'all-collapsed' ? [] : validIds.slice(0, 1),
+						transitioningItemIds: [],
+					};
+					accordionRuntimeState.value[node.id] = runtime;
+				}
+				runtime.editingItemId = validIds.includes(String(runtime.editingItemId || ''))
+					? String(runtime.editingItemId)
+					: (validIds[0] || '');
+				runtime.expandedItemIds = (Array.isArray(runtime.expandedItemIds) ? runtime.expandedItemIds : [])
+					.map((id) => String(id || ''))
+					.filter((id, index, ids) => validIds.includes(id) && ids.indexOf(id) === index);
+				if (node.settings?.maxExpanded !== 'multiple' && runtime.expandedItemIds.length > 1) {
+					runtime.expandedItemIds = runtime.expandedItemIds.slice(-1);
+				}
+				runtime.transitioningItemIds = (Array.isArray(runtime.transitioningItemIds) ? runtime.transitioningItemIds : [])
+					.filter((id) => validIds.includes(String(id || '')));
+				return runtime;
+			}
+			function selectAccordionItem(node, itemId) {
+				const items = accordionItemsForNode(node);
+				const match = items.find((item) => String(item.id || '') === String(itemId || ''));
+				if (!match) return;
+				accordionRuntimeForNode(node).editingItemId = match.id;
+			}
+			function toggleAccordionItem(node, itemId) {
+				const items = accordionItemsForNode(node);
+				const match = items.find((item) => String(item.id || '') === String(itemId || ''));
+				if (!match) return;
+				const runtime = accordionRuntimeForNode(node);
+				const safeId = String(match.id);
+				if (runtime.expandedItemIds.includes(safeId)) {
+					runtime.expandedItemIds = runtime.expandedItemIds.filter((id) => id !== safeId);
+					return;
+				}
+				runtime.expandedItemIds = node.settings?.maxExpanded === 'multiple'
+					? runtime.expandedItemIds.concat(safeId)
+					: [safeId];
+			}
+			function resetAccordionRuntimeFromDefaults(node = selectedNode.value) {
+				if (!node || node.type !== 'accordion') return;
+				const items = accordionItemsForNode(node);
+				const runtime = accordionRuntimeForNode(node);
+				runtime.expandedItemIds = node.settings?.defaultState === 'all-collapsed' || !items.length
+					? []
+					: [items[0].id];
+			}
+			function addAccordionItem(node = selectedNode.value) {
+				if (!node || node.type !== 'accordion') return;
+				const items = accordionItemsForNode(node);
+				const next = accordionItemDefaults(items.length);
+				items.push(next);
+				accordionRuntimeForNode(node).editingItemId = next.id;
+			}
+			function duplicateAccordionItem(node = selectedNode.value, itemId = '') {
+				if (!node || node.type !== 'accordion') return;
+				const items = accordionItemsForNode(node);
+				const index = items.findIndex((item) => String(item.id || '') === String(itemId || ''));
+				if (index < 0) return;
+				const copy = jclone(items[index]);
+				copy.id = uid('accordion_item');
+				copy.children = norm(copy.children || []);
+				copy.children.forEach(regenIds);
+				items.splice(index + 1, 0, copy);
+				accordionRuntimeForNode(node).editingItemId = copy.id;
+			}
+			function removeAccordionItem(node = selectedNode.value, itemId = '') {
+				if (!node || node.type !== 'accordion') return;
+				const items = accordionItemsForNode(node);
+				if (items.length <= 1) return;
+				const index = items.findIndex((item) => String(item.id || '') === String(itemId || ''));
+				if (index < 0) return;
+				items.splice(index, 1);
+				const runtime = accordionRuntimeForNode(node);
+				runtime.editingItemId = items[Math.max(0, index - 1)].id;
+				runtime.expandedItemIds = runtime.expandedItemIds.filter((id) => String(id) !== String(itemId));
+			}
+			function accordionEditingItem(node = selectedNode.value) {
+				const items = accordionItemsForNode(node);
+				const editingId = accordionRuntimeForNode(node).editingItemId;
+				return items.find((item) => String(item.id || '') === String(editingId || '')) || items[0] || null;
+			}
+			function accordionItemSummary(item, index) {
+				return String(item?.title || '').trim() || ('Item #' + (index + 1));
 			}
 			function tabsWidthUnit(node = selectedNode.value) {
 				return TABS_WIDGET_WIDTH_UNITS.includes(node?.settings?.tabWidthUnit) ? node.settings.tabWidthUnit : 'px';
@@ -4045,7 +4147,7 @@
 				}
 			}, { deep: true });
 			watch(selectedId, (nextId) => {
-				settingsTab.value = 'layout';
+				settingsTab.value = selectedNode.value?.type === 'accordion' ? 'content' : 'layout';
 				closeControlResponsiveMenu();
 				closeWidthPreviewMenu();
 				scheduleColorisInit();
@@ -4727,6 +4829,8 @@
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
 				tabsItemsForNode, tabsActiveItem, selectTabsItem, addTabsItem, duplicateTabsItem, removeTabsItem, tabsItemSummary, tabsSelectedRowDirection,
 				tabsWidthValue, tabsWidthUnit, tabsWidthMax, tabsWidthStep, onTabsWidthInput, setTabsWidthValue, setTabsWidthUnit,
+				accordionItemsForNode, accordionRuntimeForNode, accordionEditingItem, selectAccordionItem, toggleAccordionItem, resetAccordionRuntimeFromDefaults,
+				addAccordionItem, duplicateAccordionItem, removeAccordionItem, accordionItemSummary,
 				tabsBreakpointOptions: TABS_WIDGET_BREAKPOINT_OPTIONS, tabsWidthUnits: TABS_WIDGET_WIDTH_UNITS,
 				iconWidgetViewOptions: ICON_WIDGET_VIEW_OPTIONS, iconWidgetShapeOptions: ICON_WIDGET_SHAPE_OPTIONS,
 				pageName, pageStatus, customCss, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
@@ -6586,6 +6690,75 @@
 									<label class="pb-form-label">CSS Class</label>
 									<input class="pb-input" v-model="selectedNode.settings.cssClass" placeholder="custom-video">
 								</div>
+							</div>
+						</div>
+					</template>
+					<template v-if="selectedType==='accordion'">
+						<div class="pb-accordion-settings pb-widget-settings pb-widget-settings--accordion">
+							<div class="pb-tab-nav">
+								<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='content'}" @click="settingsTab='content'"><i class="fas fa-edit"></i><span>Content</span></button>
+								<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='style'}" @click="settingsTab='style'"><i class="fas fa-adjust"></i><span>Style</span></button>
+								<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='advanced'}" @click="settingsTab='advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
+							</div>
+
+							<div v-show="settingsTab==='content'" class="pb-tab-content">
+								<details class="pb-collapsible" open>
+									<summary>Layout</summary>
+									<div class="pb-collapsible-body">
+										<div class="pb-form-group">
+											<label class="pb-form-label">Items</label>
+											<draggable
+												v-model="selectedNode.accordionItems"
+												item-key="id"
+												:group="{ name: 'pb-accordion-items', pull: false, put: false }"
+												handle=".pb-accordion-item-drag"
+												class="pb-accordion-items-list"
+											>
+												<template #item="{ element: item, index }">
+													<div class="pb-accordion-item-row" :class="{ active: accordionRuntimeForNode(selectedNode).editingItemId===item.id }">
+														<span class="pb-accordion-item-drag" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
+														<button type="button" class="pb-accordion-item-main" @click="selectAccordionItem(selectedNode, item.id)">{{ accordionItemSummary(item, index) }}</button>
+														<button type="button" class="pb-accordion-item-action" title="Duplicate Item" @click="duplicateAccordionItem(selectedNode, item.id)"><i class="far fa-copy"></i></button>
+														<button type="button" class="pb-accordion-item-action" title="Delete Item" :disabled="accordionItemsForNode(selectedNode).length<=1" @click="removeAccordionItem(selectedNode, item.id)"><i class="fas fa-times"></i></button>
+													</div>
+												</template>
+											</draggable>
+											<button type="button" class="pb-btn pb-accordion-add-btn" @click="addAccordionItem(selectedNode)"><i class="fas fa-plus"></i><span>Add Item</span></button>
+										</div>
+
+										<div v-if="accordionEditingItem(selectedNode)" class="pb-accordion-item-fields">
+											<div class="pb-form-group"><label class="pb-form-label">Title</label><input class="pb-input" v-model="accordionEditingItem(selectedNode).title" placeholder="Item title"></div>
+											<div class="pb-form-group"><label class="pb-form-label">CSS ID</label><input class="pb-input" v-model="accordionEditingItem(selectedNode).cssId" placeholder="item-one"></div>
+										</div>
+									</div>
+								</details>
+
+								<details class="pb-collapsible" open>
+									<summary>Interactions</summary>
+									<div class="pb-collapsible-body">
+										<div class="pb-form-group">
+											<label class="pb-form-label">Default State</label>
+											<select class="pb-select" v-model="selectedNode.settings.defaultState" @change="resetAccordionRuntimeFromDefaults(selectedNode)">
+												<option value="first-expanded">First Expanded</option>
+												<option value="all-collapsed">All Collapsed</option>
+											</select>
+										</div>
+										<div class="pb-form-group">
+											<label class="pb-form-label">Max Items Expanded</label>
+											<select class="pb-select" v-model="selectedNode.settings.maxExpanded" @change="accordionRuntimeForNode(selectedNode)">
+												<option value="one">One</option>
+												<option value="multiple">Multiple</option>
+											</select>
+										</div>
+										<div class="pb-form-group">
+											<label class="pb-form-label">Animation Duration <span class="pb-form-hint">{{ selectedNode.settings.animationDuration }}ms</span></label>
+											<div class="pb-range-value-row">
+												<input type="range" class="pb-range" min="0" max="2000" step="50" v-model.number="selectedNode.settings.animationDuration">
+												<input class="pb-input pb-input-compact" type="number" min="0" max="5000" step="50" v-model.number="selectedNode.settings.animationDuration">
+											</div>
+										</div>
+									</div>
+								</details>
 							</div>
 						</div>
 					</template>
