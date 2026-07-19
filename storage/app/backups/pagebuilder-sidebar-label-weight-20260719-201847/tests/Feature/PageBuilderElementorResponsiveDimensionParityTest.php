@@ -97,30 +97,6 @@ class PageBuilderElementorResponsiveDimensionParityTest extends TestCase
         $this->assertStringContainsString('padding: 8px 0 4px;', $builderCss);
     }
 
-    public function test_editor_bolds_control_names_without_bolding_existing_headings_or_small_captions(): void
-    {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
-
-        $this->assertIsString($builderCss);
-        $marker = 'Control-name emphasis: preserve existing bold headings and regular-weight captions.';
-        $this->assertStringContainsString($marker, $builderCss);
-
-        $start = strpos($builderCss, '/* '.$marker.' */');
-        $end = strpos($builderCss, '}', $start);
-        $controlNameRule = substr($builderCss, $start, $end - $start + 1);
-
-        $this->assertStringContainsString('.pb-panel.left .pb-form-group .pb-form-label', $controlNameRule);
-        $this->assertStringContainsString('.pb-panel.left .pb-widget-advanced-controls .pb-advanced-control-head > span', $controlNameRule);
-        $this->assertStringContainsString('.pb-panel.left .pb-widget-advanced-controls .pb-advanced-field > span', $controlNameRule);
-        $this->assertStringContainsString('.pb-panel.left .pb-widget-advanced-controls .pb-advanced-two-fields > label > span', $controlNameRule);
-        $this->assertStringContainsString('.pb-panel.left .pb-widget-advanced-controls .pb-advanced-four-fields > label > span', $controlNameRule);
-        $this->assertStringContainsString('.pb-panel.left .pb-widget-advanced-controls .pb-advanced-toggle > span', $controlNameRule);
-        $this->assertStringContainsString('font-weight: 600;', $controlNameRule);
-        $this->assertStringNotContainsString('pb-collapsible summary', $controlNameRule);
-        $this->assertStringNotContainsString('pb-advanced-edge-fields', $controlNameRule);
-        $this->assertStringNotContainsString('pb-side-input', $controlNameRule);
-    }
-
     public function test_frontend_renderer_accepts_elementor_like_spacing_units_for_layout_nodes(): void
     {
         $node = [

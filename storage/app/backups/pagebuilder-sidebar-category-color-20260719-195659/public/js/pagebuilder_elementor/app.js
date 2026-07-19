@@ -5308,9 +5308,10 @@
 				],
 				general: [
 					{ type:'tabs',        label:'Tabs',        icon:'far fa-folder' },
+				],
+				advanced: [
 					{ type:'accordion',   label:'Accordion',   icon:'fas fa-bars' },
 				],
-				advanced: [],
 			};
 
 			// ── Save ──────────────────────────────────────────────────────────
@@ -5523,7 +5524,7 @@
 					</draggable>
 				</div>
 
-				<div class="pb-section" v-if="toolbox.advanced.length">
+				<div class="pb-section">
 					<div class="pb-panel-title">Advanced</div>
 					<draggable
 						:list="toolbox.advanced"

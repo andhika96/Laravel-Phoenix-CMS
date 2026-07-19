@@ -6,7 +6,7 @@ use Tests\TestCase;
 
 class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 {
-    public function test_editor_registers_general_accordion_with_three_nested_items(): void
+    public function test_editor_registers_advanced_accordion_with_three_nested_items(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
 
@@ -14,25 +14,8 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertSourceContains('function isAccordion(t)', $appJs);
         $this->assertSourceContains('function accordionWidgetDefaultItems()', $appJs);
         $this->assertSourceContains('accordionItems: accordionWidgetDefaultItems()', $appJs);
-        $this->assertMatchesRegularExpression(
-            "/general:\\s*\\[\\s*\\{ type:'tabs'.*?\\{ type:'accordion',\\s+label:'Accordion'/s",
-            $appJs
-        );
-        $this->assertSourceContains('advanced: []', $appJs);
-        $this->assertSourceContains('<div class="pb-section" v-if="toolbox.advanced.length">', $appJs);
-    }
-
-    public function test_sidebar_categories_and_color_fields_use_polished_global_spacing(): void
-    {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
-
-        $this->assertSourceContains('.pb-panel.left .pb-tab-content > .pb-collapsible[open] > .pb-collapsible-body', $builderCss);
-        $this->assertSourceContains('padding-bottom: 18px;', $builderCss);
-        $this->assertSourceContains('.pb-panel.left .clr-field', $builderCss);
-        $this->assertSourceContains('display: block;', $builderCss);
-        $this->assertSourceContains('width: 100%;', $builderCss);
-        $this->assertSourceContains('.pb-panel.left .clr-field button', $builderCss);
-        $this->assertSourceContains('width: 48px;', $builderCss);
+        $this->assertSourceContains("advanced: [", $appJs);
+        $this->assertSourceContains("{ type:'accordion',   label:'Accordion'", $appJs);
     }
 
     public function test_recursive_helpers_visit_accordion_item_children(): void

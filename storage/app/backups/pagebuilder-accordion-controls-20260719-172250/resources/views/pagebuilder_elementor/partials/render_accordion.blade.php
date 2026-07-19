@@ -34,27 +34,16 @@
 				$normalized[] = $token . 'px';
 				continue;
 			}
-			if (!preg_match('/^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)$/i', $token)) return $fallback;
+			if (!preg_match('/^-?\d+(?:\.\d+)?(?:px|%|em|rem|vw|vh)$/i', $token)) return $fallback;
 			$normalized[] = $token;
 		}
 		return implode(' ', $normalized);
 	};
 	$responsiveValue = function (string $base, string $suffix = '', $fallback = '') use ($accordionSettings) {
 		$value = $accordionSettings[$base . $suffix] ?? null;
-		if ($suffix === 'Mobile' && ($value === '' || $value === null)) {
-			$value = $accordionSettings[$base . 'Tablet'] ?? null;
-		}
 		if ($suffix !== '' && ($value === '' || $value === null)) $value = $accordionSettings[$base] ?? null;
 		return ($value === '' || $value === null) ? $fallback : $value;
 	};
-	$lineHeightToken = function ($value, string $fallback = '1.4'): string {
-		$raw = trim((string) ($value ?? ''));
-		return preg_match('/^(?:normal|\d+(?:\.\d+)?(?:px|%|em|rem)?)$/i', $raw) ? $raw : $fallback;
-	};
-	$headerFontFamily = trim((string) ($accordionSettings['headerFontFamily'] ?? 'inherit')) ?: 'inherit';
-	if (!preg_match('/^[A-Za-z0-9 _-]+(?:\s*,\s*[A-Za-z0-9 _-]+)*$/', $headerFontFamily)) {
-		$headerFontFamily = 'inherit';
-	}
 	$borderStyle = function ($value): string {
 		$raw = strtolower(trim((string) ($value ?? '')));
 		return in_array($raw, ['solid', 'double', 'dotted', 'dashed', 'groove'], true) ? $raw : 'none';
@@ -83,12 +72,11 @@
 		'--accordion-content-distance:' . $cssToken($responsiveValue('accordionContentDistance', '', '0px'), '0px'),
 		'--accordion-border-radius:' . $cssToken($responsiveValue('accordionBorderRadius', '', '0px'), '0px'),
 		'--accordion-padding:' . $cssToken($responsiveValue('accordionPadding', '', '0px'), '0px'),
-		'--accordion-header-font-family:' . $headerFontFamily,
+		'--accordion-header-font-family:' . (trim((string) ($accordionSettings['headerFontFamily'] ?? 'inherit')) ?: 'inherit'),
 		'--accordion-header-font-size:' . $cssToken($responsiveValue('headerFontSize', '', '16px'), '16px'),
 		'--accordion-header-font-weight:' . (trim((string) ($accordionSettings['headerFontWeight'] ?? '600')) ?: '600'),
-		'--accordion-header-line-height:' . $lineHeightToken($responsiveValue('headerLineHeight', '', '1.4'), '1.4'),
-		'--accordion-header-letter-spacing:' . $cssToken($responsiveValue('headerLetterSpacing', '', '0px'), '0px'),
-		'--accordion-header-word-spacing:' . $cssToken($responsiveValue('headerWordSpacing', '', '0px'), '0px'),
+		'--accordion-header-line-height:' . (trim((string) ($accordionSettings['headerLineHeight'] ?? '1.4')) ?: '1.4'),
+		'--accordion-header-letter-spacing:' . $cssToken($accordionSettings['headerLetterSpacing'] ?? '0px', '0px'),
 		'--accordion-header-text-transform:' . (trim((string) ($accordionSettings['headerTextTransform'] ?? 'none')) ?: 'none'),
 		'--accordion-header-font-style:' . (trim((string) ($accordionSettings['headerFontStyle'] ?? 'normal')) ?: 'normal'),
 		'--accordion-header-text-decoration:' . (trim((string) ($accordionSettings['headerTextDecoration'] ?? 'none')) ?: 'none'),
@@ -134,7 +122,6 @@
 		'padding-left:' . $cssToken($responsiveValue('paddingLeft', '', '0px'), '0'),
 	];
 	$widthMode = strtolower(trim((string) ($accordionSettings['widthMode'] ?? 'default')));
-	if (!in_array($widthMode, ['default', 'full', 'inline', 'custom'], true)) $widthMode = 'default';
 	if ($widthMode === 'full') $advancedStyles[] = 'width:100%';
 	if ($widthMode === 'inline') $advancedStyles[] = 'width:fit-content';
 	if ($widthMode === 'custom') $advancedStyles[] = 'width:' . $cssToken($responsiveValue('customWidth', '', ''), 'auto');
@@ -224,8 +211,7 @@
 		foreach (['mask-position', '-webkit-mask-position'] as $prop) $advancedStyles[] = $prop . ':' . $maskPosition;
 		foreach (['mask-repeat', '-webkit-mask-repeat'] as $prop) $advancedStyles[] = $prop . ':' . $maskRepeat;
 	}
-	// Keep Advanced declarations in generated ID rules so responsive and hover
-	// rules can override the desktop values without resorting to !important.
+	$styleVars = array_merge($styleVars, $advancedStyles);
 
 	$customAttributes = [];
 	foreach (($accordionSettings['attributes'] ?? []) as $attribute) {
@@ -348,8 +334,7 @@
 		JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 	) : '';
 
-	$responsiveRules = ['#' . $nodeDomId . '{' . implode(';', array_filter($advancedStyles)) . '}'];
-	$responsiveHoverRules = [];
+	$responsiveRules = [];
 	foreach (['Tablet' => 1024, 'Mobile' => 767] as $suffix => $breakpoint) {
 		$rules = [
 			'--accordion-item-gap:' . $cssToken($responsiveValue('accordionItemGap', $suffix, '0px'), '0px'),
@@ -357,9 +342,6 @@
 			'--accordion-border-radius:' . $cssToken($responsiveValue('accordionBorderRadius', $suffix, '0px'), '0px'),
 			'--accordion-padding:' . $cssToken($responsiveValue('accordionPadding', $suffix, '0px'), '0px'),
 			'--accordion-header-font-size:' . $cssToken($responsiveValue('headerFontSize', $suffix, '16px'), '16px'),
-			'--accordion-header-line-height:' . $lineHeightToken($responsiveValue('headerLineHeight', $suffix, '1.4'), '1.4'),
-			'--accordion-header-letter-spacing:' . $cssToken($responsiveValue('headerLetterSpacing', $suffix, '0px'), '0px'),
-			'--accordion-header-word-spacing:' . $cssToken($responsiveValue('headerWordSpacing', $suffix, '0px'), '0px'),
 			'--accordion-icon-size:' . $cssToken($responsiveValue('headerIconSize', $suffix, '16px'), '16px'),
 			'--accordion-icon-spacing:' . $cssToken($responsiveValue('headerIconSpacing', $suffix, '12px'), '12px'),
 			'--accordion-content-radius:' . $cssToken($responsiveValue('contentBorderRadius', $suffix, '0px'), '0px'),
@@ -375,64 +357,10 @@
 			'border-radius:' . $cssToken($responsiveValue('advancedBorderRadius', $suffix, '0px'), '0'),
 			'--pb-advanced-transform:' . $buildTransform('', $suffix),
 		];
-		$responsiveWidthMode = strtolower(trim((string) $responsiveValue('widthMode', $suffix, $widthMode)));
-		if (!in_array($responsiveWidthMode, ['default', 'full', 'inline', 'custom'], true)) $responsiveWidthMode = $widthMode;
-		$rules[] = 'width:' . match ($responsiveWidthMode) {
-			'full' => '100%',
-			'inline' => 'fit-content',
-			'custom' => $cssToken($responsiveValue('customWidth', $suffix, ''), 'auto'),
-			default => 'auto',
-		};
-
-		$responsiveAlignSelf = trim((string) $responsiveValue('alignSelf', $suffix, 'auto'));
-		$rules[] = 'align-self:' . (in_array($responsiveAlignSelf, ['auto', 'flex-start', 'center', 'flex-end', 'stretch'], true) ? $responsiveAlignSelf : 'auto');
-
-		$responsiveOrderMode = strtolower(trim((string) $responsiveValue('orderMode', $suffix, 'default')));
-		$responsiveOrder = match ($responsiveOrderMode) {
-			'start' => -9999,
-			'end' => 9999,
-			'custom' => is_numeric($responsiveValue('order', $suffix, '')) ? (int) $responsiveValue('order', $suffix, 0) : 0,
-			default => 0,
-		};
-		$rules[] = 'order:' . $responsiveOrder;
-
-		$responsiveSizeMode = strtolower(trim((string) $responsiveValue('sizeMode', $suffix, 'none')));
-		$rules[] = 'flex:' . match ($responsiveSizeMode) {
-			'grow' => '1 1 0',
-			'custom' => ((float) $responsiveValue('flexGrow', $suffix, 0)) . ' ' . ((float) $responsiveValue('flexShrink', $suffix, 1)) . ' auto',
-			default => '0 1 auto',
-		};
-
-		if (in_array($position, ['absolute', 'fixed'], true)) {
-			$rules[] = (($accordionSettings['horizontalOrientation'] ?? 'left') === 'right' ? 'right:' : 'left:') . $spaceToken($responsiveValue('positionX', $suffix, '0px'), '0');
-			$rules[] = (($accordionSettings['verticalOrientation'] ?? 'top') === 'bottom' ? 'bottom:' : 'top:') . $spaceToken($responsiveValue('positionY', $suffix, '0px'), '0');
-		}
-		if (in_array($sticky, ['top', 'bottom'], true)) {
-			$rules[] = $sticky . ':' . $spaceToken($responsiveValue('stickyOffset', $suffix, '0px'), '0');
-		}
-
+		if ($widthMode === 'custom') $rules[] = 'width:' . $cssToken($responsiveValue('customWidth', $suffix, ''), 'auto');
+		if (in_array($responsiveValue('alignSelf', $suffix, 'auto'), ['flex-start', 'center', 'flex-end', 'stretch'], true)) $rules[] = 'align-self:' . $responsiveValue('alignSelf', $suffix, 'auto');
 		if ($responsiveValue('zIndex', $suffix, '') !== '' && is_numeric($responsiveValue('zIndex', $suffix, ''))) $rules[] = 'z-index:' . (int) $responsiveValue('zIndex', $suffix, 0);
-
-		if (!empty($accordionSettings['maskEnabled'])) {
-			$responsiveMaskSizeMode = strtolower(trim((string) $responsiveValue('maskSize', $suffix, 'fit')));
-			if (!in_array($responsiveMaskSizeMode, ['fit', 'fill', 'custom'], true)) $responsiveMaskSizeMode = 'fit';
-			$responsiveMaskScale = max(1, min(300, (float) $responsiveValue('maskScale', $suffix, 100)));
-			$responsiveMaskSize = $responsiveMaskSizeMode === 'fill' ? 'cover' : ($responsiveMaskSizeMode === 'custom' ? $responsiveMaskScale . '%' : 'contain');
-			$responsiveMaskPosition = strtolower(trim((string) $responsiveValue('maskPosition', $suffix, 'center center')));
-			$allowedMaskPositions = ['left top', 'center top', 'right top', 'left center', 'center center', 'right center', 'left bottom', 'center bottom', 'right bottom', 'custom'];
-			if (!in_array($responsiveMaskPosition, $allowedMaskPositions, true)) $responsiveMaskPosition = 'center center';
-			if ($responsiveMaskPosition === 'custom') {
-				$responsiveMaskPosition = $cssToken($responsiveValue('maskPositionX', $suffix, '50%'), '50%') . ' ' . $cssToken($responsiveValue('maskPositionY', $suffix, '50%'), '50%');
-			}
-			$responsiveMaskRepeat = strtolower(trim((string) $responsiveValue('maskRepeat', $suffix, 'no-repeat')));
-			if (!in_array($responsiveMaskRepeat, ['no-repeat', 'repeat', 'repeat-x', 'repeat-y', 'round', 'space'], true)) $responsiveMaskRepeat = 'no-repeat';
-			foreach (['mask-size', '-webkit-mask-size'] as $prop) $rules[] = $prop . ':' . $responsiveMaskSize;
-			foreach (['mask-position', '-webkit-mask-position'] as $prop) $rules[] = $prop . ':' . $responsiveMaskPosition;
-			foreach (['mask-repeat', '-webkit-mask-repeat'] as $prop) $rules[] = $prop . ':' . $responsiveMaskRepeat;
-		}
-
 		$responsiveRules[] = '@media (max-width:' . $breakpoint . 'px){#' . $nodeDomId . '{' . implode(';', $rules) . '}}';
-		$responsiveHoverRules[] = '@media (max-width:' . $breakpoint . 'px){#' . $nodeDomId . ':hover{border-radius:' . $cssToken($responsiveValue('advancedBorderRadiusHover', $suffix, '0px'), '0') . ';--pb-advanced-transform:' . $buildTransform('Hover', $suffix) . '}}';
 	}
 	$hoverRules = array_merge($advancedBackground('Hover'), [
 		'border-style:' . (in_array(($accordionSettings['advancedBorderTypeHover'] ?? 'none'), ['solid', 'double', 'dotted', 'dashed', 'groove'], true) ? $accordionSettings['advancedBorderTypeHover'] : 'none'),
@@ -449,7 +377,6 @@
 		]);
 	}
 	$responsiveRules[] = '#' . $nodeDomId . ':hover{' . implode(';', array_filter($hoverRules)) . '}';
-	$responsiveRules = array_merge($responsiveRules, $responsiveHoverRules);
 	$customCssCode = trim((string) ($accordionSettings['customCssCode'] ?? ''));
 	if ($customCssCode !== '') {
 		$customCssCode = preg_replace('/@import\b[^;]*;?/i', '', $customCssCode) ?? '';

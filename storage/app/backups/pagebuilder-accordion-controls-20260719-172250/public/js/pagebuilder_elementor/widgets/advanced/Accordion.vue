@@ -95,9 +95,8 @@ export default {
 				'--accordion-header-font-family': String(this.settings.headerFontFamily || 'inherit'),
 				'--accordion-header-font-size': this.cssToken(this.responsiveValue('headerFontSize', '16px'), '16px'),
 				'--accordion-header-font-weight': String(this.settings.headerFontWeight || '600'),
-				'--accordion-header-line-height': this.lineHeightToken(this.responsiveValue('headerLineHeight', '1.4'), '1.4'),
-				'--accordion-header-letter-spacing': this.cssToken(this.responsiveValue('headerLetterSpacing', '0px'), '0px'),
-				'--accordion-header-word-spacing': this.cssToken(this.responsiveValue('headerWordSpacing', '0px'), '0px'),
+				'--accordion-header-line-height': String(this.settings.headerLineHeight || '1.4'),
+				'--accordion-header-letter-spacing': this.cssToken(this.settings.headerLetterSpacing, '0px'),
 				'--accordion-header-text-transform': String(this.settings.headerTextTransform || 'none'),
 				'--accordion-header-font-style': String(this.settings.headerFontStyle || 'normal'),
 				'--accordion-header-text-decoration': String(this.settings.headerTextDecoration || 'none'),
@@ -189,13 +188,9 @@ export default {
 			if (tokens.length < 1 || tokens.length > 4) return fallback;
 			const normalized = tokens.map((token) => {
 				if (/^-?\d+(?:\.\d+)?$/.test(token)) return token + 'px';
-				return /^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)$/.test(token) ? token : '';
+				return /^-?\d+(?:\.\d+)?(?:px|%|em|rem|vw|vh)$/.test(token) ? token : '';
 			});
 			return normalized.every(Boolean) ? normalized.join(' ') : fallback;
-		},
-		lineHeightToken(value, fallback = '1.4') {
-			const raw = String(value == null ? '' : value).trim();
-			return /^(?:normal|\d+(?:\.\d+)?(?:px|%|em|rem)?)$/i.test(raw) ? raw : fallback;
 		},
 		borderStyle(value) {
 			const raw = String(value || '').toLowerCase();
@@ -236,6 +231,7 @@ export default {
 			}
 			const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 			if (this.animationDuration <= 0 || reduced) {
+				this.skipNextExpandedWatch = true;
 				this.$emit('toggle-item', item.id);
 				return;
 			}
@@ -399,7 +395,6 @@ export default {
 	font-weight: var(--accordion-header-font-weight, 600);
 	line-height: var(--accordion-header-line-height, 1.4);
 	letter-spacing: var(--accordion-header-letter-spacing, 0);
-	word-spacing: var(--accordion-header-word-spacing, 0);
 	text-transform: var(--accordion-header-text-transform, none);
 	font-style: var(--accordion-header-font-style, normal);
 	text-decoration: var(--accordion-header-text-decoration, none);

@@ -1,12 +1,12 @@
 <template>
 	<div class="el-widget-accordion" :class="rootClass" :style="rootStyle" data-pb-interactive="true" @click.stop>
-		<div v-for="item in items" :key="item.id" class="el-widget-accordion__item" :class="{ 'is-active': isVisuallyExpanded(item.id) }">
+		<div v-for="item in items" :key="item.id" class="el-widget-accordion__item" :class="{ 'is-active': isExpanded(item.id) }">
 			<component :is="titleTag" class="el-widget-accordion__heading">
 				<button
 					type="button"
 					class="el-widget-accordion__header"
 					:id="headerId(item.id)"
-					:aria-expanded="isVisuallyExpanded(item.id) ? 'true' : 'false'"
+					:aria-expanded="isExpanded(item.id) ? 'true' : 'false'"
 					:aria-controls="panelId(item.id)"
 					data-pb-interactive="true"
 					@click.stop="toggleItem(item)"
@@ -25,16 +25,16 @@
 			<div
 				ref="panels"
 				class="el-widget-accordion__panel"
-				:class="panelClass(item.id)"
+				:class="{ 'is-active': isExpanded(item.id) }"
 				:id="panelId(item.id)"
 				:data-accordion-item-id="item.id"
 				:aria-labelledby="headerId(item.id)"
-				:aria-hidden="isVisuallyExpanded(item.id) ? 'false' : 'true'"
+				:aria-hidden="isExpanded(item.id) ? 'false' : 'true'"
 				:style="panelStyle(item.id)"
-				@animationend="onPanelAnimationEnd(item.id, $event)"
+				@transitionend="onPanelTransitionEnd(item.id, $event)"
 			>
 				<div class="el-widget-accordion__panel-inner">
-					<slot name="panel" :item="item" :expanded="isVisuallyExpanded(item.id)"></slot>
+					<slot name="panel" :item="item" :expanded="isExpanded(item.id)"></slot>
 				</div>
 			</div>
 		</div>
@@ -53,10 +53,7 @@ export default {
 	data() {
 		return {
 			panelHeights: {},
-			panelAnimationStates: {},
-			panelAnimationMetrics: {},
-			pendingToggleItemId: '',
-			skipNextExpandedWatch: false,
+			panelRaf: 0,
 		};
 	},
 	computed: {
@@ -95,9 +92,8 @@ export default {
 				'--accordion-header-font-family': String(this.settings.headerFontFamily || 'inherit'),
 				'--accordion-header-font-size': this.cssToken(this.responsiveValue('headerFontSize', '16px'), '16px'),
 				'--accordion-header-font-weight': String(this.settings.headerFontWeight || '600'),
-				'--accordion-header-line-height': this.lineHeightToken(this.responsiveValue('headerLineHeight', '1.4'), '1.4'),
-				'--accordion-header-letter-spacing': this.cssToken(this.responsiveValue('headerLetterSpacing', '0px'), '0px'),
-				'--accordion-header-word-spacing': this.cssToken(this.responsiveValue('headerWordSpacing', '0px'), '0px'),
+				'--accordion-header-line-height': String(this.settings.headerLineHeight || '1.4'),
+				'--accordion-header-letter-spacing': this.cssToken(this.settings.headerLetterSpacing, '0px'),
 				'--accordion-header-text-transform': String(this.settings.headerTextTransform || 'none'),
 				'--accordion-header-font-style': String(this.settings.headerFontStyle || 'normal'),
 				'--accordion-header-text-decoration': String(this.settings.headerTextDecoration || 'none'),
@@ -133,26 +129,19 @@ export default {
 		expandedItemIds: {
 			deep: true,
 			handler() {
-				if (this.skipNextExpandedWatch) {
-					this.skipNextExpandedWatch = false;
-					return;
-				}
-				this.setInitialPanelHeights();
+				this.queuePanelHeightSync();
 			},
 		},
 	},
 	mounted() {
-		this.setInitialPanelHeights();
+		this.queuePanelHeightSync(true);
+	},
+	beforeUnmount() {
+		if (this.panelRaf) cancelAnimationFrame(this.panelRaf);
 	},
 	methods: {
 		isExpanded(itemId) {
 			return this.expandedItemIds.map(String).includes(String(itemId));
-		},
-		isVisuallyExpanded(itemId) {
-			const state = this.panelAnimationStates[String(itemId)] || '';
-			if (state === 'opening') return true;
-			if (state === 'closing') return false;
-			return this.isExpanded(itemId);
 		},
 		headerId(itemId) {
 			return 'pb-accordion-header-' + String(this.item.id || 'node') + '-' + String(itemId || 'item');
@@ -161,17 +150,17 @@ export default {
 			return 'pb-accordion-panel-' + String(this.item.id || 'node') + '-' + String(itemId || 'item');
 		},
 		iconClass(itemId) {
-			return this.isVisuallyExpanded(itemId)
+			return this.isExpanded(itemId)
 				? String(this.settings.collapseIconClass || 'fas fa-minus')
 				: String(this.settings.expandIconClass || 'fas fa-plus');
 		},
 		iconSource(itemId) {
-			const role = this.isVisuallyExpanded(itemId) ? 'collapse' : 'expand';
+			const role = this.isExpanded(itemId) ? 'collapse' : 'expand';
 			const value = String(this.settings[role + 'IconSource'] || 'library').toLowerCase();
 			return ['none', 'library', 'svg'].includes(value) ? value : 'library';
 		},
 		svgIconDataUri(itemId) {
-			const role = this.isVisuallyExpanded(itemId) ? 'collapse' : 'expand';
+			const role = this.isExpanded(itemId) ? 'collapse' : 'expand';
 			const markup = String(this.settings[role + 'IconSvg'] || '').trim();
 			return markup ? 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(markup) : '';
 		},
@@ -184,18 +173,8 @@ export default {
 		cssToken(value, fallback = '0px') {
 			const raw = String(value == null ? '' : value).trim();
 			if (!raw) return fallback;
-			if (/^calc\([^;{}]+\)$/.test(raw)) return raw;
-			const tokens = raw.split(/\s+/);
-			if (tokens.length < 1 || tokens.length > 4) return fallback;
-			const normalized = tokens.map((token) => {
-				if (/^-?\d+(?:\.\d+)?$/.test(token)) return token + 'px';
-				return /^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)$/.test(token) ? token : '';
-			});
-			return normalized.every(Boolean) ? normalized.join(' ') : fallback;
-		},
-		lineHeightToken(value, fallback = '1.4') {
-			const raw = String(value == null ? '' : value).trim();
-			return /^(?:normal|\d+(?:\.\d+)?(?:px|%|em|rem)?)$/i.test(raw) ? raw : fallback;
+			if (/^-?\d+(?:\.\d+)?$/.test(raw)) return raw + 'px';
+			return /^-?\d+(?:\.\d+)?(?:px|%|em|rem|vw|vh)$/.test(raw) || /^calc\([^;{}]+\)$/.test(raw) ? raw : fallback;
 		},
 		borderStyle(value) {
 			const raw = String(value || '').toLowerCase();
@@ -226,98 +205,42 @@ export default {
 		},
 		toggleItem(item) {
 			if (!item) return;
-			const itemId = String(item.id || '');
-			const expanding = !this.isExpanded(itemId);
-			const transitions = [{ itemId, expanding }];
-			if (expanding && this.settings.maxExpanded !== 'multiple') {
-				this.expandedItemIds.map(String).filter((id) => id !== itemId).forEach((id) => {
-					transitions.push({ itemId: id, expanding: false });
-				});
-			}
-			const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-			if (this.animationDuration <= 0 || reduced) {
-				this.$emit('toggle-item', item.id);
-				return;
-			}
-			this.pendingToggleItemId = itemId;
-			this.startPanelTransitions(transitions);
+			this.$emit('toggle-item', item.id);
 		},
 		panelStyle(itemId) {
-			const key = String(itemId);
-			const value = this.panelHeights[key];
-			const metrics = this.panelAnimationMetrics[key] || {};
-			return {
-				height: value == null ? (this.isExpanded(itemId) ? 'auto' : '0px') : value,
-				'--accordion-panel-start-height': metrics.start || '0px',
-				'--accordion-panel-target-height': metrics.target || '0px',
+			const value = this.panelHeights[String(itemId)];
+			return { height: value == null ? (this.isExpanded(itemId) ? 'auto' : '0px') : value };
+		},
+		queuePanelHeightSync(immediate = false) {
+			if (this.panelRaf) cancelAnimationFrame(this.panelRaf);
+			const apply = () => {
+				this.panelRaf = 0;
+				this.syncPanelHeights();
 			};
+			if (immediate) this.$nextTick(apply);
+			else this.$nextTick(() => { this.panelRaf = requestAnimationFrame(apply); });
 		},
-		panelClass(itemId) {
-			const state = this.panelAnimationStates[String(itemId)] || '';
-			return {
-				'is-active': this.isVisuallyExpanded(itemId),
-				'is-opening': state === 'opening',
-				'is-closing': state === 'closing',
-			};
-		},
-		panelElements() {
-			const queried = this.$el ? Array.from(this.$el.querySelectorAll('.el-widget-accordion__panel')) : [];
-			if (queried.length) return queried;
-			const refs = this.$refs.panels;
-			if (Array.isArray(refs) && refs.length) return refs;
-			if (refs) return [refs];
-			return [];
-		},
-		setInitialPanelHeights() {
-			this.$nextTick(() => {
-				const panels = this.panelElements();
-				const next = {};
-				panels.forEach((panel) => {
-					const itemId = String(panel?.dataset?.accordionItemId || '');
-					if (!itemId) return;
-					next[itemId] = this.isExpanded(itemId) ? 'auto' : '0px';
-				});
-				this.panelHeights = next;
-			});
-		},
-		startPanelTransitions(transitions = []) {
-			const panels = this.panelElements();
-			const nextHeights = { ...this.panelHeights };
-			const nextStates = { ...this.panelAnimationStates };
-			const nextMetrics = { ...this.panelAnimationMetrics };
-			const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-			transitions.forEach(({ itemId, expanding }) => {
-				const panel = panels.find((candidate) => String(candidate?.dataset?.accordionItemId || '') === String(itemId));
-				if (!panel) return;
-				const key = String(itemId);
-				const startHeight = expanding ? '0px' : Math.max(0, panel.getBoundingClientRect().height) + 'px';
-				const targetHeight = expanding ? panel.scrollHeight + 'px' : '0px';
-				nextMetrics[key] = { start: startHeight, target: targetHeight };
-				if (this.animationDuration <= 0 || reduced) {
-					nextStates[key] = '';
-					nextHeights[key] = expanding ? 'auto' : '0px';
-					return;
+		syncPanelHeights() {
+			const panels = Array.isArray(this.$refs.panels) ? this.$refs.panels : [];
+			const next = { ...this.panelHeights };
+			panels.forEach((panel) => {
+				const itemId = String(panel?.dataset?.accordionItemId || '');
+				if (!itemId) return;
+				if (this.isExpanded(itemId)) {
+					next[itemId] = panel.scrollHeight + 'px';
+				} else {
+					const currentHeight = panel.getBoundingClientRect().height;
+					next[itemId] = currentHeight > 0 ? currentHeight + 'px' : '0px';
+					requestAnimationFrame(() => {
+						this.panelHeights = { ...this.panelHeights, [itemId]: '0px' };
+					});
 				}
-				nextStates[key] = expanding ? 'opening' : 'closing';
-				nextHeights[key] = targetHeight;
 			});
-			this.panelAnimationMetrics = nextMetrics;
-			this.panelAnimationStates = nextStates;
-			this.panelHeights = nextHeights;
+			this.panelHeights = next;
 		},
-		onPanelAnimationEnd(itemId, event) {
-			const animationName = String(event?.animationName || '');
-			if (!event || event.target !== event.currentTarget || (!animationName.includes('pb-accordion-open') && !animationName.includes('pb-accordion-close'))) return;
-			const key = String(itemId);
-			const shouldCommit = key === String(this.pendingToggleItemId || '');
-			const endingState = this.panelAnimationStates[key] || '';
-			this.panelAnimationStates = { ...this.panelAnimationStates, [key]: '' };
-			this.panelHeights = { ...this.panelHeights, [key]: endingState === 'opening' ? 'auto' : '0px' };
-			if (shouldCommit) {
-				this.pendingToggleItemId = '';
-				this.skipNextExpandedWatch = true;
-				this.$emit('toggle-item', itemId);
-			}
+		onPanelTransitionEnd(itemId, event) {
+			if (!event || event.propertyName !== 'height' || !this.isExpanded(itemId)) return;
+			this.panelHeights = { ...this.panelHeights, [String(itemId)]: 'auto' };
 		},
 	},
 };
@@ -326,24 +249,7 @@ export default {
 <style scoped>
 .el-widget-accordion__panel {
 	overflow: hidden;
-}
-
-.el-widget-accordion__panel.is-opening {
-	animation: pb-accordion-open var(--accordion-animation-duration, 400ms) ease forwards;
-}
-
-.el-widget-accordion__panel.is-closing {
-	animation: pb-accordion-close var(--accordion-animation-duration, 400ms) ease forwards;
-}
-
-@keyframes pb-accordion-open {
-	from { height: var(--accordion-panel-start-height, 0); }
-	to { height: var(--accordion-panel-target-height, 0); }
-}
-
-@keyframes pb-accordion-close {
-	from { height: var(--accordion-panel-start-height, 0); }
-	to { height: var(--accordion-panel-target-height, 0); }
+	transition: height var(--accordion-animation-duration, 400ms) ease;
 }
 
 .el-widget-accordion {
@@ -399,7 +305,6 @@ export default {
 	font-weight: var(--accordion-header-font-weight, 600);
 	line-height: var(--accordion-header-line-height, 1.4);
 	letter-spacing: var(--accordion-header-letter-spacing, 0);
-	word-spacing: var(--accordion-header-word-spacing, 0);
 	text-transform: var(--accordion-header-text-transform, none);
 	font-style: var(--accordion-header-font-style, normal);
 	text-decoration: var(--accordion-header-text-decoration, none);

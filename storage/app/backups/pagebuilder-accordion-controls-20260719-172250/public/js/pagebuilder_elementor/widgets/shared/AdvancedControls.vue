@@ -1,23 +1,25 @@
 <template>
 	<div class="pb-widget-advanced-controls">
+		<div class="pb-advanced-device-note"><i :class="deviceIcon"></i> Editing {{ deviceLabel }}</div>
+
 		<details class="pb-collapsible" open>
 			<summary>Layout</summary>
 			<div class="pb-collapsible-body">
 				<EdgeControl label="Margin" :settings="settings" :keys="edgeKeys('margin')" fallback="0px" allow-negative :responsive-icon="deviceIcon" />
 				<EdgeControl label="Padding" :settings="settings" :keys="edgeKeys('padding')" fallback="0px" :responsive-icon="deviceIcon" />
-				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Width</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('widthMode', 'default')" @change="setResponsiveSetting('widthMode', $event.target.value)"><option value="default">Default</option><option value="full">Full Width</option><option value="inline">Inline</option><option value="custom">Custom</option></select></div>
-				<DimensionControl v-if="effectiveResponsiveValue('widthMode', 'default')==='custom'" label="Custom Width" :settings="settings" :setting-key="responsiveKey('customWidth')" fallback="320px" :responsive-icon="deviceIcon" />
-				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Align Self</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('alignSelf', 'auto')" @change="setResponsiveSetting('alignSelf', $event.target.value)"><option value="auto">Default</option><option value="flex-start">Start</option><option value="center">Center</option><option value="flex-end">End</option><option value="stretch">Stretch</option></select></div>
-				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Order</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('orderMode', 'default')" @change="setResponsiveSetting('orderMode', $event.target.value)"><option value="default">Default</option><option value="start">Start</option><option value="end">End</option><option value="custom">Custom</option></select></div>
-				<div v-if="effectiveResponsiveValue('orderMode', 'default')==='custom'" class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Custom Order</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><input class="pb-input" type="number" :value="effectiveResponsiveValue('order', '')" @input="setResponsiveNumberSetting('order', $event.target.value)"></div>
-				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Size</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('sizeMode', 'none')" @change="setResponsiveSetting('sizeMode', $event.target.value)"><option value="none">None</option><option value="grow">Grow</option><option value="shrink">Shrink</option><option value="custom">Custom</option></select></div>
-				<div v-if="effectiveResponsiveValue('sizeMode', 'none')==='custom'" class="pb-advanced-size-fields"><ScalarControl label="Flex Grow" :settings="settings" :setting-key="responsiveKey('flexGrow')" :fallback="0" :min-value="0" :max-value="10" :step-value="0.1" :responsive-icon="deviceIcon" /><ScalarControl label="Flex Shrink" :settings="settings" :setting-key="responsiveKey('flexShrink')" :fallback="1" :min-value="0" :max-value="10" :step-value="0.1" :responsive-icon="deviceIcon" /></div>
+				<label class="pb-advanced-field"><span>Width</span><select class="pb-select" v-model="settings.widthMode"><option value="default">Default</option><option value="full">Full Width</option><option value="inline">Inline</option><option value="custom">Custom</option></select></label>
+				<DimensionControl v-if="settings.widthMode==='custom'" label="Custom Width" :settings="settings" :setting-key="responsiveKey('customWidth')" fallback="320px" :responsive-icon="deviceIcon" />
+				<label class="pb-advanced-field"><span>Align Self</span><select class="pb-select" v-model="settings[responsiveKey('alignSelf')]"><option value="auto">Default</option><option value="flex-start">Start</option><option value="center">Center</option><option value="flex-end">End</option><option value="stretch">Stretch</option></select></label>
+				<label class="pb-advanced-field"><span>Order</span><select class="pb-select" v-model="settings[responsiveKey('orderMode')]"><option value="default">Default</option><option value="start">Start</option><option value="end">End</option><option value="custom">Custom</option></select></label>
+				<label v-if="settings[responsiveKey('orderMode')]==='custom'" class="pb-advanced-field"><span>Custom Order</span><input class="pb-input" type="number" v-model.number="settings[responsiveKey('order')]"></label>
+				<label class="pb-advanced-field"><span>Size</span><select class="pb-select" v-model="settings[responsiveKey('sizeMode')]"><option value="none">None</option><option value="grow">Grow</option><option value="shrink">Shrink</option><option value="custom">Custom</option></select></label>
+				<div v-if="settings[responsiveKey('sizeMode')]==='custom'" class="pb-advanced-two-fields"><label><span>Flex Grow</span><input class="pb-input" type="number" step=".1" v-model.number="settings[responsiveKey('flexGrow')]"></label><label><span>Flex Shrink</span><input class="pb-input" type="number" step=".1" v-model.number="settings[responsiveKey('flexShrink')]"></label></div>
 				<label class="pb-advanced-field"><span>Position</span><select class="pb-select" v-model="settings.position"><option value="default">Default</option><option value="absolute">Absolute</option><option value="fixed">Fixed</option></select></label>
 				<template v-if="settings.position!=='default'">
 					<div class="pb-advanced-two-fields"><label><span>Horizontal Orientation</span><select class="pb-select" v-model="settings.horizontalOrientation"><option value="left">Left</option><option value="right">Right</option></select></label><DimensionControl label="X Offset" :settings="settings" :setting-key="responsiveKey('positionX')" fallback="0px" allow-negative :responsive-icon="deviceIcon" /></div>
 					<div class="pb-advanced-two-fields"><label><span>Vertical Orientation</span><select class="pb-select" v-model="settings.verticalOrientation"><option value="top">Top</option><option value="bottom">Bottom</option></select></label><DimensionControl label="Y Offset" :settings="settings" :setting-key="responsiveKey('positionY')" fallback="0px" allow-negative :responsive-icon="deviceIcon" /></div>
 				</template>
-				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Z-Index</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><input class="pb-input" type="number" :value="effectiveResponsiveValue('zIndex', '')" @input="setResponsiveNumberSetting('zIndex', $event.target.value)"></div>
+				<label class="pb-advanced-field"><span>Z-Index</span><input class="pb-input" type="number" v-model.number="settings[responsiveKey('zIndex')]"></label>
 				<label class="pb-advanced-field"><span>CSS ID</span><input class="pb-input" v-model="settings.cssId" placeholder="unique-widget-id"></label>
 				<label class="pb-advanced-field"><span>CSS Classes</span><input class="pb-input" v-model="settings.cssClass" placeholder="class-one class-two"></label>
 			</div>
@@ -75,17 +77,10 @@
 		<details class="pb-collapsible">
 			<summary>Transform</summary>
 			<div class="pb-collapsible-body"><StateTabs v-model="transformState" />
-				<div class="pb-transform-grid">
-					<DimensionControl label="Rotate" :settings="settings" :setting-key="stateKey('transformRotate', transformState)" fallback="0deg" :units="['deg']" allow-negative />
-					<DimensionControl label="Perspective" :settings="settings" :setting-key="stateKey('transformPerspective', transformState)" fallback="0px" />
-					<DimensionControl label="3D Rotate X" :settings="settings" :setting-key="stateKey('transformRotateX', transformState)" fallback="0deg" :units="['deg']" allow-negative />
-					<DimensionControl label="3D Rotate Y" :settings="settings" :setting-key="stateKey('transformRotateY', transformState)" fallback="0deg" :units="['deg']" allow-negative />
-					<DimensionControl label="Offset X" :settings="settings" :setting-key="responsiveStateKey('transformOffsetX', transformState)" fallback="0px" allow-negative :responsive-icon="deviceIcon" />
-					<DimensionControl label="Offset Y" :settings="settings" :setting-key="responsiveStateKey('transformOffsetY', transformState)" fallback="0px" allow-negative :responsive-icon="deviceIcon" />
-					<ScalarControl label="Scale" :settings="settings" :setting-key="stateKey('transformScale', transformState)" :fallback="1" :min-value="0" :max-value="5" :step-value="0.01" />
-					<DimensionControl label="Skew X" :settings="settings" :setting-key="stateKey('transformSkewX', transformState)" fallback="0deg" :units="['deg']" allow-negative />
-					<DimensionControl label="Skew Y" :settings="settings" :setting-key="stateKey('transformSkewY', transformState)" fallback="0deg" :units="['deg']" allow-negative />
-				</div>
+				<div class="pb-advanced-two-fields"><DimensionControl label="Rotate" :settings="settings" :setting-key="stateKey('transformRotate', transformState)" fallback="0deg" :units="['deg']" allow-negative /><DimensionControl label="Perspective" :settings="settings" :setting-key="stateKey('transformPerspective', transformState)" fallback="0px" /></div>
+				<div class="pb-advanced-two-fields"><DimensionControl label="3D Rotate X" :settings="settings" :setting-key="stateKey('transformRotateX', transformState)" fallback="0deg" :units="['deg']" allow-negative /><DimensionControl label="3D Rotate Y" :settings="settings" :setting-key="stateKey('transformRotateY', transformState)" fallback="0deg" :units="['deg']" allow-negative /></div>
+				<div class="pb-advanced-two-fields"><DimensionControl label="Offset X" :settings="settings" :setting-key="responsiveStateKey('transformOffsetX', transformState)" fallback="0px" allow-negative :responsive-icon="deviceIcon" /><DimensionControl label="Offset Y" :settings="settings" :setting-key="responsiveStateKey('transformOffsetY', transformState)" fallback="0px" allow-negative :responsive-icon="deviceIcon" /></div>
+				<div class="pb-advanced-two-fields"><label><span>Scale</span><input class="pb-input" type="number" step=".01" v-model.number="settings[stateKey('transformScale', transformState)]"></label><div class="pb-advanced-two-fields"><DimensionControl label="Skew X" :settings="settings" :setting-key="stateKey('transformSkewX', transformState)" fallback="0deg" :units="['deg']" allow-negative /><DimensionControl label="Skew Y" :settings="settings" :setting-key="stateKey('transformSkewY', transformState)" fallback="0deg" :units="['deg']" allow-negative /></div></div>
 				<label class="pb-advanced-toggle"><span>Flip Horizontal</span><input type="checkbox" v-model="settings[stateKey('transformFlipHorizontal', transformState)]"></label><label class="pb-advanced-toggle"><span>Flip Vertical</span><input type="checkbox" v-model="settings[stateKey('transformFlipVertical', transformState)]"></label>
 				<label v-if="transformState==='hover'" class="pb-advanced-field"><span>Hover Transition Duration</span><input class="pb-input" type="number" min="0" step=".1" v-model.number="settings.transformHoverDuration"></label>
 				<div class="pb-advanced-two-fields"><label><span>X Anchor</span><select class="pb-select" v-model="settings.transformOriginX"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></label><label><span>Y Anchor</span><select class="pb-select" v-model="settings.transformOriginY"><option value="top">Top</option><option value="center">Center</option><option value="bottom">Bottom</option></select></label></div>
@@ -107,7 +102,7 @@
 			<label v-if="borderState==='hover'" class="pb-advanced-field"><span>Hover Transition Duration</span><input class="pb-input" type="number" min="0" step=".1" v-model.number="settings.advancedBorderHoverDuration"></label>
 		</div></details>
 
-		<details class="pb-collapsible"><summary>Mask</summary><div class="pb-collapsible-body"><label class="pb-advanced-toggle"><span>Enable Mask</span><input type="checkbox" v-model="settings.maskEnabled"></label><template v-if="settings.maskEnabled"><label class="pb-advanced-field"><span>Shape</span><select class="pb-select" v-model="settings.maskShape"><option v-for="shape in maskShapes" :key="shape" :value="shape">{{ shape }}</option></select></label><label v-if="settings.maskShape==='custom'" class="pb-advanced-field"><span>Custom Image or SVG</span><input class="pb-input" v-model="settings.maskCustomImage"></label><div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Size</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('maskSize', 'fit')" @change="setResponsiveSetting('maskSize', $event.target.value)"><option value="fit">Fit</option><option value="fill">Fill</option><option value="custom">Custom</option></select></div><ScalarControl v-if="effectiveResponsiveValue('maskSize', 'fit')==='custom'" label="Scale" :settings="settings" :setting-key="responsiveKey('maskScale')" :fallback="100" :min-value="1" :max-value="300" :step-value="1" :responsive-icon="deviceIcon" /><div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Position</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('maskPosition', 'center center')" @change="setResponsiveSetting('maskPosition', $event.target.value)"><option v-for="position in maskPositions" :key="position" :value="position">{{ position }}</option></select></div><div v-if="effectiveResponsiveValue('maskPosition', 'center center')==='custom'" class="pb-advanced-two-fields"><DimensionControl label="X" :settings="settings" :setting-key="responsiveKey('maskPositionX')" fallback="50%" :responsive-icon="deviceIcon" /><DimensionControl label="Y" :settings="settings" :setting-key="responsiveKey('maskPositionY')" fallback="50%" :responsive-icon="deviceIcon" /></div><div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Repeat</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('maskRepeat', 'no-repeat')" @change="setResponsiveSetting('maskRepeat', $event.target.value)"><option v-for="repeat in maskRepeats" :key="repeat" :value="repeat">{{ repeat }}</option></select></div></template></div></details>
+		<details class="pb-collapsible"><summary>Mask</summary><div class="pb-collapsible-body"><label class="pb-advanced-toggle"><span>Enable Mask</span><input type="checkbox" v-model="settings.maskEnabled"></label><template v-if="settings.maskEnabled"><label class="pb-advanced-field"><span>Shape</span><select class="pb-select" v-model="settings.maskShape"><option v-for="shape in maskShapes" :key="shape" :value="shape">{{ shape }}</option></select></label><label v-if="settings.maskShape==='custom'" class="pb-advanced-field"><span>Custom Image or SVG</span><input class="pb-input" v-model="settings.maskCustomImage"></label><label class="pb-advanced-field"><span>Size</span><select class="pb-select" v-model="settings[responsiveKey('maskSize')]"><option value="fit">Fit</option><option value="fill">Fill</option><option value="custom">Custom</option></select></label><label v-if="settings[responsiveKey('maskSize')]==='custom'" class="pb-advanced-field"><span>Scale</span><input class="pb-input" type="number" v-model.number="settings[responsiveKey('maskScale')]"></label><label class="pb-advanced-field"><span>Position</span><select class="pb-select" v-model="settings[responsiveKey('maskPosition')]"><option v-for="position in maskPositions" :key="position" :value="position">{{ position }}</option></select></label><div v-if="settings[responsiveKey('maskPosition')]==='custom'" class="pb-advanced-two-fields"><DimensionControl label="X" :settings="settings" :setting-key="responsiveKey('maskPositionX')" fallback="50%" :responsive-icon="deviceIcon" /><DimensionControl label="Y" :settings="settings" :setting-key="responsiveKey('maskPositionY')" fallback="50%" :responsive-icon="deviceIcon" /></div><label class="pb-advanced-field"><span>Repeat</span><select class="pb-select" v-model="settings[responsiveKey('maskRepeat')]"><option v-for="repeat in maskRepeats" :key="repeat" :value="repeat">{{ repeat }}</option></select></label></template></div></details>
 
 		<details class="pb-collapsible"><summary>Responsive</summary><div class="pb-collapsible-body"><label class="pb-advanced-toggle"><span>Hide On Desktop</span><input type="checkbox" v-model="settings.hideDesktop"></label><label class="pb-advanced-toggle"><span>Hide On Tablet Portrait</span><input type="checkbox" v-model="settings.hideTablet"></label><label class="pb-advanced-toggle"><span>Hide On Mobile Portrait</span><input type="checkbox" v-model="settings.hideMobile"></label></div></details>
 
@@ -145,82 +140,14 @@ function dimensionStep(unit) {
 	return ['em', 'rem'].includes(unit) ? 0.1 : 1;
 }
 
-function hasResponsiveValue(value) {
-	return value !== '' && value !== null && value !== undefined;
-}
-function responsiveBaseKey(settingKey) {
-	return String(settingKey || '').replace(/(?:Tablet|Mobile)$/, '');
-}
-function inheritedResponsiveValue(settings, settingKey, fallback = '') {
-	const ownValue = settings?.[settingKey];
-	if (hasResponsiveValue(ownValue)) return ownValue;
-	const key = String(settingKey || '');
-	const base = responsiveBaseKey(key);
-	if (base === key) return fallback;
-	if (key.endsWith('Mobile')) {
-		const tabletValue = settings?.[base + 'Tablet'];
-		if (hasResponsiveValue(tabletValue)) return tabletValue;
-	}
-	const desktopValue = settings?.[base];
-	return hasResponsiveValue(desktopValue) ? desktopValue : fallback;
-}
-
-const ResponsiveDeviceControl = {
-	props: { icon: { type: String, default: 'fas fa-desktop' } },
-	inject: { selectResponsiveDevice: { default: null } },
-	data() {
-		return {
-			open: false,
-			devices: [
-				{ value: 'desktop', label: 'Desktop', icon: 'fas fa-desktop' },
-				{ value: 'tablet', label: 'Tablet Portrait', icon: 'fas fa-tablet-alt' },
-				{ value: 'mobile', label: 'Mobile Portrait', icon: 'fas fa-mobile-alt' },
-			],
-		};
-	},
-	computed: {
-		activeDevice() {
-			if (this.icon.includes('tablet')) return 'tablet';
-			if (this.icon.includes('mobile')) return 'mobile';
-			return 'desktop';
-		},
-		activeLabel() { return this.devices.find((device) => device.value === this.activeDevice)?.label || 'Desktop'; },
-	},
-	methods: {
-		select(device) {
-			if (typeof this.selectResponsiveDevice === 'function') this.selectResponsiveDevice(device);
-			this.open = false;
-		},
-	},
-	template: `<div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" :aria-label="'Edit for ' + activeLabel" :aria-expanded="open ? 'true' : 'false'" @click="open=!open"><i :class="icon"></i></button><div v-if="open" class="pb-control-device-menu"><button v-for="device in devices" :key="device.value" type="button" class="pb-control-device-item" :class="{active:device.value===activeDevice}" @click="select(device.value)"><i :class="device.icon"></i><span>{{ device.label }}</span></button></div></div>`,
-};
-
-const ScalarControl = {
-	components: { ResponsiveDeviceControl },
-	props: {
-		settings: { type: Object, required: true }, settingKey: { type: String, required: true }, label: String,
-		fallback: { type: Number, default: 0 }, minValue: { type: Number, default: 0 },
-		maxValue: { type: Number, default: 100 }, stepValue: { type: Number, default: 1 },
-		responsiveIcon: { type: String, default: '' },
-	},
-	computed: {
-		value() { const value = Number(inheritedResponsiveValue(this.settings, this.settingKey, this.fallback)); return Number.isFinite(value) ? value : this.fallback; },
-	},
-	methods: {
-		setValue(raw) { const value = Number(raw); if (Number.isFinite(value)) this.settings[this.settingKey] = Math.min(this.maxValue, Math.max(this.minValue, value)); },
-	},
-	template: `<div class="pb-advanced-dimension-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><responsive-device-control v-if="responsiveIcon" :icon="responsiveIcon" /></div><div class="pb-range-value-row"><input class="pb-range" type="range" :min="minValue" :max="maxValue" :step="stepValue" :value="value" @input="setValue($event.target.value)"><input class="pb-input pb-input-compact" type="number" :min="minValue" :max="maxValue" :step="stepValue" :value="value" @input="setValue($event.target.value)"></div></div>`,
-};
-
 const DimensionControl = {
-	components: { ResponsiveDeviceControl },
 	props: {
 		settings: { type: Object, required: true }, settingKey: { type: String, required: true }, label: String,
 		fallback: { type: String, default: '0px' }, units: { type: Array, default: () => DEFAULT_DIMENSION_UNITS },
 		allowNegative: { type: Boolean, default: false }, responsiveIcon: { type: String, default: '' },
 	},
 	computed: {
-		parsed() { return parseDimension(inheritedResponsiveValue(this.settings, this.settingKey, this.fallback), this.fallback, this.units); },
+		parsed() { return parseDimension(this.settings[this.settingKey], this.fallback, this.units); },
 		minValue() { return this.allowNegative ? -dimensionLimit(this.parsed.unit) : 0; },
 		maxValue() { return dimensionLimit(this.parsed.unit); },
 		stepValue() { return dimensionStep(this.parsed.unit); },
@@ -237,20 +164,19 @@ const DimensionControl = {
 			this.settings[this.settingKey] = String(this.parsed.value) + safe;
 		},
 	},
-	template: `<div class="pb-advanced-dimension-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><div class="pb-advanced-control-tools"><responsive-device-control v-if="responsiveIcon" :icon="responsiveIcon" /><select class="pb-mini-unit" :value="parsed.unit" @change="setUnit($event.target.value)"><option v-for="unit in units" :key="unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-range-value-row"><input class="pb-range" type="range" :min="minValue" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"><input class="pb-input pb-input-compact" type="number" :min="minValue" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"></div></div>`,
+	template: `<div class="pb-advanced-dimension-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><div class="pb-advanced-control-tools"><i v-if="responsiveIcon" :class="responsiveIcon"></i><select class="pb-mini-unit" :value="parsed.unit" @change="setUnit($event.target.value)"><option v-for="unit in units" :key="unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-range-value-row"><input class="pb-range" type="range" :min="minValue" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"><input class="pb-input pb-input-compact" type="number" :min="minValue" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"></div></div>`,
 };
 
 const EdgeControl = {
-	components: { ResponsiveDeviceControl },
 	props: {
 		settings: { type: Object, required: true }, keys: { type: Array, required: true }, label: String,
 		fallback: { type: String, default: '0px' }, allowNegative: { type: Boolean, default: false },
 		responsiveIcon: { type: String, default: '' },
 	},
 	data() { return { linked: true, sides: ['Top', 'Right', 'Bottom', 'Left'], units: DEFAULT_DIMENSION_UNITS }; },
-	computed: { unit() { return parseDimension(inheritedResponsiveValue(this.settings, this.keys[0], this.fallback), this.fallback, this.units).unit; } },
+	computed: { unit() { return parseDimension(this.settings[this.keys[0]], this.fallback, this.units).unit; } },
 	methods: {
-		value(index) { return parseDimension(inheritedResponsiveValue(this.settings, this.keys[index], this.fallback), this.fallback, this.units).value; },
+		value(index) { return parseDimension(this.settings[this.keys[index]], this.fallback, this.units).value; },
 		setValue(index, raw) {
 			const limit = dimensionLimit(this.unit);
 			const number = Number(raw);
@@ -264,12 +190,11 @@ const EdgeControl = {
 			this.keys.forEach((key, index) => { this.settings[key] = String(this.value(index)) + safe; });
 		},
 	},
-	template: `<div class="pb-advanced-edge-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><div class="pb-advanced-control-tools"><responsive-device-control v-if="responsiveIcon" :icon="responsiveIcon" /><select class="pb-mini-unit" :value="unit" @change="setUnit($event.target.value)"><option v-for="option in units" :key="option" :value="option">{{ option }}</option></select></div></div><div class="pb-advanced-edge-fields"><label v-for="(side,index) in sides" :key="side"><input class="pb-input" type="number" :step="dimensionStep(unit)" :value="value(index)" @input="setValue(index,$event.target.value)"><span>{{ side }}</span></label><button type="button" class="pb-link-btn" :class="{active:linked}" @click="linked=!linked" title="Link values"><i class="fas" :class="linked ? 'fa-link' : 'fa-unlink'"></i></button></div></div>`,
+	template: `<div class="pb-advanced-edge-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><div class="pb-advanced-control-tools"><i v-if="responsiveIcon" :class="responsiveIcon"></i><select class="pb-mini-unit" :value="unit" @change="setUnit($event.target.value)"><option v-for="option in units" :key="option" :value="option">{{ option }}</option></select></div></div><div class="pb-advanced-edge-fields"><label v-for="(side,index) in sides" :key="side"><input class="pb-input" type="number" :step="dimensionStep(unit)" :value="value(index)" @input="setValue(index,$event.target.value)"><span>{{ side }}</span></label><button type="button" class="pb-link-btn" :class="{active:linked}" @click="linked=!linked" title="Link values"><i class="fas" :class="linked ? 'fa-link' : 'fa-unlink'"></i></button></div></div>`,
 };
 EdgeControl.methods.dimensionStep = dimensionStep;
 
 const BoxControl = {
-	components: { ResponsiveDeviceControl },
 	props: {
 		settings: { type: Object, required: true }, settingKey: { type: String, required: true }, label: String,
 		fallback: { type: String, default: '0px' }, responsiveIcon: { type: String, default: '' },
@@ -277,7 +202,7 @@ const BoxControl = {
 	data() { return { linked: true, sides: ['Top', 'Right', 'Bottom', 'Left'], units: DEFAULT_DIMENSION_UNITS }; },
 	computed: {
 		tokens() {
-			const raw = String(inheritedResponsiveValue(this.settings, this.settingKey, this.fallback)).trim().split(/\s+/).slice(0, 4);
+			const raw = String(this.settings[this.settingKey] ?? this.fallback).trim().split(/\s+/).slice(0, 4);
 			const expanded = raw.length === 1 ? [raw[0], raw[0], raw[0], raw[0]] : (raw.length === 2 ? [raw[0], raw[1], raw[0], raw[1]] : (raw.length === 3 ? [raw[0], raw[1], raw[2], raw[1]] : raw));
 			return expanded.map((token) => parseDimension(token, this.fallback, this.units));
 		},
@@ -296,7 +221,7 @@ const BoxControl = {
 		},
 		setUnit(unit) { this.write(this.tokens.map((token) => token.value), this.units.includes(unit) ? unit : 'px'); },
 	},
-	template: `<div class="pb-advanced-edge-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><div class="pb-advanced-control-tools"><responsive-device-control v-if="responsiveIcon" :icon="responsiveIcon" /><select class="pb-mini-unit" :value="unit" @change="setUnit($event.target.value)"><option v-for="option in units" :key="option" :value="option">{{ option }}</option></select></div></div><div class="pb-advanced-edge-fields"><label v-for="(side,index) in sides" :key="side"><input class="pb-input" type="number" :step="dimensionStep(unit)" :value="value(index)" @input="setValue(index,$event.target.value)"><span>{{ side }}</span></label><button type="button" class="pb-link-btn" :class="{active:linked}" @click="linked=!linked" title="Link values"><i class="fas" :class="linked ? 'fa-link' : 'fa-unlink'"></i></button></div></div>`,
+	template: `<div class="pb-advanced-edge-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><div class="pb-advanced-control-tools"><i v-if="responsiveIcon" :class="responsiveIcon"></i><select class="pb-mini-unit" :value="unit" @change="setUnit($event.target.value)"><option v-for="option in units" :key="option" :value="option">{{ option }}</option></select></div></div><div class="pb-advanced-edge-fields"><label v-for="(side,index) in sides" :key="side"><input class="pb-input" type="number" :step="dimensionStep(unit)" :value="value(index)" @input="setValue(index,$event.target.value)"><span>{{ side }}</span></label><button type="button" class="pb-link-btn" :class="{active:linked}" @click="linked=!linked" title="Link values"><i class="fas" :class="linked ? 'fa-link' : 'fa-unlink'"></i></button></div></div>`,
 };
 BoxControl.methods.dimensionStep = dimensionStep;
 
@@ -313,15 +238,12 @@ const MotionEffect = {
 
 export default {
 	name: 'WidgetAdvancedControls',
-	components: { StateTabs, MotionEffect, ResponsiveDeviceControl, DimensionControl, ScalarControl, EdgeControl, BoxControl },
+	components: { StateTabs, MotionEffect, DimensionControl, EdgeControl, BoxControl },
 	props: {
 		node: { type: Object, required: true },
 		responsiveDevice: { type: String, default: 'desktop' },
 	},
-	emits: ['unavailable-ai', 'responsive-device'],
-	provide() {
-		return { selectResponsiveDevice: (device) => this.$emit('responsive-device', device) };
-	},
+	emits: ['unavailable-ai'],
 	data() {
 		return {
 			sides: ['Top', 'Right', 'Bottom', 'Left'],
@@ -344,12 +266,6 @@ export default {
 	},
 	methods: {
 		responsiveKey(base) { return base + (this.responsiveDevice === 'tablet' ? 'Tablet' : (this.responsiveDevice === 'mobile' ? 'Mobile' : '')); },
-		effectiveResponsiveValue(base, fallback = '') { return inheritedResponsiveValue(this.settings, this.responsiveKey(base), fallback); },
-		setResponsiveSetting(base, value) { this.settings[this.responsiveKey(base)] = value; },
-		setResponsiveNumberSetting(base, raw) {
-			const value = raw === '' ? '' : Number(raw);
-			if (value === '' || Number.isFinite(value)) this.setResponsiveSetting(base, value);
-		},
 		edgeKeys(base) { return this.sides.map((side) => this.responsiveKey(base + side)); },
 		stateKey(base, state) { return base + (state === 'hover' ? 'Hover' : ''); },
 		responsiveStateKey(base, state) { return this.responsiveKey(this.stateKey(base, state)); },
@@ -367,16 +283,13 @@ export default {
 
 <style scoped>
 .pb-widget-advanced-controls { display: flex; flex-direction: column; gap: 0; }
+.pb-advanced-device-note { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding: 9px 10px; border-radius: 8px; background: #f3f5fa; color: #526178; font-size: 11px; }
 .pb-advanced-subtitle { margin: 10px 0 8px; font-size: 11px; font-weight: 700; color: #344054; }
 .pb-advanced-field, .pb-advanced-two-fields > label, .pb-advanced-four-fields > label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; font-size: 11px; color: #526178; }
-.pb-advanced-responsive-field .pb-advanced-control-head { margin-bottom: 0; }
-.pb-advanced-size-fields { display: grid; grid-template-columns: minmax(0, 1fr); }
 .pb-advanced-two-fields, .pb-advanced-four-fields { display: grid; gap: 8px; }
 .pb-advanced-two-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .pb-advanced-four-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .pb-advanced-dimension-control, .pb-advanced-edge-control { min-width: 0; margin-bottom: 14px; }
-.pb-transform-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
-.pb-transform-grid > * { min-width: 0; }
 .pb-advanced-control-head { min-height: 26px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; font-size: 11px; color: #344054; }
 .pb-advanced-control-tools { display: inline-flex; align-items: center; gap: 7px; color: #667085; }
 .pb-advanced-control-tools .pb-mini-unit { width: 56px; min-width: 56px; }

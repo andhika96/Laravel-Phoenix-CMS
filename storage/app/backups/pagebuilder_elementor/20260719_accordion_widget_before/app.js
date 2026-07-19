@@ -16,8 +16,7 @@
 	const sfcOptions = {
 		moduleCache: { vue: Vue },
 		getFile(url) {
-			const requestUrl = url + (url.includes('?') ? '&' : '?') + 'pbv=20260719-12';
-			return fetch(requestUrl, { cache: 'no-store' }).then(r => {
+			return fetch(url, { cache: 'no-store' }).then(r => {
 				if (!r.ok) throw new Error(url);
 				return r.text();
 			});
@@ -28,14 +27,6 @@
 		},
 		log(type, msg) { console[type](msg); },
 	};
-	const WidgetAdvancedControls = defineAsyncComponent(() => loader.loadModule(
-		'/js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue',
-		sfcOptions
-	));
-	const TypographyControl = defineAsyncComponent(() => loader.loadModule(
-		'/js/pagebuilder_elementor/widgets/shared/TypographyControl.vue',
-		sfcOptions
-	));
 
 	const widgetMap = {
 		container:      '/js/pagebuilder_elementor/widgets/layout/Container.vue',
@@ -51,7 +42,6 @@
 		divider:        '/js/pagebuilder_elementor/widgets/basic/Divider.vue',
 		spacer:         '/js/pagebuilder_elementor/widgets/basic/Spacer.vue',
 		tabs:           '/js/pagebuilder_elementor/widgets/general/Tabs.vue',
-		accordion:      '/js/pagebuilder_elementor/widgets/advanced/Accordion.vue',
 	};
 
 	const _wcache = {};
@@ -70,7 +60,6 @@
 	function isCont(t)    { return t === 'container' || t === 'container_fluid'; }
 	function isGrid(t)    { return t === 'row_grid' || t === 'grid'; }
 	function isTabs(t)    { return t === 'tabs'; }
-	function isAccordion(t) { return t === 'accordion'; }
 	function isWgt(t)     { return !isCont(t) && !isGrid(t); }
 	function toEmbed(url) {
 		if (!url || url.includes('embed/')) return url || '';
@@ -285,298 +274,6 @@
 			cssClass: '',
 		};
 	}
-	function accordionItemDefaults(index = 0) {
-		return {
-			id: uid('accordion_item'),
-			title: 'Item #' + (index + 1),
-			cssId: '',
-			children: [],
-		};
-	}
-	function accordionWidgetDefaultItems() {
-		return [accordionItemDefaults(0), accordionItemDefaults(1), accordionItemDefaults(2)];
-	}
-	function widgetAdvancedDefaults() {
-		const defaults = {
-			widthMode: 'default',
-			position: 'default', horizontalOrientation: 'left', verticalOrientation: 'top',
-			cssId: '', cssClass: '',
-			displayConditions: [], cacheMode: 'default',
-			animateWithAI: false,
-			scrollingEffects: false,
-			verticalScrollEnabled: false, verticalScrollDirection: 'up', verticalScrollSpeed: 4, verticalScrollViewportStart: 0, verticalScrollViewportEnd: 100,
-			horizontalScrollEnabled: false, horizontalScrollDirection: 'left', horizontalScrollSpeed: 4, horizontalScrollViewportStart: 0, horizontalScrollViewportEnd: 100,
-			transparencyEnabled: false, transparencyDirection: 'fade-in', transparencyLevel: 5, transparencyViewportStart: 0, transparencyViewportEnd: 100,
-			blurEnabled: false, blurDirection: 'fade-in', blurLevel: 5, blurViewportStart: 0, blurViewportEnd: 100,
-			rotateEnabled: false, rotateDirection: 'left', rotateSpeed: 4, rotateViewportStart: 0, rotateViewportEnd: 100,
-			scaleEnabled: false, scaleDirection: 'up', scaleSpeed: 4, scaleViewportStart: 0, scaleViewportEnd: 100,
-			scrollApplyDesktop: true, scrollApplyTablet: true, scrollApplyMobile: true, effectsRelativeTo: 'default',
-			mouseEffects: false, mouseTrackEnabled: false, mouseTrackDirection: 'direct', mouseTrackSpeed: 1,
-			tilt3dEnabled: false, tilt3dDirection: 'direct', tilt3dSpeed: 1,
-			sticky: 'none', stickyOnDesktop: true, stickyOnTablet: true, stickyOnMobile: true, stickyEffectsOffset: 0, stickyAnchorOffset: 0, stickyStayInColumn: false,
-			entranceAnimation: '', entranceDuration: 'normal', entranceDelay: 0,
-			transformState: 'normal', transformRotate: '0deg', transformRotateX: '0deg', transformRotateY: '0deg', transformPerspective: '0px', transformScale: 1,
-			transformSkewX: '0deg', transformSkewY: '0deg', transformFlipHorizontal: false, transformFlipVertical: false,
-			transformRotateHover: '0deg', transformRotateXHover: '0deg', transformRotateYHover: '0deg', transformPerspectiveHover: '0px', transformScaleHover: 1,
-			transformSkewXHover: '0deg', transformSkewYHover: '0deg', transformFlipHorizontalHover: false, transformFlipVerticalHover: false,
-			transformOriginX: 'center', transformOriginY: 'center', transformHoverDuration: 0.3,
-			advancedBackgroundType: 'none', advancedBackgroundColor: '', advancedBackgroundImage: '', advancedBackgroundPosition: 'center center', advancedBackgroundAttachment: 'scroll', advancedBackgroundRepeat: 'no-repeat', advancedBackgroundSize: 'cover',
-			advancedGradientColorOne: '#ffffff', advancedGradientLocationOne: 0, advancedGradientColorTwo: '#000000', advancedGradientLocationTwo: 100, advancedGradientType: 'linear', advancedGradientAngle: 180, advancedGradientPosition: 'center center',
-			advancedBackgroundTypeHover: 'none', advancedBackgroundColorHover: '', advancedBackgroundImageHover: '', advancedBackgroundPositionHover: 'center center', advancedBackgroundAttachmentHover: 'scroll', advancedBackgroundRepeatHover: 'no-repeat', advancedBackgroundSizeHover: 'cover',
-			advancedGradientColorOneHover: '#ffffff', advancedGradientLocationOneHover: 0, advancedGradientColorTwoHover: '#000000', advancedGradientLocationTwoHover: 100, advancedGradientTypeHover: 'linear', advancedGradientAngleHover: 180, advancedGradientPositionHover: 'center center', advancedBackgroundHoverDuration: 0.3,
-			advancedBorderType: 'none', advancedBorderWidth: '0px', advancedBorderColor: '#000000', advancedBoxShadowEnabled: false, advancedBoxShadowColor: 'rgba(0,0,0,.2)', advancedBoxShadowX: '0px', advancedBoxShadowY: '4px', advancedBoxShadowBlur: '16px', advancedBoxShadowSpread: '0px', advancedBoxShadowInset: false,
-			advancedBorderTypeHover: 'none', advancedBorderWidthHover: '0px', advancedBorderColorHover: '#000000', advancedBoxShadowEnabledHover: false, advancedBoxShadowColorHover: 'rgba(0,0,0,.2)', advancedBoxShadowXHover: '0px', advancedBoxShadowYHover: '4px', advancedBoxShadowBlurHover: '16px', advancedBoxShadowSpreadHover: '0px', advancedBoxShadowInsetHover: false, advancedBorderHoverDuration: 0.3,
-			maskEnabled: false, maskShape: 'circle', maskCustomImage: '', maskCustomSvg: '',
-			attributes: [], customCssCode: '',
-			hideDesktop: false, hideTablet: false, hideMobile: false,
-		};
-		const responsiveDefaults = {
-			marginTop: '0px', marginRight: '0px', marginBottom: '0px', marginLeft: '0px',
-			paddingTop: '0px', paddingRight: '0px', paddingBottom: '0px', paddingLeft: '0px',
-			widthMode: 'default', customWidth: '', alignSelf: 'auto', orderMode: 'default', order: '', sizeMode: 'none', flexGrow: 0, flexShrink: 1,
-			positionX: '0px', positionY: '0px', zIndex: '', stickyOffset: '0px',
-			transformOffsetX: '0px', transformOffsetY: '0px', transformOffsetXHover: '0px', transformOffsetYHover: '0px',
-			advancedBorderRadius: '0px', advancedBorderRadiusHover: '0px',
-			maskSize: 'fit', maskScale: 100, maskPosition: 'center center', maskPositionX: '50%', maskPositionY: '50%', maskRepeat: 'no-repeat',
-		};
-		Object.entries(responsiveDefaults).forEach(([key, value]) => {
-			defaults[key] = value;
-			defaults[key + 'Tablet'] = '';
-			defaults[key + 'Mobile'] = '';
-		});
-		return defaults;
-	}
-	function normalizeWidgetAdvancedSettings(settings) {
-		if (!settings || typeof settings !== 'object') return settings;
-		const defaults = widgetAdvancedDefaults();
-		Object.keys(defaults).forEach((key) => {
-			if (settings[key] === undefined) settings[key] = cloneSettingValue(defaults[key]);
-		});
-		settings.displayConditions = Array.isArray(settings.displayConditions) ? settings.displayConditions : [];
-		settings.attributes = normalizeAttributes(settings.attributes);
-		settings.cacheMode = ['default', 'inactive', 'active'].includes(settings.cacheMode) ? settings.cacheMode : 'default';
-		const widthModes = ['default', 'full', 'inline', 'custom'];
-		settings.widthMode = widthModes.includes(settings.widthMode) ? settings.widthMode : 'default';
-		['widthModeTablet', 'widthModeMobile'].forEach((key) => {
-			const value = settings[key];
-			settings[key] = value === '' || value == null ? '' : (widthModes.includes(value) ? value : '');
-		});
-		settings.position = ['default', 'absolute', 'fixed'].includes(settings.position) ? settings.position : 'default';
-		settings.animateWithAI = false;
-		return settings;
-	}
-	function widgetAdvancedPreviewStyle(settings, device) {
-		const s = settings || {};
-		const safeDevice = device === 'tablet' || device === 'mobile' ? device : 'desktop';
-		const cascadeDevices = safeDevice === 'mobile' ? ['mobile', 'tablet', 'desktop'] : (safeDevice === 'tablet' ? ['tablet', 'desktop'] : ['desktop']);
-		const get = (base, fallback = '') => {
-			for (const candidateDevice of cascadeDevices) {
-				const value = s[responsiveKey(base, candidateDevice)];
-				if (value !== '' && value != null) return value;
-			}
-			return fallback;
-		};
-		const style = {
-			marginTop: cssSpace(get('marginTop', '0px'), '0'), marginRight: cssSpace(get('marginRight', '0px'), '0'),
-			marginBottom: cssSpace(get('marginBottom', '0px'), '0'), marginLeft: cssSpace(get('marginLeft', '0px'), '0'),
-			paddingTop: cssSpace(get('paddingTop', '0px'), '0'), paddingRight: cssSpace(get('paddingRight', '0px'), '0'),
-			paddingBottom: cssSpace(get('paddingBottom', '0px'), '0'), paddingLeft: cssSpace(get('paddingLeft', '0px'), '0'),
-			alignSelf: get('alignSelf', 'auto'),
-			borderRadius: cssSize(get('advancedBorderRadius', '0px'), '0'),
-			transition: `background ${Number(s.advancedBackgroundHoverDuration) || 0.3}s ease, border ${Number(s.advancedBorderHoverDuration) || 0.3}s ease, box-shadow ${Number(s.advancedBorderHoverDuration) || 0.3}s ease, transform ${Number(s.transformHoverDuration) || 0.3}s ease`,
-		};
-		const hidden = safeDevice === 'desktop' ? s.hideDesktop : (safeDevice === 'tablet' ? s.hideTablet : s.hideMobile);
-		if (hidden === true || hidden === 'true' || hidden === 1 || hidden === '1') style.display = 'none';
-		const rawWidthMode = get('widthMode', 'default');
-		const widthMode = ['default', 'full', 'inline', 'custom'].includes(rawWidthMode) ? rawWidthMode : 'default';
-		if (widthMode === 'full') style.width = '100%';
-		else if (widthMode === 'inline') style.width = 'fit-content';
-		else if (widthMode === 'custom') style.width = cssSize(get('customWidth', ''), 'auto');
-		else style.width = 'auto';
-		const orderMode = get('orderMode', 'default');
-		if (orderMode === 'start') style.order = -9999;
-		if (orderMode === 'end') style.order = 9999;
-		if (orderMode === 'custom' && Number.isFinite(Number(get('order', '')))) style.order = Number(get('order'));
-		const sizeMode = get('sizeMode', 'none');
-		if (sizeMode === 'grow') style.flex = '1 1 0';
-		if (sizeMode === 'shrink') style.flex = '0 1 auto';
-		if (sizeMode === 'custom') style.flex = `${Number(get('flexGrow', 0)) || 0} ${Number(get('flexShrink', 1)) || 1} auto`;
-		if (['absolute', 'fixed'].includes(s.position)) {
-			style.position = s.position;
-			style[s.horizontalOrientation === 'right' ? 'right' : 'left'] = cssSpace(get('positionX', '0px'), '0');
-			style[s.verticalOrientation === 'bottom' ? 'bottom' : 'top'] = cssSpace(get('positionY', '0px'), '0');
-		}
-		if (s.sticky === 'top' || s.sticky === 'bottom') {
-			style.position = 'sticky';
-			style[s.sticky] = cssSpace(get('stickyOffset', '0px'), '0');
-		}
-		if (get('zIndex', '') !== '') style.zIndex = Number(get('zIndex')) || 0;
-		const backgroundValue = (hover = false) => {
-			const suffix = hover ? 'Hover' : '';
-			const type = s['advancedBackgroundType' + suffix] || 'none';
-			if (type === 'classic') {
-				const image = String(s['advancedBackgroundImage' + suffix] || '').trim();
-				if (image) return `url("${image.replace(/["\\]/g, '')}")`;
-				return String(s['advancedBackgroundColor' + suffix] || 'transparent');
-			}
-			if (type === 'gradient') {
-				const one = s['advancedGradientColorOne' + suffix] || '#fff';
-				const two = s['advancedGradientColorTwo' + suffix] || '#000';
-				const oneLoc = clamp(Number(s['advancedGradientLocationOne' + suffix]) || 0, 0, 100);
-				const twoLoc = clamp(Number(s['advancedGradientLocationTwo' + suffix]) || 100, 0, 100);
-				return s['advancedGradientType' + suffix] === 'radial'
-					? `radial-gradient(circle, ${one} ${oneLoc}%, ${two} ${twoLoc}%)`
-					: `linear-gradient(${clamp(Number(s['advancedGradientAngle' + suffix]) || 180, 0, 360)}deg, ${one} ${oneLoc}%, ${two} ${twoLoc}%)`;
-			}
-			return 'none';
-		};
-		const normalBackground = backgroundValue(false);
-		if (normalBackground !== 'none') {
-			if (String(normalBackground).startsWith('#') || String(normalBackground).startsWith('rgb') || normalBackground === 'transparent') style.backgroundColor = normalBackground;
-			else style.backgroundImage = normalBackground;
-		}
-		style['--pb-advanced-hover-background'] = backgroundValue(true);
-		const borderType = ['solid', 'double', 'dotted', 'dashed', 'groove'].includes(s.advancedBorderType) ? s.advancedBorderType : 'none';
-		style.borderStyle = borderType;
-		style.borderWidth = borderType === 'none' ? '0' : cssSize(s.advancedBorderWidth, '1px');
-		style.borderColor = String(s.advancedBorderColor || 'transparent');
-		if (s.advancedBoxShadowEnabled) style.boxShadow = `${cssSize(s.advancedBoxShadowX, '0')} ${cssSize(s.advancedBoxShadowY, '0')} ${cssSize(s.advancedBoxShadowBlur, '0')} ${cssSize(s.advancedBoxShadowSpread, '0')} ${s.advancedBoxShadowColor || 'rgba(0,0,0,.2)'}${s.advancedBoxShadowInset ? ' inset' : ''}`;
-		const transform = [
-			`perspective(${cssSize(s.transformPerspective, '0px')})`, `translate(${cssSpace(get('transformOffsetX', '0px'), '0')}, ${cssSpace(get('transformOffsetY', '0px'), '0')})`,
-			`rotate(${cssSize(s.transformRotate, '0deg')})`, `rotateX(${cssSize(s.transformRotateX, '0deg')})`, `rotateY(${cssSize(s.transformRotateY, '0deg')})`,
-			`scale(${Number(s.transformScale) || 1})`, `skew(${cssSize(s.transformSkewX, '0deg')}, ${cssSize(s.transformSkewY, '0deg')})`,
-			s.transformFlipHorizontal ? 'scaleX(-1)' : '', s.transformFlipVertical ? 'scaleY(-1)' : '',
-		].filter(Boolean).join(' ');
-		style['--pb-advanced-transform'] = transform;
-		style.transform = 'var(--pb-advanced-transform)';
-		const hoverTransform = [
-			`perspective(${cssSize(s.transformPerspectiveHover, '0px')})`, `translate(${cssSpace(get('transformOffsetXHover', '0px'), '0')}, ${cssSpace(get('transformOffsetYHover', '0px'), '0')})`,
-			`rotate(${cssSize(s.transformRotateHover, '0deg')})`, `rotateX(${cssSize(s.transformRotateXHover, '0deg')})`, `rotateY(${cssSize(s.transformRotateYHover, '0deg')})`,
-			`scale(${Number(s.transformScaleHover) || 1})`, `skew(${cssSize(s.transformSkewXHover, '0deg')}, ${cssSize(s.transformSkewYHover, '0deg')})`,
-			s.transformFlipHorizontalHover ? 'scaleX(-1)' : '', s.transformFlipVerticalHover ? 'scaleY(-1)' : '',
-		].filter(Boolean).join(' ');
-		style['--pb-advanced-hover-transform'] = hoverTransform;
-		style['--pb-advanced-hover-border-style'] = ['solid', 'double', 'dotted', 'dashed', 'groove'].includes(s.advancedBorderTypeHover) ? s.advancedBorderTypeHover : 'none';
-		style['--pb-advanced-hover-border-width'] = cssSize(s.advancedBorderWidthHover, '0');
-		style['--pb-advanced-hover-border-color'] = String(s.advancedBorderColorHover || 'transparent');
-		style.transformOrigin = `${s.transformOriginX || 'center'} ${s.transformOriginY || 'center'}`;
-		if (s.maskEnabled) {
-			const maskImage = s.maskShape === 'custom' && s.maskCustomImage ? `url("${String(s.maskCustomImage).replace(/["\\]/g, '')}")` : 'radial-gradient(circle, #000 60%, transparent 61%)';
-			style.maskImage = maskImage; style.WebkitMaskImage = maskImage;
-			const maskSize = get('maskSize', 'fit');
-			style.maskSize = style.WebkitMaskSize = maskSize === 'fill' ? 'cover' : (maskSize === 'custom' ? `${Number(get('maskScale', 100)) || 100}%` : 'contain');
-			style.maskPosition = style.WebkitMaskPosition = get('maskPosition', 'center center') === 'custom' ? `${get('maskPositionX', '50%')} ${get('maskPositionY', '50%')}` : get('maskPosition', 'center center');
-			style.maskRepeat = style.WebkitMaskRepeat = get('maskRepeat', 'no-repeat');
-		}
-		return style;
-	}
-	function accordionWidgetDefaults() {
-		return {
-			...widgetAdvancedDefaults(),
-			itemPosition: 'stretch',
-			itemPositionTablet: '',
-			itemPositionMobile: '',
-			iconPosition: 'start',
-			iconPositionTablet: '',
-			iconPositionMobile: '',
-			expandIconSource: 'library',
-			expandIconClass: 'fas fa-plus',
-			expandIconSvg: '',
-			collapseIconSource: 'library',
-			collapseIconClass: 'fas fa-minus',
-			collapseIconSvg: '',
-			titleTag: 'div',
-			faqSchema: false,
-			defaultState: 'first-expanded',
-			maxExpanded: 'one',
-			animationDuration: 400,
-			accordionItemGap: '0px',
-			accordionItemGapTablet: '',
-			accordionItemGapMobile: '',
-			accordionContentDistance: '0px',
-			accordionContentDistanceTablet: '',
-			accordionContentDistanceMobile: '',
-			accordionBorderRadius: '0px',
-			accordionBorderRadiusTablet: '',
-			accordionBorderRadiusMobile: '',
-			accordionPadding: '0px',
-			accordionPaddingTablet: '',
-			accordionPaddingMobile: '',
-			headerFontFamily: 'inherit',
-			headerFontSize: '16px',
-			headerFontSizeTablet: '',
-			headerFontSizeMobile: '',
-			headerFontWeight: '600',
-			headerLineHeight: '1.4em',
-			headerLineHeightTablet: '',
-			headerLineHeightMobile: '',
-			headerLetterSpacing: '0px',
-			headerLetterSpacingTablet: '',
-			headerLetterSpacingMobile: '',
-			headerWordSpacing: '0px',
-			headerWordSpacingTablet: '',
-			headerWordSpacingMobile: '',
-			headerTextTransform: 'none',
-			headerFontStyle: 'normal',
-			headerTextDecoration: 'none',
-			headerIconSize: '16px',
-			headerIconSizeTablet: '',
-			headerIconSizeMobile: '',
-			headerIconSpacing: '12px',
-			headerIconSpacingTablet: '',
-			headerIconSpacingMobile: '',
-			contentBackgroundType: 'classic',
-			contentBackgroundColor: '#ffffff',
-			contentGradientColorOne: '#ffffff',
-			contentGradientLocationOne: 0,
-			contentGradientColorTwo: '#f4f6f8',
-			contentGradientLocationTwo: 100,
-			contentGradientType: 'linear',
-			contentGradientAngle: 180,
-			contentGradientPosition: 'center center',
-			contentBorderType: 'none',
-			contentBorderWidth: '0px',
-			contentBorderColor: '#d5dae3',
-			contentBorderRadius: '0px',
-			contentBorderRadiusTablet: '',
-			contentBorderRadiusMobile: '',
-			contentPadding: '20px',
-			contentPaddingTablet: '',
-			contentPaddingMobile: '',
-			cssClass: '',
-			...accordionStateDefaults('Normal', '#ffffff', '#1f2937', '#667085'),
-			...accordionStateDefaults('Hover', '#f8fafc', '#344054', '#475467'),
-			...accordionStateDefaults('Active', '#f2f4f7', '#101828', '#344054'),
-		};
-	}
-	function accordionStateDefaults(suffix, backgroundColor, titleColor, iconColor) {
-		return {
-			['accordionBackgroundType' + suffix]: 'classic',
-			['accordionBackgroundColor' + suffix]: backgroundColor,
-			['accordionGradientColorOne' + suffix]: backgroundColor,
-			['accordionGradientLocationOne' + suffix]: 0,
-			['accordionGradientColorTwo' + suffix]: '#eef2f6',
-			['accordionGradientLocationTwo' + suffix]: 100,
-			['accordionGradientType' + suffix]: 'linear',
-			['accordionGradientAngle' + suffix]: 180,
-			['accordionGradientPosition' + suffix]: 'center center',
-			['accordionBorderType' + suffix]: 'solid',
-			['accordionBorderWidth' + suffix]: '1px',
-			['accordionBorderColor' + suffix]: '#d5dae3',
-			['headerTitleColor' + suffix]: titleColor,
-			['headerTextShadow' + suffix]: 'none',
-			['headerTextStrokeWidth' + suffix]: '0px',
-			['headerTextStrokeColor' + suffix]: titleColor,
-			['headerIconColor' + suffix]: iconColor,
-		};
-	}
-	const ACCORDION_STYLE_STATES = Object.freeze([
-		{ value: 'normal', label: 'Normal' },
-		{ value: 'hover', label: 'Hover' },
-		{ value: 'active', label: 'Active' },
-	]);
-	const ACCORDION_BORDER_TYPES = Object.freeze(['default', 'none', 'solid', 'double', 'dotted', 'dashed', 'groove']);
-	const ACCORDION_GRADIENT_TYPES = Object.freeze(['linear', 'radial']);
 	function normalizeTabsDirection(value) {
 		const raw = String(value || '').trim().toLowerCase();
 		return ['row', 'row-reverse', 'column', 'column-reverse'].includes(raw) ? raw : 'row';
@@ -1159,7 +856,6 @@
 		divider: 'Divider',
 		spacer: 'Spacer',
 		tabs: 'Tabs',
-		accordion: 'Accordion',
 	});
 
 	const NODE_LABEL_ICONS = Object.freeze({
@@ -1176,7 +872,6 @@
 		divider: 'fas fa-minus',
 		spacer: 'fas fa-arrows-alt-v',
 		tabs: 'far fa-folder',
-		accordion: 'fas fa-bars',
 	});
 
 	function baseNodeLabel(type, fallback = 'Widget') {
@@ -1237,15 +932,6 @@
 				settings.activeTabId = tabItems[0].id;
 				return { id, type, label:'Tabs', labelSuffix:'', settings, tabItems };
 			}
-			case 'accordion':
-				return {
-					id,
-					type,
-					label: 'Accordion',
-					labelSuffix: '',
-					settings: accordionWidgetDefaults(),
-					accordionItems: accordionWidgetDefaultItems(),
-				};
 			default: return null;
 		}
 	}
@@ -1317,9 +1003,6 @@
 			onShowToolbox:  { type: Function, required: true },
 			pendingInsertTarget: { type: Object, default: null },
 			onRerouteTabsDrop: { type: Function, default: null },
-			onAccordionRuntimeForNode: { type: Function, default: null },
-			onToggleAccordionItem: { type: Function, default: null },
-			onRerouteAccordionDrop: { type: Function, default: null },
 			onTrackDropzonePointer: { type: Function, default: null },
 		},
 		emits: [],
@@ -1352,7 +1035,6 @@
 			isCont()  { return isCont(this.node.type); },
 			isGrid()  { return isGrid(this.node.type); },
 			isTabsNode() { return isTabs(this.node.type); },
-			isAccordionNode() { return isAccordion(this.node.type); },
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
 				return displayNodeLabel(this.node);
@@ -1391,29 +1073,15 @@
 					&& (chosenPosition === 'absolute' || chosenPosition === 'fixed');
 			},
 			nodeShellId() {
-				const raw = String(this.node?.settings?.cssId || '').trim();
-				if (this.isAccordionNode && /^[A-Za-z][A-Za-z0-9_-]*$/.test(raw)) return raw;
 				if (!this.isCont) return null;
+				const raw = String(this.node?.settings?.cssId || '').trim();
 				return raw || null;
 			},
-			nodeAdvancedClasses() {
-				if (!this.isAccordionNode) return [];
-				const s = this.node.settings || {};
-				const classes = ['pb-has-advanced'];
-				String(s.cssClass || '').trim().split(/\s+/).filter(Boolean).forEach((token) => {
-					const safe = token.replace(/[^A-Za-z0-9_-]/g, '');
-					if (safe) classes.push(safe);
-				});
-				if (s.entranceAnimation) classes.push('pb-advanced-entrance', 'pb-anim-' + String(s.entranceAnimation).replace(/[^A-Za-z0-9_-]/g, ''));
-				if (s.scrollingEffects) classes.push('pb-motion-scroll');
-				if (s.mouseEffects) classes.push('pb-motion-mouse');
-				return classes;
-			},
 			nodeShellStyle() {
+				if (!this.isCont) return {};
+
 				const s = this.node.settings || {};
 				const device = this.responsiveDevice || 'desktop';
-				if (this.isAccordionNode) return widgetAdvancedPreviewStyle(s, device);
-				if (!this.isCont) return {};
 				const currentHideValue = device === 'tablet'
 					? s.hideTablet
 					: (device === 'mobile' ? s.hideMobile : s.hideDesktop);
@@ -1731,18 +1399,6 @@
 				const item = this.activeTabsItem();
 				return item && Array.isArray(item.children) ? item.children : [];
 			},
-			accordionItemsList() {
-				return Array.isArray(this.node.accordionItems) ? this.node.accordionItems : [];
-			},
-			accordionExpandedItemIds() {
-				if (!this.onAccordionRuntimeForNode) return [];
-				const runtime = this.onAccordionRuntimeForNode(this.node);
-				return Array.isArray(runtime?.expandedItemIds) ? runtime.expandedItemIds : [];
-			},
-			accordionItemChildren(itemId) {
-				const item = this.accordionItemsList().find((entry) => String(entry?.id || '') === String(itemId || ''));
-				return item && Array.isArray(item.children) ? item.children : [];
-			},
 			onNodeContentClick(node, event) {
 				if (isInteractiveCanvasTarget(event && event.target)) return;
 				this.onSelect(node);
@@ -1769,9 +1425,6 @@
 					onShowToolbox:  this.onShowToolbox,
 					pendingInsertTarget: this.pendingInsertTarget,
 					onRerouteTabsDrop: this.onRerouteTabsDrop,
-					onAccordionRuntimeForNode: this.onAccordionRuntimeForNode,
-					onToggleAccordionItem: this.onToggleAccordionItem,
-					onRerouteAccordionDrop: this.onRerouteAccordionDrop,
 					onTrackDropzonePointer: this.onTrackDropzonePointer,
 				};
 			},
@@ -1947,17 +1600,6 @@
 				if (this.onRerouteTabsDrop && this.onRerouteTabsDrop(evt, children)) return;
 				this.onAddCol(evt, { children }, -1, null);
 			},
-			onAccordionDropzoneMove(evt) {
-				return this.onTabDropzoneMove(evt);
-			},
-			onAddAccordionItemChild(evt, item) {
-				const children = this.accordionItemChildren(item?.id);
-				if (this.onRerouteAccordionDrop && this.onRerouteAccordionDrop(evt, children)) return;
-				this.onAddCol(evt, { children }, -1, null);
-			},
-			toggleAccordionItemFromPreview(itemId) {
-				if (this.onToggleAccordionItem) this.onToggleAccordionItem(this.node, itemId);
-			},
 			isSequentialColumnLocked(colIndex) {
 				const cols = Array.isArray(this.node.columns) ? this.node.columns : [];
 				const idx = Number(colIndex);
@@ -2117,7 +1759,7 @@
 <div
 	class="pb-node"
 	:id="nodeShellId || null"
-	:class="['pb-node-' + node.type, nodeAdvancedClasses, { active: isVisualActive, 'is-toolbar-visible': isToolbarVisible, 'pb-grid-outline-enabled': !!node.settings?.gridOutline, 'pb-node-widget': isWidgetNode }]"
+	:class="['pb-node-' + node.type, { active: isVisualActive, 'is-toolbar-visible': isToolbarVisible, 'pb-grid-outline-enabled': !!node.settings?.gridOutline, 'pb-node-widget': isWidgetNode }]"
 	:style="nodeShellStyle"
 	:data-hover-label="label"
 	:data-node-type="node.type"
@@ -2310,59 +1952,6 @@
 			</div>
 		</template>
 
-		<!-- ACCORDION -->
-		<template v-else-if="isAccordionNode">
-			<div class="pb-preview pb-preview-accordion">
-				<div class="pb-preview-inner">
-					<component
-						:is="loadWidget(node.type)"
-						:item="node"
-						:expanded-item-ids="accordionExpandedItemIds()"
-						:responsive-device="responsiveDevice"
-						@toggle-item="toggleAccordionItemFromPreview"
-					>
-						<template #panel="{ item }">
-							<draggable
-								:list="accordionItemChildren(item.id)"
-								item-key="id"
-								:group="colGroup"
-								:move="onAccordionDropzoneMove"
-								:fallback-on-body="true"
-								:dragover-bubble="false"
-								:swap-threshold="0.65"
-								:empty-insert-threshold="30"
-								data-parent-node-type="accordion"
-								:data-parent-node-id="node.id"
-								:data-accordion-item-id="item.id"
-								:class="['pb-dropzone', 'pb-dropzone-accordion', {
-									'is-empty': accordionItemChildren(item.id).length === 0,
-									'is-pending-insert-target': pendingInsertTarget && pendingInsertTarget.type === 'accordion' && pendingInsertTarget.nodeId === node.id && pendingInsertTarget.itemId === item.id
-								}]"
-								ghost-class="pb-ghost"
-								dragover-class="is-drop-hover"
-								@add="(event) => onAddAccordionItemChild(event, item)"
-								@start="onDragStart"
-								@end="onDragEnd"
-							>
-								<template #item="{ element }">
-									<BuilderNode :node="element" v-bind="passdown()" />
-								</template>
-								<template #footer>
-									<div v-if="accordionItemChildren(item.id).length === 0" class="pb-dropzone-empty pb-accordion-empty-hint">
-										<button type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox({ type: 'accordion', nodeId: node.id, itemId: item.id })">
-											<i class="fas fa-plus"></i>
-											<span>Add</span>
-										</button>
-										<div class="pb-dropzone-empty-text">Drop here</div>
-									</div>
-								</template>
-							</draggable>
-						</template>
-					</component>
-				</div>
-			</div>
-		</template>
-
 		<!-- WIDGET -->
 		<template v-else>
 			<div class="pb-preview">
@@ -2381,7 +1970,7 @@
 	const PBC = window.PAGE_BUILDER_ELEMENTOR_CONTEXT || {};
 
 	createApp({
-		components: { draggable, BuilderNode, CkEditorField, WidgetAdvancedControls, TypographyControl },
+		components: { draggable, BuilderNode, CkEditorField },
 		setup() {
 			const mode       = ref(PBC.mode || 'create');
 			const saveUrl    = ref(PBC.saveUrl || '');
@@ -2668,11 +2257,6 @@
 			const suppressHistory = ref(false);
 			const columnResizeOverlay = ref({ visible: false, text: '', x: 0, y: 0 });
 			const pendingInsertTarget = ref(null);
-			const accordionRuntimeState = ref({});
-			const accordionStyleState = ref('normal');
-			const accordionTitleStyleState = ref('normal');
-			const accordionIconStyleState = ref('normal');
-			const accordionBoxLinks = ref({});
 			let activeColumnResizeCleanup = null;
 			const rootNodes   = ref([]);
 			const responsiveDevices = [
@@ -2680,9 +2264,6 @@
 				{ value: 'tablet', label: 'Tablet', menuLabel: 'Tablet Portrait', icon: 'fas fa-tablet-alt' },
 				{ value: 'mobile', label: 'Mobile', menuLabel: 'Mobile Portrait', icon: 'fas fa-mobile-alt' },
 			];
-			const fontFamilies = Array.isArray(window.PB_ELEMENTOR_FONT_FAMILIES)
-				? window.PB_ELEMENTOR_FONT_FAMILIES
-				: [];
 			const desktopPreviewWidths = [
 				{ value: '1140', label: '1140px' },
 				{ value: '1320', label: '1320px' },
@@ -2987,29 +2568,6 @@
 							? activeTabId
 							: c.tabItems[0].id;
 					}
-			if (c.type === 'accordion') {
-						c.settings = { ...accordionWidgetDefaults(), ...(c.settings || {}) };
-						normalizeWidgetAdvancedSettings(c.settings);
-						c.settings.faqSchema = !!c.settings.faqSchema;
-						c.settings.defaultState = c.settings.defaultState === 'all-collapsed' ? 'all-collapsed' : 'first-expanded';
-						c.settings.maxExpanded = c.settings.maxExpanded === 'multiple' ? 'multiple' : 'one';
-						c.settings.animationDuration = clamp(Number(c.settings.animationDuration) || 400, 0, 5000);
-						c.settings.cssClass = String(c.settings.cssClass || '').trim();
-						const rawItems = Array.isArray(c.accordionItems) && c.accordionItems.length
-							? c.accordionItems
-							: accordionWidgetDefaultItems();
-						c.accordionItems = rawItems.map((rawItem, index) => {
-							const item = {
-								id: rawItem && rawItem.id ? rawItem.id : uid('accordion_item'),
-								title: String(rawItem && rawItem.title ? rawItem.title : ('Item #' + (index + 1))).trim() || ('Item #' + (index + 1)),
-								cssId: normalizeTabsCssId(rawItem && rawItem.cssId),
-								children: (rawItem && rawItem.children) || [],
-							};
-							item.children = norm(item.children || []);
-							return item;
-						});
-						if (!c.accordionItems.length) c.accordionItems = [accordionItemDefaults(0)];
-					}
 					if (c.settings && typeof c.settings === 'object') {
 						seedResponsiveSettings(c.settings);
 					}
@@ -3034,7 +2592,6 @@
 					if (n.children) { const r = findById(n.children, id); if (r) return r; }
 					if (n.columns) for (const col of n.columns) { const r = findById(col.children||[], id); if (r) return r; }
 					if (n.tabItems) for (const item of n.tabItems) { const r = findById(item.children||[], id); if (r) return r; }
-					if (n.accordionItems) for (const item of n.accordionItems) { const r = findById(item.children||[], id); if (r) return r; }
 				}
 				return null;
 			}
@@ -3123,22 +2680,6 @@
 					clearPendingInsertTarget();
 					return true;
 				}
-				if (target.type === 'accordion') {
-					const accordionNode = findById(rootNodes.value, target.nodeId);
-					if (!accordionNode || accordionNode.type !== 'accordion' || !Array.isArray(accordionNode.accordionItems)) return false;
-					const targetItem = accordionNode.accordionItems.find((entry) => String(entry?.id || '') === String(target.itemId || ''));
-					if (!targetItem || !Array.isArray(targetItem.children)) return false;
-					const runtime = accordionRuntimeForNode(accordionNode);
-					if (!runtime.expandedItemIds.includes(String(targetItem.id))) {
-						runtime.expandedItemIds = accordionNode.settings?.maxExpanded === 'multiple'
-							? runtime.expandedItemIds.concat(String(targetItem.id))
-							: [String(targetItem.id)];
-					}
-					targetItem.children.push(item);
-					selectedId.value = item.id;
-					clearPendingInsertTarget();
-					return true;
-				}
 				return false;
 			}
 			function onToolboxItemClick(toolDef) {
@@ -3193,117 +2734,6 @@
 			function tabsSelectedRowDirection(node = selectedNode.value) {
 				return tabsRowDirection(node?.settings?.direction);
 			}
-			function accordionItemsForNode(node = selectedNode.value) {
-				if (!node || node.type !== 'accordion') return [];
-				if (!Array.isArray(node.accordionItems) || !node.accordionItems.length) {
-					node.accordionItems = [accordionItemDefaults(0)];
-				}
-				return node.accordionItems;
-			}
-			function sameStringArray(left, right) {
-				if (!Array.isArray(left) || !Array.isArray(right) || left.length !== right.length) return false;
-				return left.every((value, index) => String(value || '') === String(right[index] || ''));
-			}
-			function accordionRuntimeForNode(node) {
-				if (!node || node.type !== 'accordion') {
-					return { editingItemId: '', expandedItemIds: [], transitioningItemIds: [] };
-				}
-				const items = accordionItemsForNode(node);
-				const validIds = items.map((item) => String(item.id || '')).filter(Boolean);
-				let runtime = accordionRuntimeState.value[node.id];
-				if (!runtime) {
-					runtime = {
-						editingItemId: validIds[0] || '',
-						expandedItemIds: node.settings?.defaultState === 'all-collapsed' ? [] : validIds.slice(0, 1),
-						transitioningItemIds: [],
-					};
-					accordionRuntimeState.value[node.id] = runtime;
-				}
-				runtime.editingItemId = validIds.includes(String(runtime.editingItemId || ''))
-					? String(runtime.editingItemId)
-					: (validIds[0] || '');
-				let normalizedExpandedItemIds = (Array.isArray(runtime.expandedItemIds) ? runtime.expandedItemIds : [])
-					.map((id) => String(id || ''))
-					.filter((id, index, ids) => validIds.includes(id) && ids.indexOf(id) === index);
-				if (node.settings?.maxExpanded !== 'multiple' && normalizedExpandedItemIds.length > 1) {
-					normalizedExpandedItemIds = normalizedExpandedItemIds.slice(-1);
-				}
-				if (!sameStringArray(runtime.expandedItemIds, normalizedExpandedItemIds)) {
-					runtime.expandedItemIds = normalizedExpandedItemIds;
-				}
-				const normalizedTransitioningItemIds = (Array.isArray(runtime.transitioningItemIds) ? runtime.transitioningItemIds : [])
-					.filter((id) => validIds.includes(String(id || '')));
-				if (!sameStringArray(runtime.transitioningItemIds, normalizedTransitioningItemIds)) {
-					runtime.transitioningItemIds = normalizedTransitioningItemIds;
-				}
-				return runtime;
-			}
-			function selectAccordionItem(node, itemId) {
-				const items = accordionItemsForNode(node);
-				const match = items.find((item) => String(item.id || '') === String(itemId || ''));
-				if (!match) return;
-				accordionRuntimeForNode(node).editingItemId = match.id;
-			}
-			function toggleAccordionItem(node, itemId) {
-				const items = accordionItemsForNode(node);
-				const match = items.find((item) => String(item.id || '') === String(itemId || ''));
-				if (!match) return;
-				const runtime = accordionRuntimeForNode(node);
-				const safeId = String(match.id);
-				if (runtime.expandedItemIds.includes(safeId)) {
-					runtime.expandedItemIds = runtime.expandedItemIds.filter((id) => id !== safeId);
-					return;
-				}
-				runtime.expandedItemIds = node.settings?.maxExpanded === 'multiple'
-					? runtime.expandedItemIds.concat(safeId)
-					: [safeId];
-			}
-			function resetAccordionRuntimeFromDefaults(node = selectedNode.value) {
-				if (!node || node.type !== 'accordion') return;
-				const items = accordionItemsForNode(node);
-				const runtime = accordionRuntimeForNode(node);
-				runtime.expandedItemIds = node.settings?.defaultState === 'all-collapsed' || !items.length
-					? []
-					: [items[0].id];
-			}
-			function addAccordionItem(node = selectedNode.value) {
-				if (!node || node.type !== 'accordion') return;
-				const items = accordionItemsForNode(node);
-				const next = accordionItemDefaults(items.length);
-				items.push(next);
-				accordionRuntimeForNode(node).editingItemId = next.id;
-			}
-			function duplicateAccordionItem(node = selectedNode.value, itemId = '') {
-				if (!node || node.type !== 'accordion') return;
-				const items = accordionItemsForNode(node);
-				const index = items.findIndex((item) => String(item.id || '') === String(itemId || ''));
-				if (index < 0) return;
-				const copy = jclone(items[index]);
-				copy.id = uid('accordion_item');
-				copy.children = norm(copy.children || []);
-				copy.children.forEach(regenIds);
-				items.splice(index + 1, 0, copy);
-				accordionRuntimeForNode(node).editingItemId = copy.id;
-			}
-			function removeAccordionItem(node = selectedNode.value, itemId = '') {
-				if (!node || node.type !== 'accordion') return;
-				const items = accordionItemsForNode(node);
-				if (items.length <= 1) return;
-				const index = items.findIndex((item) => String(item.id || '') === String(itemId || ''));
-				if (index < 0) return;
-				items.splice(index, 1);
-				const runtime = accordionRuntimeForNode(node);
-				runtime.editingItemId = items[Math.max(0, index - 1)].id;
-				runtime.expandedItemIds = runtime.expandedItemIds.filter((id) => String(id) !== String(itemId));
-			}
-			function accordionEditingItem(node = selectedNode.value) {
-				const items = accordionItemsForNode(node);
-				const editingId = accordionRuntimeForNode(node).editingItemId;
-				return items.find((item) => String(item.id || '') === String(editingId || '')) || items[0] || null;
-			}
-			function accordionItemSummary(item, index) {
-				return String(item?.title || '').trim() || ('Item #' + (index + 1));
-			}
 			function tabsWidthUnit(node = selectedNode.value) {
 				return TABS_WIDGET_WIDTH_UNITS.includes(node?.settings?.tabWidthUnit) ? node.settings.tabWidthUnit : 'px';
 			}
@@ -3345,7 +2775,6 @@
 			const iconLibraryIcons = ref([]);
 			const iconLibrarySelected = ref(null);
 			const iconLibraryTargetNodeId = ref('');
-			const iconLibraryTargetSettingKey = ref('');
 			const iconLibraryLoading = ref(false);
 			const iconLibraryLoaded = ref(false);
 			const iconLibraryError = ref('');
@@ -3412,7 +2841,6 @@
 				if (!node || node.type !== 'icon') return;
 				await ensureIconLibraryLoaded();
 				iconLibraryTargetNodeId.value = String(node.id || '');
-				iconLibraryTargetSettingKey.value = '';
 				iconLibraryGroup.value = 'all';
 				iconLibrarySearch.value = '';
 				syncIconLibrarySelectionFromNode(node);
@@ -3424,19 +2852,6 @@
 				iconLibrarySearch.value = '';
 				iconLibrarySelected.value = null;
 				iconLibraryTargetNodeId.value = '';
-				iconLibraryTargetSettingKey.value = '';
-			}
-			async function openAccordionIconLibrary(role, node = selectedNode.value) {
-				if (!node || node.type !== 'accordion' || !['expand', 'collapse'].includes(role)) return;
-				await ensureIconLibraryLoaded();
-				const settingKey = role + 'IconClass';
-				const parsed = parseIconWidgetClassParts(node.settings?.[settingKey]);
-				iconLibraryTargetNodeId.value = String(node.id || '');
-				iconLibraryTargetSettingKey.value = settingKey;
-				iconLibraryGroup.value = 'all';
-				iconLibrarySearch.value = '';
-				iconLibrarySelected.value = iconLibraryIcons.value.find((item) => item.style === parsed.style && item.name === parsed.name) || null;
-				showIconLibraryModal.value = true;
 			}
 			function selectIconLibraryItem(item) {
 				iconLibrarySelected.value = item || null;
@@ -3445,14 +2860,6 @@
 				if (!iconLibrarySelected.value) return;
 				const nodeId = String(iconLibraryTargetNodeId.value || '');
 				const node = nodeId ? findById(rootNodes.value, nodeId) : selectedNode.value;
-				const settingKey = String(iconLibraryTargetSettingKey.value || '');
-				if (node && node.type === 'accordion' && ['expandIconClass', 'collapseIconClass'].includes(settingKey)) {
-					if (!node.settings || typeof node.settings !== 'object') node.settings = {};
-					node.settings[settingKey] = iconLibrarySelected.value.className;
-					node.settings[settingKey.replace('Class', 'Source')] = 'library';
-					closeIconLibrary();
-					return;
-				}
 				if (!node || node.type !== 'icon') return;
 				if (!node.settings || typeof node.settings !== 'object') node.settings = {};
 				node.settings.iconStyle = iconLibrarySelected.value.style;
@@ -3460,45 +2867,6 @@
 				node.settings.iconClass = iconLibrarySelected.value.className;
 				normalizeIconWidgetSettings(node.settings);
 				closeIconLibrary();
-			}
-			function sanitizeAccordionSvgMarkup(value) {
-				const source = String(value || '').trim();
-				if (!source || typeof DOMParser !== 'function') return '';
-				const doc = new DOMParser().parseFromString(source, 'image/svg+xml');
-				const root = doc.documentElement;
-				if (!root || root.nodeName.toLowerCase() !== 'svg' || doc.querySelector('parsererror')) return '';
-				const allowed = new Set(['svg', 'g', 'path', 'circle', 'ellipse', 'rect', 'line', 'polyline', 'polygon', 'title', 'desc']);
-				Array.from(root.querySelectorAll('*')).forEach((element) => {
-					if (!allowed.has(element.nodeName.toLowerCase())) {
-						element.remove();
-						return;
-					}
-					Array.from(element.attributes).forEach((attribute) => {
-						const name = attribute.name.toLowerCase();
-						if (name.startsWith('on') || name === 'style' || name.includes('href')) element.removeAttribute(attribute.name);
-					});
-				});
-				Array.from(root.attributes).forEach((attribute) => {
-					const name = attribute.name.toLowerCase();
-					if (name.startsWith('on') || name === 'style' || name.includes('href')) root.removeAttribute(attribute.name);
-				});
-				return new XMLSerializer().serializeToString(root);
-			}
-			function chooseAccordionSvg(role, node = selectedNode.value) {
-				if (!node || node.type !== 'accordion' || !['expand', 'collapse'].includes(role)) return;
-				const markup = window.prompt('Paste trusted SVG markup', String(node.settings?.[role + 'IconSvg'] || ''));
-				if (markup === null) return;
-				const sanitized = sanitizeAccordionSvgMarkup(markup);
-				if (!sanitized) {
-					showSaveToast('error', 'SVG tidak valid atau mengandung markup yang tidak didukung.');
-					return;
-				}
-				node.settings[role + 'IconSvg'] = sanitized;
-				node.settings[role + 'IconSource'] = 'svg';
-			}
-			function accordionStateKey(base, state = accordionStyleState.value) {
-				const safeState = ['normal', 'hover', 'active'].includes(state) ? state : 'normal';
-				return base + safeState.charAt(0).toUpperCase() + safeState.slice(1);
 			}
 			const selectedColumnContext = computed(() => {
 				const nodeId = String(selectedColumnNodeId.value || selectedId.value || '').trim();
@@ -4146,88 +3514,6 @@
 				const value = normalizedSizeControlValue(current, safe, options.allowEmpty ? '' : 0);
 				setResponsiveSetting(node.settings, base, sizeControlToken(value, safe, options.emptyToken || 'auto'));
 			}
-			function accordionResponsiveSource(node, key, fallback = '') {
-				const settings = node?.settings;
-				if (!settings) return fallback;
-				let source = settings[key];
-				if ((source === '' || source == null) && /(?:Tablet|Mobile)$/.test(key)) {
-					source = settings[key.replace(/(?:Tablet|Mobile)$/, '')];
-				}
-				return source === '' || source == null ? fallback : source;
-			}
-			function accordionDimensionParsed(node, key, fallback = '0px') {
-				const source = accordionResponsiveSource(node, key, fallback);
-				const fallbackUnit = parseNumberUnit(fallback, 'px', sizeControlUnits).unit || 'px';
-				return parseNumberUnit(source, fallbackUnit, sizeControlUnits);
-			}
-			function accordionDimensionUnit(node, key, fallback = '0px') {
-				const parsed = accordionDimensionParsed(node, key, fallback);
-				return sizeControlUnits.includes(parsed.unit) ? parsed.unit : 'px';
-			}
-			function accordionDimensionValue(node, key, fallback = '0px') {
-				const parsed = accordionDimensionParsed(node, key, fallback);
-				return parsed.value === '' ? 0 : normalizedSizeControlValue(parsed.value, parsed.unit, 0);
-			}
-			function accordionDimensionMax(node, key, fallback = '0px') {
-				return sizeControlMaxForUnit(accordionDimensionUnit(node, key, fallback));
-			}
-			function accordionDimensionStep(node, key, fallback = '0px') {
-				return sizeControlStepForUnit(accordionDimensionUnit(node, key, fallback));
-			}
-			function onAccordionDimensionInput(node, key, event, fallback = '0px') {
-				if (!node?.settings || !event?.target) return;
-				const unit = accordionDimensionUnit(node, key, fallback);
-				const value = normalizedSizeControlValue(event.target.value, unit, 0);
-				node.settings[key] = sizeControlToken(value, unit, '0' + unit);
-			}
-			function setAccordionDimensionUnit(node, key, unit, fallback = '0px') {
-				if (!node?.settings) return;
-				const safeUnit = sizeControlUnits.includes(unit) ? unit : 'px';
-				const value = normalizedSizeControlValue(accordionDimensionValue(node, key, fallback), safeUnit, 0);
-				node.settings[key] = sizeControlToken(value, safeUnit, '0' + safeUnit);
-			}
-			function accordionBoxTokens(node, key, fallback = '0px') {
-				const source = String(accordionResponsiveSource(node, key, fallback)).trim() || fallback;
-				const raw = source.split(/\s+/).slice(0, 4);
-				const expanded = raw.length === 1
-					? [raw[0], raw[0], raw[0], raw[0]]
-					: (raw.length === 2
-						? [raw[0], raw[1], raw[0], raw[1]]
-						: (raw.length === 3 ? [raw[0], raw[1], raw[2], raw[1]] : raw));
-				return expanded.map((token) => parseNumberUnit(token, 'px', sizeControlUnits));
-			}
-			function accordionBoxUnit(node, key, fallback = '0px') {
-				const unit = accordionBoxTokens(node, key, fallback)[0]?.unit;
-				return sizeControlUnits.includes(unit) ? unit : 'px';
-			}
-			function accordionBoxSideValue(node, key, sideIndex, fallback = '0px') {
-				const parsed = accordionBoxTokens(node, key, fallback)[sideIndex] || { value: 0, unit: 'px' };
-				return parsed.value === '' ? 0 : normalizedSizeControlValue(parsed.value, parsed.unit, 0);
-			}
-			function accordionBoxLinked(key) {
-				return accordionBoxLinks.value[key] !== false;
-			}
-			function toggleAccordionBoxLink(key) {
-				accordionBoxLinks.value = { ...accordionBoxLinks.value, [key]: !accordionBoxLinked(key) };
-			}
-			function writeAccordionBox(node, key, values, unit) {
-				if (!node?.settings) return;
-				node.settings[key] = values.map((value) => sizeControlToken(value, unit, '0' + unit)).join(' ');
-			}
-			function onAccordionBoxSideInput(node, key, sideIndex, event, fallback = '0px') {
-				if (!node?.settings || !event?.target) return;
-				const unit = accordionBoxUnit(node, key, fallback);
-				const value = normalizedSizeControlValue(event.target.value, unit, 0);
-				const values = [0, 1, 2, 3].map((index) => accordionBoxSideValue(node, key, index, fallback));
-				if (accordionBoxLinked(key)) values.fill(value);
-				else values[sideIndex] = value;
-				writeAccordionBox(node, key, values, unit);
-			}
-			function setAccordionBoxUnit(node, key, unit, fallback = '0px') {
-				const safeUnit = sizeControlUnits.includes(unit) ? unit : 'px';
-				const values = [0, 1, 2, 3].map((index) => accordionBoxSideValue(node, key, index, fallback));
-				writeAccordionBox(node, key, values, safeUnit);
-			}
 			const containerWidthUnits = sizeControlLegacyUnits;
 			function containerWidthMaxForUnit(unit) {
 				return sizeControlMaxForUnit(unit);
@@ -4634,13 +3920,6 @@
 							}
 						});
 					}
-					if (Array.isArray(node.accordionItems) && node.accordionItems.length) {
-						node.accordionItems.forEach((item) => {
-							if (Array.isArray(item && item.children) && item.children.length) {
-								walkNodes(item.children, handler);
-							}
-						});
-					}
 				});
 			}
 			function syncAllGridCellsForDevice(device = responsiveDevice.value) {
@@ -4690,7 +3969,7 @@
 				}
 			}, { deep: true });
 			watch(selectedId, (nextId) => {
-				settingsTab.value = selectedNode.value?.type === 'accordion' ? 'content' : 'layout';
+				settingsTab.value = 'layout';
 				closeControlResponsiveMenu();
 				closeWidthPreviewMenu();
 				scheduleColorisInit();
@@ -4708,7 +3987,6 @@
 					if (n.children && delFrom(n.children, id)) return true;
 					if (n.columns) for (const col of n.columns) if (delFrom(col.children||[], id)) return true;
 					if (n.tabItems) for (const item of n.tabItems) if (delFrom(item.children||[], id)) return true;
-					if (n.accordionItems) for (const item of n.accordionItems) if (delFrom(item.children||[], id)) return true;
 				}
 				return false;
 			}
@@ -4719,11 +3997,6 @@
 				if (node.tabItems) node.tabItems.forEach((item, index) => {
 					item.id = uid('tab');
 					if (!item.title) item.title = 'Tab #' + (index + 1);
-					(item.children || []).forEach(regenIds);
-				});
-				(node.accordionItems || []).forEach((item, index) => {
-					item.id = uid('accordion_item');
-					if (!item.title) item.title = 'Item #' + (index + 1);
 					(item.children || []).forEach(regenIds);
 				});
 				if (node.type === 'tabs' && node.settings) {
@@ -4741,7 +4014,6 @@
 					if (n.children && dupIn(n.children, id)) return true;
 					if (n.columns) for (const col of n.columns) if (dupIn(col.children||[], id)) return true;
 					if (n.tabItems) for (const item of n.tabItems) if (dupIn(item.children||[], id)) return true;
-					if (n.accordionItems) for (const item of n.accordionItems) if (dupIn(item.children||[], id)) return true;
 				}
 				return false;
 			}
@@ -5005,9 +4277,6 @@
 				if (currentIndex >= 0) tabChildren.splice(currentIndex, 1);
 				targetChildren.push(item);
 				return true;
-			}
-			function rerouteAccordionDropToNestedColumn(evt, itemChildren) {
-				return rerouteTabsDropToNestedColumn(evt, itemChildren);
 			}
 
 			// onAddCol: dipanggil saat item di-drop ke grid column
@@ -5308,9 +4577,7 @@
 				],
 				general: [
 					{ type:'tabs',        label:'Tabs',        icon:'far fa-folder' },
-					{ type:'accordion',   label:'Accordion',   icon:'fas fa-bars' },
 				],
-				advanced: [],
 			};
 
 			// ── Save ──────────────────────────────────────────────────────────
@@ -5349,7 +4616,7 @@
 				appTitle, toolbox, rootNodes, loadWidget,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
 				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, selectedNode, selectedType,
-				responsiveDevice, responsiveDevices, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
+				responsiveDevice, responsiveDevices, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
 				controlResponsiveMenu, responsiveDeviceIcon, responsiveDeviceLabel, deviceOptionLabel,
 				openControlResponsiveMenu, closeControlResponsiveMenu, isControlResponsiveMenuOpen,
 				setResponsiveDevice, applyResponsiveDevice, toggleWidthPreviewMenu, closeWidthPreviewMenu, selectDesktopPreviewWidth,
@@ -5370,16 +4637,10 @@
 				displayNodeLabel, nodeLabelIcon,
 				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
-				openIconLibrary, openAccordionIconLibrary, chooseAccordionSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
+				openIconLibrary, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
 				tabsItemsForNode, tabsActiveItem, selectTabsItem, addTabsItem, duplicateTabsItem, removeTabsItem, tabsItemSummary, tabsSelectedRowDirection,
 				tabsWidthValue, tabsWidthUnit, tabsWidthMax, tabsWidthStep, onTabsWidthInput, setTabsWidthValue, setTabsWidthUnit,
-				accordionItemsForNode, accordionRuntimeForNode, accordionEditingItem, selectAccordionItem, toggleAccordionItem, resetAccordionRuntimeFromDefaults,
-				addAccordionItem, duplicateAccordionItem, removeAccordionItem, accordionItemSummary,
-				accordionStyleState, accordionTitleStyleState, accordionIconStyleState, accordionStateKey,
-				accordionDimensionValue, accordionDimensionUnit, accordionDimensionMax, accordionDimensionStep, onAccordionDimensionInput, setAccordionDimensionUnit,
-				accordionBoxUnit, accordionBoxSideValue, accordionBoxLinked, toggleAccordionBoxLink, onAccordionBoxSideInput, setAccordionBoxUnit,
-				accordionStyleStates: ACCORDION_STYLE_STATES, accordionBorderTypes: ACCORDION_BORDER_TYPES, accordionGradientTypes: ACCORDION_GRADIENT_TYPES,
 				tabsBreakpointOptions: TABS_WIDGET_BREAKPOINT_OPTIONS, tabsWidthUnits: TABS_WIDGET_WIDTH_UNITS,
 				iconWidgetViewOptions: ICON_WIDGET_VIEW_OPTIONS, iconWidgetShapeOptions: ICON_WIDGET_SHAPE_OPTIONS,
 				pageName, pageStatus, customCss, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
@@ -5391,7 +4652,7 @@
 				onAddContainer, onAddCol, onRootAdd,
 				modal, cPresets, gPresets, applyContPreset, applyGridPreset, closeModal, pickLayout, openModal,
 				canUndo, canRedo, undo, redo,
-				onToolboxItemClick, pendingInsertTarget, clearPendingInsertTarget, rerouteTabsDropToNestedColumn, rerouteAccordionDropToNestedColumn, trackDropzonePointerFromEvent,
+				onToolboxItemClick, pendingInsertTarget, clearPendingInsertTarget, rerouteTabsDropToNestedColumn, trackDropzonePointerFromEvent,
 			};
 		},
 
@@ -5509,24 +4770,6 @@
 					<div class="pb-panel-title">General</div>
 					<draggable
 						:list="toolbox.general"
-						:group="sidebarWgtGroup"
-						:clone="toolClone"
-						item-key="type"
-						class="pb-tool-grid"
-						:sort="false"
-						@start="onDragStart"
-						@end="onDragEnd"
-					>
-						<template #item="{ element }">
-							<div class="pb-tool-item" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
-						</template>
-					</draggable>
-				</div>
-
-				<div class="pb-section" v-if="toolbox.advanced.length">
-					<div class="pb-panel-title">Advanced</div>
-					<draggable
-						:list="toolbox.advanced"
 						:group="sidebarWgtGroup"
 						:clone="toolClone"
 						item-key="type"
@@ -7242,214 +6485,6 @@
 							</div>
 						</div>
 					</template>
-					<template v-if="selectedType==='accordion'">
-						<div class="pb-accordion-settings pb-widget-settings pb-widget-settings--accordion">
-							<div class="pb-tab-nav">
-								<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='content'}" @click="settingsTab='content'"><i class="fas fa-edit"></i><span>Content</span></button>
-								<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='style'}" @click="settingsTab='style'"><i class="fas fa-adjust"></i><span>Style</span></button>
-								<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='advanced'}" @click="settingsTab='advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
-							</div>
-
-							<div v-show="settingsTab==='content'" class="pb-tab-content">
-								<details class="pb-collapsible" open>
-									<summary>Layout</summary>
-									<div class="pb-collapsible-body">
-										<div class="pb-form-group">
-											<label class="pb-form-label">Items</label>
-											<draggable
-												v-model="selectedNode.accordionItems"
-												item-key="id"
-												:group="{ name: 'pb-accordion-items', pull: false, put: false }"
-												handle=".pb-accordion-item-drag"
-												class="pb-accordion-items-list"
-											>
-												<template #item="{ element: item, index }">
-													<div class="pb-accordion-item-row" :class="{ active: accordionRuntimeForNode(selectedNode).editingItemId===item.id }">
-														<span class="pb-accordion-item-drag" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
-														<button type="button" class="pb-accordion-item-main" @click="selectAccordionItem(selectedNode, item.id)">{{ accordionItemSummary(item, index) }}</button>
-														<button type="button" class="pb-accordion-item-action" title="Duplicate Item" @click="duplicateAccordionItem(selectedNode, item.id)"><i class="far fa-copy"></i></button>
-														<button type="button" class="pb-accordion-item-action" title="Delete Item" :disabled="accordionItemsForNode(selectedNode).length<=1" @click="removeAccordionItem(selectedNode, item.id)"><i class="fas fa-times"></i></button>
-													</div>
-												</template>
-											</draggable>
-											<button type="button" class="pb-btn pb-accordion-add-btn" @click="addAccordionItem(selectedNode)"><i class="fas fa-plus"></i><span>Add Item</span></button>
-										</div>
-
-										<div v-if="accordionEditingItem(selectedNode)" class="pb-accordion-item-fields">
-											<div class="pb-form-group"><label class="pb-form-label">Title</label><input class="pb-input" v-model="accordionEditingItem(selectedNode).title" placeholder="Item title"></div>
-											<div class="pb-form-group"><label class="pb-form-label">CSS ID</label><input class="pb-input" v-model="accordionEditingItem(selectedNode).cssId" placeholder="item-one"></div>
-										</div>
-
-										<div class="pb-form-group">
-											<div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">Item Position</label><div class="pb-control-device-wrap">
-												<button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-item-position')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-												<div v-if="isControlResponsiveMenuOpen('accordion-item-position')" class="pb-control-device-menu">
-													<button v-for="device in responsiveDevices" :key="'accordion-item-position-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-item-position', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button>
-												</div>
-											</div></div>
-											<select class="pb-select" v-model="selectedNode.settings[activeResponsiveKey('itemPosition')]">
-												<option value="">Default</option><option value="start">Start</option><option value="center">Center</option><option value="end">End</option><option value="stretch">Stretch</option>
-											</select>
-										</div>
-										<div class="pb-form-group">
-											<div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">Icon Position</label><div class="pb-control-device-wrap">
-												<button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-icon-position')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-												<div v-if="isControlResponsiveMenuOpen('accordion-icon-position')" class="pb-control-device-menu">
-													<button v-for="device in responsiveDevices" :key="'accordion-icon-position-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-icon-position', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button>
-												</div>
-											</div></div>
-											<select class="pb-select" v-model="selectedNode.settings[activeResponsiveKey('iconPosition')]">
-												<option value="">Default</option><option value="start">Start</option><option value="end">End</option>
-											</select>
-										</div>
-										<div class="pb-form-group">
-											<label class="pb-form-label">Expand Icon</label>
-											<select class="pb-select" v-model="selectedNode.settings.expandIconSource">
-												<option value="none">None</option><option value="library">Icon Library</option><option value="svg">Upload SVG</option>
-											</select>
-											<button v-if="selectedNode.settings.expandIconSource==='library'" type="button" class="pb-btn pb-icon-source-btn" @click="openAccordionIconLibrary('expand', selectedNode)"><i :class="selectedNode.settings.expandIconClass"></i><span>Choose from Library</span></button>
-											<button v-if="selectedNode.settings.expandIconSource==='svg'" type="button" class="pb-btn pb-icon-source-btn" @click="chooseAccordionSvg('expand', selectedNode)"><i class="fas fa-upload"></i><span>Choose SVG</span></button>
-										</div>
-										<div class="pb-form-group">
-											<label class="pb-form-label">Collapse Icon</label>
-											<select class="pb-select" v-model="selectedNode.settings.collapseIconSource">
-												<option value="none">None</option><option value="library">Icon Library</option><option value="svg">Upload SVG</option>
-											</select>
-											<button v-if="selectedNode.settings.collapseIconSource==='library'" type="button" class="pb-btn pb-icon-source-btn" @click="openAccordionIconLibrary('collapse', selectedNode)"><i :class="selectedNode.settings.collapseIconClass"></i><span>Choose from Library</span></button>
-											<button v-if="selectedNode.settings.collapseIconSource==='svg'" type="button" class="pb-btn pb-icon-source-btn" @click="chooseAccordionSvg('collapse', selectedNode)"><i class="fas fa-upload"></i><span>Choose SVG</span></button>
-										</div>
-										<div class="pb-form-group">
-											<label class="pb-form-label">Title HTML Tag</label>
-											<select class="pb-select" v-model="selectedNode.settings.titleTag">
-												<option v-for="tag in ['h1','h2','h3','h4','h5','h6','div','span','p']" :key="tag" :value="tag">{{ tag.toUpperCase() }}</option>
-											</select>
-										</div>
-										<div class="pb-form-group pb-toggle-label-row">
-											<label class="pb-form-label mb-0">FAQ Schema</label>
-											<div class="pb-toggle-wrap"><input :id="'accordion-faq-'+selectedNode.id" type="checkbox" class="pb-toggle" v-model="selectedNode.settings.faqSchema"><label :for="'accordion-faq-'+selectedNode.id"></label></div>
-										</div>
-									</div>
-								</details>
-
-								<details class="pb-collapsible" open>
-									<summary>Interactions</summary>
-									<div class="pb-collapsible-body">
-										<div class="pb-form-group">
-											<label class="pb-form-label">Default State</label>
-											<select class="pb-select" v-model="selectedNode.settings.defaultState" @change="resetAccordionRuntimeFromDefaults(selectedNode)">
-												<option value="first-expanded">First Expanded</option>
-												<option value="all-collapsed">All Collapsed</option>
-											</select>
-										</div>
-										<div class="pb-form-group">
-											<label class="pb-form-label">Max Items Expanded</label>
-											<select class="pb-select" v-model="selectedNode.settings.maxExpanded" @change="accordionRuntimeForNode(selectedNode)">
-												<option value="one">One</option>
-												<option value="multiple">Multiple</option>
-											</select>
-										</div>
-										<div class="pb-form-group">
-											<label class="pb-form-label">Animation Duration <span class="pb-form-hint">{{ selectedNode.settings.animationDuration }}ms</span></label>
-											<div class="pb-range-value-row">
-												<input type="range" class="pb-range" min="0" max="2000" step="50" v-model.number="selectedNode.settings.animationDuration">
-												<input class="pb-input pb-input-compact" type="number" min="0" max="5000" step="50" v-model.number="selectedNode.settings.animationDuration">
-											</div>
-										</div>
-									</div>
-								</details>
-							</div>
-
-							<div v-show="settingsTab==='style'" class="pb-tab-content pb-accordion-style-settings">
-								<details class="pb-collapsible" open>
-									<summary>Accordion</summary>
-									<div class="pb-collapsible-body">
-										<div class="pb-form-group pb-accordion-dimension-control">
-											<div class="pb-label-row"><label class="pb-form-label mb-0">Space Between Items</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap">
-												<button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-item-gap')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-												<div v-if="isControlResponsiveMenuOpen('accordion-item-gap')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-item-gap-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-item-gap', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div>
-											</div><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('accordionItemGap'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-gap-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div>
-											<div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('accordionItemGap'), $event, '0px')"><input class="pb-input pb-input-compact" type="number" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('accordionItemGap'), $event, '0px')"></div>
-										</div>
-										<div class="pb-form-group pb-accordion-dimension-control">
-											<div class="pb-label-row"><label class="pb-form-label mb-0">Distance from Content</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap">
-												<button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-content-distance')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-												<div v-if="isControlResponsiveMenuOpen('accordion-content-distance')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-content-distance-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-content-distance', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div>
-											</div><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('accordionContentDistance'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-distance-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div>
-											<div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('accordionContentDistance'), $event, '0px')"><input class="pb-input pb-input-compact" type="number" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('accordionContentDistance'), $event, '0px')"></div>
-										</div>
-										<div class="pb-state-tabs">
-											<button v-for="state in accordionStyleStates" :key="'accordion-state-'+state.value" type="button" :class="{active:accordionStyleState===state.value}" @click="accordionStyleState=state.value">{{ state.label }}</button>
-										</div>
-										<div class="pb-form-group"><label class="pb-form-label">Background Type</label><select class="pb-select" v-model="selectedNode.settings[accordionStateKey('accordionBackgroundType', accordionStyleState)]"><option value="classic">Classic</option><option value="gradient">Gradient</option></select></div>
-										<template v-if="selectedNode.settings[accordionStateKey('accordionBackgroundType', accordionStyleState)]==='gradient'">
-											<div class="pb-form-group"><label class="pb-form-label">First Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('accordionGradientColorOne', accordionStyleState)]"></div>
-											<div class="pb-form-group"><label class="pb-form-label">First Location</label><input class="pb-input" type="number" min="0" max="100" v-model.number="selectedNode.settings[accordionStateKey('accordionGradientLocationOne', accordionStyleState)]"></div>
-											<div class="pb-form-group"><label class="pb-form-label">Second Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('accordionGradientColorTwo', accordionStyleState)]"></div>
-											<div class="pb-form-group"><label class="pb-form-label">Second Location</label><input class="pb-input" type="number" min="0" max="100" v-model.number="selectedNode.settings[accordionStateKey('accordionGradientLocationTwo', accordionStyleState)]"></div>
-											<div class="pb-form-group"><label class="pb-form-label">Gradient Type</label><select class="pb-select" v-model="selectedNode.settings[accordionStateKey('accordionGradientType', accordionStyleState)]"><option v-for="type in accordionGradientTypes" :key="type" :value="type">{{ type }}</option></select></div>
-											<div v-if="selectedNode.settings[accordionStateKey('accordionGradientType', accordionStyleState)]==='linear'" class="pb-form-group"><label class="pb-form-label">Angle</label><input class="pb-input" type="number" min="0" max="360" v-model.number="selectedNode.settings[accordionStateKey('accordionGradientAngle', accordionStyleState)]"></div>
-											<div v-else class="pb-form-group"><label class="pb-form-label">Position</label><select class="pb-select" v-model="selectedNode.settings[accordionStateKey('accordionGradientPosition', accordionStyleState)]"><option value="center center">Center Center</option><option value="center top">Center Top</option><option value="center bottom">Center Bottom</option><option value="left center">Left Center</option><option value="right center">Right Center</option></select></div>
-										</template>
-										<div v-else class="pb-form-group"><label class="pb-form-label">Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('accordionBackgroundColor', accordionStyleState)]"></div>
-										<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="selectedNode.settings[accordionStateKey('accordionBorderType', accordionStyleState)]"><option v-for="type in accordionBorderTypes" :key="type" :value="type">{{ type }}</option></select></div>
-										<template v-if="!['default','none'].includes(selectedNode.settings[accordionStateKey('accordionBorderType', accordionStyleState)])">
-										<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Border Width</label><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" @change="setAccordionDimensionUnit(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), $event.target.value, '1px')"><option v-for="unit in ['px','pt','em','rem']" :key="'accordion-border-width-unit-'+unit" :value="unit">{{ unit }}</option></select></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" :step="accordionDimensionStep(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" :value="accordionDimensionValue(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" @input="onAccordionDimensionInput(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), $event, '1px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" @input="onAccordionDimensionInput(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), $event, '1px')"></div></div>
-											<div class="pb-form-group"><label class="pb-form-label">Border Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('accordionBorderColor', accordionStyleState)]"></div>
-										</template>
-										<div class="pb-form-group pb-accordion-box-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-border-radius')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('accordion-border-radius')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-border-radius-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-border-radius', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="accordionBoxUnit(selectedNode, activeResponsiveKey('accordionBorderRadius'), '0px')" @change="setAccordionBoxUnit(selectedNode, activeResponsiveKey('accordionBorderRadius'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-radius-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side,index) in ['Top','Right','Bottom','Left']" :key="'accordion-radius-'+side" class="pb-side-input"><input class="pb-input" type="number" min="0" :value="accordionBoxSideValue(selectedNode, activeResponsiveKey('accordionBorderRadius'), index, '0px')" @input="onAccordionBoxSideInput(selectedNode, activeResponsiveKey('accordionBorderRadius'), index, $event, '0px')"><span>{{ side }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active:accordionBoxLinked(activeResponsiveKey('accordionBorderRadius'))}" @click="toggleAccordionBoxLink(activeResponsiveKey('accordionBorderRadius'))" title="Link values"><i class="fas" :class="accordionBoxLinked(activeResponsiveKey('accordionBorderRadius')) ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>
-										<div class="pb-form-group pb-accordion-box-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Padding</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-padding')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('accordion-padding')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-padding-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-padding', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="accordionBoxUnit(selectedNode, activeResponsiveKey('accordionPadding'), '0px')" @change="setAccordionBoxUnit(selectedNode, activeResponsiveKey('accordionPadding'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-padding-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side,index) in ['Top','Right','Bottom','Left']" :key="'accordion-padding-'+side" class="pb-side-input"><input class="pb-input" type="number" min="0" :value="accordionBoxSideValue(selectedNode, activeResponsiveKey('accordionPadding'), index, '0px')" @input="onAccordionBoxSideInput(selectedNode, activeResponsiveKey('accordionPadding'), index, $event, '0px')"><span>{{ side }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active:accordionBoxLinked(activeResponsiveKey('accordionPadding'))}" @click="toggleAccordionBoxLink(activeResponsiveKey('accordionPadding'))" title="Link values"><i class="fas" :class="accordionBoxLinked(activeResponsiveKey('accordionPadding')) ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>
-									</div>
-								</details>
-
-								<details class="pb-collapsible" open>
-									<summary>Header</summary>
-									<div class="pb-collapsible-body">
-										<div class="pb-subsection-title">Title</div>
-										<TypographyControl :settings="selectedNode.settings" :responsive-device="responsiveDevice" :font-families="fontFamilies" @responsive-device="setResponsiveDevice" />
-										<div class="pb-state-tabs"><button v-for="state in accordionStyleStates" :key="'title-state-'+state.value" type="button" :class="{active:accordionTitleStyleState===state.value}" @click="accordionTitleStyleState=state.value">{{ state.label }}</button></div>
-										<div class="pb-form-group"><label class="pb-form-label">Title Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('headerTitleColor', accordionTitleStyleState)]"></div>
-										<div class="pb-form-group"><label class="pb-form-label">Text Shadow</label><input class="pb-input" v-model="selectedNode.settings[accordionStateKey('headerTextShadow', accordionTitleStyleState)]" placeholder="0 1px 2px rgba(0,0,0,.15)"></div>
-									<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Text Stroke Width</label><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" @change="setAccordionDimensionUnit(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), $event.target.value, '0px')"><option v-for="unit in ['px','pt','em','rem']" :key="'accordion-stroke-unit-'+unit" :value="unit">{{ unit }}</option></select></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" :step="accordionDimensionStep(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" :value="accordionDimensionValue(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" @input="onAccordionDimensionInput(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), $event, '0px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" @input="onAccordionDimensionInput(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), $event, '0px')"></div></div>
-										<div class="pb-form-group"><label class="pb-form-label">Text Stroke Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('headerTextStrokeColor', accordionTitleStyleState)]"></div>
-										<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Icon Size</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-icon-size')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('accordion-icon-size')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-icon-size-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-icon-size', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('headerIconSize'), $event.target.value, '16px')"><option v-for="unit in sizeControlUnits" :key="'accordion-icon-size-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerIconSize'), $event, '16px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerIconSize'), $event, '16px')"></div></div>
-										<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Icon Spacing</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-icon-spacing')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('accordion-icon-spacing')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-icon-spacing-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-icon-spacing', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('headerIconSpacing'), $event.target.value, '12px')"><option v-for="unit in sizeControlUnits" :key="'accordion-icon-spacing-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerIconSpacing'), $event, '12px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerIconSpacing'), $event, '12px')"></div></div>
-										<div class="pb-state-tabs"><button v-for="state in accordionStyleStates" :key="'icon-state-'+state.value" type="button" :class="{active:accordionIconStyleState===state.value}" @click="accordionIconStyleState=state.value">{{ state.label }}</button></div>
-										<div class="pb-form-group"><label class="pb-form-label">Icon Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('headerIconColor', accordionIconStyleState)]"></div>
-									</div>
-								</details>
-
-								<details class="pb-collapsible" open>
-									<summary>Content</summary>
-									<div class="pb-collapsible-body">
-										<div class="pb-form-group"><label class="pb-form-label">Background Type</label><select class="pb-select" v-model="selectedNode.settings.contentBackgroundType"><option value="classic">Classic</option><option value="gradient">Gradient</option></select></div>
-										<template v-if="selectedNode.settings.contentBackgroundType==='gradient'">
-											<div class="pb-form-group"><label class="pb-form-label">First Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.contentGradientColorOne"></div>
-											<div class="pb-form-group"><label class="pb-form-label">First Location</label><input class="pb-input" type="number" min="0" max="100" v-model.number="selectedNode.settings.contentGradientLocationOne"></div>
-											<div class="pb-form-group"><label class="pb-form-label">Second Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.contentGradientColorTwo"></div>
-											<div class="pb-form-group"><label class="pb-form-label">Second Location</label><input class="pb-input" type="number" min="0" max="100" v-model.number="selectedNode.settings.contentGradientLocationTwo"></div>
-											<div class="pb-form-group"><label class="pb-form-label">Gradient Type</label><select class="pb-select" v-model="selectedNode.settings.contentGradientType"><option v-for="type in accordionGradientTypes" :key="type" :value="type">{{ type }}</option></select></div>
-											<div v-if="selectedNode.settings.contentGradientType==='linear'" class="pb-form-group"><label class="pb-form-label">Angle</label><input class="pb-input" type="number" min="0" max="360" v-model.number="selectedNode.settings.contentGradientAngle"></div>
-											<div v-else class="pb-form-group"><label class="pb-form-label">Position</label><select class="pb-select" v-model="selectedNode.settings.contentGradientPosition"><option value="center center">Center Center</option><option value="center top">Center Top</option><option value="center bottom">Center Bottom</option><option value="left center">Left Center</option><option value="right center">Right Center</option></select></div>
-										</template>
-										<div v-else class="pb-form-group"><label class="pb-form-label">Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.contentBackgroundColor"></div>
-										<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="selectedNode.settings.contentBorderType"><option v-for="type in accordionBorderTypes" :key="type" :value="type">{{ type }}</option></select></div>
-									<template v-if="!['default','none'].includes(selectedNode.settings.contentBorderType)"><div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Border Width</label><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, 'contentBorderWidth', '0px')" @change="setAccordionDimensionUnit(selectedNode, 'contentBorderWidth', $event.target.value, '0px')"><option v-for="unit in ['px','pt','em','rem']" :key="'accordion-content-border-unit-'+unit" :value="unit">{{ unit }}</option></select></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, 'contentBorderWidth', '0px')" :step="accordionDimensionStep(selectedNode, 'contentBorderWidth', '0px')" :value="accordionDimensionValue(selectedNode, 'contentBorderWidth', '0px')" @input="onAccordionDimensionInput(selectedNode, 'contentBorderWidth', $event, '0px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, 'contentBorderWidth', '0px')" @input="onAccordionDimensionInput(selectedNode, 'contentBorderWidth', $event, '0px')"></div></div><div class="pb-form-group"><label class="pb-form-label">Border Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.contentBorderColor"></div></template>
-										<div class="pb-form-group pb-accordion-box-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-content-radius')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('accordion-content-radius')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-content-radius-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-content-radius', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="accordionBoxUnit(selectedNode, activeResponsiveKey('contentBorderRadius'), '0px')" @change="setAccordionBoxUnit(selectedNode, activeResponsiveKey('contentBorderRadius'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-content-radius-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side,index) in ['Top','Right','Bottom','Left']" :key="'accordion-content-radius-'+side" class="pb-side-input"><input class="pb-input" type="number" min="0" :value="accordionBoxSideValue(selectedNode, activeResponsiveKey('contentBorderRadius'), index, '0px')" @input="onAccordionBoxSideInput(selectedNode, activeResponsiveKey('contentBorderRadius'), index, $event, '0px')"><span>{{ side }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active:accordionBoxLinked(activeResponsiveKey('contentBorderRadius'))}" @click="toggleAccordionBoxLink(activeResponsiveKey('contentBorderRadius'))" title="Link values"><i class="fas" :class="accordionBoxLinked(activeResponsiveKey('contentBorderRadius')) ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>
-										<div class="pb-form-group pb-accordion-box-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Padding</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-content-padding')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('accordion-content-padding')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-content-padding-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-content-padding', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="accordionBoxUnit(selectedNode, activeResponsiveKey('contentPadding'), '20px')" @change="setAccordionBoxUnit(selectedNode, activeResponsiveKey('contentPadding'), $event.target.value, '20px')"><option v-for="unit in sizeControlUnits" :key="'accordion-content-padding-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side,index) in ['Top','Right','Bottom','Left']" :key="'accordion-content-padding-'+side" class="pb-side-input"><input class="pb-input" type="number" min="0" :value="accordionBoxSideValue(selectedNode, activeResponsiveKey('contentPadding'), index, '20px')" @input="onAccordionBoxSideInput(selectedNode, activeResponsiveKey('contentPadding'), index, $event, '20px')"><span>{{ side }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active:accordionBoxLinked(activeResponsiveKey('contentPadding'))}" @click="toggleAccordionBoxLink(activeResponsiveKey('contentPadding'))" title="Link values"><i class="fas" :class="accordionBoxLinked(activeResponsiveKey('contentPadding')) ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>
-									</div>
-								</details>
-							</div>
-
-							<div v-show="settingsTab==='advanced'" class="pb-tab-content pb-accordion-advanced-settings">
-								<WidgetAdvancedControls
-									:node="selectedNode"
-									:responsive-device="responsiveDevice"
-									@responsive-device="setResponsiveDevice"
-									@unavailable-ai="showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')"
-								/>
-							</div>
-						</div>
-					</template>
 					<template v-if="selectedType==='tabs'">
 						<div class="pb-tabs-settings pb-widget-settings pb-widget-settings--tabs">
 							<details class="pb-collapsible" open>
@@ -7794,9 +6829,6 @@
 								:on-show-toolbox="showToolboxPanel"
 								:pending-insert-target="pendingInsertTarget"
 								:on-reroute-tabs-drop="rerouteTabsDropToNestedColumn"
-								:on-accordion-runtime-for-node="accordionRuntimeForNode"
-								:on-toggle-accordion-item="toggleAccordionItem"
-								:on-reroute-accordion-drop="rerouteAccordionDropToNestedColumn"
 								:on-track-dropzone-pointer="trackDropzonePointerFromEvent"
 							/>
 						</template>

@@ -16,7 +16,7 @@
 	const sfcOptions = {
 		moduleCache: { vue: Vue },
 		getFile(url) {
-			const requestUrl = url + (url.includes('?') ? '&' : '?') + 'pbv=20260719-12';
+			const requestUrl = url + (url.includes('?') ? '&' : '?') + 'pbv=20260719-11';
 			return fetch(requestUrl, { cache: 'no-store' }).then(r => {
 				if (!r.ok) throw new Error(url);
 				return r.text();
@@ -30,10 +30,6 @@
 	};
 	const WidgetAdvancedControls = defineAsyncComponent(() => loader.loadModule(
 		'/js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue',
-		sfcOptions
-	));
-	const TypographyControl = defineAsyncComponent(() => loader.loadModule(
-		'/js/pagebuilder_elementor/widgets/shared/TypographyControl.vue',
 		sfcOptions
 	));
 
@@ -333,7 +329,7 @@
 		const responsiveDefaults = {
 			marginTop: '0px', marginRight: '0px', marginBottom: '0px', marginLeft: '0px',
 			paddingTop: '0px', paddingRight: '0px', paddingBottom: '0px', paddingLeft: '0px',
-			widthMode: 'default', customWidth: '', alignSelf: 'auto', orderMode: 'default', order: '', sizeMode: 'none', flexGrow: 0, flexShrink: 1,
+			customWidth: '', alignSelf: 'auto', orderMode: 'default', order: '', sizeMode: 'none', flexGrow: 0, flexShrink: 1,
 			positionX: '0px', positionY: '0px', zIndex: '', stickyOffset: '0px',
 			transformOffsetX: '0px', transformOffsetY: '0px', transformOffsetXHover: '0px', transformOffsetYHover: '0px',
 			advancedBorderRadius: '0px', advancedBorderRadiusHover: '0px',
@@ -355,12 +351,7 @@
 		settings.displayConditions = Array.isArray(settings.displayConditions) ? settings.displayConditions : [];
 		settings.attributes = normalizeAttributes(settings.attributes);
 		settings.cacheMode = ['default', 'inactive', 'active'].includes(settings.cacheMode) ? settings.cacheMode : 'default';
-		const widthModes = ['default', 'full', 'inline', 'custom'];
-		settings.widthMode = widthModes.includes(settings.widthMode) ? settings.widthMode : 'default';
-		['widthModeTablet', 'widthModeMobile'].forEach((key) => {
-			const value = settings[key];
-			settings[key] = value === '' || value == null ? '' : (widthModes.includes(value) ? value : '');
-		});
+		settings.widthMode = ['default', 'full', 'inline', 'custom'].includes(settings.widthMode) ? settings.widthMode : 'default';
 		settings.position = ['default', 'absolute', 'fixed'].includes(settings.position) ? settings.position : 'default';
 		settings.animateWithAI = false;
 		return settings;
@@ -368,13 +359,11 @@
 	function widgetAdvancedPreviewStyle(settings, device) {
 		const s = settings || {};
 		const safeDevice = device === 'tablet' || device === 'mobile' ? device : 'desktop';
-		const cascadeDevices = safeDevice === 'mobile' ? ['mobile', 'tablet', 'desktop'] : (safeDevice === 'tablet' ? ['tablet', 'desktop'] : ['desktop']);
 		const get = (base, fallback = '') => {
-			for (const candidateDevice of cascadeDevices) {
-				const value = s[responsiveKey(base, candidateDevice)];
-				if (value !== '' && value != null) return value;
-			}
-			return fallback;
+			const key = responsiveKey(base, safeDevice);
+			const value = s[key];
+			if (safeDevice !== 'desktop' && (value === '' || value == null)) return s[base] ?? fallback;
+			return value === '' || value == null ? fallback : value;
 		};
 		const style = {
 			marginTop: cssSpace(get('marginTop', '0px'), '0'), marginRight: cssSpace(get('marginRight', '0px'), '0'),
@@ -387,12 +376,9 @@
 		};
 		const hidden = safeDevice === 'desktop' ? s.hideDesktop : (safeDevice === 'tablet' ? s.hideTablet : s.hideMobile);
 		if (hidden === true || hidden === 'true' || hidden === 1 || hidden === '1') style.display = 'none';
-		const rawWidthMode = get('widthMode', 'default');
-		const widthMode = ['default', 'full', 'inline', 'custom'].includes(rawWidthMode) ? rawWidthMode : 'default';
-		if (widthMode === 'full') style.width = '100%';
-		else if (widthMode === 'inline') style.width = 'fit-content';
-		else if (widthMode === 'custom') style.width = cssSize(get('customWidth', ''), 'auto');
-		else style.width = 'auto';
+		if (s.widthMode === 'full') style.width = '100%';
+		if (s.widthMode === 'inline') style.width = 'fit-content';
+		if (s.widthMode === 'custom') style.width = cssSize(get('customWidth', ''), 'auto');
 		const orderMode = get('orderMode', 'default');
 		if (orderMode === 'start') style.order = -9999;
 		if (orderMode === 'end') style.order = 9999;
@@ -507,15 +493,8 @@
 			headerFontSizeTablet: '',
 			headerFontSizeMobile: '',
 			headerFontWeight: '600',
-			headerLineHeight: '1.4em',
-			headerLineHeightTablet: '',
-			headerLineHeightMobile: '',
+			headerLineHeight: '1.4',
 			headerLetterSpacing: '0px',
-			headerLetterSpacingTablet: '',
-			headerLetterSpacingMobile: '',
-			headerWordSpacing: '0px',
-			headerWordSpacingTablet: '',
-			headerWordSpacingMobile: '',
 			headerTextTransform: 'none',
 			headerFontStyle: 'normal',
 			headerTextDecoration: 'none',
@@ -2381,7 +2360,7 @@
 	const PBC = window.PAGE_BUILDER_ELEMENTOR_CONTEXT || {};
 
 	createApp({
-		components: { draggable, BuilderNode, CkEditorField, WidgetAdvancedControls, TypographyControl },
+		components: { draggable, BuilderNode, CkEditorField, WidgetAdvancedControls },
 		setup() {
 			const mode       = ref(PBC.mode || 'create');
 			const saveUrl    = ref(PBC.saveUrl || '');
@@ -2680,9 +2659,6 @@
 				{ value: 'tablet', label: 'Tablet', menuLabel: 'Tablet Portrait', icon: 'fas fa-tablet-alt' },
 				{ value: 'mobile', label: 'Mobile', menuLabel: 'Mobile Portrait', icon: 'fas fa-mobile-alt' },
 			];
-			const fontFamilies = Array.isArray(window.PB_ELEMENTOR_FONT_FAMILIES)
-				? window.PB_ELEMENTOR_FONT_FAMILIES
-				: [];
 			const desktopPreviewWidths = [
 				{ value: '1140', label: '1140px' },
 				{ value: '1320', label: '1320px' },
@@ -4146,19 +4122,9 @@
 				const value = normalizedSizeControlValue(current, safe, options.allowEmpty ? '' : 0);
 				setResponsiveSetting(node.settings, base, sizeControlToken(value, safe, options.emptyToken || 'auto'));
 			}
-			function accordionResponsiveSource(node, key, fallback = '') {
-				const settings = node?.settings;
-				if (!settings) return fallback;
-				let source = settings[key];
-				if ((source === '' || source == null) && /(?:Tablet|Mobile)$/.test(key)) {
-					source = settings[key.replace(/(?:Tablet|Mobile)$/, '')];
-				}
-				return source === '' || source == null ? fallback : source;
-			}
 			function accordionDimensionParsed(node, key, fallback = '0px') {
-				const source = accordionResponsiveSource(node, key, fallback);
-				const fallbackUnit = parseNumberUnit(fallback, 'px', sizeControlUnits).unit || 'px';
-				return parseNumberUnit(source, fallbackUnit, sizeControlUnits);
+				const source = node?.settings?.[key] ?? fallback;
+				return parseNumberUnit(source, 'px', sizeControlUnits);
 			}
 			function accordionDimensionUnit(node, key, fallback = '0px') {
 				const parsed = accordionDimensionParsed(node, key, fallback);
@@ -4187,7 +4153,7 @@
 				node.settings[key] = sizeControlToken(value, safeUnit, '0' + safeUnit);
 			}
 			function accordionBoxTokens(node, key, fallback = '0px') {
-				const source = String(accordionResponsiveSource(node, key, fallback)).trim() || fallback;
+				const source = String(node?.settings?.[key] ?? fallback).trim() || fallback;
 				const raw = source.split(/\s+/).slice(0, 4);
 				const expanded = raw.length === 1
 					? [raw[0], raw[0], raw[0], raw[0]]
@@ -5308,9 +5274,10 @@
 				],
 				general: [
 					{ type:'tabs',        label:'Tabs',        icon:'far fa-folder' },
+				],
+				advanced: [
 					{ type:'accordion',   label:'Accordion',   icon:'fas fa-bars' },
 				],
-				advanced: [],
 			};
 
 			// ── Save ──────────────────────────────────────────────────────────
@@ -5349,7 +5316,7 @@
 				appTitle, toolbox, rootNodes, loadWidget,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
 				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, selectedNode, selectedType,
-				responsiveDevice, responsiveDevices, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
+				responsiveDevice, responsiveDevices, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
 				controlResponsiveMenu, responsiveDeviceIcon, responsiveDeviceLabel, deviceOptionLabel,
 				openControlResponsiveMenu, closeControlResponsiveMenu, isControlResponsiveMenuOpen,
 				setResponsiveDevice, applyResponsiveDevice, toggleWidthPreviewMenu, closeWidthPreviewMenu, selectDesktopPreviewWidth,
@@ -5523,7 +5490,7 @@
 					</draggable>
 				</div>
 
-				<div class="pb-section" v-if="toolbox.advanced.length">
+				<div class="pb-section">
 					<div class="pb-panel-title">Advanced</div>
 					<draggable
 						:list="toolbox.advanced"
@@ -7280,24 +7247,17 @@
 											<div class="pb-form-group"><label class="pb-form-label">CSS ID</label><input class="pb-input" v-model="accordionEditingItem(selectedNode).cssId" placeholder="item-one"></div>
 										</div>
 
+										<div class="pb-device-switcher pb-accordion-device-switcher">
+											<button v-for="device in responsiveDevices" :key="'accordion-content-'+device.value" type="button" class="pb-device-btn" :class="{active:responsiveDevice===device.value}" @click="setResponsiveDevice(device.value)"><i :class="device.icon"></i><span>{{ device.label }}</span></button>
+										</div>
 										<div class="pb-form-group">
-											<div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">Item Position</label><div class="pb-control-device-wrap">
-												<button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-item-position')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-												<div v-if="isControlResponsiveMenuOpen('accordion-item-position')" class="pb-control-device-menu">
-													<button v-for="device in responsiveDevices" :key="'accordion-item-position-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-item-position', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button>
-												</div>
-											</div></div>
+											<label class="pb-form-label">Item Position</label>
 											<select class="pb-select" v-model="selectedNode.settings[activeResponsiveKey('itemPosition')]">
 												<option value="">Default</option><option value="start">Start</option><option value="center">Center</option><option value="end">End</option><option value="stretch">Stretch</option>
 											</select>
 										</div>
 										<div class="pb-form-group">
-											<div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">Icon Position</label><div class="pb-control-device-wrap">
-												<button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-icon-position')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-												<div v-if="isControlResponsiveMenuOpen('accordion-icon-position')" class="pb-control-device-menu">
-													<button v-for="device in responsiveDevices" :key="'accordion-icon-position-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-icon-position', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button>
-												</div>
-											</div></div>
+											<label class="pb-form-label">Icon Position</label>
 											<select class="pb-select" v-model="selectedNode.settings[activeResponsiveKey('iconPosition')]">
 												<option value="">Default</option><option value="start">Start</option><option value="end">End</option>
 											</select>
@@ -7360,21 +7320,19 @@
 							</div>
 
 							<div v-show="settingsTab==='style'" class="pb-tab-content pb-accordion-style-settings">
+								<div class="pb-device-switcher pb-accordion-device-switcher">
+									<button v-for="device in responsiveDevices" :key="'accordion-style-'+device.value" type="button" class="pb-device-btn" :class="{active:responsiveDevice===device.value}" @click="setResponsiveDevice(device.value)"><i :class="device.icon"></i><span>{{ device.label }}</span></button>
+								</div>
+
 								<details class="pb-collapsible" open>
 									<summary>Accordion</summary>
 									<div class="pb-collapsible-body">
 										<div class="pb-form-group pb-accordion-dimension-control">
-											<div class="pb-label-row"><label class="pb-form-label mb-0">Space Between Items</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap">
-												<button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-item-gap')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-												<div v-if="isControlResponsiveMenuOpen('accordion-item-gap')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-item-gap-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-item-gap', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div>
-											</div><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('accordionItemGap'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-gap-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div>
+											<div class="pb-label-row"><label class="pb-form-label mb-0">Space Between Items</label><div class="pb-accordion-dimension-tools"><i :class="responsiveDeviceIcon()"></i><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('accordionItemGap'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-gap-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div>
 											<div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('accordionItemGap'), $event, '0px')"><input class="pb-input pb-input-compact" type="number" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('accordionItemGap'), '0px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('accordionItemGap'), $event, '0px')"></div>
 										</div>
 										<div class="pb-form-group pb-accordion-dimension-control">
-											<div class="pb-label-row"><label class="pb-form-label mb-0">Distance from Content</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap">
-												<button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-content-distance')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-												<div v-if="isControlResponsiveMenuOpen('accordion-content-distance')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-content-distance-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-content-distance', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div>
-											</div><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('accordionContentDistance'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-distance-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div>
+											<div class="pb-label-row"><label class="pb-form-label mb-0">Distance from Content</label><div class="pb-accordion-dimension-tools"><i :class="responsiveDeviceIcon()"></i><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('accordionContentDistance'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-distance-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div>
 											<div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('accordionContentDistance'), $event, '0px')"><input class="pb-input pb-input-compact" type="number" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('accordionContentDistance'), '0px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('accordionContentDistance'), $event, '0px')"></div>
 										</div>
 										<div class="pb-state-tabs">
@@ -7393,26 +7351,31 @@
 										<div v-else class="pb-form-group"><label class="pb-form-label">Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('accordionBackgroundColor', accordionStyleState)]"></div>
 										<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="selectedNode.settings[accordionStateKey('accordionBorderType', accordionStyleState)]"><option v-for="type in accordionBorderTypes" :key="type" :value="type">{{ type }}</option></select></div>
 										<template v-if="!['default','none'].includes(selectedNode.settings[accordionStateKey('accordionBorderType', accordionStyleState)])">
-										<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Border Width</label><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" @change="setAccordionDimensionUnit(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), $event.target.value, '1px')"><option v-for="unit in ['px','pt','em','rem']" :key="'accordion-border-width-unit-'+unit" :value="unit">{{ unit }}</option></select></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" :step="accordionDimensionStep(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" :value="accordionDimensionValue(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" @input="onAccordionDimensionInput(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), $event, '1px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" @input="onAccordionDimensionInput(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), $event, '1px')"></div></div>
+											<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Border Width</label><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" @change="setAccordionDimensionUnit(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), $event.target.value, '1px')"><option v-for="unit in sizeControlUnits" :key="'accordion-border-width-unit-'+unit" :value="unit">{{ unit }}</option></select></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" :step="accordionDimensionStep(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" :value="accordionDimensionValue(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" @input="onAccordionDimensionInput(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), $event, '1px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), '1px')" @input="onAccordionDimensionInput(selectedNode, accordionStateKey('accordionBorderWidth', accordionStyleState), $event, '1px')"></div></div>
 											<div class="pb-form-group"><label class="pb-form-label">Border Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('accordionBorderColor', accordionStyleState)]"></div>
 										</template>
-										<div class="pb-form-group pb-accordion-box-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-border-radius')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('accordion-border-radius')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-border-radius-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-border-radius', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="accordionBoxUnit(selectedNode, activeResponsiveKey('accordionBorderRadius'), '0px')" @change="setAccordionBoxUnit(selectedNode, activeResponsiveKey('accordionBorderRadius'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-radius-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side,index) in ['Top','Right','Bottom','Left']" :key="'accordion-radius-'+side" class="pb-side-input"><input class="pb-input" type="number" min="0" :value="accordionBoxSideValue(selectedNode, activeResponsiveKey('accordionBorderRadius'), index, '0px')" @input="onAccordionBoxSideInput(selectedNode, activeResponsiveKey('accordionBorderRadius'), index, $event, '0px')"><span>{{ side }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active:accordionBoxLinked(activeResponsiveKey('accordionBorderRadius'))}" @click="toggleAccordionBoxLink(activeResponsiveKey('accordionBorderRadius'))" title="Link values"><i class="fas" :class="accordionBoxLinked(activeResponsiveKey('accordionBorderRadius')) ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>
-										<div class="pb-form-group pb-accordion-box-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Padding</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-padding')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('accordion-padding')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-padding-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-padding', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="accordionBoxUnit(selectedNode, activeResponsiveKey('accordionPadding'), '0px')" @change="setAccordionBoxUnit(selectedNode, activeResponsiveKey('accordionPadding'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-padding-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side,index) in ['Top','Right','Bottom','Left']" :key="'accordion-padding-'+side" class="pb-side-input"><input class="pb-input" type="number" min="0" :value="accordionBoxSideValue(selectedNode, activeResponsiveKey('accordionPadding'), index, '0px')" @input="onAccordionBoxSideInput(selectedNode, activeResponsiveKey('accordionPadding'), index, $event, '0px')"><span>{{ side }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active:accordionBoxLinked(activeResponsiveKey('accordionPadding'))}" @click="toggleAccordionBoxLink(activeResponsiveKey('accordionPadding'))" title="Link values"><i class="fas" :class="accordionBoxLinked(activeResponsiveKey('accordionPadding')) ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>
+										<div class="pb-form-group pb-accordion-box-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-accordion-dimension-tools"><i :class="responsiveDeviceIcon()"></i><select class="pb-mini-unit" :value="accordionBoxUnit(selectedNode, activeResponsiveKey('accordionBorderRadius'), '0px')" @change="setAccordionBoxUnit(selectedNode, activeResponsiveKey('accordionBorderRadius'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-radius-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side,index) in ['Top','Right','Bottom','Left']" :key="'accordion-radius-'+side" class="pb-side-input"><input class="pb-input" type="number" min="0" :value="accordionBoxSideValue(selectedNode, activeResponsiveKey('accordionBorderRadius'), index, '0px')" @input="onAccordionBoxSideInput(selectedNode, activeResponsiveKey('accordionBorderRadius'), index, $event, '0px')"><span>{{ side }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active:accordionBoxLinked(activeResponsiveKey('accordionBorderRadius'))}" @click="toggleAccordionBoxLink(activeResponsiveKey('accordionBorderRadius'))" title="Link values"><i class="fas" :class="accordionBoxLinked(activeResponsiveKey('accordionBorderRadius')) ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>
+										<div class="pb-form-group pb-accordion-box-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Padding</label><div class="pb-accordion-dimension-tools"><i :class="responsiveDeviceIcon()"></i><select class="pb-mini-unit" :value="accordionBoxUnit(selectedNode, activeResponsiveKey('accordionPadding'), '0px')" @change="setAccordionBoxUnit(selectedNode, activeResponsiveKey('accordionPadding'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-padding-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side,index) in ['Top','Right','Bottom','Left']" :key="'accordion-padding-'+side" class="pb-side-input"><input class="pb-input" type="number" min="0" :value="accordionBoxSideValue(selectedNode, activeResponsiveKey('accordionPadding'), index, '0px')" @input="onAccordionBoxSideInput(selectedNode, activeResponsiveKey('accordionPadding'), index, $event, '0px')"><span>{{ side }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active:accordionBoxLinked(activeResponsiveKey('accordionPadding'))}" @click="toggleAccordionBoxLink(activeResponsiveKey('accordionPadding'))" title="Link values"><i class="fas" :class="accordionBoxLinked(activeResponsiveKey('accordionPadding')) ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>
 									</div>
 								</details>
 
 								<details class="pb-collapsible" open>
 									<summary>Header</summary>
 									<div class="pb-collapsible-body">
-										<div class="pb-subsection-title">Title</div>
-										<TypographyControl :settings="selectedNode.settings" :responsive-device="responsiveDevice" :font-families="fontFamilies" @responsive-device="setResponsiveDevice" />
+										<div class="pb-subsection-title">Title Typography</div>
+										<div class="pb-form-group"><label class="pb-form-label">Font Family</label><input class="pb-input" v-model="selectedNode.settings.headerFontFamily"></div>
+										<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Font Size</label><div class="pb-accordion-dimension-tools"><i :class="responsiveDeviceIcon()"></i><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('headerFontSize'), '16px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('headerFontSize'), $event.target.value, '16px')"><option v-for="unit in sizeControlUnits" :key="'accordion-font-size-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('headerFontSize'), '16px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('headerFontSize'), '16px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerFontSize'), '16px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerFontSize'), $event, '16px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerFontSize'), '16px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerFontSize'), $event, '16px')"></div></div>
+										<div class="pb-form-group"><label class="pb-form-label">Font Weight</label><select class="pb-select" v-model="selectedNode.settings.headerFontWeight"><option v-for="weight in ['300','400','500','600','700','800']" :key="weight" :value="weight">{{ weight }}</option></select></div>
+										<div class="pb-form-group"><label class="pb-form-label">Line Height</label><input class="pb-input" v-model="selectedNode.settings.headerLineHeight"></div>
+										<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Letter Spacing</label><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, 'headerLetterSpacing', '0px')" @change="setAccordionDimensionUnit(selectedNode, 'headerLetterSpacing', $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-letter-spacing-unit-'+unit" :value="unit">{{ unit }}</option></select></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, 'headerLetterSpacing', '0px')" :step="accordionDimensionStep(selectedNode, 'headerLetterSpacing', '0px')" :value="accordionDimensionValue(selectedNode, 'headerLetterSpacing', '0px')" @input="onAccordionDimensionInput(selectedNode, 'headerLetterSpacing', $event, '0px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, 'headerLetterSpacing', '0px')" @input="onAccordionDimensionInput(selectedNode, 'headerLetterSpacing', $event, '0px')"></div></div>
+										<div class="pb-form-group"><label class="pb-form-label">Text Transform</label><select class="pb-select" v-model="selectedNode.settings.headerTextTransform"><option value="none">None</option><option value="uppercase">Uppercase</option><option value="lowercase">Lowercase</option><option value="capitalize">Capitalize</option></select></div>
 										<div class="pb-state-tabs"><button v-for="state in accordionStyleStates" :key="'title-state-'+state.value" type="button" :class="{active:accordionTitleStyleState===state.value}" @click="accordionTitleStyleState=state.value">{{ state.label }}</button></div>
 										<div class="pb-form-group"><label class="pb-form-label">Title Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('headerTitleColor', accordionTitleStyleState)]"></div>
 										<div class="pb-form-group"><label class="pb-form-label">Text Shadow</label><input class="pb-input" v-model="selectedNode.settings[accordionStateKey('headerTextShadow', accordionTitleStyleState)]" placeholder="0 1px 2px rgba(0,0,0,.15)"></div>
-									<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Text Stroke Width</label><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" @change="setAccordionDimensionUnit(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), $event.target.value, '0px')"><option v-for="unit in ['px','pt','em','rem']" :key="'accordion-stroke-unit-'+unit" :value="unit">{{ unit }}</option></select></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" :step="accordionDimensionStep(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" :value="accordionDimensionValue(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" @input="onAccordionDimensionInput(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), $event, '0px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" @input="onAccordionDimensionInput(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), $event, '0px')"></div></div>
+										<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Text Stroke Width</label><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" @change="setAccordionDimensionUnit(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-stroke-unit-'+unit" :value="unit">{{ unit }}</option></select></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" :step="accordionDimensionStep(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" :value="accordionDimensionValue(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" @input="onAccordionDimensionInput(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), $event, '0px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), '0px')" @input="onAccordionDimensionInput(selectedNode, accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState), $event, '0px')"></div></div>
 										<div class="pb-form-group"><label class="pb-form-label">Text Stroke Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('headerTextStrokeColor', accordionTitleStyleState)]"></div>
-										<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Icon Size</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-icon-size')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('accordion-icon-size')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-icon-size-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-icon-size', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('headerIconSize'), $event.target.value, '16px')"><option v-for="unit in sizeControlUnits" :key="'accordion-icon-size-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerIconSize'), $event, '16px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerIconSize'), $event, '16px')"></div></div>
-										<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Icon Spacing</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-icon-spacing')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('accordion-icon-spacing')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-icon-spacing-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-icon-spacing', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('headerIconSpacing'), $event.target.value, '12px')"><option v-for="unit in sizeControlUnits" :key="'accordion-icon-spacing-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerIconSpacing'), $event, '12px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerIconSpacing'), $event, '12px')"></div></div>
+										<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Icon Size</label><div class="pb-accordion-dimension-tools"><i :class="responsiveDeviceIcon()"></i><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('headerIconSize'), $event.target.value, '16px')"><option v-for="unit in sizeControlUnits" :key="'accordion-icon-size-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerIconSize'), $event, '16px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerIconSize'), '16px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerIconSize'), $event, '16px')"></div></div>
+										<div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Icon Spacing</label><div class="pb-accordion-dimension-tools"><i :class="responsiveDeviceIcon()"></i><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" @change="setAccordionDimensionUnit(selectedNode, activeResponsiveKey('headerIconSpacing'), $event.target.value, '12px')"><option v-for="unit in sizeControlUnits" :key="'accordion-icon-spacing-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" :step="accordionDimensionStep(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerIconSpacing'), $event, '12px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, activeResponsiveKey('headerIconSpacing'), '12px')" @input="onAccordionDimensionInput(selectedNode, activeResponsiveKey('headerIconSpacing'), $event, '12px')"></div></div>
 										<div class="pb-state-tabs"><button v-for="state in accordionStyleStates" :key="'icon-state-'+state.value" type="button" :class="{active:accordionIconStyleState===state.value}" @click="accordionIconStyleState=state.value">{{ state.label }}</button></div>
 										<div class="pb-form-group"><label class="pb-form-label">Icon Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('headerIconColor', accordionIconStyleState)]"></div>
 									</div>
@@ -7433,9 +7396,9 @@
 										</template>
 										<div v-else class="pb-form-group"><label class="pb-form-label">Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.contentBackgroundColor"></div>
 										<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="selectedNode.settings.contentBorderType"><option v-for="type in accordionBorderTypes" :key="type" :value="type">{{ type }}</option></select></div>
-									<template v-if="!['default','none'].includes(selectedNode.settings.contentBorderType)"><div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Border Width</label><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, 'contentBorderWidth', '0px')" @change="setAccordionDimensionUnit(selectedNode, 'contentBorderWidth', $event.target.value, '0px')"><option v-for="unit in ['px','pt','em','rem']" :key="'accordion-content-border-unit-'+unit" :value="unit">{{ unit }}</option></select></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, 'contentBorderWidth', '0px')" :step="accordionDimensionStep(selectedNode, 'contentBorderWidth', '0px')" :value="accordionDimensionValue(selectedNode, 'contentBorderWidth', '0px')" @input="onAccordionDimensionInput(selectedNode, 'contentBorderWidth', $event, '0px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, 'contentBorderWidth', '0px')" @input="onAccordionDimensionInput(selectedNode, 'contentBorderWidth', $event, '0px')"></div></div><div class="pb-form-group"><label class="pb-form-label">Border Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.contentBorderColor"></div></template>
-										<div class="pb-form-group pb-accordion-box-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-content-radius')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('accordion-content-radius')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-content-radius-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-content-radius', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="accordionBoxUnit(selectedNode, activeResponsiveKey('contentBorderRadius'), '0px')" @change="setAccordionBoxUnit(selectedNode, activeResponsiveKey('contentBorderRadius'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-content-radius-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side,index) in ['Top','Right','Bottom','Left']" :key="'accordion-content-radius-'+side" class="pb-side-input"><input class="pb-input" type="number" min="0" :value="accordionBoxSideValue(selectedNode, activeResponsiveKey('contentBorderRadius'), index, '0px')" @input="onAccordionBoxSideInput(selectedNode, activeResponsiveKey('contentBorderRadius'), index, $event, '0px')"><span>{{ side }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active:accordionBoxLinked(activeResponsiveKey('contentBorderRadius'))}" @click="toggleAccordionBoxLink(activeResponsiveKey('contentBorderRadius'))" title="Link values"><i class="fas" :class="accordionBoxLinked(activeResponsiveKey('contentBorderRadius')) ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>
-										<div class="pb-form-group pb-accordion-box-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Padding</label><div class="pb-accordion-dimension-tools"><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('accordion-content-padding')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('accordion-content-padding')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'accordion-content-padding-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('accordion-content-padding', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="accordionBoxUnit(selectedNode, activeResponsiveKey('contentPadding'), '20px')" @change="setAccordionBoxUnit(selectedNode, activeResponsiveKey('contentPadding'), $event.target.value, '20px')"><option v-for="unit in sizeControlUnits" :key="'accordion-content-padding-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side,index) in ['Top','Right','Bottom','Left']" :key="'accordion-content-padding-'+side" class="pb-side-input"><input class="pb-input" type="number" min="0" :value="accordionBoxSideValue(selectedNode, activeResponsiveKey('contentPadding'), index, '20px')" @input="onAccordionBoxSideInput(selectedNode, activeResponsiveKey('contentPadding'), index, $event, '20px')"><span>{{ side }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active:accordionBoxLinked(activeResponsiveKey('contentPadding'))}" @click="toggleAccordionBoxLink(activeResponsiveKey('contentPadding'))" title="Link values"><i class="fas" :class="accordionBoxLinked(activeResponsiveKey('contentPadding')) ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>
+										<template v-if="!['default','none'].includes(selectedNode.settings.contentBorderType)"><div class="pb-form-group pb-accordion-dimension-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Border Width</label><select class="pb-mini-unit" :value="accordionDimensionUnit(selectedNode, 'contentBorderWidth', '0px')" @change="setAccordionDimensionUnit(selectedNode, 'contentBorderWidth', $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-content-border-unit-'+unit" :value="unit">{{ unit }}</option></select></div><div class="pb-range-value-row"><input type="range" class="pb-range" min="0" :max="accordionDimensionMax(selectedNode, 'contentBorderWidth', '0px')" :step="accordionDimensionStep(selectedNode, 'contentBorderWidth', '0px')" :value="accordionDimensionValue(selectedNode, 'contentBorderWidth', '0px')" @input="onAccordionDimensionInput(selectedNode, 'contentBorderWidth', $event, '0px')"><input class="pb-input pb-input-compact" type="number" min="0" :value="accordionDimensionValue(selectedNode, 'contentBorderWidth', '0px')" @input="onAccordionDimensionInput(selectedNode, 'contentBorderWidth', $event, '0px')"></div></div><div class="pb-form-group"><label class="pb-form-label">Border Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.contentBorderColor"></div></template>
+										<div class="pb-form-group pb-accordion-box-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-accordion-dimension-tools"><i :class="responsiveDeviceIcon()"></i><select class="pb-mini-unit" :value="accordionBoxUnit(selectedNode, activeResponsiveKey('contentBorderRadius'), '0px')" @change="setAccordionBoxUnit(selectedNode, activeResponsiveKey('contentBorderRadius'), $event.target.value, '0px')"><option v-for="unit in sizeControlUnits" :key="'accordion-content-radius-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side,index) in ['Top','Right','Bottom','Left']" :key="'accordion-content-radius-'+side" class="pb-side-input"><input class="pb-input" type="number" min="0" :value="accordionBoxSideValue(selectedNode, activeResponsiveKey('contentBorderRadius'), index, '0px')" @input="onAccordionBoxSideInput(selectedNode, activeResponsiveKey('contentBorderRadius'), index, $event, '0px')"><span>{{ side }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active:accordionBoxLinked(activeResponsiveKey('contentBorderRadius'))}" @click="toggleAccordionBoxLink(activeResponsiveKey('contentBorderRadius'))" title="Link values"><i class="fas" :class="accordionBoxLinked(activeResponsiveKey('contentBorderRadius')) ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>
+										<div class="pb-form-group pb-accordion-box-control"><div class="pb-label-row"><label class="pb-form-label mb-0">Padding</label><div class="pb-accordion-dimension-tools"><i :class="responsiveDeviceIcon()"></i><select class="pb-mini-unit" :value="accordionBoxUnit(selectedNode, activeResponsiveKey('contentPadding'), '20px')" @change="setAccordionBoxUnit(selectedNode, activeResponsiveKey('contentPadding'), $event.target.value, '20px')"><option v-for="unit in sizeControlUnits" :key="'accordion-content-padding-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side,index) in ['Top','Right','Bottom','Left']" :key="'accordion-content-padding-'+side" class="pb-side-input"><input class="pb-input" type="number" min="0" :value="accordionBoxSideValue(selectedNode, activeResponsiveKey('contentPadding'), index, '20px')" @input="onAccordionBoxSideInput(selectedNode, activeResponsiveKey('contentPadding'), index, $event, '20px')"><span>{{ side }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active:accordionBoxLinked(activeResponsiveKey('contentPadding'))}" @click="toggleAccordionBoxLink(activeResponsiveKey('contentPadding'))" title="Link values"><i class="fas" :class="accordionBoxLinked(activeResponsiveKey('contentPadding')) ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>
 									</div>
 								</details>
 							</div>
@@ -7444,7 +7407,6 @@
 								<WidgetAdvancedControls
 									:node="selectedNode"
 									:responsive-device="responsiveDevice"
-									@responsive-device="setResponsiveDevice"
 									@unavailable-ai="showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')"
 								/>
 							</div>

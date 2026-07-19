@@ -6255,13 +6255,3 @@ body {
 .pb-panel.left .clr-field button::after {
 	box-shadow: inset 0 0 0 1px rgba(16, 24, 40, 0.14);
 }
-
-/* Control-name emphasis: preserve existing bold headings and regular-weight captions. */
-.pb-panel.left .pb-form-group .pb-form-label,
-.pb-panel.left .pb-widget-advanced-controls .pb-advanced-control-head > span,
-.pb-panel.left .pb-widget-advanced-controls .pb-advanced-field > span,
-.pb-panel.left .pb-widget-advanced-controls .pb-advanced-two-fields > label > span,
-.pb-panel.left .pb-widget-advanced-controls .pb-advanced-four-fields > label > span,
-.pb-panel.left .pb-widget-advanced-controls .pb-advanced-toggle > span {
-	font-weight: 600;
-}

@@ -682,7 +682,6 @@
 	font-weight: var(--accordion-header-font-weight, 600);
 	line-height: var(--accordion-header-line-height, 1.4);
 	letter-spacing: var(--accordion-header-letter-spacing, 0);
-	word-spacing: var(--accordion-header-word-spacing, 0);
 	text-transform: var(--accordion-header-text-transform, none);
 	font-style: var(--accordion-header-font-style, normal);
 	text-decoration: var(--accordion-header-text-decoration, none);

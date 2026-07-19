@@ -654,12 +654,5 @@ final result: blocked
 - Border radius, padding, and Advanced margin/padding use four numeric side inputs with a link/unlink control and separate unit selector.
 - Normal/Hover controls render as two equal columns without an empty third column. Measured widths were 136.37px and 136.38px in a 274.22px row.
 - Accordion Style and Advanced layouts were checked in Chrome at the 1320px desktop canvas setting; no clipping or broken control rows were observed.
-- Follow-up control parity: Add Item has a measured 12px separation from the item list; Add Item and both Choose from Library buttons use an 8px icon-to-label gap.
-- Global Desktop/Tablet/Mobile rows were removed from Accordion Content and Style. Responsive settings now expose a per-control device picker, including Item Position, Style dimensions, Typography, Advanced Layout, and Transform offsets.
-- Joined four-side controls were rechecked in Chrome: all adjacent seams measured 0px and the 256px group had no horizontal overflow.
-- Advanced Transform now uses one 256px column for all nine scalar rows; `scrollWidth` matched `clientWidth` at 256px.
-- Typography now uses a popover with searchable Custom Fonts and System groups, plus Size, Weight, Transform, Style, Decoration, Line Height, Letter Spacing, and Word Spacing controls.
-- Plus Jakarta Sans loaded from local storage and applied to the Accordion header; all 12 local font stylesheets and the exercised WOFF2 files returned HTTP 200.
-- Responsive device menus were interaction-tested in Chrome, including Offset X; the browser console reported 0 errors and 0 warnings.
 
 final result: passed

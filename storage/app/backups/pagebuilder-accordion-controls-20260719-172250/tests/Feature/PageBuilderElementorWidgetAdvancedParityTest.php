@@ -243,22 +243,6 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertSourceContains("\$__pbFragmentCache->remember", $blade);
     }
 
-    public function test_advanced_responsive_controls_are_clickable_and_transform_grid_is_not_nested(): void
-    {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
-        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
-
-        $this->assertSourceContains('ResponsiveDeviceControl', $component);
-        $this->assertSourceContains("this.\$emit('responsive-device'", $component);
-        $this->assertSourceContains('pb-transform-grid', $component);
-        $this->assertSourceContains('ScalarControl', $component);
-        $this->assertFalse(str_contains($component, 'pb-advanced-device-note'));
-        $this->assertSourceContains('@responsive-device="setResponsiveDevice"', $appJs);
-        $this->assertSourceContains('.pb-widget-advanced-controls .pb-transform-grid', $css);
-        $this->assertSourceContains('.pb-widget-advanced-controls .pb-control-device-btn', $css);
-    }
-
     private function assertSourceContains(string $needle, string $source): void
     {
         $this->assertTrue(str_contains($source, $needle), 'Missing source marker: '.$needle);

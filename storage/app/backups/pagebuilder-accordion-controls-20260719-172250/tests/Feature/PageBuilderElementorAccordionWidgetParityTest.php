@@ -6,7 +6,7 @@ use Tests\TestCase;
 
 class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 {
-    public function test_editor_registers_general_accordion_with_three_nested_items(): void
+    public function test_editor_registers_advanced_accordion_with_three_nested_items(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
 
@@ -14,25 +14,8 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertSourceContains('function isAccordion(t)', $appJs);
         $this->assertSourceContains('function accordionWidgetDefaultItems()', $appJs);
         $this->assertSourceContains('accordionItems: accordionWidgetDefaultItems()', $appJs);
-        $this->assertMatchesRegularExpression(
-            "/general:\\s*\\[\\s*\\{ type:'tabs'.*?\\{ type:'accordion',\\s+label:'Accordion'/s",
-            $appJs
-        );
-        $this->assertSourceContains('advanced: []', $appJs);
-        $this->assertSourceContains('<div class="pb-section" v-if="toolbox.advanced.length">', $appJs);
-    }
-
-    public function test_sidebar_categories_and_color_fields_use_polished_global_spacing(): void
-    {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
-
-        $this->assertSourceContains('.pb-panel.left .pb-tab-content > .pb-collapsible[open] > .pb-collapsible-body', $builderCss);
-        $this->assertSourceContains('padding-bottom: 18px;', $builderCss);
-        $this->assertSourceContains('.pb-panel.left .clr-field', $builderCss);
-        $this->assertSourceContains('display: block;', $builderCss);
-        $this->assertSourceContains('width: 100%;', $builderCss);
-        $this->assertSourceContains('.pb-panel.left .clr-field button', $builderCss);
-        $this->assertSourceContains('width: 48px;', $builderCss);
+        $this->assertSourceContains("advanced: [", $appJs);
+        $this->assertSourceContains("{ type:'accordion',   label:'Accordion'", $appJs);
     }
 
     public function test_recursive_helpers_visit_accordion_item_children(): void
@@ -154,7 +137,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
             'Border Type',
             'Border Width',
             'Border Radius',
-            '<TypographyControl',
+            'Title Typography',
             'Text Shadow',
             'Text Stroke',
             'Icon Size',
@@ -263,130 +246,8 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertSourceContains('frontend-runtime.js', $frontendShell);
     }
 
-    public function test_frontend_applies_advanced_responsive_values_for_each_device(): void
-    {
-        $html = view('pagebuilder_elementor.partials.render_node', ['node' => [
-            'id' => 'responsive-accordion',
-            'type' => 'accordion',
-            'settings' => [
-                'cssId' => 'responsive-accordion',
-                'accordionItemGap' => '12pt',
-                'headerFontSize' => '20px',
-                'headerFontSizeTablet' => '18px',
-                'headerFontSizeMobile' => '',
-                'widthMode' => 'custom',
-                'customWidth' => '640px',
-                'widthModeTablet' => 'full',
-                'widthModeMobile' => 'inline',
-                'orderModeTablet' => 'custom',
-                'orderTablet' => 7,
-                'orderModeMobile' => 'start',
-                'sizeModeTablet' => 'custom',
-                'flexGrowTablet' => 2,
-                'flexShrinkTablet' => .5,
-                'sizeModeMobile' => 'grow',
-                'position' => 'absolute',
-                'horizontalOrientation' => 'right',
-                'verticalOrientation' => 'top',
-                'positionXTablet' => '12pt',
-                'positionYTablet' => '13px',
-                'positionXMobile' => '18px',
-                'positionYMobile' => '19px',
-                'sticky' => 'bottom',
-                'stickyOffsetTablet' => '14px',
-                'stickyOffsetMobile' => '20px',
-                'transformOffsetXHoverTablet' => '21px',
-                'transformOffsetYHoverTablet' => '22px',
-                'transformOffsetXHoverMobile' => '23px',
-                'transformOffsetYHoverMobile' => '24px',
-                'advancedBorderRadiusHoverTablet' => '25px',
-                'advancedBorderRadiusHoverMobile' => '26px',
-                'maskEnabled' => true,
-                'maskSizeTablet' => 'custom',
-                'maskScaleTablet' => 125,
-                'maskPositionTablet' => 'custom',
-                'maskPositionXTablet' => '33%',
-                'maskPositionYTablet' => '44%',
-                'maskRepeatTablet' => 'round',
-                'maskSizeMobile' => 'fill',
-                'maskPositionMobile' => 'right bottom',
-                'maskRepeatMobile' => 'space',
-            ],
-            'accordionItems' => [['id' => 'one', 'title' => 'One', 'children' => []]],
-        ]])->render();
-
-        $this->assertStringContainsString('--accordion-item-gap:12pt', $html);
-        $this->assertStringContainsString('#responsive-accordion{', $html);
-
-        $tabletRule = $this->cssMediaRule($html, 1024, 'responsive-accordion');
-        foreach (['--accordion-header-font-size:18px', 'width:100%', 'order:7', 'flex:2 0.5 auto', 'right:12pt', 'top:13px', 'bottom:14px', 'mask-size:125%', 'mask-position:33% 44%', 'mask-repeat:round'] as $declaration) {
-            $this->assertStringContainsString($declaration, $tabletRule);
-        }
-
-        $mobileRule = $this->cssMediaRule($html, 767, 'responsive-accordion');
-        foreach (['--accordion-header-font-size:18px', 'width:fit-content', 'order:-9999', 'flex:1 1 0', 'right:18px', 'top:19px', 'bottom:20px', 'mask-size:cover', 'mask-position:right bottom', 'mask-repeat:space'] as $declaration) {
-            $this->assertStringContainsString($declaration, $mobileRule);
-        }
-
-        $this->assertStringContainsString('@media (max-width:1024px){#responsive-accordion:hover{border-radius:25px;--pb-advanced-transform:', $html);
-        $this->assertStringContainsString('translate(21px,22px)', $html);
-        $this->assertStringContainsString('@media (max-width:767px){#responsive-accordion:hover{border-radius:26px;--pb-advanced-transform:', $html);
-        $this->assertStringContainsString('translate(23px,24px)', $html);
-    }
-
-    public function test_accordion_uses_per_control_responsive_popovers_and_spaced_actions(): void
-    {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
-
-        $this->assertFalse(str_contains($appJs, "'accordion-content-'+device.value"));
-        $this->assertFalse(str_contains($appJs, "'accordion-style-'+device.value"));
-        foreach (['accordion-item-position', 'accordion-icon-position', 'accordion-item-gap', 'accordion-content-distance', 'accordion-border-radius', 'accordion-padding', 'accordion-icon-size', 'accordion-icon-spacing', 'accordion-content-radius', 'accordion-content-padding'] as $controlKey) {
-            $this->assertSourceContains("openControlResponsiveMenu('{$controlKey}')", $appJs);
-        }
-        $this->assertSourceContains('.pb-accordion-add-btn', $css);
-        $this->assertSourceContains('margin-top: 12px', $css);
-        $this->assertSourceContains('.pb-icon-source-btn', $css);
-        $this->assertSourceContains('display: inline-flex', $css);
-        $this->assertSourceContains('.pb-panel.left .pb-accordion-settings .pb-four-sides-with-link', $css);
-    }
-
-    public function test_accordion_typography_uses_popover_grouped_fonts_and_responsive_dimensions(): void
-    {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
-        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/TypographyControl.vue'));
-        $accordion = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/Accordion.vue'));
-        $renderer = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_accordion.blade.php'));
-        $editorShell = file_get_contents(resource_path('views/pagebuilder_elementor/editor_shell.blade.php'));
-        $frontendShell = file_get_contents(resource_path('views/pagebuilder_elementor/frontend_renderer.blade.php'));
-
-        $this->assertSourceContains('<TypographyControl', $appJs);
-        foreach (['pb-typography-trigger', 'pb-typography-popover', 'pb-font-family-menu', 'Custom Fonts', 'System', 'headerFontStyle', 'Decoration', 'Word Spacing'] as $marker) {
-            $this->assertSourceContains($marker, $component);
-        }
-        foreach (['typography-font-size', 'typography-line-height', 'typography-letter-spacing', 'typography-word-spacing'] as $controlKey) {
-            $this->assertSourceContains($controlKey, $component);
-        }
-        $this->assertSourceContains('--accordion-header-word-spacing', $accordion);
-        $this->assertSourceContains('--accordion-header-word-spacing', $renderer);
-        $this->assertSourceContains('window.PB_ELEMENTOR_FONT_FAMILIES', $editorShell);
-        $this->assertSourceContains("asset('storage/fonts/", $editorShell);
-        $this->assertSourceContains("asset('storage/fonts/", $frontendShell);
-    }
-
     private function assertSourceContains(string $needle, string $source): void
     {
         $this->assertTrue(str_contains($source, $needle), 'Missing source marker: '.$needle);
-    }
-
-    private function cssMediaRule(string $html, int $breakpoint, string $id): string
-    {
-        $prefix = '@media (max-width:'.$breakpoint.'px){#'.$id.'{';
-        $start = strpos($html, $prefix);
-        $this->assertNotFalse($start, 'Missing responsive CSS rule: '.$prefix);
-        $end = strpos($html, '}}', $start);
-        $this->assertNotFalse($end, 'Unterminated responsive CSS rule: '.$prefix);
-
-        return substr($html, $start, $end + 2 - $start);
     }
 }
