@@ -3175,6 +3175,10 @@
 				}
 				return node.accordionItems;
 			}
+			function sameStringArray(left, right) {
+				if (!Array.isArray(left) || !Array.isArray(right) || left.length !== right.length) return false;
+				return left.every((value, index) => String(value || '') === String(right[index] || ''));
+			}
 			function accordionRuntimeForNode(node) {
 				if (!node || node.type !== 'accordion') {
 					return { editingItemId: '', expandedItemIds: [], transitioningItemIds: [] };
@@ -3193,14 +3197,20 @@
 				runtime.editingItemId = validIds.includes(String(runtime.editingItemId || ''))
 					? String(runtime.editingItemId)
 					: (validIds[0] || '');
-				runtime.expandedItemIds = (Array.isArray(runtime.expandedItemIds) ? runtime.expandedItemIds : [])
+				let normalizedExpandedItemIds = (Array.isArray(runtime.expandedItemIds) ? runtime.expandedItemIds : [])
 					.map((id) => String(id || ''))
 					.filter((id, index, ids) => validIds.includes(id) && ids.indexOf(id) === index);
-				if (node.settings?.maxExpanded !== 'multiple' && runtime.expandedItemIds.length > 1) {
-					runtime.expandedItemIds = runtime.expandedItemIds.slice(-1);
+				if (node.settings?.maxExpanded !== 'multiple' && normalizedExpandedItemIds.length > 1) {
+					normalizedExpandedItemIds = normalizedExpandedItemIds.slice(-1);
 				}
-				runtime.transitioningItemIds = (Array.isArray(runtime.transitioningItemIds) ? runtime.transitioningItemIds : [])
+				if (!sameStringArray(runtime.expandedItemIds, normalizedExpandedItemIds)) {
+					runtime.expandedItemIds = normalizedExpandedItemIds;
+				}
+				const normalizedTransitioningItemIds = (Array.isArray(runtime.transitioningItemIds) ? runtime.transitioningItemIds : [])
 					.filter((id) => validIds.includes(String(id || '')));
+				if (!sameStringArray(runtime.transitioningItemIds, normalizedTransitioningItemIds)) {
+					runtime.transitioningItemIds = normalizedTransitioningItemIds;
+				}
 				return runtime;
 			}
 			function selectAccordionItem(node, itemId) {

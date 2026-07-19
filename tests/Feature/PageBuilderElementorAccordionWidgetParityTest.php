@@ -40,6 +40,15 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertFalse(str_contains($appJs, 'settings.editorExpandedItemIds'));
     }
 
+    public function test_accordion_runtime_normalization_does_not_reassign_equal_arrays_during_render(): void
+    {
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertSourceContains('function sameStringArray(left, right)', $appJs);
+        $this->assertSourceContains('if (!sameStringArray(runtime.expandedItemIds, normalizedExpandedItemIds))', $appJs);
+        $this->assertSourceContains('if (!sameStringArray(runtime.transitioningItemIds, normalizedTransitioningItemIds))', $appJs);
+    }
+
     public function test_editor_exposes_accordion_item_actions_and_interactions(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
