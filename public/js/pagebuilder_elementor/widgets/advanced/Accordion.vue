@@ -1,19 +1,27 @@
 <template>
 	<div class="el-widget-accordion" :class="rootClass" :style="rootStyle" data-pb-interactive="true" @click.stop>
 		<div v-for="item in items" :key="item.id" class="el-widget-accordion__item" :class="{ 'is-active': isExpanded(item.id) }">
-			<button
-				type="button"
-				class="el-widget-accordion__header"
-				:id="headerId(item.id)"
-				:aria-expanded="isExpanded(item.id) ? 'true' : 'false'"
-				:aria-controls="panelId(item.id)"
-				data-pb-interactive="true"
-				@click.stop="toggleItem(item)"
-			>
-				<span v-if="iconPosition==='start'" class="el-widget-accordion__icon" aria-hidden="true"><i :class="iconClass(item.id)"></i></span>
-				<component :is="titleTag" class="el-widget-accordion__title">{{ item.title || 'Item' }}</component>
-				<span v-if="iconPosition==='end'" class="el-widget-accordion__icon" aria-hidden="true"><i :class="iconClass(item.id)"></i></span>
-			</button>
+			<component :is="titleTag" class="el-widget-accordion__heading">
+				<button
+					type="button"
+					class="el-widget-accordion__header"
+					:id="headerId(item.id)"
+					:aria-expanded="isExpanded(item.id) ? 'true' : 'false'"
+					:aria-controls="panelId(item.id)"
+					data-pb-interactive="true"
+					@click.stop="toggleItem(item)"
+				>
+					<span v-if="iconPosition==='start' && iconSource(item.id)!=='none'" class="el-widget-accordion__icon" aria-hidden="true">
+						<img v-if="iconSource(item.id)==='svg'" :src="svgIconDataUri(item.id)" alt="">
+						<i v-else :class="iconClass(item.id)"></i>
+					</span>
+					<span class="el-widget-accordion__title">{{ item.title || 'Item' }}</span>
+					<span v-if="iconPosition==='end' && iconSource(item.id)!=='none'" class="el-widget-accordion__icon" aria-hidden="true">
+						<img v-if="iconSource(item.id)==='svg'" :src="svgIconDataUri(item.id)" alt="">
+						<i v-else :class="iconClass(item.id)"></i>
+					</span>
+				</button>
+			</component>
 			<div
 				ref="panels"
 				class="el-widget-accordion__panel"
@@ -69,10 +77,52 @@ export default {
 			return Number.isFinite(duration) ? Math.min(5000, Math.max(0, duration)) : 400;
 		},
 		rootClass() {
-			return String(this.settings.cssClass || '').trim().split(/\s+/).filter(Boolean);
+			const classes = String(this.settings.cssClass || '').trim().split(/\s+/).filter(Boolean);
+			classes.push('is-item-position-' + this.itemPosition);
+			classes.push('is-icon-position-' + this.iconPosition);
+			return classes;
 		},
 		rootStyle() {
-			return { '--accordion-animation-duration': this.animationDuration + 'ms' };
+			const style = {
+				'--accordion-animation-duration': this.animationDuration + 'ms',
+				'--accordion-item-gap': this.cssToken(this.responsiveValue('accordionItemGap', '0px'), '0px'),
+				'--accordion-content-distance': this.cssToken(this.responsiveValue('accordionContentDistance', '0px'), '0px'),
+				'--accordion-border-radius': this.cssToken(this.responsiveValue('accordionBorderRadius', '0px'), '0px'),
+				'--accordion-padding': this.cssToken(this.responsiveValue('accordionPadding', '0px'), '0px'),
+				'--accordion-header-font-family': String(this.settings.headerFontFamily || 'inherit'),
+				'--accordion-header-font-size': this.cssToken(this.responsiveValue('headerFontSize', '16px'), '16px'),
+				'--accordion-header-font-weight': String(this.settings.headerFontWeight || '600'),
+				'--accordion-header-line-height': String(this.settings.headerLineHeight || '1.4'),
+				'--accordion-header-letter-spacing': this.cssToken(this.settings.headerLetterSpacing, '0px'),
+				'--accordion-header-text-transform': String(this.settings.headerTextTransform || 'none'),
+				'--accordion-header-font-style': String(this.settings.headerFontStyle || 'normal'),
+				'--accordion-header-text-decoration': String(this.settings.headerTextDecoration || 'none'),
+				'--accordion-icon-size': this.cssToken(this.responsiveValue('headerIconSize', '16px'), '16px'),
+				'--accordion-icon-spacing': this.cssToken(this.responsiveValue('headerIconSpacing', '12px'), '12px'),
+				'--accordion-content-background': this.contentBackground(),
+				'--accordion-content-border-style': this.borderStyle(this.settings.contentBorderType),
+				'--accordion-content-border-width': this.cssToken(this.settings.contentBorderWidth, '0px'),
+				'--accordion-content-border-color': String(this.settings.contentBorderColor || 'transparent'),
+				'--accordion-content-radius': this.cssToken(this.responsiveValue('contentBorderRadius', '0px'), '0px'),
+				'--accordion-content-padding': this.cssToken(this.responsiveValue('contentPadding', '20px'), '20px'),
+			};
+			['Normal', 'Hover', 'Active'].forEach((suffix) => {
+				const state = suffix.toLowerCase();
+				style['--accordion-background-' + state] = this.stateBackground(suffix);
+				style['--accordion-border-style-' + state] = this.borderStyle(this.settings['accordionBorderType' + suffix]);
+				style['--accordion-border-width-' + state] = this.cssToken(this.settings['accordionBorderWidth' + suffix], '0px');
+				style['--accordion-border-color-' + state] = String(this.settings['accordionBorderColor' + suffix] || 'transparent');
+				style['--accordion-header-' + state + '-title-color'] = String(this.settings['headerTitleColor' + suffix] || 'currentColor');
+				style['--accordion-header-' + state + '-text-shadow'] = String(this.settings['headerTextShadow' + suffix] || 'none');
+				style['--accordion-header-' + state + '-stroke-width'] = this.cssToken(this.settings['headerTextStrokeWidth' + suffix], '0px');
+				style['--accordion-header-' + state + '-stroke-color'] = String(this.settings['headerTextStrokeColor' + suffix] || 'currentColor');
+				style['--accordion-header-' + state + '-icon-color'] = String(this.settings['headerIconColor' + suffix] || 'currentColor');
+			});
+			return style;
+		},
+		itemPosition() {
+			const value = String(this.responsiveValue('itemPosition', 'stretch')).toLowerCase();
+			return ['start', 'center', 'end', 'stretch'].includes(value) ? value : 'stretch';
 		},
 	},
 	watch: {
@@ -103,6 +153,55 @@ export default {
 			return this.isExpanded(itemId)
 				? String(this.settings.collapseIconClass || 'fas fa-minus')
 				: String(this.settings.expandIconClass || 'fas fa-plus');
+		},
+		iconSource(itemId) {
+			const role = this.isExpanded(itemId) ? 'collapse' : 'expand';
+			const value = String(this.settings[role + 'IconSource'] || 'library').toLowerCase();
+			return ['none', 'library', 'svg'].includes(value) ? value : 'library';
+		},
+		svgIconDataUri(itemId) {
+			const role = this.isExpanded(itemId) ? 'collapse' : 'expand';
+			const markup = String(this.settings[role + 'IconSvg'] || '').trim();
+			return markup ? 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(markup) : '';
+		},
+		responsiveValue(base, fallback = '') {
+			const suffix = this.responsiveDevice === 'tablet' ? 'Tablet' : (this.responsiveDevice === 'mobile' ? 'Mobile' : '');
+			const value = this.settings[base + suffix];
+			if (suffix && (value === '' || value == null)) return this.settings[base] ?? fallback;
+			return value === '' || value == null ? fallback : value;
+		},
+		cssToken(value, fallback = '0px') {
+			const raw = String(value == null ? '' : value).trim();
+			if (!raw) return fallback;
+			if (/^-?\d+(?:\.\d+)?$/.test(raw)) return raw + 'px';
+			return /^-?\d+(?:\.\d+)?(?:px|%|em|rem|vw|vh)$/.test(raw) || /^calc\([^;{}]+\)$/.test(raw) ? raw : fallback;
+		},
+		borderStyle(value) {
+			const raw = String(value || '').toLowerCase();
+			return ['solid', 'double', 'dotted', 'dashed', 'groove'].includes(raw) ? raw : 'none';
+		},
+		gradient(prefix, suffix = '') {
+			const first = String(this.settings[prefix + 'GradientColorOne' + suffix] || '#ffffff');
+			const second = String(this.settings[prefix + 'GradientColorTwo' + suffix] || '#f4f6f8');
+			const firstLocation = Math.min(100, Math.max(0, Number(this.settings[prefix + 'GradientLocationOne' + suffix]) || 0));
+			const secondLocation = Math.min(100, Math.max(0, Number(this.settings[prefix + 'GradientLocationTwo' + suffix]) || 100));
+			const type = String(this.settings[prefix + 'GradientType' + suffix] || 'linear');
+			if (type === 'radial') {
+				const position = String(this.settings[prefix + 'GradientPosition' + suffix] || 'center center').replace(/[^a-z\s-]/gi, '') || 'center center';
+				return `radial-gradient(at ${position}, ${first} ${firstLocation}%, ${second} ${secondLocation}%)`;
+			}
+			const angle = Math.min(360, Math.max(0, Number(this.settings[prefix + 'GradientAngle' + suffix]) || 180));
+			return `linear-gradient(${angle}deg, ${first} ${firstLocation}%, ${second} ${secondLocation}%)`;
+		},
+		stateBackground(suffix) {
+			return this.settings['accordionBackgroundType' + suffix] === 'gradient'
+				? this.gradient('accordion', suffix)
+				: String(this.settings['accordionBackgroundColor' + suffix] || 'transparent');
+		},
+		contentBackground() {
+			return this.settings.contentBackgroundType === 'gradient'
+				? this.gradient('content')
+				: String(this.settings.contentBackgroundColor || 'transparent');
 		},
 		toggleItem(item) {
 			if (!item) return;
@@ -151,6 +250,125 @@ export default {
 .el-widget-accordion__panel {
 	overflow: hidden;
 	transition: height var(--accordion-animation-duration, 400ms) ease;
+}
+
+.el-widget-accordion {
+	width: 100%;
+	padding: var(--accordion-padding, 0);
+}
+
+.el-widget-accordion__item {
+	margin-bottom: var(--accordion-item-gap, 0);
+	background: var(--accordion-background-normal, #fff);
+	border-style: var(--accordion-border-style-normal, solid);
+	border-width: var(--accordion-border-width-normal, 1px);
+	border-color: var(--accordion-border-color-normal, #d5dae3);
+	border-radius: var(--accordion-border-radius, 0);
+	overflow: hidden;
+}
+
+.el-widget-accordion__item:last-child {
+	margin-bottom: 0;
+}
+
+.el-widget-accordion__item:hover {
+	background: var(--accordion-background-hover, var(--accordion-background-normal, #fff));
+	border-style: var(--accordion-border-style-hover, var(--accordion-border-style-normal, solid));
+	border-width: var(--accordion-border-width-hover, var(--accordion-border-width-normal, 1px));
+	border-color: var(--accordion-border-color-hover, var(--accordion-border-color-normal, #d5dae3));
+}
+
+.el-widget-accordion__item.is-active {
+	background: var(--accordion-background-active, var(--accordion-background-normal, #fff));
+	border-style: var(--accordion-border-style-active, var(--accordion-border-style-normal, solid));
+	border-width: var(--accordion-border-width-active, var(--accordion-border-width-normal, 1px));
+	border-color: var(--accordion-border-color-active, var(--accordion-border-color-normal, #d5dae3));
+}
+
+.el-widget-accordion__heading {
+	margin: 0;
+	font: inherit;
+}
+
+.el-widget-accordion__header {
+	appearance: none;
+	width: 100%;
+	min-height: 52px;
+	padding: 14px 16px;
+	border: 0;
+	background: transparent;
+	display: flex;
+	align-items: center;
+	gap: var(--accordion-icon-spacing, 12px);
+	font-family: var(--accordion-header-font-family, inherit);
+	font-size: var(--accordion-header-font-size, 16px);
+	font-weight: var(--accordion-header-font-weight, 600);
+	line-height: var(--accordion-header-line-height, 1.4);
+	letter-spacing: var(--accordion-header-letter-spacing, 0);
+	text-transform: var(--accordion-header-text-transform, none);
+	font-style: var(--accordion-header-font-style, normal);
+	text-decoration: var(--accordion-header-text-decoration, none);
+	color: var(--accordion-header-normal-title-color, currentColor);
+	text-shadow: var(--accordion-header-normal-text-shadow, none);
+	-webkit-text-stroke: var(--accordion-header-normal-stroke-width, 0) var(--accordion-header-normal-stroke-color, currentColor);
+	cursor: pointer;
+}
+
+.el-widget-accordion__item:hover .el-widget-accordion__header {
+	color: var(--accordion-header-hover-title-color, var(--accordion-header-normal-title-color, currentColor));
+	text-shadow: var(--accordion-header-hover-text-shadow, none);
+	-webkit-text-stroke: var(--accordion-header-hover-stroke-width, 0) var(--accordion-header-hover-stroke-color, currentColor);
+}
+
+.el-widget-accordion__item.is-active .el-widget-accordion__header {
+	color: var(--accordion-header-active-title-color, var(--accordion-header-normal-title-color, currentColor));
+	text-shadow: var(--accordion-header-active-text-shadow, none);
+	-webkit-text-stroke: var(--accordion-header-active-stroke-width, 0) var(--accordion-header-active-stroke-color, currentColor);
+}
+
+.el-widget-accordion__title {
+	flex: 1 1 auto;
+}
+
+.is-item-position-start .el-widget-accordion__title { text-align: left; }
+.is-item-position-center .el-widget-accordion__title { text-align: center; }
+.is-item-position-end .el-widget-accordion__title { text-align: right; }
+.is-item-position-stretch .el-widget-accordion__title { text-align: left; }
+
+.el-widget-accordion__icon {
+	flex: 0 0 auto;
+	width: var(--accordion-icon-size, 16px);
+	height: var(--accordion-icon-size, 16px);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--accordion-icon-size, 16px);
+	color: var(--accordion-header-normal-icon-color, currentColor);
+}
+
+.el-widget-accordion__icon img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.el-widget-accordion__item:hover .el-widget-accordion__icon {
+	color: var(--accordion-header-hover-icon-color, var(--accordion-header-normal-icon-color, currentColor));
+}
+
+.el-widget-accordion__item.is-active .el-widget-accordion__icon {
+	color: var(--accordion-header-active-icon-color, var(--accordion-header-normal-icon-color, currentColor));
+}
+
+.el-widget-accordion__panel-inner {
+	margin-top: var(--accordion-content-distance, 0);
+	padding: var(--accordion-content-padding, 20px);
+	background: var(--accordion-content-background, #fff);
+	border-style: var(--accordion-content-border-style, none);
+	border-width: var(--accordion-content-border-width, 0);
+	border-color: var(--accordion-content-border-color, transparent);
+	border-radius: var(--accordion-content-radius, 0);
 }
 
 @media (prefers-reduced-motion: reduce) {

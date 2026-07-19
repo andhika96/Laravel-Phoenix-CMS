@@ -242,6 +242,67 @@ body {
 	background: #fbfcff;
 }
 
+.pb-accordion-device-switcher {
+	margin: 14px 0 18px;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 6px;
+}
+
+.pb-accordion-device-switcher .pb-device-btn {
+	min-width: 0;
+	padding: 8px 5px;
+	font-size: 10px;
+}
+
+.pb-icon-source-btn {
+	width: 100%;
+	margin-top: 8px;
+	justify-content: center;
+	gap: 8px;
+}
+
+.pb-state-tabs {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	margin: 4px 0 16px;
+	border: 1px solid #d5dce8;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.pb-state-tabs button {
+	min-height: 34px;
+	border: 0;
+	border-right: 1px solid #d5dce8;
+	background: #fff;
+	font-size: 11px;
+	color: #526178;
+}
+
+.pb-state-tabs button:last-child {
+	border-right: 0;
+}
+
+.pb-state-tabs button.active {
+	background: #eef1ff;
+	color: var(--pb-primary);
+	font-weight: 600;
+}
+
+.pb-subsection-title {
+	margin: 2px 0 12px;
+	font-size: 12px;
+	font-weight: 700;
+	color: #26344b;
+}
+
+.pb-inline-fields {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 8px;
+}
+
 .pb-tabs-items-list {
 	display: flex;
 	flex-direction: column;
@@ -319,12 +380,7 @@ body {
 }
 
 .pb-preview-accordion .el-widget-accordion__item {
-	border: 1px solid #d5dae3;
-	border-bottom: 0;
-}
-
-.pb-preview-accordion .el-widget-accordion__item:last-child {
-	border-bottom: 1px solid #d5dae3;
+	box-sizing: border-box;
 }
 
 .pb-preview-accordion .el-widget-accordion__header {
@@ -333,7 +389,7 @@ body {
 	min-height: 58px;
 	padding: 14px 16px;
 	border: 0;
-	background: #fff;
+	background: transparent;
 	display: flex;
 	align-items: center;
 	gap: 12px;

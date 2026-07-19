@@ -306,9 +306,86 @@
 			defaultState: 'first-expanded',
 			maxExpanded: 'one',
 			animationDuration: 400,
+			accordionItemGap: '0px',
+			accordionItemGapTablet: '',
+			accordionItemGapMobile: '',
+			accordionContentDistance: '0px',
+			accordionContentDistanceTablet: '',
+			accordionContentDistanceMobile: '',
+			accordionBorderRadius: '0px',
+			accordionBorderRadiusTablet: '',
+			accordionBorderRadiusMobile: '',
+			accordionPadding: '0px',
+			accordionPaddingTablet: '',
+			accordionPaddingMobile: '',
+			headerFontFamily: 'inherit',
+			headerFontSize: '16px',
+			headerFontSizeTablet: '',
+			headerFontSizeMobile: '',
+			headerFontWeight: '600',
+			headerLineHeight: '1.4',
+			headerLetterSpacing: '0px',
+			headerTextTransform: 'none',
+			headerFontStyle: 'normal',
+			headerTextDecoration: 'none',
+			headerIconSize: '16px',
+			headerIconSizeTablet: '',
+			headerIconSizeMobile: '',
+			headerIconSpacing: '12px',
+			headerIconSpacingTablet: '',
+			headerIconSpacingMobile: '',
+			contentBackgroundType: 'classic',
+			contentBackgroundColor: '#ffffff',
+			contentGradientColorOne: '#ffffff',
+			contentGradientLocationOne: 0,
+			contentGradientColorTwo: '#f4f6f8',
+			contentGradientLocationTwo: 100,
+			contentGradientType: 'linear',
+			contentGradientAngle: 180,
+			contentGradientPosition: 'center center',
+			contentBorderType: 'none',
+			contentBorderWidth: '0px',
+			contentBorderColor: '#d5dae3',
+			contentBorderRadius: '0px',
+			contentBorderRadiusTablet: '',
+			contentBorderRadiusMobile: '',
+			contentPadding: '20px',
+			contentPaddingTablet: '',
+			contentPaddingMobile: '',
 			cssClass: '',
+			...accordionStateDefaults('Normal', '#ffffff', '#1f2937', '#667085'),
+			...accordionStateDefaults('Hover', '#f8fafc', '#344054', '#475467'),
+			...accordionStateDefaults('Active', '#f2f4f7', '#101828', '#344054'),
 		};
 	}
+	function accordionStateDefaults(suffix, backgroundColor, titleColor, iconColor) {
+		return {
+			['accordionBackgroundType' + suffix]: 'classic',
+			['accordionBackgroundColor' + suffix]: backgroundColor,
+			['accordionGradientColorOne' + suffix]: backgroundColor,
+			['accordionGradientLocationOne' + suffix]: 0,
+			['accordionGradientColorTwo' + suffix]: '#eef2f6',
+			['accordionGradientLocationTwo' + suffix]: 100,
+			['accordionGradientType' + suffix]: 'linear',
+			['accordionGradientAngle' + suffix]: 180,
+			['accordionGradientPosition' + suffix]: 'center center',
+			['accordionBorderType' + suffix]: 'solid',
+			['accordionBorderWidth' + suffix]: '1px',
+			['accordionBorderColor' + suffix]: '#d5dae3',
+			['headerTitleColor' + suffix]: titleColor,
+			['headerTextShadow' + suffix]: 'none',
+			['headerTextStrokeWidth' + suffix]: '0px',
+			['headerTextStrokeColor' + suffix]: titleColor,
+			['headerIconColor' + suffix]: iconColor,
+		};
+	}
+	const ACCORDION_STYLE_STATES = Object.freeze([
+		{ value: 'normal', label: 'Normal' },
+		{ value: 'hover', label: 'Hover' },
+		{ value: 'active', label: 'Active' },
+	]);
+	const ACCORDION_BORDER_TYPES = Object.freeze(['default', 'none', 'solid', 'double', 'dotted', 'dashed', 'groove']);
+	const ACCORDION_GRADIENT_TYPES = Object.freeze(['linear', 'radial']);
 	function normalizeTabsDirection(value) {
 		const raw = String(value || '').trim().toLowerCase();
 		return ['row', 'row-reverse', 'column', 'column-reverse'].includes(raw) ? raw : 'row';
@@ -2388,6 +2465,9 @@
 			const columnResizeOverlay = ref({ visible: false, text: '', x: 0, y: 0 });
 			const pendingInsertTarget = ref(null);
 			const accordionRuntimeState = ref({});
+			const accordionStyleState = ref('normal');
+			const accordionTitleStyleState = ref('normal');
+			const accordionIconStyleState = ref('normal');
 			let activeColumnResizeCleanup = null;
 			const rootNodes   = ref([]);
 			const responsiveDevices = [
@@ -3046,6 +3126,7 @@
 			const iconLibraryIcons = ref([]);
 			const iconLibrarySelected = ref(null);
 			const iconLibraryTargetNodeId = ref('');
+			const iconLibraryTargetSettingKey = ref('');
 			const iconLibraryLoading = ref(false);
 			const iconLibraryLoaded = ref(false);
 			const iconLibraryError = ref('');
@@ -3112,6 +3193,7 @@
 				if (!node || node.type !== 'icon') return;
 				await ensureIconLibraryLoaded();
 				iconLibraryTargetNodeId.value = String(node.id || '');
+				iconLibraryTargetSettingKey.value = '';
 				iconLibraryGroup.value = 'all';
 				iconLibrarySearch.value = '';
 				syncIconLibrarySelectionFromNode(node);
@@ -3123,6 +3205,19 @@
 				iconLibrarySearch.value = '';
 				iconLibrarySelected.value = null;
 				iconLibraryTargetNodeId.value = '';
+				iconLibraryTargetSettingKey.value = '';
+			}
+			async function openAccordionIconLibrary(role, node = selectedNode.value) {
+				if (!node || node.type !== 'accordion' || !['expand', 'collapse'].includes(role)) return;
+				await ensureIconLibraryLoaded();
+				const settingKey = role + 'IconClass';
+				const parsed = parseIconWidgetClassParts(node.settings?.[settingKey]);
+				iconLibraryTargetNodeId.value = String(node.id || '');
+				iconLibraryTargetSettingKey.value = settingKey;
+				iconLibraryGroup.value = 'all';
+				iconLibrarySearch.value = '';
+				iconLibrarySelected.value = iconLibraryIcons.value.find((item) => item.style === parsed.style && item.name === parsed.name) || null;
+				showIconLibraryModal.value = true;
 			}
 			function selectIconLibraryItem(item) {
 				iconLibrarySelected.value = item || null;
@@ -3131,6 +3226,14 @@
 				if (!iconLibrarySelected.value) return;
 				const nodeId = String(iconLibraryTargetNodeId.value || '');
 				const node = nodeId ? findById(rootNodes.value, nodeId) : selectedNode.value;
+				const settingKey = String(iconLibraryTargetSettingKey.value || '');
+				if (node && node.type === 'accordion' && ['expandIconClass', 'collapseIconClass'].includes(settingKey)) {
+					if (!node.settings || typeof node.settings !== 'object') node.settings = {};
+					node.settings[settingKey] = iconLibrarySelected.value.className;
+					node.settings[settingKey.replace('Class', 'Source')] = 'library';
+					closeIconLibrary();
+					return;
+				}
 				if (!node || node.type !== 'icon') return;
 				if (!node.settings || typeof node.settings !== 'object') node.settings = {};
 				node.settings.iconStyle = iconLibrarySelected.value.style;
@@ -3138,6 +3241,45 @@
 				node.settings.iconClass = iconLibrarySelected.value.className;
 				normalizeIconWidgetSettings(node.settings);
 				closeIconLibrary();
+			}
+			function sanitizeAccordionSvgMarkup(value) {
+				const source = String(value || '').trim();
+				if (!source || typeof DOMParser !== 'function') return '';
+				const doc = new DOMParser().parseFromString(source, 'image/svg+xml');
+				const root = doc.documentElement;
+				if (!root || root.nodeName.toLowerCase() !== 'svg' || doc.querySelector('parsererror')) return '';
+				const allowed = new Set(['svg', 'g', 'path', 'circle', 'ellipse', 'rect', 'line', 'polyline', 'polygon', 'title', 'desc']);
+				Array.from(root.querySelectorAll('*')).forEach((element) => {
+					if (!allowed.has(element.nodeName.toLowerCase())) {
+						element.remove();
+						return;
+					}
+					Array.from(element.attributes).forEach((attribute) => {
+						const name = attribute.name.toLowerCase();
+						if (name.startsWith('on') || name === 'style' || name.includes('href')) element.removeAttribute(attribute.name);
+					});
+				});
+				Array.from(root.attributes).forEach((attribute) => {
+					const name = attribute.name.toLowerCase();
+					if (name.startsWith('on') || name === 'style' || name.includes('href')) root.removeAttribute(attribute.name);
+				});
+				return new XMLSerializer().serializeToString(root);
+			}
+			function chooseAccordionSvg(role, node = selectedNode.value) {
+				if (!node || node.type !== 'accordion' || !['expand', 'collapse'].includes(role)) return;
+				const markup = window.prompt('Paste trusted SVG markup', String(node.settings?.[role + 'IconSvg'] || ''));
+				if (markup === null) return;
+				const sanitized = sanitizeAccordionSvgMarkup(markup);
+				if (!sanitized) {
+					showSaveToast('error', 'SVG tidak valid atau mengandung markup yang tidak didukung.');
+					return;
+				}
+				node.settings[role + 'IconSvg'] = sanitized;
+				node.settings[role + 'IconSource'] = 'svg';
+			}
+			function accordionStateKey(base, state = accordionStyleState.value) {
+				const safeState = ['normal', 'hover', 'active'].includes(state) ? state : 'normal';
+				return base + safeState.charAt(0).toUpperCase() + safeState.slice(1);
 			}
 			const selectedColumnContext = computed(() => {
 				const nodeId = String(selectedColumnNodeId.value || selectedId.value || '').trim();
@@ -4928,12 +5070,14 @@
 				displayNodeLabel, nodeLabelIcon,
 				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
-				openIconLibrary, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
+				openIconLibrary, openAccordionIconLibrary, chooseAccordionSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
 				tabsItemsForNode, tabsActiveItem, selectTabsItem, addTabsItem, duplicateTabsItem, removeTabsItem, tabsItemSummary, tabsSelectedRowDirection,
 				tabsWidthValue, tabsWidthUnit, tabsWidthMax, tabsWidthStep, onTabsWidthInput, setTabsWidthValue, setTabsWidthUnit,
 				accordionItemsForNode, accordionRuntimeForNode, accordionEditingItem, selectAccordionItem, toggleAccordionItem, resetAccordionRuntimeFromDefaults,
 				addAccordionItem, duplicateAccordionItem, removeAccordionItem, accordionItemSummary,
+				accordionStyleState, accordionTitleStyleState, accordionIconStyleState, accordionStateKey,
+				accordionStyleStates: ACCORDION_STYLE_STATES, accordionBorderTypes: ACCORDION_BORDER_TYPES, accordionGradientTypes: ACCORDION_GRADIENT_TYPES,
 				tabsBreakpointOptions: TABS_WIDGET_BREAKPOINT_OPTIONS, tabsWidthUnits: TABS_WIDGET_WIDTH_UNITS,
 				iconWidgetViewOptions: ICON_WIDGET_VIEW_OPTIONS, iconWidgetShapeOptions: ICON_WIDGET_SHAPE_OPTIONS,
 				pageName, pageStatus, customCss, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
@@ -6833,6 +6977,48 @@
 											<div class="pb-form-group"><label class="pb-form-label">Title</label><input class="pb-input" v-model="accordionEditingItem(selectedNode).title" placeholder="Item title"></div>
 											<div class="pb-form-group"><label class="pb-form-label">CSS ID</label><input class="pb-input" v-model="accordionEditingItem(selectedNode).cssId" placeholder="item-one"></div>
 										</div>
+
+										<div class="pb-device-switcher pb-accordion-device-switcher">
+											<button v-for="device in responsiveDevices" :key="'accordion-content-'+device.value" type="button" class="pb-device-btn" :class="{active:responsiveDevice===device.value}" @click="setResponsiveDevice(device.value)"><i :class="device.icon"></i><span>{{ device.label }}</span></button>
+										</div>
+										<div class="pb-form-group">
+											<label class="pb-form-label">Item Position</label>
+											<select class="pb-select" v-model="selectedNode.settings[activeResponsiveKey('itemPosition')]">
+												<option value="">Default</option><option value="start">Start</option><option value="center">Center</option><option value="end">End</option><option value="stretch">Stretch</option>
+											</select>
+										</div>
+										<div class="pb-form-group">
+											<label class="pb-form-label">Icon Position</label>
+											<select class="pb-select" v-model="selectedNode.settings[activeResponsiveKey('iconPosition')]">
+												<option value="">Default</option><option value="start">Start</option><option value="end">End</option>
+											</select>
+										</div>
+										<div class="pb-form-group">
+											<label class="pb-form-label">Expand Icon</label>
+											<select class="pb-select" v-model="selectedNode.settings.expandIconSource">
+												<option value="none">None</option><option value="library">Icon Library</option><option value="svg">Upload SVG</option>
+											</select>
+											<button v-if="selectedNode.settings.expandIconSource==='library'" type="button" class="pb-btn pb-icon-source-btn" @click="openAccordionIconLibrary('expand', selectedNode)"><i :class="selectedNode.settings.expandIconClass"></i><span>Choose from Library</span></button>
+											<button v-if="selectedNode.settings.expandIconSource==='svg'" type="button" class="pb-btn pb-icon-source-btn" @click="chooseAccordionSvg('expand', selectedNode)"><i class="fas fa-upload"></i><span>Choose SVG</span></button>
+										</div>
+										<div class="pb-form-group">
+											<label class="pb-form-label">Collapse Icon</label>
+											<select class="pb-select" v-model="selectedNode.settings.collapseIconSource">
+												<option value="none">None</option><option value="library">Icon Library</option><option value="svg">Upload SVG</option>
+											</select>
+											<button v-if="selectedNode.settings.collapseIconSource==='library'" type="button" class="pb-btn pb-icon-source-btn" @click="openAccordionIconLibrary('collapse', selectedNode)"><i :class="selectedNode.settings.collapseIconClass"></i><span>Choose from Library</span></button>
+											<button v-if="selectedNode.settings.collapseIconSource==='svg'" type="button" class="pb-btn pb-icon-source-btn" @click="chooseAccordionSvg('collapse', selectedNode)"><i class="fas fa-upload"></i><span>Choose SVG</span></button>
+										</div>
+										<div class="pb-form-group">
+											<label class="pb-form-label">Title HTML Tag</label>
+											<select class="pb-select" v-model="selectedNode.settings.titleTag">
+												<option v-for="tag in ['h1','h2','h3','h4','h5','h6','div','span','p']" :key="tag" :value="tag">{{ tag.toUpperCase() }}</option>
+											</select>
+										</div>
+										<div class="pb-form-group pb-toggle-label-row">
+											<label class="pb-form-label mb-0">FAQ Schema</label>
+											<div class="pb-toggle-wrap"><input :id="'accordion-faq-'+selectedNode.id" type="checkbox" class="pb-toggle" v-model="selectedNode.settings.faqSchema"><label :for="'accordion-faq-'+selectedNode.id"></label></div>
+										</div>
 									</div>
 								</details>
 
@@ -6860,6 +7046,83 @@
 												<input class="pb-input pb-input-compact" type="number" min="0" max="5000" step="50" v-model.number="selectedNode.settings.animationDuration">
 											</div>
 										</div>
+									</div>
+								</details>
+							</div>
+
+							<div v-show="settingsTab==='style'" class="pb-tab-content pb-accordion-style-settings">
+								<div class="pb-device-switcher pb-accordion-device-switcher">
+									<button v-for="device in responsiveDevices" :key="'accordion-style-'+device.value" type="button" class="pb-device-btn" :class="{active:responsiveDevice===device.value}" @click="setResponsiveDevice(device.value)"><i :class="device.icon"></i><span>{{ device.label }}</span></button>
+								</div>
+
+								<details class="pb-collapsible" open>
+									<summary>Accordion</summary>
+									<div class="pb-collapsible-body">
+										<div class="pb-form-group"><label class="pb-form-label">Space Between Items</label><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('accordionItemGap')]" placeholder="0px"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Distance from Content</label><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('accordionContentDistance')]" placeholder="0px"></div>
+										<div class="pb-state-tabs">
+											<button v-for="state in accordionStyleStates" :key="'accordion-state-'+state.value" type="button" :class="{active:accordionStyleState===state.value}" @click="accordionStyleState=state.value">{{ state.label }}</button>
+										</div>
+										<div class="pb-form-group"><label class="pb-form-label">Background Type</label><select class="pb-select" v-model="selectedNode.settings[accordionStateKey('accordionBackgroundType', accordionStyleState)]"><option value="classic">Classic</option><option value="gradient">Gradient</option></select></div>
+										<template v-if="selectedNode.settings[accordionStateKey('accordionBackgroundType', accordionStyleState)]==='gradient'">
+											<div class="pb-form-group"><label class="pb-form-label">First Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('accordionGradientColorOne', accordionStyleState)]"></div>
+											<div class="pb-form-group"><label class="pb-form-label">First Location</label><input class="pb-input" type="number" min="0" max="100" v-model.number="selectedNode.settings[accordionStateKey('accordionGradientLocationOne', accordionStyleState)]"></div>
+											<div class="pb-form-group"><label class="pb-form-label">Second Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('accordionGradientColorTwo', accordionStyleState)]"></div>
+											<div class="pb-form-group"><label class="pb-form-label">Second Location</label><input class="pb-input" type="number" min="0" max="100" v-model.number="selectedNode.settings[accordionStateKey('accordionGradientLocationTwo', accordionStyleState)]"></div>
+											<div class="pb-form-group"><label class="pb-form-label">Gradient Type</label><select class="pb-select" v-model="selectedNode.settings[accordionStateKey('accordionGradientType', accordionStyleState)]"><option v-for="type in accordionGradientTypes" :key="type" :value="type">{{ type }}</option></select></div>
+											<div v-if="selectedNode.settings[accordionStateKey('accordionGradientType', accordionStyleState)]==='linear'" class="pb-form-group"><label class="pb-form-label">Angle</label><input class="pb-input" type="number" min="0" max="360" v-model.number="selectedNode.settings[accordionStateKey('accordionGradientAngle', accordionStyleState)]"></div>
+											<div v-else class="pb-form-group"><label class="pb-form-label">Position</label><select class="pb-select" v-model="selectedNode.settings[accordionStateKey('accordionGradientPosition', accordionStyleState)]"><option value="center center">Center Center</option><option value="center top">Center Top</option><option value="center bottom">Center Bottom</option><option value="left center">Left Center</option><option value="right center">Right Center</option></select></div>
+										</template>
+										<div v-else class="pb-form-group"><label class="pb-form-label">Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('accordionBackgroundColor', accordionStyleState)]"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="selectedNode.settings[accordionStateKey('accordionBorderType', accordionStyleState)]"><option v-for="type in accordionBorderTypes" :key="type" :value="type">{{ type }}</option></select></div>
+										<template v-if="!['default','none'].includes(selectedNode.settings[accordionStateKey('accordionBorderType', accordionStyleState)])">
+											<div class="pb-form-group"><label class="pb-form-label">Border Width</label><input class="pb-input" v-model="selectedNode.settings[accordionStateKey('accordionBorderWidth', accordionStyleState)]" placeholder="1px"></div>
+											<div class="pb-form-group"><label class="pb-form-label">Border Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('accordionBorderColor', accordionStyleState)]"></div>
+										</template>
+										<div class="pb-form-group"><label class="pb-form-label">Border Radius</label><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('accordionBorderRadius')]" placeholder="0px"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Padding</label><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('accordionPadding')]" placeholder="0px"></div>
+									</div>
+								</details>
+
+								<details class="pb-collapsible" open>
+									<summary>Header</summary>
+									<div class="pb-collapsible-body">
+										<div class="pb-subsection-title">Title Typography</div>
+										<div class="pb-form-group"><label class="pb-form-label">Font Family</label><input class="pb-input" v-model="selectedNode.settings.headerFontFamily"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Font Size</label><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('headerFontSize')]" placeholder="16px"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Font Weight</label><select class="pb-select" v-model="selectedNode.settings.headerFontWeight"><option v-for="weight in ['300','400','500','600','700','800']" :key="weight" :value="weight">{{ weight }}</option></select></div>
+										<div class="pb-form-group"><label class="pb-form-label">Line Height</label><input class="pb-input" v-model="selectedNode.settings.headerLineHeight"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Letter Spacing</label><input class="pb-input" v-model="selectedNode.settings.headerLetterSpacing"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Text Transform</label><select class="pb-select" v-model="selectedNode.settings.headerTextTransform"><option value="none">None</option><option value="uppercase">Uppercase</option><option value="lowercase">Lowercase</option><option value="capitalize">Capitalize</option></select></div>
+										<div class="pb-state-tabs"><button v-for="state in accordionStyleStates" :key="'title-state-'+state.value" type="button" :class="{active:accordionTitleStyleState===state.value}" @click="accordionTitleStyleState=state.value">{{ state.label }}</button></div>
+										<div class="pb-form-group"><label class="pb-form-label">Title Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('headerTitleColor', accordionTitleStyleState)]"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Text Shadow</label><input class="pb-input" v-model="selectedNode.settings[accordionStateKey('headerTextShadow', accordionTitleStyleState)]" placeholder="0 1px 2px rgba(0,0,0,.15)"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Text Stroke</label><div class="pb-inline-fields"><input class="pb-input" v-model="selectedNode.settings[accordionStateKey('headerTextStrokeWidth', accordionTitleStyleState)]" placeholder="0px"><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('headerTextStrokeColor', accordionTitleStyleState)]"></div></div>
+										<div class="pb-form-group"><label class="pb-form-label">Icon Size</label><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('headerIconSize')]" placeholder="16px"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Icon Spacing</label><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('headerIconSpacing')]" placeholder="12px"></div>
+										<div class="pb-state-tabs"><button v-for="state in accordionStyleStates" :key="'icon-state-'+state.value" type="button" :class="{active:accordionIconStyleState===state.value}" @click="accordionIconStyleState=state.value">{{ state.label }}</button></div>
+										<div class="pb-form-group"><label class="pb-form-label">Icon Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings[accordionStateKey('headerIconColor', accordionIconStyleState)]"></div>
+									</div>
+								</details>
+
+								<details class="pb-collapsible" open>
+									<summary>Content</summary>
+									<div class="pb-collapsible-body">
+										<div class="pb-form-group"><label class="pb-form-label">Background Type</label><select class="pb-select" v-model="selectedNode.settings.contentBackgroundType"><option value="classic">Classic</option><option value="gradient">Gradient</option></select></div>
+										<template v-if="selectedNode.settings.contentBackgroundType==='gradient'">
+											<div class="pb-form-group"><label class="pb-form-label">First Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.contentGradientColorOne"></div>
+											<div class="pb-form-group"><label class="pb-form-label">First Location</label><input class="pb-input" type="number" min="0" max="100" v-model.number="selectedNode.settings.contentGradientLocationOne"></div>
+											<div class="pb-form-group"><label class="pb-form-label">Second Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.contentGradientColorTwo"></div>
+											<div class="pb-form-group"><label class="pb-form-label">Second Location</label><input class="pb-input" type="number" min="0" max="100" v-model.number="selectedNode.settings.contentGradientLocationTwo"></div>
+											<div class="pb-form-group"><label class="pb-form-label">Gradient Type</label><select class="pb-select" v-model="selectedNode.settings.contentGradientType"><option v-for="type in accordionGradientTypes" :key="type" :value="type">{{ type }}</option></select></div>
+											<div v-if="selectedNode.settings.contentGradientType==='linear'" class="pb-form-group"><label class="pb-form-label">Angle</label><input class="pb-input" type="number" min="0" max="360" v-model.number="selectedNode.settings.contentGradientAngle"></div>
+											<div v-else class="pb-form-group"><label class="pb-form-label">Position</label><select class="pb-select" v-model="selectedNode.settings.contentGradientPosition"><option value="center center">Center Center</option><option value="center top">Center Top</option><option value="center bottom">Center Bottom</option><option value="left center">Left Center</option><option value="right center">Right Center</option></select></div>
+										</template>
+										<div v-else class="pb-form-group"><label class="pb-form-label">Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.contentBackgroundColor"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="selectedNode.settings.contentBorderType"><option v-for="type in accordionBorderTypes" :key="type" :value="type">{{ type }}</option></select></div>
+										<template v-if="!['default','none'].includes(selectedNode.settings.contentBorderType)"><div class="pb-form-group"><label class="pb-form-label">Border Width</label><input class="pb-input" v-model="selectedNode.settings.contentBorderWidth"></div><div class="pb-form-group"><label class="pb-form-label">Border Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.contentBorderColor"></div></template>
+										<div class="pb-form-group"><label class="pb-form-label">Border Radius</label><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('contentBorderRadius')]" placeholder="0px"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Padding</label><input class="pb-input" v-model="selectedNode.settings[activeResponsiveKey('contentPadding')]" placeholder="20px"></div>
 									</div>
 								</details>
 							</div>

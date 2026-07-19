@@ -79,6 +79,59 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertSourceContains('function rerouteAccordionDropToNestedColumn(evt, itemChildren)', $appJs);
     }
 
+    public function test_content_tab_exposes_all_audited_layout_icon_and_schema_controls(): void
+    {
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        foreach ([
+            'Item Position',
+            'Icon Position',
+            'Expand Icon',
+            'Collapse Icon',
+            'Title HTML Tag',
+            'FAQ Schema',
+        ] as $label) {
+            $this->assertSourceContains($label, $appJs);
+        }
+
+        $this->assertSourceContains("openAccordionIconLibrary('expand'", $appJs);
+        $this->assertSourceContains("chooseAccordionSvg('collapse'", $appJs);
+        $this->assertSourceContains("activeResponsiveKey('itemPosition')", $appJs);
+        $this->assertSourceContains("activeResponsiveKey('iconPosition')", $appJs);
+    }
+
+    public function test_style_tab_exposes_accordion_header_and_content_state_controls(): void
+    {
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/Accordion.vue'));
+
+        foreach ([
+            'Space Between Items',
+            'Distance from Content',
+            'Background Type',
+            'Gradient Type',
+            'Border Type',
+            'Border Width',
+            'Border Radius',
+            'Title Typography',
+            'Text Shadow',
+            'Text Stroke',
+            'Icon Size',
+            'Icon Spacing',
+        ] as $label) {
+            $this->assertSourceContains($label, $appJs);
+        }
+
+        $this->assertSourceContains("{ value: 'normal', label: 'Normal' }", $appJs);
+        $this->assertSourceContains("{ value: 'hover', label: 'Hover' }", $appJs);
+        $this->assertSourceContains("{ value: 'active', label: 'Active' }", $appJs);
+        $this->assertSourceContains("'groove'", $appJs);
+        $this->assertSourceContains("'radial'", $appJs);
+        $this->assertSourceContains("--accordion-item-gap", $component);
+        $this->assertSourceContains("--accordion-header-active-title-color", $component);
+        $this->assertSourceContains("--accordion-content-padding", $component);
+    }
+
     private function assertSourceContains(string $needle, string $source): void
     {
         $this->assertTrue(str_contains($source, $needle), 'Missing source marker: '.$needle);
