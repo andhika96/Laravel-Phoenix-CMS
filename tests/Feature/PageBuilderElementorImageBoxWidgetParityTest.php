@@ -120,6 +120,40 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $this->assertSourceContains('resetFilters()', $filters);
         $this->assertSourceContains('this.$emit(\'update:modelValue\'', $filters);
     }
+    public function test_editor_canvas_renders_responsive_styled_and_safe_image_box(): void
+    {
+        $path = public_path('js/pagebuilder_elementor/widgets/general/ImageBox.vue');
+        $this->assertFileExists($path);
+        $component = file_get_contents($path);
+
+        foreach ([
+            "name: 'GeneralImageBox'",
+            ':is="safeTitleTag"',
+            'pb-image-box__image',
+            'pb-image-box__title',
+            'pb-image-box__description',
+            'responsiveValue(base',
+            'boxStyle()',
+            'imageStyle()',
+            'titleStyle()',
+            'descriptionStyle()',
+            'filterCss(filters)',
+            'safeLinkUrl',
+            'linkRel',
+            'safeCustomAttributes',
+            'settings() {',
+            '--pb-image-box-hover-filter',
+            '--pb-image-box-hover-opacity',
+            'prefers-reduced-motion: reduce',
+        ] as $marker) {
+            $this->assertSourceContains($marker, $component);
+        }
+
+        $this->assertFalse(str_contains($component, 'v-html'));
+        $this->assertMatchesRegularExpression('/<a[^>]+pb-image-box__image-link.*?<img/s', $component);
+        $this->assertMatchesRegularExpression('/<a[^>]+pb-image-box__title-link.*?<component/s', $component);
+        $this->assertDoesNotMatchRegularExpression('/<a[^>]*>\s*<p class="pb-image-box__description"/s', $component);
+    }
     private function assertSourceContains(string $needle, string $source): void
     {
         $this->assertTrue(str_contains($source, $needle), 'Missing source marker: '.$needle);
