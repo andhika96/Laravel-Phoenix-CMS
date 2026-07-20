@@ -210,6 +210,142 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $this->assertSourceContains('margin-bottom: 7px;', $css);
         $this->assertSourceContains('min-height: 48px;', $css);
     }
+
+    public function test_frontend_renderer_resolves_safe_dynamic_content_links_responsive_styles_and_advanced_controls(): void
+    {
+        $renderNode = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_node.blade.php'));
+        $partialPath = resource_path('views/pagebuilder_elementor/partials/render_image_box.blade.php');
+        $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
+
+        $this->assertFileExists($partialPath);
+        $partial = file_get_contents($partialPath);
+
+        $this->assertSourceContains("@elseif(\$type === 'image_box')", $renderNode);
+        $this->assertSourceContains('pagebuilder_elementor.partials.render_image_box', $renderNode);
+        $this->assertSourceContains("in_array(\$type, ['accordion', 'image_box'], true)", $renderNode);
+        $this->assertSourceContains('pagebuilder_dynamic_context', $renderNode);
+        $this->assertSourceContains("'user_id' =>", $renderNode);
+        $this->assertSourceContains('DynamicTagResolver::class', $partial);
+        $this->assertSourceContains('ImageRenditionResolver::class', $partial);
+        $this->assertSourceContains('WidgetAdvancedStyleResolver::class', $partial);
+        $this->assertSourceContains('pb-image-box__image-link', $partial);
+        $this->assertSourceContains('pb-image-box__title-link', $partial);
+        $this->assertSourceContains('pb-image-box__description', $partial);
+        $this->assertSourceContains("@media (max-width: ' . \$breakpoint . 'px)", $partial);
+        $this->assertSourceContains('--pb-image-box-hover-filter', $partial);
+
+        foreach ([
+            '.el-widget-image-box',
+            '.pb-image-box__media',
+            '.pb-image-box__image',
+            '.pb-image-box__content',
+            '.pb-image-box__title',
+            '.pb-image-box__description',
+            '.pb-image-box--position-left',
+            '.pb-image-box--position-right',
+            '@media (prefers-reduced-motion: reduce)',
+        ] as $selector) {
+            $this->assertSourceContains($selector, $frontendCss);
+        }
+
+        request()->attributes->set('pagebuilder_dynamic_context', [
+            'page' => ['page_name' => 'Dynamic Image Box Title'],
+        ]);
+
+        $html = view('pagebuilder_elementor.partials.render_image_box', [
+            'node' => [
+                'id' => 'image-box-test',
+                'type' => 'image_box',
+                'settings' => [
+                    'imageUrl' => '/images/example.jpg',
+                    'imageAlt' => 'Accessible example',
+                    'imageResolution' => 'full',
+                    'title' => 'Static title',
+                    'description' => '<script>alert(1)</script> Safe description',
+                    'dynamicBindings' => ['title' => 'page_title'],
+                    'linkUrl' => '/documentation',
+                    'linkTarget' => '_blank',
+                    'linkNofollow' => true,
+                    'linkCustomAttributes' => [
+                        ['key' => 'data-track', 'value' => 'image-box'],
+                        ['key' => 'onclick', 'value' => 'alert(1)'],
+                    ],
+                    'titleTag' => 'h2',
+                    'imagePosition' => 'left',
+                    'imagePositionTablet' => 'top',
+                    'imagePositionMobile' => 'right',
+                    'alignment' => 'left',
+                    'alignmentTablet' => 'center',
+                    'alignmentMobile' => 'right',
+                    'imageSpacing' => '16px',
+                    'contentSpacing' => '8px',
+                    'imageWidth' => '40%',
+                    'imageWidthTablet' => '60%',
+                    'imageWidthMobile' => '100%',
+                    'imageBorderType' => 'solid',
+                    'imageBorderWidth' => '2px',
+                    'imageBorderColor' => '#123456',
+                    'imageBorderRadius' => '12px',
+                    'imageNormalFilter' => ['blur' => 0, 'brightness' => 100, 'contrast' => 100, 'saturation' => 100, 'hue' => 0],
+                    'imageHoverFilter' => ['blur' => 1, 'brightness' => 90, 'contrast' => 110, 'saturation' => 105, 'hue' => 5],
+                    'imageNormalOpacity' => 0.9,
+                    'imageHoverOpacity' => 0.7,
+                    'imageHoverTransition' => 0.4,
+                    'titleColor' => '#111827',
+                    'descriptionColor' => '#475467',
+                    'marginTop' => '12px',
+                    'hideMobile' => true,
+                    'cssClass' => 'marketing-card <unsafe>',
+                    'attributes' => [
+                        ['name' => 'data-section', 'value' => 'hero'],
+                        ['name' => 'onmouseover', 'value' => 'alert(1)'],
+                    ],
+                    'customCssCode' => 'selector .pb-image-box__title{font-weight:700}',
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('id="pb-node-image-box-test"', $html);
+        $this->assertStringContainsString('Dynamic Image Box Title', $html);
+        $this->assertStringNotContainsString('Static title', $html);
+        $this->assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt; Safe description', $html);
+        $this->assertStringNotContainsString('<script>alert(1)</script>', $html);
+        $this->assertSame(2, substr_count($html, 'href="/documentation"'));
+        $this->assertStringContainsString('target="_blank"', $html);
+        $this->assertStringContainsString('rel="noopener noreferrer nofollow"', $html);
+        $this->assertStringContainsString('data-track="image-box"', $html);
+        $this->assertStringNotContainsString('onclick=', $html);
+        $this->assertStringContainsString('data-section="hero"', $html);
+        $this->assertStringNotContainsString('onmouseover=', $html);
+        $this->assertStringContainsString('class="el-widget-image-box pb-image-box pb-advanced-widget marketing-card unsafe pb-hide-mobile pb-image-box--position-left"', $html);
+        $this->assertStringContainsString('margin-top:12px', $html);
+        $this->assertStringContainsString('#pb-node-image-box-test .pb-image-box__title{font-weight:700}', $html);
+        $compactHtml = str_replace(' ', '', $html);
+        $this->assertStringContainsString('@media(max-width:1024px)', $compactHtml);
+        $this->assertStringContainsString('@media(max-width:767px)', $compactHtml);
+    }
+
+    public function test_frontend_renderer_rejects_unsafe_image_and_link_urls(): void
+    {
+        $html = view('pagebuilder_elementor.partials.render_image_box', [
+            'node' => [
+                'id' => 'unsafe-image-box',
+                'type' => 'image_box',
+                'settings' => [
+                    'imageUrl' => 'javascript:alert(1)',
+                    'title' => 'Safe title',
+                    'description' => 'Safe description',
+                    'linkUrl' => 'javascript:alert(2)',
+                    'titleTag' => 'script',
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringNotContainsString('javascript:', $html);
+        $this->assertStringNotContainsString('<script', $html);
+        $this->assertStringContainsString('<h3 class="pb-image-box__title"', $html);
+        $this->assertStringContainsString('pb-image-box__empty-media', $html);
+    }
     private function assertSourceContains(string $needle, string $source): void
     {
         $this->assertTrue(str_contains($source, $needle), 'Missing source marker: '.$needle);

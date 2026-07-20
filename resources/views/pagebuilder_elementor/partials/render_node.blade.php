@@ -6,13 +6,23 @@
 
 	$__pbRequest = request();
 	$__pbUser = $__pbRequest->user();
+	$__pbDynamicContext = $__pbRequest->attributes->get('pagebuilder_dynamic_context', []);
+	$__pbDynamicContext = is_array($__pbDynamicContext) ? $__pbDynamicContext : [];
+	if (!array_key_exists('page', $__pbDynamicContext) && isset($pageData)) {
+		$__pbDynamicContext['page'] = $pageData;
+	}
+	$__pbDynamicContext['page_url'] ??= url()->current();
+	$__pbDynamicContext['site_title'] ??= config('app.name');
+	$__pbDynamicContext['site_url'] ??= config('app.url');
+	$__pbDynamicContext['user'] ??= $__pbUser;
+	$__pbRequest->attributes->set('pagebuilder_dynamic_context', $__pbDynamicContext);
 	$__pbConditionGroups = is_array($settings['displayConditions'] ?? null) ? $settings['displayConditions'] : [];
 	$__pbConditionEvaluator = app(\App\Support\PageBuilderElementor\WidgetDisplayConditionEvaluator::class);
 	if (!$__pbConditionEvaluator->allows($__pbConditionGroups, $__pbRequest, $__pbUser)) {
 		return;
 	}
 
-	if ($type === 'accordion' && ($settings['cacheMode'] ?? 'default') === 'active') {
+	if (in_array($type, ['accordion', 'image_box'], true) && ($settings['cacheMode'] ?? 'default') === 'active') {
 		$__pbRoles = [];
 		if ($__pbUser && method_exists($__pbUser, 'getRoleNames')) {
 			$__pbRoles = collect($__pbUser->getRoleNames())->map(fn ($role) => (string) $role)->all();
@@ -24,9 +34,13 @@
 			'page_slug' => $__pbRequest->attributes->get('pagebuilder_page_slug') ?? $__pbRequest->route('slug') ?? basename(trim($__pbRequest->path(), '/')),
 			'auth' => $__pbUser ? 'authenticated' : 'guest',
 			'roles' => $__pbRoles,
+			'user_id' => $__pbUser && method_exists($__pbUser, 'getAuthIdentifier') ? $__pbUser->getAuthIdentifier() : ($__pbUser->id ?? null),
 		];
 		$__pbFragmentCache = app(\App\Support\PageBuilderElementor\WidgetFragmentCache::class);
-		echo $__pbFragmentCache->remember($node, $__pbContext, fn () => view('pagebuilder_elementor.partials.render_accordion', ['node' => $node])->render());
+		$__pbFragmentView = $type === 'image_box'
+			? 'pagebuilder_elementor.partials.render_image_box'
+			: 'pagebuilder_elementor.partials.render_accordion';
+		echo $__pbFragmentCache->remember($node, $__pbContext, fn () => view($__pbFragmentView, ['node' => $node])->render());
 		return;
 	}
 
@@ -1624,6 +1638,9 @@
 			})();
 		</script>
 	@endif
+
+@elseif($type === 'image_box')
+	@include('pagebuilder_elementor.partials.render_image_box', ['node' => $node])
 
 @elseif($type === 'accordion')
 	@include('pagebuilder_elementor.partials.render_accordion', ['node' => $node])
