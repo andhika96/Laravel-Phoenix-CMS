@@ -79,6 +79,47 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         }
     }
 
+    public function test_shared_controls_are_prefix_aware_accessible_and_reusable(): void
+    {
+        foreach ([
+            public_path('js/pagebuilder_elementor/widgets/shared/LinkControl.vue'),
+            public_path('js/pagebuilder_elementor/widgets/shared/DynamicTagControl.vue'),
+            public_path('js/pagebuilder_elementor/widgets/shared/CssFilterControl.vue'),
+        ] as $path) {
+            $this->assertFileExists($path);
+        }
+
+        $typography = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/TypographyControl.vue'));
+        $link = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/LinkControl.vue'));
+        $dynamicTag = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/DynamicTagControl.vue'));
+        $filters = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/CssFilterControl.vue'));
+
+        $this->assertSourceContains("prefix: { type: String, default: 'header' }", $typography);
+        $this->assertSourceContains('settingKey(base)', $typography);
+        $this->assertSourceContains("return this.prefix + base", $typography);
+        $this->assertSourceContains("responsiveKey('FontSize')", $typography);
+        $this->assertSourceContains("settingKey('FontWeight')", $typography);
+        $this->assertSourceContains("resetDefaults", $typography);
+
+        foreach (['URL', 'Open in new window', 'Add nofollow', 'Custom Attributes'] as $label) {
+            $this->assertSourceContains($label, $link);
+        }
+        $this->assertSourceContains("rel: ['noopener', 'noreferrer'", $link);
+        $this->assertSourceContains('aria-label="Link options"', $link);
+
+        foreach (['page_title', 'page_excerpt', 'featured_image', 'page_url', 'site_title', 'site_url', 'user_display_name'] as $tag) {
+            $this->assertSourceContains($tag, $dynamicTag);
+        }
+        $this->assertSourceContains('aria-label="Dynamic tags"', $dynamicTag);
+        $this->assertSourceContains('this.$emit(\'update:modelValue\'', $dynamicTag);
+
+        foreach (['Blur', 'Brightness', 'Contrast', 'Saturation', 'Hue'] as $label) {
+            $this->assertSourceContains($label, $filters);
+        }
+        $this->assertSourceContains('aria-label="CSS Filters"', $filters);
+        $this->assertSourceContains('resetFilters()', $filters);
+        $this->assertSourceContains('this.$emit(\'update:modelValue\'', $filters);
+    }
     private function assertSourceContains(string $needle, string $source): void
     {
         $this->assertTrue(str_contains($source, $needle), 'Missing source marker: '.$needle);

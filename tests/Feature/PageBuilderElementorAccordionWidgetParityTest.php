@@ -361,7 +361,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $frontendShell = file_get_contents(resource_path('views/pagebuilder_elementor/frontend_renderer.blade.php'));
 
         $this->assertSourceContains('<TypographyControl', $appJs);
-        foreach (['pb-typography-trigger', 'pb-typography-popover', 'pb-font-family-menu', 'Custom Fonts', 'System', 'headerFontStyle', 'Decoration', 'Word Spacing'] as $marker) {
+        foreach (['pb-typography-trigger', 'pb-typography-popover', 'pb-font-family-menu', 'Custom Fonts', 'System', "prefix: { type: String, default: 'header' }", "settingKey('FontStyle')", 'Decoration', 'Word Spacing'] as $marker) {
             $this->assertSourceContains($marker, $component);
         }
         foreach (['typography-font-size', 'typography-line-height', 'typography-letter-spacing', 'typography-word-spacing'] as $controlKey) {

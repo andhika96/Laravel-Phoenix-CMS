@@ -21,9 +21,9 @@
 			</div>
 
 			<div class="pb-typography-field pb-typography-family-field">
-				<label id="pb-typography-family-label">Family</label>
+				<label :id="familyLabelId">Family</label>
 				<div class="pb-font-family-select">
-					<button type="button" class="pb-font-family-button" aria-haspopup="listbox" aria-labelledby="pb-typography-family-label" :aria-expanded="familyMenuOpen ? 'true' : 'false'" @click="familyMenuOpen = !familyMenuOpen">
+					<button type="button" class="pb-font-family-button" aria-haspopup="listbox" :aria-labelledby="familyLabelId" :aria-expanded="familyMenuOpen ? 'true' : 'false'" @click="familyMenuOpen = !familyMenuOpen">
 						<span>{{ selectedFamilyLabel }}</span>
 						<i class="fas" :class="familyMenuOpen ? 'fa-caret-up' : 'fa-caret-down'"></i>
 					</button>
@@ -32,7 +32,7 @@
 							<i class="fas fa-search"></i>
 							<input ref="familySearch" v-model.trim="fontSearch" type="search" placeholder="Search fonts" aria-label="Search fonts">
 						</div>
-						<div class="pb-font-family-options" role="listbox" aria-labelledby="pb-typography-family-label">
+						<div class="pb-font-family-options" role="listbox" :aria-labelledby="familyLabelId">
 							<button type="button" role="option" :aria-selected="isSelectedFamily('inherit')" :class="{ active: isSelectedFamily('inherit') }" @click="selectFamily({ label: 'Default', value: 'inherit' })">
 								Default
 							</button>
@@ -54,11 +54,11 @@
 				</div>
 			</div>
 
-			<DimensionField label="Size" control-key="typography-font-size" :settings="settings" :setting-key="responsiveKey('headerFontSize')" fallback="16px" :units="['px', 'em', 'rem', '%']" :responsive-device="responsiveDevice" @responsive-device="selectResponsiveDevice" />
+			<DimensionField label="Size" :control-key="prefix + '-typography-font-size'" :settings="settings" :setting-key="responsiveKey('FontSize')" :fallback="resetDefaults.FontSize || '16px'" :units="['px', 'em', 'rem', '%']" :responsive-device="responsiveDevice" @responsive-device="selectResponsiveDevice" />
 
 			<label class="pb-typography-select-field">
 				<span>Weight</span>
-				<select class="pb-select" v-model="settings.headerFontWeight">
+				<select class="pb-select" v-model="settings[settingKey('FontWeight')]">
 					<option value="inherit">Default</option>
 					<option v-for="weight in fontWeights" :key="weight" :value="String(weight)">{{ weight }}</option>
 				</select>
@@ -66,7 +66,7 @@
 
 			<label class="pb-typography-select-field">
 				<span>Transform</span>
-				<select class="pb-select" v-model="settings.headerTextTransform">
+				<select class="pb-select" v-model="settings[settingKey('TextTransform')]">
 					<option value="none">Default</option>
 					<option value="uppercase">Uppercase</option>
 					<option value="lowercase">Lowercase</option>
@@ -76,7 +76,7 @@
 
 			<label class="pb-typography-select-field">
 				<span>Font Style</span>
-				<select class="pb-select" v-model="settings.headerFontStyle">
+				<select class="pb-select" v-model="settings[settingKey('FontStyle')]">
 					<option value="normal">Default</option>
 					<option value="italic">Italic</option>
 					<option value="oblique">Oblique</option>
@@ -85,7 +85,7 @@
 
 			<label class="pb-typography-select-field">
 				<span>Decoration</span>
-				<select class="pb-select" v-model="settings.headerTextDecoration">
+				<select class="pb-select" v-model="settings[settingKey('TextDecoration')]">
 					<option value="none">Default</option>
 					<option value="underline">Underline</option>
 					<option value="overline">Overline</option>
@@ -93,9 +93,9 @@
 				</select>
 			</label>
 
-			<DimensionField label="Line Height" control-key="typography-line-height" :settings="settings" :setting-key="responsiveKey('headerLineHeight')" fallback="1.4em" :units="['px', 'em', 'rem']" :responsive-device="responsiveDevice" @responsive-device="selectResponsiveDevice" />
-			<DimensionField label="Letter Spacing" control-key="typography-letter-spacing" :settings="settings" :setting-key="responsiveKey('headerLetterSpacing')" fallback="0px" :units="['px', 'em', 'rem']" allow-negative :responsive-device="responsiveDevice" @responsive-device="selectResponsiveDevice" />
-			<DimensionField label="Word Spacing" control-key="typography-word-spacing" :settings="settings" :setting-key="responsiveKey('headerWordSpacing')" fallback="0px" :units="['px', 'em', 'rem']" allow-negative :responsive-device="responsiveDevice" @responsive-device="selectResponsiveDevice" />
+			<DimensionField label="Line Height" :control-key="prefix + '-typography-line-height'" :settings="settings" :setting-key="responsiveKey('LineHeight')" :fallback="resetDefaults.LineHeight || '1.4em'" :units="['px', 'em', 'rem']" :responsive-device="responsiveDevice" @responsive-device="selectResponsiveDevice" />
+			<DimensionField label="Letter Spacing" :control-key="prefix + '-typography-letter-spacing'" :settings="settings" :setting-key="responsiveKey('LetterSpacing')" :fallback="resetDefaults.LetterSpacing || '0px'" :units="['px', 'em', 'rem']" allow-negative :responsive-device="responsiveDevice" @responsive-device="selectResponsiveDevice" />
+			<DimensionField label="Word Spacing" :control-key="prefix + '-typography-word-spacing'" :settings="settings" :setting-key="responsiveKey('WordSpacing')" :fallback="resetDefaults.WordSpacing || '0px'" :units="['px', 'em', 'rem']" allow-negative :responsive-device="responsiveDevice" @responsive-device="selectResponsiveDevice" />
 		</div>
 	</div>
 </template>
@@ -205,6 +205,8 @@ export default {
 		settings: { type: Object, required: true },
 		responsiveDevice: { type: String, default: 'desktop' },
 		fontFamilies: { type: [Array, Object], default: () => [] },
+		prefix: { type: String, default: 'header' },
+		resetDefaults: { type: Object, default: () => ({}) },
 	},
 	emits: ['responsive-device'],
 	data() {
@@ -230,23 +232,27 @@ export default {
 		},
 		filteredCustomFonts() { return this.filterFonts(this.customFontOptions); },
 		filteredSystemFonts() { return this.filterFonts(SYSTEM_FONTS); },
+		familyLabelId() { return `pb-typography-${this.prefix}-family-label`; },
 		selectedFamilyLabel() {
-			const current = String(this.settings.headerFontFamily || 'inherit');
+			const current = String(this.settings[this.settingKey('FontFamily')] || 'inherit');
 			if (current === 'inherit') return 'Default';
 			return [...this.customFontOptions, ...SYSTEM_FONTS].find((font) => font.value === current)?.label || current.replace(/^['\"]|['\"].*$/g, '');
 		},
 	},
 	methods: {
+		settingKey(base) {
+			return this.prefix + base;
+		},
 		responsiveKey(base) {
-			return base + (this.responsiveDevice === 'tablet' ? 'Tablet' : (this.responsiveDevice === 'mobile' ? 'Mobile' : ''));
+			return this.settingKey(base) + (this.responsiveDevice === 'tablet' ? 'Tablet' : (this.responsiveDevice === 'mobile' ? 'Mobile' : ''));
 		},
 		filterFonts(fonts) {
 			const query = this.fontSearch.toLocaleLowerCase();
 			return query ? fonts.filter((font) => `${font.label} ${font.value}`.toLocaleLowerCase().includes(query)) : fonts;
 		},
-		isSelectedFamily(value) { return String(this.settings.headerFontFamily || 'inherit') === value; },
+		isSelectedFamily(value) { return String(this.settings[this.settingKey('FontFamily')] || 'inherit') === value; },
 		selectFamily(font) {
-			this.settings.headerFontFamily = font.value;
+			this.settings[this.settingKey('FontFamily')] = font.value;
 			this.familyMenuOpen = false;
 			this.fontSearch = '';
 		},
@@ -264,15 +270,19 @@ export default {
 			this.$nextTick(() => this.$refs.familySearch?.focus());
 		},
 		resetTypography() {
-			Object.assign(this.settings, {
-				headerFontFamily: 'inherit',
-				headerFontSize: '16px', headerFontSizeTablet: '', headerFontSizeMobile: '',
-				headerFontWeight: '600',
-				headerTextTransform: 'none', headerFontStyle: 'normal', headerTextDecoration: 'none',
-				headerLineHeight: '1.4em', headerLineHeightTablet: '', headerLineHeightMobile: '',
-				headerLetterSpacing: '0px', headerLetterSpacingTablet: '', headerLetterSpacingMobile: '',
-				headerWordSpacing: '0px', headerWordSpacingTablet: '', headerWordSpacingMobile: '',
+			const defaults = {
+				FontFamily: 'inherit', FontSize: '16px', FontWeight: '600',
+				TextTransform: 'none', FontStyle: 'normal', TextDecoration: 'none',
+				LineHeight: '1.4em', LetterSpacing: '0px', WordSpacing: '0px',
+				...this.resetDefaults,
+			};
+			const values = {};
+			Object.entries(defaults).forEach(([key, value]) => { values[this.settingKey(key)] = value; });
+			['FontSize', 'LineHeight', 'LetterSpacing', 'WordSpacing'].forEach((key) => {
+				values[this.settingKey(key) + 'Tablet'] = '';
+				values[this.settingKey(key) + 'Mobile'] = '';
 			});
+			Object.assign(this.settings, values);
 		},
 	},
 };
