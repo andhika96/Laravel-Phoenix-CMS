@@ -141,6 +141,7 @@
 		'text-align:' . $desktopAlignment,
 		'--pb-image-box-image-spacing:' . $cssLength($responsive('imageSpacing', '', '15px'), '15px'),
 		'--pb-image-box-content-spacing:' . $cssLength($responsive('contentSpacing', '', '0px'), '0px'),
+		'--pb-image-box-media-justify:' . ($desktopPosition === 'top' ? $alignItems($desktopAlignment) : 'center'),
 		'--pb-image-box-hover-filter:' . $filterCss($imageBoxSettings['imageHoverFilter'] ?? []),
 		'--pb-image-box-hover-opacity:' . $opacity($imageBoxSettings['imageHoverOpacity'] ?? 1),
 		'--pb-image-box-hover-transition:' . $imageTransition . 's',
@@ -163,6 +164,7 @@
 			'text-align:' . $currentAlignment,
 			'--pb-image-box-image-spacing:' . $cssLength($responsive('imageSpacing', $suffix, '15px'), '15px'),
 			'--pb-image-box-content-spacing:' . $cssLength($responsive('contentSpacing', $suffix, '0px'), '0px'),
+			'--pb-image-box-media-justify:' . ($currentPosition === 'top' ? $alignItems($currentAlignment) : 'center'),
 		];
 		$mediaLayoutRules = ['width:' . ($currentPosition === 'top' ? '100%' : 'auto'), 'margin:0'];
 		if ($currentPosition === 'top') $mediaLayoutRules[] = 'margin-bottom:var(--pb-image-box-image-spacing)';

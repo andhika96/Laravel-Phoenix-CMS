@@ -211,6 +211,60 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $this->assertSourceContains('min-height: 48px;', $css);
     }
 
+    public function test_image_box_settings_reuse_compact_segmented_controls_and_layout_spacing(): void
+    {
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        foreach ([
+            'pb-form-group pb-image-box-choice-row',
+            'pb-btn-group pb-image-box-segmented pb-image-box-segmented--three',
+            'pb-btn-group pb-image-box-segmented pb-image-box-segmented--four',
+            'class="pb-seg-btn"',
+            ':aria-pressed=',
+        ] as $marker) {
+            $this->assertSourceContains($marker, $appJs);
+        }
+
+        foreach ([
+            '.pb-panel.left .pb-image-box-settings .pb-tab-content',
+            '.pb-panel.left .pb-image-box-settings .pb-collapsible-body',
+            'padding: 8px 0 4px;',
+            '.pb-image-box-choice-row',
+            'grid-template-columns: minmax(0, 1fr) auto;',
+            'flex-wrap: nowrap;',
+            'flex: 0 0 28px;',
+        ] as $marker) {
+            $this->assertSourceContains($marker, $css);
+        }
+    }
+
+    public function test_default_top_center_alignment_centers_media_in_canvas_and_frontend(): void
+    {
+        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/ImageBox.vue'));
+        $partial = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_image_box.blade.php'));
+        $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
+
+        $this->assertSourceContains("'--pb-image-box-media-justify': this.position === 'top' ? this.flexAlignment(this.alignment) : 'center'", $component);
+        $this->assertSourceContains('justify-content: var(--pb-image-box-media-justify, center);', $component);
+        $this->assertSourceContains("'--pb-image-box-media-justify:' . (\$desktopPosition === 'top' ? \$alignItems(\$desktopAlignment) : 'center')", $partial);
+        $this->assertSourceContains("'--pb-image-box-media-justify:' . (\$currentPosition === 'top' ? \$alignItems(\$currentAlignment) : 'center')", $partial);
+        $this->assertSourceContains('justify-content: var(--pb-image-box-media-justify, center);', $frontendCss);
+
+        $html = view('pagebuilder_elementor.partials.render_image_box', [
+            'node' => [
+                'id' => 'default-centered-image-box',
+                'type' => 'image_box',
+                'settings' => [
+                    'imageUrl' => '/images/example.jpg',
+                    'title' => 'Centered by default',
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('--pb-image-box-media-justify:center', str_replace(' ', '', $html));
+    }
+
     public function test_frontend_renderer_resolves_safe_dynamic_content_links_responsive_styles_and_advanced_controls(): void
     {
         $renderNode = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_node.blade.php'));

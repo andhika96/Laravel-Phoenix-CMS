@@ -760,7 +760,7 @@
 .pb-image-box__media {
 	display: flex;
 	flex: 0 0 auto;
-	justify-content: inherit;
+	justify-content: var(--pb-image-box-media-justify, center);
 	min-width: 0;
 }
 

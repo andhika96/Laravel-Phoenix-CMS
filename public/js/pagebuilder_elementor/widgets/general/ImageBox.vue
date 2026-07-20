@@ -87,6 +87,7 @@ export default {
 				textAlign: this.alignment,
 				'--pb-image-box-image-spacing': imageSpacing,
 				'--pb-image-box-content-spacing': this.cssSize(this.responsiveValue('contentSpacing', '0px'), '0px'),
+				'--pb-image-box-media-justify': this.position === 'top' ? this.flexAlignment(this.alignment) : 'center',
 				'--pb-image-box-hover-filter': this.filterCss(this.settings.imageHoverFilter),
 				'--pb-image-box-hover-opacity': String(this.opacity(this.settings.imageHoverOpacity, 1)),
 				'--pb-image-box-hover-transition': `${this.duration(this.settings.imageHoverTransition)}s`,
@@ -184,7 +185,7 @@ export default {
 
 <style scoped>
 .pb-image-box { width: 100%; min-width: 0; }
-.pb-image-box__media { flex: 0 0 auto; display: flex; justify-content: inherit; min-width: 0; }
+.pb-image-box__media { flex: 0 0 auto; display: flex; justify-content: var(--pb-image-box-media-justify, center); min-width: 0; }
 .pb-image-box__image-link { display: block; width: fit-content; max-width: 100%; color: inherit; }
 .pb-image-box__image { height: auto; object-fit: cover; }
 .pb-image-box__empty-media { width: min(100%, 320px); aspect-ratio: 16 / 9; display: grid; place-items: center; border: 1px solid #d8dee8; border-radius: 4px; background: #f2f4f7; color: #98a2b3; font-size: 44px; }
@@ -192,7 +193,7 @@ export default {
 .pb-image-box__title-link { color: inherit; text-decoration: none; }
 .pb-image-box__title { margin: 0 0 var(--pb-image-box-content-spacing); }
 .pb-image-box__description { margin: 0; }
-.pb-image-box--position-top .pb-image-box__media { width: 100%; margin-bottom: var(--pb-image-box-image-spacing); justify-content: inherit; }
+.pb-image-box--position-top .pb-image-box__media { width: 100%; margin-bottom: var(--pb-image-box-image-spacing); }
 .pb-image-box--position-left .pb-image-box__media { margin-right: var(--pb-image-box-image-spacing); }
 .pb-image-box--position-right .pb-image-box__media { margin-left: var(--pb-image-box-image-spacing); }
 .pb-image-box:hover .pb-image-box__image { filter: var(--pb-image-box-hover-filter); opacity: var(--pb-image-box-hover-opacity); }

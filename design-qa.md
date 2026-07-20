@@ -663,3 +663,22 @@ final result: blocked
 - Responsive device menus were interaction-tested in Chrome, including Offset X; the browser console reported 0 errors and 0 warnings.
 
 final result: passed
+
+## Image Box revision QA - 2026-07-20
+
+- final result: blocked
+- reference sources:
+  - `C:/Users/CAHYO/AppData/Local/Temp/codex-clipboard-b5b0f9e9-d13e-488a-b0f7-f7dad2af7240.png`
+  - `C:/Users/CAHYO/AppData/Local/Temp/codex-clipboard-9d1d8014-350a-4f88-94ae-4b1dc4b63abd.png`
+  - `C:/Users/CAHYO/AppData/Local/Temp/codex-clipboard-6487bdeb-66c5-4d95-9c9e-127fed238157.png`
+- implementation target: local Page Builder Image Box settings panel and canvas/frontend renderer
+- automated verification:
+  - two focused regression tests passed with 18 assertions
+  - PHP syntax checks passed for the test and Blade partial
+  - JavaScript syntax check passed for `app.js`
+  - `git diff --check` passed
+- visual blocker: the Chrome control connection could not start because the Windows sandbox helper failed while applying read ACLs, so a fresh implementation screenshot could not be captured for a same-state comparison.
+- pending visual checks:
+  - category-to-first-control spacing matches Layout Container rhythm
+  - Image Position and Alignment render as compact, single-row segmented icon controls
+  - default Top plus Center places the image at the horizontal center in the editor canvas
