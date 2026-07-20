@@ -16,7 +16,7 @@
 	const sfcOptions = {
 		moduleCache: { vue: Vue },
 		getFile(url) {
-			const requestUrl = url + (url.includes('?') ? '&' : '?') + 'pbv=20260719-12';
+			const requestUrl = url + (url.includes('?') ? '&' : '?') + 'pbv=20260720-1';
 			return fetch(requestUrl, { cache: 'no-store' }).then(r => {
 				if (!r.ok) throw new Error(url);
 				return r.text();
