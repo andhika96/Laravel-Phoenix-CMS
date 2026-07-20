@@ -6265,3 +6265,88 @@ body {
 .pb-panel.left .pb-widget-advanced-controls .pb-advanced-toggle > span {
 	font-weight: 600;
 }
+
+/* Image Box settings: follow the established Accordion panel rhythm. */
+.pb-panel.left .pb-image-box-settings {
+	width: 100%;
+	min-width: 0;
+}
+
+.pb-image-box-settings .pb-tab-btn,
+.pb-image-box-settings .pb-collapsible > summary {
+	min-height: 48px;
+}
+
+.pb-image-box-settings .pb-collapsible-body {
+	display: grid;
+	gap: 13px;
+	padding-top: 14px;
+	padding-bottom: 18px;
+}
+
+.pb-image-box-settings .pb-form-group {
+	min-width: 0;
+	margin: 0;
+}
+
+.pb-image-box-settings .pb-form-label {
+	display: block;
+	margin-bottom: 7px;
+}
+
+.pb-image-box-settings .pb-form-label-row .pb-form-label {
+	margin-bottom: 0;
+}
+
+.pb-image-box-dynamic-field {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 34px;
+	align-items: start;
+	width: 100%;
+	min-width: 0;
+}
+
+.pb-image-box-dynamic-field > .pb-input,
+.pb-image-box-dynamic-field > .pb-textarea {
+	min-width: 0;
+	border-radius: 7px 0 0 7px;
+}
+
+.pb-image-box-dynamic-field > .pb-dynamic-tag-control {
+	align-self: stretch;
+}
+
+.pb-image-box-segmented {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	width: 100%;
+	min-width: 0;
+}
+
+.pb-image-box-segmented .pb-segment-btn {
+	min-width: 0;
+	border-radius: 0;
+}
+
+.pb-image-box-segmented .pb-segment-btn:first-child {
+	border-radius: 7px 0 0 7px;
+}
+
+.pb-image-box-segmented .pb-segment-btn:last-child {
+	border-radius: 0 7px 7px 0;
+}
+
+.pb-image-box-settings .pb-state-tabs--two {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pb-image-box-settings .pb-state-tabs--two .pb-state-tab {
+	min-width: 0;
+}
+
+.pb-image-box-settings .pb-inline-fields {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 10px;
+}

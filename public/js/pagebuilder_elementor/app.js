@@ -36,6 +36,18 @@
 		'/js/pagebuilder_elementor/widgets/shared/TypographyControl.vue',
 		sfcOptions
 	));
+	const LinkControl = defineAsyncComponent(() => loader.loadModule(
+		'/js/pagebuilder_elementor/widgets/shared/LinkControl.vue',
+		sfcOptions
+	));
+	const DynamicTagControl = defineAsyncComponent(() => loader.loadModule(
+		'/js/pagebuilder_elementor/widgets/shared/DynamicTagControl.vue',
+		sfcOptions
+	));
+	const CssFilterControl = defineAsyncComponent(() => loader.loadModule(
+		'/js/pagebuilder_elementor/widgets/shared/CssFilterControl.vue',
+		sfcOptions
+	));
 
 	const widgetMap = {
 		container:      '/js/pagebuilder_elementor/widgets/layout/Container.vue',
@@ -2518,7 +2530,7 @@
 	const PBC = window.PAGE_BUILDER_ELEMENTOR_CONTEXT || {};
 
 	createApp({
-		components: { draggable, BuilderNode, CkEditorField, WidgetAdvancedControls, TypographyControl },
+		components: { draggable, BuilderNode, CkEditorField, WidgetAdvancedControls, TypographyControl, LinkControl, DynamicTagControl, CssFilterControl },
 		setup() {
 			const mode       = ref(PBC.mode || 'create');
 			const saveUrl    = ref(PBC.saveUrl || '');
@@ -2799,6 +2811,7 @@
 			const selectedColumnId = ref('');
 			const hoveredId   = ref('');
 			const settingsTab = ref('layout'); // 'layout' | 'style' | 'advanced'
+			const imageBoxImageState = ref('normal');
 			const responsiveDevice = ref('desktop');
 			const desktopPreviewWidth = ref('1320');
 			const widthPreviewMenuOpen = ref(false);
@@ -4831,7 +4844,7 @@
 				}
 			}, { deep: true });
 			watch(selectedId, (nextId) => {
-				settingsTab.value = selectedNode.value?.type === 'accordion' ? 'content' : 'layout';
+				settingsTab.value = ['accordion', 'image_box'].includes(selectedNode.value?.type) ? 'content' : 'layout';
 				closeControlResponsiveMenu();
 				closeWidthPreviewMenu();
 				scheduleColorisInit();
@@ -5490,7 +5503,7 @@
 			return {
 				appTitle, toolbox, rootNodes, loadWidget,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
-				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, selectedNode, selectedType,
+				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, imageBoxImageState, selectedNode, selectedType,
 				responsiveDevice, responsiveDevices, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
 				controlResponsiveMenu, responsiveDeviceIcon, responsiveDeviceLabel, deviceOptionLabel,
 				openControlResponsiveMenu, closeControlResponsiveMenu, isControlResponsiveMenuOpen,
@@ -7381,6 +7394,85 @@
 									<label class="pb-form-label">CSS Class</label>
 									<input class="pb-input" v-model="selectedNode.settings.cssClass" placeholder="custom-video">
 								</div>
+							</div>
+						</div>
+					</template>
+					<template v-if="selectedType==='image_box'">
+						<div class="pb-image-box-settings pb-widget-settings pb-widget-settings--image-box">
+							<div class="pb-tab-nav">
+								<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='content'}" @click="settingsTab='content'"><i class="fas fa-edit"></i><span>Content</span></button>
+								<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='style'}" @click="settingsTab='style'"><i class="fas fa-adjust"></i><span>Style</span></button>
+								<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='advanced'}" @click="settingsTab='advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
+							</div>
+
+							<div v-show="settingsTab==='content'" class="pb-tab-content">
+								<details class="pb-collapsible" open>
+									<summary>Image Box</summary>
+									<div class="pb-collapsible-body">
+										<div class="pb-form-group">
+											<label class="pb-form-label">Choose Image</label>
+											<div class="pb-bg-media-field pb-widget-settings__media-field" :class="{ 'has-image': !!selectedNode.settings.imageUrl }">
+												<div class="pb-bg-media-preview" :style="selectedNode.settings.imageUrl ? { backgroundImage: 'url(' + selectedNode.settings.imageUrl + ')' } : {}">
+													<button type="button" class="pb-bg-media-center-btn" :title="selectedNode.settings.imageUrl ? 'Change Image' : 'Choose Image'" @click="chooseMedia(selectedNode.settings, 'imageUrl')"><i :class="selectedNode.settings.imageUrl ? 'fas fa-pen' : 'fas fa-plus'"></i></button>
+												</div>
+												<div class="pb-bg-media-actions">
+													<button type="button" class="pb-bg-media-choose" @click="chooseMedia(selectedNode.settings, 'imageUrl')">Choose Image</button>
+													<button type="button" class="pb-bg-media-remove" :disabled="!selectedNode.settings.imageUrl" title="Remove Image" @click="clearMedia(selectedNode.settings, 'imageUrl')"><i class="fas fa-trash-alt"></i></button>
+												</div>
+											</div>
+										</div>
+										<div class="pb-form-group"><label class="pb-form-label">Image Resolution</label><select class="pb-select" v-model="selectedNode.settings.imageResolution"><option value="thumbnail">Thumbnail - 150px</option><option value="medium">Medium - 300px</option><option value="medium_large">Medium Large - 768px</option><option value="large">Large - 1024px</option><option value="1536x1536">1536 x 1536</option><option value="2048x2048">2048 x 2048</option><option value="full">Full</option></select></div>
+										<div class="pb-form-group"><label class="pb-form-label">Title</label><div class="pb-image-box-dynamic-field"><input class="pb-input" v-model="selectedNode.settings.title"><DynamicTagControl :model-value="selectedNode.settings.dynamicBindings.title || ''" @update:modelValue="selectedNode.settings.dynamicBindings.title=$event" /></div></div>
+										<div class="pb-form-group"><label class="pb-form-label">Description</label><div class="pb-image-box-dynamic-field pb-image-box-dynamic-field--textarea"><textarea class="pb-input" rows="5" v-model="selectedNode.settings.description"></textarea><DynamicTagControl :model-value="selectedNode.settings.dynamicBindings.description || ''" @update:modelValue="selectedNode.settings.dynamicBindings.description=$event" /></div></div>
+										<div class="pb-form-group"><label class="pb-form-label">Link</label><LinkControl :url="selectedNode.settings.linkUrl" :target="selectedNode.settings.linkTarget" :nofollow="selectedNode.settings.linkNofollow" :custom-attributes="selectedNode.settings.linkCustomAttributes" @update:url="selectedNode.settings.linkUrl=$event" @update:target="selectedNode.settings.linkTarget=$event" @update:nofollow="selectedNode.settings.linkNofollow=$event" @update:customAttributes="selectedNode.settings.linkCustomAttributes=$event" /></div>
+										<div class="pb-form-group"><label class="pb-form-label">Title HTML Tag</label><select class="pb-select" v-model="selectedNode.settings.titleTag"><option v-for="tag in ['h1','h2','h3','h4','h5','h6','div','span','p']" :key="'image-box-tag-'+tag" :value="tag">{{ tag.toUpperCase() }}</option></select></div>
+									</div>
+								</details>
+							</div>
+
+							<div v-show="settingsTab==='style'" class="pb-tab-content pb-image-box-style-settings">
+								<details class="pb-collapsible" open>
+									<summary>Box</summary>
+									<div class="pb-collapsible-body">
+										<div class="pb-form-group"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">Image Position</label><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('image-box-position')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('image-box-position')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'image-box-position-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('image-box-position', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div></div><div class="pb-image-box-segmented pb-image-box-segmented--three"><button v-for="option in [{value:'left',icon:'fas fa-arrow-left'},{value:'top',icon:'fas fa-arrow-up'},{value:'right',icon:'fas fa-arrow-right'}]" :key="'image-box-position-option-'+option.value" type="button" :class="{active:selectedNode.settings[activeResponsiveKey('imagePosition')]===option.value}" :title="option.value" @click="selectedNode.settings[activeResponsiveKey('imagePosition')]=option.value"><i :class="option.icon"></i></button></div></div>
+										<div class="pb-form-group"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">Alignment</label><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('image-box-alignment')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('image-box-alignment')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'image-box-alignment-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('image-box-alignment', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div></div><div class="pb-image-box-segmented pb-image-box-segmented--four"><button v-for="option in [{value:'left',icon:'fas fa-align-left'},{value:'center',icon:'fas fa-align-center'},{value:'right',icon:'fas fa-align-right'},{value:'justify',icon:'fas fa-align-justify'}]" :key="'image-box-alignment-option-'+option.value" type="button" :class="{active:selectedNode.settings[activeResponsiveKey('alignment')]===option.value}" :title="option.value" @click="selectedNode.settings[activeResponsiveKey('alignment')]=option.value"><i :class="option.icon"></i></button></div></div>
+										<div v-for="control in [{key:'imageSpacing',label:'Image Spacing',fallback:'15px',id:'image-box-image-spacing'},{key:'contentSpacing',label:'Content Spacing',fallback:'0px',id:'image-box-content-spacing'}]" :key="control.key" class="pb-form-group pb-image-box-dimension-control"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">{{ control.label }}</label><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu(control.id)" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen(control.id)" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="control.id+'-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice(control.id, device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div></div><div class="pb-range-value-row"><input class="pb-range" type="range" min="0" :max="sizeControlMax(selectedNode, control.key, control.fallback)" :step="sizeControlStep(selectedNode, control.key, control.fallback)" :value="sizeControlDisplayValue(selectedNode, control.key, control.fallback)" @input="onSizeControlInput(selectedNode, control.key, $event, {fallback:control.fallback})"><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" min="0" :value="sizeControlDisplayValue(selectedNode, control.key, control.fallback)" @input="onSizeControlInput(selectedNode, control.key, $event, {fallback:control.fallback})"><select class="pb-mini-unit" :value="sizeControlUnit(selectedNode, control.key, control.fallback)" @change="setSizeControlUnit(selectedNode, control.key, $event.target.value, {fallback:control.fallback})"><option v-for="unit in sizeControlUnits" :key="control.key+'-'+unit" :value="unit">{{ unit }}</option></select></div></div></div>
+									</div>
+								</details>
+
+								<details class="pb-collapsible" open>
+									<summary>Image</summary>
+									<div class="pb-collapsible-body">
+										<div class="pb-form-group pb-image-box-dimension-control"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">Width</label><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('image-box-width')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('image-box-width')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'image-box-width-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('image-box-width', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div></div><div class="pb-range-value-row"><input class="pb-range" type="range" min="0" :max="sizeControlMax(selectedNode, 'imageWidth', '30%')" :step="sizeControlStep(selectedNode, 'imageWidth', '30%')" :value="sizeControlDisplayValue(selectedNode, 'imageWidth', '30%')" @input="onSizeControlInput(selectedNode, 'imageWidth', $event, {fallback:'30%'})"><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" min="0" :value="sizeControlDisplayValue(selectedNode, 'imageWidth', '30%')" @input="onSizeControlInput(selectedNode, 'imageWidth', $event, {fallback:'30%'})"><select class="pb-mini-unit" :value="sizeControlUnit(selectedNode, 'imageWidth', '30%')" @change="setSizeControlUnit(selectedNode, 'imageWidth', $event.target.value, {fallback:'30%'})"><option v-for="unit in sizeControlUnits" :key="'image-box-width-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div></div>
+										<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="selectedNode.settings.imageBorderType"><option value="none">Default</option><option value="solid">Solid</option><option value="double">Double</option><option value="dotted">Dotted</option><option value="dashed">Dashed</option><option value="groove">Groove</option></select></div>
+										<template v-if="selectedNode.settings.imageBorderType!=='none'"><div class="pb-form-group"><label class="pb-form-label">Border Width</label><input class="pb-input" v-model="selectedNode.settings.imageBorderWidth" placeholder="1px"></div><div class="pb-form-group"><label class="pb-form-label">Border Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.imageBorderColor"></div></template>
+										<div class="pb-form-group pb-image-box-dimension-control"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('image-box-radius')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button><div v-if="isControlResponsiveMenuOpen('image-box-radius')" class="pb-control-device-menu"><button v-for="device in responsiveDevices" :key="'image-box-radius-'+device.value" type="button" class="pb-control-device-item" :class="{active:responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('image-box-radius', device.value)"><i :class="device.icon"></i><span>{{ deviceOptionLabel(device) }}</span></button></div></div></div><div class="pb-range-value-row"><input class="pb-range" type="range" min="0" :max="sizeControlMax(selectedNode, 'imageBorderRadius', '0px')" :step="sizeControlStep(selectedNode, 'imageBorderRadius', '0px')" :value="sizeControlDisplayValue(selectedNode, 'imageBorderRadius', '0px')" @input="onSizeControlInput(selectedNode, 'imageBorderRadius', $event, {fallback:'0px'})"><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" min="0" :value="sizeControlDisplayValue(selectedNode, 'imageBorderRadius', '0px')" @input="onSizeControlInput(selectedNode, 'imageBorderRadius', $event, {fallback:'0px'})"><select class="pb-mini-unit" :value="sizeControlUnit(selectedNode, 'imageBorderRadius', '0px')" @change="setSizeControlUnit(selectedNode, 'imageBorderRadius', $event.target.value, {fallback:'0px'})"><option v-for="unit in sizeControlUnits" :key="'image-box-radius-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div></div>
+										<div class="pb-state-tabs pb-state-tabs--two"><button type="button" :class="{active:imageBoxImageState==='normal'}" @click="imageBoxImageState='normal'">Normal</button><button type="button" :class="{active:imageBoxImageState==='hover'}" @click="imageBoxImageState='hover'">Hover</button></div>
+										<CssFilterControl v-if="imageBoxImageState==='normal'" v-model="selectedNode.settings.imageNormalFilter" />
+										<CssFilterControl v-else v-model="selectedNode.settings.imageHoverFilter" />
+										<div class="pb-form-group"><label class="pb-form-label">Opacity</label><div v-if="imageBoxImageState==='normal'" class="pb-range-value-row"><input class="pb-range" type="range" min="0" max="1" step="0.01" v-model.number="selectedNode.settings.imageNormalOpacity"><input class="pb-input pb-input-compact" type="number" min="0" max="1" step="0.01" v-model.number="selectedNode.settings.imageNormalOpacity"></div><div v-else class="pb-range-value-row"><input class="pb-range" type="range" min="0" max="1" step="0.01" v-model.number="selectedNode.settings.imageHoverOpacity"><input class="pb-input pb-input-compact" type="number" min="0" max="1" step="0.01" v-model.number="selectedNode.settings.imageHoverOpacity"></div></div>
+										<div v-if="imageBoxImageState==='hover'" class="pb-form-group"><label class="pb-form-label">Transition Duration</label><div class="pb-range-value-row"><input class="pb-range" type="range" min="0" max="5" step="0.1" v-model.number="selectedNode.settings.imageHoverTransition"><input class="pb-input pb-input-compact" type="number" min="0" max="10" step="0.1" v-model.number="selectedNode.settings.imageHoverTransition"></div></div>
+									</div>
+								</details>
+
+								<details class="pb-collapsible" open>
+									<summary>Content</summary>
+									<div class="pb-collapsible-body">
+										<div class="pb-subsection-title">Title</div>
+										<div class="pb-form-group"><label class="pb-form-label">Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.titleColor"></div>
+										<TypographyControl prefix="title" :settings="selectedNode.settings" :responsive-device="responsiveDevice" :font-families="fontFamilies" :reset-defaults="{FontSize:'29px',FontWeight:'400',LineHeight:'1.2em'}" @responsive-device="setResponsiveDevice" />
+										<div class="pb-form-group"><label class="pb-form-label">Text Stroke</label><div class="pb-image-box-inline-fields"><input class="pb-input" v-model="selectedNode.settings.titleTextStrokeWidth" placeholder="0px"><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.titleTextStrokeColor"></div></div>
+										<div class="pb-form-group"><label class="pb-form-label">Text Shadow</label><input class="pb-input" v-model="selectedNode.settings.titleTextShadow" placeholder="0 1px 2px rgba(0,0,0,.15)"></div>
+										<div class="pb-subsection-title pb-subsection-title--spaced">Description</div>
+										<div class="pb-form-group"><label class="pb-form-label">Color</label><input class="pb-input pb-coloris-input" v-model="selectedNode.settings.descriptionColor"></div>
+										<TypographyControl prefix="description" :settings="selectedNode.settings" :responsive-device="responsiveDevice" :font-families="fontFamilies" :reset-defaults="{FontSize:'16px',FontWeight:'400',LineHeight:'1.5em'}" @responsive-device="setResponsiveDevice" />
+										<div class="pb-form-group"><label class="pb-form-label">Text Shadow</label><input class="pb-input" v-model="selectedNode.settings.descriptionTextShadow" placeholder="0 1px 2px rgba(0,0,0,.15)"></div>
+									</div>
+								</details>
+							</div>
+
+							<div v-show="settingsTab==='advanced'" class="pb-tab-content pb-image-box-advanced-settings">
+								<WidgetAdvancedControls :node="selectedNode" :responsive-device="responsiveDevice" @responsive-device="setResponsiveDevice" @unavailable-ai="showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')" />
 							</div>
 						</div>
 					</template>
