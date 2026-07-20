@@ -45,6 +45,7 @@
 		heading:        '/js/pagebuilder_elementor/widgets/basic/Heading.vue',
 		text_editor:    '/js/pagebuilder_elementor/widgets/basic/TextEditor.vue',
 		image:          '/js/pagebuilder_elementor/widgets/basic/Image.vue',
+		image_box:      '/js/pagebuilder_elementor/widgets/general/ImageBox.vue',
 		video:          '/js/pagebuilder_elementor/widgets/basic/Video.vue',
 		icon:           '/js/pagebuilder_elementor/widgets/basic/Icon.vue',
 		button:         '/js/pagebuilder_elementor/widgets/basic/Button.vue',
@@ -548,6 +549,140 @@
 			...accordionStateDefaults('Hover', '#f8fafc', '#344054', '#475467'),
 			...accordionStateDefaults('Active', '#f2f4f7', '#101828', '#344054'),
 		};
+	}
+	function imageBoxFilterDefaults() {
+		return { blur: 0, brightness: 100, contrast: 100, saturation: 100, hue: 0 };
+	}
+	function imageBoxWidgetDefaults() {
+		return {
+			...widgetAdvancedDefaults(),
+			imageUrl: '',
+			imageAlt: '',
+			imageResolution: 'full',
+			title: 'This is the heading',
+			description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.',
+			linkUrl: '',
+			linkTarget: '',
+			linkNofollow: false,
+			linkCustomAttributes: [],
+			titleTag: 'h3',
+			dynamicBindings: {},
+			imagePosition: 'top',
+			imagePositionTablet: '',
+			imagePositionMobile: '',
+			alignment: 'center',
+			alignmentTablet: '',
+			alignmentMobile: '',
+			imageSpacing: '15px',
+			imageSpacingTablet: '',
+			imageSpacingMobile: '',
+			contentSpacing: '0px',
+			contentSpacingTablet: '',
+			contentSpacingMobile: '',
+			imageWidth: '30%',
+			imageWidthTablet: '',
+			imageWidthMobile: '',
+			imageBorderType: 'none',
+			imageBorderWidth: '1px',
+			imageBorderColor: '#000000',
+			imageBorderRadius: '0px',
+			imageBorderRadiusTablet: '',
+			imageBorderRadiusMobile: '',
+			imageNormalFilter: imageBoxFilterDefaults(),
+			imageHoverFilter: imageBoxFilterDefaults(),
+			imageNormalOpacity: 1,
+			imageHoverOpacity: 1,
+			imageHoverTransition: 0.3,
+			titleColor: '',
+			titleFontFamily: 'inherit',
+			titleFontSize: '29px',
+			titleFontSizeTablet: '',
+			titleFontSizeMobile: '',
+			titleFontWeight: '400',
+			titleLineHeight: '1.2em',
+			titleLineHeightTablet: '',
+			titleLineHeightMobile: '',
+			titleLetterSpacing: '0px',
+			titleLetterSpacingTablet: '',
+			titleLetterSpacingMobile: '',
+			titleWordSpacing: '0px',
+			titleWordSpacingTablet: '',
+			titleWordSpacingMobile: '',
+			titleTextTransform: 'none',
+			titleFontStyle: 'normal',
+			titleTextDecoration: 'none',
+			titleTextStrokeWidth: '0px',
+			titleTextStrokeColor: '#000000',
+			titleTextShadow: 'none',
+			descriptionColor: '',
+			descriptionFontFamily: 'inherit',
+			descriptionFontSize: '16px',
+			descriptionFontSizeTablet: '',
+			descriptionFontSizeMobile: '',
+			descriptionFontWeight: '400',
+			descriptionLineHeight: '1.5em',
+			descriptionLineHeightTablet: '',
+			descriptionLineHeightMobile: '',
+			descriptionLetterSpacing: '0px',
+			descriptionLetterSpacingTablet: '',
+			descriptionLetterSpacingMobile: '',
+			descriptionWordSpacing: '0px',
+			descriptionWordSpacingTablet: '',
+			descriptionWordSpacingMobile: '',
+			descriptionTextTransform: 'none',
+			descriptionFontStyle: 'normal',
+			descriptionTextDecoration: 'none',
+			descriptionTextShadow: 'none',
+		};
+	}
+	const imageBoxResolutionOptions = Object.freeze(['thumbnail', 'medium', 'medium_large', 'large', '1536x1536', '2048x2048', 'full']);
+	const imageBoxTitleTagOptions = Object.freeze(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p']);
+	const imageBoxPositionOptions = Object.freeze(['top', 'left', 'right']);
+	const imageBoxAlignmentOptions = Object.freeze(['left', 'center', 'right', 'justify']);
+	const imageBoxBorderTypeOptions = Object.freeze(['none', 'solid', 'double', 'dotted', 'dashed', 'groove']);
+	function normalizeImageBoxFilter(value) {
+		const source = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+		return {
+			blur: clamp(Number(source.blur) || 0, 0, 100),
+			brightness: clamp(Number(source.brightness == null ? 100 : source.brightness) || 0, 0, 200),
+			contrast: clamp(Number(source.contrast == null ? 100 : source.contrast) || 0, 0, 200),
+			saturation: clamp(Number(source.saturation == null ? 100 : source.saturation) || 0, 0, 200),
+			hue: clamp(Number(source.hue) || 0, 0, 360),
+		};
+	}
+	function normalizeImageBoxSettings(settings) {
+		if (!settings || typeof settings !== 'object') return settings;
+		const defaults = imageBoxWidgetDefaults();
+		Object.keys(defaults).forEach((key) => {
+			if (settings[key] === undefined) settings[key] = cloneSettingValue(defaults[key]);
+		});
+		settings.imageResolution = imageBoxResolutionOptions.includes(settings.imageResolution) ? settings.imageResolution : 'full';
+		settings.titleTag = imageBoxTitleTagOptions.includes(settings.titleTag) ? settings.titleTag : 'h3';
+		settings.imagePosition = imageBoxPositionOptions.includes(settings.imagePosition) ? settings.imagePosition : 'top';
+		settings.alignment = imageBoxAlignmentOptions.includes(settings.alignment) ? settings.alignment : 'center';
+		['imagePositionTablet', 'imagePositionMobile'].forEach((key) => {
+			settings[key] = settings[key] === '' || imageBoxPositionOptions.includes(settings[key]) ? settings[key] : '';
+		});
+		['alignmentTablet', 'alignmentMobile'].forEach((key) => {
+			settings[key] = settings[key] === '' || imageBoxAlignmentOptions.includes(settings[key]) ? settings[key] : '';
+		});
+		settings.imageBorderType = imageBoxBorderTypeOptions.includes(settings.imageBorderType) ? settings.imageBorderType : 'none';
+		settings.imageNormalFilter = normalizeImageBoxFilter(settings.imageNormalFilter);
+		settings.imageHoverFilter = normalizeImageBoxFilter(settings.imageHoverFilter);
+		settings.imageNormalOpacity = clamp(Number(settings.imageNormalOpacity), 0, 1);
+		settings.imageHoverOpacity = clamp(Number(settings.imageHoverOpacity), 0, 1);
+		settings.imageHoverTransition = clamp(Number(settings.imageHoverTransition) || 0.3, 0, 10);
+		settings.linkTarget = settings.linkTarget === '_blank' ? '_blank' : '';
+		settings.linkNofollow = !!settings.linkNofollow;
+		settings.linkCustomAttributes = normalizeAttributes(settings.linkCustomAttributes);
+		settings.dynamicBindings = settings.dynamicBindings && typeof settings.dynamicBindings === 'object' && !Array.isArray(settings.dynamicBindings)
+			? { ...settings.dynamicBindings }
+			: {};
+		['imageUrl', 'imageAlt', 'title', 'description', 'linkUrl'].forEach((key) => {
+			settings[key] = String(settings[key] == null ? '' : settings[key]);
+		});
+		normalizeWidgetAdvancedSettings(settings);
+		return settings;
 	}
 	function accordionStateDefaults(suffix, backgroundColor, titleColor, iconColor) {
 		return {
@@ -1226,6 +1361,8 @@
 			case 'heading':        return { id, type, label:'Heading', labelSuffix:'',        settings:{ text:'Add your heading text', tag:'h2', align:'left', color:'#101828', cssClass:'' } };
 			case 'text_editor':    return { id, type, label:'Text Editor', labelSuffix:'',    settings:{ html:'<p>Edit this text.</p>', cssClass:'' } };
 			case 'image':          return { id, type, label:'Image', labelSuffix:'',          settings:{ src:'https://placehold.co/640x360', alt:'Image', width:'100%', height:'auto', cssClass:'' } };
+			case 'image_box':
+				return { id, type, label:'Image Box', labelSuffix:'', settings: imageBoxWidgetDefaults() };
 			case 'video':          return { id, type, label:'Video', labelSuffix:'',          settings:videoDefaults() };
 			case 'button':         return { id, type, label:'Button', labelSuffix:'',         settings:{ text:'Click here', url:'#', newTab:false, align:'left', className:'btn btn-primary' } };
 			case 'icon':           return { id, type, label:'Icon', labelSuffix:'',           settings:iconWidgetDefaults() };
@@ -2957,6 +3094,10 @@
 					if (c.type === 'icon') {
 						c.settings = { ...iconWidgetDefaults(), ...(c.settings || {}) };
 						normalizeIconWidgetSettings(c.settings);
+					}
+					if (c.type === 'image_box') {
+						c.settings = { ...imageBoxWidgetDefaults(), ...(c.settings || {}) };
+						normalizeImageBoxSettings(c.settings);
 					}
 					if (c.type === 'tabs') {
 						c.settings = { ...tabsWidgetDefaults(), ...(c.settings || {}) };
@@ -5309,6 +5450,7 @@
 				general: [
 					{ type:'tabs',        label:'Tabs',        icon:'far fa-folder' },
 					{ type:'accordion',   label:'Accordion',   icon:'fas fa-bars' },
+					{ type:'image_box',   label:'Image Box',   icon:'far fa-image' },
 				],
 				advanced: [],
 			};
