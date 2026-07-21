@@ -51,8 +51,6 @@
 	));
 
 	const widgetMap = {
-		container:      '/js/pagebuilder_elementor/widgets/layout/Container.vue',
-		container_fluid:'/js/pagebuilder_elementor/widgets/layout/ContainerFluid.vue',
 	};
 
 	const _wcache = {};
@@ -1314,20 +1312,6 @@
 		}
 
 		switch (type) {
-			case 'container': {
-				const s = containerDefaults('container');
-				const cols = Number(s.gridColumns || 3);
-				return { id, type, label:'Container', labelSuffix:'', settings:s,
-					columns: Array.from({length: cols}, () => ({id:uid('c'), children:[]})),
-					children:[] };
-			}
-			case 'container_fluid': {
-				const s = containerDefaults('container_fluid');
-				const cols = Number(s.gridColumns || 3);
-				return { id, type, label:'Container Fluid', labelSuffix:'', settings:s,
-					columns: Array.from({length: cols}, () => ({id:uid('c'), children:[]})),
-					children:[] };
-			}
 			default: return null;
 		}
 	}
@@ -5471,6 +5455,47 @@
 				fontFamilies,
 				setResponsiveDevice,
 				activeResponsiveKey,
+				spacingControlUnits,
+				shapeDividerTypeOptions,
+				containerResponsiveValue,
+				setContainerResponsiveSetting,
+				onContainerDisplayTypeChange,
+				onContainerContentWidthChange,
+				spacingUnit,
+				spacingSideValue,
+				onSpacingSideInput,
+				setSpacingUnit,
+				containerWidthValue,
+				containerWidthUnit,
+				containerWidthMax,
+				containerWidthStep,
+				onContainerWidthInput,
+				setContainerWidthUnit,
+				minHeightValue,
+				minHeightUnit,
+				setMinHeightValue,
+				setMinHeightUnit,
+				shapeDividerHasWidth,
+				shapeDividerHasFlip,
+				shapeDividerHasInvert,
+				shapeDividerWidthValue,
+				shapeDividerWidthUnit,
+				setShapeDividerWidthValue,
+				setShapeDividerWidthUnit,
+				shapeDividerHeightValue,
+				shapeDividerHeightUnit,
+				setShapeDividerHeightValue,
+				setShapeDividerHeightUnit,
+				containerGridColumnsValue,
+				setContainerGridColumnsValue,
+				containerGridRowsValue,
+				setContainerGridRowsValue,
+				syncContainerGap,
+				bgStateKey,
+				setBgState,
+				isBgHoverState,
+				setBgTypeForState,
+				setBgOverlayTypeForState,
 				syncGridColumnsForDevice,
 				syncGridGap,
 				syncResponsiveSides,
@@ -5786,7 +5811,7 @@
 					</div>
 
 					<!-- ═══ CONTAINER / CONTAINER_FLUID TABS ═══ -->
-					<template v-if="selectedType==='container'||selectedType==='container_fluid'">
+					<template v-if="!hasRegisteredWidget(selectedType) && (selectedType==='container'||selectedType==='container_fluid')">
 						<div class="pb-layout-settings pb-layout-settings--container">
 							<div class="pb-tab-nav">
 								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='layout'}" @click="settingsTab='layout'"><i class="far fa-square"></i><span>Layout</span></button>

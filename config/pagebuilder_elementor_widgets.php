@@ -1,6 +1,26 @@
 <?php
 
 return [
+    'container' => [
+        'type' => 'container',
+        'label' => 'Container',
+        'category' => 'layout',
+        'icon' => 'fas fa-cube',
+        'definition' => 'js/pagebuilder_elementor/widgets/layout/container/definition.js',
+        'canvas' => 'js/pagebuilder_elementor/widgets/layout/container/Canvas.vue',
+        'settings' => 'js/pagebuilder_elementor/widgets/layout/container/Settings.vue',
+        'toolbox' => true,
+    ],
+    'container_fluid' => [
+        'type' => 'container_fluid',
+        'label' => 'Container Fluid',
+        'category' => 'layout',
+        'icon' => 'fas fa-cube',
+        'definition' => 'js/pagebuilder_elementor/widgets/layout/container-fluid/definition.js',
+        'canvas' => 'js/pagebuilder_elementor/widgets/layout/container-fluid/Canvas.vue',
+        'settings' => 'js/pagebuilder_elementor/widgets/layout/container-fluid/Settings.vue',
+        'toolbox' => true,
+    ],
     'grid' => [
         'type' => 'grid',
         'label' => 'Grid',
