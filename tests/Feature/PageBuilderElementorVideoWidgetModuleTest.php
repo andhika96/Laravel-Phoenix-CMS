@@ -57,4 +57,18 @@ class PageBuilderElementorVideoWidgetModuleTest extends TestCase
         $this->assertStringContainsString('youtube.com/embed/dQw4w9WgXcQ', $html);
         $this->assertStringContainsString('padding-bottom:56.25%', str_replace(' ', '', $html));
     }
+
+    public function test_selecting_video_does_not_run_recursive_deep_normalization(): void
+    {
+        $app = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertIsString($app);
+        $compactApp = preg_replace('/\\s+/', ' ', $app);
+        $this->assertIsString($compactApp);
+        $this->assertStringNotContainsString(
+            "watch(selectedNode, n => { if (n?.type === 'video') { normalizeVideoNodeSettings(n.settings); } }, { deep: true });",
+            $compactApp
+        );
+        $this->assertStringContainsString('node.settings.sourceType = normalizeVideoSourceType(value); normalizeVideoNodeSettings(node.settings);', $compactApp);
+    }
 }

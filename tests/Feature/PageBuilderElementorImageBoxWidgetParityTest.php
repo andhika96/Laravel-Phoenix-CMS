@@ -157,7 +157,14 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
     public function test_settings_panel_matches_confirmed_elementor_controls_and_accordion_rhythm(): void
     {
         $appJs = $this->editorSource();
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
         $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $this->assertIsString($settings);
+        $this->assertStringNotContainsString('@click.prevent="node.settings[editor.activeResponsiveKey(', $settings);
+        $this->assertStringContainsString("editor.setResponsiveSetting(node.settings, 'imagePosition', option.value)", $settings);
+        $this->assertStringContainsString("editor.setResponsiveSetting(node.settings, 'alignment', option.value)", $settings);
+        $this->assertStringContainsString('setResponsiveSetting,', $appJs);
 
         foreach ([
             "const LinkControl = defineAsyncComponent",

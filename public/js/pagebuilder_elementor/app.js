@@ -4364,11 +4364,6 @@
 				],
 				scheduleColorisInit
 			);
-			watch(selectedNode, n => {
-				if (n?.type === 'video') {
-					normalizeVideoNodeSettings(n.settings);
-				}
-			}, { deep: true });
 			watch(selectedId, (nextId) => {
 				settingsTab.value = ['accordion', 'image_box'].includes(selectedNode.value?.type) ? 'content' : 'layout';
 				closeControlResponsiveMenu();
@@ -5078,6 +5073,7 @@
 				fontFamilies,
 				setResponsiveDevice,
 				activeResponsiveKey,
+				setResponsiveSetting,
 				spacingControlUnits,
 				shapeDividerTypeOptions,
 				containerResponsiveValue,
