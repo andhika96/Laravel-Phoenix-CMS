@@ -44,6 +44,16 @@
 		return;
 	}
 
+	$__pbWidgetModule = config('pagebuilder_elementor_widgets.' . $type);
+	$__pbWidgetView = is_array($__pbWidgetModule) ? ($__pbWidgetModule['view'] ?? '') : '';
+	if (is_string($__pbWidgetView) && $__pbWidgetView !== '' && view()->exists($__pbWidgetView)) {
+		echo view($__pbWidgetView, array_filter([
+			'node' => $node,
+			'pageData' => $pageData ?? null,
+		], fn ($value) => $value !== null))->render();
+		return;
+	}
+
 	$css_value = function ($value, $fallback = '') {
 		if ($value === null || $value === '') {
 			return $fallback;

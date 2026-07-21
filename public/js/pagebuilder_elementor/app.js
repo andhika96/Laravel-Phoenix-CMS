@@ -12,6 +12,7 @@
 	const { createApp, ref, computed, defineAsyncComponent, watch, onMounted, onBeforeUnmount, nextTick } = Vue;
 	const draggable = window.vuedraggable;
 	const loader    = window['vue3-sfc-loader'];
+	const widgetRegistry = window.PageBuilderElementorWidgets || null;
 
 	const sfcOptions = {
 		moduleCache: { vue: Vue },
@@ -54,7 +55,6 @@
 		container_fluid:'/js/pagebuilder_elementor/widgets/layout/ContainerFluid.vue',
 		row_grid:       '/js/pagebuilder_elementor/widgets/layout/RowGrid.vue',
 		grid:           '/js/pagebuilder_elementor/widgets/layout/Grid.vue',
-		heading:        '/js/pagebuilder_elementor/widgets/basic/Heading.vue',
 		text_editor:    '/js/pagebuilder_elementor/widgets/basic/TextEditor.vue',
 		image:          '/js/pagebuilder_elementor/widgets/basic/Image.vue',
 		image_box:      '/js/pagebuilder_elementor/widgets/general/ImageBox.vue',
@@ -70,12 +70,23 @@
 	const _wcache = {};
 	function loadWidget(type) {
 		if (!_wcache[type]) {
-			const path = widgetMap[type];
+			const path = widgetRegistry?.get(type)?.canvas || widgetMap[type];
 			_wcache[type] = path
 				? defineAsyncComponent(() => loader.loadModule(path, sfcOptions))
 				: { template: '<div style="color:red">??' + type + '</div>' };
 		}
 		return _wcache[type];
+	}
+
+	const _settingsCache = {};
+	function loadWidgetSettings(type) {
+		if (!_settingsCache[type]) {
+			const path = widgetRegistry?.get(type)?.settings;
+			_settingsCache[type] = path
+				? defineAsyncComponent(() => loader.loadModule(path, sfcOptions))
+				: { template: '<div class="pb-form-note">Settings module is unavailable for this widget.</div>' };
+		}
+		return _settingsCache[type];
 	}
 
 	function uid(p)       { return p + '_' + Math.random().toString(36).slice(2, 9); }
@@ -1343,6 +1354,17 @@
 
 	function makeNode(type) {
 		const id = uid('n');
+		const registeredDefinition = widgetRegistry?.get(type);
+		if (registeredDefinition) {
+			return {
+				id,
+				type,
+				label: registeredDefinition.label,
+				labelSuffix: '',
+				settings: registeredDefinition.defaults(),
+			};
+		}
+
 		switch (type) {
 			case 'container': {
 				const s = containerDefaults('container');
@@ -1370,7 +1392,6 @@
 				return { id, type, label:'Grid', labelSuffix:'', settings:s,
 					columns: Array.from({length: cols}, () => ({id:uid('c'), children:[]})) };
 			}
-			case 'heading':        return { id, type, label:'Heading', labelSuffix:'',        settings:{ text:'Add your heading text', tag:'h2', align:'left', color:'#101828', cssClass:'' } };
 			case 'text_editor':    return { id, type, label:'Text Editor', labelSuffix:'',    settings:{ html:'<p>Edit this text.</p>', cssClass:'' } };
 			case 'image':          return { id, type, label:'Image', labelSuffix:'',          settings:{ src:'https://placehold.co/640x360', alt:'Image', width:'100%', height:'auto', cssClass:'' } };
 			case 'image_box':
@@ -3027,6 +3048,8 @@
 					if (baseLabel) c.label = baseLabel;
 					if (suffix) c.labelSuffix = suffix;
 					else c.labelSuffix = '';
+					const registeredDefinition = widgetRegistry?.get(c.type);
+					if (registeredDefinition) registeredDefinition.normalize(c);
 					if (isGrid(c.type)) {
 						c.settings = { ...gridDefaults(c.type), ...(c.settings || {}) };
 						if (c.settings.customCss && !c.settings.cssClass) c.settings.cssClass = c.settings.customCss;
@@ -5451,7 +5474,6 @@
 					{ type:'grid',            label:'Grid',            icon:'fas fa-th-large' },
 				],
 				basic: [
-					{ type:'heading',     label:'Heading',     icon:'fas fa-heading' },
 					{ type:'text_editor', label:'Text Editor', icon:'fas fa-edit' },
 					{ type:'image',       label:'Image',       icon:'far fa-image' },
 					{ type:'video',       label:'Video',       icon:'fas fa-video' },
@@ -5467,6 +5489,15 @@
 				],
 				advanced: [],
 			};
+			const registeredToolbox = widgetRegistry?.toolbox() || {};
+			Object.entries(registeredToolbox).forEach(([category, items]) => {
+				toolbox[category] ||= [];
+				items.forEach((item) => {
+					if (!toolbox[category].some((existing) => existing.type === item.type)) {
+						toolbox[category].push(item);
+					}
+				});
+			});
 
 			// ── Save ──────────────────────────────────────────────────────────
 			async function savePage() {
@@ -5501,7 +5532,7 @@
 			const appTitle = computed(() => mode.value==='edit' ? 'Edit Page Builder' : 'Create Page Builder');
 
 			return {
-				appTitle, toolbox, rootNodes, loadWidget,
+				appTitle, toolbox, rootNodes, loadWidget, loadWidgetSettings,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
 				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, imageBoxImageState, selectedNode, selectedType,
 				responsiveDevice, responsiveDevices, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
@@ -7132,19 +7163,7 @@
 						</div>
 						</div>
 					</template><!-- /grid tabs -->
-					<template v-if="selectedType==='heading'">
-						<div class="pb-widget-settings pb-widget-settings--basic pb-widget-settings--heading">
-							<div class="pb-widget-settings__group">
-								<div class="pb-form-group"><label class="pb-form-label">Text</label><textarea class="pb-textarea" v-model="selectedNode.settings.text"></textarea></div>
-								<div class="pb-form-group"><label class="pb-form-label">Tag</label><select class="pb-select" v-model="selectedNode.settings.tag"><option>h1</option><option>h2</option><option>h3</option><option>h4</option><option>h5</option><option>h6</option></select></div>
-								<div class="pb-form-group"><label class="pb-form-label">Align</label><select class="pb-select" v-model="selectedNode.settings.align"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></div>
-								<div class="pb-form-group"><label class="pb-form-label">Color</label><input class="pb-input" v-model="selectedNode.settings.color"></div>
-							</div>
-							<div class="pb-widget-settings__group pb-widget-settings__group--advanced">
-								<div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="selectedNode.settings.cssClass" placeholder="custom-heading"></div>
-							</div>
-						</div>
-					</template>
+					<component v-if="selectedType==='heading'" :is="loadWidgetSettings(selectedType)" :node="selectedNode" />
 					<template v-if="selectedType==='text_editor'">
 						<div class="pb-widget-settings pb-widget-settings--basic pb-widget-settings--text-editor">
 							<div class="pb-widget-settings__group">
