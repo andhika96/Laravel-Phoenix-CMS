@@ -1,6 +1,26 @@
 <?php
 
 return [
+    'grid' => [
+        'type' => 'grid',
+        'label' => 'Grid',
+        'category' => 'layout',
+        'icon' => 'fas fa-th-large',
+        'definition' => 'js/pagebuilder_elementor/widgets/layout/grid/definition.js',
+        'canvas' => 'js/pagebuilder_elementor/widgets/layout/grid/Canvas.vue',
+        'settings' => 'js/pagebuilder_elementor/widgets/layout/grid/Settings.vue',
+        'toolbox' => true,
+    ],
+    'row_grid' => [
+        'type' => 'row_grid',
+        'label' => 'Row Grid',
+        'category' => 'layout',
+        'icon' => 'fas fa-th-large',
+        'definition' => 'js/pagebuilder_elementor/widgets/layout/row-grid/definition.js',
+        'canvas' => 'js/pagebuilder_elementor/widgets/layout/row-grid/Canvas.vue',
+        'settings' => 'js/pagebuilder_elementor/widgets/layout/row-grid/Settings.vue',
+        'toolbox' => true,
+    ],
     'heading' => [
         'type' => 'heading',
         'label' => 'Heading',

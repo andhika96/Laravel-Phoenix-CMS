@@ -53,8 +53,6 @@
 	const widgetMap = {
 		container:      '/js/pagebuilder_elementor/widgets/layout/Container.vue',
 		container_fluid:'/js/pagebuilder_elementor/widgets/layout/ContainerFluid.vue',
-		row_grid:       '/js/pagebuilder_elementor/widgets/layout/RowGrid.vue',
-		grid:           '/js/pagebuilder_elementor/widgets/layout/Grid.vue',
 	};
 
 	const _wcache = {};
@@ -1329,18 +1327,6 @@
 				return { id, type, label:'Container Fluid', labelSuffix:'', settings:s,
 					columns: Array.from({length: cols}, () => ({id:uid('c'), children:[]})),
 					children:[] };
-			}
-			case 'row_grid': {
-				const s = gridDefaults(type);
-				const cols = clamp(Number(s.columns || 1), 1, 12);
-				return { id, type, label:'Row Grid', labelSuffix:'', settings:s,
-					columns: Array.from({length: cols}, () => ({id:uid('c'), children:[]})) };
-			}
-			case 'grid': {
-				const s = gridDefaults(type);
-				const cols = clamp(Number(s.columns || 1), 1, 12);
-				return { id, type, label:'Grid', labelSuffix:'', settings:s,
-					columns: Array.from({length: cols}, () => ({id:uid('c'), children:[]})) };
 			}
 			default: return null;
 		}
@@ -5485,6 +5471,11 @@
 				fontFamilies,
 				setResponsiveDevice,
 				activeResponsiveKey,
+				syncGridColumnsForDevice,
+				syncGridGap,
+				syncResponsiveSides,
+				chooseBgImage,
+				clearBgImage,
 				showUnsupportedControlNotice,
 				dynamicTagControl: DynamicTagControl,
 				linkControl: LinkControl,
@@ -6805,7 +6796,7 @@
 					</template><!-- /container tabs -->
 
 					<!-- ═══ GRID / ROW_GRID TABS ═══ -->
-					<template v-if="selectedType==='grid'||selectedType==='row_grid'">
+					<template v-if="!hasRegisteredWidget(selectedType) && (selectedType==='grid'||selectedType==='row_grid')">
 						<div class="pb-grid-settings pb-grid-settings--layout">
 							<div class="pb-tab-nav">
 								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='layout'}"   @click="settingsTab='layout'"><i class="fas fa-th-large"></i><span>Layout</span></button>
