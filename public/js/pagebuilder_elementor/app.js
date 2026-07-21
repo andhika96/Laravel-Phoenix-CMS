@@ -4169,6 +4169,10 @@
 			function bgStateKey(node, base) {
 				return base + bgStateSuffix(node);
 			}
+			function setBgStateValue(node, base, value) {
+				if (!node || !node.settings) return;
+				node.settings[bgStateKey(node, base)] = value;
+			}
 			function initContainerHoverStyleState(node) {
 				if (!node || !node.settings) return;
 				const settings = node.settings;
@@ -5111,6 +5115,7 @@
 				setContainerGridRowsValue,
 				syncContainerGap,
 				bgStateKey,
+				setBgStateValue,
 				setBgState,
 				isBgHoverState,
 				setBgTypeForState,

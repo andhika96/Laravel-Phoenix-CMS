@@ -13,6 +13,7 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
         string $folder,
         string $label,
         string $contentWidth,
+        bool $toolboxVisible,
     ): void {
         $catalog = config('pagebuilder_elementor_widgets');
 
@@ -21,7 +22,7 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
 
         $this->assertSame($label, $module['label']);
         $this->assertSame('layout', $module['category']);
-        $this->assertTrue($module['toolbox']);
+        $this->assertSame($toolboxVisible, $module['toolbox']);
         $this->assertFileExists(public_path($module['definition']));
         $this->assertFileExists(public_path($module['canvas']));
         $this->assertFileExists(public_path($module['settings']));
@@ -33,12 +34,23 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
 
         $this->assertStringContainsString("type: '{$type}'", $definition);
         $this->assertStringContainsString("const DEFAULT_CONTENT_WIDTH = '{$contentWidth}'", $definition);
+        $this->assertStringContainsString('toolbox: '.($toolboxVisible ? 'true' : 'false'), $definition);
         $this->assertStringContainsString('createNode(node)', $definition);
         $this->assertStringContainsString('normalize(node)', $definition);
         $this->assertStringContainsString("widgets/layout/{$folder}/Canvas.vue", $definition);
         $this->assertStringContainsString("widgets/layout/{$folder}/Settings.vue", $definition);
         $this->assertStringContainsString('<template>', $settings);
         $this->assertStringContainsString('pb-layout-settings', $settings);
+
+        $this->assertStringNotContainsString('@click="node.settings[editor.bgStateKey(', $settings);
+        foreach ([
+            "editor.setBgStateValue(node, 'bgGradientType', 'linear')",
+            "editor.setBgStateValue(node, 'bgGradientType', 'radial')",
+            "editor.setBgStateValue(node, 'bgOverlayGradientType', 'linear')",
+            "editor.setBgStateValue(node, 'bgOverlayGradientType', 'radial')",
+        ] as $safeAssignment) {
+            $this->assertStringContainsString($safeAssignment, $settings);
+        }
 
         $this->assertStringNotContainsString("case '{$type}':", $app);
         $this->assertStringNotContainsString("/widgets/layout/" . ($type === 'container' ? 'Container' : 'ContainerFluid') . '.vue', $app);
@@ -50,13 +62,15 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
 
         $this->assertSame(1, substr_count($app, ':is="loadWidgetSettings(selectedType)"'));
         $this->assertStringNotContainsString("<template v-if=\"selectedType==='container'||selectedType==='container_fluid'\">", $app);
+        $this->assertStringContainsString('function setBgStateValue(node, base, value)', $app);
+        $this->assertStringContainsString('setBgStateValue,', $app);
     }
 
     public static function containerProvider(): array
     {
         return [
-            'container' => ['container', 'container', 'Container', 'full'],
-            'container fluid' => ['container_fluid', 'container-fluid', 'Container Fluid', 'full'],
+            'container' => ['container', 'container', 'Container', 'full', true],
+            'container fluid' => ['container_fluid', 'container-fluid', 'Container Fluid', 'full', false],
         ];
     }
 }

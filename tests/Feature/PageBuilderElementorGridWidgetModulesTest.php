@@ -13,6 +13,7 @@ class PageBuilderElementorGridWidgetModulesTest extends TestCase
         string $folder,
         string $label,
         int $defaultColumns,
+        bool $toolboxVisible,
     ): void {
         $catalog = config('pagebuilder_elementor_widgets');
 
@@ -21,7 +22,7 @@ class PageBuilderElementorGridWidgetModulesTest extends TestCase
 
         $this->assertSame($label, $module['label']);
         $this->assertSame('layout', $module['category']);
-        $this->assertTrue($module['toolbox']);
+        $this->assertSame($toolboxVisible, $module['toolbox']);
         $this->assertFileExists(public_path($module['definition']));
         $this->assertFileExists(public_path($module['canvas']));
         $this->assertFileExists(public_path($module['settings']));
@@ -33,6 +34,7 @@ class PageBuilderElementorGridWidgetModulesTest extends TestCase
 
         $this->assertStringContainsString("type: '{$type}'", $definition);
         $this->assertStringContainsString("const DEFAULT_COLUMNS = {$defaultColumns}", $definition);
+        $this->assertStringContainsString('toolbox: '.($toolboxVisible ? 'true' : 'false'), $definition);
         $this->assertStringContainsString('createNode(node)', $definition);
         $this->assertStringContainsString('normalize(node)', $definition);
         $this->assertStringContainsString("widgets/layout/{$folder}/Canvas.vue", $definition);
@@ -55,8 +57,8 @@ class PageBuilderElementorGridWidgetModulesTest extends TestCase
     public static function layoutWidgetProvider(): array
     {
         return [
-            'grid' => ['grid', 'grid', 'Grid', 3],
-            'row grid' => ['row_grid', 'row-grid', 'Row Grid', 1],
+            'grid' => ['grid', 'grid', 'Grid', 3, true],
+            'row grid' => ['row_grid', 'row-grid', 'Row Grid', 1, false],
         ];
     }
 }

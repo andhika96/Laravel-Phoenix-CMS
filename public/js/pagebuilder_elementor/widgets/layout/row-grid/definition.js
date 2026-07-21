@@ -149,7 +149,7 @@
 		label: 'Row Grid',
 		category: 'layout',
 		icon: 'fas fa-th-large',
-		toolbox: true,
+		toolbox: false,
 		canvas: '/js/pagebuilder_elementor/widgets/layout/row-grid/Canvas.vue',
 		settings: '/js/pagebuilder_elementor/widgets/layout/row-grid/Settings.vue',
 		defaults,

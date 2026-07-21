@@ -273,7 +273,7 @@
 		label: 'Container Fluid',
 		category: 'layout',
 		icon: 'fas fa-cube',
-		toolbox: true,
+		toolbox: false,
 		canvas: '/js/pagebuilder_elementor/widgets/layout/container-fluid/Canvas.vue',
 		settings: '/js/pagebuilder_elementor/widgets/layout/container-fluid/Settings.vue',
 		defaults,

@@ -408,8 +408,8 @@
 									<div class="pb-form-group">
 										<label class="pb-form-label">Gradient Type</label>
 										<div class="pb-btn-group">
-											<button class="pb-seg-btn" :class="{active:node.settings[editor.bgStateKey(node,'bgGradientType')]==='linear'}" @click="node.settings[editor.bgStateKey(node,'bgGradientType')]='linear'">Linear</button>
-											<button class="pb-seg-btn" :class="{active:node.settings[editor.bgStateKey(node,'bgGradientType')]==='radial'}" @click="node.settings[editor.bgStateKey(node,'bgGradientType')]='radial'">Radial</button>
+											<button class="pb-seg-btn" :class="{active:node.settings[editor.bgStateKey(node,'bgGradientType')]==='linear'}" @click="editor.setBgStateValue(node, 'bgGradientType', 'linear')">Linear</button>
+											<button class="pb-seg-btn" :class="{active:node.settings[editor.bgStateKey(node,'bgGradientType')]==='radial'}" @click="editor.setBgStateValue(node, 'bgGradientType', 'radial')">Radial</button>
 										</div>
 									</div>
 									<div class="pb-form-group" v-if="node.settings[editor.bgStateKey(node,'bgGradientType')]==='linear'">
@@ -492,8 +492,8 @@
 										<div class="pb-form-group">
 											<label class="pb-form-label">Gradient Type</label>
 											<div class="pb-btn-group">
-												<button class="pb-seg-btn" :class="{active:node.settings[editor.bgStateKey(node,'bgOverlayGradientType')]==='linear'}" @click="node.settings[editor.bgStateKey(node,'bgOverlayGradientType')]='linear'">Linear</button>
-												<button class="pb-seg-btn" :class="{active:node.settings[editor.bgStateKey(node,'bgOverlayGradientType')]==='radial'}" @click="node.settings[editor.bgStateKey(node,'bgOverlayGradientType')]='radial'">Radial</button>
+												<button class="pb-seg-btn" :class="{active:node.settings[editor.bgStateKey(node,'bgOverlayGradientType')]==='linear'}" @click="editor.setBgStateValue(node, 'bgOverlayGradientType', 'linear')">Linear</button>
+												<button class="pb-seg-btn" :class="{active:node.settings[editor.bgStateKey(node,'bgOverlayGradientType')]==='radial'}" @click="editor.setBgStateValue(node, 'bgOverlayGradientType', 'radial')">Radial</button>
 											</div>
 										</div>
 										<div class="pb-form-group" v-if="node.settings[editor.bgStateKey(node,'bgOverlayGradientType')]==='linear'">

@@ -21,7 +21,7 @@ return [
         'canvas' => 'js/pagebuilder_elementor/widgets/layout/container-fluid/Canvas.vue',
         'settings' => 'js/pagebuilder_elementor/widgets/layout/container-fluid/Settings.vue',
         'view' => 'pagebuilder_elementor.widgets.layout.container-fluid',
-        'toolbox' => true,
+        'toolbox' => false,
     ],
     'grid' => [
         'type' => 'grid',
@@ -43,7 +43,7 @@ return [
         'canvas' => 'js/pagebuilder_elementor/widgets/layout/row-grid/Canvas.vue',
         'settings' => 'js/pagebuilder_elementor/widgets/layout/row-grid/Settings.vue',
         'view' => 'pagebuilder_elementor.widgets.layout.row-grid',
-        'toolbox' => true,
+        'toolbox' => false,
     ],
     'heading' => [
         'type' => 'heading',
