@@ -8,7 +8,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
 {
     public function test_registration_maps_general_image_box_with_normalized_dedicated_defaults(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
         $definition = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/definition.js'));
         $module = config('pagebuilder_elementor_widgets.image_box');
 
@@ -156,7 +156,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
     }
     public function test_settings_panel_matches_confirmed_elementor_controls_and_accordion_rhythm(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
         $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
 
         foreach ([
@@ -164,13 +164,12 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
             "const DynamicTagControl = defineAsyncComponent",
             "const CssFilterControl = defineAsyncComponent",
             'components: { draggable, BuilderNode, CkEditorField, WidgetAdvancedControls, TypographyControl, LinkControl, DynamicTagControl, CssFilterControl }',
-            "selectedType==='image_box'",
             'pb-image-box-settings',
             'Choose Image',
             'Image Resolution',
             'Title HTML Tag',
-            '<LinkControl',
-            '<DynamicTagControl',
+            '<component :is="editor.linkControl"',
+            '<component :is="editor.dynamicTagControl"',
             'Image Position',
             'Alignment',
             'Image Spacing',
@@ -178,16 +177,16 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
             'Width',
             'Border Type',
             'Border Radius',
-            '<CssFilterControl',
+            '<component :is="editor.cssFilterControl"',
             'Opacity',
             'Transition Duration',
-            '<TypographyControl',
+            '<component :is="editor.typographyControl"',
             'Text Stroke',
             'Text Shadow',
-            '<WidgetAdvancedControls',
-            "activeResponsiveKey('imagePosition')",
-            "activeResponsiveKey('alignment')",
-            "imageBoxImageState==='normal'",
+            '<component :is="editor.widgetAdvancedControls"',
+            "editor.activeResponsiveKey('imagePosition')",
+            "editor.activeResponsiveKey('alignment')",
+            "editor.imageBoxImageState==='normal'",
             'pb-state-tabs pb-state-tabs--two',
         ] as $marker) {
             $this->assertSourceContains($marker, $appJs);
@@ -213,7 +212,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
 
     public function test_image_box_settings_reuse_compact_segmented_controls_and_layout_spacing(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
         $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
 
         foreach ([
@@ -268,14 +267,14 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
     public function test_frontend_renderer_resolves_safe_dynamic_content_links_responsive_styles_and_advanced_controls(): void
     {
         $renderNode = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_node.blade.php'));
+        $module = config('pagebuilder_elementor_widgets.image_box');
         $partialPath = resource_path('views/pagebuilder_elementor/partials/render_image_box.blade.php');
         $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
 
         $this->assertFileExists($partialPath);
         $partial = file_get_contents($partialPath);
 
-        $this->assertSourceContains("@elseif(\$type === 'image_box')", $renderNode);
-        $this->assertSourceContains('pagebuilder_elementor.partials.render_image_box', $renderNode);
+        $this->assertSame('pagebuilder_elementor.partials.render_image_box', $module['view']);
         $this->assertSourceContains("in_array(\$type, ['accordion', 'image_box'], true)", $renderNode);
         $this->assertSourceContains('pagebuilder_dynamic_context', $renderNode);
         $this->assertSourceContains("'user_id' =>", $renderNode);
@@ -400,6 +399,17 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $this->assertStringContainsString('<h3 class="pb-image-box__title"', $html);
         $this->assertStringContainsString('pb-image-box__empty-media', $html);
     }
+    private function editorSource(): string
+    {
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
+
+        $this->assertIsString($appJs);
+        $this->assertIsString($settings);
+
+        return $appJs."\n".$settings;
+    }
+
     private function assertSourceContains(string $needle, string $source): void
     {
         $this->assertTrue(str_contains($source, $needle), 'Missing source marker: '.$needle);

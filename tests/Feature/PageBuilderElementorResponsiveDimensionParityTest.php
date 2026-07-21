@@ -10,46 +10,47 @@ class PageBuilderElementorResponsiveDimensionParityTest extends TestCase
     public function test_editor_exposes_standardized_responsive_dimension_controls_for_basic_widgets(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $imageSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/image/Settings.vue'));
+        $dividerSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/divider/Settings.vue'));
 
         $this->assertIsString($appJs);
+        $this->assertIsString($imageSettings);
+        $this->assertIsString($dividerSettings);
         $this->assertStringContainsString("const sizeControlUnits = ['px', 'pt', 'em', 'rem', '%'];", $appJs);
-        $this->assertStringContainsString("openControlResponsiveMenu('image-width')", $appJs);
-        $this->assertStringContainsString("openControlResponsiveMenu('image-height')", $appJs);
-        $this->assertStringContainsString("openControlResponsiveMenu('divider-width')", $appJs);
-        $this->assertStringContainsString("v-for=\"unit in sizeControlUnits\"", $appJs);
-        $this->assertMatchesRegularExpression(
-            '/openControlResponsiveMenu\\(\'image-width\'\\).*?<div class="pb-range-value-row">/s',
-            $appJs
+        $this->assertStringContainsString('control-key="image-width"', $imageSettings);
+        $this->assertStringContainsString('control-key="image-height"', $imageSettings);
+        $this->assertStringContainsString('editor.openControlResponsiveMenu(controlKey)', $imageSettings);
+        $this->assertStringContainsString("editor.openControlResponsiveMenu('divider-width')", $dividerSettings);
+        $this->assertStringContainsString('v-for="unit in editor.sizeControlUnits"', $imageSettings);
+        $this->assertStringContainsString('v-for="unit in editor.sizeControlUnits"', $dividerSettings);
+        $this->assertStringContainsString('<div class="pb-range-value-row">', $imageSettings);
+        $this->assertStringContainsString('<div class="pb-range-value-row">', $dividerSettings);
+        $this->assertStringNotContainsString(
+            '<option value="vw">vw</option>',
+            $imageSettings."\n".$dividerSettings
         );
-        $this->assertMatchesRegularExpression(
-            '/openControlResponsiveMenu\\(\'image-height\'\\).*?<div class="pb-range-value-row">/s',
-            $appJs
-        );
-        $this->assertMatchesRegularExpression(
-            '/openControlResponsiveMenu\\(\'divider-width\'\\).*?<div class="pb-range-value-row">/s',
-            $appJs
-        );
-        $this->assertStringNotContainsString('<option value="vw">vw</option>', $appJs);
     }
 
     public function test_editor_exposes_elementor_like_spacing_units_for_container_margin_and_padding(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $containerSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/layout/container/Settings.vue'));
         $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
 
         $this->assertIsString($appJs);
+        $this->assertIsString($containerSettings);
         $this->assertIsString($builderCss);
         $this->assertStringContainsString("const spacingControlUnits = ['px', '%', 'em', 'rem', 'vw'];", $appJs);
-        $this->assertStringContainsString("spacingUnit(selectedNode, 'margin')", $appJs);
-        $this->assertStringContainsString("setSpacingUnit(selectedNode, 'margin', \$event.target.value)", $appJs);
-        $this->assertStringContainsString("spacingUnit(selectedNode, 'padding')", $appJs);
-        $this->assertStringContainsString("setSpacingUnit(selectedNode, 'padding', \$event.target.value)", $appJs);
-        $this->assertStringContainsString("onSpacingSideInput(selectedNode, 'margin', 'Top', \$event)", $appJs);
-        $this->assertStringContainsString("onSpacingSideInput(selectedNode, 'padding', 'Top', \$event)", $appJs);
-        $this->assertStringContainsString('v-for="unit in spacingControlUnits"', $appJs);
-        $this->assertStringContainsString('pb-edge-unit-select', $appJs);
-        $this->assertStringContainsString('pb-four-sides-with-link', $appJs);
-        $this->assertStringContainsString('pb-side-link-cell', $appJs);
+        $this->assertStringContainsString("editor.spacingUnit(node, 'margin')", $containerSettings);
+        $this->assertStringContainsString("editor.setSpacingUnit(node, 'margin', \$event.target.value)", $containerSettings);
+        $this->assertStringContainsString("editor.spacingUnit(node, 'padding')", $containerSettings);
+        $this->assertStringContainsString("editor.setSpacingUnit(node, 'padding', \$event.target.value)", $containerSettings);
+        $this->assertStringContainsString("editor.onSpacingSideInput(node, 'margin', 'Top', \$event)", $containerSettings);
+        $this->assertStringContainsString("editor.onSpacingSideInput(node, 'padding', 'Top', \$event)", $containerSettings);
+        $this->assertStringContainsString('v-for="unit in editor.spacingControlUnits"', $containerSettings);
+        $this->assertStringContainsString('pb-edge-unit-select', $containerSettings);
+        $this->assertStringContainsString('pb-four-sides-with-link', $containerSettings);
+        $this->assertStringContainsString('pb-side-link-cell', $containerSettings);
         $this->assertStringContainsString('.pb-panel.left .pb-layout-settings .pb-edge-unit-select', $builderCss);
         $this->assertStringContainsString('width: 54px;', $builderCss);
         $this->assertStringContainsString('border: 1px solid #cfd6e3;', $builderCss);
@@ -158,32 +159,35 @@ class PageBuilderElementorResponsiveDimensionParityTest extends TestCase
     public function test_editor_exposes_video_aspect_ratio_as_preset_select(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $videoSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/video/Settings.vue'));
 
         $this->assertIsString($appJs);
+        $this->assertIsString($videoSettings);
         $this->assertStringContainsString('const videoAspectRatioOptions = [', $appJs);
         $this->assertStringContainsString("{ value: '16/9', label: '16:9 (Widescreen)' }", $appJs);
         $this->assertStringContainsString("{ value: '4/3', label: '4:3 (Standard)' }", $appJs);
         $this->assertStringContainsString("{ value: '1/1', label: '1:1 (Square)' }", $appJs);
         $this->assertStringContainsString("{ value: '9/16', label: '9:16 (Vertical)' }", $appJs);
-        $this->assertStringContainsString('<label class="pb-form-label mb-0">Aspect Ratio</label>', $appJs);
-        $this->assertStringContainsString('<select class="pb-select" :value="videoAspectRatioValue(selectedNode)" @change="setVideoAspectRatioValue(selectedNode, $event.target.value)">', $appJs);
-        $this->assertStringContainsString('v-for="option in videoAspectRatioOptions"', $appJs);
-        $this->assertStringNotContainsString('<label class="pb-form-label">Aspect Ratio</label><input class="pb-input" v-model="selectedNode.settings.ratio">', $appJs);
+        $this->assertStringContainsString('<label class="pb-form-label mb-0">Aspect Ratio</label>', $videoSettings);
+        $this->assertStringContainsString(':value="editor.videoAspectRatioValue(node)"', $videoSettings);
+        $this->assertStringContainsString('@change="editor.setVideoAspectRatioValue(node, $event.target.value)"', $videoSettings);
+        $this->assertStringContainsString('v-for="option in editor.videoAspectRatioOptions"', $videoSettings);
+        $this->assertStringNotContainsString('<input class="pb-input" v-model="node.settings.ratio">', $videoSettings);
     }
 
     public function test_editor_exposes_video_aspect_ratio_as_responsive_select(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $videoSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/video/Settings.vue'));
 
-        $this->assertIsString($appJs);
-        $this->assertStringContainsString("openControlResponsiveMenu('video-ratio')", $appJs);
-        $this->assertStringContainsString(":value=\"videoAspectRatioValue(selectedNode)\"", $appJs);
-        $this->assertStringContainsString("@change=\"setVideoAspectRatioValue(selectedNode, \$event.target.value)\"", $appJs);
+        $this->assertIsString($videoSettings);
+        $this->assertStringContainsString("editor.openControlResponsiveMenu('video-ratio')", $videoSettings);
+        $this->assertStringContainsString(":value=\"editor.videoAspectRatioValue(node)\"", $videoSettings);
+        $this->assertStringContainsString("@change=\"editor.setVideoAspectRatioValue(node, \$event.target.value)\"", $videoSettings);
     }
 
     public function test_video_widget_preview_reads_responsive_ratio_values(): void
     {
-        $videoVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/Video.vue'));
+        $videoVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/video/Canvas.vue'));
 
         $this->assertIsString($videoVue);
         $this->assertStringContainsString('responsiveDevice: {', $videoVue);

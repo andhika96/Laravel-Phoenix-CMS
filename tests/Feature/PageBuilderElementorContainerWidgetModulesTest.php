@@ -25,6 +25,7 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
         $this->assertFileExists(public_path($module['definition']));
         $this->assertFileExists(public_path($module['canvas']));
         $this->assertFileExists(public_path($module['settings']));
+        $this->assertTrue(view()->exists($module['view']));
 
         $definition = file_get_contents(public_path($module['definition']));
         $settings = file_get_contents(public_path($module['settings']));

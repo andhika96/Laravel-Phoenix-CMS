@@ -9,6 +9,7 @@ return [
         'definition' => 'js/pagebuilder_elementor/widgets/layout/container/definition.js',
         'canvas' => 'js/pagebuilder_elementor/widgets/layout/container/Canvas.vue',
         'settings' => 'js/pagebuilder_elementor/widgets/layout/container/Settings.vue',
+        'view' => 'pagebuilder_elementor.widgets.layout.container',
         'toolbox' => true,
     ],
     'container_fluid' => [
@@ -19,6 +20,7 @@ return [
         'definition' => 'js/pagebuilder_elementor/widgets/layout/container-fluid/definition.js',
         'canvas' => 'js/pagebuilder_elementor/widgets/layout/container-fluid/Canvas.vue',
         'settings' => 'js/pagebuilder_elementor/widgets/layout/container-fluid/Settings.vue',
+        'view' => 'pagebuilder_elementor.widgets.layout.container-fluid',
         'toolbox' => true,
     ],
     'grid' => [
@@ -29,6 +31,7 @@ return [
         'definition' => 'js/pagebuilder_elementor/widgets/layout/grid/definition.js',
         'canvas' => 'js/pagebuilder_elementor/widgets/layout/grid/Canvas.vue',
         'settings' => 'js/pagebuilder_elementor/widgets/layout/grid/Settings.vue',
+        'view' => 'pagebuilder_elementor.widgets.layout.grid',
         'toolbox' => true,
     ],
     'row_grid' => [
@@ -39,6 +42,7 @@ return [
         'definition' => 'js/pagebuilder_elementor/widgets/layout/row-grid/definition.js',
         'canvas' => 'js/pagebuilder_elementor/widgets/layout/row-grid/Canvas.vue',
         'settings' => 'js/pagebuilder_elementor/widgets/layout/row-grid/Settings.vue',
+        'view' => 'pagebuilder_elementor.widgets.layout.row-grid',
         'toolbox' => true,
     ],
     'heading' => [

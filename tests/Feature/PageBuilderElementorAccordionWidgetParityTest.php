@@ -8,7 +8,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 {
     public function test_editor_registers_general_accordion_with_three_nested_items(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
         $definition = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/definition.js'));
         $module = config('pagebuilder_elementor_widgets.accordion');
 
@@ -38,7 +38,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 
     public function test_recursive_helpers_visit_accordion_item_children(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
 
         $this->assertSourceContains("if (c.type === 'accordion')", $appJs);
         $this->assertSourceContains('item.children = norm(item.children || [])', $appJs);
@@ -48,7 +48,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 
     public function test_accordion_sidebar_and_canvas_use_separate_runtime_state(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
 
         $this->assertSourceContains('const accordionRuntimeState = ref({});', $appJs);
         $this->assertSourceContains('function accordionRuntimeForNode(node)', $appJs);
@@ -60,7 +60,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 
     public function test_accordion_runtime_normalization_does_not_reassign_equal_arrays_during_render(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
 
         $this->assertSourceContains('function sameStringArray(left, right)', $appJs);
         $this->assertSourceContains('if (!sameStringArray(runtime.expandedItemIds, normalizedExpandedItemIds))', $appJs);
@@ -69,12 +69,12 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 
     public function test_editor_exposes_accordion_item_actions_and_interactions(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
 
         $this->assertSourceContains('function addAccordionItem(node = selectedNode.value)', $appJs);
         $this->assertSourceContains('function duplicateAccordionItem(node = selectedNode.value', $appJs);
         $this->assertSourceContains('function removeAccordionItem(node = selectedNode.value', $appJs);
-        $this->assertSourceContains('accordionItemsForNode(selectedNode)', $appJs);
+        $this->assertSourceContains('editor.accordionItemsForNode(node)', $appJs);
         $this->assertSourceContains('Add Item', $appJs);
         $this->assertSourceContains('Default State', $appJs);
         $this->assertSourceContains('Max Items Expanded', $appJs);
@@ -110,7 +110,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 
     public function test_editor_renders_targeted_nested_dropzones_for_each_expanded_item(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
 
         $this->assertSourceContains('isAccordionNode() { return isAccordion(this.node.type); }', $appJs);
         $this->assertSourceContains('data-parent-node-type="accordion"', $appJs);
@@ -123,7 +123,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 
     public function test_content_tab_exposes_all_audited_layout_icon_and_schema_controls(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
 
         foreach ([
             'Item Position',
@@ -136,15 +136,15 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
             $this->assertSourceContains($label, $appJs);
         }
 
-        $this->assertSourceContains("openAccordionIconLibrary('expand'", $appJs);
-        $this->assertSourceContains("chooseAccordionSvg('collapse'", $appJs);
-        $this->assertSourceContains("activeResponsiveKey('itemPosition')", $appJs);
-        $this->assertSourceContains("activeResponsiveKey('iconPosition')", $appJs);
+        $this->assertSourceContains("editor.openAccordionIconLibrary('expand'", $appJs);
+        $this->assertSourceContains("editor.chooseAccordionSvg('collapse'", $appJs);
+        $this->assertSourceContains("editor.activeResponsiveKey('itemPosition')", $appJs);
+        $this->assertSourceContains("editor.activeResponsiveKey('iconPosition')", $appJs);
     }
 
     public function test_style_tab_exposes_accordion_header_and_content_state_controls(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
         $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Canvas.vue'));
 
         foreach ([
@@ -155,7 +155,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
             'Border Type',
             'Border Width',
             'Border Radius',
-            '<TypographyControl',
+            '<component :is="editor.typographyControl"',
             'Text Shadow',
             'Text Stroke',
             'Icon Size',
@@ -176,13 +176,13 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 
     public function test_accordion_style_dimensions_use_numeric_unit_aware_controls(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
 
 		$this->assertSourceContains('pb-accordion-dimension-control', $appJs);
 		$this->assertSourceContains('pb-accordion-box-control', $appJs);
-        $this->assertSourceContains('accordionDimensionValue(selectedNode', $appJs);
-        $this->assertSourceContains('setAccordionDimensionUnit(selectedNode', $appJs);
-        $this->assertSourceContains('accordionBoxSideValue(selectedNode', $appJs);
+        $this->assertSourceContains('editor.accordionDimensionValue(node', $appJs);
+        $this->assertSourceContains('editor.setAccordionDimensionUnit(node', $appJs);
+        $this->assertSourceContains('editor.accordionBoxSideValue(node', $appJs);
         $this->assertSourceContains('toggleAccordionBoxLink(', $appJs);
         $this->assertSourceContains('type="number"', $appJs);
         $this->assertSourceContains('type="range"', $appJs);
@@ -337,7 +337,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 
     public function test_accordion_uses_per_control_responsive_popovers_and_spaced_actions(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
         $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
 
         $this->assertFalse(str_contains($appJs, "'accordion-content-'+device.value"));
@@ -354,14 +354,14 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 
     public function test_accordion_typography_uses_popover_grouped_fonts_and_responsive_dimensions(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
         $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/TypographyControl.vue'));
         $accordion = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Canvas.vue'));
         $renderer = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_accordion.blade.php'));
         $editorShell = file_get_contents(resource_path('views/pagebuilder_elementor/editor_shell.blade.php'));
         $frontendShell = file_get_contents(resource_path('views/pagebuilder_elementor/frontend_renderer.blade.php'));
 
-        $this->assertSourceContains('<TypographyControl', $appJs);
+        $this->assertSourceContains('<component :is="editor.typographyControl"', $appJs);
         foreach (['pb-typography-trigger', 'pb-typography-popover', 'pb-font-family-menu', 'Custom Fonts', 'System', "prefix: { type: String, default: 'header' }", "settingKey('FontStyle')", 'Decoration', 'Word Spacing'] as $marker) {
             $this->assertSourceContains($marker, $component);
         }
@@ -373,6 +373,17 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertSourceContains('window.PB_ELEMENTOR_FONT_FAMILIES', $editorShell);
         $this->assertSourceContains("asset('storage/fonts/", $editorShell);
         $this->assertSourceContains("asset('storage/fonts/", $frontendShell);
+    }
+
+    private function editorSource(): string
+    {
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Settings.vue'));
+
+        $this->assertIsString($appJs);
+        $this->assertIsString($settings);
+
+        return $appJs."\n".$settings;
     }
 
     private function assertSourceContains(string $needle, string $source): void

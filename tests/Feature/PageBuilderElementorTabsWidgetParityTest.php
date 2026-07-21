@@ -64,7 +64,7 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
 
     public function test_tabs_canvas_preview_marks_interactive_areas_to_avoid_parent_selection_clicks(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
         $tabsVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Canvas.vue'));
         $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
 
@@ -82,7 +82,7 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
 
     public function test_tabs_canvas_preview_defers_nested_layout_dropzones_to_child_grid_columns(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
         $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
 
         $this->assertIsString($appJs);
@@ -162,7 +162,7 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
 
     public function test_tabs_targeted_insert_mechanisms_and_glowing_pulse_highlights(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $appJs = $this->editorSource();
         $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
 
         $this->assertIsString($appJs);
@@ -185,5 +185,16 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringNotContainsString(".pb-node.pb-node-tabs .pb-dropzone-tab * {\n\tpointer-events: auto;", $builderCss);
         $this->assertStringContainsString('pulsePendingBorder', $builderCss);
         $this->assertStringNotContainsString('bouncePendingAdd', $builderCss);
+    }
+
+    private function editorSource(): string
+    {
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Settings.vue'));
+
+        $this->assertIsString($appJs);
+        $this->assertIsString($settings);
+
+        return $appJs."\n".$settings;
     }
 }
