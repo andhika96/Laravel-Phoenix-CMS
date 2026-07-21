@@ -1,4 +1,4 @@
-(function () {
+(async function () {
 	'use strict';
 	console.log('[PB] app.js loaded v3-refactor - ' + new Date().toISOString());
 
@@ -29,26 +29,35 @@
 		},
 		log(type, msg) { console[type](msg); },
 	};
-	const WidgetAdvancedControls = defineAsyncComponent(() => loader.loadModule(
-		'/js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue',
-		sfcOptions
-	));
-	const TypographyControl = defineAsyncComponent(() => loader.loadModule(
-		'/js/pagebuilder_elementor/widgets/shared/TypographyControl.vue',
-		sfcOptions
-	));
-	const LinkControl = defineAsyncComponent(() => loader.loadModule(
-		'/js/pagebuilder_elementor/widgets/shared/LinkControl.vue',
-		sfcOptions
-	));
-	const DynamicTagControl = defineAsyncComponent(() => loader.loadModule(
-		'/js/pagebuilder_elementor/widgets/shared/DynamicTagControl.vue',
-		sfcOptions
-	));
-	const CssFilterControl = defineAsyncComponent(() => loader.loadModule(
-		'/js/pagebuilder_elementor/widgets/shared/CssFilterControl.vue',
-		sfcOptions
-	));
+	const _sfcModulePromises = {};
+	const _sfcResolvedModules = {};
+	function loadSfcModule(path) {
+		if (!_sfcModulePromises[path]) {
+			_sfcModulePromises[path] = loader.loadModule(path, sfcOptions)
+				.then(component => {
+					_sfcResolvedModules[path] = component;
+					return component;
+				})
+				.catch(error => {
+					delete _sfcModulePromises[path];
+					throw error;
+				});
+		}
+		return _sfcModulePromises[path];
+	}
+
+	const sharedControlPaths = Object.freeze({
+		advanced: '/js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue',
+		typography: '/js/pagebuilder_elementor/widgets/shared/TypographyControl.vue',
+		link: '/js/pagebuilder_elementor/widgets/shared/LinkControl.vue',
+		dynamicTag: '/js/pagebuilder_elementor/widgets/shared/DynamicTagControl.vue',
+		cssFilter: '/js/pagebuilder_elementor/widgets/shared/CssFilterControl.vue',
+	});
+	const WidgetAdvancedControls = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.advanced));
+	const TypographyControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.typography));
+	const LinkControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.link));
+	const DynamicTagControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.dynamicTag));
+	const CssFilterControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.cssFilter));
 
 
 	const _wcache = {};
@@ -64,13 +73,27 @@
 
 	const _settingsCache = {};
 	function loadWidgetSettings(type) {
+		const path = widgetRegistry?.get(type)?.settings;
 		if (!_settingsCache[type]) {
-			const path = widgetRegistry?.get(type)?.settings;
 			_settingsCache[type] = path
-				? defineAsyncComponent(() => loader.loadModule(path, sfcOptions))
+				? defineAsyncComponent(() => loadSfcModule(path))
 				: { template: '<div class="pb-form-note">Settings module is unavailable for this widget.</div>' };
 		}
-		return _settingsCache[type];
+		return _sfcResolvedModules[path] || _settingsCache[type];
+	}
+
+	async function preloadWidgetSettingsModules() {
+		const modulePaths = [...new Set([
+			...Object.values(sharedControlPaths),
+			...(widgetRegistry?.all() || []).map(definition => definition.settings).filter(Boolean),
+		])];
+		const results = await Promise.allSettled(modulePaths.map(loadSfcModule));
+
+		results.forEach((result, index) => {
+			if (result.status === 'rejected') {
+				console.warn('[PB] Settings preload failed:', modulePaths[index], result.reason);
+			}
+		});
 	}
 
 	function hasRegisteredWidget(type) {
@@ -2092,6 +2115,12 @@
 	});
 
 	const PBC = window.PAGE_BUILDER_ELEMENTOR_CONTEXT || {};
+
+	try {
+		await preloadWidgetSettingsModules();
+	} catch (error) {
+		console.warn('[PB] Settings preload initialization failed:', error);
+	}
 
 	createApp({
 		components: { draggable, BuilderNode, CkEditorField, WidgetAdvancedControls, TypographyControl, LinkControl, DynamicTagControl, CssFilterControl },

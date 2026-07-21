@@ -66,6 +66,39 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
         $this->assertStringNotContainsString("case 'heading':", $app);
     }
 
+    public function test_editor_preloads_registered_settings_and_shared_controls_before_mount(): void
+    {
+        $app = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertIsString($app);
+
+        foreach ([
+            'const _sfcModulePromises = {};',
+            'const _sfcResolvedModules = {};',
+            'function loadSfcModule(path)',
+            'function preloadWidgetSettingsModules()',
+            'widgetRegistry?.all()',
+            'Promise.allSettled(modulePaths.map(loadSfcModule))',
+            '_sfcResolvedModules[path] || _settingsCache[type]',
+            "console.warn('[PB] Settings preload failed:', modulePaths[index], result.reason);",
+            'preloadWidgetSettingsModules()',
+            '(async function () {',
+            'await preloadWidgetSettingsModules();',
+        ] as $marker) {
+            $this->assertStringContainsString($marker, $app);
+        }
+
+        foreach (['AdvancedControls.vue', 'TypographyControl.vue', 'LinkControl.vue', 'DynamicTagControl.vue', 'CssFilterControl.vue'] as $sharedControl) {
+            $this->assertStringContainsString($sharedControl, $app);
+        }
+
+        $preloadPosition = strrpos($app, 'preloadWidgetSettingsModules()');
+        $mountPosition = strpos($app, 'createApp({');
+        $this->assertNotFalse($preloadPosition);
+        $this->assertNotFalse($mountPosition);
+        $this->assertLessThan($mountPosition, $preloadPosition);
+    }
+
     public function test_heading_frontend_dispatches_through_registered_view(): void
     {
         $renderNode = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_node.blade.php'));
