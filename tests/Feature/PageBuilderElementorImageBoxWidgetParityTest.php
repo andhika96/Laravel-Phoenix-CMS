@@ -9,15 +9,15 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
     public function test_registration_maps_general_image_box_with_normalized_dedicated_defaults(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $definition = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/definition.js'));
+        $module = config('pagebuilder_elementor_widgets.image_box');
 
-        $this->assertSourceContains("image_box:      '/js/pagebuilder_elementor/widgets/general/ImageBox.vue'", $appJs);
-        $this->assertMatchesRegularExpression(
-            "/general:\s*\[.*?\{ type:'image_box',\s+label:'Image Box'/s",
-            $appJs
-        );
+        $this->assertSame('js/pagebuilder_elementor/widgets/general/image-box/Canvas.vue', $module['canvas']);
+        $this->assertSame('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue', $module['settings']);
+        $this->assertSourceContains("type: 'image_box'", $definition);
+        $this->assertSourceContains("label: 'Image Box'", $definition);
         $this->assertSourceContains('function imageBoxWidgetDefaults()', $appJs);
-        $this->assertSourceContains("case 'image_box':", $appJs);
-        $this->assertSourceContains("settings: imageBoxWidgetDefaults()", $appJs);
+        $this->assertFalse(str_contains($appJs, "case 'image_box':"));
         $this->assertSourceContains("if (c.type === 'image_box')", $appJs);
         $this->assertSourceContains('normalizeImageBoxSettings(c.settings)', $appJs);
 
@@ -122,7 +122,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
     }
     public function test_editor_canvas_renders_responsive_styled_and_safe_image_box(): void
     {
-        $path = public_path('js/pagebuilder_elementor/widgets/general/ImageBox.vue');
+        $path = public_path('js/pagebuilder_elementor/widgets/general/image-box/Canvas.vue');
         $this->assertFileExists($path);
         $component = file_get_contents($path);
 
@@ -241,7 +241,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
 
     public function test_default_top_center_alignment_centers_media_in_canvas_and_frontend(): void
     {
-        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/ImageBox.vue'));
+        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Canvas.vue'));
         $partial = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_image_box.blade.php'));
         $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
 

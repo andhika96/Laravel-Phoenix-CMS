@@ -9,15 +9,16 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
     public function test_editor_registers_general_accordion_with_three_nested_items(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $definition = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/definition.js'));
+        $module = config('pagebuilder_elementor_widgets.accordion');
 
-        $this->assertSourceContains("accordion:      '/js/pagebuilder_elementor/widgets/advanced/Accordion.vue'", $appJs);
+        $this->assertSame('js/pagebuilder_elementor/widgets/advanced/accordion/Canvas.vue', $module['canvas']);
+        $this->assertSame('js/pagebuilder_elementor/widgets/advanced/accordion/Settings.vue', $module['settings']);
+        $this->assertSourceContains("type: 'accordion'", $definition);
+        $this->assertSourceContains("label: 'Accordion'", $definition);
         $this->assertSourceContains('function isAccordion(t)', $appJs);
         $this->assertSourceContains('function accordionWidgetDefaultItems()', $appJs);
-        $this->assertSourceContains('accordionItems: accordionWidgetDefaultItems()', $appJs);
-        $this->assertMatchesRegularExpression(
-            "/general:\\s*\\[\\s*\\{ type:'tabs'.*?\\{ type:'accordion',\\s+label:'Accordion'/s",
-            $appJs
-        );
+        $this->assertSourceContains('node.accordionItems = accordionWidgetDefaultItems()', $appJs);
         $this->assertSourceContains('advanced: []', $appJs);
         $this->assertSourceContains('<div class="pb-section" v-if="toolbox.advanced.length">', $appJs);
     }
@@ -82,7 +83,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 
     public function test_accordion_preview_component_renders_accessible_animated_headers(): void
     {
-        $componentPath = public_path('js/pagebuilder_elementor/widgets/advanced/Accordion.vue');
+        $componentPath = public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Canvas.vue');
 
         $this->assertFileExists($componentPath);
 
@@ -95,7 +96,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 
     public function test_accordion_preview_animates_from_measured_pixel_heights_before_using_auto(): void
     {
-        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/Accordion.vue'));
+        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Canvas.vue'));
 
 		$this->assertSourceContains('startPanelTransitions(transitions)', $component);
 		$this->assertSourceContains('skipNextExpandedWatch', $component);
@@ -144,7 +145,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
     public function test_style_tab_exposes_accordion_header_and_content_state_controls(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
-        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/Accordion.vue'));
+        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Canvas.vue'));
 
         foreach ([
             'Space Between Items',
@@ -355,7 +356,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
         $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/TypographyControl.vue'));
-        $accordion = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/Accordion.vue'));
+        $accordion = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Canvas.vue'));
         $renderer = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_accordion.blade.php'));
         $editorShell = file_get_contents(resource_path('views/pagebuilder_elementor/editor_shell.blade.php'));
         $frontendShell = file_get_contents(resource_path('views/pagebuilder_elementor/frontend_renderer.blade.php'));

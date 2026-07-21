@@ -55,9 +55,6 @@
 		container_fluid:'/js/pagebuilder_elementor/widgets/layout/ContainerFluid.vue',
 		row_grid:       '/js/pagebuilder_elementor/widgets/layout/RowGrid.vue',
 		grid:           '/js/pagebuilder_elementor/widgets/layout/Grid.vue',
-		image_box:      '/js/pagebuilder_elementor/widgets/general/ImageBox.vue',
-		tabs:           '/js/pagebuilder_elementor/widgets/general/Tabs.vue',
-		accordion:      '/js/pagebuilder_elementor/widgets/advanced/Accordion.vue',
 	};
 
 	const _wcache = {};
@@ -1308,13 +1305,14 @@
 		const id = uid('n');
 		const registeredDefinition = widgetRegistry?.get(type);
 		if (registeredDefinition) {
-			return {
+			const node = {
 				id,
 				type,
 				label: registeredDefinition.label,
 				labelSuffix: '',
 				settings: registeredDefinition.defaults(),
 			};
+			return typeof registeredDefinition.createNode === 'function' ? registeredDefinition.createNode(node) : node;
 		}
 
 		switch (type) {
@@ -1344,23 +1342,6 @@
 				return { id, type, label:'Grid', labelSuffix:'', settings:s,
 					columns: Array.from({length: cols}, () => ({id:uid('c'), children:[]})) };
 			}
-			case 'image_box':
-				return { id, type, label:'Image Box', labelSuffix:'', settings: imageBoxWidgetDefaults() };
-			case 'tabs': {
-				const settings = tabsWidgetDefaults();
-				const tabItems = tabsWidgetDefaultItems();
-				settings.activeTabId = tabItems[0].id;
-				return { id, type, label:'Tabs', labelSuffix:'', settings, tabItems };
-			}
-			case 'accordion':
-				return {
-					id,
-					type,
-					label: 'Accordion',
-					labelSuffix: '',
-					settings: accordionWidgetDefaults(),
-					accordionItems: accordionWidgetDefaultItems(),
-				};
 			default: return null;
 		}
 	}
@@ -2493,6 +2474,32 @@
 	};
 
 	// ── App ────────────────────────────────────────────────────────────────────
+	window.PageBuilderElementorComplexWidgetRuntime = Object.freeze({
+		image_box: {
+			defaults: imageBoxWidgetDefaults,
+			normalize(node) {
+				const normalized = node && typeof node === 'object' ? node : {};
+				normalized.settings = { ...imageBoxWidgetDefaults(), ...(normalized.settings || {}) };
+				normalizeImageBoxSettings(normalized.settings);
+				return normalized;
+			},
+		},
+		tabs: {
+			defaults: tabsWidgetDefaults,
+			createNode(node) {
+				node.tabItems = tabsWidgetDefaultItems();
+				node.settings.activeTabId = node.tabItems[0].id;
+				return node;
+			},
+			normalize: (node) => node,
+		},
+		accordion: {
+			defaults: accordionWidgetDefaults,
+			createNode(node) { node.accordionItems = accordionWidgetDefaultItems(); return node; },
+			normalize: (node) => node,
+		},
+	});
+
 	const PBC = window.PAGE_BUILDER_ELEMENTOR_CONTEXT || {};
 
 	createApp({
@@ -5379,9 +5386,6 @@
 				basic: [
 				],
 				general: [
-					{ type:'tabs',        label:'Tabs',        icon:'far fa-folder' },
-					{ type:'accordion',   label:'Accordion',   icon:'fas fa-bars' },
-					{ type:'image_box',   label:'Image Box',   icon:'far fa-image' },
 				],
 				advanced: [],
 			};
@@ -5474,6 +5478,69 @@
 				iconWidgetUsesShape,
 				toggleIconLinkOptions,
 				isIconLinkOptionsOpen,
+				get settingsTab() { return settingsTab.value; },
+				set settingsTab(value) { settingsTab.value = value; },
+				get imageBoxImageState() { return imageBoxImageState.value; },
+				set imageBoxImageState(value) { imageBoxImageState.value = value; },
+				fontFamilies,
+				setResponsiveDevice,
+				activeResponsiveKey,
+				showUnsupportedControlNotice,
+				dynamicTagControl: DynamicTagControl,
+				linkControl: LinkControl,
+				cssFilterControl: CssFilterControl,
+				typographyControl: TypographyControl,
+				widgetAdvancedControls: WidgetAdvancedControls,
+				draggable,
+				tabsItemsForNode,
+				tabsActiveItem,
+				selectTabsItem,
+				addTabsItem,
+				duplicateTabsItem,
+				removeTabsItem,
+				tabsItemSummary,
+				tabsSelectedRowDirection,
+				tabsWidthValue,
+				tabsWidthUnit,
+				tabsWidthMax,
+				tabsWidthStep,
+				onTabsWidthInput,
+				setTabsWidthUnit,
+				tabsWidthUnits: TABS_WIDGET_WIDTH_UNITS,
+				tabsBreakpointOptions: TABS_WIDGET_BREAKPOINT_OPTIONS,
+				accordionItemsForNode,
+				accordionRuntimeForNode,
+				accordionEditingItem,
+				selectAccordionItem,
+				resetAccordionRuntimeFromDefaults,
+				addAccordionItem,
+				duplicateAccordionItem,
+				removeAccordionItem,
+				accordionItemSummary,
+				openAccordionIconLibrary,
+				chooseAccordionSvg,
+				get accordionStyleState() { return accordionStyleState.value; },
+				set accordionStyleState(value) { accordionStyleState.value = value; },
+				get accordionTitleStyleState() { return accordionTitleStyleState.value; },
+				set accordionTitleStyleState(value) { accordionTitleStyleState.value = value; },
+				get accordionIconStyleState() { return accordionIconStyleState.value; },
+				set accordionIconStyleState(value) { accordionIconStyleState.value = value; },
+				accordionStyleStates: ACCORDION_STYLE_STATES,
+				accordionGradientTypes: ACCORDION_GRADIENT_TYPES,
+				accordionBorderTypes: ACCORDION_BORDER_TYPES,
+				accordionStateKey,
+				accordionDimensionMax,
+				accordionDimensionStep,
+				accordionDimensionUnit,
+				accordionDimensionValue,
+				onAccordionDimensionInput,
+				setAccordionDimensionUnit,
+				accordionBoxUnit,
+				setAccordionBoxUnit,
+				accordionBoxSideValue,
+				onAccordionBoxSideInput,
+				accordionBoxLinked,
+				toggleAccordionBoxLink,
 			};
 
 			const appTitle = computed(() => mode.value==='edit' ? 'Edit Page Builder' : 'Create Page Builder');
@@ -7363,7 +7430,7 @@
 							</div>
 						</div>
 					</template>
-					<template v-if="selectedType==='image_box'">
+					<template v-if="!hasRegisteredWidget(selectedType) && selectedType==='image_box'">
 						<div class="pb-image-box-settings pb-widget-settings pb-widget-settings--image-box">
 							<div class="pb-tab-nav">
 								<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='content'}" @click="settingsTab='content'"><i class="fas fa-edit"></i><span>Content</span></button>
@@ -7442,7 +7509,7 @@
 							</div>
 						</div>
 					</template>
-					<template v-if="selectedType==='accordion'">
+					<template v-if="!hasRegisteredWidget(selectedType) && selectedType==='accordion'">
 						<div class="pb-accordion-settings pb-widget-settings pb-widget-settings--accordion">
 							<div class="pb-tab-nav">
 								<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:settingsTab==='content'}" @click="settingsTab='content'"><i class="fas fa-edit"></i><span>Content</span></button>
@@ -7650,7 +7717,7 @@
 							</div>
 						</div>
 					</template>
-					<template v-if="selectedType==='tabs'">
+					<template v-if="!hasRegisteredWidget(selectedType) && selectedType==='tabs'">
 						<div class="pb-tabs-settings pb-widget-settings pb-widget-settings--tabs">
 							<details class="pb-collapsible" open>
 								<summary>Tabs</summary>

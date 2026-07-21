@@ -8,26 +8,24 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
 {
     public function test_editor_exposes_general_category_and_tabs_controls(): void
     {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $definition = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/definition.js'));
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Settings.vue'));
 
-        $this->assertIsString($appJs);
-        $this->assertStringContainsString("general: [", $appJs);
-        $this->assertStringContainsString("{ type:'tabs',", $appJs);
-        $this->assertStringContainsString("label:'Tabs'", $appJs);
-        $this->assertStringContainsString("selectedType==='tabs'", $appJs);
-        $this->assertStringContainsString('pb-tabs-settings pb-widget-settings pb-widget-settings--tabs', $appJs);
-        $this->assertStringContainsString('Tabs Items', $appJs);
-        $this->assertStringContainsString('Add Tab', $appJs);
-        $this->assertStringContainsString('Horizontal Scroll', $appJs);
-        $this->assertStringContainsString('Breakpoint', $appJs);
-        $this->assertStringContainsString('pb-tabs-width-control', $appJs);
-        $this->assertStringContainsString('tabsWidthValue(selectedNode)', $appJs);
-        $this->assertStringContainsString('onTabsWidthInput(selectedNode, $event)', $appJs);
+        $this->assertStringContainsString("type: 'tabs'", $definition);
+        $this->assertStringContainsString("label: 'Tabs'", $definition);
+        $this->assertStringContainsString('pb-tabs-settings pb-widget-settings pb-widget-settings--tabs', $settings);
+        $this->assertStringContainsString('Tabs Items', $settings);
+        $this->assertStringContainsString('Add Tab', $settings);
+        $this->assertStringContainsString('Horizontal Scroll', $settings);
+        $this->assertStringContainsString('Breakpoint', $settings);
+        $this->assertStringContainsString('pb-tabs-width-control', $settings);
+        $this->assertStringContainsString('editor.tabsWidthValue(node)', $settings);
+        $this->assertStringContainsString('editor.onTabsWidthInput(node, $event)', $settings);
     }
 
     public function test_tabs_preview_component_exists_and_renders_nested_tab_shell(): void
     {
-        $tabsVuePath = public_path('js/pagebuilder_elementor/widgets/general/Tabs.vue');
+        $tabsVuePath = public_path('js/pagebuilder_elementor/widgets/general/tabs/Canvas.vue');
 
         $this->assertFileExists($tabsVuePath);
 
@@ -44,7 +42,7 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
 
     public function test_tabs_breakpoint_controls_switch_editor_and_frontend_to_vertical_layout(): void
     {
-        $tabsVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/Tabs.vue'));
+        $tabsVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Canvas.vue'));
         $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
         $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
 
@@ -67,7 +65,7 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
     public function test_tabs_canvas_preview_marks_interactive_areas_to_avoid_parent_selection_clicks(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
-        $tabsVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/Tabs.vue'));
+        $tabsVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Canvas.vue'));
         $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
 
         $this->assertIsString($appJs);
