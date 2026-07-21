@@ -55,14 +55,8 @@
 		container_fluid:'/js/pagebuilder_elementor/widgets/layout/ContainerFluid.vue',
 		row_grid:       '/js/pagebuilder_elementor/widgets/layout/RowGrid.vue',
 		grid:           '/js/pagebuilder_elementor/widgets/layout/Grid.vue',
-		text_editor:    '/js/pagebuilder_elementor/widgets/basic/TextEditor.vue',
-		image:          '/js/pagebuilder_elementor/widgets/basic/Image.vue',
 		image_box:      '/js/pagebuilder_elementor/widgets/general/ImageBox.vue',
 		video:          '/js/pagebuilder_elementor/widgets/basic/Video.vue',
-		icon:           '/js/pagebuilder_elementor/widgets/basic/Icon.vue',
-		button:         '/js/pagebuilder_elementor/widgets/basic/Button.vue',
-		divider:        '/js/pagebuilder_elementor/widgets/basic/Divider.vue',
-		spacer:         '/js/pagebuilder_elementor/widgets/basic/Spacer.vue',
 		tabs:           '/js/pagebuilder_elementor/widgets/general/Tabs.vue',
 		accordion:      '/js/pagebuilder_elementor/widgets/advanced/Accordion.vue',
 	};
@@ -87,6 +81,10 @@
 				: { template: '<div class="pb-form-note">Settings module is unavailable for this widget.</div>' };
 		}
 		return _settingsCache[type];
+	}
+
+	function hasRegisteredWidget(type) {
+		return !!widgetRegistry?.get(type);
 	}
 
 	function uid(p)       { return p + '_' + Math.random().toString(36).slice(2, 9); }
@@ -1392,15 +1390,9 @@
 				return { id, type, label:'Grid', labelSuffix:'', settings:s,
 					columns: Array.from({length: cols}, () => ({id:uid('c'), children:[]})) };
 			}
-			case 'text_editor':    return { id, type, label:'Text Editor', labelSuffix:'',    settings:{ html:'<p>Edit this text.</p>', cssClass:'' } };
-			case 'image':          return { id, type, label:'Image', labelSuffix:'',          settings:{ src:'https://placehold.co/640x360', alt:'Image', width:'100%', height:'auto', cssClass:'' } };
 			case 'image_box':
 				return { id, type, label:'Image Box', labelSuffix:'', settings: imageBoxWidgetDefaults() };
 			case 'video':          return { id, type, label:'Video', labelSuffix:'',          settings:videoDefaults() };
-			case 'button':         return { id, type, label:'Button', labelSuffix:'',         settings:{ text:'Click here', url:'#', newTab:false, align:'left', className:'btn btn-primary' } };
-			case 'icon':           return { id, type, label:'Icon', labelSuffix:'',           settings:iconWidgetDefaults() };
-			case 'divider':        return { id, type, label:'Divider', labelSuffix:'',        settings:{ style:'solid', width:'100%', thickness:2, color:'#d0d7e6', cssClass:'' } };
-			case 'spacer':         return { id, type, label:'Spacer', labelSuffix:'',         settings:{ height:'32px', cssClass:'' } };
 			case 'tabs': {
 				const settings = tabsWidgetDefaults();
 				const tabItems = tabsWidgetDefaultItems();
@@ -3126,10 +3118,6 @@
 					if (c.type === 'video') {
 						c.settings = { ...videoDefaults(), ...(c.settings || {}) };
 						normalizeVideoNodeSettings(c.settings);
-					}
-					if (c.type === 'icon') {
-						c.settings = { ...iconWidgetDefaults(), ...(c.settings || {}) };
-						normalizeIconWidgetSettings(c.settings);
 					}
 					if (c.type === 'image_box') {
 						c.settings = { ...imageBoxWidgetDefaults(), ...(c.settings || {}) };
@@ -5474,13 +5462,7 @@
 					{ type:'grid',            label:'Grid',            icon:'fas fa-th-large' },
 				],
 				basic: [
-					{ type:'text_editor', label:'Text Editor', icon:'fas fa-edit' },
-					{ type:'image',       label:'Image',       icon:'far fa-image' },
 					{ type:'video',       label:'Video',       icon:'fas fa-video' },
-					{ type:'button',      label:'Button',      icon:'fas fa-link' },
-					{ type:'icon',        label:'Icon',        icon:'far fa-star' },
-					{ type:'divider',     label:'Divider',     icon:'fas fa-minus' },
-					{ type:'spacer',      label:'Spacer',      icon:'fas fa-arrows-alt-v' },
 				],
 				general: [
 					{ type:'tabs',        label:'Tabs',        icon:'far fa-folder' },
@@ -5529,10 +5511,46 @@
 				}
 			}
 
+			const widgetEditorServices = {
+				ckEditorField: CkEditorField,
+				get responsiveDevice() { return responsiveDevice.value; },
+				responsiveDevices,
+				sizeControlUnits,
+				iconWidgetViewOptions: ICON_WIDGET_VIEW_OPTIONS,
+				iconWidgetShapeOptions: ICON_WIDGET_SHAPE_OPTIONS,
+				openTextEditorModal,
+				chooseMedia,
+				clearMedia,
+				openControlResponsiveMenu,
+				isControlResponsiveMenuOpen,
+				applyResponsiveDevice,
+				responsiveDeviceLabel,
+				responsiveDeviceIcon,
+				deviceOptionLabel,
+				sizeControlDisplayValue,
+				sizeControlUnit,
+				sizeControlMax,
+				sizeControlStep,
+				onSizeControlInput,
+				setSizeControlUnit,
+				spacerHeightValue,
+				spacerHeightUnit,
+				spacerHeightMax,
+				spacerHeightStep,
+				onSpacerHeightInput,
+				setSpacerHeightUnit,
+				openIconLibrary,
+				iconWidgetCurrentLabel,
+				iconWidgetCurrentStyleLabel,
+				iconWidgetUsesShape,
+				toggleIconLinkOptions,
+				isIconLinkOptionsOpen,
+			};
+
 			const appTitle = computed(() => mode.value==='edit' ? 'Edit Page Builder' : 'Create Page Builder');
 
 			return {
-				appTitle, toolbox, rootNodes, loadWidget, loadWidgetSettings,
+				appTitle, toolbox, rootNodes, loadWidget, loadWidgetSettings, hasRegisteredWidget, widgetEditorServices,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
 				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, imageBoxImageState, selectedNode, selectedType,
 				responsiveDevice, responsiveDevices, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
@@ -7163,8 +7181,8 @@
 						</div>
 						</div>
 					</template><!-- /grid tabs -->
-					<component v-if="selectedType==='heading'" :is="loadWidgetSettings(selectedType)" :node="selectedNode" />
-					<template v-if="selectedType==='text_editor'">
+					<component v-if="hasRegisteredWidget(selectedType)" :is="loadWidgetSettings(selectedType)" :node="selectedNode" :editor="widgetEditorServices" />
+					<template v-if="!hasRegisteredWidget(selectedType) && selectedType==='text_editor'">
 						<div class="pb-widget-settings pb-widget-settings--basic pb-widget-settings--text-editor">
 							<div class="pb-widget-settings__group">
 								<div class="pb-form-group">
@@ -7183,7 +7201,7 @@
 							</div>
 						</div>
 					</template>
-					<template v-if="selectedType==='image'">
+					<template v-if="!hasRegisteredWidget(selectedType) && selectedType==='image'">
 						<div class="pb-widget-settings pb-widget-settings--basic pb-widget-settings--image">
 							<div class="pb-widget-settings__group pb-widget-settings__group--media">
 								<div class="pb-form-group">
@@ -7821,7 +7839,7 @@
 							</details>
 						</div>
 					</template>
-					<template v-if="selectedType==='icon'">
+					<template v-if="!hasRegisteredWidget(selectedType) && selectedType==='icon'">
 						<div class="pb-widget-settings pb-widget-settings--basic pb-widget-settings--icon">
 							<div class="pb-widget-settings__group">
 								<div class="pb-widget-settings__section-title">Icon</div>
@@ -7885,7 +7903,7 @@
 							</div>
 						</div>
 					</template>
-					<template v-if="selectedType==='button'">
+					<template v-if="!hasRegisteredWidget(selectedType) && selectedType==='button'">
 						<div class="pb-widget-settings pb-widget-settings--basic pb-widget-settings--button">
 							<div class="pb-widget-settings__group">
 								<div class="pb-form-group"><label class="pb-form-label">Text</label><input class="pb-input" v-model="selectedNode.settings.text"></div>
@@ -7910,7 +7928,7 @@
 							</div>
 						</div>
 					</template>
-					<template v-if="selectedType==='divider'">
+					<template v-if="!hasRegisteredWidget(selectedType) && selectedType==='divider'">
 						<div class="pb-widget-settings pb-widget-settings--basic pb-widget-settings--divider">
 							<div class="pb-widget-settings__group">
 								<div class="pb-form-group"><label class="pb-form-label">Style</label><select class="pb-select" v-model="selectedNode.settings.style"><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="dotted">Dotted</option></select></div>
@@ -7951,7 +7969,7 @@
 							</div>
 						</div>
 					</template>
-					<template v-if="selectedType==='spacer'">
+					<template v-if="!hasRegisteredWidget(selectedType) && selectedType==='spacer'">
 						<div class="pb-widget-settings pb-widget-settings--basic pb-widget-settings--spacer">
 							<div class="pb-widget-settings__group">
 								<div class="pb-form-group">

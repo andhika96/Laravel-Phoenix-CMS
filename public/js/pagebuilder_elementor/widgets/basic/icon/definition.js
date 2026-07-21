@@ -1,0 +1,31 @@
+(function (registry) {
+	'use strict';
+	const defaults = () => ({
+		iconStyle: 'regular', iconName: 'star', iconClass: 'far fa-star', view: 'default', shape: 'circle',
+		link: '', openInNewWindow: false, nofollow: false, attributes: [], cssClass: '',
+	});
+	const stylePrefix = (style) => ({ brands: 'fab', light: 'fal', duotone: 'fad', solid: 'fas' }[style] || 'far');
+	registry.register({
+		type: 'icon', label: 'Icon', category: 'basic', icon: 'far fa-star', toolbox: true,
+		canvas: '/js/pagebuilder_elementor/widgets/basic/icon/Canvas.vue',
+		settings: '/js/pagebuilder_elementor/widgets/basic/icon/Settings.vue',
+		defaults,
+		normalize(node) {
+			const settings = node.settings = { ...defaults(), ...(node.settings || {}) };
+			const tokens = String(settings.iconClass || '').trim().split(/\s+/).filter(Boolean);
+			const parsedStyle = tokens.includes('fas') ? 'solid' : tokens.includes('fab') ? 'brands' : tokens.includes('fal') ? 'light' : tokens.includes('fad') ? 'duotone' : 'regular';
+			const parsedName = (tokens.find((token) => token.startsWith('fa-')) || 'fa-star').slice(3);
+			settings.iconStyle = ['regular', 'solid', 'brands', 'light', 'duotone'].includes(settings.iconStyle) ? settings.iconStyle : parsedStyle;
+			settings.iconName = String(settings.iconName || parsedName || 'star').trim().toLowerCase().replace(/^fa-/, '') || 'star';
+			settings.iconClass = stylePrefix(settings.iconStyle) + ' fa-' + settings.iconName;
+			settings.view = ['default', 'stacked', 'framed'].includes(settings.view) ? settings.view : 'default';
+			settings.shape = ['circle', 'rounded', 'square'].includes(settings.shape) ? settings.shape : 'circle';
+			settings.link = String(settings.link || '').trim();
+			settings.openInNewWindow = !!settings.openInNewWindow;
+			settings.nofollow = !!settings.nofollow;
+			settings.attributes = Array.isArray(settings.attributes) ? settings.attributes : [];
+			settings.cssClass = String(settings.cssClass || '').trim();
+			return node;
+		},
+	});
+})(window.PageBuilderElementorWidgets);
