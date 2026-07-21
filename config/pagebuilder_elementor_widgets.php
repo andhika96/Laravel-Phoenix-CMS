@@ -12,6 +12,17 @@ return [
         'view' => 'pagebuilder_elementor.widgets.basic.heading',
         'toolbox' => true,
     ],
+    'video' => [
+        'type' => 'video',
+        'label' => 'Video',
+        'category' => 'basic',
+        'icon' => 'fas fa-video',
+        'definition' => 'js/pagebuilder_elementor/widgets/basic/video/definition.js',
+        'canvas' => 'js/pagebuilder_elementor/widgets/basic/video/Canvas.vue',
+        'settings' => 'js/pagebuilder_elementor/widgets/basic/video/Settings.vue',
+        'view' => 'pagebuilder_elementor.widgets.basic.video',
+        'toolbox' => true,
+    ],
     'text_editor' => [
         'type' => 'text_editor',
         'label' => 'Text Editor',

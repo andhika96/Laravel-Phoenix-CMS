@@ -56,7 +56,6 @@
 		row_grid:       '/js/pagebuilder_elementor/widgets/layout/RowGrid.vue',
 		grid:           '/js/pagebuilder_elementor/widgets/layout/Grid.vue',
 		image_box:      '/js/pagebuilder_elementor/widgets/general/ImageBox.vue',
-		video:          '/js/pagebuilder_elementor/widgets/basic/Video.vue',
 		tabs:           '/js/pagebuilder_elementor/widgets/general/Tabs.vue',
 		accordion:      '/js/pagebuilder_elementor/widgets/advanced/Accordion.vue',
 	};
@@ -94,11 +93,6 @@
 	function isTabs(t)    { return t === 'tabs'; }
 	function isAccordion(t) { return t === 'accordion'; }
 	function isWgt(t)     { return !isCont(t) && !isGrid(t); }
-	function toEmbed(url) {
-		if (!url || url.includes('embed/')) return url || '';
-		const m = url.match(/youtu\.be\/([^?&]+)/) || url.match(/[?&]v=([^&]+)/);
-		return m ? 'https://www.youtube.com/embed/' + m[1] : url;
-	}
 	function normalizeVideoSourceType(value) {
 		const raw = String(value || '').trim().toLowerCase();
 		if (raw === 'file') return 'self_hosted';
@@ -107,46 +101,6 @@
 	function isHostedVideoSourceType(value) {
 		const source = normalizeVideoSourceType(value);
 		return source === 'self_hosted' || source === 'videopress';
-	}
-	function toPositiveInteger(value) {
-		if (value === '' || value === null || value === undefined) return '';
-		const num = Number(value);
-		if (!Number.isFinite(num) || num < 0) return '';
-		return Math.round(num);
-	}
-	function videoDefaults() {
-		return {
-			sourceType: 'youtube',
-			youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-			youtubeEmbed: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-			vimeoUrl: 'https://vimeo.com/235215203',
-			dailymotionUrl: 'https://www.dailymotion.com/video/x84sh87',
-			fileUrl: '',
-			externalUrl: false,
-			startTime: '',
-			endTime: '',
-			autoplay: false,
-			mute: false,
-			loop: false,
-			playerControls: true,
-			captions: false,
-			privacyMode: false,
-			lazyLoad: false,
-			suggestedVideos: 'current_channel',
-			introTitle: true,
-			introPortrait: true,
-			introByline: true,
-			controlsColor: '',
-			videoInfo: true,
-			logo: true,
-			downloadButton: true,
-			preload: 'metadata',
-			poster: '',
-			imageOverlay: false,
-			overlayImage: '',
-			ratio: '16/9',
-			cssClass: '',
-		};
 	}
 	const FONT_AWESOME_5_ICON_METADATA_URL = '/assets/plugins/fontawesome/5.15.3/metadata/icons.json';
 	const FONT_AWESOME_5_ICON_GROUPS = Object.freeze([
@@ -1392,7 +1346,6 @@
 			}
 			case 'image_box':
 				return { id, type, label:'Image Box', labelSuffix:'', settings: imageBoxWidgetDefaults() };
-			case 'video':          return { id, type, label:'Video', labelSuffix:'',          settings:videoDefaults() };
 			case 'tabs': {
 				const settings = tabsWidgetDefaults();
 				const tabItems = tabsWidgetDefaultItems();
@@ -3115,10 +3068,6 @@
 						while (c.columns.length < tcCont) c.columns.push({ id: uid('c'), children: [] });
 						if (c.columns.length > tcCont) { const last=c.columns[tcCont-1]; c.columns.slice(tcCont).forEach(col=>(col.children||[]).forEach(ch=>last.children.push(ch))); c.columns=c.columns.slice(0,tcCont); }
 					}
-					if (c.type === 'video') {
-						c.settings = { ...videoDefaults(), ...(c.settings || {}) };
-						normalizeVideoNodeSettings(c.settings);
-					}
 					if (c.type === 'image_box') {
 						c.settings = { ...imageBoxWidgetDefaults(), ...(c.settings || {}) };
 						normalizeImageBoxSettings(c.settings);
@@ -4057,46 +4006,12 @@
 			};
 			function normalizeVideoNodeSettings(settings) {
 				if (!settings || typeof settings !== 'object') return;
-				const defaults = videoDefaults();
-				Object.keys(defaults).forEach((key) => {
-					if (!Object.prototype.hasOwnProperty.call(settings, key)) {
-						settings[key] = cloneSettingValue(defaults[key]);
-					}
-				});
-				settings.sourceType = normalizeVideoSourceType(settings.sourceType);
-				settings.youtubeEmbed = toEmbed(settings.youtubeUrl || '');
-				settings.ratio = normalizeVideoAspectRatio(settings.ratio);
-				if (settings.ratioTablet !== '' && settings.ratioTablet !== null && settings.ratioTablet !== undefined) {
-					settings.ratioTablet = normalizeVideoAspectRatio(settings.ratioTablet);
-				}
-				if (settings.ratioMobile !== '' && settings.ratioMobile !== null && settings.ratioMobile !== undefined) {
-					settings.ratioMobile = normalizeVideoAspectRatio(settings.ratioMobile);
-				}
-				settings.externalUrl = !!settings.externalUrl;
-				settings.startTime = toPositiveInteger(settings.startTime);
-				settings.endTime = toPositiveInteger(settings.endTime);
-				settings.autoplay = !!settings.autoplay;
-				settings.mute = !!settings.mute;
-				settings.loop = !!settings.loop;
-				settings.playerControls = settings.playerControls !== false;
-				settings.captions = !!settings.captions;
-				settings.privacyMode = !!settings.privacyMode;
-				settings.lazyLoad = !!settings.lazyLoad;
-				settings.suggestedVideos = settings.suggestedVideos === 'any_video' ? 'any_video' : 'current_channel';
-				settings.introTitle = settings.introTitle !== false;
-				settings.introPortrait = settings.introPortrait !== false;
-				settings.introByline = settings.introByline !== false;
-				settings.controlsColor = String(settings.controlsColor || '').trim();
-				settings.videoInfo = settings.videoInfo !== false;
-				settings.logo = settings.logo !== false;
-				settings.downloadButton = settings.downloadButton !== false;
-				settings.preload = ['metadata', 'auto', 'none'].includes(String(settings.preload || '').toLowerCase())
-					? String(settings.preload).toLowerCase()
-					: 'metadata';
-				settings.poster = String(settings.poster || '').trim();
-				settings.imageOverlay = !!settings.imageOverlay;
-				settings.overlayImage = String(settings.overlayImage || '').trim();
-				settings.cssClass = String(settings.cssClass || '').trim();
+				const definition = widgetRegistry?.get('video');
+				if (typeof definition?.normalize !== 'function') return;
+				const normalized = definition.normalize({ type: 'video', settings });
+				const nextSettings = normalized?.settings || {};
+				Object.keys(settings).forEach((key) => delete settings[key]);
+				Object.assign(settings, nextSettings);
 			}
 			function videoCurrentSource(node) {
 				return normalizeVideoSourceType(node?.settings?.sourceType);
@@ -5462,7 +5377,6 @@
 					{ type:'grid',            label:'Grid',            icon:'fas fa-th-large' },
 				],
 				basic: [
-					{ type:'video',       label:'Video',       icon:'fas fa-video' },
 				],
 				general: [
 					{ type:'tabs',        label:'Tabs',        icon:'far fa-folder' },
@@ -5521,6 +5435,21 @@
 				openTextEditorModal,
 				chooseMedia,
 				clearMedia,
+				videoSourceOptions,
+				videoAspectRatioOptions,
+				videoCurrentSource,
+				setVideoSourceType,
+				videoLinkField,
+				videoUsesHostedPicker,
+				videoShowsEndTime,
+				videoShowsPoster,
+				videoShowsOverlay,
+				videoUsesControlsColor,
+				videoToggleOptions,
+				videoSelectOptions,
+				videoToggleStateLabel,
+				videoAspectRatioValue,
+				setVideoAspectRatioValue,
 				openControlResponsiveMenu,
 				isControlResponsiveMenuOpen,
 				applyResponsiveDevice,
@@ -7278,7 +7207,7 @@
 							</div>
 						</div>
 					</template>
-					<template v-if="selectedType==='video'">
+					<template v-if="!hasRegisteredWidget(selectedType) && selectedType==='video'">
 						<div class="pb-video-settings">
 							<div class="pb-video-settings__group pb-video-settings__group--basic">
 								<div class="pb-form-group">
