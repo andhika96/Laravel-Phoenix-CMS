@@ -21,6 +21,9 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringContainsString('pb-tabs-width-control', $settings);
         $this->assertStringContainsString('editor.tabsWidthValue(node)', $settings);
         $this->assertStringContainsString('editor.onTabsWidthInput(node, $event)', $settings);
+        $this->assertStringContainsString('activeItem()', $settings);
+        $this->assertStringContainsString('v-model="activeItem.title"', $settings);
+        $this->assertStringNotContainsString('v-model="editor.tabsActiveItem(node).', $settings);
     }
 
     public function test_tabs_preview_component_exists_and_renders_nested_tab_shell(): void

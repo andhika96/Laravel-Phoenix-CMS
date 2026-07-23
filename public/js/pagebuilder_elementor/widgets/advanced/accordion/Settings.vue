@@ -31,9 +31,9 @@
 											<button type="button" class="pb-btn pb-accordion-add-btn" @click="editor.addAccordionItem(node)"><i class="fas fa-plus"></i><span>Add Item</span></button>
 										</div>
 
-										<div v-if="editor.accordionEditingItem(node)" class="pb-accordion-item-fields">
-											<div class="pb-form-group"><label class="pb-form-label">Title</label><input class="pb-input" v-model="editor.accordionEditingItem(node).title" placeholder="Item title"></div>
-											<div class="pb-form-group"><label class="pb-form-label">CSS ID</label><input class="pb-input" v-model="editor.accordionEditingItem(node).cssId" placeholder="item-one"></div>
+										<div v-if="editingItem" class="pb-accordion-item-fields">
+											<div class="pb-form-group"><label class="pb-form-label">Title</label><input class="pb-input" v-model="editingItem.title" placeholder="Item title"></div>
+											<div class="pb-form-group"><label class="pb-form-label">CSS ID</label><input class="pb-input" v-model="editingItem.cssId" placeholder="item-one"></div>
 										</div>
 
 										<div class="pb-form-group">
@@ -208,5 +208,16 @@
 </template>
 
 <script>
-export default { name: 'AccordionWidgetSettings', props: { node: { type: Object, required: true }, editor: { type: Object, required: true } } };
+export default {
+    name: 'AccordionWidgetSettings',
+    props: {
+        node: { type: Object, required: true },
+        editor: { type: Object, required: true },
+    },
+    computed: {
+        editingItem() {
+            return this.editor.accordionEditingItem(this.node);
+        },
+    },
+};
 </script>

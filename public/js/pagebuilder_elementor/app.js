@@ -27,7 +27,11 @@
 			const s = Object.assign(document.createElement('style'), { textContent: css });
 			document.head.insertBefore(s, document.head.querySelector('style'));
 		},
-		log(type, msg) { console[type](msg); },
+		log(type, msg, detail) {
+			const writer = typeof console[type] === 'function' ? console[type] : console.log;
+			if (detail === undefined) writer.call(console, msg);
+			else writer.call(console, msg, detail);
+		},
 	};
 	const _sfcModulePromises = {};
 	const _sfcResolvedModules = {};
@@ -94,6 +98,21 @@
 				console.warn('[PB] Settings preload failed:', modulePaths[index], result.reason);
 			}
 		});
+	}
+
+	function scheduleWidgetSettingsPreload() {
+		const run = () => {
+			preloadWidgetSettingsModules().catch(error => {
+				console.warn('[PB] Settings preload initialization failed:', error);
+			});
+		};
+
+		if ('requestIdleCallback' in window) {
+			window.requestIdleCallback(run, { timeout: 1500 });
+			return;
+		}
+
+		window.setTimeout(run, 0);
 	}
 
 	function hasRegisteredWidget(type) {
@@ -2116,11 +2135,6 @@
 
 	const PBC = window.PAGE_BUILDER_ELEMENTOR_CONTEXT || {};
 
-	try {
-		await preloadWidgetSettingsModules();
-	} catch (error) {
-		console.warn('[PB] Settings preload initialization failed:', error);
-	}
 
 	createApp({
 		components: { draggable, BuilderNode, CkEditorField, WidgetAdvancedControls, TypographyControl, LinkControl, DynamicTagControl, CssFilterControl },
@@ -5766,4 +5780,5 @@
 </div>
 		`,
 	}).mount('#pbElementorApp');
+	scheduleWidgetSettingsPreload();
 })();

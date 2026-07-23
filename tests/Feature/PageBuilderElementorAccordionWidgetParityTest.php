@@ -81,6 +81,17 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertSourceContains('Animation Duration', $appJs);
     }
 
+    public function test_accordion_settings_bind_editable_fields_through_a_valid_computed_member(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Settings.vue'));
+
+        $this->assertIsString($settings);
+        $this->assertSourceContains('editingItem()', $settings);
+        $this->assertSourceContains('v-model="editingItem.title"', $settings);
+        $this->assertSourceContains('v-model="editingItem.cssId"', $settings);
+        $this->assertFalse(str_contains($settings, 'v-model="editor.accordionEditingItem(node).'));
+    }
+
     public function test_accordion_preview_component_renders_accessible_animated_headers(): void
     {
         $componentPath = public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Canvas.vue');

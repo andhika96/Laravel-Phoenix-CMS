@@ -121,7 +121,81 @@
 							</div>
 							<div class="pb-prop-section pb-grid-settings__group">
 								<div class="pb-prop-section-title">Border</div>
-								<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="node.settings.borderType"><option value="none">None<…2630 tokens truncated…									</div>
+								<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="node.settings.borderType"><option value="none">None</option><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="dotted">Dotted</option><option value="double">Double</option></select></div>
+								<template v-if="node.settings.borderType!=='none'">
+									<div class="pb-form-group"><label class="pb-form-label">Border Width</label><input class="pb-input" v-model="node.settings.borderWidth" placeholder="1px"></div>
+									<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings.borderColor"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.borderColor"></div></div>
+								</template>
+								<div class="pb-form-group">
+									<div class="pb-label-row"><label class="pb-form-label">Border Radius</label><button class="pb-link-btn" @click="node.settings.borderRadiusLinked=!node.settings.borderRadiusLinked" :title="node.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="node.settings.borderRadiusLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
+									<div class="pb-four-sides">
+										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.borderRadiusTL" @input="node.settings.borderRadiusLinked&&(node.settings.borderRadiusTR=node.settings.borderRadiusBR=node.settings.borderRadiusBL=node.settings.borderRadiusTL)" placeholder="0"><span>TL</span></div>
+										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.borderRadiusTR" @input="node.settings.borderRadiusLinked&&(node.settings.borderRadiusTL=node.settings.borderRadiusBR=node.settings.borderRadiusBL=node.settings.borderRadiusTR)" placeholder="0"><span>TR</span></div>
+										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.borderRadiusBR" @input="node.settings.borderRadiusLinked&&(node.settings.borderRadiusTL=node.settings.borderRadiusTR=node.settings.borderRadiusBL=node.settings.borderRadiusBR)" placeholder="0"><span>BR</span></div>
+										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.borderRadiusBL" @input="node.settings.borderRadiusLinked&&(node.settings.borderRadiusTL=node.settings.borderRadiusTR=node.settings.borderRadiusBR=node.settings.borderRadiusBL)" placeholder="0"><span>BL</span></div>
+									</div>
+								</div>
+							</div>
+							<div class="pb-prop-section pb-grid-settings__group">
+								<div class="pb-label-row"><div class="pb-prop-section-title mb-0">Box Shadow</div><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'gridShadowEnable-' + node.id" v-model="node.settings.shadowEnabled"><label :for="'gridShadowEnable-' + node.id"></label></div></div>
+								<template v-if="node.settings.shadowEnabled">
+									<div class="pb-four-sides mt-2">
+										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.shadowH" placeholder="0"><span>H</span></div>
+										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.shadowV" placeholder="0"><span>V</span></div>
+										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.shadowBlur" placeholder="0"><span>Blur</span></div>
+										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.shadowSpread" placeholder="0"><span>Spread</span></div>
+									</div>
+									<div class="pb-form-group mt-2"><label class="pb-form-label">Shadow Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings.shadowColor"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.shadowColor"></div></div>
+									<div class="pb-form-group"><label class="pb-form-label">Shadow Opacity <span class="pb-form-hint">{{ Math.round((node.settings.shadowOpacity ?? 0.3)*100) }}%</span></label><input type="range" class="pb-range" min="0" max="1" step="0.01" v-model.number="node.settings.shadowOpacity"></div>
+								</template>
+							</div>
+						</div>
+						<!-- TAB ADVANCED (GRID) -->
+						<div v-show="editor.settingsTab==='advanced'" class="pb-tab-content pb-grid-settings__tab">
+							<div class="pb-prop-section pb-grid-settings__group">
+								<div class="pb-prop-section-title">Motion Effects</div>
+								<div class="pb-form-group">
+									<div class="pb-inline-action-row" role="button" tabindex="0" title="Animate With AI" @click="editor.showUnsupportedControlNotice('Animate With AI', 'Animate With AI belum tersedia di builder ini. Kontrolnya disamakan dengan demo tanpa toggle dan tanpa efek canvas.')" @keydown.enter.prevent="editor.showUnsupportedControlNotice('Animate With AI', 'Animate With AI belum tersedia di builder ini. Kontrolnya disamakan dengan demo tanpa toggle dan tanpa efek canvas.')" @keydown.space.prevent="editor.showUnsupportedControlNotice('Animate With AI', 'Animate With AI belum tersedia di builder ini. Kontrolnya disamakan dengan demo tanpa toggle dan tanpa efek canvas.')">
+										<label class="pb-form-label mb-0">Animate With AI</label>
+									</div>
+								</div>
+								<div class="pb-form-group">
+									<div class="pb-label-row"><label class="pb-form-label mb-0">Scrolling Effects</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'gridScrollEffects-' + node.id" v-model="node.settings.scrollingEffects"><label :for="'gridScrollEffects-' + node.id"></label></div></div>
+								</div>
+								<template v-if="node.settings.scrollingEffects">
+									<div class="pb-form-group">
+										<label class="pb-form-label">Scroll Effect Type</label>
+										<select class="pb-select" v-model="node.settings.scrollEffectType">
+											<option value="vertical">Vertical</option>
+											<option value="horizontal">Horizontal</option>
+											<option value="transparency">Transparency</option>
+											<option value="blur">Blur</option>
+											<option value="rotate">Rotate</option>
+											<option value="scale">Scale</option>
+										</select>
+									</div>
+									<div class="pb-gap-row">
+										<div class="pb-gap-field">
+											<label class="pb-form-label">Direction</label>
+											<select class="pb-select" v-model="node.settings.scrollDirection">
+												<option value="up">Up</option>
+												<option value="down">Down</option>
+												<option value="left">Left</option>
+												<option value="right">Right</option>
+												<option value="in">In</option>
+												<option value="out">Out</option>
+											</select>
+										</div>
+										<div class="pb-gap-field">
+											<label class="pb-form-label">Speed</label>
+											<input class="pb-input" type="number" min="0" max="10" step="0.1" v-model.number="node.settings.scrollSpeed">
+										</div>
+									</div>
+									<div class="pb-gap-row">
+										<div class="pb-gap-field">
+											<label class="pb-form-label">Viewport Start</label>
+											<input class="pb-input" type="number" min="0" max="100" step="1" v-model.number="node.settings.scrollViewportStart">
+										</div>
 										<div class="pb-gap-field">
 											<label class="pb-form-label">Viewport End</label>
 											<input class="pb-input" type="number" min="0" max="100" step="1" v-model.number="node.settings.scrollViewportEnd">

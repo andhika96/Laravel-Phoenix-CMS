@@ -66,7 +66,7 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
         $this->assertStringNotContainsString("case 'heading':", $app);
     }
 
-    public function test_editor_preloads_registered_settings_and_shared_controls_before_mount(): void
+    public function test_editor_mounts_before_preloading_registered_settings_and_preserves_loader_diagnostics(): void
     {
         $app = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
 
@@ -81,9 +81,11 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
             'Promise.allSettled(modulePaths.map(loadSfcModule))',
             '_sfcResolvedModules[path] || _settingsCache[type]',
             "console.warn('[PB] Settings preload failed:', modulePaths[index], result.reason);",
-            'preloadWidgetSettingsModules()',
+            'log(type, msg, detail)',
+            'function scheduleWidgetSettingsPreload()',
+            'window.requestIdleCallback(run',
+            'scheduleWidgetSettingsPreload();',
             '(async function () {',
-            'await preloadWidgetSettingsModules();',
         ] as $marker) {
             $this->assertStringContainsString($marker, $app);
         }
@@ -92,11 +94,12 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
             $this->assertStringContainsString($sharedControl, $app);
         }
 
-        $preloadPosition = strrpos($app, 'preloadWidgetSettingsModules()');
-        $mountPosition = strpos($app, 'createApp({');
-        $this->assertNotFalse($preloadPosition);
+        $mountPosition = strrpos($app, "}).mount('#pbElementorApp');");
+        $preloadPosition = strrpos($app, 'scheduleWidgetSettingsPreload();');
         $this->assertNotFalse($mountPosition);
-        $this->assertLessThan($mountPosition, $preloadPosition);
+        $this->assertNotFalse($preloadPosition);
+        $this->assertLessThan($preloadPosition, $mountPosition);
+        $this->assertStringNotContainsString('await preloadWidgetSettingsModules();', $app);
     }
 
     public function test_heading_frontend_dispatches_through_registered_view(): void

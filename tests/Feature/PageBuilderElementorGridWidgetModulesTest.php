@@ -41,6 +41,11 @@ class PageBuilderElementorGridWidgetModulesTest extends TestCase
         $this->assertStringContainsString("widgets/layout/{$folder}/Settings.vue", $definition);
         $this->assertStringContainsString('<template>', $settings);
         $this->assertStringContainsString('pb-grid-settings', $settings);
+        $this->assertStringContainsString('Box Shadow', $settings);
+        $this->assertStringContainsString('Motion Effects', $settings);
+        $this->assertStringContainsString('scrollViewportStart', $settings);
+        $this->assertStringContainsString('scrollViewportEnd', $settings);
+        $this->assertStringNotContainsString('tokens truncated', $settings);
 
         $this->assertStringNotContainsString("case '{$type}':", $app);
         $this->assertStringNotContainsString("/widgets/layout/" . ($type === 'grid' ? 'Grid' : 'RowGrid') . '.vue', $app);

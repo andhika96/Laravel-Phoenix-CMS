@@ -31,22 +31,22 @@
 										</button>
 									</div>
 
-									<div v-if="editor.tabsActiveItem(node)" class="pb-tabs-item-fields">
+									<div v-if="activeItem" class="pb-tabs-item-fields">
 										<div class="pb-form-group">
 											<label class="pb-form-label">Title</label>
-											<input class="pb-input" v-model="editor.tabsActiveItem(node).title" placeholder="Tab title">
+											<input class="pb-input" v-model="activeItem.title" placeholder="Tab title">
 										</div>
 										<div class="pb-form-group">
 											<label class="pb-form-label">Icon Class</label>
-											<input class="pb-input" v-model="editor.tabsActiveItem(node).iconClass" placeholder="far fa-star">
+											<input class="pb-input" v-model="activeItem.iconClass" placeholder="far fa-star">
 										</div>
 										<div class="pb-form-group">
 											<label class="pb-form-label">Active Icon Class</label>
-											<input class="pb-input" v-model="editor.tabsActiveItem(node).activeIconClass" placeholder="fas fa-star">
+											<input class="pb-input" v-model="activeItem.activeIconClass" placeholder="fas fa-star">
 										</div>
 										<div class="pb-form-group">
 											<label class="pb-form-label">CSS ID</label>
-											<input class="pb-input" v-model="editor.tabsActiveItem(node).cssId" placeholder="tab-one">
+											<input class="pb-input" v-model="activeItem.cssId" placeholder="tab-one">
 										</div>
 									</div>
 
@@ -118,5 +118,16 @@
 </template>
 
 <script>
-export default { name: 'TabsWidgetSettings', props: { node: { type: Object, required: true }, editor: { type: Object, required: true } } };
+export default {
+    name: 'TabsWidgetSettings',
+    props: {
+        node: { type: Object, required: true },
+        editor: { type: Object, required: true },
+    },
+    computed: {
+        activeItem() {
+            return this.editor.tabsActiveItem(this.node);
+        },
+    },
+};
 </script>
