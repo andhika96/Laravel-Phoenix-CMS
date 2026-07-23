@@ -249,7 +249,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $this->assertSourceContains('font-size-mode-key="titleFontSizeMode"', $settings);
         $this->assertSourceContains("this.settings[this.fontSizeModeKey] = 'custom'", $typography);
         $this->assertSourceContains("this.settings[this.fontSizeModeKey] = 'auto'", $typography);
-        $this->assertStringNotContainsString('H1-H6 use automatic heading scale until Typography Size is edited.', $settings);
+        $this->assertSourceContains('H1-H6 use automatic heading scale until Typography Size is edited.', $settings);
 
         $automaticH1 = view('pagebuilder_elementor.partials.render_image_box', [
             'node' => ['id' => 'automatic-h1-image-box-title', 'type' => 'image_box', 'settings' => ['title' => 'Automatic H1 heading', 'titleTag' => 'h1', 'titleFontSize' => '29px', 'titleFontSizeMode' => 'auto']],
@@ -575,14 +575,13 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $this->assertStringContainsString('<h3 class="pb-image-box__title"', $html);
         $this->assertStringContainsString('pb-image-box__empty-media', $html);
     }
-    public function test_style_colors_use_only_the_local_coloris_picker(): void
+    public function test_style_colors_use_canonical_swatch_and_picker_rows(): void
     {
         $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
 
         $this->assertIsString($settings);
-        $this->assertStringNotContainsString('type="color"', $settings);
-        $this->assertStringNotContainsString('class="pb-color-swatch"', $settings);
         foreach (['imageBorderColor', 'titleColor', 'descriptionColor'] as $key) {
+            $this->assertStringContainsString('type="color" class="pb-color-swatch" v-model="node.settings.'.$key.'"', $settings);
             $this->assertStringContainsString('class="pb-input coloris pb-coloris-input" v-model="node.settings.'.$key.'"', $settings);
         }
     }

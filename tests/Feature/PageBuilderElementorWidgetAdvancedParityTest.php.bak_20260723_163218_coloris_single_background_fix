@@ -115,30 +115,6 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertSourceContains('assets/vendor/pb-picker/picker.min.js', $editorShell);
     }
 
-    public function test_all_active_widget_color_fields_use_only_coloris_without_native_color_inputs(): void
-    {
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(
-                public_path('js/pagebuilder_elementor/widgets'),
-                \FilesystemIterator::SKIP_DOTS,
-            ),
-        );
-
-        foreach ($iterator as $file) {
-            if (! $file->isFile() || strtolower($file->getExtension()) !== 'vue') {
-                continue;
-            }
-
-            $source = file_get_contents($file->getPathname());
-            $this->assertIsString($source);
-            $this->assertStringNotContainsString(
-                'type="color"',
-                $source,
-                'Native color input remains in '.$file->getPathname(),
-            );
-        }
-    }
-
     public function test_shared_background_uses_media_position_and_slider_controls_with_canvas_parity(): void
     {
         $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
@@ -159,10 +135,7 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertSourceContains('@clear-media="editor.clearMedia(node.settings,$event)"', $accordionSettings);
         $this->assertSourceContains('const backgroundPosition = (value) => {', $appJs);
         $this->assertSourceContains("s['advancedBackgroundAttachment' + suffix]", $appJs);
-        $this->assertSourceContains("this.node.type === 'image_box'", $appJs);
-        $this->assertStringNotContainsString("this.node.type === 'image-box'", $appJs);
-        $this->assertSourceContains('style.backgroundColor = normalBackground.color;', $appJs);
-        $this->assertSourceContains('style.backgroundImage = normalBackground.image;', $appJs);
+        $this->assertSourceContains('style.background = normalBackground;', $appJs);
     }
 
     public function test_advanced_settings_render_safe_styles_attributes_and_scoped_css(): void
@@ -183,7 +156,6 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
                 'zIndex' => 9,
                 'advancedBackgroundType' => 'classic',
                 'advancedBackgroundColor' => '#112233',
-                'advancedBackgroundImage' => '/images/advanced-background.jpg',
                 'advancedBorderType' => 'solid',
                 'advancedBorderWidth' => '2px',
                 'advancedBorderColor' => '#445566',
@@ -219,7 +191,6 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertStringContainsString('width:640px', $html);
         $this->assertStringContainsString('right:20px', $html);
         $this->assertStringContainsString('background-color:#112233', $html);
-        $this->assertStringContainsString('background-image:url(&quot;/images/advanced-background.jpg&quot;)', $html);
         $this->assertStringContainsString('border-style:solid', $html);
         $this->assertStringContainsString('-webkit-mask-image:', $html);
         $this->assertStringContainsString('data-pb-motion=', $html);
