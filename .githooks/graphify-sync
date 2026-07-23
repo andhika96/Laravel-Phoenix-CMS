@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Portable bridge from Git for Windows hooks to the PowerShell Graphify updater.
+# Git operations must never be blocked when Graphify is unavailable or fails.
+
+[ "${GRAPHIFY_SKIP_HOOK:-0}" = "1" ] && exit 0
+
+EVENT_NAME=${1:-git-hook}
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+UPDATE_SCRIPT="$REPO_ROOT/scripts/graphify/update-from-git.ps1"
+
+if [ ! -f "$UPDATE_SCRIPT" ]; then
+    echo "[graphify sync] updater not found: $UPDATE_SCRIPT" >&2
+    exit 0
+fi
+
+if command -v powershell.exe >/dev/null 2>&1; then
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$UPDATE_SCRIPT" -Event "$EVENT_NAME"
+elif command -v pwsh.exe >/dev/null 2>&1; then
+    pwsh.exe -NoProfile -File "$UPDATE_SCRIPT" -Event "$EVENT_NAME"
+else
+    echo "[graphify sync] PowerShell is unavailable; graph update skipped." >&2
+fi
+
+exit 0

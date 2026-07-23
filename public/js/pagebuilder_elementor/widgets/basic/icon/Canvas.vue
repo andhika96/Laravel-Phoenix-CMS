@@ -60,6 +60,15 @@ export default {
 		linkHref() {
 			return String(this.settings.link || '').trim();
 		},
+		customAttributes() {
+			const attrs = {};
+			const source = Array.isArray(this.settings.attributes) ? this.settings.attributes : [];
+			source.forEach((attribute) => {
+				const name = String(attribute?.name || '').trim();
+				if (this.allowedAttributeName(name)) attrs[name] = String(attribute?.value ?? '');
+			});
+			return attrs;
+		},
 		linkRel() {
 			const rel = [];
 			if (this.settings.openInNewWindow) {
@@ -81,7 +90,13 @@ export default {
 			if (this.linkRel) {
 				attrs.rel = this.linkRel;
 			}
+			Object.assign(attrs, this.customAttributes);
 			return attrs;
+		},
+	},
+	methods: {
+		allowedAttributeName(name) {
+			return /^(data-[A-Za-z0-9_.:-]+|aria-[A-Za-z0-9_.:-]+|title)$/.test(name);
 		},
 	},
 };

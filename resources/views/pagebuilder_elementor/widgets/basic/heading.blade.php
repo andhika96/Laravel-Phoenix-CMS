@@ -1,6 +1,6 @@
 @php
 	$settings = $node['settings'] ?? [];
-	$tag = in_array($settings['tag'] ?? 'h2', ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div'], true)
+	$tag = in_array($settings['tag'] ?? 'h2', ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p'], true)
 		? $settings['tag']
 		: 'h2';
 	$customClass = implode(' ', array_filter(array_map(

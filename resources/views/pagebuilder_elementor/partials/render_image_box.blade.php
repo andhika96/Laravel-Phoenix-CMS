@@ -37,6 +37,11 @@
 
 	$titleTag = strtolower(trim((string) ($imageBoxSettings['titleTag'] ?? 'h3')));
 	if (!in_array($titleTag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p'], true)) $titleTag = 'h3';
+	$titleTagFontSizes = ['h1' => '40px', 'h2' => '34px', 'h3' => '29px', 'h4' => '24px', 'h5' => '20px', 'h6' => '16px', 'div' => '29px', 'span' => '29px', 'p' => '29px'];
+	$storedTitleFontSize = trim((string) ($imageBoxSettings['titleFontSize'] ?? ''));
+	$titleFontSizeMode = in_array($imageBoxSettings['titleFontSizeMode'] ?? null, ['auto', 'custom'], true)
+		? $imageBoxSettings['titleFontSizeMode']
+		: ($storedTitleFontSize !== '' && $storedTitleFontSize !== '29px' ? 'custom' : 'auto');
 	$linkTarget = ($imageBoxSettings['linkTarget'] ?? '') === '_blank' ? '_blank' : '';
 	$relTokens = [];
 	if ($linkTarget === '_blank') $relTokens = ['noopener', 'noreferrer'];
@@ -111,11 +116,14 @@
 		'transition:filter ' . $imageTransition . 's ease,opacity ' . $imageTransition . 's ease',
 	]);
 
-	$typographyStyle = function (string $prefix, string $suffix = '') use ($imageBoxSettings, $responsive, $cssLength, $cssColor, $cssShadow, $cssFontFamily, $enum): string {
+	$typographyStyle = function (string $prefix, string $suffix = '') use ($imageBoxSettings, $responsive, $cssLength, $cssColor, $cssShadow, $cssFontFamily, $enum, $titleTag, $titleTagFontSizes, $titleFontSizeMode): string {
 		$isTitle = $prefix === 'title';
+		$fontSize = $isTitle && $titleFontSizeMode === 'auto'
+			? ($titleTagFontSizes[$titleTag] ?? '29px')
+			: $cssLength($responsive($prefix . 'FontSize', $suffix, $isTitle ? '29px' : '16px'), $isTitle ? '29px' : '16px');
 		$rules = [
 			'font-family:' . $cssFontFamily($imageBoxSettings[$prefix . 'FontFamily'] ?? 'inherit'),
-			'font-size:' . $cssLength($responsive($prefix . 'FontSize', $suffix, $isTitle ? '29px' : '16px'), $isTitle ? '29px' : '16px'),
+			'font-size:' . $fontSize,
 			'font-weight:' . (preg_match('/^(?:normal|bold|[1-9]00)$/', trim((string) ($imageBoxSettings[$prefix . 'FontWeight'] ?? '400'))) ? trim((string) ($imageBoxSettings[$prefix . 'FontWeight'] ?? '400')) : '400'),
 			'line-height:' . $cssLength($responsive($prefix . 'LineHeight', $suffix, $isTitle ? '1.2em' : '1.5em'), $isTitle ? '1.2em' : '1.5em'),
 			'letter-spacing:' . $cssLength($responsive($prefix . 'LetterSpacing', $suffix, '0px'), '0px'),
@@ -127,7 +135,7 @@
 			'text-shadow:' . $cssShadow($imageBoxSettings[$prefix . 'TextShadow'] ?? 'none'),
 		];
 		if ($isTitle) {
-			$rules[] = '-webkit-text-stroke-width:' . $cssLength($imageBoxSettings['titleTextStrokeWidth'] ?? '0px', '0px');
+			$rules[] = '-webkit-text-stroke-width:' . $cssLength($responsive('titleTextStrokeWidth', $suffix, '0px'), '0px');
 			$rules[] = '-webkit-text-stroke-color:' . $cssColor($imageBoxSettings['titleTextStrokeColor'] ?? 'currentColor', 'currentColor');
 		}
 		return implode(';', $rules);

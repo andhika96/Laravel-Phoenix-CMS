@@ -1,5 +1,5 @@
 <template>
-	<div :class="['basic-text-editor', customClass]" v-html="html"></div>
+	<div :class="['el-widget-text-editor', customClass]" v-html="html"></div>
 </template>
 
 <script>
@@ -22,7 +22,7 @@ export default {
 				.join(' ');
 		},
 		html() {
-			return this.item.settings?.html || '<p>Text editor content</p>';
+			return String(this.item.settings?.html ?? '');
 		},
 	},
 };

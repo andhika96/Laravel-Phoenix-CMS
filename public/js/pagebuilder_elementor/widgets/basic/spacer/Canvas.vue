@@ -1,5 +1,5 @@
 <template>
-	<div :class="customClass" :style="spacerStyle"></div>
+	<div :class="['el-widget-spacer', customClass]" :style="spacerStyle"></div>
 </template>
 
 <script>
@@ -37,6 +37,10 @@ export default {
 			const device = String(this.responsiveDevice || 'desktop').toLowerCase();
 			const key = device === 'tablet' ? base + 'Tablet' : (device === 'mobile' ? base + 'Mobile' : base);
 			const value = settings[key];
+			if (device === 'mobile' && (value === '' || value === null || value === undefined)) {
+				const tabletValue = settings[base + 'Tablet'];
+				if (tabletValue !== '' && tabletValue !== null && tabletValue !== undefined) return tabletValue;
+			}
 			if (device !== 'desktop' && (value === '' || value === null || value === undefined)) {
 				const desktopValue = settings[base];
 				return (desktopValue === '' || desktopValue === null || desktopValue === undefined) ? fallback : desktopValue;

@@ -27,6 +27,7 @@ Route::controller(App\Http\Controllers\Web\PageBuilderElementor\PageBuilderEleme
 	Route::post('/pagebuilder-elementor/update/{idOrSlug}', 'update')->name('cms.core.pagebuilder_elementor.update');
 
 	Route::get('/pagebuilder-elementor/data/{idOrSlug}', 'getData')->name('cms.core.pagebuilder_elementor.data');
+	Route::get('/pagebuilder-elementor/image-rendition', 'imageRendition')->name('cms.core.pagebuilder_elementor.image_rendition');
 
 	Route::get('/pagebuilder-elementor/preview/{idOrSlug}', 'preview')->name('cms.core.pagebuilder_elementor.preview');
 });

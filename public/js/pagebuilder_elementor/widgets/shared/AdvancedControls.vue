@@ -94,16 +94,31 @@
 
 		<details class="pb-collapsible"><summary>Background</summary><div class="pb-collapsible-body"><StateTabs v-model="backgroundState" />
 			<label class="pb-advanced-field"><span>Background Type</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundType', backgroundState)]"><option value="none">None</option><option value="classic">Classic</option><option value="gradient">Gradient</option></select></label>
-			<template v-if="settings[stateKey('advancedBackgroundType', backgroundState)]==='classic'"><label class="pb-advanced-field"><span>Color</span><input class="pb-input" v-model="settings[stateKey('advancedBackgroundColor', backgroundState)]"></label><label class="pb-advanced-field"><span>Image</span><input class="pb-input" v-model="settings[stateKey('advancedBackgroundImage', backgroundState)]" placeholder="https://..."></label><div class="pb-advanced-two-fields"><label><span>Position</span><input class="pb-input" v-model="settings[stateKey('advancedBackgroundPosition', backgroundState)]"></label><label><span>Attachment</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundAttachment', backgroundState)]"><option value="scroll">Scroll</option><option value="fixed">Fixed</option></select></label><label><span>Repeat</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundRepeat', backgroundState)]"><option value="no-repeat">No Repeat</option><option value="repeat">Repeat</option><option value="repeat-x">Repeat X</option><option value="repeat-y">Repeat Y</option></select></label><label><span>Size</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundSize', backgroundState)]"><option value="auto">Auto</option><option value="cover">Cover</option><option value="contain">Contain</option></select></label></div></template>
-			<template v-if="settings[stateKey('advancedBackgroundType', backgroundState)]==='gradient'"><div class="pb-advanced-two-fields"><label><span>First Color</span><input class="pb-input" v-model="settings[stateKey('advancedGradientColorOne', backgroundState)]"></label><label><span>First Location</span><input class="pb-input" type="number" min="0" max="100" v-model.number="settings[stateKey('advancedGradientLocationOne', backgroundState)]"></label><label><span>Second Color</span><input class="pb-input" v-model="settings[stateKey('advancedGradientColorTwo', backgroundState)]"></label><label><span>Second Location</span><input class="pb-input" type="number" min="0" max="100" v-model.number="settings[stateKey('advancedGradientLocationTwo', backgroundState)]"></label></div><label class="pb-advanced-field"><span>Gradient Type</span><select class="pb-select" v-model="settings[stateKey('advancedGradientType', backgroundState)]"><option value="linear">Linear</option><option value="radial">Radial</option></select></label></template>
+			<template v-if="settings[stateKey('advancedBackgroundType', backgroundState)]==='classic'">
+				<label class="pb-advanced-field"><span>Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedBackgroundColor', backgroundState)]"></label>
+				<div class="pb-advanced-field">
+					<span>Image</span>
+					<div class="pb-bg-media-field" :class="{ 'has-image': !!settings[stateKey('advancedBackgroundImage', backgroundState)] }">
+						<div class="pb-bg-media-preview" :style="settings[stateKey('advancedBackgroundImage', backgroundState)] ? { backgroundImage: 'url(' + settings[stateKey('advancedBackgroundImage', backgroundState)] + ')' } : {}">
+							<button type="button" class="pb-bg-media-center-btn" :title="settings[stateKey('advancedBackgroundImage', backgroundState)] ? 'Change Image' : 'Choose Image'" @click="$emit('choose-media', stateKey('advancedBackgroundImage', backgroundState))"><i :class="settings[stateKey('advancedBackgroundImage', backgroundState)] ? 'fas fa-pen' : 'fas fa-plus'"></i></button>
+						</div>
+						<div class="pb-bg-media-actions"><button type="button" class="pb-bg-media-choose" @click="$emit('choose-media', stateKey('advancedBackgroundImage', backgroundState))">Choose Image</button><button type="button" class="pb-bg-media-remove" :disabled="!settings[stateKey('advancedBackgroundImage', backgroundState)]" title="Remove Image" @click="$emit('clear-media', stateKey('advancedBackgroundImage', backgroundState))"><i class="fas fa-trash-alt"></i></button></div>
+					</div>
+				</div>
+				<div class="pb-advanced-two-fields"><label><span>Position</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundPosition', backgroundState)]"><option v-for="position in backgroundPositions" :key="position.value" :value="position.value">{{ position.label }}</option></select></label><label><span>Attachment</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundAttachment', backgroundState)]"><option value="scroll">Scroll</option><option value="fixed">Fixed</option></select></label><label><span>Repeat</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundRepeat', backgroundState)]"><option value="no-repeat">No Repeat</option><option value="repeat">Repeat</option><option value="repeat-x">Repeat X</option><option value="repeat-y">Repeat Y</option></select></label><label><span>Size</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundSize', backgroundState)]"><option value="auto">Auto</option><option value="cover">Cover</option><option value="contain">Contain</option></select></label></div>
+			</template>
+			<template v-if="settings[stateKey('advancedBackgroundType', backgroundState)]==='gradient'">
+				<div class="pb-advanced-two-fields"><label><span>First Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedGradientColorOne', backgroundState)]"></label><ScalarControl label="First Location" :settings="settings" :setting-key="stateKey('advancedGradientLocationOne', backgroundState)" :fallback="0" :min-value="0" :max-value="100" :step-value="1" /><label><span>Second Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedGradientColorTwo', backgroundState)]"></label><ScalarControl label="Second Location" :settings="settings" :setting-key="stateKey('advancedGradientLocationTwo', backgroundState)" :fallback="100" :min-value="0" :max-value="100" :step-value="1" /></div>
+				<label class="pb-advanced-field"><span>Gradient Type</span><select class="pb-select" v-model="settings[stateKey('advancedGradientType', backgroundState)]"><option value="linear">Linear</option><option value="radial">Radial</option></select></label>
+			</template>
 			<label v-if="backgroundState==='hover'" class="pb-advanced-field"><span>Hover Transition Duration</span><input class="pb-input" type="number" min="0" step=".1" v-model.number="settings.advancedBackgroundHoverDuration"></label>
 		</div></details>
 
 		<details class="pb-collapsible"><summary>Border</summary><div class="pb-collapsible-body"><StateTabs v-model="borderState" />
 			<label class="pb-advanced-field"><span>Border Type</span><select class="pb-select" v-model="settings[stateKey('advancedBorderType', borderState)]"><option v-for="type in borderTypes" :key="type" :value="type">{{ type }}</option></select></label>
-			<div v-if="settings[stateKey('advancedBorderType', borderState)]!=='none'" class="pb-advanced-two-fields"><DimensionControl label="Border Width" :settings="settings" :setting-key="stateKey('advancedBorderWidth', borderState)" fallback="1px" /><label><span>Border Color</span><input class="pb-input" v-model="settings[stateKey('advancedBorderColor', borderState)]"></label></div>
+			<div v-if="settings[stateKey('advancedBorderType', borderState)]!=='none'" class="pb-advanced-two-fields"><DimensionControl label="Border Width" :settings="settings" :setting-key="stateKey('advancedBorderWidth', borderState)" fallback="1px" /><label><span>Border Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedBorderColor', borderState)]"></label></div>
 			<BoxControl label="Border Radius" :settings="settings" :setting-key="responsiveStateKey('advancedBorderRadius', borderState)" fallback="0px" :responsive-icon="deviceIcon" />
-			<label class="pb-advanced-toggle"><span>Box Shadow</span><input type="checkbox" v-model="settings[stateKey('advancedBoxShadowEnabled', borderState)]"></label><div v-if="settings[stateKey('advancedBoxShadowEnabled', borderState)]" class="pb-advanced-two-fields"><label><span>Color</span><input class="pb-input" v-model="settings[stateKey('advancedBoxShadowColor', borderState)]"></label><DimensionControl label="Horizontal" :settings="settings" :setting-key="stateKey('advancedBoxShadowX', borderState)" fallback="0px" allow-negative /><DimensionControl label="Vertical" :settings="settings" :setting-key="stateKey('advancedBoxShadowY', borderState)" fallback="4px" allow-negative /><DimensionControl label="Blur" :settings="settings" :setting-key="stateKey('advancedBoxShadowBlur', borderState)" fallback="16px" /><DimensionControl label="Spread" :settings="settings" :setting-key="stateKey('advancedBoxShadowSpread', borderState)" fallback="0px" allow-negative /><label class="pb-advanced-toggle"><span>Outline / Inset</span><input type="checkbox" v-model="settings[stateKey('advancedBoxShadowInset', borderState)]"></label></div>
+			<label class="pb-advanced-toggle"><span>Box Shadow</span><input type="checkbox" v-model="settings[stateKey('advancedBoxShadowEnabled', borderState)]"></label><div v-if="settings[stateKey('advancedBoxShadowEnabled', borderState)]" class="pb-advanced-two-fields"><label><span>Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedBoxShadowColor', borderState)]"></label><DimensionControl label="Horizontal" :settings="settings" :setting-key="stateKey('advancedBoxShadowX', borderState)" fallback="0px" allow-negative /><DimensionControl label="Vertical" :settings="settings" :setting-key="stateKey('advancedBoxShadowY', borderState)" fallback="4px" allow-negative /><DimensionControl label="Blur" :settings="settings" :setting-key="stateKey('advancedBoxShadowBlur', borderState)" fallback="16px" /><DimensionControl label="Spread" :settings="settings" :setting-key="stateKey('advancedBoxShadowSpread', borderState)" fallback="0px" allow-negative /><label class="pb-advanced-toggle"><span>Outline / Inset</span><input type="checkbox" v-model="settings[stateKey('advancedBoxShadowInset', borderState)]"></label></div>
 			<label v-if="borderState==='hover'" class="pb-advanced-field"><span>Hover Transition Duration</span><input class="pb-input" type="number" min="0" step=".1" v-model.number="settings.advancedBorderHoverDuration"></label>
 		</div></details>
 
@@ -124,10 +139,11 @@ const StateTabs = {
 	template: `<div class="pb-state-tabs pb-state-tabs--two"><button type="button" :class="{active:modelValue==='normal'}" @click="$emit('update:modelValue','normal')">Normal</button><button type="button" :class="{active:modelValue==='hover'}" @click="$emit('update:modelValue','hover')">Hover</button></div>`,
 };
 
-const DEFAULT_DIMENSION_UNITS = ['px', '%', 'em', 'rem'];
+const DEFAULT_DIMENSION_UNITS = ['px', 'pt', 'em', 'rem', '%'];
+const SPACING_DIMENSION_UNITS = ['px', '%', 'em', 'rem', 'vw'];
 function parseDimension(value, fallback = '0px', units = DEFAULT_DIMENSION_UNITS) {
 	const raw = String(value ?? '').trim() || String(fallback || '0px');
-	const match = raw.match(/^(-?\d+(?:\.\d+)?)(px|%|em|rem|pt|deg)?$/i);
+	const match = raw.match(/^(-?\d+(?:\.\d+)?)(px|%|em|rem|pt|vw|deg)?$/i);
 	const fallbackMatch = String(fallback || '0px').match(/^(-?\d+(?:\.\d+)?)([a-z%]+)?$/i);
 	const unit = match?.[2] || fallbackMatch?.[2] || units[0] || 'px';
 	return {
@@ -136,7 +152,7 @@ function parseDimension(value, fallback = '0px', units = DEFAULT_DIMENSION_UNITS
 	};
 }
 function dimensionLimit(unit) {
-	if (unit === '%' || unit === 'deg') return unit === 'deg' ? 360 : 100;
+	if (unit === '%' || unit === 'vw' || unit === 'deg') return unit === 'deg' ? 360 : 100;
 	if (unit === 'em' || unit === 'rem') return 30;
 	if (unit === 'pt') return 720;
 	return 1600;
@@ -247,7 +263,7 @@ const EdgeControl = {
 		fallback: { type: String, default: '0px' }, allowNegative: { type: Boolean, default: false },
 		responsiveIcon: { type: String, default: '' },
 	},
-	data() { return { linked: true, sides: ['Top', 'Right', 'Bottom', 'Left'], units: DEFAULT_DIMENSION_UNITS }; },
+	data() { return { linked: true, sides: ['Top', 'Right', 'Bottom', 'Left'], units: SPACING_DIMENSION_UNITS }; },
 	computed: { unit() { return parseDimension(inheritedResponsiveValue(this.settings, this.keys[0], this.fallback), this.fallback, this.units).unit; } },
 	methods: {
 		value(index) { return parseDimension(inheritedResponsiveValue(this.settings, this.keys[index], this.fallback), this.fallback, this.units).value; },
@@ -318,7 +334,7 @@ export default {
 		node: { type: Object, required: true },
 		responsiveDevice: { type: String, default: 'desktop' },
 	},
-	emits: ['unavailable-ai', 'responsive-device'],
+	emits: ['unavailable-ai', 'responsive-device', 'choose-media', 'clear-media'],
 	provide() {
 		return { selectResponsiveDevice: (device) => this.$emit('responsive-device', device) };
 	},
@@ -332,6 +348,7 @@ export default {
 			entranceAnimations: ['fadeIn','fadeInUp','fadeInDown','fadeInLeft','fadeInRight','zoomIn','bounceIn','slideInUp','slideInDown','slideInLeft','slideInRight','rotateIn','lightSpeedIn','rollIn'],
 			maskShapes: ['circle', 'flower', 'sketch', 'triangle', 'blob', 'hexagon', 'custom'],
 			maskPositions: ['left top','center top','right top','left center','center center','right center','left bottom','center bottom','right bottom','custom'],
+			backgroundPositions: [{value:'center center',label:'Center'},{value:'top center',label:'Top'},{value:'bottom center',label:'Bottom'},{value:'center left',label:'Left'},{value:'center right',label:'Right'},{value:'top left',label:'Top Left'},{value:'top right',label:'Top Right'},{value:'bottom left',label:'Bottom Left'},{value:'bottom right',label:'Bottom Right'}],
 			maskRepeats: ['no-repeat','repeat','repeat-x','repeat-y','round','space'],
 		};
 	},

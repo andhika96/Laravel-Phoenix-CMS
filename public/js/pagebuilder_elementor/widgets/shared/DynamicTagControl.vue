@@ -1,6 +1,6 @@
 <template>
 	<div class="pb-dynamic-tag-control">
-		<button type="button" class="pb-dynamic-tag-trigger" :class="{ active: open || modelValue }" aria-label="Dynamic tags" :aria-expanded="open ? 'true' : 'false'" @click="open = !open">
+		<button type="button" class="pb-dynamic-tag-trigger" :class="{ active: open || modelValue }" aria-label="Dynamic tags" :title="selectedOption ? `Dynamic tag: ${selectedOption.label}` : 'Choose dynamic tag'" :aria-expanded="open ? 'true' : 'false'" @click="open = !open">
 			<i class="fas fa-database"></i>
 		</button>
 		<div v-if="open" class="pb-dynamic-tag-popover">
@@ -28,12 +28,22 @@ const DYNAMIC_TAG_OPTIONS = [
 
 export default {
 	name: 'DynamicTagControl',
-	props: { modelValue: { type: String, default: '' } },
+	props: {
+		modelValue: { type: String, default: '' },
+		allowedValues: { type: Array, default: () => [] },
+	},
 	emits: ['update:modelValue'],
-	data() { return { open: false, options: DYNAMIC_TAG_OPTIONS }; },
+	data() { return { open: false }; },
+	computed: {
+		options() {
+			if (!this.allowedValues.length) return DYNAMIC_TAG_OPTIONS;
+			return DYNAMIC_TAG_OPTIONS.filter((option) => this.allowedValues.includes(option.value));
+		},
+		selectedOption() { return this.options.find((option) => option.value === this.modelValue) || null; },
+	},
 	methods: {
 		selectTag(value) {
-			this.$emit('update:modelValue', DYNAMIC_TAG_OPTIONS.some((option) => option.value === value) ? value : '');
+			this.$emit('update:modelValue', this.options.some((option) => option.value === value) ? value : '');
 			this.open = false;
 		},
 	},

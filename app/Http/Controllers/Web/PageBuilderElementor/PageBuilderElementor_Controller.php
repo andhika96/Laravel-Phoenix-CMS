@@ -6,11 +6,32 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Page_Builder_Elementor\AddPageBuilderElementorRequest;
 use App\Http\Requests\Page_Builder_Elementor\EditPageBuilderElementorRequest;
 use App\Models\Page_Builder\Page_Builder;
+use App\Support\PageBuilderElementor\ImageRenditionResolver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PageBuilderElementor_Controller extends Controller
 {
+	public function imageRendition(Request $request, ImageRenditionResolver $resolver)
+	{
+		$validated = $request->validate([
+			'url' => ['required', 'string', 'max:2048'],
+			'size' => ['required', 'string', 'in:thumbnail,medium,medium_large,large,1536x1536,2048x2048,full'],
+		]);
+
+		$sourceUrl = trim($validated['url']);
+		if (!str_starts_with($sourceUrl, '/') && !preg_match('#^https?://#i', $sourceUrl))
+		{
+			return response()->json(['message' => 'The image URL is invalid.'], 422);
+		}
+
+		return response()->json([
+			'sourceUrl' => $sourceUrl,
+			'size' => $validated['size'],
+			'url' => $resolver->resolve($sourceUrl, $validated['size']),
+		]);
+	}
+
 	public function create(Request $request)
 	{
 		$this->prepareCkfinderSession($request);

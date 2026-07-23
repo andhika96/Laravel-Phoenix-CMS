@@ -26,6 +26,22 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringNotContainsString('v-model="editor.tabsActiveItem(node).', $settings);
     }
 
+    public function test_tabs_settings_use_standard_content_style_and_advanced_panels(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Settings.vue'));
+
+        $this->assertIsString($settings);
+        $this->assertStringContainsString('class="pb-tab-nav"', $settings);
+        foreach (['Content', 'Style', 'Advanced'] as $tab) {
+            $this->assertStringContainsString(">$tab</span>", $settings);
+        }
+        $this->assertStringContainsString("editor.settingsTab === 'content'", $settings);
+        $this->assertStringContainsString("editor.settingsTab === 'style'", $settings);
+        $this->assertStringContainsString("editor.settingsTab === 'advanced'", $settings);
+        $this->assertStringContainsString('<summary>Alignment</summary>', $settings);
+        $this->assertStringContainsString('v-model="node.settings.cssClass"', $settings);
+    }
+
     public function test_tabs_preview_component_exists_and_renders_nested_tab_shell(): void
     {
         $tabsVuePath = public_path('js/pagebuilder_elementor/widgets/general/tabs/Canvas.vue');

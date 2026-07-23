@@ -1,6 +1,6 @@
 <template>
 	<div :style="wrapperStyle">
-		<a :href="href" :target="target" :class="btnClass">{{ text }}</a>
+		<a :href="href" :target="target" :rel="rel" :class="['el-widget-button', buttonClass]">{{ text }}</a>
 	</div>
 </template>
 
@@ -15,17 +15,21 @@ export default {
 	},
 	computed: {
 		text() {
-			return this.item.settings?.text || 'Button';
+			return this.item.settings?.text ?? 'Click here';
 		},
 		href() {
-			return this.item.settings?.url || '#';
+			return this.item.settings?.url ?? '#';
 		},
 		target() {
-			return this.item.settings?.newTab ? '_blank' : '_self';
+			return this.item.settings?.newTab ? '_blank' : null;
 		},
-		btnClass() {
+		rel() {
+			return this.item.settings?.newTab ? 'noopener' : null;
+		},
+		buttonClass() {
 			return this.item.settings?.className || 'btn btn-primary';
 		},
+
 		wrapperStyle() {
 			return {
 				textAlign: this.item.settings?.align || 'left',

@@ -5,6 +5,7 @@
 		throw new Error('Page Builder Elementor widget registry is not loaded.');
 	}
 
+	const allowedTags = Object.freeze(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p']);
 	const defaults = () => ({
 		text: 'Add your heading text',
 		tag: 'h2',
@@ -25,6 +26,7 @@
 		normalize(node) {
 			const normalized = node && typeof node === 'object' ? node : {};
 			normalized.settings = { ...defaults(), ...(normalized.settings || {}) };
+			normalized.settings.tag = allowedTags.includes(normalized.settings.tag) ? normalized.settings.tag : 'h2';
 			return normalized;
 		},
 	});

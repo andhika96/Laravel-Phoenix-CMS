@@ -56,6 +56,14 @@
 			saveUrl: @json($saveUrl),
 			csrfToken: @json(csrf_token()),
 			pageData: @json($pageData),
+			imageRenditionUrl: @json(route('cms.core.pagebuilder_elementor.image_rendition')),
+			dynamicPreviewContext: {
+				page_excerpt: @json((string) ($pageData->description ?? $pageData->excerpt ?? '')),
+				page_url: @json($pageData ? route('cms.core.pagebuilder_elementor.preview', $pageData->uri) : ''),
+				site_title: @json(config('app.name')),
+				site_url: @json(config('app.url')),
+				user_display_name: @json((string) (auth()->user()->name ?? '')),
+			},
 		};
 		window.PB_ELEMENTOR_SHAPES = @json(json_decode(file_get_contents(resource_path('data/pagebuilder_elementor_shapes.json')), true));
 		window.PB_ELEMENTOR_FONT_FAMILIES = @json($pbElementorFontFamilies);

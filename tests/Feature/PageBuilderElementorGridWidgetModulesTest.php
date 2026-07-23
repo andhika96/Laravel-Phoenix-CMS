@@ -59,11 +59,47 @@ class PageBuilderElementorGridWidgetModulesTest extends TestCase
         $this->assertStringNotContainsString("<template v-if=\"selectedType==='grid'||selectedType==='row_grid'\">", $app);
     }
 
+    public function test_grid_and_row_grid_use_compound_unit_controls_for_gap_padding_and_margin(): void
+    {
+        foreach (['grid', 'row-grid'] as $folder) {
+            $settings = file_get_contents(public_path("js/pagebuilder_elementor/widgets/layout/{$folder}/Settings.vue"));
+
+            $this->assertIsString($settings);
+            $this->assertStringContainsString("editor.sizeControlDisplayValue(node, 'columnGap', '20px')", $settings);
+            $this->assertStringContainsString("editor.sizeControlUnit(node, 'rowGap', '20px')", $settings);
+            $this->assertStringContainsString("editor.spacingUnit(node, 'padding')", $settings);
+            $this->assertStringContainsString("editor.spacingSideValue(node, 'padding', side)", $settings);
+            $this->assertStringContainsString("editor.spacingUnit(node, 'margin')", $settings);
+            $this->assertStringContainsString("editor.spacingSideValue(node, 'margin', side)", $settings);
+            $this->assertStringNotContainsString("v-model=\"node.settings[editor.activeResponsiveKey('columnGap')]\"", $settings);
+            $this->assertStringNotContainsString("v-model=\"node.settings[editor.activeResponsiveKey('paddingTop')]\"", $settings);
+        }
+    }
+
     public static function layoutWidgetProvider(): array
     {
         return [
             'grid' => ['grid', 'grid', 'Grid', 3, true],
             'row grid' => ['row_grid', 'row-grid', 'Row Grid', 1, false],
         ];
+    }
+    public function test_grid_and_row_grid_advanced_dimensions_use_numeric_unit_controls(): void
+    {
+        foreach (['grid', 'row-grid'] as $folder) {
+            $settings = file_get_contents(public_path("js/pagebuilder_elementor/widgets/layout/{$folder}/Settings.vue"));
+
+            $this->assertIsString($settings);
+            $this->assertStringContainsString("dimensionValue('borderWidth'", $settings);
+            $this->assertStringContainsString("dimensionGroupUnit(['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL']", $settings);
+            $this->assertStringContainsString("dimensionGroupUnit(['shadowH','shadowV','shadowBlur','shadowSpread']", $settings);
+            $this->assertStringContainsString("{key:'stickyOffset',label:'Sticky Offset'}", $settings);
+            $this->assertStringContainsString("{key:'transformRotate',label:'Rotate'}", $settings);
+            $this->assertStringContainsString("dimensionValue(control.key, 'deg')", $settings);
+            $this->assertStringContainsString("dimensionGroupUnit(['positionTop','positionRight','positionBottom','positionLeft']", $settings);
+            $this->assertStringNotContainsString('v-model="node.settings.borderWidth"', $settings);
+            $this->assertStringNotContainsString('v-model="node.settings.shadowH"', $settings);
+            $this->assertStringNotContainsString('v-model="node.settings.transformRotate"', $settings);
+            $this->assertStringNotContainsString('v-model="node.settings.positionTop"', $settings);
+        }
     }
 }

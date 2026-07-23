@@ -23,6 +23,7 @@
 
 <script>
 const TITLE_TAGS = Object.freeze(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p']);
+const TITLE_TAG_FONT_SIZES = Object.freeze({ h1: '40px', h2: '34px', h3: '29px', h4: '24px', h5: '20px', h6: '16px', div: '29px', span: '29px', p: '29px' });
 const POSITIONS = Object.freeze(['top', 'left', 'right']);
 const ALIGNMENTS = Object.freeze(['left', 'center', 'right', 'justify']);
 const BORDER_TYPES = Object.freeze(['none', 'solid', 'double', 'dotted', 'dashed', 'groove']);
@@ -32,17 +33,22 @@ export default {
 	props: {
 		item: { type: Object, required: true },
 		responsiveDevice: { type: String, default: 'desktop' },
+		dynamicContext: { type: Object, default: () => ({}) },
 	},
+	data() { return { resolvedImageUrl: '', imageRenditionRequest: 0 }; },
 	computed: {
 		settings() { return this.item.settings || {}; },
-		imageUrl() { return String(this.settings.imageUrl || '').trim(); },
+		rawImageUrl() { return String(this.settings.imageUrl || '').trim(); },
+		imageUrl() { return this.resolvedImageUrl || this.rawImageUrl; },
+		imageRenditionKey() { return `${this.rawImageUrl}|${String(this.settings.imageResolution || 'full')}`; },
 		imageAlt() { return String(this.settings.imageAlt || ''); },
-		title() { return String(this.settings.title || ''); },
-		description() { return String(this.settings.description || ''); },
+		title() { return String(this.resolveDynamicValue('title', this.settings.title || '')); },
+		description() { return String(this.resolveDynamicValue('description', this.settings.description || '')); },
 		safeTitleTag() {
 			const tag = String(this.settings.titleTag || 'h3').toLowerCase();
 			return TITLE_TAGS.includes(tag) ? tag : 'h3';
 		},
+		automaticTitleFontSize() { return TITLE_TAG_FONT_SIZES[this.safeTitleTag] || '29px'; },
 		position() {
 			const value = String(this.responsiveValue('imagePosition', 'top')).toLowerCase();
 			return POSITIONS.includes(value) ? value : 'top';
@@ -110,8 +116,11 @@ export default {
 		},
 		titleStyle() {
 			return this.typographyStyle('title', {
+				fontSize: this.settings.titleFontSizeMode === 'custom'
+					? this.cssSize(this.responsiveValue('titleFontSize', '29px'), '29px')
+					: this.automaticTitleFontSize,
 				color: this.safeColor(this.settings.titleColor, 'inherit'),
-				WebkitTextStrokeWidth: this.cssSize(this.settings.titleTextStrokeWidth, '0px'),
+				WebkitTextStrokeWidth: this.cssSize(this.responsiveValue('titleTextStrokeWidth', '0px'), '0px'),
 				WebkitTextStrokeColor: this.safeColor(this.settings.titleTextStrokeColor, 'currentColor'),
 				textShadow: this.safeShadow(this.settings.titleTextShadow),
 			});
@@ -123,7 +132,32 @@ export default {
 			});
 		},
 	},
+	watch: {
+		imageRenditionKey: {
+			immediate: true,
+			handler() { this.resolveImageRendition(); },
+		},
+	},
 	methods: {
+		resolveDynamicValue(field, fallback) {
+			const binding = String(this.settings.dynamicBindings?.[field] || '');
+			if (!binding || !Object.prototype.hasOwnProperty.call(this.dynamicContext, binding)) return fallback;
+			const value = this.dynamicContext[binding];
+			return value === null || value === undefined ? fallback : value;
+		},
+		async resolveImageRendition() {
+			const requestId = ++this.imageRenditionRequest;
+			const sourceUrl = this.rawImageUrl;
+			this.resolvedImageUrl = sourceUrl;
+			const endpoint = String(window.PAGE_BUILDER_ELEMENTOR_CONTEXT?.imageRenditionUrl || '');
+			if (!sourceUrl || !endpoint || !window.axios) return;
+			try {
+				const response = await window.axios.get(endpoint, { params: { url: sourceUrl, size: this.settings.imageResolution || 'full' } });
+				if (requestId === this.imageRenditionRequest) this.resolvedImageUrl = String(response.data?.url || sourceUrl);
+			} catch (_) {
+				if (requestId === this.imageRenditionRequest) this.resolvedImageUrl = sourceUrl;
+			}
+		},
 		responsiveValue(base, fallback = '') {
 			const device = ['tablet', 'mobile'].includes(this.responsiveDevice) ? this.responsiveDevice : 'desktop';
 			const keys = device === 'mobile' ? [base + 'Mobile', base + 'Tablet', base] : (device === 'tablet' ? [base + 'Tablet', base] : [base]);

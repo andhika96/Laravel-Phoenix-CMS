@@ -1,0 +1,57 @@
+<?php
+
+namespace Tests\Feature;
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\TestCase;
+
+class PageBuilderElementorBasicWidgetModulesTest extends TestCase
+{
+    #[DataProvider('basicWidgetProvider')]
+    public function test_basic_widget_has_complete_module_contract(string $type, string $folder, string $label): void
+    {
+        $catalog = config('pagebuilder_elementor_widgets');
+        $this->assertArrayHasKey($type, $catalog);
+
+        $module = $catalog[$type];
+        $this->assertSame($label, $module['label']);
+        $this->assertSame('basic', $module['category']);
+        $this->assertTrue($module['toolbox']);
+        $this->assertFileExists(public_path($module['definition']));
+        $this->assertFileExists(public_path($module['canvas']));
+        $this->assertFileExists(public_path($module['settings']));
+        $this->assertTrue(view()->exists($module['view']));
+
+        $definition = file_get_contents(public_path($module['definition']));
+        $this->assertStringContainsString("type: '{$type}'", $definition);
+        $this->assertStringContainsString('defaults', $definition);
+        $this->assertStringContainsString('normalize(node)', $definition);
+
+        $app = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $this->assertStringNotContainsString("<template v-if=\"selectedType==='{$type}'\">", $app);
+        $this->assertStringNotContainsString("case '{$type}':", $app);
+        $this->assertStringNotContainsString("{$type}:" . str_repeat(' ', max(1, 15 - strlen($type))), $app);
+        $this->assertStringContainsString("widgets/basic/{$folder}/Settings.vue", $definition);
+    }
+
+    public function test_registered_basic_settings_use_shared_dynamic_sidebar_mount(): void
+    {
+        $app = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertStringContainsString('hasRegisteredWidget(selectedType)', $app);
+        $this->assertStringContainsString(':editor="widgetEditorServices"', $app);
+        $this->assertSame(1, substr_count($app, ':is="loadWidgetSettings(selectedType)"'));
+    }
+
+    public static function basicWidgetProvider(): array
+    {
+        return [
+            'text editor' => ['text_editor', 'text-editor', 'Text Editor'],
+            'image' => ['image', 'image', 'Image'],
+            'button' => ['button', 'button', 'Button'],
+            'divider' => ['divider', 'divider', 'Divider'],
+            'spacer' => ['spacer', 'spacer', 'Spacer'],
+            'icon' => ['icon', 'icon', 'Icon'],
+        ];
+    }
+}

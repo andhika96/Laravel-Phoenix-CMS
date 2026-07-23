@@ -43,6 +43,98 @@ class PageBuilderElementorBasicWidgetModulesTest extends TestCase
         $this->assertSame(1, substr_count($app, ':is="loadWidgetSettings(selectedType)"'));
     }
 
+    public function test_text_editor_settings_and_canvas_follow_the_shared_sidebar_contract(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/text-editor/Settings.vue'));
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/text-editor/Canvas.vue'));
+
+        $this->assertStringContainsString('pb-tab-nav', $settings);
+        $this->assertStringContainsString('>Content</span>', $settings);
+        $this->assertStringContainsString('>Advanced</span>', $settings);
+        $this->assertStringContainsString("editor.settingsTab==='content'", $settings);
+        $this->assertStringContainsString("editor.settingsTab==='advanced'", $settings);
+        $this->assertStringContainsString('pb-collapsible', $settings);
+        $this->assertStringContainsString("['el-widget-text-editor', customClass]", $canvas);
+        $this->assertStringContainsString("return String(this.item.settings?.html ?? '');", $canvas);
+
+        $html = view('pagebuilder_elementor.widgets.basic.text-editor', [
+            'node' => ['settings' => ['html' => '', 'cssClass' => '']],
+        ])->render();
+        $this->assertStringNotContainsString('Text editor content', $html);
+    }
+
+    public function test_image_settings_use_standard_tabs_media_and_inherited_responsive_dimensions(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/image/Settings.vue'));
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/image/Canvas.vue'));
+
+        $this->assertStringContainsString('pb-tab-nav', $settings);
+        foreach (['Content', 'Style', 'Advanced'] as $tab) {
+            $this->assertStringContainsString(">$tab</span>", $settings);
+        }
+        $this->assertStringContainsString('pb-bg-media-field', $settings);
+        $this->assertStringNotContainsString('>Image URL</label>', $settings);
+        $this->assertStringContainsString('<DimensionSetting label="Width"', $settings);
+        $this->assertStringContainsString('<DimensionSetting label="Height"', $settings);
+        $this->assertStringContainsString("['el-widget-image', customClass]", $canvas);
+        $this->assertStringContainsString("const tabletValue = settings[base + 'Tablet'];", $canvas);
+        $this->assertStringContainsString('if (device === \'mobile\'', $canvas);
+    }
+
+    public function test_button_settings_and_canvas_follow_shared_sidebar_and_link_contract(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/button/Settings.vue'));
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/button/Canvas.vue'));
+
+        $this->assertIsString($settings);
+        $this->assertIsString($canvas);
+        $this->assertStringContainsString('class="pb-tab-nav"', $settings);
+        foreach (['Content', 'Advanced'] as $tab) {
+            $this->assertStringContainsString(">$tab</span>", $settings);
+        }
+        $this->assertStringContainsString('class="pb-collapsible"', $settings);
+        $this->assertStringContainsString(':rel="rel"', $canvas);
+        $this->assertStringContainsString("return this.item.settings?.newTab ? 'noopener' : null;", $canvas);
+        $this->assertStringContainsString("['el-widget-button', buttonClass]", $canvas);
+        $this->assertStringContainsString("return this.item.settings?.text ?? 'Click here';", $canvas);
+    }
+
+    public function test_divider_uses_standard_tabs_compound_thickness_control_and_responsive_inheritance(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/divider/Settings.vue'));
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/divider/Canvas.vue'));
+
+        $this->assertIsString($settings);
+        $this->assertIsString($canvas);
+        $this->assertStringContainsString('class="pb-tab-nav"', $settings);
+        foreach (['Content', 'Style', 'Advanced'] as $tab) {
+            $this->assertStringContainsString(">$tab</span>", $settings);
+        }
+        $this->assertStringContainsString('class="pb-range-value-row"', $settings);
+        $this->assertStringContainsString('v-model.number="node.settings.thickness"', $settings);
+        $this->assertStringContainsString('<select class="pb-mini-unit" disabled aria-label="Thickness unit">', $settings);
+        $this->assertStringContainsString("['el-widget-divider', customClass]", $canvas);
+        $this->assertStringContainsString("const tabletValue = settings[base + 'Tablet'];", $canvas);
+        $this->assertStringContainsString("const thickness = this.item.settings?.thickness ?? 2;", $canvas);
+    }
+
+    public function test_spacer_uses_standard_tabs_and_inherited_responsive_height(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/spacer/Settings.vue'));
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/spacer/Canvas.vue'));
+
+        $this->assertIsString($settings);
+        $this->assertIsString($canvas);
+        $this->assertStringContainsString('class="pb-tab-nav"', $settings);
+        foreach (['Content', 'Advanced'] as $tab) {
+            $this->assertStringContainsString(">$tab</span>", $settings);
+        }
+        $this->assertStringContainsString('class="pb-collapsible"', $settings);
+        $this->assertStringContainsString('class="pb-range-value-row"', $settings);
+        $this->assertStringContainsString("['el-widget-spacer', customClass]", $canvas);
+        $this->assertStringContainsString("const tabletValue = settings[base + 'Tablet'];", $canvas);
+    }
+
     public static function basicWidgetProvider(): array
     {
         return [

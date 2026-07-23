@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Support\PageBuilderElementor\ImageRenditionResolver;
+use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
@@ -120,6 +122,152 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $this->assertSourceContains('resetFilters()', $filters);
         $this->assertSourceContains('this.$emit(\'update:modelValue\'', $filters);
     }
+    public function test_typography_subcomponents_use_compact_scoped_deep_layout(): void
+    {
+        $typography = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/TypographyControl.vue'));
+
+        foreach ([
+            ':deep(.pb-typography-dimension-head)',
+            ':deep(.pb-typography-range-row)',
+            ':deep(.pb-control-device-btn)',
+            'grid-template-columns: minmax(0, 1fr) 68px',
+            'height: 34px',
+            'font-size: 11px',
+            'appearance: textfield',
+        ] as $marker) {
+            $this->assertSourceContains($marker, $typography);
+        }
+    }
+
+    public function test_editor_image_resolution_uses_the_backend_rendition_resolver(): void
+    {
+        $testRoot = storage_path('framework/testing/image-box-editor-rendition-'.bin2hex(random_bytes(5)));
+        $sourceRoot = $testRoot.DIRECTORY_SEPARATOR.'media';
+        $outputRoot = $testRoot.DIRECTORY_SEPARATOR.'renditions';
+
+        File::ensureDirectoryExists($sourceRoot);
+        $sourceImage = imagecreatetruecolor(2, 2);
+        imagefill($sourceImage, 0, 0, imagecolorallocate($sourceImage, 72, 99, 160));
+        imagepng($sourceImage, $sourceRoot.DIRECTORY_SEPARATOR.'source.png');
+        imagedestroy($sourceImage);
+
+        $this->app->instance(ImageRenditionResolver::class, new ImageRenditionResolver(
+            sourceRoots: ['media' => $sourceRoot],
+            outputRoot: $outputRoot,
+            outputUrlPrefix: '/test-renditions',
+        ));
+
+        try {
+            $response = $this->getJson(route('cms.core.pagebuilder_elementor.image_rendition', [
+                'url' => '/media/source.png',
+                'size' => 'thumbnail',
+            ]));
+
+            $response
+                ->assertOk()
+                ->assertJsonPath('sourceUrl', '/media/source.png')
+                ->assertJsonPath('size', 'thumbnail');
+
+            $this->assertMatchesRegularExpression(
+                '#^/test-renditions/[a-f0-9]{40}-thumbnail\.png$#',
+                (string) $response->json('url')
+            );
+        } finally {
+            File::deleteDirectory($testRoot);
+        }
+
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Canvas.vue'));
+        $editor = file_get_contents(resource_path('views/pagebuilder_elementor/editor_shell.blade.php'));
+
+        $this->assertSourceContains('imageRenditionUrl', $editor);
+        $this->assertSourceContains('resolvedImageUrl', $canvas);
+        $this->assertSourceContains('resolveImageRendition()', $canvas);
+        $this->assertSourceContains('settings.imageResolution', $canvas);
+    }
+
+    public function test_image_box_text_effects_use_structured_popover_controls(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
+        $strokePath = public_path('js/pagebuilder_elementor/widgets/shared/TextStrokeControl.vue');
+        $shadowPath = public_path('js/pagebuilder_elementor/widgets/shared/TextShadowControl.vue');
+
+        $this->assertFileExists($strokePath);
+        $this->assertFileExists($shadowPath);
+        $this->assertSourceContains('<component :is="editor.textStrokeControl"', $settings);
+        $this->assertSourceContains('<component :is="editor.textShadowControl"', $settings);
+        $this->assertStringNotContainsString('v-model="node.settings.titleTextStrokeWidth"', $settings);
+        $this->assertStringNotContainsString('v-model="node.settings.titleTextShadow"', $settings);
+        $this->assertStringNotContainsString('v-model="node.settings.descriptionTextShadow"', $settings);
+
+        $stroke = file_get_contents($strokePath);
+        foreach (['Text Stroke', 'Stroke Color', 'type="range"', 'type="number"', "'px', 'em', 'rem'", 'responsiveDevice', 'fa-pen', 'fa-undo-alt', 'position: absolute', 'appearance: textfield'] as $marker) {
+            $this->assertSourceContains($marker, $stroke);
+        }
+        $this->assertStringNotContainsString("{{ open ? 'Close' : 'Edit' }}", $stroke);
+        $this->assertStringNotContainsString('>Reset</button>', $stroke);
+
+        $shadow = file_get_contents($shadowPath);
+        foreach (['Text Shadow', 'Color', 'Blur', 'Horizontal', 'Vertical', 'type="range"', 'type="number"', "this.\$emit('update:modelValue'", 'fa-pen', 'fa-undo-alt', 'position: absolute', 'appearance: textfield'] as $marker) {
+            $this->assertSourceContains($marker, $shadow);
+        }
+        $this->assertStringNotContainsString("{{ open ? 'Close' : 'Edit' }}", $shadow);
+        $this->assertStringNotContainsString('>Reset</button>', $shadow);
+
+        foreach (['activeTextEffect', 'control-id="title-stroke"', 'control-id="title-shadow"', 'control-id="description-shadow"', '@request-open="activeTextEffect=$event"'] as $marker) {
+            $this->assertSourceContains($marker, $settings);
+        }
+    }
+
+    public function test_dynamic_tags_are_field_scoped_and_drive_the_canvas_preview(): void
+    {
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Canvas.vue'));
+        $dynamicTag = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/DynamicTagControl.vue'));
+
+        $this->assertSourceContains('allowedValues', $dynamicTag);
+        $this->assertSourceContains('selectedOption', $dynamicTag);
+        $this->assertSourceContains(':title="selectedOption', $dynamicTag);
+        $this->assertSourceContains(':allowed-values="editor.imageBoxTextDynamicTags"', $settings);
+        $this->assertSourceContains('dynamicContext', $canvas);
+        $this->assertSourceContains("resolveDynamicValue('title'", $canvas);
+        $this->assertSourceContains("resolveDynamicValue('description'", $canvas);
+        $this->assertSourceContains('dynamicPreviewContext', $appJs);
+        $this->assertSourceContains(':dynamic-context="dynamicPreviewContext"', $appJs);
+    }
+
+    public function test_title_html_tag_uses_automatic_visual_scale_until_typography_size_is_customized(): void
+    {
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Canvas.vue'));
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
+        $typography = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/TypographyControl.vue'));
+
+        $this->assertSourceContains(':is="safeTitleTag"', $canvas);
+        $this->assertSourceContains("titleFontSizeMode: 'auto'", $appJs);
+        $this->assertSourceContains('TITLE_TAG_FONT_SIZES', $canvas);
+        $this->assertSourceContains('font-size-mode-key="titleFontSizeMode"', $settings);
+        $this->assertSourceContains("this.settings[this.fontSizeModeKey] = 'custom'", $typography);
+        $this->assertSourceContains("this.settings[this.fontSizeModeKey] = 'auto'", $typography);
+        $this->assertSourceContains('H1-H6 use automatic heading scale until Typography Size is edited.', $settings);
+
+        $automaticH1 = view('pagebuilder_elementor.partials.render_image_box', [
+            'node' => ['id' => 'automatic-h1-image-box-title', 'type' => 'image_box', 'settings' => ['title' => 'Automatic H1 heading', 'titleTag' => 'h1', 'titleFontSize' => '29px', 'titleFontSizeMode' => 'auto']],
+        ])->render();
+        $automaticH6 = view('pagebuilder_elementor.partials.render_image_box', [
+            'node' => ['id' => 'automatic-h6-image-box-title', 'type' => 'image_box', 'settings' => ['title' => 'Automatic H6 heading', 'titleTag' => 'h6', 'titleFontSize' => '29px', 'titleFontSizeMode' => 'auto']],
+        ])->render();
+        $customH6 = view('pagebuilder_elementor.partials.render_image_box', [
+            'node' => ['id' => 'custom-h6-image-box-title', 'type' => 'image_box', 'settings' => ['title' => 'Custom H6 heading', 'titleTag' => 'h6', 'titleFontSize' => '37px', 'titleFontSizeMode' => 'custom']],
+        ])->render();
+
+        $this->assertStringContainsString('<h1 class="pb-image-box__title"', $automaticH1);
+        $this->assertStringContainsString('font-size:40px', $automaticH1);
+        $this->assertStringContainsString('<h6 class="pb-image-box__title"', $automaticH6);
+        $this->assertStringContainsString('font-size:16px', $automaticH6);
+        $this->assertStringContainsString('<h6 class="pb-image-box__title"', $customH6);
+        $this->assertStringContainsString('font-size:37px', $customH6);
+    }
     public function test_editor_canvas_renders_responsive_styled_and_safe_image_box(): void
     {
         $path = public_path('js/pagebuilder_elementor/widgets/general/image-box/Canvas.vue');
@@ -154,6 +302,27 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $this->assertMatchesRegularExpression('/<a[^>]+pb-image-box__title-link.*?<component/s', $component);
         $this->assertDoesNotMatchRegularExpression('/<a[^>]*>\s*<p class="pb-image-box__description"/s', $component);
     }
+    public function test_editor_shell_applies_shared_advanced_preview_to_image_box_nodes(): void
+    {
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertSourceContains("hasSharedAdvancedControls() { return this.isAccordionNode || this.node.type === 'image-box'; }", $appJs);
+        $this->assertSourceContains('if (!this.hasSharedAdvancedControls) return [];', $appJs);
+        $this->assertSourceContains('if (this.hasSharedAdvancedControls) return widgetAdvancedPreviewStyle(s, device);', $appJs);
+        $this->assertSourceContains('if (this.hasSharedAdvancedControls && /^[A-Za-z][A-Za-z0-9_-]*$/.test(raw)) return raw;', $appJs);
+    }
+
+    public function test_image_border_width_uses_a_numeric_slider_and_unit_control(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
+
+        $this->assertSourceContains("sizeControlDisplayValue(node, 'imageBorderWidth', '1px'", $settings);
+        $this->assertSourceContains("onSizeControlInput(node, 'imageBorderWidth'", $settings);
+        $this->assertSourceContains("setSizeControlUnit(node, 'imageBorderWidth'", $settings);
+        $this->assertSourceContains("v-for=\"unit in ['px','pt','em','rem']\"", $settings);
+        $this->assertStringNotContainsString('v-model="node.settings.imageBorderWidth" placeholder="1px"', $settings);
+    }
+
     public function test_settings_panel_matches_confirmed_elementor_controls_and_accordion_rhythm(): void
     {
         $appJs = $this->editorSource();
@@ -405,6 +574,16 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $this->assertStringNotContainsString('<script', $html);
         $this->assertStringContainsString('<h3 class="pb-image-box__title"', $html);
         $this->assertStringContainsString('pb-image-box__empty-media', $html);
+    }
+    public function test_style_colors_use_canonical_swatch_and_picker_rows(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
+
+        $this->assertIsString($settings);
+        foreach (['imageBorderColor', 'titleColor', 'descriptionColor'] as $key) {
+            $this->assertStringContainsString('type="color" class="pb-color-swatch" v-model="node.settings.'.$key.'"', $settings);
+            $this->assertStringContainsString('class="pb-input coloris pb-coloris-input" v-model="node.settings.'.$key.'"', $settings);
+        }
     }
     private function editorSource(): string
     {

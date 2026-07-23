@@ -1,34 +1,27 @@
 <template>
 	<div class="pb-widget-settings pb-widget-settings--basic pb-widget-settings--image">
-		<div class="pb-widget-settings__group pb-widget-settings__group--media">
-			<div class="pb-form-group">
-				<label class="pb-form-label">Image</label>
-				<div class="pb-bg-media-field pb-widget-settings__media-field" :class="{ 'has-image': !!node.settings.src }">
-					<div class="pb-bg-media-preview" :style="node.settings.src ? { backgroundImage: 'url(' + node.settings.src + ')' } : {}">
-						<button type="button" class="pb-bg-media-center-btn" :title="node.settings.src ? 'Change Image' : 'Choose Image'" @click="editor.chooseMedia(node.settings, 'src')">
-							<i :class="node.settings.src ? 'fas fa-pen' : 'fas fa-plus'"></i>
-						</button>
-					</div>
-					<div class="pb-bg-media-actions">
-						<button type="button" class="pb-bg-media-choose" @click="editor.chooseMedia(node.settings, 'src')">Choose Image</button>
-						<button type="button" class="pb-bg-media-remove" :disabled="!node.settings.src" title="Remove Image" @click="editor.clearMedia(node.settings, 'src')"><i class="fas fa-trash-alt"></i></button>
-					</div>
-				</div>
-			</div>
-			<div class="pb-form-group"><label class="pb-form-label">Image URL</label><input class="pb-input" v-model="node.settings.src"></div>
-			<div class="pb-form-group"><label class="pb-form-label">Alt</label><input class="pb-input" v-model="node.settings.alt"></div>
+		<div class="pb-tab-nav">
+			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:editor.settingsTab==='content'}" @click="editor.settingsTab='content'"><i class="fas fa-edit"></i><span>Content</span></button>
+			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:editor.settingsTab==='style'}" @click="editor.settingsTab='style'"><i class="fas fa-adjust"></i><span>Style</span></button>
+			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:editor.settingsTab==='advanced'}" @click="editor.settingsTab='advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
 		</div>
-		<div class="pb-widget-settings__group pb-widget-settings__group--sizing">
-			<div class="pb-widget-settings__section-title">Dimensions</div>
-			<DimensionSetting label="Width" control-key="image-width" setting-key="width" fallback="100%" :node="node" :editor="editor" />
-			<DimensionSetting label="Height" control-key="image-height" setting-key="height" fallback="auto" allow-empty :node="node" :editor="editor" />
+
+		<div v-show="editor.settingsTab==='content'" class="pb-tab-content">
+			<details class="pb-collapsible" open><summary>Image</summary><div class="pb-collapsible-body">
+				<div class="pb-form-group"><label class="pb-form-label">Image</label><div class="pb-bg-media-field pb-widget-settings__media-field" :class="{ 'has-image': !!node.settings.src }"><div class="pb-bg-media-preview" :style="node.settings.src ? { backgroundImage: 'url(' + node.settings.src + ')' } : {}"><button type="button" class="pb-bg-media-center-btn" :title="node.settings.src ? 'Change Image' : 'Choose Image'" @click="editor.chooseMedia(node.settings, 'src')"><i :class="node.settings.src ? 'fas fa-pen' : 'fas fa-plus'"></i></button></div><div class="pb-bg-media-actions"><button type="button" class="pb-bg-media-choose" @click="editor.chooseMedia(node.settings, 'src')">Choose Image</button><button type="button" class="pb-bg-media-remove" :disabled="!node.settings.src" title="Remove Image" @click="editor.clearMedia(node.settings, 'src')"><i class="fas fa-trash-alt"></i></button></div></div></div>
+				<div class="pb-form-group"><label class="pb-form-label">Alt</label><input class="pb-input" v-model="node.settings.alt"></div>
+			</div></details>
 		</div>
-		<div class="pb-widget-settings__group pb-widget-settings__group--advanced">
-			<div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="node.settings.cssClass" placeholder="custom-image"></div>
+
+		<div v-show="editor.settingsTab==='style'" class="pb-tab-content">
+			<details class="pb-collapsible" open><summary>Dimensions</summary><div class="pb-collapsible-body"><DimensionSetting label="Width" control-key="image-width" setting-key="width" fallback="100%" :node="node" :editor="editor" /><DimensionSetting label="Height" control-key="image-height" setting-key="height" fallback="auto" allow-empty :node="node" :editor="editor" /></div></details>
+		</div>
+
+		<div v-show="editor.settingsTab==='advanced'" class="pb-tab-content">
+			<details class="pb-collapsible" open><summary>Attributes</summary><div class="pb-collapsible-body"><div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="node.settings.cssClass" placeholder="custom-image"></div></div></details>
 		</div>
 	</div>
 </template>
-
 <script>
 const DimensionSetting = {
 	props: {

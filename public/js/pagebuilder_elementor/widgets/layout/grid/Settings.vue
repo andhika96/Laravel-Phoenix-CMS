@@ -31,9 +31,27 @@
 								</div>
 								<div class="pb-form-group">
 									<div class="pb-label-row"><label class="pb-form-label mb-0">Column / Row Gap</label><button class="pb-link-btn" @click="node.settings.gapLinked=!node.settings.gapLinked" :title="node.settings.gapLinked?'Unlink':'Link'"><i :class="node.settings.gapLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
-									<div class="pb-gap-row mt-1">
-										<div class="pb-gap-field"><input class="pb-input" v-model="node.settings[editor.activeResponsiveKey('columnGap')]" @input="editor.syncGridGap(node.settings, 'columnGap')" placeholder="20px"><span>Column</span></div>
-										<div class="pb-gap-field"><input class="pb-input" v-model="node.settings[editor.activeResponsiveKey('rowGap')]" @input="editor.syncGridGap(node.settings, 'rowGap')" placeholder="20px"><span>Row</span></div>
+									<div class="pb-grid-gap-controls mt-1">
+										<div>
+											<label class="pb-form-label">Column</label>
+											<div class="pb-range-value-row">
+												<input type="range" min="0" :max="editor.sizeControlMax(node, 'columnGap', '20px')" :step="editor.sizeControlStep(node, 'columnGap', '20px')" :value="editor.sizeControlDisplayValue(node, 'columnGap', '20px')" @input="editor.onSizeControlInput(node, 'columnGap', $event, { fallback: '20px' }); editor.syncGridGap(node.settings, 'columnGap')">
+												<input class="pb-input pb-range-number" type="number" :step="editor.sizeControlStep(node, 'columnGap', '20px')" :value="editor.sizeControlDisplayValue(node, 'columnGap', '20px')" @input="editor.onSizeControlInput(node, 'columnGap', $event, { fallback: '20px' }); editor.syncGridGap(node.settings, 'columnGap')">
+												<select class="pb-mini-unit" :value="editor.sizeControlUnit(node, 'columnGap', '20px')" @change="editor.setSizeControlUnit(node, 'columnGap', $event.target.value, { fallback: '20px' }); editor.syncGridGap(node.settings, 'columnGap')">
+													<option v-for="unit in editor.spacingControlUnits" :key="'column-gap-'+unit" :value="unit">{{ unit }}</option>
+												</select>
+											</div>
+										</div>
+										<div>
+											<label class="pb-form-label">Row</label>
+											<div class="pb-range-value-row">
+												<input type="range" min="0" :max="editor.sizeControlMax(node, 'rowGap', '20px')" :step="editor.sizeControlStep(node, 'rowGap', '20px')" :value="editor.sizeControlDisplayValue(node, 'rowGap', '20px')" @input="editor.onSizeControlInput(node, 'rowGap', $event, { fallback: '20px' }); editor.syncGridGap(node.settings, 'rowGap')">
+												<input class="pb-input pb-range-number" type="number" :step="editor.sizeControlStep(node, 'rowGap', '20px')" :value="editor.sizeControlDisplayValue(node, 'rowGap', '20px')" @input="editor.onSizeControlInput(node, 'rowGap', $event, { fallback: '20px' }); editor.syncGridGap(node.settings, 'rowGap')">
+												<select class="pb-mini-unit" :value="editor.sizeControlUnit(node, 'rowGap', '20px')" @change="editor.setSizeControlUnit(node, 'rowGap', $event.target.value, { fallback: '20px' }); editor.syncGridGap(node.settings, 'rowGap')">
+													<option v-for="unit in editor.spacingControlUnits" :key="'row-gap-'+unit" :value="unit">{{ unit }}</option>
+												</select>
+											</div>
+										</div>
 									</div>
 								</div>
 								<div class="pb-form-group">
@@ -56,21 +74,41 @@
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row"><label class="pb-form-label">Padding</label><button class="pb-link-btn" @click="node.settings.paddingLinked=!node.settings.paddingLinked" :title="node.settings.paddingLinked?'Unlink':'Link'"><i :class="node.settings.paddingLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
+									<div class="pb-label-row">
+										<label class="pb-form-label mb-0">Padding</label>
+										<div class="pb-label-tools">
+											<select class="pb-mini-unit" :value="editor.spacingUnit(node, 'padding')" @change="editor.setSpacingUnit(node, 'padding', $event.target.value)">
+												<option v-for="unit in editor.spacingControlUnits" :key="'padding-'+unit" :value="unit">{{ unit }}</option>
+											</select>
+											<button type="button" class="pb-link-btn" @click="node.settings.paddingLinked=!node.settings.paddingLinked" :title="node.settings.paddingLinked?'Unlink':'Link'"><i :class="node.settings.paddingLinked?'fas fa-link':'fas fa-unlink'"></i></button>
+										</div>
+									</div>
 									<div class="pb-four-sides mt-1">
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings[editor.activeResponsiveKey('paddingTop')]" @input="editor.syncResponsiveSides(node.settings, 'padding', 'Top', node.settings.paddingLinked)" placeholder="0"><span>Top</span></div>
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings[editor.activeResponsiveKey('paddingRight')]" @input="editor.syncResponsiveSides(node.settings, 'padding', 'Right', node.settings.paddingLinked)" placeholder="0"><span>Right</span></div>
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings[editor.activeResponsiveKey('paddingBottom')]" @input="editor.syncResponsiveSides(node.settings, 'padding', 'Bottom', node.settings.paddingLinked)" placeholder="0"><span>Bottom</span></div>
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings[editor.activeResponsiveKey('paddingLeft')]" @input="editor.syncResponsiveSides(node.settings, 'padding', 'Left', node.settings.paddingLinked)" placeholder="0"><span>Left</span></div>
+										<template v-for="side in ['Top','Right','Bottom','Left']" :key="'grid-padding-'+side">
+											<label class="pb-side-input">
+												<input class="pb-input" type="number" :value="editor.spacingSideValue(node, 'padding', side)" @input="editor.onSpacingSideInput(node, 'padding', side, $event)">
+												<span>{{ side }}</span>
+											</label>
+										</template>
 									</div>
 								</div>
 								<div class="pb-form-group">
-									<div class="pb-label-row"><label class="pb-form-label">Margin</label><button class="pb-link-btn" @click="node.settings.marginLinked=!node.settings.marginLinked" :title="node.settings.marginLinked?'Unlink':'Link'"><i :class="node.settings.marginLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
+									<div class="pb-label-row">
+										<label class="pb-form-label mb-0">Margin</label>
+										<div class="pb-label-tools">
+											<select class="pb-mini-unit" :value="editor.spacingUnit(node, 'margin')" @change="editor.setSpacingUnit(node, 'margin', $event.target.value)">
+												<option v-for="unit in editor.spacingControlUnits" :key="'margin-'+unit" :value="unit">{{ unit }}</option>
+											</select>
+											<button type="button" class="pb-link-btn" @click="node.settings.marginLinked=!node.settings.marginLinked" :title="node.settings.marginLinked?'Unlink':'Link'"><i :class="node.settings.marginLinked?'fas fa-link':'fas fa-unlink'"></i></button>
+										</div>
+									</div>
 									<div class="pb-four-sides mt-1">
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings[editor.activeResponsiveKey('marginTop')]" @input="editor.syncResponsiveSides(node.settings, 'margin', 'Top', node.settings.marginLinked)" placeholder="0"><span>Top</span></div>
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings[editor.activeResponsiveKey('marginRight')]" @input="editor.syncResponsiveSides(node.settings, 'margin', 'Right', node.settings.marginLinked)" placeholder="0"><span>Right</span></div>
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings[editor.activeResponsiveKey('marginBottom')]" @input="editor.syncResponsiveSides(node.settings, 'margin', 'Bottom', node.settings.marginLinked)" placeholder="0"><span>Bottom</span></div>
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings[editor.activeResponsiveKey('marginLeft')]" @input="editor.syncResponsiveSides(node.settings, 'margin', 'Left', node.settings.marginLinked)" placeholder="0"><span>Left</span></div>
+										<template v-for="side in ['Top','Right','Bottom','Left']" :key="'grid-margin-'+side">
+											<label class="pb-side-input">
+												<input class="pb-input" type="number" :value="editor.spacingSideValue(node, 'margin', side)" @input="editor.onSpacingSideInput(node, 'margin', side, $event)">
+												<span>{{ side }}</span>
+											</label>
+										</template>
 									</div>
 								</div>
 							</div>
@@ -123,28 +161,21 @@
 								<div class="pb-prop-section-title">Border</div>
 								<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="node.settings.borderType"><option value="none">None</option><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="dotted">Dotted</option><option value="double">Double</option></select></div>
 								<template v-if="node.settings.borderType!=='none'">
-									<div class="pb-form-group"><label class="pb-form-label">Border Width</label><input class="pb-input" v-model="node.settings.borderWidth" placeholder="1px"></div>
+									<div class="pb-form-group">
+										<label class="pb-form-label">Border Width</label>
+										<div class="pb-range-value-row"><input class="pb-range" type="range" min="0" max="20" step="1" :value="dimensionValue('borderWidth', 'px') || 0" @input="setDimensionValue('borderWidth', $event, 'px')"><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" min="0" step="1" :value="dimensionValue('borderWidth', 'px')" @input="setDimensionValue('borderWidth', $event, 'px')"><select class="pb-mini-unit" :value="dimensionUnit('borderWidth', 'px')" @change="setDimensionUnit('borderWidth', $event.target.value, 'px')"><option v-for="unit in ['px','pt','em','rem']" :key="'grid-border-width-'+unit" :value="unit">{{ unit }}</option></select></div></div>
+									</div>
 									<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings.borderColor"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.borderColor"></div></div>
 								</template>
 								<div class="pb-form-group">
-									<div class="pb-label-row"><label class="pb-form-label">Border Radius</label><button class="pb-link-btn" @click="node.settings.borderRadiusLinked=!node.settings.borderRadiusLinked" :title="node.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="node.settings.borderRadiusLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
-									<div class="pb-four-sides">
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.borderRadiusTL" @input="node.settings.borderRadiusLinked&&(node.settings.borderRadiusTR=node.settings.borderRadiusBR=node.settings.borderRadiusBL=node.settings.borderRadiusTL)" placeholder="0"><span>TL</span></div>
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.borderRadiusTR" @input="node.settings.borderRadiusLinked&&(node.settings.borderRadiusTL=node.settings.borderRadiusBR=node.settings.borderRadiusBL=node.settings.borderRadiusTR)" placeholder="0"><span>TR</span></div>
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.borderRadiusBR" @input="node.settings.borderRadiusLinked&&(node.settings.borderRadiusTL=node.settings.borderRadiusTR=node.settings.borderRadiusBL=node.settings.borderRadiusBR)" placeholder="0"><span>BR</span></div>
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.borderRadiusBL" @input="node.settings.borderRadiusLinked&&(node.settings.borderRadiusTL=node.settings.borderRadiusTR=node.settings.borderRadiusBR=node.settings.borderRadiusBL)" placeholder="0"><span>BL</span></div>
-									</div>
+									<div class="pb-label-row"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-label-tools"><select class="pb-mini-unit" :value="dimensionGroupUnit(['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL'], 'px')" @change="setDimensionGroupUnit(['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL'], $event.target.value, 'px')"><option v-for="unit in ['px','%','em','rem','vw']" :key="'grid-radius-'+unit" :value="unit">{{ unit }}</option></select><button type="button" class="pb-link-btn" @click="node.settings.borderRadiusLinked=!node.settings.borderRadiusLinked" :title="node.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="node.settings.borderRadiusLinked?'fas fa-link':'fas fa-unlink'"></i></button></div></div>
+									<div class="pb-four-sides mt-1"><template v-for="corner in [{key:'borderRadiusTL',label:'TL'},{key:'borderRadiusTR',label:'TR'},{key:'borderRadiusBR',label:'BR'},{key:'borderRadiusBL',label:'BL'}]" :key="corner.key"><label class="pb-side-input"><input class="pb-input" type="number" min="0" :value="dimensionValue(corner.key, 'px')" @input="setLinkedDimensionValue(corner.key, ['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL'], $event, 'px', node.settings.borderRadiusLinked)"><span>{{ corner.label }}</span></label></template></div>
 								</div>
-							</div>
 							<div class="pb-prop-section pb-grid-settings__group">
 								<div class="pb-label-row"><div class="pb-prop-section-title mb-0">Box Shadow</div><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'gridShadowEnable-' + node.id" v-model="node.settings.shadowEnabled"><label :for="'gridShadowEnable-' + node.id"></label></div></div>
 								<template v-if="node.settings.shadowEnabled">
-									<div class="pb-four-sides mt-2">
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.shadowH" placeholder="0"><span>H</span></div>
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.shadowV" placeholder="0"><span>V</span></div>
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.shadowBlur" placeholder="0"><span>Blur</span></div>
-										<div class="pb-side-input"><input class="pb-input" v-model="node.settings.shadowSpread" placeholder="0"><span>Spread</span></div>
-									</div>
+									<div class="pb-label-row mt-2"><label class="pb-form-label mb-0">Shadow Dimensions</label><select class="pb-mini-unit" :value="dimensionGroupUnit(['shadowH','shadowV','shadowBlur','shadowSpread'], 'px')" @change="setDimensionGroupUnit(['shadowH','shadowV','shadowBlur','shadowSpread'], $event.target.value, 'px')"><option v-for="unit in ['px','em','rem']" :key="'grid-shadow-'+unit" :value="unit">{{ unit }}</option></select></div>
+									<div class="pb-four-sides mt-1"><template v-for="control in [{key:'shadowH',label:'H'},{key:'shadowV',label:'V'},{key:'shadowBlur',label:'Blur'},{key:'shadowSpread',label:'Spread'}]" :key="control.key"><label class="pb-side-input"><input class="pb-input" type="number" :min="control.key==='shadowBlur' ? 0 : null" :value="dimensionValue(control.key, 'px')" @input="setDimensionValue(control.key, $event, 'px')"><span>{{ control.label }}</span></label></template></div>
 									<div class="pb-form-group mt-2"><label class="pb-form-label">Shadow Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings.shadowColor"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.shadowColor"></div></div>
 									<div class="pb-form-group"><label class="pb-form-label">Shadow Opacity <span class="pb-form-hint">{{ Math.round((node.settings.shadowOpacity ?? 0.3)*100) }}%</span></label><input type="range" class="pb-range" min="0" max="1" step="0.01" v-model.number="node.settings.shadowOpacity"></div>
 								</template>
@@ -269,9 +300,8 @@
 									</select>
 								</div>
 								<template v-if="node.settings.sticky !== 'none'">
-									<div class="pb-gap-row">
-										<div class="pb-gap-field"><label class="pb-form-label">Sticky Offset</label><input class="pb-input" v-model="node.settings.stickyOffset" placeholder="0"></div>
-										<div class="pb-gap-field"><label class="pb-form-label">Effects Offset</label><input class="pb-input" v-model="node.settings.stickyEffectsOffset" placeholder="0"></div>
+									<div class="pb-grid-gap-controls">
+										<div v-for="control in [{key:'stickyOffset',label:'Sticky Offset'},{key:'stickyEffectsOffset',label:'Effects Offset'}]" :key="control.key" class="pb-form-group"><label class="pb-form-label">{{ control.label }}</label><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" min="0" :value="dimensionValue(control.key, 'px')" @input="setDimensionValue(control.key, $event, 'px')"><select class="pb-mini-unit" :value="dimensionUnit(control.key, 'px')" @change="setDimensionUnit(control.key, $event.target.value, 'px')"><option v-for="unit in ['px','%','em','rem','vw']" :key="control.key+'-'+unit" :value="unit">{{ unit }}</option></select></div></div>
 									</div>
 									<div class="pb-form-group">
 										<div class="pb-label-row"><label class="pb-form-label mb-0">Sticky On Desktop</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'gridStickyDesktop-' + node.id" v-model="node.settings.stickyOnDesktop"><label :for="'gridStickyDesktop-' + node.id"></label></div></div>
@@ -303,14 +333,10 @@
 							</div>
 							<div class="pb-prop-section pb-grid-settings__group">
 								<div class="pb-prop-section-title">Transform</div>
-								<div class="pb-gap-row">
-									<div class="pb-gap-field"><input class="pb-input" v-model="node.settings.transformRotate" placeholder="0deg"><span>Rotate</span></div>
-									<div class="pb-gap-field"><input class="pb-input" v-model="node.settings.transformOffsetX" placeholder="0px"><span>Offset X</span></div>
-									<div class="pb-gap-field"><input class="pb-input" v-model="node.settings.transformOffsetY" placeholder="0px"><span>Offset Y</span></div>
-									<div class="pb-gap-field"><input class="pb-input" v-model="node.settings.transformScaleX" placeholder="1"><span>Scale X</span></div>
-									<div class="pb-gap-field"><input class="pb-input" v-model="node.settings.transformScaleY" placeholder="1"><span>Scale Y</span></div>
-									<div class="pb-gap-field"><input class="pb-input" v-model="node.settings.transformSkewX" placeholder="0deg"><span>Skew X</span></div>
-									<div class="pb-gap-field"><input class="pb-input" v-model="node.settings.transformSkewY" placeholder="0deg"><span>Skew Y</span></div>
+								<div class="pb-grid-gap-controls">
+									<div v-for="control in [{key:'transformRotate',label:'Rotate'},{key:'transformSkewX',label:'Skew X'},{key:'transformSkewY',label:'Skew Y'}]" :key="control.key" class="pb-form-group"><label class="pb-form-label">{{ control.label }}</label><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" :value="dimensionValue(control.key, 'deg')" @input="setDimensionValue(control.key, $event, 'deg')"><select class="pb-mini-unit" disabled><option>deg</option></select></div></div>
+									<div v-for="control in [{key:'transformOffsetX',label:'Offset X'},{key:'transformOffsetY',label:'Offset Y'}]" :key="control.key" class="pb-form-group"><label class="pb-form-label">{{ control.label }}</label><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" :value="dimensionValue(control.key, 'px')" @input="setDimensionValue(control.key, $event, 'px')"><select class="pb-mini-unit" :value="dimensionUnit(control.key, 'px')" @change="setDimensionUnit(control.key, $event.target.value, 'px')"><option v-for="unit in ['px','%','em','rem','vw']" :key="control.key+'-'+unit" :value="unit">{{ unit }}</option></select></div></div>
+									<div v-for="control in [{key:'transformScaleX',label:'Scale X'},{key:'transformScaleY',label:'Scale Y'}]" :key="control.key" class="pb-form-group"><label class="pb-form-label">{{ control.label }}</label><input class="pb-input" type="number" step="0.1" v-model.number="node.settings[control.key]" placeholder="1"></div>
 								</div>
 							</div>
 							<div class="pb-prop-section pb-grid-settings__group">
@@ -346,12 +372,8 @@
 										<option value="scroll">Scroll</option>
 									</select>
 								</div>
-								<div class="pb-four-sides mt-1">
-									<div class="pb-side-input"><input class="pb-input" v-model="node.settings.positionTop" placeholder="auto"><span>Top</span></div>
-									<div class="pb-side-input"><input class="pb-input" v-model="node.settings.positionRight" placeholder="auto"><span>Right</span></div>
-									<div class="pb-side-input"><input class="pb-input" v-model="node.settings.positionBottom" placeholder="auto"><span>Bottom</span></div>
-									<div class="pb-side-input"><input class="pb-input" v-model="node.settings.positionLeft" placeholder="auto"><span>Left</span></div>
-								</div>
+								<div class="pb-label-row mt-1"><label class="pb-form-label mb-0">Offsets</label><select class="pb-mini-unit" :value="dimensionGroupUnit(['positionTop','positionRight','positionBottom','positionLeft'], 'px')" @change="setDimensionGroupUnit(['positionTop','positionRight','positionBottom','positionLeft'], $event.target.value, 'px')"><option v-for="unit in ['px','%','em','rem','vw']" :key="'grid-position-'+unit" :value="unit">{{ unit }}</option></select></div>
+								<div class="pb-four-sides mt-1"><template v-for="control in [{key:'positionTop',label:'Top'},{key:'positionRight',label:'Right'},{key:'positionBottom',label:'Bottom'},{key:'positionLeft',label:'Left'}]" :key="control.key"><label class="pb-side-input"><input class="pb-input" type="number" :value="dimensionValue(control.key, 'px')" @input="setDimensionValue(control.key, $event, 'px', '')" placeholder="auto"><span>{{ control.label }}</span></label></template></div>
 							</div>
 							<div class="pb-prop-section pb-grid-settings__group">
 								<div class="pb-form-group"><label class="pb-form-label">Z-Index</label><input class="pb-input" v-model="node.settings.zIndex" type="number" placeholder="auto"></div>
@@ -372,5 +394,42 @@
 </template>
 
 <script>
-export default { name: 'GridWidgetSettings', props: { node: { type: Object, required: true }, editor: { type: Object, required: true } } };
+export default {
+	name: 'GridWidgetSettings',
+	props: { node: { type: Object, required: true }, editor: { type: Object, required: true } },
+	methods: {
+		dimensionParts(key, fallbackUnit = 'px') {
+			const raw = String(this.node.settings[key] ?? '').trim();
+			if (!raw || raw.toLowerCase() === 'auto') return { value: '', unit: fallbackUnit };
+			const match = raw.match(/^(-?(?:\d+\.?\d*|\.\d+))\s*(px|pt|em|rem|%|vw|deg)?$/i);
+			if (!match) return { value: '', unit: fallbackUnit };
+			return { value: match[1], unit: (match[2] || fallbackUnit).toLowerCase() };
+		},
+		dimensionValue(key, fallbackUnit = 'px') { return this.dimensionParts(key, fallbackUnit).value; },
+		dimensionUnit(key, fallbackUnit = 'px') { return this.dimensionParts(key, fallbackUnit).unit; },
+		setDimensionValue(key, event, fallbackUnit = 'px', emptyToken = '') {
+			const raw = String(event?.target?.value ?? '').trim();
+			if (raw === '') { this.node.settings[key] = emptyToken; return; }
+			const value = Number(raw);
+			if (!Number.isFinite(value)) return;
+			this.node.settings[key] = String(value) + this.dimensionUnit(key, fallbackUnit);
+		},
+		setDimensionUnit(key, unit, fallbackUnit = 'px') {
+			const value = this.dimensionValue(key, fallbackUnit);
+			if (value === '') return;
+			this.node.settings[key] = String(value) + String(unit || fallbackUnit);
+		},
+		dimensionGroupUnit(keys, fallbackUnit = 'px') {
+			for (const key of keys) if (this.dimensionValue(key, fallbackUnit) !== '') return this.dimensionUnit(key, fallbackUnit);
+			return fallbackUnit;
+		},
+		setDimensionGroupUnit(keys, unit, fallbackUnit = 'px') { keys.forEach((key) => this.setDimensionUnit(key, unit, fallbackUnit)); },
+		setLinkedDimensionValue(key, keys, event, fallbackUnit = 'px', linked = false) {
+			this.setDimensionValue(key, event, fallbackUnit);
+			if (!linked) return;
+			const value = this.node.settings[key];
+			keys.forEach((target) => { if (target !== key) this.node.settings[target] = value; });
+		},
+	},
+};
 </script>

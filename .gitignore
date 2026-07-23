@@ -27,6 +27,7 @@ yarn-error.log
 /.playwright-daemon
 /.tmp-chrome-profile
 /.worktrees
+/graphify-out/
 
 **/caddy
 frankenphp

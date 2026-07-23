@@ -135,6 +135,10 @@ export default {
 			const device = String(this.responsiveDevice || 'desktop').toLowerCase();
 			const key = device === 'tablet' ? base + 'Tablet' : (device === 'mobile' ? base + 'Mobile' : base);
 			const value = settings[key];
+			if (device === 'mobile' && (value === '' || value === null || value === undefined)) {
+				const tabletValue = settings[base + 'Tablet'];
+				if (tabletValue !== '' && tabletValue !== null && tabletValue !== undefined) return tabletValue;
+			}
 			if (device !== 'desktop' && (value === '' || value === null || value === undefined)) {
 				const desktopValue = settings[base];
 				return (desktopValue === '' || desktopValue === null || desktopValue === undefined) ? fallback : desktopValue;
@@ -181,7 +185,8 @@ export default {
 			return shortMatch ? shortMatch[1] : value;
 		},
 		cleanColor(value) {
-			return String(value || '').trim().replace(/^#/, '');
+			const match = String(value || '').trim().match(/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i);
+			return match ? match[1].toLowerCase() : '';
 		},
 		timeFragment(start, end) {
 			const startTime = this.positiveTime(start);

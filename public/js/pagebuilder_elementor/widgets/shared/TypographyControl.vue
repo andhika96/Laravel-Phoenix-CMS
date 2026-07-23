@@ -54,7 +54,7 @@
 				</div>
 			</div>
 
-			<DimensionField label="Size" :control-key="prefix + '-typography-font-size'" :settings="settings" :setting-key="responsiveKey('FontSize')" :fallback="resetDefaults.FontSize || '16px'" :units="['px', 'em', 'rem', '%']" :responsive-device="responsiveDevice" @responsive-device="selectResponsiveDevice" />
+			<DimensionField label="Size" :control-key="prefix + '-typography-font-size'" :settings="settings" :setting-key="responsiveKey('FontSize')" :fallback="resetDefaults.FontSize || '16px'" :units="['px', 'em', 'rem', '%']" :responsive-device="responsiveDevice" @responsive-device="selectResponsiveDevice" @value-change="markFontSizeCustom" />
 
 			<label class="pb-typography-select-field">
 				<span>Weight</span>
@@ -170,7 +170,7 @@ const DimensionField = {
 		allowNegative: { type: Boolean, default: false },
 		responsiveDevice: { type: String, default: 'desktop' },
 	},
-	emits: ['responsive-device'],
+	emits: ['responsive-device', 'value-change'],
 	computed: {
 		desktopSettingKey() { return this.settingKey.replace(/(?:Tablet|Mobile)$/, ''); },
 		resolvedValue() {
@@ -189,10 +189,12 @@ const DimensionField = {
 			if (!Number.isFinite(number)) return;
 			const safeValue = Math.min(this.maxValue, Math.max(this.minValue, number));
 			this.settings[this.settingKey] = String(safeValue) + this.parsed.unit;
+			this.$emit('value-change');
 		},
 		setUnit(unit) {
 			const safeUnit = this.units.includes(unit) ? unit : this.units[0];
 			this.settings[this.settingKey] = String(this.parsed.value) + safeUnit;
+			this.$emit('value-change');
 		},
 	},
 	template: `<div class="pb-typography-dimension"><div class="pb-typography-dimension-head"><span>{{ label }}</span><div class="pb-typography-dimension-tools"><ResponsivePicker :model-value="responsiveDevice" :control-key="controlKey" @select="$emit('responsive-device',$event)" /><select class="pb-mini-unit" :value="parsed.unit" :aria-label="label + ' unit'" @change="setUnit($event.target.value)"><option v-for="unit in units" :key="unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-typography-range-row"><input class="pb-range" type="range" :min="minValue" :max="maxValue" :step="stepValue" :value="parsed.value" :aria-label="label" @input="setValue($event.target.value)"><input class="pb-input pb-input-compact" type="number" :min="minValue" :max="maxValue" :step="stepValue" :value="parsed.value" :aria-label="label + ' value'" @input="setValue($event.target.value)"></div></div>`,
@@ -207,6 +209,7 @@ export default {
 		fontFamilies: { type: [Array, Object], default: () => [] },
 		prefix: { type: String, default: 'header' },
 		resetDefaults: { type: Object, default: () => ({}) },
+		fontSizeModeKey: { type: String, default: '' },
 	},
 	emits: ['responsive-device'],
 	data() {
@@ -269,6 +272,9 @@ export default {
 			this.familyMenuOpen = true;
 			this.$nextTick(() => this.$refs.familySearch?.focus());
 		},
+		markFontSizeCustom() {
+			if (this.fontSizeModeKey) this.settings[this.fontSizeModeKey] = 'custom';
+		},
 		resetTypography() {
 			const defaults = {
 				FontFamily: 'inherit', FontSize: '16px', FontWeight: '600',
@@ -283,6 +289,7 @@ export default {
 				values[this.settingKey(key) + 'Mobile'] = '';
 			});
 			Object.assign(this.settings, values);
+			if (this.fontSizeModeKey) this.settings[this.fontSizeModeKey] = 'auto';
 		},
 	},
 };
@@ -303,7 +310,7 @@ export default {
 .pb-typography-field { margin-bottom: 14px; }
 .pb-typography-family-field > label { display: block; margin-bottom: 7px; color: #344054; font-size: 11px; }
 .pb-font-family-select { position: relative; }
-.pb-font-family-button { width: 100%; min-height: 38px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 10px; border: 1px solid #d3dae6; border-radius: 6px; background: #fff; color: #344054; font-size: 12px; text-align: left; cursor: pointer; }
+.pb-font-family-button { width: 100%; height: 34px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 10px; border: 1px solid #d3dae6; border-radius: 6px; background: #fff; color: #344054; font-size: 12px; text-align: left; cursor: pointer; }
 .pb-font-family-menu { position: absolute; z-index: 30; top: calc(100% + 4px); right: 0; left: 0; overflow: hidden; border: 1px solid #d3dae6; border-radius: 6px; background: #fff; box-shadow: 0 9px 24px rgba(16, 24, 40, .18); }
 .pb-font-family-search { display: grid; grid-template-columns: 20px minmax(0, 1fr); align-items: center; gap: 4px; margin: 7px; padding: 0 7px; border: 1px solid #b9c2d0; border-radius: 5px; color: #7a8699; }
 .pb-font-family-search input { min-width: 0; height: 32px; border: 0; outline: 0; background: transparent; color: #344054; font: inherit; }
@@ -312,18 +319,20 @@ export default {
 .pb-font-family-options button:hover, .pb-font-family-options button.active { background: #eef1ff; color: #5367ff; }
 .pb-font-family-group { padding: 10px 8px 4px; color: #667085; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
 .pb-font-family-empty { padding: 14px 8px; color: #7a8699; font-size: 11px; text-align: center; }
-.pb-typography-select-field { display: grid; grid-template-columns: minmax(0, 1fr) 150px; align-items: center; gap: 10px; margin-bottom: 12px; color: #344054; font-size: 11px; }
-.pb-typography-select-field .pb-select { min-width: 0; }
-.pb-typography-dimension { margin-bottom: 15px; }
-.pb-typography-dimension-head { min-height: 28px; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; color: #344054; font-size: 11px; }
-.pb-typography-dimension-tools { display: inline-flex; align-items: center; gap: 4px; }
-.pb-typography-dimension-tools .pb-mini-unit { width: 56px; min-width: 56px; }
-.pb-typography-range-row { display: grid; grid-template-columns: minmax(0, 1fr) 84px; align-items: center; gap: 9px; }
-.pb-typography-range-row .pb-input { min-width: 0; text-align: center; }
-.pb-control-device-wrap { position: relative; }
-.pb-control-device-btn { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 4px; background: transparent; color: #667085; cursor: pointer; }
-.pb-control-device-btn:hover { background: #eef1ff; color: #5b6cff; }
-.pb-control-device-menu { position: absolute; z-index: 40; top: calc(100% + 3px); right: 0; min-width: 150px; overflow: hidden; padding: 4px; border: 1px solid #d3dae6; border-radius: 6px; background: #fff; box-shadow: 0 8px 20px rgba(16, 24, 40, .18); }
-.pb-control-device-menu button { width: 100%; display: flex; align-items: center; gap: 8px; padding: 7px 8px; border: 0; border-radius: 4px; background: transparent; color: #526178; font-size: 11px; text-align: left; cursor: pointer; }
-.pb-control-device-menu button:hover, .pb-control-device-menu button.active { background: #eef1ff; color: #5b6cff; }
+.pb-typography-select-field { display: grid; grid-template-columns: minmax(0, 1fr) 136px; align-items: center; gap: 10px; margin-bottom: 10px; color: #344054; font-size: 11px; line-height: 1.35; }
+.pb-typography-select-field .pb-select { min-width: 0; height: 34px; padding: 6px 28px 6px 9px; border-radius: 5px; font-size: 11px; line-height: 1.2; }
+.pb-typography-control :deep(.pb-typography-dimension) { margin-bottom: 12px; }
+.pb-typography-control :deep(.pb-typography-dimension-head) { min-height: 28px; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; color: #344054; font-size: 11px; line-height: 1.35; }
+.pb-typography-control :deep(.pb-typography-dimension-tools) { display: inline-flex; align-items: center; flex: 0 0 auto; gap: 4px; }
+.pb-typography-control :deep(.pb-typography-dimension-tools .pb-mini-unit) { width: 56px; min-width: 56px; height: 30px; padding: 4px 22px 4px 7px; border-radius: 5px; font-size: 11px; }
+.pb-typography-control :deep(.pb-typography-range-row) { display: grid; grid-template-columns: minmax(0, 1fr) 68px; align-items: center; gap: 9px; }
+.pb-typography-control :deep(.pb-typography-range-row .pb-range) { min-width: 0; width: 100%; margin: 0; }
+.pb-typography-control :deep(.pb-typography-range-row .pb-input) { min-width: 0; width: 68px; height: 34px; padding: 5px 8px; border-radius: 5px; font-size: 11px; line-height: 1.2; text-align: center; appearance: textfield; }
+.pb-typography-control :deep(.pb-typography-range-row input[type="number"]::-webkit-inner-spin-button), .pb-typography-control :deep(.pb-typography-range-row input[type="number"]::-webkit-outer-spin-button) { margin: 0; -webkit-appearance: none; }
+.pb-typography-control :deep(.pb-control-device-wrap) { position: relative; }
+.pb-typography-control :deep(.pb-control-device-btn) { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #d3dae6; border-radius: 5px; background: #fff; color: #667085; font-size: 10px; cursor: pointer; }
+.pb-typography-control :deep(.pb-control-device-btn:hover) { border-color: #8c9aff; background: #eef1ff; color: #5b6cff; }
+.pb-typography-control :deep(.pb-control-device-menu) { position: absolute; z-index: 40; top: calc(100% + 3px); right: 0; min-width: 150px; overflow: hidden; padding: 4px; border: 1px solid #d3dae6; border-radius: 6px; background: #fff; box-shadow: 0 8px 20px rgba(16, 24, 40, .18); }
+.pb-typography-control :deep(.pb-control-device-menu button) { width: 100%; display: flex; align-items: center; gap: 8px; padding: 7px 8px; border: 0; border-radius: 4px; background: transparent; color: #526178; font-size: 11px; text-align: left; cursor: pointer; }
+.pb-typography-control :deep(.pb-control-device-menu button:hover), .pb-typography-control :deep(.pb-control-device-menu button.active) { background: #eef1ff; color: #5b6cff; }
 </style>

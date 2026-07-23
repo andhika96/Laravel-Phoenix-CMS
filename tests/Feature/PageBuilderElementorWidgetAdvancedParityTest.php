@@ -14,13 +14,16 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
     public function test_shared_advanced_model_is_normalized_for_accordion_widgets(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $imageBoxSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
 
         $this->assertSourceContains('function widgetAdvancedDefaults()', $appJs);
         $this->assertSourceContains('function normalizeWidgetAdvancedSettings(settings)', $appJs);
         $this->assertSourceContains('...widgetAdvancedDefaults()', $appJs);
         $this->assertSourceContains("normalizeWidgetAdvancedSettings(c.settings)", $appJs);
         $this->assertSourceContains("'/js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'", $appJs);
-        $this->assertSourceContains('<WidgetAdvancedControls', $appJs);
+        $this->assertSourceContains('const WidgetAdvancedControls = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.advanced));', $appJs);
+        $this->assertSourceContains('widgetAdvancedControls: WidgetAdvancedControls', $appJs);
+        $this->assertSourceContains('<component :is="editor.widgetAdvancedControls"', $imageBoxSettings);
     }
 
     public function test_shared_advanced_controls_cover_every_approved_section(): void
@@ -80,8 +83,59 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertSourceContains('<BoxControl', $component);
         $this->assertSourceContains('type="range"', $component);
         $this->assertSourceContains('type="number"', $component);
+        $this->assertSourceContains("const DEFAULT_DIMENSION_UNITS = ['px', 'pt', 'em', 'rem', '%'];", $component);
+        $this->assertSourceContains("const SPACING_DIMENSION_UNITS = ['px', '%', 'em', 'rem', 'vw'];", $component);
+        $this->assertSourceContains("units: SPACING_DIMENSION_UNITS", $component);
         $this->assertSourceContains('.pb-state-tabs--two', $css);
         $this->assertSourceContains('grid-template-columns: repeat(2, minmax(0, 1fr))', $css);
+    }
+
+    public function test_shared_advanced_color_fields_use_the_local_color_picker(): void
+    {
+        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $editorShell = file_get_contents(resource_path('views/pagebuilder_elementor/editor_shell.blade.php'));
+
+        foreach ([
+            "advancedBackgroundColor', backgroundState",
+            "advancedGradientColorOne', backgroundState",
+            "advancedGradientColorTwo', backgroundState",
+            "advancedBorderColor', borderState",
+            "advancedBoxShadowColor', borderState",
+        ] as $settingBinding) {
+            $this->assertMatchesRegularExpression(
+                '/class="pb-input pb-coloris-input"[^>]+'.preg_quote($settingBinding, '/').'/',
+                $component,
+                'Shared color field is missing the local picker hook: '.$settingBinding,
+            );
+        }
+
+        $this->assertSourceContains("el: '.pb-coloris-input'", $appJs);
+        $this->assertSourceContains('assets/vendor/pb-picker/picker.min.css', $editorShell);
+        $this->assertSourceContains('assets/vendor/pb-picker/picker.min.js', $editorShell);
+    }
+
+    public function test_shared_background_uses_media_position_and_slider_controls_with_canvas_parity(): void
+    {
+        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
+        $imageBoxSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
+        $accordionSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Settings.vue'));
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertSourceContains('<div class="pb-bg-media-field"', $component);
+        $this->assertSourceContains('$emit(\'choose-media\', stateKey(\'advancedBackgroundImage\', backgroundState))', $component);
+        $this->assertSourceContains('$emit(\'clear-media\', stateKey(\'advancedBackgroundImage\', backgroundState))', $component);
+        $this->assertSourceContains('<option v-for="position in backgroundPositions"', $component);
+        $this->assertSourceContains('<ScalarControl label="First Location"', $component);
+        $this->assertSourceContains('<ScalarControl label="Second Location"', $component);
+        $this->assertStringNotContainsString('placeholder="https://..."', $component);
+        $this->assertSourceContains('@choose-media="editor.chooseMedia(node.settings,$event)"', $imageBoxSettings);
+        $this->assertSourceContains('@clear-media="editor.clearMedia(node.settings,$event)"', $imageBoxSettings);
+        $this->assertSourceContains('@choose-media="editor.chooseMedia(node.settings,$event)"', $accordionSettings);
+        $this->assertSourceContains('@clear-media="editor.clearMedia(node.settings,$event)"', $accordionSettings);
+        $this->assertSourceContains('const backgroundPosition = (value) => {', $appJs);
+        $this->assertSourceContains("s['advancedBackgroundAttachment' + suffix]", $appJs);
+        $this->assertSourceContains('style.background = normalBackground;', $appJs);
     }
 
     public function test_advanced_settings_render_safe_styles_attributes_and_scoped_css(): void
@@ -247,6 +301,7 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
         $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
+        $imageBoxSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
         $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
 
         $this->assertSourceContains('ResponsiveDeviceControl', $component);
@@ -254,7 +309,7 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertSourceContains('pb-transform-grid', $component);
         $this->assertSourceContains('ScalarControl', $component);
         $this->assertFalse(str_contains($component, 'pb-advanced-device-note'));
-        $this->assertSourceContains('@responsive-device="setResponsiveDevice"', $appJs);
+        $this->assertSourceContains('@responsive-device="editor.setResponsiveDevice"', $imageBoxSettings);
         $this->assertSourceContains('.pb-widget-advanced-controls .pb-transform-grid', $css);
         $this->assertSourceContains('.pb-widget-advanced-controls .pb-control-device-btn', $css);
     }

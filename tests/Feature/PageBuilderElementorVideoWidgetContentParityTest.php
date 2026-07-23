@@ -10,36 +10,41 @@ class PageBuilderElementorVideoWidgetContentParityTest extends TestCase
     public function test_editor_exposes_elementor_like_video_content_controls(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/video/Settings.vue'));
 
         $this->assertIsString($appJs);
+        $this->assertIsString($settings);
+        $uiSources = $appJs . $settings;
         $this->assertStringContainsString('const videoSourceOptions = [', $appJs);
         $this->assertStringContainsString("{ value: 'youtube', label: 'YouTube' }", $appJs);
         $this->assertStringContainsString("{ value: 'vimeo', label: 'Vimeo' }", $appJs);
         $this->assertStringContainsString("{ value: 'dailymotion', label: 'Dailymotion' }", $appJs);
         $this->assertStringContainsString("{ value: 'self_hosted', label: 'Self Hosted' }", $appJs);
         $this->assertStringContainsString("{ value: 'videopress', label: 'VideoPress' }", $appJs);
-        $this->assertStringContainsString('<label class="pb-form-label">Start Time</label>', $appJs);
-        $this->assertStringContainsString('<label class="pb-form-label">End Time</label>', $appJs);
-        $this->assertStringContainsString('Suggested Videos', $appJs);
-        $this->assertStringContainsString('Privacy Mode', $appJs);
-        $this->assertStringContainsString('Intro Title', $appJs);
-        $this->assertStringContainsString('Video Info', $appJs);
-        $this->assertStringContainsString('Download Button', $appJs);
-        $this->assertStringContainsString('Preload', $appJs);
-        $this->assertStringContainsString('Poster', $appJs);
-        $this->assertStringContainsString('Image Overlay', $appJs);
+        $this->assertStringContainsString('<label class="pb-form-label">Start Time</label>', $settings);
+        $this->assertStringContainsString('<label class="pb-form-label">End Time</label>', $settings);
+        $this->assertStringContainsString('Suggested Videos', $uiSources);
+        $this->assertStringContainsString('Privacy Mode', $uiSources);
+        $this->assertStringContainsString('Intro Title', $uiSources);
+        $this->assertStringContainsString('Video Info', $uiSources);
+        $this->assertStringContainsString('Download Button', $uiSources);
+        $this->assertStringContainsString('Preload', $uiSources);
+        $this->assertStringContainsString('Poster', $uiSources);
+        $this->assertStringContainsString('Image Overlay', $uiSources);
     }
 
     public function test_editor_uses_ckfinder_media_picker_for_hosted_video_sources(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/video/Settings.vue'));
 
         $this->assertIsString($appJs);
-        $this->assertStringContainsString('videoUsesHostedPicker(selectedNode)', $appJs);
-        $this->assertStringContainsString('External URL', $appJs);
-        $this->assertStringContainsString("@click=\"chooseMedia(selectedNode.settings, 'fileUrl', 'Paste video URL')\"", $appJs);
-        $this->assertStringContainsString("@click=\"chooseMedia(selectedNode.settings, 'poster', 'Paste image URL')\"", $appJs);
-        $this->assertStringContainsString("@click=\"chooseMedia(selectedNode.settings, 'overlayImage', 'Paste image URL')\"", $appJs);
+        $this->assertIsString($settings);
+        $this->assertStringContainsString('editor.videoUsesHostedPicker(node)', $settings);
+        $this->assertStringContainsString('External URL', $settings);
+        $this->assertStringContainsString("@choose=\"editor.chooseMedia(node.settings, 'fileUrl', 'Paste video URL')\"", $settings);
+        $this->assertStringContainsString("@choose=\"editor.chooseMedia(node.settings, 'poster', 'Paste image URL')\"", $settings);
+        $this->assertStringContainsString("@choose=\"editor.chooseMedia(node.settings, 'overlayImage', 'Paste image URL')\"", $settings);
     }
 
     public function test_editor_exposes_image_overlay_for_iframe_video_sources(): void
@@ -55,7 +60,7 @@ class PageBuilderElementorVideoWidgetContentParityTest extends TestCase
 
     public function test_video_widget_preview_supports_iframe_and_hosted_sources(): void
     {
-        $videoVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/Video.vue'));
+        $videoVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/video/Canvas.vue'));
 
         $this->assertIsString($videoVue);
         $this->assertStringContainsString('isIframeSource() {', $videoVue);
@@ -64,6 +69,24 @@ class PageBuilderElementorVideoWidgetContentParityTest extends TestCase
         $this->assertStringContainsString("if (source === 'dailymotion') {", $videoVue);
         $this->assertStringContainsString("if (source === 'youtube' || source === 'vimeo' || source === 'dailymotion' || source === 'self_hosted' || source === 'videopress') {", $videoVue);
         $this->assertStringContainsString('dismissOverlay()', $videoVue);
+    }
+
+    public function test_video_settings_use_consistent_tabs_color_picker_and_responsive_inheritance(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/video/Settings.vue'));
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/video/Canvas.vue'));
+
+        $this->assertIsString($settings);
+        $this->assertIsString($canvas);
+        $this->assertStringContainsString('class="pb-tab-nav"', $settings);
+        $this->assertStringContainsString("settingsTab === 'content'", $settings);
+        $this->assertStringContainsString("settingsTab === 'style'", $settings);
+        $this->assertStringContainsString("settingsTab === 'advanced'", $settings);
+        $this->assertStringContainsString('class="pb-color-row"', $settings);
+        $this->assertStringContainsString('class="pb-color-swatch"', $settings);
+        $this->assertStringContainsString('class="pb-input coloris pb-coloris-input"', $settings);
+        $this->assertStringContainsString("const tabletValue = settings[base + 'Tablet'];", $canvas);
+        $this->assertStringContainsString("const match = String(value || '').trim().match(/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i);", $canvas);
     }
 
     #[DataProvider('frontendVideoSourceProvider')]

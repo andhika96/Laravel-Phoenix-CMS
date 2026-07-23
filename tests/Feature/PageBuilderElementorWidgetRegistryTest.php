@@ -66,6 +66,28 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
         $this->assertStringNotContainsString("case 'heading':", $app);
     }
 
+    public function test_heading_settings_use_standard_tabs_picker_and_safe_html_tags(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/heading/Settings.vue'));
+        $definition = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/heading/definition.js'));
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/heading/Canvas.vue'));
+        $blade = file_get_contents(resource_path('views/pagebuilder_elementor/widgets/basic/heading.blade.php'));
+        $app = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertStringContainsString('pb-tab-nav', $settings);
+        foreach (['Content', 'Style', 'Advanced'] as $tab) {
+            $this->assertStringContainsString(">$tab</span>", $settings);
+        }
+        $this->assertStringContainsString('pb-color-row', $settings);
+        $this->assertStringContainsString('pb-color-swatch', $settings);
+        $this->assertStringContainsString('pb-input coloris pb-coloris-input', $settings);
+        $this->assertStringContainsString("const allowedTags = Object.freeze(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p']);", $definition);
+        $this->assertStringContainsString('normalized.settings.tag = allowedTags.includes(normalized.settings.tag)', $definition);
+        $this->assertStringContainsString('safeTag()', $canvas);
+        $this->assertStringContainsString("['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p']", $blade);
+        $this->assertStringContainsString("settingsTab.value = type && !isCont(type) && !isGrid(type) ? 'content' : 'layout';", $app);
+    }
+
     public function test_editor_mounts_before_preloading_registered_settings_and_preserves_loader_diagnostics(): void
     {
         $app = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));

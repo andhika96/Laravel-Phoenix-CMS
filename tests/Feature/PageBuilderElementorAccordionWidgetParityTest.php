@@ -199,6 +199,20 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertSourceContains('type="range"', $appJs);
     }
 
+    public function test_accordion_uses_canonical_color_gradient_and_text_shadow_controls(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Settings.vue'));
+
+        $this->assertIsString($settings);
+        $this->assertStringNotContainsString('<input class="pb-input pb-coloris-input"', $settings);
+        $this->assertGreaterThanOrEqual(9, substr_count($settings, 'class="pb-color-row"'));
+        $this->assertGreaterThanOrEqual(9, substr_count($settings, 'class="pb-color-swatch"'));
+        $this->assertStringContainsString(':is="editor.textShadowControl"', $settings);
+        $this->assertStringContainsString('@update:modelValue="node.settings[editor.accordionStateKey(\'headerTextShadow\', editor.accordionTitleStyleState)] = $event"', $settings);
+        $this->assertStringNotContainsString('placeholder="0 1px 2px rgba(0,0,0,.15)"', $settings);
+        $this->assertStringContainsString('class="pb-range-value-row pb-accordion-gradient-control"', $settings);
+    }
+
     public function test_frontend_renders_semantic_nested_accordion_and_safe_faq_schema(): void
     {
         $html = view('pagebuilder_elementor.partials.render_node', ['node' => [

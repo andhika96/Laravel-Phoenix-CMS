@@ -56,12 +56,16 @@
 		link: '/js/pagebuilder_elementor/widgets/shared/LinkControl.vue',
 		dynamicTag: '/js/pagebuilder_elementor/widgets/shared/DynamicTagControl.vue',
 		cssFilter: '/js/pagebuilder_elementor/widgets/shared/CssFilterControl.vue',
+		textStroke: '/js/pagebuilder_elementor/widgets/shared/TextStrokeControl.vue',
+		textShadow: '/js/pagebuilder_elementor/widgets/shared/TextShadowControl.vue',
 	});
 	const WidgetAdvancedControls = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.advanced));
 	const TypographyControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.typography));
 	const LinkControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.link));
 	const DynamicTagControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.dynamicTag));
 	const CssFilterControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.cssFilter));
+	const TextStrokeControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.textStroke));
+	const TextShadowControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.textShadow));
 
 
 	const _wcache = {};
@@ -420,12 +424,24 @@
 			style[s.sticky] = cssSpace(get('stickyOffset', '0px'), '0');
 		}
 		if (get('zIndex', '') !== '') style.zIndex = Number(get('zIndex')) || 0;
+		const backgroundPositions = ['center center', 'top center', 'bottom center', 'center left', 'center right', 'top left', 'top right', 'bottom left', 'bottom right'];
+		const backgroundPosition = (value) => {
+			const candidate = String(value || '').trim().toLowerCase();
+			return backgroundPositions.includes(candidate) ? candidate : 'center center';
+		};
 		const backgroundValue = (hover = false) => {
 			const suffix = hover ? 'Hover' : '';
 			const type = s['advancedBackgroundType' + suffix] || 'none';
 			if (type === 'classic') {
 				const image = String(s['advancedBackgroundImage' + suffix] || '').trim();
-				if (image) return `url("${image.replace(/["\\]/g, '')}")`;
+				if (image) {
+					const safeImage = image.replace(/["\\]/g, '');
+					const position = backgroundPosition(s['advancedBackgroundPosition' + suffix]);
+					const attachment = s['advancedBackgroundAttachment' + suffix] === 'fixed' ? 'fixed' : 'scroll';
+					const repeat = ['no-repeat', 'repeat', 'repeat-x', 'repeat-y'].includes(s['advancedBackgroundRepeat' + suffix]) ? s['advancedBackgroundRepeat' + suffix] : 'no-repeat';
+					const size = ['auto', 'cover', 'contain'].includes(s['advancedBackgroundSize' + suffix]) ? s['advancedBackgroundSize' + suffix] : 'cover';
+					return `url("${safeImage}") ${position} / ${size} ${repeat} ${attachment}`;
+				}
 				return String(s['advancedBackgroundColor' + suffix] || 'transparent');
 			}
 			if (type === 'gradient') {
@@ -442,7 +458,7 @@
 		const normalBackground = backgroundValue(false);
 		if (normalBackground !== 'none') {
 			if (String(normalBackground).startsWith('#') || String(normalBackground).startsWith('rgb') || normalBackground === 'transparent') style.backgroundColor = normalBackground;
-			else style.backgroundImage = normalBackground;
+			else style.background = normalBackground;
 		}
 		style['--pb-advanced-hover-background'] = backgroundValue(true);
 		const borderType = ['solid', 'double', 'dotted', 'dashed', 'groove'].includes(s.advancedBorderType) ? s.advancedBorderType : 'none';
@@ -574,6 +590,7 @@
 			linkNofollow: false,
 			linkCustomAttributes: [],
 			titleTag: 'h3',
+			titleFontSizeMode: 'auto',
 			dynamicBindings: {},
 			imagePosition: 'top',
 			imagePositionTablet: '',
@@ -620,6 +637,8 @@
 			titleFontStyle: 'normal',
 			titleTextDecoration: 'none',
 			titleTextStrokeWidth: '0px',
+			titleTextStrokeWidthTablet: '',
+			titleTextStrokeWidthMobile: '',
 			titleTextStrokeColor: '#000000',
 			titleTextShadow: 'none',
 			descriptionColor: '',
@@ -645,6 +664,7 @@
 	}
 	const imageBoxResolutionOptions = Object.freeze(['thumbnail', 'medium', 'medium_large', 'large', '1536x1536', '2048x2048', 'full']);
 	const imageBoxTitleTagOptions = Object.freeze(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p']);
+	const IMAGE_BOX_TEXT_DYNAMIC_TAGS = Object.freeze(['page_title', 'page_excerpt', 'page_url', 'site_title', 'site_url', 'user_display_name']);
 	const imageBoxPositionOptions = Object.freeze(['top', 'left', 'right']);
 	const imageBoxAlignmentOptions = Object.freeze(['left', 'center', 'right', 'justify']);
 	const imageBoxBorderTypeOptions = Object.freeze(['none', 'solid', 'double', 'dotted', 'dashed', 'groove']);
@@ -660,12 +680,17 @@
 	}
 	function normalizeImageBoxSettings(settings) {
 		if (!settings || typeof settings !== 'object') return settings;
+		const hadTitleFontSizeMode = settings.titleFontSizeMode !== undefined;
+		const legacyTitleFontSize = String(settings.titleFontSize ?? '').trim();
 		const defaults = imageBoxWidgetDefaults();
 		Object.keys(defaults).forEach((key) => {
 			if (settings[key] === undefined) settings[key] = cloneSettingValue(defaults[key]);
 		});
 		settings.imageResolution = imageBoxResolutionOptions.includes(settings.imageResolution) ? settings.imageResolution : 'full';
 		settings.titleTag = imageBoxTitleTagOptions.includes(settings.titleTag) ? settings.titleTag : 'h3';
+		settings.titleFontSizeMode = hadTitleFontSizeMode
+			? (['auto', 'custom'].includes(settings.titleFontSizeMode) ? settings.titleFontSizeMode : 'auto')
+			: (legacyTitleFontSize && legacyTitleFontSize !== '29px' ? 'custom' : 'auto');
 		settings.imagePosition = imageBoxPositionOptions.includes(settings.imagePosition) ? settings.imagePosition : 'top';
 		settings.alignment = imageBoxAlignmentOptions.includes(settings.alignment) ? settings.alignment : 'center';
 		['imagePositionTablet', 'imagePositionMobile'].forEach((key) => {
@@ -1030,6 +1055,7 @@
 			selectedColumnId: { type: String, default: '' },
 			hoveredId:   { type: String,   default: '' },
 			responsiveDevice: { type: String, default: 'desktop' },
+			dynamicContext: { type: Object, default: () => ({}) },
 			// Handlers dari app
 			onAddContainer: { type: Function, required: true },
 			onAddCol:       { type: Function, required: true },
@@ -1082,6 +1108,7 @@
 			isGrid()  { return isGrid(this.node.type); },
 			isTabsNode() { return isTabs(this.node.type); },
 			isAccordionNode() { return isAccordion(this.node.type); },
+			hasSharedAdvancedControls() { return this.isAccordionNode || this.node.type === 'image-box'; },
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
 				return displayNodeLabel(this.node);
@@ -1121,12 +1148,12 @@
 			},
 			nodeShellId() {
 				const raw = String(this.node?.settings?.cssId || '').trim();
-				if (this.isAccordionNode && /^[A-Za-z][A-Za-z0-9_-]*$/.test(raw)) return raw;
+				if (this.hasSharedAdvancedControls && /^[A-Za-z][A-Za-z0-9_-]*$/.test(raw)) return raw;
 				if (!this.isCont) return null;
 				return raw || null;
 			},
 			nodeAdvancedClasses() {
-				if (!this.isAccordionNode) return [];
+				if (!this.hasSharedAdvancedControls) return [];
 				const s = this.node.settings || {};
 				const classes = ['pb-has-advanced'];
 				String(s.cssClass || '').trim().split(/\s+/).filter(Boolean).forEach((token) => {
@@ -1141,7 +1168,7 @@
 			nodeShellStyle() {
 				const s = this.node.settings || {};
 				const device = this.responsiveDevice || 'desktop';
-				if (this.isAccordionNode) return widgetAdvancedPreviewStyle(s, device);
+				if (this.hasSharedAdvancedControls) return widgetAdvancedPreviewStyle(s, device);
 				if (!this.isCont) return {};
 				const currentHideValue = device === 'tablet'
 					? s.hideTablet
@@ -1483,6 +1510,7 @@
 					selectedColumnId: this.selectedColumnId,
 					hoveredId:      this.hoveredId,
 					responsiveDevice: this.responsiveDevice,
+					dynamicContext: this.dynamicContext,
 					onAddContainer: this.onAddContainer,
 					onAddCol:       this.onAddCol,
 					onSelect:       this.onSelect,
@@ -2096,7 +2124,7 @@
 		<template v-else>
 			<div class="pb-preview">
 				<div class="pb-preview-inner">
-					<component :is="loadWidget(node.type)" :item="node" :responsive-device="responsiveDevice" />
+					<component :is="loadWidget(node.type)" :item="node" :responsive-device="responsiveDevice" :dynamic-context="dynamicContext" />
 				</div>
 			</div>
 		</template>
@@ -2143,6 +2171,7 @@
 			const saveUrl    = ref(PBC.saveUrl || '');
 			const pd         = PBC.pageData || null;
 			const pageName   = ref(pd?.page_name || 'Untitled Page');
+			const dynamicPreviewContext = computed(() => ({ ...(PBC.dynamicPreviewContext || {}), page_title: pageName.value }));
 			const pageStatus = ref(pd?.status || 'draft');
 			const customCss  = ref(pd?.custom_css || '');
 			const showCssEditor = ref(false);
@@ -4408,7 +4437,8 @@
 				scheduleColorisInit
 			);
 			watch(selectedId, (nextId) => {
-				settingsTab.value = ['accordion', 'image_box'].includes(selectedNode.value?.type) ? 'content' : 'layout';
+				const type = selectedNode.value?.type;
+				settingsTab.value = type && !isCont(type) && !isGrid(type) ? 'content' : 'layout';
 				closeControlResponsiveMenu();
 				closeWidthPreviewMenu();
 				scheduleColorisInit();
@@ -5165,7 +5195,10 @@
 				chooseBgImage,
 				clearBgImage,
 				showUnsupportedControlNotice,
+				imageBoxTextDynamicTags: IMAGE_BOX_TEXT_DYNAMIC_TAGS,
 				dynamicTagControl: DynamicTagControl,
+				textStrokeControl: TextStrokeControl,
+				textShadowControl: TextShadowControl,
 				linkControl: LinkControl,
 				cssFilterControl: CssFilterControl,
 				typographyControl: TypographyControl,
@@ -5261,7 +5294,7 @@
 				accordionStyleStates: ACCORDION_STYLE_STATES, accordionBorderTypes: ACCORDION_BORDER_TYPES, accordionGradientTypes: ACCORDION_GRADIENT_TYPES,
 				tabsBreakpointOptions: TABS_WIDGET_BREAKPOINT_OPTIONS, tabsWidthUnits: TABS_WIDGET_WIDTH_UNITS,
 				iconWidgetViewOptions: ICON_WIDGET_VIEW_OPTIONS, iconWidgetShapeOptions: ICON_WIDGET_SHAPE_OPTIONS,
-				pageName, pageStatus, customCss, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
+				pageName, pageStatus, customCss, dynamicPreviewContext, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
 				showTextEditorModal, textEditorModalFullscreen, textEditorModalSummary, setTextEditorHtml, openTextEditorModal, closeTextEditorModal,
 				customCssGotoLine, customCssSearchQuery, customCssActiveLine, customCssCharCount, customCssLineCount, customCssLineNumbers, customCssSummary,
 				openCustomCssEditor, closeCustomCssEditor, applyCustomCssEditorChanges, clearCustomCss, handleCustomCssTab, syncCustomCssEditorScroll, goToCustomCssLine, searchCustomCssCode, savePage, saveState, saveMsg,
@@ -5523,6 +5556,7 @@
 								:selected-column-id="selectedColumnId"
 								:hovered-id="hoveredId"
 								:responsive-device="responsiveDevice"
+								:dynamic-context="dynamicPreviewContext"
 								:on-add-container="onAddContainer"
 								:on-add-col="onAddCol"
 								:on-select="selectNode"

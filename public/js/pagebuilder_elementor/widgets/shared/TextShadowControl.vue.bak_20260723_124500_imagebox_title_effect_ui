@@ -1,0 +1,75 @@
+<template>
+	<div class="pb-text-effect-control">
+		<div class="pb-text-effect-heading">
+			<label class="pb-form-label">Text Shadow</label>
+			<button type="button" class="pb-text-effect-edit" :class="{ active: open || modelValue !== 'none' }" @click="open = !open">{{ open ? 'Close' : 'Edit' }}</button>
+		</div>
+		<div v-if="open" class="pb-text-effect-popover">
+			<div class="pb-text-effect-row"><label>Color</label><input class="pb-input pb-coloris-input" v-model="shadow.color" @input="emitValue"></div>
+			<div v-for="control in controls" :key="control.key" class="pb-text-effect-field">
+				<label>{{ control.label }}</label>
+				<div class="pb-text-effect-slider">
+					<input type="range" :min="control.min" :max="control.max" v-model.number="shadow[control.key]" @input="emitValue">
+					<input type="number" :min="control.min" :max="control.max" v-model.number="shadow[control.key]" @input="emitValue">
+				</div>
+			</div>
+			<button type="button" class="pb-text-effect-reset" @click="reset">Reset</button>
+		</div>
+	</div>
+</template>
+
+<script>
+export default {
+	name: 'TextShadowControl',
+	props: { modelValue: { type: String, default: 'none' } },
+	emits: ['update:modelValue'],
+	data() {
+		return {
+			open: false,
+			shadow: { color: 'rgba(0,0,0,.3)', blur: 0, horizontal: 0, vertical: 0 },
+			controls: [
+				{ key: 'blur', label: 'Blur', min: 0, max: 100 },
+				{ key: 'horizontal', label: 'Horizontal', min: -100, max: 100 },
+				{ key: 'vertical', label: 'Vertical', min: -100, max: 100 },
+			],
+		};
+	},
+	created() { this.readValue(this.modelValue); },
+	watch: { modelValue(value) { this.readValue(value); } },
+	methods: {
+		readValue(value) {
+			const match = String(value || '').trim().match(/^(-?\d+(?:\.\d+)?)px\s+(-?\d+(?:\.\d+)?)px\s+(\d+(?:\.\d+)?)px\s+(.+)$/);
+			if (!match) return;
+			this.shadow.horizontal = Number(match[1]);
+			this.shadow.vertical = Number(match[2]);
+			this.shadow.blur = Number(match[3]);
+			this.shadow.color = match[4];
+		},
+		emitValue() {
+			const clamp = (value, min, max) => Math.min(max, Math.max(min, Number(value) || 0));
+			const horizontal = clamp(this.shadow.horizontal, -100, 100);
+			const vertical = clamp(this.shadow.vertical, -100, 100);
+			const blur = clamp(this.shadow.blur, 0, 100);
+			const color = String(this.shadow.color || 'rgba(0,0,0,.3)').trim();
+			this.$emit('update:modelValue', `${horizontal}px ${vertical}px ${blur}px ${color}`);
+		},
+		reset() {
+			this.shadow = { color: 'rgba(0,0,0,.3)', blur: 0, horizontal: 0, vertical: 0 };
+			this.$emit('update:modelValue', 'none');
+		},
+	},
+};
+</script>
+
+<style scoped>
+.pb-text-effect-control { position: relative; margin-bottom: 12px; }
+.pb-text-effect-heading, .pb-text-effect-row, .pb-text-effect-slider { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.pb-text-effect-edit { min-width: 46px; padding: 4px 8px; border: 1px solid #d0d5dd; border-radius: 4px; background: #fff; color: #475467; font-size: 11px; cursor: pointer; }
+.pb-text-effect-edit.active { color: #5367ff; border-color: #8c9aff; background: #f2f4ff; }
+.pb-text-effect-popover { margin-top: 7px; padding: 10px; border: 1px solid #d6dce7; border-radius: 6px; background: #fff; box-shadow: 0 8px 20px rgba(16,24,40,.12); }
+.pb-text-effect-row, .pb-text-effect-field { margin-bottom: 8px; color: #475467; font-size: 11px; }
+.pb-text-effect-field > label { display: block; margin-bottom: 4px; }
+.pb-text-effect-slider input[type="range"] { flex: 1; }
+.pb-text-effect-slider input[type="number"] { width: 64px; padding: 4px; border: 1px solid #d0d5dd; border-radius: 4px; }
+.pb-text-effect-reset { margin-top: 2px; padding: 4px 8px; border: 0; border-radius: 4px; color: #5367ff; background: #eef1ff; cursor: pointer; }
+</style>

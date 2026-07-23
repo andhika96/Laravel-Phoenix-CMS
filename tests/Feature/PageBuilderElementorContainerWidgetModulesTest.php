@@ -66,6 +66,26 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
         $this->assertStringContainsString('setBgStateValue,', $app);
     }
 
+    public function test_container_variants_use_compound_numeric_unit_controls(): void
+    {
+        foreach (['container', 'container-fluid'] as $folder) {
+            $settings = file_get_contents(public_path("js/pagebuilder_elementor/widgets/layout/{$folder}/Settings.vue"));
+
+            $this->assertIsString($settings);
+            foreach (['flexColumnGap', 'flexRowGap', 'gridColumnGap', 'gridRowGap'] as $key) {
+                $this->assertStringContainsString("{key:'{$key}'", $settings);
+            }
+            $this->assertStringContainsString('editor.sizeControlDisplayValue(node, control.key', $settings);
+            $this->assertStringContainsString('editor.sizeControlUnit(node, control.key', $settings);
+            $this->assertStringContainsString("dimensionValue(editor.bgStateKey(node,'borderWidth'), 'px')", $settings);
+            $this->assertStringContainsString("dimensionGroupUnit(['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL']", $settings);
+            $this->assertStringContainsString("dimensionGroupUnit([editor.bgStateKey(node,'shadowH')", $settings);
+            $this->assertStringContainsString("{key:'stickyOffset',label:'Sticky Offset'}", $settings);
+            $this->assertStringContainsString("{key:'transformRotate',label:'Rotate'}", $settings);
+            $this->assertStringNotContainsString("v-model=\"node.settings[editor.bgStateKey(node,'borderWidth')]\"", $settings);
+            $this->assertStringNotContainsString('v-model="node.settings.transformRotate"', $settings);
+        }
+    }
     public static function containerProvider(): array
     {
         return [
