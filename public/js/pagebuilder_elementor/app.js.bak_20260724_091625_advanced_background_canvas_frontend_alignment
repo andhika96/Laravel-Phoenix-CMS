@@ -429,20 +429,10 @@
 			const candidate = String(value || '').trim().toLowerCase();
 			return backgroundPositions.includes(candidate) ? candidate : 'center center';
 		};
-		const emptyBackground = () => ({
-			color: '',
-			image: 'none',
-			position: 'center center',
-			attachment: 'scroll',
-			repeat: 'no-repeat',
-			size: 'auto',
-			value: 'none',
-		});
 		const backgroundValue = (hover = false) => {
 			const suffix = hover ? 'Hover' : '';
 			const type = s['advancedBackgroundType' + suffix] || 'none';
 			if (type === 'classic') {
-				const color = String(s['advancedBackgroundColor' + suffix] || 'transparent');
 				const image = String(s['advancedBackgroundImage' + suffix] || '').trim();
 				if (image) {
 					const safeImage = image.replace(/["\\]/g, '');
@@ -450,41 +440,27 @@
 					const attachment = s['advancedBackgroundAttachment' + suffix] === 'fixed' ? 'fixed' : 'scroll';
 					const repeat = ['no-repeat', 'repeat', 'repeat-x', 'repeat-y'].includes(s['advancedBackgroundRepeat' + suffix]) ? s['advancedBackgroundRepeat' + suffix] : 'no-repeat';
 					const size = ['auto', 'cover', 'contain'].includes(s['advancedBackgroundSize' + suffix]) ? s['advancedBackgroundSize' + suffix] : 'cover';
-					const imageValue = `url("${safeImage}")`;
-					return {
-						color,
-						image: imageValue,
-						position,
-						attachment,
-						repeat,
-						size,
-						value: `${imageValue} ${position} / ${size} ${repeat} ${attachment} ${color}`,
-					};
+					return `url("${safeImage}") ${position} / ${size} ${repeat} ${attachment}`;
 				}
-				return { ...emptyBackground(), color, value: color };
+				return String(s['advancedBackgroundColor' + suffix] || 'transparent');
 			}
 			if (type === 'gradient') {
 				const one = s['advancedGradientColorOne' + suffix] || '#fff';
 				const two = s['advancedGradientColorTwo' + suffix] || '#000';
 				const oneLoc = clamp(Number(s['advancedGradientLocationOne' + suffix]) || 0, 0, 100);
 				const twoLoc = clamp(Number(s['advancedGradientLocationTwo' + suffix]) || 100, 0, 100);
-				const image = s['advancedGradientType' + suffix] === 'radial'
+				return s['advancedGradientType' + suffix] === 'radial'
 					? `radial-gradient(circle, ${one} ${oneLoc}%, ${two} ${twoLoc}%)`
 					: `linear-gradient(${clamp(Number(s['advancedGradientAngle' + suffix]) || 180, 0, 360)}deg, ${one} ${oneLoc}%, ${two} ${twoLoc}%)`;
-				return { ...emptyBackground(), image, value: image };
 			}
-			return emptyBackground();
+			return 'none';
 		};
 		const normalBackground = backgroundValue(false);
-		if (normalBackground.color) style.backgroundColor = normalBackground.color;
-		if (normalBackground.image !== 'none') {
-			style.backgroundImage = normalBackground.image;
-			style.backgroundPosition = normalBackground.position;
-			style.backgroundAttachment = normalBackground.attachment;
-			style.backgroundRepeat = normalBackground.repeat;
-			style.backgroundSize = normalBackground.size;
+		if (normalBackground !== 'none') {
+			if (String(normalBackground).startsWith('#') || String(normalBackground).startsWith('rgb') || normalBackground === 'transparent') style.backgroundColor = normalBackground;
+			else style.background = normalBackground;
 		}
-		style['--pb-advanced-hover-background'] = backgroundValue(true).value;
+		style['--pb-advanced-hover-background'] = backgroundValue(true);
 		const borderType = ['solid', 'double', 'dotted', 'dashed', 'groove'].includes(s.advancedBorderType) ? s.advancedBorderType : 'none';
 		style.borderStyle = borderType;
 		style.borderWidth = borderType === 'none' ? '0' : cssSize(s.advancedBorderWidth, '1px');
@@ -1132,7 +1108,7 @@
 			isGrid()  { return isGrid(this.node.type); },
 			isTabsNode() { return isTabs(this.node.type); },
 			isAccordionNode() { return isAccordion(this.node.type); },
-			hasSharedAdvancedControls() { return this.isAccordionNode || this.node.type === 'image_box'; },
+			hasSharedAdvancedControls() { return this.isAccordionNode || this.node.type === 'image-box'; },
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
 				return displayNodeLabel(this.node);

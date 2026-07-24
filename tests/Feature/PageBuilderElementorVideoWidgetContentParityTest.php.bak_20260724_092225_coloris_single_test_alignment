@@ -83,7 +83,7 @@ class PageBuilderElementorVideoWidgetContentParityTest extends TestCase
         $this->assertStringContainsString("settingsTab === 'style'", $settings);
         $this->assertStringContainsString("settingsTab === 'advanced'", $settings);
         $this->assertStringContainsString('class="pb-color-row"', $settings);
-        $this->assertStringNotContainsString('class="pb-color-swatch"', $settings);
+        $this->assertStringContainsString('class="pb-color-swatch"', $settings);
         $this->assertStringContainsString('class="pb-input coloris pb-coloris-input"', $settings);
         $this->assertStringContainsString("const tabletValue = settings[base + 'Tablet'];", $canvas);
         $this->assertStringContainsString("const match = String(value || '').trim().match(/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i);", $canvas);

@@ -393,7 +393,7 @@
 									<div class="pb-form-group">
 										<label class="pb-form-label">Color</label>
 										<div class="pb-color-row">
-											<input type="color" class="pb-color-swatch" v-model="node.settings[editor.bgStateKey(node,'bgColor')]">
+
 											<input class="pb-input coloris pb-coloris-input" v-model="node.settings[editor.bgStateKey(node,'bgColor')]" placeholder="#ffffff">
 										</div>
 									</div>
@@ -417,14 +417,14 @@
 									<div class="pb-form-group">
 										<label class="pb-form-label">Start Color</label>
 										<div class="pb-color-row">
-											<input type="color" class="pb-color-swatch" v-model="node.settings[editor.bgStateKey(node,'bgGradientStart')]">
+
 											<input class="pb-input coloris pb-coloris-input" v-model="node.settings[editor.bgStateKey(node,'bgGradientStart')]">
 										</div>
 									</div>
 									<div class="pb-form-group">
 										<label class="pb-form-label">End Color</label>
 										<div class="pb-color-row">
-											<input type="color" class="pb-color-swatch" v-model="node.settings[editor.bgStateKey(node,'bgGradientEnd')]">
+
 											<input class="pb-input coloris pb-coloris-input" v-model="node.settings[editor.bgStateKey(node,'bgGradientEnd')]">
 										</div>
 									</div>
@@ -481,7 +481,7 @@
 										<div class="pb-form-group">
 											<label class="pb-form-label">Color</label>
 											<div class="pb-color-row">
-												<input type="color" class="pb-color-swatch" v-model="node.settings[editor.bgStateKey(node,'bgOverlayColor')]">
+
 												<input class="pb-input coloris pb-coloris-input" v-model="node.settings[editor.bgStateKey(node,'bgOverlayColor')]" placeholder="#000000">
 											</div>
 										</div>
@@ -501,14 +501,14 @@
 										<div class="pb-form-group">
 											<label class="pb-form-label">Start Color</label>
 											<div class="pb-color-row">
-												<input type="color" class="pb-color-swatch" v-model="node.settings[editor.bgStateKey(node,'bgOverlayGradientStart')]">
+
 												<input class="pb-input coloris pb-coloris-input" v-model="node.settings[editor.bgStateKey(node,'bgOverlayGradientStart')]">
 											</div>
 										</div>
 										<div class="pb-form-group">
 											<label class="pb-form-label">End Color</label>
 											<div class="pb-color-row">
-												<input type="color" class="pb-color-swatch" v-model="node.settings[editor.bgStateKey(node,'bgOverlayGradientEnd')]">
+
 												<input class="pb-input coloris pb-coloris-input" v-model="node.settings[editor.bgStateKey(node,'bgOverlayGradientEnd')]">
 											</div>
 										</div>
@@ -568,7 +568,7 @@
 									<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="node.settings[editor.bgStateKey(node,'borderType')]"><option value="none">None</option><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="dotted">Dotted</option><option value="double">Double</option></select></div>
 									<template v-if="node.settings[editor.bgStateKey(node,'borderType')]!=='none'">
 										<div class="pb-form-group"><label class="pb-form-label">Border Width</label><div class="pb-range-value-row"><input class="pb-range" type="range" min="0" max="20" step="1" :value="dimensionValue(editor.bgStateKey(node,'borderWidth'), 'px') || 0" @input="setDimensionValue(editor.bgStateKey(node,'borderWidth'), $event, 'px')"><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" min="0" :value="dimensionValue(editor.bgStateKey(node,'borderWidth'), 'px')" @input="setDimensionValue(editor.bgStateKey(node,'borderWidth'), $event, 'px')"><select class="pb-mini-unit" :value="dimensionUnit(editor.bgStateKey(node,'borderWidth'), 'px')" @change="setDimensionUnit(editor.bgStateKey(node,'borderWidth'), $event.target.value, 'px')"><option v-for="unit in ['px','pt','em','rem']" :key="'container-border-width-'+unit" :value="unit">{{ unit }}</option></select></div></div></div>
-										<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings[editor.bgStateKey(node,'borderColor')]"><input class="pb-input coloris pb-coloris-input" v-model="node.settings[editor.bgStateKey(node,'borderColor')]"></div></div>
+										<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings[editor.bgStateKey(node,'borderColor')]"></div></div>
 									</template>
 									<div class="pb-form-group">
 										<div class="pb-label-row"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-label-tools"><select class="pb-mini-unit" :value="dimensionGroupUnit(['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL'], 'px')" @change="setDimensionGroupUnit(['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL'], $event.target.value, 'px')"><option v-for="unit in ['px','%','em','rem','vw']" :key="'container-radius-'+unit" :value="unit">{{ unit }}</option></select><button type="button" class="pb-link-btn" @click="node.settings.borderRadiusLinked=!node.settings.borderRadiusLinked" :title="node.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="node.settings.borderRadiusLinked?'fas fa-link':'fas fa-unlink'"></i></button></div></div>
@@ -588,7 +588,7 @@
 									<template v-if="node.settings[editor.bgStateKey(node,'shadowEnabled')]">
 										<div class="pb-label-row mt-2"><label class="pb-form-label mb-0">Shadow Dimensions</label><select class="pb-mini-unit" :value="dimensionGroupUnit([editor.bgStateKey(node,'shadowH'),editor.bgStateKey(node,'shadowV'),editor.bgStateKey(node,'shadowBlur'),editor.bgStateKey(node,'shadowSpread')], 'px')" @change="setDimensionGroupUnit([editor.bgStateKey(node,'shadowH'),editor.bgStateKey(node,'shadowV'),editor.bgStateKey(node,'shadowBlur'),editor.bgStateKey(node,'shadowSpread')], $event.target.value, 'px')"><option v-for="unit in ['px','em','rem']" :key="'container-shadow-'+unit" :value="unit">{{ unit }}</option></select></div>
 										<div class="pb-four-sides mt-1"><template v-for="control in [{key:'shadowH',label:'H'},{key:'shadowV',label:'V'},{key:'shadowBlur',label:'Blur'},{key:'shadowSpread',label:'Spread'}]" :key="control.key"><label class="pb-side-input"><input class="pb-input" type="number" :min="control.key==='shadowBlur' ? 0 : null" :value="dimensionValue(editor.bgStateKey(node,control.key), 'px')" @input="setDimensionValue(editor.bgStateKey(node,control.key), $event, 'px')"><span>{{ control.label }}</span></label></template></div>
-										<div class="pb-form-group mt-2"><label class="pb-form-label">Shadow Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings[editor.bgStateKey(node,'shadowColor')]"><input class="pb-input coloris pb-coloris-input" v-model="node.settings[editor.bgStateKey(node,'shadowColor')]"></div></div>
+										<div class="pb-form-group mt-2"><label class="pb-form-label">Shadow Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings[editor.bgStateKey(node,'shadowColor')]"></div></div>
 										<div class="pb-form-group"><label class="pb-form-label">Shadow Opacity <span class="pb-form-hint">{{ Math.round((node.settings[editor.bgStateKey(node,'shadowOpacity')] ?? 0.3)*100) }}%</span></label><input type="range" class="pb-range" min="0" max="1" step="0.01" v-model.number="node.settings[editor.bgStateKey(node,'shadowOpacity')]"></div>
 									</template>
 								</div>
@@ -613,7 +613,7 @@
 										<div class="pb-form-group">
 											<label class="pb-form-label">Color</label>
 											<div class="pb-color-row">
-												<input type="color" class="pb-color-swatch" v-model="node.settings[(node.settings.shapeDividerSide==='bottom'?'shapeDividerBottomColor':'shapeDividerTopColor')]">
+
 												<input class="pb-input coloris pb-coloris-input" v-model="node.settings[(node.settings.shapeDividerSide==='bottom'?'shapeDividerBottomColor':'shapeDividerTopColor')]">
 											</div>
 										</div>

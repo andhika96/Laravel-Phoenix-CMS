@@ -168,19 +168,18 @@ final class WidgetAdvancedStyleResolver
     {
         $type = strtolower(trim((string) ($settings['advancedBackgroundType'.$suffix] ?? 'none')));
         if ($type === 'classic') {
-            $rules = [
-                'background-color:'.$this->color($settings['advancedBackgroundColor'.$suffix] ?? '', 'transparent'),
-            ];
             $image = $this->safeImageUrl($settings['advancedBackgroundImage'.$suffix] ?? '');
             if ($image !== '') {
-                $rules[] = 'background-image:url("'.$image.'")';
-                $rules[] = 'background-position:'.$this->backgroundPosition($settings['advancedBackgroundPosition'.$suffix] ?? 'center center');
-                $rules[] = 'background-attachment:'.(($settings['advancedBackgroundAttachment'.$suffix] ?? 'scroll') === 'fixed' ? 'fixed' : 'scroll');
-                $rules[] = 'background-repeat:'.$this->enum($settings['advancedBackgroundRepeat'.$suffix] ?? 'no-repeat', ['no-repeat', 'repeat', 'repeat-x', 'repeat-y'], 'no-repeat');
-                $rules[] = 'background-size:'.$this->enum($settings['advancedBackgroundSize'.$suffix] ?? 'cover', ['auto', 'cover', 'contain', '100% 100%'], 'cover');
+                return [
+                    'background-image:url("'.$image.'")',
+                    'background-position:'.$this->backgroundPosition($settings['advancedBackgroundPosition'.$suffix] ?? 'center center'),
+                    'background-attachment:'.(($settings['advancedBackgroundAttachment'.$suffix] ?? 'scroll') === 'fixed' ? 'fixed' : 'scroll'),
+                    'background-repeat:'.$this->enum($settings['advancedBackgroundRepeat'.$suffix] ?? 'no-repeat', ['no-repeat', 'repeat', 'repeat-x', 'repeat-y'], 'no-repeat'),
+                    'background-size:'.$this->enum($settings['advancedBackgroundSize'.$suffix] ?? 'cover', ['auto', 'cover', 'contain', '100% 100%'], 'cover'),
+                ];
             }
 
-            return $rules;
+            return ['background-color:'.$this->color($settings['advancedBackgroundColor'.$suffix] ?? '', 'transparent')];
         }
 
         if ($type === 'gradient') {

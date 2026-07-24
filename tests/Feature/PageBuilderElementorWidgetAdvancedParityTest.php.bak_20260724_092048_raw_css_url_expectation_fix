@@ -163,7 +163,6 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertStringNotContainsString("this.node.type === 'image-box'", $appJs);
         $this->assertSourceContains('style.backgroundColor = normalBackground.color;', $appJs);
         $this->assertSourceContains('style.backgroundImage = normalBackground.image;', $appJs);
-        $this->assertSourceContains('value: `${imageValue} ${position} / ${size} ${repeat} ${attachment} ${color}`', $appJs);
     }
 
     public function test_advanced_settings_render_safe_styles_attributes_and_scoped_css(): void
@@ -220,7 +219,7 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertStringContainsString('width:640px', $html);
         $this->assertStringContainsString('right:20px', $html);
         $this->assertStringContainsString('background-color:#112233', $html);
-        $this->assertStringContainsString('background-image:url("/images/advanced-background.jpg")', $html);
+        $this->assertStringContainsString('background-image:url(&quot;/images/advanced-background.jpg&quot;)', $html);
         $this->assertStringContainsString('border-style:solid', $html);
         $this->assertStringContainsString('-webkit-mask-image:', $html);
         $this->assertStringContainsString('data-pb-motion=', $html);

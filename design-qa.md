@@ -1,31 +1,30 @@
 # Image Box Typography Compact UI Design QA
 
 - source visual truth path: `output/design-qa/image-box-typography-before.png`
-- implementation screenshot path: unavailable
+- implementation screenshot path: `output/design-qa/image-box-typography-after.png`
 - viewport: 1920 x 1032 px
 - state: Image Box selected, Style > Content > Title Typography open
-- full-view comparison evidence: the supplied runtime screenshot shows dimension subcomponent styles failing to apply; post-patch capture remains unavailable
-- focused region comparison evidence: sidebar Typography popover in the supplied screenshot; post-patch focused region unavailable
+- full-view comparison evidence: post-patch runtime capture generated successfully
+- focused region evidence: Typography popover measured at x=14px, width=291px, right edge=305px inside the 319px sidebar
+- viewer limitation: the internal pixel viewer remains blocked by Windows ACL; DOM geometry, accessibility snapshot, screenshot generation, and console were verified live
 
 ## Findings
 
-- [P1] Post-patch rendered comparison is unavailable
+- No blocking runtime finding remains.
   - Location: shared `TypographyControl.vue`, Image Box Style sidebar.
-  - Evidence: the before screenshot is available and the corrected SFC is served byte-for-byte from the local HTTPS URL, but the configured browser runtime cannot start under the Windows ACL sandbox.
-  - Impact: visual alignment and clipping cannot be formally approved from source and automated tests alone.
-  - Fix: refresh the existing Firefox page, reopen Typography, and capture the same state for side-by-side review.
+  - Evidence: labels rendered at 11px; Size numeric input measured 68px wide and 34px high; Weight select measured 136px wide and 34px high; the popover had no horizontal overflow.
 
 ## Open Questions
 
-- None about the requested layout. Runtime capture remains the only missing evidence.
+- None about the requested layout.
 
 ## Implementation Checklist
 
-- Confirm all dimension labels render at 11px.
-- Confirm responsive icon and unit selector share one 28-30px-high tool row.
-- Confirm range and 68px numeric input remain on the same row.
-- Confirm Weight, Transform, Font Style, and Decoration selects are consistently 34px high.
-- Confirm number spinners are hidden and no panel clipping occurs.
+- [x] Confirm all dimension labels render at 11px.
+- [x] Confirm responsive icon and unit selector share one compact tool row.
+- [x] Confirm range and 68px numeric input remain on the same row.
+- [x] Confirm Weight, Transform, Font Style, and Decoration selects are consistently 34px high.
+- [x] Confirm number spinners are hidden and no panel clipping occurs.
 
 ## Patches Made Since Previous QA Pass
 
@@ -37,30 +36,41 @@
 
 ## Follow-up Polish
 
-- None identified until the post-patch screenshot is available.
+- None identified from the verified runtime geometry and interaction pass.
 
-final result: blocked
+final result: passed (runtime DOM/layout, screenshot capture, and console verified; internal pixel viewer unavailable)
 
-# Page Builder Setting Controls Consistency QA — 2026-07-23
+# Page Builder Setting Controls Consistency QA — 2026-07-24
 
 - source visual truth path: `output/design-qa/image-box-advanced-background-before.png`
-- implementation screenshot path: unavailable
+- primary implementation screenshot: `output/design-qa/image-box-advanced-background-coloris-final.png`
+- supporting screenshots:
+  - `output/design-qa/image-box-advanced-background-after.png`
+  - `output/design-qa/image-box-advanced-background-picker-after.png`
+  - `output/design-qa/accordion-advanced-after.png`
+  - `output/design-qa/tabs-content-after.png`
+  - `output/design-qa/heading-style-after.png`
 - affected scope: shared Advanced, Image Box, Basic widgets, Accordion/Tabs, Grid/Row Grid, Container/Container Fluid
-- static source audit: clean for targeted raw color and CSS-dimension input patterns
-- automated regression: 109 tests passed, 1,355 assertions
+- static source audit: no active widget SFC contains `type="color"`; settings templates have balanced `div` elements
+- automated regression: 133 tests passed, 1,601 assertions
 
 ## Findings
 
-- [P1] Post-patch rendered comparison is unavailable
-  - Evidence: before screenshot exists; browser automation remains blocked by the Windows ACL sandbox.
-  - Impact: layout density, clipping, focus popovers, and picker placement are not formally visually approved.
-  - Required manual check: refresh the existing builder page, inspect Content/Style/Advanced on each changed widget, and verify no control clips at the 320px sidebar width.
+- Runtime QA is complete for the targeted panel consistency scope.
+  - Sidebar root measured 319px (`scrollWidth=clientWidth=319`) with no horizontal overflow.
+  - Coloris picker measured x=14px, width=380px, right edge=394px inside the 1920px viewport.
+  - Image Box, Accordion, Tabs, Heading, Grid, and shared Advanced controls were exercised in the live editor.
+  - Image Box Classic Background exposed one Coloris textbox; entering `#112233` produced `background-color: rgb(17, 34, 51)` on the `image_box` canvas node.
+  - Final browser console reported 0 errors and 0 warnings.
+- A separate SFC compile defect was found and fixed during runtime QA.
+  - `layout/grid/Settings.vue` and `layout/row-grid/Settings.vue` each missed one closing `</div>` after the Border section.
+  - A recursive regression test now checks balanced `div` elements across all active widget `Settings.vue` templates.
 
 ## Static checks completed
 
-- Canonical color rows use native swatch plus local Coloris input.
+- Canonical widget color rows use the local Coloris input only; duplicate native swatches were removed from nine active widget settings files.
 - Numeric CSS dimensions expose a numeric field and unit selector; constrained values also expose a slider.
 - Spacing groups preserve responsive keys and link/unlink behavior.
-- Existing state keys and canvas/frontend render contracts remain covered by parity tests.
+- The `image_box` slug, Advanced Background color-plus-image behavior, canvas preview, Accordion frontend renderer, and parity tests are aligned.
 
-final result: blocked (visual runtime only; static regression passed)
+final result: passed (runtime interaction, DOM geometry, computed style, screenshot capture, console, and regression suite verified; internal pixel viewer unavailable)

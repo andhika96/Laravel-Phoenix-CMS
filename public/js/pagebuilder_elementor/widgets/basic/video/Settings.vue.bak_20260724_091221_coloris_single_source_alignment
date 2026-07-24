@@ -45,7 +45,7 @@
 			<details class="pb-collapsible" open>
 				<summary>Player</summary>
 				<div class="pb-collapsible-body">
-					<div v-if="editor.videoUsesControlsColor(node)" class="pb-form-group"><label class="pb-form-label">Controls Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.controlsColor" placeholder="#ff3366"></div></div>
+					<div v-if="editor.videoUsesControlsColor(node)" class="pb-form-group"><label class="pb-form-label">Controls Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings.controlsColor"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.controlsColor" placeholder="#ff3366"></div></div>
 					<div v-else class="pb-form-note">This video source does not expose a custom player color.</div>
 				</div>
 			</details>

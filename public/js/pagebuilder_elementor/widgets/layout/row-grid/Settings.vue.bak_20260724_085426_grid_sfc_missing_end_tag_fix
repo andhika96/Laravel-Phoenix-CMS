@@ -124,14 +124,14 @@
 									</div>
 								</div>
 								<template v-if="node.settings.bgType==='color'">
-									<div class="pb-form-group"><label class="pb-form-label">Background Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.bgColor" placeholder="#ffffff"></div></div>
+									<div class="pb-form-group"><label class="pb-form-label">Background Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings.bgColor"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.bgColor" placeholder="#ffffff"></div></div>
 									<div class="pb-form-group"><label class="pb-form-label">Opacity <span class="pb-form-hint">{{ Math.round((node.settings.bgOpacity ?? 1)*100) }}%</span></label><input type="range" class="pb-range" min="0" max="1" step="0.01" v-model.number="node.settings.bgOpacity"></div>
 								</template>
 								<template v-if="node.settings.bgType==='gradient'">
 									<div class="pb-form-group"><label class="pb-form-label">Gradient Type</label><div class="pb-btn-group"><button class="pb-seg-btn" :class="{active:node.settings.bgGradientType==='linear'}" @click="node.settings.bgGradientType='linear'">Linear</button><button class="pb-seg-btn" :class="{active:node.settings.bgGradientType==='radial'}" @click="node.settings.bgGradientType='radial'">Radial</button></div></div>
 									<div class="pb-form-group" v-if="node.settings.bgGradientType==='linear'"><label class="pb-form-label">Angle <span class="pb-form-hint">{{ node.settings.bgGradientAngle ?? 90 }}&deg;</span></label><input type="range" class="pb-range" min="0" max="360" step="1" v-model.number="node.settings.bgGradientAngle"></div>
-									<div class="pb-form-group"><label class="pb-form-label">Start Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.bgGradientStart"></div></div>
-									<div class="pb-form-group"><label class="pb-form-label">End Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.bgGradientEnd"></div></div>
+									<div class="pb-form-group"><label class="pb-form-label">Start Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings.bgGradientStart"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.bgGradientStart"></div></div>
+									<div class="pb-form-group"><label class="pb-form-label">End Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings.bgGradientEnd"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.bgGradientEnd"></div></div>
 									<div class="pb-form-group"><label class="pb-form-label">Position <span class="pb-form-hint">{{ node.settings.bgGradientPosition ?? 50 }}%</span></label><input type="range" class="pb-range" min="0" max="100" step="1" v-model.number="node.settings.bgGradientPosition"></div>
 								</template>
 								<template v-if="node.settings.bgType==='image'">
@@ -165,19 +165,18 @@
 										<label class="pb-form-label">Border Width</label>
 										<div class="pb-range-value-row"><input class="pb-range" type="range" min="0" max="20" step="1" :value="dimensionValue('borderWidth', 'px') || 0" @input="setDimensionValue('borderWidth', $event, 'px')"><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" min="0" step="1" :value="dimensionValue('borderWidth', 'px')" @input="setDimensionValue('borderWidth', $event, 'px')"><select class="pb-mini-unit" :value="dimensionUnit('borderWidth', 'px')" @change="setDimensionUnit('borderWidth', $event.target.value, 'px')"><option v-for="unit in ['px','pt','em','rem']" :key="'grid-border-width-'+unit" :value="unit">{{ unit }}</option></select></div></div>
 									</div>
-									<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.borderColor"></div></div>
+									<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings.borderColor"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.borderColor"></div></div>
 								</template>
 								<div class="pb-form-group">
 									<div class="pb-label-row"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-label-tools"><select class="pb-mini-unit" :value="dimensionGroupUnit(['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL'], 'px')" @change="setDimensionGroupUnit(['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL'], $event.target.value, 'px')"><option v-for="unit in ['px','%','em','rem','vw']" :key="'grid-radius-'+unit" :value="unit">{{ unit }}</option></select><button type="button" class="pb-link-btn" @click="node.settings.borderRadiusLinked=!node.settings.borderRadiusLinked" :title="node.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="node.settings.borderRadiusLinked?'fas fa-link':'fas fa-unlink'"></i></button></div></div>
 									<div class="pb-four-sides mt-1"><template v-for="corner in [{key:'borderRadiusTL',label:'TL'},{key:'borderRadiusTR',label:'TR'},{key:'borderRadiusBR',label:'BR'},{key:'borderRadiusBL',label:'BL'}]" :key="corner.key"><label class="pb-side-input"><input class="pb-input" type="number" min="0" :value="dimensionValue(corner.key, 'px')" @input="setLinkedDimensionValue(corner.key, ['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL'], $event, 'px', node.settings.borderRadiusLinked)"><span>{{ corner.label }}</span></label></template></div>
 								</div>
-							</div>
 							<div class="pb-prop-section pb-grid-settings__group">
 								<div class="pb-label-row"><div class="pb-prop-section-title mb-0">Box Shadow</div><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'gridShadowEnable-' + node.id" v-model="node.settings.shadowEnabled"><label :for="'gridShadowEnable-' + node.id"></label></div></div>
 								<template v-if="node.settings.shadowEnabled">
 									<div class="pb-label-row mt-2"><label class="pb-form-label mb-0">Shadow Dimensions</label><select class="pb-mini-unit" :value="dimensionGroupUnit(['shadowH','shadowV','shadowBlur','shadowSpread'], 'px')" @change="setDimensionGroupUnit(['shadowH','shadowV','shadowBlur','shadowSpread'], $event.target.value, 'px')"><option v-for="unit in ['px','em','rem']" :key="'grid-shadow-'+unit" :value="unit">{{ unit }}</option></select></div>
 									<div class="pb-four-sides mt-1"><template v-for="control in [{key:'shadowH',label:'H'},{key:'shadowV',label:'V'},{key:'shadowBlur',label:'Blur'},{key:'shadowSpread',label:'Spread'}]" :key="control.key"><label class="pb-side-input"><input class="pb-input" type="number" :min="control.key==='shadowBlur' ? 0 : null" :value="dimensionValue(control.key, 'px')" @input="setDimensionValue(control.key, $event, 'px')"><span>{{ control.label }}</span></label></template></div>
-									<div class="pb-form-group mt-2"><label class="pb-form-label">Shadow Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.shadowColor"></div></div>
+									<div class="pb-form-group mt-2"><label class="pb-form-label">Shadow Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings.shadowColor"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.shadowColor"></div></div>
 									<div class="pb-form-group"><label class="pb-form-label">Shadow Opacity <span class="pb-form-hint">{{ Math.round((node.settings.shadowOpacity ?? 0.3)*100) }}%</span></label><input type="range" class="pb-range" min="0" max="1" step="0.01" v-model.number="node.settings.shadowOpacity"></div>
 								</template>
 							</div>
@@ -396,7 +395,7 @@
 
 <script>
 export default {
-	name: 'GridWidgetSettings',
+	name: 'RowGridWidgetSettings',
 	props: { node: { type: Object, required: true }, editor: { type: Object, required: true } },
 	methods: {
 		dimensionParts(key, fallbackUnit = 'px') {

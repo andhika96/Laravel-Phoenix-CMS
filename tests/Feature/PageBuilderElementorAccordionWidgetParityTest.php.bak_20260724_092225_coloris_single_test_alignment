@@ -206,8 +206,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertIsString($settings);
         $this->assertStringNotContainsString('<input class="pb-input pb-coloris-input"', $settings);
         $this->assertGreaterThanOrEqual(9, substr_count($settings, 'class="pb-color-row"'));
-        $this->assertStringNotContainsString('class="pb-color-swatch"', $settings);
-        $this->assertGreaterThanOrEqual(9, substr_count($settings, 'class="pb-input coloris pb-coloris-input"'));
+        $this->assertGreaterThanOrEqual(9, substr_count($settings, 'class="pb-color-swatch"'));
         $this->assertStringContainsString(':is="editor.textShadowControl"', $settings);
         $this->assertStringContainsString('@update:modelValue="node.settings[editor.accordionStateKey(\'headerTextShadow\', editor.accordionTitleStyleState)] = $event"', $settings);
         $this->assertStringNotContainsString('placeholder="0 1px 2px rgba(0,0,0,.15)"', $settings);

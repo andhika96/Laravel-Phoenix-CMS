@@ -79,7 +79,7 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
             $this->assertStringContainsString(">$tab</span>", $settings);
         }
         $this->assertStringContainsString('pb-color-row', $settings);
-        $this->assertStringNotContainsString('pb-color-swatch', $settings);
+        $this->assertStringContainsString('pb-color-swatch', $settings);
         $this->assertStringContainsString('pb-input coloris pb-coloris-input', $settings);
         $this->assertStringContainsString("const allowedTags = Object.freeze(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p']);", $definition);
         $this->assertStringContainsString('normalized.settings.tag = allowedTags.includes(normalized.settings.tag)', $definition);

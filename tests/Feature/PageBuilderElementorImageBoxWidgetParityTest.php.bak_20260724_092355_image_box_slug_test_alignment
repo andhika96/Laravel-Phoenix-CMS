@@ -306,7 +306,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
 
-        $this->assertSourceContains("hasSharedAdvancedControls() { return this.isAccordionNode || this.node.type === 'image_box'; }", $appJs);
+        $this->assertSourceContains("hasSharedAdvancedControls() { return this.isAccordionNode || this.node.type === 'image-box'; }", $appJs);
         $this->assertSourceContains('if (!this.hasSharedAdvancedControls) return [];', $appJs);
         $this->assertSourceContains('if (this.hasSharedAdvancedControls) return widgetAdvancedPreviewStyle(s, device);', $appJs);
         $this->assertSourceContains('if (this.hasSharedAdvancedControls && /^[A-Za-z][A-Za-z0-9_-]*$/.test(raw)) return raw;', $appJs);

@@ -21,7 +21,7 @@
 			<details class="pb-collapsible" open>
 				<summary>Heading</summary>
 				<div class="pb-collapsible-body">
-					<div class="pb-form-group"><label class="pb-form-label">Text Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.color" placeholder="#101828"></div></div>
+					<div class="pb-form-group"><label class="pb-form-label">Text Color</label><div class="pb-color-row"><input type="color" class="pb-color-swatch" v-model="node.settings.color"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.color" placeholder="#101828"></div></div>
 				</div>
 			</details>
 		</div>

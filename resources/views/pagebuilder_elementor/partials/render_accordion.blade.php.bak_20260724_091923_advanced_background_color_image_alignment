@@ -164,18 +164,10 @@
 	$advancedBackground = function (string $suffix = '') use ($accordionSettings, $gradient, $safeUrl): array {
 		$type = strtolower(trim((string) ($accordionSettings['advancedBackgroundType' . $suffix] ?? 'none')));
 		if ($type === 'classic') {
-			$rules = [
-				'background-color:' . (trim((string) ($accordionSettings['advancedBackgroundColor' . $suffix] ?? 'transparent')) ?: 'transparent'),
-			];
 			$image = $safeUrl($accordionSettings['advancedBackgroundImage' . $suffix] ?? '');
-			if ($image !== '') {
-				$rules[] = 'background-image:url("' . $image . '")';
-				$rules[] = 'background-position:' . ($accordionSettings['advancedBackgroundPosition' . $suffix] ?? 'center center');
-				$rules[] = 'background-repeat:' . ($accordionSettings['advancedBackgroundRepeat' . $suffix] ?? 'no-repeat');
-				$rules[] = 'background-size:' . ($accordionSettings['advancedBackgroundSize' . $suffix] ?? 'cover');
-				$rules[] = 'background-attachment:' . ($accordionSettings['advancedBackgroundAttachment' . $suffix] ?? 'scroll');
-			}
-			return $rules;
+			return $image !== ''
+				? ['background-image:url("' . $image . '")', 'background-position:' . ($accordionSettings['advancedBackgroundPosition' . $suffix] ?? 'center center'), 'background-repeat:' . ($accordionSettings['advancedBackgroundRepeat' . $suffix] ?? 'no-repeat'), 'background-size:' . ($accordionSettings['advancedBackgroundSize' . $suffix] ?? 'cover'), 'background-attachment:' . ($accordionSettings['advancedBackgroundAttachment' . $suffix] ?? 'scroll')]
+				: ['background-color:' . (trim((string) ($accordionSettings['advancedBackgroundColor' . $suffix] ?? 'transparent')) ?: 'transparent')];
 		}
 		if ($type === 'gradient') return ['background-image:' . $gradient('advanced', $suffix)];
 		return [];
