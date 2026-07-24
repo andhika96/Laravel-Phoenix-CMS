@@ -8,6 +8,7 @@
 	// 3. Container children: <draggable group="{name:'pb-container', put:...}" @add="onAddContainer">
 	// 4. Grid column children: <draggable group="{name:'pb-col', put:['pb-widget','pb-col']}" @add="onAddCol">
 	// 5. TIDAK ADA native drag event di node canvas
+	// Testing
 
 	const { createApp, ref, computed, defineAsyncComponent, watch, onMounted, onBeforeUnmount, nextTick } = Vue;
 	const draggable = window.vuedraggable;
