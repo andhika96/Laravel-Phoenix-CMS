@@ -1,0 +1,37 @@
+<script setup>
+import { iconForKind } from '../data/assets';
+
+defineProps({
+  asset: Object,
+  selected: Boolean,
+  viewMode: String,
+});
+
+const emit = defineEmits(['select', 'toggle-star']);
+</script>
+
+<template>
+  <article
+    class="asset-card"
+    :class="[{ selected }, `asset-${asset.kind}`, { 'list-card': viewMode === 'list' }]"
+    tabindex="0"
+    @click="emit('select', asset, $event)"
+    @keydown.enter="emit('select', asset, $event)"
+  >
+    <div class="asset-check">
+      <i class="bi" :class="selected ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+    </div>
+    <div class="asset-preview" :style="{ background: asset.color }">
+      <img v-if="asset.src" :src="asset.src" :alt="asset.name" />
+      <i v-else class="bi file-kind-icon" :class="iconForKind[asset.kind]"></i>
+      <span class="asset-extension">{{ asset.ext }}</span>
+    </div>
+    <div class="asset-copy">
+      <strong :title="asset.name">{{ asset.name }}</strong>
+      <span>{{ asset.size }} <b>·</b> {{ asset.modified }}</span>
+    </div>
+    <button class="asset-menu" aria-label="Asset actions" @click.stop>
+      <i class="bi bi-three-dots-vertical"></i>
+    </button>
+  </article>
+</template>
