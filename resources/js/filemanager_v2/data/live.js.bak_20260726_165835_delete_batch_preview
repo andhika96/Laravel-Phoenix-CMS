@@ -196,21 +196,6 @@ export async function deleteAsset(storage, path) {
   const params = new URLSearchParams({ storage, path });
   return request(`/assets?${params.toString()}`, { method: 'DELETE' });
 }
-export async function previewDelete(storage, paths) {
-  return request('/assets/delete-preview', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ storage, paths }),
-  });
-}
-
-export async function deleteAssets(storage, paths) {
-  return request('/assets/delete-batch', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ storage, paths }),
-  });
-}
 
 
 export async function moveAssets(storage, paths, destination) {

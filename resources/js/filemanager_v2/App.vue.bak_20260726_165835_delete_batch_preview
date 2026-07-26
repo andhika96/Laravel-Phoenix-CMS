@@ -6,7 +6,7 @@ import DetailsDrawer from './components/DetailsDrawer.vue';
 import UploadPanel from './components/UploadPanel.vue';
 import FilePondUploadEngine from './components/FilePondUploadEngine.vue';
 import SettingsModal from './components/SettingsModal.vue';
-import { assets, createFolder as createFolderApi, deleteAsset, deleteAssets, folders, initializeWorkspace, loadAssets, loadFolderDetails as loadFolderDetailsApi, loadFolders, moveAssets, navItems, previewDelete, renameAsset, replaceAssets, replaceFolders, storageProfiles, toggleAssetStar, upsertAsset } from './data/live';
+import { assets, createFolder as createFolderApi, deleteAsset, folders, initializeWorkspace, loadAssets, loadFolderDetails as loadFolderDetailsApi, loadFolders, moveAssets, navItems, renameAsset, replaceAssets, replaceFolders, storageProfiles, toggleAssetStar, upsertAsset } from './data/live';
 
 const activeStorage = ref('local');
 const activeNav = ref('all');
@@ -36,17 +36,11 @@ const actionModal = ref(null);
 const actionSubmitState = ref('idle');
 const actionModalItem = ref(null);
 const actionModalCount = ref(0);
-const deleteImpact = ref(null);
-const deleteImpactLoading = ref(false);
-const deletePaths = ref([]);
 const folderName = ref('');
 const moveDestination = ref('');
 const assetName = ref('');
-const FILE_MANAGER_HISTORY_KEY = 'fileManagerV2';
 let actionCloseTimer;
 let refreshSequence = 0;
-let deleteImpactSequence = 0;
-let workspaceReady = false;
 const themeQuery = window.matchMedia('(prefers-color-scheme: dark)');
 const savedTheme = window.localStorage.getItem('arunika-files-theme');
 const themePreference = ref(['light', 'dark', 'system'].includes(savedTheme) ? savedTheme : 'system');
@@ -60,43 +54,6 @@ const selectedAssets = computed(() => assets.filter((asset) => selectedIds.value
 const selectedFiles = computed(() => selectedAssets.value.filter((asset) => asset.type === 'file'));
 const selectedAssetsAreFilesOnly = computed(() => selectedAssets.value.length > 0 && selectedFiles.value.length === selectedAssets.value.length);
 const selectedAssetsAreAllStarred = computed(() => selectedAssetsAreFilesOnly.value && selectedFiles.value.every((asset) => asset.starred));
-function countLabel(count, singular, plural = `${singular}s`) {
-  return `${count} ${count === 1 ? singular : plural}`;
-}
-
-const deleteModalTitle = computed(() => {
-  const impact = deleteImpact.value;
-  if (!impact) return `Delete ${countLabel(actionModalCount.value, 'selected asset')}?`;
-  if (impact.selectedFolderCount > 0 && impact.hasFolderContents) {
-    return impact.selectedFolderCount === 1 ? 'Delete folder and its contents?' : 'Delete folders and their contents?';
-  }
-
-  const targets = [
-    impact.selectedFolderCount ? countLabel(impact.selectedFolderCount, 'folder') : null,
-    impact.selectedFileCount ? countLabel(impact.selectedFileCount, 'file') : null,
-  ].filter(Boolean);
-
-  return `Delete ${targets.join(' and ')}?`;
-});
-
-const deleteImpactSummary = computed(() => {
-  const impact = deleteImpact.value;
-  if (!impact) return 'This action cannot be undone.';
-
-  const contents = [
-    impact.fileCount ? countLabel(impact.fileCount, 'file') : null,
-    impact.folderCount ? countLabel(impact.folderCount, 'folder') : null,
-  ].filter(Boolean);
-
-  return `This permanently deletes ${contents.join(' and ')} (${impact.size}). This action cannot be undone.`;
-});
-
-const deleteImpactIncludedText = computed(() => {
-  const count = deleteImpact.value?.includedByFolderCount || 0;
-  if (!count) return '';
-
-  return `${countLabel(count, 'selected item')} inside a selected folder is included and is not counted twice.`;
-});
 const moveDestinations = computed(() => [{ path: '', name: 'All assets' }, ...folders]);
 const filteredAssets = computed(() => {
   let list = assets.filter((asset) => {
@@ -181,69 +138,6 @@ function syncCompactViewport(event) {
   if (event.matches) detailAsset.value = null;
 }
 
-function currentNavigationState() {
-  return {
-    storage: activeStorage.value,
-    collection: activeNav.value,
-    folder: activeFolder.value,
-  };
-}
-
-function normalizeNavigationState(state, fallbackStorage) {
-  const storage = typeof state?.storage === 'string' && storageProfiles[state.storage] ? state.storage : fallbackStorage;
-  const collection = navItems.some((item) => item.id === state?.collection) ? state.collection : 'all';
-  const folder = collection === 'all' && typeof state?.folder === 'string' ? state.folder.replace(/^\/+|\/+$/g, '') : '';
-
-  return { storage, collection, folder };
-}
-
-function navigationStateFromUrl(fallbackStorage) {
-  const url = new URL(window.location.href);
-  const storage = url.searchParams.get('fm_storage');
-  const collection = url.searchParams.get('fm_collection');
-  const folder = url.searchParams.get('fm_folder');
-
-  if (storage === null && collection === null && folder === null) return null;
-
-  return normalizeNavigationState({ storage, collection, folder }, fallbackStorage);
-}
-
-function browserNavigationState(fallbackStorage) {
-  const state = window.history.state?.[FILE_MANAGER_HISTORY_KEY];
-  return state ? normalizeNavigationState(state, fallbackStorage) : navigationStateFromUrl(fallbackStorage);
-}
-
-function navigationHistoryUrl(state) {
-  const url = new URL(window.location.href);
-  url.searchParams.set('fm_storage', state.storage);
-  url.searchParams.set('fm_collection', state.collection);
-
-  if (state.folder) url.searchParams.set('fm_folder', state.folder); else url.searchParams.delete('fm_folder');
-
-  return `${url.pathname}${url.search}${url.hash}`;
-}
-
-function sameNavigationState(first, second) {
-  return first?.storage === second?.storage && first?.collection === second?.collection && first?.folder === second?.folder;
-}
-
-function writeBrowserHistory(mode = 'push') {
-  const state = currentNavigationState();
-  const currentState = window.history.state?.[FILE_MANAGER_HISTORY_KEY];
-  if (mode === 'push' && sameNavigationState(currentState, state)) return;
-
-  const historyState = window.history.state && typeof window.history.state === 'object' ? window.history.state : {};
-  const payload = { ...historyState, [FILE_MANAGER_HISTORY_KEY]: state };
-  const url = navigationHistoryUrl(state);
-
-  if (mode === 'replace') {
-    window.history.replaceState(payload, '', url);
-    return;
-  }
-
-  window.history.pushState(payload, '', url);
-}
-
 async function refreshAssets({ refreshFolders = false } = {}) {
   const requestId = ++refreshSequence;
   const context = { storage: activeStorage.value, path: activeFolder.value, collection: activeNav.value, search: search.value, type: filter.value, sort: sort.value };
@@ -257,58 +151,33 @@ async function refreshAssets({ refreshFolders = false } = {}) {
   if (folderItems) replaceFolders(folderItems);
 }
 
-async function applyNavigationState(state, { refreshFolders = false } = {}) {
-  activeStorage.value = state.storage;
-  activeNav.value = state.collection;
-  activeFolder.value = state.folder;
+async function changeStorage(id) {
+  activeStorage.value = id;
+  activeNav.value = 'all';
+  activeFolder.value = '';
   selectedIds.value = new Set();
   detailAsset.value = null;
   closeMobileSidebar();
-  await refreshAssets({ refreshFolders });
+  await refreshAssets({ refreshFolders: true });
+  notify(`Switched to ${storageProfiles[id].name}`);
 }
 
-async function changeStorage(id, { historyMode = 'push', notifyUser = true } = {}) {
-  if (!storageProfiles[id]) return;
-
-  await applyNavigationState({ storage: id, collection: 'all', folder: '' }, { refreshFolders: true });
-  if (historyMode !== 'none') writeBrowserHistory(historyMode);
-  if (notifyUser) notify(`Switched to ${storageProfiles[id].name}`);
+async function changeNav(id) {
+  activeNav.value = id;
+  activeFolder.value = '';
+  selectedIds.value = new Set();
+  detailAsset.value = null;
+  closeMobileSidebar();
+  await refreshAssets();
 }
 
-async function changeNav(id, { historyMode = 'push' } = {}) {
-  if (!navItems.some((item) => item.id === id)) return;
-
-  await applyNavigationState({ storage: activeStorage.value, collection: id, folder: '' });
-  if (historyMode !== 'none') writeBrowserHistory(historyMode);
-}
-
-async function changeFolder(id, { historyMode = 'push' } = {}) {
-  const folder = typeof id === 'string' ? id.replace(/^\/+|\/+$/g, '') : '';
-
-  await applyNavigationState({ storage: activeStorage.value, collection: 'all', folder });
-  if (historyMode !== 'none') writeBrowserHistory(historyMode);
-}
-
-async function handleBrowserHistory(event) {
-  if (!workspaceReady) return;
-
-  const state = event.state?.[FILE_MANAGER_HISTORY_KEY]
-    ? normalizeNavigationState(event.state[FILE_MANAGER_HISTORY_KEY], activeStorage.value)
-    : navigationStateFromUrl(activeStorage.value);
-
-  if (!state || sameNavigationState(state, currentNavigationState())) return;
-
-  if (state.storage !== activeStorage.value) {
-    await changeStorage(state.storage, { historyMode: 'none', notifyUser: false });
-  }
-
-  if (state.collection !== activeNav.value) {
-    await changeNav(state.collection, { historyMode: 'none' });
-  }
-
-  if (state.folder !== activeFolder.value) {
-    await changeFolder(state.folder, { historyMode: 'none' });
-  }
+async function changeFolder(id) {
+  activeFolder.value = id;
+  activeNav.value = 'all';
+  selectedIds.value = new Set();
+  detailAsset.value = null;
+  closeMobileSidebar();
+  await refreshAssets();
 }
 
 function selectAsset(asset) {
@@ -368,10 +237,6 @@ function closeActionModal(force = false) {
   folderName.value = '';
   assetName.value = '';
   moveDestination.value = '';
-  deleteImpactSequence++;
-  deleteImpact.value = null;
-  deleteImpactLoading.value = false;
-  deletePaths.value = [];
 }
 
 async function submitActionModal() {
@@ -406,30 +271,20 @@ async function submitActionModal() {
       const asset = actionModalItem.value;
       if (!asset?.path) throw new Error('The asset is no longer available.');
       const renamed = await renameAsset(activeStorage.value, asset.path, assetName.value.trim());
-      const renamedActiveFolder = asset.type === 'folder' && (activeFolder.value === asset.path || activeFolder.value.startsWith(`${asset.path}/`));
-      if (renamedActiveFolder) {
+      if (asset.type === 'folder' && (activeFolder.value === asset.path || activeFolder.value.startsWith(`${asset.path}/`))) {
         activeFolder.value = renamed.path + activeFolder.value.slice(asset.path.length);
       }
       selectedIds.value = new Set([renamed.id]);
       detailAsset.value = renamed;
       await refreshAssets({ refreshFolders: true });
-      if (renamedActiveFolder) writeBrowserHistory('replace');
       successMessage = `${asset.type === 'folder' ? 'Folder' : 'File'} renamed.`;
     } else if (type === 'delete') {
-      const paths = deletePaths.value;
-      if (!paths.length || !deleteImpact.value) throw new Error('The delete preview is no longer available. Please try again.');
-      const result = await deleteAssets(activeStorage.value, paths);
+      if (!selected.length) throw new Error('Select at least one asset to delete.');
+      const count = selected.length;
+      await Promise.all(selected.map((asset) => deleteAsset(activeStorage.value, asset.path)));
       clearSelection();
       await refreshAssets({ refreshFolders: true });
-      if (result.failedCount) {
-        actionSubmitState.value = 'idle';
-        const deleted = countLabel(result.deletedCount, 'asset');
-        const failed = countLabel(result.failedCount, 'asset');
-        notify(result.deletedCount ? `${deleted} deleted. ${failed} could not be deleted.` : `${failed} could not be deleted.`, 'failed');
-        closeActionModal(true);
-        return;
-      }
-      successMessage = `${countLabel(result.deletedCount, 'asset')} deleted.`;
+      successMessage = `${count} asset${count === 1 ? '' : 's'} deleted.`;
     } else if (type === 'delete-upload') {
       if (!uploadItem?.asset?.path) throw new Error('The uploaded file is no longer available.');
       await deleteAsset(uploadItem.storage, uploadItem.asset.path);
@@ -533,33 +388,8 @@ function createFolder() {
   openActionModal('create');
 }
 
-async function deleteSelected() {
-  const paths = selectedAssets.value.map((asset) => asset.path);
-  if (!paths.length) return;
-
-  const requestId = ++deleteImpactSequence;
-  window.clearTimeout(actionCloseTimer);
-  actionSubmitState.value = 'idle';
-  actionModalItem.value = null;
-  actionModalCount.value = paths.length;
-  deletePaths.value = paths;
-  deleteImpact.value = null;
-  deleteImpactLoading.value = true;
-  actionModal.value = 'delete';
-
-  try {
-    const impact = await previewDelete(activeStorage.value, paths);
-    if (requestId !== deleteImpactSequence || actionModal.value !== 'delete') return;
-
-    deleteImpact.value = impact;
-    actionModalCount.value = impact.targetCount;
-  } catch (error) {
-    if (requestId !== deleteImpactSequence) return;
-    closeActionModal(true);
-    notify(error.message, 'failed');
-  } finally {
-    if (requestId === deleteImpactSequence) deleteImpactLoading.value = false;
-  }
+function deleteSelected() {
+  openActionModal('delete');
 }
 
 function downloadAsset(asset) {
@@ -662,12 +492,9 @@ onMounted(() => {
   mobileViewportQuery.addEventListener('change', syncMobileViewport);
   compactViewportQuery.addEventListener('change', syncCompactViewport);
   window.addEventListener('keydown', handleGlobalKeydown);
-  window.addEventListener('popstate', handleBrowserHistory);
   initializeWorkspace().then(async (defaultStorage) => {
-    const initialState = browserNavigationState(defaultStorage) || { storage: defaultStorage, collection: 'all', folder: '' };
-    await applyNavigationState(initialState, { refreshFolders: true });
-    workspaceReady = true;
-    writeBrowserHistory('replace');
+    activeStorage.value = defaultStorage;
+    await refreshAssets({ refreshFolders: true });
   }).catch((error) => notify(error.message, 'failed'));
 });
 onBeforeUnmount(() => {
@@ -675,7 +502,6 @@ onBeforeUnmount(() => {
   mobileViewportQuery.removeEventListener('change', syncMobileViewport);
   compactViewportQuery.removeEventListener('change', syncCompactViewport);
   window.removeEventListener('keydown', handleGlobalKeydown);
-  window.removeEventListener('popstate', handleBrowserHistory);
 });
   window.clearTimeout(actionCloseTimer);
   window.clearTimeout(notify.timer);
@@ -845,9 +671,9 @@ onBeforeUnmount(() => {
               <h2 id="action-modal-title">
                 <template v-if="actionModal === 'create'">Create folder</template>
                 <template v-else-if="actionModal === 'move'">Move {{ actionModalCount }} selected asset<span v-if="actionModalCount !== 1">s</span></template>
-                <template v-else-if="actionModal === 'delete'">{{ deleteModalTitle }}</template>
                 <template v-else-if="actionModal === 'delete-upload'">Delete uploaded file</template>
-                <template v-else>Rename {{ actionModalItem?.type === 'folder' ? 'folder' : 'file' }}</template>
+                <template v-else-if="actionModal === 'rename'">Rename {{ actionModalItem?.type === 'folder' ? 'folder' : 'file' }}</template>
+                <template v-else>Delete {{ actionModalCount }} selected asset<span v-if="actionModalCount !== 1">s</span></template>
               </h2>
             </div>
             <button type="button" aria-label="Close dialog" :disabled="actionSubmitState !== 'idle'" @click="closeActionModal"><i class="bi bi-x-lg"></i></button>
@@ -871,25 +697,11 @@ onBeforeUnmount(() => {
                 </select>
                 <p class="action-modal-help">Selected assets will remain in {{ activeProfile.shortName }} storage.</p>
               </template>
-              <template v-else-if="actionModal === 'delete'">
-                <div v-if="deleteImpactLoading" class="action-modal-preview-loading">
-                  <span class="action-preview-spinner"></span>
-                  <span>Calculating deletion impact...</span>
-                </div>
-                <div v-else class="action-modal-alert">
-                  <i class="bi bi-exclamation-triangle-fill"></i>
-                  <div>
-                    <strong>{{ deleteModalTitle }}</strong>
-                    <p>{{ deleteImpactSummary }}</p>
-                    <p v-if="deleteImpactIncludedText">{{ deleteImpactIncludedText }}</p>
-                  </div>
-                </div>
-              </template>
               <template v-else>
                 <div class="action-modal-alert">
                   <i class="bi bi-exclamation-triangle-fill"></i>
                   <div>
-                    <strong>Delete {{ actionModalItem?.name }}?</strong>
+                    <strong><template v-if="actionModal === 'delete-upload'">Delete {{ actionModalItem?.name }}?</template><template v-else>Delete selected assets?</template></strong>
                     <p>This action cannot be undone.</p>
                   </div>
                 </div>
@@ -897,12 +709,11 @@ onBeforeUnmount(() => {
             </div>
             <footer>
               <button type="button" class="btn btn-light border" :disabled="actionSubmitState !== 'idle'" @click="closeActionModal">Cancel</button>
-              <button v-if="actionSubmitState === 'idle'" type="submit" class="btn" :class="actionModal === 'delete' || actionModal === 'delete-upload' ? 'btn-danger' : 'btn-primary'" :disabled="(actionModal === 'move' && moveDestination === activeFolder) || (actionModal === 'delete' && (deleteImpactLoading || !deleteImpact))">
+              <button v-if="actionSubmitState === 'idle'" type="submit" class="btn" :class="actionModal === 'delete' || actionModal === 'delete-upload' ? 'btn-danger' : 'btn-primary'" :disabled="actionModal === 'move' && moveDestination === activeFolder">
                 <template v-if="actionModal === 'create'">Create folder</template>
                 <template v-else-if="actionModal === 'move'">Move assets</template>
-                <template v-else-if="actionModal === 'rename'">Rename</template>
-                <template v-else-if="actionModal === 'delete'">Delete permanently</template>
-                <template v-else>Delete file</template>
+                 <template v-else-if="actionModal === 'rename'">Rename</template>
+                <template v-else>Delete assets</template>
               </button>
               <button v-else-if="actionSubmitState === 'submitting'" type="button" class="btn btn-secondary action-submit-state" disabled><span class="action-submit-spinner"></span><span><template v-if="actionModal === 'create'">Creating folder</template><template v-else-if="actionModal === 'move'">Moving assets</template><template v-else-if="actionModal === 'rename'">Renaming</template><template v-else>Deleting assets</template></span></button>
               <button v-else type="button" class="btn btn-success action-submit-state" disabled><i class="bi bi-check-circle-fill"></i><span>Success</span></button>

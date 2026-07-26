@@ -165,28 +165,6 @@ class FileManagerV2Controller extends Controller
         return response()->json(status: 204);
     }
 
-    public function deletePreview(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'storage' => ['required', 'string', 'max:40'],
-            'paths' => ['required', 'array', 'min:1', 'max:100'],
-            'paths.*' => ['required', 'string', 'max:2000'],
-        ]);
-
-        return response()->json(['data' => $this->storage->deletePreview($validated['storage'], $validated['paths'])]);
-    }
-
-    public function deleteMany(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'storage' => ['required', 'string', 'max:40'],
-            'paths' => ['required', 'array', 'min:1', 'max:100'],
-            'paths.*' => ['required', 'string', 'max:2000'],
-        ]);
-
-        return response()->json(['data' => $this->storage->deleteMany($validated['storage'], $validated['paths'])]);
-    }
-
     public function preview(Request $request)
     {
         $validated = $request->validate([

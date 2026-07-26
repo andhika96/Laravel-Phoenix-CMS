@@ -42,11 +42,9 @@ const deletePaths = ref([]);
 const folderName = ref('');
 const moveDestination = ref('');
 const assetName = ref('');
-const FILE_MANAGER_HISTORY_KEY = 'fileManagerV2';
 let actionCloseTimer;
 let refreshSequence = 0;
 let deleteImpactSequence = 0;
-let workspaceReady = false;
 const themeQuery = window.matchMedia('(prefers-color-scheme: dark)');
 const savedTheme = window.localStorage.getItem('arunika-files-theme');
 const themePreference = ref(['light', 'dark', 'system'].includes(savedTheme) ? savedTheme : 'system');
@@ -181,69 +179,6 @@ function syncCompactViewport(event) {
   if (event.matches) detailAsset.value = null;
 }
 
-function currentNavigationState() {
-  return {
-    storage: activeStorage.value,
-    collection: activeNav.value,
-    folder: activeFolder.value,
-  };
-}
-
-function normalizeNavigationState(state, fallbackStorage) {
-  const storage = typeof state?.storage === 'string' && storageProfiles[state.storage] ? state.storage : fallbackStorage;
-  const collection = navItems.some((item) => item.id === state?.collection) ? state.collection : 'all';
-  const folder = collection === 'all' && typeof state?.folder === 'string' ? state.folder.replace(/^\/+|\/+$/g, '') : '';
-
-  return { storage, collection, folder };
-}
-
-function navigationStateFromUrl(fallbackStorage) {
-  const url = new URL(window.location.href);
-  const storage = url.searchParams.get('fm_storage');
-  const collection = url.searchParams.get('fm_collection');
-  const folder = url.searchParams.get('fm_folder');
-
-  if (storage === null && collection === null && folder === null) return null;
-
-  return normalizeNavigationState({ storage, collection, folder }, fallbackStorage);
-}
-
-function browserNavigationState(fallbackStorage) {
-  const state = window.history.state?.[FILE_MANAGER_HISTORY_KEY];
-  return state ? normalizeNavigationState(state, fallbackStorage) : navigationStateFromUrl(fallbackStorage);
-}
-
-function navigationHistoryUrl(state) {
-  const url = new URL(window.location.href);
-  url.searchParams.set('fm_storage', state.storage);
-  url.searchParams.set('fm_collection', state.collection);
-
-  if (state.folder) url.searchParams.set('fm_folder', state.folder); else url.searchParams.delete('fm_folder');
-
-  return `${url.pathname}${url.search}${url.hash}`;
-}
-
-function sameNavigationState(first, second) {
-  return first?.storage === second?.storage && first?.collection === second?.collection && first?.folder === second?.folder;
-}
-
-function writeBrowserHistory(mode = 'push') {
-  const state = currentNavigationState();
-  const currentState = window.history.state?.[FILE_MANAGER_HISTORY_KEY];
-  if (mode === 'push' && sameNavigationState(currentState, state)) return;
-
-  const historyState = window.history.state && typeof window.history.state === 'object' ? window.history.state : {};
-  const payload = { ...historyState, [FILE_MANAGER_HISTORY_KEY]: state };
-  const url = navigationHistoryUrl(state);
-
-  if (mode === 'replace') {
-    window.history.replaceState(payload, '', url);
-    return;
-  }
-
-  window.history.pushState(payload, '', url);
-}
-
 async function refreshAssets({ refreshFolders = false } = {}) {
   const requestId = ++refreshSequence;
   const context = { storage: activeStorage.value, path: activeFolder.value, collection: activeNav.value, search: search.value, type: filter.value, sort: sort.value };
@@ -257,58 +192,33 @@ async function refreshAssets({ refreshFolders = false } = {}) {
   if (folderItems) replaceFolders(folderItems);
 }
 
-async function applyNavigationState(state, { refreshFolders = false } = {}) {
-  activeStorage.value = state.storage;
-  activeNav.value = state.collection;
-  activeFolder.value = state.folder;
+async function changeStorage(id) {
+  activeStorage.value = id;
+  activeNav.value = 'all';
+  activeFolder.value = '';
   selectedIds.value = new Set();
   detailAsset.value = null;
   closeMobileSidebar();
-  await refreshAssets({ refreshFolders });
+  await refreshAssets({ refreshFolders: true });
+  notify(`Switched to ${storageProfiles[id].name}`);
 }
 
-async function changeStorage(id, { historyMode = 'push', notifyUser = true } = {}) {
-  if (!storageProfiles[id]) return;
-
-  await applyNavigationState({ storage: id, collection: 'all', folder: '' }, { refreshFolders: true });
-  if (historyMode !== 'none') writeBrowserHistory(historyMode);
-  if (notifyUser) notify(`Switched to ${storageProfiles[id].name}`);
+async function changeNav(id) {
+  activeNav.value = id;
+  activeFolder.value = '';
+  selectedIds.value = new Set();
+  detailAsset.value = null;
+  closeMobileSidebar();
+  await refreshAssets();
 }
 
-async function changeNav(id, { historyMode = 'push' } = {}) {
-  if (!navItems.some((item) => item.id === id)) return;
-
-  await applyNavigationState({ storage: activeStorage.value, collection: id, folder: '' });
-  if (historyMode !== 'none') writeBrowserHistory(historyMode);
-}
-
-async function changeFolder(id, { historyMode = 'push' } = {}) {
-  const folder = typeof id === 'string' ? id.replace(/^\/+|\/+$/g, '') : '';
-
-  await applyNavigationState({ storage: activeStorage.value, collection: 'all', folder });
-  if (historyMode !== 'none') writeBrowserHistory(historyMode);
-}
-
-async function handleBrowserHistory(event) {
-  if (!workspaceReady) return;
-
-  const state = event.state?.[FILE_MANAGER_HISTORY_KEY]
-    ? normalizeNavigationState(event.state[FILE_MANAGER_HISTORY_KEY], activeStorage.value)
-    : navigationStateFromUrl(activeStorage.value);
-
-  if (!state || sameNavigationState(state, currentNavigationState())) return;
-
-  if (state.storage !== activeStorage.value) {
-    await changeStorage(state.storage, { historyMode: 'none', notifyUser: false });
-  }
-
-  if (state.collection !== activeNav.value) {
-    await changeNav(state.collection, { historyMode: 'none' });
-  }
-
-  if (state.folder !== activeFolder.value) {
-    await changeFolder(state.folder, { historyMode: 'none' });
-  }
+async function changeFolder(id) {
+  activeFolder.value = id;
+  activeNav.value = 'all';
+  selectedIds.value = new Set();
+  detailAsset.value = null;
+  closeMobileSidebar();
+  await refreshAssets();
 }
 
 function selectAsset(asset) {
@@ -406,14 +316,12 @@ async function submitActionModal() {
       const asset = actionModalItem.value;
       if (!asset?.path) throw new Error('The asset is no longer available.');
       const renamed = await renameAsset(activeStorage.value, asset.path, assetName.value.trim());
-      const renamedActiveFolder = asset.type === 'folder' && (activeFolder.value === asset.path || activeFolder.value.startsWith(`${asset.path}/`));
-      if (renamedActiveFolder) {
+      if (asset.type === 'folder' && (activeFolder.value === asset.path || activeFolder.value.startsWith(`${asset.path}/`))) {
         activeFolder.value = renamed.path + activeFolder.value.slice(asset.path.length);
       }
       selectedIds.value = new Set([renamed.id]);
       detailAsset.value = renamed;
       await refreshAssets({ refreshFolders: true });
-      if (renamedActiveFolder) writeBrowserHistory('replace');
       successMessage = `${asset.type === 'folder' ? 'Folder' : 'File'} renamed.`;
     } else if (type === 'delete') {
       const paths = deletePaths.value;
@@ -662,12 +570,9 @@ onMounted(() => {
   mobileViewportQuery.addEventListener('change', syncMobileViewport);
   compactViewportQuery.addEventListener('change', syncCompactViewport);
   window.addEventListener('keydown', handleGlobalKeydown);
-  window.addEventListener('popstate', handleBrowserHistory);
   initializeWorkspace().then(async (defaultStorage) => {
-    const initialState = browserNavigationState(defaultStorage) || { storage: defaultStorage, collection: 'all', folder: '' };
-    await applyNavigationState(initialState, { refreshFolders: true });
-    workspaceReady = true;
-    writeBrowserHistory('replace');
+    activeStorage.value = defaultStorage;
+    await refreshAssets({ refreshFolders: true });
   }).catch((error) => notify(error.message, 'failed'));
 });
 onBeforeUnmount(() => {
@@ -675,7 +580,6 @@ onBeforeUnmount(() => {
   mobileViewportQuery.removeEventListener('change', syncMobileViewport);
   compactViewportQuery.removeEventListener('change', syncCompactViewport);
   window.removeEventListener('keydown', handleGlobalKeydown);
-  window.removeEventListener('popstate', handleBrowserHistory);
 });
   window.clearTimeout(actionCloseTimer);
   window.clearTimeout(notify.timer);

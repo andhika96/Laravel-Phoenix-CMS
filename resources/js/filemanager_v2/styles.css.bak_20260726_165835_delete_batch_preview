@@ -286,8 +286,6 @@ button { cursor: pointer; }
 .action-modal-alert > i { margin-top: 1px; color: #d74c5d; font-size: 16px; }
 .action-modal-alert strong { display: block; font-size: clamp(11px, .95vw, 12px); }
 .action-modal-alert p { margin: 3px 0 0; color: #a35a63; font-size: clamp(10px, .82vw, 11px); }
-.action-modal-preview-loading { display: flex; align-items: center; gap: 9px; padding: 12px; color: var(--muted); background: var(--surface-raised); border: 1px solid var(--line); border-radius: 8px; font-size: clamp(10px, .82vw, 11px); }
-.action-preview-spinner { width: 14px; height: 14px; flex: 0 0 auto; border: 2px solid rgba(83, 104, 232, .2); border-top-color: #5368e8; border-radius: 50%; animation: action-submit-spin .7s linear infinite; }
 
 .settings-modal > header small { color: #8c95a5; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
 .settings-modal > header h2 { margin: 3px 0 0; font-size: 18px; }

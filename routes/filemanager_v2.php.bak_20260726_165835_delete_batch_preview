@@ -30,8 +30,6 @@ Route::middleware(['auth', 'checkSuspended'])->group(function (): void {
         Route::post('/assets/move', [FileManagerV2Controller::class, 'move'])->name('assets.move');
         Route::post('/assets/star', [FileManagerV2Controller::class, 'toggleStar'])->name('assets.star');
         Route::delete('/assets', [FileManagerV2Controller::class, 'delete'])->name('assets.delete');
-        Route::post('/assets/delete-preview', [FileManagerV2Controller::class, 'deletePreview'])->name('assets.delete_preview');
-        Route::post('/assets/delete-batch', [FileManagerV2Controller::class, 'deleteMany'])->name('assets.delete_many');
         Route::get('/assets/preview', [FileManagerV2Controller::class, 'preview'])->name('assets.preview');
         Route::get('/assets/download', [FileManagerV2Controller::class, 'download'])->name('assets.download');
 
