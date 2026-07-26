@@ -1,0 +1,68 @@
+<?php
+
+namespace Tests\Feature\FileManagerV2;
+
+use App\Services\FileManagerV2\FileManagerV2Storage;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
+use Tests\TestCase;
+
+class FileManagerV2StorageUsageAndBreadcrumbTest extends TestCase
+{
+    private string $root;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->root = storage_path('framework/testing/filemanager_v2_storage_usage');
+        File::deleteDirectory($this->root);
+        config([
+            'filemanager_v2.local.files_root' => $this->root . '/files',
+            'filemanager_v2.local.cache_root' => $this->root . '/cache',
+            'filemanager_v2.local.metadata_root' => $this->root . '/metadata',
+            'filemanager_v2.local.runtime_root' => $this->root . '/runtime',
+            'filemanager_v2.connections.local.quota_bytes' => 10,
+            'filemanager_v2.connections.r2.enabled' => false,
+            'filemanager_v2.cache.store' => 'array',
+        ]);
+    }
+
+    protected function tearDown(): void
+    {
+        File::deleteDirectory($this->root);
+
+        parent::tearDown();
+    }
+
+    public function test_storage_profile_reports_recursive_usage_for_the_visible_root(): void
+    {
+        $storage = app(FileManagerV2Storage::class);
+        $storage->makeDirectory('local', '', 'Campaigns');
+        $storage->upload('local', '', UploadedFile::fake()->createWithContent('root.txt', '1234'));
+        $storage->upload('local', 'Campaigns', UploadedFile::fake()->createWithContent('brief.txt', '123456'));
+
+        $profile = collect($storage->profiles())->firstWhere('id', 'local');
+
+        $this->assertSame(10, $profile['usedBytes']);
+        $this->assertSame(10, $profile['quotaBytes']);
+        $this->assertSame(100, $profile['usagePercent']);
+        $this->assertSame('10 B', $profile['usedLabel']);
+        $this->assertSame('10 B', $profile['quotaLabel']);
+    }
+
+    public function test_breadcrumb_uses_a_non_wrapping_scroller_with_directional_fades(): void
+    {
+        $app = file_get_contents(resource_path('js/filemanager_v2/App.vue'));
+        $styles = file_get_contents(resource_path('js/filemanager_v2/styles.css'));
+
+        $this->assertStringContainsString('const breadcrumbScroller = ref(null);', $app);
+        $this->assertStringContainsString('function updateBreadcrumbOverflow()', $app);
+        $this->assertStringContainsString('class="breadcrumb-scroller"', $app);
+        $this->assertStringContainsString('@scroll.passive="updateBreadcrumbOverflow"', $app);
+        $this->assertStringContainsString('.breadcrumb-scroller {', $styles);
+        $this->assertStringContainsString('.breadcrumb-trail {', $styles);
+        $this->assertStringContainsString('.breadcrumb-wrap.has-left-overflow::before', $styles);
+        $this->assertStringContainsString('.breadcrumb-wrap.has-right-overflow::after', $styles);
+    }
+}

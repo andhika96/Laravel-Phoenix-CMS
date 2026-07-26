@@ -7,7 +7,6 @@ use Illuminate\Cache\Repository;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -26,7 +25,6 @@ class FileManagerV2Storage
             $local['metadata_root'],
             $local['cache_root'] . DIRECTORY_SEPARATOR . 'previews',
             $local['runtime_root'] . DIRECTORY_SEPARATOR . 'uploads',
-            config('filemanager_v2.settings.root'),
         ] as $directory) {
             File::ensureDirectoryExists($directory, 0755, true);
         }
@@ -42,7 +40,7 @@ class FileManagerV2Storage
 
     public function profile(string $storage): array
     {
-        $profile = $this->configuredConnections()[$storage] ?? null;
+        $profile = config("filemanager_v2.connections.{$storage}");
 
         if (! is_array($profile) || empty($profile['enabled'])) {
             abort(404, 'Storage connection tidak tersedia.');
@@ -56,46 +54,20 @@ class FileManagerV2Storage
     {
         $this->prepare();
 
-        return collect($this->configuredConnections())
+        return collect(config('filemanager_v2.connections', []))
             ->filter(fn (array $profile) => ! empty($profile['enabled']))
             ->map(function (array $profile, string $id): array {
-                $usage = $this->usage($id, $profile);
-
                 return [
-                    ...$this->publicConnection($id, $profile),
+                    'id' => $id,
+                    'name' => $profile['name'],
+                    'shortName' => $profile['short_name'],
+                    'icon' => $profile['icon'],
                     'connected' => $this->connectionAvailable($id),
-                    ...$usage,
+                    'root' => $id === 'local' ? config('filemanager_v2.local.files_root') : '',
                 ];
             })
             ->values()
             ->all();
-    }
-
-    /** @param array<string, mixed> $profile @return array<string, int|string> */
-    private function usage(string $storage, array $profile): array
-    {
-        $usedBytes = 0;
-
-        try {
-            foreach ($this->disk($storage)->listContents('', true) as $item) {
-                if ($item instanceof StorageAttributes && ! $item->isDir()) {
-                    $usedBytes += (int) ($item->fileSize() ?? 0);
-                }
-            }
-        } catch (\Throwable) {
-            // The connection status is reported separately; an unavailable remote disk has no reliable usage total.
-        }
-
-        $quotaBytes = max(0, (int) ($profile['quota_bytes'] ?? 0));
-        $usagePercent = $quotaBytes > 0 ? min(100, (int) round(($usedBytes / $quotaBytes) * 100)) : 0;
-
-        return [
-            'usedBytes' => $usedBytes,
-            'quotaBytes' => $quotaBytes,
-            'usagePercent' => $usagePercent,
-            'usedLabel' => $this->formatBytes($usedBytes),
-            'quotaLabel' => $quotaBytes > 0 ? $this->formatBytes($quotaBytes) : 'No limit',
-        ];
     }
 
     public function disk(string $storage): FilesystemAdapter
@@ -107,28 +79,7 @@ class FileManagerV2Storage
 
             return Storage::build([
                 'driver' => 'local',
-                'root' => $this->localRoot($profile),
-                'throw' => false,
-            ]);
-        }
-
-        if (($profile['driver'] ?? null) === 's3') {
-            $key = $this->decryptSecret($profile['key_encrypted'] ?? null);
-            $secret = $this->decryptSecret($profile['secret_encrypted'] ?? null);
-
-            if ($key === '' || $secret === '' || empty($profile['bucket'])) {
-                throw new RuntimeException('Kredensial storage cloud belum lengkap.');
-            }
-
-            return Storage::build([
-                'driver' => 's3',
-                'key' => $key,
-                'secret' => $secret,
-                'region' => $profile['region'] ?: 'us-east-1',
-                'bucket' => $profile['bucket'],
-                'endpoint' => $profile['endpoint'] ?: null,
-                'use_path_style_endpoint' => (bool) ($profile['use_path_style_endpoint'] ?? false),
-                'root' => $profile['root'] ?? '',
+                'root' => config('filemanager_v2.local.files_root'),
                 'throw' => false,
             ]);
         }
@@ -159,8 +110,7 @@ class FileManagerV2Storage
     public function bootstrap(): array
     {
         $profiles = $this->profiles();
-        $default = $this->settings()['defaultStorage'];
-        $upload = $this->uploadSettings();
+        $default = config('filemanager_v2.default_storage', 'local');
 
         if (! collect($profiles)->contains('id', $default)) {
             $default = $profiles[0]['id'] ?? 'local';
@@ -170,95 +120,11 @@ class FileManagerV2Storage
             'defaultStorage' => $default,
             'profiles' => $profiles,
             'upload' => [
-                'chunkSize' => $upload['chunk_size'],
-                'chunkThreshold' => $upload['chunk_threshold'],
-                'maxParallel' => $upload['max_parallel'],
-                'maxFileSize' => $upload['max_file_size'],
-                'retryAttempts' => $upload['retry_attempts'],
+                'chunkSize' => config('filemanager_v2.uploads.chunk_size'),
+                'chunkThreshold' => config('filemanager_v2.uploads.chunk_threshold'),
+                'maxParallel' => config('filemanager_v2.uploads.max_parallel'),
+                'maxFileSize' => config('filemanager_v2.uploads.max_file_size'),
             ],
-        ];
-    }
-
-    /** @return array<string, mixed> */
-    public function settings(): array
-    {
-        $stored = $this->storedSettings();
-        $connections = $this->configuredConnections();
-        $default = (string) ($stored['default_storage'] ?? config('filemanager_v2.default_storage', 'local'));
-        $enabledIds = collect($connections)
-            ->filter(fn (array $connection): bool => ! empty($connection['enabled']))
-            ->keys();
-
-        if (! $enabledIds->contains($default)) {
-            $default = (string) ($enabledIds->first() ?? 'local');
-        }
-
-        $upload = $this->uploadSettings();
-
-        return [
-            'defaultStorage' => $default,
-            'connections' => collect($connections)
-                ->map(fn (array $profile, string $id): array => $this->publicConnection($id, $profile))
-                ->values()
-                ->all(),
-            'upload' => [
-                'maxFileSize' => $upload['max_file_size'],
-                'chunkSize' => $upload['chunk_size'],
-                'chunkThreshold' => $upload['chunk_threshold'],
-                'maxParallel' => $upload['max_parallel'],
-                'retryAttempts' => $upload['retry_attempts'],
-            ],
-        ];
-    }
-
-    /** @param array<string, mixed> $settings @return array<string, mixed> */
-    public function saveSettings(array $settings): array
-    {
-        $this->prepare();
-        $existing = $this->configuredConnections();
-        $connections = [];
-
-        foreach ($settings['connections'] as $connection) {
-            $id = (string) $connection['id'];
-            abort_if(isset($connections[$id]), 422, 'ID storage connection tidak boleh duplikat.');
-            $connections[$id] = $this->normalizeStoredConnection($id, $connection, $existing[$id] ?? []);
-        }
-
-        abort_unless(isset($connections['local']), 422, 'Local storage wajib tetap tersedia.');
-        $default = (string) $settings['defaultStorage'];
-        abort_if(empty($connections[$default]['enabled']), 422, 'Default storage harus aktif.');
-
-        $removedConnections = [];
-        foreach (config('filemanager_v2.connections', []) as $id => $profile) {
-            $id = (string) $id;
-            if (is_array($profile) && $id !== 'local' && ! isset($connections[$id])) {
-                $removedConnections[] = $id;
-            }
-        }
-
-        File::put($this->settingsPath(), json_encode([
-            'version' => 1,
-            'default_storage' => $default,
-            'connections' => $connections,
-            'removed_connections' => $removedConnections,
-            'upload' => $this->normalizeUploadSettings($settings['upload'] ?? []),
-        ], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR), LOCK_EX);
-
-        foreach (array_unique([...array_keys($existing), ...array_keys($connections), ...$removedConnections]) as $id) {
-            $this->bust($id, '');
-        }
-
-        return $this->settings();
-    }
-
-    /** @return array<string, mixed> */
-    public function testConnection(string $storage): array
-    {
-        $this->profile($storage);
-
-        return [
-            'storage' => $storage,
-            'connected' => $this->connectionAvailable($storage),
         ];
     }
 
@@ -507,7 +373,6 @@ class FileManagerV2Storage
     {
         $parent = $this->path($parent);
         $this->assertUpload($file);
-        $this->assertQuota($storage, (int) $file->getSize());
         $name = $this->availableName($storage, $parent, $this->fileName($file->getClientOriginalName()));
         $path = $parent === '' ? $name : $parent . '/' . $name;
 
@@ -530,7 +395,6 @@ class FileManagerV2Storage
         $parent = $this->path($parent);
         $name = $this->fileName($name);
         $this->assertUploadMeta($name, $size, $parts);
-        $this->assertQuota($storage, $size);
         $id = (string) Str::uuid();
         $directory = $this->runtimeDirectory($id);
         File::ensureDirectoryExists($directory, 0755, true);
@@ -558,7 +422,6 @@ class FileManagerV2Storage
         if ($part < 0 || $part >= $session['parts']) {
             abort(422, 'Nomor chunk tidak valid.');
         }
-        abort_if((int) $chunk->getSize() > $this->uploadSettings()['chunk_size'], 422, 'Ukuran chunk melampaui batas upload.');
 
         $target = $this->runtimeDirectory($id) . DIRECTORY_SEPARATOR . sprintf('%08d.part', $part);
         $chunk->move(dirname($target), basename($target));
@@ -906,236 +769,12 @@ class FileManagerV2Storage
     private function connectionAvailable(string $storage): bool
     {
         try {
-            foreach ($this->disk($storage)->listContents('', false) as $_item) {
-                break;
-            }
+            $this->disk($storage)->listContents('', false)->current();
 
             return true;
         } catch (\Throwable) {
             return false;
         }
-    }
-
-    /** @return array<string, array<string, mixed>> */
-    private function configuredConnections(): array
-    {
-        $storedSettings = $this->storedSettings();
-        $removedConnections = array_fill_keys(array_filter(
-            $storedSettings['removed_connections'] ?? [],
-            static fn ($id): bool => is_string($id) && $id !== 'local',
-        ), true);
-        $connections = [];
-
-        foreach (config('filemanager_v2.connections', []) as $id => $profile) {
-            $id = (string) $id;
-            if (is_array($profile) && ! isset($removedConnections[$id])) {
-                $connections[$id] = $this->normalizeConnectionProfile($id, $profile);
-            }
-        }
-
-        foreach (($storedSettings['connections'] ?? []) as $id => $profile) {
-            if (is_string($id) && is_array($profile) && ! isset($removedConnections[$id])) {
-                $connections[$id] = $this->normalizeConnectionProfile($id, [...($connections[$id] ?? []), ...$profile]);
-            }
-        }
-
-        return $connections;
-    }
-
-    /** @param array<string, mixed> $profile @return array<string, mixed> */
-    private function normalizeConnectionProfile(string $id, array $profile): array
-    {
-        $type = (string) ($profile['type'] ?? ($profile['driver'] === 'local' ? 'local' : ($id === 'r2' ? 'r2' : 's3_compatible')));
-        $type = in_array($type, ['local', 's3', 's3_compatible', 'r2'], true) ? $type : 's3_compatible';
-        $root = $this->path((string) ($profile['root'] ?? ''));
-
-        return [
-            'name' => trim((string) ($profile['name'] ?? $this->defaultConnectionName($type))) ?: $this->defaultConnectionName($type),
-            'short_name' => trim((string) ($profile['short_name'] ?? $this->defaultConnectionShortName($type))) ?: $this->defaultConnectionShortName($type),
-            'icon' => (string) ($profile['icon'] ?? $this->defaultConnectionIcon($type)),
-            'enabled' => (bool) ($profile['enabled'] ?? true),
-            'type' => $type,
-            'driver' => $type === 'local' ? 'local' : (string) ($profile['driver'] ?? 's3'),
-            'disk' => $profile['disk'] ?? null,
-            'root' => $root,
-            'quota_bytes' => max(0, (int) ($profile['quota_bytes'] ?? 1073741824)),
-            'bucket' => trim((string) ($profile['bucket'] ?? '')),
-            'region' => trim((string) ($profile['region'] ?? ($type === 'r2' ? 'auto' : 'us-east-1'))),
-            'endpoint' => trim((string) ($profile['endpoint'] ?? '')),
-            'use_path_style_endpoint' => (bool) ($profile['use_path_style_endpoint'] ?? ($type === 's3_compatible')),
-            'key_encrypted' => $profile['key_encrypted'] ?? null,
-            'secret_encrypted' => $profile['secret_encrypted'] ?? null,
-        ];
-    }
-
-    /** @param array<string, mixed> $profile @return array<string, mixed> */
-    private function publicConnection(string $id, array $profile): array
-    {
-        return [
-            'id' => $id,
-            'name' => $profile['name'],
-            'shortName' => $profile['short_name'],
-            'icon' => $profile['icon'],
-            'type' => $profile['type'],
-            'enabled' => (bool) $profile['enabled'],
-            'root' => $profile['root'],
-            'quotaBytes' => (int) $profile['quota_bytes'],
-            'bucket' => $profile['bucket'],
-            'region' => $profile['region'],
-            'endpoint' => $profile['endpoint'],
-            'usePathStyle' => (bool) $profile['use_path_style_endpoint'],
-            'credentialsConfigured' => ($profile['driver'] ?? null) === 'disk' || (! empty($profile['key_encrypted']) && ! empty($profile['secret_encrypted'])),
-        ];
-    }
-
-    /** @param array<string, mixed> $input @param array<string, mixed> $existing @return array<string, mixed> */
-    private function normalizeStoredConnection(string $id, array $input, array $existing): array
-    {
-        abort_unless((bool) preg_match('/^[a-z][a-z0-9-]{0,38}$/', $id), 422, 'ID storage connection tidak valid.');
-        $type = (string) ($input['type'] ?? '');
-        abort_unless(in_array($type, ['local', 's3', 's3_compatible', 'r2'], true), 422, 'Tipe storage connection tidak valid.');
-        abort_if($id === 'local' && $type !== 'local', 422, 'Local storage tidak dapat diubah menjadi cloud storage.');
-        abort_if($id !== 'local' && $type === 'local', 422, 'Hanya connection local yang dapat memakai driver local.');
-
-        $accessKey = trim((string) ($input['accessKey'] ?? ''));
-        $secretKey = trim((string) ($input['secretKey'] ?? ''));
-        $usesDynamicS3 = $type !== 'local' && ($accessKey !== '' || $secretKey !== '' || ($existing['driver'] ?? null) === 's3');
-
-        return $this->normalizeConnectionProfile($id, [
-            ...$existing,
-            'name' => $input['name'] ?? $existing['name'] ?? $this->defaultConnectionName($type),
-            'short_name' => $input['shortName'] ?? $existing['short_name'] ?? $this->defaultConnectionShortName($type),
-            'icon' => $this->defaultConnectionIcon($type),
-            'enabled' => $input['enabled'] ?? $existing['enabled'] ?? true,
-            'type' => $type,
-            'driver' => $type === 'local' ? 'local' : ($usesDynamicS3 ? 's3' : ($existing['driver'] ?? 's3')),
-            'root' => $input['root'] ?? $existing['root'] ?? '',
-            'quota_bytes' => $input['quotaBytes'] ?? $existing['quota_bytes'] ?? 1073741824,
-            'bucket' => $input['bucket'] ?? $existing['bucket'] ?? '',
-            'region' => $input['region'] ?? $existing['region'] ?? ($type === 'r2' ? 'auto' : 'us-east-1'),
-            'endpoint' => $input['endpoint'] ?? $existing['endpoint'] ?? '',
-            'use_path_style_endpoint' => $input['usePathStyle'] ?? $existing['use_path_style_endpoint'] ?? ($type === 's3_compatible'),
-            'key_encrypted' => $this->encryptSecret($accessKey, $existing['key_encrypted'] ?? null),
-            'secret_encrypted' => $this->encryptSecret($secretKey, $existing['secret_encrypted'] ?? null),
-        ]);
-    }
-
-    /** @return array<string, mixed> */
-    private function storedSettings(): array
-    {
-        $path = $this->settingsPath();
-        if (! File::exists($path)) {
-            return [];
-        }
-
-        try {
-            $settings = json_decode(File::get($path), true, flags: JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
-            return [];
-        }
-
-        return is_array($settings) ? $settings : [];
-    }
-
-    private function settingsPath(): string
-    {
-        return config('filemanager_v2.settings.root') . DIRECTORY_SEPARATOR . 'connections.json';
-    }
-
-    /** @return array<string, int> */
-    private function uploadSettings(): array
-    {
-        $defaults = config('filemanager_v2.uploads');
-        $stored = $this->storedSettings()['upload'] ?? [];
-        $chunkSize = max(1, (int) ($stored['chunk_size'] ?? $defaults['chunk_size']));
-
-        return [
-            'max_file_size' => max(1, (int) ($stored['max_file_size'] ?? $defaults['max_file_size'])),
-            'chunk_size' => $chunkSize,
-            'chunk_threshold' => max($chunkSize, (int) ($stored['chunk_threshold'] ?? $defaults['chunk_threshold'])),
-            'max_parallel' => min(10, max(1, (int) ($stored['max_parallel'] ?? $defaults['max_parallel']))),
-            'retry_attempts' => min(5, max(0, (int) ($stored['retry_attempts'] ?? $defaults['retry_attempts'] ?? 2))),
-        ];
-    }
-
-    /** @param array<string, mixed> $input @return array<string, int> */
-    private function normalizeUploadSettings(array $input): array
-    {
-        $defaults = $this->uploadSettings();
-        $chunkSize = max(1, (int) ($input['chunkSize'] ?? $defaults['chunk_size']));
-
-        return [
-            'max_file_size' => max(1, (int) ($input['maxFileSize'] ?? $defaults['max_file_size'])),
-            'chunk_size' => $chunkSize,
-            'chunk_threshold' => max($chunkSize, (int) ($input['chunkThreshold'] ?? $defaults['chunk_threshold'])),
-            'max_parallel' => min(10, max(1, (int) ($input['maxParallel'] ?? $defaults['max_parallel']))),
-            'retry_attempts' => min(5, max(0, (int) ($input['retryAttempts'] ?? $defaults['retry_attempts']))),
-        ];
-    }
-
-    private function localRoot(array $profile): string
-    {
-        $base = config('filemanager_v2.local.files_root');
-        $root = $this->path((string) ($profile['root'] ?? ''));
-        $resolved = $root === '' ? $base : $base . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $root);
-        File::ensureDirectoryExists($resolved, 0755, true);
-
-        return $resolved;
-    }
-
-    private function encryptSecret(string $secret, mixed $existing): mixed
-    {
-        return $secret === '' ? $existing : Crypt::encryptString($secret);
-    }
-
-    private function decryptSecret(mixed $encrypted): string
-    {
-        if (! is_string($encrypted) || $encrypted === '') {
-            return '';
-        }
-
-        try {
-            return Crypt::decryptString($encrypted);
-        } catch (\Throwable) {
-            return '';
-        }
-    }
-
-    private function defaultConnectionName(string $type): string
-    {
-        return match ($type) {
-            'local' => 'Local storage',
-            's3' => 'AWS S3',
-            'r2' => 'Cloudflare R2',
-            default => 'S3-compatible storage',
-        };
-    }
-
-    private function defaultConnectionShortName(string $type): string
-    {
-        return match ($type) {
-            'local' => 'LOCAL',
-            's3' => 'AWS S3',
-            'r2' => 'R2',
-            default => 'S3 API',
-        };
-    }
-
-    private function defaultConnectionIcon(string $type): string
-    {
-        return $type === 'local' ? 'bi-device-hdd' : 'bi-cloud';
-    }
-
-    private function assertQuota(string $storage, int $size): void
-    {
-        $profile = $this->profile($storage);
-        $quota = (int) $profile['quota_bytes'];
-        if ($quota === 0) {
-            return;
-        }
-
-        $used = $this->usage($storage, $profile)['usedBytes'];
-        abort_if($used + $size > $quota, 422, 'Storage connection sudah mencapai batas kapasitasnya.');
     }
 
     private function metadataPath(string $storage): string
@@ -1222,10 +861,9 @@ class FileManagerV2Storage
 
     private function assertUploadMeta(string $name, int $size, int $parts): void
     {
-        $upload = $this->uploadSettings();
         $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
         abort_if(in_array($extension, config('filemanager_v2.uploads.forbidden_extensions'), true), 422, 'Ekstensi file tidak diizinkan.');
-        abort_if($size < 1 || $size > $upload['max_file_size'], 422, 'Ukuran file melampaui batas upload.');
+        abort_if($size < 1 || $size > config('filemanager_v2.uploads.max_file_size'), 422, 'Ukuran file melampaui batas upload.');
         abort_if($parts < 1 || $parts > 10000, 422, 'Jumlah chunk tidak valid.');
     }
 

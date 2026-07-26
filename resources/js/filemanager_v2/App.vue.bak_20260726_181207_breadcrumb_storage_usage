@@ -1,12 +1,12 @@
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import StorageSidebar from './components/StorageSidebar.vue';
 import AssetCard from './components/AssetCard.vue';
 import DetailsDrawer from './components/DetailsDrawer.vue';
 import UploadPanel from './components/UploadPanel.vue';
 import FilePondUploadEngine from './components/FilePondUploadEngine.vue';
-import StorageSettingsModal from './components/StorageSettingsModal.vue';
-import { assets, createFolder as createFolderApi, deleteAsset, deleteAssets, folders, initializeWorkspace, loadAssets, loadFolderDetails as loadFolderDetailsApi, loadFolders, loadStorageSettings, moveAssets, navItems, previewDelete, refreshStorageProfiles, renameAsset, replaceAssets, replaceFolders, saveStorageSettings, storageProfiles, testStorageConnection, toggleAssetStar, upsertAsset } from './data/live';
+import SettingsModal from './components/SettingsModal.vue';
+import { assets, createFolder as createFolderApi, deleteAsset, deleteAssets, folders, initializeWorkspace, loadAssets, loadFolderDetails as loadFolderDetailsApi, loadFolders, moveAssets, navItems, previewDelete, renameAsset, replaceAssets, replaceFolders, storageProfiles, toggleAssetStar, upsertAsset } from './data/live';
 
 const activeStorage = ref('local');
 const activeNav = ref('all');
@@ -23,7 +23,6 @@ const compactViewportQuery = window.matchMedia('(max-width: 1000px)');
 const isCompactViewport = ref(compactViewportQuery.matches);
 const detailAsset = ref(null);
 const settingsOpen = ref(false);
-const storageSettings = ref(null);
 const uploadOpen = ref(false);
 const uploadMinimized = ref(false);
 const uploadsPaused = ref(false);
@@ -33,8 +32,6 @@ const mobileSidebarOpen = ref(false);
 const uploadInput = ref(null);
 const folderInput = ref(null);
 const uploadEngine = ref(null);
-const breadcrumbScroller = ref(null);
-const breadcrumbOverflow = ref({ left: false, right: false });
 const actionModal = ref(null);
 const actionSubmitState = ref('idle');
 const actionModalItem = ref(null);
@@ -55,7 +52,7 @@ const savedTheme = window.localStorage.getItem('arunika-files-theme');
 const themePreference = ref(['light', 'dark', 'system'].includes(savedTheme) ? savedTheme : 'system');
 const systemTheme = ref(themeQuery.matches ? 'dark' : 'light');
 
-const activeProfile = computed(() => storageProfiles[activeStorage.value] || { shortName: 'LOCAL', name: 'Local storage', icon: 'bi-device-hdd', root: '', usedBytes: 0, quotaBytes: 0, usagePercent: 0, usedLabel: '0 B', quotaLabel: 'No limit' });
+const activeProfile = computed(() => storageProfiles[activeStorage.value] || { shortName: 'LOCAL', name: 'Local storage', icon: 'bi-device-hdd', root: '', used: 0, total: 1, unit: 'GB' });
 const activeNavItem = computed(() => navItems.find((item) => item.id === activeNav.value) || navItems[0]);
 const activeFolderName = computed(() => activeFolder.value ? activeFolder.value.split('/').at(-1) : activeNavItem.value.label);
 const breadcrumbSegments = computed(() => activeFolder.value.split('/').filter(Boolean).map((name, index, parts) => ({ name, path: parts.slice(0, index + 1).join('/') })));
@@ -162,21 +159,6 @@ function closeMobileSidebar() {
   mobileSidebarOpen.value = false;
 }
 
-function updateBreadcrumbOverflow() {
-  const scroller = breadcrumbScroller.value;
-  if (!scroller) return;
-
-  const maxScrollLeft = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
-  breadcrumbOverflow.value = {
-    left: maxScrollLeft > 1 && scroller.scrollLeft > 1,
-    right: maxScrollLeft > 1 && scroller.scrollLeft < maxScrollLeft - 1,
-  };
-}
-
-function queueBreadcrumbOverflowUpdate() {
-  void nextTick(updateBreadcrumbOverflow);
-}
-
 function handleGlobalKeydown(event) {
   if (event.key !== 'Escape') return;
   if (actionModal.value) {
@@ -262,13 +244,12 @@ function writeBrowserHistory(mode = 'push') {
   window.history.pushState(payload, '', url);
 }
 
-async function refreshAssets({ refreshFolders = false, refreshUsage = false } = {}) {
+async function refreshAssets({ refreshFolders = false } = {}) {
   const requestId = ++refreshSequence;
   const context = { storage: activeStorage.value, path: activeFolder.value, collection: activeNav.value, search: search.value, type: filter.value, sort: sort.value };
   const [payload, folderItems] = await Promise.all([
     loadAssets(context.storage, { path: context.path, collection: context.collection, search: context.search, type: context.type, sort: context.sort }),
     refreshFolders ? loadFolders(context.storage) : Promise.resolve(null),
-    refreshUsage ? refreshStorageProfiles() : Promise.resolve(),
   ]);
   if (requestId !== refreshSequence) return;
 
@@ -439,7 +420,7 @@ async function submitActionModal() {
       if (!paths.length || !deleteImpact.value) throw new Error('The delete preview is no longer available. Please try again.');
       const result = await deleteAssets(activeStorage.value, paths);
       clearSelection();
-      await refreshAssets({ refreshFolders: true, refreshUsage: true });
+      await refreshAssets({ refreshFolders: true });
       if (result.failedCount) {
         actionSubmitState.value = 'idle';
         const deleted = countLabel(result.deletedCount, 'asset');
@@ -453,7 +434,7 @@ async function submitActionModal() {
       if (!uploadItem?.asset?.path) throw new Error('The uploaded file is no longer available.');
       await deleteAsset(uploadItem.storage, uploadItem.asset.path);
       onPondRemoved({ id: uploadItem.id });
-      if (uploadItem.storage === activeStorage.value) await refreshAssets({ refreshFolders: true, refreshUsage: true });
+      if (uploadItem.storage === activeStorage.value) await refreshAssets({ refreshFolders: true });
       successMessage = 'Uploaded file deleted.';
     } else {
       throw new Error('Unsupported file action.');
@@ -520,7 +501,7 @@ async function onPondDone({ id, asset, storage }) {
 
   upsertAsset(asset);
   try {
-    await refreshAssets({ refreshFolders: true, refreshUsage: true });
+    await refreshAssets({ refreshFolders: true });
   } catch (error) {
     notify(error.message, 'failed');
   } finally {
@@ -657,35 +638,10 @@ function closeUploads() {
   uploads.value = uploads.value.filter((item) => item.status === 'uploading');
 }
 
-async function openSettings() {
-  closeMobileSidebar();
-  try {
-    storageSettings.value = await loadStorageSettings();
-    settingsOpen.value = true;
-  } catch (error) {
-    notify(error.message, 'failed');
-  }
-}
-
-async function saveSettings(settings) {
-  const saved = await saveStorageSettings(settings);
-  storageSettings.value = saved;
-
-  const nextStorage = storageProfiles[saved.defaultStorage] ? saved.defaultStorage : Object.keys(storageProfiles)[0];
-  if (nextStorage) {
-    await changeStorage(nextStorage, { historyMode: 'replace', notifyUser: false });
-  }
-  notify('Storage and upload settings saved');
+function saveSettings(settings) {
+  activeStorage.value = settings.defaultStorage;
   settingsOpen.value = false;
-}
-
-async function testConnection(storage) {
-  try {
-    const result = await testStorageConnection(storage);
-    notify(result.connected ? `Connection to ${storageProfiles[storage]?.name || storage} successful` : `Connection to ${storageProfiles[storage]?.name || storage} is unavailable`, result.connected ? 'success' : 'failed');
-  } catch (error) {
-    notify(error.message, 'failed');
-  }
+  notify('Storage and upload settings saved');
 }
 
 function formatBytes(bytes) {
@@ -701,20 +657,17 @@ function onDrop(event) {
 }
 
 watch(resolvedTheme, applyTheme, { immediate: true });
-watch([activeFolder, activeStorage, activeNav], queueBreadcrumbOverflowUpdate);
 onMounted(() => {
   themeQuery.addEventListener('change', syncSystemTheme);
   mobileViewportQuery.addEventListener('change', syncMobileViewport);
   compactViewportQuery.addEventListener('change', syncCompactViewport);
   window.addEventListener('keydown', handleGlobalKeydown);
   window.addEventListener('popstate', handleBrowserHistory);
-  window.addEventListener('resize', updateBreadcrumbOverflow);
   initializeWorkspace().then(async (defaultStorage) => {
     const initialState = browserNavigationState(defaultStorage) || { storage: defaultStorage, collection: 'all', folder: '' };
     await applyNavigationState(initialState, { refreshFolders: true });
     workspaceReady = true;
     writeBrowserHistory('replace');
-    updateBreadcrumbOverflow();
   }).catch((error) => notify(error.message, 'failed'));
 });
 onBeforeUnmount(() => {
@@ -723,7 +676,6 @@ onBeforeUnmount(() => {
   compactViewportQuery.removeEventListener('change', syncCompactViewport);
   window.removeEventListener('keydown', handleGlobalKeydown);
   window.removeEventListener('popstate', handleBrowserHistory);
-  window.removeEventListener('resize', updateBreadcrumbOverflow);
 });
   window.clearTimeout(actionCloseTimer);
   window.clearTimeout(notify.timer);
@@ -750,7 +702,7 @@ onBeforeUnmount(() => {
       @change-nav="changeNav"
       @change-folder="changeFolder"
       @create-folder="createFolder"
-      @open-settings="openSettings"
+      @open-settings="settingsOpen = true; closeMobileSidebar()"
       @close-mobile="closeMobileSidebar"
     />
 
@@ -760,24 +712,22 @@ onBeforeUnmount(() => {
         <button class="mobile-sidebar-toggle" type="button" aria-controls="mobile-file-navigation" :aria-expanded="mobileSidebarOpen" aria-label="Open navigation" @click="mobileSidebarOpen = true">
           <i class="bi bi-list"></i>
         </button>
-        <div class="breadcrumb-wrap" :class="{ 'has-left-overflow': breadcrumbOverflow.left, 'has-right-overflow': breadcrumbOverflow.right }">
+        <div class="breadcrumb-wrap">
           <small>{{ activeProfile.shortName }}</small>
-          <div ref="breadcrumbScroller" class="breadcrumb-scroller" aria-label="Folder breadcrumb" @scroll.passive="updateBreadcrumbOverflow">
-            <div class="breadcrumb-trail">
-              <button type="button" @click="changeFolder('')">Assets</button>
-              <template v-if="breadcrumbSegments.length">
-                <template v-for="(segment, index) in breadcrumbSegments" :key="segment.path">
-                  <i class="bi bi-chevron-right"></i>
-                  <button v-if="index < breadcrumbSegments.length - 1" type="button" @click="changeFolder(segment.path)">{{ segment.name }}</button>
-                  <strong v-else>{{ segment.name }}</strong>
-                </template>
-              </template>
-              <template v-else>
+          <div>
+            <button type="button" @click="changeFolder('')">Assets</button>
+            <template v-if="breadcrumbSegments.length">
+              <template v-for="(segment, index) in breadcrumbSegments" :key="segment.path">
                 <i class="bi bi-chevron-right"></i>
-                <strong>{{ activeFolderName }}</strong>
+                <button v-if="index < breadcrumbSegments.length - 1" type="button" @click="changeFolder(segment.path)">{{ segment.name }}</button>
+                <strong v-else>{{ segment.name }}</strong>
               </template>
-            </div>
-          </div>
+            </template>
+            <template v-else>
+              <i class="bi bi-chevron-right"></i>
+              <strong>{{ activeFolderName }}</strong>
+            </template>
+        </div>
         </div>
         <div class="topbar-actions">
           <div class="search-field">
@@ -989,13 +939,13 @@ onBeforeUnmount(() => {
       @retry="retryUpload"
     />
 
-    <StorageSettingsModal
+    <SettingsModal
       :show="settingsOpen"
       :active-storage="activeStorage"
-      :settings="storageSettings"
+      :profiles="storageProfiles"
       @close="settingsOpen = false"
-      :save-handler="saveSettings"
-      @test="testConnection"
+      @save="saveSettings"
+      @test="notify(`Connection to ${storageProfiles[$event].name} successful`)"
     />
 
     <div v-if="toast" class="fm-toast" :class="`is-${toast.status}`" role="status">

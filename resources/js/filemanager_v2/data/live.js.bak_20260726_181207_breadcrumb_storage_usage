@@ -10,6 +10,7 @@ export const navItems = [
   { id: 'all', label: 'All assets', icon: 'bi-grid' },
   { id: 'recent', label: 'Recently used', icon: 'bi-clock-history' },
   { id: 'starred', label: 'Starred', icon: 'bi-star' },
+  { id: 'shared', label: 'Shared with me', icon: 'bi-people' },
 ];
 
 export const iconForKind = {
@@ -20,16 +21,14 @@ export const iconForKind = {
   audio: 'bi-file-earmark-music',
 };
 
-export const uploadOptions = reactive({
+let uploadOptions = {
   chunkSize: 8 * 1024 * 1024,
   chunkThreshold: 16 * 1024 * 1024,
   maxParallel: 3,
-  maxFileSize: 1024 * 1024 * 1024,
-  retryAttempts: 2,
-});
+};
 
 export function getUploadOptions() {
-  return uploadOptions;
+  return { ...uploadOptions };
 }
 
 function csrfHeaders(headers = {}) {
@@ -52,9 +51,7 @@ async function request(path, options = {}) {
   const body = await response.json().catch(() => ({}));
   if (!response.ok) {
     const message = body.message || body.errors?.[Object.keys(body.errors)[0]]?.[0] || 'Permintaan File Manager V2 gagal.';
-    const error = new Error(message);
-    error.status = response.status;
-    throw error;
+    throw new Error(message);
   }
 
   return body.data;
@@ -79,9 +76,7 @@ function uploadFormData(path, data, onProgress = () => {}, bindAbort = () => {})
         return;
       }
 
-      const error = new Error(body.message || body.errors?.[Object.keys(body.errors)[0]]?.[0] || 'Upload File Manager V2 gagal.');
-      error.status = request.status;
-      reject(error);
+      reject(new Error(body.message || body.errors?.[Object.keys(body.errors)[0]]?.[0] || 'Upload File Manager V2 gagal.'));
     });
     request.addEventListener('error', () => reject(new Error('Koneksi upload terputus.')));
     request.addEventListener('abort', () => reject(new Error('Upload dibatalkan.')));
@@ -89,34 +84,14 @@ function uploadFormData(path, data, onProgress = () => {}, bindAbort = () => {})
   });
 }
 
-async function withUploadRetry(task, { waitForResume, isAborted }) {
-  const attempts = Math.max(0, Number(uploadOptions.retryAttempts) || 0);
-
-  for (let attempt = 0; attempt <= attempts; attempt += 1) {
-    try {
-      return await task();
-    } catch (error) {
-      const clientError = Number(error?.status || 0) >= 400 && Number(error.status) < 500;
-      if (isAborted() || clientError || attempt === attempts) throw error;
-
-      await waitForResume();
-      await new Promise((resolve) => window.setTimeout(resolve, Math.min(2000, 250 * (2 ** attempt))));
-    }
-  }
-
-  throw new Error('Upload gagal setelah seluruh percobaan ulang dijalankan.');
-}
-
 function normalizeProfile(profile) {
   return {
     ...profile,
     status: profile.connected ? 'Connected' : 'Unavailable',
     tone: profile.connected ? 'success' : 'secondary',
-    usedBytes: Number(profile.usedBytes || 0),
-    quotaBytes: Number(profile.quotaBytes || 0),
-    usagePercent: Number(profile.usagePercent || 0),
-    usedLabel: profile.usedLabel || '0 B',
-    quotaLabel: profile.quotaLabel || 'No limit',
+    used: 0,
+    total: 1,
+    unit: 'GB',
   };
 }
 
@@ -170,46 +145,13 @@ export function replaceFolders(folderItems) {
 }
 export async function initializeWorkspace() {
   const bootstrap = await request('/bootstrap');
-  replaceStorageProfiles(bootstrap.profiles);
-  Object.assign(uploadOptions, bootstrap.upload);
-
-  return bootstrap.defaultStorage;
-}
-
-function replaceStorageProfiles(profiles) {
   Object.keys(storageProfiles).forEach((key) => delete storageProfiles[key]);
-  profiles.forEach((profile) => {
+  bootstrap.profiles.forEach((profile) => {
     storageProfiles[profile.id] = normalizeProfile(profile);
   });
-}
+  uploadOptions = { ...uploadOptions, ...bootstrap.upload };
 
-export async function refreshStorageProfiles() {
-  const bootstrap = await request('/bootstrap');
-  replaceStorageProfiles(bootstrap.profiles);
-  Object.assign(uploadOptions, bootstrap.upload);
-}
-
-export async function loadStorageSettings() {
-  return request('/settings');
-}
-
-export async function saveStorageSettings(settings) {
-  const saved = await request('/settings', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(settings),
-  });
-  await refreshStorageProfiles();
-
-  return saved;
-}
-
-export async function testStorageConnection(storage) {
-  return request('/settings/test', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ storage }),
-  });
+  return bootstrap.defaultStorage;
 }
 
 export async function loadAssets(storage, options = {}) {
@@ -306,46 +248,42 @@ export async function uploadFile(file, {
   });
 
   if (file.size < uploadOptions.chunkThreshold) {
-    const asset = await withUploadRetry(() => {
-      const data = new FormData();
-      data.append('storage', storage);
-      data.append('path', path);
-      data.append('file', file);
-      return uploadFormData('/assets/upload', data, onProgress, (abort) => {
-        abortCurrentRequest = abort;
-      });
-    }, { waitForResume, isAborted: () => aborted });
+    const data = new FormData();
+    data.append('storage', storage);
+    data.append('path', path);
+    data.append('file', file);
+    const asset = await uploadFormData('/assets/upload', data, onProgress, (abort) => {
+      abortCurrentRequest = abort;
+    });
     if (aborted) throw new Error('Upload dibatalkan.');
     return normalizeAsset(asset);
   }
 
   const parts = Math.ceil(file.size / uploadOptions.chunkSize);
-  const session = await withUploadRetry(() => request('/uploads', {
+  const session = await request('/uploads', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ storage, path, name: file.name, size: file.size, parts }),
-  }), { waitForResume, isAborted: () => aborted });
+  });
   uploadSessionId = session.id;
 
   for (let part = 0; part < parts; part += 1) {
     await waitForResume();
     if (aborted) throw new Error('Upload dibatalkan.');
+    const data = new FormData();
+    data.append('chunk', file.slice(part * uploadOptions.chunkSize, Math.min(file.size, (part + 1) * uploadOptions.chunkSize)), `${file.name}.part`);
     const completedShare = part / parts;
     const partShare = 1 / parts;
-    await withUploadRetry(() => {
-      const data = new FormData();
-      data.append('chunk', file.slice(part * uploadOptions.chunkSize, Math.min(file.size, (part + 1) * uploadOptions.chunkSize)), `${file.name}.part`);
-      return uploadFormData(`/uploads/${session.id}/chunks/${part}`, data, (progress) => {
-        onProgress(Math.round((completedShare + ((progress / 100) * partShare)) * 100));
-      }, (abort) => {
-        abortCurrentRequest = abort;
-      });
-    }, { waitForResume, isAborted: () => aborted });
+    await uploadFormData(`/uploads/${session.id}/chunks/${part}`, data, (progress) => {
+      onProgress(Math.round((completedShare + ((progress / 100) * partShare)) * 100));
+    }, (abort) => {
+      abortCurrentRequest = abort;
+    });
     if (aborted) throw new Error('Upload dibatalkan.');
     onProgress(Math.round(((part + 1) / parts) * 100));
   }
 
-  return normalizeAsset(await withUploadRetry(() => request(`/uploads/${session.id}/complete`, { method: 'POST' }), { waitForResume, isAborted: () => aborted }));
+  return normalizeAsset(await request(`/uploads/${session.id}/complete`, { method: 'POST' }));
 }
 
 export async function ensureFolders(storage, relativePath) {

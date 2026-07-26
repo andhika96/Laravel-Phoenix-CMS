@@ -228,23 +228,14 @@ class FileManagerV2Storage
         $default = (string) $settings['defaultStorage'];
         abort_if(empty($connections[$default]['enabled']), 422, 'Default storage harus aktif.');
 
-        $removedConnections = [];
-        foreach (config('filemanager_v2.connections', []) as $id => $profile) {
-            $id = (string) $id;
-            if (is_array($profile) && $id !== 'local' && ! isset($connections[$id])) {
-                $removedConnections[] = $id;
-            }
-        }
-
         File::put($this->settingsPath(), json_encode([
             'version' => 1,
             'default_storage' => $default,
             'connections' => $connections,
-            'removed_connections' => $removedConnections,
             'upload' => $this->normalizeUploadSettings($settings['upload'] ?? []),
         ], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR), LOCK_EX);
 
-        foreach (array_unique([...array_keys($existing), ...array_keys($connections), ...$removedConnections]) as $id) {
+        foreach (array_unique([...array_keys($existing), ...array_keys($connections)]) as $id) {
             $this->bust($id, '');
         }
 
@@ -919,22 +910,16 @@ class FileManagerV2Storage
     /** @return array<string, array<string, mixed>> */
     private function configuredConnections(): array
     {
-        $storedSettings = $this->storedSettings();
-        $removedConnections = array_fill_keys(array_filter(
-            $storedSettings['removed_connections'] ?? [],
-            static fn ($id): bool => is_string($id) && $id !== 'local',
-        ), true);
         $connections = [];
 
         foreach (config('filemanager_v2.connections', []) as $id => $profile) {
-            $id = (string) $id;
-            if (is_array($profile) && ! isset($removedConnections[$id])) {
-                $connections[$id] = $this->normalizeConnectionProfile($id, $profile);
+            if (is_array($profile)) {
+                $connections[$id] = $this->normalizeConnectionProfile((string) $id, $profile);
             }
         }
 
-        foreach (($storedSettings['connections'] ?? []) as $id => $profile) {
-            if (is_string($id) && is_array($profile) && ! isset($removedConnections[$id])) {
+        foreach (($this->storedSettings()['connections'] ?? []) as $id => $profile) {
+            if (is_string($id) && is_array($profile)) {
                 $connections[$id] = $this->normalizeConnectionProfile($id, [...($connections[$id] ?? []), ...$profile]);
             }
         }

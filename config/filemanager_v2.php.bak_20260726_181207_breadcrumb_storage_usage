@@ -18,12 +18,6 @@ return [
         'runtime_root' => storage_path('app/public/filemanager_v2/runtime'),
     ],
 
-    // Connection credentials and editable V2 preferences are intentionally
-    // outside public/storage. The service encrypts secret keys before writing.
-    'settings' => [
-        'root' => storage_path('app/filemanager_v2/settings'),
-    ],
-
     'default_storage' => env('FILEMANAGER_V2_DEFAULT_STORAGE', 'local'),
 
     'connections' => [
@@ -33,9 +27,6 @@ return [
             'icon' => 'bi-device-hdd',
             'enabled' => true,
             'driver' => 'local',
-            // Initial default only. Administrators change the actual limit in
-            // Storage & upload settings, per connection.
-            'quota_bytes' => 1073741824,
         ],
         'r2' => [
             'name' => 'Cloudflare R2',
@@ -44,7 +35,6 @@ return [
             'enabled' => env('FILEMANAGER_V2_R2_ENABLED', false),
             'driver' => 'disk',
             'disk' => env('FILEMANAGER_V2_R2_DISK', 's3_r2'),
-            'quota_bytes' => 1073741824,
         ],
     ],
 

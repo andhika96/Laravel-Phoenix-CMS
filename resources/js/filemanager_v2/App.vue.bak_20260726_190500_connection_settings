@@ -5,8 +5,8 @@ import AssetCard from './components/AssetCard.vue';
 import DetailsDrawer from './components/DetailsDrawer.vue';
 import UploadPanel from './components/UploadPanel.vue';
 import FilePondUploadEngine from './components/FilePondUploadEngine.vue';
-import StorageSettingsModal from './components/StorageSettingsModal.vue';
-import { assets, createFolder as createFolderApi, deleteAsset, deleteAssets, folders, initializeWorkspace, loadAssets, loadFolderDetails as loadFolderDetailsApi, loadFolders, loadStorageSettings, moveAssets, navItems, previewDelete, refreshStorageProfiles, renameAsset, replaceAssets, replaceFolders, saveStorageSettings, storageProfiles, testStorageConnection, toggleAssetStar, upsertAsset } from './data/live';
+import SettingsModal from './components/SettingsModal.vue';
+import { assets, createFolder as createFolderApi, deleteAsset, deleteAssets, folders, initializeWorkspace, loadAssets, loadFolderDetails as loadFolderDetailsApi, loadFolders, moveAssets, navItems, previewDelete, refreshStorageProfiles, renameAsset, replaceAssets, replaceFolders, storageProfiles, toggleAssetStar, upsertAsset } from './data/live';
 
 const activeStorage = ref('local');
 const activeNav = ref('all');
@@ -23,7 +23,6 @@ const compactViewportQuery = window.matchMedia('(max-width: 1000px)');
 const isCompactViewport = ref(compactViewportQuery.matches);
 const detailAsset = ref(null);
 const settingsOpen = ref(false);
-const storageSettings = ref(null);
 const uploadOpen = ref(false);
 const uploadMinimized = ref(false);
 const uploadsPaused = ref(false);
@@ -657,35 +656,10 @@ function closeUploads() {
   uploads.value = uploads.value.filter((item) => item.status === 'uploading');
 }
 
-async function openSettings() {
-  closeMobileSidebar();
-  try {
-    storageSettings.value = await loadStorageSettings();
-    settingsOpen.value = true;
-  } catch (error) {
-    notify(error.message, 'failed');
-  }
-}
-
-async function saveSettings(settings) {
-  const saved = await saveStorageSettings(settings);
-  storageSettings.value = saved;
-
-  const nextStorage = storageProfiles[saved.defaultStorage] ? saved.defaultStorage : Object.keys(storageProfiles)[0];
-  if (nextStorage) {
-    await changeStorage(nextStorage, { historyMode: 'replace', notifyUser: false });
-  }
-  notify('Storage and upload settings saved');
+function saveSettings(settings) {
+  activeStorage.value = settings.defaultStorage;
   settingsOpen.value = false;
-}
-
-async function testConnection(storage) {
-  try {
-    const result = await testStorageConnection(storage);
-    notify(result.connected ? `Connection to ${storageProfiles[storage]?.name || storage} successful` : `Connection to ${storageProfiles[storage]?.name || storage} is unavailable`, result.connected ? 'success' : 'failed');
-  } catch (error) {
-    notify(error.message, 'failed');
-  }
+  notify('Storage and upload settings saved');
 }
 
 function formatBytes(bytes) {
@@ -750,7 +724,7 @@ onBeforeUnmount(() => {
       @change-nav="changeNav"
       @change-folder="changeFolder"
       @create-folder="createFolder"
-      @open-settings="openSettings"
+      @open-settings="settingsOpen = true; closeMobileSidebar()"
       @close-mobile="closeMobileSidebar"
     />
 
@@ -989,13 +963,13 @@ onBeforeUnmount(() => {
       @retry="retryUpload"
     />
 
-    <StorageSettingsModal
+    <SettingsModal
       :show="settingsOpen"
       :active-storage="activeStorage"
-      :settings="storageSettings"
+      :profiles="storageProfiles"
       @close="settingsOpen = false"
-      :save-handler="saveSettings"
-      @test="testConnection"
+      @save="saveSettings"
+      @test="notify(`Connection to ${storageProfiles[$event].name} successful`)"
     />
 
     <div v-if="toast" class="fm-toast" :class="`is-${toast.status}`" role="status">

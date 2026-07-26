@@ -668,15 +668,19 @@ async function openSettings() {
 }
 
 async function saveSettings(settings) {
-  const saved = await saveStorageSettings(settings);
-  storageSettings.value = saved;
+  try {
+    const saved = await saveStorageSettings(settings);
+    storageSettings.value = saved;
+    settingsOpen.value = false;
 
-  const nextStorage = storageProfiles[saved.defaultStorage] ? saved.defaultStorage : Object.keys(storageProfiles)[0];
-  if (nextStorage) {
-    await changeStorage(nextStorage, { historyMode: 'replace', notifyUser: false });
+    const nextStorage = storageProfiles[saved.defaultStorage] ? saved.defaultStorage : Object.keys(storageProfiles)[0];
+    if (nextStorage) {
+      await changeStorage(nextStorage, { historyMode: 'replace', notifyUser: false });
+    }
+    notify('Storage and upload settings saved');
+  } catch (error) {
+    notify(error.message, 'failed');
   }
-  notify('Storage and upload settings saved');
-  settingsOpen.value = false;
 }
 
 async function testConnection(storage) {
@@ -994,7 +998,7 @@ onBeforeUnmount(() => {
       :active-storage="activeStorage"
       :settings="storageSettings"
       @close="settingsOpen = false"
-      :save-handler="saveSettings"
+      @save="saveSettings"
       @test="testConnection"
     />
 

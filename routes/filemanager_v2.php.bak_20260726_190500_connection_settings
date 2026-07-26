@@ -20,9 +20,6 @@ Route::middleware(['auth', 'checkSuspended'])->group(function (): void {
 
     Route::prefix('/api/v2/file-manager')->name('filemanager_v2.')->group(function (): void {
         Route::get('/bootstrap', [FileManagerV2Controller::class, 'bootstrap'])->name('bootstrap');
-        Route::get('/settings', [FileManagerV2Controller::class, 'settings'])->name('settings.show');
-        Route::put('/settings', [FileManagerV2Controller::class, 'saveSettings'])->name('settings.save');
-        Route::post('/settings/test', [FileManagerV2Controller::class, 'testSettingsConnection'])->name('settings.test');
         Route::get('/assets', [FileManagerV2Controller::class, 'browse'])->name('assets.browse');
         Route::get('/folders', [FileManagerV2Controller::class, 'folders'])->name('folders.index');
         Route::get('/assets/details', [FileManagerV2Controller::class, 'details'])->name('assets.details');

@@ -17,7 +17,6 @@ const resumeWaiters = [];
 const releasedIds = new Set();
 const uploadOptions = getUploadOptions();
 const maxParallelUploads = computed(() => Math.max(1, Number(uploadOptions.maxParallel) || 3));
-const maxFileSize = computed(() => `${Math.max(1, Math.floor((Number(uploadOptions.maxFileSize) || (1024 * 1024 * 1024)) / (1024 * 1024)))}MB`);
 
 function waitForResume() {
   if (!props.paused) return Promise.resolve();
@@ -152,7 +151,7 @@ defineExpose({ addFiles, retryFile, removeFile });
     :allow-revert="false"
     :instant-upload="true"
     :max-parallel-uploads="maxParallelUploads"
-    :max-file-size="maxFileSize"
+    max-file-size="1024MB"
     :server="server"
     @addfile="handleAddFile"
     @processfileprogress="handleProgress"
