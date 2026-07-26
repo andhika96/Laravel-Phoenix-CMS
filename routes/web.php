@@ -7,6 +7,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 // require __DIR__.'/experimentalFeaturesWeb.php';
 require __DIR__.'/experimentalFeaturesWebv2.php';
+require __DIR__.'/filemanager_v2.php';
 
 // Route::get('/', function() 
 // {

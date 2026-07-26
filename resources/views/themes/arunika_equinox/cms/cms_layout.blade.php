@@ -58,6 +58,7 @@
 		<!-- Custom CSS -->
 		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/themes/arunika_equinox/arunika_equinox.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
 
 		@stack('css')
 

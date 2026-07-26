@@ -7,7 +7,7 @@ defineProps({
   viewMode: String,
 });
 
-const emit = defineEmits(['select', 'toggle-star']);
+const emit = defineEmits(['select', 'toggle-star', 'open-details']);
 </script>
 
 <template>
@@ -30,8 +30,8 @@ const emit = defineEmits(['select', 'toggle-star']);
       <strong :title="asset.name">{{ asset.name }}</strong>
       <span>{{ asset.size }} <b>·</b> {{ asset.modified }}</span>
     </div>
-    <button class="asset-menu" aria-label="Asset actions" @click.stop>
-      <i class="bi bi-three-dots-vertical"></i>
+    <button class="asset-menu" aria-label="Open file information" title="Open file information" @click.stop="emit('open-details', asset)">
+      <i class="bi bi-info-circle"></i>
     </button>
   </article>
 </template>

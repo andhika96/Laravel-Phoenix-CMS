@@ -1,0 +1,82 @@
+/*
+ * Shared CMS typography contract.
+ *
+ * This mirrors the Bootstrap RFS output imported by File Manager V2
+ * (`bootstrap/scss/vendor/rfs`). Values at and below the RFS 1.25rem
+ * threshold remain stable; only display-level headings scale fluidly.
+ */
+
+:root
+{
+	--ph-fmv2-rfs-h1: calc(1.375rem + 1.5vw);
+	--ph-fmv2-rfs-h2: calc(1.325rem + .9vw);
+	--ph-fmv2-rfs-h3: calc(1.3rem + .6vw);
+	--ph-fmv2-rfs-h4: calc(1.275rem + .3vw);
+}
+
+@media (min-width: 1200px)
+{
+	:root
+	{
+		--ph-fmv2-rfs-h1: 2.5rem;
+		--ph-fmv2-rfs-h2: 2rem;
+		--ph-fmv2-rfs-h3: 1.75rem;
+		--ph-fmv2-rfs-h4: 1.5rem;
+	}
+}
+/*
+ * Physical display size is not exposed to web pages. Compact density follows
+ * available browser space and recalculates automatically on resize and zoom.
+ */
+@media (min-width: 1200px) and (max-height: 920px)
+{
+	:root
+	{
+		--ph-fmv2-rfs-h1: clamp(1.75rem, calc(1.375rem + 1.25vw), 2rem);
+		--ph-fmv2-rfs-h2: clamp(1.5rem, calc(1.325rem + .75vw), 1.75rem);
+		--ph-fmv2-rfs-h3: clamp(1.375rem, calc(1.3rem + .5vw), 1.5rem);
+		--ph-fmv2-rfs-h4: clamp(1.25rem, calc(1.2rem + .25vw), 1.375rem);
+	}
+}
+
+/* Main content areas of the Arunika and Awesome Admin shells. */
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main) :where(h1, .h1)
+{
+	font-size: var(--ph-fmv2-rfs-h1);
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main) :where(h2, .h2)
+{
+	font-size: var(--ph-fmv2-rfs-h2);
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main) :where(h3, .h3)
+{
+	font-size: var(--ph-fmv2-rfs-h3);
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main) :where(h4, .h4)
+{
+	font-size: var(--ph-fmv2-rfs-h4);
+}
+
+/* Bootstrap overlays and expandable panels can be teleported outside main. */
+body :where(.modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h1, .h1)
+{
+	font-size: var(--ph-fmv2-rfs-h1);
+}
+
+body :where(.modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h2, .h2)
+{
+	font-size: var(--ph-fmv2-rfs-h2);
+}
+
+body :where(.modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h3, .h3)
+{
+	font-size: var(--ph-fmv2-rfs-h3);
+}
+
+body :where(.modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h4, .h4)
+{
+	font-size: var(--ph-fmv2-rfs-h4);
+}

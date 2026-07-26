@@ -1,0 +1,175 @@
+import { reactive } from 'vue';
+
+const config = window.FILEMANAGER_V2_CONFIG || {};
+
+export const storageProfiles = reactive({});
+export const folders = reactive([]);
+export const assets = reactive([]);
+
+export const navItems = [
+  { id: 'all', label: 'All assets', icon: 'bi-grid' },
+  { id: 'recent', label: 'Recently used', icon: 'bi-clock-history' },
+  { id: 'starred', label: 'Starred', icon: 'bi-star' },
+  { id: 'shared', label: 'Shared with me', icon: 'bi-people' },
+];
+
+export const iconForKind = {
+  folder: 'bi-folder2',
+  document: 'bi-file-earmark-text',
+  video: 'bi-file-earmark-play',
+  archive: 'bi-file-earmark-zip',
+  audio: 'bi-file-earmark-music',
+};
+
+let uploadOptions = {
+  chunkSize: 8 * 1024 * 1024,
+  chunkThreshold: 16 * 1024 * 1024,
+  maxParallel: 3,
+};
+
+function csrfHeaders(headers = {}) {
+  return {
+    Accept: 'application/json',
+    'X-CSRF-TOKEN': config.csrfToken,
+    ...headers,
+  };
+}
+
+async function request(path, options = {}) {
+  const response = await fetch(`${config.apiBase}${path}`, {
+    credentials: 'same-origin',
+    ...options,
+    headers: csrfHeaders(options.headers),
+  });
+
+  if (response.status === 204) return null;
+
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = body.message || body.errors?.[Object.keys(body.errors)[0]]?.[0] || 'Permintaan File Manager V2 gagal.';
+    throw new Error(message);
+  }
+
+  return body.data;
+}
+
+function normalizeProfile(profile) {
+  return {
+    ...profile,
+    status: profile.connected ? 'Connected' : 'Unavailable',
+    tone: profile.connected ? 'success' : 'secondary',
+    used: 0,
+    total: 1,
+    unit: 'GB',
+  };
+}
+
+function colorForKind(kind) {
+  return {
+    image: '#dce9ff',
+    video: '#e5e7ff',
+    audio: '#e4f0ff',
+    archive: '#eee8da',
+    document: '#fde2e2',
+    folder: '#e9edff',
+  }[kind] || '#eef1f7';
+}
+
+function normalizeAsset(asset) {
+  return {
+    ...asset,
+    ext: asset.extension || (asset.type === 'folder' ? 'FOLDER' : 'FILE'),
+    src: asset.previewUrl,
+    modified: asset.modifiedLabel || '—',
+    dimensions: '—',
+    tags: [],
+    color: colorForKind(asset.kind),
+  };
+}
+
+export async function initializeWorkspace() {
+  const bootstrap = await request('/bootstrap');
+  Object.keys(storageProfiles).forEach((key) => delete storageProfiles[key]);
+  bootstrap.profiles.forEach((profile) => {
+    storageProfiles[profile.id] = normalizeProfile(profile);
+  });
+  uploadOptions = { ...uploadOptions, ...bootstrap.upload };
+
+  return bootstrap.defaultStorage;
+}
+
+export async function loadAssets(storage, options = {}) {
+  const params = new URLSearchParams({
+    storage,
+    path: options.path || '',
+    search: options.search || '',
+    type: options.type || 'all',
+    sort: options.sort || 'modified',
+  });
+  const payload = await request(`/assets?${params.toString()}`);
+  assets.splice(0, assets.length, ...payload.items.filter((item) => item.type === 'file').map(normalizeAsset));
+  folders.splice(0, folders.length, ...payload.folders.map((folder) => ({
+    ...folder,
+    id: folder.path,
+    icon: 'bi-folder2',
+    count: '',
+  })));
+
+  return payload;
+}
+
+export async function createFolder(storage, path, name) {
+  return request('/folders', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ storage, path, name }),
+  });
+}
+
+export async function deleteAsset(storage, path) {
+  const params = new URLSearchParams({ storage, path });
+  return request(`/assets?${params.toString()}`, { method: 'DELETE' });
+}
+
+export async function uploadFile(file, { storage, path = '', onProgress = () => {} }) {
+  if (file.size < uploadOptions.chunkThreshold) {
+    const data = new FormData();
+    data.append('storage', storage);
+    data.append('path', path);
+    data.append('file', file);
+    const asset = await request('/assets/upload', { method: 'POST', body: data });
+    onProgress(100);
+    return normalizeAsset(asset);
+  }
+
+  const parts = Math.ceil(file.size / uploadOptions.chunkSize);
+  const session = await request('/uploads', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ storage, path, name: file.name, size: file.size, parts }),
+  });
+
+  for (let part = 0; part < parts; part += 1) {
+    const data = new FormData();
+    data.append('chunk', file.slice(part * uploadOptions.chunkSize, Math.min(file.size, (part + 1) * uploadOptions.chunkSize)), `${file.name}.part`);
+    await request(`/uploads/${session.id}/chunks/${part}`, { method: 'POST', body: data });
+    onProgress(Math.round(((part + 1) / parts) * 100));
+  }
+
+  return normalizeAsset(await request(`/uploads/${session.id}/complete`, { method: 'POST' }));
+}
+
+export async function ensureFolders(storage, relativePath) {
+  const parts = relativePath.split('/').filter(Boolean);
+  let current = '';
+  for (const part of parts) {
+    const next = current ? `${current}/${part}` : part;
+    try {
+      await createFolder(storage, current, part);
+    } catch (error) {
+      if (!/sudah digunakan/i.test(error.message)) throw error;
+    }
+    current = next;
+  }
+  return current;
+}

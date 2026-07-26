@@ -1,0 +1,35 @@
+<?php
+
+namespace Tests\Feature\FileManagerV2;
+
+use Tests\TestCase;
+
+class FileManagerV2FolderPresentationTest extends TestCase
+{
+    public function test_nested_folders_are_kept_in_the_content_grid_and_sidebar_tree(): void
+    {
+        $live = file_get_contents(resource_path('js/filemanager_v2/data/live.js'));
+        $app = file_get_contents(resource_path('js/filemanager_v2/App.vue'));
+        $sidebar = file_get_contents(resource_path('js/filemanager_v2/components/StorageSidebar.vue'));
+        $styles = file_get_contents(resource_path('js/filemanager_v2/styles.css'));
+
+        $this->assertStringContainsString('payload.items.map(normalizeAsset)', $live);
+        $this->assertStringNotContainsString("payload.items.filter((item) => item.type === 'file')", $live);
+        $this->assertStringContainsString("depth: folder.path.split('/').filter(Boolean).length - 1", $live);
+        $this->assertStringContainsString("if (asset.type === 'folder') {", $app);
+        $this->assertStringContainsString('void changeFolder(asset.path);', $app);
+        $this->assertStringContainsString('class="folder-tree-branch"', $sidebar);
+        $this->assertStringContainsString(":style=\"{ '--folder-depth': folder.depth }\"", $sidebar);
+        $this->assertStringContainsString('.folder-tree-branch {', $styles);
+    }
+
+    public function test_action_modal_footer_is_targeted_through_its_form(): void
+    {
+        $styles = file_get_contents(resource_path('js/filemanager_v2/styles.css'));
+
+        $this->assertStringContainsString('.action-modal > form > footer {', $styles);
+        $this->assertStringContainsString('.action-modal > form > footer .btn {', $styles);
+        $this->assertStringNotContainsString('.action-modal > footer {', $styles);
+        $this->assertMatchesRegularExpression('/\\.span-2\\s*\\{\\s*grid-column:\\s*span 1;\\s*\\}\\s*\\}\\s*@media \\(prefers-reduced-motion: reduce\\)/', $styles);
+    }
+}

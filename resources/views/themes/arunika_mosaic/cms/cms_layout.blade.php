@@ -27,6 +27,7 @@
 		<!-- Custom CSS -->
 		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/themes/arunika_mosaic/arunika_mosaic.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
 
 		@stack('css')
 

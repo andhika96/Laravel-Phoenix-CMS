@@ -39,6 +39,7 @@
 			<link href="{{ asset('assets/css/themes/default/phoenix-cms-default.css?v=').time() }}" rel="stylesheet">
 			<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">
 			<link href="{{ asset('assets/css/themes/default/aruna-admin-v7-default.css?v=').time() }}" rel="stylesheet">
+			<link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
 
 			@stack('css')
 
