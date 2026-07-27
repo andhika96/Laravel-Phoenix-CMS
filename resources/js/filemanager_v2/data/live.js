@@ -1,4 +1,5 @@
 import { reactive } from 'vue';
+import uploadFilePlaceholder from '../assets/file-upload-placeholder.svg';
 
 const config = window.FILEMANAGER_V2_CONFIG || {};
 
@@ -14,6 +15,7 @@ export const navItems = [
 
 export const iconForKind = {
   folder: 'bi-folder2',
+  image: 'bi-file-earmark-image',
   document: 'bi-file-earmark-text',
   video: 'bi-file-earmark-play',
   archive: 'bi-file-earmark-zip',
@@ -73,13 +75,25 @@ function uploadFormData(path, data, onProgress = () => {}, bindAbort = () => {})
       if (event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100));
     });
     request.addEventListener('load', () => {
-      const body = JSON.parse(request.responseText || '{}');
+      let body = null;
+      try {
+        body = JSON.parse(request.responseText || '{}');
+      } catch {
+        // Reverse proxies can return an HTML error page (for example, nginx 502).
+      }
       if (request.status >= 200 && request.status < 300) {
-        resolve(body.data);
+        if (body?.data !== undefined) {
+          resolve(body.data);
+          return;
+        }
+
+        const error = new Error(`Upload berhasil, tetapi respons server tidak valid (HTTP ${request.status}).`);
+        error.status = request.status;
+        reject(error);
         return;
       }
 
-      const error = new Error(body.message || body.errors?.[Object.keys(body.errors)[0]]?.[0] || 'Upload File Manager V2 gagal.');
+      const error = new Error(body?.message || body?.errors?.[Object.keys(body.errors)[0]]?.[0] || `Upload gagal (HTTP ${request.status}).`);
       error.status = request.status;
       reject(error);
     });
@@ -131,11 +145,15 @@ function colorForKind(kind) {
   }[kind] || '#eef1f7';
 }
 
+function isSvgAsset(asset) {
+  return String(asset.extension || '').toLowerCase() === 'svg';
+}
+
 function normalizeAsset(asset) {
   return {
     ...asset,
     ext: asset.extension || (asset.type === 'folder' ? 'FOLDER' : 'FILE'),
-    src: asset.previewUrl,
+    src: isSvgAsset(asset) ? uploadFilePlaceholder : asset.previewUrl,
     modified: asset.modifiedLabel || '—',
     dimensions: '—',
     tags: [],
@@ -290,6 +308,7 @@ export async function toggleAssetStar(storage, path) {
 export async function uploadFile(file, {
   storage,
   path = '',
+  batchId = null,
   onProgress = () => {},
   waitForResume = async () => {},
   onAbort = () => {},
@@ -311,6 +330,7 @@ export async function uploadFile(file, {
       data.append('storage', storage);
       data.append('path', path);
       data.append('file', file);
+      if (batchId) data.append('batchId', batchId);
       return uploadFormData('/assets/upload', data, onProgress, (abort) => {
         abortCurrentRequest = abort;
       });
@@ -323,7 +343,7 @@ export async function uploadFile(file, {
   const session = await withUploadRetry(() => request('/uploads', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ storage, path, name: file.name, size: file.size, parts }),
+    body: JSON.stringify({ storage, path, name: file.name, size: file.size, parts, ...(batchId ? { batchId } : {}) }),
   }), { waitForResume, isAborted: () => aborted });
   uploadSessionId = session.id;
 
@@ -347,6 +367,19 @@ export async function uploadFile(file, {
 
   return normalizeAsset(await withUploadRetry(() => request(`/uploads/${session.id}/complete`, { method: 'POST' }), { waitForResume, isAborted: () => aborted }));
 }
+
+export async function beginFolderUploadBatch({ storage, path = '', folders, totalBytes, fileCount }) {
+  return request('/uploads/batches', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ storage, path, folders, totalBytes, fileCount }),
+  });
+}
+
+export async function completeFolderUploadBatch(batchId) {
+  return request(`/uploads/batches/${batchId}/complete`, { method: 'POST' });
+}
+
 
 export async function ensureFolders(storage, relativePath) {
   const parts = relativePath.split('/').filter(Boolean);

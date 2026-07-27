@@ -150,9 +150,10 @@ class FileManagerV2Controller extends Controller
             'storage' => ['required', 'string', 'max:40'],
             'path' => ['nullable', 'string', 'max:2000'],
             'file' => ['required', 'file'],
+            'batchId' => ['nullable', 'uuid'],
         ]);
 
-        return response()->json(['data' => $this->storage->upload($validated['storage'], $validated['path'] ?? '', $request->file('file'))], 201);
+        return response()->json(['data' => $this->storage->upload($validated['storage'], $validated['path'] ?? '', $request->file('file'), $validated['batchId'] ?? null)], 201);
     }
 
     public function startUpload(Request $request): JsonResponse
@@ -164,6 +165,7 @@ class FileManagerV2Controller extends Controller
             'size' => ['required', 'integer', 'min:1'],
             'parts' => ['required', 'integer', 'min:1', 'max:10000'],
             'checksum' => ['nullable', 'regex:/^[a-fA-F0-9]{64}$/'],
+            'batchId' => ['nullable', 'uuid'],
         ]);
 
         return response()->json(['data' => $this->storage->startUpload(
@@ -173,7 +175,33 @@ class FileManagerV2Controller extends Controller
             $validated['size'],
             $validated['parts'],
             $validated['checksum'] ?? null,
+            $validated['batchId'] ?? null,
         )], 201);
+    }
+
+    public function beginFolderUploadBatch(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'storage' => ['required', 'string', 'max:40'],
+            'path' => ['nullable', 'string', 'max:2000'],
+            'folders' => ['required', 'array', 'min:1', 'max:100000'],
+            'folders.*' => ['required', 'string', 'max:2000'],
+            'totalBytes' => ['required', 'integer', 'min:1'],
+            'fileCount' => ['required', 'integer', 'min:1', 'max:100000'],
+        ]);
+
+        return response()->json(['data' => $this->storage->beginFolderUploadBatch(
+            $validated['storage'],
+            $validated['path'] ?? '',
+            $validated['folders'],
+            $validated['totalBytes'],
+            $validated['fileCount'],
+        )], 201);
+    }
+
+    public function completeFolderUploadBatch(string $batch): JsonResponse
+    {
+        return response()->json(['data' => $this->storage->completeFolderUploadBatch($batch)]);
     }
 
     public function uploadChunk(Request $request, string $upload, int $part): JsonResponse

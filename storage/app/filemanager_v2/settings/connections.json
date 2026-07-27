@@ -23,18 +23,18 @@
             "name": "Cloudflare R2",
             "short_name": "R2",
             "icon": "bi-cloud",
-            "enabled": false,
+            "enabled": true,
             "type": "r2",
-            "driver": "disk",
+            "driver": "s3",
             "disk": "s3_r2",
             "root": "",
             "quota_bytes": 1073741824,
-            "bucket": "",
+            "bucket": "arunikas3",
             "region": "auto",
-            "endpoint": "",
+            "endpoint": "https:\/\/64420a3663370cd6e25e2d52313832fe.r2.cloudflarestorage.com",
             "use_path_style_endpoint": false,
-            "key_encrypted": null,
-            "secret_encrypted": null
+            "key_encrypted": "eyJpdiI6IjgyUmtrZmNNN2NPc2NrNEJTZmJGcmc9PSIsInZhbHVlIjoiSnhUMDZtR2NIMkR1cFFCbnJRVHduV1ZhZkRPVFlmejZ4ek9zMGZUQ2VSVmhZQWVaK3lzMnBoWkNRWDMxNEtSMyIsIm1hYyI6ImQzNGQ4Yzk3MjhmYzNmOTYzYmNlMGNhMTJkZTk5Y2I0YTEwODg1NGFlMzljZGExYWEyZGMzZDc3Yzg3NDYyMTUiLCJ0YWciOiIifQ==",
+            "secret_encrypted": "eyJpdiI6ImQ0bFdZcGRZRDFIY0tHaHFiV29KN3c9PSIsInZhbHVlIjoiK2lKM3J3QVRLcXlOK0VHaUFsS0lxd01oV2RBUDFGbVIvRTFLajltbnNaSHFlbUZmMHhBVUZFV25TVTk0bnFCWmJmbVlVT0FqV0lzY2pwOW53MzJJVWJVTFJLeVErMzI3SUhnOWV4emd5QUU9IiwibWFjIjoiNzYxNTE4ZGRhMzdkZmEzMjA3Yzk0ZTIwYTE2MmJlYjRjODRjZGY5OTRhMjMyOWNkMzczMTIxNWQ5ZmRkNmQxOCIsInRhZyI6IiJ9"
         }
     },
     "removed_connections": [],
@@ -42,7 +42,7 @@
         "max_file_size": 1073741824,
         "chunk_size": 8388608,
         "chunk_threshold": 16777216,
-        "max_parallel": 3,
+        "max_parallel": 10,
         "retry_attempts": 2
     }
 }

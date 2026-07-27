@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import uploadFilePlaceholder from '../assets/file-upload-placeholder.svg';
 
 const props = defineProps({
   uploads: Array,
@@ -9,11 +10,26 @@ const props = defineProps({
 
 const emit = defineEmits(['toggle-minimize', 'toggle-pause', 'close', 'remove', 'retry']);
 const completed = computed(() => props.uploads.filter((item) => item.status === 'done').length);
-const hasPendingUploads = computed(() => props.uploads.some((item) => item.status === 'uploading'));
+const hasPendingUploads = computed(() => props.uploads.some((item) => ['queued', 'uploading'].includes(item.status)));
 const overall = computed(() => {
   if (!props.uploads.length) return 0;
   return Math.round(props.uploads.reduce((total, item) => total + item.progress, 0) / props.uploads.length);
 });
+const visibleUploads = computed(() => {
+  const visible = [];
+  const statuses = ['uploading', 'error', 'queued', 'done', 'cancelled'];
+
+  for (const status of statuses) {
+    for (const item of props.uploads) {
+      if (item.status !== status) continue;
+      visible.push(item);
+      if (visible.length === 120) return visible;
+    }
+  }
+
+  return visible;
+});
+const hiddenUploads = computed(() => Math.max(0, props.uploads.length - visibleUploads.value.length));
 </script>
 
 <template>
@@ -43,12 +59,15 @@ const overall = computed(() => {
         </button>
       </div>
       <div class="upload-list">
-        <div v-for="item in uploads" :key="item.id" class="upload-item">
-          <div class="upload-file-icon"><i class="bi bi-file-earmark"></i></div>
+        <div v-for="item in visibleUploads" :key="item.id" class="upload-item">
+          <div class="upload-file-icon">
+            <img class="upload-file-placeholder" :src="uploadFilePlaceholder" alt="" aria-hidden="true">
+          </div>
           <div class="upload-item-copy">
             <strong>{{ item.name }}</strong>
             <small v-if="item.status === 'error'" class="text-danger">{{ item.error }}</small>
             <small v-else-if="item.status === 'done'" class="text-success">Uploaded · {{ item.size }}</small>
+            <small v-else-if="item.status === 'queued'" class="text-muted">Waiting in queue &middot; {{ item.size }}</small>
             <small v-else>{{ item.size }} · {{ item.progress }}%</small>
             <div v-if="item.status === 'uploading'" class="progress">
               <div class="progress-bar" :style="{ width: item.progress + '%' }"></div>
@@ -61,6 +80,7 @@ const overall = computed(() => {
           </div>
         </div>
       </div>
+      <p v-if="hiddenUploads" class="upload-list-more">Showing active items and the first 120 of {{ uploads.length }} files.</p>
     </div>
   </section>
 </template>

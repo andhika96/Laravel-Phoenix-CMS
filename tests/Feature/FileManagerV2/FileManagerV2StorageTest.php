@@ -96,6 +96,20 @@ class FileManagerV2StorageTest extends TestCase
         $this->assertSame('inside.txt', $browse['items'][0]['name']);
     }
 
+    public function test_folder_tree_cache_is_refreshed_after_a_managed_change(): void
+    {
+        $service = app(FileManagerV2Storage::class);
+        $service->makeDirectory('local', '', 'Cached');
+
+        $this->assertSame(['Cached'], array_column($service->folders('local'), 'path'));
+
+        File::makeDirectory($this->root . '/files/External');
+        $this->assertSame(['Cached'], array_column($service->folders('local'), 'path'));
+
+        $service->makeDirectory('local', '', 'Managed');
+        $this->assertEqualsCanonicalizing(['Cached', 'External', 'Managed'], array_column($service->folders('local'), 'path'));
+    }
+
     public function test_all_assets_lists_only_immediate_root_files_and_folders(): void
     {
         $service = app(FileManagerV2Storage::class);

@@ -100,8 +100,12 @@ class FileManagerV2Storage
 
     public function disk(string $storage): FilesystemAdapter
     {
-        $profile = $this->profile($storage);
+        return $this->diskForProfile($this->profile($storage));
+    }
 
+    /** @param array<string, mixed> $profile */
+    private function diskForProfile(array $profile): FilesystemAdapter
+    {
         if (($profile['driver'] ?? null) === 'local') {
             $this->prepare();
 
@@ -254,14 +258,14 @@ class FileManagerV2Storage
     /** @return array<string, mixed> */
     public function testConnection(string $storage): array
     {
-        $this->profile($storage);
+        $profile = $this->configuredConnections()[$storage] ?? null;
+        abort_unless(is_array($profile), 404, 'Storage connection tidak tersedia.');
 
         return [
             'storage' => $storage,
-            'connected' => $this->connectionAvailable($storage),
+            'connected' => $this->connectionAvailable($storage, $profile),
         ];
     }
-
     /** @return array<string, mixed> */
     public function browse(string $storage, string|null $path, array $filters = []): array
     {
@@ -343,20 +347,25 @@ class FileManagerV2Storage
     public function folders(string $storage): array
     {
         $this->prepare();
-        $folders = [];
+        $revision = (int) $this->cache()->get($this->revisionKey($storage, ''), 1);
+        $cacheKey = 'filemanager_v2:folders:' . sha1(json_encode([$storage, $revision], JSON_THROW_ON_ERROR));
 
-        foreach ($this->disk($storage)->listContents('', true) as $item) {
-            if (! $item instanceof StorageAttributes || ! $item->isDir()) {
-                continue;
+        return $this->cache()->remember($cacheKey, config('filemanager_v2.cache.listing_ttl_seconds'), function () use ($storage): array {
+            $folders = [];
+
+            foreach ($this->disk($storage)->listContents('', true) as $item) {
+                if (! $item instanceof StorageAttributes || ! $item->isDir()) {
+                    continue;
+                }
+
+                $path = $item->path();
+                $folders[] = ['path' => $path, 'name' => basename($path)];
             }
 
-            $path = $item->path();
-            $folders[] = ['path' => $path, 'name' => basename($path)];
-        }
+            usort($folders, fn (array $left, array $right): int => strnatcasecmp($left['path'], $right['path']));
 
-        usort($folders, fn (array $left, array $right): int => strnatcasecmp($left['path'], $right['path']));
-
-        return $folders;
+            return $folders;
+        });
     }
     /** @return array<string, mixed> */
     public function folderDetails(string $storage, string|null $path): array
@@ -502,19 +511,112 @@ class FileManagerV2Storage
         return ['path' => $path, 'name' => $name];
     }
 
-    /** @return array<string, mixed> */
-    public function upload(string $storage, string|null $parent, UploadedFile $file): array
+    /**
+     * Reserve the capacity and materialize the folder tree for one folder-upload batch.
+     *
+     * @param array<int, string> $folders Paths relative to $parent.
+     * @return array<string, int|string>
+     */
+    public function beginFolderUploadBatch(string $storage, string|null $parent, array $folders, int $totalBytes, int $fileCount): array
+    {
+        $this->prepare();
+        $profile = $this->profile($storage);
+        $parent = $this->path($parent);
+        abort_if($totalBytes < 1 || $fileCount < 1, 422, 'Batch upload harus memiliki setidaknya satu file.');
+        abort_if($fileCount > 100000 || count($folders) > 100000, 422, 'Batch upload terlalu besar.');
+
+        $id = (string) Str::uuid();
+        $expiresAt = now()->addHours((int) config('filemanager_v2.uploads.runtime_ttl_hours'));
+        $this->reserveFolderUploadQuota($id, $storage, $profile, $totalBytes, $expiresAt->getTimestamp());
+
+        try {
+            $relativeFolders = collect($folders)
+                ->filter(fn (mixed $folder): bool => is_string($folder))
+                ->map(fn (string $folder): string => $this->path($folder))
+                ->filter()
+                ->unique()
+                ->sortBy(fn (string $folder): int => substr_count($folder, '/'))
+                ->values();
+
+            $disk = $this->disk($storage);
+            foreach ($relativeFolders as $folder) {
+                $path = $this->joinPath($parent, $folder);
+                abort_if($disk->fileExists($path), 422, 'Path folder berbenturan dengan file yang ada.');
+
+                if (! $disk->directoryExists($path)) {
+                    $disk->makeDirectory($path);
+                }
+            }
+
+            $batch = [
+                'id' => $id,
+                'storage' => $storage,
+                'path' => $parent,
+                'totalBytes' => $totalBytes,
+                'fileCount' => $fileCount,
+                'claimedBytes' => 0,
+                'expiresAt' => $expiresAt->getTimestamp(),
+            ];
+            $this->cache()->put($this->folderUploadBatchKey($id), $batch, $expiresAt);
+            $this->bust($storage, $parent);
+
+            return [
+                'id' => $id,
+                'storage' => $storage,
+                'path' => $parent,
+                'totalBytes' => $totalBytes,
+                'fileCount' => $fileCount,
+                'folderCount' => $relativeFolders->count(),
+                'expiresAt' => $expiresAt->toIso8601String(),
+            ];
+        } catch (\Throwable $exception) {
+            $this->releaseFolderUploadQuota($id, $storage);
+
+            throw $exception;
+        }
+    }
+
+    /** @return array<string, int|string> */
+    public function completeFolderUploadBatch(string $id): array
+    {
+        $batch = $this->folderUploadBatch($id);
+        $this->releaseFolderUploadQuota($id, (string) $batch['storage']);
+        $this->cache()->forget($this->folderUploadBatchKey($id));
+
+        return [
+            'id' => $id,
+            'storage' => $batch['storage'],
+            'path' => $batch['path'],
+            'claimedBytes' => (int) $batch['claimedBytes'],
+        ];
+    }
+
+    public function upload(string $storage, string|null $parent, UploadedFile $file, ?string $batchId = null): array
     {
         $parent = $this->path($parent);
         $this->assertUpload($file);
-        $this->assertQuota($storage, (int) $file->getSize());
+        $size = (int) $file->getSize();
+        if ($batchId !== null) {
+            $this->claimFolderUploadBytes($batchId, $storage, $parent, $size);
+        } else {
+            $this->assertQuota($storage, $size);
+        }
         $name = $this->availableName($storage, $parent, $this->fileName($file->getClientOriginalName()));
         $path = $parent === '' ? $name : $parent . '/' . $name;
 
         $stream = fopen($file->getRealPath(), 'rb');
-        $this->disk($storage)->writeStream($path, $stream);
-        if (is_resource($stream)) {
-            fclose($stream);
+        try {
+            $this->disk($storage)->writeStream($path, $stream);
+        } catch (\Throwable $exception) {
+            if ($batchId !== null) {
+                $this->releaseFolderUploadBytes($batchId, $size);
+            }
+
+            throw $exception;
+        } finally {
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
         }
 
         $this->bust($storage, $parent);
@@ -523,14 +625,18 @@ class FileManagerV2Storage
     }
 
     /** @return array<string, mixed> */
-    public function startUpload(string $storage, string|null $parent, string $name, int $size, int $parts, ?string $checksum = null): array
+    public function startUpload(string $storage, string|null $parent, string $name, int $size, int $parts, ?string $checksum = null, ?string $batchId = null): array
     {
         $this->prepare();
         $this->profile($storage);
         $parent = $this->path($parent);
         $name = $this->fileName($name);
         $this->assertUploadMeta($name, $size, $parts);
-        $this->assertQuota($storage, $size);
+        if ($batchId !== null) {
+            $this->claimFolderUploadBytes($batchId, $storage, $parent, $size);
+        } else {
+            $this->assertQuota($storage, $size);
+        }
         $id = (string) Str::uuid();
         $directory = $this->runtimeDirectory($id);
         File::ensureDirectoryExists($directory, 0755, true);
@@ -540,6 +646,7 @@ class FileManagerV2Storage
             'storage' => $storage,
             'parent' => $parent,
             'name' => $name,
+            'batch_id' => $batchId,
             'size' => $size,
             'parts' => $parts,
             'checksum' => $checksum,
@@ -617,6 +724,11 @@ class FileManagerV2Storage
 
     public function cancelUpload(string $id): void
     {
+        $session = $this->session($id);
+        if (is_string($session['batch_id'] ?? null) && $session['batch_id'] !== '') {
+            $this->releaseFolderUploadBytes($session['batch_id'], (int) $session['size']);
+        }
+
         $this->deleteRuntime($id);
     }
 
@@ -903,10 +1015,12 @@ class FileManagerV2Storage
         throw new RuntimeException('Asset tidak ditemukan.');
     }
 
-    private function connectionAvailable(string $storage): bool
+    /** @param array<string, mixed>|null $profile */
+    private function connectionAvailable(string $storage, ?array $profile = null): bool
     {
         try {
-            foreach ($this->disk($storage)->listContents('', false) as $_item) {
+            $disk = $profile === null ? $this->disk($storage) : $this->diskForProfile($profile);
+            foreach ($disk->listContents('', false) as $_item) {
                 break;
             }
 
@@ -915,7 +1029,6 @@ class FileManagerV2Storage
             return false;
         }
     }
-
     /** @return array<string, array<string, mixed>> */
     private function configuredConnections(): array
     {
@@ -1126,6 +1239,99 @@ class FileManagerV2Storage
         return $type === 'local' ? 'bi-device-hdd' : 'bi-cloud';
     }
 
+    private function joinPath(string $parent, string $child): string
+    {
+        return $parent === '' ? $child : ($child === '' ? $parent : $parent . '/' . $child);
+    }
+
+    private function folderUploadBatchKey(string $id): string
+    {
+        abort_unless((bool) preg_match('/^[0-9a-f-]{36}$/i', $id), 404, 'Batch upload tidak ditemukan.');
+
+        return 'filemanager_v2:folder-upload-batch:' . $id;
+    }
+
+    private function folderUploadReservationsKey(string $storage): string
+    {
+        return 'filemanager_v2:folder-upload-reservations:' . $storage;
+    }
+
+    /** @return array<string, mixed> */
+    private function folderUploadBatch(string $id): array
+    {
+        $batch = $this->cache()->get($this->folderUploadBatchKey($id));
+        abort_unless(is_array($batch), 410, 'Batch upload telah berakhir atau kedaluwarsa.');
+        abort_if((int) ($batch['expiresAt'] ?? 0) <= now()->getTimestamp(), 410, 'Batch upload telah kedaluwarsa.');
+
+        return $batch;
+    }
+
+    /** @param array<string, mixed> $profile */
+    private function reserveFolderUploadQuota(string $id, string $storage, array $profile, int $bytes, int $expiresAt): void
+    {
+        $this->cache()->lock('filemanager_v2:folder-upload-reservations-lock:' . $storage, 10)->block(5, function () use ($id, $storage, $profile, $bytes, $expiresAt): void {
+            $key = $this->folderUploadReservationsKey($storage);
+            $reservations = array_filter(
+                (array) $this->cache()->get($key, []),
+                fn (mixed $reservation): bool => is_array($reservation) && (int) ($reservation['expiresAt'] ?? 0) > now()->getTimestamp(),
+            );
+            $quota = (int) ($profile['quota_bytes'] ?? 0);
+            if ($quota > 0) {
+                $used = (int) $this->usage($storage, $profile)['usedBytes'];
+                $reserved = array_sum(array_map(fn (array $reservation): int => (int) ($reservation['bytes'] ?? 0), $reservations));
+                abort_if($used + $reserved + $bytes > $quota, 422, 'Storage connection sudah mencapai batas kapasitasnya.');
+            }
+
+            $reservations[$id] = ['bytes' => $bytes, 'expiresAt' => $expiresAt];
+            $this->cache()->put($key, $reservations, now()->addSeconds(max(1, $expiresAt - now()->getTimestamp())));
+        });
+    }
+
+    private function releaseFolderUploadQuota(string $id, string $storage): void
+    {
+        $this->cache()->lock('filemanager_v2:folder-upload-reservations-lock:' . $storage, 10)->block(5, function () use ($id, $storage): void {
+            $key = $this->folderUploadReservationsKey($storage);
+            $reservations = (array) $this->cache()->get($key, []);
+            unset($reservations[$id]);
+
+            if ($reservations === []) {
+                $this->cache()->forget($key);
+
+                return;
+            }
+
+            $latestExpiry = max(array_map(fn (mixed $reservation): int => is_array($reservation) ? (int) ($reservation['expiresAt'] ?? 0) : 0, $reservations));
+            $this->cache()->put($key, $reservations, now()->addSeconds(max(1, $latestExpiry - now()->getTimestamp())));
+        });
+    }
+
+    private function claimFolderUploadBytes(string $id, string $storage, string $parent, int $bytes): void
+    {
+        abort_if($bytes < 1, 422, 'Ukuran file upload tidak valid.');
+        $this->cache()->lock('filemanager_v2:folder-upload-batch-lock:' . $id, 10)->block(5, function () use ($id, $storage, $parent, $bytes): void {
+            $batch = $this->folderUploadBatch($id);
+            abort_unless($batch['storage'] === $storage, 422, 'Batch upload tidak sesuai dengan storage aktif.');
+            $batchPath = (string) $batch['path'];
+            abort_unless($batchPath === '' || $parent === $batchPath || str_starts_with($parent, $batchPath . '/'), 422, 'Path upload berada di luar batch folder.');
+            abort_if((int) $batch['claimedBytes'] + $bytes > (int) $batch['totalBytes'], 422, 'Ukuran file melebihi reservasi batch upload.');
+
+            $batch['claimedBytes'] = (int) $batch['claimedBytes'] + $bytes;
+            $this->cache()->put($this->folderUploadBatchKey($id), $batch, now()->addSeconds(max(1, (int) $batch['expiresAt'] - now()->getTimestamp())));
+        });
+    }
+
+    private function releaseFolderUploadBytes(string $id, int $bytes): void
+    {
+        $this->cache()->lock('filemanager_v2:folder-upload-batch-lock:' . $id, 10)->block(5, function () use ($id, $bytes): void {
+            $batch = $this->cache()->get($this->folderUploadBatchKey($id));
+            if (! is_array($batch)) {
+                return;
+            }
+
+            $batch['claimedBytes'] = max(0, (int) ($batch['claimedBytes'] ?? 0) - $bytes);
+            $this->cache()->put($this->folderUploadBatchKey($id), $batch, now()->addSeconds(max(1, (int) ($batch['expiresAt'] ?? now()->getTimestamp()) - now()->getTimestamp())));
+        });
+    }
     private function assertQuota(string $storage, int $size): void
     {
         $profile = $this->profile($storage);

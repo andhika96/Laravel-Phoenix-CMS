@@ -30,7 +30,7 @@ const emit = defineEmits(['select', 'toggle-star', 'open-details', 'open-folder'
       <i class="bi bi-star-fill"></i>
     </span>
     <div class="asset-preview" :style="{ background: asset.color }">
-      <img v-if="asset.src" :src="asset.src" :alt="asset.name" />
+      <img v-if="asset.src" :src="asset.src" :alt="asset.name" loading="lazy" decoding="async" />
       <i v-else class="bi file-kind-icon" :class="iconForKind[asset.kind]"></i>
       <span class="asset-extension">{{ asset.ext }}</span>
     </div>

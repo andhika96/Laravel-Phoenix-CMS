@@ -39,6 +39,8 @@ Route::middleware(['auth', 'checkSuspended'])->group(function (): void {
         Route::get('/assets/download', [FileManagerV2Controller::class, 'download'])->name('assets.download');
 
         Route::post('/uploads', [FileManagerV2Controller::class, 'startUpload'])->name('uploads.start');
+        Route::post('/uploads/batches', [FileManagerV2Controller::class, 'beginFolderUploadBatch'])->name('uploads.batches.start');
+        Route::post('/uploads/batches/{batch}/complete', [FileManagerV2Controller::class, 'completeFolderUploadBatch'])->whereUuid('batch')->name('uploads.batches.complete');
         Route::post('/uploads/{upload}/chunks/{part}', [FileManagerV2Controller::class, 'uploadChunk'])->whereNumber('part')->name('uploads.chunk');
         Route::post('/uploads/{upload}/complete', [FileManagerV2Controller::class, 'completeUpload'])->name('uploads.complete');
         Route::delete('/uploads/{upload}', [FileManagerV2Controller::class, 'cancelUpload'])->name('uploads.cancel');

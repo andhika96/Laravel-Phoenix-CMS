@@ -6,7 +6,8 @@ import DetailsDrawer from './components/DetailsDrawer.vue';
 import UploadPanel from './components/UploadPanel.vue';
 import FilePondUploadEngine from './components/FilePondUploadEngine.vue';
 import StorageSettingsModal from './components/StorageSettingsModal.vue';
-import { assets, createFolder as createFolderApi, deleteAsset, deleteAssets, folders, initializeWorkspace, loadAssets, loadFolderDetails as loadFolderDetailsApi, loadFolders, loadStorageSettings, moveAssets, navItems, previewDelete, refreshStorageProfiles, renameAsset, replaceAssets, replaceFolders, saveStorageSettings, storageProfiles, testStorageConnection, toggleAssetStar, upsertAsset } from './data/live';
+import { assets, createFolder as createFolderApi, deleteAsset, deleteAssets, folders, getUploadOptions, initializeWorkspace, loadAssets, loadFolderDetails as loadFolderDetailsApi, loadFolders, loadStorageSettings, moveAssets, navItems, previewDelete, refreshStorageProfiles, renameAsset, replaceAssets, replaceFolders, saveStorageSettings, storageProfiles, testStorageConnection, toggleAssetStar, upsertAsset } from './data/live';
+import { createFolderUploadCoordinator } from './data/folderUploadBatch';
 
 const activeStorage = ref('local');
 const activeNav = ref('all');
@@ -48,8 +49,14 @@ const assetName = ref('');
 const FILE_MANAGER_HISTORY_KEY = 'fileManagerV2';
 let actionCloseTimer;
 let refreshSequence = 0;
+const workspaceLoadState = ref('idle');
+const WORKSPACE_CACHE_LIMIT = 24;
+const workspaceCache = new Map();
+const folderCache = new Map();
 let deleteImpactSequence = 0;
 let workspaceReady = false;
+const folderUploadBatches = new Map();
+let folderBatchRefreshTimer;
 const themeQuery = window.matchMedia('(prefers-color-scheme: dark)');
 const savedTheme = window.localStorage.getItem('arunika-files-theme');
 const themePreference = ref(['light', 'dark', 'system'].includes(savedTheme) ? savedTheme : 'system');
@@ -135,6 +142,7 @@ const emptyState = computed(() => {
 const resolvedTheme = computed(() => (themePreference.value === 'system' ? systemTheme.value : themePreference.value));
 const themeIcon = computed(() => (resolvedTheme.value === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'));
 const themeLabel = computed(() => ({ light: 'Light', dark: 'Dark', system: 'System' }[themePreference.value]));
+const workspaceLoadMessage = computed(() => `${workspaceLoadState.value === 'refreshing' ? 'Refreshing' : 'Loading'} ${activeProfile.value.name}...`);
 
 
 function notify(message, status = 'success') {
@@ -262,18 +270,71 @@ function writeBrowserHistory(mode = 'push') {
   window.history.pushState(payload, '', url);
 }
 
+function workspaceCacheKey(context) {
+  return [context.storage, context.path, context.collection, context.search, context.type, context.sort].join('\u001f');
+}
+
+function rememberCacheEntry(cache, key, value) {
+  if (cache.has(key)) cache.delete(key);
+  cache.set(key, value);
+
+  while (cache.size > WORKSPACE_CACHE_LIMIT) {
+    cache.delete(cache.keys().next().value);
+  }
+}
+
+function restoreWorkspaceFromCache(context, refreshFolders) {
+  const key = workspaceCacheKey(context);
+  const payload = workspaceCache.get(key);
+  const folderItems = refreshFolders ? folderCache.get(context.storage) : null;
+
+  if (payload) {
+    rememberCacheEntry(workspaceCache, key, payload);
+    replaceAssets(payload);
+  }
+  if (folderItems) {
+    rememberCacheEntry(folderCache, context.storage, folderItems);
+    replaceFolders(folderItems);
+  }
+
+  return Boolean(payload);
+}
+
+function rememberWorkspace(context, payload, folderItems) {
+  rememberCacheEntry(workspaceCache, workspaceCacheKey(context), payload);
+  if (folderItems) rememberCacheEntry(folderCache, context.storage, folderItems);
+}
+
+function clearWorkspaceCache() {
+  workspaceCache.clear();
+  folderCache.clear();
+}
+
 async function refreshAssets({ refreshFolders = false, refreshUsage = false } = {}) {
   const requestId = ++refreshSequence;
   const context = { storage: activeStorage.value, path: activeFolder.value, collection: activeNav.value, search: search.value, type: filter.value, sort: sort.value };
-  const [payload, folderItems] = await Promise.all([
-    loadAssets(context.storage, { path: context.path, collection: context.collection, search: context.search, type: context.type, sort: context.sort }),
-    refreshFolders ? loadFolders(context.storage) : Promise.resolve(null),
-    refreshUsage ? refreshStorageProfiles() : Promise.resolve(),
-  ]);
-  if (requestId !== refreshSequence) return;
+  const restored = restoreWorkspaceFromCache(context, refreshFolders);
+  workspaceLoadState.value = restored ? 'refreshing' : 'loading';
 
-  replaceAssets(payload);
-  if (folderItems) replaceFolders(folderItems);
+  if (!restored) {
+    replaceAssets({ items: [] });
+    if (refreshFolders) replaceFolders([]);
+  }
+
+  try {
+    const [payload, folderItems] = await Promise.all([
+      loadAssets(context.storage, { path: context.path, collection: context.collection, search: context.search, type: context.type, sort: context.sort }),
+      refreshFolders ? loadFolders(context.storage) : Promise.resolve(null),
+      refreshUsage ? refreshStorageProfiles() : Promise.resolve(),
+    ]);
+    if (requestId !== refreshSequence) return;
+
+    replaceAssets(payload);
+    if (folderItems) replaceFolders(folderItems);
+    rememberWorkspace(context, payload, folderItems);
+  } finally {
+    if (requestId === refreshSequence) workspaceLoadState.value = 'idle';
+  }
 }
 
 async function applyNavigationState(state, { refreshFolders = false } = {}) {
@@ -408,6 +469,7 @@ async function submitActionModal() {
   }
 
   actionSubmitState.value = 'submitting';
+  clearWorkspaceCache();
   let successMessage = '';
   try {
     if (type === 'create') {
@@ -487,8 +549,78 @@ function handleUploadInput(event) {
   event.target.value = '';
 }
 
+function scheduleFolderBatchRefresh(storage) {
+  window.clearTimeout(folderBatchRefreshTimer);
+  folderBatchRefreshTimer = window.setTimeout(async () => {
+    clearWorkspaceCache();
+    if (storage !== activeStorage.value) return;
+    try {
+      await refreshAssets({ refreshFolders: true, refreshUsage: true });
+    } catch (error) {
+      notify(error.message, 'failed');
+    }
+  }, 100);
+}
+
+async function startFolderUpload(fileList) {
+  if (!fileList?.length) return;
+
+  uploadOpen.value = true;
+  uploadMinimized.value = false;
+  const storage = activeStorage.value;
+  const path = activeFolder.value;
+  let coordinator;
+  coordinator = createFolderUploadCoordinator({
+    files: fileList,
+    storage,
+    path,
+    getMaxParallel: () => getUploadOptions().maxParallel,
+    onItemAdded: (job) => {
+      uploads.value.push({
+        id: job.id,
+        name: job.name,
+        size: formatBytes(job.bytes),
+        progress: job.progress,
+        status: job.status,
+        error: job.error,
+        storage,
+        path: job.path,
+        folderBatch: true,
+      });
+      folderUploadBatches.set(job.id, coordinator);
+    },
+    onItemUpdated: (job) => {
+      const item = uploads.value.find((candidate) => candidate.id === job.id);
+      if (item) Object.assign(item, { progress: job.progress, status: job.status, error: job.error, path: job.path });
+    },
+    onItemDone: (job, asset) => {
+      const item = uploads.value.find((candidate) => candidate.id === job.id);
+      if (!item) return;
+      item.asset = asset;
+      item.path = asset.path;
+      // A folder can contain thousands of files. The single final refresh below
+      // keeps the asset grid from creating a preview request for every upload.
+    },
+    onStartError: (error) => notify(error?.message || 'Folder upload tidak dapat dimulai.', 'failed'),
+    onFinished: ({ batch, jobs }) => {
+      jobs.filter((job) => job.status !== 'error').forEach((job) => folderUploadBatches.delete(job.id));
+      const failed = jobs.filter((job) => job.status === 'error').length;
+      if (batch?.storage) scheduleFolderBatchRefresh(batch.storage);
+      if (failed) notify(`${failed} file folder gagal diupload. Gunakan Retry setelah batch selesai.`, 'failed');
+    },
+  });
+  coordinator.setPaused(uploadsPaused.value);
+  await coordinator.start();
+}
+
+function handleFolderUploadInput(event) {
+  void startFolderUpload(event.target.files);
+  event.target.value = '';
+}
+
 function toggleUploadsPause() {
   uploadsPaused.value = !uploadsPaused.value;
+  new Set(folderUploadBatches.values()).forEach((coordinator) => coordinator.setPaused(uploadsPaused.value));
 }
 
 function onPondAdded(item) {
@@ -519,6 +651,7 @@ async function onPondDone({ id, asset, storage }) {
   if (storage !== activeStorage.value) return;
 
   upsertAsset(asset);
+  clearWorkspaceCache();
   try {
     await refreshAssets({ refreshFolders: true, refreshUsage: true });
   } catch (error) {
@@ -542,6 +675,13 @@ function onPondRemoved({ id }) {
 }
 
 function retryUpload(item) {
+  if (item.folderBatch) {
+    const accepted = folderUploadBatches.get(item.id)?.retry(item.id);
+    if (!accepted) notify('Tunggu batch folder selesai sebelum mencoba ulang file ini.', 'failed');
+
+    return;
+  }
+
   item.status = 'uploading';
   item.progress = 0;
   item.error = '';
@@ -616,6 +756,7 @@ async function toggleSelectedStar() {
   if (!selected.length || !selectedAssetsAreFilesOnly.value) return;
 
   const willRemove = selectedAssetsAreAllStarred.value;
+  clearWorkspaceCache();
   try {
     await Promise.all(selected.map((asset) => toggleAssetStar(activeStorage.value, asset.path)));
     await refreshAssets();
@@ -645,6 +786,17 @@ async function removeUpload(item) {
     openActionModal('delete-upload', item);
     return;
   }
+  if (item.folderBatch) {
+    if (item.status === 'error' || item.status === 'cancelled') {
+      folderUploadBatches.delete(item.id);
+      onPondRemoved({ id: item.id });
+    } else {
+      folderUploadBatches.get(item.id)?.cancel(item.id);
+    }
+
+    return;
+  }
+
   if (!uploadEngine.value) {
     onPondRemoved({ id: item.id });
     return;
@@ -654,7 +806,7 @@ async function removeUpload(item) {
 
 function closeUploads() {
   uploadOpen.value = false;
-  uploads.value = uploads.value.filter((item) => item.status === 'uploading');
+  uploads.value = uploads.value.filter((item) => ['queued', 'uploading'].includes(item.status));
 }
 
 async function openSettings() {
@@ -670,6 +822,8 @@ async function openSettings() {
 async function saveSettings(settings) {
   const saved = await saveStorageSettings(settings);
   storageSettings.value = saved;
+  clearWorkspaceCache();
+  new Set(folderUploadBatches.values()).forEach((coordinator) => coordinator.refreshConcurrency());
 
   const nextStorage = storageProfiles[saved.defaultStorage] ? saved.defaultStorage : Object.keys(storageProfiles)[0];
   if (nextStorage) {
@@ -679,13 +833,18 @@ async function saveSettings(settings) {
   settingsOpen.value = false;
 }
 
-async function testConnection(storage) {
-  try {
-    const result = await testStorageConnection(storage);
-    notify(result.connected ? `Connection to ${storageProfiles[storage]?.name || storage} successful` : `Connection to ${storageProfiles[storage]?.name || storage} is unavailable`, result.connected ? 'success' : 'failed');
-  } catch (error) {
-    notify(error.message, 'failed');
-  }
+async function testConnection({ storage, settings } = {}) {
+  const saved = await saveStorageSettings(settings);
+  storageSettings.value = saved;
+  clearWorkspaceCache();
+
+  new Set(folderUploadBatches.values()).forEach((coordinator) => coordinator.refreshConcurrency());
+  const profile = saved.connections?.find((connection) => connection.id === storage);
+  const result = await testStorageConnection(storage);
+  const name = profile?.name || storageProfiles[storage]?.name || storage;
+  notify(result.connected ? `Connection to ${name} successful` : `Connection to ${name} is unavailable`, result.connected ? 'success' : 'failed');
+
+  return { ...result, name };
 }
 
 function formatBytes(bytes) {
@@ -804,6 +963,9 @@ onBeforeUnmount(() => {
         <div>
           <h1>{{ activeFolderName }}</h1>
           <p>{{ filteredAssets.length }} assets · Updated a few seconds ago</p>
+          <span v-if="workspaceLoadState === 'refreshing'" class="workspace-refresh-state" role="status">
+            <i class="bi bi-arrow-repeat"></i>{{ workspaceLoadMessage }}
+          </span>
         </div>
         <div class="primary-actions">
           <button class="btn btn-light border" @click="createFolder"><i class="bi bi-folder-plus"></i> New folder</button>
@@ -817,7 +979,7 @@ onBeforeUnmount(() => {
             </ul>
           </div>
           <input ref="uploadInput" class="d-none" type="file" multiple @change="handleUploadInput" />
-          <input ref="folderInput" class="d-none" type="file" multiple webkitdirectory @change="handleUploadInput" />
+          <input ref="folderInput" class="d-none" type="file" multiple webkitdirectory @change="handleFolderUploadInput" />
         </div>
       </section>
 
@@ -862,7 +1024,12 @@ onBeforeUnmount(() => {
 
       <section class="asset-area" :class="{ 'with-drawer': detailAsset }">
         <div class="asset-scroll">
-          <div v-if="filteredAssets.length" class="asset-grid" :class="{ 'list-view': viewMode === 'list' }">
+          <div v-if="workspaceLoadState === 'loading'" class="workspace-loading" role="status">
+            <span class="workspace-loading-spinner" aria-hidden="true"></span>
+            <strong>{{ workspaceLoadMessage }}</strong>
+            <small>Fetching files and folders...</small>
+          </div>
+          <div v-else-if="filteredAssets.length" class="asset-grid" :class="{ 'list-view': viewMode === 'list' }">
             <AssetCard
               v-for="asset in filteredAssets"
               :key="asset.id"
@@ -995,7 +1162,7 @@ onBeforeUnmount(() => {
       :settings="storageSettings"
       @close="settingsOpen = false"
       :save-handler="saveSettings"
-      @test="testConnection"
+      :test-handler="testConnection"
     />
 
     <div v-if="toast" class="fm-toast" :class="`is-${toast.status}`" role="status">

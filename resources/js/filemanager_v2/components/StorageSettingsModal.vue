@@ -8,12 +8,14 @@ const props = defineProps({
   activeStorage: String,
   settings: Object,
   saveHandler: Function,
+  testHandler: Function,
 });
 
-const emit = defineEmits(['close', 'test']);
+const emit = defineEmits(['close']);
 const activeTab = ref('connections');
 const selectedConnectionId = ref('local');
 const isSubmitting = ref(false);
+const isTesting = ref(false);
 const submitNotice = ref(null);
 const form = reactive({
   defaultStorage: 'local',
@@ -117,7 +119,29 @@ function removeConnection() {
 }
 
 function close() {
-  if (!isSubmitting.value) emit('close');
+  if (!isSubmitting.value && !isTesting.value) emit('close');
+}
+
+async function testConnection() {
+  const connection = selectedConnection.value;
+  if (isTesting.value || !connection || typeof props.testHandler !== 'function') return;
+
+  isTesting.value = true;
+  submitNotice.value = null;
+  try {
+    const result = await props.testHandler({
+      storage: connection.id,
+      settings: JSON.parse(JSON.stringify(form)),
+    });
+    const name = result.name || connection.name || connection.id;
+    submitNotice.value = result.connected
+      ? { type: 'success', message: `Connection to ${name} succeeded. Credentials saved securely.` }
+      : { type: 'error', message: `Connection to ${name} could not be established. Check the endpoint, bucket, region, and credentials.` };
+  } catch (error) {
+    submitNotice.value = { type: 'error', message: error?.message || 'Connection test failed. Please review the storage settings.' };
+  } finally {
+    isTesting.value = false;
+  }
 }
 
 async function submit() {
@@ -152,10 +176,10 @@ watch(() => props.show, (visible) => {
           <small>File manager</small>
           <h2>Storage & upload settings</h2>
         </div>
-        <button type="button" aria-label="Close settings" :disabled="isSubmitting" @click="close"><i class="bi bi-x-lg"></i></button>
+        <button type="button" aria-label="Close settings" :disabled="isSubmitting || isTesting" @click="close"><i class="bi bi-x-lg"></i></button>
       </header>
 
-      <fieldset class="settings-submit-fieldset" :disabled="isSubmitting">
+      <fieldset class="settings-submit-fieldset" :disabled="isSubmitting || isTesting">
       <div class="settings-body">
         <nav class="settings-nav" aria-label="Settings sections">
           <button type="button" :class="{ active: activeTab === 'connections' }" @click="activeTab = 'connections'"><i class="bi bi-hdd-stack"></i> Storage connections</button>
@@ -194,7 +218,7 @@ watch(() => props.show, (visible) => {
                 <div><h3>{{ selectedConnection.name }}</h3><p>Credentials are encrypted on the server and are never returned to this browser.</p></div>
                 <div class="settings-section-actions">
                   <button v-if="selectedConnection.id !== form.defaultStorage" type="button" class="btn btn-sm btn-outline-secondary" @click="setDefaultConnection(selectedConnection.id)"><i class="bi bi-check2-circle"></i> Make default</button>
-                  <button type="button" class="btn btn-sm btn-outline-primary" @click="emit('test', selectedConnection.id)"><i class="bi bi-plug"></i> Test connection</button>
+                  <button type="button" class="btn btn-sm btn-outline-primary" @click="testConnection"><i class="bi" :class="isTesting ? 'bi-arrow-repeat' : 'bi-plug'"></i> {{ isTesting ? 'Testing connection...' : 'Test connection' }}</button>
                   <button v-if="selectedConnection.id !== 'local'" type="button" class="btn btn-sm btn-outline-danger" @click="removeConnection"><i class="bi bi-trash3"></i> Delete connection</button>
                 </div>
               </div>
@@ -219,6 +243,10 @@ watch(() => props.show, (visible) => {
                 <label class="span-2">S3 API endpoint<input v-model.trim="selectedConnection.endpoint" class="form-control" :placeholder="selectedConnection.type === 's3' ? 'Optional for AWS S3' : 'https://endpoint.example.com'" /></label>
                 <label>Access key ID<input v-model="selectedConnection.accessKey" autocomplete="off" class="form-control" :placeholder="selectedConnection.credentialsConfigured ? 'Leave blank to keep encrypted value' : 'Required to connect'" /></label>
                 <label>Secret access key<input v-model="selectedConnection.secretKey" type="password" autocomplete="new-password" class="form-control" :placeholder="selectedConnection.credentialsConfigured ? 'Leave blank to keep encrypted value' : 'Required to connect'" /></label>
+                <small class="span-2 form-text" :class="selectedConnection.credentialsConfigured ? 'text-success' : 'text-secondary'">
+                  <i class="bi" :class="selectedConnection.credentialsConfigured ? 'bi-shield-check' : 'bi-key'"></i>
+                  {{ selectedConnection.credentialsConfigured ? 'Credentials saved securely. Leave both fields blank to keep the encrypted values, or enter both values to replace them.' : 'Enter both credentials, then use Test connection to save and verify this connection.' }}
+                </small>
                 <div class="switch-row span-2"><div><strong>Use path-style endpoint</strong><small>Required by many S3-compatible providers; usually off for AWS S3 and R2.</small></div><div class="form-check form-switch"><input v-model="selectedConnection.usePathStyle" class="form-check-input" type="checkbox" /></div></div>
               </div>
             </section>
@@ -249,8 +277,8 @@ watch(() => props.show, (visible) => {
         <span>{{ submitNotice.message }}</span>
       </p>
       <footer>
-        <button type="button" class="btn btn-light" :disabled="isSubmitting" @click="close">Cancel</button>
-        <button v-if="!isSubmitting" type="button" class="btn btn-primary" @click="submit">Save settings</button>
+        <button type="button" class="btn btn-light" :disabled="isSubmitting || isTesting" @click="close">Cancel</button>
+        <button v-if="!isSubmitting && !isTesting" type="button" class="btn btn-primary" @click="submit">Save settings</button>
         <button v-else type="button" class="btn btn-secondary action-submit-state" disabled><span class="action-submit-spinner"></span><span>Saving settings</span></button>
       </footer>
     </section>

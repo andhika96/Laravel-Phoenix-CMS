@@ -210,10 +210,58 @@ class FileManagerV2ConnectionSettingsTest extends TestCase
             ->assertJsonPath('data.connected', true);
     }
 
+    public function test_disabled_cloud_connection_can_be_saved_and_tested_before_activation(): void
+    {
+        $this->withoutMiddleware();
+
+        $payload = [
+            'defaultStorage' => 'local',
+            'connections' => [
+                [
+                    'id' => 'local',
+                    'type' => 'local',
+                    'name' => 'Local storage',
+                    'enabled' => true,
+                    'root' => '',
+                    'quotaBytes' => 1024,
+                ],
+                [
+                    'id' => 'staging-r2',
+                    'type' => 'r2',
+                    'name' => 'Staging R2',
+                    'enabled' => false,
+                    'root' => '',
+                    'quotaBytes' => 1024,
+                    'bucket' => 'staging-assets',
+                    'region' => 'auto',
+                    'endpoint' => 'https://r2.example.test',
+                    'usePathStyle' => false,
+                    'accessKey' => '',
+                    'secretKey' => '',
+                ],
+            ],
+            'upload' => [
+                'maxFileSize' => 1024,
+                'chunkSize' => 8,
+                'chunkThreshold' => 16,
+                'maxParallel' => 2,
+                'retryAttempts' => 2,
+            ],
+        ];
+
+        $this->putJson('/api/v2/file-manager/settings', $payload)->assertOk();
+
+        $this->postJson('/api/v2/file-manager/settings/test', ['storage' => 'staging-r2'])
+            ->assertOk()
+            ->assertJsonPath('data.storage', 'staging-r2')
+            ->assertJsonPath('data.connected', false);
+    }
     public function test_settings_ui_hides_shared_and_only_exposes_operational_controls(): void
     {
         $live = file_get_contents(resource_path('js/filemanager_v2/data/live.js'));
         $modal = file_get_contents(resource_path('js/filemanager_v2/components/StorageSettingsModal.vue'));
+        $app = file_get_contents(resource_path('js/filemanager_v2/App.vue'));
+        $styles = file_get_contents(resource_path('js/filemanager_v2/styles.css'));
 
         $this->assertStringNotContainsString("{ id: 'shared'", $live);
         $this->assertStringContainsString('Add connection', $modal);
@@ -224,5 +272,14 @@ class FileManagerV2ConnectionSettingsTest extends TestCase
         $this->assertStringNotContainsString('Verify checksum', $modal);
         $this->assertStringNotContainsString('Resumable uploads', $modal);
         $this->assertStringNotContainsString('Performance</button>', $modal);
+        $this->assertStringContainsString('Credentials saved securely', $modal);
+        $this->assertStringContainsString('testHandler', $modal);
+        $this->assertStringContainsString('await props.testHandler', $modal);
+        $this->assertStringNotContainsString("emit('test'", $modal);
+        $this->assertStringContainsString(':test-handler="testConnection"', $app);
+        $this->assertStringContainsString('await saveStorageSettings(settings)', $app);
+        $this->assertStringContainsString('.form-grid > .form-text {', $styles);
+        $this->assertStringContainsString('font-size: clamp(10px, 0.8vw, 11px);', $styles);
+        $this->assertStringContainsString('line-height: 1.45;', $styles);
     }
 }
