@@ -100,7 +100,6 @@ export function createFolderUploadCoordinator({
         storage,
         path: job.path,
         batchId: job.useBatchReservation ? batch?.id : null,
-        idempotencyKey: job.id,
         waitForResume,
         onProgress: (progress) => update(job, { progress }),
         onAbort: (abort) => {
@@ -182,21 +181,6 @@ export function createFolderUploadCoordinator({
       pump();
 
       return true;
-    },
-
-    retryFailed() {
-      if (!batchCompleted) return 0;
-
-      const failedJobs = jobs.filter((job) => job.status === 'error');
-      failedJobs.forEach((job) => {
-        job.cancelRequested = false;
-        job.useBatchReservation = false;
-        update(job, { status: 'queued', progress: 0, error: '' });
-        queue.push(job);
-      });
-      pump();
-
-      return failedJobs.length;
     },
 
     cancel(id) {

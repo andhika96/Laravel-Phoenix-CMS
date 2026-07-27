@@ -151,10 +151,9 @@ class FileManagerV2Controller extends Controller
             'path' => ['nullable', 'string', 'max:2000'],
             'file' => ['required', 'file'],
             'batchId' => ['nullable', 'uuid'],
-            'idempotencyKey' => ['nullable', 'string', 'max:120'],
         ]);
 
-        return response()->json(['data' => $this->storage->upload($validated['storage'], $validated['path'] ?? '', $request->file('file'), $validated['batchId'] ?? null, $validated['idempotencyKey'] ?? null)], 201);
+        return response()->json(['data' => $this->storage->upload($validated['storage'], $validated['path'] ?? '', $request->file('file'), $validated['batchId'] ?? null)], 201);
     }
 
     public function startUpload(Request $request): JsonResponse
@@ -167,7 +166,6 @@ class FileManagerV2Controller extends Controller
             'parts' => ['required', 'integer', 'min:1', 'max:10000'],
             'checksum' => ['nullable', 'regex:/^[a-fA-F0-9]{64}$/'],
             'batchId' => ['nullable', 'uuid'],
-            'idempotencyKey' => ['nullable', 'string', 'max:120'],
         ]);
 
         return response()->json(['data' => $this->storage->startUpload(
@@ -178,7 +176,6 @@ class FileManagerV2Controller extends Controller
             $validated['parts'],
             $validated['checksum'] ?? null,
             $validated['batchId'] ?? null,
-            $validated['idempotencyKey'] ?? null,
         )], 201);
     }
 

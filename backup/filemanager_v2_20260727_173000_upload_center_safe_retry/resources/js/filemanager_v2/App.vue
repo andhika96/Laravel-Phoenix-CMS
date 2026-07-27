@@ -65,10 +65,6 @@ const systemTheme = ref(themeQuery.matches ? 'dark' : 'light');
 const activeProfile = computed(() => storageProfiles[activeStorage.value] || { shortName: 'LOCAL', name: 'Local storage', icon: 'bi-device-hdd', root: '', usedBytes: 0, quotaBytes: 0, usagePercent: 0, usedLabel: '0 B', quotaLabel: 'No limit' });
 const activeNavItem = computed(() => navItems.find((item) => item.id === activeNav.value) || navItems[0]);
 const activeFolderName = computed(() => activeFolder.value ? activeFolder.value.split('/').at(-1) : activeNavItem.value.label);
-const hasUploadCenter = computed(() => uploads.value.length > 0);
-const activeUploadCount = computed(() => uploads.value.filter((item) => ['queued', 'uploading'].includes(item.status)).length);
-const failedUploadCount = computed(() => uploads.value.filter((item) => item.status === 'error').length);
-const uploadCenterCount = computed(() => activeUploadCount.value || failedUploadCount.value || uploads.value.length);
 const breadcrumbSegments = computed(() => activeFolder.value.split('/').filter(Boolean).map((name, index, parts) => ({ name, path: parts.slice(0, index + 1).join('/') })));
 const selectedAssets = computed(() => assets.filter((asset) => selectedIds.value.has(asset.id)));
 const selectedFiles = computed(() => selectedAssets.value.filter((asset) => asset.type === 'file'));
@@ -678,45 +674,18 @@ function onPondRemoved({ id }) {
   if (!uploads.value.length) uploadOpen.value = false;
 }
 
-function retryUpload(item, { silent = false } = {}) {
+function retryUpload(item) {
   if (item.folderBatch) {
     const accepted = folderUploadBatches.get(item.id)?.retry(item.id);
-    if (!accepted && !silent) notify('Tunggu batch folder selesai sebelum mencoba ulang file ini.', 'failed');
+    if (!accepted) notify('Tunggu batch folder selesai sebelum mencoba ulang file ini.', 'failed');
 
-    return Boolean(accepted);
-  }
-
-  if (!uploadEngine.value) return false;
-  item.status = 'uploading';
-  item.progress = 0;
-  item.error = '';
-  void uploadEngine.value.retryFile(item.id);
-
-  return true;
-}
-
-function retryFailedUploads() {
-  let retried = 0;
-  const retriedBatches = new Set();
-
-  uploads.value.filter((item) => item.status === 'error' && item.folderBatch).forEach((item) => {
-    const coordinator = folderUploadBatches.get(item.id);
-    if (!coordinator || retriedBatches.has(coordinator)) return;
-    retriedBatches.add(coordinator);
-    retried += coordinator.retryFailed();
-  });
-  uploads.value
-    .filter((item) => item.status === 'error' && !item.folderBatch)
-    .forEach((item) => { if (retryUpload(item, { silent: true })) retried += 1; });
-
-  if (!retried) {
-    notify('Tidak ada file gagal yang siap dicoba ulang.', 'failed');
     return;
   }
 
-  uploadOpen.value = true;
-  uploadMinimized.value = false;
-  notify(`${retried} file gagal dimasukkan kembali ke antrean upload.`);
+  item.status = 'uploading';
+  item.progress = 0;
+  item.error = '';
+  void uploadEngine.value?.retryFile(item.id);
 }
 
 function createFolder() {
@@ -837,13 +806,7 @@ async function removeUpload(item) {
 
 function closeUploads() {
   uploadOpen.value = false;
-  uploadMinimized.value = false;
-}
-
-function openUploads() {
-  if (!hasUploadCenter.value) return;
-  uploadOpen.value = true;
-  uploadMinimized.value = false;
+  uploads.value = uploads.value.filter((item) => ['queued', 'uploading'].includes(item.status));
 }
 
 async function openSettings() {
@@ -981,9 +944,6 @@ onBeforeUnmount(() => {
             <input v-model="search" placeholder="Search assets, tags, or file types…" />
             <kbd>Ctrl K</kbd>
           </div>
-          <button v-if="hasUploadCenter" class="icon-button upload-center-button" type="button" :title="`Open uploads (${uploadCenterCount})`" :aria-label="`Open uploads (${uploadCenterCount})`" @click="openUploads">
-            <i class="bi bi-cloud-arrow-up"></i><span class="upload-center-count">{{ uploadCenterCount }}</span>
-          </button>
           <div class="dropdown">
             <button class="icon-button theme-button" type="button" data-bs-toggle="dropdown" :title="`Theme: ${themeLabel}`" :aria-label="`Theme: ${themeLabel}`">
               <i class="bi" :class="themeIcon"></i>
@@ -1194,7 +1154,6 @@ onBeforeUnmount(() => {
       @close="closeUploads"
       @remove="removeUpload"
       @retry="retryUpload"
-      @retry-failed="retryFailedUploads"
     />
 
     <StorageSettingsModal

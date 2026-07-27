@@ -591,116 +591,18 @@ class FileManagerV2Storage
         ];
     }
 
-    /** @return array{asset?: array<string, mixed>, session?: array<string, mixed>}|null */
-    private function existingIdempotentUpload(string $storage, string $parent, string $name, int $size, ?string $idempotencyKey): ?array
-    {
-        $key = $this->normalizedIdempotencyKey($idempotencyKey);
-        if ($key === null) {
-            return null;
-        }
-
-        $cacheKey = $this->uploadIdempotencyCacheKey($key);
-        $record = $this->cache()->get($cacheKey);
-        if (! is_array($record)) {
-            return null;
-        }
-        abort_unless(
-            ($record['storage'] ?? null) === $storage
-                && ($record['parent'] ?? null) === $parent
-                && ($record['name'] ?? null) === $name
-                && (int) ($record['size'] ?? -1) === $size,
-            409,
-            'Kunci retry upload sudah digunakan untuk file lain.',
-        );
-
-        if (($record['state'] ?? null) === 'asset' && is_string($record['path'] ?? null) && $this->disk($storage)->fileExists($record['path'])) {
-            return ['asset' => $this->assetForPath($storage, $record['path'])];
-        }
-
-        if (($record['state'] ?? null) === 'session' && is_string($record['sessionId'] ?? null)) {
-            $sessionPath = $this->runtimeDirectory($record['sessionId']) . DIRECTORY_SEPARATOR . 'session.json';
-            if (is_file($sessionPath)) {
-                return ['session' => $this->session($record['sessionId'])];
-            }
-        }
-
-        $this->cache()->forget($cacheKey);
-
-        return null;
-    }
-
-    /** @param array<string, mixed> $asset */
-    private function rememberIdempotentAsset(string $storage, string $parent, string $name, int $size, ?string $idempotencyKey, array $asset): void
-    {
-        $key = $this->normalizedIdempotencyKey($idempotencyKey);
-        if ($key === null) {
-            return;
-        }
-
-        $this->cache()->put($this->uploadIdempotencyCacheKey($key), [
-            'state' => 'asset',
-            'storage' => $storage,
-            'parent' => $parent,
-            'name' => $name,
-            'size' => $size,
-            'path' => $asset['path'],
-        ], now()->addDay());
-    }
-
-    /** @param array<string, mixed> $session */
-    private function rememberIdempotentSession(array $session): void
-    {
-        $key = $this->normalizedIdempotencyKey($session['idempotency_key'] ?? null);
-        if ($key === null) {
-            return;
-        }
-
-        $this->cache()->put($this->uploadIdempotencyCacheKey($key), [
-            'state' => 'session',
-            'storage' => $session['storage'],
-            'parent' => $session['parent'],
-            'name' => $session['name'],
-            'size' => $session['size'],
-            'sessionId' => $session['id'],
-        ], now()->addDay());
-    }
-
-    private function forgetIdempotentUpload(?string $idempotencyKey): void
-    {
-        $key = $this->normalizedIdempotencyKey($idempotencyKey);
-        if ($key !== null) {
-            $this->cache()->forget($this->uploadIdempotencyCacheKey($key));
-        }
-    }
-
-    private function normalizedIdempotencyKey(?string $idempotencyKey): ?string
-    {
-        $key = trim((string) $idempotencyKey);
-
-        return $key === '' ? null : $key;
-    }
-
-    private function uploadIdempotencyCacheKey(string $idempotencyKey): string
-    {
-        return 'filemanager_v2:upload-idempotency:' . hash('sha256', $idempotencyKey);
-    }
-
-    public function upload(string $storage, string|null $parent, UploadedFile $file, ?string $batchId = null, ?string $idempotencyKey = null): array
+    public function upload(string $storage, string|null $parent, UploadedFile $file, ?string $batchId = null): array
     {
         $parent = $this->path($parent);
         $this->assertUpload($file);
         $size = (int) $file->getSize();
-        $name = $this->fileName($file->getClientOriginalName());
-        if ($existing = $this->existingIdempotentUpload($storage, $parent, $name, $size, $idempotencyKey)) {
-            return $existing['asset'];
-        }
         if ($batchId !== null) {
             $this->claimFolderUploadBytes($batchId, $storage, $parent, $size);
         } else {
             $this->assertQuota($storage, $size);
         }
-        $availableName = $this->availableName($storage, $parent, $name);
-        $path = $parent === '' ? $availableName : $parent . '/' . $availableName;
+        $name = $this->availableName($storage, $parent, $this->fileName($file->getClientOriginalName()));
+        $path = $parent === '' ? $name : $parent . '/' . $name;
 
         $stream = fopen($file->getRealPath(), 'rb');
         try {
@@ -719,23 +621,17 @@ class FileManagerV2Storage
 
         $this->bust($storage, $parent);
 
-        $asset = $this->assetForPath($storage, $path);
-        $this->rememberIdempotentAsset($storage, $parent, $name, $size, $idempotencyKey, $asset);
-
-        return $asset;
+        return $this->assetForPath($storage, $path);
     }
 
     /** @return array<string, mixed> */
-    public function startUpload(string $storage, string|null $parent, string $name, int $size, int $parts, ?string $checksum = null, ?string $batchId = null, ?string $idempotencyKey = null): array
+    public function startUpload(string $storage, string|null $parent, string $name, int $size, int $parts, ?string $checksum = null, ?string $batchId = null): array
     {
         $this->prepare();
         $this->profile($storage);
         $parent = $this->path($parent);
         $name = $this->fileName($name);
         $this->assertUploadMeta($name, $size, $parts);
-        if ($existing = $this->existingIdempotentUpload($storage, $parent, $name, $size, $idempotencyKey)) {
-            return isset($existing['asset']) ? ['asset' => $existing['asset']] : $existing['session'];
-        }
         if ($batchId !== null) {
             $this->claimFolderUploadBytes($batchId, $storage, $parent, $size);
         } else {
@@ -754,12 +650,10 @@ class FileManagerV2Storage
             'size' => $size,
             'parts' => $parts,
             'checksum' => $checksum,
-            'idempotency_key' => $this->normalizedIdempotencyKey($idempotencyKey),
             'received' => [],
             'created_at' => now()->toIso8601String(),
         ];
         $this->saveSession($session);
-        $this->rememberIdempotentSession($session);
 
         return $session;
     }
@@ -817,24 +711,15 @@ class FileManagerV2Storage
             abort(422, 'Checksum file tidak cocok.');
         }
 
-        $existing = $this->existingIdempotentUpload($session['storage'], $session['parent'], $session['name'], (int) $session['size'], $session['idempotency_key'] ?? null);
-        if ($existing && isset($existing['asset'])) {
-            $this->deleteRuntime($id);
-
-            return $existing['asset'];
-        }
-
         $name = $this->availableName($session['storage'], $session['parent'], $session['name']);
         $path = $session['parent'] === '' ? $name : $session['parent'] . '/' . $name;
         $stream = fopen($combined, 'rb');
         $this->disk($session['storage'])->writeStream($path, $stream);
         fclose($stream);
-        $this->bust($session['storage'], $session['parent']);
-        $asset = $this->assetForPath($session['storage'], $path);
-        $this->rememberIdempotentAsset($session['storage'], $session['parent'], $session['name'], (int) $session['size'], $session['idempotency_key'] ?? null, $asset);
         $this->deleteRuntime($id);
+        $this->bust($session['storage'], $session['parent']);
 
-        return $asset;
+        return $this->assetForPath($session['storage'], $path);
     }
 
     public function cancelUpload(string $id): void
@@ -843,7 +728,6 @@ class FileManagerV2Storage
         if (is_string($session['batch_id'] ?? null) && $session['batch_id'] !== '') {
             $this->releaseFolderUploadBytes($session['batch_id'], (int) $session['size']);
         }
-        $this->forgetIdempotentUpload($session['idempotency_key'] ?? null);
 
         $this->deleteRuntime($id);
     }

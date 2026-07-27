@@ -309,7 +309,6 @@ export async function uploadFile(file, {
   storage,
   path = '',
   batchId = null,
-  idempotencyKey = null,
   onProgress = () => {},
   waitForResume = async () => {},
   onAbort = () => {},
@@ -332,7 +331,6 @@ export async function uploadFile(file, {
       data.append('path', path);
       data.append('file', file);
       if (batchId) data.append('batchId', batchId);
-      if (idempotencyKey) data.append('idempotencyKey', idempotencyKey);
       return uploadFormData('/assets/upload', data, onProgress, (abort) => {
         abortCurrentRequest = abort;
       });
@@ -345,9 +343,8 @@ export async function uploadFile(file, {
   const session = await withUploadRetry(() => request('/uploads', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ storage, path, name: file.name, size: file.size, parts, ...(batchId ? { batchId } : {}), ...(idempotencyKey ? { idempotencyKey } : {}) }),
+    body: JSON.stringify({ storage, path, name: file.name, size: file.size, parts, ...(batchId ? { batchId } : {}) }),
   }), { waitForResume, isAborted: () => aborted });
-  if (session.asset) return normalizeAsset(session.asset);
   uploadSessionId = session.id;
 
   for (let part = 0; part < parts; part += 1) {

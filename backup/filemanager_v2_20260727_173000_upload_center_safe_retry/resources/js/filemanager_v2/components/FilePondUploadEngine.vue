@@ -33,12 +33,7 @@ function metadataFor(file) {
     storage: file.getMetadata('storage'),
     path: file.getMetadata('path') || '',
     relativePath: file.getMetadata('relativePath') || '',
-    idempotencyKey: file.getMetadata('idempotencyKey') || '',
   };
-}
-
-function makeUploadKey() {
-  return window.crypto?.randomUUID?.() || `filepond-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
 const server = {
@@ -49,7 +44,6 @@ const server = {
       storage: metadata.storage,
       path: metadata.path || '',
       relativePath: metadata.relativePath || '',
-      idempotencyKey: metadata.idempotencyKey || '',
     };
 
     void (async () => {
@@ -62,7 +56,6 @@ const server = {
         const asset = await uploadFile(file, {
           storage: target.storage,
           path: target.path,
-          idempotencyKey: target.idempotencyKey,
           onProgress: (percentage) => progress(true, Math.round(file.size * (percentage / 100)), file.size),
           waitForResume,
           onAbort: (abortRequest) => { cancelUpload = abortRequest; },
@@ -134,7 +127,6 @@ function addFiles(fileList, target) {
         storage: target.storage,
         path: target.path || '',
         relativePath: file.webkitRelativePath || '',
-        idempotencyKey: makeUploadKey(),
       },
     });
   }

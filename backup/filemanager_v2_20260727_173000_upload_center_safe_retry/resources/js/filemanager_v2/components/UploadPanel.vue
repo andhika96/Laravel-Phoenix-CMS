@@ -8,9 +8,8 @@ const props = defineProps({
   paused: Boolean,
 });
 
-const emit = defineEmits(['toggle-minimize', 'toggle-pause', 'close', 'remove', 'retry', 'retry-failed']);
+const emit = defineEmits(['toggle-minimize', 'toggle-pause', 'close', 'remove', 'retry']);
 const completed = computed(() => props.uploads.filter((item) => item.status === 'done').length);
-const failed = computed(() => props.uploads.filter((item) => item.status === 'error').length);
 const hasPendingUploads = computed(() => props.uploads.some((item) => ['queued', 'uploading'].includes(item.status)));
 const overall = computed(() => {
   if (!props.uploads.length) return 0;
@@ -54,15 +53,10 @@ const hiddenUploads = computed(() => Math.max(0, props.uploads.length - visibleU
     <div v-if="!minimized" class="upload-body">
       <div class="upload-summary">
         <div class="progress"><div class="progress-bar" :style="{ width: overall + '%' }"></div></div>
-        <div class="upload-summary-actions">
-          <button v-if="failed" type="button" :disabled="hasPendingUploads" :title="hasPendingUploads ? 'Tunggu antrean upload selesai' : `Upload ulang ${failed} file gagal`" @click="emit('retry-failed')">
-            <i class="bi bi-arrow-repeat"></i> Retry failed ({{ failed }})
-          </button>
-          <button v-if="hasPendingUploads" type="button" @click="emit('toggle-pause')">
-            <i class="bi" :class="paused ? 'bi-play-fill' : 'bi-pause-fill'"></i>
-            {{ paused ? 'Resume all' : 'Pause all' }}
-          </button>
-        </div>
+        <button v-if="hasPendingUploads" @click="emit('toggle-pause')">
+          <i class="bi" :class="paused ? 'bi-play-fill' : 'bi-pause-fill'"></i>
+          {{ paused ? 'Resume all' : 'Pause all' }}
+        </button>
       </div>
       <div class="upload-list">
         <div v-for="item in visibleUploads" :key="item.id" class="upload-item">
@@ -81,7 +75,7 @@ const hiddenUploads = computed(() => Math.max(0, props.uploads.length - visibleU
           </div>
           <div class="upload-item-status">
             <button v-if="item.status === 'done'" type="button" title="Delete uploaded file" aria-label="Delete uploaded file" @click="emit('remove', item)"><i class="bi bi-arrow-counterclockwise"></i></button>
-            <button v-else-if="item.status === 'error'" type="button" :disabled="item.folderBatch && hasPendingUploads" title="Retry file" @click="emit('retry', item)"><i class="bi bi-arrow-clockwise"></i></button>
+            <button v-else-if="item.status === 'error'" @click="emit('retry', item)"><i class="bi bi-arrow-clockwise"></i></button>
             <button v-else @click="emit('remove', item)"><i class="bi bi-x"></i></button>
           </div>
         </div>
