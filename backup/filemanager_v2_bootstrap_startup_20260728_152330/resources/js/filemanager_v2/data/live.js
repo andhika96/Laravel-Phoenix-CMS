@@ -27,7 +27,7 @@ export const uploadOptions = reactive({
   chunkThreshold: 16 * 1024 * 1024,
   maxParallel: 3,
   maxFileSize: 1024 * 1024 * 1024,
-  retryAttempts: 5,
+  retryAttempts: 2,
 });
 
 export function getUploadOptions() {
@@ -103,32 +103,18 @@ function uploadFormData(path, data, onProgress = () => {}, bindAbort = () => {})
   });
 }
 
-function isRetryableUploadError(error) {
-  const status = Number(error?.status || 0);
-  return status === 0 || status === 408 || status === 425 || status === 429 || status >= 500;
-}
+async function withUploadRetry(task, { waitForResume, isAborted }) {
+  const attempts = Math.max(0, Number(uploadOptions.retryAttempts) || 0);
 
-function retryDelayMs(attempt) {
-  const baseDelay = Math.min(8000, 1000 * (2 ** attempt));
-  const jitter = 0.85 + (Math.random() * 0.3);
-  return Math.round(baseDelay * jitter);
-}
-
-async function withUploadRetry(task, { waitForResume, isAborted, onAttempt = () => {}, onRetry = () => {} }) {
-  const maxAttempts = Math.max(1, Number(uploadOptions.retryAttempts) || 1);
-
-  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-    onAttempt({ attempt: attempt + 1, maxAttempts });
+  for (let attempt = 0; attempt <= attempts; attempt += 1) {
     try {
       return await task();
     } catch (error) {
-      if (isAborted() || !isRetryableUploadError(error) || attempt + 1 === maxAttempts) throw error;
+      const clientError = Number(error?.status || 0) >= 400 && Number(error.status) < 500;
+      if (isAborted() || clientError || attempt === attempts) throw error;
 
       await waitForResume();
-      if (isAborted()) throw error;
-      const delayMs = retryDelayMs(attempt);
-      onRetry({ attempt: attempt + 2, maxAttempts, delayMs, error });
-      await new Promise((resolve) => window.setTimeout(resolve, delayMs));
+      await new Promise((resolve) => window.setTimeout(resolve, Math.min(2000, 250 * (2 ** attempt))));
     }
   }
 
@@ -216,8 +202,9 @@ function replaceStorageProfiles(profiles) {
 }
 
 export async function refreshStorageProfiles() {
-  const profiles = await request('/profiles');
-  replaceStorageProfiles(profiles);
+  const bootstrap = await request('/bootstrap');
+  replaceStorageProfiles(bootstrap.profiles);
+  Object.assign(uploadOptions, bootstrap.upload);
 }
 
 export async function loadStorageSettings() {
@@ -326,8 +313,6 @@ export async function uploadFile(file, {
   onProgress = () => {},
   waitForResume = async () => {},
   onAbort = () => {},
-  onAttempt = () => {},
-  onRetry = () => {},
 }) {
   let abortCurrentRequest = () => {};
   let uploadSessionId = null;
@@ -351,7 +336,7 @@ export async function uploadFile(file, {
       return uploadFormData('/assets/upload', data, onProgress, (abort) => {
         abortCurrentRequest = abort;
       });
-    }, { waitForResume, isAborted: () => aborted, onAttempt, onRetry });
+    }, { waitForResume, isAborted: () => aborted });
     if (aborted) throw new Error('Upload dibatalkan.');
     return normalizeAsset(asset);
   }
@@ -361,7 +346,7 @@ export async function uploadFile(file, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ storage, path, name: file.name, size: file.size, parts, ...(batchId ? { batchId } : {}), ...(idempotencyKey ? { idempotencyKey } : {}) }),
-  }), { waitForResume, isAborted: () => aborted, onAttempt, onRetry });
+  }), { waitForResume, isAborted: () => aborted });
   if (session.asset) return normalizeAsset(session.asset);
   uploadSessionId = session.id;
 
@@ -378,12 +363,12 @@ export async function uploadFile(file, {
       }, (abort) => {
         abortCurrentRequest = abort;
       });
-    }, { waitForResume, isAborted: () => aborted, onAttempt, onRetry });
+    }, { waitForResume, isAborted: () => aborted });
     if (aborted) throw new Error('Upload dibatalkan.');
     onProgress(Math.round(((part + 1) / parts) * 100));
   }
 
-  return normalizeAsset(await withUploadRetry(() => request(`/uploads/${session.id}/complete`, { method: 'POST' }), { waitForResume, isAborted: () => aborted, onAttempt, onRetry }));
+  return normalizeAsset(await withUploadRetry(() => request(`/uploads/${session.id}/complete`, { method: 'POST' }), { waitForResume, isAborted: () => aborted }));
 }
 
 export async function beginFolderUploadBatch({ storage, path = '', folders, totalBytes, fileCount }) {

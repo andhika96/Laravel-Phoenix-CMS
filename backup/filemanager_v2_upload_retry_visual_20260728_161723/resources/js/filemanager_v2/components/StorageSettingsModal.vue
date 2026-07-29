@@ -25,7 +25,7 @@ const form = reactive({
     chunkSize: 8 * MEBIBYTE,
     chunkThreshold: 16 * MEBIBYTE,
     maxParallel: 3,
-    retryAttempts: 5,
+    retryAttempts: 2,
   },
 });
 
@@ -258,7 +258,7 @@ watch(() => props.show, (visible) => {
               <label>Parallel files<input v-model.number="form.upload.maxParallel" type="number" min="1" max="10" class="form-control" /><small>Maximum simultaneous FilePond uploads.</small></label>
               <label>Multipart chunk (MB)<input :value="megabytes(form.upload.chunkSize)" type="number" min="1" class="form-control" @input="setMegabytes(form.upload, 'chunkSize', $event.target.value)" /><small>Each multipart request is enforced by the server.</small></label>
               <label>Chunk threshold (MB)<input :value="megabytes(form.upload.chunkThreshold)" type="number" min="1" class="form-control" @input="setMegabytes(form.upload, 'chunkThreshold', $event.target.value)" /><small>Files at or above this size use multipart upload.</small></label>
-              <label>Automatic retries<input v-model.number="form.upload.retryAttempts" type="number" min="1" max="5" class="form-control" /><small>Total attempts per temporary connection or server failure, including the first upload attempt.</small></label>
+              <label>Automatic retries<input v-model.number="form.upload.retryAttempts" type="number" min="0" max="5" class="form-control" /><small>Retries transient connection and server failures with backoff.</small></label>
             </div>
           </section>
 

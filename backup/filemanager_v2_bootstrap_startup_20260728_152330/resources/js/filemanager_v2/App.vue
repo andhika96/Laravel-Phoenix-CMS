@@ -329,13 +329,13 @@ async function refreshAssets({ refreshFolders = false, refreshUsage = false } = 
     const [payload, folderItems] = await Promise.all([
       loadAssets(context.storage, { path: context.path, collection: context.collection, search: context.search, type: context.type, sort: context.sort }),
       refreshFolders ? loadFolders(context.storage) : Promise.resolve(null),
+      refreshUsage ? refreshStorageProfiles() : Promise.resolve(),
     ]);
     if (requestId !== refreshSequence) return;
 
     replaceAssets(payload);
     if (folderItems) replaceFolders(folderItems);
     rememberWorkspace(context, payload, folderItems);
-    if (refreshUsage) void refreshStorageProfiles();
   } finally {
     if (requestId === refreshSequence) workspaceLoadState.value = 'idle';
   }
@@ -579,7 +579,6 @@ async function startFolderUpload(fileList) {
     storage,
     path,
     getMaxParallel: () => getUploadOptions().maxParallel,
-    getMaxAttempts: () => getUploadOptions().retryAttempts,
     onItemAdded: (job) => {
       uploads.value.push({
         id: job.id,
@@ -588,9 +587,6 @@ async function startFolderUpload(fileList) {
         progress: job.progress,
         status: job.status,
         error: job.error,
-        attempt: job.attempt,
-        maxAttempts: job.maxAttempts,
-        retryAt: job.retryAt,
         storage,
         path: job.path,
         folderBatch: true,
@@ -599,7 +595,7 @@ async function startFolderUpload(fileList) {
     },
     onItemUpdated: (job) => {
       const item = uploads.value.find((candidate) => candidate.id === job.id);
-      if (item) Object.assign(item, { progress: job.progress, status: job.status, error: job.error, path: job.path, attempt: job.attempt, maxAttempts: job.maxAttempts, retryAt: job.retryAt });
+      if (item) Object.assign(item, { progress: job.progress, status: job.status, error: job.error, path: job.path });
     },
     onItemDone: (job, asset) => {
       const item = uploads.value.find((candidate) => candidate.id === job.id);
@@ -638,9 +634,6 @@ function onPondAdded(item) {
     size: formatBytes(item.size),
     progress: 0,
     status: 'uploading',
-    attempt: 1,
-    maxAttempts: getUploadOptions().retryAttempts,
-    retryAt: null,
     storage: item.storage,
     path: item.path,
   });
@@ -649,16 +642,6 @@ function onPondAdded(item) {
 function onPondProgress({ id, progress }) {
   const item = uploads.value.find((candidate) => candidate.id === id);
   if (item) item.progress = progress;
-}
-
-function onPondAttempt({ id, attempt, maxAttempts }) {
-  const item = uploads.value.find((candidate) => candidate.id === id);
-  if (item) Object.assign(item, { status: 'uploading', attempt, maxAttempts, retryAt: null });
-}
-
-function onPondRetrying({ id, attempt, maxAttempts, retryAt, error }) {
-  const item = uploads.value.find((candidate) => candidate.id === id);
-  if (item) Object.assign(item, { status: 'retrying', attempt, maxAttempts, retryAt, error });
 }
 
 async function onPondDone({ id, asset, storage }) {
@@ -707,9 +690,6 @@ function retryUpload(item, { silent = false } = {}) {
   item.status = 'uploading';
   item.progress = 0;
   item.error = '';
-  item.attempt = 1;
-  item.maxAttempts = getUploadOptions().retryAttempts;
-  item.retryAt = null;
   void uploadEngine.value.retryFile(item.id);
 
   return true;
@@ -925,18 +905,13 @@ onMounted(() => {
   window.addEventListener('keydown', handleGlobalKeydown);
   window.addEventListener('popstate', handleBrowserHistory);
   window.addEventListener('resize', updateBreadcrumbOverflow);
-  workspaceLoadState.value = 'loading';
   initializeWorkspace().then(async (defaultStorage) => {
     const initialState = browserNavigationState(defaultStorage) || { storage: defaultStorage, collection: 'all', folder: '' };
     await applyNavigationState(initialState, { refreshFolders: true });
     workspaceReady = true;
     writeBrowserHistory('replace');
     updateBreadcrumbOverflow();
-    void refreshStorageProfiles();
-  }).catch((error) => {
-    workspaceLoadState.value = 'idle';
-    notify(error.message, 'failed');
-  });
+  }).catch((error) => notify(error.message, 'failed'));
 });
 onBeforeUnmount(() => {
   themeQuery.removeEventListener('change', syncSystemTheme);
@@ -1204,8 +1179,6 @@ onBeforeUnmount(() => {
       :paused="uploadsPaused"
       @added="onPondAdded"
       @progress="onPondProgress"
-      @attempt="onPondAttempt"
-      @retrying="onPondRetrying"
       @done="onPondDone"
       @failed="onPondFailed"
       @removed="onPondRemoved"

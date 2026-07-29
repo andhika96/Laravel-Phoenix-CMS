@@ -30,14 +30,12 @@ export function createFolderUploadCoordinator({
   storage,
   path = '',
   getMaxParallel,
-  getMaxAttempts,
   onItemAdded = () => {},
   onItemUpdated = () => {},
   onItemDone = () => {},
   onStartError = () => {},
   onFinished = () => {},
 }) {
-  const maximumAttempts = () => Math.max(1, Number(getMaxAttempts?.() || 5));
   const jobs = Array.from(files, (file) => ({
     id: makeId(),
     file,
@@ -48,9 +46,6 @@ export function createFolderUploadCoordinator({
     progress: 0,
     status: 'queued',
     error: '',
-    attempt: 1,
-    maxAttempts: maximumAttempts(),
-    retryAt: null,
     abort: null,
     cancelRequested: false,
     useBatchReservation: true,
@@ -98,7 +93,7 @@ export function createFolderUploadCoordinator({
 
   const process = async (job) => {
     active += 1;
-    update(job, { status: 'uploading', error: '', retryAt: null });
+    update(job, { status: 'uploading', error: '' });
 
     try {
       const asset = await uploadFile(job.file, {
@@ -108,14 +103,6 @@ export function createFolderUploadCoordinator({
         idempotencyKey: job.id,
         waitForResume,
         onProgress: (progress) => update(job, { progress }),
-        onAttempt: ({ attempt, maxAttempts }) => update(job, { status: 'uploading', attempt, maxAttempts, retryAt: null }),
-        onRetry: ({ attempt, maxAttempts, delayMs, error }) => update(job, {
-          status: 'retrying',
-          attempt,
-          maxAttempts,
-          retryAt: Date.now() + delayMs,
-          error: error?.message || 'Upload sementara gagal.',
-        }),
         onAbort: (abort) => {
           job.abort = abort;
           if (job.cancelRequested) abort();
@@ -190,7 +177,7 @@ export function createFolderUploadCoordinator({
 
       job.cancelRequested = false;
       job.useBatchReservation = false;
-      update(job, { status: 'queued', progress: 0, error: '', attempt: 1, maxAttempts: maximumAttempts(), retryAt: null });
+      update(job, { status: 'queued', progress: 0, error: '' });
       queue.push(job);
       pump();
 
@@ -204,7 +191,7 @@ export function createFolderUploadCoordinator({
       failedJobs.forEach((job) => {
         job.cancelRequested = false;
         job.useBatchReservation = false;
-        update(job, { status: 'queued', progress: 0, error: '', attempt: 1, maxAttempts: maximumAttempts(), retryAt: null });
+        update(job, { status: 'queued', progress: 0, error: '' });
         queue.push(job);
       });
       pump();

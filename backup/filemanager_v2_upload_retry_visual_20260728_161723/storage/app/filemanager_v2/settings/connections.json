@@ -43,6 +43,6 @@
         "chunk_size": 8388608,
         "chunk_threshold": 16777216,
         "max_parallel": 10,
-        "retry_attempts": 5
+        "retry_attempts": 2
     }
 }

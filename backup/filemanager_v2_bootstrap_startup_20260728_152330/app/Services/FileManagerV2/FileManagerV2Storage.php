@@ -162,7 +162,7 @@ class FileManagerV2Storage
     /** @return array<string, mixed> */
     public function bootstrap(): array
     {
-        $profiles = $this->bootstrapProfiles();
+        $profiles = $this->profiles();
         $default = $this->settings()['defaultStorage'];
         $upload = $this->uploadSettings();
 
@@ -181,31 +181,6 @@ class FileManagerV2Storage
                 'retryAttempts' => $upload['retry_attempts'],
             ],
         ];
-    }
-
-    /** @return array<int, array<string, mixed>> */
-    private function bootstrapProfiles(): array
-    {
-        $this->prepare();
-
-        return collect($this->configuredConnections())
-            ->filter(fn (array $profile) => ! empty($profile['enabled']))
-            ->map(function (array $profile, string $id): array {
-                $quotaBytes = max(0, (int) ($profile['quota_bytes'] ?? 0));
-
-                return [
-                    ...$this->publicConnection($id, $profile),
-                    'connected' => null,
-                    'usedBytes' => 0,
-                    'quotaBytes' => $quotaBytes,
-                    'usagePercent' => 0,
-                    'usedLabel' => '0 B',
-                    'quotaLabel' => $quotaBytes > 0 ? $this->formatBytes($quotaBytes) : 'No limit',
-                    'usagePending' => true,
-                ];
-            })
-            ->values()
-            ->all();
     }
 
     /** @return array<string, mixed> */
@@ -1308,7 +1283,7 @@ class FileManagerV2Storage
             'chunk_size' => $chunkSize,
             'chunk_threshold' => max($chunkSize, (int) ($stored['chunk_threshold'] ?? $defaults['chunk_threshold'])),
             'max_parallel' => min(10, max(1, (int) ($stored['max_parallel'] ?? $defaults['max_parallel']))),
-            'retry_attempts' => min(5, max(1, (int) ($stored['retry_attempts'] ?? $defaults['retry_attempts'] ?? 5))),
+            'retry_attempts' => min(5, max(0, (int) ($stored['retry_attempts'] ?? $defaults['retry_attempts'] ?? 2))),
         ];
     }
 

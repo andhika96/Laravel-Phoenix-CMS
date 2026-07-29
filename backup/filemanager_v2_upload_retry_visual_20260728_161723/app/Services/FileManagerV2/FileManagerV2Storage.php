@@ -1308,7 +1308,7 @@ class FileManagerV2Storage
             'chunk_size' => $chunkSize,
             'chunk_threshold' => max($chunkSize, (int) ($stored['chunk_threshold'] ?? $defaults['chunk_threshold'])),
             'max_parallel' => min(10, max(1, (int) ($stored['max_parallel'] ?? $defaults['max_parallel']))),
-            'retry_attempts' => min(5, max(1, (int) ($stored['retry_attempts'] ?? $defaults['retry_attempts'] ?? 5))),
+            'retry_attempts' => min(5, max(0, (int) ($stored['retry_attempts'] ?? $defaults['retry_attempts'] ?? 2))),
         ];
     }
 

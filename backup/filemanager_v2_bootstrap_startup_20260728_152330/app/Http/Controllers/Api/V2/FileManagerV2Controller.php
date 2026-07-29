@@ -18,11 +18,6 @@ class FileManagerV2Controller extends Controller
         return response()->json(['data' => $this->storage->bootstrap()]);
     }
 
-    public function profiles(): JsonResponse
-    {
-        return response()->json(['data' => $this->storage->profiles()]);
-    }
-
     public function settings(): JsonResponse
     {
         return response()->json(['data' => $this->storage->settings()]);
@@ -51,7 +46,7 @@ class FileManagerV2Controller extends Controller
             'upload.chunkSize' => ['required', 'integer', 'min:1', 'max:1073741824'],
             'upload.chunkThreshold' => ['required', 'integer', 'min:1', 'max:10995116277760'],
             'upload.maxParallel' => ['required', 'integer', 'min:1', 'max:10'],
-            'upload.retryAttempts' => ['required', 'integer', 'min:1', 'max:5'],
+            'upload.retryAttempts' => ['required', 'integer', 'min:0', 'max:5'],
         ]);
 
         return response()->json(['data' => $this->storage->saveSettings($validated)]);

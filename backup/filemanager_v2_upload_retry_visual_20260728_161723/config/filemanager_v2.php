@@ -61,7 +61,6 @@ return [
         'chunk_size' => (int) env('FILEMANAGER_V2_CHUNK_SIZE', 8388608), // 8 MB
         'chunk_threshold' => (int) env('FILEMANAGER_V2_CHUNK_THRESHOLD', 16777216), // 16 MB
         'max_parallel' => (int) env('FILEMANAGER_V2_MAX_PARALLEL', 3),
-        'retry_attempts' => (int) env('FILEMANAGER_V2_RETRY_ATTEMPTS', 5),
         'runtime_ttl_hours' => (int) env('FILEMANAGER_V2_RUNTIME_TTL_HOURS', 24),
         'forbidden_extensions' => [
             'php', 'php3', 'php4', 'php5', 'phtml', 'phar',
