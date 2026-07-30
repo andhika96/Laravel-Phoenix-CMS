@@ -91,15 +91,6 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertSourceContains('grid-template-columns: repeat(2, minmax(0, 1fr))', $css);
     }
 
-    public function test_motion_effect_child_toggles_inherit_the_shared_toggle_row_layout(): void
-    {
-        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
-
-        $this->assertSourceContains(':deep(.pb-motion-effect .pb-advanced-toggle)', $component);
-        $this->assertSourceContains('justify-content: space-between', $component);
-        $this->assertSourceContains('gap: 12px', $component);
-    }
-
     public function test_shared_advanced_color_fields_use_the_local_color_picker(): void
     {
         $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));

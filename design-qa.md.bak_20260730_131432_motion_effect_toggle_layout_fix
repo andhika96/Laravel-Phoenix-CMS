@@ -104,65 +104,6 @@ The reference and local implementation screenshots were reviewed together at the
 
 final result: passed
 
-# Design QA - Icon Box Elementor Parity
-
-Date: 2026-07-30
-
-## Sources compared
-
-- Official Elementor playground screenshot: `C:\Users\CAHYO\.codex\visualizations\2026\07\30\019fb132-77fc-7ca0-ba81-839fb642c773\icon-box-elementor-reference-content.png`.
-- Local runtime screenshot: `C:\Users\CAHYO\.codex\visualizations\2026\07\30\019fb132-77fc-7ca0-ba81-839fb642c773\icon-box-local-content.png`.
-- Runtime editor: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/edit/icon-box-runtime-qa-20260730`.
-- Frontend preview: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/preview/icon-box-runtime-qa-20260730`.
-
-The official reference and local implementation were reviewed together in the same desktop Content state. The local product keeps its established light Page Builder design system while preserving Elementor's hierarchy, labels, conditionals, and canvas behavior.
-
-## Verification states
-
-- Content: Font Awesome library picker, Default/Stacked/Framed, conditional Square/Rounded/Circle, title, description, link options, dynamic tags, and title tag.
-- Style / Box: responsive icon position, alignment, icon spacing, and content spacing.
-- Style / Icon: Normal/Hover colors, conditional secondary color, size, padding, rotate, Framed border width, radius sides, and 28 Hover Animation choices.
-- Style / Content: title and description color, typography, title stroke, and shadows.
-- Advanced: shared Layout, Display Conditions, Cache Settings, Motion Effects, Transform, Background, Border, Mask, Responsive, Attributes, and Custom CSS.
-- Runtime: Vue SFC compilation, canvas rendering, Tablet 720px mode, save success, reload persistence, and frontend Blade rendering.
-
-## Findings
-
-- P0: none.
-- P1: none.
-- P2: none.
-- The local sidebar and canvas chrome intentionally follow the current light product design rather than Elementor's dark editor shell.
-- The browser-control surface did not expose a console-message stream in this pass; runtime verification therefore used successful SFC rendering, DOM snapshots, save/reload behavior, frontend output, and automated regression coverage.
-
-final result: passed
-
-# Design QA - Motion Effects Toggle Row Layout
-
-Date: 2026-07-30
-
-- source visual truth path: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-383e4484-4208-4be2-b0d8-6aac24595360.png`
-- implementation screenshot path: `C:\Users\CAHYO\.codex\visualizations\2026\07\30\019fb132-77fc-7ca0-ba81-839fb642c773\motion-effects-toggle-layout-after-lower.png`
-- viewport: focused 319 x 709 px sidebar crop from the desktop editor
-- state: Heading selected, Advanced > Motion Effects open, Scrolling Effects enabled
-- full-view comparison evidence: source and corrected implementation were opened together in the same comparison input
-- focused region evidence: all six MotionEffect child rows were measured in runtime DOM
-
-## Findings
-
-- The source screenshot showed the Vertical Scroll, Horizontal Scroll, Transparency, Blur, Rotate, and Scale checkboxes attached directly to their labels.
-- Root cause: the parent component's scoped `.pb-advanced-toggle` rule did not penetrate the nested `MotionEffect` child component.
-- The corrected rows now compute to `display:flex`, `justify-content:space-between`, `align-items:center`, and `gap:12px`.
-- All six checkboxes share the same right edge at x=290 within the 319px sidebar crop.
-- Typography, color tokens, copy, and existing image/icon usage remain unchanged; no asset work was required.
-- Browser console verification reported zero errors and zero warnings.
-
-## Patches made since the previous QA pass
-
-- Added a scoped `:deep(.pb-motion-effect .pb-advanced-toggle)` selector so nested toggles inherit the canonical shared row layout.
-- Added a regression test for the nested child-component styling contract.
-
-final result: passed
-
 # Design QA - Heading Advanced Section Scope Correction
 
 Date: 2026-07-30

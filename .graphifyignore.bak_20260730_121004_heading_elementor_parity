@@ -28,8 +28,6 @@ backups/
 tmp/
 output/
 graphify-out/
-docs/superpowers/
-design-qa.md
 *.bak
 *.bak_*
 *.backup-*

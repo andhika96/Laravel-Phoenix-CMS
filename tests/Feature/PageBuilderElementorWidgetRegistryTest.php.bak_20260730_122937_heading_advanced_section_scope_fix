@@ -194,24 +194,6 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
         $this->assertStringContainsString("this.node.type === 'heading'", $app);
     }
 
-    public function test_heading_hides_non_reference_advanced_sections_without_changing_shared_defaults(): void
-    {
-        $headingSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/heading/Settings.vue'));
-        $sharedControls = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
-        $imageBoxSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
-
-        $this->assertStringContainsString(':show-display-conditions="false"', $headingSettings);
-        $this->assertStringContainsString(':show-cache-settings="false"', $headingSettings);
-
-        $this->assertStringContainsString('<details v-if="showDisplayConditions"', $sharedControls);
-        $this->assertStringContainsString('<details v-if="showCacheSettings"', $sharedControls);
-        $this->assertStringContainsString("showDisplayConditions: { type: Boolean, default: true }", $sharedControls);
-        $this->assertStringContainsString("showCacheSettings: { type: Boolean, default: true }", $sharedControls);
-
-        $this->assertStringNotContainsString('show-display-conditions', $imageBoxSettings);
-        $this->assertStringNotContainsString('show-cache-settings', $imageBoxSettings);
-    }
-
     public function test_heading_frontend_renders_safe_link_typography_and_advanced_wrapper(): void
     {
         $html = view('pagebuilder_elementor.partials.render_node', [

@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Support\PageBuilderElementor\WidgetDisplayConditionEvaluator;
 use App\Support\PageBuilderElementor\WidgetFragmentCache;
-use App\Support\PageBuilderElementor\WidgetAdvancedStyleResolver;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -89,15 +88,6 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertSourceContains("units: SPACING_DIMENSION_UNITS", $component);
         $this->assertSourceContains('.pb-state-tabs--two', $css);
         $this->assertSourceContains('grid-template-columns: repeat(2, minmax(0, 1fr))', $css);
-    }
-
-    public function test_motion_effect_child_toggles_inherit_the_shared_toggle_row_layout(): void
-    {
-        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
-
-        $this->assertSourceContains(':deep(.pb-motion-effect .pb-advanced-toggle)', $component);
-        $this->assertSourceContains('justify-content: space-between', $component);
-        $this->assertSourceContains('gap: 12px', $component);
     }
 
     public function test_shared_advanced_color_fields_use_the_local_color_picker(): void
@@ -353,87 +343,6 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertSourceContains('.pb-widget-advanced-controls .pb-transform-grid', $css);
         $this->assertSourceContains('.pb-widget-advanced-controls .pb-control-device-btn', $css);
     }
-
-    public function test_shared_advanced_controls_complete_grid_transform_background_and_border_contracts(): void
-    {
-        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
-        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
-        $resolver = file_get_contents(app_path('Support/PageBuilderElementor/WidgetAdvancedStyleResolver.php'));
-
-        foreach ([
-            'Column Span',
-            'Row Span',
-            "responsiveStateKey('transformRotate', transformState)",
-            "responsiveStateKey('transformScale', transformState)",
-            "value=\"custom\">Custom</option>",
-            "stateKey('advancedBackgroundPositionX', backgroundState)",
-            "stateKey('advancedBackgroundPositionY', backgroundState)",
-            "stateKey('advancedBackgroundCustomSize', backgroundState)",
-            '<BoxControl v-if="settings[stateKey(\'advancedBorderType\', borderState)]!==\'none\'" label="Border Width"',
-        ] as $marker) {
-            $this->assertSourceContains($marker, $component);
-        }
-
-        foreach ([
-            "gridColumn: get('gridColumnSpan'",
-            "gridRow: get('gridRowSpan'",
-            "get('transformRotate'",
-            "get('transformScale'",
-            'advancedBackgroundPositionX',
-            'advancedBackgroundCustomSize',
-            'advancedBorderWidth',
-        ] as $marker) {
-            $this->assertSourceContains($marker, $appJs);
-        }
-
-        foreach ([
-            'grid-column:span ',
-            'grid-row:span ',
-			"'transformRotate'.\$stateSuffix",
-			"'transformScale'.\$stateSuffix",
-            'advancedBackgroundPositionX',
-            'advancedBackgroundCustomSize',
-            'borderWidth(',
-        ] as $marker) {
-            $this->assertSourceContains($marker, $resolver);
-        }
-    }
-
-	public function test_advanced_resolver_renders_generic_grid_responsive_transform_custom_background_and_edge_border(): void
-	{
-		$resolver = app(WidgetAdvancedStyleResolver::class);
-		$result = $resolver->resolve([
-			'gridColumnSpan' => 2,
-			'gridRowSpan' => 3,
-			'gridColumnSpanTablet' => 4,
-			'gridRowSpanTablet' => 5,
-			'transformRotate' => '10deg',
-			'transformRotateTablet' => '20deg',
-			'transformScale' => 1.1,
-			'transformScaleTablet' => 1.2,
-			'advancedBackgroundType' => 'classic',
-			'advancedBackgroundImage' => '/images/advanced-custom.jpg',
-			'advancedBackgroundPosition' => 'custom',
-			'advancedBackgroundPositionX' => '25%',
-			'advancedBackgroundPositionY' => '75%',
-			'advancedBackgroundSize' => 'custom',
-			'advancedBackgroundCustomSize' => '60%',
-			'advancedBorderType' => 'solid',
-			'advancedBorderWidth' => '1px 2px 3px 4px',
-		], 'advanced-contract', Request::create('/preview', 'GET'));
-
-		$css = str_replace(' ', '', $result['css']);
-		$this->assertStringContainsString('grid-column:span2', $css);
-		$this->assertStringContainsString('grid-row:span3', $css);
-		$this->assertStringContainsString('background-position:25%75%', $css);
-		$this->assertStringContainsString('background-size:60%', $css);
-		$this->assertStringContainsString('border-width:1px2px3px4px', $css);
-		$this->assertStringContainsString('rotate(10deg)', $css);
-		$this->assertStringContainsString('grid-column:span4', $css);
-		$this->assertStringContainsString('grid-row:span5', $css);
-		$this->assertStringContainsString('rotate(20deg)', $css);
-		$this->assertStringContainsString('scale(1.2)', $css);
-	}
 
     private function assertSourceContains(string $needle, string $source): void
     {

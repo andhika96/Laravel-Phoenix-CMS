@@ -756,7 +756,7 @@
 			iconStyle: 'regular', iconName: 'star', iconClass: 'far fa-star', view: 'default', shape: 'circle',
 			title: 'This is the heading',
 			description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.',
-			linkUrl: '', linkTarget: '', linkNofollow: false, linkCustomAttributes: [], titleTag: 'h3', titleFontSizeMode: 'auto', dynamicBindings: {},
+			linkUrl: '', linkTarget: '', linkNofollow: false, linkCustomAttributes: [], titleTag: 'h3', dynamicBindings: {},
 			iconPosition: 'top', iconPositionTablet: '', iconPositionMobile: '',
 			alignment: 'center', alignmentTablet: '', alignmentMobile: '',
 			iconSpacing: '15px', iconSpacingTablet: '', iconSpacingMobile: '',
@@ -784,8 +784,6 @@
 	const iconBoxHoverAnimations = Object.freeze(['none', 'grow', 'shrink', 'pulse', 'pulse-grow', 'pulse-shrink', 'push', 'pop', 'bounce-in', 'bounce-out', 'rotate', 'grow-rotate', 'float', 'sink', 'bob', 'hang', 'skew', 'skew-forward', 'skew-backward', 'wobble-vertical', 'wobble-horizontal', 'wobble-to-bottom-right', 'wobble-to-top-right', 'wobble-top', 'wobble-bottom', 'wobble-skew', 'buzz', 'buzz-out']);
 	function normalizeIconBoxSettings(settings) {
 		if (!settings || typeof settings !== 'object') return settings;
-		const hadTitleFontSizeMode = settings.titleFontSizeMode !== undefined;
-		const legacyTitleFontSize = String(settings.titleFontSize ?? '').trim();
 		const defaults = iconBoxWidgetDefaults();
 		Object.keys(defaults).forEach((key) => { if (settings[key] === undefined) settings[key] = cloneSettingValue(defaults[key]); });
 		const parsed = parseIconWidgetClassParts(settings.iconClass);
@@ -796,9 +794,6 @@
 		settings.view = ['default', 'stacked', 'framed'].includes(settings.view) ? settings.view : 'default';
 		settings.shape = ['circle', 'rounded', 'square'].includes(settings.shape) ? settings.shape : 'circle';
 		settings.titleTag = imageBoxTitleTagOptions.includes(settings.titleTag) ? settings.titleTag : 'h3';
-		settings.titleFontSizeMode = hadTitleFontSizeMode
-			? (['auto', 'custom'].includes(settings.titleFontSizeMode) ? settings.titleFontSizeMode : 'auto')
-			: (legacyTitleFontSize && legacyTitleFontSize !== '29px' ? 'custom' : 'auto');
 		settings.iconPosition = imageBoxPositionOptions.includes(settings.iconPosition) ? settings.iconPosition : 'top';
 		settings.alignment = imageBoxAlignmentOptions.includes(settings.alignment) ? settings.alignment : 'center';
 		['iconPositionTablet', 'iconPositionMobile'].forEach((key) => { settings[key] = settings[key] === '' || imageBoxPositionOptions.includes(settings[key]) ? settings[key] : ''; });
@@ -1044,7 +1039,6 @@
 		icon: 'Icon',
 		divider: 'Divider',
 		spacer: 'Spacer',
-		icon_box: 'Icon Box',
 		tabs: 'Tabs',
 		accordion: 'Accordion',
 	});
@@ -3292,26 +3286,18 @@
 					iconLibraryLoading.value = false;
 				}
 			}
-			function isIconLibraryWidgetNode(node) {
-				return !!node && ['icon', 'icon_box'].includes(node.type);
-			}
-			function normalizeIconLibraryWidgetSettings(node) {
-				if (!isIconLibraryWidgetNode(node)) return;
-				if (node.type === 'icon_box') normalizeIconBoxSettings(node.settings || (node.settings = {}));
-				else normalizeIconWidgetSettings(node.settings || (node.settings = {}));
-			}
 			function syncIconLibrarySelectionFromNode(node) {
-				if (!isIconLibraryWidgetNode(node)) {
+				if (!node || node.type !== 'icon') {
 					iconLibrarySelected.value = null;
 					return;
 				}
-				normalizeIconLibraryWidgetSettings(node);
+				normalizeIconWidgetSettings(node.settings || (node.settings = {}));
 				const targetStyle = String(node.settings.iconStyle || '').trim().toLowerCase();
 				const targetName = String(node.settings.iconName || '').trim().toLowerCase();
 				iconLibrarySelected.value = iconLibraryIcons.value.find((item) => item.style === targetStyle && item.name === targetName) || null;
 			}
 			async function openIconLibrary(node = selectedNode.value) {
-				if (!isIconLibraryWidgetNode(node)) return;
+				if (!node || node.type !== 'icon') return;
 				await ensureIconLibraryLoaded();
 				iconLibraryTargetNodeId.value = String(node.id || '');
 				iconLibraryTargetSettingKey.value = '';
@@ -3355,12 +3341,12 @@
 					closeIconLibrary();
 					return;
 				}
-				if (!isIconLibraryWidgetNode(node)) return;
+				if (!node || node.type !== 'icon') return;
 				if (!node.settings || typeof node.settings !== 'object') node.settings = {};
 				node.settings.iconStyle = iconLibrarySelected.value.style;
 				node.settings.iconName = iconLibrarySelected.value.name;
 				node.settings.iconClass = iconLibrarySelected.value.className;
-				normalizeIconLibraryWidgetSettings(node);
+				normalizeIconWidgetSettings(node.settings);
 				closeIconLibrary();
 			}
 			function sanitizeAccordionSvgMarkup(value) {
@@ -3926,7 +3912,6 @@
 				if (unit === '%' || unit === 'vw') return 100;
 				if (unit === 'em' || unit === 'rem') return 30;
 				if (unit === 'pt') return 720;
-				if (unit === 'deg') return 360;
 				return 1600;
 			}
 			function sizeControlStepForUnit(unit) {
@@ -3945,40 +3930,27 @@
 				if (!Number.isFinite(num)) return emptyValue;
 				return clamp(num, 0, sizeControlMaxForUnit(unit));
 			}
-			function sizeControlAllowedUnits(options = {}) {
-				const requested = Array.isArray(options.allowedUnits)
-					? options.allowedUnits.map((unit) => String(unit || '').trim().toLowerCase()).filter(Boolean)
-					: [];
-				return requested.length ? [...new Set(requested)] : sizeControlUnits;
-			}
-			function sizeControlFallbackUnit(options = {}, allowedUnits = sizeControlUnits) {
-				const requested = String(options.fallbackUnit || '').trim().toLowerCase();
-				return allowedUnits.includes(requested) ? requested : (allowedUnits[0] || 'px');
-			}
 			function sizeControlDisplayValue(node, base, fallback = '', options = {}) {
-				const allowedUnits = sizeControlAllowedUnits(options);
-				const fallbackUnit = sizeControlFallbackUnit(options, allowedUnits);
 				const parsed = sizeControlParsed(
 					node,
 					base,
 					fallback,
-					fallbackUnit,
-					allowedUnits
+					options.fallbackUnit || 'px',
+					options.allowedUnits || sizeControlUnits
 				);
 				if (parsed.value === '') return '';
 				return normalizedSizeControlValue(parsed.value, parsed.unit, '');
 			}
 			function sizeControlUnit(node, base, fallback = '', options = {}) {
-				const allowedUnits = sizeControlAllowedUnits(options);
-				const fallbackUnit = sizeControlFallbackUnit(options, allowedUnits);
+				const fallbackUnit = options.fallbackUnit || 'px';
 				const parsed = sizeControlParsed(
 					node,
 					base,
 					fallback,
 					fallbackUnit,
-					allowedUnits
+					options.allowedUnits || sizeControlUnits
 				);
-				return allowedUnits.includes(parsed.unit) ? parsed.unit : fallbackUnit;
+				return sizeControlUnits.includes(parsed.unit) ? parsed.unit : fallbackUnit;
 			}
 			function sizeControlMax(node, base, fallback = '', options = {}) {
 				return sizeControlMaxForUnit(sizeControlUnit(node, base, fallback, options));
@@ -4019,9 +3991,7 @@
 			}
 			function setSizeControlUnit(node, base, unit, options = {}) {
 				if (!node || !node.settings) return;
-				const allowedUnits = sizeControlAllowedUnits(options);
-				const fallbackUnit = sizeControlFallbackUnit(options, allowedUnits);
-				const safe = allowedUnits.includes(unit) ? unit : fallbackUnit;
+				const safe = sizeControlUnits.includes(unit) ? unit : (options.fallbackUnit || 'px');
 				const current = sizeControlDisplayValue(node, base, options.fallback || '', options);
 				if (current === '' && options.allowEmpty) {
 					setResponsiveSetting(node.settings, base, options.emptyToken || 'auto');

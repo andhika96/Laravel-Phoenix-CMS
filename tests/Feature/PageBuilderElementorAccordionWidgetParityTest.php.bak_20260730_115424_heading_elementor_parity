@@ -264,7 +264,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertStringNotContainsString('id="invalid id"', $html);
         $this->assertStringContainsString('pb-accordion-summary-accordion-main-first', $html);
         $this->assertStringContainsString('aria-expanded="true"', $html);
-        $this->assertStringContainsString('<h4 class="el-widget-heading elementor-heading-title"', $html);
+        $this->assertStringContainsString('<h4 class="el-widget-heading"', $html);
         $this->assertStringContainsString('"@type":"FAQPage"', $html);
         $this->assertStringContainsString('First question?', $html);
         $this->assertStringContainsString('Second answer', $html);

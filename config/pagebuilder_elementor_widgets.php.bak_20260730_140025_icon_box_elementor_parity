@@ -78,17 +78,6 @@ return [
         'view' => 'pagebuilder_elementor.partials.render_image_box',
         'toolbox' => true,
     ],
-    'icon_box' => [
-        'type' => 'icon_box',
-        'label' => 'Icon Box',
-        'category' => 'general',
-        'icon' => 'far fa-star',
-        'definition' => 'js/pagebuilder_elementor/widgets/general/icon-box/definition.js',
-        'canvas' => 'js/pagebuilder_elementor/widgets/general/icon-box/Canvas.vue',
-        'settings' => 'js/pagebuilder_elementor/widgets/general/icon-box/Settings.vue',
-        'view' => 'pagebuilder_elementor.partials.render_icon_box',
-        'toolbox' => true,
-    ],
     'tabs' => [
         'type' => 'tabs',
         'label' => 'Tabs',

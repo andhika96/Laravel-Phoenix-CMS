@@ -1044,7 +1044,6 @@
 		icon: 'Icon',
 		divider: 'Divider',
 		spacer: 'Spacer',
-		icon_box: 'Icon Box',
 		tabs: 'Tabs',
 		accordion: 'Accordion',
 	});
@@ -3926,7 +3925,6 @@
 				if (unit === '%' || unit === 'vw') return 100;
 				if (unit === 'em' || unit === 'rem') return 30;
 				if (unit === 'pt') return 720;
-				if (unit === 'deg') return 360;
 				return 1600;
 			}
 			function sizeControlStepForUnit(unit) {
@@ -3945,40 +3943,27 @@
 				if (!Number.isFinite(num)) return emptyValue;
 				return clamp(num, 0, sizeControlMaxForUnit(unit));
 			}
-			function sizeControlAllowedUnits(options = {}) {
-				const requested = Array.isArray(options.allowedUnits)
-					? options.allowedUnits.map((unit) => String(unit || '').trim().toLowerCase()).filter(Boolean)
-					: [];
-				return requested.length ? [...new Set(requested)] : sizeControlUnits;
-			}
-			function sizeControlFallbackUnit(options = {}, allowedUnits = sizeControlUnits) {
-				const requested = String(options.fallbackUnit || '').trim().toLowerCase();
-				return allowedUnits.includes(requested) ? requested : (allowedUnits[0] || 'px');
-			}
 			function sizeControlDisplayValue(node, base, fallback = '', options = {}) {
-				const allowedUnits = sizeControlAllowedUnits(options);
-				const fallbackUnit = sizeControlFallbackUnit(options, allowedUnits);
 				const parsed = sizeControlParsed(
 					node,
 					base,
 					fallback,
-					fallbackUnit,
-					allowedUnits
+					options.fallbackUnit || 'px',
+					options.allowedUnits || sizeControlUnits
 				);
 				if (parsed.value === '') return '';
 				return normalizedSizeControlValue(parsed.value, parsed.unit, '');
 			}
 			function sizeControlUnit(node, base, fallback = '', options = {}) {
-				const allowedUnits = sizeControlAllowedUnits(options);
-				const fallbackUnit = sizeControlFallbackUnit(options, allowedUnits);
+				const fallbackUnit = options.fallbackUnit || 'px';
 				const parsed = sizeControlParsed(
 					node,
 					base,
 					fallback,
 					fallbackUnit,
-					allowedUnits
+					options.allowedUnits || sizeControlUnits
 				);
-				return allowedUnits.includes(parsed.unit) ? parsed.unit : fallbackUnit;
+				return sizeControlUnits.includes(parsed.unit) ? parsed.unit : fallbackUnit;
 			}
 			function sizeControlMax(node, base, fallback = '', options = {}) {
 				return sizeControlMaxForUnit(sizeControlUnit(node, base, fallback, options));
@@ -4019,9 +4004,7 @@
 			}
 			function setSizeControlUnit(node, base, unit, options = {}) {
 				if (!node || !node.settings) return;
-				const allowedUnits = sizeControlAllowedUnits(options);
-				const fallbackUnit = sizeControlFallbackUnit(options, allowedUnits);
-				const safe = allowedUnits.includes(unit) ? unit : fallbackUnit;
+				const safe = sizeControlUnits.includes(unit) ? unit : (options.fallbackUnit || 'px');
 				const current = sizeControlDisplayValue(node, base, options.fallback || '', options);
 				if (current === '' && options.allowEmpty) {
 					setResponsiveSetting(node.settings, base, options.emptyToken || 'auto');
