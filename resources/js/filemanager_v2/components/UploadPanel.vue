@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import uploadFilePlaceholder from '../assets/file-upload-placeholder.svg';
 
 const props = defineProps({
@@ -11,14 +11,25 @@ const props = defineProps({
 const emit = defineEmits(['toggle-minimize', 'toggle-pause', 'close', 'remove', 'retry', 'retry-failed']);
 const completed = computed(() => props.uploads.filter((item) => item.status === 'done').length);
 const failed = computed(() => props.uploads.filter((item) => item.status === 'error').length);
-const hasPendingUploads = computed(() => props.uploads.some((item) => ['queued', 'uploading'].includes(item.status)));
+const hasPendingUploads = computed(() => props.uploads.some((item) => ['queued', 'uploading', 'retrying'].includes(item.status)));
+const retryClock = ref(Date.now());
+let retryClockTimer = null;
+onMounted(() => {
+  retryClockTimer = window.setInterval(() => {
+    if (props.uploads.some((item) => item.status === 'retrying')) retryClock.value = Date.now();
+  }, 250);
+});
+onBeforeUnmount(() => {
+  if (retryClockTimer) window.clearInterval(retryClockTimer);
+});
+const retrySecondsRemaining = (item) => Math.max(0, Math.ceil((Number(item.retryAt || retryClock.value) - retryClock.value) / 1000));
 const overall = computed(() => {
   if (!props.uploads.length) return 0;
   return Math.round(props.uploads.reduce((total, item) => total + item.progress, 0) / props.uploads.length);
 });
 const visibleUploads = computed(() => {
   const visible = [];
-  const statuses = ['uploading', 'error', 'queued', 'done', 'cancelled'];
+  const statuses = ['uploading', 'retrying', 'error', 'queued', 'done', 'cancelled'];
 
   for (const status of statuses) {
     for (const item of props.uploads) {
@@ -72,10 +83,11 @@ const hiddenUploads = computed(() => Math.max(0, props.uploads.length - visibleU
           <div class="upload-item-copy">
             <strong>{{ item.name }}</strong>
             <small v-if="item.status === 'error'" class="text-danger">{{ item.error }}</small>
+            <small v-else-if="item.status === 'retrying'" class="text-warning"><i class="bi bi-arrow-repeat"></i> Retrying {{ item.attempt }}/{{ item.maxAttempts }} &middot; next attempt in {{ retrySecondsRemaining(item) }}s &middot; {{ item.error }}</small>
             <small v-else-if="item.status === 'done'" class="text-success">Uploaded · {{ item.size }}</small>
             <small v-else-if="item.status === 'queued'" class="text-muted">Waiting in queue &middot; {{ item.size }}</small>
-            <small v-else>{{ item.size }} · {{ item.progress }}%</small>
-            <div v-if="item.status === 'uploading'" class="progress">
+            <small v-else><template v-if="item.attempt > 1">Retry {{ item.attempt }}/{{ item.maxAttempts }} &middot; </template>{{ item.size }} &middot; {{ item.progress }}%</small>
+            <div v-if="['uploading', 'retrying'].includes(item.status)" class="progress">
               <div class="progress-bar" :style="{ width: item.progress + '%' }"></div>
             </div>
           </div>

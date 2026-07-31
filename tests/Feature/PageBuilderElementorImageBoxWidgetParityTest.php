@@ -306,7 +306,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
 
-        $this->assertSourceContains("hasSharedAdvancedControls() { return this.isAccordionNode || this.node.type === 'image_box'; }", $appJs);
+        $this->assertSourceContains("hasSharedAdvancedControls() { return this.isAccordionNode || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading'; }", $appJs);
         $this->assertSourceContains('if (!this.hasSharedAdvancedControls) return [];', $appJs);
         $this->assertSourceContains('if (this.hasSharedAdvancedControls) return widgetAdvancedPreviewStyle(s, device);', $appJs);
         $this->assertSourceContains('if (this.hasSharedAdvancedControls && /^[A-Za-z][A-Za-z0-9_-]*$/.test(raw)) return raw;', $appJs);
@@ -451,7 +451,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $partial = file_get_contents($partialPath);
 
         $this->assertSame('pagebuilder_elementor.partials.render_image_box', $module['view']);
-        $this->assertSourceContains("in_array(\$type, ['accordion', 'image_box'], true)", $renderNode);
+        $this->assertSourceContains("in_array(\$type, ['accordion', 'image_box', 'icon_box', 'image_carousel', 'basic_gallery', 'icon_list', 'heading'], true)", $renderNode);
         $this->assertSourceContains('pagebuilder_dynamic_context', $renderNode);
         $this->assertSourceContains("'user_id' =>", $renderNode);
         $this->assertSourceContains('DynamicTagResolver::class', $partial);

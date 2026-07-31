@@ -1,0 +1,290 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import test from 'node:test';
+
+const canvasPath = new URL('../public/js/pagebuilder_elementor/widgets/general/image-carousel/Canvas.vue', import.meta.url);
+const settingsPath = new URL('../public/js/pagebuilder_elementor/widgets/general/image-carousel/Settings.vue', import.meta.url);
+
+function componentFromVueFile(path) {
+	const source = fs.readFileSync(path, 'utf8');
+	const match = source.match(/<script>([\s\S]*?)<\/script>/);
+	assert.ok(match, `Missing <script> in ${path.pathname}`);
+
+	return new Function(match[1].replace('export default', 'return'))();
+}
+
+function canvasContext(settings, responsiveDevice = 'desktop') {
+	const component = componentFromVueFile(canvasPath);
+	const context = {
+		item: { settings },
+		responsiveDevice,
+		...component.data(),
+	};
+
+	for (const [name, method] of Object.entries(component.methods)) {
+		context[name] = method.bind(context);
+	}
+	for (const [name, getter] of Object.entries(component.computed)) {
+		Object.defineProperty(context, name, {
+			configurable: true,
+			get: () => getter.call(context),
+		});
+	}
+
+	return context;
+}
+
+test('Image Carousel Vue components compile as JavaScript', () => {
+	assert.equal(componentFromVueFile(canvasPath).name, 'GeneralImageCarousel');
+	assert.equal(componentFromVueFile(settingsPath).name, 'ImageCarouselWidgetSettings');
+});
+
+test('all visual canvas settings resolve to live responsive styles', () => {
+	const context = canvasContext({
+		images: [
+			{ id: 'one', url: '/one.jpg', alt: 'One', caption: 'Caption one' },
+			{ id: 'two', url: '/two.jpg', alt: 'Two', caption: 'Caption two' },
+			{ id: 'three', url: '/three.jpg', alt: 'Three', caption: 'Caption three' },
+			{ id: 'four', url: '/four.jpg', alt: 'Four', caption: 'Caption four' },
+		],
+		slidesToShow: '3',
+		slidesToShowTablet: '2',
+		slidesToScroll: '1',
+		slidesToScrollTablet: '2',
+		navigation: 'arrows_dots',
+		arrowPosition: 'outside',
+		arrowSize: '20px',
+		arrowSizeTablet: '31px',
+		arrowColor: '#123456',
+		paginationPosition: 'inside',
+		dotSize: '8px',
+		dotSizeTablet: '12px',
+		dotSpacing: '9px',
+		dotSpacingTablet: '15px',
+		dotColor: '#234567',
+		dotActiveColor: '#345678',
+		imageSpacingMode: 'custom',
+		imageSpacing: '10px',
+		imageSpacingTablet: '22px',
+		imageVerticalAlign: 'start',
+		imageVerticalAlignTablet: 'end',
+		imageStretch: true,
+		imageBorderType: 'dashed',
+		imageBorderColor: '#456789',
+		imageBorderWidthTop: '1px',
+		imageBorderWidthRight: '2px',
+		imageBorderWidthBottom: '3px',
+		imageBorderWidthLeft: '4px',
+		imageBorderWidthTopTablet: '5px',
+		imageBorderWidthRightTablet: '6px',
+		imageBorderWidthBottomTablet: '7px',
+		imageBorderWidthLeftTablet: '8px',
+		imageBorderRadiusTop: '2px',
+		imageBorderRadiusRight: '3px',
+		imageBorderRadiusBottom: '4px',
+		imageBorderRadiusLeft: '5px',
+		imageBorderRadiusTopTablet: '9px',
+		imageBorderRadiusRightTablet: '10px',
+		imageBorderRadiusBottomTablet: '11px',
+		imageBorderRadiusLeftTablet: '12px',
+		captionType: 'caption',
+		captionAlignment: 'left',
+		captionAlignmentTablet: 'right',
+		captionColor: '#56789a',
+		captionFontFamily: 'Inter',
+		captionFontSize: '16px',
+		captionFontSizeTablet: '21px',
+		captionFontWeight: '700',
+		captionLineHeight: '1.4em',
+		captionLineHeightTablet: '1.8em',
+		captionLetterSpacing: '1px',
+		captionLetterSpacingTablet: '2px',
+		captionWordSpacing: '3px',
+		captionWordSpacingTablet: '4px',
+		captionTextTransform: 'uppercase',
+		captionFontStyle: 'italic',
+		captionTextDecoration: 'underline',
+		captionTextShadow: '1px 1px 2px #000000',
+		captionSpacing: '7px',
+		captionSpacingTablet: '13px',
+		animationSpeed: 725,
+	}, 'tablet');
+
+	assert.equal(context.visibleSlides, 2);
+	assert.equal(context.slidesToScroll, 2);
+	assert.equal(context.showsArrows, true);
+	assert.equal(context.showsDots, true);
+	assert.deepEqual(context.rootClasses, ['is-arrows-outside', 'is-pagination-inside']);
+	assert.equal(context.rootStyle['--pb-carousel-arrow-size'], '31px');
+	assert.equal(context.rootStyle['--pb-carousel-arrow-color'], '#123456');
+	assert.equal(context.rootStyle['--pb-carousel-dot-size'], '12px');
+	assert.equal(context.rootStyle['--pb-carousel-dot-gap'], '15px');
+	assert.equal(context.rootStyle['--pb-carousel-image-gap'], '22px');
+	assert.equal(context.rootStyle['--pb-carousel-transition'], '725ms');
+	assert.equal(context.slideStyle.alignSelf, 'flex-end');
+	assert.equal(context.imageStyle.width, '100%');
+	assert.equal(context.imageStyle.borderStyle, 'dashed');
+	assert.equal(context.imageStyle.borderTopWidth, '5px');
+	assert.equal(context.imageStyle.borderRightWidth, '6px');
+	assert.equal(context.imageStyle.borderRadius, '9px 10px 11px 12px');
+	assert.equal(context.captionStyle.textAlign, 'right');
+	assert.equal(context.captionStyle.fontSize, '21px');
+	assert.equal(context.captionStyle.lineHeight, '1.8em');
+	assert.equal(context.captionStyle.letterSpacing, '2px');
+	assert.equal(context.captionStyle.wordSpacing, '4px');
+	assert.equal(context.captionStyle.marginTop, '13px');
+	assert.equal(context.captionStyle.textTransform, 'uppercase');
+});
+
+test('Image Resolution projects the next dimensions before the rendition request completes', async () => {
+	const originalWindow = globalThis.window;
+	const requests = [];
+	let resolveRequest;
+	globalThis.window = {
+		clearInterval() {},
+		setInterval() { return 1; },
+		matchMedia() { return { matches: false }; },
+		PAGE_BUILDER_ELEMENTOR_CONTEXT: { imageRenditionUrl: '/pagebuilder/rendition' },
+		axios: {
+			get(url, config) {
+				requests.push({ url, params: config.params });
+				return new Promise((resolve) => { resolveRequest = resolve; });
+			},
+		},
+	};
+
+	try {
+		const sourceUrl = '/storage/ckfinder/userfiles/image.png';
+		const custom = canvasContext({
+			images: [{ id: 'one', url: sourceUrl, alt: 'One' }],
+			imageResolution: 'custom', customImageWidth: 320, customImageHeight: 180,
+			imageStretch: false,
+		});
+		const named = canvasContext({
+			images: [{ id: 'one', url: sourceUrl, alt: 'One' }],
+			imageResolution: 'medium', imageStretch: false,
+		});
+		const invalid = canvasContext({
+			images: [{ id: 'one', url: sourceUrl, alt: 'One' }],
+			imageResolution: 'custom', customImageWidth: 320, customImageHeight: 5500000,
+			imageStretch: false,
+		});
+
+		assert.equal(custom.imageStyle.width, '320px');
+		assert.equal(custom.imageStyle.height, '180px');
+		assert.equal(custom.imageStyle.objectFit, 'cover');
+		assert.equal(named.imageStyle.width, '300px');
+		assert.equal(named.imageStyle.height, 'auto');
+		assert.equal(invalid.imageStyle.width, 'auto');
+		assert.equal(invalid.imageStyle.height, 'auto');
+
+		custom.resolvedImages = [{ id: 'one', url: '/renditions/stale-thumbnail.png', alt: 'One' }];
+		const pending = custom.resolveImageRenditions();
+		assert.deepEqual(custom.resolvedImages, [{ id: 'one', url: sourceUrl, alt: 'One' }]);
+		assert.deepEqual(requests, [{
+			url: '/pagebuilder/rendition',
+			params: { url: sourceUrl, size: 'custom', width: 320, height: 180 },
+		}]);
+		resolveRequest({ data: { url: '/renditions/current-custom.png' } });
+		await pending;
+	} finally {
+		globalThis.window = originalWindow;
+	}
+});
+
+test('content, links, captions, navigation, and non-loop boundaries react on canvas', () => {
+	const context = canvasContext({
+		images: [
+			{ id: 'one', url: '/one.jpg', alt: 'One', title: 'Title one', caption: 'Caption one', description: 'Description one' },
+			{ id: 'two', url: '/two.jpg', alt: 'Two' },
+			{ id: 'three', url: '/three.jpg', alt: 'Three' },
+		],
+		slidesToShow: '1',
+		slidesToScroll: '2',
+		navigation: 'arrows_dots',
+		linkType: 'custom',
+		customLinkUrl: 'https://example.com/gallery',
+		lightbox: 'yes',
+		captionType: 'description',
+		infiniteLoop: false,
+		pauseOnInteraction: true,
+	});
+	context.startAutoplay = () => {};
+	context.stopAutoplay = () => {};
+
+	assert.equal(context.captionFor(context.images[0]), 'Description one');
+	assert.equal(context.linkFor(context.images[0]), 'https://example.com/gallery');
+	assert.equal(context.linkFor({ url: 'javascript:alert(1)' }), 'https://example.com/gallery');
+	assert.equal(context.usesLightbox, false);
+
+	context.goTo(99, true);
+	assert.equal(context.activeIndex, 2);
+	assert.equal(context.interactionPaused, true);
+	context.next(true);
+	assert.equal(context.activeIndex, 2);
+	context.previous(false);
+	assert.equal(context.activeIndex, 1);
+});
+
+test('autoplay, pause controls, direction, infinite loop, and rendition controls execute on canvas', async () => {
+	const originalWindow = globalThis.window;
+	const scheduled = [];
+	const cleared = [];
+	const renditionRequests = [];
+	globalThis.window = {
+		clearInterval(id) { cleared.push(id); },
+		setInterval(callback, delay) { scheduled.push({ callback, delay }); return scheduled.length; },
+		matchMedia() { return { matches: false }; },
+		PAGE_BUILDER_ELEMENTOR_CONTEXT: { imageRenditionUrl: '/pagebuilder/rendition' },
+		axios: {
+			async get(url, config) {
+				renditionRequests.push({ url, params: config.params });
+				return { data: { url: '/renditions/custom-one.jpg' } };
+			},
+		},
+	};
+
+	try {
+		const context = canvasContext({
+			images: [
+				{ id: 'one', url: '/one.jpg', alt: 'One' },
+				{ id: 'two', url: '/two.jpg', alt: 'Two' },
+				{ id: 'three', url: '/three.jpg', alt: 'Three' },
+			],
+			imageResolution: 'custom', customImageWidth: 320, customImageHeight: 180,
+			slidesToShow: '1', slidesToScroll: '1', autoplay: true, pauseOnHover: true,
+			pauseOnInteraction: false, autoplaySpeed: 1750, infiniteLoop: true, direction: 'right',
+		});
+
+		context.startAutoplay();
+		assert.equal(scheduled.at(-1).delay, 1750);
+		context.activeIndex = 0;
+		scheduled.at(-1).callback();
+		assert.equal(context.activeIndex, 2);
+
+		context.hovered = true;
+		context.startAutoplay();
+		assert.equal(context.timer, null);
+		assert.ok(cleared.length >= 1);
+
+		context.hovered = false;
+		await context.resolveImageRenditions();
+		assert.equal(renditionRequests.length, 3);
+		assert.deepEqual(renditionRequests[0], {
+			url: '/pagebuilder/rendition',
+			params: { url: '/one.jpg', size: 'custom', width: 320, height: 180 },
+		});
+		assert.equal(context.resolvedImages[0].url, '/renditions/custom-one.jpg');
+	} finally {
+		globalThis.window = originalWindow;
+	}
+});
+test('outside arrows are rendered outside the clipped viewport and canvas exposes boundary state', () => {
+	const source = fs.readFileSync(canvasPath, 'utf8');
+	const viewport = source.match(/<div class="pb-image-carousel__viewport">([\s\S]*?)<\/div>\s*<div v-if="showsDots"/)?.[1] || '';
+
+	assert.doesNotMatch(viewport, /pb-image-carousel__arrow--previous/);
+	assert.match(source, /tabindex="0"/);
+	assert.match(source, /:disabled="previousDisabled"/);
+	assert.match(source, /:disabled="nextDisabled"/);
+});

@@ -1804,6 +1804,15 @@ body {
 	pointer-events: auto;
 }
 
+.pb-node.pb-node-image_carousel [data-pb-interactive="true"] {
+	pointer-events: auto;
+}
+
+.pb-node.pb-node-image_carousel .pb-image-carousel__viewport,
+.pb-node.pb-node-image_carousel .pb-image-carousel__viewport * {
+	pointer-events: auto;
+}
+
 .pb-node.pb-node-tabs .pb-dropzone-empty,
 .pb-node.pb-node-tabs .pb-grid-col-empty-hint,
 .pb-node.pb-node-tabs .pb-tabs-empty-hint,
@@ -4640,6 +4649,13 @@ body {
 	padding-left: 6px;
 }
 
+/* Direct unit selects (used by four-side controls) must share the same
+   trailing alignment as controls that wrap their unit in pb-control-unit-wrap. */
+.pb-label-row.pb-label-row-device > .pb-label-tools > .pb-mini-unit {
+	margin-left: auto;
+	flex: 0 0 auto;
+}
+
 .pb-control-device-menu {
 	min-width: 152px;
 	max-width: min(220px, calc(100vw - 44px));
@@ -4982,6 +4998,60 @@ body {
 .pb-panel.left .pb-widget-settings .pb-range-value-row {
 	grid-template-columns: minmax(0, 1fr) 128px;
 	gap: 10px;
+}
+
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-four-sides-with-link,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-four-sides-with-link {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr)) 28px;
+	gap: 0;
+	align-items: start;
+	width: 100%;
+}
+
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-input,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-side-input {
+	min-width: 0;
+	gap: 4px;
+}
+
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-input .pb-input,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-side-input .pb-input {
+	width: 100%;
+	min-width: 0;
+	height: 30px;
+	min-height: 30px;
+	padding: 3px 4px;
+	border-radius: 0;
+	border-right-width: 0;
+	font-size: 11px;
+	text-align: center;
+}
+
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-input:first-child .pb-input,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-side-input:first-child .pb-input {
+	border-radius: 5px 0 0 5px;
+}
+
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-input span,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-side-input span {
+	font-size: 9px;
+	line-height: 1.25;
+}
+
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-link-cell,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-side-link-cell {
+	align-self: start;
+}
+
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-link-btn,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-link-btn {
+	width: 28px;
+	min-width: 28px;
+	height: 30px;
+	min-height: 30px;
+	padding: 0;
+	border-radius: 0 5px 5px 0;
 }
 
 .pb-panel.left .pb-widget-settings .pb-value-with-unit {

@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#05060b">
+  <title>Lost in Signal — 404</title>
+  <style>
+    :root { --background:#05060b; --text:#f5f3ff; --muted:rgba(224,226,245,.57); --line:rgba(223,227,255,.16); --ease:cubic-bezier(.16,1,.3,1); --pointer-x:50%; --pointer-y:42%; }
+    * { box-sizing:border-box; }
+    html, body { width:100%; min-height:100%; margin:0; }
+    body { overflow:hidden; background:#05060b; color:var(--text); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; }
+    a { color:inherit; text-decoration:none; }
+    button { font:inherit; }
+    .page { isolation:isolate; position:relative; display:grid; grid-template-rows:auto 1fr auto; width:100%; min-height:100svh; overflow:hidden; background:radial-gradient(circle at 50% 38%, rgba(35,39,82,.42), transparent 35%), linear-gradient(145deg,#05060b 0%,#080916 48%,#04050a 100%); }
+    .ambient, .vignette, .grain, .pointer-glow, .orbit-ring, #particle-canvas { position:absolute; inset:0; pointer-events:none; }
+    .ambient { z-index:1; inset:-30%; filter:blur(20px); opacity:.92; background:radial-gradient(circle at 35% 42%,rgba(91,76,255,.18),transparent 22%),radial-gradient(circle at 64% 49%,rgba(67,195,255,.12),transparent 25%),radial-gradient(circle at 56% 24%,rgba(255,111,211,.08),transparent 18%); animation:ambient-drift 21s ease-in-out infinite alternate; }
+    @keyframes ambient-drift { from { transform:translate3d(-1.5%,-1%,0) scale(1.02); } to { transform:translate3d(1.8%,1.3%,0) scale(1.06); } }
+    #particle-canvas { z-index:3; width:100%; height:100%; }
+    .pointer-glow { z-index:4; background:radial-gradient(440px circle at var(--pointer-x) var(--pointer-y),rgba(112,151,255,.13),rgba(124,86,255,.04) 38%,transparent 70%); transition:background-position .18s linear; }
+    .orbit-ring { z-index:4; inset:auto; width:270px; height:270px; left:calc(var(--pointer-x) - 135px); top:calc(var(--pointer-y) - 135px); opacity:.29; border-radius:50%; background:conic-gradient(from 0deg,transparent 0 12%,rgba(132,191,255,.5) 18%,transparent 27% 49%,rgba(213,148,255,.45) 60%,transparent 68% 85%,rgba(133,166,255,.34) 94%,transparent); -webkit-mask:radial-gradient(circle,transparent 0 61%,#000 62% 63%,transparent 64%); mask:radial-gradient(circle,transparent 0 61%,#000 62% 63%,transparent 64%); animation:orbit-turn 11s linear infinite; }
+    @keyframes orbit-turn { to { transform:rotate(360deg); } }
+    .vignette { z-index:8; background:radial-gradient(ellipse at center,transparent 35%,rgba(1,2,7,.28) 72%,rgba(0,0,0,.72) 115%); }
+    .grain { z-index:9; opacity:.12; mix-blend-mode:soft-light; background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.28) 0 1px,transparent 1px 4px),repeating-linear-gradient(90deg,rgba(17,22,54,.2) 0 1px,transparent 1px 5px); background-size:4px 4px,5px 5px; }
+    .site-header { z-index:11; display:flex; align-items:center; justify-content:space-between; padding:clamp(24px,4.4vh,48px) clamp(24px,4vw,68px) 0; opacity:0; transform:translateY(-18px); animation:header-in 1s var(--ease) .1s forwards; }
+    @keyframes header-in { to { opacity:1; transform:translateY(0); } }
+    .brand, .status, .eyebrow, .coordinates, .site-footer { font-family:"SFMono-Regular", Consolas, "Liberation Mono", monospace; text-transform:uppercase; }
+    .brand { display:inline-flex; align-items:center; gap:12px; --mag-x:0px; --mag-y:0px; transform:translate(var(--mag-x),var(--mag-y)); transition:transform .58s var(--ease); }
+    .brand-mark { display:grid; place-items:center; width:34px; height:34px; border:1px solid rgba(226,229,255,.23); border-radius:50%; background:rgba(255,255,255,.035); box-shadow:inset 0 0 18px rgba(137,141,255,.08),0 0 30px rgba(79,97,255,.08); color:rgba(241,241,255,.84); font:500 10px/1 "SFMono-Regular",Consolas,monospace; letter-spacing:.08em; }
+    .brand-name { color:rgba(239,239,252,.68); font-size:10px; font-weight:500; letter-spacing:.23em; }
+    .status { display:flex; align-items:center; gap:9px; color:rgba(222,224,242,.45); font-size:8px; letter-spacing:.16em; white-space:nowrap; }
+    .status-dot { width:5px; height:5px; border-radius:50%; background:#ad8cff; box-shadow:0 0 12px #ad8cff,0 0 22px rgba(173,140,255,.65); }
+    main { z-index:5; position:relative; min-height:0; }
+    .hero-visual { z-index:5; position:absolute; left:50%; top:42vh; width:70%; text-align:center; transform:translate(-50%,-50%); opacity:0; filter:blur(10px); animation:code-in 1.6s var(--ease) .15s forwards; }
+    @keyframes code-in { to { opacity:1; filter:blur(0); } }
+    .ghost-code { color:transparent; -webkit-text-stroke:.75px rgba(153,174,255,.10); text-shadow:0 0 18px rgba(101,143,255,.06),0 0 72px rgba(126,91,255,.035); opacity:.42; mix-blend-mode:screen; font-family:Arial,Helvetica,sans-serif; font-size:min(37vw,49vh,510px); font-weight:900; line-height:.76; letter-spacing:-.095em; white-space:nowrap; user-select:none; }
+    .coordinates { position:absolute; top:42vh; z-index:6; display:flex; align-items:center; gap:9px; color:rgba(205,211,247,.28); font-size:7px; letter-spacing:.18em; opacity:0; animation:soft-in 1s var(--ease) .66s forwards; }
+    .coordinates::before { content:""; width:18px; height:1px; background:rgba(183,196,255,.29); }
+    .coordinates-left { left:clamp(24px,4vw,68px); }
+    .coordinates-right { right:clamp(24px,4vw,68px); }
+    .hero-copy { position:relative; z-index:7; width:min(970px,calc(100% - 48px)); margin:clamp(155px,23vh,240px) auto 0; text-align:center; }
+    .reveal { opacity:0; transform:translateY(24px); animation:copy-in 1s var(--ease) forwards; }
+    @keyframes copy-in { to { opacity:1; transform:translateY(0); } }
+    .eyebrow { display:flex; align-items:center; justify-content:center; gap:13px; color:rgba(219,222,243,.46); font-size:8px; letter-spacing:.17em; animation-delay:.66s; }
+    .eyebrow-line { width:38px; height:1px; background:linear-gradient(90deg,rgba(133,161,255,.15),rgba(204,145,255,.7),rgba(133,161,255,.15)); box-shadow:0 0 10px rgba(171,127,255,.35); }
+    h1 { margin:clamp(15px,2.5vh,25px) 0 0; font-size:clamp(42px,5.85vw,85px); font-weight:450; line-height:.96; letter-spacing:-.064em; animation-delay:.78s; }
+    .headline-serif { font-family:"Iowan Old Style","Bodoni 72","Bodoni MT",Didot,Georgia,serif; font-style:italic; font-weight:400; background:linear-gradient(105deg,#dcd5ff 5%,#a7c7ff 47%,#dda9ff 92%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .hero-bottom { display:grid; grid-template-columns:minmax(230px,350px) auto; justify-content:center; gap:clamp(36px,7vw,104px); align-items:center; margin-top:clamp(22px,3.2vh,35px); text-align:left; animation-delay:.94s; }
+    .description { margin:0; color:var(--muted); font-size:12px; line-height:1.75; }
+    .actions { display:flex; gap:9px; }
+    .action { --mag-x:0px; --mag-y:0px; position:relative; display:flex; align-items:center; justify-content:space-between; gap:16px; min-width:168px; min-height:50px; padding:8px 10px 8px 18px; overflow:hidden; border:1px solid rgba(217,220,255,.12); border-radius:999px; background:rgba(255,255,255,.025); color:rgba(246,245,255,.88); cursor:pointer; font-size:10px; letter-spacing:.01em; transform:translate(var(--mag-x),var(--mag-y)); transition:transform .58s var(--ease),border-color .55s var(--ease),box-shadow .55s var(--ease),background .55s var(--ease); }
+    .action::before { content:""; position:absolute; inset:-40% -70%; background:linear-gradient(105deg,transparent 38%,rgba(230,225,255,.25) 49%,transparent 59%); transform:translateX(-65%) rotate(9deg); transition:transform .8s var(--ease); }
+    .action:hover { border-color:rgba(192,183,255,.42); box-shadow:0 0 28px rgba(115,84,255,.18),inset 0 1px 0 rgba(255,255,255,.12); }
+    .action:hover::before { transform:translateX(67%) rotate(9deg); }
+    .action.primary { border-color:rgba(181,193,255,.25); background:linear-gradient(110deg,rgba(255,255,255,.12),rgba(130,109,255,.12)),rgba(22,23,41,.72); box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 10px 40px rgba(50,45,150,.15); }
+    .action span { position:relative; z-index:1; }
+    .action-icon { display:grid; place-items:center; width:30px; height:30px; flex:0 0 30px; border:1px solid rgba(230,230,255,.15); border-radius:50%; background:rgba(255,255,255,.045); font:400 15px/1 Georgia,serif; transition:transform .7s var(--ease),background .5s var(--ease); }
+    .action:hover .action-icon { transform:rotate(90deg); background:rgba(174,149,255,.12); }
+    .action:focus-visible, .brand:focus-visible { outline:1px solid #bba0ff; outline-offset:5px; }
+    .site-footer { z-index:11; display:grid; grid-template-columns:1fr auto 1fr; align-items:end; padding:0 clamp(24px,4vw,68px) clamp(23px,3.7vh,41px); color:rgba(216,219,238,.3); font-size:7px; letter-spacing:.17em; opacity:0; animation:soft-in 1s var(--ease) 1s forwards; }
+    @keyframes soft-in { to { opacity:1; } }
+    .footer-message { justify-self:center; }
+    .equalizer { justify-self:end; display:flex; align-items:end; gap:4px; height:15px; }
+    .equalizer i { width:1px; background:rgba(206,204,255,.5); animation:equalize 1.7s ease-in-out infinite alternate; }
+    .equalizer i:nth-child(1) { height:6px; animation-delay:-.7s; } .equalizer i:nth-child(2) { height:13px; animation-delay:-1.2s; } .equalizer i:nth-child(3) { height:9px; animation-delay:-.2s; } .equalizer i:nth-child(4) { height:5px; animation-delay:-.9s; }
+    @keyframes equalize { to { height:2px; } }
+    .cursor-dot, .cursor-ring { display:none; position:fixed; z-index:30; top:0; left:0; pointer-events:none; }
+    @media (pointer:fine) { body { cursor:none; } .cursor-dot, .cursor-ring { display:block; } .cursor-dot { width:5px; height:5px; border-radius:50%; background:#f5efff; box-shadow:0 0 11px #bba3ff,0 0 24px rgba(105,178,255,.8); transform:translate3d(calc(var(--cursor-x, -20px) - 2.5px),calc(var(--cursor-y, -20px) - 2.5px),0); } .cursor-ring { width:36px; height:36px; border:1px solid rgba(214,207,255,.7); border-radius:50%; box-shadow:0 0 18px rgba(152,131,255,.18),inset 0 0 10px rgba(113,194,255,.08); transform:translate3d(calc(var(--cursor-ring-x, -40px) - 18px),calc(var(--cursor-ring-y, -40px) - 18px),0); transition:width .3s var(--ease),height .3s var(--ease),border-color .3s var(--ease),transform .08s linear; } .cursor-ring.is-hover { width:54px; height:54px; border-color:rgba(215,190,255,.92); transform:translate3d(calc(var(--cursor-ring-x, -60px) - 27px),calc(var(--cursor-ring-y, -60px) - 27px),0); } }
+    @media (max-width:720px) { .site-header { padding-top:max(20px,env(safe-area-inset-top)); } .status-label { display:none; } .hero-visual { top:35vh; width:100%; } .ghost-code { font-size:min(41vw,27vh); } .coordinates { top:35vh; } .coordinates-right { display:none; } .hero-copy { width:calc(100% - 40px); margin-top:clamp(152px,24vh,205px); text-align:left; } .eyebrow { justify-content:flex-start; } h1 { font-size:clamp(41px,12.7vw,67px); } .hero-bottom { display:flex; flex-direction:column; align-items:stretch; gap:21px; margin-top:22px; } .description { max-width:350px; } .actions { width:100%; } .action { min-width:0; flex:1; padding-left:14px; gap:7px; } .site-footer { padding-bottom:max(20px,env(safe-area-inset-bottom)); grid-template-columns:1fr auto; } .footer-message { display:none; } .equalizer { grid-column:2; } }
+    @media (max-width:390px) { .brand-name { display:none; } .site-header { padding-inline:20px; } .coordinates-left { left:20px; } .action { font-size:9px; } .action-icon { width:27px; height:27px; flex-basis:27px; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; } .ambient { animation:none; } .orbit-ring { animation:none; opacity:.22; } .action::before { display:none; } }
+  </style>
+</head>
+<body>
+  <div class="page" id="page">
+    <div class="ambient" aria-hidden="true"></div>
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+    <div class="pointer-glow" aria-hidden="true"></div>
+    <div class="orbit-ring" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="brand magnetic" href="./" aria-label="NØ NOCTURNE home">
+        <span class="brand-mark">NØ</span><span class="brand-name">NOCTURNE</span>
+      </a>
+      <div class="status"><span class="status-dot"></span><span id="header-status" class="status-label" aria-live="polite">UNMAPPED COORDINATE</span></div>
+    </header>
+
+    <main>
+      <div class="hero-visual" aria-hidden="true"><div class="ghost-code">404</div></div>
+      <span class="coordinates coordinates-left" aria-hidden="true">47.2042° N</span>
+      <span class="coordinates coordinates-right" aria-hidden="true">—03.0404 Z</span>
+      <section class="hero-copy" aria-labelledby="page-title">
+        <div class="eyebrow reveal"><span>ERROR / 404</span><i class="eyebrow-line"></i><span>SIGNAL UNRESOLVED</span></div>
+        <h1 id="page-title" class="reveal">You drifted outside<br>the <em class="headline-serif">interface.</em></h1>
+        <div class="hero-bottom reveal">
+          <p class="description">This page dissolved into the quiet between coordinates. Follow the glow and let the signal pull you home.</p>
+          <div class="actions">
+            <a class="action primary magnetic" href="./"><span>Return to orbit</span><i class="action-icon" aria-hidden="true">↗</i></a>
+            <button id="recalibrate" class="action magnetic" type="button"><span>Recalibrate</span><i class="action-icon" aria-hidden="true">+</i></button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer"><span>04 — 04</span><span class="footer-message">MOVE THROUGH 404 TO ACTIVATE THE VORTEX</span><span class="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i></span></footer>
+  </div>
+  <i class="cursor-dot" aria-hidden="true"></i><i class="cursor-ring" aria-hidden="true"></i>
+
+  <script>
+    (() => {
+      "use strict";
+      const canvas = document.getElementById("particle-canvas");
+      const context = canvas.getContext("2d", { alpha: true });
+      const page = document.getElementById("page");
+      const status = document.getElementById("header-status");
+      const recalibrateButton = document.getElementById("recalibrate");
+      const ring = document.querySelector(".cursor-ring");
+      const COLORS = [[99,153,255],[110,226,255],[166,118,255],[255,148,226]];
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const finePointer = window.matchMedia("(pointer: fine)").matches;
+      const pointer = { x: innerWidth / 2, y: innerHeight * .42, smoothX: innerWidth / 2, smoothY: innerHeight * .42, moveX: 0, moveY: 0, speed: 0, active: false };
+      let width = 0, height = 0, dpr = 1, particles = [], dust = [], last = performance.now(), statusTimer = 0;
+      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+      const mulberry32 = seed => () => { let t = seed += 0x6D2B79F5; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+      const shuffle = (items, random) => { for (let i = items.length - 1; i > 0; i--) { const j = Math.floor(random() * (i + 1)); [items[i], items[j]] = [items[j], items[i]]; } return items; };
+
+      function buildTargets() {
+        const mask = document.createElement("canvas");
+        mask.width = width; mask.height = height;
+        const maskContext = mask.getContext("2d", { willReadFrequently: true });
+        const fontSize = Math.min(width * .37, height * .49, 510);
+        const centerY = height * (width < 720 ? .35 : .42);
+        maskContext.fillStyle = "#fff";
+        maskContext.textAlign = "center";
+        maskContext.textBaseline = "middle";
+        maskContext.font = `900 ${fontSize}px Arial, sans-serif`;
+        maskContext.fillText("404", width / 2, centerY);
+        const image = maskContext.getImageData(0, 0, width, height).data;
+        const step = width < 720 ? 5 : 7;
+        const points = [];
+        for (let y = 0; y < height; y += step) for (let x = 0; x < width; x += step) if (image[(y * width + x) * 4 + 3] > 80) points.push({ x, y });
+        return shuffle(points, mulberry32(404));
+      }
+
+      function resize() {
+        width = Math.max(1, innerWidth); height = Math.max(1, innerHeight); dpr = Math.min(devicePixelRatio || 1, 1.6);
+        canvas.width = Math.floor(width * dpr); canvas.height = Math.floor(height * dpr);
+        canvas.style.width = `${width}px`; canvas.style.height = `${height}px`;
+        context.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const points = buildTargets();
+        const count = width < 720 ? clamp(Math.floor(width * height / 900), 520, 780) : clamp(Math.floor(width * height / 720), 1050, 1850);
+        const random = mulberry32(404 + width * 13 + height * 7);
+        const old = particles;
+        particles = Array.from({ length: Math.min(count, points.length) }, (_, index) => {
+          const target = points[Math.floor(index * points.length / Math.min(count, points.length))];
+          const prior = old[index];
+          const radius = Math.max(width, height) * (.25 + random() * .8);
+          const angle = random() * Math.PI * 2;
+          return { x: prior ? prior.x : width / 2 + Math.cos(angle) * radius, y: prior ? prior.y : height / 2 + Math.sin(angle) * radius, tx: target.x, ty: target.y, vx: prior ? prior.vx : 0, vy: prior ? prior.vy : 0, size: .55 + random() * 1.45, depth: .25 + random() * .75, phase: random() * Math.PI * 2, color: Math.floor(random() * COLORS.length), orbitSpeed: .46 + random() * .74 };
+        });
+        dust = Array.from({ length: width < 720 ? 52 : 110 }, () => ({ x: random() * width, y: random() * height, speed: .03 + random() * .1, size: .35 + random() * 1.15, alpha: .1 + random() * .38, depth: .2 + random() * .8 }));
+      }
+
+      function handlePointerMove(event) {
+        const movementX = Number.isFinite(event.movementX) ? event.movementX : event.clientX - pointer.x;
+        const movementY = Number.isFinite(event.movementY) ? event.movementY : event.clientY - pointer.y;
+        pointer.x = event.clientX; pointer.y = event.clientY; pointer.active = true;
+        pointer.moveX = pointer.moveX * .45 + movementX * .55;
+        pointer.moveY = pointer.moveY * .45 + movementY * .55;
+        pointer.speed = clamp(Math.hypot(pointer.moveX, pointer.moveY), 0, 42);
+        page.style.setProperty("--pointer-x", `${pointer.x}px`); page.style.setProperty("--pointer-y", `${pointer.y}px`);
+        if (finePointer) page.style.setProperty("--cursor-x", `${pointer.x}px`);
+      }
+      if (window.PointerEvent) window.addEventListener("pointermove", handlePointerMove, { passive: true, capture: true });
+      else window.addEventListener("mousemove", handlePointerMove, { passive: true, capture: true });
+      window.addEventListener("pointerdown", handlePointerMove, { passive: true, capture: true });
+      window.addEventListener("pointerup", event => { if (event.pointerType === "touch") pointer.active = false; }, { passive: true });
+      document.addEventListener("mouseout", event => { if (!event.relatedTarget) pointer.active = false; }, { passive: true });
+      window.addEventListener("blur", () => { pointer.active = false; });
+      window.addEventListener("resize", resize, { passive: true });
+
+      function recalibrate() {
+        const centerX = width / 2, centerY = height * (width < 720 ? .35 : .42), random = Math.random;
+        particles.forEach(particle => { const dx = particle.x - centerX, dy = particle.y - centerY, distance = Math.hypot(dx, dy) || 1, impulse = 5 + random() * 11; particle.vx += dx / distance * impulse; particle.vy += dy / distance * impulse; });
+        status.textContent = "SEARCHING THE VOID";
+        clearTimeout(statusTimer); statusTimer = setTimeout(() => { status.textContent = "SIGNAL UNRESOLVED"; }, 1450);
+      }
+      recalibrateButton.addEventListener("click", recalibrate);
+
+      function animate(now) {
+        const delta = clamp((now - last) / 16.667, .25, 2.2); last = now;
+        const time = now / 1000, influence = (width < 720 ? 160 : 270) * (reducedMotion ? .64 : 1);
+        pointer.smoothX += (pointer.x - pointer.smoothX) * .14;
+        pointer.smoothY += (pointer.y - pointer.smoothY) * .14;
+        if (finePointer) { page.style.setProperty("--cursor-ring-x", `${pointer.smoothX}px`); page.style.setProperty("--cursor-ring-y", `${pointer.smoothY}px`); }
+        context.clearRect(0, 0, width, height);
+        context.save(); context.globalCompositeOperation = "lighter";
+        dust.forEach(speck => { speck.y -= speck.speed * delta * (1 + speck.depth); if (speck.y < -4) { speck.y = height + 4; speck.x = Math.random() * width; } context.fillStyle = `rgba(133,166,255,${speck.alpha * .34})`; context.fillRect(speck.x, speck.y, speck.size, speck.size); });
+        const trails = COLORS.map(() => []);
+        particles.forEach(particle => {
+          const idleRadius = (1.8 + particle.depth * 4.8) * (reducedMotion ? .42 : 1);
+          const idleAngle = time * particle.orbitSpeed + particle.phase;
+          const floatX = Math.cos(idleAngle) * idleRadius;
+          const floatY = Math.sin(idleAngle * .86) * idleRadius * .76;
+          const flow = .012 + particle.depth * .016 * Math.sin(time * .54 + particle.phase);
+          particle.vx += Math.sin(particle.y * .011 + time * .72 + particle.phase) * flow * delta;
+          particle.vy += Math.cos(particle.x * .009 - time * .61 + particle.phase) * flow * delta;
+          let vortexStrength = 0, localSpring = .021, localDamping = .90;
+          if (pointer.active) {
+            const dx = particle.x - pointer.smoothX, dy = particle.y - pointer.smoothY, distance = Math.hypot(dx, dy);
+            if (distance < influence && distance > .1) {
+              vortexStrength = Math.pow((influence - distance) / influence, 1.18);
+              localSpring = .021 * (1 - vortexStrength * .94);
+              const unitX = dx / distance, unitY = dy / distance, tangentX = -unitY, tangentY = unitX;
+              const orbitRadius = 42 + particle.depth * 34 + Math.min(pointer.speed, 24) * .9;
+              const radialForce = (orbitRadius - distance) * .032 * vortexStrength;
+              const swirlForce = (1.55 + particle.depth * 2.7 + pointer.speed * .07) * vortexStrength;
+              particle.vx += (unitX * radialForce + tangentX * swirlForce + pointer.moveX * vortexStrength * .012) * delta;
+              particle.vy += (unitY * radialForce + tangentY * swirlForce + pointer.moveY * vortexStrength * .012) * delta;
+              localDamping = .90 + vortexStrength * .046;
+            }
+          }
+          particle.vx += (particle.tx + floatX - particle.x) * localSpring * delta;
+          particle.vy += (particle.ty + floatY - particle.y) * localSpring * delta;
+          particle.vx *= localDamping; particle.vy *= localDamping;
+          const velocity = Math.hypot(particle.vx, particle.vy), maxVelocity = 15 + pointer.speed * .08;
+          if (velocity > maxVelocity) { particle.vx = particle.vx / velocity * maxVelocity; particle.vy = particle.vy / velocity * maxVelocity; }
+          particle.x += particle.vx * delta; particle.y += particle.vy * delta;
+          if (!reducedMotion && velocity > .48) trails[particle.color].push([particle.x, particle.y, particle.vx, particle.vy]);
+        });
+        context.lineCap = "round"; context.lineWidth = .72;
+        trails.forEach((group, colorIndex) => { if (!group.length) return; const [r,g,b] = COLORS[colorIndex]; context.beginPath(); group.forEach(([x,y,vx,vy]) => { const scale = Math.min(3.1,1.25 + Math.hypot(vx,vy) * .13); context.moveTo(x,y); context.lineTo(x - vx * scale,y - vy * scale); }); context.strokeStyle = `rgba(${r},${g},${b},.13)`; context.stroke(); });
+        particles.forEach(particle => { const [r,g,b] = COLORS[particle.color], shimmer = .54 + Math.sin(time * 1.8 + particle.phase) * .18, alpha = shimmer * (.35 + particle.depth * .55); if (particle.size > 1.55) { context.beginPath(); context.arc(particle.x,particle.y,particle.size * 4.2,0,Math.PI * 2); context.fillStyle = `rgba(${r},${g},${b},${alpha * .08})`; context.fill(); } context.beginPath(); context.arc(particle.x,particle.y,particle.size,0,Math.PI * 2); context.fillStyle = `rgba(${r},${g},${b},${alpha})`; context.fill(); });
+        context.restore();
+        requestAnimationFrame(animate);
+      }
+
+      document.querySelectorAll(".magnetic").forEach(element => {
+        element.addEventListener("pointermove", event => { if (!finePointer || reducedMotion) return; const rect = element.getBoundingClientRect(); element.style.setProperty("--mag-x", `${(event.clientX - (rect.left + rect.width / 2)) * .16}px`); element.style.setProperty("--mag-y", `${(event.clientY - (rect.top + rect.height / 2)) * .16}px`); }, { passive: true });
+        element.addEventListener("pointerleave", () => { element.style.setProperty("--mag-x", "0px"); element.style.setProperty("--mag-y", "0px"); });
+      });
+      if (finePointer) document.querySelectorAll("a,button").forEach(element => { element.addEventListener("pointerenter", () => ring.classList.add("is-hover")); element.addEventListener("pointerleave", () => ring.classList.remove("is-hover")); });
+      resize(); requestAnimationFrame(animate);
+    })();
+  </script>
+</body>
+</html>

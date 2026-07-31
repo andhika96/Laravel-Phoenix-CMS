@@ -12,6 +12,7 @@
 				<div v-if="effectiveResponsiveValue('orderMode', 'default')==='custom'" class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Custom Order</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><input class="pb-input" type="number" :value="effectiveResponsiveValue('order', '')" @input="setResponsiveNumberSetting('order', $event.target.value)"></div>
 				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Size</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('sizeMode', 'none')" @change="setResponsiveSetting('sizeMode', $event.target.value)"><option value="none">None</option><option value="grow">Grow</option><option value="shrink">Shrink</option><option value="custom">Custom</option></select></div>
 				<div v-if="effectiveResponsiveValue('sizeMode', 'none')==='custom'" class="pb-advanced-size-fields"><ScalarControl label="Flex Grow" :settings="settings" :setting-key="responsiveKey('flexGrow')" :fallback="0" :min-value="0" :max-value="10" :step-value="0.1" :responsive-icon="deviceIcon" /><ScalarControl label="Flex Shrink" :settings="settings" :setting-key="responsiveKey('flexShrink')" :fallback="1" :min-value="0" :max-value="10" :step-value="0.1" :responsive-icon="deviceIcon" /></div>
+				<div class="pb-advanced-size-fields"><ScalarControl label="Column Span" :settings="settings" :setting-key="responsiveKey('gridColumnSpan')" :fallback="1" :min-value="1" :max-value="12" :step-value="1" :responsive-icon="deviceIcon" /><ScalarControl label="Row Span" :settings="settings" :setting-key="responsiveKey('gridRowSpan')" :fallback="1" :min-value="1" :max-value="12" :step-value="1" :responsive-icon="deviceIcon" /></div>
 				<label class="pb-advanced-field"><span>Position</span><select class="pb-select" v-model="settings.position"><option value="default">Default</option><option value="absolute">Absolute</option><option value="fixed">Fixed</option></select></label>
 				<template v-if="settings.position!=='default'">
 					<div class="pb-advanced-two-fields"><label><span>Horizontal Orientation</span><select class="pb-select" v-model="settings.horizontalOrientation"><option value="left">Left</option><option value="right">Right</option></select></label><DimensionControl label="X Offset" :settings="settings" :setting-key="responsiveKey('positionX')" fallback="0px" allow-negative :responsive-icon="deviceIcon" /></div>
@@ -23,7 +24,7 @@
 			</div>
 		</details>
 
-		<details class="pb-collapsible">
+		<details v-if="showDisplayConditions" class="pb-collapsible">
 			<summary>Display Conditions</summary>
 			<div class="pb-collapsible-body">
 				<p class="pb-advanced-help">Rules inside a group use AND. Groups use OR.</p>
@@ -42,7 +43,7 @@
 			</div>
 		</details>
 
-		<details class="pb-collapsible">
+		<details v-if="showCacheSettings" class="pb-collapsible">
 			<summary>Cache Settings</summary>
 			<div class="pb-collapsible-body"><label class="pb-advanced-field"><span>Cache Mode</span><select class="pb-select" v-model="settings.cacheMode"><option value="default">Default</option><option value="inactive">Inactive</option><option value="active">Active</option></select></label><p class="pb-advanced-help">Active caches the rendered widget fragment and invalidates it when content changes.</p></div>
 		</details>
@@ -76,17 +77,17 @@
 			<summary>Transform</summary>
 			<div class="pb-collapsible-body"><StateTabs v-model="transformState" />
 				<div class="pb-transform-grid">
-					<DimensionControl label="Rotate" :settings="settings" :setting-key="stateKey('transformRotate', transformState)" fallback="0deg" :units="['deg']" allow-negative />
-					<DimensionControl label="Perspective" :settings="settings" :setting-key="stateKey('transformPerspective', transformState)" fallback="0px" />
-					<DimensionControl label="3D Rotate X" :settings="settings" :setting-key="stateKey('transformRotateX', transformState)" fallback="0deg" :units="['deg']" allow-negative />
-					<DimensionControl label="3D Rotate Y" :settings="settings" :setting-key="stateKey('transformRotateY', transformState)" fallback="0deg" :units="['deg']" allow-negative />
+					<DimensionControl label="Rotate" :settings="settings" :setting-key="responsiveStateKey('transformRotate', transformState)" fallback="0deg" :units="['deg']" allow-negative :responsive-icon="deviceIcon" />
+					<DimensionControl label="Perspective" :settings="settings" :setting-key="responsiveStateKey('transformPerspective', transformState)" fallback="0px" :responsive-icon="deviceIcon" />
+					<DimensionControl label="3D Rotate X" :settings="settings" :setting-key="responsiveStateKey('transformRotateX', transformState)" fallback="0deg" :units="['deg']" allow-negative :responsive-icon="deviceIcon" />
+					<DimensionControl label="3D Rotate Y" :settings="settings" :setting-key="responsiveStateKey('transformRotateY', transformState)" fallback="0deg" :units="['deg']" allow-negative :responsive-icon="deviceIcon" />
 					<DimensionControl label="Offset X" :settings="settings" :setting-key="responsiveStateKey('transformOffsetX', transformState)" fallback="0px" allow-negative :responsive-icon="deviceIcon" />
 					<DimensionControl label="Offset Y" :settings="settings" :setting-key="responsiveStateKey('transformOffsetY', transformState)" fallback="0px" allow-negative :responsive-icon="deviceIcon" />
-					<ScalarControl label="Scale" :settings="settings" :setting-key="stateKey('transformScale', transformState)" :fallback="1" :min-value="0" :max-value="5" :step-value="0.01" />
-					<DimensionControl label="Skew X" :settings="settings" :setting-key="stateKey('transformSkewX', transformState)" fallback="0deg" :units="['deg']" allow-negative />
-					<DimensionControl label="Skew Y" :settings="settings" :setting-key="stateKey('transformSkewY', transformState)" fallback="0deg" :units="['deg']" allow-negative />
+					<ScalarControl label="Scale" :settings="settings" :setting-key="responsiveStateKey('transformScale', transformState)" :fallback="1" :min-value="0" :max-value="5" :step-value="0.01" :responsive-icon="deviceIcon" />
+					<DimensionControl label="Skew X" :settings="settings" :setting-key="responsiveStateKey('transformSkewX', transformState)" fallback="0deg" :units="['deg']" allow-negative :responsive-icon="deviceIcon" />
+					<DimensionControl label="Skew Y" :settings="settings" :setting-key="responsiveStateKey('transformSkewY', transformState)" fallback="0deg" :units="['deg']" allow-negative :responsive-icon="deviceIcon" />
 				</div>
-				<label class="pb-advanced-toggle"><span>Flip Horizontal</span><input type="checkbox" v-model="settings[stateKey('transformFlipHorizontal', transformState)]"></label><label class="pb-advanced-toggle"><span>Flip Vertical</span><input type="checkbox" v-model="settings[stateKey('transformFlipVertical', transformState)]"></label>
+				<label class="pb-advanced-toggle"><span>Flip Horizontal</span><input type="checkbox" :checked="effectiveResponsiveStateValue('transformFlipHorizontal', transformState, false)" @change="setResponsiveStateSetting('transformFlipHorizontal', transformState, $event.target.checked)"></label><label class="pb-advanced-toggle"><span>Flip Vertical</span><input type="checkbox" :checked="effectiveResponsiveStateValue('transformFlipVertical', transformState, false)" @change="setResponsiveStateSetting('transformFlipVertical', transformState, $event.target.checked)"></label>
 				<label v-if="transformState==='hover'" class="pb-advanced-field"><span>Hover Transition Duration</span><input class="pb-input" type="number" min="0" step=".1" v-model.number="settings.transformHoverDuration"></label>
 				<div class="pb-advanced-two-fields"><label><span>X Anchor</span><select class="pb-select" v-model="settings.transformOriginX"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></label><label><span>Y Anchor</span><select class="pb-select" v-model="settings.transformOriginY"><option value="top">Top</option><option value="center">Center</option><option value="bottom">Bottom</option></select></label></div>
 			</div>
@@ -105,7 +106,9 @@
 						<div class="pb-bg-media-actions"><button type="button" class="pb-bg-media-choose" @click="$emit('choose-media', stateKey('advancedBackgroundImage', backgroundState))">Choose Image</button><button type="button" class="pb-bg-media-remove" :disabled="!settings[stateKey('advancedBackgroundImage', backgroundState)]" title="Remove Image" @click="$emit('clear-media', stateKey('advancedBackgroundImage', backgroundState))"><i class="fas fa-trash-alt"></i></button></div>
 					</div>
 				</div>
-				<div class="pb-advanced-two-fields"><label><span>Position</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundPosition', backgroundState)]"><option v-for="position in backgroundPositions" :key="position.value" :value="position.value">{{ position.label }}</option></select></label><label><span>Attachment</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundAttachment', backgroundState)]"><option value="scroll">Scroll</option><option value="fixed">Fixed</option></select></label><label><span>Repeat</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundRepeat', backgroundState)]"><option value="no-repeat">No Repeat</option><option value="repeat">Repeat</option><option value="repeat-x">Repeat X</option><option value="repeat-y">Repeat Y</option></select></label><label><span>Size</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundSize', backgroundState)]"><option value="auto">Auto</option><option value="cover">Cover</option><option value="contain">Contain</option></select></label></div>
+				<div class="pb-advanced-two-fields"><label><span>Position</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundPosition', backgroundState)]"><option v-for="position in backgroundPositions" :key="position.value" :value="position.value">{{ position.label }}</option><option value="custom">Custom</option></select></label><label><span>Attachment</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundAttachment', backgroundState)]"><option value="scroll">Scroll</option><option value="fixed">Fixed</option></select></label><label><span>Repeat</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundRepeat', backgroundState)]"><option value="no-repeat">No Repeat</option><option value="repeat">Repeat</option><option value="repeat-x">Repeat X</option><option value="repeat-y">Repeat Y</option></select></label><label><span>Size</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundSize', backgroundState)]"><option value="auto">Auto</option><option value="cover">Cover</option><option value="contain">Contain</option><option value="custom">Custom</option></select></label></div>
+				<div v-if="settings[stateKey('advancedBackgroundPosition', backgroundState)]==='custom'" class="pb-advanced-two-fields"><DimensionControl label="Position X" :settings="settings" :setting-key="stateKey('advancedBackgroundPositionX', backgroundState)" fallback="50%" /><DimensionControl label="Position Y" :settings="settings" :setting-key="stateKey('advancedBackgroundPositionY', backgroundState)" fallback="50%" /></div>
+				<DimensionControl v-if="settings[stateKey('advancedBackgroundSize', backgroundState)]==='custom'" label="Custom Size" :settings="settings" :setting-key="stateKey('advancedBackgroundCustomSize', backgroundState)" fallback="100%" />
 			</template>
 			<template v-if="settings[stateKey('advancedBackgroundType', backgroundState)]==='gradient'">
 				<div class="pb-advanced-two-fields"><label><span>First Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedGradientColorOne', backgroundState)]"></label><ScalarControl label="First Location" :settings="settings" :setting-key="stateKey('advancedGradientLocationOne', backgroundState)" :fallback="0" :min-value="0" :max-value="100" :step-value="1" /><label><span>Second Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedGradientColorTwo', backgroundState)]"></label><ScalarControl label="Second Location" :settings="settings" :setting-key="stateKey('advancedGradientLocationTwo', backgroundState)" :fallback="100" :min-value="0" :max-value="100" :step-value="1" /></div>
@@ -116,7 +119,8 @@
 
 		<details class="pb-collapsible"><summary>Border</summary><div class="pb-collapsible-body"><StateTabs v-model="borderState" />
 			<label class="pb-advanced-field"><span>Border Type</span><select class="pb-select" v-model="settings[stateKey('advancedBorderType', borderState)]"><option v-for="type in borderTypes" :key="type" :value="type">{{ type }}</option></select></label>
-			<div v-if="settings[stateKey('advancedBorderType', borderState)]!=='none'" class="pb-advanced-two-fields"><DimensionControl label="Border Width" :settings="settings" :setting-key="stateKey('advancedBorderWidth', borderState)" fallback="1px" /><label><span>Border Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedBorderColor', borderState)]"></label></div>
+			<BoxControl v-if="settings[stateKey('advancedBorderType', borderState)]!=='none'" label="Border Width" :settings="settings" :setting-key="stateKey('advancedBorderWidth', borderState)" fallback="1px" />
+			<label v-if="settings[stateKey('advancedBorderType', borderState)]!=='none'" class="pb-advanced-field"><span>Border Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedBorderColor', borderState)]"></label>
 			<BoxControl label="Border Radius" :settings="settings" :setting-key="responsiveStateKey('advancedBorderRadius', borderState)" fallback="0px" :responsive-icon="deviceIcon" />
 			<label class="pb-advanced-toggle"><span>Box Shadow</span><input type="checkbox" v-model="settings[stateKey('advancedBoxShadowEnabled', borderState)]"></label><div v-if="settings[stateKey('advancedBoxShadowEnabled', borderState)]" class="pb-advanced-two-fields"><label><span>Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedBoxShadowColor', borderState)]"></label><DimensionControl label="Horizontal" :settings="settings" :setting-key="stateKey('advancedBoxShadowX', borderState)" fallback="0px" allow-negative /><DimensionControl label="Vertical" :settings="settings" :setting-key="stateKey('advancedBoxShadowY', borderState)" fallback="4px" allow-negative /><DimensionControl label="Blur" :settings="settings" :setting-key="stateKey('advancedBoxShadowBlur', borderState)" fallback="16px" /><DimensionControl label="Spread" :settings="settings" :setting-key="stateKey('advancedBoxShadowSpread', borderState)" fallback="0px" allow-negative /><label class="pb-advanced-toggle"><span>Outline / Inset</span><input type="checkbox" v-model="settings[stateKey('advancedBoxShadowInset', borderState)]"></label></div>
 			<label v-if="borderState==='hover'" class="pb-advanced-field"><span>Hover Transition Duration</span><input class="pb-input" type="number" min="0" step=".1" v-model.number="settings.advancedBorderHoverDuration"></label>
@@ -333,6 +337,8 @@ export default {
 	props: {
 		node: { type: Object, required: true },
 		responsiveDevice: { type: String, default: 'desktop' },
+		showDisplayConditions: { type: Boolean, default: true },
+		showCacheSettings: { type: Boolean, default: true },
 	},
 	emits: ['unavailable-ai', 'responsive-device', 'choose-media', 'clear-media'],
 	provide() {
@@ -362,7 +368,9 @@ export default {
 	methods: {
 		responsiveKey(base) { return base + (this.responsiveDevice === 'tablet' ? 'Tablet' : (this.responsiveDevice === 'mobile' ? 'Mobile' : '')); },
 		effectiveResponsiveValue(base, fallback = '') { return inheritedResponsiveValue(this.settings, this.responsiveKey(base), fallback); },
+		effectiveResponsiveStateValue(base, state, fallback = '') { return inheritedResponsiveValue(this.settings, this.responsiveStateKey(base, state), fallback); },
 		setResponsiveSetting(base, value) { this.settings[this.responsiveKey(base)] = value; },
+		setResponsiveStateSetting(base, state, value) { this.settings[this.responsiveStateKey(base, state)] = value; },
 		setResponsiveNumberSetting(base, raw) {
 			const value = raw === '' ? '' : Number(raw);
 			if (value === '' || Number.isFinite(value)) this.setResponsiveSetting(base, value);
@@ -405,7 +413,8 @@ export default {
 .pb-advanced-edge-fields label span { color: #7a8699; font-size: 9px; }
 .pb-advanced-edge-fields .pb-link-btn { width: 28px; height: 30px; border-radius: 0 5px 5px 0; }
 .pb-advanced-edge-fields .pb-link-btn.active { background: #eef1ff; color: #5b6cff; }
-.pb-advanced-toggle { min-height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-size: 12px; color: #344054; }
+.pb-advanced-toggle,
+:deep(.pb-motion-effect .pb-advanced-toggle) { min-height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-size: 12px; color: #344054; }
 .pb-ai-disabled { width: 100%; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 10px; border: 1px dashed #c9d1df; border-radius: 8px; background: #f8fafc; color: #667085; text-align: left; }
 .pb-ai-disabled span { display: flex; flex-direction: column; }.pb-ai-disabled small { font-size: 10px; }
 .pb-advanced-help { margin: 4px 0 12px; color: #7a8699; font-size: 10px; line-height: 1.5; }

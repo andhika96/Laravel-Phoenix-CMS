@@ -1,0 +1,154 @@
+# Image Box Typography Compact UI Design QA
+
+- source visual truth path: `output/design-qa/image-box-typography-before.png`
+- implementation screenshot path: `output/design-qa/image-box-typography-after.png`
+- viewport: 1920 x 1032 px
+- state: Image Box selected, Style > Content > Title Typography open
+- full-view comparison evidence: post-patch runtime capture generated successfully
+- focused region evidence: Typography popover measured at x=14px, width=291px, right edge=305px inside the 319px sidebar
+- viewer limitation: the internal pixel viewer remains blocked by Windows ACL; DOM geometry, accessibility snapshot, screenshot generation, and console were verified live
+
+## Findings
+
+- No blocking runtime finding remains.
+  - Location: shared `TypographyControl.vue`, Image Box Style sidebar.
+  - Evidence: labels rendered at 11px; Size numeric input measured 68px wide and 34px high; Weight select measured 136px wide and 34px high; the popover had no horizontal overflow.
+
+## Open Questions
+
+- None about the requested layout.
+
+## Implementation Checklist
+
+- [x] Confirm all dimension labels render at 11px.
+- [x] Confirm responsive icon and unit selector share one compact tool row.
+- [x] Confirm range and 68px numeric input remain on the same row.
+- [x] Confirm Weight, Transform, Font Style, and Decoration selects are consistently 34px high.
+- [x] Confirm number spinners are hidden and no panel clipping occurs.
+
+## Patches Made Since Previous QA Pass
+
+- Corrected scoped-style penetration for local `DimensionField` and `ResponsivePicker` subcomponents with `:deep(...)`.
+- Standardized dimension/select controls to 11px labels and 30-34px heights.
+- Standardized range/numeric layout to a compact two-column row.
+- Removed native numeric spinners.
+- Added a regression test for the scoped deep layout contract.
+
+## Follow-up Polish
+
+- None identified from the verified runtime geometry and interaction pass.
+
+final result: passed (runtime DOM/layout, screenshot capture, and console verified; internal pixel viewer unavailable)
+
+# Page Builder Setting Controls Consistency QA — 2026-07-24
+
+- source visual truth path: `output/design-qa/image-box-advanced-background-before.png`
+- primary implementation screenshot: `output/design-qa/image-box-advanced-background-coloris-final.png`
+- supporting screenshots:
+  - `output/design-qa/image-box-advanced-background-after.png`
+  - `output/design-qa/image-box-advanced-background-picker-after.png`
+  - `output/design-qa/accordion-advanced-after.png`
+  - `output/design-qa/tabs-content-after.png`
+  - `output/design-qa/heading-style-after.png`
+- affected scope: shared Advanced, Image Box, Basic widgets, Accordion/Tabs, Grid/Row Grid, Container/Container Fluid
+- static source audit: no active widget SFC contains `type="color"`; settings templates have balanced `div` elements
+- automated regression: 133 tests passed, 1,601 assertions
+
+## Findings
+
+- Runtime QA is complete for the targeted panel consistency scope.
+  - Sidebar root measured 319px (`scrollWidth=clientWidth=319`) with no horizontal overflow.
+  - Coloris picker measured x=14px, width=380px, right edge=394px inside the 1920px viewport.
+  - Image Box, Accordion, Tabs, Heading, Grid, and shared Advanced controls were exercised in the live editor.
+  - Image Box Classic Background exposed one Coloris textbox; entering `#112233` produced `background-color: rgb(17, 34, 51)` on the `image_box` canvas node.
+  - Final browser console reported 0 errors and 0 warnings.
+- A separate SFC compile defect was found and fixed during runtime QA.
+  - `layout/grid/Settings.vue` and `layout/row-grid/Settings.vue` each missed one closing `</div>` after the Border section.
+  - A recursive regression test now checks balanced `div` elements across all active widget `Settings.vue` templates.
+
+## Static checks completed
+
+- Canonical widget color rows use the local Coloris input only; duplicate native swatches were removed from nine active widget settings files.
+- Numeric CSS dimensions expose a numeric field and unit selector; constrained values also expose a slider.
+- Spacing groups preserve responsive keys and link/unlink behavior.
+- The `image_box` slug, Advanced Background color-plus-image behavior, canvas preview, Accordion frontend renderer, and parity tests are aligned.
+
+final result: passed (runtime interaction, DOM geometry, computed style, screenshot capture, console, and regression suite verified; internal pixel viewer unavailable)
+
+# Design QA - Heading Elementor Parity
+
+Date: 2026-07-30
+
+## Sources compared
+
+- Official Elementor Flexbox playground Heading widget.
+- Supplied screenshots for Content, Style, Advanced Layout, and collapsed Advanced sections.
+- Local implementation at `https://laravel-13-phoenix.aruna/pagebuilder-elementor/edit/heading-runtime-qa-20260730`.
+
+The reference and local implementation screenshots were reviewed together at the desktop builder state. The local builder keeps its established light design system while matching the reference control hierarchy, labels, grouping, responsive affordances, state tabs, and interaction behavior.
+
+## Verification states
+
+- Content: Title, dynamic binding, Link with options/dynamic binding, and HTML Tag.
+- Style: responsive alignment, Typography, Text Stroke, Text Shadow, Blend Mode, Normal/Hover colors, and transition duration.
+- Advanced: Layout, Motion Effects, Transform, Background, Border, Mask, Responsive, Attributes, and Custom CSS.
+- Runtime: title/tag/link, color, alignment, blend mode, padding, CSS ID/classes, grid span, save/reload persistence, and frontend preview.
+
+## Findings
+
+- P0: none.
+- P1: none.
+- P2: none.
+- The local sidebar is wider and uses the product's existing light theme rather than Elementor's dark theme; this is intentional design-system continuity, not a parity defect.
+- Video and Slideshow background types are not exposed in the shared widget Advanced background control because this builder does not yet have a safe shared media runtime contract for them. Classic and Gradient, including custom position/size and Normal/Hover, are functional.
+
+final result: passed
+
+# Design QA - Motion Effects Toggle Row Layout
+
+Date: 2026-07-30
+
+- source visual truth path: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-383e4484-4208-4be2-b0d8-6aac24595360.png`
+- implementation screenshot path: `C:\Users\CAHYO\.codex\visualizations\2026\07\30\019fb132-77fc-7ca0-ba81-839fb642c773\motion-effects-toggle-layout-after-lower.png`
+- viewport: focused 319 x 709 px sidebar crop from the desktop editor
+- state: Heading selected, Advanced > Motion Effects open, Scrolling Effects enabled
+- full-view comparison evidence: source and corrected implementation were opened together in the same comparison input
+- focused region evidence: all six MotionEffect child rows were measured in runtime DOM
+
+## Findings
+
+- The source screenshot showed the Vertical Scroll, Horizontal Scroll, Transparency, Blur, Rotate, and Scale checkboxes attached directly to their labels.
+- Root cause: the parent component's scoped `.pb-advanced-toggle` rule did not penetrate the nested `MotionEffect` child component.
+- The corrected rows now compute to `display:flex`, `justify-content:space-between`, `align-items:center`, and `gap:12px`.
+- All six checkboxes share the same right edge at x=290 within the 319px sidebar crop.
+- Typography, color tokens, copy, and existing image/icon usage remain unchanged; no asset work was required.
+- Browser console verification reported zero errors and zero warnings.
+
+## Patches made since the previous QA pass
+
+- Added a scoped `:deep(.pb-motion-effect .pb-advanced-toggle)` selector so nested toggles inherit the canonical shared row layout.
+- Added a regression test for the nested child-component styling contract.
+
+final result: passed
+
+# Design QA - Heading Advanced Section Scope Correction
+
+Date: 2026-07-30
+
+## Sources compared
+
+- Official Elementor Heading Advanced screenshot: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-c13f612e-bba4-4ebc-9e7b-6b4ebb6145f9.png`.
+- Local runtime screenshot: `C:\Users\CAHYO\.codex\visualizations\2026\07\30\019fb132-77fc-7ca0-ba81-839fb642c773\heading-advanced-runtime-qa-collapsed.png`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/edit/heading-runtime-qa-20260730`.
+
+The source and implementation screenshots were reviewed together in the same collapsed Advanced state. Both now expose the same nine section labels in the same order: Layout, Motion Effects, Transform, Background, Border, Mask, Responsive, Attributes, and Custom CSS.
+
+## Findings
+
+- The earlier Heading implementation exposed two shared sections that are absent from the Elementor Heading reference: Display Conditions and Cache Settings.
+- Both sections are now hidden only for Heading through explicit shared-component props.
+- Shared defaults remain enabled, so Image Box and other widgets using the shared Advanced controls retain Display Conditions and Cache Settings.
+- Runtime DOM verification found exactly nine Heading sections and zero matches for both removed labels.
+- Browser console verification reported zero errors and zero warnings.
+
+final result: passed

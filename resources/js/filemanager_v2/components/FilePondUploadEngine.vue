@@ -11,7 +11,7 @@ const props = defineProps({
   paused: Boolean,
 });
 
-const emit = defineEmits(['added', 'progress', 'done', 'failed', 'removed']);
+const emit = defineEmits(['added', 'progress', 'attempt', 'retrying', 'done', 'failed', 'removed']);
 const pond = ref(null);
 const resumeWaiters = [];
 const releasedIds = new Set();
@@ -66,6 +66,18 @@ const server = {
           onProgress: (percentage) => progress(true, Math.round(file.size * (percentage / 100)), file.size),
           waitForResume,
           onAbort: (abortRequest) => { cancelUpload = abortRequest; },
+          onAttempt: ({ attempt, maxAttempts }) => {
+            if (!cancelled) emit('attempt', { id: file.id, attempt, maxAttempts });
+          },
+          onRetry: ({ attempt, maxAttempts, delayMs, error }) => {
+            if (!cancelled) emit('retrying', {
+              id: file.id,
+              attempt,
+              maxAttempts,
+              retryAt: Date.now() + delayMs,
+              error: error?.message || 'Upload sementara gagal.',
+            });
+          },
         });
         if (!cancelled) load(JSON.stringify(asset));
       } catch (uploadError) {

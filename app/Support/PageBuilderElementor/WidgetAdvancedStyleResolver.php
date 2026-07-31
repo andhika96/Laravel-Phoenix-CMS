@@ -143,6 +143,11 @@ final class WidgetAdvancedStyleResolver
             $rules[] = 'flex:'.$grow.' '.$shrink.' auto';
         }
 
+		$columnSpan = $this->clamp($this->responsive($settings, 'gridColumnSpan', $suffix, 1), 1, 12);
+		$rowSpan = $this->clamp($this->responsive($settings, 'gridRowSpan', $suffix, 1), 1, 12);
+		$rules[] = 'grid-column:span '.$columnSpan;
+		$rules[] = 'grid-row:span '.$rowSpan;
+
         $position = strtolower(trim((string) ($settings['position'] ?? 'default')));
         if (in_array($position, ['absolute', 'fixed'], true)) {
             $rules[] = 'position:'.$position;
@@ -174,10 +179,16 @@ final class WidgetAdvancedStyleResolver
             $image = $this->safeImageUrl($settings['advancedBackgroundImage'.$suffix] ?? '');
             if ($image !== '') {
                 $rules[] = 'background-image:url("'.$image.'")';
-                $rules[] = 'background-position:'.$this->backgroundPosition($settings['advancedBackgroundPosition'.$suffix] ?? 'center center');
+				$position = ($settings['advancedBackgroundPosition'.$suffix] ?? 'center center') === 'custom'
+					? $this->length($settings['advancedBackgroundPositionX'.$suffix] ?? '50%', '50%').' '.$this->length($settings['advancedBackgroundPositionY'.$suffix] ?? '50%', '50%')
+					: $this->backgroundPosition($settings['advancedBackgroundPosition'.$suffix] ?? 'center center');
+				$rules[] = 'background-position:'.$position;
                 $rules[] = 'background-attachment:'.(($settings['advancedBackgroundAttachment'.$suffix] ?? 'scroll') === 'fixed' ? 'fixed' : 'scroll');
                 $rules[] = 'background-repeat:'.$this->enum($settings['advancedBackgroundRepeat'.$suffix] ?? 'no-repeat', ['no-repeat', 'repeat', 'repeat-x', 'repeat-y'], 'no-repeat');
-                $rules[] = 'background-size:'.$this->enum($settings['advancedBackgroundSize'.$suffix] ?? 'cover', ['auto', 'cover', 'contain', '100% 100%'], 'cover');
+				$size = ($settings['advancedBackgroundSize'.$suffix] ?? 'cover') === 'custom'
+					? $this->length($settings['advancedBackgroundCustomSize'.$suffix] ?? '100%', '100%')
+					: $this->enum($settings['advancedBackgroundSize'.$suffix] ?? 'cover', ['auto', 'cover', 'contain'], 'cover');
+				$rules[] = 'background-size:'.$size;
             }
 
             return $rules;
@@ -204,7 +215,7 @@ final class WidgetAdvancedStyleResolver
         $type = $this->enum($settings['advancedBorderType'.$suffix] ?? 'none', ['none', 'solid', 'double', 'dotted', 'dashed', 'groove'], 'none');
         $rules = [
             'border-style:'.$type,
-            'border-width:'.($type === 'none' ? '0' : $this->length($settings['advancedBorderWidth'.$suffix] ?? '1px', '1px')),
+			'border-width:'.($type === 'none' ? '0' : $this->borderWidth($settings['advancedBorderWidth'.$suffix] ?? '1px')),
             'border-color:'.$this->color($settings['advancedBorderColor'.$suffix] ?? 'transparent', 'transparent'),
         ];
         if ($suffix === '') {
@@ -262,18 +273,19 @@ final class WidgetAdvancedStyleResolver
 
     private function transform(array $settings, string $stateSuffix, string $responsiveSuffix): string
     {
-        $scale = is_numeric($settings['transformScale'.$stateSuffix] ?? null) ? (float) $settings['transformScale'.$stateSuffix] : 1;
+		$scaleValue = $this->responsive($settings, 'transformScale'.$stateSuffix, $responsiveSuffix, 1);
+		$scale = is_numeric($scaleValue) ? (float) $scaleValue : 1;
         $parts = [
-            'perspective('.$this->length($settings['transformPerspective'.$stateSuffix] ?? '0px', '0px').')',
+			'perspective('.$this->length($this->responsive($settings, 'transformPerspective'.$stateSuffix, $responsiveSuffix, '0px'), '0px').')',
             'translate('.$this->space($this->responsive($settings, 'transformOffsetX'.$stateSuffix, $responsiveSuffix, '0px'), '0').','.$this->space($this->responsive($settings, 'transformOffsetY'.$stateSuffix, $responsiveSuffix, '0px'), '0').')',
-            'rotate('.$this->angle($settings['transformRotate'.$stateSuffix] ?? '0deg').')',
-            'rotateX('.$this->angle($settings['transformRotateX'.$stateSuffix] ?? '0deg').')',
-            'rotateY('.$this->angle($settings['transformRotateY'.$stateSuffix] ?? '0deg').')',
+			'rotate('.$this->angle($this->responsive($settings, 'transformRotate'.$stateSuffix, $responsiveSuffix, '0deg')).')',
+			'rotateX('.$this->angle($this->responsive($settings, 'transformRotateX'.$stateSuffix, $responsiveSuffix, '0deg')).')',
+			'rotateY('.$this->angle($this->responsive($settings, 'transformRotateY'.$stateSuffix, $responsiveSuffix, '0deg')).')',
             'scale('.$scale.')',
-            'skew('.$this->angle($settings['transformSkewX'.$stateSuffix] ?? '0deg').','.$this->angle($settings['transformSkewY'.$stateSuffix] ?? '0deg').')',
+			'skew('.$this->angle($this->responsive($settings, 'transformSkewX'.$stateSuffix, $responsiveSuffix, '0deg')).','.$this->angle($this->responsive($settings, 'transformSkewY'.$stateSuffix, $responsiveSuffix, '0deg')).')',
         ];
-        if ($this->truthy($settings['transformFlipHorizontal'.$stateSuffix] ?? false)) $parts[] = 'scaleX(-1)';
-        if ($this->truthy($settings['transformFlipVertical'.$stateSuffix] ?? false)) $parts[] = 'scaleY(-1)';
+		if ($this->truthy($this->responsive($settings, 'transformFlipHorizontal'.$stateSuffix, $responsiveSuffix, false))) $parts[] = 'scaleX(-1)';
+		if ($this->truthy($this->responsive($settings, 'transformFlipVertical'.$stateSuffix, $responsiveSuffix, false))) $parts[] = 'scaleY(-1)';
 
         return implode(' ', $parts);
     }
@@ -378,6 +390,15 @@ final class WidgetAdvancedStyleResolver
 
         return $fallback;
     }
+
+	private function borderWidth(mixed $value): string
+	{
+		$tokens = preg_split('/\s+/', trim((string) $value)) ?: [];
+		$tokens = array_slice(array_values(array_filter($tokens, fn ($token) => $token !== '')), 0, 4);
+		if ($tokens === []) return '1px';
+
+		return implode(' ', array_map(fn ($token) => $this->length($token, '1px'), $tokens));
+	}
 
     private function space(mixed $value, string $fallback): string
     {
