@@ -1808,11 +1808,6 @@ body {
 	pointer-events: auto;
 }
 
-.pb-node.pb-node-image_carousel .pb-image-carousel__viewport,
-.pb-node.pb-node-image_carousel .pb-image-carousel__viewport * {
-	pointer-events: auto;
-}
-
 .pb-node.pb-node-tabs .pb-dropzone-empty,
 .pb-node.pb-node-tabs .pb-grid-col-empty-hint,
 .pb-node.pb-node-tabs .pb-tabs-empty-hint,

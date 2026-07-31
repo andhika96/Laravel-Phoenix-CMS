@@ -227,63 +227,6 @@ test('content, links, captions, navigation, and non-loop boundaries react on can
 	assert.equal(context.activeIndex, 1);
 });
 
-test('image track supports horizontal pointer dragging without triggering native image drag', () => {
-	const source = fs.readFileSync(canvasPath, 'utf8');
-	const editorCss = fs.readFileSync(editorCssPath, 'utf8');
-
-	assert.match(source, /pb-image-carousel__viewport[^>]*data-pb-interactive="true"/);
-	assert.match(source, /@pointerdown\.stop="startDrag\(\$event\)"/);
-	assert.match(source, /@pointermove\.stop="moveDrag\(\$event\)"/);
-	assert.match(source, /@pointerup\.stop="endDrag\(\$event\)"/);
-	assert.match(source, /@pointercancel\.stop="cancelDrag\(\$event\)"/);
-	assert.match(source, /draggable="false"/);
-	assert.match(editorCss, /\.pb-node\.pb-node-image_carousel \.pb-image-carousel__viewport[\s\S]*?pointer-events:\s*auto;/);
-
-	const context = canvasContext({
-		images: [
-			{ id: 'one', url: '/one.jpg', alt: 'One' },
-			{ id: 'two', url: '/two.jpg', alt: 'Two' },
-			{ id: 'three', url: '/three.jpg', alt: 'Three' },
-		],
-		slidesToShow: '1', slidesToScroll: '1', navigation: 'arrows_dots',
-		pauseOnInteraction: true,
-	});
-	context.startAutoplay = () => {};
-	context.stopAutoplay = () => {};
-
-	const pointerTarget = {
-		clientWidth: 600,
-		captured: [],
-		released: [],
-		setPointerCapture(pointerId) { this.captured.push(pointerId); },
-		releasePointerCapture(pointerId) { this.released.push(pointerId); },
-	};
-	const event = (x, overrides = {}) => ({
-		button: 0, pointerId: 7, clientX: x, clientY: 120, currentTarget: pointerTarget,
-		preventDefault() {}, stopPropagation() {}, ...overrides,
-	});
-
-	context.startDrag(event(400));
-	assert.equal(context.dragState.pointerId, 7);
-	assert.deepEqual(pointerTarget.captured, [7]);
-	context.moveDrag(event(250));
-	assert.equal(context.dragOffset, -150);
-	context.endDrag(event(250));
-	assert.equal(context.activeIndex, 1, 'dragging left should advance one slide');
-	assert.equal(context.dragState, null);
-	assert.equal(context.dragOffset, 0);
-	assert.deepEqual(pointerTarget.released, [7]);
-
-	let prevented = false;
-	let stopped = false;
-	context.onImageClick({
-		preventDefault() { prevented = true; },
-		stopPropagation() { stopped = true; },
-	}, context.images[1]);
-	assert.equal(prevented, true, 'the click generated after a drag should not follow the image link');
-	assert.equal(stopped, true, 'the suppressed click should not bubble into editor selection');
-});
-
 test('autoplay, pause controls, direction, infinite loop, and rendition controls execute on canvas', async () => {
 	const originalWindow = globalThis.window;
 	const scheduled = [];

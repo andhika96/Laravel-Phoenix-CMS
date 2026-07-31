@@ -1808,11 +1808,6 @@ body {
 	pointer-events: auto;
 }
 
-.pb-node.pb-node-image_carousel .pb-image-carousel__viewport,
-.pb-node.pb-node-image_carousel .pb-image-carousel__viewport * {
-	pointer-events: auto;
-}
-
 .pb-node.pb-node-tabs .pb-dropzone-empty,
 .pb-node.pb-node-tabs .pb-grid-col-empty-hint,
 .pb-node.pb-node-tabs .pb-tabs-empty-hint,
@@ -4647,13 +4642,6 @@ body {
 .pb-label-row.pb-label-row-device > .pb-label-tools .pb-control-unit-wrap {
 	margin-left: auto;
 	padding-left: 6px;
-}
-
-/* Direct unit selects (used by four-side controls) must share the same
-   trailing alignment as controls that wrap their unit in pb-control-unit-wrap. */
-.pb-label-row.pb-label-row-device > .pb-label-tools > .pb-mini-unit {
-	margin-left: auto;
-	flex: 0 0 auto;
 }
 
 .pb-control-device-menu {
