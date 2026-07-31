@@ -11,9 +11,9 @@
 					</figure>
 				</div>
 			</div>
-			<button v-if="showsArrows" type="button" class="pb-image-carousel__arrow pb-image-carousel__arrow--previous" aria-label="Previous slide" :disabled="previousDisabled" data-pb-interactive="true" @click.stop="previous(true)"><i :class="settings.previousArrowIcon"></i></button>
-			<button v-if="showsArrows" type="button" class="pb-image-carousel__arrow pb-image-carousel__arrow--next" aria-label="Next slide" :disabled="nextDisabled" data-pb-interactive="true" @click.stop="next(true)"><i :class="settings.nextArrowIcon"></i></button>
-			<div v-if="showsDots" class="pb-image-carousel__pagination" role="tablist" aria-label="Carousel pagination"><button v-for="page in pageCount" :key="page" type="button" class="pb-image-carousel__dot" :class="{'is-active':dotIndex===page-1}" :aria-label="'Go to slide '+page" :aria-selected="dotIndex===page-1" data-pb-interactive="true" @click.stop="goTo((page-1)*slidesToScroll,true)"></button></div>
+			<button v-if="showsArrows" type="button" class="pb-image-carousel__arrow pb-image-carousel__arrow--previous" aria-label="Previous slide" :disabled="previousDisabled" @click="previous(true)"><i :class="settings.previousArrowIcon"></i></button>
+			<button v-if="showsArrows" type="button" class="pb-image-carousel__arrow pb-image-carousel__arrow--next" aria-label="Next slide" :disabled="nextDisabled" @click="next(true)"><i :class="settings.nextArrowIcon"></i></button>
+			<div v-if="showsDots" class="pb-image-carousel__pagination" role="tablist" aria-label="Carousel pagination"><button v-for="page in pageCount" :key="page" type="button" class="pb-image-carousel__dot" :class="{'is-active':dotIndex===page-1}" :aria-label="'Go to slide '+page" :aria-selected="dotIndex===page-1" @click="goTo((page-1)*slidesToScroll,true)"></button></div>
 		</template>
 		<div v-if="lightboxUrl" class="pb-image-carousel-lightbox" role="dialog" aria-modal="true" @click.self="lightboxUrl=''" @keydown.esc="lightboxUrl=''"><button type="button" aria-label="Close lightbox" @click="lightboxUrl=''">&times;</button><img :src="lightboxUrl" alt=""></div>
 	</div>

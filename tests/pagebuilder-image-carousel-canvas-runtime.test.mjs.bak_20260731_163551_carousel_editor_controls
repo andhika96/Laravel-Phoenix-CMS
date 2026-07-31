@@ -4,7 +4,6 @@ import test from 'node:test';
 
 const canvasPath = new URL('../public/js/pagebuilder_elementor/widgets/general/image-carousel/Canvas.vue', import.meta.url);
 const settingsPath = new URL('../public/js/pagebuilder_elementor/widgets/general/image-carousel/Settings.vue', import.meta.url);
-const editorCssPath = new URL('../public/assets/css/pagebuilder_elementor.css', import.meta.url);
 
 function componentFromVueFile(path) {
 	const source = fs.readFileSync(path, 'utf8');
@@ -288,14 +287,4 @@ test('outside arrows are rendered outside the clipped viewport and canvas expose
 	assert.match(source, /tabindex="0"/);
 	assert.match(source, /:disabled="previousDisabled"/);
 	assert.match(source, /:disabled="nextDisabled"/);
-});
-
-test('editor canvas explicitly enables carousel arrow and pagination click targets', () => {
-	const source = fs.readFileSync(canvasPath, 'utf8');
-	const editorCss = fs.readFileSync(editorCssPath, 'utf8');
-
-	assert.match(source, /pb-image-carousel__arrow--previous[^>]*data-pb-interactive="true"[^>]*@click\.stop="previous\(true\)"/);
-	assert.match(source, /pb-image-carousel__arrow--next[^>]*data-pb-interactive="true"[^>]*@click\.stop="next\(true\)"/);
-	assert.match(source, /pb-image-carousel__dot[^>]*data-pb-interactive="true"[^>]*@click\.stop="goTo\(\(page-1\)\*slidesToScroll,true\)"/);
-	assert.match(editorCss, /\.pb-node\.pb-node-image_carousel \[data-pb-interactive="true"\]\s*\{\s*pointer-events:\s*auto;/);
 });
