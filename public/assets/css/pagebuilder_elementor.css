@@ -4984,7 +4984,8 @@ body {
 	gap: 10px;
 }
 
-.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-four-sides-with-link {
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-four-sides-with-link,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-four-sides-with-link {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr)) 28px;
 	gap: 0;
@@ -4992,12 +4993,14 @@ body {
 	width: 100%;
 }
 
-.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-input {
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-input,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-side-input {
 	min-width: 0;
 	gap: 4px;
 }
 
-.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-input .pb-input {
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-input .pb-input,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-side-input .pb-input {
 	width: 100%;
 	min-width: 0;
 	height: 30px;
@@ -5009,20 +5012,24 @@ body {
 	text-align: center;
 }
 
-.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-input:first-child .pb-input {
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-input:first-child .pb-input,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-side-input:first-child .pb-input {
 	border-radius: 5px 0 0 5px;
 }
 
-.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-input span {
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-input span,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-side-input span {
 	font-size: 9px;
 	line-height: 1.25;
 }
 
-.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-link-cell {
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-side-link-cell,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-side-link-cell {
 	align-self: start;
 }
 
-.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-link-btn {
+.pb-panel.left .pb-widget-settings--icon-box .pb-icon-box-sides-control .pb-link-btn,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-icon-box-sides-control .pb-link-btn {
 	width: 28px;
 	min-width: 28px;
 	height: 30px;

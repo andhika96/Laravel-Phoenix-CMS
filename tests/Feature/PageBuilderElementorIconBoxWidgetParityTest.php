@@ -327,7 +327,7 @@ class PageBuilderElementorIconBoxWidgetParityTest extends TestCase
         ])->render();
 
         $this->assertStringContainsString("'icon_box' => 'pagebuilder_elementor.partials.render_icon_box'", $renderNode);
-        $this->assertStringContainsString("['accordion', 'image_box', 'icon_box', 'heading']", $renderNode);
+        $this->assertStringContainsString("['accordion', 'image_box', 'icon_box', 'image_carousel', 'basic_gallery', 'icon_list', 'heading']", $renderNode);
         $this->assertStringContainsString('Dispatched Icon Box', $html);
         $this->assertStringContainsString('el-widget-icon-box', $html);
     }

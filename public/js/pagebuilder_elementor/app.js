@@ -750,6 +750,188 @@
 		normalizeWidgetAdvancedSettings(settings);
 		return settings;
 	}
+	function imageCarouselWidgetDefaults() {
+		return {
+			...widgetAdvancedDefaults(),
+			carouselName: 'Image Carousel', images: [], imageResolution: 'thumbnail', customImageWidth: 150, customImageHeight: 150,
+			slidesToShow: 'default', slidesToShowTablet: '', slidesToShowMobile: '', slidesToScroll: 'default', slidesToScrollTablet: '', slidesToScrollMobile: '',
+			imageStretch: false, navigation: 'arrows_dots', previousArrowIcon: 'fas fa-chevron-left', nextArrowIcon: 'fas fa-chevron-right',
+			linkType: 'none', customLinkUrl: '', lightbox: 'default', captionType: 'none',
+			lazyload: false, autoplay: true, pauseOnHover: true, pauseOnInteraction: true, autoplaySpeed: 5000, infiniteLoop: true, animationSpeed: 500, direction: 'left',
+			arrowPosition: 'inside', arrowSize: '20px', arrowSizeTablet: '', arrowSizeMobile: '', arrowColor: '',
+			paginationPosition: 'outside', dotSpacing: '8px', dotSpacingTablet: '', dotSpacingMobile: '', dotSize: '8px', dotSizeTablet: '', dotSizeMobile: '', dotColor: '#c4c7cf', dotActiveColor: '#69727d',
+			imageVerticalAlign: 'center', imageVerticalAlignTablet: '', imageVerticalAlignMobile: '', imageSpacingMode: 'default', imageSpacing: '20px', imageSpacingTablet: '', imageSpacingMobile: '',
+			imageBorderType: 'default', imageBorderWidthTop: '0px', imageBorderWidthRight: '0px', imageBorderWidthBottom: '0px', imageBorderWidthLeft: '0px', imageBorderColor: '',
+			imageBorderRadiusTop: '0px', imageBorderRadiusRight: '0px', imageBorderRadiusBottom: '0px', imageBorderRadiusLeft: '0px',
+			captionAlignment: 'center', captionAlignmentTablet: '', captionAlignmentMobile: '', captionColor: '',
+			captionFontFamily: 'inherit', captionFontSize: '16px', captionFontSizeTablet: '', captionFontSizeMobile: '', captionFontWeight: '400',
+			captionLineHeight: '1.5em', captionLineHeightTablet: '', captionLineHeightMobile: '', captionLetterSpacing: '0px', captionLetterSpacingTablet: '', captionLetterSpacingMobile: '',
+			captionWordSpacing: '0px', captionWordSpacingTablet: '', captionWordSpacingMobile: '', captionTextTransform: 'none', captionFontStyle: 'normal', captionTextDecoration: 'none',
+			captionTextShadow: 'none', captionSpacing: '8px', captionSpacingTablet: '', captionSpacingMobile: '',
+		};
+	}
+	const imageCarouselResolutionOptions = Object.freeze(['thumbnail', 'medium', 'medium_large', 'large', '1536x1536', '2048x2048', 'full', 'custom']);
+	const imageCarouselNavigationOptions = Object.freeze(['arrows_dots', 'arrows', 'dots', 'none']);
+	const imageCarouselLinkOptions = Object.freeze(['none', 'media', 'custom']);
+	const imageCarouselCaptionOptions = Object.freeze(['none', 'title', 'caption', 'description']);
+	const imageCarouselBorderOptions = Object.freeze(['default', 'none', 'solid', 'double', 'dotted', 'dashed', 'groove']);
+	function normalizeImageCarouselSlideCount(value, fallback = 'default') {
+		const raw = String(value ?? '').trim().toLowerCase();
+		if (raw === '' && fallback === '') return '';
+		if (raw === 'default') return 'default';
+		const number = Number(raw);
+		return Number.isInteger(number) && number >= 1 && number <= 10 ? String(number) : fallback;
+	}
+	function normalizeImageCarouselImage(item, index) {
+		const source = item && typeof item === 'object' && !Array.isArray(item) ? item : {};
+		const url = String(source.url || '').trim();
+		return {
+			id: String(source.id || uid('carousel-image-' + index)).replace(/[^A-Za-z0-9_-]/g, '') || uid('carousel-image'),
+			url,
+			alt: String(source.alt || ''), title: String(source.title || ''), caption: String(source.caption || ''), description: String(source.description || ''),
+			attachmentUrl: String(source.attachmentUrl || ''),
+		};
+	}
+	function normalizeImageCarouselSettings(settings) {
+		if (!settings || typeof settings !== 'object') return settings;
+		const defaults = imageCarouselWidgetDefaults();
+		Object.keys(defaults).forEach((key) => { if (settings[key] === undefined) settings[key] = cloneSettingValue(defaults[key]); });
+		const seenIds = new Set();
+		settings.images = (Array.isArray(settings.images) ? settings.images : []).map(normalizeImageCarouselImage).filter((item) => {
+			if (!item.url || seenIds.has(item.id)) return false;
+			seenIds.add(item.id); return true;
+		});
+		settings.imageResolution = imageCarouselResolutionOptions.includes(settings.imageResolution) ? settings.imageResolution : 'thumbnail';
+		settings.customImageWidth = clamp(Math.round(Number(settings.customImageWidth) || 150), 1, 4096);
+		settings.customImageHeight = clamp(Math.round(Number(settings.customImageHeight) || 150), 1, 4096);
+		settings.slidesToShow = normalizeImageCarouselSlideCount(settings.slidesToShow, 'default');
+		settings.slidesToScroll = normalizeImageCarouselSlideCount(settings.slidesToScroll, 'default');
+		['slidesToShowTablet', 'slidesToShowMobile', 'slidesToScrollTablet', 'slidesToScrollMobile'].forEach((key) => { settings[key] = normalizeImageCarouselSlideCount(settings[key], ''); });
+		settings.navigation = imageCarouselNavigationOptions.includes(settings.navigation) ? settings.navigation : 'arrows_dots';
+		settings.linkType = imageCarouselLinkOptions.includes(settings.linkType) ? settings.linkType : 'none';
+		settings.captionType = imageCarouselCaptionOptions.includes(settings.captionType) ? settings.captionType : 'none';
+		settings.lightbox = ['default', 'yes', 'no'].includes(settings.lightbox) ? settings.lightbox : 'default';
+		settings.direction = settings.direction === 'right' ? 'right' : 'left';
+		settings.arrowPosition = settings.arrowPosition === 'outside' ? 'outside' : 'inside';
+		settings.paginationPosition = settings.paginationPosition === 'inside' ? 'inside' : 'outside';
+		settings.imageSpacingMode = settings.imageSpacingMode === 'custom' ? 'custom' : 'default';
+		settings.imageBorderType = imageCarouselBorderOptions.includes(settings.imageBorderType) ? settings.imageBorderType : 'default';
+		settings.imageVerticalAlign = ['start', 'center', 'end'].includes(settings.imageVerticalAlign) ? settings.imageVerticalAlign : 'center';
+		settings.captionAlignment = ['left', 'center', 'right', 'justify'].includes(settings.captionAlignment) ? settings.captionAlignment : 'center';
+		['imageVerticalAlignTablet', 'imageVerticalAlignMobile'].forEach((key) => { settings[key] = settings[key] === '' || ['start', 'center', 'end'].includes(settings[key]) ? settings[key] : ''; });
+		['captionAlignmentTablet', 'captionAlignmentMobile'].forEach((key) => { settings[key] = settings[key] === '' || ['left', 'center', 'right', 'justify'].includes(settings[key]) ? settings[key] : ''; });
+		['imageStretch', 'lazyload', 'autoplay', 'pauseOnHover', 'pauseOnInteraction', 'infiniteLoop'].forEach((key) => { settings[key] = !!settings[key]; });
+		settings.autoplaySpeed = clamp(Math.round(Number(settings.autoplaySpeed) || 5000), 100, 60000);
+		settings.animationSpeed = clamp(Math.round(Number(settings.animationSpeed) || 500), 0, 10000);
+		settings.carouselName = String(settings.carouselName || 'Image Carousel').trim() || 'Image Carousel';
+		settings.customLinkUrl = String(settings.customLinkUrl || '').trim();
+		settings.previousArrowIcon = String(settings.previousArrowIcon || 'fas fa-chevron-left').trim();
+		settings.nextArrowIcon = String(settings.nextArrowIcon || 'fas fa-chevron-right').trim();
+		normalizeWidgetAdvancedSettings(settings);
+		return settings;
+	}
+	function basicGalleryWidgetDefaults() {
+		return {
+			...widgetAdvancedDefaults(),
+			images: [], imageResolution: 'thumbnail', customImageWidth: 150, customImageHeight: 150,
+			columns: '4', columnsTablet: '2', columnsMobile: '1',
+			captionType: 'caption', linkType: 'media', lightbox: 'default', orderBy: 'default',
+			gapMode: 'default', gap: '10px', gapTablet: '', gapMobile: '',
+			imageBorderType: 'default', imageBorderWidthTop: '0px', imageBorderWidthRight: '0px', imageBorderWidthBottom: '0px', imageBorderWidthLeft: '0px', imageBorderColor: '',
+			imageBorderRadiusTop: '0px', imageBorderRadiusRight: '0px', imageBorderRadiusBottom: '0px', imageBorderRadiusLeft: '0px',
+			imageBorderRadiusTopTablet: '', imageBorderRadiusRightTablet: '', imageBorderRadiusBottomTablet: '', imageBorderRadiusLeftTablet: '',
+			imageBorderRadiusTopMobile: '', imageBorderRadiusRightMobile: '', imageBorderRadiusBottomMobile: '', imageBorderRadiusLeftMobile: '',
+			captionAlignment: 'center', captionAlignmentTablet: '', captionAlignmentMobile: '', captionColor: '',
+			captionFontFamily: 'inherit', captionFontSize: '16px', captionFontSizeTablet: '', captionFontSizeMobile: '', captionFontWeight: '400',
+			captionLineHeight: '1.5em', captionLineHeightTablet: '', captionLineHeightMobile: '', captionLetterSpacing: '0px', captionLetterSpacingTablet: '', captionLetterSpacingMobile: '',
+			captionWordSpacing: '0px', captionWordSpacingTablet: '', captionWordSpacingMobile: '', captionTextTransform: 'none', captionFontStyle: 'normal', captionTextDecoration: 'none',
+			captionTextShadow: 'none', captionSpacing: '8px', captionSpacingTablet: '', captionSpacingMobile: '',
+		};
+	}
+	function normalizeBasicGalleryColumnCount(value, fallback) {
+		const number = Number(String(value ?? '').trim());
+		return Number.isInteger(number) && number >= 1 && number <= 10 ? String(number) : fallback;
+	}
+	function normalizeBasicGallerySettings(settings) {
+		if (!settings || typeof settings !== 'object') return settings;
+		const defaults = basicGalleryWidgetDefaults();
+		Object.keys(defaults).forEach((key) => { if (settings[key] === undefined) settings[key] = cloneSettingValue(defaults[key]); });
+		const seenIds = new Set();
+		settings.images = (Array.isArray(settings.images) ? settings.images : []).map(normalizeImageCarouselImage).filter((item) => {
+			if (!item.url || seenIds.has(item.id)) return false;
+			seenIds.add(item.id); return true;
+		});
+		settings.imageResolution = imageCarouselResolutionOptions.includes(settings.imageResolution) ? settings.imageResolution : 'thumbnail';
+		settings.customImageWidth = clamp(Math.round(Number(settings.customImageWidth) || 150), 1, 4096);
+		settings.customImageHeight = clamp(Math.round(Number(settings.customImageHeight) || 150), 1, 4096);
+		settings.columns = normalizeBasicGalleryColumnCount(settings.columns, '4');
+		settings.columnsTablet = normalizeBasicGalleryColumnCount(settings.columnsTablet, '2');
+		settings.columnsMobile = normalizeBasicGalleryColumnCount(settings.columnsMobile, '1');
+		settings.captionType = ['none', 'caption'].includes(settings.captionType) ? settings.captionType : 'caption';
+		settings.linkType = ['none', 'media', 'attachment'].includes(settings.linkType) ? settings.linkType : 'media';
+		settings.lightbox = ['default', 'yes', 'no'].includes(settings.lightbox) ? settings.lightbox : 'default';
+		settings.orderBy = settings.orderBy === 'random' ? 'random' : 'default';
+		settings.gapMode = ['default', 'no_gap', 'narrow', 'extended', 'wide', 'custom'].includes(settings.gapMode) ? settings.gapMode : 'default';
+		settings.imageBorderType = imageCarouselBorderOptions.includes(settings.imageBorderType) ? settings.imageBorderType : 'default';
+		settings.captionAlignment = ['left', 'center', 'right', 'justify'].includes(settings.captionAlignment) ? settings.captionAlignment : 'center';
+		['captionAlignmentTablet', 'captionAlignmentMobile'].forEach((key) => { settings[key] = settings[key] === '' || ['left', 'center', 'right', 'justify'].includes(settings[key]) ? settings[key] : ''; });
+		normalizeWidgetAdvancedSettings(settings);
+		return settings;
+	}
+	function iconListWidgetDefaults() {
+		return {
+			...widgetAdvancedDefaults(),
+			layout: 'traditional',
+			items: [
+				{ id: uid('ili'), text: 'List Item #1', iconStyle: 'solid', iconName: 'check', iconClass: 'fas fa-check', linkUrl: '', linkTarget: '', linkNofollow: false, linkCustomAttributes: [] },
+				{ id: uid('ili'), text: 'List Item #2', iconStyle: 'solid', iconName: 'times', iconClass: 'fas fa-times', linkUrl: '', linkTarget: '', linkNofollow: false, linkCustomAttributes: [] },
+				{ id: uid('ili'), text: 'List Item #3', iconStyle: 'solid', iconName: 'dot-circle', iconClass: 'fas fa-dot-circle', linkUrl: '', linkTarget: '', linkNofollow: false, linkCustomAttributes: [] },
+			],
+			applyLinkOn: 'full_width',
+			spaceBetween: '0px', spaceBetweenTablet: '', spaceBetweenMobile: '',
+			alignment: 'start', alignmentTablet: '', alignmentMobile: '',
+			divider: false, dividerStyle: 'solid', dividerWeight: '1px', dividerWidth: '100%', dividerHeight: '100%', dividerColor: '#dddddd',
+			iconColor: '', iconColorHover: '', iconTransitionDuration: 0.3,
+			iconSize: '14px', iconSizeTablet: '', iconSizeMobile: '', iconGap: '8px', iconGapTablet: '', iconGapMobile: '',
+			iconHorizontalAlignment: '', iconHorizontalAlignmentTablet: '', iconHorizontalAlignmentMobile: '', iconVerticalAlignment: '', iconVerticalAlignmentTablet: '', iconVerticalAlignmentMobile: '',
+			iconVerticalOffset: '0px', iconVerticalOffsetTablet: '', iconVerticalOffsetMobile: '',
+			textColor: '', textColorHover: '', textTransitionDuration: 0.3,
+			textFontFamily: 'inherit', textFontSize: '16px', textFontSizeTablet: '', textFontSizeMobile: '', textFontWeight: '400',
+			textLineHeight: '1.5em', textLineHeightTablet: '', textLineHeightMobile: '', textLetterSpacing: '0px', textLetterSpacingTablet: '', textLetterSpacingMobile: '',
+			textWordSpacing: '0px', textWordSpacingTablet: '', textWordSpacingMobile: '', textTextTransform: 'none', textFontStyle: 'normal', textTextDecoration: 'none', textTextShadow: 'none',
+		};
+	}
+	function normalizeIconListSettings(settings) {
+		if (!settings || typeof settings !== 'object') return settings;
+		const defaults = iconListWidgetDefaults();
+		Object.keys(defaults).forEach((key) => { if (settings[key] === undefined) settings[key] = cloneSettingValue(defaults[key]); });
+		settings.layout = ['traditional', 'inline'].includes(settings.layout) ? settings.layout : 'traditional';
+		settings.applyLinkOn = ['full_width', 'inline'].includes(settings.applyLinkOn) ? settings.applyLinkOn : 'full_width';
+		const seenIds = new Set();
+		settings.items = (Array.isArray(settings.items) ? settings.items : defaults.items).map((item, index) => {
+			const source = item && typeof item === 'object' ? item : {};
+			let id = String(source.id || '').trim().replace(/[^A-Za-z0-9_-]/g, '');
+			if (!id || seenIds.has(id)) id = uid('ili');
+			seenIds.add(id);
+			const parsed = parseIconWidgetClassParts(source.iconClass);
+			const style = ['regular', 'solid', 'brands', 'light', 'duotone'].includes(source.iconStyle) ? source.iconStyle : (parsed.style || 'solid');
+			const name = String(source.iconName || parsed.name || 'check').trim().toLowerCase().replace(/^fa-/, '').replace(/[^a-z0-9-]/g, '') || 'check';
+			return { id, text: String(source.text == null ? ('List Item #' + (index + 1)) : source.text), iconStyle: style, iconName: name, iconClass: iconWidgetClassName(style, name), linkUrl: String(source.linkUrl || '').trim(), linkTarget: source.linkTarget === '_blank' ? '_blank' : '', linkNofollow: !!source.linkNofollow, linkCustomAttributes: normalizeAttributes(source.linkCustomAttributes) };
+		});
+		if (!settings.items.length) settings.items = cloneSettingValue(defaults.items);
+		settings.alignment = ['start', 'center', 'end'].includes(settings.alignment) ? settings.alignment : 'start';
+		['alignmentTablet', 'alignmentMobile'].forEach((key) => { settings[key] = settings[key] === '' || ['start', 'center', 'end'].includes(settings[key]) ? settings[key] : ''; });
+		settings.divider = !!settings.divider;
+		settings.dividerStyle = ['solid', 'double', 'dotted', 'dashed'].includes(settings.dividerStyle) ? settings.dividerStyle : 'solid';
+		settings.iconHorizontalAlignment = ['', 'left', 'center', 'right'].includes(settings.iconHorizontalAlignment) ? settings.iconHorizontalAlignment : '';
+		settings.iconVerticalAlignment = ['', 'flex-start', 'center', 'flex-end'].includes(settings.iconVerticalAlignment) ? settings.iconVerticalAlignment : '';
+		['iconHorizontalAlignmentTablet', 'iconHorizontalAlignmentMobile'].forEach((key) => { settings[key] = ['', 'left', 'center', 'right'].includes(settings[key]) ? settings[key] : ''; });
+		['iconVerticalAlignmentTablet', 'iconVerticalAlignmentMobile'].forEach((key) => { settings[key] = ['', 'flex-start', 'center', 'flex-end'].includes(settings[key]) ? settings[key] : ''; });
+		settings.iconTransitionDuration = clamp(Number(settings.iconTransitionDuration) || 0, 0, 10);
+		settings.textTransitionDuration = clamp(Number(settings.textTransitionDuration) || 0, 0, 10);
+		normalizeWidgetAdvancedSettings(settings);
+		return settings;
+	}
 	function iconBoxWidgetDefaults() {
 		return {
 			...widgetAdvancedDefaults(),
@@ -1045,6 +1227,9 @@
 		divider: 'Divider',
 		spacer: 'Spacer',
 		icon_box: 'Icon Box',
+		icon_list: 'Icon List',
+		image_carousel: 'Image Carousel',
+		basic_gallery: 'Basic Gallery',
 		tabs: 'Tabs',
 		accordion: 'Accordion',
 	});
@@ -1062,6 +1247,9 @@
 		icon: 'far fa-star',
 		divider: 'fas fa-minus',
 		spacer: 'fas fa-arrows-alt-v',
+		image_carousel: 'fas fa-images',
+		basic_gallery: 'fas fa-th',
+		icon_list: 'fas fa-list-ul',
 		tabs: 'far fa-folder',
 		accordion: 'fas fa-bars',
 	});
@@ -1205,7 +1393,7 @@
 			isGrid()  { return isGrid(this.node.type); },
 			isTabsNode() { return isTabs(this.node.type); },
 			isAccordionNode() { return isAccordion(this.node.type); },
-			hasSharedAdvancedControls() { return this.isAccordionNode || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'heading'; },
+			hasSharedAdvancedControls() { return this.isAccordionNode || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading'; },
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
 				return displayNodeLabel(this.node);
@@ -2242,6 +2430,33 @@
 				return normalized;
 			},
 		},
+		image_carousel: {
+			defaults: imageCarouselWidgetDefaults,
+			normalize(node) {
+				const normalized = node && typeof node === 'object' ? node : {};
+				normalized.settings = { ...imageCarouselWidgetDefaults(), ...(normalized.settings || {}) };
+				normalizeImageCarouselSettings(normalized.settings);
+				return normalized;
+			},
+		},
+		basic_gallery: {
+			defaults: basicGalleryWidgetDefaults,
+			normalize(node) {
+				const normalized = node && typeof node === 'object' ? node : {};
+				normalized.settings = { ...basicGalleryWidgetDefaults(), ...(normalized.settings || {}) };
+				normalizeBasicGallerySettings(normalized.settings);
+				return normalized;
+			},
+		},
+		icon_list: {
+			defaults: iconListWidgetDefaults,
+			normalize(node) {
+				const normalized = node && typeof node === 'object' ? node : {};
+				normalized.settings = { ...iconListWidgetDefaults(), ...(normalized.settings || {}) };
+				normalizeIconListSettings(normalized.settings);
+				return normalized;
+			},
+		},
 		icon_box: {
 			defaults: iconBoxWidgetDefaults,
 			normalize(node) {
@@ -2848,6 +3063,18 @@
 						c.settings = { ...imageBoxWidgetDefaults(), ...(c.settings || {}) };
 						normalizeImageBoxSettings(c.settings);
 					}
+					if (c.type === 'image_carousel') {
+						c.settings = { ...imageCarouselWidgetDefaults(), ...(c.settings || {}) };
+						normalizeImageCarouselSettings(c.settings);
+					}
+					if (c.type === 'basic_gallery') {
+						c.settings = { ...basicGalleryWidgetDefaults(), ...(c.settings || {}) };
+						normalizeBasicGallerySettings(c.settings);
+					}
+					if (c.type === 'icon_list') {
+						c.settings = { ...iconListWidgetDefaults(), ...(c.settings || {}) };
+						normalizeIconListSettings(c.settings);
+					}
 					if (c.type === 'icon_box') {
 						c.settings = { ...iconBoxWidgetDefaults(), ...(c.settings || {}) };
 						normalizeIconBoxSettings(c.settings);
@@ -3195,6 +3422,36 @@
 				const editingId = accordionRuntimeForNode(node).editingItemId;
 				return items.find((item) => String(item.id || '') === String(editingId || '')) || items[0] || null;
 			}
+			function iconListItemsForNode(node = selectedNode.value) {
+				if (!node || node.type !== 'icon_list') return [];
+				if (!node.settings || typeof node.settings !== 'object') node.settings = iconListWidgetDefaults();
+				normalizeIconListSettings(node.settings);
+				return node.settings.items;
+			}
+			function addIconListItem(node = selectedNode.value) {
+				const items = iconListItemsForNode(node);
+				if (!node || node.type !== 'icon_list') return;
+				const index = items.length + 1;
+				items.push({ id: uid('ili'), text: 'List Item #' + index, iconStyle: 'solid', iconName: 'check', iconClass: 'fas fa-check', linkUrl: '', linkTarget: '', linkNofollow: false, linkCustomAttributes: [] });
+			}
+			function duplicateIconListItem(itemId, node = selectedNode.value) {
+				const items = iconListItemsForNode(node);
+				const index = items.findIndex((item) => String(item.id) === String(itemId));
+				if (index < 0) return;
+				const duplicate = jclone(items[index]);
+				duplicate.id = uid('ili');
+				duplicate.text = String(duplicate.text || 'List Item') + ' Copy';
+				items.splice(index + 1, 0, duplicate);
+			}
+			function removeIconListItem(itemId, node = selectedNode.value) {
+				const items = iconListItemsForNode(node);
+				if (items.length <= 1) return;
+				const index = items.findIndex((item) => String(item.id) === String(itemId));
+				if (index >= 0) items.splice(index, 1);
+			}
+			function iconListItemSummary(item, index) {
+				return String(item?.text || '').trim() || ('List Item #' + (index + 1));
+			}
 			function accordionItemSummary(item, index) {
 				return String(item?.title || '').trim() || ('Item #' + (index + 1));
 			}
@@ -3240,6 +3497,7 @@
 			const iconLibrarySelected = ref(null);
 			const iconLibraryTargetNodeId = ref('');
 			const iconLibraryTargetSettingKey = ref('');
+			const iconLibraryTargetItemId = ref('');
 			const iconLibraryLoading = ref(false);
 			const iconLibraryLoaded = ref(false);
 			const iconLibraryError = ref('');
@@ -3315,6 +3573,7 @@
 				await ensureIconLibraryLoaded();
 				iconLibraryTargetNodeId.value = String(node.id || '');
 				iconLibraryTargetSettingKey.value = '';
+				iconLibraryTargetItemId.value = '';
 				iconLibraryGroup.value = 'all';
 				iconLibrarySearch.value = '';
 				syncIconLibrarySelectionFromNode(node);
@@ -3327,6 +3586,22 @@
 				iconLibrarySelected.value = null;
 				iconLibraryTargetNodeId.value = '';
 				iconLibraryTargetSettingKey.value = '';
+				iconLibraryTargetItemId.value = '';
+			}
+			async function openIconListItemIconLibrary(itemId, node = selectedNode.value) {
+				if (!node || node.type !== 'icon_list') return;
+				normalizeIconListSettings(node.settings || (node.settings = {}));
+				const item = node.settings.items.find((entry) => String(entry.id) === String(itemId));
+				if (!item) return;
+				await ensureIconLibraryLoaded();
+				const parsed = parseIconWidgetClassParts(item.iconClass);
+				iconLibraryTargetNodeId.value = String(node.id || '');
+				iconLibraryTargetSettingKey.value = 'iconListItem';
+				iconLibraryTargetItemId.value = String(item.id);
+				iconLibraryGroup.value = 'all';
+				iconLibrarySearch.value = '';
+				iconLibrarySelected.value = iconLibraryIcons.value.find((entry) => entry.style === parsed.style && entry.name === parsed.name) || null;
+				showIconLibraryModal.value = true;
 			}
 			async function openAccordionIconLibrary(role, node = selectedNode.value) {
 				if (!node || node.type !== 'accordion' || !['expand', 'collapse'].includes(role)) return;
@@ -3335,6 +3610,7 @@
 				const parsed = parseIconWidgetClassParts(node.settings?.[settingKey]);
 				iconLibraryTargetNodeId.value = String(node.id || '');
 				iconLibraryTargetSettingKey.value = settingKey;
+				iconLibraryTargetItemId.value = '';
 				iconLibraryGroup.value = 'all';
 				iconLibrarySearch.value = '';
 				iconLibrarySelected.value = iconLibraryIcons.value.find((item) => item.style === parsed.style && item.name === parsed.name) || null;
@@ -3348,6 +3624,17 @@
 				const nodeId = String(iconLibraryTargetNodeId.value || '');
 				const node = nodeId ? findById(rootNodes.value, nodeId) : selectedNode.value;
 				const settingKey = String(iconLibraryTargetSettingKey.value || '');
+				const itemId = String(iconLibraryTargetItemId.value || '');
+				if (node && node.type === 'icon_list' && settingKey === 'iconListItem' && itemId) {
+					normalizeIconListSettings(node.settings || (node.settings = {}));
+					const item = node.settings.items.find((entry) => String(entry.id) === itemId);
+					if (!item) return;
+					item.iconStyle = iconLibrarySelected.value.style;
+					item.iconName = iconLibrarySelected.value.name;
+					item.iconClass = iconLibrarySelected.value.className;
+					closeIconLibrary();
+					return;
+				}
 				if (node && node.type === 'accordion' && ['expandIconClass', 'collapseIconClass'].includes(settingKey)) {
 					if (!node.settings || typeof node.settings !== 'object') node.settings = {};
 					node.settings[settingKey] = iconLibrarySelected.value.className;
@@ -4711,6 +4998,61 @@
 				if (nextUrl === null) return;
 				targetObj[safeKey] = String(nextUrl).trim();
 			}
+			function chooseMediaGallery(targetObj, propName) {
+				if (!targetObj || !propName) return;
+				const safeKey = String(propName);
+				const ckf = window.CKFinder;
+				const appendFiles = (files) => {
+					const existing = Array.isArray(targetObj[safeKey]) ? targetObj[safeKey].map((item, index) => normalizeImageCarouselImage(item, index)) : [];
+					const seenUrls = new Set(existing.map((item) => item.url));
+					const additions = (Array.isArray(files) ? files : []).map((file, index) => {
+						if (!file || typeof file.getUrl !== 'function') return null;
+						const url = String(file.getUrl() || '').trim();
+						if (!url || seenUrls.has(url)) return null;
+						seenUrls.add(url);
+						const name = typeof file.get === 'function' ? String(file.get('name') || '') : '';
+						const title = name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim();
+						return normalizeImageCarouselImage({ id: uid('carousel-image'), url, alt: title, title, caption: '', description: '' }, existing.length + index);
+					}).filter(Boolean);
+					targetObj[safeKey] = [...existing, ...additions];
+				};
+				if (!ckf || typeof ckf.popup !== 'function') {
+					const nextUrl = window.prompt('Paste image URL');
+					if (nextUrl) appendFiles([{ getUrl: () => String(nextUrl).trim(), get: () => '' }]);
+					return;
+				}
+				const basePath = new URL('/assets/plugins/ckfinder/', window.location.origin).toString();
+				const connectorPath = new URL('/assets/plugins/ckfinder/core/connector/php/connector.php', window.location.origin).toString();
+				ckf.popup({
+					basePath, connectorPath, chooseFiles: true,
+					onInit: (finder) => {
+						finder.on('files:choose', (evt) => {
+							const collection = evt?.data?.files;
+							let files = collection && typeof collection.toArray === 'function' ? collection.toArray() : [];
+							if (!files.length && collection && typeof collection.first === 'function') {
+								const first = collection.first();
+								if (first) files = [first];
+							}
+							appendFiles(files);
+						});
+					},
+				});
+			}
+			function removeMediaGalleryItem(targetObj, propName, itemId) {
+				if (!targetObj || !propName) return;
+				const safeKey = String(propName);
+				targetObj[safeKey] = (Array.isArray(targetObj[safeKey]) ? targetObj[safeKey] : []).filter((item) => String(item?.id || '') !== String(itemId || ''));
+			}
+			function moveMediaGalleryItem(targetObj, propName, itemId, offset) {
+				if (!targetObj || !propName) return;
+				const safeKey = String(propName);
+				const items = Array.isArray(targetObj[safeKey]) ? [...targetObj[safeKey]] : [];
+				const index = items.findIndex((item) => String(item?.id || '') === String(itemId || ''));
+				const targetIndex = index + (Number(offset) < 0 ? -1 : 1);
+				if (index < 0 || targetIndex < 0 || targetIndex >= items.length) return;
+				[items[index], items[targetIndex]] = [items[targetIndex], items[index]];
+				targetObj[safeKey] = items;
+			}
 			function clearMedia(targetObj, propName) {
 				if (!targetObj || !propName) return;
 				targetObj[String(propName)] = '';
@@ -5235,6 +5577,9 @@
 				iconWidgetShapeOptions: ICON_WIDGET_SHAPE_OPTIONS,
 				openTextEditorModal,
 				chooseMedia,
+				chooseMediaGallery,
+				removeMediaGalleryItem,
+				moveMediaGalleryItem,
 				clearMedia,
 				videoSourceOptions,
 				videoAspectRatioOptions,
@@ -5270,6 +5615,7 @@
 				onSpacerHeightInput,
 				setSpacerHeightUnit,
 				openIconLibrary,
+				fontAwesomeStyleLabel,
 				iconWidgetCurrentLabel,
 				iconWidgetCurrentStyleLabel,
 				iconWidgetUsesShape,
@@ -5367,6 +5713,7 @@
 				duplicateAccordionItem,
 				removeAccordionItem,
 				accordionItemSummary,
+				iconListItemsForNode, addIconListItem, duplicateIconListItem, removeIconListItem, iconListItemSummary, openIconListItemIconLibrary,
 				openAccordionIconLibrary,
 				chooseAccordionSvg,
 				get accordionStyleState() { return accordionStyleState.value; },
@@ -5418,14 +5765,15 @@
 				containerGridRowsValue, setContainerGridRowsValue, syncContainerGap,
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
 				displayNodeLabel, nodeLabelIcon,
-				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, clearMedia,
+				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
-				openIconLibrary, openAccordionIconLibrary, chooseAccordionSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
+				openIconLibrary, openIconListItemIconLibrary, openAccordionIconLibrary, chooseAccordionSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
 				tabsItemsForNode, tabsActiveItem, selectTabsItem, addTabsItem, duplicateTabsItem, removeTabsItem, tabsItemSummary, tabsSelectedRowDirection,
 				tabsWidthValue, tabsWidthUnit, tabsWidthMax, tabsWidthStep, onTabsWidthInput, setTabsWidthValue, setTabsWidthUnit,
 				accordionItemsForNode, accordionRuntimeForNode, accordionEditingItem, selectAccordionItem, toggleAccordionItem, resetAccordionRuntimeFromDefaults,
 				addAccordionItem, duplicateAccordionItem, removeAccordionItem, accordionItemSummary,
+				iconListItemsForNode, addIconListItem, duplicateIconListItem, removeIconListItem, iconListItemSummary,
 				accordionStyleState, accordionTitleStyleState, accordionIconStyleState, accordionStateKey,
 				accordionDimensionValue, accordionDimensionUnit, accordionDimensionMax, accordionDimensionStep, onAccordionDimensionInput, setAccordionDimensionUnit,
 				accordionBoxUnit, accordionBoxSideValue, accordionBoxLinked, toggleAccordionBoxLink, onAccordionBoxSideInput, setAccordionBoxUnit,

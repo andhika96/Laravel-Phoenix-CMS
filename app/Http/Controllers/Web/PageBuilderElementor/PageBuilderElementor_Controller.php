@@ -16,10 +16,18 @@ class PageBuilderElementor_Controller extends Controller
 	{
 		$validated = $request->validate([
 			'url' => ['required', 'string', 'max:2048'],
-			'size' => ['required', 'string', 'in:thumbnail,medium,medium_large,large,1536x1536,2048x2048,full'],
+			'size' => ['required', 'string', 'in:thumbnail,medium,medium_large,large,1536x1536,2048x2048,full,custom'],
+			'width' => ['nullable', 'integer', 'min:1', 'max:4096'],
+			'height' => ['nullable', 'integer', 'min:1', 'max:4096'],
 		]);
+		if ($validated['size'] === 'custom' && empty($validated['width']) && empty($validated['height']))
+		{
+			return response()->json(['message' => 'Custom image resolution requires a width or height.'], 422);
+		}
 
 		$sourceUrl = trim($validated['url']);
+		$customWidth = isset($validated['width']) ? (int) $validated['width'] : null;
+		$customHeight = isset($validated['height']) ? (int) $validated['height'] : null;
 		if (!str_starts_with($sourceUrl, '/') && !preg_match('#^https?://#i', $sourceUrl))
 		{
 			return response()->json(['message' => 'The image URL is invalid.'], 422);
@@ -28,7 +36,9 @@ class PageBuilderElementor_Controller extends Controller
 		return response()->json([
 			'sourceUrl' => $sourceUrl,
 			'size' => $validated['size'],
-			'url' => $resolver->resolve($sourceUrl, $validated['size']),
+			'width' => $customWidth,
+			'height' => $customHeight,
+			'url' => $resolver->resolve($sourceUrl, $validated['size'], $customWidth, $customHeight),
 		]);
 	}
 

@@ -37,6 +37,9 @@ class PageBuilderElementorComplexWidgetModulesTest extends TestCase
         return [
             'image box' => ['image_box', 'Image Box'],
             'icon box' => ['icon_box', 'Icon Box'],
+            'image carousel' => ['image_carousel', 'Image Carousel'],
+            'basic gallery' => ['basic_gallery', 'Basic Gallery'],
+            'icon list' => ['icon_list', 'Icon List'],
             'tabs' => ['tabs', 'Tabs'],
             'accordion' => ['accordion', 'Accordion'],
         ];

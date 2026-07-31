@@ -22,7 +22,7 @@
 		return;
 	}
 
-	if (in_array($type, ['accordion', 'image_box', 'icon_box', 'heading'], true) && ($settings['cacheMode'] ?? 'default') === 'active') {
+	if (in_array($type, ['accordion', 'image_box', 'icon_box', 'image_carousel', 'basic_gallery', 'icon_list', 'heading'], true) && ($settings['cacheMode'] ?? 'default') === 'active') {
 		$__pbRoles = [];
 		if ($__pbUser && method_exists($__pbUser, 'getRoleNames')) {
 			$__pbRoles = collect($__pbUser->getRoleNames())->map(fn ($role) => (string) $role)->all();
@@ -40,6 +40,9 @@
 		$__pbFragmentView = match ($type) {
 			'image_box' => 'pagebuilder_elementor.partials.render_image_box',
 			'icon_box' => 'pagebuilder_elementor.partials.render_icon_box',
+			'image_carousel' => 'pagebuilder_elementor.partials.render_image_carousel',
+			'basic_gallery' => 'pagebuilder_elementor.partials.render_basic_gallery',
+			'icon_list' => 'pagebuilder_elementor.partials.render_icon_list',
 			'heading' => 'pagebuilder_elementor.widgets.basic.heading',
 			default => 'pagebuilder_elementor.partials.render_accordion',
 		};

@@ -66,6 +66,17 @@ class PageBuilderElementorImageRenditionResolverTest extends TestCase
         $this->assertSame([400, 200], array_slice(getimagesize($generatedPath), 0, 2));
     }
 
+    public function test_custom_resolution_crops_to_the_requested_dimensions_without_upscaling(): void
+    {
+        $resolver = $this->resolver();
+        $url = $resolver->resolve('/test-media/landscape.png', 'custom', 320, 180);
+        $generatedPath = $this->outputRoot.'/'.basename($url);
+
+        $this->assertMatchesRegularExpression('#^/test-renditions/[a-f0-9]{40}-custom-320x180\.png$#', $url);
+        $this->assertFileExists($generatedPath);
+        $this->assertSame([320, 180], array_slice(getimagesize($generatedPath), 0, 2));
+    }
+
     public function test_it_fails_closed_to_original_url_for_unsafe_or_unsupported_sources(): void
     {
         $resolver = $this->resolver();

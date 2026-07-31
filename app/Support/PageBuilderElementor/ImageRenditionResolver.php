@@ -41,10 +41,19 @@ final class ImageRenditionResolver
         return self::SIZES;
     }
 
-    public function resolve(string $url, string $size): string
+    public function resolve(string $url, string $size, ?int $width = null, ?int $height = null): string
     {
-        if (! array_key_exists($size, self::SIZES) || self::SIZES[$size] === null) {
+        $isCustom = $size === 'custom';
+        if (! $isCustom && (! array_key_exists($size, self::SIZES) || self::SIZES[$size] === null)) {
             return $url;
+        }
+
+        if ($isCustom) {
+            $width = $width === null ? null : max(1, min(4096, $width));
+            $height = $height === null ? null : max(1, min(4096, $height));
+            if ($width === null && $height === null) {
+                return $url;
+            }
         }
 
         $sourcePath = $this->sourcePath($url);
@@ -60,23 +69,30 @@ final class ImageRenditionResolver
 
         try {
             $this->ensureOutputDirectory();
-            $width = self::SIZES[$size];
+            $width = $isCustom ? $width : self::SIZES[$size];
+            $height = $isCustom ? $height : null;
             $fingerprint = implode('|', [
                 $sourcePath,
                 (string) filemtime($sourcePath),
                 (string) filesize($sourcePath),
                 $size,
                 (string) $width,
+                (string) $height,
             ]);
-            $filename = sha1($fingerprint).'-'.$size.'.'.$extension;
+            $dimensionSuffix = $isCustom ? '-'.($width ?? 0).'x'.($height ?? 0) : '';
+            $filename = sha1($fingerprint).'-'.$size.$dimensionSuffix.'.'.$extension;
             $destination = rtrim($this->outputRoot, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$filename;
 
             if (! is_file($destination)) {
                 $temporary = $destination.'.tmp';
                 $manager = new ImageManager(new Driver());
-                $encoded = $manager->read($sourcePath)
-                    ->scaleDown(width: $width)
-                    ->encodeByExtension($extension);
+                $image = $manager->read($sourcePath);
+                $scaled = $isCustom
+                    ? ($width !== null && $height !== null
+                        ? $image->coverDown($width, $height)
+                        : $image->scaleDown(width: $width, height: $height))
+                    : $image->scaleDown(width: $width);
+                $encoded = $scaled->encodeByExtension($extension);
                 $encoded->save($temporary);
 
                 if (! @rename($temporary, $destination)) {
@@ -104,7 +120,7 @@ final class ImageRenditionResolver
         }
 
         $parts = parse_url($raw);
-        if ($parts === false || isset($parts['scheme']) || isset($parts['host'])) {
+        if ($parts === false || ((isset($parts['scheme']) || isset($parts['host'])) && ! $this->isSameOriginUrl($parts))) {
             return null;
         }
 
@@ -133,6 +149,32 @@ final class ImageRenditionResolver
         }
 
         return null;
+    }
+
+    /**
+     * CKFinder returns absolute URLs in some browser configurations. They are
+     * safe to turn into a local path only when they belong to this CMS; remote
+     * URLs stay fail-closed and are never fetched by the rendition endpoint.
+     */
+    private function isSameOriginUrl(array $parts): bool
+    {
+        $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+        $host = strtolower((string) ($parts['host'] ?? ''));
+        if (! in_array($scheme, ['http', 'https'], true) || $host === '' || isset($parts['user']) || isset($parts['pass'])) {
+            return false;
+        }
+
+        $configuredHost = parse_url((string) config('app.url'), PHP_URL_HOST);
+        $requestHost = app()->bound('request') ? request()->getHost() : null;
+        $trustedHosts = array_filter([$configuredHost, $requestHost], static fn ($candidate): bool => is_string($candidate) && $candidate !== '');
+
+        foreach ($trustedHosts as $trustedHost) {
+            if ($host === strtolower($trustedHost)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function isContained(string $candidate, string $root): bool
