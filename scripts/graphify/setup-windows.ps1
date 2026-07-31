@@ -59,9 +59,12 @@ if ($LASTEXITCODE -ne 0) {
     throw 'Gagal mengatur core.hooksPath.'
 }
 
-& $graphifyCommand.Source hook install
-if ($LASTEXITCODE -ne 0) {
-    throw 'Gagal memasang Graphify Git hooks.'
+$requiredHooks = @('graphify-sync', 'post-checkout', 'post-commit', 'post-merge', 'post-rewrite', 'pre-push')
+$missingHooks = $requiredHooks | Where-Object {
+    -not (Test-Path -LiteralPath (Join-Path $repoRoot ".githooks\\$_"))
+}
+if ($missingHooks) {
+    throw "Hook Graphify yang dikelola repository tidak ditemukan: $($missingHooks -join ', '). Jalankan git pull terlebih dahulu."
 }
 
 $graphifyOut = Join-Path $repoRoot 'graphify-out'
@@ -93,5 +96,5 @@ Write-Host ''
 Write-Host '[graphify setup] Selesai.'
 Write-Host "Repository : $repoRoot"
 Write-Host "Hooks path : $(git config --local --get core.hooksPath)"
-& $graphifyCommand.Source hook status
+Write-Host 'Hooks source: .githooks (dikelola Git, tidak ditulis ulang per komputer).'
 Write-Host 'Log update : ~/.cache/graphify-git-sync.log'

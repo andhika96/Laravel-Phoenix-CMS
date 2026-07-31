@@ -42,33 +42,68 @@ try {
         }
     }
 
-    $previousErrorActionPreference = $ErrorActionPreference
-    $ErrorActionPreference = 'Continue'
-    try {
-        if ($python) {
-            $output = & $python -m graphify update $repoRoot 2>&1
+    function Invoke-GraphifyCodeUpdate {
+        param([switch] $Force)
+
+        $arguments = @('update', $repoRoot)
+        if ($Force) {
+            $arguments += '--force'
         }
-        else {
-            $graphifyCommand = Get-Command graphify.exe -ErrorAction SilentlyContinue
-            if (-not $graphifyCommand) {
-                $graphifyCommand = Get-Command graphify -ErrorAction SilentlyContinue
+
+        $previousErrorActionPreference = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        try {
+            if ($python) {
+                $commandOutput = & $python -m graphify @arguments 2>&1
             }
-            if (-not $graphifyCommand) {
-                throw 'Graphify tidak ditemukan. Jalankan scripts\graphify\setup-windows.ps1.'
+            else {
+                $graphifyCommand = Get-Command graphify.exe -ErrorAction SilentlyContinue
+                if (-not $graphifyCommand) {
+                    $graphifyCommand = Get-Command graphify -ErrorAction SilentlyContinue
+                }
+                if (-not $graphifyCommand) {
+                    throw 'Graphify tidak ditemukan. Jalankan scripts\graphify\setup-windows.ps1.'
+                }
+                $commandOutput = & $graphifyCommand.Source @arguments 2>&1
             }
-            $output = & $graphifyCommand.Source update $repoRoot 2>&1
+
+            return [PSCustomObject]@{
+                ExitCode = $LASTEXITCODE
+                Output   = @($commandOutput)
+            }
         }
-        $exitCode = $LASTEXITCODE
-    }
-    finally {
-        $ErrorActionPreference = $previousErrorActionPreference
-    }
-    if ($output) {
-        $output | ForEach-Object { Add-Content -LiteralPath $logPath -Value ([string] $_) }
+        finally {
+            $ErrorActionPreference = $previousErrorActionPreference
+        }
     }
 
-    if ($exitCode -ne 0) {
-        throw "graphify update keluar dengan exit code $exitCode"
+    $result = Invoke-GraphifyCodeUpdate
+    if ($result.Output) {
+        $result.Output | ForEach-Object { Add-Content -LiteralPath $logPath -Value ([string] $_) }
+    }
+
+    if ($result.ExitCode -ne 0) {
+        $outputText = ($result.Output | ForEach-Object { [string] $_ }) -join [Environment]::NewLine
+        $staleCorpusGuard = $outputText -match 'Refusing to overwrite' -and $outputText -match 'left the scan corpus'
+
+        if (-not $staleCorpusGuard) {
+            throw "graphify update keluar dengan exit code $($result.ExitCode)"
+        }
+
+        # A tracked ignore-rule change can intentionally remove old plan, backup,
+        # or generated files from the local graph. Graphify fails closed first;
+        # only this exact dual diagnostic is safe to recover with --force.
+        $recoveryMessage = "[$timestamp][$Event] stale corpus guard detected; running verified forced code-only rebuild"
+        Add-Content -LiteralPath $logPath -Value $recoveryMessage
+        Write-Host "[graphify sync:$Event] graph lama memuat file yang sekarang dikecualikan; melakukan rebuild code-only aman..."
+
+        $recovery = Invoke-GraphifyCodeUpdate -Force
+        if ($recovery.Output) {
+            $recovery.Output | ForEach-Object { Add-Content -LiteralPath $logPath -Value ([string] $_) }
+        }
+        if ($recovery.ExitCode -ne 0) {
+            throw "rebuild Graphify dengan --force keluar dengan exit code $($recovery.ExitCode)"
+        }
     }
 
     $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
