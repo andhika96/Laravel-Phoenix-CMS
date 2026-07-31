@@ -132,7 +132,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
             ':deep(.pb-control-device-btn)',
             'grid-template-columns: minmax(0, 1fr) 68px',
             'height: 34px',
-            'font-size: 12px',
+            'font-size: 11px',
             'appearance: textfield',
         ] as $marker) {
             $this->assertSourceContains($marker, $typography);

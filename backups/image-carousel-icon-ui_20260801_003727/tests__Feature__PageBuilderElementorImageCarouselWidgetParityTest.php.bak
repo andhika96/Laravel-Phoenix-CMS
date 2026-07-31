@@ -49,9 +49,6 @@ class PageBuilderElementorImageCarouselWidgetParityTest extends TestCase
             "slidesToShow: 'default'",
             "slidesToScroll: 'default'",
             "navigation: 'arrows_dots'",
-            "previousArrowIconSource: 'library'",
-            'openImageCarouselArrowIconLibrary',
-            'chooseImageCarouselArrowSvg',
             'autoplay: true',
             'pauseOnHover: true',
             'pauseOnInteraction: true',
@@ -79,7 +76,6 @@ class PageBuilderElementorImageCarouselWidgetParityTest extends TestCase
             'Content', 'Style', 'Advanced', 'Image Carousel', 'Carousel Name', 'Images',
             'Image Resolution', 'Slides to Show', 'Slides to Scroll', 'Image Stretch',
             'Navigation', 'Previous Arrow Icon', 'Next Arrow Icon', 'Link', 'Lightbox',
-            'icon-picker', 'Upload SVG', 'Icon Library',
             'Caption', 'Additional Options', 'Lazyload', 'Autoplay', 'Pause on Hover',
             'Pause on Interaction', 'Autoplay Speed', 'Infinite Loop', 'Animation Speed',
             'Direction', 'Arrows', 'Pagination', 'Position', 'Space Between Dots',
@@ -117,7 +113,6 @@ class PageBuilderElementorImageCarouselWidgetParityTest extends TestCase
             'pb-image-carousel__track',
             'pb-image-carousel__slide',
             'pb-image-carousel__arrow',
-            'arrowIconSource(', 'arrowIconSvgData(', 'pb-image-carousel__arrow-svg',
             'pb-image-carousel__pagination',
             'responsiveValue(base',
             'visibleSlides',
@@ -144,10 +139,6 @@ class PageBuilderElementorImageCarouselWidgetParityTest extends TestCase
         foreach (['.pb-image-carousel', '.pb-image-carousel__track', '.pb-image-carousel__arrow', '.pb-image-carousel__dot', '.pb-image-carousel-lightbox'] as $selector) {
             $this->assertStringContainsString($selector, $frontendCss);
         }
-
-        $renderer = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_image_carousel.blade.php'));
-        $this->assertStringContainsString('$sanitizeSvg', $renderer);
-        $this->assertStringContainsString("\$previousArrow['svg']", $renderer);
     }
 
     public function test_canvas_reacts_to_responsive_image_styles_and_live_autoplay_controls(): void

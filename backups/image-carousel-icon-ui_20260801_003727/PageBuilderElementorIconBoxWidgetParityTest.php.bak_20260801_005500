@@ -131,7 +131,7 @@ class PageBuilderElementorIconBoxWidgetParityTest extends TestCase
         $app = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
 
         $this->assertStringContainsString('function isIconLibraryWidgetNode(node)', $app);
-        $this->assertStringContainsString("['icon', 'icon_box', 'image_carousel'].includes(node.type)", $app);
+        $this->assertStringContainsString("['icon', 'icon_box'].includes(node.type)", $app);
         $this->assertStringContainsString('normalizeIconLibraryWidgetSettings(node)', $app);
         $this->assertStringContainsString('if (!isIconLibraryWidgetNode(node)) return;', $app);
     }

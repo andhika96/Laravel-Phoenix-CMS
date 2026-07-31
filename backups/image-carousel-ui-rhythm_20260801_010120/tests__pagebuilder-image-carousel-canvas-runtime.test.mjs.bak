@@ -63,11 +63,6 @@ test('Image Carousel arrow controls match the Elementor icon picker and compact 
 	assert.match(blade, /\$sanitizeSvg/);
 	assert.match(blade, /previousArrow\['svg'\]/);
 	assert.match(editorCss, /pb-image-carousel-icon-picker__button/);
-	assert.match(editorCss, /pb-widget-settings--image-carousel \.pb-collapsible-body[\s\S]*display: grid;/);
-	assert.match(editorCss, /pb-widget-settings--image-carousel \.pb-label-row\.pb-label-row-device[\s\S]*justify-content: space-between;/);
-	assert.match(editorCss, /pb-carousel-gallery__head \.pb-btn\.icon-sm[\s\S]*max-width: 24px;/);
-	assert.match(settings, /pb-carousel-gallery__head[\s\S]*padding:6px 8px/);
-	assert.match(settings, /pb-carousel-gallery__add[\s\S]*min-height:30px/);
 	assert.match(frontendCss, /width:calc\(var\(--pb-carousel-arrow-size,16px\) \+ 12px\)/);
 });
 

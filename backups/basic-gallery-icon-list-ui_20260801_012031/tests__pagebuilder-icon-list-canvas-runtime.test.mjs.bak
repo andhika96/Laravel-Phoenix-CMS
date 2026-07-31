@@ -4,7 +4,6 @@ import test from 'node:test';
 
 const canvasPath = new URL('../public/js/pagebuilder_elementor/widgets/general/icon-list/Canvas.vue', import.meta.url);
 const settingsPath = new URL('../public/js/pagebuilder_elementor/widgets/general/icon-list/Settings.vue', import.meta.url);
-const editorCssPath = new URL('../public/assets/css/pagebuilder_elementor.css', import.meta.url);
 
 function componentFromVueFile(path) {
 	const source = fs.readFileSync(path, 'utf8');
@@ -108,27 +107,4 @@ test('canvas sanitizes links, rel values, and custom attributes', () => {
 		'data-track': 'docs',
 		'aria-label': 'Documentation',
 	});
-});
-
-test('Icon List panel keeps its rhythm, responsive controls, and repeater actions compact', () => {
-	const css = fs.readFileSync(editorCssPath, 'utf8');
-	const bodyRule = css.match(/\.pb-panel\.left\s+\.pb-widget-settings--icon-list\s+\.pb-collapsible-body\s*\{([\s\S]*?)\}/);
-	const labelRule = css.match(/\.pb-panel\.left\s+\.pb-widget-settings--icon-list\s+\.pb-label-row\.pb-label-row-device\s*\{([\s\S]*?)\}/);
-	const deviceRule = css.match(/\.pb-panel\.left\s+\.pb-widget-settings--icon-list\s+\.pb-label-row\.pb-label-row-device\s*>\s*\.pb-control-device-wrap\s*\{([\s\S]*?)\}/);
-	const addButtonRule = css.match(/\.pb-panel\.left\s+\.pb-widget-settings--icon-list\s+\.pb-icon-list-add\s*\{([\s\S]*?)\}/);
-	const actionRule = css.match(/\.pb-panel\.left\s+\.pb-widget-settings--icon-list\s+\.pb-icon-list-repeater__actions\s+button\s*\{([\s\S]*?)\}/);
-
-	assert.ok(bodyRule, 'Icon List should own its vertical panel rhythm');
-	assert.match(bodyRule[1], /display\s*:\s*grid\s*;/);
-	assert.match(bodyRule[1], /gap\s*:\s*14px\s*;/);
-	assert.ok(labelRule, 'Icon List responsive labels should be scoped to the widget');
-	assert.match(labelRule[1], /justify-content\s*:\s*space-between\s*;/);
-	assert.ok(deviceRule, 'Icon List device menu should be scoped to the widget');
-	assert.match(deviceRule[1], /margin-left\s*:\s*auto\s*;/);
-	assert.ok(addButtonRule, 'Icon List add action should have a compact widget rule');
-	assert.match(addButtonRule[1], /min-height\s*:\s*30px\s*;/);
-	assert.match(addButtonRule[1], /padding\s*:\s*6px\s+8px\s*;/);
-	assert.ok(actionRule, 'Icon List row actions should have a compact widget rule');
-	assert.match(actionRule[1], /width\s*:\s*24px\s*;/);
-	assert.match(actionRule[1], /height\s*:\s*24px\s*;/);
 });

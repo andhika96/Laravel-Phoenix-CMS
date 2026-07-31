@@ -4,10 +4,7 @@ import test from 'node:test';
 
 const canvasPath = new URL('../public/js/pagebuilder_elementor/widgets/general/image-carousel/Canvas.vue', import.meta.url);
 const settingsPath = new URL('../public/js/pagebuilder_elementor/widgets/general/image-carousel/Settings.vue', import.meta.url);
-const appPath = new URL('../public/js/pagebuilder_elementor/app.js', import.meta.url);
-const frontendBladePath = new URL('../resources/views/pagebuilder_elementor/partials/render_image_carousel.blade.php', import.meta.url);
 const editorCssPath = new URL('../public/assets/css/pagebuilder_elementor.css', import.meta.url);
-const frontendCssPath = new URL('../public/assets/css/frontend_elementor.css', import.meta.url);
 
 function componentFromVueFile(path) {
 	const source = fs.readFileSync(path, 'utf8');
@@ -41,34 +38,6 @@ function canvasContext(settings, responsiveDevice = 'desktop') {
 test('Image Carousel Vue components compile as JavaScript', () => {
 	assert.equal(componentFromVueFile(canvasPath).name, 'GeneralImageCarousel');
 	assert.equal(componentFromVueFile(settingsPath).name, 'ImageCarouselWidgetSettings');
-});
-
-test('Image Carousel arrow controls match the Elementor icon picker and compact canvas rhythm', () => {
-	const settings = fs.readFileSync(settingsPath, 'utf8');
-	const app = fs.readFileSync(appPath, 'utf8');
-	const canvas = fs.readFileSync(canvasPath, 'utf8');
-	const blade = fs.readFileSync(frontendBladePath, 'utf8');
-	const editorCss = fs.readFileSync(editorCssPath, 'utf8');
-	const frontendCss = fs.readFileSync(frontendCssPath, 'utf8');
-
-	assert.match(settings, /const IconPicker=/);
-	assert.match(settings, /editor\.openImageCarouselArrowIconLibrary/);
-	assert.match(settings, /title="Upload SVG"/);
-	assert.match(settings, /title="Icon Library"/);
-	assert.match(app, /previousArrowIconSource: 'library'/);
-	assert.match(app, /openImageCarouselArrowIconLibrary/);
-	assert.match(app, /chooseImageCarouselArrowSvg/);
-	assert.match(canvas, /arrowIconSource\('previous'\)/);
-	assert.match(canvas, /pb-image-carousel__arrow-svg/);
-	assert.match(blade, /\$sanitizeSvg/);
-	assert.match(blade, /previousArrow\['svg'\]/);
-	assert.match(editorCss, /pb-image-carousel-icon-picker__button/);
-	assert.match(editorCss, /pb-widget-settings--image-carousel \.pb-collapsible-body[\s\S]*display: grid;/);
-	assert.match(editorCss, /pb-widget-settings--image-carousel \.pb-label-row\.pb-label-row-device[\s\S]*justify-content: space-between;/);
-	assert.match(editorCss, /pb-carousel-gallery__head \.pb-btn\.icon-sm[\s\S]*max-width: 24px;/);
-	assert.match(settings, /pb-carousel-gallery__head[\s\S]*padding:6px 8px/);
-	assert.match(settings, /pb-carousel-gallery__add[\s\S]*min-height:30px/);
-	assert.match(frontendCss, /width:calc\(var\(--pb-carousel-arrow-size,16px\) \+ 12px\)/);
 });
 
 test('all visual canvas settings resolve to live responsive styles', () => {

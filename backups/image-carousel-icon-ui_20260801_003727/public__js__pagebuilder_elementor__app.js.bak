@@ -755,10 +755,10 @@
 			...widgetAdvancedDefaults(),
 			carouselName: 'Image Carousel', images: [], imageResolution: 'thumbnail', customImageWidth: 150, customImageHeight: 150,
 			slidesToShow: 'default', slidesToShowTablet: '', slidesToShowMobile: '', slidesToScroll: 'default', slidesToScrollTablet: '', slidesToScrollMobile: '',
-			imageStretch: false, navigation: 'arrows_dots', previousArrowIcon: 'fas fa-chevron-left', previousArrowIconSource: 'library', previousArrowIconSvg: '', nextArrowIcon: 'fas fa-chevron-right', nextArrowIconSource: 'library', nextArrowIconSvg: '',
+			imageStretch: false, navigation: 'arrows_dots', previousArrowIcon: 'fas fa-chevron-left', nextArrowIcon: 'fas fa-chevron-right',
 			linkType: 'none', customLinkUrl: '', lightbox: 'default', captionType: 'none',
 			lazyload: false, autoplay: true, pauseOnHover: true, pauseOnInteraction: true, autoplaySpeed: 5000, infiniteLoop: true, animationSpeed: 500, direction: 'left',
-			arrowPosition: 'inside', arrowSize: '16px', arrowSizeTablet: '', arrowSizeMobile: '', arrowColor: '',
+			arrowPosition: 'inside', arrowSize: '20px', arrowSizeTablet: '', arrowSizeMobile: '', arrowColor: '',
 			paginationPosition: 'outside', dotSpacing: '8px', dotSpacingTablet: '', dotSpacingMobile: '', dotSize: '8px', dotSizeTablet: '', dotSizeMobile: '', dotColor: '#c4c7cf', dotActiveColor: '#69727d',
 			imageVerticalAlign: 'center', imageVerticalAlignTablet: '', imageVerticalAlignMobile: '', imageSpacingMode: 'default', imageSpacing: '20px', imageSpacingTablet: '', imageSpacingMobile: '',
 			imageBorderType: 'default', imageBorderWidthTop: '0px', imageBorderWidthRight: '0px', imageBorderWidthBottom: '0px', imageBorderWidthLeft: '0px', imageBorderColor: '',
@@ -825,11 +825,8 @@
 		settings.animationSpeed = clamp(Math.round(Number(settings.animationSpeed) || 500), 0, 10000);
 		settings.carouselName = String(settings.carouselName || 'Image Carousel').trim() || 'Image Carousel';
 		settings.customLinkUrl = String(settings.customLinkUrl || '').trim();
-		['previousArrowIcon', 'nextArrowIcon'].forEach((key) => {
-			settings[key] = String(settings[key] || (key === 'previousArrowIcon' ? 'fas fa-chevron-left' : 'fas fa-chevron-right')).trim();
-			settings[key + 'Source'] = settings[key + 'Source'] === 'svg' && String(settings[key + 'Svg'] || '').trim() ? 'svg' : 'library';
-			settings[key + 'Svg'] = settings[key + 'Source'] === 'svg' ? String(settings[key + 'Svg'] || '').trim() : '';
-		});
+		settings.previousArrowIcon = String(settings.previousArrowIcon || 'fas fa-chevron-left').trim();
+		settings.nextArrowIcon = String(settings.nextArrowIcon || 'fas fa-chevron-right').trim();
 		normalizeWidgetAdvancedSettings(settings);
 		return settings;
 	}
@@ -3554,12 +3551,12 @@
 				}
 			}
 			function isIconLibraryWidgetNode(node) {
-				return !!node && ['icon', 'icon_box', 'image_carousel'].includes(node.type);
+				return !!node && ['icon', 'icon_box'].includes(node.type);
 			}
 			function normalizeIconLibraryWidgetSettings(node) {
 				if (!isIconLibraryWidgetNode(node)) return;
 				if (node.type === 'icon_box') normalizeIconBoxSettings(node.settings || (node.settings = {}));
-				else if (node.type === 'icon') normalizeIconWidgetSettings(node.settings || (node.settings = {}));
+				else normalizeIconWidgetSettings(node.settings || (node.settings = {}));
 			}
 			function syncIconLibrarySelectionFromNode(node) {
 				if (!isIconLibraryWidgetNode(node)) {
@@ -3619,18 +3616,6 @@
 				iconLibrarySelected.value = iconLibraryIcons.value.find((item) => item.style === parsed.style && item.name === parsed.name) || null;
 				showIconLibraryModal.value = true;
 			}
-			async function openImageCarouselArrowIconLibrary(settingKey, node = selectedNode.value) {
-				if (!node || node.type !== 'image_carousel' || !['previousArrowIcon', 'nextArrowIcon'].includes(settingKey)) return;
-				await ensureIconLibraryLoaded();
-				const parsed = parseIconWidgetClassParts(node.settings?.[settingKey]);
-				iconLibraryTargetNodeId.value = String(node.id || '');
-				iconLibraryTargetSettingKey.value = settingKey;
-				iconLibraryTargetItemId.value = '';
-				iconLibraryGroup.value = 'all';
-				iconLibrarySearch.value = '';
-				iconLibrarySelected.value = iconLibraryIcons.value.find((item) => item.style === parsed.style && item.name === parsed.name) || null;
-				showIconLibraryModal.value = true;
-			}
 			function selectIconLibraryItem(item) {
 				iconLibrarySelected.value = item || null;
 			}
@@ -3654,14 +3639,6 @@
 					if (!node.settings || typeof node.settings !== 'object') node.settings = {};
 					node.settings[settingKey] = iconLibrarySelected.value.className;
 					node.settings[settingKey.replace('Class', 'Source')] = 'library';
-					closeIconLibrary();
-					return;
-				}
-				if (node && node.type === 'image_carousel' && ['previousArrowIcon', 'nextArrowIcon'].includes(settingKey)) {
-					if (!node.settings || typeof node.settings !== 'object') node.settings = {};
-					node.settings[settingKey] = iconLibrarySelected.value.className;
-					node.settings[settingKey + 'Source'] = 'library';
-					node.settings[settingKey + 'Svg'] = '';
 					closeIconLibrary();
 					return;
 				}
@@ -3707,18 +3684,6 @@
 				}
 				node.settings[role + 'IconSvg'] = sanitized;
 				node.settings[role + 'IconSource'] = 'svg';
-			}
-			function chooseImageCarouselArrowSvg(settingKey, node = selectedNode.value) {
-				if (!node || node.type !== 'image_carousel' || !['previousArrowIcon', 'nextArrowIcon'].includes(settingKey)) return;
-				const markup = window.prompt('Paste trusted SVG markup', String(node.settings?.[settingKey + 'Svg'] || ''));
-				if (markup === null) return;
-				const sanitized = sanitizeAccordionSvgMarkup(markup);
-				if (!sanitized) {
-					showSaveToast('error', 'SVG tidak valid atau mengandung markup yang tidak didukung.');
-					return;
-				}
-				node.settings[settingKey + 'Svg'] = sanitized;
-				node.settings[settingKey + 'Source'] = 'svg';
 			}
 			function accordionStateKey(base, state = accordionStyleState.value) {
 				const safeState = ['normal', 'hover', 'active'].includes(state) ? state : 'normal';
@@ -5650,8 +5615,6 @@
 				onSpacerHeightInput,
 				setSpacerHeightUnit,
 				openIconLibrary,
-				openImageCarouselArrowIconLibrary,
-				chooseImageCarouselArrowSvg,
 				fontAwesomeStyleLabel,
 				iconWidgetCurrentLabel,
 				iconWidgetCurrentStyleLabel,
@@ -5804,7 +5767,7 @@
 				displayNodeLabel, nodeLabelIcon,
 				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
-				openIconLibrary, openIconListItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, chooseAccordionSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
+				openIconLibrary, openIconListItemIconLibrary, openAccordionIconLibrary, chooseAccordionSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
 				tabsItemsForNode, tabsActiveItem, selectTabsItem, addTabsItem, duplicateTabsItem, removeTabsItem, tabsItemSummary, tabsSelectedRowDirection,
 				tabsWidthValue, tabsWidthUnit, tabsWidthMax, tabsWidthStep, onTabsWidthInput, setTabsWidthValue, setTabsWidthUnit,

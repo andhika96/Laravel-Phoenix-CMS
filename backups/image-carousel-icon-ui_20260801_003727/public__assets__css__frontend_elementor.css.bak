@@ -869,12 +869,10 @@
 .pb-image-carousel__slide{flex:0 0 calc(100% / var(--pb-carousel-visible,3));min-width:0;margin:0;padding-inline:calc(var(--pb-carousel-image-gap,0px) / 2)}
 .pb-image-carousel__slide img{display:block;max-width:100%;margin:auto}
 .pb-image-carousel__caption{padding-inline:4px}
-.pb-image-carousel__arrow{position:absolute;top:50%;z-index:2;display:grid;place-items:center;transform:translateY(-50%);border:0;background:rgba(255,255,255,.88);box-shadow:0 2px 8px rgba(16,24,40,.14);color:var(--pb-carousel-arrow-color,#69727d);font-size:var(--pb-carousel-arrow-size,16px);width:calc(var(--pb-carousel-arrow-size,16px) + 12px);height:calc(var(--pb-carousel-arrow-size,16px) + 12px);padding:0;border-radius:50%;cursor:pointer}
-.pb-image-carousel__arrow-svg{display:block;width:1em;height:1em;object-fit:contain}
-.pb-image-carousel__arrow-svg svg{display:block;width:100%;height:100%}
+.pb-image-carousel__arrow{position:absolute;top:50%;z-index:2;display:grid;place-items:center;transform:translateY(-50%);border:0;background:rgba(255,255,255,.88);box-shadow:0 2px 8px rgba(16,24,40,.14);color:var(--pb-carousel-arrow-color,#69727d);font-size:var(--pb-carousel-arrow-size,20px);width:calc(var(--pb-carousel-arrow-size,20px) + 20px);height:calc(var(--pb-carousel-arrow-size,20px) + 20px);border-radius:50%;cursor:pointer}
 .pb-image-carousel__arrow:disabled{opacity:.35;cursor:not-allowed}
 .pb-image-carousel__arrow--previous{left:8px}.pb-image-carousel__arrow--next{right:8px}
-.pb-image-carousel.is-arrows-outside{padding-inline:calc(var(--pb-carousel-arrow-size,16px) + 16px)}
+.pb-image-carousel.is-arrows-outside{padding-inline:calc(var(--pb-carousel-arrow-size,20px) + 24px)}
 .pb-image-carousel.is-arrows-outside .pb-image-carousel__arrow--previous{left:0}.pb-image-carousel.is-arrows-outside .pb-image-carousel__arrow--next{right:0}
 .pb-image-carousel__pagination{display:flex;justify-content:center;gap:var(--pb-carousel-dot-gap,8px);padding:10px}
 .pb-image-carousel.is-pagination-inside .pb-image-carousel__pagination{position:absolute;z-index:3;left:0;right:0;bottom:0}
