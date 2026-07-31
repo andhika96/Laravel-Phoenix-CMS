@@ -57,3 +57,7 @@ package-lock.json
 *.eot
 *.zip
 *.pdf
+
+# Raw data files unsupported by the code-relationship extractor
+database/sql/laravel_11.sql
+resources/data/pagebuilder_elementor_shapes.json
