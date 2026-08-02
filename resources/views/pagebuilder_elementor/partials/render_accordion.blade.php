@@ -77,6 +77,12 @@
 		if (($accordionSettings[$typeKey] ?? 'classic') === 'gradient') return $gradient($prefix, $suffix);
 		return trim((string) ($accordionSettings[$prefix . 'BackgroundColor' . $suffix] ?? 'transparent')) ?: 'transparent';
 	};
+	$boxShadow = function (string $prefix, string $suffix = '') use ($accordionSettings, $cssToken): string {
+		if (empty($accordionSettings[$prefix . 'Enabled' . $suffix])) return 'none';
+		$parts = array_map(fn ($field) => $cssToken($accordionSettings[$prefix . $field . $suffix] ?? '0px', '0px'), ['X', 'Y', 'Blur', 'Spread']);
+		$color = preg_replace('/[;{}]/', '', trim((string) ($accordionSettings[$prefix . 'Color' . $suffix] ?? 'rgba(0,0,0,.2)'))) ?: 'rgba(0,0,0,.2)';
+		return implode(' ', $parts) . ' ' . $color . (!empty($accordionSettings[$prefix . 'Inset' . $suffix]) ? ' inset' : '');
+	};
 	$styleVars = [
 		'--accordion-animation-duration:' . $animationDuration . 'ms',
 		'--accordion-item-gap:' . $cssToken($responsiveValue('accordionItemGap', '', '0px'), '0px'),
@@ -92,23 +98,24 @@
 		'--accordion-header-text-transform:' . (trim((string) ($accordionSettings['headerTextTransform'] ?? 'none')) ?: 'none'),
 		'--accordion-header-font-style:' . (trim((string) ($accordionSettings['headerFontStyle'] ?? 'normal')) ?: 'normal'),
 		'--accordion-header-text-decoration:' . (trim((string) ($accordionSettings['headerTextDecoration'] ?? 'none')) ?: 'none'),
-		'--accordion-icon-size:' . $cssToken($responsiveValue('headerIconSize', '', '16px'), '16px'),
-		'--accordion-icon-spacing:' . $cssToken($responsiveValue('headerIconSpacing', '', '12px'), '12px'),
+		'--accordion-icon-size:' . $cssToken($responsiveValue('headerIconSize', '', '15px'), '15px'),
+		'--accordion-icon-spacing:' . $cssToken($responsiveValue('headerIconSpacing', '', '10px'), '10px'),
 		'--accordion-content-background:' . $background('content'),
-		'--accordion-content-border-style:' . $borderStyle($accordionSettings['contentBorderType'] ?? 'none'),
-		'--accordion-content-border-width:' . $cssToken($accordionSettings['contentBorderWidth'] ?? '0px', '0px'),
+		'--accordion-content-border-style:' . $borderStyle($accordionSettings['contentBorderType'] ?? 'default'),
+		'--accordion-content-border-width:' . $cssToken($responsiveValue('contentBorderWidth', '', '0px'), '0px'),
 		'--accordion-content-border-color:' . (trim((string) ($accordionSettings['contentBorderColor'] ?? 'transparent')) ?: 'transparent'),
 		'--accordion-content-radius:' . $cssToken($responsiveValue('contentBorderRadius', '', '0px'), '0px'),
-		'--accordion-content-padding:' . $cssToken($responsiveValue('contentPadding', '', '20px'), '20px'),
+		'--accordion-content-padding:' . $cssToken($responsiveValue('contentPadding', '', '0px'), '0px'),
 	];
 	foreach (['Normal' => 'normal', 'Hover' => 'hover', 'Active' => 'active'] as $suffix => $state) {
 		$styleVars[] = '--accordion-background-' . $state . ':' . $background('accordion', $suffix);
-		$styleVars[] = '--accordion-border-style-' . $state . ':' . $borderStyle($accordionSettings['accordionBorderType' . $suffix] ?? 'solid');
-		$styleVars[] = '--accordion-border-width-' . $state . ':' . $cssToken($accordionSettings['accordionBorderWidth' . $suffix] ?? '1px', '1px');
+		$styleVars[] = '--accordion-border-style-' . $state . ':' . $borderStyle($accordionSettings['accordionBorderType' . $suffix] ?? 'default');
+		$styleVars[] = '--accordion-border-width-' . $state . ':' . $cssToken($responsiveValue('accordionBorderWidth' . $suffix, '', '1px'), '1px');
 		$styleVars[] = '--accordion-border-color-' . $state . ':' . (trim((string) ($accordionSettings['accordionBorderColor' . $suffix] ?? '#d5dae3')) ?: '#d5dae3');
+		$styleVars[] = '--accordion-box-shadow-' . $state . ':' . $boxShadow('accordionBoxShadow', $suffix);
 		$styleVars[] = '--accordion-header-' . $state . '-title-color:' . (trim((string) ($accordionSettings['headerTitleColor' . $suffix] ?? '#1f2937')) ?: '#1f2937');
 		$styleVars[] = '--accordion-header-' . $state . '-text-shadow:' . (trim((string) ($accordionSettings['headerTextShadow' . $suffix] ?? 'none')) ?: 'none');
-		$styleVars[] = '--accordion-header-' . $state . '-stroke-width:' . $cssToken($accordionSettings['headerTextStrokeWidth' . $suffix] ?? '0px', '0px');
+		$styleVars[] = '--accordion-header-' . $state . '-stroke-width:' . $cssToken($responsiveValue('headerTextStrokeWidth' . $suffix, '', '0px'), '0px');
 		$styleVars[] = '--accordion-header-' . $state . '-stroke-color:' . (trim((string) ($accordionSettings['headerTextStrokeColor' . $suffix] ?? 'currentColor')) ?: 'currentColor');
 		$styleVars[] = '--accordion-header-' . $state . '-icon-color:' . (trim((string) ($accordionSettings['headerIconColor' . $suffix] ?? 'currentColor')) ?: 'currentColor');
 	}
@@ -368,10 +375,11 @@
 			'--accordion-header-line-height:' . $lineHeightToken($responsiveValue('headerLineHeight', $suffix, '1.4'), '1.4'),
 			'--accordion-header-letter-spacing:' . $cssToken($responsiveValue('headerLetterSpacing', $suffix, '0px'), '0px'),
 			'--accordion-header-word-spacing:' . $cssToken($responsiveValue('headerWordSpacing', $suffix, '0px'), '0px'),
-			'--accordion-icon-size:' . $cssToken($responsiveValue('headerIconSize', $suffix, '16px'), '16px'),
-			'--accordion-icon-spacing:' . $cssToken($responsiveValue('headerIconSpacing', $suffix, '12px'), '12px'),
+			'--accordion-icon-size:' . $cssToken($responsiveValue('headerIconSize', $suffix, '15px'), '15px'),
+			'--accordion-icon-spacing:' . $cssToken($responsiveValue('headerIconSpacing', $suffix, '10px'), '10px'),
+			'--accordion-content-border-width:' . $cssToken($responsiveValue('contentBorderWidth', $suffix, '0px'), '0px'),
 			'--accordion-content-radius:' . $cssToken($responsiveValue('contentBorderRadius', $suffix, '0px'), '0px'),
-			'--accordion-content-padding:' . $cssToken($responsiveValue('contentPadding', $suffix, '20px'), '20px'),
+			'--accordion-content-padding:' . $cssToken($responsiveValue('contentPadding', $suffix, '0px'), '0px'),
 			'margin-top:' . $spaceToken($responsiveValue('marginTop', $suffix, '0px'), '0'),
 			'margin-right:' . $spaceToken($responsiveValue('marginRight', $suffix, '0px'), '0'),
 			'margin-bottom:' . $spaceToken($responsiveValue('marginBottom', $suffix, '0px'), '0'),
@@ -383,6 +391,10 @@
 			'border-radius:' . $cssToken($responsiveValue('advancedBorderRadius', $suffix, '0px'), '0'),
 			'--pb-advanced-transform:' . $buildTransform('', $suffix),
 		];
+		foreach (['Normal' => 'normal', 'Hover' => 'hover', 'Active' => 'active'] as $stateSuffix => $state) {
+			$rules[] = '--accordion-border-width-' . $state . ':' . $cssToken($responsiveValue('accordionBorderWidth' . $stateSuffix, $suffix, '1px'), '1px');
+			$rules[] = '--accordion-header-' . $state . '-stroke-width:' . $cssToken($responsiveValue('headerTextStrokeWidth' . $stateSuffix, $suffix, '0px'), '0px');
+		}
 		$responsiveWidthMode = strtolower(trim((string) $responsiveValue('widthMode', $suffix, $widthMode)));
 		if (!in_array($responsiveWidthMode, ['default', 'full', 'inline', 'custom'], true)) $responsiveWidthMode = $widthMode;
 		$rules[] = 'width:' . match ($responsiveWidthMode) {

@@ -74,10 +74,15 @@ class PageBuilderElementorIconBoxWidgetParityTest extends TestCase
         $this->assertStringContainsString("node.settings.view === 'framed'", $settings);
         $this->assertStringContainsString("editor.iconBoxIconState === 'hover'", $settings);
         $this->assertStringContainsString('editor.openIconLibrary(node)', $settings);
-        $this->assertStringContainsString('editor.dynamicTagControl', $settings);
+		$this->assertStringNotContainsString('editor.dynamicTagControl', $settings);
         $this->assertStringContainsString('editor.linkControl', $settings);
+        $this->assertStringContainsString('pb-icon-box-link-field', $settings);
+        $this->assertStringContainsString('.pb-icon-box-link-field :deep(.pb-link-control){min-width:0;}', $settings);
+        $this->assertStringContainsString('pb-image-box-settings pb-icon-box-settings', $settings);
+        $this->assertStringContainsString(':aria-pressed="node.settings[editor.activeResponsiveKey(control.key)]===option.value"', $settings);
         $this->assertStringContainsString('editor.typographyControl', $settings);
         $this->assertStringContainsString('editor.widgetAdvancedControls', $settings);
+        $this->assertStringContainsString("['div','span','p'].includes(tag) ? tag : tag.toUpperCase()", $settings);
     }
 
     public function test_rotate_control_accepts_degree_units_and_reaches_frontend_css(): void
@@ -236,6 +241,27 @@ class PageBuilderElementorIconBoxWidgetParityTest extends TestCase
         $this->assertStringContainsString('nofollow', $compact);
         $this->assertStringContainsString('data-track="icon-box"', $compact);
         $this->assertStringContainsString('@media(max-width:1024px)', str_replace(' ', '', $html));
+    }
+
+    public function test_dynamic_link_binding_stays_in_sync_between_canvas_and_frontend(): void
+    {
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/icon-box/Canvas.vue'));
+
+        $this->assertStringContainsString("this.resolveDynamicValue('linkUrl',this.settings.linkUrl||'')", $canvas);
+
+        $html = view('pagebuilder_elementor.partials.render_icon_box', [
+            'node' => [
+                'id' => 'icon-box-dynamic-link',
+                'type' => 'icon_box',
+                'settings' => [
+                    'title' => 'Dynamic link',
+                    'linkUrl' => '',
+                    'dynamicBindings' => ['linkUrl' => 'page_url'],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('href="'.url()->current().'"', $html);
     }
 
     public function test_frontend_rejects_unsafe_url_tag_icon_and_attributes(): void

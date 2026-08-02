@@ -66,6 +66,7 @@ test('Image Carousel arrow controls match the Elementor icon picker and compact 
 	assert.match(editorCss, /pb-widget-settings--image-carousel \.pb-collapsible-body[\s\S]*display: grid;/);
 	assert.match(editorCss, /pb-widget-settings--image-carousel \.pb-label-row\.pb-label-row-device[\s\S]*justify-content: space-between;/);
 	assert.match(editorCss, /pb-carousel-gallery__head \.pb-btn\.icon-sm[\s\S]*max-width: 24px;/);
+	assert.match(editorCss, /pb-widget-settings--image-carousel\s+\.pb-carousel-gallery__add\s*\{[\s\S]*?padding\s*:\s*14px\s+8px\s*;/);
 	assert.match(settings, /pb-carousel-gallery__head[\s\S]*padding:6px 8px/);
 	assert.match(settings, /pb-carousel-gallery__add[\s\S]*min-height:30px/);
 	assert.match(frontendCss, /width:calc\(var\(--pb-carousel-arrow-size,16px\) \+ 12px\)/);
@@ -236,6 +237,9 @@ test('content, links, captions, navigation, and non-loop boundaries react on can
 		navigation: 'arrows_dots',
 		linkType: 'custom',
 		customLinkUrl: 'https://example.com/gallery',
+		linkTarget: '_blank',
+		linkNofollow: true,
+		linkCustomAttributes: [{ key: 'data-track', value: 'carousel' }, { key: 'onclick', value: 'blocked' }],
 		lightbox: 'yes',
 		captionType: 'description',
 		infiniteLoop: false,
@@ -247,6 +251,9 @@ test('content, links, captions, navigation, and non-loop boundaries react on can
 	assert.equal(context.captionFor(context.images[0]), 'Description one');
 	assert.equal(context.linkFor(context.images[0]), 'https://example.com/gallery');
 	assert.equal(context.linkFor({ url: 'javascript:alert(1)' }), 'https://example.com/gallery');
+	assert.equal(context.linkTarget, '_blank');
+	assert.equal(context.linkRel, 'noopener noreferrer nofollow');
+	assert.deepEqual(context.linkAttributes, { 'data-track': 'carousel' });
 	assert.equal(context.usesLightbox, false);
 
 	context.goTo(99, true);

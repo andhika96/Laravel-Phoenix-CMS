@@ -1,0 +1,209 @@
+<?php
+
+namespace Tests\Feature;
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\TestCase;
+
+class PageBuilderElementorResponsiveBorderRadiusParityTest extends TestCase
+{
+    #[DataProvider('layoutNodeProvider')]
+    public function test_frontend_renderer_emits_per_device_border_radius_rules_for_all_layout_variants(
+        array $node,
+        string $expectedId
+    ): void {
+        $html = view('pagebuilder_elementor.partials.render_node', ['node' => $node])->render();
+
+        $this->assertStringContainsString('id="' . $expectedId . '"', $html);
+        $this->assertStringContainsString('border-radius:4px 8px 12px 16px', $html);
+        $this->assertStringContainsString(
+            '@media (max-width: 1024px){#' . $expectedId . '{border-radius:20px 8px 24px 16px}}',
+            $html
+        );
+        $this->assertStringContainsString(
+            '@media (max-width: 767px){#' . $expectedId . '{border-radius:4px 30px 12px 16px}}',
+            $html
+        );
+    }
+
+    public static function layoutNodeProvider(): array
+    {
+        $settings = [
+            'borderRadiusTL' => '4px',
+            'borderRadiusTR' => '8px',
+            'borderRadiusBR' => '12px',
+            'borderRadiusBL' => '16px',
+            'borderRadiusTLTablet' => '20px',
+            'borderRadiusBRTablet' => '24px',
+            'borderRadiusTRMobile' => '30px',
+        ];
+        $columns = [
+            ['id' => 'column-1', 'children' => []],
+        ];
+
+        return [
+            'container' => [[
+                'id' => 'responsive-radius-container',
+                'type' => 'container',
+                'settings' => $settings,
+                'columns' => $columns,
+            ], 'pb-node-responsive-radius-container'],
+            'container-fluid' => [[
+                'id' => 'responsive-radius-container-fluid',
+                'type' => 'container_fluid',
+                'settings' => $settings,
+                'columns' => $columns,
+            ], 'pb-node-responsive-radius-container-fluid'],
+            'grid' => [[
+                'id' => 'responsive-radius-grid',
+                'type' => 'grid',
+                'settings' => $settings,
+                'columns' => $columns,
+            ], 'pb-node-responsive-radius-grid'],
+            'row-grid' => [[
+                'id' => 'responsive-radius-row-grid',
+                'type' => 'row_grid',
+                'settings' => $settings,
+                'columns' => $columns,
+            ], 'pb-node-responsive-radius-row-grid'],
+        ];
+    }
+
+    #[DataProvider('layoutSettingsProvider')]
+    public function test_layout_radius_settings_use_responsive_four_side_control_pattern(
+        string $settingsPath,
+        string $definitionPath,
+        string $controlKey
+    ): void {
+        $settings = file_get_contents(public_path($settingsPath));
+        $definition = file_get_contents(public_path($definitionPath));
+
+        $this->assertIsString($settings);
+        $this->assertIsString($definition);
+        $this->assertStringContainsString("editor.openControlResponsiveMenu('" . $controlKey . "')", $settings);
+        $this->assertStringContainsString('pb-four-sides pb-four-sides-with-link', $settings);
+        $this->assertStringContainsString('pb-side-link-cell', $settings);
+        $this->assertStringContainsString('responsiveRadiusKeys()', $settings);
+        $this->assertStringContainsString("radiusDimensionValue(corner.key, 'px')", $settings);
+        $this->assertStringContainsString('borderRadiusTLTablet', $definition);
+        $this->assertStringContainsString('borderRadiusTLMobile', $definition);
+    }
+
+    public static function layoutSettingsProvider(): array
+    {
+        return [
+            'container' => [
+                'js/pagebuilder_elementor/widgets/layout/container/Settings.vue',
+                'js/pagebuilder_elementor/widgets/layout/container/definition.js',
+                'container-border-radius',
+            ],
+            'container-fluid' => [
+                'js/pagebuilder_elementor/widgets/layout/container-fluid/Settings.vue',
+                'js/pagebuilder_elementor/widgets/layout/container-fluid/definition.js',
+                'container-fluid-border-radius',
+            ],
+            'grid' => [
+                'js/pagebuilder_elementor/widgets/layout/grid/Settings.vue',
+                'js/pagebuilder_elementor/widgets/layout/grid/definition.js',
+                'grid-border-radius',
+            ],
+            'row-grid' => [
+                'js/pagebuilder_elementor/widgets/layout/row-grid/Settings.vue',
+                'js/pagebuilder_elementor/widgets/layout/row-grid/definition.js',
+                'row-grid-border-radius',
+            ],
+        ];
+    }
+
+    public function test_layout_radius_header_keeps_its_responsive_controls_on_the_trailing_edge(): void
+    {
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $this->assertIsString($builderCss);
+        $this->assertStringContainsString('.pb-label-row.pb-radius-control-header', $builderCss);
+        $this->assertStringContainsString('margin-left: auto;', $builderCss);
+        $this->assertStringContainsString(
+            '.pb-panel.left .pb-grid-settings .pb-four-sides-with-link',
+            $builderCss
+        );
+    }
+
+    public function test_widget_responsive_label_rows_keep_device_controls_on_the_trailing_edge(): void
+    {
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $widgetSelector = '.pb-panel.left :is(.pb-widget-settings--basic, .pb-widget-settings--icon-box) .pb-label-row.pb-label-row-device';
+        $deviceWrapSelector = $widgetSelector . ' > .pb-control-device-wrap';
+
+        $this->assertIsString($builderCss);
+        $this->assertMatchesRegularExpression(
+            '/' . preg_quote($widgetSelector, '/') . '\\s*\\{[^}]*justify-content:\\s*space-between;/s',
+            $builderCss
+        );
+        $this->assertMatchesRegularExpression(
+            '/' . preg_quote($deviceWrapSelector, '/') . '\\s*\\{[^}]*margin-left:\\s*auto;/s',
+            $builderCss
+        );
+    }
+
+    public function test_layout_responsive_label_rows_keep_direct_device_controls_on_the_trailing_edge(): void
+    {
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $layoutSelector = '.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-label-row.pb-label-row-device';
+        $deviceWrapSelector = $layoutSelector . ' > .pb-control-device-wrap';
+
+        $this->assertIsString($builderCss);
+        $this->assertMatchesRegularExpression(
+            '/' . preg_quote($layoutSelector, '/') . '\\s*\\{[^}]*justify-content:\\s*space-between;/s',
+            $builderCss
+        );
+        $this->assertMatchesRegularExpression(
+            '/' . preg_quote($deviceWrapSelector, '/') . '\\s*\\{[^}]*margin-left:\\s*auto;/s',
+            $builderCss
+        );
+    }
+
+    #[DataProvider('layoutSpacingSettingsProvider')]
+    public function test_layout_spacing_headers_group_the_device_control_with_the_trailing_unit_selector(
+        string $settingsPath,
+        string $controlKey
+    ): void {
+        $settings = file_get_contents(public_path($settingsPath));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $this->assertIsString($settings);
+        $this->assertIsString($builderCss);
+        $this->assertStringContainsString("editor.openControlResponsiveMenu('" . $controlKey . "')", $settings);
+        $this->assertMatchesRegularExpression(
+            '/<div class="pb-label-tools">\\s*<div class="pb-control-device-wrap">\\s*<button class="pb-control-device-btn" @click\\.stop="editor\\.openControlResponsiveMenu\\(\'' . preg_quote($controlKey, '/') . '\'\\)"/s',
+            $settings
+        );
+        $this->assertMatchesRegularExpression(
+            '/' . preg_quote('.pb-panel.left .pb-layout-settings .pb-spacing-control-group .pb-label-row.pb-label-row-device', '/') . '\\s*\\{[^}]*justify-content:\\s*space-between;/s',
+            $builderCss
+        );
+    }
+
+    public static function layoutSpacingSettingsProvider(): array
+    {
+        return [
+            'container-margin' => [
+                'js/pagebuilder_elementor/widgets/layout/container/Settings.vue',
+                'container-margin',
+            ],
+            'container-padding' => [
+                'js/pagebuilder_elementor/widgets/layout/container/Settings.vue',
+                'container-padding',
+            ],
+            'container-fluid-margin' => [
+                'js/pagebuilder_elementor/widgets/layout/container-fluid/Settings.vue',
+                'container-margin',
+            ],
+            'container-fluid-padding' => [
+                'js/pagebuilder_elementor/widgets/layout/container-fluid/Settings.vue',
+                'container-padding',
+            ],
+        ];
+    }
+}

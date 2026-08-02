@@ -18,7 +18,7 @@
 	const sfcOptions = {
 		moduleCache: { vue: Vue },
 		getFile(url) {
-			const requestUrl = url + (url.includes('?') ? '&' : '?') + 'pbv=20260720-1';
+			const requestUrl = url + (url.includes('?') ? '&' : '?') + 'pbv=20260802-tabs-ui-2';
 			return fetch(requestUrl, { cache: 'no-store' }).then(r => {
 				if (!r.ok) throw new Error(url);
 				return r.text();
@@ -91,33 +91,104 @@
 		return _sfcResolvedModules[path] || _settingsCache[type];
 	}
 
-	async function preloadWidgetSettingsModules() {
+	function preloadSettingsModuleAtIdle(modulePaths, cursor, onComplete) {
+		if (cursor >= modulePaths.length) {
+			onComplete();
+			return;
+		}
+
+		const run = () => {
+			if (document.body.classList.contains('pb-is-dragging') || window.navigator?.scheduling?.isInputPending?.({ includeContinuous: true })) {
+				window.setTimeout(() => preloadSettingsModuleAtIdle(modulePaths, cursor, onComplete), 200);
+				return;
+			}
+
+			const path = modulePaths[cursor];
+			Promise.resolve()
+				.then(() => loadSfcModule(path))
+				.catch(error => {
+					console.warn('[PB] Settings preload failed:', path, error);
+				})
+				.finally(() => {
+					preloadSettingsModuleAtIdle(modulePaths, cursor + 1, onComplete);
+				});
+		};
+
+		if ('requestIdleCallback' in window) {
+			window.requestIdleCallback(run);
+			return;
+		}
+
+		window.setTimeout(run, 300);
+	}
+
+	function preloadWidgetSettingsModules() {
 		const modulePaths = [...new Set([
 			...Object.values(sharedControlPaths),
 			...(widgetRegistry?.all() || []).map(definition => definition.settings).filter(Boolean),
 		])];
-		const results = await Promise.allSettled(modulePaths.map(loadSfcModule));
 
-		results.forEach((result, index) => {
-			if (result.status === 'rejected') {
-				console.warn('[PB] Settings preload failed:', modulePaths[index], result.reason);
-			}
+		return new Promise(resolve => {
+			preloadSettingsModuleAtIdle(modulePaths, 0, resolve);
 		});
 	}
 
-	function scheduleWidgetSettingsPreload() {
+	let _settingsPreloadFirstDragStarted = false;
+	function scheduleWidgetSettingsPreloadAfterFirstGesture() {
+		let started = false;
+		let idleHandle = null;
+		let paintScheduled = false;
+		const hasPendingInput = () => Boolean(
+			window.navigator?.scheduling?.isInputPending?.({ includeContinuous: true })
+		);
+		const shouldWaitForInput = () => document.body.classList.contains('pb-is-dragging') || hasPendingInput();
 		const run = () => {
+			idleHandle = null;
+			if (started) return;
+			if (shouldWaitForInput()) {
+				deferUntilPaint();
+				return;
+			}
+			started = true;
 			preloadWidgetSettingsModules().catch(error => {
 				console.warn('[PB] Settings preload initialization failed:', error);
 			});
 		};
+		const queueIdle = () => {
+			if (started || idleHandle !== null) return;
+			if ('requestIdleCallback' in window) {
+				idleHandle = window.requestIdleCallback(run);
+				return;
+			}
+			idleHandle = window.setTimeout(run, 300);
+		};
+		const deferUntilPaint = () => {
+			if (started || paintScheduled || idleHandle !== null) return;
+			paintScheduled = true;
+			window.requestAnimationFrame(() => {
+				window.requestAnimationFrame(() => {
+					paintScheduled = false;
+					queueIdle();
+				});
+			});
+		};
+		const settleAfterDrag = () => {
+			_settingsPreloadFirstDragStarted = false;
+			deferUntilPaint();
+		};
+		const finishFirstGesture = () => {
+			if (_settingsPreloadFirstDragStarted || document.body.classList.contains('pb-is-dragging')) {
+				window.addEventListener('dragend', settleAfterDrag, { once: true });
+				return;
+			}
+			deferUntilPaint();
+		};
+		const observeFirstGesture = () => {
+			window.addEventListener('pointerup', finishFirstGesture, { once: true, passive: true });
+		};
 
-		if ('requestIdleCallback' in window) {
-			window.requestIdleCallback(run, { timeout: 1500 });
-			return;
-		}
-
-		window.setTimeout(run, 0);
+		window.addEventListener('pointerdown', observeFirstGesture, { once: true, passive: true });
+		window.addEventListener('keydown', deferUntilPaint, { once: true });
 	}
 
 	function hasRegisteredWidget(type) {
@@ -167,9 +238,9 @@
 		{ value: 'square', label: 'Square' },
 	]);
 	const TABS_WIDGET_BREAKPOINT_OPTIONS = Object.freeze([
-		{ value: 'mobile', label: 'Mobile Portrait (< 767px)' },
-		{ value: 'tablet', label: 'Tablet Portrait (< 1024px)' },
 		{ value: 'none', label: 'None' },
+		{ value: 'mobile', label: 'Mobile Portrait (>767px)' },
+		{ value: 'tablet', label: 'Tablet Portrait (>1024px)' },
 	]);
 	const TABS_WIDGET_WIDTH_UNITS = Object.freeze(['px', '%']);
 	function fontAwesomeStylePrefix(style) {
@@ -277,9 +348,12 @@
 		return {
 			id: uid('tab'),
 			title: 'Tab #' + (index + 1),
+			iconSource: 'none',
 			iconClass: '',
+			iconSvg: '',
 			activeIconClass: '',
 			cssId: '',
+			dynamicBindings: { title: '', cssId: '' },
 			children: [],
 		};
 	}
@@ -288,14 +362,86 @@
 	}
 	function tabsWidgetDefaults() {
 		return {
+			...widgetAdvancedDefaults(),
 			direction: 'row',
+			directionTablet: '',
+			directionMobile: '',
 			justify: 'flex-start',
+			justifyTablet: '',
+			justifyMobile: '',
 			alignTitle: 'center',
+			alignTitleTablet: '',
+			alignTitleMobile: '',
 			tabWidth: '',
 			tabWidthUnit: 'px',
 			horizontalScroll: false,
+			horizontalScrollTablet: '',
+			horizontalScrollMobile: '',
 			breakpoint: 'mobile',
 			activeTabId: '',
+			tabsGap: '8px', tabsGapTablet: '', tabsGapMobile: '',
+			tabsContentDistance: '16px', tabsContentDistanceTablet: '', tabsContentDistanceMobile: '',
+			tabsNormalTextColor: '#4f5f78',
+			tabsNormalTextShadow: 'none', tabsNormalTextStrokeWidth: '0px', tabsNormalTextStrokeColor: '#4f5f78', tabsNormalIconColor: '#4f5f78',
+			tabsNormalBackgroundType: 'classic', tabsNormalGradientColorOne: '#f3f5fa', tabsNormalGradientColorTwo: '#ffffff', tabsNormalGradientType: 'linear', tabsNormalGradientAngle: 180, tabsNormalGradientPosition: 'center center',
+			tabsNormalBoxShadowEnabled: false, tabsNormalBoxShadowColor: 'rgba(0,0,0,.2)', tabsNormalBoxShadowX: '0px', tabsNormalBoxShadowY: '0px', tabsNormalBoxShadowBlur: '0px', tabsNormalBoxShadowSpread: '0px', tabsNormalBoxShadowInset: false,
+			tabsNormalBackgroundColor: '#f3f5fa',
+			tabsNormalBorderType: 'solid',
+			tabsNormalBorderWidth: '1px',
+			tabsNormalBorderColor: '#dde3ef',
+			tabsNormalBorderRadius: '0px',
+			tabsNormalPadding: '14px 20px',
+			tabsHoverTextColor: '#4f5ec9',
+			tabsHoverTextShadow: 'none', tabsHoverTextStrokeWidth: '0px', tabsHoverTextStrokeColor: '#4f5ec9', tabsHoverIconColor: '#4f5ec9',
+			tabsHoverBackgroundType: 'classic', tabsHoverGradientColorOne: '#eef1ff', tabsHoverGradientColorTwo: '#ffffff', tabsHoverGradientType: 'linear', tabsHoverGradientAngle: 180, tabsHoverGradientPosition: 'center center',
+			tabsHoverBoxShadowEnabled: false, tabsHoverBoxShadowColor: 'rgba(0,0,0,.2)', tabsHoverBoxShadowX: '0px', tabsHoverBoxShadowY: '0px', tabsHoverBoxShadowBlur: '0px', tabsHoverBoxShadowSpread: '0px', tabsHoverBoxShadowInset: false,
+			tabsHoverBackgroundColor: '#eef1ff',
+			tabsHoverBorderType: 'solid',
+			tabsHoverBorderWidth: '1px',
+			tabsHoverBorderColor: '#c9d3f3',
+			tabsHoverBorderRadius: '0px',
+			tabsHoverPadding: '14px 20px',
+			tabsActiveTextColor: '#ffffff',
+			tabsActiveTextShadow: 'none', tabsActiveTextStrokeWidth: '0px', tabsActiveTextStrokeColor: '#ffffff', tabsActiveIconColor: '#ffffff',
+			tabsActiveBackgroundType: 'classic', tabsActiveGradientColorOne: '#4f5ec9', tabsActiveGradientColorTwo: '#7c8cff', tabsActiveGradientType: 'linear', tabsActiveGradientAngle: 180, tabsActiveGradientPosition: 'center center',
+			tabsActiveBoxShadowEnabled: false, tabsActiveBoxShadowColor: 'rgba(0,0,0,.2)', tabsActiveBoxShadowX: '0px', tabsActiveBoxShadowY: '0px', tabsActiveBoxShadowBlur: '0px', tabsActiveBoxShadowSpread: '0px', tabsActiveBoxShadowInset: false,
+			tabsActiveBackgroundColor: '#4f5ec9',
+			tabsActiveBorderType: 'solid',
+			tabsActiveBorderWidth: '1px',
+			tabsActiveBorderColor: '#4f5ec9',
+			tabsActiveBorderRadius: '0px',
+			tabsActivePadding: '14px 20px',
+			tabsTitleFontFamily: 'inherit',
+			tabsTitleFontSize: '14px',
+			tabsTitleFontWeight: '500',
+			tabsTitleTextTransform: 'none',
+			tabsTitleFontStyle: 'normal',
+			tabsTitleTextDecoration: 'none',
+			tabsTitleLineHeight: '1.3em',
+			tabsTitleLetterSpacing: '0px',
+			tabsTitleWordSpacing: '0px',
+			tabsIconSize: '14px',
+			tabsIconSizeTablet: '', tabsIconSizeMobile: '',
+			tabsIconSpacing: '10px',
+			tabsIconSpacingTablet: '', tabsIconSpacingMobile: '',
+			tabsIconPosition: 'row', tabsIconPositionTablet: '', tabsIconPositionMobile: '',
+			tabsContentBackgroundType: 'classic', tabsContentGradientColorOne: '#ffffff', tabsContentGradientColorTwo: '#f3f5fa', tabsContentGradientType: 'linear', tabsContentGradientAngle: 180, tabsContentGradientPosition: 'center center',
+			tabsContentBackgroundColor: 'transparent',
+			tabsContentTextColor: 'inherit',
+			tabsContentBorderType: 'none',
+			tabsContentBorderWidth: '0px',
+			tabsContentBorderColor: 'transparent',
+			tabsContentBorderRadius: '0px',
+			tabsContentPadding: '0px',
+			tabsContentFontFamily: 'inherit',
+			tabsContentFontSize: '16px',
+			tabsContentFontWeight: 'inherit',
+			tabsContentTextTransform: 'none',
+			tabsContentFontStyle: 'normal',
+			tabsContentTextDecoration: 'none',
+			tabsContentLineHeight: '1.5em',
+			tabsContentLetterSpacing: '0px',
+			tabsContentWordSpacing: '0px',
 			cssClass: '',
 		};
 	}
@@ -577,10 +723,10 @@
 			headerTextTransform: 'none',
 			headerFontStyle: 'normal',
 			headerTextDecoration: 'none',
-			headerIconSize: '16px',
+			headerIconSize: '15px',
 			headerIconSizeTablet: '',
 			headerIconSizeMobile: '',
-			headerIconSpacing: '12px',
+			headerIconSpacing: '10px',
 			headerIconSpacingTablet: '',
 			headerIconSpacingMobile: '',
 			contentBackgroundType: 'classic',
@@ -592,13 +738,13 @@
 			contentGradientType: 'linear',
 			contentGradientAngle: 180,
 			contentGradientPosition: 'center center',
-			contentBorderType: 'none',
+			contentBorderType: 'default',
 			contentBorderWidth: '0px',
 			contentBorderColor: '#d5dae3',
 			contentBorderRadius: '0px',
 			contentBorderRadiusTablet: '',
 			contentBorderRadiusMobile: '',
-			contentPadding: '20px',
+			contentPadding: '0px',
 			contentPaddingTablet: '',
 			contentPaddingMobile: '',
 			cssClass: '',
@@ -616,6 +762,8 @@
 			imageUrl: '',
 			imageAlt: '',
 			imageResolution: 'full',
+			customImageWidth: 150,
+			customImageHeight: 150,
 			title: 'This is the heading',
 			description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.',
 			linkUrl: '',
@@ -695,9 +843,11 @@
 			descriptionTextShadow: 'none',
 		};
 	}
-	const imageBoxResolutionOptions = Object.freeze(['thumbnail', 'medium', 'medium_large', 'large', '1536x1536', '2048x2048', 'full']);
+	const imageBoxResolutionOptions = Object.freeze(['thumbnail', 'medium', 'medium_large', 'large', '1536x1536', '2048x2048', 'full', 'custom']);
 	const imageBoxTitleTagOptions = Object.freeze(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p']);
 	const IMAGE_BOX_TEXT_DYNAMIC_TAGS = Object.freeze(['page_title', 'page_excerpt', 'page_url', 'site_title', 'site_url', 'user_display_name']);
+	const IMAGE_BOX_IMAGE_DYNAMIC_TAGS = Object.freeze(['featured_image']);
+	const IMAGE_BOX_LINK_DYNAMIC_TAGS = Object.freeze(['page_url', 'site_url']);
 	const imageBoxPositionOptions = Object.freeze(['top', 'left', 'right']);
 	const imageBoxAlignmentOptions = Object.freeze(['left', 'center', 'right', 'justify']);
 	const imageBoxBorderTypeOptions = Object.freeze(['none', 'solid', 'double', 'dotted', 'dashed', 'groove']);
@@ -720,6 +870,8 @@
 			if (settings[key] === undefined) settings[key] = cloneSettingValue(defaults[key]);
 		});
 		settings.imageResolution = imageBoxResolutionOptions.includes(settings.imageResolution) ? settings.imageResolution : 'full';
+		settings.customImageWidth = clamp(Math.round(Number(settings.customImageWidth) || 150), 1, 4096);
+		settings.customImageHeight = clamp(Math.round(Number(settings.customImageHeight) || 150), 1, 4096);
 		settings.titleTag = imageBoxTitleTagOptions.includes(settings.titleTag) ? settings.titleTag : 'h3';
 		settings.titleFontSizeMode = hadTitleFontSizeMode
 			? (['auto', 'custom'].includes(settings.titleFontSizeMode) ? settings.titleFontSizeMode : 'auto')
@@ -756,7 +908,7 @@
 			carouselName: 'Image Carousel', images: [], imageResolution: 'thumbnail', customImageWidth: 150, customImageHeight: 150,
 			slidesToShow: 'default', slidesToShowTablet: '', slidesToShowMobile: '', slidesToScroll: 'default', slidesToScrollTablet: '', slidesToScrollMobile: '',
 			imageStretch: false, navigation: 'arrows_dots', previousArrowIcon: 'fas fa-chevron-left', previousArrowIconSource: 'library', previousArrowIconSvg: '', nextArrowIcon: 'fas fa-chevron-right', nextArrowIconSource: 'library', nextArrowIconSvg: '',
-			linkType: 'none', customLinkUrl: '', lightbox: 'default', captionType: 'none',
+			linkType: 'none', customLinkUrl: '', linkTarget: '', linkNofollow: false, linkCustomAttributes: [], lightbox: 'default', captionType: 'none',
 			lazyload: false, autoplay: true, pauseOnHover: true, pauseOnInteraction: true, autoplaySpeed: 5000, infiniteLoop: true, animationSpeed: 500, direction: 'left',
 			arrowPosition: 'inside', arrowSize: '16px', arrowSizeTablet: '', arrowSizeMobile: '', arrowColor: '',
 			paginationPosition: 'outside', dotSpacing: '8px', dotSpacingTablet: '', dotSpacingMobile: '', dotSize: '8px', dotSizeTablet: '', dotSizeMobile: '', dotColor: '#c4c7cf', dotActiveColor: '#69727d',
@@ -811,6 +963,9 @@
 		settings.linkType = imageCarouselLinkOptions.includes(settings.linkType) ? settings.linkType : 'none';
 		settings.captionType = imageCarouselCaptionOptions.includes(settings.captionType) ? settings.captionType : 'none';
 		settings.lightbox = ['default', 'yes', 'no'].includes(settings.lightbox) ? settings.lightbox : 'default';
+		settings.linkTarget = settings.linkTarget === '_blank' ? '_blank' : '';
+		settings.linkNofollow = !!settings.linkNofollow;
+		settings.linkCustomAttributes = normalizeAttributes(settings.linkCustomAttributes);
 		settings.direction = settings.direction === 'right' ? 'right' : 'left';
 		settings.arrowPosition = settings.arrowPosition === 'outside' ? 'outside' : 'inside';
 		settings.paginationPosition = settings.paginationPosition === 'inside' ? 'inside' : 'outside';
@@ -1008,9 +1163,16 @@
 			['accordionGradientType' + suffix]: 'linear',
 			['accordionGradientAngle' + suffix]: 180,
 			['accordionGradientPosition' + suffix]: 'center center',
-			['accordionBorderType' + suffix]: 'solid',
+			['accordionBorderType' + suffix]: 'default',
 			['accordionBorderWidth' + suffix]: '1px',
 			['accordionBorderColor' + suffix]: '#d5dae3',
+			['accordionBoxShadowEnabled' + suffix]: false,
+			['accordionBoxShadowColor' + suffix]: 'rgba(0,0,0,.2)',
+			['accordionBoxShadowX' + suffix]: '0px',
+			['accordionBoxShadowY' + suffix]: '0px',
+			['accordionBoxShadowBlur' + suffix]: '0px',
+			['accordionBoxShadowSpread' + suffix]: '0px',
+			['accordionBoxShadowInset' + suffix]: false,
 			['headerTitleColor' + suffix]: titleColor,
 			['headerTextShadow' + suffix]: 'none',
 			['headerTextStrokeWidth' + suffix]: '0px',
@@ -1178,7 +1340,7 @@
 		if (!Array.isArray(attrs)) return [];
 		return attrs
 			.map(attr => ({
-				name: String(attr && attr.name ? attr.name : '').trim(),
+				name: String(attr && (attr.name || attr.key) ? (attr.name || attr.key) : '').trim(),
 				value: attr && attr.value != null ? String(attr.value) : '',
 			}))
 			.filter(attr => attr.name);
@@ -1396,7 +1558,7 @@
 			isGrid()  { return isGrid(this.node.type); },
 			isTabsNode() { return isTabs(this.node.type); },
 			isAccordionNode() { return isAccordion(this.node.type); },
-			hasSharedAdvancedControls() { return this.isAccordionNode || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading'; },
+			hasSharedAdvancedControls() { return this.isTabsNode || this.isAccordionNode || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading'; },
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
 				return displayNodeLabel(this.node);
@@ -3082,14 +3244,23 @@
 						c.settings = { ...iconBoxWidgetDefaults(), ...(c.settings || {}) };
 						normalizeIconBoxSettings(c.settings);
 					}
-					if (c.type === 'tabs') {
-						c.settings = { ...tabsWidgetDefaults(), ...(c.settings || {}) };
-						c.settings.direction = normalizeTabsDirection(c.settings.direction);
+				if (c.type === 'tabs') {
+							c.settings = { ...tabsWidgetDefaults(), ...(c.settings || {}) };
+							normalizeWidgetAdvancedSettings(c.settings);
+							const tabsAdvancedBackgroundTypes = ['none', 'classic', 'gradient'];
+							['advancedBackgroundType', 'advancedBackgroundTypeHover'].forEach((key) => {
+								if (!tabsAdvancedBackgroundTypes.includes(c.settings[key])) c.settings[key] = 'none';
+							});
+							c.settings.direction = normalizeTabsDirection(c.settings.direction);
+						['directionTablet', 'directionMobile'].forEach((key) => { c.settings[key] = c.settings[key] === '' ? '' : normalizeTabsDirection(c.settings[key]); });
 						c.settings.justify = normalizeTabsJustify(c.settings.justify);
+						['justifyTablet', 'justifyMobile'].forEach((key) => { c.settings[key] = c.settings[key] === '' ? '' : normalizeTabsJustify(c.settings[key]); });
 						c.settings.alignTitle = normalizeTabsAlignTitle(c.settings.alignTitle);
+						['alignTitleTablet', 'alignTitleMobile'].forEach((key) => { c.settings[key] = c.settings[key] === '' ? '' : normalizeTabsAlignTitle(c.settings[key]); });
 						c.settings.tabWidth = normalizeTabsWidthValue(c.settings.tabWidth);
 						c.settings.tabWidthUnit = normalizeTabsWidthUnit(c.settings.tabWidthUnit);
 						c.settings.horizontalScroll = !!c.settings.horizontalScroll;
+						['horizontalScrollTablet', 'horizontalScrollMobile'].forEach((key) => { c.settings[key] = c.settings[key] === '' ? '' : !!c.settings[key]; });
 						c.settings.breakpoint = normalizeTabsBreakpoint(c.settings.breakpoint);
 						c.settings.cssClass = String(c.settings.cssClass || '').trim();
 						const rawItems = Array.isArray(c.tabItems) && c.tabItems.length
@@ -3098,9 +3269,15 @@
 						c.tabItems = rawItems.map((item, index) => ({
 							id: item && item.id ? item.id : uid('tab'),
 							title: String(item && item.title ? item.title : ('Tab #' + (index + 1))).trim() || ('Tab #' + (index + 1)),
+							iconSource: ['none', 'library', 'svg'].includes(String(item && item.iconSource || '')) ? String(item.iconSource) : (String(item && item.iconClass || '').trim() ? 'library' : 'none'),
 							iconClass: normalizeTabsItemClass(item && item.iconClass),
+							iconSvg: normalizeTabsItemClass(item && item.iconSvg),
 							activeIconClass: normalizeTabsItemClass(item && item.activeIconClass),
 							cssId: normalizeTabsCssId(item && item.cssId),
+							dynamicBindings: {
+								title: normalizeTabsItemClass(item && item.dynamicBindings && item.dynamicBindings.title),
+								cssId: normalizeTabsItemClass(item && item.dynamicBindings && item.dynamicBindings.cssId),
+							},
 							children: norm((item && item.children) || []),
 						}));
 						if (!c.tabItems.length) {
@@ -3606,6 +3783,20 @@
 				iconLibrarySelected.value = iconLibraryIcons.value.find((entry) => entry.style === parsed.style && entry.name === parsed.name) || null;
 				showIconLibraryModal.value = true;
 			}
+			async function openTabsItemIconLibrary(itemId, settingKey, node = selectedNode.value) {
+				if (!node || node.type !== 'tabs' || settingKey !== 'iconClass') return;
+				const item = tabsItemsForNode(node).find((entry) => String(entry.id) === String(itemId));
+				if (!item) return;
+				await ensureIconLibraryLoaded();
+				const parsed = parseIconWidgetClassParts(item[settingKey]);
+				iconLibraryTargetNodeId.value = String(node.id || '');
+				iconLibraryTargetSettingKey.value = settingKey;
+				iconLibraryTargetItemId.value = String(item.id);
+				iconLibraryGroup.value = 'all';
+				iconLibrarySearch.value = '';
+				iconLibrarySelected.value = iconLibraryIcons.value.find((entry) => entry.style === parsed.style && entry.name === parsed.name) || null;
+				showIconLibraryModal.value = true;
+			}
 			async function openAccordionIconLibrary(role, node = selectedNode.value) {
 				if (!node || node.type !== 'accordion' || !['expand', 'collapse'].includes(role)) return;
 				await ensureIconLibraryLoaded();
@@ -3647,6 +3838,15 @@
 					item.iconStyle = iconLibrarySelected.value.style;
 					item.iconName = iconLibrarySelected.value.name;
 					item.iconClass = iconLibrarySelected.value.className;
+					closeIconLibrary();
+					return;
+				}
+				if (node && node.type === 'tabs' && settingKey === 'iconClass' && itemId) {
+					const item = tabsItemsForNode(node).find((entry) => String(entry.id) === itemId);
+					if (!item) return;
+					item.iconClass = iconLibrarySelected.value.className;
+					item.iconSource = 'library';
+					item.iconSvg = '';
 					closeIconLibrary();
 					return;
 				}
@@ -3707,6 +3907,21 @@
 				}
 				node.settings[role + 'IconSvg'] = sanitized;
 				node.settings[role + 'IconSource'] = 'svg';
+			}
+			function chooseTabsItemSvg(itemId, node = selectedNode.value) {
+				if (!node || node.type !== 'tabs') return;
+				const item = tabsItemsForNode(node).find((entry) => String(entry.id) === String(itemId));
+				if (!item) return;
+				const markup = window.prompt('Paste trusted SVG markup', String(item.iconSvg || ''));
+				if (markup === null) return;
+				const sanitized = sanitizeAccordionSvgMarkup(markup);
+				if (!sanitized) {
+					showSaveToast('error', 'SVG tidak valid atau mengandung markup yang tidak didukung.');
+					return;
+				}
+				item.iconSvg = sanitized;
+				item.iconSource = 'svg';
+				item.iconClass = '';
 			}
 			function chooseImageCarouselArrowSvg(settingKey, node = selectedNode.value) {
 				if (!node || node.type !== 'image_carousel' || !['previousArrowIcon', 'nextArrowIcon'].includes(settingKey)) return;
@@ -5140,6 +5355,7 @@
 				return fallbackDropzone;
 			}
 			function onDragStart() {
+				_settingsPreloadFirstDragStarted = true;
 				clearPendingInsertTarget();
 				hoveredId.value = '';
 				document.body.classList.add('pb-is-dragging');
@@ -5650,6 +5866,8 @@
 				onSpacerHeightInput,
 				setSpacerHeightUnit,
 				openIconLibrary,
+				openTabsItemIconLibrary,
+				chooseTabsItemSvg,
 				openImageCarouselArrowIconLibrary,
 				chooseImageCarouselArrowSvg,
 				fontAwesomeStyleLabel,
@@ -5717,6 +5935,8 @@
 				clearBgImage,
 				showUnsupportedControlNotice,
 				imageBoxTextDynamicTags: IMAGE_BOX_TEXT_DYNAMIC_TAGS,
+				imageBoxImageDynamicTags: IMAGE_BOX_IMAGE_DYNAMIC_TAGS,
+				imageBoxLinkDynamicTags: IMAGE_BOX_LINK_DYNAMIC_TAGS,
 				dynamicTagControl: DynamicTagControl,
 				textStrokeControl: TextStrokeControl,
 				textShadowControl: TextShadowControl,
@@ -5753,6 +5973,7 @@
 				iconListItemsForNode, addIconListItem, duplicateIconListItem, removeIconListItem, iconListItemSummary, openIconListItemIconLibrary,
 				openAccordionIconLibrary,
 				chooseAccordionSvg,
+				chooseTabsItemSvg,
 				get accordionStyleState() { return accordionStyleState.value; },
 				set accordionStyleState(value) { accordionStyleState.value = value; },
 				get accordionTitleStyleState() { return accordionTitleStyleState.value; },
@@ -5804,7 +6025,7 @@
 				displayNodeLabel, nodeLabelIcon,
 				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
-				openIconLibrary, openIconListItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, chooseAccordionSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
+				openIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
 				tabsItemsForNode, tabsActiveItem, selectTabsItem, addTabsItem, duplicateTabsItem, removeTabsItem, tabsItemSummary, tabsSelectedRowDirection,
 				tabsWidthValue, tabsWidthUnit, tabsWidthMax, tabsWidthStep, onTabsWidthInput, setTabsWidthValue, setTabsWidthUnit,
@@ -6337,5 +6558,5 @@
 </div>
 		`,
 	}).mount('#pbElementorApp');
-	scheduleWidgetSettingsPreload();
+	scheduleWidgetSettingsPreloadAfterFirstGesture();
 })();

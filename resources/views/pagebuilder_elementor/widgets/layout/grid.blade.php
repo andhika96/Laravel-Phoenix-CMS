@@ -77,6 +77,8 @@
 			$responsive_side_rules($s, 'Mobile', 'padding', fn ($value) => $css_value($value, '0')),
 			$responsive_side_rules($s, 'Mobile', 'margin', fn ($value) => $css_space($value, '0'))
 		);
+		if (($tabletBorderRadius = $responsive_border_radius_value($s, 'Tablet')) !== null) $tabletRootRules[] = 'border-radius:' . $tabletBorderRadius;
+		if (($mobileBorderRadius = $responsive_border_radius_value($s, 'Mobile')) !== null) $mobileRootRules[] = 'border-radius:' . $mobileBorderRadius;
 		$tabletGridRules = [];
 		$mobileGridRules = [];
 

@@ -27,6 +27,8 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
             "imageUrl: ''",
             "imageAlt: ''",
             "imageResolution: 'full'",
+            'customImageWidth: 150',
+            'customImageHeight: 150',
             "title: 'This is the heading'",
             'description:',
             "linkUrl: ''",
@@ -71,6 +73,8 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
 
         foreach ([
             'imageBoxResolutionOptions',
+			'IMAGE_BOX_IMAGE_DYNAMIC_TAGS',
+			'IMAGE_BOX_LINK_DYNAMIC_TAGS',
             'imageBoxTitleTagOptions',
             'imageBoxPositionOptions',
             'imageBoxAlignmentOptions',
@@ -183,6 +187,9 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $this->assertSourceContains('resolvedImageUrl', $canvas);
         $this->assertSourceContains('resolveImageRendition()', $canvas);
         $this->assertSourceContains('settings.imageResolution', $canvas);
+		$this->assertSourceContains('params.width = Number(this.settings.customImageWidth) || 150;', $canvas);
+		$this->assertSourceContains('params.height = Number(this.settings.customImageHeight) || 150;', $canvas);
+		$this->assertSourceContains('imageResolution === \'custom\' ? $customImageWidth : null', file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_image_box.blade.php')));
     }
 
     public function test_image_box_text_effects_use_structured_popover_controls(): void
@@ -218,23 +225,47 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         }
     }
 
-    public function test_dynamic_tags_are_field_scoped_and_drive_the_canvas_preview(): void
+    public function test_saved_dynamic_tags_continue_to_drive_the_canvas_preview_without_editor_triggers(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
         $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
         $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Canvas.vue'));
-        $dynamicTag = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/DynamicTagControl.vue'));
 
-        $this->assertSourceContains('allowedValues', $dynamicTag);
-        $this->assertSourceContains('selectedOption', $dynamicTag);
-        $this->assertSourceContains(':title="selectedOption', $dynamicTag);
-        $this->assertSourceContains(':allowed-values="editor.imageBoxTextDynamicTags"', $settings);
+        $this->assertStringNotContainsString('editor.dynamicTagControl', $settings);
+        $this->assertStringNotContainsString('pb-image-box-dynamic-field', $settings);
         $this->assertSourceContains('dynamicContext', $canvas);
         $this->assertSourceContains("resolveDynamicValue('title'", $canvas);
         $this->assertSourceContains("resolveDynamicValue('description'", $canvas);
+		$this->assertSourceContains("resolveDynamicValue('imageUrl'", $canvas);
+		$this->assertSourceContains("resolveDynamicValue('linkUrl'", $canvas);
         $this->assertSourceContains('dynamicPreviewContext', $appJs);
         $this->assertSourceContains(':dynamic-context="dynamicPreviewContext"', $appJs);
     }
+
+	public function test_dynamic_image_and_link_bindings_render_the_same_values_as_the_editor(): void
+	{
+		request()->attributes->set('pagebuilder_dynamic_context', [
+			'featured_image' => '/images/dynamic-featured.jpg',
+			'page_url' => '/dynamic-page',
+		]);
+
+		$html = view('pagebuilder_elementor.partials.render_image_box', [
+			'node' => [
+				'id' => 'dynamic-image-box',
+				'type' => 'image_box',
+				'settings' => [
+					'imageUrl' => '/images/static.jpg',
+					'imageResolution' => 'full',
+					'title' => 'Dynamic media',
+					'linkUrl' => '/static-link',
+					'dynamicBindings' => ['imageUrl' => 'featured_image', 'linkUrl' => 'page_url'],
+				],
+			],
+		])->render();
+
+		$this->assertStringContainsString('src="/images/dynamic-featured.jpg"', $html);
+		$this->assertSame(2, substr_count($html, 'href="/dynamic-page"'));
+	}
 
     public function test_title_html_tag_uses_automatic_visual_scale_until_typography_size_is_customized(): void
     {
@@ -306,7 +337,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
 
-        $this->assertSourceContains("hasSharedAdvancedControls() { return this.isAccordionNode || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading'; }", $appJs);
+		$this->assertSourceContains("hasSharedAdvancedControls() { return this.isTabsNode || this.isAccordionNode || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading'; }", $appJs);
         $this->assertSourceContains('if (!this.hasSharedAdvancedControls) return [];', $appJs);
         $this->assertSourceContains('if (this.hasSharedAdvancedControls) return widgetAdvancedPreviewStyle(s, device);', $appJs);
         $this->assertSourceContains('if (this.hasSharedAdvancedControls && /^[A-Za-z][A-Za-z0-9_-]*$/.test(raw)) return raw;', $appJs);
@@ -345,7 +376,6 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
             'Image Resolution',
             'Title HTML Tag',
             '<component :is="editor.linkControl"',
-            '<component :is="editor.dynamicTagControl"',
             'Image Position',
             'Alignment',
             'Image Spacing',
@@ -360,6 +390,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
             'Text Stroke',
             'Text Shadow',
             '<component :is="editor.widgetAdvancedControls"',
+            ':elementor-choices="true"',
             "editor.activeResponsiveKey('imagePosition')",
             "editor.activeResponsiveKey('alignment')",
             "editor.imageBoxImageState==='normal'",
@@ -368,13 +399,15 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
             $this->assertSourceContains($marker, $appJs);
         }
 
+        $this->assertStringNotContainsString('editor.dynamicTagControl', $settings);
+        $this->assertStringNotContainsString('pb-image-box-dynamic-field', $settings);
+
         foreach ([
             '.pb-panel.left .pb-image-box-settings',
             '.pb-image-box-settings .pb-tab-btn',
             '.pb-image-box-settings .pb-collapsible > summary',
             '.pb-image-box-settings .pb-collapsible-body',
             '.pb-image-box-settings .pb-form-group',
-            '.pb-image-box-dynamic-field',
             '.pb-image-box-segmented',
             '.pb-image-box-settings .pb-state-tabs--two',
         ] as $selector) {
@@ -384,6 +417,10 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $this->assertSourceContains('gap: 13px;', $css);
         $this->assertSourceContains('margin-bottom: 7px;', $css);
         $this->assertSourceContains('min-height: 48px;', $css);
+        $this->assertMatchesRegularExpression('/<details class="pb-collapsible" open>\s*<summary>Box<\\/summary>/', $settings);
+        $this->assertMatchesRegularExpression('/<details class="pb-collapsible">\s*<summary>Image<\\/summary>/', $settings);
+        $this->assertMatchesRegularExpression('/<details class="pb-collapsible">\s*<summary>Content<\\/summary>/', $settings);
+        $this->assertStringContainsString("['div','span','p'].includes(tag) ? tag : tag.toUpperCase()", $settings);
     }
 
     public function test_image_box_settings_reuse_compact_segmented_controls_and_layout_spacing(): void

@@ -91,13 +91,29 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertSourceContains('grid-template-columns: repeat(2, minmax(0, 1fr))', $css);
     }
 
-    public function test_motion_effect_child_toggles_inherit_the_shared_toggle_row_layout(): void
+    public function test_motion_effect_child_controls_inherit_the_compact_shared_form_layout(): void
     {
         $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
 
         $this->assertSourceContains(':deep(.pb-motion-effect .pb-advanced-toggle)', $component);
+        $this->assertSourceContains(':deep(.pb-motion-effect .pb-advanced-two-fields)', $component);
+        $this->assertSourceContains(':deep(.pb-motion-effect .pb-advanced-two-fields > label)', $component);
+        $this->assertSourceContains(':deep(.pb-motion-effect .pb-advanced-two-fields .pb-input)', $component);
+        $this->assertSourceContains('grid-template-columns: minmax(0, 1fr)', $component);
+        $this->assertSourceContains('height: 32px', $component);
         $this->assertSourceContains('justify-content: space-between', $component);
         $this->assertSourceContains('gap: 12px', $component);
+    }
+
+    public function test_box_shadow_conditional_controls_keep_the_elementor_style_vertical_field_hierarchy(): void
+    {
+        $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
+
+        $this->assertSourceContains('class="pb-advanced-shadow-fields"', $component);
+        $this->assertSourceContains('.pb-advanced-shadow-fields { display: grid; grid-template-columns: minmax(0, 1fr);', $component);
+        $this->assertSourceContains('.pb-advanced-shadow-fields > .pb-advanced-field', $component);
+        $this->assertSourceContains('.pb-advanced-shadow-fields > .pb-advanced-dimension-control', $component);
+        $this->assertSourceContains('.pb-advanced-shadow-fields > .pb-advanced-toggle', $component);
     }
 
     public function test_shared_advanced_color_fields_use_the_local_color_picker(): void
@@ -354,15 +370,14 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $this->assertSourceContains('.pb-widget-advanced-controls .pb-control-device-btn', $css);
     }
 
-    public function test_shared_advanced_controls_complete_grid_transform_background_and_border_contracts(): void
+    public function test_shared_advanced_controls_hide_inert_grid_spans_and_keep_transform_background_and_border_contracts(): void
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
         $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
         $resolver = file_get_contents(app_path('Support/PageBuilderElementor/WidgetAdvancedStyleResolver.php'));
+		$css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
 
         foreach ([
-            'Column Span',
-            'Row Span',
             "responsiveStateKey('transformRotate', transformState)",
             "responsiveStateKey('transformScale', transformState)",
             "value=\"custom\">Custom</option>",
@@ -373,6 +388,22 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         ] as $marker) {
             $this->assertSourceContains($marker, $component);
         }
+
+		foreach ([
+			'Column Span',
+			'Row Span',
+			'isGridParent',
+			'parentLayout:',
+		] as $marker) {
+			$this->assertStringNotContainsString($marker, $component);
+		}
+
+
+		$this->assertMatchesRegularExpression(
+			'~\.pb-panel\.left \.pb-widget-advanced-controls \.pb-advanced-choice-buttons button\s*\{[^}]*width:\s*30px;[^}]*min-width:\s*30px;[^}]*height:\s*28px;[^}]*appearance:\s*none;[^}]*border:\s*1px solid #cfd6e3;[^}]*background:\s*#ffffff;~s',
+			$css
+		);
+		$this->assertSourceContains('background: #eaf0ff;', $css);
 
         foreach ([
             "gridColumn: get('gridColumnSpan'",
@@ -385,6 +416,37 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         ] as $marker) {
             $this->assertSourceContains($marker, $appJs);
         }
+
+        foreach ([
+            'widgets/advanced/accordion/Settings.vue',
+            'widgets/basic/heading/Settings.vue',
+            'widgets/general/tabs/Settings.vue',
+            'widgets/general/icon-list/Settings.vue',
+            'widgets/general/basic-gallery/Settings.vue',
+            'widgets/general/icon-box/Settings.vue',
+            'widgets/general/image-carousel/Settings.vue',
+            'widgets/general/image-box/Settings.vue',
+        ] as $settingsPath) {
+            $settings = file_get_contents(public_path('js/pagebuilder_elementor/'.$settingsPath));
+			$this->assertStringNotContainsString(':parent-layout=', $settings);
+        }
+
+		foreach ([
+			'widgets/advanced/accordion/Settings.vue',
+			'widgets/general/tabs/Settings.vue',
+			'widgets/general/icon-list/Settings.vue',
+			'widgets/general/basic-gallery/Settings.vue',
+			'widgets/general/icon-box/Settings.vue',
+			'widgets/general/image-carousel/Settings.vue',
+			'widgets/general/image-box/Settings.vue',
+		] as $settingsPath) {
+			$settings = file_get_contents(public_path('js/pagebuilder_elementor/'.$settingsPath));
+			$this->assertSourceContains(':elementor-choices="true"', $settings);
+			$this->assertSourceContains(':show-display-conditions="false"', $settings);
+			$this->assertSourceContains(':show-cache-settings="false"', $settings);
+		}
+
+		$this->assertSourceContains('hasSharedAdvancedControls() { return this.isTabsNode || this.isAccordionNode', $appJs);
 
         foreach ([
             'grid-column:span ',
@@ -433,6 +495,32 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
 		$this->assertStringContainsString('grid-row:span5', $css);
 		$this->assertStringContainsString('rotate(20deg)', $css);
 		$this->assertStringContainsString('scale(1.2)', $css);
+	}
+
+	public function test_runtime_box_shadow_and_general_widget_forms_use_the_compact_live_panel_baseline(): void
+	{
+		$css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+		foreach ([
+			'.pb-widget-settings--icon-list',
+			'.pb-widget-settings--basic-gallery',
+			'.pb-widget-settings--image-carousel',
+			'.pb-widget-settings--image-box',
+			'.pb-widget-settings--icon-box',
+			':is(.pb-tabs-inline-editor, .pb-accordion-inline-editor) > summary',
+			':is(.pb-tabs-shadow-grid, .pb-accordion-shadow-grid)',
+		] as $selector) {
+			$this->assertSourceContains($selector, $css);
+		}
+
+		$this->assertMatchesRegularExpression(
+			'~\.pb-panel\.left \.pb-widget-settings :is\(\.pb-tabs-inline-editor, \.pb-accordion-inline-editor\) > summary\s*\{[^}]*justify-content:\s*space-between;[^}]*font-size:\s*11px;[^}]*text-align:\s*left;~s',
+			$css
+		);
+		$this->assertMatchesRegularExpression(
+			'~:is\(\.pb-tabs-shadow-grid, \.pb-accordion-shadow-grid\) \.pb-input\s*\{[^}]*height:\s*32px;[^}]*font-size:\s*12px;~s',
+			$css
+		);
 	}
 
     private function assertSourceContains(string $needle, string $source): void

@@ -89,8 +89,8 @@ class PageBuilderElementorBasicGalleryWidgetParityTest extends TestCase
             "editor.chooseMediaGallery(node.settings, 'images')",
             "editor.removeMediaGalleryItem(node.settings, 'images'",
             "editor.moveMediaGalleryItem(node.settings, 'images'",
-            ':show-display-conditions="true"',
-            ':show-cache-settings="true"',
+			':show-display-conditions="false"',
+			':show-cache-settings="false"',
         ] as $conditional) {
             $this->assertStringContainsString($conditional, $settings);
         }
@@ -100,6 +100,23 @@ class PageBuilderElementorBasicGalleryWidgetParityTest extends TestCase
             'Infinite Loop', 'Animation Speed', 'Pagination',
         ] as $carouselOnlyLabel) {
             $this->assertStringNotContainsString($carouselOnlyLabel, $settings);
+        }
+    }
+
+    public function test_settings_keep_the_gallery_picker_actions_compact_and_keyboard_addressable(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/basic-gallery/Settings.vue'));
+
+        foreach ([
+            'pb-basic-gallery-images-control',
+            'aria-label="Add images"',
+            'aria-label="Move image up"',
+            'aria-label="Move image down"',
+            'aria-label="Remove image"',
+            '.pb-basic-gallery-picker__item:hover .pb-basic-gallery-picker__actions',
+            '.pb-basic-gallery-picker__item:focus-within .pb-basic-gallery-picker__actions',
+        ] as $marker) {
+            $this->assertStringContainsString($marker, $settings);
         }
     }
 

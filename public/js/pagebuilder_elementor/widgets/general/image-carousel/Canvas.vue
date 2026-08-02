@@ -5,7 +5,7 @@
 			<div class="pb-image-carousel__viewport" data-pb-interactive="true" @pointerdown.stop="startDrag($event)" @pointermove.stop="moveDrag($event)" @pointerup.stop="endDrag($event)" @pointercancel.stop="cancelDrag($event)" @lostpointercapture.stop="cancelDrag($event)">
 				<div class="pb-image-carousel__track" :style="trackStyle">
 					<figure v-for="image in images" :key="image.id" class="pb-image-carousel__slide" :style="slideStyle">
-						<a v-if="linkFor(image)" :href="linkFor(image)" :class="{'is-lightbox':usesLightbox}" @click="onImageClick($event,image)"><img draggable="false" :src="image.url" :alt="image.alt" :loading="settings.lazyload?'lazy':'eager'" :style="imageStyle"></a>
+						<a v-if="linkFor(image)" :href="linkFor(image)" :target="linkTarget" :rel="linkRel" v-bind="linkAttributes" :class="{'is-lightbox':usesLightbox}" @click="onImageClick($event,image)"><img draggable="false" :src="image.url" :alt="image.alt" :loading="settings.lazyload?'lazy':'eager'" :style="imageStyle"></a>
 						<img v-else draggable="false" :src="image.url" :alt="image.alt" :loading="settings.lazyload?'lazy':'eager'" :style="imageStyle">
 						<figcaption v-if="captionFor(image)" class="pb-image-carousel__caption" :style="captionStyle">{{ captionFor(image) }}</figcaption>
 					</figure>
@@ -39,6 +39,10 @@ export default{
 		previousDisabled(){return !this.settings.infiniteLoop&&this.activeIndex<=0;},
 		nextDisabled(){return !this.settings.infiniteLoop&&this.activeIndex>=this.maxIndex;},
 		usesLightbox(){return this.settings.linkType==='media'&&this.settings.lightbox!=='no';},
+		linkTarget(){return this.settings.linkType==='custom'&&this.settings.linkTarget==='_blank'?'_blank':null;},
+		linkRel(){const rel=[];if(this.linkTarget==='_blank')rel.push('noopener','noreferrer');if(this.settings.linkType==='custom'&&this.settings.linkNofollow)rel.push('nofollow');return [...new Set(rel)].join(' ')||null;},
+		linkAttributes(){return this.settings.linkType==='custom'?this.safeCustomAttributes:{};},
+		safeCustomAttributes(){const out={};(Array.isArray(this.settings.linkCustomAttributes)?this.settings.linkCustomAttributes:[]).forEach(attribute=>{const key=String(attribute?.key||attribute?.name||'').trim();if(/^(?:aria-[a-z0-9_-]+|data-[a-z0-9_-]+|title|download|hreflang)$/i.test(key))out[key]=String(attribute?.value??'');});return out;},
 		rootClasses(){return[`is-arrows-${this.settings.arrowPosition||'inside'}`,`is-pagination-${this.settings.paginationPosition||'outside'}`];},
 		rootStyle(){return{'--pb-carousel-arrow-size':this.cssSize(this.responsiveValue('arrowSize','16px'),'16px'),'--pb-carousel-arrow-color':this.safeColor(this.settings.arrowColor,'#69727d'),'--pb-carousel-dot-size':this.cssSize(this.responsiveValue('dotSize','8px'),'8px'),'--pb-carousel-dot-gap':this.cssSize(this.responsiveValue('dotSpacing','8px'),'8px'),'--pb-carousel-dot-color':this.safeColor(this.settings.dotColor,'#c4c7cf'),'--pb-carousel-dot-active':this.safeColor(this.settings.dotActiveColor,'#69727d'),'--pb-carousel-image-gap':this.settings.imageSpacingMode==='custom'?this.cssSize(this.responsiveValue('imageSpacing','20px'),'20px'):'20px','--pb-carousel-transition':`${Math.max(0,Number(this.settings.animationSpeed)||0)}ms`};},
 		isDragging(){return!!this.dragState;},

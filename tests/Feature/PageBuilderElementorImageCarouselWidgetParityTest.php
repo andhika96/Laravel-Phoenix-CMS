@@ -76,10 +76,11 @@ class PageBuilderElementorImageCarouselWidgetParityTest extends TestCase
         $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-carousel/Settings.vue'));
 
         foreach ([
-            'Content', 'Style', 'Advanced', 'Image Carousel', 'Carousel Name', 'Images',
+            'Content', 'Style', 'Advanced', 'Image Carousel', 'Images',
             'Image Resolution', 'Slides to Show', 'Slides to Scroll', 'Image Stretch',
             'Navigation', 'Previous Arrow Icon', 'Next Arrow Icon', 'Link', 'Lightbox',
-            'icon-picker', 'Upload SVG', 'Icon Library',
+            'icon-picker', 'Default', 'Upload SVG', 'Icon Library',
+            'Set how many slides are shown in the carousel at one time.',
             'Caption', 'Additional Options', 'Lazyload', 'Autoplay', 'Pause on Hover',
             'Pause on Interaction', 'Autoplay Speed', 'Infinite Loop', 'Animation Speed',
             'Direction', 'Arrows', 'Pagination', 'Position', 'Space Between Dots',
@@ -95,15 +96,67 @@ class PageBuilderElementorImageCarouselWidgetParityTest extends TestCase
             "node.settings.navigation === 'arrows_dots'",
             "node.settings.linkType === 'media'",
             "node.settings.linkType === 'custom'",
+            'editor.linkControl',
+            'node.settings.linkTarget',
+            'node.settings.linkNofollow',
+            'node.settings.linkCustomAttributes',
             "node.settings.captionType !== 'none'",
             'editor.chooseMediaGallery(node.settings, \'images\')',
             'editor.removeMediaGalleryItem(node.settings, \'images\'',
             'editor.moveMediaGalleryItem(node.settings, \'images\'',
+            'isGalleryImageExpanded(image.id)',
+            'toggleGalleryImage(image.id)',
+            'expandedGalleryImageId',
+            'setDefault(){this.node.settings[this.settingKey]=this.fallback;',
             ':show-display-conditions="false"',
             ':show-cache-settings="false"',
+            ':elementor-choices="true"',
         ] as $conditional) {
             $this->assertStringContainsString($conditional, $settings);
         }
+
+        $this->assertStringContainsString("{'is-current':source==='library'&&value!==fallback}", $settings);
+        $this->assertStringContainsString('<i v-else :class="value"></i>', $settings);
+        $this->assertStringNotContainsString('<i v-else class="far fa-star"></i>', $settings);
+    }
+
+    public function test_custom_carousel_links_keep_elementor_link_options_in_canvas_and_frontend(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-carousel/Settings.vue'));
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-carousel/Canvas.vue'));
+        $renderer = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_image_carousel.blade.php'));
+        $app = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertStringNotContainsString('>Carousel Name</label>', $settings);
+        $this->assertStringContainsString('editor.linkControl', $settings);
+        foreach (['linkTarget', 'linkNofollow', 'linkCustomAttributes'] as $marker) {
+            $this->assertStringContainsString($marker, $settings);
+            $this->assertStringContainsString($marker, $canvas);
+            $this->assertStringContainsString($marker, $renderer);
+        }
+        $this->assertStringContainsString('(attr.name || attr.key)', $app);
+
+        $html = view('pagebuilder_elementor.partials.render_image_carousel', [
+            'node' => [
+                'id' => 'custom-link-carousel',
+                'type' => 'image_carousel',
+                'settings' => [
+                    'images' => [['id' => 'one', 'url' => '/storage/gallery/one.jpg', 'alt' => 'One']],
+                    'slidesToShow' => '1',
+                    'linkType' => 'custom',
+                    'customLinkUrl' => 'https://example.com/gallery',
+                    'linkTarget' => '_blank',
+                    'linkNofollow' => true,
+                    'linkCustomAttributes' => [['key' => 'data-track', 'value' => 'carousel'], ['key' => 'onclick', 'value' => 'blocked']],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('href="https://example.com/gallery"', $html);
+        $this->assertStringContainsString('target="_blank"', $html);
+        $this->assertStringContainsString('rel="noopener noreferrer nofollow"', $html);
+        $this->assertStringContainsString('data-track="carousel"', $html);
+        $this->assertStringNotContainsString('onclick="blocked"', $html);
     }
 
     public function test_canvas_and_frontend_share_navigation_caption_and_responsive_behavior(): void

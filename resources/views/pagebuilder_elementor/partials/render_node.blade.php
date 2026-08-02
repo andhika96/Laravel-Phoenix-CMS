@@ -671,6 +671,24 @@
 		return $value;
 	};
 
+	$responsive_border_radius_value = function (array $s, string $deviceSuffix) use ($css_value, $responsive_setting_value) {
+		$keys = ['borderRadiusTL', 'borderRadiusTR', 'borderRadiusBR', 'borderRadiusBL'];
+		$hasOverride = false;
+		$values = [];
+
+		foreach ($keys as $key) {
+			$responsiveKey = $key . $deviceSuffix;
+			$responsiveValue = $s[$responsiveKey] ?? '';
+			if ($responsiveValue !== '' && $responsiveValue !== null) {
+				$hasOverride = true;
+			}
+
+			$values[] = $css_value($responsive_setting_value($s, $key, $deviceSuffix, '0'), '0');
+		}
+
+		return $hasOverride ? implode(' ', $values) : null;
+	};
+
 	$resolve_html_tag = function (array $s) {
 		$raw = strtolower(trim((string) ($s['htmlTag'] ?? 'default')));
 		$allowed = ['div', 'section', 'header', 'main', 'article', 'aside', 'footer', 'nav'];

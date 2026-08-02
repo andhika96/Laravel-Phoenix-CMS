@@ -78,7 +78,7 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
             $this->assertStringContainsString('editor.sizeControlDisplayValue(node, control.key', $settings);
             $this->assertStringContainsString('editor.sizeControlUnit(node, control.key', $settings);
             $this->assertStringContainsString("dimensionValue(editor.bgStateKey(node,'borderWidth'), 'px')", $settings);
-            $this->assertStringContainsString("dimensionGroupUnit(['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL']", $settings);
+            $this->assertStringContainsString("dimensionGroupUnit(responsiveRadiusKeys(), 'px')", $settings);
             $this->assertStringContainsString("dimensionGroupUnit([editor.bgStateKey(node,'shadowH')", $settings);
             $this->assertStringContainsString("{key:'stickyOffset',label:'Sticky Offset'}", $settings);
             $this->assertStringContainsString("{key:'transformRotate',label:'Rotate'}", $settings);

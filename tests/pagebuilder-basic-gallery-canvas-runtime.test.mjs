@@ -231,6 +231,6 @@ test('Basic Gallery panel keeps its rhythm, responsive controls, and gallery act
 	assert.match(deviceRule[1], /margin-left\s*:\s*auto\s*;/);
 	assert.ok(addButtonRule, 'Basic Gallery add action should have a compact widget rule');
 	assert.match(addButtonRule[1], /min-height\s*:\s*30px\s*;/);
-	assert.match(addButtonRule[1], /padding\s*:\s*6px\s+8px\s*;/);
+	assert.match(addButtonRule[1], /padding\s*:\s*14px\s+8px\s*;/);
 	assert.match(css, /\.pb-panel\.left\s+\.pb-widget-settings--basic-gallery\s+\.pb-basic-gallery-picker__head\s+\.pb-btn\.icon-sm\s*\{[\s\S]*?width\s*:\s*24px\s*;/);
 });

@@ -90,7 +90,7 @@ class PageBuilderElementorGridWidgetModulesTest extends TestCase
 
             $this->assertIsString($settings);
             $this->assertStringContainsString("dimensionValue('borderWidth'", $settings);
-            $this->assertStringContainsString("dimensionGroupUnit(['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL']", $settings);
+            $this->assertStringContainsString("dimensionGroupUnit(responsiveRadiusKeys(), 'px')", $settings);
             $this->assertStringContainsString("dimensionGroupUnit(['shadowH','shadowV','shadowBlur','shadowSpread']", $settings);
             $this->assertStringContainsString("{key:'stickyOffset',label:'Sticky Offset'}", $settings);
             $this->assertStringContainsString("{key:'transformRotate',label:'Rotate'}", $settings);

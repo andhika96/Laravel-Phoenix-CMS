@@ -13,6 +13,10 @@ export default {
 			type: Object,
 			required: true,
 		},
+		responsiveDevice: {
+			type: String,
+			default: 'desktop',
+		},
 	},
 	computed: {
 		settings() {
@@ -80,8 +84,10 @@ export default {
 
 			this.appendResponsiveEdgeRules(tabletRootRules, 'padding', 'padding', 'tablet', false);
 			this.appendResponsiveEdgeRules(tabletRootRules, 'margin', 'margin', 'tablet', true);
+			this.appendResponsiveBorderRadiusRule(tabletRootRules, 'tablet');
 			this.appendResponsiveEdgeRules(mobileRootRules, 'padding', 'padding', 'mobile', false);
 			this.appendResponsiveEdgeRules(mobileRootRules, 'margin', 'margin', 'mobile', true);
+			this.appendResponsiveBorderRadiusRule(mobileRootRules, 'mobile');
 			this.appendResponsiveGridRules(tabletGridRules, 'tablet');
 			this.appendResponsiveGridRules(mobileGridRules, 'mobile');
 
@@ -150,6 +156,14 @@ export default {
 		responsiveSetting(base, device) {
 			return this.settings[base + this.responsiveSuffix(device)];
 		},
+		resolvedResponsiveSetting(base, device = this.responsiveDevice || 'desktop', fallback = '') {
+			const value = this.responsiveSetting(base, device);
+			if (value === '' || value === null || value === undefined) {
+				const desktopValue = this.settings[base];
+				return desktopValue === '' || desktopValue === null || desktopValue === undefined ? fallback : desktopValue;
+			}
+			return value;
+		},
 		appendResponsiveEdgeRules(rules, cssPrefix, settingPrefix, device, allowAuto) {
 			[
 				['top', 'Top'],
@@ -163,6 +177,16 @@ export default {
 
 				rules.push(cssPrefix + '-' + cssSide + ':' + (allowAuto ? this.toCssSpace(raw, '0') : this.toCssSize(raw, '0')));
 			});
+		},
+		appendResponsiveBorderRadiusRule(rules, device) {
+			const keys = ['borderRadiusTL', 'borderRadiusTR', 'borderRadiusBR', 'borderRadiusBL'];
+			const hasOverride = keys.some((key) => {
+				const value = this.responsiveSetting(key, device);
+				return value !== '' && value !== null && value !== undefined;
+			});
+			if (!hasOverride) return;
+
+			rules.push('border-radius:' + keys.map((key) => this.toCssSize(this.resolvedResponsiveSetting(key, device, '0'), '0')).join(' '));
 		},
 		appendResponsiveGridRules(rules, device) {
 			const columns = this.responsiveSetting('columns', device);
@@ -274,10 +298,10 @@ export default {
 			if (settings.borderRadius) return this.toCssSize(settings.borderRadius, '0');
 
 			return [
-				this.toCssSize(settings.borderRadiusTL, '0'),
-				this.toCssSize(settings.borderRadiusTR, '0'),
-				this.toCssSize(settings.borderRadiusBR, '0'),
-				this.toCssSize(settings.borderRadiusBL, '0'),
+				this.toCssSize(this.resolvedResponsiveSetting('borderRadiusTL', this.responsiveDevice || 'desktop', '0'), '0'),
+				this.toCssSize(this.resolvedResponsiveSetting('borderRadiusTR', this.responsiveDevice || 'desktop', '0'), '0'),
+				this.toCssSize(this.resolvedResponsiveSetting('borderRadiusBR', this.responsiveDevice || 'desktop', '0'), '0'),
+				this.toCssSize(this.resolvedResponsiveSetting('borderRadiusBL', this.responsiveDevice || 'desktop', '0'), '0'),
 			].join(' ');
 		},
 		shadowValue(settings) {

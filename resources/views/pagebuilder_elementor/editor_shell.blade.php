@@ -59,6 +59,7 @@
 			imageRenditionUrl: @json(route('cms.core.pagebuilder_elementor.image_rendition')),
 			dynamicPreviewContext: {
 				page_excerpt: @json((string) ($pageData->description ?? $pageData->excerpt ?? '')),
+				featured_image: @json((string) ($pageData->featured_image ?? $pageData->cover_image ?? '')),
 				page_url: @json($pageData ? route('cms.core.pagebuilder_elementor.preview', $pageData->uri) : ''),
 				site_title: @json(config('app.name')),
 				site_url: @json(config('app.url')),

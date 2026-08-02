@@ -1,0 +1,146 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class PageBuilderElementorIconListWidgetParityTest extends TestCase
+{
+    public function test_icon_list_is_registered_as_a_modular_general_widget(): void
+    {
+        $catalog = config('pagebuilder_elementor_widgets');
+        $this->assertArrayHasKey('icon_list', $catalog);
+        $widget = $catalog['icon_list'];
+        $this->assertSame('Icon List', $widget['label']);
+        $this->assertSame('general', $widget['category']);
+        $this->assertTrue($widget['toolbox']);
+        $this->assertFileExists(public_path($widget['definition']));
+        $this->assertFileExists(public_path($widget['canvas']));
+        $this->assertFileExists(public_path($widget['settings']));
+        $this->assertTrue(view()->exists($widget['view']));
+    }
+
+    public function test_icon_list_defaults_and_normalizer_cover_repeatable_content_and_all_style_sections(): void
+    {
+        $app = $this->editorSource();
+        $definition = $this->widgetSource('definition.js');
+        foreach ([
+            'function iconListWidgetDefaults()', 'function normalizeIconListSettings(settings)', "layout: 'traditional'", "applyLinkOn: 'full_width'",
+            "text: 'List Item #1'", "iconClass: 'fas fa-check'", "text: 'List Item #2'", "iconClass: 'fas fa-times'", "text: 'List Item #3'", "iconClass: 'fas fa-dot-circle'",
+            "spaceBetween: '0px'", 'divider: false', "dividerStyle: 'solid'", "dividerWidth: '100%'", "dividerHeight: '100%'",
+            "iconSize: '14px'", "iconGap: '8px'", 'iconTransitionDuration: 0.3', 'textTransitionDuration: 0.3',
+            'normalizeWidgetAdvancedSettings(settings)', "icon_list: {",
+        ] as $marker) $this->assertStringContainsString($marker, $app);
+        foreach (["type: 'icon_list'", 'defaults()', 'normalize(node)'] as $marker) $this->assertStringContainsString($marker, $definition);
+    }
+
+    public function test_icon_list_content_panel_exposes_repeater_icon_picker_links_and_apply_link_scope(): void
+    {
+        $settings = $this->widgetSource('Settings.vue');
+        $app = $this->editorSource();
+        foreach (['<summary>Icon List</summary>', 'Layout', 'Default', 'Inline', 'Items', 'Text', 'Icon', 'editor.linkControl', 'Add Item', 'Duplicate Item', 'Remove Item', 'Apply Link On', 'Full Width', 'editor.openIconListItemIconLibrary(item.id,node)'] as $marker) {
+            $this->assertStringContainsString($marker, $settings);
+        }
+        foreach (['function addIconListItem(', 'function duplicateIconListItem(', 'function removeIconListItem(', 'async function openIconListItemIconLibrary(', 'iconLibraryTargetItemId', "node.type === 'icon_list'"] as $marker) {
+            $this->assertStringContainsString($marker, $app);
+        }
+    }
+
+    public function test_icon_list_settings_keep_elementor_compact_choice_and_collapsible_repeater_hierarchy(): void
+    {
+        $settings = $this->widgetSource('Settings.vue');
+
+        foreach ([
+            'pb-icon-list-inline-control',
+            'role="group" aria-label="Layout"',
+            'aria-label="Default"',
+            'aria-label="Inline"',
+            'pb-icon-list-repeater__disclosure',
+            'aria-label="Duplicate item"',
+            'aria-label="Remove item"',
+            '.pb-icon-list-repeater__item[open]>summary .pb-icon-list-repeater__disclosure',
+        ] as $marker) {
+            $this->assertStringContainsString($marker, $settings);
+        }
+    }
+
+    public function test_icon_list_style_panel_matches_elementor_sections_and_conditionals(): void
+    {
+        $settings = $this->widgetSource('Settings.vue');
+        foreach (['<summary>List</summary>', 'Space Between', 'Alignment', 'Divider', 'Divider Style', 'Weight', 'Width', 'Height', '<summary>Icon</summary>', 'Normal', 'Hover', 'Transition Duration', 'Size', 'Gap', 'Horizontal Alignment', 'Vertical Alignment', 'Adjust Vertical Position', '<summary>Text</summary>', 'editor.typographyControl', 'editor.textShadowControl', 'Text Color', 'Hover Color'] as $marker) {
+            $this->assertStringContainsString($marker, $settings);
+        }
+        $this->assertStringContainsString('v-if="node.settings.divider"', $settings);
+        $this->assertStringContainsString('v-if="node.settings.layout!==\'inline\'"', $settings);
+        $this->assertStringContainsString('v-if="node.settings.layout===\'inline\'"', $settings);
+        $this->assertStringContainsString(':show-display-conditions="true"', $settings);
+        $this->assertStringContainsString(':show-cache-settings="true"', $settings);
+    }
+
+    public function test_icon_list_canvas_applies_responsive_layout_divider_icon_and_text_styles(): void
+    {
+        $canvas = $this->widgetSource('Canvas.vue');
+        foreach (['GeneralIconList', 'responsiveValue(', 'rootClasses()', 'rootStyle()', 'itemStyle()', 'iconStyle()', 'textStyle()', 'linkFor(item)', 'relFor(item)', 'is-inline', 'has-divider', '--pb-icon-list-space-between', '--pb-icon-list-divider-weight', '--pb-icon-list-divider-size', '--pb-icon-list-icon-size', '--pb-icon-list-icon-gap', '--pb-icon-list-icon-offset', ':hover'] as $marker) {
+            $this->assertStringContainsString($marker, $canvas);
+        }
+    }
+
+    public function test_icon_list_settings_runtime_dependencies_are_exposed_to_widget_editor_services(): void
+    {
+        $settings = $this->widgetSource('Settings.vue');
+        $app = $this->editorSource();
+        $serviceStart = strpos($app, 'const widgetEditorServices = {');
+        $serviceEnd = strpos($app, 'const appTitle = computed(', $serviceStart);
+
+        $this->assertStringContainsString('this.editor.fontAwesomeStyleLabel(', $settings);
+        $this->assertNotFalse($serviceStart);
+        $this->assertNotFalse($serviceEnd);
+        $serviceSource = substr($app, $serviceStart, $serviceEnd - $serviceStart);
+        $this->assertStringContainsString('fontAwesomeStyleLabel,', $serviceSource);
+    }
+    public function test_icon_list_frontend_renders_semantic_safe_responsive_output(): void
+    {
+        $html = view('pagebuilder_elementor.partials.render_node', ['node' => [
+            'id' => 'benefit-list', 'type' => 'icon_list', 'settings' => [
+                'layout' => 'inline', 'applyLinkOn' => 'inline',
+                'items' => [
+                    ['id' => 'benefit-one', 'text' => 'Fast delivery', 'iconClass' => 'fas fa-bolt', 'linkUrl' => 'https://example.com/fast', 'linkTarget' => '_blank', 'linkNofollow' => true, 'linkCustomAttributes' => [['name' => 'data-track', 'value' => 'fast']]],
+                    ['id' => 'benefit-two', 'text' => 'Unsafe URL ignored', 'iconClass' => 'fas fa-shield-alt', 'linkUrl' => 'javascript:alert(1)'],
+                ],
+                'spaceBetween' => '18px', 'spaceBetweenTablet' => '12px', 'spaceBetweenMobile' => '8px',
+                'alignment' => 'center', 'alignmentTablet' => 'end', 'alignmentMobile' => 'start',
+                'divider' => true, 'dividerStyle' => 'dashed', 'dividerWeight' => '2px', 'dividerHeight' => '60%', 'dividerColor' => '#abcdef',
+                'iconColor' => '#123456', 'iconColorHover' => '#654321', 'iconTransitionDuration' => .25,
+                'iconSize' => '22px', 'iconSizeTablet' => '20px', 'iconSizeMobile' => '18px', 'iconGap' => '10px',
+                'iconHorizontalAlignment' => 'center', 'iconVerticalAlignment' => 'flex-end', 'iconVerticalOffset' => '-2px',
+                'textColor' => '#111111', 'textColorHover' => '#222222', 'textTransitionDuration' => .4,
+                'textFontFamily' => 'Arial, sans-serif', 'textFontSize' => '17px', 'textFontSizeTablet' => '16px', 'textFontSizeMobile' => '15px',
+                'textFontWeight' => '700', 'textTextTransform' => 'uppercase', 'textTextShadow' => '1px 2px 3px rgba(0,0,0,.3)',
+                'cssId' => 'benefits', 'cssClass' => 'highlight-list', 'attributes' => [['name' => 'data-widget', 'value' => 'icon-list']],
+            ],
+        ]])->render();
+        $compact = preg_replace('/\s+/', ' ', $html);
+        $css = str_replace(' ', '', $html);
+        foreach (['<ul', 'pb-icon-list', 'is-inline', 'has-divider', 'id="benefits"', 'highlight-list', 'data-widget="icon-list"', '<li', 'fas fa-bolt', 'Fast delivery', 'href="https://example.com/fast"', 'target="_blank"', 'rel="nofollow noopener noreferrer"', 'data-track="fast"'] as $marker) {
+            $this->assertStringContainsString($marker, $compact);
+        }
+        $this->assertStringNotContainsString('javascript:alert', $compact);
+        foreach (['--pb-icon-list-space-between:18px', '--pb-icon-list-divider-size:60%', 'font-family:Arial,sans-serif', '@media(max-width:1024px)', '@media(max-width:767px)', '#benefits.pb-icon-list.pb-icon-list--apply-inline'] as $marker) {
+            $this->assertStringContainsString($marker, $css);
+        }
+    }
+
+    private function widgetSource(string $file): string
+    {
+        $source = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/icon-list/' . $file));
+        $this->assertIsString($source);
+        return $source;
+    }
+
+    private function editorSource(): string
+    {
+        $source = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $this->assertIsString($source);
+        return $source;
+    }
+}

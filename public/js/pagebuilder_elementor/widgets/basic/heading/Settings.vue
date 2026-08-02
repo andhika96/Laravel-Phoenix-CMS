@@ -10,8 +10,8 @@
 			<details class="pb-collapsible" open>
 				<summary>Heading</summary>
 				<div class="pb-collapsible-body">
-					<div class="pb-form-group"><label class="pb-form-label">Title</label><div class="pb-heading-dynamic-field pb-heading-dynamic-field--textarea"><textarea class="pb-textarea" rows="4" v-model="node.settings.text"></textarea><component :is="editor.dynamicTagControl" :allowed-values="editor.imageBoxTextDynamicTags" :model-value="node.settings.dynamicBindings.title || ''" @update:modelValue="node.settings.dynamicBindings.title=$event" /></div></div>
-					<div class="pb-form-group"><label class="pb-form-label">Link</label><div class="pb-heading-link-field"><component :is="editor.linkControl" :url="node.settings.linkUrl" :target="node.settings.linkTarget" :nofollow="node.settings.linkNofollow" :custom-attributes="node.settings.linkCustomAttributes" @update:url="node.settings.linkUrl=$event" @update:target="node.settings.linkTarget=$event" @update:nofollow="node.settings.linkNofollow=$event" @update:customAttributes="node.settings.linkCustomAttributes=$event" /><component :is="editor.dynamicTagControl" :allowed-values="editor.imageBoxTextDynamicTags" :model-value="node.settings.dynamicBindings.linkUrl || ''" @update:modelValue="node.settings.dynamicBindings.linkUrl=$event" /></div></div>
+					<div class="pb-form-group"><label class="pb-form-label">Title</label><textarea class="pb-textarea" rows="4" v-model="node.settings.text"></textarea></div>
+					<div class="pb-form-group"><label class="pb-form-label">Link</label><component :is="editor.linkControl" :url="node.settings.linkUrl" :target="node.settings.linkTarget" :nofollow="node.settings.linkNofollow" :custom-attributes="node.settings.linkCustomAttributes" @update:url="node.settings.linkUrl=$event" @update:target="node.settings.linkTarget=$event" @update:nofollow="node.settings.linkNofollow=$event" @update:customAttributes="node.settings.linkCustomAttributes=$event" /></div>
 					<div class="pb-form-group"><label class="pb-form-label">HTML Tag</label><select class="pb-select" v-model="node.settings.tag"><option v-for="tag in tags" :key="tag" :value="tag">{{ tag.toUpperCase() }}</option></select></div>
 				</div>
 			</details>
@@ -60,10 +60,6 @@ export default {
 </script>
 
 <style scoped>
-.pb-heading-dynamic-field, .pb-heading-link-field { position: relative; }
-.pb-heading-dynamic-field :deep(.pb-dynamic-tag-control), .pb-heading-link-field > :deep(.pb-dynamic-tag-control) { position: absolute; right: 3px; top: 3px; }
-.pb-heading-dynamic-field--textarea .pb-textarea { padding-right: 42px; }
-.pb-heading-link-field { padding-right: 38px; }
 .pb-heading-choice-row { margin-bottom: 10px; }
 .pb-heading-segmented { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .pb-heading-segmented .pb-seg-btn { min-width: 0; }

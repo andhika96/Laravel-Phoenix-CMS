@@ -1,0 +1,213 @@
+<template>
+	<div class="pb-tabs-settings pb-widget-settings pb-widget-settings--tabs">
+		<div class="pb-tab-nav">
+			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active: editor.settingsTab === 'content'}" @click="editor.settingsTab = 'content'"><i class="fas fa-edit"></i><span>Content</span></button>
+			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active: editor.settingsTab === 'style'}" @click="editor.settingsTab = 'style'"><i class="fas fa-adjust"></i><span>Style</span></button>
+			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active: editor.settingsTab === 'advanced'}" @click="editor.settingsTab = 'advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
+		</div>
+
+		<div v-show="editor.settingsTab === 'content'" class="pb-tab-content">
+			<details class="pb-collapsible" open>
+				<summary>Tabs</summary>
+				<div class="pb-collapsible-body">
+					<div class="pb-form-group">
+						<div class="pb-label-row"><label class="pb-form-label mb-0">Tabs Items</label></div>
+						<div class="pb-tabs-items-list"><div v-for="(item, index) in editor.tabsItemsForNode(node)" :key="item.id" class="pb-tabs-item-row" :class="{ active: node.settings.activeTabId === item.id }"><button type="button" class="pb-tabs-item-main" @click="editor.selectTabsItem(node, item.id)"><span>{{ editor.tabsItemSummary(item, index) }}</span></button><button type="button" class="pb-tabs-item-action" title="Duplicate Tab" @click="editor.duplicateTabsItem(node, item.id)"><i class="far fa-copy"></i></button><button type="button" class="pb-tabs-item-action" title="Delete Tab" :disabled="editor.tabsItemsForNode(node).length <= 1" @click="editor.removeTabsItem(node, item.id)"><i class="fas fa-times"></i></button></div></div>
+						<button type="button" class="pb-btn pb-tabs-add-btn" @click="editor.addTabsItem(node)"><i class="fas fa-plus"></i><span>Add Tab</span></button>
+					</div>
+					<div v-if="activeItem" class="pb-tabs-item-fields">
+						<div class="pb-form-group"><label class="pb-form-label">Title</label><input class="pb-input" v-model="activeItem.title" placeholder="Tab title"></div>
+						<div class="pb-form-group"><label class="pb-form-label">Icon Class</label><input class="pb-input" v-model="activeItem.iconClass" placeholder="far fa-star"></div>
+						<div class="pb-form-group"><label class="pb-form-label">Active Icon Class</label><input class="pb-input" v-model="activeItem.activeIconClass" placeholder="fas fa-star"></div>
+						<div class="pb-form-group"><label class="pb-form-label">CSS ID</label><input class="pb-input" v-model="activeItem.cssId" placeholder="tab-one"></div>
+					</div>
+				</div>
+			</details>
+
+			<details class="pb-collapsible" open>
+				<summary>Layout</summary>
+				<div class="pb-collapsible-body">
+					<div class="pb-form-group"><label class="pb-form-label">Direction</label><div class="pb-seg-group"><button type="button" class="pb-seg-btn" :class="{active: node.settings.direction === 'row'}" @click="node.settings.direction = 'row'" title="Row"><i class="fas fa-arrow-right"></i></button><button type="button" class="pb-seg-btn" :class="{active: node.settings.direction === 'column'}" @click="node.settings.direction = 'column'" title="Column"><i class="fas fa-arrow-down"></i></button><button type="button" class="pb-seg-btn" :class="{active: node.settings.direction === 'row-reverse'}" @click="node.settings.direction = 'row-reverse'" title="Row Reverse"><i class="fas fa-arrow-left"></i></button><button type="button" class="pb-seg-btn" :class="{active: node.settings.direction === 'column-reverse'}" @click="node.settings.direction = 'column-reverse'" title="Column Reverse"><i class="fas fa-arrow-up"></i></button></div></div>
+					<div v-if="editor.tabsSelectedRowDirection(node)" class="pb-form-group pb-tabs-width-control"><label class="pb-form-label">Width</label><div class="pb-range-value-row"><input type="range" class="pb-range" min="1" :max="editor.tabsWidthMax(node)" :step="editor.tabsWidthStep(node)" :value="editor.tabsWidthValue(node)" @input="editor.onTabsWidthInput(node, $event)"><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" min="1" :max="editor.tabsWidthMax(node)" :step="editor.tabsWidthStep(node)" :value="editor.tabsWidthValue(node)" @input="editor.onTabsWidthInput(node, $event)"><select class="pb-mini-unit" :value="editor.tabsWidthUnit(node)" @change="editor.setTabsWidthUnit(node, $event.target.value)"><option v-for="unit in editor.tabsWidthUnits" :key="'tabs-width-unit-' + unit" :value="unit">{{ unit }}</option></select></div></div></div>
+					<div class="pb-form-group"><label class="pb-form-label">Horizontal Scroll</label><select class="pb-select" v-model="node.settings.horizontalScroll"><option :value="false">Disable</option><option :value="true">Enable</option></select><div class="pb-form-note">Scroll tabs if they do not fit their parent container.</div></div>
+					<div class="pb-form-group"><label class="pb-form-label">Breakpoint</label><select class="pb-select" v-model="node.settings.breakpoint"><option v-for="option in editor.tabsBreakpointOptions" :key="'tabs-breakpoint-' + option.value" :value="option.value">{{ option.label }}</option></select><div class="pb-form-note">Choose when tabs switch to a vertical accordion layout.</div></div>
+				</div>
+			</details>
+		</div>
+
+		<div v-show="editor.settingsTab === 'style'" class="pb-tab-content pb-tabs-style-settings">
+			<details class="pb-collapsible" open>
+				<summary>Alignment</summary>
+				<div class="pb-collapsible-body">
+					<div class="pb-form-group"><label class="pb-form-label">Justify</label><div class="pb-seg-group"><button type="button" class="pb-seg-btn" :class="{active: node.settings.justify === 'flex-start'}" @click="node.settings.justify = 'flex-start'" title="Start"><i class="fas fa-align-left"></i></button><button type="button" class="pb-seg-btn" :class="{active: node.settings.justify === 'center'}" @click="node.settings.justify = 'center'" title="Center"><i class="fas fa-align-center"></i></button><button type="button" class="pb-seg-btn" :class="{active: node.settings.justify === 'flex-end'}" @click="node.settings.justify = 'flex-end'" title="End"><i class="fas fa-align-right"></i></button><button type="button" class="pb-seg-btn" :class="{active: node.settings.justify === 'stretch'}" @click="node.settings.justify = 'stretch'" title="Stretch"><i class="fas fa-align-justify"></i></button></div></div>
+					<div class="pb-form-group"><label class="pb-form-label">Align Title</label><div class="pb-seg-group"><button type="button" class="pb-seg-btn" :class="{active: node.settings.alignTitle === 'left'}" @click="node.settings.alignTitle = 'left'" title="Left"><i class="fas fa-align-left"></i></button><button type="button" class="pb-seg-btn" :class="{active: node.settings.alignTitle === 'center'}" @click="node.settings.alignTitle = 'center'" title="Center"><i class="fas fa-align-center"></i></button><button type="button" class="pb-seg-btn" :class="{active: node.settings.alignTitle === 'right'}" @click="node.settings.alignTitle = 'right'" title="Right"><i class="fas fa-align-right"></i></button></div></div>
+				</div>
+			</details>
+			<details class="pb-collapsible" open>
+				<summary>Tabs</summary>
+				<div class="pb-collapsible-body">
+					<div class="pb-state-tabs pb-tabs-style-state"><button v-for="state in tabStates" :key="state.value" type="button" :class="{active: tabState === state.value}" @click="tabState = state.value">{{ state.label }}</button></div>
+					<div class="pb-form-group"><label class="pb-form-label">Text Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings[tabStateKey('TextColor')]"></div></div>
+					<div class="pb-form-group"><label class="pb-form-label">Background Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings[tabStateKey('BackgroundColor')]"></div></div>
+					<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="node.settings[tabStateKey('BorderType')]"><option v-for="type in borderTypes" :key="type" :value="type">{{ borderTypeLabel(type) }}</option></select></div>
+					<responsive-box-control v-if="node.settings[tabStateKey('BorderType')] !== 'none'" label="Border Width" :base="tabStateKey('BorderWidth')" :control-id="'tabs-' + tabState + '-border-width'" fallback="1px" :node="node" :editor="editor" />
+					<div v-if="node.settings[tabStateKey('BorderType')] !== 'none'" class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings[tabStateKey('BorderColor')]"></div></div>
+					<responsive-box-control label="Border Radius" :base="tabStateKey('BorderRadius')" :control-id="'tabs-' + tabState + '-border-radius'" fallback="0px" kind="corners" :node="node" :editor="editor" />
+					<responsive-box-control label="Padding" :base="tabStateKey('Padding')" :control-id="'tabs-' + tabState + '-padding'" fallback="14px 20px" :node="node" :editor="editor" />
+					<component :is="editor.typographyControl" :settings="node.settings" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" prefix="tabsTitle" :reset-defaults="titleTypographyDefaults" @responsive-device="editor.setResponsiveDevice" />
+					<responsive-dimension-control label="Icon Size" base="tabsIconSize" control-id="tabs-icon-size" fallback="14px" :node="node" :editor="editor" :max="160" />
+					<responsive-dimension-control label="Icon Spacing" base="tabsIconSpacing" control-id="tabs-icon-spacing" fallback="10px" :node="node" :editor="editor" :max="120" />
+				</div>
+			</details>
+
+			<details class="pb-collapsible" open>
+				<summary>Content</summary>
+				<div class="pb-collapsible-body">
+					<div class="pb-form-group"><label class="pb-form-label">Background Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.tabsContentBackgroundColor"></div></div>
+					<div class="pb-form-group"><label class="pb-form-label">Content Text Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.tabsContentTextColor"></div></div>
+					<div class="pb-form-group"><label class="pb-form-label">Border Type</label><select class="pb-select" v-model="node.settings.tabsContentBorderType"><option v-for="type in borderTypes" :key="'content-' + type" :value="type">{{ borderTypeLabel(type) }}</option></select></div>
+					<responsive-box-control v-if="node.settings.tabsContentBorderType !== 'none'" label="Border Width" base="tabsContentBorderWidth" control-id="tabs-content-border-width" fallback="0px" :node="node" :editor="editor" />
+					<div v-if="node.settings.tabsContentBorderType !== 'none'" class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.tabsContentBorderColor"></div></div>
+					<responsive-box-control label="Border Radius" base="tabsContentBorderRadius" control-id="tabs-content-border-radius" fallback="0px" kind="corners" :node="node" :editor="editor" />
+					<responsive-box-control label="Padding" base="tabsContentPadding" control-id="tabs-content-padding" fallback="0px" :node="node" :editor="editor" />
+					<component :is="editor.typographyControl" :settings="node.settings" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" prefix="tabsContent" :reset-defaults="contentTypographyDefaults" @responsive-device="editor.setResponsiveDevice" />
+				</div>
+			</details>
+		</div>
+
+		<div v-show="editor.settingsTab === 'advanced'" class="pb-tab-content">
+			<component :is="editor.widgetAdvancedControls" :node="node" :responsive-device="editor.responsiveDevice" :show-display-conditions="true" :show-cache-settings="true" @responsive-device="editor.setResponsiveDevice" @choose-media="editor.chooseMedia(node.settings, $event)" @clear-media="editor.clearMedia(node.settings, $event)" @unavailable-ai="editor.showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')" />
+		</div>
+	</div>
+</template>
+
+<script>
+const DIMENSION_PATTERN = /^(-?\d+(?:\.\d+)?)(px|pt|%|em|rem|vw|vh)?$/i;
+const DIMENSION_UNITS = ['px', 'pt', '%', 'em', 'rem', 'vw', 'vh'];
+
+function parseDimension(value, fallback = '0px') {
+	const fallbackMatch = String(fallback || '0px').trim().match(DIMENSION_PATTERN);
+	const match = String(value || '').trim().match(DIMENSION_PATTERN);
+	const unit = match?.[2] || fallbackMatch?.[2] || 'px';
+	return {
+		value: Number(match?.[1] ?? fallbackMatch?.[1] ?? 0),
+		unit: DIMENSION_UNITS.includes(unit) ? unit : 'px',
+	};
+}
+
+function expandBoxValue(value, fallback) {
+	const tokens = String(value || fallback || '0px').trim().split(/\s+/).filter(Boolean);
+	if (tokens.length === 1) return [tokens[0], tokens[0], tokens[0], tokens[0]];
+	if (tokens.length === 2) return [tokens[0], tokens[1], tokens[0], tokens[1]];
+	if (tokens.length === 3) return [tokens[0], tokens[1], tokens[2], tokens[1]];
+	if (tokens.length >= 4) return tokens.slice(0, 4);
+	return ['0px', '0px', '0px', '0px'];
+}
+
+function dimensionLimit(unit) {
+	if (unit === '%') return 100;
+	if (unit === 'em' || unit === 'rem') return 30;
+	if (unit === 'vw' || unit === 'vh') return 100;
+	return 400;
+}
+
+function dimensionStep(unit) {
+	return unit === 'em' || unit === 'rem' ? 0.01 : 1;
+}
+
+const ResponsiveMenu = {
+	props: { editor: { type: Object, required: true }, controlId: { type: String, required: true } },
+	template: `<div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" :title="'Responsive: ' + editor.responsiveDeviceLabel()" @click.stop="editor.openControlResponsiveMenu(controlId)"><i :class="editor.responsiveDeviceIcon()"></i></button><div v-if="editor.isControlResponsiveMenuOpen(controlId)" class="pb-control-device-menu"><button v-for="device in editor.responsiveDevices" :key="controlId + '-' + device.value" type="button" class="pb-control-device-item" :class="{active: editor.responsiveDevice === device.value}" @click.stop="editor.applyResponsiveDevice(controlId, device.value)"><i :class="device.icon"></i><span>{{ editor.deviceOptionLabel(device) }}</span></button></div></div>`,
+};
+
+const ResponsiveDimensionControl = {
+	components: { ResponsiveMenu },
+	props: { label: String, base: String, controlId: String, fallback: String, node: Object, editor: Object, min: { type: Number, default: 0 }, max: { type: Number, default: 400 } },
+	computed: {
+		settingKey() { return this.editor.activeResponsiveKey(this.base); },
+		parsed() { return parseDimension(this.node.settings[this.settingKey], this.fallback); },
+		maxValue() { return Math.min(this.max, dimensionLimit(this.parsed.unit)); },
+		stepValue() { return dimensionStep(this.parsed.unit); },
+	},
+	methods: {
+		setValue(raw) {
+			const value = Number(raw);
+			if (!Number.isFinite(value)) return;
+			this.node.settings[this.settingKey] = `${Math.min(this.maxValue, Math.max(this.min, value))}${this.parsed.unit}`;
+		},
+		setUnit(unit) {
+			const safeUnit = DIMENSION_UNITS.includes(unit) ? unit : 'px';
+			this.node.settings[this.settingKey] = `${this.parsed.value}${safeUnit}`;
+		},
+	},
+	template: `<div class="pb-form-group pb-tabs-dimension-control"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">{{ label }}</label><div class="pb-label-tools"><responsive-menu :editor="editor" :control-id="controlId"/><select class="pb-mini-unit" :value="parsed.unit" :aria-label="label + ' unit'" @change="setUnit($event.target.value)"><option v-for="unit in ['px','pt','%','em','rem','vw','vh']" :key="unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-range-value-row"><input class="pb-range" type="range" :min="min" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"><input class="pb-input pb-input-compact" type="number" :min="min" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"></div></div>`,
+};
+
+const ResponsiveBoxControl = {
+	components: { ResponsiveMenu },
+	props: { label: String, base: String, controlId: String, fallback: String, kind: { type: String, default: 'edges' }, node: Object, editor: Object },
+	data() { return { linked: true }; },
+	computed: {
+		sides() { return this.kind === 'corners' ? [{key:'TL',label:'Top Left'},{key:'TR',label:'Top Right'},{key:'BR',label:'Bottom Right'},{key:'BL',label:'Bottom Left'}] : [{key:'Top',label:'Top'},{key:'Right',label:'Right'},{key:'Bottom',label:'Bottom'},{key:'Left',label:'Left'}]; },
+		baseValue() { return this.node.settings[this.editor.activeResponsiveKey(this.base)] || this.node.settings[this.base] || this.fallback; },
+		unit() { return this.value(0).unit; },
+		maxValue() { return dimensionLimit(this.unit); },
+		stepValue() { return dimensionStep(this.unit); },
+	},
+	methods: {
+		settingKey(side) { return this.editor.activeResponsiveKey(this.base + side.key); },
+		value(index) {
+			const side = this.sides[index];
+			const fallbackToken = expandBoxValue(this.baseValue, this.fallback)[index];
+			return parseDimension(this.node.settings[this.settingKey(side)] || fallbackToken, fallbackToken);
+		},
+		setValue(index, raw) {
+			const numeric = Number(raw);
+			if (!Number.isFinite(numeric)) return;
+			const safe = Math.min(this.maxValue, Math.max(0, numeric));
+			if (this.linked) this.sides.forEach((side) => { this.node.settings[this.settingKey(side)] = `${safe}${this.unit}`; });
+			else this.node.settings[this.settingKey(this.sides[index])] = `${safe}${this.unit}`;
+		},
+		setUnit(unit) {
+			const safeUnit = DIMENSION_UNITS.includes(unit) ? unit : 'px';
+			this.sides.forEach((side, index) => { this.node.settings[this.settingKey(side)] = `${this.value(index).value}${safeUnit}`; });
+		},
+	},
+	template: `<div class="pb-form-group pb-tabs-box-control"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">{{ label }}</label><div class="pb-label-tools"><responsive-menu :editor="editor" :control-id="controlId"/><select class="pb-mini-unit" :value="unit" :aria-label="label + ' unit'" @change="setUnit($event.target.value)"><option v-for="option in ['px','pt','%','em','rem','vw','vh']" :key="option" :value="option">{{ option }}</option></select></div></div><div class="pb-four-sides pb-four-sides-with-link"><label v-for="(side, index) in sides" :key="side.key" class="pb-side-input"><input class="pb-input" type="number" min="0" :max="maxValue" :step="stepValue" :value="value(index).value" @input="setValue(index, $event.target.value)"><span>{{ side.label }}</span></label><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" :class="{active: linked}" :title="linked ? 'Unlink values' : 'Link values'" @click="linked = !linked"><i class="fas" :class="linked ? 'fa-link' : 'fa-unlink'"></i></button></div></div></div>`,
+};
+
+export default {
+	name: 'TabsWidgetSettings',
+	components: { ResponsiveDimensionControl, ResponsiveBoxControl },
+	props: { node: { type: Object, required: true }, editor: { type: Object, required: true } },
+	data() {
+		return {
+			tabState: 'normal',
+			tabStates: [{value:'normal',label:'Normal'},{value:'hover',label:'Hover'},{value:'active',label:'Active'}],
+			borderTypes: ['none', 'solid', 'double', 'dotted', 'dashed', 'groove'],
+			titleTypographyDefaults: { FontFamily:'inherit', FontSize:'14px', FontWeight:'500', TextTransform:'none', FontStyle:'normal', TextDecoration:'none', LineHeight:'1.3em', LetterSpacing:'0px', WordSpacing:'0px' },
+			contentTypographyDefaults: { FontFamily:'inherit', FontSize:'16px', FontWeight:'inherit', TextTransform:'none', FontStyle:'normal', TextDecoration:'none', LineHeight:'1.5em', LetterSpacing:'0px', WordSpacing:'0px' },
+		};
+	},
+	computed: {
+		activeItem() { return this.editor.tabsActiveItem(this.node); },
+	},
+	methods: {
+		tabStateKey(field) { return `tabs${this.tabState.charAt(0).toUpperCase()}${this.tabState.slice(1)}${field}`; },
+		borderTypeLabel(type) { return type === 'none' ? 'None' : type.charAt(0).toUpperCase() + type.slice(1); },
+	},
+};
+</script>
+
+<style scoped>
+.pb-tabs-style-state { margin: 4px 0 16px; }
+.pb-tabs-dimension-control .pb-label-tools, .pb-tabs-box-control .pb-label-tools { margin-left: auto; }
+.pb-tabs-box-control .pb-four-sides-with-link { grid-template-columns: repeat(4, minmax(0, 1fr)) 28px; gap: 0; align-items: start; }
+.pb-tabs-box-control .pb-side-input { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.pb-tabs-box-control .pb-side-input .pb-input { min-width: 0; height: 30px; padding: 3px; border-radius: 0; border-right-width: 0; text-align: center; font-size: 11px; }
+.pb-tabs-box-control .pb-side-input:first-child .pb-input { border-radius: 5px 0 0 5px; }
+.pb-tabs-box-control .pb-side-input span { color: #7a8699; font-size: 9px; text-align: center; }
+.pb-tabs-box-control .pb-side-link-cell { display: flex; align-items: flex-start; }
+.pb-tabs-box-control .pb-link-btn { width: 28px; height: 30px; border-radius: 0 5px 5px 0; }
+.pb-tabs-box-control .pb-link-btn.active { background: #eef1ff; color: #5b6cff; }
+</style>

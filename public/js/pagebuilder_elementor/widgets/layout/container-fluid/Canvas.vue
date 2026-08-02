@@ -120,8 +120,10 @@ export default {
 
 			this.appendResponsiveEdgeRules(tabletRules, 'padding', 'padding', 'tablet', false);
 			this.appendResponsiveEdgeRules(tabletRules, 'margin', 'margin', 'tablet', true);
+			this.appendResponsiveBorderRadiusRule(tabletRules, 'tablet');
 			this.appendResponsiveEdgeRules(mobileRules, 'padding', 'padding', 'mobile', false);
 			this.appendResponsiveEdgeRules(mobileRules, 'margin', 'margin', 'mobile', true);
+			this.appendResponsiveBorderRadiusRule(mobileRules, 'mobile');
 
 			const blocks = [];
 
@@ -223,13 +225,10 @@ export default {
 			return this.settings[base + this.responsiveSuffix(device)];
 		},
 		responsiveSetting(base, fallback = '') {
-			const device = this.responsiveDevice || 'desktop';
-			const key = base + this.responsiveSuffix(device);
-			const value = this.settings[key];
-			if (device !== 'desktop' && (value === '' || value === null || value === undefined)) {
-				const desktopValue = this.settings[base];
-				return desktopValue === null || desktopValue === undefined || desktopValue === '' ? fallback : desktopValue;
-			}
+			return this.resolvedResponsiveSettingForDevice(base, this.responsiveDevice || 'desktop', fallback);
+		},
+		resolvedResponsiveSettingForDevice(base, device, fallback = '') {
+			const value = this.responsiveSettingForDevice(base, device);
 			if (value === '' || value === null || value === undefined) {
 				const desktopValue = this.settings[base];
 				return desktopValue === null || desktopValue === undefined || desktopValue === '' ? fallback : desktopValue;
@@ -249,6 +248,16 @@ export default {
 
 				rules.push(cssPrefix + '-' + cssSide + ':' + (allowAuto ? this.toCssSpace(raw, '0') : this.toCssSize(raw, '0')));
 			});
+		},
+		appendResponsiveBorderRadiusRule(rules, device) {
+			const keys = ['borderRadiusTL', 'borderRadiusTR', 'borderRadiusBR', 'borderRadiusBL'];
+			const hasOverride = keys.some((key) => {
+				const value = this.responsiveSettingForDevice(key, device);
+				return value !== '' && value !== null && value !== undefined;
+			});
+			if (!hasOverride) return;
+
+			rules.push('border-radius:' + keys.map((key) => this.toCssSize(this.resolvedResponsiveSettingForDevice(key, device, '0'), '0')).join(' '));
 		},
 		toCssSize(value, fallback = '') {
 			if (value === null || value === undefined || value === '') return fallback;
@@ -488,10 +497,10 @@ export default {
 			if (settings.borderRadius) return this.toCssSize(settings.borderRadius, '0');
 
 			return [
-				this.toCssSize(settings.borderRadiusTL, '0'),
-				this.toCssSize(settings.borderRadiusTR, '0'),
-				this.toCssSize(settings.borderRadiusBR, '0'),
-				this.toCssSize(settings.borderRadiusBL, '0'),
+				this.toCssSize(this.responsiveSetting('borderRadiusTL', '0'), '0'),
+				this.toCssSize(this.responsiveSetting('borderRadiusTR', '0'), '0'),
+				this.toCssSize(this.responsiveSetting('borderRadiusBR', '0'), '0'),
+				this.toCssSize(this.responsiveSetting('borderRadiusBL', '0'), '0'),
 			].join(' ');
 		},
 		shadowValue(settings, suffix = '') {

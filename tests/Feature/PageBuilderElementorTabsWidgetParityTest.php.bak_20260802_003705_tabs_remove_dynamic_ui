@@ -1,0 +1,313 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class PageBuilderElementorTabsWidgetParityTest extends TestCase
+{
+    public function test_editor_exposes_general_category_and_tabs_controls(): void
+    {
+        $definition = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/definition.js'));
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Settings.vue'));
+
+        $this->assertStringContainsString("type: 'tabs'", $definition);
+        $this->assertStringContainsString("label: 'Tabs'", $definition);
+        $this->assertStringContainsString('pb-tabs-settings pb-widget-settings pb-widget-settings--tabs', $settings);
+        $this->assertStringContainsString('Tabs Items', $settings);
+        $this->assertStringContainsString('Add Tab', $settings);
+        $this->assertStringContainsString('Horizontal Scroll', $settings);
+        $this->assertStringContainsString('Breakpoint', $settings);
+		$this->assertStringNotContainsString('pb-tabs-width-control', $settings);
+        $this->assertStringContainsString('activeItem()', $settings);
+        $this->assertStringContainsString('expandedTabId', $settings);
+        $this->assertStringContainsString('toggleTabsItem(item.id)', $settings);
+        $this->assertStringContainsString('v-if="isItemExpanded(item)"', $settings);
+        $this->assertStringContainsString('v-model="item.title"', $settings);
+        $this->assertStringContainsString("editor.openTabsItemIconLibrary(item.id, 'iconClass', node)", $settings);
+		$this->assertStringContainsString('editor.chooseTabsItemSvg(item.id, node)', $settings);
+		$this->assertStringContainsString("item.iconSource==='none'", $settings);
+		$this->assertStringContainsString('item.dynamicBindings?.title', $settings);
+		$this->assertStringNotContainsString('Active Icon', $settings);
+        $this->assertStringNotContainsString('v-model="item.iconClass"', $settings);
+        $this->assertStringNotContainsString('v-model="item.activeIconClass"', $settings);
+        $this->assertStringNotContainsString('v-model="editor.tabsActiveItem(node).', $settings);
+    }
+
+    public function test_tabs_settings_use_standard_content_style_and_advanced_panels(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Settings.vue'));
+
+        $this->assertIsString($settings);
+        $this->assertStringContainsString('class="pb-tab-nav"', $settings);
+        foreach (['Content', 'Style', 'Advanced'] as $tab) {
+            $this->assertStringContainsString(">$tab</span>", $settings);
+        }
+        $this->assertStringContainsString("editor.settingsTab === 'content'", $settings);
+        $this->assertStringContainsString("editor.settingsTab === 'style'", $settings);
+        $this->assertStringContainsString("editor.settingsTab === 'advanced'", $settings);
+		foreach (['<summary>Tabs</summary>', '<summary>Additional Settings</summary>', '<summary>Titles</summary>', '<summary>Icon</summary>', '<summary>Content</summary>'] as $section) {
+			$this->assertStringContainsString($section, $settings);
+		}
+        $this->assertStringContainsString('editor.widgetAdvancedControls', $settings);
+    }
+
+    public function test_tabs_preview_component_exists_and_renders_nested_tab_shell(): void
+    {
+        $tabsVuePath = public_path('js/pagebuilder_elementor/widgets/general/tabs/Canvas.vue');
+
+        $this->assertFileExists($tabsVuePath);
+
+        $tabsVue = file_get_contents($tabsVuePath);
+
+        $this->assertIsString($tabsVue);
+        $this->assertStringContainsString("name: 'GeneralTabs'", $tabsVue);
+        $this->assertStringContainsString('el-widget-tabs', $tabsVue);
+        $this->assertStringContainsString('activeTab()', $tabsVue);
+        $this->assertStringContainsString('tabItems()', $tabsVue);
+        $this->assertStringContainsString('isAccordionPreview()', $tabsVue);
+        $this->assertStringContainsString('el-widget-tabs__accordion', $tabsVue);
+    }
+
+    public function test_tabs_breakpoint_controls_switch_editor_and_frontend_to_vertical_layout(): void
+    {
+        $tabsVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Canvas.vue'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
+
+        $this->assertIsString($tabsVue);
+        $this->assertIsString($builderCss);
+        $this->assertIsString($frontendCss);
+        $this->assertStringContainsString("this.breakpoint === 'tablet'", $tabsVue);
+        $this->assertStringContainsString("device === 'tablet' || device === 'mobile'", $tabsVue);
+        $this->assertStringContainsString('pb-canvas.is-mobile .el-widget-tabs.is-breakpoint-mobile', $builderCss);
+        $this->assertStringContainsString('pb-canvas.is-tablet .el-widget-tabs.is-breakpoint-tablet', $builderCss);
+        $this->assertStringContainsString('flex-direction: column;', $frontendCss);
+        $this->assertStringContainsString('width: 100% !important;', $frontendCss);
+        $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-tabs-item-main', $builderCss);
+        $this->assertStringContainsString('font-weight: 400;', $builderCss);
+        $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-seg-group', $builderCss);
+        $this->assertStringContainsString('gap: 7px;', $builderCss);
+        $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-tabs-item-header', $builderCss);
+        $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-tabs-inline-control .pb-seg-group', $builderCss);
+        $this->assertMatchesRegularExpression(
+            '/\.pb-panel\.left \.pb-tabs-settings \.pb-tabs-item-row\s*\{[^}]*display:\s*block;[^}]*grid-template-columns:\s*none;/s',
+            $builderCss
+        );
+		$this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-tabs-icon-mode-btn', $builderCss);
+    }
+
+    public function test_tabs_items_reuse_the_shared_icon_library_and_sanitized_svg_picker(): void
+    {
+        $app = $this->editorSource();
+		$serviceStart = strpos($app, 'const widgetEditorServices = {');
+		$serviceEnd = strpos($app, 'const appTitle = computed(', $serviceStart);
+
+        foreach ([
+            'async function openTabsItemIconLibrary(',
+            "node.type !== 'tabs'",
+			"settingKey !== 'iconClass'",
+            "node.type === 'tabs'",
+			'item.iconClass = iconLibrarySelected.value.className;',
+			"item.iconSource = 'library';",
+			'function chooseTabsItemSvg(',
+			"item.iconSource = 'svg';",
+            'openTabsItemIconLibrary,',
+			'chooseTabsItemSvg,',
+        ] as $marker) {
+            $this->assertStringContainsString($marker, $app);
+        }
+
+		$this->assertNotFalse($serviceStart);
+		$this->assertNotFalse($serviceEnd);
+		$this->assertStringContainsString('openTabsItemIconLibrary,', substr($app, $serviceStart, $serviceEnd - $serviceStart));
+		$this->assertStringContainsString('chooseTabsItemSvg,', substr($app, $serviceStart, $serviceEnd - $serviceStart));
+    }
+
+    public function test_tabs_canvas_preview_marks_interactive_areas_to_avoid_parent_selection_clicks(): void
+    {
+        $appJs = $this->editorSource();
+        $tabsVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Canvas.vue'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $this->assertIsString($appJs);
+        $this->assertIsString($tabsVue);
+        $this->assertIsString($builderCss);
+        $this->assertStringContainsString('@click.stop="onNodeContentClick(node, $event)"', $appJs);
+        $this->assertStringContainsString("function isInteractiveCanvasTarget(target)", $appJs);
+        $this->assertStringContainsString('data-pb-interactive="true"', $tabsVue);
+        $this->assertStringContainsString('@click.stop="activateTab(tab.id)"', $tabsVue);
+        $this->assertStringContainsString('.pb-node.pb-node-tabs .pb-preview,', $builderCss);
+        $this->assertStringContainsString('.pb-node.pb-node-tabs .pb-dropzone-tab,', $builderCss);
+        $this->assertStringContainsString('pointer-events: auto;', $builderCss);
+    }
+
+    public function test_tabs_canvas_preview_defers_nested_layout_dropzones_to_child_grid_columns(): void
+    {
+        $appJs = $this->editorSource();
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $this->assertIsString($appJs);
+        $this->assertIsString($builderCss);
+        $this->assertStringContainsString('data-pb-nested-dropzone="true"', $appJs);
+        $this->assertStringContainsString(':move="onTabDropzoneMove"', $appJs);
+        $this->assertStringContainsString('function isNestedCanvasDropTarget(target)', $appJs);
+        $this->assertStringContainsString('function findNestedCanvasDropTargetFromEvent(event, parentEl = null)', $appJs);
+        $this->assertStringContainsString('function trackDropzonePointerFromEvent(event)', $appJs);
+        $this->assertStringContainsString('let lastHoveredDropzoneEl = null;', $appJs);
+        $this->assertStringContainsString('function rerouteTabsDropToNestedColumn(evt, tabChildren)', $appJs);
+        $this->assertStringContainsString(':fallback-on-body="true"', $appJs);
+        $this->assertStringNotContainsString(':force-fallback="true"', $appJs);
+        $this->assertStringContainsString(':dragover-bubble="false"', $appJs);
+        $this->assertStringContainsString(':swap-threshold="0.65"', $appJs);
+        $this->assertStringContainsString(':empty-insert-threshold="30"', $appJs);
+        $this->assertStringContainsString("onOpenModal('container', 'tabs', activeTabsChildren())", $appJs);
+        $this->assertStringContainsString('[data-pb-nested-dropzone="true"]', $builderCss);
+    }
+
+    public function test_frontend_renderer_emits_tabs_markup_and_nested_children(): void
+    {
+        $html = view('pagebuilder_elementor.partials.render_node', [
+            'node' => [
+                'id' => 'tabs-node',
+                'type' => 'tabs',
+                'settings' => [
+                    'direction' => 'row',
+                    'justify' => 'flex-start',
+                    'alignTitle' => 'center',
+                    'horizontalScroll' => false,
+                    'breakpoint' => 'mobile',
+                    'activeTabId' => 'tab-1',
+                    'cssClass' => 'custom-tabs-node',
+                ],
+                'tabItems' => [
+                    [
+                        'id' => 'tab-1',
+                        'title' => 'Tab #1',
+                        'iconClass' => '',
+                        'activeIconClass' => '',
+                        'cssId' => 'tab-one',
+                        'children' => [
+                            [
+                                'id' => 'heading-inside-tab',
+                                'type' => 'heading',
+                                'settings' => [
+                                    'text' => 'Heading inside tab',
+                                    'tag' => 'h3',
+                                    'align' => 'left',
+                                    'color' => '#101828',
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'id' => 'tab-2',
+                        'title' => 'Tab #2',
+                        'iconClass' => '',
+                        'activeIconClass' => '',
+                        'cssId' => 'tab-two',
+                        'children' => [],
+                    ],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('el-widget-tabs', $html);
+        $this->assertStringContainsString('custom-tabs-node', $html);
+        $this->assertStringContainsString('el-widget-tabs__nav', $html);
+        $this->assertStringContainsString('Tab #1', $html);
+        $this->assertStringContainsString('Tab #2', $html);
+        $this->assertStringContainsString('Heading inside tab', $html);
+        $this->assertStringContainsString('data-tab-id="tab-1"', $html);
+        $this->assertStringContainsString('data-tab-panel="tab-1"', $html);
+    }
+
+    public function test_frontend_renderer_resolves_item_dynamic_tags_and_sanitizes_svg_icons(): void
+    {
+        $attributes = request()->attributes;
+        $hadContext = $attributes->has('pagebuilder_dynamic_context');
+        $previousContext = $attributes->get('pagebuilder_dynamic_context');
+        $attributes->set('pagebuilder_dynamic_context', [
+            'site_title' => 'Phoenix CMS',
+            'page' => ['page_name' => 'Product Guide 2026'],
+        ]);
+
+        try {
+            $html = view('pagebuilder_elementor.partials.render_node', [
+                'node' => [
+                    'id' => 'dynamic-tabs',
+                    'type' => 'tabs',
+                    'settings' => ['activeTabId' => 'dynamic-tab'],
+                    'tabItems' => [[
+                        'id' => 'dynamic-tab',
+                        'title' => 'Static title',
+                        'cssId' => 'static-id',
+                        'iconSource' => 'svg',
+                        'iconSvg' => '<svg viewBox="0 0 24 24" onload="alert(1)"><script>alert(2)</script><path d="M2 12h20" /></svg>',
+                        'dynamicBindings' => [
+                            'title' => 'site_title',
+                            'cssId' => 'page_title',
+                        ],
+                        'children' => [],
+                    ]],
+                ],
+            ])->render();
+        } finally {
+            if ($hadContext) {
+                $attributes->set('pagebuilder_dynamic_context', $previousContext);
+            } else {
+                $attributes->remove('pagebuilder_dynamic_context');
+            }
+        }
+
+        $this->assertStringContainsString('Phoenix CMS', $html);
+        $this->assertStringContainsString('id="Product-Guide-2026"', $html);
+        $this->assertStringContainsString('aria-labelledby="Product-Guide-2026"', $html);
+        $this->assertMatchesRegularExpression('/src="data:image\/svg\+xml;base64,[^"]+"/', $html);
+
+        preg_match('/src="data:image\/svg\+xml;base64,([^"]+)"/', $html, $match);
+        $sanitizedSvg = base64_decode($match[1] ?? '', true);
+        $this->assertIsString($sanitizedSvg);
+        $this->assertStringContainsString('<path', $sanitizedSvg);
+        $this->assertStringNotContainsString('<script', $sanitizedSvg);
+        $this->assertStringNotContainsString('onload', $sanitizedSvg);
+    }
+
+    public function test_tabs_targeted_insert_mechanisms_and_glowing_pulse_highlights(): void
+    {
+        $appJs = $this->editorSource();
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $this->assertIsString($appJs);
+        $this->assertIsString($builderCss);
+
+        // Verify JS contains the targeted insert methods and click handler bindings
+        $this->assertStringContainsString('pendingInsertTarget', $appJs);
+        $this->assertStringContainsString('onToolboxItemClick', $appJs);
+        $this->assertStringContainsString('insertToolIntoPendingTarget', $appJs);
+        $this->assertStringContainsString("type: 'column'", $appJs);
+        $this->assertStringContainsString("onOpenModal('container', 'tabs', activeTabsChildren())", $appJs);
+        $this->assertStringContainsString('pb-pending-insert-notice', $appJs);
+        $this->assertStringContainsString('is-pending-insert-target', $appJs);
+        $this->assertStringContainsString('@click="onToolboxItemClick(element)"', $appJs);
+
+        // Verify CSS keeps targeted notice styling without bouncing the + Add button
+        $this->assertStringContainsString('.pb-pending-insert-notice', $builderCss);
+        $this->assertStringContainsString('.pb-dropzone.is-pending-insert-target', $builderCss);
+        $this->assertStringContainsString('.pb-node.pb-node-tabs .pb-grid-col-empty-hint .pb-inline-add', $builderCss);
+        $this->assertStringNotContainsString(".pb-node.pb-node-tabs .pb-dropzone-tab * {\n\tpointer-events: auto;", $builderCss);
+        $this->assertStringContainsString('pulsePendingBorder', $builderCss);
+        $this->assertStringNotContainsString('bouncePendingAdd', $builderCss);
+    }
+
+    private function editorSource(): string
+    {
+        $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Settings.vue'));
+
+        $this->assertIsString($appJs);
+        $this->assertIsString($settings);
+
+        return $appJs."\n".$settings;
+    }
+}

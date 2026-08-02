@@ -18,11 +18,20 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringContainsString('Add Tab', $settings);
         $this->assertStringContainsString('Horizontal Scroll', $settings);
         $this->assertStringContainsString('Breakpoint', $settings);
-        $this->assertStringContainsString('pb-tabs-width-control', $settings);
-        $this->assertStringContainsString('editor.tabsWidthValue(node)', $settings);
-        $this->assertStringContainsString('editor.onTabsWidthInput(node, $event)', $settings);
+		$this->assertStringNotContainsString('pb-tabs-width-control', $settings);
         $this->assertStringContainsString('activeItem()', $settings);
-        $this->assertStringContainsString('v-model="activeItem.title"', $settings);
+        $this->assertStringContainsString('expandedTabId', $settings);
+        $this->assertStringContainsString('toggleTabsItem(item.id)', $settings);
+        $this->assertStringContainsString('v-if="isItemExpanded(item)"', $settings);
+        $this->assertStringContainsString('v-model="item.title"', $settings);
+        $this->assertStringContainsString("editor.openTabsItemIconLibrary(item.id, 'iconClass', node)", $settings);
+		$this->assertStringContainsString('editor.chooseTabsItemSvg(item.id, node)', $settings);
+		$this->assertStringContainsString("item.iconSource==='none'", $settings);
+		$this->assertStringNotContainsString('item.dynamicBindings?.title', $settings);
+		$this->assertStringNotContainsString(':is="editor.dynamicTagControl"', $settings);
+		$this->assertStringNotContainsString('Active Icon', $settings);
+        $this->assertStringNotContainsString('v-model="item.iconClass"', $settings);
+        $this->assertStringNotContainsString('v-model="item.activeIconClass"', $settings);
         $this->assertStringNotContainsString('v-model="editor.tabsActiveItem(node).', $settings);
     }
 
@@ -38,8 +47,10 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringContainsString("editor.settingsTab === 'content'", $settings);
         $this->assertStringContainsString("editor.settingsTab === 'style'", $settings);
         $this->assertStringContainsString("editor.settingsTab === 'advanced'", $settings);
-        $this->assertStringContainsString('<summary>Alignment</summary>', $settings);
-        $this->assertStringContainsString('v-model="node.settings.cssClass"', $settings);
+		foreach (['<summary>Tabs</summary>', '<summary>Additional Settings</summary>', '<summary>Titles</summary>', '<summary>Icon</summary>', '<summary>Content</summary>'] as $section) {
+			$this->assertStringContainsString($section, $settings);
+		}
+        $this->assertStringContainsString('editor.widgetAdvancedControls', $settings);
     }
 
     public function test_tabs_preview_component_exists_and_renders_nested_tab_shell(): void
@@ -78,7 +89,40 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringContainsString('font-weight: 400;', $builderCss);
         $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-seg-group', $builderCss);
         $this->assertStringContainsString('gap: 7px;', $builderCss);
-        $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-tabs-item-fields + .pb-form-group', $builderCss);
+        $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-tabs-item-header', $builderCss);
+        $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-tabs-inline-control .pb-seg-group', $builderCss);
+        $this->assertMatchesRegularExpression(
+            '/\.pb-panel\.left \.pb-tabs-settings \.pb-tabs-item-row\s*\{[^}]*display:\s*block;[^}]*grid-template-columns:\s*none;/s',
+            $builderCss
+        );
+		$this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-tabs-icon-mode-btn', $builderCss);
+    }
+
+    public function test_tabs_items_reuse_the_shared_icon_library_and_sanitized_svg_picker(): void
+    {
+        $app = $this->editorSource();
+		$serviceStart = strpos($app, 'const widgetEditorServices = {');
+		$serviceEnd = strpos($app, 'const appTitle = computed(', $serviceStart);
+
+        foreach ([
+            'async function openTabsItemIconLibrary(',
+            "node.type !== 'tabs'",
+			"settingKey !== 'iconClass'",
+            "node.type === 'tabs'",
+			'item.iconClass = iconLibrarySelected.value.className;',
+			"item.iconSource = 'library';",
+			'function chooseTabsItemSvg(',
+			"item.iconSource = 'svg';",
+            'openTabsItemIconLibrary,',
+			'chooseTabsItemSvg,',
+        ] as $marker) {
+            $this->assertStringContainsString($marker, $app);
+        }
+
+		$this->assertNotFalse($serviceStart);
+		$this->assertNotFalse($serviceEnd);
+		$this->assertStringContainsString('openTabsItemIconLibrary,', substr($app, $serviceStart, $serviceEnd - $serviceStart));
+		$this->assertStringContainsString('chooseTabsItemSvg,', substr($app, $serviceStart, $serviceEnd - $serviceStart));
     }
 
     public function test_tabs_canvas_preview_marks_interactive_areas_to_avoid_parent_selection_clicks(): void
@@ -177,6 +221,57 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
         $this->assertStringContainsString('Heading inside tab', $html);
         $this->assertStringContainsString('data-tab-id="tab-1"', $html);
         $this->assertStringContainsString('data-tab-panel="tab-1"', $html);
+    }
+
+    public function test_frontend_renderer_resolves_item_dynamic_tags_and_sanitizes_svg_icons(): void
+    {
+        $attributes = request()->attributes;
+        $hadContext = $attributes->has('pagebuilder_dynamic_context');
+        $previousContext = $attributes->get('pagebuilder_dynamic_context');
+        $attributes->set('pagebuilder_dynamic_context', [
+            'site_title' => 'Phoenix CMS',
+            'page' => ['page_name' => 'Product Guide 2026'],
+        ]);
+
+        try {
+            $html = view('pagebuilder_elementor.partials.render_node', [
+                'node' => [
+                    'id' => 'dynamic-tabs',
+                    'type' => 'tabs',
+                    'settings' => ['activeTabId' => 'dynamic-tab'],
+                    'tabItems' => [[
+                        'id' => 'dynamic-tab',
+                        'title' => 'Static title',
+                        'cssId' => 'static-id',
+                        'iconSource' => 'svg',
+                        'iconSvg' => '<svg viewBox="0 0 24 24" onload="alert(1)"><script>alert(2)</script><path d="M2 12h20" /></svg>',
+                        'dynamicBindings' => [
+                            'title' => 'site_title',
+                            'cssId' => 'page_title',
+                        ],
+                        'children' => [],
+                    ]],
+                ],
+            ])->render();
+        } finally {
+            if ($hadContext) {
+                $attributes->set('pagebuilder_dynamic_context', $previousContext);
+            } else {
+                $attributes->remove('pagebuilder_dynamic_context');
+            }
+        }
+
+        $this->assertStringContainsString('Phoenix CMS', $html);
+        $this->assertStringContainsString('id="Product-Guide-2026"', $html);
+        $this->assertStringContainsString('aria-labelledby="Product-Guide-2026"', $html);
+        $this->assertMatchesRegularExpression('/src="data:image\/svg\+xml;base64,[^"]+"/', $html);
+
+        preg_match('/src="data:image\/svg\+xml;base64,([^"]+)"/', $html, $match);
+        $sanitizedSvg = base64_decode($match[1] ?? '', true);
+        $this->assertIsString($sanitizedSvg);
+        $this->assertStringContainsString('<path', $sanitizedSvg);
+        $this->assertStringNotContainsString('<script', $sanitizedSvg);
+        $this->assertStringNotContainsString('onload', $sanitizedSvg);
     }
 
     public function test_tabs_targeted_insert_mechanisms_and_glowing_pulse_highlights(): void

@@ -4922,6 +4922,32 @@ body {
 	margin-left: 0;
 }
 
+/* Widgets that still use the shared direct responsive trigger keep it on
+   the trailing edge, while specialized settings retain their own layouts. */
+.pb-panel.left :is(.pb-widget-settings--basic, .pb-widget-settings--icon-box) .pb-label-row.pb-label-row-device {
+	justify-content: space-between;
+}
+
+.pb-panel.left :is(.pb-widget-settings--basic, .pb-widget-settings--icon-box) .pb-label-row.pb-label-row-device > .pb-form-label {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.pb-panel.left :is(.pb-widget-settings--basic, .pb-widget-settings--icon-box) .pb-label-row.pb-label-row-device > .pb-control-device-wrap {
+	flex: 0 0 auto;
+	margin-left: auto;
+}
+
+.pb-panel.left :is(.pb-widget-settings--basic, .pb-widget-settings--icon-box) .pb-label-row.pb-label-row-device > .pb-label-tools {
+	flex: 0 0 auto;
+	margin-left: auto;
+	justify-content: flex-end;
+}
+
+.pb-panel.left :is(.pb-widget-settings--basic, .pb-widget-settings--icon-box) .pb-label-row.pb-label-row-device > .pb-label-tools > .pb-mini-unit {
+	margin-left: 0;
+}
+
 .pb-panel.left .pb-widget-settings .pb-control-device-btn {
 	width: 24px;
 	height: 24px;
@@ -5093,13 +5119,15 @@ body {
 }
 
 .pb-panel.left .pb-control-device-btn {
-	width: 20px;
-	height: 20px;
-	min-width: 20px;
+	width: 20px !important;
+	height: 20px !important;
+	min-width: 20px !important;
+	padding: 0;
+	border: 0 !important;
 	border-radius: 5px;
+	background: transparent !important;
 	color: #647695;
-	border-color: #cfd8eb;
-	box-shadow: none;
+	box-shadow: none !important;
 }
 
 .pb-panel.left .pb-control-device-btn i {
@@ -5108,8 +5136,13 @@ body {
 }
 
 .pb-panel.left .pb-control-device-btn:hover {
-	background: #eef3ff;
+	background: #eef3ff !important;
 	color: #243047;
+}
+
+.pb-panel.left .pb-control-device-btn:focus-visible {
+	outline: 2px solid #9eb7ef;
+	outline-offset: 2px;
 }
 
 .pb-panel.left .pb-control-device-menu {
@@ -5297,7 +5330,7 @@ body {
 
 .pb-panel.left .pb-widget-settings--image-carousel .pb-carousel-gallery__add {
 	min-height: 30px;
-	padding: 6px 8px;
+	padding: 14px 8px;
 	font-size: 13px;
 	line-height: 1.2;
 }
@@ -5409,7 +5442,13 @@ body {
 	line-height: 1;
 }
 
-.pb-panel.left .pb-widget-settings--basic-gallery .pb-basic-gallery-picker__add,
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-basic-gallery-picker__add {
+	min-height: 30px;
+	padding: 14px 8px;
+	font-size: 13px;
+	line-height: 1.2;
+}
+
 .pb-panel.left .pb-widget-settings--icon-list .pb-icon-list-add {
 	min-height: 30px;
 	padding: 6px 8px;
@@ -5433,9 +5472,17 @@ body {
 	font-size: 11px;
 }
 
-.pb-panel.left .pb-widget-settings--icon-list .pb-icon-list-repeater__item > summary {
+.pb-panel.left .pb-widget-settings--icon-list .pb-icon-list-repeater__item > .pb-icon-list-repeater__header {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	width: 100%;
 	min-height: 36px;
 	padding: 6px 8px;
+	border: 0;
+	background: #fff;
+	text-align: left;
+	cursor: pointer;
 }
 
 .pb-panel.left .pb-widget-settings--icon-list .pb-icon-list-repeater__body {
@@ -6084,8 +6131,60 @@ body {
 	color: #394862;
 }
 
-.pb-panel.left .pb-layout-settings .pb-label-row.pb-label-row-device > .pb-control-device-wrap,
-.pb-panel.left .pb-grid-settings .pb-label-row.pb-label-row-device > .pb-control-device-wrap {
+.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-label-row.pb-label-row-device {
+	justify-content: space-between;
+}
+
+.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-label-row.pb-label-row-device > .pb-form-label {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-label-row.pb-label-row-device > .pb-control-device-wrap {
+	flex: 0 0 auto;
+	margin-left: auto;
+}
+
+/* These controls sit at the right edge, so their menus must expand inward
+   to remain inside the editor panel. */
+.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-control-device-menu {
+	left: auto;
+	right: 0;
+}
+
+/* Container grid item headers pair their device trigger and unit as one
+   trailing group instead of splitting them across the label row. */
+.pb-panel.left .pb-layout-settings .pb-label-row.pb-label-row-device > .pb-label-tools {
+	flex: 0 0 auto;
+	margin-left: auto;
+	justify-content: flex-end;
+}
+
+.pb-panel.left .pb-layout-settings .pb-label-row.pb-label-row-device > .pb-label-tools .pb-control-unit-wrap {
+	margin-left: 0;
+	padding-left: 4px;
+}
+
+.pb-panel.left .pb-layout-settings .pb-label-row.pb-radius-control-header,
+.pb-panel.left .pb-grid-settings .pb-label-row.pb-radius-control-header {
+	justify-content: space-between;
+}
+
+.pb-panel.left .pb-layout-settings .pb-label-row.pb-radius-control-header > .pb-form-label,
+.pb-panel.left .pb-grid-settings .pb-label-row.pb-radius-control-header > .pb-form-label {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.pb-panel.left .pb-layout-settings .pb-label-row.pb-radius-control-header > .pb-label-tools,
+.pb-panel.left .pb-grid-settings .pb-label-row.pb-radius-control-header > .pb-label-tools {
+	flex: 0 0 auto;
+	margin-left: auto;
+	justify-content: flex-end;
+}
+
+.pb-panel.left .pb-layout-settings .pb-label-row.pb-radius-control-header > .pb-label-tools > .pb-mini-unit,
+.pb-panel.left .pb-grid-settings .pb-label-row.pb-radius-control-header > .pb-label-tools > .pb-mini-unit {
 	margin-left: 0;
 }
 
@@ -6158,9 +6257,14 @@ body {
 .pb-panel.left .pb-layout-settings .pb-spacing-control-group .pb-label-row.pb-label-row-device {
 	display: flex;
 	width: 100%;
-	justify-content: flex-start;
+	justify-content: space-between;
 	margin-bottom: 6px;
 	gap: 6px;
+}
+
+.pb-panel.left .pb-layout-settings .pb-spacing-control-group .pb-label-row.pb-label-row-device > .pb-form-label {
+	flex: 1 1 auto;
+	min-width: 0;
 }
 
 .pb-panel.left .pb-layout-settings .pb-spacing-control-group .pb-label-tools {
@@ -6191,17 +6295,20 @@ body {
 	box-shadow: 0 0 0 2px rgba(91, 108, 255, 0.12);
 }
 
-.pb-panel.left .pb-layout-settings .pb-four-sides-with-link {
+.pb-panel.left .pb-layout-settings .pb-four-sides-with-link,
+.pb-panel.left .pb-grid-settings .pb-four-sides-with-link {
 	grid-template-columns: repeat(4, minmax(0, 1fr)) 28px;
 	gap: 0;
 	align-items: start;
 }
 
-.pb-panel.left .pb-layout-settings .pb-four-sides-with-link .pb-side-input {
+.pb-panel.left .pb-layout-settings .pb-four-sides-with-link .pb-side-input,
+.pb-panel.left .pb-grid-settings .pb-four-sides-with-link .pb-side-input {
 	gap: 4px;
 }
 
-.pb-panel.left .pb-layout-settings .pb-four-sides-with-link .pb-side-input .pb-input {
+.pb-panel.left .pb-layout-settings .pb-four-sides-with-link .pb-side-input .pb-input,
+.pb-panel.left .pb-grid-settings .pb-four-sides-with-link .pb-side-input .pb-input {
 	height: 28px;
 	min-height: 28px;
 	padding: 3px 4px;
@@ -6210,22 +6317,26 @@ body {
 	border-right-width: 0;
 }
 
-.pb-panel.left .pb-layout-settings .pb-four-sides-with-link .pb-side-input:first-child .pb-input {
+.pb-panel.left .pb-layout-settings .pb-four-sides-with-link .pb-side-input:first-child .pb-input,
+.pb-panel.left .pb-grid-settings .pb-four-sides-with-link .pb-side-input:first-child .pb-input {
 	border-radius: 4px 0 0 4px;
 }
 
-.pb-panel.left .pb-layout-settings .pb-four-sides-with-link .pb-side-input span {
+.pb-panel.left .pb-layout-settings .pb-four-sides-with-link .pb-side-input span,
+.pb-panel.left .pb-grid-settings .pb-four-sides-with-link .pb-side-input span {
 	font-size: 9px;
 	line-height: 1.25;
 }
 
-.pb-panel.left .pb-layout-settings .pb-side-link-cell {
+.pb-panel.left .pb-layout-settings .pb-side-link-cell,
+.pb-panel.left .pb-grid-settings .pb-side-link-cell {
 	display: flex;
 	align-items: flex-start;
 	justify-content: stretch;
 }
 
-.pb-panel.left .pb-layout-settings .pb-side-link-cell .pb-link-btn {
+.pb-panel.left .pb-layout-settings .pb-side-link-cell .pb-link-btn,
+.pb-panel.left .pb-grid-settings .pb-side-link-cell .pb-link-btn {
 	width: 28px;
 	min-width: 28px;
 	height: 28px;
@@ -6599,6 +6710,64 @@ body {
 	font-weight: 600;
 }
 
+/* ChoiceButtons is a small runtime subcomponent. Its controls do not inherit
+   the SFC scoped style, so style the live panel controls here for every widget. */
+.pb-panel.left .pb-widget-advanced-controls .pb-advanced-control-head {
+	min-height: 28px;
+	justify-content: flex-start;
+	gap: 6px;
+	margin-bottom: 6px;
+}
+
+.pb-panel.left .pb-widget-advanced-controls .pb-advanced-control-head > span {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.pb-panel.left .pb-widget-advanced-controls .pb-advanced-choice-buttons {
+	display: inline-flex;
+	align-items: center;
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-widget-advanced-controls .pb-advanced-choice-buttons button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	min-width: 30px;
+	height: 28px;
+	margin: 0;
+	padding: 0;
+	appearance: none;
+	border: 1px solid #cfd6e3;
+	border-right: 0;
+	border-radius: 0;
+	background: #ffffff;
+	color: #526178;
+	box-shadow: none;
+	font: inherit;
+	font-size: 10px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.pb-panel.left .pb-widget-advanced-controls .pb-advanced-choice-buttons button:first-child {
+	border-radius: 5px 0 0 5px;
+}
+
+.pb-panel.left .pb-widget-advanced-controls .pb-advanced-choice-buttons button:last-child {
+	border-right: 1px solid #cfd6e3;
+	border-radius: 0 5px 5px 0;
+}
+
+.pb-panel.left .pb-widget-advanced-controls .pb-advanced-choice-buttons button:hover,
+.pb-panel.left .pb-widget-advanced-controls .pb-advanced-choice-buttons button.active {
+	border-color: #aebdf7;
+	background: #eaf0ff;
+	color: #3348b8;
+}
+
 /* Image Box settings: follow the established Accordion panel rhythm. */
 .pb-panel.left .pb-image-box-settings {
 	width: 100%;
@@ -6634,22 +6803,21 @@ body {
 	margin-bottom: 0;
 }
 
-.pb-image-box-dynamic-field {
+.pb-image-box-custom-resolution {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) 34px;
-	align-items: start;
-	width: 100%;
-	min-width: 0;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 8px;
+	margin: -4px 0 14px;
 }
 
-.pb-image-box-dynamic-field > .pb-input,
-.pb-image-box-dynamic-field > .pb-textarea {
-	min-width: 0;
-	border-radius: 7px 0 0 7px;
+.pb-image-box-custom-resolution .pb-form-note {
+	grid-column: 1 / -1;
 }
 
-.pb-image-box-dynamic-field > .pb-dynamic-tag-control {
-	align-self: stretch;
+.pb-image-box-custom-resolution label > span {
+	display: block;
+	margin-bottom: 4px;
+	font-size: 11px;
 }
 
 .pb-image-box-choice-row {
@@ -6703,4 +6871,1380 @@ body {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 10px;
+}
+
+/* Direct responsive controls in these panels must use the same trailing edge
+   as every other editor control, otherwise an inward-opening popover clips. */
+.pb-panel.left :is(.pb-widget-settings--image-box, .pb-widget-settings--accordion) .pb-label-row.pb-label-row-device {
+	justify-content: space-between;
+}
+
+.pb-panel.left :is(.pb-widget-settings--image-box, .pb-widget-settings--accordion) .pb-label-row.pb-label-row-device > .pb-form-label {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.pb-panel.left :is(.pb-widget-settings--image-box, .pb-widget-settings--accordion) .pb-label-row.pb-label-row-device > .pb-control-device-wrap {
+	flex: 0 0 auto;
+	margin-left: auto;
+}
+
+/* One borderless responsive trigger with a comfortable hit area is used across every editor control. */
+.pb-panel.left .pb-control-device-btn {
+	width: 28px !important;
+	height: 28px !important;
+	min-width: 28px !important;
+	padding: 6px !important;
+	border: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+}
+
+.pb-panel.left .pb-control-device-btn:hover,
+.pb-panel.left .pb-control-device-btn[aria-expanded="true"] {
+	background: #eef3ff !important;
+	color: #243047;
+}
+
+.pb-panel.left .pb-control-device-btn:focus-visible {
+	outline: 2px solid #9eb7ef;
+	outline-offset: 2px;
+}
+
+.pb-panel.left .pb-control-device-menu {
+	left: auto;
+	right: 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-dimension-control .pb-label-tools,
+.pb-panel.left .pb-tabs-settings .pb-tabs-box-control .pb-label-tools {
+	flex: 0 0 auto;
+	margin-left: auto;
+	justify-content: flex-end;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-typography-trigger-row {
+	min-height: 32px;
+	font-size: 12px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-typography-trigger {
+	width: 30px;
+	height: 30px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-typography-popover {
+	padding: 10px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-typography-popover-head {
+	margin-bottom: 8px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-typography-select-field {
+	grid-template-columns: minmax(0, 1fr) 118px;
+	margin-bottom: 8px;
+}
+
+/* Tabs mirrors Elementor's compact repeater: the selected item expands in its
+   own card, while every other item stays a single, scan-friendly row. */
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-row {
+	display: block;
+	grid-template-columns: none;
+	overflow: hidden;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-header {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 40px 40px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-main {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-disclosure {
+	flex: 0 0 auto;
+	font-size: 10px;
+	transition: transform 160ms ease;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-row.expanded .pb-tabs-item-disclosure {
+	transform: rotate(180deg);
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-fields {
+	padding: 14px 12px 4px;
+	border: 0;
+	border-top: 1px solid #dbe3f2;
+	border-radius: 0;
+	background: #fbfcff;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-fields .pb-form-group:last-child {
+	margin-bottom: 10px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-fields .pb-form-label {
+	font-size: 13px;
+	line-height: 1.35;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-fields .pb-input {
+	min-height: 34px;
+	padding: 6px 10px;
+	font-size: 13px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-action {
+	font-size: 13px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-control .pb-label-row {
+	min-height: 34px;
+	margin-bottom: 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-actions {
+	display: inline-flex;
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-picker-btn,
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-clear-btn {
+	width: 34px;
+	height: 32px;
+	border: 1px solid #d4ddee;
+	border-radius: 0;
+	background: #fff;
+	color: #526178;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-picker-btn {
+	border-radius: 6px 0 0 6px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-clear-btn {
+	border-left: 0;
+	border-radius: 0 6px 6px 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-picker-btn:hover,
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-clear-btn:not(:disabled):hover {
+	border-color: #aebdf7;
+	background: #eef3ff;
+	color: #4154d9;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-clear-btn:disabled {
+	color: #aeb8c9;
+	cursor: not-allowed;
+}
+
+/* Icon-only choices remain opposite their label, matching Elementor's panel
+   rhythm without shrinking the target below a comfortable click area. */
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-control .pb-label-row {
+	min-height: 36px;
+	margin-bottom: 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-control .pb-form-label {
+	flex: 0 1 auto;
+	min-width: 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-control .pb-tabs-control-label {
+	display: inline-flex;
+	min-width: 0;
+	align-items: center;
+	gap: 6px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-control .pb-seg-group {
+	flex: 0 0 auto;
+	margin-left: auto;
+	gap: 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-control .pb-seg-btn {
+	width: 36px;
+	height: 32px;
+	border-radius: 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-control .pb-seg-btn:first-child {
+	border-radius: 6px 0 0 6px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-control .pb-seg-btn:last-child {
+	border-radius: 0 6px 6px 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-control .pb-label-tools {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 5px;
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-mode-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 32px;
+	padding: 0;
+	border: 1px solid #d4ddee;
+	border-right: 0;
+	border-radius: 0;
+	background: #fff;
+	color: #526178;
+	font-size: 13px;
+	cursor: pointer;
+}
+
+/* Tabs panel parity pass: these rules are deliberately global because the
+   compact controls are rendered by child SFCs and cannot inherit a parent's
+   scoped selectors. Keep this block Tabs-only so other widgets are unchanged. */
+.pb-panel.left .pb-tabs-settings {
+	font-size: 12px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-collapsible {
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-collapsible summary {
+	padding-bottom: 9px;
+	font-size: 13px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-collapsible-body,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls > .pb-collapsible[open] > .pb-collapsible-body {
+	padding: 0 0 8px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-form-group,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-field,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-two-fields > label,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-four-fields > label {
+	margin-bottom: 16px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-form-label,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-control-head,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-field,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-two-fields > label,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-four-fields > label {
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-input:not(textarea),
+.pb-panel.left .pb-tabs-settings .pb-select,
+.pb-panel.left .pb-tabs-settings .pb-mini-unit {
+	height: 30px;
+	min-height: 30px;
+	padding: 4px 8px;
+	border-radius: 5px;
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-tabs-settings input[type="number"] {
+	appearance: auto;
+	-moz-appearance: auto;
+}
+
+.pb-panel.left .pb-tabs-settings input[type="number"]::-webkit-inner-spin-button,
+.pb-panel.left .pb-tabs-settings input[type="number"]::-webkit-outer-spin-button {
+	margin: 0;
+	-webkit-appearance: auto;
+	opacity: 0;
+}
+
+.pb-panel.left .pb-tabs-settings input[type="number"]:hover::-webkit-inner-spin-button,
+.pb-panel.left .pb-tabs-settings input[type="number"]:hover::-webkit-outer-spin-button,
+.pb-panel.left .pb-tabs-settings input[type="number"]:focus::-webkit-inner-spin-button,
+.pb-panel.left .pb-tabs-settings input[type="number"]:focus::-webkit-outer-spin-button {
+	opacity: 1;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-control-device-btn {
+	width: 24px !important;
+	height: 24px !important;
+	min-width: 24px !important;
+	padding: 5px !important;
+	font-size: 10px !important;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-control-device-menu {
+	top: calc(100% + 4px);
+	left: auto;
+	right: 0;
+	width: 138px;
+	min-width: 138px;
+	max-width: 138px;
+	padding: 4px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-control-device-item {
+	height: 27px;
+	gap: 6px;
+	padding: 0 7px;
+	font-size: 10px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-control-device-item i {
+	width: 12px;
+	font-size: 10px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-control .pb-label-row {
+	min-height: 30px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-control .pb-seg-btn,
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-mode-btn {
+	width: 32px;
+	height: 30px;
+	min-width: 32px;
+	padding: 0;
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-dimension-control .pb-label-row,
+.pb-panel.left .pb-tabs-settings .pb-tabs-box-control .pb-label-row {
+	min-height: 30px;
+	margin-bottom: 7px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-dimension-control .pb-label-tools,
+.pb-panel.left .pb-tabs-settings .pb-tabs-box-control .pb-label-tools {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-dimension-control .pb-mini-unit,
+.pb-panel.left .pb-tabs-settings .pb-tabs-box-control .pb-mini-unit,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-control-tools .pb-mini-unit {
+	width: 52px;
+	min-width: 52px;
+	padding: 3px 20px 3px 7px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-dimension-control .pb-range-value-row,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-dimension-control .pb-range-value-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 68px;
+	gap: 8px;
+	width: min(100%, 300px);
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-dimension-control .pb-input-compact,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-dimension-control .pb-input-compact {
+	width: 68px;
+	min-width: 68px;
+	text-align: center;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-box-control .pb-four-sides-with-link,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-edge-fields {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr)) 26px;
+	gap: 0;
+	align-items: start;
+	width: min(100%, 330px);
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-box-control .pb-side-input,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-edge-fields label {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+	align-items: center;
+	gap: 3px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-box-control .pb-side-input .pb-input,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-edge-fields .pb-input {
+	width: 100%;
+	min-width: 0;
+	height: 30px;
+	padding: 3px;
+	border-radius: 0;
+	border-right-width: 0;
+	font-size: 11px;
+	text-align: center;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-box-control .pb-side-input:first-child .pb-input,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-edge-fields label:first-child .pb-input {
+	border-radius: 5px 0 0 5px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-box-control .pb-side-input span,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-edge-fields label span {
+	font-size: 9px;
+	line-height: 1.25;
+	text-align: center;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-box-control .pb-side-link-cell,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-edge-fields > .pb-link-btn {
+	display: flex;
+	align-items: center;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-box-control .pb-link-btn,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-edge-fields > .pb-link-btn {
+	width: 26px;
+	min-width: 26px;
+	height: 30px;
+	min-height: 30px;
+	padding: 0;
+	border-radius: 0 5px 5px 0;
+	font-size: 10px;
+	line-height: 1;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-box-control .pb-link-btn > i,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-edge-fields > .pb-link-btn > i {
+	display: block;
+	line-height: 1;
+	transform: translateY(1px);
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-color-control,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-field:has(.pb-coloris-input),
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-two-fields > label:has(.pb-coloris-input) {
+	display: flex;
+	min-height: 30px;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-color-control > .pb-form-label,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-field:has(.pb-coloris-input) > span,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-two-fields > label:has(.pb-coloris-input) > span {
+	margin: 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-color-control .pb-color-row,
+.pb-panel.left .pb-tabs-settings .pb-tabs-color-control > .clr-field,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls :is(.pb-advanced-field, .pb-advanced-two-fields > label):has(.pb-coloris-input) > .clr-field {
+	width: 36px;
+	min-width: 36px;
+	height: 30px;
+	flex: 0 0 36px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-color-control .clr-field,
+.pb-panel.left .pb-tabs-settings .pb-tabs-color-control .clr-field .pb-coloris-input,
+.pb-panel.left .pb-tabs-settings .pb-tabs-color-control .pb-color-row > .pb-coloris-input,
+.pb-panel.left .pb-tabs-settings .pb-tabs-color-control > .pb-coloris-input,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls :is(.pb-advanced-field, .pb-advanced-two-fields > label):has(.pb-coloris-input) > .clr-field .pb-coloris-input,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls :is(.pb-advanced-field, .pb-advanced-two-fields > label):has(.pb-coloris-input) > .pb-coloris-input {
+	width: 36px;
+	min-width: 36px;
+	height: 30px;
+	padding: 0;
+	color: transparent;
+	text-indent: -9999px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-color-control .clr-field button,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls :is(.pb-advanced-field, .pb-advanced-two-fields > label):has(.pb-coloris-input) > .clr-field button {
+	width: 36px;
+	height: 30px;
+	border: 1px solid #cfd6e3;
+	border-radius: 5px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-color-control .clr-field:focus-within,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .clr-field:focus-within {
+	outline: 2px solid #9eb7ef;
+	outline-offset: 1px;
+	border-radius: 5px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-two-fields,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-four-fields {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-state-tabs,
+.pb-panel.left .pb-tabs-settings .pb-tabs-style-state {
+	margin-bottom: 18px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-background-control > .pb-form-group {
+	margin-bottom: 18px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-editor {
+	display: block;
+	width: 100%;
+	margin: 0 0 16px;
+	border: 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-editor > summary {
+	display: flex;
+	width: 100%;
+	min-height: 30px;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	list-style: none;
+	color: #344054;
+	font-size: 11px;
+	cursor: pointer;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-editor > summary::-webkit-details-marker {
+	display: none;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-inline-editor .pb-tabs-edit-button {
+	display: inline-flex;
+	min-width: 42px;
+	height: 28px;
+	align-items: center;
+	justify-content: center;
+	padding: 0 8px;
+	border: 1px solid #cfd6e3;
+	border-radius: 5px;
+	background: #fff;
+	color: #526178;
+	font-size: 10px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-control-head {
+	min-height: 28px;
+	justify-content: flex-start;
+	gap: 5px;
+	margin-bottom: 6px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-control-head > span {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-choice-buttons {
+	display: inline-flex;
+	align-items: center;
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-choice-buttons button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	min-width: 30px;
+	height: 28px;
+	margin: 0;
+	padding: 0;
+	border: 1px solid #cfd6e3;
+	border-right: 0;
+	border-radius: 0;
+	background: #fff;
+	color: #526178;
+	box-shadow: none;
+	font: inherit;
+	font-size: 10px;
+	cursor: pointer;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-choice-buttons button:first-child {
+	border-radius: 5px 0 0 5px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-choice-buttons button:last-child {
+	border-right: 1px solid #cfd6e3;
+	border-radius: 0 5px 5px 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-choice-buttons button:hover,
+.pb-panel.left .pb-tabs-settings .pb-widget-advanced-controls .pb-advanced-choice-buttons button.active {
+	border-color: #aebdf7;
+	background: #eaf0ff;
+	color: #3348b8;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-header {
+	grid-template-columns: minmax(0, 1fr) 36px 36px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-main,
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-action {
+	min-height: 38px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-main {
+	padding: 8px 11px;
+	font-size: 12px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-action {
+	width: 36px;
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-fields {
+	padding: 10px 10px 2px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-fields .pb-form-label,
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-fields .pb-input {
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-fields .pb-input {
+	height: 30px;
+	min-height: 30px;
+	padding: 4px 8px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-mode-btn:first-child {
+	border-radius: 6px 0 0 6px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-mode-btn:last-child {
+	border-right: 1px solid #d4ddee;
+	border-radius: 0 6px 6px 0;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-mode-btn:hover,
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-mode-btn.active {
+	background: #eef3ff;
+	color: #4154d9;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-icon-mode-btn img {
+	width: 15px;
+	height: 15px;
+	object-fit: contain;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-dynamic-field {
+	position: relative;
+	display: flex;
+	width: 100%;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-dynamic-field > .pb-input {
+	min-width: 0;
+	flex: 1 1 auto;
+	border-radius: 6px 0 0 6px;
+}
+
+.pb-panel.left .pb-tabs-settings textarea.pb-input.pb-advanced-css {
+	height: 180px;
+	min-height: 180px;
+	padding: 9px 10px;
+	font-size: 11px;
+	line-height: 1.5;
+	resize: vertical;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-help-link {
+	margin: 2px 0 0;
+	border-top: 1px solid #e6ebf4;
+}
+
+/* Accordion parity: retain Accordion-specific controls while using the compact
+   panel geometry already approved for Tabs. */
+.pb-panel.left .pb-accordion-settings {
+	font-size: 12px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-collapsible {
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-collapsible summary {
+	padding-bottom: 9px;
+	font-size: 13px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-collapsible-body,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls > .pb-collapsible[open] > .pb-collapsible-body {
+	padding: 0 0 8px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-form-group,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-field,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-two-fields > label,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-four-fields > label {
+	margin-bottom: 16px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-form-label,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-control-head,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-field,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-two-fields > label,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-four-fields > label {
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-input:not(textarea),
+.pb-panel.left .pb-accordion-settings .pb-select,
+.pb-panel.left .pb-accordion-settings .pb-mini-unit {
+	height: 30px;
+	min-height: 30px;
+	padding: 4px 8px;
+	border-radius: 5px;
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-accordion-settings input[type="number"] {
+	appearance: auto;
+	-moz-appearance: auto;
+}
+
+.pb-panel.left .pb-accordion-settings input[type="number"]::-webkit-inner-spin-button,
+.pb-panel.left .pb-accordion-settings input[type="number"]::-webkit-outer-spin-button {
+	margin: 0;
+	-webkit-appearance: auto;
+	opacity: 0;
+}
+
+.pb-panel.left .pb-accordion-settings input[type="number"]:hover::-webkit-inner-spin-button,
+.pb-panel.left .pb-accordion-settings input[type="number"]:hover::-webkit-outer-spin-button,
+.pb-panel.left .pb-accordion-settings input[type="number"]:focus::-webkit-inner-spin-button,
+.pb-panel.left .pb-accordion-settings input[type="number"]:focus::-webkit-outer-spin-button {
+	opacity: 1;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-items-control > .pb-label-row {
+	margin-bottom: 8px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-items-list {
+	gap: 10px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-row {
+	display: block;
+	grid-template-columns: none;
+	border-radius: 0;
+	overflow: hidden;
+	box-shadow: none;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-row.active {
+	border-color: #aebdf7;
+	box-shadow: 0 0 0 1px rgba(91, 108, 255, .08);
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-header {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 36px 36px;
+	cursor: grab;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-main,
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-action {
+	min-height: 38px;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	color: #526178;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-main {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 8px 11px;
+	color: var(--pb-text);
+	font-size: 12px;
+	text-align: left;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-action {
+	width: 36px;
+	border-left: 1px solid var(--pb-border);
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-action:hover:not(:disabled) {
+	background: #eef3ff;
+	color: #4154d9;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-action:disabled {
+	opacity: .42;
+	cursor: not-allowed;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-disclosure {
+	flex: 0 0 auto;
+	font-size: 10px;
+	transition: transform 160ms ease;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-row.expanded .pb-accordion-item-disclosure {
+	transform: rotate(180deg);
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-fields {
+	margin: 0;
+	padding: 10px 10px 2px;
+	border: 0;
+	border-top: 1px solid #dbe3f2;
+	border-radius: 0;
+	background: #fbfcff;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-fields .pb-form-group:last-child {
+	margin-bottom: 10px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-fields .pb-form-label,
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-fields .pb-input {
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-add-btn {
+	display: inline-flex;
+	min-height: 30px;
+	align-items: center;
+	gap: 7px;
+	margin-top: 12px;
+	padding: 5px 10px;
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-subsection-title {
+	margin: 4px 0 14px;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-inline-control .pb-label-row {
+	min-height: 30px;
+	margin-bottom: 0;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-control-label {
+	display: inline-flex;
+	min-width: 0;
+	align-items: center;
+	gap: 6px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-inline-control .pb-seg-group,
+.pb-panel.left .pb-accordion-settings .pb-accordion-icon-actions {
+	display: inline-flex;
+	flex: 0 0 auto;
+	margin-left: auto;
+	gap: 0;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-inline-control .pb-seg-btn,
+.pb-panel.left .pb-accordion-settings .pb-accordion-icon-mode-btn {
+	display: inline-flex;
+	width: 32px;
+	min-width: 32px;
+	height: 30px;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border: 1px solid #d4ddee;
+	border-right: 0;
+	border-radius: 0;
+	background: #fff;
+	color: #526178;
+	font-size: 11px;
+	cursor: pointer;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-inline-control .pb-seg-btn:first-child,
+.pb-panel.left .pb-accordion-settings .pb-accordion-icon-mode-btn:first-child {
+	border-radius: 5px 0 0 5px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-inline-control .pb-seg-btn:last-child,
+.pb-panel.left .pb-accordion-settings .pb-accordion-icon-mode-btn:last-child {
+	border-right: 1px solid #d4ddee;
+	border-radius: 0 5px 5px 0;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-inline-control .pb-seg-btn:hover,
+.pb-panel.left .pb-accordion-settings .pb-accordion-inline-control .pb-seg-btn.active,
+.pb-panel.left .pb-accordion-settings .pb-accordion-icon-mode-btn:hover,
+.pb-panel.left .pb-accordion-settings .pb-accordion-icon-mode-btn.active {
+	border-color: #aebdf7;
+	background: #eaf0ff;
+	color: #3348b8;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-control-device-btn {
+	width: 24px !important;
+	min-width: 24px !important;
+	height: 24px !important;
+	padding: 5px !important;
+	font-size: 10px !important;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-control-device-menu {
+	top: calc(100% + 4px);
+	left: auto;
+	right: 0;
+	width: 138px;
+	min-width: 138px;
+	max-width: 138px;
+	padding: 4px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-control-device-item {
+	height: 27px;
+	gap: 6px;
+	padding: 0 7px;
+	font-size: 10px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-control-device-item i {
+	width: 12px;
+	font-size: 10px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-dimension-control .pb-label-row,
+.pb-panel.left .pb-accordion-settings .pb-accordion-box-control .pb-label-row {
+	min-height: 30px;
+	margin-bottom: 7px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-dimension-control .pb-label-tools,
+.pb-panel.left .pb-accordion-settings .pb-accordion-box-control .pb-label-tools {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-dimension-control .pb-mini-unit,
+.pb-panel.left .pb-accordion-settings .pb-accordion-box-control .pb-mini-unit,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-control-tools .pb-mini-unit {
+	width: 52px;
+	min-width: 52px;
+	padding: 3px 20px 3px 7px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-dimension-control .pb-range-value-row,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-dimension-control .pb-range-value-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 68px;
+	gap: 8px;
+	width: min(100%, 300px);
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-dimension-control .pb-input-compact,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-dimension-control .pb-input-compact {
+	width: 68px;
+	min-width: 68px;
+	text-align: center;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-box-control .pb-four-sides-with-link,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-edge-fields {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr)) 26px;
+	gap: 0;
+	align-items: start;
+	width: min(100%, 330px);
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-box-control .pb-side-input,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-edge-fields label {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+	align-items: center;
+	gap: 3px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-box-control .pb-side-input .pb-input,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-edge-fields .pb-input {
+	width: 100%;
+	min-width: 0;
+	height: 30px;
+	padding: 3px;
+	border-radius: 0;
+	border-right-width: 0;
+	font-size: 11px;
+	text-align: center;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-box-control .pb-side-input:first-child .pb-input,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-edge-fields label:first-child .pb-input {
+	border-radius: 5px 0 0 5px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-box-control .pb-side-input span,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-edge-fields label span {
+	font-size: 9px;
+	line-height: 1.25;
+	text-align: center;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-box-control .pb-side-link-cell,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-edge-fields > .pb-link-btn {
+	display: flex;
+	align-items: center;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-box-control .pb-link-btn,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-edge-fields > .pb-link-btn {
+	width: 26px;
+	min-width: 26px;
+	height: 30px;
+	min-height: 30px;
+	padding: 0;
+	border-radius: 0 5px 5px 0;
+	font-size: 10px;
+	line-height: 1;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-box-control .pb-link-btn > i,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-edge-fields > .pb-link-btn > i {
+	display: block;
+	line-height: 1;
+	transform: translateY(1px);
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-color-control,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-field:has(.pb-coloris-input),
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-two-fields > label:has(.pb-coloris-input) {
+	display: flex;
+	min-height: 30px;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-color-control > .pb-form-label,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-field:has(.pb-coloris-input) > span,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-two-fields > label:has(.pb-coloris-input) > span {
+	margin: 0;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-color-control .pb-color-row,
+.pb-panel.left .pb-accordion-settings .pb-accordion-color-control > .clr-field,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls :is(.pb-advanced-field, .pb-advanced-two-fields > label):has(.pb-coloris-input) > .clr-field {
+	width: 36px;
+	min-width: 36px;
+	height: 30px;
+	flex: 0 0 36px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-color-control .clr-field,
+.pb-panel.left .pb-accordion-settings .pb-accordion-color-control .clr-field .pb-coloris-input,
+.pb-panel.left .pb-accordion-settings .pb-accordion-color-control .pb-color-row > .pb-coloris-input,
+.pb-panel.left .pb-accordion-settings .pb-accordion-color-control > .pb-coloris-input,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls :is(.pb-advanced-field, .pb-advanced-two-fields > label):has(.pb-coloris-input) > .clr-field .pb-coloris-input,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls :is(.pb-advanced-field, .pb-advanced-two-fields > label):has(.pb-coloris-input) > .pb-coloris-input {
+	width: 36px;
+	min-width: 36px;
+	height: 30px;
+	padding: 0;
+	color: transparent;
+	text-indent: -9999px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-color-control .clr-field button,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls :is(.pb-advanced-field, .pb-advanced-two-fields > label):has(.pb-coloris-input) > .clr-field button {
+	width: 36px;
+	height: 30px;
+	border: 1px solid #cfd6e3;
+	border-radius: 5px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-state-tabs {
+	margin: 4px 0 18px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-background-control > .pb-form-group {
+	margin-bottom: 18px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-inline-editor {
+	display: block;
+	width: 100%;
+	margin: 0 0 16px;
+	border: 0;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-inline-editor > summary {
+	display: flex;
+	width: 100%;
+	min-height: 30px;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 0;
+	list-style: none;
+	color: #344054;
+	font-size: 11px;
+	cursor: pointer;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-inline-editor > summary::-webkit-details-marker {
+	display: none;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-edit-button {
+	display: inline-flex;
+	min-width: 42px;
+	height: 28px;
+	align-items: center;
+	justify-content: center;
+	padding: 0 8px;
+	border: 1px solid #cfd6e3;
+	border-radius: 5px;
+	background: #fff;
+	color: #526178;
+	font-size: 10px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-inline-editor__body {
+	margin-top: 9px;
+	padding: 10px;
+	border: 1px solid #e2e7ef;
+	border-radius: 5px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-shadow-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 0;
+	margin: 0;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-shadow-grid label {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	margin: 0 0 12px;
+	color: #526178;
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-text-effect-trigger-row,
+.pb-panel.left .pb-accordion-settings .pb-typography-trigger-row {
+	min-height: 30px;
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-text-effect-trigger,
+.pb-panel.left .pb-accordion-settings .pb-typography-trigger {
+	width: 30px;
+	height: 28px;
+	font-size: 10px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-two-fields,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-four-fields,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-transform-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 0;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-control-head {
+	min-height: 28px;
+	justify-content: flex-start;
+	gap: 5px;
+	margin-bottom: 6px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-control-head > span {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-choice-buttons {
+	display: inline-flex;
+	align-items: center;
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-choice-buttons button {
+	display: inline-flex;
+	width: 30px;
+	min-width: 30px;
+	height: 28px;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: 0;
+	border: 1px solid #cfd6e3;
+	border-right: 0;
+	border-radius: 0;
+	background: #fff;
+	color: #526178;
+	font-size: 10px;
+	cursor: pointer;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-choice-buttons button:first-child {
+	border-radius: 5px 0 0 5px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-choice-buttons button:last-child {
+	border-right: 1px solid #cfd6e3;
+	border-radius: 0 5px 5px 0;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-choice-buttons button:hover,
+.pb-panel.left .pb-accordion-settings .pb-widget-advanced-controls .pb-advanced-choice-buttons button.active {
+	border-color: #aebdf7;
+	background: #eaf0ff;
+	color: #3348b8;
+}
+
+.pb-panel.left .pb-accordion-settings textarea.pb-input.pb-advanced-css {
+	height: 180px;
+	min-height: 180px;
+	padding: 9px 10px;
+	font-size: 11px;
+	line-height: 1.5;
+	resize: vertical;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-help-link {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 2px 0 0;
+	padding: 14px 0 2px;
+	border-top: 1px solid #e6ebf4;
+	color: #697386;
+	font-size: 11px;
+	text-decoration: none;
+}
+
+/* Keep the recently-added General widgets at Elementor panel density.
+   These controls are shared runtime templates, so they need one live-panel
+   baseline instead of relying on scoped styles from an individual widget. */
+.pb-panel.left :is(.pb-widget-settings--icon-list, .pb-widget-settings--basic-gallery, .pb-widget-settings--image-carousel, .pb-widget-settings--image-box, .pb-widget-settings--icon-box) .pb-form-label {
+	margin-bottom: 6px;
+	font-size: 11px;
+	line-height: 1.3;
+}
+
+.pb-panel.left :is(.pb-widget-settings--icon-list, .pb-widget-settings--basic-gallery, .pb-widget-settings--image-carousel, .pb-widget-settings--image-box, .pb-widget-settings--icon-box) :is(.pb-input, .pb-select, .pb-textarea, .pb-mini-unit) {
+	min-height: 30px;
+	padding: 5px 8px;
+	font-size: 11px;
+	border-radius: 5px;
+}
+
+.pb-panel.left :is(.pb-widget-settings--icon-list, .pb-widget-settings--basic-gallery, .pb-widget-settings--image-carousel, .pb-widget-settings--image-box, .pb-widget-settings--icon-box) .pb-textarea {
+	min-height: 78px;
+	line-height: 1.45;
+}
+
+/* BoxShadowControl is an inline runtime component. Give every widget the
+   same compact, left-aligned editor that Tabs and Accordion already use. */
+.pb-panel.left .pb-widget-settings :is(.pb-tabs-inline-editor, .pb-accordion-inline-editor) {
+	display: block;
+	width: 100%;
+	margin: 0 0 14px;
+	border: 0;
+}
+
+.pb-panel.left .pb-widget-settings :is(.pb-tabs-inline-editor, .pb-accordion-inline-editor) > summary {
+	display: flex;
+	width: 100%;
+	min-height: 30px;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 0;
+	list-style: none;
+	color: #344054;
+	font-size: 11px;
+	font-weight: 500;
+	text-align: left;
+	cursor: pointer;
+}
+
+.pb-panel.left .pb-widget-settings :is(.pb-tabs-inline-editor, .pb-accordion-inline-editor) > summary::-webkit-details-marker {
+	display: none;
+}
+
+.pb-panel.left .pb-widget-settings :is(.pb-tabs-inline-editor, .pb-accordion-inline-editor) > summary > span:first-child {
+	flex: 1 1 auto;
+	min-width: 0;
+	text-align: left;
+}
+
+.pb-panel.left .pb-widget-settings :is(.pb-tabs-edit-button, .pb-accordion-edit-button) {
+	display: inline-flex;
+	min-width: 42px;
+	height: 28px;
+	align-items: center;
+	justify-content: center;
+	padding: 0 8px;
+	border: 1px solid #cfd6e3;
+	border-radius: 5px;
+	background: #fff;
+	color: #526178;
+	font-size: 10px;
+	font-weight: 500;
+}
+
+.pb-panel.left .pb-widget-settings :is(.pb-tabs-inline-editor__body, .pb-accordion-inline-editor__body) {
+	margin-top: 9px;
+	padding: 10px;
+	border: 1px solid #e2e7ef;
+	border-radius: 5px;
+}
+
+.pb-panel.left .pb-widget-settings :is(.pb-tabs-shadow-grid, .pb-accordion-shadow-grid) {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 0;
+	margin: 0;
+}
+
+.pb-panel.left .pb-widget-settings :is(.pb-tabs-shadow-grid, .pb-accordion-shadow-grid) label {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	margin: 0 0 12px;
+	color: #526178;
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-widget-settings :is(.pb-tabs-shadow-grid, .pb-accordion-shadow-grid) .pb-input {
+	height: 32px;
+	min-height: 32px;
+	padding: 4px 8px;
+	font-size: 12px;
+}
+
+.pb-panel.left .pb-widget-settings :is(.pb-tabs-shadow-grid, .pb-accordion-shadow-grid) label > span {
+	color: #344054;
+	font-weight: 600;
 }

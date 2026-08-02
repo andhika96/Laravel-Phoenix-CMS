@@ -38,9 +38,9 @@ export default {
 	data() { return { resolvedImageUrl: '', imageRenditionRequest: 0 }; },
 	computed: {
 		settings() { return this.item.settings || {}; },
-		rawImageUrl() { return String(this.settings.imageUrl || '').trim(); },
+		rawImageUrl() { return String(this.resolveDynamicValue('imageUrl', this.settings.imageUrl || '')).trim(); },
 		imageUrl() { return this.resolvedImageUrl || this.rawImageUrl; },
-		imageRenditionKey() { return `${this.rawImageUrl}|${String(this.settings.imageResolution || 'full')}`; },
+		imageRenditionKey() { return `${this.rawImageUrl}|${String(this.settings.imageResolution || 'full')}|${Number(this.settings.customImageWidth) || 150}|${Number(this.settings.customImageHeight) || 150}`; },
 		imageAlt() { return String(this.settings.imageAlt || ''); },
 		title() { return String(this.resolveDynamicValue('title', this.settings.title || '')); },
 		description() { return String(this.resolveDynamicValue('description', this.settings.description || '')); },
@@ -62,7 +62,7 @@ export default {
 			return String(this.settings.cssClass || '').split(/\s+/).map((token) => token.replace(/^\.+/, '').replace(/[^a-zA-Z0-9_-]/g, '')).filter(Boolean).join(' ');
 		},
 		safeLinkUrl() {
-			const url = String(this.settings.linkUrl || '').trim();
+			const url = String(this.resolveDynamicValue('linkUrl', this.settings.linkUrl || '')).trim();
 			if (!url) return '';
 			if (/^(https?:|mailto:|tel:)/i.test(url) || url.startsWith('/') || url.startsWith('#')) return url;
 			return '';
@@ -152,7 +152,13 @@ export default {
 			const endpoint = String(window.PAGE_BUILDER_ELEMENTOR_CONTEXT?.imageRenditionUrl || '');
 			if (!sourceUrl || !endpoint || !window.axios) return;
 			try {
-				const response = await window.axios.get(endpoint, { params: { url: sourceUrl, size: this.settings.imageResolution || 'full' } });
+				const size = this.settings.imageResolution || 'full';
+				const params = { url: sourceUrl, size };
+				if (size === 'custom') {
+					params.width = Number(this.settings.customImageWidth) || 150;
+					params.height = Number(this.settings.customImageHeight) || 150;
+				}
+				const response = await window.axios.get(endpoint, { params });
 				if (requestId === this.imageRenditionRequest) this.resolvedImageUrl = String(response.data?.url || sourceUrl);
 			} catch (_) {
 				if (requestId === this.imageRenditionRequest) this.resolvedImageUrl = sourceUrl;

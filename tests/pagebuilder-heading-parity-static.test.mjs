@@ -21,7 +21,6 @@ for (const marker of [
 }
 
 for (const marker of [
-    'editor.dynamicTagControl',
     'editor.linkControl',
     'editor.typographyControl',
     'editor.textStrokeControl',
@@ -33,6 +32,8 @@ for (const marker of [
 ]) {
     assert.ok(settings.includes(marker), `Heading Settings must include ${marker}`);
 }
+
+assert.ok(!settings.includes('editor.dynamicTagControl'), 'Heading Settings must not render Dynamic Tag triggers');
 
 assert.ok(canvas.includes('safeLinkUrl'), 'Heading Canvas must sanitize link URLs');
 assert.ok(canvas.includes('heading-title-link'), 'Heading Canvas must render optional linked headings');

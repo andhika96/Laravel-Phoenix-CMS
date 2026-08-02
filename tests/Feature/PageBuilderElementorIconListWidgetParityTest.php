@@ -46,6 +46,31 @@ class PageBuilderElementorIconListWidgetParityTest extends TestCase
         }
     }
 
+    public function test_icon_list_settings_keep_elementor_compact_choice_and_collapsible_repeater_hierarchy(): void
+    {
+        $settings = $this->widgetSource('Settings.vue');
+
+        foreach ([
+            'pb-icon-list-inline-control',
+            'role="group" aria-label="Layout"',
+            'aria-label="Default"',
+            'aria-label="Inline"',
+            'pb-icon-list-repeater__header',
+            'role="button"',
+            'aria-expanded="isIconListItemOpen(item,index) ? \'true\' : \'false\'"',
+            'pb-icon-list-repeater__disclosure',
+            'aria-label="Duplicate item"',
+            'aria-label="Remove item"',
+            'v-if="isIconListItemOpen(item,index)"',
+            "expandedIconListItemId:null",
+            'toggleIconListItem(item.id,index)',
+            ".pb-icon-list-repeater__disclosure.is-open",
+        ] as $marker) {
+            $this->assertStringContainsString($marker, $settings);
+        }
+        $this->assertStringNotContainsString('<details v-for="(item,index) in node.settings.items"', $settings);
+    }
+
     public function test_icon_list_style_panel_matches_elementor_sections_and_conditionals(): void
     {
         $settings = $this->widgetSource('Settings.vue');
@@ -55,8 +80,8 @@ class PageBuilderElementorIconListWidgetParityTest extends TestCase
         $this->assertStringContainsString('v-if="node.settings.divider"', $settings);
         $this->assertStringContainsString('v-if="node.settings.layout!==\'inline\'"', $settings);
         $this->assertStringContainsString('v-if="node.settings.layout===\'inline\'"', $settings);
-        $this->assertStringContainsString(':show-display-conditions="true"', $settings);
-        $this->assertStringContainsString(':show-cache-settings="true"', $settings);
+		$this->assertStringContainsString(':show-display-conditions="false"', $settings);
+		$this->assertStringContainsString(':show-cache-settings="false"', $settings);
     }
 
     public function test_icon_list_canvas_applies_responsive_layout_divider_icon_and_text_styles(): void

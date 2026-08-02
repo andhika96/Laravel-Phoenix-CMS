@@ -117,6 +117,7 @@ test('Icon List panel keeps its rhythm, responsive controls, and repeater action
 	const deviceRule = css.match(/\.pb-panel\.left\s+\.pb-widget-settings--icon-list\s+\.pb-label-row\.pb-label-row-device\s*>\s*\.pb-control-device-wrap\s*\{([\s\S]*?)\}/);
 	const addButtonRule = css.match(/\.pb-panel\.left\s+\.pb-widget-settings--icon-list\s+\.pb-icon-list-add\s*\{([\s\S]*?)\}/);
 	const actionRule = css.match(/\.pb-panel\.left\s+\.pb-widget-settings--icon-list\s+\.pb-icon-list-repeater__actions\s+button\s*\{([\s\S]*?)\}/);
+	const headerRule = css.match(/\.pb-panel\.left\s+\.pb-widget-settings--icon-list\s+\.pb-icon-list-repeater__item\s*>\s*\.pb-icon-list-repeater__header\s*\{([\s\S]*?)\}/);
 
 	assert.ok(bodyRule, 'Icon List should own its vertical panel rhythm');
 	assert.match(bodyRule[1], /display\s*:\s*grid\s*;/);
@@ -131,4 +132,8 @@ test('Icon List panel keeps its rhythm, responsive controls, and repeater action
 	assert.ok(actionRule, 'Icon List row actions should have a compact widget rule');
 	assert.match(actionRule[1], /width\s*:\s*24px\s*;/);
 	assert.match(actionRule[1], /height\s*:\s*24px\s*;/);
+	assert.ok(headerRule, 'Icon List repeater header should use a custom marker-free flex row');
+	assert.match(headerRule[1], /display\s*:\s*flex\s*;/);
+	assert.match(headerRule[1], /width\s*:\s*100%\s*;/);
+	assert.doesNotMatch(css, /\.pb-widget-settings--icon-list[^{}]*\.pb-icon-list-repeater__item\s*>\s*summary\s*\{/);
 });

@@ -7,12 +7,11 @@
 				<EdgeControl label="Padding" :settings="settings" :keys="edgeKeys('padding')" fallback="0px" :responsive-icon="deviceIcon" />
 				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Width</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('widthMode', 'default')" @change="setResponsiveSetting('widthMode', $event.target.value)"><option value="default">Default</option><option value="full">Full Width</option><option value="inline">Inline</option><option value="custom">Custom</option></select></div>
 				<DimensionControl v-if="effectiveResponsiveValue('widthMode', 'default')==='custom'" label="Custom Width" :settings="settings" :setting-key="responsiveKey('customWidth')" fallback="320px" :responsive-icon="deviceIcon" />
-				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Align Self</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('alignSelf', 'auto')" @change="setResponsiveSetting('alignSelf', $event.target.value)"><option value="auto">Default</option><option value="flex-start">Start</option><option value="center">Center</option><option value="flex-end">End</option><option value="stretch">Stretch</option></select></div>
-				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Order</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('orderMode', 'default')" @change="setResponsiveSetting('orderMode', $event.target.value)"><option value="default">Default</option><option value="start">Start</option><option value="end">End</option><option value="custom">Custom</option></select></div>
+				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Align Self</span><ResponsiveDeviceControl :icon="deviceIcon" /><ChoiceButtons v-if="elementorChoices" :model-value="effectiveResponsiveValue('alignSelf', 'auto')" :options="alignSelfChoices" @update:modelValue="setResponsiveSetting('alignSelf', $event)" /></div><select v-if="!elementorChoices" class="pb-select" :value="effectiveResponsiveValue('alignSelf', 'auto')" @change="setResponsiveSetting('alignSelf', $event.target.value)"><option value="auto">Default</option><option value="flex-start">Start</option><option value="center">Center</option><option value="flex-end">End</option><option value="stretch">Stretch</option></select></div>
+				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Order</span><ResponsiveDeviceControl :icon="deviceIcon" /><ChoiceButtons v-if="elementorChoices" :model-value="effectiveResponsiveValue('orderMode', 'default')" :options="orderChoices" @update:modelValue="setResponsiveSetting('orderMode', $event)" /></div><select v-if="!elementorChoices" class="pb-select" :value="effectiveResponsiveValue('orderMode', 'default')" @change="setResponsiveSetting('orderMode', $event.target.value)"><option value="default">Default</option><option value="start">Start</option><option value="end">End</option><option value="custom">Custom</option></select></div>
 				<div v-if="effectiveResponsiveValue('orderMode', 'default')==='custom'" class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Custom Order</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><input class="pb-input" type="number" :value="effectiveResponsiveValue('order', '')" @input="setResponsiveNumberSetting('order', $event.target.value)"></div>
-				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Size</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('sizeMode', 'none')" @change="setResponsiveSetting('sizeMode', $event.target.value)"><option value="none">None</option><option value="grow">Grow</option><option value="shrink">Shrink</option><option value="custom">Custom</option></select></div>
+				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Size</span><ResponsiveDeviceControl :icon="deviceIcon" /><ChoiceButtons v-if="elementorChoices" :model-value="effectiveResponsiveValue('sizeMode', 'none')" :options="sizeChoices" @update:modelValue="setResponsiveSetting('sizeMode', $event)" /></div><select v-if="!elementorChoices" class="pb-select" :value="effectiveResponsiveValue('sizeMode', 'none')" @change="setResponsiveSetting('sizeMode', $event.target.value)"><option value="none">None</option><option value="grow">Grow</option><option value="shrink">Shrink</option><option value="custom">Custom</option></select></div>
 				<div v-if="effectiveResponsiveValue('sizeMode', 'none')==='custom'" class="pb-advanced-size-fields"><ScalarControl label="Flex Grow" :settings="settings" :setting-key="responsiveKey('flexGrow')" :fallback="0" :min-value="0" :max-value="10" :step-value="0.1" :responsive-icon="deviceIcon" /><ScalarControl label="Flex Shrink" :settings="settings" :setting-key="responsiveKey('flexShrink')" :fallback="1" :min-value="0" :max-value="10" :step-value="0.1" :responsive-icon="deviceIcon" /></div>
-				<div class="pb-advanced-size-fields"><ScalarControl label="Column Span" :settings="settings" :setting-key="responsiveKey('gridColumnSpan')" :fallback="1" :min-value="1" :max-value="12" :step-value="1" :responsive-icon="deviceIcon" /><ScalarControl label="Row Span" :settings="settings" :setting-key="responsiveKey('gridRowSpan')" :fallback="1" :min-value="1" :max-value="12" :step-value="1" :responsive-icon="deviceIcon" /></div>
 				<label class="pb-advanced-field"><span>Position</span><select class="pb-select" v-model="settings.position"><option value="default">Default</option><option value="absolute">Absolute</option><option value="fixed">Fixed</option></select></label>
 				<template v-if="settings.position!=='default'">
 					<div class="pb-advanced-two-fields"><label><span>Horizontal Orientation</span><select class="pb-select" v-model="settings.horizontalOrientation"><option value="left">Left</option><option value="right">Right</option></select></label><DimensionControl label="X Offset" :settings="settings" :setting-key="responsiveKey('positionX')" fallback="0px" allow-negative :responsive-icon="deviceIcon" /></div>
@@ -122,7 +121,7 @@
 			<BoxControl v-if="settings[stateKey('advancedBorderType', borderState)]!=='none'" label="Border Width" :settings="settings" :setting-key="stateKey('advancedBorderWidth', borderState)" fallback="1px" />
 			<label v-if="settings[stateKey('advancedBorderType', borderState)]!=='none'" class="pb-advanced-field"><span>Border Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedBorderColor', borderState)]"></label>
 			<BoxControl label="Border Radius" :settings="settings" :setting-key="responsiveStateKey('advancedBorderRadius', borderState)" fallback="0px" :responsive-icon="deviceIcon" />
-			<label class="pb-advanced-toggle"><span>Box Shadow</span><input type="checkbox" v-model="settings[stateKey('advancedBoxShadowEnabled', borderState)]"></label><div v-if="settings[stateKey('advancedBoxShadowEnabled', borderState)]" class="pb-advanced-two-fields"><label><span>Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedBoxShadowColor', borderState)]"></label><DimensionControl label="Horizontal" :settings="settings" :setting-key="stateKey('advancedBoxShadowX', borderState)" fallback="0px" allow-negative /><DimensionControl label="Vertical" :settings="settings" :setting-key="stateKey('advancedBoxShadowY', borderState)" fallback="4px" allow-negative /><DimensionControl label="Blur" :settings="settings" :setting-key="stateKey('advancedBoxShadowBlur', borderState)" fallback="16px" /><DimensionControl label="Spread" :settings="settings" :setting-key="stateKey('advancedBoxShadowSpread', borderState)" fallback="0px" allow-negative /><label class="pb-advanced-toggle"><span>Outline / Inset</span><input type="checkbox" v-model="settings[stateKey('advancedBoxShadowInset', borderState)]"></label></div>
+			<label class="pb-advanced-toggle"><span>Box Shadow</span><input type="checkbox" v-model="settings[stateKey('advancedBoxShadowEnabled', borderState)]"></label><div v-if="settings[stateKey('advancedBoxShadowEnabled', borderState)]" class="pb-advanced-shadow-fields"><label class="pb-advanced-field"><span>Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedBoxShadowColor', borderState)]"></label><DimensionControl label="Horizontal" :settings="settings" :setting-key="stateKey('advancedBoxShadowX', borderState)" fallback="0px" allow-negative /><DimensionControl label="Vertical" :settings="settings" :setting-key="stateKey('advancedBoxShadowY', borderState)" fallback="4px" allow-negative /><DimensionControl label="Blur" :settings="settings" :setting-key="stateKey('advancedBoxShadowBlur', borderState)" fallback="16px" /><DimensionControl label="Spread" :settings="settings" :setting-key="stateKey('advancedBoxShadowSpread', borderState)" fallback="0px" allow-negative /><label class="pb-advanced-toggle"><span>Outline / Inset</span><input type="checkbox" v-model="settings[stateKey('advancedBoxShadowInset', borderState)]"></label></div>
 			<label v-if="borderState==='hover'" class="pb-advanced-field"><span>Hover Transition Duration</span><input class="pb-input" type="number" min="0" step=".1" v-model.number="settings.advancedBorderHoverDuration"></label>
 		</div></details>
 
@@ -141,6 +140,12 @@ const StateTabs = {
 	props: { modelValue: { type: String, default: 'normal' } },
 	emits: ['update:modelValue'],
 	template: `<div class="pb-state-tabs pb-state-tabs--two"><button type="button" :class="{active:modelValue==='normal'}" @click="$emit('update:modelValue','normal')">Normal</button><button type="button" :class="{active:modelValue==='hover'}" @click="$emit('update:modelValue','hover')">Hover</button></div>`,
+};
+
+const ChoiceButtons = {
+	props: { modelValue: { type: String, default: '' }, options: { type: Array, default: () => [] } },
+	emits: ['update:modelValue'],
+	template: `<div class="pb-advanced-choice-buttons"><button v-for="option in options" :key="option.value" type="button" :class="{active:modelValue===option.value}" :title="option.label" :aria-label="option.label" @click="$emit('update:modelValue',option.value)"><i :class="option.icon"></i></button></div>`,
 };
 
 const DEFAULT_DIMENSION_UNITS = ['px', 'pt', 'em', 'rem', '%'];
@@ -333,12 +338,13 @@ const MotionEffect = {
 
 export default {
 	name: 'WidgetAdvancedControls',
-	components: { StateTabs, MotionEffect, ResponsiveDeviceControl, DimensionControl, ScalarControl, EdgeControl, BoxControl },
+	components: { StateTabs, ChoiceButtons, MotionEffect, ResponsiveDeviceControl, DimensionControl, ScalarControl, EdgeControl, BoxControl },
 	props: {
 		node: { type: Object, required: true },
 		responsiveDevice: { type: String, default: 'desktop' },
-		showDisplayConditions: { type: Boolean, default: true },
-		showCacheSettings: { type: Boolean, default: true },
+		showDisplayConditions: { type: Boolean, default: false },
+		showCacheSettings: { type: Boolean, default: false },
+		elementorChoices: { type: Boolean, default: false },
 	},
 	emits: ['unavailable-ai', 'responsive-device', 'choose-media', 'clear-media'],
 	provide() {
@@ -348,6 +354,9 @@ export default {
 		return {
 			sides: ['Top', 'Right', 'Bottom', 'Left'],
 			backgroundState: 'normal', borderState: 'normal', transformState: 'normal',
+			alignSelfChoices: [{value:'auto',label:'Default',icon:'fas fa-ban'},{value:'flex-start',label:'Start',icon:'fas fa-align-left'},{value:'center',label:'Center',icon:'fas fa-align-center'},{value:'flex-end',label:'End',icon:'fas fa-align-right'},{value:'stretch',label:'Stretch',icon:'fas fa-arrows-alt-h'}],
+			orderChoices: [{value:'default',label:'Default',icon:'fas fa-ban'},{value:'start',label:'Start',icon:'fas fa-step-backward'},{value:'end',label:'End',icon:'fas fa-step-forward'},{value:'custom',label:'Custom',icon:'fas fa-sliders-h'}],
+			sizeChoices: [{value:'none',label:'None',icon:'fas fa-ban'},{value:'grow',label:'Grow',icon:'fas fa-expand-alt'},{value:'shrink',label:'Shrink',icon:'fas fa-compress-alt'},{value:'custom',label:'Custom',icon:'fas fa-sliders-h'}],
 			borderTypes: ['none', 'solid', 'double', 'dotted', 'dashed', 'groove'],
 			fadeDirections: [['fade-in','Fade In'],['fade-out','Fade Out'],['fade-out-in','Fade Out In'],['fade-in-out','Fade In Out']],
 			scaleDirections: [['up','Up'],['down','Down'],['down-up','Down-Up'],['up-down','Up-Down']],
@@ -395,10 +404,19 @@ export default {
 .pb-advanced-subtitle { margin: 10px 0 8px; font-size: 11px; font-weight: 700; color: #344054; }
 .pb-advanced-field, .pb-advanced-two-fields > label, .pb-advanced-four-fields > label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; font-size: 11px; color: #526178; }
 .pb-advanced-responsive-field .pb-advanced-control-head { margin-bottom: 0; }
+.pb-advanced-choice-buttons { display: inline-flex; align-items: center; margin-left: auto; }
+.pb-advanced-choice-buttons button { width: 32px; height: 30px; padding: 0; border: 1px solid #d4ddee; border-right: 0; border-radius: 0; background: #fff; color: #526178; font-size: 11px; cursor: pointer; }
+.pb-advanced-choice-buttons button:first-child { border-radius: 5px 0 0 5px; }
+.pb-advanced-choice-buttons button:last-child { border-right: 1px solid #d4ddee; border-radius: 0 5px 5px 0; }
+.pb-advanced-choice-buttons button:hover, .pb-advanced-choice-buttons button.active { background: #eef3ff; color: #4154d9; }
 .pb-advanced-size-fields { display: grid; grid-template-columns: minmax(0, 1fr); }
 .pb-advanced-two-fields, .pb-advanced-four-fields { display: grid; gap: 8px; }
 .pb-advanced-two-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .pb-advanced-four-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pb-advanced-shadow-fields { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
+.pb-advanced-shadow-fields > .pb-advanced-field,
+.pb-advanced-shadow-fields > .pb-advanced-dimension-control,
+.pb-advanced-shadow-fields > .pb-advanced-toggle { margin-bottom: 12px; }
 .pb-advanced-dimension-control, .pb-advanced-edge-control { min-width: 0; margin-bottom: 14px; }
 .pb-transform-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
 .pb-transform-grid > * { min-width: 0; }
@@ -415,6 +433,12 @@ export default {
 .pb-advanced-edge-fields .pb-link-btn.active { background: #eef1ff; color: #5b6cff; }
 .pb-advanced-toggle,
 :deep(.pb-motion-effect .pb-advanced-toggle) { min-height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-size: 12px; color: #344054; }
+:deep(.pb-motion-effect) { padding: 10px 0 12px; border-top: 1px solid #edf0f5; }
+:deep(.pb-motion-effect .pb-advanced-two-fields) { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; }
+:deep(.pb-motion-effect .pb-advanced-two-fields > label) { display: flex; min-width: 0; flex-direction: column; gap: 6px; margin: 0 0 12px; color: #526178; font-size: 11px; }
+:deep(.pb-motion-effect .pb-advanced-two-fields > label > span) { color: #344054; font-weight: 600; }
+:deep(.pb-motion-effect .pb-advanced-two-fields .pb-input),
+:deep(.pb-motion-effect .pb-advanced-two-fields .pb-select) { width: 100%; min-width: 0; height: 32px; min-height: 32px; margin: 0; font-size: 12px; }
 .pb-ai-disabled { width: 100%; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 10px; border: 1px dashed #c9d1df; border-radius: 8px; background: #f8fafc; color: #667085; text-align: left; }
 .pb-ai-disabled span { display: flex; flex-direction: column; }.pb-ai-disabled small { font-size: 10px; }
 .pb-advanced-help { margin: 4px 0 12px; color: #7a8699; font-size: 10px; line-height: 1.5; }

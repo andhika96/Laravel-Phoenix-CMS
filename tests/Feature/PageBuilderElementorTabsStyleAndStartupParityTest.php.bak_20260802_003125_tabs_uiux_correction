@@ -1,0 +1,169 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class PageBuilderElementorTabsStyleAndStartupParityTest extends TestCase
+{
+    public function test_editor_never_starts_bulk_settings_preload_during_the_first_drag_gesture(): void
+    {
+        $editor = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertIsString($editor);
+        $this->assertStringContainsString('function scheduleWidgetSettingsPreloadAfterFirstGesture()', $editor);
+        $this->assertStringContainsString("window.addEventListener('pointerdown', observeFirstGesture, { once: true, passive: true });", $editor);
+        $this->assertStringContainsString("window.addEventListener('dragend', settleAfterDrag, { once: true });", $editor);
+        $this->assertStringNotContainsString("window.addEventListener('pointerdown', schedule, { once: true, passive: true });", $editor);
+    }
+
+    public function test_editor_preloads_one_settings_module_per_idle_slice_after_the_first_gesture(): void
+    {
+        $editor = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertIsString($editor);
+        $this->assertStringContainsString('function preloadSettingsModuleAtIdle(modulePaths, cursor, onComplete)', $editor);
+        $this->assertStringContainsString('const path = modulePaths[cursor];', $editor);
+        $this->assertStringContainsString('loadSfcModule(path)', $editor);
+        $this->assertStringContainsString('preloadSettingsModuleAtIdle(modulePaths, cursor + 1, onComplete);', $editor);
+        $this->assertStringNotContainsString('Promise.allSettled(modulePaths.map(loadSfcModule))', $editor);
+    }
+
+    public function test_editor_uses_one_borderless_compact_multiview_button_treatment(): void
+    {
+        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $this->assertIsString($css);
+        $this->assertStringContainsString('.pb-panel.left .pb-control-device-btn {', $css);
+        $this->assertStringContainsString('border: 0 !important;', $css);
+        $this->assertStringContainsString('background: transparent !important;', $css);
+        $this->assertStringContainsString('.pb-panel.left .pb-control-device-btn:focus-visible {', $css);
+    }
+
+    public function test_multiview_button_has_a_comfortable_hit_area_and_its_menu_opens_inward(): void
+    {
+        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $this->assertIsString($css);
+        $this->assertMatchesRegularExpression(
+            '/\.pb-panel\.left \.pb-control-device-btn\s*\{[^}]*width:\s*28px !important;[^}]*height:\s*28px !important;[^}]*min-width:\s*28px !important;[^}]*padding:\s*6px !important;/s',
+            $css
+        );
+        $this->assertMatchesRegularExpression(
+            '/\.pb-panel\.left \.pb-control-device-menu\s*\{[^}]*left:\s*auto;[^}]*right:\s*0;/s',
+            $css
+        );
+    }
+
+    public function test_tabs_style_and_advanced_panels_expose_the_complete_audited_control_groups(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Settings.vue'));
+
+        $this->assertIsString($settings);
+        foreach ([
+            'Tabs',
+			'Titles',
+			'Icon',
+            'Content',
+            'Normal',
+            'Hover',
+            'Active',
+			'Gap between tabs',
+			'Distance from content',
+			'Background Type',
+            'Border Type',
+            'Border Width',
+			'Box Shadow',
+            'Border Radius',
+            'Padding',
+			'Text Shadow',
+			'Text Stroke',
+			'Need Help',
+        ] as $label) {
+            $this->assertStringContainsString($label, $settings);
+        }
+
+        $this->assertStringContainsString(':is="editor.typographyControl"', $settings);
+		$this->assertStringContainsString(':is="editor.textShadowControl"', $settings);
+		$this->assertStringContainsString(':is="editor.textStrokeControl"', $settings);
+        $this->assertStringContainsString(':is="editor.widgetAdvancedControls"', $settings);
+		$this->assertStringContainsString(':elementor-choices="true"', $settings);
+        $this->assertStringContainsString('pb-tabs-dimension-control', $settings);
+        $this->assertStringContainsString('pb-tabs-box-control', $settings);
+    }
+
+    public function test_tabs_settings_use_compact_elementor_like_controls_without_the_removed_content_width_control(): void
+    {
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Settings.vue'));
+        $editor = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $this->assertIsString($settings);
+        $this->assertIsString($editor);
+        $this->assertIsString($css);
+
+        $this->assertStringNotContainsString('base="tabWidth"', $settings);
+        $this->assertStringContainsString('pbv=20260801-tabs-ui-1', $editor);
+        $this->assertStringContainsString('pb-tabs-color-control', $settings);
+        $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings input[type="number"]::-webkit-inner-spin-button', $css);
+        $this->assertMatchesRegularExpression(
+            '/\.pb-panel\.left \.pb-tabs-settings \.pb-tabs-box-control \.pb-four-sides-with-link,[^{]*\{[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\) 26px;[^}]*width:\s*min\(100%, 330px\);/s',
+            $css
+        );
+        $this->assertMatchesRegularExpression(
+            '/\.pb-panel\.left \.pb-tabs-settings \.pb-widget-advanced-controls \.pb-advanced-choice-buttons button\s*\{[^}]*width:\s*30px;[^}]*height:\s*28px;[^}]*border:\s*1px solid #cfd6e3;[^}]*background:\s*#fff;/s',
+            $css
+        );
+        $this->assertStringContainsString('.pb-panel.left .pb-tabs-settings .pb-tabs-color-control', $css);
+        $this->assertStringContainsString('width: 36px;', $css);
+    }
+
+    public function test_tabs_style_settings_render_into_frontend_variables_and_advanced_wrapper(): void
+    {
+        $html = view('pagebuilder_elementor.partials.render_node', [
+            'node' => [
+                'id' => 'tabs-style-parity',
+                'type' => 'tabs',
+                'settings' => [
+                    'tabsNormalTextColor' => '#233047',
+					'tabsNormalIconColor' => '#123456',
+					'tabsNormalTextShadow' => '1px 2px 3px #000000',
+                    'tabsActiveBackgroundColor' => '#4455ff',
+					'tabsActiveBackgroundType' => 'gradient',
+					'tabsActiveGradientColorOne' => '#4455ff',
+					'tabsActiveGradientColorTwo' => '#7788ff',
+					'tabsGap' => '9px',
+					'tabsContentDistance' => '18px',
+                    'tabsIconSize' => '13px',
+                    'tabsIconSpacing' => '7px',
+                    'tabsContentPadding' => '16px 18px',
+                    'tabsContentTextColor' => '#111827',
+                    'cssId' => 'tabs-style-output',
+                    'cssClass' => 'custom-tabs-style',
+                    'widthMode' => 'full',
+                    'marginTop' => '12px',
+                ],
+                'tabItems' => [
+                    ['id' => 'one', 'title' => 'One', 'children' => []],
+                    ['id' => 'two', 'title' => 'Two', 'children' => []],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('id="tabs-style-output"', $html);
+        $this->assertStringContainsString('custom-tabs-style', $html);
+        $this->assertStringContainsString('--pb-tabs-normal-text-color:#233047', $html);
+		$this->assertStringContainsString('--pb-tabs-normal-icon-color:#123456', $html);
+		$this->assertStringContainsString('--pb-tabs-normal-text-shadow:1px 2px 3px #000000', $html);
+		$this->assertStringContainsString('--pb-tabs-active-background:linear-gradient(180deg, #4455ff, #7788ff)', $html);
+		$this->assertStringContainsString('--pb-tabs-gap:9px', $html);
+		$this->assertStringContainsString('--pb-tabs-content-distance:18px', $html);
+        $this->assertStringContainsString('--pb-tabs-icon-size:13px', $html);
+        $this->assertStringContainsString('--pb-tabs-icon-spacing:7px', $html);
+        $this->assertStringContainsString('--pb-tabs-content-padding:16px 18px', $html);
+        $this->assertStringContainsString('--pb-tabs-content-text-color:#111827', $html);
+        $this->assertStringContainsString('data-pb-motion=', $html);
+        $this->assertStringContainsString('width:100%', $html);
+        $this->assertStringContainsString('margin-top:12px', $html);
+    }
+}

@@ -31,8 +31,11 @@
 	$imageUrl = $safeImageUrl($imageUrl);
 	$linkUrl = $safeLinkUrl($linkUrl);
 	$imageResolution = strtolower(trim((string) ($imageBoxSettings['imageResolution'] ?? 'full')));
+	if (!in_array($imageResolution, ['thumbnail', 'medium', 'medium_large', 'large', '1536x1536', '2048x2048', 'full', 'custom'], true)) $imageResolution = 'full';
+	$customImageWidth = max(1, min(4096, (int) ($imageBoxSettings['customImageWidth'] ?? 150)));
+	$customImageHeight = max(1, min(4096, (int) ($imageBoxSettings['customImageHeight'] ?? 150)));
 	$imageUrl = $imageUrl !== ''
-		? app(\App\Support\PageBuilderElementor\ImageRenditionResolver::class)->resolve($imageUrl, $imageResolution)
+		? app(\App\Support\PageBuilderElementor\ImageRenditionResolver::class)->resolve($imageUrl, $imageResolution, $imageResolution === 'custom' ? $customImageWidth : null, $imageResolution === 'custom' ? $customImageHeight : null)
 		: '';
 
 	$titleTag = strtolower(trim((string) ($imageBoxSettings['titleTag'] ?? 'h3')));

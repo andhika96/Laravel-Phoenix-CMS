@@ -1,5 +1,5 @@
 <template>
-	<div class="pb-widget-settings pb-widget-settings--icon-box">
+	<div class="pb-image-box-settings pb-icon-box-settings pb-widget-settings pb-widget-settings--icon-box">
 		<div class="pb-tab-nav">
 			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:editor.settingsTab==='content'}" @click="editor.settingsTab='content'"><i class="fas fa-edit"></i><span>Content</span></button>
 			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:editor.settingsTab==='style'}" @click="editor.settingsTab='style'"><i class="fas fa-adjust"></i><span>Style</span></button>
@@ -13,10 +13,10 @@
 					<div class="pb-form-group"><label class="pb-form-label">Icon</label><button type="button" class="pb-icon-picker-field" @click="editor.openIconLibrary(node)"><div class="pb-icon-picker-preview"><i :class="node.settings.iconClass || 'far fa-star'"></i></div><div class="pb-icon-picker-copy"><div class="pb-icon-picker-name">{{ editor.iconWidgetCurrentLabel(node) }}</div><div class="pb-icon-picker-style">{{ editor.iconWidgetCurrentStyleLabel(node) }}</div></div><i class="fas fa-chevron-right"></i></button></div>
 					<div class="pb-form-group"><label class="pb-form-label">View</label><select class="pb-select" v-model="node.settings.view"><option value="default">Default</option><option value="stacked">Stacked</option><option value="framed">Framed</option></select></div>
 					<div v-if="node.settings.view !== 'default'" class="pb-form-group"><label class="pb-form-label">Shape</label><select class="pb-select" v-model="node.settings.shape"><option value="square">Square</option><option value="rounded">Rounded</option><option value="circle">Circle</option></select></div>
-					<div class="pb-form-group"><label class="pb-form-label">Title</label><div class="pb-image-box-dynamic-field"><input class="pb-input" v-model="node.settings.title" placeholder="Enter your title"><component :is="editor.dynamicTagControl" :allowed-values="editor.imageBoxTextDynamicTags" :model-value="node.settings.dynamicBindings.title || ''" @update:modelValue="node.settings.dynamicBindings.title=$event" /></div></div>
-					<div class="pb-form-group"><label class="pb-form-label">Description</label><div class="pb-image-box-dynamic-field pb-image-box-dynamic-field--textarea"><textarea class="pb-input" rows="5" v-model="node.settings.description" placeholder="Enter your description"></textarea><component :is="editor.dynamicTagControl" :allowed-values="editor.imageBoxTextDynamicTags" :model-value="node.settings.dynamicBindings.description || ''" @update:modelValue="node.settings.dynamicBindings.description=$event" /></div></div>
-					<div class="pb-form-group"><label class="pb-form-label">Link</label><component :is="editor.linkControl" :url="node.settings.linkUrl" :target="node.settings.linkTarget" :nofollow="node.settings.linkNofollow" :custom-attributes="node.settings.linkCustomAttributes" @update:url="node.settings.linkUrl=$event" @update:target="node.settings.linkTarget=$event" @update:nofollow="node.settings.linkNofollow=$event" @update:customAttributes="node.settings.linkCustomAttributes=$event" /></div>
-					<div class="pb-form-group"><label class="pb-form-label">Title HTML Tag</label><select class="pb-select" v-model="node.settings.titleTag"><option v-for="tag in ['h1','h2','h3','h4','h5','h6','div','span','p']" :key="'icon-box-tag-'+tag" :value="tag">{{ tag.toUpperCase() }}</option></select></div>
+					<div class="pb-form-group"><label class="pb-form-label">Title</label><input class="pb-input" v-model="node.settings.title" placeholder="Enter your title"></div>
+					<div class="pb-form-group"><label class="pb-form-label">Description</label><textarea class="pb-input" rows="5" v-model="node.settings.description" placeholder="Enter your description"></textarea></div>
+					<div class="pb-form-group"><label class="pb-form-label">Link</label><div class="pb-icon-box-link-field"><component :is="editor.linkControl" :url="node.settings.linkUrl" :target="node.settings.linkTarget" :nofollow="node.settings.linkNofollow" :custom-attributes="node.settings.linkCustomAttributes" @update:url="node.settings.linkUrl=$event" @update:target="node.settings.linkTarget=$event" @update:nofollow="node.settings.linkNofollow=$event" @update:customAttributes="node.settings.linkCustomAttributes=$event" /></div></div>
+					<div class="pb-form-group"><label class="pb-form-label">Title HTML Tag</label><select class="pb-select" v-model="node.settings.titleTag"><option v-for="tag in ['h1','h2','h3','h4','h5','h6','div','span','p']" :key="'icon-box-tag-'+tag" :value="tag">{{ ['div','span','p'].includes(tag) ? tag : tag.toUpperCase() }}</option></select></div>
 				</div>
 			</details>
 		</div>
@@ -27,7 +27,7 @@
 				<div class="pb-collapsible-body">
 					<div v-for="control in choiceControls" :key="control.key" class="pb-form-group pb-image-box-choice-row">
 						<div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">{{ control.label }}</label><responsive-menu :editor="editor" :id="control.id" /></div>
-						<div class="pb-btn-group pb-image-box-segmented" :class="control.options.length===4 ? 'pb-image-box-segmented--four' : 'pb-image-box-segmented--three'"><button v-for="option in control.options" :key="control.key+'-'+option.value" type="button" class="pb-seg-btn" :class="{active:node.settings[editor.activeResponsiveKey(control.key)]===option.value}" :title="option.label" @click.prevent="editor.setResponsiveSetting(node.settings,control.key,option.value)"><i :class="option.icon"></i></button></div>
+						<div class="pb-btn-group pb-image-box-segmented" :class="control.options.length===4 ? 'pb-image-box-segmented--four' : 'pb-image-box-segmented--three'"><button v-for="option in control.options" :key="control.key+'-'+option.value" type="button" class="pb-seg-btn" :class="{active:node.settings[editor.activeResponsiveKey(control.key)]===option.value}" :aria-pressed="node.settings[editor.activeResponsiveKey(control.key)]===option.value" :title="option.label" @click.prevent="editor.setResponsiveSetting(node.settings,control.key,option.value)"><i :class="option.icon"></i></button></div>
 					</div>
 					<size-control v-for="control in boxSizeControls" :key="control.key" :node="node" :editor="editor" :control="control" />
 				</div>
@@ -64,7 +64,7 @@
 			</details>
 		</div>
 
-		<div v-show="editor.settingsTab==='advanced'" class="pb-tab-content pb-icon-box-advanced-settings"><component :is="editor.widgetAdvancedControls" :node="node" :responsive-device="editor.responsiveDevice" :show-display-conditions="false" :show-cache-settings="false" @responsive-device="editor.setResponsiveDevice" @choose-media="editor.chooseMedia(node.settings,$event)" @clear-media="editor.clearMedia(node.settings,$event)" @unavailable-ai="editor.showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')" /></div>
+		<div v-show="editor.settingsTab==='advanced'" class="pb-tab-content pb-icon-box-advanced-settings"><component :is="editor.widgetAdvancedControls" :node="node" :responsive-device="editor.responsiveDevice" :show-display-conditions="false" :show-cache-settings="false" :elementor-choices="true" @responsive-device="editor.setResponsiveDevice" @choose-media="editor.chooseMedia(node.settings,$event)" @clear-media="editor.clearMedia(node.settings,$event)" @unavailable-ai="editor.showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')" /></div>
 	</div>
 </template>
 
@@ -99,3 +99,7 @@ export default {
 	},
 };
 </script>
+
+<style scoped>
+.pb-icon-box-link-field :deep(.pb-link-control){min-width:0;}
+</style>

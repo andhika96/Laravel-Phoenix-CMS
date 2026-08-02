@@ -88,7 +88,7 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
         $this->assertStringContainsString("settingsTab.value = type && !isCont(type) && !isGrid(type) ? 'content' : 'layout';", $app);
     }
 
-    public function test_editor_mounts_before_preloading_registered_settings_and_preserves_loader_diagnostics(): void
+    public function test_editor_waits_for_the_first_gesture_to_settle_before_preloading_registered_settings(): void
     {
         $app = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
 
@@ -99,14 +99,18 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
             'const _sfcResolvedModules = {};',
             'function loadSfcModule(path)',
             'function preloadWidgetSettingsModules()',
+            'function preloadSettingsModuleAtIdle(modulePaths, cursor, onComplete)',
             'widgetRegistry?.all()',
-            'Promise.allSettled(modulePaths.map(loadSfcModule))',
+            'const path = modulePaths[cursor];',
+            'preloadSettingsModuleAtIdle(modulePaths, cursor + 1, onComplete);',
             '_sfcResolvedModules[path] || _settingsCache[type]',
-            "console.warn('[PB] Settings preload failed:', modulePaths[index], result.reason);",
+            "console.warn('[PB] Settings preload failed:', path, error);",
             'log(type, msg, detail)',
-            'function scheduleWidgetSettingsPreload()',
+            'function scheduleWidgetSettingsPreloadAfterFirstGesture()',
             'window.requestIdleCallback(run',
-            'scheduleWidgetSettingsPreload();',
+            "window.addEventListener('pointerdown', observeFirstGesture, { once: true, passive: true });",
+            "window.addEventListener('dragend', settleAfterDrag, { once: true });",
+            'scheduleWidgetSettingsPreloadAfterFirstGesture();',
             '(async function () {',
         ] as $marker) {
             $this->assertStringContainsString($marker, $app);
@@ -117,11 +121,12 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
         }
 
         $mountPosition = strrpos($app, "}).mount('#pbElementorApp');");
-        $preloadPosition = strrpos($app, 'scheduleWidgetSettingsPreload();');
+        $preloadPosition = strrpos($app, 'scheduleWidgetSettingsPreloadAfterFirstGesture();');
         $this->assertNotFalse($mountPosition);
         $this->assertNotFalse($preloadPosition);
         $this->assertLessThan($preloadPosition, $mountPosition);
         $this->assertStringNotContainsString('await preloadWidgetSettingsModules();', $app);
+        $this->assertStringNotContainsString('Promise.allSettled(modulePaths.map(loadSfcModule))', $app);
     }
 
     public function test_heading_frontend_dispatches_through_registered_view(): void
@@ -172,7 +177,6 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
         }
 
         foreach ([
-            'editor.dynamicTagControl',
             'editor.linkControl',
             'editor.typographyControl',
             'editor.textStrokeControl',
@@ -188,13 +192,15 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
             $this->assertStringContainsString($marker, $settings);
         }
 
+        $this->assertStringNotContainsString('editor.dynamicTagControl', $settings);
+
         $this->assertStringContainsString("value:'justify',icon:'fas fa-align-justify'", $settings);
         $this->assertStringContainsString('safeLinkUrl', $canvas);
         $this->assertStringContainsString('heading-title-link', $canvas);
         $this->assertStringContainsString("this.node.type === 'heading'", $app);
     }
 
-    public function test_heading_hides_non_reference_advanced_sections_without_changing_shared_defaults(): void
+    public function test_heading_and_general_widgets_hide_non_reference_advanced_sections_by_default(): void
     {
         $headingSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/heading/Settings.vue'));
         $sharedControls = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
@@ -205,11 +211,11 @@ class PageBuilderElementorWidgetRegistryTest extends TestCase
 
         $this->assertStringContainsString('<details v-if="showDisplayConditions"', $sharedControls);
         $this->assertStringContainsString('<details v-if="showCacheSettings"', $sharedControls);
-        $this->assertStringContainsString("showDisplayConditions: { type: Boolean, default: true }", $sharedControls);
-        $this->assertStringContainsString("showCacheSettings: { type: Boolean, default: true }", $sharedControls);
+        $this->assertStringContainsString("showDisplayConditions: { type: Boolean, default: false }", $sharedControls);
+        $this->assertStringContainsString("showCacheSettings: { type: Boolean, default: false }", $sharedControls);
 
-        $this->assertStringNotContainsString('show-display-conditions', $imageBoxSettings);
-        $this->assertStringNotContainsString('show-cache-settings', $imageBoxSettings);
+        $this->assertStringContainsString(':show-display-conditions="false"', $imageBoxSettings);
+        $this->assertStringContainsString(':show-cache-settings="false"', $imageBoxSettings);
     }
 
     public function test_heading_frontend_renders_safe_link_typography_and_advanced_wrapper(): void

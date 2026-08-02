@@ -1,0 +1,446 @@
+<template>
+	<div class="pb-widget-advanced-controls">
+		<details class="pb-collapsible" open>
+			<summary>Layout</summary>
+			<div class="pb-collapsible-body">
+				<EdgeControl label="Margin" :settings="settings" :keys="edgeKeys('margin')" fallback="0px" allow-negative :responsive-icon="deviceIcon" />
+				<EdgeControl label="Padding" :settings="settings" :keys="edgeKeys('padding')" fallback="0px" :responsive-icon="deviceIcon" />
+				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Width</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('widthMode', 'default')" @change="setResponsiveSetting('widthMode', $event.target.value)"><option value="default">Default</option><option value="full">Full Width</option><option value="inline">Inline</option><option value="custom">Custom</option></select></div>
+				<DimensionControl v-if="effectiveResponsiveValue('widthMode', 'default')==='custom'" label="Custom Width" :settings="settings" :setting-key="responsiveKey('customWidth')" fallback="320px" :responsive-icon="deviceIcon" />
+				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Align Self</span><ResponsiveDeviceControl :icon="deviceIcon" /><ChoiceButtons v-if="elementorChoices" :model-value="effectiveResponsiveValue('alignSelf', 'auto')" :options="alignSelfChoices" @update:modelValue="setResponsiveSetting('alignSelf', $event)" /></div><select v-if="!elementorChoices" class="pb-select" :value="effectiveResponsiveValue('alignSelf', 'auto')" @change="setResponsiveSetting('alignSelf', $event.target.value)"><option value="auto">Default</option><option value="flex-start">Start</option><option value="center">Center</option><option value="flex-end">End</option><option value="stretch">Stretch</option></select></div>
+				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Order</span><ResponsiveDeviceControl :icon="deviceIcon" /><ChoiceButtons v-if="elementorChoices" :model-value="effectiveResponsiveValue('orderMode', 'default')" :options="orderChoices" @update:modelValue="setResponsiveSetting('orderMode', $event)" /></div><select v-if="!elementorChoices" class="pb-select" :value="effectiveResponsiveValue('orderMode', 'default')" @change="setResponsiveSetting('orderMode', $event.target.value)"><option value="default">Default</option><option value="start">Start</option><option value="end">End</option><option value="custom">Custom</option></select></div>
+				<div v-if="effectiveResponsiveValue('orderMode', 'default')==='custom'" class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Custom Order</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><input class="pb-input" type="number" :value="effectiveResponsiveValue('order', '')" @input="setResponsiveNumberSetting('order', $event.target.value)"></div>
+				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Size</span><ResponsiveDeviceControl :icon="deviceIcon" /><ChoiceButtons v-if="elementorChoices" :model-value="effectiveResponsiveValue('sizeMode', 'none')" :options="sizeChoices" @update:modelValue="setResponsiveSetting('sizeMode', $event)" /></div><select v-if="!elementorChoices" class="pb-select" :value="effectiveResponsiveValue('sizeMode', 'none')" @change="setResponsiveSetting('sizeMode', $event.target.value)"><option value="none">None</option><option value="grow">Grow</option><option value="shrink">Shrink</option><option value="custom">Custom</option></select></div>
+				<div v-if="effectiveResponsiveValue('sizeMode', 'none')==='custom'" class="pb-advanced-size-fields"><ScalarControl label="Flex Grow" :settings="settings" :setting-key="responsiveKey('flexGrow')" :fallback="0" :min-value="0" :max-value="10" :step-value="0.1" :responsive-icon="deviceIcon" /><ScalarControl label="Flex Shrink" :settings="settings" :setting-key="responsiveKey('flexShrink')" :fallback="1" :min-value="0" :max-value="10" :step-value="0.1" :responsive-icon="deviceIcon" /></div>
+				<label class="pb-advanced-field"><span>Position</span><select class="pb-select" v-model="settings.position"><option value="default">Default</option><option value="absolute">Absolute</option><option value="fixed">Fixed</option></select></label>
+				<template v-if="settings.position!=='default'">
+					<div class="pb-advanced-two-fields"><label><span>Horizontal Orientation</span><select class="pb-select" v-model="settings.horizontalOrientation"><option value="left">Left</option><option value="right">Right</option></select></label><DimensionControl label="X Offset" :settings="settings" :setting-key="responsiveKey('positionX')" fallback="0px" allow-negative :responsive-icon="deviceIcon" /></div>
+					<div class="pb-advanced-two-fields"><label><span>Vertical Orientation</span><select class="pb-select" v-model="settings.verticalOrientation"><option value="top">Top</option><option value="bottom">Bottom</option></select></label><DimensionControl label="Y Offset" :settings="settings" :setting-key="responsiveKey('positionY')" fallback="0px" allow-negative :responsive-icon="deviceIcon" /></div>
+				</template>
+				<div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Z-Index</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><input class="pb-input" type="number" :value="effectiveResponsiveValue('zIndex', '')" @input="setResponsiveNumberSetting('zIndex', $event.target.value)"></div>
+				<label class="pb-advanced-field"><span>CSS ID</span><input class="pb-input" v-model="settings.cssId" placeholder="unique-widget-id"></label>
+				<label class="pb-advanced-field"><span>CSS Classes</span><input class="pb-input" v-model="settings.cssClass" placeholder="class-one class-two"></label>
+			</div>
+		</details>
+
+		<details v-if="showDisplayConditions" class="pb-collapsible">
+			<summary>Display Conditions</summary>
+			<div class="pb-collapsible-body">
+				<p class="pb-advanced-help">Rules inside a group use AND. Groups use OR.</p>
+				<div v-for="(group, groupIndex) in conditionGroups" :key="group.id || groupIndex" class="pb-condition-group">
+					<div class="pb-condition-group-head"><strong>Group {{ groupIndex + 1 }}</strong><button type="button" @click="removeConditionGroup(groupIndex)"><i class="fas fa-times"></i></button></div>
+					<div v-for="(rule, ruleIndex) in group.rules" :key="rule.id || ruleIndex" class="pb-condition-rule">
+						<select class="pb-select" v-model="rule.effect"><option value="include">Include</option><option value="exclude">Exclude</option></select>
+						<select class="pb-select" v-model="rule.source"><option value="page-id">Page ID</option><option value="page-slug">Page Slug</option><option value="auth-state">Authenticated / Guest</option><option value="user-role">User Role</option><option value="date-range">Date / Time Range</option><option value="device">Device</option></select>
+						<select class="pb-select" v-model="rule.operator"><option value="is">Is</option><option value="is-not">Is Not</option><option value="contains">Contains</option></select>
+						<input class="pb-input" v-model="rule.value" placeholder="Value">
+						<button type="button" class="pb-advanced-remove" @click="removeConditionRule(group, ruleIndex)"><i class="fas fa-trash"></i></button>
+					</div>
+					<button type="button" class="pb-btn" @click="addConditionRule(group)"><i class="fas fa-plus"></i> Add Condition</button>
+				</div>
+				<button type="button" class="pb-btn" @click="addConditionGroup"><i class="fas fa-plus"></i> Add Group</button>
+			</div>
+		</details>
+
+		<details v-if="showCacheSettings" class="pb-collapsible">
+			<summary>Cache Settings</summary>
+			<div class="pb-collapsible-body"><label class="pb-advanced-field"><span>Cache Mode</span><select class="pb-select" v-model="settings.cacheMode"><option value="default">Default</option><option value="inactive">Inactive</option><option value="active">Active</option></select></label><p class="pb-advanced-help">Active caches the rendered widget fragment and invalidates it when content changes.</p></div>
+		</details>
+
+		<details class="pb-collapsible">
+			<summary>Motion Effects</summary>
+			<div class="pb-collapsible-body">
+				<button type="button" class="pb-ai-disabled" disabled @click="notifyUnavailableAI"><i class="fas fa-wand-magic-sparkles"></i><span><strong>Animate With AI</strong><small>AI service is not connected</small></span></button>
+				<label class="pb-advanced-toggle"><span>Scrolling Effects</span><input type="checkbox" v-model="settings.scrollingEffects"></label>
+				<template v-if="settings.scrollingEffects">
+					<MotionEffect label="Vertical Scroll" enabled-key="verticalScrollEnabled" direction-key="verticalScrollDirection" :directions="[['up','Up'],['down','Down']]" :settings="settings" />
+					<MotionEffect label="Horizontal Scroll" enabled-key="horizontalScrollEnabled" direction-key="horizontalScrollDirection" :directions="[['left','Left'],['right','Right']]" :settings="settings" />
+					<MotionEffect label="Transparency" enabled-key="transparencyEnabled" direction-key="transparencyDirection" :directions="fadeDirections" :settings="settings" level-key="transparencyLevel" />
+					<MotionEffect label="Blur" enabled-key="blurEnabled" direction-key="blurDirection" :directions="fadeDirections" :settings="settings" level-key="blurLevel" />
+					<MotionEffect label="Rotate" enabled-key="rotateEnabled" direction-key="rotateDirection" :directions="[['left','Left'],['right','Right']]" :settings="settings" />
+					<MotionEffect label="Scale" enabled-key="scaleEnabled" direction-key="scaleDirection" :directions="scaleDirections" :settings="settings" />
+					<div class="pb-advanced-subtitle">Apply Effects On</div>
+					<label class="pb-advanced-toggle"><span>Desktop</span><input type="checkbox" v-model="settings.scrollApplyDesktop"></label><label class="pb-advanced-toggle"><span>Tablet Portrait</span><input type="checkbox" v-model="settings.scrollApplyTablet"></label><label class="pb-advanced-toggle"><span>Mobile Portrait</span><input type="checkbox" v-model="settings.scrollApplyMobile"></label>
+					<label class="pb-advanced-field"><span>Effects Relative To</span><select class="pb-select" v-model="settings.effectsRelativeTo"><option value="default">Default</option><option value="viewport">Viewport</option><option value="page">Entire Page</option></select></label>
+				</template>
+				<label class="pb-advanced-toggle"><span>Mouse Effects</span><input type="checkbox" v-model="settings.mouseEffects"></label>
+				<template v-if="settings.mouseEffects"><label class="pb-advanced-toggle"><span>Mouse Track</span><input type="checkbox" v-model="settings.mouseTrackEnabled"></label><div v-if="settings.mouseTrackEnabled" class="pb-advanced-two-fields"><label><span>Direction</span><select class="pb-select" v-model="settings.mouseTrackDirection"><option value="direct">Direct</option><option value="opposite">Opposite</option></select></label><label><span>Speed</span><input class="pb-input" type="number" step=".1" v-model.number="settings.mouseTrackSpeed"></label></div><label class="pb-advanced-toggle"><span>3D Tilt</span><input type="checkbox" v-model="settings.tilt3dEnabled"></label><div v-if="settings.tilt3dEnabled" class="pb-advanced-two-fields"><label><span>Direction</span><select class="pb-select" v-model="settings.tilt3dDirection"><option value="direct">Direct</option><option value="opposite">Opposite</option></select></label><label><span>Speed</span><input class="pb-input" type="number" step=".1" v-model.number="settings.tilt3dSpeed"></label></div></template>
+				<label class="pb-advanced-field"><span>Sticky</span><select class="pb-select" v-model="settings.sticky"><option value="none">None</option><option value="top">Top</option><option value="bottom">Bottom</option></select></label>
+				<template v-if="settings.sticky!=='none'"><DimensionControl label="Sticky Offset" :settings="settings" :setting-key="responsiveKey('stickyOffset')" fallback="0px" :responsive-icon="deviceIcon" /><DimensionControl label="Effects Offset" :settings="settings" setting-key="stickyEffectsOffset" fallback="0px" /><DimensionControl label="Anchor Offset" :settings="settings" setting-key="stickyAnchorOffset" fallback="0px" /><label class="pb-advanced-toggle"><span>Stay In Column</span><input type="checkbox" v-model="settings.stickyStayInColumn"></label></template>
+				<label class="pb-advanced-field"><span>Entrance Animation</span><select class="pb-select" v-model="settings.entranceAnimation"><option value="">None</option><option v-for="animation in entranceAnimations" :key="animation" :value="animation">{{ animation }}</option></select></label>
+				<div v-if="settings.entranceAnimation" class="pb-advanced-two-fields"><label><span>Duration</span><select class="pb-select" v-model="settings.entranceDuration"><option value="slow">Slow</option><option value="normal">Normal</option><option value="fast">Fast</option></select></label><label><span>Delay (ms)</span><input class="pb-input" type="number" min="0" v-model.number="settings.entranceDelay"></label></div>
+			</div>
+		</details>
+
+		<details class="pb-collapsible">
+			<summary>Transform</summary>
+			<div class="pb-collapsible-body"><StateTabs v-model="transformState" />
+				<div class="pb-transform-grid">
+					<DimensionControl label="Rotate" :settings="settings" :setting-key="responsiveStateKey('transformRotate', transformState)" fallback="0deg" :units="['deg']" allow-negative :responsive-icon="deviceIcon" />
+					<DimensionControl label="Perspective" :settings="settings" :setting-key="responsiveStateKey('transformPerspective', transformState)" fallback="0px" :responsive-icon="deviceIcon" />
+					<DimensionControl label="3D Rotate X" :settings="settings" :setting-key="responsiveStateKey('transformRotateX', transformState)" fallback="0deg" :units="['deg']" allow-negative :responsive-icon="deviceIcon" />
+					<DimensionControl label="3D Rotate Y" :settings="settings" :setting-key="responsiveStateKey('transformRotateY', transformState)" fallback="0deg" :units="['deg']" allow-negative :responsive-icon="deviceIcon" />
+					<DimensionControl label="Offset X" :settings="settings" :setting-key="responsiveStateKey('transformOffsetX', transformState)" fallback="0px" allow-negative :responsive-icon="deviceIcon" />
+					<DimensionControl label="Offset Y" :settings="settings" :setting-key="responsiveStateKey('transformOffsetY', transformState)" fallback="0px" allow-negative :responsive-icon="deviceIcon" />
+					<ScalarControl label="Scale" :settings="settings" :setting-key="responsiveStateKey('transformScale', transformState)" :fallback="1" :min-value="0" :max-value="5" :step-value="0.01" :responsive-icon="deviceIcon" />
+					<DimensionControl label="Skew X" :settings="settings" :setting-key="responsiveStateKey('transformSkewX', transformState)" fallback="0deg" :units="['deg']" allow-negative :responsive-icon="deviceIcon" />
+					<DimensionControl label="Skew Y" :settings="settings" :setting-key="responsiveStateKey('transformSkewY', transformState)" fallback="0deg" :units="['deg']" allow-negative :responsive-icon="deviceIcon" />
+				</div>
+				<label class="pb-advanced-toggle"><span>Flip Horizontal</span><input type="checkbox" :checked="effectiveResponsiveStateValue('transformFlipHorizontal', transformState, false)" @change="setResponsiveStateSetting('transformFlipHorizontal', transformState, $event.target.checked)"></label><label class="pb-advanced-toggle"><span>Flip Vertical</span><input type="checkbox" :checked="effectiveResponsiveStateValue('transformFlipVertical', transformState, false)" @change="setResponsiveStateSetting('transformFlipVertical', transformState, $event.target.checked)"></label>
+				<label v-if="transformState==='hover'" class="pb-advanced-field"><span>Hover Transition Duration</span><input class="pb-input" type="number" min="0" step=".1" v-model.number="settings.transformHoverDuration"></label>
+				<div class="pb-advanced-two-fields"><label><span>X Anchor</span><select class="pb-select" v-model="settings.transformOriginX"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></label><label><span>Y Anchor</span><select class="pb-select" v-model="settings.transformOriginY"><option value="top">Top</option><option value="center">Center</option><option value="bottom">Bottom</option></select></label></div>
+			</div>
+		</details>
+
+		<details class="pb-collapsible"><summary>Background</summary><div class="pb-collapsible-body"><StateTabs v-model="backgroundState" />
+			<label class="pb-advanced-field"><span>Background Type</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundType', backgroundState)]"><option value="none">None</option><option value="classic">Classic</option><option value="gradient">Gradient</option></select></label>
+			<template v-if="settings[stateKey('advancedBackgroundType', backgroundState)]==='classic'">
+				<label class="pb-advanced-field"><span>Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedBackgroundColor', backgroundState)]"></label>
+				<div class="pb-advanced-field">
+					<span>Image</span>
+					<div class="pb-bg-media-field" :class="{ 'has-image': !!settings[stateKey('advancedBackgroundImage', backgroundState)] }">
+						<div class="pb-bg-media-preview" :style="settings[stateKey('advancedBackgroundImage', backgroundState)] ? { backgroundImage: 'url(' + settings[stateKey('advancedBackgroundImage', backgroundState)] + ')' } : {}">
+							<button type="button" class="pb-bg-media-center-btn" :title="settings[stateKey('advancedBackgroundImage', backgroundState)] ? 'Change Image' : 'Choose Image'" @click="$emit('choose-media', stateKey('advancedBackgroundImage', backgroundState))"><i :class="settings[stateKey('advancedBackgroundImage', backgroundState)] ? 'fas fa-pen' : 'fas fa-plus'"></i></button>
+						</div>
+						<div class="pb-bg-media-actions"><button type="button" class="pb-bg-media-choose" @click="$emit('choose-media', stateKey('advancedBackgroundImage', backgroundState))">Choose Image</button><button type="button" class="pb-bg-media-remove" :disabled="!settings[stateKey('advancedBackgroundImage', backgroundState)]" title="Remove Image" @click="$emit('clear-media', stateKey('advancedBackgroundImage', backgroundState))"><i class="fas fa-trash-alt"></i></button></div>
+					</div>
+				</div>
+				<div class="pb-advanced-two-fields"><label><span>Position</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundPosition', backgroundState)]"><option v-for="position in backgroundPositions" :key="position.value" :value="position.value">{{ position.label }}</option><option value="custom">Custom</option></select></label><label><span>Attachment</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundAttachment', backgroundState)]"><option value="scroll">Scroll</option><option value="fixed">Fixed</option></select></label><label><span>Repeat</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundRepeat', backgroundState)]"><option value="no-repeat">No Repeat</option><option value="repeat">Repeat</option><option value="repeat-x">Repeat X</option><option value="repeat-y">Repeat Y</option></select></label><label><span>Size</span><select class="pb-select" v-model="settings[stateKey('advancedBackgroundSize', backgroundState)]"><option value="auto">Auto</option><option value="cover">Cover</option><option value="contain">Contain</option><option value="custom">Custom</option></select></label></div>
+				<div v-if="settings[stateKey('advancedBackgroundPosition', backgroundState)]==='custom'" class="pb-advanced-two-fields"><DimensionControl label="Position X" :settings="settings" :setting-key="stateKey('advancedBackgroundPositionX', backgroundState)" fallback="50%" /><DimensionControl label="Position Y" :settings="settings" :setting-key="stateKey('advancedBackgroundPositionY', backgroundState)" fallback="50%" /></div>
+				<DimensionControl v-if="settings[stateKey('advancedBackgroundSize', backgroundState)]==='custom'" label="Custom Size" :settings="settings" :setting-key="stateKey('advancedBackgroundCustomSize', backgroundState)" fallback="100%" />
+			</template>
+			<template v-if="settings[stateKey('advancedBackgroundType', backgroundState)]==='gradient'">
+				<div class="pb-advanced-two-fields"><label><span>First Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedGradientColorOne', backgroundState)]"></label><ScalarControl label="First Location" :settings="settings" :setting-key="stateKey('advancedGradientLocationOne', backgroundState)" :fallback="0" :min-value="0" :max-value="100" :step-value="1" /><label><span>Second Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedGradientColorTwo', backgroundState)]"></label><ScalarControl label="Second Location" :settings="settings" :setting-key="stateKey('advancedGradientLocationTwo', backgroundState)" :fallback="100" :min-value="0" :max-value="100" :step-value="1" /></div>
+				<label class="pb-advanced-field"><span>Gradient Type</span><select class="pb-select" v-model="settings[stateKey('advancedGradientType', backgroundState)]"><option value="linear">Linear</option><option value="radial">Radial</option></select></label>
+			</template>
+			<label v-if="backgroundState==='hover'" class="pb-advanced-field"><span>Hover Transition Duration</span><input class="pb-input" type="number" min="0" step=".1" v-model.number="settings.advancedBackgroundHoverDuration"></label>
+		</div></details>
+
+		<details class="pb-collapsible"><summary>Border</summary><div class="pb-collapsible-body"><StateTabs v-model="borderState" />
+			<label class="pb-advanced-field"><span>Border Type</span><select class="pb-select" v-model="settings[stateKey('advancedBorderType', borderState)]"><option v-for="type in borderTypes" :key="type" :value="type">{{ type }}</option></select></label>
+			<BoxControl v-if="settings[stateKey('advancedBorderType', borderState)]!=='none'" label="Border Width" :settings="settings" :setting-key="stateKey('advancedBorderWidth', borderState)" fallback="1px" />
+			<label v-if="settings[stateKey('advancedBorderType', borderState)]!=='none'" class="pb-advanced-field"><span>Border Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedBorderColor', borderState)]"></label>
+			<BoxControl label="Border Radius" :settings="settings" :setting-key="responsiveStateKey('advancedBorderRadius', borderState)" fallback="0px" :responsive-icon="deviceIcon" />
+			<label class="pb-advanced-toggle"><span>Box Shadow</span><input type="checkbox" v-model="settings[stateKey('advancedBoxShadowEnabled', borderState)]"></label><div v-if="settings[stateKey('advancedBoxShadowEnabled', borderState)]" class="pb-advanced-two-fields"><label><span>Color</span><input class="pb-input pb-coloris-input" v-model="settings[stateKey('advancedBoxShadowColor', borderState)]"></label><DimensionControl label="Horizontal" :settings="settings" :setting-key="stateKey('advancedBoxShadowX', borderState)" fallback="0px" allow-negative /><DimensionControl label="Vertical" :settings="settings" :setting-key="stateKey('advancedBoxShadowY', borderState)" fallback="4px" allow-negative /><DimensionControl label="Blur" :settings="settings" :setting-key="stateKey('advancedBoxShadowBlur', borderState)" fallback="16px" /><DimensionControl label="Spread" :settings="settings" :setting-key="stateKey('advancedBoxShadowSpread', borderState)" fallback="0px" allow-negative /><label class="pb-advanced-toggle"><span>Outline / Inset</span><input type="checkbox" v-model="settings[stateKey('advancedBoxShadowInset', borderState)]"></label></div>
+			<label v-if="borderState==='hover'" class="pb-advanced-field"><span>Hover Transition Duration</span><input class="pb-input" type="number" min="0" step=".1" v-model.number="settings.advancedBorderHoverDuration"></label>
+		</div></details>
+
+		<details class="pb-collapsible"><summary>Mask</summary><div class="pb-collapsible-body"><label class="pb-advanced-toggle"><span>Enable Mask</span><input type="checkbox" v-model="settings.maskEnabled"></label><template v-if="settings.maskEnabled"><label class="pb-advanced-field"><span>Shape</span><select class="pb-select" v-model="settings.maskShape"><option v-for="shape in maskShapes" :key="shape" :value="shape">{{ shape }}</option></select></label><label v-if="settings.maskShape==='custom'" class="pb-advanced-field"><span>Custom Image or SVG</span><input class="pb-input" v-model="settings.maskCustomImage"></label><div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Size</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('maskSize', 'fit')" @change="setResponsiveSetting('maskSize', $event.target.value)"><option value="fit">Fit</option><option value="fill">Fill</option><option value="custom">Custom</option></select></div><ScalarControl v-if="effectiveResponsiveValue('maskSize', 'fit')==='custom'" label="Scale" :settings="settings" :setting-key="responsiveKey('maskScale')" :fallback="100" :min-value="1" :max-value="300" :step-value="1" :responsive-icon="deviceIcon" /><div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Position</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('maskPosition', 'center center')" @change="setResponsiveSetting('maskPosition', $event.target.value)"><option v-for="position in maskPositions" :key="position" :value="position">{{ position }}</option></select></div><div v-if="effectiveResponsiveValue('maskPosition', 'center center')==='custom'" class="pb-advanced-two-fields"><DimensionControl label="X" :settings="settings" :setting-key="responsiveKey('maskPositionX')" fallback="50%" :responsive-icon="deviceIcon" /><DimensionControl label="Y" :settings="settings" :setting-key="responsiveKey('maskPositionY')" fallback="50%" :responsive-icon="deviceIcon" /></div><div class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Repeat</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('maskRepeat', 'no-repeat')" @change="setResponsiveSetting('maskRepeat', $event.target.value)"><option v-for="repeat in maskRepeats" :key="repeat" :value="repeat">{{ repeat }}</option></select></div></template></div></details>
+
+		<details class="pb-collapsible"><summary>Responsive</summary><div class="pb-collapsible-body"><label class="pb-advanced-toggle"><span>Hide On Desktop</span><input type="checkbox" v-model="settings.hideDesktop"></label><label class="pb-advanced-toggle"><span>Hide On Tablet Portrait</span><input type="checkbox" v-model="settings.hideTablet"></label><label class="pb-advanced-toggle"><span>Hide On Mobile Portrait</span><input type="checkbox" v-model="settings.hideMobile"></label></div></details>
+
+		<details class="pb-collapsible"><summary>Attributes</summary><div class="pb-collapsible-body"><div v-for="(attribute,index) in attributes" :key="index" class="pb-attribute-row"><input class="pb-input" v-model="attribute.name" placeholder="key"><input class="pb-input" v-model="attribute.value" placeholder="value"><button type="button" @click="removeAttribute(index)"><i class="fas fa-times"></i></button></div><button type="button" class="pb-btn" @click="addAttribute"><i class="fas fa-plus"></i> Add Attribute</button><p class="pb-advanced-help">Use key|value semantics. Event handlers, style, id, class, and unsafe URLs are rejected on render.</p></div></details>
+
+		<details class="pb-collapsible"><summary>Custom CSS</summary><div class="pb-collapsible-body"><textarea class="pb-input pb-advanced-css" v-model="settings.customCssCode" rows="9" placeholder="selector { color: #101828; }"></textarea><p class="pb-advanced-help">Use <code>selector</code> to scope rules to this widget.</p></div></details>
+	</div>
+</template>
+
+<script>
+const StateTabs = {
+	props: { modelValue: { type: String, default: 'normal' } },
+	emits: ['update:modelValue'],
+	template: `<div class="pb-state-tabs pb-state-tabs--two"><button type="button" :class="{active:modelValue==='normal'}" @click="$emit('update:modelValue','normal')">Normal</button><button type="button" :class="{active:modelValue==='hover'}" @click="$emit('update:modelValue','hover')">Hover</button></div>`,
+};
+
+const ChoiceButtons = {
+	props: { modelValue: { type: String, default: '' }, options: { type: Array, default: () => [] } },
+	emits: ['update:modelValue'],
+	template: `<div class="pb-advanced-choice-buttons"><button v-for="option in options" :key="option.value" type="button" :class="{active:modelValue===option.value}" :title="option.label" :aria-label="option.label" @click="$emit('update:modelValue',option.value)"><i :class="option.icon"></i></button></div>`,
+};
+
+const DEFAULT_DIMENSION_UNITS = ['px', 'pt', 'em', 'rem', '%'];
+const SPACING_DIMENSION_UNITS = ['px', '%', 'em', 'rem', 'vw'];
+function parseDimension(value, fallback = '0px', units = DEFAULT_DIMENSION_UNITS) {
+	const raw = String(value ?? '').trim() || String(fallback || '0px');
+	const match = raw.match(/^(-?\d+(?:\.\d+)?)(px|%|em|rem|pt|vw|deg)?$/i);
+	const fallbackMatch = String(fallback || '0px').match(/^(-?\d+(?:\.\d+)?)([a-z%]+)?$/i);
+	const unit = match?.[2] || fallbackMatch?.[2] || units[0] || 'px';
+	return {
+		value: Number(match?.[1] ?? fallbackMatch?.[1] ?? 0),
+		unit: units.includes(unit) ? unit : (units[0] || 'px'),
+	};
+}
+function dimensionLimit(unit) {
+	if (unit === '%' || unit === 'vw' || unit === 'deg') return unit === 'deg' ? 360 : 100;
+	if (unit === 'em' || unit === 'rem') return 30;
+	if (unit === 'pt') return 720;
+	return 1600;
+}
+function dimensionStep(unit) {
+	return ['em', 'rem'].includes(unit) ? 0.1 : 1;
+}
+
+function hasResponsiveValue(value) {
+	return value !== '' && value !== null && value !== undefined;
+}
+function responsiveBaseKey(settingKey) {
+	return String(settingKey || '').replace(/(?:Tablet|Mobile)$/, '');
+}
+function inheritedResponsiveValue(settings, settingKey, fallback = '') {
+	const ownValue = settings?.[settingKey];
+	if (hasResponsiveValue(ownValue)) return ownValue;
+	const key = String(settingKey || '');
+	const base = responsiveBaseKey(key);
+	if (base === key) return fallback;
+	if (key.endsWith('Mobile')) {
+		const tabletValue = settings?.[base + 'Tablet'];
+		if (hasResponsiveValue(tabletValue)) return tabletValue;
+	}
+	const desktopValue = settings?.[base];
+	return hasResponsiveValue(desktopValue) ? desktopValue : fallback;
+}
+
+const ResponsiveDeviceControl = {
+	props: { icon: { type: String, default: 'fas fa-desktop' } },
+	inject: { selectResponsiveDevice: { default: null } },
+	data() {
+		return {
+			open: false,
+			devices: [
+				{ value: 'desktop', label: 'Desktop', icon: 'fas fa-desktop' },
+				{ value: 'tablet', label: 'Tablet Portrait', icon: 'fas fa-tablet-alt' },
+				{ value: 'mobile', label: 'Mobile Portrait', icon: 'fas fa-mobile-alt' },
+			],
+		};
+	},
+	computed: {
+		activeDevice() {
+			if (this.icon.includes('tablet')) return 'tablet';
+			if (this.icon.includes('mobile')) return 'mobile';
+			return 'desktop';
+		},
+		activeLabel() { return this.devices.find((device) => device.value === this.activeDevice)?.label || 'Desktop'; },
+	},
+	methods: {
+		select(device) {
+			if (typeof this.selectResponsiveDevice === 'function') this.selectResponsiveDevice(device);
+			this.open = false;
+		},
+	},
+	template: `<div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" :aria-label="'Edit for ' + activeLabel" :aria-expanded="open ? 'true' : 'false'" @click="open=!open"><i :class="icon"></i></button><div v-if="open" class="pb-control-device-menu"><button v-for="device in devices" :key="device.value" type="button" class="pb-control-device-item" :class="{active:device.value===activeDevice}" @click="select(device.value)"><i :class="device.icon"></i><span>{{ device.label }}</span></button></div></div>`,
+};
+
+const ScalarControl = {
+	components: { ResponsiveDeviceControl },
+	props: {
+		settings: { type: Object, required: true }, settingKey: { type: String, required: true }, label: String,
+		fallback: { type: Number, default: 0 }, minValue: { type: Number, default: 0 },
+		maxValue: { type: Number, default: 100 }, stepValue: { type: Number, default: 1 },
+		responsiveIcon: { type: String, default: '' },
+	},
+	computed: {
+		value() { const value = Number(inheritedResponsiveValue(this.settings, this.settingKey, this.fallback)); return Number.isFinite(value) ? value : this.fallback; },
+	},
+	methods: {
+		setValue(raw) { const value = Number(raw); if (Number.isFinite(value)) this.settings[this.settingKey] = Math.min(this.maxValue, Math.max(this.minValue, value)); },
+	},
+	template: `<div class="pb-advanced-dimension-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><responsive-device-control v-if="responsiveIcon" :icon="responsiveIcon" /></div><div class="pb-range-value-row"><input class="pb-range" type="range" :min="minValue" :max="maxValue" :step="stepValue" :value="value" @input="setValue($event.target.value)"><input class="pb-input pb-input-compact" type="number" :min="minValue" :max="maxValue" :step="stepValue" :value="value" @input="setValue($event.target.value)"></div></div>`,
+};
+
+const DimensionControl = {
+	components: { ResponsiveDeviceControl },
+	props: {
+		settings: { type: Object, required: true }, settingKey: { type: String, required: true }, label: String,
+		fallback: { type: String, default: '0px' }, units: { type: Array, default: () => DEFAULT_DIMENSION_UNITS },
+		allowNegative: { type: Boolean, default: false }, responsiveIcon: { type: String, default: '' },
+	},
+	computed: {
+		parsed() { return parseDimension(inheritedResponsiveValue(this.settings, this.settingKey, this.fallback), this.fallback, this.units); },
+		minValue() { return this.allowNegative ? -dimensionLimit(this.parsed.unit) : 0; },
+		maxValue() { return dimensionLimit(this.parsed.unit); },
+		stepValue() { return dimensionStep(this.parsed.unit); },
+	},
+	methods: {
+		setValue(value) {
+			const number = Number(value);
+			if (!Number.isFinite(number)) return;
+			const safe = Math.min(this.maxValue, Math.max(this.minValue, number));
+			this.settings[this.settingKey] = String(safe) + this.parsed.unit;
+		},
+		setUnit(unit) {
+			const safe = this.units.includes(unit) ? unit : this.units[0];
+			this.settings[this.settingKey] = String(this.parsed.value) + safe;
+		},
+	},
+	template: `<div class="pb-advanced-dimension-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><div class="pb-advanced-control-tools"><responsive-device-control v-if="responsiveIcon" :icon="responsiveIcon" /><select class="pb-mini-unit" :value="parsed.unit" @change="setUnit($event.target.value)"><option v-for="unit in units" :key="unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-range-value-row"><input class="pb-range" type="range" :min="minValue" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"><input class="pb-input pb-input-compact" type="number" :min="minValue" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"></div></div>`,
+};
+
+const EdgeControl = {
+	components: { ResponsiveDeviceControl },
+	props: {
+		settings: { type: Object, required: true }, keys: { type: Array, required: true }, label: String,
+		fallback: { type: String, default: '0px' }, allowNegative: { type: Boolean, default: false },
+		responsiveIcon: { type: String, default: '' },
+	},
+	data() { return { linked: true, sides: ['Top', 'Right', 'Bottom', 'Left'], units: SPACING_DIMENSION_UNITS }; },
+	computed: { unit() { return parseDimension(inheritedResponsiveValue(this.settings, this.keys[0], this.fallback), this.fallback, this.units).unit; } },
+	methods: {
+		value(index) { return parseDimension(inheritedResponsiveValue(this.settings, this.keys[index], this.fallback), this.fallback, this.units).value; },
+		setValue(index, raw) {
+			const limit = dimensionLimit(this.unit);
+			const number = Number(raw);
+			if (!Number.isFinite(number)) return;
+			const safe = Math.min(limit, Math.max(this.allowNegative ? -limit : 0, number));
+			if (this.linked) this.keys.forEach((key) => { this.settings[key] = String(safe) + this.unit; });
+			else this.settings[this.keys[index]] = String(safe) + this.unit;
+		},
+		setUnit(unit) {
+			const safe = this.units.includes(unit) ? unit : 'px';
+			this.keys.forEach((key, index) => { this.settings[key] = String(this.value(index)) + safe; });
+		},
+	},
+	template: `<div class="pb-advanced-edge-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><div class="pb-advanced-control-tools"><responsive-device-control v-if="responsiveIcon" :icon="responsiveIcon" /><select class="pb-mini-unit" :value="unit" @change="setUnit($event.target.value)"><option v-for="option in units" :key="option" :value="option">{{ option }}</option></select></div></div><div class="pb-advanced-edge-fields"><label v-for="(side,index) in sides" :key="side"><input class="pb-input" type="number" :step="dimensionStep(unit)" :value="value(index)" @input="setValue(index,$event.target.value)"><span>{{ side }}</span></label><button type="button" class="pb-link-btn" :class="{active:linked}" @click="linked=!linked" title="Link values"><i class="fas" :class="linked ? 'fa-link' : 'fa-unlink'"></i></button></div></div>`,
+};
+EdgeControl.methods.dimensionStep = dimensionStep;
+
+const BoxControl = {
+	components: { ResponsiveDeviceControl },
+	props: {
+		settings: { type: Object, required: true }, settingKey: { type: String, required: true }, label: String,
+		fallback: { type: String, default: '0px' }, responsiveIcon: { type: String, default: '' },
+	},
+	data() { return { linked: true, sides: ['Top', 'Right', 'Bottom', 'Left'], units: DEFAULT_DIMENSION_UNITS }; },
+	computed: {
+		tokens() {
+			const raw = String(inheritedResponsiveValue(this.settings, this.settingKey, this.fallback)).trim().split(/\s+/).slice(0, 4);
+			const expanded = raw.length === 1 ? [raw[0], raw[0], raw[0], raw[0]] : (raw.length === 2 ? [raw[0], raw[1], raw[0], raw[1]] : (raw.length === 3 ? [raw[0], raw[1], raw[2], raw[1]] : raw));
+			return expanded.map((token) => parseDimension(token, this.fallback, this.units));
+		},
+		unit() { return this.tokens[0]?.unit || 'px'; },
+	},
+	methods: {
+		value(index) { return this.tokens[index]?.value ?? 0; },
+		write(values, unit = this.unit) { this.settings[this.settingKey] = values.map((value) => String(value) + unit).join(' '); },
+		setValue(index, raw) {
+			const number = Number(raw);
+			if (!Number.isFinite(number)) return;
+			const safe = Math.min(dimensionLimit(this.unit), Math.max(0, number));
+			const values = this.tokens.map((token) => token.value);
+			if (this.linked) values.fill(safe); else values[index] = safe;
+			this.write(values);
+		},
+		setUnit(unit) { this.write(this.tokens.map((token) => token.value), this.units.includes(unit) ? unit : 'px'); },
+	},
+	template: `<div class="pb-advanced-edge-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><div class="pb-advanced-control-tools"><responsive-device-control v-if="responsiveIcon" :icon="responsiveIcon" /><select class="pb-mini-unit" :value="unit" @change="setUnit($event.target.value)"><option v-for="option in units" :key="option" :value="option">{{ option }}</option></select></div></div><div class="pb-advanced-edge-fields"><label v-for="(side,index) in sides" :key="side"><input class="pb-input" type="number" :step="dimensionStep(unit)" :value="value(index)" @input="setValue(index,$event.target.value)"><span>{{ side }}</span></label><button type="button" class="pb-link-btn" :class="{active:linked}" @click="linked=!linked" title="Link values"><i class="fas" :class="linked ? 'fa-link' : 'fa-unlink'"></i></button></div></div>`,
+};
+BoxControl.methods.dimensionStep = dimensionStep;
+
+const MotionEffect = {
+	props: {
+		label: String, settings: Object, enabledKey: String, directionKey: String,
+		directions: { type: Array, default: () => [] }, levelKey: { type: String, default: '' },
+	},
+	computed: {
+		prefix() { return this.enabledKey.replace(/Enabled$/, ''); },
+	},
+	template: `<div class="pb-motion-effect"><label class="pb-advanced-toggle"><span>{{ label }}</span><input type="checkbox" v-model="settings[enabledKey]"></label><div v-if="settings[enabledKey]" class="pb-advanced-two-fields"><label><span>Direction</span><select class="pb-select" v-model="settings[directionKey]"><option v-for="option in directions" :key="option[0]" :value="option[0]">{{ option[1] }}</option></select></label><label><span>{{ levelKey ? 'Level' : 'Speed' }}</span><input class="pb-input" type="number" step=".1" v-model.number="settings[levelKey || (prefix+'Speed')]"></label><label><span>Viewport Start</span><input class="pb-input" type="number" min="0" max="100" v-model.number="settings[prefix+'ViewportStart']"></label><label><span>Viewport End</span><input class="pb-input" type="number" min="0" max="100" v-model.number="settings[prefix+'ViewportEnd']"></label></div></div>`,
+};
+
+export default {
+	name: 'WidgetAdvancedControls',
+	components: { StateTabs, ChoiceButtons, MotionEffect, ResponsiveDeviceControl, DimensionControl, ScalarControl, EdgeControl, BoxControl },
+	props: {
+		node: { type: Object, required: true },
+		responsiveDevice: { type: String, default: 'desktop' },
+		showDisplayConditions: { type: Boolean, default: false },
+		showCacheSettings: { type: Boolean, default: false },
+		elementorChoices: { type: Boolean, default: false },
+	},
+	emits: ['unavailable-ai', 'responsive-device', 'choose-media', 'clear-media'],
+	provide() {
+		return { selectResponsiveDevice: (device) => this.$emit('responsive-device', device) };
+	},
+	data() {
+		return {
+			sides: ['Top', 'Right', 'Bottom', 'Left'],
+			backgroundState: 'normal', borderState: 'normal', transformState: 'normal',
+			alignSelfChoices: [{value:'auto',label:'Default',icon:'fas fa-ban'},{value:'flex-start',label:'Start',icon:'fas fa-align-left'},{value:'center',label:'Center',icon:'fas fa-align-center'},{value:'flex-end',label:'End',icon:'fas fa-align-right'},{value:'stretch',label:'Stretch',icon:'fas fa-arrows-alt-h'}],
+			orderChoices: [{value:'default',label:'Default',icon:'fas fa-ban'},{value:'start',label:'Start',icon:'fas fa-step-backward'},{value:'end',label:'End',icon:'fas fa-step-forward'},{value:'custom',label:'Custom',icon:'fas fa-sliders-h'}],
+			sizeChoices: [{value:'none',label:'None',icon:'fas fa-ban'},{value:'grow',label:'Grow',icon:'fas fa-expand-alt'},{value:'shrink',label:'Shrink',icon:'fas fa-compress-alt'},{value:'custom',label:'Custom',icon:'fas fa-sliders-h'}],
+			borderTypes: ['none', 'solid', 'double', 'dotted', 'dashed', 'groove'],
+			fadeDirections: [['fade-in','Fade In'],['fade-out','Fade Out'],['fade-out-in','Fade Out In'],['fade-in-out','Fade In Out']],
+			scaleDirections: [['up','Up'],['down','Down'],['down-up','Down-Up'],['up-down','Up-Down']],
+			entranceAnimations: ['fadeIn','fadeInUp','fadeInDown','fadeInLeft','fadeInRight','zoomIn','bounceIn','slideInUp','slideInDown','slideInLeft','slideInRight','rotateIn','lightSpeedIn','rollIn'],
+			maskShapes: ['circle', 'flower', 'sketch', 'triangle', 'blob', 'hexagon', 'custom'],
+			maskPositions: ['left top','center top','right top','left center','center center','right center','left bottom','center bottom','right bottom','custom'],
+			backgroundPositions: [{value:'center center',label:'Center'},{value:'top center',label:'Top'},{value:'bottom center',label:'Bottom'},{value:'center left',label:'Left'},{value:'center right',label:'Right'},{value:'top left',label:'Top Left'},{value:'top right',label:'Top Right'},{value:'bottom left',label:'Bottom Left'},{value:'bottom right',label:'Bottom Right'}],
+			maskRepeats: ['no-repeat','repeat','repeat-x','repeat-y','round','space'],
+		};
+	},
+	computed: {
+		settings() { return this.node.settings || (this.node.settings = {}); },
+		attributes() { return Array.isArray(this.settings.attributes) ? this.settings.attributes : (this.settings.attributes = []); },
+		conditionGroups() { return Array.isArray(this.settings.displayConditions) ? this.settings.displayConditions : (this.settings.displayConditions = []); },
+		deviceLabel() { return this.responsiveDevice === 'tablet' ? 'Tablet Portrait' : (this.responsiveDevice === 'mobile' ? 'Mobile Portrait' : 'Desktop'); },
+		deviceIcon() { return this.responsiveDevice === 'tablet' ? 'fas fa-tablet-alt' : (this.responsiveDevice === 'mobile' ? 'fas fa-mobile-alt' : 'fas fa-desktop'); },
+	},
+	methods: {
+		responsiveKey(base) { return base + (this.responsiveDevice === 'tablet' ? 'Tablet' : (this.responsiveDevice === 'mobile' ? 'Mobile' : '')); },
+		effectiveResponsiveValue(base, fallback = '') { return inheritedResponsiveValue(this.settings, this.responsiveKey(base), fallback); },
+		effectiveResponsiveStateValue(base, state, fallback = '') { return inheritedResponsiveValue(this.settings, this.responsiveStateKey(base, state), fallback); },
+		setResponsiveSetting(base, value) { this.settings[this.responsiveKey(base)] = value; },
+		setResponsiveStateSetting(base, state, value) { this.settings[this.responsiveStateKey(base, state)] = value; },
+		setResponsiveNumberSetting(base, raw) {
+			const value = raw === '' ? '' : Number(raw);
+			if (value === '' || Number.isFinite(value)) this.setResponsiveSetting(base, value);
+		},
+		edgeKeys(base) { return this.sides.map((side) => this.responsiveKey(base + side)); },
+		stateKey(base, state) { return base + (state === 'hover' ? 'Hover' : ''); },
+		responsiveStateKey(base, state) { return this.responsiveKey(this.stateKey(base, state)); },
+		notifyUnavailableAI() { this.$emit('unavailable-ai'); },
+		addAttribute() { this.attributes.push({ name: '', value: '' }); },
+		removeAttribute(index) { this.attributes.splice(index, 1); },
+		newId(prefix) { return prefix + '-' + Math.random().toString(36).slice(2, 9); },
+		addConditionGroup() { this.conditionGroups.push({ id: this.newId('group'), rules: [{ id: this.newId('rule'), effect: 'include', source: 'page-slug', operator: 'is', value: '' }] }); },
+		removeConditionGroup(index) { this.conditionGroups.splice(index, 1); },
+		addConditionRule(group) { if (!Array.isArray(group.rules)) group.rules = []; group.rules.push({ id: this.newId('rule'), effect: 'include', source: 'page-slug', operator: 'is', value: '' }); },
+		removeConditionRule(group, index) { if (Array.isArray(group.rules)) group.rules.splice(index, 1); },
+	},
+};
+</script>
+
+<style scoped>
+.pb-widget-advanced-controls { display: flex; flex-direction: column; gap: 0; }
+.pb-advanced-subtitle { margin: 10px 0 8px; font-size: 11px; font-weight: 700; color: #344054; }
+.pb-advanced-field, .pb-advanced-two-fields > label, .pb-advanced-four-fields > label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; font-size: 11px; color: #526178; }
+.pb-advanced-responsive-field .pb-advanced-control-head { margin-bottom: 0; }
+.pb-advanced-choice-buttons { display: inline-flex; align-items: center; margin-left: auto; }
+.pb-advanced-choice-buttons button { width: 32px; height: 30px; padding: 0; border: 1px solid #d4ddee; border-right: 0; border-radius: 0; background: #fff; color: #526178; font-size: 11px; cursor: pointer; }
+.pb-advanced-choice-buttons button:first-child { border-radius: 5px 0 0 5px; }
+.pb-advanced-choice-buttons button:last-child { border-right: 1px solid #d4ddee; border-radius: 0 5px 5px 0; }
+.pb-advanced-choice-buttons button:hover, .pb-advanced-choice-buttons button.active { background: #eef3ff; color: #4154d9; }
+.pb-advanced-size-fields { display: grid; grid-template-columns: minmax(0, 1fr); }
+.pb-advanced-two-fields, .pb-advanced-four-fields { display: grid; gap: 8px; }
+.pb-advanced-two-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pb-advanced-four-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pb-advanced-dimension-control, .pb-advanced-edge-control { min-width: 0; margin-bottom: 14px; }
+.pb-transform-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
+.pb-transform-grid > * { min-width: 0; }
+.pb-advanced-control-head { min-height: 26px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; font-size: 11px; color: #344054; }
+.pb-advanced-control-tools { display: inline-flex; align-items: center; gap: 7px; color: #667085; }
+.pb-advanced-control-tools .pb-mini-unit { width: 56px; min-width: 56px; }
+.pb-advanced-dimension-control .pb-range-value-row { grid-template-columns: minmax(0, 1fr) 84px; gap: 8px; }
+.pb-advanced-edge-fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) 28px; gap: 0; align-items: start; }
+.pb-advanced-edge-fields label { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.pb-advanced-edge-fields .pb-input { min-width: 0; height: 30px; padding: 3px; border-radius: 0; border-right-width: 0; text-align: center; font-size: 11px; }
+.pb-advanced-edge-fields label:first-child .pb-input { border-radius: 5px 0 0 5px; }
+.pb-advanced-edge-fields label span { color: #7a8699; font-size: 9px; }
+.pb-advanced-edge-fields .pb-link-btn { width: 28px; height: 30px; border-radius: 0 5px 5px 0; }
+.pb-advanced-edge-fields .pb-link-btn.active { background: #eef1ff; color: #5b6cff; }
+.pb-advanced-toggle,
+:deep(.pb-motion-effect .pb-advanced-toggle) { min-height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-size: 12px; color: #344054; }
+:deep(.pb-motion-effect) { padding: 10px 0 12px; border-top: 1px solid #edf0f5; }
+:deep(.pb-motion-effect .pb-advanced-two-fields) { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; }
+:deep(.pb-motion-effect .pb-advanced-two-fields > label) { display: flex; min-width: 0; flex-direction: column; gap: 6px; margin: 0 0 12px; color: #526178; font-size: 11px; }
+:deep(.pb-motion-effect .pb-advanced-two-fields > label > span) { color: #344054; font-weight: 600; }
+:deep(.pb-motion-effect .pb-advanced-two-fields .pb-input),
+:deep(.pb-motion-effect .pb-advanced-two-fields .pb-select) { width: 100%; min-width: 0; height: 32px; min-height: 32px; margin: 0; font-size: 12px; }
+.pb-ai-disabled { width: 100%; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 10px; border: 1px dashed #c9d1df; border-radius: 8px; background: #f8fafc; color: #667085; text-align: left; }
+.pb-ai-disabled span { display: flex; flex-direction: column; }.pb-ai-disabled small { font-size: 10px; }
+.pb-advanced-help { margin: 4px 0 12px; color: #7a8699; font-size: 10px; line-height: 1.5; }
+.pb-condition-group { margin-bottom: 12px; padding: 10px; border: 1px solid #dce2ec; border-radius: 8px; }
+.pb-condition-group-head { display: flex; justify-content: space-between; margin-bottom: 8px; }.pb-condition-group-head button,.pb-advanced-remove,.pb-attribute-row button { border: 0; background: transparent; color: #667085; }
+.pb-condition-rule { display: grid; gap: 6px; margin-bottom: 8px; }.pb-attribute-row { display: grid; grid-template-columns: 1fr 1fr 30px; gap: 6px; margin-bottom: 8px; }
+.pb-motion-effect { padding: 8px 0; border-top: 1px solid #edf0f5; }
+.pb-advanced-css { min-height: 180px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+</style>

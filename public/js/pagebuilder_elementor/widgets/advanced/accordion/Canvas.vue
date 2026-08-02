@@ -101,24 +101,25 @@ export default {
 				'--accordion-header-text-transform': String(this.settings.headerTextTransform || 'none'),
 				'--accordion-header-font-style': String(this.settings.headerFontStyle || 'normal'),
 				'--accordion-header-text-decoration': String(this.settings.headerTextDecoration || 'none'),
-				'--accordion-icon-size': this.cssToken(this.responsiveValue('headerIconSize', '16px'), '16px'),
-				'--accordion-icon-spacing': this.cssToken(this.responsiveValue('headerIconSpacing', '12px'), '12px'),
+				'--accordion-icon-size': this.cssToken(this.responsiveValue('headerIconSize', '15px'), '15px'),
+				'--accordion-icon-spacing': this.cssToken(this.responsiveValue('headerIconSpacing', '10px'), '10px'),
 				'--accordion-content-background': this.contentBackground(),
 				'--accordion-content-border-style': this.borderStyle(this.settings.contentBorderType),
-				'--accordion-content-border-width': this.cssToken(this.settings.contentBorderWidth, '0px'),
+				'--accordion-content-border-width': this.cssToken(this.responsiveValue('contentBorderWidth', '0px'), '0px'),
 				'--accordion-content-border-color': String(this.settings.contentBorderColor || 'transparent'),
 				'--accordion-content-radius': this.cssToken(this.responsiveValue('contentBorderRadius', '0px'), '0px'),
-				'--accordion-content-padding': this.cssToken(this.responsiveValue('contentPadding', '20px'), '20px'),
+				'--accordion-content-padding': this.cssToken(this.responsiveValue('contentPadding', '0px'), '0px'),
 			};
 			['Normal', 'Hover', 'Active'].forEach((suffix) => {
 				const state = suffix.toLowerCase();
 				style['--accordion-background-' + state] = this.stateBackground(suffix);
 				style['--accordion-border-style-' + state] = this.borderStyle(this.settings['accordionBorderType' + suffix]);
-				style['--accordion-border-width-' + state] = this.cssToken(this.settings['accordionBorderWidth' + suffix], '0px');
+				style['--accordion-border-width-' + state] = this.cssToken(this.responsiveValue('accordionBorderWidth' + suffix, '0px'), '0px');
 				style['--accordion-border-color-' + state] = String(this.settings['accordionBorderColor' + suffix] || 'transparent');
+				style['--accordion-box-shadow-' + state] = this.boxShadowValue('accordionBoxShadow', suffix);
 				style['--accordion-header-' + state + '-title-color'] = String(this.settings['headerTitleColor' + suffix] || 'currentColor');
 				style['--accordion-header-' + state + '-text-shadow'] = String(this.settings['headerTextShadow' + suffix] || 'none');
-				style['--accordion-header-' + state + '-stroke-width'] = this.cssToken(this.settings['headerTextStrokeWidth' + suffix], '0px');
+				style['--accordion-header-' + state + '-stroke-width'] = this.cssToken(this.responsiveValue('headerTextStrokeWidth' + suffix, '0px'), '0px');
 				style['--accordion-header-' + state + '-stroke-color'] = String(this.settings['headerTextStrokeColor' + suffix] || 'currentColor');
 				style['--accordion-header-' + state + '-icon-color'] = String(this.settings['headerIconColor' + suffix] || 'currentColor');
 			});
@@ -200,6 +201,12 @@ export default {
 		borderStyle(value) {
 			const raw = String(value || '').toLowerCase();
 			return ['solid', 'double', 'dotted', 'dashed', 'groove'].includes(raw) ? raw : 'none';
+		},
+		boxShadowValue(prefix, suffix = '') {
+			if (!this.settings[prefix + 'Enabled' + suffix]) return 'none';
+			const parts = ['X', 'Y', 'Blur', 'Spread'].map((field) => this.cssToken(this.settings[prefix + field + suffix], '0px'));
+			const color = String(this.settings[prefix + 'Color' + suffix] || 'rgba(0,0,0,.2)').replace(/[;{}]/g, '') || 'rgba(0,0,0,.2)';
+			return `${parts.join(' ')} ${color}${this.settings[prefix + 'Inset' + suffix] ? ' inset' : ''}`;
 		},
 		gradient(prefix, suffix = '') {
 			const first = String(this.settings[prefix + 'GradientColorOne' + suffix] || '#ffffff');
@@ -357,8 +364,10 @@ export default {
 	border-style: var(--accordion-border-style-normal, solid);
 	border-width: var(--accordion-border-width-normal, 1px);
 	border-color: var(--accordion-border-color-normal, #d5dae3);
+	box-shadow: var(--accordion-box-shadow-normal, none);
 	border-radius: var(--accordion-border-radius, 0);
 	overflow: hidden;
+	transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
 
 .el-widget-accordion__item:last-child {
@@ -370,6 +379,7 @@ export default {
 	border-style: var(--accordion-border-style-hover, var(--accordion-border-style-normal, solid));
 	border-width: var(--accordion-border-width-hover, var(--accordion-border-width-normal, 1px));
 	border-color: var(--accordion-border-color-hover, var(--accordion-border-color-normal, #d5dae3));
+	box-shadow: var(--accordion-box-shadow-hover, var(--accordion-box-shadow-normal, none));
 }
 
 .el-widget-accordion__item.is-active {
@@ -377,6 +387,7 @@ export default {
 	border-style: var(--accordion-border-style-active, var(--accordion-border-style-normal, solid));
 	border-width: var(--accordion-border-width-active, var(--accordion-border-width-normal, 1px));
 	border-color: var(--accordion-border-color-active, var(--accordion-border-color-normal, #d5dae3));
+	box-shadow: var(--accordion-box-shadow-active, var(--accordion-box-shadow-normal, none));
 }
 
 .el-widget-accordion__heading {
@@ -393,7 +404,7 @@ export default {
 	background: transparent;
 	display: flex;
 	align-items: center;
-	gap: var(--accordion-icon-spacing, 12px);
+	gap: var(--accordion-icon-spacing, 10px);
 	font-family: var(--accordion-header-font-family, inherit);
 	font-size: var(--accordion-header-font-size, 16px);
 	font-weight: var(--accordion-header-font-weight, 600);
@@ -437,7 +448,7 @@ export default {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	font-size: var(--accordion-icon-size, 16px);
+	font-size: var(--accordion-icon-size, 15px);
 	color: var(--accordion-header-normal-icon-color, currentColor);
 }
 

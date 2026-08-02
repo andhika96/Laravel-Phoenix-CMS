@@ -167,6 +167,8 @@
 			$responsive_side_rules($s, 'Mobile', 'padding', fn ($value) => $css_value($value, '0')),
 			$responsive_side_rules($s, 'Mobile', 'margin', fn ($value) => $css_space($value, '0'))
 		);
+		if (($tabletBorderRadius = $responsive_border_radius_value($s, 'Tablet')) !== null) $tabletRules[] = 'border-radius:' . $tabletBorderRadius;
+		if (($mobileBorderRadius = $responsive_border_radius_value($s, 'Mobile')) !== null) $mobileRules[] = 'border-radius:' . $mobileBorderRadius;
 		if (($s['minHeightTablet'] ?? '') !== '') $tabletRules[] = 'min-height:' . $css_value($s['minHeightTablet'], 'auto');
 		if (($s['minHeightMobile'] ?? '') !== '') $mobileRules[] = 'min-height:' . $css_value($s['minHeightMobile'], 'auto');
 		if ($fullMode) {

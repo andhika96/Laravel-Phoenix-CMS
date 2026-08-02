@@ -91,6 +91,17 @@
 	$showDots = in_array($navigation, ['arrows_dots', 'dots'], true) && $hasAnyOverflow;
 	$linkType = $enum($settings['linkType'] ?? 'none', ['none', 'media', 'custom'], 'none');
 	$customLinkUrl = $safeLinkUrl($settings['customLinkUrl'] ?? '');
+	$linkTarget = $linkType === 'custom' && ($settings['linkTarget'] ?? '') === '_blank' ? '_blank' : '';
+	$relTokens = $linkTarget === '_blank' ? ['noopener', 'noreferrer'] : [];
+	if ($linkType === 'custom' && $truthy($settings['linkNofollow'] ?? false)) $relTokens[] = 'nofollow';
+	$linkRel = implode(' ', array_values(array_unique($relTokens)));
+	$linkAttributes = [];
+	foreach (($settings['linkCustomAttributes'] ?? []) as $attribute) {
+		if (!is_array($attribute)) continue;
+		$name = strtolower(trim((string) ($attribute['key'] ?? $attribute['name'] ?? '')));
+		if (!preg_match('/^(?:aria-[a-z0-9_-]+|data-[a-z0-9_-]+|title|download|hreflang)$/', $name)) continue;
+		$linkAttributes[$name] = (string) ($attribute['value'] ?? '');
+	}
 	$captionType = $enum($settings['captionType'] ?? 'none', ['none', 'title', 'caption', 'description'], 'none');
 	$borderType = $enum($settings['imageBorderType'] ?? 'default', ['default', 'none', 'solid', 'double', 'dotted', 'dashed', 'groove'], 'default');
 	$actualBorderType = in_array($borderType, ['default', 'none'], true) ? 'none' : $borderType;
@@ -164,7 +175,7 @@
 						$caption = $captionType !== 'none' ? (string) ($image[$captionType] ?? '') : '';
 					@endphp
 					<figure class="pb-image-carousel__slide">
-						@if($linkUrl !== '')<a href="{{ $linkUrl }}" @if($linkType === 'media' && ($settings['lightbox'] ?? 'default') !== 'no') data-carousel-lightbox @endif>@endif
+						@if($linkUrl !== '')<a href="{{ $linkUrl }}" @if($linkType === 'custom' && $linkTarget !== '') target="{{ $linkTarget }}" @endif @if($linkType === 'custom' && $linkRel !== '') rel="{{ $linkRel }}" @endif @if($linkType === 'custom') @foreach($linkAttributes as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach @endif @if($linkType === 'media' && ($settings['lightbox'] ?? 'default') !== 'no') data-carousel-lightbox @endif>@endif
 						<img src="{{ $image['url'] }}" alt="{{ $image['alt'] }}" style="{{ $imageStyle }}" @if($truthy($settings['lazyload'] ?? false)) loading="lazy" @endif>
 						@if($linkUrl !== '')</a>@endif
 						@if($caption !== '')<figcaption class="pb-image-carousel__caption" style="{{ $captionStyle }}">{{ $caption }}</figcaption>@endif

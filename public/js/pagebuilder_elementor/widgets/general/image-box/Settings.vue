@@ -13,20 +13,21 @@
 										<div class="pb-form-group">
 											<label class="pb-form-label">Choose Image</label>
 											<div class="pb-bg-media-field pb-widget-settings__media-field" :class="{ 'has-image': !!node.settings.imageUrl }">
-												<div class="pb-bg-media-preview" :style="node.settings.imageUrl ? { backgroundImage: 'url(' + node.settings.imageUrl + ')' } : {}">
-													<button type="button" class="pb-bg-media-center-btn" :title="node.settings.imageUrl ? 'Change Image' : 'Choose Image'" @click="editor.chooseMedia(node.settings, 'imageUrl')"><i :class="node.settings.imageUrl ? 'fas fa-pen' : 'fas fa-plus'"></i></button>
-												</div>
-												<div class="pb-bg-media-actions">
-													<button type="button" class="pb-bg-media-choose" @click="editor.chooseMedia(node.settings, 'imageUrl')">Choose Image</button>
-													<button type="button" class="pb-bg-media-remove" :disabled="!node.settings.imageUrl" title="Remove Image" @click="editor.clearMedia(node.settings, 'imageUrl')"><i class="fas fa-trash-alt"></i></button>
-												</div>
+													<div class="pb-bg-media-preview" :style="node.settings.imageUrl ? { backgroundImage: 'url(' + node.settings.imageUrl + ')' } : {}">
+														<button type="button" class="pb-bg-media-center-btn" :title="node.settings.imageUrl ? 'Change Image' : 'Choose Image'" @click="editor.chooseMedia(node.settings, 'imageUrl')"><i :class="node.settings.imageUrl ? 'fas fa-pen' : 'fas fa-plus'"></i></button>
+													</div>
+													<div class="pb-bg-media-actions">
+														<button type="button" class="pb-bg-media-choose" @click="editor.chooseMedia(node.settings, 'imageUrl')">Choose Image</button>
+														<button type="button" class="pb-bg-media-remove" :disabled="!node.settings.imageUrl" title="Remove Image" @click="editor.clearMedia(node.settings, 'imageUrl')"><i class="fas fa-trash-alt"></i></button>
+													</div>
 											</div>
 										</div>
-										<div class="pb-form-group"><label class="pb-form-label">Image Resolution</label><select class="pb-select" v-model="node.settings.imageResolution"><option value="thumbnail">Thumbnail - 150px</option><option value="medium">Medium - 300px</option><option value="medium_large">Medium Large - 768px</option><option value="large">Large - 1024px</option><option value="1536x1536">1536 x 1536</option><option value="2048x2048">2048 x 2048</option><option value="full">Full</option></select></div>
-										<div class="pb-form-group"><label class="pb-form-label">Title</label><div class="pb-image-box-dynamic-field"><input class="pb-input" v-model="node.settings.title"><component :is="editor.dynamicTagControl" :allowed-values="editor.imageBoxTextDynamicTags" :model-value="node.settings.dynamicBindings.title || ''" @update:modelValue="node.settings.dynamicBindings.title=$event" /></div></div>
-										<div class="pb-form-group"><label class="pb-form-label">Description</label><div class="pb-image-box-dynamic-field pb-image-box-dynamic-field--textarea"><textarea class="pb-input" rows="5" v-model="node.settings.description"></textarea><component :is="editor.dynamicTagControl" :allowed-values="editor.imageBoxTextDynamicTags" :model-value="node.settings.dynamicBindings.description || ''" @update:modelValue="node.settings.dynamicBindings.description=$event" /></div></div>
-										<div class="pb-form-group"><label class="pb-form-label">Link</label><component :is="editor.linkControl" :url="node.settings.linkUrl" :target="node.settings.linkTarget" :nofollow="node.settings.linkNofollow" :custom-attributes="node.settings.linkCustomAttributes" @update:url="node.settings.linkUrl=$event" @update:target="node.settings.linkTarget=$event" @update:nofollow="node.settings.linkNofollow=$event" @update:customAttributes="node.settings.linkCustomAttributes=$event" /></div>
-										<div class="pb-form-group"><label class="pb-form-label">Title HTML Tag</label><select class="pb-select" v-model="node.settings.titleTag"><option v-for="tag in ['h1','h2','h3','h4','h5','h6','div','span','p']" :key="'image-box-tag-'+tag" :value="tag">{{ tag.toUpperCase() }}</option></select></div>
+										<div class="pb-form-group"><label class="pb-form-label">Image Resolution</label><select class="pb-select" v-model="node.settings.imageResolution"><option value="thumbnail">Thumbnail - 150px</option><option value="medium">Medium - 300px</option><option value="medium_large">Medium Large - 768px</option><option value="large">Large - 1024px</option><option value="1536x1536">1536 x 1536</option><option value="2048x2048">2048 x 2048</option><option value="full">Full</option><option value="custom">Custom</option></select></div>
+										<div v-if="node.settings.imageResolution === 'custom'" class="pb-image-box-custom-resolution"><div class="pb-form-note">Crop the image or enter only one dimension to preserve its original ratio.</div><label><span>Width</span><input class="pb-input" type="number" min="1" max="4096" v-model.number="node.settings.customImageWidth"></label><label><span>Height</span><input class="pb-input" type="number" min="1" max="4096" v-model.number="node.settings.customImageHeight"></label></div>
+										<div class="pb-form-group"><label class="pb-form-label">Title</label><input class="pb-input" v-model="node.settings.title"></div>
+										<div class="pb-form-group"><label class="pb-form-label">Description</label><textarea class="pb-input" rows="5" v-model="node.settings.description"></textarea></div>
+										<div class="pb-form-group"><label class="pb-form-label">Link</label><div class="pb-icon-box-link-field"><component :is="editor.linkControl" :url="node.settings.linkUrl" :target="node.settings.linkTarget" :nofollow="node.settings.linkNofollow" :custom-attributes="node.settings.linkCustomAttributes" @update:url="node.settings.linkUrl=$event" @update:target="node.settings.linkTarget=$event" @update:nofollow="node.settings.linkNofollow=$event" @update:customAttributes="node.settings.linkCustomAttributes=$event" /></div></div>
+										<div class="pb-form-group"><label class="pb-form-label">Title HTML Tag</label><select class="pb-select" v-model="node.settings.titleTag"><option v-for="tag in ['h1','h2','h3','h4','h5','h6','div','span','p']" :key="'image-box-tag-'+tag" :value="tag">{{ ['div','span','p'].includes(tag) ? tag : tag.toUpperCase() }}</option></select></div>
 									</div>
 								</details>
 							</div>
@@ -41,7 +42,7 @@
 									</div>
 								</details>
 
-								<details class="pb-collapsible" open>
+								<details class="pb-collapsible">
 									<summary>Image</summary>
 									<div class="pb-collapsible-body">
 										<div class="pb-form-group pb-image-box-dimension-control"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">Width</label><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="editor.openControlResponsiveMenu('image-box-width')" :title="'Responsive: ' + editor.responsiveDeviceLabel()"><i :class="editor.responsiveDeviceIcon()"></i></button><div v-if="editor.isControlResponsiveMenuOpen('image-box-width')" class="pb-control-device-menu"><button v-for="device in editor.responsiveDevices" :key="'image-box-width-'+device.value" type="button" class="pb-control-device-item" :class="{active:editor.responsiveDevice===device.value}" @click.stop="editor.applyResponsiveDevice('image-box-width', device.value)"><i :class="device.icon"></i><span>{{ editor.deviceOptionLabel(device) }}</span></button></div></div></div><div class="pb-range-value-row"><input class="pb-range" type="range" min="0" :max="editor.sizeControlMax(node, 'imageWidth', '30%')" :step="editor.sizeControlStep(node, 'imageWidth', '30%')" :value="editor.sizeControlDisplayValue(node, 'imageWidth', '30%')" @input="editor.onSizeControlInput(node, 'imageWidth', $event, {fallback:'30%'})"><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" min="0" :value="editor.sizeControlDisplayValue(node, 'imageWidth', '30%')" @input="editor.onSizeControlInput(node, 'imageWidth', $event, {fallback:'30%'})"><select class="pb-mini-unit" :value="editor.sizeControlUnit(node, 'imageWidth', '30%')" @change="editor.setSizeControlUnit(node, 'imageWidth', $event.target.value, {fallback:'30%'})"><option v-for="unit in editor.sizeControlUnits" :key="'image-box-width-unit-'+unit" :value="unit">{{ unit }}</option></select></div></div></div>
@@ -56,7 +57,7 @@
 									</div>
 								</details>
 
-								<details class="pb-collapsible" open>
+								<details class="pb-collapsible">
 									<summary>Content</summary>
 									<div class="pb-collapsible-body">
 										<div class="pb-subsection-title">Title</div>
@@ -73,7 +74,7 @@
 							</div>
 
 							<div v-show="editor.settingsTab==='advanced'" class="pb-tab-content pb-image-box-advanced-settings">
-								<component :is="editor.widgetAdvancedControls" :node="node" :responsive-device="editor.responsiveDevice" @responsive-device="editor.setResponsiveDevice" @choose-media="editor.chooseMedia(node.settings,$event)" @clear-media="editor.clearMedia(node.settings,$event)" @unavailable-ai="editor.showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')" />
+								<component :is="editor.widgetAdvancedControls" :node="node" :responsive-device="editor.responsiveDevice" :show-display-conditions="false" :show-cache-settings="false" :elementor-choices="true" @responsive-device="editor.setResponsiveDevice" @choose-media="editor.chooseMedia(node.settings,$event)" @clear-media="editor.clearMedia(node.settings,$event)" @unavailable-ai="editor.showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')" />
 							</div>
 						</div>
 </template>

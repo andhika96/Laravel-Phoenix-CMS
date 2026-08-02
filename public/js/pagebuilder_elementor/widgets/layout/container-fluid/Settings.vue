@@ -571,8 +571,8 @@
 										<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings[editor.bgStateKey(node,'borderColor')]"></div></div>
 									</template>
 									<div class="pb-form-group">
-										<div class="pb-label-row"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-label-tools"><select class="pb-mini-unit" :value="dimensionGroupUnit(['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL'], 'px')" @change="setDimensionGroupUnit(['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL'], $event.target.value, 'px')"><option v-for="unit in ['px','%','em','rem','vw']" :key="'container-radius-'+unit" :value="unit">{{ unit }}</option></select><button type="button" class="pb-link-btn" @click="node.settings.borderRadiusLinked=!node.settings.borderRadiusLinked" :title="node.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="node.settings.borderRadiusLinked?'fas fa-link':'fas fa-unlink'"></i></button></div></div>
-										<div class="pb-four-sides mt-1"><template v-for="corner in [{key:'borderRadiusTL',label:'Top'},{key:'borderRadiusTR',label:'Right'},{key:'borderRadiusBR',label:'Bottom'},{key:'borderRadiusBL',label:'Left'}]" :key="corner.key"><label class="pb-side-input"><input class="pb-input" type="number" min="0" :value="dimensionValue(corner.key, 'px')" @input="setLinkedDimensionValue(corner.key, ['borderRadiusTL','borderRadiusTR','borderRadiusBR','borderRadiusBL'], $event, 'px', node.settings.borderRadiusLinked)"><span>{{ corner.label }}</span></label></template></div>
+										<div class="pb-label-row pb-label-row-device pb-radius-control-header"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-label-tools"><div class="pb-control-device-wrap"><button class="pb-control-device-btn" @click.stop="editor.openControlResponsiveMenu('container-fluid-border-radius')" :title="'Responsive: ' + editor.responsiveDeviceLabel()"><i :class="editor.responsiveDeviceIcon()"></i></button><div v-if="editor.isControlResponsiveMenuOpen('container-fluid-border-radius')" class="pb-control-device-menu"><button v-for="device in editor.responsiveDevices" :key="'container-fluid-border-radius-' + device.value" class="pb-control-device-item" :class="{active: editor.responsiveDevice===device.value}" @click.stop="editor.applyResponsiveDevice('container-fluid-border-radius', device.value)"><i :class="device.icon"></i><span>{{ editor.deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="dimensionGroupUnit(responsiveRadiusKeys(), 'px')" @change="setRadiusDimensionGroupUnit($event.target.value, 'px')"><option v-for="unit in ['px','%','em','rem','vw']" :key="'container-radius-'+unit" :value="unit">{{ unit }}</option></select></div></div>
+										<div class="pb-four-sides pb-four-sides-with-link mt-1"><template v-for="corner in [{key:'borderRadiusTL',label:'Top'},{key:'borderRadiusTR',label:'Right'},{key:'borderRadiusBR',label:'Bottom'},{key:'borderRadiusBL',label:'Left'}]" :key="corner.key"><label class="pb-side-input"><input class="pb-input" type="number" min="0" :value="radiusDimensionValue(corner.key, 'px')" @input="setLinkedRadiusDimensionValue(corner.key, $event, 'px')"><span>{{ corner.label }}</span></label></template><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" @click="node.settings.borderRadiusLinked=!node.settings.borderRadiusLinked" :title="node.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="node.settings.borderRadiusLinked?'fas fa-link':'fas fa-unlink'"></i></button></div></div>
 
 									</div>
 								</div>
@@ -665,16 +665,16 @@
 								<div class="pb-form-group pb-spacing-control-group">
 									<div class="pb-label-row pb-label-row-device">
 										<label class="pb-form-label mb-0">Margin</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="editor.openControlResponsiveMenu('container-margin')" :title="'Responsive: ' + editor.responsiveDeviceLabel()"><i :class="editor.responsiveDeviceIcon()"></i></button>
-											<div v-if="editor.isControlResponsiveMenuOpen('container-margin')" class="pb-control-device-menu">
-												<button v-for="device in editor.responsiveDevices" :key="'container-margin-' + device.value" class="pb-control-device-item" :class="{active: editor.responsiveDevice===device.value}" @click.stop="editor.applyResponsiveDevice('container-margin', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ editor.deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
 										<div class="pb-label-tools">
+											<div class="pb-control-device-wrap">
+												<button class="pb-control-device-btn" @click.stop="editor.openControlResponsiveMenu('container-margin')" :title="'Responsive: ' + editor.responsiveDeviceLabel()"><i :class="editor.responsiveDeviceIcon()"></i></button>
+												<div v-if="editor.isControlResponsiveMenuOpen('container-margin')" class="pb-control-device-menu">
+													<button v-for="device in editor.responsiveDevices" :key="'container-margin-' + device.value" class="pb-control-device-item" :class="{active: editor.responsiveDevice===device.value}" @click.stop="editor.applyResponsiveDevice('container-margin', device.value)">
+														<i :class="device.icon"></i>
+														<span>{{ editor.deviceOptionLabel(device) }}</span>
+													</button>
+												</div>
+											</div>
 											<select class="pb-mini-unit pb-edge-unit-select" :value="editor.spacingUnit(node, 'margin')" @change="editor.setSpacingUnit(node, 'margin', $event.target.value)">
 												<option v-for="unit in editor.spacingControlUnits" :key="'container-margin-unit-' + unit" :value="unit">{{ unit }}</option>
 											</select>
@@ -691,16 +691,16 @@
 								<div class="pb-form-group pb-spacing-control-group">
 									<div class="pb-label-row pb-label-row-device">
 										<label class="pb-form-label mb-0">Padding</label>
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="editor.openControlResponsiveMenu('container-padding')" :title="'Responsive: ' + editor.responsiveDeviceLabel()"><i :class="editor.responsiveDeviceIcon()"></i></button>
-											<div v-if="editor.isControlResponsiveMenuOpen('container-padding')" class="pb-control-device-menu">
-												<button v-for="device in editor.responsiveDevices" :key="'container-padding-' + device.value" class="pb-control-device-item" :class="{active: editor.responsiveDevice===device.value}" @click.stop="editor.applyResponsiveDevice('container-padding', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ editor.deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
 										<div class="pb-label-tools">
+											<div class="pb-control-device-wrap">
+												<button class="pb-control-device-btn" @click.stop="editor.openControlResponsiveMenu('container-padding')" :title="'Responsive: ' + editor.responsiveDeviceLabel()"><i :class="editor.responsiveDeviceIcon()"></i></button>
+												<div v-if="editor.isControlResponsiveMenuOpen('container-padding')" class="pb-control-device-menu">
+													<button v-for="device in editor.responsiveDevices" :key="'container-padding-' + device.value" class="pb-control-device-item" :class="{active: editor.responsiveDevice===device.value}" @click.stop="editor.applyResponsiveDevice('container-padding', device.value)">
+														<i :class="device.icon"></i>
+														<span>{{ editor.deviceOptionLabel(device) }}</span>
+													</button>
+												</div>
+											</div>
 											<select class="pb-mini-unit pb-edge-unit-select" :value="editor.spacingUnit(node, 'padding')" @change="editor.setSpacingUnit(node, 'padding', $event.target.value)">
 												<option v-for="unit in editor.spacingControlUnits" :key="'container-padding-unit-' + unit" :value="unit">{{ unit }}</option>
 											</select>
@@ -1012,6 +1012,10 @@ export default {
 		dimensionGroupUnit(keys, fallbackUnit = 'px') { for (const key of keys) if (this.dimensionValue(key, fallbackUnit) !== '') return this.dimensionUnit(key, fallbackUnit); return fallbackUnit; },
 		setDimensionGroupUnit(keys, unit, fallbackUnit = 'px') { keys.forEach((key) => this.setDimensionUnit(key, unit, fallbackUnit)); },
 		setLinkedDimensionValue(key, keys, event, fallbackUnit = 'px', linked = false) { this.setDimensionValue(key, event, fallbackUnit); if (!linked) return; const value = this.node.settings[key]; keys.forEach((target) => { if (target !== key) this.node.settings[target] = value; }); },
+		responsiveRadiusKeys() { return ['borderRadiusTL', 'borderRadiusTR', 'borderRadiusBR', 'borderRadiusBL'].map((key) => this.editor.activeResponsiveKey(key)); },
+		radiusDimensionValue(key, fallbackUnit = 'px') { return this.dimensionValue(this.editor.activeResponsiveKey(key), fallbackUnit); },
+		setRadiusDimensionGroupUnit(unit, fallbackUnit = 'px') { this.node.settings.borderRadius = ''; this.setDimensionGroupUnit(this.responsiveRadiusKeys(), unit, fallbackUnit); },
+		setLinkedRadiusDimensionValue(key, event, fallbackUnit = 'px') { this.node.settings.borderRadius = ''; this.setLinkedDimensionValue(this.editor.activeResponsiveKey(key), this.responsiveRadiusKeys(), event, fallbackUnit, this.node.settings.borderRadiusLinked); },
 	},
 };
 </script>
