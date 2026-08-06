@@ -108,11 +108,6 @@
 								<div class="ph-custom-tooltip"><span>{{ t('Dashboard') }}</span></div>
 							</a>
 
-							<a href="{{ url('chat') }}" class="list-group-item list-group-item-action">
-								<div class="ph-nav-icon"><i class="fal fa-comments fa-fw"></i></div>
-								<span class="ph-nav-text">{{ t('Messages') }}</span>
-								<div class="ph-custom-tooltip"><span>{{ t('Messages') }}</span></div>
-							</a>
 						</div>
 
 						{!! menu_versioning() !!}

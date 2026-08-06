@@ -94,12 +94,6 @@
 								<div class="ph-custom-tooltip"><span>{{ t('Dashboard') }}</span></div>
 							</a>
 
-							<a href="{{ url('chat') }}" class="list-group-item list-group-item-action{{ request()->is('chat*') ? ' active' : '' }}">
-								<div class="ph-nav-icon"><i class="fal fa-comments fa-fw"></i></div>
-								<span class="ph-nav-text">{{ t('Messages') }}</span>
-								<div class="ph-custom-tooltip"><span>{{ t('Messages') }}</span></div>
-							</a>
-
 							<a href="{{ url('awesome_admin') }}" class="list-group-item list-group-item-action{{ request()->is('awesome_admin*') ? ' active' : '' }}">
 								<div class="ph-nav-icon"><i class="fad fa-user-secret"></i></div>
 								<span class="ph-nav-text">{{ t('Awesome Admin') }}</span>

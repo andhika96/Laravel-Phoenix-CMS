@@ -20,27 +20,6 @@ Route::controller(App\Http\Controllers\Web\Homepage\Homepage_Controller::class)-
 	Route::get('/home/listdata', 'listData')->name('cms.core.homepage.listdata');
 });
 
-/* ──────────────────────────────────────────────────────────
- *  CMS Chat — Real-time messaging antar user (Laravel Reverb)
- * ────────────────────────────────────────────────────────── */
-Route::middleware(['auth', 'checkSuspended'])
-	->prefix('chat')
-	->name('cms.chat.')
-	->controller(App\Http\Controllers\Web\Chat\Chat_Controller::class)
-	->group(function ()
-	{
-		// Halaman utama chat
-		Route::get('/', 'index')->name('index');
-
-		// API endpoints (return JSON)
-		Route::get('/api/users',                     'users')->name('api.users');
-		Route::get('/api/conversations',             'conversations')->name('api.conversations');
-		Route::post('/api/conversations/open',       'openConversation')->name('api.open');
-		Route::get('/api/conversations/{id}/messages', 'messages')->name('api.messages');
-		Route::post('/api/conversations/{id}/send',    'send')->name('api.send');
-		Route::post('/api/conversations/{id}/typing',  'typing')->name('api.typing');
-	});
-
 Route::name('cms.core.')
 	->prefix('article')
 	->namespace('App\Http\Controllers\Web\Articles')

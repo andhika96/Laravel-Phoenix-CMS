@@ -1,162 +1,242 @@
-# PRD — Meeting Room Booking dengan Internal Chargeback
+# PRD — Asset & Meeting Room Booking dengan Optional Payment Module
 
 ## 1. Ringkasan Produk
 
-Meeting Room Booking adalah modul PhoenixCMS untuk menemukan ruang rapat yang
-tersedia, melihat fasilitas dan tarif, melakukan booking, memperpanjang durasi,
-serta membebankan biaya pemakaian ke divisi atau cost center pengguna.
+Asset & Meeting Room Booking adalah modul PhoenixCMS untuk mengelola master asset,
+menyusun fasilitas yang melekat pada sebuah room, menemukan jadwal yang tersedia,
+dan melakukan booking asset. Room merupakan salah satu kategori asset; perangkat,
+furniture, consumable, dan kategori lain dikelola melalui master asset yang sama.
 
-Produk dirancang memiliki booking core yang kelak dapat mendukung resource lain,
-tetapi scope rilis pertama hanya meeting room. UI, istilah, validasi, fasilitas,
-dan laporan pada MVP tetap spesifik untuk ruang rapat agar implementasi tidak
-terlalu generik sebelum dibutuhkan.
+Scope rilis pertama tetap berpusat pada meeting room. Satu room dapat memiliki
+komposisi fasilitas terstruktur, misalnya satu meja besar, sepuluh kursi, satu
+proyektor, dan sepuluh botol air putih. Asset tertentu dapat dibooking secara
+mandiri, menjadi komponen/add-on room, atau mendukung kedua mode tersebut.
+
+Payment merupakan modul opsional dengan satu pengaturan global. Kondisi default
+adalah nonaktif sehingga booking berjalan tanpa harga atau pembayaran. Ketika
+diaktifkan, halaman pengelolaan Room Rate Plan, payment gateway, transaksi, dan
+kebijakan pembayaran muncul sesuai permission.
 
 ## 2. Latar Belakang
 
-Pemesanan ruang rapat sering bergantung pada komunikasi manual sehingga pengguna
-sulit mengetahui jadwal kosong, fasilitas yang tersedia, dan biaya yang akan
-dibebankan. Perpanjangan rapat juga dapat berbenturan dengan booking berikutnya
-dan berpotensi menimbulkan konflik jika tidak memiliki aturan yang transparan.
+Pemesanan ruang dan perangkat sering bergantung pada komunikasi manual sehingga
+pengguna sulit mengetahui jadwal kosong, fasilitas yang didapatkan, dan asset
+pendukung yang dapat digunakan. Pengelolaan room yang terpisah dari perangkat dan
+furniture juga membuat data fasilitas tidak konsisten.
 
-PhoenixCMS saat ini telah memiliki autentikasi, role, dan permission, tetapi
-belum memiliki struktur jabatan organisasi. Jabatan organisasi dan tingkat
-prioritas booking harus dibangun terpisah dari role akses aplikasi.
+PhoenixCMS telah memiliki autentikasi, role, dan permission. Sistem booking perlu
+memakai mekanisme tersebut serta menambahkan hierarki otoritas booking untuk
+Super Admin, Admin, Presiden Komisaris/Preskom, dan Direktur. Hierarki ini
+menentukan apakah sebuah booking dapat dipindahkan atau dibatalkan langsung, atau
+harus melalui persetujuan organizer.
 
 ## 3. Tujuan
 
-1. Menampilkan slot ruang rapat yang benar-benar tersedia untuk hari ini, besok,
-   atau tanggal pilihan pengguna.
-2. Memungkinkan booking langsung dikonfirmasi ketika slot masih tersedia.
-3. Menampilkan kapasitas, fasilitas, lokasi, dan estimasi biaya sebelum booking.
-4. Membebankan biaya booking ke divisi, cost center, atau project internal.
-5. Mendukung extend yang aman, transparan, dan mempertimbangkan prioritas jabatan.
-6. Mencegah double booking melalui pemeriksaan konflik yang bersifat transaksional.
-7. Menyediakan laporan pemakaian dan chargeback yang dapat diaudit.
+1. Menyediakan master asset terstruktur dengan kategori yang dapat dikembangkan.
+2. Menjadikan room sebagai asset dengan detail dan aturan booking khusus room.
+3. Menyimpan komposisi fasilitas room beserta quantity yang didapatkan pengguna.
+4. Menampilkan slot room dan asset yang benar-benar tersedia.
+5. Memungkinkan booking langsung dikonfirmasi ketika slot masih tersedia.
+6. Mendukung pemindahan dan pembatalan booking berdasarkan hierarki role.
+7. Mendukung extend yang aman tanpa menyebabkan double booking.
+8. Menyediakan payment module yang dapat diaktifkan atau dinonaktifkan secara
+   global tanpa merusak booking yang sudah ada.
+9. Menyediakan activity log dan notifikasi untuk perubahan material pada booking.
 
 ## 4. Non-Goals MVP
 
-- Pembayaran pribadi, payment gateway, kartu kredit, dan dompet digital.
-- Pelanggan eksternal atau marketplace penyewaan ruang publik.
+- Inventory stock tracking, stock balance, stock movement, dan pengurangan
+  consumable otomatis.
+- Substitusi fasilitas otomatis ketika sebuah item tidak tersedia.
+- Sinkronisasi ke sistem inventory atau ERP eksternal.
 - Booking berulang atau recurring meeting.
 - Dynamic pricing berdasarkan permintaan.
-- Lelang slot, waitlist otomatis, atau auto-preemption berdasarkan jabatan.
+- Lelang slot, waitlist otomatis, atau preemption tanpa aturan otoritas.
 - Integrasi Google Calendar, Microsoft Outlook, perangkat akses pintu, atau sensor.
-- Booking resource selain meeting room pada UI produksi.
-- Paket subscription atau lisensi bulanan per ruang.
+- Perubahan atau penghapusan master asset akibat pemindahan/pembatalan booking.
+- Pengguna eksternal atau marketplace penyewaan asset publik.
 
 ## 5. Terminologi
 
-- **Room Rate Plan**: aturan tarif penggunaan sebuah ruang. Istilah ini menggantikan
-  "lisensi ruangan" karena model MVP adalah biaya per booking, bukan subscription.
-- **Fixed Facility**: fasilitas permanen yang sudah termasuk tarif ruang, seperti
-  TV, proyektor terpasang, whiteboard, dan video conference unit.
-- **Add-on**: fasilitas atau layanan opsional yang memiliki biaya tambahan, seperti
-  proyektor portabel, operator, konsumsi, atau perlengkapan tambahan.
-- **Cost Center**: unit pembebanan biaya internal.
-- **Priority Level**: tingkat prioritas jabatan untuk mengajukan override extend;
-  bukan hak untuk otomatis membatalkan booking pengguna lain.
-- **Room Manager**: pengguna yang berwenang mengelola ruang dan menyelesaikan
-  konflik extend.
+- **Asset**: resource yang dikelola dalam master data, seperti room, laptop,
+  proyektor, meja, kursi, atau consumable.
+- **Asset Category**: pengelompokan asset seperti Room, Device, Furniture, dan
+  Consumable.
+- **Room Composition**: daftar asset/fasilitas beserta quantity yang menjadi
+  bagian atau kelengkapan sebuah room.
+- **Fixed Facility**: fasilitas yang secara operasional melekat pada room, seperti
+  meja besar, kursi utama, TV, atau proyektor terpasang.
+- **Bookable Asset**: asset yang memiliki jadwal dan dapat dibooking secara
+  mandiri atau bersama room.
+- **Add-on/Component Asset**: asset yang dapat ditambahkan ke booking room.
+- **Room Rate Plan**: aturan harga penggunaan room yang hanya berlaku ketika
+  Payment Module aktif.
+- **Payment Module**: fitur global opsional untuk rate plan, payment gateway,
+  transaksi, refund, dan kebijakan pembayaran.
+- **Booking Authority Level**: urutan otoritas role untuk memindahkan atau
+  membatalkan booking pengguna lain.
+- **Move Booking**: memindahkan booking ke room/asset atau slot lain yang kosong.
+- **Force Cancel**: pembatalan langsung oleh role berotoritas terhadap booking
+  milik role yang lebih rendah.
+- **Booking Change Request**: permintaan move atau cancel kepada organizer ketika
+  target memiliki level role yang sama atau lebih tinggi.
 
 ## 6. Persona dan Hak Utama
 
 ### 6.1 Employee / Booker
 
-- Melihat ruang dan slot tersedia.
+- Melihat asset dan slot tersedia.
 - Melakukan, melihat, membatalkan, dan memperpanjang booking miliknya.
-- Memilih cost center atau project yang diizinkan untuknya.
-- Melihat estimasi serta biaya final booking.
+- Melihat komposisi fasilitas yang didapatkan dari room.
+- Menambahkan asset yang tersedia sebagai komponen/add-on booking.
+- Menyetujui atau menolak Booking Change Request atas booking miliknya.
 
-### 6.2 Room Manager
+### 6.2 Asset / Room Manager
 
-- Mengelola jadwal operasional, blackout, maintenance, dan konflik extend untuk
-  ruang yang menjadi tanggung jawabnya.
-- Memindahkan booking terdampak ke ruang pengganti melalui proses terkontrol.
-- Menandai no-show atau koreksi pemakaian dengan alasan wajib.
+- Mengelola master asset sesuai permission dan scope tanggung jawabnya.
+- Mengelola kategori, detail room, jam operasional, blackout, dan maintenance.
+- Menentukan komposisi fasilitas dan quantity pada room.
+- Menangani masalah operasional asset tanpa mengubah histori booking.
 
-### 6.3 Finance / Billing
+### 6.3 Booking Authority
 
-- Melihat chargeback per divisi, cost center, project, ruang, dan periode.
-- Melakukan adjustment atau reversal dengan alasan dan audit log.
-- Memfinalisasi serta mengekspor statement bulanan.
+Role berotoritas terdiri dari:
 
-### 6.4 Administrator
+1. Super Admin;
+2. Admin;
+3. Presiden Komisaris/Preskom;
+4. Direktur.
 
-- Mengelola ruang, fasilitas, tarif, struktur organisasi, jabatan, priority level,
-  permission, dan kebijakan booking global.
+Role tersebut dapat memindahkan atau melakukan Force Cancel berdasarkan hasil
+perbandingan level role organizer target.
+
+### 6.4 Payment Administrator (Kondisional)
+
+Persona ini hanya aktif ketika Payment Module diaktifkan dan memiliki permission
+yang sesuai.
+
+- Mengelola Room Rate Plan dan kebijakan harga.
+- Mengelola konfigurasi payment gateway.
+- Melihat transaksi, kegagalan pembayaran, refund, dan laporan pembayaran.
+
+### 6.5 Administrator
+
+- Mengelola asset, kategori, konfigurasi booking, role, permission, dan level
+  otoritas booking.
+- Mengaktifkan atau menonaktifkan Payment Module secara global.
+- Melihat activity log dan kegagalan proses sistem.
 
 ## 7. Scope Fungsional MVP
 
-### 7.1 Room Catalog
+### 7.1 Master Asset dan Kategori
 
-Setiap ruang memiliki:
+Master Asset menyimpan data umum:
 
-- nama, kode unik, status aktif/nonaktif;
+- kode asset unik;
+- nama asset;
+- kategori dan subkategori;
+- status aktif, nonaktif, maintenance, atau retired;
+- lokasi dan unit pemilik opsional;
+- deskripsi, foto, dan metadata;
+- unit pengukuran, seperti unit, buah, set, atau botol;
+- mode booking: standalone, component/add-on, keduanya, atau non-bookable.
+
+Kategori awal mencakup Room, Device, Furniture, dan Consumable. Administrator
+dapat menambah kategori tanpa mengubah struktur booking inti.
+
+Asset berserial seperti laptop atau proyektor dapat dicatat sebagai unit asset
+tersendiri. Asset berbasis quantity seperti kursi tambahan atau botol air dicatat
+sebagai master item, tetapi jumlah stok aktual belum dilacak pada MVP.
+
+### 7.2 Room Catalog dan Room Composition
+
+Room adalah asset berkategori `Room` dan memiliki detail khusus:
+
 - gedung, lantai, lokasi, deskripsi, dan foto;
 - kapasitas minimum dan maksimum;
 - timezone dan jam operasional;
-- durasi minimum, durasi maksimum, interval booking, dan buffer antarmeeting;
-- Room Manager;
-- fixed facilities dan add-ons;
-- Room Rate Plan aktif;
-- blackout atau jadwal maintenance.
+- durasi minimum dan maksimum;
+- interval booking dan buffer antarmeeting;
+- Asset/Room Manager;
+- blackout dan jadwal maintenance;
+- Room Composition.
 
-Fasilitas memiliki nama, kategori, jumlah, unit, deskripsi, dan metadata yang
-relevan. Contoh: `TV`, jumlah `1`, ukuran `65`, unit ukuran `inch`; atau
-`Projector`, jumlah `1`, resolusi `4K`, tipe `fixed`.
+Saat membuat atau mengubah room, Administrator/Asset Manager dapat menambahkan
+komponen fasilitas dari Master Asset. Setiap baris komposisi minimal menyimpan:
 
-### 7.2 Availability
+- asset/fasilitas;
+- quantity;
+- unit;
+- tipe komponen: fixed facility, device, furniture, atau consumable;
+- status included atau optional/add-on;
+- catatan dan metadata yang relevan.
 
-Halaman utama menyediakan tab atau filter:
+Contoh komposisi:
+
+| Komponen | Quantity | Unit | Tipe |
+|---|---:|---|---|
+| Meja besar | 1 | unit | Fixed facility |
+| Kursi | 10 | unit | Furniture |
+| Proyektor | 1 | unit | Device |
+| Air putih botol | 10 | botol | Consumable |
+
+Quantity pada Room Composition adalah informasi fasilitas, bukan stock balance.
+Perubahan botol air menjadi air putih gelas kaca dilakukan manual pada komposisi
+room. Tidak ada pengurangan stok atau substitusi otomatis pada MVP.
+
+### 7.3 Availability
+
+Halaman utama menyediakan filter:
 
 - Hari Ini;
 - Besok;
 - Pilih Tanggal;
-- waktu mulai, durasi, kapasitas, lokasi, dan fasilitas wajib.
-
-Hasil menampilkan daftar ruang yang memenuhi kebutuhan beserta:
-
-- slot tersedia;
+- waktu mulai dan durasi;
 - kapasitas;
-- fasilitas utama;
-- tarif dasar;
-- estimasi biaya untuk durasi yang dipilih;
-- status `Available`, `Limited`, `Maintenance`, atau `Closed`.
+- lokasi;
+- kategori dan fasilitas wajib.
 
-Pengguna dapat membuka detail ruang untuk melihat timeline harian. Identitas dan
-judul meeting pengguna lain tidak ditampilkan kepada pengguna biasa; slot yang
-terisi hanya ditampilkan sebagai `Booked`.
+Hasil menampilkan daftar room/asset yang memenuhi kebutuhan beserta slot,
+kapasitas, fasilitas utama, dan status `Available`, `Limited`, `Maintenance`, atau
+`Closed`.
 
-### 7.3 Create Booking
+Asset berserial yang dibooking secara mandiri diperiksa terhadap overlap jadwal.
+Quantity room composition tidak digunakan sebagai validasi stok pada MVP.
+
+Identitas, agenda, dan participant booking pengguna lain tidak ditampilkan kepada
+pengguna biasa; slot yang terisi hanya ditampilkan sebagai `Booked`.
+
+### 7.4 Create Booking
 
 Form booking memuat:
 
-- ruang;
+- room atau asset utama;
 - tanggal, waktu mulai, waktu selesai, dan durasi;
 - judul dan agenda singkat;
 - organizer dan participant opsional;
 - jumlah peserta;
-- cost center wajib;
-- project opsional;
-- add-ons opsional;
+- komponen/add-on asset opsional;
 - catatan kebutuhan khusus;
-- ringkasan tarif dan estimasi chargeback.
+- ringkasan fasilitas yang didapatkan;
+- informasi harga/payment hanya ketika Payment Module aktif.
 
 Booking langsung berstatus `Confirmed` jika:
 
-1. ruang aktif dan berada dalam jam operasional;
-2. kapasitas mencukupi;
+1. asset aktif dan berada dalam jam operasional jika aturan waktu diterapkan;
+2. kapasitas mencukupi untuk room;
 3. slot dan buffer tidak bertabrakan;
 4. tidak berada dalam blackout atau maintenance;
-5. cost center valid dan boleh digunakan organizer;
-6. Room Rate Plan aktif;
-7. add-on yang memiliki stok memenuhi kebutuhan.
+5. asset berserial yang dipilih tidak digunakan booking lain;
+6. aturan payment terpenuhi hanya ketika Payment Module aktif.
 
 Sistem mengulang pemeriksaan konflik secara transaksional saat konfirmasi. Jika
-slot baru saja diambil pengguna lain, booking tidak dibuat dan UI menampilkan
-slot alternatif terbaru.
+slot baru saja diambil, booking tidak dibuat dan UI menampilkan alternatif terbaru.
 
-### 7.4 My Bookings
+Booking menyimpan snapshot nama asset, room composition, quantity, dan konfigurasi
+payment yang berlaku saat booking dibuat. Perubahan master asset setelahnya tidak
+mengubah histori booking.
+
+### 7.5 My Bookings
 
 Pengguna dapat melihat booking pada kategori:
 
@@ -166,102 +246,138 @@ Pengguna dapat melihat booking pada kategori:
 - Cancelled;
 - No-show.
 
-Detail booking menampilkan ruang, waktu, fasilitas, participant, cost center,
-estimasi biaya, biaya final, riwayat extend, dan activity log yang boleh dilihat
-pengguna.
+Detail menampilkan asset utama, jadwal, fasilitas, participant, riwayat extend,
+riwayat pemindahan, status payment jika modul aktif, dan activity log yang boleh
+dilihat pengguna.
 
-### 7.5 Extend Booking
+### 7.6 Move Booking dan Force Cancel
 
-Tombol extend tersedia mulai 30 menit sebelum waktu selesai hingga booking
-berakhir. Extend menggunakan interval booking ruang, dengan default 30 menit.
-
-#### Extend tanpa konflik
-
-Jika ruang, fixed facilities, dan add-ons tetap tersedia, extend langsung
-disetujui. Sistem memperbarui waktu selesai serta estimasi chargeback secara
-atomik.
-
-#### Extend dengan konflik
-
-Jika extend bertabrakan dengan booking berikutnya:
-
-1. Sistem membandingkan priority level jabatan organizer saat ini dengan
-   organizer booking berikutnya.
-2. Jika prioritas saat ini sama atau lebih rendah, extend ditolak dan sistem
-   menawarkan ruang alternatif yang sesuai.
-3. Jika prioritas saat ini lebih tinggi, pengguna dapat membuat
-   `Priority Override Request`; booking berikutnya tidak otomatis dibatalkan.
-4. Sistem mencari ruang pengganti yang memenuhi waktu, kapasitas, dan fasilitas
-   booking terdampak.
-5. Organizer terdampak dapat menerima perpindahan yang ditawarkan atau menolak.
-6. Room Manager dapat menyetujui override hanya dengan memilih ruang pengganti
-   yang berhasil direservasi secara atomik, atau setelah organizer terdampak
-   secara eksplisit menyetujui pembatalan.
-7. Jika tidak ada keputusan sebelum waktu selesai booking saat ini, permintaan
-   extend kedaluwarsa dan jadwal awal tetap berlaku.
-
-Semua permintaan, persetujuan, penolakan, perpindahan, dan pembatalan menyimpan
-pelaku, waktu, alasan, nilai prioritas, serta kondisi sebelum/sesudah.
-
-### 7.6 Cancellation dan No-show
-
-Kebijakan default MVP:
-
-- pembatalan minimal 2 jam sebelum mulai: tidak ada charge;
-- pembatalan kurang dari 2 jam sebelum mulai: charge 50% dari tarif ruang;
-- pembatalan setelah waktu mulai atau no-show: charge 100% tarif ruang;
-- add-on yang belum dikonsumsi tidak ditagihkan;
-- Finance dapat membuat adjustment dengan alasan wajib.
-
-Nilai persentase dan cancellation window dapat diubah Administrator, tetapi
-perubahan hanya berlaku untuk booking baru agar histori biaya tetap konsisten.
-
-## 8. Aturan Harga dan Chargeback
-
-### 8.1 Tarif Ruang
-
-Setiap ruang memiliki satu Room Rate Plan aktif pada suatu waktu. Rate plan
-memiliki tanggal efektif, tarif per jam, interval penagihan, mata uang, dan aturan
-pembulatan. Default MVP menggunakan interval 30 menit dan membulatkan durasi ke
-atas ke interval terdekat.
+Hierarki role booking adalah:
 
 ```text
-Billable Room Cost = Hourly Rate × Rounded Billable Minutes / 60
-Estimated Cost     = Billable Room Cost + Estimated Add-on Cost
-Final Cost         = Actual Approved Duration Cost + Fulfilled Add-on Cost
-                     + Cancellation/No-show Charge + Adjustment
+Super Admin > Admin > Presiden Komisaris/Preskom > Direktur > Role biasa
 ```
 
-Fixed facilities sudah termasuk dalam tarif ruang. Add-on dapat menggunakan
-harga per booking, per unit, atau per jam. Harga yang berlaku disalin sebagai
-snapshot ke booking sehingga perubahan tarif di masa depan tidak mengubah
-booking lama.
+Aturan aksi:
 
-### 8.2 Internal Chargeback
+1. Role berotoritas dapat langsung memindahkan atau melakukan Force Cancel hanya
+   terhadap booking milik organizer dengan level role lebih rendah.
+2. Role tidak dapat langsung mengubah booking milik organizer dengan level yang
+   sama atau lebih tinggi.
+3. Untuk level sama atau lebih tinggi, sistem membuat Booking Change Request
+   kepada organizer target.
+4. Booking baru dipindahkan atau dibatalkan setelah organizer target menyetujui.
+5. Penolakan atau request kedaluwarsa mempertahankan booking awal tanpa perubahan.
+6. Semua aksi memerlukan alasan dan dicatat pada activity log.
 
-- Setiap booking wajib memiliki satu cost center.
-- Cost center berasal dari unit organisasi dan akses pengguna.
-- Estimasi biaya ditampilkan sebelum konfirmasi.
-- Biaya final diposting setelah booking selesai, dibatalkan terlambat, atau
-  ditandai no-show.
-- Extend menambah biaya berdasarkan rate snapshot booking yang sama.
-- Statement bulanan mengelompokkan biaya per divisi, cost center, project,
-  ruang, dan organizer.
-- MVP menyediakan ekspor CSV/XLSX; posting otomatis ke ERP berada di luar scope.
+Pemindahan booking menggunakan daftar slot/asset alternatif yang kosong. Setelah
+target dipilih, sistem memeriksa ulang availability dan memindahkan booking secara
+atomik. Booking mempertahankan identitas yang sama serta mencatat jadwal/asset
+lama dan baru.
 
-## 9. Struktur Organisasi dan Prioritas
+Jika target tidak lagi kosong saat persetujuan atau eksekusi, pemindahan gagal
+tanpa mengubah booking awal dan sistem meminta pemilihan alternatif baru.
 
-Role/permission aplikasi dan jabatan organisasi adalah dua konsep berbeda.
+Force Cancel hanya mengubah status booking menjadi `Cancelled`, melepaskan slot,
+dan mengirim notifikasi. Aksi ini tidak mengubah atau menghapus Master Asset,
+Room Composition, ataupun quantity fasilitas. Karena inventory tracking berada
+di luar MVP, pembatalan tidak menghasilkan stock movement.
 
-- `Role/Permission` menentukan tindakan yang boleh dilakukan dalam aplikasi.
-- `Position` menyimpan nama jabatan dan `priority_level`.
-- `Organization Unit` menyimpan divisi/departemen dan struktur induknya.
-- `Cost Center` menyimpan kode pembebanan dan unit pemilik.
-- Setiap pengguna memiliki satu posisi utama aktif serta satu unit utama pada MVP.
-- Administrator mengatur priority level; pengguna tidak dapat mengubahnya.
-- Priority level hanya digunakan pada konflik extend dalam MVP.
-- Priority level tidak memberikan akses admin dan tidak memengaruhi booking awal
-  yang sudah lebih dahulu dikonfirmasi.
+### 7.7 Extend Booking
+
+Tombol extend tersedia mulai 30 menit sebelum waktu selesai hingga booking
+berakhir. Extend menggunakan interval booking asset, dengan default 30 menit.
+
+Jika slot tetap kosong, extend langsung disetujui secara atomik. Jika bertabrakan,
+pengguna biasa menerima alternatif dan tidak dapat mengambil slot berikutnya.
+
+Role berotoritas dapat menjalankan aturan Move Booking/Force Cancel terhadap
+booking berikutnya. Booking role lebih rendah dapat ditangani langsung; booking
+role sama atau lebih tinggi harus melalui Booking Change Request. Tidak ada
+pembatalan otomatis hanya karena level role lebih tinggi.
+
+Jika tidak ada keputusan sebelum waktu booking saat ini berakhir, permintaan
+extend kedaluwarsa dan jadwal awal tetap berlaku.
+
+### 7.8 Cancellation dan No-show
+
+Pengguna dapat membatalkan booking miliknya sesuai kebijakan waktu yang ditetapkan
+Administrator. Pembatalan melepaskan slot tanpa mengubah Master Asset atau Room
+Composition.
+
+Pada kondisi Payment Module nonaktif, cancellation dan no-show tidak memiliki
+dampak finansial. Jika Payment Module aktif, kebijakan biaya/refund yang tersimpan
+pada snapshot booking dapat diterapkan tanpa mengubah histori booking lain.
+
+## 8. Optional Payment Module
+
+### 8.1 Global Toggle
+
+Sistem memiliki satu konfigurasi global `Payment Module` dengan kondisi default
+`Disabled`.
+
+Ketika `Disabled`:
+
+- menu dan form payment disembunyikan;
+- Room Rate Plan tidak diwajibkan;
+- booking tidak menampilkan harga, checkout, payment gateway, atau status bayar;
+- endpoint mutasi payment ditolak oleh backend;
+- booking baru menyimpan bahwa payment tidak berlaku.
+
+Ketika `Enabled`:
+
+- menu Room Rate Plan dan payment gateway muncul sesuai permission;
+- Administrator dapat mengelola tarif, interval, mata uang, dan kebijakan harga;
+- pengguna melihat estimasi harga dan langkah pembayaran pada booking;
+- transaksi, kegagalan, refund, dan audit payment dicatat;
+- booking tidak dapat dikonfirmasi sebelum aturan payment yang aktif terpenuhi.
+
+Perubahan toggle tidak mengubah histori. Booking yang dibuat ketika module
+nonaktif tetap tanpa payment. Menonaktifkan module setelah pernah digunakan tidak
+menghapus transaksi lama; histori tetap tersedia bagi pengguna berpermission
+untuk kebutuhan audit.
+
+### 8.2 Room Rate Plan
+
+Ketika Payment Module aktif, sebuah room dapat memiliki satu Room Rate Plan aktif
+pada suatu waktu. Rate plan dapat menyimpan tanggal efektif, tarif, interval
+penagihan, mata uang, pembulatan, cancellation policy, dan refund policy.
+
+Harga yang berlaku disalin sebagai snapshot ke booking agar perubahan rate plan
+tidak mengubah transaksi lama.
+
+### 8.3 Payment Gateway
+
+Konfigurasi gateway minimal mencakup provider, mode sandbox/production, status,
+payment method yang diizinkan, callback/webhook setting, dan credential terenkripsi.
+Secret harus disamarkan pada UI dan tidak boleh masuk log atau response biasa.
+
+## 9. Role Hierarchy dan Otoritas Booking
+
+Role/permission menentukan akses aplikasi dan Booking Authority Level menentukan
+batas langsung terhadap booking pengguna lain. Keduanya tetap berada dalam domain
+RBAC aplikasi, bukan jabatan organisasi terpisah.
+
+Urutan default:
+
+1. Super Admin;
+2. Admin;
+3. Presiden Komisaris/Preskom;
+4. Direktur;
+5. role biasa.
+
+Aturan otoritas:
+
+- aksi hanya berjalan jika actor memiliki permission yang sesuai;
+- perbandingan level menggunakan role aktif organizer target;
+- direct move dan Force Cancel hanya berlaku ke level lebih rendah;
+- level sama atau lebih tinggi wajib melalui Booking Change Request;
+- level role tidak otomatis memberikan akses mengubah Master Asset atau Payment;
+- perubahan level role tidak mengubah histori actor/target yang sudah disnapshot.
+
+Jika pengguna memiliki lebih dari satu role, sistem menggunakan level otoritas
+tertinggi yang aktif. Detail mapping level ke role diputuskan pada implementation
+plan dan disimpan secara terstruktur, bukan hard-coded di UI.
 
 ## 10. Status dan State Transition
 
@@ -274,10 +390,10 @@ In Progress → Cancelled
 Confirmed → No-show
 ```
 
-Booking yang dipindahkan tetap memiliki identitas yang sama, tetapi menyimpan
-room lama, room baru, alasan, actor, dan timestamp di activity log.
+Pemindahan tidak membuat booking baru dan tidak menjadi status terminal. Sistem
+menyimpan event `Moved` berisi target lama, target baru, actor, alasan, dan waktu.
 
-### 10.2 Extension Request
+### 10.2 Booking Change Request
 
 ```text
 Pending → Approved
@@ -286,303 +402,376 @@ Pending → Expired
 Pending → Cancelled
 ```
 
-### 10.3 Charge
+Approval terhadap move hanya berhasil jika target masih tersedia pada saat
+eksekusi. Approval terhadap cancel mengubah booking target menjadi `Cancelled`.
+
+### 10.3 Extension Request
 
 ```text
-Estimated → Posted → Adjusted
-Posted/Adjusted → Reversed
+Pending → Approved
+Pending → Rejected
+Pending → Expired
+Pending → Cancelled
 ```
 
-Setiap transisi invalid harus ditolak di server dan tidak hanya disembunyikan
-dari UI.
+### 10.4 Payment Transaction (Kondisional)
+
+```text
+Pending → Paid
+Pending → Failed
+Paid → Refunded
+Paid → Partially Refunded
+```
+
+State payment hanya digunakan ketika Payment Module aktif. Semua transisi invalid
+ditolak di server dan tidak hanya disembunyikan dari UI.
 
 ## 11. Notifikasi
 
 Notifikasi in-app dan email dikirim untuk:
 
-- booking confirmed atau cancelled;
-- reminder 24 jam dan 30 menit sebelum mulai;
-- perubahan ruang atau waktu;
-- extend berhasil;
-- Priority Override Request diterima organizer terdampak dan Room Manager;
-- permintaan disetujui, ditolak, dibatalkan, atau kedaluwarsa;
-- booking ditandai no-show;
-- statement chargeback bulanan selesai difinalisasi.
+- booking confirmed, moved, cancelled, completed, atau no-show;
+- reminder sebelum booking dimulai;
+- perubahan room, asset, atau waktu;
+- extend berhasil atau gagal;
+- Booking Change Request diterima organizer target;
+- request disetujui, ditolak, dibatalkan, atau kedaluwarsa;
+- Force Cancel oleh role berotoritas;
+- status payment/refund ketika Payment Module aktif.
 
-Notifikasi konflik harus menjelaskan dampak, alternatif yang ditawarkan, batas
-waktu respons, dan siapa yang mengambil keputusan.
+Notifikasi perubahan harus menjelaskan actor, alasan, dampak, target alternatif,
+batas waktu respons, dan hasil akhir. Kegagalan notifikasi tidak boleh membatalkan
+transaksi booking yang sudah committed.
 
 ## 12. Halaman dan Navigasi
 
 ### Employee
 
-1. **Booking Dashboard** — pencarian Hari Ini/Besok/Tanggal dan rekomendasi ruang.
-2. **Room Detail** — foto, lokasi, fasilitas, kebijakan, tarif, dan timeline.
-3. **Booking Review** — detail meeting, cost center, add-ons, serta estimasi biaya.
+1. **Booking Dashboard** — pencarian Hari Ini/Besok/Tanggal dan rekomendasi asset.
+2. **Asset/Room Detail** — foto, lokasi, fasilitas, kebijakan, dan timeline.
+3. **Booking Review** — jadwal, peserta, komposisi fasilitas, dan add-on.
 4. **My Bookings** — daftar, detail, cancel, dan extend.
-5. **Override Resolution** — menerima atau menolak perpindahan booking terdampak.
+5. **Booking Change Requests** — menerima atau menolak request move/cancel.
+6. **Payment/Checkout** — hanya tampil ketika Payment Module aktif.
 
 ### Management
 
-1. **Room Management** — ruang, jam operasional, fasilitas, blackout, dan manager.
-2. **Rate Plans & Add-ons** — tarif efektif dan katalog add-on.
-3. **Organization & Priority** — unit, posisi, priority level, dan cost center.
-4. **Conflict Center** — permintaan extend yang memerlukan resolusi.
-5. **Chargeback Reports** — biaya, utilization, no-show, cancellation, dan ekspor.
+1. **Asset Categories** — kategori dan aturan umum asset.
+2. **Master Asset** — room, device, furniture, consumable, dan asset lain.
+3. **Room Composition** — fasilitas, quantity, included, dan optional/add-on.
+4. **Booking Control Center** — move, Force Cancel, request, dan activity log.
+5. **Payment Settings** — global toggle dan gateway, sesuai permission.
+6. **Room Rate Plans** — hanya tampil ketika Payment Module aktif.
+7. **Payment Transactions & Reports** — hanya tampil ketika module aktif.
 
 ## 13. Model Data Konseptual
 
-Entitas utama:
+Entitas utama MVP:
 
-- `bookable_resources` — fondasi resource generik; MVP hanya memakai tipe
-  `meeting_room`;
-- `meeting_rooms` — detail khusus ruang;
-- `room_operating_hours` dan `room_blackouts`;
-- `facilities` dan `room_facilities`;
-- `addons` dan `room_addons`;
-- `room_rate_plans`;
+- `asset_categories`;
+- `assets` sebagai master data umum;
+- `room_asset_details` untuk data khusus room;
+- `room_operating_hours` dan `asset_blackouts`;
+- `room_asset_components` untuk komposisi fasilitas dan quantity;
 - `bookings` dan `booking_participants`;
-- `booking_addons`;
+- `booking_assets` untuk asset utama dan component/add-on yang disnapshot;
+- `booking_moves`;
+- `booking_change_requests`;
 - `booking_extension_requests`;
-- `booking_relocations`;
-- `booking_charge_snapshots` dan `booking_charge_adjustments`;
-- `organization_units`, `positions`, `cost_centers`, dan `user_org_profiles`;
-- `chargeback_statements` dan `chargeback_statement_items`;
-- `booking_activity_logs`.
+- `booking_activity_logs`;
+- konfigurasi global/feature settings untuk Payment Module;
+- mapping Booking Authority Level terhadap role.
 
-Relasi dan nama tabel final diputuskan pada implementation plan setelah schema
-aktif serta konvensi repository diperiksa lebih dalam.
+Entitas kondisional ketika Payment Module aktif:
+
+- `room_rate_plans`;
+- `payment_gateways`;
+- `payment_transactions`;
+- `payment_refunds`;
+- snapshot harga dan kebijakan payment pada booking.
+
+Inventory tables seperti stock balances, stock movements, stock reservations,
+dan substitution rules berada di luar MVP. Nama tabel dan relasi final diputuskan
+pada implementation plan setelah konvensi repository diperiksa lebih dalam.
 
 ## 14. Permission Konseptual
+
+### Asset dan Room
+
+- `asset.view`
+- `asset.manage`
+- `asset.manage_categories`
+- `room.manage_details`
+- `room.manage_composition`
+
+### Booking
 
 - `booking.view_availability`
 - `booking.create`
 - `booking.view_own`
 - `booking.cancel_own`
 - `booking.extend_own`
-- `booking.resolve_affected`
-- `booking.manage_rooms`
-- `booking.manage_rates`
-- `booking.manage_organization`
-- `booking.resolve_overrides`
-- `booking.view_chargebacks`
-- `booking.adjust_charges`
-- `booking.finalize_statements`
+- `booking.move_lower`
+- `booking.force_cancel_lower`
+- `booking.request_change`
+- `booking.respond_own_change_request`
+- `booking.view_activity`
 
-Permission menggunakan mekanisme RBAC PhoenixCMS yang sudah ada. Priority level
-jabatan tidak boleh digunakan sebagai pengganti authorization.
+### Payment (Kondisional)
+
+- `payment.toggle_module`
+- `payment.manage_rate_plans`
+- `payment.manage_gateways`
+- `payment.view_transactions`
+- `payment.refund`
+
+Backend wajib memeriksa permission, status global Payment Module, serta Booking
+Authority Level. Menyembunyikan tombol atau menu bukan pengganti authorization.
 
 ## 15. Arah Arsitektur dan Data Flow
 
-PRD ini tidak menetapkan struktur class final, tetapi menetapkan batas domain
-yang harus tetap terpisah:
+Domain yang harus tetap terpisah:
 
-- **Resource Catalog** mengelola ruang, fasilitas, operating hours, blackout,
-  add-on, dan Room Manager.
+- **Asset Catalog** mengelola kategori, Master Asset, status, metadata, dan mode
+  booking.
+- **Room Composition** mengelola fasilitas dan quantity yang melekat pada room.
 - **Availability Engine** menghitung slot dari jam operasional, buffer, blackout,
-  booking, kapasitas, fasilitas, dan stok add-on.
-- **Booking Service** memvalidasi dan membuat perubahan booking secara
-  transaksional.
-- **Pricing & Chargeback Service** menghasilkan quote, menyimpan snapshot,
-  mem-posting charge, adjustment, reversal, dan statement.
-- **Extension Workflow** menangani extend normal, priority comparison, override,
-  relocation, serta expiry.
-- **Organization Service** mengelola unit, posisi, priority level, cost center,
-  dan assignment pengguna.
-- **Notification Service** menerima event domain setelah transaksi berhasil;
-  kegagalan notifikasi tidak boleh membatalkan booking yang sudah committed.
+  booking aktif, kapasitas, dan asset berserial yang dipilih.
+- **Booking Service** memvalidasi dan membuat perubahan booking secara transaksional.
+- **Booking Authority Workflow** membandingkan role, menjalankan direct action,
+  membuat request, dan menangani approval/expiry.
+- **Optional Payment Service** hanya aktif saat global toggle enabled.
+- **Notification Service** menerima domain event setelah transaksi berhasil.
 - **Audit Service** menyimpan jejak perubahan material secara konsisten.
+
+Tidak ada Inventory Service pada MVP. Room Composition dan quantity tidak boleh
+diam-diam dianggap sebagai stock balance.
 
 ### 15.1 Data Flow Pencarian dan Booking
 
 1. Pengguna mengirim tanggal, waktu, durasi, kapasitas, dan fasilitas.
-2. Availability Engine mengembalikan ruang serta slot yang memenuhi syarat.
-3. Pricing Service menghasilkan quote bertimestamp dari rate plan aktif.
-4. Pengguna memilih cost center dan mengonfirmasi booking.
-5. Booking Service memeriksa ulang permission, quote, cost center, stok, dan
-   overlap di dalam transaksi.
-6. Booking, price snapshot, add-on reservation, dan activity log disimpan.
-7. Setelah commit, event booking memicu notifikasi dan pembaruan tampilan jadwal.
+2. Availability Engine mengembalikan room/asset serta slot yang memenuhi syarat.
+3. Sistem menampilkan Room Composition dan add-on yang dapat dipilih.
+4. Jika Payment Module aktif, Payment Service menghasilkan quote.
+5. Pengguna mengonfirmasi booking.
+6. Booking Service memeriksa ulang permission, overlap, blackout, dan asset.
+7. Jika payment aktif, sistem memeriksa quote dan hasil payment sesuai kebijakan.
+8. Booking, asset snapshot, composition snapshot, dan activity log disimpan.
+9. Setelah commit, event booking memicu notifikasi.
 
-### 15.2 Data Flow Extend dan Override
+### 15.2 Data Flow Move dan Force Cancel
 
-1. Booking Service memvalidasi status, ownership, waktu, serta interval extend.
-2. Availability Engine memeriksa ruang dan add-on hingga waktu selesai baru.
-3. Jika kosong, Booking Service memperpanjang booking dan Pricing Service
-   memperbarui estimasi.
-4. Jika konflik, Extension Workflow membandingkan priority level yang tersimpan
-   pada profil organisasi aktif.
-5. Request yang memenuhi syarat menyimpan snapshot priority dan alternatif ruang.
-6. Approval melakukan reservasi ruang pengganti, relocation, extend, repricing,
-   dan audit log dalam satu transaksi.
-7. Setelah commit, seluruh pihak menerima hasil yang sama melalui notifikasi.
+1. Actor memilih booking target dan memasukkan alasan.
+2. Sistem memeriksa permission serta membandingkan authority level.
+3. Jika target lebih rendah, direct action dapat dilanjutkan.
+4. Jika target sama/lebih tinggi, sistem membuat Booking Change Request.
+5. Untuk move, sistem menampilkan target alternatif yang kosong.
+6. Pada eksekusi/approval, availability diperiksa ulang dalam transaksi.
+7. Jika valid, booking dipindahkan tanpa mengganti identitas booking.
+8. Untuk cancel, status booking diubah menjadi `Cancelled` dan slot dilepas.
+9. Master Asset, Room Composition, dan quantity fasilitas tidak diubah.
+10. Setelah commit, actor dan organizer menerima notifikasi yang sama.
 
-### 15.3 Error Handling
+### 15.3 Data Flow Extend
 
-- Quote yang kedaluwarsa atau berubah ditolak dengan quote baru untuk dikonfirmasi
-  pengguna; sistem tidak diam-diam menambah biaya.
-- Konflik akibat request bersamaan menghasilkan respons conflict dan rekomendasi
-  slot terbaru tanpa membuat booking parsial.
-- Cost center nonaktif, rate plan tidak aktif, add-on habis, atau ruang maintenance
-  menghasilkan pesan spesifik yang dapat ditindaklanjuti.
-- Kegagalan reservasi ruang pengganti membatalkan seluruh approval override;
-  booking lama dan booking terdampak tetap utuh.
-- Retry request menggunakan idempotency key agar tidak menggandakan booking,
-  charge, adjustment, atau notifikasi.
-- Kegagalan notifikasi masuk retry queue dan terlihat oleh Administrator, tetapi
-  tidak mengubah hasil transaksi domain.
+1. Sistem memvalidasi ownership, status, waktu, dan interval extend.
+2. Availability Engine memeriksa hingga waktu selesai baru.
+3. Jika kosong, booking diperpanjang dalam satu transaksi.
+4. Jika konflik, pengguna menerima alternatif.
+5. Role berotoritas menggunakan workflow move/cancel sesuai hierarchy.
+6. Jika approval diperlukan dan belum selesai saat booking berakhir, request
+   kedaluwarsa dan jadwal awal tetap berlaku.
 
-### 15.4 Strategi Pengujian
+### 15.4 Error Handling
 
-- **Unit tests**: slot calculation, buffer, blackout, priority comparison,
-  pembulatan tarif, cancellation charge, add-on pricing, dan state transition.
-- **Feature tests**: permission, room filtering, booking lifecycle, chargeback,
-  extend, override, relocation, adjustment, ekspor, dan privasi booking lain.
-- **Concurrency tests**: dua booking pada slot sama, booking vs extend, serta dua
-  approval terhadap ruang pengganti yang sama.
-- **Notification tests**: event hanya dikirim setelah commit dan retry tidak
-  menggandakan pesan.
-- **Browser/runtime QA**: pencarian Hari Ini/Besok, responsive layout, keyboard,
-  quote review, conflict recovery, dan seluruh alur extend.
-- **Regression tests**: autentikasi, RBAC, navigasi CMS, serta modul eksisting
-  yang berbagi account dan permission tetap berjalan.
+- Konflik request bersamaan menghasilkan respons conflict dan alternatif terbaru.
+- Target move yang tidak lagi kosong membatalkan seluruh pemindahan tanpa mengubah
+  booking awal.
+- Request level sama/lebih tinggi tanpa approval tidak boleh dieksekusi.
+- Asset nonaktif, maintenance, atau blackout menghasilkan pesan spesifik.
+- Endpoint payment ditolak ketika Payment Module nonaktif.
+- Gateway timeout/failure tidak boleh membuat booking berstatus ambigu.
+- Retry request menggunakan idempotency key untuk mencegah booking, move, cancel,
+  payment, refund, atau notifikasi ganda.
+- Kegagalan notifikasi masuk retry queue dan tidak mengubah hasil transaksi domain.
+
+### 15.5 Strategi Pengujian
+
+- **Unit tests**: slot calculation, buffer, blackout, role comparison, state
+  transition, composition snapshot, dan conditional payment rules.
+- **Feature tests**: asset/category CRUD, room composition, booking lifecycle,
+  direct move/cancel, approval request, extend, payment toggle, dan privasi.
+- **Concurrency tests**: dua booking pada slot sama, booking vs move, dua approval
+  terhadap target sama, dan target move yang diambil sebelum approval.
+- **Payment tests**: menu/endpoint disabled, rate plan, gateway callback,
+  idempotency, failure, dan refund ketika module aktif.
+- **Browser/runtime QA**: asset management, room creation, composition input,
+  availability, booking, move/cancel request, responsive layout, dan keyboard.
+- **Regression tests**: autentikasi, RBAC, navigasi CMS, dan modul existing yang
+  memakai account/permission tetap berjalan.
 
 ## 16. Non-Functional Requirements
 
 ### Konsistensi dan Concurrency
 
-- Tidak boleh ada dua booking aktif yang overlap pada ruang yang sama.
-- Pemeriksaan availability dan pembuatan/perpindahan booking harus berada dalam
-  transaksi database dengan strategi locking yang sesuai.
+- Tidak boleh ada dua booking aktif yang overlap pada asset yang sama.
+- Pemeriksaan availability dan mutasi booking berada dalam transaksi database
+  dengan strategi locking yang sesuai.
 - Endpoint mutasi harus idempotent terhadap retry atau double-click.
+- Move/cancel tidak boleh mengubah Master Asset atau Room Composition.
 
 ### Waktu
 
-- Waktu disimpan dalam UTC dan ditampilkan mengikuti timezone ruang/pengguna.
-- Perhitungan buffer, blackout, extend, dan billing menggunakan sumber waktu
-  server, bukan jam browser.
+- Waktu disimpan dalam UTC dan ditampilkan mengikuti timezone asset/pengguna.
+- Perhitungan buffer, blackout, extend, dan request expiry menggunakan waktu server.
 
 ### Keamanan dan Privasi
 
-- Pengguna biasa tidak dapat melihat judul, agenda, participant, atau cost center
+- Pengguna biasa tidak dapat melihat agenda, participant, atau detail privat
   booking milik pengguna lain.
-- Semua aksi billing dan override memiliki audit log immutable pada level aplikasi.
-- Input teks, identifier, enum, tanggal, tarif, dan quantity divalidasi di server.
+- Semua aksi move, Force Cancel, approval, role comparison, dan payment memiliki
+  audit log.
+- Payment credential dienkripsi dan disamarkan jika module aktif.
+- Input identifier, enum, tanggal, quantity, metadata, dan harga divalidasi server.
 
 ### Performa
 
-- Pencarian availability untuk rentang satu hari dan hingga 100 ruang memiliki
-  target respons p95 maksimal 2 detik pada beban operasional normal.
-- Kalender tidak memuat seluruh histori; data diambil berdasarkan rentang tanggal.
+- Pencarian availability satu hari untuk hingga 100 room/asset memiliki target
+  respons p95 maksimal 2 detik pada beban operasional normal.
+- Kalender mengambil data berdasarkan rentang tanggal, bukan seluruh histori.
 
 ### Aksesibilitas dan Responsivitas
 
-- Alur pencarian dan booking dapat digunakan melalui keyboard.
+- Alur asset, room composition, pencarian, dan booking dapat digunakan keyboard.
 - Status tidak dibedakan hanya dengan warna.
-- Layout mendukung desktop, tablet, dan mobile tanpa menghilangkan informasi biaya
-  atau konflik penting.
+- Layout mendukung desktop, tablet, dan mobile tanpa menyembunyikan informasi
+  otoritas, konflik, atau payment penting.
 
 ## 17. Acceptance Criteria MVP
 
-1. Pengguna dapat memilih Hari Ini atau Besok dan melihat hanya slot yang valid
-   berdasarkan jam operasional, blackout, buffer, dan booking aktif.
-2. Filter kapasitas dan fasilitas mengeluarkan ruang yang tidak memenuhi syarat.
-3. Detail ruang menampilkan fasilitas terstruktur, termasuk jumlah dan metadata
-   seperti ukuran TV dalam inch.
-4. Estimasi biaya menggunakan rate plan dan add-on yang berlaku, dengan hasil
-   pembulatan yang konsisten antara UI dan server.
-5. Booking kosong langsung terkonfirmasi dan menyimpan snapshot harga serta cost
-   center.
-6. Dua permintaan bersamaan untuk ruang dan waktu yang sama hanya menghasilkan
-   satu booking terkonfirmasi.
-7. Extend tanpa konflik memperbarui waktu dan estimasi biaya dalam satu transaksi.
-8. Extend yang bertabrakan ditolak untuk prioritas sama/lebih rendah.
-9. Prioritas lebih tinggi hanya dapat membuat override request dan tidak otomatis
-   membatalkan booking berikutnya.
-10. Override hanya disetujui setelah ruang pengganti berhasil direservasi atau
-    organizer terdampak menyetujui pembatalan.
-11. Booking yang dibatalkan atau no-show menghasilkan charge sesuai snapshot
-    kebijakan yang berlaku saat booking dibuat.
-12. Finance dapat melihat, memfilter, melakukan adjustment beralasan, dan
-    mengekspor chargeback per periode.
-13. Pengguna tanpa permission ditolak oleh backend meskipun memanggil endpoint
-    secara langsung.
-14. Semua perubahan booking, override, relocation, dan charge tercatat dalam
-    activity log.
+1. Administrator dapat membuat kategori asset dan Master Asset.
+2. Room dibuat sebagai asset berkategori Room dengan detail khusus room.
+3. Room Composition dapat menyimpan 1 meja, 10 kursi, 1 proyektor, dan 10 botol
+   air sebagai baris terstruktur dengan quantity dan unit.
+4. Quantity fasilitas tidak dianggap sebagai stock balance dan tidak berkurang
+   akibat booking/cancellation.
+5. Asset dapat dikonfigurasi standalone, component/add-on, keduanya, atau
+   non-bookable.
+6. Pengguna dapat mencari Hari Ini/Besok/Tanggal dan hanya melihat slot valid.
+7. Dua request bersamaan pada asset dan waktu sama hanya menghasilkan satu
+   booking terkonfirmasi.
+8. Booking menyimpan snapshot asset dan Room Composition.
+9. Payment Module default nonaktif; menu/form payment tersembunyi dan endpoint
+   mutasi ditolak backend.
+10. Ketika Payment Module diaktifkan, Room Rate Plan dan payment gateway dapat
+    dikelola oleh pengguna berpermission.
+11. Booking lama tidak berubah ketika Payment Module diaktifkan/dinonaktifkan.
+12. Super Admin, Admin, Preskom, dan Direktur hanya dapat direct move/Force Cancel
+    terhadap booking level lebih rendah.
+13. Booking level sama atau lebih tinggi hanya dapat diubah setelah organizer
+    menyetujui Booking Change Request.
+14. Move hanya berhasil ke target kosong dan mempertahankan identitas booking.
+15. Force Cancel mengubah status serta melepaskan slot tanpa mengubah Master Asset,
+    Room Composition, atau stock.
+16. Extend tanpa konflik memperbarui jadwal secara atomik.
+17. Semua move, cancel, request, approval, extend, dan payment dicatat dalam
+    activity log sesuai status module.
+18. Pengguna tanpa permission ditolak backend meskipun memanggil endpoint langsung.
 
 ## 18. KPI Awal
 
 - Persentase booking berhasil tanpa bantuan admin.
-- Utilization rate per ruang dan jam.
+- Utilization rate per room dan asset berserial.
 - Persentase pencarian yang menghasilkan booking.
-- Konflik booking dan konflik extend per 100 booking.
-- Waktu rata-rata penyelesaian override request.
+- Konflik booking dan extend per 100 booking.
+- Jumlah direct move dan Force Cancel per role.
+- Jumlah Booking Change Request serta waktu rata-rata respons.
 - Cancellation dan no-show rate.
-- Nilai chargeback per divisi/cost center.
-- Persentase ruang dengan fasilitas atau kapasitas yang tidak sesuai kebutuhan.
+- Persentase room dengan Room Composition lengkap.
+- Persentase payment berhasil dan gagal hanya ketika Payment Module aktif.
 
 ## 19. Tahapan Rilis
 
-### Phase 1 — MVP Meeting Room
+### Phase 1 — Asset & Meeting Room Booking MVP
 
-- organisasi, jabatan, priority level, dan cost center;
-- room catalog, fasilitas, add-on, jam operasional, dan blackout;
-- rate plan dan internal chargeback;
+- kategori dan Master Asset;
+- detail room dan Room Composition;
+- asset standalone/component/add-on;
 - availability Hari Ini/Besok/Tanggal;
-- create, cancel, dan My Bookings;
-- extend normal dan controlled priority override;
-- notifikasi, audit log, serta laporan dasar.
+- create, cancel, My Bookings, dan extend;
+- role hierarchy, direct move/Force Cancel, serta Booking Change Request;
+- Payment Module global dengan kondisi default nonaktif;
+- conditional Room Rate Plan, gateway management, dan payment flow;
+- notifikasi, activity log, dan pengujian runtime.
 
 ### Phase 1.1 — Operational Improvements
 
 - check-in manual atau QR;
-- deteksi no-show berbasis check-in;
-- template room setup;
-- dashboard utilization dan rekomendasi kapasitas.
+- no-show berbasis check-in;
+- template komposisi room;
+- dashboard utilization dan rekomendasi kapasitas;
+- inventory stock tracking;
+- stock movement dan reservation;
+- substitusi consumable/perangkat otomatis.
 
 ### Phase 2 — Integrasi dan Resource Lain
 
 - recurring booking;
 - calendar integration;
-- ERP/accounting export terjadwal;
-- approval policy opsional per ruang;
-- booking kendaraan, perangkat, venue, atau resource lain;
-- pengguna eksternal dan payment gateway jika strategi produk membutuhkannya.
+- ERP/accounting integration;
+- approval policy tambahan per kategori asset;
+- booking kendaraan, venue, atau resource lain dengan aturan khusus;
+- pengguna eksternal dan marketplace jika strategi produk membutuhkannya.
 
 ## 20. Risiko dan Mitigasi
 
-### Penyalahgunaan Prioritas Jabatan
+### Penyalahgunaan Hierarki Role
 
-Mitigasi: tidak ada auto-preemption, alasan wajib, ruang pengganti, persetujuan
-eksplisit, permission terpisah, dan audit log.
+Mitigasi: permission terpisah, direct action hanya ke level lebih rendah, request
+untuk level sama/lebih tinggi, alasan wajib, notifikasi, dan activity log.
 
-### Double Booking
+### Double Booking Saat Move
 
-Mitigasi: validasi server, transaksi, locking, constraint/strategi overlap, dan
-tes concurrency.
+Mitigasi: validasi server, transaksi, locking, pengecekan ulang target, dan tes
+concurrency.
 
-### Tarif Berubah Mengubah Histori
+### Master Asset Berubah Mengubah Histori
 
-Mitigasi: snapshot rate, fasilitas, add-on, dan cancellation policy pada booking.
+Mitigasi: snapshot asset dan Room Composition pada booking. Move/cancel tidak
+menulis ke Master Asset.
 
-### Data Organisasi Tidak Akurat
+### Quantity Disalahartikan sebagai Stok
 
-Mitigasi: hanya Administrator yang mengubah position/priority/cost center,
-effective dating, dan histori perubahan.
+Mitigasi: label UI yang jelas, pemisahan domain Room Composition, dan dokumentasi
+bahwa inventory tracking belum aktif pada MVP.
 
-### Fasilitas Tercatat tetapi Tidak Tersedia
+### Payment Toggle Salah Konfigurasi
 
-Mitigasi: status fasilitas, maintenance, stok add-on, laporan masalah, dan
-verifikasi Room Manager.
+Mitigasi: default disabled, validasi konfigurasi sebelum enable, permission khusus,
+endpoint guard, audit log, dan histori payment tidak dihapus saat disabled.
+
+### Fasilitas Tidak Sesuai Kondisi Aktual
+
+Mitigasi: status asset, maintenance, verifikasi berkala Asset/Room Manager, dan
+perubahan manual Room Composition sampai inventory tracking tersedia.
 
 ## 21. Keputusan Produk yang Disepakati
 
-- Rilis pertama berfokus pada meeting room.
-- Booking menggunakan daftar jadwal yang tersedia.
-- Model monetisasi MVP adalah biaya per booking melalui internal chargeback.
-- Biaya dibebankan ke divisi/cost center, bukan dibayar pribadi.
-- Availability-first dengan konfirmasi otomatis digunakan sebagai alur utama.
-- Fixed facilities termasuk tarif ruang; add-on dapat ditagihkan terpisah.
-- Extend didukung dan konflik ditangani dengan controlled priority override.
-- Jabatan/prioritas organisasi dipisahkan dari role/permission aplikasi.
-- Tidak ada pembatalan otomatis hanya karena pengguna memiliki jabatan lebih tinggi.
+- Rilis pertama berfokus pada meeting room dengan fondasi Master Asset generik.
+- Room, laptop, proyektor, furniture, consumable, dan item lain dikelola sebagai
+  asset berkategori.
+- Room memiliki komposisi fasilitas terstruktur beserta quantity dan unit.
+- Quantity komposisi belum menjadi inventory stock pada MVP.
+- Inventory tracking, stock movement, reservation, dan substitusi otomatis ditunda.
+- Payment merupakan modul global opsional dengan kondisi default nonaktif.
+- Ketika payment nonaktif, UI dan endpoint payment tidak tersedia untuk booking.
+- Ketika payment aktif, Room Rate Plan, gateway, transaksi, dan refund dikelola
+  sesuai permission.
+- Hierarki role adalah Super Admin, Admin, Presiden Komisaris/Preskom, Direktur,
+  lalu role biasa.
+- Direct move dan Force Cancel hanya boleh terhadap booking level lebih rendah.
+- Booking level sama atau lebih tinggi harus melalui persetujuan organizer.
+- Move hanya mengubah alokasi/jadwal booking dan mempertahankan identitas booking.
+- Cancel hanya mengubah status serta melepaskan slot; Master Asset dan Room
+  Composition tidak berubah.
+- Tidak ada pembatalan otomatis hanya karena actor memiliki level role lebih tinggi.
