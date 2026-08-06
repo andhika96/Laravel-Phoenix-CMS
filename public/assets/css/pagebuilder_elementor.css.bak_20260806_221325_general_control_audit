@@ -5055,47 +5055,6 @@ body {
 	padding: 0 6px !important;
 }
 
-/* The new General widgets use the same compact shared text-control geometry as
-   Heading. Without this, the shared components fall back to their 36–38px
-   defaults and make the controls visually heavier than their peers. */
-.pb-panel.left .pb-widget-settings--general-new .pb-typography-control,
-.pb-panel.left .pb-widget-settings--general-new .pb-text-effect-control {
-	margin-bottom: 15px;
-}
-
-.pb-panel.left .pb-widget-settings--general-new .pb-typography-trigger-row,
-.pb-panel.left .pb-widget-settings--general-new .pb-text-effect-trigger-row {
-	min-height: 32px;
-	gap: 8px;
-	font-size: 11px;
-}
-
-.pb-panel.left .pb-widget-settings--general-new .pb-typography-trigger-actions {
-	gap: 4px;
-}
-
-.pb-panel.left .pb-widget-settings--general-new .pb-typography-trigger {
-	width: 30px;
-	height: 30px;
-	min-height: 30px;
-	border-right-width: 1px;
-	border-radius: 6px;
-	font-size: 10px;
-}
-
-.pb-panel.left .pb-widget-settings--general-new .pb-typography-trigger:first-child,
-.pb-panel.left .pb-widget-settings--general-new .pb-typography-trigger:last-child {
-	border-radius: 6px;
-}
-
-.pb-panel.left .pb-widget-settings--general-new .pb-text-effect-trigger {
-	width: 30px;
-	height: 28px;
-	min-height: 28px;
-	border-radius: 6px;
-	font-size: 10px;
-}
-
 .pb-panel.left .pb-widget-settings .pb-control-device-btn {
 	width: 24px;
 	height: 24px;

@@ -86,43 +86,6 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
             $this->assertStringNotContainsString('v-model="node.settings.transformRotate"', $settings);
         }
     }
-
-    public function test_container_background_video_and_slideshow_are_wired_end_to_end(): void
-    {
-        $definition = file_get_contents(public_path('js/pagebuilder_elementor/widgets/layout/container/definition.js'));
-        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/layout/container/Settings.vue'));
-        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/layout/container/Canvas.vue'));
-        $renderer = file_get_contents(resource_path('views/pagebuilder_elementor/widgets/layout/container.blade.php'));
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
-
-        foreach ([
-            "bgVideoLink: ''",
-            'bgVideoPlayOnMobile: false',
-            'bgVideoFallback: \'\'',
-            'bgSlideshowImages: []',
-            'bgSlideshowInfiniteLoop: true',
-            "bgSlideshowTransition: 'fade'",
-            'bgSlideshowSizeTablet: \'\'',
-        ] as $setting) {
-            $this->assertStringContainsString($setting, $definition);
-        }
-
-        foreach (['title="Video"', 'title="Slideshow"', 'Video Link', 'Choose Video from CKFinder', "editor.chooseMedia(node.settings, 'bgVideoLink', 'Paste video URL')", 'Background Fallback', 'Infinite Loop', 'Transition Duration (ms)', 'Ken Burns Effect', "editor.chooseMediaGallery(node.settings, 'bgSlideshowImages')"] as $control) {
-            $this->assertStringContainsString($control, $settings);
-        }
-
-        foreach (['shouldRenderBackgroundVideo', 'shouldRenderBackgroundSlideshow', 'videoEmbedUrl(value)', 'syncBackgroundVideo(event)', 'syncBackgroundMedia()', 'pb-container-background-slideshow'] as $canvasContract) {
-            $this->assertStringContainsString($canvasContract, $canvas);
-        }
-
-        foreach (['$hasVideoBackground', '$hasSlideshowBackground', '$videoEmbedUrl', 'pb-container-background-video', 'pb-container-background-slideshow', '@keyframes'] as $renderContract) {
-            $this->assertStringContainsString($renderContract, $renderer);
-        }
-
-        $this->assertStringContainsString('.pb-container-background-media', $css);
-        $this->assertStringContainsString('.pb-background-video-mobile-disabled', $css);
-    }
-
     public static function containerProvider(): array
     {
         return [

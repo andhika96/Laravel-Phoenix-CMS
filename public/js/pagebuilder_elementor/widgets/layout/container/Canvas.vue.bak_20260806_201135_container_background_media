@@ -1,12 +1,5 @@
 <template>
 	<component :is="rootTag" :id="domId" :class="rootClass" :style="containerStyle" v-bind="customAttrs">
-		<div v-if="shouldRenderBackgroundVideo" class="pb-container-background-media pb-container-background-video" aria-hidden="true">
-			<iframe v-if="backgroundVideoEmbedSrc" :src="backgroundVideoEmbedSrc" title="Background video" tabindex="-1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-			<video v-else-if="backgroundVideoSource" :src="backgroundVideoSource" :poster="settings.bgVideoFallback || null" autoplay muted playsinline :loop="!isTruthy(settings.bgVideoPlayOnce)" @loadedmetadata="syncBackgroundVideo" @timeupdate="enforceBackgroundVideoEnd"></video>
-		</div>
-		<div v-if="shouldRenderBackgroundSlideshow" class="pb-container-background-media pb-container-background-slideshow" :class="'pb-container-background-slideshow--' + slideshowTransition" aria-hidden="true">
-			<span v-for="(image, index) in slideshowImages" :key="image.id || image.url || index" class="pb-container-background-slideshow__slide" :class="{ 'is-active': index === slideshowIndex }" :style="backgroundSlideshowStyle(image, index)"></span>
-		</div>
 		<div v-if="shapeDividerType(settings, 'top') !== 'none'" class="pb-shape-divider-layer pb-shape-divider-top" aria-hidden="true" v-html="shapeDividerSvg(settings, 'top')"></div>
 		<div v-if="shapeDividerType(settings, 'bottom') !== 'none'" class="pb-shape-divider-layer pb-shape-divider-bottom" aria-hidden="true" v-html="shapeDividerSvg(settings, 'bottom')"></div>
 		<slot></slot>
@@ -45,23 +38,18 @@ export default {
 			previewMouseMoveHandler: null,
 			previewMouseLeaveHandler: null,
 			previewRaf: 0,
-			slideshowIndex: 0,
-			slideshowTimer: null,
 		};
 	},
 	mounted() {
 		this.syncPreviewBindings();
-		this.syncBackgroundMedia();
 	},
 	updated() {
 		this.$nextTick(() => {
 			this.syncPreviewBindings();
-			this.syncBackgroundMedia();
 		});
 	},
 	beforeUnmount() {
 		this.teardownPreviewBindings();
-		this.clearSlideshowTimer();
 	},
 	computed: {
 		settings() {
@@ -78,7 +66,6 @@ export default {
 		},
 		rootClass() {
 			const classes = ['el-layout-container'];
-			if (this.hasBackgroundMedia) classes.push('pb-has-background-media');
 			if (this.settings.cssClass) classes.push(this.settings.cssClass);
 			if (this.isTruthy(this.settings.hideDesktop)) classes.push('pb-hide-desktop');
 			if (this.isTruthy(this.settings.hideTablet)) classes.push('pb-hide-tablet');
@@ -102,42 +89,6 @@ export default {
 				if (this.isDisabled(this.settings.stickyOnMobile)) classes.push('pb-sticky-off-mobile');
 			}
 			return classes;
-		},
-		backgroundType() {
-			return String(this.settings.bgType || 'none').toLowerCase();
-		},
-		slideshowImages() {
-			return Array.isArray(this.settings.bgSlideshowImages)
-				? this.settings.bgSlideshowImages.filter((image) => image && String(image.url || '').trim())
-				: [];
-		},
-		slideshowTransition() {
-			const transition = String(this.settings.bgSlideshowTransition || 'fade').toLowerCase();
-			return ['fade', 'slide-right', 'slide-left', 'slide-up', 'slide-down'].includes(transition) ? transition : 'fade';
-		},
-		slideshowSize() {
-			const size = this.responsiveSetting('bgSlideshowSize', this.settings.bgSlideshowSize || 'cover');
-			return size === 'default' ? 'cover' : (size || 'cover');
-		},
-		slideshowPosition() {
-			return this.responsiveSetting('bgSlideshowPosition', this.settings.bgSlideshowPosition || 'center center') || 'center center';
-		},
-		shouldRenderBackgroundVideo() {
-			return this.backgroundType === 'video'
-				&& Boolean(String(this.settings.bgVideoLink || '').trim())
-				&& (this.responsiveDevice !== 'mobile' || this.isTruthy(this.settings.bgVideoPlayOnMobile));
-		},
-		shouldRenderBackgroundSlideshow() {
-			return this.backgroundType === 'slideshow' && this.slideshowImages.length > 0;
-		},
-		hasBackgroundMedia() {
-			return this.shouldRenderBackgroundVideo || this.shouldRenderBackgroundSlideshow;
-		},
-		backgroundVideoEmbedSrc() {
-			return this.videoEmbedUrl(this.settings.bgVideoLink);
-		},
-		backgroundVideoSource() {
-			return this.backgroundVideoEmbedSrc ? '' : String(this.settings.bgVideoLink || '').trim();
 		},
 		customAttrs() {
 			const attrs = {};
@@ -235,9 +186,6 @@ export default {
 			};
 
 			Object.assign(style, this.backgroundStyles(s, ''));
-			if (this.backgroundType === 'video') {
-				style.backgroundColor = s.bgColor || '#ffffff';
-			}
 
 			Object.assign(style, this.borderStyleRules(s));
 
@@ -257,7 +205,7 @@ export default {
 			}
 
 			this.applyAdvancedLayoutStyle(style, s);
-			if ((this.hasAnyShapeDivider(s) || this.hasBackgroundMedia) && (!style.position || style.position === 'static')) {
+			if (this.hasAnyShapeDivider(s) && (!style.position || style.position === 'static')) {
 				style.position = 'relative';
 			}
 			this.applyEditorPreviewEffects(style, s);
@@ -507,16 +455,6 @@ export default {
 		backgroundLayer(settings, prefix, suffix = '') {
 			const type = String(this.stateSetting(settings, prefix + 'Type', suffix) || 'none').toLowerCase();
 			if (type === 'none') return null;
-			if (prefix === 'bg' && suffix === '' && type === 'video') {
-				const fallback = String(settings.bgVideoFallback || '').trim();
-				if (!fallback) return null;
-				return { image: 'url("' + fallback + '")', size: 'cover', position: 'center center', repeat: 'no-repeat', attachment: 'scroll', blendMode: 'normal' };
-			}
-			if (prefix === 'bg' && suffix === '' && type === 'slideshow') {
-				const firstImage = this.slideshowImages[0] && String(this.slideshowImages[0].url || '').trim();
-				if (!firstImage) return null;
-				return { image: 'url("' + firstImage + '")', size: this.slideshowSize, position: this.slideshowPosition, repeat: 'no-repeat', attachment: 'scroll', blendMode: 'normal' };
-			}
 			if (type === 'color') {
 				const color = this.colorWithOpacity(this.stateSetting(settings, prefix + 'Color', suffix) || '#ffffff', this.stateSetting(settings, prefix + 'Opacity', suffix));
 				return {
@@ -555,82 +493,6 @@ export default {
 				attachment: this.stateSetting(settings, prefix + 'Attachment', suffix) || 'scroll',
 				blendMode: this.stateSetting(settings, prefix + 'BlendMode', suffix) || 'normal',
 			};
-		},
-		videoEmbedUrl(value) {
-			const url = String(value || '').trim();
-			if (!url) return '';
-			const youtube = url.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/i);
-			const start = Math.max(0, Number(this.settings.bgVideoStart) || 0);
-			const end = Math.max(0, Number(this.settings.bgVideoEnd) || 0);
-			const playOnce = this.isTruthy(this.settings.bgVideoPlayOnce);
-			if (youtube) {
-				const params = new URLSearchParams({ autoplay: '1', mute: '1', controls: '0', playsinline: '1', rel: '0' });
-				if (start) params.set('start', String(start));
-				if (end > start) params.set('end', String(end));
-				if (!playOnce) { params.set('loop', '1'); params.set('playlist', youtube[1]); }
-				return 'https://www.' + (this.isTruthy(this.settings.bgVideoPrivacy) ? 'youtube-nocookie.com' : 'youtube.com') + '/embed/' + youtube[1] + '?' + params.toString();
-			}
-			const vimeo = url.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
-			if (vimeo) {
-				const params = new URLSearchParams({ autoplay: '1', muted: '1', background: '1', loop: playOnce ? '0' : '1', title: '0', byline: '0', portrait: '0' });
-				if (start) params.set('#t', String(start) + 's');
-				if (this.isTruthy(this.settings.bgVideoPrivacy)) params.set('dnt', '1');
-				return 'https://player.vimeo.com/video/' + vimeo[1] + '?' + params.toString();
-			}
-			return '';
-		},
-		syncBackgroundVideo(event) {
-			const video = event && event.target;
-			if (!video) return;
-			const start = Math.max(0, Number(this.settings.bgVideoStart) || 0);
-			if (start && Number.isFinite(video.duration) && start < video.duration) video.currentTime = start;
-			const play = video.play && video.play();
-			if (play && typeof play.catch === 'function') play.catch(() => {});
-		},
-		enforceBackgroundVideoEnd(event) {
-			const video = event && event.target;
-			const end = Math.max(0, Number(this.settings.bgVideoEnd) || 0);
-			if (!video || !end || video.currentTime < end) return;
-			if (this.isTruthy(this.settings.bgVideoPlayOnce)) { video.pause(); return; }
-			video.currentTime = Math.max(0, Number(this.settings.bgVideoStart) || 0);
-		},
-		backgroundSlideshowStyle(image, index) {
-			const active = index === this.slideshowIndex;
-			const nextIndex = (this.slideshowIndex + 1) % Math.max(1, this.slideshowImages.length);
-			const duration = Math.max(100, Number(this.settings.bgSlideshowTransitionDuration) || 500);
-			const transition = this.slideshowTransition;
-			let transform = 'translate3d(0, 0, 0)';
-			if (!active && transition === 'slide-right') transform = 'translate3d(-100%, 0, 0)';
-			if (!active && transition === 'slide-left') transform = 'translate3d(100%, 0, 0)';
-			if (!active && transition === 'slide-up') transform = 'translate3d(0, 100%, 0)';
-			if (!active && transition === 'slide-down') transform = 'translate3d(0, -100%, 0)';
-			if (active && this.isTruthy(this.settings.bgSlideshowKenBurns)) transform += ' scale(1.08)';
-			return {
-				backgroundImage: (!this.isTruthy(this.settings.bgSlideshowLazyload) || active || index === nextIndex) ? 'url("' + String(image.url).replace(/"/g, '\\"') + '")' : 'none',
-				backgroundSize: this.slideshowSize,
-				backgroundPosition: this.slideshowPosition,
-				opacity: active ? 1 : 0,
-				transform,
-				transitionDuration: duration + 'ms',
-			};
-		},
-		clearSlideshowTimer() {
-			if (this.slideshowTimer) window.clearInterval(this.slideshowTimer);
-			this.slideshowTimer = null;
-		},
-		syncBackgroundMedia() {
-			this.clearSlideshowTimer();
-			if (!this.shouldRenderBackgroundSlideshow || this.slideshowImages.length < 2) { this.slideshowIndex = 0; return; }
-			if (this.slideshowIndex >= this.slideshowImages.length) this.slideshowIndex = 0;
-			const duration = Math.max(1000, Number(this.settings.bgSlideshowDuration) || 5000);
-			this.slideshowTimer = window.setInterval(() => {
-				if (this.slideshowIndex >= this.slideshowImages.length - 1) {
-					if (!this.isTruthy(this.settings.bgSlideshowInfiniteLoop)) { this.clearSlideshowTimer(); return; }
-					this.slideshowIndex = 0;
-					return;
-				}
-				this.slideshowIndex += 1;
-			}, duration);
 		},
 		borderRadius(settings) {
 			if (settings.borderRadius) return this.toCssSize(settings.borderRadius, '0');

@@ -133,26 +133,6 @@
 			bgPosition: 'center center',
 			bgRepeat: 'no-repeat',
 			bgAttachment: 'scroll',
-			bgVideoLink: '',
-			bgVideoStart: '',
-			bgVideoEnd: '',
-			bgVideoPlayOnce: false,
-			bgVideoPlayOnMobile: false,
-			bgVideoPrivacy: false,
-			bgVideoFallback: '',
-			bgSlideshowImages: [],
-			bgSlideshowInfiniteLoop: true,
-			bgSlideshowDuration: 5000,
-			bgSlideshowTransition: 'fade',
-			bgSlideshowTransitionDuration: 500,
-			bgSlideshowSize: 'cover',
-			bgSlideshowSizeTablet: '',
-			bgSlideshowSizeMobile: '',
-			bgSlideshowPosition: 'center center',
-			bgSlideshowPositionTablet: '',
-			bgSlideshowPositionMobile: '',
-			bgSlideshowLazyload: false,
-			bgSlideshowKenBurns: false,
 			bgTypeHover: 'none',
 			bgColorHover: '#ffffff',
 			bgOpacityHover: 1,
@@ -292,9 +272,6 @@
 		if (settings.customCss && !settings.cssClass) settings.cssClass = settings.customCss;
 		settings.animateWithAI = false;
 		settings.attributes = Array.isArray(settings.attributes) ? settings.attributes : [];
-		settings.bgSlideshowImages = Array.isArray(settings.bgSlideshowImages)
-			? settings.bgSlideshowImages.filter((image) => image && typeof image.url === 'string' && image.url.trim())
-			: [];
 		node.settings = settings;
 		return node;
 	}

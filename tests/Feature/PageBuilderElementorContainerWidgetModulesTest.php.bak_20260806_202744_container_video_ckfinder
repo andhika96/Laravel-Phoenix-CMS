@@ -107,7 +107,7 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
             $this->assertStringContainsString($setting, $definition);
         }
 
-        foreach (['title="Video"', 'title="Slideshow"', 'Video Link', 'Choose Video from CKFinder', "editor.chooseMedia(node.settings, 'bgVideoLink', 'Paste video URL')", 'Background Fallback', 'Infinite Loop', 'Transition Duration (ms)', 'Ken Burns Effect', "editor.chooseMediaGallery(node.settings, 'bgSlideshowImages')"] as $control) {
+        foreach (['title="Video"', 'title="Slideshow"', 'Video Link', 'Background Fallback', 'Infinite Loop', 'Transition Duration (ms)', 'Ken Burns Effect', "editor.chooseMediaGallery(node.settings, 'bgSlideshowImages')"] as $control) {
             $this->assertStringContainsString($control, $settings);
         }
 

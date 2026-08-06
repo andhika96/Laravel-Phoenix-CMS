@@ -2,39 +2,6 @@
 		$s = $settings;
 		$display = $s['displayType'] ?? 'flex';
 		$fullMode = $type === 'container_fluid' || in_array(($s['contentWidth'] ?? ''), ['full', 'fluid'], true);
-		$backgroundType = strtolower(trim((string) ($s['bgType'] ?? 'none')));
-		$safeBackgroundUrl = static function ($value): string {
-			return str_replace(['"', "'", '(', ')', '\\'], '', trim((string) $value));
-		};
-		$videoLink = trim((string) ($s['bgVideoLink'] ?? ''));
-		$videoFallback = $safeBackgroundUrl($s['bgVideoFallback'] ?? '');
-		$slideshowImages = array_values(array_filter(is_array($s['bgSlideshowImages'] ?? null) ? $s['bgSlideshowImages'] : [], static fn ($image) => is_array($image) && trim((string) ($image['url'] ?? '')) !== ''));
-		$slideshowImages = array_map(static function ($image) use ($safeBackgroundUrl) {
-			$image['url'] = $safeBackgroundUrl($image['url'] ?? '');
-			return $image;
-		}, $slideshowImages);
-		$videoEmbedUrl = '';
-		$videoNativeUrl = '';
-		$videoStart = max(0, (float) ($s['bgVideoStart'] ?? 0));
-		$videoEnd = max(0, (float) ($s['bgVideoEnd'] ?? 0));
-		$videoPlayOnce = filter_var($s['bgVideoPlayOnce'] ?? false, FILTER_VALIDATE_BOOLEAN);
-		if ($backgroundType === 'video' && $videoLink !== '') {
-			if (preg_match('~(?:youtu\.be/|youtube(?:-nocookie)?\.com/(?:watch\?v=|embed/|shorts/))([A-Za-z0-9_-]{6,})~i', $videoLink, $match)) {
-				$params = ['autoplay' => '1', 'mute' => '1', 'controls' => '0', 'playsinline' => '1', 'rel' => '0'];
-				if ($videoStart > 0) $params['start'] = (string) $videoStart;
-				if ($videoEnd > $videoStart) $params['end'] = (string) $videoEnd;
-				if (!$videoPlayOnce) { $params['loop'] = '1'; $params['playlist'] = $match[1]; }
-				$videoEmbedUrl = 'https://www.' . (filter_var($s['bgVideoPrivacy'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 'youtube-nocookie.com' : 'youtube.com') . '/embed/' . $match[1] . '?' . http_build_query($params);
-			} elseif (preg_match('~vimeo\.com/(?:video/)?(\d+)~i', $videoLink, $match)) {
-				$params = ['autoplay' => '1', 'muted' => '1', 'background' => '1', 'loop' => $videoPlayOnce ? '0' : '1', 'title' => '0', 'byline' => '0', 'portrait' => '0'];
-				if (filter_var($s['bgVideoPrivacy'] ?? false, FILTER_VALIDATE_BOOLEAN)) $params['dnt'] = '1';
-				$videoEmbedUrl = 'https://player.vimeo.com/video/' . $match[1] . '?' . http_build_query($params) . ($videoStart > 0 ? '#t=' . $videoStart . 's' : '');
-			} elseif (preg_match('~^(?:https?:)?//|^/~i', $videoLink)) {
-				$videoNativeUrl = $safeBackgroundUrl($videoLink);
-			}
-		}
-		$hasVideoBackground = $backgroundType === 'video' && ($videoEmbedUrl !== '' || $videoNativeUrl !== '');
-		$hasSlideshowBackground = $backgroundType === 'slideshow' && count($slideshowImages) > 0;
 		$styles = [
 			'box-sizing:border-box',
 			'display:block',
@@ -42,21 +9,6 @@
 		];
 
 		$styles = array_merge($styles, $background_styles($s));
-		if ($backgroundType === 'video') {
-			$styles[] = 'background-color:' . ($s['bgColor'] ?? '#ffffff');
-		}
-		if ($backgroundType === 'video' && $videoFallback !== '') {
-			$styles[] = 'background-image:url("' . $videoFallback . '")';
-			$styles[] = 'background-size:cover';
-			$styles[] = 'background-position:center center';
-			$styles[] = 'background-repeat:no-repeat';
-		}
-		if ($backgroundType === 'slideshow' && $hasSlideshowBackground) {
-			$styles[] = 'background-image:url("' . $slideshowImages[0]['url'] . '")';
-			$styles[] = 'background-size:' . (($s['bgSlideshowSize'] ?? 'cover') === 'default' ? 'cover' : ($s['bgSlideshowSize'] ?? 'cover'));
-			$styles[] = 'background-position:' . ($s['bgSlideshowPosition'] ?? 'center center');
-			$styles[] = 'background-repeat:no-repeat';
-		}
 		$styles = array_merge($styles, $border_style_rules($s));
 
 		$styles[] = 'border-radius:' . $border_radius_value($s);
@@ -111,13 +63,13 @@
 		}
 
 		$hasShapeDivider = $shape_divider_type($s, 'top') !== 'none' || $shape_divider_type($s, 'bottom') !== 'none';
-		if (($hasShapeDivider || $hasVideoBackground || $hasSlideshowBackground) && ($s['sticky'] ?? 'none') === 'none' && (($s['position'] ?? 'default') === 'default') && ($s['zIndex'] ?? '') === '') {
+		if ($hasShapeDivider && ($s['sticky'] ?? 'none') === 'none' && (($s['position'] ?? 'default') === 'default') && ($s['zIndex'] ?? '') === '') {
 			$styles[] = 'position:relative';
 		}
 
 		$style = implode(';', array_filter($styles));
 		$baseClass = $type === 'container_fluid' ? 'el-layout-container-fluid' : 'el-layout-container';
-		$classTokens = array_filter(array_merge([$baseClass, ($hasVideoBackground || $hasSlideshowBackground) ? 'pb-has-background-media' : '', ($hasVideoBackground && !filter_var($s['bgVideoPlayOnMobile'] ?? false, FILTER_VALIDATE_BOOLEAN)) ? 'pb-background-video-mobile-disabled' : '', $normalize_class_tokens($s['cssClass'] ?? '')], $layout_effect_classes($s)));
+		$classTokens = array_filter(array_merge([$baseClass, $normalize_class_tokens($s['cssClass'] ?? '')], $layout_effect_classes($s)));
 		$classes = trim(implode(' ', $classTokens));
 		$attrBag = $attribute_pairs($s['attributes'] ?? []);
 		if (!empty($s['cssId'])) $attrBag['data-css-id'] = (string) $s['cssId'];
@@ -328,29 +280,6 @@
 		if ($bottomShapeSvg !== '') {
 			$styleBlocks[] = '#' . $nodeDomId . ' > .pb-shape-divider-bottom{' . $shape_divider_layer_rule($s, 'bottom') . '}';
 		}
-		if ($hasSlideshowBackground) {
-			$slideDuration = max(1000, (int) ($s['bgSlideshowDuration'] ?? 5000));
-			$slideTransitionDuration = max(100, (int) ($s['bgSlideshowTransitionDuration'] ?? 500));
-			$slideCount = count($slideshowImages);
-			$animationName = 'pb-container-slideshow-' . preg_replace('/[^A-Za-z0-9_-]/', '', (string) ($node['id'] ?? 'item'));
-			$cycleDuration = $slideDuration * $slideCount;
-			$fadeEnd = min(49, max(1, ($slideTransitionDuration / $slideDuration) * 100));
-			$visibleEnd = min(99, max($fadeEnd + 1, 100 - $fadeEnd));
-			$transition = $s['bgSlideshowTransition'] ?? 'fade';
-			$kenBurns = filter_var($s['bgSlideshowKenBurns'] ?? false, FILTER_VALIDATE_BOOLEAN);
-			$fromTransform = $transition === 'slide-right' ? 'translate3d(100%,0,0)' : ($transition === 'slide-left' ? 'translate3d(-100%,0,0)' : ($transition === 'slide-up' ? 'translate3d(0,100%,0)' : ($transition === 'slide-down' ? 'translate3d(0,-100%,0)' : 'translate3d(0,0,0)')));
-			$toTransform = $transition === 'slide-right' ? 'translate3d(-100%,0,0)' : ($transition === 'slide-left' ? 'translate3d(100%,0,0)' : ($transition === 'slide-up' ? 'translate3d(0,-100%,0)' : ($transition === 'slide-down' ? 'translate3d(0,100%,0)' : 'translate3d(0,0,0)')));
-			$centerTransform = $kenBurns ? 'translate3d(0,0,0) scale(1.08)' : 'translate3d(0,0,0)';
-			$styleBlocks[] = '@keyframes ' . $animationName . '{0%{opacity:0;transform:' . $fromTransform . '} ' . $fadeEnd . '%{opacity:1;transform:' . $centerTransform . '} ' . $visibleEnd . '%{opacity:1;transform:' . $centerTransform . '} 100%{opacity:0;transform:' . $toTransform . '}}';
-			foreach (['Tablet' => 1024, 'Mobile' => 767] as $suffix => $breakpoint) {
-				$size = $s['bgSlideshowSize' . $suffix] ?? '';
-				$position = $s['bgSlideshowPosition' . $suffix] ?? '';
-				$rules = [];
-				if ($size !== '') $rules[] = 'background-size:' . ($size === 'default' ? 'cover' : $size);
-				if ($position !== '') $rules[] = 'background-position:' . $position;
-				if ($rules) $styleBlocks[] = '@media (max-width: ' . $breakpoint . 'px){#' . $nodeDomId . ' .pb-container-background-slideshow__slide{' . implode(';', $rules) . '}}';
-			}
-		}
 
 		$customScopedCss = $scoped_css($node['id'] ?? null, $s['customCssCode'] ?? '');
 		if ($customScopedCss !== '') $styleBlocks[] = $customScopedCss;
@@ -360,26 +289,6 @@
 			{{ $attrName }}="{{ e($attrValue) }}"
 		@endforeach
 	>
-		@if($hasVideoBackground)
-			<div class="pb-container-background-media pb-container-background-video" aria-hidden="true">
-				@if($videoEmbedUrl !== '')
-					<iframe src="{{ e($videoEmbedUrl) }}" title="Background video" tabindex="-1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-				@else
-					<video src="{{ e($videoNativeUrl) }}" @if($videoFallback !== '') poster="{{ e($videoFallback) }}" @endif autoplay muted playsinline @if(!$videoPlayOnce) loop @endif data-pb-video-start="{{ $videoStart }}" data-pb-video-end="{{ $videoEnd }}" onloadedmetadata="if(this.dataset.pbVideoStart){this.currentTime=Number(this.dataset.pbVideoStart)||0}" ontimeupdate="var e=Number(this.dataset.pbVideoEnd||0);if(e&&this.currentTime>=e){if(this.loop){this.currentTime=Number(this.dataset.pbVideoStart)||0}else{this.pause()}}"></video>
-				@endif
-			</div>
-		@endif
-		@if($hasSlideshowBackground)
-			@php $slideshowLazyload = filter_var($s['bgSlideshowLazyload'] ?? false, FILTER_VALIDATE_BOOLEAN); @endphp
-			<div class="pb-container-background-media pb-container-background-slideshow pb-container-background-slideshow--{{ e($s['bgSlideshowTransition'] ?? 'fade') }}" aria-hidden="true">
-				@foreach($slideshowImages as $index => $image)
-					<span class="pb-container-background-slideshow__slide" @if($slideshowLazyload) data-pb-slideshow-image="{{ e($image['url']) }}" @endif style="@unless($slideshowLazyload)background-image:url(&quot;{{ e($image['url']) }}&quot;);@endunless background-size:{{ e(($s['bgSlideshowSize'] ?? 'cover') === 'default' ? 'cover' : ($s['bgSlideshowSize'] ?? 'cover')) }};background-position:{{ e($s['bgSlideshowPosition'] ?? 'center center') }};animation:{{ $animationName }} {{ $cycleDuration }}ms linear {{ filter_var($s['bgSlideshowInfiniteLoop'] ?? true, FILTER_VALIDATE_BOOLEAN) ? 'infinite' : '1' }};animation-delay:-{{ $index * $slideDuration }}ms;animation-fill-mode:both"></span>
-				@endforeach
-			</div>
-			@if($slideshowLazyload)
-				<script>(function(){var root=document.getElementById(@json($nodeDomId));if(!root)return;var slides=Array.prototype.slice.call(root.querySelectorAll('.pb-container-background-slideshow__slide'));if(!slides.length)return;var load=function(index){var slide=slides[index];if(slide&&slide.dataset.pbSlideshowImage&&!slide.style.backgroundImage)slide.style.backgroundImage='url("'+slide.dataset.pbSlideshowImage.replace(/"/g,'\\"')+'")';};var current=0;load(current);load((current+1)%slides.length);window.setInterval(function(){current=(current+1)%slides.length;load((current+1)%slides.length);},{{ $slideDuration }});}());</script>
-			@endif
-		@endif
 		@if($topShapeSvg !== '')
 			<div class="pb-shape-divider-layer pb-shape-divider-top" aria-hidden="true">{!! $topShapeSvg !!}</div>
 		@endif

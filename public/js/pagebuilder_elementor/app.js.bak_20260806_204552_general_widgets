@@ -1423,11 +1423,6 @@
 		basic_gallery: 'Basic Gallery',
 		tabs: 'Tabs',
 		accordion: 'Accordion',
-		counter: 'Counter',
-		progress_bar: 'Progress Bar',
-		testimonial: 'Testimonial',
-		social_icons: 'Social Icons',
-		alert: 'Alert',
 	});
 
 	const NODE_LABEL_ICONS = Object.freeze({
@@ -1448,11 +1443,6 @@
 		icon_list: 'fas fa-list-ul',
 		tabs: 'far fa-folder',
 		accordion: 'fas fa-bars',
-		counter: 'fas fa-sort-numeric-up',
-		progress_bar: 'fas fa-tasks',
-		testimonial: 'fas fa-quote-left',
-		social_icons: 'fas fa-share-alt',
-		alert: 'fas fa-exclamation-triangle',
 	});
 
 	function baseNodeLabel(type, fallback = 'Widget') {
@@ -1594,8 +1584,7 @@
 			isGrid()  { return isGrid(this.node.type); },
 			isTabsNode() { return isTabs(this.node.type); },
 			isAccordionNode() { return isAccordion(this.node.type); },
-        hasSharedAdvancedControls() { return this.isTabsNode || this.isAccordionNode || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading'; },
-        hasNewGeneralAdvancedControls() { return ['counter', 'progress_bar', 'testimonial', 'social_icons', 'alert'].includes(this.node.type); },
+			hasSharedAdvancedControls() { return this.isTabsNode || this.isAccordionNode || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading'; },
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
 				return displayNodeLabel(this.node);
@@ -1635,15 +1624,12 @@
 			},
 			nodeShellId() {
 				const raw = String(this.node?.settings?.cssId || '').trim();
-                if (this.hasSharedAdvancedControls && /^[A-Za-z][A-Za-z0-9_-]*$/.test(raw)) return raw;
-                if (this.hasNewGeneralAdvancedControls && /^[A-Za-z][A-Za-z0-9_-]*$/.test(raw)) return raw;
+				if (this.hasSharedAdvancedControls && /^[A-Za-z][A-Za-z0-9_-]*$/.test(raw)) return raw;
 				if (!this.isCont) return null;
 				return raw || null;
 			},
 			nodeAdvancedClasses() {
-                if (!this.hasNewGeneralAdvancedControls) {
-                    if (!this.hasSharedAdvancedControls) return [];
-                }
+				if (!this.hasSharedAdvancedControls) return [];
 				const s = this.node.settings || {};
 				const classes = ['pb-has-advanced'];
 				String(s.cssClass || '').trim().split(/\s+/).filter(Boolean).forEach((token) => {
@@ -1658,8 +1644,7 @@
 			nodeShellStyle() {
 				const s = this.node.settings || {};
 				const device = this.responsiveDevice || 'desktop';
-                if (this.hasNewGeneralAdvancedControls) return widgetAdvancedPreviewStyle(s, device);
-                if (this.hasSharedAdvancedControls) return widgetAdvancedPreviewStyle(s, device);
+				if (this.hasSharedAdvancedControls) return widgetAdvancedPreviewStyle(s, device);
 				if (!this.isCont) return {};
 				const currentHideValue = device === 'tablet'
 					? s.hideTablet
@@ -3772,7 +3757,7 @@
 				}
 			}
 		function isIconLibraryWidgetNode(node) {
-            return !!node && (['icon', 'icon_box', 'image_carousel'].includes(node.type) || node.type === 'button' || ['social_icons', 'alert'].includes(node.type));
+			return !!node && (['icon', 'icon_box', 'image_carousel'].includes(node.type) || node.type === 'button');
 		}
 		function normalizeIconLibraryWidgetSettings(node) {
 			if (!isIconLibraryWidgetNode(node)) return;
@@ -3799,33 +3784,6 @@
 				iconLibraryGroup.value = 'all';
 				iconLibrarySearch.value = '';
 				syncIconLibrarySelectionFromNode(node);
-				showIconLibraryModal.value = true;
-			}
-			async function openSocialIconLibrary(itemId, node = selectedNode.value) {
-				if (!node || node.type !== 'social_icons') return;
-				const items = Array.isArray(node.settings?.items) ? node.settings.items : [];
-				const item = items.find((entry) => String(entry.id) === String(itemId));
-				if (!item) return;
-				await ensureIconLibraryLoaded();
-				const parsed = parseIconWidgetClassParts(item.iconClass || '');
-				iconLibraryTargetNodeId.value = String(node.id || '');
-				iconLibraryTargetSettingKey.value = 'socialIconItem';
-				iconLibraryTargetItemId.value = String(item.id);
-				iconLibraryGroup.value = 'all';
-				iconLibrarySearch.value = '';
-				iconLibrarySelected.value = iconLibraryIcons.value.find((entry) => entry.style === parsed.style && entry.name === parsed.name) || null;
-				showIconLibraryModal.value = true;
-			}
-			async function openAlertIconLibrary(node = selectedNode.value) {
-				if (!node || node.type !== 'alert') return;
-				await ensureIconLibraryLoaded();
-				const parsed = parseIconWidgetClassParts(node.settings?.dismissIconClass || 'fas fa-times');
-				iconLibraryTargetNodeId.value = String(node.id || '');
-				iconLibraryTargetSettingKey.value = 'alertDismissIcon';
-				iconLibraryTargetItemId.value = '';
-				iconLibraryGroup.value = 'all';
-				iconLibrarySearch.value = '';
-				iconLibrarySelected.value = iconLibraryIcons.value.find((entry) => entry.style === parsed.style && entry.name === parsed.name) || null;
 				showIconLibraryModal.value = true;
 			}
 			function closeIconLibrary() {
@@ -3919,27 +3877,6 @@
 					closeIconLibrary();
 					return;
 				}
-				if (node && node.type === 'social_icons' && settingKey === 'socialIconItem' && itemId) {
-					const item = (Array.isArray(node.settings?.items) ? node.settings.items : []).find((entry) => String(entry.id) === itemId);
-					if (!item) return;
-					item.iconClass = iconLibrarySelected.value.className;
-					item.iconName = iconLibrarySelected.value.name;
-					item.iconStyle = iconLibrarySelected.value.style;
-					item.iconSource = 'library';
-					item.iconSvg = '';
-					closeIconLibrary();
-					return;
-				}
-				if (node && node.type === 'alert' && settingKey === 'alertDismissIcon') {
-					if (!node.settings || typeof node.settings !== 'object') node.settings = {};
-					node.settings.dismissIconClass = iconLibrarySelected.value.className;
-					node.settings.dismissIconName = iconLibrarySelected.value.name;
-					node.settings.dismissIconStyle = iconLibrarySelected.value.style;
-					node.settings.dismissIconSource = 'library';
-					node.settings.dismissIconSvg = '';
-					closeIconLibrary();
-					return;
-				}
 				if (node && node.type === 'accordion' && ['expandIconClass', 'collapseIconClass'].includes(settingKey)) {
 					if (!node.settings || typeof node.settings !== 'object') node.settings = {};
 					node.settings[settingKey] = iconLibrarySelected.value.className;
@@ -4023,34 +3960,6 @@
 				item.iconSvg = sanitized;
 				item.iconSource = 'svg';
 				item.iconClass = '';
-			}
-			function chooseSocialIconSvg(itemId, node = selectedNode.value) {
-				if (!node || node.type !== 'social_icons') return;
-				const item = (Array.isArray(node.settings?.items) ? node.settings.items : []).find((entry) => String(entry.id) === String(itemId));
-				if (!item) return;
-				const markup = window.prompt('Paste trusted SVG markup', String(item.iconSvg || ''));
-				if (markup === null) return;
-				const sanitized = sanitizeAccordionSvgMarkup(markup);
-				if (!sanitized) {
-					showSaveToast('error', 'SVG tidak valid atau mengandung markup yang tidak didukung.');
-					return;
-				}
-				item.iconSvg = sanitized;
-				item.iconSource = 'svg';
-				item.iconClass = '';
-			}
-			function chooseAlertIconSvg(node = selectedNode.value) {
-				if (!node || node.type !== 'alert') return;
-				const markup = window.prompt('Paste trusted SVG markup', String(node.settings?.dismissIconSvg || ''));
-				if (markup === null) return;
-				const sanitized = sanitizeAccordionSvgMarkup(markup);
-				if (!sanitized) {
-					showSaveToast('error', 'SVG tidak valid atau mengandung markup yang tidak didukung.');
-					return;
-				}
-				node.settings.dismissIconSvg = sanitized;
-				node.settings.dismissIconSource = 'svg';
-				node.settings.dismissIconClass = '';
 			}
 			function chooseImageCarouselArrowSvg(settingKey, node = selectedNode.value) {
 				if (!node || node.type !== 'image_carousel' || !['previousArrowIcon', 'nextArrowIcon'].includes(settingKey)) return;
@@ -6009,11 +5918,7 @@
 				onSpacerHeightInput,
 				setSpacerHeightUnit,
 				openIconLibrary,
-				openSocialIconLibrary,
-				openAlertIconLibrary,
 				chooseButtonSvg,
-				chooseSocialIconSvg,
-				chooseAlertIconSvg,
 				openTabsItemIconLibrary,
 				chooseTabsItemSvg,
 				openImageCarouselArrowIconLibrary,
@@ -6119,8 +6024,6 @@
 				removeAccordionItem,
 				accordionItemSummary,
 				iconListItemsForNode, addIconListItem, duplicateIconListItem, removeIconListItem, iconListItemSummary, openIconListItemIconLibrary,
-				openSocialIconLibrary, chooseSocialIconSvg,
-				openAlertIconLibrary, chooseAlertIconSvg,
 				openAccordionIconLibrary,
 				chooseAccordionSvg,
 				chooseTabsItemSvg,
@@ -6175,7 +6078,7 @@
 				displayNodeLabel, nodeLabelIcon,
 				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
-				openIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, openSocialIconLibrary, openAlertIconLibrary, chooseButtonSvg, chooseSocialIconSvg, chooseAlertIconSvg, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
+				openIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, chooseButtonSvg, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
 				tabsItemsForNode, tabsActiveItem, selectTabsItem, addTabsItem, duplicateTabsItem, removeTabsItem, tabsItemSummary, tabsSelectedRowDirection,
 				tabsWidthValue, tabsWidthUnit, tabsWidthMax, tabsWidthStep, onTabsWidthInput, setTabsWidthValue, setTabsWidthUnit,
