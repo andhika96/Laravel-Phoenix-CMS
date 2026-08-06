@@ -1,0 +1,138 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class PageBuilderElementorBasicWidgetStyleParityTest extends TestCase
+{
+    public function test_missing_basic_style_tabs_follow_elementor_style_control_contract(): void
+    {
+        $widgets = [
+			'button' => ['Style', 'Position', 'typographyControl', 'textShadowControl', 'Background Type', 'Border Radius', 'Padding'],
+			'text-editor' => ['Style', 'Alignment', 'typographyControl', 'textShadowControl', 'Paragraph Spacing', 'Link Color'],
+            'icon' => ['Style', 'Alignment', 'Primary Color', 'Secondary Color', 'Size', 'Rotate'],
+        ];
+
+        foreach ($widgets as $folder => $markers) {
+            $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/'.$folder.'/Settings.vue'));
+            $this->assertIsString($settings);
+            $this->assertStringContainsString('class="pb-tab-nav"', $settings);
+            $this->assertStringContainsString('>Content</span>', $settings);
+            $this->assertStringContainsString('>Style</span>', $settings);
+            $this->assertStringContainsString('>Advanced</span>', $settings);
+
+            foreach ($markers as $marker) {
+                $this->assertStringContainsString($marker, $settings, "Missing {$marker} marker in {$folder} settings.");
+            }
+
+            $this->assertStringContainsString('activeResponsiveKey', $settings);
+            $this->assertStringContainsString('setResponsiveSetting', $settings);
+        }
+    }
+
+    public function test_basic_style_panels_follow_general_compact_control_density(): void
+    {
+        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $this->assertIsString($css);
+
+        foreach ([
+            '.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings',
+            '.pb-basic-button-style-settings .pb-basic-inline-editor',
+            '.pb-basic-responsive-choice .pb-basic-segmented',
+            '.pb-basic-button-style-settings .pb-basic-edit-button',
+            '.pb-basic-icon-style-settings .pb-range-value-row',
+            '.pb-typography-trigger',
+            '.pb-text-effect-trigger',
+        ] as $marker) {
+            $this->assertStringContainsString($marker, $css, "Missing compact density marker {$marker}.");
+        }
+
+        $this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) 68px;', $css);
+        $this->assertStringContainsString(".pb-panel.left .pb-basic-button-style-settings .pb-basic-shadow-grid {\n\tdisplay: grid;", $css);
+        $this->assertStringContainsString(".pb-panel.left .pb-basic-button-style-settings .pb-basic-inline-editor > summary {\n\tdisplay: flex;", $css);
+        $this->assertStringContainsString('min-width: 42px;', $css);
+        $this->assertStringContainsString('width: 36px;', $css);
+        $this->assertStringContainsString('height: 30px;', $css);
+    }
+
+    public function test_button_style_reaches_frontend_and_responsive_css(): void
+    {
+        $html = view('pagebuilder_elementor.partials.render_node', ['node' => [
+            'id' => 'button-style-output',
+            'type' => 'button',
+            'settings' => [
+                'text' => 'Buy now',
+                'url' => '/checkout',
+                'align' => 'center',
+                'alignTablet' => 'stretch',
+                'buttonBackgroundType' => 'gradient',
+                'buttonGradientColorOne' => '#123456',
+                'buttonGradientColorTwo' => '#654321',
+                'buttonBorderType' => 'solid',
+                'buttonBorderWidth' => '2px',
+                'buttonBorderColor' => '#111111',
+                'buttonBorderRadius' => '8px',
+                'buttonPadding' => '10px 20px',
+                'buttonPaddingTablet' => '8px 12px',
+                'buttonTextColor' => '#ffffff',
+                'buttonTextColorHover' => '#eeeeee',
+            ],
+        ]])->render();
+
+        $this->assertStringContainsString('id="pb-basic-button-button-style-output"', $html);
+        $this->assertStringContainsString('linear-gradient(90deg, #123456, #654321)', $html);
+        $this->assertStringContainsString('border-width:2px', $html);
+        $this->assertStringContainsString('padding:8px 12px', $html);
+        $this->assertStringContainsString('width:100%', $html);
+    }
+
+    public function test_text_editor_style_reaches_frontend_and_responsive_css(): void
+    {
+        $html = view('pagebuilder_elementor.partials.render_node', ['node' => [
+            'id' => 'text-style-output',
+            'type' => 'text_editor',
+            'settings' => [
+                'html' => '<p>Styled text</p>',
+                'align' => 'center',
+                'alignMobile' => 'left',
+                'textEditorTextColor' => '#112233',
+                'textEditorLinkColor' => '#445566',
+                'textEditorFontSize' => '18px',
+                'paragraphSpacing' => '14px',
+                'paragraphSpacingMobile' => '8px',
+            ],
+        ]])->render();
+
+        $this->assertStringContainsString('id="pb-basic-text-editor-text-style-output"', $html);
+        $this->assertStringContainsString('text-align:center', $html);
+        $this->assertStringContainsString('font-size:18px', $html);
+        $this->assertStringContainsString('--pb-text-editor-link-color:#445566', $html);
+        $this->assertStringContainsString('--pb-text-editor-paragraph-spacing:8px', $html);
+    }
+
+    public function test_icon_style_reaches_frontend_and_responsive_css(): void
+    {
+        $html = view('pagebuilder_elementor.partials.render_node', ['node' => [
+            'id' => 'icon-style-output',
+            'type' => 'icon',
+            'settings' => [
+                'iconClass' => 'fas fa-star',
+                'view' => 'framed',
+                'shape' => 'rounded',
+                'primaryColor' => '#123456',
+                'secondaryColor' => '#abcdef',
+                'iconSize' => '48px',
+                'iconSizeMobile' => '30px',
+                'iconRotate' => '12deg',
+            ],
+        ]])->render();
+
+        $this->assertStringContainsString('id="pb-basic-icon-icon-style-output"', $html);
+        $this->assertStringContainsString('--pb-icon-primary:#123456', $html);
+        $this->assertStringContainsString('--pb-icon-secondary:#abcdef', $html);
+        $this->assertStringContainsString('font-size:48px', $html);
+        $this->assertStringContainsString('transform:rotate(12deg)', $html);
+        $this->assertStringContainsString('font-size:30px', $html);
+    }
+}

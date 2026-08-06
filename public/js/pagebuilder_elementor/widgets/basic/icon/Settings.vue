@@ -2,6 +2,7 @@
 	<div class="pb-widget-settings pb-widget-settings--basic pb-widget-settings--icon">
 		<div class="pb-tab-nav">
 			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active: editor.settingsTab === 'content'}" @click="editor.settingsTab = 'content'"><i class="fas fa-edit"></i><span>Content</span></button>
+			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active: editor.settingsTab === 'style'}" @click="editor.settingsTab = 'style'"><i class="fas fa-adjust"></i><span>Style</span></button>
 			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active: editor.settingsTab === 'advanced'}" @click="editor.settingsTab = 'advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
 		</div>
 
@@ -28,6 +29,20 @@
 			</details>
 		</div>
 
+		<div v-show="editor.settingsTab === 'style'" class="pb-tab-content pb-basic-icon-style-settings">
+			<details class="pb-collapsible" open>
+				<summary>Icon</summary>
+				<div class="pb-collapsible-body">
+					<ResponsiveChoice label="Alignment" base="align" control-id="icon-alignment" :node="node" :editor="editor" :options="alignmentOptions" />
+					<div class="pb-state-tabs pb-state-tabs--two"><button type="button" :class="{active: styleState === 'normal'}" @click="styleState = 'normal'">Normal</button><button type="button" :class="{active: styleState === 'hover'}" @click="styleState = 'hover'">Hover</button></div>
+					<div class="pb-form-group"><label class="pb-form-label">Primary Color</label><input class="pb-input coloris pb-coloris-input" v-model="node.settings[styleState === 'hover' ? 'primaryColorHover' : 'primaryColor']" placeholder="#6f7f94"></div>
+					<div v-if="editor.iconWidgetUsesShape(node)" class="pb-form-group"><label class="pb-form-label">Secondary Color</label><input class="pb-input coloris pb-coloris-input" v-model="node.settings[styleState === 'hover' ? 'secondaryColorHover' : 'secondaryColor']" placeholder="#7b8796"></div>
+					<ResponsiveDimensionControl label="Size" base="iconSize" control-id="icon-size" fallback="52px" :node="node" :editor="editor" :units="['px','%','em','rem','vw']" :max="300" />
+					<ResponsiveDimensionControl label="Rotate" base="iconRotate" control-id="icon-rotate" fallback="0deg" :node="node" :editor="editor" :units="['deg','grad','rad','turn']" :max="360" />
+				</div>
+			</details>
+		</div>
+
 		<div v-show="editor.settingsTab === 'advanced'" class="pb-tab-content">
 			<details class="pb-collapsible" open><summary>Attributes</summary><div class="pb-collapsible-body"><div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="node.settings.cssClass" placeholder="custom-icon"></div></div></details>
 		</div>
@@ -35,5 +50,80 @@
 </template>
 
 <script>
-export default { name: 'BasicIconSettings', props: { node: { type: Object, required: true }, editor: { type: Object, required: true } } };
+const ResponsiveMenu = {
+	props: { editor: { type: Object, required: true }, id: { type: String, required: true } },
+	template: `<div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="editor.openControlResponsiveMenu(id)" :title="'Responsive: ' + editor.responsiveDeviceLabel()"><i :class="editor.responsiveDeviceIcon()"></i></button><div v-if="editor.isControlResponsiveMenuOpen(id)" class="pb-control-device-menu"><button v-for="device in editor.responsiveDevices" :key="id + '-' + device.value" type="button" class="pb-control-device-item" :class="{active: editor.responsiveDevice === device.value}" @click.stop="editor.applyResponsiveDevice(id, device.value)"><i :class="device.icon"></i><span>{{ editor.deviceOptionLabel(device) }}</span></button></div></div>`,
+};
+
+const ResponsiveChoice = {
+	components: { ResponsiveMenu },
+	props: { label: String, base: String, controlId: String, node: Object, editor: Object, options: Array },
+	computed: {
+		settingKey() { return this.editor.activeResponsiveKey(this.base); },
+		value() { return this.node.settings[this.settingKey] || this.node.settings[this.base] || this.options?.[0]?.value || ''; },
+	},
+	methods: { setValue(value) { this.editor.setResponsiveSetting(this.node.settings, this.base, value); } },
+	template: `<div class="pb-form-group pb-basic-responsive-choice"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">{{ label }}</label><responsive-menu :editor="editor" :id="controlId" /></div><div class="pb-btn-group pb-basic-segmented"><button v-for="option in options" :key="option.value" type="button" class="pb-seg-btn" :class="{active: value === option.value}" :aria-pressed="value === option.value" :title="option.label" @click.prevent="setValue(option.value)"><i :class="option.icon"></i><span class="sr-only">{{ option.label }}</span></button></div></div>`,
+};
+
+function parseDimension(raw, fallback = '0px', units = ['px']) {
+	const value = String(raw || fallback).trim();
+	const match = value.match(/^(-?\d+(?:\.\d+)?)([a-z%]*)$/i);
+	const unit = match && units.includes((match[2] || units[0]).toLowerCase()) ? (match[2] || units[0]).toLowerCase() : units[0];
+	return { value: match ? Number(match[1]) : Number.parseFloat(fallback) || 0, unit };
+}
+
+const ResponsiveDimensionControl = {
+	components: { ResponsiveMenu },
+	props: { label: String, base: String, controlId: String, fallback: String, node: Object, editor: Object, units: { type: Array, default: () => ['px'] }, min: { type: Number, default: 0 }, max: { type: Number, default: 400 } },
+	computed: {
+		settingKey() { return this.editor.activeResponsiveKey(this.base); },
+		source() { return this.node.settings[this.settingKey] || this.node.settings[this.base] || this.fallback; },
+		unitsList() { return Array.isArray(this.units) && this.units.length ? this.units : ['px']; },
+		parsed() { return parseDimension(this.source, this.fallback, this.unitsList); },
+		maxValue() { return Math.min(this.max, this.unitMax(this.parsed.unit)); },
+		stepValue() {
+			if (['em', 'rem'].includes(this.parsed.unit)) return 0.1;
+			if (['rad', 'turn'].includes(this.parsed.unit)) return 0.01;
+			return 1;
+		},
+	},
+	methods: {
+		unitMax(unit) {
+			if (unit === '%' || unit === 'vw') return 100;
+			if (unit === 'em' || unit === 'rem') return 30;
+			if (unit === 'pt') return 720;
+			if (unit === 'deg') return 360;
+			if (unit === 'grad') return 400;
+			if (unit === 'rad') return Math.PI * 2;
+			if (unit === 'turn') return 1;
+			return this.max;
+		},
+		setValue(raw) { const value = Number(raw); if (!Number.isFinite(value)) return; this.editor.setResponsiveSetting(this.node.settings, this.base, `${Math.min(this.maxValue, Math.max(this.min, value))}${this.parsed.unit}`); },
+		setUnit(unit) { const safe = this.unitsList.includes(unit) ? unit : this.unitsList[0]; const max = Math.min(this.max, this.unitMax(safe)); const value = Math.min(max, Math.max(this.min, this.parsed.value)); this.editor.setResponsiveSetting(this.node.settings, this.base, `${value}${safe}`); },
+	},
+	template: `<div class="pb-form-group pb-basic-dimension-control"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">{{ label }}</label><div class="pb-label-tools"><responsive-menu :editor="editor" :id="controlId" /><select class="pb-mini-unit" :value="parsed.unit" :aria-label="label + ' unit'" @change="setUnit($event.target.value)"><option v-for="option in unitsList" :key="option" :value="option">{{ option }}</option></select></div></div><div class="pb-range-value-row"><input class="pb-range" type="range" :min="min" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" :min="min" :max="maxValue" :step="stepValue" :value="parsed.value" :aria-label="label" @input="setValue($event.target.value)"></div></div></div>`,
+};
+
+export default {
+	name: 'BasicIconSettings',
+	components: { ResponsiveChoice, ResponsiveDimensionControl },
+	props: { node: { type: Object, required: true }, editor: { type: Object, required: true } },
+	data() {
+		return {
+			styleState: 'normal',
+			alignmentOptions: [
+				{ value: 'left', label: 'Left', icon: 'fas fa-align-left' },
+				{ value: 'center', label: 'Center', icon: 'fas fa-align-center' },
+				{ value: 'right', label: 'Right', icon: 'fas fa-align-right' },
+			],
+		};
+	},
+};
 </script>
+
+<style scoped>
+.pb-basic-segmented { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pb-basic-segmented .pb-seg-btn { min-width: 0; }
+.pb-basic-dimension-control .pb-label-tools { display: inline-flex; align-items: center; gap: 7px; margin-left: auto; }
+</style>

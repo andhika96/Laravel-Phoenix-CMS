@@ -317,6 +317,32 @@
 		settings.attributes = normalizeAttributes(settings.attributes);
 		settings.cssClass = String(settings.cssClass || '').trim();
 	}
+	function normalizeButtonIconSettings(settings) {
+		if (!settings || typeof settings !== 'object') return;
+		const parsed = parseIconWidgetClassParts(settings.iconClass);
+		const rawSource = String(settings.iconSource || '').trim().toLowerCase();
+		const rawClass = String(settings.iconClass || '').trim();
+		const rawSvg = String(settings.iconSvg || '').trim();
+		const source = rawSource === 'svg' && rawSvg.startsWith('<svg')
+			? 'svg'
+			: (rawSource === 'library' && /^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i.test(rawClass)
+				? 'library'
+				: (rawSource === 'none' && rawClass && /^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i.test(rawClass) ? 'library' : (rawSvg.startsWith('<svg') ? 'svg' : 'none')));
+		const style = String(settings.iconStyle || parsed.style || 'regular').trim().toLowerCase();
+		const safeStyle = ['regular', 'solid', 'brands', 'light', 'duotone'].includes(style) ? style : 'regular';
+		const name = String(settings.iconName || parsed.name || 'star').trim().toLowerCase().replace(/^fa-/, '').replace(/[^a-z0-9-]/g, '') || 'star';
+		settings.iconSource = source;
+		settings.iconStyle = safeStyle;
+		settings.iconName = name;
+		settings.iconClass = source === 'library' ? iconWidgetClassName(safeStyle, name) : '';
+		settings.iconSvg = source === 'svg' && typeof sanitizeAccordionSvgMarkup === 'function' ? sanitizeAccordionSvgMarkup(rawSvg) : '';
+		if (source === 'svg' && !settings.iconSvg) settings.iconSource = 'none';
+		settings.buttonIconPosition = ['row', 'row-reverse'].includes(settings.buttonIconPosition) ? settings.buttonIconPosition : 'row';
+		['buttonIconSpacing', 'buttonIconSpacingTablet', 'buttonIconSpacingMobile'].forEach((key) => {
+			const value = String(settings[key] ?? '').trim();
+			settings[key] = value === '' && key !== 'buttonIconSpacing' ? '' : (/^-?\d+(?:\.\d+)?(?:px|em|rem)$/i.test(value) ? value : (key === 'buttonIconSpacing' ? '8px' : ''));
+		});
+	}
 	function buildFontAwesomeIconLibrary(metadata) {
 		const out = [];
 		if (!metadata || typeof metadata !== 'object') return out;
@@ -3730,13 +3756,14 @@
 					iconLibraryLoading.value = false;
 				}
 			}
-			function isIconLibraryWidgetNode(node) {
-				return !!node && ['icon', 'icon_box', 'image_carousel'].includes(node.type);
-			}
-			function normalizeIconLibraryWidgetSettings(node) {
-				if (!isIconLibraryWidgetNode(node)) return;
-				if (node.type === 'icon_box') normalizeIconBoxSettings(node.settings || (node.settings = {}));
-				else if (node.type === 'icon') normalizeIconWidgetSettings(node.settings || (node.settings = {}));
+		function isIconLibraryWidgetNode(node) {
+			return !!node && (['icon', 'icon_box', 'image_carousel'].includes(node.type) || node.type === 'button');
+		}
+		function normalizeIconLibraryWidgetSettings(node) {
+			if (!isIconLibraryWidgetNode(node)) return;
+			if (node.type === 'icon_box') normalizeIconBoxSettings(node.settings || (node.settings = {}));
+			else if (node.type === 'icon') normalizeIconWidgetSettings(node.settings || (node.settings = {}));
+			else if (node.type === 'button') normalizeButtonIconSettings(node.settings || (node.settings = {}));
 			}
 			function syncIconLibrarySelectionFromNode(node) {
 				if (!isIconLibraryWidgetNode(node)) {
@@ -3865,6 +3892,17 @@
 					closeIconLibrary();
 					return;
 				}
+				if (node && node.type === 'button') {
+					if (!node.settings || typeof node.settings !== 'object') node.settings = {};
+					node.settings.iconSource = 'library';
+					node.settings.iconStyle = iconLibrarySelected.value.style;
+					node.settings.iconName = iconLibrarySelected.value.name;
+					node.settings.iconClass = iconLibrarySelected.value.className;
+					node.settings.iconSvg = '';
+					normalizeButtonIconSettings(node.settings);
+					closeIconLibrary();
+					return;
+				}
 				if (!isIconLibraryWidgetNode(node)) return;
 				if (!node.settings || typeof node.settings !== 'object') node.settings = {};
 				node.settings.iconStyle = iconLibrarySelected.value.style;
@@ -3934,6 +3972,20 @@
 				}
 				node.settings[settingKey + 'Svg'] = sanitized;
 				node.settings[settingKey + 'Source'] = 'svg';
+			}
+			function chooseButtonSvg(node = selectedNode.value) {
+				if (!node || node.type !== 'button') return;
+				const markup = window.prompt('Paste trusted SVG markup', String(node.settings?.iconSvg || ''));
+				if (markup === null) return;
+				const sanitized = sanitizeAccordionSvgMarkup(markup);
+				if (!sanitized) {
+					showSaveToast('error', 'SVG tidak valid atau mengandung markup yang tidak didukung.');
+					return;
+				}
+				if (!node.settings || typeof node.settings !== 'object') node.settings = {};
+				node.settings.iconSvg = sanitized;
+				node.settings.iconSource = 'svg';
+				node.settings.iconClass = '';
 			}
 			function accordionStateKey(base, state = accordionStyleState.value) {
 				const safeState = ['normal', 'hover', 'active'].includes(state) ? state : 'normal';
@@ -5866,6 +5918,7 @@
 				onSpacerHeightInput,
 				setSpacerHeightUnit,
 				openIconLibrary,
+				chooseButtonSvg,
 				openTabsItemIconLibrary,
 				chooseTabsItemSvg,
 				openImageCarouselArrowIconLibrary,
@@ -6025,7 +6078,7 @@
 				displayNodeLabel, nodeLabelIcon,
 				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
-				openIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
+				openIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, chooseButtonSvg, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
 				tabsItemsForNode, tabsActiveItem, selectTabsItem, addTabsItem, duplicateTabsItem, removeTabsItem, tabsItemSummary, tabsSelectedRowDirection,
 				tabsWidthValue, tabsWidthUnit, tabsWidthMax, tabsWidthStep, onTabsWidthInput, setTabsWidthValue, setTabsWidthUnit,

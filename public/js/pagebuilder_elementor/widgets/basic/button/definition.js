@@ -1,14 +1,50 @@
 (function (registry) {
 	'use strict';
-	const defaults = () => ({ text: 'Click here', url: '#', newTab: false, align: 'left', className: 'btn btn-primary' });
+	const defaults = () => ({
+		text: 'Click here', url: '#', newTab: false, iconSource: 'none', iconStyle: 'regular', iconName: 'star', iconClass: '', iconSvg: '', buttonIconPosition: 'row', buttonIconSpacing: '8px', buttonIconSpacingTablet: '', buttonIconSpacingMobile: '', align: 'left', alignTablet: '', alignMobile: '', className: 'btn btn-primary',
+		buttonTextColor: '#ffffff', buttonTextColorHover: '#ffffff',
+		buttonBackgroundType: 'classic', buttonBackgroundColor: '#0d6efd', buttonBackgroundColorHover: '#0b5ed7',
+		buttonGradientColorOne: '#0d6efd', buttonGradientColorTwo: '#6f42c1', buttonGradientAngle: 90,
+		buttonGradientColorOneHover: '#0b5ed7', buttonGradientColorTwoHover: '#59339d', buttonGradientAngleHover: 90,
+		buttonBackgroundTypeHover: 'classic', buttonBorderType: 'none', buttonBorderTypeHover: 'none', buttonBorderWidth: '1px', buttonBorderWidthHover: '1px', buttonBorderColor: '#0d6efd', buttonBorderColorHover: '#0b5ed7',
+		buttonBorderRadius: '5px', buttonBorderRadiusTablet: '', buttonBorderRadiusMobile: '',
+		buttonPadding: '12px 24px', buttonPaddingTablet: '', buttonPaddingMobile: '',
+		buttonBoxShadowEnabled: false, buttonBoxShadowColor: 'rgba(0,0,0,.16)', buttonBoxShadowX: '0px', buttonBoxShadowY: '4px', buttonBoxShadowBlur: '12px', buttonBoxShadowSpread: '0px', buttonBoxShadowInset: false,
+		buttonBoxShadowEnabledHover: false, buttonBoxShadowColorHover: 'rgba(0,0,0,.2)', buttonBoxShadowXHover: '0px', buttonBoxShadowYHover: '6px', buttonBoxShadowBlurHover: '16px', buttonBoxShadowSpreadHover: '0px', buttonBoxShadowInsetHover: false,
+		buttonFontFamily: 'inherit', buttonFontSize: '16px', buttonFontSizeTablet: '', buttonFontSizeMobile: '', buttonFontWeight: '600', buttonTextTransform: 'none', buttonFontStyle: 'normal', buttonTextDecoration: 'none', buttonLineHeight: '1.2em', buttonLineHeightTablet: '', buttonLineHeightMobile: '', buttonLetterSpacing: '0px', buttonLetterSpacingTablet: '', buttonLetterSpacingMobile: '', buttonWordSpacing: '0px', buttonWordSpacingTablet: '', buttonWordSpacingMobile: '', buttonTextShadow: 'none', buttonTransitionDuration: 0.3,
+	});
 	registry.register({
 		type: 'button', label: 'Button', category: 'basic', icon: 'fas fa-link', toolbox: true,
 		canvas: '/js/pagebuilder_elementor/widgets/basic/button/Canvas.vue',
 		settings: '/js/pagebuilder_elementor/widgets/basic/button/Settings.vue',
 		defaults,
 		normalize(node) {
-			node.settings = { ...defaults(), ...(node.settings || {}) };
-			node.settings.newTab = !!node.settings.newTab;
+		const previousSettings = node.settings && typeof node.settings === 'object' ? { ...node.settings } : {};
+		node.settings = { ...defaults(), ...previousSettings };
+		node.settings.newTab = !!node.settings.newTab;
+		const hadIconSource = Object.prototype.hasOwnProperty.call(previousSettings, 'iconSource');
+		const rawIconSource = String(node.settings.iconSource || '').trim().toLowerCase();
+		const inferredIconSource = !hadIconSource && String(node.settings.iconSvg || '').trim() ? 'svg' : (!hadIconSource && String(node.settings.iconClass || '').trim() ? 'library' : rawIconSource);
+		node.settings.iconSource = ['none', 'library', 'svg'].includes(inferredIconSource) ? inferredIconSource : 'none';
+		const iconClass = String(node.settings.iconClass || '').trim();
+		const iconSvg = String(node.settings.iconSvg || '').trim();
+		if (node.settings.iconSource === 'library' && !/^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i.test(iconClass)) node.settings.iconSource = 'none';
+		if (node.settings.iconSource === 'svg' && !iconSvg.startsWith('<svg')) node.settings.iconSource = 'none';
+		if (node.settings.iconSource === 'none') { node.settings.iconClass = ''; node.settings.iconSvg = ''; }
+		if (!['row', 'row-reverse'].includes(node.settings.buttonIconPosition)) node.settings.buttonIconPosition = 'row';
+		['buttonIconSpacing', 'buttonIconSpacingTablet', 'buttonIconSpacingMobile'].forEach((key) => {
+			const value = String(node.settings[key] ?? '').trim();
+			if (value !== '' && !/^-?\d+(?:\.\d+)?(?:px|em|rem)$/i.test(value)) node.settings[key] = key === 'buttonIconSpacing' ? '8px' : '';
+		});
+		node.settings.align = ['left', 'center', 'right', 'stretch'].includes(node.settings.align) ? node.settings.align : 'left';
+		['alignTablet', 'alignMobile'].forEach((key) => {
+			node.settings[key] = node.settings[key] === '' || ['left', 'center', 'right', 'stretch'].includes(node.settings[key]) ? node.settings[key] : '';
+		});
+		['buttonBorderType', 'buttonBackgroundType'].forEach((key) => {
+			const values = key === 'buttonBorderType' ? ['none', 'solid', 'double', 'dotted', 'dashed', 'groove'] : ['classic', 'gradient'];
+			node.settings[key] = values.includes(node.settings[key]) ? node.settings[key] : values[0];
+		});
+		node.settings.buttonTransitionDuration = Number.isFinite(Number(node.settings.buttonTransitionDuration)) ? Math.max(0, Math.min(10, Number(node.settings.buttonTransitionDuration))) : 0.3;
 			return node;
 		},
 	});
