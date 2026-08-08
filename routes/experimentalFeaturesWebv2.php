@@ -35,6 +35,19 @@ Route::controller(App\Http\Controllers\Web\PageBuilderElementor\PageBuilderEleme
 		->name('cms.core.pagebuilder_elementor.form.submit');
 });
 
+Route::controller(App\Http\Controllers\Web\PageBuilderElementorV23\PageBuilderElementorV23Controller::class)
+	->prefix('pagebuilder-elementor/v2.3')
+	->group(function () {
+		Route::get('/create', 'create')->name('cms.core.pagebuilder_elementor_v23.create');
+		Route::post('/store', 'store')->name('cms.core.pagebuilder_elementor_v23.store');
+		Route::get('/edit/{idOrSlug}', 'edit')->name('cms.core.pagebuilder_elementor_v23.edit');
+		Route::post('/update/{idOrSlug}', 'update')->name('cms.core.pagebuilder_elementor_v23.update');
+		Route::get('/data/{idOrSlug}', 'getData')->name('cms.core.pagebuilder_elementor_v23.data');
+		Route::get('/image-rendition', 'imageRendition')->name('cms.core.pagebuilder_elementor_v23.image_rendition');
+		Route::get('/preview/{idOrSlug}', 'preview')->name('cms.core.pagebuilder_elementor_v23.preview');
+		Route::post('/form/{idOrSlug}/{nodeId}', 'submitForm')->middleware('throttle:20,1')->name('cms.core.pagebuilder_elementor_v23.form.submit');
+	});
+
 /* New Arunika Themes */
 
 Route::controller(App\Http\Controllers\Web\Themes\Themes_Controller::class)->group(function()
