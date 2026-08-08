@@ -65,6 +65,48 @@ test('production v2.3 ports the approved tokens and shell geometry', () => {
     assert.match(css, /\.webpage-frame\.mobile\s*\{\s*width:\s*390px;/);
 });
 
+test('production v2.3 properties shell follows the approved compact hierarchy', () => {
+    assert.match(app, /v-if="selectedNode && !selectedColumnContext" class="properties-tabs"/);
+    assert.match(app, /class="property-tab" :class="\{ active: settingsTab==='content' \}"/);
+    assert.match(app, /class="pb-section v23-properties-section"/);
+    assert.match(app, /Widget · \{\{ selectedType \}\}/);
+    assert.doesNotMatch(app, /class="pb-props-header"/);
+
+    assert.match(css, /\.properties-tabs\s*\{[\s\S]*?grid-template-columns:\s*repeat\(3,\s*1fr\);/);
+    assert.match(css, /\.selection-summary\s*\{[\s\S]*?display:\s*flex;[\s\S]*?padding:\s*10px;/);
+    assert.match(css, /\.selection-summary strong\s*\{[\s\S]*?display:\s*block;/);
+    assert.match(css, /\.v23-properties-section\s+\.pb-tab-nav\s*\{\s*display:\s*none\s*!important;/);
+});
+
+test('production v2.3 canvas uses the approved selection chrome and instant device resize', () => {
+    assert.match(app, /'canvas-section':\s*isCont\s*\|\|\s*isGrid/);
+    assert.match(app, /'canvas-widget':\s*isWidgetNode/);
+    assert.match(app, /'ancestor-active':\s*isAncestorVisualActive\s*&&\s*\(isCont\s*\|\|\s*isGrid\)/);
+    assert.match(app, /:class="isCont \|\| isGrid \? 'container-handle' : 'widget-label'"/);
+    assert.match(app, /class="pb-node-actions" :class="\{ 'section-toolbar': isCont \|\| isGrid \}"/);
+
+    assert.match(app, /const canvasZoom = ref\(80\);/);
+    assert.match(app, /const showCanvasGrid = ref\(true\);/);
+    assert.match(app, /const desktopPreviewWidth = ref\('1180'\);/);
+    assert.match(app, /\{ value: '1180', label: '1180px' \}/);
+    assert.match(app, /\['1140', '1180', '1320'\]\.includes\(normalized\)/);
+    assert.match(app, /function changeCanvasZoom\(delta\)/);
+    assert.match(app, /function scheduleResponsiveGridSync\(device\)/);
+    assert.match(app, /responsiveGridSyncTimer = window\.setTimeout\(\(\) => \{/);
+    assert.match(app, /watch\(responsiveDevice, \(device\) => \{[\s\S]*?scheduleResponsiveGridSync\(device\);/);
+    assert.match(app, /class="canvas-region" :class="\{ 'grid-off': !showCanvasGrid \}"/);
+    assert.match(app, /<div class="zoom-control">\{\{ canvasZoom \}\}%<\/div>/);
+    assert.match(app, /transform:\s*'scale\('\s*\+\s*canvasZoom\.value\s*\/\s*100\s*\+\s*'\)'/);
+    assert.match(app, /class="pb-root-followup-hint"[\s\S]*?class="pb-root-followup-text"[\s\S]*?class="root-drop-label">Add to page root<[\s\S]*?Container, Grid, or Widget/);
+
+    assert.match(css, /\.webpage-frame \.pb-node-widget\.active\s*\{[\s\S]*?outline:\s*2px solid #2b84d2;[\s\S]*?outline-offset:\s*4px;/);
+    assert.match(css, /\.webpage-frame \.pb-node-container\.active[\s\S]*?outline:\s*2px solid var\(--brand\);[\s\S]*?outline-offset:\s*-2px;/);
+    assert.match(css, /\.webpage-frame \.pb-node-container\.ancestor-active[\s\S]*?outline:\s*1px dashed rgba\(91,\s*76,\s*240,\s*\.7\);/);
+    assert.match(css, /\.canvas-region\.grid-off\s*\{\s*background-image:\s*none;/);
+    assert.match(css, /\.webpage-frame\s*\{[\s\S]*?transition:\s*none;/);
+    assert.match(css, /\.webpage-frame \.pb-root-followup-hint\s*\{[\s\S]*?height:\s*46px;/);
+});
+
 test('production shell loads Bootstrap Icons for shell chrome and keeps Font Awesome for widgets', () => {
     assert.match(shell, /bootstrap-icons@1\.11\.3\/font\/bootstrap-icons\.min\.css/);
     assert.match(shell, /fontawesome\/5\.15\.3\/css\/all\.min\.css/);

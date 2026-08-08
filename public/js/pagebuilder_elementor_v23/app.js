@@ -195,6 +195,18 @@
 		return !!widgetRegistry?.get(type);
 	}
 
+	function nodeContainsDescendantId(node, id) {
+		const targetId = String(id || '').trim();
+		if (!node || !targetId) return false;
+		const lists = [
+			node.children,
+			...(Array.isArray(node.columns) ? node.columns.map(column => column && column.children) : []),
+			...(Array.isArray(node.tabItems) ? node.tabItems.map(item => item && item.children) : []),
+			...(Array.isArray(node.accordionItems) ? node.accordionItems.map(item => item && item.children) : []),
+		];
+		return lists.some(list => Array.isArray(list) && list.some(child => child && (child.id === targetId || nodeContainsDescendantId(child, targetId))));
+	}
+
 	function uid(p)       { return p + '_' + Math.random().toString(36).slice(2, 9); }
 	function jclone(v)    { return JSON.parse(JSON.stringify(v)); }
 	function isCont(t)    { return t === 'container' || t === 'container_fluid'; }
@@ -1635,9 +1647,12 @@
 				if (hovered && hovered !== this.node.id) return false;
 				return this.selectedId === this.node.id;
 			},
+			isAncestorVisualActive() {
+				return this.selectedId !== this.node.id && nodeContainsDescendantId(this.node, this.selectedId);
+			},
 			isToolbarVisible() {
 				const focusId = this.hoveredId || this.selectedId || '';
-				return focusId === this.node.id;
+				return focusId === this.node.id || (!this.hoveredId && this.isAncestorVisualActive);
 			},
 			isFlexColumnEditor() {
 				const s = this.node.settings || {};
@@ -2392,7 +2407,18 @@
 <div
 	class="pb-node"
 	:id="nodeShellId || null"
-	:class="['pb-node-' + node.type, nodeAdvancedClasses, { active: isVisualActive, 'is-toolbar-visible': isToolbarVisible, 'pb-grid-outline-enabled': !!node.settings?.gridOutline, 'pb-node-widget': isWidgetNode }]"
+	:class="['pb-node-' + node.type, nodeAdvancedClasses, {
+		active: isVisualActive,
+		selected: isVisualActive && (isCont || isGrid),
+		'selected-widget': isVisualActive && isWidgetNode,
+		'ancestor-active': isAncestorVisualActive && (isCont || isGrid),
+		'ancestor-widget': isAncestorVisualActive && isWidgetNode,
+		'canvas-section': isCont || isGrid,
+		'canvas-widget': isWidgetNode,
+		'is-toolbar-visible': isToolbarVisible,
+		'pb-grid-outline-enabled': !!node.settings?.gridOutline,
+		'pb-node-widget': isWidgetNode
+	}]"
 	:style="nodeShellStyle"
 	:data-hover-label="label"
 	:data-node-type="node.type"
@@ -2401,8 +2427,8 @@
 	@mouseleave.stop="onClearHover(node.id, $event)"
 >
 	<div class="pb-node-toolbar" @click.stop>
-		<div class="pb-node-label" @click.stop="onSelect(node)"><i :class="labelIcon"></i> {{ label }}</div>
-		<div class="pb-node-actions" @click.stop="onSelect(node)">
+		<button type="button" class="pb-node-label" :class="isCont || isGrid ? 'container-handle' : 'widget-label'" @click.stop="onSelect(node)"><i :class="labelIcon"></i> {{ label }}</button>
+		<div class="pb-node-actions" :class="{ 'section-toolbar': isCont || isGrid }" @click.stop="onSelect(node)">
 			<button v-if="isCont" class="pb-node-btn" @click.stop="onOpenModal(node.type, 'root', { containerNode: node, list: [] })" title="Structure"><i class="fas fa-columns"></i></button>
 			<button class="pb-node-btn" @click.stop="onDuplicate(node.id)" title="Duplicate"><i class="far fa-copy"></i></button>
 			<button class="pb-node-btn remove" @click.stop="onRemove(node.id)" title="Delete"><i class="fas fa-trash"></i></button>
@@ -3018,12 +3044,14 @@
 			const imageBoxImageState = ref('normal');
 			const iconBoxIconState = ref('normal');
 			const responsiveDevice = ref('desktop');
+			const canvasZoom = ref(80);
+			const showCanvasGrid = ref(true);
 			const leftCollapsed = ref(false);
 			const previewMode = ref(false);
 			watch(previewMode, (enabled) => {
 				if (enabled) closePageSettings();
 			});
-			const desktopPreviewWidth = ref('1320');
+			const desktopPreviewWidth = ref('1180');
 			const widthPreviewMenuOpen = ref(false);
 			const suppressHistory = ref(false);
 			const columnResizeOverlay = ref({ visible: false, text: '', x: 0, y: 0 });
@@ -3045,6 +3073,7 @@
 				: [];
 			const desktopPreviewWidths = [
 				{ value: '1140', label: '1140px' },
+				{ value: '1180', label: '1180px' },
 				{ value: '1320', label: '1320px' },
 			];
 			const controlResponsiveMenu = ref('');
@@ -3052,8 +3081,9 @@
 			function normalizeResponsiveDevice(device = 'desktop') {
 				return (device === 'tablet' || device === 'mobile') ? device : 'desktop';
 			}
-			function normalizeDesktopPreviewWidth(value = '1320') {
-				return String(value) === '1140' ? '1140' : '1320';
+			function normalizeDesktopPreviewWidth(value = '1180') {
+				const normalized = String(value);
+				return ['1140', '1180', '1320'].includes(normalized) ? normalized : '1180';
 			}
 			function cloneColumnsState(columns) {
 				if (!Array.isArray(columns)) return [];
@@ -3140,16 +3170,25 @@
 				const meta = responsiveMeta(device);
 				return meta.menuLabel || meta.label || '';
 			}
+			function responsiveCanvasLabel(device = responsiveDevice.value) {
+				return responsiveMeta(device).label || 'Desktop';
+			}
 			function previewCanvasWidthLabel() {
 				if (responsiveDevice.value === 'tablet') return '768px';
 				if (responsiveDevice.value === 'mobile') return '390px';
 				return normalizeDesktopPreviewWidth(desktopPreviewWidth.value) + 'px';
 			}
 			function previewCanvasStyle() {
-				if (responsiveDevice.value !== 'desktop') return null;
-				return {
-					maxWidth: normalizeDesktopPreviewWidth(desktopPreviewWidth.value) + 'px',
+				const style = {
+					transform: 'scale(' + canvasZoom.value / 100 + ')',
 				};
+				if (responsiveDevice.value === 'desktop') {
+					style.maxWidth = normalizeDesktopPreviewWidth(desktopPreviewWidth.value) + 'px';
+				}
+				return style;
+			}
+			function changeCanvasZoom(delta) {
+				canvasZoom.value = clamp(canvasZoom.value + Number(delta || 0), 50, 110);
 			}
 			function toggleWidthPreviewMenu() {
 				if (responsiveDevice.value !== 'desktop') return;
@@ -3182,6 +3221,7 @@
 				if (responsiveDevice.value !== safeDevice) {
 					responsiveDevice.value = safeDevice;
 				}
+				canvasZoom.value = safeDevice === 'desktop' ? 80 : (safeDevice === 'tablet' ? 82 : 90);
 			}
 			function applyResponsiveDevice(key, device) {
 				setResponsiveDevice(device);
@@ -5356,6 +5396,14 @@
 					}
 				});
 			}
+			let responsiveGridSyncTimer = null;
+			function scheduleResponsiveGridSync(device) {
+				if (responsiveGridSyncTimer !== null) window.clearTimeout(responsiveGridSyncTimer);
+				responsiveGridSyncTimer = window.setTimeout(() => {
+					responsiveGridSyncTimer = null;
+					syncAllGridCellsForDevice(device);
+				}, 0);
+			}
 			watch(selectedNode, n => { if (n && isGrid(n.type)) syncCols(n, null, responsiveDevice.value); }, { deep: true });
 			// Sync jumlah cell saat Grid Container settings berubah.
 			watch(
@@ -5373,9 +5421,12 @@
 					if (node && isCont(node.type)) syncCols(node, null, responsiveDevice.value);
 				}
 			);
-			watch(responsiveDevice, () => {
-				syncAllGridCellsForDevice();
+			watch(responsiveDevice, (device) => {
+				scheduleResponsiveGridSync(device);
 				closeWidthPreviewMenu();
+			});
+			onBeforeUnmount(() => {
+				if (responsiveGridSyncTimer !== null) window.clearTimeout(responsiveGridSyncTimer);
 			});
 			watch(settingsTab, scheduleColorisInit);
 			watch(
@@ -6308,7 +6359,7 @@
 				appTitle, pageSettingsOpen, openPageSettings, closePageSettings, toolbox, elementSearch, filteredToolboxGroups, leftCollapsed, previewMode, rootNodes, loadWidget, loadWidgetSettings, hasRegisteredWidget, widgetEditorServices,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
 				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, imageBoxImageState, iconBoxIconState, selectedNode, selectedType,
-				responsiveDevice, responsiveDevices, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
+				responsiveDevice, responsiveDevices, responsiveCanvasLabel, canvasZoom, showCanvasGrid, changeCanvasZoom, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
 				controlResponsiveMenu, responsiveDeviceIcon, responsiveDeviceLabel, deviceOptionLabel,
 				openControlResponsiveMenu, closeControlResponsiveMenu, isControlResponsiveMenuOpen,
 				setResponsiveDevice, applyResponsiveDevice, toggleWidthPreviewMenu, closeWidthPreviewMenu, selectDesktopPreviewWidth,
@@ -6398,7 +6449,7 @@
 				<button class="device-btn" :class="{ active: responsiveDevice==='tablet' }" title="Tablet" @click="setResponsiveDevice('tablet')"><i class="bi bi-tablet"></i></button>
 				<button class="device-btn" :class="{ active: responsiveDevice==='mobile' }" title="Mobile" @click="setResponsiveDevice('mobile')"><i class="bi bi-phone"></i></button>
 			</div>
-			<div class="zoom-control">{{ previewCanvasWidthLabel() }}</div>
+			<div class="zoom-control">{{ canvasZoom }}%</div>
 		</div>
 
 		<div class="topbar-right">
@@ -6443,10 +6494,15 @@
 					<button v-if="selectedNode || selectedColumnContext" class="panel-icon-btn" title="Back to Elements" @click="showToolboxPanel()"><i class="bi bi-chevron-left"></i></button>
 					<div class="panel-title">
 						<strong>{{ selectedColumnContext ? 'Column ' + (selectedColumnContext.index + 1) : (selectedNode ? displayNodeLabel(selectedNode) : 'Elements') }}</strong>
-						<span>{{ selectedNode || selectedColumnContext ? 'Element settings' : 'Drag or click to add' }}</span>
+						<span>{{ selectedColumnContext ? 'Layout settings' : (selectedNode ? 'Widget settings' : 'Drag or click to add') }}</span>
 					</div>
 				</div>
 				<button class="panel-icon-btn" title="Collapse panel" @click="leftCollapsed = true"><i class="bi bi-chevron-left"></i></button>
+			</div>
+			<div v-if="selectedNode && !selectedColumnContext" class="properties-tabs">
+				<button type="button" class="property-tab" :class="{ active: settingsTab==='content' }" @click="settingsTab='content'">Content</button>
+				<button type="button" class="property-tab" :class="{ active: settingsTab==='style' }" @click="settingsTab='style'">Style</button>
+				<button type="button" class="property-tab" :class="{ active: settingsTab==='advanced' }" @click="settingsTab='advanced'">Advanced</button>
 			</div>
 
 			<template v-if="!(selectedNode || selectedColumnContext)">
@@ -6612,17 +6668,11 @@
 						<div class="selection-summary-icon"><i :class="selectedColumnContext ? 'bi bi-layout-three-columns' : nodeLabelIcon(selectedType)"></i></div>
 						<div>
 							<strong>{{ selectedColumnContext ? 'Column ' + (selectedColumnContext.index + 1) : displayNodeLabel(selectedNode) }}</strong>
-							<small>{{ selectedColumnContext ? 'Layout column' : selectedType }}</small>
+							<small v-if="selectedColumnContext">Layout column</small>
+							<small v-else>Widget · {{ selectedType }}</small>
 						</div>
 					</div>
-				<div class="pb-section" v-if="selectedColumnContext">
-					<div class="pb-props-header">
-						<button class="pb-btn icon-sm" @click="clearCurrentSelection" title="Back"><i class="fas fa-chevron-left"></i></button>
-						<div class="pb-props-type-badge">
-							<i class="far fa-square"></i>
-							<span>Column {{ selectedColumnContext.index + 1 }}</span>
-						</div>
-					</div>
+				<div class="pb-section v23-properties-section" v-if="selectedColumnContext">
 					<div class="pb-form-note mt-2 mb-3">Inside {{ displayNodeLabel(selectedColumnContext.node) }}</div>
 					<details class="pb-collapsible" open>
 						<summary>Layout</summary>
@@ -6653,15 +6703,8 @@
 						</div>
 					</details>
 				</div>
-				<div class="pb-section" v-else>
-					<div class="pb-props-header">
-						<button class="pb-btn icon-sm" @click="clearCurrentSelection" title="Back"><i class="fas fa-chevron-left"></i></button>
-						<div class="pb-props-type-badge">
-							<i :class="nodeLabelIcon(selectedType)"></i>
-							<span>{{ displayNodeLabel(selectedNode) }}</span>
-						</div>
-					</div>
-					<div class="pb-form-group pb-element-name-group mt-2">
+				<div class="pb-section v23-properties-section" v-else>
+					<div v-if="settingsTab==='advanced'" class="pb-form-group pb-element-name-group">
 						<label class="pb-form-label">Element Name Suffix</label>
 						<input class="pb-input pb-input-sm" v-model="selectedNode.labelSuffix" placeholder="e.g. Section 1">
 					</div>
@@ -6673,9 +6716,9 @@
 		</aside>
 
 		<component v-if="customCss" :is="'style'">{{ customCss }}</component>
-		<section class="canvas-region" @click="clearSel(); closeWidthPreviewMenu()">
+		<section class="canvas-region" :class="{ 'grid-off': !showCanvasGrid }" @click="clearSel(); closeWidthPreviewMenu()">
 			<div class="canvas-toolbar" @click.stop>
-				<div class="canvas-meta"><span class="live-indicator">Editing</span><span>{{ rootNodes.length }} root elements</span></div>
+				<div class="canvas-meta"><span>{{ responsiveCanvasLabel() }}</span><i class="bi bi-dot"></i><span>{{ previewCanvasWidthLabel().replace('px', ' px') }}</span><span class="live-indicator">Live canvas</span></div>
 				<div class="canvas-breadcrumbs" aria-label="Canvas selection">
 					<button class="active"><i class="bi bi-file-earmark"></i>Page</button>
 					<template v-if="selectedNode || selectedColumnContext">
@@ -6684,6 +6727,10 @@
 					</template>
 				</div>
 				<div class="canvas-actions">
+					<button class="canvas-action" :class="{ active: showCanvasGrid }" title="Canvas grid" @click="showCanvasGrid = !showCanvasGrid"><i class="bi bi-grid-3x3-gap"></i></button>
+					<button class="canvas-action" title="Zoom out" @click="changeCanvasZoom(-10)"><i class="bi bi-dash-lg"></i></button>
+					<button class="canvas-action" title="Reset zoom" @click="canvasZoom = 80"><i class="bi bi-aspect-ratio"></i></button>
+					<button class="canvas-action" title="Zoom in" @click="changeCanvasZoom(10)"><i class="bi bi-plus-lg"></i></button>
 					<div class="pb-stage-width-control" @click.stop>
 						<button type="button" class="canvas-width-control" :class="{ 'is-menu-open': widthPreviewMenuOpen }" :title="responsiveDevice==='desktop' ? 'Choose desktop preview width' : 'Preview width'" @click="toggleWidthPreviewMenu">
 							<i class="bi bi-arrows"></i><span>{{ previewCanvasWidthLabel() }}</span><i class="bi bi-chevron-down"></i>
@@ -6748,9 +6795,9 @@
 								<i class="fas fa-plus"></i>
 								<div class="mt-3">Drag Container, Grid, or Widget to start building</div>
 							</div>
-							<div v-else class="pb-root-followup-hint">
-								<i class="fas fa-plus"></i>
-								<div class="pb-root-followup-text">Drag Container, Grid, or Widget here to continue building</div>
+							<div v-else class="pb-root-followup-hint" role="button" tabindex="0" @click.stop="showToolboxPanel()" @keydown.enter.stop="showToolboxPanel()">
+								<i class="bi bi-plus-circle"></i>
+								<div class="pb-root-followup-text"><span class="root-drop-label">Add to page root</span><span> · Container, Grid, or Widget</span></div>
 							</div>
 						</template>
 					</draggable>
