@@ -81,7 +81,25 @@ test('a selected canvas node keeps its toolbar while the pointer crosses another
 });
 
 test('widget label and action hit areas bridge the visual gap above the node', () => {
-    assert.match(css, /\.webpage-frame \.pb-node-widget > \.pb-node-toolbar > :is\(\.pb-node-label, \.pb-node-actions\)::after\s*\{[\s\S]*?bottom:\s*-5px;[\s\S]*?height:\s*5px;/);
+    assert.match(css, /\.webpage-frame \.pb-node-widget > \.pb-node-toolbar > :is\(\.pb-node-label, \.pb-node-actions\)::after\s*\{[\s\S]*?bottom:\s*-10px;[\s\S]*?height:\s*10px;/);
+});
+
+test('collapsed sidebar toggle aligns with the canvas metadata row', () => {
+    assert.match(css, /\.floating-expand\.left\s*\{[^}]*top:\s*65px;/);
+});
+
+test('page root reaches the frame edge without clipping node toolbars', () => {
+    assert.match(css, /\.webpage-frame \.pb-canvas\s*\{[^}]*padding:\s*0;/);
+    assert.match(css, /\.webpage-frame\s*\{[^}]*overflow:\s*clip;[^}]*overflow-clip-margin:\s*24px;/);
+});
+
+test('widget labels expose a stable 24px target at the default 80 percent zoom', () => {
+    assert.match(css, /\.webpage-frame \.pb-node-label\.widget-label::before\s*\{[^}]*inset:\s*-5px;[^}]*content:\s*['"]{2};/);
+});
+
+test('clicking a canvas node label reveals the collapsed properties panel', () => {
+    assert.match(app, /@click\.stop="onSelect\(node,\s*\{\s*revealPanel:\s*true\s*\}\)"/);
+    assert.match(app, /function selectNode\(n,\s*options\s*=\s*\{\}\)\s*\{[\s\S]*?if\s*\(options\.revealPanel\)\s*leftCollapsed\.value\s*=\s*false;/);
 });
 
 test('flex column widths live in Container Layout instead of selectable canvas column chrome', () => {

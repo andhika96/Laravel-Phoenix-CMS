@@ -9819,7 +9819,7 @@ body {
 
 .floating-expand.left {
 	position: fixed;
-	top: 72px;
+	top: 65px;
 	left: 14px;
 	z-index: 20;
 	display: grid;
@@ -10593,7 +10593,13 @@ body {
 /* V23_PROTOTYPE_PROPERTIES_CONTRACT_END */
 
 /* Page Builder 2.3: approved canvas selection language. */
-.webpage-frame { transition: none; }
+.webpage-frame {
+	overflow: clip;
+	overflow-clip-margin: 24px;
+	transition: none;
+}
+
+.webpage-frame .pb-canvas { padding: 0; }
 
 .webpage-frame .pb-node {
 	margin-bottom: 0;
@@ -10705,6 +10711,12 @@ body {
 	transform: translateY(-100%);
 }
 
+.webpage-frame .pb-node-label.widget-label::before {
+	position: absolute;
+	inset: -5px;
+	content: '';
+}
+
 .webpage-frame .pb-node-actions.section-toolbar {
 	top: 0;
 	right: 8px;
@@ -10755,9 +10767,9 @@ body {
 .webpage-frame .pb-node-widget > .pb-node-toolbar > :is(.pb-node-label, .pb-node-actions)::after {
 	position: absolute;
 	right: 0;
-	bottom: -5px;
+	bottom: -10px;
 	left: 0;
-	height: 5px;
+	height: 10px;
 	content: '';
 }
 

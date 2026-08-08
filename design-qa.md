@@ -1,3 +1,68 @@
+# Design QA - Page Builder v2.3 Canvas, Labels, and Sidebar Reveal
+
+Date: 2026-08-09
+
+## Comparison target
+
+- source visual truth path: `D:\Laragon\www\laravel-13-phoenix\output\browser\v23-prototype-collapsed-reference.png`
+- supplied alignment reference: `C:\Users\aruna\.codex\attachments\471d9dc1-e6ef-458a-ad22-c7a9f9ce3bb8\image-1.png`
+- supplied canvas references: `C:\Users\aruna\.codex\attachments\471d9dc1-e6ef-458a-ad22-c7a9f9ce3bb8\image-2.png` and `image-3.png`
+- implementation screenshot path: `D:\Laragon\www\laravel-13-phoenix\output\browser\v23-canvas-collapsed-final.png`
+- focused implementation path: `D:\Laragon\www\laravel-13-phoenix\output\browser\v23-first-widget-label-after.png`
+- runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`
+- viewport: 1280 x 720 CSS px; source and implementation captures are both 1280 x 720 px; devicePixelRatio reported 1.5; no density resampling was needed because the browser captures have equal pixel dimensions.
+- state: Desktop 1180px at 80%, sidebar collapsed for the full comparison, one Container with two Heading widgets in the same column, first Heading hovered and second Heading selected.
+
+The browser-rendered prototype and corrected production screenshot were opened together in one comparison input. Focused checks covered the toolbar metadata row, canvas/frame edge, first and second widget labels, and the collapsed-to-open sidebar interaction. No Save action was performed.
+
+## Findings
+
+- No actionable P0, P1, or P2 issue remains in the requested desktop state.
+- Fonts and typography: shell and label typography retain the existing v2.3 prototype contract; no font, weight, wrapping, or truncation regression was introduced.
+- Spacing and layout rhythm: the root layout now starts 1.07px from the frame on both axes, which is the frame border rather than internal canvas padding. The previous scaled 11.73px content gap is gone.
+- Colors and visual tokens: existing purple Container and blue Widget selection tokens are unchanged.
+- Image quality and asset fidelity: no image or icon assets were changed; the existing icon libraries remain in use.
+- Copy and content: labels, breadcrumbs, page copy, and settings copy are unchanged.
+- Interaction: the invisible widget-label target extends 5px around the visual label and the toolbar bridge extends 10px toward the node. At 80% zoom, points above the label, inside it, and 6px below it all resolve to the Heading label button.
+- Interaction: clicking the second Heading label while the sidebar is collapsed selects that Heading and reopens the Properties panel with title `Heading`.
+- Browser console: zero errors and zero warnings after reload, node creation, duplication, collapse, hover, and label-click checks.
+
+## Comparison history
+
+1. Baseline blocked:
+   - P1: `.pb-canvas` supplied 14px padding, producing an 11.73px visible inset at 80% zoom.
+   - P1: removing the padding alone would place the first widget label outside the frame's hidden overflow and clip it.
+   - P2: the 34px sidebar button at top 72px was centered 7px below the Desktop metadata text.
+   - P1: widget labels rendered as a 20px visual target, only 16px at 80% zoom, with a 5px transition bridge.
+   - P1: label selection changed the node but left `leftCollapsed` true.
+2. Fixes applied:
+   - removed only the production v2.3 canvas padding and used a 24px overflow clip margin for editor chrome;
+   - moved the sidebar reopen control to top 65px;
+   - added a 5px transparent label target and a 10px toolbar bridge without enlarging the visible badge;
+   - added an explicit `revealPanel` option only to Container/Widget name-label clicks.
+3. Post-fix evidence:
+   - frame/root gap measured 1.07px, first label remained visible 11.47px above the frame, and all three focused hit-test points resolved to the label button;
+   - clicking the second Heading label changed the sidebar from collapsed to visible and showed Heading settings;
+   - same-viewport prototype and implementation screenshots show the selected layout border flush with the white page frame.
+
+## Primary interactions tested
+
+- Collapse the Properties sidebar.
+- Hover the first and second widget in a shared column.
+- Move across the enlarged label and bridge hit areas.
+- Click the second widget label and verify sidebar reveal plus selected Heading state.
+- Verify the first label remains visible above a flush root layout.
+
+## Implementation checklist
+
+- [x] Align sidebar reopen control with Desktop metadata.
+- [x] Remove canvas-to-root layout gap without clipping editor labels.
+- [x] Stabilize and enlarge widget-label hit areas for adjacent widgets.
+- [x] Reopen the sidebar only when a Container/Widget name label requests it.
+- [x] Run browser interaction checks, console checks, focused tests, full v2.3 Node tests, route/persistence tests, syntax check, and diff check.
+
+final result: passed
+
 # Design QA - Page Builder v2.3 Six UI Regression Corrections
 
 Date: 2026-08-09

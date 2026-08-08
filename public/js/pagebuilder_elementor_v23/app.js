@@ -2459,7 +2459,7 @@
 	@mouseleave.stop="onClearHover(node.id, $event)"
 >
 	<div class="pb-node-toolbar" @click.stop>
-		<button type="button" class="pb-node-label" :class="isCont || isGrid ? 'container-handle' : 'widget-label'" @click.stop="onSelect(node)"><i :class="labelIcon"></i> {{ label }}</button>
+		<button type="button" class="pb-node-label" :class="isCont || isGrid ? 'container-handle' : 'widget-label'" @click.stop="onSelect(node, { revealPanel: true })"><i :class="labelIcon"></i> {{ label }}</button>
 		<div class="pb-node-actions" :class="{ 'section-toolbar': isCont || isGrid }" @click.stop="onSelect(node)">
 			<button v-if="isCont" class="pb-node-btn" @click.stop="onOpenModal(node.type, 'root', { containerNode: node, list: [] })" title="Structure"><i class="fas fa-columns"></i></button>
 			<button class="pb-node-btn" @click.stop="onDuplicate(node.id)" title="Duplicate"><i class="far fa-copy"></i></button>
@@ -5564,7 +5564,12 @@
 				if (hoveredId.value === id) hoveredId.value = '';
 			}
 			function dupNode(id)    { dupIn(rootNodes.value, id); }
-			function selectNode(n)  { clearPendingInsertTarget(); clearSelectedColumn(); selectedId.value = n.id; }
+			function selectNode(n, options = {}) {
+				clearPendingInsertTarget();
+				clearSelectedColumn();
+				selectedId.value = n.id;
+				if (options.revealPanel) leftCollapsed.value = false;
+			}
 			function clearSel()     { clearPendingInsertTarget(); clearSelectedColumn(); selectedId.value = ''; }
 			function clearCurrentSelection() {
 				if (selectedColumnContext.value) {
