@@ -40,7 +40,7 @@
 	@endforeach
 </div>
 
-<script src="{{ asset('js/pagebuilder_elementor/frontend-runtime.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor/frontend-runtime.js')) }}"></script>
+<script src="{{ asset('js/pagebuilder_elementor_v23/frontend-runtime.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor_v23/frontend-runtime.js')) }}"></script>
 
 </body>
 </html>

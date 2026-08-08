@@ -48,15 +48,17 @@
 	<link href="{{ asset('assets/css/pagebuilder_elementor_v23.css') }}?v={{ @filemtime(public_path('assets/css/pagebuilder_elementor_v23.css')) }}" rel="stylesheet">
 </head>
 <body>
-	<div id="pbElementorApp" v-cloak></div>
+	<div id="pbElementorV23App" v-cloak></div>
 
 	<script>
 		window.PAGE_BUILDER_ELEMENTOR_V23_CONTEXT = {
 			mode: @json($mode),
+			editorVersion: '2.3',
 			saveUrl: @json($saveUrl),
 			csrfToken: @json(csrf_token()),
 			pageData: @json($pageData),
 			imageRenditionUrl: @json(route('cms.core.pagebuilder_elementor_v23.image_rendition')),
+			previewUrl: @json($pageData ? route('cms.core.pagebuilder_elementor_v23.preview', $pageData->uri) : ''),
 			dynamicPreviewContext: {
 				page_excerpt: @json((string) ($pageData->description ?? $pageData->excerpt ?? '')),
 				featured_image: @json((string) ($pageData->featured_image ?? $pageData->cover_image ?? '')),
@@ -78,11 +80,12 @@
 	<script src="{{ asset('assets/plugins/ckfinder/ckfinder.js') }}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-build-classic@41.4.2/build/ckeditor.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
-	<script src="{{ asset('js/pagebuilder_elementor/frontend-runtime.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor/frontend-runtime.js')) }}"></script>
-	<script src="{{ asset('js/pagebuilder_elementor/widget-registry.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor/widget-registry.js')) }}"></script>
+	<script src="{{ asset('js/pagebuilder_elementor_v23/frontend-runtime.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor_v23/frontend-runtime.js')) }}"></script>
+	<script src="{{ asset('js/pagebuilder_elementor_v23/widget-registry.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor_v23/widget-registry.js')) }}"></script>
 	@foreach(config('pagebuilder_elementor_v23_widgets', []) as $pbElementorWidget)
-	<script src="{{ asset($pbElementorWidget['definition']) }}?v={{ @filemtime(public_path($pbElementorWidget['definition'])) }}"></script>
+	@php($pbElementorDefinition = str_replace('js/pagebuilder_elementor/', 'js/pagebuilder_elementor_v23/', $pbElementorWidget['definition']))
+	<script src="{{ asset($pbElementorDefinition) }}?v={{ @filemtime(public_path($pbElementorDefinition)) }}"></script>
 	@endforeach
-	<script src="{{ asset('js/pagebuilder_elementor/app.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor/app.js')) }}"></script>
+	<script src="{{ asset('js/pagebuilder_elementor_v23/app.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor_v23/app.js')) }}"></script>
 </body>
 </html>

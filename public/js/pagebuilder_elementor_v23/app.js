@@ -6836,6 +6836,6 @@
 	</teleport>
 </div>
 		`,
-	}).mount('#pbElementorApp');
+	}).mount('#pbElementorV23App');
 	scheduleWidgetSettingsPreloadAfterFirstGesture();
 })();

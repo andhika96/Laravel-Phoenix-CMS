@@ -109,6 +109,20 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
             ->assertJsonPath('editorVersion', '2.0');
     }
 
+    public function test_v23_preview_uses_only_the_v23_renderer_shell(): void
+    {
+        $this->insertPage('v23-preview', 'V23 Preview', Page_Builder::EDITOR_VERSION_V23, '[]');
+
+        $html = $this->get(route('cms.core.pagebuilder_elementor_v23.preview', 'v23-preview'))
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString('assets/css/frontend_elementor_v23.css', $html);
+        $this->assertStringContainsString('js/pagebuilder_elementor_v23/frontend-runtime.js', $html);
+        $this->assertStringNotContainsString('assets/css/frontend_elementor.css', $html);
+        $this->assertStringNotContainsString('js/pagebuilder_elementor/frontend-runtime.js', $html);
+    }
+
     private function formLayout(): string
     {
         return json_encode([
