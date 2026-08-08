@@ -58,6 +58,7 @@ class PageBuilderElementorV20VersionGuardTest extends TestCase
                 ],
             ],
         ], JSON_THROW_ON_ERROR));
+        $this->insertPage('0', 'V23 Zero Page', Page_Builder::EDITOR_VERSION_V23, '[]');
     }
 
     protected function tearDown(): void
@@ -104,6 +105,15 @@ class PageBuilderElementorV20VersionGuardTest extends TestCase
     {
         $this->postJson('/pagebuilder-elementor/update/v23-page', [
             'pageName' => 'V23 Page',
+            'pageStatus' => 'draft',
+            'layout' => '[]',
+        ])->assertStatus(409)->assertJsonPath('editorVersion', '2.3');
+    }
+
+    public function test_v20_update_endpoint_treats_zero_uri_as_a_version_conflict_before_validation(): void
+    {
+        $this->postJson('/pagebuilder-elementor/update/0', [
+            'pageName' => 'V23 Zero Page',
             'pageStatus' => 'draft',
             'layout' => '[]',
         ])->assertStatus(409)->assertJsonPath('editorVersion', '2.3');

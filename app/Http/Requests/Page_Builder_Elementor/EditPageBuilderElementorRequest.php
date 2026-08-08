@@ -62,7 +62,7 @@ class EditPageBuilderElementorRequest extends FormRequest
 	{
 		$idOrSlug = $this->route('idOrSlug');
 
-		if (! $idOrSlug)
+		if ($idOrSlug === null || $idOrSlug === '')
 		{
 			return null;
 		}
@@ -81,7 +81,7 @@ class EditPageBuilderElementorRequest extends FormRequest
 	{
 		$idOrSlug = $this->route('idOrSlug');
 
-		if (! $idOrSlug)
+		if ($idOrSlug === null || $idOrSlug === '')
 		{
 			return null;
 		}
