@@ -104,6 +104,48 @@ The reference and local implementation screenshots were reviewed together at the
 
 final result: passed
 
+# Design QA - Page Builder v2.3 Properties and Canvas Regression Correction
+
+Date: 2026-08-08
+
+## Sources compared
+
+- Approved prototype screenshot: `C:\Users\aruna\.codex\attachments\9bb8f4d0-2104-4888-827d-e784f0965676\image-3.png`.
+- Reported production regression screenshot: `C:\Users\aruna\.codex\attachments\9bb8f4d0-2104-4888-827d-e784f0965676\image-4.png`.
+- Final Container runtime screenshot: `C:\Users\aruna\.codex\visualizations\2026\08\08\pagebuilder-v23-regression-qa\production-container-layout-final-1920x1008.png`.
+- Final Heading runtime screenshot: `C:\Users\aruna\.codex\visualizations\2026\08\08\pagebuilder-v23-regression-qa\production-heading-toolbar-final-1920x1008.png`.
+- Combined prototype/runtime comparison: `C:\Users\aruna\.codex\visualizations\2026\08\08\pagebuilder-v23-regression-qa\prototype-vs-production-final.png`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+
+The supplied reference and final implementation were reviewed together at 1920 x 1008. Production was exercised with a selected three-column Container and a selected Heading inside its first internal column.
+
+## Verification states
+
+- Registry category audit: all 36 active v2.3 entries were matched against the tabs implemented by their Settings modules.
+- Layout nodes: Container, Container Fluid, Grid, and Row Grid expose Layout, Style, and Advanced.
+- Widgets: 31 widgets expose Content, Style, and Advanced; Spacer exposes only Content and Advanced because it has no Style implementation.
+- Container: the header reads `Container settings`, the summary reads `Container · container`, and Layout is active with visible controls.
+- Container tabs: Layout, Style, and Advanced each rendered one visible settings panel with the expected controls.
+- Column widths: three internal columns rendered 33.3%, 33.3%, and 33.3%; changing Column 1 to 40% updated the adjacent width to 26.7% immediately.
+- Direction guard: Column widths is visible for Row and Row Reverse, hidden for Column and Column Reverse where the existing width algorithm does not apply.
+- Canvas: column labels and direct resize handles are absent; width editing remains available in Layout > Column widths.
+- Heading toolbar: both the label-side and action-side 5px transition zones resolve to toolbar elements and keep `is-toolbar-visible` active.
+- Runtime safety: no Save action was performed.
+- Browser logs: zero errors and zero warnings.
+
+## Findings and corrections
+
+- Replaced the hardcoded Content, Style, and Advanced shell with contextual tabs derived from the selected node type.
+- Corrected Layout identity copy so Container and Grid no longer appear as widgets.
+- Kept selected-node toolbar visibility stable while another node briefly receives hover.
+- Added invisible pointer bridges without moving the approved label/action geometry.
+- Moved flex column width editing into Container Layout and removed legacy selectable Column chrome from the v2.3 canvas.
+- P0: none.
+- P1: none.
+- P2: none.
+
+final result: passed
+
 # Design QA - Page Builder v2.3 Properties and Canvas Fidelity
 
 Date: 2026-08-08

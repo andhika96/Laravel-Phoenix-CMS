@@ -214,6 +214,33 @@
 	function isTabs(t)    { return t === 'tabs'; }
 	function isAccordion(t) { return t === 'accordion'; }
 	function isWgt(t)     { return !isCont(t) && !isGrid(t); }
+	// V23_CONTEXTUAL_PROPERTY_HELPERS_START
+	function propertyTabsForNodeType(type) {
+		if (isCont(type) || isGrid(type)) {
+			return [
+				{ id: 'layout', label: 'Layout' },
+				{ id: 'style', label: 'Style' },
+				{ id: 'advanced', label: 'Advanced' },
+			];
+		}
+		if (type === 'spacer') {
+			return [
+				{ id: 'content', label: 'Content' },
+				{ id: 'advanced', label: 'Advanced' },
+			];
+		}
+		return [
+			{ id: 'content', label: 'Content' },
+			{ id: 'style', label: 'Style' },
+			{ id: 'advanced', label: 'Advanced' },
+		];
+	}
+	function propertyKindForNodeType(type) {
+		if (isCont(type)) return 'Container';
+		if (isGrid(type)) return 'Grid';
+		return 'Widget';
+	}
+	// V23_CONTEXTUAL_PROPERTY_HELPERS_END
 	function normalizeVideoSourceType(value) {
 		const raw = String(value || '').trim().toLowerCase();
 		if (raw === 'file') return 'self_hosted';
@@ -1651,6 +1678,7 @@
 				return this.selectedId !== this.node.id && nodeContainsDescendantId(this.node, this.selectedId);
 			},
 			isToolbarVisible() {
+				if (this.selectedId === this.node.id) return true;
 				const focusId = this.hoveredId || this.selectedId || '';
 				return focusId === this.node.id || (!this.hoveredId && this.isAncestorVisualActive);
 			},
@@ -3469,6 +3497,8 @@
 
 			const selectedNode = computed(() => selectedId.value ? findById(rootNodes.value, selectedId.value) : null);
 			const selectedType = computed(() => selectedNode.value?.type || '');
+			const activeSettingsTabs = computed(() => propertyTabsForNodeType(selectedType.value));
+			const selectedNodeKind = computed(() => propertyKindForNodeType(selectedType.value));
 			const textEditorModalSummary = computed(() => {
 				const html = selectedType.value === 'text_editor' ? String(selectedNode.value?.settings?.html || '') : '';
 				const text = html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
@@ -4490,6 +4520,18 @@
 			function setSelectedColumnWidthValue(ctx, next) {
 				if (!ctx || !ctx.node || !ctx.column || !ctx.canEditWidth) return;
 				applyColumnPairWidths(ctx.node, ctx.index, Number(next) || 0);
+			}
+			function columnSettingsWidthValue(node, index) {
+				if (!node || !Array.isArray(node.columns)) return 0;
+				return columnWidthValue({ node, column: node.columns[index], index });
+			}
+			function setColumnSettingsWidthValue(node, index, next) {
+				if (!node || !Array.isArray(node.columns) || node.columns.length < 2) return;
+				const settings = node.settings || {};
+				const displayType = settings.displayType || 'flex';
+				const direction = getResponsiveSetting(settings, 'direction', settings.direction || 'row') || 'row';
+				if (displayType !== 'flex' || !['row', 'row-reverse'].includes(direction)) return;
+				applyColumnPairWidths(node, index, Number(next) || 0);
 			}
 			function setColumnResizeOverlay(visible, text = '', x = 0, y = 0) {
 				columnResizeOverlay.value = { visible, text, x, y };
@@ -6274,6 +6316,8 @@
 				setContainerGridColumnsValue,
 				containerGridRowsValue,
 				setContainerGridRowsValue,
+				columnSettingsWidthValue,
+				setColumnSettingsWidthValue,
 				syncContainerGap,
 				bgStateKey,
 				setBgStateValue,
@@ -6358,7 +6402,7 @@
 			return {
 				appTitle, pageSettingsOpen, openPageSettings, closePageSettings, toolbox, elementSearch, filteredToolboxGroups, leftCollapsed, previewMode, rootNodes, loadWidget, loadWidgetSettings, hasRegisteredWidget, widgetEditorServices,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
-				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, imageBoxImageState, iconBoxIconState, selectedNode, selectedType,
+				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, imageBoxImageState, iconBoxIconState, selectedNode, selectedType, activeSettingsTabs, selectedNodeKind,
 				responsiveDevice, responsiveDevices, responsiveCanvasLabel, canvasZoom, showCanvasGrid, changeCanvasZoom, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
 				controlResponsiveMenu, responsiveDeviceIcon, responsiveDeviceLabel, deviceOptionLabel,
 				openControlResponsiveMenu, closeControlResponsiveMenu, isControlResponsiveMenuOpen,
@@ -6494,15 +6538,13 @@
 					<button v-if="selectedNode || selectedColumnContext" class="panel-icon-btn" title="Back to Elements" @click="showToolboxPanel()"><i class="bi bi-chevron-left"></i></button>
 					<div class="panel-title">
 						<strong>{{ selectedColumnContext ? 'Column ' + (selectedColumnContext.index + 1) : (selectedNode ? displayNodeLabel(selectedNode) : 'Elements') }}</strong>
-						<span>{{ selectedColumnContext ? 'Layout settings' : (selectedNode ? 'Widget settings' : 'Drag or click to add') }}</span>
+						<span>{{ selectedColumnContext ? 'Layout settings' : (selectedNode ? selectedNodeKind + ' settings' : 'Drag or click to add') }}</span>
 					</div>
 				</div>
 				<button class="panel-icon-btn" title="Collapse panel" @click="leftCollapsed = true"><i class="bi bi-chevron-left"></i></button>
 			</div>
 			<div v-if="selectedNode && !selectedColumnContext" class="properties-tabs">
-				<button type="button" class="property-tab" :class="{ active: settingsTab==='content' }" @click="settingsTab='content'">Content</button>
-				<button type="button" class="property-tab" :class="{ active: settingsTab==='style' }" @click="settingsTab='style'">Style</button>
-				<button type="button" class="property-tab" :class="{ active: settingsTab==='advanced' }" @click="settingsTab='advanced'">Advanced</button>
+				<button v-for="tab in activeSettingsTabs" :key="tab.id" type="button" class="property-tab" :class="{ active: settingsTab===tab.id }" @click="settingsTab=tab.id">{{ tab.label }}</button>
 			</div>
 
 			<template v-if="!(selectedNode || selectedColumnContext)">
@@ -6669,7 +6711,7 @@
 						<div>
 							<strong>{{ selectedColumnContext ? 'Column ' + (selectedColumnContext.index + 1) : displayNodeLabel(selectedNode) }}</strong>
 							<small v-if="selectedColumnContext">Layout column</small>
-							<small v-else>Widget · {{ selectedType }}</small>
+							<small v-else>{{ selectedNodeKind }} · {{ selectedType }}</small>
 						</div>
 					</div>
 				<div class="pb-section v23-properties-section" v-if="selectedColumnContext">

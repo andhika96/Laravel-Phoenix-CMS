@@ -204,6 +204,21 @@
 								</div>
 								</div>
 							</details>
+							<details class="pb-collapsible" v-if="(node.settings.displayType==='flex'||!node.settings.displayType) && ['row','row-reverse'].includes(editor.containerResponsiveValue(node.settings,'direction','row')) && node.columns && node.columns.length > 1" open>
+								<summary>Column widths</summary>
+								<div class="pb-collapsible-body">
+									<div class="pb-container-column-widths">
+										<label v-for="(column, index) in node.columns" :key="column.id" class="pb-container-column-width-row">
+											<span>Column {{ index + 1 }}</span>
+											<span class="pb-container-column-width-value">
+												<input class="pb-input pb-input-compact" type="number" min="4" max="96" step="0.1" :value="editor.columnSettingsWidthValue(node, index)" @input="editor.setColumnSettingsWidthValue(node, index, $event.target.value)">
+												<small>%</small>
+											</span>
+										</label>
+									</div>
+									<div class="pb-form-note">Columns stay as internal layout slots. Changing one width automatically balances the adjacent column.</div>
+								</div>
+							</details>
 							<details class="pb-collapsible" v-if="node.settings.displayType==='grid'" open>
 								<summary>Items</summary>
 								<div class="pb-collapsible-body">
@@ -1047,6 +1062,11 @@ export default {
 <style scoped>
 .pb-two-column-row { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; }
 .pb-two-column-row > .pb-form-group { margin-bottom:0; }
+.pb-container-column-widths { display:grid; gap:7px; }
+.pb-container-column-width-row { display:grid; grid-template-columns:minmax(0, 1fr) 86px; align-items:center; gap:8px; min-height:38px; padding:5px 7px 5px 9px; border:1px solid #e1e5ed; border-radius:7px; background:#fafbfc; color:#657084; font-size:11px; font-weight:600; }
+.pb-container-column-width-value { display:grid; grid-template-columns:minmax(0, 1fr) 20px; align-items:center; overflow:hidden; border:1px solid #dce2eb; border-radius:6px; background:#fff; }
+.pb-container-column-width-value .pb-input { min-height:28px; padding:4px 5px; border:0; text-align:center; }
+.pb-container-column-width-value small { display:grid; place-items:center; align-self:stretch; border-left:1px solid #e5e9ef; color:#7d8798; font-size:9px; font-weight:650; }
 .pb-container-slideshow-picker { overflow:hidden; border:1px solid #dce3ef; border-radius:6px; background:#fff; }
 .pb-container-slideshow-picker__head { display:flex; align-items:center; justify-content:space-between; min-height:36px; padding:6px 8px; background:#f7f9fc; color:#334155; font-size:12px; font-weight:600; }
 .pb-container-slideshow-picker__head .pb-btn.icon-sm { width:24px; min-width:24px; height:24px; min-height:24px; padding:0; border-radius:6px; }

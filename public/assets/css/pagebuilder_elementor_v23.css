@@ -9830,7 +9830,8 @@ body {
 /* Page Builder 2.3: approved contextual Properties hierarchy. */
 .properties-tabs {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-auto-flow: column;
+	grid-auto-columns: 1fr;
 	padding: 0 12px;
 	border-bottom: 1px solid var(--line);
 }
@@ -10068,6 +10069,11 @@ body {
 	transform: translateX(-50%);
 }
 
+.webpage-frame .pb-grid-col-label,
+.webpage-frame .pb-col-resizer {
+	display: none !important;
+}
+
 .webpage-frame .pb-node-label.widget-label {
 	top: -5px;
 	left: -5px;
@@ -10132,6 +10138,15 @@ body {
 }
 
 .webpage-frame .pb-node-widget > .pb-node-toolbar > .pb-node-actions .pb-node-btn:hover { background: rgba(255, 255, 255, .15); }
+
+.webpage-frame .pb-node-widget > .pb-node-toolbar > :is(.pb-node-label, .pb-node-actions)::after {
+	position: absolute;
+	right: 0;
+	bottom: -5px;
+	left: 0;
+	height: 5px;
+	content: '';
+}
 
 .webpage-frame .pb-root-followup-hint {
 	display: flex;

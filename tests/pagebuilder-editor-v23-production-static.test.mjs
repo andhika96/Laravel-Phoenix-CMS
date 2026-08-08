@@ -67,12 +67,13 @@ test('production v2.3 ports the approved tokens and shell geometry', () => {
 
 test('production v2.3 properties shell follows the approved compact hierarchy', () => {
     assert.match(app, /v-if="selectedNode && !selectedColumnContext" class="properties-tabs"/);
-    assert.match(app, /class="property-tab" :class="\{ active: settingsTab==='content' \}"/);
+    assert.match(app, /v-for="tab in activeSettingsTabs"/);
+    assert.match(app, /selectedNodeKind \+ ' settings'/);
     assert.match(app, /class="pb-section v23-properties-section"/);
-    assert.match(app, /Widget · \{\{ selectedType \}\}/);
+    assert.match(app, /\{\{ selectedNodeKind \}\} · \{\{ selectedType \}\}/);
     assert.doesNotMatch(app, /class="pb-props-header"/);
 
-    assert.match(css, /\.properties-tabs\s*\{[\s\S]*?grid-template-columns:\s*repeat\(3,\s*1fr\);/);
+    assert.match(css, /\.properties-tabs\s*\{[\s\S]*?grid-auto-flow:\s*column;[\s\S]*?grid-auto-columns:\s*1fr;/);
     assert.match(css, /\.selection-summary\s*\{[\s\S]*?display:\s*flex;[\s\S]*?padding:\s*10px;/);
     assert.match(css, /\.selection-summary strong\s*\{[\s\S]*?display:\s*block;/);
     assert.match(css, /\.v23-properties-section\s+\.pb-tab-nav\s*\{\s*display:\s*none\s*!important;/);
