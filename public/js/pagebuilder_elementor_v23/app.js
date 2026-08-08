@@ -3529,9 +3529,20 @@
 				}
 				return false;
 			}
+			function insertToolAtRoot(toolDef) {
+				const item = toolClone(toolDef);
+				if (!item) return false;
+				rootNodes.value.push(item);
+				selectedId.value = item.id;
+				onRootAdd({
+					newIndex: rootNodes.value.length - 1,
+					item: { _underlying_vm_: item },
+				});
+				return true;
+			}
 			function onToolboxItemClick(toolDef) {
-				if (!pendingInsertTarget.value) return;
-				insertToolIntoPendingTarget(toolDef, pendingInsertTarget.value);
+				if (pendingInsertTarget.value) return insertToolIntoPendingTarget(toolDef, pendingInsertTarget.value);
+				return insertToolAtRoot(toolDef);
 			}
 			function selectTabsItem(node, itemId) {
 				if (!node || node.type !== 'tabs') return;
