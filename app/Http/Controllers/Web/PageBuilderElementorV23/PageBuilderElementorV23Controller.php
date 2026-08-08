@@ -380,7 +380,7 @@ class PageBuilderElementorV23Controller extends Controller
 				return response()->json([
 					'success' => false,
 					'status' => 'failed',
-					'message' => t('Page data not found'),
+					'message' => 'Page data not found',
 				], 404);
 			}
 
@@ -392,7 +392,7 @@ class PageBuilderElementorV23Controller extends Controller
 			return response()->json([
 				'success' => false,
 				'status' => 'failed',
-				'message' => t('This page belongs to a different editor version'),
+				'message' => 'This page belongs to a different editor version',
 				'editorVersion' => $page->editor_version,
 			], 409);
 		}
