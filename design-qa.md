@@ -104,6 +104,59 @@ The reference and local implementation screenshots were reviewed together at the
 
 final result: passed
 
+# Design QA - Page Builder v2.3 Literal Prototype Control Contract
+
+Date: 2026-08-09
+
+## Sources compared
+
+- Direct prototype source: `D:\Laragon\www\laravel-13-phoenix\public\mockups\pagebuilder-editor-redesign-prototype-v2.3.html`.
+- Browser-rendered prototype URL: `https://laravel-13-phoenix.aruna/mockups/pagebuilder-editor-redesign-prototype-v2.3.html`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+- Full audit result: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\pagebuilder-v23-full-settings-audit\runtime-control-audit-after-summary.json`.
+- Combined prototype-left/runtime-right comparisons:
+  - `compare-heading-content-prototype-left-runtime-right.png`
+  - `compare-heading-style-prototype-left-runtime-right.png`
+  - `compare-heading-advanced-prototype-left-runtime-right.png`
+  - `compare-container-layout-prototype-left-runtime-right.png`
+  - all stored under `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\pagebuilder-v23-full-settings-audit`.
+
+The approved HTML prototype and production v2.3 were opened directly in the in-app browser, captured at the same viewport, combined side by side, and inspected in matching Content, Style, Advanced, and Layout states. Production keeps its real control set and behavior while matching the prototype's geometry and visual hierarchy.
+
+## Literal control contract
+
+- Properties tabs: 42px height and 10px type.
+- Selection summary: 10px padding, 14px bottom gap, 33px icon, 10px title, and 8.5px caption.
+- Form labels: 9.5px / 600 with a 6px label-to-control gap.
+- Inputs and selects: 34px height and 10px type.
+- Textareas: 76px minimum height and 10px type.
+- Segmented controls: 3px wrapper padding and 27px button height.
+- Typography trigger: 30px; text-effect triggers: 30 x 28px.
+- Range/value, unit, spacing, color, picker, repeater, AI, and toggle controls follow the same compact rhythm without forcing unrelated groups into horizontal rows.
+
+## Verification states
+
+- Baseline audit: 34 widgets, 101 Content/Layout/Style/Advanced states, 4,642 density and layout violations.
+- Final audit: 34 widgets, 101 states, zero violations, and zero horizontal-overflow states.
+- Category coverage: 29 Layout/Basic states, 42 General states, and 30 Pro states.
+- Every registered widget reported zero violations, including Container, Grid, all Basic and General widgets, and all Pro widgets through Flip Box.
+- Four combined visual comparisons were inspected; no broken padding, margin, field grouping, control scale, clipping, or hierarchy remained.
+- Runtime safety: no Save action was performed.
+
+## Findings and corrections
+
+- Removed the global `:has(...)` layout rule that forced unrelated labels and controls into malformed horizontal form groups.
+- Applied the prototype contract to shared Widget, Layout, Grid, Advanced, and Pro settings ancestry rather than patching only the screenshots' widgets.
+- Corrected the previously uncovered Layout root and normalized compact AI, typography, effect, icon picker, gallery, repeater, segmented, switch, unit, and four-side controls.
+- Tightened the static contract assertions so each expected declaration must exist inside its own CSS rule instead of matching across rule boundaries.
+- Kept the compact toggle state text visually hidden while preserving it in the accessibility tree.
+- The complete 9.2 MB runtime audit artifact retains per-state panel records and measured violations; the small summary file is only the handoff index.
+- P0: none.
+- P1: none.
+- P2: none.
+
+final result: passed for all 34 widgets and 101 audited desktop settings states
+
 # Design QA - Page Builder v2.3 Properties Density and Rhythm
 
 Date: 2026-08-08

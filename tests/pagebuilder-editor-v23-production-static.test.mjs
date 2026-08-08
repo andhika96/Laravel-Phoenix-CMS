@@ -74,7 +74,7 @@ test('production v2.3 properties shell follows the approved compact hierarchy', 
     assert.doesNotMatch(app, /class="pb-props-header"/);
 
     assert.match(css, /\.properties-tabs\s*\{[\s\S]*?grid-auto-flow:\s*column;[\s\S]*?grid-auto-columns:\s*1fr;/);
-    assert.match(css, /\.selection-summary\s*\{[\s\S]*?display:\s*flex;[\s\S]*?padding:\s*12px;/);
+    assert.match(css, /\.selection-summary\s*\{[^}]*display:\s*flex;[^}]*padding:\s*10px;/);
     assert.match(css, /\.selection-summary strong\s*\{[\s\S]*?display:\s*block;/);
     assert.match(css, /\.v23-properties-section\s+\.pb-tab-nav\s*\{\s*display:\s*none\s*!important;/);
 });

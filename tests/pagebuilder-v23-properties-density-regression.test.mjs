@@ -9,7 +9,6 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
 const app = readFileSync(resolve(root, 'public/js/pagebuilder_elementor_v23/app.js'), 'utf8');
 const css = readFileSync(resolve(root, 'public/assets/css/pagebuilder_elementor_v23.css'), 'utf8');
-const advancedControls = readFileSync(resolve(root, 'public/js/pagebuilder_elementor_v23/widgets/shared/AdvancedControls.vue'), 'utf8');
 
 function contextualHelpers() {
     const source = app.match(/\/\/ V23_CONTEXTUAL_PROPERTY_HELPERS_START([\s\S]*?)\/\/ V23_CONTEXTUAL_PROPERTY_HELPERS_END/)?.[1];
@@ -40,27 +39,43 @@ test('property tabs reset the shared sidebar scroll position', () => {
     assert.match(app, /watch\(selectedId,[\s\S]*?nextTick\(resetPropertiesPanelScroll\);/);
 });
 
-test('the v2.3 properties panel uses a readable and consistent density contract', () => {
-    const inlineControlSelector = '.pb-form-group:not(:is(.pb-form-row--two, .pb-two-column-row, .pb-inline-fields) > .pb-form-group):has(> .pb-form-label + :is(.pb-select, .pb-color-row, .pb-btn-group, .pb-coloris-input, .clr-field))';
+test('the v2.3 properties panel matches the approved prototype density contract', () => {
+    const contract = css.match(/\/\* V23_PROTOTYPE_PROPERTIES_CONTRACT_START \*\/([\s\S]*?)\/\* V23_PROTOTYPE_PROPERTIES_CONTRACT_END \*\//)?.[1];
+    assert.ok(contract, 'the isolated v2.3 prototype properties contract should exist');
 
     assert.match(css, /\.workspace\s*\{[\s\S]*?grid-template-columns:\s*300px minmax\(440px, 1fr\);/);
-    assert.match(css, /\.property-tab\s*\{[\s\S]*?height:\s*48px;[\s\S]*?font-size:\s*12px;/);
+    assert.match(contract, /\.property-tab\s*\{[^}]*height:\s*42px;[^}]*font-size:\s*10px;/);
     assert.match(css, /\.property-tab:focus\s*\{\s*outline:\s*none;\s*\}/);
     assert.match(css, /\.property-tab:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--brand\);/);
-    assert.match(css, /\.selection-summary-icon\s*\{[\s\S]*?width:\s*36px;[\s\S]*?height:\s*36px;/);
-    assert.match(css, /\.selection-summary strong\s*\{[\s\S]*?font-size:\s*12px;/);
-    assert.match(css, /\.selection-summary small\s*\{[\s\S]*?font-size:\s*10px;/);
-    assert.match(css, /\.side-panel \.v23-properties-section \.pb-collapsible > summary\s*\{[\s\S]*?min-height:\s*40px;[\s\S]*?font-size:\s*12px;/);
+    assert.match(contract, /\.selection-summary\s*\{[^}]*margin-bottom:\s*14px;[^}]*padding:\s*10px;/);
+    assert.match(contract, /\.selection-summary-icon\s*\{[^}]*width:\s*33px;[^}]*height:\s*33px;/);
+    assert.match(contract, /\.selection-summary strong\s*\{[^}]*font-size:\s*10px;/);
+    assert.match(contract, /\.selection-summary small\s*\{[^}]*font-size:\s*8\.5px;/);
+    assert.match(contract, /\.pb-collapsible > summary\s*\{[^}]*min-height:\s*34px(?:\s*!important)?;[^}]*font-size:\s*10px(?:\s*!important)?;/);
     assert.match(css, /\.side-panel \.v23-properties-section \.pb-collapsible > summary:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--brand\);/);
-    assert.match(css, /\.side-panel \.v23-properties-section \.pb-collapsible-body\s*\{\s*padding:\s*8px 0 10px !important;\s*\}/);
-    assert.match(css, /\.side-panel\.pb-panel\.left \.v23-properties-section \.pb-widget-settings \.pb-form-label\s*\{[\s\S]*?font-size:\s*11px;/);
-    assert.match(css, /\.side-panel\.pb-panel\.left \.v23-properties-section \.pb-widget-settings :is\(\.pb-input, \.pb-select\)\s*\{[\s\S]*?min-height:\s*36px;[\s\S]*?font-size:\s*12px;/);
-    assert.ok(css.includes(inlineControlSelector));
+    assert.match(contract, /\.pb-form-group\s*\{[^}]*margin-bottom:\s*11px(?:\s*!important)?;/);
+    assert.match(contract, /\.pb-form-label\s*\{[^}]*margin-bottom:\s*6px;[^}]*font-size:\s*9\.5px;[^}]*font-weight:\s*600;/);
+    assert.match(contract, /:is\(\.pb-input, \.pb-select\)\s*\{[^}]*height:\s*34px;[^}]*font-size:\s*10px(?:\s*!important)?;/);
+    assert.match(contract, /:is\(\.pb-textarea, textarea\.pb-input\)\s*\{[^}]*min-height:\s*76px;[^}]*font-size:\s*10px;/);
+    assert.match(contract, /:is\(\.pb-seg-group,[^)]*\.pb-state-tabs[^)]*\)\s*\{[^}]*padding:\s*3px;/);
+    assert.match(contract, /:is\(\.pb-seg-btn, \.pb-state-tabs button\)\s*\{[^}]*height:\s*27px(?:\s*!important)?;[^}]*font-size:\s*10px(?:\s*!important)?;/);
+    assert.match(contract, /\.pb-range-value-row\s*\{[^}]*gap:\s*8px;/);
+    assert.match(contract, /\.pb-value-with-unit\s*\{[^}]*min-height:\s*30px;/);
+    assert.match(contract, /\.pb-toggle-state\s*\{[^}]*position:\s*absolute;[^}]*clip:\s*rect\(0 0 0 0\);/);
+    assert.doesNotMatch(contract, /\.pb-toggle-state\s*\{[^}]*display:\s*none;/);
+    assert.doesNotMatch(contract, /:has\(/, 'prototype controls stay vertically stacked instead of forcing label/control rows');
 });
 
-test('shared heading and Advanced controls keep compact but legible proportions', () => {
+test('shared buttons and compound fields inherit the prototype proportions', () => {
+    const contract = css.match(/\/\* V23_PROTOTYPE_PROPERTIES_CONTRACT_START \*\/([\s\S]*?)\/\* V23_PROTOTYPE_PROPERTIES_CONTRACT_END \*\//)?.[1];
+    assert.ok(contract);
+
     assert.match(css, /\.pb-panel\.left \.pb-heading-style-settings \.pb-heading-choice-row\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) 152px;/);
     assert.match(css, /\.pb-panel\.left \.pb-heading-style-settings \.clr-field button\s*\{[\s\S]*?width:\s*34px;/);
-    assert.match(advancedControls, /\.pb-ai-disabled strong\s*\{\s*font-size:\s*12px;[\s\S]*?line-height:\s*1\.3;\s*\}/);
-    assert.match(advancedControls, /\.pb-ai-disabled small\s*\{\s*font-size:\s*10px;[\s\S]*?line-height:\s*1\.4;\s*\}/);
+    assert.match(contract, /\.pb-ai-disabled strong\s*\{[^}]*font-size:\s*10px/);
+    assert.match(contract, /\.pb-ai-disabled small\s*\{[^}]*font-size:\s*8\.5px/);
+    assert.match(contract, /\.pb-typography-trigger\s*\{[^}]*width:\s*30px;[^}]*height:\s*30px;/);
+    assert.match(contract, /:is\(\.pb-text-effect-trigger, \.pb-css-filter-trigger\)\s*\{[^}]*width:\s*30px;[^}]*height:\s*28px;/);
+    assert.match(contract, /\.pb-icon-picker-field\s*\{[^}]*grid-template-columns:\s*34px minmax\(0, 1fr\) 10px;/);
+    assert.match(contract, /:is\(\.pb-carousel-gallery__add, \.pb-basic-gallery-picker__add, \.pb-social-add/);
 });
