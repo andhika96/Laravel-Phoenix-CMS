@@ -2758,7 +2758,7 @@
 			}
 			function keepFocusedEditorControlInPanel(event) {
 				const target = event && event.target;
-				const panel = document.querySelector('.pb-panel.left');
+				const panel = document.querySelector('.side-panel.left-panel .panel-body');
 				if (!(target instanceof HTMLElement) || !panel || !panel.contains(target)) {
 					lockWindowScrollPosition();
 					return;
@@ -3004,6 +3004,8 @@
 			const imageBoxImageState = ref('normal');
 			const iconBoxIconState = ref('normal');
 			const responsiveDevice = ref('desktop');
+			const leftCollapsed = ref(false);
+			const previewMode = ref(false);
 			const desktopPreviewWidth = ref('1320');
 			const widthPreviewMenuOpen = ref(false);
 			const suppressHistory = ref(false);
@@ -3122,8 +3124,8 @@
 				return meta.menuLabel || meta.label || '';
 			}
 			function previewCanvasWidthLabel() {
-				if (responsiveDevice.value === 'tablet') return '720px';
-				if (responsiveDevice.value === 'mobile') return '540px';
+				if (responsiveDevice.value === 'tablet') return '768px';
+				if (responsiveDevice.value === 'mobile') return '390px';
 				return normalizeDesktopPreviewWidth(desktopPreviewWidth.value) + 'px';
 			}
 			function previewCanvasStyle() {
@@ -5448,10 +5450,12 @@
 			function showToolboxPanel(target = null) {
 				clearSelectedColumn();
 				selectedId.value = '';
+				leftCollapsed.value = false;
+				previewMode.value = false;
 				setPendingInsertTarget(target);
 				closeControlResponsiveMenu();
 				nextTick(() => {
-					const leftPanel = document.querySelector('.pb-panel.left');
+					const leftPanel = document.querySelector('.side-panel.left-panel .panel-body');
 					if (!leftPanel) return;
 					leftPanel.scrollTo({ top: 0, behavior: 'smooth' });
 					const titles = Array.from(leftPanel.querySelectorAll('.pb-panel-title'));
@@ -6039,6 +6043,16 @@
 					}
 				});
 			});
+			const elementSearch = ref('');
+			const filteredToolboxGroups = computed(() => {
+				const query = elementSearch.value.trim().toLowerCase();
+				return ['layout', 'basic', 'general', 'pro', 'advanced']
+					.map(name => ({
+						name,
+						items: (toolbox[name] || []).filter(item => !query || `${item.label} ${item.type}`.toLowerCase().includes(query)),
+					}))
+					.filter(group => group.items.length);
+			});
 
 			// ── Save ──────────────────────────────────────────────────────────
 			async function savePage() {
@@ -6262,7 +6276,7 @@
 			const appTitle = computed(() => mode.value==='edit' ? 'Edit Page Builder' : 'Create Page Builder');
 
 			return {
-				appTitle, toolbox, rootNodes, loadWidget, loadWidgetSettings, hasRegisteredWidget, widgetEditorServices,
+				appTitle, toolbox, elementSearch, filteredToolboxGroups, leftCollapsed, previewMode, rootNodes, loadWidget, loadWidgetSettings, hasRegisteredWidget, widgetEditorServices,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
 				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, imageBoxImageState, iconBoxIconState, selectedNode, selectedType,
 				responsiveDevice, responsiveDevices, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
@@ -6313,23 +6327,45 @@
 		},
 
 		template: `
-<div class="pb-app">
-	<div class="pb-topbar">
-		<div class="pb-brand"><span class="pb-brand-badge">PB</span><span>{{ appTitle }} - Elementor Style</span></div>
-		<div class="pb-top-actions">
-			<button class="pb-btn icon" :disabled="!canUndo" @click="undo" title="Undo"><i class="fas fa-undo"></i></button>
-			<button class="pb-btn icon" :disabled="!canRedo" @click="redo" title="Redo"><i class="fas fa-redo"></i></button>
-			<button class="pb-btn primary" :class="{ 'is-loading': saveState==='saving' }" :disabled="saveState==='saving'" @click="savePage">
-				<template v-if="saveState==='saving'">
-					Saving
-					<span class="spinner-border spinner-border-sm text-light ms-1" role="status" aria-hidden="true"></span>
-				</template>
-				<template v-else>
-					<i class="fas fa-save"></i> Save
-				</template>
+<div class="builder-app">
+	<header class="topbar">
+		<div class="topbar-left">
+			<div class="brand-lockup">
+				<div class="brand-mark"><i class="bi bi-grid-1x2-fill"></i></div>
+				<div class="brand-copy"><strong>Phoenix</strong><span>Page Builder 2.3</span></div>
+			</div>
+			<div class="page-crumbs">
+				<span class="workspace-label">Website</span>
+				<i class="bi bi-chevron-right divider"></i>
+				<span class="page-name" :title="pageName">{{ pageName }}</span>
+				<span class="save-state" :class="'is-' + saveState">
+					<i class="bi" :class="saveState==='saving' ? 'bi-cloud-arrow-up' : (saveState==='error' ? 'bi-exclamation-circle' : 'bi-cloud-check')"></i>
+					{{ saveState==='saving' ? 'Saving' : (saveState==='error' ? 'Save failed' : 'Saved') }}
+				</span>
+			</div>
+		</div>
+
+		<div class="topbar-center">
+			<div class="device-switcher" aria-label="Responsive preview">
+				<button class="device-btn" :class="{ active: responsiveDevice==='desktop' }" title="Desktop" @click="setResponsiveDevice('desktop')"><i class="bi bi-display"></i></button>
+				<button class="device-btn" :class="{ active: responsiveDevice==='tablet' }" title="Tablet" @click="setResponsiveDevice('tablet')"><i class="bi bi-tablet"></i></button>
+				<button class="device-btn" :class="{ active: responsiveDevice==='mobile' }" title="Mobile" @click="setResponsiveDevice('mobile')"><i class="bi bi-phone"></i></button>
+			</div>
+			<div class="zoom-control">{{ previewCanvasWidthLabel() }}</div>
+		</div>
+
+		<div class="topbar-right">
+			<div class="action-group">
+				<button class="icon-btn" :disabled="!canUndo" @click="undo" title="Undo"><i class="bi bi-arrow-counterclockwise"></i></button>
+				<button class="icon-btn" :disabled="!canRedo" @click="redo" title="Redo"><i class="bi bi-arrow-clockwise"></i></button>
+			</div>
+			<button class="top-action" @click="previewMode = !previewMode"><i class="bi me-1" :class="previewMode ? 'bi-layout-sidebar-inset' : 'bi-play-circle'"></i>{{ previewMode ? 'Editor' : 'Preview' }}</button>
+			<button class="top-action primary" :class="{ 'is-loading': saveState==='saving' }" :disabled="saveState==='saving'" @click="savePage">
+				<span v-if="saveState==='saving'" class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+				<i v-else class="bi bi-cloud-arrow-up me-1"></i>{{ saveState==='saving' ? 'Saving' : 'Save' }}
 			</button>
 		</div>
-	</div>
+	</header>
 
 	<div class="pb-notice" v-cloak>
 		<div aria-live="polite" aria-atomic="true" class="position-relative">
@@ -6353,9 +6389,53 @@
 		</div>
 	</div>
 
-	<div class="pb-main">
-		<div class="pb-panel left">
-			<div v-if="!selectedNode">
+	<main class="workspace" :class="{ 'left-collapsed': leftCollapsed, 'preview-mode': previewMode }">
+		<aside class="side-panel left-panel pb-panel left">
+			<div class="panel-header">
+				<div class="panel-header-start">
+					<button v-if="selectedNode || selectedColumnContext" class="panel-icon-btn" title="Back to Elements" @click="showToolboxPanel()"><i class="bi bi-chevron-left"></i></button>
+					<div class="panel-title">
+						<strong>{{ selectedColumnContext ? 'Column ' + (selectedColumnContext.index + 1) : (selectedNode ? displayNodeLabel(selectedNode) : 'Elements') }}</strong>
+						<span>{{ selectedNode || selectedColumnContext ? 'Element settings' : 'Drag or click to add' }}</span>
+					</div>
+				</div>
+				<button class="panel-icon-btn" title="Collapse panel" @click="leftCollapsed = true"><i class="bi bi-chevron-left"></i></button>
+			</div>
+
+			<template v-if="!(selectedNode || selectedColumnContext)">
+				<div class="panel-body">
+					<div v-if="pendingInsertTarget" class="pending-insert-notice pb-pending-insert-notice">
+						<div class="pb-pending-insert-text"><i class="bi bi-plus-circle"></i><span>Click a widget to insert into the selected target</span></div>
+						<button type="button" class="pb-pending-insert-cancel" title="Cancel targeted insert" @click="clearPendingInsertTarget"><i class="bi bi-x-lg"></i></button>
+					</div>
+					<div class="search-box">
+						<i class="bi bi-search"></i>
+						<input v-model="elementSearch" placeholder="Search widgets">
+					</div>
+					<div v-for="group in filteredToolboxGroups" :key="group.name" class="library-group">
+						<div class="group-heading"><span>{{ group.name }}</span><small>{{ group.items.length }}</small></div>
+						<draggable
+							:list="group.items"
+							:group="group.name === 'layout' ? sidebarContGroup : sidebarWgtGroup"
+							:clone="toolClone"
+							item-key="type"
+							class="element-grid"
+							:sort="false"
+							@start="onDragStart"
+							@end="onDragEnd"
+						>
+							<template #item="{ element }">
+								<button type="button" class="element-card" @click="onToolboxItemClick(element)">
+									<i :class="element.icon"></i>
+									<strong>{{ element.label }}</strong>
+									<small>{{ element.type }}</small>
+								</button>
+							</template>
+						</draggable>
+					</div>
+					<div v-if="filteredToolboxGroups.length===0" class="empty-search-state"><i class="bi bi-search"></i><span>No widgets found</span></div>
+
+					<div class="pb-legacy-toolbox" aria-hidden="true">
 				<div v-if="pendingInsertTarget" class="pb-pending-insert-notice">
 					<div class="pb-pending-insert-text">
 						<i class="fas fa-plus-circle animate-pulse"></i>
@@ -6475,9 +6555,19 @@
 						</template>
 					</draggable>
 				</div>
-			</div>
+				</div>
+				</div>
+			</template>
 
-						<div v-else>
+			<template v-else>
+				<div class="panel-body">
+					<div class="selection-summary">
+						<div class="selection-summary-icon"><i :class="selectedColumnContext ? 'bi bi-layout-three-columns' : nodeLabelIcon(selectedType)"></i></div>
+						<div>
+							<strong>{{ selectedColumnContext ? 'Column ' + (selectedColumnContext.index + 1) : displayNodeLabel(selectedNode) }}</strong>
+							<small>{{ selectedColumnContext ? 'Layout column' : selectedType }}</small>
+						</div>
+					</div>
 				<div class="pb-section" v-if="selectedColumnContext">
 					<div class="pb-props-header">
 						<button class="pb-btn icon-sm" @click="clearCurrentSelection" title="Back"><i class="fas fa-chevron-left"></i></button>
@@ -6531,34 +6621,39 @@
 
 					<component v-if="hasRegisteredWidget(selectedType)" :is="loadWidgetSettings(selectedType)" :node="selectedNode" :editor="widgetEditorServices" />
 				</div>
-			</div>
-		</div>
+				</div>
+			</template>
+		</aside>
 
 		<component v-if="customCss" :is="'style'">{{ customCss }}</component>
-		<div class="pb-canvas-wrap" @click="clearSel(); closeWidthPreviewMenu()">
-			<div class="pb-stage-window" @click.stop="closeWidthPreviewMenu()">
-				<div class="pb-stage-toolbar">
-					<div class="pb-stage-device-group">
-						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='mobile' }" @click="setResponsiveDevice('mobile')" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
-						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='tablet' }" @click="setResponsiveDevice('tablet')" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-						<button class="pb-stage-device-btn" :class="{ active: responsiveDevice==='desktop' }" @click="setResponsiveDevice('desktop')" title="Desktop"><i class="fas fa-desktop"></i></button>
-					</div>
+		<section class="canvas-region" @click="clearSel(); closeWidthPreviewMenu()">
+			<div class="canvas-toolbar" @click.stop>
+				<div class="canvas-meta"><span class="live-indicator">Editing</span><span>{{ rootNodes.length }} root elements</span></div>
+				<div class="canvas-breadcrumbs" aria-label="Canvas selection">
+					<button class="active"><i class="bi bi-file-earmark"></i>Page</button>
+					<template v-if="selectedNode || selectedColumnContext">
+						<i class="bi bi-chevron-right crumb-separator"></i>
+						<button @click="clearCurrentSelection">{{ selectedColumnContext ? 'Column ' + (selectedColumnContext.index + 1) : displayNodeLabel(selectedNode) }}</button>
+					</template>
+				</div>
+				<div class="canvas-actions">
 					<div class="pb-stage-width-control" @click.stop>
-						<button type="button" class="pb-stage-width-pill" :class="{ 'is-interactive': responsiveDevice==='desktop', 'is-menu-open': widthPreviewMenuOpen }" :title="responsiveDevice==='desktop' ? 'Choose desktop preview width' : 'Preview width'" @click="toggleWidthPreviewMenu">
-						<i class="fas fa-arrows-alt-h"></i>
-						<span>{{ previewCanvasWidthLabel() }}</span>
-						<i class="fas fa-chevron-down"></i>
+						<button type="button" class="canvas-width-control" :class="{ 'is-menu-open': widthPreviewMenuOpen }" :title="responsiveDevice==='desktop' ? 'Choose desktop preview width' : 'Preview width'" @click="toggleWidthPreviewMenu">
+							<i class="bi bi-arrows"></i><span>{{ previewCanvasWidthLabel() }}</span><i class="bi bi-chevron-down"></i>
 						</button>
 						<div v-if="responsiveDevice==='desktop' && widthPreviewMenuOpen" class="pb-stage-width-menu">
 							<button v-for="option in desktopPreviewWidths" :key="'desktop-width-'+option.value" type="button" class="pb-stage-width-option" :class="{ active: desktopPreviewWidth===option.value }" @click="selectDesktopPreviewWidth(option.value)">
-								<span>{{ option.label }}</span>
-								<i v-if="desktopPreviewWidth===option.value" class="fas fa-check"></i>
+								<span>{{ option.label }}</span><i v-if="desktopPreviewWidth===option.value" class="bi bi-check-lg"></i>
 							</button>
 						</div>
 					</div>
+					<button class="canvas-action" title="Custom CSS" @click="openCustomCssEditor"><i class="bi bi-code-slash"></i></button>
 				</div>
+			</div>
 
-				<div class="pb-canvas" :class="'is-' + responsiveDevice" :style="previewCanvasStyle()" @click="clearSel">
+			<div class="stage" @click.stop="closeWidthPreviewMenu()">
+				<div class="webpage-frame" :class="{ tablet: responsiveDevice==='tablet', mobile: responsiveDevice==='mobile' }" :style="previewCanvasStyle()">
+					<div class="pb-canvas" :class="'is-' + responsiveDevice" @click="clearSel">
 					<draggable
 						v-model="rootNodes"
 						item-key="id"
@@ -6615,7 +6710,9 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</section>
+	<button v-if="leftCollapsed && !previewMode" type="button" class="floating-expand left" title="Open elements panel" @click="leftCollapsed = false"><i class="bi bi-layout-sidebar-inset"></i></button>
+	</main>
 
 	<div v-if="columnResizeOverlay.visible" class="pb-col-resize-overlay" :style="{ left: columnResizeOverlay.x + 'px', top: columnResizeOverlay.y + 'px' }">{{ columnResizeOverlay.text }}</div>
 

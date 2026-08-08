@@ -1,0 +1,1780 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Phoenix Page Builder — Editor Redesign Prototype v2.3</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --shell-bg: #eef1f5;
+            --panel-bg: #ffffff;
+            --canvas-bg: #e9edf2;
+            --ink: #172033;
+            --muted: #687386;
+            --line: #e2e7ee;
+            --soft: #f6f8fb;
+            --brand: #5b4cf0;
+            --brand-dark: #4437cf;
+            --brand-soft: #efedff;
+            --success: #18a06b;
+            --danger: #e05260;
+            --shadow-sm: 0 1px 2px rgba(18, 27, 45, .05), 0 5px 16px rgba(18, 27, 45, .05);
+            --shadow-lg: 0 22px 60px rgba(26, 34, 52, .14);
+        }
+
+        * { box-sizing: border-box; }
+
+        [v-cloak] { display: none; }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--ink);
+            background: var(--shell-bg);
+        }
+
+        button, input, select { font: inherit; }
+
+        .builder-app {
+            display: grid;
+            grid-template-rows: 58px minmax(0, 1fr);
+            height: 100vh;
+            min-width: 1120px;
+        }
+
+        .topbar {
+            position: relative;
+            z-index: 30;
+            display: grid;
+            grid-template-columns: minmax(340px, 1fr) auto minmax(340px, 1fr);
+            align-items: center;
+            gap: 18px;
+            padding: 0 14px 0 10px;
+            background: rgba(255, 255, 255, .96);
+            border-bottom: 1px solid var(--line);
+            box-shadow: 0 1px 8px rgba(23, 32, 51, .04);
+            backdrop-filter: blur(18px);
+        }
+
+        .topbar-left,
+        .topbar-center,
+        .topbar-right,
+        .brand-lockup,
+        .page-crumbs,
+        .device-switcher,
+        .action-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .topbar-left { min-width: 0; gap: 14px; }
+        .topbar-center { justify-content: center; gap: 10px; }
+        .topbar-right { justify-content: flex-end; gap: 8px; }
+
+        .brand-lockup {
+            gap: 9px;
+            flex: 0 0 auto;
+            padding-right: 14px;
+            border-right: 1px solid var(--line);
+        }
+
+        .brand-mark {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+            border-radius: 10px;
+            background: linear-gradient(140deg, #7a6ef7 0%, #4b3bdd 55%, #30269f 100%);
+            box-shadow: 0 7px 16px rgba(75, 59, 221, .25);
+        }
+
+        .brand-copy { line-height: 1.05; }
+        .brand-copy strong { display: block; font-size: 12px; letter-spacing: -.01em; }
+        .brand-copy span { color: var(--muted); font-size: 9px; text-transform: uppercase; letter-spacing: .12em; }
+
+        .page-crumbs { min-width: 0; gap: 8px; font-size: 12px; }
+        .page-crumbs .workspace-label { color: var(--muted); }
+        .page-crumbs .divider { color: #b1b8c5; }
+        .page-name { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 650; }
+        .save-state { display: inline-flex; align-items: center; gap: 5px; color: var(--success); font-size: 10px; font-weight: 600; }
+
+        .toolbar-btn,
+        .icon-btn,
+        .device-btn,
+        .panel-icon-btn {
+            display: inline-grid;
+            place-items: center;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+        }
+
+        .icon-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            font-size: 14px;
+        }
+
+        .icon-btn:hover:not(:disabled) { color: var(--ink); background: var(--soft); }
+        .icon-btn:disabled { opacity: .35; }
+
+        .device-switcher {
+            gap: 2px;
+            padding: 3px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: var(--soft);
+        }
+
+        .device-btn {
+            width: 32px;
+            height: 28px;
+            border-radius: 7px;
+            font-size: 13px;
+        }
+
+        .device-btn:hover { color: var(--ink); }
+        .device-btn.active { color: var(--brand); background: #fff; box-shadow: var(--shadow-sm); }
+
+        .zoom-control {
+            display: inline-flex;
+            align-items: center;
+            height: 34px;
+            padding: 0 10px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            background: #fff;
+            color: #4d586c;
+            font-size: 11px;
+            font-weight: 650;
+        }
+
+        .top-action {
+            height: 34px;
+            padding: 0 13px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            background: #fff;
+            color: #354056;
+            font-size: 11px;
+            font-weight: 650;
+        }
+
+        .top-action:hover { border-color: #cdd3de; background: var(--soft); }
+        .top-action.primary { border-color: var(--brand); color: #fff; background: var(--brand); box-shadow: 0 7px 16px rgba(91, 76, 240, .2); }
+        .top-action.primary:hover { border-color: var(--brand-dark); background: var(--brand-dark); }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 288px minmax(440px, 1fr);
+            min-height: 0;
+            transition: grid-template-columns .22s ease;
+        }
+
+        .workspace.left-collapsed { grid-template-columns: 0 minmax(440px, 1fr); }
+
+        .workspace.preview-mode { grid-template-columns: 0 minmax(440px, 1fr); }
+        .workspace.preview-mode .side-panel {
+            padding: 0;
+            border: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .side-panel {
+            position: relative;
+            z-index: 15;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            min-height: 0;
+            background: var(--panel-bg);
+            border-right: 1px solid var(--line);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 58px;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .panel-title strong { display: block; font-size: 13px; letter-spacing: -.01em; }
+        .panel-title span { color: var(--muted); font-size: 10px; }
+        .panel-header-start { display: flex; align-items: center; min-width: 0; gap: 8px; }
+
+        .panel-icon-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .panel-icon-btn:hover { color: var(--ink); background: var(--soft); }
+
+        .panel-body {
+            flex: 1;
+            min-height: 0;
+            padding: 14px;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+            scrollbar-color: #cdd3dd transparent;
+        }
+
+        .search-box { position: relative; margin-bottom: 14px; }
+        .search-box i { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: #929bad; font-size: 12px; }
+        .search-box input { width: 100%; height: 36px; padding: 0 12px 0 32px; border: 1px solid var(--line); border-radius: 9px; outline: 0; background: var(--soft); color: var(--ink); font-size: 11px; }
+        .search-box input:focus { border-color: rgba(91, 76, 240, .48); background: #fff; box-shadow: 0 0 0 3px rgba(91, 76, 240, .08); }
+
+        .library-group { margin-bottom: 18px; }
+        .group-heading { display: flex; align-items: center; justify-content: space-between; margin: 0 2px 9px; }
+        .group-heading span { color: #4d586b; font-size: 10px; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+        .group-heading small { color: #a0a8b7; font-size: 9px; }
+
+        .element-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+        .element-card {
+            min-height: 76px;
+            padding: 11px 9px 9px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #fff;
+            color: #445066;
+            text-align: left;
+            cursor: grab;
+            transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+        }
+
+        .element-card:hover { transform: translateY(-1px); border-color: #c9c3ff; box-shadow: 0 7px 18px rgba(41, 37, 90, .09); }
+        .element-card:active { cursor: grabbing; transform: scale(.98); }
+        .element-card i { display: block; margin-bottom: 8px; color: var(--brand); font-size: 17px; }
+        .element-card strong { display: block; font-size: 10px; font-weight: 650; }
+        .element-card small { display: block; margin-top: 2px; color: #929bad; font-size: 8.5px; }
+
+        .layer-tree { display: flex; flex-direction: column; gap: 5px; }
+        .layer-row { display: flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 9px; border: 1px solid transparent; border-radius: 8px; color: #526076; background: transparent; font-size: 10px; cursor: pointer; }
+        .layer-row:hover { background: var(--soft); }
+        .layer-row.active { color: var(--brand); border-color: #dad6ff; background: var(--brand-soft); }
+        .layer-row.child { margin-left: 14px; }
+        .layer-row .drag { color: #a7aebb; }
+        .layer-row .type-icon { width: 18px; color: #788398; text-align: center; }
+        .layer-row span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .page-card { padding: 10px; border: 1px solid var(--line); border-radius: 11px; background: #fff; box-shadow: var(--shadow-sm); }
+        .page-thumb { position: relative; aspect-ratio: 16 / 10; margin-bottom: 9px; overflow: hidden; border: 1px solid #e3e7ec; border-radius: 7px; background: linear-gradient(145deg, #f7f3ff 0%, #eef4ff 100%); }
+        .page-thumb::before { content: ""; position: absolute; inset: 16% 10% auto; height: 16%; border-radius: 5px; background: #fff; box-shadow: 0 16px 0 #fff, 0 32px 0 #fff; }
+        .page-card-row { display: flex; align-items: center; justify-content: space-between; }
+        .page-card strong { font-size: 10px; }
+        .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px rgba(24, 160, 107, .12); }
+
+        .canvas-region {
+            position: relative;
+            min-width: 0;
+            min-height: 0;
+            overflow: auto;
+            background-color: var(--canvas-bg);
+            background-image: radial-gradient(circle, rgba(104, 115, 134, .15) 1px, transparent 1px);
+            background-size: 18px 18px;
+        }
+
+        .canvas-region.grid-off { background-image: none; }
+
+        .canvas-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 12;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 48px;
+            padding: 0 14px;
+            background: rgba(239, 242, 246, .92);
+            border-bottom: 1px solid rgba(215, 220, 228, .9);
+            backdrop-filter: blur(14px);
+        }
+
+        .canvas-meta { display: flex; align-items: center; gap: 8px; color: #596579; font-size: 10px; font-weight: 600; }
+        .live-indicator { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 99px; color: #287d5c; background: #e8f7f1; font-size: 9px; }
+        .live-indicator::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #2cb77f; box-shadow: 0 0 0 3px rgba(44, 183, 127, .14); }
+
+        .canvas-breadcrumbs {
+            position: absolute;
+            left: 50%;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            max-width: 46%;
+            padding: 4px;
+            border: 1px solid rgba(213, 218, 227, .95);
+            border-radius: 9px;
+            background: rgba(255, 255, 255, .92);
+            box-shadow: var(--shadow-sm);
+            transform: translateX(-50%);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .canvas-breadcrumbs::-webkit-scrollbar { display: none; }
+
+        .canvas-breadcrumbs button {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            min-width: 0;
+            height: 24px;
+            padding: 0 7px;
+            border: 0;
+            border-radius: 6px;
+            color: #6e7889;
+            background: transparent;
+            font-size: 8.5px;
+            font-weight: 650;
+            white-space: nowrap;
+        }
+
+        .canvas-breadcrumbs button:hover { color: var(--brand); background: var(--brand-soft); }
+        .canvas-breadcrumbs button.active { color: #fff; background: var(--brand); }
+        .canvas-breadcrumbs .crumb-separator { color: #b0b7c3; font-size: 8px; }
+
+        .canvas-actions { display: flex; align-items: center; gap: 4px; }
+        .canvas-action { display: inline-grid; place-items: center; width: 29px; height: 29px; padding: 0; border: 0; border-radius: 8px; color: #667286; background: transparent; font-size: 12px; }
+        .canvas-action:hover, .canvas-action.active { color: var(--brand); background: #fff; box-shadow: var(--shadow-sm); }
+
+        .stage {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            min-width: max-content;
+            min-height: calc(100% - 48px);
+            padding: 34px 42px 64px;
+        }
+
+        .webpage-frame {
+            position: relative;
+            width: 1180px;
+            min-height: 720px;
+            overflow: hidden;
+            border: 1px solid rgba(185, 192, 205, .9);
+            border-radius: 4px;
+            background: #fff;
+            box-shadow: var(--shadow-lg);
+            transform-origin: top center;
+            transition: width .24s ease, transform .2s ease;
+        }
+
+        .webpage-frame.tablet { width: 768px; }
+        .webpage-frame.mobile { width: 390px; }
+
+        .site-nav { display: flex; align-items: center; justify-content: space-between; height: 70px; padding: 0 7%; background: #fff; border-bottom: 1px solid #edf0f4; }
+        .site-logo { display: flex; align-items: center; gap: 8px; color: #171d2c; font-size: 14px; font-weight: 800; }
+        .site-logo-mark { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; color: #fff; background: #5b4cf0; font-size: 12px; }
+        .site-links { display: flex; align-items: center; gap: 28px; color: #5f6879; font-size: 10px; font-weight: 600; }
+        .site-links .active { color: #171d2c; }
+        .site-nav-action { padding: 8px 13px; border-radius: 8px; color: #fff; background: #161c2b; }
+
+        .frame-mobile .site-links span:not(.site-nav-action) { display: none; }
+        .frame-mobile .site-nav { padding-inline: 20px; }
+
+        .canvas-section { position: relative; outline: 0 solid transparent; transition: outline-color .12s ease; cursor: default; }
+        .canvas-section:hover { outline: 1px solid rgba(91, 76, 240, .48); outline-offset: -1px; }
+        .canvas-section.selected { z-index: 3; outline: 2px solid var(--brand); outline-offset: -2px; }
+        .canvas-section.ancestor-active { z-index: 2; outline: 1px dashed rgba(91, 76, 240, .7); outline-offset: -2px; }
+
+        .container-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            z-index: 8;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            height: 24px;
+            padding: 0 10px;
+            border: 0;
+            border-radius: 0 0 8px 8px;
+            color: #fff;
+            background: var(--brand);
+            box-shadow: 0 7px 18px rgba(68, 55, 207, .2);
+            font-size: 8px;
+            font-weight: 750;
+            letter-spacing: .035em;
+            text-transform: uppercase;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+
+        .canvas-section:hover > .container-handle,
+        .canvas-section.selected > .container-handle,
+        .canvas-section.ancestor-active > .container-handle { display: inline-flex; }
+        .canvas-section.ancestor-active > .container-handle { color: #5649cb; background: #efedff; box-shadow: inset 0 0 0 1px #cfc9ff; }
+
+        .column-shell { position: relative; min-width: 0; }
+
+        .canvas-widget { position: relative; border-radius: 4px; outline: 0 solid transparent; transition: outline-color .12s ease; }
+        .canvas-widget:hover { z-index: 5; outline: 1px solid rgba(43, 132, 210, .55); outline-offset: 4px; }
+        .canvas-widget.selected-widget { z-index: 6; outline: 2px solid #2b84d2; outline-offset: 4px; }
+
+        .widget-label {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            z-index: 9;
+            display: none;
+            align-items: center;
+            gap: 5px;
+            height: 20px;
+            padding: 0 7px;
+            border: 0;
+            border-radius: 6px 6px 6px 2px;
+            color: #fff;
+            background: #2b84d2;
+            box-shadow: 0 6px 14px rgba(43, 132, 210, .2);
+            font-size: 7.5px;
+            font-weight: 700;
+            transform: translateY(-100%);
+            white-space: nowrap;
+        }
+
+        .canvas-widget:hover > .widget-label,
+        .canvas-widget.selected-widget > .widget-label { display: inline-flex; }
+        .canvas-widget.ancestor-widget { outline: 1px dashed rgba(43, 132, 210, .65); outline-offset: 4px; }
+        .canvas-widget.ancestor-widget > .widget-label { display: inline-flex; color: #236da9; background: #e8f4ff; box-shadow: inset 0 0 0 1px #abd7fb; }
+
+        .nested-container {
+            position: relative;
+            min-height: 90px;
+            border: 1px dashed #bbb4ff;
+            border-radius: 11px;
+            background: rgba(248, 247, 255, .62);
+            transition: border-color .12s ease, box-shadow .12s ease;
+        }
+
+        .nested-container:hover { border-color: #8175ef; }
+        .nested-container.selected-inner { border-style: solid; border-width: 2px; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(91, 76, 240, .08); }
+        .nested-container.ancestor-inner { border-color: rgba(91, 76, 240, .8); }
+
+        .inner-container-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            z-index: 8;
+            display: none;
+            align-items: center;
+            gap: 5px;
+            height: 21px;
+            padding: 0 8px;
+            border: 0;
+            border-radius: 0 0 7px 7px;
+            color: #fff;
+            background: #7164e8;
+            font-size: 7px;
+            font-weight: 750;
+            text-transform: uppercase;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+
+        .nested-container:hover > .inner-container-handle,
+        .nested-container.selected-inner > .inner-container-handle,
+        .nested-container.ancestor-inner > .inner-container-handle { display: inline-flex; }
+        .nested-container.ancestor-inner > .inner-container-handle { color: #574bc9; background: #efedff; box-shadow: inset 0 0 0 1px #cbc5ff; }
+
+        .nested-column {
+            position: relative;
+            min-height: 64px;
+            padding: 22px 12px 12px;
+            border-radius: 8px;
+        }
+        .nested-columns-grid { display: flex; align-items: stretch; min-height: 92px; }
+
+        .nested-dropzone {
+            display: grid;
+            place-items: center;
+            min-height: 78px;
+            padding: 12px;
+            border: 1px dashed #c8c3f7;
+            border-radius: 9px;
+            color: #7569dc;
+            background: #f7f5ff;
+            text-align: center;
+        }
+
+        .nested-add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 30px;
+            padding: 0 11px;
+            border: 1px solid #d4cffb;
+            border-radius: 8px;
+            color: #5f52d8;
+            background: #fff;
+            font-size: 8px;
+            font-weight: 700;
+        }
+        .nested-add-btn.is-targeting { color: #fff; border-color: var(--brand); background: var(--brand); box-shadow: 0 0 0 4px rgba(91, 76, 240, .12); }
+        .pending-insert-notice { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 12px 12px; padding: 9px 10px; border: 1px solid #cdc7ff; border-radius: 9px; color: #5447ca; background: #f2f0ff; font-size: 8.5px; font-weight: 700; }
+        .pending-insert-notice button { width: 23px; height: 23px; padding: 0; border: 0; border-radius: 6px; color: #6a5de0; background: #fff; }
+        .target-dropzone { box-shadow: inset 0 0 0 2px var(--brand), 0 0 0 4px rgba(91, 76, 240, .09); }
+
+        .nested-add-btn:hover { border-color: #a9a0f2; background: var(--brand-soft); }
+        .justify-self-center { justify-self: center; }
+
+        .root-drop-label { font-weight: 750; }
+
+        .section-toolbar { position: absolute; top: 0; right: 8px; z-index: 8; display: none; align-items: center; height: 26px; overflow: hidden; border-radius: 0 0 7px 7px; color: #fff; background: var(--brand); box-shadow: 0 5px 15px rgba(54, 42, 168, .2); }
+        .canvas-section.selected .section-toolbar { display: flex; }
+        .section-toolbar button { display: grid; place-items: center; width: 27px; height: 26px; padding: 0; border: 0; color: #fff; background: transparent; font-size: 9px; }
+        .section-toolbar button:hover { background: rgba(255, 255, 255, .15); }
+
+        .hero-section { display: grid; grid-template-columns: 1.08fr .92fr; align-items: center; gap: 44px; min-height: 456px; padding: 64px 7%; background: #f8f7ff; }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 18px; color: #5b4cf0; font-size: 9px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+        .hero-eyebrow i { display: grid; place-items: center; width: 21px; height: 21px; border-radius: 7px; background: #eae7ff; }
+        .hero-title { max-width: 560px; margin: 0 0 18px; color: #161b2a; font-size: 48px; line-height: 1.04; letter-spacing: -.05em; }
+        .hero-text { max-width: 500px; margin-bottom: 25px; color: #626d7e; font-size: 13px; line-height: 1.65; }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+        .hero-primary, .hero-secondary { min-height: 42px; padding: 0 18px; border: 0; border-radius: 9px; font-size: 10px; font-weight: 700; }
+        .hero-primary { color: #fff; background: #5b4cf0; box-shadow: 0 10px 22px rgba(91, 76, 240, .22); }
+        .hero-secondary { color: #303a50; background: #fff; border: 1px solid #e2e5eb; }
+        .hero-visual { position: relative; min-height: 320px; }
+        .hero-visual img { width: 100%; height: 320px; object-fit: cover; border-radius: 18px; box-shadow: 0 22px 52px rgba(32, 37, 56, .18); }
+        .hero-stat { position: absolute; left: -26px; bottom: 26px; width: 156px; padding: 14px; border: 1px solid rgba(255, 255, 255, .7); border-radius: 13px; background: rgba(255, 255, 255, .93); box-shadow: 0 15px 32px rgba(40, 45, 63, .13); backdrop-filter: blur(16px); }
+        .hero-stat small { display: block; color: #7d8798; font-size: 8px; }
+        .hero-stat strong { display: block; margin: 3px 0 8px; color: #1b2333; font-size: 20px; }
+        .mini-progress { height: 5px; overflow: hidden; border-radius: 99px; background: #eceef2; }
+        .mini-progress span { display: block; width: 76%; height: 100%; background: linear-gradient(90deg, #5b4cf0, #8d82ff); }
+
+        .frame-tablet .hero-section, .frame-mobile .hero-section { grid-template-columns: 1fr; }
+        .frame-tablet .hero-section { gap: 30px; padding-block: 48px; }
+        .frame-mobile .hero-section { gap: 24px; min-height: 0; padding: 42px 24px; }
+        .frame-mobile .hero-title { font-size: 35px; }
+        .frame-mobile .hero-visual { min-height: 240px; }
+        .frame-mobile .hero-visual img { height: 240px; }
+        .frame-mobile .hero-stat { left: 12px; bottom: 12px; }
+
+        .logos-section { padding: 23px 7%; border-bottom: 1px solid #edf0f4; background: #fff; }
+        .logos-section .compact-column { padding-top: 10px; }
+        .logos-copy { margin-bottom: 14px; color: #9aa2b0; font-size: 8px; font-weight: 650; letter-spacing: .08em; text-align: center; text-transform: uppercase; }
+        .logo-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; color: #6f7887; font-size: 11px; font-weight: 800; text-align: center; }
+        .frame-mobile .logo-row { grid-template-columns: repeat(2, 1fr); row-gap: 14px; }
+        .frame-mobile .logo-row span:last-child { grid-column: 1 / -1; }
+
+        .features-section { padding: 62px 7%; background: #fff; }
+        .section-kicker { margin-bottom: 9px; color: #5b4cf0; font-size: 9px; font-weight: 750; letter-spacing: .08em; text-align: center; text-transform: uppercase; }
+        .section-heading { max-width: 600px; margin: 0 auto 12px; font-size: 30px; line-height: 1.15; letter-spacing: -.035em; text-align: center; }
+        .section-lead { max-width: 560px; margin: 0 auto 34px; color: #70798a; font-size: 11px; line-height: 1.65; text-align: center; }
+        .feature-grid-shell { padding: 36px 8px 8px; }
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .feature-column { position: relative; min-width: 0; }
+        .feature-card { padding: 22px; border: 1px solid #e7eaf0; border-radius: 14px; background: #fff; box-shadow: 0 7px 22px rgba(25, 34, 50, .04); }
+        .feature-icon { display: grid; place-items: center; width: 38px; height: 38px; margin-bottom: 17px; border-radius: 11px; color: #5b4cf0; background: #efedff; }
+        .feature-card strong { display: block; margin-bottom: 8px; font-size: 13px; }
+        .feature-card p { margin: 0; color: #737d8e; font-size: 9.5px; line-height: 1.65; }
+        .frame-mobile .features-section { padding: 46px 24px; }
+        .frame-mobile .feature-grid { grid-template-columns: 1fr; }
+        .frame-mobile .section-heading { font-size: 26px; }
+
+        .complex-demo-section { padding: 62px 7%; background: #f9fafc; }
+        .complex-demo-heading { max-width: 640px; margin: 0 auto 30px; text-align: center; }
+        .complex-demo-heading span { color: var(--brand); font-size: 8px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+        .complex-demo-heading h2 { margin: 8px 0 9px; font-size: 28px; letter-spacing: -.035em; }
+        .complex-demo-heading p { margin: 0; color: #727c8d; font-size: 10px; line-height: 1.6; }
+
+        .tabs-widget-shell { padding: 8px; border: 1px solid #e0e4eb; border-radius: 13px; background: #fff; box-shadow: var(--shadow-sm); }
+        .tabs-nav { display: flex; gap: 4px; padding: 5px; border-radius: 9px; background: #f2f4f8; }
+        .tabs-nav-btn { flex: 1; height: 34px; border: 0; border-radius: 7px; color: #707a8b; background: transparent; font-size: 9px; font-weight: 650; }
+        .tabs-nav-btn:hover { color: var(--ink); }
+        .tabs-nav-btn.active { color: var(--brand); background: #fff; box-shadow: var(--shadow-sm); }
+        .tabs-nav-btn.selected-node { box-shadow: inset 0 0 0 1px #2b84d2, var(--shadow-sm); }
+        .tab-content-dropzone { position: relative; min-height: 188px; padding: 28px 10px 10px; }
+        .tab-content-label { position: absolute; top: 7px; left: 10px; display: none; align-items: center; gap: 5px; color: #526075; font-size: 7px; font-weight: 750; text-transform: uppercase; }
+        .tab-content-dropzone:hover > .tab-content-label,
+        .tab-content-dropzone.selected-tab-content > .tab-content-label,
+        .tab-content-dropzone.ancestor-tab-content > .tab-content-label { display: inline-flex; }
+
+        .tab-widget-stack { display: grid; gap: 10px; }
+        .tab-widget-card { padding: 13px; border: 1px solid #e7eaf0; border-radius: 9px; background: #fff; }
+        .tab-widget-card h4 { margin: 0 0 5px; font-size: 13px; }
+        .tab-widget-card p { margin: 0; color: #737d8e; font-size: 9px; line-height: 1.55; }
+
+        .accordion-widget-shell { display: grid; gap: 7px; padding: 8px; border: 1px solid #e0e4eb; border-radius: 13px; background: #fff; box-shadow: var(--shadow-sm); }
+        .accordion-item-demo { overflow: hidden; border: 1px solid #e5e8ee; border-radius: 9px; }
+        .accordion-title-demo { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 42px; padding: 0 13px; border: 0; color: #354056; background: #fff; font-size: 9px; font-weight: 700; }
+        .accordion-title-demo.active { color: var(--brand); background: #f7f5ff; }
+        .accordion-title-demo.selected-node { box-shadow: inset 0 0 0 1px #2b84d2; }
+        .accordion-panel-demo { position: relative; padding: 28px 10px 10px; border-top: 1px solid #eceef2; background: #fbfcfe; }
+        .accordion-panel-demo.selected-content { box-shadow: inset 0 0 0 2px #2b84d2; }
+        .accordion-panel-demo.ancestor-content { box-shadow: inset 0 0 0 1px rgba(43, 132, 210, .55); }
+        .accordion-panel-label { position: absolute; top: 8px; left: 11px; color: #6a7587; font-size: 7px; font-weight: 750; text-transform: uppercase; }
+
+        .frame-mobile .complex-demo-section { padding: 46px 24px; }
+
+        .inserted-section { padding: 42px 7%; border-top: 1px dashed #ddd9ff; background: #fbfaff; }
+        .inserted-inner { max-width: 680px; margin: auto; text-align: center; }
+        .inserted-icon { display: grid; place-items: center; width: 44px; height: 44px; margin: 0 auto 14px; border-radius: 13px; color: #fff; background: var(--brand); }
+        .inserted-inner h3 { margin: 0 0 8px; font-size: 24px; }
+        .inserted-inner p { margin: 0; color: #717b8c; font-size: 10px; line-height: 1.6; }
+
+        .drop-end { display: flex; align-items: center; justify-content: center; gap: 8px; height: 46px; margin: 8px; border: 1px dashed #b9b2fc; border-radius: 8px; color: #695ce8; background: #f4f2ff; font-size: 9px; font-weight: 650; }
+
+        .properties-tabs { display: grid; grid-template-columns: repeat(3, 1fr); padding: 0 12px; border-bottom: 1px solid var(--line); }
+        .property-tab { position: relative; height: 42px; padding: 0; border: 0; color: #7d8798; background: transparent; font-size: 10px; font-weight: 650; }
+        .property-tab:hover { color: var(--ink); }
+        .property-tab.active { color: var(--brand); }
+        .property-tab.active::after { content: ""; position: absolute; right: 12px; bottom: -1px; left: 12px; height: 2px; border-radius: 2px 2px 0 0; background: var(--brand); }
+
+        .selection-summary { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); }
+        .selection-summary-icon { display: grid; place-items: center; width: 33px; height: 33px; flex: 0 0 auto; border-radius: 9px; color: var(--brand); background: var(--brand-soft); }
+        .selection-summary strong { display: block; font-size: 10px; }
+        .selection-summary small { display: block; margin-top: 2px; color: var(--muted); font-size: 8.5px; }
+
+        .control-group { padding: 14px 0; border-bottom: 1px solid #edf0f4; }
+        .control-group:first-of-type { padding-top: 0; }
+        .control-group:last-child { border-bottom: 0; }
+        .control-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 11px; }
+        .control-heading strong { font-size: 10px; }
+        .control-heading i { color: #9aa2b0; font-size: 10px; }
+        .field-row { margin-bottom: 11px; }
+        .field-row:last-child { margin-bottom: 0; }
+        .field-label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; color: #596579; font-size: 9.5px; font-weight: 600; }
+        .field-label small { color: #9aa2b0; font-size: 8px; font-weight: 500; }
+        .proto-input, .proto-select, .proto-textarea { width: 100%; border: 1px solid var(--line); border-radius: 8px; outline: 0; background: #fff; color: var(--ink); font-size: 10px; }
+        .proto-input, .proto-select { height: 34px; padding: 0 10px; }
+        .proto-textarea { min-height: 76px; padding: 9px 10px; resize: vertical; line-height: 1.5; }
+        .proto-input:focus, .proto-select:focus, .proto-textarea:focus { border-color: rgba(91, 76, 240, .5); box-shadow: 0 0 0 3px rgba(91, 76, 240, .07); }
+        .color-control { display: grid; grid-template-columns: 36px 1fr; gap: 7px; }
+        .color-control input[type="color"] { width: 36px; height: 34px; padding: 3px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+        .segmented { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 3px; border: 1px solid var(--line); border-radius: 9px; background: var(--soft); }
+        .segmented.two { grid-template-columns: repeat(2, 1fr); }
+        .segmented button { height: 27px; padding: 0; border: 0; border-radius: 6px; color: #788397; background: transparent; font-size: 10px; }
+        .segmented button.active { color: var(--brand); background: #fff; box-shadow: var(--shadow-sm); }
+        .range-row { display: grid; grid-template-columns: 1fr 54px; align-items: center; gap: 8px; }
+        .range-row input[type="range"] { accent-color: var(--brand); }
+        .range-value { height: 30px; border: 1px solid var(--line); border-radius: 7px; color: #596579; background: #fff; font-size: 9px; text-align: center; }
+        .switch-row { display: flex; align-items: center; justify-content: space-between; min-height: 32px; color: #596579; font-size: 9.5px; }
+        .form-check-input:checked { border-color: var(--brand); background-color: var(--brand); }
+
+        .layout-columns { display: grid; gap: 7px; }
+        .layout-column-row { display: grid; grid-template-columns: 1fr 66px; align-items: center; gap: 8px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 8px; background: #fafbfc; }
+        .layout-column-row span { color: #657084; font-size: 8.5px; font-weight: 650; }
+        .layout-column-row input { width: 100%; height: 29px; border: 1px solid var(--line); border-radius: 7px; color: #4e596c; background: #fff; font-size: 9px; text-align: center; }
+        .layout-contract-note { margin-top: 8px; padding: 8px 9px; border-radius: 8px; color: #6d668f; background: #f5f3ff; font-size: 8px; line-height: 1.5; }
+
+        .structure-backdrop { position: fixed; z-index: 250; inset: 0; display: grid; place-items: center; padding: 24px; background: rgba(21, 26, 38, .48); backdrop-filter: blur(3px); }
+        .structure-modal { width: min(520px, 92vw); overflow: hidden; border: 1px solid #e0e3e9; border-radius: 16px; background: #fff; box-shadow: 0 28px 80px rgba(16, 22, 34, .25); }
+        .structure-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+        .structure-modal-head strong { font-size: 13px; }
+        .structure-modal-head span { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; }
+        .structure-modal-close { width: 30px; height: 30px; padding: 0; border: 1px solid var(--line); border-radius: 8px; color: #667085; background: #fff; }
+        .structure-modal-body { padding: 18px; }
+        .layout-type-switch { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 16px; }
+        .layout-type-switch button { height: 38px; border: 1px solid var(--line); border-radius: 9px; color: #667085; background: #fff; font-size: 9px; font-weight: 700; }
+        .layout-type-switch button.active { color: var(--brand); border-color: #bdb6ff; background: var(--brand-soft); }
+        .structure-presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; }
+        .structure-preset { min-height: 70px; padding: 10px 8px; border: 1px solid var(--line); border-radius: 10px; color: #647087; background: #fff; font-size: 8px; font-weight: 700; }
+        .structure-preset:hover { color: var(--brand); border-color: #b9b1ff; background: #f7f5ff; }
+        .preset-shape { display: grid; gap: 3px; height: 25px; margin-bottom: 7px; }
+        .preset-shape i { display: block; min-width: 0; border: 1px solid #a9a1f7; border-radius: 3px; background: #eeecff; }
+
+
+        .toast-stack { position: fixed; z-index: 200; right: 18px; bottom: 18px; display: flex; flex-direction: column; gap: 8px; }
+        .proto-toast { display: flex; align-items: center; gap: 10px; min-width: 260px; padding: 11px 13px; border: 1px solid rgba(255, 255, 255, .1); border-radius: 11px; color: #fff; background: #1b2130; box-shadow: 0 18px 40px rgba(16, 22, 34, .22); animation: toast-in .2s ease both; }
+        .proto-toast i { color: #8d82ff; }
+        .proto-toast span { font-size: 10px; font-weight: 600; }
+
+        .floating-expand {
+            position: fixed;
+            z-index: 25;
+            top: 72px;
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            color: #687386;
+            background: #fff;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .floating-expand.left { left: 10px; }
+
+        @keyframes toast-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-height: 740px) {
+            .panel-header { min-height: 52px; }
+            .element-card { min-height: 68px; }
+            .element-card small { display: none; }
+            .stage { padding-top: 24px; }
+        }
+    </style>
+</head>
+<body>
+<div id="prototypeApp" class="builder-app" v-cloak>
+    <header class="topbar">
+        <div class="topbar-left">
+            <div class="brand-lockup">
+                <div class="brand-mark">P</div>
+                <div class="brand-copy"><strong>Phoenix</strong><span>Page Builder</span></div>
+            </div>
+            <div class="page-crumbs">
+                <span class="workspace-label">Website</span>
+                <i class="bi bi-chevron-right divider"></i>
+                <span class="page-name">{{ pageName }}</span>
+                <span class="save-state"><i class="bi bi-cloud-check"></i> Saved</span>
+            </div>
+        </div>
+
+        <div class="topbar-center">
+            <div class="device-switcher" aria-label="Responsive preview">
+                <button v-for="device in devices" :key="device.id" class="device-btn" :class="{ active: activeDevice === device.id }" :title="device.label" @click="setDevice(device.id)">
+                    <i :class="device.icon"></i>
+                </button>
+            </div>
+            <div class="zoom-control">{{ zoom }}%</div>
+        </div>
+
+        <div class="topbar-right">
+            <div class="action-group">
+                <button class="icon-btn" title="Undo" :disabled="!canUndo" @click="undo"><i class="bi bi-arrow-counterclockwise"></i></button>
+                <button class="icon-btn" title="Redo" :disabled="!canRedo" @click="redo"><i class="bi bi-arrow-clockwise"></i></button>
+            </div>
+            <button class="top-action" @click="togglePreview"><i class="bi me-1" :class="previewMode ? 'bi-layout-sidebar-inset' : 'bi-play-circle'"></i>{{ previewMode ? 'Editor' : 'Preview' }}</button>
+            <button class="top-action primary" @click="publish"><i class="bi bi-send me-1"></i> Publish</button>
+        </div>
+    </header>
+
+    <main class="workspace" :class="{ 'left-collapsed': leftCollapsed, 'preview-mode': previewMode }">
+        <aside class="side-panel left-panel">
+            <div class="panel-header">
+                <div class="panel-header-start">
+                    <button v-if="selectedSection" class="panel-icon-btn" title="Back to Elements" @click="showToolboxPanel()"><i class="bi bi-chevron-left"></i></button>
+                    <div class="panel-title">
+                        <strong>{{ selectedSection ? selectedEntity.label : 'Elements' }}</strong>
+                        <span>{{ selectedSection ? selectedEntity.kind + ' settings' : 'Drag or click to add' }}</span>
+                    </div>
+                </div>
+                <button class="panel-icon-btn" title="Collapse panel" @click="leftCollapsed = true"><i class="bi bi-chevron-left"></i></button>
+            </div>
+
+            <template v-if="!selectedSection">
+                <div class="panel-body">
+                    <div v-if="pendingInsertTarget" class="pending-insert-notice">
+                        <span><i class="bi bi-plus-circle me-1"></i>Click a widget to insert into {{ pendingInsertTarget.label }}</span>
+                        <button title="Cancel targeted insert" @click="clearPendingInsertTarget"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                    <div class="search-box">
+                        <i class="bi bi-search"></i>
+                        <input v-model="elementSearch" placeholder="Search widgets">
+                    </div>
+                    <div v-for="group in filteredElementGroups" :key="group.name" class="library-group">
+                        <div class="group-heading"><span>{{ group.name }}</span><small>{{ group.items.length }}</small></div>
+                        <div class="element-grid">
+                            <button v-for="item in group.items" :key="item.type" class="element-card" @click="onToolboxItemClick(item)">
+                                <i :class="item.icon"></i>
+                                <strong>{{ item.label }}</strong>
+                                <small>{{ item.hint }}</small>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-else>
+                <div class="properties-tabs">
+                    <button v-for="tab in activePropertyTabs" :key="tab.id" class="property-tab" :class="{ active: propertyTab === tab.id }" @click="propertyTab = tab.id">{{ tab.label }}</button>
+                </div>
+                <div class="panel-body">
+                    <div class="selection-summary">
+                        <div class="selection-summary-icon"><i :class="selectedEntity.icon || 'bi bi-layout-text-window-reverse'"></i></div>
+                        <div><strong>{{ selectedEntity.label }}</strong><small>{{ selectedEntity.kind }} · {{ selectedEntity.id }}</small></div>
+                    </div>
+
+                    <template v-if="propertyTab === 'layout' && selectedContainerLayout">
+                        <div class="control-group">
+                            <div class="control-heading"><strong>Container Layout</strong><i class="bi bi-layout-three-columns"></i></div>
+                            <div class="field-row"><label class="field-label">Display</label><div class="segmented two"><button :class="{ active: selectedContainerLayout.displayType === 'flex' }" @click="updateContainerLayout('displayType', 'flex')">Flexbox</button><button :class="{ active: selectedContainerLayout.displayType === 'grid' }" @click="updateContainerLayout('displayType', 'grid')">Grid</button></div></div>
+                            <div class="field-row"><label class="field-label">Direction</label><select class="proto-select" :value="selectedContainerLayout.direction" @change="updateContainerLayout('direction', $event.target.value)"><option value="row">Row</option><option value="column">Column</option><option value="row-reverse">Row reverse</option><option value="column-reverse">Column reverse</option></select></div>
+                            <div class="field-row"><label class="field-label">Wrap</label><select class="proto-select" :value="selectedContainerLayout.wrap" @change="updateContainerLayout('wrap', $event.target.value)"><option value="nowrap">No wrap</option><option value="wrap">Wrap</option></select></div>
+                            <div class="field-row"><label class="field-label">Gap <small>{{ selectedContainerLayout.gap }} px</small></label><div class="range-row"><input type="range" min="0" max="80" :value="selectedContainerLayout.gap" @input="updateContainerLayout('gap', Number($event.target.value))"><input class="range-value" :value="selectedContainerLayout.gap + ' px'" readonly></div></div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-heading"><strong>Column widths</strong><i class="bi bi-arrows-expand"></i></div>
+                            <div class="layout-columns">
+                                <label v-for="(column, index) in selectedContainerLayout.columns" :key="column.id" class="layout-column-row"><span>Column {{ index + 1 }}</span><input type="number" min="4" max="100" :value="column.width" @change="updateColumnWidth(column.id, $event.target.value)"></label>
+                            </div>
+                            <div class="layout-contract-note">Columns remain internal layout slots. They are configured here and no longer appear as labels or selectable nodes on the canvas.</div>
+                        </div>
+                    </template>
+
+                    <template v-else-if="propertyTab === 'content'">
+                        <div class="control-group">
+                            <div class="control-heading"><strong>Content</strong><i class="bi bi-pencil-square"></i></div>
+                            <template v-if="selectedNestedWidget">
+                                <div class="field-row"><label class="field-label">{{ selectedNestedWidget.label }}</label><input class="proto-input" v-model="selectedNestedWidget.title" @focus="beginChange" @change="commitPendingChange"></div>
+                                <div class="field-row"><label class="field-label">Content</label><textarea class="proto-textarea" v-model="selectedNestedWidget.text" @focus="beginChange" @change="commitPendingChange"></textarea></div>
+                            </template>
+                            <template v-else>
+                                <div class="field-row"><label class="field-label">Heading</label><input class="proto-input" v-model="selectedSection.title" @focus="beginChange" @change="commitPendingChange"></div>
+                                <div class="field-row"><label class="field-label">Description</label><textarea class="proto-textarea" v-model="selectedSection.description" @focus="beginChange" @change="commitPendingChange"></textarea></div>
+                                <div v-if="selectedSection.id === 'hero'" class="field-row"><label class="field-label">Primary button</label><input class="proto-input" v-model="selectedSection.buttonText" @focus="beginChange" @change="commitPendingChange"></div>
+                            </template>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-heading"><strong>Alignment</strong><i class="bi bi-text-left"></i></div>
+                            <div class="segmented">
+                                <button v-for="alignment in alignments" :key="alignment.id" :class="{ active: selectedSection.align === alignment.id }" @click="updateSetting('align', alignment.id)"><i :class="alignment.icon"></i></button>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template v-else-if="propertyTab === 'style'">
+                        <div class="control-group">
+                            <div class="control-heading"><strong>Surface</strong><i class="bi bi-palette"></i></div>
+                            <div class="field-row">
+                                <label class="field-label">Background color</label>
+                                <div class="color-control"><input type="color" v-model="selectedSection.background" @focus="beginChange" @pointerdown="beginChange" @input="liveStateChanged" @change="commitPendingChange"><input class="proto-input" v-model="selectedSection.background" @focus="beginChange" @change="commitPendingChange"></div>
+                            </div>
+                            <div class="field-row">
+                                <label class="field-label">Text color</label>
+                                <div class="color-control"><input type="color" v-model="selectedSection.textColor" @focus="beginChange" @pointerdown="beginChange" @input="liveStateChanged" @change="commitPendingChange"><input class="proto-input" v-model="selectedSection.textColor" @focus="beginChange" @change="commitPendingChange"></div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-heading"><strong>Spacing & shape</strong><i class="bi bi-bounding-box"></i></div>
+                            <div class="field-row"><label class="field-label">Padding <small>{{ selectedSection.padding }} px</small></label><div class="range-row"><input type="range" min="16" max="100" v-model.number="selectedSection.padding" @pointerdown="beginChange" @keydown="beginChange" @input="liveStateChanged" @change="commitPendingChange"><input class="range-value" :value="selectedSection.padding + ' px'" readonly></div></div>
+                            <div class="field-row"><label class="field-label">Corner radius <small>{{ selectedSection.radius }} px</small></label><div class="range-row"><input type="range" min="0" max="36" v-model.number="selectedSection.radius" @pointerdown="beginChange" @keydown="beginChange" @input="liveStateChanged" @change="commitPendingChange"><input class="range-value" :value="selectedSection.radius + ' px'" readonly></div></div>
+                        </div>
+                    </template>
+
+                    <template v-else>
+                        <div class="control-group">
+                            <div class="control-heading"><strong>Responsive</strong><i class="bi bi-display"></i></div>
+                            <div class="switch-row"><span>Hide on tablet</span><div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" @change="notify('Responsive visibility changed in prototype')"></div></div>
+                            <div class="switch-row"><span>Hide on mobile</span><div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" @change="notify('Responsive visibility changed in prototype')"></div></div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-heading"><strong>Element attributes</strong><i class="bi bi-braces"></i></div>
+                            <div class="field-row"><label class="field-label">CSS ID</label><input class="proto-input" :value="selectedEntity.id"></div>
+                            <div class="field-row"><label class="field-label">CSS classes</label><input class="proto-input" placeholder="custom-class"></div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-heading"><strong>Motion</strong><i class="bi bi-lightning-charge"></i></div>
+                            <div class="field-row"><label class="field-label">Entrance animation</label><select class="proto-select" @change="notify('Animation preview: ' + $event.target.value)"><option>None</option><option>Fade up</option><option>Slide in</option><option>Scale in</option></select></div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </aside>
+
+        <section class="canvas-region" :class="{ 'grid-off': !showGrid }">
+            <div class="canvas-toolbar">
+                <div class="canvas-meta">
+                    <span>{{ activeDeviceLabel }}</span>
+                    <i class="bi bi-dot"></i>
+                    <span>{{ activeCanvasWidth }} px</span>
+                    <span class="live-indicator">Live canvas</span>
+                </div>
+                <div v-if="canvasBreadcrumbs.length" class="canvas-breadcrumbs" aria-label="Selected element hierarchy">
+                    <template v-for="(crumb, index) in canvasBreadcrumbs" :key="crumb.id">
+                        <button :class="{ active: crumb.id === selectedId }" @click="selectSection(crumb.id)"><i :class="crumb.icon"></i><span>{{ crumb.label }}</span></button>
+                        <i v-if="index < canvasBreadcrumbs.length - 1" class="bi bi-chevron-right crumb-separator"></i>
+                    </template>
+                </div>
+                <div class="canvas-actions">
+                    <button class="canvas-action" :class="{ active: showGrid }" title="Canvas grid" @click="showGrid = !showGrid"><i class="bi bi-grid-3x3-gap"></i></button>
+                    <button class="canvas-action" title="Zoom out" @click="changeZoom(-10)"><i class="bi bi-dash-lg"></i></button>
+                    <button class="canvas-action" title="Reset zoom" @click="zoom = 80"><i class="bi bi-aspect-ratio"></i></button>
+                    <button class="canvas-action" title="Zoom in" @click="changeZoom(10)"><i class="bi bi-plus-lg"></i></button>
+                </div>
+            </div>
+
+            <div class="stage" @click.self="selectedId = null">
+                <div class="webpage-frame" :class="[activeDevice, 'frame-' + activeDevice]" :style="{ transform: 'scale(' + zoom / 100 + ')' }">
+                    <nav class="site-nav">
+                        <div class="site-logo"><span class="site-logo-mark"><i class="bi bi-stars"></i></span>NovaFlow</div>
+                        <div class="site-links"><span class="active">Home</span><span>Platform</span><span>Solutions</span><span>Resources</span><span class="site-nav-action">Start free</span></div>
+                    </nav>
+
+                    <section class="canvas-section hero-section" :class="{ selected: selectedId === 'hero', 'ancestor-active': isParentActive('hero') }" :style="sectionStyle(sections.hero)" @click.stop="selectSection('hero')">
+                        <button class="container-handle" @click.stop="selectSection('hero')"><i class="bi bi-arrows-move"></i> Container · Hero</button>
+                        <div class="section-toolbar">
+                            <button title="Move"><i class="bi bi-arrows-move"></i></button>
+                            <button title="Duplicate" @click.stop="duplicateSection('hero')"><i class="bi bi-copy"></i></button>
+                            <button title="Delete" @click.stop="notify('Core demo section is protected')"><i class="bi bi-trash3"></i></button>
+                        </div>
+                        <div class="column-shell" :style="columnStyle('hero', 'hero-column-1')">
+                            <div class="canvas-widget" :class="{ 'selected-widget': selectedId === 'hero-eyebrow' }" @click.stop="selectSection('hero-eyebrow')">
+                                <button class="widget-label" @click.stop="selectSection('hero-eyebrow')"><i class="bi bi-stars"></i> Eyebrow</button>
+                                <div class="hero-eyebrow"><i class="bi bi-stars"></i> Smart workflow platform</div>
+                            </div>
+                            <div class="canvas-widget" :class="{ 'selected-widget': selectedId === 'hero-heading' }" @click.stop="selectSection('hero-heading')">
+                                <button class="widget-label" @click.stop="selectSection('hero-heading')"><i class="bi bi-type-h1"></i> Heading</button>
+                                <h1 class="hero-title" :style="{ color: sections.hero.textColor, textAlign: sections.hero.align }">{{ sections.hero.title }}</h1>
+                            </div>
+                            <div class="canvas-widget" :class="{ 'selected-widget': selectedId === 'hero-text' }" @click.stop="selectSection('hero-text')">
+                                <button class="widget-label" @click.stop="selectSection('hero-text')"><i class="bi bi-text-paragraph"></i> Text Editor</button>
+                                <p class="hero-text" :style="{ textAlign: sections.hero.align }">{{ sections.hero.description }}</p>
+                            </div>
+                            <div class="hero-actions canvas-widget" :class="{ 'selected-widget': selectedId === 'hero-buttons' }" :style="{ justifyContent: alignmentFlex(sections.hero.align) }" @click.stop="selectSection('hero-buttons')">
+                                <button class="widget-label" @click.stop="selectSection('hero-buttons')"><i class="bi bi-record-btn"></i> Buttons</button>
+                                <button class="hero-primary" :style="{ borderRadius: sections.hero.radius + 'px' }">{{ sections.hero.buttonText }}</button>
+                                <button class="hero-secondary">See how it works <i class="bi bi-arrow-right ms-1"></i></button>
+                            </div>
+                        </div>
+                        <div class="hero-visual column-shell" :style="columnStyle('hero', 'hero-column-2')">
+                            <div class="canvas-widget" :class="{ 'selected-widget': selectedId === 'hero-image' }" @click.stop="selectSection('hero-image')">
+                                <button class="widget-label" @click.stop="selectSection('hero-image')"><i class="bi bi-image"></i> Image</button>
+                                <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1100&q=85" alt="Team collaborating in a modern workspace">
+                                <div class="hero-stat"><small>Workflow efficiency</small><strong>+76%</strong><div class="mini-progress"><span></span></div></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="canvas-section logos-section" :class="{ selected: selectedId === 'logos', 'ancestor-active': isParentActive('logos') }" :style="sectionStyle(sections.logos)" @click.stop="selectSection('logos')">
+                        <button class="container-handle" @click.stop="selectSection('logos')"><i class="bi bi-arrows-move"></i> Container · Logo Cloud</button>
+                        <div class="section-toolbar"><button><i class="bi bi-arrows-move"></i></button><button @click.stop="duplicateSection('logos')"><i class="bi bi-copy"></i></button><button @click.stop="notify('Core demo section is protected')"><i class="bi bi-trash3"></i></button></div>
+                        <div class="column-shell compact-column">
+                            <div class="canvas-widget" :class="{ 'selected-widget': selectedId === 'logos-caption' }" @click.stop="selectSection('logos-caption')">
+                                <button class="widget-label" @click.stop="selectSection('logos-caption')"><i class="bi bi-text-paragraph"></i> Caption</button>
+                                <div class="logos-copy">Trusted by focused teams worldwide</div>
+                            </div>
+                            <div class="canvas-widget" :class="{ 'selected-widget': selectedId === 'logos-grid' }" @click.stop="selectSection('logos-grid')">
+                                <button class="widget-label" @click.stop="selectSection('logos-grid')"><i class="bi bi-collection"></i> Logo Grid</button>
+                                <div class="logo-row"><span>VERTEX</span><span>ACME</span><span>POLARIS</span><span>LIGHTBOX</span><span>ORBITAL</span></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="canvas-section features-section" :class="{ selected: selectedId === 'features', 'ancestor-active': isParentActive('features') }" :style="sectionStyle(sections.features)" @click.stop="selectSection('features')">
+                        <button class="container-handle" @click.stop="selectSection('features')"><i class="bi bi-arrows-move"></i> Container · Features</button>
+                        <div class="section-toolbar"><button><i class="bi bi-arrows-move"></i></button><button @click.stop="duplicateSection('features')"><i class="bi bi-copy"></i></button><button @click.stop="notify('Core demo section is protected')"><i class="bi bi-trash3"></i></button></div>
+                        <div class="column-shell">
+                            <div class="canvas-widget" :class="{ 'selected-widget': selectedId === 'features-eyebrow' }" @click.stop="selectSection('features-eyebrow')">
+                                <button class="widget-label" @click.stop="selectSection('features-eyebrow')"><i class="bi bi-stars"></i> Eyebrow</button>
+                                <div class="section-kicker">Designed for momentum</div>
+                            </div>
+                            <div class="canvas-widget" :class="{ 'selected-widget': selectedId === 'features-heading' }" @click.stop="selectSection('features-heading')">
+                                <button class="widget-label" @click.stop="selectSection('features-heading')"><i class="bi bi-type-h2"></i> Heading</button>
+                                <h2 class="section-heading" :style="{ color: sections.features.textColor, textAlign: sections.features.align }">{{ sections.features.title }}</h2>
+                            </div>
+                            <div class="canvas-widget" :class="{ 'selected-widget': selectedId === 'features-text' }" @click.stop="selectSection('features-text')">
+                                <button class="widget-label" @click.stop="selectSection('features-text')"><i class="bi bi-text-paragraph"></i> Text Editor</button>
+                                <p class="section-lead">Bring planning, collaboration, and execution into one calm workspace that your entire team can understand.</p>
+                            </div>
+                            <div class="nested-container feature-grid-shell" :class="{ 'selected-inner': selectedId === 'features-grid-container', 'ancestor-inner': isAncestorActive('features-grid-container') }" @click.stop="selectSection('features-grid-container')">
+                                <button class="inner-container-handle" @click.stop="selectSection('features-grid-container')"><i class="bi bi-grid"></i> Inner Grid Container</button>
+                                <div class="feature-grid" :style="containerLayoutStyle('features-grid-container')">
+                                    <div v-for="(feature, index) in features" :key="feature.title" class="feature-column column-shell" :style="columnStyle('features-grid-container', 'features-column-' + (index + 2))">
+                                        <article class="feature-card canvas-widget" :class="{ 'selected-widget': selectedId === 'features-icon-box-' + (index + 1) }" :style="{ borderRadius: sections.features.radius + 'px' }" @click.stop="selectSection('features-icon-box-' + (index + 1))">
+                                            <button class="widget-label" @click.stop="selectSection('features-icon-box-' + (index + 1))"><i class="bi bi-app-indicator"></i> Icon Box {{ index + 1 }}</button>
+                                            <div class="feature-icon"><i :class="feature.icon"></i></div>
+                                            <strong>{{ feature.title }}</strong>
+                                            <p>{{ feature.text }}</p>
+                                        </article>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="canvas-section complex-demo-section" :class="{ selected: selectedId === 'tabs-demo', 'ancestor-active': isParentActive('tabs-demo') }" :style="sectionStyle(sections['tabs-demo'])" @click.stop="selectSection('tabs-demo')">
+                        <button class="container-handle" @click.stop="selectSection('tabs-demo')"><i class="bi bi-arrows-move"></i> Container · Tabs Demo</button>
+                        <div class="section-toolbar"><button><i class="bi bi-arrows-move"></i></button><button @click.stop="duplicateSection('tabs-demo')"><i class="bi bi-copy"></i></button><button @click.stop="notify('Core demo section is protected')"><i class="bi bi-trash3"></i></button></div>
+                        <div class="column-shell">
+                            <div class="complex-demo-heading canvas-widget" :class="{ 'selected-widget': selectedId === 'tabs-demo-heading' }" @click.stop="selectSection('tabs-demo-heading')">
+                                <button class="widget-label" @click.stop="selectSection('tabs-demo-heading')"><i class="bi bi-type-h2"></i> Heading</button>
+                                <span>Recursive content</span>
+                                <h2>Tabs can contain a complete layout tree</h2>
+                                <p>Each tab owns its own content area. Add a Container, configure its internal layout, then place Widgets into its slots.</p>
+                            </div>
+
+                            <div class="tabs-widget-shell canvas-widget" :class="{ 'selected-widget': selectedId === 'tabs-widget', 'ancestor-widget': isAncestorActive('tabs-widget') }" @click.stop="selectSection('tabs-widget')">
+                                <button class="widget-label" @click.stop="selectSection('tabs-widget')"><i class="bi bi-view-stacked"></i> Tabs Widget</button>
+                                <div class="tabs-nav">
+                                    <button v-for="tab in tabDemo.items" :key="tab.id" class="tabs-nav-btn" :class="{ active: tabDemo.activeTabId === tab.id, 'selected-node': selectedId === tab.id }" @click.stop="activateTab(tab.id)">{{ tab.title }}</button>
+                                </div>
+                                <div v-if="activeTabItem" class="tab-content-dropzone" :class="{ 'selected-tab-content': selectedId === activeTabItem.contentId, 'ancestor-tab-content': isAncestorActive(activeTabItem.contentId), 'target-dropzone': isPendingTarget('tab', activeTabItem.id) }" @click.stop="selectSection(activeTabItem.contentId)">
+                                    <div class="tab-content-label"><i class="bi bi-window-stack"></i> {{ activeTabItem.title }} Content</div>
+                                    <div v-if="activeTabItem.hasContainer" class="nested-container" :class="{ 'selected-inner': selectedId === activeTabItem.containerId, 'ancestor-inner': isAncestorActive(activeTabItem.containerId) }" @click.stop="selectSection(activeTabItem.containerId)">
+                                        <button class="inner-container-handle" @click.stop="selectSection(activeTabItem.containerId)"><i class="bi bi-square"></i> Container · {{ activeTabItem.title }}</button>
+                                        <div class="nested-columns-grid" :style="containerLayoutStyle(activeTabItem.containerId)">
+                                            <div v-for="(column, columnIndex) in internalColumns(activeTabItem.containerId)" :key="column.id" class="nested-column" :style="columnStyle(activeTabItem.containerId, column.id)">
+                                                <div class="tab-widget-stack">
+                                                    <div v-for="widget in widgetsForColumn(activeTabItem, column.id)" :key="widget.id" class="tab-widget-card canvas-widget" :class="{ 'selected-widget': selectedId === widget.id }" @click.stop="selectSection(widget.id)">
+                                                        <button class="widget-label" @click.stop="selectSection(widget.id)"><i :class="widget.icon"></i> {{ widget.label }}</button>
+                                                        <h4>{{ widget.title }}</h4>
+                                                        <p>{{ widget.text }}</p>
+                                                    </div>
+                                                    <button class="nested-add-btn justify-self-center" :class="{ 'is-targeting': isPendingTarget('tab', activeTabItem.id, column.id) }" @click.stop="showToolboxPanel({ type: 'tab', nodeId: 'tabs-widget', itemId: activeTabItem.id, columnId: column.id, label: activeTabItem.title + ' · slot ' + (columnIndex + 1) })"><i class="bi bi-plus-circle"></i> Add Widget</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div v-else class="nested-dropzone">
+                                        <div><button class="nested-add-btn" @click.stop="openStructureModal('tab', activeTabItem.id)"><i class="bi bi-plus-square"></i> Add Container to {{ activeTabItem.title }}</button><div class="mt-2" style="font-size:7.5px">Choose the same Flexbox or Grid structure used by the current builder.</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="canvas-section complex-demo-section" :class="{ selected: selectedId === 'accordion-demo', 'ancestor-active': isParentActive('accordion-demo') }" :style="sectionStyle(sections['accordion-demo'])" @click.stop="selectSection('accordion-demo')">
+                        <button class="container-handle" @click.stop="selectSection('accordion-demo')"><i class="bi bi-arrows-move"></i> Container · Accordion Demo</button>
+                        <div class="section-toolbar"><button><i class="bi bi-arrows-move"></i></button><button @click.stop="duplicateSection('accordion-demo')"><i class="bi bi-copy"></i></button><button @click.stop="notify('Core demo section is protected')"><i class="bi bi-trash3"></i></button></div>
+                        <div class="column-shell">
+                            <div class="complex-demo-heading canvas-widget" :class="{ 'selected-widget': selectedId === 'accordion-demo-heading' }" @click.stop="selectSection('accordion-demo-heading')">
+                                <button class="widget-label" @click.stop="selectSection('accordion-demo-heading')"><i class="bi bi-type-h2"></i> Heading</button>
+                                <span>Same nesting contract</span>
+                                <h2>Accordion items can own nested content too</h2>
+                                <p>Expanded panels use the same Container, internal layout slots, and Widget hierarchy as Tabs.</p>
+                            </div>
+                            <div class="accordion-widget-shell canvas-widget" :class="{ 'selected-widget': selectedId === 'accordion-widget', 'ancestor-widget': isAncestorActive('accordion-widget') }" @click.stop="selectSection('accordion-widget')">
+                                <button class="widget-label" @click.stop="selectSection('accordion-widget')"><i class="bi bi-list-nested"></i> Accordion Widget</button>
+                                <div v-for="item in accordionDemo.items" :key="item.id" class="accordion-item-demo">
+                                    <button class="accordion-title-demo" :class="{ active: accordionDemo.activeItemId === item.id, 'selected-node': selectedId === item.id }" @click.stop="toggleAccordion(item.id)"><span>{{ item.title }}</span><i :class="accordionDemo.activeItemId === item.id ? 'bi bi-dash-lg' : 'bi bi-plus-lg'"></i></button>
+                                    <div v-if="accordionDemo.activeItemId === item.id" class="accordion-panel-demo" :class="{ 'selected-content': selectedId === item.contentId, 'ancestor-content': isAncestorActive(item.contentId), 'target-dropzone': isPendingTarget('accordion', item.id) }" @click.stop="selectSection(item.contentId)">
+                                        <div class="accordion-panel-label"><i class="bi bi-window-stack me-1"></i>{{ item.title }} Content</div>
+                                        <div v-if="item.hasContainer" class="nested-container" :class="{ 'selected-inner': selectedId === item.containerId, 'ancestor-inner': isAncestorActive(item.containerId) }" @click.stop="selectSection(item.containerId)">
+                                            <button class="inner-container-handle" @click.stop="selectSection(item.containerId)"><i class="bi bi-square"></i> Container · {{ item.title }}</button>
+                                            <div class="nested-columns-grid" :style="containerLayoutStyle(item.containerId)">
+                                                <div v-for="(column, columnIndex) in internalColumns(item.containerId)" :key="column.id" class="nested-column" :style="columnStyle(item.containerId, column.id)">
+                                                    <div class="tab-widget-stack">
+                                                        <div v-for="widget in widgetsForColumn(item, column.id)" :key="widget.id" class="tab-widget-card canvas-widget" :class="{ 'selected-widget': selectedId === widget.id }" @click.stop="selectSection(widget.id)">
+                                                            <button class="widget-label" @click.stop="selectSection(widget.id)"><i :class="widget.icon"></i> {{ widget.label }}</button>
+                                                            <h4>{{ widget.title }}</h4><p>{{ widget.text }}</p>
+                                                        </div>
+                                                        <button class="nested-add-btn" :class="{ 'is-targeting': isPendingTarget('accordion', item.id, column.id) }" @click.stop="showToolboxPanel({ type: 'accordion', nodeId: 'accordion-widget', itemId: item.id, columnId: column.id, label: item.title + ' · slot ' + (columnIndex + 1) })"><i class="bi bi-plus-circle"></i> Add Widget</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div v-else class="nested-dropzone"><button class="nested-add-btn" @click.stop="openStructureModal('accordion', item.id)"><i class="bi bi-plus-square"></i> Add Container to this Item</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section v-for="section in addedSections" :key="section.id" class="canvas-section inserted-section" :class="{ selected: selectedId === section.id }" :style="sectionStyle(section)" @click.stop="selectSection(section.id)">
+                        <button class="container-handle" @click.stop="selectSection(section.id)"><i class="bi bi-arrows-move"></i> Container · {{ section.label }}</button>
+                        <div class="section-toolbar"><button><i class="bi bi-arrows-move"></i></button><button @click.stop="duplicateSection(section.id)"><i class="bi bi-copy"></i></button><button @click.stop="removeSection(section.id)"><i class="bi bi-trash3"></i></button></div>
+                        <div class="inserted-inner">
+                            <div class="inserted-icon"><i :class="section.icon"></i></div>
+                            <h3 :style="{ color: section.textColor }">{{ section.title }}</h3>
+                            <p>{{ section.description }}</p>
+                        </div>
+                    </section>
+
+                    <div class="drop-end" :class="{ 'target-dropzone': isPendingTarget('root') }" @click.stop="showToolboxPanel({ type: 'root', label: 'page root' })"><i class="bi bi-plus-circle"></i><span class="root-drop-label">Add to page root</span><span>· Container, Grid, or Widget</span></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <button v-if="leftCollapsed && !previewMode" class="floating-expand left" title="Open left panel" @click="leftCollapsed = false"><i class="bi bi-chevron-right"></i></button>
+
+    <div v-if="structureModal.visible" class="structure-backdrop" @click.self="closeStructureModal">
+        <div class="structure-modal" role="dialog" aria-modal="true" aria-label="Select container structure">
+            <div class="structure-modal-head">
+                <div><strong>Select your structure</strong><span>Same structure-preset flow as the active Page Builder.</span></div>
+                <button class="structure-modal-close" @click="closeStructureModal"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="structure-modal-body">
+                <div class="layout-type-switch">
+                    <button :class="{ active: structureModal.layoutType === 'flex' }" @click="structureModal.layoutType = 'flex'"><i class="bi bi-distribute-horizontal me-1"></i>Flexbox</button>
+                    <button :class="{ active: structureModal.layoutType === 'grid' }" @click="structureModal.layoutType = 'grid'"><i class="bi bi-grid-3x3-gap me-1"></i>Grid</button>
+                </div>
+                <div class="structure-presets">
+                    <button v-for="preset in structurePresets" :key="preset.label" class="structure-preset" @click="applyContainerPreset(preset)">
+                        <span class="preset-shape" :style="{ gridTemplateColumns: preset.widths.join(' ') }"><i v-for="index in preset.cols" :key="index"></i></span>
+                        {{ preset.label }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-stack" aria-live="polite">
+        <div v-for="toast in toasts" :key="toast.id" class="proto-toast"><i class="bi bi-stars"></i><span>{{ toast.message }}</span></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.4.38/dist/vue.global.prod.js"></script>
+<script>
+    const { createApp, computed, reactive, ref } = Vue;
+
+    createApp({
+        setup() {
+            const pageName = ref('NovaFlow Homepage');
+            const activeDevice = ref('desktop');
+            const selectedId = ref(null);
+            const propertyTab = ref('content');
+            const elementSearch = ref('');
+            const leftCollapsed = ref(false);
+            const previewMode = ref(false);
+            const showGrid = ref(true);
+            const zoom = ref(80);
+            const toasts = ref([]);
+            const addedSections = ref([]);
+            const history = ref([]);
+            const future = ref([]);
+            const pendingInsertTarget = ref(null);
+            const structureModal = reactive({ visible: false, zone: '', itemId: '', containerId: '', layoutType: 'flex' });
+            let toastId = 0;
+            let sectionId = 0;
+            let nestedWidgetId = 0;
+            let pendingChangeSnapshot = null;
+
+            const devices = [
+                { id: 'desktop', label: 'Desktop', icon: 'bi bi-display' },
+                { id: 'tablet', label: 'Tablet', icon: 'bi bi-tablet' },
+                { id: 'mobile', label: 'Mobile', icon: 'bi bi-phone' },
+            ];
+
+            const structurePresets = [
+                { cols: 1, label: '1 Column', widths: ['1fr'] },
+                { cols: 2, label: '2 Columns', widths: ['1fr', '1fr'] },
+                { cols: 3, label: '3 Columns', widths: ['1fr', '1fr', '1fr'] },
+                { cols: 2, label: '1/3 + 2/3', widths: ['1fr', '2fr'] },
+            ];
+
+            const elementGroups = [
+                {
+                    name: 'Layout',
+                    items: [
+                        { type: 'container', label: 'Container', hint: 'Flexible wrapper', icon: 'bi bi-square' },
+                        { type: 'grid', label: 'Grid', hint: 'Responsive columns', icon: 'bi bi-grid' },
+                        { type: 'tabs', label: 'Tabs', hint: 'Tabbed content', icon: 'bi bi-view-stacked' },
+                        { type: 'accordion', label: 'Accordion', hint: 'Collapsible rows', icon: 'bi bi-list-nested' },
+                    ],
+                },
+                {
+                    name: 'Basic',
+                    items: [
+                        { type: 'heading', label: 'Heading', hint: 'Title text', icon: 'bi bi-type-h1' },
+                        { type: 'text', label: 'Text editor', hint: 'Rich content', icon: 'bi bi-text-paragraph' },
+                        { type: 'image', label: 'Image', hint: 'Visual media', icon: 'bi bi-image' },
+                        { type: 'button', label: 'Button', hint: 'Call to action', icon: 'bi bi-record-btn' },
+                        { type: 'video', label: 'Video', hint: 'Hosted or URL', icon: 'bi bi-play-btn' },
+                        { type: 'icon-box', label: 'Icon box', hint: 'Icon with copy', icon: 'bi bi-app-indicator' },
+                    ],
+                },
+            ];
+
+            const sections = reactive({
+                hero: {
+                    id: 'hero', label: 'Hero section', icon: 'bi bi-layout-text-window-reverse',
+                    title: 'Move from busywork to your best work.',
+                    description: 'Plan projects, align your team, and ship meaningful work from one focused, beautifully simple workspace.',
+                    buttonText: 'Start building free', background: '#f8f7ff', textColor: '#161b2a', align: 'left', padding: 64, radius: 9,
+                },
+                logos: {
+                    id: 'logos', label: 'Logo cloud', icon: 'bi bi-collection',
+                    title: 'Trusted teams', description: 'A compact brand trust section.',
+                    background: '#ffffff', textColor: '#6f7887', align: 'center', padding: 23, radius: 0,
+                },
+                features: {
+                    id: 'features', label: 'Features section', icon: 'bi bi-grid-1x2',
+                    title: 'Everything your team needs to move forward',
+                    description: 'Bring planning, collaboration, and execution into one calm workspace.',
+                    background: '#ffffff', textColor: '#172033', align: 'center', padding: 62, radius: 14,
+                },
+                'tabs-demo': {
+                    id: 'tabs-demo', label: 'Tabs demo section', icon: 'bi bi-view-stacked',
+                    title: 'Tabs can contain a complete layout tree', description: 'Nested content demonstration.',
+                    background: '#f9fafc', textColor: '#172033', align: 'center', padding: 62, radius: 12,
+                },
+                'accordion-demo': {
+                    id: 'accordion-demo', label: 'Accordion demo section', icon: 'bi bi-list-nested',
+                    title: 'Accordion items can own nested content too', description: 'Nested content demonstration.',
+                    background: '#ffffff', textColor: '#172033', align: 'center', padding: 62, radius: 12,
+                },
+            });
+
+            const tabDemo = reactive({
+                activeTabId: 'tabs-item-overview',
+                items: [
+                    {
+                        id: 'tabs-item-overview', title: 'Overview', contentId: 'tabs-content-overview',
+                        hasContainer: true, containerId: 'tabs-container-overview', columnId: 'tabs-column-overview',
+                        widgets: [
+                            { id: 'tabs-overview-heading', label: 'Heading', icon: 'bi bi-type-h3', title: 'One workspace, less friction', text: 'This Heading widget lives inside a Container within the active tab content.' },
+                            { id: 'tabs-overview-text', label: 'Text Editor', icon: 'bi bi-text-paragraph', title: 'Supporting copy', text: 'Every nested widget keeps its own selection label and full breadcrumb path.' },
+                        ],
+                    },
+                    {
+                        id: 'tabs-item-workflow', title: 'Workflow', contentId: 'tabs-content-workflow',
+                        hasContainer: true, containerId: 'tabs-container-workflow', columnId: 'tabs-column-workflow',
+                        widgets: [
+                            { id: 'tabs-workflow-icon-box', label: 'Icon Box', icon: 'bi bi-app-indicator', title: 'Build recursively', text: 'Containers and widgets can be placed inside each tab independently.' },
+                        ],
+                    },
+                    { id: 'tabs-item-empty', title: 'Build your own', contentId: 'tabs-content-empty', hasContainer: false, containerId: '', columnId: '', widgets: [] },
+                ],
+            });
+
+            const accordionDemo = reactive({
+                activeItemId: 'accordion-item-details',
+                items: [
+                    {
+                        id: 'accordion-item-details', title: 'Project details', contentId: 'accordion-content-details',
+                        hasContainer: true, containerId: 'accordion-container-details', columnId: 'accordion-column-details',
+                        widgets: [
+                            { id: 'accordion-details-text', label: 'Text Editor', icon: 'bi bi-text-paragraph', title: 'Nested accordion content', text: 'The expanded item owns its own recursive child tree.' },
+                        ],
+                    },
+                    { id: 'accordion-item-empty', title: 'Add custom content', contentId: 'accordion-content-empty', hasContainer: false, containerId: '', columnId: '', widgets: [] },
+                ],
+            });
+
+            const containerLayouts = reactive({
+                hero: { displayType: 'flex', direction: 'row', wrap: 'nowrap', gap: 44, columns: [{ id: 'hero-column-1', width: 54 }, { id: 'hero-column-2', width: 46 }] },
+                logos: { displayType: 'flex', direction: 'column', wrap: 'nowrap', gap: 10, columns: [{ id: 'logos-column-1', width: 100 }] },
+                features: { displayType: 'flex', direction: 'column', wrap: 'nowrap', gap: 18, columns: [{ id: 'features-column-1', width: 100 }] },
+                'features-grid-container': { displayType: 'grid', direction: 'row', wrap: 'nowrap', gap: 16, columns: [{ id: 'features-column-2', width: 33.33 }, { id: 'features-column-3', width: 33.33 }, { id: 'features-column-4', width: 33.34 }] },
+                'tabs-demo': { displayType: 'flex', direction: 'column', wrap: 'nowrap', gap: 24, columns: [{ id: 'tabs-demo-column-1', width: 100 }] },
+                'accordion-demo': { displayType: 'flex', direction: 'column', wrap: 'nowrap', gap: 24, columns: [{ id: 'accordion-demo-column-1', width: 100 }] },
+                'tabs-container-overview': { displayType: 'flex', direction: 'column', wrap: 'nowrap', gap: 12, columns: [{ id: 'tabs-column-overview', width: 100 }] },
+                'tabs-container-workflow': { displayType: 'flex', direction: 'column', wrap: 'nowrap', gap: 12, columns: [{ id: 'tabs-column-workflow', width: 100 }] },
+                'accordion-container-details': { displayType: 'flex', direction: 'column', wrap: 'nowrap', gap: 12, columns: [{ id: 'accordion-column-details', width: 100 }] },
+            });
+
+            const nestedNodes = reactive({
+                'hero-eyebrow': { id: 'hero-eyebrow', label: 'Eyebrow', kind: 'Widget', icon: 'bi bi-stars', sectionId: 'hero', parentId: 'hero' },
+                'hero-heading': { id: 'hero-heading', label: 'Heading', kind: 'Widget', icon: 'bi bi-type-h1', sectionId: 'hero', parentId: 'hero' },
+                'hero-text': { id: 'hero-text', label: 'Text Editor', kind: 'Widget', icon: 'bi bi-text-paragraph', sectionId: 'hero', parentId: 'hero' },
+                'hero-buttons': { id: 'hero-buttons', label: 'Buttons', kind: 'Widget', icon: 'bi bi-record-btn', sectionId: 'hero', parentId: 'hero' },
+                'hero-image': { id: 'hero-image', label: 'Image', kind: 'Widget', icon: 'bi bi-image', sectionId: 'hero', parentId: 'hero' },
+                'logos-caption': { id: 'logos-caption', label: 'Caption', kind: 'Widget', icon: 'bi bi-text-paragraph', sectionId: 'logos', parentId: 'logos' },
+                'logos-grid': { id: 'logos-grid', label: 'Logo Grid', kind: 'Widget', icon: 'bi bi-collection', sectionId: 'logos', parentId: 'logos' },
+                'features-eyebrow': { id: 'features-eyebrow', label: 'Eyebrow', kind: 'Widget', icon: 'bi bi-stars', sectionId: 'features', parentId: 'features' },
+                'features-heading': { id: 'features-heading', label: 'Heading', kind: 'Widget', icon: 'bi bi-type-h2', sectionId: 'features', parentId: 'features' },
+                'features-text': { id: 'features-text', label: 'Text Editor', kind: 'Widget', icon: 'bi bi-text-paragraph', sectionId: 'features', parentId: 'features' },
+                'features-grid-container': { id: 'features-grid-container', label: 'Inner Grid Container', kind: 'Container', icon: 'bi bi-grid', sectionId: 'features', parentId: 'features' },
+                'features-icon-box-1': { id: 'features-icon-box-1', label: 'Icon Box 1', kind: 'Widget', icon: 'bi bi-app-indicator', sectionId: 'features', parentId: 'features-grid-container' },
+                'features-icon-box-2': { id: 'features-icon-box-2', label: 'Icon Box 2', kind: 'Widget', icon: 'bi bi-app-indicator', sectionId: 'features', parentId: 'features-grid-container' },
+                'features-icon-box-3': { id: 'features-icon-box-3', label: 'Icon Box 3', kind: 'Widget', icon: 'bi bi-app-indicator', sectionId: 'features', parentId: 'features-grid-container' },
+                'tabs-demo-heading': { id: 'tabs-demo-heading', label: 'Heading', kind: 'Widget', icon: 'bi bi-type-h2', sectionId: 'tabs-demo', parentId: 'tabs-demo' },
+                'tabs-widget': { id: 'tabs-widget', label: 'Tabs Widget', kind: 'Widget', icon: 'bi bi-view-stacked', sectionId: 'tabs-demo', parentId: 'tabs-demo' },
+                'accordion-demo-heading': { id: 'accordion-demo-heading', label: 'Heading', kind: 'Widget', icon: 'bi bi-type-h2', sectionId: 'accordion-demo', parentId: 'accordion-demo' },
+                'accordion-widget': { id: 'accordion-widget', label: 'Accordion Widget', kind: 'Widget', icon: 'bi bi-list-nested', sectionId: 'accordion-demo', parentId: 'accordion-demo' },
+            });
+
+            function registerContentHierarchy(item, ownerId, sectionId, itemKind) {
+                nestedNodes[item.id] = { id: item.id, label: item.title, kind: itemKind, icon: itemKind === 'Tab Item' ? 'bi bi-tab' : 'bi bi-list-nested', sectionId, parentId: ownerId };
+                nestedNodes[item.contentId] = { id: item.contentId, label: `${item.title} Content`, kind: 'Content Area', icon: 'bi bi-window-stack', sectionId, parentId: item.id };
+                if (!item.hasContainer) return;
+                nestedNodes[item.containerId] = { id: item.containerId, label: `Container · ${item.title}`, kind: 'Container', icon: 'bi bi-square', sectionId, parentId: item.contentId };
+                const fallbackColumnId = containerLayouts[item.containerId]?.columns?.[0]?.id || item.columnId;
+                (item.widgets || []).forEach((widget) => {
+                    widget.columnId ||= fallbackColumnId;
+                    nestedNodes[widget.id] = { id: widget.id, label: widget.label, kind: 'Widget', icon: widget.icon, sectionId, parentId: item.containerId };
+                });
+            }
+
+            tabDemo.items.forEach((item) => registerContentHierarchy(item, 'tabs-widget', 'tabs-demo', 'Tab Item'));
+            accordionDemo.items.forEach((item) => registerContentHierarchy(item, 'accordion-widget', 'accordion-demo', 'Accordion Item'));
+
+            const features = [
+                { title: 'Plan with clarity', text: 'Turn priorities into practical roadmaps everyone can follow.', icon: 'bi bi-signpost-split' },
+                { title: 'Work in context', text: 'Keep decisions, files, and feedback close to the work itself.', icon: 'bi bi-chat-square-text' },
+                { title: 'See momentum', text: 'Understand progress without another status meeting or spreadsheet.', icon: 'bi bi-graph-up-arrow' },
+            ];
+
+            const propertyTabs = [
+                { id: 'content', label: 'Content' },
+                { id: 'style', label: 'Style' },
+                { id: 'advanced', label: 'Advanced' },
+            ];
+
+            const alignments = [
+                { id: 'left', icon: 'bi bi-text-left' },
+                { id: 'center', icon: 'bi bi-text-center' },
+                { id: 'right', icon: 'bi bi-text-right' },
+            ];
+
+            function rootEntity(section) {
+                if (!section) return null;
+                return { id: section.id, label: `Container · ${section.label.replace(' section', '')}`, kind: 'Container', icon: section.icon || 'bi bi-square', sectionId: section.id, parentId: null };
+            }
+
+            function resolveEntity(id) {
+                if (!id) return null;
+                if (nestedNodes[id]) return nestedNodes[id];
+                if (sections[id]) return rootEntity(sections[id]);
+                return rootEntity(addedSections.value.find((section) => section.id === id));
+            }
+
+            function ancestorIds(id) {
+                const ids = [];
+                const visited = new Set();
+                let current = resolveEntity(id);
+                while (current?.parentId && !visited.has(current.parentId)) {
+                    visited.add(current.parentId);
+                    ids.push(current.parentId);
+                    current = resolveEntity(current.parentId);
+                }
+                return ids;
+            }
+
+            const activeDeviceLabel = computed(() => devices.find((device) => device.id === activeDevice.value)?.label || 'Desktop');
+            const activeCanvasWidth = computed(() => ({ desktop: 1180, tablet: 768, mobile: 390 }[activeDevice.value]));
+            const selectedEntity = computed(() => resolveEntity(selectedId.value));
+            const selectedSection = computed(() => {
+                const sectionId = selectedEntity.value?.sectionId || selectedId.value;
+                return sections[sectionId] || addedSections.value.find((section) => section.id === sectionId) || null;
+            });
+            const selectedNestedWidget = computed(() => {
+                for (const item of [...tabDemo.items, ...accordionDemo.items]) {
+                    const widget = (item.widgets || []).find((entry) => entry.id === selectedId.value);
+                    if (widget) return widget;
+                }
+                return null;
+            });
+            const selectedContainerLayout = computed(() => selectedEntity.value?.kind === 'Container' ? (containerLayouts[selectedEntity.value.id] || null) : null);
+            const activePropertyTabs = computed(() => selectedContainerLayout.value
+                ? [{ id: 'layout', label: 'Layout' }, { id: 'style', label: 'Style' }, { id: 'advanced', label: 'Advanced' }]
+                : propertyTabs);
+            const canvasBreadcrumbs = computed(() => {
+                const crumbs = [];
+                const visited = new Set();
+                let current = selectedEntity.value;
+                while (current && !visited.has(current.id)) {
+                    visited.add(current.id);
+                    crumbs.unshift(current);
+                    current = current.parentId ? resolveEntity(current.parentId) : null;
+                }
+                return crumbs;
+            });
+            const activeTabItem = computed(() => tabDemo.items.find((item) => item.id === tabDemo.activeTabId) || tabDemo.items[0] || null);
+            const filteredElementGroups = computed(() => {
+                const query = elementSearch.value.trim().toLowerCase();
+                if (!query) return elementGroups;
+                return elementGroups.map((group) => ({ ...group, items: group.items.filter((item) => `${item.label} ${item.hint}`.toLowerCase().includes(query)) })).filter((group) => group.items.length);
+            });
+            const canUndo = computed(() => history.value.length > 0);
+            const canRedo = computed(() => future.value.length > 0);
+
+            function snapshot() {
+                return JSON.stringify({
+                    sections: JSON.parse(JSON.stringify(sections)),
+                    addedSections: JSON.parse(JSON.stringify(addedSections.value)),
+                    tabDemo: JSON.parse(JSON.stringify(tabDemo)),
+                    accordionDemo: JSON.parse(JSON.stringify(accordionDemo)),
+                    nestedNodes: JSON.parse(JSON.stringify(nestedNodes)),
+                    containerLayouts: JSON.parse(JSON.stringify(containerLayouts)),
+                    selectedId: selectedId.value,
+                });
+            }
+
+            function restore(serialized) {
+                const state = JSON.parse(serialized);
+                Object.keys(sections).forEach((key) => Object.assign(sections[key], state.sections[key]));
+                addedSections.value = state.addedSections;
+                Object.assign(tabDemo, state.tabDemo);
+                Object.assign(accordionDemo, state.accordionDemo);
+                Object.keys(nestedNodes).forEach((key) => delete nestedNodes[key]);
+                Object.assign(nestedNodes, state.nestedNodes);
+                Object.keys(containerLayouts).forEach((key) => delete containerLayouts[key]);
+                Object.assign(containerLayouts, state.containerLayouts || {});
+                selectedId.value = state.selectedId;
+            }
+
+            function commitState(previousState = null) {
+                history.value.push(previousState || snapshot());
+                if (history.value.length > 30) history.value.shift();
+                future.value = [];
+            }
+
+            function beginChange() {
+                if (pendingChangeSnapshot === null) pendingChangeSnapshot = snapshot();
+            }
+
+            function commitPendingChange() {
+                if (pendingChangeSnapshot === null) return;
+                commitState(pendingChangeSnapshot);
+                pendingChangeSnapshot = null;
+            }
+
+            function liveStateChanged() {
+                // Vue's reactive binding provides the live preview. The final change event records history.
+            }
+
+            function undo() {
+                if (!canUndo.value) return;
+                pendingChangeSnapshot = null;
+                future.value.push(snapshot());
+                restore(history.value.pop());
+                notify('Last change undone');
+            }
+
+            function redo() {
+                if (!canRedo.value) return;
+                pendingChangeSnapshot = null;
+                history.value.push(snapshot());
+                restore(future.value.pop());
+                notify('Change restored');
+            }
+
+            function notify(message) {
+                const id = ++toastId;
+                toasts.value.push({ id, message });
+                window.setTimeout(() => { toasts.value = toasts.value.filter((toast) => toast.id !== id); }, 2600);
+            }
+
+            function selectSection(id) {
+                clearPendingInsertTarget();
+                const ancestry = [id, ...ancestorIds(id)];
+                const owningTab = tabDemo.items.find((item) => ancestry.includes(item.id));
+                if (owningTab) tabDemo.activeTabId = owningTab.id;
+                const owningAccordionItem = accordionDemo.items.find((item) => ancestry.includes(item.id));
+                if (owningAccordionItem) accordionDemo.activeItemId = owningAccordionItem.id;
+                selectedId.value = id;
+                propertyTab.value = resolveEntity(id)?.kind === 'Container' ? 'layout' : 'content';
+                leftCollapsed.value = false;
+            }
+
+            function isParentActive(sectionId) {
+                return selectedEntity.value?.sectionId === sectionId && selectedId.value !== sectionId;
+            }
+
+            function isAncestorActive(nodeId) {
+                return ancestorIds(selectedId.value).includes(nodeId);
+            }
+
+            function activateTab(tabId) {
+                tabDemo.activeTabId = tabId;
+                selectSection(tabId);
+            }
+
+            function toggleAccordion(itemId) {
+                const nextActiveId = accordionDemo.activeItemId === itemId ? '' : itemId;
+                selectedId.value = itemId;
+                propertyTab.value = 'content';
+                leftCollapsed.value = false;
+                accordionDemo.activeItemId = nextActiveId;
+            }
+
+            function internalColumns(containerId) {
+                return containerLayouts[containerId]?.columns || [];
+            }
+
+            function widgetsForColumn(item, columnId) {
+                const firstColumnId = internalColumns(item.containerId)[0]?.id || item.columnId;
+                return (item.widgets || []).filter((widget) => (widget.columnId || firstColumnId) === columnId);
+            }
+
+            function clearPendingInsertTarget() {
+                pendingInsertTarget.value = null;
+            }
+
+            function showToolboxPanel(target = null) {
+                pendingInsertTarget.value = target ? JSON.parse(JSON.stringify(target)) : null;
+                selectedId.value = '';
+                leftCollapsed.value = false;
+            }
+
+            function isPendingTarget(type, itemId = '', columnId = '') {
+                const target = pendingInsertTarget.value;
+                if (!target || target.type !== type) return false;
+                if (itemId && target.itemId !== itemId) return false;
+                return !columnId || target.columnId === columnId;
+            }
+
+            function findNestedItem(type, itemId) {
+                const source = type === 'tab' ? tabDemo.items : accordionDemo.items;
+                return source.find((item) => item.id === itemId) || null;
+            }
+
+            function widgetFromTool(toolDef, columnId) {
+                const token = ++nestedWidgetId;
+                return {
+                    id: `nested-${toolDef.type}-${token}`,
+                    label: toolDef.label,
+                    icon: toolDef.icon,
+                    title: `${toolDef.label} ${token}`,
+                    text: `Inserted through the current builder targeted + Add contract.`,
+                    columnId,
+                };
+            }
+
+            function insertToolIntoPendingTarget(toolDef, target = pendingInsertTarget.value) {
+                if (!toolDef || !target) return false;
+                if (target.type === 'root') {
+                    if (toolDef.type === 'container' || toolDef.type === 'grid') {
+                        openStructureModal('root', toolDef.type);
+                        structureModal.layoutType = toolDef.type === 'grid' ? 'grid' : 'flex';
+                        return true;
+                    }
+                    insertElement(toolDef);
+                    clearPendingInsertTarget();
+                    return true;
+                }
+                if (toolDef.type === 'container') {
+                    notify('Container uses the structure picker, matching the current builder contract');
+                    return false;
+                }
+                const item = findNestedItem(target.type, target.itemId);
+                if (!item || !item.hasContainer) return false;
+                const before = snapshot();
+                const columnId = target.columnId || internalColumns(item.containerId)[0]?.id || item.columnId;
+                const widget = widgetFromTool(toolDef, columnId);
+                item.widgets.push(widget);
+                const sectionId = target.type === 'tab' ? 'tabs-demo' : 'accordion-demo';
+                nestedNodes[widget.id] = { id: widget.id, label: widget.label, kind: 'Widget', icon: widget.icon, sectionId, parentId: item.containerId };
+                if (target.type === 'tab') tabDemo.activeTabId = item.id;
+                else accordionDemo.activeItemId = item.id;
+                selectedId.value = widget.id;
+                propertyTab.value = 'content';
+                clearPendingInsertTarget();
+                leftCollapsed.value = false;
+                commitState(before);
+                notify(`${toolDef.label} inserted into ${item.title}`);
+                return true;
+            }
+
+            function onToolboxItemClick(toolDef) {
+                if (pendingInsertTarget.value) return insertToolIntoPendingTarget(toolDef, pendingInsertTarget.value);
+                if (toolDef.type === 'container' || toolDef.type === 'grid') {
+                    openStructureModal('root', toolDef.type);
+                    return true;
+                }
+                insertElement(toolDef);
+                return true;
+            }
+
+            function openStructureModal(zone, itemId = '') {
+                structureModal.visible = true;
+                structureModal.zone = zone;
+                structureModal.itemId = itemId;
+                structureModal.containerId = zone === 'container' ? itemId : '';
+                structureModal.layoutType = zone === 'root' && itemId === 'grid' ? 'grid' : 'flex';
+            }
+
+            function closeStructureModal() {
+                const wasRootInsert = structureModal.zone === 'root';
+                structureModal.visible = false;
+                structureModal.zone = '';
+                structureModal.itemId = '';
+                structureModal.containerId = '';
+                if (wasRootInsert) clearPendingInsertTarget();
+            }
+
+            function applyContainerPreset(preset) {
+                const before = snapshot();
+                const widths = preset.widths.map((width) => Math.round((Number.parseFloat(width) || 1) / preset.widths.reduce((sum, value) => sum + (Number.parseFloat(value) || 1), 0) * 10000) / 100);
+                if (structureModal.zone === 'root') {
+                    const tool = { type: structureModal.layoutType === 'grid' ? 'grid' : 'container', label: structureModal.layoutType === 'grid' ? 'Grid' : 'Container', icon: structureModal.layoutType === 'grid' ? 'bi bi-grid' : 'bi bi-square' };
+                    insertElement(tool, { preset, widths, displayType: structureModal.layoutType });
+                    clearPendingInsertTarget();
+                    closeStructureModal();
+                    return;
+                }
+                if (structureModal.zone === 'container') {
+                    const containerId = structureModal.containerId;
+                    const layout = containerLayouts[containerId];
+                    if (!layout) return;
+                    layout.displayType = structureModal.layoutType;
+                    layout.direction = preset.cols === 1 ? 'column' : 'row';
+                    layout.columns = widths.map((width, index) => ({ id: `${containerId}-slot-${index + 1}`, width }));
+                    commitState(before);
+                    closeStructureModal();
+                    return;
+                }
+                const item = findNestedItem(structureModal.zone, structureModal.itemId);
+                if (!item || item.hasContainer) return;
+                const token = ++nestedWidgetId;
+                item.hasContainer = true;
+                item.containerId = `${structureModal.zone}-container-custom-${token}`;
+                item.columnId = `${item.containerId}-slot-1`;
+                item.widgets = [];
+                containerLayouts[item.containerId] = {
+                    displayType: structureModal.layoutType,
+                    direction: preset.cols === 1 ? 'column' : 'row',
+                    wrap: 'nowrap',
+                    gap: 12,
+                    columns: widths.map((width, index) => ({ id: `${item.containerId}-slot-${index + 1}`, width })),
+                };
+                item.columnId = containerLayouts[item.containerId].columns[0].id;
+                const ownerId = structureModal.zone === 'tab' ? 'tabs-widget' : 'accordion-widget';
+                const sectionId = structureModal.zone === 'tab' ? 'tabs-demo' : 'accordion-demo';
+                registerContentHierarchy(item, ownerId, sectionId, structureModal.zone === 'tab' ? 'Tab Item' : 'Accordion Item');
+                if (structureModal.zone === 'tab') tabDemo.activeTabId = item.id;
+                else accordionDemo.activeItemId = item.id;
+                selectedId.value = item.containerId;
+                propertyTab.value = 'layout';
+                leftCollapsed.value = false;
+                commitState(before);
+                clearPendingInsertTarget();
+                closeStructureModal();
+                notify(`Container structure added inside ${item.title}`);
+            }
+
+            function setDevice(device) {
+                activeDevice.value = device;
+                zoom.value = device === 'desktop' ? 80 : device === 'tablet' ? 82 : 90;
+            }
+
+            function changeZoom(delta) {
+                zoom.value = Math.min(110, Math.max(50, zoom.value + delta));
+            }
+
+            function togglePreview() {
+                previewMode.value = !previewMode.value;
+                notify(previewMode.value ? 'Distraction-free preview enabled' : 'Editor panels restored');
+            }
+
+            function insertElement(item, layoutPreset = null) {
+                const before = snapshot();
+                const id = `section-${++sectionId}`;
+                const copy = {
+                    id,
+                    label: item.label,
+                    icon: item.icon,
+                    title: `${item.label} added to your page`,
+                    description: 'This prototype block is ready for content and style adjustments from the contextual sidebar.',
+                    background: '#fbfaff', textColor: '#172033', align: 'center', padding: 42, radius: 12,
+                };
+                addedSections.value.push(copy);
+                const widths = layoutPreset?.widths || [100];
+                containerLayouts[id] = {
+                    displayType: layoutPreset?.displayType || 'grid',
+                    direction: layoutPreset?.preset?.cols > 1 ? 'row' : 'column',
+                    wrap: 'nowrap',
+                    gap: 20,
+                    columns: widths.map((width, index) => ({ id: `${id}-slot-${index + 1}`, width })),
+                };
+                selectedId.value = id;
+                propertyTab.value = 'layout';
+                commitState(before);
+                notify(`${item.label} added to canvas`);
+            }
+
+            function duplicateSection(id) {
+                const source = sections[id] || addedSections.value.find((section) => section.id === id);
+                if (!source) return;
+                const before = snapshot();
+                const newId = `section-${++sectionId}`;
+                addedSections.value.push({ ...JSON.parse(JSON.stringify(source)), id: newId, label: `${source.label} copy` });
+                if (containerLayouts[id]) {
+                    containerLayouts[newId] = JSON.parse(JSON.stringify(containerLayouts[id]));
+                    containerLayouts[newId].columns = containerLayouts[newId].columns.map((column, index) => ({ ...column, id: `${newId}-slot-${index + 1}` }));
+                }
+                selectedId.value = newId;
+                propertyTab.value = 'layout';
+                commitState(before);
+                notify(`${source.label} duplicated`);
+            }
+
+            function removeSection(id) {
+                const before = snapshot();
+                addedSections.value = addedSections.value.filter((section) => section.id !== id);
+                delete containerLayouts[id];
+                selectedId.value = 'features';
+                propertyTab.value = 'layout';
+                commitState(before);
+                notify('Section removed from prototype');
+            }
+
+            function updateSetting(key, value) {
+                if (!selectedSection.value) return;
+                const before = snapshot();
+                selectedSection.value[key] = value;
+                commitState(before);
+            }
+
+            function updateContainerLayout(key, value) {
+                if (!selectedContainerLayout.value) return;
+                const before = snapshot();
+                selectedContainerLayout.value[key] = value;
+                commitState(before);
+            }
+
+            function updateColumnWidth(columnId, value) {
+                if (!selectedContainerLayout.value) return;
+                const column = selectedContainerLayout.value.columns.find((entry) => entry.id === columnId);
+                if (!column) return;
+                const before = snapshot();
+                column.width = Math.max(4, Math.min(100, Number(value) || 4));
+                commitState(before);
+            }
+
+            function containerLayoutStyle(containerId) {
+                const layout = containerLayouts[containerId];
+                if (!layout) return {};
+                const compact = activeDevice.value !== 'desktop';
+                if (layout.displayType === 'grid') {
+                    return {
+                        display: 'grid',
+                        gridTemplateColumns: compact ? '1fr' : layout.columns.map((column) => `${column.width || 100}fr`).join(' '),
+                        gap: `${layout.gap}px`,
+                    };
+                }
+                return {
+                    display: 'flex',
+                    flexDirection: compact ? 'column' : layout.direction,
+                    flexWrap: compact ? 'nowrap' : layout.wrap,
+                    gap: `${layout.gap}px`,
+                };
+            }
+
+            function columnStyle(containerId, columnId) {
+                const layout = containerLayouts[containerId];
+                const column = layout?.columns?.find((entry) => entry.id === columnId);
+                if (!layout || !column || activeDevice.value !== 'desktop' || layout.displayType === 'grid') return {};
+                if (!String(layout.direction).startsWith('row')) return { width: '100%' };
+                return { flex: `0 0 ${column.width}%`, width: `${column.width}%` };
+            }
+
+            function sectionStyle(section) {
+                return {
+                    backgroundColor: section.background,
+                    paddingTop: `${section.padding}px`,
+                    paddingBottom: `${section.padding}px`,
+                    ...containerLayoutStyle(section.id),
+                };
+            }
+
+            function alignmentFlex(align) {
+                return ({ left: 'flex-start', center: 'center', right: 'flex-end' }[align] || 'flex-start');
+            }
+
+            function publish() {
+                notify('Prototype published locally — no production data changed');
+            }
+
+            return {
+                pageName, activeDevice, selectedId, propertyTab, elementSearch,
+                leftCollapsed, previewMode, showGrid, zoom, toasts, addedSections, sections, tabDemo, accordionDemo,
+                pendingInsertTarget, structureModal, structurePresets,
+                devices, features, propertyTabs, alignments,
+                activeDeviceLabel, activeCanvasWidth, selectedEntity, selectedSection, selectedNestedWidget, selectedContainerLayout, activePropertyTabs, canvasBreadcrumbs, activeTabItem,
+                filteredElementGroups, canUndo, canRedo,
+                selectSection, isParentActive, isAncestorActive, activateTab, toggleAccordion,
+                internalColumns, widgetsForColumn, clearPendingInsertTarget, showToolboxPanel, isPendingTarget,
+                insertToolIntoPendingTarget, onToolboxItemClick, openStructureModal, closeStructureModal, applyContainerPreset,
+                setDevice, changeZoom, togglePreview, insertElement,
+                duplicateSection, removeSection, updateSetting, updateContainerLayout, updateColumnWidth,
+                containerLayoutStyle, columnStyle, sectionStyle, alignmentFlex,
+                beginChange, commitPendingChange, commitState, liveStateChanged, undo, redo, notify, publish,
+            };
+        },
+    }).mount('#prototypeApp');
+</script>
+</body>
+</html>
