@@ -439,8 +439,10 @@ export default {
 :deep(.pb-motion-effect .pb-advanced-two-fields > label > span) { color: #344054; font-weight: 600; }
 :deep(.pb-motion-effect .pb-advanced-two-fields .pb-input),
 :deep(.pb-motion-effect .pb-advanced-two-fields .pb-select) { width: 100%; min-width: 0; height: 32px; min-height: 32px; margin: 0; font-size: 12px; }
-.pb-ai-disabled { width: 100%; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 10px; border: 1px dashed #c9d1df; border-radius: 8px; background: #f8fafc; color: #667085; text-align: left; }
-.pb-ai-disabled span { display: flex; flex-direction: column; }.pb-ai-disabled small { font-size: 10px; }
+.pb-ai-disabled { width: 100%; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding: 10px 12px; border: 1px dashed #c9d1df; border-radius: 8px; background: #f8fafc; color: #667085; text-align: left; }
+.pb-ai-disabled span { display: flex; flex-direction: column; }
+.pb-ai-disabled strong { font-size: 12px; line-height: 1.3; }
+.pb-ai-disabled small { font-size: 10px; line-height: 1.4; }
 .pb-advanced-help { margin: 4px 0 12px; color: #7a8699; font-size: 10px; line-height: 1.5; }
 .pb-condition-group { margin-bottom: 12px; padding: 10px; border: 1px solid #dce2ec; border-radius: 8px; }
 .pb-condition-group-head { display: flex; justify-content: space-between; margin-bottom: 8px; }.pb-condition-group-head button,.pb-advanced-remove,.pb-attribute-row button { border: 0; background: transparent; color: #667085; }

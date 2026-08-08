@@ -240,6 +240,10 @@
 		if (isGrid(type)) return 'Grid';
 		return 'Widget';
 	}
+	function resetPropertiesPanelScroll(doc = document) {
+		const panel = doc.querySelector('.side-panel.left-panel .panel-body');
+		if (panel) panel.scrollTop = 0;
+	}
 	// V23_CONTEXTUAL_PROPERTY_HELPERS_END
 	function normalizeVideoSourceType(value) {
 		const raw = String(value || '').trim().toLowerCase();
@@ -5485,6 +5489,7 @@
 			watch(selectedId, (nextId) => {
 				const type = selectedNode.value?.type;
 				settingsTab.value = type && !isCont(type) && !isGrid(type) ? 'content' : 'layout';
+				nextTick(resetPropertiesPanelScroll);
 				closeControlResponsiveMenu();
 				closeWidthPreviewMenu();
 				scheduleColorisInit();
@@ -5567,6 +5572,10 @@
 					return;
 				}
 				clearSel();
+			}
+			function selectSettingsTab(tabId) {
+				settingsTab.value = tabId;
+				nextTick(resetPropertiesPanelScroll);
 			}
 			function showToolboxPanel(target = null) {
 				clearSelectedColumn();
@@ -6422,7 +6431,7 @@
 				containerGridRowsValue, setContainerGridRowsValue, syncContainerGap,
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
 				displayNodeLabel, nodeLabelIcon,
-				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
+				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, selectSettingsTab, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
 				openIconLibrary, openProIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, openSocialIconLibrary, openAlertIconLibrary, chooseButtonSvg, chooseSocialIconSvg, chooseAlertIconSvg, chooseProIconSvg, chooseRatingSvg, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
@@ -6544,7 +6553,7 @@
 				<button class="panel-icon-btn" title="Collapse panel" @click="leftCollapsed = true"><i class="bi bi-chevron-left"></i></button>
 			</div>
 			<div v-if="selectedNode && !selectedColumnContext" class="properties-tabs">
-				<button v-for="tab in activeSettingsTabs" :key="tab.id" type="button" class="property-tab" :class="{ active: settingsTab===tab.id }" @click="settingsTab=tab.id">{{ tab.label }}</button>
+				<button v-for="tab in activeSettingsTabs" :key="tab.id" type="button" class="property-tab" :class="{ active: settingsTab===tab.id }" @click="selectSettingsTab(tab.id)">{{ tab.label }}</button>
 			</div>
 
 			<template v-if="!(selectedNode || selectedColumnContext)">

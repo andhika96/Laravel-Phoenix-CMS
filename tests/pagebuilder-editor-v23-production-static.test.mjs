@@ -55,7 +55,7 @@ test('production v2.3 keeps production canvas and editor contracts inside the ne
 test('production v2.3 ports the approved tokens and shell geometry', () => {
     assert.match(css, /--brand:\s*#5b4cf0/);
     assert.match(css, /grid-template-rows:\s*58px minmax\(0, 1fr\)/);
-    assert.match(css, /grid-template-columns:\s*288px minmax\(440px, 1fr\)/);
+    assert.match(css, /grid-template-columns:\s*300px minmax\(440px, 1fr\)/);
     assert.match(css, /\.workspace\.preview-mode\s*\{/);
     assert.match(css, /\.element-grid\s*\{/);
     assert.match(css, /\.element-card\s*\{/);
@@ -74,7 +74,7 @@ test('production v2.3 properties shell follows the approved compact hierarchy', 
     assert.doesNotMatch(app, /class="pb-props-header"/);
 
     assert.match(css, /\.properties-tabs\s*\{[\s\S]*?grid-auto-flow:\s*column;[\s\S]*?grid-auto-columns:\s*1fr;/);
-    assert.match(css, /\.selection-summary\s*\{[\s\S]*?display:\s*flex;[\s\S]*?padding:\s*10px;/);
+    assert.match(css, /\.selection-summary\s*\{[\s\S]*?display:\s*flex;[\s\S]*?padding:\s*12px;/);
     assert.match(css, /\.selection-summary strong\s*\{[\s\S]*?display:\s*block;/);
     assert.match(css, /\.v23-properties-section\s+\.pb-tab-nav\s*\{\s*display:\s*none\s*!important;/);
 });
