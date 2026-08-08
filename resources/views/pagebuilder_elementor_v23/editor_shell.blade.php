@@ -84,7 +84,7 @@
 	<script src="{{ asset('js/pagebuilder_elementor_v23/frontend-runtime.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor_v23/frontend-runtime.js')) }}"></script>
 	<script src="{{ asset('js/pagebuilder_elementor_v23/widget-registry.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor_v23/widget-registry.js')) }}"></script>
 	@foreach(config('pagebuilder_elementor_v23_widgets', []) as $pbElementorWidget)
-	@php($pbElementorDefinition = str_replace('js/pagebuilder_elementor/', 'js/pagebuilder_elementor_v23/', $pbElementorWidget['definition']))
+	@php($pbElementorDefinition = $pbElementorWidget['definition'])
 	<script src="{{ asset($pbElementorDefinition) }}?v={{ @filemtime(public_path($pbElementorDefinition)) }}"></script>
 	@endforeach
 	<script src="{{ asset('js/pagebuilder_elementor_v23/app.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor_v23/app.js')) }}"></script>
