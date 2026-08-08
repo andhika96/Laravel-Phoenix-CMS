@@ -12,7 +12,9 @@ class EditPageBuilderElementorRequest extends FormRequest
 {
 	public function authorize(): bool
 	{
-		return true;
+		$page = $this->resolveRequestedPage();
+
+		return ! $page || $page->editor_version === Page_Builder::EDITOR_VERSION_V20;
 	}
 
 	public function rules(): array
@@ -46,6 +48,16 @@ class EditPageBuilderElementorRequest extends FormRequest
 		], 422));
 	}
 
+	protected function failedAuthorization()
+	{
+		throw new HttpResponseException(response()->json([
+			'success' => false,
+			'status' => 'failed',
+			'message' => t('This page belongs to a different editor version'),
+			'editorVersion' => $this->resolveRequestedPage()?->editor_version,
+		], 409));
+	}
+
 	private function resolveCurrentId(): ?int
 	{
 		$idOrSlug = $this->route('idOrSlug');
@@ -63,5 +75,21 @@ class EditPageBuilderElementorRequest extends FormRequest
 			->first();
 
 		return $page?->id;
+	}
+
+	private function resolveRequestedPage(): ?Page_Builder
+	{
+		$idOrSlug = $this->route('idOrSlug');
+
+		if (! $idOrSlug)
+		{
+			return null;
+		}
+
+		return Page_Builder::query()
+			->where(fn ($query) => $query
+				->where('uri', $idOrSlug)
+				->orWhere('id', $idOrSlug))
+			->first();
 	}
 }

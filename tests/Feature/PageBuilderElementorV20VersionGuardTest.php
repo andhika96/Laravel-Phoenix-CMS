@@ -100,6 +100,15 @@ class PageBuilderElementorV20VersionGuardTest extends TestCase
         $this->assertSame($before, DB::table('page_builder')->where('uri', 'v23-page')->value('vars'));
     }
 
+    public function test_v20_update_endpoint_returns_a_conflict_before_validating_a_v23_page_name(): void
+    {
+        $this->postJson('/pagebuilder-elementor/update/v23-page', [
+            'pageName' => 'V23 Page',
+            'pageStatus' => 'draft',
+            'layout' => '[]',
+        ])->assertStatus(409)->assertJsonPath('editorVersion', '2.3');
+    }
+
     public function test_v20_edit_endpoint_does_not_open_a_v23_page_in_the_editor(): void
     {
         $this->get('/pagebuilder-elementor/edit/v23-page')->assertStatus(409);
