@@ -71,3 +71,12 @@ test('production shell loads Bootstrap Icons for shell chrome and keeps Font Awe
     assert.match(app, /class="bi bi-/);
     assert.match(app, /:class="element\.icon"/);
 });
+
+test('production v2.3 anchors page settings to the existing page-name control', () => {
+    assert.match(app, /const pageSettingsOpen = ref\(false\);/);
+    assert.match(app, /function openPageSettings\(\)/);
+    assert.match(app, /function closePageSettings\(\)/);
+    assert.match(app, /<button\b(?=[^>]*class="page-name")(?=[^>]*@click\.stop="openPageSettings")[^>]*>/);
+    assert.match(app, /class="page-settings-popover"/);
+    assert.match(app, /class="page-settings-popover"[\s\S]{0,3000}v-model="pageName"[\s\S]{0,3000}v-model="pageStatus"[\s\S]{0,3000}\{\{ customCssSummary \}\}[\s\S]{0,3000}@click="openCustomCssEditor"/);
+});

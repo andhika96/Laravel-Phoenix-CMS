@@ -2728,6 +2728,7 @@
 			const dynamicPreviewContext = computed(() => ({ ...(PBC.dynamicPreviewContext || {}), page_title: pageName.value }));
 			const pageStatus = ref(pd?.status || 'draft');
 			const customCss  = ref(pd?.custom_css || '');
+			const pageSettingsOpen = ref(false);
 			const showCssEditor = ref(false);
 			const cssEditorFullscreen = ref(false);
 			const showTextEditorModal = ref(false);
@@ -2902,6 +2903,7 @@
 				}, 500);
 			}
 			function openCustomCssEditor() {
+				closePageSettings();
 				showCssEditor.value = true;
 				nextTick(() => {
 					if (customCssEditorTextarea.value && typeof customCssEditorTextarea.value.focus === 'function') {
@@ -2912,6 +2914,16 @@
 			}
 			function closeCustomCssEditor() {
 				showCssEditor.value = false;
+			}
+			function openPageSettings() {
+				pageSettingsOpen.value = true;
+				nextTick(() => document.querySelector('.page-settings-popover input')?.focus());
+			}
+			function closePageSettings() {
+				pageSettingsOpen.value = false;
+			}
+			function handlePageSettingsKeydown(event) {
+				if (event.key === 'Escape') closePageSettings();
 			}
 			function normalizeCustomCssBeforeApply(source) {
 				const original = String(source || '');
@@ -2986,6 +2998,7 @@
 				lockWindowScrollPosition();
 				window.addEventListener('scroll', lockWindowScrollPosition, { passive: true });
 				window.addEventListener('focusin', keepFocusedEditorControlInPanel);
+				document.addEventListener('keydown', handlePageSettingsKeydown);
 				scheduleColorisInit();
 			});
 			onBeforeUnmount(() => {
@@ -2995,6 +3008,7 @@
 				if (typeof activeColumnResizeCleanup === 'function') activeColumnResizeCleanup();
 				window.removeEventListener('scroll', lockWindowScrollPosition);
 				window.removeEventListener('focusin', keepFocusedEditorControlInPanel);
+				document.removeEventListener('keydown', handlePageSettingsKeydown);
 			});
 			const selectedId  = ref('');
 			const selectedColumnNodeId = ref('');
@@ -3006,6 +3020,9 @@
 			const responsiveDevice = ref('desktop');
 			const leftCollapsed = ref(false);
 			const previewMode = ref(false);
+			watch(previewMode, (enabled) => {
+				if (enabled) closePageSettings();
+			});
 			const desktopPreviewWidth = ref('1320');
 			const widthPreviewMenuOpen = ref(false);
 			const suppressHistory = ref(false);
@@ -6070,6 +6087,7 @@
 					);
 					const successMessage = res.data?.message || 'Saved';
 					saveState.value = 'success';
+					closePageSettings();
 					saveMsg.value = typeof successMessage === 'string' ? successMessage : 'Saved';
 					showSaveToast('success', successMessage);
 					if (mode.value==='create' && res.data?.editUrl) {
@@ -6276,7 +6294,7 @@
 			const appTitle = computed(() => mode.value==='edit' ? 'Edit Page Builder' : 'Create Page Builder');
 
 			return {
-				appTitle, toolbox, elementSearch, filteredToolboxGroups, leftCollapsed, previewMode, rootNodes, loadWidget, loadWidgetSettings, hasRegisteredWidget, widgetEditorServices,
+				appTitle, pageSettingsOpen, openPageSettings, closePageSettings, toolbox, elementSearch, filteredToolboxGroups, leftCollapsed, previewMode, rootNodes, loadWidget, loadWidgetSettings, hasRegisteredWidget, widgetEditorServices,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
 				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, imageBoxImageState, iconBoxIconState, selectedNode, selectedType,
 				responsiveDevice, responsiveDevices, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
@@ -6327,7 +6345,7 @@
 		},
 
 		template: `
-<div class="builder-app">
+<div class="builder-app" @click="closePageSettings">
 	<header class="topbar">
 		<div class="topbar-left">
 			<div class="brand-lockup">
@@ -6337,7 +6355,25 @@
 			<div class="page-crumbs">
 				<span class="workspace-label">Website</span>
 				<i class="bi bi-chevron-right divider"></i>
-				<span class="page-name" :title="pageName">{{ pageName }}</span>
+				<div class="page-settings-anchor">
+					<button type="button" class="page-name" :title="'Edit settings for ' + pageName" :aria-expanded="pageSettingsOpen" @click.stop="openPageSettings">
+						<span>{{ pageName }}</span><i class="bi bi-chevron-down"></i>
+					</button>
+					<div v-if="pageSettingsOpen" class="page-settings-popover" @click.stop>
+						<div class="page-settings-header">
+							<div><strong>Page settings</strong><span>Manage this page</span></div>
+							<button type="button" class="page-settings-close" title="Close page settings" @click="closePageSettings"><i class="bi bi-x-lg"></i></button>
+						</div>
+						<div class="page-settings-body">
+							<label class="page-settings-field"><span>Page name</span><input v-model="pageName" type="text"></label>
+							<label class="page-settings-field"><span>Status</span><select v-model="pageStatus"><option value="publish">Publish</option><option value="draft">Draft</option><option value="not_active">Not Active</option></select></label>
+							<div class="page-settings-css">
+								<div><span>Custom CSS</span><small>{{ customCssSummary }}</small></div>
+								<button type="button" @click="openCustomCssEditor"><i class="bi bi-code-slash"></i>Open editor</button>
+							</div>
+						</div>
+					</div>
+				</div>
 				<span class="save-state" :class="'is-' + saveState">
 					<i class="bi" :class="saveState==='saving' ? 'bi-cloud-arrow-up' : (saveState==='error' ? 'bi-exclamation-circle' : 'bi-cloud-check')"></i>
 					{{ saveState==='saving' ? 'Saving' : (saveState==='error' ? 'Save failed' : 'Saved') }}

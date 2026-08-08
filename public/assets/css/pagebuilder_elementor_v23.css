@@ -9459,7 +9459,76 @@ body {
 .page-crumbs { min-width: 0; gap: 8px; font-size: 12px; }
 .page-crumbs .workspace-label { color: var(--muted); }
 .page-crumbs .divider { color: #b1b8c5; }
-.page-name { max-width: 220px; overflow: hidden; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.page-settings-anchor { position: relative; min-width: 0; }
+.page-name {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	max-width: 220px;
+	padding: 4px 6px;
+	border: 0;
+	border-radius: 7px;
+	background: transparent;
+	color: var(--ink);
+	font-weight: 650;
+	white-space: nowrap;
+}
+.page-name:hover,
+.page-name[aria-expanded="true"] { color: var(--brand); background: var(--brand-soft); }
+.page-name span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.page-name i { flex: 0 0 auto; color: #929bad; font-size: 8px; }
+
+.page-settings-popover {
+	position: absolute;
+	top: calc(100% + 12px);
+	left: -8px;
+	z-index: 80;
+	width: 304px;
+	border: 1px solid var(--line);
+	border-radius: 12px;
+	background: #fff;
+	box-shadow: 0 18px 48px rgba(23, 32, 51, .18);
+	overflow: visible;
+}
+
+.page-settings-popover::before {
+	position: absolute;
+	top: -6px;
+	left: 30px;
+	width: 11px;
+	height: 11px;
+	border-top: 1px solid var(--line);
+	border-left: 1px solid var(--line);
+	background: #fff;
+	transform: rotate(45deg);
+	content: "";
+}
+
+.page-settings-header {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	min-height: 56px;
+	padding: 10px 12px 10px 14px;
+	border-bottom: 1px solid var(--line);
+}
+.page-settings-header strong { display: block; font-size: 12px; }
+.page-settings-header span { display: block; margin-top: 1px; color: var(--muted); font-size: 9px; font-weight: 500; }
+.page-settings-close { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 7px; color: var(--muted); background: transparent; }
+.page-settings-close:hover { color: var(--ink); background: var(--soft); }
+.page-settings-body { display: grid; gap: 12px; padding: 14px; }
+.page-settings-field { display: grid; gap: 6px; }
+.page-settings-field > span,
+.page-settings-css > div > span { color: #4d586b; font-size: 9px; font-weight: 750; letter-spacing: .05em; text-transform: uppercase; }
+.page-settings-field input,
+.page-settings-field select { width: 100%; height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 9px; outline: 0; background: var(--soft); color: var(--ink); font-size: 11px; }
+.page-settings-field input:focus,
+.page-settings-field select:focus { border-color: rgba(91, 76, 240, .48); background: #fff; box-shadow: 0 0 0 3px rgba(91, 76, 240, .08); }
+.page-settings-css { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 2px; }
+.page-settings-css small { display: block; margin-top: 2px; color: var(--muted); font-size: 9px; }
+.page-settings-css button { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 9px; border: 1px solid #dad6ff; border-radius: 8px; color: var(--brand); background: var(--brand-soft); font-size: 9px; font-weight: 700; white-space: nowrap; }
+.page-settings-css button:hover { border-color: #c9c3ff; background: #e8e4ff; }
 .save-state { display: inline-flex; align-items: center; gap: 5px; color: var(--success); font-size: 10px; font-weight: 600; }
 .save-state.is-saving { color: var(--brand); }
 .save-state.is-error { color: var(--danger); }
