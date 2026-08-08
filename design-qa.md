@@ -104,6 +104,54 @@ The reference and local implementation screenshots were reviewed together at the
 
 final result: passed
 
+# Design QA - Page Builder v2.3 Shared Form Controls Audit
+
+Date: 2026-08-09
+
+## Sources compared
+
+- Approved v2.3 prototype: `D:\Laragon\www\laravel-13-phoenix\public\mockups\pagebuilder-editor-redesign-prototype-v2.3.html`.
+- Official Elementor Flexbox playground Heading Typography control.
+- Reported screenshots covering four-side controls, Link, Typography, and v2.0 number-spinner behavior.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+- Audit artifact: `C:\Users\aruna\.codex\visualizations\2026\08\09\pagebuilder-v23-shared-controls-audit\runtime-shared-control-audit.json`.
+- Combined comparisons:
+  - `compare-heading-style-prototype-left-runtime-right.png`
+  - `compare-heading-advanced-prototype-left-runtime-right.png`
+  - `compare-final-typography-elementor-left-v23-right.png`
+  - all stored under `C:\Users\aruna\.codex\visualizations\2026\08\09\pagebuilder-v23-shared-controls-audit`.
+
+The prototype, Elementor reference, and latest runtime were inspected together at the same 1280 x 720 browser viewport. The shared fix was then exercised across every registered v2.3 widget and each available Content, Layout, Style, and Advanced state.
+
+## Verification states
+
+- Cross-widget audit: 34 widgets, 101 settings states, 1,897 visible controls, 783 number inputs, 95 four-side groups, 341 range rows, and 20 Link compound rows; zero measured layout violations and zero audit errors.
+- Four-side controls: all visible Margin, Padding, and related groups measured four 30px number inputs plus a 28 x 30px link button; chain icons measured 9px.
+- Number controls: computed `appearance` is `auto`, preserving native increment/decrement controls.
+- Link compound field: input and options button are adjacent with zero gap, equal 34px height, and a 34px options button.
+- Typography: official Elementor popover measured 514.33px high; v2.3 measured 512.33px high with no horizontal overflow.
+- Link options popover measured 188.08px high with 10px padding and no horizontal overflow.
+- Runtime safety: no Save action was performed.
+
+## Findings and corrections
+
+- Restored number increment/decrement controls throughout v2.3 instead of changing only the reported Margin and Padding fields.
+- Normalized both shared four-side implementations so number cells and the link button share one continuous, aligned compound control.
+- Reduced the chain icon and link-options gear to the prototype's compact hierarchy.
+- Corrected Link input radii and adjacency so the input and options button render as one field.
+- Reduced shared range value columns and unit cells, including the Divider overflow case found outside the supplied screenshots.
+- Corrected the nested Divider value/unit collision from a measured 32px overlap to 0px, while retaining a 52px value cell and 36px unit cell inside the shared 92px value area.
+- Preserved the dedicated three-cell Grid and Row Grid gap geometry (`1fr 54px 36px`) so the range, numeric value, and unit remain on one row without spill.
+- Restored the compact standalone four-side geometry used by Container/Grid shadow and position controls: four equal 30px fields, 6px gaps, and 7px field radii.
+- Removed the final doubled right-border seam from all linked four-side number cells, including Image Carousel.
+- Tightened Typography, Text Stroke, Text Shadow, CSS Filter, and Link popover padding, gaps, field sizes, and value columns.
+- Reduced Typography from 632.33px before correction to 512.33px after correction, matching the official Elementor control height within 2px.
+- P0: none.
+- P1: none.
+- P2: none in the audited desktop states.
+
+final result: passed for all 34 widgets and 101 audited v2.3 settings states
+
 # Design QA - Page Builder v2.3 Literal Prototype Control Contract
 
 Date: 2026-08-09
