@@ -1,0 +1,90 @@
+@php
+	$settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
+	$nodeId = trim((string) ($node['id'] ?? 'basic-gallery')) ?: 'basic-gallery';
+	$safeUrl = function (mixed $value): string {
+		$url = trim((string) $value);
+		if ($url === '' || str_starts_with($url, '//')) return '';
+		return preg_match('/^(?:https?:|\/)/i', $url) ? $url : '';
+	};
+	$cssLength = function (mixed $value, string $fallback = '0px'): string {
+		$raw = trim((string) $value);
+		return preg_match('/^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i', $raw) ? $raw : $fallback;
+	};
+	$cssColor = function (mixed $value, string $fallback): string {
+		$raw = trim((string) $value);
+		return $raw !== '' && preg_match('/^[#a-z0-9(),.%\s-]+$/i', $raw) ? $raw : $fallback;
+	};
+	$enum = function (mixed $value, array $allowed, string $fallback): string {
+		$raw = strtolower(trim((string) $value));
+		return in_array($raw, $allowed, true) ? $raw : $fallback;
+	};
+	$responsive = function (string $base, string $suffix = '', mixed $fallback = '') use ($settings): mixed {
+		$keys = $suffix === 'Mobile' ? [$base.'Mobile', $base.'Tablet', $base] : ($suffix === 'Tablet' ? [$base.'Tablet', $base] : [$base]);
+		foreach ($keys as $key) {
+			$value = $settings[$key] ?? null;
+			if ($value !== '' && $value !== null) return $value;
+		}
+		return $fallback;
+	};
+	$columnCount = function (string $suffix = '') use ($responsive): int {
+		return max(1, min(10, (int) $responsive('columns', $suffix, $suffix === 'Mobile' ? 1 : ($suffix === 'Tablet' ? 2 : 4))));
+	};
+	$imageResolution = $enum($settings['imageResolution'] ?? 'thumbnail', ['thumbnail', 'medium', 'medium_large', 'large', '1536x1536', '2048x2048', 'full', 'custom'], 'thumbnail');
+	$customWidth = max(1, min(4096, (int) ($settings['customImageWidth'] ?? 150)));
+	$customHeight = max(1, min(4096, (int) ($settings['customImageHeight'] ?? 150)));
+	$resolver = app(\App\Support\PageBuilderElementorV23\ImageRenditionResolver::class);
+	$images = [];
+	foreach (is_array($settings['images'] ?? null) ? $settings['images'] : [] as $index => $image) {
+		if (!is_array($image)) continue;
+		$url = $safeUrl($image['url'] ?? '');
+		if ($url === '') continue;
+		$url = $resolver->resolve($url, $imageResolution, $imageResolution === 'custom' ? $customWidth : null, $imageResolution === 'custom' ? $customHeight : null);
+		$images[] = ['id' => preg_replace('/[^A-Za-z0-9_-]/', '', (string) ($image['id'] ?? 'gallery-'.$index)) ?: 'gallery-'.$index, 'url' => $url, 'alt' => (string) ($image['alt'] ?? ''), 'caption' => (string) ($image['caption'] ?? ''), 'attachmentUrl' => $safeUrl($image['attachmentUrl'] ?? '')];
+	}
+	if (($settings['orderBy'] ?? 'default') === 'random' && count($images) > 1) shuffle($images);
+	$linkType = $enum($settings['linkType'] ?? 'media', ['none', 'media', 'attachment'], 'media');
+	$captionType = $enum($settings['captionType'] ?? 'caption', ['none', 'caption'], 'caption');
+	$lightbox = $enum($settings['lightbox'] ?? 'default', ['default', 'yes', 'no'], 'default');
+	$gapMode = $enum($settings['gapMode'] ?? 'default', ['default', 'no_gap', 'narrow', 'extended', 'wide', 'custom'], 'default');
+	$gapPresets = ['default' => '10px', 'no_gap' => '0px', 'narrow' => '5px', 'extended' => '15px', 'wide' => '20px'];
+	$gap = fn (string $suffix = ''): string => $gapMode === 'custom' ? $cssLength($responsive('gap', $suffix, '10px'), '10px') : ($gapPresets[$gapMode] ?? '10px');
+	$borderType = $enum($settings['imageBorderType'] ?? 'default', ['default', 'none', 'solid', 'double', 'dotted', 'dashed', 'groove'], 'default');
+	$actualBorderType = in_array($borderType, ['default', 'none'], true) ? 'none' : $borderType;
+	$imageStyle = implode(';', ['border-style:'.$actualBorderType, 'border-width:'.$cssLength($settings['imageBorderWidthTop'] ?? '0px').' '.$cssLength($settings['imageBorderWidthRight'] ?? '0px').' '.$cssLength($settings['imageBorderWidthBottom'] ?? '0px').' '.$cssLength($settings['imageBorderWidthLeft'] ?? '0px'), 'border-color:'.$cssColor($settings['imageBorderColor'] ?? '', 'transparent'), 'border-radius:'.$cssLength($settings['imageBorderRadiusTop'] ?? '0px').' '.$cssLength($settings['imageBorderRadiusRight'] ?? '0px').' '.$cssLength($settings['imageBorderRadiusBottom'] ?? '0px').' '.$cssLength($settings['imageBorderRadiusLeft'] ?? '0px')]);
+	$fontFamily = (string) ($settings['captionFontFamily'] ?? 'inherit');
+	if (!preg_match('/^[A-Za-z0-9 _,\'"-]+$/', $fontFamily)) $fontFamily = 'inherit';
+	$captionStyle = implode(';', ['color:'.$cssColor($settings['captionColor'] ?? '', 'inherit'), 'text-align:'.$enum($responsive('captionAlignment', '', 'center'), ['left','center','right','justify'], 'center'), 'font-family:'.$fontFamily, 'font-size:'.$cssLength($responsive('captionFontSize', '', '16px'), '16px'), 'font-weight:'.preg_replace('/[^A-Za-z0-9-]/', '', (string) ($settings['captionFontWeight'] ?? '400')), 'line-height:'.$cssLength($responsive('captionLineHeight', '', '1.5em'), '1.5em'), 'letter-spacing:'.$cssLength($responsive('captionLetterSpacing', '', '0px'), '0px'), 'word-spacing:'.$cssLength($responsive('captionWordSpacing', '', '0px'), '0px'), 'text-transform:'.$enum($settings['captionTextTransform'] ?? 'none', ['none','uppercase','lowercase','capitalize'], 'none'), 'font-style:'.$enum($settings['captionFontStyle'] ?? 'normal', ['normal','italic','oblique'], 'normal'), 'text-decoration:'.$enum($settings['captionTextDecoration'] ?? 'none', ['none','underline','overline','line-through'], 'none'), 'text-shadow:'.(preg_match('/^[#a-z0-9(),.%\s-]+$/i', (string) ($settings['captionTextShadow'] ?? 'none')) ? (string) ($settings['captionTextShadow'] ?? 'none') : 'none'), 'margin-top:'.$cssLength($responsive('captionSpacing', '', '8px'), '8px')]);
+	$advanced = app(\App\Support\PageBuilderElementorV23\WidgetAdvancedStyleResolver::class)->resolve($settings, $nodeId, request());
+	$rootClasses = array_values(array_unique(array_merge(['el-widget-basic-gallery', 'pb-basic-gallery'], $advanced['classes'])));
+	$rootStyle = '--pb-basic-gallery-columns:'.$columnCount().';--pb-basic-gallery-columns-tablet:'.$columnCount('Tablet').';--pb-basic-gallery-columns-mobile:'.$columnCount('Mobile').';--pb-basic-gallery-gap:'.$gap().';--pb-basic-gallery-gap-tablet:'.$gap('Tablet').';--pb-basic-gallery-gap-mobile:'.$gap('Mobile');
+	$radius = fn (string $suffix): string => implode(' ', array_map(fn ($side) => $cssLength($responsive('imageBorderRadius'.$side, $suffix, $settings['imageBorderRadius'.$side] ?? '0px'), '0px'), ['Top','Right','Bottom','Left']));
+	$captionResponsiveStyle = fn (string $suffix): string => implode(';', [
+		'text-align:'.$enum($responsive('captionAlignment', $suffix, 'center'), ['left','center','right','justify'], 'center'),
+		'font-size:'.$cssLength($responsive('captionFontSize', $suffix, '16px'), '16px'),
+		'line-height:'.$cssLength($responsive('captionLineHeight', $suffix, '1.5em'), '1.5em'),
+		'letter-spacing:'.$cssLength($responsive('captionLetterSpacing', $suffix, '0px'), '0px'),
+		'word-spacing:'.$cssLength($responsive('captionWordSpacing', $suffix, '0px'), '0px'),
+		'margin-top:'.$cssLength($responsive('captionSpacing', $suffix, '8px'), '8px'),
+	]);
+	$mediaRules = '@media(max-width:1024px){#'.$advanced['id'].'{--pb-basic-gallery-columns:'.$columnCount('Tablet').';--pb-basic-gallery-gap:'.$gap('Tablet').'}#'.$advanced['id'].' img{border-radius:'.$radius('Tablet').'}#'.$advanced['id'].' .pb-basic-gallery__caption{'.$captionResponsiveStyle('Tablet').'}}';
+	$mediaRules .= '@media(max-width:767px){#'.$advanced['id'].'{--pb-basic-gallery-columns:'.$columnCount('Mobile').';--pb-basic-gallery-gap:'.$gap('Mobile').'}#'.$advanced['id'].' img{border-radius:'.$radius('Mobile').'}#'.$advanced['id'].' .pb-basic-gallery__caption{'.$captionResponsiveStyle('Mobile').'}}';
+@endphp
+
+<div id="{{ $advanced['id'] }}" class="{{ implode(' ', $rootClasses) }}" style="{{ $rootStyle }}" data-basic-gallery data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName => $attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach>
+	@if(empty($images))
+		<div class="pb-basic-gallery__empty"><i class="fas fa-th" aria-hidden="true"></i><span>No images selected</span></div>
+	@else
+		<div class="pb-basic-gallery__grid">
+			@foreach($images as $image)
+				@php $linkUrl = $linkType === 'none' ? '' : ($linkType === 'attachment' ? ($image['attachmentUrl'] ?: $image['url']) : $image['url']); @endphp
+				<figure class="pb-basic-gallery__item">
+					@if($linkUrl !== '')<a href="{{ $linkUrl }}" @if($linkType === 'media' && $lightbox !== 'no') data-basic-gallery-lightbox @endif>@endif
+					<img src="{{ $image['url'] }}" alt="{{ $image['alt'] }}" style="{{ $imageStyle }}">
+					@if($linkUrl !== '')</a>@endif
+					@if($captionType === 'caption' && $image['caption'] !== '')<figcaption class="pb-basic-gallery__caption" style="{{ $captionStyle }}">{{ $image['caption'] }}</figcaption>@endif
+				</figure>
+			@endforeach
+		</div>
+	@endif
+</div>
+<style>{!! $advanced['css'].$mediaRules !!}</style>

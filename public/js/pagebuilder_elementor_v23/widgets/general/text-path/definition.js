@@ -1,0 +1,54 @@
+(function (registry) {
+	'use strict';
+	if (!registry) throw new Error('Page Builder Elementor widget registry is not loaded.');
+	const shared = () => window.PageBuilderElementorV23ComplexWidgetRuntime?.image_box?.defaults?.() || {};
+	const defaults = () => ({
+		...shared(),
+		text: 'Add Your Curvy Text Here',
+		pathType: 'wave',
+		customSvgUrl: '',
+		linkUrl: '', linkTarget: '', linkNofollow: false, linkCustomAttributes: [],
+		alignment: 'left', alignmentTablet: '', alignmentMobile: '',
+		textDirection: 'default',
+		showPath: false,
+		size: '500px', sizeTablet: '', sizeMobile: '',
+		rotate: '0deg', rotateTablet: '', rotateMobile: '',
+		textColor: '#101828', textColorHover: '#101828',
+		textFontFamily: 'inherit', textFontSize: '20px', textFontSizeTablet: '', textFontSizeMobile: '', textFontWeight: '400', textTextTransform: 'none', textFontStyle: 'normal', textTextDecoration: 'none', textLineHeight: '1.2em', textLineHeightTablet: '', textLineHeightMobile: '', textLetterSpacing: '0px', textLetterSpacingTablet: '', textLetterSpacingMobile: '', textWordSpacing: '0px', textWordSpacingTablet: '', textWordSpacingMobile: '',
+		textStrokeWidth: '0px', textStrokeWidthTablet: '', textStrokeWidthMobile: '', textStrokeColor: 'currentColor',
+		wordSpacing: '0px', wordSpacingTablet: '', wordSpacingMobile: '',
+		startingPoint: 0,
+		hoverAnimation: 'none', transitionDuration: 0.3,
+		pathColor: 'transparent', pathColorHover: 'transparent',
+		pathStrokeColor: '#f04438', pathStrokeColorHover: '#f04438',
+		pathStrokeWidth: '1px', pathStrokeWidthTablet: '', pathStrokeWidthMobile: '',
+		pathStrokeWidthHover: '1px', pathStrokeWidthHoverTablet: '', pathStrokeWidthHoverMobile: '',
+		pathTransitionDuration: 0.3,
+	});
+	const animations = ['none','grow','shrink','pulse','pulse-grow','pulse-shrink','push','pop','bounce-in','bounce-out','rotate','grow-rotate','float','sink','bob','hang','skew','skew-forward','skew-backward','wobble-vertical','wobble-horizontal','wobble-to-bottom-right','wobble-to-top-right','wobble-top','wobble-bottom','wobble-skew','buzz','buzz-out'];
+	registry.register({
+		type: 'text_path', label: 'Text Path', category: 'general', icon: 'fas fa-bezier-curve', toolbox: true,
+		canvas: '/js/pagebuilder_elementor_v23/widgets/general/text-path/Canvas.vue',
+		settings: '/js/pagebuilder_elementor_v23/widgets/general/text-path/Settings.vue',
+		defaults,
+		normalize(node) {
+			const settings = node.settings = { ...defaults(), ...(node.settings || {}) };
+			settings.text = String(settings.text ?? '');
+			settings.pathType = ['wave','arc','circle','line','oval','spiral','custom'].includes(settings.pathType) ? settings.pathType : 'wave';
+			settings.customSvgUrl = String(settings.customSvgUrl || '').trim();
+			settings.linkUrl = String(settings.linkUrl || '').trim();
+			settings.linkTarget = settings.linkTarget === '_blank' ? '_blank' : '';
+			settings.linkNofollow = !!settings.linkNofollow;
+			settings.linkCustomAttributes = Array.isArray(settings.linkCustomAttributes) ? settings.linkCustomAttributes : [];
+			settings.alignment = ['left','center','right'].includes(settings.alignment) ? settings.alignment : 'left';
+			['alignmentTablet','alignmentMobile'].forEach((key) => { settings[key] = settings[key] === '' || ['left','center','right'].includes(settings[key]) ? settings[key] : ''; });
+			settings.textDirection = ['default','rtl','ltr'].includes(settings.textDirection) ? settings.textDirection : 'default';
+			settings.showPath = !!settings.showPath;
+			settings.startingPoint = Math.max(0, Math.min(100, Number(settings.startingPoint) || 0));
+			settings.hoverAnimation = animations.includes(settings.hoverAnimation) ? settings.hoverAnimation : 'none';
+			settings.transitionDuration = Math.max(0, Math.min(10, Number(settings.transitionDuration) || 0.3));
+			settings.pathTransitionDuration = Math.max(0, Math.min(10, Number(settings.pathTransitionDuration) || 0.3));
+			return node;
+		},
+	});
+})(window.PageBuilderElementorV23Widgets);
