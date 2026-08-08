@@ -56,8 +56,10 @@ class EditPageBuilderElementorRequest extends FormRequest
 		}
 
 		$page = Page_Builder::query()
-			->where('uri', $idOrSlug)
-			->orWhere('id', $idOrSlug)
+			->where('editor_version', Page_Builder::EDITOR_VERSION_V20)
+			->where(fn ($query) => $query
+				->where('uri', $idOrSlug)
+				->orWhere('id', $idOrSlug))
 			->first();
 
 		return $page?->id;

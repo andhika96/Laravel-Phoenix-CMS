@@ -37,6 +37,7 @@ class PageBuilderElementorFormSubmissionTest extends TestCase
             $table->text('custom_css')->nullable();
             $table->text('vars');
             $table->string('status')->default('publish');
+            $table->string('editor_version', 10)->default('2.0');
             $table->timestamps();
         });
 
@@ -276,6 +277,7 @@ class PageBuilderElementorFormSubmissionTest extends TestCase
                 'children' => [$form],
             ]], JSON_THROW_ON_ERROR),
             'status' => 'publish',
+            'editor_version' => Page_Builder::EDITOR_VERSION_V20,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

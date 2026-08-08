@@ -61,10 +61,12 @@ class PageBuilderElementor_Controller extends Controller
 	{
 		$this->prepareCkfinderSession($request);
 
-		$pageData = Page_Builder::query()
-			->where('uri', $idOrSlug)
-			->orWhere('id', $idOrSlug)
-			->first();
+		$pageData = $this->resolveOwnedPage($idOrSlug);
+
+		if (! $pageData)
+		{
+			return $this->missingOrVersionConflict($idOrSlug, false);
+		}
 
 		if ($pageData)
 		{
@@ -98,6 +100,7 @@ class PageBuilderElementor_Controller extends Controller
 					'custom_css' => $this->normalizeCustomCssPayload($request->input('customCss', '')),
 					'vars' => $layoutPayload,
 					'status' => $request->input('pageStatus', 'draft'),
+					'editor_version' => Page_Builder::EDITOR_VERSION_V20,
 				];
 
 				$pageBuilder = Page_Builder::create($newData);
@@ -159,14 +162,11 @@ class PageBuilderElementor_Controller extends Controller
 
 	public function update(EditPageBuilderElementorRequest $request, $idOrSlug)
 	{
-		$pageData = Page_Builder::query()
-			->where('uri', $idOrSlug)
-			->orWhere('id', $idOrSlug)
-			->first();
+		$pageData = $this->resolveOwnedPage($idOrSlug);
 
 		if (! $pageData)
 		{
-			abort(404);
+			return $this->missingOrVersionConflict($idOrSlug, $request->wantsJson());
 		}
 
 		if ($request->validated())
@@ -248,14 +248,11 @@ class PageBuilderElementor_Controller extends Controller
 
 	public function preview($idOrSlug)
 	{
-		$pageData = Page_Builder::query()
-			->where('uri', $idOrSlug)
-			->orWhere('id', $idOrSlug)
-			->first();
+		$pageData = $this->resolveOwnedPage($idOrSlug);
 
 		if (! $pageData)
 		{
-			abort(404);
+			return $this->missingOrVersionConflict($idOrSlug, false);
 		}
 
 		$nodes = is_array($pageData->vars)
@@ -270,10 +267,12 @@ class PageBuilderElementor_Controller extends Controller
 
 	public function submitForm(Request $request, $idOrSlug, $nodeId, FormSubmissionHandler $handler)
 	{
-		$pageData = Page_Builder::query()
-			->where('uri', $idOrSlug)
-			->orWhere('id', $idOrSlug)
-			->firstOrFail();
+		$pageData = $this->resolveOwnedPage($idOrSlug);
+
+		if (! $pageData)
+		{
+			return $this->missingOrVersionConflict($idOrSlug, true);
+		}
 
 		try
 		{
@@ -304,19 +303,11 @@ class PageBuilderElementor_Controller extends Controller
 
 	public function getData($idOrSlug)
 	{
-		$pageData = Page_Builder::query()
-			->where('uri', $idOrSlug)
-			->orWhere('id', $idOrSlug)
-			->first();
+		$pageData = $this->resolveOwnedPage($idOrSlug);
 
 		if (! $pageData)
 		{
-			return response()->json(
-			[
-				'success' => false,
-				'status' => 'failed',
-				'message' => t('Page data not found'),
-			], 404);
+			return $this->missingOrVersionConflict($idOrSlug, true);
 		}
 
 		return response()->json(
@@ -362,6 +353,51 @@ class PageBuilderElementor_Controller extends Controller
 		}
 
 		return $query->exists();
+	}
+
+	private function resolveOwnedPage(string|int $idOrSlug): ?Page_Builder
+	{
+		return Page_Builder::query()
+			->where('editor_version', Page_Builder::EDITOR_VERSION_V20)
+			->where(fn ($query) => $query
+				->where('uri', $idOrSlug)
+				->orWhere('id', $idOrSlug))
+			->first();
+	}
+
+	private function missingOrVersionConflict(string|int $idOrSlug, bool $wantsJson)
+	{
+		$page = Page_Builder::query()
+			->where(fn ($query) => $query
+				->where('uri', $idOrSlug)
+				->orWhere('id', $idOrSlug))
+			->first();
+
+		if (! $page)
+		{
+			if ($wantsJson)
+			{
+				return response()->json([
+					'success' => false,
+					'status' => 'failed',
+					'message' => t('Page data not found'),
+				], 404);
+			}
+
+			abort(404);
+		}
+
+		if ($wantsJson)
+		{
+			return response()->json([
+				'success' => false,
+				'status' => 'failed',
+				'message' => t('This page belongs to a different editor version'),
+				'editorVersion' => $page->editor_version,
+			], 409);
+		}
+
+		abort(409, 'This page belongs to a different editor version.');
 	}
 
 	private function normalizeLayoutPayload($layout): string
