@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Page_Builder_Elementor\AddPageBuilderElementorRequest;
 use App\Http\Requests\Page_Builder_Elementor\EditPageBuilderElementorRequest;
 use App\Models\Page_Builder\Page_Builder;
+use App\Support\PageBuilderElementor\FormSubmissionHandler;
 use App\Support\PageBuilderElementor\ImageRenditionResolver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class PageBuilderElementor_Controller extends Controller
 {
@@ -263,6 +266,40 @@ class PageBuilderElementor_Controller extends Controller
 			'pageData' => $pageData,
 			'nodes'    => $nodes,
 		]);
+	}
+
+	public function submitForm(Request $request, $idOrSlug, $nodeId, FormSubmissionHandler $handler)
+	{
+		$pageData = Page_Builder::query()
+			->where('uri', $idOrSlug)
+			->orWhere('id', $idOrSlug)
+			->firstOrFail();
+
+		try
+		{
+			return response()->json($handler->handle($pageData, (string) $nodeId, $request));
+		}
+		catch (ValidationException $exception)
+		{
+			return response()->json([
+				'success' => false,
+				'message' => collect($exception->errors())->flatten()->first() ?: 'Please check the form fields.',
+				'errors' => $exception->errors(),
+			], 422);
+		}
+		catch (HttpExceptionInterface $exception)
+		{
+			throw $exception;
+		}
+		catch (\Throwable $exception)
+		{
+			report($exception);
+
+			return response()->json([
+				'success' => false,
+				'message' => 'An error occurred while submitting the form.',
+			], 500);
+		}
 	}
 
 	public function getData($idOrSlug)

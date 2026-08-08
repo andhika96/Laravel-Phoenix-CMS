@@ -1,0 +1,123 @@
+<?php
+
+namespace Tests\Feature;
+
+use Illuminate\Support\Facades\File;
+use Tests\TestCase;
+
+class PageBuilderElementorProWidgetsTest extends TestCase
+{
+    private const WIDGETS = [
+        'form' => ['Form', 'form'],
+        'slides' => ['Slides', 'slides'],
+        'animated_headline' => ['Animated Headline', 'animated-headline'],
+        'hotspot' => ['Hotspot', 'hotspot'],
+        'price_list' => ['Price List', 'price-list'],
+        'price_table' => ['Price Table', 'price-table'],
+        'call_to_action' => ['Call to Action', 'call-to-action'],
+        'countdown' => ['Countdown', 'countdown'],
+        'carousel' => ['Carousel', 'carousel'],
+        'flip_box' => ['Flip Box', 'flip-box'],
+    ];
+
+    public function test_ten_widgets_are_registered_in_a_dedicated_pro_category(): void
+    {
+        foreach (self::WIDGETS as $type => [$label, $directory]) {
+            $module = config("pagebuilder_elementor_widgets.{$type}");
+
+            $this->assertIsArray($module, "Missing {$type} module.");
+            $this->assertSame($type, $module['type']);
+            $this->assertSame($label, $module['label']);
+            $this->assertSame('pro', $module['category']);
+            $this->assertTrue($module['toolbox']);
+            $this->assertStringContainsString("/pro/{$directory}/definition.js", $module['definition']);
+            $this->assertFileExists(public_path($module['definition']));
+            $this->assertFileExists(public_path($module['canvas']));
+            $this->assertFileExists(public_path($module['settings']));
+            $this->assertTrue(view()->exists($module['view']));
+        }
+    }
+
+    public function test_toolbox_and_editor_shell_render_the_pro_category(): void
+    {
+        $app = File::get(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertStringContainsString('toolbox.pro', $app);
+        $this->assertStringContainsString('>Pro<', $app);
+        foreach (array_keys(self::WIDGETS) as $type) {
+            $this->assertStringContainsString("{$type}:", $app);
+        }
+    }
+
+    public function test_pro_settings_map_elementor_content_style_and_shared_advanced_controls(): void
+    {
+        $settings = File::get(public_path('js/pagebuilder_elementor/widgets/pro/shared/Settings.vue'));
+
+        foreach ([
+            'Form Fields', 'Actions After Submit', 'Slider Options', 'Animated Text',
+            'Tooltip', 'Separator', 'Currency Symbol', 'Hover Effects', 'Actions After Expire',
+            'Slides on display', 'Flip Effect', 'Normal', 'Hover', 'Border Radius',
+        ] as $label) {
+            $this->assertStringContainsString($label, $settings);
+        }
+
+        $this->assertStringContainsString('editor.widgetAdvancedControls', $settings);
+        $this->assertStringContainsString('editor.typographyControl', $settings);
+        $this->assertStringContainsString('editor.linkControl', $settings);
+        $this->assertStringNotContainsString('v-if="false"', $settings);
+        $this->assertStringContainsString('prefix="formLabel"', $settings);
+        $this->assertStringContainsString('prefix="slideTitle"', $settings);
+        $this->assertStringContainsString('prefix="headline"', $settings);
+        $this->assertStringContainsString('prefix="tooltip"', $settings);
+        $this->assertStringContainsString('prefix="priceListTitle"', $settings);
+        $this->assertStringContainsString('prefix="priceTablePrice"', $settings);
+        $this->assertStringContainsString('prefix="ctaTitle"', $settings);
+        $this->assertStringContainsString('prefix="countdownDigit"', $settings);
+        $this->assertStringContainsString('prefix="carouselTitle"', $settings);
+        $this->assertStringContainsString('prefix="flipFrontTitle"', $settings);
+        $this->assertGreaterThanOrEqual(7, substr_count($settings, '<link-field'));
+        $this->assertStringContainsString('pb-widget-settings--pro', $settings);
+        $this->assertStringContainsString('responsive', $settings);
+        $this->assertStringContainsString('unit', $settings);
+    }
+
+    public function test_pro_canvas_contains_widget_specific_accessible_interactions(): void
+    {
+        $canvas = File::get(public_path('js/pagebuilder_elementor/widgets/pro/shared/Canvas.vue'));
+
+        foreach (['data-pro-form', 'data-pro-slides', 'data-pro-hotspot', 'data-pro-countdown', 'data-pro-carousel', 'data-pro-flip-box'] as $hook) {
+            $this->assertStringContainsString($hook, $canvas);
+        }
+
+        $this->assertStringContainsString('aria-live', $canvas);
+        $this->assertStringContainsString('@click.stop', $canvas);
+        $this->assertStringContainsString('@keydown', $canvas);
+        $this->assertStringContainsString('prefers-reduced-motion', $canvas);
+    }
+
+    public function test_frontend_renderer_outputs_each_pro_widget_and_sanitizes_unsafe_links(): void
+    {
+        foreach (array_keys(self::WIDGETS) as $type) {
+            $html = view('pagebuilder_elementor.partials.render_pro_widget', [
+                'node' => [
+                    'id' => "{$type}-example",
+                    'type' => $type,
+                    'settings' => ['linkUrl' => 'javascript:alert(1)', 'buttonLink' => 'javascript:alert(1)'],
+                ],
+            ])->render();
+
+            $this->assertStringContainsString("data-pro-widget=\"{$type}\"", $html);
+            $this->assertStringNotContainsString('javascript:', $html);
+        }
+    }
+
+    public function test_frontend_runtime_initializes_pro_interactions_once(): void
+    {
+        $runtime = File::get(public_path('js/pagebuilder_elementor/frontend-runtime.js'));
+
+        foreach (['initProSlides', 'initProCarousel', 'initProCountdown', 'initProHotspot', 'initProFlipBox', 'initProForm'] as $function) {
+            $this->assertStringContainsString("function {$function}", $runtime);
+        }
+        $this->assertStringContainsString('data-pb-pro-ready', $runtime);
+    }
+}

@@ -1,0 +1,630 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import test from "node:test";
+import vm from "node:vm";
+
+const canvasPath = new URL(
+    "../public/js/pagebuilder_elementor/widgets/pro/shared/Canvas.vue",
+    import.meta.url,
+);
+const appPath = new URL(
+    "../public/js/pagebuilder_elementor/app.js",
+    import.meta.url,
+);
+const widgetRegistryPath = new URL(
+    "../public/js/pagebuilder_elementor/widget-registry.js",
+    import.meta.url,
+);
+const formDefinitionPath = new URL(
+    "../public/js/pagebuilder_elementor/widgets/pro/form/definition.js",
+    import.meta.url,
+);
+const fontAwesomeMetadataPath = new URL(
+    "../public/assets/plugins/fontawesome/5.15.3/metadata/icons.json",
+    import.meta.url,
+);
+
+function componentFromVueFile(path) {
+    const source = fs.readFileSync(path, "utf8");
+    const match = source.match(/<script>([\s\S]*?)<\/script>/);
+    assert.ok(match, `Missing <script> in ${path.pathname}`);
+
+    return new Function(match[1].replace("export default", "return"))();
+}
+
+function canvasContext(type, settings, responsiveDevice = "desktop") {
+    const component = componentFromVueFile(canvasPath);
+    const context = {
+        item: { id: `${type}-test`, type, settings },
+        responsiveDevice,
+        ...component.data(),
+    };
+
+    for (const [name, method] of Object.entries(component.methods))
+        context[name] = method.bind(context);
+    for (const [name, getter] of Object.entries(component.computed)) {
+        Object.defineProperty(context, name, {
+            configurable: true,
+            get: () => getter.call(context),
+        });
+    }
+
+    return context;
+}
+
+test("Form toolbox icon uses a style bundled by Font Awesome", () => {
+    const context = { window: {} };
+    vm.runInNewContext(fs.readFileSync(widgetRegistryPath, "utf8"), context);
+    vm.runInNewContext(fs.readFileSync(formDefinitionPath, "utf8"), context);
+
+    const item = context.window.PageBuilderElementorWidgets
+        .toolbox()
+        .pro.find((widget) => widget.type === "form");
+    const [prefix, iconClass] = item.icon.split(/\s+/);
+    const style = { fas: "solid", far: "regular", fab: "brands" }[prefix];
+    const iconName = iconClass.replace(/^fa-/, "");
+    const metadata = JSON.parse(
+        fs.readFileSync(fontAwesomeMetadataPath, "utf8"),
+    );
+
+    assert.ok(
+        metadata[iconName]?.styles.includes(style),
+        `${item.icon} is not available in the bundled Font Awesome style`,
+    );
+});
+
+test("Form element labels use a style bundled by Font Awesome", () => {
+    const source = fs.readFileSync(appPath, "utf8");
+    const iconMap = source.match(
+        /const NODE_LABEL_ICONS = Object\.freeze\((\{[\s\S]*?\})\);/,
+    );
+    const resolver = source.match(
+        /function nodeLabelIcon\(type\) \{[\s\S]*?\n\t\}/,
+    );
+    assert.ok(iconMap, "Missing NODE_LABEL_ICONS");
+    assert.ok(resolver, "Missing nodeLabelIcon");
+
+    const context = {};
+    vm.createContext(context);
+    vm.runInContext(`const NODE_LABEL_ICONS = ${iconMap[1]};`, context);
+    vm.runInContext(resolver[0], context);
+    const [prefix, iconClass] = vm.runInContext(
+        'nodeLabelIcon("form")',
+        context,
+    ).split(/\s+/);
+    const style = { fas: "solid", far: "regular", fab: "brands" }[prefix];
+    const iconName = iconClass.replace(/^fa-/, "");
+    const metadata = JSON.parse(
+        fs.readFileSync(fontAwesomeMetadataPath, "utf8"),
+    );
+
+    assert.ok(
+        metadata[iconName]?.styles.includes(style),
+        `${prefix} ${iconClass} is not available in the bundled Font Awesome style`,
+    );
+});
+
+test("Price List Style controls resolve to canvas item, separator, and image styles", () => {
+    const context = canvasContext("price_list", {
+        items: [
+            {
+                id: "item-1",
+                title: "Coffee",
+                price: "$4",
+                description: "Fresh",
+                imageUrl: "/coffee.jpg",
+            },
+        ],
+        rowGap: "24px",
+        verticalAlign: "middle",
+        separatorStyle: "dashed",
+        separatorWeight: "3px",
+        separatorColor: "#123456",
+        separatorSpacing: "12px",
+        imageSize: "72px",
+        imageRadius: "9px",
+        imageSpacing: "18px",
+    });
+
+    assert.equal(context.priceListRootStyle.gap, "24px");
+    assert.equal(context.priceListItemStyle.alignItems, "center");
+    assert.equal(context.priceListItemStyle.gap, "18px");
+    assert.equal(context.priceListSeparatorStyle.borderBottomStyle, "dashed");
+    assert.equal(context.priceListSeparatorStyle.borderBottomWidth, "3px");
+    assert.equal(context.priceListSeparatorStyle.borderBottomColor, "#123456");
+    assert.equal(context.priceListSeparatorStyle.marginInline, "12px");
+    assert.equal(context.priceListTitleStyle.color, "#101828");
+    assert.equal(context.priceListPriceStyle.color, "#6979f8");
+    assert.equal(context.priceListDescriptionStyle.color, "#667085");
+    assert.deepEqual(context.priceListImageStyle, {
+        width: "72px",
+        height: "72px",
+        borderRadius: "9px",
+    });
+});
+
+test("Price Table sale, divider, ribbon, and color controls resolve on canvas", () => {
+    const context = canvasContext("price_table", {
+        price: "1234.56",
+        currencyFormat: "period",
+        sale: true,
+        originalPrice: "1499.00",
+        featuresBackground: "#112233",
+        featuresColor: "#f5f5f5",
+        featureDivider: true,
+        featureDividerColor: "#445566",
+        featureDividerWidth: "2px",
+        ribbonBackground: "#778899",
+        ribbonTextColor: "#ffffff",
+        ribbonPosition: "left",
+    });
+
+    assert.equal(context.formattedPrice, "1.234,56");
+    assert.equal(context.formattedOriginalPrice, "1.499,00");
+    assert.deepEqual(context.priceTableFeaturesStyle, {
+        background: "#112233",
+        color: "#f5f5f5",
+    });
+    assert.deepEqual(context.priceTableFeatureStyle, {
+        borderBottomColor: "#445566",
+        borderBottomStyle: "solid",
+        borderBottomWidth: "2px",
+    });
+    assert.deepEqual(context.priceTableRibbonStyle, {
+        background: "#778899",
+        color: "#ffffff",
+    });
+});
+
+test("Call to Action layout, image, overlay, content, and ribbon controls resolve on canvas", () => {
+    const context = canvasContext("call_to_action", {
+        skin: "cover",
+        imagePosition: "right",
+        imageUrl: "/hero.jpg",
+        height: "420px",
+        padding: "36px",
+        alignment: "center",
+        verticalPosition: "bottom",
+        imageWidth: "48%",
+        imageHeight: "280px",
+        boxBackground: "#102030",
+        overlayColor: "#00000066",
+        ribbonBackground: "#405060",
+        ribbonTextColor: "#ffffff",
+    });
+
+    assert.deepEqual(context.ctaStyle, {
+        minHeight: "420px",
+        background: "#102030",
+        padding: "36px",
+        flexDirection: "row-reverse",
+    });
+    assert.deepEqual(context.ctaImageStyle, {
+        backgroundImage: 'url("/hero.jpg")',
+        width: "48%",
+        height: "280px",
+    });
+    assert.deepEqual(context.ctaContentStyle, {
+        alignSelf: "flex-end",
+        textAlign: "center",
+    });
+    assert.deepEqual(context.ctaOverlayStyle, { background: "#00000066" });
+    assert.deepEqual(context.ctaRibbonStyle, {
+        background: "#405060",
+        color: "#ffffff",
+    });
+});
+
+test("Countdown display, labels, colors, box styles, and expire actions resolve on canvas", () => {
+    const settings = {
+        countdownType: "due-date",
+        dueDate: "2000-01-01T00:00:00Z",
+        labelDisplay: "inline",
+        showDays: true,
+        showHours: false,
+        showMinutes: true,
+        showSeconds: true,
+        showLabels: true,
+        customLabels: false,
+        daysLabel: "Hari",
+        expireAction: "message",
+        expireMessage: "Finished",
+        containerWidth: "88%",
+        boxSpacing: "14px",
+        boxBackground: "#112233",
+        boxBorderColor: "#445566",
+        boxBorderWidth: "2px",
+        boxRadius: "9px",
+        boxPadding: "17px",
+        digitColor: "#ffffff",
+        labelColor: "#aabbcc",
+    };
+    const context = canvasContext("countdown", settings);
+
+    assert.deepEqual(context.countdownRootStyle, { width: "88%", gap: "14px" });
+    assert.deepEqual(context.countdownBoxStyle, {
+        background: "#112233",
+        color: "#ffffff",
+        padding: "17px",
+        borderRadius: "9px",
+        border: "2px solid #445566",
+        flexDirection: "row",
+    });
+    assert.deepEqual(context.countdownLabelStyle, { color: "#aabbcc" });
+    assert.equal(context.countdownParts[0].label, "Days");
+    assert.equal(context.countdownParts[1].show, false);
+    assert.equal(context.countdownMessageVisible, true);
+    assert.equal(context.countdownShouldHide, false);
+
+    settings.customLabels = true;
+    settings.expireAction = "hide";
+    assert.equal(context.countdownParts[0].label, "Hari");
+    assert.equal(context.countdownMessageVisible, false);
+    assert.equal(context.countdownShouldHide, true);
+});
+
+test("Carousel responsive count, equal height, transition, arrows, and pagination styles resolve on canvas", () => {
+    const context = canvasContext(
+        "carousel",
+        {
+            items: [
+                { id: "one", title: "One" },
+                { id: "two", title: "Two" },
+                { id: "three", title: "Three" },
+                { id: "four", title: "Four" },
+            ],
+            slidesToShow: 3,
+            slidesToShowTablet: 2,
+            slidesToShowMobile: 1,
+            slidesToScroll: 1,
+            equalHeight: true,
+            gap: "24px",
+            transitionSpeed: 850,
+            slideBackground: "#112233",
+            slideBorderColor: "#445566",
+            slideBorderWidth: "2px",
+            slideRadius: "9px",
+            slidePadding: "18px",
+            arrowColor: "#aabbcc",
+            arrowBackground: "#223344",
+            paginationColor: "#556677",
+            paginationActiveColor: "#ddeeff",
+        },
+        "tablet",
+    );
+
+    assert.equal(context.carouselVisible, 2);
+    assert.deepEqual(context.carouselRootStyle, {
+        "--arrow-color": "#aabbcc",
+        "--arrow-background": "#223344",
+        "--carousel-arrow-size": "34px",
+        "--carousel-dot-gap": "8px",
+        "--carousel-dot-size": "8px",
+        "--pagination-color": "#556677",
+        "--pagination-active-color": "#ddeeff",
+    });
+    assert.deepEqual(context.carouselTrackStyle, {
+        transform: "translate3d(calc(-0% - 0px),0,0)",
+        gap: "24px",
+        transitionDuration: "850ms",
+        alignItems: "stretch",
+    });
+    assert.deepEqual(context.carouselSlideStyle, {
+        flex: "0 0 calc(50% - 12px)",
+        background: "#112233",
+        padding: "18px",
+        borderRadius: "9px",
+        border: "2px solid #445566",
+        height: "auto",
+    });
+    assert.deepEqual(context.carouselArrowStyle, {
+        color: "#aabbcc",
+        background: "#223344",
+    });
+    assert.deepEqual(context.carouselDotStyle(false), {
+        background: "#556677",
+    });
+    assert.deepEqual(context.carouselDotStyle(true), { background: "#ddeeff" });
+});
+
+test("Flip Box front, back, graphic, vertical alignment, and border styles resolve on canvas", () => {
+    const context = canvasContext("flip_box", {
+        height: "360px",
+        borderRadius: "12px",
+        verticalPosition: "bottom",
+        frontBackground: "#112233",
+        frontPadding: "24px",
+        frontAlignment: "left",
+        frontBorderWidth: "2px",
+        frontBorderColor: "#334455",
+        frontTitleColor: "#ffffff",
+        frontDescriptionColor: "#aabbcc",
+        backBackground: "#445566",
+        backPadding: "28px",
+        backAlignment: "right",
+        backBorderWidth: "3px",
+        backBorderColor: "#667788",
+        backTitleColor: "#ddeeff",
+        backDescriptionColor: "#ccddee",
+        frontImageWidth: "38%",
+        frontImageOpacity: 0.65,
+        frontImageRadius: "10px",
+        frontGraphicSpacing: "16px",
+        iconColor: "#123456",
+        iconBackground: "#abcdef",
+        iconSize: "52px",
+        iconPadding: "11px",
+        iconRadius: "50%",
+        iconRotation: 25,
+    });
+
+    assert.deepEqual(context.flipRootStyle, {
+        height: "360px",
+        borderRadius: "12px",
+    });
+    assert.deepEqual(context.flipFrontStyle, {
+        background: "#112233",
+        padding: "24px",
+        textAlign: "left",
+        justifyContent: "flex-end",
+        border: "2px solid #334455",
+    });
+    assert.deepEqual(context.flipBackStyle, {
+        background: "#445566",
+        padding: "28px",
+        textAlign: "right",
+        justifyContent: "flex-end",
+        border: "3px solid #667788",
+    });
+    assert.equal(context.flipFrontTitleStyle.color, "#ffffff");
+    assert.equal(context.flipFrontDescriptionStyle.color, "#aabbcc");
+    assert.equal(context.flipBackTitleStyle.color, "#ddeeff");
+    assert.equal(context.flipBackDescriptionStyle.color, "#ccddee");
+    assert.deepEqual(context.flipImageStyle, {
+        width: "38%",
+        opacity: 0.65,
+        borderRadius: "10px",
+        marginBottom: "16px",
+    });
+    assert.deepEqual(context.flipIconStyle, {
+        fontSize: "52px",
+        color: "#123456",
+        background: "#abcdef",
+        padding: "11px",
+        borderRadius: "50%",
+        transform: "rotate(25deg)",
+        marginBottom: "16px",
+    });
+});
+
+test("Hotspot image, marker, tooltip, animation, and responsive styles resolve on canvas", () => {
+    const context = canvasContext(
+        "hotspot",
+        {
+            imageWidth: "82%",
+            imageMaxWidth: "760px",
+            imageHeight: "420px",
+            imageAlignment: "right",
+            imageObjectFit: "cover",
+            imageObjectPosition: "top center",
+            imageOpacity: 0.72,
+            imageBrightness: 115,
+            imageContrast: 90,
+            imageSaturation: 80,
+            imageBlur: 2,
+            imageHue: 15,
+            imageTransitionDuration: 0.6,
+            imageBorderType: "solid",
+            imageBorderWidth: "3px",
+            imageBorderColor: "#112233",
+            imageRadius: "12px",
+            imageShadowColor: "#00000055",
+            imageShadowHorizontal: "4px",
+            imageShadowVertical: "6px",
+            imageShadowBlur: "18px",
+            imageShadowSpread: "1px",
+            hotspotColor: "#ffffff",
+            hotspotBoxColor: "#334455",
+            hotspotMinWidth: "40px",
+            hotspotMinHeight: "42px",
+            hotspotPadding: "9px",
+            hotspotRadius: "45%",
+            tooltipPosition: "right",
+            tooltipAnimation: "grow",
+            tooltipDuration: 650,
+            tooltipTextColor: "#fefefe",
+            tooltipColor: "#101820",
+            tooltipAlign: "left",
+            tooltipMinWidth: "140px",
+            tooltipMaxWidth: "280px",
+            tooltipPadding: "12px",
+            tooltipRadius: "7px",
+        },
+        "tablet",
+    );
+
+    assert.deepEqual(context.hotspotRootStyle, {
+        width: "82%",
+        maxWidth: "760px",
+        marginLeft: "auto",
+        marginRight: "0",
+    });
+    assert.deepEqual(context.hotspotImageStyle, {
+        height: "420px",
+        objectFit: "cover",
+        objectPosition: "top center",
+        opacity: 0.72,
+        filter: "brightness(115%) contrast(90%) saturate(80%) blur(2px) hue-rotate(15deg)",
+        transitionDuration: "0.6s",
+        border: "3px solid #112233",
+        borderRadius: "12px",
+        boxShadow: "4px 6px 18px 1px #00000055",
+    });
+    assert.equal(context.hotspotStyle({ x: 35, y: 65 }).minWidth, "40px");
+    assert.equal(context.hotspotStyle({ x: 35, y: 65 }).minHeight, "42px");
+    assert.deepEqual(context.hotspotTooltipStyle, {
+        color: "#fefefe",
+        background: "#101820",
+        textAlign: "left",
+        minWidth: "140px",
+        maxWidth: "280px",
+        padding: "12px",
+        borderRadius: "7px",
+        transitionDuration: "650ms",
+    });
+});
+
+test("Slides per-slide backgrounds, content positions, colors, and navigation styles resolve on canvas", () => {
+    const context = canvasContext("slides", {
+        height: "460px",
+        contentWidth: "58%",
+        slidesPadding: "34px",
+        horizontalPosition: "right",
+        verticalPosition: "bottom",
+        textAlign: "right",
+        titleColor: "#ffffff",
+        descriptionColor: "#eeeeee",
+        arrowsPosition: "outside",
+        arrowsSize: "30px",
+        arrowsColor: "#112233",
+        dotsPosition: "outside",
+        dotsGap: "11px",
+        dotsSize: "10px",
+        dotsColor: "#445566",
+        dotsActiveColor: "#778899",
+    });
+    const slide = {
+        backgroundImage: "/slide.jpg",
+        backgroundColor: "#102030",
+        backgroundOverlay: "#00000066",
+        backgroundPosition: "top center",
+        backgroundSize: "contain",
+        titleColor: "#aabbcc",
+        descriptionColor: "#bbccdd",
+    };
+
+    assert.deepEqual(context.slidesStyle, {
+        height: "460px",
+        overflow: "visible",
+        "--slides-arrow-offset": "-42px",
+        "--slides-dot-offset": "-24px",
+        "--slides-arrow-size": "30px",
+        "--slides-arrow-color": "#112233",
+        "--slides-dot-gap": "11px",
+        "--slides-dot-size": "10px",
+        "--slides-dot-color": "#445566",
+        "--slides-dot-active-color": "#778899",
+    });
+    assert.deepEqual(context.slideStyle(slide), {
+        backgroundImage: 'url("/slide.jpg")',
+        backgroundColor: "#102030",
+        backgroundPosition: "top center",
+        backgroundSize: "contain",
+        justifyContent: "flex-end",
+        alignItems: "flex-end",
+        "--slide-overlay-color": "#00000066",
+    });
+    assert.deepEqual(context.slidesContentStyle, {
+        width: "58%",
+        padding: "34px",
+        textAlign: "right",
+        zIndex: 1,
+    });
+    assert.equal(context.slideTitleStyle(slide).color, "#aabbcc");
+    assert.equal(context.slideDescriptionStyle(slide).color, "#bbccdd");
+    assert.deepEqual(context.slidesArrowStyle, {
+        color: "#112233",
+        fontSize: "30px",
+    });
+    assert.deepEqual(context.slidesDotStyle(false), { background: "#445566" });
+    assert.deepEqual(context.slidesDotStyle(true), { background: "#778899" });
+});
+
+test("Animated Headline shape, rotating effect, color, duration, and layer styles resolve on canvas", () => {
+    const context = canvasContext("animated_headline", {
+        headlineStyle: "highlighted",
+        marker: "double-underline",
+        rotationEffect: "clip",
+        alignment: "center",
+        titleColor: "#112233",
+        animatedColor: "#445566",
+        markerColor: "#778899",
+        strokeWidth: "6px",
+        bringToFront: true,
+        roundedEdges: false,
+        duration: 1350,
+    });
+
+    assert.equal(context.headlineStyle.textAlign, "center");
+    assert.equal(context.headlineStyle.color, "#112233");
+    assert.deepEqual(context.headlineAnimatedClasses, [
+        "is-highlighted",
+        "marker-double-underline",
+        "effect-clip",
+        { "is-changing": false },
+        "is-front",
+        "is-square",
+    ]);
+    assert.equal(context.headlineAnimatedStyle.color, "#445566");
+    assert.equal(
+        context.headlineAnimatedStyle["--headline-marker-color"],
+        "#778899",
+    );
+    assert.equal(
+        context.headlineAnimatedStyle["--headline-stroke-width"],
+        "6px",
+    );
+    assert.equal(
+        context.headlineAnimatedStyle["--headline-duration"],
+        "1350ms",
+    );
+});
+
+test("Form field groups, input sizing, focus styles, button sizing, and step state resolve on canvas", () => {
+    const context = canvasContext("form", {
+        fields: [
+            { id: "name", type: "text", label: "Name", width: 50 },
+            {
+                id: "plan",
+                type: "select",
+                label: "Plan",
+                optionsText: "Basic|basic\nPro|pro",
+                width: 50,
+            },
+            { id: "step-2", type: "step", stepTitle: "Details" },
+            {
+                id: "terms",
+                type: "acceptance",
+                acceptanceText: "I agree",
+                required: true,
+                width: 100,
+            },
+        ],
+        inputSize: "large",
+        fieldBorderWidth: "2px",
+        fieldFocusBorderColor: "#112233",
+        fieldFocusBackground: "#f5f5f5",
+        buttonSize: "medium",
+        buttonWidth: "50",
+        buttonIconPosition: "after",
+        buttonIconSpacing: "9px",
+        submitActions: ["message", "redirect"],
+        stepType: "number-text",
+        stepShape: "rounded",
+    });
+
+    assert.equal(context.formSteps.length, 2);
+    assert.equal(context.formSteps[1].title, "Details");
+    assert.equal(context.formSteps[1].fields[0].id, "terms");
+    assert.deepEqual(context.formInputStyle, {
+        minHeight: "50px",
+        borderWidth: "2px",
+        "--field-focus-border": "#112233",
+        "--field-focus-bg": "#f5f5f5",
+    });
+    assert.equal(context.formButtonStyle.minHeight, "42px");
+    assert.equal(context.formButtonStyle.width, "50%");
+    assert.equal(context.formButtonStyle.gap, "9px");
+    assert.equal(context.formActionEnabled("redirect"), true);
+    assert.equal(context.formActionEnabled("webhook"), false);
+});

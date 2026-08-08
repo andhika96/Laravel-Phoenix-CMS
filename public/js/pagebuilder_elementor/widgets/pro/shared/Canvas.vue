@@ -1,0 +1,3087 @@
+<template>
+    <div
+        class="pb-pro-canvas"
+        :class="['pb-pro-canvas--' + type, customClass]"
+        :style="advancedStyle"
+        :data-pro-widget="type"
+    >
+        <form
+            v-if="type === 'form'"
+            data-pro-form
+            data-pb-interactive="true"
+            class="pb-pro-form"
+            :style="formStyle"
+            :novalidate="s.validation === 'custom'"
+            @submit.prevent
+            @click.stop
+        >
+            <div
+                v-if="formSteps.length > 1 && s.stepType !== 'none'"
+                class="pb-pro-form__progress"
+            >
+                <span
+                    v-for="(step, index) in formSteps"
+                    :key="'step-' + index"
+                    :class="[
+                        'shape-' + s.stepShape,
+                        { active: index <= currentFormStep },
+                    ]"
+                    >{{ index + 1 }}<small>{{ step.title }}</small></span
+                >
+            </div>
+            <div class="pb-pro-form__step-title" v-if="activeFormStep.title">
+                <strong>{{ activeFormStep.title }}</strong
+                ><small v-if="activeFormStep.description">{{
+                    activeFormStep.description
+                }}</small>
+            </div>
+            <div
+                v-for="field in activeFormStep.fields"
+                :key="field.id"
+                class="pb-pro-form__field"
+                :class="{ 'is-inline': field.inlineList }"
+                :style="{ width: (field.width || 100) + '%' }"
+            >
+                <label
+                    v-if="
+                        ![
+                            'hidden',
+                            'html',
+                            'acceptance',
+                            'checkbox',
+                            'radio',
+                        ].includes(field.type)
+                    "
+                    :for="item.id + '-' + field.id"
+                    :class="{ 'pb-visually-hidden': !s.showLabels }"
+                    :style="[
+                        typographyStyle('formLabel', '14px', '400', '1.4em'),
+                        { color: s.labelColor || '#344054' },
+                    ]"
+                    >{{ field.label
+                    }}<span v-if="field.required && s.markRequired">
+                        *</span
+                    ></label
+                >
+                <div
+                    v-if="field.type === 'html'"
+                    class="pb-pro-form__html"
+                    v-html="sanitizeFormHtml(field.html)"
+                ></div>
+                <label
+                    v-else-if="field.type === 'acceptance'"
+                    class="pb-pro-form__choice"
+                >
+                    <input
+                        type="checkbox"
+                        :required="field.required"
+                        :style="formInputStyle"
+                    />
+                    <span>{{ field.acceptanceText }}</span>
+                </label>
+                <textarea
+                    v-else-if="field.type === 'textarea'"
+                    :id="item.id + '-' + field.id"
+                    :placeholder="field.placeholder"
+                    :required="field.required"
+                    :rows="Math.max(1, Number(field.rows) || 4)"
+                    :value="field.defaultValue"
+                    :style="formInputStyle"
+                ></textarea>
+                <select
+                    v-else-if="field.type === 'select'"
+                    :id="item.id + '-' + field.id"
+                    :required="field.required"
+                    :multiple="field.multiple"
+                    :style="formInputStyle"
+                >
+                    <option v-if="field.placeholder" value="">
+                        {{ field.placeholder }}
+                    </option>
+                    <option
+                        v-for="option in parseFormOptions(field)"
+                        :key="option.value"
+                        :value="option.value"
+                    >
+                        {{ option.label }}
+                    </option>
+                </select>
+                <fieldset
+                    v-else-if="['checkbox', 'radio'].includes(field.type)"
+                    class="pb-pro-form__choice-group"
+                >
+                    <legend :class="{ 'pb-visually-hidden': !s.showLabels }">
+                        {{ field.label
+                        }}<span v-if="field.required && s.markRequired">
+                            *</span
+                        >
+                    </legend>
+                    <div class="pb-pro-form__choices">
+                        <label
+                            v-for="option in parseFormOptions(field)"
+                            :key="option.value"
+                            class="pb-pro-form__choice"
+                        >
+                            <input
+                                :type="field.type"
+                                :name="item.id + '-' + field.id"
+                                :value="option.value"
+                                :required="field.required"
+                                :style="formInputStyle"
+                            />
+                            <span>{{ option.label }}</span>
+                        </label>
+                    </div>
+                </fieldset>
+                <input
+                    v-else
+                    :id="item.id + '-' + field.id"
+                    :type="safeInputType(field.type)"
+                    :placeholder="field.placeholder"
+                    :required="field.required"
+                    :value="
+                        field.type === 'file' ? undefined : field.defaultValue
+                    "
+                    :accept="
+                        field.type === 'file' ? field.fileTypes : undefined
+                    "
+                    :multiple="field.type === 'file' && field.multiple"
+                    :min="field.min || undefined"
+                    :max="field.max || undefined"
+                    :step="field.step || undefined"
+                    :autocomplete="field.autocomplete || undefined"
+                    :style="formInputStyle"
+                />
+            </div>
+            <div class="pb-pro-form__actions" :style="formActionsStyle">
+                <button
+                    v-if="currentFormStep > 0"
+                    type="button"
+                    data-pb-interactive="true"
+                    :style="formButtonStyle"
+                    @click.stop="currentFormStep--"
+                >
+                    {{ activeFormStep.previousButton || "Previous" }}
+                </button>
+                <button
+                    v-if="currentFormStep < formSteps.length - 1"
+                    type="button"
+                    data-pb-interactive="true"
+                    :style="formButtonStyle"
+                    @click.stop="currentFormStep++"
+                >
+                    {{ activeFormStep.nextButton || "Next" }}
+                </button>
+                <button
+                    v-else
+                    :id="safeDomId(s.buttonId)"
+                    type="submit"
+                    :style="formButtonStyle"
+                >
+                    <template v-if="s.buttonIconPosition !== 'after'">
+                        <span
+                            v-if="proIconSvg(s, 'buttonIcon')"
+                            class="pb-pro-icon-svg"
+                            v-html="proIconSvg(s, 'buttonIcon')"
+                        ></span>
+                        <i
+                            v-else-if="proIconClass(s, 'buttonIcon')"
+                            :class="proIconClass(s, 'buttonIcon')"
+                        ></i>
+                    </template>
+                    <span>{{ s.buttonText || "Send" }}</span>
+                    <template v-if="s.buttonIconPosition === 'after'">
+                        <span
+                            v-if="proIconSvg(s, 'buttonIcon')"
+                            class="pb-pro-icon-svg"
+                            v-html="proIconSvg(s, 'buttonIcon')"
+                        ></span>
+                        <i
+                            v-else-if="proIconClass(s, 'buttonIcon')"
+                            :class="proIconClass(s, 'buttonIcon')"
+                        ></i>
+                    </template>
+                </button>
+            </div>
+            <div aria-live="polite" class="pb-pro-form__message"></div>
+        </form>
+
+        <div
+            v-else-if="type === 'slides'"
+            data-pro-slides
+            class="pb-pro-slides"
+            :style="slidesStyle"
+            tabindex="0"
+            @keydown="onCarouselKeydown"
+            @mouseenter="onSliderHover(true)"
+            @mouseleave="onSliderHover(false)"
+        >
+            <article
+                v-for="(slide, index) in s.slides"
+                v-show="index === activeIndex"
+                :key="slide.id"
+                class="pb-pro-slides__slide"
+                :class="'transition-' + s.transition"
+                :style="slideStyle(slide)"
+            >
+                <div
+                    class="pb-pro-slides__content"
+                    :class="'animation-' + s.contentAnimation"
+                    :style="slidesContentStyle"
+                >
+                    <component
+                        :is="safeTag(s.titleTag, 'h2')"
+                        class="pb-pro-slides__title"
+                        :style="slideTitleStyle(slide)"
+                        >{{ slide.title }}</component
+                    ><component
+                        :is="safeTag(s.descriptionTag, 'div')"
+                        class="pb-pro-slides__description"
+                        :style="slideDescriptionStyle(slide)"
+                        >{{ slide.description }}</component
+                    ><span
+                        v-if="slide.buttonText"
+                        class="pb-pro-button"
+                        :style="buttonStyle"
+                        >{{ slide.buttonText }}</span
+                    >
+                </div>
+            </article>
+            <button
+                v-if="hasArrows"
+                type="button"
+                class="pb-pro-arrow pb-pro-arrow--prev"
+                aria-label="Previous slide"
+                data-pb-interactive="true"
+                :style="slidesArrowStyle"
+                @click.stop="previous"
+            >
+                <i class="fas fa-chevron-left"></i></button
+            ><button
+                v-if="hasArrows"
+                type="button"
+                class="pb-pro-arrow pb-pro-arrow--next"
+                aria-label="Next slide"
+                data-pb-interactive="true"
+                :style="slidesArrowStyle"
+                @click.stop="next"
+            >
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <div v-if="hasDots" class="pb-pro-dots" role="tablist">
+                <button
+                    v-for="(_, index) in s.slides"
+                    :key="index"
+                    type="button"
+                    :class="{ active: index === activeIndex }"
+                    :style="slidesDotStyle(index === activeIndex)"
+                    :aria-label="'Go to slide ' + (index + 1)"
+                    data-pb-interactive="true"
+                    @click.stop="selectSlide(index)"
+                ></button>
+            </div>
+        </div>
+
+        <component
+            v-else-if="type === 'animated_headline'"
+            :is="safeTag(s.tag, 'h2')"
+            class="pb-pro-headline"
+            :style="headlineStyle"
+            ><span>{{ s.beforeText }} </span
+            ><span
+                :key="'animated-' + wordIndex"
+                class="pb-pro-headline__animated"
+                :class="headlineAnimatedClasses"
+                :style="headlineAnimatedStyle"
+                >{{ animatedWord }}</span
+            ><span v-if="s.afterText"> {{ s.afterText }}</span></component
+        >
+
+        <div
+            v-else-if="type === 'hotspot'"
+            data-pro-hotspot
+            class="pb-pro-hotspot"
+            :style="hotspotRootStyle"
+        >
+            <img
+                v-if="hotspotImageUrl"
+                :src="safeMediaUrl(hotspotImageUrl)"
+                :alt="s.imageAlt || ''"
+                :style="hotspotImageStyle"
+            />
+            <div v-else class="pb-pro-hotspot__placeholder">
+                <i class="far fa-image"></i><span>Choose Image</span>
+            </div>
+            <button
+                v-for="(spot, index) in s.hotspots"
+                :key="spot.id"
+                type="button"
+                class="pb-pro-hotspot__marker"
+                :class="[
+                    'is-' + s.hotspotAnimation,
+                    { 'is-sequenced': s.sequencedAnimation },
+                ]"
+                :style="hotspotStyle(spot, index)"
+                :aria-expanded="openHotspot === index ? 'true' : 'false'"
+                data-pb-interactive="true"
+                @click.stop="
+                    s.tooltipTrigger === 'click' && toggleHotspot(index)
+                "
+                @mouseenter="
+                    s.tooltipTrigger === 'hover' && (openHotspot = index)
+                "
+                @mouseleave="s.tooltipTrigger === 'hover' && (openHotspot = -1)"
+                @focus="s.tooltipTrigger === 'hover' && (openHotspot = index)"
+                @blur="s.tooltipTrigger === 'hover' && (openHotspot = -1)"
+                @keydown.escape.stop="openHotspot = -1"
+            >
+                <span>{{ spot.label || "+" }}</span
+                ><span
+                    v-show="openHotspot === index"
+                    class="pb-pro-hotspot__tooltip"
+                    :class="[
+                        'is-' + s.tooltipPosition,
+                        'is-' + s.tooltipAnimation,
+                    ]"
+                    :style="[
+                        typographyStyle('tooltip', '13px', '400', '1.4em'),
+                        hotspotTooltipStyle,
+                    ]"
+                    >{{ spot.tooltip }}</span
+                >
+            </button>
+        </div>
+
+        <div
+            v-else-if="type === 'price_list'"
+            class="pb-pro-price-list"
+            :style="priceListRootStyle"
+        >
+            <article
+                v-for="entry in s.items"
+                :key="entry.id"
+                class="pb-pro-price-list__item"
+                :style="priceListItemStyle"
+            >
+                <img
+                    v-if="entry.imageUrl"
+                    :src="safeMediaUrl(entry.imageUrl)"
+                    alt=""
+                    :style="priceListImageStyle"
+                />
+                <div class="pb-pro-price-list__body">
+                    <div class="pb-pro-price-list__line">
+                        <component
+                            :is="safeTag(s.titleTag, 'h3')"
+                            :style="priceListTitleStyle"
+                            >{{ entry.title }}</component
+                        ><span :style="priceListSeparatorStyle"></span
+                        ><strong :style="priceListPriceStyle">{{
+                            entry.price
+                        }}</strong>
+                    </div>
+                    <component
+                        :is="safeTag(s.descriptionTag, 'div')"
+                        class="pb-pro-price-list__description"
+                        :style="priceListDescriptionStyle"
+                        >{{ entry.description }}</component
+                    >
+                </div>
+            </article>
+        </div>
+
+        <div v-else-if="type === 'price_table'" class="pb-pro-price-table">
+            <div
+                v-if="s.showRibbon"
+                class="pb-pro-price-table__ribbon"
+                :class="'is-' + s.ribbonPosition"
+                :style="priceTableRibbonStyle"
+            >
+                {{ s.ribbonTitle }}
+            </div>
+            <header
+                :style="{
+                    background: s.headerBackground,
+                    color: s.headerColor,
+                }"
+            >
+                <component
+                    :is="safeTag(s.titleTag, 'h3')"
+                    :style="
+                        typographyStyle(
+                            'priceTableHeader',
+                            '24px',
+                            '600',
+                            '1.2em',
+                        )
+                    "
+                    >{{ s.title }}</component
+                >
+                <p>{{ s.description }}</p>
+            </header>
+            <div
+                class="pb-pro-price-table__price"
+                :style="{
+                    background: s.pricingBackground,
+                    color: s.priceColor,
+                }"
+            >
+                <span>{{ s.currencySymbol }}</span
+                ><del
+                    v-if="s.sale"
+                    class="pb-pro-price-table__original-price"
+                    >{{ formattedOriginalPrice }}</del
+                ><strong
+                    :style="
+                        typographyStyle(
+                            'priceTablePrice',
+                            '44px',
+                            '600',
+                            '1.1em',
+                        )
+                    "
+                    >{{ formattedPrice }}</strong
+                ><small>{{ s.period }}</small>
+            </div>
+            <ul :style="priceTableFeaturesStyle">
+                <li
+                    v-for="feature in s.features"
+                    :key="feature.id"
+                    :style="{
+                        ...typographyStyle(
+                            'priceTableFeatures',
+                            '14px',
+                            '400',
+                            '1.4em',
+                        ),
+                        ...priceTableFeatureStyle,
+                    }"
+                >
+                    <span
+                        v-if="proIconSvg(feature, 'icon')"
+                        class="pb-pro-icon-svg"
+                        v-html="proIconSvg(feature, 'icon')"
+                    ></span>
+                    <i
+                        v-else
+                        :class="proIconClass(feature, 'icon', 'fas fa-check')"
+                    ></i>{{ feature.text }}
+                </li>
+            </ul>
+            <footer :style="{ background: s.footerBackground }">
+                <span class="pb-pro-button" :style="buttonStyle">{{
+                    s.buttonText
+                }}</span
+                ><small>{{ s.additionalInfo }}</small>
+            </footer>
+        </div>
+
+        <article
+            v-else-if="type === 'call_to_action'"
+            class="pb-pro-cta"
+            :class="[
+                'is-' + s.skin,
+                'image-' + s.imagePosition,
+                'effect-' + s.hoverEffect,
+            ]"
+            :style="ctaStyle"
+        >
+            <div
+                v-if="s.imageUrl"
+                class="pb-pro-cta__image"
+                :style="ctaImageStyle"
+            ></div>
+            <div
+                v-if="s.skin === 'cover'"
+                class="pb-pro-cta__overlay"
+                :style="ctaOverlayStyle"
+            ></div>
+            <div class="pb-pro-cta__content" :style="ctaContentStyle">
+                <h2
+                    :style="{
+                        ...typographyStyle('ctaTitle', '28px', '600', '1.2em'),
+                        color: s.titleColor,
+                    }"
+                >
+                    {{ s.title }}
+                </h2>
+                <p
+                    :style="{
+                        ...typographyStyle(
+                            'ctaDescription',
+                            '16px',
+                            '400',
+                            '1.5em',
+                        ),
+                        color: s.descriptionColor,
+                    }"
+                >
+                    {{ s.description }}
+                </p>
+                <span class="pb-pro-button" :style="buttonStyle">{{
+                    s.buttonText
+                }}</span>
+            </div>
+            <span
+                v-if="s.showRibbon"
+                class="pb-pro-cta__ribbon"
+                :class="'is-' + s.ribbonPosition"
+                :style="ctaRibbonStyle"
+                >{{ s.ribbonTitle }}</span
+            >
+        </article>
+
+        <div
+            v-else-if="type === 'countdown'"
+            v-show="!countdownShouldHide"
+            data-pro-countdown
+            class="pb-pro-countdown"
+            :style="countdownRootStyle"
+            aria-live="polite"
+        >
+            <template v-for="part in countdownParts" :key="part.key"
+                ><div
+                    v-if="part.show"
+                    class="pb-pro-countdown__box"
+                    :style="countdownBoxStyle"
+                >
+                    <strong
+                        :style="
+                            typographyStyle(
+                                'countdownDigit',
+                                '30px',
+                                '600',
+                                '1.1em',
+                            )
+                        "
+                        >{{ part.value }}</strong
+                    ><span
+                        v-if="s.showLabels"
+                        :style="{
+                            ...typographyStyle(
+                                'countdownLabel',
+                                '12px',
+                                '400',
+                                '1.4em',
+                            ),
+                            ...countdownLabelStyle,
+                        }"
+                        >{{ part.label }}</span
+                    >
+                </div></template
+            >
+            <div
+                v-if="countdownMessageVisible"
+                class="pb-pro-countdown__expired"
+            >
+                {{ s.expireMessage }}
+            </div>
+        </div>
+
+        <div
+            v-else-if="type === 'carousel'"
+            data-pro-carousel
+            class="pb-pro-carousel"
+            :style="carouselRootStyle"
+            tabindex="0"
+            @keydown="onCarouselKeydown"
+            @mouseenter="onSliderHover(true)"
+            @mouseleave="onSliderHover(false)"
+        >
+            <div class="pb-pro-carousel__viewport">
+                <div class="pb-pro-carousel__track" :style="carouselTrackStyle">
+                    <article
+                        v-for="entry in s.items"
+                        :key="entry.id"
+                        class="pb-pro-carousel__slide"
+                        :style="carouselSlideStyle"
+                    >
+                        <img
+                            v-if="entry.imageUrl"
+                            :src="safeMediaUrl(entry.imageUrl)"
+                            alt=""
+                        />
+                        <h3
+                            :style="
+                                typographyStyle(
+                                    'carouselTitle',
+                                    '20px',
+                                    '600',
+                                    '1.3em',
+                                )
+                            "
+                        >
+                            {{ entry.title }}
+                        </h3>
+                        <p
+                            :style="
+                                typographyStyle(
+                                    'carouselDescription',
+                                    '14px',
+                                    '400',
+                                    '1.5em',
+                                )
+                            "
+                        >
+                            {{ entry.description }}
+                        </p>
+                    </article>
+                </div>
+            </div>
+            <button
+                v-if="hasArrows"
+                type="button"
+                class="pb-pro-arrow pb-pro-arrow--prev"
+                aria-label="Previous slide"
+                data-pb-interactive="true"
+                :style="carouselArrowStyle"
+                @click.stop="previous"
+            >
+                <i class="fas fa-chevron-left"></i></button
+            ><button
+                v-if="hasArrows"
+                type="button"
+                class="pb-pro-arrow pb-pro-arrow--next"
+                aria-label="Next slide"
+                data-pb-interactive="true"
+                :style="carouselArrowStyle"
+                @click.stop="next"
+            >
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <div v-if="hasDots" class="pb-pro-dots" role="tablist">
+                <button
+                    v-for="page in carouselPageCount"
+                    :key="page"
+                    type="button"
+                    :class="{ active: carouselDotIndex === page - 1 }"
+                    :style="carouselDotStyle(carouselDotIndex === page - 1)"
+                    :aria-label="'Go to slide ' + page"
+                    data-pb-interactive="true"
+                    @click.stop="selectSlide((page - 1) * carouselStep)"
+                ></button>
+            </div>
+        </div>
+
+        <div
+            v-else-if="type === 'flip_box'"
+            data-pro-flip-box
+            data-pb-interactive="true"
+            class="pb-pro-flip-box"
+            :class="[
+                'effect-' + s.flipEffect,
+                'direction-' + s.flipDirection,
+                { flipped: flipActive },
+            ]"
+            :style="flipRootStyle"
+            tabindex="0"
+            @click.stop="toggleFlip"
+            @keydown.enter.prevent.stop="toggleFlip"
+            @keydown.space.prevent.stop="toggleFlip"
+            @keydown.esc.stop="flipActive = false"
+        >
+            <div class="pb-pro-flip-box__inner">
+                <section
+                    class="pb-pro-flip-box__face pb-pro-flip-box__front"
+                    :style="flipFrontStyle"
+                >
+                    <span
+                        v-if="
+                            s.frontGraphic === 'icon' &&
+                            proIconSvg(s, 'frontIcon')
+                        "
+                        class="pb-pro-icon-svg pb-pro-flip-box__front-icon"
+                        :style="flipIconStyle"
+                        v-html="proIconSvg(s, 'frontIcon')"
+                    ></span
+                    ><i
+                        v-else-if="s.frontGraphic === 'icon'"
+                        :class="proIconClass(s, 'frontIcon', 'fas fa-star')"
+                        :style="flipIconStyle"
+                    ></i
+                    ><img
+                        v-else-if="
+                            s.frontGraphic === 'image' && s.frontImageUrl
+                        "
+                        :src="safeMediaUrl(s.frontImageUrl)"
+                        alt=""
+                        :style="flipImageStyle"
+                    />
+                    <h3 :style="flipFrontTitleStyle">
+                        {{ s.frontTitle }}
+                    </h3>
+                    <p :style="flipFrontDescriptionStyle">
+                        {{ s.frontDescription }}
+                    </p>
+                </section>
+                <section
+                    class="pb-pro-flip-box__face pb-pro-flip-box__back"
+                    :style="flipBackStyle"
+                >
+                    <h3 :style="flipBackTitleStyle">
+                        {{ s.backTitle }}
+                    </h3>
+                    <p :style="flipBackDescriptionStyle">
+                        {{ s.backDescription }}
+                    </p>
+                    <span class="pb-pro-button" :style="buttonStyle">{{
+                        s.backButtonText
+                    }}</span>
+                </section>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name: "ProWidgetCanvas",
+    props: {
+        item: { type: Object, required: true },
+        responsiveDevice: { type: String, default: "desktop" },
+    },
+    data() {
+        return {
+            activeIndex: 0,
+            currentFormStep: 0,
+            openHotspot: -1,
+            hotspotImageUrl: "",
+            hotspotRenditionRequest: 0,
+            flipActive: false,
+            now: Date.now(),
+            timer: 0,
+            wordIndex: 0,
+            wordTimer: 0,
+            sliderTimer: 0,
+            sliderHovered: false,
+            sliderInteractionPaused: false,
+            reducedMotion:
+                typeof matchMedia === "function" &&
+                matchMedia("(prefers-reduced-motion: reduce)").matches,
+        };
+    },
+    computed: {
+        type() {
+            return this.item.type;
+        },
+        s() {
+            return this.item.settings || {};
+        },
+        hotspotRenditionKey() {
+            if (this.type !== "hotspot") return "";
+            return `${String(this.s.imageUrl || "")}|${String(this.s.imageResolution || "full")}`;
+        },
+        customClass() {
+            return String(this.s.cssClass || "")
+                .split(/\s+/)
+                .map((v) => v.replace(/[^A-Za-z0-9_-]/g, ""))
+                .filter(Boolean)
+                .join(" ");
+        },
+        advancedStyle() {
+            return {};
+        },
+        itemCount() {
+            return this.type === "slides"
+                ? (this.s.slides || []).length
+                : (this.s.items || []).length;
+        },
+        carouselVisible() {
+            const n = Number(this.responsiveValue("slidesToShow", 3)) || 1;
+            return Math.max(1, Math.min(n, this.itemCount || 1));
+        },
+        carouselStep() {
+            return Math.max(
+                1,
+                Math.min(
+                    this.carouselVisible,
+                    Number(this.s.slidesToScroll) || 1,
+                ),
+            );
+        },
+        carouselMaxIndex() {
+            return Math.max(0, this.itemCount - this.carouselVisible);
+        },
+        carouselPageCount() {
+            return Math.max(
+                1,
+                Math.ceil(this.carouselMaxIndex / this.carouselStep) + 1,
+            );
+        },
+        carouselDotIndex() {
+            return Math.min(
+                this.carouselPageCount - 1,
+                Math.round(this.activeIndex / this.carouselStep),
+            );
+        },
+        carouselRootStyle() {
+            return {
+                "--arrow-color": this.s.arrowColor || "#344054",
+                "--arrow-background": this.s.arrowBackground || "#fff",
+                "--carousel-arrow-size": this.safeLength(
+                    this.responsiveValue("arrowsSize", "34px"),
+                    "34px",
+                ),
+                "--carousel-dot-gap": this.safeLength(
+                    this.responsiveValue("dotsGap", "8px"),
+                    "8px",
+                ),
+                "--carousel-dot-size": this.safeLength(
+                    this.responsiveValue("dotsSize", "8px"),
+                    "8px",
+                ),
+                "--pagination-color": this.s.paginationColor || "#d0d5dd",
+                "--pagination-active-color":
+                    this.s.paginationActiveColor || "#6979f8",
+            };
+        },
+        maxIndex() {
+            return this.type === "carousel"
+                ? this.carouselMaxIndex
+                : Math.max(0, this.itemCount - 1);
+        },
+        hasArrows() {
+            return (
+                ["both", "arrows"].includes(this.s.navigation) &&
+                this.maxIndex > 0
+            );
+        },
+        hasDots() {
+            return (
+                (this.type === "slides"
+                    ? ["both", "dots"].includes(this.s.navigation)
+                    : this.s.pagination !== "none") && this.maxIndex > 0
+            );
+        },
+        buttonTypographyPrefix() {
+            return (
+                {
+                    form: "formButton",
+                    slides: "slideButton",
+                    price_table: "priceTableButton",
+                    call_to_action: "ctaButton",
+                    flip_box: "flipButton",
+                }[this.type] || "ctaButton"
+            );
+        },
+        buttonStyle() {
+            return {
+                ...this.typographyStyle(
+                    this.buttonTypographyPrefix,
+                    "14px",
+                    "600",
+                    "1.2em",
+                ),
+                background: this.s.buttonBackground || "#6979f8",
+                color: this.s.buttonTextColor || "#fff",
+                borderRadius: this.safeLength(
+                    this.responsiveValue(
+                        "buttonRadius",
+                        this.responsiveValue("slideRadius", "4px"),
+                    ),
+                    "4px",
+                ),
+                "--pb-button-hover-bg":
+                    this.s.buttonBackgroundHover ||
+                    this.s.buttonBackground ||
+                    "#6979f8",
+                "--pb-button-hover-color":
+                    this.s.buttonTextColorHover ||
+                    this.s.buttonTextColor ||
+                    "#fff",
+            };
+        },
+        formStyle() {
+            return {
+                gap: this.safeLength(
+                    this.responsiveValue("rowGap", "10px"),
+                    "10px",
+                ),
+                "--column-gap": this.safeLength(
+                    this.responsiveValue("columnGap", "10px"),
+                    "10px",
+                ),
+                "--field-bg": this.s.fieldBackground || "#fff",
+                "--field-border": this.s.fieldBorderColor || "#d0d5dd",
+                "--field-color": this.s.fieldTextColor || "#344054",
+                "--field-radius": this.safeLength(
+                    this.responsiveValue("fieldRadius", "4px"),
+                    "4px",
+                ),
+                "--form-html-color": this.s.htmlColor || "#344054",
+                "--form-success": this.s.successColor || "#067647",
+                "--form-error": this.s.errorColor || "#b42318",
+                "--step-active": this.s.stepActiveColor || "#6979f8",
+                "--step-inactive": this.s.stepInactiveColor || "#d0d5dd",
+            };
+        },
+        formSteps() {
+            const steps = [{ title: "", description: "", fields: [] }];
+            for (const field of this.s.fields || []) {
+                if (field.type === "step") {
+                    const target = steps[steps.length - 1].fields.length
+                        ? { fields: [] }
+                        : steps[steps.length - 1];
+                    Object.assign(target, {
+                        title: field.stepTitle || "Step",
+                        description: field.stepDescription || "",
+                        nextButton: field.nextButton || "Next",
+                        previousButton: field.previousButton || "Previous",
+                    });
+                    if (target !== steps[steps.length - 1]) steps.push(target);
+                } else steps[steps.length - 1].fields.push(field);
+            }
+            return steps.filter((step) => step.fields.length);
+        },
+        activeFormStep() {
+            return (
+                this.formSteps[
+                    Math.max(
+                        0,
+                        Math.min(
+                            this.currentFormStep,
+                            this.formSteps.length - 1,
+                        ),
+                    )
+                ] || { fields: [] }
+            );
+        },
+        formInputStyle() {
+            const heights = {
+                "extra-small": "31px",
+                small: "36px",
+                medium: "42px",
+                large: "50px",
+                "extra-large": "58px",
+            };
+            return {
+                minHeight: heights[this.s.inputSize] || "36px",
+                borderWidth: this.safeLength(
+                    this.responsiveValue("fieldBorderWidth", "1px"),
+                    "1px",
+                ),
+                "--field-focus-border":
+                    this.s.fieldFocusBorderColor || "#6979f8",
+                "--field-focus-bg": this.s.fieldFocusBackground || "#fff",
+            };
+        },
+        formButtonStyle() {
+            const heights = {
+                "extra-small": "31px",
+                small: "36px",
+                medium: "42px",
+                large: "50px",
+                "extra-large": "58px",
+            };
+            const width = Math.max(
+                20,
+                Math.min(100, Number(this.s.buttonWidth) || 100),
+            );
+            return {
+                ...this.buttonStyle,
+                minHeight: heights[this.s.buttonSize] || "36px",
+                width: `${width}%`,
+                gap: this.safeLength(
+                    this.responsiveValue("buttonIconSpacing", "5px"),
+                    "5px",
+                ),
+            };
+        },
+        formActionsStyle() {
+            return {
+                justifyContent:
+                    { left: "flex-start", center: "center", right: "flex-end" }[
+                        this.s.buttonAlign
+                    ] || "flex-start",
+            };
+        },
+        slidesStyle() {
+            const arrowsOutside = this.s.arrowsPosition === "outside";
+            const dotsOutside = this.s.dotsPosition === "outside";
+            return {
+                height: this.safeLength(
+                    this.responsiveValue("height", "400px"),
+                    "400px",
+                ),
+                overflow: arrowsOutside || dotsOutside ? "visible" : "hidden",
+                "--slides-arrow-offset": arrowsOutside ? "-42px" : "10px",
+                "--slides-dot-offset": dotsOutside ? "-24px" : "12px",
+                "--slides-arrow-size": this.safeLength(
+                    this.responsiveValue("arrowsSize", "24px"),
+                    "24px",
+                ),
+                "--slides-arrow-color": this.s.arrowsColor || "#fff",
+                "--slides-dot-gap": this.safeLength(
+                    this.responsiveValue("dotsGap", "8px"),
+                    "8px",
+                ),
+                "--slides-dot-size": this.safeLength(
+                    this.responsiveValue("dotsSize", "8px"),
+                    "8px",
+                ),
+                "--slides-dot-color": this.s.dotsColor || "#ffffff80",
+                "--slides-dot-active-color": this.s.dotsActiveColor || "#fff",
+            };
+        },
+        slidesContentStyle() {
+            return {
+                width: this.safeLength(
+                    this.responsiveValue("contentWidth", "66%"),
+                    "66%",
+                ),
+                padding: this.safeLength(
+                    this.responsiveValue("slidesPadding", "30px"),
+                    "30px",
+                ),
+                textAlign: this.s.textAlign || "center",
+                zIndex: 1,
+            };
+        },
+        slidesArrowStyle() {
+            return {
+                color: this.s.arrowsColor || "#fff",
+                fontSize: this.safeLength(
+                    this.responsiveValue("arrowsSize", "24px"),
+                    "24px",
+                ),
+            };
+        },
+        headlineStyle() {
+            return {
+                ...this.typographyStyle("headline", "36px", "600", "1.2em"),
+                textAlign: this.s.alignment || "left",
+                color: this.s.titleColor || "#101828",
+            };
+        },
+        headlineAnimatedClasses() {
+            return [
+                "is-" + this.s.headlineStyle,
+                "marker-" + (this.s.marker || "circle"),
+                "effect-" + (this.s.rotationEffect || "typing"),
+                { "is-changing": this.s.headlineStyle === "rotating" },
+                this.s.bringToFront ? "is-front" : "is-back",
+                this.s.roundedEdges ? "is-rounded" : "is-square",
+            ];
+        },
+        headlineAnimatedStyle() {
+            return {
+                ...this.typographyStyle("animatedText", "36px", "600", "1.2em"),
+                color: this.s.animatedColor || "#6979f8",
+                "--headline-marker-color": this.s.markerColor || "#6979f8",
+                "--headline-stroke-width": this.safeLength(
+                    this.responsiveValue("strokeWidth", "8px"),
+                    "8px",
+                ),
+                "--headline-duration": `${Math.max(100, Number(this.s.duration) || 1200)}ms`,
+            };
+        },
+        animatedWord() {
+            if (this.s.headlineStyle !== "rotating")
+                return this.s.animatedText || "";
+            const words = this.s.rotatingTexts || [];
+            return words[this.wordIndex % Math.max(1, words.length)] || "";
+        },
+        hotspotRootStyle() {
+            const alignment = this.safeEnum(
+                this.s.imageAlignment,
+                ["left", "center", "right"],
+                "center",
+            );
+            return {
+                width: this.safeLength(
+                    this.responsiveValue("imageWidth", "100%"),
+                    "100%",
+                ),
+                maxWidth: this.safeLength(
+                    this.responsiveValue("imageMaxWidth", "100%"),
+                    "100%",
+                ),
+                marginLeft: alignment === "left" ? "0" : "auto",
+                marginRight: alignment === "right" ? "0" : "auto",
+            };
+        },
+        hotspotImageStyle() {
+            const borderType = this.safeEnum(
+                this.s.imageBorderType,
+                ["none", "solid", "double", "dotted", "dashed"],
+                "none",
+            );
+            const opacity = Math.max(
+                0,
+                Math.min(1, Number(this.s.imageOpacity ?? 1)),
+            );
+            const filter = [
+                `brightness(${Math.max(0, Number(this.s.imageBrightness) || 100)}%)`,
+                `contrast(${Math.max(0, Number(this.s.imageContrast) || 100)}%)`,
+                `saturate(${Math.max(0, Number(this.s.imageSaturation) || 100)}%)`,
+                `blur(${Math.max(0, Number(this.s.imageBlur) || 0)}px)`,
+                `hue-rotate(${Math.max(0, Number(this.s.imageHue) || 0)}deg)`,
+            ].join(" ");
+            return {
+                height: this.safeLength(
+                    this.responsiveValue("imageHeight", "auto"),
+                    "auto",
+                ),
+                objectFit: this.safeEnum(
+                    this.s.imageObjectFit,
+                    ["cover", "contain", "fill", "none", "scale-down"],
+                    "cover",
+                ),
+                objectPosition: this.safeEnum(
+                    this.s.imageObjectPosition,
+                    [
+                        "top left",
+                        "top center",
+                        "top right",
+                        "center left",
+                        "center center",
+                        "center right",
+                        "bottom left",
+                        "bottom center",
+                        "bottom right",
+                    ],
+                    "center center",
+                ),
+                opacity,
+                filter,
+                transitionDuration: `${Math.max(0, Number(this.s.imageTransitionDuration) || 0)}s`,
+                border:
+                    borderType === "none"
+                        ? "0 solid transparent"
+                        : `${this.safeLength(this.responsiveValue("imageBorderWidth", "1px"), "1px")} ${borderType} ${this.s.imageBorderColor || "transparent"}`,
+                borderRadius: this.safeLength(
+                    this.responsiveValue("imageRadius", "0px"),
+                    "0px",
+                ),
+                boxShadow: `${this.safeLength(this.responsiveValue("imageShadowHorizontal", "0px"), "0px")} ${this.safeLength(this.responsiveValue("imageShadowVertical", "0px"), "0px")} ${this.safeLength(this.responsiveValue("imageShadowBlur", "0px"), "0px")} ${this.safeLength(this.responsiveValue("imageShadowSpread", "0px"), "0px")} ${this.s.imageShadowColor || "transparent"}`,
+            };
+        },
+        hotspotTooltipStyle() {
+            return {
+                color: this.s.tooltipTextColor || "#fff",
+                background: this.s.tooltipColor || "#101828",
+                textAlign: this.safeEnum(
+                    this.s.tooltipAlign,
+                    ["left", "center", "right"],
+                    "center",
+                ),
+                minWidth: this.safeLength(
+                    this.responsiveValue("tooltipMinWidth", "120px"),
+                    "120px",
+                ),
+                maxWidth: this.safeLength(
+                    this.responsiveValue("tooltipMaxWidth", "240px"),
+                    "240px",
+                ),
+                padding: this.safeLength(
+                    this.responsiveValue("tooltipPadding", "10px"),
+                    "10px",
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("tooltipRadius", "4px"),
+                    "4px",
+                ),
+                transitionDuration: `${Math.max(0, Number(this.s.tooltipDuration) || 0)}ms`,
+            };
+        },
+        priceListRootStyle() {
+            return {
+                gap: this.safeLength(
+                    this.responsiveValue("rowGap", "20px"),
+                    "20px",
+                ),
+            };
+        },
+        priceListItemStyle() {
+            return {
+                alignItems:
+                    { top: "flex-start", middle: "center", bottom: "flex-end" }[
+                        this.s.verticalAlign
+                    ] || "flex-start",
+                gap: this.safeLength(
+                    this.responsiveValue("imageSpacing", "16px"),
+                    "16px",
+                ),
+            };
+        },
+        priceListSeparatorStyle() {
+            return {
+                borderBottomStyle: this.safeEnum(
+                    this.s.separatorStyle,
+                    ["solid", "dotted", "dashed", "double", "none"],
+                    "dotted",
+                ),
+                borderBottomWidth: this.safeLength(
+                    this.responsiveValue("separatorWeight", "1px"),
+                    "1px",
+                ),
+                borderBottomColor: this.s.separatorColor || "#d0d5dd",
+                marginInline: this.safeLength(
+                    this.responsiveValue("separatorSpacing", "8px"),
+                    "8px",
+                ),
+            };
+        },
+        priceListImageStyle() {
+            const size = this.safeLength(
+                this.responsiveValue("imageSize", "56px"),
+                "56px",
+            );
+            return {
+                width: size,
+                height: size,
+                borderRadius: this.safeLength(
+                    this.responsiveValue("imageRadius", "4px"),
+                    "4px",
+                ),
+            };
+        },
+        priceListTitleStyle() {
+            return {
+                ...this.typographyStyle(
+                    "priceListTitle",
+                    "18px",
+                    "600",
+                    "1.3em",
+                ),
+                color: this.s.titleColor || "#101828",
+            };
+        },
+        priceListPriceStyle() {
+            return {
+                ...this.typographyStyle(
+                    "priceListPrice",
+                    "18px",
+                    "600",
+                    "1.3em",
+                ),
+                color: this.s.priceColor || "#6979f8",
+            };
+        },
+        priceListDescriptionStyle() {
+            return {
+                ...this.typographyStyle(
+                    "priceListDescription",
+                    "14px",
+                    "400",
+                    "1.5em",
+                ),
+                color: this.s.descriptionColor || "#667085",
+            };
+        },
+        formattedPrice() {
+            return this.formatPrice(this.s.price);
+        },
+        formattedOriginalPrice() {
+            return this.formatPrice(this.s.originalPrice);
+        },
+        priceTableFeaturesStyle() {
+            return {
+                background: this.s.featuresBackground || "#fff",
+                color: this.s.featuresColor || "#344054",
+            };
+        },
+        priceTableFeatureStyle() {
+            return {
+                borderBottomColor: this.s.featureDividerColor || "#e4e7ec",
+                borderBottomStyle: this.s.featureDivider ? "solid" : "none",
+                borderBottomWidth: this.s.featureDivider
+                    ? this.safeLength(
+                          this.responsiveValue("featureDividerWidth", "1px"),
+                          "1px",
+                      )
+                    : "0px",
+            };
+        },
+        priceTableRibbonStyle() {
+            return {
+                background: this.s.ribbonBackground || "#f04438",
+                color: this.s.ribbonTextColor || "#fff",
+            };
+        },
+        countdownTarget() {
+            if (this.s.countdownType === "evergreen") {
+                const seconds =
+                    (Number(this.s.evergreenDays) || 0) * 86400 +
+                    (Number(this.s.evergreenHours) || 0) * 3600 +
+                    (Number(this.s.evergreenMinutes) || 0) * 60;
+                return (
+                    this._evergreenStart ||
+                    (this._evergreenStart = Date.now() + seconds * 1000)
+                );
+            }
+            const parsed = Date.parse(this.s.dueDate);
+            return Number.isFinite(parsed) ? parsed : Date.now();
+        },
+        countdownRemaining() {
+            return Math.max(
+                0,
+                Math.floor((this.countdownTarget - this.now) / 1000),
+            );
+        },
+        countdownExpired() {
+            return this.countdownRemaining <= 0;
+        },
+        countdownMessageVisible() {
+            return this.countdownExpired && this.s.expireAction === "message";
+        },
+        countdownShouldHide() {
+            return this.countdownExpired && this.s.expireAction === "hide";
+        },
+        countdownParts() {
+            let remaining = this.countdownRemaining;
+            const days = Math.floor(remaining / 86400);
+            remaining %= 86400;
+            const hours = Math.floor(remaining / 3600);
+            remaining %= 3600;
+            const minutes = Math.floor(remaining / 60);
+            const seconds = remaining % 60;
+            return [
+                {
+                    key: "days",
+                    value: String(days).padStart(2, "0"),
+                    label: this.s.customLabels
+                        ? this.s.daysLabel || "Days"
+                        : "Days",
+                    show: this.s.showDays !== false,
+                },
+                {
+                    key: "hours",
+                    value: String(hours).padStart(2, "0"),
+                    label: this.s.customLabels
+                        ? this.s.hoursLabel || "Hours"
+                        : "Hours",
+                    show: this.s.showHours !== false,
+                },
+                {
+                    key: "minutes",
+                    value: String(minutes).padStart(2, "0"),
+                    label: this.s.customLabels
+                        ? this.s.minutesLabel || "Minutes"
+                        : "Minutes",
+                    show: this.s.showMinutes !== false,
+                },
+                {
+                    key: "seconds",
+                    value: String(seconds).padStart(2, "0"),
+                    label: this.s.customLabels
+                        ? this.s.secondsLabel || "Seconds"
+                        : "Seconds",
+                    show: this.s.showSeconds !== false,
+                },
+            ];
+        },
+        countdownRootStyle() {
+            return {
+                width: this.safeLength(
+                    this.responsiveValue("containerWidth", "100%"),
+                    "100%",
+                ),
+                gap: this.safeLength(
+                    this.responsiveValue("boxSpacing", "10px"),
+                    "10px",
+                ),
+            };
+        },
+        countdownBoxStyle() {
+            return {
+                background: this.s.boxBackground || "#101828",
+                color: this.s.digitColor || "#fff",
+                padding: this.safeLength(
+                    this.responsiveValue("boxPadding", "18px"),
+                    "18px",
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("boxRadius", "4px"),
+                    "4px",
+                ),
+                border:
+                    this.safeLength(
+                        this.responsiveValue("boxBorderWidth", "0px"),
+                        "0px",
+                    ) +
+                    " solid " +
+                    (this.s.boxBorderColor || "transparent"),
+                flexDirection:
+                    this.s.labelDisplay === "inline" ? "row" : "column",
+            };
+        },
+        countdownLabelStyle() {
+            return { color: this.s.labelColor || "#d0d5dd" };
+        },
+        carouselTrackStyle() {
+            const gap = this.safeLength(
+                this.responsiveValue("gap", "20px"),
+                "20px",
+            );
+            const match = gap.match(/^(-?\d+(?:\.\d+)?)([a-z%]*)$/i);
+            const gapPitch = match
+                ? `${Number(
+                      (
+                          (Number(match[1]) * this.activeIndex) /
+                          this.carouselVisible
+                      ).toFixed(4),
+                  )}${match[2] || "px"}`
+                : "0px";
+            return {
+                transform: `translate3d(calc(-${this.activeIndex * (100 / this.carouselVisible)}% - ${gapPitch}),0,0)`,
+                gap,
+                transitionDuration:
+                    Math.max(0, Number(this.s.transitionSpeed) || 0) + "ms",
+                alignItems: this.s.equalHeight ? "stretch" : "flex-start",
+            };
+        },
+        carouselSlideStyle() {
+            return {
+                flex: `0 0 calc(${100 / this.carouselVisible}% - ${this.carouselGapOffset})`,
+                background: this.s.slideBackground || "#fff",
+                padding: this.safeLength(
+                    this.responsiveValue("slidePadding", "20px"),
+                    "20px",
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("slideRadius", "8px"),
+                    "8px",
+                ),
+                border:
+                    this.safeLength(
+                        this.responsiveValue("slideBorderWidth", "1px"),
+                        "1px",
+                    ) +
+                    " solid " +
+                    (this.s.slideBorderColor || "#e4e7ec"),
+                height: this.s.equalHeight ? "auto" : "max-content",
+            };
+        },
+        carouselGapOffset() {
+            const gap = this.safeLength(
+                this.responsiveValue("gap", "20px"),
+                "20px",
+            );
+            const match = gap.match(/^(-?\d+(?:\.\d+)?)([a-z%]*)$/i);
+            if (!match || this.carouselVisible <= 1) return "0px";
+            const value =
+                (Number(match[1]) * (this.carouselVisible - 1)) /
+                this.carouselVisible;
+            return `${Number(value.toFixed(4))}${match[2] || "px"}`;
+        },
+        carouselArrowStyle() {
+            return {
+                color: this.s.arrowColor || "#344054",
+                background: this.s.arrowBackground || "#fff",
+            };
+        },
+        ctaStyle() {
+            return {
+                minHeight: this.safeLength(
+                    this.responsiveValue("height", "300px"),
+                    "300px",
+                ),
+                background: this.s.boxBackground || "#f2f4f7",
+                padding: this.safeLength(
+                    this.responsiveValue("padding", "30px"),
+                    "30px",
+                ),
+                flexDirection:
+                    {
+                        left: "row",
+                        right: "row-reverse",
+                        above: "column",
+                        below: "column-reverse",
+                    }[this.s.imagePosition] || "row",
+            };
+        },
+        ctaImageStyle() {
+            return {
+                backgroundImage: this.safeCssUrl(this.s.imageUrl),
+                width: this.safeLength(
+                    this.responsiveValue("imageWidth", "40%"),
+                    "40%",
+                ),
+                height: this.safeLength(
+                    this.responsiveValue("imageHeight", "300px"),
+                    "300px",
+                ),
+            };
+        },
+        ctaContentStyle() {
+            return {
+                alignSelf:
+                    { top: "flex-start", middle: "center", bottom: "flex-end" }[
+                        this.s.verticalPosition
+                    ] || "center",
+                textAlign: this.safeEnum(
+                    this.s.alignment,
+                    ["left", "center", "right"],
+                    "left",
+                ),
+            };
+        },
+        ctaOverlayStyle() {
+            return { background: this.s.overlayColor || "#00000033" };
+        },
+        ctaRibbonStyle() {
+            return {
+                background: this.s.ribbonBackground || "#f04438",
+                color: this.s.ribbonTextColor || "#fff",
+            };
+        },
+        flipRootStyle() {
+            return {
+                height: this.safeLength(
+                    this.responsiveValue("height", "300px"),
+                    "300px",
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("borderRadius", "8px"),
+                    "8px",
+                ),
+            };
+        },
+        flipFrontStyle() {
+            return {
+                background: this.s.frontBackground || "#14b8a6",
+                padding: this.safeLength(
+                    this.responsiveValue("frontPadding", "30px"),
+                    "30px",
+                ),
+                textAlign: this.safeEnum(
+                    this.s.frontAlignment,
+                    ["left", "center", "right"],
+                    "center",
+                ),
+                justifyContent:
+                    { top: "flex-start", middle: "center", bottom: "flex-end" }[
+                        this.s.verticalPosition
+                    ] || "center",
+                border:
+                    this.safeLength(
+                        this.responsiveValue("frontBorderWidth", "0px"),
+                        "0px",
+                    ) +
+                    " solid " +
+                    (this.s.frontBorderColor || "transparent"),
+            };
+        },
+        flipBackStyle() {
+            return {
+                background: this.s.backBackground || "#6979f8",
+                padding: this.safeLength(
+                    this.responsiveValue("backPadding", "30px"),
+                    "30px",
+                ),
+                textAlign: this.safeEnum(
+                    this.s.backAlignment,
+                    ["left", "center", "right"],
+                    "center",
+                ),
+                justifyContent:
+                    { top: "flex-start", middle: "center", bottom: "flex-end" }[
+                        this.s.verticalPosition
+                    ] || "center",
+                border:
+                    this.safeLength(
+                        this.responsiveValue("backBorderWidth", "0px"),
+                        "0px",
+                    ) +
+                    " solid " +
+                    (this.s.backBorderColor || "transparent"),
+            };
+        },
+        flipFrontTitleStyle() {
+            return {
+                ...this.typographyStyle(
+                    "flipFrontTitle",
+                    "24px",
+                    "600",
+                    "1.2em",
+                ),
+                color: this.s.frontTitleColor || "#fff",
+            };
+        },
+        flipFrontDescriptionStyle() {
+            return { color: this.s.frontDescriptionColor || "#fff" };
+        },
+        flipBackTitleStyle() {
+            return {
+                ...this.typographyStyle(
+                    "flipBackTitle",
+                    "24px",
+                    "600",
+                    "1.2em",
+                ),
+                color: this.s.backTitleColor || "#fff",
+            };
+        },
+        flipBackDescriptionStyle() {
+            return { color: this.s.backDescriptionColor || "#fff" };
+        },
+        flipImageStyle() {
+            return {
+                width: this.safeLength(
+                    this.responsiveValue("frontImageWidth", "30%"),
+                    "30%",
+                ),
+                opacity: Math.max(
+                    0,
+                    Math.min(1, Number(this.s.frontImageOpacity) || 0),
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("frontImageRadius", "0px"),
+                    "0px",
+                ),
+                marginBottom: this.safeLength(
+                    this.responsiveValue("frontGraphicSpacing", "16px"),
+                    "16px",
+                ),
+            };
+        },
+        flipIconStyle() {
+            return {
+                fontSize: this.safeLength(
+                    this.responsiveValue("iconSize", "48px"),
+                    "48px",
+                ),
+                color: this.s.iconColor || "#fff",
+                background: this.s.iconBackground || "transparent",
+                padding: this.safeLength(
+                    this.responsiveValue("iconPadding", "0px"),
+                    "0px",
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("iconRadius", "0px"),
+                    "0px",
+                ),
+                transform: `rotate(${Math.max(-360, Math.min(360, Number(this.s.iconRotation) || 0))}deg)`,
+                marginBottom: this.safeLength(
+                    this.responsiveValue("frontGraphicSpacing", "16px"),
+                    "16px",
+                ),
+            };
+        },
+    },
+    watch: {
+        hotspotRenditionKey: {
+            immediate: true,
+            handler() {
+                this.resolveHotspotImage();
+            },
+        },
+        responsiveDevice() {
+            this.goTo(this.activeIndex);
+            this.startSliderAutoplay();
+        },
+    },
+    mounted() {
+        this.timer = window.setInterval(() => {
+            this.now = Date.now();
+        }, 1000);
+        if (
+            this.type === "animated_headline" &&
+            this.s.headlineStyle === "rotating" &&
+            !this.reducedMotion
+        )
+            this.wordTimer = window.setInterval(
+                () => {
+                    const words = this.s.rotatingTexts || [];
+                    if (!this.s.loop && this.wordIndex >= words.length - 1) {
+                        window.clearInterval(this.wordTimer);
+                        this.wordTimer = 0;
+                        return;
+                    }
+                    this.wordIndex++;
+                },
+                Math.max(400, Number(this.s.delay) || 2500),
+            );
+        this.startSliderAutoplay();
+    },
+    beforeUnmount() {
+        window.clearInterval(this.timer);
+        window.clearInterval(this.wordTimer);
+        window.clearInterval(this.sliderTimer);
+    },
+    methods: {
+        async resolveHotspotImage() {
+            const requestId = ++this.hotspotRenditionRequest;
+            const sourceUrl = String(this.s.imageUrl || "");
+            this.hotspotImageUrl = sourceUrl;
+            const endpoint = String(
+                window.PAGE_BUILDER_ELEMENTOR_CONTEXT?.imageRenditionUrl || "",
+            );
+            const requestedSize = String(this.s.imageResolution || "full");
+            const size = ["thumbnail", "medium", "large", "full"].includes(
+                requestedSize,
+            )
+                ? requestedSize
+                : "full";
+            if (
+                this.type !== "hotspot" ||
+                !sourceUrl ||
+                !endpoint ||
+                !window.axios ||
+                size === "full"
+            )
+                return;
+            try {
+                const response = await window.axios.get(endpoint, {
+                    params: { url: sourceUrl, size },
+                });
+                if (requestId === this.hotspotRenditionRequest)
+                    this.hotspotImageUrl = String(
+                        response.data?.url || sourceUrl,
+                    );
+            } catch (_) {
+                if (requestId === this.hotspotRenditionRequest)
+                    this.hotspotImageUrl = sourceUrl;
+            }
+        },
+        formatPrice(value) {
+            const raw = String(value ?? "").trim();
+            const normalized = raw.replace(/[^\d.-]/g, "");
+            const number = Number(normalized);
+            if (!Number.isFinite(number)) return raw;
+            const [integer, decimal = ""] = number
+                .toFixed(Math.min(2, (normalized.split(".")[1] || "").length))
+                .split(".");
+            const thousands = this.s.currencyFormat === "period" ? "." : ",";
+            const decimalMark = this.s.currencyFormat === "period" ? "," : ".";
+            return (
+                integer.replace(/\B(?=(\d{3})+(?!\d))/g, thousands) +
+                (decimal ? decimalMark + decimal : "")
+            );
+        },
+        goTo(index) {
+            let next = Number(index) || 0;
+            if (this.s.infiniteLoop && this.maxIndex > 0) {
+                if (next > this.maxIndex) next = 0;
+                if (next < 0) next = this.maxIndex;
+            } else next = Math.max(0, Math.min(this.maxIndex, next));
+            this.activeIndex = next;
+        },
+        previous() {
+            this.goTo(
+                this.activeIndex -
+                    (this.type === "carousel" ? this.carouselStep : 1),
+            );
+            this.afterSliderInteraction();
+        },
+        next() {
+            this.goTo(
+                this.activeIndex +
+                    (this.type === "carousel" ? this.carouselStep : 1),
+            );
+            this.afterSliderInteraction();
+        },
+        selectSlide(index) {
+            this.goTo(index);
+            this.afterSliderInteraction();
+        },
+        afterSliderInteraction() {
+            if (!["slides", "carousel"].includes(this.type)) return;
+            if (this.s.pauseOnInteraction) {
+                this.sliderInteractionPaused = true;
+                this.stopSliderAutoplay();
+            } else this.startSliderAutoplay();
+        },
+        onSliderHover(hovered) {
+            this.sliderHovered = hovered;
+            this.startSliderAutoplay();
+        },
+        stopSliderAutoplay() {
+            window.clearInterval(this.sliderTimer);
+            this.sliderTimer = 0;
+        },
+        startSliderAutoplay() {
+            this.stopSliderAutoplay();
+            if (
+                !["slides", "carousel"].includes(this.type) ||
+                !this.s.autoplay ||
+                this.reducedMotion ||
+                this.sliderInteractionPaused ||
+                (this.s.pauseOnHover && this.sliderHovered) ||
+                this.maxIndex <= 0
+            )
+                return;
+            this.sliderTimer = window.setInterval(
+                () =>
+                    this.goTo(
+                        this.activeIndex +
+                            (this.type === "carousel" ? this.carouselStep : 1),
+                    ),
+                Math.max(100, Number(this.s.autoplaySpeed) || 5000),
+            );
+        },
+        carouselDotStyle(active) {
+            return {
+                background: active
+                    ? this.s.paginationActiveColor || "#6979f8"
+                    : this.s.paginationColor || "#d0d5dd",
+            };
+        },
+        onCarouselKeydown(event) {
+            if (event.key === "ArrowLeft") {
+                event.preventDefault();
+                this.previous();
+            }
+            if (event.key === "ArrowRight") {
+                event.preventDefault();
+                this.next();
+            }
+        },
+        toggleFlip(event) {
+            const target = event?.target;
+            if (
+                target?.closest &&
+                target.closest("a,button,input,select,textarea")
+            )
+                return;
+            this.flipActive = !this.flipActive;
+        },
+        toggleHotspot(index) {
+            if (this.s.tooltipTrigger === "none") return;
+            this.openHotspot = this.openHotspot === index ? -1 : index;
+        },
+        hotspotStyle(spot, index = 0) {
+            return {
+                ...this.typographyStyle("hotspot", "14px", "600", "1.2em"),
+                left: Math.max(0, Math.min(100, Number(spot.x) || 0)) + "%",
+                top: Math.max(0, Math.min(100, Number(spot.y) || 0)) + "%",
+                color: this.s.hotspotColor || "#fff",
+                background: this.s.hotspotBoxColor || "#6979f8",
+                minWidth: this.safeLength(
+                    this.responsiveValue("hotspotMinWidth", "32px"),
+                    "32px",
+                ),
+                minHeight: this.safeLength(
+                    this.responsiveValue("hotspotMinHeight", "32px"),
+                    "32px",
+                ),
+                padding: this.safeLength(
+                    this.responsiveValue("hotspotPadding", "8px"),
+                    "8px",
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("hotspotRadius", "50%"),
+                    "50%",
+                ),
+                animationDelay: this.s.sequencedAnimation
+                    ? `${Math.max(0, index) * 150}ms`
+                    : "0ms",
+            };
+        },
+        slideStyle(slide) {
+            const horizontal =
+                { left: "flex-start", center: "center", right: "flex-end" }[
+                    this.s.horizontalPosition
+                ] || "center";
+            const vertical =
+                { top: "flex-start", middle: "center", bottom: "flex-end" }[
+                    this.s.verticalPosition
+                ] || "center";
+            return {
+                backgroundImage: slide.backgroundImage
+                    ? this.safeCssUrl(slide.backgroundImage)
+                    : "none",
+                backgroundColor: slide.backgroundColor || "#6979f8",
+                backgroundPosition: this.safeEnum(
+                    slide.backgroundPosition,
+                    [
+                        "top left",
+                        "top center",
+                        "top right",
+                        "center left",
+                        "center center",
+                        "center right",
+                        "bottom left",
+                        "bottom center",
+                        "bottom right",
+                    ],
+                    "center center",
+                ),
+                backgroundSize: this.safeEnum(
+                    slide.backgroundSize,
+                    ["cover", "contain", "auto"],
+                    "cover",
+                ),
+                justifyContent: horizontal,
+                alignItems: vertical,
+                "--slide-overlay-color":
+                    slide.backgroundOverlay || "transparent",
+            };
+        },
+        slideTitleStyle(slide) {
+            return {
+                ...this.typographyStyle("slideTitle", "32px", "600", "1.2em"),
+                color: slide.titleColor || this.s.titleColor || "#fff",
+            };
+        },
+        slideDescriptionStyle(slide) {
+            return {
+                ...this.typographyStyle(
+                    "slideDescription",
+                    "16px",
+                    "400",
+                    "1.5em",
+                ),
+                color:
+                    slide.descriptionColor || this.s.descriptionColor || "#fff",
+            };
+        },
+        slidesDotStyle(active) {
+            return {
+                background: active
+                    ? this.s.dotsActiveColor || "#fff"
+                    : this.s.dotsColor || "#ffffff80",
+            };
+        },
+        typographyStyle(
+            prefix,
+            size = "16px",
+            weight = "400",
+            lineHeight = "1.4em",
+        ) {
+            return {
+                fontFamily: this.safeFontFamily(this.s[prefix + "FontFamily"]),
+                fontSize: this.safeLength(
+                    this.responsiveValue(prefix + "FontSize", size),
+                    size,
+                ),
+                fontWeight: this.safeFontWeight(
+                    this.s[prefix + "FontWeight"],
+                    weight,
+                ),
+                lineHeight: this.safeLength(
+                    this.responsiveValue(prefix + "LineHeight", lineHeight),
+                    lineHeight,
+                ),
+                letterSpacing: this.safeLength(
+                    this.responsiveValue(prefix + "LetterSpacing", "0px"),
+                    "0px",
+                ),
+                wordSpacing: this.safeLength(
+                    this.responsiveValue(prefix + "WordSpacing", "0px"),
+                    "0px",
+                ),
+                textTransform: this.safeEnum(
+                    this.s[prefix + "TextTransform"],
+                    ["none", "uppercase", "lowercase", "capitalize"],
+                    "none",
+                ),
+                fontStyle: this.safeEnum(
+                    this.s[prefix + "FontStyle"],
+                    ["normal", "italic", "oblique"],
+                    "normal",
+                ),
+                textDecoration: this.safeEnum(
+                    this.s[prefix + "TextDecoration"],
+                    ["none", "underline", "overline", "line-through"],
+                    "none",
+                ),
+            };
+        },
+        responsiveValue(base, fallback = "") {
+            const d = ["tablet", "mobile"].includes(this.responsiveDevice)
+                ? this.responsiveDevice
+                : "desktop";
+            const keys =
+                d === "mobile"
+                    ? [base + "Mobile", base + "Tablet", base]
+                    : d === "tablet"
+                      ? [base + "Tablet", base]
+                      : [base];
+            for (const key of keys) {
+                const value = this.s[key];
+                if (value !== "" && value != null) return value;
+            }
+            return fallback;
+        },
+        safeLength(value, fallback) {
+            const raw = String(value ?? "").trim();
+            return /^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i.test(raw)
+                ? raw
+                : fallback;
+        },
+        safeFontFamily(value) {
+            const raw = String(value || "inherit").trim();
+            return raw && /^[A-Za-z0-9 _,.'"-]+$/.test(raw) ? raw : "inherit";
+        },
+        safeFontWeight(value, fallback) {
+            const raw = String(value || "");
+            return /^(?:normal|bold|[1-9]00)$/.test(raw) ? raw : fallback;
+        },
+        safeEnum(value, allowed, fallback) {
+            return allowed.includes(value) ? value : fallback;
+        },
+        safeMediaUrl(value) {
+            const raw = String(value || "").trim();
+            return /^(?:https?:\/\/|\/)[^\u0000-\u001f"'()\\]*$/i.test(raw)
+                ? raw
+                : "";
+        },
+        safeCssUrl(value) {
+            const raw = this.safeMediaUrl(value);
+            return raw ? `url("${raw}")` : "none";
+        },
+        safeTag(value, fallback) {
+            return [
+                "h1",
+                "h2",
+                "h3",
+                "h4",
+                "h5",
+                "h6",
+                "div",
+                "span",
+                "p",
+            ].includes(String(value || "").toLowerCase())
+                ? String(value).toLowerCase()
+                : fallback;
+        },
+        sanitizeSvg(value) {
+            const raw = String(value || "").trim();
+            if (!raw || typeof DOMParser === "undefined") return "";
+            const doc = new DOMParser().parseFromString(raw, "image/svg+xml");
+            const root = doc.documentElement;
+            if (
+                !root ||
+                root.nodeName.toLowerCase() !== "svg" ||
+                doc.querySelector("parsererror")
+            )
+                return "";
+            const allowed = new Set([
+                "svg",
+                "g",
+                "path",
+                "circle",
+                "ellipse",
+                "rect",
+                "line",
+                "polyline",
+                "polygon",
+                "title",
+                "desc",
+            ]);
+            [root, ...root.querySelectorAll("*")].forEach((element) => {
+                if (!allowed.has(element.nodeName.toLowerCase())) {
+                    element.remove();
+                    return;
+                }
+                Array.from(element.attributes).forEach((attribute) => {
+                    const name = attribute.name.toLowerCase();
+                    if (
+                        name.startsWith("on") ||
+                        name === "style" ||
+                        name.includes("href")
+                    )
+                        element.removeAttribute(attribute.name);
+                });
+            });
+            return root.outerHTML;
+        },
+        proIconSvg(entry, prefix) {
+            return entry?.[prefix + "Source"] === "svg"
+                ? this.sanitizeSvg(entry[prefix + "Svg"])
+                : "";
+        },
+        proIconClass(entry, prefix, fallback = "") {
+            if (entry?.[prefix + "Source"] === "none") return "";
+            const iconClass = String(entry?.[prefix + "Class"] || "").trim();
+            return /^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i.test(
+                iconClass,
+            )
+                ? iconClass
+                : fallback;
+        },
+        safeInputType(value) {
+            return [
+                "text",
+                "email",
+                "number",
+                "tel",
+                "url",
+                "date",
+                "time",
+                "file",
+                "hidden",
+                "checkbox",
+                "radio",
+            ].includes(value)
+                ? value
+                : "text";
+        },
+        sanitizeFormHtml(value) {
+            const template = document.createElement("template");
+            template.innerHTML = String(value || "");
+            const allowed = new Set([
+                "A",
+                "B",
+                "BR",
+                "EM",
+                "I",
+                "LI",
+                "OL",
+                "P",
+                "SPAN",
+                "STRONG",
+                "U",
+                "UL",
+            ]);
+            const safeHref = /^(?:https?:\/\/|mailto:|tel:|\/|#)/i;
+            const clean = (parent) => {
+                Array.from(parent.childNodes).forEach((node) => {
+                    if (node.nodeType !== 1) return;
+                    if (!allowed.has(node.tagName)) {
+                        if (
+                            ["SCRIPT", "STYLE", "IFRAME", "OBJECT"].includes(
+                                node.tagName,
+                            )
+                        )
+                            node.remove();
+                        else {
+                            clean(node);
+                            node.replaceWith(...node.childNodes);
+                        }
+                        return;
+                    }
+                    Array.from(node.attributes).forEach((attribute) => {
+                        const name = attribute.name.toLowerCase();
+                        if (
+                            node.tagName !== "A" ||
+                            !["href", "target", "rel"].includes(name)
+                        )
+                            node.removeAttribute(attribute.name);
+                    });
+                    if (node.tagName === "A") {
+                        if (!safeHref.test(node.getAttribute("href") || ""))
+                            node.removeAttribute("href");
+                        if (node.getAttribute("target") === "_blank")
+                            node.setAttribute("rel", "noopener noreferrer");
+                        else node.removeAttribute("target");
+                    }
+                    clean(node);
+                });
+            };
+            clean(template.content);
+            return template.innerHTML;
+        },
+        parseFormOptions(field) {
+            if (Array.isArray(field.options) && field.options.length) {
+                return field.options.map((entry) =>
+                    typeof entry === "object"
+                        ? {
+                              label: String(entry.label ?? entry.value ?? ""),
+                              value: String(entry.value ?? entry.label ?? ""),
+                          }
+                        : { label: String(entry), value: String(entry) },
+                );
+            }
+            return String(field.optionsText || "")
+                .split(/\r?\n/)
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map((line) => {
+                    const [label, ...value] = line.split("|");
+                    return {
+                        label: label.trim(),
+                        value: (value.join("|") || label).trim(),
+                    };
+                });
+        },
+        formActionEnabled(action) {
+            return (
+                Array.isArray(this.s.submitActions) &&
+                this.s.submitActions.includes(action)
+            );
+        },
+        safeDomId(value) {
+            return String(value || "").replace(/[^A-Za-z0-9_-]/g, "");
+        },
+    },
+};
+</script>
+
+<style scoped>
+:global(.pb-node .pb-pro-canvas [data-pb-interactive="true"]) {
+    pointer-events: auto;
+}
+.pb-pro-button:hover,
+.pb-pro-form button:hover {
+    background: var(--pb-button-hover-bg) !important;
+    color: var(--pb-button-hover-color) !important;
+}
+.pb-pro-canvas {
+    width: 100%;
+    min-width: 0;
+}
+.pb-pro-form {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--column-gap);
+}
+.pb-pro-form__field {
+    padding-right: var(--column-gap);
+}
+.pb-pro-form__choice-group {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+.pb-pro-form__choice-group legend {
+    margin-bottom: 6px;
+    padding: 0;
+    font-size: 13px;
+}
+.pb-visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+.pb-pro-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+.pb-pro-form input,
+.pb-pro-form textarea,
+.pb-pro-form select {
+    width: 100%;
+    min-height: 36px;
+    padding: 8px 10px;
+    border: 1px solid var(--field-border);
+    border-radius: var(--field-radius);
+    background: var(--field-bg);
+    color: var(--field-color);
+}
+.pb-pro-form input:focus,
+.pb-pro-form textarea:focus,
+.pb-pro-form select:focus {
+    border-color: var(--field-focus-border, #6979f8);
+    background: var(--field-focus-bg, #fff);
+    outline: 0;
+}
+.pb-pro-form__html {
+    color: var(--form-html-color, #344054);
+}
+.pb-pro-form__choices {
+    display: grid;
+    gap: 8px;
+}
+.pb-pro-form__field.is-inline .pb-pro-form__choices {
+    display: flex;
+    flex-wrap: wrap;
+}
+.pb-pro-form .pb-pro-form__choice {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0 12px 0 0;
+}
+.pb-pro-form .pb-pro-form__choice input {
+    width: auto;
+    min-height: 0;
+}
+.pb-pro-form__progress,
+.pb-pro-form__step-title {
+    width: 100%;
+}
+.pb-pro-form__progress {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+.pb-pro-form__progress > span {
+    display: grid;
+    min-width: 30px;
+    min-height: 30px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--step-inactive, #d0d5dd);
+    color: #fff;
+}
+.pb-pro-form__progress > span.active {
+    background: var(--step-active, #6979f8);
+}
+.pb-pro-form__progress > span.shape-square {
+    border-radius: 0;
+}
+.pb-pro-form__progress > span.shape-rounded {
+    border-radius: 7px;
+}
+.pb-pro-form__progress small {
+    color: inherit;
+    font-size: 10px;
+}
+.pb-pro-form__step-title {
+    display: grid;
+    gap: 3px;
+}
+.pb-pro-form__actions {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+}
+.pb-pro-form__message {
+    width: 100%;
+    color: var(--form-success, #067647);
+}
+.pb-pro-button,
+.pb-pro-form button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 9px 18px;
+    border: 0;
+    text-decoration: none;
+}
+.pb-pro-slides {
+    position: relative;
+    overflow: hidden;
+}
+.pb-pro-slides__slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    background-size: cover;
+    background-position: center;
+}
+.pb-pro-slides__slide::before {
+    position: absolute;
+    inset: 0;
+    background: var(--slide-overlay-color, transparent);
+    content: "";
+}
+.pb-pro-slides__content {
+    position: relative;
+}
+.pb-pro-slides__title {
+    margin: 0 0 12px;
+    color: inherit;
+}
+.pb-pro-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 3;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    background: #fff;
+    color: #344054;
+    box-shadow: 0 4px 12px #10182822;
+}
+.pb-pro-arrow--prev {
+    left: var(--slides-arrow-offset, 10px);
+}
+.pb-pro-arrow--next {
+    right: var(--slides-arrow-offset, 10px);
+}
+.pb-pro-dots {
+    position: absolute;
+    left: 50%;
+    bottom: var(--slides-dot-offset, 12px);
+    display: flex;
+    gap: var(--slides-dot-gap, 8px);
+    transform: translateX(-50%);
+}
+.pb-pro-dots button {
+    width: var(--slides-dot-size, 8px);
+    height: var(--slides-dot-size, 8px);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--slides-dot-color, #d0d5dd);
+}
+.pb-pro-dots button.active {
+    background: var(--slides-dot-active-color, #6979f8);
+}
+.pb-pro-slides .pb-pro-arrow {
+    color: var(--slides-arrow-color, #fff);
+    font-size: var(--slides-arrow-size, 24px);
+}
+.pb-pro-slides__slide.transition-fade {
+    animation: pb-pro-slides-fade 0.5s ease both;
+}
+.pb-pro-slides__slide.transition-slide {
+    animation: pb-pro-slides-slide 0.5s ease both;
+}
+.pb-pro-slides__content.animation-down {
+    animation: pb-pro-content-down 0.5s ease both;
+}
+.pb-pro-slides__content.animation-up {
+    animation: pb-pro-content-up 0.5s ease both;
+}
+.pb-pro-slides__content.animation-right {
+    animation: pb-pro-content-right 0.5s ease both;
+}
+.pb-pro-slides__content.animation-left {
+    animation: pb-pro-content-left 0.5s ease both;
+}
+.pb-pro-slides__content.animation-zoom {
+    animation: pb-pro-content-zoom 0.5s ease both;
+}
+@keyframes pb-pro-slides-fade {
+    from {
+        opacity: 0;
+    }
+}
+@keyframes pb-pro-slides-slide {
+    from {
+        opacity: 0.35;
+        transform: translateX(7%);
+    }
+}
+@keyframes pb-pro-content-down {
+    from {
+        opacity: 0;
+        transform: translateY(-24px);
+    }
+}
+@keyframes pb-pro-content-up {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+}
+@keyframes pb-pro-content-right {
+    from {
+        opacity: 0;
+        transform: translateX(-24px);
+    }
+}
+@keyframes pb-pro-content-left {
+    from {
+        opacity: 0;
+        transform: translateX(24px);
+    }
+}
+@keyframes pb-pro-content-zoom {
+    from {
+        opacity: 0;
+        transform: scale(0.82);
+    }
+}
+.pb-pro-headline__animated {
+    position: relative;
+    color: var(--animated-color, #6979f8);
+}
+.pb-pro-headline__animated.is-highlighted {
+    padding: 0 0.2em;
+}
+.pb-pro-headline__animated.is-highlighted::before,
+.pb-pro-headline__animated.is-highlighted::after {
+    position: absolute;
+    z-index: -1;
+    border-color: var(--headline-marker-color, currentColor);
+    content: "";
+    pointer-events: none;
+}
+.pb-pro-headline__animated.is-front::before,
+.pb-pro-headline__animated.is-front::after {
+    z-index: 1;
+}
+.pb-pro-headline__animated.marker-circle::before {
+    inset: -0.18em -0.28em;
+    border-width: var(--headline-stroke-width, 3px);
+    border-style: solid;
+    border-radius: 50%;
+}
+.pb-pro-headline__animated.is-square::before {
+    border-radius: 0;
+}
+.pb-pro-headline__animated.marker-underline::after,
+.pb-pro-headline__animated.marker-double-underline::before,
+.pb-pro-headline__animated.marker-double-underline::after,
+.pb-pro-headline__animated.marker-underline-zigzag::after {
+    right: 0;
+    bottom: -0.12em;
+    left: 0;
+    border-bottom-width: var(--headline-stroke-width, 3px);
+    border-bottom-style: solid;
+}
+.pb-pro-headline__animated.marker-double-underline::before {
+    bottom: 0.05em;
+}
+.pb-pro-headline__animated.marker-underline-zigzag::after {
+    border-bottom-style: wavy;
+}
+.pb-pro-headline__animated.marker-strikethrough::after {
+    top: 52%;
+    right: -0.1em;
+    left: -0.1em;
+    border-top: var(--headline-stroke-width, 3px) solid
+        var(--headline-marker-color, currentColor);
+}
+.pb-pro-headline__animated.marker-diagonal::after,
+.pb-pro-headline__animated.marker-x::before,
+.pb-pro-headline__animated.marker-x::after {
+    top: 50%;
+    right: -0.1em;
+    left: -0.1em;
+    border-top: var(--headline-stroke-width, 3px) solid
+        var(--headline-marker-color, currentColor);
+    transform: rotate(-8deg);
+}
+.pb-pro-headline__animated.marker-x::before {
+    transform: rotate(12deg);
+}
+.pb-pro-headline__animated.marker-curly::after {
+    right: 0;
+    bottom: -0.15em;
+    left: 0;
+    border-bottom: var(--headline-stroke-width, 3px) wavy
+        var(--headline-marker-color, currentColor);
+}
+.pb-pro-headline__animated.marker-double::before {
+    inset: -0.2em -0.3em;
+    border: var(--headline-stroke-width, 3px) solid
+        var(--headline-marker-color, currentColor);
+    border-radius: 50%;
+}
+.pb-pro-headline__animated.marker-double::after {
+    inset: -0.08em -0.16em;
+    border: calc(var(--headline-stroke-width, 3px) / 2) solid
+        var(--headline-marker-color, currentColor);
+    border-radius: 50%;
+}
+.pb-pro-headline__animated.is-rotating {
+    display: inline-block;
+}
+.pb-pro-headline__animated.is-changing.effect-typing {
+    animation: pb-pro-headline-typing var(--headline-duration, 1200ms)
+        steps(8, end) both;
+}
+.pb-pro-headline__animated.is-changing.effect-clip {
+    animation: pb-pro-headline-clip var(--headline-duration, 1200ms) ease both;
+}
+.pb-pro-headline__animated.is-changing.effect-flip {
+    animation: pb-pro-headline-flip var(--headline-duration, 1200ms) ease both;
+}
+.pb-pro-headline__animated.is-changing.effect-swirl {
+    animation: pb-pro-headline-swirl var(--headline-duration, 1200ms) ease both;
+}
+.pb-pro-headline__animated.is-changing.effect-blinds {
+    animation: pb-pro-headline-blinds var(--headline-duration, 1200ms) ease both;
+}
+.pb-pro-headline__animated.is-changing.effect-drop-in {
+    animation: pb-pro-headline-drop-in var(--headline-duration, 1200ms) ease
+        both;
+}
+.pb-pro-headline__animated.is-changing.effect-wave {
+    animation: pb-pro-headline-wave var(--headline-duration, 1200ms) ease both;
+}
+.pb-pro-headline__animated.is-changing.effect-slide {
+    animation: pb-pro-headline-slide var(--headline-duration, 1200ms) ease both;
+}
+@keyframes pb-pro-headline-typing {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+}
+@keyframes pb-pro-headline-clip {
+    from {
+        opacity: 0;
+        transform: scaleX(0.2);
+    }
+}
+@keyframes pb-pro-headline-flip {
+    from {
+        opacity: 0;
+        transform: rotateX(-90deg);
+    }
+}
+@keyframes pb-pro-headline-swirl {
+    from {
+        opacity: 0;
+        transform: rotate(-18deg) scale(0.6);
+    }
+}
+@keyframes pb-pro-headline-blinds {
+    from {
+        opacity: 0;
+        transform: scaleY(0.1);
+    }
+}
+@keyframes pb-pro-headline-drop-in {
+    from {
+        opacity: 0;
+        transform: translateY(-0.8em);
+    }
+}
+@keyframes pb-pro-headline-wave {
+    from {
+        opacity: 0;
+        transform: skewY(10deg) translateY(0.3em);
+    }
+}
+@keyframes pb-pro-headline-slide {
+    from {
+        opacity: 0;
+        transform: translateX(-0.8em);
+    }
+}
+.pb-pro-hotspot {
+    position: relative;
+    min-height: 220px;
+    margin: auto;
+}
+.pb-pro-hotspot > img {
+    display: block;
+    width: 100%;
+    transition-property: opacity, filter, transform;
+}
+.pb-pro-hotspot__placeholder {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    min-height: 220px;
+    background: #f2f4f7;
+    color: #98a2b3;
+}
+.pb-pro-hotspot__placeholder i {
+    font-size: 34px;
+}
+.pb-pro-hotspot__marker {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    transform: translate(-50%, -50%);
+    border: 0;
+}
+.pb-pro-hotspot__marker.is-soft-beat {
+    animation: pb-pro-hotspot-soft-beat 1.4s ease-in-out infinite;
+}
+.pb-pro-hotspot__marker.is-expand {
+    animation: pb-pro-hotspot-expand 1.8s ease-out infinite;
+}
+.pb-pro-hotspot__marker.is-overlay::after {
+    position: absolute;
+    inset: -6px;
+    border-radius: inherit;
+    background: currentColor;
+    content: "";
+    opacity: 0.2;
+    animation: pb-pro-hotspot-overlay 1.8s ease-out infinite;
+}
+.pb-pro-hotspot__tooltip {
+    position: absolute;
+    z-index: 4;
+    width: max-content;
+    max-width: 240px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    background: #101828;
+    color: #fff;
+    font-size: 12px;
+    opacity: 1;
+    transition-property: opacity, transform;
+}
+.pb-pro-hotspot__tooltip.is-grow {
+    animation: pb-pro-tooltip-grow var(--tooltip-duration, 300ms) ease both;
+}
+.pb-pro-hotspot__tooltip.is-directional-fade {
+    animation: pb-pro-tooltip-fade var(--tooltip-duration, 300ms) ease both;
+}
+.pb-pro-hotspot__tooltip.is-directional-slide {
+    animation: pb-pro-tooltip-slide var(--tooltip-duration, 300ms) ease both;
+}
+@keyframes pb-pro-hotspot-soft-beat {
+    50% {
+        transform: translate(-50%, -50%) scale(1.12);
+    }
+}
+@keyframes pb-pro-hotspot-expand {
+    50% {
+        box-shadow: 0 0 0 10px rgb(105 121 248 / 0);
+    }
+}
+@keyframes pb-pro-hotspot-overlay {
+    to {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+@keyframes pb-pro-tooltip-grow {
+    from {
+        opacity: 0;
+        scale: 0.85;
+    }
+}
+@keyframes pb-pro-tooltip-fade {
+    from {
+        opacity: 0;
+    }
+}
+@keyframes pb-pro-tooltip-slide {
+    from {
+        opacity: 0;
+        translate: 0 6px;
+    }
+}
+.pb-pro-hotspot__tooltip.is-top {
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+}
+.pb-pro-hotspot__tooltip.is-bottom {
+    left: 50%;
+    top: calc(100% + 8px);
+    transform: translateX(-50%);
+}
+.pb-pro-hotspot__tooltip.is-left {
+    right: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+}
+.pb-pro-hotspot__tooltip.is-right {
+    left: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+}
+.pb-pro-price-list {
+    display: grid;
+    gap: var(--row-gap);
+}
+.pb-pro-price-list__item {
+    display: flex;
+    gap: 16px;
+}
+.pb-pro-price-list__item img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+}
+.pb-pro-price-list__body {
+    flex: 1;
+}
+.pb-pro-price-list__line {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+.pb-pro-price-list__line h3 {
+    margin: 0;
+}
+.pb-pro-price-list__line > span {
+    flex: 1;
+    border-bottom: 1px dotted #d0d5dd;
+}
+.pb-pro-price-table {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e4e7ec;
+    border-radius: 8px;
+    text-align: center;
+}
+.pb-pro-price-table header,
+.pb-pro-price-table__price,
+.pb-pro-price-table footer {
+    padding: 22px;
+}
+.pb-pro-price-table header h3 {
+    margin: 0;
+}
+.pb-pro-price-table__price strong {
+    font-size: 44px;
+}
+.pb-pro-price-table__original-price {
+    display: block;
+    opacity: 0.65;
+}
+.pb-pro-price-table__price small {
+    display: block;
+}
+.pb-pro-price-table ul {
+    list-style: none;
+    margin: 0;
+    padding: 20px;
+}
+.pb-pro-price-table li {
+    padding: 8px;
+}
+.pb-pro-price-table li:last-child {
+    border-bottom-width: 0 !important;
+}
+.pb-pro-price-table li i {
+    margin-right: 8px;
+}
+.pb-pro-price-table li .pb-pro-icon-svg {
+    margin-right: 8px;
+}
+.pb-pro-icon-svg {
+    display: inline-flex;
+    width: 1em;
+    height: 1em;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    vertical-align: -0.125em;
+}
+.pb-pro-icon-svg :deep(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+.pb-pro-flip-box__front-icon {
+    margin-bottom: var(--flip-graphic-spacing, 16px);
+}
+.pb-pro-price-table footer small {
+    display: block;
+    margin-top: 10px;
+}
+.pb-pro-price-table__ribbon,
+.pb-pro-cta__ribbon {
+    position: absolute;
+    z-index: 4;
+    top: 18px;
+    padding: 5px 28px;
+    background: #f04438;
+    color: #fff;
+}
+.pb-pro-price-table__ribbon.is-right,
+.pb-pro-cta__ribbon.is-right {
+    right: -28px;
+    transform: rotate(45deg);
+}
+.pb-pro-price-table__ribbon.is-left,
+.pb-pro-cta__ribbon.is-left {
+    left: -28px;
+    transform: rotate(-45deg);
+}
+.pb-pro-cta {
+    position: relative;
+    display: flex;
+    gap: 24px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+.pb-pro-cta__image {
+    flex: 0 0 auto;
+    min-height: 220px;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s ease;
+}
+.pb-pro-cta__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+.pb-pro-cta__content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+.pb-pro-cta__ribbon {
+    z-index: 3;
+}
+.pb-pro-cta.is-cover .pb-pro-cta__image {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+.pb-pro-cta.effect-zoom-in:hover .pb-pro-cta__image {
+    transform: scale(1.08);
+}
+.pb-pro-cta.effect-zoom-out .pb-pro-cta__image {
+    transform: scale(1.08);
+}
+.pb-pro-cta.effect-zoom-out:hover .pb-pro-cta__image {
+    transform: scale(1);
+}
+.pb-pro-cta.effect-move-left:hover .pb-pro-cta__image {
+    transform: translateX(-12px);
+}
+.pb-pro-cta.effect-move-right:hover .pb-pro-cta__image {
+    transform: translateX(12px);
+}
+.pb-pro-cta.effect-move-up:hover .pb-pro-cta__image {
+    transform: translateY(-12px);
+}
+.pb-pro-cta.effect-move-down:hover .pb-pro-cta__image {
+    transform: translateY(12px);
+}
+.pb-pro-countdown {
+    display: flex;
+    justify-content: center;
+}
+.pb-pro-countdown__box {
+    min-width: 76px;
+    text-align: center;
+}
+.pb-pro-countdown__box strong {
+    display: block;
+    font-size: 30px;
+}
+.pb-pro-countdown__box span {
+    display: block;
+    font-size: 12px;
+    color: inherit;
+    opacity: 0.75;
+}
+.pb-pro-countdown__expired {
+    padding: 16px;
+}
+.pb-pro-carousel {
+    position: relative;
+    padding: 0 46px 24px;
+}
+.pb-pro-carousel__viewport {
+    overflow: hidden;
+}
+.pb-pro-carousel__track {
+    display: flex;
+    transition: transform 0.4s ease;
+}
+.pb-pro-carousel .pb-pro-arrow {
+    width: var(--carousel-arrow-size, 34px);
+    height: var(--carousel-arrow-size, 34px);
+}
+.pb-pro-carousel .pb-pro-dots {
+    gap: var(--carousel-dot-gap, 8px);
+}
+.pb-pro-carousel .pb-pro-dots button {
+    width: var(--carousel-dot-size, 8px);
+    height: var(--carousel-dot-size, 8px);
+}
+.pb-pro-carousel__slide {
+    min-width: 0;
+}
+.pb-pro-carousel__slide img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+}
+.pb-pro-flip-box {
+    perspective: 1000px;
+    overflow: hidden;
+}
+.pb-pro-flip-box__inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+}
+.pb-pro-flip-box__face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    backface-visibility: hidden;
+}
+.pb-pro-flip-box.effect-flip.direction-left .pb-pro-flip-box__back {
+    transform: rotateY(180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-left.flipped .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-flip.direction-left:hover .pb-pro-flip-box__inner {
+    transform: rotateY(-180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-right .pb-pro-flip-box__back {
+    transform: rotateY(-180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-right.flipped .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-flip.direction-right:hover .pb-pro-flip-box__inner {
+    transform: rotateY(180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-up .pb-pro-flip-box__back {
+    transform: rotateX(-180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-up.flipped .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-flip.direction-up:hover .pb-pro-flip-box__inner {
+    transform: rotateX(180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-down .pb-pro-flip-box__back {
+    transform: rotateX(180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-down.flipped .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-flip.direction-down:hover .pb-pro-flip-box__inner {
+    transform: rotateX(-180deg);
+}
+.pb-pro-flip-box.effect-slide .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-push .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-zoom-in .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-zoom-out .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-fade .pb-pro-flip-box__inner {
+    transform: none;
+}
+.pb-pro-flip-box.effect-slide .pb-pro-flip-box__face,
+.pb-pro-flip-box.effect-push .pb-pro-flip-box__face,
+.pb-pro-flip-box.effect-zoom-in .pb-pro-flip-box__face,
+.pb-pro-flip-box.effect-zoom-out .pb-pro-flip-box__face,
+.pb-pro-flip-box.effect-fade .pb-pro-flip-box__face {
+    transition:
+        transform 0.6s ease,
+        opacity 0.6s ease;
+}
+.pb-pro-flip-box.effect-slide.direction-up .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-push.direction-up .pb-pro-flip-box__back {
+    transform: translateY(100%);
+}
+.pb-pro-flip-box.effect-slide.direction-down .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-push.direction-down .pb-pro-flip-box__back {
+    transform: translateY(-100%);
+}
+.pb-pro-flip-box.effect-slide.direction-left .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-push.direction-left .pb-pro-flip-box__back {
+    transform: translateX(100%);
+}
+.pb-pro-flip-box.effect-slide.direction-right .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-push.direction-right .pb-pro-flip-box__back {
+    transform: translateX(-100%);
+}
+.pb-pro-flip-box.effect-slide.flipped .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-slide:hover .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-push.flipped .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-push:hover .pb-pro-flip-box__back {
+    transform: translate(0);
+}
+.pb-pro-flip-box.effect-zoom-in .pb-pro-flip-box__back {
+    transform: scale(0.65);
+    opacity: 0;
+}
+.pb-pro-flip-box.effect-zoom-out .pb-pro-flip-box__back {
+    transform: scale(1.35);
+    opacity: 0;
+}
+.pb-pro-flip-box.effect-fade .pb-pro-flip-box__back {
+    transform: none;
+    opacity: 0;
+}
+.pb-pro-flip-box.effect-zoom-in.flipped .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-zoom-in:hover .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-zoom-out.flipped .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-zoom-out:hover .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-fade.flipped .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-fade:hover .pb-pro-flip-box__back {
+    transform: scale(1);
+    opacity: 1;
+}
+.pb-pro-flip-box.effect-zoom-in.flipped .pb-pro-flip-box__front,
+.pb-pro-flip-box.effect-zoom-in:hover .pb-pro-flip-box__front,
+.pb-pro-flip-box.effect-zoom-out.flipped .pb-pro-flip-box__front,
+.pb-pro-flip-box.effect-zoom-out:hover .pb-pro-flip-box__front,
+.pb-pro-flip-box.effect-fade.flipped .pb-pro-flip-box__front,
+.pb-pro-flip-box.effect-fade:hover .pb-pro-flip-box__front {
+    opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+    .pb-pro-carousel__track,
+    .pb-pro-cta,
+    .pb-pro-cta__image,
+    .pb-pro-flip-box__inner {
+        transition: none !important;
+    }
+}
+</style>

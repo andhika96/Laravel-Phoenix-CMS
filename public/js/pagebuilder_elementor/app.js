@@ -1428,6 +1428,18 @@
 		testimonial: 'Testimonial',
 		social_icons: 'Social Icons',
 		alert: 'Alert',
+		rating: 'Rating',
+		text_path: 'Text Path',
+		form: 'Form',
+		slides: 'Slides',
+		animated_headline: 'Animated Headline',
+		hotspot: 'Hotspot',
+		price_list: 'Price List',
+		price_table: 'Price Table',
+		call_to_action: 'Call to Action',
+		countdown: 'Countdown',
+		carousel: 'Carousel',
+		flip_box: 'Flip Box',
 	});
 
 	const NODE_LABEL_ICONS = Object.freeze({
@@ -1453,6 +1465,18 @@
 		testimonial: 'fas fa-quote-left',
 		social_icons: 'fas fa-share-alt',
 		alert: 'fas fa-exclamation-triangle',
+		rating: 'fas fa-star-half-alt',
+		text_path: 'fas fa-bezier-curve',
+		form: 'fab fa-wpforms',
+		slides: 'fas fa-sliders-h',
+		animated_headline: 'fas fa-heading',
+		hotspot: 'fas fa-map-marker-alt',
+		price_list: 'fas fa-list-alt',
+		price_table: 'fas fa-tags',
+		call_to_action: 'fas fa-bullhorn',
+		countdown: 'fas fa-hourglass-half',
+		carousel: 'fas fa-clone',
+		flip_box: 'fas fa-sync-alt',
 	});
 
 	function baseNodeLabel(type, fallback = 'Widget') {
@@ -1595,7 +1619,10 @@
 			isTabsNode() { return isTabs(this.node.type); },
 			isAccordionNode() { return isAccordion(this.node.type); },
         hasSharedAdvancedControls() { return this.isTabsNode || this.isAccordionNode || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading'; },
-        hasNewGeneralAdvancedControls() { return ['counter', 'progress_bar', 'testimonial', 'social_icons', 'alert'].includes(this.node.type); },
+		hasNewGeneralAdvancedControls() {
+			return ['counter', 'progress_bar', 'testimonial', 'social_icons', 'alert', 'rating', 'text_path'].includes(this.node.type)
+				|| ['form', 'slides', 'animated_headline', 'hotspot', 'price_list', 'price_table', 'call_to_action', 'countdown', 'carousel', 'flip_box'].includes(this.node.type);
+		},
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
 				return displayNodeLabel(this.node);
@@ -3772,7 +3799,7 @@
 				}
 			}
 		function isIconLibraryWidgetNode(node) {
-            return !!node && (['icon', 'icon_box', 'image_carousel'].includes(node.type) || node.type === 'button' || ['social_icons', 'alert'].includes(node.type));
+            return !!node && (['icon', 'icon_box', 'image_carousel'].includes(node.type) || node.type === 'button' || ['social_icons', 'alert', 'rating'].includes(node.type));
 		}
 		function normalizeIconLibraryWidgetSettings(node) {
 			if (!isIconLibraryWidgetNode(node)) return;
@@ -3799,6 +3826,35 @@
 				iconLibraryGroup.value = 'all';
 				iconLibrarySearch.value = '';
 				syncIconLibrarySelectionFromNode(node);
+				showIconLibraryModal.value = true;
+			}
+			function resolveProIconTarget(targetKey, itemId, node = selectedNode.value) {
+				const targets = {
+					formButton: { type: 'form', prefix: 'buttonIcon' },
+					priceTableFeature: { type: 'price_table', prefix: 'icon', collection: 'features' },
+					flipBoxFront: { type: 'flip_box', prefix: 'frontIcon' },
+				};
+				const target = targets[String(targetKey || '')];
+				if (!target || !node || node.type !== target.type) return null;
+				let entry = node.settings || (node.settings = {});
+				if (target.collection) {
+					const items = Array.isArray(entry[target.collection]) ? entry[target.collection] : [];
+					entry = items.find((item) => String(item.id) === String(itemId));
+				}
+				if (!entry) return null;
+				return { entry, prefix: target.prefix };
+			}
+			async function openProIconLibrary(targetKey, itemId = '', node = selectedNode.value) {
+				const target = resolveProIconTarget(targetKey, itemId, node);
+				if (!target) return;
+				await ensureIconLibraryLoaded();
+				const parsed = parseIconWidgetClassParts(target.entry[target.prefix + 'Class'] || '');
+				iconLibraryTargetNodeId.value = String(node.id || '');
+				iconLibraryTargetSettingKey.value = 'proIcon';
+				iconLibraryTargetItemId.value = JSON.stringify({ targetKey, itemId: String(itemId || '') });
+				iconLibraryGroup.value = 'all';
+				iconLibrarySearch.value = '';
+				iconLibrarySelected.value = iconLibraryIcons.value.find((entry) => entry.style === parsed.style && entry.name === parsed.name) || null;
 				showIconLibraryModal.value = true;
 			}
 			async function openSocialIconLibrary(itemId, node = selectedNode.value) {
@@ -3900,6 +3956,19 @@
 				const node = nodeId ? findById(rootNodes.value, nodeId) : selectedNode.value;
 				const settingKey = String(iconLibraryTargetSettingKey.value || '');
 				const itemId = String(iconLibraryTargetItemId.value || '');
+				if (node && settingKey === 'proIcon') {
+					let descriptor = null;
+					try { descriptor = JSON.parse(itemId); } catch (_) { return; }
+					const target = resolveProIconTarget(descriptor?.targetKey, descriptor?.itemId, node);
+					if (!target) return;
+					target.entry[target.prefix + 'Class'] = iconLibrarySelected.value.className;
+					target.entry[target.prefix + 'Name'] = iconLibrarySelected.value.name;
+					target.entry[target.prefix + 'Style'] = iconLibrarySelected.value.style;
+					target.entry[target.prefix + 'Source'] = 'library';
+					target.entry[target.prefix + 'Svg'] = '';
+					closeIconLibrary();
+					return;
+				}
 				if (node && node.type === 'icon_list' && settingKey === 'iconListItem' && itemId) {
 					normalizeIconListSettings(node.settings || (node.settings = {}));
 					const item = node.settings.items.find((entry) => String(entry.id) === itemId);
@@ -3937,6 +4006,16 @@
 					node.settings.dismissIconStyle = iconLibrarySelected.value.style;
 					node.settings.dismissIconSource = 'library';
 					node.settings.dismissIconSvg = '';
+					closeIconLibrary();
+					return;
+				}
+				if (node && node.type === 'rating') {
+					if (!node.settings || typeof node.settings !== 'object') node.settings = {};
+					node.settings.iconStyle = iconLibrarySelected.value.style;
+					node.settings.iconName = iconLibrarySelected.value.name;
+					node.settings.iconClass = iconLibrarySelected.value.className;
+					node.settings.iconSource = 'library';
+					node.settings.iconSvg = '';
 					closeIconLibrary();
 					return;
 				}
@@ -4051,6 +4130,34 @@
 				node.settings.dismissIconSvg = sanitized;
 				node.settings.dismissIconSource = 'svg';
 				node.settings.dismissIconClass = '';
+			}
+			function chooseRatingSvg(node = selectedNode.value) {
+				if (!node || node.type !== 'rating') return;
+				const markup = window.prompt('Paste trusted SVG markup', String(node.settings?.iconSvg || ''));
+				if (markup === null) return;
+				const sanitized = sanitizeAccordionSvgMarkup(markup);
+				if (!sanitized) {
+					showSaveToast('error', 'SVG tidak valid atau mengandung markup yang tidak didukung.');
+					return;
+				}
+				node.settings.iconSvg = sanitized;
+				node.settings.iconSource = 'svg';
+				node.settings.iconClass = '';
+			}
+			function chooseProIconSvg(targetKey, itemId = '', node = selectedNode.value) {
+				const target = resolveProIconTarget(targetKey, itemId, node);
+				if (!target) return;
+				const svgKey = target.prefix + 'Svg';
+				const markup = window.prompt('Paste trusted SVG markup', String(target.entry[svgKey] || ''));
+				if (markup === null) return;
+				const sanitized = sanitizeAccordionSvgMarkup(markup);
+				if (!sanitized) {
+					showSaveToast('error', 'SVG tidak valid atau mengandung markup yang tidak didukung.');
+					return;
+				}
+				target.entry[svgKey] = sanitized;
+				target.entry[target.prefix + 'Source'] = 'svg';
+				target.entry[target.prefix + 'Class'] = '';
 			}
 			function chooseImageCarouselArrowSvg(settingKey, node = selectedNode.value) {
 				if (!node || node.type !== 'image_carousel' || !['previousArrowIcon', 'nextArrowIcon'].includes(settingKey)) return;
@@ -5920,6 +6027,7 @@
 				],
 				general: [
 				],
+				pro: [],
 				advanced: [],
 			};
 			const registeredToolbox = widgetRegistry?.toolbox() || {};
@@ -6009,11 +6117,14 @@
 				onSpacerHeightInput,
 				setSpacerHeightUnit,
 				openIconLibrary,
+				openProIconLibrary,
 				openSocialIconLibrary,
 				openAlertIconLibrary,
 				chooseButtonSvg,
 				chooseSocialIconSvg,
 				chooseAlertIconSvg,
+				chooseProIconSvg,
+				chooseRatingSvg,
 				openTabsItemIconLibrary,
 				chooseTabsItemSvg,
 				openImageCarouselArrowIconLibrary,
@@ -6175,7 +6286,7 @@
 				displayNodeLabel, nodeLabelIcon,
 				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
-				openIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, openSocialIconLibrary, openAlertIconLibrary, chooseButtonSvg, chooseSocialIconSvg, chooseAlertIconSvg, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
+				openIconLibrary, openProIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, openSocialIconLibrary, openAlertIconLibrary, chooseButtonSvg, chooseSocialIconSvg, chooseAlertIconSvg, chooseProIconSvg, chooseRatingSvg, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
 				tabsItemsForNode, tabsActiveItem, selectTabsItem, addTabsItem, duplicateTabsItem, removeTabsItem, tabsItemSummary, tabsSelectedRowDirection,
 				tabsWidthValue, tabsWidthUnit, tabsWidthMax, tabsWidthStep, onTabsWidthInput, setTabsWidthValue, setTabsWidthUnit,
@@ -6315,6 +6426,24 @@
 					<div class="pb-panel-title">General</div>
 					<draggable
 						:list="toolbox.general"
+						:group="sidebarWgtGroup"
+						:clone="toolClone"
+						item-key="type"
+						class="pb-tool-grid"
+						:sort="false"
+						@start="onDragStart"
+						@end="onDragEnd"
+					>
+						<template #item="{ element }">
+							<div class="pb-tool-item" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
+						</template>
+					</draggable>
+				</div>
+
+				<div class="pb-section" v-if="toolbox.pro.length">
+					<div class="pb-panel-title">Pro</div>
+					<draggable
+						:list="toolbox.pro"
 						:group="sidebarWgtGroup"
 						:clone="toolClone"
 						item-key="type"

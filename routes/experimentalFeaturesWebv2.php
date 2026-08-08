@@ -30,6 +30,9 @@ Route::controller(App\Http\Controllers\Web\PageBuilderElementor\PageBuilderEleme
 	Route::get('/pagebuilder-elementor/image-rendition', 'imageRendition')->name('cms.core.pagebuilder_elementor.image_rendition');
 
 	Route::get('/pagebuilder-elementor/preview/{idOrSlug}', 'preview')->name('cms.core.pagebuilder_elementor.preview');
+	Route::post('/pagebuilder-elementor/form/{idOrSlug}/{nodeId}', 'submitForm')
+		->middleware('throttle:20,1')
+		->name('cms.core.pagebuilder_elementor.form.submit');
 });
 
 /* New Arunika Themes */

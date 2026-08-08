@@ -76,7 +76,8 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
                 $this->assertStringContainsString("{key:'{$key}'", $settings);
             }
             $this->assertStringContainsString('editor.sizeControlDisplayValue(node, control.key', $settings);
-            $this->assertStringContainsString('editor.sizeControlUnit(node, control.key', $settings);
+            $this->assertStringContainsString("editor.sizeControlUnit(node, 'flexColumnGap'", $settings);
+            $this->assertStringContainsString("editor.sizeControlUnit(node, 'gridColumnGap'", $settings);
             $this->assertStringContainsString("dimensionValue(editor.bgStateKey(node,'borderWidth'), 'px')", $settings);
             $this->assertStringContainsString("dimensionGroupUnit(responsiveRadiusKeys(), 'px')", $settings);
             $this->assertStringContainsString("dimensionGroupUnit([editor.bgStateKey(node,'shadowH')", $settings);
@@ -85,6 +86,51 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
             $this->assertStringNotContainsString("v-model=\"node.settings[editor.bgStateKey(node,'borderWidth')]\"", $settings);
             $this->assertStringNotContainsString('v-model="node.settings.transformRotate"', $settings);
         }
+    }
+
+    public function test_container_variants_use_elementor_style_compact_gap_controls(): void
+    {
+        foreach (['container', 'container-fluid'] as $folder) {
+            $settings = file_get_contents(public_path("js/pagebuilder_elementor/widgets/layout/{$folder}/Settings.vue"));
+
+            $this->assertIsString($settings);
+            $this->assertSame(2, substr_count($settings, 'pb-container-gap-control pb-container-gap-control__values'));
+            $this->assertSame(2, substr_count($settings, 'pb-container-gap-control__unit'));
+            $this->assertSame(2, substr_count($settings, 'pb-container-gap-control__values'));
+            $this->assertSame(2, substr_count($settings, 'pb-container-gap-control__link'));
+            $this->assertSame(1, substr_count($settings, 'pb-container-gap-control__group'));
+            $this->assertGreaterThan(
+                strpos($settings, 'editor.containerGridRowsValue(node)'),
+                strpos($settings, 'pb-container-gap-control__group')
+            );
+            foreach (['flexColumnGap', 'flexRowGap', 'gridColumnGap', 'gridRowGap'] as $key) {
+                $this->assertStringContainsString("editor.setSizeControlUnit(node, '{$key}', \$event.target.value", $settings);
+            }
+            $this->assertStringNotContainsString('forEach((key) => editor.setSizeControlUnit', $settings);
+            $this->assertStringNotContainsString('pb-container-gap-control"><input class="pb-range"', $settings);
+        }
+
+        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $this->assertIsString($css);
+        $this->assertStringContainsString('.pb-gap-row.pb-container-gap-control__values {', $css);
+        $this->assertStringContainsString(
+            ".pb-panel.left .pb-layout-settings .pb-gap-row.pb-container-gap-control__values {\n\tgrid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 33px;",
+            $css
+        );
+        $this->assertStringContainsString(
+            ".pb-panel.left .pb-grid-settings .pb-mini-unit {\n\tmin-height: 31px;",
+            $css
+        );
+        $this->assertStringContainsString(
+            ".pb-panel.left .pb-layout-settings .pb-container-gap-control__link {\n\twidth: 33px;\n\tmin-width: 33px;\n\theight: 33px;\n\tmin-height: 33px;\n\tmargin-top: 0;",
+            $css
+        );
+        $this->assertStringContainsString('margin-top: 18px;', $css);
+        $this->assertGreaterThan(
+            strpos($css, '.pb-panel.left .pb-layout-settings .pb-gap-row,'),
+            strpos($css, '.pb-gap-row.pb-container-gap-control__values {')
+        );
     }
 
     public function test_container_background_video_and_slideshow_are_wired_end_to_end(): void

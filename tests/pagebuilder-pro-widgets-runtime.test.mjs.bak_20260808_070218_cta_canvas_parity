@@ -1,0 +1,87 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import test from 'node:test';
+
+const canvasPath = new URL('../public/js/pagebuilder_elementor/widgets/pro/shared/Canvas.vue', import.meta.url);
+
+function componentFromVueFile(path) {
+	const source = fs.readFileSync(path, 'utf8');
+	const match = source.match(/<script>([\s\S]*?)<\/script>/);
+	assert.ok(match, `Missing <script> in ${path.pathname}`);
+
+	return new Function(match[1].replace('export default', 'return'))();
+}
+
+function canvasContext(type, settings, responsiveDevice = 'desktop') {
+	const component = componentFromVueFile(canvasPath);
+	const context = {
+		item: { id: `${type}-test`, type, settings },
+		responsiveDevice,
+		...component.data(),
+	};
+
+	for (const [name, method] of Object.entries(component.methods)) context[name] = method.bind(context);
+	for (const [name, getter] of Object.entries(component.computed)) {
+		Object.defineProperty(context, name, { configurable: true, get: () => getter.call(context) });
+	}
+
+	return context;
+}
+
+test('Price List Style controls resolve to canvas item, separator, and image styles', () => {
+	const context = canvasContext('price_list', {
+		items: [{ id: 'item-1', title: 'Coffee', price: '$4', description: 'Fresh', imageUrl: '/coffee.jpg' }],
+		rowGap: '24px',
+		verticalAlign: 'middle',
+		separatorStyle: 'dashed',
+		separatorWeight: '3px',
+		separatorColor: '#123456',
+		separatorSpacing: '12px',
+		imageSize: '72px',
+		imageRadius: '9px',
+		imageSpacing: '18px',
+	});
+
+	assert.equal(context.priceListRootStyle.gap, '24px');
+	assert.equal(context.priceListItemStyle.alignItems, 'center');
+	assert.equal(context.priceListItemStyle.gap, '18px');
+	assert.equal(context.priceListSeparatorStyle.borderBottomStyle, 'dashed');
+	assert.equal(context.priceListSeparatorStyle.borderBottomWidth, '3px');
+	assert.equal(context.priceListSeparatorStyle.borderBottomColor, '#123456');
+	assert.equal(context.priceListSeparatorStyle.marginInline, '12px');
+	assert.equal(context.priceListTitleStyle.color, '#101828');
+	assert.equal(context.priceListPriceStyle.color, '#6979f8');
+	assert.equal(context.priceListDescriptionStyle.color, '#667085');
+	assert.deepEqual(context.priceListImageStyle, {
+		width: '72px',
+		height: '72px',
+		borderRadius: '9px',
+	});
+});
+
+test('Price Table sale, divider, ribbon, and color controls resolve on canvas', () => {
+	const context = canvasContext('price_table', {
+		price: '1234.56',
+		currencyFormat: 'period',
+		sale: true,
+		originalPrice: '1499.00',
+		featuresBackground: '#112233',
+		featuresColor: '#f5f5f5',
+		featureDivider: true,
+		featureDividerColor: '#445566',
+		featureDividerWidth: '2px',
+		ribbonBackground: '#778899',
+		ribbonTextColor: '#ffffff',
+		ribbonPosition: 'left',
+	});
+
+	assert.equal(context.formattedPrice, '1.234,56');
+	assert.equal(context.formattedOriginalPrice, '1.499,00');
+	assert.deepEqual(context.priceTableFeaturesStyle, { background: '#112233', color: '#f5f5f5' });
+	assert.deepEqual(context.priceTableFeatureStyle, {
+		borderBottomColor: '#445566',
+		borderBottomStyle: 'solid',
+		borderBottomWidth: '2px',
+	});
+	assert.deepEqual(context.priceTableRibbonStyle, { background: '#778899', color: '#ffffff' });
+});

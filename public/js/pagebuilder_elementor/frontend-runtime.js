@@ -414,15 +414,231 @@
 		});
 	}
 
+	function parseProConfig(root) {
+		try { return JSON.parse(root.getAttribute('data-pro-config') || '{}'); }
+		catch (_) { return {}; }
+	}
+
+	function markProReady(root, kind) {
+		if (!root || root.getAttribute('data-pb-pro-ready')) return false;
+		root.setAttribute('data-pb-pro-ready', kind);
+		return true;
+	}
+
+	function bindProSlider(root, carousel) {
+		if (!markProReady(root, carousel ? 'carousel' : 'slides')) return;
+		const config = parseProConfig(root);
+		const items = Array.from(root.querySelectorAll(carousel ? ':scope .pb-pro-carousel__slide' : ':scope .pb-pro-slides__slide'));
+		const track = carousel ? root.querySelector(':scope .pb-pro-carousel__track') : null;
+		const previous = root.querySelector(':scope [data-pro-prev]');
+		const next = root.querySelector(':scope [data-pro-next]');
+		const dots = Array.from(root.querySelectorAll(':scope [data-pro-index]'));
+		const progress = root.querySelector(':scope [data-pro-progress]');
+		const current = root.querySelector(':scope [data-pro-current]');
+		const total = root.querySelector(':scope [data-pro-total]');
+		let active = 0;
+		let timer = 0;
+		let interactionPaused = false;
+		let hovered = false;
+		function visible() {
+			if (!carousel) return 1;
+			const device = currentDevice();
+			const key = device === 'mobile' ? 'slidesToShowMobile' : (device === 'tablet' ? 'slidesToShowTablet' : 'slidesToShow');
+			return Math.max(1, Math.min(items.length || 1, Number(config[key]) || (device === 'desktop' ? 3 : 1)));
+		}
+		function maximum() { return carousel ? Math.max(0, items.length - visible()) : Math.max(0, items.length - 1); }
+		function step() { return carousel ? Math.max(1, Math.min(visible(), Number(config.slidesToScroll) || 1)) : 1; }
+		function gapOffset(count) {
+			const raw = String(getComputedStyle(root).getPropertyValue('--carousel-gap') || '20px').trim();
+			const match = raw.match(/^(-?\d+(?:\.\d+)?)([a-z%]*)$/i);
+			if (!match || count <= 1) return '0px';
+			return Number((Number(match[1]) * (count - 1) / count).toFixed(4)) + (match[2] || 'px');
+		}
+		function normalize(index) {
+			const max = maximum();
+			if (config.infiniteLoop && max > 0) { if (index > max) return 0; if (index < 0) return max; }
+			return Math.max(0, Math.min(max, index));
+		}
+		function render(index) {
+			active = normalize(Number(index) || 0);
+			if (carousel && track) {
+				const count = visible();
+				root.style.setProperty('--pb-pro-visible', String(count));
+				track.style.transitionDuration = Math.max(0, Number(config.transitionSpeed) || 0) + 'ms';
+				track.style.alignItems = config.equalHeight ? 'stretch' : 'flex-start';
+				items.forEach(function (item) { item.style.flexBasis = `calc(${100 / count}% - ${gapOffset(count)})`; item.style.height = config.equalHeight ? 'auto' : 'max-content'; });
+				const offset = Math.max(0, Number(items[active]?.offsetLeft) || 0);
+				track.style.transform = `translate3d(-${offset}px,0,0)`;
+			} else items.forEach(function (item, itemIndex) { item.hidden = itemIndex !== active; item.classList.toggle('is-active', itemIndex === active); });
+			const pageCount = carousel ? Math.max(1, Math.ceil(maximum() / step()) + 1) : items.length;
+			const activePage = carousel ? Math.min(pageCount - 1, Math.round(active / step())) : active;
+			dots.forEach(function (dot, dotIndex) { dot.hidden = carousel && dotIndex >= pageCount; const selected = dotIndex === activePage; dot.classList.toggle('active', selected); dot.setAttribute('aria-selected', selected ? 'true' : 'false'); });
+			if (current) current.textContent = String(activePage + 1);
+			if (total) total.textContent = String(pageCount);
+			if (progress) progress.style.width = ((activePage + 1) / pageCount * 100) + '%';
+			if (carousel && dots[0]?.parentElement) dots[0].parentElement.hidden = maximum() <= 0;
+			if (carousel && previous) previous.hidden = maximum() <= 0;
+			if (carousel && next) next.hidden = maximum() <= 0;
+			if (previous) previous.disabled = !config.infiniteLoop && active === 0;
+			if (next) next.disabled = !config.infiniteLoop && active === maximum();
+		}
+		function stop() { if (timer) window.clearInterval(timer); timer = 0; }
+		function start() { stop(); if (!config.autoplay || prefersReducedMotion() || interactionPaused || (config.pauseOnHover && hovered) || maximum() <= 0) return; timer = window.setInterval(function () { render(active + Math.max(1, Number(config.slidesToScroll) || 1)); }, Math.max(100, Number(config.autoplaySpeed) || 5000)); }
+		function interact(index) { render(index); if (config.pauseOnInteraction) { interactionPaused = true; stop(); } else start(); }
+		previous?.addEventListener('click', function () { interact(active - Math.max(1, Number(config.slidesToScroll) || 1)); });
+		next?.addEventListener('click', function () { interact(active + Math.max(1, Number(config.slidesToScroll) || 1)); });
+		dots.forEach(function (dot) { dot.addEventListener('click', function () { const pageIndex = Number(dot.dataset.proIndex) || 0; interact(pageIndex * step()); }); });
+		root.addEventListener('mouseenter', function () { hovered = true; start(); });
+		root.addEventListener('mouseleave', function () { hovered = false; start(); });
+		root.addEventListener('keydown', function (event) { if (event.key === 'ArrowLeft') { event.preventDefault(); interact(active - 1); } if (event.key === 'ArrowRight') { event.preventDefault(); interact(active + 1); } });
+		window.addEventListener('resize', function () { render(active); }, { passive: true });
+		render(0); start();
+	}
+
+	function initProSlides(root) { bindProSlider(root, false); }
+	function initProCarousel(root) { bindProSlider(root, true); }
+
+	function initProCountdown(root) {
+		if (!markProReady(root, 'countdown')) return;
+		const config = parseProConfig(root);
+		const target = config.type === 'evergreen' ? Date.now() + Math.max(0, Number(config.duration) || 0) * 1000 : Date.parse(config.dueDate || '');
+		let timer = 0;
+		function render() {
+			let remaining = Number.isFinite(target) ? Math.max(0, Math.floor((target - Date.now()) / 1000)) : 0;
+			const values = { days: Math.floor(remaining / 86400) };
+			remaining %= 86400; values.hours = Math.floor(remaining / 3600); remaining %= 3600; values.minutes = Math.floor(remaining / 60); values.seconds = remaining % 60;
+			Object.entries(values).forEach(function ([key, value]) { const node = root.querySelector('[data-countdown-' + key + ']'); if (node) node.textContent = String(value).padStart(2, '0'); });
+			if (Object.values(values).some(Boolean)) return;
+			if (timer) window.clearInterval(timer); timer = 0;
+			if (config.action === 'hide') root.hidden = true;
+			if (config.action === 'message') { const message = root.querySelector('[data-countdown-message]'); if (message) message.hidden = false; }
+			if (config.action === 'redirect' && /^(?:https?:\/\/|\/|#)/i.test(String(config.redirect || ''))) window.location.assign(config.redirect);
+		}
+		render(); if (!root.hidden) timer = window.setInterval(render, 1000);
+	}
+
+	function initProHotspot(root) {
+		if (!markProReady(root, 'hotspot')) return;
+		const trigger = root.dataset.trigger || 'hover';
+		root.querySelectorAll(':scope .pb-pro-hotspot__marker').forEach(function (marker) {
+			const tooltip = marker.querySelector(':scope .pb-pro-hotspot__tooltip');
+			if (!tooltip || trigger === 'none') return;
+			const show = function () { tooltip.hidden = false; marker.setAttribute('aria-expanded', 'true'); };
+			const hide = function () { tooltip.hidden = true; marker.setAttribute('aria-expanded', 'false'); };
+			if (trigger === 'click') marker.addEventListener('click', function (event) {
+				const linked = typeof marker.matches === 'function' && marker.matches('a[href]');
+				if (tooltip.hidden) { if (linked) event.preventDefault(); show(); return; }
+				if (!linked) hide();
+			});
+			else { marker.addEventListener('mouseenter', show); marker.addEventListener('mouseleave', hide); marker.addEventListener('focus', show); marker.addEventListener('blur', hide); }
+			marker.addEventListener('keydown', function (event) { if (event.key === 'Escape') hide(); });
+		});
+	}
+
+	function initProFlipBox(root) {
+		if (!markProReady(root, 'flip-box')) return;
+		function toggle() { root.classList.toggle('is-flipped'); }
+		root.addEventListener('click', function (event) {
+			if (event.target.closest('a,button,input,select,textarea')) return;
+			toggle();
+		});
+		root.addEventListener('keydown', function (event) {
+			if (event.target !== root) return;
+			if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggle(); }
+			if (event.key === 'Escape') root.classList.remove('is-flipped');
+		});
+	}
+
+	function initProForm(root) {
+		if (!markProReady(root, 'form')) return;
+		const config = parseProConfig(root);
+		const validation = root.dataset.validation === 'custom' ? 'custom' : 'browser';
+		const steps = Array.from(root.querySelectorAll(':scope [data-pro-form-step]'));
+		const indicators = Array.from(root.querySelectorAll('[data-pro-step-indicator]'));
+		let activeStep = 0;
+		function renderStep(index) {
+			activeStep = Math.max(0, Math.min(steps.length - 1, Number(index) || 0));
+			steps.forEach(function (step, stepIndex) { step.hidden = stepIndex !== activeStep; });
+			indicators.forEach(function (indicator, stepIndex) { indicator.classList.toggle('active', stepIndex <= activeStep); });
+		}
+		function validateStep() {
+			const fields = steps[activeStep]?.querySelectorAll('input,textarea,select') || [];
+			for (const field of fields) {
+				if (field.checkValidity()) continue;
+				if (validation === 'browser') field.reportValidity();
+				else field.focus?.();
+				return false;
+			}
+			return true;
+		}
+		root.querySelectorAll('[data-pro-next]').forEach(function (button) { button.addEventListener('click', function () { if (validateStep()) renderStep(activeStep + 1); }); });
+		root.querySelectorAll('[data-pro-previous]').forEach(function (button) { button.addEventListener('click', function () { renderStep(activeStep - 1); }); });
+		root.addEventListener('submit', async function (event) {
+			event.preventDefault();
+			const message = root.querySelector('[data-pro-form-message]');
+			if (!root.checkValidity()) { if (validation === 'browser') root.reportValidity(); else root.querySelector(':invalid')?.focus?.(); if (message) { message.classList.add('is-error'); message.textContent = root.dataset.errorMessage || 'Please check the form fields.'; } return; }
+			const actions = config.actions || [];
+			const data = new FormData(root);
+			const submit = root.querySelector('button[type="submit"]');
+			if (!config.submitUrl) {
+				if (message) { message.classList.toggle('is-error', actions.some(function (action) { return !['message', 'redirect'].includes(action); })); message.textContent = actions.every(function (action) { return ['message', 'redirect'].includes(action); }) ? root.dataset.successMessage || 'The form was sent successfully.' : root.dataset.errorMessage || 'This form is not connected yet.'; }
+				return;
+			}
+			if (submit) submit.disabled = true;
+			root.setAttribute('aria-busy', 'true');
+			if (message) { message.classList.remove('is-error'); message.textContent = 'Sending...'; }
+			try {
+				const response = await fetch(config.submitUrl, { method: 'POST', headers: { Accept: 'application/json' }, body: data });
+				const payload = await response.json().catch(function () { return {}; });
+				if (!response.ok) throw payload;
+				if (message) message.textContent = payload.message || ((actions.includes('message')) ? root.dataset.successMessage || 'The form was sent successfully.' : '');
+				root.dispatchEvent(new CustomEvent('pagebuilder:form-submit', { bubbles: true, detail: { form: root, data, actions, response: payload } }));
+				if (payload.redirect && /^(?:https?:\/\/|\/|#)/i.test(String(payload.redirect))) window.location.assign(payload.redirect);
+			} catch (error) {
+				if (message) { message.classList.add('is-error'); message.textContent = error?.message || root.dataset.errorMessage || 'An error occurred.'; }
+			} finally {
+				if (submit) submit.disabled = false;
+				root.setAttribute('aria-busy', 'false');
+			}
+		});
+		if (steps.length) renderStep(0);
+	}
+
+	function initProAnimatedHeadline(root) {
+		if (!markProReady(root, 'animated-headline')) return;
+		const config = parseProConfig(root); const target = root.querySelector('.pb-pro-headline__animated'); const words = Array.isArray(config.words) ? config.words.filter(Boolean) : [];
+		if (!target) return;
+		target.style.setProperty('--headline-duration', Math.max(100, Number(config.duration) || 1200) + 'ms');
+		if (words.length < 2 || prefersReducedMotion()) return;
+		let index = 0;
+		function rotate() {
+			if (!config.loop && index >= words.length - 1) return;
+			index = (index + 1) % words.length;
+			target.classList.remove('is-changing');
+			target.textContent = words[index];
+			void target.offsetWidth;
+			target.classList.add('is-changing');
+			window.setTimeout(rotate, Math.max(400, Number(config.delay) || 2500));
+		}
+		window.setTimeout(rotate, Math.max(400, Number(config.delay) || 2500));
+	}
+
 	function init(scope) {
 		const rootScope = scope && scope.querySelectorAll ? scope : document;
 		rootScope.querySelectorAll('[data-accordion-root]').forEach(bindAccordion);
 		rootScope.querySelectorAll('[data-image-carousel]').forEach(bindImageCarousel);
 		rootScope.querySelectorAll('[data-basic-gallery]').forEach(bindBasicGallery);
 		rootScope.querySelectorAll('[data-pb-motion]').forEach(bindAdvancedWidget);
+		rootScope.querySelectorAll('[data-pro-slides]').forEach(initProSlides);
+		rootScope.querySelectorAll('[data-pro-carousel]').forEach(initProCarousel);
+		rootScope.querySelectorAll('[data-pro-countdown]').forEach(initProCountdown);
+		rootScope.querySelectorAll('[data-pro-hotspot]').forEach(initProHotspot);
+		rootScope.querySelectorAll('[data-pro-flip-box]').forEach(initProFlipBox);
+		rootScope.querySelectorAll('[data-pro-form]').forEach(initProForm);
+		rootScope.querySelectorAll('[data-pro-headline]').forEach(initProAnimatedHeadline);
 	}
 
-	window.PageBuilderElementorRuntime = Object.freeze({ init, bindAccordion, bindImageCarousel, bindBasicGallery, bindAdvancedWidget });
+	window.PageBuilderElementorRuntime = Object.freeze({ init, bindAccordion, bindImageCarousel, bindBasicGallery, bindAdvancedWidget, initProSlides, initProCarousel, initProCountdown, initProHotspot, initProFlipBox, initProForm, initProAnimatedHeadline });
 
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', function () { init(document); }, { once: true });

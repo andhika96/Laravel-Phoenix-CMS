@@ -133,7 +133,7 @@ class PageBuilderElementorGeneralWidgetsTest extends TestCase
     {
         $app = File::get(public_path('js/pagebuilder_elementor/app.js'));
 
-        $this->assertStringContainsString("['counter', 'progress_bar', 'testimonial', 'social_icons', 'alert']", $app);
+        $this->assertStringContainsString("['counter', 'progress_bar', 'testimonial', 'social_icons', 'alert', 'rating', 'text_path']", $app);
         foreach (['counter' => "counter: 'Counter'", 'progress_bar' => "progress_bar: 'Progress Bar'", 'testimonial' => "testimonial: 'Testimonial'", 'social_icons' => "social_icons: 'Social Icons'", 'alert' => "alert: 'Alert'"] as $marker) {
             $this->assertStringContainsString($marker, $app);
         }

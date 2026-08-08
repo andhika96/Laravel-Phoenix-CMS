@@ -153,12 +153,13 @@
 												</div>
 											</div>
 
+											<select class="pb-mini-unit pb-container-gap-control__unit" :value="editor.sizeControlUnit(node, 'flexColumnGap', '20px')" @change="editor.setSizeControlUnit(node, 'flexColumnGap', $event.target.value, {fallback:'20px'}); editor.setSizeControlUnit(node, 'flexRowGap', $event.target.value, {fallback:'20px'}); editor.syncContainerGap(node.settings, 'column')"><option v-for="unit in editor.spacingControlUnits" :key="'flex-gap-'+unit" :value="unit">{{ unit }}</option></select>
 										</div>
 									</div>
-									<div class="pb-grid-gap-controls">
-									<div v-for="control in [{key:'flexColumnGap',label:'Column',sync:'column'},{key:'flexRowGap',label:'Row',sync:'row'}]" :key="control.key" class="pb-form-group"><label class="pb-form-label">{{ control.label }}</label><div class="pb-range-value-row"><input class="pb-range" type="range" min="0" :max="editor.sizeControlMax(node, control.key, '20px')" :step="editor.sizeControlStep(node, control.key, '20px')" :value="editor.sizeControlDisplayValue(node, control.key, '20px')" @input="editor.onSizeControlInput(node, control.key, $event, {fallback:'20px'}); editor.syncContainerGap(node.settings, control.sync)"><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" min="0" :value="editor.sizeControlDisplayValue(node, control.key, '20px')" @input="editor.onSizeControlInput(node, control.key, $event, {fallback:'20px'}); editor.syncContainerGap(node.settings, control.sync)"><select class="pb-mini-unit" :value="editor.sizeControlUnit(node, control.key, '20px')" @change="editor.setSizeControlUnit(node, control.key, $event.target.value, {fallback:'20px'}); editor.syncContainerGap(node.settings, control.sync)"><option v-for="unit in editor.spacingControlUnits" :key="control.key+'-'+unit" :value="unit">{{ unit }}</option></select></div></div></div>
-									<button type="button" class="pb-link-btn" @click="node.settings.containerGapLinked=!node.settings.containerGapLinked" :title="node.settings.containerGapLinked?'Unlink':'Link'"><i :class="node.settings.containerGapLinked?'fas fa-link':'fas fa-unlink'"></i></button>
-								</div>
+									<div class="pb-gap-row pb-gap-row-with-link pb-container-gap-control pb-container-gap-control__values">
+										<div v-for="control in [{key:'flexColumnGap',label:'Column',sync:'column'},{key:'flexRowGap',label:'Row',sync:'row'}]" :key="control.key" class="pb-gap-field"><input class="pb-input pb-input-compact" type="number" min="0" :value="editor.sizeControlDisplayValue(node, control.key, '20px')" @input="editor.onSizeControlInput(node, control.key, $event, {fallback:'20px'}); editor.syncContainerGap(node.settings, control.sync)"><span>{{ control.label }}</span></div>
+										<button type="button" class="pb-link-btn pb-container-gap-control__link" @click="node.settings.containerGapLinked=!node.settings.containerGapLinked" :title="node.settings.containerGapLinked?'Unlink':'Link'"><i :class="node.settings.containerGapLinked?'fas fa-link':'fas fa-unlink'"></i></button>
+									</div>
 								</div>
 								<div class="pb-form-group">
 									<div class="pb-label-row pb-label-row-device">
@@ -251,7 +252,7 @@
 										<input class="pb-input pb-input-compact" type="number" min="1" max="12" step="1" :value="editor.containerGridRowsValue(node)" @input="editor.setContainerGridRowsValue(node, $event.target.value)">
 									</div>
 								</div>
-								<div class="pb-form-group">
+								<div class="pb-form-group pb-container-gap-control__group">
 									<div class="pb-label-row pb-label-row-device">
 										<label class="pb-form-label">Gaps</label>
 										<div class="pb-label-tools">
@@ -265,12 +266,13 @@
 												</div>
 											</div>
 
+											<select class="pb-mini-unit pb-container-gap-control__unit" :value="editor.sizeControlUnit(node, 'gridColumnGap', '10px')" @change="editor.setSizeControlUnit(node, 'gridColumnGap', $event.target.value, {fallback:'10px'}); editor.setSizeControlUnit(node, 'gridRowGap', $event.target.value, {fallback:'10px'}); editor.syncContainerGap(node.settings, 'gridColumn')"><option v-for="unit in editor.spacingControlUnits" :key="'grid-gap-'+unit" :value="unit">{{ unit }}</option></select>
 										</div>
 									</div>
-									<div class="pb-grid-gap-controls">
-									<div v-for="control in [{key:'gridColumnGap',label:'Column',sync:'gridColumn'},{key:'gridRowGap',label:'Row',sync:'gridRow'}]" :key="control.key" class="pb-form-group"><label class="pb-form-label">{{ control.label }}</label><div class="pb-range-value-row"><input class="pb-range" type="range" min="0" :max="editor.sizeControlMax(node, control.key, '10px')" :step="editor.sizeControlStep(node, control.key, '10px')" :value="editor.sizeControlDisplayValue(node, control.key, '10px')" @input="editor.onSizeControlInput(node, control.key, $event, {fallback:'10px'}); editor.syncContainerGap(node.settings, control.sync)"><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" min="0" :value="editor.sizeControlDisplayValue(node, control.key, '10px')" @input="editor.onSizeControlInput(node, control.key, $event, {fallback:'10px'}); editor.syncContainerGap(node.settings, control.sync)"><select class="pb-mini-unit" :value="editor.sizeControlUnit(node, control.key, '10px')" @change="editor.setSizeControlUnit(node, control.key, $event.target.value, {fallback:'10px'}); editor.syncContainerGap(node.settings, control.sync)"><option v-for="unit in editor.spacingControlUnits" :key="control.key+'-'+unit" :value="unit">{{ unit }}</option></select></div></div></div>
-									<button type="button" class="pb-link-btn" @click="node.settings.containerGapLinked=!node.settings.containerGapLinked" :title="node.settings.containerGapLinked?'Unlink':'Link'"><i :class="node.settings.containerGapLinked?'fas fa-link':'fas fa-unlink'"></i></button>
-								</div>
+									<div class="pb-gap-row pb-gap-row-with-link pb-container-gap-control pb-container-gap-control__values">
+										<div v-for="control in [{key:'gridColumnGap',label:'Column',sync:'gridColumn'},{key:'gridRowGap',label:'Row',sync:'gridRow'}]" :key="control.key" class="pb-gap-field"><input class="pb-input pb-input-compact" type="number" min="0" :value="editor.sizeControlDisplayValue(node, control.key, '10px')" @input="editor.onSizeControlInput(node, control.key, $event, {fallback:'10px'}); editor.syncContainerGap(node.settings, control.sync)"><span>{{ control.label }}</span></div>
+										<button type="button" class="pb-link-btn pb-container-gap-control__link" @click="node.settings.containerGapLinked=!node.settings.containerGapLinked" :title="node.settings.containerGapLinked?'Unlink':'Link'"><i :class="node.settings.containerGapLinked?'fas fa-link':'fas fa-unlink'"></i></button>
+									</div>
 								</div>
 								<div class="pb-form-group">
 									<div class="pb-label-row pb-label-row-device">

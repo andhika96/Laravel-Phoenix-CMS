@@ -1,0 +1,27 @@
+@php
+    $settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
+    $nodeId = trim((string) ($node['id'] ?? 'rating')) ?: 'rating';
+    $scale = max(1, min(10, (int) round((float) ($settings['ratingScale'] ?? 5))));
+    $rating = max(0, min($scale, round(((float) ($settings['rating'] ?? $scale)) * 2) / 2));
+    $safeLength = function (mixed $value, string $fallback): string { $raw = trim((string) $value); return preg_match('/^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i', $raw) ? $raw : $fallback; };
+    $safeColor = function (mixed $value, string $fallback): string { $raw = trim((string) $value); return $raw !== '' && preg_match('/^[#a-z0-9(),.%\s-]+$/i', $raw) ? $raw : $fallback; };
+    $alignment = function (mixed $value): string { return in_array($value, ['left','center','right'], true) ? $value : 'left'; };
+    $justify = fn (string $value): string => $value === 'center' ? 'center' : ($value === 'right' ? 'flex-end' : 'flex-start');
+    $responsive = function (string $base, string $suffix = '', mixed $fallback = '') use ($settings): mixed { $keys = $suffix === 'Mobile' ? [$base.'Mobile', $base.'Tablet', $base] : ($suffix === 'Tablet' ? [$base.'Tablet', $base] : [$base]); foreach ($keys as $key) { if (($settings[$key] ?? '') !== '' && ($settings[$key] ?? null) !== null) return $settings[$key]; } return $fallback; };
+    $iconClass = preg_match('/^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i', trim((string) ($settings['iconClass'] ?? ''))) ? trim((string) $settings['iconClass']) : 'fas fa-star';
+    $iconSvg = ''; if (($settings['iconSource'] ?? '') === 'svg') { $rawSvg = trim((string) ($settings['iconSvg'] ?? '')); $rawSvg = preg_replace('/<script\b[^>]*>.*?<\/script>/is', '', $rawSvg) ?? ''; $rawSvg = preg_replace('/\s(?:on[a-z]+|style|xlink:href|href)\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $rawSvg) ?? ''; $iconSvg = str_starts_with(strtolower($rawSvg), '<svg') ? strip_tags($rawSvg, '<svg><g><path><circle><ellipse><rect><line><polyline><polygon><title><desc>') : ''; }
+    $advanced = app(\App\Support\PageBuilderElementor\WidgetAdvancedStyleResolver::class)->resolve($settings, $nodeId, request());
+    $rootClasses = array_values(array_unique(array_merge(['el-widget-rating','pb-rating'], $advanced['classes'])));
+    $rootStyle = implode(';', ['justify-content:'.$justify($alignment($responsive('alignment', '', 'left'))),'--pb-rating-size:'.$safeLength($responsive('iconSize', '', '18px'), '18px'),'--pb-rating-gap:'.$safeLength($responsive('iconSpacing', '', '4px'), '4px'),'--pb-rating-marked:'.$safeColor($settings['markedColor'] ?? '', '#f0ad4e'),'--pb-rating-unmarked:'.$safeColor($settings['unmarkedColor'] ?? '', '#ccd2dc')]);
+    $mediaRules = [];
+    foreach (['Tablet'=>1024,'Mobile'=>767] as $suffix=>$breakpoint) { $mediaRules[] = '@media(max-width:'.$breakpoint.'px){#'.$advanced['id'].'{justify-content:'.$justify($alignment($responsive('alignment', $suffix, 'left'))).';--pb-rating-size:'.$safeLength($responsive('iconSize', $suffix, '18px'), '18px').';--pb-rating-gap:'.$safeLength($responsive('iconSpacing', $suffix, '4px'), '4px').'}}'; }
+@endphp
+<div id="{{ $advanced['id'] }}" class="{{ implode(' ', $rootClasses) }}" style="{{ $rootStyle }}" role="img" aria-label="Rated {{ $rating }} out of {{ $scale }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach>
+    @for($index = 1; $index <= $scale; $index++)
+        @php $fill = max(0, min(1, $rating - ($index - 1))) * 100; @endphp
+        <span class="pb-rating__item" data-rating-item style="--pb-rating-fill:{{ rtrim(rtrim(number_format($fill, 2, '.', ''), '0'), '.') }}%"><span data-rating-unmarked aria-hidden="true">@if($iconSvg !== ''){!! $iconSvg !!}@else<i class="{{ $iconClass }}"></i>@endif</span><span data-rating-marked aria-hidden="true">@if($iconSvg !== ''){!! $iconSvg !!}@else<i class="{{ $iconClass }}"></i>@endif</span></span>
+    @endfor
+</div>
+<style>
+#{{ $advanced['id'] }}{display:flex;align-items:center;gap:var(--pb-rating-gap);width:100%;min-width:0}#{{ $advanced['id'] }} [data-rating-item]{position:relative;display:inline-grid;flex:0 0 auto;height:var(--pb-rating-size);font-size:var(--pb-rating-size);line-height:1}#{{ $advanced['id'] }} [data-rating-unmarked],#{{ $advanced['id'] }} [data-rating-marked]{grid-area:1/1;display:inline-grid;place-items:center;width:max-content;min-width:1em;height:1em}#{{ $advanced['id'] }} [data-rating-unmarked]{position:relative;color:var(--pb-rating-unmarked)}#{{ $advanced['id'] }} [data-rating-marked]{position:absolute;inset:0;width:100%;color:var(--pb-rating-marked);clip-path:inset(0 calc(100% - var(--pb-rating-fill)) 0 0)}#{{ $advanced['id'] }} [data-rating-unmarked] svg,#{{ $advanced['id'] }} [data-rating-marked] svg{display:block;width:1em;height:1em;fill:currentColor}#{{ $advanced['id'] }} [data-rating-unmarked] i,#{{ $advanced['id'] }} [data-rating-marked] i{display:block;line-height:1}{!! implode('', $mediaRules) !!}{!! $advanced['css'] !!}
+</style>

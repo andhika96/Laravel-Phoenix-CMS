@@ -1,0 +1,175 @@
+<?php
+
+namespace Tests\Feature;
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\TestCase;
+
+class PageBuilderElementorContainerWidgetModulesTest extends TestCase
+{
+    #[DataProvider('containerProvider')]
+    public function test_container_has_complete_module_contract(
+        string $type,
+        string $folder,
+        string $label,
+        string $contentWidth,
+        bool $toolboxVisible,
+    ): void {
+        $catalog = config('pagebuilder_elementor_widgets');
+
+        $this->assertArrayHasKey($type, $catalog);
+        $module = $catalog[$type];
+
+        $this->assertSame($label, $module['label']);
+        $this->assertSame('layout', $module['category']);
+        $this->assertSame($toolboxVisible, $module['toolbox']);
+        $this->assertFileExists(public_path($module['definition']));
+        $this->assertFileExists(public_path($module['canvas']));
+        $this->assertFileExists(public_path($module['settings']));
+        $this->assertTrue(view()->exists($module['view']));
+
+        $definition = file_get_contents(public_path($module['definition']));
+        $settings = file_get_contents(public_path($module['settings']));
+        $app = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertStringContainsString("type: '{$type}'", $definition);
+        $this->assertStringContainsString("const DEFAULT_CONTENT_WIDTH = '{$contentWidth}'", $definition);
+        $this->assertStringContainsString('toolbox: '.($toolboxVisible ? 'true' : 'false'), $definition);
+        $this->assertStringContainsString('createNode(node)', $definition);
+        $this->assertStringContainsString('normalize(node)', $definition);
+        $this->assertStringContainsString("widgets/layout/{$folder}/Canvas.vue", $definition);
+        $this->assertStringContainsString("widgets/layout/{$folder}/Settings.vue", $definition);
+        $this->assertStringContainsString('<template>', $settings);
+        $this->assertStringContainsString('pb-layout-settings', $settings);
+
+        $this->assertStringNotContainsString('@click="node.settings[editor.bgStateKey(', $settings);
+        foreach ([
+            "editor.setBgStateValue(node, 'bgGradientType', 'linear')",
+            "editor.setBgStateValue(node, 'bgGradientType', 'radial')",
+            "editor.setBgStateValue(node, 'bgOverlayGradientType', 'linear')",
+            "editor.setBgStateValue(node, 'bgOverlayGradientType', 'radial')",
+        ] as $safeAssignment) {
+            $this->assertStringContainsString($safeAssignment, $settings);
+        }
+
+        $this->assertStringNotContainsString("case '{$type}':", $app);
+        $this->assertStringNotContainsString("/widgets/layout/" . ($type === 'container' ? 'Container' : 'ContainerFluid') . '.vue', $app);
+    }
+
+    public function test_container_settings_use_the_shared_dynamic_sidebar_mount(): void
+    {
+        $app = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
+
+        $this->assertSame(1, substr_count($app, ':is="loadWidgetSettings(selectedType)"'));
+        $this->assertStringNotContainsString("<template v-if=\"selectedType==='container'||selectedType==='container_fluid'\">", $app);
+        $this->assertStringContainsString('function setBgStateValue(node, base, value)', $app);
+        $this->assertStringContainsString('setBgStateValue,', $app);
+    }
+
+    public function test_container_variants_use_compound_numeric_unit_controls(): void
+    {
+        foreach (['container', 'container-fluid'] as $folder) {
+            $settings = file_get_contents(public_path("js/pagebuilder_elementor/widgets/layout/{$folder}/Settings.vue"));
+
+            $this->assertIsString($settings);
+            foreach (['flexColumnGap', 'flexRowGap', 'gridColumnGap', 'gridRowGap'] as $key) {
+                $this->assertStringContainsString("{key:'{$key}'", $settings);
+            }
+            $this->assertStringContainsString('editor.sizeControlDisplayValue(node, control.key', $settings);
+            $this->assertStringContainsString("editor.sizeControlUnit(node, 'flexColumnGap'", $settings);
+            $this->assertStringContainsString("editor.sizeControlUnit(node, 'gridColumnGap'", $settings);
+            $this->assertStringContainsString("dimensionValue(editor.bgStateKey(node,'borderWidth'), 'px')", $settings);
+            $this->assertStringContainsString("dimensionGroupUnit(responsiveRadiusKeys(), 'px')", $settings);
+            $this->assertStringContainsString("dimensionGroupUnit([editor.bgStateKey(node,'shadowH')", $settings);
+            $this->assertStringContainsString("{key:'stickyOffset',label:'Sticky Offset'}", $settings);
+            $this->assertStringContainsString("{key:'transformRotate',label:'Rotate'}", $settings);
+            $this->assertStringNotContainsString("v-model=\"node.settings[editor.bgStateKey(node,'borderWidth')]\"", $settings);
+            $this->assertStringNotContainsString('v-model="node.settings.transformRotate"', $settings);
+        }
+    }
+
+    public function test_container_variants_use_elementor_style_compact_gap_controls(): void
+    {
+        foreach (['container', 'container-fluid'] as $folder) {
+            $settings = file_get_contents(public_path("js/pagebuilder_elementor/widgets/layout/{$folder}/Settings.vue"));
+
+            $this->assertIsString($settings);
+            $this->assertSame(2, substr_count($settings, 'pb-container-gap-control pb-container-gap-control__values'));
+            $this->assertSame(2, substr_count($settings, 'pb-container-gap-control__unit'));
+            $this->assertSame(2, substr_count($settings, 'pb-container-gap-control__values'));
+            $this->assertSame(2, substr_count($settings, 'pb-container-gap-control__link'));
+            $this->assertSame(1, substr_count($settings, 'pb-container-gap-control__group'));
+            $this->assertGreaterThan(
+                strpos($settings, 'editor.containerGridRowsValue(node)'),
+                strpos($settings, 'pb-container-gap-control__group')
+            );
+            foreach (['flexColumnGap', 'flexRowGap', 'gridColumnGap', 'gridRowGap'] as $key) {
+                $this->assertStringContainsString("editor.setSizeControlUnit(node, '{$key}', \$event.target.value", $settings);
+            }
+            $this->assertStringNotContainsString('forEach((key) => editor.setSizeControlUnit', $settings);
+            $this->assertStringNotContainsString('pb-container-gap-control"><input class="pb-range"', $settings);
+        }
+
+        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $this->assertIsString($css);
+        $this->assertStringContainsString('.pb-gap-row.pb-container-gap-control__values {', $css);
+        $this->assertStringContainsString(
+            ".pb-panel.left .pb-layout-settings .pb-gap-row.pb-container-gap-control__values {\n\tgrid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 33px;",
+            $css
+        );
+        $this->assertStringContainsString(
+            ".pb-panel.left .pb-layout-settings .pb-container-gap-control__link {\n\twidth: 33px;\n\tmin-width: 33px;\n\theight: 33px;\n\tmin-height: 33px;\n\tmargin-top: 0;",
+            $css
+        );
+        $this->assertStringContainsString('margin-top: 18px;', $css);
+        $this->assertGreaterThan(
+            strpos($css, '.pb-panel.left .pb-layout-settings .pb-gap-row,'),
+            strpos($css, '.pb-gap-row.pb-container-gap-control__values {')
+        );
+    }
+
+    public function test_container_background_video_and_slideshow_are_wired_end_to_end(): void
+    {
+        $definition = file_get_contents(public_path('js/pagebuilder_elementor/widgets/layout/container/definition.js'));
+        $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/layout/container/Settings.vue'));
+        $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/layout/container/Canvas.vue'));
+        $renderer = file_get_contents(resource_path('views/pagebuilder_elementor/widgets/layout/container.blade.php'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        foreach ([
+            "bgVideoLink: ''",
+            'bgVideoPlayOnMobile: false',
+            'bgVideoFallback: \'\'',
+            'bgSlideshowImages: []',
+            'bgSlideshowInfiniteLoop: true',
+            "bgSlideshowTransition: 'fade'",
+            'bgSlideshowSizeTablet: \'\'',
+        ] as $setting) {
+            $this->assertStringContainsString($setting, $definition);
+        }
+
+        foreach (['title="Video"', 'title="Slideshow"', 'Video Link', 'Choose Video from CKFinder', "editor.chooseMedia(node.settings, 'bgVideoLink', 'Paste video URL')", 'Background Fallback', 'Infinite Loop', 'Transition Duration (ms)', 'Ken Burns Effect', "editor.chooseMediaGallery(node.settings, 'bgSlideshowImages')"] as $control) {
+            $this->assertStringContainsString($control, $settings);
+        }
+
+        foreach (['shouldRenderBackgroundVideo', 'shouldRenderBackgroundSlideshow', 'videoEmbedUrl(value)', 'syncBackgroundVideo(event)', 'syncBackgroundMedia()', 'pb-container-background-slideshow'] as $canvasContract) {
+            $this->assertStringContainsString($canvasContract, $canvas);
+        }
+
+        foreach (['$hasVideoBackground', '$hasSlideshowBackground', '$videoEmbedUrl', 'pb-container-background-video', 'pb-container-background-slideshow', '@keyframes'] as $renderContract) {
+            $this->assertStringContainsString($renderContract, $renderer);
+        }
+
+        $this->assertStringContainsString('.pb-container-background-media', $css);
+        $this->assertStringContainsString('.pb-background-video-mobile-disabled', $css);
+    }
+
+    public static function containerProvider(): array
+    {
+        return [
+            'container' => ['container', 'container', 'Container', 'full', true],
+            'container fluid' => ['container_fluid', 'container-fluid', 'Container Fluid', 'full', false],
+        ];
+    }
+}
