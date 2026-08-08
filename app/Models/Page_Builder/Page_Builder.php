@@ -11,6 +11,9 @@ class Page_Builder extends Model
 {
 	use HasFactory;
 
+	public const EDITOR_VERSION_V20 = '2.0';
+	public const EDITOR_VERSION_V23 = '2.3';
+
 	protected $table = 'page_builder';
 
 	public $timestamps = true;    
