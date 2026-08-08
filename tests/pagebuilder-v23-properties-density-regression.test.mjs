@@ -25,6 +25,20 @@ const widgetVueSources = collectFiles(widgetRoot, '.vue')
     .map((path) => readFileSync(path, 'utf8'))
     .join('\n');
 
+const unitSliderDefinitions = [
+    ['Accordion dimensions', 'advanced/accordion/Settings.vue', 'pb-accordion-dimension-control'],
+    ['Tabs dimensions', 'general/tabs/Settings.vue', 'pb-tabs-dimension-control'],
+    ['Text Editor dimensions', 'basic/text-editor/Settings.vue', 'pb-basic-dimension-control'],
+    ['Icon dimensions', 'basic/icon/Settings.vue', 'pb-basic-dimension-control'],
+    ['Button icon spacing', 'basic/button/Settings.vue', 'pb-basic-button-icon-spacing-row'],
+    ['Advanced dimensions', 'shared/AdvancedControls.vue', 'pb-advanced-dimension-control'],
+    ['Typography dimensions', 'shared/TypographyControl.vue', 'pb-typography-dimension'],
+].map(([label, path, marker]) => ({
+    label,
+    marker,
+    source: readFileSync(resolve(widgetRoot, path), 'utf8'),
+}));
+
 function contextualHelpers() {
     const source = app.match(/\/\/ V23_CONTEXTUAL_PROPERTY_HELPERS_START([\s\S]*?)\/\/ V23_CONTEXTUAL_PROPERTY_HELPERS_END/)?.[1];
     assert.ok(source, 'v2.3 contextual property helpers should exist');
@@ -98,6 +112,34 @@ test('shared buttons and compound fields inherit the prototype proportions', () 
     assert.match(contract, /:is\(\.pb-carousel-gallery__add, \.pb-basic-gallery-picker__add, \.pb-social-add/);
 });
 
+test('Accordion item fields, responsive tools, and standalone color swatches keep compact visual alignment', () => {
+    assert.match(css, /\.pb-accordion-settings \.pb-accordion-item-fields\s*\{[^}]*padding:\s*10px 10px 12px;/);
+    assert.match(css, /:is\(\.pb-tabs-settings, \.pb-accordion-settings\)[^{}]*\.pb-label-row-device > \.pb-label-tools\s*\{[^}]*flex:\s*0 0 auto;[^}]*margin-left:\s*auto;[^}]*justify-content:\s*flex-end;/);
+    assert.match(css, /:is\(\.pb-tabs-settings, \.pb-accordion-settings\)[^{}]*\.clr-field\s*\{[^}]*overflow:\s*hidden;[^}]*border-radius:\s*7px;/);
+    assert.match(css, /:is\(\.pb-tabs-settings, \.pb-accordion-settings\)[^{}]*\.clr-field button\s*\{[^}]*width:\s*36px;[^}]*height:\s*30px;[^}]*border-radius:\s*7px;/);
+});
+
+test('every unit-bearing slider groups its numeric input and unit beside the range', () => {
+    for (const definition of unitSliderDefinitions) {
+        const line = definition.source.split(/\r?\n/).find((candidate) => candidate.includes(definition.marker) && candidate.includes('type="range"') && candidate.includes('pb-mini-unit'));
+        assert.ok(line, `${definition.label} should expose a unit-bearing range template`);
+
+        const rangeIndex = line.indexOf('type="range"');
+        assert.doesNotMatch(line.slice(0, rangeIndex), /<select class="pb-mini-unit"/, `${definition.label} must not leave the unit in the heading row`);
+        assert.match(
+            line.slice(rangeIndex),
+            /<div class="pb-value-with-unit"><input[^>]*type="number"[^>]*><select class="pb-mini-unit"/,
+            `${definition.label} should keep its number and unit in one trailing group`,
+        );
+    }
+
+    const contract = css.match(/\/\* V23_PROTOTYPE_PROPERTIES_CONTRACT_START \*\/([\s\S]*?)\/\* V23_PROTOTYPE_PROPERTIES_CONTRACT_END \*\//)?.[1];
+    assert.ok(contract);
+    assert.match(contract, /\.pb-value-with-unit\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(0, 1fr\) 36px\s*!important;/);
+    assert.match(contract, /\.pb-typography-range-row\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) 92px;/);
+    assert.match(css, /\.pb-basic-button-icon-spacing-row\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) 92px;/);
+});
+
 test('shared numeric and compound controls stay compact across every v2.3 widget', () => {
     const contract = css.match(/\/\* V23_PROTOTYPE_PROPERTIES_CONTRACT_START \*\/([\s\S]*?)\/\* V23_PROTOTYPE_PROPERTIES_CONTRACT_END \*\//)?.[1];
     assert.ok(contract);
@@ -126,7 +168,7 @@ test('shared numeric and compound controls stay compact across every v2.3 widget
     assert.match(contract, /\.pb-typography-select-field\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) 108px;[^}]*margin-bottom:\s*6px;[^}]*font-size:\s*10px;/);
     assert.match(contract, /\.pb-typography-dimension\s*\{[^}]*margin-bottom:\s*6px(?:\s*!important)?;/);
     assert.match(contract, /\.pb-typography-dimension-head\s*\{[^}]*margin-bottom:\s*2px;[^}]*font-size:\s*10px;/);
-    assert.match(contract, /\.pb-typography-range-row\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) 62px;[^}]*gap:\s*6px;/);
+    assert.match(contract, /\.pb-typography-range-row\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) 92px;[^}]*gap:\s*6px;/);
     assert.match(contract, /:is\(\.pb-text-effect-popover, \.pb-css-filter-popover, \.pb-link-options-popover\)\s*\{[^}]*gap:\s*8px(?:\s*!important)?;[^}]*padding:\s*10px(?:\s*!important)?;/);
     assert.match(contract, /\.pb-value-with-unit \.pb-mini-unit\s*\{[^}]*width:\s*36px;[^}]*min-width:\s*36px;/);
 });

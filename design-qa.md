@@ -1,3 +1,38 @@
+# Design QA - Page Builder v2.3 Six UI Regression Corrections
+
+Date: 2026-08-09
+
+## Sources compared
+
+- Six reported before-state screenshots: `C:\Users\aruna\.codex\attachments\759c3331-75c6-4cf6-871f-30f9e985a953\image-1.png` through `image-6.png`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+- Full implementation captures and six before/after comparison images: `output/browser/pagebuilder-v23-six-ui-regressions`.
+
+Each supplied defect crop and the matching corrected runtime region were opened together in one comparison image. Runtime interaction stayed client-only and no Save action was performed.
+
+## Findings and corrections
+
+- The collapsed-panel reopen control no longer covers `Desktop`; its right edge is followed by an 8px gap before the canvas metadata.
+- The sticky canvas toolbar now anchors to the canvas viewport's left edge. With the sidebar open and horizontal canvas scroll at 299.33px, the toolbar remained fully visible at x=300px.
+- Expanded Accordion item fields now retain 12px below the final CSS ID group instead of the previous 2px.
+- Accordion and Tabs responsive tool groups no longer stretch. Border Radius measured a 5px device-to-unit gap with the group aligned to the trailing edge.
+- Compact standalone Coloris controls in Accordion, Tabs, and their shared Advanced fields use a 36 x 30px clipped wrapper/button with a complete 7px radius.
+- Unit-bearing sliders now place the number input and unit in one 92px trailing group. The same structure covers Accordion, Tabs, Text Editor, Icon, Button Icon Spacing, shared Advanced dimensions, and all Typography dimensions.
+
+## Verification
+
+- Runtime Accordion Style: number 52 x 30px plus unit 36 x 30px, with no overlap or header-level unit.
+- Runtime Heading Typography: Size, Line Height, Letter Spacing, and Word Spacing each reported a two-child value/unit group and no unit in the heading row.
+- Runtime Accordion Content: final CSS ID group had a measured 12px bottom gap.
+- Runtime shell: collapsed metadata and horizontally scrolled toolbar were measured after the CSS reload.
+- Automated checks: 85 Node Page Builder tests passed; 19 focused Laravel feature tests passed with 2,571 assertions; `git diff --check` passed.
+- Static audit: all seven active unit-bearing slider component definitions are covered by a regression test.
+- P0: none.
+- P1: none.
+- P2: none in the six reviewed desktop states.
+
+final result: passed
+
 # Design QA - Page Builder v2.3 Compound Number Control Correction
 
 Date: 2026-08-09

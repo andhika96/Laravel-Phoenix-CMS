@@ -7887,7 +7887,7 @@ body {
 
 .pb-panel.left .pb-accordion-settings .pb-accordion-item-fields {
 	margin: 0;
-	padding: 10px 10px 2px;
+	padding: 10px 10px 12px;
 	border: 0;
 	border-top: 1px solid #dbe3f2;
 	border-radius: 0;
@@ -8019,6 +8019,12 @@ body {
 	align-items: center;
 	gap: 5px;
 	margin-left: auto;
+}
+
+.pb-panel.left :is(.pb-tabs-settings, .pb-accordion-settings) .pb-label-row-device > .pb-label-tools {
+	flex: 0 0 auto;
+	margin-left: auto;
+	justify-content: flex-end;
 }
 
 .pb-panel.left .pb-accordion-settings .pb-accordion-dimension-control .pb-mini-unit,
@@ -8961,7 +8967,7 @@ body {
 
 .pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-spacing-row {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) 68px;
+	grid-template-columns: minmax(0, 1fr) 92px;
 	gap: 8px;
 	align-items: center;
 }
@@ -9595,6 +9601,8 @@ body {
 .workspace.left-collapsed,
 .workspace.preview-mode { grid-template-columns: 0 minmax(440px, 1fr); }
 
+.workspace.left-collapsed .canvas-meta { margin-left: 42px; }
+
 .workspace.left-collapsed .side-panel,
 .workspace.preview-mode .side-panel {
 	padding: 0;
@@ -9721,6 +9729,7 @@ body {
 .canvas-toolbar {
 	position: sticky;
 	top: 0;
+	left: 0;
 	z-index: 12;
 	display: flex;
 	align-items: center;
@@ -10085,6 +10094,7 @@ body {
 }
 
 .side-panel.pb-panel.left .v23-properties-section .pb-value-with-unit {
+	display: grid;
 	grid-template-columns: minmax(0, 1fr) 36px !important;
 	min-height: 30px;
 	gap: 4px;
@@ -10123,6 +10133,17 @@ body {
 
 .side-panel.pb-panel.left .v23-properties-section .clr-field button {
 	border-radius: 0 8px 8px 0;
+}
+
+.pb-panel.left :is(.pb-tabs-settings, .pb-accordion-settings) :is(.pb-tabs-color-control, .pb-accordion-color-control, .pb-widget-advanced-controls .pb-advanced-field, .pb-widget-advanced-controls .pb-advanced-two-fields > label) .clr-field {
+	overflow: hidden;
+	border-radius: 7px;
+}
+
+.pb-panel.left :is(.pb-tabs-settings, .pb-accordion-settings) :is(.pb-tabs-color-control, .pb-accordion-color-control, .pb-widget-advanced-controls .pb-advanced-field, .pb-widget-advanced-controls .pb-advanced-two-fields > label) .clr-field button {
+	width: 36px;
+	height: 30px;
+	border-radius: 7px;
 }
 
 .side-panel.pb-panel.left .v23-properties-section :is(.pb-toggle-label-row, .pb-inline-action-row) {
@@ -10497,12 +10518,13 @@ body {
 }
 
 .side-panel.pb-panel.left .v23-properties-section .pb-typography-range-row {
-	grid-template-columns: minmax(0, 1fr) 62px;
+	grid-template-columns: minmax(0, 1fr) 92px;
 	gap: 6px;
 }
 
 .side-panel.pb-panel.left .v23-properties-section .pb-typography-range-row .pb-input {
-	width: 62px;
+	width: 100%;
+	min-width: 0;
 	height: 30px;
 	min-height: 30px;
 	padding: 0 3px;

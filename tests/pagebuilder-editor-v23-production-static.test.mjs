@@ -65,6 +65,11 @@ test('production v2.3 ports the approved tokens and shell geometry', () => {
     assert.match(css, /\.webpage-frame\.mobile\s*\{\s*width:\s*390px;/);
 });
 
+test('collapsed sidebar and horizontal canvas scrolling keep the canvas toolbar readable', () => {
+    assert.match(css, /\.workspace\.left-collapsed \.canvas-meta\s*\{[^}]*margin-left:\s*42px;/);
+    assert.match(css, /\.canvas-toolbar\s*\{[^}]*position:\s*sticky;[^}]*top:\s*0;[^}]*left:\s*0;/);
+});
+
 test('production v2.3 properties shell follows the approved compact hierarchy', () => {
     assert.match(app, /v-if="selectedNode && !selectedColumnContext" class="properties-tabs"/);
     assert.match(app, /v-for="tab in activeSettingsTabs"/);

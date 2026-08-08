@@ -262,7 +262,7 @@ const DimensionControl = {
 			this.settings[this.settingKey] = String(this.parsed.value) + safe;
 		},
 	},
-	template: `<div class="pb-advanced-dimension-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><div class="pb-advanced-control-tools"><responsive-device-control v-if="responsiveIcon" :icon="responsiveIcon" /><select class="pb-mini-unit" :value="parsed.unit" @change="setUnit($event.target.value)"><option v-for="unit in units" :key="unit" :value="unit">{{ unit }}</option></select></div></div><div class="pb-range-value-row"><input class="pb-range" type="range" :min="minValue" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"><input class="pb-input pb-input-compact" type="number" :min="minValue" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"></div></div>`,
+	template: `<div class="pb-advanced-dimension-control"><div class="pb-advanced-control-head"><span>{{ label }}</span><div class="pb-advanced-control-tools"><responsive-device-control v-if="responsiveIcon" :icon="responsiveIcon" /></div></div><div class="pb-range-value-row"><input class="pb-range" type="range" :min="minValue" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"><div class="pb-value-with-unit"><input class="pb-input pb-input-compact" type="number" :min="minValue" :max="maxValue" :step="stepValue" :value="parsed.value" @input="setValue($event.target.value)"><select class="pb-mini-unit" :value="parsed.unit" @change="setUnit($event.target.value)"><option v-for="unit in units" :key="unit" :value="unit">{{ unit }}</option></select></div></div></div>`,
 };
 
 const EdgeControl = {
