@@ -109,6 +109,10 @@ test('shared numeric and compound controls stay compact across every v2.3 widget
     assert.match(contract, /:is\(\.pb-four-sides-with-link, \.pb-advanced-edge-fields\)[^}]*input\[type="number"\]\s*\{[^}]*height:\s*30px(?:\s*!important)?;[^}]*padding:\s*0 3px(?:\s*!important)?;[^}]*border-right-width:\s*0;/);
     assert.match(contract, /:is\(\.pb-four-sides-with-link, \.pb-advanced-edge-fields\)[^}]*\.pb-link-btn\s*\{[^}]*width:\s*28px;[^}]*height:\s*30px;/);
     assert.match(contract, /:is\(\.pb-four-sides-with-link, \.pb-advanced-edge-fields\)[^}]*\.pb-link-btn i\s*\{[^}]*font-size:\s*9px(?:\s*!important)?;/);
+    assert.match(contract, /\.pb-container-gap-control__values\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) 28px(?:\s*!important)?;[^}]*gap:\s*0;/);
+    assert.match(contract, /\.pb-container-gap-control__values \.pb-input\s*\{[^}]*height:\s*30px(?:\s*!important)?;[^}]*border-right-width:\s*0;/);
+    assert.match(contract, /\.pb-container-gap-control__values \.pb-link-btn\s*\{[^}]*width:\s*28px;[^}]*height:\s*30px;/);
+    assert.match(contract, /\.pb-container-gap-control__values \.pb-link-btn i\s*\{[^}]*font-size:\s*9px(?:\s*!important)?;/);
     assert.match(contract, /\.pb-four-sides:not\(\.pb-four-sides-with-link\)\s*\{[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\);[^}]*gap:\s*6px;/);
     assert.match(contract, /\.pb-four-sides:not\(\.pb-four-sides-with-link\)[^}]*input\[type="number"\]\s*\{[^}]*height:\s*30px(?:\s*!important)?;[^}]*border-radius:\s*7px;/);
 
@@ -135,5 +139,18 @@ test('the shared density contract covers every active four-side and three-cell r
     assert.equal(plainSides.length, 10, 'all ten standalone four-side controls remain covered');
     assert.equal(linkedSides.length, 14, 'all fourteen linked four-side controls remain covered');
     assert.equal((widgetVueSources.match(/pb-advanced-edge-fields/g) || []).length >= 1, true, 'shared Advanced edge controls remain covered');
+    assert.equal((widgetSources.match(/pb-container-gap-control__values/g) || []).length, 4, 'Container and Container Fluid expose all four linked gap controls');
     assert.equal((widgetSources.match(/pb-range-number/g) || []).length, 4, 'Grid and Row Grid expose four direct three-cell range rows');
+});
+
+test('every responsive spacing side uses a numeric input with native steppers', () => {
+    const spacingInputs = [...widgetSources.matchAll(/<input class="pb-input"[^>]*spacingSideValue[^>]*>/g)]
+        .map((match) => match[0]);
+    const sideInputs = [...widgetVueSources.matchAll(/<(?:label|div)[^>]*class="[^"]*pb-side-input[^"]*"[^>]*><input class="pb-input"[^>]*>/g)]
+        .map((match) => match[0]);
+
+    assert.equal(spacingInputs.length, 20, 'all Container, Container Fluid, Grid, and Row Grid spacing inputs are audited');
+    spacingInputs.forEach((input) => assert.match(input, /\btype="number"/, input));
+    assert.equal(sideInputs.length, 32, 'all active side-input definitions across layout and widgets are audited');
+    sideInputs.forEach((input) => assert.match(input, /\btype="number"/, input));
 });

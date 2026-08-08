@@ -720,10 +720,10 @@
 										</div>
 									</div>
 									<div class="pb-four-sides pb-four-sides-with-link mt-1">
-										<div class="pb-side-input"><input class="pb-input" :value="editor.spacingSideValue(node, 'margin', 'Top')" @input="editor.onSpacingSideInput(node, 'margin', 'Top', $event)" placeholder=""><span>Top</span></div>
-										<div class="pb-side-input"><input class="pb-input" :value="editor.spacingSideValue(node, 'margin', 'Right')" @input="editor.onSpacingSideInput(node, 'margin', 'Right', $event)" placeholder=""><span>Right</span></div>
-										<div class="pb-side-input"><input class="pb-input" :value="editor.spacingSideValue(node, 'margin', 'Bottom')" @input="editor.onSpacingSideInput(node, 'margin', 'Bottom', $event)" placeholder=""><span>Bottom</span></div>
-										<div class="pb-side-input"><input class="pb-input" :value="editor.spacingSideValue(node, 'margin', 'Left')" @input="editor.onSpacingSideInput(node, 'margin', 'Left', $event)" placeholder=""><span>Left</span></div>
+										<div class="pb-side-input"><input class="pb-input" type="number" :value="editor.spacingSideValue(node, 'margin', 'Top')" @input="editor.onSpacingSideInput(node, 'margin', 'Top', $event)" placeholder=""><span>Top</span></div>
+										<div class="pb-side-input"><input class="pb-input" type="number" :value="editor.spacingSideValue(node, 'margin', 'Right')" @input="editor.onSpacingSideInput(node, 'margin', 'Right', $event)" placeholder=""><span>Right</span></div>
+										<div class="pb-side-input"><input class="pb-input" type="number" :value="editor.spacingSideValue(node, 'margin', 'Bottom')" @input="editor.onSpacingSideInput(node, 'margin', 'Bottom', $event)" placeholder=""><span>Bottom</span></div>
+										<div class="pb-side-input"><input class="pb-input" type="number" :value="editor.spacingSideValue(node, 'margin', 'Left')" @input="editor.onSpacingSideInput(node, 'margin', 'Left', $event)" placeholder=""><span>Left</span></div>
 										<div class="pb-side-link-cell"><button class="pb-link-btn" @click="node.settings.marginLinked=!node.settings.marginLinked" :title="node.settings.marginLinked?'Unlink':'Link'"><i :class="node.settings.marginLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
 									</div>
 								</div>
@@ -746,10 +746,10 @@
 										</div>
 									</div>
 									<div class="pb-four-sides pb-four-sides-with-link mt-1">
-										<div class="pb-side-input"><input class="pb-input" :value="editor.spacingSideValue(node, 'padding', 'Top')" @input="editor.onSpacingSideInput(node, 'padding', 'Top', $event)" placeholder=""><span>Top</span></div>
-										<div class="pb-side-input"><input class="pb-input" :value="editor.spacingSideValue(node, 'padding', 'Right')" @input="editor.onSpacingSideInput(node, 'padding', 'Right', $event)" placeholder=""><span>Right</span></div>
-										<div class="pb-side-input"><input class="pb-input" :value="editor.spacingSideValue(node, 'padding', 'Bottom')" @input="editor.onSpacingSideInput(node, 'padding', 'Bottom', $event)" placeholder=""><span>Bottom</span></div>
-										<div class="pb-side-input"><input class="pb-input" :value="editor.spacingSideValue(node, 'padding', 'Left')" @input="editor.onSpacingSideInput(node, 'padding', 'Left', $event)" placeholder=""><span>Left</span></div>
+										<div class="pb-side-input"><input class="pb-input" type="number" :value="editor.spacingSideValue(node, 'padding', 'Top')" @input="editor.onSpacingSideInput(node, 'padding', 'Top', $event)" placeholder=""><span>Top</span></div>
+										<div class="pb-side-input"><input class="pb-input" type="number" :value="editor.spacingSideValue(node, 'padding', 'Right')" @input="editor.onSpacingSideInput(node, 'padding', 'Right', $event)" placeholder=""><span>Right</span></div>
+										<div class="pb-side-input"><input class="pb-input" type="number" :value="editor.spacingSideValue(node, 'padding', 'Bottom')" @input="editor.onSpacingSideInput(node, 'padding', 'Bottom', $event)" placeholder=""><span>Bottom</span></div>
+										<div class="pb-side-input"><input class="pb-input" type="number" :value="editor.spacingSideValue(node, 'padding', 'Left')" @input="editor.onSpacingSideInput(node, 'padding', 'Left', $event)" placeholder=""><span>Left</span></div>
 										<div class="pb-side-link-cell"><button class="pb-link-btn" @click="node.settings.paddingLinked=!node.settings.paddingLinked" :title="node.settings.paddingLinked?'Unlink':'Link'"><i :class="node.settings.paddingLinked?'fas fa-link':'fas fa-unlink'"></i></button></div>
 									</div>
 								</div>

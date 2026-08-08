@@ -1,3 +1,33 @@
+# Design QA - Page Builder v2.3 Compound Number Control Correction
+
+Date: 2026-08-09
+
+## Sources compared
+
+- Reported Advanced Margin/Padding screenshot: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-11e8e335-2afd-4b56-8313-6478b9302a4f.png`.
+- Reported Container Gaps screenshot: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-7e3c0401-5e1f-4f94-844b-c32443f92202.png`.
+- Approved Button Border Radius/Padding reference: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-c861923f-3a35-4c2b-ab46-6c400e9c152c.png`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+
+The Button linked four-side control was used as the existing production baseline. Container Layout Gaps, Container Advanced Margin/Padding, and Button Style Border Radius/Padding were then measured and visually inspected in the same browser session. No Save action was performed.
+
+## Root causes and corrections
+
+- Container and Container Fluid had 16 responsive Margin/Padding fields rendered as text inputs. They now use `type="number"`, so the native increment/decrement steppers are present consistently with Grid, Row Grid, shared Advanced controls, and widget side controls.
+- Container and Container Fluid Gaps used a 33px chain button beside 30px numeric inputs. The v2.3 shared properties contract now uses two equal numeric columns plus a 28px chain column, with both inputs and chain button at 30px height and the chain icon at 9px.
+- Existing link/unlink state, responsive setting keys, units, input handlers, and v2.0 files remain unchanged.
+
+## Verification
+
+- Runtime Container Advanced Margin/Padding: all eight visible fields reported `type=number`, `appearance=auto`, and 30px height; both chain buttons measured 28 x 30px.
+- Runtime Container Layout Gaps: both fields reported `appearance=auto` and 30px height; the chain button measured 28 x 30px with a 9px icon.
+- Runtime Button Style Border Radius/Padding remained at four 30px number fields plus a 28 x 30px chain button.
+- Static audit covers 20 responsive spacing inputs, all 32 active `pb-side-input` definitions, 14 linked four-side definitions, shared Advanced edge controls, and all four Container/Container Fluid gap definitions.
+- Automated checks: 82 Node Page Builder tests passed; 23 focused Laravel feature tests passed with 2,610 assertions; `git diff --check` passed.
+- Container Fluid received the same source-level correction and regression coverage; the separate Container Fluid control was not available as a distinct toolbox item in this runtime QA state.
+
+final result: passed for the corrected v2.3 compound numeric controls; runtime verified for Container and Button, statically verified for Container Fluid
+
 # Image Box Typography Compact UI Design QA
 
 - source visual truth path: `output/design-qa/image-box-typography-before.png`
