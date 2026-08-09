@@ -10,7 +10,7 @@ function loadChildContainerHelpers() {
     const block = app.match(/\/\/ V23_CHILD_CONTAINER_HELPERS_START([\s\S]*?)\/\/ V23_CHILD_CONTAINER_HELPERS_END/)?.[1];
     assert.ok(block, 'child Container helpers should exist');
     const context = { structuredClone: globalThis.structuredClone };
-    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer };`, context);
+    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer, canMoveNodeIntoContainer };`, context);
     return context.api;
 }
 
@@ -146,5 +146,14 @@ test('canonical node IDs stay stable when a legacy snapshot is normalized twice'
 
     assert.deepEqual(first, second);
     assert.deepEqual(second[0].children.map((child) => child.id), ['child']);
+
+test('a Container cannot be dropped into itself or its descendant', () => {
+    const api = loadChildContainerHelpers();
+    const tree = { id: 'parent', type: 'container', children: [{ id: 'child', type: 'container', children: [] }] };
+
+    assert.equal(api.canMoveNodeIntoContainer(tree, 'parent'), false);
+    assert.equal(api.canMoveNodeIntoContainer(tree, 'child'), false);
+    assert.equal(api.canMoveNodeIntoContainer(tree, 'other'), true);
+});
     assert.equal(second[0].children[0].children[0].id, 'heading');
 });

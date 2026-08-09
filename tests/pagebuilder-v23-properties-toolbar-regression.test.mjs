@@ -104,12 +104,13 @@ test('clicking a canvas node label reveals the collapsed properties panel', () =
 
 test('Container Layout exposes selectable Child Containers and Add Container', () => {
     assert.match(containerSettings, /<summary>Child Containers<\/summary>/);
-    assert.match(containerSettings, /\(node\.children \|\| \[\]\)\.filter\(\(child\) => child && \['container','container_fluid'\]\.includes\(child\.type\)\)\.length/);
-    assert.match(containerSettings, /aria-label="Add Container" @click="editor\.addContainerChild\(node\)"/);
+    assert.match(containerSettings, /@click="editor\.addContainerChild\(node\)"/);
     assert.match(containerSettings, /Each layout item is a selectable Container with its own Layout, Style, and Advanced settings\./);
-    assert.doesNotMatch(containerSettings, /<summary>Column widths<\/summary>/);
-    assert.doesNotMatch(containerSettings, /node\.columns/);
+    assert.doesNotMatch(containerSettings, /Add Column|Column widths|node\.columns/);
     assert.doesNotMatch(containerSettings, /addContainerFlexColumn/);
+    assert.doesNotMatch(app, /pb-grid-col-label-button|selectedColumnContext|selectColumn\(/);
+    assert.match(app, /v-model="node\.children"/);
+    assert.match(app, /:parent-node="node"/);
     assert.match(app, /function addContainerChild\(node\)[\s\S]*?appendChildContainer\(node, \(\) => makeNode\('container'\)\)/);
     assert.match(app, /addContainerChild,/);
 });

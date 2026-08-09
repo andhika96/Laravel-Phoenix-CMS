@@ -352,6 +352,18 @@
 		const child = createChildContainerNode(createContainer, formatContainerPercent(newShare));
 		parent.children.push(child);
 		return child;
+	function canMoveNodeIntoContainer(draggedNode, targetNodeId) {
+		const target = String(targetNodeId || '').trim();
+		if (!draggedNode || !target) return true;
+		if (String(draggedNode.id || '') === target) return false;
+		const lists = [
+			draggedNode.children,
+			...(Array.isArray(draggedNode.tabItems) ? draggedNode.tabItems.map((item) => item && item.children) : []),
+			...(Array.isArray(draggedNode.accordionItems) ? draggedNode.accordionItems.map((item) => item && item.children) : []),
+		];
+		return !lists.some((list) => (Array.isArray(list) ? list : []).some((child) => child && !canMoveNodeIntoContainer(child, target)));
+	}
+
 	}
 
 	function normalizeLegacyContainerSnapshot(nodes, createContainer) {
@@ -1808,26 +1820,25 @@
 	const BuilderNode = {
 		name: 'BuilderNode',
 		components: { draggable },
+			parentNode: { type: Object, default: null },
+			siblingIndex: { type: Number, default: -1 },
 		props: {
 			node:        { type: Object,   required: true },
 			selectedId:  { type: String,   default: '' },
-			selectedColumnNodeId: { type: String, default: '' },
-			selectedColumnId: { type: String, default: '' },
 			hoveredId:   { type: String,   default: '' },
 			responsiveDevice: { type: String, default: 'desktop' },
 			dynamicContext: { type: Object, default: () => ({}) },
 			// Handlers dari app
 			onAddContainer: { type: Function, required: true },
-			onAddCol:       { type: Function, required: true },
 			onSelect:       { type: Function, required: true },
-			onSelectColumn: { type: Function, required: true },
 			onSetHover:     { type: Function, required: true },
 			onClearHover:   { type: Function, required: true },
 			onRemove:       { type: Function, required: true },
 			onDuplicate:    { type: Function, required: true },
 			onDragStart:    { type: Function, required: true },
 			onDragEnd:      { type: Function, required: true },
-			onStartColumnResize: { type: Function, required: true },
+			onCanMoveCanvasNode: { type: Function, required: true },
+			onStartContainerEdgeResize: { type: Function, required: true },
 			onOpenModal:    { type: Function, required: true },
 			onShowToolbox:  { type: Function, required: true },
 			pendingInsertTarget: { type: Object, default: null },
@@ -1844,24 +1855,18 @@
 				outOfFlowShellTarget: null,
 				outOfFlowShellObserver: null,
 				outOfFlowShellRaf: 0,
-				columnLabelOffsetRaf: 0,
-				columnLabelResizeObserver: null,
-				columnLabelWindowResizeHandler: null,
 			};
 		},
 		mounted() {
 			this.syncOutOfFlowShellPlaceholder();
-			this.syncColumnLabelOffsetBinding();
 		},
 		updated() {
 			this.$nextTick(() => {
 				this.syncOutOfFlowShellPlaceholder();
-				this.syncColumnLabelOffsetBinding();
 			});
 		},
 		beforeUnmount() {
 			this.teardownOutOfFlowShellPlaceholder();
-			this.teardownColumnLabelOffsetBinding();
 		},
 		computed: {
 			isCont()  { return isCont(this.node.type); },
@@ -1982,6 +1987,14 @@
 				} else if (sizeMode === 'custom') {
 					const customBasis = this.nodeResponsiveValue('containerWidth', s.containerWidth)
 						|| this.nodeResponsiveValue('maxWidth', s.maxWidth);
+				if (this.parentNode && isCont(this.parentNode.type)) {
+					const parentSettings = this.parentNode.settings || {};
+					const parentDirection = parentSettings.direction || 'row';
+					if ((parentSettings.displayType || 'flex') === 'flex' && ['row', 'row-reverse'].includes(parentDirection)) {
+						const width = cssSize(this.nodeResponsiveValue('containerWidth', s.containerWidth || 'auto'), 'auto');
+						if (width !== 'auto') style.flex = '0 0 ' + width;
+					}
+				}
 					style.flex = '0 0 ' + cssSize(customBasis, 'auto');
 				}
 
@@ -2021,8 +2034,6 @@
 						const fromGroup = from.options && from.options.group && from.options.group.name;
 						// Tolak drag dari pb-col (widget pindah antar kolom tidak boleh masuk container)
 						if (fromGroup === 'pb-col') return false;
-						// Tolak jika yang di-drag adalah container
-						if (el.dataset && el.dataset.nodeType && isCont(el.dataset.nodeType)) return false;
 						return true;
 					},
 				};
@@ -2278,22 +2289,19 @@
 			passdown() {
 				return {
 					selectedId:     this.selectedId,
-					selectedColumnNodeId: this.selectedColumnNodeId,
-					selectedColumnId: this.selectedColumnId,
 					hoveredId:      this.hoveredId,
 					responsiveDevice: this.responsiveDevice,
 					dynamicContext: this.dynamicContext,
 					onAddContainer: this.onAddContainer,
-					onAddCol:       this.onAddCol,
 					onSelect:       this.onSelect,
-					onSelectColumn: this.onSelectColumn,
 					onSetHover:     this.onSetHover,
 					onClearHover:   this.onClearHover,
 					onRemove:       this.onRemove,
 					onDuplicate:    this.onDuplicate,
 					onDragStart:    this.onDragStart,
 					onDragEnd:      this.onDragEnd,
-					onStartColumnResize: this.onStartColumnResize,
+					onCanMoveCanvasNode: this.onCanMoveCanvasNode,
+					onStartContainerEdgeResize: this.onStartContainerEdgeResize,
 					onOpenModal:    this.onOpenModal,
 					onShowToolbox:  this.onShowToolbox,
 					pendingInsertTarget: this.pendingInsertTarget,
@@ -2442,26 +2450,6 @@
 				const alignItems = String(this.nodeResponsiveValue('gridAlignItems', s.gridAlignItems || 'start') || 'start').toLowerCase();
 				return { ...base, justifyContent: mapMain[alignItems] || 'flex-start' };
 			},
-			columnHasChildren(col) {
-				return Array.isArray(col && col.children) && col.children.length > 0;
-			},
-			columnLabel(ci) {
-				return 'Column ' + (Number(ci) + 1);
-			},
-			isColumnSelected(col) {
-				return this.selectedColumnNodeId === this.node.id && this.selectedColumnId === String(col && col.id || '');
-			},
-			showColumnResizeHandle(ci) {
-				return this.isFlexRowResizable && Number(ci) < ((this.node.columns || []).length - 1);
-			},
-			selectColumn(col) {
-				if (!col) return;
-				this.onSelectColumn(this.node, col);
-			},
-			startColumnResize(event, col, ci) {
-				if (!col) return;
-				this.onStartColumnResize(event, this.node, col, ci);
-			},
 			onTabDropzoneMove(evt) {
 				const originalEvent = evt && evt.originalEvent ? evt.originalEvent : null;
 				const parentEl = evt && evt.to ? evt.to : null;
@@ -2474,7 +2462,7 @@
 			onAddActiveTabChild(evt) {
 				const children = this.activeTabsChildren();
 				if (this.onRerouteTabsDrop && this.onRerouteTabsDrop(evt, children)) return;
-				this.onAddCol(evt, { children }, -1, null);
+				this.onAddContainer(evt, { children });
 			},
 			onAccordionDropzoneMove(evt) {
 				return this.onTabDropzoneMove(evt);
@@ -2482,7 +2470,7 @@
 			onAddAccordionItemChild(evt, item) {
 				const children = this.accordionItemChildren(item?.id);
 				if (this.onRerouteAccordionDrop && this.onRerouteAccordionDrop(evt, children)) return;
-				this.onAddCol(evt, { children }, -1, null);
+				this.onAddContainer(evt, { children });
 			},
 			toggleAccordionItemFromPreview(itemId) {
 				if (this.onToggleAccordionItem) this.onToggleAccordionItem(this.node, itemId);
@@ -2677,84 +2665,36 @@
 	<div class="pb-node-content" :style="contentShellStyle" @click.stop="onNodeContentClick(node, $event)">
 
 		<!-- CONTAINER -->
-		<!-- CONTAINER: merender columns sesuai displayType -->
 		<template v-if="isCont">
-			<component :is="loadWidget(node.type)" :item="node" :responsive-device="responsiveDevice">
-				<div class="el-cont-columns" :style="contColumnsStyle">
-					<div
-						v-for="(col, ci) in (node.columns || [])"
-						:key="col.id"
-						:class="['el-grid-col', 'pb-grid-col', {
-							'is-selected-col': isColumnSelected(col),
-							'has-flex-col-controls': isFlexColumnEditor,
-							'has-resize-handle': showColumnResizeHandle(ci)
-						}]"
-						:data-col-index="ci"
-						:data-parent-node-id="node.id"
-						:style="contColStyle(col)"
-					>
-						<button
-							v-if="isFlexColumnEditor"
-							type="button"
-							class="pb-grid-col-label pb-grid-col-label-button"
-							:class="{ 'is-active': isColumnSelected(col) }"
-							@click.stop="selectColumn(col)"
-						>
-							<span class="pb-grid-col-label-badge"><i class="far fa-square"></i></span>
-							<span>{{ columnLabel(ci) }}</span>
-						</button>
-						<button
-							v-if="showColumnResizeHandle(ci)"
-							type="button"
-							class="pb-col-resizer"
-							title="Drag to resize columns"
-							@click.stop
-							@mousedown.stop.prevent="startColumnResize($event, col, ci)"
-						>
-							<i class="fas fa-arrows-alt-h"></i>
-						</button>
-						<draggable
-							v-model="col.children"
-							item-key="id"
-							:group="colGroup"
-							data-pb-interactive="true"
-							data-pb-nested-dropzone="true"
-							:fallback-on-body="true"
-							:dragover-bubble="false"
-							:swap-threshold="0.65"
-							:empty-insert-threshold="30"
-							:data-col-index="ci"
-							:data-parent-node-id="node.id"
-							:data-parent-node-type="node.type"
-							:style="contDropzoneStyle(col)"
-							:class="['pb-dropzone', 'pb-dropzone-col', {
-								'is-empty': !col.children || col.children.length === 0,
-								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading'),
-								'is-sequential-locked': isSequentialColumnLocked(ci),
-								'is-pending-insert-target': pendingInsertTarget && pendingInsertTarget.type === 'column' && pendingInsertTarget.nodeId === node.id && pendingInsertTarget.colId === col.id
-							}]"
-							ghost-class="pb-ghost"
-							dragover-class="is-drop-hover"
-							@add="(e) => onAddCol(e, col, ci, node)"
-							@start="onDragStart"
-							@end="onDragEnd"
-						>
-							<template #item="{ element }">
-								<BuilderNode :node="element" :style="contChildNodeStyle(col, element)" v-bind="passdown()" />
-							</template>
-							<template #footer>
-								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">
-									<button v-if="!isSequentialColumnLocked(ci)" type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox({ type: 'column', nodeId: node.id, colId: col.id })">
-										<i class="fas fa-plus"></i>
-										<span>Add</span>
-									</button>
-									<div v-else class="pb-dropzone-lock-text">Fill previous column first</div>
-									<div class="pb-dropzone-empty-text">{{ isSequentialColumnLocked(ci) ? 'Locked' : 'Drop here' }}</div>
-								</div>
-							</template>
-						</draggable>
-					</div>
-				</div>
+			<component :is="loadWidget(node.type)" :item="node" :responsive-device="responsiveDevice" :fill-editor-shell="!!parentNode">
+				<draggable
+					v-model="node.children"
+					item-key="id"
+					:group="contGroup"
+					:move="onCanMoveCanvasNode"
+					data-pb-interactive="true"
+					data-pb-nested-dropzone="true"
+					:data-parent-node-id="node.id"
+					:data-parent-node-type="node.type"
+					class="pb-dropzone pb-dropzone-container-children"
+					ghost-class="pb-ghost"
+					dragover-class="is-drop-hover"
+					@add="(event) => onAddContainer(event, node)"
+					@start="onDragStart"
+					@end="onDragEnd"
+				>
+					<template #item="{ element, index }">
+						<BuilderNode :node="element" :parent-node="node" :sibling-index="index" v-bind="passdown()" />
+					</template>
+					<template #footer>
+						<div v-if="!node.children || node.children.length === 0" class="pb-dropzone-empty pb-container-empty-hint">
+							<button type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox({ type: 'container', nodeId: node.id })">
+								<i class="fas fa-plus"></i><span>Add</span>
+							</button>
+							<div class="pb-dropzone-empty-text">Drop here</div>
+						</div>
+					</template>
+				</draggable>
 			</component>
 		</template>
 
@@ -2784,7 +2724,7 @@
 							}]"
 							ghost-class="pb-ghost"
 							dragover-class="is-drop-hover"
-							@add="(e) => onAddCol(e, col, ci, node)"
+							@add="(e) => onAddContainer(e, { children: col.children })"
 							@start="onDragStart"
 							@end="onDragEnd"
 						>
@@ -3276,8 +3216,6 @@
 				document.removeEventListener('keydown', handlePageSettingsKeydown);
 			});
 			const selectedId  = ref('');
-			const selectedColumnNodeId = ref('');
-			const selectedColumnId = ref('');
 			const hoveredId   = ref('');
 			const settingsTab = ref('layout'); // 'layout' | 'style' | 'advanced'
 			const imageBoxImageState = ref('normal');
@@ -3699,6 +3637,17 @@
 					if (n.tabItems) for (const item of n.tabItems) { const r = findById(item.children||[], id); if (r) return r; }
 					if (n.accordionItems) for (const item of n.accordionItems) { const r = findById(item.children||[], id); if (r) return r; }
 				}
+			function canMoveCanvasNode(event) {
+				const draggedId = String(event && event.dragged && event.dragged.dataset && event.dragged.dataset.nodeId || '').trim();
+				const targetDropzone = event && event.to;
+				const targetOwner = targetDropzone && typeof targetDropzone.closest === 'function'
+					? targetDropzone.closest('[data-node-id]')
+					: null;
+				const targetId = String(targetOwner && targetOwner.dataset && targetOwner.dataset.nodeId || '').trim();
+				if (!draggedId || !targetId) return true;
+				return canMoveNodeIntoContainer(findById(rootNodes.value, draggedId), targetId);
+			}
+			function startContainerEdgeResize() {}
 				return null;
 			}
 
@@ -3770,10 +3719,6 @@
 				if (!toolDef || !target) return false;
 				const item = toolClone(toolDef);
 				if (!item) return false;
-				if (isCont(item.type)) {
-					showUnsupportedControlNotice('Container', 'Container belum bisa dimasukkan langsung ke target + Add ini. Gunakan Grid atau widget biasa.');
-					return false;
-				}
 				if (target.type === 'container') {
 					const ownerNode = findById(rootNodes.value, target.nodeId);
 					if (!ownerNode || !isCont(ownerNode.type)) return false;
@@ -4514,38 +4459,13 @@
 				const safeState = ['normal', 'hover', 'active'].includes(state) ? state : 'normal';
 				return base + safeState.charAt(0).toUpperCase() + safeState.slice(1);
 			}
-			const selectedColumnContext = computed(() => {
-				const nodeId = String(selectedColumnNodeId.value || selectedId.value || '').trim();
-				const colId = String(selectedColumnId.value || '').trim();
-				if (!nodeId || !colId) return null;
-				const node = findById(rootNodes.value, nodeId);
-				if (!node || !isCont(node.type) || !Array.isArray(node.columns)) return null;
-				const index = node.columns.findIndex((col) => col && col.id === colId);
-				if (index < 0) return null;
-				const settings = node.settings || {};
-				const displayType = settings.displayType || 'flex';
-				const direction = getResponsiveSetting(settings, 'direction', settings.direction || 'row') || 'row';
-				const flexWrap = getResponsiveSetting(settings, 'flexWrap', settings.flexWrap || 'nowrap') || 'nowrap';
-				return {
-					node,
-					column: node.columns[index],
-					index,
-					total: node.columns.length,
-					displayType,
-					direction,
-					flexWrap,
-					canEditWidth: displayType === 'flex' && (direction === 'row' || direction === 'row-reverse'),
-					canDragResize: displayType === 'flex' && direction === 'row' && flexWrap === 'nowrap' && node.columns.length > 1,
-				};
-			});
-
 			// ── Column sync ───────────────────────────────────────────────────
 			function syncCols(node, forceCount, device = 'desktop') {
 				if (!node) return;
 				const currentDevice = (device === 'tablet' || device === 'mobile') ? device : 'desktop';
 				const isContNode = isCont(node.type);
 				const isGridNode = isGrid(node.type);
-				if (!isContNode && !isGridNode) return;
+				if (!isGridNode) return;
 				const state = getResponsiveColumnsState(node);
 				const s = node.settings || {};
 				const colSetting = isContNode
@@ -4762,14 +4682,11 @@
 				columnResizeOverlay.value = { visible, text, x, y };
 			}
 			function clearSelectedColumn() {
-				selectedColumnNodeId.value = '';
-				selectedColumnId.value = '';
+				return null;
 			}
-			function selectColumn(node, col) {
+			function selectLegacyColumn(node, col) {
 				if (!node || !col) return;
 				selectedId.value = node.id;
-				selectedColumnNodeId.value = node.id;
-				selectedColumnId.value = col.id;
 				settingsTab.value = 'layout';
 			}
 			function startColumnResize(event, node, col, index) {
@@ -4800,7 +4717,7 @@
 				const minPx = Math.max(48, Math.min(idealMinPx, maxAllowedMinPx));
 				const dragMinPercent = roundColumnPercent((minPx / pairWidth) * pairTotalPercent);
 
-				selectColumn(node, col);
+				selectLegacyColumn(node, col);
 				suppressHistory.value = true;
 				document.body.classList.add('pb-is-resizing-columns');
 				setColumnResizeOverlay(true, formatColumnPercent(percents[index] || 0), startX + 18, currentRect.top + 24);
@@ -5714,10 +5631,6 @@
 				closeControlResponsiveMenu();
 				closeWidthPreviewMenu();
 				scheduleColorisInit();
-				if (!nextId || nextId !== selectedColumnNodeId.value) clearSelectedColumn();
-			});
-			watch(selectedColumnContext, (ctx) => {
-				if (!ctx && selectedColumnId.value) clearSelectedColumn();
 			});
 
 			// ── Remove / Dup ──────────────────────────────────────────────────
@@ -5781,7 +5694,6 @@
 			function removeNode(id) {
 				delFrom(rootNodes.value, id);
 				if (selectedId.value === id) selectedId.value = '';
-				if (selectedColumnNodeId.value === id) clearSelectedColumn();
 				if (hoveredId.value === id) hoveredId.value = '';
 			}
 			function dupNode(id)    { dupIn(rootNodes.value, id); }
@@ -5793,10 +5705,6 @@
 			}
 			function clearSel()     { clearPendingInsertTarget(); clearSelectedColumn(); selectedId.value = ''; }
 			function clearCurrentSelection() {
-				if (selectedColumnContext.value) {
-					clearSelectedColumn();
-					return;
-				}
 				clearSel();
 			}
 			function selectSettingsTab(tabId) {
@@ -6256,7 +6164,6 @@
 				if (idx < 0) return;
 				liveList.splice(idx, 1);
 				if (selectedId.value === current.pendingNodeId) selectedId.value = '';
-				if (selectedColumnNodeId.value === current.pendingNodeId) clearSelectedColumn();
 				if (hoveredId.value === current.pendingNodeId) hoveredId.value = '';
 			}
 			function closeModal() {
@@ -6620,7 +6527,7 @@
 			return {
 				appTitle, pageSettingsOpen, openPageSettings, closePageSettings, toolbox, elementSearch, filteredToolboxGroups, leftCollapsed, previewMode, rootNodes, loadWidget, loadWidgetSettings, hasRegisteredWidget, widgetEditorServices,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
-				selectedId, selectedColumnNodeId, selectedColumnId, selectedColumnContext, hoveredId, settingsTab, imageBoxImageState, iconBoxIconState, selectedNode, selectedType, activeSettingsTabs, selectedNodeKind,
+				selectedId, hoveredId, settingsTab, imageBoxImageState, iconBoxIconState, selectedNode, selectedType, activeSettingsTabs, selectedNodeKind,
 				responsiveDevice, responsiveDevices, responsiveCanvasLabel, canvasZoom, showCanvasGrid, changeCanvasZoom, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
 				controlResponsiveMenu, responsiveDeviceIcon, responsiveDeviceLabel, deviceOptionLabel,
 				openControlResponsiveMenu, closeControlResponsiveMenu, isControlResponsiveMenuOpen,
@@ -6640,7 +6547,7 @@
 				containerGridRowsValue, setContainerGridRowsValue, syncContainerGap,
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
 				displayNodeLabel, nodeLabelIcon,
-				selectNode, selectColumn, startColumnResize, clearSel, clearCurrentSelection, selectSettingsTab, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
+				selectNode, clearSel, clearCurrentSelection, selectSettingsTab, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
 				openIconLibrary, openProIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, openSocialIconLibrary, openAlertIconLibrary, chooseButtonSvg, chooseSocialIconSvg, chooseAlertIconSvg, chooseProIconSvg, chooseRatingSvg, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
@@ -6660,8 +6567,8 @@
 				customCssGotoLine, customCssSearchQuery, customCssActiveLine, customCssCharCount, customCssLineCount, customCssLineNumbers, customCssSummary,
 				openCustomCssEditor, closeCustomCssEditor, applyCustomCssEditorChanges, clearCustomCss, handleCustomCssTab, syncCustomCssEditorScroll, goToCustomCssLine, searchCustomCssCode, savePage, saveState, saveMsg,
 				toastVisible, responseStatusToast, isArrayMessageAfterSubmit, responseMessageAfterSubmit, closeToast, showUnsupportedControlNotice,
-				onDragStart, onDragEnd,
-				onAddContainer, onAddCol, onRootAdd,
+				onDragStart, onDragEnd, canMoveCanvasNode, startContainerEdgeResize,
+				onAddContainer, onRootAdd,
 				modal, cPresets, gPresets, applyContPreset, applyGridPreset, closeModal, pickLayout, openModal,
 				canUndo, canRedo, undo, redo,
 				onToolboxItemClick, pendingInsertTarget, clearPendingInsertTarget, rerouteTabsDropToNestedColumn, rerouteAccordionDropToNestedColumn, trackDropzonePointerFromEvent,
@@ -6753,19 +6660,19 @@
 		<aside class="side-panel left-panel pb-panel left">
 			<div class="panel-header">
 				<div class="panel-header-start">
-					<button v-if="selectedNode || selectedColumnContext" class="panel-icon-btn" title="Back to Elements" @click="showToolboxPanel()"><i class="bi bi-chevron-left"></i></button>
+					<button v-if="selectedNode" class="panel-icon-btn" title="Back to Elements" @click="showToolboxPanel()"><i class="bi bi-chevron-left"></i></button>
 					<div class="panel-title">
-						<strong>{{ selectedColumnContext ? 'Column ' + (selectedColumnContext.index + 1) : (selectedNode ? displayNodeLabel(selectedNode) : 'Elements') }}</strong>
-						<span>{{ selectedColumnContext ? 'Layout settings' : (selectedNode ? selectedNodeKind + ' settings' : 'Drag or click to add') }}</span>
+						<strong>{{ selectedNode ? displayNodeLabel(selectedNode) : 'Elements' }}</strong>
+						<span>{{ selectedNode ? selectedNodeKind + ' settings' : 'Drag or click to add' }}</span>
 					</div>
 				</div>
 				<button class="panel-icon-btn" title="Collapse panel" @click="leftCollapsed = true"><i class="bi bi-chevron-left"></i></button>
 			</div>
-			<div v-if="selectedNode && !selectedColumnContext" class="properties-tabs">
+			<div v-if="selectedNode" class="properties-tabs">
 				<button v-for="tab in activeSettingsTabs" :key="tab.id" type="button" class="property-tab" :class="{ active: settingsTab===tab.id }" @click="selectSettingsTab(tab.id)">{{ tab.label }}</button>
 			</div>
 
-			<template v-if="!(selectedNode || selectedColumnContext)">
+			<template v-if="!selectedNode">
 				<div class="panel-body">
 					<div v-if="pendingInsertTarget" class="pending-insert-notice pb-pending-insert-notice">
 						<div class="pb-pending-insert-text"><i class="bi bi-plus-circle"></i><span>Click a widget to insert into the selected target</span></div>
@@ -6925,45 +6832,13 @@
 			<template v-else>
 				<div class="panel-body">
 					<div class="selection-summary">
-						<div class="selection-summary-icon"><i :class="selectedColumnContext ? 'bi bi-layout-three-columns' : nodeLabelIcon(selectedType)"></i></div>
+						<div class="selection-summary-icon"><i :class="nodeLabelIcon(selectedNode)"></i></div>
 						<div>
-							<strong>{{ selectedColumnContext ? 'Column ' + (selectedColumnContext.index + 1) : displayNodeLabel(selectedNode) }}</strong>
-							<small v-if="selectedColumnContext">Layout column</small>
-							<small v-else>{{ selectedNodeKind }} · {{ selectedType }}</small>
+							<strong>{{ displayNodeLabel(selectedNode) }}</strong>
+							<small>{{ selectedNodeKind }} · {{ selectedType }}</small>
 						</div>
 					</div>
-				<div class="pb-section v23-properties-section" v-if="selectedColumnContext">
-					<div class="pb-form-note mt-2 mb-3">Inside {{ displayNodeLabel(selectedColumnContext.node) }}</div>
-					<details class="pb-collapsible" open>
-						<summary>Layout</summary>
-						<div class="pb-collapsible-body">
-							<div class="pb-form-group">
-								<div class="pb-label-row pb-label-row-device">
-									<label class="pb-form-label mb-0">Width</label>
-									<div class="pb-label-tools">
-										<div class="pb-control-device-wrap">
-											<button class="pb-control-device-btn" @click.stop="openControlResponsiveMenu('column-width')" :title="'Responsive: ' + responsiveDeviceLabel()"><i :class="responsiveDeviceIcon()"></i></button>
-											<div v-if="isControlResponsiveMenuOpen('column-width')" class="pb-control-device-menu">
-												<button v-for="device in responsiveDevices" :key="'column-width-' + device.value" class="pb-control-device-item" :class="{active: responsiveDevice===device.value}" @click.stop="applyResponsiveDevice('column-width', device.value)">
-													<i :class="device.icon"></i>
-													<span>{{ deviceOptionLabel(device) }}</span>
-												</button>
-											</div>
-										</div>
-										<div class="pb-control-unit-wrap">%</div>
-									</div>
-								</div>
-								<div class="pb-range-value-row">
-									<input type="range" class="pb-range" min="1" max="99" step="0.5" :value="columnWidthValue(selectedColumnContext)" @input="setSelectedColumnWidthValue(selectedColumnContext, $event.target.value)">
-									<input class="pb-input pb-input-compact" type="number" min="1" max="99" step="0.1" :value="columnWidthValue(selectedColumnContext)" @input="setSelectedColumnWidthValue(selectedColumnContext, $event.target.value)">
-								</div>
-								<div class="pb-form-note" v-if="selectedColumnContext.canDragResize">Tip: you can also drag the divider handle on the canvas.</div>
-								<div class="pb-form-note" v-else>Direct drag resize is available for flex row containers without wrap.</div>
-							</div>
-						</div>
-					</details>
-				</div>
-				<div class="pb-section v23-properties-section" v-else>
+				<div class="pb-section v23-properties-section">
 					<div v-if="settingsTab==='advanced'" class="pb-form-group pb-element-name-group">
 						<label class="pb-form-label">Element Name Suffix</label>
 						<input class="pb-input pb-input-sm" v-model="selectedNode.labelSuffix" placeholder="e.g. Section 1">
@@ -6981,9 +6856,9 @@
 				<div class="canvas-meta"><span>{{ responsiveCanvasLabel() }}</span><i class="bi bi-dot"></i><span>{{ previewCanvasWidthLabel().replace('px', ' px') }}</span><span class="live-indicator">Live canvas</span></div>
 				<div class="canvas-breadcrumbs" aria-label="Canvas selection">
 					<button class="active"><i class="bi bi-file-earmark"></i>Page</button>
-					<template v-if="selectedNode || selectedColumnContext">
+					<template v-if="selectedNode">
 						<i class="bi bi-chevron-right crumb-separator"></i>
-						<button @click="clearCurrentSelection">{{ selectedColumnContext ? 'Column ' + (selectedColumnContext.index + 1) : displayNodeLabel(selectedNode) }}</button>
+						<button @click="clearCurrentSelection">{{ displayNodeLabel(selectedNode) }}</button>
 					</template>
 				</div>
 				<div class="canvas-actions">
@@ -7024,22 +6899,19 @@
 							<BuilderNode
 								:node="element"
 								:selected-id="selectedId"
-								:selected-column-node-id="selectedColumnNodeId"
-								:selected-column-id="selectedColumnId"
 								:hovered-id="hoveredId"
 								:responsive-device="responsiveDevice"
 								:dynamic-context="dynamicPreviewContext"
 								:on-add-container="onAddContainer"
-								:on-add-col="onAddCol"
 								:on-select="selectNode"
-								:on-select-column="selectColumn"
 								:on-set-hover="setHoveredNode"
 								:on-clear-hover="clearHoveredNode"
 								:on-remove="removeNode"
 								:on-duplicate="dupNode"
 								:on-drag-start="onDragStart"
 								:on-drag-end="onDragEnd"
-								:on-start-column-resize="startColumnResize"
+								:on-can-move-canvas-node="canMoveCanvasNode"
+								:on-start-container-edge-resize="startContainerEdgeResize"
 								:on-open-modal="openModal"
 								:on-show-toolbox="showToolboxPanel"
 								:pending-insert-target="pendingInsertTarget"

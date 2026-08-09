@@ -24,6 +24,10 @@ export default {
 		},
 		responsiveDevice: {
 			type: String,
+		fillEditorShell: {
+			type: Boolean,
+			default: false,
+		},
 			default: 'desktop',
 		},
 	},
@@ -231,7 +235,7 @@ export default {
 			const style = {
 				display: 'block',
 				boxSizing: 'border-box',
-				width: fullMode ? this.toCssSize(widthValue, '100%') : '100%',
+				width: this.fillEditorShell ? '100%' : (fullMode ? this.toCssSize(widthValue, '100%') : '100%'),
 			};
 
 			Object.assign(style, this.backgroundStyles(s, ''));

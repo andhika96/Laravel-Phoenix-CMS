@@ -26,7 +26,6 @@ test('v2.3 retains the v2.0 editor action functions', () => {
         'async function savePage()',
         'function onRootAdd',
         'function onAddContainer',
-        'function onAddCol',
         'function showToolboxPanel',
         'function openCustomCssEditor',
         'function openCkFinder',
@@ -34,7 +33,6 @@ test('v2.3 retains the v2.0 editor action functions', () => {
         'function chooseMediaGallery',
         'function openIconLibrary',
         'function setResponsiveDevice',
-        'function startColumnResize',
         'function rerouteTabsDropToNestedColumn',
         'function rerouteAccordionDropToNestedColumn',
     ]) {
@@ -58,12 +56,9 @@ test('v2.3 retains modal state and root-canvas callback bindings', () => {
         '@end="onDragEnd"',
         '<BuilderNode',
         ':on-add-container="onAddContainer"',
-        ':on-add-col="onAddCol"',
         ':on-select="selectNode"',
-        ':on-select-column="selectColumn"',
         ':on-remove="removeNode"',
         ':on-duplicate="dupNode"',
-        ':on-start-column-resize="startColumnResize"',
         ':on-open-modal="openModal"',
         ':on-show-toolbox="showToolboxPanel"',
         ':on-reroute-tabs-drop="rerouteTabsDropToNestedColumn"',
@@ -73,6 +68,19 @@ test('v2.3 retains modal state and root-canvas callback bindings', () => {
     ]) {
         assertBothContain(marker);
     }
+test('v2.3 intentionally replaces internal columns with child Container actions', () => {
+    for (const marker of [
+        'function addContainerChild(node)',
+        'function startContainerEdgeResize',
+        'v-model="node.children"',
+        ':parent-node="node"',
+        ':on-start-container-edge-resize="startContainerEdgeResize"',
+    ]) {
+        assert.match(v23, new RegExp(escapeRegExp(marker)));
+    }
+    assert.doesNotMatch(v23, /selectedColumnContext|:on-select-column="selectColumn"/);
+});
+
 });
 
 test('v2.3 exposes the page-settings state, actions, and anchored popover fields', () => {
