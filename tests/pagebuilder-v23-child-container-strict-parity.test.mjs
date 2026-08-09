@@ -146,6 +146,9 @@ test('canonical node IDs stay stable when a legacy snapshot is normalized twice'
 
     assert.deepEqual(first, second);
     assert.deepEqual(second[0].children.map((child) => child.id), ['child']);
+    assert.equal(second[0].children[0].children[0].id, 'heading');
+    assert.equal(Object.hasOwn(second[0], 'columns'), false);
+});
 
 test('a Container cannot be dropped into itself or its descendant', () => {
     const api = loadChildContainerHelpers();
@@ -154,6 +157,4 @@ test('a Container cannot be dropped into itself or its descendant', () => {
     assert.equal(api.canMoveNodeIntoContainer(tree, 'parent'), false);
     assert.equal(api.canMoveNodeIntoContainer(tree, 'child'), false);
     assert.equal(api.canMoveNodeIntoContainer(tree, 'other'), true);
-});
-    assert.equal(second[0].children[0].children[0].id, 'heading');
 });

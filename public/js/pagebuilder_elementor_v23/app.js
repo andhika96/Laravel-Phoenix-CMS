@@ -352,6 +352,7 @@
 		const child = createChildContainerNode(createContainer, formatContainerPercent(newShare));
 		parent.children.push(child);
 		return child;
+	}
 	function canMoveNodeIntoContainer(draggedNode, targetNodeId) {
 		const target = String(targetNodeId || '').trim();
 		if (!draggedNode || !target) return true;
@@ -364,7 +365,6 @@
 		return !lists.some((list) => (Array.isArray(list) ? list : []).some((child) => child && !canMoveNodeIntoContainer(child, target)));
 	}
 
-	}
 
 	function normalizeLegacyContainerSnapshot(nodes, createContainer) {
 		const migrationState = createLegacyContainerMigrationState(nodes);
