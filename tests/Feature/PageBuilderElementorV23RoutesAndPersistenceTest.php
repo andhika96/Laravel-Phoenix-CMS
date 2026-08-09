@@ -123,6 +123,64 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
         $this->assertStringNotContainsString('js/pagebuilder_elementor/frontend-runtime.js', $html);
     }
 
+    public function test_v23_editing_a_legacy_layout_does_not_mutate_its_vars_or_timestamp(): void
+    {
+        $legacyVars = json_encode([
+            [
+                'id' => 'legacy-container',
+                'type' => 'container',
+                'settings' => ['columns' => [['id' => 'legacy-column']]],
+            ],
+        ], JSON_THROW_ON_ERROR);
+        $this->insertPage('v23-legacy', 'V23 Legacy', Page_Builder::EDITOR_VERSION_V23, $legacyVars);
+
+        $before = DB::table('page_builder')->where('uri', 'v23-legacy')->first(['vars', 'updated_at']);
+
+        $this->get('/pagebuilder-elementor/v2.3/edit/v23-legacy')->assertOk();
+
+        $after = DB::table('page_builder')->where('uri', 'v23-legacy')->first(['vars', 'updated_at']);
+        $this->assertSame($before->vars, $after->vars);
+        $this->assertSame($before->updated_at, $after->updated_at);
+    }
+
+    public function test_v23_update_persists_canonical_children_without_container_columns(): void
+    {
+        $this->insertPage('v23-children', 'V23 Children', Page_Builder::EDITOR_VERSION_V23, '[]');
+
+        $this->postJson('/pagebuilder-elementor/v2.3/update/v23-children', [
+            'pageName' => 'V23 Children',
+            'pageStatus' => 'publish',
+            'layout' => json_encode([
+                [
+                    'id' => 'container-parent',
+                    'type' => 'container',
+                    'settings' => ['layout' => 'flex'],
+                    'children' => [
+                        ['id' => 'container-child', 'type' => 'container', 'settings' => ['layout' => 'flex'], 'children' => []],
+                    ],
+                ],
+            ], JSON_THROW_ON_ERROR),
+        ])->assertOk()->assertJsonPath('success', true);
+
+        $layout = json_decode(DB::table('page_builder')->where('uri', 'v23-children')->value('vars'), true, flags: JSON_THROW_ON_ERROR);
+        $this->assertSame('container-child', $layout[0]['children'][0]['id']);
+        $this->assertArrayNotHasKey('columns', $layout[0]['settings']);
+    }
+
+    public function test_v23_update_validation_failure_leaves_vars_byte_for_byte_unchanged(): void
+    {
+        $storedVars = '[{"id":"container-existing","type":"container","settings":{"layout":"flex"},"children":[]}]';
+        $this->insertPage('v23-invalid-update', 'V23 Invalid Update', Page_Builder::EDITOR_VERSION_V23, $storedVars);
+
+        $this->postJson('/pagebuilder-elementor/v2.3/update/v23-invalid-update', [
+            'pageName' => '',
+            'pageStatus' => 'publish',
+            'layout' => '[]',
+        ])->assertStatus(422);
+
+        $this->assertSame($storedVars, DB::table('page_builder')->where('uri', 'v23-invalid-update')->value('vars'));
+    }
+
     private function formLayout(): string
     {
         return json_encode([
