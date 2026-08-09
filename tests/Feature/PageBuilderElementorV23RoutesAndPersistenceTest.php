@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Page_Builder\Page_Builder;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
@@ -179,6 +180,28 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
         ])->assertStatus(422);
 
         $this->assertSame($storedVars, DB::table('page_builder')->where('uri', 'v23-invalid-update')->value('vars'));
+    }
+
+    public function test_v23_update_returns_an_error_when_persistence_is_rejected(): void
+    {
+        $storedVars = '[{"id":"container-existing","type":"container","settings":{"layout":"flex"},"children":[]}]';
+        $this->insertPage('v23-rejected-update', 'V23 Rejected Update', Page_Builder::EDITOR_VERSION_V23, $storedVars);
+
+        $originalDispatcher = Page_Builder::getEventDispatcher();
+        Page_Builder::setEventDispatcher(new Dispatcher($this->app));
+        Page_Builder::saving(static fn () => false);
+
+        try {
+            $this->postJson('/pagebuilder-elementor/v2.3/update/v23-rejected-update', [
+                'pageName' => 'V23 Rejected Update',
+                'pageStatus' => 'publish',
+                'layout' => '[]',
+            ])->assertStatus(500)->assertJsonPath('success', false);
+        } finally {
+            Page_Builder::setEventDispatcher($originalDispatcher);
+        }
+
+        $this->assertSame($storedVars, DB::table('page_builder')->where('uri', 'v23-rejected-update')->value('vars'));
     }
 
     private function formLayout(): string

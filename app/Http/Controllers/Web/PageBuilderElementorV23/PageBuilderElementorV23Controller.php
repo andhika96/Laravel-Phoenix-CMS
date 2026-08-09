@@ -190,14 +190,12 @@ class PageBuilderElementorV23Controller extends Controller
 
 				$pageData->fill($newData);
 
-				if ($pageData->save())
+				if (! $pageData->save())
 				{
-					DB::commit();
+					throw new \RuntimeException(t('Page Builder Elementor could not be updated'));
 				}
-				else
-				{
-					DB::rollBack();
-				}
+
+				DB::commit();
 
 				if ($request->wantsJson())
 				{
