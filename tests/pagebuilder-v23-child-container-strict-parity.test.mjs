@@ -10,7 +10,7 @@ function loadChildContainerHelpers() {
     const block = app.match(/\/\/ V23_CHILD_CONTAINER_HELPERS_START([\s\S]*?)\/\/ V23_CHILD_CONTAINER_HELPERS_END/)?.[1];
     assert.ok(block, 'child Container helpers should exist');
     const context = { structuredClone: globalThis.structuredClone };
-    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer, canMoveNodeIntoContainer };`, context);
+    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer, canMoveNodeIntoContainer, responsiveContainerWidth, applyAdjacentContainerWidths };`, context);
     return context.api;
 }
 
@@ -157,4 +157,71 @@ test('a Container cannot be dropped into itself or its descendant', () => {
     assert.equal(api.canMoveNodeIntoContainer(tree, 'parent'), false);
     assert.equal(api.canMoveNodeIntoContainer(tree, 'child'), false);
     assert.equal(api.canMoveNodeIntoContainer(tree, 'other'), true);
+});
+
+test('responsive width inherits from the nearest larger device', () => {
+    const api = loadChildContainerHelpers();
+    const settings = { containerWidth: '60%', containerWidthTablet: '55%', containerWidthMobile: '' };
+
+    assert.equal(api.responsiveContainerWidth(settings, 'desktop'), '60%');
+    assert.equal(api.responsiveContainerWidth(settings, 'tablet'), '55%');
+    assert.equal(api.responsiveContainerWidth(settings, 'mobile'), '55%');
+});
+
+test('edge resize writes only the active device and preserves the pair total', () => {
+    const api = loadChildContainerHelpers();
+    const children = [
+        containerFactory(),
+        containerFactory(),
+        containerFactory(),
+    ];
+    children[0].settings.containerWidth = '25%';
+    children[1].settings.containerWidth = '50%';
+    children[2].settings.containerWidth = '25%';
+
+    const result = api.applyAdjacentContainerWidths(children, 0, 35, 'tablet', { minPercent: 8 });
+
+    assert.deepEqual(JSON.parse(JSON.stringify(result)), { current: 35, next: 40, total: 75 });
+    assert.equal(children[0].settings.containerWidth, '25%');
+    assert.equal(children[1].settings.containerWidth, '50%');
+    assert.equal(children[0].settings.containerWidthTablet, '35%');
+    assert.equal(children[1].settings.containerWidthTablet, '40%');
+    assert.equal(children[2].settings.containerWidthTablet, '');
+});
+
+test('edge resize clamps a Container to the pair minimum width', () => {
+    const api = loadChildContainerHelpers();
+    const children = [containerFactory(), containerFactory()];
+    children[0].settings.containerWidth = '25%';
+    children[1].settings.containerWidth = '50%';
+
+    assert.deepEqual(
+        JSON.parse(JSON.stringify(api.applyAdjacentContainerWidths(children, 0, 2, 'mobile', { minPercent: 8 }))),
+        { current: 8, next: 67, total: 75 }
+    );
+    assert.equal(children[0].settings.containerWidthMobile, '8%');
+    assert.equal(children[1].settings.containerWidthMobile, '67%');
+});
+
+test('child Container edge resizing uses its responsive pair and one history snapshot', () => {
+    const resizeBody = app.match(/function startContainerEdgeResize\(event, parent, index\) \{([\s\S]*?)\n\s*const selectedNode =/)?.[1];
+
+    assert.ok(resizeBody, 'Container edge resize controller should exist');
+    assert.match(app, /showContainerEdgeResizeHandle\(\) \{/);
+    assert.match(app, /class="pb-container-edge-resizer"/);
+    assert.match(app, /onStartContainerEdgeResize\(\$event, parentNode, siblingIndex\)/);
+    assert.match(resizeBody, /containerPercentages\(children, responsiveDevice\.value\)/);
+    assert.match(resizeBody, /applyAdjacentContainerWidths\(children, index, requested, responsiveDevice\.value, \{ minPercent \}\)/);
+    assert.match(resizeBody, /suppressHistory\.value = true/);
+    assert.match(resizeBody, /suppressHistory\.value = false/);
+    assert.match(resizeBody, /const stop = \(\) => \{[\s\S]*?snap\(\);/);
+    assert.doesNotMatch(resizeBody.match(/const onMove = \(moveEvent\) => \{([\s\S]*?)\n\s*\};/)?.[1] || '', /snap\(\)/);
+});
+
+test('Container edge resizer uses the dedicated child Container selector', () => {
+    const css = fs.readFileSync(path.resolve('public/assets/css/pagebuilder_elementor_v23.css'), 'utf8');
+
+    assert.match(css, /\.pb-container-edge-resizer\s*\{/);
+    assert.match(css, /cursor:\s*col-resize/);
+    assert.match(css, /\.pb-container-edge-resizer i\s*\{/);
 });

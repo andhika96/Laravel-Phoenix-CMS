@@ -336,6 +336,46 @@
 		return (Math.round((Number(value) + Number.EPSILON) * 10) / 10).toFixed(1).replace(/\.0$/, '') + '%';
 	}
 
+	function containerWidthKey(device) {
+		if (device === 'tablet') return 'containerWidthTablet';
+		if (device === 'mobile') return 'containerWidthMobile';
+		return 'containerWidth';
+	}
+
+	function responsiveContainerWidth(settings, device, fallback = '100%') {
+		const source = settings || {};
+		if (device === 'mobile') return source.containerWidthMobile || source.containerWidthTablet || source.containerWidth || fallback;
+		if (device === 'tablet') return source.containerWidthTablet || source.containerWidth || fallback;
+		return source.containerWidth || fallback;
+	}
+
+	function containerPercentages(children, device) {
+		const list = Array.isArray(children) ? children : [];
+		if (!list.length) return [];
+		const values = list.map((child) => parseContainerPercent(responsiveContainerWidth(child && child.settings, device, '')));
+		const specified = values.reduce((sum, value) => sum + (value == null ? 0 : value), 0);
+		const missing = values.filter((value) => value == null).length;
+		const share = missing ? Math.max(0, 100 - specified) / missing : 0;
+		return values.map((value) => value == null ? share : value);
+	}
+
+	function applyAdjacentContainerWidths(children, index, nextPercent, device, options = {}) {
+		const list = Array.isArray(children) ? children : [];
+		if (index < 0 || index >= list.length - 1) return null;
+		const percentages = containerPercentages(list, device);
+		const total = percentages[index] + percentages[index + 1];
+		const minimum = Math.max(4, Number(options.minPercent) || 4);
+		const current = Math.min(Math.max(Number(nextPercent) || 0, minimum), total - minimum);
+		const next = total - current;
+		list[index].settings[containerWidthKey(device)] = formatContainerPercent(current);
+		list[index + 1].settings[containerWidthKey(device)] = formatContainerPercent(next);
+		return {
+			current: Math.round(current * 10) / 10,
+			next: Math.round(next * 10) / 10,
+			total: Math.round(total * 10) / 10,
+		};
+	}
+
 	function appendChildContainer(parent, createContainer) {
 		if (!parent || typeof parent !== 'object') return null;
 		if (!Array.isArray(parent.children)) parent.children = [];
@@ -1911,6 +1951,24 @@
 				const flexWrap = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
 				return direction === 'row' && flexWrap === 'nowrap' && Array.isArray(this.node.columns) && this.node.columns.length > 1;
 			},
+			showContainerEdgeResizeHandle() {
+				const parent = this.parentNode;
+				const siblings = Array.isArray(parent && parent.children) ? parent.children : [];
+				const current = siblings[this.siblingIndex];
+				const next = siblings[this.siblingIndex + 1];
+				const settings = parent && parent.settings ? parent.settings : {};
+				const activeValue = (base, fallback) => {
+					const key = responsiveKey(base, this.responsiveDevice || 'desktop');
+					const value = settings[key];
+					return value === '' || value == null ? (settings[base] || fallback) : value;
+				};
+				return isCont(parent && parent.type)
+					&& isCont(current && current.type)
+					&& isCont(next && next.type)
+					&& (settings.displayType || 'flex') === 'flex'
+					&& activeValue('direction', 'row') === 'row'
+					&& activeValue('flexWrap', 'nowrap') === 'nowrap';
+			},
 			isOutOfFlowLayoutNode() {
 				const settings = this.node && this.node.settings ? this.node.settings : {};
 				const stickyMode = String(settings.sticky || 'none').trim().toLowerCase();
@@ -1989,13 +2047,26 @@
 						|| this.nodeResponsiveValue('maxWidth', s.maxWidth);
 					style.flex = '0 0 ' + cssSize(customBasis, 'auto');
 				}
-				if (this.parentNode && isCont(this.parentNode.type)) {
-					const parentSettings = this.parentNode.settings || {};
-					const parentDirection = parentSettings.direction || 'row';
-					if ((parentSettings.displayType || 'flex') === 'flex' && ['row', 'row-reverse'].includes(parentDirection)) {
-						const width = cssSize(this.nodeResponsiveValue('containerWidth', s.containerWidth || 'auto'), 'auto');
-						if (width !== 'auto') style.flex = '0 0 ' + width;
+				const parentSettings = this.parentNode && this.parentNode.settings ? this.parentNode.settings : {};
+				if (isCont(this.node.type) && isCont(this.parentNode && this.parentNode.type) && (parentSettings.displayType || 'flex') === 'flex') {
+					const directionKey = responsiveKey('direction', this.responsiveDevice || 'desktop');
+					const direction = parentSettings[directionKey] || parentSettings.direction || 'row';
+					if (direction === 'row' || direction === 'row-reverse') {
+						const width = responsiveContainerWidth(this.node.settings || {}, this.responsiveDevice, '100%');
+						style.flex = '0 1 ' + width;
+						style.flexBasis = width;
+						style.width = width;
+						style.minWidth = this.responsiveDevice === 'mobile' ? '56px' : (this.responsiveDevice === 'tablet' ? '72px' : '96px');
+					} else {
+						style.flex = '0 0 auto';
+						style.width = '100%';
+						style.minWidth = '0';
 					}
+				} else if (this.parentNode && isCont(this.parentNode.type) && (parentSettings.displayType || 'flex') === 'flex') {
+					style.flex = '1 1 auto';
+					style.width = '100%';
+					style.maxWidth = '100%';
+					style.minWidth = '0';
 				}
 
 				return style;
@@ -2079,7 +2150,7 @@
 					justifyContent, alignItems, alignContent,
 					gap:cssSize(s.gap,'0'), rowGap:cssSize(rowGap,'0'), columnGap:cssSize(columnGap,'0'), width:'100%' };
 				style['--pb-flex-column-gap'] = cssSize(columnGap, '0');
-				style['--pb-col-resizer-size'] = '28px';
+				style['--pb-container-resizer-size'] = '28px';
 				style.minHeight = 'inherit';
 				style.height = '100%';
 					return style;
@@ -2593,6 +2664,16 @@
 			<button class="pb-node-btn remove" @click.stop="onRemove(node.id)" title="Delete"><i class="fas fa-trash"></i></button>
 		</div>
 	</div>
+	<button
+		v-if="showContainerEdgeResizeHandle"
+		type="button"
+		class="pb-container-edge-resizer"
+		title="Drag to resize containers"
+		@click.stop
+		@mousedown.stop.prevent="onStartContainerEdgeResize($event, parentNode, siblingIndex)"
+	>
+		<i class="fas fa-arrows-alt-h"></i>
+	</button>
 
 	<div class="pb-node-content" :style="contentShellStyle" @click.stop="onNodeContentClick(node, $event)">
 
@@ -3128,7 +3209,7 @@
 				if (toastTimer) clearTimeout(toastTimer);
 				if (customCssSearchTimer) clearTimeout(customCssSearchTimer);
 				if (windowScrollLockFrame) cancelAnimationFrame(windowScrollLockFrame);
-				if (typeof activeColumnResizeCleanup === 'function') activeColumnResizeCleanup();
+				if (typeof activeContainerResizeCleanup === 'function') activeContainerResizeCleanup();
 				window.removeEventListener('scroll', lockWindowScrollPosition);
 				window.removeEventListener('focusin', keepFocusedEditorControlInPanel);
 				document.removeEventListener('keydown', handlePageSettingsKeydown);
@@ -3149,14 +3230,14 @@
 			const desktopPreviewWidth = ref('1180');
 			const widthPreviewMenuOpen = ref(false);
 			const suppressHistory = ref(false);
-			const columnResizeOverlay = ref({ visible: false, text: '', x: 0, y: 0 });
+			const containerResizeOverlay = ref({ visible: false, text: '', x: 0, y: 0 });
 			const pendingInsertTarget = ref(null);
 			const accordionRuntimeState = ref({});
 			const accordionStyleState = ref('normal');
 			const accordionTitleStyleState = ref('normal');
 			const accordionIconStyleState = ref('normal');
 			const accordionBoxLinks = ref({});
-			let activeColumnResizeCleanup = null;
+			let activeContainerResizeCleanup = null;
 			const rootNodes   = ref([]);
 			const responsiveDevices = [
 				{ value: 'desktop', label: 'Desktop', menuLabel: 'Desktop', icon: 'fas fa-desktop' },
@@ -3567,7 +3648,62 @@
 				if (!draggedId || !targetId) return true;
 				return canMoveNodeIntoContainer(findById(rootNodes.value, draggedId), targetId);
 			}
-			function startContainerEdgeResize() {}
+			function startContainerEdgeResize(event, parent, index) {
+				const children = Array.isArray(parent && parent.children) ? parent.children : [];
+				const current = children[index];
+				const next = children[index + 1];
+				const settings = parent && parent.settings ? parent.settings : {};
+				const direction = getResponsiveSetting(settings, 'direction', settings.direction || 'row') || 'row';
+				const wrap = getResponsiveSetting(settings, 'flexWrap', settings.flexWrap || 'nowrap') || 'nowrap';
+				if (!event || !isCont(parent && parent.type) || !isCont(current && current.type) || !isCont(next && next.type)) return;
+				if ((settings.displayType || 'flex') !== 'flex' || direction !== 'row' || wrap !== 'nowrap') return;
+
+				const currentEl = event.currentTarget && event.currentTarget.closest('.pb-node');
+				const nextEl = currentEl && currentEl.nextElementSibling;
+				if (!currentEl || !nextEl || !nextEl.classList.contains('pb-node')) return;
+				const currentRect = currentEl.getBoundingClientRect();
+				const nextRect = nextEl.getBoundingClientRect();
+				const pairWidth = currentRect.width + nextRect.width;
+				if (!(pairWidth > 0)) return;
+
+				const percentages = containerPercentages(children, responsiveDevice.value);
+				const pairTotal = percentages[index] + percentages[index + 1];
+				const startX = Number(event.clientX) || 0;
+				const startWidth = currentRect.width;
+				const minPx = Math.max(48, Math.min(160, pairWidth * 0.18, (pairWidth / 2) - 24));
+				const minPercent = Math.max(4, (minPx / pairWidth) * pairTotal);
+				let finished = false;
+
+				selectNode(current);
+				suppressHistory.value = true;
+				document.body.classList.add('pb-is-resizing-containers');
+				setContainerResizeOverlay(true, formatContainerPercent(percentages[index]), startX + 18, currentRect.top + 24);
+
+				const stop = () => {
+					if (finished) return;
+					finished = true;
+					window.removeEventListener('mousemove', onMove);
+					window.removeEventListener('mouseup', stop);
+					window.removeEventListener('blur', stop);
+					activeContainerResizeCleanup = null;
+					suppressHistory.value = false;
+					document.body.classList.remove('pb-is-resizing-containers');
+					setContainerResizeOverlay(false);
+					snap();
+				};
+				const onMove = (moveEvent) => {
+					const delta = (Number(moveEvent.clientX) || 0) - startX;
+					const nextWidth = Math.min(Math.max(startWidth + delta, minPx), pairWidth - minPx);
+					const requested = (nextWidth / pairWidth) * pairTotal;
+					const result = applyAdjacentContainerWidths(children, index, requested, responsiveDevice.value, { minPercent });
+					if (result) setContainerResizeOverlay(true, formatContainerPercent(result.current), (Number(moveEvent.clientX) || 0) + 18, currentRect.top + 24);
+				};
+
+				activeContainerResizeCleanup = stop;
+				window.addEventListener('mousemove', onMove);
+				window.addEventListener('mouseup', stop);
+				window.addEventListener('blur', stop);
+			}
 
 			const selectedNode = computed(() => selectedId.value ? findById(rootNodes.value, selectedId.value) : null);
 			const selectedType = computed(() => selectedNode.value?.type || '');
@@ -4586,8 +4722,8 @@
 				if (displayType !== 'flex' || !['row', 'row-reverse'].includes(direction)) return;
 				applyColumnPairWidths(node, index, Number(next) || 0);
 			}
-			function setColumnResizeOverlay(visible, text = '', x = 0, y = 0) {
-				columnResizeOverlay.value = { visible, text, x, y };
+			function setContainerResizeOverlay(visible, text = '', x = 0, y = 0) {
+				containerResizeOverlay.value = { visible, text, x, y };
 			}
 			function clearSelectedColumn() {
 				return null;
@@ -4627,8 +4763,8 @@
 
 				selectLegacyColumn(node, col);
 				suppressHistory.value = true;
-				document.body.classList.add('pb-is-resizing-columns');
-				setColumnResizeOverlay(true, formatColumnPercent(percents[index] || 0), startX + 18, currentRect.top + 24);
+				document.body.classList.add('pb-is-resizing-containers');
+				setContainerResizeOverlay(true, formatColumnPercent(percents[index] || 0), startX + 18, currentRect.top + 24);
 
 				let finished = false;
 				const stop = () => {
@@ -4637,10 +4773,10 @@
 					window.removeEventListener('mousemove', onMove);
 					window.removeEventListener('mouseup', stop);
 					window.removeEventListener('blur', stop);
-					activeColumnResizeCleanup = null;
+					activeContainerResizeCleanup = null;
 					suppressHistory.value = false;
-					document.body.classList.remove('pb-is-resizing-columns');
-					setColumnResizeOverlay(false);
+					document.body.classList.remove('pb-is-resizing-containers');
+					setContainerResizeOverlay(false);
 					snap();
 				};
 				const onMove = (moveEvent) => {
@@ -4648,10 +4784,10 @@
 					const nextCurrentWidth = clamp(startCurrentWidth + deltaX, minPx, pairWidth - minPx);
 					const nextCurrentPercent = roundColumnPercent((nextCurrentWidth / pairWidth) * pairTotalPercent);
 					applyColumnPairWidths(node, index, nextCurrentPercent, pairIndex, { minPercent: dragMinPercent });
-					setColumnResizeOverlay(true, formatColumnPercent(columnWidthValue({ node, column: col, index })), (Number(moveEvent.clientX) || 0) + 18, currentRect.top + 24);
+					setContainerResizeOverlay(true, formatColumnPercent(columnWidthValue({ node, column: col, index })), (Number(moveEvent.clientX) || 0) + 18, currentRect.top + 24);
 				};
 
-				activeColumnResizeCleanup = stop;
+				activeContainerResizeCleanup = stop;
 				window.addEventListener('mousemove', onMove);
 				window.addEventListener('mouseup', stop);
 				window.addEventListener('blur', stop);
@@ -6409,7 +6545,7 @@
 				spacingControlUnits, spacingUnit, spacingSideValue, onSpacingSideInput, setSpacingUnit,
 				sizeControlUnits, videoAspectRatioOptions, videoAspectRatioValue, setVideoAspectRatioValue, videoSourceOptions, videoSuggestedVideoOptions, videoPreloadOptions, videoCurrentSource, setVideoSourceType, videoLinkField, videoUsesHostedPicker, videoShowsEndTime, videoShowsPoster, videoShowsOverlay, videoUsesControlsColor, videoToggleOptions, videoSelectOptions, videoToggleStateLabel, sizeControlDisplayValue, sizeControlUnit, sizeControlMax, sizeControlStep, onSizeControlInput, setSizeControlUnit,
 				containerWidthValue, containerWidthUnit, containerWidthMax, containerWidthStep, onContainerWidthInput, setContainerWidthValue, setContainerWidthUnit,
-				columnWidthValue, setSelectedColumnWidthValue, columnResizeOverlay,
+				columnWidthValue, setSelectedColumnWidthValue, containerResizeOverlay,
 				minHeightValue, minHeightUnit, setMinHeightValue, setMinHeightUnit,
 				spacerHeightValue, spacerHeightUnit, spacerHeightMax, spacerHeightStep, onSpacerHeightInput, setSpacerHeightValue, setSpacerHeightUnit,
 				shapeDividerTypeOptions, shapeDividerHasWidth, shapeDividerHasFlip, shapeDividerHasInvert,
@@ -6812,7 +6948,7 @@
 	<button v-if="leftCollapsed && !previewMode" type="button" class="floating-expand left" title="Open elements panel" @click="leftCollapsed = false"><i class="bi bi-layout-sidebar-inset"></i></button>
 	</main>
 
-	<div v-if="columnResizeOverlay.visible" class="pb-col-resize-overlay" :style="{ left: columnResizeOverlay.x + 'px', top: columnResizeOverlay.y + 'px' }">{{ columnResizeOverlay.text }}</div>
+	<div v-if="containerResizeOverlay.visible" class="pb-container-resize-overlay" :style="{ left: containerResizeOverlay.x + 'px', top: containerResizeOverlay.y + 'px' }">{{ containerResizeOverlay.text }}</div>
 
 	<teleport to="body">
 		<div v-if="showCssEditor" class="pb-css-editor-modal" @click.self="closeCustomCssEditor">
