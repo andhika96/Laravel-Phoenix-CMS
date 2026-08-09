@@ -5,7 +5,6 @@
 
 	const TYPE = 'container';
 	const DEFAULT_CONTENT_WIDTH = 'full';
-	const uid = () => 'c_' + Math.random().toString(36).slice(2, 9);
 	function defaults() {
 		const type = TYPE;
 		const isFluid = type === 'container_fluid';
@@ -309,10 +308,8 @@
 		settings: '/js/pagebuilder_elementor_v23/widgets/layout/container/Settings.vue',
 		defaults,
 		createNode(node) {
-			const columns = Math.max(1, Math.min(12, Number(node.settings?.gridColumns || 3)));
 			return {
 				...node,
-				columns: Array.from({ length: columns }, () => ({ id: uid(), children: [] })),
 				children: [],
 			};
 		},

@@ -214,6 +214,97 @@
 	function isTabs(t)    { return t === 'tabs'; }
 	function isAccordion(t) { return t === 'accordion'; }
 	function isWgt(t)     { return !isCont(t) && !isGrid(t); }
+	// V23_CHILD_CONTAINER_HELPERS_START
+	function validCanonicalId(value) {
+		return /^[A-Za-z0-9_-]+$/.test(String(value || '').trim());
+	}
+
+	function createLegacyContainerMigrationState(nodes) {
+		const nodeIdCounts = new Map();
+		const columnIdCounts = new Map();
+		const seen = new WeakSet();
+		const visit = (list) => {
+			(Array.isArray(list) ? list : []).forEach((node) => {
+				if (!node || typeof node !== 'object' || seen.has(node)) return;
+				seen.add(node);
+				const nodeId = String(node.id || '').trim();
+				if (validCanonicalId(nodeId)) nodeIdCounts.set(nodeId, (nodeIdCounts.get(nodeId) || 0) + 1);
+				(Array.isArray(node.columns) ? node.columns : []).forEach((column) => {
+					const columnId = String(column && column.id || '').trim();
+					if (validCanonicalId(columnId)) columnIdCounts.set(columnId, (columnIdCounts.get(columnId) || 0) + 1);
+					visit(column && column.children);
+				});
+				visit(node.children);
+				(Array.isArray(node.tabItems) ? node.tabItems : []).forEach((item) => visit(item && item.children));
+				(Array.isArray(node.accordionItems) ? node.accordionItems : []).forEach((item) => visit(item && item.children));
+			});
+		};
+		visit(nodes);
+		return { nodeIdCounts, columnIdCounts, claimedIds: new Set(), preclaimedIds: new Set(), generated: 0, migrated: false };
+	}
+
+	function uniqueCanonicalId(state, base) {
+		const safeBase = validCanonicalId(base) ? String(base).trim() : 'node';
+		let candidate = safeBase;
+		let suffix = 2;
+		while (state.claimedIds.has(candidate)) candidate = safeBase + '-' + suffix++;
+		state.claimedIds.add(candidate);
+		return candidate;
+	}
+
+	function uniqueLegacyContainerId(state, base) {
+		const safeBase = validCanonicalId(base) ? String(base).trim() : 'container-child';
+		let candidate = safeBase;
+		let suffix = 2;
+		while (state.claimedIds.has(candidate) || state.nodeIdCounts.has(candidate)) candidate = safeBase + '-' + suffix++;
+		state.claimedIds.add(candidate);
+		state.preclaimedIds.add(candidate);
+		return candidate;
+	}
+
+	function claimCanonicalNodeId(state, rawId, prefix = 'node') {
+		const requested = String(rawId || '').trim();
+		if (state.preclaimedIds.has(requested)) {
+			state.preclaimedIds.delete(requested);
+			return requested;
+		}
+		if (validCanonicalId(requested) && !state.claimedIds.has(requested)) return uniqueCanonicalId(state, requested);
+		state.generated += 1;
+		return uniqueCanonicalId(state, prefix + '-' + state.generated);
+	}
+
+	function migrateLegacyContainerColumns(node, state, createContainer) {
+		if (!node || !['container', 'container_fluid'].includes(node.type) || !Array.isArray(node.columns)) return false;
+		const legacyColumns = node.columns;
+		const parentId = String(node.id || 'container');
+		const existingChildren = Array.isArray(node.children) ? node.children : [];
+		const migratedChildren = legacyColumns.map((rawColumn, index) => {
+			const column = rawColumn && typeof rawColumn === 'object' ? rawColumn : {};
+			const requestedId = String(column.id || '').trim();
+			const canReuse = validCanonicalId(requestedId)
+				&& (state.columnIdCounts.get(requestedId) || 0) === 1
+				&& !state.nodeIdCounts.has(requestedId)
+				&& !state.claimedIds.has(requestedId);
+			const child = createContainer();
+			child.id = uniqueLegacyContainerId(state, canReuse ? requestedId : parentId + '-child-container-' + (index + 1));
+			child.type = 'container';
+			child.settings = child.settings && typeof child.settings === 'object' ? child.settings : {};
+			child.settings.displayType = child.settings.displayType || 'flex';
+			child.settings.direction = 'column';
+			child.settings.contentWidth = 'full';
+			child.settings.containerWidth = String(column.flexBasis || child.settings.containerWidth || '100%');
+			child.settings.containerWidthTablet = String(column.flexBasisTablet || child.settings.containerWidthTablet || '');
+			child.settings.containerWidthMobile = String(column.flexBasisMobile || child.settings.containerWidthMobile || '');
+			child.children = (Array.isArray(column.children) ? column.children : []).filter((nested) => nested && typeof nested === 'object');
+			delete child.columns;
+			return child;
+		});
+		node.children = existingChildren.concat(migratedChildren);
+		delete node.columns;
+		state.migrated = true;
+		return true;
+	}
+	// V23_CHILD_CONTAINER_HELPERS_END
 	// V23_CONTEXTUAL_PROPERTY_HELPERS_START
 	function propertyTabsForNodeType(type) {
 		if (isCont(type) || isGrid(type)) {
@@ -3291,10 +3382,13 @@
 			const canRedo = computed(() => histIdx.value < hist.value.length - 1);
 
 			// ── Tree ─────────────────────────────────────────────────────────
+			const parsedLayout = parse(pd?.vars);
+			const legacyMigrationState = createLegacyContainerMigrationState(parsedLayout);
+
 			function norm(nodes) {
 				return (nodes || []).map(n => {
 					const c = jclone(n);
-					if (!c.id) c.id = uid('n');
+					c.id = claimCanonicalNodeId(legacyMigrationState, c.id, 'node');
 					const baseLabel = baseNodeLabel(c.type, '');
 					const legacyLabel = String(c.label || '').trim();
 					let suffix = String(c.labelSuffix || '').trim();
@@ -3369,19 +3463,6 @@
 						}
 						if (!Array.isArray(c.children)) c.children = [];
 						c.settings.attributes = normalizeAttributes(c.settings.attributes);
-						// Normalisasi columns[] Container (arsitektur baru)
-						const tcContCols = clamp(Number(c.settings.gridColumns || (Array.isArray(c.columns) ? c.columns.length : 1) || 1), 1, 12);
-						c.settings.gridColumns = tcContCols;
-						const tcContRows = (c.settings.displayType || 'flex') === 'grid' ? containerGridRowsCount(c.settings.gridRows) : 1;
-						const tcCont = Math.max(1, tcContCols * tcContRows);
-						if (!Array.isArray(c.columns) || !c.columns.length) {
-							if (c.children.length > 0) { c.columns = [{ id: uid('c'), children: norm(c.children) }]; c.children = []; }
-							else { c.columns = []; }
-						} else {
-							c.columns = c.columns.map(col => ({ id: col.id||uid('c'), flexBasis: col.flexBasis, children: norm(col.children||[]) }));
-						}
-						while (c.columns.length < tcCont) c.columns.push({ id: uid('c'), children: [] });
-						if (c.columns.length > tcCont) { const last=c.columns[tcCont-1]; c.columns.slice(tcCont).forEach(col=>(col.children||[]).forEach(ch=>last.children.push(ch))); c.columns=c.columns.slice(0,tcCont); }
 					}
 					if (c.type === 'image_box') {
 						c.settings = { ...imageBoxWidgetDefaults(), ...(c.settings || {}) };
@@ -3473,6 +3554,7 @@
 					if (c.settings && typeof c.settings === 'object') {
 						seedResponsiveSettings(c.settings);
 					}
+					if (isCont(c.type)) migrateLegacyContainerColumns(c, legacyMigrationState, () => makeNode('container'));
 					if (Array.isArray(c.children)) c.children = norm(c.children);
 					return c;
 				});
@@ -3483,7 +3565,12 @@
 				try { const p = JSON.parse(raw); return Array.isArray(p) ? p : []; } catch { return []; }
 			}
 
-			rootNodes.value = norm(parse(pd?.vars));
+			rootNodes.value = norm(parsedLayout);
+			const legacyMigrationPending = ref(legacyMigrationState.migrated);
+			if (legacyMigrationPending.value) {
+				saveState.value = 'dirty';
+				saveMsg.value = 'Legacy layout ready to save';
+			}
 			snap();
 			watch(rootNodes, snap, { deep: true });
 
