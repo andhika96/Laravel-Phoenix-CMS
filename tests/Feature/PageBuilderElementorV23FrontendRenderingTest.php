@@ -74,6 +74,82 @@ class PageBuilderElementorV23FrontendRenderingTest extends TestCase
         }
     }
 
+    public function test_v23_container_renders_canonical_and_legacy_layouts_without_content_loss(): void
+    {
+        $heading = fn (string $id, string $text): array => [
+            'id' => $id,
+            'type' => 'heading',
+            'settings' => ['text' => $text],
+        ];
+
+        $canonical = $this->renderNode([
+            'id' => 'canonical-parent',
+            'type' => 'container',
+            'settings' => ['displayType' => 'flex', 'direction' => 'row'],
+            'children' => [
+                ['id' => 'canonical-left', 'type' => 'container', 'settings' => ['displayType' => 'flex', 'containerWidth' => '33%'], 'children' => [$heading('a', 'First')]],
+                ['id' => 'canonical-right', 'type' => 'container', 'settings' => ['displayType' => 'flex', 'containerWidth' => '67%'], 'children' => [$heading('b', 'Second')]],
+            ],
+        ]);
+
+        $legacy = $this->renderNode([
+            'id' => 'legacy-parent',
+            'type' => 'container',
+            'settings' => ['displayType' => 'flex', 'direction' => 'row'],
+            'columns' => [
+                ['id' => 'legacy-left', 'flexBasis' => '33%', 'children' => [$heading('c', 'First')]],
+                ['id' => 'legacy-right', 'flexBasis' => '67%', 'children' => [$heading('d', 'Second')]],
+            ],
+        ]);
+
+        foreach ([$canonical, $legacy] as $html) {
+            $this->assertStringContainsString('First', $html);
+            $this->assertStringContainsString('Second', $html);
+            $this->assertLessThan(strpos($html, 'Second'), strpos($html, 'First'));
+            $this->assertStringContainsString('33%', $html);
+            $this->assertStringContainsString('67%', $html);
+        }
+        $this->assertStringContainsString('id="pb-node-canonical-left"', $canonical);
+        $this->assertStringContainsString('id="pb-node-canonical-right"', $canonical);
+    }
+
+    public function test_v23_legacy_fallback_never_merges_extra_columns_into_the_last_cell(): void
+    {
+        $legacy = $this->renderNode([
+            'id' => 'legacy-grid',
+            'type' => 'container',
+            'settings' => ['displayType' => 'grid', 'gridColumns' => 1, 'gridRows' => '1'],
+            'columns' => [
+                ['id' => 'one', 'children' => [['id' => 'a', 'type' => 'heading', 'settings' => ['text' => 'One']]]],
+                ['id' => 'two', 'children' => [['id' => 'b', 'type' => 'heading', 'settings' => ['text' => 'Two']]]],
+                ['id' => 'three', 'children' => [['id' => 'c', 'type' => 'heading', 'settings' => ['text' => 'Three']]]],
+            ],
+        ]);
+
+        $this->assertStringContainsString('One', $legacy);
+        $this->assertStringContainsString('Two', $legacy);
+        $this->assertStringContainsString('Three', $legacy);
+        $this->assertSame(3, substr_count($legacy, 'class="el-grid-col"'));
+    }
+
+    public function test_v23_legacy_fallback_recovers_loose_children_before_columns(): void
+    {
+        $legacy = $this->renderNode([
+            'id' => 'legacy-hybrid',
+            'type' => 'container',
+            'settings' => ['displayType' => 'flex', 'direction' => 'row'],
+            'children' => [['id' => 'loose', 'type' => 'heading', 'settings' => ['text' => 'Loose']]],
+            'columns' => [
+                ['id' => 'column', 'flexBasis' => '100%', 'children' => [['id' => 'column-child', 'type' => 'heading', 'settings' => ['text' => 'Column']]]],
+            ],
+        ]);
+
+        $this->assertStringContainsString('Loose', $legacy);
+        $this->assertStringContainsString('Column', $legacy);
+        $this->assertLessThan(strpos($legacy, 'Column'), strpos($legacy, 'Loose'));
+        $this->assertSame(2, substr_count($legacy, 'class="el-grid-col"'));
+    }
+
     private function renderNode(array $node, ?Page_Builder $page = null): string
     {
         return view('pagebuilder_elementor_v23.partials.render_node', [

@@ -35,10 +35,11 @@
 		}
 		$hasVideoBackground = $backgroundType === 'video' && ($videoEmbedUrl !== '' || $videoNativeUrl !== '');
 		$hasSlideshowBackground = $backgroundType === 'slideshow' && count($slideshowImages) > 0;
+		$containerWidth = $css_value($s['containerWidth'] ?? null, '100%');
 		$styles = [
 			'box-sizing:border-box',
 			'display:block',
-			'width:' . ($fullMode ? $css_value($s['containerWidth'] ?? '100%', '100%') : '100%'),
+			'width:' . ($fullMode || array_key_exists('containerWidth', $s) ? $containerWidth : '100%'),
 		];
 
 		$styles = array_merge($styles, $background_styles($s));
@@ -124,23 +125,14 @@
 		$nodeDomId = 'pb-node-' . ($node['id'] ?? '');
 		$rootTag = $resolve_html_tag($s);
 
-		$containerColumns = is_array($columns) ? $columns : [];
-		$targetCols = $display === 'grid'
-			? max(1, min(12, (int) ($s['gridColumns'] ?? 1)))
-			: max(1, min(12, count($containerColumns) > 0 ? count($containerColumns) : (int) ($s['gridColumns'] ?? 1)));
-		$targetRows = $display === 'grid' ? $container_grid_rows_count($s['gridRows'] ?? null) : 1;
-		$targetCells = $display === 'grid'
-			? max(1, min(144, $targetCols * $targetRows))
-			: $targetCols;
-		if (count($containerColumns) === 0) {
-			if (count($children) > 0) {
-				$containerColumns = [['id' => 'legacy-col', 'children' => $children]];
-			} else {
-				$containerColumns = [];
-				for ($i = 0; $i < $targetCells; $i++) {
-					$containerColumns[] = ['id' => 'col-' . ($i + 1), 'children' => []];
-				}
-			}
+		$hasLegacyColumns = array_key_exists('columns', $node);
+		$hasCanonicalChildren = array_key_exists('children', $node) && !$hasLegacyColumns;
+		$canonicalChildren = $hasCanonicalChildren && is_array($children) ? $children : [];
+		$legacyLooseChildren = $hasLegacyColumns && is_array($children) ? $children : [];
+		$legacyColumns = $hasLegacyColumns && is_array($columns) ? $columns : [];
+		$containerColumns = $legacyColumns;
+		if ($legacyLooseChildren) {
+			array_unshift($containerColumns, ['id' => 'legacy-loose', 'children' => $legacyLooseChildren]);
 		}
 
 		$normalizedColumns = [];
@@ -152,19 +144,6 @@
 				'flexBasis' => $c['flexBasis'] ?? null,
 				'children' => is_array($colChildren) ? $colChildren : [],
 			];
-		}
-		while (count($normalizedColumns) < $targetCells) {
-			$normalizedColumns[] = ['id' => 'col-' . (count($normalizedColumns) + 1), 'flexBasis' => null, 'children' => []];
-		}
-		if (count($normalizedColumns) > $targetCells) {
-			$lastIdx = $targetCells - 1;
-			for ($i = $targetCells; $i < count($normalizedColumns); $i++) {
-				$extraChildren = $normalizedColumns[$i]['children'] ?? [];
-				if (!empty($extraChildren)) {
-					$normalizedColumns[$lastIdx]['children'] = array_merge($normalizedColumns[$lastIdx]['children'] ?? [], $extraChildren);
-				}
-			}
-			$normalizedColumns = array_slice($normalizedColumns, 0, $targetCells);
 		}
 
 		if ($display === 'grid') {
@@ -387,6 +366,11 @@
 			<div class="pb-shape-divider-layer pb-shape-divider-bottom" aria-hidden="true">{!! $bottomShapeSvg !!}</div>
 		@endif
 		<div class="el-cont-columns" style="{{ $contColumnsStyle }}">
+			@if($hasCanonicalChildren)
+				@foreach($canonicalChildren as $child)
+					@include('pagebuilder_elementor_v23.partials.render_node', ['node' => $child])
+				@endforeach
+			@else
 			@foreach($normalizedColumns as $col)
 				@php
 					$colStyles = [];
@@ -618,6 +602,7 @@
 					@endforeach
 				</div>
 			@endforeach
+			@endif
 		</div>
 	</{{ $rootTag }}>
 	@if($styleBlocks)

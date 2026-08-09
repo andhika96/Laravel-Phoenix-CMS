@@ -27,6 +27,27 @@
 	box-sizing: border-box;
 }
 
+.el-cont-columns > .el-layout-container,
+.el-cont-columns > .el-layout-container-fluid {
+	min-width: 0;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.el-cont-columns > :not(.el-layout-container):not(.el-layout-container-fluid):not(.el-grid-col) {
+	width: 100%;
+	min-width: 0;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.el-cont-columns[style*="display: grid"] > .el-layout-container,
+.el-cont-columns[style*="display:grid"] > .el-layout-container,
+.el-cont-columns[style*="display: grid"] > .el-layout-container-fluid,
+.el-cont-columns[style*="display:grid"] > .el-layout-container-fluid {
+	width: 100%;
+}
+
 .el-cont-columns > .el-grid-col {
 	min-width: 0;
 	min-height: 0;
