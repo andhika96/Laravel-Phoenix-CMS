@@ -1987,6 +1987,8 @@
 				} else if (sizeMode === 'custom') {
 					const customBasis = this.nodeResponsiveValue('containerWidth', s.containerWidth)
 						|| this.nodeResponsiveValue('maxWidth', s.maxWidth);
+					style.flex = '0 0 ' + cssSize(customBasis, 'auto');
+				}
 				if (this.parentNode && isCont(this.parentNode.type)) {
 					const parentSettings = this.parentNode.settings || {};
 					const parentDirection = parentSettings.direction || 'row';
