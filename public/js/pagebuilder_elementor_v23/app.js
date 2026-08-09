@@ -405,6 +405,24 @@
 	}
 
 
+	function canonicalLayoutForSave(nodes) {
+		if (!Array.isArray(nodes)) return [];
+		const visit = (list) => (Array.isArray(list) ? list : []).map((node) => {
+			if (!node || typeof node !== 'object') return node;
+			if (node.type === 'container' || node.type === 'container_fluid') delete node.columns;
+			if (Array.isArray(node.children)) node.children = visit(node.children);
+			['tabItems', 'accordionItems'].forEach((key) => {
+				if (!Array.isArray(node[key])) return;
+				node[key] = node[key].map((item) => {
+					if (item && typeof item === 'object' && Array.isArray(item.children)) item.children = visit(item.children);
+					return item;
+				});
+			});
+			return node;
+		});
+		return visit(JSON.parse(JSON.stringify(nodes)));
+	}
+
 	function normalizeLegacyContainerSnapshot(nodes, createContainer) {
 		const migrationState = createLegacyContainerMigrationState(nodes);
 		const normalize = (list) => (Array.isArray(list) ? list : [])
@@ -5493,10 +5511,12 @@
 					if (normalizedCustomCss.changed) {
 						customCss.value = normalizedCustomCss.value;
 					}
+					const layoutPayload = canonicalLayoutForSave(rootNodes.value);
 					const res = await axios.post(saveUrl.value,
-						{ pageName:pageName.value, pageStatus:pageStatus.value, customCss:normalizedCustomCss.value, layout:rootNodes.value },
+						{ pageName:pageName.value, pageStatus:pageStatus.value, customCss:normalizedCustomCss.value, layout:layoutPayload },
 						{ headers:{ 'X-CSRF-TOKEN':PBC.csrfToken, 'X-Requested-With':'XMLHttpRequest', Accept:'application/json' } }
 					);
+					legacyMigrationPending.value = false;
 					const successMessage = res.data?.message || 'Saved';
 					saveState.value = 'success';
 					closePageSettings();
@@ -5788,7 +5808,7 @@
 				</div>
 				<span class="save-state" :class="'is-' + saveState">
 					<i class="bi" :class="saveState==='saving' ? 'bi-cloud-arrow-up' : (saveState==='error' ? 'bi-exclamation-circle' : 'bi-cloud-check')"></i>
-					{{ saveState==='saving' ? 'Saving' : (saveState==='error' ? 'Save failed' : 'Saved') }}
+					{{ saveState==='dirty' ? 'Migration pending' : (saveState==='saving' ? 'Saving' : (saveState==='error' ? 'Save failed' : 'Saved')) }}
 				</span>
 			</div>
 		</div>

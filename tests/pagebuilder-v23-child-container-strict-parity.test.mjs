@@ -10,7 +10,7 @@ function loadChildContainerHelpers() {
     const block = app.match(/\/\/ V23_CHILD_CONTAINER_HELPERS_START([\s\S]*?)\/\/ V23_CHILD_CONTAINER_HELPERS_END/)?.[1];
     assert.ok(block, 'child Container helpers should exist');
     const context = { structuredClone: globalThis.structuredClone };
-    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer, canMoveNodeIntoContainer, responsiveContainerWidth, applyAdjacentContainerWidths };`, context);
+    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer, canMoveNodeIntoContainer, responsiveContainerWidth, applyAdjacentContainerWidths, canonicalLayoutForSave };`, context);
     return context.api;
 }
 
@@ -229,4 +229,55 @@ test('Container edge resizer uses the dedicated child Container selector', () =>
 test('Grid and Flexbox retain canonical child Containers without pseudo-column synchronization', () => {
 	assert.doesNotMatch(app, /responsiveColumnsCache|function syncCols\(|function syncGridColumnsForDevice\(|syncAllGridCellsForDevice|scheduleResponsiveGridSync/);
 	assert.doesNotMatch(app, /function addContainerFlexColumn\(|function startColumnResize\(|function applyColumnPairWidths\(|function legacyColumnDropAdapter\(|function rerouteTabsDropToNestedColumn\(|function rerouteAccordionDropToNestedColumn\(/);
+});
+
+test('save serialization canonicalizes only Container columns through nested child collections', () => {
+    const api = loadChildContainerHelpers();
+    const source = [{
+        id: 'parent', type: 'container', order: 4,
+        settings: { columns: 6, containerWidth: '70%', containerWidthTablet: '60%', containerWidthMobile: '100%' },
+        columns: [{ id: 'legacy-parent', children: [] }],
+        children: [{
+            id: 'gallery', type: 'basic_gallery', columns: [{ id: 'widget-column' }], settings: { columns: 4 },
+            children: [],
+        }],
+        tabItems: [{ id: 'tab-a', children: [{ id: 'tab-container', type: 'container_fluid', columns: [{ id: 'legacy-tab' }], settings: {}, children: [] }] }],
+        accordionItems: [{ id: 'accordion-a', children: [{ id: 'accordion-container', type: 'container', columns: [{ id: 'legacy-accordion' }], settings: {}, children: [] }] }],
+    }];
+
+    const serialized = api.canonicalLayoutForSave(source);
+
+    assert.equal(Object.hasOwn(serialized[0], 'columns'), false);
+    assert.equal(serialized[0].settings.columns, 6);
+    assert.equal(serialized[0].order, 4);
+    assert.equal(serialized[0].settings.containerWidthTablet, '60%');
+    assert.equal(Object.hasOwn(serialized[0].children[0], 'columns'), true);
+    assert.equal(serialized[0].children[0].settings.columns, 4);
+    assert.equal(Object.hasOwn(serialized[0].tabItems[0].children[0], 'columns'), false);
+    assert.equal(Object.hasOwn(serialized[0].accordionItems[0].children[0], 'columns'), false);
+    assert.equal(Object.hasOwn(source[0], 'columns'), true);
+    assert.equal(Object.hasOwn(source[0].tabItems[0].children[0], 'columns'), true);
+    assert.deepEqual(Array.from(api.canonicalLayoutForSave('not-an-array')), []);
+});
+
+test('save serialization accepts a Proxy root without mutating it', () => {
+    const api = loadChildContainerHelpers();
+    const source = [{ id: 'parent', type: 'container', columns: [{ id: 'legacy', children: [] }], children: [] }];
+    const proxied = new Proxy(source, {});
+
+    assert.doesNotThrow(() => api.canonicalLayoutForSave(proxied));
+    assert.equal(Object.hasOwn(source[0], 'columns'), true);
+});
+
+test('savePage posts a canonical clone and clears migration state only after success', () => {
+    const saveBody = app.match(/async function savePage\(\) \{([\s\S]*?)\n\s*const widgetEditorServices =/)?.[1] || '';
+    const catchBody = saveBody.match(/catch\(e\) \{([\s\S]*)/)?.[1] || '';
+
+    assert.match(saveBody, /const layoutPayload = canonicalLayoutForSave\(rootNodes\.value\);/);
+    assert.match(saveBody, /layout:\s*layoutPayload/);
+    assert.match(saveBody, /const res = await axios\.post/);
+    assert.ok(saveBody.indexOf('legacyMigrationPending.value = false;') > saveBody.indexOf('const res = await axios.post'));
+    assert.ok(saveBody.indexOf('legacyMigrationPending.value = false;') < saveBody.indexOf('catch(e)'));
+    assert.doesNotMatch(catchBody, /legacyMigrationPending\.value = false/);
+    assert.match(app, /saveState==='dirty' \? 'Migration pending' : \(saveState==='saving' \? 'Saving' : \(saveState==='error' \? 'Save failed' : 'Saved'\)\)/);
 });
