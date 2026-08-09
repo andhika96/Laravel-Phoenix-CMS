@@ -14,6 +14,14 @@ function loadChildContainerHelpers() {
     return context.api;
 }
 
+function loadLegacyContainerSnapshotNormalizer() {
+    const block = app.match(/\/\/ V23_CHILD_CONTAINER_HELPERS_START([\s\S]*?)\/\/ V23_CHILD_CONTAINER_HELPERS_END/)?.[1];
+    assert.ok(block, 'child Container helpers should exist');
+    const context = { structuredClone: globalThis.structuredClone };
+    vm.runInNewContext(`${block}\nthis.normalizeLegacyContainerSnapshot = normalizeLegacyContainerSnapshot;`, context);
+    return context.normalizeLegacyContainerSnapshot;
+}
+
 function containerFactory() {
     return {
         id: '',
@@ -99,4 +107,19 @@ test('generated child Container ids never steal an existing node id', () => {
 
     assert.equal(node.children[0].id, 'parent-child-container-1');
     assert.equal(node.children[1].id, 'parent-child-container-1-2');
+});
+
+test('canonical node IDs stay stable when a legacy snapshot is normalized twice', () => {
+    const normalizeLegacyContainerSnapshot = loadLegacyContainerSnapshotNormalizer();
+    const source = [{
+        id: 'parent', type: 'container', settings: {}, children: [],
+        columns: [{ id: 'child', children: [{ id: 'heading', type: 'heading', settings: {} }] }],
+    }];
+
+    const first = normalizeLegacyContainerSnapshot(source, containerFactory).nodes;
+    const second = normalizeLegacyContainerSnapshot(first, containerFactory).nodes;
+
+    assert.deepEqual(first, second);
+    assert.deepEqual(second[0].children.map((child) => child.id), ['child']);
+    assert.equal(second[0].children[0].children[0].id, 'heading');
 });

@@ -304,6 +304,33 @@
 		state.migrated = true;
 		return true;
 	}
+
+	function normalizeLegacyContainerSnapshot(nodes, createContainer) {
+		const migrationState = createLegacyContainerMigrationState(nodes);
+		const normalize = (list) => (Array.isArray(list) ? list : [])
+			.filter((node) => node && typeof node === 'object')
+			.map((rawNode) => {
+				const node = structuredClone(rawNode);
+				node.id = claimCanonicalNodeId(migrationState, node.id, 'node');
+				if (['container', 'container_fluid'].includes(node.type)) migrateLegacyContainerColumns(node, migrationState, createContainer);
+				if (Array.isArray(node.children)) node.children = normalize(node.children);
+				if (Array.isArray(node.columns)) {
+					node.columns = node.columns.map((column) => ({
+					...(column && typeof column === 'object' ? column : {}),
+					children: normalize(column && column.children),
+				}));
+				}
+				['tabItems', 'accordionItems'].forEach((key) => {
+					if (!Array.isArray(node[key])) return;
+					node[key] = node[key].map((item) => ({
+						...(item && typeof item === 'object' ? item : {}),
+						children: normalize(item && item.children),
+					}));
+				});
+				return node;
+			});
+		return { nodes: normalize(nodes), migrationState };
+	}
 	// V23_CHILD_CONTAINER_HELPERS_END
 	// V23_CONTEXTUAL_PROPERTY_HELPERS_START
 	function propertyTabsForNodeType(type) {
@@ -3383,9 +3410,9 @@
 
 			// ── Tree ─────────────────────────────────────────────────────────
 			const parsedLayout = parse(pd?.vars);
-			const legacyMigrationState = createLegacyContainerMigrationState(parsedLayout);
+			const initialLegacySnapshot = normalizeLegacyContainerSnapshot(parsedLayout, () => makeNode('container'));
 
-			function norm(nodes) {
+			function norm(nodes, legacyMigrationState = createLegacyContainerMigrationState(nodes)) {
 				return (nodes || []).map(n => {
 					const c = jclone(n);
 					c.id = claimCanonicalNodeId(legacyMigrationState, c.id, 'node');
@@ -3428,7 +3455,7 @@
 						const targetCols = clamp(Number(c.settings.columns || (Array.isArray(c.columns) ? c.columns.length : 1) || 1), 1, 12);
 						c.settings.columns = targetCols;
 						if (!Array.isArray(c.columns) || !c.columns.length) c.columns = [{id:uid('c'),children:[]}];
-						c.columns = c.columns.map(col => ({ id: col.id||uid('c'), children: norm(col.children||[]) }));
+						c.columns = c.columns.map(col => ({ id: col.id||uid('c'), children: norm(col.children||[], legacyMigrationState) }));
 						while (c.columns.length < targetCols) c.columns.push({ id: uid('c'), children: [] });
 						if (c.columns.length > targetCols) {
 							const last = c.columns[targetCols - 1];
@@ -3518,7 +3545,7 @@
 								title: normalizeTabsItemClass(item && item.dynamicBindings && item.dynamicBindings.title),
 								cssId: normalizeTabsItemClass(item && item.dynamicBindings && item.dynamicBindings.cssId),
 							},
-							children: norm((item && item.children) || []),
+							children: norm((item && item.children) || [], legacyMigrationState),
 						}));
 						if (!c.tabItems.length) {
 							c.tabItems = [tabsItemDefaults(0)];
@@ -3546,7 +3573,7 @@
 								cssId: normalizeTabsCssId(rawItem && rawItem.cssId),
 								children: (rawItem && rawItem.children) || [],
 							};
-							item.children = norm(item.children || []);
+							item.children = norm(item.children || [], legacyMigrationState);
 							return item;
 						});
 						if (!c.accordionItems.length) c.accordionItems = [accordionItemDefaults(0)];
@@ -3555,7 +3582,7 @@
 						seedResponsiveSettings(c.settings);
 					}
 					if (isCont(c.type)) migrateLegacyContainerColumns(c, legacyMigrationState, () => makeNode('container'));
-					if (Array.isArray(c.children)) c.children = norm(c.children);
+					if (Array.isArray(c.children)) c.children = norm(c.children, legacyMigrationState);
 					return c;
 				});
 			}
@@ -3565,8 +3592,8 @@
 				try { const p = JSON.parse(raw); return Array.isArray(p) ? p : []; } catch { return []; }
 			}
 
-			rootNodes.value = norm(parsedLayout);
-			const legacyMigrationPending = ref(legacyMigrationState.migrated);
+			rootNodes.value = norm(initialLegacySnapshot.nodes);
+			const legacyMigrationPending = ref(initialLegacySnapshot.migrationState.migrated);
 			if (legacyMigrationPending.value) {
 				saveState.value = 'dirty';
 				saveMsg.value = 'Legacy layout ready to save';
