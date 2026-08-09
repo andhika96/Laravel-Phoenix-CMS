@@ -102,13 +102,14 @@ test('clicking a canvas node label reveals the collapsed properties panel', () =
     assert.match(app, /function selectNode\(n,\s*options\s*=\s*\{\}\)\s*\{[\s\S]*?if\s*\(options\.revealPanel\)\s*leftCollapsed\.value\s*=\s*false;/);
 });
 
-test('flex column widths live in Container Layout instead of selectable canvas column chrome', () => {
-    assert.match(containerSettings, /<summary>Column widths<\/summary>/);
-    assert.match(containerSettings, /\['row','row-reverse'\]\.includes\(editor\.containerResponsiveValue\(node\.settings,'direction','row'\)\)/);
-    assert.match(containerSettings, /v-for="\(column, index\) in node\.columns"/);
-    assert.match(containerSettings, /editor\.columnSettingsWidthValue\(node, index\)/);
-    assert.match(containerSettings, /editor\.setColumnSettingsWidthValue\(node, index, \$event\.target\.value\)/);
-    assert.match(app, /columnSettingsWidthValue,/);
-    assert.match(app, /setColumnSettingsWidthValue,/);
-    assert.match(css, /\.webpage-frame \.pb-grid-col-label,[\s\S]*?\.webpage-frame \.pb-col-resizer\s*\{\s*display:\s*none\s*!important;/);
+test('Container Layout exposes selectable Child Containers and Add Container', () => {
+    assert.match(containerSettings, /<summary>Child Containers<\/summary>/);
+    assert.match(containerSettings, /\(node\.children \|\| \[\]\)\.filter\(\(child\) => child && \['container','container_fluid'\]\.includes\(child\.type\)\)\.length/);
+    assert.match(containerSettings, /aria-label="Add Container" @click="editor\.addContainerChild\(node\)"/);
+    assert.match(containerSettings, /Each layout item is a selectable Container with its own Layout, Style, and Advanced settings\./);
+    assert.doesNotMatch(containerSettings, /<summary>Column widths<\/summary>/);
+    assert.doesNotMatch(containerSettings, /node\.columns/);
+    assert.doesNotMatch(containerSettings, /addContainerFlexColumn/);
+    assert.match(app, /function addContainerChild\(node\)[\s\S]*?appendChildContainer\(node, \(\) => makeNode\('container'\)\)/);
+    assert.match(app, /addContainerChild,/);
 });

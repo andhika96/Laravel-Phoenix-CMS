@@ -305,6 +305,55 @@
 		return true;
 	}
 
+	function createChildContainerNode(createContainer, width = '100%', children = []) {
+		const child = createContainer();
+		child.type = 'container';
+		child.settings = child.settings && typeof child.settings === 'object' ? child.settings : {};
+		child.settings.displayType = child.settings.displayType || 'flex';
+		child.settings.direction = 'column';
+		child.settings.contentWidth = 'full';
+		child.settings.containerWidth = String(width || '100%');
+		child.settings.containerWidthTablet = String(child.settings.containerWidthTablet || '');
+		child.settings.containerWidthMobile = String(child.settings.containerWidthMobile || '');
+		child.children = Array.isArray(children) ? children : [];
+		delete child.columns;
+		return child;
+	}
+
+	function presetChildContainers(createContainer, preset) {
+		const count = Math.max(1, Number(preset && preset.cols) || 1);
+		const widths = Array.isArray(preset && preset.flexWidths) ? preset.flexWidths : [];
+		const equalWidth = (100 / count).toFixed(4).replace(/0+$/, '').replace(/\.$/, '') + '%';
+		return Array.from({ length: count }, (_, index) => createChildContainerNode(createContainer, widths[index] || equalWidth));
+	}
+
+	function parseContainerPercent(value) {
+		const match = String(value || '').trim().match(/^(\d+(?:\.\d+)?)%$/);
+		return match ? Math.max(0, Number(match[1])) : null;
+	}
+
+	function formatContainerPercent(value) {
+		return (Math.round((Number(value) + Number.EPSILON) * 10) / 10).toFixed(1).replace(/\.0$/, '') + '%';
+	}
+
+	function appendChildContainer(parent, createContainer) {
+		if (!parent || typeof parent !== 'object') return null;
+		if (!Array.isArray(parent.children)) parent.children = [];
+		const existing = parent.children.filter((child) => child && (child.type === 'container' || child.type === 'container_fluid'));
+		const previous = existing.map((child) => parseContainerPercent(child.settings && child.settings.containerWidth));
+		const fallback = existing.length ? 100 / existing.length : 100;
+		const resolved = previous.map((value) => value == null ? fallback : value);
+		const previousTotal = resolved.reduce((sum, value) => sum + value, 0) || 100;
+		const newShare = 100 / (existing.length + 1);
+		const scale = (100 - newShare) / previousTotal;
+		existing.forEach((child, index) => {
+			child.settings.containerWidth = formatContainerPercent(resolved[index] * scale);
+		});
+		const child = createChildContainerNode(createContainer, formatContainerPercent(newShare));
+		parent.children.push(child);
+		return child;
+	}
+
 	function normalizeLegacyContainerSnapshot(nodes, createContainer) {
 		const migrationState = createLegacyContainerMigrationState(nodes);
 		const normalize = (list) => (Array.isArray(list) ? list : [])
@@ -1655,6 +1704,51 @@
 		return NODE_LABEL_ICONS[type] || 'fas fa-cube';
 	}
 
+	function convertGridNodeToContainer(node) {
+		if (!node || !isGrid(node.type)) return node;
+		const source = node.settings || {};
+		const definition = widgetRegistry?.get('container');
+		const target = typeof definition?.defaults === 'function' ? definition.defaults() : {};
+		Object.keys(target).forEach((key) => {
+			if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = jclone(source[key]);
+		});
+		const sourceColumns = Array.isArray(node.columns) ? node.columns : [];
+		const columnCount = clamp(Number(source.gridColumns || source.columns || sourceColumns.length || 3), 1, 12);
+
+		target.displayType = 'grid';
+		target.gridColumns = columnCount;
+		target.gridColumnsTablet = source.gridColumnsTablet || source.columnsTablet || '';
+		target.gridColumnsMobile = source.gridColumnsMobile || source.columnsMobile || '';
+		target.gridRows = /^\d+$/.test(String(source.gridRows || '').trim()) ? String(source.gridRows) : '1';
+		target.gridRowsTablet = source.gridRowsTablet || '';
+		target.gridRowsMobile = source.gridRowsMobile || '';
+		target.gridColumnGap = source.gridColumnGap || source.columnGap || source.gap || target.gridColumnGap || '10px';
+		target.gridRowGap = source.gridRowGap || source.rowGap || source.gap || target.gridRowGap || '10px';
+		target.gridColumnGapTablet = source.gridColumnGapTablet || source.columnGapTablet || '';
+		target.gridColumnGapMobile = source.gridColumnGapMobile || source.columnGapMobile || '';
+		target.gridRowGapTablet = source.gridRowGapTablet || source.rowGapTablet || '';
+		target.gridRowGapMobile = source.gridRowGapMobile || source.rowGapMobile || '';
+		target.containerGapLinked = source.containerGapLinked ?? source.gapLinked ?? target.containerGapLinked;
+		target.gridJustifyItems = source.gridJustifyItems || source.justifyItems || target.gridJustifyItems || 'stretch';
+		target.gridAlignItems = source.gridAlignItems || source.alignItems || target.gridAlignItems || 'start';
+		target.autoFlow = source.autoFlow || target.autoFlow || 'row';
+		target.gridTemplateColumns = source.gridTemplateColumns || '';
+		target.gridOutline = source.gridOutline ?? true;
+
+		node.type = 'container';
+		node.label = 'Container';
+		node.settings = target;
+		node.children = (Array.isArray(node.children) ? node.children : []).concat(
+			sourceColumns.map((column) => createChildContainerNode(
+				() => makeNode('container'),
+				column && column.flexBasis || '100%',
+				column && column.children
+			))
+		);
+		delete node.columns;
+		return node;
+	}
+
 	function makeNode(type) {
 		const id = uid('n');
 		const registeredDefinition = widgetRegistry?.get(type);
@@ -1679,14 +1773,9 @@
 	function cloneItem(origin) {
 		const item = jclone(origin);
 		item.id = uid('n');
-		if (isCont(item.type)) {
+		if (isCont(item.type) || isGrid(item.type)) {
 			item.children = [];
-			const cols = clamp(Number(item.settings?.gridColumns || 1), 1, 12);
-			item.columns = Array.from({length: cols}, () => ({id: uid('c'), children: []}));
-		}
-		if (isGrid(item.type)) {
-			const cols = Number(item.settings?.columns || 1);
-			item.columns = Array.from({length: cols}, () => ({id: uid('c'), children: []}));
+			delete item.columns;
 		}
 		return item;
 	}
@@ -3661,6 +3750,15 @@
 			function clearPendingInsertTarget() {
 				pendingInsertTarget.value = null;
 			}
+			function addContainerChild(node) {
+				if (!node || !isCont(node.type)) return null;
+				const child = appendChildContainer(node, () => makeNode('container'));
+				if (!child) return null;
+				seedResponsiveSettings(child.settings, true);
+				selectedId.value = child.id;
+				clearPendingInsertTarget();
+				return child;
+			}
 			function setPendingInsertTarget(target = null) {
 				pendingInsertTarget.value = target && typeof target === 'object' ? jclone(target) : null;
 			}
@@ -3675,6 +3773,15 @@
 				if (isCont(item.type)) {
 					showUnsupportedControlNotice('Container', 'Container belum bisa dimasukkan langsung ke target + Add ini. Gunakan Grid atau widget biasa.');
 					return false;
+				}
+				if (target.type === 'container') {
+					const ownerNode = findById(rootNodes.value, target.nodeId);
+					if (!ownerNode || !isCont(ownerNode.type)) return false;
+					if (!Array.isArray(ownerNode.children)) ownerNode.children = [];
+					ownerNode.children.push(item);
+					selectedId.value = item.id;
+					clearPendingInsertTarget();
+					return true;
 				}
 				if (target.type === 'column') {
 					const ownerNode = findById(rootNodes.value, target.nodeId);
@@ -5627,8 +5734,8 @@
 			}
 			function regenIds(node) {
 				node.id = uid('n');
+				if (isCont(node.type) || isGrid(node.type)) delete node.columns;
 				if (node.children) node.children.forEach(regenIds);
-				if (node.columns) node.columns.forEach(col => { col.id=uid('c'); (col.children||[]).forEach(regenIds); });
 				if (node.tabItems) node.tabItems.forEach((item, index) => {
 					item.id = uid('tab');
 					if (!item.title) item.title = 'Tab #' + (index + 1);
@@ -5918,24 +6025,13 @@
 				}
 				console.log('[PB] onAddContainer, item:', item?.type, 'idx:', idx);
 				if (!item) return;
-
-				// Widget masuk container -> bungkus dalam grid 1 kolom
-				if (isWgt(item.type)) {
-					nextTick(() => {
-						const live = findById([containerNode], item.id) !== null
-							? containerNode.children[idx]
-							: containerNode.children[idx];
-						if (!live) return;
-						const saved = jclone(live); saved.id = uid('n');
-						const g = makeNode('grid'); g.settings.columns = 1;
-						g.columns = [{ id: uid('c'), children: [saved] }];
-						containerNode.children.splice(idx, 1, g);
-					});
+				if (isGrid(item.type)) {
+					convertGridNodeToContainer(item);
+					seedResponsiveSettings(item.settings, true);
 					return;
 				}
-				// Grid -> OK, biarkan
-				// Container -> tidak harusnya masuk, tapi kalau masuk hapus
-				if (isCont(item.type)) { containerNode.children.splice(idx, 1); }
+
+				// Container dan widget adalah child node canonical yang valid.
 			}
 
 			function columnHasChildrenForSequential(col, ignoreNodeId = '') {
@@ -6114,14 +6210,11 @@
 						const saved = jclone(live); saved.id = live.id;
 						const c = makeNode('container');
 						if (!c) return;
-						c.settings.displayType = 'grid';
-						c.settings.gridColumns = 1;
-						c.settings.gridRows = '1';
-						c.settings.gridColumnGap = '20px';
-						c.settings.gridRowGap = '20px';
-						c.settings.gridAlignItems = 'start';
+						c.settings.displayType = 'flex';
+						c.settings.direction = 'column';
 						seedResponsiveSettings(c.settings, true);
-						c.columns = [{ id: uid('c'), children: [saved] }];
+						c.children = [saved];
+						delete c.columns;
 						rootNodes.value.splice(realIdx, 1, c);
 					});
 					return;
@@ -6196,18 +6289,14 @@
 							c.settings.displayType = 'grid'; c.settings.gridColumns = cols;
 							c.settings.gridColumnGap = '20px'; c.settings.gridRowGap = '20px';
 							c.settings.gridAlignItems = 'start';
-							c.columns = Array.from({length:cols}, () => ({id:uid('c'),children:[]}));
 						} else {
 							c.settings.displayType = 'flex'; c.settings.direction = p.direction||'row';
 							c.settings.alignItems = 'flex-start'; c.settings.flexColumnGap = '20px';
 							c.settings.gridColumns = cols;
 							c.settings.gridTemplateColumns = '';
-							if (p.flexWidths && p.flexWidths.length) {
-								c.columns = p.flexWidths.map(w => ({id:uid('c'),flexBasis:w,children:[]}));
-							} else {
-								c.columns = Array.from({length:cols}, () => ({id:uid('c'),children:[]}));
-							}
 						}
+						c.children = presetChildContainers(() => makeNode('container'), p);
+						delete c.columns;
 						seedResponsiveSettings(c.settings, true);
 						return c;
 					}
@@ -6228,8 +6317,9 @@
 						node.settings.displayType = 'grid'; node.settings.gridColumns = cols;
 						node.settings.gridColumnGap = '20px'; node.settings.gridRowGap = '20px';
 						node.settings.gridAlignItems = 'start';
+						node.children = presetChildContainers(() => makeNode('container'), { cols });
+						delete node.columns;
 						seedResponsiveSettings(node.settings, true);
-						node.columns = Array.from({length:cols}, () => ({id:uid('c'),children:[]}));
 						modal.value.discardOnClose = false;
 						selectedId.value = node.id; closeModal(); return;
 					}
@@ -6238,8 +6328,9 @@
 					c.settings.displayType = 'grid'; c.settings.gridColumns = cols;
 					c.settings.gridColumnGap = '20px'; c.settings.gridRowGap = '20px';
 					c.settings.gridAlignItems = 'start';
+					c.children = presetChildContainers(() => makeNode('container'), { cols });
+					delete c.columns;
 					seedResponsiveSettings(c.settings, true);
-					c.columns = Array.from({length:cols}, () => ({id:uid('c'),children:[]}));
 					list.push(c); selectedId.value = c.id; closeModal();
 				}
 
@@ -6444,8 +6535,7 @@
 				setContainerGridColumnsValue,
 				containerGridRowsValue,
 				setContainerGridRowsValue,
-				columnSettingsWidthValue,
-				setColumnSettingsWidthValue,
+				addContainerChild,
 				syncContainerGap,
 				bgStateKey,
 				setBgStateValue,

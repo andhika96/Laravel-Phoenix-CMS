@@ -10,7 +10,7 @@ function loadChildContainerHelpers() {
     const block = app.match(/\/\/ V23_CHILD_CONTAINER_HELPERS_START([\s\S]*?)\/\/ V23_CHILD_CONTAINER_HELPERS_END/)?.[1];
     assert.ok(block, 'child Container helpers should exist');
     const context = { structuredClone: globalThis.structuredClone };
-    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns };`, context);
+    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer };`, context);
     return context.api;
 }
 
@@ -36,6 +36,31 @@ function containerFactory() {
         children: [],
     };
 }
+
+test('a two-column preset creates child Containers and never columns', () => {
+    const api = loadChildContainerHelpers();
+    const children = api.presetChildContainers(containerFactory, { cols: 2, flexWidths: ['33%', '67%'] });
+
+    assert.equal(children.length, 2);
+    assert.deepEqual(Array.from(children, (child) => child.type), ['container', 'container']);
+    assert.deepEqual(Array.from(children, (child) => child.settings.direction), ['column', 'column']);
+    assert.deepEqual(Array.from(children, (child) => child.settings.containerWidth), ['33%', '67%']);
+    assert.ok(children.every((child) => Array.isArray(child.children) && !Object.hasOwn(child, 'columns')));
+});
+
+test('Add Container appends one selectable canonical child', () => {
+    const api = loadChildContainerHelpers();
+    const parent = { id: 'parent', type: 'container', settings: { displayType: 'flex' }, children: [] };
+    const first = api.appendChildContainer(parent, containerFactory);
+    const child = api.appendChildContainer(parent, containerFactory);
+
+    assert.equal(parent.children.length, 2);
+    assert.equal(parent.children[0], first);
+    assert.equal(parent.children[1], child);
+    assert.deepEqual(parent.children.map((entry) => entry.settings.containerWidth), ['50%', '50%']);
+    assert.equal(child.type, 'container');
+    assert.equal(Object.hasOwn(child, 'columns'), false);
+});
 
 test('legacy columns become real child Containers without losing nested widgets', () => {
     const api = loadChildContainerHelpers();
