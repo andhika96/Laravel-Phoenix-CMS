@@ -2362,6 +2362,7 @@
 					:data-parent-node-id="node.id"
 					:data-parent-node-type="node.type"
 					class="pb-dropzone pb-dropzone-container-children"
+					:style="contColumnsStyle"
 					ghost-class="pb-ghost"
 					dragover-class="is-drop-hover"
 					@add="(event) => onAddContainer(event, node)"
