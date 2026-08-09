@@ -6,7 +6,7 @@
 	// 1. Sidebar: <draggable pull="clone" put=false :clone="cloneItem">
 	// 2. Canvas root: <draggable group="pb-root">
 	// 3. Container children: <draggable group="{name:'pb-container', put:...}" @add="onAddContainer">
-	// 4. Grid column children: <draggable group="{name:'pb-col', put:['pb-widget','pb-col']}" @add="onAddCol">
+	// 4. Semua layout children memakai satu draggable node.children canonical.
 	// 5. TIDAK ADA native drag event di node canvas
 	// Testing
 
@@ -1820,10 +1820,10 @@
 	const BuilderNode = {
 		name: 'BuilderNode',
 		components: { draggable },
-			parentNode: { type: Object, default: null },
-			siblingIndex: { type: Number, default: -1 },
 		props: {
 			node:        { type: Object,   required: true },
+			parentNode: { type: Object, default: null },
+			siblingIndex: { type: Number, default: -1 },
 			selectedId:  { type: String,   default: '' },
 			hoveredId:   { type: String,   default: '' },
 			responsiveDevice: { type: String, default: 'desktop' },
@@ -1995,8 +1995,6 @@
 						if (width !== 'auto') style.flex = '0 0 ' + width;
 					}
 				}
-					style.flex = '0 0 ' + cssSize(customBasis, 'auto');
-				}
 
 				return style;
 			},
@@ -2085,32 +2083,6 @@
 					return style;
 				}
 				return { display:'block', width:'100%' };
-			},
-			// group untuk grid column
-			colGroup() {
-				return {
-					name: 'pb-col',
-					put: (to, from, el) => {
-						// el = elemen yang di-drag, cek nodeType-nya
-						const nodeType = String((el && el.dataset && el.dataset.nodeType) || '').trim();
-						const isExistingCanvasNode = !!nodeType;
-						// Tolak jika yang di-drag adalah container
-						if (nodeType && isCont(nodeType)) return false;
-						const sourceParentNodeType = this.getParentNodeTypeFromSortable(from);
-						const targetParentNodeType = this.getParentNodeTypeFromSortable(to);
-						if (isExistingCanvasNode && sourceParentNodeType && targetParentNodeType) {
-							const sameOwnerFamily =
-								((isCont(sourceParentNodeType) || isGrid(sourceParentNodeType) || isTabs(sourceParentNodeType))
-									&& (isCont(targetParentNodeType) || isGrid(targetParentNodeType) || isTabs(targetParentNodeType)));
-							if (!sameOwnerFamily) return false;
-						}
-						const targetIndex = this.getTargetColumnIndexFromDropzone(to);
-						if (!isExistingCanvasNode && targetIndex >= 0 && this.isSequentialColumnLocked(targetIndex)) return false;
-						// Terima dari sesama pb-col (reorder + pindah antar kolom)
-						// Terima dari pb-container (widget yang ada di container)
-						return true;
-					},
-				};
 			},
 		},
 		methods: {
@@ -2450,58 +2422,16 @@
 				const alignItems = String(this.nodeResponsiveValue('gridAlignItems', s.gridAlignItems || 'start') || 'start').toLowerCase();
 				return { ...base, justifyContent: mapMain[alignItems] || 'flex-start' };
 			},
-			onTabDropzoneMove(evt) {
-				const originalEvent = evt && evt.originalEvent ? evt.originalEvent : null;
-				const parentEl = evt && evt.to ? evt.to : null;
-				const trackedDropzone = this.onTrackDropzonePointer ? this.onTrackDropzonePointer(originalEvent) : null;
-				if (trackedDropzone && parentEl && trackedDropzone !== parentEl && parentEl.contains(trackedDropzone)) return false;
-				if (findNestedCanvasDropTargetFromEvent(originalEvent, parentEl)) return false;
-				const target = originalEvent ? originalEvent.target : null;
-				return !isNestedCanvasDropTarget(target);
-			},
 			onAddActiveTabChild(evt) {
 				const children = this.activeTabsChildren();
-				if (this.onRerouteTabsDrop && this.onRerouteTabsDrop(evt, children)) return;
 				this.onAddContainer(evt, { children });
-			},
-			onAccordionDropzoneMove(evt) {
-				return this.onTabDropzoneMove(evt);
 			},
 			onAddAccordionItemChild(evt, item) {
 				const children = this.accordionItemChildren(item?.id);
-				if (this.onRerouteAccordionDrop && this.onRerouteAccordionDrop(evt, children)) return;
 				this.onAddContainer(evt, { children });
 			},
 			toggleAccordionItemFromPreview(itemId) {
 				if (this.onToggleAccordionItem) this.onToggleAccordionItem(this.node, itemId);
-			},
-			isSequentialColumnLocked(colIndex) {
-				const cols = Array.isArray(this.node.columns) ? this.node.columns : [];
-				const idx = Number(colIndex);
-				if (!Number.isFinite(idx) || idx < 0 || idx >= cols.length) return false;
-				const target = cols[idx];
-				// Kolom yang sudah terisi tetap bisa dipakai; lock hanya untuk kolom kosong.
-				if (this.columnHasChildren(target)) return false;
-				for (let i = 0; i < idx; i++) {
-					if (!this.columnHasChildren(cols[i])) return true;
-				}
-				return false;
-			},
-			getTargetColumnIndexFromDropzone(sortableRef) {
-				const el = sortableRef && sortableRef.el ? sortableRef.el : null;
-				if (!el) return -1;
-				const host = el.closest('[data-col-index]');
-				if (!host) return -1;
-				const raw = Number(host.dataset.colIndex);
-				return Number.isFinite(raw) ? raw : -1;
-			},
-			getParentNodeTypeFromSortable(sortableRef) {
-				const el = sortableRef && sortableRef.el ? sortableRef.el : null;
-				if (!el || typeof el.closest !== 'function') return '';
-				const parentNode = el.closest('[data-parent-node-type]');
-				if (parentNode) return String(parentNode.getAttribute('data-parent-node-type') || '').trim();
-				const hostNode = el.closest('[data-node-id]');
-				return hostNode ? String(hostNode.getAttribute('data-node-type') || '').trim() : '';
 			},
 			contGridNodeStyle(col, childNode = null) {
 				const s = this.node.settings || {};
@@ -2701,49 +2631,35 @@
 		<!-- GRID -->
 		<template v-else-if="isGrid">
 			<component :is="loadWidget(node.type)" :item="node">
-				<div class="el-grid-columns" :style="gridStyle">
-					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col" :data-col-index="ci">
-						<draggable
-							v-model="col.children"
-							item-key="id"
-							:group="colGroup"
-							data-pb-interactive="true"
-							data-pb-nested-dropzone="true"
-							:fallback-on-body="true"
-							:dragover-bubble="false"
-							:swap-threshold="0.65"
-							:empty-insert-threshold="30"
-							:data-col-index="ci"
-							:data-parent-node-id="node.id"
-							:data-parent-node-type="node.type"
-							:class="['pb-dropzone', 'pb-dropzone-col', {
-								'is-empty': !col.children || col.children.length === 0,
-								'has-single-heading': !!(col.children && col.children.length === 1 && col.children[0] && col.children[0].type === 'heading'),
-								'is-sequential-locked': isSequentialColumnLocked(ci),
-								'is-pending-insert-target': pendingInsertTarget && pendingInsertTarget.type === 'column' && pendingInsertTarget.nodeId === node.id && pendingInsertTarget.colId === col.id
-							}]"
-							ghost-class="pb-ghost"
-							dragover-class="is-drop-hover"
-							@add="(e) => onAddContainer(e, { children: col.children })"
-							@start="onDragStart"
-							@end="onDragEnd"
-						>
-							<template #item="{ element }">
-								<BuilderNode :node="element" v-bind="passdown()" />
-							</template>
-							<template #footer>
-								<div v-if="!col.children || col.children.length === 0" class="pb-dropzone-empty pb-grid-col-empty-hint">
-									<button v-if="!isSequentialColumnLocked(ci)" type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox({ type: 'column', nodeId: node.id, colId: col.id })">
-										<i class="fas fa-plus"></i>
-										<span>Add</span>
-									</button>
-									<div v-else class="pb-dropzone-lock-text">Fill previous column first</div>
-									<div class="pb-dropzone-empty-text">{{ isSequentialColumnLocked(ci) ? 'Locked' : 'Drop here' }}</div>
-								</div>
-							</template>
-						</draggable>
-					</div>
-				</div>
+				<draggable
+					v-model="node.children"
+					item-key="id"
+					:group="contGroup"
+					:move="onCanMoveCanvasNode"
+					data-pb-interactive="true"
+					data-pb-nested-dropzone="true"
+					:data-parent-node-id="node.id"
+					:data-parent-node-type="node.type"
+					class="el-grid-columns pb-dropzone pb-dropzone-container-children"
+					:style="gridStyle"
+					ghost-class="pb-ghost"
+					dragover-class="is-drop-hover"
+					@add="(event) => onAddContainer(event, node)"
+					@start="onDragStart"
+					@end="onDragEnd"
+				>
+					<template #item="{ element, index }">
+						<BuilderNode :node="element" :parent-node="node" :sibling-index="index" v-bind="passdown()" />
+					</template>
+					<template #footer>
+						<div v-if="!node.children || node.children.length === 0" class="pb-dropzone-empty pb-container-empty-hint">
+							<button type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox({ type: 'container', nodeId: node.id })">
+								<i class="fas fa-plus"></i><span>Add</span>
+							</button>
+							<div class="pb-dropzone-empty-text">Drop here</div>
+						</div>
+					</template>
+				</draggable>
 			</component>
 		</template>
 
@@ -2755,8 +2671,8 @@
 						<draggable
 							:list="activeTabsChildren()"
 							item-key="id"
-							:group="colGroup"
-							:move="onTabDropzoneMove"
+							:group="contGroup"
+							:move="onCanMoveCanvasNode"
 							:fallback-on-body="true"
 							:dragover-bubble="false"
 							:swap-threshold="0.65"
@@ -3648,13 +3564,16 @@
 				return canMoveNodeIntoContainer(findById(rootNodes.value, draggedId), targetId);
 			}
 			function startContainerEdgeResize() {}
-				return null;
-			}
 
 			const selectedNode = computed(() => selectedId.value ? findById(rootNodes.value, selectedId.value) : null);
 			const selectedType = computed(() => selectedNode.value?.type || '');
 			const activeSettingsTabs = computed(() => propertyTabsForNodeType(selectedType.value));
-			const selectedNodeKind = computed(() => propertyKindForNodeType(selectedType.value));
+			const selectedNodeKind = computed(() => {
+				const node = selectedNode.value;
+				return node && isCont(node.type) && (node.settings?.displayType || 'flex') === 'grid'
+					? 'Grid'
+					: propertyKindForNodeType(selectedType.value);
+			});
 			const textEditorModalSummary = computed(() => {
 				const html = selectedType.value === 'text_editor' ? String(selectedNode.value?.settings?.html || '') : '';
 				const text = html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
@@ -3711,10 +3630,6 @@
 			function setPendingInsertTarget(target = null) {
 				pendingInsertTarget.value = target && typeof target === 'object' ? jclone(target) : null;
 			}
-			function findColumnById(node, colId) {
-				if (!node || !Array.isArray(node.columns)) return null;
-				return node.columns.find((col) => String(col && col.id || '') === String(colId || '')) || null;
-			}
 			function insertToolIntoPendingTarget(toolDef, target = pendingInsertTarget.value) {
 				if (!toolDef || !target) return false;
 				const item = toolClone(toolDef);
@@ -3724,17 +3639,6 @@
 					if (!ownerNode || !isCont(ownerNode.type)) return false;
 					if (!Array.isArray(ownerNode.children)) ownerNode.children = [];
 					ownerNode.children.push(item);
-					selectedId.value = item.id;
-					clearPendingInsertTarget();
-					return true;
-				}
-				if (target.type === 'column') {
-					const ownerNode = findById(rootNodes.value, target.nodeId);
-					const targetColumn = findColumnById(ownerNode, target.colId);
-					const targetIndex = Array.isArray(ownerNode && ownerNode.columns) ? ownerNode.columns.findIndex((col) => String(col && col.id || '') === String(target.colId || '')) : -1;
-					if (!ownerNode || !targetColumn || !Array.isArray(targetColumn.children)) return false;
-					if (Number.isFinite(targetIndex) && isSequentialColumnLockedForNode(ownerNode, targetIndex)) return false;
-					targetColumn.children.push(item);
 					selectedId.value = item.id;
 					clearPendingInsertTarget();
 					return true;
@@ -5480,6 +5384,7 @@
 				const dt = s.displayType || 'flex';
 
 				if (dt === 'flex') {
+					normalizeFlexColumnWidths(node);
 					const nextRow = firstGapValue(
 						getResponsiveSetting(s, 'gridRowGap', ''),
 						s.rowGap,
@@ -5994,8 +5899,7 @@
 				return rerouteTabsDropToNestedColumn(evt, itemChildren);
 			}
 
-			// onAddCol: dipanggil saat item di-drop ke grid column
-			function onAddCol(evt, col, colIndex, parentNode) {
+			function legacyColumnDropAdapter(evt, col, colIndex, parentNode) {
 				const idx  = evt.newIndex;
 				const draggedNodeType = String((evt.item && evt.item.dataset && evt.item.dataset.nodeType) || '').trim();
 				const isExistingCanvasNode = !!draggedNodeType;
@@ -6066,44 +5970,8 @@
 						const live = findById(rootNodes.value, item.id) || rootNodes.value[idx];
 						if (!live) return;
 						const realIdx = rootNodes.value.indexOf(live);
-						const gs = live.settings || {};
-						const cols = clamp(Number(gs.columns || (Array.isArray(live.columns) ? live.columns.length : 3) || 3), 1, 12);
-
-						const c = makeNode('container');
-						Object.keys(c.settings || {}).forEach((key) => {
-							if (Object.prototype.hasOwnProperty.call(gs, key)) c.settings[key] = gs[key];
-						});
-
-						c.id = live.id;
-						c.labelSuffix = String(live.labelSuffix || '').trim();
-						c.settings.displayType = 'grid';
-						c.settings.gridColumns = cols;
-						c.settings.gridTemplateColumns = gs.gridTemplateColumns || '';
-						c.settings.gridRows = gs.gridRows || c.settings.gridRows;
-						c.settings.gridColumnGap = gs.columnGap || gs.gridColumnGap || c.settings.gridColumnGap;
-						c.settings.gridRowGap = gs.rowGap || gs.gridRowGap || c.settings.gridRowGap;
-						c.settings.gridAlignItems = gs.gridAlignItems || c.settings.gridAlignItems || 'start';
-						c.settings.autoFlow = gs.autoFlow || c.settings.autoFlow;
+						const c = convertGridNodeToContainer(live);
 						seedResponsiveSettings(c.settings, true);
-
-						const sourceColumns = Array.isArray(live.columns) ? live.columns : [];
-						c.columns = Array.from({ length: cols }, (_, colIdx) => {
-							const sourceCol = sourceColumns[colIdx];
-							const children = Array.isArray(sourceCol && sourceCol.children)
-								? sourceCol.children.map(child => jclone(child))
-								: [];
-							return { id: uid('c'), children };
-						});
-
-						if (sourceColumns.length > cols && c.columns.length > 0) {
-							const lastCol = c.columns[c.columns.length - 1];
-							sourceColumns.slice(cols).forEach((col) => {
-								(col && col.children ? col.children : []).forEach((child) => {
-									lastCol.children.push(jclone(child));
-								});
-							});
-						}
-
 						rootNodes.value.splice(realIdx, 1, c);
 					});
 					return;
@@ -6864,7 +6732,7 @@
 				<div class="canvas-actions">
 					<button class="canvas-action" :class="{ active: showCanvasGrid }" title="Canvas grid" @click="showCanvasGrid = !showCanvasGrid"><i class="bi bi-grid-3x3-gap"></i></button>
 					<button class="canvas-action" title="Zoom out" @click="changeCanvasZoom(-10)"><i class="bi bi-dash-lg"></i></button>
-					<button class="canvas-action" title="Reset zoom" @click="canvasZoom = 80"><i class="bi bi-aspect-ratio"></i></button>
+					<button class="canvas-action" title="Reset zoom" @click="canvasZoom = 100"><i class="bi bi-aspect-ratio"></i></button>
 					<button class="canvas-action" title="Zoom in" @click="changeCanvasZoom(10)"><i class="bi bi-plus-lg"></i></button>
 					<div class="pb-stage-width-control" @click.stop>
 						<button type="button" class="canvas-width-control" :class="{ 'is-menu-open': widthPreviewMenuOpen }" :title="responsiveDevice==='desktop' ? 'Choose desktop preview width' : 'Preview width'" @click="toggleWidthPreviewMenu">

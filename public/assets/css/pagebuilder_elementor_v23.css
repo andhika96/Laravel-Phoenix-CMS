@@ -10545,7 +10545,7 @@ body {
 	display: none;
 }
 
-.webpage-frame .pb-node-widget { border-radius: 0; }
+.webpage-frame .pb-node-widget { border-radius: 4px; }
 .webpage-frame .pb-node-widget:hover {
 	z-index: 5;
 	outline: 1px solid rgba(43, 132, 210, .55);

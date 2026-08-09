@@ -33,8 +33,6 @@ test('v2.3 retains the v2.0 editor action functions', () => {
         'function chooseMediaGallery',
         'function openIconLibrary',
         'function setResponsiveDevice',
-        'function rerouteTabsDropToNestedColumn',
-        'function rerouteAccordionDropToNestedColumn',
     ]) {
         assertBothContain(marker);
     }
@@ -61,13 +59,12 @@ test('v2.3 retains modal state and root-canvas callback bindings', () => {
         ':on-duplicate="dupNode"',
         ':on-open-modal="openModal"',
         ':on-show-toolbox="showToolboxPanel"',
-        ':on-reroute-tabs-drop="rerouteTabsDropToNestedColumn"',
         ':on-toggle-accordion-item="toggleAccordionItem"',
-        ':on-reroute-accordion-drop="rerouteAccordionDropToNestedColumn"',
-        ':on-track-dropzone-pointer="trackDropzonePointerFromEvent"',
     ]) {
         assertBothContain(marker);
     }
+});
+
 test('v2.3 intentionally replaces internal columns with child Container actions', () => {
     for (const marker of [
         'function addContainerChild(node)',
@@ -79,8 +76,8 @@ test('v2.3 intentionally replaces internal columns with child Container actions'
         assert.match(v23, new RegExp(escapeRegExp(marker)));
     }
     assert.doesNotMatch(v23, /selectedColumnContext|:on-select-column="selectColumn"/);
-});
-
+    assert.doesNotMatch(v23, /v-for="\(col, ci\) in node\.columns"|v-model="col\.children"|target\.type === 'column'|function onAddCol\(/);
+    assert.match(v23, /function syncCols\(\) \{\s*\/\/ `columns` is normalized only when loading legacy snapshots;/);
 });
 
 test('v2.3 exposes the page-settings state, actions, and anchored popover fields', () => {

@@ -114,3 +114,11 @@ test('Container Layout exposes selectable Child Containers and Add Container', (
     assert.match(app, /function addContainerChild\(node\)[\s\S]*?appendChildContainer\(node, \(\) => makeNode\('container'\)\)/);
     assert.match(app, /addContainerChild,/);
 });
+test('Grid canvas has one direct child dropzone and no pseudo-column insert target', () => {
+    const gridCanvas = app.match(/<!-- GRID -->([\s\S]*?)<!-- TABS -->/)?.[1] || '';
+
+    assert.match(gridCanvas, /v-model="node\.children"/);
+    assert.match(gridCanvas, /:parent-node="node"/);
+    assert.doesNotMatch(gridCanvas, /node\.columns|v-model="col\.children"|pb-dropzone-col|type: 'column'/);
+    assert.doesNotMatch(app, /pendingInsertTarget && pendingInsertTarget\.type === 'column'|target\.type === 'column'/);
+});
