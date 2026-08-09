@@ -3555,6 +3555,8 @@
 					if (n.tabItems) for (const item of n.tabItems) { const r = findById(item.children||[], id); if (r) return r; }
 					if (n.accordionItems) for (const item of n.accordionItems) { const r = findById(item.children||[], id); if (r) return r; }
 				}
+				return null;
+			}
 			function canMoveCanvasNode(event) {
 				const draggedId = String(event && event.dragged && event.dragged.dataset && event.dragged.dataset.nodeId || '').trim();
 				const targetDropzone = event && event.to;
