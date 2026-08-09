@@ -28,7 +28,7 @@ test('production v2.3 owns the approved shell state without changing the toolbox
     assert.match(app, /const leftCollapsed = ref\(false\);/);
     assert.match(app, /const previewMode = ref\(false\);/);
     assert.match(app, /leftCollapsed\.value = false;/);
-    assert.match(app, /selectedNode \|\| selectedColumnContext/);
+    assert.match(app, /const selectedNode = computed\(\(\) => selectedId\.value \? findById\(rootNodes\.value, selectedId\.value\) : null\);/);
     assert.match(app, /v-for="group in filteredToolboxGroups"/);
     assert.match(app, /:list="group\.items"/);
 });
@@ -37,7 +37,7 @@ test('production v2.3 keeps production canvas and editor contracts inside the ne
     for (const marker of [
         'v-model="rootNodes"',
         '<BuilderNode',
-        'columnResizeOverlay.visible',
+        'containerResizeOverlay.visible',
         'toastVisible',
         'showCssEditor',
         'showTextEditorModal',
@@ -71,7 +71,7 @@ test('collapsed sidebar and horizontal canvas scrolling keep the canvas toolbar 
 });
 
 test('production v2.3 properties shell follows the approved compact hierarchy', () => {
-    assert.match(app, /v-if="selectedNode && !selectedColumnContext" class="properties-tabs"/);
+    assert.match(app, /v-if="selectedNode" class="properties-tabs"/);
     assert.match(app, /v-for="tab in activeSettingsTabs"/);
     assert.match(app, /selectedNodeKind \+ ' settings'/);
     assert.match(app, /class="pb-section v23-properties-section"/);
