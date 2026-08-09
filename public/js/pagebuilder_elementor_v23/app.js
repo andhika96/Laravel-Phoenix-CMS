@@ -412,6 +412,7 @@
 			.map((rawNode) => {
 				const node = structuredClone(rawNode);
 				node.id = claimCanonicalNodeId(migrationState, node.id, 'node');
+				if (['grid', 'row_grid'].includes(node.type)) convertGridNodeToContainer(node, migrationState, createContainer);
 				if (['container', 'container_fluid'].includes(node.type)) migrateLegacyContainerColumns(node, migrationState, createContainer);
 				if (Array.isArray(node.children)) node.children = normalize(node.children);
 				if (Array.isArray(node.columns)) {
@@ -1755,8 +1756,11 @@
 		return NODE_LABEL_ICONS[type] || 'fas fa-cube';
 	}
 
+	const legacyGridMigrationStates = new WeakMap();
 	function convertGridNodeToContainer(node) {
 		if (!node || !isGrid(node.type)) return node;
+		const migrationState = arguments[1] || legacyGridMigrationStates.get(node) || null;
+		const createContainer = arguments[2] || (() => makeNode('container'));
 		const source = node.settings || {};
 		const definition = widgetRegistry?.get('container');
 		const target = typeof definition?.defaults === 'function' ? definition.defaults() : {};
@@ -1789,14 +1793,14 @@
 		node.type = 'container';
 		node.label = 'Container';
 		node.settings = target;
-		node.children = (Array.isArray(node.children) ? node.children : []).concat(
-			sourceColumns.map((column) => createChildContainerNode(
-				() => makeNode('container'),
-				column && column.flexBasis || '100%',
-				column && column.children
-			))
+		node.children = Array.isArray(node.children) ? node.children : [];
+		node.columns = sourceColumns;
+		migrateLegacyContainerColumns(
+			node,
+			migrationState || createLegacyContainerMigrationState([node]),
+			createContainer
 		);
-		delete node.columns;
+		legacyGridMigrationStates.delete(node);
 		return node;
 	}
 
@@ -3016,6 +3020,8 @@
 				return (nodes || []).map(n => {
 					const c = jclone(n);
 					c.id = claimCanonicalNodeId(legacyMigrationState, c.id, 'node');
+					if (isGrid(c.type)) legacyGridMigrationStates.set(c, legacyMigrationState);
+					if (isGrid(c.type)) convertGridNodeToContainer(c);
 					const baseLabel = baseNodeLabel(c.type, '');
 					const legacyLabel = String(c.label || '').trim();
 					let suffix = String(c.labelSuffix || '').trim();
