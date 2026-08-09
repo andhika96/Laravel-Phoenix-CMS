@@ -5738,7 +5738,7 @@
 				spacingControlUnits, spacingUnit, spacingSideValue, onSpacingSideInput, setSpacingUnit,
 				sizeControlUnits, videoAspectRatioOptions, videoAspectRatioValue, setVideoAspectRatioValue, videoSourceOptions, videoSuggestedVideoOptions, videoPreloadOptions, videoCurrentSource, setVideoSourceType, videoLinkField, videoUsesHostedPicker, videoShowsEndTime, videoShowsPoster, videoShowsOverlay, videoUsesControlsColor, videoToggleOptions, videoSelectOptions, videoToggleStateLabel, sizeControlDisplayValue, sizeControlUnit, sizeControlMax, sizeControlStep, onSizeControlInput, setSizeControlUnit,
 				containerWidthValue, containerWidthUnit, containerWidthMax, containerWidthStep, onContainerWidthInput, setContainerWidthValue, setContainerWidthUnit,
-				columnWidthValue, setSelectedColumnWidthValue, containerResizeOverlay,
+				containerResizeOverlay,
 				minHeightValue, minHeightUnit, setMinHeightValue, setMinHeightUnit,
 				spacerHeightValue, spacerHeightUnit, spacerHeightMax, spacerHeightStep, onSpacerHeightInput, setSpacerHeightValue, setSpacerHeightUnit,
 				shapeDividerTypeOptions, shapeDividerHasWidth, shapeDividerHasFlip, shapeDividerHasInvert,
