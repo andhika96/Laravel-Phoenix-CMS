@@ -65,18 +65,21 @@ test('v2.3 retains modal state and root-canvas callback bindings', () => {
     }
 });
 
-test('v2.3 intentionally replaces internal columns with child Container actions', () => {
+test('v2.3 keeps Flexbox child Containers and restores conceptual Grid columns', () => {
     for (const marker of [
         'function addContainerChild(node)',
         'function startContainerEdgeResize',
         'v-model="node.children"',
+        'v-for="(col, ci) in node.columns"',
+        'v-model="col.children"',
+        "target.type === 'column'",
+        'function onAddCol(',
         ':parent-node="node"',
         ':on-start-container-edge-resize="startContainerEdgeResize"',
     ]) {
         assert.match(v23, new RegExp(escapeRegExp(marker)));
     }
     assert.doesNotMatch(v23, /selectedColumnContext|:on-select-column="selectColumn"/);
-    assert.doesNotMatch(v23, /v-for="\(col, ci\) in node\.columns"|v-model="col\.children"|target\.type === 'column'|function onAddCol\(/);
     assert.doesNotMatch(v23, /responsiveColumnsCache|function syncCols\(|function syncGridColumnsForDevice\(|scheduleResponsiveGridSync/);
 });
 

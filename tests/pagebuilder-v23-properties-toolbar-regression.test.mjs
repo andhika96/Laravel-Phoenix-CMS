@@ -102,24 +102,29 @@ test('clicking a canvas node label reveals the collapsed properties panel', () =
     assert.match(app, /function selectNode\(n,\s*options\s*=\s*\{\}\)\s*\{[\s\S]*?if\s*\(options\.revealPanel\)\s*leftCollapsed\.value\s*=\s*false;/);
 });
 
-test('Container Layout exposes selectable Child Containers and Add Container', () => {
+test('Container Layout exposes selectable Child Containers and Add Container only for Flexbox', () => {
+    assert.match(containerSettings, /<details class="pb-collapsible" v-if="\(node\.settings\?\.displayType \|\| 'flex'\) === 'flex'" open>[\s\S]*?<summary>Child Containers<\/summary>/);
     assert.match(containerSettings, /<summary>Child Containers<\/summary>/);
     assert.match(containerSettings, /@click="editor\.addContainerChild\(node\)"/);
     assert.match(containerSettings, /Each layout item is a selectable Container with its own Layout, Style, and Advanced settings\./);
     assert.doesNotMatch(containerSettings, /Add Column|Column widths|node\.columns/);
     assert.doesNotMatch(containerSettings, /addContainerFlexColumn/);
+    assert.match(app, /function addContainerChild\(node\)[\s\S]*?appendChildContainer\(node, \(\) => makeNode\('container'\)\)/);
+    assert.match(app, /addContainerChild,/);
     assert.doesNotMatch(app, /pb-grid-col-label-button|selectedColumnContext|selectColumn\(/);
     assert.match(app, /v-model="node\.children"/);
     assert.match(app, /:parent-node="node"/);
-    assert.match(app, /function addContainerChild\(node\)[\s\S]*?appendChildContainer\(node, \(\) => makeNode\('container'\)\)/);
-    assert.match(app, /addContainerChild,/);
 });
-test('Grid canvas has one direct child dropzone and no pseudo-column insert target', () => {
+
+test('Grid canvas uses conceptual column dropzones without selectable Column settings', () => {
     const gridCanvas = app.match(/<!-- GRID -->([\s\S]*?)<!-- TABS -->/)?.[1] || '';
 
-    assert.match(gridCanvas, /v-model="node\.children"/);
+    assert.match(gridCanvas, /v-for="\(col, ci\) in node\.columns"/);
+    assert.match(gridCanvas, /v-model="col\.children"/);
     assert.match(gridCanvas, /:parent-node="node"/);
-    assert.doesNotMatch(gridCanvas, /node\.columns|v-model="col\.children"|pb-dropzone-col|type: 'column'/);
-    assert.doesNotMatch(app, /pendingInsertTarget && pendingInsertTarget\.type === 'column'|target\.type === 'column'/);
+    assert.match(gridCanvas, /pb-dropzone-col/);
+    assert.match(gridCanvas, /type: 'column'/);
+    assert.match(app, /pendingInsertTarget && pendingInsertTarget\.type === 'column'|target\.type === 'column'/);
+    assert.doesNotMatch(app, /selectedColumnContext|:on-select-column="selectColumn"/);
     assert.doesNotMatch(app, /syncGridColumnsForDevice|responsiveGridSyncTimer|scheduleResponsiveGridSync/);
 });

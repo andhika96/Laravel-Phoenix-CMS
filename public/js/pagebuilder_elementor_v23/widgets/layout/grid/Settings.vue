@@ -16,14 +16,14 @@
 								</div>
 								<div class="pb-form-group">
 									<label class="pb-form-label">Columns <span class="pb-form-hint">1-12</span></label>
-									<input class="pb-input" v-model.number="node.settings[editor.activeResponsiveKey('columns')]" type="number" min="1" max="12">
+									<input class="pb-input" :value="editor.gridColumnsValue(node)" @input="editor.setGridColumnsValue(node, $event.target.value)" type="number" min="1" max="12">
 								</div>
 								<div class="pb-form-group">
 									<div class="pb-label-row"><label class="pb-form-label mb-0">Grid Auto Height</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'gridAutoHeight-' + node.id" v-model="node.settings.gridAutoHeight"><label :for="'gridAutoHeight-' + node.id"></label></div></div>
 								</div>
 								<div class="pb-form-group">
 									<label class="pb-form-label">Rows</label>
-									<input class="pb-input" v-model="node.settings[editor.activeResponsiveKey('gridRows')]" placeholder="auto or 2">
+									<input class="pb-input" :value="editor.gridRowsValue(node)" @input="editor.setGridRowsValue(node, $event.target.value)" type="number" min="1" max="12">
 								</div>
 								<div class="pb-form-group" v-if="editor.responsiveDevice==='desktop'">
 									<label class="pb-form-label">Grid Template Columns</label>

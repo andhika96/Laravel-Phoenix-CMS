@@ -144,7 +144,7 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
         $this->assertSame($before->updated_at, $after->updated_at);
     }
 
-    public function test_v23_update_persists_canonical_children_without_container_columns(): void
+    public function test_v23_update_persists_flex_children_and_grid_columns(): void
     {
         $this->insertPage('v23-children', 'V23 Children', Page_Builder::EDITOR_VERSION_V23, '[]');
 
@@ -155,17 +155,29 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
                 [
                     'id' => 'container-parent',
                     'type' => 'container',
-                    'settings' => ['layout' => 'flex'],
+                    'settings' => ['displayType' => 'flex'],
                     'children' => [
-                        ['id' => 'container-child', 'type' => 'container', 'settings' => ['layout' => 'flex'], 'children' => []],
+                        ['id' => 'container-child', 'type' => 'container', 'settings' => ['displayType' => 'flex'], 'children' => []],
                     ],
+                ],
+                [
+                    'id' => 'grid-parent',
+                    'type' => 'grid',
+                    'settings' => ['columns' => 2, 'gridRows' => 1],
+                    'columns' => [
+                        ['id' => 'grid-cell-1', 'children' => [['id' => 'grid-heading', 'type' => 'heading', 'settings' => ['text' => 'Grid Heading']]]],
+                        ['id' => 'grid-cell-2', 'children' => []],
+                    ],
+                    'children' => [],
                 ],
             ], JSON_THROW_ON_ERROR),
         ])->assertOk()->assertJsonPath('success', true);
 
         $layout = json_decode(DB::table('page_builder')->where('uri', 'v23-children')->value('vars'), true, flags: JSON_THROW_ON_ERROR);
         $this->assertSame('container-child', $layout[0]['children'][0]['id']);
-        $this->assertArrayNotHasKey('columns', $layout[0]['settings']);
+        $this->assertArrayNotHasKey('columns', $layout[0]);
+        $this->assertSame('grid-cell-1', $layout[1]['columns'][0]['id']);
+        $this->assertSame('grid-heading', $layout[1]['columns'][0]['children'][0]['id']);
     }
 
     public function test_v23_update_validation_failure_leaves_vars_byte_for_byte_unchanged(): void

@@ -204,7 +204,7 @@
 								</div>
 								</div>
 							</details>
-							<details class="pb-collapsible" open>
+							<details class="pb-collapsible" v-if="(node.settings?.displayType || 'flex') === 'flex'" open>
 								<summary>Child Containers</summary>
 								<div class="pb-collapsible-body">
 									<div class="pb-container-child-actions">

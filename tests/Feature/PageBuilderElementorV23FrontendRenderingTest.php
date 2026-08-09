@@ -113,6 +113,53 @@ class PageBuilderElementorV23FrontendRenderingTest extends TestCase
         $this->assertStringContainsString('id="pb-node-canonical-right"', $canonical);
     }
 
+    public function test_v23_grid_columns_render_widgets_containers_and_nested_grids(): void
+    {
+        $grid = $this->renderNode([
+            'id' => 'grid-parent',
+            'type' => 'grid',
+            'settings' => ['columns' => 3, 'gridRows' => 1],
+            'children' => [],
+            'columns' => [
+                [
+                    'id' => 'grid-cell-widget',
+                    'children' => [['id' => 'grid-heading', 'type' => 'heading', 'settings' => ['text' => 'Grid Widget']]],
+                ],
+                [
+                    'id' => 'grid-cell-container',
+                    'children' => [[
+                        'id' => 'grid-container',
+                        'type' => 'container',
+                        'settings' => ['displayType' => 'flex'],
+                        'children' => [['id' => 'container-heading', 'type' => 'heading', 'settings' => ['text' => 'Nested Container']]],
+                    ]],
+                ],
+                [
+                    'id' => 'grid-cell-grid',
+                    'children' => [[
+                        'id' => 'nested-grid',
+                        'type' => 'grid',
+                        'settings' => ['columns' => 1, 'gridRows' => 1],
+                        'children' => [],
+                        'columns' => [[
+                            'id' => 'nested-grid-cell',
+                            'children' => [['id' => 'nested-grid-heading', 'type' => 'heading', 'settings' => ['text' => 'Nested Grid']]],
+                        ]],
+                    ]],
+                ],
+            ],
+        ]);
+
+        $this->assertSame(4, substr_count($grid, 'class="el-grid-col"'));
+        $this->assertStringContainsString('Grid Widget', $grid);
+        $this->assertStringContainsString('id="pb-node-grid-container"', $grid);
+        $this->assertStringContainsString('Nested Container', $grid);
+        $this->assertStringContainsString('id="pb-node-nested-grid"', $grid);
+        $this->assertStringContainsString('Nested Grid', $grid);
+        $this->assertLessThan(strpos($grid, 'Nested Container'), strpos($grid, 'Grid Widget'));
+        $this->assertLessThan(strpos($grid, 'Nested Grid'), strpos($grid, 'Nested Container'));
+    }
+
     public function test_v23_legacy_fallback_never_merges_extra_columns_into_the_last_cell(): void
     {
         $legacy = $this->renderNode([

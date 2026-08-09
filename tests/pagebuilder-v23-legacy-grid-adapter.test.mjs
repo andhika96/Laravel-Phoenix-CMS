@@ -22,33 +22,17 @@ function containerFactory() {
 
 function loadLegacyGridAdapter() {
     const helpers = app.match(/\/\/ V23_CHILD_CONTAINER_HELPERS_START([\s\S]*?)\/\/ V23_CHILD_CONTAINER_HELPERS_END/)?.[1];
-    const converter = app.match(/function convertGridNodeToContainer[\s\S]*?(?=\n\tfunction makeNode)/)?.[0];
-    const setters = app.match(/function setContainerGridColumnsValue\(node, next\) \{[\s\S]*?(?=\s*function syncContainerGap)/)?.[0];
-    assert.ok(helpers, 'child Container helpers should exist');
-    assert.ok(converter, 'Grid adapter should exist');
-    assert.ok(setters, 'Grid track setters should exist');
+    assert.ok(helpers, 'Grid and Flex migration helpers should exist');
 
     const context = { Map, WeakSet, structuredClone: globalThis.structuredClone, containerFactory };
     vm.runInNewContext(`
-        const clamp = (value, min, max) => Math.min(Math.max(Number(value), min), max);
-        const isGrid = (type) => type === 'grid' || type === 'row_grid';
-        const jclone = (value) => structuredClone(value);
-        const widgetRegistry = { get: () => ({ defaults: () => containerFactory() }) };
-        const makeNode = () => containerFactory();
-        const legacyGridMigrationStates = new WeakMap();
-        const responsiveDevice = { value: 'tablet' };
-        const normalizeResponsiveDevice = (device) => ['tablet', 'mobile'].includes(device) ? device : 'desktop';
-        const responsiveKey = (base, device) => device === 'tablet' ? base + 'Tablet' : (device === 'mobile' ? base + 'Mobile' : base);
-        const setContainerResponsiveSetting = (settings, base, value) => { settings[responsiveKey(base, responsiveDevice.value)] = value; };
         ${helpers}
-        ${converter}
-        ${setters}
-        this.api = { normalizeLegacyContainerSnapshot, setContainerGridColumnsValue, setContainerGridRowsValue };
+        this.api = { normalizeLegacyContainerSnapshot, reconcileGridColumns };
     `, context);
     return context.api;
 }
 
-test('legacy Grid and Row Grid load as direct child Containers with stable column IDs and order', () => {
+test('legacy Grid and Row Grid keep conceptual columns with stable content order', () => {
     const api = loadLegacyGridAdapter();
     const source = [
         {
@@ -70,18 +54,19 @@ test('legacy Grid and Row Grid load as direct child Containers with stable colum
     const { nodes, migrationState } = api.normalizeLegacyContainerSnapshot(source, containerFactory);
 
     assert.equal(migrationState.migrated, true);
-    assert.deepEqual(nodes.map((node) => node.type), ['container', 'container']);
-    assert.deepEqual(nodes.map((node) => node.settings.displayType), ['grid', 'grid']);
-    assert.deepEqual(nodes[0].children.map((child) => child.id), ['grid-left', 'grid-right']);
-    assert.deepEqual(nodes[1].children.map((child) => child.id), ['row-one', 'row-two']);
-    assert.deepEqual(nodes.flatMap((node) => node.children.flatMap((child) => child.children.map((nested) => nested.id))), ['heading-a', 'heading-b', 'widget-one', 'widget-two']);
-    assert.equal(Object.hasOwn(nodes[0], 'columns'), false);
-    assert.equal(Object.hasOwn(nodes[1], 'columns'), false);
+    assert.deepEqual(nodes.map((node) => node.type), ['grid', 'row_grid']);
+    assert.deepEqual(nodes[0].columns.slice(0, 2).map((column) => column.id), ['grid-left', 'grid-right']);
+    assert.deepEqual(nodes[1].columns.slice(0, 2).map((column) => column.id), ['row-one', 'row-two']);
+    assert.equal(nodes[0].columns.length, 4, '2 columns x 2 rows should materialize four conceptual cells');
+    assert.equal(nodes[1].columns.length, 3, 'three columns should materialize three conceptual cells');
+    assert.deepEqual(nodes.flatMap((node) => node.columns.flatMap((column) => column.children.map((nested) => nested.id))), ['heading-a', 'heading-b', 'widget-one', 'widget-two']);
+    assert.equal(nodes[0].children.length, 0);
+    assert.equal(nodes[1].children.length, 0);
     assert.equal(source[0].type, 'grid');
     assert.equal(Object.hasOwn(source[0], 'columns'), true);
 });
 
-test('Grid track setters update settings without changing migrated child identity or order', () => {
+test('Grid track reconciliation changes cells without changing existing content identity or order', () => {
     const api = loadLegacyGridAdapter();
     const { nodes } = api.normalizeLegacyContainerSnapshot([{
         id: 'legacy-grid', type: 'grid', settings: { columns: 2 }, children: [],
@@ -91,20 +76,19 @@ test('Grid track setters update settings without changing migrated child identit
         ],
     }], containerFactory);
     const node = nodes[0];
-    const beforeIds = node.children.map((child) => child.id);
-    const beforeNestedIds = node.children.map((child) => child.children.map((nested) => nested.id));
+    const beforeIds = node.columns.map((column) => column.id);
+    const beforeNestedIds = node.columns.map((column) => column.children.map((nested) => nested.id));
 
-    api.setContainerGridColumnsValue(node, 6);
-    api.setContainerGridRowsValue(node, 4);
+    let nextId = 0;
+    api.reconcileGridColumns(node, 6, 4, () => `generated-cell-${++nextId}`);
 
-    assert.equal(node.settings.gridColumnsTablet, 6);
-    assert.equal(node.settings.gridRowsTablet, '4');
-    assert.deepEqual(node.children.map((child) => child.id), beforeIds);
-    assert.deepEqual(node.children.map((child) => child.children.map((nested) => nested.id)), beforeNestedIds);
-    assert.equal(Object.hasOwn(node, 'columns'), false);
+    assert.equal(node.columns.length, 24);
+    assert.deepEqual(node.columns.slice(0, 2).map((column) => column.id), beforeIds);
+    assert.deepEqual(node.columns.slice(0, 2).map((column) => column.children.map((nested) => nested.id)), beforeNestedIds);
+    assert.ok(node.columns.slice(2).every((column) => !Object.hasOwn(column, 'type') && column.children.length === 0));
 });
 
-test('legacy Grid repairs duplicate or malformed column IDs without colliding with direct children', () => {
+test('legacy Grid repairs duplicate or malformed cell IDs without colliding with node IDs', () => {
     const api = loadLegacyGridAdapter();
     const { nodes } = api.normalizeLegacyContainerSnapshot([{
         id: 'legacy-grid', type: 'grid', settings: {},
@@ -117,12 +101,10 @@ test('legacy Grid repairs duplicate or malformed column IDs without colliding wi
     }], containerFactory);
     const node = nodes[0];
 
-    assert.deepEqual(node.children.map((child) => child.id), [
-        'taken',
-        'legacy-grid-child-container-1',
-        'legacy-grid-child-container-2',
-        'legacy-grid-child-container-3',
-    ]);
-    assert.deepEqual(node.children.slice(1).map((child) => child.children.map((nested) => nested.id)), [['one'], ['two'], ['three']]);
-    assert.equal(Object.hasOwn(node, 'columns'), false);
+    assert.equal(node.type, 'grid');
+    assert.equal(node.children.length, 0);
+    assert.equal(node.columns.length, 3);
+    assert.equal(new Set(node.columns.map((column) => column.id)).size, 3);
+    assert.ok(node.columns.every((column) => column.id !== 'taken'));
+    assert.deepEqual(node.columns.map((column) => column.children.map((nested) => nested.id)), [['one', 'taken'], ['two'], ['three']]);
 });

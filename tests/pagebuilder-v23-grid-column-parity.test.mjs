@@ -1,0 +1,203 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import test from 'node:test';
+import vm from 'node:vm';
+import { fileURLToPath } from 'node:url';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const appPath = path.join(root, 'public/js/pagebuilder_elementor_v23/app.js');
+const settingsPath = path.join(root, 'public/js/pagebuilder_elementor_v23/widgets/layout/container/Settings.vue');
+const cssPath = path.join(root, 'public/assets/css/pagebuilder_elementor_v23.css');
+const app = fs.readFileSync(appPath, 'utf8');
+const containerSettings = fs.readFileSync(settingsPath, 'utf8');
+const css = fs.readFileSync(cssPath, 'utf8');
+
+function extractBlock(source, startIndex) {
+    const open = source.indexOf('{', startIndex);
+    assert.notEqual(open, -1, 'function or method opening brace should exist');
+    let depth = 0;
+    let quote = '';
+    let escaped = false;
+    for (let index = open; index < source.length; index += 1) {
+        const char = source[index];
+        if (quote) {
+            if (escaped) escaped = false;
+            else if (char === '\\') escaped = true;
+            else if (char === quote) quote = '';
+            continue;
+        }
+        if (char === '"' || char === "'" || char === '`') {
+            quote = char;
+            continue;
+        }
+        if (char === '{') depth += 1;
+        if (char === '}') {
+            depth -= 1;
+            if (depth === 0) return source.slice(open + 1, index);
+        }
+    }
+    assert.fail('function or method closing brace should exist');
+}
+
+function namedFunction(name) {
+    const start = app.indexOf(`function ${name}(`);
+    assert.notEqual(start, -1, `${name} should exist`);
+    const body = extractBlock(app, start);
+    const signatureStart = app.indexOf('(', start);
+    const signatureEnd = app.indexOf(')', signatureStart);
+    return `function ${name}${app.slice(signatureStart, signatureEnd + 1)} {${body}}`;
+}
+
+function loadGridHelpers() {
+    const names = [
+        'gridSlotCount',
+        'reconcileGridColumns',
+        'gridColumnHasContent',
+        'isGridColumnLockedSequentially',
+        'canonicalLayoutForSave',
+    ];
+    const context = vm.createContext({ structuredClone, console });
+    vm.runInContext(`${names.map(namedFunction).join('\n')}\nthis.api = { ${names.join(', ')} };`, context);
+    return context.api;
+}
+
+function methodBody(name) {
+    const start = app.indexOf(`\n\t\t\t${name}()`);
+    assert.notEqual(start, -1, `${name} BuilderNode method should exist`);
+    return extractBlock(app, start);
+}
+
+test('Grid Columns and Rows create conceptual slots without creating child Containers', () => {
+    const api = loadGridHelpers();
+    const firstWidget = { id: 'heading-1', type: 'heading' };
+    const node = {
+        children: [],
+        columns: [
+            { id: 'cell-1', children: [firstWidget] },
+            { id: 'cell-2', children: [] },
+        ],
+    };
+    let nextId = 2;
+
+    const slots = api.reconcileGridColumns(node, 3, 2, () => `cell-${++nextId}`);
+
+    assert.equal(api.gridSlotCount(3, 2), 6);
+    assert.equal(slots.length, 6);
+    assert.equal(node.children.length, 0);
+    assert.equal(slots[0].id, 'cell-1');
+    assert.equal(slots[0].children[0], firstWidget);
+    assert.ok(slots.every((slot) => Array.isArray(slot.children)));
+    assert.ok(slots.every((slot) => !Object.hasOwn(slot, 'type')));
+});
+
+test('Grid slot reduction preserves overflow content in the final remaining slot', () => {
+    const api = loadGridHelpers();
+    const node = {
+        columns: Array.from({ length: 6 }, (_, index) => ({
+            id: `cell-${index + 1}`,
+            children: index === 5 ? [{ id: 'button-1', type: 'button' }] : [],
+        })),
+    };
+
+    const slots = api.reconcileGridColumns(node, 2, 1, () => 'unused');
+
+    assert.equal(slots.length, 2);
+    assert.deepEqual(Array.from(slots[1].children, (child) => child.id), ['button-1']);
+});
+
+test('only the first/current empty Grid column is unlocked', () => {
+    const api = loadGridHelpers();
+    const node = {
+        columns: [
+            { id: 'cell-1', children: [] },
+            { id: 'cell-2', children: [] },
+            { id: 'cell-3', children: [] },
+        ],
+    };
+
+    assert.equal(api.isGridColumnLockedSequentially(node, 0), false);
+    assert.equal(api.isGridColumnLockedSequentially(node, 1), true);
+    assert.equal(api.isGridColumnLockedSequentially(node, 2), true);
+
+    node.columns[0].children.push({ id: 'container-1', type: 'container' });
+    assert.equal(api.isGridColumnLockedSequentially(node, 1), false);
+    assert.equal(api.isGridColumnLockedSequentially(node, 2), true);
+
+    node.columns[1].children.push({ id: 'grid-1', type: 'grid' });
+    assert.equal(api.isGridColumnLockedSequentially(node, 2), false);
+});
+
+test('Grid column Sortable accepts Widget, Container, and Grid sources but rejects a locked target', () => {
+    const body = methodBody('colGroup');
+    const unlocked = new Function(body).call({
+        getTargetColumnIndexFromDropzone: () => 0,
+        isSequentialColumnLocked: () => false,
+    });
+    const locked = new Function(body).call({
+        getTargetColumnIndexFromDropzone: () => 2,
+        isSequentialColumnLocked: () => true,
+    });
+    const target = { el: { dataset: { colIndex: '0' } } };
+
+    for (const [group, nodeType] of [['pb-col', 'heading'], ['pb-root', 'container'], ['pb-container', 'grid']]) {
+        const from = { options: { group: { name: group } } };
+        assert.equal(unlocked.put(target, from, { dataset: { nodeType } }), true, `${nodeType} should enter the current Grid column`);
+        assert.equal(locked.put(target, from, { dataset: { nodeType } }), false, `${nodeType} should not skip an earlier empty Grid column`);
+    }
+});
+
+test('Grid columns persist on save while Flexbox legacy columns are removed', () => {
+    const api = loadGridHelpers();
+    const source = [
+        {
+            id: 'grid-container',
+            type: 'container',
+            settings: { displayType: 'grid' },
+            children: [],
+            columns: [{ id: 'cell-1', children: [{ id: 'nested-grid', type: 'grid', settings: {}, columns: [{ id: 'nested-cell', children: [] }] }] }],
+        },
+        {
+            id: 'flex-container',
+            type: 'container',
+            settings: { displayType: 'flex' },
+            children: [],
+            columns: [{ id: 'legacy-flex-cell', children: [] }],
+        },
+    ];
+
+    const saved = api.canonicalLayoutForSave(source);
+
+    assert.equal(saved[0].columns.length, 1);
+    assert.equal(saved[0].columns[0].children[0].columns.length, 1);
+    assert.equal(Object.hasOwn(saved[1], 'columns'), false);
+    assert.equal(Object.hasOwn(source[1], 'columns'), true, 'serialization must not mutate editor state');
+});
+
+test('Container settings expose Add Container only for Flexbox', () => {
+    const childSection = containerSettings.match(/<details class="pb-collapsible"[^>]*>\s*<summary>Child Containers<\/summary>[\s\S]*?<\/details>/)?.[0] || '';
+    assert.match(childSection, /v-if="[^\"]*displayType[^\"]*flex/);
+    assert.match(childSection, /Add Container/);
+    assert.doesNotMatch(childSection, /displayType==='grid'/);
+});
+
+test('Container Grid and legacy Grid render column dropzones while Flexbox keeps child Containers', () => {
+    assert.match(app, /v-if="\(node\.settings\?\.displayType \|\| 'flex'\) === 'grid'"[\s\S]*?v-for="\(col, ci\) in node\.columns"[\s\S]*?v-model="col\.children"/);
+    assert.match(app, /v-else[\s\S]*?v-model="node\.children"[\s\S]*?pb-dropzone-container-children/);
+    assert.match(app, /<template v-else-if="isGrid">[\s\S]*?v-for="\(col, ci\) in node\.columns"[\s\S]*?v-model="col\.children"/);
+    assert.match(app, /onShowToolbox\(\{ type: 'column', nodeId: node\.id, colId: col\.id \}\)/);
+});
+
+test('restored Grid cells preserve original alignment and single Heading preview behavior', () => {
+    assert.match(app, /contDropzoneStyle\(col\)\s*\{[\s\S]*?gridAlignItems[\s\S]*?justifyContent/);
+    assert.match(app, /contGridNodeStyle\(col, childNode = null\)\s*\{[\s\S]*?gridJustifyItems[\s\S]*?--pb-widget-shell-justify[\s\S]*?gridAlignItems/);
+    assert.match(app, /contChildNodeStyle\(col, childNode = null\)\s*\{[\s\S]*?contGridNodeStyle\(col, childNode\)/);
+    assert.match(app, /v-if="\(node\.settings\?\.displayType \|\| 'flex'\) === 'grid'"[\s\S]*?:style="contDropzoneStyle\(col\)"[\s\S]*?has-single-heading[\s\S]*?:style="contChildNodeStyle\(col, element\)"/);
+    assert.match(app, /<template v-else-if="isGrid">[\s\S]*?has-single-heading/);
+});
+
+test('empty Grid cell hint and Sortable ghost stay inside the target cell', () => {
+    assert.match(css, /\.pb-grid-col-empty-hint\s*\{[\s\S]*?position:\s*absolute;[\s\S]*?inset:\s*0;[\s\S]*?align-items:\s*center;[\s\S]*?justify-content:\s*center;/);
+    assert.match(css, /\.pb-dropzone-col\s*\{[\s\S]*?position:\s*relative;/);
+    assert.match(css, /\.pb-dropzone-col\s*>\s*\.sortable-ghost,[\s\S]*?\.pb-dropzone-col\s*>\s*\.sortable-chosen\s*\{[\s\S]*?position:\s*relative;[\s\S]*?z-index:\s*1;/);
+});

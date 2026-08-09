@@ -1267,6 +1267,8 @@ body {
 	flex-direction: column;
 	align-items: center;
 	gap: 8px;
+}
+
 .pb-dropzone-container-children {
 	position: relative;
 	width: 100%;
@@ -1288,15 +1290,12 @@ body {
 	justify-content: center;
 }
 
-}
-
 .pb-dropzone-empty-text {
 	font-size: 12px;
 	color: #8a95ac;
 }
 
-/* Container kosong: normal flow hint (bukan absolute overlay) */
-/* Grid column kosong: normal flow hint */
+/* Grid column kosong: overlay penuh agar placeholder Sortable tetap tepat di dalam cell. */
 .pb-grid-col-empty-hint {
 	position: absolute;
 	inset: 0;
@@ -1337,12 +1336,31 @@ body {
 }
 
 .pb-dropzone-container-children > .pb-container-empty-hint {
+	position: absolute;
+	inset: 0;
 	width: 100%;
 	min-width: 0;
 	align-self: stretch;
 	justify-self: stretch;
 	grid-column: 1 / -1;
 	box-sizing: border-box;
+	z-index: 0;
+}
+
+.pb-dropzone-container-children > .pb-ghost,
+.pb-dropzone-container-children > .sortable-ghost,
+.pb-dropzone-container-children > .sortable-chosen {
+	position: relative;
+	z-index: 1;
+}
+
+.pb-dropzone-container-children.is-sequential-locked {
+	border-color: #e2e8f7;
+	background: #f6f8fd;
+}
+
+.pb-dropzone-container-children.is-sequential-locked .pb-dropzone-empty-text {
+	color: #9aa4bc;
 }
 
 .pb-dropzone-container-children > :is(.pb-node-grid, .pb-node-row_grid) {
@@ -1586,8 +1604,7 @@ body {
 	font-size: 10px;
 }
 
-.pb-grid-col:hover > .pb-col-resizer,
-.pb-grid-col.is-drag-over-col > .pb-col-resizer {
+.pb-node:hover > .pb-container-edge-resizer {
 	opacity: 1;
 	pointer-events: auto;
 }
@@ -10577,7 +10594,7 @@ body {
 	top: 24px;
 }
 
-.webpage-frame .pb-node-widget { border-radius: 4px; }
+.webpage-frame .pb-node-widget { border-radius: 0; }
 .webpage-frame .pb-node-widget:hover {
 	z-index: 5;
 	outline: 1px solid rgba(43, 132, 210, .55);

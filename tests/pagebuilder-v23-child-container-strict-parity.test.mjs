@@ -10,7 +10,7 @@ function loadChildContainerHelpers() {
     const block = app.match(/\/\/ V23_CHILD_CONTAINER_HELPERS_START([\s\S]*?)\/\/ V23_CHILD_CONTAINER_HELPERS_END/)?.[1];
     assert.ok(block, 'child Container helpers should exist');
     const context = { structuredClone: globalThis.structuredClone };
-    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer, canMoveNodeIntoContainer, responsiveContainerWidth, applyAdjacentContainerWidths, canonicalLayoutForSave };`, context);
+    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer, gridSlotCount, reconcileGridColumns, gridColumnHasContent, isGridColumnLockedSequentially, canMoveNodeIntoContainer, responsiveContainerWidth, applyAdjacentContainerWidths, canonicalLayoutForSave };`, context);
     return context.api;
 }
 
@@ -60,6 +60,82 @@ test('Add Container appends one selectable canonical child', () => {
     assert.deepEqual(parent.children.map((entry) => entry.settings.containerWidth), ['50%', '50%']);
     assert.equal(child.type, 'container');
     assert.equal(Object.hasOwn(child, 'columns'), false);
+});
+
+test('Grid track growth materializes conceptual columns without deleting existing content', () => {
+    const api = loadChildContainerHelpers();
+    const first = { id: 'cell-1', children: [{ id: 'heading-1', type: 'heading' }] };
+    const second = { id: 'cell-2', children: [] };
+    const parent = {
+        id: 'grid-parent',
+        type: 'container',
+        settings: { displayType: 'grid', gridColumns: 3, gridRows: '2' },
+        children: [],
+        columns: [first, second],
+    };
+    let nextId = 2;
+
+    const slots = api.reconcileGridColumns(parent, 3, 2, () => `cell-${++nextId}`);
+
+    assert.equal(slots.length, 6);
+    assert.equal(parent.children.length, 0);
+    assert.equal(parent.columns[0].id, first.id);
+    assert.equal(parent.columns[0].children[0], first.children[0]);
+    assert.equal(parent.columns[1].id, second.id);
+    assert.ok(parent.columns.every((column) => Array.isArray(column.children) && !Object.hasOwn(column, 'type')));
+
+    api.reconcileGridColumns(parent, 2, 1, () => 'unused');
+    assert.equal(parent.columns.length, 2);
+    assert.equal(parent.columns[0].children[0].id, 'heading-1');
+});
+
+test('Grid columns unlock sequentially as the previous empty slot is filled', () => {
+    const api = loadChildContainerHelpers();
+    const slots = ['first', 'second', 'third'].map((id) => ({ id, children: [] }));
+    const parent = {
+        id: 'grid-parent',
+        type: 'container',
+        settings: { displayType: 'grid' },
+        columns: slots,
+    };
+
+    assert.equal(api.isGridColumnLockedSequentially(parent, 0), false);
+    assert.equal(api.isGridColumnLockedSequentially(parent, 1), true);
+    assert.equal(api.isGridColumnLockedSequentially(parent, 2), true);
+
+    slots[0].children.push({ id: 'heading-a', type: 'heading', settings: {} });
+    assert.equal(api.isGridColumnLockedSequentially(parent, 1), false);
+    assert.equal(api.isGridColumnLockedSequentially(parent, 2), true);
+
+    slots[1].children.push({ id: 'button-b', type: 'button', settings: {} });
+    assert.equal(api.isGridColumnLockedSequentially(parent, 2), false);
+    assert.equal(api.isGridColumnLockedSequentially(parent, 2, 'pending-clone'), false);
+});
+
+test('canonical Grid snapshots and track controls reconcile conceptual columns', () => {
+    const normalizeLegacyContainerSnapshot = loadLegacyContainerSnapshotNormalizer();
+    let nextId = 0;
+    const createContainer = () => ({ ...containerFactory(), id: `generated-${++nextId}` });
+    const source = [{
+        id: 'grid-parent',
+        type: 'container',
+        settings: { displayType: 'grid', gridColumns: 3, gridRows: '2' },
+        children: [],
+        columns: [{ id: 'cell-1', children: [] }, { id: 'cell-2', children: [] }],
+    }];
+
+    const normalized = normalizeLegacyContainerSnapshot(source, createContainer);
+
+    assert.equal(normalized.nodes[0].children.length, 0);
+    assert.equal(normalized.nodes[0].columns.length, 6);
+    assert.equal(normalized.migrationState.migrated, true);
+
+    const columnsSetter = app.match(/function setContainerGridColumnsValue\(node, next\) \{([\s\S]*?)\n\s*\}/)?.[1] || '';
+    const rowsSetter = app.match(/function setContainerGridRowsValue\(node, next\) \{([\s\S]*?)\n\s*\}/)?.[1] || '';
+    const displayTypeHandler = app.match(/function onContainerDisplayTypeChange\(node\) \{([\s\S]*?)\n\s*watch\(responsiveDevice/)?.[1] || '';
+    assert.match(columnsSetter, /ensureNodeGridColumns\(node\)/);
+    assert.match(rowsSetter, /ensureNodeGridColumns\(node\)/);
+    assert.match(displayTypeHandler, /if \(dt === 'grid'\)[\s\S]*?ensureNodeGridColumns\(node\)[\s\S]*?moveLooseGridChildrenIntoColumns\(node\)/);
 });
 
 test('legacy columns become real child Containers without losing nested widgets', () => {
@@ -226,22 +302,27 @@ test('Container edge resizer uses the dedicated child Container selector', () =>
     assert.match(css, /\.pb-container-edge-resizer i\s*\{/);
 });
 
-test('Grid and Flexbox retain canonical child Containers without pseudo-column synchronization', () => {
-	assert.match(app, /class="pb-dropzone pb-dropzone-container-children"\s+:style="contColumnsStyle"/);
+test('Grid uses conceptual columns while Flexbox retains canonical child Containers', () => {
+	assert.match(app, /v-if="\(node\.settings\?\.displayType \|\| 'flex'\) === 'grid'"[\s\S]*?v-model="col\.children"/);
+	assert.match(app, /<draggable\s+v-else\s+v-model="node\.children"[\s\S]*?pb-dropzone-container-children/);
+	assert.match(app, /<template v-else-if="isGrid">[\s\S]*?v-model="col\.children"/);
 	assert.doesNotMatch(app, /responsiveColumnsCache|function syncCols\(|function syncGridColumnsForDevice\(|syncAllGridCellsForDevice|scheduleResponsiveGridSync/);
 	assert.doesNotMatch(app, /function addContainerFlexColumn\(|function startColumnResize\(|function applyColumnPairWidths\(|function legacyColumnDropAdapter\(|function rerouteTabsDropToNestedColumn\(|function rerouteAccordionDropToNestedColumn\(/);
 	assert.doesNotMatch(app, /\bcolumnWidthValue\b|\bsetSelectedColumnWidthValue\b/);
 });
 
-test('save serialization canonicalizes only Container columns through nested child collections', () => {
+test('save serialization strips Flex columns but preserves Grid columns through nested collections', () => {
     const api = loadChildContainerHelpers();
     const source = [{
         id: 'parent', type: 'container', order: 4,
-        settings: { columns: 6, containerWidth: '70%', containerWidthTablet: '60%', containerWidthMobile: '100%' },
+        settings: { displayType: 'flex', columns: 6, containerWidth: '70%', containerWidthTablet: '60%', containerWidthMobile: '100%' },
         columns: [{ id: 'legacy-parent', children: [] }],
         children: [{
             id: 'gallery', type: 'basic_gallery', columns: [{ id: 'widget-column' }], settings: { columns: 4 },
             children: [],
+        }, {
+            id: 'nested-grid', type: 'grid', settings: { columns: 1, gridRows: '1' },
+            columns: [{ id: 'nested-cell', children: [{ id: 'nested-button', type: 'button', settings: {} }] }],
         }],
         tabItems: [{ id: 'tab-a', children: [{ id: 'tab-container', type: 'container_fluid', columns: [{ id: 'legacy-tab' }], settings: {}, children: [] }] }],
         accordionItems: [{ id: 'accordion-a', children: [{ id: 'accordion-container', type: 'container', columns: [{ id: 'legacy-accordion' }], settings: {}, children: [] }] }],
@@ -255,6 +336,7 @@ test('save serialization canonicalizes only Container columns through nested chi
     assert.equal(serialized[0].settings.containerWidthTablet, '60%');
     assert.equal(Object.hasOwn(serialized[0].children[0], 'columns'), true);
     assert.equal(serialized[0].children[0].settings.columns, 4);
+    assert.equal(serialized[0].children[1].columns[0].children[0].id, 'nested-button');
     assert.equal(Object.hasOwn(serialized[0].tabItems[0].children[0], 'columns'), false);
     assert.equal(Object.hasOwn(serialized[0].accordionItems[0].children[0], 'columns'), false);
     assert.equal(Object.hasOwn(source[0], 'columns'), true);
@@ -285,7 +367,7 @@ test('savePage posts a canonical clone and clears migration state only after suc
 });
 
 test('toolbox and existing widgets can enter canonical child Container dropzones', () => {
-    const contGroupBody = app.match(/contGroup\(\) \{([\s\S]*?)\n\s*\},\n\s*\/\/ Style kolom/)?.[1];
+    const contGroupBody = app.match(/contGroup\(\) \{([\s\S]*?)\n\s*\},\n\s*colGroup\(\)/)?.[1];
     assert.ok(contGroupBody, 'BuilderNode.contGroup should exist');
 
     const contGroup = new Function(contGroupBody).call({});
@@ -303,8 +385,8 @@ test('toolbox and existing widgets can enter canonical child Container dropzones
     assert.equal(accepts('pb-root'), true, 'child Containers must accept widgets moved from the page root');
     assert.equal(accepts('pb-container'), true, 'child Containers must accept sibling and nested child moves');
 
-    const childDropzones = Array.from(app.matchAll(/<draggable\s+v-model="node\.children"([\s\S]*?)@add="\(event\) => onAddContainer\(event, node\)"/g), (match) => match[1]);
-    assert.equal(childDropzones.length, 2, 'Container and legacy Grid branches should share the nested Sortable contract');
+    const childDropzones = Array.from(app.matchAll(/<draggable\s+v-else\s+v-model="node\.children"([\s\S]*?)@add="\(event\) => onAddContainer\(event, node, parentNode\)"/g), (match) => match[1]);
+    assert.equal(childDropzones.length, 1, 'only Flexbox should use the canonical child Container dropzone');
     childDropzones.forEach((dropzone) => {
         assert.match(dropzone, /:group="contGroup"/);
         assert.match(dropzone, /:move="onCanMoveCanvasNode"/);
@@ -313,6 +395,7 @@ test('toolbox and existing widgets can enter canonical child Container dropzones
         assert.match(dropzone, /:swap-threshold="0\.65"/);
         assert.match(dropzone, /:empty-insert-threshold="30"/);
     });
+    assert.match(app, /function onAddContainer\(evt, containerNode, parentNode = null\)/);
 });
 
 test('default Advanced widget width fills its Container while explicit widths stay configurable', () => {
@@ -327,6 +410,7 @@ test('default Advanced widget width fills its Container while explicit widths st
 
 test('empty child hints and nested layout toolbars remain centered and collision-free', () => {
     const css = fs.readFileSync(path.resolve('public/assets/css/pagebuilder_elementor_v23.css'), 'utf8');
+    assert.doesNotMatch(app, /style\.minHeight = 'inherit';/, 'inline inheritance must not collapse an empty child dropzone below its 68px CSS minimum');
     const emptyHintRule = css.match(/\.pb-dropzone-container-children\s*>\s*\.pb-container-empty-hint\s*\{([\s\S]*?)\}/)?.[1];
     assert.ok(emptyHintRule, 'child Container empty hint should have a scoped stretch rule');
     assert.match(emptyHintRule, /width:\s*100%/);
@@ -334,6 +418,12 @@ test('empty child hints and nested layout toolbars remain centered and collision
     assert.match(emptyHintRule, /justify-self:\s*stretch/);
     assert.match(emptyHintRule, /grid-column:\s*1\s*\/\s*-1/);
     assert.match(emptyHintRule, /box-sizing:\s*border-box/);
+    assert.match(emptyHintRule, /position:\s*absolute/);
+    assert.match(emptyHintRule, /inset:\s*0/);
+    assert.match(emptyHintRule, /z-index:\s*0/);
+
+    assert.match(css, /\.pb-dropzone-container-children\s*>\s*\.pb-ghost,\s*\.pb-dropzone-container-children\s*>\s*\.sortable-ghost,\s*\.pb-dropzone-container-children\s*>\s*\.sortable-chosen\s*\{[\s\S]*?position:\s*relative;[\s\S]*?z-index:\s*1;/);
+    assert.match(css, /\.pb-dropzone-container-children\.is-sequential-locked\s*\{[\s\S]*?background:/);
 
     assert.match(css, /\.pb-dropzone-container-children\s*>\s*:is\(\.pb-node-grid,\s*\.pb-node-row_grid\)\s*\{[\s\S]*?width:\s*100%;[\s\S]*?align-self:\s*stretch;[\s\S]*?justify-self:\s*stretch;/);
     assert.doesNotMatch(css, /\.webpage-frame \.pb-node\.ancestor-active:not\(\.active\)\s*>\s*\.pb-node-toolbar\s*>\s*\.container-handle\s*\{\s*display:\s*none;/);
