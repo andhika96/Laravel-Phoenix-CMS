@@ -121,4 +121,5 @@ test('Grid canvas has one direct child dropzone and no pseudo-column insert targ
     assert.match(gridCanvas, /:parent-node="node"/);
     assert.doesNotMatch(gridCanvas, /node\.columns|v-model="col\.children"|pb-dropzone-col|type: 'column'/);
     assert.doesNotMatch(app, /pendingInsertTarget && pendingInsertTarget\.type === 'column'|target\.type === 'column'/);
+    assert.doesNotMatch(app, /syncGridColumnsForDevice|responsiveGridSyncTimer|scheduleResponsiveGridSync/);
 });

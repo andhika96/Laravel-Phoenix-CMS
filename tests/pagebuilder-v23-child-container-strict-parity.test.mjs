@@ -225,3 +225,8 @@ test('Container edge resizer uses the dedicated child Container selector', () =>
     assert.match(css, /cursor:\s*col-resize/);
     assert.match(css, /\.pb-container-edge-resizer i\s*\{/);
 });
+
+test('Grid and Flexbox retain canonical child Containers without pseudo-column synchronization', () => {
+	assert.doesNotMatch(app, /responsiveColumnsCache|function syncCols\(|function syncGridColumnsForDevice\(|syncAllGridCellsForDevice|scheduleResponsiveGridSync/);
+	assert.doesNotMatch(app, /function addContainerFlexColumn\(|function startColumnResize\(|function applyColumnPairWidths\(|function legacyColumnDropAdapter\(|function rerouteTabsDropToNestedColumn\(|function rerouteAccordionDropToNestedColumn\(/);
+});

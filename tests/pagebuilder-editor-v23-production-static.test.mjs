@@ -97,9 +97,7 @@ test('production v2.3 canvas uses the approved selection chrome and instant devi
     assert.match(app, /\{ value: '1180', label: '1180px' \}/);
     assert.match(app, /\['1140', '1180', '1320'\]\.includes\(normalized\)/);
     assert.match(app, /function changeCanvasZoom\(delta\)/);
-    assert.match(app, /function scheduleResponsiveGridSync\(device\)/);
-    assert.match(app, /responsiveGridSyncTimer = window\.setTimeout\(\(\) => \{/);
-    assert.match(app, /watch\(responsiveDevice, \(device\) => \{[\s\S]*?scheduleResponsiveGridSync\(device\);/);
+    assert.doesNotMatch(app, /responsiveGridSyncTimer|scheduleResponsiveGridSync|syncAllGridCellsForDevice/);
     assert.match(app, /class="canvas-region" :class="\{ 'grid-off': !showCanvasGrid \}"/);
     assert.match(app, /<div class="zoom-control">\{\{ canvasZoom \}\}%<\/div>/);
     assert.match(app, /transform:\s*'scale\('\s*\+\s*canvasZoom\.value\s*\/\s*100\s*\+\s*'\)'/);

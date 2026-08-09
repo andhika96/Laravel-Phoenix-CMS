@@ -16,7 +16,7 @@
 								</div>
 								<div class="pb-form-group">
 									<label class="pb-form-label">Columns <span class="pb-form-hint">1-12</span></label>
-									<input class="pb-input" v-model.number="node.settings[editor.activeResponsiveKey('columns')]" type="number" min="1" max="12" @input="editor.syncGridColumnsForDevice(node)">
+									<input class="pb-input" v-model.number="node.settings[editor.activeResponsiveKey('columns')]" type="number" min="1" max="12">
 								</div>
 								<div class="pb-form-group">
 									<div class="pb-label-row"><label class="pb-form-label mb-0">Grid Auto Height</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'gridAutoHeight-' + node.id" v-model="node.settings.gridAutoHeight"><label :for="'gridAutoHeight-' + node.id"></label></div></div>

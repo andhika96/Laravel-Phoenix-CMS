@@ -77,7 +77,7 @@ test('v2.3 intentionally replaces internal columns with child Container actions'
     }
     assert.doesNotMatch(v23, /selectedColumnContext|:on-select-column="selectColumn"/);
     assert.doesNotMatch(v23, /v-for="\(col, ci\) in node\.columns"|v-model="col\.children"|target\.type === 'column'|function onAddCol\(/);
-    assert.match(v23, /function syncCols\(\) \{\s*\/\/ `columns` is normalized only when loading legacy snapshots;/);
+    assert.doesNotMatch(v23, /responsiveColumnsCache|function syncCols\(|function syncGridColumnsForDevice\(|scheduleResponsiveGridSync/);
 });
 
 test('v2.3 exposes the page-settings state, actions, and anchored popover fields', () => {

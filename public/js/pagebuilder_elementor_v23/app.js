@@ -200,7 +200,6 @@
 		if (!node || !targetId) return false;
 		const lists = [
 			node.children,
-			...(Array.isArray(node.columns) ? node.columns.map(column => column && column.children) : []),
 			...(Array.isArray(node.tabItems) ? node.tabItems.map(item => item && item.children) : []),
 			...(Array.isArray(node.accordionItems) ? node.accordionItems.map(item => item && item.children) : []),
 		];
@@ -1882,11 +1881,8 @@
 			onOpenModal:    { type: Function, required: true },
 			onShowToolbox:  { type: Function, required: true },
 			pendingInsertTarget: { type: Object, default: null },
-			onRerouteTabsDrop: { type: Function, default: null },
 			onAccordionRuntimeForNode: { type: Function, default: null },
 			onToggleAccordionItem: { type: Function, default: null },
-			onRerouteAccordionDrop: { type: Function, default: null },
-			onTrackDropzonePointer: { type: Function, default: null },
 		},
 		emits: [],
 		data() {
@@ -1937,19 +1933,6 @@
 				if (this.selectedId === this.node.id) return true;
 				const focusId = this.hoveredId || this.selectedId || '';
 				return focusId === this.node.id || (!this.hoveredId && this.isAncestorVisualActive);
-			},
-			isFlexColumnEditor() {
-				const s = this.node.settings || {};
-				if (!this.isCont || (s.displayType || 'flex') !== 'flex') return false;
-				const direction = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-				return direction === 'row' || direction === 'row-reverse';
-			},
-			isFlexRowResizable() {
-				const s = this.node.settings || {};
-				if (!this.isFlexColumnEditor) return false;
-				const direction = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-				const flexWrap = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
-				return direction === 'row' && flexWrap === 'nowrap' && Array.isArray(this.node.columns) && this.node.columns.length > 1;
 			},
 			showContainerEdgeResizeHandle() {
 				const parent = this.parentNode;
@@ -2222,86 +2205,6 @@
 				}
 				this.queueOutOfFlowShellMeasure();
 			},
-			queueColumnLabelOffsetSync() {
-				if (this.columnLabelOffsetRaf) cancelAnimationFrame(this.columnLabelOffsetRaf);
-				this.columnLabelOffsetRaf = requestAnimationFrame(() => {
-					this.columnLabelOffsetRaf = 0;
-					this.syncColumnLabelOffsets();
-				});
-			},
-			syncColumnLabelOffsetBinding() {
-				if (!this.isFlexColumnEditor) {
-					this.teardownColumnLabelOffsetBinding();
-					return;
-				}
-				if (!this.columnLabelWindowResizeHandler) {
-					this.columnLabelWindowResizeHandler = () => this.queueColumnLabelOffsetSync();
-					window.addEventListener('resize', this.columnLabelWindowResizeHandler);
-				}
-				if (!this.columnLabelResizeObserver && typeof ResizeObserver === 'function' && this.$el) {
-					this.columnLabelResizeObserver = new ResizeObserver(() => this.queueColumnLabelOffsetSync());
-					this.columnLabelResizeObserver.observe(this.$el);
-				}
-				this.queueColumnLabelOffsetSync();
-			},
-			teardownColumnLabelOffsetBinding() {
-				if (this.columnLabelOffsetRaf) {
-					cancelAnimationFrame(this.columnLabelOffsetRaf);
-					this.columnLabelOffsetRaf = 0;
-				}
-				if (this.columnLabelResizeObserver) {
-					this.columnLabelResizeObserver.disconnect();
-					this.columnLabelResizeObserver = null;
-				}
-				if (this.columnLabelWindowResizeHandler) {
-					window.removeEventListener('resize', this.columnLabelWindowResizeHandler);
-					this.columnLabelWindowResizeHandler = null;
-				}
-				this.resetColumnLabelOffsets();
-			},
-			resolveColumnLabelElements() {
-				if (!this.$el || typeof this.$el.querySelector !== 'function') {
-					return { containerLabel: null, columnLabels: [] };
-				}
-				const containerLabel = this.$el.querySelector(':scope > .pb-node-toolbar > .pb-node-label');
-				const content = this.$el.querySelector(':scope > .pb-node-content');
-				const columnsRoot = content
-					? content.querySelector(':scope > .el-layout-container > .el-cont-columns, :scope > .el-layout-container-fluid > .el-cont-columns')
-					: null;
-				const columnLabels = columnsRoot
-					? Array.from(columnsRoot.querySelectorAll(':scope > .pb-grid-col > .pb-grid-col-label'))
-					: [];
-				return { containerLabel, columnLabels };
-			},
-			resetColumnLabelOffsets() {
-				const { columnLabels } = this.resolveColumnLabelElements();
-				columnLabels.forEach((label) => {
-					label.style.removeProperty('--pb-col-label-offset-x');
-					label.classList.remove('is-auto-shifted');
-				});
-			},
-			syncColumnLabelOffsets() {
-				const { containerLabel, columnLabels } = this.resolveColumnLabelElements();
-				columnLabels.forEach((label) => {
-					label.style.removeProperty('--pb-col-label-offset-x');
-					label.classList.remove('is-auto-shifted');
-				});
-				if (!containerLabel || !columnLabels.length || !this.isFlexColumnEditor) return;
-				const containerRect = containerLabel.getBoundingClientRect();
-				const guard = 10;
-				columnLabels.forEach((label) => {
-					const rect = label.getBoundingClientRect();
-					const overlaps =
-						rect.left < containerRect.right + guard &&
-						rect.right > containerRect.left - guard &&
-						rect.top < containerRect.bottom + guard &&
-						rect.bottom > containerRect.top - guard;
-					if (!overlaps) return;
-					const offset = Math.min(260, Math.max(0, Math.ceil(containerRect.right - rect.left + guard)));
-					label.style.setProperty('--pb-col-label-offset-x', offset + 'px');
-					label.classList.add('is-auto-shifted');
-				});
-			},
 			tabsItemsList() {
 				return Array.isArray(this.node.tabItems) ? this.node.tabItems : [];
 			},
@@ -2350,150 +2253,10 @@
 					onOpenModal:    this.onOpenModal,
 					onShowToolbox:  this.onShowToolbox,
 					pendingInsertTarget: this.pendingInsertTarget,
-					onRerouteTabsDrop: this.onRerouteTabsDrop,
 					onAccordionRuntimeForNode: this.onAccordionRuntimeForNode,
 					onToggleAccordionItem: this.onToggleAccordionItem,
-					onRerouteAccordionDrop: this.onRerouteAccordionDrop,
 					onTrackDropzonePointer: this.onTrackDropzonePointer,
 				};
-			},
-			flexPercentBasis(rawBasis) {
-				const match = String(rawBasis == null ? '' : rawBasis).trim().match(/^(\d+(?:\.\d+)?)%$/);
-				if (!match) return null;
-				const percent = Number(match[1]);
-				return Number.isFinite(percent) && percent > 0 ? percent : null;
-			},
-			flexPercentBasisToken(percent) {
-				const safePercent = clamp(Number(percent) || 0, 0, 100);
-				const s = this.node.settings || {};
-				const columnGap = this.nodeResponsiveValue('flexColumnGap', s.flexColumnGap || s.gap || '0');
-				const gapToken = cssSize(columnGap, '0');
-				const gapMatch = String(gapToken || '').trim().match(/^(\d+(?:\.\d+)?)px$/i);
-				const colCount = Array.isArray(this.node.columns) ? this.node.columns.length : 1;
-				if (gapMatch && colCount > 1 && safePercent > 0) {
-					const totalGapPx = Number(gapMatch[1]) * (colCount - 1);
-					const gapSharePx = Math.round(totalGapPx * (safePercent / 100) * 1000) / 1000;
-					if (gapSharePx > 0) return 'calc(' + safePercent + '% - ' + gapSharePx + 'px)';
-				}
-				return safePercent + '%';
-			},
-			contColStyle(col) {
-				const s = this.node.settings || {};
-				const dt = s.displayType || 'flex';
-				const rawBasis = String(col && col.flexBasis != null ? col.flexBasis : '').trim();
-				const hasBasis = rawBasis !== '';
-
-				if (dt === 'flex') {
-					const dir = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-					const isColumnDir = dir === 'column' || dir === 'column-reverse';
-					const wrapMode = this.nodeResponsiveValue('flexWrap', s.flexWrap || 'nowrap') || 'nowrap';
-					const isWrapMode = wrapMode === 'wrap' || wrapMode === 'wrap-reverse';
-					const stableRowMinWidth = isWrapMode
-						? '220px'
-						: ((this.responsiveDevice || 'desktop') === 'mobile'
-							? '56px'
-							: ((this.responsiveDevice || 'desktop') === 'tablet' ? '72px' : '96px'));
-
-					if (hasBasis) {
-						if (isColumnDir) {
-							return {
-								flex: '0 0 ' + rawBasis,
-								height: rawBasis,
-								minHeight: rawBasis,
-								width: '100%',
-								minWidth: '0',
-								boxSizing: 'border-box',
-							};
-						}
-						const percentBasis = this.flexPercentBasis(rawBasis);
-						if (percentBasis != null) {
-							const basisToken = this.flexPercentBasisToken(percentBasis);
-							return {
-								flex: '0 0 ' + basisToken,
-								flexBasis: basisToken,
-								width: basisToken,
-								minWidth: stableRowMinWidth,
-								maxWidth: '100%',
-								height: 'auto',
-								alignSelf: 'stretch',
-								display: 'flex',
-								flexDirection: 'column',
-								boxSizing: 'border-box',
-							};
-						}
-						const rowStyle = {
-							flex: '0 0 ' + rawBasis,
-							width: rawBasis,
-							minWidth: stableRowMinWidth,
-							maxWidth: rawBasis,
-							height: 'auto',
-							alignSelf: 'stretch',
-							display: 'flex',
-							flexDirection: 'column',
-							boxSizing: 'border-box',
-						};
-						return rowStyle;
-					}
-
-					if (isColumnDir) {
-						return {
-							flex: '0 0 auto',
-							width: '100%',
-							minWidth: '0',
-							minHeight: '88px',
-							boxSizing: 'border-box',
-						};
-					}
-
-					const rowStyle = {
-						flex: '1 1 0',
-						width: 'auto',
-						minWidth: stableRowMinWidth,
-						height: 'auto',
-						alignSelf: 'stretch',
-						display: 'flex',
-						flexDirection: 'column',
-						boxSizing: 'border-box',
-					};
-					return rowStyle;
-				}
-
-				return {};
-			},
-			contDropzoneStyle(col) {
-				const s = this.node.settings || {};
-				const childCount = Array.isArray(col?.children) ? col.children.length : 0;
-				const dt = s.displayType || 'flex';
-				const base = { flex: '1 1 auto' };
-
-				if (dt === 'flex') {
-					const dir = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-					const isRowDir = dir === 'row' || dir === 'row-reverse';
-					if (!isRowDir) return {};
-					const alignItems = String(this.nodeResponsiveValue('alignItems', s.alignItems || 'flex-start') || 'flex-start').toLowerCase();
-					const mapMain = {
-						'flex-start': 'flex-start',
-						center: 'center',
-						'flex-end': 'flex-end',
-						stretch: 'flex-start',
-					};
-					const style = { ...base, minHeight: childCount === 0 ? '68px' : '100%' };
-					if (childCount > 0) style.justifyContent = mapMain[alignItems] || 'flex-start';
-					return style;
-				}
-
-				if (dt !== 'grid') return {};
-				// Keep empty-column placeholders (Column label + Drop here) fixed in place.
-				if (childCount === 0) return {};
-
-				const mapMain = {
-					start: 'flex-start',
-					center: 'center',
-					end: 'flex-end',
-					stretch: 'flex-start',
-				};
-				const alignItems = String(this.nodeResponsiveValue('gridAlignItems', s.gridAlignItems || 'start') || 'start').toLowerCase();
-				return { ...base, justifyContent: mapMain[alignItems] || 'flex-start' };
 			},
 			onAddActiveTabChild(evt) {
 				const children = this.activeTabsChildren();
@@ -2505,119 +2268,6 @@
 			},
 			toggleAccordionItemFromPreview(itemId) {
 				if (this.onToggleAccordionItem) this.onToggleAccordionItem(this.node, itemId);
-			},
-			contGridNodeStyle(col, childNode = null) {
-				const s = this.node.settings || {};
-				if ((s.displayType || 'flex') !== 'grid') return {};
-
-				const justifyItems = String(this.nodeResponsiveValue('gridJustifyItems', s.gridJustifyItems || 'stretch') || 'stretch').toLowerCase();
-				const style = {
-					maxWidth: '100%',
-					minWidth: '0',
-					marginTop: '0',
-					marginBottom: '0',
-				};
-				const isWidgetChild = !!childNode && !isCont(childNode.type) && !isGrid(childNode.type);
-
-				// Keep the Balanced shell for the default "stretch" mode, but let
-				// justify-items start/center/end position widgets again.
-				if (isWidgetChild) {
-					const shellJustifyMap = {
-						start: 'flex-start',
-						center: 'center',
-						end: 'flex-end',
-						stretch: 'flex-start',
-					};
-					const widgetType = String(childNode?.type || '').trim();
-					const shrinkableWidgetTypes = new Set(['heading', 'button']);
-					style.width = '100%';
-					style.marginLeft = '0';
-					style.marginRight = '0';
-					style.alignSelf = 'stretch';
-					style['--pb-widget-shell-justify'] = shellJustifyMap[justifyItems] || 'flex-start';
-					style['--pb-widget-inner-width'] = (justifyItems === 'stretch' || !shrinkableWidgetTypes.has(widgetType)) ? '100%' : 'fit-content';
-					style['--pb-widget-content-width'] = (justifyItems === 'stretch' || !shrinkableWidgetTypes.has(widgetType)) ? '100%' : 'fit-content';
-				} else {
-					if (justifyItems === 'center') {
-						style.width = 'fit-content';
-						style.marginLeft = 'auto';
-						style.marginRight = 'auto';
-					} else if (justifyItems === 'end') {
-						style.width = 'fit-content';
-						style.marginLeft = 'auto';
-						style.marginRight = '0';
-					} else if (justifyItems === 'start') {
-						style.width = 'fit-content';
-						style.marginLeft = '0';
-						style.marginRight = 'auto';
-					} else {
-						style.width = '100%';
-						style.marginLeft = '0';
-						style.marginRight = '0';
-					}
-				}
-
-				// Vertical placement applies only when a cell has one widget.
-				const alignItems = String(this.nodeResponsiveValue('gridAlignItems', s.gridAlignItems || 'start') || 'start').toLowerCase();
-				const childCount = Array.isArray(col?.children) ? col.children.length : 0;
-				if (childCount <= 1) {
-					if (alignItems === 'center') {
-						style.marginTop = 'auto';
-						style.marginBottom = 'auto';
-					} else if (alignItems === 'end') {
-						style.marginTop = 'auto';
-						style.marginBottom = '0';
-					}
-				}
-
-				return style;
-			},
-			contFlexNodeStyle(childNode = null) {
-				const s = this.node.settings || {};
-				if ((s.displayType || 'flex') !== 'flex') return {};
-				const dir = this.nodeResponsiveValue('direction', s.direction || 'row') || 'row';
-				const isRowDir = dir === 'row' || dir === 'row-reverse';
-				if (!isRowDir) return {};
-
-				const justifyContent = String(this.nodeResponsiveValue('justifyContent', s.justifyContent || 'flex-start') || 'flex-start').toLowerCase();
-				const isWidgetChild = !!childNode && !isCont(childNode.type) && !isGrid(childNode.type);
-				const style = {
-					maxWidth: '100%',
-					minWidth: '0',
-				};
-
-				if (!isWidgetChild) return style;
-
-				const shellJustifyMap = {
-					'flex-start': 'flex-start',
-					center: 'center',
-					'flex-end': 'flex-end',
-					'space-between': 'flex-start',
-					'space-around': 'flex-start',
-					'space-evenly': 'flex-start',
-					stretch: 'flex-start',
-				};
-				const widgetType = String(childNode?.type || '').trim();
-				const shrinkableWidgetTypes = new Set(['heading', 'button']);
-				const canShrink = (justifyContent === 'flex-start' || justifyContent === 'center' || justifyContent === 'flex-end')
-					&& shrinkableWidgetTypes.has(widgetType);
-
-				style.width = '100%';
-				style.marginLeft = '0';
-				style.marginRight = '0';
-				style.alignSelf = 'stretch';
-				style['--pb-widget-shell-justify'] = shellJustifyMap[justifyContent] || 'flex-start';
-				style['--pb-widget-inner-width'] = canShrink ? 'fit-content' : '100%';
-				style['--pb-widget-content-width'] = canShrink ? 'fit-content' : '100%';
-
-				return style;
-			},
-			contChildNodeStyle(col, childNode = null) {
-				const s = this.node.settings || {};
-				const dt = s.displayType || 'flex';
-				if (dt === 'grid') return this.contGridNodeStyle(col, childNode);
-				if (dt === 'flex') return this.contFlexNodeStyle(childNode);
-				return {};
 			},
 			nodeResponsiveValue(base, fallback = '') {
 				const s = this.node.settings || {};
@@ -3253,7 +2903,6 @@
 				{ value: '1320', label: '1320px' },
 			];
 			const controlResponsiveMenu = ref('');
-			const responsiveColumnsCache = new WeakMap();
 			function normalizeResponsiveDevice(device = 'desktop') {
 				return (device === 'tablet' || device === 'mobile') ? device : 'desktop';
 			}
@@ -3261,81 +2910,6 @@
 				const normalized = String(value);
 				return ['1140', '1180', '1320'].includes(normalized) ? normalized : '1180';
 			}
-			function cloneColumnsState(columns) {
-				if (!Array.isArray(columns)) return [];
-				return columns.map((col) => ({
-					id: (col && col.id) ? col.id : uid('c'),
-					flexBasis: col && Object.prototype.hasOwnProperty.call(col, 'flexBasis') ? col.flexBasis : undefined,
-					children: Array.isArray(col && col.children) ? col.children.slice() : [],
-				}));
-			}
-			function getResponsiveColumnsState(node) {
-				if (!node || typeof node !== 'object') return null;
-				let state = responsiveColumnsCache.get(node);
-				if (!state) {
-					state = {
-						activeDevice: '',
-						snapshots: {
-							desktop: [],
-							tablet: [],
-							mobile: [],
-						},
-					};
-					responsiveColumnsCache.set(node, state);
-				}
-				return state;
-			}
-			function resolveColumnsSnapshotForDevice(state, device) {
-				if (!state || !state.snapshots) return [];
-				const safeDevice = normalizeResponsiveDevice(device);
-				const direct = state.snapshots[safeDevice];
-				if (Array.isArray(direct) && direct.length) return direct;
-				if (safeDevice === 'mobile') {
-					const tablet = state.snapshots.tablet;
-					if (Array.isArray(tablet) && tablet.length) return tablet;
-				}
-				if (safeDevice !== 'desktop') {
-					const desktop = state.snapshots.desktop;
-					if (Array.isArray(desktop) && desktop.length) return desktop;
-				}
-				return [];
-			}
-			function collectColumnChildren(columns) {
-				const out = [];
-				if (!Array.isArray(columns)) return out;
-				columns.forEach((col) => {
-					if (!col || !Array.isArray(col.children)) return;
-					col.children.forEach((child) => {
-						if (child && child.id) out.push(child);
-					});
-				});
-				return out;
-			}
-			function reconcileColumnsContent(sourceColumns, targetColumns) {
-				if (!Array.isArray(targetColumns) || !targetColumns.length) return;
-				const sourceChildren = collectColumnChildren(sourceColumns);
-				const sourceIds = new Set(sourceChildren.map((child) => child.id));
-
-				targetColumns.forEach((col) => {
-					if (!Array.isArray(col.children)) col.children = [];
-					col.children = col.children.filter((child) => child && child.id && sourceIds.has(child.id));
-				});
-
-				const existingIds = new Set();
-				targetColumns.forEach((col) => {
-					(col.children || []).forEach((child) => {
-						if (child && child.id) existingIds.add(child.id);
-					});
-				});
-
-				const missing = sourceChildren.filter((child) => child && child.id && !existingIds.has(child.id));
-				if (!missing.length) return;
-				const receiver = targetColumns[0];
-				if (!receiver) return;
-				if (!Array.isArray(receiver.children)) receiver.children = [];
-				missing.forEach((child) => receiver.children.push(child));
-			}
-
 			function responsiveMeta(device = responsiveDevice.value) {
 				return responsiveDevices.find((entry) => entry.value === device) || responsiveDevices[0];
 			}
@@ -3632,7 +3206,6 @@
 				for (const n of nodes) {
 					if (n.id === id) return n;
 					if (n.children) { const r = findById(n.children, id); if (r) return r; }
-					if (n.columns) for (const col of n.columns) { const r = findById(col.children||[], id); if (r) return r; }
 					if (n.tabItems) for (const item of n.tabItems) { const r = findById(item.children||[], id); if (r) return r; }
 					if (n.accordionItems) for (const item of n.accordionItems) { const r = findById(item.children||[], id); if (r) return r; }
 				}
@@ -4504,50 +4077,6 @@
 				return base + safeState.charAt(0).toUpperCase() + safeState.slice(1);
 			}
 			// ── Column sync ───────────────────────────────────────────────────
-			function syncCols(node, forceCount, device = 'desktop') {
-				if (!node) return;
-				const currentDevice = (device === 'tablet' || device === 'mobile') ? device : 'desktop';
-				const isContNode = isCont(node.type);
-				const isGridNode = isGrid(node.type);
-				if (!isGridNode) return;
-				const state = getResponsiveColumnsState(node);
-				const s = node.settings || {};
-				const colSetting = isContNode
-					? getResponsiveSettingForDevice(s, 'gridColumns', currentDevice, s.gridColumns || 3)
-					: getResponsiveSettingForDevice(s, 'columns', currentDevice, s.columns || 1);
-				const baseCols = forceCount != null ? clamp(Number(forceCount), 1, 12) : clamp(Number(colSetting), 1, 12);
-				let t = baseCols;
-				if (isContNode && (s.displayType || 'flex') === 'grid') {
-					const rowsValue = getResponsiveSettingForDevice(s, 'gridRows', currentDevice, s.gridRows || '1');
-					const rows = containerGridRowsCount(rowsValue);
-					t = Math.max(1, baseCols * rows);
-				}
-				if (!Array.isArray(node.columns)) node.columns = [];
-
-				// Preserve each device layout snapshot so responsive column changes do not overwrite other devices.
-				if (state && state.activeDevice && state.activeDevice !== currentDevice) {
-					const sourceColumns = cloneColumnsState(node.columns);
-					state.snapshots[state.activeDevice] = sourceColumns;
-					const restored = resolveColumnsSnapshotForDevice(state, currentDevice);
-					if (Array.isArray(restored) && restored.length) {
-						node.columns = cloneColumnsState(restored);
-						// Content is global across devices. Keep target snapshot in sync with latest source content.
-						reconcileColumnsContent(sourceColumns, node.columns);
-					}
-				}
-
-				while (node.columns.length < t) node.columns.push({id:uid('c'),children:[]});
-				if (node.columns.length > t) {
-					const last = node.columns[t-1];
-					node.columns.slice(t).forEach(col => (col.children||[]).forEach(c => last.children.push(c)));
-					node.columns = node.columns.slice(0, t);
-				}
-
-				if (state) {
-					state.snapshots[currentDevice] = cloneColumnsState(node.columns);
-					state.activeDevice = currentDevice;
-				}
-			}
 			function activeResponsiveKey(base) {
 				return responsiveKey(base, normalizeResponsiveDevice(responsiveDevice.value));
 			}
@@ -4609,188 +4138,8 @@
 				if (!Number.isFinite(num) || num <= 0) return emptyValue;
 				return String(num) + unit;
 			}
-			function roundColumnPercent(value) {
-				return Math.round((Number(value) + Number.EPSILON) * 10) / 10;
-			}
-			function formatColumnPercent(value) {
-				const safe = roundColumnPercent(value);
-				return safe.toFixed(1).replace(/\.0$/, '') + '%';
-			}
-			function getFlexColumnPercentages(node) {
-				if (!node || !Array.isArray(node.columns) || !node.columns.length) return [];
-				const percents = Array.from({ length: node.columns.length }, () => 0);
-				let specifiedTotal = 0;
-				const fallbackIndexes = [];
-				node.columns.forEach((col, index) => {
-					const raw = String(col && col.flexBasis != null ? col.flexBasis : '').trim();
-					const match = raw.match(/^(\d+(?:\.\d+)?)%$/);
-					if (match) {
-						const value = Math.max(0, Number(match[1]) || 0);
-						percents[index] = value;
-						specifiedTotal += value;
-						return;
-					}
-					fallbackIndexes.push(index);
-				});
-				if (fallbackIndexes.length) {
-					const remaining = Math.max(0, 100 - specifiedTotal);
-					const share = fallbackIndexes.length ? remaining / fallbackIndexes.length : 0;
-					fallbackIndexes.forEach((index) => {
-						percents[index] = share;
-					});
-				}
-				const total = percents.reduce((sum, value) => sum + value, 0);
-				if (!(total > 0)) {
-					const equal = 100 / node.columns.length;
-					return percents.map(() => equal);
-				}
-				if (Math.abs(total - 100) > 0.05) {
-					return percents.map((value) => (value / total) * 100);
-				}
-				return percents;
-			}
-			function companionColumnIndex(node, index) {
-				if (!node || !Array.isArray(node.columns)) return -1;
-				if (index < node.columns.length - 1) return index + 1;
-				if (index > 0) return index - 1;
-				return -1;
-			}
-			function resolveColumnPairMinPercent(node, index, pairIndex, pairTotal, fallbackPercent = null) {
-				const fallback = Number.isFinite(Number(fallbackPercent))
-					? Number(fallbackPercent)
-					: Math.max(4, Math.min(14, pairTotal * 0.18));
-				try {
-					const currentEl = document.querySelector('.pb-grid-col[data-col-index="' + index + '"][data-parent-node-id="' + node.id + '"]');
-					const pairEl = document.querySelector('.pb-grid-col[data-col-index="' + pairIndex + '"][data-parent-node-id="' + node.id + '"]');
-					if (!currentEl || !pairEl) return fallback;
-					const currentRect = currentEl.getBoundingClientRect();
-					const pairRect = pairEl.getBoundingClientRect();
-					const pairWidth = currentRect.width + pairRect.width;
-					if (!(pairWidth > 0)) return fallback;
-					const idealMinPx = Math.min(160, Math.max(110, pairWidth * 0.18));
-					const maxAllowedMinPx = Math.max(48, (pairWidth / 2) - 24);
-					const minPx = Math.max(48, Math.min(idealMinPx, maxAllowedMinPx));
-					return Math.max(4, roundColumnPercent((minPx / pairWidth) * pairTotal));
-				} catch (error) {
-					return fallback;
-				}
-			}
-			function applyColumnPairWidths(node, index, nextPercent, pairIndex = companionColumnIndex(node, index), options = {}) {
-				if (!node || !Array.isArray(node.columns) || index < 0 || index >= node.columns.length) return;
-				const safeIndex = Number(index);
-				if (!Number.isFinite(safeIndex)) return;
-				if (pairIndex < 0 || pairIndex >= node.columns.length || pairIndex === safeIndex) {
-					node.columns[safeIndex].flexBasis = formatColumnPercent(clamp(Number(nextPercent) || 0, 1, 100));
-					return;
-				}
-				const percents = getFlexColumnPercentages(node);
-				const pairTotal = (percents[safeIndex] || 0) + (percents[pairIndex] || 0);
-				const requestedMinPercent = Number(options.minPercent);
-				const rawMinPercent = resolveColumnPairMinPercent(
-					node,
-					safeIndex,
-					pairIndex,
-					pairTotal,
-					Number.isFinite(requestedMinPercent) ? requestedMinPercent : null
-				);
-				const minPercent = clamp(rawMinPercent, 4, Math.max(4, (pairTotal / 2) - 0.5));
-				const safeCurrent = clamp(Number(nextPercent) || 0, minPercent, Math.max(minPercent, pairTotal - minPercent));
-				const adjustedCurrent = roundColumnPercent(safeCurrent);
-				node.columns[safeIndex].flexBasis = formatColumnPercent(adjustedCurrent);
-				node.columns[pairIndex].flexBasis = formatColumnPercent(pairTotal - adjustedCurrent);
-			}
-			function columnWidthValue(ctx) {
-				if (!ctx || !ctx.node || !ctx.column) return 0;
-				const parsed = parseNumberUnit(ctx.column.flexBasis, '%', ['%']);
-				if (parsed.value !== '') return parsed.value;
-				const percents = getFlexColumnPercentages(ctx.node);
-				return roundColumnPercent(percents[ctx.index] || 0);
-			}
-			function setSelectedColumnWidthValue(ctx, next) {
-				if (!ctx || !ctx.node || !ctx.column || !ctx.canEditWidth) return;
-				applyColumnPairWidths(ctx.node, ctx.index, Number(next) || 0);
-			}
-			function columnSettingsWidthValue(node, index) {
-				if (!node || !Array.isArray(node.columns)) return 0;
-				return columnWidthValue({ node, column: node.columns[index], index });
-			}
-			function setColumnSettingsWidthValue(node, index, next) {
-				if (!node || !Array.isArray(node.columns) || node.columns.length < 2) return;
-				const settings = node.settings || {};
-				const displayType = settings.displayType || 'flex';
-				const direction = getResponsiveSetting(settings, 'direction', settings.direction || 'row') || 'row';
-				if (displayType !== 'flex' || !['row', 'row-reverse'].includes(direction)) return;
-				applyColumnPairWidths(node, index, Number(next) || 0);
-			}
 			function setContainerResizeOverlay(visible, text = '', x = 0, y = 0) {
 				containerResizeOverlay.value = { visible, text, x, y };
-			}
-			function clearSelectedColumn() {
-				return null;
-			}
-			function selectLegacyColumn(node, col) {
-				if (!node || !col) return;
-				selectedId.value = node.id;
-				settingsTab.value = 'layout';
-			}
-			function startColumnResize(event, node, col, index) {
-				if (!event || !node || !col || !Array.isArray(node.columns)) return;
-				const settings = node.settings || {};
-				const displayType = settings.displayType || 'flex';
-				const direction = getResponsiveSetting(settings, 'direction', settings.direction || 'row') || 'row';
-				const flexWrap = getResponsiveSetting(settings, 'flexWrap', settings.flexWrap || 'nowrap') || 'nowrap';
-				if (displayType !== 'flex' || direction !== 'row' || flexWrap !== 'nowrap') return;
-				const pairIndex = companionColumnIndex(node, index);
-				if (pairIndex < 0) return;
-				const handleEl = event.currentTarget;
-				const currentColEl = handleEl && typeof handleEl.closest === 'function' ? handleEl.closest('.pb-grid-col') : null;
-				const nextColEl = currentColEl && currentColEl.nextElementSibling && currentColEl.nextElementSibling.classList.contains('pb-grid-col')
-					? currentColEl.nextElementSibling
-					: null;
-				if (!currentColEl || !nextColEl) return;
-				const currentRect = currentColEl.getBoundingClientRect();
-				const nextRect = nextColEl.getBoundingClientRect();
-				const pairWidth = currentRect.width + nextRect.width;
-				if (!(pairWidth > 0)) return;
-				const percents = getFlexColumnPercentages(node);
-				const pairTotalPercent = (percents[index] || 0) + (percents[pairIndex] || 0);
-				const startX = Number(event.clientX) || 0;
-				const startCurrentWidth = currentRect.width;
-				const idealMinPx = Math.min(160, Math.max(110, pairWidth * 0.18));
-				const maxAllowedMinPx = Math.max(48, (pairWidth / 2) - 24);
-				const minPx = Math.max(48, Math.min(idealMinPx, maxAllowedMinPx));
-				const dragMinPercent = roundColumnPercent((minPx / pairWidth) * pairTotalPercent);
-
-				selectLegacyColumn(node, col);
-				suppressHistory.value = true;
-				document.body.classList.add('pb-is-resizing-containers');
-				setContainerResizeOverlay(true, formatColumnPercent(percents[index] || 0), startX + 18, currentRect.top + 24);
-
-				let finished = false;
-				const stop = () => {
-					if (finished) return;
-					finished = true;
-					window.removeEventListener('mousemove', onMove);
-					window.removeEventListener('mouseup', stop);
-					window.removeEventListener('blur', stop);
-					activeContainerResizeCleanup = null;
-					suppressHistory.value = false;
-					document.body.classList.remove('pb-is-resizing-containers');
-					setContainerResizeOverlay(false);
-					snap();
-				};
-				const onMove = (moveEvent) => {
-					const deltaX = (Number(moveEvent.clientX) || 0) - startX;
-					const nextCurrentWidth = clamp(startCurrentWidth + deltaX, minPx, pairWidth - minPx);
-					const nextCurrentPercent = roundColumnPercent((nextCurrentWidth / pairWidth) * pairTotalPercent);
-					applyColumnPairWidths(node, index, nextCurrentPercent, pairIndex, { minPercent: dragMinPercent });
-					setContainerResizeOverlay(true, formatColumnPercent(columnWidthValue({ node, column: col, index })), (Number(moveEvent.clientX) || 0) + 18, currentRect.top + 24);
-				};
-
-				activeContainerResizeCleanup = stop;
-				window.addEventListener('mousemove', onMove);
-				window.addEventListener('mouseup', stop);
-				window.addEventListener('blur', stop);
 			}
 			function containerWidthSource(node) {
 				if (!node || !node.settings) return '';
@@ -5435,7 +4784,6 @@
 				const device = normalizeResponsiveDevice(responsiveDevice.value);
 				const value = clamp(Number(next) || 1, 1, 12);
 				node.settings[responsiveKey('gridColumns', device)] = value;
-				syncCols(node, null, device);
 			}
 			function containerGridRowsValue(node) {
 				if (!node || !node.settings) return 1;
@@ -5446,7 +4794,6 @@
 				if (!node || !node.settings) return;
 				const value = clamp(Number(next) || 1, 1, 12);
 				setContainerResponsiveSetting(node.settings, 'gridRows', String(value));
-				syncCols(node, null, responsiveDevice.value);
 			}
 			function syncContainerGap(settings, source) {
 				if (!settings || !settings.containerGapLinked) return;
@@ -5524,7 +4871,6 @@
 				const dt = s.displayType || 'flex';
 
 				if (dt === 'flex') {
-					normalizeFlexColumnWidths(node);
 					const nextRow = firstGapValue(
 						getResponsiveSetting(s, 'gridRowGap', ''),
 						s.rowGap,
@@ -5576,86 +4922,8 @@
 					s.columnGap = nextCol;
 				}
 			}
-			function syncGridColumnsForDevice(node) {
-				syncCols(node, null, responsiveDevice.value);
-			}
-			function syncSelectedNodeGridCells() {
-				const node = selectedNode.value;
-				if (!node) return;
-				if (isCont(node.type) || isGrid(node.type)) {
-					syncCols(node, null, responsiveDevice.value);
-				}
-			}
-			function walkNodes(nodes, handler) {
-				if (!Array.isArray(nodes) || typeof handler !== 'function') return;
-				nodes.forEach((node) => {
-					if (!node) return;
-					handler(node);
-					if (Array.isArray(node.children) && node.children.length) {
-						walkNodes(node.children, handler);
-					}
-					if (Array.isArray(node.columns) && node.columns.length) {
-						node.columns.forEach((col) => {
-							if (Array.isArray(col && col.children) && col.children.length) {
-								walkNodes(col.children, handler);
-							}
-						});
-					}
-					if (Array.isArray(node.tabItems) && node.tabItems.length) {
-						node.tabItems.forEach((item) => {
-							if (Array.isArray(item && item.children) && item.children.length) {
-								walkNodes(item.children, handler);
-							}
-						});
-					}
-					if (Array.isArray(node.accordionItems) && node.accordionItems.length) {
-						node.accordionItems.forEach((item) => {
-							if (Array.isArray(item && item.children) && item.children.length) {
-								walkNodes(item.children, handler);
-							}
-						});
-					}
-				});
-			}
-			function syncAllGridCellsForDevice(device = responsiveDevice.value) {
-				const safeDevice = normalizeResponsiveDevice(device);
-				walkNodes(rootNodes.value, (node) => {
-					if (isCont(node.type) || isGrid(node.type)) {
-						syncCols(node, null, safeDevice);
-					}
-				});
-			}
-			let responsiveGridSyncTimer = null;
-			function scheduleResponsiveGridSync(device) {
-				if (responsiveGridSyncTimer !== null) window.clearTimeout(responsiveGridSyncTimer);
-				responsiveGridSyncTimer = window.setTimeout(() => {
-					responsiveGridSyncTimer = null;
-					syncAllGridCellsForDevice(device);
-				}, 0);
-			}
-			watch(selectedNode, n => { if (n && isGrid(n.type)) syncCols(n, null, responsiveDevice.value); }, { deep: true });
-			// Sync jumlah cell saat Grid Container settings berubah.
-			watch(
-				() => [
-					selectedNode.value?.settings?.displayType,
-					selectedNode.value?.settings?.gridColumns,
-					selectedNode.value?.settings?.gridColumnsTablet,
-					selectedNode.value?.settings?.gridColumnsMobile,
-					selectedNode.value?.settings?.gridRows,
-					selectedNode.value?.settings?.gridRowsTablet,
-					selectedNode.value?.settings?.gridRowsMobile,
-				],
-				() => {
-					const node = selectedNode.value;
-					if (node && isCont(node.type)) syncCols(node, null, responsiveDevice.value);
-				}
-			);
-			watch(responsiveDevice, (device) => {
-				scheduleResponsiveGridSync(device);
+			watch(responsiveDevice, () => {
 				closeWidthPreviewMenu();
-			});
-			onBeforeUnmount(() => {
-				if (responsiveGridSyncTimer !== null) window.clearTimeout(responsiveGridSyncTimer);
 			});
 			watch(settingsTab, scheduleColorisInit);
 			watch(
@@ -5684,7 +4952,6 @@
 					if (nodes[i].id === id) { nodes.splice(i,1); return true; }
 					const n = nodes[i];
 					if (n.children && delFrom(n.children, id)) return true;
-					if (n.columns) for (const col of n.columns) if (delFrom(col.children||[], id)) return true;
 					if (n.tabItems) for (const item of n.tabItems) if (delFrom(item.children||[], id)) return true;
 					if (n.accordionItems) for (const item of n.accordionItems) if (delFrom(item.children||[], id)) return true;
 				}
@@ -5717,7 +4984,6 @@
 					}
 					const n = nodes[i];
 					if (n.children && dupIn(n.children, id)) return true;
-					if (n.columns) for (const col of n.columns) if (dupIn(col.children||[], id)) return true;
 					if (n.tabItems) for (const item of n.tabItems) if (dupIn(item.children||[], id)) return true;
 					if (n.accordionItems) for (const item of n.accordionItems) if (dupIn(item.children||[], id)) return true;
 				}
@@ -5744,11 +5010,10 @@
 			function dupNode(id)    { dupIn(rootNodes.value, id); }
 			function selectNode(n, options = {}) {
 				clearPendingInsertTarget();
-				clearSelectedColumn();
 				selectedId.value = n.id;
 				if (options.revealPanel) leftCollapsed.value = false;
 			}
-			function clearSel()     { clearPendingInsertTarget(); clearSelectedColumn(); selectedId.value = ''; }
+			function clearSel()     { clearPendingInsertTarget(); selectedId.value = ''; }
 			function clearCurrentSelection() {
 				clearSel();
 			}
@@ -5757,7 +5022,6 @@
 				nextTick(resetPropertiesPanelScroll);
 			}
 			function showToolboxPanel(target = null) {
-				clearSelectedColumn();
 				selectedId.value = '';
 				leftCollapsed.value = false;
 				previewMode.value = false;
@@ -5896,7 +5160,6 @@
 				lastHoveredDropzoneEl = null;
 				document.querySelectorAll('.pb-dropzone.is-drop-hover').forEach(el => el.classList.remove('is-drop-hover'));
 				document.querySelectorAll('.pb-node.is-drag-over').forEach(el => el.classList.remove('is-drag-over'));
-				document.querySelectorAll('.pb-grid-col.is-drag-over-col').forEach(el => el.classList.remove('is-drag-over-col'));
 			}
 			function trackDropzonePointerFromEvent(event) {
 				if (!event) return null;
@@ -5930,28 +5193,23 @@
 				nextTick(() => {
 					document.querySelectorAll('.pb-dropzone').forEach(el => {
 						const parentNode = el.closest('.pb-node');
-						const parentCol  = el.closest('.pb-grid-col');
 						const enter = (e) => {
 							e.stopPropagation();
 							trackDropzonePointerFromEvent(e);
 							// Bersihkan semua highlight sebelumnya
 							document.querySelectorAll('.pb-dropzone.is-drop-hover').forEach(z => z.classList.remove('is-drop-hover'));
 							document.querySelectorAll('.pb-node.is-drag-over').forEach(n => n.classList.remove('is-drag-over'));
-							document.querySelectorAll('.pb-grid-col.is-drag-over-col').forEach(c => c.classList.remove('is-drag-over-col'));
 							// Tambahkan highlight ke dropzone
 							el.classList.add('is-drop-hover');
 							lastHoveredDropzoneEl = el;
 							// Tambahkan class ke pb-node parent → label muncul seperti hover
 							if (parentNode) parentNode.classList.add('is-drag-over');
-							// Tambahkan class ke pb-grid-col parent → label kolom muncul
-							if (parentCol) parentCol.classList.add('is-drag-over-col');
 						};
 						const leave = (e) => {
 							// Hanya hapus jika mouse benar-benar keluar dari elemen (bukan ke child)
 							if (!el.contains(e.relatedTarget)) {
 								el.classList.remove('is-drop-hover');
 								if (parentNode) parentNode.classList.remove('is-drag-over');
-								if (parentCol) parentCol.classList.remove('is-drag-over-col');
 							}
 						};
 						el.addEventListener('dragenter', enter);
@@ -5985,96 +5243,6 @@
 				}
 
 				// Container dan widget adalah child node canonical yang valid.
-			}
-
-			function columnHasChildrenForSequential(col, ignoreNodeId = '') {
-				if (!col || !Array.isArray(col.children) || col.children.length === 0) return false;
-				if (!ignoreNodeId) return true;
-				return col.children.some((child) => child && child.id !== ignoreNodeId);
-			}
-			function isSequentialColumnLockedForNode(node, colIndex, ignoreNodeId = '') {
-				const cols = Array.isArray(node && node.columns) ? node.columns : [];
-				const idx = Number(colIndex);
-				if (!Number.isFinite(idx) || idx < 0 || idx >= cols.length) return false;
-				if (columnHasChildrenForSequential(cols[idx], ignoreNodeId)) return false;
-				for (let i = 0; i < idx; i++) {
-					if (!columnHasChildrenForSequential(cols[i], ignoreNodeId)) return true;
-				}
-				return false;
-			}
-			function rerouteTabsDropToNestedColumn(evt, tabChildren) {
-				const parentEl = evt && evt.to ? evt.to : null;
-				const originalEvent = evt && evt.originalEvent ? evt.originalEvent : null;
-				const hoveredEl = findNestedCanvasDropTargetFromEvent(originalEvent, parentEl) || lastHoveredDropzoneEl;
-				if (!hoveredEl || !parentEl || hoveredEl === parentEl) return false;
-				if (!parentEl.contains(hoveredEl) || !hoveredEl.classList || !hoveredEl.classList.contains('pb-dropzone-col')) return false;
-
-				const parentNodeId = String(hoveredEl.dataset.parentNodeId || '').trim();
-				const colIndex = Number(hoveredEl.dataset.colIndex);
-				if (!parentNodeId || !Number.isFinite(colIndex)) return false;
-
-				const ownerNode = findById(rootNodes.value, parentNodeId);
-				const ownerColumns = Array.isArray(ownerNode && ownerNode.columns) ? ownerNode.columns : [];
-				const targetColumn = ownerColumns[colIndex];
-				const targetChildren = Array.isArray(targetColumn && targetColumn.children) ? targetColumn.children : null;
-				if (!ownerNode || !targetColumn || !targetChildren) return false;
-
-				const idx = Number(evt.newIndex);
-				const vmData = evt.item && evt.item._underlying_vm_;
-				let item = null;
-				if (vmData && vmData.id) {
-					item = tabChildren.find((child) => child && child.id === vmData.id) || tabChildren[idx] || tabChildren[tabChildren.length - 1];
-				} else {
-					item = tabChildren[idx] || tabChildren[tabChildren.length - 1];
-				}
-				if (!item) return false;
-				if (isSequentialColumnLockedForNode(ownerNode, colIndex, item.id)) return false;
-
-				const currentIndex = tabChildren.indexOf(item);
-				if (currentIndex >= 0) tabChildren.splice(currentIndex, 1);
-				targetChildren.push(item);
-				return true;
-			}
-			function rerouteAccordionDropToNestedColumn(evt, itemChildren) {
-				return rerouteTabsDropToNestedColumn(evt, itemChildren);
-			}
-
-			function legacyColumnDropAdapter(evt, col, colIndex, parentNode) {
-				const idx  = evt.newIndex;
-				const draggedNodeType = String((evt.item && evt.item.dataset && evt.item.dataset.nodeType) || '').trim();
-				const isExistingCanvasNode = !!draggedNodeType;
-				// vuedraggable@4.1.0: item ada di _underlying_vm_
-				// Tapi array sudah diupdate, cari item yang cocok
-				const vmData = evt.item && evt.item._underlying_vm_;
-				// Cari item di col.children berdasarkan id dari vm, atau pakai newIndex
-				let item = null;
-				if (vmData && vmData.id) {
-					item = col.children.find(c => c.id === vmData.id) || col.children[idx];
-				} else {
-					item = col.children[idx] || col.children[col.children.length - 1];
-				}
-				console.log('[PB] onAddCol idx:', idx, 'col.len:', col.children.length, 'item:', item?.type);
-				if (!item) return;
-
-				// Safety guard: cegah bypass lock berurutan walau ada jalur drop yang lolos put().
-				const targetIndex = Number(colIndex);
-				if (!isExistingCanvasNode && parentNode && Number.isFinite(targetIndex) && isSequentialColumnLockedForNode(parentNode, targetIndex, item.id)) {
-					const targetPos = col.children.indexOf(item);
-					if (targetPos >= 0) col.children.splice(targetPos, 1);
-					const fromEl = evt.from;
-					const cameFromColumn = !!(fromEl && fromEl.classList && fromEl.classList.contains('pb-dropzone-col'));
-					const fromList = fromEl && fromEl.__draggable_component__ ? fromEl.__draggable_component__.realList : null;
-					if (cameFromColumn && Array.isArray(fromList) && !fromList.some((child) => child && child.id === item.id)) {
-						const oldIndex = Number(evt.oldIndex);
-						if (Number.isFinite(oldIndex) && oldIndex >= 0 && oldIndex <= fromList.length) fromList.splice(oldIndex, 0, item);
-						else fromList.push(item);
-					}
-					return;
-				}
-
-				// Grid atau widget -> OK
-				// Container -> hapus
-				if (isCont(item.type)) { col.children.splice(col.children.indexOf(item), 1); }
 			}
 
 			// onRootAdd: dipanggil saat item di-drop ke root
@@ -6458,7 +5626,6 @@
 				isBgHoverState,
 				setBgTypeForState,
 				setBgOverlayTypeForState,
-				syncGridColumnsForDevice,
 				syncGridGap,
 				syncResponsiveSides,
 				chooseBgImage,
@@ -6536,7 +5703,7 @@
 				appTitle, pageSettingsOpen, openPageSettings, closePageSettings, toolbox, elementSearch, filteredToolboxGroups, leftCollapsed, previewMode, rootNodes, loadWidget, loadWidgetSettings, hasRegisteredWidget, widgetEditorServices,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
 				selectedId, hoveredId, settingsTab, imageBoxImageState, iconBoxIconState, selectedNode, selectedType, activeSettingsTabs, selectedNodeKind,
-				responsiveDevice, responsiveDevices, responsiveCanvasLabel, canvasZoom, showCanvasGrid, changeCanvasZoom, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap, syncGridColumnsForDevice,
+				responsiveDevice, responsiveDevices, responsiveCanvasLabel, canvasZoom, showCanvasGrid, changeCanvasZoom, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap,
 				controlResponsiveMenu, responsiveDeviceIcon, responsiveDeviceLabel, deviceOptionLabel,
 				openControlResponsiveMenu, closeControlResponsiveMenu, isControlResponsiveMenuOpen,
 				setResponsiveDevice, applyResponsiveDevice, toggleWidthPreviewMenu, closeWidthPreviewMenu, selectDesktopPreviewWidth,
@@ -6555,7 +5722,7 @@
 				containerGridRowsValue, setContainerGridRowsValue, syncContainerGap,
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
 				displayNodeLabel, nodeLabelIcon,
-				selectNode, clearSel, clearCurrentSelection, selectSettingsTab, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, syncCols, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
+				selectNode, clearSel, clearCurrentSelection, selectSettingsTab, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
 				openIconLibrary, openProIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, openSocialIconLibrary, openAlertIconLibrary, chooseButtonSvg, chooseSocialIconSvg, chooseAlertIconSvg, chooseProIconSvg, chooseRatingSvg, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
@@ -6579,7 +5746,7 @@
 				onAddContainer, onRootAdd,
 				modal, cPresets, gPresets, applyContPreset, applyGridPreset, closeModal, pickLayout, openModal,
 				canUndo, canRedo, undo, redo,
-				onToolboxItemClick, pendingInsertTarget, clearPendingInsertTarget, rerouteTabsDropToNestedColumn, rerouteAccordionDropToNestedColumn, trackDropzonePointerFromEvent,
+				onToolboxItemClick, pendingInsertTarget, clearPendingInsertTarget,
 			};
 		},
 
@@ -6923,11 +6090,8 @@
 								:on-open-modal="openModal"
 								:on-show-toolbox="showToolboxPanel"
 								:pending-insert-target="pendingInsertTarget"
-								:on-reroute-tabs-drop="rerouteTabsDropToNestedColumn"
 								:on-accordion-runtime-for-node="accordionRuntimeForNode"
 								:on-toggle-accordion-item="toggleAccordionItem"
-								:on-reroute-accordion-drop="rerouteAccordionDropToNestedColumn"
-								:on-track-dropzone-pointer="trackDropzonePointerFromEvent"
 							/>
 						</template>
 						<template #footer>
