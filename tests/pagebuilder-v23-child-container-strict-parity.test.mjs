@@ -283,3 +283,60 @@ test('savePage posts a canonical clone and clears migration state only after suc
     assert.doesNotMatch(catchBody, /legacyMigrationPending\.value = false/);
     assert.match(app, /saveState==='dirty' \? 'Migration pending' : \(saveState==='saving' \? 'Saving' : \(saveState==='error' \? 'Save failed' : 'Saved'\)\)/);
 });
+
+test('toolbox and existing widgets can enter canonical child Container dropzones', () => {
+    const contGroupBody = app.match(/contGroup\(\) \{([\s\S]*?)\n\s*\},\n\s*\/\/ Style kolom/)?.[1];
+    assert.ok(contGroupBody, 'BuilderNode.contGroup should exist');
+
+    const contGroup = new Function(contGroupBody).call({});
+    const accepts = (groupName, nestedTarget = true) => typeof contGroup.put === 'function'
+        ? contGroup.put(
+            { el: { dataset: nestedTarget ? { pbNestedDropzone: 'true' } : {} } },
+            { options: { group: { name: groupName } } },
+            {},
+        )
+        : contGroup.put === true;
+
+    assert.equal(contGroup.name, 'pb-container');
+    assert.equal(accepts('pb-col'), true, 'child Containers must accept sidebar widget clones');
+    assert.equal(accepts('pb-col', false), false, 'shared Tabs and Accordion groups must not gain sidebar drop behavior');
+    assert.equal(accepts('pb-root'), true, 'child Containers must accept widgets moved from the page root');
+    assert.equal(accepts('pb-container'), true, 'child Containers must accept sibling and nested child moves');
+
+    const childDropzones = Array.from(app.matchAll(/<draggable\s+v-model="node\.children"([\s\S]*?)@add="\(event\) => onAddContainer\(event, node\)"/g), (match) => match[1]);
+    assert.equal(childDropzones.length, 2, 'Container and legacy Grid branches should share the nested Sortable contract');
+    childDropzones.forEach((dropzone) => {
+        assert.match(dropzone, /:group="contGroup"/);
+        assert.match(dropzone, /:move="onCanMoveCanvasNode"/);
+        assert.match(dropzone, /:fallback-on-body="true"/);
+        assert.match(dropzone, /:dragover-bubble="false"/);
+        assert.match(dropzone, /:swap-threshold="0\.65"/);
+        assert.match(dropzone, /:empty-insert-threshold="30"/);
+    });
+});
+
+test('default Advanced widget width fills its Container while explicit widths stay configurable', () => {
+    const previewStyleBody = app.match(/function widgetAdvancedPreviewStyle\(settings, device\) \{([\s\S]*?)\n\s*return style;\n\s*\}/)?.[1];
+    assert.ok(previewStyleBody, 'widgetAdvancedPreviewStyle should exist');
+    assert.match(previewStyleBody, /if \(widthMode === 'full'\) style\.width = '100%';/);
+    assert.match(previewStyleBody, /else if \(widthMode === 'inline'\) style\.width = 'fit-content';/);
+    assert.match(previewStyleBody, /else if \(widthMode === 'custom'\) style\.width = cssSize\(/);
+    assert.match(previewStyleBody, /else style\.width = '100%';/);
+    assert.doesNotMatch(previewStyleBody, /else style\.width = 'auto';/);
+});
+
+test('empty child hints and nested layout toolbars remain centered and collision-free', () => {
+    const css = fs.readFileSync(path.resolve('public/assets/css/pagebuilder_elementor_v23.css'), 'utf8');
+    const emptyHintRule = css.match(/\.pb-dropzone-container-children\s*>\s*\.pb-container-empty-hint\s*\{([\s\S]*?)\}/)?.[1];
+    assert.ok(emptyHintRule, 'child Container empty hint should have a scoped stretch rule');
+    assert.match(emptyHintRule, /width:\s*100%/);
+    assert.match(emptyHintRule, /align-self:\s*stretch/);
+    assert.match(emptyHintRule, /justify-self:\s*stretch/);
+    assert.match(emptyHintRule, /grid-column:\s*1\s*\/\s*-1/);
+    assert.match(emptyHintRule, /box-sizing:\s*border-box/);
+
+    assert.match(css, /\.pb-dropzone-container-children\s*>\s*:is\(\.pb-node-grid,\s*\.pb-node-row_grid\)\s*\{[\s\S]*?width:\s*100%;[\s\S]*?align-self:\s*stretch;[\s\S]*?justify-self:\s*stretch;/);
+    assert.doesNotMatch(css, /\.webpage-frame \.pb-node\.ancestor-active:not\(\.active\)\s*>\s*\.pb-node-toolbar\s*>\s*\.container-handle\s*\{\s*display:\s*none;/);
+    assert.match(css, /\.webpage-frame \.pb-dropzone-container-children\s*>\s*\.pb-node\s*>\s*\.pb-node-toolbar\s*>\s*\.container-handle\s*\{[\s\S]*?left:\s*8px;[\s\S]*?max-width:\s*calc\(100% - 105px\);[\s\S]*?transform:\s*none;/);
+    assert.match(css, /\.webpage-frame \[data-pb-nested-dropzone="true"\]\s+\[data-pb-nested-dropzone="true"\]\s*>\s*\.pb-node\s*>\s*\.pb-node-toolbar\s*>\s*:is\(\.container-handle,\s*\.section-toolbar\)\s*\{[\s\S]*?top:\s*24px;/);
+});

@@ -861,7 +861,7 @@
 		if (widthMode === 'full') style.width = '100%';
 		else if (widthMode === 'inline') style.width = 'fit-content';
 		else if (widthMode === 'custom') style.width = cssSize(get('customWidth', ''), 'auto');
-		else style.width = 'auto';
+		else style.width = '100%';
 		const orderMode = get('orderMode', 'default');
 		if (orderMode === 'start') style.order = -9999;
 		if (orderMode === 'end') style.order = 9999;
@@ -2102,14 +2102,15 @@
 				}
 				return style;
 			},
-			// group untuk container children — tolak dari pb-col dan tolak container node
+			// Shared group for canonical child Container dropzones.
 			contGroup() {
 				return {
 					name: 'pb-container',
-					put: (to, from, el) => {
-						const fromGroup = from.options && from.options.group && from.options.group.name;
-						// Tolak drag dari pb-col (widget pindah antar kolom tidak boleh masuk container)
-						if (fromGroup === 'pb-col') return false;
+					put(to, from) {
+						const fromGroup = from?.options?.group?.name;
+						if (fromGroup === 'pb-col') {
+							return to?.el?.dataset?.pbNestedDropzone === 'true';
+						}
 						return true;
 					},
 				};
@@ -2357,6 +2358,10 @@
 					item-key="id"
 					:group="contGroup"
 					:move="onCanMoveCanvasNode"
+					:fallback-on-body="true"
+					:dragover-bubble="false"
+					:swap-threshold="0.65"
+					:empty-insert-threshold="30"
 					data-pb-interactive="true"
 					data-pb-nested-dropzone="true"
 					:data-parent-node-id="node.id"
@@ -2392,6 +2397,10 @@
 					item-key="id"
 					:group="contGroup"
 					:move="onCanMoveCanvasNode"
+					:fallback-on-body="true"
+					:dragover-bubble="false"
+					:swap-threshold="0.65"
+					:empty-insert-threshold="30"
 					data-pb-interactive="true"
 					data-pb-nested-dropzone="true"
 					:data-parent-node-id="node.id"
