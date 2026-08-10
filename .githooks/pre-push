@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Graphify pre-push is opt-in so a slow local graph update never delays Git.
+[ "${GRAPHIFY_RUN_PRE_PUSH:-0}" = "1" ] || exit 0
+
 REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
 sh "$REPO_ROOT/.githooks/graphify-sync" pre-push
 exit 0

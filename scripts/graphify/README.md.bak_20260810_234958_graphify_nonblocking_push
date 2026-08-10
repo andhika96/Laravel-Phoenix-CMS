@@ -18,27 +18,13 @@ Script tersebut memasang Graphify `0.9.23` bila diperlukan, mengaktifkan `.githo
 - `post-checkout`: refresh setelah berpindah branch.
 - `post-merge`: refresh setelah `git pull` atau merge.
 - `post-rewrite`: refresh setelah rebase.
-- `pre-push`: tidak berjalan secara default agar update Graphify lokal tidak menunda push; tersedia sebagai opt-in eksplisit.
+- `pre-push`: pemeriksaan incremental terakhir sebelum push.
 
 Graph tetap lokal dan dikecualikan dari Git melalui `/graphify-out/`. Kegagalan Graphify dicatat di `%USERPROFILE%\.cache\graphify-git-sync.log` dan tidak membatalkan operasi Git.
 
 Jika Graphify mendeteksi graph lama masih berisi file yang kini dikecualikan oleh `.graphifyignore`, updater mengenali kedua diagnostic pengaman Graphify (`Refusing to overwrite` dan `left the scan corpus`) lalu menjalankan kembali scan code-only dengan `--force`. Pemulihan ini hanya berlaku untuk kombinasi diagnostic tersebut; error lain tetap dicatat tanpa mengganggu Git. Dengan begitu, laptop dan PC kantor membangun graph lokal masing-masing dari scope source yang sama tanpa mengirim `graphify-out` ke repository.
 
-Push normal tidak memerlukan environment variable tambahan:
-
-```powershell
-git push origin main
-```
-
-Jika pemeriksaan Graphify memang ingin dijalankan sebelum push:
-
-```powershell
-$env:GRAPHIFY_RUN_PRE_PUSH = '1'
-git push origin main
-Remove-Item Env:GRAPHIFY_RUN_PRE_PUSH
-```
-
-Untuk melewati seluruh hook Graphify lainnya sementara:
+Untuk melewati hook sementara:
 
 ```powershell
 $env:GRAPHIFY_SKIP_HOOK = '1'
