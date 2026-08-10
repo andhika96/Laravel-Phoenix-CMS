@@ -8,7 +8,9 @@
 
 		<div v-show="editor.settingsTab==='content'" class="pb-tab-content">
 			<details class="pb-collapsible" open><summary>Image</summary><div class="pb-collapsible-body">
-				<div class="pb-form-group"><label class="pb-form-label">Image</label><div class="pb-bg-media-field pb-widget-settings__media-field" :class="{ 'has-image': !!node.settings.src }"><div class="pb-bg-media-preview" :style="node.settings.src ? { backgroundImage: 'url(' + node.settings.src + ')' } : {}"><button type="button" class="pb-bg-media-center-btn" :title="node.settings.src ? 'Change Image' : 'Choose Image'" @click="editor.chooseMedia(node.settings, 'src')"><i :class="node.settings.src ? 'fas fa-pen' : 'fas fa-plus'"></i></button></div><div class="pb-bg-media-actions"><button type="button" class="pb-bg-media-choose" @click="editor.chooseMedia(node.settings, 'src')">Choose Image</button><button type="button" class="pb-bg-media-remove" :disabled="!node.settings.src" title="Remove Image" @click="editor.clearMedia(node.settings, 'src')"><i class="fas fa-trash-alt"></i></button></div></div></div>
+				<div class="pb-form-group"><label class="pb-form-label">Image Source</label><select class="pb-select" :value="imageSource" @change="setImageSource($event.target.value)"><option value="ckfinder">CKFinder</option><option value="url">External URL</option></select></div>
+				<div v-if="imageSource === 'ckfinder'" class="pb-form-group"><label class="pb-form-label">Image</label><div class="pb-bg-media-field pb-widget-settings__media-field" :class="{ 'has-image': !!node.settings.src }"><div class="pb-bg-media-preview" :style="node.settings.src ? { backgroundImage: 'url(' + node.settings.src + ')' } : {}"><button type="button" class="pb-bg-media-center-btn" :title="node.settings.src ? 'Change Image' : 'Choose Image'" @click="editor.chooseMedia(node.settings, 'src')"><i :class="node.settings.src ? 'fas fa-pen' : 'fas fa-plus'"></i></button></div><div class="pb-bg-media-actions"><button type="button" class="pb-bg-media-choose" @click="editor.chooseMedia(node.settings, 'src')">Choose Image</button><button type="button" class="pb-bg-media-remove" :disabled="!node.settings.src" title="Remove Image" @click="editor.clearMedia(node.settings, 'src')"><i class="fas fa-trash-alt"></i></button></div></div></div>
+				<div v-else class="pb-form-group"><label class="pb-form-label">Image URL</label><input class="pb-input" type="url" v-model.trim="node.settings.src" placeholder="https://example.com/image.jpg"><div class="pb-form-note">Use a direct HTTP or HTTPS image URL.</div></div>
 				<div class="pb-form-group"><label class="pb-form-label">Alt</label><input class="pb-input" v-model="node.settings.alt"></div>
 			</div></details>
 		</div>
@@ -54,5 +56,15 @@ export default {
 	name: 'BasicImageSettings',
 	components: { DimensionSetting },
 	props: { node: { type: Object, required: true }, editor: { type: Object, required: true } },
+	computed: {
+		imageSource() {
+			return this.node.settings?.imageSource === 'url' ? 'url' : 'ckfinder';
+		},
+	},
+	methods: {
+		setImageSource(value) {
+			this.node.settings.imageSource = value === 'url' ? 'url' : 'ckfinder';
+		},
+	},
 };
 </script>
