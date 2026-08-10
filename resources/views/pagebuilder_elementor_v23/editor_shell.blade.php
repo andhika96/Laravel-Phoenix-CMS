@@ -79,7 +79,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/vuedraggable@4.1.0/dist/vuedraggable.umd.min.js"></script>
 	<script src="{{ asset('assets/vendor/pb-picker/picker.min.js') }}?v={{ @filemtime(public_path('assets/vendor/pb-picker/picker.min.js')) }}"></script>
 	<script src="{{ asset('assets/plugins/ckfinder/ckfinder.js') }}"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-build-classic@41.4.2/build/ckeditor.js"></script>
+	<script src="{{ asset('assets/plugins/ckeditor5/build/ckeditor.js') }}?v=0.0.1"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
 	<script src="{{ asset('js/pagebuilder_elementor_v23/frontend-runtime.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor_v23/frontend-runtime.js')) }}"></script>
 	<script src="{{ asset('js/pagebuilder_elementor_v23/widget-registry.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor_v23/widget-registry.js')) }}"></script>

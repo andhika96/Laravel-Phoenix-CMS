@@ -93,7 +93,7 @@ test('page root reaches the frame edge without clipping node toolbars', () => {
     assert.match(css, /\.webpage-frame\s*\{[^}]*overflow:\s*clip;[^}]*overflow-clip-margin:\s*24px;/);
 });
 
-test('widget labels expose a stable 24px target at the default 80 percent zoom', () => {
+test('widget labels expose an enlarged hit target at the default 100 percent zoom', () => {
     assert.match(css, /\.webpage-frame \.pb-node-label\.widget-label::before\s*\{[^}]*inset:\s*-5px;[^}]*content:\s*['"]{2};/);
 });
 

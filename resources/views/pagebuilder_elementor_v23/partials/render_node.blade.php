@@ -691,7 +691,7 @@
 
 	$resolve_html_tag = function (array $s) {
 		$raw = strtolower(trim((string) ($s['htmlTag'] ?? 'default')));
-		$allowed = ['div', 'section', 'header', 'main', 'article', 'aside', 'footer', 'nav'];
+		$allowed = ['div', 'section', 'header', 'main', 'article', 'aside', 'footer', 'nav', 'a'];
 		if ($raw === '' || $raw === 'default') return 'div';
 		return in_array($raw, $allowed, true) ? $raw : 'div';
 	};

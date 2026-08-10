@@ -120,10 +120,19 @@
 		$baseClass = $type === 'container_fluid' ? 'el-layout-container-fluid' : 'el-layout-container';
 		$classTokens = array_filter(array_merge([$baseClass, ($hasVideoBackground || $hasSlideshowBackground) ? 'pb-has-background-media' : '', ($hasVideoBackground && !filter_var($s['bgVideoPlayOnMobile'] ?? false, FILTER_VALIDATE_BOOLEAN)) ? 'pb-background-video-mobile-disabled' : '', $normalize_class_tokens($s['cssClass'] ?? '')], $layout_effect_classes($s)));
 		$classes = trim(implode(' ', $classTokens));
+		$rootTag = $resolve_html_tag($s);
 		$attrBag = $attribute_pairs($s['attributes'] ?? []);
 		if (!empty($s['cssId'])) $attrBag['data-css-id'] = (string) $s['cssId'];
+		if ($rootTag === 'a') {
+			$rawLinkUrl = trim((string) ($s['linkUrl'] ?? ''));
+			$attrBag['href'] = preg_match('/^(?:https?:|mailto:|tel:|\/|#)/i', $rawLinkUrl) ? $rawLinkUrl : '#';
+			$linkTargetBlank = filter_var($s['linkTargetBlank'] ?? false, FILTER_VALIDATE_BOOLEAN);
+			$linkNofollow = filter_var($s['linkNofollow'] ?? false, FILTER_VALIDATE_BOOLEAN);
+			if ($linkTargetBlank) $attrBag['target'] = '_blank';
+			$linkRel = array_filter([$linkNofollow ? 'nofollow' : '', $linkTargetBlank ? 'noopener' : '']);
+			if ($linkRel) $attrBag['rel'] = implode(' ', $linkRel);
+		}
 		$nodeDomId = 'pb-node-' . ($node['id'] ?? '');
-		$rootTag = $resolve_html_tag($s);
 
 		$hasLegacyColumns = array_key_exists('columns', $node);
 		$hasCanonicalChildren = array_key_exists('children', $node) && !$hasLegacyColumns;

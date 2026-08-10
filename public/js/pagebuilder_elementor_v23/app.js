@@ -1944,7 +1944,40 @@
 			onMounted(() => {
 				const el = document.getElementById(elId);
 				if (!el || !window.ClassicEditor) return;
-				window.ClassicEditor.create(el).then(ed => {
+				window.ClassicEditor.create(el, {
+					toolbar: {
+						items: [
+							'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'todoList',
+							'|', 'outdent', 'indent', 'alignment', 'undo', 'redo', '|', 'CKFinder', 'imageUpload',
+							'imageInsert', 'blockQuote', 'insertTable', 'removeFormat', 'underline', 'fontFamily',
+							'fontSize', 'fontColor', 'highlight', 'selectAll',
+						],
+          shouldNotGroupWhenFull: false,
+					},
+					language: 'en',
+					image: {
+						styles: ['alignCenter', 'alignLeft', 'alignRight'],
+						resizeOptions: [
+							{ name: 'resizeImage:original', label: 'Default image width', value: null },
+							{ name: 'resizeImage:25', label: '25% page width', value: '25' },
+							{ name: 'resizeImage:50', label: '50% page width', value: '50' },
+							{ name: 'resizeImage:75', label: '75% page width', value: '75' },
+							{ name: 'resizeImage:100', label: '100% page width', value: '100' },
+						],
+						toolbar: [
+							'imageTextAlternative', 'toggleImageCaption', '|', 'imageStyle:inline',
+							'imageStyle:wrapText', 'imageStyle:breakText', 'imageStyle:side', '|', 'resizeImage', 'linkImage',
+						],
+					},
+					table: {
+						contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableCellProperties', 'tableProperties'],
+					},
+					ckfinder: {
+						openerMethod: 'modal',
+						uploadUrl: new URL('/assets/plugins/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images&responseType=json', window.location.origin).toString(),
+					},
+					licenseKey: '',
+				}).then(ed => {
 					inst = ed;
 					ed.setData(props.modelValue || '');
 					ed.model.document.on('change:data', () => ctx.emit('update:modelValue', ed.getData()));
@@ -3139,7 +3172,7 @@
 			const imageBoxImageState = ref('normal');
 			const iconBoxIconState = ref('normal');
 			const responsiveDevice = ref('desktop');
-			const canvasZoom = ref(80);
+			const canvasZoom = ref(100);
 			const showCanvasGrid = ref(true);
 			const leftCollapsed = ref(false);
 			const previewMode = ref(false);
@@ -3240,7 +3273,7 @@
 				if (responsiveDevice.value !== safeDevice) {
 					responsiveDevice.value = safeDevice;
 				}
-				canvasZoom.value = safeDevice === 'desktop' ? 80 : (safeDevice === 'tablet' ? 82 : 90);
+				canvasZoom.value = safeDevice === 'desktop' ? 100 : (safeDevice === 'tablet' ? 82 : 90);
 			}
 			function applyResponsiveDevice(key, device) {
 				setResponsiveDevice(device);
@@ -6483,10 +6516,10 @@
 								<i class="fas fa-plus"></i>
 								<div class="mt-3">Drag Container, Grid, or Widget to start building</div>
 							</div>
-							<div v-else class="pb-root-followup-hint" role="button" tabindex="0" @click.stop="showToolboxPanel()" @keydown.enter.stop="showToolboxPanel()">
-								<i class="bi bi-plus-circle"></i>
-								<div class="pb-root-followup-text"><span class="root-drop-label">Add to page root</span><span> · Container, Grid, or Widget</span></div>
-							</div>
+							<button v-else type="button" class="pb-root-followup-hint" aria-label="Add Container, Grid, or Widget to page root" @click.stop="showToolboxPanel()">
+								<span class="pb-root-followup-icon"><i class="bi bi-plus-lg"></i></span>
+								<span class="pb-root-followup-text"><span class="root-drop-label">Add to page root</span><span>Container, Grid, or Widget</span></span>
+							</button>
 						</template>
 					</draggable>
 				</div>

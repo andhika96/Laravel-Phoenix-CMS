@@ -302,7 +302,6 @@
 									<select class="pb-select" :value="editor.containerResponsiveValue(node.settings,'autoFlow',node.settings.autoFlow || 'row')" @change="editor.setContainerResponsiveSetting(node.settings,'autoFlow',$event.target.value)">
 										<option value="row">Row</option>
 										<option value="column">Column</option>
-										<option value="dense">Dense</option>
 									</select>
 								</div>
 								<div class="pb-form-group">
@@ -352,12 +351,10 @@
 								<div class="pb-collapsible-body">
 									<div class="pb-form-group">
 										<label class="pb-form-label">Overflow</label>
-										<select class="pb-select" v-model="node.settings.overflow">
+										<select class="pb-select" :value="['hidden','auto'].includes(node.settings.overflow) ? node.settings.overflow : 'default'" @change="node.settings.overflow=$event.target.value">
 											<option value="default">Default</option>
-											<option value="visible">Visible</option>
 											<option value="hidden">Hidden</option>
 											<option value="auto">Auto</option>
-											<option value="scroll">Scroll</option>
 										</select>
 									</div>
 									<div class="pb-form-group">
@@ -372,7 +369,16 @@
 											<option value="aside">ASIDE</option>
 											<option value="footer">FOOTER</option>
 											<option value="nav">NAV</option>
+											<option value="a">A (Link)</option>
 										</select>
+									</div>
+									<div v-if="node.settings.htmlTag==='a'" class="pb-form-group">
+										<label class="pb-form-label">Link</label>
+										<input class="pb-input" v-model="node.settings.linkUrl" type="url" placeholder="https://example.com">
+										<div class="pb-advanced-switch-grid mt-2">
+											<div class="pb-form-group"><div class="pb-label-row"><label class="pb-form-label mb-0">Open in new window</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'containerLinkTarget-' + node.id" v-model="node.settings.linkTargetBlank"><label :for="'containerLinkTarget-' + node.id"></label></div></div></div>
+											<div class="pb-form-group"><div class="pb-label-row"><label class="pb-form-label mb-0">Add nofollow</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'containerLinkNofollow-' + node.id" v-model="node.settings.linkNofollow"><label :for="'containerLinkNofollow-' + node.id"></label></div></div></div>
+										</div>
 									</div>
 								</div>
 							</details>
@@ -816,10 +822,8 @@
 									<label class="pb-form-label">Position</label>
 									<select class="pb-select" v-model="node.settings.position">
 										<option value="default">Default</option>
-										<option value="relative">Relative</option>
 										<option value="absolute">Absolute</option>
 										<option value="fixed">Fixed</option>
-										<option value="sticky">Sticky</option>
 									</select>
 								</div>
 								<div class="pb-form-group">
@@ -842,17 +846,6 @@
 										<label class="pb-form-label mb-0">Display Conditions</label>
 										<button class="pb-field-action-btn" type="button" title="Display Conditions" @click="editor.showUnsupportedControlNotice('Display Conditions', 'Display Conditions panel belum tersedia di builder ini. Untuk saat ini yang aktif baru hide per device.')"><i class="fas fa-sitemap"></i></button>
 									</div>
-									<div class="pb-advanced-switch-grid">
-										<div class="pb-form-group">
-											<div class="pb-label-row"><label class="pb-form-label mb-0">Hide Desktop</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'containerHideDesktop-' + node.id" v-model="node.settings.hideDesktop"><label :for="'containerHideDesktop-' + node.id"></label></div></div>
-										</div>
-										<div class="pb-form-group">
-											<div class="pb-label-row"><label class="pb-form-label mb-0">Hide Tablet</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'containerHideTablet-' + node.id" v-model="node.settings.hideTablet"><label :for="'containerHideTablet-' + node.id"></label></div></div>
-										</div>
-											<div class="pb-form-group">
-												<div class="pb-label-row"><label class="pb-form-label mb-0">Hide Mobile</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'containerHideMobile-' + node.id" v-model="node.settings.hideMobile"><label :for="'containerHideMobile-' + node.id"></label></div></div>
-											</div>
-										</div>
 									</div>
 								</div>
 							</details>
@@ -1023,6 +1016,41 @@
 									<div v-for="control in [{key:'transformScaleX',label:'Scale X'},{key:'transformScaleY',label:'Scale Y'}]" :key="control.key" class="pb-form-group"><label class="pb-form-label">{{ control.label }}</label><input class="pb-input" type="number" step="0.1" v-model.number="node.settings[control.key]" placeholder="1"></div>
 								</div>
 
+								</div>
+							</details>
+							<details class="pb-collapsible">
+								<summary>Responsive</summary>
+								<div class="pb-collapsible-body">
+									<div class="pb-advanced-switch-grid">
+										<div class="pb-form-group">
+											<div class="pb-label-row"><label class="pb-form-label mb-0">Hide Desktop</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'containerHideDesktop-' + node.id" v-model="node.settings.hideDesktop"><label :for="'containerHideDesktop-' + node.id"></label></div></div>
+										</div>
+										<div class="pb-form-group">
+											<div class="pb-label-row"><label class="pb-form-label mb-0">Hide Tablet</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'containerHideTablet-' + node.id" v-model="node.settings.hideTablet"><label :for="'containerHideTablet-' + node.id"></label></div></div>
+										</div>
+										<div class="pb-form-group">
+											<div class="pb-label-row"><label class="pb-form-label mb-0">Hide Mobile</label><div class="pb-toggle-wrap"><input type="checkbox" class="pb-toggle" :id="'containerHideMobile-' + node.id" v-model="node.settings.hideMobile"><label :for="'containerHideMobile-' + node.id"></label></div></div>
+										</div>
+									</div>
+								</div>
+							</details>
+							<details class="pb-collapsible">
+								<summary>Attributes</summary>
+								<div class="pb-collapsible-body">
+									<div class="pb-label-row"><div class="pb-form-label mb-0">Custom Attributes</div><button type="button" class="pb-seg-btn pb-mini-btn" aria-label="Add Attribute" @click="node.settings.attributes=(node.settings.attributes||[]).concat({name:'',value:''})"><i class="fas fa-plus"></i></button></div>
+									<div v-for="(attr,index) in node.settings.attributes" :key="'container-attr-'+index" class="pb-attr-row mt-2">
+										<input class="pb-input" v-model="attr.name" placeholder="data-name">
+										<input class="pb-input" v-model="attr.value" placeholder="value">
+										<button type="button" class="pb-seg-btn pb-mini-btn" aria-label="Remove Attribute" @click="node.settings.attributes.splice(index,1)"><i class="fas fa-trash-alt"></i></button>
+									</div>
+									<div v-if="!(node.settings.attributes||[]).length" class="pb-form-note">Add valid HTML attributes such as data-name or aria-label.</div>
+								</div>
+							</details>
+							<details class="pb-collapsible">
+								<summary>Custom CSS</summary>
+								<div class="pb-collapsible-body">
+									<div class="pb-form-group"><label class="pb-form-label">CSS Code</label><textarea class="pb-textarea pb-code-editor" v-model="node.settings.customCssCode" placeholder="selector { property: value; }"></textarea></div>
+									<div class="pb-form-note">Use selector to target this Container or Grid.</div>
 								</div>
 							</details>
 						</div><!-- /tab advanced container -->

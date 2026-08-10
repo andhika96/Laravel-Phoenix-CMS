@@ -1,3 +1,44 @@
+# Design QA - Page Builder v2.3 Grid Slots and Empty Drop Targets
+
+Date: 2026-08-09
+
+## Sources compared
+
+- Reported bottom-left drag placeholder: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-e5c29ede-e9d6-4657-b3f8-e3766e33e28e.png` (1920 x 1008 px, includes external browser chrome).
+- Reported Grid track/child mismatch: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-c37826c3-d67d-499c-b589-748696f5565d.png` (1920 x 1008 px, includes external browser chrome).
+- Official Elementor reference: `https://playground.elementor.com/demo/flexbox/`.
+- Final selected Grid state: `C:\Users\aruna\.codex\visualizations\2026\08\09\019fe447-e16a-7cf3-8dd0-c510cd1ada60\pagebuilder-v23-grid-slots-final\grid-3x2-selected-sequential-lock-1280x672.png`.
+- Final Flexbox state: `C:\Users\aruna\.codex\visualizations\2026\08\09\019fe447-e16a-7cf3-8dd0-c510cd1ada60\pagebuilder-v23-grid-slots-final\flexbox-two-child-containers-centered-1280x672.png`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+
+The reported Grid screenshot and final Grid screenshot were opened together in one comparison input. The source includes external browser chrome, while the implementation capture is a 1280 x 672 CSS-pixel page viewport, so the comparison focused on the editor state, slot geometry, alignment, labels, and interaction affordances rather than browser-shell pixels. No Save action was performed.
+
+## Verified runtime states
+
+- Grid with Columns `3` and Rows `2` materialized six real canonical child Containers instead of retaining only the previous two children.
+- Exactly one empty Grid slot exposed `Add` / `Drop here`; the other five showed `Fill previous container first` / `Locked`.
+- All six empty child dropzones measured 68px high and the active empty hint occupied the full dropzone instead of participating in normal flow at its lower-left edge.
+- Filling the first Grid slot reduced locked slots from five to four and moved the single active Add affordance to the next empty slot; filling the second reduced the lock count to three.
+- Flexbox two-column preset rendered two canonical child Containers at 528px each, with two centered Add hints, zero locked slots, and one shared-edge resizer.
+- The empty hint width measured approximately 526.67px inside each 528px Flex child, confirming full-width centering with only the existing border allowance.
+- Browser console contained only the normal Page Builder load/root-add logs and no errors or warnings in the verified flows.
+
+## Findings and corrections
+
+- P1 resolved: the Grid Columns/Rows controls now materialize missing canonical child Container slots up to `columns x rows`, while track reductions do not delete or reorder existing content.
+- P1 resolved: Grid slots now unlock sequentially. A locked slot rejects new toolbox/layout items and existing canvas items until every preceding slot contains content.
+- P1 resolved: the empty child hint is an absolute full-area overlay and Sortable ghost/chosen nodes render above it, removing the normal-flow footer that pushed the drag placeholder toward the lower-left corner.
+- P1 resolved: the inherited inline minimum height was removed; the canonical 68px CSS minimum now controls empty Flex and Grid child dropzones.
+- Fonts, icons, colors, control density, selection colors, and the established v2.3 sidebar/canvas design system were preserved.
+- P0: none.
+- P2: none in the verified Grid and Flex states.
+
+## Verification boundary
+
+- The in-app browser coordinate-drag action did not trigger Sortable's native clone gesture, so a real pointer drag from the toolbox was not claimed as runtime-verified. Target geometry, overlay stacking, group acceptance/lock contracts, click-to-insert behavior, sequential unlock behavior, and automated drag/drop regression contracts were verified.
+
+final result: passed for the verified Grid and Flex states, with the pointer-drag automation boundary stated above
+
 # Design QA - Page Builder v2.3 Canvas, Labels, and Sidebar Reveal
 
 Date: 2026-08-09
@@ -60,6 +101,218 @@ The browser-rendered prototype and corrected production screenshot were opened t
 - [x] Stabilize and enlarge widget-label hit areas for adjacent widgets.
 - [x] Reopen the sidebar only when a Container/Widget name label requests it.
 - [x] Run browser interaction checks, console checks, focused tests, full v2.3 Node tests, route/persistence tests, syntax check, and diff check.
+
+final result: passed
+
+# Design QA - Page Builder v2.3 Child Container Strict Parity
+
+Date: 2026-08-09
+
+## Sources compared
+
+- Official Elementor Flexbox demo: `https://playground.elementor.com/demo/flexbox/`.
+- Local runtime: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+- Evidence directory: `D:\Laragon\www\laravel-13-phoenix\output\browser\v23-child-container-final-20260809`.
+- Comparison viewport: 1280 x 720 px for both official and local captures.
+
+The official reference and local implementation were inspected together. The official demo exposed real nested `Container` nodes (`e-child` / `e-flex`) and east/west resize handles; the local runtime was then exercised with equivalent canonical child Container flows.
+
+## Verified interaction flow
+
+1. Editor booted with zero console errors and zero warnings.
+2. The two-column Flexbox preset rendered two direct canonical child Containers horizontally at 50/50.
+3. Dragging the shared edge changed only the adjacent pair from 50/50 to 58.9/41.1 and enabled Undo.
+4. `Add Container` appended and selected a third canonical child Container.
+5. Switching Flexbox to Grid preserved child IDs and order; changing Grid Columns from 2 to 3 produced three tracks.
+6. Switching Grid back to Flexbox preserved the same child IDs, order, nested Text Editor, and two shared-edge resize handles.
+7. Responsive sizing inherited Desktop 39.3% on Tablet, accepted a Tablet-only 45% override, and left Desktop at 39.3%.
+8. The narrow Text Editor sidebar kept the compact toolbar; its three-dot overflow exposed the complete editing actions on demand.
+9. The selected Text Editor's blue outline and label use square corners as requested.
+
+## Findings and boundaries
+
+- P0: none.
+- P1: none.
+- P2: none.
+- No Save action was performed during browser QA, so the user's page data was never mutated.
+- Browser persistence reload and frontend preview were intentionally not exercised on the user's page; server persistence and frontend rendering are covered by the focused Laravel suite.
+- Mouse resize and primary interactions were verified; a complete keyboard-only and WCAG audit was not part of this pass.
+- Final local browser log: zero errors and zero warnings.
+
+final result: passed
+
+# Design QA - Page Builder v2.3 Grid Container Unification
+
+Date: 2026-08-09
+
+## Sources compared
+
+- Official Elementor Grid Layout: `output/browser/grid-elementor-audit-20260809/02-official-grid-layout.png`.
+- Official Elementor Grid Additional Options: `output/browser/grid-elementor-audit-20260809/01-official-grid-additional-options.png`.
+- Official Elementor Grid Style: `output/browser/grid-elementor-audit-20260809/04-official-grid-style.png`.
+- Original v2.3 legacy Grid screenshots: Codex attachment set `40a81440-f8a1-4240-ac3b-8c3d7a7b9026`, images 2-4.
+- Corrected v2.3 Grid Layout: `output/browser/grid-elementor-audit-20260809/06-v23-grid-unified-layout.png`.
+- Corrected v2.3 Grid Additional Options with linked root: `output/browser/grid-elementor-audit-20260809/09-v23-grid-additional-options-link.png`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+
+The official and local Layout screenshots were inspected together. The local editor keeps Phoenix's light design system, while its control hierarchy and interaction path now follow Elementor's Grid-as-Container model.
+
+## Findings and corrections
+
+- P1 resolved: root Grid and legacy/nested Grid used different settings components. Legacy Grid nodes are now normalized to Container nodes with `displayType: grid`, including columns, rows, gaps, responsive values, content, and shared Style/Advanced state.
+- P1 resolved: changing Grid to Flexbox now exposes Column widths and Add Column; runtime verification changed a three-column Grid to Flexbox and added Column 4 successfully.
+- P2 resolved: the legacy-only Grid Auto Height, Grid Template Columns, and Dense UI are no longer exposed in the active Grid path.
+- P2 resolved: Additional Options now matches Elementor's Overflow choices (`Default`, `Hidden`, `Auto`) and includes functional `A (Link)` output in both the canvas and frontend renderer.
+- P2 resolved: Style now consistently exposes Background Normal/Hover, Background Overlay, Border, Box Shadow, and Shape Divider.
+- P2 resolved: Advanced now follows Layout, Motion Effects, Transform, Responsive, Attributes, and Custom CSS, with compact controls inherited from the established Container design.
+- Grid identity is retained in the sidebar, breadcrumb, and canvas label even though the active implementation is the shared Container component.
+- No save operation was performed during browser QA.
+
+## Verification
+
+- Runtime DOM: Grid identity and all Layout, Style, and Advanced groups verified.
+- Runtime interaction: Grid to Flexbox and Add Column verified; linked Grid rendered as `<a href="/demo-grid" target="_blank" rel="nofollow noopener">`.
+- Visual comparison: official and corrected Layout and Additional Options screenshots inspected together.
+- Automated: 99 Node tests passed; 20 Laravel tests passed with 2577 assertions.
+- Vue SFC compilation: Container Settings compiled successfully.
+- Graphify: incremental update completed; `convertGridNodeToContainer()` is present with EXTRACTED calls.
+
+final result: passed
+
+# Design QA - Page Builder v2.3 Flexbox Column Controls
+
+Date: 2026-08-09
+
+- source visual truth path: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-616e46fb-90df-4254-a7c3-b475f0c07cbf.png`
+- implementation screenshot path: `C:\Users\aruna\.codex\visualizations\2026\08\09\019fe447-e16a-7cf3-8dd0-c510cd1ada60\pagebuilder-v23-flex-column-resize-add-final.png`
+- viewport: 655 x 552 CSS px at device scale factor 1.5
+- pixel dimensions: source 1476 x 317 px; implementation 655 x 552 px
+- density normalization: compared as focused desktop editor regions; browser chrome and the different canvas crop were excluded from fidelity judgments
+- state: selected two-column Flexbox Container after Grid to Flexbox conversion, with Column widths expanded, Add Column visible, and the divider resize handle visible
+
+## Comparison evidence
+
+- The source and final implementation were opened together in the same comparison input.
+- A separate focused crop was not needed because the sidebar action, numeric width controls, and canvas divider are legible in the full implementation capture.
+- Primary interactions tested: real pointer drag on the divider, Add Column from two to three columns, and Grid to Flexbox conversion followed by Add Column.
+- Browser console check: zero errors and zero warnings.
+- No Save action was performed during browser QA.
+
+## Required fidelity surfaces
+
+- Fonts and typography: the implementation retains the established v2.3 sidebar hierarchy and compact control labels; no clipping or unintended wrapping is visible.
+- Spacing and layout rhythm: Add Column fits inside the existing Column widths section, and the divider is centered between adjacent columns without changing the surrounding canvas geometry.
+- Colors and visual tokens: the action and divider use existing v2.3 purple/blue selection tokens; no unrelated token changes were introduced.
+- Image quality and assets: no raster image or custom illustrative asset is required; existing Font Awesome and editor UI assets remain unchanged.
+- Copy and content: `Add Column`, `2 / 12 columns`, and the per-column width labels communicate the requested action and current limit directly.
+
+## Findings and iteration history
+
+- Earlier P2: after a three-column Flexbox was converted to a two-column Grid and back, retained Flexbox percentages could total only 66.6%, leaving unused row space.
+- Fix: Grid to Flexbox conversion now normalizes the retained column ratios to a 100% total.
+- Post-fix evidence: runtime values are 57.1% and 42.9%, the two column rectangles occupy the full row, one divider is visible, and Add Column remains available.
+- The v2.0 reference shows explicit Column 1/Column 2 canvas badges. Their absence in v2.3 is intentional: columns remain internal layout slots, while the requested divider affordance is restored.
+- P0: none.
+- P1: none.
+- P2: none remaining.
+
+final result: passed
+
+# Design QA - Text Editor Toolbar Overflow and Square Selection Outline
+
+Date: 2026-08-09
+
+## Sources and rendered evidence
+
+- Source visual truth for toolbar issue: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-0542c628-a24a-49c8-8de5-b5987a8668be.png` (927 x 964 px).
+- Source visual truth for outline-radius issue: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-bbb0bd2e-f647-46af-b399-4f258af6571a.png` (1517 x 201 px).
+- Compact default implementation: `C:\Users\aruna\.codex\visualizations\2026\08\09\019fe447-e16a-7cf3-8dd0-c510cd1ada60\pagebuilder-v23-ckeditor-sidebar-compact.png` (655 x 552 px).
+- Open overflow implementation: `C:\Users\aruna\.codex\visualizations\2026\08\09\019fe447-e16a-7cf3-8dd0-c510cd1ada60\pagebuilder-v23-ckeditor-sidebar-overflow.png` (655 x 552 px).
+- Square selection outline implementation: `C:\Users\aruna\.codex\visualizations\2026\08\09\019fe447-e16a-7cf3-8dd0-c510cd1ada60\pagebuilder-v23-widget-outline-square.png` (655 x 552 px).
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+- Browser CSS viewport: 655 x 552 px at device pixel ratio 1.5.
+- Density normalization: none. The two user screenshots are issue references at different crops and viewport sizes; comparisons therefore used the focused Text Editor toolbar and selected-widget outline regions rather than pixel-overlay scoring.
+- State: unsaved create page, Text Editor selected, Desktop 1180 px canvas. No Save action was performed.
+
+## Comparison evidence
+
+- The source toolbar screenshot and both compact/open implementation captures were opened in the same comparison input. The default sidebar now exposes only Paragraph, Bold, Italic, and the three-dot button in one 38.45 px toolbar row; clicking the button exposes the remaining configured controls.
+- The source radius screenshot and corrected implementation were opened in the same comparison input. The selected widget computes to `border-radius: 0px` with a `2px solid rgb(43, 132, 210)` outline, while the blue Text Editor label intentionally retains its compact rounded shape.
+- A focused-region comparison was required because each user screenshot used a different browser crop and scale. No asset comparison was needed; the changes use existing CKEditor controls and the existing icon library.
+
+## Required fidelity surfaces
+
+- Fonts and typography: unchanged; existing Page Builder and CKEditor typography remains intact.
+- Spacing and layout rhythm: improved by reducing the narrow-sidebar toolbar from about 189.20 px to 38.45 px while preserving the editor field below it.
+- Colors and visual tokens: unchanged; the selected widget retains the established blue outline and label colors.
+- Image quality and asset fidelity: no image or generated asset changes were introduced.
+- Copy and content: unchanged; Text Editor labels and `Edit this text.` remain identical.
+
+## Findings and corrections
+
+- [P2] The narrow sidebar previously forced every CKEditor item to wrap into multiple rows. Root cause was `shouldNotGroupWhenFull: true`. It is now `false`, restoring CKEditor's native three-dot overflow without removing any configured toolbar item.
+- [P2] The blue selected-widget outline inherited a 4px radius. The v2.3 canvas widget shell now uses `border-radius: 0`, producing straight outline corners while leaving the label and actual widget content styling untouched.
+- Runtime interaction verified the overflow button expanded and exposed the complete hidden toolbar, including lists, alignment, media, table, font, color, highlight, and selection controls.
+- The Expand modal remained available with a wider 578 px one-row toolbar and responsive overflow.
+- Browser console verification reported zero errors and zero warnings.
+- P0: none.
+- P1: none.
+- Remaining P2: none.
+
+## Comparison history
+
+- Earlier P2 toolbar density: all controls wrapped in the narrow sidebar. Fixed through native CKEditor grouping; post-fix visual evidence is the compact and open-overflow captures above.
+- Earlier P2 outline shape: selected-widget outline had rounded corners. Fixed by removing the widget-shell radius; post-fix visual evidence is the square-outline capture above.
+
+final result: passed
+
+# Design QA - Page Builder v2.3 Selected Root Insertion Rail and UI Updates
+
+Date: 2026-08-09
+
+## Comparison target
+
+- source visual truth path: `C:\Users\aruna\.codex\generated_images\019fe447-e16a-7cf3-8dd0-c510cd1ada60\exec-b6890a30-1d7b-443d-b28c-d3b486c95559.png`
+- implementation screenshot path: `C:\Users\aruna\.codex\visualizations\2026\08\09\019fe447-e16a-7cf3-8dd0-c510cd1ada60\pagebuilder-v23-selected-ui-implementation.png`
+- runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`
+- viewport: 1280 x 720 CSS px at devicePixelRatio 1.5; implementation capture is 1280 x 720 px. The selected source mock is 1848 x 832 px and was compared by component composition rather than pixel-overlay scaling because it is a focused concept crop with black framing.
+- state: Desktop 1180px at 100%, one new single-column Container and one selected Text Editor widget, full CKEditor toolbar visible, root insertion rail visible below the content.
+
+The source mock and browser-rendered implementation were opened together in one comparison input. A separate crop was unnecessary because the simple rail, 32px icon, dashed line, and both text rows were readable in the full implementation capture; runtime computed geometry supplied the focused evidence.
+
+## Findings
+
+- No actionable P0, P1, or P2 mismatch remains for the selected insertion-rail direction.
+- Fonts and typography: the implementation preserves the product's Inter typography. The title and supporting line retain the same two-level hierarchy as the mock without wrapping or truncation.
+- Spacing and layout rhythm: the root button is 72px high and spans the available 1180px page frame. The plus is centered on the dashed rail, followed by a compact 5px text gap.
+- Colors and visual tokens: the plus uses the existing `--brand` purple (`rgb(91, 76, 240)`), while the rail uses the established soft purple border token (`rgb(185, 178, 252)`).
+- Image quality and asset fidelity: the component contains no raster imagery. Its plus uses the existing Bootstrap Icons library; no custom SVG, placeholder, or generated decorative asset was substituted.
+- Copy and content: `Add to page root` and `Container, Grid, or Widget` match the selected mock exactly.
+- Interaction: the rail is a native enabled button. Clicking it opened the Elements panel for root insertion; Enter and Space inherit native button behavior. The visible focus ring is defined through `:focus-visible`.
+- Supporting requested UI: the selected widget label measured 22px high at 9px type, its opposite action buttons measured 24 x 22px at 9px type, and the editor rendered 27 CKEditor toolbar buttons.
+- Browser console: zero errors and zero warnings after creating the Container, choosing its structure, opening Advanced, adding Text Editor, and clicking the root insertion rail. No Save action was performed.
+
+## Comparison history
+
+1. Selected mock established the target: a thin dashed horizontal rail, centered circular purple plus, and two centered text rows.
+2. First implementation pass reproduced that composition using the existing design tokens and Bootstrap Icons, while changing the prior faux-button `div` into a native button.
+3. Post-build browser evidence showed no P0, P1, or P2 mismatch requiring another visual iteration.
+
+## Primary interactions tested
+
+- Create a Container, choose Flexbox and a one-column structure, then verify four linked Padding values display as `1` with unit `rem`.
+- Verify the desktop header starts at `100%` zoom.
+- Add Text Editor and verify its full local Article CKEditor toolbar renders.
+- Click the root insertion rail and verify the Elements panel opens for a root-level insertion.
+- Inspect computed geometry for the widget label, action buttons, root button, plus icon, and dashed pseudo-element.
+
+## Implementation checklist
+
+- [x] Recreate the selected insertion rail in the existing v2.3 design system.
+- [x] Keep the rail fully interactive and keyboard accessible.
+- [x] Verify widget label and action-button geometry.
+- [x] Verify Container defaults and CKEditor toolbar at runtime.
+- [x] Check application console and avoid persistence during QA.
 
 final result: passed
 

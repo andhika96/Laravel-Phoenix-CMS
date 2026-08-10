@@ -24,11 +24,11 @@ export default {
 		},
 		responsiveDevice: {
 			type: String,
+			default: 'desktop',
+		},
 		fillEditorShell: {
 			type: Boolean,
 			default: false,
-		},
-			default: 'desktop',
 		},
 	},
 	data() {
@@ -76,7 +76,7 @@ export default {
 		},
 		rootTag() {
 			const raw = String(this.settings.htmlTag || 'default').trim().toLowerCase();
-			const allowed = ['div', 'section', 'header', 'main', 'article', 'aside', 'footer', 'nav'];
+			const allowed = ['div', 'section', 'header', 'main', 'article', 'aside', 'footer', 'nav', 'a'];
 			if (raw === 'default' || !raw) return 'div';
 			return allowed.includes(raw) ? raw : 'div';
 		},
@@ -156,6 +156,14 @@ export default {
 
 			if (this.settings.cssId) {
 				attrs['data-css-id'] = this.settings.cssId;
+			}
+			if (this.rootTag === 'a') {
+				attrs.href = this.safeLinkUrl(this.settings.linkUrl);
+				if (this.isTruthy(this.settings.linkTargetBlank)) attrs.target = '_blank';
+				const rel = [];
+				if (this.isTruthy(this.settings.linkNofollow)) rel.push('nofollow');
+				if (attrs.target === '_blank') rel.push('noopener');
+				if (rel.length) attrs.rel = rel.join(' ');
 			}
 
 			return attrs;
@@ -270,6 +278,12 @@ export default {
 		},
 	},
 	methods: {
+		safeLinkUrl(value) {
+			const url = String(value || '').trim();
+			if (!url) return '#';
+			if (/^(?:https?:|mailto:|tel:|\/|#)/i.test(url)) return url;
+			return '#';
+		},
 		clamp(value, min, max) {
 			return Math.min(max, Math.max(min, Number(value) || min));
 		},

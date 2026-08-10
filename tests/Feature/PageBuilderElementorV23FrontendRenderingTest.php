@@ -74,6 +74,41 @@ class PageBuilderElementorV23FrontendRenderingTest extends TestCase
         }
     }
 
+    public function test_v23_grid_link_renders_safe_frontend_attributes(): void
+    {
+        $linkedGrid = $this->renderNode([
+            'id' => 'grid-link-v23',
+            'type' => 'container',
+            'settings' => [
+                'displayType' => 'grid',
+                'htmlTag' => 'a',
+                'linkUrl' => '/demo-grid',
+                'linkTargetBlank' => true,
+                'linkNofollow' => true,
+            ],
+            'children' => [],
+        ]);
+
+        $this->assertStringContainsString('<a id="pb-node-grid-link-v23"', $linkedGrid);
+        $this->assertStringContainsString('href="/demo-grid"', $linkedGrid);
+        $this->assertStringContainsString('target="_blank"', $linkedGrid);
+        $this->assertStringContainsString('rel="nofollow noopener"', $linkedGrid);
+
+        $unsafeGrid = $this->renderNode([
+            'id' => 'unsafe-grid-link-v23',
+            'type' => 'container',
+            'settings' => [
+                'displayType' => 'grid',
+                'htmlTag' => 'a',
+                'linkUrl' => 'javascript:alert(1)',
+            ],
+            'children' => [],
+        ]);
+
+        $this->assertStringContainsString('href="#"', $unsafeGrid);
+        $this->assertStringNotContainsString('javascript:alert(1)', $unsafeGrid);
+    }
+
     public function test_v23_container_renders_canonical_and_legacy_layouts_without_content_loss(): void
     {
         $heading = fn (string $id, string $text): array => [

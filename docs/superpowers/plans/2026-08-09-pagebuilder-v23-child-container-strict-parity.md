@@ -1,0 +1,1585 @@
+# Page Builder v2.3 Child Container Strict Parity Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Mengganti slot `columns[]` internal Page Builder v2.3 dengan child Container nyata, termasuk migrasi legacy saat load, Add Container, drag/drop, edge resize responsif, penyimpanan canonical, dan frontend dual-read.
+
+**Architecture:** Editor menormalisasi setiap Container legacy menjadi tree canonical `children[]` sebelum history pertama dibuat. Semua operasi editor setelah load hanya memakai node biasa; `columns[]` dipertahankan sebagai input kompatibilitas pada frontend dan dihapus dari payload Container saat explicit Save. Edge resize menulis `containerWidth`, `containerWidthTablet`, atau `containerWidthMobile` pada dua child Container yang bersebelahan sambil mempertahankan total lebar pasangan.
+
+**Tech Stack:** Laravel 13, Blade, Vue 3 global build, `vue3-sfc-loader`, `vuedraggable` 4.1, Axios, Node.js built-in test runner, PHP Feature tests, Graphify.
+
+## Global Constraints
+
+- Scope hanya `pagebuilder_elementor_v23`; source, asset, route, view, dan test Page Builder v2.0 tidak boleh berubah.
+- `D:\Laragon\www\laravel-13-phoenix` tetap source of truth; checkout bernama serupa di drive lain tidak disentuh.
+- Worktree sudah dirty. Pertahankan semua perubahan lama, backup, screenshot, dan `graphify-out`; jangan reset, clean, bulk-stage, atau menimpa hunk yang bukan bagian pekerjaan ini.
+- Sebelum memodifikasi file existing, buat backup timestamp `*.bak_YYYYMMDD_HHMMSS_child_container_strict_parity`.
+- Ikuti TDD: tulis test, jalankan dan saksikan failure yang tepat, baru ubah production code, lalu jalankan test sampai green.
+- Canonical Container hanya menulis `children[]`; `columns[]` adalah compatibility input dan frontend fallback, bukan model editor permanen.
+- Load atau Preview tidak melakukan persistence. Hanya klik Save yang boleh menulis schema canonical.
+- Grid dan Flexbox memakai `children[]` yang sama. Mengubah `displayType`, Columns, atau Rows tidak boleh menambah, memindah, menggabungkan, atau menghapus child.
+- Jangan menambah dependency baru. Pakai helper lokal, Vue, Sortable, dan Laravel yang sudah tersedia.
+- Browser QA hanya memakai in-app browser yang sudah digunakan pada task ini dan page fixture v2.3 disposable; jangan menyimpan perubahan ke page milik user.
+- Jangan commit `graphify-out`, file `.bak`, screenshot, atau artifact browser.
+- Commit task hanya boleh memuat hunk task tersebut. Karena file target sudah dirty, gunakan partial staging dan periksa `git diff --cached` sebelum commit.
+
+## File Map
+
+- Create `tests/pagebuilder-v23-child-container-strict-parity.test.mjs`: behavioral unit tests untuk adapter legacy, factory preset, responsive width, dan canonical serializer.
+- Modify `public/js/pagebuilder_elementor_v23/app.js`: adapter load, canonical tree traversal, canvas child rendering, nesting guard, Add Container, preset, edge resize, history, dan save payload.
+- Modify `public/js/pagebuilder_elementor_v23/widgets/layout/container/definition.js`: factory Container canonical tanpa `columns[]`.
+- Modify `public/js/pagebuilder_elementor_v23/widgets/layout/container/Settings.vue`: ganti UI Column widths/Add Column dengan ringkasan child dan Add Container.
+- Modify `public/js/pagebuilder_elementor_v23/widgets/layout/container/Canvas.vue`: inner Container mengisi shell editor ketika width dimiliki shell child.
+- Modify `public/assets/css/pagebuilder_elementor_v23.css`: dropzone direct children dan edge-resize chrome tanpa pseudo Column label.
+- Modify `public/assets/css/frontend_elementor_v23.css`: direct child Container menjadi flex/grid item yang aman.
+- Modify `resources/views/pagebuilder_elementor_v23/widgets/layout/container.blade.php`: render canonical direct children dan legacy fallback tanpa truncation/merge.
+- Modify `tests/pagebuilder-v23-functional-parity-static.test.mjs`: ubah exception parity v2.3 dari API column lama ke API child Container.
+- Modify `tests/pagebuilder-v23-properties-toolbar-regression.test.mjs`: kontrak UI Add Container dan tidak adanya pseudo Column.
+- Modify `tests/pagebuilder-v23-grid-container-unification.test.mjs`: Grid/Flex hanya mengubah track settings, bukan child tree.
+- Modify `tests/Feature/PageBuilderElementorV23FrontendRenderingTest.php`: frontend canonical dan legacy menghasilkan urutan/konten/lebar yang setara.
+- Modify `tests/Feature/PageBuilderElementorV23RoutesAndPersistenceTest.php`: GET tidak memutasi legacy JSON, explicit update menyimpan canonical, validation failure tidak mengubah stored JSON.
+- Modify `design-qa.md`: bukti automated test, browser QA, batas verifikasi, dan Graphify.
+
+---
+
+### Task 1: Backup dan Legacy-to-Canonical Adapter
+
+**Files:**
+- Create: `tests/pagebuilder-v23-child-container-strict-parity.test.mjs`
+- Modify: `public/js/pagebuilder_elementor_v23/app.js:198-216, 3188-3570`
+- Modify: `public/js/pagebuilder_elementor_v23/widgets/layout/container/definition.js:289-322`
+- Test: `tests/pagebuilder-v23-child-container-strict-parity.test.mjs`
+
+**Interfaces:**
+- Consumes: `makeNode('container')`, `isCont(type)`, `convertGridNodeToContainer(node)`, dan `norm(nodes)` dari `app.js`.
+- Produces: `createLegacyContainerMigrationState(nodes)`, `claimCanonicalNodeId(state, rawId, prefix)`, `migrateLegacyContainerColumns(node, state, createContainer)`, serta `legacyMigrationPending`.
+
+- [ ] **Step 1: Buat backup semua file existing yang akan disentuh plan**
+
+```powershell
+$stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+$paths = @(
+  'public/assets/css/frontend_elementor_v23.css',
+  'public/assets/css/pagebuilder_elementor_v23.css',
+  'public/js/pagebuilder_elementor_v23/app.js',
+  'public/js/pagebuilder_elementor_v23/widgets/layout/container/Canvas.vue',
+  'public/js/pagebuilder_elementor_v23/widgets/layout/container/Settings.vue',
+  'public/js/pagebuilder_elementor_v23/widgets/layout/container/definition.js',
+  'resources/views/pagebuilder_elementor_v23/widgets/layout/container.blade.php',
+  'tests/Feature/PageBuilderElementorV23FrontendRenderingTest.php',
+  'tests/Feature/PageBuilderElementorV23RoutesAndPersistenceTest.php',
+  'tests/pagebuilder-v23-functional-parity-static.test.mjs',
+  'tests/pagebuilder-v23-grid-container-unification.test.mjs',
+  'tests/pagebuilder-v23-properties-toolbar-regression.test.mjs',
+  'design-qa.md'
+)
+foreach ($path in $paths) {
+  Copy-Item -LiteralPath $path -Destination ($path + '.bak_' + $stamp + '_child_container_strict_parity')
+}
+```
+
+Expected: setiap source aktif memiliki satu backup baru; backup tetap untracked.
+
+- [ ] **Step 2: Tulis failing behavioral tests untuk migrasi dua/tiga kolom, ID collision, malformed column, dan idempotency**
+
+Tambahkan test loader yang mengeksekusi helper production dari marker khusus, bukan menyalin algoritmanya ke test:
+
+```js
+function loadChildContainerHelpers() {
+    const block = app.match(/\/\/ V23_CHILD_CONTAINER_HELPERS_START([\s\S]*?)\/\/ V23_CHILD_CONTAINER_HELPERS_END/)?.[1];
+    assert.ok(block, 'child Container helpers should exist');
+    const context = { structuredClone: globalThis.structuredClone };
+    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns };`, context);
+    return context.api;
+}
+
+function containerFactory() {
+    return {
+        id: '',
+        type: 'container',
+        settings: {
+            displayType: 'flex',
+            contentWidth: 'full',
+            containerWidth: '100%',
+            containerWidthTablet: '',
+            containerWidthMobile: '',
+        },
+        children: [],
+    };
+}
+
+test('legacy columns become real child Containers without losing nested widgets', () => {
+    const api = loadChildContainerHelpers();
+    const source = [{
+        id: 'parent', type: 'container', settings: { displayType: 'flex' }, children: [],
+        columns: [
+            { id: 'left', flexBasis: '33%', flexBasisTablet: '45%', children: [{ id: 'heading-a', type: 'heading', settings: { text: 'A' } }] },
+            { id: 'right', flexBasis: '67%', children: [{ id: 'heading-b', type: 'heading', settings: { text: 'B' } }] },
+        ],
+    }];
+    const state = api.createLegacyContainerMigrationState(source);
+    const node = structuredClone(source[0]);
+
+    assert.equal(api.migrateLegacyContainerColumns(node, state, containerFactory), true);
+    assert.equal(Object.hasOwn(node, 'columns'), false);
+    assert.deepEqual(node.children.map((child) => child.id), ['left', 'right']);
+    assert.deepEqual(node.children.map((child) => child.settings.containerWidth), ['33%', '67%']);
+    assert.equal(node.children[0].settings.containerWidthTablet, '45%');
+    assert.deepEqual(node.children.flatMap((child) => child.children.map((nested) => nested.id)), ['heading-a', 'heading-b']);
+    assert.equal(api.migrateLegacyContainerColumns(node, state, containerFactory), false);
+    assert.equal(node.children.length, 2);
+});
+
+test('duplicate or malformed legacy column ids are repaired deterministically', () => {
+    const api = loadChildContainerHelpers();
+    const source = [{
+        id: 'parent', type: 'container', settings: {}, children: [{ id: 'taken', type: 'heading', settings: {} }],
+        columns: [
+            { id: 'taken', children: [{ id: 'one', type: 'heading', settings: {} }] },
+            { id: 'taken', children: [{ id: 'two', type: 'heading', settings: {} }] },
+            { id: '', children: [null, { id: 'three', type: 'heading', settings: {} }, 'invalid'] },
+        ],
+    }];
+    const state = api.createLegacyContainerMigrationState(source);
+    const node = structuredClone(source[0]);
+
+    api.migrateLegacyContainerColumns(node, state, containerFactory);
+
+    assert.deepEqual(node.children.slice(1).map((child) => child.id), [
+        'parent-child-container-1',
+        'parent-child-container-2',
+        'parent-child-container-3',
+    ]);
+    assert.deepEqual(node.children.slice(1).map((child) => child.children.map((nested) => nested.id)), [['one'], ['two'], ['three']]);
+});
+
+test('unknown node types remain untouched by the Container adapter', () => {
+    const api = loadChildContainerHelpers();
+    const node = { id: 'unknown', type: 'future_widget', settings: { mode: 'x' }, columns: [{ id: 'opaque', children: [] }] };
+    const state = api.createLegacyContainerMigrationState([node]);
+
+    assert.equal(api.migrateLegacyContainerColumns(node, state, containerFactory), false);
+    assert.equal(node.type, 'future_widget');
+    assert.equal(node.settings.mode, 'x');
+    assert.equal(node.columns[0].id, 'opaque');
+});
+
+test('generated child Container ids never steal an existing node id', () => {
+    const api = loadChildContainerHelpers();
+    const source = [{
+        id: 'parent', type: 'container', settings: {},
+        children: [{ id: 'parent-child-container-1', type: 'heading', settings: {} }],
+        columns: [{ id: '', children: [] }],
+    }];
+    const state = api.createLegacyContainerMigrationState(source);
+    const node = structuredClone(source[0]);
+
+    api.migrateLegacyContainerColumns(node, state, containerFactory);
+
+    assert.equal(node.children[0].id, 'parent-child-container-1');
+    assert.equal(node.children[1].id, 'parent-child-container-1-2');
+});
+```
+
+- [ ] **Step 3: Jalankan test dan pastikan RED karena helper belum tersedia**
+
+Run: `node --test tests/pagebuilder-v23-child-container-strict-parity.test.mjs`
+
+Expected: FAIL pada `child Container helpers should exist`; bukan syntax error atau fixture error.
+
+- [ ] **Step 4: Tambahkan helper migrasi minimal ke `app.js`**
+
+Tempatkan helper tepat setelah `isCont/isGrid/isWgt`, diapit marker yang dipakai test:
+
+```js
+// V23_CHILD_CONTAINER_HELPERS_START
+function validCanonicalId(value) {
+    return /^[A-Za-z0-9_-]+$/.test(String(value || '').trim());
+}
+
+function createLegacyContainerMigrationState(nodes) {
+    const nodeIdCounts = new Map();
+    const columnIdCounts = new Map();
+    const seen = new WeakSet();
+    const visit = (list) => {
+        (Array.isArray(list) ? list : []).forEach((node) => {
+            if (!node || typeof node !== 'object' || seen.has(node)) return;
+            seen.add(node);
+            const nodeId = String(node.id || '').trim();
+            if (validCanonicalId(nodeId)) nodeIdCounts.set(nodeId, (nodeIdCounts.get(nodeId) || 0) + 1);
+            (Array.isArray(node.columns) ? node.columns : []).forEach((column) => {
+                const columnId = String(column && column.id || '').trim();
+                if (validCanonicalId(columnId)) columnIdCounts.set(columnId, (columnIdCounts.get(columnId) || 0) + 1);
+                visit(column && column.children);
+            });
+            visit(node.children);
+            (Array.isArray(node.tabItems) ? node.tabItems : []).forEach((item) => visit(item && item.children));
+            (Array.isArray(node.accordionItems) ? node.accordionItems : []).forEach((item) => visit(item && item.children));
+        });
+    };
+    visit(nodes);
+    return { nodeIdCounts, columnIdCounts, claimedIds: new Set(), preclaimedIds: new Set(), generated: 0, migrated: false };
+}
+
+function uniqueCanonicalId(state, base) {
+    const safeBase = validCanonicalId(base) ? String(base).trim() : 'node';
+    let candidate = safeBase;
+    let suffix = 2;
+    while (state.claimedIds.has(candidate)) candidate = safeBase + '-' + suffix++;
+    state.claimedIds.add(candidate);
+    return candidate;
+}
+
+function uniqueLegacyContainerId(state, base) {
+    const safeBase = validCanonicalId(base) ? String(base).trim() : 'container-child';
+    let candidate = safeBase;
+    let suffix = 2;
+    while (state.claimedIds.has(candidate) || state.nodeIdCounts.has(candidate)) candidate = safeBase + '-' + suffix++;
+    state.claimedIds.add(candidate);
+    state.preclaimedIds.add(candidate);
+    return candidate;
+}
+
+function claimCanonicalNodeId(state, rawId, prefix = 'node') {
+    const requested = String(rawId || '').trim();
+    if (state.preclaimedIds.has(requested)) {
+        state.preclaimedIds.delete(requested);
+        return requested;
+    }
+    if (validCanonicalId(requested) && !state.claimedIds.has(requested)) return uniqueCanonicalId(state, requested);
+    state.generated += 1;
+    return uniqueCanonicalId(state, prefix + '-' + state.generated);
+}
+
+function migrateLegacyContainerColumns(node, state, createContainer) {
+    if (!node || !['container', 'container_fluid'].includes(node.type) || !Array.isArray(node.columns)) return false;
+    const legacyColumns = node.columns;
+    const parentId = String(node.id || 'container');
+    const existingChildren = Array.isArray(node.children) ? node.children : [];
+    const migratedChildren = legacyColumns.map((rawColumn, index) => {
+        const column = rawColumn && typeof rawColumn === 'object' ? rawColumn : {};
+        const requestedId = String(column.id || '').trim();
+        const canReuse = validCanonicalId(requestedId)
+            && (state.columnIdCounts.get(requestedId) || 0) === 1
+            && !state.nodeIdCounts.has(requestedId)
+            && !state.claimedIds.has(requestedId);
+        const child = createContainer();
+        child.id = uniqueLegacyContainerId(state, canReuse ? requestedId : parentId + '-child-container-' + (index + 1));
+        child.type = 'container';
+        child.settings = child.settings && typeof child.settings === 'object' ? child.settings : {};
+        child.settings.displayType = child.settings.displayType || 'flex';
+        child.settings.direction = 'column';
+        child.settings.contentWidth = 'full';
+        child.settings.containerWidth = String(column.flexBasis || child.settings.containerWidth || '100%');
+        child.settings.containerWidthTablet = String(column.flexBasisTablet || child.settings.containerWidthTablet || '');
+        child.settings.containerWidthMobile = String(column.flexBasisMobile || child.settings.containerWidthMobile || '');
+        child.children = (Array.isArray(column.children) ? column.children : []).filter((nested) => nested && typeof nested === 'object');
+        delete child.columns;
+        return child;
+    });
+    node.children = existingChildren.concat(migratedChildren);
+    delete node.columns;
+    state.migrated = true;
+    return true;
+}
+// V23_CHILD_CONTAINER_HELPERS_END
+```
+
+Wire ke `norm()` dengan satu state untuk seluruh tree:
+
+```js
+const parsedLayout = parse(pd?.vars);
+const legacyMigrationState = createLegacyContainerMigrationState(parsedLayout);
+
+function norm(nodes) {
+    return (nodes || []).map((node) => {
+        const c = jclone(node);
+        c.id = claimCanonicalNodeId(legacyMigrationState, c.id, 'node');
+        if (isGrid(c.type)) convertGridNodeToContainer(c);
+        // registry/settings normalization tetap berjalan di sini
+        if (isCont(c.type)) migrateLegacyContainerColumns(c, legacyMigrationState, () => makeNode('container'));
+        if (Array.isArray(c.children)) c.children = norm(c.children);
+        return c;
+    });
+}
+
+rootNodes.value = norm(parsedLayout);
+const legacyMigrationPending = ref(legacyMigrationState.migrated);
+if (legacyMigrationPending.value) {
+    saveState.value = 'dirty';
+    saveMsg.value = 'Legacy layout ready to save';
+}
+snap();
+```
+
+Hapus normalisasi Container yang membuat/menambah/memotong `c.columns`; pertahankan normalisasi settings dan recursion `children`, `tabItems`, serta `accordionItems`.
+
+- [ ] **Step 5: Ubah factory Container menjadi canonical**
+
+```js
+createNode(node) {
+    return {
+        ...node,
+        children: [],
+    };
+},
+```
+
+Hapus local `uid()` di `definition.js` bila tidak lagi dipakai.
+
+- [ ] **Step 6: Jalankan focused test sampai GREEN**
+
+Run: `node --test tests/pagebuilder-v23-child-container-strict-parity.test.mjs`
+
+Expected: semua migration tests PASS; source object fixture tetap memiliki `columns`, sedangkan clone editor canonical tidak.
+
+- [ ] **Step 7: Commit checkpoint migration secara partial**
+
+```powershell
+git add -- tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+git add -p -- public/js/pagebuilder_elementor_v23/app.js public/js/pagebuilder_elementor_v23/widgets/layout/container/definition.js
+git diff --cached --check
+git diff --cached
+git commit -m "feat: normalize v23 legacy columns into child containers"
+```
+
+Expected: staged diff tidak memuat perubahan lama di file yang sama.
+
+---
+
+### Task 2: Canonical Presets dan Add Container
+
+**Files:**
+- Modify: `public/js/pagebuilder_elementor_v23/app.js:3632-3705, 5930-6225`
+- Modify: `public/js/pagebuilder_elementor_v23/widgets/layout/container/Settings.vue:200-226`
+- Test: `tests/pagebuilder-v23-child-container-strict-parity.test.mjs`
+- Test: `tests/pagebuilder-v23-properties-toolbar-regression.test.mjs`
+
+**Interfaces:**
+- Consumes: canonical Container factory dari Task 1.
+- Produces: `createChildContainerNode(createContainer, width, children)`, `presetChildContainers(createContainer, preset)`, `addContainerChild(node)`, dan pending target `{ type: 'container', nodeId: string }`.
+
+- [ ] **Step 1: Tambahkan failing tests untuk factory preset dan Add Container**
+
+```js
+test('a two-column preset creates child Containers and never columns', () => {
+    const api = loadChildContainerHelpers();
+    const children = api.presetChildContainers(containerFactory, { cols: 2, flexWidths: ['33%', '67%'] });
+
+    assert.equal(children.length, 2);
+    assert.deepEqual(Array.from(children, (child) => child.type), ['container', 'container']);
+    assert.deepEqual(Array.from(children, (child) => child.settings.direction), ['column', 'column']);
+    assert.deepEqual(Array.from(children, (child) => child.settings.containerWidth), ['33%', '67%']);
+    assert.ok(children.every((child) => Array.isArray(child.children) && !Object.hasOwn(child, 'columns')));
+});
+
+test('Add Container appends one selectable canonical child', () => {
+    const api = loadChildContainerHelpers();
+    const parent = { id: 'parent', type: 'container', settings: { displayType: 'flex' }, children: [] };
+    const first = api.appendChildContainer(parent, containerFactory);
+    const child = api.appendChildContainer(parent, containerFactory);
+
+    assert.equal(parent.children.length, 2);
+    assert.equal(parent.children[0], first);
+    assert.equal(parent.children[1], child);
+    assert.deepEqual(parent.children.map((entry) => entry.settings.containerWidth), ['50%', '50%']);
+    assert.equal(child.type, 'container');
+    assert.equal(Object.hasOwn(child, 'columns'), false);
+});
+```
+
+Expose kedua helper baru dari `loadChildContainerHelpers()`.
+
+- [ ] **Step 2: Jalankan tests dan pastikan RED pada function yang belum ada**
+
+Run: `node --test tests/pagebuilder-v23-child-container-strict-parity.test.mjs`
+
+Expected: FAIL karena `presetChildContainers`/`appendChildContainer` belum didefinisikan.
+
+- [ ] **Step 3: Implementasikan helper canonical child/preset minimal**
+
+Tambahkan di helper block Task 1:
+
+```js
+function createChildContainerNode(createContainer, width = '100%', children = []) {
+    const child = createContainer();
+    child.type = 'container';
+    child.settings = child.settings && typeof child.settings === 'object' ? child.settings : {};
+    child.settings.displayType = child.settings.displayType || 'flex';
+    child.settings.direction = 'column';
+    child.settings.contentWidth = 'full';
+    child.settings.containerWidth = String(width || '100%');
+    child.settings.containerWidthTablet = String(child.settings.containerWidthTablet || '');
+    child.settings.containerWidthMobile = String(child.settings.containerWidthMobile || '');
+    child.children = Array.isArray(children) ? children : [];
+    delete child.columns;
+    return child;
+}
+
+function presetChildContainers(createContainer, preset) {
+    const count = Math.max(1, Number(preset && preset.cols) || 1);
+    const widths = Array.isArray(preset && preset.flexWidths) ? preset.flexWidths : [];
+    const equalWidth = (100 / count).toFixed(4).replace(/0+$/, '').replace(/\.$/, '') + '%';
+    return Array.from({ length: count }, (_, index) => createChildContainerNode(createContainer, widths[index] || equalWidth));
+}
+
+function parseContainerPercent(value) {
+    const match = String(value || '').trim().match(/^(\d+(?:\.\d+)?)%$/);
+    return match ? Math.max(0, Number(match[1])) : null;
+}
+
+function formatContainerPercent(value) {
+    return (Math.round((Number(value) + Number.EPSILON) * 10) / 10).toFixed(1).replace(/\.0$/, '') + '%';
+}
+
+function appendChildContainer(parent, createContainer) {
+    if (!parent || typeof parent !== 'object') return null;
+    if (!Array.isArray(parent.children)) parent.children = [];
+    const existing = parent.children.filter((child) => child && (child.type === 'container' || child.type === 'container_fluid'));
+    const previous = existing.map((child) => parseContainerPercent(child.settings && child.settings.containerWidth));
+    const fallback = existing.length ? 100 / existing.length : 100;
+    const resolved = previous.map((value) => value == null ? fallback : value);
+    const previousTotal = resolved.reduce((sum, value) => sum + value, 0) || 100;
+    const newShare = 100 / (existing.length + 1);
+    const scale = (100 - newShare) / previousTotal;
+    existing.forEach((child, index) => {
+        child.settings.containerWidth = formatContainerPercent(resolved[index] * scale);
+    });
+    const child = createChildContainerNode(createContainer, formatContainerPercent(newShare));
+    parent.children.push(child);
+    return child;
+}
+```
+
+Gunakan `presetChildContainers(() => makeNode('container'), p)` pada `applyContPreset()` dan `applyGridPreset()`. Grid memakai children yang sama; `cols` hanya mengisi `settings.gridColumns`.
+
+- [ ] **Step 4: Ganti flow add/wrap agar canonical**
+
+Implementasikan `addContainerChild(node)`:
+
+```js
+function addContainerChild(node) {
+    if (!node || !isCont(node.type)) return null;
+    const child = appendChildContainer(node, () => makeNode('container'));
+    if (!child) return null;
+    seedResponsiveSettings(child.settings, true);
+    selectedId.value = child.id;
+    clearPendingInsertTarget();
+    return child;
+}
+```
+
+Perubahan flow wajib:
+
+- `insertToolIntoPendingTarget()` menerima `target.type === 'container'` dan push tool clone ke `ownerNode.children`; Container tidak lagi ditolak.
+- `onRootAdd()` membungkus direct widget dengan parent Container berisi `children: [saved]`, bukan Grid satu kolom.
+- `onAddContainer()` mempertahankan Container dan widget yang masuk; hanya legacy `grid/row_grid` yang dikonversi menjadi Container.
+- `cloneItem()` dan duplicate hanya meregenerasi node IDs melalui `children`, `tabItems`, dan `accordionItems`; tidak membuat `columns`.
+
+- [ ] **Step 5: Ganti sidebar section Column widths menjadi Child Containers**
+
+```vue
+<details class="pb-collapsible" open>
+    <summary>Child Containers</summary>
+    <div class="pb-collapsible-body">
+        <div class="pb-container-child-actions">
+            <span>{{ (node.children || []).filter((child) => child && ['container','container_fluid'].includes(child.type)).length }} containers</span>
+            <button type="button" class="pb-container-add-child" aria-label="Add Container" @click="editor.addContainerChild(node)">
+                <i class="fas fa-plus"></i><span>Add Container</span>
+            </button>
+        </div>
+        <div class="pb-form-note">Each layout item is a selectable Container with its own Layout, Style, and Advanced settings.</div>
+    </div>
+</details>
+```
+
+Hapus seluruh loop `node.columns`, input Column width, copy “internal layout slots”, dan `addContainerFlexColumn`.
+
+- [ ] **Step 6: Jalankan focused tests**
+
+Run:
+
+```powershell
+node --test tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+node --test tests/pagebuilder-v23-properties-toolbar-regression.test.mjs
+```
+
+Expected: preset/helper tests PASS; properties test lama FAIL hanya pada assertion Column lama sampai diperbarui pada Task 3.
+
+- [ ] **Step 7: Commit checkpoint factory/Add Container secara partial**
+
+```powershell
+git add -p -- public/js/pagebuilder_elementor_v23/app.js public/js/pagebuilder_elementor_v23/widgets/layout/container/Settings.vue tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+git diff --cached --check
+git diff --cached
+git commit -m "feat: create canonical child containers in v23"
+```
+
+---
+
+### Task 3: Direct-Children Canvas, Selection, dan Nested Drag/Drop
+
+**Files:**
+- Modify: `public/js/pagebuilder_elementor_v23/app.js:1680-2675, 3570-3705, 5519-6060, 6380-6955`
+- Modify: `public/js/pagebuilder_elementor_v23/widgets/layout/container/Canvas.vue:1-35, 220-255`
+- Modify: `public/assets/css/pagebuilder_elementor_v23.css:1270-1720, 2450-2555, 10680-10710`
+- Modify: `tests/pagebuilder-v23-functional-parity-static.test.mjs`
+- Modify: `tests/pagebuilder-v23-properties-toolbar-regression.test.mjs`
+- Test: `tests/pagebuilder-v23-child-container-strict-parity.test.mjs`
+
+**Interfaces:**
+- Consumes: `node.children`, pending target Container, dan `nodeContainsDescendantId()`.
+- Produces: `canMoveNodeIntoContainer(draggedNode, targetNodeId)`, BuilderNode props `parentNode`/`siblingIndex`/`onCanMoveCanvasNode`, direct draggable list, dan normal child Container selection.
+
+- [ ] **Step 1: Tulis failing tests untuk cycle guard dan penghapusan pseudo Column contract**
+
+```js
+test('a Container cannot be dropped into itself or its descendant', () => {
+    const api = loadChildContainerHelpers();
+    const tree = { id: 'parent', type: 'container', children: [{ id: 'child', type: 'container', children: [] }] };
+
+    assert.equal(api.canMoveNodeIntoContainer(tree, 'parent'), false);
+    assert.equal(api.canMoveNodeIntoContainer(tree, 'child'), false);
+    assert.equal(api.canMoveNodeIntoContainer(tree, 'other'), true);
+});
+```
+
+Extend object `api` pada `loadChildContainerHelpers()` dengan `canMoveNodeIntoContainer`.
+
+Ubah properties regression agar mengharapkan:
+
+```js
+assert.match(containerSettings, /<summary>Child Containers<\/summary>/);
+assert.match(containerSettings, /@click="editor\.addContainerChild\(node\)"/);
+assert.doesNotMatch(containerSettings, /Add Column|Column widths|node\.columns/);
+assert.doesNotMatch(app, /pb-grid-col-label-button|selectedColumnContext|selectColumn\(/);
+assert.match(app, /v-model="node\.children"/);
+assert.match(app, /:parent-node="node"/);
+```
+
+- [ ] **Step 2: Jalankan tests dan pastikan RED pada cycle guard/canonical template**
+
+Run:
+
+```powershell
+node --test tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+node --test tests/pagebuilder-v23-properties-toolbar-regression.test.mjs
+```
+
+Expected: FAIL karena canvas masih memakai `node.columns` dan helper cycle guard belum tersedia.
+
+- [ ] **Step 3: Implementasikan cycle guard pure**
+
+```js
+function canMoveNodeIntoContainer(draggedNode, targetNodeId) {
+    const target = String(targetNodeId || '').trim();
+    if (!draggedNode || !target) return true;
+    if (String(draggedNode.id || '') === target) return false;
+    const lists = [
+        draggedNode.children,
+        ...(Array.isArray(draggedNode.tabItems) ? draggedNode.tabItems.map((item) => item && item.children) : []),
+        ...(Array.isArray(draggedNode.accordionItems) ? draggedNode.accordionItems.map((item) => item && item.children) : []),
+    ];
+    return !lists.some((list) => (Array.isArray(list) ? list : []).some((child) => child && !canMoveNodeIntoContainer(child, target)));
+}
+```
+
+Adapter DOM di setup mencari `dragged.dataset.nodeId`, owner dropzone terdekat, lalu memanggil helper ini pada `:move`:
+
+```js
+function canMoveCanvasNode(event) {
+    const draggedId = String(event && event.dragged && event.dragged.dataset && event.dragged.dataset.nodeId || '').trim();
+    const targetDropzone = event && event.to;
+    const targetOwner = targetDropzone && typeof targetDropzone.closest === 'function'
+        ? targetDropzone.closest('[data-node-id]')
+        : null;
+    const targetId = String(targetOwner && targetOwner.dataset && targetOwner.dataset.nodeId || '').trim();
+    if (!draggedId || !targetId) return true;
+    const draggedNode = findById(rootNodes.value, draggedId);
+    return canMoveNodeIntoContainer(draggedNode, targetId);
+}
+```
+
+- [ ] **Step 4: Render `node.children` langsung melalui satu draggable Container**
+
+Ganti block `v-for="(col, ci) in node.columns"` dengan:
+
+```vue
+<draggable
+    v-model="node.children"
+    item-key="id"
+    :group="contGroup"
+    :move="onCanMoveCanvasNode"
+    data-pb-interactive="true"
+    data-pb-nested-dropzone="true"
+    :data-parent-node-id="node.id"
+    :data-parent-node-type="node.type"
+    class="pb-dropzone pb-dropzone-container-children"
+    ghost-class="pb-ghost"
+    dragover-class="is-drop-hover"
+    @add="(event) => onAddContainer(event, node)"
+    @start="onDragStart"
+    @end="onDragEnd"
+>
+    <template #item="{ element, index }">
+        <BuilderNode
+            :node="element"
+            :parent-node="node"
+            :sibling-index="index"
+            v-bind="passdown()"
+        />
+    </template>
+    <template #footer>
+        <div v-if="!node.children || node.children.length === 0" class="pb-dropzone-empty pb-container-empty-hint">
+            <button type="button" class="pb-inline-add" data-pb-interactive="true" @click.stop.prevent="onShowToolbox({ type: 'container', nodeId: node.id })">
+                <i class="fas fa-plus"></i><span>Add</span>
+            </button>
+            <div class="pb-dropzone-empty-text">Drop here</div>
+        </div>
+    </template>
+</draggable>
+```
+
+Hapus selected-column props/state/computed/sidebar, `columnLabel()`, sequential column lock, `findColumnById()`, dan semua recursion `node.columns`. Pertahankan recursion `children`, tabs, dan accordion.
+
+Tambahkan props dan passdown berikut pada BuilderNode, lalu bind callback dari root:
+
+```js
+parentNode: { type: Object, default: null },
+siblingIndex: { type: Number, default: -1 },
+onCanMoveCanvasNode: { type: Function, required: true },
+onStartContainerEdgeResize: { type: Function, required: true },
+```
+
+```js
+passdown() {
+    return {
+        selectedId: this.selectedId,
+        hoveredId: this.hoveredId,
+        responsiveDevice: this.responsiveDevice,
+        dynamicContext: this.dynamicContext,
+        onAddContainer: this.onAddContainer,
+        onSelect: this.onSelect,
+        onSetHover: this.onSetHover,
+        onClearHover: this.onClearHover,
+        onRemove: this.onRemove,
+        onDuplicate: this.onDuplicate,
+        onDragStart: this.onDragStart,
+        onDragEnd: this.onDragEnd,
+        onCanMoveCanvasNode: this.onCanMoveCanvasNode,
+        onStartContainerEdgeResize: this.onStartContainerEdgeResize,
+        onOpenModal: this.onOpenModal,
+        onShowToolbox: this.onShowToolbox,
+        pendingInsertTarget: this.pendingInsertTarget,
+        onRerouteTabsDrop: this.onRerouteTabsDrop,
+        onAccordionRuntimeForNode: this.onAccordionRuntimeForNode,
+        onToggleAccordionItem: this.onToggleAccordionItem,
+        onRerouteAccordionDrop: this.onRerouteAccordionDrop,
+        onTrackDropzonePointer: this.onTrackDropzonePointer,
+    };
+}
+```
+
+Root BuilderNode memakai `:on-can-move-canvas-node="canMoveCanvasNode"` dan `:on-start-container-edge-resize="startContainerEdgeResize"`. Hapus seluruh selected-column/on-add-col/on-start-column-resize binding lama.
+
+- [ ] **Step 5: Biarkan Canvas inner Container mengisi shell child**
+
+Pass prop pada component:
+
+```vue
+<component
+    :is="loadWidget(node.type)"
+    :item="node"
+    :responsive-device="responsiveDevice"
+    :fill-editor-shell="!!parentNode"
+>
+```
+
+Tambahkan prop/computed di `Canvas.vue`:
+
+```js
+fillEditorShell: { type: Boolean, default: false },
+```
+
+dan pada `containerStyle()`:
+
+```js
+width: this.fillEditorShell ? '100%' : (fullMode ? this.toCssSize(widthValue, '100%') : '100%'),
+```
+
+Outer `.pb-node` menjadi layout item; inner Canvas tidak menerapkan width dua kali.
+
+- [ ] **Step 6: Tambahkan CSS direct child tanpa pseudo Column**
+
+```css
+.pb-dropzone-container-children {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    min-height: 68px;
+}
+
+.pb-dropzone-container-children > .pb-node {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.pb-container-empty-hint {
+    min-height: 68px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+```
+
+Hapus rule yang khusus menampilkan `.pb-grid-col-label`, `.is-selected-col`, dan selected Column sidebar. Jangan menghapus shared empty-hint rules yang masih dipakai Tabs/Accordion.
+
+- [ ] **Step 7: Update functional parity exception secara eksplisit**
+
+`tests/pagebuilder-v23-functional-parity-static.test.mjs` tetap membandingkan action umum v2.0/v2.3, tetapi keluarkan `startColumnResize`, `selectColumn`, `on-add-col`, dan `on-start-column-resize` dari `assertBothContain`. Tambahkan test v2.3-only:
+
+```js
+test('v2.3 intentionally replaces internal columns with child Container actions', () => {
+    for (const marker of [
+        'function addContainerChild(node)',
+        'function startContainerEdgeResize',
+        'v-model="node.children"',
+        ':parent-node="node"',
+        ':on-start-container-edge-resize="startContainerEdgeResize"',
+    ]) {
+        assert.match(v23, new RegExp(escapeRegExp(marker)));
+    }
+    assert.doesNotMatch(v23, /selectedColumnContext|:on-select-column="selectColumn"/);
+});
+```
+
+- [ ] **Step 8: Jalankan focused tests sampai GREEN**
+
+Run:
+
+```powershell
+node --test tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+node --test tests/pagebuilder-v23-properties-toolbar-regression.test.mjs
+node --test tests/pagebuilder-v23-functional-parity-static.test.mjs
+node --check public/js/pagebuilder_elementor_v23/app.js
+```
+
+Expected: semua PASS dan `node --check` exit 0.
+
+- [ ] **Step 9: Commit checkpoint canvas/drag-drop secara partial**
+
+```powershell
+git add -p -- public/js/pagebuilder_elementor_v23/app.js public/js/pagebuilder_elementor_v23/widgets/layout/container/Canvas.vue public/assets/css/pagebuilder_elementor_v23.css tests/pagebuilder-v23-functional-parity-static.test.mjs tests/pagebuilder-v23-properties-toolbar-regression.test.mjs tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+git diff --cached --check
+git diff --cached
+git commit -m "feat: render selectable child containers in v23 canvas"
+```
+
+---
+
+### Task 4: Responsive Edge Resize dan Satu History Snapshot
+
+**Files:**
+- Modify: `public/js/pagebuilder_elementor_v23/app.js:4380-4730`
+- Modify: `public/assets/css/pagebuilder_elementor_v23.css:1440-1535, 1695-1720`
+- Test: `tests/pagebuilder-v23-child-container-strict-parity.test.mjs`
+
+**Interfaces:**
+- Consumes: BuilderNode `parentNode`, `siblingIndex`, `responsiveDevice`, `snap()`, dan `suppressHistory`.
+- Produces: `containerWidthKey(device)`, `responsiveContainerWidth(settings, device)`, `containerPercentages(children, device)`, `applyAdjacentContainerWidths(children, index, nextPercent, device, options)`, dan `startContainerEdgeResize(event, parent, index)`.
+
+- [ ] **Step 1: Tulis failing tests untuk inheritance, isolation, pair total, dan minimum width**
+
+```js
+test('responsive width inherits from the nearest larger device', () => {
+    const api = loadChildContainerHelpers();
+    const settings = { containerWidth: '60%', containerWidthTablet: '55%', containerWidthMobile: '' };
+    assert.equal(api.responsiveContainerWidth(settings, 'desktop'), '60%');
+    assert.equal(api.responsiveContainerWidth(settings, 'tablet'), '55%');
+    assert.equal(api.responsiveContainerWidth(settings, 'mobile'), '55%');
+});
+
+test('edge resize writes only the active device and preserves the pair total', () => {
+    const api = loadChildContainerHelpers();
+    const children = [
+        containerFactory(),
+        containerFactory(),
+        containerFactory(),
+    ];
+    children[0].settings.containerWidth = '25%';
+    children[1].settings.containerWidth = '50%';
+    children[2].settings.containerWidth = '25%';
+
+    const result = api.applyAdjacentContainerWidths(children, 0, 35, 'tablet', { minPercent: 8 });
+
+    assert.deepEqual(JSON.parse(JSON.stringify(result)), { current: 35, next: 40, total: 75 });
+    assert.equal(children[0].settings.containerWidth, '25%');
+    assert.equal(children[1].settings.containerWidth, '50%');
+    assert.equal(children[0].settings.containerWidthTablet, '35%');
+    assert.equal(children[1].settings.containerWidthTablet, '40%');
+    assert.equal(children[2].settings.containerWidthTablet, '');
+});
+```
+
+Extend object `api` pada `loadChildContainerHelpers()` dengan `responsiveContainerWidth` dan `applyAdjacentContainerWidths`.
+
+- [ ] **Step 2: Jalankan tests dan pastikan RED pada responsive helper**
+
+Run: `node --test tests/pagebuilder-v23-child-container-strict-parity.test.mjs`
+
+Expected: FAIL karena responsive width API belum ada.
+
+- [ ] **Step 3: Implementasikan pure responsive pair resize**
+
+```js
+function containerWidthKey(device) {
+    if (device === 'tablet') return 'containerWidthTablet';
+    if (device === 'mobile') return 'containerWidthMobile';
+    return 'containerWidth';
+}
+
+function responsiveContainerWidth(settings, device, fallback = '100%') {
+    const source = settings || {};
+    if (device === 'mobile') return source.containerWidthMobile || source.containerWidthTablet || source.containerWidth || fallback;
+    if (device === 'tablet') return source.containerWidthTablet || source.containerWidth || fallback;
+    return source.containerWidth || fallback;
+}
+
+function containerPercentages(children, device) {
+    const list = Array.isArray(children) ? children : [];
+    if (!list.length) return [];
+    const values = list.map((child) => parseContainerPercent(responsiveContainerWidth(child && child.settings, device, '')));
+    const specified = values.reduce((sum, value) => sum + (value == null ? 0 : value), 0);
+    const missing = values.filter((value) => value == null).length;
+    const share = missing ? Math.max(0, 100 - specified) / missing : 0;
+    return values.map((value) => value == null ? share : value);
+}
+
+function applyAdjacentContainerWidths(children, index, nextPercent, device, options = {}) {
+    const list = Array.isArray(children) ? children : [];
+    if (index < 0 || index >= list.length - 1) return null;
+    const percentages = containerPercentages(list, device);
+    const total = percentages[index] + percentages[index + 1];
+    const minimum = Math.max(4, Number(options.minPercent) || 4);
+    const current = Math.min(Math.max(Number(nextPercent) || 0, minimum), total - minimum);
+    const next = total - current;
+    list[index].settings[containerWidthKey(device)] = formatContainerPercent(current);
+    list[index + 1].settings[containerWidthKey(device)] = formatContainerPercent(next);
+    return {
+        current: Math.round(current * 10) / 10,
+        next: Math.round(next * 10) / 10,
+        total: Math.round(total * 10) / 10,
+    };
+}
+```
+
+- [ ] **Step 4: Render edge handle pada child Container, bukan parent column slot**
+
+BuilderNode menampilkan handle hanya jika parent adalah Flexbox, active direction `row`, active wrap `nowrap`, dan current serta next sibling sama-sama Container:
+
+```js
+showContainerEdgeResizeHandle() {
+    const parent = this.parentNode;
+    const siblings = Array.isArray(parent && parent.children) ? parent.children : [];
+    const current = siblings[this.siblingIndex];
+    const next = siblings[this.siblingIndex + 1];
+    const settings = parent && parent.settings ? parent.settings : {};
+    const activeValue = (base, fallback) => {
+        const key = responsiveKey(base, this.responsiveDevice || 'desktop');
+        const value = settings[key];
+        return value === '' || value == null ? (settings[base] || fallback) : value;
+    };
+    return isCont(parent && parent.type)
+        && isCont(current && current.type)
+        && isCont(next && next.type)
+        && (settings.displayType || 'flex') === 'flex'
+        && activeValue('direction', 'row') === 'row'
+        && activeValue('flexWrap', 'nowrap') === 'nowrap';
+},
+```
+
+```vue
+<button
+    v-if="showContainerEdgeResizeHandle"
+    type="button"
+    class="pb-container-edge-resizer"
+    title="Drag to resize containers"
+    @click.stop
+    @mousedown.stop.prevent="onStartContainerEdgeResize($event, parentNode, siblingIndex)"
+>
+    <i class="fas fa-arrows-alt-h"></i>
+</button>
+```
+
+`nodeShellStyle` pada child Container memakai active responsive width:
+
+```js
+const parentSettings = this.parentNode && this.parentNode.settings ? this.parentNode.settings : {};
+if (isCont(this.node.type) && isCont(this.parentNode && this.parentNode.type) && (parentSettings.displayType || 'flex') === 'flex') {
+    const directionKey = responsiveKey('direction', this.responsiveDevice || 'desktop');
+    const direction = parentSettings[directionKey] || parentSettings.direction || 'row';
+    if (direction === 'row' || direction === 'row-reverse') {
+        const width = responsiveContainerWidth(this.node.settings || {}, this.responsiveDevice, '100%');
+        style.flex = '0 1 ' + width;
+        style.flexBasis = width;
+        style.width = width;
+        style.minWidth = this.responsiveDevice === 'mobile' ? '56px' : (this.responsiveDevice === 'tablet' ? '72px' : '96px');
+    } else {
+        style.flex = '0 0 auto';
+        style.width = '100%';
+        style.minWidth = '0';
+    }
+} else if (this.parentNode && isCont(this.parentNode.type) && (parentSettings.displayType || 'flex') === 'flex') {
+    style.flex = '1 1 auto';
+    style.width = '100%';
+    style.maxWidth = '100%';
+    style.minWidth = '0';
+}
+```
+
+- [ ] **Step 5: Adapt controller pointer resize dan history**
+
+`startContainerEdgeResize(event, parent, index)` mengambil dua sibling `.pb-node`, menghitung `pairWidth`, mengaktifkan `suppressHistory`, memanggil `applyAdjacentContainerWidths()` pada mousemove, lalu pada mouseup/blur melakukan tepat satu `snap()` setelah `suppressHistory=false`:
+
+```js
+function startContainerEdgeResize(event, parent, index) {
+    const children = Array.isArray(parent && parent.children) ? parent.children : [];
+    const current = children[index];
+    const next = children[index + 1];
+    const settings = parent && parent.settings ? parent.settings : {};
+    const direction = getResponsiveSetting(settings, 'direction', settings.direction || 'row') || 'row';
+    const wrap = getResponsiveSetting(settings, 'flexWrap', settings.flexWrap || 'nowrap') || 'nowrap';
+    if (!event || !isCont(parent && parent.type) || !isCont(current && current.type) || !isCont(next && next.type)) return;
+    if ((settings.displayType || 'flex') !== 'flex' || direction !== 'row' || wrap !== 'nowrap') return;
+
+    const currentEl = event.currentTarget && event.currentTarget.closest('.pb-node');
+    const nextEl = currentEl && currentEl.nextElementSibling;
+    if (!currentEl || !nextEl || !nextEl.classList.contains('pb-node')) return;
+    const currentRect = currentEl.getBoundingClientRect();
+    const nextRect = nextEl.getBoundingClientRect();
+    const pairWidth = currentRect.width + nextRect.width;
+    if (!(pairWidth > 0)) return;
+
+    const percentages = containerPercentages(children, responsiveDevice.value);
+    const pairTotal = percentages[index] + percentages[index + 1];
+    const startX = Number(event.clientX) || 0;
+    const startWidth = currentRect.width;
+    const minPx = Math.max(48, Math.min(160, pairWidth * 0.18, (pairWidth / 2) - 24));
+    const minPercent = Math.max(4, (minPx / pairWidth) * pairTotal);
+    let finished = false;
+
+    selectNode(current);
+    suppressHistory.value = true;
+    document.body.classList.add('pb-is-resizing-containers');
+    setContainerResizeOverlay(true, formatContainerPercent(percentages[index]), startX + 18, currentRect.top + 24);
+
+    const stop = () => {
+        if (finished) return;
+        finished = true;
+        window.removeEventListener('mousemove', onMove);
+        window.removeEventListener('mouseup', stop);
+        window.removeEventListener('blur', stop);
+        suppressHistory.value = false;
+        document.body.classList.remove('pb-is-resizing-containers');
+        setContainerResizeOverlay(false);
+        snap();
+    };
+    const onMove = (moveEvent) => {
+        const delta = (Number(moveEvent.clientX) || 0) - startX;
+        const nextWidth = Math.min(Math.max(startWidth + delta, minPx), pairWidth - minPx);
+        const requested = (nextWidth / pairWidth) * pairTotal;
+        const result = applyAdjacentContainerWidths(children, index, requested, responsiveDevice.value, { minPercent });
+        if (result) setContainerResizeOverlay(true, formatContainerPercent(result.current), (Number(moveEvent.clientX) || 0) + 18, currentRect.top + 24);
+    };
+
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', stop);
+    window.addEventListener('blur', stop);
+}
+```
+
+Rename `columnResizeOverlay`, `setColumnResizeOverlay`, `activeColumnResizeCleanup`, dan body class lama ke `containerResizeOverlay`, `setContainerResizeOverlay`, `activeContainerResizeCleanup`, dan `pb-is-resizing-containers` agar tidak menyisakan editor-column API.
+
+Mutation yang harus ditangkap test/browser:
+
+- `snap()` dipanggil pada setiap mousemove: harus gagal karena satu drag seharusnya satu history entry.
+- width Mobile menulis Desktop key: harus gagal pada test isolation.
+- pair total dipaksa 100: harus gagal saat pasangan awal berjumlah 75.
+
+- [ ] **Step 6: Ganti CSS resizer**
+
+```css
+.pb-container-edge-resizer {
+    --pb-container-resizer-hit-size: 52px;
+    position: absolute;
+    top: 50%;
+    right: calc((var(--pb-container-resizer-hit-size) + var(--pb-flex-column-gap, 0px)) / -2);
+    width: var(--pb-container-resizer-hit-size);
+    height: 52px;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    z-index: 32;
+    cursor: col-resize;
+}
+```
+
+Gunakan visual lingkaran/icon yang sudah ada dari `.pb-col-resizer i`; rename selector tanpa mengubah geometry yang sudah lolos QA.
+
+- [ ] **Step 7: Jalankan focused tests sampai GREEN**
+
+Run:
+
+```powershell
+node --test tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+node --test tests/pagebuilder-v23-properties-toolbar-regression.test.mjs
+node --check public/js/pagebuilder_elementor_v23/app.js
+```
+
+Expected: semua PASS; output tidak mengandung unhandled rejection atau syntax error.
+
+- [ ] **Step 8: Commit checkpoint resize secara partial**
+
+```powershell
+git add -p -- public/js/pagebuilder_elementor_v23/app.js public/assets/css/pagebuilder_elementor_v23.css tests/pagebuilder-v23-child-container-strict-parity.test.mjs tests/pagebuilder-v23-properties-toolbar-regression.test.mjs
+git diff --cached --check
+git diff --cached
+git commit -m "feat: resize adjacent v23 child containers"
+```
+
+---
+
+### Task 5: Grid/Flex Shared Children dan Responsive Tracks
+
+**Files:**
+- Modify: `public/js/pagebuilder_elementor_v23/app.js:3188-3270, 4406-4465, 5358-5535`
+- Modify: `public/js/pagebuilder_elementor_v23/widgets/layout/container/Settings.vue:226-390`
+- Modify: `tests/pagebuilder-v23-grid-container-unification.test.mjs`
+- Test: `tests/pagebuilder-v23-child-container-strict-parity.test.mjs`
+
+**Interfaces:**
+- Consumes: canonical `node.children` dari Tasks 1-3.
+- Produces: Grid Columns/Rows setters yang hanya menulis responsive settings dan `onContainerDisplayTypeChange(node)` yang tidak mengubah child identity/order.
+
+- [ ] **Step 1: Tulis failing behavioral contract untuk mode switch**
+
+Tambahkan helper test yang mengambil snapshot child sebelum dan sesudah perubahan layout settings:
+
+```js
+test('Grid and Flexbox share the same child identities and order', () => {
+    const node = {
+        id: 'parent', type: 'container',
+        settings: { displayType: 'grid', gridColumns: 3, gridRows: '2' },
+        children: [
+            { id: 'a', type: 'container', settings: {}, children: [] },
+            { id: 'b', type: 'container', settings: {}, children: [] },
+        ],
+    };
+    const before = node.children.map((child) => child.id);
+    node.settings.displayType = 'flex';
+    node.settings.displayType = 'grid';
+    node.settings.gridColumns = 6;
+    node.settings.gridRows = '4';
+
+    assert.deepEqual(node.children.map((child) => child.id), before);
+    assert.equal(Object.hasOwn(node, 'columns'), false);
+});
+```
+
+Update grid static wiring assertions:
+
+```js
+assert.match(app, /function setContainerGridColumnsValue\(node, next\)[\s\S]*?settings\[responsiveKey\('gridColumns', device\)\] = value;/);
+assert.match(app, /function setContainerGridRowsValue\(node, next\)[\s\S]*?setContainerResponsiveSetting\(node\.settings, 'gridRows', String\(value\)\);/);
+assert.doesNotMatch(app, /function syncCols\(/);
+assert.doesNotMatch(app, /responsiveColumnsCache|reconcileColumnsContent/);
+```
+
+- [ ] **Step 2: Jalankan grid tests dan pastikan RED pada `syncCols` yang masih ada**
+
+Run:
+
+```powershell
+node --test tests/pagebuilder-v23-grid-container-unification.test.mjs
+node --test tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+```
+
+Expected: grid test FAIL karena `syncCols()`/responsive slot snapshots masih ada.
+
+- [ ] **Step 3: Hapus seluruh column-count synchronization**
+
+Hapus `responsiveColumnsCache`, clone/reconcile column snapshots, `syncCols`, `syncGridColumnsForDevice`, selected-node grid-cell watcher, dan responsive-device grid sync timer.
+
+Ubah setter menjadi settings-only:
+
+```js
+function setContainerGridColumnsValue(node, next) {
+    if (!node || !node.settings) return;
+    const device = normalizeResponsiveDevice(responsiveDevice.value);
+    node.settings[responsiveKey('gridColumns', device)] = clamp(Number(next) || 1, 1, 12);
+}
+
+function setContainerGridRowsValue(node, next) {
+    if (!node || !node.settings) return;
+    setContainerResponsiveSetting(node.settings, 'gridRows', String(clamp(Number(next) || 1, 1, 12)));
+}
+```
+
+`onContainerDisplayTypeChange()` hanya menyelaraskan gap values; jangan memanggil width normalizer atau memodifikasi children.
+
+- [ ] **Step 4: Pastikan Grid canvas memakai direct children**
+
+`contColumnsStyle()` tetap menghasilkan CSS Grid tracks dari active `gridColumns/gridRows`, tetapi draggable/list tetap satu `node.children`. Grid outline menarget direct `.pb-node` children, bukan generated cell.
+
+- [ ] **Step 5: Jalankan focused suite sampai GREEN**
+
+Run:
+
+```powershell
+node --test tests/pagebuilder-v23-grid-container-unification.test.mjs
+node --test tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+node --test tests/pagebuilder-v23-properties-toolbar-regression.test.mjs
+```
+
+Expected: semua PASS; tidak ada source contract yang masih membutuhkan `syncCols`.
+
+- [ ] **Step 6: Commit checkpoint Grid/Flex secara partial**
+
+```powershell
+git add -p -- public/js/pagebuilder_elementor_v23/app.js public/js/pagebuilder_elementor_v23/widgets/layout/container/Settings.vue tests/pagebuilder-v23-grid-container-unification.test.mjs tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+git diff --cached --check
+git diff --cached
+git commit -m "refactor: share v23 children across grid and flex"
+```
+
+---
+
+### Task 6: Frontend Canonical Rendering dengan Legacy Fallback
+
+**Files:**
+- Modify: `resources/views/pagebuilder_elementor_v23/widgets/layout/container.blade.php:136-190, 398-630`
+- Modify: `public/assets/css/frontend_elementor_v23.css:19-55`
+- Modify: `tests/Feature/PageBuilderElementorV23FrontendRenderingTest.php`
+
+**Interfaces:**
+- Consumes: canonical `children[]` dan legacy `columns[]` dari `render_node.blade.php` scope.
+- Produces: canonical direct recursive render dan legacy wrapper fallback tanpa truncation/merge.
+
+- [ ] **Step 1: Tulis failing frontend tests untuk kedua schema**
+
+```php
+public function test_v23_container_renders_canonical_and_legacy_layouts_without_content_loss(): void
+{
+    $heading = fn (string $id, string $text): array => [
+        'id' => $id,
+        'type' => 'heading',
+        'settings' => ['text' => $text],
+    ];
+
+    $canonical = $this->renderNode([
+        'id' => 'canonical-parent',
+        'type' => 'container',
+        'settings' => ['displayType' => 'flex', 'direction' => 'row'],
+        'children' => [
+            ['id' => 'canonical-left', 'type' => 'container', 'settings' => ['displayType' => 'flex', 'containerWidth' => '33%'], 'children' => [$heading('a', 'First')]],
+            ['id' => 'canonical-right', 'type' => 'container', 'settings' => ['displayType' => 'flex', 'containerWidth' => '67%'], 'children' => [$heading('b', 'Second')]],
+        ],
+    ]);
+
+    $legacy = $this->renderNode([
+        'id' => 'legacy-parent',
+        'type' => 'container',
+        'settings' => ['displayType' => 'flex', 'direction' => 'row'],
+        'columns' => [
+            ['id' => 'legacy-left', 'flexBasis' => '33%', 'children' => [$heading('c', 'First')]],
+            ['id' => 'legacy-right', 'flexBasis' => '67%', 'children' => [$heading('d', 'Second')]],
+        ],
+    ]);
+
+    foreach ([$canonical, $legacy] as $html) {
+        $this->assertStringContainsString('First', $html);
+        $this->assertStringContainsString('Second', $html);
+        $this->assertLessThan(strpos($html, 'Second'), strpos($html, 'First'));
+        $this->assertStringContainsString('33%', $html);
+        $this->assertStringContainsString('67%', $html);
+    }
+    $this->assertStringContainsString('id="pb-node-canonical-left"', $canonical);
+    $this->assertStringContainsString('id="pb-node-canonical-right"', $canonical);
+}
+
+public function test_v23_legacy_fallback_never_merges_extra_columns_into_the_last_cell(): void
+{
+    $legacy = $this->renderNode([
+        'id' => 'legacy-grid',
+        'type' => 'container',
+        'settings' => ['displayType' => 'grid', 'gridColumns' => 1, 'gridRows' => '1'],
+        'columns' => [
+            ['id' => 'one', 'children' => [['id' => 'a', 'type' => 'heading', 'settings' => ['text' => 'One']]]],
+            ['id' => 'two', 'children' => [['id' => 'b', 'type' => 'heading', 'settings' => ['text' => 'Two']]]],
+            ['id' => 'three', 'children' => [['id' => 'c', 'type' => 'heading', 'settings' => ['text' => 'Three']]]],
+        ],
+    ]);
+
+    $this->assertStringContainsString('One', $legacy);
+    $this->assertStringContainsString('Two', $legacy);
+    $this->assertStringContainsString('Three', $legacy);
+    $this->assertSame(3, substr_count($legacy, 'class="el-grid-col"'));
+}
+```
+
+- [ ] **Step 2: Jalankan feature test dan pastikan RED**
+
+Run: `php artisan test tests/Feature/PageBuilderElementorV23FrontendRenderingTest.php --compact`
+
+Expected: canonical width/order atau no-merge assertion FAIL terhadap renderer saat ini.
+
+- [ ] **Step 3: Pisahkan canonical path dan fallback path di Blade**
+
+Gunakan presence, bukan `count(children)`, agar canonical Container kosong tidak dianggap legacy dan hybrid legacy tidak kehilangan loose children:
+
+```php
+$hasLegacyColumns = array_key_exists('columns', $node);
+$hasCanonicalChildren = array_key_exists('children', $node) && !$hasLegacyColumns;
+$canonicalChildren = $hasCanonicalChildren && is_array($children) ? $children : [];
+$legacyLooseChildren = $hasLegacyColumns && is_array($children) ? $children : [];
+$legacyColumns = $hasLegacyColumns && is_array($columns) ? $columns : [];
+```
+
+Canonical path:
+
+```blade
+<div class="el-cont-columns" style="{{ $contColumnsStyle }}">
+    @foreach($canonicalChildren as $child)
+        @include('pagebuilder_elementor_v23.partials.render_node', ['node' => $child])
+    @endforeach
+</div>
+```
+
+Fallback path mempertahankan satu wrapper `.el-grid-col` per legacy column dan seluruh `column.children`. Jika `$legacyLooseChildren` tidak kosong, prepend satu recoverable wrapper untuk children tersebut sebelum legacy columns. Hapus `while` yang menambah empty cell, `array_slice`, dan loop yang menggabungkan extra children ke cell terakhir. `gridColumns/gridRows` hanya menentukan CSS tracks.
+
+- [ ] **Step 4: Tambahkan CSS direct child frontend**
+
+```css
+.el-cont-columns > .el-layout-container,
+.el-cont-columns > .el-layout-container-fluid {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.el-cont-columns > :not(.el-layout-container):not(.el-layout-container-fluid):not(.el-grid-col) {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.el-cont-columns[style*="display: grid"] > .el-layout-container,
+.el-cont-columns[style*="display:grid"] > .el-layout-container,
+.el-cont-columns[style*="display: grid"] > .el-layout-container-fluid,
+.el-cont-columns[style*="display:grid"] > .el-layout-container-fluid {
+    width: 100%;
+}
+```
+
+Pertahankan `.el-grid-col` rules untuk legacy fallback selama compatibility window.
+
+- [ ] **Step 5: Jalankan frontend tests sampai GREEN**
+
+Run: `php artisan test tests/Feature/PageBuilderElementorV23FrontendRenderingTest.php --compact`
+
+Expected: semua tests PASS dan canonical/legacy sama-sama mempertahankan content order.
+
+- [ ] **Step 6: Commit checkpoint renderer secara partial**
+
+```powershell
+git add -p -- resources/views/pagebuilder_elementor_v23/widgets/layout/container.blade.php public/assets/css/frontend_elementor_v23.css tests/Feature/PageBuilderElementorV23FrontendRenderingTest.php
+git diff --cached --check
+git diff --cached
+git commit -m "feat: render canonical and legacy v23 containers"
+```
+
+---
+
+### Task 7: Canonical Save Contract dan Persistence Safety
+
+**Files:**
+- Modify: `public/js/pagebuilder_elementor_v23/app.js:2860-2920, 6284-6320, 6580-6615`
+- Modify: `tests/pagebuilder-v23-child-container-strict-parity.test.mjs`
+- Modify: `tests/Feature/PageBuilderElementorV23RoutesAndPersistenceTest.php`
+
+**Interfaces:**
+- Consumes: `rootNodes`, `legacyMigrationPending`, dan Axios save endpoint v2.3.
+- Produces: `canonicalLayoutForSave(nodes)` dan migration-pending save state.
+
+- [ ] **Step 1: Tulis failing serializer test**
+
+```js
+test('save serialization strips legacy columns only from Container nodes', () => {
+    const api = loadChildContainerHelpers();
+    const source = [{
+        id: 'parent', type: 'container', settings: {},
+        columns: [{ id: 'legacy', children: [] }],
+        children: [{ id: 'gallery', type: 'basic_gallery', settings: { columns: 4 } }],
+    }];
+
+    const serialized = api.canonicalLayoutForSave(source);
+
+    assert.equal(Object.hasOwn(serialized[0], 'columns'), false);
+    assert.equal(serialized[0].children[0].settings.columns, 4);
+    assert.equal(Object.hasOwn(source[0], 'columns'), true);
+});
+```
+
+Extend object `api` pada `loadChildContainerHelpers()` dengan `canonicalLayoutForSave`.
+
+- [ ] **Step 2: Tulis failing Laravel tests untuk GET/no-write, explicit canonical update, dan failed update**
+
+```php
+public function test_opening_a_legacy_v23_page_does_not_persist_editor_migration(): void
+{
+    $legacy = json_encode([['id' => 'parent', 'type' => 'container', 'settings' => ['displayType' => 'flex'], 'columns' => [['id' => 'left', 'children' => []]]]], JSON_THROW_ON_ERROR);
+    $this->insertPage('v23-legacy', 'V23 Legacy', Page_Builder::EDITOR_VERSION_V23, $legacy);
+
+    $before = DB::table('page_builder')->where('uri', 'v23-legacy')->first();
+    $this->get('/pagebuilder-elementor/v2.3/edit/v23-legacy')->assertOk();
+    $after = DB::table('page_builder')->where('uri', 'v23-legacy')->first();
+
+    $this->assertSame($before->vars, $after->vars);
+    $this->assertSame((string) $before->updated_at, (string) $after->updated_at);
+}
+
+public function test_explicit_update_persists_canonical_children_and_no_container_columns(): void
+{
+    $this->insertPage('v23-canonical-save', 'V23 Canonical Save', Page_Builder::EDITOR_VERSION_V23, '[]');
+    $layout = [[
+        'id' => 'parent', 'type' => 'container', 'settings' => ['displayType' => 'flex'],
+        'children' => [['id' => 'child', 'type' => 'container', 'settings' => ['containerWidth' => '50%'], 'children' => []]],
+    ]];
+
+    $this->postJson('/pagebuilder-elementor/v2.3/update/v23-canonical-save', [
+        'pageName' => 'V23 Canonical Save',
+        'pageStatus' => 'draft',
+        'layout' => $layout,
+    ])->assertOk()->assertJsonPath('success', true);
+
+    $stored = json_decode(DB::table('page_builder')->where('uri', 'v23-canonical-save')->value('vars'), true, flags: JSON_THROW_ON_ERROR);
+    $this->assertSame('child', $stored[0]['children'][0]['id']);
+    $this->assertArrayNotHasKey('columns', $stored[0]);
+}
+
+public function test_failed_update_leaves_the_stored_layout_unchanged(): void
+{
+    $this->insertPage('v23-failed-save', 'V23 Failed Save', Page_Builder::EDITOR_VERSION_V23, '[{"id":"original"}]');
+    $before = DB::table('page_builder')->where('uri', 'v23-failed-save')->value('vars');
+
+    $this->postJson('/pagebuilder-elementor/v2.3/update/v23-failed-save', [
+        'pageName' => '',
+        'layout' => [['id' => 'replacement']],
+    ])->assertStatus(422);
+
+    $this->assertSame($before, DB::table('page_builder')->where('uri', 'v23-failed-save')->value('vars'));
+}
+```
+
+- [ ] **Step 3: Jalankan focused tests dan pastikan RED**
+
+Run:
+
+```powershell
+node --test tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+php artisan test tests/Feature/PageBuilderElementorV23RoutesAndPersistenceTest.php --compact
+```
+
+Expected: Node serializer test FAIL karena function belum ada; Laravel tests mengunci server no-write/failure behavior.
+
+- [ ] **Step 4: Implementasikan canonical serializer dan save state**
+
+```js
+function canonicalLayoutForSave(nodes) {
+    const visit = (list) => (Array.isArray(list) ? list : []).map((node) => {
+        const copy = structuredClone(node);
+        if (copy.type === 'container' || copy.type === 'container_fluid') delete copy.columns;
+        if (Array.isArray(copy.children)) copy.children = visit(copy.children);
+        if (Array.isArray(copy.tabItems)) copy.tabItems = copy.tabItems.map((item) => ({ ...item, children: visit(item.children) }));
+        if (Array.isArray(copy.accordionItems)) copy.accordionItems = copy.accordionItems.map((item) => ({ ...item, children: visit(item.children) }));
+        return copy;
+    });
+    return visit(nodes);
+}
+```
+
+Pada `savePage()`:
+
+```js
+const layoutPayload = canonicalLayoutForSave(rootNodes.value);
+const res = await axios.post(saveUrl.value, {
+    pageName: pageName.value,
+    pageStatus: pageStatus.value,
+    customCss: normalizedCustomCss.value,
+    layout: layoutPayload,
+}, {
+    headers: {
+        'X-CSRF-TOKEN': PBC.csrfToken,
+        'X-Requested-With': 'XMLHttpRequest',
+        Accept: 'application/json',
+    },
+});
+legacyMigrationPending.value = false;
+```
+
+Jangan mengubah `rootNodes` atau `legacyMigrationPending` pada catch. Template save-state menampilkan `Migration pending` untuk `saveState === 'dirty'`, `Saving`, `Save failed`, atau `Saved` sesuai state.
+
+- [ ] **Step 5: Jalankan persistence tests sampai GREEN**
+
+Run:
+
+```powershell
+node --test tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+php artisan test tests/Feature/PageBuilderElementorV23RoutesAndPersistenceTest.php --compact
+```
+
+Expected: semua PASS; GET legacy tidak mengubah `vars/updated_at`; 422 tidak mengubah stored layout.
+
+- [ ] **Step 6: Commit checkpoint save contract secara partial**
+
+```powershell
+git add -p -- public/js/pagebuilder_elementor_v23/app.js tests/pagebuilder-v23-child-container-strict-parity.test.mjs tests/Feature/PageBuilderElementorV23RoutesAndPersistenceTest.php
+git diff --cached --check
+git diff --cached
+git commit -m "feat: persist canonical v23 container trees on save"
+```
+
+---
+
+### Task 8: Full Verification, Browser QA, Dokumentasi, dan Graphify
+
+**Files:**
+- Modify: `design-qa.md`
+- Verify: seluruh file pada File Map
+- Verify unchanged: `public/js/pagebuilder_elementor/**`, `resources/views/pagebuilder_elementor/**`, dan asset v2.0.
+
+**Interfaces:**
+- Consumes: seluruh deliverable Tasks 1-7.
+- Produces: bukti final automated/runtime, screenshot comparison, dan graph incremental yang sehat.
+
+- [ ] **Step 1: Jalankan seluruh Node tests v2.3**
+
+```powershell
+$nodeTests = @(Get-ChildItem -LiteralPath 'tests' -Filter '*v23*.test.mjs' | Select-Object -ExpandProperty FullName)
+node --test $nodeTests
+```
+
+Expected: semua tests PASS, 0 failed.
+
+- [ ] **Step 2: Jalankan focused Laravel tests**
+
+```powershell
+php artisan test tests/Feature/PageBuilderElementorV23RoutesAndPersistenceTest.php tests/Feature/PageBuilderElementorV23FrontendRenderingTest.php --compact
+```
+
+Expected: semua tests PASS.
+
+- [ ] **Step 3: Jalankan syntax/diff gates**
+
+```powershell
+node --check public/js/pagebuilder_elementor_v23/app.js
+git diff --check
+git diff --name-only -- public/js/pagebuilder_elementor public/assets/css/pagebuilder_elementor.css public/assets/css/frontend_elementor.css resources/views/pagebuilder_elementor
+```
+
+Expected: dua command pertama exit 0; command terakhir tidak mengeluarkan path v2.0.
+
+- [ ] **Step 4: Browser QA tanpa menyentuh page user**
+
+Gunakan in-app browser pada fixture draft v2.3 yang dibuat khusus QA. Jalankan state berikut:
+
+1. Buka fixture legacy dua kolom dan catat stored `vars` sebelum load.
+2. Hard reload; verifikasi badge menjadi `Container`, bukan `Column 1/2`, dan state menampilkan migration pending.
+3. Pilih kedua child Container; verifikasi Layout/Style/Advanced lengkap.
+4. Add Container, duplicate, reorder, nest, lalu undo/redo; verifikasi ID/order/content stabil.
+5. Resize edge Desktop, Tablet, dan Mobile; verifikasi active width berubah dan device lain tidak berubah.
+6. Switch Grid → Flexbox → Grid; verifikasi children/order/content tidak berpindah.
+7. Sebelum klik Save, query fixture dan verifikasi stored `vars` identik dengan nilai awal.
+8. Klik Save satu kali pada fixture disposable, hard reload, lalu verifikasi schema canonical dibuka kembali tanpa `columns[]`.
+9. Verifikasi frontend preview menampilkan urutan/content/lebar yang sama.
+10. Periksa console: 0 error dan 0 warning yang berasal dari Page Builder.
+
+Capture screenshot pada viewport yang sama untuk:
+
+- migrated child Containers;
+- edge resize dengan percentage overlay;
+- Grid/Flex round-trip;
+- reopened canonical result.
+
+- [ ] **Step 5: Bandingkan interaksi dengan demo Elementor Flexbox**
+
+Buka `https://playground.elementor.com/demo/flexbox` pada browser yang sama. Cocokkan mental model berikut: child adalah Container selectable, penambahan memakai Container, dan resize berada pada shared edge. Catat perbedaan yang memang berada di luar scope; jangan mengubah widget/shell lain.
+
+- [ ] **Step 6: Update `design-qa.md`**
+
+Tambahkan entry bertanggal `2026-08-09` yang mencatat:
+
+- fixture dan browser/viewport;
+- legacy no-write proof sebelum Save;
+- explicit Save/reload canonical proof;
+- responsive resize results;
+- Grid/Flex preservation;
+- console result;
+- exact test commands/counts;
+- v2.0 no-diff result;
+- screenshot paths;
+- batas verifikasi yang tersisa.
+
+- [ ] **Step 7: Update Graphify incremental dan health-check**
+
+```powershell
+graphify update .
+graphify diagnose multigraph --graph graphify-out/graph.json
+graphify reflect --if-stale
+git status --short --branch
+```
+
+Expected: graph incremental selesai tanpa dangling/missing/collapsed edge warning; `graphify-out` tetap unstaged/uncommitted.
+
+- [ ] **Step 8: Final regression pass setelah dokumentasi/Graphify**
+
+```powershell
+$nodeTests = @(Get-ChildItem -LiteralPath 'tests' -Filter '*v23*.test.mjs' | Select-Object -ExpandProperty FullName)
+node --test $nodeTests
+php artisan test tests/Feature/PageBuilderElementorV23RoutesAndPersistenceTest.php tests/Feature/PageBuilderElementorV23FrontendRenderingTest.php --compact
+node --check public/js/pagebuilder_elementor_v23/app.js
+git diff --check
+```
+
+Expected: semua PASS, syntax exit 0, diff check exit 0.
+
+- [ ] **Step 9: Commit dokumentasi/final task hunks secara partial jika commit task dipakai**
+
+```powershell
+git add -p -- design-qa.md
+git diff --cached --check
+git diff --cached
+git commit -m "test: verify v23 child container strict parity"
+```
+
+Expected: backup, screenshot, dan `graphify-out` tidak staged.
+
+## Completion Checklist
+
+- [ ] Legacy two/three-column data membuka child Containers tanpa content loss.
+- [ ] Normalization idempotent dan duplicate/malformed IDs aman.
+- [ ] New Container/preset/Add Container tidak menulis `columns[]`.
+- [ ] Child Container selectable, nested, reorderable, duplicable, dan deletable sebagai normal node.
+- [ ] Edge resize mengubah tepat dua sibling dan membuat satu history snapshot.
+- [ ] Desktop/Tablet/Mobile width terisolasi dengan inheritance terdekat.
+- [ ] Grid/Flex round-trip mempertahankan IDs, order, settings, dan widgets.
+- [ ] Save payload canonical; load/preview tidak menulis; failed Save tidak mengubah stored JSON.
+- [ ] Frontend merender canonical dan legacy tanpa truncation atau merge.
+- [ ] Focused/full tests, browser QA, console, diff, dan v2.0 isolation verified.
+- [ ] Graphify incremental sehat dan generated output tidak committed.

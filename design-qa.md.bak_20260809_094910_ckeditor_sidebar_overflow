@@ -1,0 +1,597 @@
+# Design QA - Page Builder v2.3 Canvas, Labels, and Sidebar Reveal
+
+Date: 2026-08-09
+
+## Comparison target
+
+- source visual truth path: `D:\Laragon\www\laravel-13-phoenix\output\browser\v23-prototype-collapsed-reference.png`
+- supplied alignment reference: `C:\Users\aruna\.codex\attachments\471d9dc1-e6ef-458a-ad22-c7a9f9ce3bb8\image-1.png`
+- supplied canvas references: `C:\Users\aruna\.codex\attachments\471d9dc1-e6ef-458a-ad22-c7a9f9ce3bb8\image-2.png` and `image-3.png`
+- implementation screenshot path: `D:\Laragon\www\laravel-13-phoenix\output\browser\v23-canvas-collapsed-final.png`
+- focused implementation path: `D:\Laragon\www\laravel-13-phoenix\output\browser\v23-first-widget-label-after.png`
+- runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`
+- viewport: 1280 x 720 CSS px; source and implementation captures are both 1280 x 720 px; devicePixelRatio reported 1.5; no density resampling was needed because the browser captures have equal pixel dimensions.
+- state: Desktop 1180px at 80%, sidebar collapsed for the full comparison, one Container with two Heading widgets in the same column, first Heading hovered and second Heading selected.
+
+The browser-rendered prototype and corrected production screenshot were opened together in one comparison input. Focused checks covered the toolbar metadata row, canvas/frame edge, first and second widget labels, and the collapsed-to-open sidebar interaction. No Save action was performed.
+
+## Findings
+
+- No actionable P0, P1, or P2 issue remains in the requested desktop state.
+- Fonts and typography: shell and label typography retain the existing v2.3 prototype contract; no font, weight, wrapping, or truncation regression was introduced.
+- Spacing and layout rhythm: the root layout now starts 1.07px from the frame on both axes, which is the frame border rather than internal canvas padding. The previous scaled 11.73px content gap is gone.
+- Colors and visual tokens: existing purple Container and blue Widget selection tokens are unchanged.
+- Image quality and asset fidelity: no image or icon assets were changed; the existing icon libraries remain in use.
+- Copy and content: labels, breadcrumbs, page copy, and settings copy are unchanged.
+- Interaction: the invisible widget-label target extends 5px around the visual label and the toolbar bridge extends 10px toward the node. At 80% zoom, points above the label, inside it, and 6px below it all resolve to the Heading label button.
+- Interaction: clicking the second Heading label while the sidebar is collapsed selects that Heading and reopens the Properties panel with title `Heading`.
+- Browser console: zero errors and zero warnings after reload, node creation, duplication, collapse, hover, and label-click checks.
+
+## Comparison history
+
+1. Baseline blocked:
+   - P1: `.pb-canvas` supplied 14px padding, producing an 11.73px visible inset at 80% zoom.
+   - P1: removing the padding alone would place the first widget label outside the frame's hidden overflow and clip it.
+   - P2: the 34px sidebar button at top 72px was centered 7px below the Desktop metadata text.
+   - P1: widget labels rendered as a 20px visual target, only 16px at 80% zoom, with a 5px transition bridge.
+   - P1: label selection changed the node but left `leftCollapsed` true.
+2. Fixes applied:
+   - removed only the production v2.3 canvas padding and used a 24px overflow clip margin for editor chrome;
+   - moved the sidebar reopen control to top 65px;
+   - added a 5px transparent label target and a 10px toolbar bridge without enlarging the visible badge;
+   - added an explicit `revealPanel` option only to Container/Widget name-label clicks.
+3. Post-fix evidence:
+   - frame/root gap measured 1.07px, first label remained visible 11.47px above the frame, and all three focused hit-test points resolved to the label button;
+   - clicking the second Heading label changed the sidebar from collapsed to visible and showed Heading settings;
+   - same-viewport prototype and implementation screenshots show the selected layout border flush with the white page frame.
+
+## Primary interactions tested
+
+- Collapse the Properties sidebar.
+- Hover the first and second widget in a shared column.
+- Move across the enlarged label and bridge hit areas.
+- Click the second widget label and verify sidebar reveal plus selected Heading state.
+- Verify the first label remains visible above a flush root layout.
+
+## Implementation checklist
+
+- [x] Align sidebar reopen control with Desktop metadata.
+- [x] Remove canvas-to-root layout gap without clipping editor labels.
+- [x] Stabilize and enlarge widget-label hit areas for adjacent widgets.
+- [x] Reopen the sidebar only when a Container/Widget name label requests it.
+- [x] Run browser interaction checks, console checks, focused tests, full v2.3 Node tests, route/persistence tests, syntax check, and diff check.
+
+final result: passed
+
+# Design QA - Page Builder v2.3 Selected Root Insertion Rail and UI Updates
+
+Date: 2026-08-09
+
+## Comparison target
+
+- source visual truth path: `C:\Users\aruna\.codex\generated_images\019fe447-e16a-7cf3-8dd0-c510cd1ada60\exec-b6890a30-1d7b-443d-b28c-d3b486c95559.png`
+- implementation screenshot path: `C:\Users\aruna\.codex\visualizations\2026\08\09\019fe447-e16a-7cf3-8dd0-c510cd1ada60\pagebuilder-v23-selected-ui-implementation.png`
+- runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`
+- viewport: 1280 x 720 CSS px at devicePixelRatio 1.5; implementation capture is 1280 x 720 px. The selected source mock is 1848 x 832 px and was compared by component composition rather than pixel-overlay scaling because it is a focused concept crop with black framing.
+- state: Desktop 1180px at 100%, one new single-column Container and one selected Text Editor widget, full CKEditor toolbar visible, root insertion rail visible below the content.
+
+The source mock and browser-rendered implementation were opened together in one comparison input. A separate crop was unnecessary because the simple rail, 32px icon, dashed line, and both text rows were readable in the full implementation capture; runtime computed geometry supplied the focused evidence.
+
+## Findings
+
+- No actionable P0, P1, or P2 mismatch remains for the selected insertion-rail direction.
+- Fonts and typography: the implementation preserves the product's Inter typography. The title and supporting line retain the same two-level hierarchy as the mock without wrapping or truncation.
+- Spacing and layout rhythm: the root button is 72px high and spans the available 1180px page frame. The plus is centered on the dashed rail, followed by a compact 5px text gap.
+- Colors and visual tokens: the plus uses the existing `--brand` purple (`rgb(91, 76, 240)`), while the rail uses the established soft purple border token (`rgb(185, 178, 252)`).
+- Image quality and asset fidelity: the component contains no raster imagery. Its plus uses the existing Bootstrap Icons library; no custom SVG, placeholder, or generated decorative asset was substituted.
+- Copy and content: `Add to page root` and `Container, Grid, or Widget` match the selected mock exactly.
+- Interaction: the rail is a native enabled button. Clicking it opened the Elements panel for root insertion; Enter and Space inherit native button behavior. The visible focus ring is defined through `:focus-visible`.
+- Supporting requested UI: the selected widget label measured 22px high at 9px type, its opposite action buttons measured 24 x 22px at 9px type, and the editor rendered 27 CKEditor toolbar buttons.
+- Browser console: zero errors and zero warnings after creating the Container, choosing its structure, opening Advanced, adding Text Editor, and clicking the root insertion rail. No Save action was performed.
+
+## Comparison history
+
+1. Selected mock established the target: a thin dashed horizontal rail, centered circular purple plus, and two centered text rows.
+2. First implementation pass reproduced that composition using the existing design tokens and Bootstrap Icons, while changing the prior faux-button `div` into a native button.
+3. Post-build browser evidence showed no P0, P1, or P2 mismatch requiring another visual iteration.
+
+## Primary interactions tested
+
+- Create a Container, choose Flexbox and a one-column structure, then verify four linked Padding values display as `1` with unit `rem`.
+- Verify the desktop header starts at `100%` zoom.
+- Add Text Editor and verify its full local Article CKEditor toolbar renders.
+- Click the root insertion rail and verify the Elements panel opens for a root-level insertion.
+- Inspect computed geometry for the widget label, action buttons, root button, plus icon, and dashed pseudo-element.
+
+## Implementation checklist
+
+- [x] Recreate the selected insertion rail in the existing v2.3 design system.
+- [x] Keep the rail fully interactive and keyboard accessible.
+- [x] Verify widget label and action-button geometry.
+- [x] Verify Container defaults and CKEditor toolbar at runtime.
+- [x] Check application console and avoid persistence during QA.
+
+final result: passed
+
+# Design QA - Page Builder v2.3 Six UI Regression Corrections
+
+Date: 2026-08-09
+
+## Sources compared
+
+- Six reported before-state screenshots: `C:\Users\aruna\.codex\attachments\759c3331-75c6-4cf6-871f-30f9e985a953\image-1.png` through `image-6.png`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+- Full implementation captures and six before/after comparison images: `output/browser/pagebuilder-v23-six-ui-regressions`.
+
+Each supplied defect crop and the matching corrected runtime region were opened together in one comparison image. Runtime interaction stayed client-only and no Save action was performed.
+
+## Findings and corrections
+
+- The collapsed-panel reopen control no longer covers `Desktop`; its right edge is followed by an 8px gap before the canvas metadata.
+- The sticky canvas toolbar now anchors to the canvas viewport's left edge. With the sidebar open and horizontal canvas scroll at 299.33px, the toolbar remained fully visible at x=300px.
+- Expanded Accordion item fields now retain 12px below the final CSS ID group instead of the previous 2px.
+- Accordion and Tabs responsive tool groups no longer stretch. Border Radius measured a 5px device-to-unit gap with the group aligned to the trailing edge.
+- Compact standalone Coloris controls in Accordion, Tabs, and their shared Advanced fields use a 36 x 30px clipped wrapper/button with a complete 7px radius.
+- Unit-bearing sliders now place the number input and unit in one 92px trailing group. The same structure covers Accordion, Tabs, Text Editor, Icon, Button Icon Spacing, shared Advanced dimensions, and all Typography dimensions.
+
+## Verification
+
+- Runtime Accordion Style: number 52 x 30px plus unit 36 x 30px, with no overlap or header-level unit.
+- Runtime Heading Typography: Size, Line Height, Letter Spacing, and Word Spacing each reported a two-child value/unit group and no unit in the heading row.
+- Runtime Accordion Content: final CSS ID group had a measured 12px bottom gap.
+- Runtime shell: collapsed metadata and horizontally scrolled toolbar were measured after the CSS reload.
+- Automated checks: 85 Node Page Builder tests passed; 19 focused Laravel feature tests passed with 2,571 assertions; `git diff --check` passed.
+- Static audit: all seven active unit-bearing slider component definitions are covered by a regression test.
+- P0: none.
+- P1: none.
+- P2: none in the six reviewed desktop states.
+
+final result: passed
+
+# Design QA - Page Builder v2.3 Compound Number Control Correction
+
+Date: 2026-08-09
+
+## Sources compared
+
+- Reported Advanced Margin/Padding screenshot: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-11e8e335-2afd-4b56-8313-6478b9302a4f.png`.
+- Reported Container Gaps screenshot: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-7e3c0401-5e1f-4f94-844b-c32443f92202.png`.
+- Approved Button Border Radius/Padding reference: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-c861923f-3a35-4c2b-ab46-6c400e9c152c.png`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+
+The Button linked four-side control was used as the existing production baseline. Container Layout Gaps, Container Advanced Margin/Padding, and Button Style Border Radius/Padding were then measured and visually inspected in the same browser session. No Save action was performed.
+
+## Root causes and corrections
+
+- Container and Container Fluid had 16 responsive Margin/Padding fields rendered as text inputs. They now use `type="number"`, so the native increment/decrement steppers are present consistently with Grid, Row Grid, shared Advanced controls, and widget side controls.
+- Container and Container Fluid Gaps used a 33px chain button beside 30px numeric inputs. The v2.3 shared properties contract now uses two equal numeric columns plus a 28px chain column, with both inputs and chain button at 30px height and the chain icon at 9px.
+- Existing link/unlink state, responsive setting keys, units, input handlers, and v2.0 files remain unchanged.
+
+## Verification
+
+- Runtime Container Advanced Margin/Padding: all eight visible fields reported `type=number`, `appearance=auto`, and 30px height; both chain buttons measured 28 x 30px.
+- Runtime Container Layout Gaps: both fields reported `appearance=auto` and 30px height; the chain button measured 28 x 30px with a 9px icon.
+- Runtime Button Style Border Radius/Padding remained at four 30px number fields plus a 28 x 30px chain button.
+- Static audit covers 20 responsive spacing inputs, all 32 active `pb-side-input` definitions, 14 linked four-side definitions, shared Advanced edge controls, and all four Container/Container Fluid gap definitions.
+- Automated checks: 82 Node Page Builder tests passed; 23 focused Laravel feature tests passed with 2,610 assertions; `git diff --check` passed.
+- Container Fluid received the same source-level correction and regression coverage; the separate Container Fluid control was not available as a distinct toolbox item in this runtime QA state.
+
+final result: passed for the corrected v2.3 compound numeric controls; runtime verified for Container and Button, statically verified for Container Fluid
+
+# Image Box Typography Compact UI Design QA
+
+- source visual truth path: `output/design-qa/image-box-typography-before.png`
+- implementation screenshot path: `output/design-qa/image-box-typography-after.png`
+- viewport: 1920 x 1032 px
+- state: Image Box selected, Style > Content > Title Typography open
+- full-view comparison evidence: post-patch runtime capture generated successfully
+- focused region evidence: Typography popover measured at x=14px, width=291px, right edge=305px inside the 319px sidebar
+- viewer limitation: the internal pixel viewer remains blocked by Windows ACL; DOM geometry, accessibility snapshot, screenshot generation, and console were verified live
+
+## Findings
+
+- No blocking runtime finding remains.
+  - Location: shared `TypographyControl.vue`, Image Box Style sidebar.
+  - Evidence: labels rendered at 11px; Size numeric input measured 68px wide and 34px high; Weight select measured 136px wide and 34px high; the popover had no horizontal overflow.
+
+## Open Questions
+
+- None about the requested layout.
+
+## Implementation Checklist
+
+- [x] Confirm all dimension labels render at 11px.
+- [x] Confirm responsive icon and unit selector share one compact tool row.
+- [x] Confirm range and 68px numeric input remain on the same row.
+- [x] Confirm Weight, Transform, Font Style, and Decoration selects are consistently 34px high.
+- [x] Confirm number spinners are hidden and no panel clipping occurs.
+
+## Patches Made Since Previous QA Pass
+
+- Corrected scoped-style penetration for local `DimensionField` and `ResponsivePicker` subcomponents with `:deep(...)`.
+- Standardized dimension/select controls to 11px labels and 30-34px heights.
+- Standardized range/numeric layout to a compact two-column row.
+- Removed native numeric spinners.
+- Added a regression test for the scoped deep layout contract.
+
+## Follow-up Polish
+
+- None identified from the verified runtime geometry and interaction pass.
+
+final result: passed (runtime DOM/layout, screenshot capture, and console verified; internal pixel viewer unavailable)
+
+# Page Builder Setting Controls Consistency QA — 2026-07-24
+
+- source visual truth path: `output/design-qa/image-box-advanced-background-before.png`
+- primary implementation screenshot: `output/design-qa/image-box-advanced-background-coloris-final.png`
+- supporting screenshots:
+  - `output/design-qa/image-box-advanced-background-after.png`
+  - `output/design-qa/image-box-advanced-background-picker-after.png`
+  - `output/design-qa/accordion-advanced-after.png`
+  - `output/design-qa/tabs-content-after.png`
+  - `output/design-qa/heading-style-after.png`
+- affected scope: shared Advanced, Image Box, Basic widgets, Accordion/Tabs, Grid/Row Grid, Container/Container Fluid
+- static source audit: no active widget SFC contains `type="color"`; settings templates have balanced `div` elements
+- automated regression: 133 tests passed, 1,601 assertions
+
+## Findings
+
+- Runtime QA is complete for the targeted panel consistency scope.
+  - Sidebar root measured 319px (`scrollWidth=clientWidth=319`) with no horizontal overflow.
+  - Coloris picker measured x=14px, width=380px, right edge=394px inside the 1920px viewport.
+  - Image Box, Accordion, Tabs, Heading, Grid, and shared Advanced controls were exercised in the live editor.
+  - Image Box Classic Background exposed one Coloris textbox; entering `#112233` produced `background-color: rgb(17, 34, 51)` on the `image_box` canvas node.
+  - Final browser console reported 0 errors and 0 warnings.
+- A separate SFC compile defect was found and fixed during runtime QA.
+  - `layout/grid/Settings.vue` and `layout/row-grid/Settings.vue` each missed one closing `</div>` after the Border section.
+  - A recursive regression test now checks balanced `div` elements across all active widget `Settings.vue` templates.
+
+## Static checks completed
+
+- Canonical widget color rows use the local Coloris input only; duplicate native swatches were removed from nine active widget settings files.
+- Numeric CSS dimensions expose a numeric field and unit selector; constrained values also expose a slider.
+- Spacing groups preserve responsive keys and link/unlink behavior.
+- The `image_box` slug, Advanced Background color-plus-image behavior, canvas preview, Accordion frontend renderer, and parity tests are aligned.
+
+final result: passed (runtime interaction, DOM geometry, computed style, screenshot capture, console, and regression suite verified; internal pixel viewer unavailable)
+
+# Design QA - Heading Elementor Parity
+
+Date: 2026-07-30
+
+## Sources compared
+
+- Official Elementor Flexbox playground Heading widget.
+- Supplied screenshots for Content, Style, Advanced Layout, and collapsed Advanced sections.
+- Local implementation at `https://laravel-13-phoenix.aruna/pagebuilder-elementor/edit/heading-runtime-qa-20260730`.
+
+The reference and local implementation screenshots were reviewed together at the desktop builder state. The local builder keeps its established light design system while matching the reference control hierarchy, labels, grouping, responsive affordances, state tabs, and interaction behavior.
+
+## Verification states
+
+- Content: Title, dynamic binding, Link with options/dynamic binding, and HTML Tag.
+- Style: responsive alignment, Typography, Text Stroke, Text Shadow, Blend Mode, Normal/Hover colors, and transition duration.
+- Advanced: Layout, Motion Effects, Transform, Background, Border, Mask, Responsive, Attributes, and Custom CSS.
+- Runtime: title/tag/link, color, alignment, blend mode, padding, CSS ID/classes, grid span, save/reload persistence, and frontend preview.
+
+## Findings
+
+- P0: none.
+- P1: none.
+- P2: none.
+- The local sidebar is wider and uses the product's existing light theme rather than Elementor's dark theme; this is intentional design-system continuity, not a parity defect.
+- Video and Slideshow background types are not exposed in the shared widget Advanced background control because this builder does not yet have a safe shared media runtime contract for them. Classic and Gradient, including custom position/size and Normal/Hover, are functional.
+
+final result: passed
+
+# Design QA - Page Builder v2.3 Shared Form Controls Audit
+
+Date: 2026-08-09
+
+## Sources compared
+
+- Approved v2.3 prototype: `D:\Laragon\www\laravel-13-phoenix\public\mockups\pagebuilder-editor-redesign-prototype-v2.3.html`.
+- Official Elementor Flexbox playground Heading Typography control.
+- Reported screenshots covering four-side controls, Link, Typography, and v2.0 number-spinner behavior.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+- Audit artifact: `C:\Users\aruna\.codex\visualizations\2026\08\09\pagebuilder-v23-shared-controls-audit\runtime-shared-control-audit.json`.
+- Combined comparisons:
+  - `compare-heading-style-prototype-left-runtime-right.png`
+  - `compare-heading-advanced-prototype-left-runtime-right.png`
+  - `compare-final-typography-elementor-left-v23-right.png`
+  - all stored under `C:\Users\aruna\.codex\visualizations\2026\08\09\pagebuilder-v23-shared-controls-audit`.
+
+The prototype, Elementor reference, and latest runtime were inspected together at the same 1280 x 720 browser viewport. The shared fix was then exercised across every registered v2.3 widget and each available Content, Layout, Style, and Advanced state.
+
+## Verification states
+
+- Cross-widget audit: 34 widgets, 101 settings states, 1,897 visible controls, 783 number inputs, 95 four-side groups, 341 range rows, and 20 Link compound rows; zero measured layout violations and zero audit errors.
+- Four-side controls: all visible Margin, Padding, and related groups measured four 30px number inputs plus a 28 x 30px link button; chain icons measured 9px.
+- Number controls: computed `appearance` is `auto`, preserving native increment/decrement controls.
+- Link compound field: input and options button are adjacent with zero gap, equal 34px height, and a 34px options button.
+- Typography: official Elementor popover measured 514.33px high; v2.3 measured 512.33px high with no horizontal overflow.
+- Link options popover measured 188.08px high with 10px padding and no horizontal overflow.
+- Runtime safety: no Save action was performed.
+
+## Findings and corrections
+
+- Restored number increment/decrement controls throughout v2.3 instead of changing only the reported Margin and Padding fields.
+- Normalized both shared four-side implementations so number cells and the link button share one continuous, aligned compound control.
+- Reduced the chain icon and link-options gear to the prototype's compact hierarchy.
+- Corrected Link input radii and adjacency so the input and options button render as one field.
+- Reduced shared range value columns and unit cells, including the Divider overflow case found outside the supplied screenshots.
+- Corrected the nested Divider value/unit collision from a measured 32px overlap to 0px, while retaining a 52px value cell and 36px unit cell inside the shared 92px value area.
+- Preserved the dedicated three-cell Grid and Row Grid gap geometry (`1fr 54px 36px`) so the range, numeric value, and unit remain on one row without spill.
+- Restored the compact standalone four-side geometry used by Container/Grid shadow and position controls: four equal 30px fields, 6px gaps, and 7px field radii.
+- Removed the final doubled right-border seam from all linked four-side number cells, including Image Carousel.
+- Tightened Typography, Text Stroke, Text Shadow, CSS Filter, and Link popover padding, gaps, field sizes, and value columns.
+- Reduced Typography from 632.33px before correction to 512.33px after correction, matching the official Elementor control height within 2px.
+- P0: none.
+- P1: none.
+- P2: none in the audited desktop states.
+
+final result: passed for all 34 widgets and 101 audited v2.3 settings states
+
+# Design QA - Page Builder v2.3 Literal Prototype Control Contract
+
+Date: 2026-08-09
+
+## Sources compared
+
+- Direct prototype source: `D:\Laragon\www\laravel-13-phoenix\public\mockups\pagebuilder-editor-redesign-prototype-v2.3.html`.
+- Browser-rendered prototype URL: `https://laravel-13-phoenix.aruna/mockups/pagebuilder-editor-redesign-prototype-v2.3.html`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+- Full audit result: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\pagebuilder-v23-full-settings-audit\runtime-control-audit-after-summary.json`.
+- Combined prototype-left/runtime-right comparisons:
+  - `compare-heading-content-prototype-left-runtime-right.png`
+  - `compare-heading-style-prototype-left-runtime-right.png`
+  - `compare-heading-advanced-prototype-left-runtime-right.png`
+  - `compare-container-layout-prototype-left-runtime-right.png`
+  - all stored under `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\pagebuilder-v23-full-settings-audit`.
+
+The approved HTML prototype and production v2.3 were opened directly in the in-app browser, captured at the same viewport, combined side by side, and inspected in matching Content, Style, Advanced, and Layout states. Production keeps its real control set and behavior while matching the prototype's geometry and visual hierarchy.
+
+## Literal control contract
+
+- Properties tabs: 42px height and 10px type.
+- Selection summary: 10px padding, 14px bottom gap, 33px icon, 10px title, and 8.5px caption.
+- Form labels: 9.5px / 600 with a 6px label-to-control gap.
+- Inputs and selects: 34px height and 10px type.
+- Textareas: 76px minimum height and 10px type.
+- Segmented controls: 3px wrapper padding and 27px button height.
+- Typography trigger: 30px; text-effect triggers: 30 x 28px.
+- Range/value, unit, spacing, color, picker, repeater, AI, and toggle controls follow the same compact rhythm without forcing unrelated groups into horizontal rows.
+
+## Verification states
+
+- Baseline audit: 34 widgets, 101 Content/Layout/Style/Advanced states, 4,642 density and layout violations.
+- Final audit: 34 widgets, 101 states, zero violations, and zero horizontal-overflow states.
+- Category coverage: 29 Layout/Basic states, 42 General states, and 30 Pro states.
+- Every registered widget reported zero violations, including Container, Grid, all Basic and General widgets, and all Pro widgets through Flip Box.
+- Four combined visual comparisons were inspected; no broken padding, margin, field grouping, control scale, clipping, or hierarchy remained.
+- Runtime safety: no Save action was performed.
+
+## Findings and corrections
+
+- Removed the global `:has(...)` layout rule that forced unrelated labels and controls into malformed horizontal form groups.
+- Applied the prototype contract to shared Widget, Layout, Grid, Advanced, and Pro settings ancestry rather than patching only the screenshots' widgets.
+- Corrected the previously uncovered Layout root and normalized compact AI, typography, effect, icon picker, gallery, repeater, segmented, switch, unit, and four-side controls.
+- Tightened the static contract assertions so each expected declaration must exist inside its own CSS rule instead of matching across rule boundaries.
+- Kept the compact toggle state text visually hidden while preserving it in the accessibility tree.
+- The complete 9.2 MB runtime audit artifact retains per-state panel records and measured violations; the small summary file is only the handoff index.
+- P0: none.
+- P1: none.
+- P2: none.
+
+final result: passed for all 34 widgets and 101 audited desktop settings states
+
+# Design QA - Page Builder v2.3 Properties Density and Rhythm
+
+Date: 2026-08-08
+
+## Sources compared
+
+- Six reported v2.3 screenshots under `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-*.png` covering Container Layout, Heading Style, Heading Advanced, collapsed Advanced sections, and Motion Effects.
+- Official Elementor Flexbox playground Heading Style screenshot: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\07-elementor-heading-style.jpg`.
+- Final Container Grid screenshot: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\11-container-grid-after.jpg`.
+- Final Heading Style screenshot: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\12-heading-style-after.jpg`.
+- Final Heading Advanced and Motion Effects screenshots: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\13-heading-advanced-top-after.jpg` and `14-heading-motion-after.jpg`.
+- Final Button, Tabs, and Form screenshots: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\16-button-style-after-final.jpg`, `17-tabs-content-after.jpg`, and `18-form-content-after.jpg`.
+- Combined Elementor/reference comparison: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\22-reference-vs-v23-after-vertical.jpg`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+
+The official reference and final v2.3 implementation were reviewed together in the same Heading Style state. The implementation keeps Phoenix's light visual language while adopting Elementor's compact inline control rhythm.
+
+## Verification states
+
+- Container Flexbox and Grid Layout panels, including selection summary, category spacing, sliders, unit fields, and segmented controls.
+- Heading Style, including Alignment, Typography, Text Stroke, Text Shadow, Blend Mode, state tabs, and Text Color.
+- Heading Advanced at the top of the panel and Motion Effects opened after scrolling.
+- Button Style color/select rows, Tabs Content repeater, and Pro Form Content repeater.
+- The shared Properties sidebar measured 300px; all representative states reported zero horizontal overflow.
+- Switching from an Advanced panel scrolled to 588px back to another property tab reset the sidebar to `scrollTop=0` and kept the selection summary fully visible.
+- Accordion content begins 8px below its summary instead of touching the category border.
+- The guarded inline-row selector is supported by the production browser; multi-column form parents remain excluded from the inline label/control treatment.
+- Latest runtime inspection reported no application-origin warnings or errors. The browser automation bridge emitted one clipboard-availability error outside application code.
+- Runtime safety: no Save action was performed.
+
+## Findings and corrections
+
+- Rebalanced the shared v2.3 panel from the prototype's overly compressed density to a readable 300px / 12px control system.
+- Normalized selection-summary typography, 36px identity icon, 48px property tabs, 40px accordion summaries, 36px fields, and 10px form rhythm.
+- Converted simple select and Coloris form groups into aligned label/control rows while leaving complex range, spacing, repeater, and nested two-column controls stacked.
+- Kept Typography at 30px and Text Stroke/Text Shadow at 28-30px, matching the existing compact-control contract.
+- Replaced native black focus outlines with solid brand-colored `:focus-visible` rings that retain sufficient contrast on white.
+- Added automatic Properties scroll reset on selected-node and property-tab changes.
+- Reduced the Heading color swatch to 34px and gave the Motion Effects AI notice explicit title/body sizing.
+- P0: none.
+- P1: none.
+- P2: none found in the verified representative states.
+
+## Limitation
+
+- The in-app browser's temporary viewport override did not change the page-reported viewport in this pass, so narrow browser-shell geometry was not claimed as visually verified. The supplied/default 1920 x 1008 capture surface and representative widget states were verified.
+
+final result: passed for the verified desktop runtime states
+
+# Design QA - Page Builder v2.3 Properties and Canvas Regression Correction
+
+Date: 2026-08-08
+
+## Sources compared
+
+- Approved prototype screenshot: `C:\Users\aruna\.codex\attachments\9bb8f4d0-2104-4888-827d-e784f0965676\image-3.png`.
+- Reported production regression screenshot: `C:\Users\aruna\.codex\attachments\9bb8f4d0-2104-4888-827d-e784f0965676\image-4.png`.
+- Final Container runtime screenshot: `C:\Users\aruna\.codex\visualizations\2026\08\08\pagebuilder-v23-regression-qa\production-container-layout-final-1920x1008.png`.
+- Final Heading runtime screenshot: `C:\Users\aruna\.codex\visualizations\2026\08\08\pagebuilder-v23-regression-qa\production-heading-toolbar-final-1920x1008.png`.
+- Combined prototype/runtime comparison: `C:\Users\aruna\.codex\visualizations\2026\08\08\pagebuilder-v23-regression-qa\prototype-vs-production-final.png`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+
+The supplied reference and final implementation were reviewed together at 1920 x 1008. Production was exercised with a selected three-column Container and a selected Heading inside its first internal column.
+
+## Verification states
+
+- Registry category audit: all 36 active v2.3 entries were matched against the tabs implemented by their Settings modules.
+- Layout nodes: Container, Container Fluid, Grid, and Row Grid expose Layout, Style, and Advanced.
+- Widgets: 31 widgets expose Content, Style, and Advanced; Spacer exposes only Content and Advanced because it has no Style implementation.
+- Container: the header reads `Container settings`, the summary reads `Container · container`, and Layout is active with visible controls.
+- Container tabs: Layout, Style, and Advanced each rendered one visible settings panel with the expected controls.
+- Column widths: three internal columns rendered 33.3%, 33.3%, and 33.3%; changing Column 1 to 40% updated the adjacent width to 26.7% immediately.
+- Direction guard: Column widths is visible for Row and Row Reverse, hidden for Column and Column Reverse where the existing width algorithm does not apply.
+- Canvas: column labels and direct resize handles are absent; width editing remains available in Layout > Column widths.
+- Heading toolbar: both the label-side and action-side 5px transition zones resolve to toolbar elements and keep `is-toolbar-visible` active.
+- Runtime safety: no Save action was performed.
+- Browser logs: zero errors and zero warnings.
+
+## Findings and corrections
+
+- Replaced the hardcoded Content, Style, and Advanced shell with contextual tabs derived from the selected node type.
+- Corrected Layout identity copy so Container and Grid no longer appear as widgets.
+- Kept selected-node toolbar visibility stable while another node briefly receives hover.
+- Added invisible pointer bridges without moving the approved label/action geometry.
+- Moved flex column width editing into Container Layout and removed legacy selectable Column chrome from the v2.3 canvas.
+- P0: none.
+- P1: none.
+- P2: none.
+
+final result: passed
+
+# Design QA - Page Builder v2.3 Properties and Canvas Fidelity
+
+Date: 2026-08-08
+
+## Sources compared
+
+- Approved v2.3 prototype: `D:\Laragon\www\laravel-13-phoenix\public\mockups\pagebuilder-editor-redesign-prototype-v2.3.html`.
+- Prototype Properties crop: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\pagebuilder-v23-properties-canvas\03-prototype-properties-crop.png`.
+- Prototype canvas crop: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\pagebuilder-v23-properties-canvas\05-prototype-canvas-crop.png`.
+- Final v2.3 runtime screenshot: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\pagebuilder-v23-properties-canvas\15-production-heading-final-1920x884.png`.
+- Final Properties crop: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\pagebuilder-v23-properties-canvas\16-production-properties-final.png`.
+- Final canvas crop: `C:\Users\aruna\.codex\visualizations\2026\08\08\019fe004-9384-79f2-9c90-5e29049a9f4b\pagebuilder-v23-properties-canvas\17-production-canvas-final.png`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create`.
+
+The prototype and implementation were reviewed together at an emulated page viewport of 1920 x 884 px. The in-app browser capture surface produced a 1681 x 884 px screenshot while preserving the same page viewport and editor state.
+
+## Verification states
+
+- Properties: Heading selected; Content, Style, and Advanced tabs opened and checked.
+- Content: compact Title, Link, Link options, and HTML Tag controls.
+- Canvas: selected Heading widget, ancestor Container, breadcrumbs, grid toggle, zoom out/reset/in, 1180px width control, and root add control.
+- Responsive: Desktop 1180px at 80%, Tablet 768px at 82%, and Mobile 390px at 90%.
+- Runtime safety: no Save action was performed.
+
+## Findings and corrections
+
+- Removed the legacy duplicate Properties header/back rows; runtime now contains zero old `pb-props-header` rows.
+- Separated the visible widget title and machine-readable type into `Heading` and `Widget · heading` instead of concatenated text.
+- Matched the prototype's 288px Properties hierarchy, 58px header, 42px tabs, compact selection summary, label rhythm, and control dimensions.
+- Replaced legacy canvas selection chrome with the prototype's blue selected-widget outline, purple ancestor outline/handle, compact toolbar, canvas metadata, and breadcrumbs.
+- Added functional canvas grid and zoom controls while preserving the existing width selector and Custom CSS behavior.
+- Removed canvas width animation and deferred expensive responsive grid synchronization so device switching no longer waits on the old 240ms visual transition.
+- The final browser log contained zero errors and zero warnings.
+- P0: none.
+- P1: none.
+- P2: none.
+
+final result: passed
+
+# Design QA - Icon Box Elementor Parity
+
+Date: 2026-07-30
+
+## Sources compared
+
+- Official Elementor playground screenshot: `C:\Users\CAHYO\.codex\visualizations\2026\07\30\019fb132-77fc-7ca0-ba81-839fb642c773\icon-box-elementor-reference-content.png`.
+- Local runtime screenshot: `C:\Users\CAHYO\.codex\visualizations\2026\07\30\019fb132-77fc-7ca0-ba81-839fb642c773\icon-box-local-content.png`.
+- Runtime editor: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/edit/icon-box-runtime-qa-20260730`.
+- Frontend preview: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/preview/icon-box-runtime-qa-20260730`.
+
+The official reference and local implementation were reviewed together in the same desktop Content state. The local product keeps its established light Page Builder design system while preserving Elementor's hierarchy, labels, conditionals, and canvas behavior.
+
+## Verification states
+
+- Content: Font Awesome library picker, Default/Stacked/Framed, conditional Square/Rounded/Circle, title, description, link options, dynamic tags, and title tag.
+- Style / Box: responsive icon position, alignment, icon spacing, and content spacing.
+- Style / Icon: Normal/Hover colors, conditional secondary color, size, padding, rotate, Framed border width, radius sides, and 28 Hover Animation choices.
+- Style / Content: title and description color, typography, title stroke, and shadows.
+- Advanced: shared Layout, Display Conditions, Cache Settings, Motion Effects, Transform, Background, Border, Mask, Responsive, Attributes, and Custom CSS.
+- Runtime: Vue SFC compilation, canvas rendering, Tablet 720px mode, save success, reload persistence, and frontend Blade rendering.
+
+## Findings
+
+- P0: none.
+- P1: none.
+- P2: none.
+- The local sidebar and canvas chrome intentionally follow the current light product design rather than Elementor's dark editor shell.
+- The browser-control surface did not expose a console-message stream in this pass; runtime verification therefore used successful SFC rendering, DOM snapshots, save/reload behavior, frontend output, and automated regression coverage.
+
+final result: passed
+
+# Design QA - Motion Effects Toggle Row Layout
+
+Date: 2026-07-30
+
+- source visual truth path: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-383e4484-4208-4be2-b0d8-6aac24595360.png`
+- implementation screenshot path: `C:\Users\CAHYO\.codex\visualizations\2026\07\30\019fb132-77fc-7ca0-ba81-839fb642c773\motion-effects-toggle-layout-after-lower.png`
+- viewport: focused 319 x 709 px sidebar crop from the desktop editor
+- state: Heading selected, Advanced > Motion Effects open, Scrolling Effects enabled
+- full-view comparison evidence: source and corrected implementation were opened together in the same comparison input
+- focused region evidence: all six MotionEffect child rows were measured in runtime DOM
+
+## Findings
+
+- The source screenshot showed the Vertical Scroll, Horizontal Scroll, Transparency, Blur, Rotate, and Scale checkboxes attached directly to their labels.
+- Root cause: the parent component's scoped `.pb-advanced-toggle` rule did not penetrate the nested `MotionEffect` child component.
+- The corrected rows now compute to `display:flex`, `justify-content:space-between`, `align-items:center`, and `gap:12px`.
+- All six checkboxes share the same right edge at x=290 within the 319px sidebar crop.
+- Typography, color tokens, copy, and existing image/icon usage remain unchanged; no asset work was required.
+- Browser console verification reported zero errors and zero warnings.
+
+## Patches made since the previous QA pass
+
+- Added a scoped `:deep(.pb-motion-effect .pb-advanced-toggle)` selector so nested toggles inherit the canonical shared row layout.
+- Added a regression test for the nested child-component styling contract.
+
+final result: passed
+
+# Design QA - Heading Advanced Section Scope Correction
+
+Date: 2026-07-30
+
+## Sources compared
+
+- Official Elementor Heading Advanced screenshot: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-c13f612e-bba4-4ebc-9e7b-6b4ebb6145f9.png`.
+- Local runtime screenshot: `C:\Users\CAHYO\.codex\visualizations\2026\07\30\019fb132-77fc-7ca0-ba81-839fb642c773\heading-advanced-runtime-qa-collapsed.png`.
+- Runtime URL: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/edit/heading-runtime-qa-20260730`.
+
+The source and implementation screenshots were reviewed together in the same collapsed Advanced state. Both now expose the same nine section labels in the same order: Layout, Motion Effects, Transform, Background, Border, Mask, Responsive, Attributes, and Custom CSS.
+
+## Findings
+
+- The earlier Heading implementation exposed two shared sections that are absent from the Elementor Heading reference: Display Conditions and Cache Settings.
+- Both sections are now hidden only for Heading through explicit shared-component props.
+- Shared defaults remain enabled, so Image Box and other widgets using the shared Advanced controls retain Display Conditions and Cache Settings.
+- Runtime DOM verification found exactly nine Heading sections and zero matches for both removed labels.
+- Browser console verification reported zero errors and zero warnings.
+
+final result: passed
