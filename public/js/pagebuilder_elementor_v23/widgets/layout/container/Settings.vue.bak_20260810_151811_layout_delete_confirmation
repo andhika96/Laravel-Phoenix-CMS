@@ -213,20 +213,6 @@
 											<i class="fas fa-plus"></i><span>Add Container</span>
 										</button>
 									</div>
-									<div v-if="editor.childContainersFor(node).length" class="pb-layout-item-list">
-										<div v-for="(child, index) in editor.childContainersFor(node)" :key="child.id" class="pb-layout-item-row">
-											<button type="button" class="pb-layout-item-main" @click="editor.selectNode(child, { revealPanel: true })">
-												<span class="pb-layout-item-icon"><i class="far fa-square"></i></span>
-												<span class="pb-layout-item-copy">
-													<strong>{{ editor.displayNodeLabel(child) || ('Container ' + (index + 1)) }}</strong>
-													<small>{{ editor.nestedItemCount(child) }} nested item{{ editor.nestedItemCount(child) === 1 ? '' : 's' }}</small>
-												</span>
-											</button>
-											<button type="button" class="pb-layout-item-delete" :aria-label="'Delete ' + (editor.displayNodeLabel(child) || ('Container ' + (index + 1)))" @click.stop="editor.removeNode(child.id)">
-												<i class="fas fa-trash"></i>
-											</button>
-										</div>
-									</div>
 									<div class="pb-form-note">Each layout item is a selectable Container with its own Layout, Style, and Advanced settings.</div>
 								</div>
 							</details>
@@ -277,21 +263,6 @@
 										<input type="range" class="pb-range" min="1" max="12" step="1" :value="editor.containerGridRowsValue(node)" @input="editor.setContainerGridRowsValue(node, $event.target.value)">
 										<input class="pb-input pb-input-compact" type="number" min="1" max="12" step="1" :value="editor.containerGridRowsValue(node)" @input="editor.setContainerGridRowsValue(node, $event.target.value)">
 									</div>
-								</div>
-								<div class="pb-form-group">
-									<label class="pb-form-label">Column Structure</label>
-									<div class="pb-layout-item-list">
-										<div v-for="track in editor.gridColumnTracks(node)" :key="track.index" class="pb-layout-item-row">
-											<div class="pb-layout-item-main pb-layout-item-main--static">
-												<span class="pb-layout-item-icon"><i class="fas fa-columns"></i></span>
-												<span class="pb-layout-item-copy"><strong>{{ track.label }}</strong><small>{{ track.itemCount }} item{{ track.itemCount === 1 ? '' : 's' }}</small></span>
-											</div>
-											<button type="button" class="pb-layout-item-delete" :disabled="!track.canRemove" :aria-label="'Delete ' + track.label" @click.stop="editor.requestGridColumnRemoval(node, track.index)">
-												<i class="fas fa-trash"></i>
-											</button>
-										</div>
-									</div>
-									<div class="pb-form-note">The final column cannot be deleted.</div>
 								</div>
 								<div class="pb-form-group pb-container-gap-control__group">
 									<div class="pb-label-row pb-label-row-device">

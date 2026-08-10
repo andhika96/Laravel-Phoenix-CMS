@@ -401,61 +401,6 @@
 		return columnCount * rowCount;
 	}
 
-	function nodeHasNestedContent(node) {
-		if (!node || typeof node !== 'object') return false;
-		if (Array.isArray(node.children) && node.children.length) return true;
-		if (Array.isArray(node.columns) && node.columns.some((column) => Array.isArray(column && column.children) && column.children.length)) return true;
-		if (Array.isArray(node.tabItems) && node.tabItems.some((item) => Array.isArray(item && item.children) && item.children.length)) return true;
-		if (Array.isArray(node.accordionItems) && node.accordionItems.some((item) => Array.isArray(item && item.children) && item.children.length)) return true;
-		return false;
-	}
-
-	function gridColumnTrackRemovalImpact(node, trackIndex) {
-		const settings = node && node.settings && typeof node.settings === 'object' ? node.settings : {};
-		const isContainerGrid = ['container', 'container_fluid'].includes(node && node.type)
-			&& (settings.displayType || 'flex') === 'grid';
-		const rawColumns = isContainerGrid ? settings.gridColumns : settings.columns;
-		const columnCount = Math.min(12, Math.max(1, Math.floor(Number(rawColumns) || 1)));
-		const rowMatch = String(settings.gridRows == null ? '' : settings.gridRows).trim().match(/^(\d+)/);
-		const rowCount = Math.min(12, Math.max(1, Math.floor(Number(rowMatch && rowMatch[1]) || 1)));
-		const safeTrackIndex = Math.floor(Number(trackIndex));
-		const canRemove = columnCount > 1 && safeTrackIndex >= 0 && safeTrackIndex < columnCount;
-		const columns = Array.isArray(node && node.columns) ? node.columns : [];
-		const removedIndexes = canRemove
-			? Array.from({ length: rowCount }, (_, rowIndex) => (rowIndex * columnCount) + safeTrackIndex)
-				.filter((columnIndex) => columnIndex < columns.length)
-			: [];
-		const itemCount = removedIndexes.reduce((total, columnIndex) => {
-			const children = columns[columnIndex] && Array.isArray(columns[columnIndex].children)
-				? columns[columnIndex].children
-				: [];
-			return total + children.length;
-		}, 0);
-		return {
-			canRemove,
-			columnCount,
-			rowCount,
-			trackIndex: safeTrackIndex,
-			removedIndexes,
-			itemCount,
-		};
-	}
-
-	function removeGridColumnTrack(node, trackIndex) {
-		const impact = gridColumnTrackRemovalImpact(node, trackIndex);
-		if (!impact.canRemove) return false;
-		const removedIndexes = new Set(impact.removedIndexes);
-		node.columns = (Array.isArray(node.columns) ? node.columns : [])
-			.filter((column, columnIndex) => !removedIndexes.has(columnIndex));
-		if (!node.settings || typeof node.settings !== 'object') node.settings = {};
-		if (['container', 'container_fluid'].includes(node.type) && (node.settings.displayType || 'flex') === 'grid') {
-			node.settings.gridColumns = impact.columnCount - 1;
-		} else {
-			node.settings.columns = impact.columnCount - 1;
-		}
-		return true;
-	}
-
 	function reconcileGridColumns(node, columns, rows, createColumnId) {
 		if (!node || typeof node !== 'object') return [];
 		const isValidId = (value) => /^[A-Za-z0-9_-]+$/.test(String(value || '').trim());
@@ -5425,99 +5370,6 @@
 				}
 				return false;
 			}
-			function childContainersFor(node) {
-				return (Array.isArray(node && node.children) ? node.children : [])
-					.filter((child) => child && isCont(child.type));
-			}
-			function nestedItemCount(node) {
-				if (!node || typeof node !== 'object') return 0;
-				let total = 0;
-				const countNodes = (nodes) => {
-					(Array.isArray(nodes) ? nodes : []).forEach((child) => {
-						total += 1;
-						countNodes(child && child.children);
-						(Array.isArray(child && child.columns) ? child.columns : []).forEach((column) => countNodes(column && column.children));
-						(Array.isArray(child && child.tabItems) ? child.tabItems : []).forEach((item) => countNodes(item && item.children));
-						(Array.isArray(child && child.accordionItems) ? child.accordionItems : []).forEach((item) => countNodes(item && item.children));
-					});
-				};
-				countNodes(node.children);
-				(Array.isArray(node.columns) ? node.columns : []).forEach((column) => countNodes(column && column.children));
-				(Array.isArray(node.tabItems) ? node.tabItems : []).forEach((item) => countNodes(item && item.children));
-				(Array.isArray(node.accordionItems) ? node.accordionItems : []).forEach((item) => countNodes(item && item.children));
-				return total;
-			}
-			function gridColumnTracks(node) {
-				const impact = gridColumnTrackRemovalImpact(node, 0);
-				return Array.from({ length: impact.columnCount }, (_, index) => {
-					const currentImpact = gridColumnTrackRemovalImpact(node, index);
-					return {
-						index,
-						label: 'Column ' + (index + 1),
-						itemCount: currentImpact.itemCount,
-						canRemove: currentImpact.canRemove,
-					};
-				});
-			}
-			function emptyDeleteConfirmation() {
-				return {
-					visible: false,
-					kind: '',
-					nodeId: '',
-					trackIndex: -1,
-					title: '',
-					message: '',
-					confirmLabel: 'Delete',
-				};
-			}
-			const deleteConfirmation = ref(emptyDeleteConfirmation());
-			function closeDeleteConfirmation() {
-				deleteConfirmation.value = emptyDeleteConfirmation();
-			}
-			function clearStaleCanvasSelection() {
-				if (selectedId.value && !findById(rootNodes.value, selectedId.value)) selectedId.value = '';
-				if (hoveredId.value && !findById(rootNodes.value, hoveredId.value)) hoveredId.value = '';
-			}
-			function finalizeNodeRemoval(id) {
-				const removed = delFrom(rootNodes.value, id);
-				if (removed) clearStaleCanvasSelection();
-				return removed;
-			}
-			function requestGridColumnRemoval(node, trackIndex) {
-				if (!node || !node.id) return false;
-				ensureNodeGridColumns(node);
-				const impact = gridColumnTrackRemovalImpact(node, trackIndex);
-				if (!impact.canRemove) return false;
-				if (impact.itemCount > 0) {
-					deleteConfirmation.value = {
-						visible: true,
-						kind: 'grid-column',
-						nodeId: node.id,
-						trackIndex: impact.trackIndex,
-						title: 'Delete Column ' + (impact.trackIndex + 1) + '?',
-						message: 'This column contains ' + impact.itemCount + ' item' + (impact.itemCount === 1 ? '' : 's') + '. Deleting it will also delete everything inside it.',
-						confirmLabel: 'Delete Column',
-					};
-					return false;
-				}
-				const removed = removeGridColumnTrack(node, impact.trackIndex);
-				if (removed) clearStaleCanvasSelection();
-				return removed;
-			}
-			function confirmPendingDeletion() {
-				const pending = { ...deleteConfirmation.value };
-				if (!pending.visible) return false;
-				let removed = false;
-				if (pending.kind === 'node') {
-					removed = finalizeNodeRemoval(pending.nodeId);
-				} else if (pending.kind === 'grid-column') {
-					const node = findById(rootNodes.value, pending.nodeId);
-					removed = !!node && removeGridColumnTrack(node, pending.trackIndex);
-					if (removed) clearStaleCanvasSelection();
-				}
-				closeDeleteConfirmation();
-				return removed;
-			}
 			function regenIds(node) {
 				node.id = uid('n');
 				if (node.children) node.children.forEach(regenIds);
@@ -5565,22 +5417,9 @@
 				hoveredId.value = resolveRelatedHoverNodeId(event);
 			}
 			function removeNode(id) {
-				const node = findById(rootNodes.value, id);
-				if (!node) return false;
-				if ((isCont(node.type) || isGrid(node.type)) && nodeHasNestedContent(node)) {
-					const label = displayNodeLabel(node);
-					deleteConfirmation.value = {
-						visible: true,
-						kind: 'node',
-						nodeId: node.id,
-						trackIndex: -1,
-						title: 'Delete ' + label + '?',
-						message: 'This ' + label.toLowerCase() + ' contains nested content. Deleting it will also delete everything inside it.',
-						confirmLabel: 'Delete ' + label,
-					};
-					return false;
-				}
-				return finalizeNodeRemoval(id);
+				delFrom(rootNodes.value, id);
+				if (selectedId.value === id) selectedId.value = '';
+				if (hoveredId.value === id) hoveredId.value = '';
 			}
 			function dupNode(id)    { dupIn(rootNodes.value, id); }
 			function selectNode(n, options = {}) {
@@ -6248,13 +6087,6 @@
 				gridRowsValue,
 				setGridRowsValue,
 				addContainerChild,
-				childContainersFor,
-				nestedItemCount,
-				gridColumnTracks,
-				requestGridColumnRemoval,
-				displayNodeLabel,
-				selectNode,
-				removeNode,
 				syncContainerGap,
 				bgStateKey,
 				setBgStateValue,
@@ -6360,7 +6192,6 @@
 				bgStateKey, setBgState, isBgHoverState, setBgTypeForState, setBgOverlayTypeForState,
 				displayNodeLabel, nodeLabelIcon,
 				selectNode, clearSel, clearCurrentSelection, selectSettingsTab, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
-				deleteConfirmation, closeDeleteConfirmation, confirmPendingDeletion,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
 				openIconLibrary, openProIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, openSocialIconLibrary, openAlertIconLibrary, chooseButtonSvg, chooseSocialIconSvg, chooseAlertIconSvg, chooseProIconSvg, chooseRatingSvg, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
@@ -6912,22 +6743,6 @@
 						<button type="button" class="pb-icon-library-btn" @click="closeIconLibrary">Close</button>
 						<button type="button" class="pb-icon-library-btn primary" :disabled="!iconLibrarySelected" @click="insertSelectedIcon">Insert</button>
 					</div>
-				</div>
-			</div>
-		</div>
-	</teleport>
-
-	<teleport to="body">
-		<div v-if="deleteConfirmation.visible" class="pb-modal-backdrop pb-delete-confirm-backdrop" @click.self="closeDeleteConfirmation" @keydown.esc.window="closeDeleteConfirmation">
-			<div class="pb-modal pb-delete-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="pb-delete-confirm-title" aria-describedby="pb-delete-confirm-message">
-				<div class="pb-delete-confirm-icon" aria-hidden="true"><i class="fas fa-trash"></i></div>
-				<div class="pb-delete-confirm-copy">
-					<h2 id="pb-delete-confirm-title">{{ deleteConfirmation.title }}</h2>
-					<p id="pb-delete-confirm-message">{{ deleteConfirmation.message }}</p>
-				</div>
-				<div class="pb-delete-confirm-actions">
-					<button type="button" class="pb-delete-confirm-button" autofocus @click="closeDeleteConfirmation">Cancel</button>
-					<button type="button" class="pb-delete-confirm-button danger" @click="confirmPendingDeletion">{{ deleteConfirmation.confirmLabel }}</button>
 				</div>
 			</div>
 		</div>

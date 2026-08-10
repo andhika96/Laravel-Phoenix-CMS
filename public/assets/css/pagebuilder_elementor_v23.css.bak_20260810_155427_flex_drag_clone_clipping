@@ -9692,18 +9692,6 @@ body {
 	pointer-events: none;
 }
 
-/* Match horizontal child Containers so the sortable clone shares the row instead of overflowing it. */
-.pb-is-dragging .pb-dropzone-container-children[style*="flex-direction: row"] > .element-card,
-.pb-is-dragging .pb-dropzone-container-children[style*="flex-direction:row"] > .element-card,
-.pb-is-dragging .pb-dropzone-container-children[style*="flex-flow: row"] > .element-card,
-.pb-is-dragging .pb-dropzone-container-children[style*="flex-flow:row"] > .element-card {
-	flex: 0 1 100%;
-	width: 100%;
-	min-width: 0;
-	max-width: 100%;
-	align-self: stretch;
-}
-
 .pb-is-dragging .pb-dropzone > .element-card i {
 	display: inline-flex;
 	margin: 0;

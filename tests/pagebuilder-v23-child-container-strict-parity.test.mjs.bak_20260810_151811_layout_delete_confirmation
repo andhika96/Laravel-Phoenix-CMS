@@ -5,13 +5,12 @@ import test from 'node:test';
 import vm from 'node:vm';
 
 const app = fs.readFileSync(path.resolve('public/js/pagebuilder_elementor_v23/app.js'), 'utf8');
-const containerSettings = fs.readFileSync(path.resolve('public/js/pagebuilder_elementor_v23/widgets/layout/container/Settings.vue'), 'utf8');
 
 function loadChildContainerHelpers() {
     const block = app.match(/\/\/ V23_CHILD_CONTAINER_HELPERS_START([\s\S]*?)\/\/ V23_CHILD_CONTAINER_HELPERS_END/)?.[1];
     assert.ok(block, 'child Container helpers should exist');
     const context = { structuredClone: globalThis.structuredClone };
-    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer, gridSlotCount, reconcileGridColumns, gridColumnHasContent, isGridColumnLockedSequentially, moveLooseGridChildrenIntoColumns, restoreGridColumnsAsFlexChildren: typeof restoreGridColumnsAsFlexChildren === 'function' ? restoreGridColumnsAsFlexChildren : null, nodeHasNestedContent: typeof nodeHasNestedContent === 'function' ? nodeHasNestedContent : null, canMoveNodeIntoContainer, responsiveContainerWidth, applyAdjacentContainerWidths, canonicalLayoutForSave };`, context);
+    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer, gridSlotCount, reconcileGridColumns, gridColumnHasContent, isGridColumnLockedSequentially, moveLooseGridChildrenIntoColumns, restoreGridColumnsAsFlexChildren: typeof restoreGridColumnsAsFlexChildren === 'function' ? restoreGridColumnsAsFlexChildren : null, canMoveNodeIntoContainer, responsiveContainerWidth, applyAdjacentContainerWidths, canonicalLayoutForSave };`, context);
     return context.api;
 }
 
@@ -61,27 +60,6 @@ test('Add Container appends one selectable canonical child', () => {
     assert.deepEqual(parent.children.map((entry) => entry.settings.containerWidth), ['50%', '50%']);
     assert.equal(child.type, 'container');
     assert.equal(Object.hasOwn(child, 'columns'), false);
-});
-
-test('layout content detection only requires confirmation when nested content exists', () => {
-    const api = loadChildContainerHelpers();
-    assert.equal(typeof api.nodeHasNestedContent, 'function');
-
-    assert.equal(api.nodeHasNestedContent({ type: 'container', children: [] }), false);
-    assert.equal(api.nodeHasNestedContent({ type: 'container', children: [{ id: 'heading-1', type: 'heading' }] }), true);
-    assert.equal(api.nodeHasNestedContent({
-        type: 'grid',
-        columns: [{ id: 'cell-1', children: [] }, { id: 'cell-2', children: [{ id: 'button-1', type: 'button' }] }],
-    }), true);
-});
-
-test('Flexbox Child Containers sidebar exposes selectable rows with a delete action', () => {
-    const childSection = containerSettings.match(/<details class="pb-collapsible"[^>]*>\s*<summary>Child Containers<\/summary>[\s\S]*?<\/details>/)?.[0] || '';
-
-    assert.match(childSection, /v-for="\(child, index\) in editor\.childContainersFor\(node\)"/);
-    assert.match(childSection, /editor\.selectNode\(child, \{ revealPanel: true \}\)/);
-    assert.match(childSection, /editor\.removeNode\(child\.id\)/);
-    assert.match(childSection, /fa-trash/);
 });
 
 test('Grid track growth materializes conceptual columns without deleting existing content', () => {

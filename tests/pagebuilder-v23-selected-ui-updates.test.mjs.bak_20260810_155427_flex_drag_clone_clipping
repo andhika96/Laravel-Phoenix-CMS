@@ -131,30 +131,6 @@ test('toolbox clone stays a readable 40px card inside canvas dropzones', () => {
     assert.doesNotMatch(css, /\.pb-is-dragging \.pb-dropzone > \.element-card > \*\s*\{[^}]*display:\s*none;/);
 });
 
-test('horizontal Flexbox lets the in-canvas toolbox clone shrink inside the row', () => {
-    const clone = cssDeclarations('.pb-is-dragging .pb-dropzone-container-children[style*="flex-direction: row"] > .element-card');
-    const shorthandClone = cssDeclarations('.pb-is-dragging .pb-dropzone-container-children[style*="flex-flow: row"] > .element-card');
-
-    assert.deepEqual(shorthandClone, clone);
-
-    assert.deepEqual(
-        {
-            flex: clone.flex,
-            width: clone.width,
-            minWidth: clone['min-width'],
-            maxWidth: clone['max-width'],
-            alignSelf: clone['align-self'],
-        },
-        {
-            flex: '0 1 100%',
-            width: '100%',
-            minWidth: '0',
-            maxWidth: '100%',
-            alignSelf: 'stretch',
-        },
-    );
-});
-
 test('active toolbox uses a visible compact card for the native drag image', () => {
     const activeToolbox = app.match(/<draggable\s*\n\s*:list="group\.items"[\s\S]*?<\/draggable>/)?.[0];
     const preview = cssDeclarations('.pb-toolbox-drag-preview');

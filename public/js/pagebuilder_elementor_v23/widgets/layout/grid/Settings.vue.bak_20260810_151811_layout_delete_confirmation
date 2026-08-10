@@ -25,21 +25,6 @@
 									<label class="pb-form-label">Rows</label>
 									<input class="pb-input" :value="editor.gridRowsValue(node)" @input="editor.setGridRowsValue(node, $event.target.value)" type="number" min="1" max="12">
 								</div>
-								<div class="pb-form-group">
-									<label class="pb-form-label">Column Structure</label>
-									<div class="pb-layout-item-list">
-										<div v-for="track in editor.gridColumnTracks(node)" :key="track.index" class="pb-layout-item-row">
-											<div class="pb-layout-item-main pb-layout-item-main--static">
-												<span class="pb-layout-item-icon"><i class="fas fa-columns"></i></span>
-												<span class="pb-layout-item-copy"><strong>{{ track.label }}</strong><small>{{ track.itemCount }} item{{ track.itemCount === 1 ? '' : 's' }}</small></span>
-											</div>
-											<button type="button" class="pb-layout-item-delete" :disabled="!track.canRemove" :aria-label="'Delete ' + track.label" @click.stop="editor.requestGridColumnRemoval(node, track.index)">
-												<i class="fas fa-trash"></i>
-											</button>
-										</div>
-									</div>
-									<div class="pb-form-note">The final column cannot be deleted.</div>
-								</div>
 								<div class="pb-form-group" v-if="editor.responsiveDevice==='desktop'">
 									<label class="pb-form-label">Grid Template Columns</label>
 									<input class="pb-input" v-model="node.settings.gridTemplateColumns" placeholder="repeat(3, minmax(0, 1fr))">
@@ -183,7 +168,7 @@
 									<div class="pb-form-group"><label class="pb-form-label">Border Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings.borderColor"></div></div>
 								</template>
 								<div class="pb-form-group">
-									<div class="pb-label-row pb-label-row-device pb-radius-control-header"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-label-tools"><div class="pb-control-device-wrap"><button class="pb-control-device-btn" @click.stop="editor.openControlResponsiveMenu('row-grid-border-radius')" :title="'Responsive: ' + editor.responsiveDeviceLabel()"><i :class="editor.responsiveDeviceIcon()"></i></button><div v-if="editor.isControlResponsiveMenuOpen('row-grid-border-radius')" class="pb-control-device-menu"><button v-for="device in editor.responsiveDevices" :key="'row-grid-border-radius-' + device.value" class="pb-control-device-item" :class="{active: editor.responsiveDevice===device.value}" @click.stop="editor.applyResponsiveDevice('row-grid-border-radius', device.value)"><i :class="device.icon"></i><span>{{ editor.deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="dimensionGroupUnit(responsiveRadiusKeys(), 'px')" @change="setRadiusDimensionGroupUnit($event.target.value, 'px')"><option v-for="unit in ['px','%','em','rem','vw']" :key="'grid-radius-'+unit" :value="unit">{{ unit }}</option></select></div></div>
+									<div class="pb-label-row pb-label-row-device pb-radius-control-header"><label class="pb-form-label mb-0">Border Radius</label><div class="pb-label-tools"><div class="pb-control-device-wrap"><button class="pb-control-device-btn" @click.stop="editor.openControlResponsiveMenu('grid-border-radius')" :title="'Responsive: ' + editor.responsiveDeviceLabel()"><i :class="editor.responsiveDeviceIcon()"></i></button><div v-if="editor.isControlResponsiveMenuOpen('grid-border-radius')" class="pb-control-device-menu"><button v-for="device in editor.responsiveDevices" :key="'grid-border-radius-' + device.value" class="pb-control-device-item" :class="{active: editor.responsiveDevice===device.value}" @click.stop="editor.applyResponsiveDevice('grid-border-radius', device.value)"><i :class="device.icon"></i><span>{{ editor.deviceOptionLabel(device) }}</span></button></div></div><select class="pb-mini-unit" :value="dimensionGroupUnit(responsiveRadiusKeys(), 'px')" @change="setRadiusDimensionGroupUnit($event.target.value, 'px')"><option v-for="unit in ['px','%','em','rem','vw']" :key="'grid-radius-'+unit" :value="unit">{{ unit }}</option></select></div></div>
 									<div class="pb-four-sides pb-four-sides-with-link mt-1"><template v-for="corner in [{key:'borderRadiusTL',label:'TL'},{key:'borderRadiusTR',label:'TR'},{key:'borderRadiusBR',label:'BR'},{key:'borderRadiusBL',label:'BL'}]" :key="corner.key"><label class="pb-side-input"><input class="pb-input" type="number" min="0" :value="radiusDimensionValue(corner.key, 'px')" @input="setLinkedRadiusDimensionValue(corner.key, $event, 'px')"><span>{{ corner.label }}</span></label></template><div class="pb-side-link-cell"><button type="button" class="pb-link-btn" @click="node.settings.borderRadiusLinked=!node.settings.borderRadiusLinked" :title="node.settings.borderRadiusLinked?'Unlink':'Link'"><i :class="node.settings.borderRadiusLinked?'fas fa-link':'fas fa-unlink'"></i></button></div></div>
 								</div>
 							</div>
@@ -411,7 +396,7 @@
 
 <script>
 export default {
-	name: 'RowGridWidgetSettings',
+	name: 'GridWidgetSettings',
 	props: { node: { type: Object, required: true }, editor: { type: Object, required: true } },
 	methods: {
 		dimensionParts(key, fallbackUnit = 'px') {

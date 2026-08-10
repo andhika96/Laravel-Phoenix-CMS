@@ -25,21 +25,6 @@
 									<label class="pb-form-label">Rows</label>
 									<input class="pb-input" :value="editor.gridRowsValue(node)" @input="editor.setGridRowsValue(node, $event.target.value)" type="number" min="1" max="12">
 								</div>
-								<div class="pb-form-group">
-									<label class="pb-form-label">Column Structure</label>
-									<div class="pb-layout-item-list">
-										<div v-for="track in editor.gridColumnTracks(node)" :key="track.index" class="pb-layout-item-row">
-											<div class="pb-layout-item-main pb-layout-item-main--static">
-												<span class="pb-layout-item-icon"><i class="fas fa-columns"></i></span>
-												<span class="pb-layout-item-copy"><strong>{{ track.label }}</strong><small>{{ track.itemCount }} item{{ track.itemCount === 1 ? '' : 's' }}</small></span>
-											</div>
-											<button type="button" class="pb-layout-item-delete" :disabled="!track.canRemove" :aria-label="'Delete ' + track.label" @click.stop="editor.requestGridColumnRemoval(node, track.index)">
-												<i class="fas fa-trash"></i>
-											</button>
-										</div>
-									</div>
-									<div class="pb-form-note">The final column cannot be deleted.</div>
-								</div>
 								<div class="pb-form-group" v-if="editor.responsiveDevice==='desktop'">
 									<label class="pb-form-label">Grid Template Columns</label>
 									<input class="pb-input" v-model="node.settings.gridTemplateColumns" placeholder="repeat(3, minmax(0, 1fr))">

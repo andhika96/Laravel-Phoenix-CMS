@@ -30,7 +30,7 @@ test('Grid identity follows its Container display mode in the editor', () => {
 test('Grid uses conceptual columns while Flexbox uses selectable child Containers', () => {
     assert.match(app, /function setContainerGridColumnsValue\(node, next\) \{[\s\S]*?node\.settings\[responsiveKey\('gridColumns', device\)\] = value;/);
     assert.match(app, /function setContainerGridRowsValue\(node, next\) \{[\s\S]*?setContainerResponsiveSetting\(node\.settings, 'gridRows', String\(value\)\);/);
-    assert.match(app, /function onContainerDisplayTypeChange\(node\) \{[\s\S]*?if \(dt === 'flex'\)[\s\S]*?restoreGridColumnsAsFlexChildren\([\s\S]*?if \(dt === 'grid'\)[\s\S]*?ensureNodeGridColumns\(node\);/);
+    assert.match(app, /function onContainerDisplayTypeChange\(node\) \{[\s\S]*?if \(dt === 'flex'\)[\s\S]*?delete node\.columns;[\s\S]*?if \(dt === 'grid'\)[\s\S]*?ensureNodeGridColumns\(node\);/);
     assert.match(app, /v-for="\(col, ci\) in node\.columns"[\s\S]*?v-model="col\.children"/);
     assert.match(app, /v-else[\s\S]*?v-model="node\.children"/);
     assert.doesNotMatch(app, /responsiveColumnsCache|reconcileColumnsContent|function syncCols\(|function syncGridColumnsForDevice\(|scheduleResponsiveGridSync/);

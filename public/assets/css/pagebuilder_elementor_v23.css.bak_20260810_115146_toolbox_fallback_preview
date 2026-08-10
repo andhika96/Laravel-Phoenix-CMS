@@ -9627,97 +9627,43 @@ body {
 .element-card strong { display: block; font-size: 10px; font-weight: 650; }
 .element-card small { display: block; margin-top: 2px; color: #929bad; font-size: 8.5px; }
 
-/* Keep the pointer preview as the same compact card used by the original builder. */
-.pb-toolbox-drag-preview {
-	box-sizing: border-box;
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	width: 133px;
-	min-width: 133px;
-	max-width: 133px;
-	min-height: 40px;
-	height: 40px;
-	padding: 10px;
-	border: 1px solid #dfe5f0;
-	border-radius: 10px;
-	background: #f9fbff;
-	color: #243047;
-	box-shadow: 0 8px 20px rgba(41, 37, 90, .16);
-	opacity: .98;
-	pointer-events: none;
-	z-index: 10000;
-	cursor: grabbing;
-}
-
-.pb-toolbox-drag-preview i {
-	display: inline-flex;
-	margin: 0;
-	color: var(--brand);
-	font-size: 12px;
-}
-
-.pb-toolbox-drag-preview strong {
-	display: block;
-	margin: 0;
-	font-size: 12px;
-	font-weight: 500;
-	white-space: nowrap;
-}
-
-.pb-toolbox-drag-preview small {
-	display: none;
-}
-
-/* The in-canvas ghost remains a readable card instead of collapsing into a rail. */
+/* A toolbox card becomes a placement rail after entering a canvas dropzone. */
 .pb-is-dragging .pb-dropzone > .element-card {
-	box-sizing: border-box;
-	display: flex;
-	align-items: center;
-	gap: 8px;
 	width: 100%;
 	min-width: 0;
-	min-height: 40px;
-	height: 40px;
-	flex: 0 0 auto;
-	margin: 0;
-	padding: 10px;
-	border: 1px solid #dfe5f0;
-	border-radius: 10px;
-	background: #f9fbff;
-	color: #243047;
-	box-shadow: 0 12px 30px rgba(54, 36, 127, 0.16);
+	min-height: 14px;
+	height: 14px;
+	flex: 0 0 14px;
+	margin: 4px 0;
+	padding: 0;
+	border: 1px dashed #8f7bff;
+	border-radius: 4px;
+	background: #efeaff;
+	box-shadow: none;
 	transform: none;
 	overflow: hidden;
 	pointer-events: none;
 }
 
-/* Match horizontal child Containers so the sortable clone shares the row instead of overflowing it. */
+.pb-is-dragging .pb-dropzone > .element-card > * {
+	display: none;
+}
+
+.pb-is-dragging .pb-dropzone-container-children[style*="flex-flow: row"] > .element-card,
+.pb-is-dragging .pb-dropzone-container-children[style*="flex-flow:row"] > .element-card,
+.pb-is-dragging .pb-dropzone-container-children[style*="flex-flow: row-reverse"] > .element-card,
+.pb-is-dragging .pb-dropzone-container-children[style*="flex-flow:row-reverse"] > .element-card,
 .pb-is-dragging .pb-dropzone-container-children[style*="flex-direction: row"] > .element-card,
 .pb-is-dragging .pb-dropzone-container-children[style*="flex-direction:row"] > .element-card,
-.pb-is-dragging .pb-dropzone-container-children[style*="flex-flow: row"] > .element-card,
-.pb-is-dragging .pb-dropzone-container-children[style*="flex-flow:row"] > .element-card {
-	flex: 0 1 100%;
-	width: 100%;
-	min-width: 0;
-	max-width: 100%;
+.pb-is-dragging .pb-dropzone-container-children[style*="flex-direction: row-reverse"] > .element-card,
+.pb-is-dragging .pb-dropzone-container-children[style*="flex-direction:row-reverse"] > .element-card {
+	width: 14px;
+	min-width: 14px;
+	max-width: 14px;
+	height: auto;
+	min-height: 44px;
+	margin: 0 4px;
 	align-self: stretch;
-}
-
-.pb-is-dragging .pb-dropzone > .element-card i {
-	display: inline-flex;
-	margin: 0;
-	font-size: 12px;
-}
-
-.pb-is-dragging .pb-dropzone > .element-card strong {
-	display: block;
-	font-size: 12px;
-	font-weight: 500;
-}
-
-.pb-is-dragging .pb-dropzone > .element-card small {
-	display: none;
 }
 .empty-search-state { display: grid; place-items: center; gap: 8px; min-height: 120px; color: var(--muted); font-size: 11px; text-align: center; }
 .empty-search-state i { color: var(--brand); font-size: 18px; }
@@ -10891,172 +10837,3 @@ body {
 	font-size: 8.5px;
 	font-weight: 550;
 }
-
-/* Layout structure lists and guarded deletion */
-.pb-layout-item-list {
-	display: grid;
-	gap: 6px;
-	margin-top: 9px;
-}
-
-.pb-layout-item-row {
-	display: flex;
-	min-width: 0;
-	align-items: stretch;
-	overflow: hidden;
-	border: 1px solid #dfe4ef;
-	border-radius: 8px;
-	background: #fff;
-}
-
-.pb-layout-item-row:focus-within {
-	border-color: rgba(91, 76, 240, .55);
-	box-shadow: 0 0 0 2px rgba(91, 76, 240, .09);
-}
-
-.pb-layout-item-main {
-	display: flex;
-	min-width: 0;
-	align-items: center;
-	flex: 1 1 auto;
-	gap: 8px;
-	padding: 7px 9px;
-	border: 0;
-	background: transparent;
-	color: #252c3d;
-	font: inherit;
-	text-align: left;
-	cursor: pointer;
-}
-
-.pb-layout-item-main:hover { background: #f7f8fc; }
-.pb-layout-item-main--static { cursor: default; }
-.pb-layout-item-main--static:hover { background: transparent; }
-
-.pb-layout-item-icon {
-	display: inline-flex;
-	width: 18px;
-	height: 18px;
-	align-items: center;
-	justify-content: center;
-	flex: 0 0 18px;
-	color: var(--pb-primary);
-	font-size: 11px;
-}
-
-.pb-layout-item-copy {
-	display: flex;
-	min-width: 0;
-	flex-direction: column;
-	gap: 1px;
-}
-
-.pb-layout-item-copy strong,
-.pb-layout-item-copy small {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.pb-layout-item-copy strong { font-size: 10.5px; font-weight: 650; }
-.pb-layout-item-copy small { color: #7c879d; font-size: 9px; }
-
-.pb-layout-item-delete {
-	display: inline-flex;
-	width: 34px;
-	min-width: 34px;
-	align-items: center;
-	justify-content: center;
-	border: 0;
-	border-left: 1px solid #e6e9f1;
-	background: transparent;
-	color: #9a4960;
-	font-size: 10px;
-	cursor: pointer;
-}
-
-.pb-layout-item-delete:hover:not(:disabled),
-.pb-layout-item-delete:focus-visible:not(:disabled) {
-	background: #fff1f3;
-	color: #b4233c;
-}
-
-.pb-layout-item-delete:focus-visible { outline: 2px solid rgba(180, 35, 60, .3); outline-offset: -2px; }
-.pb-layout-item-delete:disabled { color: #c5cad6; cursor: not-allowed; }
-
-.pb-delete-confirm-backdrop { z-index: 10020; }
-
-.pb-delete-confirm-modal {
-	display: grid;
-	width: 420px;
-	max-width: calc(100vw - 32px);
-	grid-template-columns: 42px minmax(0, 1fr);
-	gap: 0 14px;
-	padding: 24px;
-	overflow: hidden;
-}
-
-.pb-delete-confirm-icon {
-	display: inline-flex;
-	width: 42px;
-	height: 42px;
-	align-items: center;
-	justify-content: center;
-	grid-row: 1;
-	border-radius: 10px;
-	background: #fff1f3;
-	color: #b4233c;
-	font-size: 15px;
-}
-
-.pb-delete-confirm-copy { min-width: 0; }
-
-.pb-delete-confirm-copy h2 {
-	margin: 0 0 6px;
-	color: #202638;
-	font-size: 16px;
-	font-weight: 700;
-	line-height: 1.35;
-}
-
-.pb-delete-confirm-copy p {
-	margin: 0;
-	color: #667087;
-	font-size: 12px;
-	line-height: 1.55;
-}
-
-.pb-delete-confirm-actions {
-	display: flex;
-	justify-content: flex-end;
-	grid-column: 1 / -1;
-	gap: 8px;
-	margin-top: 22px;
-}
-
-.pb-delete-confirm-button {
-	min-height: 36px;
-	padding: 0 14px;
-	border: 1px solid #dce1eb;
-	border-radius: 8px;
-	background: #fff;
-	color: #364056;
-	font: inherit;
-	font-size: 11px;
-	font-weight: 650;
-	cursor: pointer;
-}
-
-.pb-delete-confirm-button:hover,
-.pb-delete-confirm-button:focus-visible { background: #f7f8fb; }
-
-.pb-delete-confirm-button:focus-visible { outline: 2px solid rgba(91, 76, 240, .35); outline-offset: 2px; }
-
-.pb-delete-confirm-button.danger {
-	border-color: #b4233c;
-	background: #b4233c;
-	color: #fff;
-}
-
-.pb-delete-confirm-button.danger:hover,
-.pb-delete-confirm-button.danger:focus-visible { background: #961d32; }

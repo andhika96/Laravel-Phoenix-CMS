@@ -8,13 +8,9 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const appPath = path.join(root, 'public/js/pagebuilder_elementor_v23/app.js');
 const settingsPath = path.join(root, 'public/js/pagebuilder_elementor_v23/widgets/layout/container/Settings.vue');
-const gridSettingsPath = path.join(root, 'public/js/pagebuilder_elementor_v23/widgets/layout/grid/Settings.vue');
-const rowGridSettingsPath = path.join(root, 'public/js/pagebuilder_elementor_v23/widgets/layout/row-grid/Settings.vue');
 const cssPath = path.join(root, 'public/assets/css/pagebuilder_elementor_v23.css');
 const app = fs.readFileSync(appPath, 'utf8');
 const containerSettings = fs.readFileSync(settingsPath, 'utf8');
-const gridSettings = fs.readFileSync(gridSettingsPath, 'utf8');
-const rowGridSettings = fs.readFileSync(rowGridSettingsPath, 'utf8');
 const css = fs.readFileSync(cssPath, 'utf8');
 
 function extractBlock(source, startIndex) {
@@ -62,13 +58,6 @@ function loadGridHelpers() {
         'canonicalLayoutForSave',
     ];
     const context = vm.createContext({ structuredClone, console });
-    vm.runInContext(`${names.map(namedFunction).join('\n')}\nthis.api = { ${names.join(', ')} };`, context);
-    return context.api;
-}
-
-function loadGridRemovalHelpers() {
-    const names = ['gridColumnTrackRemovalImpact', 'removeGridColumnTrack'];
-    const context = vm.createContext({ console });
     vm.runInContext(`${names.map(namedFunction).join('\n')}\nthis.api = { ${names.join(', ')} };`, context);
     return context.api;
 }
@@ -128,51 +117,6 @@ test('Grid slot reduction preserves overflow content in the final remaining slot
 
     assert.equal(slots.length, 2);
     assert.deepEqual(Array.from(slots[1].children, (child) => child.id), ['button-1']);
-});
-
-test('deleting a Grid column track removes the matching cell from every row', () => {
-    const api = loadGridRemovalHelpers();
-    const node = {
-        type: 'grid',
-        settings: { columns: 3, gridRows: '2' },
-        columns: [
-            { id: 'r1-c1', children: [] },
-            { id: 'r1-c2', children: [{ id: 'heading-1', type: 'heading' }] },
-            { id: 'r1-c3', children: [] },
-            { id: 'r2-c1', children: [] },
-            { id: 'r2-c2', children: [{ id: 'button-1', type: 'button' }] },
-            { id: 'r2-c3', children: [] },
-        ],
-    };
-
-    const impact = api.gridColumnTrackRemovalImpact(node, 1);
-    assert.deepEqual(JSON.parse(JSON.stringify(impact)), {
-        canRemove: true,
-        columnCount: 3,
-        rowCount: 2,
-        trackIndex: 1,
-        removedIndexes: [1, 4],
-        itemCount: 2,
-    });
-
-    assert.equal(api.removeGridColumnTrack(node, 1), true);
-    assert.equal(node.settings.columns, 2);
-    assert.deepEqual(Array.from(node.columns, (column) => column.id), ['r1-c1', 'r1-c3', 'r2-c1', 'r2-c3']);
-});
-
-test('Grid column deletion updates Container Grid settings and protects the final track', () => {
-    const api = loadGridRemovalHelpers();
-    const node = {
-        type: 'container',
-        settings: { displayType: 'grid', gridColumns: 2, gridRows: '1' },
-        columns: [{ id: 'left', children: [] }, { id: 'right', children: [] }],
-    };
-
-    assert.equal(api.removeGridColumnTrack(node, 0), true);
-    assert.equal(node.settings.gridColumns, 1);
-    assert.deepEqual(Array.from(node.columns, (column) => column.id), ['right']);
-    assert.equal(api.removeGridColumnTrack(node, 0), false);
-    assert.deepEqual(Array.from(node.columns, (column) => column.id), ['right']);
 });
 
 test('only the first/current empty Grid column is unlocked', () => {
@@ -293,28 +237,6 @@ test('Container settings expose Add Container only for Flexbox', () => {
     assert.match(childSection, /v-if="[^\"]*displayType[^\"]*flex/);
     assert.match(childSection, /Add Container/);
     assert.doesNotMatch(childSection, /displayType==='grid'/);
-});
-
-test('Container Grid and standalone Grid settings expose guarded column deletion', () => {
-    for (const source of [containerSettings, gridSettings, rowGridSettings]) {
-        assert.match(source, /editor\.gridColumnTracks\(node\)/);
-        assert.match(source, /editor\.requestGridColumnRemoval\(node, track\.index\)/);
-        assert.match(source, /fa-trash/);
-    }
-
-    assert.match(app, /const deleteConfirmation = ref\(/);
-    assert.match(app, /function confirmPendingDeletion\(\)/);
-    assert.match(app, /role="dialog"/);
-    assert.match(app, /aria-modal="true"/);
-    assert.match(css, /\.pb-delete-confirm-modal\s*\{/);
-});
-
-test('Grid column rows stay read-only during Vue render', () => {
-    const start = app.indexOf('function gridColumnTracks(');
-    assert.notEqual(start, -1, 'gridColumnTracks should exist');
-    const body = extractBlock(app, start);
-
-    assert.doesNotMatch(body, /ensureNodeGridColumns\(/, 'render-time list building must not replace reactive Grid columns');
 });
 
 test('Container Grid and legacy Grid render column dropzones while Flexbox keeps child Containers', () => {

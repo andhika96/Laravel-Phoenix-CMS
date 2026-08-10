@@ -5,13 +5,12 @@ import test from 'node:test';
 import vm from 'node:vm';
 
 const app = fs.readFileSync(path.resolve('public/js/pagebuilder_elementor_v23/app.js'), 'utf8');
-const containerSettings = fs.readFileSync(path.resolve('public/js/pagebuilder_elementor_v23/widgets/layout/container/Settings.vue'), 'utf8');
 
 function loadChildContainerHelpers() {
     const block = app.match(/\/\/ V23_CHILD_CONTAINER_HELPERS_START([\s\S]*?)\/\/ V23_CHILD_CONTAINER_HELPERS_END/)?.[1];
     assert.ok(block, 'child Container helpers should exist');
     const context = { structuredClone: globalThis.structuredClone };
-    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer, gridSlotCount, reconcileGridColumns, gridColumnHasContent, isGridColumnLockedSequentially, moveLooseGridChildrenIntoColumns, restoreGridColumnsAsFlexChildren: typeof restoreGridColumnsAsFlexChildren === 'function' ? restoreGridColumnsAsFlexChildren : null, nodeHasNestedContent: typeof nodeHasNestedContent === 'function' ? nodeHasNestedContent : null, canMoveNodeIntoContainer, responsiveContainerWidth, applyAdjacentContainerWidths, canonicalLayoutForSave };`, context);
+    vm.runInNewContext(`${block}\nthis.api = { createLegacyContainerMigrationState, claimCanonicalNodeId, migrateLegacyContainerColumns, createChildContainerNode, presetChildContainers, appendChildContainer, gridSlotCount, reconcileGridColumns, gridColumnHasContent, isGridColumnLockedSequentially, canMoveNodeIntoContainer, responsiveContainerWidth, applyAdjacentContainerWidths, canonicalLayoutForSave };`, context);
     return context.api;
 }
 
@@ -63,27 +62,6 @@ test('Add Container appends one selectable canonical child', () => {
     assert.equal(Object.hasOwn(child, 'columns'), false);
 });
 
-test('layout content detection only requires confirmation when nested content exists', () => {
-    const api = loadChildContainerHelpers();
-    assert.equal(typeof api.nodeHasNestedContent, 'function');
-
-    assert.equal(api.nodeHasNestedContent({ type: 'container', children: [] }), false);
-    assert.equal(api.nodeHasNestedContent({ type: 'container', children: [{ id: 'heading-1', type: 'heading' }] }), true);
-    assert.equal(api.nodeHasNestedContent({
-        type: 'grid',
-        columns: [{ id: 'cell-1', children: [] }, { id: 'cell-2', children: [{ id: 'button-1', type: 'button' }] }],
-    }), true);
-});
-
-test('Flexbox Child Containers sidebar exposes selectable rows with a delete action', () => {
-    const childSection = containerSettings.match(/<details class="pb-collapsible"[^>]*>\s*<summary>Child Containers<\/summary>[\s\S]*?<\/details>/)?.[0] || '';
-
-    assert.match(childSection, /v-for="\(child, index\) in editor\.childContainersFor\(node\)"/);
-    assert.match(childSection, /editor\.selectNode\(child, \{ revealPanel: true \}\)/);
-    assert.match(childSection, /editor\.removeNode\(child\.id\)/);
-    assert.match(childSection, /fa-trash/);
-});
-
 test('Grid track growth materializes conceptual columns without deleting existing content', () => {
     const api = loadChildContainerHelpers();
     const first = { id: 'cell-1', children: [{ id: 'heading-1', type: 'heading' }] };
@@ -109,77 +87,6 @@ test('Grid track growth materializes conceptual columns without deleting existin
     api.reconcileGridColumns(parent, 2, 1, () => 'unused');
     assert.equal(parent.columns.length, 2);
     assert.equal(parent.columns[0].children[0].id, 'heading-1');
-});
-
-test('Flexbox child Containers unwrap one level into conceptual Grid cells', () => {
-    const api = loadChildContainerHelpers();
-    const emptyColumn = {
-        ...containerFactory(),
-        id: 'flex-left',
-        settings: { ...containerFactory().settings, containerWidth: '50%', cssClass: 'left-column' },
-    };
-    const nestedContainer = {
-        ...containerFactory(),
-        id: 'nested-container',
-        children: [{ id: 'button-1', type: 'button', settings: {} }],
-    };
-    const filledColumn = {
-        ...containerFactory(),
-        id: 'flex-right',
-        settings: { ...containerFactory().settings, containerWidth: '50%', cssClass: 'right-column' },
-        children: [
-            { id: 'heading-1', type: 'heading', settings: {} },
-            nestedContainer,
-        ],
-    };
-    const parent = {
-        id: 'parent',
-        type: 'container',
-        settings: { displayType: 'grid' },
-        children: [emptyColumn, filledColumn],
-        columns: [{ id: 'cell-left', children: [] }, { id: 'cell-right', children: [] }],
-    };
-
-    assert.equal(api.moveLooseGridChildrenIntoColumns(parent), true);
-
-    assert.equal(parent.children.length, 0);
-    assert.deepEqual(Array.from(parent.columns[0].children, (child) => child.id), []);
-    assert.deepEqual(Array.from(parent.columns[1].children, (child) => child.id), ['heading-1', 'nested-container']);
-    assert.equal(parent.columns[0].flexSourceContainer.id, 'flex-left');
-    assert.equal(parent.columns[0].flexSourceContainer.settings.cssClass, 'left-column');
-    assert.equal(parent.columns[1].flexSourceContainer.id, 'flex-right');
-    assert.equal(parent.columns[1].flexSourceContainer.settings.cssClass, 'right-column');
-    assert.equal(Object.hasOwn(parent.columns[1].flexSourceContainer, 'children'), false);
-    assert.equal(parent.columns[1].children[1].children[0].id, 'button-1');
-});
-
-test('Grid to Flexbox restores the unwrapped child Container identities and settings', () => {
-    const api = loadChildContainerHelpers();
-    assert.equal(typeof api.restoreGridColumnsAsFlexChildren, 'function');
-    const parent = {
-        id: 'parent',
-        type: 'container',
-        settings: { displayType: 'flex' },
-        children: [],
-        columns: [{
-            id: 'cell-left',
-            flexSourceContainer: {
-                id: 'flex-left',
-                type: 'container',
-                settings: { displayType: 'flex', containerWidth: '50%', cssClass: 'left-column' },
-            },
-            children: [{ id: 'heading-1', type: 'heading', settings: {} }],
-        }],
-    };
-
-    assert.equal(api.restoreGridColumnsAsFlexChildren(parent, containerFactory), true);
-
-    assert.equal(Object.hasOwn(parent, 'columns'), false);
-    assert.deepEqual(Array.from(parent.children, (child) => child.id), ['flex-left']);
-    assert.equal(parent.children[0].settings.cssClass, 'left-column');
-    assert.equal(parent.children[0].settings.containerWidth, '50%');
-    assert.equal(parent.children[0].children[0].id, 'heading-1');
-    assert.equal(Object.hasOwn(parent.children[0], 'flexSourceContainer'), false);
 });
 
 test('Grid columns unlock sequentially as the previous empty slot is filled', () => {
@@ -463,33 +370,20 @@ test('toolbox and existing widgets can enter canonical child Container dropzones
     const contGroupBody = app.match(/contGroup\(\) \{([\s\S]*?)\n\s*\},\n\s*colGroup\(\)/)?.[1];
     assert.ok(contGroupBody, 'BuilderNode.contGroup should exist');
 
-    const groupFor = (children = []) => new Function(contGroupBody).call({ node: { children } });
-    const accepts = (group, groupName, nestedTarget = true, nodeType = '') => typeof group.put === 'function'
-        ? group.put(
+    const contGroup = new Function(contGroupBody).call({});
+    const accepts = (groupName, nestedTarget = true) => typeof contGroup.put === 'function'
+        ? contGroup.put(
             { el: { dataset: nestedTarget ? { pbNestedDropzone: 'true' } : {} } },
             { options: { group: { name: groupName } } },
-            { dataset: nodeType ? { nodeType } : {} },
+            {},
         )
-        : group.put === true;
+        : contGroup.put === true;
 
-    const leafGroup = groupFor();
-    const structuralParentGroup = groupFor([
-        { id: 'column-1', type: 'container' },
-        { id: 'column-2', type: 'container' },
-    ]);
-
-    assert.equal(leafGroup.name, 'pb-container');
-    assert.equal(accepts(leafGroup, 'pb-col'), true, 'leaf child Containers must accept sidebar widget clones');
-    assert.equal(accepts(leafGroup, 'pb-col', false), false, 'shared Tabs and Accordion groups must not gain sidebar drop behavior');
-    assert.equal(accepts(leafGroup, 'pb-root', true, 'heading'), true, 'leaf child Containers must accept widgets moved from the page root');
-    assert.equal(accepts(leafGroup, 'pb-container', true, 'heading'), true, 'leaf child Containers must accept sibling widget moves');
-
-    assert.equal(accepts(structuralParentGroup, 'pb-col'), false, 'sidebar widgets must not enter a Flexbox parent beside child Containers');
-    assert.equal(accepts(structuralParentGroup, 'pb-container', true, 'heading'), false, 'existing widgets must not move beside Flexbox child Containers');
-    assert.equal(accepts(structuralParentGroup, 'pb-root', true, 'heading'), false, 'root widgets must not move beside Flexbox child Containers');
-    assert.equal(accepts(structuralParentGroup, 'pb-root'), true, 'sidebar layout tools remain valid structural children');
-    assert.equal(accepts(structuralParentGroup, 'pb-container', true, 'container'), true, 'nested Containers remain valid structural children');
-    assert.equal(accepts(structuralParentGroup, 'pb-col', true, 'grid'), true, 'Grid layout nodes remain valid structural children');
+    assert.equal(contGroup.name, 'pb-container');
+    assert.equal(accepts('pb-col'), true, 'child Containers must accept sidebar widget clones');
+    assert.equal(accepts('pb-col', false), false, 'shared Tabs and Accordion groups must not gain sidebar drop behavior');
+    assert.equal(accepts('pb-root'), true, 'child Containers must accept widgets moved from the page root');
+    assert.equal(accepts('pb-container'), true, 'child Containers must accept sibling and nested child moves');
 
     const childDropzones = Array.from(app.matchAll(/<draggable\s+v-else\s+v-model="node\.children"([\s\S]*?)@add="\(event\) => onAddContainer\(event, node, parentNode\)"/g), (match) => match[1]);
     assert.equal(childDropzones.length, 1, 'only Flexbox should use the canonical child Container dropzone');
