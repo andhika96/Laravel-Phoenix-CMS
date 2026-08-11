@@ -4,7 +4,6 @@
 	const boundRoots = new WeakSet();
 	const boundCarouselRoots = new WeakSet();
 	const boundBasicGalleryRoots = new WeakSet();
-	const boundBasicImageRoots = new WeakSet();
 	const transitionState = new WeakMap();
 	const reducedMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
 	const motionEntries = new Map();
@@ -415,18 +414,6 @@
 		});
 	}
 
-	function bindBasicImage(root) {
-		if (!root || boundBasicImageRoots.has(root)) return;
-		boundBasicImageRoots.add(root);
-		root.querySelectorAll('[data-basic-image-lightbox]').forEach(function (link) {
-			link.addEventListener('click', function (event) {
-				event.preventDefault();
-				const image = link.querySelector('img');
-				openImageLightbox(image?.getAttribute('src') || link.getAttribute('href'), image?.getAttribute('alt') || '');
-			});
-		});
-	}
-
 	function parseProConfig(root) {
 		try { return JSON.parse(root.getAttribute('data-pro-config') || '{}'); }
 		catch (_) { return {}; }
@@ -641,7 +628,6 @@
 		rootScope.querySelectorAll('[data-accordion-root]').forEach(bindAccordion);
 		rootScope.querySelectorAll('[data-image-carousel]').forEach(bindImageCarousel);
 		rootScope.querySelectorAll('[data-basic-gallery]').forEach(bindBasicGallery);
-		rootScope.querySelectorAll('[data-basic-image]').forEach(bindBasicImage);
 		rootScope.querySelectorAll('[data-pb-motion]').forEach(bindAdvancedWidget);
 		rootScope.querySelectorAll('[data-pro-slides]').forEach(initProSlides);
 		rootScope.querySelectorAll('[data-pro-carousel]').forEach(initProCarousel);
@@ -652,7 +638,7 @@
 		rootScope.querySelectorAll('[data-pro-headline]').forEach(initProAnimatedHeadline);
 	}
 
-	window.PageBuilderElementorV23Runtime = Object.freeze({ init, bindAccordion, bindImageCarousel, bindBasicGallery, bindBasicImage, bindAdvancedWidget, initProSlides, initProCarousel, initProCountdown, initProHotspot, initProFlipBox, initProForm, initProAnimatedHeadline });
+	window.PageBuilderElementorV23Runtime = Object.freeze({ init, bindAccordion, bindImageCarousel, bindBasicGallery, bindAdvancedWidget, initProSlides, initProCarousel, initProCountdown, initProHotspot, initProFlipBox, initProForm, initProAnimatedHeadline });
 
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', function () { init(document); }, { once: true });

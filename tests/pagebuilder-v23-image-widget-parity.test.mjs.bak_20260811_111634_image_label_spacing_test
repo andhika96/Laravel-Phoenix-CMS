@@ -1,0 +1,126 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { dirname, join, resolve } from 'node:path';
+import test from 'node:test';
+import { fileURLToPath } from 'node:url';
+import { compile } from '@vue/compiler-dom';
+import { parse } from '@vue/compiler-sfc';
+import { renderToString } from '@vue/server-renderer';
+import * as Vue from 'vue';
+
+const testDir = dirname(fileURLToPath(import.meta.url));
+const rootDir = resolve(testDir, '..');
+
+async function loadSfc(relativePath) {
+  const filename = join(rootDir, relativePath);
+  const source = await readFile(filename, 'utf8');
+  const { descriptor, errors } = parse(source, { filename });
+  assert.deepEqual(errors, []);
+  const component = Function(descriptor.script.content.replace(/export\s+default/, 'return'))();
+  component.render = Function('Vue', compile(descriptor.template.content, { mode: 'function' }).code)(Vue);
+  return component;
+}
+
+function editorFor(settingsTab) {
+  const EmptyControl = { template: '<div></div>' };
+  return {
+    settingsTab,
+    responsiveDevice: 'desktop',
+    responsiveDevices: [],
+    sizeControlUnits: ['px', '%', 'em', 'rem', 'vw', 'vh'],
+    widgetAdvancedControls: EmptyControl,
+    linkControl: EmptyControl,
+    dynamicTagControl: EmptyControl,
+    typographyControl: { template: '<div>Typography</div>' },
+    cssFilterControl: { template: '<div>CSS Filters</div>' },
+    textShadowControl: { template: '<div>Text Shadow</div>' },
+    fontFamilies: [],
+    chooseMedia() {}, clearMedia() {}, setResponsiveDevice() {},
+    openControlResponsiveMenu() {}, applyResponsiveDevice() {},
+    responsiveDeviceLabel: () => 'Desktop', responsiveDeviceIcon: () => 'fas fa-desktop',
+    isControlResponsiveMenuOpen: () => false, deviceOptionLabel: () => '',
+    activeResponsiveKey: (key) => key,
+    setResponsiveSetting(target, key, value) { target[key] = value; },
+    sizeControlMax: () => 4096, sizeControlStep: () => 1,
+    sizeControlDisplayValue: (node, key, fallback) => Number.parseFloat(node.settings[key] || fallback) || 0,
+    sizeControlUnit: (node, key, fallback) => String(node.settings[key] || fallback).match(/[a-z%]+$/i)?.[0] || 'px',
+    onSizeControlInput() {}, setSizeControlUnit() {},
+    showUnsupportedControlNotice() {},
+  };
+}
+
+async function renderComponent(component, props) {
+  return renderToString(Vue.createSSRApp(component, props));
+}
+
+test('Image Content exposes Elementor resolution, caption, link and lightbox branches', async () => {
+  const component = await loadSfc('public/js/pagebuilder_elementor_v23/widgets/basic/image/Settings.vue');
+  const base = {
+    src: '/storage/example.jpg', imageSource: 'ckfinder', imageResolution: 'custom',
+    customImageWidth: 640, customImageHeight: '', captionType: 'custom', customCaption: 'A caption',
+    linkType: 'custom', customLinkUrl: '/models', linkTarget: '_blank', linkNofollow: true,
+    linkCustomAttributes: [{ key: 'data-track', value: 'image' }],
+  };
+
+  const customHtml = await renderComponent(component, { node: { settings: { ...base } }, editor: editorFor('content') });
+  assert.match(customHtml, /Image Resolution/);
+  assert.match(customHtml, /Thumbnail - 150 x 150/);
+  assert.match(customHtml, /Custom Caption/);
+  assert.match(customHtml, /A caption/);
+  assert.match(customHtml, /Link Options/);
+
+  const mediaHtml = await renderComponent(component, {
+    node: { settings: { ...base, captionType: 'attachment', linkType: 'media', attachmentCaption: 'Media caption' } },
+    editor: editorFor('content'),
+  });
+  assert.match(mediaHtml, /Attachment Caption/);
+  assert.match(mediaHtml, /Lightbox/);
+  assert.match(mediaHtml, /value="yes"/);
+});
+
+test('Image Style exposes responsive sizing, object fit, state, border, shadow and caption controls', async () => {
+  const component = await loadSfc('public/js/pagebuilder_elementor_v23/widgets/basic/image/Settings.vue');
+  const html = await renderComponent(component, {
+    node: { settings: { height: '320px', objectFit: 'cover', captionType: 'custom', imageBorderType: 'solid' } },
+    editor: editorFor('style'),
+  });
+
+  for (const label of ['Alignment', 'Width', 'Max Width', 'Height', 'Object Fit', 'Object Position', 'Normal', 'Hover', 'CSS Filters', 'Opacity', 'Transition Duration', 'Hover Animation', 'Border Type', 'Border Width', 'Border Color', 'Border Radius', 'Box Shadow', 'Background Color', 'Typography', 'Text Shadow', 'Spacing']) {
+    assert.match(html, new RegExp(label));
+  }
+  assert.match(html, /value="grow-rotate"/);
+  assert.match(html, /value="buzz-out"/);
+});
+
+test('Image canvas renders responsive visual settings, safe custom links and captions', async () => {
+  const component = await loadSfc('public/js/pagebuilder_elementor_v23/widgets/basic/image/Canvas.vue');
+  const html = await renderComponent(component, {
+    item: { settings: {
+      src: 'https://cdn.example.com/image.jpg', alt: 'Example',
+      width: '75%', maxWidth: '90%', height: '320px', objectFit: 'cover', objectPosition: 'top right', alignment: 'right',
+      captionType: 'custom', customCaption: 'Visible caption', captionAlignment: 'center', captionColor: '#123456', captionBackgroundColor: '#ffffff', captionSpacing: '12px',
+      linkType: 'custom', customLinkUrl: '/models', linkTarget: '_blank', linkNofollow: true,
+      linkCustomAttributes: [{ key: 'data-track', value: 'image' }, { key: 'onclick', value: 'alert(1)' }],
+      imageNormalOpacity: 0.8, imageHoverOpacity: 1, imageHoverTransition: 0.4, imageHoverAnimation: 'grow',
+      imageBorderType: 'solid', imageBorderWidth: '2px', imageBorderColor: '#000000', imageBorderRadius: '8px',
+    } },
+    responsiveDevice: 'desktop',
+  });
+
+  assert.match(html, /href="\/models"/);
+  assert.match(html, /target="_blank"/);
+  assert.match(html, /rel="noopener noreferrer nofollow"/);
+  assert.match(html, /data-track="image"/);
+  assert.doesNotMatch(html, /onclick=/);
+  assert.match(html, /Visible caption/);
+  assert.match(html, /object-fit:cover/);
+  assert.match(html, /object-position:top right/);
+  assert.match(html, /text-align:right/);
+  assert.match(html, /pb-image--hover-grow/);
+
+  const unsafeHtml = await renderComponent(component, {
+    item: { settings: { src: '/safe.jpg', linkType: 'custom', customLinkUrl: 'javascript:alert(1)' } },
+    responsiveDevice: 'desktop',
+  });
+  assert.doesNotMatch(unsafeHtml, /<a\b/);
+});
