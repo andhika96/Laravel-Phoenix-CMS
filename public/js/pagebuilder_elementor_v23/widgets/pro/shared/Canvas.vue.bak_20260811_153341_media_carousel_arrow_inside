@@ -3450,24 +3450,13 @@ export default {
     width: var(--carousel-arrow-size, 34px);
     height: var(--carousel-arrow-size, 34px);
 }
-.pb-pro-media-carousel .pb-pro-arrow {
-    display: grid;
-    place-items: center;
-    padding: 0;
-    font-size: var(--carousel-arrow-size, 20px);
-    line-height: 1;
-}
-.pb-pro-media-carousel .pb-pro-arrow > i {
-    font-size: min(50%, 16px);
-    line-height: 1;
-}
 .pb-pro-media-carousel .pb-pro-arrow--prev {
     left: var(--carousel-arrow-gutter, 46px);
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
 }
 .pb-pro-media-carousel .pb-pro-arrow--next {
     right: var(--carousel-arrow-gutter, 46px);
-    transform: translateY(-50%);
+    transform: translate(50%, -50%);
 }
 .pb-pro-carousel .pb-pro-dots {
     gap: var(--carousel-dot-gap, 8px);

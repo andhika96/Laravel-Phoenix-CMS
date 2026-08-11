@@ -299,18 +299,7 @@
 		closeButton.className = 'pb-pro-media-lightbox__close';
 		closeButton.setAttribute('aria-label', 'Close lightbox');
 		closeButton.textContent = '×';
-		const uiColor = String(settings.uiColor || '#fff');
-		const uiHoverColor = String(settings.uiHoverColor || '#6979f8');
-		let closeHovered = false;
-		let closeFocused = false;
-		const renderCloseColor = function () {
-			closeButton.style.color = closeHovered || closeFocused ? uiHoverColor : uiColor;
-		};
-		closeButton.addEventListener('mouseenter', function () { closeHovered = true; renderCloseColor(); });
-		closeButton.addEventListener('mouseleave', function () { closeHovered = false; renderCloseColor(); });
-		closeButton.addEventListener('focus', function () { closeFocused = true; renderCloseColor(); });
-		closeButton.addEventListener('blur', function () { closeFocused = false; renderCloseColor(); });
-		renderCloseColor();
+		closeButton.style.color = String(settings.uiColor || '#fff');
 		overlay.appendChild(closeButton);
 		if (mediaType === 'video') {
 			const frame = document.createElement('iframe');
@@ -560,7 +549,6 @@
 				openMediaLightbox(trigger.dataset.mediaSrc, trigger.dataset.mediaType, trigger.dataset.mediaAlt || '', {
 					background: styles.getPropertyValue('--media-lightbox-background').trim() || 'rgba(0,0,0,.92)',
 					uiColor: styles.getPropertyValue('--media-lightbox-ui').trim() || '#fff',
-					uiHoverColor: styles.getPropertyValue('--media-lightbox-ui-hover').trim() || '#6979f8',
 					videoWidth: styles.getPropertyValue('--media-lightbox-video-width').trim() || '75%',
 				});
 			});

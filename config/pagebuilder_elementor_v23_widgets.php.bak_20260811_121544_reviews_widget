@@ -284,20 +284,6 @@ return [
         'settings' => 'js/pagebuilder_elementor_v23/widgets/pro/shared/Settings.vue',
         'view' => 'pagebuilder_elementor_v23.partials.render_pro_widget', 'toolbox' => true,
     ],
-    'reviews' => [
-        'type' => 'reviews', 'label' => 'Reviews', 'category' => 'pro', 'icon' => 'fas fa-comments',
-        'definition' => 'js/pagebuilder_elementor_v23/widgets/pro/reviews/definition.js',
-        'canvas' => 'js/pagebuilder_elementor_v23/widgets/pro/shared/Canvas.vue',
-        'settings' => 'js/pagebuilder_elementor_v23/widgets/pro/shared/Settings.vue',
-        'view' => 'pagebuilder_elementor_v23.partials.render_pro_widget', 'toolbox' => true,
-    ],
-    'media_carousel' => [
-        'type' => 'media_carousel', 'label' => 'Media Carousel', 'category' => 'pro', 'icon' => 'fas fa-photo-video',
-        'definition' => 'js/pagebuilder_elementor_v23/widgets/pro/media-carousel/definition.js',
-        'canvas' => 'js/pagebuilder_elementor_v23/widgets/pro/shared/Canvas.vue',
-        'settings' => 'js/pagebuilder_elementor_v23/widgets/pro/shared/Settings.vue',
-        'view' => 'pagebuilder_elementor_v23.partials.render_pro_widget', 'toolbox' => true,
-    ],
     'flip_box' => [
         'type' => 'flip_box', 'label' => 'Flip Box', 'category' => 'pro', 'icon' => 'fas fa-sync-alt',
         'definition' => 'js/pagebuilder_elementor_v23/widgets/pro/flip-box/definition.js',

@@ -284,61 +284,23 @@
 		scheduleMotion();
 	}
 
-	function openMediaLightbox(source, type = 'image', alt = '', settings = {}) {
-		const mediaSource = String(source || '').trim();
-		const mediaType = type === 'video' ? 'video' : 'image';
-		if (!mediaSource || !/^(https?:\/\/|\/)/i.test(mediaSource) || mediaSource.startsWith('//')) return;
-		if (mediaType === 'video' && !/^https:\/\/(?:www\.youtube\.com\/embed\/[A-Za-z0-9_-]+|player\.vimeo\.com\/video\/\d+)$/i.test(mediaSource)) return;
+	function openImageLightbox(source, alt = '') {
+		const imageSource = String(source || '').trim();
+		if (!imageSource || !/^(https?:\/\/|\/)/i.test(imageSource) || imageSource.startsWith('//')) return;
 		const overlay = document.createElement('div');
-		overlay.className = 'pb-image-lightbox pb-image-carousel-lightbox pb-pro-media-lightbox';
+		overlay.className = 'pb-image-lightbox pb-image-carousel-lightbox';
 		overlay.setAttribute('role', 'dialog');
 		overlay.setAttribute('aria-modal', 'true');
-		overlay.style.background = String(settings.background || 'rgba(0,0,0,.92)');
-		const closeButton = document.createElement('button');
-		closeButton.type = 'button';
-		closeButton.className = 'pb-pro-media-lightbox__close';
-		closeButton.setAttribute('aria-label', 'Close lightbox');
-		closeButton.textContent = '×';
-		const uiColor = String(settings.uiColor || '#fff');
-		const uiHoverColor = String(settings.uiHoverColor || '#6979f8');
-		let closeHovered = false;
-		let closeFocused = false;
-		const renderCloseColor = function () {
-			closeButton.style.color = closeHovered || closeFocused ? uiHoverColor : uiColor;
-		};
-		closeButton.addEventListener('mouseenter', function () { closeHovered = true; renderCloseColor(); });
-		closeButton.addEventListener('mouseleave', function () { closeHovered = false; renderCloseColor(); });
-		closeButton.addEventListener('focus', function () { closeFocused = true; renderCloseColor(); });
-		closeButton.addEventListener('blur', function () { closeFocused = false; renderCloseColor(); });
-		renderCloseColor();
-		overlay.appendChild(closeButton);
-		if (mediaType === 'video') {
-			const frame = document.createElement('iframe');
-			frame.src = mediaSource;
-			frame.title = String(alt || 'Media video');
-			frame.allow = 'autoplay; fullscreen; picture-in-picture';
-			frame.allowFullscreen = true;
-			frame.style.width = String(settings.videoWidth || '75%');
-			frame.style.maxWidth = '1100px';
-			frame.style.aspectRatio = '16 / 9';
-			frame.style.border = '0';
-			overlay.appendChild(frame);
-		} else {
-			const image = document.createElement('img');
-			image.src = mediaSource;
-			image.alt = String(alt || '');
-			overlay.appendChild(image);
-		}
+		overlay.innerHTML = '<button type="button" aria-label="Close lightbox">&times;</button><img alt="">';
+		const image = overlay.querySelector('img');
+		image.src = imageSource;
+		image.alt = String(alt || '');
 		const close = function () { overlay.remove(); document.removeEventListener('keydown', onKeydown); };
 		const onKeydown = function (event) { if (event.key === 'Escape') close(); };
 		overlay.addEventListener('click', function (event) { if (event.target === overlay || event.target.closest('button')) close(); });
 		document.addEventListener('keydown', onKeydown);
 		document.body.appendChild(overlay);
-		closeButton.focus();
-	}
-
-	function openImageLightbox(source, alt = '') {
-		openMediaLightbox(source, 'image', alt);
+		overlay.querySelector('button')?.focus();
 	}
 
 	function bindImageCarousel(root) {
@@ -493,7 +455,6 @@
 		let hovered = false;
 		function visible() {
 			if (!carousel) return 1;
-			if (config.skin === 'slideshow' || ['fade', 'cube'].includes(config.effect)) return 1;
 			const device = currentDevice();
 			const key = device === 'mobile' ? 'slidesToShowMobile' : (device === 'tablet' ? 'slidesToShowTablet' : 'slidesToShow');
 			return Math.max(1, Math.min(items.length || 1, Number(config[key]) || (device === 'desktop' ? 3 : 1)));
@@ -523,13 +484,7 @@
 				root.style.setProperty('--pb-pro-visible', String(count));
 				track.style.transitionDuration = Math.max(0, Number(config.transitionSpeed) || 0) + 'ms';
 				track.style.alignItems = config.equalHeight ? 'stretch' : 'flex-start';
-				items.forEach(function (item, itemIndex) {
-					item.style.flexBasis = `calc(${100 / count}% - ${gapOffset(count)})`;
-					item.style.height = config.equalHeight ? 'auto' : 'max-content';
-					item.classList?.toggle('is-active', itemIndex === active);
-					item.classList?.toggle('is-before', itemIndex < active);
-					item.classList?.toggle('is-after', itemIndex > active);
-				});
+				items.forEach(function (item) { item.style.flexBasis = `calc(${100 / count}% - ${gapOffset(count)})`; item.style.height = config.equalHeight ? 'auto' : 'max-content'; });
 				const offset = Math.max(0, Number(items[active]?.offsetLeft) || 0);
 				track.style.transform = `translate3d(-${offset}px,0,0)`;
 			} else items.forEach(function (item, itemIndex) { item.hidden = itemIndex !== active; item.classList.toggle('is-active', itemIndex === active); });
@@ -553,18 +508,7 @@
 		dots.forEach(function (dot) { dot.addEventListener('click', function () { const pageIndex = Number(dot.dataset.proIndex) || 0; interact(pageIndex * step()); }); });
 		root.addEventListener('mouseenter', function () { hovered = true; start(); });
 		root.addEventListener('mouseleave', function () { hovered = false; start(); });
-		root.addEventListener('keydown', function (event) { if (event.key === 'ArrowLeft') { event.preventDefault(); interact(active - step()); } if (event.key === 'ArrowRight') { event.preventDefault(); interact(active + step()); } });
-		root.querySelectorAll(':scope [data-pro-media-lightbox]').forEach(function (trigger) {
-			trigger.addEventListener('click', function () {
-				const styles = getComputedStyle(root);
-				openMediaLightbox(trigger.dataset.mediaSrc, trigger.dataset.mediaType, trigger.dataset.mediaAlt || '', {
-					background: styles.getPropertyValue('--media-lightbox-background').trim() || 'rgba(0,0,0,.92)',
-					uiColor: styles.getPropertyValue('--media-lightbox-ui').trim() || '#fff',
-					uiHoverColor: styles.getPropertyValue('--media-lightbox-ui-hover').trim() || '#6979f8',
-					videoWidth: styles.getPropertyValue('--media-lightbox-video-width').trim() || '75%',
-				});
-			});
-		});
+		root.addEventListener('keydown', function (event) { if (event.key === 'ArrowLeft') { event.preventDefault(); interact(active - 1); } if (event.key === 'ArrowRight') { event.preventDefault(); interact(active + 1); } });
 		window.addEventListener('resize', function () { render(active); }, { passive: true });
 		render(0); start();
 	}

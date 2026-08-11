@@ -9,11 +9,12 @@ use Tests\TestCase;
 
 class PageBuilderElementorV23AssetIsolationTest extends TestCase
 {
-    public function test_v23_asset_tree_contains_active_v20_files_without_v20_internal_references(): void
+    public function test_v23_asset_tree_matches_active_v20_files_without_v20_internal_references(): void
     {
-        $v20Assets = $this->activeRelativeFiles(public_path('js/pagebuilder_elementor'));
-        $v23Assets = $this->activeRelativeFiles(public_path('js/pagebuilder_elementor_v23'));
-        $this->assertSame([], array_values(array_diff($v20Assets, $v23Assets)));
+        $this->assertSame(
+            $this->activeRelativeFiles(public_path('js/pagebuilder_elementor')),
+            $this->activeRelativeFiles(public_path('js/pagebuilder_elementor_v23')),
+        );
         $this->assertSame(
             $this->activeRelativeFiles(resource_path('views/pagebuilder_elementor')),
             $this->activeRelativeFiles(resource_path('views/pagebuilder_elementor_v23')),

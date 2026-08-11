@@ -1995,8 +1995,6 @@
 		call_to_action: 'Call to Action',
 		countdown: 'Countdown',
 		carousel: 'Carousel',
-		reviews: 'Reviews',
-		media_carousel: 'Media Carousel',
 		flip_box: 'Flip Box',
 	});
 
@@ -2034,8 +2032,6 @@
 		call_to_action: 'fas fa-bullhorn',
 		countdown: 'fas fa-hourglass-half',
 		carousel: 'fas fa-clone',
-		reviews: 'fas fa-comments',
-		media_carousel: 'fas fa-photo-video',
 		flip_box: 'fas fa-sync-alt',
 	});
 
@@ -2204,7 +2200,7 @@
 			hasSharedAdvancedControls() { return this.isTabsNode || this.isAccordionNode || this.node.type === 'image' || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading'; },
 		hasNewGeneralAdvancedControls() {
 			return ['counter', 'progress_bar', 'testimonial', 'social_icons', 'alert', 'rating', 'text_path'].includes(this.node.type)
-				|| ['form', 'slides', 'animated_headline', 'hotspot', 'price_list', 'price_table', 'call_to_action', 'countdown', 'carousel', 'reviews', 'media_carousel', 'flip_box'].includes(this.node.type);
+				|| ['form', 'slides', 'animated_headline', 'hotspot', 'price_list', 'price_table', 'call_to_action', 'countdown', 'carousel', 'flip_box'].includes(this.node.type);
 		},
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
@@ -4223,7 +4219,6 @@
 				const targets = {
 					formButton: { type: 'form', prefix: 'buttonIcon' },
 					priceTableFeature: { type: 'price_table', prefix: 'icon', collection: 'features' },
-					reviewsItem: { type: 'reviews', prefix: 'icon', collection: 'items' },
 					flipBoxFront: { type: 'flip_box', prefix: 'frontIcon' },
 				};
 				const target = targets[String(targetKey || '')];

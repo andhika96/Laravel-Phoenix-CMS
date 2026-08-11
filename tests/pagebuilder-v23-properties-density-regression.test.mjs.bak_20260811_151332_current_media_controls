@@ -179,7 +179,7 @@ test('the shared density contract covers every active four-side and three-cell r
     const linkedSides = classValues.filter((tokens) => tokens.includes('pb-four-sides-with-link'));
 
     assert.equal(plainSides.length, 10, 'all ten standalone four-side controls remain covered');
-    assert.equal(linkedSides.length, 15, 'all fifteen linked four-side controls remain covered');
+    assert.equal(linkedSides.length, 14, 'all fourteen linked four-side controls remain covered');
     assert.equal((widgetVueSources.match(/pb-advanced-edge-fields/g) || []).length >= 1, true, 'shared Advanced edge controls remain covered');
     assert.equal((widgetSources.match(/pb-container-gap-control__values/g) || []).length, 4, 'Container and Container Fluid expose all four linked gap controls');
     assert.equal((widgetSources.match(/pb-range-number/g) || []).length, 4, 'Grid and Row Grid expose four direct three-cell range rows');
@@ -193,6 +193,6 @@ test('every responsive spacing side uses a numeric input with native steppers', 
 
     assert.equal(spacingInputs.length, 20, 'all Container, Container Fluid, Grid, and Row Grid spacing inputs are audited');
     spacingInputs.forEach((input) => assert.match(input, /\btype="number"/, input));
-    assert.equal(sideInputs.length, 33, 'all active side-input definitions across layout and widgets are audited');
+    assert.equal(sideInputs.length, 32, 'all active side-input definitions across layout and widgets are audited');
     sideInputs.forEach((input) => assert.match(input, /\btype="number"/, input));
 });
