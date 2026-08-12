@@ -68,6 +68,24 @@
 	const TextStrokeControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.textStroke));
 	const TextShadowControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.textShadow));
 
+	const WidgetSettingsLoading = {
+		name: 'WidgetSettingsLoading',
+		template: `
+			<div class="pb-widget-settings-loading" role="status" aria-live="polite">
+				<span class="pb-widget-settings-loading__spinner" aria-hidden="true"></span>
+				<span>Loading widget settings...</span>
+			</div>
+		`,
+	};
+	const WidgetSettingsError = {
+		name: 'WidgetSettingsError',
+		template: `
+			<div class="pb-widget-settings-error" role="alert">
+				<i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+				<span>Unable to load widget settings.</span>
+			</div>
+		`,
+	};
 
 	const _wcache = {};
 	function loadWidget(type) {
@@ -85,7 +103,12 @@
 		const path = widgetRegistry?.get(type)?.settings;
 		if (!_settingsCache[type]) {
 			_settingsCache[type] = path
-				? defineAsyncComponent(() => loadSfcModule(path))
+				? defineAsyncComponent({
+					loader: () => loadSfcModule(path),
+					loadingComponent: WidgetSettingsLoading,
+					errorComponent: WidgetSettingsError,
+					delay: 0,
+				})
 				: { template: '<div class="pb-form-note">Settings module is unavailable for this widget.</div>' };
 		}
 		return _sfcResolvedModules[path] || _settingsCache[type];
@@ -209,6 +232,49 @@
 
 	function uid(p)       { return p + '_' + Math.random().toString(36).slice(2, 9); }
 	function jclone(v)    { return JSON.parse(JSON.stringify(v)); }
+	const CONTEXT_CLIPBOARD_SOURCE = 'phoenix-pagebuilder-v23';
+	const CONTEXT_CLIPBOARD_VERSION = 1;
+	const CONTEXT_CLIPBOARD_MAX_CHARS = 1024 * 1024;
+	const CONTEXT_CLIPBOARD_MAX_NODES = 50;
+	// V23_CONTEXT_CLIPBOARD_HELPERS_START
+	function contextClipboardPayload(node) {
+		return JSON.stringify({
+			source: CONTEXT_CLIPBOARD_SOURCE,
+			version: CONTEXT_CLIPBOARD_VERSION,
+			kind: 'node',
+			node,
+		});
+	}
+	function contextClipboardNodeShape(node) {
+		return !!node
+			&& typeof node === 'object'
+			&& typeof node.type === 'string'
+			&& node.type.trim().length > 0
+			&& !!node.settings
+			&& typeof node.settings === 'object'
+			&& !Array.isArray(node.settings);
+	}
+	function parseContextClipboardPayload(raw) {
+		const text = String(raw ?? '').trim();
+		if (!text) return { nodes: [], reason: 'empty' };
+		if (text.length > CONTEXT_CLIPBOARD_MAX_CHARS) return { nodes: [], reason: 'too-large' };
+		let parsed;
+		try {
+			parsed = JSON.parse(text);
+		} catch (_) {
+			return { nodes: [], reason: 'invalid-json' };
+		}
+		if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return { nodes: [], reason: 'invalid' };
+		if (parsed.source !== CONTEXT_CLIPBOARD_SOURCE || Number(parsed.version) !== CONTEXT_CLIPBOARD_VERSION) {
+			return { nodes: [], reason: 'unsupported' };
+		}
+		const nodes = Array.isArray(parsed.nodes) ? parsed.nodes : (parsed.node ? [parsed.node] : []);
+		if (!nodes.length || nodes.length > CONTEXT_CLIPBOARD_MAX_NODES || nodes.some((node) => !contextClipboardNodeShape(node))) {
+			return { nodes: [], reason: 'invalid' };
+		}
+		return { nodes, reason: '' };
+	}
+	// V23_CONTEXT_CLIPBOARD_HELPERS_END
 	function isCont(t)    { return t === 'container' || t === 'container_fluid'; }
 	function isGrid(t)    { return t === 'row_grid' || t === 'grid'; }
 	function isTabs(t)    { return t === 'tabs'; }
@@ -1969,6 +2035,7 @@
 		text_editor: 'Text Editor',
 		image: 'Image',
 		video: 'Video',
+		google_maps: 'Google Maps',
 		button: 'Button',
 		icon: 'Icon',
 		divider: 'Divider',
@@ -1996,8 +2063,14 @@
 		countdown: 'Countdown',
 		carousel: 'Carousel',
 		reviews: 'Reviews',
+		testimonial_carousel: 'Testimonial Carousel',
 		media_carousel: 'Media Carousel',
 		flip_box: 'Flip Box',
+		code_highlight: 'Code Highlight',
+		blockquote: 'Blockquote',
+		share_buttons: 'Share Buttons',
+		progress_tracker: 'Progress Tracker',
+		video_playlist: 'Video Playlist',
 	});
 
 	const NODE_LABEL_ICONS = Object.freeze({
@@ -2009,6 +2082,7 @@
 		text_editor: 'fas fa-edit',
 		image: 'far fa-image',
 		video: 'fas fa-video',
+		google_maps: 'fas fa-map-marker-alt',
 		button: 'fas fa-link',
 		icon: 'far fa-star',
 		divider: 'fas fa-minus',
@@ -2035,8 +2109,14 @@
 		countdown: 'fas fa-hourglass-half',
 		carousel: 'fas fa-clone',
 		reviews: 'fas fa-comments',
+		testimonial_carousel: 'fas fa-quote-right',
 		media_carousel: 'fas fa-photo-video',
 		flip_box: 'fas fa-sync-alt',
+		code_highlight: 'fas fa-code',
+		blockquote: 'fas fa-quote-left',
+		share_buttons: 'fas fa-share-alt',
+		progress_tracker: 'fas fa-tasks',
+		video_playlist: 'fas fa-list',
 	});
 
 	function baseNodeLabel(type, fallback = 'Widget') {
@@ -2050,6 +2130,81 @@
 		const suffix = String(node.labelSuffix || '').trim();
 		return suffix ? (base + ' ' + suffix) : base;
 	}
+
+	// Context menu: satu shell visual dipakai bersama, tetapi susunan item tetap
+	// dipisahkan per target agar parity widget/layout tidak tercampur.
+	const contextMenuDefinitions = Object.freeze({
+		widget: Object.freeze([
+			{ id: 'edit', label: 'Edit' },
+			{ id: 'duplicate', label: 'Duplicate', shortcut: 'Ctrl + D' },
+			{ id: 'separator-duplicate', separator: true },
+			{ id: 'copy', label: 'Copy', shortcut: 'Ctrl + C' },
+			{ id: 'paste', label: 'Paste', shortcut: 'Ctrl + V' },
+			{ id: 'pasteStyle', label: 'Paste style', shortcut: 'Ctrl + Shift + V' },
+			{ id: 'pasteExternal', label: 'Paste from other site' },
+			{ id: 'resetStyle', label: 'Reset style' },
+			{ id: 'separator-global', separator: true },
+			{ id: 'saveGlobal', label: 'Save as global' },
+			{ id: 'separator-structure', separator: true },
+			{ id: 'structure', label: 'Structure', shortcut: 'Ctrl + I' },
+			{ id: 'separator-delete', separator: true },
+			{ id: 'delete', label: 'Delete', shortcut: 'Delete', danger: true },
+		]),
+		container: Object.freeze([
+			{ id: 'edit', label: 'Edit Container' },
+			{ id: 'duplicate', label: 'Duplicate', shortcut: 'Ctrl + D' },
+			{ id: 'separator-add', separator: true },
+			{ id: 'addContainer', label: 'Add New Container' },
+			{ id: 'separator-clipboard', separator: true },
+			{ id: 'copy', label: 'Copy', shortcut: 'Ctrl + C' },
+			{ id: 'paste', label: 'Paste', shortcut: 'Ctrl + V' },
+			{ id: 'pasteStyle', label: 'Paste style', shortcut: 'Ctrl + Shift + V' },
+			{ id: 'pasteExternal', label: 'Paste from other site' },
+			{ id: 'resetStyle', label: 'Reset style' },
+			{ id: 'separator-template', separator: true },
+			{ id: 'saveTemplate', label: 'Save as Template' },
+			{ id: 'separator-structure', separator: true },
+			{ id: 'structure', label: 'Structure', shortcut: 'Ctrl + I' },
+			{ id: 'separator-delete', separator: true },
+			{ id: 'delete', label: 'Delete', shortcut: 'Delete', danger: true },
+		]),
+		grid: Object.freeze([
+			{ id: 'edit', label: 'Edit Grid' },
+			{ id: 'duplicate', label: 'Duplicate', shortcut: 'Ctrl + D' },
+			{ id: 'separator-add', separator: true },
+			{ id: 'addContainer', label: 'Add New Container' },
+			{ id: 'separator-clipboard', separator: true },
+			{ id: 'copy', label: 'Copy', shortcut: 'Ctrl + C' },
+			{ id: 'paste', label: 'Paste', shortcut: 'Ctrl + V' },
+			{ id: 'pasteStyle', label: 'Paste style', shortcut: 'Ctrl + Shift + V' },
+			{ id: 'pasteExternal', label: 'Paste from other site' },
+			{ id: 'resetStyle', label: 'Reset style' },
+			{ id: 'separator-template', separator: true },
+			{ id: 'saveTemplate', label: 'Save as Template' },
+			{ id: 'separator-structure', separator: true },
+			{ id: 'structure', label: 'Structure', shortcut: 'Ctrl + I' },
+			{ id: 'separator-delete', separator: true },
+			{ id: 'delete', label: 'Delete', shortcut: 'Delete', danger: true },
+		]),
+		gridColumn: Object.freeze([
+			{ id: 'edit', label: 'Edit Grid' },
+			{ id: 'duplicate', label: 'Duplicate', shortcut: 'Ctrl + D' },
+			{ id: 'separator-add', separator: true },
+			{ id: 'addContainer', label: 'Add New Container' },
+			{ id: 'separator-clipboard', separator: true },
+			{ id: 'copy', label: 'Copy', shortcut: 'Ctrl + C' },
+			{ id: 'paste', label: 'Paste', shortcut: 'Ctrl + V' },
+			{ id: 'pasteStyle', label: 'Paste style', shortcut: 'Ctrl + Shift + V' },
+			{ id: 'pasteExternal', label: 'Paste from other site' },
+			{ id: 'resetStyle', label: 'Reset style' },
+			{ id: 'separator-template', separator: true },
+			{ id: 'saveTemplate', label: 'Save as Template' },
+			{ id: 'separator-structure', separator: true },
+			{ id: 'structure', label: 'Structure', shortcut: 'Ctrl + I' },
+			{ id: 'separator-delete', separator: true },
+			{ id: 'delete', label: 'Delete', shortcut: 'Delete', danger: true },
+		]),
+	});
 
 	function nodeLabelIcon(nodeOrType) {
 		const node = nodeOrType && typeof nodeOrType === 'object' ? nodeOrType : null;
@@ -2172,6 +2327,7 @@
 			onStartContainerEdgeResize: { type: Function, required: true },
 			onOpenModal:    { type: Function, required: true },
 			onShowToolbox:  { type: Function, required: true },
+			onContextMenu:  { type: Function, required: true },
 			pendingInsertTarget: { type: Object, default: null },
 			onAccordionRuntimeForNode: { type: Function, default: null },
 			onToggleAccordionItem: { type: Function, default: null },
@@ -2201,10 +2357,10 @@
 			isGrid()  { return isGrid(this.node.type); },
 			isTabsNode() { return isTabs(this.node.type); },
 			isAccordionNode() { return isAccordion(this.node.type); },
-			hasSharedAdvancedControls() { return this.isTabsNode || this.isAccordionNode || this.node.type === 'image' || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading'; },
+			hasSharedAdvancedControls() { return this.isTabsNode || this.isAccordionNode || this.node.type === 'image' || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading' || this.node.type === 'google_maps'; },
 		hasNewGeneralAdvancedControls() {
 			return ['counter', 'progress_bar', 'testimonial', 'social_icons', 'alert', 'rating', 'text_path'].includes(this.node.type)
-				|| ['form', 'slides', 'animated_headline', 'hotspot', 'price_list', 'price_table', 'call_to_action', 'countdown', 'carousel', 'reviews', 'media_carousel', 'flip_box'].includes(this.node.type);
+				|| ['form', 'slides', 'animated_headline', 'hotspot', 'price_list', 'price_table', 'call_to_action', 'countdown', 'carousel', 'reviews', 'testimonial_carousel', 'media_carousel', 'flip_box', 'code_highlight', 'blockquote', 'share_buttons', 'progress_tracker', 'video_playlist'].includes(this.node.type);
 		},
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
@@ -2562,6 +2718,7 @@
 					onStartContainerEdgeResize: this.onStartContainerEdgeResize,
 					onOpenModal:    this.onOpenModal,
 					onShowToolbox:  this.onShowToolbox,
+					onContextMenu:  this.onContextMenu,
 					pendingInsertTarget: this.pendingInsertTarget,
 					onAccordionRuntimeForNode: this.onAccordionRuntimeForNode,
 					onToggleAccordionItem: this.onToggleAccordionItem,
@@ -2705,6 +2862,7 @@
 	:data-node-id="node.id"
 	@mouseenter.stop="onSetHover(node.id)"
 	@mouseleave.stop="onClearHover(node.id, $event)"
+	@contextmenu.stop.prevent="onContextMenu($event, node)"
 >
 	<div class="pb-node-toolbar" @click.stop>
 		<button type="button" class="pb-node-label" :class="isCont || isGrid ? 'container-handle' : 'widget-label'" @click.stop="onSelect(node, { revealPanel: true })"><i :class="labelIcon"></i> {{ label }}</button>
@@ -2731,7 +2889,7 @@
 		<template v-if="isCont">
 			<component :is="loadWidget(node.type)" :item="node" :responsive-device="responsiveDevice" :fill-editor-shell="!!parentNode">
 				<div v-if="(node.settings?.displayType || 'flex') === 'grid'" class="el-cont-columns" :style="contColumnsStyle">
-					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col" :data-col-index="ci">
+					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col" :data-col-index="ci" @contextmenu.stop.prevent="onContextMenu($event, { kind: 'gridColumn', node: node, column: col, columnIndex: ci })">
 						<draggable
 							v-model="col.children"
 							item-key="id"
@@ -2815,7 +2973,7 @@
 		<template v-else-if="isGrid">
 			<component :is="loadWidget(node.type)" :item="node">
 				<div class="el-grid-columns" :style="gridStyle">
-					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col" :data-col-index="ci">
+					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col" :data-col-index="ci" @contextmenu.stop.prevent="onContextMenu($event, { kind: 'gridColumn', node: node, column: col, columnIndex: ci })">
 						<draggable
 							v-model="col.children"
 							item-key="id"
@@ -3248,6 +3406,7 @@
 			}
 			function closePageSettings() {
 				pageSettingsOpen.value = false;
+				closeContextMenu();
 			}
 			function handlePageSettingsKeydown(event) {
 				if (event.key === 'Escape') closePageSettings();
@@ -3362,6 +3521,19 @@
 			const accordionBoxLinks = ref({});
 			let activeContainerResizeCleanup = null;
 			const rootNodes   = ref([]);
+			function emptyContextMenuState() {
+				return {
+					visible: false,
+					x: 0,
+					y: 0,
+					scope: '',
+					target: null,
+					items: [],
+				};
+			}
+			const contextMenu = ref(emptyContextMenuState());
+			const contextClipboard = ref(null);
+			const contextStyleClipboard = ref(null);
 			const responsiveDevices = [
 				{ value: 'desktop', label: 'Desktop', menuLabel: 'Desktop', icon: 'fas fa-desktop' },
 				{ value: 'tablet', label: 'Tablet', menuLabel: 'Tablet Portrait', icon: 'fas fa-tablet-alt' },
@@ -3690,6 +3862,359 @@
 					if (n.accordionItems) for (const item of n.accordionItems) { const r = findById(item.children||[], id); if (r) return r; }
 				}
 				return null;
+			}
+			function isGridLayoutNode(node) {
+				return !!node && (isGrid(node.type) || (isCont(node.type) && (node.settings?.displayType || 'flex') === 'grid'));
+			}
+			function contextMenuScopeFor(node, target = null) {
+				if (target && target.kind === 'gridColumn') return 'gridColumn';
+				if (isGridLayoutNode(node)) return 'grid';
+				if (isCont(node && node.type)) return 'container';
+				return 'widget';
+			}
+			function contextMenuNodeFromTarget(target) {
+				return target && target.kind === 'gridColumn' ? target.node : target;
+			}
+			function contextMenuMetaFor(target) {
+				const node = contextMenuNodeFromTarget(target);
+				if (!node || !node.id) return null;
+				const scope = contextMenuScopeFor(node, target);
+				return {
+					nodeId: String(node.id),
+					nodeType: String(node.type || ''),
+					scope,
+					columnId: target && target.kind === 'gridColumn' ? String(target.column?.id || '') : '',
+					columnIndex: target && target.kind === 'gridColumn' ? Number(target.columnIndex) : -1,
+				};
+			}
+			function contextMenuEditLabel(scope, node) {
+				if (scope === 'widget') return 'Edit ' + displayNodeLabel(node);
+				if (scope === 'grid' || scope === 'gridColumn') return 'Edit Grid';
+				return 'Edit Container';
+			}
+			function contextMenuItemsFor(scope, node) {
+				const definitions = contextMenuDefinitions[scope] || contextMenuDefinitions.widget;
+				return definitions.map((item) => item.separator
+					? { ...item }
+					: { ...item, label: item.id === 'edit' ? contextMenuEditLabel(scope, node) : item.label });
+			}
+			function contextMenuPosition(event, itemCount = 12) {
+				const gutter = 12;
+				const menuWidth = 344;
+				const estimatedHeight = Math.min(560, Math.max(180, itemCount * 42));
+				const viewportWidth = Math.max(Number(window.innerWidth) || 0, menuWidth + gutter * 2);
+				const viewportHeight = Math.max(Number(window.innerHeight) || 0, estimatedHeight + gutter * 2);
+				const clientX = Number(event?.clientX) || gutter;
+				const clientY = Number(event?.clientY) || gutter;
+				return {
+					x: clamp(clientX, gutter, Math.max(gutter, viewportWidth - menuWidth - gutter)),
+					y: clamp(clientY, gutter, Math.max(gutter, viewportHeight - estimatedHeight - gutter)),
+				};
+			}
+			function closeContextMenu() {
+				contextMenu.value = emptyContextMenuState();
+			}
+			function openContextMenu(event, target) {
+				const meta = contextMenuMetaFor(target);
+				if (!event || !meta) return;
+				const node = findById(rootNodes.value, meta.nodeId) || contextMenuNodeFromTarget(target);
+				if (!node || !node.id) return;
+				event.preventDefault();
+				event.stopPropagation();
+				selectNode(node);
+				const position = contextMenuPosition(event, (contextMenuDefinitions[meta.scope] || []).length);
+				contextMenu.value = {
+					visible: true,
+					x: position.x,
+					y: position.y,
+					scope: meta.scope,
+					target: meta,
+					items: contextMenuItemsFor(meta.scope, node),
+				};
+			}
+			function onCanvasContextMenu(event) {
+				const columnElement = event?.target?.closest?.('.pb-grid-col');
+				if (!columnElement) return;
+				const nodeElement = columnElement.closest?.('[data-node-id]');
+				const nodeId = columnElement.dataset?.parentNodeId || nodeElement?.dataset?.nodeId || '';
+				const node = findById(rootNodes.value, nodeId);
+				const columnIndex = Number(columnElement.dataset?.colIndex);
+				const column = node && Array.isArray(node.columns) ? node.columns[columnIndex] : null;
+				if (node && column) openContextMenu(event, { kind: 'gridColumn', node, column, columnIndex });
+			}
+			function contextMenuTargetNode(meta = contextMenu.value.target) {
+				return meta && meta.nodeId ? findById(rootNodes.value, meta.nodeId) : null;
+			}
+			function findNodeLocation(nodes, id, parentNode = null, zone = 'root', column = null) {
+				if (!Array.isArray(nodes)) return null;
+				for (let index = 0; index < nodes.length; index++) {
+					const node = nodes[index];
+					if (!node) continue;
+					if (String(node.id) === String(id)) return { list: nodes, index, node, parentNode, zone, column };
+					const nested = findNodeLocation(node.children, id, node, 'children');
+					if (nested) return nested;
+					for (const ownerColumn of Array.isArray(node.columns) ? node.columns : []) {
+						const nestedColumn = findNodeLocation(ownerColumn?.children, id, node, 'column', ownerColumn);
+						if (nestedColumn) return nestedColumn;
+					}
+					for (const item of Array.isArray(node.tabItems) ? node.tabItems : []) {
+						const nestedTab = findNodeLocation(item?.children, id, node, 'tab', item);
+						if (nestedTab) return nestedTab;
+					}
+					for (const item of Array.isArray(node.accordionItems) ? node.accordionItems : []) {
+						const nestedAccordion = findNodeLocation(item?.children, id, node, 'accordion', item);
+						if (nestedAccordion) return nestedAccordion;
+					}
+				}
+				return null;
+			}
+			function contextPasteDestination(meta, node) {
+				if (!node) return null;
+				if (meta?.scope === 'gridColumn') {
+					if (!Array.isArray(node.columns)) ensureNodeGridColumns(node);
+					const columnIndex = Number.isFinite(meta.columnIndex) && meta.columnIndex >= 0
+						? meta.columnIndex
+						: (node.columns || []).findIndex((column) => String(column?.id || '') === String(meta.columnId || ''));
+					const column = node.columns?.[columnIndex];
+					if (!column) return null;
+					if (isGridColumnLockedSequentially(node, columnIndex)) return { blocked: true };
+					if (!Array.isArray(column.children)) column.children = [];
+					return { list: column.children, index: column.children.length };
+				}
+				if (isGridLayoutNode(node)) {
+					ensureNodeGridColumns(node);
+					const column = node.columns?.[0];
+					if (!column) return null;
+					if (!Array.isArray(column.children)) column.children = [];
+					return { list: column.children, index: column.children.length };
+				}
+				if (isCont(node.type)) {
+					if (!Array.isArray(node.children)) node.children = [];
+					return { list: node.children, index: node.children.length };
+				}
+				const location = findNodeLocation(rootNodes.value, node.id);
+			return location ? { list: location.list, index: location.index + 1 } : null;
+			}
+			function contextStyleFamily(type) {
+				if (isCont(type)) return 'container';
+				if (isGrid(type)) return 'grid';
+				return String(type || 'widget');
+			}
+			function contextClipboardNodeSupported(node, depth = 0) {
+				if (depth > 100 || !contextClipboardNodeShape(node)) return false;
+				if (!isCont(node.type) && !isGrid(node.type) && !hasRegisteredWidget(node.type)) return false;
+				const arrayProperty = (key) => !Object.prototype.hasOwnProperty.call(node, key) || Array.isArray(node[key]);
+				if (!arrayProperty('children') || !arrayProperty('columns') || !arrayProperty('tabItems') || !arrayProperty('accordionItems')) return false;
+				if (Array.isArray(node.children) && node.children.some((child) => !contextClipboardNodeSupported(child, depth + 1))) return false;
+				if (Array.isArray(node.columns) && node.columns.some((column) => (
+					!column
+					|| typeof column !== 'object'
+					|| Array.isArray(column)
+					|| !Array.isArray(column.children)
+					|| column.children.some((child) => !contextClipboardNodeSupported(child, depth + 1))
+				))) return false;
+				for (const key of ['tabItems', 'accordionItems']) {
+					if (Array.isArray(node[key]) && node[key].some((item) => (
+						!item
+						|| typeof item !== 'object'
+						|| Array.isArray(item)
+						|| !Array.isArray(item.children)
+						|| item.children.some((child) => !contextClipboardNodeSupported(child, depth + 1))
+					))) return false;
+				}
+				return true;
+			}
+			function normalizeExternalContextNode(raw) {
+				if (!contextClipboardNodeSupported(raw)) return null;
+				const node = jclone(raw);
+				regenIds(node);
+				if (isGrid(node.type) || (isCont(node.type) && (node.settings.displayType || 'flex') === 'grid')) {
+					ensureNodeGridColumns(node);
+				}
+				return node;
+			}
+			async function copyContextTarget(node) {
+				if (!node) return;
+				const label = displayNodeLabel(node);
+				contextClipboard.value = { node: jclone(node), type: node.type, label };
+				contextStyleClipboard.value = { settings: jclone(node.settings || {}), type: node.type, family: contextStyleFamily(node.type), label };
+				const clipboard = window.navigator?.clipboard;
+				if (!clipboard || typeof clipboard.writeText !== 'function') {
+					showSaveToast('info', label + ' copied untuk sesi editor ini. Clipboard browser tidak tersedia.');
+					return;
+				}
+				try {
+					await clipboard.writeText(contextClipboardPayload(node));
+					showSaveToast('success', label + ' copied ke clipboard.');
+				} catch (_) {
+					showSaveToast('info', label + ' copied untuk sesi editor ini. Akses clipboard browser ditolak.');
+				}
+			}
+			function pasteContextClipboard(meta, node) {
+				const clipboard = contextClipboard.value;
+				if (!clipboard?.node || !node) {
+					showSaveToast('info', 'Belum ada element yang bisa di-paste.');
+					return;
+				}
+				const destination = contextPasteDestination(meta, node);
+				if (destination?.blocked) {
+					showSaveToast('info', 'Kolom ini masih terkunci. Isi kolom sebelumnya terlebih dahulu.');
+					return;
+				}
+				if (!destination?.list) {
+					showSaveToast('info', 'Target paste tidak tersedia.');
+					return;
+				}
+				const item = jclone(clipboard.node);
+				regenIds(item);
+				if (isGrid(item.type)) ensureNodeGridColumns(item);
+				destination.list.splice(destination.index, 0, item);
+				selectedId.value = item.id;
+				showSaveToast('success', displayNodeLabel(item) + ' pasted.');
+			}
+			async function pasteExternalContextClipboard(meta, node) {
+				if (!node) return;
+				const clipboard = window.navigator?.clipboard;
+				if (!clipboard || typeof clipboard.readText !== 'function') {
+					showSaveToast('info', 'Clipboard browser tidak tersedia untuk Paste from other site.');
+					return;
+				}
+				let raw;
+				try {
+					raw = await clipboard.readText();
+				} catch (_) {
+					showSaveToast('info', 'Akses clipboard browser ditolak. Izinkan clipboard lalu coba lagi.');
+					return;
+				}
+				const parsed = parseContextClipboardPayload(raw);
+				if (parsed.reason === 'unsupported') {
+					showSaveToast('info', 'Format clipboard tidak kompatibel. Saat ini hanya payload Phoenix Page Builder v2.3 yang didukung.');
+					return;
+				}
+				if (parsed.reason === 'too-large') {
+					showSaveToast('info', 'Payload clipboard terlalu besar untuk ditempel.');
+					return;
+				}
+				if (!parsed.nodes.length) {
+					showSaveToast('info', 'Clipboard tidak berisi element Phoenix v2.3 yang valid.');
+					return;
+				}
+				const imported = parsed.nodes.map(normalizeExternalContextNode);
+				if (imported.some((item) => !item)) {
+					showSaveToast('info', 'Clipboard berisi widget atau layout yang belum didukung v2.3.');
+					return;
+				}
+				const destination = contextPasteDestination(meta, node);
+				if (destination?.blocked) {
+					showSaveToast('info', 'Kolom ini masih terkunci. Isi kolom sebelumnya terlebih dahulu.');
+					return;
+				}
+				if (!destination?.list) {
+					showSaveToast('info', 'Target paste tidak tersedia.');
+					return;
+				}
+				imported.forEach((item, index) => destination.list.splice(destination.index + index, 0, item));
+				selectedId.value = imported[imported.length - 1].id;
+				const message = imported.length === 1
+					? displayNodeLabel(imported[0]) + ' pasted from clipboard.'
+					: imported.length + ' elements pasted from clipboard.';
+				showSaveToast('success', message);
+			}
+			function pasteContextStyle(node) {
+				const clipboard = contextStyleClipboard.value;
+				if (!clipboard?.settings || !node) {
+					showSaveToast('info', 'Belum ada style yang bisa di-paste.');
+					return;
+				}
+				if (clipboard.family !== contextStyleFamily(node.type)) {
+					showSaveToast('info', 'Paste style hanya tersedia untuk tipe element yang sekelompok.');
+					return;
+				}
+				node.settings = jclone(clipboard.settings);
+				showSaveToast('success', 'Style berhasil di-paste ke ' + displayNodeLabel(node) + '.');
+			}
+			function resetContextStyle(node) {
+				if (!node) return;
+				const fresh = makeNode(node.type);
+				if (!fresh || !fresh.settings) {
+					showUnsupportedControlNotice('Reset style');
+					return;
+				}
+				node.settings = jclone(fresh.settings);
+				if (isCont(node.type)) seedResponsiveSettings(node.settings, true);
+				showSaveToast('success', displayNodeLabel(node) + ' style di-reset.');
+			}
+			function addContextContainer(node) {
+				if (!node || (!isCont(node.type) && !isGrid(node.type))) return;
+				selectNode(node);
+				if (isGridLayoutNode(node)) {
+					ensureNodeGridColumns(node);
+					const column = node.columns?.[0];
+					if (!column) {
+						showSaveToast('info', 'Grid belum memiliki column yang bisa dipakai.');
+						return;
+					}
+					showToolboxPanel({ type: 'column', nodeId: node.id, colId: column.id });
+					return;
+				}
+				showToolboxPanel({ type: 'container', nodeId: node.id });
+			}
+			function openContextStructure(node) {
+				if (isGrid(node?.type)) {
+					openModal('grid', 'root', { containerNode: node, list: [] });
+					return;
+				}
+				if (isCont(node?.type)) {
+					openModal(node.type, 'root', { containerNode: node, list: [] });
+					return;
+				}
+				showUnsupportedControlNotice('Structure', 'Structure untuk widget akan memakai Navigator pada tahap berikutnya.');
+			}
+			function runContextMenuAction(item) {
+				const meta = contextMenu.value.target;
+				const node = contextMenuTargetNode(meta);
+				closeContextMenu();
+				if (!item || !node) return;
+				switch (item.id) {
+					case 'edit':
+						selectNode(node, { revealPanel: true });
+						break;
+					case 'duplicate':
+						dupNode(node.id);
+						break;
+					case 'copy':
+						copyContextTarget(node);
+						break;
+					case 'paste':
+						pasteContextClipboard(meta, node);
+						break;
+					case 'pasteStyle':
+						pasteContextStyle(node);
+						break;
+					case 'pasteExternal':
+						pasteExternalContextClipboard(meta, node);
+						break;
+					case 'resetStyle':
+						resetContextStyle(node);
+						break;
+					case 'saveGlobal':
+						showUnsupportedControlNotice('Save as global', 'Global widget belum memiliki persistence/backend di v2.3.');
+						break;
+					case 'saveTemplate':
+						showUnsupportedControlNotice('Save as Template', 'Template belum memiliki persistence/backend di v2.3.');
+						break;
+					case 'structure':
+						openContextStructure(node);
+						break;
+					case 'addContainer':
+						addContextContainer(node);
+						break;
+					case 'delete':
+						removeNode(node.id);
+						break;
+					default:
+						break;
+				}
 			}
 			function canMoveCanvasNode(event) {
 				const draggedId = String(event && event.dragged && event.dragged.dataset && event.dragged.dataset.nodeId || '').trim();
@@ -6440,6 +6965,7 @@
 				displayNodeLabel, nodeLabelIcon,
 				selectNode, clearSel, clearCurrentSelection, selectSettingsTab, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
 				deleteConfirmation, closeDeleteConfirmation, confirmPendingDeletion,
+				contextMenu, openContextMenu, onCanvasContextMenu, closeContextMenu, runContextMenuAction,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
 				openIconLibrary, openProIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, openSocialIconLibrary, openAlertIconLibrary, chooseButtonSvg, chooseSocialIconSvg, chooseAlertIconSvg, chooseProIconSvg, chooseRatingSvg, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
@@ -6468,7 +6994,7 @@
 		},
 
 		template: `
-<div class="builder-app" @click="closePageSettings">
+		<div class="builder-app" @click="closePageSettings" @keydown.esc.window="closeContextMenu">
 	<header class="topbar">
 		<div class="topbar-left">
 			<div class="brand-lockup">
@@ -6744,7 +7270,7 @@
 		</aside>
 
 		<component v-if="customCss" :is="'style'">{{ customCss }}</component>
-		<section class="canvas-region" :class="{ 'grid-off': !showCanvasGrid }" @click="clearSel(); closeWidthPreviewMenu()">
+		<section class="canvas-region" :class="{ 'grid-off': !showCanvasGrid }" @click="clearSel(); closeWidthPreviewMenu(); closeContextMenu()" @contextmenu="onCanvasContextMenu">
 			<div class="canvas-toolbar" @click.stop>
 				<div class="canvas-meta"><span>{{ responsiveCanvasLabel() }}</span><i class="bi bi-dot"></i><span>{{ previewCanvasWidthLabel().replace('px', ' px') }}</span><span class="live-indicator">Live canvas</span></div>
 				<div class="canvas-breadcrumbs" aria-label="Canvas selection">
@@ -6773,9 +7299,9 @@
 				</div>
 			</div>
 
-			<div class="stage" @click.stop="closeWidthPreviewMenu()">
+			<div class="stage" @click.stop="closeWidthPreviewMenu(); closeContextMenu()">
 				<div class="webpage-frame" :class="{ tablet: responsiveDevice==='tablet', mobile: responsiveDevice==='mobile' }" :style="previewCanvasStyle()">
-					<div class="pb-canvas" :class="'is-' + responsiveDevice" @click="clearSel">
+					<div class="pb-canvas" :class="'is-' + responsiveDevice" @click="clearSel(); closeContextMenu()">
 					<draggable
 						v-model="rootNodes"
 						item-key="id"
@@ -6808,6 +7334,7 @@
 								:on-start-container-edge-resize="startContainerEdgeResize"
 								:on-open-modal="openModal"
 								:on-show-toolbox="showToolboxPanel"
+								:on-context-menu="openContextMenu"
 								:pending-insert-target="pendingInsertTarget"
 								:on-accordion-runtime-for-node="accordionRuntimeForNode"
 								:on-toggle-accordion-item="toggleAccordionItem"
@@ -6826,10 +7353,35 @@
 					</draggable>
 				</div>
 			</div>
+			</div>
+		</section>
+		<button v-if="leftCollapsed && !previewMode" type="button" class="floating-expand left" title="Open elements panel" @click="leftCollapsed = false"><i class="bi bi-layout-sidebar-inset"></i></button>
+		</main>
+
+		<div
+			v-if="contextMenu.visible"
+			class="pb-context-menu"
+			:style="{ left: contextMenu.x + 'px', top: contextMenu.y + 'px' }"
+			role="menu"
+			aria-label="Element actions"
+			@click.stop
+			@contextmenu.stop.prevent="closeContextMenu"
+		>
+			<template v-for="item in contextMenu.items" :key="item.id">
+				<div v-if="item.separator" class="pb-context-menu-separator" role="separator"></div>
+				<button
+					v-else
+					type="button"
+					class="pb-context-menu-item"
+					:class="{ danger: item.danger }"
+					role="menuitem"
+					@click="runContextMenuAction(item)"
+				>
+					<span>{{ item.label }}</span>
+					<kbd v-if="item.shortcut">{{ item.shortcut }}</kbd>
+				</button>
+			</template>
 		</div>
-	</section>
-	<button v-if="leftCollapsed && !previewMode" type="button" class="floating-expand left" title="Open elements panel" @click="leftCollapsed = false"><i class="bi bi-layout-sidebar-inset"></i></button>
-	</main>
 
 	<div v-if="containerResizeOverlay.visible" class="pb-container-resize-overlay" :style="{ left: containerResizeOverlay.x + 'px', top: containerResizeOverlay.y + 'px' }">{{ containerResizeOverlay.text }}</div>
 

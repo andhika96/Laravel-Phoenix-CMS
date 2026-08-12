@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { readFileSync } from 'node:fs';
+
+const root = 'D:/Laragon/www/laravel-13-phoenix';
+const app = readFileSync(`${root}/public/js/pagebuilder_elementor_v23/app.js`, 'utf8');
+const css = readFileSync(`${root}/public/assets/css/pagebuilder_elementor_v23.css`, 'utf8');
+
+test('context menu keeps per-target definitions behind one shared shell', () => {
+  assert.match(app, /const contextMenuDefinitions\s*=\s*Object\.freeze\(/);
+  for (const scope of ['widget', 'container', 'grid', 'gridColumn']) {
+    assert.match(app, new RegExp(`${scope}:\\s*Object\\.freeze\\(`), `${scope} context menu definition should exist`);
+  }
+
+  assert.match(app, /function openContextMenu\(event, target\)/);
+  assert.match(app, /function runContextMenuAction\(item\)/);
+  assert.match(app, /@contextmenu\.stop\.prevent="onContextMenu\(\$event, node\)"/);
+  assert.match(app, /kind: 'gridColumn'/);
+  assert.match(app, /class="pb-context-menu"/);
+  assert.match(app, /@keydown\.esc\.window="closeContextMenu"/);
+  assert.match(app, /Ctrl \+ D/);
+  assert.match(app, /Save as global/);
+  assert.match(app, /Save as Template/);
+  assert.match(app, /Paste from other site/);
+});
+
+test('context menu uses the light Phoenix surface and stays accessible', () => {
+  assert.match(css, /\.pb-context-menu\s*\{/);
+  assert.match(css, /\.pb-context-menu-item\s*\{/);
+  assert.match(css, /background:\s*var\(--panel-bg\)/);
+  assert.match(css, /box-shadow:\s*var\(--shadow-lg\)/);
+  assert.match(css, /\.pb-context-menu-item:focus-visible/);
+  assert.match(css, /\.pb-context-menu-item\.danger/);
+});

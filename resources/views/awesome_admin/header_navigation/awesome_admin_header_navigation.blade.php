@@ -14,11 +14,12 @@
 		{{ Breadcrumbs::render('awesome_admin.header_navigation') }}
 	</div>
 
-<div id="headerNavigationEditor" class="header-navigation-editor">
+<div id="headerNavigationEditor" class="header-navigation-editor editorial-option-two">
 	<main>
-		<div class="ph-content rounded p-3 mb-3">
+		<div class="ph-content rounded p-3 mb-3 header-editor-topbar">
 				<div class="mock-topbar">
-					<div>
+					<div class="mock-topbar-copy">
+						<div class="editor-eyebrow">{{ t('Site Navigation') }}</div>
 						<h1 class="mock-title">{{ t('Manage Header Navigation') }}</h1>
 						<p class="mock-subtitle">{{ t('Configure the frontend header layout, colors, responsive sizing, and scroll behavior with live preview.') }}</p>
 					</div>
@@ -31,8 +32,8 @@
 
 						<div id="headerNavigationSaveStatus" class="mock-status"><i class="fas fa-database"></i> {{ t('Ready') }}</div>
 
-						<button id="saveHeaderNavigation" type="button" class="btn btn-danger btn-sm save-header-navigation">
-							<i class="fas fa-save me-1"></i> {{ t('Save Settings') }}
+						<button id="saveHeaderNavigation" type="button" class="btn btn-primary btn-sm save-header-navigation">
+							<i class="fas fa-save me-1"></i> {{ t('Save changes') }}
 						</button>
 					</div>
 				</div>
@@ -40,7 +41,29 @@
 
 			<div class="mock-workspace-grid">
 			<div class="mock-control-pane">
-				<div class="ph-content rounded p-3 control-scroll">
+				<div class="ph-content rounded p-3 control-scroll inspector-shell">
+					<div class="inspector-layout">
+						<nav class="inspector-nav" aria-label="Header navigation settings">
+							<button type="button" class="inspector-nav-item is-active" data-inspector-index="0" data-inspector-group="0" aria-pressed="true">
+								<i class="fad fa-eye" aria-hidden="true"></i><span>{{ t('Preview') }}</span>
+							</button>
+							<button type="button" class="inspector-nav-item" data-inspector-index="1" data-inspector-group="1" aria-pressed="false">
+								<i class="fad fa-palette" aria-hidden="true"></i><span>{{ t('Colors') }}</span>
+							</button>
+							<button type="button" class="inspector-nav-item" data-inspector-index="2" data-inspector-group="2" aria-pressed="false">
+								<i class="fad fa-columns" aria-hidden="true"></i><span>{{ t('Layout') }}</span>
+							</button>
+							<button type="button" class="inspector-nav-item" data-inspector-index="3" data-inspector-group="3" aria-pressed="false">
+								<i class="fad fa-sliders-h" aria-hidden="true"></i><span>{{ t('Behavior') }}</span>
+							</button>
+							<button type="button" class="inspector-nav-item" data-inspector-index="4" data-inspector-group="1" data-inspector-anchor="effects" aria-pressed="false">
+								<i class="fad fa-sparkles" aria-hidden="true"></i><span>{{ t('Effects') }}</span>
+							</button>
+							<button type="button" class="inspector-nav-item" data-inspector-index="5" data-inspector-group="4" aria-pressed="false">
+								<i class="fad fa-ruler-combined" aria-hidden="true"></i><span>{{ t('Sizing') }}</span>
+							</button>
+						</nav>
+						<div class="inspector-content">
 					<div class="header-settings-accordion">
 						<details class="header-setting-group" open>
 							<summary class="header-setting-summary">
@@ -323,8 +346,6 @@
 							<input id="animateScroll" class="form-check-input" type="checkbox">
 							<label class="form-check-label" for="animateScroll">Animasi berubah saat discroll</label>
 						</div>
-						<label class="form-label" for="scrollSim">Simulate scroll</label>
-						<input id="scrollSim" type="range" min="0" max="100" value="0" class="form-range">
 							</div>
 						</details>
 
@@ -622,18 +643,27 @@
 							</div>
 						</details>
 					</div>
+						</div>
+					</div>
 				</div>
 			</div>
 
 			<div class="mock-preview-pane">
 				<div class="ph-content rounded preview-card">
 					<div class="preview-toolbar">
-						<div>
-							<strong>Live preview</strong>
-							<div class="text-muted small">Scroll preview panel atau pakai slider untuk lihat state header.</div>
+						<div class="preview-toolbar-copy">
+							<div class="preview-toolbar-title"><span class="preview-live-dot" aria-hidden="true"></span><strong>Live preview</strong></div>
+							<div class="preview-toolbar-hint">Scroll the artboard or choose a scroll state to see the header adapt.</div>
 							<div id="previewScaleStatus" class="preview-scale-status" aria-live="polite">Desktop 1440×900px · Fit 100%</div>
 						</div>
-						<button id="resetPreview" type="button" class="btn btn-sm btn-outline-danger"><i class="fas fa-undo-alt me-1"></i> Reset</button>
+						<div class="preview-toolbar-actions">
+							<div class="preview-device-switcher" role="group" aria-label="Preview device">
+								<button type="button" class="preview-device-button is-active" data-preview-device="desktop" aria-pressed="true"><i class="fas fa-desktop" aria-hidden="true"></i><span>Desktop</span></button>
+								<button type="button" class="preview-device-button" data-preview-device="tablet" aria-pressed="false"><i class="fas fa-tablet-alt" aria-hidden="true"></i><span>Tablet</span></button>
+								<button type="button" class="preview-device-button" data-preview-device="mobile" aria-pressed="false"><i class="fas fa-mobile-alt" aria-hidden="true"></i><span>Mobile</span></button>
+							</div>
+							<button id="resetPreview" type="button" class="btn btn-sm btn-outline-secondary"><i class="fas fa-undo-alt me-1"></i> Reset</button>
+						</div>
 					</div>
 					<div id="previewFrame" class="preview-frame">
 						<div id="previewViewport" class="preview-viewport">
@@ -655,6 +685,26 @@
 									</div>
 								</section>
 							</div>
+						</div>
+					</div>
+					<div id="previewTimeline" class="preview-timeline" aria-label="Scroll state timeline">
+						<div class="preview-timeline-head">
+							<div>
+								<strong>Scroll state timeline</strong>
+								<span>Preview how your header adapts as users scroll.</span>
+							</div>
+							<span id="scrollTimelineValue" class="preview-timeline-value">Top &middot; 0%</span>
+						</div>
+						<div class="preview-timeline-track" role="group" aria-label="Scroll state presets">
+							<span class="preview-timeline-line" aria-hidden="true"></span>
+							<button type="button" class="preview-timeline-point is-active" data-scroll-preset="0" aria-pressed="true"><span>Top</span><small>0%</small></button>
+							<button type="button" class="preview-timeline-point" data-scroll-preset="25" aria-pressed="false"><span>Scrolled</span><small>25%</small></button>
+							<button type="button" class="preview-timeline-point" data-scroll-preset="50" aria-pressed="false"><span>Mid</span><small>50%</small></button>
+							<button type="button" class="preview-timeline-point" data-scroll-preset="75" aria-pressed="false"><span>Near bottom</span><small>75%</small></button>
+							<button type="button" class="preview-timeline-point" data-scroll-preset="100" aria-pressed="false"><span>Bottom</span><small>100%</small></button>
+						</div>
+						<div class="preview-timeline-range">
+							<input id="scrollSim" type="range" min="0" max="100" value="0" class="form-range" aria-label="Simulate scroll">
 						</div>
 					</div>
 				</div>

@@ -708,6 +708,81 @@
                 /></section-box>
             </template>
 
+            <template v-else-if="type === 'progress_tracker'">
+                <section-box title="Progress Tracker" :open="true">
+                    <select-control label="Tracker Type" v-model="s.trackerType" :options="progressTrackerTypeOptions" />
+                    <select-control label="Progress Relative To" v-model="s.relativeTo" :options="progressTrackerRelativeOptions" />
+                    <text-control v-if="s.relativeTo === 'selector'" label="CSS Selector" v-model="s.selector" placeholder="#id or .class" />
+                    <responsive-choice label="Direction" base="direction" control-id="progress-tracker-direction" :node="node" :editor="editor" :options="progressTrackerAlignmentOptions" />
+                    <toggle-control label="Percentage" v-model="s.showPercentage" />
+                </section-box>
+            </template>
+
+            <template v-else-if="type === 'video_playlist'">
+                <section-box title="Playlist" :open="true">
+                    <text-control label="Playlist Name" v-model="s.playlistName" />
+                    <select-control label="HTML Tag" v-model="s.playlistTitleTag" :options="playlistTagOptions" />
+                    <div class="pb-subsection-title">Playlist Items</div>
+                    <repeater-list :items="s.items" item-label="Playlist Items" :duplicate="true" @add="addItem('items')" @duplicate="duplicateItem('items', $event)" @remove="removeItem('items', $event)">
+                        <template #default="{ item }">
+                            <select-control label="Type" v-model="item.type" :options="videoPlaylistTypeOptions" />
+                            <media-control v-if="item.type === 'self_hosted'" label="Link" v-model="item.link" :editor="editor" :settings="item" setting-key="link" />
+                            <text-control v-else-if="item.type !== 'section'" label="Link" v-model="item.link" />
+                            <button v-if="item.type === 'youtube' || item.type === 'vimeo'" type="button" class="pb-btn pb-btn-sm" @click="getVideoData(item)"><i class="fas fa-download"></i> Get Video Data</button>
+                            <template v-if="item.type === 'section'">
+                                <text-control label="Section Title" v-model="item.title" />
+                                <textarea-control label="Section Content" v-model="item.sectionContent" />
+                            </template>
+                            <template v-else>
+                                <text-control label="Title" v-model="item.title" />
+                                <select-control label="Title HTML Tag" v-model="item.titleTag" :options="playlistItemTagOptions" />
+                                <text-control label="Duration" v-model="item.duration" />
+                                <media-control label="Thumbnail" v-model="item.thumbnailUrl" :editor="editor" :settings="item" setting-key="thumbnailUrl" />
+                                <toggle-control label="Content Tabs" v-model="item.showContentTabs" />
+                                <template v-if="item.showContentTabs">
+                                    <text-control label="Tab 1 Title" v-model="item.contentTabOneTitle" />
+                                    <textarea-control label="Tab 1 Content" v-model="item.contentTabOneContent" />
+                                    <text-control label="Tab 2 Title" v-model="item.contentTabTwoTitle" />
+                                    <textarea-control label="Tab 2 Content" v-model="item.contentTabTwoContent" />
+                                </template>
+                            </template>
+                        </template>
+                    </repeater-list>
+                </section-box>
+                <section-box title="Tabs">
+                    <toggle-control label="Collapsible" v-model="s.tabsCollapsible" />
+                    <template v-if="s.tabsCollapsible">
+                        <text-control label="Read More Label" v-model="s.readMoreLabel" />
+                        <text-control label="Read Less Label" v-model="s.readLessLabel" />
+                        <size-control label="Height" base="tabsHeight" fallback="120px" :node="node" :editor="editor" :max="600" :allowed-units="['px', 'em', 'rem', 'vh']" />
+                    </template>
+                </section-box>
+                <section-box title="Image Overlay">
+                    <toggle-control label="Show" v-model="s.imageOverlay" />
+                    <template v-if="s.imageOverlay">
+                        <media-control label="Choose Image" v-model="s.overlayImageUrl" :editor="editor" :settings="s" setting-key="overlayImageUrl" />
+                        <select-control label="Image Resolution" v-model="s.imageResolution" :options="playlistImageResolutionOptions" />
+                        <template v-if="s.imageResolution === 'custom'"><number-control label="Custom Width" v-model="s.customImageWidth" :min="1" :max="4096" /><number-control label="Custom Height" v-model="s.customImageHeight" :min="1" :max="4096" /></template>
+                    </template>
+                </section-box>
+                <section-box title="Additional Options" :open="true">
+                    <toggle-control label="Autoplay On Load" v-model="s.autoplayOnLoad" />
+                    <toggle-control label="Next Up" v-model="s.autoplayNext" />
+                    <toggle-control label="Indicate Watched" v-model="s.indicateWatched" />
+                    <toggle-control label="Video Count" v-model="s.showVideoCount" />
+                    <toggle-control label="Duration" v-model="s.showDuration" />
+                    <toggle-control label="Thumbnails" v-model="s.showThumbnails" />
+                    <select-control label="Dropdown Alignment" v-model="s.dropdownAlignment" :options="alignmentOptions" />
+                    <pro-icon-picker label="Play icon" prefix="playIcon" target-key="videoPlaylistPlayIcon" :entry="s" :node="node" :editor="editor" fallback-class="fas fa-play" fallback-name="play" />
+                    <pro-icon-picker label="Played icon" prefix="playedIcon" target-key="videoPlaylistPlayedIcon" :entry="s" :node="node" :editor="editor" fallback-class="fas fa-check" fallback-name="check" />
+                    <pro-icon-picker label="Dropdown icon" prefix="dropdownIcon" target-key="videoPlaylistDropdownIcon" :entry="s" :node="node" :editor="editor" fallback-class="fas fa-chevron-down" fallback-name="chevron-down" />
+                    <div class="pb-subsection-title">Dropdown icon states</div>
+                    <color-control label="Normal" v-model="s.dropdownIconColor" />
+                    <color-control label="Hover" v-model="s.dropdownIconColorHover" />
+                    <color-control label="Active" v-model="s.dropdownIconColorActive" />
+                </section-box>
+            </template>
+
             <template v-else-if="type === 'carousel'">
                 <section-box title="Slides" :open="true"
                     ><text-control
@@ -928,6 +1003,91 @@
                         label="Lazy Load"
                         v-model="s.lazyLoad"
                 /></section-box>
+            </template>
+
+            <template v-else-if="type === 'testimonial_carousel'">
+                <section-box title="Slides" :open="true">
+                    <text-control label="Slides Name" v-model="s.slidesName" />
+                    <repeater-list :items="s.items" item-label="Testimonial" :duplicate="true" @add="addItem('items')" @duplicate="duplicateItem('items', $event)" @remove="removeItem('items', $event)">
+                        <template #default="{ item }">
+                            <textarea-control label="Content" v-model="item.content" />
+                            <media-control label="Image" v-model="item.imageUrl" :editor="editor" :settings="item" setting-key="imageUrl" />
+                            <text-control label="Name" v-model="item.name" />
+                            <text-control label="Title" v-model="item.title" />
+                        </template>
+                    </repeater-list>
+                    <select-control label="Skin" v-model="s.skin" :options="testimonialSkinOptions" />
+                    <select-control label="Layout" v-model="s.layout" :options="testimonialLayoutOptions" />
+                    <responsive-choice label="Alignment" base="alignment" control-id="testimonial-carousel-alignment" :node="node" :editor="editor" :options="testimonialAlignmentOptions" />
+                    <responsive-number label="Slides Per View" base="slidesToShow" :node="node" :editor="editor" :min="1" :max="10" />
+                    <responsive-number label="Slides to Scroll" base="slidesToScroll" :node="node" :editor="editor" :min="1" :max="10" />
+                    <size-control label="Width" base="width" fallback="100%" :node="node" :editor="editor" :min="1" :max="100" :allowed-units="['%', 'px', 'em', 'rem']" />
+                </section-box>
+                <section-box title="Additional Options" :open="true">
+                    <toggle-control label="Arrows" v-model="s.arrows" />
+                    <select-control label="Pagination" v-model="s.pagination" :options="paginationOptions" />
+                    <number-control label="Transition Duration" v-model="s.transitionSpeed" :min="0" />
+                    <toggle-control label="Autoplay" v-model="s.autoplay" />
+                    <number-control v-if="s.autoplay" label="Autoplay Speed" v-model="s.autoplaySpeed" :min="100" />
+                    <toggle-control label="Infinite Loop" v-model="s.infiniteLoop" />
+                    <toggle-control label="Pause on Hover" v-model="s.pauseOnHover" />
+                    <toggle-control label="Pause on Interaction" v-model="s.pauseOnInteraction" />
+                    <select-control label="Image Resolution" v-model="s.imageResolution" :options="reviewImageSizes" />
+                    <template v-if="s.imageResolution === 'custom'">
+                        <number-control label="Custom Width" v-model="s.customImageWidth" :min="1" :max="4096" />
+                        <number-control label="Custom Height" v-model="s.customImageHeight" :min="1" :max="4096" />
+                    </template>
+                    <toggle-control label="Lazy Load" v-model="s.lazyLoad" />
+                </section-box>
+            </template>
+
+            <template v-else-if="type === 'code_highlight'">
+                <section-box title="Code" :open="true">
+                    <select-control label="Language" v-model="s.language" :options="codeLanguageOptions" />
+                    <textarea-control label="Code" v-model="s.code" />
+                    <toggle-control label="Line Numbers" v-model="s.lineNumbers" />
+                    <toggle-control label="Copy to Clipboard" v-model="s.copyButton" />
+                    <text-control label="Highlight Lines" v-model="s.highlightLines" />
+                    <toggle-control label="Word Wrap" v-model="s.wordWrap" />
+                    <select-control label="Theme" v-model="s.theme" :options="codeThemeOptions" />
+                    <size-control label="Height" base="height" fallback="300px" :node="node" :editor="editor" :max="1000" :allowed-units="['px', 'em', 'rem', 'vh']" />
+                    <size-control label="Font Size" base="fontSize" fallback="14px" :node="node" :editor="editor" :max="64" :allowed-units="['px', 'pt', 'em', 'rem']" />
+                </section-box>
+            </template>
+            <template v-else-if="type === 'blockquote'">
+                <section-box title="Blockquote" :open="true">
+                    <select-control label="Skin" v-model="s.skin" :options="blockquoteSkinOptions" />
+                    <responsive-choice v-if="s.skin !== 'border'" label="Alignment" base="alignment" control-id="blockquote-alignment" :node="node" :editor="editor" :options="blockquoteAlignmentOptions" />
+                    <textarea-control label="Content" v-model="s.content" />
+                    <text-control label="Author" v-model="s.author" />
+                    <toggle-control label="Tweet Button" v-model="s.tweetButton" />
+                    <template v-if="s.tweetButton">
+                        <select-control label="View" v-model="s.tweetView" :options="blockquoteTweetViewOptions" />
+                        <select-control label="Tweet Button Skin" v-model="s.tweetSkin" :options="blockquoteTweetSkinOptions" />
+                        <text-control label="Label" v-model="s.tweetLabel" />
+                        <text-control label="Username" v-model="s.tweetUsername" />
+                        <select-control label="Target URL" v-model="s.tweetTarget" :options="blockquoteTweetTargetOptions" />
+                        <text-control v-if="s.tweetTarget === 'custom'" label="Custom URL" v-model="s.tweetUrl" />
+                    </template>
+                </section-box>
+            </template>
+            <template v-else-if="type === 'share_buttons'">
+                <section-box title="Share Buttons" :open="true">
+                    <repeater-list :items="s.items" item-label="Network" :duplicate="true" @add="addItem('items')" @duplicate="duplicateItem('items', $event)" @remove="removeItem('items', $event)">
+                        <template #default="{ item }">
+                            <select-control label="Network" v-model="item.network" :options="shareNetworkOptions" />
+                            <text-control label="Custom Label" v-model="item.customLabel" />
+                        </template>
+                    </repeater-list>
+                    <select-control label="View" v-model="s.view" :options="shareViewOptions" />
+                    <toggle-control label="Label" v-model="s.showLabel" />
+                    <select-control label="Skin" v-model="s.skin" :options="shareSkinOptions" />
+                    <select-control label="Shape" v-model="s.shape" :options="shareShapeOptions" />
+                    <select-control label="Columns" v-model="s.columns" :options="shareColumnsOptions" />
+                    <select-control label="Alignment" v-model="s.alignment" :options="alignmentOptions" />
+                    <select-control label="Target URL" v-model="s.targetUrl" :options="shareTargetOptions" />
+                    <text-control v-if="s.targetUrl === 'custom'" label="Custom URL" v-model="s.customUrl" />
+                </section-box>
             </template>
 
             <template v-else-if="type === 'flip_box'">
@@ -1798,6 +1958,86 @@
                         @responsive-device="editor.setResponsiveDevice"
                 /></section-box>
             </template>
+            <template v-else-if="type === 'progress_tracker'">
+                <section-box title="Tracker" :open="true">
+                    <size-control label="Tracker Size" base="trackerSize" fallback="6px" :node="node" :editor="editor" :max="100" :allowed-units="['px', '%', 'em', 'rem', 'vh']" />
+                    <size-control v-if="s.trackerType === 'circular'" label="Circular Size" base="circleSize" fallback="140px" :node="node" :editor="editor" :max="600" :allowed-units="['px', 'em', 'rem', 'vw', 'vh']" />
+                </section-box>
+                <section-box title="Progress Indicator" :open="true">
+                    <color-control label="Indicator Color" v-model="s.indicatorColor" />
+                    <size-control label="Indicator Width" base="indicatorWidth" fallback="4px" :node="node" :editor="editor" :max="100" :allowed-units="['px', 'em', 'rem']" />
+                    <select-control label="Alignment" v-model="s.indicatorAlignment" :options="alignmentOptions" />
+                </section-box>
+                <section-box title="Tracker Background">
+                    <color-control label="Background Color" v-model="s.backgroundColor" />
+                    <size-control label="Width" base="backgroundWidth" fallback="4px" :node="node" :editor="editor" :max="100" :allowed-units="['px', 'em', 'rem']" />
+                </section-box>
+                <section-box title="Percentage">
+                    <color-control label="Percentage Color" v-model="s.percentageColor" />
+                    <component :is="editor.typographyControl" prefix="progressTrackerPercentage" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                    <component :is="editor.textShadowControl" aria-label="Text Shadow" :model-value="s.progressTrackerPercentageTextShadow" control-id="progress-tracker-percentage-shadow" @update:modelValue="s.progressTrackerPercentageTextShadow = $event" />
+                </section-box>
+            </template>
+            <template v-else-if="type === 'video_playlist'">
+                <section-box title="Layout" :open="true">
+                    <responsive-choice label="Video Position" base="videoPosition" control-id="video-playlist-position" :node="node" :editor="editor" :options="videoPlaylistPositionOptions" />
+                    <size-control label="Height" base="videoHeight" fallback="360px" :node="node" :editor="editor" :max="1000" :allowed-units="['px', 'em', 'rem', 'vh']" />
+                </section-box>
+                <section-box title="Top Bar" :open="true">
+                    <color-control label="Background" v-model="s.playlistNameBackground" />
+                    <color-control label="Playlist Name Color" v-model="s.playlistNameColor" />
+                    <component :is="editor.typographyControl" prefix="videoPlaylistName" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                    <color-control label="Video Count Color" v-model="s.videoCountColor" />
+                    <component :is="editor.typographyControl" prefix="videoPlaylistCount" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                </section-box>
+                <section-box title="Videos" :open="true">
+                    <div class="pb-subsection-title">Normal</div>
+                    <color-control label="Background" v-model="s.itemBackground" />
+                    <color-control label="Color" v-model="s.itemColor" />
+                    <div class="pb-subsection-title">Hover</div>
+                    <color-control label="Background" v-model="s.itemBackgroundHover" />
+                    <color-control label="Color" v-model="s.itemColorHover" />
+                    <div class="pb-subsection-title">Active</div>
+                    <color-control label="Background" v-model="s.itemBackgroundActive" />
+                    <color-control label="Color" v-model="s.itemColorActive" />
+                    <component :is="editor.typographyControl" prefix="videoPlaylistItem" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                    <div class="pb-subsection-title">Duration</div>
+                    <color-control label="Color" v-model="s.durationColor" />
+                    <component :is="editor.typographyControl" prefix="videoPlaylistDuration" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                    <div class="pb-subsection-title">Icon</div>
+                    <color-control label="Color" v-model="s.iconColor" />
+                    <color-control label="Background" v-model="s.iconBackground" />
+                    <text-control label="Shadow" v-model="s.iconShadow" />
+                    <size-control label="Size" base="iconSize" fallback="18px" :node="node" :editor="editor" :max="100" :allowed-units="['px', 'em', 'rem']" />
+                </section-box>
+                <section-box title="Sections">
+                    <select-control label="Background type" v-model="s.sectionBackgroundType" :options="videoPlaylistBackgroundTypeOptions" />
+                    <color-control label="Background" v-model="s.sectionBackground" />
+                    <select-control label="Border type" v-model="s.sectionBorderType" :options="borderTypeOptions" />
+                    <color-control label="Border Color" v-model="s.sectionBorderColor" />
+                    <size-control label="Border Width" base="sectionBorderWidth" fallback="1px" :node="node" :editor="editor" :max="20" />
+                    <size-control label="Border Radius" base="sectionRadius" fallback="6px" :node="node" :editor="editor" :max="100" />
+                    <text-control label="Box Shadow" v-model="s.sectionBoxShadow" />
+                    <size-control label="Padding" base="sectionPadding" fallback="12px" :node="node" :editor="editor" :max="100" />
+                </section-box>
+                <section-box title="Tabs">
+                    <size-control label="Border Width" base="tabsBorderWidth" fallback="1px" :node="node" :editor="editor" :max="20" />
+                    <color-control label="Border Color" v-model="s.tabsBorderColor" />
+                    <color-control label="Background" v-model="s.tabsBackground" />
+                    <div class="pb-subsection-title">Title</div>
+                    <color-control label="Color" v-model="s.tabsTitleColor" />
+                    <color-control label="Active Color" v-model="s.tabsTitleActiveColor" />
+                    <component :is="editor.typographyControl" prefix="videoPlaylistTabTitle" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                    <div class="pb-subsection-title">Content</div>
+                    <color-control label="Color" v-model="s.tabsContentColor" />
+                    <component :is="editor.typographyControl" prefix="videoPlaylistTabContent" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                    <size-control label="Padding" base="tabsContentPadding" fallback="14px" :node="node" :editor="editor" :max="100" />
+                    <div class="pb-subsection-title">Show More</div>
+                    <color-control label="Color" v-model="s.showMoreColor" />
+                    <color-control label="Color (Hover)" v-model="s.showMoreColorHover" />
+                    <component :is="editor.typographyControl" prefix="videoPlaylistShowMore" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                </section-box>
+            </template>
             <template v-else-if="type === 'carousel'">
                 <section-box title="Slides" :open="true"
                     ><size-control
@@ -2069,6 +2309,151 @@
                             label="Active Color"
                             v-model="s.paginationActiveColor" /></template
                 ></section-box>
+            </template>
+            <template v-else-if="type === 'testimonial_carousel'">
+                <section-box title="Slides" :open="true">
+                    <size-control label="Space Between" base="gap" fallback="10px" :node="node" :editor="editor" :max="200" :allowed-units="['px', '%', 'em', 'rem']" />
+                    <color-control label="Background Color" v-model="s.slideBackground" />
+                    <sides-control label="Border Width" base="slideBorder" control-id="testimonial-carousel-slide-border" :node="node" :editor="editor" />
+                    <sides-control label="Border Radius" base="slideRadius" control-id="testimonial-carousel-slide-radius" :node="node" :editor="editor" />
+                    <color-control label="Border Color" v-model="s.slideBorderColor" />
+                    <sides-control label="Padding" base="slidePadding" control-id="testimonial-carousel-slide-padding" :node="node" :editor="editor" />
+                </section-box>
+                <section-box title="Content" :open="true">
+                    <size-control label="Gap" base="contentGap" fallback="10px" :node="node" :editor="editor" :max="100" :allowed-units="['px', '%', 'em', 'rem']" />
+                    <color-control label="Text Color" v-model="s.contentColor" />
+                    <component :is="editor.typographyControl" prefix="testimonialCarouselContent" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" :reset-defaults="{FontSize:'16px',FontWeight:'400',LineHeight:'1.5em'}" @responsive-device="editor.setResponsiveDevice" />
+                    <component :is="editor.textStrokeControl" aria-label="Text Stroke" :settings="s" width-key="testimonialCarouselContentTextStrokeWidth" color-key="testimonialCarouselContentTextStrokeColor" :responsive-device="editor.responsiveDevice" control-id="testimonial-carousel-content-stroke" />
+                    <component :is="editor.textShadowControl" aria-label="Text Shadow" :model-value="s.testimonialCarouselContentTextShadow" control-id="testimonial-carousel-content-shadow" @update:modelValue="s.testimonialCarouselContentTextShadow = $event" />
+                    <div class="pb-subsection-title">Name</div>
+                    <color-control label="Name Color" v-model="s.nameColor" />
+                    <component :is="editor.typographyControl" prefix="testimonialCarouselName" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" :reset-defaults="{FontSize:'18px',FontWeight:'600',LineHeight:'1.3em'}" @responsive-device="editor.setResponsiveDevice" />
+                    <div class="pb-subsection-title">Title</div>
+                    <color-control label="Title Color" v-model="s.titleColor" />
+                    <component :is="editor.typographyControl" prefix="testimonialCarouselTitle" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" :reset-defaults="{FontSize:'14px',FontWeight:'400',LineHeight:'1.4em'}" @responsive-device="editor.setResponsiveDevice" />
+                </section-box>
+                <section-box title="Image">
+                    <size-control label="Size" base="imageSize" fallback="50px" :node="node" :editor="editor" :max="300" />
+                    <size-control label="Gap" base="imageGap" fallback="10px" :node="node" :editor="editor" :max="150" />
+                    <toggle-control label="Border" v-model="s.imageBorder" />
+                    <template v-if="s.imageBorder">
+                        <color-control label="Border Color" v-model="s.imageBorderColor" />
+                        <sides-control label="Border Width" base="imageBorder" control-id="testimonial-carousel-image-border" :node="node" :editor="editor" />
+                    </template>
+                    <sides-control label="Border Radius" base="imageRadius" control-id="testimonial-carousel-image-radius" :node="node" :editor="editor" />
+                </section-box>
+                <section-box title="Navigation">
+                    <template v-if="s.arrows">
+                        <div class="pb-subsection-title">Arrows</div>
+                        <size-control label="Size" base="arrowsSize" fallback="20px" :node="node" :editor="editor" :max="100" />
+                        <color-control label="Color" v-model="s.arrowColor" />
+                    </template>
+                    <template v-if="s.pagination !== 'none'">
+                        <div class="pb-subsection-title">Pagination</div>
+                        <size-control label="Space Between Dots" base="dotsGap" fallback="8px" :node="node" :editor="editor" :max="100" />
+                        <size-control label="Size" base="dotsSize" fallback="8px" :node="node" :editor="editor" :max="100" />
+                        <color-control label="Color" v-model="s.paginationColor" />
+                        <color-control label="Active Color" v-model="s.paginationActiveColor" />
+                    </template>
+                </section-box>
+            </template>
+            <template v-else-if="type === 'code_highlight'">
+                <section-box title="Code" :open="true">
+                    <color-control label="Text Color" v-model="s.codeTextColor" />
+                    <color-control label="Background Color" v-model="s.codeBackground" />
+                    <component :is="editor.typographyControl" prefix="codeHighlight" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                    <sides-control label="Padding" base="codePadding" control-id="code-highlight-padding" :node="node" :editor="editor" />
+                    <sides-control label="Border Radius" base="codeRadius" control-id="code-highlight-radius" :node="node" :editor="editor" />
+                </section-box>
+                <section-box title="Line Numbers">
+                    <color-control label="Text Color" v-model="s.lineNumberColor" />
+                    <color-control label="Background Color" v-model="s.lineNumberBackground" />
+                    <size-control label="Gutter Width" base="gutterWidth" fallback="34px" :node="node" :editor="editor" :max="120" :allowed-units="['px', 'em', 'rem']" />
+                </section-box>
+                <section-box title="Highlighted Lines">
+                    <color-control label="Background Color" v-model="s.highlightLineColor" />
+                    <color-control label="Border Color" v-model="s.highlightLineBorderColor" />
+                </section-box>
+                <section-box title="Copy Button">
+                    <color-control label="Text Color" v-model="s.copyButtonTextColor" />
+                    <color-control label="Background Color" v-model="s.copyButtonBackground" />
+                    <color-control label="Text Color (Hover)" v-model="s.copyButtonTextColorHover" />
+                    <color-control label="Background Color (Hover)" v-model="s.copyButtonBackgroundHover" />
+                    <component :is="editor.typographyControl" prefix="codeHighlightCopyButton" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                    <sides-control label="Padding" base="copyButtonPadding" control-id="code-highlight-copy-padding" :node="node" :editor="editor" />
+                    <sides-control label="Border Radius" base="copyButtonRadius" control-id="code-highlight-copy-radius" :node="node" :editor="editor" />
+                </section-box>
+            </template>
+            <template v-else-if="type === 'blockquote'">
+                <section-box title="Content" :open="true">
+                    <color-control label="Text Color" v-model="s.contentColor" />
+                    <size-control label="Gap" base="contentGap" fallback="16px" :node="node" :editor="editor" :max="100" :allowed-units="['px', '%', 'em', 'rem']" />
+                    <component :is="editor.typographyControl" prefix="blockquoteContent" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                    <div class="pb-subsection-title">Author</div>
+                    <color-control label="Text Color" v-model="s.authorColor" />
+                    <component :is="editor.typographyControl" prefix="blockquoteAuthor" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                </section-box>
+                <section-box title="Tweet Button" v-if="s.tweetButton">
+                    <size-control label="Size" base="tweetSize" fallback="14px" :node="node" :editor="editor" :max="100" :allowed-units="['px', 'em', 'rem']" />
+                    <size-control label="Border Radius" base="tweetBorderRadius" fallback="4px" :node="node" :editor="editor" :max="100" :allowed-units="['px', '%', 'em', 'rem']" />
+                    <select-control label="Color" v-model="s.tweetColorMode" :options="buttonColorOptions" />
+                    <template v-if="s.tweetColorMode === 'custom'">
+                        <color-control label="Primary Color" v-model="s.tweetPrimaryColor" />
+                        <color-control label="Secondary Color" v-model="s.tweetSecondaryColor" />
+                        <color-control label="Primary Color (Hover)" v-model="s.tweetPrimaryColorHover" />
+                        <color-control label="Secondary Color (Hover)" v-model="s.tweetSecondaryColorHover" />
+                    </template>
+                    <number-control label="Transition Duration" v-model="s.tweetTransitionDuration" :min="0" :max="10" :step="0.1" />
+                    <component :is="editor.typographyControl" prefix="blockquoteTweet" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                </section-box>
+                <section-box v-if="s.skin === 'border'" title="Content Button Border">
+                    <color-control label="Border Color" v-model="s.borderColor" />
+                    <sides-control label="Border Width" base="borderWidth" control-id="blockquote-border-width" :node="node" :editor="editor" />
+                    <size-control label="Gap" base="borderGap" fallback="16px" :node="node" :editor="editor" :max="100" />
+                    <number-control label="Transition Duration" v-model="s.borderTransitionDuration" :min="0" :max="10" :step="0.1" />
+                    <size-control label="Vertical Padding" base="borderVerticalPadding" fallback="8px" :node="node" :editor="editor" :max="100" />
+                </section-box>
+                <section-box v-if="s.skin === 'quotation'" title="Quote">
+                    <color-control label="Quote Color" v-model="s.quoteColor" />
+                    <size-control label="Quote Size" base="quoteSize" fallback="48px" :node="node" :editor="editor" :max="200" />
+                    <size-control label="Gap" base="quoteGap" fallback="12px" :node="node" :editor="editor" :max="100" />
+                </section-box>
+                <section-box v-if="s.skin === 'boxed'" title="Box">
+                    <sides-control label="Padding" base="boxPadding" control-id="blockquote-box-padding" :node="node" :editor="editor" />
+                    <color-control label="Background Color" v-model="s.boxBackground" />
+                    <color-control label="Background Color (Hover)" v-model="s.boxBackgroundHover" />
+                    <select-control label="Border Type" v-model="s.boxBorderType" :options="borderTypeOptions" />
+                    <div class="pb-subsection-title">Normal</div>
+                    <sides-control label="Border Width" base="boxBorderWidth" control-id="blockquote-box-border-width" :node="node" :editor="editor" />
+                    <sides-control label="Border Radius" base="boxRadius" control-id="blockquote-box-radius" :node="node" :editor="editor" />
+                    <color-control label="Border Color" v-model="s.boxBorderColor" />
+                    <text-control label="Box Shadow" v-model="s.boxShadow" />
+                    <div class="pb-subsection-title">Hover</div>
+                    <sides-control label="Border Width" base="boxBorderWidthHover" control-id="blockquote-box-border-width-hover" :node="node" :editor="editor" />
+                    <sides-control label="Border Radius" base="boxRadiusHover" control-id="blockquote-box-radius-hover" :node="node" :editor="editor" />
+                    <color-control label="Border Color" v-model="s.boxBorderColorHover" />
+                    <text-control label="Box Shadow (Hover)" v-model="s.boxShadowHover" />
+                    <number-control label="Transition Duration" v-model="s.boxTransitionDuration" :min="0" :max="10" :step="0.1" />
+                </section-box>
+            </template>
+            <template v-else-if="type === 'share_buttons'">
+                <section-box title="Layout" :open="true">
+                    <size-control label="Columns Gap" base="columnsGap" fallback="8px" :node="node" :editor="editor" :max="100" />
+                    <size-control label="Rows Gap" base="rowsGap" fallback="8px" :node="node" :editor="editor" :max="100" />
+                    <size-control label="Button Size" base="buttonSize" fallback="40px" :node="node" :editor="editor" :max="200" />
+                    <size-control label="Icon Size" base="iconSize" fallback="16px" :node="node" :editor="editor" :max="100" />
+                    <size-control label="Button Height" base="buttonHeight" fallback="40px" :node="node" :editor="editor" :max="200" />
+                </section-box>
+                <section-box title="Color" :open="true">
+                    <select-control label="Color" v-model="s.colorMode" :options="buttonColorOptions" />
+                    <template v-if="s.colorMode === 'custom'">
+                        <color-control label="Primary Color" v-model="s.primaryColor" />
+                        <color-control label="Secondary Color" v-model="s.secondaryColor" />
+                        <color-control label="Primary Color (Hover)" v-model="s.primaryColorHover" />
+                        <color-control label="Secondary Color (Hover)" v-model="s.secondaryColorHover" />
+                    </template>
+                    <component :is="editor.typographyControl" prefix="shareButtons" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                </section-box>
             </template>
             <template v-else-if="type === 'flip_box'">
                 <section-box title="Front" :open="true"
@@ -2412,6 +2797,19 @@ const ResponsiveNumber = {
     },
     template: `<div class="pb-form-group"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">{{label}}</label><responsive-menu :editor="editor" :id="'pro-'+base"/></div><input class="pb-input" type="number" :min="min" :max="max" v-model.number="node.settings[key]"></div>`,
 };
+const ResponsiveChoice = {
+    components: { ResponsiveMenu },
+    props: ["label", "base", "controlId", "node", "editor", "options"],
+    computed: {
+        settingKey() {
+            return this.editor.activeResponsiveKey(this.base);
+        },
+        value() {
+            return this.node.settings[this.settingKey] || this.node.settings[this.base] || this.options?.[0]?.value || "";
+        },
+    },
+    template: `<div class="pb-form-group"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">{{label}}</label><responsive-menu :editor="editor" :id="controlId"/></div><div class="pb-btn-group pb-compact-choice"><button v-for="option in options" :key="base+'-'+option.value" type="button" class="pb-seg-btn" :class="{active:value===option.value}" :title="option.label" :aria-label="option.label" @click="editor.setResponsiveSetting(node.settings,base,option.value)"><i :class="option.icon"></i><span class="sr-only">{{option.label}}</span></button></div></div>`,
+};
 const RepeaterList = {
     props: ["items", "itemLabel", "duplicate"],
     emits: ["add", "duplicate", "remove"],
@@ -2500,6 +2898,7 @@ export default {
         SizeControl,
         SidesControl,
         ResponsiveNumber,
+        ResponsiveChoice,
         RepeaterList,
         ProIconPicker,
     },
@@ -2775,6 +3174,62 @@ export default {
                 option("evergreen", "Evergreen Timer"),
             ];
         },
+        progressTrackerTypeOptions() {
+            return [option("horizontal", "Horizontal"), option("circular", "Circular")];
+        },
+        progressTrackerRelativeOptions() {
+            return [
+                option("page", "Entire Page"),
+                option("post_content", "Post Content"),
+                option("selector", "CSS Selector"),
+            ];
+        },
+        progressTrackerAlignmentOptions() {
+            return [
+                { value: "left", label: "Left", icon: "fas fa-align-left" },
+                { value: "center", label: "Center", icon: "fas fa-align-center" },
+                { value: "right", label: "Right", icon: "fas fa-align-right" },
+            ];
+        },
+        videoPlaylistTypeOptions() {
+            return [
+                option("youtube", "YouTube"),
+                option("vimeo", "Vimeo"),
+                option("self_hosted", "Self Hosted"),
+                option("section", "Section"),
+            ];
+        },
+        playlistTagOptions() {
+            return ["h2", "h3", "h4", "h5", "h6", "div", "span"].map((v) =>
+                option(v, v.toUpperCase()),
+            );
+        },
+        playlistItemTagOptions() {
+            return ["h3", "h4", "h5", "h6", "div", "span"].map((v) =>
+                option(v, v.toUpperCase()),
+            );
+        },
+        playlistImageResolutionOptions() {
+            return [
+                option("thumbnail", "Thumbnail"),
+                option("medium", "Medium"),
+                option("medium_large", "Medium Large"),
+                option("large", "Large"),
+                option("1536x1536", "1536 x 1536"),
+                option("2048x2048", "2048 x 2048"),
+                option("full", "Full"),
+                option("custom", "Custom"),
+            ];
+        },
+        videoPlaylistPositionOptions() {
+            return [
+                { value: "left", label: "Left", icon: "fas fa-columns" },
+                { value: "right", label: "Right", icon: "fas fa-columns" },
+            ];
+        },
+        videoPlaylistBackgroundTypeOptions() {
+            return [option("classic", "Classic"), option("gradient", "Gradient"), option("none", "None")];
+        },
         displayOptions() {
             return [option("block", "Block"), option("inline", "Inline")];
         },
@@ -2805,6 +3260,199 @@ export default {
                 option("full", "Full"),
                 option("custom", "Custom"),
             ];
+        },
+        testimonialSkinOptions() {
+            return [option("default", "Default"), option("bubble", "Bubble")];
+        },
+        testimonialLayoutOptions() {
+            return [
+                option("image_inline", "Image Inline"),
+                option("image_stacked", "Image Stacked"),
+                option("image_above", "Image Above"),
+                option("image_left", "Image Left"),
+                option("image_right", "Image Right"),
+            ];
+        },
+        testimonialAlignmentOptions() {
+            return [
+                { value: "left", label: "Left", icon: "fas fa-align-left" },
+                { value: "center", label: "Center", icon: "fas fa-align-center" },
+                { value: "right", label: "Right", icon: "fas fa-align-right" },
+            ];
+        },
+        blockquoteSkinOptions() {
+            return [
+                option("border", "Border"),
+                option("quotation", "Quotation"),
+                option("boxed", "Boxed"),
+                option("clean", "Clean"),
+            ];
+        },
+        blockquoteAlignmentOptions() {
+            return [
+                { value: "left", label: "Left", icon: "fas fa-align-left" },
+                { value: "center", label: "Center", icon: "fas fa-align-center" },
+                { value: "right", label: "Right", icon: "fas fa-align-right" },
+            ];
+        },
+        blockquoteTweetViewOptions() {
+            return [
+                option("icon_text", "Icon & Text"),
+                option("icon", "Icon"),
+                option("text", "Text only"),
+            ];
+        },
+        blockquoteTweetSkinOptions() {
+            return [
+                option("classic", "Classic"),
+                option("bubble", "Bubble"),
+                option("link", "Link"),
+            ];
+        },
+        blockquoteTweetTargetOptions() {
+            return [
+                option("current", "Current Page"),
+                option("none", "None"),
+                option("custom", "Custom Link"),
+            ];
+        },
+        buttonColorOptions() {
+            return [option("official", "Official"), option("custom", "Custom")];
+        },
+        shareNetworkOptions() {
+            return [
+                ["facebook", "Facebook"],
+                ["twitter", "Twitter"],
+                ["x", "X"],
+                ["threads", "Threads"],
+                ["linkedin", "LinkedIn"],
+                ["pinterest", "Pinterest"],
+                ["reddit", "Reddit"],
+                ["whatsapp", "WhatsApp"],
+                ["telegram", "Telegram"],
+                ["email", "Email"],
+                ["print", "Print"],
+                ["copy", "Copy Link"],
+                ["vk", "VK"],
+                ["tumblr", "Tumblr"],
+                ["skype", "Skype"],
+                ["digg", "Digg"],
+                ["stumbleupon", "StumbleUpon"],
+                ["pocket", "Pocket"],
+                ["flipboard", "Flipboard"],
+                ["buffer", "Buffer"],
+                ["weibo", "Weibo"],
+                ["blogger", "Blogger"],
+                ["odnoklassniki", "Odnoklassniki"],
+            ].map(([value, label]) => option(value, label));
+        },
+        shareViewOptions() {
+            return [
+                option("icon_text", "Icon & Text"),
+                option("icon", "Icon only"),
+                option("text", "Text only"),
+            ];
+        },
+        shareSkinOptions() {
+            return [
+                option("flat", "Flat"),
+                option("gradient", "Gradient"),
+                option("minimal", "Minimal"),
+                option("framed", "Framed"),
+                option("box", "Box"),
+                option("3d", "3D"),
+            ];
+        },
+        shareShapeOptions() {
+            return [
+                option("rounded", "Rounded"),
+                option("square", "Square"),
+                option("circle", "Circle"),
+                option("none", "None"),
+            ];
+        },
+        shareColumnsOptions() {
+            return [
+                option("auto", "Auto"),
+                ...["1", "2", "3", "4", "5", "6"].map((value) => option(value, value)),
+            ];
+        },
+        shareTargetOptions() {
+            return [option("current", "Current Page"), option("custom", "Custom")];
+        },
+        codeLanguageOptions() {
+            return [
+                option("plain-text", "Plain Text"),
+                option("markup", "Markup"),
+                option("html", "HTML"),
+                option("xml", "XML"),
+                option("svg", "SVG"),
+                option("mathml", "MathML"),
+                option("ssml", "SSML"),
+                option("atom", "Atom"),
+                option("rss", "RSS"),
+                option("css", "CSS"),
+                option("less", "Less"),
+                option("sass", "Sass"),
+                option("scss", "SCSS"),
+                option("javascript", "JavaScript"),
+                option("typescript", "TypeScript"),
+                option("actionscript", "ActionScript"),
+                option("c", "C"),
+                option("cpp", "C++"),
+                option("csharp", "C#"),
+                option("java", "Java"),
+                option("kotlin", "Kotlin"),
+                option("dart", "Dart"),
+                option("go", "Go"),
+                option("rust", "Rust"),
+                option("swift", "Swift"),
+                option("objectivec", "Objective-C"),
+                option("php", "PHP"),
+                option("python", "Python"),
+                option("ruby", "Ruby"),
+                option("perl", "Perl"),
+                option("lua", "Lua"),
+                option("r", "R"),
+                option("matlab", "MATLAB"),
+                option("sql", "SQL"),
+                option("plsql", "PL/SQL"),
+                option("json", "JSON"),
+                option("json5", "JSON5"),
+                option("yaml", "YAML"),
+                option("toml", "TOML"),
+                option("markdown", "Markdown"),
+                option("mdx", "MDX"),
+                option("bash", "Bash"),
+                option("shell", "Shell"),
+                option("powershell", "PowerShell"),
+                option("batch", "Batch"),
+                option("docker", "Docker"),
+                option("git", "Git"),
+                option("diff", "Diff"),
+                option("http", "HTTP"),
+                option("graphql", "GraphQL"),
+                option("jsx", "JSX"),
+                option("tsx", "TSX"),
+                option("vue", "Vue"),
+                option("twig", "Twig"),
+                option("blade", "Blade"),
+                option("pascal", "Pascal"),
+                option("haskell", "Haskell"),
+                option("scala", "Scala"),
+                option("groovy", "Groovy"),
+                option("elixir", "Elixir"),
+                option("erlang", "Erlang"),
+                option("clojure", "Clojure"),
+                option("fsharp", "F#"),
+                option("fortran", "Fortran"),
+                option("cobol", "COBOL"),
+                option("basic", "BASIC"),
+                option("arduino", "Arduino"),
+            ];
+        },
+        codeThemeOptions() {
+            return [option("light", "Light"), option("dark", "Dark")];
         },
         mediaCarouselSkinOptions() {
             return [option("carousel", "Carousel"), option("slideshow", "Slideshow"), option("coverflow", "Coverflow")];
@@ -2932,6 +3580,11 @@ export default {
                     iconClass: "fas fa-check",
                     iconSvg: "",
                 },
+                shareButtons: {
+                    id,
+                    network: "facebook",
+                    customLabel: "Facebook",
+                },
             };
             const item =
                 key === "items" && this.type === "media_carousel"
@@ -2968,8 +3621,49 @@ export default {
                           iconClass: "fab fa-twitter",
                           iconSvg: "",
                       }
+                    : key === "items" && this.type === "testimonial_carousel"
+                    ? {
+                          id,
+                          imageUrl:
+                              "https://playground.elementor.com/wp-content/plugins/elementor/assets/images/placeholder.png",
+                          name: "John Doe",
+                          title: "CEO",
+                          content: "Write your testimonial here.",
+                      }
+                    : key === "items" && this.type === "share_buttons"
+                    ? {
+                          id,
+                          network: "facebook",
+                          customLabel: "Facebook",
+                      }
+                    : key === "items" && this.type === "video_playlist"
+                    ? {
+                          id,
+                          type: "youtube",
+                          link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                          title: "Sample video",
+                          titleTag: "h4",
+                          duration: "0:16",
+                          thumbnailUrl: "",
+                          sectionContent: "",
+                          showContentTabs: false,
+                          contentTabOneTitle: "Overview",
+                          contentTabOneContent: "",
+                          contentTabTwoTitle: "Notes",
+                          contentTabTwoContent: "",
+                      }
                     : templates[key];
             (this.s[key] ||= []).push({ ...item });
+        },
+        getVideoData(item) {
+            if (!item || !["youtube", "vimeo"].includes(item.type)) return;
+            const raw = String(item.link || "").trim();
+            const youtube = raw.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/i);
+            if (youtube && !item.thumbnailUrl) {
+                item.thumbnailUrl = `https://img.youtube.com/vi/${youtube[1]}/hqdefault.jpg`;
+            }
+            if (!item.title) item.title = item.type === "vimeo" ? "Vimeo Video" : "YouTube Video";
+            return item;
         },
         removeItem(key, index) {
             if (Array.isArray(this.s[key]) && this.s[key].length > 1)

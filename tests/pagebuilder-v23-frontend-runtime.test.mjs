@@ -198,6 +198,78 @@ test("actual Pro Flip Box runtime ignores nested interactive controls", () => {
     assert.equal(root.classList.contains("is-flipped"), true);
 });
 
+test("actual Code Highlight runtime copies the exact source and reports status", async () => {
+    const label = { textContent: "Copy" };
+    const button = eventTarget();
+    button.querySelector = () => label;
+    button.setAttribute = (name, value) => { button[name] = value; };
+    const source = { value: 'const value = "<safe>";' };
+    const status = { textContent: "" };
+    const root = rootBase();
+    root.querySelector = (selector) => {
+        if (selector.includes("data-code-copy-status")) return status;
+        if (selector.includes("data-code-copy")) return button;
+        if (selector.includes("data-code-source")) return source;
+        return null;
+    };
+
+    const originalNavigatorDescriptor = Object.getOwnPropertyDescriptor(globalThis, "navigator");
+    const copied = [];
+    Object.defineProperty(globalThis, "navigator", {
+        configurable: true,
+        value: { clipboard: { writeText: async (value) => copied.push(value) } },
+    });
+    try {
+        runtime.initProCodeHighlight(root);
+        await button.handlers.get("click")();
+    } finally {
+        if (originalNavigatorDescriptor) Object.defineProperty(globalThis, "navigator", originalNavigatorDescriptor);
+        else delete globalThis.navigator;
+    }
+
+    assert.deepEqual(copied, [source.value]);
+    assert.equal(status.textContent, "Copied");
+    assert.equal(label.textContent, "Copied");
+    assert.equal(button["aria-label"], "Code copied");
+});
+
+test("actual Share Buttons runtime supports copy and print actions", async () => {
+    const status = { textContent: "" };
+    const copy = eventTarget();
+    const print = eventTarget();
+    const values = new Map([
+        ["data-share-action", "copy"],
+        ["data-share-url", "https://example.com/article"],
+    ]);
+    copy.getAttribute = (name) => values.get(name) || "";
+    print.getAttribute = (name) => name === "data-share-action" ? "print" : "";
+    const root = rootBase();
+    root.querySelector = (selector) => selector.includes("data-share-status") ? status : null;
+    root.querySelectorAll = (selector) => selector.includes("data-share-action") ? [copy, print] : [];
+    const copied = [];
+    let printCalls = 0;
+    const originalNavigatorDescriptor = Object.getOwnPropertyDescriptor(globalThis, "navigator");
+    const originalPrint = window.print;
+    Object.defineProperty(globalThis, "navigator", {
+        configurable: true,
+        value: { clipboard: { writeText: async (value) => copied.push(value) } },
+    });
+    window.print = () => { printCalls++; };
+    try {
+        runtime.initProShareButtons(root);
+        await copy.handlers.get("click")({ preventDefault() {} });
+        print.handlers.get("click")({ preventDefault() {} });
+    } finally {
+        if (originalNavigatorDescriptor) Object.defineProperty(globalThis, "navigator", originalNavigatorDescriptor);
+        else delete globalThis.navigator;
+        window.print = originalPrint;
+    }
+
+    assert.deepEqual(copied, ["https://example.com/article"]);
+    assert.equal(status.textContent, "Copied");
+    assert.equal(printCalls, 1);
+});
+
 function invalidForm(validation) {
     const root = rootBase({ "data-pro-config": "{}" });
     root.dataset.validation = validation;

@@ -154,6 +154,92 @@ class HeaderNavigationSettingsTest extends TestCase
 		$this->assertMatchesRegularExpression('/\.header-menu a\s*\{[^}]*padding:\s*8px 11px;[^}]*font-size:\s*12\.5px;/s', $styles);
 	}
 
+	public function test_editorial_option_two_shell_exposes_preview_inspector_and_timeline_contract(): void
+	{
+		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
+		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$script = file_get_contents(public_path('assets/js/awesome-admin-header-navigation.js'));
+
+		$this->assertStringContainsString('header-editor-topbar', $view);
+		$this->assertStringContainsString('inspector-layout', $view);
+		$this->assertSame(6, substr_count($view, 'data-inspector-index='));
+		$this->assertStringContainsString('id="previewTimeline"', $view);
+		$this->assertSame(1, substr_count($view, 'id="scrollSim"'));
+		$this->assertSame(1, substr_count($view, 'id="deviceMode"'));
+		$this->assertStringContainsString('data-preview-device="desktop"', $view);
+		$this->assertStringContainsString('data-scroll-preset="50"', $view);
+
+		$this->assertStringContainsString('.editorial-option-two', $styles);
+		$this->assertStringContainsString('.preview-timeline', $styles);
+		$this->assertStringContainsString('syncPreviewDeviceButtons', $script);
+		$this->assertStringContainsString('data-scroll-preset', $script);
+	}
+
+	public function test_editorial_option_two_uses_cms_typography_and_keeps_preview_density_compact(): void
+	{
+		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+
+		$this->assertStringContainsString('font-family: var(--ph-font-family, inherit);', $styles);
+		$this->assertStringContainsString('--mock-control-font-size: var(--ph-adaptive-font-size, var(--ph-font-size, 1rem));', $styles);
+		$this->assertStringContainsString('font-size: var(--ph-fmv2-rfs-h1, 2rem);', $styles);
+		$this->assertStringContainsString('--mock-panel-height: calc(100vh - 220px);', $styles);
+		$this->assertStringContainsString('.editorial-option-two .preview-frame', $styles);
+		$this->assertStringContainsString('flex: 1 1 auto;', $styles);
+		$this->assertStringNotContainsString('font-family: Georgia, "Times New Roman", serif;', $styles);
+	}
+
+	public function test_editorial_option_two_uses_cms_sized_sidebar_controls(): void
+	{
+		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+
+		$this->assertStringContainsString('--header-editor-font-size: clamp(10px, var(--ph-adaptive-font-size, var(--ph-font-size, 1rem)), 12px);', $styles);
+		$this->assertStringContainsString('--mock-control-height: 30px;', $styles);
+		$this->assertStringContainsString('--box-input-height: 30px;', $styles);
+		$this->assertStringContainsString('--segmented-control-height: 28px;', $styles);
+		$this->assertStringContainsString('.editorial-option-two .segmented button {', $styles);
+		$this->assertStringContainsString('min-height: var(--segmented-control-height);', $styles);
+		$this->assertStringContainsString('.editorial-option-two .inspector-content .form-check.form-switch {', $styles);
+		$this->assertStringContainsString('min-height: 24px;', $styles);
+	}
+
+	public function test_editorial_option_two_keeps_color_values_spaced_and_preview_frame_open(): void
+	{
+		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+
+		$this->assertStringContainsString('padding: 4px 8px 4px 40px;', $styles);
+		$this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 30px;', $styles);
+		$this->assertStringContainsString('.editorial-option-two .link-color-field {', $styles);
+		$this->assertStringContainsString('padding: 8px;', $styles);
+		$this->assertStringContainsString('min-height: 36px;', $styles);
+		$this->assertStringContainsString('grid-template-columns: auto minmax(0, 1fr) minmax(160px, .34fr);', $styles);
+		$this->assertStringContainsString('.editorial-option-two .preview-frame {', $styles);
+		$this->assertStringContainsString('flex: 1 1 auto;', $styles);
+	}
+
+	public function test_editorial_option_two_gives_the_inspector_and_preview_a_usable_desktop_frame(): void
+	{
+		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+
+		$this->assertStringContainsString('--mock-sidebar-min: 400px;', $styles);
+		$this->assertStringContainsString('--mock-sidebar-width: 420px;', $styles);
+		$this->assertStringContainsString('--mock-panel-height: clamp(640px, calc(100vh - 170px), 820px);', $styles);
+		$this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(var(--mock-sidebar-min), var(--mock-sidebar-width));', $styles);
+		$this->assertStringContainsString('.editorial-option-two .inspector-content {', $styles);
+		$this->assertStringContainsString('padding: 14px 16px 22px;', $styles);
+	}
+
+	public function test_editorial_option_two_scales_controls_and_spacing_from_inspector_width(): void
+	{
+		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+
+		$this->assertStringContainsString('container: header-inspector / inline-size;', $styles);
+		$this->assertStringContainsString('--header-editor-font-size: min(var(--ph-adaptive-font-size, var(--ph-font-size, 1rem)), clamp(11px, 3cqi, 13px));', $styles);
+		$this->assertStringContainsString('--inspector-space: clamp(10px, 3cqi, 14px);', $styles);
+		$this->assertStringContainsString('--mock-control-height: clamp(30px, 8cqi, 34px);', $styles);
+		$this->assertStringContainsString('margin-bottom: var(--inspector-space) !important;', $styles);
+		$this->assertStringContainsString('--bs-gutter-y: var(--inspector-space);', $styles);
+	}
+
 	public function test_preview_auto_fits_at_minimum_sixty_five_percent_without_a_menu_limit_control(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));

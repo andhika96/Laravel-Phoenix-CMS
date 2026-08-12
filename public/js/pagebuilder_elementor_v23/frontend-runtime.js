@@ -591,6 +591,209 @@
 		render(); if (!root.hidden) timer = window.setInterval(render, 1000);
 	}
 
+	function initProProgressTracker(root) {
+		if (!markProReady(root, 'progress-tracker')) return;
+		const config = parseProConfig(root);
+		const indicator = root.querySelector(':scope [data-progress-indicator]');
+		const percentage = root.querySelector(':scope [data-progress-percentage]');
+		const progressbar = root.querySelector('[role="progressbar"]');
+		const circumference = 2 * Math.PI * 52;
+		function targetElement() {
+			if (config.relativeTo === 'selector') {
+				try { return document.querySelector(String(config.selector || '')); } catch (_) { return null; }
+			}
+			if (config.relativeTo === 'post_content') return document.querySelector('.post-content, .entry-content, article, main') || document.documentElement;
+			return document.documentElement;
+		}
+		function calculate() {
+			const viewport = Math.max(1, window.innerHeight || document.documentElement.clientHeight || 1);
+			const scrollTop = Math.max(0, window.scrollY || document.documentElement.scrollTop || 0);
+			const target = targetElement();
+			let value = 0;
+			if (target && config.relativeTo === 'page') {
+				const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body?.scrollHeight || 0);
+				const maximum = Math.max(0, scrollHeight - viewport);
+				value = maximum ? (scrollTop / maximum) * 100 : 50;
+			} else if (target) {
+				const rect = target.getBoundingClientRect();
+				const top = rect.top + scrollTop;
+				const height = Math.max(1, rect.height || target.scrollHeight || 1);
+				value = ((scrollTop - top + viewport) / (height + viewport)) * 100;
+			}
+			value = Math.max(0, Math.min(100, Math.round(value)));
+			root.dataset.progressValue = String(value);
+			if (indicator) {
+				if (root.classList.contains('pb-pro-progress-tracker--circular')) {
+					indicator.style.strokeDasharray = String(circumference);
+					indicator.style.strokeDashoffset = String(circumference * (1 - value / 100));
+				} else indicator.style.width = value + '%';
+			}
+			if (percentage) percentage.textContent = value + '%';
+			if (progressbar) progressbar.setAttribute('aria-valuenow', String(value));
+		}
+		root.__pbProgressUpdate = calculate;
+		window.addEventListener('scroll', calculate, { passive: true });
+		window.addEventListener('resize', calculate, { passive: true });
+		calculate();
+	}
+
+	function initProVideoPlaylist(root) {
+		if (!markProReady(root, 'video-playlist')) return;
+		const config = parseProConfig(root);
+		const items = Array.isArray(config.items) ? config.items : [];
+		const player = root.querySelector(':scope [data-playlist-player]');
+		const list = Array.from(root.querySelectorAll(':scope [data-playlist-index]'));
+		const tabs = root.querySelector(':scope [data-playlist-tabs]');
+		let active = 0;
+		let activeTab = 0;
+		let tabsExpanded = true;
+		const watched = new Set();
+		function safeMedia(value) {
+			const raw = String(value || '').trim();
+			return /^(?:https?:\/\/|\/)[^\u0000-\u001f"'()\\]*$/i.test(raw) ? raw : '';
+		}
+		function embed(value) {
+			const raw = String(value || '').trim();
+			if (!/^https?:\/\//i.test(raw)) return '';
+			try {
+				const url = new URL(raw);
+				const host = url.hostname.toLowerCase().replace(/^www\./, '');
+				if (host === 'youtu.be') {
+					const id = url.pathname.slice(1);
+					return /^[A-Za-z0-9_-]{6,}$/.test(id) ? 'https://www.youtube.com/embed/' + encodeURIComponent(id) : '';
+				}
+				if (host === 'youtube.com' || host === 'm.youtube.com') {
+					const id = url.searchParams.get('v') || url.pathname.split('/').filter(Boolean).pop();
+					return /^[A-Za-z0-9_-]{6,}$/.test(id || '') ? 'https://www.youtube.com/embed/' + encodeURIComponent(id) : '';
+				}
+				if (host === 'vimeo.com' || host === 'player.vimeo.com') {
+					const id = url.pathname.split('/').filter(Boolean).pop();
+					return /^\d+$/.test(id || '') ? 'https://player.vimeo.com/video/' + id : '';
+				}
+			} catch (_) {}
+			return '';
+		}
+		function tag(value) {
+			return ['h1','h2','h3','h4','h5','h6','div','span'].includes(String(value || '').toLowerCase()) ? String(value).toLowerCase() : 'h4';
+		}
+		function thumbnail(entry) {
+			const custom = safeMedia(entry?.thumbnailUrl);
+			if (custom) return custom;
+			const link = String(entry?.link || '');
+			const match = link.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/i);
+			return match ? 'https://img.youtube.com/vi/' + encodeURIComponent(match[1]) + '/hqdefault.jpg' : '';
+		}
+		function iconClass(index) {
+			return config.indicateWatched && watched.has(index) ? String(config.playedIcon || 'fas fa-check') : String(config.playIcon || 'fas fa-play');
+		}
+		function renderPlayer(entry) {
+			if (!player) return;
+			player.replaceChildren();
+			if (!entry) return;
+			if (entry.type === 'section') {
+				const section = document.createElement('div');
+				section.className = 'pb-pro-video-playlist__section';
+				const heading = document.createElement(tag(entry.titleTag));
+				heading.textContent = String(entry.title || '');
+				const paragraph = document.createElement('p');
+				paragraph.textContent = String(entry.sectionContent || '');
+				section.append(heading, paragraph);
+				player.append(section);
+				return;
+			}
+			const media = document.createElement('div');
+			media.className = 'pb-pro-video-playlist__media';
+			const overlay = config.imageOverlay ? safeMedia(config.overlayImageUrl) || thumbnail(entry) : '';
+			if (overlay) {
+				const image = document.createElement('img');
+				image.className = 'pb-pro-video-playlist__overlay-image';
+				image.src = overlay;
+				image.alt = '';
+				media.append(image);
+			}
+			const source = entry.type === 'self_hosted' ? safeMedia(entry.link) : embed(entry.link);
+			if (entry.type === 'self_hosted' && source) {
+				const video = document.createElement('video');
+				video.src = source;
+				video.controls = true;
+				if (config.autoplayOnLoad) video.autoplay = true;
+				video.addEventListener('ended', function () { if (config.autoplayNext) select(active + 1); });
+				media.append(video);
+			} else if (source) {
+				const frame = document.createElement('iframe');
+				frame.src = config.autoplayOnLoad ? source + (source.includes('?') ? '&' : '?') + 'autoplay=1' : source;
+				frame.title = String(entry.title || 'Video');
+				frame.allow = 'autoplay; fullscreen; picture-in-picture';
+				frame.allowFullscreen = true;
+				media.append(frame);
+			} else {
+				const placeholder = document.createElement('div');
+				placeholder.className = 'pb-pro-video-playlist__placeholder';
+				placeholder.textContent = 'Select a video';
+				media.append(placeholder);
+			}
+			player.append(media);
+		}
+		function renderTabs(entry) {
+			if (!tabs) return;
+			tabs.replaceChildren();
+			if (!entry || entry.type === 'section' || !entry.showContentTabs) { tabs.hidden = true; return; }
+			tabs.hidden = false;
+			const buttons = document.createElement('div');
+			buttons.className = 'pb-pro-video-playlist__tab-buttons';
+			const content = document.createElement('div');
+			content.className = 'pb-pro-video-playlist__tab-content';
+			const tabData = [
+				{ title: entry.contentTabOneTitle || 'Overview', content: entry.contentTabOneContent || '' },
+				{ title: entry.contentTabTwoTitle || 'Notes', content: entry.contentTabTwoContent || '' },
+			];
+			tabData.forEach(function (tab, index) {
+				const button = document.createElement('button');
+				button.type = 'button';
+				button.textContent = String(tab.title);
+				button.classList.toggle('is-active', index === activeTab);
+				button.addEventListener('click', function () { activeTab = index; renderTabs(entry); });
+				buttons.append(button);
+			});
+			content.textContent = String(tabData[activeTab]?.content || '');
+			if (config.tabsCollapsible) {
+				content.style.maxHeight = String(config.tabsHeight || '120px');
+				content.style.overflow = 'auto';
+				if (!tabsExpanded) content.hidden = true;
+			}
+			tabs.append(buttons, content);
+			if (config.tabsCollapsible) {
+				const toggle = document.createElement('button');
+				toggle.type = 'button';
+				toggle.className = 'pb-pro-video-playlist__show-more';
+				toggle.textContent = tabsExpanded ? String(config.readLessLabel || 'Read Less') : String(config.readMoreLabel || 'Read More');
+				toggle.addEventListener('click', function () { tabsExpanded = !tabsExpanded; renderTabs(entry); });
+				tabs.append(toggle);
+			}
+		}
+		function renderList() {
+			list.forEach(function (button, index) {
+				button.classList.toggle('is-active', index === active);
+				button.classList.toggle('is-watched', config.indicateWatched && watched.has(index));
+				const icon = button.querySelector(':scope .pb-pro-video-playlist__item-icon i');
+				if (icon) icon.className = iconClass(index);
+			});
+		}
+		function select(index) {
+			if (!items.length) return;
+			const next = Math.max(0, Math.min(items.length - 1, Number(index) || 0));
+			if (config.indicateWatched && next !== active) watched.add(active);
+			active = next;
+			activeTab = 0;
+			tabsExpanded = true;
+			renderPlayer(items[active]);
+			renderTabs(items[active]);
+			renderList();
+		}
+		list.forEach(function (button) { button.addEventListener('click', function () { select(button.dataset.playlistIndex); }); });
+		select(0);
+	}
+
 	function initProHotspot(root) {
 		if (!markProReady(root, 'hotspot')) return;
 		const trigger = root.dataset.trigger || 'hover';
@@ -697,6 +900,91 @@
 		window.setTimeout(rotate, Math.max(400, Number(config.delay) || 2500));
 	}
 
+	function initProCodeHighlight(root) {
+		if (!markProReady(root, 'code-highlight')) return;
+		const button = root.querySelector(':scope [data-code-copy]');
+		const source = root.querySelector(':scope [data-code-source]');
+		const status = root.querySelector(':scope [data-code-copy-status]');
+		if (!button || !source) return;
+		let resetTimer = 0;
+		function setStatus(message) {
+			if (status) status.textContent = message;
+			button.setAttribute('aria-label', message === 'Copied' ? 'Code copied' : message === 'Copy failed' ? 'Copy code failed' : 'Copy code');
+			const label = button.querySelector('span');
+			if (label) label.textContent = message || 'Copy';
+			window.clearTimeout(resetTimer);
+			if (message) resetTimer = window.setTimeout(function () { setStatus(''); }, 1800);
+		}
+		function fallbackCopy(value) {
+			if (!document.body) return false;
+			const textarea = document.createElement('textarea');
+			textarea.value = value;
+			textarea.setAttribute('readonly', '');
+			textarea.style.position = 'fixed';
+			textarea.style.opacity = '0';
+			document.body.appendChild(textarea);
+			textarea.select();
+			let copied = false;
+			try { copied = Boolean(document.execCommand('copy')); } catch (_) { copied = false; }
+			textarea.remove();
+			return copied;
+		}
+		button.addEventListener('click', async function () {
+			const value = String(source.value || source.textContent || '');
+			try {
+				if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
+				else if (!fallbackCopy(value)) throw new Error('Clipboard unavailable');
+				setStatus('Copied');
+			} catch (_) {
+				setStatus('Copy failed');
+			}
+		});
+	}
+
+	function initProShareButtons(root) {
+		if (!markProReady(root, 'share-buttons')) return;
+		const status = root.querySelector(':scope [data-share-status]');
+		function setStatus(message) {
+			if (status) status.textContent = message;
+			if (message) window.setTimeout(function () {
+				if (status) status.textContent = '';
+			}, 1800);
+		}
+		function fallbackCopy(value) {
+			if (!document.body) return false;
+			const textarea = document.createElement('textarea');
+			textarea.value = value;
+			textarea.setAttribute('readonly', '');
+			textarea.style.position = 'fixed';
+			textarea.style.opacity = '0';
+			document.body.appendChild(textarea);
+			textarea.select();
+			let copied = false;
+			try { copied = Boolean(document.execCommand('copy')); } catch (_) { copied = false; }
+			textarea.remove();
+			return copied;
+		}
+		root.querySelectorAll(':scope [data-share-action]').forEach(function (button) {
+			const action = button.getAttribute('data-share-action');
+			if (!['copy', 'print'].includes(action)) return;
+			button.addEventListener('click', async function (event) {
+				event.preventDefault();
+				if (action === 'print') {
+					if (typeof window.print === 'function') window.print();
+					return;
+				}
+				const value = String(button.getAttribute('data-share-url') || '');
+				try {
+					if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
+					else if (!fallbackCopy(value)) throw new Error('Clipboard unavailable');
+					setStatus('Copied');
+				} catch (_) {
+					setStatus('Copy failed');
+				}
+			});
+		});
+	}
+
 	function init(scope) {
 		const rootScope = scope && scope.querySelectorAll ? scope : document;
 		rootScope.querySelectorAll('[data-accordion-root]').forEach(bindAccordion);
@@ -707,13 +995,17 @@
 		rootScope.querySelectorAll('[data-pro-slides]').forEach(initProSlides);
 		rootScope.querySelectorAll('[data-pro-carousel]').forEach(initProCarousel);
 		rootScope.querySelectorAll('[data-pro-countdown]').forEach(initProCountdown);
+		rootScope.querySelectorAll('[data-progress-tracker]').forEach(initProProgressTracker);
+		rootScope.querySelectorAll('[data-video-playlist]').forEach(initProVideoPlaylist);
 		rootScope.querySelectorAll('[data-pro-hotspot]').forEach(initProHotspot);
 		rootScope.querySelectorAll('[data-pro-flip-box]').forEach(initProFlipBox);
 		rootScope.querySelectorAll('[data-pro-form]').forEach(initProForm);
 		rootScope.querySelectorAll('[data-pro-headline]').forEach(initProAnimatedHeadline);
+		rootScope.querySelectorAll('[data-code-highlight]').forEach(initProCodeHighlight);
+		rootScope.querySelectorAll('[data-share-buttons]').forEach(initProShareButtons);
 	}
 
-	window.PageBuilderElementorV23Runtime = Object.freeze({ init, bindAccordion, bindImageCarousel, bindBasicGallery, bindBasicImage, bindAdvancedWidget, initProSlides, initProCarousel, initProCountdown, initProHotspot, initProFlipBox, initProForm, initProAnimatedHeadline });
+	window.PageBuilderElementorV23Runtime = Object.freeze({ init, bindAccordion, bindImageCarousel, bindBasicGallery, bindBasicImage, bindAdvancedWidget, initProSlides, initProCarousel, initProCountdown, initProProgressTracker, initProVideoPlaylist, initProHotspot, initProFlipBox, initProForm, initProAnimatedHeadline, initProCodeHighlight, initProShareButtons });
 
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', function () { init(document); }, { once: true });

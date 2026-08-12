@@ -987,6 +987,57 @@ const editor = document.getElementById('headerNavigationEditor');
 			els.header.classList.toggle('is-scrolled', scrolled);
 		}
 
+		function syncPreviewDeviceButtons() {
+			const activeDevice = controls.deviceMode.value;
+			editor.querySelectorAll('[data-preview-device]').forEach(button => {
+				const isActive = button.dataset.previewDevice === activeDevice;
+				button.classList.toggle('is-active', isActive);
+				button.setAttribute('aria-pressed', String(isActive));
+			});
+		}
+
+		function updatePreviewTimeline() {
+			const value = Math.max(0, Math.min(100, Number(controls.scrollSim.value) || 0));
+			const points = [
+				[0, 'Top'],
+				[25, 'Scrolled'],
+				[50, 'Mid'],
+				[75, 'Near bottom'],
+				[100, 'Bottom']
+			];
+			const nearest = points.reduce((current, point) => Math.abs(point[0] - value) < Math.abs(current[0] - value) ? point : current, points[0]);
+			const timelineValue = document.getElementById('scrollTimelineValue');
+			if (timelineValue) timelineValue.textContent = `${nearest[1]} · ${value}%`;
+
+			editor.querySelectorAll('[data-scroll-preset]').forEach(button => {
+				const isActive = Number(button.dataset.scrollPreset) === nearest[0];
+				button.classList.toggle('is-active', isActive);
+				button.setAttribute('aria-pressed', String(isActive));
+			});
+		}
+
+		function focusInspectorSection(button) {
+			const groups = Array.from(editor.querySelectorAll('.header-setting-group'));
+			const groupIndex = Number(button.dataset.inspectorGroup ?? button.dataset.inspectorIndex);
+			const target = groups[groupIndex];
+			if (!target) return;
+
+			groups.forEach(group => {
+				group.open = false;
+			});
+			target.open = true;
+			editor.querySelectorAll('[data-inspector-index]').forEach(item => {
+				const isActive = item === button;
+				item.classList.toggle('is-active', isActive);
+				item.setAttribute('aria-pressed', String(isActive));
+			});
+
+			const scrollTarget = button.dataset.inspectorAnchor === 'effects'
+				? target.querySelector('.shadow-control') || target
+				: target;
+			scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
+
 		function updateJson() {
 			const split = state.logoPosition === 'center' && state.menuPosition === 'center'
 				? { logo_between_menu: true, left_menu_count: Math.floor(state.menus.length / 2), right_menu_count: state.menus.length - Math.floor(state.menus.length / 2) }
@@ -1350,7 +1401,7 @@ const editor = document.getElementById('headerNavigationEditor');
 				setSaveStatus('failed', error.message || 'Save failed');
 			} finally {
 				button.disabled = false;
-				button.innerHTML = '<i class="fas fa-save me-1"></i> Save Settings';
+				button.innerHTML = '<i class="fas fa-save me-1"></i> Save changes';
 			}
 		}
 
@@ -1379,6 +1430,8 @@ const editor = document.getElementById('headerNavigationEditor');
 			renderHeader();
 			updatePreviewScale();
 			updateScrolledState();
+			syncPreviewDeviceButtons();
+			updatePreviewTimeline();
 			updateJson();
 		}
 
@@ -1416,6 +1469,26 @@ const editor = document.getElementById('headerNavigationEditor');
 			updateAll();
 		});
 
+		editor.querySelectorAll('[data-preview-device]').forEach(button => {
+			button.addEventListener('click', () => {
+				switchResponsiveBoxMode(null, normalizeResponsiveMode(button.dataset.previewDevice));
+				updateAll();
+			});
+		});
+
+		editor.querySelectorAll('[data-inspector-index]').forEach(button => {
+			button.addEventListener('click', () => focusInspectorSection(button));
+		});
+
+		editor.querySelectorAll('[data-scroll-preset]').forEach(button => {
+			button.addEventListener('click', () => {
+				const percentage = Math.max(0, Math.min(100, Number(button.dataset.scrollPreset) || 0));
+				controls.scrollSim.value = String(percentage);
+				updateAll();
+				els.deviceStage.scrollTo({ top: Math.round((percentage / 100) * 320), behavior: 'smooth' });
+			});
+		});
+
 		initResponsiveBoxProfiles();
 		initNumberSteppers();
 		initBoxSteppers();
@@ -1437,6 +1510,7 @@ const editor = document.getElementById('headerNavigationEditor');
 				? Math.min(100, Math.round((els.deviceStage.scrollTop / 320) * 100))
 				: 0;
 			updateScrolledState();
+			updatePreviewTimeline();
 			updateJson();
 		});
 

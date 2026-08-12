@@ -579,6 +579,77 @@
         </div>
 
         <div
+            v-else-if="type === 'progress_tracker'"
+            data-progress-tracker
+            class="pb-pro-progress-tracker"
+            :class="[
+                'pb-pro-progress-tracker--' + progressTrackerType,
+                'align-' + progressTrackerAlignment,
+            ]"
+            :style="progressTrackerRootStyle"
+            :data-progress-value="progressTrackerPercent"
+            aria-label="Progress tracker"
+        >
+            <div v-if="progressTrackerType === 'horizontal'" class="pb-pro-progress-tracker__horizontal" role="progressbar" :aria-valuenow="progressTrackerPercent" aria-valuemin="0" aria-valuemax="100">
+                <span class="pb-pro-progress-tracker__track">
+                    <span class="pb-pro-progress-tracker__indicator" :style="progressTrackerIndicatorStyle"></span>
+                </span>
+            </div>
+            <div v-else class="pb-pro-progress-tracker__circular" role="progressbar" :aria-valuenow="progressTrackerPercent" aria-valuemin="0" aria-valuemax="100">
+                <svg viewBox="0 0 120 120" role="img" aria-label="Progress">
+                    <circle class="pb-pro-progress-tracker__circle-track" cx="60" cy="60" r="52" :style="progressTrackerCircleTrackStyle"></circle>
+                    <circle class="pb-pro-progress-tracker__circle-indicator" cx="60" cy="60" r="52" :style="progressTrackerCircleIndicatorStyle"></circle>
+                </svg>
+            </div>
+            <span v-if="s.showPercentage !== false" class="pb-pro-progress-tracker__percentage" :style="progressTrackerPercentageStyle">{{ progressTrackerPercent }}%</span>
+        </div>
+
+        <div
+            v-else-if="type === 'video_playlist'"
+            data-video-playlist
+            class="pb-pro-video-playlist"
+            :class="['position-' + videoPlaylistPosition]"
+            :style="videoPlaylistRootStyle"
+            aria-label="Video Playlist"
+        >
+            <header class="pb-pro-video-playlist__topbar">
+                <component :is="safeTag(s.playlistTitleTag, 'h3')" class="pb-pro-video-playlist__name" :style="videoPlaylistNameStyle">{{ s.playlistName }}</component>
+                <span v-if="s.showVideoCount !== false" class="pb-pro-video-playlist__count" :style="videoPlaylistCountStyle">{{ videoPlaylistItems.length }} videos</span>
+            </header>
+            <div class="pb-pro-video-playlist__body">
+                <section class="pb-pro-video-playlist__player" data-playlist-player>
+                    <div v-if="videoPlaylistActiveItem?.type === 'section'" class="pb-pro-video-playlist__section" :style="videoPlaylistSectionStyle">
+                        <component :is="safeTag(videoPlaylistActiveItem.titleTag, 'h4')" :style="videoPlaylistItemTitleStyle">{{ videoPlaylistActiveItem.title }}</component>
+                        <p>{{ videoPlaylistActiveItem.sectionContent }}</p>
+                    </div>
+                    <div v-else class="pb-pro-video-playlist__media">
+                        <img v-if="s.imageOverlay && videoPlaylistOverlayImage" class="pb-pro-video-playlist__overlay-image" :src="videoPlaylistOverlayImage" alt="" />
+                        <iframe v-if="videoPlaylistEmbedUrl(videoPlaylistActiveItem)" :src="videoPlaylistEmbedUrl(videoPlaylistActiveItem)" :title="videoPlaylistActiveItem?.title || 'Video'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        <video v-else-if="videoPlaylistActiveItem?.type === 'self_hosted' && safeMediaUrl(videoPlaylistActiveItem.link)" :src="safeMediaUrl(videoPlaylistActiveItem.link)" controls :autoplay="s.autoplayOnLoad" @ended="playNextVideo"></video>
+                        <div v-else class="pb-pro-video-playlist__placeholder">Select a video</div>
+                    </div>
+                </section>
+                <nav class="pb-pro-video-playlist__items" aria-label="Playlist videos">
+                    <button v-for="(entry, index) in videoPlaylistItems" :key="entry.id || index" type="button" class="pb-pro-video-playlist__item" :class="{ 'is-active': index === activePlaylistIndex, 'is-watched': playlistWatched.includes(index) }" :data-playlist-index="index" :style="videoPlaylistItemStyle(index)" @click.stop="selectVideoPlaylistItem(index)">
+                        <span v-if="s.showThumbnails !== false" class="pb-pro-video-playlist__thumbnail"><img v-if="videoPlaylistThumbnail(entry)" :src="videoPlaylistThumbnail(entry)" alt="" /><span v-else class="pb-pro-video-playlist__thumbnail-placeholder"><i :class="videoPlaylistIconClass(index)"></i></span></span>
+                        <span class="pb-pro-video-playlist__item-copy">
+                            <component :is="safeTag(entry.titleTag, 'h4')" :style="videoPlaylistItemTitleStyle">{{ entry.title }}</component>
+                            <span v-if="s.showDuration !== false && entry.duration" class="pb-pro-video-playlist__duration" :style="videoPlaylistDurationStyle">{{ entry.duration }}</span>
+                        </span>
+                        <span class="pb-pro-video-playlist__item-icon" :style="videoPlaylistIconStyle(index)"><i :class="videoPlaylistIconClass(index)"></i></span>
+                    </button>
+                </nav>
+            </div>
+            <div v-if="videoPlaylistTabs.length" class="pb-pro-video-playlist__tabs" data-playlist-tabs>
+                <div class="pb-pro-video-playlist__tab-buttons" role="tablist">
+                    <button v-for="(tab, index) in videoPlaylistTabs" :key="tab.title + index" type="button" :class="{ 'is-active': activePlaylistTab === index }" :style="videoPlaylistTabButtonStyle(index)" @click.stop="activePlaylistTab = index">{{ tab.title }}</button>
+                </div>
+                <div v-if="!s.tabsCollapsible || playlistTabsExpanded" class="pb-pro-video-playlist__tab-content" :style="{ ...videoPlaylistTabContentStyle, maxHeight: s.tabsCollapsible ? safeLength(responsiveValue('tabsHeight', '120px'), '120px') : 'none', overflow: s.tabsCollapsible ? 'auto' : 'visible' }">{{ videoPlaylistTabs[activePlaylistTab]?.content }}</div>
+                <button v-if="s.tabsCollapsible" type="button" class="pb-pro-video-playlist__show-more" :style="videoPlaylistShowMoreStyle" @click.stop="playlistTabsExpanded = !playlistTabsExpanded">{{ playlistTabsExpanded ? (s.readLessLabel || 'Read Less') : (s.readMoreLabel || 'Read More') }}</button>
+            </div>
+        </div>
+
+        <div
             v-else-if="type === 'carousel'"
             data-pro-carousel
             class="pb-pro-carousel"
@@ -889,6 +960,157 @@
         </div>
 
         <div
+            v-else-if="type === 'testimonial_carousel'"
+            data-pro-carousel
+            class="pb-pro-carousel pb-pro-testimonial-carousel"
+            :class="[
+                'skin-' + (s.skin || 'default'),
+                'layout-' + (s.layout || 'image_inline'),
+            ]"
+            :style="testimonialRootStyle"
+            :aria-label="s.slidesName || 'Testimonial Carousel'"
+            tabindex="0"
+            @keydown="onCarouselKeydown"
+            @mouseenter="onSliderHover(true)"
+            @mouseleave="onSliderHover(false)"
+        >
+            <div class="pb-pro-carousel__viewport">
+                <div class="pb-pro-carousel__track" :style="carouselTrackStyle">
+                    <article
+                        v-for="entry in s.items"
+                        :key="entry.id"
+                        class="pb-pro-carousel__slide pb-pro-testimonial-carousel__slide"
+                        :style="testimonialSlideStyle"
+                    >
+                        <div class="pb-pro-testimonial-carousel__inner">
+                            <p class="pb-pro-testimonial-carousel__content" :style="testimonialContentStyle">
+                                {{ entry.content }}
+                            </p>
+                            <div class="pb-pro-testimonial-carousel__identity">
+                                <img
+                                    v-if="entry.imageUrl"
+                                    class="pb-pro-testimonial-carousel__image"
+                                    :src="reviewImageUrl(entry)"
+                                    :loading="s.lazyLoad ? 'lazy' : 'eager'"
+                                    alt=""
+                                    :style="testimonialImageStyle"
+                                />
+                                <div class="pb-pro-testimonial-carousel__meta">
+                                    <strong :style="testimonialNameStyle">{{ entry.name }}</strong>
+                                    <span :style="testimonialTitleStyle">{{ entry.title }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <button v-if="hasArrows" type="button" class="pb-pro-arrow pb-pro-arrow--prev" aria-label="Previous slide" data-pb-interactive="true" :style="carouselArrowStyle" @click.stop="previous"><i class="fas fa-chevron-left"></i></button>
+            <button v-if="hasArrows" type="button" class="pb-pro-arrow pb-pro-arrow--next" aria-label="Next slide" data-pb-interactive="true" :style="carouselArrowStyle" @click.stop="next"><i class="fas fa-chevron-right"></i></button>
+            <div v-if="hasDots && s.pagination === 'dots'" class="pb-pro-dots" role="tablist">
+                <button v-for="page in carouselPageCount" :key="page" type="button" :class="{ active: carouselDotIndex === page - 1 }" :style="carouselDotStyle(carouselDotIndex === page - 1)" :aria-label="'Go to slide ' + page" data-pb-interactive="true" @click.stop="selectSlide((page - 1) * carouselStep)"></button>
+            </div>
+            <div v-if="hasDots && s.pagination === 'fraction'" class="pb-pro-carousel__fraction" aria-live="polite">{{ carouselDotIndex + 1 }} / {{ carouselPageCount }}</div>
+            <div v-if="hasDots && s.pagination === 'progress'" class="pb-pro-carousel__progress" aria-hidden="true"><span :style="{ width: ((carouselDotIndex + 1) / carouselPageCount * 100) + '%' }"></span></div>
+        </div>
+
+        <div
+            v-else-if="type === 'code_highlight'"
+            data-code-highlight
+            class="pb-pro-code-highlight"
+            :class="['theme-' + codeTheme, 'language-' + codeLanguage, { 'is-word-wrap': s.wordWrap }]"
+            :style="codeHighlightRootStyle"
+        >
+            <div class="pb-pro-code-highlight__toolbar">
+                <span class="pb-pro-code-highlight__language">{{ codeLanguageLabel }}</span>
+                <button
+                    v-if="s.copyButton"
+                    type="button"
+                    class="pb-pro-code-highlight__copy"
+                    data-code-copy
+                    :style="codeCopyButtonStyle"
+                    aria-label="Copy code"
+                    data-pb-interactive="true"
+                    @click.stop="copyCode"
+                >
+                    <i class="fas fa-copy" aria-hidden="true"></i>
+                    <span>{{ codeCopyStatus || 'Copy' }}</span>
+                </button>
+                <span class="pb-visually-hidden" data-code-copy-status aria-live="polite">{{ codeCopyStatus }}</span>
+            </div>
+            <div class="pb-pro-code-highlight__viewport">
+                <pre class="pb-pro-code-highlight__pre"><code class="pb-pro-code-highlight__code" :style="codeHighlightCodeStyle"><span v-for="line in codeLines" :key="line.number" class="pb-pro-code-highlight__line" :class="{ 'is-highlighted': line.highlighted }"><span v-if="s.lineNumbers" class="pb-pro-code-highlight__line-number">{{ line.number }}</span><span class="pb-pro-code-highlight__line-content" v-html="line.html"></span></span></code></pre>
+            </div>
+            <textarea class="pb-visually-hidden" data-code-source readonly>{{ s.code }}</textarea>
+        </div>
+
+        <div
+            v-else-if="type === 'blockquote'"
+            data-blockquote
+            class="pb-pro-blockquote"
+            :class="[
+                'skin-' + blockquoteSkin,
+                'align-' + blockquoteAlignment,
+            ]"
+            :style="blockquoteRootStyle"
+        >
+            <span v-if="blockquoteSkin === 'quotation'" class="pb-pro-blockquote__quote-mark" aria-hidden="true">“</span>
+            <div class="pb-pro-blockquote__content" :style="blockquoteContentStyle">
+                {{ s.content }}
+            </div>
+            <div v-if="s.author" class="pb-pro-blockquote__author" :style="blockquoteAuthorStyle">
+                {{ s.author }}
+            </div>
+            <a
+                v-if="s.tweetButton"
+                class="pb-pro-blockquote__tweet"
+                :class="'tweet-skin-' + safeEnum(s.tweetSkin, ['classic', 'bubble', 'link'], 'classic')"
+                data-blockquote-tweet
+                :href="blockquoteTweetHref"
+                target="_blank"
+                rel="noopener noreferrer"
+                :style="blockquoteTweetStyle"
+                data-pb-interactive="true"
+                @click.stop
+            >
+                <i v-if="s.tweetView !== 'text'" class="fab fa-twitter" aria-hidden="true"></i>
+                <span v-if="s.tweetView !== 'icon'">{{ s.tweetLabel || 'Tweet' }}</span>
+            </a>
+        </div>
+
+        <div
+            v-else-if="type === 'share_buttons'"
+            data-share-buttons
+            class="pb-pro-share-buttons"
+            :class="[
+                'skin-' + shareSkin,
+                'shape-' + shareShape,
+                'align-' + shareAlignment,
+                shareColumnsClass,
+            ]"
+            :style="shareButtonsRootStyle"
+        >
+            <a
+                v-for="entry in shareItems"
+                :key="entry.id"
+                class="pb-pro-share-buttons__button"
+                :class="'network-' + shareNetwork(entry.network)"
+                :href="shareButtonHref(entry)"
+                :target="shareButtonTarget(entry)"
+                :rel="shareButtonRel(entry)"
+                :data-share-network="shareNetwork(entry.network)"
+                :data-share-url="shareTargetUrl"
+                :data-share-action="shareAction(entry)"
+                :style="shareButtonStyle(entry)"
+                data-pb-interactive="true"
+                @click.stop="handleShareAction(entry, $event)"
+            >
+                <i v-if="s.view !== 'text'" :class="shareNetworkIcon(entry.network)" aria-hidden="true"></i>
+                <span v-if="s.view !== 'icon' && s.showLabel !== false">{{ entry.customLabel || shareNetworkLabel(entry.network) }}</span>
+            </a>
+            <span class="pb-visually-hidden" data-share-status aria-live="polite">{{ shareActionStatus }}</span>
+        </div>
+
+        <div
             v-else-if="type === 'flip_box'"
             data-pro-flip-box
             data-pb-interactive="true"
@@ -983,6 +1205,17 @@ export default {
             sliderTimer: 0,
             sliderHovered: false,
             sliderInteractionPaused: false,
+            codeCopyStatus: "",
+            codeCopyStatusTimer: 0,
+            shareActionStatus: "",
+            shareActionStatusTimer: 0,
+            progressValue: 50,
+            progressScrollHandler: null,
+            progressResizeHandler: null,
+            activePlaylistIndex: 0,
+            activePlaylistTab: 0,
+            playlistTabsExpanded: true,
+            playlistWatched: [],
             reducedMotion:
                 typeof matchMedia === "function" &&
                 matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -995,12 +1228,324 @@ export default {
         s() {
             return this.item.settings || {};
         },
+        codeLanguage() {
+            return this.safeEnum(
+                this.s.language,
+                [
+                    "plain-text",
+                    "markup",
+                    "html",
+                    "xml",
+                    "svg",
+                    "mathml",
+                    "ssml",
+                    "atom",
+                    "rss",
+                    "css",
+                    "less",
+                    "sass",
+                    "scss",
+                    "javascript",
+                    "typescript",
+                    "actionscript",
+                    "c",
+                    "cpp",
+                    "csharp",
+                    "java",
+                    "kotlin",
+                    "dart",
+                    "go",
+                    "rust",
+                    "swift",
+                    "objectivec",
+                    "php",
+                    "python",
+                    "ruby",
+                    "perl",
+                    "lua",
+                    "r",
+                    "matlab",
+                    "sql",
+                    "plsql",
+                    "json",
+                    "json5",
+                    "yaml",
+                    "toml",
+                    "markdown",
+                    "mdx",
+                    "bash",
+                    "shell",
+                    "powershell",
+                    "batch",
+                    "docker",
+                    "git",
+                    "diff",
+                    "http",
+                    "graphql",
+                    "jsx",
+                    "tsx",
+                    "vue",
+                    "twig",
+                    "blade",
+                    "pascal",
+                    "haskell",
+                    "scala",
+                    "groovy",
+                    "elixir",
+                    "erlang",
+                    "clojure",
+                    "fsharp",
+                    "fortran",
+                    "cobol",
+                    "basic",
+                    "arduino",
+                ],
+                "javascript",
+            );
+        },
+        codeTheme() {
+            return this.safeEnum(this.s.theme, ["light", "dark"], "dark");
+        },
+        codeLanguageLabel() {
+            const labels = {
+                "plain-text": "Plain Text",
+                markup: "Markup",
+                html: "HTML",
+                xml: "XML",
+                svg: "SVG",
+                mathml: "MathML",
+                ssml: "SSML",
+                atom: "Atom",
+                rss: "RSS",
+                css: "CSS",
+                less: "Less",
+                sass: "Sass",
+                scss: "SCSS",
+                javascript: "JavaScript",
+                typescript: "TypeScript",
+                actionscript: "ActionScript",
+                c: "C",
+                cpp: "C++",
+                csharp: "C#",
+                java: "Java",
+                kotlin: "Kotlin",
+                dart: "Dart",
+                go: "Go",
+                rust: "Rust",
+                swift: "Swift",
+                objectivec: "Objective-C",
+                php: "PHP",
+                python: "Python",
+                ruby: "Ruby",
+                perl: "Perl",
+                lua: "Lua",
+                r: "R",
+                matlab: "MATLAB",
+                sql: "SQL",
+                plsql: "PL/SQL",
+                json: "JSON",
+                json5: "JSON5",
+                yaml: "YAML",
+                toml: "TOML",
+                markdown: "Markdown",
+                mdx: "MDX",
+                bash: "Bash",
+                shell: "Shell",
+                powershell: "PowerShell",
+                batch: "Batch",
+                docker: "Docker",
+                git: "Git",
+                diff: "Diff",
+                http: "HTTP",
+                graphql: "GraphQL",
+                jsx: "JSX",
+                tsx: "TSX",
+                vue: "Vue",
+                twig: "Twig",
+                blade: "Blade",
+                pascal: "Pascal",
+                haskell: "Haskell",
+                scala: "Scala",
+                groovy: "Groovy",
+                elixir: "Elixir",
+                erlang: "Erlang",
+                clojure: "Clojure",
+                fsharp: "F#",
+                fortran: "Fortran",
+                cobol: "COBOL",
+                basic: "BASIC",
+                arduino: "Arduino",
+            };
+            return labels[this.codeLanguage] || "Code";
+        },
+        highlightedCodeLines() {
+            const lines = new Set();
+            for (const segment of String(this.s.highlightLines || "").split(",")) {
+                const raw = segment.trim();
+                const range = raw.match(/^(\d+)\s*-\s*(\d+)$/);
+                if (range) {
+                    const start = Math.max(1, Number(range[1]));
+                    const end = Math.max(1, Number(range[2]));
+                    for (let line = Math.min(start, end); line <= Math.max(start, end); line++) lines.add(line);
+                } else if (/^\d+$/.test(raw) && Number(raw) > 0) lines.add(Number(raw));
+            }
+            return lines;
+        },
+        codeLines() {
+            return String(this.s.code ?? "").split(/\r\n|\r|\n/).map((source, index) => ({
+                number: index + 1,
+                source,
+                highlighted: this.highlightedCodeLines.has(index + 1),
+                html: this.highlightCodeLine(source, this.codeLanguage),
+            }));
+        },
+        codeHighlightRootStyle() {
+            const light = this.codeTheme === "light";
+            return {
+                "--code-highlight-height": this.safeLength(this.responsiveValue("height", "300px"), "300px"),
+                "--code-highlight-font-size": this.safeLength(this.responsiveValue("fontSize", "14px"), "14px"),
+                "--code-highlight-text": this.safeColor(this.s.codeTextColor, light ? "#101828" : "#e6edf3"),
+                "--code-highlight-background": this.safeColor(this.s.codeBackground, light ? "#f8fafc" : "#0d1117"),
+                "--code-highlight-line-number": this.safeColor(this.s.lineNumberColor, light ? "#667085" : "#8b949e"),
+                "--code-highlight-line-number-background": this.safeColor(this.s.lineNumberBackground, light ? "#f2f4f7" : "#161b22"),
+                "--code-highlight-gutter-width": this.safeLength(this.responsiveValue("gutterWidth", "34px"), "34px"),
+                "--code-highlight-line-background": this.safeColor(this.s.highlightLineColor, light ? "#e0e7ff" : "#1f6feb33"),
+                "--code-highlight-line-border": this.safeColor(this.s.highlightLineBorderColor, light ? "#6979f8" : "#58a6ff"),
+                "--code-highlight-padding": this.responsiveBoxValue("codePadding", "20px"),
+                "--code-highlight-padding-top": this.safeLength(this.responsiveValue("codePaddingTop", "20px"), "20px"),
+                "--code-highlight-padding-right": this.safeLength(this.responsiveValue("codePaddingRight", "20px"), "20px"),
+                "--code-highlight-padding-bottom": this.safeLength(this.responsiveValue("codePaddingBottom", "20px"), "20px"),
+                "--code-highlight-padding-left": this.safeLength(this.responsiveValue("codePaddingLeft", "20px"), "20px"),
+                "--code-highlight-radius": this.responsiveBoxValue("codeRadius", "6px"),
+                "--code-highlight-copy-text-hover": this.safeColor(this.s.copyButtonTextColorHover, "#fff"),
+                "--code-highlight-copy-background-hover": this.safeColor(this.s.copyButtonBackgroundHover, "#5868e8"),
+            };
+        },
+        codeHighlightCodeStyle() {
+            return {
+                ...this.typographyStyle("codeHighlight", "14px", "400", "1.5em"),
+                fontSize: "var(--code-highlight-font-size)",
+                color: "var(--code-highlight-text)",
+            };
+        },
+        codeCopyButtonStyle() {
+            return {
+                ...this.typographyStyle("codeHighlightCopyButton", "12px", "600", "1.2em"),
+                color: this.safeColor(this.s.copyButtonTextColor, "#fff"),
+                background: this.safeColor(this.s.copyButtonBackground, "#6979f8"),
+                padding: this.responsiveBoxValue("copyButtonPadding", "8px"),
+                borderRadius: this.responsiveBoxValue("copyButtonRadius", "4px"),
+            };
+        },
+        blockquoteSkin() {
+            return this.safeEnum(this.s.skin, ["border", "quotation", "boxed", "clean"], "border");
+        },
+        blockquoteAlignment() {
+            return this.safeEnum(this.responsiveValue("alignment", "left"), ["left", "center", "right"], "left");
+        },
+        blockquoteRootStyle() {
+            return {
+                "--blockquote-content-gap": this.safeLength(this.responsiveValue("contentGap", "16px"), "16px"),
+                "--blockquote-content-color": this.safeColor(this.s.contentColor, "#344054"),
+                "--blockquote-author-color": this.safeColor(this.s.authorColor, "#101828"),
+                "--blockquote-border-color": this.safeColor(this.s.borderColor, "#6979f8"),
+                "--blockquote-border-width": this.responsiveBoxValue("borderWidth", "0px"),
+                "--blockquote-border-gap": this.safeLength(this.responsiveValue("borderGap", "16px"), "16px"),
+                "--blockquote-border-padding": this.safeLength(this.responsiveValue("borderVerticalPadding", "8px"), "8px"),
+                "--blockquote-border-duration": String(Math.max(0, Math.min(10, Number(this.s.borderTransitionDuration) || 0))) + "s",
+                "--blockquote-quote-color": this.safeColor(this.s.quoteColor, "#6979f8"),
+                "--blockquote-quote-size": this.safeLength(this.responsiveValue("quoteSize", "48px"), "48px"),
+                "--blockquote-quote-gap": this.safeLength(this.responsiveValue("quoteGap", "12px"), "12px"),
+                "--blockquote-box-padding": this.responsiveBoxValue("boxPadding", "24px"),
+                "--blockquote-box-background": this.safeColor(this.s.boxBackground, "#f8fafc"),
+                "--blockquote-box-background-hover": this.safeColor(this.s.boxBackgroundHover, "#eef2ff"),
+                "--blockquote-box-border-type": this.safeEnum(this.s.boxBorderType, ["none", "solid", "double", "dotted", "dashed"], "none"),
+                "--blockquote-box-border-width": this.responsiveBoxValue("boxBorderWidth", "1px"),
+                "--blockquote-box-border-color": this.safeColor(this.s.boxBorderColor, "#e4e7ec"),
+                "--blockquote-box-border-color-hover": this.safeColor(this.s.boxBorderColorHover, "#6979f8"),
+                "--blockquote-box-radius": this.responsiveBoxValue("boxRadius", "8px"),
+                "--blockquote-box-shadow": this.safeTextShadow(this.s.boxShadow, "none"),
+                "--blockquote-box-shadow-hover": this.safeTextShadow(this.s.boxShadowHover, "none"),
+                "--blockquote-box-duration": String(Math.max(0, Math.min(10, Number(this.s.boxTransitionDuration) || 0))) + "s",
+            };
+        },
+        blockquoteContentStyle() {
+            return this.typographyStyle("blockquoteContent", "18px", "400", "1.5em");
+        },
+        blockquoteAuthorStyle() {
+            return {
+                ...this.typographyStyle("blockquoteAuthor", "14px", "600", "1.4em"),
+                color: "var(--blockquote-author-color)",
+            };
+        },
+        blockquoteTweetStyle() {
+            const official = {
+                background: "#1da1f2",
+                color: "#ffffff",
+                hoverBackground: "#0d8bd0",
+                hoverColor: "#ffffff",
+            };
+            return {
+                ...this.typographyStyle("blockquoteTweet", "13px", "600", "1.2em"),
+                "--blockquote-tweet-background": this.safeColor(this.s.tweetColorMode === "custom" ? this.s.tweetPrimaryColor : official.background, official.background),
+                "--blockquote-tweet-color": this.safeColor(this.s.tweetColorMode === "custom" ? this.s.tweetSecondaryColor : official.color, official.color),
+                "--blockquote-tweet-background-hover": this.safeColor(this.s.tweetColorMode === "custom" ? this.s.tweetPrimaryColorHover : official.hoverBackground, official.hoverBackground),
+                "--blockquote-tweet-color-hover": this.safeColor(this.s.tweetColorMode === "custom" ? this.s.tweetSecondaryColorHover : official.hoverColor, official.hoverColor),
+                "--blockquote-tweet-size": this.safeLength(this.responsiveValue("tweetSize", "14px"), "14px"),
+                "--blockquote-tweet-radius": this.safeLength(this.responsiveValue("tweetBorderRadius", "4px"), "4px"),
+                "--blockquote-tweet-duration": String(Math.max(0, Math.min(10, Number(this.s.tweetTransitionDuration) || 0))) + "s",
+                "--blockquote-tweet-gap": this.safeLength(this.responsiveValue("tweetGap", "8px"), "8px"),
+            };
+        },
+        blockquoteTweetHref() {
+            const target = this.s.tweetTarget === "custom"
+                ? this.safeLinkUrl(this.s.tweetUrl)
+                : this.s.tweetTarget === "none"
+                  ? ""
+                  : this.currentPreviewUrl;
+            const query = new URLSearchParams();
+            query.set("text", String(this.s.content || ""));
+            if (target) query.set("url", target);
+            if (String(this.s.tweetUsername || "").trim()) query.set("via", String(this.s.tweetUsername).replace(/^@+/, ""));
+            return "https://twitter.com/intent/tweet?" + query.toString();
+        },
+        currentPreviewUrl() {
+            return this.safeLinkUrl(typeof window !== "undefined" && window.location?.href ? window.location.href : "https://example.com/") || "https://example.com/";
+        },
+        shareItems() {
+            return Array.isArray(this.s.items) ? this.s.items : [];
+        },
+        shareSkin() {
+            return this.safeEnum(this.s.skin, ["flat", "gradient", "minimal", "framed", "box", "3d"], "flat");
+        },
+        shareShape() {
+            return this.safeEnum(this.s.shape, ["rounded", "square", "circle", "none"], "rounded");
+        },
+        shareAlignment() {
+            return this.safeEnum(this.s.alignment, ["left", "center", "right"], "left");
+        },
+        shareColumnsClass() {
+            const value = this.safeEnum(String(this.s.columns || "auto"), ["auto", "1", "2", "3", "4", "5", "6"], "auto");
+            return value === "auto" ? "columns-auto" : "columns-" + value;
+        },
+        shareTargetUrl() {
+            return this.s.targetUrl === "custom" ? this.safeLinkUrl(this.s.customUrl) || this.currentPreviewUrl : this.currentPreviewUrl;
+        },
+        shareButtonsRootStyle() {
+            return {
+                "--share-columns-gap": this.safeLength(this.responsiveValue("columnsGap", "8px"), "8px"),
+                "--share-rows-gap": this.safeLength(this.responsiveValue("rowsGap", "8px"), "8px"),
+                "--share-button-size": this.safeLength(this.responsiveValue("buttonSize", "40px"), "40px"),
+                "--share-icon-size": this.safeLength(this.responsiveValue("iconSize", "16px"), "16px"),
+                "--share-button-height": this.safeLength(this.responsiveValue("buttonHeight", "40px"), "40px"),
+            };
+        },
         hotspotRenditionKey() {
             if (this.type !== "hotspot") return "";
             return `${String(this.s.imageUrl || "")}|${String(this.s.imageResolution || "full")}`;
         },
         reviewRenditionKey() {
-            if (!["reviews", "media_carousel"].includes(this.type)) return "";
+            if (!["reviews", "media_carousel", "testimonial_carousel"].includes(this.type)) return "";
             return JSON.stringify({
                 images: (this.s.items || []).map((entry) => [entry.id, entry.imageUrl]),
                 size: this.s.imageResolution || "full",
@@ -1028,7 +1573,7 @@ export default {
                 this.type === "media_carousel" &&
                 (this.s.skin === "slideshow" || ["fade", "cube"].includes(this.s.effect))
             ) return 1;
-            const fallback = this.type === "reviews" ? 1 : 3;
+            const fallback = ["reviews", "testimonial_carousel"].includes(this.type) ? 1 : 3;
             const n = Number(this.responsiveValue("slidesToShow", fallback)) || 1;
             return Math.max(1, Math.min(n, this.itemCount || 1));
         },
@@ -1078,12 +1623,12 @@ export default {
             };
         },
         maxIndex() {
-            return ["carousel", "reviews", "media_carousel"].includes(this.type)
+            return ["carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type)
                 ? this.carouselMaxIndex
                 : Math.max(0, this.itemCount - 1);
         },
         hasArrows() {
-            if (["reviews", "media_carousel"].includes(this.type)) return Boolean(this.s.arrows) && this.maxIndex > 0;
+            if (["reviews", "media_carousel", "testimonial_carousel"].includes(this.type)) return Boolean(this.s.arrows) && this.maxIndex > 0;
             return (
                 ["both", "arrows"].includes(this.s.navigation) &&
                 this.maxIndex > 0
@@ -1652,6 +2197,148 @@ export default {
         countdownLabelStyle() {
             return { color: this.s.labelColor || "#d0d5dd" };
         },
+        progressTrackerType() {
+            return this.safeEnum(this.s.trackerType, ["horizontal", "circular"], "horizontal");
+        },
+        progressTrackerAlignment() {
+            return this.safeEnum(this.responsiveValue("direction", "left"), ["left", "center", "right"], "left");
+        },
+        progressTrackerPercent() {
+            return Math.max(0, Math.min(100, Math.round(Number(this.progressValue) || 0)));
+        },
+        progressTrackerCircleCircumference() {
+            return 2 * Math.PI * 52;
+        },
+        progressTrackerRootStyle() {
+            return {
+                "--progress-tracker-size": this.safeLength(this.responsiveValue("trackerSize", "6px"), "6px"),
+                "--progress-tracker-circle-size": this.safeLength(this.responsiveValue("circleSize", "140px"), "140px"),
+                "--progress-tracker-indicator": this.safeColor(this.s.indicatorColor, "#6979f8"),
+                "--progress-tracker-indicator-width": this.safeLength(this.responsiveValue("indicatorWidth", "4px"), "4px"),
+                "--progress-tracker-background": this.safeColor(this.s.backgroundColor, "#e4e7ec"),
+                "--progress-tracker-background-width": this.safeLength(this.responsiveValue("backgroundWidth", "4px"), "4px"),
+                "--progress-tracker-percentage": this.safeColor(this.s.percentageColor, "#101828"),
+            };
+        },
+        progressTrackerIndicatorStyle() {
+            return {
+                width: this.progressTrackerPercent + "%",
+                marginLeft: this.progressTrackerAlignment === "right" ? "auto" : this.progressTrackerAlignment === "center" ? "auto" : "0",
+                marginRight: this.progressTrackerAlignment === "center" ? "auto" : "0",
+            };
+        },
+        progressTrackerCircleTrackStyle() {
+            return {
+                fill: "none",
+                stroke: "var(--progress-tracker-background)",
+                strokeWidth: "var(--progress-tracker-background-width)",
+            };
+        },
+        progressTrackerCircleIndicatorStyle() {
+            return {
+                fill: "none",
+                stroke: "var(--progress-tracker-indicator)",
+                strokeWidth: "var(--progress-tracker-indicator-width)",
+                strokeDasharray: this.progressTrackerCircleCircumference,
+                strokeDashoffset: this.progressTrackerCircleCircumference * (1 - this.progressTrackerPercent / 100),
+            };
+        },
+        progressTrackerPercentageStyle() {
+            return {
+                ...this.typographyStyle("progressTrackerPercentage", "14px", "600", "1.2em"),
+                color: "var(--progress-tracker-percentage)",
+                textShadow: this.safeTextShadow(this.s.progressTrackerPercentageTextShadow, "none"),
+            };
+        },
+        videoPlaylistItems() {
+            return Array.isArray(this.s.items) ? this.s.items : [];
+        },
+        videoPlaylistPosition() {
+            return this.safeEnum(this.responsiveValue("videoPosition", "left"), ["left", "right"], "left");
+        },
+        videoPlaylistActiveItem() {
+            return this.videoPlaylistItems[this.activePlaylistIndex] || this.videoPlaylistItems[0] || { type: "section", title: "Playlist", sectionContent: "" };
+        },
+        videoPlaylistOverlayImage() {
+            if (!this.s.imageOverlay) return "";
+            return this.safeMediaUrl(this.s.overlayImageUrl) || this.videoPlaylistThumbnail(this.videoPlaylistActiveItem);
+        },
+        videoPlaylistTabs() {
+            const entry = this.videoPlaylistActiveItem;
+            if (!entry || entry.type === "section" || !entry.showContentTabs) return [];
+            return [
+                { title: String(entry.contentTabOneTitle || "Overview"), content: String(entry.contentTabOneContent || "") },
+                { title: String(entry.contentTabTwoTitle || "Notes"), content: String(entry.contentTabTwoContent || "") },
+            ].filter((tab) => tab.title || tab.content);
+        },
+        videoPlaylistRootStyle() {
+            return {
+                "--video-playlist-height": this.safeLength(this.responsiveValue("videoHeight", "360px"), "360px"),
+                "--video-playlist-name-background": this.safeColor(this.s.playlistNameBackground, "#101828"),
+                "--video-playlist-name-color": this.safeColor(this.s.playlistNameColor, "#fff"),
+                "--video-playlist-count-color": this.safeColor(this.s.videoCountColor, "#667085"),
+                "--video-playlist-item-background": this.safeColor(this.s.itemBackground, "#fff"),
+                "--video-playlist-item-background-hover": this.safeColor(this.s.itemBackgroundHover, "#f2f4f7"),
+                "--video-playlist-item-background-active": this.safeColor(this.s.itemBackgroundActive, "#eef2ff"),
+                "--video-playlist-item-color": this.safeColor(this.s.itemColor, "#344054"),
+                "--video-playlist-item-color-hover": this.safeColor(this.s.itemColorHover, "#101828"),
+                "--video-playlist-item-color-active": this.safeColor(this.s.itemColorActive, "#101828"),
+                "--video-playlist-duration-color": this.safeColor(this.s.durationColor, "#667085"),
+                "--video-playlist-icon-color": this.safeColor(this.s.iconColor, "#6979f8"),
+                "--video-playlist-icon-background": this.safeColor(this.s.iconBackground, "#fff"),
+                "--video-playlist-icon-shadow": this.safeTextShadow(this.s.iconShadow, "none"),
+                "--video-playlist-icon-size": this.safeLength(this.responsiveValue("iconSize", "18px"), "18px"),
+                "--video-playlist-section-background": this.safeColor(this.s.sectionBackground, "#f8fafc"),
+                "--video-playlist-section-border-color": this.safeColor(this.s.sectionBorderColor, "#e4e7ec"),
+                "--video-playlist-section-border-type": this.safeEnum(this.s.sectionBorderType, ["none", "solid", "double", "dotted", "dashed"], "solid"),
+                "--video-playlist-section-border-width": this.safeLength(this.responsiveValue("sectionBorderWidth", "1px"), "1px"),
+                "--video-playlist-section-radius": this.safeLength(this.responsiveValue("sectionRadius", "6px"), "6px"),
+                "--video-playlist-section-padding": this.safeLength(this.responsiveValue("sectionPadding", "12px"), "12px"),
+                "--video-playlist-section-shadow": this.safeTextShadow(this.s.sectionBoxShadow, "none"),
+                "--video-playlist-tabs-border-width": this.safeLength(this.responsiveValue("tabsBorderWidth", "1px"), "1px"),
+                "--video-playlist-tabs-border-color": this.safeColor(this.s.tabsBorderColor, "#e4e7ec"),
+                "--video-playlist-tabs-background": this.safeColor(this.s.tabsBackground, "#fff"),
+                "--video-playlist-tabs-title-color": this.safeColor(this.s.tabsTitleColor, "#667085"),
+                "--video-playlist-tabs-title-active": this.safeColor(this.s.tabsTitleActiveColor, "#6979f8"),
+                "--video-playlist-tabs-content-color": this.safeColor(this.s.tabsContentColor, "#344054"),
+                "--video-playlist-tabs-content-padding": this.safeLength(this.responsiveValue("tabsContentPadding", "14px"), "14px"),
+                "--video-playlist-show-more": this.safeColor(this.s.showMoreColor, "#6979f8"),
+                "--video-playlist-show-more-hover": this.safeColor(this.s.showMoreColorHover, "#5868e8"),
+            };
+        },
+        videoPlaylistNameStyle() {
+            return { ...this.typographyStyle("videoPlaylistName", "20px", "600", "1.3em"), color: "var(--video-playlist-name-color)" };
+        },
+        videoPlaylistCountStyle() {
+            return { ...this.typographyStyle("videoPlaylistCount", "13px", "400", "1.4em"), color: "var(--video-playlist-count-color)" };
+        },
+        videoPlaylistItemTitleStyle() {
+            return this.typographyStyle("videoPlaylistItem", "14px", "500", "1.3em");
+        },
+        videoPlaylistDurationStyle() {
+            return { ...this.typographyStyle("videoPlaylistDuration", "12px", "400", "1.3em"), color: "var(--video-playlist-duration-color)" };
+        },
+        videoPlaylistSectionStyle() {
+            return { background: "var(--video-playlist-section-background)", border: "var(--video-playlist-section-border-width) var(--video-playlist-section-border-type, solid) var(--video-playlist-section-border-color)", borderRadius: "var(--video-playlist-section-radius)", padding: "var(--video-playlist-section-padding)", boxShadow: this.safeTextShadow(this.s.sectionBoxShadow, "none") };
+        },
+        videoPlaylistItemStyle() {
+            return (index) => {
+                const active = index === this.activePlaylistIndex;
+                return { background: active ? "var(--video-playlist-item-background-active)" : "var(--video-playlist-item-background)", color: active ? "var(--video-playlist-item-color-active)" : "var(--video-playlist-item-color)" };
+            };
+        },
+        videoPlaylistIconStyle() {
+            return (index) => ({ color: index === this.activePlaylistIndex ? this.safeColor(this.s.dropdownIconColorActive, "#6979f8") : this.safeColor(this.s.iconColor, "#6979f8"), background: "var(--video-playlist-icon-background)", boxShadow: this.safeTextShadow(this.s.iconShadow, "none"), fontSize: "var(--video-playlist-icon-size)" });
+        },
+        videoPlaylistTabButtonStyle() {
+            return (index) => ({ ...this.typographyStyle("videoPlaylistTabTitle", "14px", "600", "1.3em"), color: index === this.activePlaylistTab ? "var(--video-playlist-tabs-title-active)" : "var(--video-playlist-tabs-title-color)" });
+        },
+        videoPlaylistTabContentStyle() {
+            return { ...this.typographyStyle("videoPlaylistTabContent", "14px", "400", "1.5em"), color: "var(--video-playlist-tabs-content-color)" };
+        },
+        videoPlaylistShowMoreStyle() {
+            return { ...this.typographyStyle("videoPlaylistShowMore", "13px", "600", "1.3em"), color: this.safeColor(this.s.showMoreColor, "#6979f8") };
+        },
         carouselTrackStyle() {
             const gap = this.safeLength(
                 this.responsiveValue("gap", "20px"),
@@ -1802,6 +2489,100 @@ export default {
             return {
                 ...this.typographyStyle("reviewText", "14px", "400", "1.6em"),
                 color: this.s.reviewColor || "#344054",
+            };
+        },
+        testimonialRootStyle() {
+            const alignment = this.safeEnum(
+                this.responsiveValue("alignment", "center"),
+                ["left", "center", "right"],
+                "center",
+            );
+            return {
+                ...this.carouselRootStyle,
+                width: this.safeLength(this.responsiveValue("width", "100%"), "100%"),
+                textAlign: alignment,
+                "--testimonial-identity-align":
+                    { left: "flex-start", center: "center", right: "flex-end" }[alignment] ||
+                    "center",
+                "--testimonial-content-gap": this.safeLength(
+                    this.responsiveValue("contentGap", "10px"),
+                    "10px",
+                ),
+                "--testimonial-image-size": this.safeLength(
+                    this.responsiveValue("imageSize", "50px"),
+                    "50px",
+                ),
+                "--testimonial-image-gap": this.safeLength(
+                    this.responsiveValue("imageGap", "10px"),
+                    "10px",
+                ),
+                "--testimonial-image-radius": this.responsiveBoxValue("imageRadius", "50%"),
+            };
+        },
+        testimonialSlideStyle() {
+            return {
+                flex: `0 0 calc(${100 / this.carouselVisible}% - ${this.carouselGapOffset})`,
+                background: this.safeColor(this.s.slideBackground, "#fff"),
+                padding: this.responsiveBoxValue("slidePadding", "20px"),
+                borderStyle: "solid",
+                borderColor: this.safeColor(this.s.slideBorderColor, "#e4e7ec"),
+                borderWidth: this.responsiveBoxValue("slideBorder", "1px"),
+                borderRadius: this.responsiveBoxValue("slideRadius", "0px"),
+            };
+        },
+        testimonialContentStyle() {
+            const strokeWidth = this.safeLength(
+                this.responsiveValue("testimonialCarouselContentTextStrokeWidth", "0px"),
+                "0px",
+            );
+            return {
+                ...this.typographyStyle(
+                    "testimonialCarouselContent",
+                    "16px",
+                    "400",
+                    "1.5em",
+                ),
+                color: this.safeColor(this.s.contentColor, "#344054"),
+                textShadow: this.safeTextShadow(
+                    this.s.testimonialCarouselContentTextShadow,
+                    "none",
+                ),
+                WebkitTextStroke: `${strokeWidth} ${this.safeColor(this.s.testimonialCarouselContentTextStrokeColor, "#000")}`,
+            };
+        },
+        testimonialNameStyle() {
+            return {
+                ...this.typographyStyle(
+                    "testimonialCarouselName",
+                    "18px",
+                    "600",
+                    "1.3em",
+                ),
+                color: this.safeColor(this.s.nameColor, "#101828"),
+            };
+        },
+        testimonialTitleStyle() {
+            return {
+                ...this.typographyStyle(
+                    "testimonialCarouselTitle",
+                    "14px",
+                    "400",
+                    "1.4em",
+                ),
+                color: this.safeColor(this.s.titleColor, "#667085"),
+            };
+        },
+        testimonialImageStyle() {
+            return {
+                width: "var(--testimonial-image-size, 50px)",
+                height: "var(--testimonial-image-size, 50px)",
+                borderStyle: "solid",
+                borderColor: this.safeColor(this.s.imageBorderColor, "#e4e7ec"),
+                borderWidth: this.s.imageBorder
+                    ? this.responsiveBoxValue("imageBorder", "1px")
+                    : "0px",
+                borderRadius: "var(--testimonial-image-radius, 50%)",
+                objectFit: "cover",
             };
         },
         carouselGapOffset() {
@@ -2029,11 +2810,18 @@ export default {
             this.startSliderAutoplay();
         },
     },
-    mounted() {
-        this.timer = window.setInterval(() => {
-            this.now = Date.now();
-        }, 1000);
-        if (
+        mounted() {
+            this.timer = window.setInterval(() => {
+                this.now = Date.now();
+            }, 1000);
+            if (this.type === "progress_tracker") {
+                this.progressScrollHandler = () => this.updateProgressTracker();
+                this.progressResizeHandler = () => this.updateProgressTracker();
+                window.addEventListener("scroll", this.progressScrollHandler, { passive: true });
+                window.addEventListener("resize", this.progressResizeHandler, { passive: true });
+                this.updateProgressTracker();
+            }
+            if (
             this.type === "animated_headline" &&
             this.s.headlineStyle === "rotating" &&
             !this.reducedMotion
@@ -2056,6 +2844,10 @@ export default {
         window.clearInterval(this.timer);
         window.clearInterval(this.wordTimer);
         window.clearInterval(this.sliderTimer);
+        window.clearTimeout(this.codeCopyStatusTimer);
+        window.clearTimeout(this.shareActionStatusTimer);
+        if (this.progressScrollHandler) window.removeEventListener("scroll", this.progressScrollHandler);
+        if (this.progressResizeHandler) window.removeEventListener("resize", this.progressResizeHandler);
     },
     methods: {
         async resolveReviewImages() {
@@ -2071,7 +2863,7 @@ export default {
             );
             const size = String(this.s.imageResolution || "full");
             if (
-                !["reviews", "media_carousel"].includes(this.type) ||
+                !["reviews", "media_carousel", "testimonial_carousel"].includes(this.type) ||
                 size === "full" ||
                 !endpoint ||
                 !window.axios
@@ -2137,6 +2929,62 @@ export default {
                 return "";
             }
             return "";
+        },
+        videoPlaylistEmbedUrl(entry) {
+            if (!entry || !["youtube", "vimeo"].includes(entry.type)) return "";
+            const base = this.safeVideoEmbedUrl(entry.link);
+            if (!base) return "";
+            if (!this.s.autoplayOnLoad) return base;
+            return base + (base.includes("?") ? "&" : "?") + "autoplay=1";
+        },
+        videoPlaylistThumbnail(entry) {
+            const custom = this.safeMediaUrl(entry?.thumbnailUrl);
+            if (custom) return custom;
+            const raw = String(entry?.link || "");
+            const match = raw.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/i);
+            return match ? `https://img.youtube.com/vi/${encodeURIComponent(match[1])}/hqdefault.jpg` : "";
+        },
+        videoPlaylistIconClass(index) {
+            const watched = this.s.indicateWatched && this.playlistWatched.includes(index);
+            return watched
+                ? this.proIconClass(this.s, "playedIcon", "fas fa-check")
+                : this.proIconClass(this.s, "playIcon", "fas fa-play");
+        },
+        selectVideoPlaylistItem(index) {
+            const next = Math.max(0, Math.min(this.videoPlaylistItems.length - 1, Number(index) || 0));
+            if (this.s.indicateWatched && this.activePlaylistIndex !== next) {
+                this.playlistWatched = Array.from(new Set([...this.playlistWatched, this.activePlaylistIndex]));
+            }
+            this.activePlaylistIndex = next;
+            this.activePlaylistTab = 0;
+        },
+        playNextVideo() {
+            if (this.s.indicateWatched) this.playlistWatched = Array.from(new Set([...this.playlistWatched, this.activePlaylistIndex]));
+            if (this.s.autoplayNext && this.activePlaylistIndex < this.videoPlaylistItems.length - 1) this.selectVideoPlaylistItem(this.activePlaylistIndex + 1);
+        },
+        progressTrackerTarget() {
+            if (typeof document === "undefined") return null;
+            if (this.s.relativeTo === "selector") {
+                try { return document.querySelector(String(this.s.selector || "")); } catch (_) { return null; }
+            }
+            if (this.s.relativeTo === "post_content") return document.querySelector(".post-content, .entry-content, article, main") || document.documentElement;
+            return document.documentElement;
+        },
+        updateProgressTracker() {
+            if (this.type !== "progress_tracker" || typeof window === "undefined" || typeof document === "undefined") return;
+            const viewport = Math.max(1, window.innerHeight || document.documentElement.clientHeight || 1);
+            const scrollTop = Math.max(0, window.scrollY || document.documentElement.scrollTop || 0);
+            const target = this.progressTrackerTarget();
+            if (!target) { this.progressValue = 0; return; }
+            if (this.s.relativeTo === "page") {
+                const max = Math.max(0, document.documentElement.scrollHeight - viewport);
+                this.progressValue = max ? (scrollTop / max) * 100 : 50;
+                return;
+            }
+            const rect = target.getBoundingClientRect ? target.getBoundingClientRect() : { top: 0, height: target.scrollHeight || 0 };
+            const top = rect.top + scrollTop;
+            const height = Math.max(1, rect.height || target.scrollHeight || 1);
+            this.progressValue = Math.max(0, Math.min(100, ((scrollTop - top + viewport) / (height + viewport)) * 100));
         },
         openMediaLightbox(entry) {
             const isVideo = entry?.type === "video";
@@ -2212,7 +3060,7 @@ export default {
         previous() {
             this.goTo(
                 this.activeIndex -
-                    (["carousel", "reviews", "media_carousel"].includes(this.type)
+                    (["carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type)
                         ? this.carouselStep
                         : 1),
             );
@@ -2221,7 +3069,7 @@ export default {
         next() {
             this.goTo(
                 this.activeIndex +
-                    (["carousel", "reviews", "media_carousel"].includes(this.type)
+                    (["carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type)
                         ? this.carouselStep
                         : 1),
             );
@@ -2232,7 +3080,7 @@ export default {
             this.afterSliderInteraction();
         },
         afterSliderInteraction() {
-            if (!["slides", "carousel", "reviews", "media_carousel"].includes(this.type)) return;
+            if (!["slides", "carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type)) return;
             if (this.s.pauseOnInteraction) {
                 this.sliderInteractionPaused = true;
                 this.stopSliderAutoplay();
@@ -2249,7 +3097,7 @@ export default {
         startSliderAutoplay() {
             this.stopSliderAutoplay();
             if (
-                !["slides", "carousel", "reviews", "media_carousel"].includes(this.type) ||
+                !["slides", "carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type) ||
                 !this.s.autoplay ||
                 this.reducedMotion ||
                 this.sliderInteractionPaused ||
@@ -2261,7 +3109,7 @@ export default {
                 () =>
                     this.goTo(
                         this.activeIndex +
-                            (["carousel", "reviews", "media_carousel"].includes(this.type)
+                            (["carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type)
                                 ? this.carouselStep
                                 : 1),
                     ),
@@ -2396,6 +3244,316 @@ export default {
                     : this.s.dotsColor || "#ffffff80",
             };
         },
+        async copyCode() {
+            const value = String(this.s.code ?? "");
+            try {
+                if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(value);
+                } else if (!this.copyCodeFallback(value)) {
+                    throw new Error("Clipboard unavailable");
+                }
+                this.codeCopyStatus = "Copied";
+            } catch (_) {
+                this.codeCopyStatus = "Copy failed";
+            }
+            window.clearTimeout(this.codeCopyStatusTimer);
+            this.codeCopyStatusTimer = window.setTimeout(() => {
+                this.codeCopyStatus = "";
+            }, 1800);
+        },
+        copyCodeFallback(value) {
+            if (typeof document === "undefined" || !document.body) return false;
+            const textarea = document.createElement("textarea");
+            textarea.value = value;
+            textarea.setAttribute("readonly", "");
+            textarea.style.position = "fixed";
+            textarea.style.opacity = "0";
+            document.body.appendChild(textarea);
+            textarea.select();
+            let copied = false;
+            try {
+                copied = Boolean(document.execCommand("copy"));
+            } catch (_) {
+                copied = false;
+            }
+            textarea.remove();
+            return copied;
+        },
+        shareNetwork(value) {
+            const allowed = [
+                "facebook",
+                "twitter",
+                "x",
+                "threads",
+                "linkedin",
+                "pinterest",
+                "reddit",
+                "whatsapp",
+                "telegram",
+                "email",
+                "print",
+                "copy",
+                "vk",
+                "tumblr",
+                "skype",
+                "digg",
+                "stumbleupon",
+                "pocket",
+                "flipboard",
+                "buffer",
+                "weibo",
+                "blogger",
+                "odnoklassniki",
+            ];
+            return this.safeEnum(String(value || ""), allowed, "facebook");
+        },
+        shareNetworkLabel(value) {
+            const labels = {
+                facebook: "Facebook",
+                twitter: "Twitter",
+                x: "X",
+                threads: "Threads",
+                linkedin: "LinkedIn",
+                pinterest: "Pinterest",
+                reddit: "Reddit",
+                whatsapp: "WhatsApp",
+                telegram: "Telegram",
+                email: "Email",
+                print: "Print",
+                copy: "Copy Link",
+                vk: "VK",
+                tumblr: "Tumblr",
+                skype: "Skype",
+                digg: "Digg",
+                stumbleupon: "StumbleUpon",
+                pocket: "Pocket",
+                flipboard: "Flipboard",
+                buffer: "Buffer",
+                weibo: "Weibo",
+                blogger: "Blogger",
+                odnoklassniki: "Odnoklassniki",
+            };
+            return labels[this.shareNetwork(value)] || "Share";
+        },
+        shareNetworkIcon(value) {
+            const icons = {
+                facebook: "fab fa-facebook-f",
+                twitter: "fab fa-twitter",
+                x: "fab fa-x-twitter",
+                threads: "fab fa-threads",
+                linkedin: "fab fa-linkedin-in",
+                pinterest: "fab fa-pinterest-p",
+                reddit: "fab fa-reddit-alien",
+                whatsapp: "fab fa-whatsapp",
+                telegram: "fab fa-telegram-plane",
+                email: "fas fa-envelope",
+                print: "fas fa-print",
+                copy: "fas fa-link",
+                vk: "fab fa-vk",
+                tumblr: "fab fa-tumblr",
+                skype: "fab fa-skype",
+                digg: "fab fa-digg",
+                stumbleupon: "fab fa-stumbleupon",
+                pocket: "fab fa-get-pocket",
+                flipboard: "fas fa-book-open",
+                buffer: "fab fa-buffer",
+                weibo: "fab fa-weibo",
+                blogger: "fab fa-blogger-b",
+                odnoklassniki: "fab fa-odnoklassniki",
+            };
+            return icons[this.shareNetwork(value)] || "fas fa-share-alt";
+        },
+        shareNetworkColors(value) {
+            const colors = {
+                facebook: ["#1877f2", "#ffffff", "#0d6efd"],
+                twitter: ["#1da1f2", "#ffffff", "#0d8bd0"],
+                x: ["#000000", "#ffffff", "#333333"],
+                threads: ["#000000", "#ffffff", "#333333"],
+                linkedin: ["#0a66c2", "#ffffff", "#004182"],
+                pinterest: ["#bd081c", "#ffffff", "#8c0615"],
+                reddit: ["#ff4500", "#ffffff", "#d93600"],
+                whatsapp: ["#25d366", "#ffffff", "#1da851"],
+                telegram: ["#229ed9", "#ffffff", "#147eb0"],
+                email: ["#667085", "#ffffff", "#475467"],
+                print: ["#667085", "#ffffff", "#475467"],
+                copy: ["#667085", "#ffffff", "#475467"],
+            };
+            const entry = colors[this.shareNetwork(value)] || ["#6979f8", "#ffffff", "#5367ff"];
+            return {
+                primary: entry[0],
+                secondary: entry[1],
+                hoverPrimary: entry[2],
+                hoverSecondary: entry[1],
+            };
+        },
+        shareButtonStyle(entry) {
+            const colors = this.shareNetworkColors(entry?.network);
+            const custom = this.s.colorMode === "custom";
+            return {
+                ...this.typographyStyle("shareButtons", "14px", "600", "1.2em"),
+                "--share-button-background": this.safeColor(custom ? this.s.primaryColor : colors.primary, colors.primary),
+                "--share-button-color": this.safeColor(custom ? this.s.secondaryColor : colors.secondary, colors.secondary),
+                "--share-button-background-hover": this.safeColor(custom ? this.s.primaryColorHover : colors.hoverPrimary, colors.hoverPrimary),
+                "--share-button-color-hover": this.safeColor(custom ? this.s.secondaryColorHover : colors.hoverSecondary, colors.hoverSecondary),
+            };
+        },
+        shareAction(value) {
+            const network = this.shareNetwork(value);
+            return ["copy", "print"].includes(network) ? network : "";
+        },
+        shareButtonHref(entry) {
+            const network = this.shareNetwork(entry?.network);
+            const url = encodeURIComponent(this.shareTargetUrl);
+            const text = encodeURIComponent(String(this.s.shareText || (typeof document !== "undefined" ? document.title : "") || ""));
+            const label = encodeURIComponent(String(entry?.customLabel || this.shareNetworkLabel(network)));
+            const builders = {
+                facebook: "https://www.facebook.com/sharer/sharer.php?u=" + url,
+                twitter: "https://twitter.com/intent/tweet?url=" + url + "&text=" + text,
+                x: "https://x.com/intent/post?url=" + url + "&text=" + text,
+                threads: "https://www.threads.net/intent/post?text=" + encodeURIComponent(String(this.s.shareText || "") + " " + this.shareTargetUrl),
+                linkedin: "https://www.linkedin.com/sharing/share-offsite/?url=" + url,
+                pinterest: "https://pinterest.com/pin/create/button/?url=" + url + "&description=" + text,
+                reddit: "https://www.reddit.com/submit?url=" + url + "&title=" + text,
+                whatsapp: "https://wa.me/?text=" + encodeURIComponent(String(this.s.shareText || "") + " " + this.shareTargetUrl),
+                telegram: "https://t.me/share/url?url=" + url + "&text=" + text,
+                email: "mailto:?subject=" + label + "&body=" + encodeURIComponent(this.shareTargetUrl),
+                vk: "https://vk.com/share.php?url=" + url,
+                tumblr: "https://www.tumblr.com/widgets/share/tool?canonicalUrl=" + url,
+                skype: "https://web.skype.com/share?url=" + url,
+                digg: "https://digg.com/submit?url=" + url,
+                stumbleupon: "https://www.stumbleupon.com/submit?url=" + url,
+                pocket: "https://getpocket.com/save?url=" + url,
+                flipboard: "https://share.flipboard.com/bookmarklet/popout?v=2&url=" + url,
+                buffer: "https://buffer.com/add?url=" + url + "&text=" + text,
+                weibo: "https://service.weibo.com/share/share.php?url=" + url + "&title=" + text,
+                blogger: "https://www.blogger.com/blog-this.g?u=" + url + "&n=" + text,
+                odnoklassniki: "https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=" + url,
+            };
+            return builders[network] || "#";
+        },
+        shareButtonTarget(entry) {
+            return this.shareAction(entry?.network) ? undefined : "_blank";
+        },
+        shareButtonRel(entry) {
+            return this.shareAction(entry?.network) ? undefined : "noopener noreferrer";
+        },
+        async handleShareAction(entry, event) {
+            const action = this.shareAction(entry?.network);
+            if (!action) return;
+            event.preventDefault();
+            if (action === "print") {
+                if (typeof window !== "undefined" && typeof window.print === "function") window.print();
+                return;
+            }
+            try {
+                if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(this.shareTargetUrl);
+                } else if (!this.copyCodeFallback(this.shareTargetUrl)) {
+                    throw new Error("Clipboard unavailable");
+                }
+                this.shareActionStatus = "Copied";
+            } catch (_) {
+                this.shareActionStatus = "Copy failed";
+            }
+            window.clearTimeout(this.shareActionStatusTimer);
+            this.shareActionStatusTimer = window.setTimeout(() => {
+                this.shareActionStatus = "";
+            }, 1800);
+        },
+        escapeCodeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        },
+        codeKeywords(language) {
+            const aliases = {
+                jsx: "javascript",
+                tsx: "typescript",
+                vue: "javascript",
+                scss: "css",
+                sass: "css",
+                less: "css",
+                json5: "json",
+                mdx: "markdown",
+                shell: "bash",
+                powershell: "bash",
+                batch: "bash",
+                docker: "bash",
+                plsql: "sql",
+                graphql: "javascript",
+                twig: "php",
+                blade: "php",
+                actionscript: "javascript",
+                kotlin: "java",
+                dart: "java",
+                objectivec: "c",
+                swift: "c",
+                arduino: "cpp",
+                fsharp: "csharp",
+            };
+            const key = aliases[language] || language;
+            return {
+                javascript: ["as", "async", "await", "break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete", "else", "export", "extends", "finally", "for", "from", "function", "if", "import", "in", "instanceof", "let", "new", "of", "return", "static", "switch", "this", "throw", "try", "typeof", "var", "while", "with", "yield"],
+                typescript: ["as", "async", "await", "boolean", "break", "case", "catch", "class", "const", "continue", "declare", "default", "else", "export", "extends", "finally", "for", "from", "function", "if", "implements", "import", "interface", "keyof", "let", "new", "number", "of", "private", "public", "return", "string", "switch", "this", "throw", "try", "type", "typeof", "var", "void", "while"],
+                json: ["true", "false", "null"],
+                php: ["abstract", "array", "as", "break", "case", "class", "const", "continue", "echo", "else", "extends", "final", "for", "foreach", "function", "if", "implements", "include", "namespace", "new", "private", "protected", "public", "require", "return", "static", "switch", "throw", "trait", "try", "use", "while"],
+                python: ["and", "as", "assert", "async", "await", "break", "class", "continue", "def", "del", "elif", "else", "except", "finally", "for", "from", "global", "if", "import", "in", "is", "lambda", "nonlocal", "not", "or", "pass", "raise", "return", "try", "while", "with", "yield"],
+                bash: ["case", "do", "done", "elif", "else", "esac", "fi", "for", "function", "if", "in", "select", "then", "until", "while"],
+                sql: ["alter", "and", "as", "by", "case", "create", "delete", "desc", "distinct", "drop", "from", "group", "having", "in", "insert", "into", "join", "limit", "not", "null", "on", "or", "order", "select", "set", "table", "then", "union", "update", "values", "when", "where"],
+                java: ["abstract", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do", "double", "else", "extends", "final", "finally", "float", "for", "if", "implements", "import", "instanceof", "int", "interface", "long", "new", "package", "private", "protected", "public", "return", "short", "static", "super", "switch", "this", "throw", "throws", "try", "void", "while"],
+                csharp: ["abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else", "enum", "event", "explicit", "false", "finally", "float", "for", "foreach", "if", "implicit", "in", "int", "interface", "internal", "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out", "override", "params", "private", "protected", "public", "readonly", "ref", "return", "sealed", "static", "string", "struct", "switch", "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "using", "virtual", "void", "volatile", "while"],
+                cpp: ["alignas", "auto", "bool", "break", "case", "catch", "char", "class", "const", "constexpr", "continue", "default", "delete", "do", "double", "else", "enum", "explicit", "false", "float", "for", "if", "include", "inline", "int", "long", "namespace", "new", "nullptr", "operator", "private", "protected", "public", "return", "short", "signed", "sizeof", "static", "struct", "switch", "template", "this", "throw", "true", "try", "typedef", "typename", "union", "unsigned", "using", "virtual", "void", "volatile", "while"],
+                c: ["auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while"],
+                go: ["break", "case", "chan", "const", "continue", "default", "defer", "else", "fallthrough", "for", "func", "go", "goto", "if", "import", "interface", "map", "package", "range", "return", "select", "struct", "switch", "type", "var"],
+                rust: ["as", "async", "await", "break", "const", "continue", "crate", "else", "enum", "extern", "fn", "for", "if", "impl", "in", "let", "loop", "match", "mod", "move", "mut", "pub", "ref", "return", "self", "Self", "static", "struct", "super", "trait", "type", "unsafe", "use", "where", "while"],
+                ruby: ["alias", "and", "begin", "break", "case", "class", "def", "defined", "do", "else", "elsif", "end", "ensure", "for", "if", "in", "module", "next", "nil", "not", "or", "redo", "rescue", "retry", "return", "self", "super", "then", "undef", "unless", "until", "when", "while", "yield"],
+                css: ["and", "from", "important", "not", "or", "supports", "to"],
+                yaml: ["false", "null", "true"],
+                markdown: [],
+                toml: ["true", "false"],
+                pascal: ["and", "array", "begin", "case", "class", "const", "div", "do", "else", "end", "for", "function", "if", "in", "mod", "not", "of", "or", "procedure", "program", "record", "repeat", "then", "type", "until", "uses", "var", "while", "with"],
+                haskell: ["case", "class", "data", "default", "deriving", "do", "else", "foreign", "if", "import", "in", "infix", "instance", "let", "module", "newtype", "of", "then", "type", "where", "without"],
+                scala: ["abstract", "case", "catch", "class", "def", "do", "else", "extends", "final", "finally", "for", "if", "implicit", "import", "lazy", "match", "new", "object", "override", "package", "private", "protected", "return", "sealed", "this", "throw", "trait", "try", "type", "val", "var", "while", "with", "yield"],
+                groovy: ["as", "assert", "break", "case", "catch", "class", "const", "continue", "def", "default", "do", "else", "enum", "extends", "false", "final", "finally", "for", "if", "implements", "import", "in", "instanceof", "interface", "new", "null", "package", "private", "protected", "public", "return", "static", "switch", "this", "throw", "trait", "true", "try", "while"],
+                elixir: ["alias", "case", "cond", "def", "defmodule", "defp", "do", "else", "end", "fn", "for", "if", "import", "in", "nil", "not", "or", "raise", "receive", "rescue", "try", "unless", "use", "when"],
+                erlang: ["after", "begin", "case", "catch", "cond", "end", "fun", "if", "let", "of", "query", "receive", "try", "when"],
+                clojure: ["and", "def", "defn", "do", "fn", "if", "let", "loop", "map", "nil", "or", "quote", "recur", "require", "set!", "throw", "try", "when"],
+            }[key] || [];
+        },
+        highlightCodePlain(value, language) {
+            let html = this.escapeCodeHtml(value);
+            const keywords = this.codeKeywords(language);
+            if (keywords.length) {
+                const escapedKeywords = keywords.map((keyword) => keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+                html = html.replace(new RegExp(`\\b(?:${escapedKeywords.join("|")})\\b`, "g"), '<span class="pb-pro-code-token pb-pro-code-token--keyword">$&</span>');
+            }
+            html = html.replace(/\b(?:true|false|null|undefined|None|True|False|nil)\b/g, '<span class="pb-pro-code-token pb-pro-code-token--literal">$&</span>');
+            html = html.replace(/\b\d+(?:\.\d+)?\b/g, '<span class="pb-pro-code-token pb-pro-code-token--number">$&</span>');
+            html = html.replace(/\b[A-Za-z_$][\w$]*(?=\s*\()/g, '<span class="pb-pro-code-token pb-pro-code-token--function">$&</span>');
+            if (["markup", "html", "xml", "svg", "mathml", "ssml", "atom", "rss", "vue"].includes(language)) html = html.replace(/(&lt;\/?[A-Za-z][^&]*?&gt;)/gi, '<span class="pb-pro-code-token pb-pro-code-token--tag">$&</span>');
+            return html;
+        },
+        highlightCodeLine(value, language) {
+            const raw = String(value ?? "");
+            const hashComments = ["bash", "shell", "powershell", "batch", "docker", "php", "python", "ruby", "yaml", "toml", "r", "perl", "lua"].includes(language);
+            const pattern = hashComments
+                ? /\/\/.*$|#.*$|\/\*.*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`/gm
+                : /\/\/.*$|\/\*.*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`/gm;
+            let html = "";
+            let cursor = 0;
+            let match;
+            while ((match = pattern.exec(raw))) {
+                html += this.highlightCodePlain(raw.slice(cursor, match.index), language);
+                const token = match[0];
+                const kind = /^(?:\/\/|#|\/\*)/.test(token) ? "comment" : "string";
+                html += `<span class="pb-pro-code-token pb-pro-code-token--${kind}">${this.escapeCodeHtml(token)}</span>`;
+                cursor = match.index + token.length;
+            }
+            return html + this.highlightCodePlain(raw.slice(cursor), language);
+        },
         typographyStyle(
             prefix,
             size = "16px",
@@ -2470,6 +3628,16 @@ export default {
         safeFontWeight(value, fallback) {
             const raw = String(value || "");
             return /^(?:normal|bold|[1-9]00)$/.test(raw) ? raw : fallback;
+        },
+        safeColor(value, fallback) {
+            const raw = String(value || "").trim();
+            return raw && /^[#a-z0-9(),.%\s-]+$/i.test(raw) ? raw : fallback;
+        },
+        safeTextShadow(value, fallback = "none") {
+            const raw = String(value || "").trim();
+            return raw === "none" || /^-?\d+(?:\.\d+)?(?:px|em|rem)\s+-?\d+(?:\.\d+)?(?:px|em|rem)(?:\s+\d+(?:\.\d+)?(?:px|em|rem)){0,2}\s+(?:#[0-9a-f]{3,8}|rgba?\([0-9.,%\s]+\))$/i.test(raw)
+                ? raw
+                : fallback;
         },
         safeEnum(value, allowed, fallback) {
             return allowed.includes(value) ? value : fallback;
@@ -3434,6 +4602,184 @@ export default {
 .pb-pro-countdown__expired {
     padding: 16px;
 }
+.pb-pro-progress-tracker {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-height: 28px;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--progress-tracker-percentage, #101828);
+}
+.pb-pro-progress-tracker.align-left { justify-content: flex-start; }
+.pb-pro-progress-tracker.align-right { justify-content: flex-end; }
+.pb-pro-progress-tracker--horizontal .pb-pro-progress-tracker__horizontal {
+    width: 100%;
+}
+.pb-pro-progress-tracker__track {
+    display: block;
+    width: 100%;
+    height: var(--progress-tracker-background-width, 4px);
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--progress-tracker-background, #e4e7ec);
+}
+.pb-pro-progress-tracker__indicator {
+    display: block;
+    height: var(--progress-tracker-indicator-width, 4px);
+    min-width: 0;
+    border-radius: inherit;
+    background: var(--progress-tracker-indicator, #6979f8);
+    transition: width .25s ease;
+}
+.pb-pro-progress-tracker--circular {
+    width: var(--progress-tracker-circle-size, 140px);
+    min-height: var(--progress-tracker-circle-size, 140px);
+    flex-direction: column;
+}
+.pb-pro-progress-tracker__circular,
+.pb-pro-progress-tracker__circular svg {
+    width: var(--progress-tracker-circle-size, 140px);
+    height: var(--progress-tracker-circle-size, 140px);
+}
+.pb-pro-progress-tracker__circular svg { overflow: visible; }
+.pb-pro-progress-tracker__circle-indicator {
+    transform: rotate(-90deg);
+    transform-origin: 60px 60px;
+    transition: stroke-dashoffset .25s ease;
+}
+.pb-pro-progress-tracker--circular .pb-pro-progress-tracker__percentage {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+}
+.pb-pro-video-playlist {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid #e4e7ec;
+    border-radius: 6px;
+    background: var(--video-playlist-item-background, #fff);
+}
+.pb-pro-video-playlist__topbar {
+    display: flex;
+    min-height: 52px;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--video-playlist-name-background, #101828);
+}
+.pb-pro-video-playlist__name { margin: 0; }
+.pb-pro-video-playlist__count { margin-left: auto; }
+.pb-pro-video-playlist__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 32%);
+    min-width: 0;
+}
+.pb-pro-video-playlist.position-right .pb-pro-video-playlist__body { grid-template-columns: minmax(220px, 32%) minmax(0, 1fr); }
+.pb-pro-video-playlist.position-right .pb-pro-video-playlist__items { order: -1; }
+.pb-pro-video-playlist__player {
+    min-width: 0;
+    min-height: var(--video-playlist-height, 360px);
+    background: #101828;
+}
+.pb-pro-video-playlist__media,
+.pb-pro-video-playlist__media iframe,
+.pb-pro-video-playlist__media video {
+    display: block;
+    width: 100%;
+    height: var(--video-playlist-height, 360px);
+    border: 0;
+}
+.pb-pro-video-playlist__media { position: relative; }
+.pb-pro-video-playlist__overlay-image {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: .9;
+    pointer-events: none;
+}
+.pb-pro-video-playlist__placeholder {
+    display: grid;
+    height: var(--video-playlist-height, 360px);
+    place-items: center;
+    color: #fff;
+    opacity: .72;
+}
+.pb-pro-video-playlist__items {
+    max-height: var(--video-playlist-height, 360px);
+    overflow: auto;
+    background: var(--video-playlist-item-background, #fff);
+}
+.pb-pro-video-playlist__item {
+    display: flex;
+    width: 100%;
+    min-height: 76px;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 0;
+    border-bottom: 1px solid #e4e7ec;
+    color: var(--video-playlist-item-color, #344054);
+    text-align: left;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+}
+.pb-pro-video-playlist__item:hover,
+.pb-pro-video-playlist__item:focus-visible { background: var(--video-playlist-item-background-hover, #f2f4f7) !important; color: var(--video-playlist-item-color-hover, #101828) !important; }
+.pb-pro-video-playlist__thumbnail {
+    display: grid;
+    flex: 0 0 82px;
+    width: 82px;
+    height: 48px;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #f2f4f7;
+}
+.pb-pro-video-playlist__thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+.pb-pro-video-playlist__thumbnail-placeholder { color: var(--video-playlist-icon-color, #6979f8); }
+.pb-pro-video-playlist__item-copy { display: grid; min-width: 0; flex: 1 1 auto; gap: 4px; }
+.pb-pro-video-playlist__item-copy h3,
+.pb-pro-video-playlist__item-copy h4,
+.pb-pro-video-playlist__item-copy h5,
+.pb-pro-video-playlist__item-copy h6,
+.pb-pro-video-playlist__item-copy div,
+.pb-pro-video-playlist__item-copy span { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pb-pro-video-playlist__duration { display: block; }
+.pb-pro-video-playlist__item-icon {
+    display: grid;
+    flex: 0 0 var(--video-playlist-icon-size, 18px);
+    width: var(--video-playlist-icon-size, 18px);
+    height: var(--video-playlist-icon-size, 18px);
+    place-items: center;
+    border-radius: 50%;
+}
+.pb-pro-video-playlist__section { height: 100%; min-height: var(--video-playlist-height, 360px); margin: 0; }
+.pb-pro-video-playlist__section h3,
+.pb-pro-video-playlist__section h4,
+.pb-pro-video-playlist__section h5,
+.pb-pro-video-playlist__section h6 { margin-top: 0; }
+.pb-pro-video-playlist__tabs {
+    border-top: var(--video-playlist-tabs-border-width, 1px) solid var(--video-playlist-tabs-border-color, #e4e7ec);
+    background: var(--video-playlist-tabs-background, #fff);
+}
+.pb-pro-video-playlist__tab-buttons { display: flex; gap: 4px; padding: 10px 14px 0; }
+.pb-pro-video-playlist__tab-buttons button { padding: 8px 10px; border: 0; border-bottom: 2px solid transparent; background: transparent; cursor: pointer; }
+.pb-pro-video-playlist__tab-buttons button.is-active { border-bottom-color: var(--video-playlist-tabs-title-active, #6979f8); }
+.pb-pro-video-playlist__tab-content { min-height: 40px; padding: var(--video-playlist-tabs-content-padding, 14px); white-space: pre-line; }
+.pb-pro-video-playlist__show-more { display: block; margin: 0 auto 10px; padding: 4px 10px; border: 0; background: transparent; color: var(--video-playlist-show-more, #6979f8); cursor: pointer; }
+.pb-pro-video-playlist__show-more:hover { color: var(--video-playlist-show-more-hover, #5868e8); }
+@media (max-width: 700px) {
+    .pb-pro-video-playlist__body,
+    .pb-pro-video-playlist.position-right .pb-pro-video-playlist__body { grid-template-columns: 1fr; }
+    .pb-pro-video-playlist.position-right .pb-pro-video-playlist__items { order: 0; }
+    .pb-pro-video-playlist__items { max-height: none; }
+}
 .pb-pro-carousel {
     --carousel-arrow-gutter: 46px;
     position: relative;
@@ -3466,6 +4812,25 @@ export default {
     transform: translateY(-50%);
 }
 .pb-pro-media-carousel .pb-pro-arrow--next {
+    right: var(--carousel-arrow-gutter, 46px);
+    transform: translateY(-50%);
+}
+.pb-pro-testimonial-carousel .pb-pro-arrow {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    font-size: var(--carousel-arrow-size, 20px);
+    line-height: 1;
+}
+.pb-pro-testimonial-carousel .pb-pro-arrow > i {
+    font-size: min(50%, 16px);
+    line-height: 1;
+}
+.pb-pro-testimonial-carousel .pb-pro-arrow--prev {
+    left: var(--carousel-arrow-gutter, 46px);
+    transform: translateY(-50%);
+}
+.pb-pro-testimonial-carousel .pb-pro-arrow--next {
     right: var(--carousel-arrow-gutter, 46px);
     transform: translateY(-50%);
 }
@@ -3641,6 +5006,166 @@ export default {
     color: var(--reviews-rating-color, #f0ad4e);
     white-space: nowrap;
 }
+.pb-pro-testimonial-carousel {
+    max-width: 100%;
+    margin-inline: auto;
+}
+.pb-pro-testimonial-carousel__slide {
+    overflow: hidden;
+    text-align: inherit;
+}
+.pb-pro-testimonial-carousel__inner {
+    display: grid;
+    gap: var(--testimonial-content-gap, 10px);
+    min-width: 0;
+}
+.pb-pro-testimonial-carousel__content {
+    margin: 0;
+    white-space: pre-line;
+}
+.pb-pro-testimonial-carousel__identity {
+    display: flex;
+    align-items: center;
+    justify-content: var(--testimonial-identity-align, center);
+    gap: var(--testimonial-image-gap, 10px);
+    min-width: 0;
+}
+.pb-pro-testimonial-carousel__image {
+    flex: 0 0 var(--testimonial-image-size, 50px);
+    width: var(--testimonial-image-size, 50px) !important;
+    height: var(--testimonial-image-size, 50px) !important;
+}
+.pb-pro-testimonial-carousel__meta {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+}
+.pb-pro-testimonial-carousel.layout-image_stacked .pb-pro-testimonial-carousel__identity,
+.pb-pro-testimonial-carousel.layout-image_above .pb-pro-testimonial-carousel__identity {
+    flex-direction: column;
+    align-items: var(--testimonial-identity-align, center);
+}
+.pb-pro-testimonial-carousel.layout-image_right .pb-pro-testimonial-carousel__identity {
+    flex-direction: row-reverse;
+}
+.pb-pro-testimonial-carousel.skin-bubble .pb-pro-testimonial-carousel__slide {
+    box-shadow: 0 8px 24px rgb(16 24 40 / 0.08);
+}
+.pb-pro-testimonial-carousel.skin-bubble .pb-pro-testimonial-carousel__content {
+    position: relative;
+    padding-top: 24px;
+}
+.pb-pro-testimonial-carousel.skin-bubble .pb-pro-testimonial-carousel__content::before {
+    position: absolute;
+    top: -0.1em;
+    left: 0;
+    color: #6979f8;
+    content: "\201C";
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1;
+}
+.pb-pro-code-highlight {
+    position: relative;
+    min-width: 0;
+    height: var(--code-highlight-height, 300px);
+    overflow: hidden;
+    border-radius: var(--code-highlight-radius, 6px);
+    background: var(--code-highlight-background, #0d1117);
+    color: var(--code-highlight-text, #e6edf3);
+}
+.pb-pro-code-highlight__toolbar {
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px;
+    background: color-mix(in srgb, var(--code-highlight-background, #0d1117) 88%, #fff);
+}
+.pb-pro-code-highlight__language {
+    font-family: var(--code-highlight-font-family, monospace);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    opacity: 0.75;
+}
+.pb-pro-code-highlight__copy {
+    display: inline-flex;
+    min-height: 28px;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    border: 0;
+    cursor: pointer;
+}
+.pb-pro-code-highlight__copy:hover,
+.pb-pro-code-highlight__copy:focus-visible {
+    background: var(--code-highlight-copy-background-hover, #5868e8) !important;
+    color: var(--code-highlight-copy-text-hover, #fff) !important;
+}
+.pb-pro-code-highlight__viewport {
+    height: calc(100% - 42px);
+    overflow: auto;
+}
+.pb-pro-code-highlight__pre {
+    min-height: 100%;
+    margin: 0;
+    padding: var(--code-highlight-padding, 20px);
+    overflow: visible;
+    background: transparent;
+    white-space: pre;
+}
+.pb-pro-code-highlight.is-word-wrap .pb-pro-code-highlight__pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+.pb-pro-code-highlight__code {
+    display: block;
+    min-width: max-content;
+    tab-size: 4;
+}
+.pb-pro-code-highlight.is-word-wrap .pb-pro-code-highlight__code {
+    min-width: 100%;
+}
+.pb-pro-code-highlight__line {
+    display: flex;
+    min-height: 1.5em;
+    margin-inline: calc(var(--code-highlight-padding-left, 20px) * -1) calc(var(--code-highlight-padding-right, 20px) * -1);
+    padding-inline: var(--code-highlight-padding-left, 20px) var(--code-highlight-padding-right, 20px);
+    border-left: 3px solid transparent;
+}
+.pb-pro-code-highlight__line.is-highlighted {
+    border-left-color: var(--code-highlight-line-border, #58a6ff);
+    background: var(--code-highlight-line-background, #1f6feb33);
+}
+.pb-pro-code-highlight__line-number {
+    flex: 0 0 var(--code-highlight-gutter-width, 34px);
+    width: var(--code-highlight-gutter-width, 34px);
+    margin-right: 12px;
+    padding-right: 10px;
+    background: var(--code-highlight-line-number-background, #161b22);
+    color: var(--code-highlight-line-number, #8b949e);
+    text-align: right;
+    user-select: none;
+}
+.pb-pro-code-highlight__line-content {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+.pb-pro-code-token--comment { color: #8b949e; }
+.pb-pro-code-token--string { color: #a5d6ff; }
+.pb-pro-code-token--keyword { color: #ff7b72; }
+.pb-pro-code-token--literal { color: #79c0ff; }
+.pb-pro-code-token--number { color: #79c0ff; }
+.pb-pro-code-token--function { color: #d2a8ff; }
+.pb-pro-code-token--tag { color: #7ee787; }
+.theme-light .pb-pro-code-token--comment { color: #667085; }
+.theme-light .pb-pro-code-token--string { color: #0f766e; }
+.theme-light .pb-pro-code-token--keyword { color: #b42318; }
+.theme-light .pb-pro-code-token--literal,
+.theme-light .pb-pro-code-token--number { color: #175cd3; }
+.theme-light .pb-pro-code-token--function { color: #6941c6; }
+.theme-light .pb-pro-code-token--tag { color: #027a48; }
 .pb-pro-carousel__fraction {
     padding-top: 12px;
     color: var(--pagination-active-color, #6979f8);
@@ -3773,6 +5298,114 @@ export default {
 .pb-pro-flip-box.effect-fade:hover .pb-pro-flip-box__front {
     opacity: 0;
 }
+.pb-pro-blockquote {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    color: var(--blockquote-content-color, #344054);
+    text-align: left;
+}
+.pb-pro-blockquote.align-center { text-align: center; }
+.pb-pro-blockquote.align-right { text-align: right; }
+.pb-pro-blockquote.skin-border {
+    border-width: var(--blockquote-border-width, 3px 0 0 0);
+    border-style: solid;
+    border-color: var(--blockquote-border-color, #6979f8);
+    padding-block: var(--blockquote-border-padding, 8px);
+    transition: border-color var(--blockquote-border-duration, 0.3s), padding var(--blockquote-border-duration, 0.3s);
+}
+.pb-pro-blockquote.skin-quotation { padding-top: calc(var(--blockquote-quote-size, 48px) + var(--blockquote-quote-gap, 12px)); }
+.pb-pro-blockquote__quote-mark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--blockquote-quote-color, #6979f8);
+    font-family: Georgia, serif;
+    font-size: var(--blockquote-quote-size, 48px);
+    line-height: 1;
+}
+.pb-pro-blockquote.align-center .pb-pro-blockquote__quote-mark { left: 50%; transform: translateX(-50%); }
+.pb-pro-blockquote.align-right .pb-pro-blockquote__quote-mark { right: 0; left: auto; }
+.pb-pro-blockquote__content { color: var(--blockquote-content-color, #344054); }
+.pb-pro-blockquote__author { margin-top: var(--blockquote-content-gap, 16px); color: var(--blockquote-author-color, #101828); }
+.pb-pro-blockquote__author::before { content: "— "; }
+.pb-pro-blockquote.skin-boxed {
+    padding: var(--blockquote-box-padding, 24px);
+    border: var(--blockquote-box-border-width, 1px) var(--blockquote-box-border-type, none) var(--blockquote-box-border-color, #e4e7ec);
+    border-radius: var(--blockquote-box-radius, 8px);
+    background: var(--blockquote-box-background, #f8fafc);
+    box-shadow: var(--blockquote-box-shadow, none);
+    transition: background var(--blockquote-box-duration, 0.3s), border-color var(--blockquote-box-duration, 0.3s), box-shadow var(--blockquote-box-duration, 0.3s), border-radius var(--blockquote-box-duration, 0.3s);
+}
+.pb-pro-blockquote.skin-boxed:hover {
+    background: var(--blockquote-box-background-hover, #eef2ff);
+    border-color: var(--blockquote-box-border-color-hover, #6979f8);
+    box-shadow: var(--blockquote-box-shadow-hover, none);
+}
+.pb-pro-blockquote__tweet {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--blockquote-tweet-gap, 8px);
+    min-height: var(--blockquote-tweet-size, 14px);
+    margin-top: var(--blockquote-content-gap, 16px);
+    padding: 7px 12px;
+    border-radius: var(--blockquote-tweet-radius, 4px);
+    background: var(--blockquote-tweet-background, #1da1f2);
+    color: var(--blockquote-tweet-color, #fff);
+    font-size: var(--blockquote-tweet-size, 14px);
+    text-decoration: none;
+    transition: background var(--blockquote-tweet-duration, 0.3s), color var(--blockquote-tweet-duration, 0.3s);
+}
+.pb-pro-blockquote__tweet:hover { background: var(--blockquote-tweet-background-hover, #0d8bd0); color: var(--blockquote-tweet-color-hover, #fff); }
+.pb-pro-blockquote__tweet.tweet-skin-bubble { border-radius: 999px; }
+.pb-pro-blockquote__tweet.tweet-skin-link { padding: 0; background: transparent; color: var(--blockquote-tweet-background, #1da1f2); }
+.pb-pro-blockquote__tweet.tweet-skin-link:hover { background: transparent; color: var(--blockquote-tweet-background-hover, #0d8bd0); }
+.pb-pro-share-buttons {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: var(--share-rows-gap, 8px) var(--share-columns-gap, 8px);
+}
+.pb-pro-share-buttons.align-center { justify-content: center; }
+.pb-pro-share-buttons.align-right { justify-content: flex-end; }
+.pb-pro-share-buttons__button {
+    display: inline-flex;
+    min-width: var(--share-button-size, 40px);
+    height: var(--share-button-height, 40px);
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 0;
+    background: var(--share-button-background, #6979f8);
+    color: var(--share-button-color, #fff);
+    text-decoration: none;
+    transition: background 0.25s, color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+.pb-pro-share-buttons__button:hover { background: var(--share-button-background-hover, #5367ff); color: var(--share-button-color-hover, #fff); }
+.pb-pro-share-buttons__button i { font-size: var(--share-icon-size, 16px); }
+.pb-pro-share-buttons.shape-rounded .pb-pro-share-buttons__button { border-radius: 6px; }
+.pb-pro-share-buttons.shape-circle .pb-pro-share-buttons__button { width: var(--share-button-size, 40px); padding: 0; border-radius: 50%; }
+.pb-pro-share-buttons.shape-circle .pb-pro-share-buttons__button span { display: none; }
+.pb-pro-share-buttons.shape-none .pb-pro-share-buttons__button { padding-inline: 0; background: transparent; color: var(--share-button-background, #6979f8); }
+.pb-pro-share-buttons.skin-gradient .pb-pro-share-buttons__button { background: linear-gradient(135deg, var(--share-button-background, #6979f8), var(--share-button-background-hover, #5367ff)); }
+.pb-pro-share-buttons.skin-minimal .pb-pro-share-buttons__button { background: transparent; color: var(--share-button-background, #6979f8); }
+.pb-pro-share-buttons.skin-framed .pb-pro-share-buttons__button { border: 1px solid var(--share-button-background, #6979f8); background: transparent; color: var(--share-button-background, #6979f8); }
+.pb-pro-share-buttons.skin-box .pb-pro-share-buttons__button { border-radius: 3px; box-shadow: 0 2px 6px #10182822; }
+.pb-pro-share-buttons.skin-3d .pb-pro-share-buttons__button { box-shadow: inset 0 -3px 0 #00000026, 0 2px 4px #10182822; transform: translateY(0); }
+.pb-pro-share-buttons.skin-3d .pb-pro-share-buttons__button:hover { transform: translateY(1px); }
+.pb-pro-share-buttons.columns-1 .pb-pro-share-buttons__button { flex-basis: 100%; }
+.pb-pro-share-buttons.columns-2 .pb-pro-share-buttons__button { flex-basis: calc((100% - var(--share-columns-gap, 8px)) / 2); }
+.pb-pro-share-buttons.columns-3 .pb-pro-share-buttons__button { flex-basis: calc((100% - (2 * var(--share-columns-gap, 8px))) / 3); }
+.pb-pro-share-buttons.columns-4 .pb-pro-share-buttons__button { flex-basis: calc((100% - (3 * var(--share-columns-gap, 8px))) / 4); }
+.pb-pro-share-buttons.columns-5 .pb-pro-share-buttons__button { flex-basis: calc((100% - (4 * var(--share-columns-gap, 8px))) / 5); }
+.pb-pro-share-buttons.columns-6 .pb-pro-share-buttons__button { flex-basis: calc((100% - (5 * var(--share-columns-gap, 8px))) / 6); }
 @media (prefers-reduced-motion: reduce) {
     .pb-pro-carousel__track,
     .pb-pro-cta,
