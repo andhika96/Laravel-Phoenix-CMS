@@ -408,9 +408,7 @@
 							</div>
 							</div>
 							</div>
-							</div>
 						</details>
-						</div>
 							</section>
 							<section id="headerNavigationStylePanel" class="inspector-tab-panel" data-inspector-panel="style" role="tabpanel" aria-labelledby="headerNavigationStyleTab" hidden>
 								<div class="header-settings-accordion">
@@ -670,7 +668,6 @@
 							</section>
 						</div>
 				</div>
-			</div>
 			</div>
 
 			<div class="mock-preview-pane">

@@ -174,23 +174,6 @@ class HeaderNavigationSettingsTest extends TestCase
 		$this->assertStringContainsString('data-scroll-preset', $script);
 	}
 
-	public function test_editorial_option_two_workspace_keeps_preview_and_inspector_as_sibling_columns(): void
-	{
-		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$workspaceStart = strpos($view, '<div class="mock-workspace-grid">');
-		$controlStart = strpos($view, '<div class="mock-control-pane">', $workspaceStart);
-		$previewStart = strpos($view, '<div class="mock-preview-pane">', $controlStart);
-
-		$this->assertNotFalse($workspaceStart);
-		$this->assertNotFalse($controlStart);
-		$this->assertNotFalse($previewStart);
-		$this->assertGreaterThan($workspaceStart, $controlStart);
-		$this->assertGreaterThan($controlStart, $previewStart);
-
-		$controlToPreview = substr($view, $controlStart, $previewStart - $controlStart);
-		$this->assertSame(substr_count($controlToPreview, '<div'), substr_count($controlToPreview, '</div>'));
-	}
-
 	public function test_editorial_option_two_uses_three_semantic_tabs_without_removing_existing_settings(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
