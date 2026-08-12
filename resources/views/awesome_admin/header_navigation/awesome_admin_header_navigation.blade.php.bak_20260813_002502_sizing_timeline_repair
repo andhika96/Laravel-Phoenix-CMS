@@ -81,11 +81,11 @@
 									<option value="desktop">Desktop</option>
 									<option value="tablet">Tablet</option>
 									<option value="mobile">Mobile</option>
-									</select>
-								</div>
-								</div>
+								</select>
 							</div>
-					</details>
+							</div>
+							</div>
+						</details>
 
 <details class="header-setting-group">
 							<summary class="header-setting-summary">
@@ -221,7 +221,9 @@
 										<label class="form-label">Header padding</label>
 										<div class="responsive-mode-control" data-responsive-control="headerPadding">
 											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
-										<div class="responsive-mode-menu" role="listbox" hidden>
+											<div class="responsive-mode-menu" role="listbox" hidden>
+												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="optio…1058 tokens truncated…									<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
+											<div class="responsive-mode-menu" role="listbox" hidden>
 												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
 												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
 												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
@@ -406,7 +408,8 @@
 							</div>
 							</div>
 							</div>
-					</details>
+							</div>
+						</details>
 						</div>
 							</section>
 							<section id="headerNavigationStylePanel" class="inspector-tab-panel" data-inspector-panel="style" role="tabpanel" aria-labelledby="headerNavigationStyleTab" hidden>
@@ -666,7 +669,7 @@
 								</div>
 							</section>
 						</div>
-			</div>
+				</div>
 			</div>
 			</div>
 

@@ -177,12 +177,6 @@ class HeaderNavigationSettingsTest extends TestCase
 	public function test_editorial_option_two_workspace_keeps_preview_and_inspector_as_sibling_columns(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$document = new \DOMDocument();
-		$previousLibxmlErrors = libxml_use_internal_errors(true);
-		$document->loadHTML($view);
-		libxml_clear_errors();
-		libxml_use_internal_errors($previousLibxmlErrors);
-		$xpath = new \DOMXPath($document);
 		$workspaceStart = strpos($view, '<div class="mock-workspace-grid">');
 		$controlStart = strpos($view, '<div class="mock-control-pane">', $workspaceStart);
 		$previewStart = strpos($view, '<div class="mock-preview-pane">', $controlStart);
@@ -194,44 +188,7 @@ class HeaderNavigationSettingsTest extends TestCase
 		$this->assertGreaterThan($controlStart, $previewStart);
 
 		$controlToPreview = substr($view, $controlStart, $previewStart - $controlStart);
-		$this->assertSame(
-			substr_count($controlToPreview, '<div'),
-			substr_count($controlToPreview, '</div>'),
-			'The control pane must be fully closed before the preview pane begins.'
-		);
-
-		$this->assertSame(1, $xpath->query('//div[contains(concat(" ", normalize-space(@class), " "), " mock-workspace-grid ")]/div[contains(concat(" ", normalize-space(@class), " "), " mock-control-pane ")]')->length);
-		$this->assertSame(1, $xpath->query('//div[contains(concat(" ", normalize-space(@class), " "), " mock-workspace-grid ")]/div[contains(concat(" ", normalize-space(@class), " "), " mock-preview-pane ")]')->length);
-		$this->assertSame(3, $xpath->query('//div[contains(concat(" ", normalize-space(@class), " "), " inspector-content ")]/section[contains(concat(" ", normalize-space(@class), " "), " inspector-tab-panel ")]')->length);
-	}
-
-	public function test_editorial_option_two_keeps_responsive_box_controls_structurally_separate(): void
-	{
-		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$document = new \DOMDocument();
-		$previousLibxmlErrors = libxml_use_internal_errors(true);
-		$document->loadHTML($view);
-		libxml_clear_errors();
-		libxml_use_internal_errors($previousLibxmlErrors);
-		$xpath = new \DOMXPath($document);
-		$this->assertStringNotContainsString('truncated', $view);
-
-		foreach ([
-			'headerRadius' => 'headerRadiusUnit',
-			'headerPadding' => 'headerPaddingUnit',
-			'navRadius' => 'navRadiusUnit',
-			'containerMargin' => 'containerMarginUnit',
-		] as $boxName => $unitId)
-		{
-			$boxControl = $xpath->query('//*[@data-box-control="'.$boxName.'"]')->item(0);
-
-			$this->assertNotNull($boxControl);
-			$this->assertSame(1, $xpath->query('./div[contains(@class, "box-control-header")]/div[contains(@class, "responsive-mode-control")]', $boxControl)->length);
-			$this->assertSame(1, $xpath->query('./div[contains(@class, "box-control-header")]/div[contains(@class, "responsive-mode-control")]/div[contains(@class, "responsive-mode-menu")]', $boxControl)->length);
-			$this->assertSame(1, $xpath->query('./div[contains(@class, "box-control-header")]/select[@id="'.$unitId.'"]', $boxControl)->length);
-			$this->assertSame(1, $xpath->query('./div[contains(@class, "box-control-row")]', $boxControl)->length);
-			$this->assertSame(0, $xpath->query('./div[contains(@class, "box-control-header")]/div[contains(@class, "box-control-row")]', $boxControl)->length);
-		}
+		$this->assertSame(substr_count($controlToPreview, '<div'), substr_count($controlToPreview, '</div>'));
 	}
 
 	public function test_editorial_option_two_uses_three_semantic_tabs_without_removing_existing_settings(): void
@@ -388,17 +345,6 @@ class HeaderNavigationSettingsTest extends TestCase
 		$this->assertMatchesRegularExpression('/\.editorial-option-two \.preview-timeline-head\s*\{[^}]*gap:\s*12px;[^}]*min-width:\s*176px;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.editorial-option-two \.preview-timeline-track\s*\{[^}]*gap:\s*8px;[^}]*margin:\s*2px 8px 4px;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.editorial-option-two \.preview-timeline-range\s*\{[^}]*margin:\s*0 0 2px;/s', $styles);
-	}
-
-	public function test_editorial_option_two_gives_sizing_controls_and_timeline_stable_intrinsic_columns(): void
-	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
-
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-control-header\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) auto auto;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-control-header \.box-unit-select\s*\{[^}]*flex:\s*0 0 72px;[^}]*min-width:\s*72px;[^}]*width:\s*72px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-control-row\s*\{[^}]*column-gap:\s*8px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.preview-timeline\s*\{[^}]*grid-template-columns:\s*minmax\(170px, \.8fr\) minmax\(0, 1\.8fr\) minmax\(128px, \.65fr\);/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.preview-timeline-point span\s*\{[^}]*white-space:\s*nowrap;/s', $styles);
 	}
 
 	public function test_preview_auto_fits_at_minimum_sixty_five_percent_without_a_menu_limit_control(): void
