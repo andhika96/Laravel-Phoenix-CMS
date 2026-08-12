@@ -120,9 +120,9 @@ class HeaderNavigationSettingsTest extends TestCase
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
 		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
 
-		$this->assertSame(7, substr_count($view, '<details class="header-setting-group'));
+		$this->assertSame(6, substr_count($view, '<details class="header-setting-group'));
 		$this->assertSame(2, substr_count($view, '<details class="header-setting-group" open>'));
-		$this->assertSame(7, substr_count($view, '<summary class="header-setting-summary">'));
+		$this->assertSame(6, substr_count($view, '<summary class="header-setting-summary">'));
 		$this->assertMatchesRegularExpression('/\.header-settings-accordion\s*\{[^}]*gap:\s*16px;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-setting-summary\s*\{[^}]*padding:\s*0 0 12px;[^}]*border-bottom:\s*1px solid/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-setting-panel\s*\{[^}]*padding:\s*18px 0 22px;/s', $styles);
@@ -162,6 +162,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 		$this->assertStringContainsString('header-editor-topbar', $view);
 		$this->assertStringContainsString('inspector-layout', $view);
+		$this->assertSame(6, substr_count($view, 'data-inspector-index='));
 		$this->assertStringContainsString('id="previewTimeline"', $view);
 		$this->assertSame(1, substr_count($view, 'id="scrollSim"'));
 		$this->assertSame(1, substr_count($view, 'id="deviceMode"'));
@@ -172,76 +173,6 @@ class HeaderNavigationSettingsTest extends TestCase
 		$this->assertStringContainsString('.preview-timeline', $styles);
 		$this->assertStringContainsString('syncPreviewDeviceButtons', $script);
 		$this->assertStringContainsString('data-scroll-preset', $script);
-	}
-
-	public function test_editorial_option_two_uses_three_semantic_tabs_without_removing_existing_settings(): void
-	{
-		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$document = new \DOMDocument();
-		$previousLibxmlErrors = libxml_use_internal_errors(true);
-		$document->loadHTML($view);
-		libxml_clear_errors();
-		libxml_use_internal_errors($previousLibxmlErrors);
-		$xpath = new \DOMXPath($document);
-
-		$this->assertSame(3, substr_count($view, 'data-inspector-tab='));
-		$this->assertMatchesRegularExpression('/<[^>]+role="tablist"[^>]*>/', $view);
-		$this->assertSame(7, substr_count($view, 'class="header-setting-group'));
-		$this->assertSame(3, substr_count($view, 'inspector-tab-panel'));
-
-		foreach (['layout', 'style', 'advanced'] as $tab)
-		{
-			$this->assertMatchesRegularExpression('/<[^>]+(?=[^>]*data-inspector-tab="'.$tab.'")(?=[^>]*role="tab")(?=[^>]*aria-selected="(?:true|false)")[^>]*>/', $view);
-			$this->assertMatchesRegularExpression('/<[^>]+(?=[^>]*class="[^"]*inspector-tab-panel)(?=[^>]*data-inspector-panel="'.$tab.'")(?=[^>]*role="tabpanel")[^>]*>/', $view);
-		}
-
-		foreach ([
-			'layout' => ['Preview', 'Layout', 'Sizing'],
-			'style' => ['Colors', 'Effects'],
-			'advanced' => ['Behavior', 'Config Preview'],
-		] as $panelName => $labels)
-		{
-			$panels = $xpath->query('//*[@data-inspector-panel="'.$panelName.'"]');
-			$this->assertSame(1, $panels->length);
-			$panelText = $panels->item(0)->textContent;
-
-			foreach ($labels as $label)
-			{
-				$this->assertStringContainsString("{{ t('".$label."') }}", $panelText);
-			}
-		}
-
-		foreach (['deviceMode', 'headerBg', 'linkActive', 'headerHeight', 'innerBg', 'jsonOutput'] as $id)
-		{
-			$this->assertStringContainsString('id="'.$id.'"', $view);
-		}
-	}
-
-	public function test_editorial_option_two_script_uses_tab_selection_and_effects_deep_focus_contract(): void
-	{
-		$script = file_get_contents(public_path('assets/js/awesome-admin-header-navigation.js'));
-
-		$this->assertStringContainsString('function selectInspectorTab(', $script);
-		$this->assertStringContainsString("editor.querySelectorAll('[data-inspector-tab]')", $script);
-		$this->assertMatchesRegularExpression('/function selectInspectorTab\([^)]*\)\s*\{.*?aria-selected/s', $script);
-		$this->assertMatchesRegularExpression('/function focusInspectorSection\([^)]*\)\s*\{.*?selectInspectorTab\(\'style\'\).*?\.shadow-control.*?(?:scrollIntoView|focus)/s', $script);
-		$this->assertDoesNotMatchRegularExpression('/\bquerySelector(?:All)?\s*\(\s*[\'\"]\s*\[data-inspector-index\]\s*[\'\"]\s*\)/', $script);
-	}
-
-	public function test_editorial_option_two_css_uses_the_approved_page_builder_sidebar_geometry(): void
-	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
-
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-header\s*\{[^}]*min-height:\s*58px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-tabs\s*\{[^}]*height:\s*42px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-tab-panel\s*\{[^}]*padding:\s*16px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-selection-summary\s*\{[^}]*padding:\s*10px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.header-setting-summary\s*\{[^}]*min-height:\s*34px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-content\s+\.form-label\s*\{[^}]*font-size:\s*9\.5px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-content\s+\.form-control,[^{]*\{[^}]*min-height:\s*34px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-content\s+\.segmented\s+button\s*\{[^}]*height:\s*27px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-content\s+\.form-check-input\s*\{[^}]*width:\s*28px;[^}]*height:\s*16px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-content\s+\.number-stepper\s*\{[^}]*height:\s*30px;/s', $styles);
 	}
 
 	public function test_editorial_option_two_uses_cms_typography_and_keeps_preview_density_compact(): void

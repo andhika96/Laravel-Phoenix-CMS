@@ -1016,55 +1016,23 @@ const editor = document.getElementById('headerNavigationEditor');
 			});
 		}
 
-		function selectInspectorTab(tabOrName, options = {}) {
-			const tabName = typeof tabOrName === 'string' ? tabOrName : tabOrName?.dataset.inspectorTab;
-			const tabs = Array.from(editor.querySelectorAll('[data-inspector-tab]'));
-			const panels = Array.from(editor.querySelectorAll('[data-inspector-panel]'));
-			const selectedTab = tabs.find(tab => tab.dataset.inspectorTab === tabName);
-			if (!selectedTab) return null;
-
-			tabs.forEach(tab => {
-				const isActive = tab === selectedTab;
-				tab.classList.toggle('is-active', isActive);
-				tab.setAttribute('aria-selected', String(isActive));
-				tab.tabIndex = isActive ? 0 : -1;
-			});
-
-			panels.forEach(panel => {
-				const isActive = panel.dataset.inspectorPanel === tabName;
-				panel.classList.toggle('is-active', isActive);
-				panel.hidden = !isActive;
-			});
-
-			if (options.scroll !== false) {
-				const content = editor.querySelector('.inspector-content');
-				if (content) content.scrollTop = 0;
-			}
-
-			return editor.querySelector(`[data-inspector-panel="${tabName}"]`);
-		}
-
-		function focusInspectorSection(sectionOrName) {
+		function focusInspectorSection(button) {
 			const groups = Array.from(editor.querySelectorAll('.header-setting-group'));
-			const target = typeof sectionOrName === 'string'
-				? groups.find(group => group.dataset.inspectorAnchor === sectionOrName)
-				: sectionOrName;
+			const groupIndex = Number(button.dataset.inspectorGroup ?? button.dataset.inspectorIndex);
+			const target = groups[groupIndex];
 			if (!target) return;
 
-			const isEffects = target.dataset.inspectorAnchor === 'effects';
-			if (isEffects) {
-				selectInspectorTab('style');
-			} else {
-				const panelName = target.closest('[data-inspector-panel]')?.dataset.inspectorPanel;
-				if (panelName) selectInspectorTab(panelName, { scroll: false });
-			}
-
-			const panel = target.closest('[data-inspector-panel]');
-			(panel ? Array.from(panel.querySelectorAll('.header-setting-group')) : groups).forEach(group => {
-				group.open = group === target;
+			groups.forEach(group => {
+				group.open = false;
+			});
+			target.open = true;
+			editor.querySelectorAll('[data-inspector-index]').forEach(item => {
+				const isActive = item === button;
+				item.classList.toggle('is-active', isActive);
+				item.setAttribute('aria-pressed', String(isActive));
 			});
 
-			const scrollTarget = isEffects
+			const scrollTarget = button.dataset.inspectorAnchor === 'effects'
 				? target.querySelector('.shadow-control') || target
 				: target;
 			scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1508,15 +1476,9 @@ const editor = document.getElementById('headerNavigationEditor');
 			});
 		});
 
-		editor.querySelectorAll('[data-inspector-tab]').forEach(button => {
-			button.addEventListener('click', () => selectInspectorTab(button));
+		editor.querySelectorAll('[data-inspector-index]').forEach(button => {
+			button.addEventListener('click', () => focusInspectorSection(button));
 		});
-
-		editor.querySelectorAll('[data-inspector-select-tab]').forEach(button => {
-			button.addEventListener('click', () => selectInspectorTab(button.dataset.inspectorSelectTab));
-		});
-
-		selectInspectorTab('layout', { scroll: false });
 
 		editor.querySelectorAll('[data-scroll-preset]').forEach(button => {
 			button.addEventListener('click', () => {
