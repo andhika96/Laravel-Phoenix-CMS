@@ -251,16 +251,6 @@ class HeaderNavigationSettingsTest extends TestCase
 		$this->assertMatchesRegularExpression('/\.editorial-option-two \.preview-scale-status\s*\{[^}]*margin-bottom:\s*2px;[^}]*padding:\s*6px 10px;/s', $styles);
 	}
 
-	public function test_editorial_option_two_gives_the_preview_timeline_breathing_room(): void
-	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
-
-		$this->assertMatchesRegularExpression('/\.editorial-option-two \.preview-timeline\s*\{[^}]*gap:\s*20px;[^}]*min-height:\s*76px;[^}]*padding:\s*14px 20px 16px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.editorial-option-two \.preview-timeline-head\s*\{[^}]*gap:\s*12px;[^}]*min-width:\s*176px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.editorial-option-two \.preview-timeline-track\s*\{[^}]*gap:\s*8px;[^}]*margin:\s*2px 8px 4px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.editorial-option-two \.preview-timeline-range\s*\{[^}]*margin:\s*0 0 2px;/s', $styles);
-	}
-
 	public function test_preview_auto_fits_at_minimum_sixty_five_percent_without_a_menu_limit_control(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
