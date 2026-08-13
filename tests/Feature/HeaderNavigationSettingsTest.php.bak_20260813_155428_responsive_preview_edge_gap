@@ -235,39 +235,6 @@ class HeaderNavigationSettingsTest extends TestCase
 		}
 	}
 
-	public function test_approved_hybrid_inspector_uses_inline_simple_settings_and_compound_value_groups(): void
-	{
-		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
-		$document = new \DOMDocument();
-		$previousLibxmlErrors = libxml_use_internal_errors(true);
-		$document->loadHTML($view);
-		libxml_clear_errors();
-		libxml_use_internal_errors($previousLibxmlErrors);
-		$xpath = new \DOMXPath($document);
-
-		$this->assertSame(1, $xpath->query('//*[@id="headerHeight"]/ancestor::div[contains(concat(" ", normalize-space(@class), " "), " inspector-inline-setting ")]')->length);
-		$this->assertSame(1, $xpath->query('//*[@data-control="linkShape"]/ancestor::div[contains(concat(" ", normalize-space(@class), " "), " inspector-inline-setting ")]')->length);
-		$this->assertSame(1, $xpath->query('//*[@data-control="leafDirection"]/ancestor::div[contains(concat(" ", normalize-space(@class), " "), " inspector-inline-setting ")]')->length);
-
-		foreach (['linkActive', 'linkHover', 'linkFocus'] as $fieldId)
-		{
-			$control = $xpath->query('//*[@id="'.$fieldId.'"]/ancestor::div[contains(concat(" ", normalize-space(@class), " "), " link-color-control ")]')->item(0);
-
-			$this->assertNotNull($control);
-			$this->assertSame(2, $xpath->query('./div[contains(concat(" ", normalize-space(@class), " "), " link-color-field ")]', $control)->length);
-			$this->assertSame(0, $xpath->query('.//label[contains(concat(" ", normalize-space(@class), " "), " link-color-label ")]', $control)->length);
-			$this->assertSame(1, $xpath->query('./preceding-sibling::div[1][contains(concat(" ", normalize-space(@class), " "), " link-color-label-row ")]', $control)->length);
-		}
-
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.inspector-inline-setting\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*128px minmax\(0, 1fr\);/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-control-row\s*\{[^}]*column-gap:\s*0;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-side input\[type="number"\]\s*\{[^}]*appearance:\s*textfield;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.link-color-control\s*\{[^}]*height:\s*32px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.link-color-field\s*\{[^}]*padding:\s*0;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.link-color-control \.box-link-toggle\s*\{[^}]*height:\s*32px;[^}]*min-height:\s*32px;/s', $styles);
-	}
-
 	public function test_editorial_option_two_uses_three_semantic_tabs_without_removing_existing_settings(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
@@ -445,7 +412,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-control-header\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) auto auto;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-control-header \.box-unit-select\s*\{[^}]*flex:\s*0 0 72px;[^}]*min-width:\s*72px;[^}]*width:\s*72px;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-control-row\s*\{[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\) 32px;[^}]*column-gap:\s*0;/s', $styles);
+		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-control-row\s*\{[^}]*column-gap:\s*8px;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.preview-timeline\s*\{[^}]*grid-template-columns:\s*minmax\(170px, \.8fr\) minmax\(0, 1\.8fr\) minmax\(128px, \.65fr\);/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.preview-timeline-point span\s*\{[^}]*white-space:\s*nowrap;/s', $styles);
 	}
@@ -484,14 +451,6 @@ class HeaderNavigationSettingsTest extends TestCase
 		$this->assertMatchesRegularExpression('/\.device-stage\s*\{[^}]*overflow:\s*auto;[^}]*scrollbar-width:\s*none;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.device-stage::\-webkit-scrollbar\s*\{[^}]*width:\s*0;[^}]*height:\s*0;/s', $styles);
 		$this->assertStringContainsString("els.deviceStage.addEventListener('scroll'", $script);
-	}
-
-	public function test_tablet_and_mobile_preview_do_not_reserve_edge_borders_beside_content(): void
-	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
-
-		$this->assertMatchesRegularExpression('/\.device-stage\.mobile-mode,\s*\.device-stage\.tablet-mode\s*\{[^}]*border:\s*0;/s', $styles);
-		$this->assertDoesNotMatchRegularExpression('/\.device-stage\.(?:mobile|tablet)-mode\s*\{[^}]*border-(?:left|right):\s*1px;/s', $styles);
 	}
 
 	protected function headerNavigationController(): Awesome_Admin_Header_Navigation_Controller

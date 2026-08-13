@@ -1047,17 +1047,13 @@
 				url("/assets/images/trees-on-forest-at-daytime-1083515.jpg");
 			background-size: cover;
 			background-position: center top;
-			scrollbar-width: none;
+			scrollbar-color: rgba(24, 34, 48, .28) transparent;
+			scrollbar-width: thin;
 		}
 
-		.device-stage::-webkit-scrollbar {
-			width: 0;
-			height: 0;
-		}
-
-		.device-stage.mobile-mode,
-		.device-stage.tablet-mode {
-			border: 0;
+		.device-stage.mobile-mode {
+			border-left: 1px solid rgba(0, 0, 0, .08);
+			border-right: 1px solid rgba(0, 0, 0, .08);
 		}
 
 		.site-header {
@@ -1462,6 +1458,11 @@
 				height: 680px;
 				min-height: 680px;
 			}
+		}
+
+		.device-stage.tablet-mode {
+			border-left: 1px solid rgba(0, 0, 0, .08);
+			border-right: 1px solid rgba(0, 0, 0, .08);
 		}
 
 		.device-stage.mobile-mode .header-container,
@@ -3170,52 +3171,31 @@
 }
 
 .header-navigation-editor.editorial-option-two .inspector-content .link-color-control {
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 32px;
-	height: 32px;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 30px;
 	min-width: 0;
 	border-radius: 8px;
-	box-shadow: none;
 }
 
 .header-navigation-editor.editorial-option-two .inspector-content .link-color-field {
 	min-width: 0;
-	padding: 0;
+	padding: 8px;
 }
 
-.header-navigation-editor.editorial-option-two .inspector-content .link-color-label-row {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 32px;
+.header-navigation-editor.editorial-option-two .inspector-content .link-color-label {
 	margin-bottom: 6px;
-}
-
-.header-navigation-editor.editorial-option-two .inspector-content .link-color-label-row .link-color-label {
-	margin: 0;
-	padding: 0 10px;
 	font-size: var(--inspector-ui-font-size);
 }
 
-.header-navigation-editor.editorial-option-two .inspector-content .link-color-field .coloris-control,
-.header-navigation-editor.editorial-option-two .inspector-content .link-color-field .clr-field {
-	display: block;
-	height: 100%;
-}
-
 .header-navigation-editor.editorial-option-two .inspector-content .link-color-field .coloris-control .clr-field input {
-	height: 30px;
-	min-height: 30px;
+	height: 32px;
+	min-height: 32px;
 	padding-left: 34px;
-	border: 0;
-	border-radius: 0;
-	box-shadow: none;
+	border-radius: 7px;
 }
 
 .header-navigation-editor.editorial-option-two .inspector-content .link-color-control .box-link-toggle {
-	width: 32px;
-	height: 32px;
-	min-height: 32px;
-	border: 0;
-	border-radius: 0;
-	box-shadow: none;
+	width: 30px;
+	min-height: 100%;
 }
 
 .header-navigation-editor.editorial-option-two .inspector-content .color-state-start {
@@ -3284,38 +3264,17 @@
 	}
 
 	.header-navigation-editor.editorial-option-two .inspector-content .link-color-control {
-		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 32px;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 28px;
 	}
 
 	.header-navigation-editor.editorial-option-two .inspector-content .link-color-control .box-link-toggle {
-		width: 32px;
+		width: 28px;
 	}
 }
 
 /* Final layout repair: keep Elementor-style responsive controls and timeline columns intact. */
 .header-navigation-editor.editorial-option-two .inspector-content .header-setting-panel > .row {
 	row-gap: 16px;
-}
-
-.header-navigation-editor.editorial-option-two .inspector-content .inspector-inline-setting {
-	display: grid;
-	grid-template-columns: 128px minmax(0, 1fr);
-	align-items: center;
-	column-gap: 12px;
-	min-width: 0;
-}
-
-.header-navigation-editor.editorial-option-two .inspector-content .inspector-inline-setting[hidden] {
-	display: none !important;
-}
-
-.header-navigation-editor.editorial-option-two .inspector-content .inspector-inline-setting > .form-label {
-	margin: 0;
-}
-
-.header-navigation-editor.editorial-option-two .inspector-content .inspector-inline-setting > .unit-control,
-.header-navigation-editor.editorial-option-two .inspector-content .inspector-inline-setting > .segmented {
-	min-width: 0;
 }
 
 .header-navigation-editor.editorial-option-two .inspector-content .box-control {
@@ -3365,42 +3324,19 @@
 }
 
 .header-navigation-editor.editorial-option-two .inspector-content .box-control-row {
-	grid-template-columns: repeat(4, minmax(0, 1fr)) 32px;
-	column-gap: 0;
+	column-gap: 8px;
 	row-gap: 0;
 }
 
 .header-navigation-editor.editorial-option-two .inspector-content .box-side-stepper {
-	border-right: 0;
-	border-radius: 0;
-	box-shadow: none;
-}
-
-.header-navigation-editor.editorial-option-two .inspector-content .box-side:nth-child(1) .box-side-stepper {
-	border-radius: 7px 0 0 7px;
-}
-
-.header-navigation-editor.editorial-option-two .inspector-content .shadow-control-row .box-side:nth-child(4) .box-side-stepper {
 	border-right: 1px solid var(--mock-border);
-	border-radius: 0 7px 7px 0;
-}
-
-.header-navigation-editor.editorial-option-two .inspector-content .box-side input[type="number"] {
-	appearance: textfield;
-	-moz-appearance: textfield;
-}
-
-.header-navigation-editor.editorial-option-two .inspector-content .box-side input[type="number"]::-webkit-outer-spin-button,
-.header-navigation-editor.editorial-option-two .inspector-content .box-side input[type="number"]::-webkit-inner-spin-button {
-	-webkit-appearance: none;
-	margin: 0;
+	border-radius: 7px;
 }
 
 .header-navigation-editor.editorial-option-two .inspector-content .box-link-toggle {
-	width: 32px;
-	min-width: 32px;
-	border-radius: 0 7px 7px 0;
-	box-shadow: none;
+	width: 30px;
+	min-width: 30px;
+	border-radius: 7px;
 }
 
 .header-navigation-editor.editorial-option-two .inspector-content .box-side-label {

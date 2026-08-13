@@ -138,7 +138,7 @@
 
 							<div class="header-setting-panel">
 						<div class="row g-3 gy-lg-4">
-							<div class="col-12 inspector-inline-setting">
+							<div class="col-12">
 								<label class="form-label" for="headerHeight">Height</label>
 								<div class="unit-control">
 									<div class="number-stepper">
@@ -273,7 +273,7 @@
 								</div>
 							</div>
 
-							<div class="col-12 inspector-inline-setting">
+							<div class="col-12">
 								<label class="form-label">Link shape</label>
 								<div class="segmented two" data-control="linkShape">
 									<button type="button" data-value="default" class="is-active">Default</button>
@@ -281,7 +281,7 @@
 								</div>
 							</div>
 
-							<div id="leafDirectionControl" class="col-12 inspector-inline-setting" hidden>
+							<div id="leafDirectionControl" class="col-12" hidden>
 								<label class="form-label">Leaf direction</label>
 								<div class="segmented two" data-control="leafDirection">
 									<button type="button" data-value="forward" class="is-active">Forward</button>
@@ -448,17 +448,15 @@
 							</div>
 							<div class="col-12 color-state-start">
 								<label class="form-label">Active link & border</label>
-								<div class="link-color-label-row">
-									<label class="link-color-label" for="linkActive">Active</label>
-									<label class="link-color-label" for="linkActiveBorder">Border</label>
-								</div>
 								<div class="link-color-control">
 									<div class="link-color-field">
+										<label class="link-color-label" for="linkActive">Active</label>
 										<div class="coloris-control">
 											<input id="linkActive" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
 										</div>
 									</div>
 									<div class="link-color-field">
+										<label class="link-color-label" for="linkActiveBorder">Border</label>
 										<div class="coloris-control">
 											<input id="linkActiveBorder" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
 										</div>
@@ -468,17 +466,15 @@
 							</div>
 							<div class="col-12">
 								<label class="form-label">Hover link & border</label>
-								<div class="link-color-label-row">
-									<label class="link-color-label" for="linkHover">Hover</label>
-									<label class="link-color-label" for="linkHoverBorder">Border</label>
-								</div>
 								<div class="link-color-control">
 									<div class="link-color-field">
+										<label class="link-color-label" for="linkHover">Hover</label>
 										<div class="coloris-control">
 											<input id="linkHover" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
 										</div>
 									</div>
 									<div class="link-color-field">
+										<label class="link-color-label" for="linkHoverBorder">Border</label>
 										<div class="coloris-control">
 											<input id="linkHoverBorder" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
 										</div>
@@ -488,17 +484,15 @@
 							</div>
 							<div class="col-12">
 								<label class="form-label">Focus link & border</label>
-								<div class="link-color-label-row">
-									<label class="link-color-label" for="linkFocus">Focus</label>
-									<label class="link-color-label" for="linkFocusBorder">Border</label>
-								</div>
 								<div class="link-color-control">
 									<div class="link-color-field">
+										<label class="link-color-label" for="linkFocus">Focus</label>
 										<div class="coloris-control">
 											<input id="linkFocus" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
 										</div>
 									</div>
 									<div class="link-color-field">
+										<label class="link-color-label" for="linkFocusBorder">Border</label>
 										<div class="coloris-control">
 											<input id="linkFocusBorder" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
 										</div>
