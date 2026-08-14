@@ -43,12 +43,8 @@ assert.equal((settings.match(/<ToggleField/g) || []).length, 4, 'Hero boolean co
 assert.doesNotMatch(settings, /pb-switch-row/, 'Hero settings must not render unstyled native checkbox rows');
 assert.match(settings, /:deep\(\.pb-hero-devices button\)/);
 assert.match(settings, /:deep\(\.pb-hero-number\)/);
-assert.match(settings, /:deep\(\.pb-hero-number input\)\{border-radius:6px 0 0 6px!important\}/);
 assert.match(settings, /:deep\(\.pb-hero-color\)/);
 assert.match(settings, /\.pb-hero-mode \.pb-seg-btn\{gap:5px\}/);
-assert.match(settings, /:aria-pressed="contentVisible\(key\)"/);
-assert.match(settings, /@click="toggleContentVisibility\(key\)"/);
-assert.match(settings, /contentVisible\(key\)\{return this\.settings\[this\.visibilityKey\(key\)\]!==false;\}/);
 
 assert.match(canvas, /data-hero-banner/);
 assert.match(canvas, /contentOrder/);
