@@ -6799,11 +6799,11 @@ body {
 	display: block;
 	width: 100%;
 	box-sizing: border-box;
-	padding-right: 48px;
+	padding-right: 60px;
 }
 
 .pb-panel.left .clr-field button {
-	width: 36px;
+	width: 48px;
 	border-left: 1px solid var(--pb-border);
 	border-radius: 0 8px 8px 0;
 }
@@ -8493,12 +8493,12 @@ body {
 .pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .clr-field .pb-coloris-input {
 	height: auto;
 	min-height: 32px;
-	padding: 7px 48px 7px 10px;
+	padding: 7px 60px 7px 10px;
 	font-size: 12px;
 }
 
 .pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .clr-field button {
-	width: 36px;
+	width: 48px;
 	height: 100%;
 	border-radius: 0 8px 8px 0;
 }
@@ -9300,12 +9300,12 @@ body {
 .pb-panel.left .pb-heading-style-settings .clr-field .pb-coloris-input {
 	height: auto;
 	min-height: 36px;
-	padding: 7px 48px 7px 10px;
+	padding: 7px 44px 7px 10px;
 	font-size: 12px;
 }
 
 .pb-panel.left .pb-heading-style-settings .clr-field button {
-	width: 36px;
+	width: 34px;
 	height: 100%;
 	border-radius: 0 8px 8px 0;
 }
@@ -10215,7 +10215,6 @@ body {
 
 .side-panel.pb-panel.left .v23-properties-section :is(.pb-color-swatch, .clr-field button) {
 	width: 36px;
-	min-width: 36px;
 	height: 34px;
 }
 

@@ -8,7 +8,6 @@ const read = (relative) => fs.existsSync(path.join(root, relative)) ? fs.readFil
 
 const definition = read('public/js/pagebuilder_elementor_v23/widgets/pro/hero-banner/definition.js');
 const settings = read('public/js/pagebuilder_elementor_v23/widgets/pro/hero-banner/Settings.vue');
-const settingsMarkup = settings.split('<style scoped>')[0];
 const canvas = read('public/js/pagebuilder_elementor_v23/widgets/pro/hero-banner/Canvas.vue');
 const blade = read('resources/views/pagebuilder_elementor_v23/widgets/pro/hero-banner.blade.php');
 const config = read('config/pagebuilder_elementor_v23_widgets.php');
@@ -50,12 +49,12 @@ assert.match(settings, /\.pb-hero-devices\{[^}]*padding:3px;[^}]*border:1px soli
 assert.match(settings, /:deep\(\.pb-hero-devices button\)\{[^}]*border:0!important;[^}]*border-radius:6px!important;[^}]*background:transparent/);
 assert.match(settings, /:deep\(\.pb-hero-devices button\.active\)\{[^}]*background:#fff;[^}]*box-shadow:var\(--shadow-sm\)/);
 assert.match(settings, /\.pb-media-field\.has-action input\{border-radius:6px 0 0 6px!important\}/);
-assert.equal((settingsMarkup.match(/<ColorField /g) || []).length, 10, 'Hero color settings must all use the shared ColorField path');
-assert.ok(settingsMarkup.includes('<input class="pb-input coloris pb-coloris-input" :value="modelValue"'), 'Hero ColorField must use the Coloris initializer hook');
-assert.doesNotMatch(settingsMarkup, /<input type="color"/, 'Hero color settings must not render native color inputs');
-assert.doesNotMatch(settingsMarkup, /pb-hero-color/, 'Hero color settings must not retain the native color wrapper');
+assert.match(settings, /:deep\(\.pb-hero-color \.pb-input\)\{border-radius:6px 0 0 6px!important\}/);
+assert.match(settings, /:deep\(\.pb-hero-color input\[type=color\]\)\{[^}]*height:34px!important;[^}]*padding:3px;[^}]*order:2/);
+assert.match(settings, /:deep\(\.pb-hero-color input\[type=color\]\)\{[^}]*width:36px!important;[^}]*min-width:36px;[^}]*flex:0 0 36px/);
 assert.match(settings, /:deep\(\.pb-hero-number\)/);
 assert.match(settings, /:deep\(\.pb-hero-number input\)\{border-radius:6px 0 0 6px!important\}/);
+assert.match(settings, /:deep\(\.pb-hero-color\)/);
 assert.match(settings, /\.pb-hero-mode \.pb-seg-btn\{gap:5px\}/);
 assert.match(settings, /:aria-pressed="contentVisible\(key\)"/);
 assert.match(settings, /@click="toggleContentVisibility\(key\)"/);
