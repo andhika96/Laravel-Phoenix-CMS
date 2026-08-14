@@ -881,23 +881,6 @@
 	.el-widget-accordion__content-wrap { transition-duration: 0ms; }
 }
 
-/* Pro > Hero Banner */
-.pb-hero-banner{position:relative;width:100%;min-width:0;overflow:hidden;background:#e8eaeb;box-sizing:border-box}
-.pb-hero-banner__picture,.pb-hero-banner__media,.pb-hero-banner__overlay,.pb-hero-banner__empty{position:absolute;inset:0;width:100%;height:100%}
-.pb-hero-banner__picture{display:block}.pb-hero-banner__media{display:block}.pb-hero-banner__overlay{z-index:1;background:var(--hero-overlay,transparent);pointer-events:none}
-.pb-hero-banner__empty{display:grid;place-items:center;color:#98a2b3;background:#eef1f4;font-size:40px}
-.pb-hero-banner__content,.pb-hero-banner__block{z-index:2;color:#292d32;box-sizing:border-box}
-.pb-hero-banner.is-grouped .pb-hero-banner__content{position:absolute;display:flex;flex-direction:column;align-items:var(--hero-content-align,flex-start);gap:var(--hero-content-gap,14px)}
-.pb-hero-banner.is-grouped .pb-hero-banner__block{width:100%}
-.pb-hero-banner.is-independent .pb-hero-banner__content{position:static}.pb-hero-banner.is-independent .pb-hero-banner__block{position:absolute}
-.pb-hero-banner__title{width:100%;margin:0;color:var(--hero-title-color,#292d32);font-size:var(--hero-title-size,48px);font-weight:var(--hero-title-weight,700);line-height:1.05}
-.pb-hero-banner__subtitle{width:100%;margin:0;color:var(--hero-subtitle-color,#292d32);font-size:var(--hero-subtitle-size,22px);font-weight:var(--hero-subtitle-weight,400);line-height:1.35}
-.pb-hero-banner__buttons{width:100%;display:flex}
-.pb-hero-banner__button{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:var(--hero-button-pad-y,10px) var(--hero-button-pad-x,18px);border:0;border-radius:var(--hero-button-radius,999px);color:var(--hero-button-color,#fff);background:var(--hero-button-bg,#30343a);font:inherit;text-decoration:none;white-space:nowrap;cursor:pointer;transition:color .2s ease,background-color .2s ease}
-.pb-hero-banner__button:hover,.pb-hero-banner__button:focus-visible{color:var(--hero-button-hover-color,#fff);background:var(--hero-button-hover-bg,#1f2328)}
-.pb-hero-banner__button:disabled,.pb-hero-banner__button.is-disabled{cursor:not-allowed;opacity:.55}
-@media(prefers-reduced-motion:reduce){.pb-hero-banner__button{transition:none!important}}
-
 /* Elementor-style Image Box widget */
 .el-widget-image-box {
 	display: flex;

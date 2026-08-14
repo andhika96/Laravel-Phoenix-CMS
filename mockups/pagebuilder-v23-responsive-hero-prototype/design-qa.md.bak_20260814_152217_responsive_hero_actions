@@ -1,0 +1,40 @@
+# Design QA — Responsive Hero Banner Prototype
+
+## Source truth
+
+- Reference: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-db4b38b4-e188-4e43-83a7-372584edb1f0.png`
+- Desktop hero asset: `public/assets/mg5gt-hero-desktop.webp`
+- Mobile hero asset: `public/assets/mg5gt-hero-mobile.webp`
+- Page Builder UI source: `public/assets/css/pagebuilder_elementor_v23.css` and `public/js/pagebuilder_elementor_v23/app.js`
+
+## Comparison evidence
+
+- Combined comparison: `public/assets/qa-comparison.png`
+- Full editor view: `public/assets/qa-prototype-desktop.png`
+- Focused hero view: `public/assets/qa-prototype-hero.png`
+- Compact browser view: `public/assets/qa-prototype-720.png`
+- Comparison state: Grouped positioning, Desktop device.
+- Interactive state checked: Independent positioning, Mobile device, Title selected.
+- Browser viewports checked: 1440 × 1000, 1024 × 900, and 720 × 1000.
+
+## Findings and patches
+
+1. **P2 · Typography:** the first desktop pass made the title more dominant than the MG5 GT reference. Reduced the responsive title scale from `3.25vw / 54px` to `2.65vw / 46px` in `src/styles.css`.
+2. **P2 · Accessibility:** responsive, alignment, and canvas icon controls relied on visual icon/title text. Added explicit accessible names in `src/App.jsx`.
+3. **P2 · Prototype clarity:** Preview and Save looked actionable even though this prototype does not navigate or persist. Disabled both controls and added explanatory titles.
+4. **P3 · Fidelity note:** the blue selection outline is intentionally editor-only and does not belong to frontend output.
+
+## Verification
+
+- Grouped and Independent mode switching: passed.
+- Desktop, Tablet, and Mobile device switching: passed.
+- Independent Title/Subtitle/Button selection: passed.
+- Numeric X-position changed the rendered element coordinate and Reset restored the device default: passed.
+- Browser horizontal overflow at 1024 px and 720 px: none.
+- Console errors/warnings: none.
+- `npm run check`: passed.
+- `npm run build`: passed.
+
+No unresolved P0, P1, or P2 findings remain.
+
+final result: passed

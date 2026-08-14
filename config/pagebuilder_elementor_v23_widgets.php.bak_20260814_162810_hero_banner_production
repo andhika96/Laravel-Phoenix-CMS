@@ -316,13 +316,6 @@ return [
         'settings' => 'js/pagebuilder_elementor_v23/widgets/pro/shared/Settings.vue',
         'view' => 'pagebuilder_elementor_v23.partials.render_pro_widget', 'toolbox' => true,
     ],
-    'hero_banner' => [
-        'type' => 'hero_banner', 'label' => 'Hero Banner', 'category' => 'pro', 'icon' => 'fas fa-image',
-        'definition' => 'js/pagebuilder_elementor_v23/widgets/pro/hero-banner/definition.js',
-        'canvas' => 'js/pagebuilder_elementor_v23/widgets/pro/hero-banner/Canvas.vue',
-        'settings' => 'js/pagebuilder_elementor_v23/widgets/pro/hero-banner/Settings.vue',
-        'view' => 'pagebuilder_elementor_v23.widgets.pro.hero-banner', 'toolbox' => true,
-    ],
     'flip_box' => [
         'type' => 'flip_box', 'label' => 'Flip Box', 'category' => 'pro', 'icon' => 'fas fa-sync-alt',
         'definition' => 'js/pagebuilder_elementor_v23/widgets/pro/flip-box/definition.js',

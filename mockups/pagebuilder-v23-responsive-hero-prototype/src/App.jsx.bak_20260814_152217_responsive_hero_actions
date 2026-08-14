@@ -1,0 +1,277 @@
+import { useMemo, useState } from "react";
+import { positionStyle } from "./positioning.js";
+
+const DEVICES = [
+  { id: "desktop", label: "Desktop", icon: "bi-display", width: "1440 px" },
+  { id: "tablet", label: "Tablet", icon: "bi-tablet", width: "768 px" },
+  { id: "mobile", label: "Mobile", icon: "bi-phone", width: "390 px" },
+];
+
+const ANCHORS = [
+  ["top-left", "top-center", "top-right"],
+  ["center-left", "center", "center-right"],
+  ["bottom-left", "bottom-center", "bottom-right"],
+];
+
+const LABELS = {
+  group: "Content group",
+  title: "Title",
+  subtitle: "Subtitle",
+  button: "Button",
+};
+
+const INITIAL = {
+  desktop: {
+    group: { anchor: "center-left", x: 17, y: 54, width: 30, align: "left" },
+    title: { anchor: "top-left", x: 17, y: 52, width: 28, align: "left" },
+    subtitle: { anchor: "top-left", x: 17, y: 65, width: 28, align: "left" },
+    button: { anchor: "top-left", x: 17, y: 77, width: 18, align: "left" },
+  },
+  tablet: {
+    group: { anchor: "center-left", x: 11, y: 55, width: 38, align: "left" },
+    title: { anchor: "top-left", x: 11, y: 48, width: 38, align: "left" },
+    subtitle: { anchor: "top-left", x: 11, y: 62, width: 38, align: "left" },
+    button: { anchor: "top-left", x: 11, y: 75, width: 24, align: "left" },
+  },
+  mobile: {
+    group: { anchor: "top-center", x: 50, y: 13, width: 82, align: "center" },
+    title: { anchor: "top-center", x: 50, y: 12, width: 84, align: "center" },
+    subtitle: { anchor: "top-center", x: 50, y: 20, width: 84, align: "center" },
+    button: { anchor: "top-center", x: 50, y: 27, width: 50, align: "center" },
+  },
+};
+
+function Field({ label, children }) {
+  return (
+    <label className="field">
+      <span>{label}</span>
+      {children}
+    </label>
+  );
+}
+
+function NumberControl({ label, value, onChange, min = 0, max = 100 }) {
+  return (
+    <Field label={label}>
+      <div className="number-control">
+        <input
+          type="number"
+          min={min}
+          max={max}
+          value={value}
+          onChange={(event) => onChange(Math.min(max, Math.max(min, Number(event.target.value))))}
+        />
+        <span>%</span>
+      </div>
+    </Field>
+  );
+}
+
+function App() {
+  const [device, setDevice] = useState("desktop");
+  const [mode, setMode] = useState("grouped");
+  const [tab, setTab] = useState("content");
+  const [selected, setSelected] = useState("title");
+  const [settings, setSettings] = useState(INITIAL);
+  const [copy, setCopy] = useState({
+    title: "MG 5 GT",
+    subtitle: "Light Up Desire",
+    button: "Watch Video",
+  });
+
+  const target = mode === "grouped" ? "group" : selected;
+  const position = settings[device][target];
+  const deviceMeta = DEVICES.find((item) => item.id === device);
+
+  const updatePosition = (key, value) => {
+    setSettings((current) => ({
+      ...current,
+      [device]: {
+        ...current[device],
+        [target]: { ...current[device][target], [key]: value },
+      },
+    }));
+  };
+
+  const previewElements = useMemo(() => ({
+    title: <h1>{copy.title || "Untitled hero"}</h1>,
+    subtitle: <p>{copy.subtitle || "Add a subtitle"}</p>,
+    button: <button className="hero-button"><span>{copy.button || "Button"}</span><i className="bi bi-play-fill" /></button>,
+  }), [copy]);
+
+  const resetCurrent = () => {
+    setSettings((current) => ({
+      ...current,
+      [device]: { ...current[device], [target]: { ...INITIAL[device][target] } },
+    }));
+  };
+
+  return (
+    <div className="builder-shell">
+      <header className="topbar">
+        <div className="topbar-left">
+          <div className="brand-mark"><i className="bi bi-grid-1x2-fill" /></div>
+          <div className="brand-copy"><strong>Phoenix</strong><span>Page Builder 2.3</span></div>
+          <div className="crumb"><span>Website</span><i className="bi bi-chevron-right" /><strong>MG5 GT Hero Prototype</strong></div>
+        </div>
+        <div className="device-switcher" aria-label="Responsive preview">
+          {DEVICES.map((item) => (
+            <button key={item.id} className={device === item.id ? "active" : ""} title={item.label} aria-label={item.label} onClick={() => setDevice(item.id)}>
+              <i className={`bi ${item.icon}`} /><span>{item.label}</span>
+            </button>
+          ))}
+        </div>
+        <div className="topbar-actions">
+          <button className="icon-button" title="Undo is disabled in this prototype" disabled><i className="bi bi-arrow-counterclockwise" /></button>
+          <button className="secondary-button" disabled title="Preview navigation is outside this prototype"><i className="bi bi-play-circle" /> Preview</button>
+          <button className="primary-button" disabled title="This prototype does not persist data"><i className="bi bi-cloud-arrow-up" /> Save</button>
+        </div>
+      </header>
+
+      <main className="workspace">
+        <aside className="inspector">
+          <div className="panel-heading">
+            <button className="back-button" aria-label="Back"><i className="bi bi-chevron-left" /></button>
+            <div><strong>Responsive Hero Banner</strong><span>Widget settings</span></div>
+            <span className="prototype-badge">Prototype</span>
+          </div>
+
+          <nav className="tabs" aria-label="Widget settings">
+            {["content", "style", "advanced"].map((item) => (
+              <button key={item} className={tab === item ? "active" : ""} onClick={() => setTab(item)}>{item}</button>
+            ))}
+          </nav>
+
+          <div className="panel-scroll">
+            {tab === "content" && (
+              <>
+                <section className="panel-section first">
+                  <div className="section-title"><span>Content behavior</span><i className="bi bi-chevron-up" /></div>
+                  <div className="mode-toggle" role="group" aria-label="Content positioning mode">
+                    <button className={mode === "grouped" ? "active" : ""} onClick={() => setMode("grouped")}><i className="bi bi-bounding-box" />Grouped</button>
+                    <button className={mode === "independent" ? "active" : ""} onClick={() => setMode("independent")}><i className="bi bi-layers" />Independent</button>
+                  </div>
+                  <p className="helper-copy">
+                    {mode === "grouped"
+                      ? "Title, subtitle, and button move as one content block."
+                      : "Each element gets its own responsive position."}
+                  </p>
+                </section>
+
+                <section className="panel-section">
+                  <div className="section-title"><span>Content</span><i className="bi bi-chevron-up" /></div>
+                  <Field label="Title"><input value={copy.title} onChange={(event) => setCopy({ ...copy, title: event.target.value })} /></Field>
+                  <Field label="Subtitle"><input value={copy.subtitle} onChange={(event) => setCopy({ ...copy, subtitle: event.target.value })} /></Field>
+                  <Field label="Button text"><input value={copy.button} onChange={(event) => setCopy({ ...copy, button: event.target.value })} /></Field>
+                </section>
+
+                <section className="panel-section">
+                  <div className="section-title"><span>Responsive position</span><span className="device-chip"><i className={`bi ${deviceMeta.icon}`} />{deviceMeta.label}</span></div>
+
+                  {mode === "independent" && (
+                    <div className="target-tabs">
+                      {["title", "subtitle", "button"].map((item) => (
+                        <button key={item} className={selected === item ? "active" : ""} onClick={() => setSelected(item)}>{LABELS[item]}</button>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="active-target"><span>Editing</span><strong>{LABELS[target]}</strong></div>
+                  <div className="control-label">Anchor point</div>
+                  <div className="anchor-grid" aria-label="Anchor point">
+                    {ANCHORS.flat().map((anchor) => (
+                      <button key={anchor} className={position.anchor === anchor ? "active" : ""} aria-label={anchor} title={anchor} onClick={() => updatePosition("anchor", anchor)}><span /></button>
+                    ))}
+                  </div>
+                  <div className="control-grid">
+                    <NumberControl label="Horizontal (X)" value={position.x} onChange={(value) => updatePosition("x", value)} />
+                    <NumberControl label="Vertical (Y)" value={position.y} onChange={(value) => updatePosition("y", value)} />
+                  </div>
+                  <NumberControl label="Content width" value={position.width} min={10} onChange={(value) => updatePosition("width", value)} />
+                  <Field label="Alignment">
+                    <div className="alignment-control">
+                      {["left", "center", "right"].map((align) => (
+                        <button key={align} className={position.align === align ? "active" : ""} title={align} aria-label={`${align} alignment`} onClick={() => updatePosition("align", align)}><i className={`bi bi-text-${align}`} /></button>
+                      ))}
+                    </div>
+                  </Field>
+                  <button className="reset-button" onClick={resetCurrent}><i className="bi bi-arrow-counterclockwise" /> Reset {deviceMeta.label}</button>
+                </section>
+
+                <section className="panel-section">
+                  <div className="section-title"><span>Responsive media</span><i className="bi bi-chevron-up" /></div>
+                  <div className="media-row">
+                    <img src="/assets/mg5gt-hero-desktop.webp" alt="Desktop hero thumbnail" />
+                    <div><strong>Desktop & Tablet</strong><span>1440 × 500 WebP</span></div>
+                    <i className="bi bi-check-circle-fill" />
+                  </div>
+                  <div className="media-row">
+                    <img src="/assets/mg5gt-hero-mobile.webp" alt="Mobile hero thumbnail" />
+                    <div><strong>Mobile</strong><span>1563 × 3025 WebP</span></div>
+                    <i className="bi bi-check-circle-fill" />
+                  </div>
+                </section>
+              </>
+            )}
+
+            {tab === "style" && (
+              <section className="panel-section first">
+                <div className="section-title"><span>Style preview</span><i className="bi bi-chevron-up" /></div>
+                <p className="empty-tab-copy">Prototype ini fokus pada keputusan positioning. Typography, colors, spacing, dan button states tetap akan memakai pola kontrol widget v2.3 saat implementasi produksi.</p>
+                <div className="style-swatch-row"><span>Text color</span><span className="swatch dark" />#292d32</div>
+                <div className="style-swatch-row"><span>Button</span><span className="swatch button" />#30343a</div>
+              </section>
+            )}
+
+            {tab === "advanced" && (
+              <section className="panel-section first">
+                <div className="section-title"><span>Advanced</span><i className="bi bi-chevron-up" /></div>
+                <p className="empty-tab-copy">Widget produksi nantinya tetap mewarisi kontrol Advanced v2.3 seperti margin, padding, motion effects, background, border, responsive visibility, attributes, dan custom CSS.</p>
+              </section>
+            )}
+          </div>
+        </aside>
+
+        <section className="canvas-region">
+          <div className="canvas-toolbar">
+            <div className="canvas-meta"><span>{deviceMeta.label}</span><i className="bi bi-dot" /><span>{deviceMeta.width}</span><em>Live canvas</em></div>
+            <div className="canvas-breadcrumb"><i className="bi bi-file-earmark" />Page<i className="bi bi-chevron-right" /><strong>Responsive Hero Banner</strong></div>
+            <div className="canvas-tools"><button title="Canvas grid" aria-label="Canvas grid"><i className="bi bi-grid-3x3-gap" /></button><button title="Reset zoom" aria-label="Reset zoom"><i className="bi bi-aspect-ratio" /></button><span>100%</span></div>
+          </div>
+
+          <div className="stage">
+            <div className={`webpage-frame ${device}`}>
+              <div className={`hero-canvas ${device}`}>
+                <picture>
+                  <source media="(max-width: 520px)" srcSet="/assets/mg5gt-hero-mobile.webp" />
+                  <img src={device === "mobile" ? "/assets/mg5gt-hero-mobile.webp" : "/assets/mg5gt-hero-desktop.webp"} alt="Yellow MG5 GT in a white studio" />
+                </picture>
+
+                {mode === "grouped" ? (
+                  <div className="content-group selection-outline" style={positionStyle(settings[device].group)}>
+                    <span className="selection-label">Content group</span>
+                    {previewElements.title}{previewElements.subtitle}{previewElements.button}
+                  </div>
+                ) : (
+                  Object.entries(previewElements).map(([key, element]) => (
+                    <div key={key} className={`independent-element ${selected === key ? "selection-outline" : ""}`} style={positionStyle(settings[device][key])} onClick={() => setSelected(key)}>
+                      {selected === key && <span className="selection-label">{LABELS[key]}</span>}
+                      {element}
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="decision-bar">
+            <div><i className={`bi ${mode === "grouped" ? "bi-bounding-box" : "bi-layers"}`} /><span>Current behavior</span><strong>{mode === "grouped" ? "Grouped positioning" : "Independent positioning"}</strong></div>
+            <p>{mode === "grouped" ? "Lebih cepat dan rapi untuk mayoritas hero banner." : "Lebih fleksibel, tetapi pengaturan responsive lebih banyak."}</p>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
+
+export { App };

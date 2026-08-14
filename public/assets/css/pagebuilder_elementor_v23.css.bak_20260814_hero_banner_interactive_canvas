@@ -1742,10 +1742,6 @@ body {
 	pointer-events: auto;
 }
 
-.pb-node.pb-node-hero_banner [data-pb-interactive="true"] {
-	pointer-events: auto;
-}
-
 .pb-node.pb-node-image_carousel .pb-image-carousel__viewport,
 .pb-node.pb-node-image_carousel .pb-image-carousel__viewport * {
 	pointer-events: auto;

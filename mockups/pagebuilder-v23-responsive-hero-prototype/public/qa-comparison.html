@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Hero Banner · Design QA Comparison</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 32px; color: #263149; background: #eef1f6; font-family: Inter, Arial, sans-serif; }
+      header { margin: 0 auto 24px; max-width: 1280px; }
+      h1 { margin: 0; font-size: 24px; }
+      p { margin: 7px 0 0; color: #69758b; font-size: 13px; }
+      main { display: grid; gap: 22px; max-width: 1280px; margin: auto; }
+      figure { margin: 0; overflow: hidden; border: 1px solid #dbe1eb; border-radius: 12px; background: #fff; box-shadow: 0 8px 24px rgba(35,48,71,.07); }
+      figcaption { display: flex; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid #e4e8f0; font-size: 12px; font-weight: 700; }
+      figcaption span { color: #7b879b; font-weight: 500; }
+      img { width: 100%; display: block; }
+      .focused { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+      .focused img { aspect-ratio: 1440 / 500; object-fit: cover; }
+      .full img { max-height: 500px; object-fit: contain; background: #f7f9fc; }
+      @media (max-width: 850px) { body { padding: 18px; } .focused { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Design QA · Responsive Hero Banner</h1>
+      <p>Source truth, focused hero implementation, dan full editor view pada satu lembar perbandingan.</p>
+    </header>
+    <main>
+      <section class="focused">
+        <figure>
+          <figcaption>Source truth <span>MG5 GT reference</span></figcaption>
+          <img src="/assets/qa-reference-mg5gt.png" alt="Original MG5 GT hero reference" />
+        </figure>
+        <figure>
+          <figcaption>Focused implementation <span>Grouped · Desktop</span></figcaption>
+          <img src="/assets/qa-prototype-hero.png" alt="Focused prototype hero" />
+        </figure>
+      </section>
+      <figure class="full">
+          <figcaption>Full implementation <span>Page Builder v2.3 prototype · 1440 × 1000</span></figcaption>
+        <img src="/assets/qa-prototype-desktop.png" alt="Full prototype editor view" />
+      </figure>
+    </main>
+  </body>
+</html>
