@@ -1,0 +1,166 @@
+<template>
+    <div class="pb-widget-settings pb-widget-settings--general-new pb-widget-settings--pro pb-hero-slider-settings">
+        <div v-show="editor.settingsTab==='content'" class="pb-tab-content">
+            <details class="pb-collapsible" open>
+                <summary>Slides</summary>
+                <div class="pb-collapsible-body">
+                    <div class="pb-label-row"><label class="pb-form-label mb-0">Media Slides</label><span class="pb-form-hint">{{ slides.length }} / 30</span></div>
+                    <div class="pb-hero-slider-slides">
+                        <div v-for="(slide,index) in slides" :key="slide.id" class="pb-hero-slider-slide" :class="{'is-open':expandedSlideId===slide.id}">
+                            <div class="pb-hero-slider-slide__header" role="button" tabindex="0" :aria-expanded="expandedSlideId===slide.id?'true':'false'" @click="toggleSlide(slide.id)" @keydown.enter.prevent="toggleSlide(slide.id)" @keydown.space.prevent="toggleSlide(slide.id)">
+                                <i class="fas fa-grip-vertical"></i><strong>{{ slide.title || (slide.mediaType==='video' ? 'Video' : 'Image') }} {{ index+1 }}</strong>
+                                <button type="button" title="Move slide up" :disabled="index===0" @click.stop="moveSlide(index,-1)"><i class="fas fa-arrow-up"></i></button>
+                                <button type="button" title="Move slide down" :disabled="index===slides.length-1" @click.stop="moveSlide(index,1)"><i class="fas fa-arrow-down"></i></button>
+                                <button type="button" title="Duplicate slide" :disabled="slides.length>=30" @click.stop="duplicateSlide(index)"><i class="far fa-copy"></i></button>
+                                <button type="button" title="Remove slide" :disabled="slides.length<=1" @click.stop="removeSlide(index)"><i class="fas fa-times"></i></button>
+                            </div>
+                            <div v-if="expandedSlideId===slide.id" class="pb-hero-slider-slide__body">
+                                <div class="pb-form-group"><label class="pb-form-label">Media Type</label><div class="pb-btn-group"><button type="button" class="pb-seg-btn" :class="{active:slide.mediaType==='image'}" @click="slide.mediaType='image'"><i class="far fa-image"></i> Image</button><button type="button" class="pb-seg-btn" :class="{active:slide.mediaType==='video'}" @click="slide.mediaType='video'"><i class="fas fa-video"></i> Video</button></div></div>
+
+                                <template v-if="slide.mediaType==='image'">
+                                    <div class="pb-form-group"><label class="pb-form-label">Image Source</label><select class="pb-select" v-model="slide.imageSource"><option value="ckfinder">CKFinder / Media Library</option><option value="url">External URL</option></select></div>
+                                    <MediaField label="Image URL" :value="slide.imageUrl" :has-picker="slide.imageSource!=='url'" @input="slide.imageUrl=$event" @choose="chooseMedia(slide,'imageUrl','Choose image')" />
+                                    <div class="pb-form-group"><label class="pb-form-label">Tablet Image URL</label><input class="pb-input" v-model="slide.imageUrlTablet"></div>
+                                    <div class="pb-form-group"><label class="pb-form-label">Mobile Image URL</label><input class="pb-input" v-model="slide.imageUrlMobile"></div>
+                                    <div class="pb-form-group"><label class="pb-form-label">Alt Text</label><input class="pb-input" v-model="slide.imageAlt"></div>
+                                </template>
+
+                                <template v-else>
+                                    <div class="pb-form-group"><label class="pb-form-label">Video Provider</label><select class="pb-select" v-model="slide.videoProvider"><option value="self_hosted">Local / Direct HTML5</option><option value="youtube">YouTube</option><option value="vimeo">Vimeo</option><option value="dailymotion">Dailymotion</option><option value="embed">Generic Embed</option></select></div>
+                                    <MediaField label="Video URL" :value="slide.videoUrl" :has-picker="slide.videoProvider==='self_hosted'" @input="slide.videoUrl=$event" @choose="chooseMedia(slide,'videoUrl','Choose video')" />
+                                    <MediaField label="Poster Image" :value="slide.videoPoster" :has-picker="true" @input="slide.videoPoster=$event" @choose="chooseMedia(slide,'videoPoster','Choose poster image')" />
+                                    <div class="pb-form-group"><label class="pb-form-label">Tablet Poster URL</label><input class="pb-input" v-model="slide.videoPosterTablet"></div>
+                                    <div class="pb-form-group"><label class="pb-form-label">Mobile Poster URL</label><input class="pb-input" v-model="slide.videoPosterMobile"></div>
+                                    <div class="pb-form-group"><label class="pb-form-label">Video Autoplay</label><select class="pb-select" v-model="slide.videoAutoplay"><option value="inherit">Inherit global</option><option value="on">On</option><option value="off">Off</option></select></div>
+                                    <div class="pb-form-group"><label class="pb-form-label">Aspect Ratio</label><select class="pb-select" v-model="slide.videoAspectRatio"><option v-for="ratio in ratios" :key="ratio" :value="ratio">{{ratio}}</option></select></div>
+                                    <ToggleField :id="'hero-slider-loop-'+slide.id" label="Loop Video" v-model="slide.videoLoop" />
+                                    <ToggleField :id="'hero-slider-muted-'+slide.id" label="Muted by default" v-model="slide.videoMuted" />
+                                    <ToggleField :id="'hero-slider-resume-'+slide.id" label="Resume position" v-model="slide.videoResume" />
+                                </template>
+
+                                <div class="pb-form-group"><label class="pb-form-label">Slide Title</label><input class="pb-input" v-model="slide.title"></div>
+                                <div class="pb-form-group"><label class="pb-form-label">Slide Subtitle</label><textarea class="pb-textarea" rows="2" v-model="slide.subtitle"></textarea></div>
+                                <div class="pb-form-group">
+                                    <div class="pb-label-row"><label class="pb-form-label mb-0">Buttons</label><span class="pb-form-hint">{{ (slide.buttons||[]).length }} / 3</span></div>
+                                    <div v-for="(button,buttonIndex) in (slide.buttons||[])" :key="button.id||buttonIndex" class="pb-hero-slider-button-row">
+                                        <input class="pb-input" v-model="button.text" placeholder="Button text">
+                                        <input class="pb-input" v-model="button.linkUrl" placeholder="Link URL">
+                                        <button type="button" title="Remove button" @click="removeButton(slide,buttonIndex)"><i class="fas fa-times"></i></button>
+                                    </div>
+                                    <button type="button" class="pb-hero-slider-add-button" :disabled="(slide.buttons||[]).length>=3" @click="addButton(slide)"><i class="fas fa-plus"></i> Add Button</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="pb-hero-add" :disabled="slides.length>=30" @click="addSlide"><i class="fas fa-plus"></i> Add Slide</button>
+                </div>
+            </details>
+
+            <details class="pb-collapsible" open>
+                <summary>Slider Behavior</summary>
+                <div class="pb-collapsible-body">
+                    <DeviceTabs :editor="editor" />
+                    <div class="pb-form-group"><label class="pb-form-label">Direction</label><div class="pb-btn-group"><button v-for="direction in ['horizontal','vertical']" :key="direction" type="button" class="pb-seg-btn" :class="{active:responsiveValue('direction','horizontal')===direction}" @click="setResponsive('direction',direction)"><i :class="direction==='vertical'?'fas fa-arrows-alt-v':'fas fa-arrows-alt-h'"></i> {{direction==='vertical'?'Vertical':'Horizontal'}}</button></div></div>
+                    <div class="pb-form-group"><label class="pb-form-label">Transition</label><select class="pb-select" v-model="settings.transition"><option value="slide">Slide</option><option value="fade">Fade</option></select></div>
+                    <div class="pb-hero-slider-grid"><div class="pb-form-group"><label class="pb-form-label">Interval (ms)</label><input class="pb-input" type="number" min="100" v-model.number="settings.autoplaySpeed"></div><div class="pb-form-group"><label class="pb-form-label">Transition Speed</label><input class="pb-input" type="number" min="0" v-model.number="settings.transitionSpeed"></div><div class="pb-form-group"><label class="pb-form-label">Slides per move</label><input class="pb-input" type="number" min="1" v-model.number="settings.perMove"></div></div>
+                    <ToggleField :id="'hero-slider-autoplay-'+node.id" label="Slider Autoplay" v-model="settings.autoplay" />
+                    <ToggleField :id="'hero-slider-loop-'+node.id" label="Loop Slides" v-model="settings.loop" />
+                    <ToggleField :id="'hero-slider-rewind-'+node.id" label="Rewind at end" v-model="settings.rewind" />
+                    <ToggleField :id="'hero-slider-hover-'+node.id" label="Pause on Hover" v-model="settings.pauseOnHover" />
+                    <ToggleField :id="'hero-slider-focus-'+node.id" label="Pause on Focus" v-model="settings.pauseOnFocus" />
+                    <ToggleField :id="'hero-slider-interaction-'+node.id" label="Pause on Interaction" v-model="settings.pauseOnInteraction" />
+                    <ToggleField :id="'hero-slider-arrows-'+node.id" label="Arrows" v-model="settings.arrows" />
+                    <ToggleField :id="'hero-slider-pagination-'+node.id" label="Pagination" v-model="settings.pagination" />
+                    <ToggleField :id="'hero-slider-progress-'+node.id" label="Progress Bar" v-model="settings.progress" />
+                    <ToggleField :id="'hero-slider-keyboard-'+node.id" label="Keyboard Navigation" v-model="settings.keyboard" />
+                    <ToggleField :id="'hero-slider-drag-'+node.id" label="Drag" v-model="settings.drag" />
+                    <ToggleField :id="'hero-slider-wheel-'+node.id" label="Mouse Wheel" v-model="settings.mouseWheel" />
+                    <ToggleField :id="'hero-slider-wheel-release-'+node.id" label="Wheel release" v-model="settings.wheelRelease" />
+                    <ToggleField :id="'hero-slider-lazy-'+node.id" label="Lazy-load media" v-model="settings.lazyLoad" />
+                    <div v-if="currentDevice!=='desktop'" class="pb-form-note">Direction overrides inherit Desktop when left empty.</div>
+                </div>
+            </details>
+
+            <details class="pb-collapsible" open>
+                <summary>Video Playback</summary>
+                <div class="pb-collapsible-body">
+                    <ToggleField :id="'hero-slider-video-autoplay-'+node.id" label="Global Video Autoplay" v-model="settings.videoAutoplay" />
+                    <div class="pb-form-group"><label class="pb-form-label">Video Duration Mode</label><select class="pb-select" v-model="settings.videoDurationMode"><option value="interval">Fixed interval</option><option value="duration">Follow video duration</option></select></div>
+                    <div class="pb-form-group"><label class="pb-form-label">Video Autoplay Fallback</label><select class="pb-select" v-model="settings.videoAutoplayFallback"><option value="interval">Use slider interval</option></select></div>
+                    <ToggleField :id="'hero-slider-video-muted-'+node.id" label="Muted autoplay" v-model="settings.videoMutedAutoplay" />
+                    <ToggleField :id="'hero-slider-video-loop-'+node.id" label="Loop Video by default" v-model="settings.videoLoop" />
+                    <ToggleField :id="'hero-slider-video-resume-'+node.id" label="Resume on re-entry" v-model="settings.videoResume" />
+                    <ToggleField :id="'hero-slider-video-privacy-'+node.id" label="Provider privacy mode" v-model="settings.videoPrivacyMode" />
+                    <div class="pb-form-group"><label class="pb-form-label">Video Controls</label><select class="pb-select" v-model="settings.videoControls"><option value="custom">Custom minimal controls</option><option value="provider">Provider controls</option></select></div>
+                    <div class="pb-form-group"><label class="pb-form-label">Dailymotion Player ID (optional)</label><input class="pb-input" v-model="settings.dailymotionPlayerId"><div class="pb-form-note">Needed when the official Dailymotion Web SDK library requires a configured player.</div></div>
+                    <div class="pb-form-group"><label class="pb-form-label">Dailymotion SDK URL (optional)</label><input class="pb-input" v-model="settings.dailymotionSdkUrl"></div>
+                </div>
+            </details>
+        </div>
+
+        <div v-show="editor.settingsTab==='style'" class="pb-tab-content">
+            <details class="pb-collapsible" open>
+                <summary>Height</summary>
+                <div class="pb-collapsible-body">
+                    <div class="pb-form-group"><label class="pb-form-label">Height Mode</label><div class="pb-btn-group"><button type="button" class="pb-seg-btn" :class="{active:settings.heightMode==='adaptive'}" @click="settings.heightMode='adaptive'">Adaptive Height</button><button type="button" class="pb-seg-btn" :class="{active:settings.heightMode==='fixed'}" @click="settings.heightMode='fixed'">Fixed Height</button></div></div>
+                    <div v-if="settings.heightMode==='fixed'" class="pb-form-group"><label class="pb-form-label">Fixed Height</label><input class="pb-input" v-model="settings.fixedHeight"></div>
+                    <DeviceTabs :editor="editor" />
+                    <div class="pb-form-group"><label class="pb-form-label">Minimum Height</label><input class="pb-input" :value="responsiveValue('minHeight','420px')" @input="setResponsive('minHeight',$event.target.value)"></div>
+                    <div class="pb-form-note">Adaptive mode uses image/native video dimensions and the configured aspect-ratio fallback for external providers.</div>
+                </div>
+            </details>
+            <details class="pb-collapsible" open>
+                <summary>Overlay & Content</summary>
+                <div class="pb-collapsible-body">
+                    <ColorField label="Overlay Color" v-model="settings.overlayColor" />
+                    <ColorField label="Title Color" v-model="settings.titleColor" />
+                    <ColorField label="Subtitle Color" v-model="settings.subtitleColor" />
+                    <ColorField label="Button Text Color" v-model="settings.buttonTextColor" />
+                    <ColorField label="Button Background" v-model="settings.buttonBackground" />
+                    <ColorField label="Button Hover Background" v-model="settings.buttonBackgroundHover" />
+                    <div class="pb-hero-slider-grid"><div class="pb-form-group"><label class="pb-form-label">Button Radius</label><input class="pb-input" v-model="settings.buttonRadius"></div><div class="pb-form-group"><label class="pb-form-label">Horizontal Padding</label><input class="pb-input" v-model="settings.buttonPaddingX"></div></div>
+                </div>
+            </details>
+        </div>
+
+        <div v-show="editor.settingsTab==='advanced'" class="pb-tab-content"><component :is="editor.widgetAdvancedControls" :node="node" :responsive-device="editor.responsiveDevice" :show-display-conditions="false" :show-cache-settings="false" :elementor-choices="true" @responsive-device="editor.setResponsiveDevice" @choose-media="editor.chooseMedia(node.settings,$event)" @clear-media="editor.clearMedia(node.settings,$event)" /></div>
+    </div>
+</template>
+
+<script>
+const DeviceTabs = { props: ['editor'], template: `<div class="pb-hero-devices"><button v-for="device in editor.responsiveDevices" :key="device.value" type="button" class="pb-seg-btn" :class="{active:editor.responsiveDevice===device.value}" :aria-pressed="editor.responsiveDevice===device.value" @click="editor.setResponsiveDevice(device.value)"><i :class="device.icon"></i><span>{{device.label}}</span></button></div>` };
+const ToggleField = { props: { id: String, label: String, modelValue: Boolean }, emits: ['update:modelValue'], template: `<div class="pb-form-group pb-toggle-label-row pb-widget-settings__compact-toggle"><label class="pb-form-label mb-0" :for="id">{{label}}</label><div class="pb-toggle-switch-wrap"><div class="pb-toggle-wrap"><input :id="id" class="pb-toggle" type="checkbox" :checked="modelValue" @change="$emit('update:modelValue',$event.target.checked)"><label :for="id"></label></div><span class="pb-toggle-state">{{modelValue?'On':'Off'}}</span></div></div>` };
+const ColorField = { props: ['label', 'modelValue'], emits: ['update:modelValue'], template: `<div class="pb-form-group"><label class="pb-form-label">{{label}}</label><input class="pb-input coloris pb-coloris-input" :value="modelValue" @input="$emit('update:modelValue',$event.target.value)"></div>` };
+const MediaField = { props: { label: String, value: String, hasPicker: Boolean }, emits: ['input', 'choose'], template: `<div class="pb-form-group"><label class="pb-form-label">{{label}}</label><div class="pb-media-field" :class="{'has-action':hasPicker}"><input class="pb-input" :value="value" @input="$emit('input',$event.target.value)"><button v-if="hasPicker" type="button" @click="$emit('choose')"><i class="fas fa-folder-open"></i></button></div></div>` };
+
+export default {
+    name: 'HeroSliderSettings',
+    components: { DeviceTabs, ToggleField, ColorField, MediaField },
+    props: { node: { type: Object, required: true }, editor: { type: Object, required: true } },
+    data() { return { expandedSlideId: '', ratios: ['16/9', '4/3', '1/1', '3/2', '21/9', '9/16', '4/5'] }; },
+    computed: {
+        settings() { return this.node.settings || (this.node.settings = {}); },
+        slides() { return Array.isArray(this.settings.slides) ? this.settings.slides : (this.settings.slides = []); },
+        currentDevice() { return this.editor.responsiveDevice || 'desktop'; },
+    },
+    mounted() { if (!this.slides.length) this.addSlide(); if (!this.expandedSlideId && this.slides[0]) this.expandedSlideId = this.slides[0].id; },
+    methods: {
+        toggleSlide(id) { this.expandedSlideId = this.expandedSlideId === id ? '' : id; },
+        newSlide(index) { return { id: 'hero-slider-slide-' + Date.now() + '-' + index, mediaType: 'image', imageSource: 'ckfinder', imageUrl: '', imageUrlTablet: '', imageUrlMobile: '', imageAlt: '', videoProvider: 'self_hosted', videoUrl: '', videoPoster: '', videoPosterTablet: '', videoPosterMobile: '', videoAutoplay: 'inherit', videoLoop: false, videoControls: true, videoMuted: true, videoResume: true, videoAspectRatio: '16/9', title: '', subtitle: '', buttons: [] }; },
+        addSlide() { if (this.slides.length >= 30) return; const slide = this.newSlide(this.slides.length + 1); this.slides.push(slide); this.expandedSlideId = slide.id; },
+        duplicateSlide(index) { if (this.slides.length >= 30) return; const copy = JSON.parse(JSON.stringify(this.slides[index])); copy.id = 'hero-slider-slide-' + Date.now(); this.slides.splice(index + 1, 0, copy); this.expandedSlideId = copy.id; },
+        removeSlide(index) { if (this.slides.length <= 1) return; const removed = this.slides.splice(index, 1)[0]; if (this.expandedSlideId === removed?.id) this.expandedSlideId = this.slides[Math.max(0, index - 1)]?.id || ''; },
+        moveSlide(index, direction) { const target = index + direction; if (target < 0 || target >= this.slides.length) return; const [slide] = this.slides.splice(index, 1); this.slides.splice(target, 0, slide); },
+        addButton(slide) { if (!Array.isArray(slide.buttons)) slide.buttons = []; if (slide.buttons.length >= 3) return; slide.buttons.push({ id: 'hero-slider-button-' + Date.now(), text: 'Learn More', linkUrl: '', linkTarget: '', linkNofollow: false }); },
+        removeButton(slide, index) { if (Array.isArray(slide.buttons)) slide.buttons.splice(index, 1); },
+        chooseMedia(target, key, label) { if (this.editor.chooseMedia) this.editor.chooseMedia(target, key, label); },
+        responsiveKey(base) { return this.currentDevice === 'mobile' ? base + 'Mobile' : (this.currentDevice === 'tablet' ? base + 'Tablet' : base); },
+        responsiveValue(base, fallback = '') { const values = this.currentDevice === 'mobile' ? [base + 'Mobile', base + 'Tablet', base] : (this.currentDevice === 'tablet' ? [base + 'Tablet', base] : [base]); for (const key of values) { if (this.settings[key] !== '' && this.settings[key] != null) return this.settings[key]; } return fallback; },
+        setResponsive(base, value) { this.settings[this.responsiveKey(base)] = value; },
+    },
+};
+</script>
+
+<style scoped>
+.pb-hero-slider-settings .pb-hero-slider-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pb-hero-slider-settings .pb-hero-slider-slides{display:grid;gap:8px}.pb-hero-slider-settings .pb-hero-slider-slide{border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden}.pb-hero-slider-settings .pb-hero-slider-slide__header{display:flex;align-items:center;gap:8px;min-height:42px;padding:8px 10px;cursor:pointer}.pb-hero-slider-settings .pb-hero-slider-slide__header>strong{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pb-hero-slider-settings .pb-hero-slider-slide__header button{width:26px;height:26px;padding:0;border:0;background:transparent;color:var(--muted);cursor:pointer}.pb-hero-slider-settings .pb-hero-slider-slide__header button:disabled{opacity:.35;cursor:not-allowed}.pb-hero-slider-settings .pb-hero-slider-slide__body{padding:10px;border-top:1px solid var(--line);background:var(--soft)}.pb-hero-slider-settings .pb-hero-add{width:100%;margin-top:10px;padding:9px;border:1px dashed var(--line);border-radius:7px;background:transparent;color:var(--primary,#6979f8);cursor:pointer}.pb-hero-slider-settings .pb-hero-add:disabled{opacity:.45;cursor:not-allowed}.pb-hero-slider-settings .pb-hero-devices{display:flex;gap:4px;margin-bottom:12px;padding:3px;border:1px solid var(--line);border-radius:9px;background:var(--soft)}.pb-hero-slider-settings :deep(.pb-hero-devices button){flex:1;border:0!important;border-radius:6px!important;background:transparent}.pb-hero-slider-settings :deep(.pb-hero-devices button.active){background:#fff;box-shadow:var(--shadow-sm)}.pb-hero-slider-settings .pb-media-field.has-action{display:flex}.pb-hero-slider-settings .pb-media-field.has-action input{border-radius:6px 0 0 6px!important}.pb-hero-slider-settings .pb-media-field.has-action button{width:46px;border:1px solid var(--line);border-left:0;border-radius:0 6px 6px 0;background:#fff;color:var(--primary,#6979f8);cursor:pointer}.pb-hero-slider-settings .pb-hero-slider-button-row{display:grid;grid-template-columns:1fr 1.5fr auto;gap:6px;margin-top:6px}.pb-hero-slider-settings .pb-hero-slider-button-row button{width:32px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--muted);cursor:pointer}.pb-hero-slider-settings .pb-hero-slider-add-button{margin-top:8px;border:0;background:transparent;color:var(--primary,#6979f8);cursor:pointer}.pb-hero-slider-settings .pb-hero-slider-add-button:disabled{opacity:.45;cursor:not-allowed}.pb-hero-slider-settings .pb-form-note{font-size:12px;line-height:1.4;color:var(--muted)}
+</style>

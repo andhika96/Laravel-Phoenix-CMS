@@ -1196,13 +1196,6 @@
 			return config[base] === '' || config[base] == null ? fallback : config[base];
 		}
 		function direction() { return deviceValue('direction', 'horizontal') === 'vertical' ? 'vertical' : 'horizontal'; }
-		function paginationPosition() {
-			const vertical = direction() === 'vertical';
-			const base = vertical ? 'paginationPositionVertical' : 'paginationPositionHorizontal';
-			const fallback = vertical ? 'center-right' : 'bottom-center';
-			const value = String(deviceValue(base, fallback) || fallback);
-			return ['top-left', 'top-center', 'top-right', 'center-left', 'center', 'center-right', 'bottom-left', 'bottom-center', 'bottom-right'].includes(value) ? value : fallback;
-		}
 		function maximum() { return Math.max(0, slides.length - 1); }
 		function normalize(index) {
 			const value = Number(index) || 0;
@@ -1311,7 +1304,7 @@
 			if (track) { track.style.transitionDuration = (prefersReducedMotion() ? 0 : Math.max(0, Number(config.transitionSpeed) || 600)) + 'ms'; track.style.transform = config.transition === 'fade' ? '' : (currentDirection === 'vertical' ? 'translate3d(0,-' + (active * 100) + '%,0)' : 'translate3d(-' + (active * 100) + '%,0,0)'); }
 			slides.forEach(function (slide, slideIndex) { const selected = slideIndex === active; slide.classList.toggle('is-active', selected); slide.setAttribute('aria-hidden', selected ? 'false' : 'true'); syncPoster(states[slideIndex]); });
 			dots.forEach(function (dot, dotIndex) { const selected = dotIndex === active; dot.classList.toggle('is-active', selected); dot.setAttribute('aria-current', selected ? 'true' : 'false'); dot.setAttribute('aria-selected', selected ? 'true' : 'false'); });
-			const pagination = root.querySelector(':scope [data-hero-pagination]'); if (pagination) { pagination.setAttribute('data-orientation', currentDirection); pagination.setAttribute('data-position', paginationPosition()); }
+			const pagination = root.querySelector(':scope [data-hero-pagination]'); if (pagination) pagination.setAttribute('data-orientation', currentDirection);
 			if (previous) previous.disabled = !config.loop && !config.rewind && active === 0;
 			if (next) next.disabled = !config.loop && !config.rewind && active === maximum();
 			updateHeight();

@@ -929,23 +929,6 @@
 @media(max-width:767px){.pb-hero-slider__content{left:6%;bottom:10%;max-width:84%}}
 @media(prefers-reduced-motion:reduce){.pb-hero-slider__track,.pb-hero-slider__track.is-fade .pb-hero-slider__slide,.pb-hero-slider__poster{transition:none!important}}
 
-/* Hero Slider pagination defaults to a centered bottom row for horizontal slides
-   and a centered right rail for vertical slides. The data position is emitted by
-   both the editor canvas and the frontend runtime so responsive overrides stay in sync. */
-.pb-hero-slider__pagination{inset:auto;transform:none}
-.pb-hero-slider__pagination[data-orientation="vertical"]{flex-direction:column}
-.pb-hero-slider__pagination[data-position="top-left"]{top:18px;left:20px}
-.pb-hero-slider__pagination[data-position="top-center"]{top:18px;left:50%;transform:translateX(-50%)}
-.pb-hero-slider__pagination[data-position="top-right"]{top:18px;right:20px}
-.pb-hero-slider__pagination[data-position="center-left"]{top:50%;left:20px;transform:translateY(-50%)}
-.pb-hero-slider__pagination[data-position="center"]{top:50%;left:50%;transform:translate(-50%,-50%)}
-.pb-hero-slider__pagination[data-position="center-right"]{top:50%;right:20px;transform:translateY(-50%)}
-.pb-hero-slider__pagination[data-position="bottom-left"]{bottom:18px;left:20px}
-.pb-hero-slider__pagination[data-position="bottom-center"]{bottom:18px;left:50%;transform:translateX(-50%)}
-.pb-hero-slider__pagination[data-position="bottom-right"]{right:20px;bottom:18px}
-.pb-hero-slider__pagination[data-orientation="horizontal"][data-position="bottom-center"]{top:auto;right:auto;bottom:18px;left:50%;transform:translateX(-50%)}
-.pb-hero-slider__pagination[data-orientation="vertical"][data-position="center-right"]{top:50%;right:18px;bottom:auto;left:auto;transform:translateY(-50%)}
-
 /* Elementor-style Image Box widget */
 .el-widget-image-box {
 	display: flex;

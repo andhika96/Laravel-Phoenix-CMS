@@ -2066,7 +2066,6 @@
 		testimonial_carousel: 'Testimonial Carousel',
 		media_carousel: 'Media Carousel',
 		hero_banner: 'Hero Banner',
-		hero_slider: 'Hero Slider',
 		flip_box: 'Flip Box',
 		code_highlight: 'Code Highlight',
 		blockquote: 'Blockquote',
@@ -2114,7 +2113,6 @@
 		testimonial_carousel: 'fas fa-quote-right',
 		media_carousel: 'fas fa-photo-video',
 		hero_banner: 'fas fa-image',
-		hero_slider: 'fas fa-photo-video',
 		flip_box: 'fas fa-sync-alt',
 		code_highlight: 'fas fa-code',
 		blockquote: 'fas fa-quote-left',
@@ -2364,7 +2362,7 @@
 			hasSharedAdvancedControls() { return this.isTabsNode || this.isAccordionNode || this.node.type === 'image' || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading' || this.node.type === 'google_maps'; },
 		hasNewGeneralAdvancedControls() {
 			return ['counter', 'progress_bar', 'testimonial', 'social_icons', 'alert', 'rating', 'text_path'].includes(this.node.type)
-				|| ['form', 'slides', 'animated_headline', 'hotspot', 'price_list', 'price_table', 'call_to_action', 'countdown', 'carousel', 'reviews', 'testimonial_carousel', 'media_carousel', 'flip_box', 'code_highlight', 'blockquote', 'share_buttons', 'progress_tracker', 'video_playlist', 'hero_banner', 'hero_slider'].includes(this.node.type);
+				|| ['form', 'slides', 'animated_headline', 'hotspot', 'price_list', 'price_table', 'call_to_action', 'countdown', 'carousel', 'reviews', 'testimonial_carousel', 'media_carousel', 'flip_box', 'code_highlight', 'blockquote', 'share_buttons', 'progress_tracker', 'video_playlist', 'hero_banner'].includes(this.node.type);
 		},
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {

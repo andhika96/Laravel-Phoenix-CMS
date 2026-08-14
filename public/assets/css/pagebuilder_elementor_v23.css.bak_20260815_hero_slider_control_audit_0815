@@ -11265,37 +11265,9 @@ body {
 	align-items: center;
 }
 
-.side-panel.pb-panel.left .v23-properties-section .pb-widget-settings.pb-hero-slider-settings .pb-hero-slider-scalar-control .pb-range-value-row {
-	grid-template-columns: minmax(0, 1fr) 72px;
-}
-
-.side-panel.pb-panel.left .v23-properties-section .pb-widget-settings.pb-hero-slider-settings .pb-hero-slider-timing-controls > .pb-hero-slider-scalar-control {
-	grid-column: 1 / -1;
-}
-
-.side-panel.pb-panel.left .v23-properties-section .pb-widget-settings.pb-hero-slider-settings .pb-hero-slider-scalar-control .pb-input-compact {
-	box-sizing: border-box;
-	height: 28px;
-	min-height: 28px;
-	width: 100% !important;
-	min-width: 0 !important;
-	border-radius: 7px;
-}
-
 .side-panel.pb-panel.left .v23-properties-section .pb-widget-settings.pb-hero-slider-settings .pb-hero-slider-size-control .pb-label-row-device {
 	min-height: 22px;
 	margin-bottom: 5px;
-}
-
-.side-panel.pb-panel.left .v23-properties-section .pb-widget-settings.pb-hero-slider-settings .pb-hero-slider-size-control .pb-label-row-device .pb-form-label {
-	min-width: 0;
-	white-space: nowrap;
-	font-size: 10px !important;
-	letter-spacing: -0.05px;
-}
-
-.side-panel.pb-panel.left .v23-properties-section .pb-widget-settings.pb-hero-slider-settings .pb-hero-slider-size-control .pb-range {
-	min-width: 0;
 }
 
 .side-panel.pb-panel.left .v23-properties-section .pb-widget-settings.pb-hero-slider-settings .pb-hero-slider-size-control .pb-value-with-unit {
@@ -11477,11 +11449,6 @@ body {
 .side-panel.pb-panel.left .v23-properties-section .pb-widget-settings.pb-hero-slider-settings .pb-widget-advanced-controls .pb-advanced-control-head > span {
 	font-size: 11px;
 	line-height: 1.35;
-}
-
-.side-panel.pb-panel.left .v23-properties-section .pb-widget-settings.pb-hero-slider-settings .pb-widget-advanced-controls .pb-advanced-two-fields > label > span {
-	white-space: nowrap;
-	font-size: 10px;
 }
 
 .side-panel.pb-panel.left .v23-properties-section .pb-widget-settings.pb-hero-slider-settings .pb-widget-advanced-controls .pb-advanced-control-head {

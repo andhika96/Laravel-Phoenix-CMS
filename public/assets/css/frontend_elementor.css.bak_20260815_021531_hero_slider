@@ -898,54 +898,6 @@
 .pb-hero-banner__button:disabled,.pb-hero-banner__button.is-disabled{cursor:not-allowed;opacity:.55}
 @media(prefers-reduced-motion:reduce){.pb-hero-banner__button{transition:none!important}}
 
-/* Pro > Hero Slider */
-.pb-hero-slider{position:relative;width:100%;min-width:0;overflow:hidden;background:#e8eaeb;box-sizing:border-box;isolation:isolate}
-.pb-hero-slider__viewport{position:absolute;inset:0;overflow:hidden;padding:var(--hero-slider-padding,0)}
-.pb-hero-slider__track{display:flex;width:100%;height:100%;transition:transform var(--hero-slider-transition,600ms) ease}
-.pb-hero-slider__slide{position:relative;flex:0 0 100%;width:100%;height:100%;min-height:inherit;overflow:hidden}
-.pb-hero-slider[data-direction="vertical"] .pb-hero-slider__track{flex-direction:column}
-.pb-hero-slider__track.is-fade{display:block}
-.pb-hero-slider__track.is-fade .pb-hero-slider__slide{position:absolute;inset:0;opacity:0;transition:opacity var(--hero-slider-transition,600ms) ease}
-.pb-hero-slider__track.is-fade .pb-hero-slider__slide.is-active{opacity:1}
-.pb-hero-slider__media,.pb-hero-slider__media picture,.pb-hero-slider__media img,.pb-hero-slider__media iframe,.pb-hero-slider__media video,.pb-hero-slider__poster{position:absolute;inset:0;width:100%;height:100%;border:0}
-.pb-hero-slider__media img,.pb-hero-slider__media video{display:block;object-fit:cover}
-.pb-hero-slider__poster{z-index:1;background-position:center;background-size:cover;pointer-events:none;transition:opacity .2s ease}
-.pb-hero-slider__poster.is-hidden{opacity:0}
-.pb-hero-slider__empty{display:grid;place-items:center;height:100%;color:#98a2b3;background:#eef1f4;font-size:40px}
-.pb-hero-slider__overlay{position:absolute;inset:0;z-index:2;background:var(--hero-slider-overlay,rgba(0,0,0,.2));pointer-events:none}
-.pb-hero-slider__content{position:absolute;left:8%;bottom:14%;z-index:3;max-width:70%;color:var(--hero-slider-title-color,#fff)}
-.pb-hero-slider__title{margin:0;color:var(--hero-slider-title-color,#fff);font-size:clamp(24px,4vw,52px);line-height:1.05}
-.pb-hero-slider__subtitle{margin:12px 0 0;color:var(--hero-slider-subtitle-color,#fff);font-size:clamp(14px,1.8vw,22px)}
-.pb-hero-slider__buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.pb-hero-slider__button{display:inline-flex;align-items:center;justify-content:center;padding:var(--hero-slider-button-pad-y,10px) var(--hero-slider-button-pad-x,18px);border:0;border-radius:var(--hero-slider-button-radius,999px);color:var(--hero-slider-button-color,#fff);background:var(--hero-slider-button-bg,#30343a);font:inherit;text-decoration:none;cursor:pointer}.pb-hero-slider__button:hover,.pb-hero-slider__button:focus-visible{background:var(--hero-slider-button-hover-bg,#1f2328)}.pb-hero-slider__button.is-disabled{cursor:not-allowed;opacity:.55}
-.pb-hero-slider__video-controls{position:absolute;right:16px;bottom:16px;z-index:4;display:flex;gap:6px}
-.pb-hero-slider__video-controls button{width:34px;height:34px;border:1px solid rgba(255,255,255,.7);border-radius:50%;color:#fff;background:rgba(0,0,0,.45);cursor:pointer}
-.pb-hero-slider__arrow{position:absolute;z-index:5;width:38px;height:38px;border:0;border-radius:50%;color:#fff;background:rgba(0,0,0,.45);cursor:pointer}
-.pb-hero-slider__arrow--prev{top:50%;left:16px;transform:translateY(-50%)}.pb-hero-slider__arrow--next{top:50%;right:16px;transform:translateY(-50%)}
-.pb-hero-slider[data-direction="vertical"] .pb-hero-slider__arrow--prev{top:16px;left:50%;transform:translateX(-50%)}.pb-hero-slider[data-direction="vertical"] .pb-hero-slider__arrow--next{top:auto;right:auto;bottom:16px;left:50%;transform:translateX(-50%)}
-.pb-hero-slider[data-arrow-icons="horizontal"][data-direction="vertical"] .pb-hero-slider__arrow--prev i{transform:rotate(90deg)}.pb-hero-slider[data-arrow-icons="horizontal"][data-direction="vertical"] .pb-hero-slider__arrow--next i{transform:rotate(90deg)}
-.pb-hero-slider__pagination{position:absolute;right:20px;bottom:18px;z-index:5;display:flex;gap:7px}.pb-hero-slider__pagination[data-orientation="vertical"]{top:50%;right:18px;bottom:auto;flex-direction:column;transform:translateY(-50%)}
-.pb-hero-slider__pagination button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.55);cursor:pointer}.pb-hero-slider__pagination button.is-active{background:#fff;transform:scale(1.25)}
-.pb-hero-slider__progress{position:absolute;right:0;bottom:0;left:0;z-index:5;height:3px;background:rgba(255,255,255,.25)}.pb-hero-slider__progress span{display:block;width:0;height:100%;background:#fff}.pb-hero-slider[data-direction="vertical"] .pb-hero-slider__progress{top:0;right:auto;bottom:0;left:auto;width:3px;height:auto}.pb-hero-slider[data-direction="vertical"] .pb-hero-slider__progress span{width:100%;height:0}
-@media(max-width:767px){.pb-hero-slider__content{left:6%;bottom:10%;max-width:84%}}
-@media(prefers-reduced-motion:reduce){.pb-hero-slider__track,.pb-hero-slider__track.is-fade .pb-hero-slider__slide,.pb-hero-slider__poster{transition:none!important}}
-
-/* Hero Slider pagination defaults to a centered bottom row for horizontal slides
-   and a centered right rail for vertical slides. The data position is emitted by
-   both the editor canvas and the frontend runtime so responsive overrides stay in sync. */
-.pb-hero-slider__pagination{inset:auto;transform:none}
-.pb-hero-slider__pagination[data-orientation="vertical"]{flex-direction:column}
-.pb-hero-slider__pagination[data-position="top-left"]{top:18px;left:20px}
-.pb-hero-slider__pagination[data-position="top-center"]{top:18px;left:50%;transform:translateX(-50%)}
-.pb-hero-slider__pagination[data-position="top-right"]{top:18px;right:20px}
-.pb-hero-slider__pagination[data-position="center-left"]{top:50%;left:20px;transform:translateY(-50%)}
-.pb-hero-slider__pagination[data-position="center"]{top:50%;left:50%;transform:translate(-50%,-50%)}
-.pb-hero-slider__pagination[data-position="center-right"]{top:50%;right:20px;transform:translateY(-50%)}
-.pb-hero-slider__pagination[data-position="bottom-left"]{bottom:18px;left:20px}
-.pb-hero-slider__pagination[data-position="bottom-center"]{bottom:18px;left:50%;transform:translateX(-50%)}
-.pb-hero-slider__pagination[data-position="bottom-right"]{right:20px;bottom:18px}
-.pb-hero-slider__pagination[data-orientation="horizontal"][data-position="bottom-center"]{top:auto;right:auto;bottom:18px;left:50%;transform:translateX(-50%)}
-.pb-hero-slider__pagination[data-orientation="vertical"][data-position="center-right"]{top:50%;right:18px;bottom:auto;left:auto;transform:translateY(-50%)}
-
 /* Elementor-style Image Box widget */
 .el-widget-image-box {
 	display: flex;
