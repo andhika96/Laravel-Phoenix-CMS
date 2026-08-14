@@ -1091,27 +1091,3 @@ Date: 2026-08-14
 - No JavaScript, persistence setting, Save action, or Reset action was changed.
 
 final result: passed
-
-# Design QA - Header Navigation Internal Page Scroll Height Correction
-
-Date: 2026-08-14
-
-## Comparison target
-
-- Source visual truth: `C:\Users\CAHYO\AppData\Local\Temp\codex-clipboard-00987d42-aa15-43a1-84dd-45c66204a176.png` (1920x1032, Firefox with DevTools showing `.page-band` at `min-height: 1024px`).
-- Runtime implementation: `C:\Users\CAHYO\.codex\visualizations\2026\08\13\019ff90f-bbcd-7f90-a47a-6659a7068ded\header-navigation-page-band-scroll-final-20260814.png` (1920x855, Chrome, DPR 1).
-- Combined comparison: `C:\Users\CAHYO\.codex\visualizations\2026\08\13\019ff90f-bbcd-7f90-a47a-6659a7068ded\header-navigation-page-band-scroll-comparison-20260814.png`.
-- State: Desktop preview, Fixed behavior, scroll animation enabled, Bottom 100%; no Save or Reset action.
-
-## Findings and patches
-
-- P1 corrected: the previous QA section changed the outer workspace height, but the requested target was the internal `.page-band`. That outer-height result is superseded and the token is restored to `clamp(640px, calc(100vh - 170px), 820px)`.
-- P1 corrected: `.page-band` increased from `540px` to `1024px`, matching the value demonstrated in the source DevTools screenshot.
-- P1 corrected: timeline presets and the slider no longer assume a fixed `320px` scroll range; they use `scrollHeight - clientHeight`.
-- Runtime geometry at 1920x911 before the interaction pass: outer preview and inspector both 741px; `.page-band` computed 1024px and rendered 840.499px at scale 0.8208; internal scroll range 720px.
-- Responsive interaction checks passed at 0/50/100%: Desktop 0/360/720px, Tablet 0/220/440px, Mobile 0/344/688px. Timeline labels and range values matched Top 0%, Mid 50%, and Bottom 100%.
-- Slider check passed on Mobile: value 25 produced scrollTop 172px of 688px and label `Scrolled · 25%`.
-- Fonts and typography, spacing outside the corrected height target, colors/tokens, image assets, icons, and copy remain unchanged.
-- Browser console reported zero errors.
-
-final result: passed

@@ -43,6 +43,15 @@
 			<div class="mock-control-pane">
 				<div class="ph-content rounded p-3 control-scroll inspector-shell">
 					<div class="inspector-layout">
+						<header class="inspector-header">
+							<button type="button" class="inspector-back-reset" data-inspector-select-tab="layout" aria-label="{{ t('Select Layout tab') }}">
+								<i class="fal fa-arrow-left" aria-hidden="true"></i>
+							</button>
+							<div class="inspector-header-copy">
+								<h2 class="inspector-title">{{ t('Header Navigation') }}</h2>
+								<p class="inspector-subtitle">{{ t('Header navigation settings') }}</p>
+							</div>
+						</header>
 						<div class="inspector-tabs" role="tablist" aria-label="{{ t('Header navigation settings') }}">
 							<button id="headerNavigationLayoutTab" type="button" class="inspector-tab is-active" data-inspector-tab="layout" role="tab" aria-controls="headerNavigationLayoutPanel" aria-selected="true">{{ t('Layout') }}</button>
 							<button id="headerNavigationStyleTab" type="button" class="inspector-tab" data-inspector-tab="style" role="tab" aria-controls="headerNavigationStylePanel" aria-selected="false">{{ t('Style') }}</button>

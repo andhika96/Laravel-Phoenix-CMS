@@ -509,22 +509,10 @@ class HeaderNavigationSettingsTest extends TestCase
 
 		$this->assertStringContainsString('--mock-sidebar-min: 400px;', $styles);
 		$this->assertStringContainsString('--mock-sidebar-width: 420px;', $styles);
-		$this->assertStringContainsString('--mock-panel-height: clamp(640px, calc(100vh - 170px), 820px);', $styles);
+		$this->assertStringContainsString('--mock-panel-height: clamp(700px, calc(100vh - 110px), 880px);', $styles);
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(var(--mock-sidebar-min), var(--mock-sidebar-width));', $styles);
 		$this->assertStringContainsString('.editorial-option-two .inspector-content {', $styles);
 		$this->assertStringContainsString('padding: 14px 16px 22px;', $styles);
-	}
-
-	public function test_live_preview_page_band_and_timeline_use_the_full_scrollable_range(): void
-	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
-		$script = file_get_contents(public_path('assets/js/awesome-admin-header-navigation.js'));
-
-		$this->assertMatchesRegularExpression('/\.page-band\s*\{[^}]*min-height:\s*1024px;/s', $styles);
-		$this->assertStringContainsString('function previewScrollMax()', $script);
-		$this->assertStringContainsString('els.deviceStage.scrollHeight - els.deviceStage.clientHeight', $script);
-		$this->assertStringNotContainsString('(percentage / 100) * 320', $script);
-		$this->assertStringNotContainsString('(els.deviceStage.scrollTop / 320) * 100', $script);
 	}
 
 	public function test_editorial_option_two_scales_controls_and_spacing_from_inspector_width(): void

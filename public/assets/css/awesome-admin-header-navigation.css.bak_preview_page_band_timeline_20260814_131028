@@ -1396,7 +1396,7 @@
 		.page-band {
 			background: linear-gradient(180deg, #ffffff, #f8fafc);
 			padding: 38px 44px 80px;
-			min-height: 1024px;
+			min-height: 540px;
 		}
 
 		.page-grid {
@@ -2604,7 +2604,7 @@
 .header-navigation-editor.editorial-option-two {
 	--mock-sidebar-min: 400px;
 	--mock-sidebar-width: 420px;
-	--mock-panel-height: clamp(640px, calc(100vh - 170px), 820px);
+	--mock-panel-height: clamp(700px, calc(100vh - 110px), 880px);
 }
 
 .editorial-option-two .mock-workspace-grid {

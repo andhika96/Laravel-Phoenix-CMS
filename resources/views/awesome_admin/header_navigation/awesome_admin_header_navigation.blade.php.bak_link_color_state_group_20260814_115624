@@ -43,6 +43,15 @@
 			<div class="mock-control-pane">
 				<div class="ph-content rounded p-3 control-scroll inspector-shell">
 					<div class="inspector-layout">
+						<header class="inspector-header">
+							<button type="button" class="inspector-back-reset" data-inspector-select-tab="layout" aria-label="{{ t('Select Layout tab') }}">
+								<i class="fal fa-arrow-left" aria-hidden="true"></i>
+							</button>
+							<div class="inspector-header-copy">
+								<h2 class="inspector-title">{{ t('Header Navigation') }}</h2>
+								<p class="inspector-subtitle">{{ t('Header navigation settings') }}</p>
+							</div>
+						</header>
 						<div class="inspector-tabs" role="tablist" aria-label="{{ t('Header navigation settings') }}">
 							<button id="headerNavigationLayoutTab" type="button" class="inspector-tab is-active" data-inspector-tab="layout" role="tab" aria-controls="headerNavigationLayoutPanel" aria-selected="true">{{ t('Layout') }}</button>
 							<button id="headerNavigationStyleTab" type="button" class="inspector-tab" data-inspector-tab="style" role="tab" aria-controls="headerNavigationStylePanel" aria-selected="false">{{ t('Style') }}</button>
@@ -437,67 +446,64 @@
 									<input id="linkColor" data-coloris value="#273142" class="form-control form-control-sm coloris-field">
 								</div>
 							</div>
-							<div class="col-12 color-state-start link-color-state-group">
-								<div class="link-color-state-title">Link states</div>
-								<div class="link-color-state-header" aria-hidden="true">
-									<span>Link</span>
-									<span>Border</span>
+							<div class="col-12 color-state-start">
+								<label class="form-label">Active link & border</label>
+								<div class="link-color-label-row">
+									<label class="link-color-label" for="linkActive">Active</label>
+									<label class="link-color-label" for="linkActiveBorder">Border</label>
 								</div>
-								<div class="link-color-state-list">
-									<div class="link-color-state-row" data-link-color-state="active">
-										<span class="link-color-state-name">Active</span>
-										<div class="link-color-control">
-											<div class="link-color-field">
-												<label class="visually-hidden" for="linkActive">Active link color</label>
-												<div class="coloris-control">
-													<input id="linkActive" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
-												</div>
-											</div>
-											<div class="link-color-field">
-												<label class="visually-hidden" for="linkActiveBorder">Active border color</label>
-												<div class="coloris-control">
-													<input id="linkActiveBorder" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
-												</div>
-											</div>
-											<button id="linkActiveBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="active" aria-label="Unlink active border color from active link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+								<div class="link-color-control">
+									<div class="link-color-field">
+										<div class="coloris-control">
+											<input id="linkActive" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
 										</div>
 									</div>
-									<div class="link-color-state-row" data-link-color-state="hover">
-										<span class="link-color-state-name">Hover</span>
-										<div class="link-color-control">
-											<div class="link-color-field">
-												<label class="visually-hidden" for="linkHover">Hover link color</label>
-												<div class="coloris-control">
-													<input id="linkHover" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
-												</div>
-											</div>
-											<div class="link-color-field">
-												<label class="visually-hidden" for="linkHoverBorder">Hover border color</label>
-												<div class="coloris-control">
-													<input id="linkHoverBorder" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
-												</div>
-											</div>
-											<button id="linkHoverBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="hover" aria-label="Unlink hover border color from hover link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+									<div class="link-color-field">
+										<div class="coloris-control">
+											<input id="linkActiveBorder" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
 										</div>
 									</div>
-									<div class="link-color-state-row" data-link-color-state="focus">
-										<span class="link-color-state-name">Focus</span>
-										<div class="link-color-control">
-											<div class="link-color-field">
-												<label class="visually-hidden" for="linkFocus">Focus link color</label>
-												<div class="coloris-control">
-													<input id="linkFocus" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
-												</div>
-											</div>
-											<div class="link-color-field">
-												<label class="visually-hidden" for="linkFocusBorder">Focus border color</label>
-												<div class="coloris-control">
-													<input id="linkFocusBorder" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
-												</div>
-											</div>
-											<button id="linkFocusBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="focus" aria-label="Unlink focus border color from focus link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+									<button id="linkActiveBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="active" aria-label="Unlink active border color from active link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+								</div>
+							</div>
+							<div class="col-12">
+								<label class="form-label">Hover link & border</label>
+								<div class="link-color-label-row">
+									<label class="link-color-label" for="linkHover">Hover</label>
+									<label class="link-color-label" for="linkHoverBorder">Border</label>
+								</div>
+								<div class="link-color-control">
+									<div class="link-color-field">
+										<div class="coloris-control">
+											<input id="linkHover" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
 										</div>
 									</div>
+									<div class="link-color-field">
+										<div class="coloris-control">
+											<input id="linkHoverBorder" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+										</div>
+									</div>
+									<button id="linkHoverBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="hover" aria-label="Unlink hover border color from hover link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+								</div>
+							</div>
+							<div class="col-12">
+								<label class="form-label">Focus link & border</label>
+								<div class="link-color-label-row">
+									<label class="link-color-label" for="linkFocus">Focus</label>
+									<label class="link-color-label" for="linkFocusBorder">Border</label>
+								</div>
+								<div class="link-color-control">
+									<div class="link-color-field">
+										<div class="coloris-control">
+											<input id="linkFocus" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
+										</div>
+									</div>
+									<div class="link-color-field">
+										<div class="coloris-control">
+											<input id="linkFocusBorder" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
+										</div>
+									</div>
+									<button id="linkFocusBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="focus" aria-label="Unlink focus border color from focus link color" aria-pressed="true"><i class="fas fa-link"></i></button>
 								</div>
 							</div>
 							</div>

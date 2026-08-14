@@ -262,7 +262,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.inspector-inline-setting\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*128px minmax\(0, 1fr\);/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-control-row\s*\{[^}]*column-gap:\s*0;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.box-side input\[type="number"\]\s*\{[^}]*appearance:\s*auto;/s', $styles);
+		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-side input\[type="number"\]\s*\{[^}]*appearance:\s*textfield;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.link-color-control\s*\{[^}]*height:\s*32px;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.link-color-field\s*\{[^}]*padding:\s*0;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.link-color-control \.box-link-toggle\s*\{[^}]*height:\s*32px;[^}]*min-height:\s*32px;/s', $styles);
@@ -412,29 +412,11 @@ class HeaderNavigationSettingsTest extends TestCase
 		$this->assertDoesNotMatchRegularExpression('/\bquerySelector(?:All)?\s*\(\s*[\'\"]\s*\[data-inspector-index\]\s*[\'\"]\s*\)/', $script);
 	}
 
-	public function test_inspector_starts_with_tabs_and_keeps_native_select_and_number_controls_visible(): void
-	{
-		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
-		$document = new \DOMDocument();
-		$previousLibxmlErrors = libxml_use_internal_errors(true);
-		$document->loadHTML($view);
-		libxml_clear_errors();
-		libxml_use_internal_errors($previousLibxmlErrors);
-		$xpath = new \DOMXPath($document);
-
-		$this->assertSame(0, $xpath->query('//header[contains(concat(" ", normalize-space(@class), " "), " inspector-header ")]')->length);
-		$this->assertSame(1, $xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " inspector-layout ")]/*[1][contains(concat(" ", normalize-space(@class), " "), " inspector-tabs ")]')->length);
-		$this->assertSame(0, $xpath->query('//*[@data-inspector-select-tab]')->length);
-		$this->assertMatchesRegularExpression('/\.editorial-option-two \.inspector-content \.form-control,[^{]*\{[^}]*background-color:\s*#ffffff;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.box-side input\[type="number"\]\s*\{[^}]*appearance:\s*auto;[^}]*-moz-appearance:\s*auto;/s', $styles);
-		$this->assertMatchesRegularExpression('/\.box-side input\[type="number"\]::-webkit-outer-spin-button,[^{]*\{[^}]*-webkit-appearance:\s*auto;[^}]*opacity:\s*1;/s', $styles);
-	}
-
 	public function test_editorial_option_two_css_uses_a_consistent_inspector_control_scale(): void
 	{
 		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
 
+		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-header\s*\{[^}]*min-height:\s*58px;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-tabs\s*\{[^}]*height:\s*42px;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-tab-panel\s*\{[^}]*padding:\s*16px;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-selection-summary\s*\{[^}]*padding:\s*10px;/s', $styles);
@@ -450,13 +432,14 @@ class HeaderNavigationSettingsTest extends TestCase
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-content\s+\.form-check-input\s*\{[^}]*width:\s*28px;[^}]*height:\s*16px;/s', $styles);
 	}
 
-	public function test_inspector_uses_one_typography_scale_through_tabs_and_controls(): void
+	public function test_inspector_uses_one_typography_scale_from_header_through_controls(): void
 	{
 		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
 
 		$this->assertStringContainsString('--inspector-ui-font-size: 12px;', $styles);
 		$this->assertStringContainsString('--inspector-meta-font-size: 10px;', $styles);
-		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-tab\s*\{[^}]*font-size:\s*var\(--inspector-ui-font-size\);/s', $styles);
+		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-title\s*\{[^}]*font-size:\s*var\(--inspector-ui-font-size\);/s', $styles);
+		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-subtitle\s*\{[^}]*font-size:\s*var\(--inspector-meta-font-size\);/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-content\s+\.form-label,[^{]*\{[^}]*font-size:\s*var\(--inspector-ui-font-size\)/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.form-control,[^{]*\{[^}]*font-size:\s*var\(--inspector-ui-font-size\)\s*!important;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-side input\s*\{[^}]*font-size:\s*var\(--inspector-ui-font-size\)\s*!important;/s', $styles);
@@ -513,18 +496,6 @@ class HeaderNavigationSettingsTest extends TestCase
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(var(--mock-sidebar-min), var(--mock-sidebar-width));', $styles);
 		$this->assertStringContainsString('.editorial-option-two .inspector-content {', $styles);
 		$this->assertStringContainsString('padding: 14px 16px 22px;', $styles);
-	}
-
-	public function test_live_preview_page_band_and_timeline_use_the_full_scrollable_range(): void
-	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
-		$script = file_get_contents(public_path('assets/js/awesome-admin-header-navigation.js'));
-
-		$this->assertMatchesRegularExpression('/\.page-band\s*\{[^}]*min-height:\s*1024px;/s', $styles);
-		$this->assertStringContainsString('function previewScrollMax()', $script);
-		$this->assertStringContainsString('els.deviceStage.scrollHeight - els.deviceStage.clientHeight', $script);
-		$this->assertStringNotContainsString('(percentage / 100) * 320', $script);
-		$this->assertStringNotContainsString('(els.deviceStage.scrollTop / 320) * 100', $script);
 	}
 
 	public function test_editorial_option_two_scales_controls_and_spacing_from_inspector_width(): void

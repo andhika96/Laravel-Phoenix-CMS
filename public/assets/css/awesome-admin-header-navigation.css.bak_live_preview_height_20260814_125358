@@ -1396,7 +1396,7 @@
 		.page-band {
 			background: linear-gradient(180deg, #ffffff, #f8fafc);
 			padding: 38px 44px 80px;
-			min-height: 1024px;
+			min-height: 540px;
 		}
 
 		.page-grid {
