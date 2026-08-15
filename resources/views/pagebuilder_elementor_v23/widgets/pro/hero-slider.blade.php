@@ -6,18 +6,48 @@
         $raw = trim((string) ($value ?? ''));
         return preg_match("~^(?:https?://|/)[^\"'\\s<>\\\\]+$~i", $raw) ? $raw : '';
     };
+    $safeLink = function ($value) {
+        $raw = trim((string) ($value ?? ''));
+        if ($raw === '' || str_starts_with($raw, '//')) return '';
+        return preg_match('#^(?:https?://|mailto:|tel:|/|\#)#i', $raw) ? $raw : '';
+    };
     $safeClass = function ($value) {
         $raw = preg_replace('/[^A-Za-z0-9_\-\s]/', ' ', (string) ($value ?? ''));
         return trim(preg_replace('/\s+/', ' ', $raw));
+    };
+    $sanitizeSvg = function ($value) {
+        $markup = trim((string) ($value ?? ''));
+        if ($markup === '' || !preg_match('/\A<svg\b[\s\S]*<\/svg>\z/i', $markup)) return '';
+        $markup = strip_tags($markup, '<svg><g><path><circle><ellipse><rect><line><polyline><polygon><title><desc>');
+        return preg_replace("/\\s(?:on[a-z]+|style|(?:xlink:)?href|src)\\s*=\\s*(?:\"[^\"]*\"|'[^']*'|[^\\s>]+)/i", '', $markup) ?? '';
+    };
+    $arrowIcon = function ($key, $fallback) use ($settings, $sanitizeSvg) {
+        $source = ($settings[$key . 'Source'] ?? '') === 'svg' ? 'svg' : 'library';
+        $svg = $source === 'svg' ? $sanitizeSvg($settings[$key . 'Svg'] ?? '') : '';
+        $class = trim((string) ($settings[$key] ?? $fallback)) ?: $fallback;
+        return ['source' => $source, 'class' => $class, 'svg' => $svg];
     };
     $cssLength = function ($value, $fallback) {
         $raw = trim((string) ($value ?? ''));
         return preg_match('/^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i', $raw) ? $raw : $fallback;
     };
+    $responsiveLength = function ($base, $device, $fallback) use ($settings, $cssLength) {
+        $keys = $device === 'mobile' ? [$base . 'Mobile', $base . 'Tablet', $base] : ($device === 'tablet' ? [$base . 'Tablet', $base] : [$base]);
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $settings) && trim((string) $settings[$key]) !== '') return $cssLength($settings[$key], $fallback);
+        }
+        return $fallback;
+    };
+    $responsiveBox = function ($base, $device, $fallbacks) use ($responsiveLength) {
+        return implode(' ', array_map(function ($side, $index) use ($base, $device, $fallbacks, $responsiveLength) {
+            return $responsiveLength($base . $side, $device, $fallbacks[$index]);
+        }, ['Top', 'Right', 'Bottom', 'Left'], array_keys(['Top', 'Right', 'Bottom', 'Left'])));
+    };
     $safeColor = function ($value, $fallback) {
         $raw = trim((string) ($value ?? ''));
         return $raw !== '' && preg_match('/^[#a-z0-9(),.%\s-]+$/i', $raw) ? $raw : $fallback;
     };
+    $enum = static fn ($value, $allowed, $fallback) => in_array($value, $allowed, true) ? $value : $fallback;
     $bool = function ($key, $fallback = false) use ($settings) {
         return array_key_exists($key, $settings) ? (bool) $settings[$key] : $fallback;
     };
@@ -29,13 +59,30 @@
         $candidate = strtolower(trim((string) ($value ?? '')));
         return in_array($candidate, $paginationPositions, true) ? $candidate : $fallback;
     };
+    $responsiveSetting = function ($base, $suffix, $fallback = '') use ($settings) {
+        $keys = $suffix === 'Mobile' ? [$base . 'Mobile', $base . 'Tablet', $base] : ($suffix === 'Tablet' ? [$base . 'Tablet', $base] : [$base]);
+        foreach ($keys as $key) if (array_key_exists($key, $settings) && $settings[$key] !== '' && $settings[$key] !== null) return $settings[$key];
+        return $fallback;
+    };
     $paginationPositionHorizontal = $paginationPosition($settings['paginationPositionHorizontal'] ?? '', 'bottom-center');
     $paginationPositionHorizontalTablet = $paginationPosition($settings['paginationPositionHorizontalTablet'] ?? '', '');
     $paginationPositionHorizontalMobile = $paginationPosition($settings['paginationPositionHorizontalMobile'] ?? '', '');
     $paginationPositionVertical = $paginationPosition($settings['paginationPositionVertical'] ?? '', 'center-right');
     $paginationPositionVerticalTablet = $paginationPosition($settings['paginationPositionVerticalTablet'] ?? '', '');
     $paginationPositionVerticalMobile = $paginationPosition($settings['paginationPositionVerticalMobile'] ?? '', '');
-    $activePaginationPosition = $direction === 'vertical' ? $paginationPositionVertical : $paginationPositionHorizontal;
+    $resolvePaginationPosition = function ($vertical, $suffix = '') use ($responsiveSetting, $paginationPosition) {
+        $axis = $vertical ? 'Vertical' : 'Horizontal';
+        $fallback = $vertical ? 'center-right' : 'bottom-center';
+        $mode = $responsiveSetting('paginationPlacementMode' . $axis, $suffix, 'basic');
+        if ($mode === 'custom') return $paginationPosition($responsiveSetting('paginationPosition' . $axis, $suffix, $fallback), $fallback);
+        $alignment = $responsiveSetting('paginationAlignment' . $axis, $suffix, 'center');
+        if ($vertical) return ['top' => 'top-right', 'bottom' => 'bottom-right'][$alignment] ?? 'center-right';
+        return ['left' => 'bottom-left', 'right' => 'bottom-right'][$alignment] ?? 'bottom-center';
+    };
+    $activePaginationPosition = $resolvePaginationPosition($direction === 'vertical');
+    $activePaginationAxis = $direction === 'vertical' ? 'Vertical' : 'Horizontal';
+    $activePaginationOffsetX = $responsiveLength('paginationOffsetX' . $activePaginationAxis, 'desktop', '0px');
+    $activePaginationOffsetY = $responsiveLength('paginationOffsetY' . $activePaginationAxis, 'desktop', '0px');
     $transition = strtolower(trim((string) ($settings['transition'] ?? 'slide'))) === 'fade' ? 'fade' : 'slide';
     $heightMode = strtolower(trim((string) ($settings['heightMode'] ?? 'adaptive'))) === 'fixed' ? 'fixed' : 'adaptive';
     $videoDurationMode = strtolower(trim((string) ($settings['videoDurationMode'] ?? 'interval'))) === 'duration' ? 'duration' : 'interval';
@@ -80,8 +127,66 @@
         if ($provider === 'vimeo') return 'https://player.vimeo.com/video/' . rawurlencode($id) . '?api=1&autopause=0&playsinline=1';
         return 'https://www.dailymotion.com/embed/video/' . rawurlencode($id) . '?api=postMessage';
     };
+    $slideResponsive = static function (array $slide, $base, $suffix, $fallback = '') {
+        $keys = $suffix === 'Mobile' ? [$base . 'Mobile', $base . 'Tablet', $base] : ($suffix === 'Tablet' ? [$base . 'Tablet', $base] : [$base]);
+        foreach ($keys as $key) if (array_key_exists($key, $slide) && $slide[$key] !== '' && $slide[$key] !== null) return $slide[$key];
+        return $fallback;
+    };
+    $percent = static function ($value, $fallback) {
+        $raw = trim((string) ($value ?? ''));
+        $number = preg_match('/^-?\d+(?:\.\d+)?%?$/', $raw) ? (float) $raw : $fallback;
+        return max(0, min(100, $number)) . '%';
+    };
+    $slidePosition = static function (array $slide, $target, $suffix) use ($slideResponsive, $enum, $percent) {
+        $anchor = $enum($slideResponsive($slide, $target . 'Anchor', $suffix, 'center-left'), ['top-left','top-center','top-right','center-left','center','center-right','bottom-left','bottom-center','bottom-right'], 'center-left');
+        [$vertical, $horizontal] = $anchor === 'center' ? ['center', 'center'] : explode('-', $anchor);
+        $translateX = $horizontal === 'center' ? '-50%' : ($horizontal === 'right' ? '-100%' : '0');
+        $translateY = $vertical === 'center' ? '-50%' : ($vertical === 'bottom' ? '-100%' : '0');
+        $align = $enum($slideResponsive($slide, $target . 'Align', $suffix, 'left'), ['left','center','right'], 'left');
+        $flex = ['left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end'][$align];
+        return 'left:' . $percent($slideResponsive($slide, $target . 'X', $suffix, 0), 0) . ';top:' . $percent($slideResponsive($slide, $target . 'Y', $suffix, 0), 0) . ';width:' . $percent($slideResponsive($slide, $target . 'Width', $suffix, 40), 40) . ';text-align:' . $align . ';transform:translate(' . $translateX . ',' . $translateY . ');--hero-slider-content-align:' . $flex;
+    };
+    $slideButtonLayout = static function (array $slide, $suffix) use ($slideResponsive, $enum, $cssLength) {
+        $direction = $enum($slideResponsive($slide, 'buttonDirection', $suffix, 'row'), ['row','column'], 'row');
+        $align = $enum($slideResponsive($slide, 'buttonAlign', $suffix, 'left'), ['left','center','right'], 'left');
+        $flex = ['left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end'][$align];
+        $wrap = $slideResponsive($slide, 'buttonWrap', $suffix, true) ? 'wrap' : 'nowrap';
+        return 'flex-direction:' . $direction . ';gap:' . $cssLength($slideResponsive($slide, 'buttonGap', $suffix, '10px'), '10px') . ';flex-wrap:' . $wrap . ';justify-content:' . ($direction === 'row' ? $flex : 'initial') . ';align-items:' . ($direction === 'column' ? $flex : 'initial');
+    };
+    $popupVideoUrl = static function (array $button) use ($safeMedia) {
+        $raw = $safeMedia($button['videoUrl'] ?? '');
+        if ($raw === '') return '';
+        $source = $button['videoSource'] ?? 'youtube';
+        if ($source === 'self_hosted') return preg_match('/\.(?:mp4|webm|ogg)(?:[?#].*)?$/i', $raw) ? $raw : '';
+        $parts = parse_url($raw);
+        if (!is_array($parts) || empty($parts['host'])) return '';
+        $host = preg_replace('/^www\./i', '', strtolower($parts['host']));
+        $pathParts = array_values(array_filter(explode('/', trim($parts['path'] ?? '', '/'))));
+        if ($source === 'youtube' && in_array($host, ['youtube.com', 'youtu.be'], true)) { parse_str($parts['query'] ?? '', $query); $id = $host === 'youtu.be' ? ($pathParts[0] ?? '') : ($query['v'] ?? end($pathParts)); return preg_match('/^[A-Za-z0-9_-]+$/', (string) $id) ? 'https://www.youtube.com/embed/' . $id : ''; }
+        if ($source === 'vimeo' && $host === 'vimeo.com') { $id = end($pathParts); return preg_match('/^\d+$/', (string) $id) ? 'https://player.vimeo.com/video/' . $id : ''; }
+        if ($source === 'dailymotion' && in_array($host, ['dailymotion.com', 'dai.ly'], true)) { $id = end($pathParts); return preg_match('/^[A-Za-z0-9]+$/', (string) $id) ? 'https://www.dailymotion.com/embed/video/' . $id : ''; }
+        return '';
+    };
+    $customAttributes = static function (array $button) {
+        $output = [];
+        foreach ((array) ($button['linkCustomAttributes'] ?? []) as $attribute) {
+            if (!is_array($attribute)) continue;
+            $key = trim((string) ($attribute['key'] ?? $attribute['name'] ?? ''));
+            if (preg_match('/^(?:aria-[a-z0-9_-]+|data-[a-z0-9_-]+|title|download|hreflang)$/i', $key)) $output[$key] = (string) ($attribute['value'] ?? '');
+        }
+        return $output;
+    };
     $defaultSlide = function ($index) {
-        return ['id' => 'hero-slider-slide-' . $index, 'mediaType' => 'image', 'imageUrl' => '', 'imageUrlTablet' => '', 'imageUrlMobile' => '', 'imageAlt' => '', 'videoProvider' => 'self_hosted', 'videoUrl' => '', 'videoPoster' => '', 'videoPosterTablet' => '', 'videoPosterMobile' => '', 'videoAutoplay' => 'inherit', 'videoLoop' => false, 'videoControls' => true, 'videoMuted' => true, 'videoResume' => true, 'videoAspectRatio' => '16/9', 'title' => '', 'subtitle' => ''];
+        return [
+            'id' => 'hero-slider-slide-' . $index, 'mediaType' => 'image', 'imageUrl' => '', 'imageUrlTablet' => '', 'imageUrlMobile' => '', 'imageAlt' => '', 'imageAltTablet' => '', 'imageAltMobile' => '', 'objectFit' => 'cover', 'objectPosition' => 'center center',
+            'videoProvider' => 'self_hosted', 'videoUrl' => '', 'videoPoster' => '', 'videoPosterTablet' => '', 'videoPosterMobile' => '', 'videoAutoplay' => 'inherit', 'videoLoop' => false, 'videoControls' => true, 'videoMuted' => true, 'videoResume' => true, 'videoAspectRatio' => '16/9',
+            'title' => '', 'subtitle' => '', 'titleTag' => 'h2', 'subtitleTag' => 'p', 'showTitle' => true, 'showSubtitle' => true, 'showButtons' => true, 'contentOrder' => ['title','subtitle','buttons'], 'positioningMode' => 'grouped',
+            'groupAnchor' => 'bottom-left', 'groupX' => '8%', 'groupY' => '86%', 'groupWidth' => '70%', 'groupAlign' => 'left', 'groupAnchorMobile' => 'bottom-center', 'groupXMobile' => '50%', 'groupYMobile' => '90%', 'groupWidthMobile' => '84%', 'groupAlignMobile' => 'center',
+            'titleAnchor' => 'top-left', 'titleX' => '8%', 'titleY' => '66%', 'titleWidth' => '70%', 'titleAlign' => 'left', 'titleAnchorMobile' => 'top-center', 'titleXMobile' => '50%', 'titleYMobile' => '66%', 'titleWidthMobile' => '84%', 'titleAlignMobile' => 'center',
+            'subtitleAnchor' => 'top-left', 'subtitleX' => '8%', 'subtitleY' => '76%', 'subtitleWidth' => '70%', 'subtitleAlign' => 'left', 'subtitleAnchorMobile' => 'top-center', 'subtitleXMobile' => '50%', 'subtitleYMobile' => '76%', 'subtitleWidthMobile' => '84%', 'subtitleAlignMobile' => 'center',
+            'buttonsAnchor' => 'top-left', 'buttonsX' => '8%', 'buttonsY' => '86%', 'buttonsWidth' => '70%', 'buttonsAlign' => 'left', 'buttonsAnchorMobile' => 'top-center', 'buttonsXMobile' => '50%', 'buttonsYMobile' => '86%', 'buttonsWidthMobile' => '84%', 'buttonsAlignMobile' => 'center',
+            'buttonDirection' => 'row', 'buttonAlign' => 'left', 'buttonGap' => '10px', 'buttonWrap' => true, 'buttons' => [], 'styleOverride' => false,
+        ];
     };
     $slides = is_array($settings['slides'] ?? null) ? array_slice($settings['slides'], 0, 30) : [];
     if (!$slides) $slides = [$defaultSlide(1)];
@@ -103,6 +208,10 @@
             'imageUrlTablet' => $safeMedia($slide['imageUrlTablet'] ?? ''),
             'imageUrlMobile' => $safeMedia($slide['imageUrlMobile'] ?? ''),
             'imageAlt' => trim((string) ($slide['imageAlt'] ?? '')),
+            'imageAltTablet' => trim((string) ($slide['imageAltTablet'] ?? '')),
+            'imageAltMobile' => trim((string) ($slide['imageAltMobile'] ?? '')),
+            'positioningMode' => ($slide['positioningMode'] ?? 'grouped') === 'independent' ? 'independent' : 'grouped',
+            'buttons' => array_slice(array_values(array_filter((array) ($slide['buttons'] ?? []), 'is_array')), 0, 3),
             'videoProvider' => $provider,
             'videoUrl' => $rawVideoUrl,
             'videoPoster' => $poster,
@@ -123,20 +232,61 @@
     }, $normalizedSlides);
     $runtimeConfig = [
         'direction' => $direction, 'directionTablet' => $directionTablet, 'directionMobile' => $directionMobile, 'paginationPositionHorizontal' => $paginationPositionHorizontal, 'paginationPositionHorizontalTablet' => $paginationPositionHorizontalTablet, 'paginationPositionHorizontalMobile' => $paginationPositionHorizontalMobile, 'paginationPositionVertical' => $paginationPositionVertical, 'paginationPositionVerticalTablet' => $paginationPositionVerticalTablet, 'paginationPositionVerticalMobile' => $paginationPositionVerticalMobile, 'transition' => $transition,
+        'paginationPlacementModeHorizontal' => $responsiveSetting('paginationPlacementModeHorizontal', '', 'basic'), 'paginationPlacementModeHorizontalTablet' => $responsiveSetting('paginationPlacementModeHorizontal', 'Tablet', ''), 'paginationPlacementModeHorizontalMobile' => $responsiveSetting('paginationPlacementModeHorizontal', 'Mobile', ''),
+        'paginationPlacementModeVertical' => $responsiveSetting('paginationPlacementModeVertical', '', 'basic'), 'paginationPlacementModeVerticalTablet' => $responsiveSetting('paginationPlacementModeVertical', 'Tablet', ''), 'paginationPlacementModeVerticalMobile' => $responsiveSetting('paginationPlacementModeVertical', 'Mobile', ''),
+        'paginationAlignmentHorizontal' => $responsiveSetting('paginationAlignmentHorizontal', '', 'center'), 'paginationAlignmentHorizontalTablet' => $responsiveSetting('paginationAlignmentHorizontal', 'Tablet', ''), 'paginationAlignmentHorizontalMobile' => $responsiveSetting('paginationAlignmentHorizontal', 'Mobile', ''),
+        'paginationAlignmentVertical' => $responsiveSetting('paginationAlignmentVertical', '', 'center'), 'paginationAlignmentVerticalTablet' => $responsiveSetting('paginationAlignmentVertical', 'Tablet', ''), 'paginationAlignmentVerticalMobile' => $responsiveSetting('paginationAlignmentVertical', 'Mobile', ''),
+        'paginationOffsetXHorizontal' => $responsiveLength('paginationOffsetXHorizontal', 'desktop', '0px'), 'paginationOffsetXHorizontalTablet' => $responsiveLength('paginationOffsetXHorizontal', 'tablet', '0px'), 'paginationOffsetXHorizontalMobile' => $responsiveLength('paginationOffsetXHorizontal', 'mobile', '0px'),
+        'paginationOffsetYHorizontal' => $responsiveLength('paginationOffsetYHorizontal', 'desktop', '0px'), 'paginationOffsetYHorizontalTablet' => $responsiveLength('paginationOffsetYHorizontal', 'tablet', '0px'), 'paginationOffsetYHorizontalMobile' => $responsiveLength('paginationOffsetYHorizontal', 'mobile', '0px'),
+        'paginationOffsetXVertical' => $responsiveLength('paginationOffsetXVertical', 'desktop', '0px'), 'paginationOffsetXVerticalTablet' => $responsiveLength('paginationOffsetXVertical', 'tablet', '0px'), 'paginationOffsetXVerticalMobile' => $responsiveLength('paginationOffsetXVertical', 'mobile', '0px'),
+        'paginationOffsetYVertical' => $responsiveLength('paginationOffsetYVertical', 'desktop', '0px'), 'paginationOffsetYVerticalTablet' => $responsiveLength('paginationOffsetYVertical', 'tablet', '0px'), 'paginationOffsetYVerticalMobile' => $responsiveLength('paginationOffsetYVertical', 'mobile', '0px'),
         'transitionSpeed' => max(0, (int) ($settings['transitionSpeed'] ?? 600)), 'autoplay' => $bool('autoplay', true), 'autoplaySpeed' => max(100, (int) ($settings['autoplaySpeed'] ?? 5000)),
         'pauseOnHover' => $bool('pauseOnHover', true), 'pauseOnFocus' => $bool('pauseOnFocus', true), 'pauseOnInteraction' => $bool('pauseOnInteraction', false),
         'loop' => $bool('loop', true), 'rewind' => $bool('rewind', false), 'perMove' => max(1, (int) ($settings['perMove'] ?? 1)),
         'arrows' => $bool('arrows', true), 'pagination' => $bool('pagination', true), 'keyboard' => $bool('keyboard', true), 'drag' => $bool('drag', true), 'mouseWheel' => $bool('mouseWheel', false), 'wheelRelease' => $bool('wheelRelease', false), 'progress' => $bool('progress', true), 'lazyLoad' => $bool('lazyLoad', true),
         'videoAutoplay' => $bool('videoAutoplay', false), 'videoDurationMode' => $videoDurationMode, 'videoAutoplayFallback' => 'interval', 'videoMutedAutoplay' => $videoMutedAutoplay, 'videoControls' => $videoControls, 'videoLoop' => $videoLoop, 'videoResume' => $videoResume, 'videoPrivacyMode' => $bool('videoPrivacyMode', false),
-        'dailymotionPlayerId' => trim((string) ($settings['dailymotionPlayerId'] ?? '')), 'dailymotionSdkUrl' => $safeMedia($settings['dailymotionSdkUrl'] ?? ''), 'heightMode' => $heightMode, 'fixedHeight' => $cssLength($settings['fixedHeight'] ?? '', '520px'), 'minHeight' => $cssLength($settings['minHeight'] ?? '', '420px'), 'minHeightTablet' => $cssLength($settings['minHeightTablet'] ?? '', '360px'), 'minHeightMobile' => $cssLength($settings['minHeightMobile'] ?? '', '280px'), 'slides' => $runtimeSlides,
+        'dailymotionPlayerId' => trim((string) ($settings['dailymotionPlayerId'] ?? '')), 'dailymotionSdkUrl' => $safeMedia($settings['dailymotionSdkUrl'] ?? ''), 'heightMode' => $heightMode, 'fixedHeight' => $responsiveLength('fixedHeight', 'desktop', '520px'), 'fixedHeightTablet' => $responsiveLength('fixedHeight', 'tablet', '520px'), 'fixedHeightMobile' => $responsiveLength('fixedHeight', 'mobile', '520px'), 'minHeight' => $cssLength($settings['minHeight'] ?? '', '420px'), 'minHeightTablet' => $cssLength($settings['minHeightTablet'] ?? '', '360px'), 'minHeightMobile' => $cssLength($settings['minHeightMobile'] ?? '', '280px'),
+        'modalBackground' => $safeColor($settings['modalBackground'] ?? '', 'rgba(0,0,0,.92)'), 'modalUiColor' => $safeColor($settings['modalUiColor'] ?? '', '#fff'), 'modalUiHoverColor' => $safeColor($settings['modalUiHoverColor'] ?? '', '#6979f8'), 'modalVideoWidth' => $cssLength($settings['modalVideoWidth'] ?? '', '75%'), 'slides' => $runtimeSlides,
     ];
     $customClass = $safeClass($settings['cssClass'] ?? '');
-    $rootStyle = '--hero-slider-overlay:' . $safeColor($settings['overlayColor'] ?? '', 'rgba(0,0,0,.2)') . ';--hero-slider-title-color:' . $safeColor($settings['titleColor'] ?? '', '#fff') . ';--hero-slider-subtitle-color:' . $safeColor($settings['subtitleColor'] ?? '', '#fff') . ';--hero-slider-button-color:' . $safeColor($settings['buttonTextColor'] ?? '', '#fff') . ';--hero-slider-button-bg:' . $safeColor($settings['buttonBackground'] ?? '', '#30343a') . ';--hero-slider-button-hover-bg:' . $safeColor($settings['buttonBackgroundHover'] ?? '', '#1f2328') . ';--hero-slider-button-radius:' . $cssLength($settings['buttonRadius'] ?? '', '999px') . ';--hero-slider-button-pad-x:' . $cssLength($settings['buttonPaddingX'] ?? '', '18px') . ';--hero-slider-button-pad-y:' . $cssLength($settings['buttonPaddingY'] ?? '', '10px') . ';min-height:' . $cssLength($settings['minHeight'] ?? '', '420px') . ';';
-    if ($heightMode === 'fixed') $rootStyle .= 'height:' . $cssLength($settings['fixedHeight'] ?? '', '520px') . ';';
+    $legacyRadius = $cssLength($settings['buttonRadius'] ?? '', '999px');
+    $legacyPaddingX = $cssLength($settings['buttonPaddingX'] ?? '', '18px');
+    $legacyPaddingY = $cssLength($settings['buttonPaddingY'] ?? '', '10px');
+    $buttonRadiusFallbacks = [$legacyRadius, $legacyRadius, $legacyRadius, $legacyRadius];
+    $buttonPaddingFallbacks = [$legacyPaddingY, $legacyPaddingX, $legacyPaddingY, $legacyPaddingX];
+    $buttonRadiusDesktop = $responsiveBox('buttonRadius', 'desktop', $buttonRadiusFallbacks);
+    $buttonRadiusTablet = $responsiveBox('buttonRadius', 'tablet', $buttonRadiusFallbacks);
+    $buttonRadiusMobile = $responsiveBox('buttonRadius', 'mobile', $buttonRadiusFallbacks);
+    $buttonPaddingDesktop = $responsiveBox('buttonPadding', 'desktop', $buttonPaddingFallbacks);
+    $buttonPaddingTablet = $responsiveBox('buttonPadding', 'tablet', $buttonPaddingFallbacks);
+    $buttonPaddingMobile = $responsiveBox('buttonPadding', 'mobile', $buttonPaddingFallbacks);
+    $arrowRadiusFallbacks = ['999px', '999px', '999px', '999px'];
+    $arrowRadiusDesktop = $responsiveBox('arrowRadius', 'desktop', $arrowRadiusFallbacks);
+    $arrowRadiusTablet = $responsiveBox('arrowRadius', 'tablet', $arrowRadiusFallbacks);
+    $arrowRadiusMobile = $responsiveBox('arrowRadius', 'mobile', $arrowRadiusFallbacks);
+    $arrowPlacement = function ($suffix = '') use ($responsiveSetting, $enum) {
+        return $enum(strtolower(trim((string) $responsiveSetting('arrowPosition', $suffix, 'inside'))), ['inside', 'outside'], 'inside');
+    };
+    $arrowEdgePosition = function ($device, $suffix = '') use ($arrowPlacement, $responsiveLength) {
+        $offset = $responsiveLength('arrowEdgeOffset', $device, '16px');
+        return $arrowPlacement($suffix) === 'outside' ? 'calc(0px - var(--hero-slider-arrow-button-size) - ' . $offset . ')' : $offset;
+    };
+    $arrowPlacementDesktop = $arrowPlacement();
+    $arrowPlacementTablet = $arrowPlacement('Tablet');
+    $arrowPlacementMobile = $arrowPlacement('Mobile');
+    $previousArrow = $arrowIcon('previousArrowIcon', 'fas fa-chevron-left');
+    $nextArrow = $arrowIcon('nextArrowIcon', 'fas fa-chevron-right');
+    $arrowIconsMode = $previousArrow['source'] === 'library' && $nextArrow['source'] === 'library' && $previousArrow['class'] === 'fas fa-chevron-left' && $nextArrow['class'] === 'fas fa-chevron-right' ? 'horizontal' : 'custom';
+    $fixedHeightDesktop = $responsiveLength('fixedHeight', 'desktop', '520px');
+    $fixedHeightTablet = $responsiveLength('fixedHeight', 'tablet', $fixedHeightDesktop);
+    $fixedHeightMobile = $responsiveLength('fixedHeight', 'mobile', $fixedHeightTablet);
+    $rootStyle = '--hero-slider-overlay:' . $safeColor($settings['overlayColor'] ?? '', 'rgba(0,0,0,.2)') . ';--hero-slider-title-color:' . $safeColor($settings['titleColor'] ?? '', '#fff') . ';--hero-slider-title-size:' . $cssLength($settings['titleFontSize'] ?? '', '52px') . ';--hero-slider-title-weight:' . $enum((string) ($settings['titleFontWeight'] ?? '700'), ['normal','bold','100','200','300','400','500','600','700','800','900'], '700') . ';--hero-slider-subtitle-color:' . $safeColor($settings['subtitleColor'] ?? '', '#fff') . ';--hero-slider-subtitle-size:' . $cssLength($settings['subtitleFontSize'] ?? '', '22px') . ';--hero-slider-subtitle-weight:' . $enum((string) ($settings['subtitleFontWeight'] ?? '400'), ['normal','bold','100','200','300','400','500','600','700','800','900'], '400') . ';--hero-slider-content-gap:' . $cssLength($settings['contentGap'] ?? '', '12px') . ';--hero-slider-button-color:' . $safeColor($settings['buttonTextColor'] ?? '', '#fff') . ';--hero-slider-button-bg:' . $safeColor($settings['buttonBackground'] ?? '', '#30343a') . ';--hero-slider-button-hover-color:' . $safeColor($settings['buttonTextColorHover'] ?? '', '#fff') . ';--hero-slider-button-hover-bg:' . $safeColor($settings['buttonBackgroundHover'] ?? '', '#1f2328') . ';--hero-slider-button-radius:' . $buttonRadiusDesktop . ';--hero-slider-button-padding:' . $buttonPaddingDesktop . ';--hero-slider-modal-background:' . $safeColor($settings['modalBackground'] ?? '', 'rgba(0,0,0,.92)') . ';--hero-slider-modal-ui:' . $safeColor($settings['modalUiColor'] ?? '', '#fff') . ';--hero-slider-modal-ui-hover:' . $safeColor($settings['modalUiHoverColor'] ?? '', '#6979f8') . ';--hero-slider-modal-video-width:' . $cssLength($settings['modalVideoWidth'] ?? '', '75%') . ';min-height:' . $cssLength($settings['minHeight'] ?? '', '420px') . ';';
+    $rootStyle .= '--hero-slider-arrow-button-size:' . $responsiveLength('arrowButtonSize', 'desktop', '38px') . ';--hero-slider-arrow-icon-size:' . $responsiveLength('arrowIconSize', 'desktop', '16px') . ';--hero-slider-arrow-edge-position:' . $arrowEdgePosition('desktop') . ';--hero-slider-arrow-overflow:' . ($arrowPlacementDesktop === 'outside' ? 'visible' : 'hidden') . ';--hero-slider-arrow-color:' . $safeColor($settings['arrowColor'] ?? '', '#fff') . ';--hero-slider-arrow-bg:' . $safeColor($settings['arrowBackground'] ?? '', 'rgba(0,0,0,.45)') . ';--hero-slider-arrow-hover-color:' . $safeColor($settings['arrowHoverColor'] ?? '', '#fff') . ';--hero-slider-arrow-hover-bg:' . $safeColor($settings['arrowHoverBackground'] ?? '', 'rgba(0,0,0,.65)') . ';--hero-slider-arrow-radius:' . $arrowRadiusDesktop . ';';
+    if ($heightMode === 'fixed') $rootStyle .= 'height:' . $fixedHeightDesktop . ';';
     $tabletMinHeight = $cssLength($settings['minHeightTablet'] ?? '', '360px');
     $mobileMinHeight = $cssLength($settings['minHeightMobile'] ?? '', '280px');
 @endphp
-<section id="{{ $heroId }}" class="pb-hero-slider{{ $customClass !== '' ? ' ' . $customClass : '' }}" data-hero-slider data-arrow-icons="horizontal" data-direction="{{ $direction }}" data-pagination-position-horizontal="{{ $paginationPositionHorizontal }}" data-pagination-position-vertical="{{ $paginationPositionVertical }}" data-height-mode="{{ $heightMode }}" data-hero-slider-config="{{ e(json_encode($runtimeConfig, JSON_UNESCAPED_SLASHES)) }}" style="{{ $rootStyle }}">
+<section id="{{ $heroId }}" class="pb-hero-slider{{ $customClass !== '' ? ' ' . $customClass : '' }}" data-hero-slider data-arrow-icons="{{ $arrowIconsMode }}" data-arrow-position="{{ $arrowPlacementDesktop }}" data-direction="{{ $direction }}" data-pagination-position-horizontal="{{ $paginationPositionHorizontal }}" data-pagination-position-vertical="{{ $paginationPositionVertical }}" data-height-mode="{{ $heightMode }}" data-hero-slider-config="{{ e(json_encode($runtimeConfig, JSON_UNESCAPED_SLASHES)) }}" style="{{ $rootStyle }}">
     <div class="pb-hero-slider__viewport">
         <div class="pb-hero-slider__track{{ $transition === 'fade' ? ' is-fade' : '' }}" data-hero-slider-track>
             @foreach($normalizedSlides as $index => $slide)
@@ -149,15 +299,27 @@
                     $poster = $slide['videoPoster'];
                     $autoplaySlide = $slide['videoAutoplay'] === 'on' || ($slide['videoAutoplay'] === 'inherit' && $bool('videoAutoplay', false));
                     $muted = $videoMutedAutoplay || $slide['videoMuted'];
+                    $slideMode = $slide['positioningMode'] === 'independent' ? 'independent' : 'grouped';
+                    $allowedOrder = ['title','subtitle','buttons'];
+                    $contentOrder = [];
+                    foreach ((array) ($slide['contentOrder'] ?? $allowedOrder) as $key) if (in_array($key, $allowedOrder, true) && !in_array($key, $contentOrder, true)) $contentOrder[] = $key;
+                    foreach ($allowedOrder as $key) if (!in_array($key, $contentOrder, true)) $contentOrder[] = $key;
+                    $titleTag = $enum($slide['titleTag'] ?? 'h2', ['h1','h2','h3','h4','h5','h6','div'], 'h2');
+                    $subtitleTag = $enum($slide['subtitleTag'] ?? 'p', ['p','div','span'], 'p');
+                    $slideStyle = '';
+                    if (!empty($slide['styleOverride'])) {
+                        $slideStyle = '--hero-slider-overlay:' . $safeColor($slide['slideOverlayColor'] ?? '', $safeColor($settings['overlayColor'] ?? '', 'rgba(0,0,0,.2)')) . ';--hero-slider-title-color:' . $safeColor($slide['slideTitleColor'] ?? '', $safeColor($settings['titleColor'] ?? '', '#fff')) . ';--hero-slider-title-size:' . $cssLength($slide['slideTitleFontSize'] ?? '', $cssLength($settings['titleFontSize'] ?? '', '52px')) . ';--hero-slider-title-weight:' . $enum((string) ($slide['slideTitleFontWeight'] ?? ($settings['titleFontWeight'] ?? '700')), ['normal','bold','100','200','300','400','500','600','700','800','900'], '700') . ';--hero-slider-subtitle-color:' . $safeColor($slide['slideSubtitleColor'] ?? '', $safeColor($settings['subtitleColor'] ?? '', '#fff')) . ';--hero-slider-subtitle-size:' . $cssLength($slide['slideSubtitleFontSize'] ?? '', $cssLength($settings['subtitleFontSize'] ?? '', '22px')) . ';--hero-slider-subtitle-weight:' . $enum((string) ($slide['slideSubtitleFontWeight'] ?? ($settings['subtitleFontWeight'] ?? '400')), ['normal','bold','100','200','300','400','500','600','700','800','900'], '400') . ';--hero-slider-content-gap:' . $cssLength($slide['slideContentGap'] ?? '', $cssLength($settings['contentGap'] ?? '', '12px')) . ';--hero-slider-button-color:' . $safeColor($slide['slideButtonTextColor'] ?? '', $safeColor($settings['buttonTextColor'] ?? '', '#fff')) . ';--hero-slider-button-bg:' . $safeColor($slide['slideButtonBackground'] ?? '', $safeColor($settings['buttonBackground'] ?? '', '#30343a')) . ';--hero-slider-button-hover-color:' . $safeColor($slide['slideButtonTextColorHover'] ?? '', $safeColor($settings['buttonTextColorHover'] ?? '', '#fff')) . ';--hero-slider-button-hover-bg:' . $safeColor($slide['slideButtonBackgroundHover'] ?? '', $safeColor($settings['buttonBackgroundHover'] ?? '', '#1f2328')) . ';';
+                    }
+                    $imageFallback = $slide['imageUrl'] ?: ($slide['imageUrlTablet'] ?: $slide['imageUrlMobile']);
                 @endphp
-                <article class="pb-hero-slider__slide{{ $index === 0 ? ' is-active' : '' }}" data-hero-slide data-index="{{ $index }}" data-video-autoplay="{{ $autoplaySlide ? 'true' : 'false' }}" data-video-provider="{{ $isVideo ? $provider : '' }}" data-video-duration-supported="{{ $durationSupported ? 'true' : 'false' }}" data-video-resume="{{ ($slide['videoResume'] && $videoResume) ? 'true' : 'false' }}" data-video-loop="{{ ($slide['videoLoop'] || $videoLoop) ? 'true' : 'false' }}" data-video-muted="{{ $muted ? 'true' : 'false' }}" data-video-poster="{{ e($slide['videoPoster']) }}" data-video-poster-tablet="{{ e($slide['videoPosterTablet']) }}" data-video-poster-mobile="{{ e($slide['videoPosterMobile']) }}" aria-hidden="{{ $index === 0 ? 'false' : 'true' }}">
+                <article class="pb-hero-slider__slide {{ $slideMode === 'independent' ? 'is-independent' : 'is-grouped' }}{{ $index === 0 ? ' is-active' : '' }}" data-hero-slide data-index="{{ $index }}" data-video-autoplay="{{ $autoplaySlide ? 'true' : 'false' }}" data-video-provider="{{ $isVideo ? $provider : '' }}" data-video-duration-supported="{{ $durationSupported ? 'true' : 'false' }}" data-video-resume="{{ ($slide['videoResume'] && $videoResume) ? 'true' : 'false' }}" data-video-loop="{{ ($slide['videoLoop'] || $videoLoop) ? 'true' : 'false' }}" data-video-muted="{{ $muted ? 'true' : 'false' }}" data-video-poster="{{ e($slide['videoPoster']) }}" data-video-poster-tablet="{{ e($slide['videoPosterTablet']) }}" data-video-poster-mobile="{{ e($slide['videoPosterMobile']) }}" aria-hidden="{{ $index === 0 ? 'false' : 'true' }}" @if($slideStyle !== '') style="{{ $slideStyle }}" @endif>
                     <div class="pb-hero-slider__media">
                         @if(!$isVideo)
-                            @if($slide['imageUrl'] !== '')
+                            @if($imageFallback !== '')
                                 <picture>
                                     @if($slide['imageUrlMobile'] !== '')<source media="(max-width: 767px)" srcset="{{ e($slide['imageUrlMobile']) }}">@endif
                                     @if($slide['imageUrlTablet'] !== '')<source media="(max-width: 1024px)" srcset="{{ e($slide['imageUrlTablet']) }}">@endif
-                                    <img src="{{ e($slide['imageUrl']) }}" alt="{{ e($slide['imageAlt']) }}" loading="{{ !$lazyLoad || $index === 0 ? 'eager' : 'lazy' }}">
+                                    <img src="{{ e($imageFallback) }}" alt="{{ e($slide['imageAlt']) }}" loading="{{ !$lazyLoad || $index === 0 ? 'eager' : 'lazy' }}">
                                 </picture>
                             @else
                                 <div class="pb-hero-slider__empty" role="img" aria-label="Hero slider image unavailable"><i class="far fa-image" aria-hidden="true"></i></div>
@@ -180,30 +342,50 @@
                         @endif
                     </div>
                     <div class="pb-hero-slider__overlay"></div>
-                    @if(trim((string) ($slide['title'] ?? '')) !== '' || trim((string) ($slide['subtitle'] ?? '')) !== '' || (is_array($slide['buttons'] ?? null) && count($slide['buttons'])))
-                        <div class="pb-hero-slider__content">
-                            @if(trim((string) ($slide['title'] ?? '')) !== '')<h2 class="pb-hero-slider__title">{{ $slide['title'] }}</h2>@endif
-                            @if(trim((string) ($slide['subtitle'] ?? '')) !== '')<p class="pb-hero-slider__subtitle">{{ $slide['subtitle'] }}</p>@endif
-                            @if(is_array($slide['buttons'] ?? null) && count($slide['buttons']))
-                                <div class="pb-hero-slider__buttons">
-                                    @foreach(array_slice($slide['buttons'], 0, 3) as $button)
-                                        @php $buttonUrl = $safeMedia($button['linkUrl'] ?? ($button['url'] ?? '')); $buttonText = trim((string) ($button['text'] ?? 'Learn More')); $buttonTarget = ($button['linkTarget'] ?? '') === '_blank'; $buttonRel = !empty($button['linkNofollow']) ? 'noopener noreferrer nofollow' : ($buttonTarget ? 'noopener noreferrer' : ''); @endphp
-                                        @if($buttonUrl !== '')<a class="pb-hero-slider__button" href="{{ e($buttonUrl) }}" @if($buttonTarget) target="_blank" @endif @if($buttonRel !== '') rel="{{ $buttonRel }}" @endif data-pb-interactive="true">{{ $buttonText }}</a>@else<button type="button" class="pb-hero-slider__button is-disabled" disabled>{{ $buttonText !== '' ? $buttonText : 'Learn More' }}</button>@endif
+                    <div class="pb-hero-slider__content">
+                        @foreach($contentOrder as $contentKey)
+                            @if($contentKey === 'title' && ($slide['showTitle'] ?? true))
+                                <div class="pb-hero-slider__block pb-hero-slider__block--title"><{{ $titleTag }} class="pb-hero-slider__title">{{ $slide['title'] ?? '' }}</{{ $titleTag }}></div>
+                            @elseif($contentKey === 'subtitle' && ($slide['showSubtitle'] ?? true))
+                                <div class="pb-hero-slider__block pb-hero-slider__block--subtitle"><{{ $subtitleTag }} class="pb-hero-slider__subtitle">{{ $slide['subtitle'] ?? '' }}</{{ $subtitleTag }}></div>
+                            @elseif($contentKey === 'buttons' && ($slide['showButtons'] ?? true))
+                                <div class="pb-hero-slider__block pb-hero-slider__block--buttons"><div class="pb-hero-slider__buttons">
+                                    @foreach($slide['buttons'] as $button)
+                                        @php
+                                            $action = $enum($button['actionType'] ?? 'link', ['link','video_popup','image_popup'], 'link');
+                                            $buttonText = trim((string) ($button['text'] ?? '')) ?: 'Button';
+                                            $buttonClass = $safeClass($button['cssClass'] ?? '');
+                                            $icon = $action === 'video_popup' ? 'fas fa-play' : ($action === 'image_popup' ? 'far fa-image' : 'fas fa-arrow-right');
+                                            $buttonUrl = $action === 'link' ? $safeLink($button['linkUrl'] ?? ($button['url'] ?? '')) : '';
+                                            $popupUrl = $action === 'video_popup' ? $popupVideoUrl($button) : ($action === 'image_popup' ? $safeMedia($button['imageUrl'] ?? '') : '');
+                                            $buttonTarget = ($button['linkTarget'] ?? '') === '_blank' ? '_blank' : '';
+                                            $buttonRels = $buttonTarget ? ['noopener','noreferrer'] : [];
+                                            if (!empty($button['linkNofollow'])) $buttonRels[] = 'nofollow';
+                                            $buttonRel = implode(' ', array_unique($buttonRels));
+                                            $buttonAttributes = $customAttributes($button);
+                                        @endphp
+                                        @if($buttonUrl !== '')
+                                            <a class="pb-hero-slider__button{{ $buttonClass !== '' ? ' ' . $buttonClass : '' }}" href="{{ e($buttonUrl) }}" @if($buttonTarget) target="_blank" @endif @if($buttonRel) rel="{{ $buttonRel }}" @endif @foreach($buttonAttributes as $name=>$value) {{ $name }}="{{ e($value) }}" @endforeach data-pb-interactive="true"><span>{{ $buttonText }}</span><i class="{{ $icon }}" aria-hidden="true"></i></a>
+                                        @elseif($popupUrl !== '')
+                                            <button type="button" class="pb-hero-slider__button{{ $buttonClass !== '' ? ' ' . $buttonClass : '' }}" data-hero-media data-media-type="{{ $action === 'video_popup' ? 'video' : 'image' }}" data-media-src="{{ e($popupUrl) }}" data-media-alt="{{ e($button['imageAlt'] ?? $buttonText) }}"><span>{{ $buttonText }}</span><i class="{{ $icon }}" aria-hidden="true"></i></button>
+                                        @else
+                                            <button type="button" class="pb-hero-slider__button{{ $buttonClass !== '' ? ' ' . $buttonClass : '' }} is-disabled" disabled><span>{{ $buttonText }}</span><i class="{{ $icon }}" aria-hidden="true"></i></button>
+                                        @endif
                                     @endforeach
-                                </div>
+                                </div></div>
                             @endif
-                        </div>
-                    @endif
+                        @endforeach
+                    </div>
                 </article>
             @endforeach
         </div>
     </div>
     @if($bool('arrows', true) && count($normalizedSlides) > 1)
-        <button type="button" class="pb-hero-slider__arrow pb-hero-slider__arrow--prev" data-hero-prev aria-label="Previous slide"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
-        <button type="button" class="pb-hero-slider__arrow pb-hero-slider__arrow--next" data-hero-next aria-label="Next slide"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+        <button type="button" class="pb-hero-slider__arrow pb-hero-slider__arrow--prev" data-hero-prev aria-label="Previous slide">@if($previousArrow['source'] === 'svg' && $previousArrow['svg'] !== '')<span class="pb-hero-slider__arrow-svg" aria-hidden="true">{!! $previousArrow['svg'] !!}</span>@else<i class="{{ e($previousArrow['class']) }}" aria-hidden="true"></i>@endif</button>
+        <button type="button" class="pb-hero-slider__arrow pb-hero-slider__arrow--next" data-hero-next aria-label="Next slide">@if($nextArrow['source'] === 'svg' && $nextArrow['svg'] !== '')<span class="pb-hero-slider__arrow-svg" aria-hidden="true">{!! $nextArrow['svg'] !!}</span>@else<i class="{{ e($nextArrow['class']) }}" aria-hidden="true"></i>@endif</button>
     @endif
     @if($bool('pagination', true) && count($normalizedSlides) > 1)
-        <div class="pb-hero-slider__pagination" data-hero-pagination data-orientation="{{ $direction === 'vertical' ? 'vertical' : 'horizontal' }}" data-position="{{ $activePaginationPosition }}" data-position-horizontal="{{ $paginationPositionHorizontal }}" data-position-vertical="{{ $paginationPositionVertical }}">
+        <div class="pb-hero-slider__pagination" data-hero-pagination data-orientation="{{ $direction === 'vertical' ? 'vertical' : 'horizontal' }}" data-position="{{ $activePaginationPosition }}" data-position-horizontal="{{ $paginationPositionHorizontal }}" data-position-vertical="{{ $paginationPositionVertical }}" style="--hero-slider-pagination-offset-x:{{ $activePaginationOffsetX }};--hero-slider-pagination-offset-y:{{ $activePaginationOffsetY }}">
             @foreach($normalizedSlides as $index => $slide)<button type="button" data-hero-index data-index="{{ $index }}" class="{{ $index === 0 ? 'is-active' : '' }}" aria-label="Go to slide {{ $index + 1 }}" aria-current="{{ $index === 0 ? 'true' : 'false' }}"></button>@endforeach
         </div>
     @endif
@@ -211,6 +393,29 @@
 </section>
 <style>
 #{{ $heroId }}{--hero-slider-gap:{{ $cssLength($settings['gap'] ?? '', '0px') }};--hero-slider-padding:{{ $cssLength($settings['padding'] ?? '', '0px') }}}
-@media(max-width:1024px){#{{ $heroId }}{min-height:{{ $tabletMinHeight }}}}
-@media(max-width:767px){#{{ $heroId }}{min-height:{{ $mobileMinHeight }}}}
+@foreach($normalizedSlides as $index => $slide)
+#{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__media img{object-fit:{{ $enum($slideResponsive($slide,'objectFit','','cover'),['cover','contain','fill'],'cover') }};object-position:{{ $enum($slideResponsive($slide,'objectPosition','','center center'),['left top','left center','left bottom','center top','center center','center bottom','right top','right center','right bottom'],'center center') }}}
+#{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__buttons{ {{ $slideButtonLayout($slide,'') }} }
+@if(($slide['positioningMode'] ?? 'grouped') === 'independent')
+@foreach(['title','subtitle','buttons'] as $target)#{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__block--{{ $target }}{ {{ $slidePosition($slide,$target,'') }} }@endforeach
+@else
+#{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__content{ {{ $slidePosition($slide,'group','') }} }
+@endif
+@endforeach
+@media(max-width:1024px){
+#{{ $heroId }}{min-height:{{ $tabletMinHeight }};--hero-slider-title-size:{{ $cssLength($settings['titleFontSizeTablet'] ?? '', '42px') }};--hero-slider-subtitle-size:{{ $cssLength($settings['subtitleFontSizeTablet'] ?? '', '18px') }};--hero-slider-content-gap:{{ $cssLength($settings['contentGapTablet'] ?? '', '10px') }};--hero-slider-button-radius:{{ $buttonRadiusTablet }};--hero-slider-button-padding:{{ $buttonPaddingTablet }};--hero-slider-arrow-button-size:{{ $responsiveLength('arrowButtonSize', 'tablet', '38px') }};--hero-slider-arrow-icon-size:{{ $responsiveLength('arrowIconSize', 'tablet', '16px') }};--hero-slider-arrow-edge-position:{{ $arrowEdgePosition('tablet', 'Tablet') }};--hero-slider-arrow-overflow:{{ $arrowPlacementTablet === 'outside' ? 'visible' : 'hidden' }};--hero-slider-arrow-radius:{{ $arrowRadiusTablet }};{{ $heightMode === 'fixed' ? 'height:' . $fixedHeightTablet . ';' : '' }}}
+@foreach($normalizedSlides as $index => $slide)
+#{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__media img{object-fit:{{ $enum($slideResponsive($slide,'objectFit','Tablet','cover'),['cover','contain','fill'],'cover') }};object-position:{{ $enum($slideResponsive($slide,'objectPosition','Tablet','center center'),['left top','left center','left bottom','center top','center center','center bottom','right top','right center','right bottom'],'center center') }}}
+#{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__buttons{ {{ $slideButtonLayout($slide,'Tablet') }} }
+@if(!empty($slide['styleOverride']))#{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}){--hero-slider-title-size:{{ $cssLength($slideResponsive($slide,'slideTitleFontSize','Tablet',$settings['titleFontSizeTablet'] ?? '42px'),'42px') }};--hero-slider-subtitle-size:{{ $cssLength($slideResponsive($slide,'slideSubtitleFontSize','Tablet',$settings['subtitleFontSizeTablet'] ?? '18px'),'18px') }};--hero-slider-content-gap:{{ $cssLength($slideResponsive($slide,'slideContentGap','Tablet',$settings['contentGapTablet'] ?? '10px'),'10px') }}}@endif
+@if(($slide['positioningMode'] ?? 'grouped') === 'independent') @foreach(['title','subtitle','buttons'] as $target)#{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__block--{{ $target }}{ {{ $slidePosition($slide,$target,'Tablet') }} }@endforeach @else #{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__content{ {{ $slidePosition($slide,'group','Tablet') }} }@endif
+@endforeach}
+@media(max-width:767px){
+#{{ $heroId }}{min-height:{{ $mobileMinHeight }};--hero-slider-title-size:{{ $cssLength($settings['titleFontSizeMobile'] ?? '', '34px') }};--hero-slider-subtitle-size:{{ $cssLength($settings['subtitleFontSizeMobile'] ?? '', '16px') }};--hero-slider-content-gap:{{ $cssLength($settings['contentGapMobile'] ?? '', '9px') }};--hero-slider-button-radius:{{ $buttonRadiusMobile }};--hero-slider-button-padding:{{ $buttonPaddingMobile }};--hero-slider-arrow-button-size:{{ $responsiveLength('arrowButtonSize', 'mobile', '38px') }};--hero-slider-arrow-icon-size:{{ $responsiveLength('arrowIconSize', 'mobile', '16px') }};--hero-slider-arrow-edge-position:{{ $arrowEdgePosition('mobile', 'Mobile') }};--hero-slider-arrow-overflow:{{ $arrowPlacementMobile === 'outside' ? 'visible' : 'hidden' }};--hero-slider-arrow-radius:{{ $arrowRadiusMobile }};{{ $heightMode === 'fixed' ? 'height:' . $fixedHeightMobile . ';' : '' }}}
+@foreach($normalizedSlides as $index => $slide)
+#{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__media img{object-fit:{{ $enum($slideResponsive($slide,'objectFit','Mobile','cover'),['cover','contain','fill'],'cover') }};object-position:{{ $enum($slideResponsive($slide,'objectPosition','Mobile','center center'),['left top','left center','left bottom','center top','center center','center bottom','right top','right center','right bottom'],'center center') }}}
+#{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__buttons{ {{ $slideButtonLayout($slide,'Mobile') }} }
+@if(!empty($slide['styleOverride']))#{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}){--hero-slider-title-size:{{ $cssLength($slideResponsive($slide,'slideTitleFontSize','Mobile',$settings['titleFontSizeMobile'] ?? '34px'),'34px') }};--hero-slider-subtitle-size:{{ $cssLength($slideResponsive($slide,'slideSubtitleFontSize','Mobile',$settings['subtitleFontSizeMobile'] ?? '16px'),'16px') }};--hero-slider-content-gap:{{ $cssLength($slideResponsive($slide,'slideContentGap','Mobile',$settings['contentGapMobile'] ?? '9px'),'9px') }}}@endif
+@if(($slide['positioningMode'] ?? 'grouped') === 'independent') @foreach(['title','subtitle','buttons'] as $target)#{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__block--{{ $target }}{ {{ $slidePosition($slide,$target,'Mobile') }} }@endforeach @else #{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__content{ {{ $slidePosition($slide,'group','Mobile') }} }@endif
+@endforeach}
 </style>

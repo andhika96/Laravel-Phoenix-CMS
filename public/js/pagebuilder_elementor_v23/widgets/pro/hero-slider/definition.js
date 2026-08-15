@@ -7,6 +7,11 @@
     const mediaTypes = new Set(['image', 'video']);
     const directions = new Set(['horizontal', 'vertical']);
     const transitions = new Set(['slide', 'fade']);
+    const anchors = new Set([
+        'top-left', 'top-center', 'top-right',
+        'center-left', 'center', 'center-right',
+        'bottom-left', 'bottom-center', 'bottom-right',
+    ]);
     const paginationPositions = new Set([
         'top-left', 'top-center', 'top-right',
         'center-left', 'center', 'center-right',
@@ -27,6 +32,59 @@
     const paginationPositionValue = (value, fallback) => {
         const candidate = cleanString(value).toLowerCase();
         return paginationPositions.has(candidate) ? candidate : fallback;
+    };
+    const cleanAttributes = (value) => Array.isArray(value)
+        ? value.filter((item) => item && typeof item === 'object').map((item) => ({
+            key: cleanString(item.key || item.name),
+            value: cleanString(item.value),
+        })).filter((item) => item.key)
+        : [];
+
+    const defaultButton = (index = 0) => ({
+        id: 'hero-slider-button-' + (index + 1),
+        text: index ? 'Button ' + (index + 1) : 'Learn More',
+        cssClass: '',
+        actionType: 'link',
+        linkUrl: '',
+        linkTarget: '',
+        linkNofollow: false,
+        linkCustomAttributes: [],
+        videoSource: 'youtube',
+        videoUrl: '',
+        imageSource: 'ckfinder',
+        imageUrl: '',
+        imageAlt: '',
+    });
+
+    const positionDefaults = () => {
+        const output = {};
+        const targets = {
+            group: ['bottom-left', '8%', '86%', '70%', 'left'],
+            title: ['top-left', '8%', '66%', '70%', 'left'],
+            subtitle: ['top-left', '8%', '76%', '70%', 'left'],
+            buttons: ['top-left', '8%', '86%', '70%', 'left'],
+        };
+        Object.entries(targets).forEach(([target, values]) => {
+            const [anchor, x, y, width, align] = values;
+            Object.assign(output, {
+                [target + 'Anchor']: anchor,
+                [target + 'X']: x,
+                [target + 'Y']: y,
+                [target + 'Width']: width,
+                [target + 'Align']: align,
+                [target + 'AnchorTablet']: '',
+                [target + 'XTablet']: '',
+                [target + 'YTablet']: '',
+                [target + 'WidthTablet']: '',
+                [target + 'AlignTablet']: '',
+                [target + 'AnchorMobile']: target === 'group' ? 'bottom-center' : 'top-center',
+                [target + 'XMobile']: '50%',
+                [target + 'YMobile']: target === 'group' ? '90%' : ({ title: '66%', subtitle: '76%', buttons: '86%' }[target] || '90%'),
+                [target + 'WidthMobile']: '84%',
+                [target + 'AlignMobile']: 'center',
+            });
+        });
+        return output;
     };
 
     function inferProvider(value) {
@@ -55,6 +113,14 @@
             imageUrlTablet: '',
             imageUrlMobile: '',
             imageAlt: '',
+            imageAltTablet: '',
+            imageAltMobile: '',
+            objectFit: 'cover',
+            objectFitTablet: '',
+            objectFitMobile: '',
+            objectPosition: 'center center',
+            objectPositionTablet: '',
+            objectPositionMobile: '',
             videoProvider: 'self_hosted',
             videoUrl: '',
             videoPoster: '',
@@ -68,7 +134,46 @@
             videoAspectRatio: '16/9',
             title: '',
             subtitle: '',
+            titleTag: 'h2',
+            subtitleTag: 'p',
+            showTitle: true,
+            showSubtitle: true,
+            showButtons: true,
+            contentOrder: ['title', 'subtitle', 'buttons'],
+            positioningMode: 'grouped',
+            ...positionDefaults(),
             buttons: [],
+            buttonDirection: 'row',
+            buttonDirectionTablet: '',
+            buttonDirectionMobile: 'column',
+            buttonAlign: 'left',
+            buttonAlignTablet: '',
+            buttonAlignMobile: 'center',
+            buttonGap: '10px',
+            buttonGapTablet: '',
+            buttonGapMobile: '9px',
+            buttonWrap: true,
+            buttonWrapTablet: '',
+            buttonWrapMobile: true,
+            styleOverride: false,
+            slideOverlayColor: '',
+            slideTitleColor: '',
+            slideSubtitleColor: '',
+            slideButtonTextColor: '',
+            slideButtonBackground: '',
+            slideButtonTextColorHover: '',
+            slideButtonBackgroundHover: '',
+            slideTitleFontSize: '',
+            slideTitleFontSizeTablet: '',
+            slideTitleFontSizeMobile: '',
+            slideTitleFontWeight: '',
+            slideSubtitleFontSize: '',
+            slideSubtitleFontSizeTablet: '',
+            slideSubtitleFontSizeMobile: '',
+            slideSubtitleFontWeight: '',
+            slideContentGap: '',
+            slideContentGapTablet: '',
+            slideContentGapMobile: '',
         };
     }
 
@@ -81,21 +186,62 @@
         pauseOnHover: true, pauseOnFocus: true, pauseOnInteraction: false,
         loop: true, rewind: false, perMove: 1,
         arrows: true, pagination: true, keyboard: true, drag: true,
+        previousArrowIcon: 'fas fa-chevron-left', previousArrowIconSource: 'library', previousArrowIconSvg: '',
+        nextArrowIcon: 'fas fa-chevron-right', nextArrowIconSource: 'library', nextArrowIconSvg: '',
+        arrowPosition: 'inside', arrowPositionTablet: '', arrowPositionMobile: '',
+        arrowEdgeOffset: '16px', arrowEdgeOffsetTablet: '', arrowEdgeOffsetMobile: '',
+        arrowButtonSize: '38px', arrowButtonSizeTablet: '', arrowButtonSizeMobile: '',
+        arrowIconSize: '16px', arrowIconSizeTablet: '', arrowIconSizeMobile: '',
+        arrowColor: '#fff', arrowBackground: 'rgba(0,0,0,.45)', arrowHoverColor: '#fff', arrowHoverBackground: 'rgba(0,0,0,.65)',
+        arrowRadiusTop: '999px', arrowRadiusRight: '999px', arrowRadiusBottom: '999px', arrowRadiusLeft: '999px',
         mouseWheel: false, wheelRelease: false, progress: true,
         lazyLoad: true, gap: '0px', padding: '0px',
         paginationPositionHorizontal: 'bottom-center', paginationPositionHorizontalTablet: '', paginationPositionHorizontalMobile: '',
         paginationPositionVertical: 'center-right', paginationPositionVerticalTablet: '', paginationPositionVerticalMobile: '',
+        paginationPlacementModeHorizontal: 'basic', paginationPlacementModeHorizontalTablet: '', paginationPlacementModeHorizontalMobile: '',
+        paginationPlacementModeVertical: 'basic', paginationPlacementModeVerticalTablet: '', paginationPlacementModeVerticalMobile: '',
+        paginationAlignmentHorizontal: 'center', paginationAlignmentHorizontalTablet: '', paginationAlignmentHorizontalMobile: '',
+        paginationAlignmentVertical: 'center', paginationAlignmentVerticalTablet: '', paginationAlignmentVerticalMobile: '',
+        paginationOffsetXHorizontal: '0px', paginationOffsetXHorizontalTablet: '', paginationOffsetXHorizontalMobile: '',
+        paginationOffsetYHorizontal: '0px', paginationOffsetYHorizontalTablet: '', paginationOffsetYHorizontalMobile: '',
+        paginationOffsetXVertical: '0px', paginationOffsetXVerticalTablet: '', paginationOffsetXVerticalMobile: '',
+        paginationOffsetYVertical: '0px', paginationOffsetYVerticalTablet: '', paginationOffsetYVerticalMobile: '',
         videoAutoplay: false, videoDurationMode: 'interval', videoAutoplayFallback: 'interval',
         videoMutedAutoplay: true, videoControls: 'custom', videoLoop: false, videoResume: true, videoPrivacyMode: false,
         dailymotionPlayerId: '', dailymotionSdkUrl: '',
-        heightMode: 'adaptive', fixedHeight: '520px',
+        heightMode: 'adaptive', fixedHeight: '520px', fixedHeightTablet: '', fixedHeightMobile: '',
         minHeight: '420px', minHeightTablet: '360px', minHeightMobile: '280px',
         overlayColor: 'rgba(0,0,0,.2)',
         titleColor: '#fff', subtitleColor: '#fff', buttonTextColor: '#fff',
         buttonBackground: '#30343a', buttonTextColorHover: '#fff', buttonBackgroundHover: '#1f2328',
+        titleFontSize: '52px', titleFontSizeTablet: '42px', titleFontSizeMobile: '34px', titleFontWeight: '700',
+        subtitleFontSize: '22px', subtitleFontSizeTablet: '18px', subtitleFontSizeMobile: '16px', subtitleFontWeight: '400',
+        contentGap: '12px', contentGapTablet: '10px', contentGapMobile: '9px',
         buttonRadius: '999px', buttonPaddingX: '18px', buttonPaddingY: '10px',
+        buttonRadiusTop: '999px', buttonRadiusRight: '999px', buttonRadiusBottom: '999px', buttonRadiusLeft: '999px',
+        buttonPaddingTop: '10px', buttonPaddingRight: '18px', buttonPaddingBottom: '10px', buttonPaddingLeft: '18px',
+        modalBackground: 'rgba(0,0,0,.92)', modalUiColor: '#fff', modalUiHoverColor: '#6979f8', modalVideoWidth: '75%',
         cssClass: '',
     });
+
+    function normalizeButton(button, index) {
+        const source = button && typeof button === 'object' ? button : {};
+        const item = { ...defaultButton(index), ...source };
+        item.id = cleanString(item.id, 'hero-slider-button-' + (index + 1));
+        item.text = cleanString(item.text, 'Learn More');
+        item.cssClass = cleanString(item.cssClass);
+        item.actionType = ['link', 'video_popup', 'image_popup'].includes(cleanString(item.actionType)) ? cleanString(item.actionType) : 'link';
+        item.linkUrl = cleanString(item.linkUrl || item.url);
+        item.linkTarget = item.linkTarget === '_blank' ? '_blank' : '';
+        item.linkNofollow = !!item.linkNofollow;
+        item.linkCustomAttributes = cleanAttributes(item.linkCustomAttributes);
+        item.videoSource = ['youtube', 'vimeo', 'dailymotion', 'self_hosted'].includes(cleanString(item.videoSource)) ? cleanString(item.videoSource) : 'youtube';
+        item.videoUrl = cleanString(item.videoUrl);
+        item.imageSource = cleanString(item.imageSource) === 'url' ? 'url' : 'ckfinder';
+        item.imageUrl = cleanString(item.imageUrl);
+        item.imageAlt = cleanString(item.imageAlt);
+        return item;
+    }
 
     function normalizeSlide(raw, index) {
         const input = raw && typeof raw === 'object' ? { ...raw } : {};
@@ -114,19 +260,50 @@
         const mediaType = mediaTypes.has(cleanString(merged.mediaType).toLowerCase())
             ? cleanString(merged.mediaType).toLowerCase()
             : (videoUrl ? 'video' : 'image');
-        const buttons = Array.isArray(merged.buttons) ? merged.buttons.slice(0, 3).map((button, buttonIndex) => {
-            const item = button && typeof button === 'object' ? button : {};
-            return {
-                ...item,
-                id: cleanString(item.id, 'hero-slider-button-' + (index + 1) + '-' + (buttonIndex + 1)),
-                text: cleanString(item.text, 'Learn More'),
-                linkUrl: cleanString(item.linkUrl || item.url),
-                linkTarget: item.linkTarget === '_blank' ? '_blank' : '',
-                linkNofollow: !!item.linkNofollow,
-            };
-        }) : [];
-        return {
+        const buttons = Array.isArray(merged.buttons) ? merged.buttons.slice(0, 3).map(normalizeButton) : [];
+        const allowedOrder = ['title', 'subtitle', 'buttons'];
+        const suppliedOrder = Array.isArray(merged.contentOrder)
+            ? merged.contentOrder.filter((key, orderIndex, values) => allowedOrder.includes(key) && values.indexOf(key) === orderIndex)
+            : [];
+        const output = {
             ...merged,
+            positioningMode: merged.positioningMode === 'independent' ? 'independent' : 'grouped',
+            titleTag: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div'].includes(merged.titleTag) ? merged.titleTag : 'h2',
+            subtitleTag: ['p', 'div', 'span'].includes(merged.subtitleTag) ? merged.subtitleTag : 'p',
+            showTitle: merged.showTitle !== false,
+            showSubtitle: merged.showSubtitle !== false,
+            showButtons: merged.showButtons !== false,
+            contentOrder: [...suppliedOrder, ...allowedOrder.filter((key) => !suppliedOrder.includes(key))],
+            styleOverride: !!merged.styleOverride,
+        };
+        ['group', 'title', 'subtitle', 'buttons'].forEach((target) => ['', 'Tablet', 'Mobile'].forEach((suffix) => {
+            const anchorKey = target + 'Anchor' + suffix;
+            const alignKey = target + 'Align' + suffix;
+            const fallbackAnchor = suffix ? '' : defaultSlide(index + 1)[anchorKey];
+            const fallbackAlign = suffix ? '' : defaultSlide(index + 1)[alignKey];
+            output[anchorKey] = anchors.has(cleanString(merged[anchorKey])) ? cleanString(merged[anchorKey]) : fallbackAnchor;
+            output[alignKey] = ['left', 'center', 'right'].includes(cleanString(merged[alignKey])) ? cleanString(merged[alignKey]) : fallbackAlign;
+            ['X', 'Y', 'Width'].forEach((part) => {
+                const key = target + part + suffix;
+                output[key] = lengthValue(merged[key], suffix ? '' : defaultSlide(index + 1)[key]);
+            });
+        }));
+        ['', 'Tablet', 'Mobile'].forEach((suffix) => {
+            const directionKey = 'buttonDirection' + suffix;
+            const alignKey = 'buttonAlign' + suffix;
+            const gapKey = 'buttonGap' + suffix;
+            const wrapKey = 'buttonWrap' + suffix;
+            output[directionKey] = ['row', 'column'].includes(cleanString(merged[directionKey])) ? cleanString(merged[directionKey]) : (suffix ? '' : 'row');
+            output[alignKey] = ['left', 'center', 'right'].includes(cleanString(merged[alignKey])) ? cleanString(merged[alignKey]) : (suffix ? '' : 'left');
+            output[gapKey] = lengthValue(merged[gapKey], suffix ? '' : '10px');
+            output[wrapKey] = suffix && merged[wrapKey] === '' ? '' : booleanValue(merged[wrapKey], true);
+            ['slideTitleFontSize', 'slideSubtitleFontSize', 'slideContentGap'].forEach((base) => {
+                const key = base + suffix;
+                output[key] = lengthValue(merged[key], '');
+            });
+        });
+        return {
+            ...output,
             id: cleanString(merged.id, 'hero-slider-slide-' + (index + 1)) || 'hero-slider-slide-' + (index + 1),
             mediaType,
             imageSource: cleanString(merged.imageSource, 'ckfinder') === 'url' ? 'url' : 'ckfinder',
@@ -134,6 +311,14 @@
             imageUrlTablet: cleanString(merged.imageUrlTablet),
             imageUrlMobile: cleanString(merged.imageUrlMobile),
             imageAlt: cleanString(merged.imageAlt),
+            imageAltTablet: cleanString(merged.imageAltTablet),
+            imageAltMobile: cleanString(merged.imageAltMobile),
+            objectFit: ['cover', 'contain', 'fill'].includes(cleanString(merged.objectFit)) ? cleanString(merged.objectFit) : 'cover',
+            objectFitTablet: ['cover', 'contain', 'fill'].includes(cleanString(merged.objectFitTablet)) ? cleanString(merged.objectFitTablet) : '',
+            objectFitMobile: ['cover', 'contain', 'fill'].includes(cleanString(merged.objectFitMobile)) ? cleanString(merged.objectFitMobile) : '',
+            objectPosition: cleanString(merged.objectPosition, 'center center'),
+            objectPositionTablet: cleanString(merged.objectPositionTablet),
+            objectPositionMobile: cleanString(merged.objectPositionMobile),
             videoProvider: normalizeProvider(providerInput, videoUrl),
             videoUrl,
             videoPoster: poster,
@@ -153,7 +338,9 @@
 
     function normalize(node) {
         const normalized = node && typeof node === 'object' ? node : {};
-        const settings = normalized.settings = { ...defaults(), ...(normalized.settings || {}) };
+        const incomingSettings = normalized.settings && typeof normalized.settings === 'object' ? normalized.settings : {};
+        const defaultSettings = defaults();
+        const settings = normalized.settings = { ...defaultSettings, ...incomingSettings };
         settings.slides = (Array.isArray(settings.slides) ? settings.slides : [])
             .slice(0, 30)
             .map(normalizeSlide);
@@ -164,6 +351,11 @@
             settings[key] = directions.has(value) ? value : '';
         });
         settings.transition = transitions.has(cleanString(settings.transition).toLowerCase()) ? cleanString(settings.transition).toLowerCase() : 'slide';
+        settings.arrowPosition = ['inside', 'outside'].includes(cleanString(settings.arrowPosition).toLowerCase()) ? cleanString(settings.arrowPosition).toLowerCase() : 'inside';
+        ['arrowPositionTablet', 'arrowPositionMobile'].forEach((key) => {
+            const value = cleanString(settings[key]).toLowerCase();
+            settings[key] = ['inside', 'outside'].includes(value) ? value : '';
+        });
         settings.videoDurationMode = cleanString(settings.videoDurationMode).toLowerCase() === 'duration' ? 'duration' : 'interval';
         settings.videoAutoplayFallback = 'interval';
         settings.videoControls = cleanString(settings.videoControls).toLowerCase() === 'provider' ? 'provider' : 'custom';
@@ -172,6 +364,26 @@
         settings.paginationPositionVertical = paginationPositionValue(settings.paginationPositionVertical, defaults().paginationPositionVertical);
         ['paginationPositionHorizontalTablet', 'paginationPositionHorizontalMobile', 'paginationPositionVerticalTablet', 'paginationPositionVerticalMobile'].forEach((key) => {
             settings[key] = paginationPositionValue(settings[key], '');
+        });
+        ['', 'Tablet', 'Mobile'].forEach((suffix) => {
+            ['Horizontal', 'Vertical'].forEach((axis) => {
+                const modeKey = 'paginationPlacementMode' + axis + suffix;
+                const alignmentKey = 'paginationAlignment' + axis + suffix;
+                const positionKey = 'paginationPosition' + axis + suffix;
+                const rawPosition = settings[positionKey];
+                const incomingMode = cleanString(incomingSettings[modeKey]).toLowerCase();
+                const basicPositions = axis === 'Horizontal'
+                    ? ['bottom-left', 'bottom-center', 'bottom-right', 'center']
+                    : ['top-right', 'center-right', 'bottom-right', 'center'];
+                const inferredMode = Object.prototype.hasOwnProperty.call(incomingSettings, positionKey) && rawPosition && !basicPositions.includes(rawPosition) ? 'custom' : 'basic';
+                settings[modeKey] = ['basic', 'custom'].includes(incomingMode) ? incomingMode : (suffix && !Object.prototype.hasOwnProperty.call(incomingSettings, positionKey) ? '' : inferredMode);
+                const incomingAlignment = cleanString(incomingSettings[alignmentKey]).toLowerCase();
+                const inferredAlignment = axis === 'Horizontal'
+                    ? (rawPosition === 'bottom-left' ? 'left' : (rawPosition === 'bottom-right' ? 'right' : 'center'))
+                    : (rawPosition === 'top-right' ? 'top' : (rawPosition === 'bottom-right' ? 'bottom' : 'center'));
+                const allowedAlignment = axis === 'Horizontal' ? ['left', 'center', 'right'] : ['top', 'center', 'bottom'];
+                settings[alignmentKey] = allowedAlignment.includes(incomingAlignment) ? incomingAlignment : (suffix && !rawPosition ? '' : inferredAlignment);
+            });
         });
         settings.autoplaySpeed = Math.min(60000, Math.max(100, Math.round(positiveNumber(settings.autoplaySpeed, 5000))));
         settings.transitionSpeed = Math.min(10000, Math.max(0, Math.round(positiveNumber(settings.transitionSpeed, 600))));
@@ -182,11 +394,42 @@
         ['autoplay', 'pauseOnHover', 'pauseOnFocus', 'pauseOnInteraction', 'loop', 'rewind', 'arrows', 'pagination', 'keyboard', 'drag', 'mouseWheel', 'wheelRelease', 'progress', 'lazyLoad', 'videoAutoplay', 'videoMutedAutoplay', 'videoLoop', 'videoResume', 'videoPrivacyMode'].forEach((key) => {
             settings[key] = booleanValue(settings[key], defaults()[key]);
         });
-        ['gap', 'padding', 'fixedHeight', 'minHeight', 'minHeightTablet', 'minHeightMobile'].forEach((key) => {
-            settings[key] = lengthValue(settings[key], defaults()[key]);
+        ['gap', 'padding', 'fixedHeight', 'fixedHeightTablet', 'fixedHeightMobile', 'minHeight', 'minHeightTablet', 'minHeightMobile', 'titleFontSize', 'titleFontSizeTablet', 'titleFontSizeMobile', 'subtitleFontSize', 'subtitleFontSizeTablet', 'subtitleFontSizeMobile', 'contentGap', 'contentGapTablet', 'contentGapMobile', 'arrowEdgeOffset', 'arrowEdgeOffsetTablet', 'arrowEdgeOffsetMobile', 'arrowButtonSize', 'arrowButtonSizeTablet', 'arrowButtonSizeMobile', 'arrowIconSize', 'arrowIconSizeTablet', 'arrowIconSizeMobile', 'paginationOffsetXHorizontal', 'paginationOffsetXHorizontalTablet', 'paginationOffsetXHorizontalMobile', 'paginationOffsetYHorizontal', 'paginationOffsetYHorizontalTablet', 'paginationOffsetYHorizontalMobile', 'paginationOffsetXVertical', 'paginationOffsetXVerticalTablet', 'paginationOffsetXVerticalMobile', 'paginationOffsetYVertical', 'paginationOffsetYVerticalTablet', 'paginationOffsetYVerticalMobile', 'modalVideoWidth'].forEach((key) => {
+            settings[key] = lengthValue(settings[key], defaultSettings[key]);
+        });
+        ['', 'Tablet', 'Mobile'].forEach((deviceSuffix) => {
+            const responsiveFallback = deviceSuffix === '' ? null : '';
+            const legacyRadius = lengthValue(incomingSettings['buttonRadius' + deviceSuffix], '');
+            const legacyPaddingX = lengthValue(incomingSettings['buttonPaddingX' + deviceSuffix], '');
+            const legacyPaddingY = lengthValue(incomingSettings['buttonPaddingY' + deviceSuffix], '');
+            ['Top', 'Right', 'Bottom', 'Left'].forEach((side) => {
+                const radiusKey = 'buttonRadius' + side + deviceSuffix;
+                const paddingKey = 'buttonPadding' + side + deviceSuffix;
+                const radiusFallback = responsiveFallback ?? defaultSettings['buttonRadius' + side];
+                const paddingFallback = responsiveFallback ?? defaultSettings['buttonPadding' + side];
+                settings[radiusKey] = Object.prototype.hasOwnProperty.call(incomingSettings, radiusKey)
+                    ? lengthValue(incomingSettings[radiusKey], radiusFallback)
+                    : (legacyRadius || lengthValue(settings[radiusKey], radiusFallback));
+                const legacyPadding = side === 'Top' || side === 'Bottom' ? legacyPaddingY : legacyPaddingX;
+                settings[paddingKey] = Object.prototype.hasOwnProperty.call(incomingSettings, paddingKey)
+                    ? lengthValue(incomingSettings[paddingKey], paddingFallback)
+                    : (legacyPadding || lengthValue(settings[paddingKey], paddingFallback));
+            });
+        });
+        ['', 'Tablet', 'Mobile'].forEach((deviceSuffix) => {
+            ['Top', 'Right', 'Bottom', 'Left'].forEach((side) => {
+                const key = 'arrowRadius' + side + deviceSuffix;
+                settings[key] = lengthValue(settings[key], deviceSuffix ? '' : defaultSettings['arrowRadius' + side]);
+            });
+        });
+        ['previousArrowIcon', 'nextArrowIcon'].forEach((key) => {
+            const fallback = key === 'previousArrowIcon' ? 'fas fa-chevron-left' : 'fas fa-chevron-right';
+            settings[key] = cleanString(settings[key], fallback) || fallback;
+            settings[key + 'Source'] = settings[key + 'Source'] === 'svg' ? 'svg' : 'library';
+            settings[key + 'Svg'] = cleanString(settings[key + 'Svg']);
         });
         ['dailymotionPlayerId', 'dailymotionSdkUrl', 'cssId', 'cssClass'].forEach((key) => { settings[key] = cleanString(settings[key]); });
-        ['overlayColor', 'titleColor', 'subtitleColor', 'buttonTextColor', 'buttonBackground', 'buttonTextColorHover', 'buttonBackgroundHover', 'buttonRadius', 'buttonPaddingX', 'buttonPaddingY'].forEach((key) => { settings[key] = cleanString(settings[key], defaults()[key]); });
+        ['overlayColor', 'titleColor', 'subtitleColor', 'buttonTextColor', 'buttonBackground', 'buttonTextColorHover', 'buttonBackgroundHover', 'arrowColor', 'arrowBackground', 'arrowHoverColor', 'arrowHoverBackground', 'titleFontWeight', 'subtitleFontWeight', 'modalBackground', 'modalUiColor', 'modalUiHoverColor', 'buttonRadius', 'buttonPaddingX', 'buttonPaddingY'].forEach((key) => { settings[key] = cleanString(settings[key], defaultSettings[key]); });
         return normalized;
     }
 

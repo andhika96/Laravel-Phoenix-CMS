@@ -1,0 +1,152 @@
+(function (registry) {
+    "use strict";
+
+    const placeholder =
+        "https://playground.elementor.com/wp-content/plugins/elementor/assets/images/placeholder.png";
+    const advanced = () =>
+        window.PageBuilderElementorV23ComplexWidgetRuntime?.image_box?.defaults?.() || {};
+    const media = (id) => ({
+        id,
+        type: "image",
+        imageUrl: placeholder,
+        videoUrl: "",
+        linkType: "none",
+        linkUrl: "",
+        linkTarget: "",
+        linkNofollow: false,
+        linkCustomAttributes: [],
+        title: "",
+        caption: "",
+        description: "",
+    });
+    const defaults = () => ({
+        ...advanced(),
+        skins: ["carousel", "slideshow", "coverflow"],
+        skin: "carousel",
+        slidesName: "Slides",
+        items: [1, 2, 3, 4, 5].map((index) => media(`media-${index}`)),
+        effect: "slide",
+        slidesToShow: 3,
+        slidesToShowTablet: 2,
+        slidesToShowMobile: 1,
+        slidesToScroll: 1,
+        slidesToScrollTablet: 1,
+        slidesToScrollMobile: 1,
+        thumbsSlidesToShow: 5,
+        thumbsSlidesToShowTablet: 4,
+        thumbsSlidesToShowMobile: 3,
+        thumbsRatio: "21:9",
+        centeredSlides: false,
+        height: "300px",
+        heightTablet: "260px",
+        heightMobile: "220px",
+        width: "100%",
+        widthTablet: "100%",
+        widthMobile: "100%",
+        arrows: true,
+        pagination: "dots",
+        transitionSpeed: 500,
+        autoplay: true,
+        autoplaySpeed: 5000,
+        infiniteLoop: true,
+        pauseOnHover: true,
+        pauseOnInteraction: true,
+        overlay: "none",
+        captionSource: "title",
+        overlayIcon: "search-plus",
+        overlayAnimation: "fade",
+        imageResolution: "full",
+        customImageWidth: 300,
+        customImageHeight: 300,
+        imageFit: "cover",
+        lazyLoad: false,
+        gap: "10px",
+        slideBackground: "#ffffff",
+        slideBorderColor: "transparent",
+        slideBorderTop: "0px",
+        slideBorderRight: "0px",
+        slideBorderBottom: "0px",
+        slideBorderLeft: "0px",
+        slideRadiusTop: "0px",
+        slideRadiusRight: "0px",
+        slideRadiusBottom: "0px",
+        slideRadiusLeft: "0px",
+        slidePaddingTop: "0px",
+        slidePaddingRight: "0px",
+        slidePaddingBottom: "0px",
+        slidePaddingLeft: "0px",
+        arrowsSize: "20px",
+        arrowColor: "#ffffff",
+        arrowBackground: "rgba(16,24,40,.5)",
+        paginationPosition: "outside",
+        dotsGap: "8px",
+        dotsSize: "8px",
+        paginationColor: "#d0d5dd",
+        paginationActiveColor: "#6979f8",
+        playIconColor: "#ffffff",
+        playIconSize: "80px",
+        playIconShadow: "0 1px 6px rgba(0,0,0,.35)",
+        overlayBackground: "rgba(0,0,0,.5)",
+        overlayTextColor: "#ffffff",
+        overlayIconSize: "32px",
+        lightboxBackground: "rgba(0,0,0,.92)",
+        lightboxUiColor: "#ffffff",
+        lightboxUiHoverColor: "#6979f8",
+        lightboxVideoWidth: "75%",
+    });
+
+    registry.register({
+        type: "media_carousel",
+        label: "Media Carousel",
+        category: "pro",
+        icon: "fas fa-photo-video",
+        toolbox: true,
+        canvas: "/js/pagebuilder_elementor_v23/widgets/pro/shared/Canvas.vue",
+        settings: "/js/pagebuilder_elementor_v23/widgets/pro/shared/Settings.vue",
+        defaults,
+        normalize(node) {
+            const base = defaults();
+            const s = (node.settings = { ...base, ...(node.settings || {}) });
+            const enumValue = (value, allowed, fallback) =>
+                allowed.includes(value) ? value : fallback;
+            const clampSlides = (value, fallback = 1) =>
+                Math.max(1, Math.min(10, Number(value) || fallback));
+            s.skins = [...base.skins];
+            s.skin = enumValue(s.skin, s.skins, "carousel");
+            s.effect = enumValue(s.effect, ["slide", "fade", "cube"], "slide");
+            s.pagination = enumValue(s.pagination, ["none", "dots", "fraction", "progress"], "dots");
+            s.overlay = enumValue(s.overlay, ["none", "text", "icon"], "none");
+            s.captionSource = enumValue(s.captionSource, ["title", "caption", "description"], "title");
+            s.overlayIcon = enumValue(s.overlayIcon, ["search-plus", "plus-circle", "eye", "link"], "search-plus");
+            s.overlayAnimation = enumValue(s.overlayAnimation, ["fade", "slide-up", "slide-down", "slide-right", "slide-left", "zoom-in"], "fade");
+            s.imageFit = enumValue(s.imageFit, ["cover", "contain", "auto"], "cover");
+            s.imageResolution = enumValue(s.imageResolution, ["thumbnail", "medium", "medium_large", "large", "1536x1536", "2048x2048", "full", "custom"], "full");
+            s.thumbsRatio = enumValue(s.thumbsRatio, ["1:1", "4:3", "16:9", "21:9"], "21:9");
+            ["slidesToShow", "slidesToShowTablet", "slidesToShowMobile", "slidesToScroll", "slidesToScrollTablet", "slidesToScrollMobile", "thumbsSlidesToShow", "thumbsSlidesToShowTablet", "thumbsSlidesToShowMobile"].forEach((key) => {
+                s[key] = clampSlides(s[key], base[key]);
+            });
+            ["arrows", "autoplay", "infiniteLoop", "pauseOnHover", "pauseOnInteraction", "centeredSlides", "lazyLoad"].forEach((key) => {
+                s[key] = Boolean(s[key]);
+            });
+            s.transitionSpeed = Math.max(0, Number(s.transitionSpeed) || 0);
+            s.autoplaySpeed = Math.max(100, Number(s.autoplaySpeed) || 5000);
+            s.customImageWidth = Math.max(1, Math.min(4096, Number(s.customImageWidth) || 300));
+            s.customImageHeight = Math.max(1, Math.min(4096, Number(s.customImageHeight) || 300));
+            s.items = (Array.isArray(s.items) && s.items.length ? s.items : base.items).map((item, index) => {
+                const normalized = { ...media(`media-${index + 1}`), ...(item || {}) };
+                normalized.type = enumValue(normalized.type, ["image", "video"], "image");
+                normalized.linkType = normalized.type === "image"
+                    ? enumValue(normalized.linkType, ["none", "media", "custom"], "none")
+                    : "none";
+                normalized.imageUrl = String(normalized.imageUrl || "").trim();
+                normalized.videoUrl = String(normalized.videoUrl || "").trim();
+                normalized.linkUrl = String(normalized.linkUrl || "").trim();
+                normalized.linkCustomAttributes = Array.isArray(normalized.linkCustomAttributes)
+                    ? normalized.linkCustomAttributes
+                    : [];
+                return normalized;
+            });
+            return node;
+        },
+    });
+})(window.PageBuilderElementorV23Widgets);

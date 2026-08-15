@@ -153,10 +153,21 @@ test('Hero Slider applies direction-specific pagination positions and responsive
     const fixture = sliderRoot({
         direction: 'horizontal',
         directionTablet: 'vertical',
+        paginationPlacementModeHorizontal: 'basic',
+        paginationAlignmentHorizontal: 'center',
+        paginationPlacementModeVertical: 'basic',
+        paginationAlignmentVertical: 'center',
+        paginationPlacementModeVerticalTablet: 'custom',
         paginationPositionHorizontal: 'bottom-center',
         paginationPositionHorizontalTablet: 'top-left',
         paginationPositionVertical: 'center-right',
         paginationPositionVerticalTablet: 'center-left',
+        paginationOffsetXHorizontal: '4px',
+        paginationOffsetYHorizontal: '-6px',
+        paginationOffsetXVertical: '10px',
+        paginationOffsetYVertical: '12px',
+        paginationOffsetXVerticalTablet: '-14px',
+        paginationOffsetYVerticalTablet: '18px',
         autoplay: false,
         loop: false,
         pagination: true,
@@ -165,12 +176,40 @@ test('Hero Slider applies direction-specific pagination positions and responsive
     runtime.initHeroSlider(fixture.root);
     assert.equal(fixture.pagination.getAttribute('data-orientation'), 'horizontal');
     assert.equal(fixture.pagination.getAttribute('data-position'), 'bottom-center');
+    assert.equal(fixture.pagination.style['--hero-slider-pagination-offset-x'], '4px');
+    assert.equal(fixture.pagination.style['--hero-slider-pagination-offset-y'], '-6px');
 
     window.innerWidth = 800;
     windowListeners.get('resize')?.();
     assert.equal(fixture.pagination.getAttribute('data-orientation'), 'vertical');
     assert.equal(fixture.pagination.getAttribute('data-position'), 'center-left');
+    assert.equal(fixture.pagination.style['--hero-slider-pagination-offset-x'], '-14px');
+    assert.equal(fixture.pagination.style['--hero-slider-pagination-offset-y'], '18px');
     window.innerWidth = 1280;
+});
+
+test('Hero Slider maps basic pagination alignment to the direction edge', () => {
+    const horizontalSlides = [node(), node()];
+    const horizontal = sliderRoot({
+        direction: 'horizontal',
+        paginationPlacementModeHorizontal: 'basic',
+        paginationAlignmentHorizontal: 'right',
+        autoplay: false,
+        pagination: true,
+    }, horizontalSlides);
+    runtime.initHeroSlider(horizontal.root);
+    assert.equal(horizontal.pagination.getAttribute('data-position'), 'bottom-right');
+
+    const verticalSlides = [node(), node()];
+    const vertical = sliderRoot({
+        direction: 'vertical',
+        paginationPlacementModeVertical: 'basic',
+        paginationAlignmentVertical: 'bottom',
+        autoplay: false,
+        pagination: true,
+    }, verticalSlides);
+    runtime.initHeroSlider(vertical.root);
+    assert.equal(vertical.pagination.getAttribute('data-position'), 'bottom-right');
 });
 
 test('Hero Slider pauses inactive native video and resumes the preserved currentTime', async () => {

@@ -742,6 +742,7 @@
                 'pb-pro-media-carousel--' + (s.skin || 'carousel'),
                 'effect-' + (s.effect || 'slide'),
                 'pagination-' + (s.paginationPosition || 'outside'),
+                'arrow-position-' + mediaArrowPosition,
             ]"
             :style="mediaCarouselRootStyle"
             :aria-label="s.slidesName || 'Media Carousel'"
@@ -797,8 +798,8 @@
                     </article>
                 </div>
             </div>
-            <button v-if="hasArrows" type="button" class="pb-pro-arrow pb-pro-arrow--prev" aria-label="Previous slide" data-pb-interactive="true" :style="carouselArrowStyle" @click.stop="previous"><i class="fas fa-chevron-left"></i></button>
-            <button v-if="hasArrows" type="button" class="pb-pro-arrow pb-pro-arrow--next" aria-label="Next slide" data-pb-interactive="true" :style="carouselArrowStyle" @click.stop="next"><i class="fas fa-chevron-right"></i></button>
+            <button v-if="hasArrows" type="button" class="pb-pro-arrow pb-pro-arrow--prev" aria-label="Previous slide" data-pb-interactive="true" @click.stop="previous"><span v-if="mediaArrowIconSvg('previous')" class="pb-pro-arrow__svg" v-html="mediaArrowIconSvg('previous')"></span><i v-else :class="mediaArrowIconClass('previous')"></i></button>
+            <button v-if="hasArrows" type="button" class="pb-pro-arrow pb-pro-arrow--next" aria-label="Next slide" data-pb-interactive="true" @click.stop="next"><span v-if="mediaArrowIconSvg('next')" class="pb-pro-arrow__svg" v-html="mediaArrowIconSvg('next')"></span><i v-else :class="mediaArrowIconClass('next')"></i></button>
             <div v-if="s.skin === 'slideshow'" class="pb-pro-media-carousel__thumbnails" role="tablist">
                 <button
                     v-for="(entry, index) in s.items"
@@ -966,6 +967,7 @@
             :class="[
                 'skin-' + (s.skin || 'default'),
                 'layout-' + (s.layout || 'image_inline'),
+                'arrow-position-' + testimonialArrowPosition,
             ]"
             :style="testimonialRootStyle"
             :aria-label="s.slidesName || 'Testimonial Carousel'"
@@ -1004,8 +1006,8 @@
                     </article>
                 </div>
             </div>
-            <button v-if="hasArrows" type="button" class="pb-pro-arrow pb-pro-arrow--prev" aria-label="Previous slide" data-pb-interactive="true" :style="carouselArrowStyle" @click.stop="previous"><i class="fas fa-chevron-left"></i></button>
-            <button v-if="hasArrows" type="button" class="pb-pro-arrow pb-pro-arrow--next" aria-label="Next slide" data-pb-interactive="true" :style="carouselArrowStyle" @click.stop="next"><i class="fas fa-chevron-right"></i></button>
+            <button v-if="hasArrows" type="button" class="pb-pro-arrow pb-pro-arrow--prev" aria-label="Previous slide" data-pb-interactive="true" @click.stop="previous"><span v-if="mediaArrowIconSvg('previous')" class="pb-pro-arrow__svg" v-html="mediaArrowIconSvg('previous')"></span><i v-else :class="mediaArrowIconClass('previous')"></i></button>
+            <button v-if="hasArrows" type="button" class="pb-pro-arrow pb-pro-arrow--next" aria-label="Next slide" data-pb-interactive="true" @click.stop="next"><span v-if="mediaArrowIconSvg('next')" class="pb-pro-arrow__svg" v-html="mediaArrowIconSvg('next')"></span><i v-else :class="mediaArrowIconClass('next')"></i></button>
             <div v-if="hasDots && s.pagination === 'dots'" class="pb-pro-dots" role="tablist">
                 <button v-for="page in carouselPageCount" :key="page" type="button" :class="{ active: carouselDotIndex === page - 1 }" :style="carouselDotStyle(carouselDotIndex === page - 1)" :aria-label="'Go to slide ' + page" data-pb-interactive="true" @click.stop="selectSlide((page - 1) * carouselStep)"></button>
             </div>
@@ -2383,9 +2385,23 @@ export default {
                 height: this.s.equalHeight ? "auto" : "max-content",
             };
         },
+        mediaArrowPosition() {
+            return this.safeEnum(this.responsiveValue("arrowPosition", "inside"), ["inside", "outside"], "inside");
+        },
         mediaCarouselRootStyle() {
+            const buttonSize = this.safeLength(this.responsiveValue("arrowButtonSize", this.responsiveValue("arrowsSize", "20px")), "20px");
+            const edgeOffset = this.safeLength(this.responsiveValue("arrowEdgeOffset", "46px"), "46px");
             return {
                 ...this.carouselRootStyle,
+                "--carousel-arrow-button-size": buttonSize,
+                "--carousel-arrow-icon-size": this.safeLength(this.responsiveValue("arrowIconSize", "10px"), "10px"),
+                "--carousel-arrow-edge-position": this.mediaArrowPosition === "outside" ? `calc(0px - ${buttonSize} - ${edgeOffset})` : edgeOffset,
+                "--carousel-arrow-overflow": this.mediaArrowPosition === "outside" ? "visible" : "hidden",
+                "--arrow-color": this.safeColor(this.s.arrowColor, "#fff"),
+                "--arrow-background": this.safeColor(this.s.arrowBackground, "rgba(16,24,40,.5)"),
+                "--arrow-hover-color": this.safeColor(this.s.arrowHoverColor, this.safeColor(this.s.arrowColor, "#fff")),
+                "--arrow-hover-background": this.safeColor(this.s.arrowHoverBackground, this.safeColor(this.s.arrowBackground, "rgba(16,24,40,.5)")),
+                "--carousel-arrow-radius": this.responsiveBoxValue("arrowRadius", "50%"),
                 width: this.safeLength(this.responsiveValue("width", "100%"), "100%"),
                 "--media-height": this.safeLength(this.responsiveValue("height", "300px"), "300px"),
                 "--media-fit": ["cover", "contain", "auto"].includes(this.s.imageFit) ? this.s.imageFit : "cover",
@@ -2491,14 +2507,28 @@ export default {
                 color: this.s.reviewColor || "#344054",
             };
         },
+        testimonialArrowPosition() {
+            return this.safeEnum(this.responsiveValue("arrowPosition", "inside"), ["inside", "outside"], "inside");
+        },
         testimonialRootStyle() {
             const alignment = this.safeEnum(
                 this.responsiveValue("alignment", "center"),
                 ["left", "center", "right"],
                 "center",
             );
+            const buttonSize = this.safeLength(this.responsiveValue("arrowButtonSize", this.responsiveValue("arrowsSize", "20px")), "20px");
+            const edgeOffset = this.safeLength(this.responsiveValue("arrowEdgeOffset", "46px"), "46px");
             return {
                 ...this.carouselRootStyle,
+                "--carousel-arrow-button-size": buttonSize,
+                "--carousel-arrow-icon-size": this.safeLength(this.responsiveValue("arrowIconSize", "10px"), "10px"),
+                "--carousel-arrow-edge-position": this.testimonialArrowPosition === "outside" ? `calc(0px - ${buttonSize} - ${edgeOffset})` : edgeOffset,
+                "--carousel-arrow-overflow": this.testimonialArrowPosition === "outside" ? "visible" : "hidden",
+                "--carousel-arrow-color": this.safeColor(this.s.arrowColor, "#344054"),
+                "--carousel-arrow-background": this.safeColor(this.s.arrowBackground, "#fff"),
+                "--carousel-arrow-hover-color": this.safeColor(this.s.arrowHoverColor, this.safeColor(this.s.arrowColor, "#344054")),
+                "--carousel-arrow-hover-background": this.safeColor(this.s.arrowHoverBackground, this.safeColor(this.s.arrowBackground, "#fff")),
+                "--carousel-arrow-radius": this.responsiveBoxValue("arrowRadius", "50%"),
                 width: this.safeLength(this.responsiveValue("width", "100%"), "100%"),
                 textAlign: alignment,
                 "--testimonial-identity-align":
@@ -3762,6 +3792,16 @@ export default {
                 ? iconClass
                 : fallback;
         },
+        mediaArrowIconSvg(role) {
+            const key = role === "next" ? "nextArrowIcon" : "previousArrowIcon";
+            return this.s[key + "Source"] === "svg" ? this.sanitizeSvg(this.s[key + "Svg"]) : "";
+        },
+        mediaArrowIconClass(role) {
+            const key = role === "next" ? "nextArrowIcon" : "previousArrowIcon";
+            const fallback = role === "next" ? "fas fa-chevron-right" : "fas fa-chevron-left";
+            const iconClass = String(this.s[key] || "").trim();
+            return /^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i.test(iconClass) ? iconClass : fallback;
+        },
         safeInputType(value) {
             return [
                 "text",
@@ -4796,44 +4836,51 @@ export default {
     width: var(--carousel-arrow-size, 34px);
     height: var(--carousel-arrow-size, 34px);
 }
-.pb-pro-media-carousel .pb-pro-arrow {
-    display: grid;
-    place-items: center;
-    padding: 0;
-    font-size: var(--carousel-arrow-size, 20px);
-    line-height: 1;
-}
-.pb-pro-media-carousel .pb-pro-arrow > i {
-    font-size: min(50%, 16px);
-    line-height: 1;
-}
-.pb-pro-media-carousel .pb-pro-arrow--prev {
-    left: var(--carousel-arrow-gutter, 46px);
-    transform: translateY(-50%);
-}
-.pb-pro-media-carousel .pb-pro-arrow--next {
-    right: var(--carousel-arrow-gutter, 46px);
-    transform: translateY(-50%);
-}
+.pb-pro-media-carousel .pb-pro-arrow,
 .pb-pro-testimonial-carousel .pb-pro-arrow {
     display: grid;
+    width: var(--carousel-arrow-button-size, 20px);
+    height: var(--carousel-arrow-button-size, 20px);
     place-items: center;
     padding: 0;
-    font-size: var(--carousel-arrow-size, 20px);
+    border-radius: var(--carousel-arrow-radius, 50%);
+    color: var(--carousel-arrow-color, var(--arrow-color, #fff));
+    background: var(--carousel-arrow-background, var(--arrow-background, rgba(16, 24, 40, 0.5)));
+    font-size: var(--carousel-arrow-icon-size, 10px);
     line-height: 1;
 }
-.pb-pro-testimonial-carousel .pb-pro-arrow > i {
-    font-size: min(50%, 16px);
+.pb-pro-media-carousel .pb-pro-arrow:hover,
+.pb-pro-media-carousel .pb-pro-arrow:focus-visible,
+.pb-pro-testimonial-carousel .pb-pro-arrow:hover,
+.pb-pro-testimonial-carousel .pb-pro-arrow:focus-visible {
+    color: var(--carousel-arrow-hover-color, var(--arrow-hover-color, var(--carousel-arrow-color, var(--arrow-color))));
+    background: var(--carousel-arrow-hover-background, var(--arrow-hover-background, var(--carousel-arrow-background, var(--arrow-background))));
+}
+.pb-pro-media-carousel .pb-pro-arrow > i,
+.pb-pro-media-carousel .pb-pro-arrow__svg,
+.pb-pro-media-carousel .pb-pro-arrow__svg > svg,
+.pb-pro-testimonial-carousel .pb-pro-arrow > i,
+.pb-pro-testimonial-carousel .pb-pro-arrow__svg,
+.pb-pro-testimonial-carousel .pb-pro-arrow__svg > svg {
+    display: block;
+    width: 1em;
+    height: 1em;
     line-height: 1;
 }
+.pb-pro-media-carousel .pb-pro-arrow__svg > svg,
+.pb-pro-testimonial-carousel .pb-pro-arrow__svg > svg { fill: currentColor; }
+.pb-pro-media-carousel .pb-pro-arrow--prev,
 .pb-pro-testimonial-carousel .pb-pro-arrow--prev {
-    left: var(--carousel-arrow-gutter, 46px);
+    left: var(--carousel-arrow-edge-position, 46px);
     transform: translateY(-50%);
 }
+.pb-pro-media-carousel .pb-pro-arrow--next,
 .pb-pro-testimonial-carousel .pb-pro-arrow--next {
-    right: var(--carousel-arrow-gutter, 46px);
+    right: var(--carousel-arrow-edge-position, 46px);
     transform: translateY(-50%);
 }
+.pb-pro-media-carousel,
+.pb-pro-testimonial-carousel { overflow: var(--carousel-arrow-overflow, hidden); }
 .pb-pro-carousel .pb-pro-dots {
     gap: var(--carousel-dot-gap, 8px);
 }

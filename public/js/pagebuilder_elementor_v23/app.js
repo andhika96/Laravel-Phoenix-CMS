@@ -1558,7 +1558,10 @@
 			imageStretch: false, navigation: 'arrows_dots', previousArrowIcon: 'fas fa-chevron-left', previousArrowIconSource: 'library', previousArrowIconSvg: '', nextArrowIcon: 'fas fa-chevron-right', nextArrowIconSource: 'library', nextArrowIconSvg: '',
 			linkType: 'none', customLinkUrl: '', linkTarget: '', linkNofollow: false, linkCustomAttributes: [], lightbox: 'default', captionType: 'none',
 			lazyload: false, autoplay: true, pauseOnHover: true, pauseOnInteraction: true, autoplaySpeed: 5000, infiniteLoop: true, animationSpeed: 500, direction: 'left',
-			arrowPosition: 'inside', arrowSize: '16px', arrowSizeTablet: '', arrowSizeMobile: '', arrowColor: '',
+			arrowPosition: 'inside', arrowPositionTablet: '', arrowPositionMobile: '', arrowEdgeOffset: '8px', arrowEdgeOffsetTablet: '', arrowEdgeOffsetMobile: '',
+			arrowButtonSize: '28px', arrowButtonSizeTablet: '', arrowButtonSizeMobile: '', arrowIconSize: '16px', arrowIconSizeTablet: '', arrowIconSizeMobile: '', arrowSize: '16px', arrowSizeTablet: '', arrowSizeMobile: '',
+			arrowColor: '', arrowBackground: 'rgba(255,255,255,.88)', arrowHoverColor: '', arrowHoverBackground: 'rgba(255,255,255,.88)',
+			arrowRadiusTop: '50%', arrowRadiusRight: '50%', arrowRadiusBottom: '50%', arrowRadiusLeft: '50%',
 			paginationPosition: 'outside', dotSpacing: '8px', dotSpacingTablet: '', dotSpacingMobile: '', dotSize: '8px', dotSizeTablet: '', dotSizeMobile: '', dotColor: '#c4c7cf', dotActiveColor: '#69727d',
 			imageVerticalAlign: 'center', imageVerticalAlignTablet: '', imageVerticalAlignMobile: '', imageSpacingMode: 'default', imageSpacing: '20px', imageSpacingTablet: '', imageSpacingMobile: '',
 			imageBorderType: 'default', imageBorderWidthTop: '0px', imageBorderWidthRight: '0px', imageBorderWidthBottom: '0px', imageBorderWidthLeft: '0px', imageBorderColor: '',
@@ -1594,8 +1597,21 @@
 	}
 	function normalizeImageCarouselSettings(settings) {
 		if (!settings || typeof settings !== 'object') return settings;
+		const legacyArrow = (value, addition, fallback) => {
+			const match = String(value || '').trim().match(/^(\d+(?:\.\d+)?)px$/i);
+			return match ? `${Number(match[1]) + addition}px` : fallback;
+		};
+		const legacyArrowSizes = { desktop: settings.arrowSize, tablet: settings.arrowSizeTablet, mobile: settings.arrowSizeMobile };
+		const missingArrowContract = { button: settings.arrowButtonSize === undefined, icon: settings.arrowIconSize === undefined, edge: settings.arrowEdgeOffset === undefined };
 		const defaults = imageCarouselWidgetDefaults();
 		Object.keys(defaults).forEach((key) => { if (settings[key] === undefined) settings[key] = cloneSettingValue(defaults[key]); });
+		if (missingArrowContract.button) settings.arrowButtonSize = legacyArrow(legacyArrowSizes.desktop, 12, '28px');
+		if (missingArrowContract.icon) settings.arrowIconSize = String(legacyArrowSizes.desktop || '16px');
+		if (missingArrowContract.edge) settings.arrowEdgeOffset = settings.arrowPosition === 'outside' ? '0px' : '8px';
+		[['Tablet', 'tablet'], ['Mobile', 'mobile']].forEach(([suffix, device]) => {
+			if (settings['arrowButtonSize' + suffix] === '' && legacyArrowSizes[device]) settings['arrowButtonSize' + suffix] = legacyArrow(legacyArrowSizes[device], 12, '');
+			if (settings['arrowIconSize' + suffix] === '' && legacyArrowSizes[device]) settings['arrowIconSize' + suffix] = String(legacyArrowSizes[device]);
+		});
 		const seenIds = new Set();
 		settings.images = (Array.isArray(settings.images) ? settings.images : []).map(normalizeImageCarouselImage).filter((item) => {
 			if (!item.url || seenIds.has(item.id)) return false;
@@ -1616,6 +1632,7 @@
 		settings.linkCustomAttributes = normalizeAttributes(settings.linkCustomAttributes);
 		settings.direction = settings.direction === 'right' ? 'right' : 'left';
 		settings.arrowPosition = settings.arrowPosition === 'outside' ? 'outside' : 'inside';
+		['arrowPositionTablet', 'arrowPositionMobile'].forEach((key) => { settings[key] = settings[key] === '' || ['inside', 'outside'].includes(settings[key]) ? settings[key] : ''; });
 		settings.paginationPosition = settings.paginationPosition === 'inside' ? 'inside' : 'outside';
 		settings.imageSpacingMode = settings.imageSpacingMode === 'custom' ? 'custom' : 'default';
 		settings.imageBorderType = imageCarouselBorderOptions.includes(settings.imageBorderType) ? settings.imageBorderType : 'default';
@@ -4857,7 +4874,7 @@
 				showIconLibraryModal.value = true;
 			}
 			async function openImageCarouselArrowIconLibrary(settingKey, node = selectedNode.value) {
-				if (!node || node.type !== 'image_carousel' || !['previousArrowIcon', 'nextArrowIcon'].includes(settingKey)) return;
+				if (!node || !['image_carousel', 'hero_slider', 'media_carousel', 'testimonial_carousel'].includes(node.type) || !['previousArrowIcon', 'nextArrowIcon'].includes(settingKey)) return;
 				await ensureIconLibraryLoaded();
 				const parsed = parseIconWidgetClassParts(node.settings?.[settingKey]);
 				iconLibraryTargetNodeId.value = String(node.id || '');
@@ -4947,7 +4964,7 @@
 					closeIconLibrary();
 					return;
 				}
-				if (node && node.type === 'image_carousel' && ['previousArrowIcon', 'nextArrowIcon'].includes(settingKey)) {
+				if (node && ['image_carousel', 'hero_slider', 'media_carousel'].includes(node.type) && ['previousArrowIcon', 'nextArrowIcon'].includes(settingKey)) {
 					if (!node.settings || typeof node.settings !== 'object') node.settings = {};
 					node.settings[settingKey] = iconLibrarySelected.value.className;
 					node.settings[settingKey + 'Source'] = 'library';
@@ -5081,7 +5098,7 @@
 				target.entry[target.prefix + 'Class'] = '';
 			}
 			function chooseImageCarouselArrowSvg(settingKey, node = selectedNode.value) {
-				if (!node || node.type !== 'image_carousel' || !['previousArrowIcon', 'nextArrowIcon'].includes(settingKey)) return;
+				if (!node || !['image_carousel', 'hero_slider', 'media_carousel', 'testimonial_carousel'].includes(node.type) || !['previousArrowIcon', 'nextArrowIcon'].includes(settingKey)) return;
 				const markup = window.prompt('Paste trusted SVG markup', String(node.settings?.[settingKey + 'Svg'] || ''));
 				if (markup === null) return;
 				const sanitized = sanitizeAccordionSvgMarkup(markup);

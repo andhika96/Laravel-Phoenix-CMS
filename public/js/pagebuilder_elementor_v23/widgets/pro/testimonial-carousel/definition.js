@@ -90,7 +90,32 @@
         imageRadiusBottom: "50%",
         imageRadiusLeft: "50%",
         arrowsSize: "20px",
+        previousArrowIcon: "fas fa-chevron-left",
+        previousArrowIconSource: "library",
+        previousArrowIconSvg: "",
+        nextArrowIcon: "fas fa-chevron-right",
+        nextArrowIconSource: "library",
+        nextArrowIconSvg: "",
+        arrowPosition: "inside",
+        arrowPositionTablet: "",
+        arrowPositionMobile: "",
+        arrowEdgeOffset: "46px",
+        arrowEdgeOffsetTablet: "",
+        arrowEdgeOffsetMobile: "",
+        arrowButtonSize: "20px",
+        arrowButtonSizeTablet: "",
+        arrowButtonSizeMobile: "",
+        arrowIconSize: "10px",
+        arrowIconSizeTablet: "",
+        arrowIconSizeMobile: "",
         arrowColor: "#344054",
+        arrowBackground: "#ffffff",
+        arrowHoverColor: "#344054",
+        arrowHoverBackground: "#ffffff",
+        arrowRadiusTop: "50%",
+        arrowRadiusRight: "50%",
+        arrowRadiusBottom: "50%",
+        arrowRadiusLeft: "50%",
         dotsGap: "8px",
         dotsSize: "8px",
         paginationColor: "#d0d5dd",
@@ -124,7 +149,17 @@
         defaults,
         normalize(node) {
             const base = defaults();
-            const s = (node.settings = { ...base, ...(node.settings || {}) });
+            const existing = node.settings || {};
+            const missingArrowContract = {
+                button: existing.arrowButtonSize === undefined,
+                icon: existing.arrowIconSize === undefined,
+                edge: existing.arrowEdgeOffset === undefined,
+            };
+            const legacyIconSize = (value, fallback = "10px") => {
+                const match = String(value || "").trim().match(/^(\d+(?:\.\d+)?)px$/i);
+                return match ? `${Math.min(16, Number(match[1]) / 2)}px` : fallback;
+            };
+            const s = (node.settings = { ...base, ...existing });
             [
                 "slidesToShow",
                 "slidesToShowTablet",
@@ -141,6 +176,17 @@
             );
             ["alignment", "alignmentTablet", "alignmentMobile"].forEach((key) => {
                 s[key] = enumValue(s[key], ["", "left", "center", "right"], "");
+            });
+            s.arrowPosition = enumValue(s.arrowPosition, ["inside", "outside"], "inside");
+            ["arrowPositionTablet", "arrowPositionMobile"].forEach((key) => {
+                s[key] = s[key] === "" || ["inside", "outside"].includes(s[key]) ? s[key] : "";
+            });
+            if (missingArrowContract.button) s.arrowButtonSize = String(existing.arrowsSize || "20px");
+            if (missingArrowContract.icon) s.arrowIconSize = legacyIconSize(existing.arrowsSize);
+            if (missingArrowContract.edge) s.arrowEdgeOffset = "46px";
+            [["Tablet", "arrowsSizeTablet"], ["Mobile", "arrowsSizeMobile"]].forEach(([suffix, legacyKey]) => {
+                if (existing[legacyKey] && !existing["arrowButtonSize" + suffix]) s["arrowButtonSize" + suffix] = String(existing[legacyKey]);
+                if (existing[legacyKey] && !existing["arrowIconSize" + suffix]) s["arrowIconSize" + suffix] = legacyIconSize(existing[legacyKey], "");
             });
             s.pagination = enumValue(
                 s.pagination,
@@ -186,10 +232,23 @@
                 "imageSize",
                 "imageGap",
                 "arrowsSize",
+                "arrowEdgeOffset",
+                "arrowButtonSize",
+                "arrowIconSize",
+                "arrowRadiusTop",
+                "arrowRadiusRight",
+                "arrowRadiusBottom",
+                "arrowRadiusLeft",
                 "dotsGap",
                 "dotsSize",
             ].forEach((key) => {
                 s[key] = clampLength(s[key], base[key]);
+            });
+            ["previousArrowIcon", "nextArrowIcon"].forEach((key) => {
+                const fallback = key === "previousArrowIcon" ? "fas fa-chevron-left" : "fas fa-chevron-right";
+                s[key] = String(s[key] || fallback).trim() || fallback;
+                s[key + "Source"] = s[key + "Source"] === "svg" && String(s[key + "Svg"] || "").trim() ? "svg" : "library";
+                s[key + "Svg"] = s[key + "Source"] === "svg" ? String(s[key + "Svg"] || "").trim() : "";
             });
             const fallbackItems = base.items;
             s.items = (Array.isArray(s.items) && s.items.length ? s.items : fallbackItems).map(

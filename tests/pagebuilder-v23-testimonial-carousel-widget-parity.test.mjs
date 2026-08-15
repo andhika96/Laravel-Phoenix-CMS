@@ -49,6 +49,8 @@ function editorFor(settingsTab) {
     chooseMedia() {},
     openProIconLibrary() {},
     chooseProIconSvg() {},
+    openImageCarouselArrowIconLibrary() {},
+    chooseImageCarouselArrowSvg() {},
     setResponsiveDevice() {},
     openControlResponsiveMenu() {},
     applyResponsiveDevice() {},
@@ -79,6 +81,24 @@ const testimonialSettings = {
   slidesToScroll: 1,
   width: '100%',
   arrows: true,
+  previousArrowIcon: 'fas fa-angle-left',
+  previousArrowIconSource: 'library',
+  previousArrowIconSvg: '',
+  nextArrowIcon: 'fas fa-angle-right',
+  nextArrowIconSource: 'library',
+  nextArrowIconSvg: '',
+  arrowPosition: 'outside',
+  arrowEdgeOffset: '12px',
+  arrowButtonSize: '44px',
+  arrowIconSize: '19px',
+  arrowColor: '#112233',
+  arrowBackground: '#ddeeff',
+  arrowHoverColor: '#ffffff',
+  arrowHoverBackground: '#334455',
+  arrowRadiusTop: '4px',
+  arrowRadiusRight: '8px',
+  arrowRadiusBottom: '12px',
+  arrowRadiusLeft: '16px',
   pagination: 'dots',
   transitionSpeed: 500,
   autoplay: true,
@@ -120,12 +140,22 @@ test('Testimonial Carousel registers as a Pro widget with mapped Elementor defau
   assert.equal(defaults.transitionSpeed, 500);
   assert.equal(defaults.autoplaySpeed, 5000);
   assert.equal(defaults.imageResolution, 'full');
+  assert.equal(defaults.previousArrowIcon, 'fas fa-chevron-left');
+  assert.equal(defaults.nextArrowIcon, 'fas fa-chevron-right');
+  assert.equal(defaults.arrowPosition, 'inside');
+  assert.equal(defaults.arrowEdgeOffset, '46px');
+  assert.equal(defaults.arrowButtonSize, '20px');
+  assert.equal(defaults.arrowIconSize, '10px');
 
   const normalized = definition.normalize({ settings: { skin: 'invalid', layout: 'invalid', pagination: 'invalid', items: [] } });
   assert.equal(normalized.settings.skin, 'default');
   assert.equal(normalized.settings.layout, 'image_inline');
   assert.equal(normalized.settings.pagination, 'dots');
   assert.equal(normalized.settings.items.length, 3);
+
+  const legacy = definition.normalize({ settings: { arrowsSize: '34px' } });
+  assert.equal(legacy.settings.arrowButtonSize, '34px');
+  assert.equal(legacy.settings.arrowIconSize, '16px');
 });
 
 test('Testimonial Carousel settings expose mapped Content, Style, responsive, and Advanced controls', async () => {
@@ -143,7 +173,7 @@ test('Testimonial Carousel settings expose mapped Content, Style, responsive, an
     node: { type: 'testimonial_carousel', settings: testimonialSettings },
     editor: editorFor('style'),
   }));
-  for (const label of ['Space Between', 'Background Color', 'Border Width', 'Border Radius', 'Padding', 'Gap', 'Text Color', 'Text Stroke', 'Text Shadow', 'Name', 'Title', 'Size', 'Image', 'Border Color', 'Navigation', 'Space Between Dots', 'Active Color']) {
+  for (const label of ['Space Between', 'Background Color', 'Border Width', 'Border Radius', 'Padding', 'Gap', 'Text Color', 'Text Stroke', 'Text Shadow', 'Name', 'Title', 'Size', 'Image', 'Border Color', 'Navigation', 'Previous Arrow Icon', 'Next Arrow Icon', 'Position', 'Edge Offset', 'Button Size', 'Icon Size', 'Icon Color', 'Button Background', 'Hover Icon Color', 'Hover Background', 'Button Radius', 'Space Between Dots', 'Active Color']) {
     assert.match(styleHtml, new RegExp(label));
   }
 
@@ -173,16 +203,27 @@ test('Testimonial Carousel canvas renders safe content and interactive carousel 
   assert.match(html, /avatar\.jpg/);
   assert.match(html, /Previous slide/);
   assert.match(html, /Next slide/);
+  assert.match(html, /arrow-position-outside/);
+  assert.match(html, /fa-angle-left/);
+  assert.match(html, /fa-angle-right/);
+  assert.match(html, /--carousel-arrow-button-size:44px/);
+  assert.match(html, /--carousel-arrow-icon-size:19px/);
+  assert.match(html, /--carousel-arrow-edge-position:calc\(0px - 44px - 12px\)/);
+  assert.match(html, /--carousel-arrow-color:#112233/);
+  assert.match(html, /--carousel-arrow-background:#ddeeff/);
+  assert.match(html, /--carousel-arrow-hover-color:#ffffff/);
+  assert.match(html, /--carousel-arrow-hover-background:#334455/);
+  assert.match(html, /--carousel-arrow-radius:4px 8px 12px 16px/);
   assert.match(html, /testimonial-identity-align:flex-end/);
   assert.match(html, /text-shadow/);
   assert.match(html, /webkit-text-stroke/);
 
   const canvasSource = await source('public/js/pagebuilder_elementor_v23/widgets/pro/shared/Canvas.vue');
   const rendererSource = await source('resources/views/pagebuilder_elementor_v23/partials/render_pro_widget.blade.php');
-  assert.match(canvasSource, /\.pb-pro-testimonial-carousel \.pb-pro-arrow--prev[\s\S]*?left: var\(--carousel-arrow-gutter, 46px\)/);
-  assert.match(canvasSource, /\.pb-pro-testimonial-carousel \.pb-pro-arrow--next[\s\S]*?right: var\(--carousel-arrow-gutter, 46px\)/);
-  assert.match(rendererSource, /\.pb-pro-testimonial-carousel \.pb-pro-arrow--prev\{left:var\(--carousel-arrow-gutter,46px\)/);
-  assert.match(rendererSource, /\.pb-pro-testimonial-carousel \.pb-pro-arrow--next\{right:var\(--carousel-arrow-gutter,46px\)/);
+  assert.match(canvasSource, /\.pb-pro-testimonial-carousel \.pb-pro-arrow--prev[\s\S]*?left: var\(--carousel-arrow-edge-position, 46px\)/);
+  assert.match(canvasSource, /\.pb-pro-testimonial-carousel \.pb-pro-arrow--next[\s\S]*?right: var\(--carousel-arrow-edge-position, 46px\)/);
+  assert.match(rendererSource, /\.pb-pro-testimonial-carousel \.pb-pro-arrow--prev\{left:var\(--carousel-arrow-edge-position,46px\)/);
+  assert.match(rendererSource, /\.pb-pro-testimonial-carousel \.pb-pro-arrow--next\{right:var\(--carousel-arrow-edge-position,46px\)/);
 });
 
 test('Testimonial Carousel bubble skin emits a CSS quote escape, not a literal backslash', async () => {

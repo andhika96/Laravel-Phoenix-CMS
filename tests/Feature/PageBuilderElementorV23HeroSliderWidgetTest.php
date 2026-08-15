@@ -42,6 +42,21 @@ class PageBuilderElementorV23HeroSliderWidgetTest extends TestCase
                             'imageUrlMobile' => '/assets/hero-mobile.webp',
                             'imageAlt' => '<unsafe alt>',
                             'title' => '<Unsafe title>',
+                            'positioningMode' => 'independent',
+                            'titleAnchor' => 'top-center',
+                            'titleX' => '50%',
+                            'titleY' => '12%',
+                            'titleWidth' => '80%',
+                            'titleAlign' => 'center',
+                            'styleOverride' => true,
+                            'slideTitleColor' => '#123456',
+                            'buttons' => [[
+                                'text' => 'Watch',
+                                'actionType' => 'video_popup',
+                                'videoSource' => 'youtube',
+                                'videoUrl' => 'https://www.youtube.com/watch?v=h529sg3pEV4',
+                                'cssClass' => 'campaign-cta .secondary <unsafe>',
+                            ]],
                         ],
                         [
                             'id' => 'video-slide',
@@ -78,6 +93,10 @@ class PageBuilderElementorV23HeroSliderWidgetTest extends TestCase
         $this->assertStringContainsString('/assets/poster.webp', $html);
         $this->assertStringContainsString('/assets/hero-tablet.webp', $html);
         $this->assertStringContainsString('/assets/hero-mobile.webp', $html);
+        $this->assertStringContainsString('is-independent', $html);
+        $this->assertStringContainsString('data-hero-media', $html);
+        $this->assertStringContainsString('class="pb-hero-slider__button campaign-cta secondary unsafe"', $html);
+        $this->assertStringContainsString('--hero-slider-title-color:#123456', $html);
         $this->assertStringContainsString('adaptive', $html);
         $this->assertStringNotContainsString('javascript:', $html);
         $this->assertStringNotContainsString('<Unsafe title>', $html);
@@ -105,5 +124,89 @@ class PageBuilderElementorV23HeroSliderWidgetTest extends TestCase
         $this->assertStringContainsString('data-video-provider="embed"', $html);
         $this->assertStringContainsString('https://example.com/embed/video-1', $html);
         $this->assertStringContainsString('data-video-duration-supported="false"', $html);
+    }
+
+    public function test_frontend_renderer_keeps_legacy_slide_content_at_the_normalizer_position(): void
+    {
+        $module = config('pagebuilder_elementor_v23_widgets.hero_slider');
+        $html = view($module['view'], [
+            'node' => [
+                'id' => 'hero-slider-legacy-position',
+                'type' => 'hero_slider',
+                'settings' => [
+                    'slides' => [[
+                        'mediaType' => 'image',
+                        'title' => 'Legacy content',
+                    ]],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('is-grouped', $html);
+        $this->assertStringContainsString('left:8%;top:86%;width:70%', $html);
+        $this->assertStringContainsString('transform:translate(0,-100%)', $html);
+    }
+
+    public function test_frontend_renderer_accepts_responsive_image_without_desktop_source_and_custom_arrow_icons(): void
+    {
+        $module = config('pagebuilder_elementor_v23_widgets.hero_slider');
+        $html = view($module['view'], [
+            'node' => [
+                'id' => 'hero-slider-responsive-image',
+                'type' => 'hero_slider',
+                'settings' => [
+                    'previousArrowIcon' => 'fas fa-circle-left',
+                    'nextArrowIcon' => 'fas fa-circle-right',
+                    'arrowButtonSize' => '44px',
+                    'arrowIconSize' => '18px',
+                    'arrowPosition' => 'outside',
+                    'arrowEdgeOffset' => '12px',
+                    'arrowPositionTablet' => 'inside',
+                    'arrowEdgeOffsetTablet' => '20px',
+                    'slides' => [
+                        ['mediaType' => 'image', 'imageUrl' => '', 'imageUrlTablet' => '/assets/tablet-only.webp', 'imageUrlMobile' => '/assets/mobile-only.webp'],
+                        ['mediaType' => 'image', 'imageUrl' => '/assets/second.webp'],
+                    ],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('<picture>', $html);
+        $this->assertStringContainsString('src="/assets/tablet-only.webp"', $html);
+        $this->assertStringContainsString('srcset="/assets/mobile-only.webp"', $html);
+        $this->assertStringContainsString('class="fas fa-circle-left"', $html);
+        $this->assertStringContainsString('class="fas fa-circle-right"', $html);
+        $this->assertStringContainsString('--hero-slider-arrow-button-size:44px', $html);
+        $this->assertStringContainsString('--hero-slider-arrow-icon-size:18px', $html);
+        $this->assertStringContainsString('--hero-slider-arrow-edge-position:calc(0px - var(--hero-slider-arrow-button-size) - 12px)', $html);
+        $this->assertStringContainsString('--hero-slider-arrow-overflow:visible', $html);
+        $this->assertStringContainsString('--hero-slider-arrow-edge-position:20px', $html);
+    }
+
+    public function test_frontend_renderer_exposes_exact_custom_pagination_offsets(): void
+    {
+        $module = config('pagebuilder_elementor_v23_widgets.hero_slider');
+        $html = view($module['view'], [
+            'node' => [
+                'id' => 'hero-slider-pagination-offsets',
+                'type' => 'hero_slider',
+                'settings' => [
+                    'direction' => 'horizontal',
+                    'paginationPlacementModeHorizontal' => 'custom',
+                    'paginationPositionHorizontal' => 'center',
+                    'paginationOffsetXHorizontal' => '-12px',
+                    'paginationOffsetYHorizontal' => '8px',
+                    'slides' => [
+                        ['mediaType' => 'image', 'imageUrl' => '/assets/first.webp'],
+                        ['mediaType' => 'image', 'imageUrl' => '/assets/second.webp'],
+                    ],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('data-position="center"', $html);
+        $this->assertStringContainsString('--hero-slider-pagination-offset-x:-12px', $html);
+        $this->assertStringContainsString('--hero-slider-pagination-offset-y:8px', $html);
+        $this->assertStringContainsString('&amp;quot;paginationOffsetXHorizontal&amp;quot;:&amp;quot;-12px&amp;quot;', $html);
     }
 }

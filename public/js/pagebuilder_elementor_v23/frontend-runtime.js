@@ -1198,10 +1198,23 @@
 		function direction() { return deviceValue('direction', 'horizontal') === 'vertical' ? 'vertical' : 'horizontal'; }
 		function paginationPosition() {
 			const vertical = direction() === 'vertical';
+			const modeBase = vertical ? 'paginationPlacementModeVertical' : 'paginationPlacementModeHorizontal';
+			const alignmentBase = vertical ? 'paginationAlignmentVertical' : 'paginationAlignmentHorizontal';
 			const base = vertical ? 'paginationPositionVertical' : 'paginationPositionHorizontal';
 			const fallback = vertical ? 'center-right' : 'bottom-center';
+			const mode = String(deviceValue(modeBase, 'basic') || 'basic');
+			if (mode !== 'custom') {
+				const alignment = String(deviceValue(alignmentBase, 'center') || 'center');
+				if (vertical) return { top: 'top-right', bottom: 'bottom-right' }[alignment] || 'center-right';
+				return { left: 'bottom-left', right: 'bottom-right' }[alignment] || 'bottom-center';
+			}
 			const value = String(deviceValue(base, fallback) || fallback);
 			return ['top-left', 'top-center', 'top-right', 'center-left', 'center', 'center-right', 'bottom-left', 'bottom-center', 'bottom-right'].includes(value) ? value : fallback;
+		}
+		function paginationOffset(coordinate) {
+			const axis = direction() === 'vertical' ? 'Vertical' : 'Horizontal';
+			const value = String(deviceValue('paginationOffset' + coordinate + axis, '0px') || '0px').trim();
+			return /^-?\d+(?:\.\d+)?(?:px|%|em|rem)$/.test(value) ? value : '0px';
 		}
 		function maximum() { return Math.max(0, slides.length - 1); }
 		function normalize(index) {
@@ -1311,7 +1324,7 @@
 			if (track) { track.style.transitionDuration = (prefersReducedMotion() ? 0 : Math.max(0, Number(config.transitionSpeed) || 600)) + 'ms'; track.style.transform = config.transition === 'fade' ? '' : (currentDirection === 'vertical' ? 'translate3d(0,-' + (active * 100) + '%,0)' : 'translate3d(-' + (active * 100) + '%,0,0)'); }
 			slides.forEach(function (slide, slideIndex) { const selected = slideIndex === active; slide.classList.toggle('is-active', selected); slide.setAttribute('aria-hidden', selected ? 'false' : 'true'); syncPoster(states[slideIndex]); });
 			dots.forEach(function (dot, dotIndex) { const selected = dotIndex === active; dot.classList.toggle('is-active', selected); dot.setAttribute('aria-current', selected ? 'true' : 'false'); dot.setAttribute('aria-selected', selected ? 'true' : 'false'); });
-			const pagination = root.querySelector(':scope [data-hero-pagination]'); if (pagination) { pagination.setAttribute('data-orientation', currentDirection); pagination.setAttribute('data-position', paginationPosition()); }
+			const pagination = root.querySelector(':scope [data-hero-pagination]'); if (pagination) { pagination.setAttribute('data-orientation', currentDirection); pagination.setAttribute('data-position', paginationPosition()); pagination.style.setProperty('--hero-slider-pagination-offset-x', paginationOffset('X')); pagination.style.setProperty('--hero-slider-pagination-offset-y', paginationOffset('Y')); }
 			if (previous) previous.disabled = !config.loop && !config.rewind && active === 0;
 			if (next) next.disabled = !config.loop && !config.rewind && active === maximum();
 			updateHeight();
@@ -1345,6 +1358,22 @@
 				});
 			});
 		}
+		root.querySelectorAll?.('[data-hero-media]').forEach(function (trigger) {
+			trigger.addEventListener('click', function () {
+				const styles = window.getComputedStyle ? window.getComputedStyle(root) : null;
+				openMediaLightbox(
+					trigger.getAttribute('data-media-src'),
+					trigger.getAttribute('data-media-type'),
+					trigger.getAttribute('data-media-alt'),
+					{
+						background: styles?.getPropertyValue('--hero-slider-modal-background').trim() || config.modalBackground,
+						uiColor: styles?.getPropertyValue('--hero-slider-modal-ui').trim() || config.modalUiColor,
+						uiHoverColor: styles?.getPropertyValue('--hero-slider-modal-ui-hover').trim() || config.modalUiHoverColor,
+						videoWidth: styles?.getPropertyValue('--hero-slider-modal-video-width').trim() || config.modalVideoWidth,
+					},
+				);
+			});
+		});
 		previous?.addEventListener('click', function () { goTo(previousIndex(), 'arrow'); });
 		next?.addEventListener('click', function () { goTo(nextIndex(), 'arrow'); });
 		dots.forEach(function (dot) { dot.addEventListener('click', function () { goTo(dot.getAttribute('data-index') ?? dot.dataset.index, 'pagination'); }); });

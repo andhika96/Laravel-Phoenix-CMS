@@ -97,6 +97,12 @@ test('Media Carousel registers as a Pro widget with all three Elementor skins', 
   assert.equal(defaults.skin, 'carousel');
   assert.equal(defaults.pagination, 'dots');
   assert.equal(defaults.autoplay, true);
+  assert.equal(defaults.arrowPosition, 'inside');
+  assert.equal(defaults.arrowEdgeOffset, '46px');
+  assert.equal(defaults.arrowButtonSize, '20px');
+  assert.equal(defaults.arrowIconSize, '10px');
+  assert.equal(defaults.previousArrowIcon, 'fas fa-chevron-left');
+  assert.equal(defaults.nextArrowIcon, 'fas fa-chevron-right');
   assert.deepEqual(Array.from(defaults.skins), ['carousel', 'slideshow', 'coverflow']);
 });
 
@@ -120,7 +126,7 @@ test('Media Carousel settings expose mapped Content, conditional skins, Style an
     node: { type: 'media_carousel', settings: { ...baseSettings } },
     editor: editorFor('style'),
   }));
-  for (const label of ['Space Between', 'Background Color', 'Border Width', 'Border Radius', 'Padding', 'Navigation', 'Arrows', 'Pagination', 'Play Icon', 'Overlay', 'Text Color', 'Icon Size', 'Lightbox', 'UI Color', 'UI Hover Color', 'Video Width']) {
+  for (const label of ['Space Between', 'Background Color', 'Border Width', 'Border Radius', 'Padding', 'Navigation', 'Arrows', 'Previous Arrow Icon', 'Next Arrow Icon', 'Position', 'Edge Offset', 'Button Size', 'Icon Size', 'Icon Color', 'Button Background', 'Hover Icon Color', 'Hover Background', 'Button Radius', 'Pagination', 'Play Icon', 'Overlay', 'Text Color', 'Lightbox', 'UI Color', 'UI Hover Color', 'Video Width']) {
     assert.match(styleHtml, new RegExp(label));
   }
 
@@ -152,28 +158,46 @@ test('Media Carousel canvas renders slideshow thumbnails, media overlay and inte
   assert.match(canvasSource, /\.pb-pro-media-lightbox__close:(?:hover|focus-visible)[^{]*\{[^}]*var\(--media-lightbox-ui-hover/);
 });
 
-test('Media Carousel arrows stay fully inside the viewport edge at every configured size', async () => {
-  const canvasSource = await source('public/js/pagebuilder_elementor_v23/widgets/pro/shared/Canvas.vue');
-  const frontendSource = await source('resources/views/pagebuilder_elementor_v23/partials/render_pro_widget.blade.php');
+test('Media Carousel canvas applies complete responsive arrow button styling and custom icons', async () => {
+  const component = await loadSfc('public/js/pagebuilder_elementor_v23/widgets/pro/shared/Canvas.vue');
+  const html = await renderToString(Vue.createSSRApp(component, {
+    item: {
+      id: 'media-arrow-test',
+      type: 'media_carousel',
+      settings: {
+        ...baseSettings,
+        slidesToShow: 1,
+        previousArrowIcon: 'fas fa-angle-left',
+        nextArrowIcon: 'fas fa-angle-right',
+        arrowPosition: 'outside',
+        arrowEdgeOffset: '12px',
+        arrowButtonSize: '44px',
+        arrowIconSize: '19px',
+        arrowColor: '#112233',
+        arrowBackground: '#ddeeff',
+        arrowHoverColor: '#ffffff',
+        arrowHoverBackground: '#334455',
+        arrowRadiusTop: '4px',
+        arrowRadiusRight: '8px',
+        arrowRadiusBottom: '12px',
+        arrowRadiusLeft: '16px',
+      },
+    },
+    responsiveDevice: 'desktop',
+  }));
 
-  assert.match(canvasSource, /\.pb-pro-carousel\s*\{[^}]*--carousel-arrow-gutter:\s*46px;[^}]*padding:\s*0 var\(--carousel-arrow-gutter\) 24px;/s);
-  assert.match(canvasSource, /\.pb-pro-media-carousel \.pb-pro-arrow--prev\s*\{[^}]*left:\s*var\(--carousel-arrow-gutter, 46px\);[^}]*transform:\s*translateY\(-50%\);/s);
-  assert.match(canvasSource, /\.pb-pro-media-carousel \.pb-pro-arrow--next\s*\{[^}]*right:\s*var\(--carousel-arrow-gutter, 46px\);[^}]*transform:\s*translateY\(-50%\);/s);
+  for (const declaration of [
+    '--carousel-arrow-button-size:44px',
+    '--carousel-arrow-icon-size:19px',
+    '--carousel-arrow-edge-position:calc(0px - 44px - 12px)',
+    '--arrow-color:#112233',
+    '--arrow-background:#ddeeff',
+    '--arrow-hover-color:#ffffff',
+    '--arrow-hover-background:#334455',
+    '--carousel-arrow-radius:4px 8px 12px 16px',
+  ]) assert.match(html, new RegExp(declaration.replace(/[()]/g, '\\$&')));
 
-  assert.match(frontendSource, /\.pb-pro-media-carousel\{--carousel-arrow-gutter:46px\}/);
-  assert.match(frontendSource, /\.pb-pro-media-carousel \.pb-pro-arrow\{[^}]*width:var\(--carousel-arrow-size,24px\);[^}]*height:var\(--carousel-arrow-size,24px\)/);
-  assert.match(frontendSource, /\.pb-pro-media-carousel \.pb-pro-arrow--prev\{left:var\(--carousel-arrow-gutter,46px\);transform:translateY\(-50%\)\}/);
-  assert.match(frontendSource, /\.pb-pro-media-carousel \.pb-pro-arrow--next\{right:var\(--carousel-arrow-gutter,46px\);transform:translateY\(-50%\)\}/);
-});
-
-test('Media Carousel arrow icons stay centered and scale inside small buttons', async () => {
-  const canvasSource = await source('public/js/pagebuilder_elementor_v23/widgets/pro/shared/Canvas.vue');
-  const frontendSource = await source('resources/views/pagebuilder_elementor_v23/partials/render_pro_widget.blade.php');
-
-  assert.match(canvasSource, /\.pb-pro-media-carousel \.pb-pro-arrow\s*\{[^}]*display:\s*grid;[^}]*place-items:\s*center;[^}]*padding:\s*0;[^}]*line-height:\s*1;/s);
-  assert.match(canvasSource, /\.pb-pro-media-carousel \.pb-pro-arrow\s*\{[^}]*font-size:\s*var\(--carousel-arrow-size, 20px\);/s);
-  assert.match(canvasSource, /\.pb-pro-media-carousel \.pb-pro-arrow\s*>\s*i\s*\{[^}]*font-size:\s*min\(50%, 16px\);[^}]*line-height:\s*1;/s);
-
-  assert.match(frontendSource, /\.pb-pro-media-carousel \.pb-pro-arrow\{[^}]*display:grid;[^}]*place-items:center;[^}]*padding:0;[^}]*line-height:1/);
-  assert.match(frontendSource, /\.pb-pro-media-carousel \.pb-pro-arrow>i\{font-size:min\(50%,16px\);line-height:1\}/);
+  assert.match(html, /arrow-position-outside/);
+  assert.match(html, /fa-angle-left/);
+  assert.match(html, /fa-angle-right/);
 });

@@ -82,7 +82,7 @@ test('the v2.3 properties panel matches the approved prototype density contract'
     assert.match(contract, /\.selection-summary small\s*\{[^}]*font-size:\s*8\.5px;/);
     assert.match(contract, /\.pb-collapsible > summary\s*\{[^}]*min-height:\s*34px(?:\s*!important)?;[^}]*font-size:\s*10px(?:\s*!important)?;/);
     assert.match(css, /\.side-panel \.v23-properties-section \.pb-collapsible > summary:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--brand\);/);
-    assert.match(contract, /\.pb-form-group\s*\{[^}]*margin-bottom:\s*11px(?:\s*!important)?;/);
+    assert.match(contract, /\.pb-form-group\s*\{[^}]*margin-bottom:\s*12px(?:\s*!important)?;/);
     assert.match(contract, /\.pb-form-label\s*\{[^}]*margin-bottom:\s*6px;[^}]*font-size:\s*9\.5px;[^}]*font-weight:\s*600;/);
     assert.match(contract, /:is\(\.pb-input, \.pb-select\)\s*\{[^}]*height:\s*34px;[^}]*font-size:\s*10px(?:\s*!important)?;/);
     assert.match(contract, /:is\(\.pb-textarea, textarea\.pb-input\)\s*\{[^}]*min-height:\s*76px;[^}]*font-size:\s*10px;/);
@@ -179,7 +179,7 @@ test('the shared density contract covers every active four-side and three-cell r
     const linkedSides = classValues.filter((tokens) => tokens.includes('pb-four-sides-with-link'));
 
     assert.equal(plainSides.length, 10, 'all ten standalone four-side controls remain covered');
-    assert.equal(linkedSides.length, 15, 'all fifteen linked four-side controls remain covered');
+    assert.equal(linkedSides.length, 16, 'all sixteen linked four-side controls remain covered');
     assert.equal((widgetVueSources.match(/pb-advanced-edge-fields/g) || []).length >= 1, true, 'shared Advanced edge controls remain covered');
     assert.equal((widgetSources.match(/pb-container-gap-control__values/g) || []).length, 4, 'Container and Container Fluid expose all four linked gap controls');
     assert.equal((widgetSources.match(/pb-range-number/g) || []).length, 4, 'Grid and Row Grid expose four direct three-cell range rows');
@@ -193,6 +193,6 @@ test('every responsive spacing side uses a numeric input with native steppers', 
 
     assert.equal(spacingInputs.length, 20, 'all Container, Container Fluid, Grid, and Row Grid spacing inputs are audited');
     spacingInputs.forEach((input) => assert.match(input, /\btype="number"/, input));
-    assert.equal(sideInputs.length, 33, 'all active side-input definitions across layout and widgets are audited');
+    assert.equal(sideInputs.length, 34, 'all active side-input definitions across layout and widgets are audited');
     sideInputs.forEach((input) => assert.match(input, /\btype="number"/, input));
 });

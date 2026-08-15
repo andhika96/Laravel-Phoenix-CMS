@@ -76,8 +76,32 @@
         slidePaddingBottom: "0px",
         slidePaddingLeft: "0px",
         arrowsSize: "20px",
+        previousArrowIcon: "fas fa-chevron-left",
+        previousArrowIconSource: "library",
+        previousArrowIconSvg: "",
+        nextArrowIcon: "fas fa-chevron-right",
+        nextArrowIconSource: "library",
+        nextArrowIconSvg: "",
+        arrowPosition: "inside",
+        arrowPositionTablet: "",
+        arrowPositionMobile: "",
+        arrowEdgeOffset: "46px",
+        arrowEdgeOffsetTablet: "",
+        arrowEdgeOffsetMobile: "",
+        arrowButtonSize: "20px",
+        arrowButtonSizeTablet: "",
+        arrowButtonSizeMobile: "",
+        arrowIconSize: "10px",
+        arrowIconSizeTablet: "",
+        arrowIconSizeMobile: "",
         arrowColor: "#ffffff",
         arrowBackground: "rgba(16,24,40,.5)",
+        arrowHoverColor: "#ffffff",
+        arrowHoverBackground: "rgba(16,24,40,.5)",
+        arrowRadiusTop: "50%",
+        arrowRadiusRight: "50%",
+        arrowRadiusBottom: "50%",
+        arrowRadiusLeft: "50%",
         paginationPosition: "outside",
         dotsGap: "8px",
         dotsSize: "8px",
@@ -106,7 +130,17 @@
         defaults,
         normalize(node) {
             const base = defaults();
-            const s = (node.settings = { ...base, ...(node.settings || {}) });
+            const existing = node.settings || {};
+            const missingArrowContract = {
+                button: existing.arrowButtonSize === undefined,
+                icon: existing.arrowIconSize === undefined,
+                edge: existing.arrowEdgeOffset === undefined,
+            };
+            const legacyIconSize = (value, fallback = "10px") => {
+                const match = String(value || "").trim().match(/^(\d+(?:\.\d+)?)px$/i);
+                return match ? `${Math.min(16, Number(match[1]) / 2)}px` : fallback;
+            };
+            const s = (node.settings = { ...base, ...existing });
             const enumValue = (value, allowed, fallback) =>
                 allowed.includes(value) ? value : fallback;
             const clampSlides = (value, fallback = 1) =>
@@ -120,6 +154,17 @@
             s.overlayIcon = enumValue(s.overlayIcon, ["search-plus", "plus-circle", "eye", "link"], "search-plus");
             s.overlayAnimation = enumValue(s.overlayAnimation, ["fade", "slide-up", "slide-down", "slide-right", "slide-left", "zoom-in"], "fade");
             s.imageFit = enumValue(s.imageFit, ["cover", "contain", "auto"], "cover");
+            s.arrowPosition = enumValue(s.arrowPosition, ["inside", "outside"], "inside");
+            ["arrowPositionTablet", "arrowPositionMobile"].forEach((key) => {
+                s[key] = s[key] === "" || ["inside", "outside"].includes(s[key]) ? s[key] : "";
+            });
+            if (missingArrowContract.button) s.arrowButtonSize = String(existing.arrowsSize || "20px");
+            if (missingArrowContract.icon) s.arrowIconSize = legacyIconSize(existing.arrowsSize);
+            if (missingArrowContract.edge) s.arrowEdgeOffset = "46px";
+            [["Tablet", "arrowsSizeTablet"], ["Mobile", "arrowsSizeMobile"]].forEach(([suffix, legacyKey]) => {
+                if (existing[legacyKey] && !existing["arrowButtonSize" + suffix]) s["arrowButtonSize" + suffix] = String(existing[legacyKey]);
+                if (existing[legacyKey] && !existing["arrowIconSize" + suffix]) s["arrowIconSize" + suffix] = legacyIconSize(existing[legacyKey], "");
+            });
             s.imageResolution = enumValue(s.imageResolution, ["thumbnail", "medium", "medium_large", "large", "1536x1536", "2048x2048", "full", "custom"], "full");
             s.thumbsRatio = enumValue(s.thumbsRatio, ["1:1", "4:3", "16:9", "21:9"], "21:9");
             ["slidesToShow", "slidesToShowTablet", "slidesToShowMobile", "slidesToScroll", "slidesToScrollTablet", "slidesToScrollMobile", "thumbsSlidesToShow", "thumbsSlidesToShowTablet", "thumbsSlidesToShowMobile"].forEach((key) => {
@@ -132,6 +177,12 @@
             s.autoplaySpeed = Math.max(100, Number(s.autoplaySpeed) || 5000);
             s.customImageWidth = Math.max(1, Math.min(4096, Number(s.customImageWidth) || 300));
             s.customImageHeight = Math.max(1, Math.min(4096, Number(s.customImageHeight) || 300));
+            ["previousArrowIcon", "nextArrowIcon"].forEach((key) => {
+                const fallback = key === "previousArrowIcon" ? "fas fa-chevron-left" : "fas fa-chevron-right";
+                s[key] = String(s[key] || fallback).trim() || fallback;
+                s[key + "Source"] = s[key + "Source"] === "svg" && String(s[key + "Svg"] || "").trim() ? "svg" : "library";
+                s[key + "Svg"] = s[key + "Source"] === "svg" ? String(s[key + "Svg"] || "").trim() : "";
+            });
             s.items = (Array.isArray(s.items) && s.items.length ? s.items : base.items).map((item, index) => {
                 const normalized = { ...media(`media-${index + 1}`), ...(item || {}) };
                 normalized.type = enumValue(normalized.type, ["image", "video"], "image");

@@ -2109,8 +2109,17 @@
                 </section-box>
                 <section-box title="Navigation" :open="true">
                     <div class="pb-subsection-title">Arrows</div>
-                    <size-control label="Size" base="arrowsSize" fallback="20px" :node="node" :editor="editor" :max="100" />
-                    <color-control label="Color" v-model="s.arrowColor" />
+                    <arrow-icon-picker label="Previous Arrow Icon" setting-key="previousArrowIcon" :node="node" :editor="editor" fallback="fas fa-chevron-left" />
+                    <arrow-icon-picker label="Next Arrow Icon" setting-key="nextArrowIcon" :node="node" :editor="editor" fallback="fas fa-chevron-right" />
+                    <responsive-select label="Position" base="arrowPosition" control-id="media-carousel-arrow-position" :node="node" :editor="editor" :options="insideOutsideOptions" />
+                    <size-control label="Edge Offset" base="arrowEdgeOffset" fallback="46px" :node="node" :editor="editor" :max="200" />
+                    <size-control label="Button Size" base="arrowButtonSize" fallback="20px" :node="node" :editor="editor" :min="12" :max="120" />
+                    <size-control label="Icon Size" base="arrowIconSize" fallback="10px" :node="node" :editor="editor" :max="80" />
+                    <color-control label="Icon Color" v-model="s.arrowColor" />
+                    <color-control label="Button Background" v-model="s.arrowBackground" />
+                    <color-control label="Hover Icon Color" v-model="s.arrowHoverColor" />
+                    <color-control label="Hover Background" v-model="s.arrowHoverBackground" />
+                    <sides-control label="Button Radius" base="arrowRadius" control-id="media-carousel-arrow-radius" :node="node" :editor="editor" />
                     <template v-if="s.skin !== 'slideshow'">
                         <div class="pb-subsection-title">Pagination</div>
                         <select-control label="Position" v-model="s.paginationPosition" :options="insideOutsideOptions" />
@@ -2345,8 +2354,17 @@
                 <section-box title="Navigation">
                     <template v-if="s.arrows">
                         <div class="pb-subsection-title">Arrows</div>
-                        <size-control label="Size" base="arrowsSize" fallback="20px" :node="node" :editor="editor" :max="100" />
-                        <color-control label="Color" v-model="s.arrowColor" />
+                        <arrow-icon-picker label="Previous Arrow Icon" setting-key="previousArrowIcon" :node="node" :editor="editor" fallback="fas fa-chevron-left" />
+                        <arrow-icon-picker label="Next Arrow Icon" setting-key="nextArrowIcon" :node="node" :editor="editor" fallback="fas fa-chevron-right" />
+                        <responsive-select label="Position" base="arrowPosition" control-id="testimonial-carousel-arrow-position" :node="node" :editor="editor" :options="insideOutsideOptions" />
+                        <size-control label="Edge Offset" base="arrowEdgeOffset" fallback="46px" :node="node" :editor="editor" :max="200" />
+                        <size-control label="Button Size" base="arrowButtonSize" fallback="20px" :node="node" :editor="editor" :min="12" :max="120" />
+                        <size-control label="Icon Size" base="arrowIconSize" fallback="10px" :node="node" :editor="editor" :max="80" />
+                        <color-control label="Icon Color" v-model="s.arrowColor" />
+                        <color-control label="Button Background" v-model="s.arrowBackground" />
+                        <color-control label="Hover Icon Color" v-model="s.arrowHoverColor" />
+                        <color-control label="Hover Background" v-model="s.arrowHoverBackground" />
+                        <sides-control label="Button Radius" base="arrowRadius" control-id="testimonial-carousel-arrow-radius" :node="node" :editor="editor" />
                     </template>
                     <template v-if="s.pagination !== 'none'">
                         <div class="pb-subsection-title">Pagination</div>
@@ -2718,6 +2736,16 @@ const ResponsiveMenu = {
     props: ["editor", "id"],
     template: `<div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="editor.openControlResponsiveMenu(id)" :title="'Responsive: '+editor.responsiveDeviceLabel()"><i :class="editor.responsiveDeviceIcon()"></i></button><div v-if="editor.isControlResponsiveMenuOpen(id)" class="pb-control-device-menu"><button v-for="device in editor.responsiveDevices" :key="id+'-'+device.value" type="button" class="pb-control-device-item" :class="{active:editor.responsiveDevice===device.value}" @click.stop="editor.applyResponsiveDevice(id,device.value)"><i :class="device.icon"></i><span>{{editor.deviceOptionLabel(device)}}</span></button></div></div>`,
 };
+const ResponsiveSelect = {
+    components: { ResponsiveMenu },
+    props: ["label", "base", "controlId", "node", "editor", "options"],
+    computed: {
+        value() {
+            return this.node.settings[this.editor.activeResponsiveKey(this.base)] || this.node.settings[this.base] || this.options?.[0]?.value || "";
+        },
+    },
+    template: `<div class="pb-form-group"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">{{label}}</label><responsive-menu :editor="editor" :id="controlId"/></div><select class="pb-select" :value="value" @change="editor.setResponsiveSetting(node.settings,base,$event.target.value)"><option v-for="option in options" :key="base+'-'+option.value" :value="option.value">{{option.label}}</option></select></div>`,
+};
 const SizeControl = {
     components: { ResponsiveMenu },
     props: {
@@ -2878,6 +2906,23 @@ const ProIconPicker = {
     },
     template: `<div class="pb-form-group"><label class="pb-form-label">{{label}}</label><div class="pb-pro-icon-picker"><button type="button" class="pb-icon-picker-field" title="Open Icon Library" @click="editor.openProIconLibrary(targetKey,itemId,node)"><div class="pb-icon-picker-preview"><i :class="source==='svg'?'fas fa-file-code':previewClass"></i></div><div class="pb-icon-picker-copy"><div class="pb-icon-picker-name">{{iconLabel}}</div><div class="pb-icon-picker-style">{{styleLabel}}</div></div><i class="fas fa-chevron-right"></i></button><div class="pb-pro-icon-picker__actions"><button type="button" title="Upload SVG" aria-label="Upload SVG" @click="editor.chooseProIconSvg(targetKey,itemId,node)"><i class="fas fa-upload"></i></button><button type="button" title="Reset Icon" aria-label="Reset Icon" @click="reset"><i class="fas fa-undo-alt"></i></button></div></div></div>`,
 };
+const ArrowIconPicker = {
+    props: ["label", "settingKey", "node", "editor", "fallback"],
+    computed: {
+        value() { return String(this.node.settings?.[this.settingKey] || this.fallback); },
+        source() { return this.node.settings?.[this.settingKey + "Source"] === "svg" ? "svg" : "library"; },
+        svgMarkup() { return String(this.node.settings?.[this.settingKey + "Svg"] || "").trim(); },
+        svgDataUri() { return this.svgMarkup.startsWith("<svg") ? "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(this.svgMarkup) : ""; },
+    },
+    methods: {
+        reset() {
+            this.node.settings[this.settingKey] = this.fallback;
+            this.node.settings[this.settingKey + "Source"] = "library";
+            this.node.settings[this.settingKey + "Svg"] = "";
+        },
+    },
+    template: `<div class="pb-form-group"><label class="pb-form-label">{{label}}</label><div class="pb-image-carousel-icon-picker"><button type="button" class="pb-image-carousel-icon-picker__button" :class="{'is-current':source==='library'&&value===fallback}" title="Default" @click="reset"><i :class="fallback"></i></button><button type="button" class="pb-image-carousel-icon-picker__button" title="Upload SVG" @click="editor.chooseImageCarouselArrowSvg(settingKey,node)"><i class="fas fa-upload"></i></button><button type="button" class="pb-image-carousel-icon-picker__button" :class="{'is-current':source==='library'&&value!==fallback}" title="Icon Library" @click="editor.openImageCarouselArrowIconLibrary(settingKey,node)"><img v-if="source==='svg'&&svgDataUri" :src="svgDataUri" alt=""><i v-else :class="value"></i></button></div></div>`,
+};
 const option = (value, label = value) => ({ value, label });
 export default {
     name: "ProWidgetSettings",
@@ -2887,6 +2932,7 @@ export default {
     },
     components: {
         SectionBox,
+        ResponsiveSelect,
         TextControl,
         TextareaControl,
         NumberControl,
@@ -2901,6 +2947,7 @@ export default {
         ResponsiveChoice,
         RepeaterList,
         ProIconPicker,
+        ArrowIconPicker,
     },
     data() {
         return {

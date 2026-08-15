@@ -28,6 +28,22 @@ class PageBuilderElementorV23TestimonialCarouselWidgetTest extends TestCase
                     'slidesToShowMobile' => 1,
                     'slidesToScroll' => 1,
                     'arrows' => true,
+                    'previousArrowIcon' => 'fas fa-angle-left',
+                    'previousArrowIconSource' => 'library',
+                    'nextArrowIcon' => 'fas fa-angle-right',
+                    'nextArrowIconSource' => 'library',
+                    'arrowPosition' => 'outside',
+                    'arrowEdgeOffset' => '12px',
+                    'arrowButtonSize' => '44px',
+                    'arrowIconSize' => '19px',
+                    'arrowColor' => '#112233',
+                    'arrowBackground' => '#ddeeff',
+                    'arrowHoverColor' => '#ffffff',
+                    'arrowHoverBackground' => '#334455',
+                    'arrowRadiusTop' => '4px',
+                    'arrowRadiusRight' => '8px',
+                    'arrowRadiusBottom' => '12px',
+                    'arrowRadiusLeft' => '16px',
                     'pagination' => 'dots',
                     'autoplay' => true,
                     'autoplaySpeed' => 5000,
@@ -51,5 +67,39 @@ class PageBuilderElementorV23TestimonialCarouselWidgetTest extends TestCase
         $this->assertStringNotContainsString('<script>alert(1)</script>', $html);
         $this->assertStringContainsString('Previous slide', $html);
         $this->assertStringContainsString('Next slide', $html);
+        foreach ([
+            'arrow-position-outside',
+            '--carousel-arrow-button-size:44px',
+            '--carousel-arrow-icon-size:19px',
+            '--carousel-arrow-edge-position:calc(0px - 44px - 12px)',
+            '--carousel-arrow-color:#112233',
+            '--carousel-arrow-background:#ddeeff',
+            '--carousel-arrow-hover-color:#ffffff',
+            '--carousel-arrow-hover-background:#334455',
+            '--carousel-arrow-radius:4px 8px 12px 16px',
+            'fas fa-angle-left',
+            'fas fa-angle-right',
+        ] as $expected) {
+            $this->assertStringContainsString($expected, $html);
+        }
+    }
+
+    public function test_frontend_renderer_preserves_legacy_testimonial_arrow_size(): void
+    {
+        $module = config('pagebuilder_elementor_v23_widgets.testimonial_carousel');
+        $html = view($module['view'], [
+            'node' => [
+                'id' => 'legacy-testimonial-carousel-arrow-test',
+                'type' => 'testimonial_carousel',
+                'settings' => [
+                    'arrows' => true,
+                    'arrowsSize' => '34px',
+                    'items' => [['id' => 'one', 'content' => 'Legacy']],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('--carousel-arrow-button-size:34px', $html);
+        $this->assertStringContainsString('--carousel-arrow-icon-size:16px', $html);
     }
 }
