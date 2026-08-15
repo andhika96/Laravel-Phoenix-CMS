@@ -30,7 +30,7 @@ async function loadSfc(relativePath) {
   const { descriptor, errors } = parse(contents, { filename });
   assert.deepEqual(errors, []);
   const component = Function(descriptor.script.content.replace(/export\s+default/, 'return'))();
-  component.render = Function('Vue', compile(descriptor.template.content, { mode: 'function', prefixIdentifiers: true }).code)(Vue);
+  component.render = Function('Vue', compile(descriptor.template.content, { mode: 'function' }).code)(Vue);
   return component;
 }
 

@@ -256,7 +256,7 @@
                 :style="slidesArrowStyle"
                 @click.stop="previous"
             >
-                <span v-if="mediaArrowIconSvg('previous')" class="pb-pro-arrow__svg" aria-hidden="true" v-html="mediaArrowIconSvg('previous')"></span><i v-else :class="mediaArrowIconClass('previous')" aria-hidden="true"></i></button
+                <i class="fas fa-chevron-left"></i></button
             ><button
                 v-if="hasArrows"
                 type="button"
@@ -266,7 +266,7 @@
                 :style="slidesArrowStyle"
                 @click.stop="next"
             >
-                <span v-if="mediaArrowIconSvg('next')" class="pb-pro-arrow__svg" aria-hidden="true" v-html="mediaArrowIconSvg('next')"></span><i v-else :class="mediaArrowIconClass('next')" aria-hidden="true"></i>
+                <i class="fas fa-chevron-right"></i>
             </button>
             <div v-if="hasDots" class="pb-pro-dots" role="tablist">
                 <button
@@ -653,7 +653,6 @@
             v-else-if="type === 'carousel'"
             data-pro-carousel
             class="pb-pro-carousel"
-            :class="['pagination-' + (s.paginationPosition || 'outside'), 'arrow-position-' + carouselArrowPosition, { 'is-image-stretch': s.imageStretch }]"
             :style="carouselRootStyle"
             tabindex="0"
             @keydown="onCarouselKeydown"
@@ -670,18 +669,30 @@
                     >
                         <img
                             v-if="entry.imageUrl"
-                            :src="reviewImageUrl(entry)"
-                            :alt="entry.imageAlt || entry.title || ''"
-                            :loading="s.lazyLoad ? 'lazy' : 'eager'"
-                            :style="{ objectFit: safeEnum(s.imageFit, ['cover', 'contain', 'auto'], 'cover'), height: s.imageStretch ? 'auto' : '140px' }"
+                            :src="safeMediaUrl(entry.imageUrl)"
+                            alt=""
                         />
                         <h3
-                                :style="carouselTitleStyle"
+                            :style="
+                                typographyStyle(
+                                    'carouselTitle',
+                                    '20px',
+                                    '600',
+                                    '1.3em',
+                                )
+                            "
                         >
                             {{ entry.title }}
                         </h3>
                         <p
-                                :style="carouselDescriptionStyle"
+                            :style="
+                                typographyStyle(
+                                    'carouselDescription',
+                                    '14px',
+                                    '400',
+                                    '1.5em',
+                                )
+                            "
                         >
                             {{ entry.description }}
                         </p>
@@ -697,7 +708,7 @@
                 :style="carouselArrowStyle"
                 @click.stop="previous"
             >
-                <span v-if="mediaArrowIconSvg('previous')" class="pb-pro-arrow__svg" aria-hidden="true" v-html="mediaArrowIconSvg('previous')"></span><i v-else :class="mediaArrowIconClass('previous')" aria-hidden="true"></i></button
+                <i class="fas fa-chevron-left"></i></button
             ><button
                 v-if="hasArrows"
                 type="button"
@@ -707,9 +718,9 @@
                 :style="carouselArrowStyle"
                 @click.stop="next"
             >
-                <span v-if="mediaArrowIconSvg('next')" class="pb-pro-arrow__svg" aria-hidden="true" v-html="mediaArrowIconSvg('next')"></span><i v-else :class="mediaArrowIconClass('next')" aria-hidden="true"></i>
+                <i class="fas fa-chevron-right"></i>
             </button>
-            <div v-if="hasDots && s.pagination === 'dots'" class="pb-pro-dots" role="tablist">
+            <div v-if="hasDots" class="pb-pro-dots" role="tablist">
                 <button
                     v-for="page in carouselPageCount"
                     :key="page"
@@ -720,12 +731,6 @@
                     data-pb-interactive="true"
                     @click.stop="selectSlide((page - 1) * carouselStep)"
                 ></button>
-            </div>
-            <div v-if="hasDots && s.pagination === 'fraction'" class="pb-pro-carousel__fraction" aria-live="polite">
-                {{ carouselDotIndex + 1 }} / {{ carouselPageCount }}
-            </div>
-            <div v-if="hasDots && s.pagination === 'progress'" class="pb-pro-carousel__progress" aria-hidden="true">
-                <span :style="{ width: ((carouselDotIndex + 1) / carouselPageCount * 100) + '%' }"></span>
             </div>
         </div>
 
@@ -823,7 +828,6 @@
             v-else-if="type === 'reviews'"
             data-pro-carousel
             class="pb-pro-carousel pb-pro-reviews"
-            :class="['pagination-' + (s.paginationPosition || 'outside'), 'arrow-position-' + carouselArrowPosition]"
             :style="reviewRootStyle"
             :aria-label="s.slidesName || 'Reviews'"
             tabindex="0"
@@ -848,8 +852,7 @@
                                 class="pb-pro-reviews__image"
                                 :src="reviewImageUrl(entry)"
                                 :loading="s.lazyLoad ? 'lazy' : 'eager'"
-                                :alt="entry.imageAlt || entry.name || ''"
-                                :style="reviewImageStyle"
+                                alt=""
                             />
                             <div class="pb-pro-reviews__identity">
                                 <strong :style="reviewNameStyle">{{ entry.name }}</strong>
@@ -927,7 +930,7 @@
                 data-pb-interactive="true"
                 :style="carouselArrowStyle"
                 @click.stop="previous"
-            ><span v-if="mediaArrowIconSvg('previous')" class="pb-pro-arrow__svg" aria-hidden="true" v-html="mediaArrowIconSvg('previous')"></span><i v-else :class="mediaArrowIconClass('previous')" aria-hidden="true"></i></button>
+            ><i class="fas fa-chevron-left"></i></button>
             <button
                 v-if="hasArrows"
                 type="button"
@@ -936,7 +939,7 @@
                 data-pb-interactive="true"
                 :style="carouselArrowStyle"
                 @click.stop="next"
-            ><span v-if="mediaArrowIconSvg('next')" class="pb-pro-arrow__svg" aria-hidden="true" v-html="mediaArrowIconSvg('next')"></span><i v-else :class="mediaArrowIconClass('next')" aria-hidden="true"></i></button>
+            ><i class="fas fa-chevron-right"></i></button>
             <div v-if="hasDots && s.pagination === 'dots'" class="pb-pro-dots" role="tablist">
                 <button
                     v-for="page in carouselPageCount"
@@ -1601,30 +1604,13 @@ export default {
             );
         },
         carouselRootStyle() {
-            const fallbackButtonSize = {
-                carousel: "34px",
-                reviews: "24px",
-                media_carousel: "20px",
-                testimonial_carousel: "20px",
-            }[this.type] || "34px";
-            const buttonSize = this.safeLength(
-                this.responsiveValue("arrowButtonSize", this.responsiveValue("arrowsSize", fallbackButtonSize)),
-                fallbackButtonSize,
-            );
-            const edgeOffset = this.safeLength(this.responsiveValue("arrowEdgeOffset", "46px"), "46px");
             return {
                 "--arrow-color": this.s.arrowColor || "#344054",
                 "--arrow-background": this.s.arrowBackground || "#fff",
-                "--carousel-arrow-size": buttonSize,
-                "--carousel-arrow-button-size": buttonSize,
-                "--carousel-arrow-icon-size": this.safeLength(this.responsiveValue("arrowIconSize", "10px"), "10px"),
-                "--carousel-arrow-edge-position": this.carouselArrowPosition === "outside" ? `calc(0px - ${buttonSize} - ${edgeOffset})` : edgeOffset,
-                "--carousel-arrow-overflow": this.carouselArrowPosition === "outside" ? "visible" : "hidden",
-                "--carousel-arrow-color": this.safeColor(this.s.arrowColor, "#344054"),
-                "--carousel-arrow-background": this.safeColor(this.s.arrowBackground, "#fff"),
-                "--carousel-arrow-hover-color": this.safeColor(this.s.arrowHoverColor, this.safeColor(this.s.arrowColor, "#344054")),
-                "--carousel-arrow-hover-background": this.safeColor(this.s.arrowHoverBackground, this.safeColor(this.s.arrowBackground, "#fff")),
-                "--carousel-arrow-radius": this.responsiveBoxValue("arrowRadius", "50%"),
+                "--carousel-arrow-size": this.safeLength(
+                    this.responsiveValue("arrowsSize", "34px"),
+                    "34px",
+                ),
                 "--carousel-dot-gap": this.safeLength(
                     this.responsiveValue("dotsGap", "8px"),
                     "8px",
@@ -1636,21 +1622,7 @@ export default {
                 "--pagination-color": this.s.paginationColor || "#d0d5dd",
                 "--pagination-active-color":
                     this.s.paginationActiveColor || "#6979f8",
-                "--carousel-pagination-color": this.s.paginationColor || "#d0d5dd",
-                "--carousel-pagination-active": this.s.paginationActiveColor || "#6979f8",
-                "--carousel-content-gap": this.safeLength(this.responsiveValue("contentGap", "10px"), "10px"),
-                "--carousel-image-fit": this.safeEnum(this.s.imageFit, ["cover", "contain", "auto"], "cover"),
-                "--carousel-title-color": this.safeColor(this.s.carouselTitleColor, "#101828"),
-                "--carousel-description-color": this.safeColor(this.s.carouselDescriptionColor, "#344054"),
             };
-        },
-        carouselArrowPosition() {
-            return this.safeEnum(this.responsiveValue("arrowPosition", "inside"), ["inside", "outside"], "inside");
-        },
-        navigationMode() {
-            if (["both", "arrows", "dots", "none"].includes(this.s.navigation)) return this.s.navigation;
-            if (this.s.arrows) return this.s.pagination === "none" ? "arrows" : "both";
-            return this.s.pagination === "none" ? "none" : "dots";
         },
         maxIndex() {
             return ["carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type)
@@ -1658,19 +1630,18 @@ export default {
                 : Math.max(0, this.itemCount - 1);
         },
         hasArrows() {
-            if (["reviews", "media_carousel", "testimonial_carousel"].includes(this.type)) {
-                return (this.type === "reviews" ? ["both", "arrows"].includes(this.navigationMode) : Boolean(this.s.arrows)) && this.maxIndex > 0;
-            }
+            if (["reviews", "media_carousel", "testimonial_carousel"].includes(this.type)) return Boolean(this.s.arrows) && this.maxIndex > 0;
             return (
                 ["both", "arrows"].includes(this.s.navigation) &&
                 this.maxIndex > 0
             );
         },
         hasDots() {
-            const enabled = ["slides", "carousel", "reviews"].includes(this.type)
-                ? ["both", "dots"].includes(this.navigationMode) && (this.type === "slides" || this.s.pagination !== "none")
-                : this.s.pagination !== "none";
-            return enabled && this.maxIndex > 0;
+            return (
+                (this.type === "slides"
+                    ? ["both", "dots"].includes(this.s.navigation)
+                    : this.s.pagination !== "none") && this.maxIndex > 0
+            );
         },
         buttonTypographyPrefix() {
             return (
@@ -1815,27 +1786,21 @@ export default {
             };
         },
         slidesStyle() {
-            const arrowsPosition = this.safeEnum(this.responsiveValue("arrowsPosition", "inside"), ["inside", "outside"], "inside");
-            const dotsPosition = this.safeEnum(this.responsiveValue("dotsPosition", "inside"), ["inside", "outside"], "inside");
-            const arrowsOutside = arrowsPosition === "outside";
-            const dotsOutside = dotsPosition === "outside";
-            const buttonSize = this.safeLength(this.responsiveValue("arrowButtonSize", "34px"), "34px");
-            const edgeOffset = this.safeLength(this.responsiveValue("arrowEdgeOffset", "10px"), "10px");
+            const arrowsOutside = this.s.arrowsPosition === "outside";
+            const dotsOutside = this.s.dotsPosition === "outside";
             return {
                 height: this.safeLength(
                     this.responsiveValue("height", "400px"),
                     "400px",
                 ),
                 overflow: arrowsOutside || dotsOutside ? "visible" : "hidden",
-                "--slides-arrow-offset": arrowsOutside ? `calc(0px - ${buttonSize} - ${edgeOffset})` : edgeOffset,
+                "--slides-arrow-offset": arrowsOutside ? "-42px" : "10px",
                 "--slides-dot-offset": dotsOutside ? "-24px" : "12px",
-                "--slides-arrow-button-size": buttonSize,
-                "--slides-arrow-icon-size": this.safeLength(this.responsiveValue("arrowIconSize", "10px"), "10px"),
-                "--slides-arrow-color": this.safeColor(this.s.arrowColor, this.safeColor(this.s.arrowsColor, "#fff")),
-                "--slides-arrow-background": this.safeColor(this.s.arrowBackground, "rgba(16,24,40,.5)"),
-                "--slides-arrow-hover-color": this.safeColor(this.s.arrowHoverColor, this.safeColor(this.s.arrowColor, "#fff")),
-                "--slides-arrow-hover-background": this.safeColor(this.s.arrowHoverBackground, "rgba(16,24,40,.7)"),
-                "--slides-arrow-radius": this.responsiveBoxValue("arrowRadius", "50%"),
+                "--slides-arrow-size": this.safeLength(
+                    this.responsiveValue("arrowsSize", "24px"),
+                    "24px",
+                ),
+                "--slides-arrow-color": this.s.arrowsColor || "#fff",
                 "--slides-dot-gap": this.safeLength(
                     this.responsiveValue("dotsGap", "8px"),
                     "8px",
@@ -1863,7 +1828,13 @@ export default {
             };
         },
         slidesArrowStyle() {
-            return {};
+            return {
+                color: this.s.arrowsColor || "#fff",
+                fontSize: this.safeLength(
+                    this.responsiveValue("arrowsSize", "24px"),
+                    "24px",
+                ),
+            };
         },
         headlineStyle() {
             return {
@@ -2414,18 +2385,6 @@ export default {
                 height: this.s.equalHeight ? "auto" : "max-content",
             };
         },
-        carouselTitleStyle() {
-            return {
-                ...this.typographyStyle("carouselTitle", "20px", "600", "1.3em"),
-                color: this.safeColor(this.s.carouselTitleColor, "#101828"),
-            };
-        },
-        carouselDescriptionStyle() {
-            return {
-                ...this.typographyStyle("carouselDescription", "14px", "400", "1.5em"),
-                color: this.safeColor(this.s.carouselDescriptionColor, "#344054"),
-            };
-        },
         mediaArrowPosition() {
             return this.safeEnum(this.responsiveValue("arrowPosition", "inside"), ["inside", "outside"], "inside");
         },
@@ -2503,9 +2462,6 @@ export default {
                     "15px",
                 ),
                 "--reviews-image-radius": this.responsiveBoxValue("imageRadius", "50%"),
-                "--reviews-image-fit": this.safeEnum(this.s.imageFit, ["cover", "contain", "auto"], "cover"),
-                "--reviews-image-border-color": this.safeColor(this.s.imageBorderColor, "#e4e7ec"),
-                "--reviews-image-border": this.s.imageBorder ? this.responsiveBoxValue("imageBorder", "1px") : "0px",
                 "--reviews-icon-size": this.safeLength(
                     this.responsiveValue("iconSize", "20px"),
                     "20px",
@@ -2531,14 +2487,6 @@ export default {
                 borderColor: this.s.slideBorderColor || "#e4e7ec",
                 borderWidth: this.responsiveBoxValue("slideBorder", "1px"),
                 borderRadius: this.responsiveBoxValue("slideRadius", "0px"),
-            };
-        },
-        reviewImageStyle() {
-            return {
-                objectFit: this.safeEnum(this.s.imageFit, ["cover", "contain", "auto"], "cover"),
-                borderStyle: "solid",
-                borderColor: this.safeColor(this.s.imageBorderColor, "#e4e7ec"),
-                borderWidth: this.s.imageBorder ? this.responsiveBoxValue("imageBorder", "1px") : "0px",
             };
         },
         reviewNameStyle() {
@@ -2680,7 +2628,10 @@ export default {
             return `${Number(value.toFixed(4))}${match[2] || "px"}`;
         },
         carouselArrowStyle() {
-            return {};
+            return {
+                color: this.s.arrowColor || "#344054",
+                background: this.s.arrowBackground || "#fff",
+            };
         },
         ctaStyle() {
             return {
@@ -2942,7 +2893,7 @@ export default {
             );
             const size = String(this.s.imageResolution || "full");
             if (
-                !["carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type) ||
+                !["reviews", "media_carousel", "testimonial_carousel"].includes(this.type) ||
                 size === "full" ||
                 !endpoint ||
                 !window.axios
@@ -4163,32 +4114,8 @@ export default {
     background: var(--slides-dot-active-color, #6979f8);
 }
 .pb-pro-slides .pb-pro-arrow {
-    display: grid;
-    width: var(--slides-arrow-button-size, 34px);
-    height: var(--slides-arrow-button-size, 34px);
-    place-items: center;
-    padding: 0;
-    border-radius: var(--slides-arrow-radius, 50%);
     color: var(--slides-arrow-color, #fff);
-    background: var(--slides-arrow-background, rgba(16, 24, 40, 0.5));
-    font-size: var(--slides-arrow-icon-size, 10px);
-    line-height: 1;
-}
-.pb-pro-slides .pb-pro-arrow:hover,
-.pb-pro-slides .pb-pro-arrow:focus-visible {
-    color: var(--slides-arrow-hover-color, var(--slides-arrow-color, #fff));
-    background: var(--slides-arrow-hover-background, var(--slides-arrow-background, rgba(16, 24, 40, 0.5)));
-}
-.pb-pro-slides .pb-pro-arrow > i,
-.pb-pro-slides .pb-pro-arrow__svg,
-.pb-pro-slides .pb-pro-arrow__svg > svg {
-    display: block;
-    width: 1em;
-    height: 1em;
-    line-height: 1;
-}
-.pb-pro-slides .pb-pro-arrow__svg > svg {
-    fill: currentColor;
+    font-size: var(--slides-arrow-size, 24px);
 }
 .pb-pro-slides__slide.transition-fade {
     animation: pb-pro-slides-fade 0.5s ease both;
@@ -4906,43 +4833,9 @@ export default {
     transition: transform 0.4s ease;
 }
 .pb-pro-carousel .pb-pro-arrow {
-    display: grid;
-    width: var(--carousel-arrow-button-size, var(--carousel-arrow-size, 34px));
-    height: var(--carousel-arrow-button-size, var(--carousel-arrow-size, 34px));
-    place-items: center;
-    padding: 0;
-    border-radius: var(--carousel-arrow-radius, 50%);
-    color: var(--carousel-arrow-color, var(--arrow-color, #344054));
-    background: var(--carousel-arrow-background, var(--arrow-background, #fff));
-    font-size: var(--carousel-arrow-icon-size, 10px);
-    line-height: 1;
+    width: var(--carousel-arrow-size, 34px);
+    height: var(--carousel-arrow-size, 34px);
 }
-.pb-pro-carousel .pb-pro-arrow:hover,
-.pb-pro-carousel .pb-pro-arrow:focus-visible {
-    color: var(--carousel-arrow-hover-color, var(--carousel-arrow-color, var(--arrow-color, #344054)));
-    background: var(--carousel-arrow-hover-background, var(--carousel-arrow-background, var(--arrow-background, #fff)));
-}
-.pb-pro-carousel .pb-pro-arrow > i,
-.pb-pro-carousel .pb-pro-arrow__svg,
-.pb-pro-carousel .pb-pro-arrow__svg > svg {
-    display: block;
-    width: 1em;
-    height: 1em;
-    line-height: 1;
-}
-.pb-pro-carousel .pb-pro-arrow__svg > svg { fill: currentColor; }
-.pb-pro-carousel .pb-pro-arrow--prev {
-    left: var(--carousel-arrow-edge-position, 46px);
-    transform: translateY(-50%);
-}
-.pb-pro-carousel .pb-pro-arrow--next {
-    right: var(--carousel-arrow-edge-position, 46px);
-    transform: translateY(-50%);
-}
-.pb-pro-carousel { overflow: var(--carousel-arrow-overflow, hidden); }
-.pb-pro-carousel.pagination-inside { padding-bottom: 0; }
-.pb-pro-carousel.pagination-inside .pb-pro-dots { bottom: 12px; }
-.pb-pro-carousel.pagination-outside .pb-pro-dots { bottom: 0; }
 .pb-pro-media-carousel .pb-pro-arrow,
 .pb-pro-testimonial-carousel .pb-pro-arrow {
     display: grid;
@@ -4994,27 +4887,15 @@ export default {
 .pb-pro-carousel .pb-pro-dots button {
     width: var(--carousel-dot-size, 8px);
     height: var(--carousel-dot-size, 8px);
-    background: var(--carousel-pagination-color, var(--pagination-color, #d0d5dd));
-}
-.pb-pro-carousel .pb-pro-dots button.active {
-    background: var(--carousel-pagination-active, var(--pagination-active-color, #6979f8));
 }
 .pb-pro-carousel__slide {
     min-width: 0;
 }
-.pb-pro-carousel:not(.pb-pro-media-carousel):not(.pb-pro-reviews):not(.pb-pro-testimonial-carousel) .pb-pro-carousel__slide {
-    display: flex;
-    flex-direction: column;
-    gap: var(--carousel-content-gap, 10px);
-}
 .pb-pro-carousel__slide img {
     width: 100%;
     height: 140px;
-    object-fit: var(--carousel-image-fit, cover);
+    object-fit: cover;
 }
-.pb-pro-carousel.is-image-stretch .pb-pro-carousel__slide img { height: auto; }
-.pb-pro-carousel__title { margin: 0; color: var(--carousel-title-color, #101828); }
-.pb-pro-carousel__description { margin: 0; color: var(--carousel-description-color, #344054); }
 .pb-pro-media-carousel {
     position: relative;
     max-width: 100%;
@@ -5130,9 +5011,7 @@ export default {
     width: var(--reviews-image-size, 50px) !important;
     height: var(--reviews-image-size, 50px) !important;
     border-radius: var(--reviews-image-radius, 50%);
-    border: solid var(--reviews-image-border-color, #e4e7ec);
-    border-width: var(--reviews-image-border, 0px);
-    object-fit: var(--reviews-image-fit, cover);
+    object-fit: cover;
 }
 .pb-pro-reviews__identity {
     display: grid;

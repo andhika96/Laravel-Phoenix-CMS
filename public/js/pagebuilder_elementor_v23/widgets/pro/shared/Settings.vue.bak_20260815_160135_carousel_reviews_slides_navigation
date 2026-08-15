@@ -802,46 +802,19 @@
                                 v-model="item.imageUrl"
                                 :editor="editor"
                                 :settings="item"
-                                setting-key="imageUrl" /><text-control
-                                label="Alt Text"
-                                v-model="item.imageAlt" /><link-field
+                                setting-key="imageUrl" /><link-field
                                 label="Link"
                                 :entry="item"
                                 :editor="editor" /></template></repeater-list
-                    ><select-control
-                        label="Image Resolution"
-                        v-model="s.imageResolution"
-                        :options="reviewImageSizes" /><template
-                        v-if="s.imageResolution === 'custom'"
-                        ><number-control
-                            label="Custom Width"
-                            v-model="s.customImageWidth"
-                            :min="1"
-                            :max="4096" /><number-control
-                            label="Custom Height"
-                            v-model="s.customImageHeight"
-                            :min="1"
-                            :max="4096" /></template
-                    ><select-control
-                        label="Image Fit"
-                        v-model="s.imageFit"
-                        :options="mediaCarouselImageFitOptions" /><toggle-control
-                        label="Image Stretch"
-                        v-model="s.imageStretch"
-                    /><toggle-control
-                        label="Lazy Load"
-                        v-model="s.lazyLoad"
-                    /><responsive-number
+                    ><responsive-number
                         label="Slides on display"
                         base="slidesToShow"
                         :node="node"
                         :editor="editor"
                         :min="1"
-                        :max="8" /><responsive-number
+                        :max="8" /><number-control
                         label="Slides on scroll"
-                        base="slidesToScroll"
-                        :node="node"
-                        :editor="editor"
+                        v-model="s.slidesToScroll"
                         :min="1"
                         :max="8" /><toggle-control
                         label="Equal Height"
@@ -866,7 +839,6 @@
                     ><select-control
                         label="Navigation"
                         v-model="s.navigation"
-                        @update:modelValue="syncNavigation"
                         :options="navigationOptions" /></section-box
                 ><section-box title="Pagination"
                     ><select-control
@@ -946,8 +918,6 @@
                                 :editor="editor"
                                 :settings="item"
                                 setting-key="imageUrl" /><text-control
-                                label="Alt Text"
-                                v-model="item.imageAlt" /><text-control
                                 label="Name"
                                 v-model="item.name" /><text-control
                                 label="Title"
@@ -995,11 +965,9 @@
                         :allowed-units="['%', 'px']"
                 /></section-box>
                 <section-box title="Additional Options" :open="true"
-                    ><select-control
-                        label="Navigation"
-                        v-model="s.navigation"
-                        :options="navigationOptions"
-                        @update:modelValue="syncNavigation" /><select-control
+                    ><toggle-control
+                        label="Arrows"
+                        v-model="s.arrows" /><select-control
                         label="Pagination"
                         v-model="s.pagination"
                         :options="paginationOptions" /><number-control
@@ -1031,10 +999,7 @@
                             v-model="s.customImageHeight"
                             :min="1"
                             :max="4096" /></template
-                        ><select-control
-                        label="Image Fit"
-                        v-model="s.imageFit"
-                        :options="mediaCarouselImageFitOptions" /><toggle-control
+                    ><toggle-control
                         label="Lazy Load"
                         v-model="s.lazyLoad"
                 /></section-box>
@@ -1388,30 +1353,36 @@
                         :node="node"
                         :editor="editor"
                 /></section-box>
-                <section-box title="Navigation" :open="true">
-                    <template v-if="['both', 'arrows'].includes(effectiveNavigation)">
-                        <div class="pb-subsection-title">Arrows</div>
-                        <arrow-icon-picker label="Previous Arrow Icon" setting-key="previousArrowIcon" :node="node" :editor="editor" fallback="fas fa-chevron-left" />
-                        <arrow-icon-picker label="Next Arrow Icon" setting-key="nextArrowIcon" :node="node" :editor="editor" fallback="fas fa-chevron-right" />
-                        <responsive-select label="Position" base="arrowsPosition" control-id="slides-arrow-position" :node="node" :editor="editor" :options="insideOutsideOptions" />
-                        <size-control label="Edge Offset" base="arrowEdgeOffset" fallback="10px" :node="node" :editor="editor" :max="200" />
-                        <size-control label="Button Size" base="arrowButtonSize" fallback="34px" :node="node" :editor="editor" :min="12" :max="120" />
-                        <size-control label="Icon Size" base="arrowIconSize" fallback="10px" :node="node" :editor="editor" :max="80" />
-                        <color-control label="Icon Color" v-model="s.arrowColor" />
-                        <color-control label="Button Background" v-model="s.arrowBackground" />
-                        <color-control label="Hover Icon Color" v-model="s.arrowHoverColor" />
-                        <color-control label="Hover Background" v-model="s.arrowHoverBackground" />
-                        <sides-control label="Button Radius" base="arrowRadius" control-id="slides-arrow-radius" :node="node" :editor="editor" />
-                    </template>
-                <template v-if="['both', 'dots'].includes(effectiveNavigation)">
-                        <div class="pb-subsection-title">Pagination</div>
-                        <responsive-select label="Position" base="dotsPosition" control-id="slides-dots-position" :node="node" :editor="editor" :options="insideOutsideOptions" />
-                        <size-control label="Size" base="dotsSize" fallback="8px" :node="node" :editor="editor" :max="100" />
-                        <size-control label="Space Between Dots" base="dotsGap" fallback="8px" :node="node" :editor="editor" :max="100" />
-                        <color-control label="Color" v-model="s.dotsColor" />
-                        <color-control label="Active Color" v-model="s.dotsActiveColor" />
-                    </template>
-                </section-box>
+                <section-box title="Navigation"
+                    ><select-control
+                        label="Arrows Position"
+                        v-model="s.arrowsPosition"
+                        :options="insideOutsideOptions" /><size-control
+                        label="Arrows Size"
+                        base="arrowsSize"
+                        fallback="24px"
+                        :node="node"
+                        :editor="editor" /><color-control
+                        label="Arrows Color"
+                        v-model="s.arrowsColor" /><select-control
+                        label="Dots Position"
+                        v-model="s.dotsPosition"
+                        :options="insideOutsideOptions" /><size-control
+                        label="Dots Size"
+                        base="dotsSize"
+                        fallback="8px"
+                        :node="node"
+                        :editor="editor" /><size-control
+                        label="Dots Gap"
+                        base="dotsGap"
+                        fallback="8px"
+                        :node="node"
+                        :editor="editor" /><color-control
+                        label="Dots Color"
+                        v-model="s.dotsColor" /><color-control
+                        label="Active Color"
+                        v-model="s.dotsActiveColor"
+                /></section-box>
             </template>
             <template v-else-if="type === 'animated_headline'">
                 <section-box
@@ -2112,30 +2083,20 @@
                         :font-families="editor.fontFamilies"
                         @responsive-device="editor.setResponsiveDevice"
                 /></section-box>
-                <section-box title="Navigation" :open="true">
-                    <template v-if="['both', 'arrows'].includes(effectiveNavigation)">
-                        <div class="pb-subsection-title">Arrows</div>
-                        <arrow-icon-picker label="Previous Arrow Icon" setting-key="previousArrowIcon" :node="node" :editor="editor" fallback="fas fa-chevron-left" />
-                        <arrow-icon-picker label="Next Arrow Icon" setting-key="nextArrowIcon" :node="node" :editor="editor" fallback="fas fa-chevron-right" />
-                        <responsive-select label="Position" base="arrowPosition" control-id="carousel-arrow-position" :node="node" :editor="editor" :options="insideOutsideOptions" />
-                        <size-control label="Edge Offset" base="arrowEdgeOffset" fallback="46px" :node="node" :editor="editor" :max="200" />
-                        <size-control label="Button Size" base="arrowButtonSize" fallback="34px" :node="node" :editor="editor" :min="12" :max="120" />
-                        <size-control label="Icon Size" base="arrowIconSize" fallback="10px" :node="node" :editor="editor" :max="80" />
-                        <color-control label="Icon Color" v-model="s.arrowColor" />
-                        <color-control label="Button Background" v-model="s.arrowBackground" />
-                        <color-control label="Hover Icon Color" v-model="s.arrowHoverColor" />
-                        <color-control label="Hover Background" v-model="s.arrowHoverBackground" />
-                        <sides-control label="Button Radius" base="arrowRadius" control-id="carousel-arrow-radius" :node="node" :editor="editor" />
-                    </template>
-                    <template v-if="['both', 'dots'].includes(effectiveNavigation) && s.pagination !== 'none'">
-                        <div class="pb-subsection-title">Pagination</div>
-                        <select-control label="Position" v-model="s.paginationPosition" :options="insideOutsideOptions" />
-                        <size-control label="Space Between Dots" base="dotsGap" fallback="8px" :node="node" :editor="editor" :max="100" />
-                        <size-control label="Size" base="dotsSize" fallback="8px" :node="node" :editor="editor" :max="100" />
-                        <color-control label="Color" v-model="s.paginationColor" />
-                        <color-control label="Active Color" v-model="s.paginationActiveColor" />
-                    </template>
-                </section-box>
+                <section-box title="Navigation"
+                    ><color-control
+                        label="Arrow Color"
+                        v-model="s.arrowColor" /><color-control
+                        label="Arrow Background"
+                        v-model="s.arrowBackground"
+                /></section-box>
+                <section-box title="Pagination"
+                    ><color-control
+                        label="Color"
+                        v-model="s.paginationColor" /><color-control
+                        label="Active Color"
+                        v-model="s.paginationActiveColor"
+                /></section-box>
             </template>
             <template v-else-if="type === 'media_carousel'">
                 <section-box title="Slides" :open="true">
@@ -2284,7 +2245,7 @@
                         control-id="reviews-image-radius"
                         :node="node"
                         :editor="editor"
-                /><select-control label="Image Fit" v-model="s.imageFit" :options="mediaCarouselImageFitOptions" /><toggle-control label="Border" v-model="s.imageBorder" /><template v-if="s.imageBorder"><color-control label="Border Color" v-model="s.imageBorderColor" /><sides-control label="Border Width" base="imageBorder" control-id="reviews-image-border" :node="node" :editor="editor" /></template></section-box>
+                /></section-box>
                 <section-box title="Icon"
                     ><select-control
                         label="Color"
@@ -2325,30 +2286,38 @@
                         label="Unmarked Color"
                         v-model="s.ratingUnmarkedColor"
                 /></section-box>
-                <section-box title="Navigation" :open="true">
-                    <template v-if="['both', 'arrows'].includes(effectiveNavigation)">
-                        <div class="pb-subsection-title">Arrows</div>
-                        <arrow-icon-picker label="Previous Arrow Icon" setting-key="previousArrowIcon" :node="node" :editor="editor" fallback="fas fa-chevron-left" />
-                        <arrow-icon-picker label="Next Arrow Icon" setting-key="nextArrowIcon" :node="node" :editor="editor" fallback="fas fa-chevron-right" />
-                        <responsive-select label="Position" base="arrowPosition" control-id="reviews-arrow-position" :node="node" :editor="editor" :options="insideOutsideOptions" />
-                        <size-control label="Edge Offset" base="arrowEdgeOffset" fallback="46px" :node="node" :editor="editor" :max="200" />
-                        <size-control label="Button Size" base="arrowButtonSize" fallback="24px" :node="node" :editor="editor" :min="12" :max="120" />
-                        <size-control label="Icon Size" base="arrowIconSize" fallback="10px" :node="node" :editor="editor" :max="80" />
-                        <color-control label="Icon Color" v-model="s.arrowColor" />
-                        <color-control label="Button Background" v-model="s.arrowBackground" />
-                        <color-control label="Hover Icon Color" v-model="s.arrowHoverColor" />
-                        <color-control label="Hover Background" v-model="s.arrowHoverBackground" />
-                        <sides-control label="Button Radius" base="arrowRadius" control-id="reviews-arrow-radius" :node="node" :editor="editor" />
-                    </template>
-                    <template v-if="['both', 'dots'].includes(effectiveNavigation) && s.pagination !== 'none'">
-                        <div class="pb-subsection-title">Pagination</div>
-                        <select-control label="Position" v-model="s.paginationPosition" :options="insideOutsideOptions" />
-                        <size-control label="Space Between Dots" base="dotsGap" fallback="8px" :node="node" :editor="editor" :max="100" />
-                        <size-control label="Size" base="dotsSize" fallback="8px" :node="node" :editor="editor" :max="100" />
-                        <color-control label="Color" v-model="s.paginationColor" />
-                        <color-control label="Active Color" v-model="s.paginationActiveColor" />
-                    </template>
-                </section-box>
+                <section-box title="Navigation"
+                    ><template v-if="s.arrows"
+                        ><div class="pb-subsection-title">Arrows</div>
+                        <size-control
+                            label="Size"
+                            base="arrowsSize"
+                            fallback="24px"
+                            :node="node"
+                            :editor="editor"
+                            :max="100" /><color-control
+                            label="Color"
+                            v-model="s.arrowColor" /></template
+                    ><template v-if="s.pagination !== 'none'"
+                        ><div class="pb-subsection-title">Pagination</div>
+                        <size-control
+                            label="Space Between Dots"
+                            base="dotsGap"
+                            fallback="8px"
+                            :node="node"
+                            :editor="editor"
+                            :max="100" /><size-control
+                            label="Size"
+                            base="dotsSize"
+                            fallback="8px"
+                            :node="node"
+                            :editor="editor"
+                            :max="100" /><color-control
+                            label="Color"
+                            v-model="s.paginationColor" /><color-control
+                            label="Active Color"
+                            v-model="s.paginationActiveColor" /></template
+                ></section-box>
             </template>
             <template v-else-if="type === 'testimonial_carousel'">
                 <section-box title="Slides" :open="true">
@@ -3112,15 +3081,6 @@ export default {
                 option("none", "None"),
             ];
         },
-        effectiveNavigation() {
-            if (["both", "arrows", "dots", "none"].includes(this.s.navigation)) {
-                return this.s.navigation;
-            }
-            const arrows = this.s.arrows !== false;
-            return arrows
-                ? this.s.pagination === "none" ? "arrows" : "both"
-                : this.s.pagination === "none" ? "none" : "dots";
-        },
         applyLinkOnOptions() {
             return [
                 option("button", "Button Only"),
@@ -3611,17 +3571,6 @@ export default {
         },
     },
     methods: {
-        syncNavigation(value) {
-            const navigation = ["both", "arrows", "dots", "none"].includes(value)
-                ? value
-                : "both";
-            this.s.navigation = navigation;
-            this.s.arrows = ["both", "arrows"].includes(navigation);
-            if (["dots", "both"].includes(navigation) && this.s.pagination === "none") {
-                this.s.pagination = "dots";
-            }
-            if (navigation === "none") this.s.pagination = "none";
-        },
         addItem(key) {
             const id = key + "-" + Date.now();
             const templates = {

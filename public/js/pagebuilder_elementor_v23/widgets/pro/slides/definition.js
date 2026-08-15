@@ -47,9 +47,36 @@
         buttonBackgroundHover: "#5868e8",
         buttonRadius: "4px",
         arrowsPosition: "inside",
+        arrowsPositionTablet: "",
+        arrowsPositionMobile: "",
         arrowsSize: "24px",
         arrowsColor: "#ffffff",
+        previousArrowIcon: "fas fa-chevron-left",
+        previousArrowIconSource: "library",
+        previousArrowIconSvg: "",
+        nextArrowIcon: "fas fa-chevron-right",
+        nextArrowIconSource: "library",
+        nextArrowIconSvg: "",
+        arrowEdgeOffset: "10px",
+        arrowEdgeOffsetTablet: "",
+        arrowEdgeOffsetMobile: "",
+        arrowButtonSize: "34px",
+        arrowButtonSizeTablet: "",
+        arrowButtonSizeMobile: "",
+        arrowIconSize: "10px",
+        arrowIconSizeTablet: "",
+        arrowIconSizeMobile: "",
+        arrowColor: "#ffffff",
+        arrowBackground: "rgba(16,24,40,.5)",
+        arrowHoverColor: "#ffffff",
+        arrowHoverBackground: "rgba(16,24,40,.7)",
+        arrowRadiusTop: "50%",
+        arrowRadiusRight: "50%",
+        arrowRadiusBottom: "50%",
+        arrowRadiusLeft: "50%",
         dotsPosition: "inside",
+        dotsPositionTablet: "",
+        dotsPositionMobile: "",
         dotsGap: "8px",
         dotsSize: "8px",
         dotsColor: "#ffffff80",
@@ -65,10 +92,24 @@
         settings: "/js/pagebuilder_elementor_v23/widgets/pro/shared/Settings.vue",
         defaults,
         normalize(node) {
+            const legacy = node.settings || {};
             const settings = (node.settings = {
                 ...defaults(),
-                ...(node.settings || {}),
+                ...legacy,
             });
+            const iconPattern = /^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i;
+            const lengthPattern = /^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i;
+            const normalizeLength = (key, fallback) => {
+                settings[key] = lengthPattern.test(String(settings[key] ?? "").trim()) ? String(settings[key]).trim() : fallback;
+                ["Tablet", "Mobile"].forEach((suffix) => {
+                    if (settings[key + suffix] !== "") settings[key + suffix] = lengthPattern.test(String(settings[key + suffix]).trim()) ? String(settings[key + suffix]).trim() : "";
+                });
+            };
+            const normalizeIcon = (key, fallback) => {
+                settings[key] = iconPattern.test(String(settings[key] || "")) ? String(settings[key]).trim() : fallback;
+                settings[key + "Source"] = settings[key + "Source"] === "svg" ? "svg" : "library";
+                settings[key + "Svg"] = String(settings[key + "Svg"] || "");
+            };
             settings.slides =
                 Array.isArray(settings.slides) && settings.slides.length
                     ? settings.slides.map((slide, index) => ({
@@ -90,6 +131,28 @@
             ].includes(settings.contentAnimation)
                 ? settings.contentAnimation
                 : "up";
+            settings.navigation = ["both", "arrows", "dots", "none"].includes(settings.navigation)
+                ? settings.navigation
+                : "both";
+            settings.arrowsPosition = ["inside", "outside"].includes(settings.arrowsPosition)
+                ? settings.arrowsPosition
+                : "inside";
+            settings.dotsPosition = ["inside", "outside"].includes(settings.dotsPosition)
+                ? settings.dotsPosition
+                : "inside";
+            ["Tablet", "Mobile"].forEach((suffix) => {
+                if (settings["arrowsPosition" + suffix] !== "") settings["arrowsPosition" + suffix] = ["inside", "outside"].includes(settings["arrowsPosition" + suffix]) ? settings["arrowsPosition" + suffix] : "";
+                if (settings["dotsPosition" + suffix] !== "") settings["dotsPosition" + suffix] = ["inside", "outside"].includes(settings["dotsPosition" + suffix]) ? settings["dotsPosition" + suffix] : "";
+            });
+            if (legacy.arrowColor == null && legacy.arrowsColor != null) settings.arrowColor = legacy.arrowsColor;
+            normalizeIcon("previousArrowIcon", "fas fa-chevron-left");
+            normalizeIcon("nextArrowIcon", "fas fa-chevron-right");
+            normalizeLength("arrowEdgeOffset", "10px");
+            normalizeLength("arrowButtonSize", "34px");
+            normalizeLength("arrowIconSize", "10px");
+            ["arrowRadiusTop", "arrowRadiusRight", "arrowRadiusBottom", "arrowRadiusLeft", "dotsGap", "dotsSize"].forEach((key) => {
+                settings[key] = lengthPattern.test(String(settings[key] ?? "").trim()) ? String(settings[key]).trim() : defaults()[key];
+            });
             return node;
         },
     });

@@ -46,13 +46,6 @@
         imageResolution: "full",
         customImageWidth: 300,
         customImageHeight: 300,
-        imageFit: "cover",
-        imageBorder: false,
-        imageBorderColor: "#e4e7ec",
-        imageBorderTop: "0px",
-        imageBorderRight: "0px",
-        imageBorderBottom: "0px",
-        imageBorderLeft: "0px",
         lazyLoad: false,
         gap: "10px",
         slideBackground: "#ffffff",
@@ -95,32 +88,6 @@
         arrowsSize: "24px",
         arrowColor: "#344054",
         arrowBackground: "#ffffff",
-        navigation: "both",
-        previousArrowIcon: "fas fa-chevron-left",
-        previousArrowIconSource: "library",
-        previousArrowIconSvg: "",
-        nextArrowIcon: "fas fa-chevron-right",
-        nextArrowIconSource: "library",
-        nextArrowIconSvg: "",
-        arrowPosition: "inside",
-        arrowPositionTablet: "",
-        arrowPositionMobile: "",
-        arrowEdgeOffset: "46px",
-        arrowEdgeOffsetTablet: "",
-        arrowEdgeOffsetMobile: "",
-        arrowButtonSize: "24px",
-        arrowButtonSizeTablet: "",
-        arrowButtonSizeMobile: "",
-        arrowIconSize: "10px",
-        arrowIconSizeTablet: "",
-        arrowIconSizeMobile: "",
-        arrowHoverColor: "#344054",
-        arrowHoverBackground: "#ffffff",
-        arrowRadiusTop: "50%",
-        arrowRadiusRight: "50%",
-        arrowRadiusBottom: "50%",
-        arrowRadiusLeft: "50%",
-        paginationPosition: "outside",
         dotsGap: "8px",
         dotsSize: "8px",
         paginationColor: "#d0d5dd",
@@ -138,23 +105,7 @@
         defaults,
         normalize(node) {
             const base = defaults();
-            const legacy = node.settings || {};
-            const s = (node.settings = { ...base, ...legacy });
-            const iconPattern = /^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i;
-            const lengthPattern = /^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i;
-            const normalizeLength = (key, fallback) => {
-                s[key] = lengthPattern.test(String(s[key] ?? "").trim()) ? String(s[key]).trim() : fallback;
-                ["Tablet", "Mobile"].forEach((suffix) => {
-                    if (s[key + suffix] !== "") {
-                        s[key + suffix] = lengthPattern.test(String(s[key + suffix]).trim()) ? String(s[key + suffix]).trim() : "";
-                    }
-                });
-            };
-            const normalizeIcon = (key, fallback) => {
-                s[key] = iconPattern.test(String(s[key] || "")) ? String(s[key]).trim() : fallback;
-                s[key + "Source"] = s[key + "Source"] === "svg" ? "svg" : "library";
-                s[key + "Svg"] = String(s[key + "Svg"] || "");
-            };
+            const s = (node.settings = { ...base, ...(node.settings || {}) });
             const clampSlides = (value) => Math.max(1, Math.min(10, Number(value) || 1));
             [
                 "slidesToShow",
@@ -167,17 +118,6 @@
             s.pagination = ["dots", "fraction", "progress", "none"].includes(s.pagination)
                 ? s.pagination
                 : "dots";
-            if (!Object.prototype.hasOwnProperty.call(legacy, "navigation")) {
-                s.navigation = s.arrows
-                    ? s.pagination === "none" ? "arrows" : "both"
-                    : s.pagination === "none" ? "none" : "dots";
-            }
-            s.navigation = ["both", "arrows", "dots", "none"].includes(s.navigation)
-                ? s.navigation
-                : "both";
-            s.paginationPosition = ["inside", "outside"].includes(s.paginationPosition)
-                ? s.paginationPosition
-                : "outside";
             s.imageResolution = [
                 "thumbnail",
                 "medium",
@@ -190,9 +130,6 @@
             ].includes(s.imageResolution)
                 ? s.imageResolution
                 : "full";
-            s.imageFit = ["cover", "contain", "auto"].includes(s.imageFit)
-                ? s.imageFit
-                : "cover";
             s.customImageWidth = Math.max(1, Math.min(4096, Number(s.customImageWidth) || 300));
             s.customImageHeight = Math.max(1, Math.min(4096, Number(s.customImageHeight) || 300));
             s.iconColorMode = ["official", "custom"].includes(s.iconColorMode)
@@ -212,26 +149,7 @@
                 "pauseOnInteraction",
                 "lazyLoad",
                 "reviewSeparator",
-                "imageBorder",
             ].forEach((key) => (s[key] = Boolean(s[key])));
-            if (legacy.arrowButtonSize == null && legacy.arrowsSize != null) s.arrowButtonSize = legacy.arrowsSize;
-            if (legacy.arrowIconSize == null && legacy.arrowsSize != null) {
-                const old = Number.parseFloat(String(legacy.arrowsSize));
-                if (Number.isFinite(old)) s.arrowIconSize = `${Math.max(1, Math.min(80, old / 2))}px`;
-            }
-            s.arrowPosition = ["inside", "outside"].includes(s.arrowPosition) ? s.arrowPosition : "inside";
-            ["Tablet", "Mobile"].forEach((suffix) => {
-                if (s["arrowPosition" + suffix] !== "") s["arrowPosition" + suffix] = ["inside", "outside"].includes(s["arrowPosition" + suffix]) ? s["arrowPosition" + suffix] : "";
-            });
-            normalizeLength("arrowEdgeOffset", "46px");
-            normalizeLength("arrowButtonSize", "24px");
-            normalizeLength("arrowIconSize", "10px");
-            ["imageBorderTop", "imageBorderRight", "imageBorderBottom", "imageBorderLeft"].forEach((key) => normalizeLength(key, "0px"));
-            ["arrowRadiusTop", "arrowRadiusRight", "arrowRadiusBottom", "arrowRadiusLeft", "dotsGap", "dotsSize"].forEach((key) => {
-                s[key] = lengthPattern.test(String(s[key] ?? "").trim()) ? String(s[key]).trim() : base[key];
-            });
-            normalizeIcon("previousArrowIcon", "fas fa-chevron-left");
-            normalizeIcon("nextArrowIcon", "fas fa-chevron-right");
             s.transitionSpeed = Math.max(0, Number(s.transitionSpeed) || 0);
             s.autoplaySpeed = Math.max(100, Number(s.autoplaySpeed) || 5000);
             const fallbackItems = base.items;
@@ -239,7 +157,6 @@
                 (item, index) => {
                     const fallback = review(`review-${index + 1}`);
                     const normalized = { ...fallback, ...(item || {}) };
-                    normalized.imageAlt = String(normalized.imageAlt || normalized.name || "");
                     const rating = normalized.rating === "" ? "" : Number(normalized.rating);
                     normalized.rating = rating === "" || !Number.isFinite(rating)
                         ? ""
