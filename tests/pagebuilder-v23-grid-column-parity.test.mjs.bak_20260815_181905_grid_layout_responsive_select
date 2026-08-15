@@ -19,11 +19,8 @@ const css = fs.readFileSync(cssPath, 'utf8');
 
 test('Grid spacing controls use the established connected responsive four-side form', () => {
     for (const source of [gridSettings, rowGridSettings]) {
-        assert.equal((source.match(/<div class="pb-responsive-switch">/g) || []).length, 0, 'Grid Layout should use one responsive select control');
-        assert.match(source, /Grid Layout[\s\S]{0,260}<div class="pb-control-device-wrap">[\s\S]*?openControlResponsiveMenu\(node\.type \+ '-grid-layout'\)/);
-        assert.match(source, /isControlResponsiveMenuOpen\(node\.type \+ '-grid-layout'\)/);
-        assert.match(source, /applyResponsiveDevice\(node\.type \+ '-grid-layout', device\.value\)/);
-        assert.match(source, /editor\.responsiveDeviceIcon\(\)/);
+        assert.equal((source.match(/<div class="pb-responsive-switch">/g) || []).length, 1, 'only Grid Layout should keep a section-level device switch');
+        assert.match(source, /Grid Layout[\s\S]{0,180}<div class="pb-responsive-switch">/);
         assert.doesNotMatch(source, /Spacing[\s\S]{0,180}<div class="pb-responsive-switch">/);
         assert.equal((source.match(/pb-form-group pb-spacing-control-group/g) || []).length, 2);
         assert.ok((source.match(/pb-four-sides pb-four-sides-with-link mt-1/g) || []).length >= 2);

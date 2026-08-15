@@ -104,31 +104,6 @@ The browser-rendered prototype and corrected production screenshot were opened t
 
 final result: passed
 
-# Design QA - Grid Layout Responsive Select
-
-Date: 2026-08-15
-
-## Comparison target
-
-- Reported target: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-f1633be2-1bb6-41c9-ad21-4091eddd8419.png`.
-- Existing product pattern: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-8eb1b716-b481-432b-a883-c26655226633.png`, the responsive device select used by Padding.
-- Runtime: `/pagebuilder-elementor/v2.3/create`, Desktop editor, temporary unsaved Grid node; no Save or Reset action.
-
-## Findings and patches
-
-- Grid Layout no longer renders three separate Desktop/Tablet/Mobile buttons. It now uses one active-device button and the existing responsive dropdown contract.
-- The dropdown renders Desktop, Tablet Portrait, and Mobile Portrait with the active state, icon, and label consistent with the Padding control.
-- Selecting Tablet Portrait changed the canvas metadata to `Tablet · 768 px`, changed the trigger icon/title, and closed the menu.
-- Columns and Rows continue using the existing responsive context through `applyResponsiveDevice`, so the Grid and Row Grid data behavior remains intact.
-
-## Visual QA boundary
-
-- The open-menu and Tablet-selected states were captured and inspected in the in-app browser.
-- Browser console reported zero warnings and zero errors.
-- This was read-only editor QA with a temporary unsaved Grid node; Save and Reset were not activated.
-
-final result: passed
-
 # Design QA - Page Builder v2.3 Grid Device Controls and Empty Canvas Height
 
 Date: 2026-08-15

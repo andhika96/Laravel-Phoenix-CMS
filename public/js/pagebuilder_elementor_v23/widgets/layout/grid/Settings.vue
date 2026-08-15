@@ -10,8 +10,14 @@
 							<div class="pb-prop-section pb-grid-settings__group">
 								<div class="pb-label-row pb-grid-settings__section-head">
 									<div class="pb-prop-section-title mb-0">Grid Layout</div>
-									<div class="pb-responsive-switch">
-										<button v-for="device in editor.responsiveDevices" :key="device.value" class="pb-device-btn" :class="{active:editor.responsiveDevice===device.value}" @click="editor.setResponsiveDevice(device.value)"><i :class="device.icon"></i><span>{{ device.label }}</span></button>
+									<div class="pb-control-device-wrap">
+										<button class="pb-control-device-btn" @click.stop="editor.openControlResponsiveMenu(node.type + '-grid-layout')" :title="'Responsive: ' + editor.responsiveDeviceLabel()"><i :class="editor.responsiveDeviceIcon()"></i></button>
+										<div v-if="editor.isControlResponsiveMenuOpen(node.type + '-grid-layout')" class="pb-control-device-menu">
+											<button v-for="device in editor.responsiveDevices" :key="node.type + '-grid-layout-' + device.value" class="pb-control-device-item" :class="{active: editor.responsiveDevice===device.value}" @click.stop="editor.applyResponsiveDevice(node.type + '-grid-layout', device.value)">
+												<i :class="device.icon"></i>
+												<span>{{ editor.deviceOptionLabel(device) }}</span>
+											</button>
+										</div>
 									</div>
 								</div>
 								<div class="pb-form-group">
