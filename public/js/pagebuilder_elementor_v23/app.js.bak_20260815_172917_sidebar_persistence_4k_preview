@@ -14,21 +14,6 @@
 	const draggable = window.vuedraggable;
 	const loader    = window['vue3-sfc-loader'];
 	const widgetRegistry = window.PageBuilderElementorV23Widgets || null;
-	const LEFT_SIDEBAR_COLLAPSED_STORAGE_KEY = 'phoenix.pagebuilder.v23.leftCollapsed';
-	function readLeftSidebarCollapsedPreference() {
-		try {
-			return window.localStorage.getItem(LEFT_SIDEBAR_COLLAPSED_STORAGE_KEY) === '1';
-		} catch (_) {
-			return false;
-		}
-	}
-	function writeLeftSidebarCollapsedPreference(collapsed) {
-		try {
-			window.localStorage.setItem(LEFT_SIDEBAR_COLLAPSED_STORAGE_KEY, collapsed ? '1' : '0');
-		} catch (_) {
-			// Storage may be unavailable in private or restricted browser contexts.
-		}
-	}
 
 	const sfcOptions = {
 		moduleCache: { vue: Vue },
@@ -3540,8 +3525,7 @@
 			const responsiveDevice = ref('desktop');
 			const canvasZoom = ref(100);
 			const showCanvasGrid = ref(true);
-			const leftCollapsed = ref(readLeftSidebarCollapsedPreference());
-			watch(leftCollapsed, (collapsed) => writeLeftSidebarCollapsedPreference(collapsed));
+			const leftCollapsed = ref(false);
 			const previewMode = ref(false);
 			watch(previewMode, (enabled) => {
 				if (enabled) closePageSettings();
@@ -3583,11 +3567,6 @@
 				{ value: '1140', label: '1140px' },
 				{ value: '1180', label: '1180px' },
 				{ value: '1320', label: '1320px' },
-				{ value: '1440', label: '1440px' },
-				{ value: '1600', label: '1600px' },
-				{ value: '1920', label: '1920px' },
-				{ value: '2560', label: '2560px' },
-				{ value: '3840', label: '3840px (4K)' },
 			];
 			const controlResponsiveMenu = ref('');
 			function normalizeResponsiveDevice(device = 'desktop') {
@@ -3595,7 +3574,7 @@
 			}
 			function normalizeDesktopPreviewWidth(value = '1180') {
 				const normalized = String(value);
-				return desktopPreviewWidths.some((option) => option.value === normalized) ? normalized : '1180';
+				return ['1140', '1180', '1320'].includes(normalized) ? normalized : '1180';
 			}
 			function responsiveMeta(device = responsiveDevice.value) {
 				return responsiveDevices.find((entry) => entry.value === device) || responsiveDevices[0];
@@ -3620,7 +3599,7 @@
 					transform: 'scale(' + canvasZoom.value / 100 + ')',
 				};
 				if (responsiveDevice.value === 'desktop') {
-					style.width = normalizeDesktopPreviewWidth(desktopPreviewWidth.value) + 'px';
+					style.maxWidth = normalizeDesktopPreviewWidth(desktopPreviewWidth.value) + 'px';
 				}
 				return style;
 			}
@@ -7350,7 +7329,6 @@
 						:group="rootGroup"
 						:clone="toolClone"
 						class="pb-dropzone pb-dropzone-root"
-						:class="{ 'is-empty': rootNodes.length===0 }"
 						ghost-class="pb-ghost"
 						dragover-class="is-drop-hover"
 						@add="onRootAdd"

@@ -103,7 +103,6 @@ test('production v2.3 canvas uses the approved selection chrome and instant devi
     assert.match(app, /function changeCanvasZoom\(delta\)/);
     assert.doesNotMatch(app, /responsiveGridSyncTimer|scheduleResponsiveGridSync|syncAllGridCellsForDevice/);
     assert.match(app, /class="canvas-region" :class="\{ 'grid-off': !showCanvasGrid \}"/);
-    assert.match(app, /class="pb-dropzone pb-dropzone-root"\s*:class="\{ 'is-empty': rootNodes\.length===0 \}"/);
     assert.match(app, /<div class="zoom-control">\{\{ canvasZoom \}\}%<\/div>/);
     assert.match(app, /transform:\s*'scale\('\s*\+\s*canvasZoom\.value\s*\/\s*100\s*\+\s*'\)'/);
     assert.match(app, /class="pb-root-followup-hint"[\s\S]*?class="pb-root-followup-text"[\s\S]*?class="root-drop-label">Add to page root<[\s\S]*?Container, Grid, or Widget/);
@@ -114,7 +113,6 @@ test('production v2.3 canvas uses the approved selection chrome and instant devi
     assert.match(css, /\.canvas-region\.grid-off\s*\{\s*background-image:\s*none;/);
     assert.match(css, /\.webpage-frame\s*\{[\s\S]*?transition:\s*none;/);
     assert.match(css, /\.webpage-frame \.pb-root-followup-hint\s*\{[\s\S]*?height:\s*72px;/);
-    assert.match(css, /\.webpage-frame \.pb-dropzone-root\.is-empty\s*\{[^}]*min-height:\s*inherit;/);
 });
 
 test('production v2.3 persists the left sidebar per browser without preview overwriting it', () => {

@@ -7350,7 +7350,6 @@
 						:group="rootGroup"
 						:clone="toolClone"
 						class="pb-dropzone pb-dropzone-root"
-						:class="{ 'is-empty': rootNodes.length===0 }"
 						ghost-class="pb-ghost"
 						dragover-class="is-drop-hover"
 						@add="onRootAdd"

@@ -17,24 +17,6 @@ const gridSettings = fs.readFileSync(gridSettingsPath, 'utf8');
 const rowGridSettings = fs.readFileSync(rowGridSettingsPath, 'utf8');
 const css = fs.readFileSync(cssPath, 'utf8');
 
-test('Grid spacing controls use the established connected responsive four-side form', () => {
-    for (const source of [gridSettings, rowGridSettings]) {
-        assert.equal((source.match(/<div class="pb-responsive-switch">/g) || []).length, 1, 'only Grid Layout should keep a section-level device switch');
-        assert.match(source, /Grid Layout[\s\S]{0,180}<div class="pb-responsive-switch">/);
-        assert.doesNotMatch(source, /Spacing[\s\S]{0,180}<div class="pb-responsive-switch">/);
-        assert.equal((source.match(/pb-form-group pb-spacing-control-group/g) || []).length, 2);
-        assert.ok((source.match(/pb-four-sides pb-four-sides-with-link mt-1/g) || []).length >= 2);
-        assert.ok((source.match(/pb-side-link-cell/g) || []).length >= 2);
-        assert.match(source, /pb-mini-unit pb-edge-unit-select/);
-        assert.match(source, /editor\.openControlResponsiveMenu\(node\.type \+ '-padding'\)/);
-        assert.match(source, /editor\.openControlResponsiveMenu\(node\.type \+ '-margin'\)/);
-    }
-
-    assert.match(css, /:is\(\.pb-layout-settings, \.pb-grid-settings\) \.pb-spacing-control-group/);
-    assert.match(css, /:is\(\.pb-layout-settings, \.pb-grid-settings\) \.pb-edge-unit-select/);
-    assert.match(css, /\.pb-panel\.left \.pb-grid-settings \.pb-device-btn\s*\{[^}]*justify-content:\s*center;[^}]*gap:\s*0;/);
-});
-
 function extractBlock(source, startIndex) {
     const open = source.indexOf('{', startIndex);
     assert.notEqual(open, -1, 'function or method opening brace should exist');

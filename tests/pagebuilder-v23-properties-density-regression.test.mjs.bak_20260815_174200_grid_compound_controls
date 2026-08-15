@@ -178,8 +178,8 @@ test('the shared density contract covers every active four-side and three-cell r
     const plainSides = classValues.filter((tokens) => tokens.includes('pb-four-sides') && !tokens.includes('pb-four-sides-with-link'));
     const linkedSides = classValues.filter((tokens) => tokens.includes('pb-four-sides-with-link'));
 
-    assert.equal(plainSides.length, 6, 'the remaining six standalone four-side controls remain covered');
-    assert.equal(linkedSides.length, 20, 'Grid spacing joins the twenty linked four-side controls');
+    assert.equal(plainSides.length, 10, 'all ten standalone four-side controls remain covered');
+    assert.equal(linkedSides.length, 16, 'all sixteen linked four-side controls remain covered');
     assert.equal((widgetVueSources.match(/pb-advanced-edge-fields/g) || []).length >= 1, true, 'shared Advanced edge controls remain covered');
     assert.equal((widgetSources.match(/pb-container-gap-control__values/g) || []).length, 4, 'Container and Container Fluid expose all four linked gap controls');
     assert.equal((widgetSources.match(/pb-range-number/g) || []).length, 4, 'Grid and Row Grid expose four direct three-cell range rows');

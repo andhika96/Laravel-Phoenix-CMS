@@ -6568,8 +6568,6 @@ body {
 	width: 28px;
 	min-width: 28px;
 	height: 26px;
-	justify-content: center;
-	gap: 0;
 	padding: 0;
 	border-radius: 6px;
 }
@@ -9860,7 +9858,6 @@ body {
 .webpage-frame .pb-canvas { width: 100%; max-width: none; min-height: 720px; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
 .webpage-frame .pb-canvas.is-tablet,
 .webpage-frame .pb-canvas.is-mobile { max-width: none; }
-.webpage-frame .pb-dropzone-root.is-empty { min-height: inherit; }
 
 .floating-expand.left {
 	position: fixed;

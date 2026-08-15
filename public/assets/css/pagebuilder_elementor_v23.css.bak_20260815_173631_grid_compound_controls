@@ -6366,11 +6366,11 @@ body {
 	border-radius: 0 6px 6px 0;
 }
 
-.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-spacing-control-group {
+.pb-panel.left .pb-layout-settings .pb-spacing-control-group {
 	margin-bottom: 14px;
 }
 
-.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-spacing-control-group .pb-label-row.pb-label-row-device {
+.pb-panel.left .pb-layout-settings .pb-spacing-control-group .pb-label-row.pb-label-row-device {
 	display: flex;
 	width: 100%;
 	justify-content: space-between;
@@ -6378,18 +6378,18 @@ body {
 	gap: 6px;
 }
 
-.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-spacing-control-group .pb-label-row.pb-label-row-device > .pb-form-label {
+.pb-panel.left .pb-layout-settings .pb-spacing-control-group .pb-label-row.pb-label-row-device > .pb-form-label {
 	flex: 1 1 auto;
 	min-width: 0;
 }
 
-.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-spacing-control-group .pb-label-tools {
+.pb-panel.left .pb-layout-settings .pb-spacing-control-group .pb-label-tools {
 	flex: 0 0 auto;
 	margin-left: auto;
 	justify-content: flex-end;
 }
 
-.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-edge-unit-select {
+.pb-panel.left .pb-layout-settings .pb-edge-unit-select {
 	width: 54px;
 	min-width: 54px;
 	height: 24px;
@@ -6405,7 +6405,7 @@ body {
 	box-shadow: none;
 }
 
-.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-edge-unit-select:focus {
+.pb-panel.left .pb-layout-settings .pb-edge-unit-select:focus {
 	outline: none;
 	border-color: #8fa0ff;
 	box-shadow: 0 0 0 2px rgba(91, 108, 255, 0.12);
@@ -6568,8 +6568,6 @@ body {
 	width: 28px;
 	min-width: 28px;
 	height: 26px;
-	justify-content: center;
-	gap: 0;
 	padding: 0;
 	border-radius: 6px;
 }
@@ -9860,7 +9858,6 @@ body {
 .webpage-frame .pb-canvas { width: 100%; max-width: none; min-height: 720px; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
 .webpage-frame .pb-canvas.is-tablet,
 .webpage-frame .pb-canvas.is-mobile { max-width: none; }
-.webpage-frame .pb-dropzone-root.is-empty { min-height: inherit; }
 
 .floating-expand.left {
 	position: fixed;

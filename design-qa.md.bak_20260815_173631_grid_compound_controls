@@ -104,33 +104,6 @@ The browser-rendered prototype and corrected production screenshot were opened t
 
 final result: passed
 
-# Design QA - Page Builder v2.3 Grid Device Controls and Empty Canvas Height
-
-Date: 2026-08-15
-
-## Comparison target
-
-- Reported Grid Layout state: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-c4d04772-5718-47ff-982b-c0255f75d436.png`.
-- Reported Grid Spacing state: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-23a44070-e7d0-49fba4397780.png`.
-- Reported empty canvas state: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-4026f4f4-2ee0-4465-aa37-49fba4397780.png`.
-- Runtime: `/pagebuilder-elementor/v2.3/create`, 1280 x 720 CSS pixels, temporary unsaved Grid node.
-- Safety: Save and Reset were not activated.
-
-## Findings and patches
-
-- The Grid Layout device switch is functional and remains available because it selects the responsive Columns and Rows values.
-- The Spacing section-level switch was redundant after Padding and Margin received their own responsive triggers, so it was removed from Grid and Row Grid.
-- Grid Layout device icons now center exactly inside their 28px buttons. Runtime center delta changed from -7.708px to -10.208px across the three icons to 0px for every icon.
-- Empty root dropzone height previously resolved to 460px while its canvas resolved to 720px. The empty-state class now inherits the 720px canvas minimum height, and the dashed empty-state surface reaches the bottom inset of the frame.
-- Non-empty root behavior remains on the existing content-driven contract; the full-height override is conditional on `rootNodes.length===0`.
-
-## Visual QA boundary
-
-- The supplied screenshots and fresh in-app runtime captures were inspected. Runtime geometry and control counts were verified directly; no Save or Reset action was used.
-- Grid Layout retains three section-level device buttons. Grid Spacing now has zero redundant section-level buttons and two per-control responsive triggers for Padding and Margin.
-
-final result: passed
-
 # Design QA - Awesome Admin Header Navigation Inspector and Responsive Preview
 
 Date: 2026-08-14
@@ -1169,31 +1142,3 @@ Date: 2026-08-14
 - Both source and runtime screenshots were captured, saved, and inspected. A composited side-by-side browser page could not be opened because the browser security policy rejected the local data URL. Formal Product Design comparison acceptance therefore cannot be claimed even though the individual runtime states and computed styles were verified.
 
 final result: blocked
-
-# Design QA - Page Builder v2.3 Grid Compound Spacing Controls
-
-Date: 2026-08-15
-
-## Comparison target
-
-- Reported Layout state: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-54ac9b6f-79a5-4983-a5f5-5e9c6801b353.png`.
-- Reported Style state: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-fb69b9af-036d-443f-ad3a-d7999155a7f6.png`.
-- Existing product reference: the connected Margin/Padding control in `widgets/layout/container/Settings.vue`.
-- Runtime: `/pagebuilder-elementor/v2.3/create`, Desktop editor, temporary unsaved Grid node, Style tab.
-- Safety: Save and Reset were not activated.
-
-## Findings and patches
-
-- P1 corrected: Grid and Row Grid rendered the unit/link tools separately from four independently rounded side inputs, so Padding and Margin did not read as one form group.
-- Both controls now reuse the established Container contract: a responsive device trigger and compact unit selector in the label row, followed by connected Top/Right/Bottom/Left inputs and one attached link cell.
-- Runtime inspection found exactly two spacing-control groups, two connected four-side rows, and two attached link cells in the selected Grid.
-- The responsive menu exposed Desktop, Tablet Portrait, and Mobile Portrait.
-- Unlinked mode changed only the edited side; after enabling the link control, entering 12 in Top updated all four sides to 12.
-- Grid Layout device controls, settings keys, canvas behavior, and Grid column structure were preserved; the later device-control follow-up removed only the redundant Spacing-level switch.
-
-## Visual QA boundary
-
-- The supplied screenshots and fresh in-app runtime captures were inspected at the same editor state. The runtime capture confirmed connected borders, compact header tools, side labels, and no horizontal overflow in the sidebar.
-- Row Grid uses the same source contract and regression coverage, but it is intentionally hidden from the toolbox and was therefore verified statically rather than as a separate runtime insertion.
-
-final result: passed
