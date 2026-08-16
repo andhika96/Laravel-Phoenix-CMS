@@ -18,6 +18,10 @@
         linkUrl: "",
         alignment: "left",
         tag: "h2",
+        headlineFontSizeMode: "auto",
+        headlineFontSize: "36px",
+        headlineFontSizeTablet: "",
+        headlineFontSizeMobile: "",
         markerColor: "#6979f8",
         strokeWidth: "8px",
         bringToFront: false,
@@ -50,6 +54,14 @@
                 : "highlighted";
             s.duration = Math.max(100, Number(s.duration) || 1200);
             s.delay = Math.max(0, Number(s.delay) || 2500);
+            s.tag = ["h1", "h2", "h3", "h4", "h5", "h6", "div", "span", "p"].includes(String(s.tag || "").toLowerCase())
+                ? String(s.tag).toLowerCase()
+                : "h2";
+            const base = defaults();
+            const hasLegacyHeadlineSize = ["headlineFontSize", "headlineFontSizeTablet", "headlineFontSizeMobile"].some((key) => String(s[key] ?? "").trim() !== String(base[key] ?? "").trim());
+            s.headlineFontSizeMode = ["auto", "custom"].includes(s.headlineFontSizeMode)
+                ? s.headlineFontSizeMode
+                : (hasLegacyHeadlineSize ? "custom" : "auto");
             return node;
         },
     });

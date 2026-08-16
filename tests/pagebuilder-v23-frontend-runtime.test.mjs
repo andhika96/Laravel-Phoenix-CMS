@@ -33,9 +33,9 @@ const runtime = window.PageBuilderElementorV23Runtime;
 function classList() {
     const values = new Set();
     return {
-        add: (name) => values.add(name),
+        add: (...names) => names.forEach((name) => values.add(name)),
         contains: (name) => values.has(name),
-        remove: (name) => values.delete(name),
+        remove: (...names) => names.forEach((name) => values.delete(name)),
         toggle(name, force) {
             const enabled = force === undefined ? !values.has(name) : force;
             if (enabled) values.add(name);
@@ -422,4 +422,61 @@ test("Animated Headline initializer is part of the public runtime contract", () 
 test("v2.3 public runtime retains Slides and Countdown initializers", () => {
     assert.equal(typeof runtime.initProSlides, "function");
     assert.equal(typeof runtime.initProCountdown, "function");
+});
+
+test("Product Color Selector runtime switches active panels and follows responsive position", () => {
+    const makeElement = (attributes = {}) => {
+        const target = eventTarget();
+        const values = new Map(Object.entries(attributes));
+        return {
+            ...target,
+            classList: classList(),
+            hidden: false,
+            getAttribute: (name) => values.get(name) || "",
+            setAttribute: (name, value) => values.set(name, String(value)),
+            focus() { this.focused = true; },
+            querySelector: () => null,
+            querySelectorAll: () => [],
+        };
+    };
+    const tabs = [
+        makeElement({ "data-product-color-id": "black" }),
+        makeElement({ "data-product-color-id": "red" }),
+    ];
+    const panels = [
+        makeElement({ "data-product-color-id": "black" }),
+        makeElement({ "data-product-color-id": "red" }),
+    ];
+    const list = makeElement();
+    const root = rootBase({
+        "data-default-item": "black",
+        "data-product-color-config": JSON.stringify({
+            defaultItemId: "black",
+            listPosition: "bottom",
+            listPositionTablet: "right",
+            listAlignment: "auto",
+            imageAspectRatio: "16 / 9",
+        }),
+    });
+    root.querySelectorAll = (selector) => selector.includes('role="tab"') ? tabs : (selector.includes("data-product-color-panel") ? panels : []);
+    root.querySelector = (selector) => selector.includes("data-product-color-list") ? list : null;
+
+    window.innerWidth = 1280;
+    runtime.initProductColorSelector(root);
+    assert.equal(tabs[0].getAttribute("aria-selected"), "true");
+    assert.equal(panels[0].hidden, false);
+    assert.equal(panels[1].hidden, true);
+
+    tabs[0].handlers.get("click")({ preventDefault() {} });
+    assert.equal(tabs[0].getAttribute("aria-selected"), "true");
+    tabs[0].handlers.get("keydown")({ key: "ArrowRight", preventDefault() {} });
+    assert.equal(tabs[1].getAttribute("aria-selected"), "true");
+    assert.equal(panels[0].hidden, true);
+    assert.equal(panels[1].hidden, false);
+
+    window.innerWidth = 768;
+    windowListeners.get("resize")();
+    assert.equal(root.getAttribute("data-position"), "right");
+    assert.equal(root.getAttribute("data-orientation"), "vertical");
+    assert.equal(list.getAttribute("aria-orientation"), "vertical");
 });

@@ -6,14 +6,14 @@
 			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active: editor.settingsTab === 'advanced'}" @click="editor.settingsTab = 'advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
 		</div>
 
-		<div v-show="editor.settingsTab === 'content'" class="pb-tab-content">
+		<div v-if="editor.settingsTab === 'content'" class="pb-tab-content">
 			<details class="pb-collapsible" open>
 				<summary>Divider</summary>
 				<div class="pb-collapsible-body"><div class="pb-form-group"><label class="pb-form-label">Style</label><select class="pb-select" v-model="node.settings.style"><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="dotted">Dotted</option></select></div></div>
 			</details>
 		</div>
 
-		<div v-show="editor.settingsTab === 'style'" class="pb-tab-content pb-basic-divider-style-settings">
+		<div v-if="editor.settingsTab === 'style'" class="pb-tab-content pb-basic-divider-style-settings">
 			<details class="pb-collapsible" open>
 				<summary>Divider</summary>
 				<div class="pb-collapsible-body">
@@ -27,7 +27,7 @@
 			</details>
 		</div>
 
-		<div v-show="editor.settingsTab === 'advanced'" class="pb-tab-content">
+		<div v-if="editor.settingsTab === 'advanced'" class="pb-tab-content">
 			<details class="pb-collapsible" open><summary>Attributes</summary><div class="pb-collapsible-body"><div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="node.settings.cssClass" placeholder="custom-divider"></div></div></details>
 		</div>
 	</div>

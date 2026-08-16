@@ -372,6 +372,13 @@ return [
         'settings' => 'js/pagebuilder_elementor_v23/widgets/pro/shared/Settings.vue',
         'view' => 'pagebuilder_elementor_v23.partials.render_pro_widget', 'toolbox' => true,
     ],
+    'product_color_selector' => [
+        'type' => 'product_color_selector', 'label' => 'Product Color Selector', 'category' => 'pro', 'icon' => 'fas fa-palette',
+        'definition' => 'js/pagebuilder_elementor_v23/widgets/pro/product-color-selector/definition.js',
+        'canvas' => 'js/pagebuilder_elementor_v23/widgets/pro/product-color-selector/Canvas.vue',
+        'settings' => 'js/pagebuilder_elementor_v23/widgets/pro/product-color-selector/Settings.vue',
+        'view' => 'pagebuilder_elementor_v23.widgets.pro.product-color-selector', 'toolbox' => true,
+    ],
     'text_editor' => [
         'type' => 'text_editor',
         'label' => 'Text Editor',

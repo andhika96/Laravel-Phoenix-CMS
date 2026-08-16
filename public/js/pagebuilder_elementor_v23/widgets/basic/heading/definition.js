@@ -23,6 +23,7 @@
 		hoverColor: '',
 		hoverTransitionDuration: 0.3,
 		headingFontFamily: 'inherit',
+		headingFontSizeMode: 'auto',
 		headingFontSize: '32px',
 		headingFontSizeTablet: '',
 		headingFontSizeMobile: '',
@@ -67,7 +68,13 @@
 				linkCustomAttributes: Array.isArray(previous.linkCustomAttributes) ? previous.linkCustomAttributes : [],
 			};
 			const settings = normalized.settings;
+			const defaultSettings = defaults();
 			settings.tag = allowedTags.includes(String(settings.tag).toLowerCase()) ? String(settings.tag).toLowerCase() : 'h2';
+			const hasLegacyCustomSize = ['headingFontSize', 'headingFontSizeTablet', 'headingFontSizeMobile']
+				.some((key) => settings[key] !== '' && settings[key] !== defaultSettings[key]);
+			settings.headingFontSizeMode = ['auto', 'custom'].includes(settings.headingFontSizeMode)
+				? settings.headingFontSizeMode
+				: (hasLegacyCustomSize ? 'custom' : 'auto');
 			['align', 'alignTablet', 'alignMobile'].forEach((key) => {
 				if (settings[key] !== '' && !allowedAlignments.includes(settings[key])) settings[key] = key === 'align' ? 'left' : '';
 			});

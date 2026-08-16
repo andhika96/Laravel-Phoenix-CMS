@@ -15,6 +15,8 @@
 	$title = (string) $resolveDynamic('title', $settings['text'] ?? 'Add your heading text');
 	$tag = strtolower(trim((string) ($settings['tag'] ?? 'h2')));
 	if (!in_array($tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p'], true)) $tag = 'h2';
+	$headingTagFontSizes = ['h1' => '40px', 'h2' => '34px', 'h3' => '29px', 'h4' => '24px', 'h5' => '20px', 'h6' => '16px', 'div' => '29px', 'span' => '29px', 'p' => '29px'];
+	$headingFontSizeMode = ($settings['headingFontSizeMode'] ?? 'auto') === 'custom' ? 'custom' : 'auto';
 
 	$safeLinkUrl = function (mixed $value): string {
 		$url = trim((string) $value);
@@ -68,12 +70,12 @@
 	$duration = fn (mixed $value): float => is_numeric($value) ? max(0, min(10, (float) $value)) : 0.3;
 	$alignments = ['left', 'center', 'right', 'justify'];
 	$blendModes = ['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'saturation', 'color', 'difference', 'exclusion', 'hue', 'luminosity'];
-	$typographyStyle = function (string $suffix = '') use ($settings, $responsive, $cssLength, $cssColor, $cssShadow, $cssFontFamily, $enum, $alignments, $blendModes): string {
+	$typographyStyle = function (string $suffix = '') use ($settings, $responsive, $cssLength, $cssColor, $cssShadow, $cssFontFamily, $enum, $alignments, $blendModes, $headingFontSizeMode, $headingTagFontSizes, $tag): string {
 		return implode(';', [
 			'text-align:' . $enum($responsive('align', $suffix, 'left'), $alignments, 'left'),
 			'color:' . $cssColor($settings['color'] ?? '#101828', '#101828'),
 			'font-family:' . $cssFontFamily($settings['headingFontFamily'] ?? 'inherit'),
-			'font-size:' . $cssLength($responsive('headingFontSize', $suffix, $settings['fontSize'] ?? '32px'), '32px'),
+			'font-size:' . $cssLength($headingFontSizeMode === 'custom' ? $responsive('headingFontSize', $suffix, $settings['fontSize'] ?? '32px') : ($headingTagFontSizes[$tag] ?? '32px'), '32px'),
 			'font-weight:' . (preg_match('/^(?:normal|bold|[1-9]00)$/', trim((string) ($settings['headingFontWeight'] ?? $settings['fontWeight'] ?? '600'))) ? trim((string) ($settings['headingFontWeight'] ?? $settings['fontWeight'] ?? '600')) : '600'),
 			'line-height:' . $cssLength($responsive('headingLineHeight', $suffix, '1.2em'), '1.2em'),
 			'letter-spacing:' . $cssLength($responsive('headingLetterSpacing', $suffix, '0px'), '0px'),

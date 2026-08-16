@@ -112,6 +112,6 @@ test('v2.3 closes page settings on Escape, outside click, preview, and successfu
 });
 
 test('v2.3 toolbox cards add at the root when no targeted insert is active', () => {
-    assert.match(v23, /function insertToolAtRoot\(toolDef\)[\s\S]{0,800}rootNodes\.value\.push\(item\)[\s\S]{0,800}onRootAdd\(/);
-    assert.match(v23, /function onToolboxItemClick\(toolDef\)[\s\S]{0,300}if \(pendingInsertTarget\.value\) return insertToolIntoPendingTarget\(toolDef, pendingInsertTarget\.value\);[\s\S]{0,300}return insertToolAtRoot\(toolDef\);/);
+	assert.match(v23, /function insertToolAtRoot\(toolDef\)[\s\S]{0,800}if \(isWgt\(item\.type\)\)[\s\S]{0,800}makeNode\('container'\)[\s\S]{0,800}rootNodes\.value\.push\(container\)/);
+	assert.match(v23, /function onToolboxItemClick\(toolDef\)[\s\S]{0,300}if \(pendingInsertTarget\.value\) return insertToolIntoPendingTarget\(toolDef, pendingInsertTarget\.value\);[\s\S]{0,300}return insertToolAtRoot\(toolDef\);/);
 });

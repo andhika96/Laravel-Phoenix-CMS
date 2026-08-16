@@ -6,7 +6,7 @@
 								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:editor.settingsTab==='advanced'}" @click="editor.settingsTab='advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
 							</div>
 						<!-- TAB LAYOUT (GRID) -->
-						<div v-show="editor.settingsTab==='layout'" class="pb-tab-content pb-grid-settings__tab">
+						<div v-if="editor.settingsTab==='layout'" class="pb-tab-content pb-grid-settings__tab">
 							<div class="pb-prop-section pb-grid-settings__group">
 								<div class="pb-label-row pb-grid-settings__section-head">
 									<div class="pb-prop-section-title mb-0">Grid Layout</div>
@@ -86,7 +86,7 @@
 							</div>
 						</div>
 						<!-- TAB STYLE (GRID) -->
-						<div v-show="editor.settingsTab==='style'" class="pb-tab-content pb-grid-settings__tab">
+						<div v-if="editor.settingsTab==='style'" class="pb-tab-content pb-grid-settings__tab">
 							<div class="pb-prop-section pb-grid-settings__group">
 								<div class="pb-label-row pb-grid-settings__section-head">
 									<div class="pb-prop-section-title mb-0">Spacing</div>
@@ -213,7 +213,7 @@
 							</div>
 						</div>
 						<!-- TAB ADVANCED (GRID) -->
-						<div v-show="editor.settingsTab==='advanced'" class="pb-tab-content pb-grid-settings__tab">
+						<div v-if="editor.settingsTab==='advanced'" class="pb-tab-content pb-grid-settings__tab">
 							<div class="pb-prop-section pb-grid-settings__group">
 								<div class="pb-prop-section-title">Motion Effects</div>
 								<div class="pb-form-group">

@@ -38,6 +38,10 @@
         title: "Basic Plan",
         description: "For small teams",
         titleTag: "h3",
+        priceTableHeaderFontSizeMode: "auto",
+        priceTableHeaderFontSize: "24px",
+        priceTableHeaderFontSizeTablet: "",
+        priceTableHeaderFontSizeMobile: "",
         currencySymbol: "$",
         price: "39.99",
         currencyFormat: "comma",
@@ -84,6 +88,14 @@
                 Array.isArray(settings.features) && settings.features.length
                     ? settings.features.map(normalizeFeature)
                     : defaults().features;
+            settings.titleTag = ["h1", "h2", "h3", "h4", "h5", "h6", "div", "span", "p"].includes(String(settings.titleTag || "").toLowerCase())
+                ? String(settings.titleTag).toLowerCase()
+                : "h3";
+            const base = defaults();
+            const hasLegacyHeaderSize = ["priceTableHeaderFontSize", "priceTableHeaderFontSizeTablet", "priceTableHeaderFontSizeMobile"].some((key) => String(settings[key] ?? "").trim() !== String(base[key] ?? "").trim());
+            settings.priceTableHeaderFontSizeMode = ["auto", "custom"].includes(settings.priceTableHeaderFontSizeMode)
+                ? settings.priceTableHeaderFontSizeMode
+                : (hasLegacyHeaderSize ? "custom" : "auto");
             return node;
         },
     });

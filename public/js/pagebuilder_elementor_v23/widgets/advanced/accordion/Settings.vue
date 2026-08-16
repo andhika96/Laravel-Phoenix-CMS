@@ -6,7 +6,7 @@
 			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active: editor.settingsTab === 'advanced'}" @click="editor.settingsTab = 'advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
 		</div>
 
-		<div v-show="editor.settingsTab === 'content'" class="pb-tab-content">
+		<div v-if="editor.settingsTab === 'content'" class="pb-tab-content">
 			<details class="pb-collapsible" open>
 				<summary>Layout</summary>
 				<div class="pb-collapsible-body">
@@ -16,7 +16,7 @@
 							<template #item="{ element: item, index }">
 								<div class="pb-accordion-item-row" :class="{ active: isItemExpanded(item), expanded: isItemExpanded(item) }">
 									<div class="pb-accordion-item-header">
-										<button type="button" class="pb-accordion-item-main" :aria-expanded="isItemExpanded(item)" @click="toggleAccordionItem(item)"><span>{{ editor.accordionItemSummary(item, index) }}</span><i class="fas fa-chevron-down pb-accordion-item-disclosure" aria-hidden="true"></i></button>
+										<button type="button" class="pb-accordion-item-main" :aria-expanded="isItemExpanded(item)" @click="toggleAccordionItem(item)"><i class="fas pb-accordion-item-disclosure" :class="isItemExpanded(item)?'fa-chevron-up':'fa-chevron-down'" aria-hidden="true"></i><span>{{ editor.accordionItemSummary(item, index) }}</span></button>
 										<button type="button" class="pb-accordion-item-action" title="Duplicate" aria-label="Duplicate item" @click.stop="duplicateAccordionItem(item.id)"><i class="far fa-copy"></i></button>
 										<button type="button" class="pb-accordion-item-action" title="Remove" aria-label="Remove item" :disabled="editor.accordionItemsForNode(node).length <= 1" @click.stop="removeAccordionItem(item.id)"><i class="fas fa-times"></i></button>
 									</div>
@@ -52,7 +52,7 @@
 			<a class="pb-accordion-help-link" href="https://go.elementor.com/widget-nested-accordion" target="_blank" rel="noopener noreferrer">Need Help <i class="fas fa-external-link-alt"></i></a>
 		</div>
 
-		<div v-show="editor.settingsTab === 'style'" class="pb-tab-content pb-accordion-style-settings">
+		<div v-if="editor.settingsTab === 'style'" class="pb-tab-content pb-accordion-style-settings">
 			<details class="pb-collapsible" open>
 				<summary>Accordion</summary>
 				<div class="pb-collapsible-body">
@@ -73,7 +73,7 @@
 				<summary>Header</summary>
 				<div class="pb-collapsible-body">
 					<div class="pb-subsection-title">Title</div>
-					<component :is="editor.typographyControl" :settings="node.settings" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+					<component :is="editor.typographyControl" :settings="node.settings" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" font-size-mode-key="headerFontSizeMode" @responsive-device="editor.setResponsiveDevice" />
 					<div class="pb-state-tabs pb-accordion-style-state"><button v-for="state in styleStates" :key="'title-' + state.value" type="button" :class="{active: titleState === state.value}" @click="titleState = state.value">{{ state.label }}</button></div>
 					<div class="pb-form-group pb-accordion-color-control"><label class="pb-form-label">Color</label><div class="pb-color-row"><input class="pb-input coloris pb-coloris-input" v-model="node.settings[stateKey('headerTitleColor', titleState)]"></div></div>
 					<component :is="editor.textShadowControl" aria-label="Text Shadow" :model-value="node.settings[stateKey('headerTextShadow', titleState)]" :control-id="'accordion-title-shadow-' + titleState" :open="activeTextEffect === ('accordion-title-shadow-' + titleState)" @request-open="activeTextEffect = $event" @update:modelValue="node.settings[stateKey('headerTextShadow', titleState)] = $event" />
@@ -101,7 +101,7 @@
 			<a class="pb-accordion-help-link" href="https://go.elementor.com/widget-nested-accordion" target="_blank" rel="noopener noreferrer">Need Help <i class="fas fa-external-link-alt"></i></a>
 		</div>
 
-		<div v-show="editor.settingsTab === 'advanced'" class="pb-tab-content pb-accordion-advanced-settings">
+		<div v-if="editor.settingsTab === 'advanced'" class="pb-tab-content pb-accordion-advanced-settings">
 			<component :is="editor.widgetAdvancedControls" :node="node" :responsive-device="editor.responsiveDevice" :show-display-conditions="false" :show-cache-settings="false" :elementor-choices="true" @responsive-device="editor.setResponsiveDevice" @choose-media="editor.chooseMedia(node.settings,$event)" @clear-media="editor.clearMedia(node.settings,$event)" @unavailable-ai="editor.showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')" />
 			<a class="pb-accordion-help-link" href="https://go.elementor.com/widget-nested-accordion" target="_blank" rel="noopener noreferrer">Need Help <i class="fas fa-external-link-alt"></i></a>
 		</div>

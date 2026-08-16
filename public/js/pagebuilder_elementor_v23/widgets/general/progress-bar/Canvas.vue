@@ -9,6 +9,7 @@
 
 <script>
 const TITLE_TAGS = Object.freeze(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p']);
+const TITLE_TAG_FONT_SIZES = Object.freeze({ h1: '40px', h2: '34px', h3: '29px', h4: '24px', h5: '20px', h6: '16px', div: '14px', span: '14px', p: '14px' });
 export default {
 	name: 'GeneralProgressBar', props: { item: { type: Object, required: true }, responsiveDevice: { type: String, default: 'desktop' } },
 	computed: {
@@ -18,7 +19,7 @@ export default {
 		customClass() { return String(this.settings.cssClass || '').split(/\s+/).map((token) => token.replace(/^\.+/, '').replace(/[^a-zA-Z0-9_-]/g, '')).filter(Boolean).join(' '); },
 		trackStyle() { return { backgroundColor: this.safeColor(this.settings.backgroundColor, '#eef1f4') }; },
 		fillStyle() { return { width: `${this.percentage}%`, backgroundColor: this.safeColor(this.settings.progressColor, '#69727d'), color: this.safeColor(this.settings.innerTextColor, '#fff') }; },
-		titleStyle() { return this.typographyStyle('title', { color: this.safeColor(this.settings.titleColor, '#344054'), textShadow: this.safeShadow(this.settings.titleTextShadow) }); },
+		titleStyle() { return this.typographyStyle('title', { color: this.safeColor(this.settings.titleColor, '#344054'), textShadow: this.safeShadow(this.settings.titleTextShadow), fontSize: this.settings.titleFontSizeMode === 'custom' ? this.cssSize(this.responsiveValue('titleFontSize', '14px'), '14px') : (TITLE_TAG_FONT_SIZES[this.safeTitleTag] || '14px') }); },
 	},
 	methods: {
 		responsiveValue(base, fallback = '') { const device = ['tablet', 'mobile'].includes(this.responsiveDevice) ? this.responsiveDevice : 'desktop'; const keys = device === 'mobile' ? [base + 'Mobile', base + 'Tablet', base] : (device === 'tablet' ? [base + 'Tablet', base] : [base]); for (const key of keys) { if (this.settings[key] !== '' && this.settings[key] !== null && this.settings[key] !== undefined) return this.settings[key]; } return fallback; },

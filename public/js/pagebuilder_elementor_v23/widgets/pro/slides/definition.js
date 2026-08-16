@@ -24,6 +24,10 @@
         slides: [slideDefaults(1), slideDefaults(2), slideDefaults(3)],
         height: "400px",
         titleTag: "h2",
+        slideTitleFontSizeMode: "auto",
+        slideTitleFontSize: "32px",
+        slideTitleFontSizeTablet: "",
+        slideTitleFontSizeMobile: "",
         descriptionTag: "div",
         navigation: "both",
         autoplay: true,
@@ -134,6 +138,14 @@
             settings.navigation = ["both", "arrows", "dots", "none"].includes(settings.navigation)
                 ? settings.navigation
                 : "both";
+            settings.titleTag = ["h1", "h2", "h3", "h4", "h5", "h6", "div", "span", "p"].includes(String(settings.titleTag || "").toLowerCase())
+                ? String(settings.titleTag).toLowerCase()
+                : "h2";
+            const slideTitleSizeDefaults = defaults();
+            const hasLegacySlideTitleSize = ["slideTitleFontSize", "slideTitleFontSizeTablet", "slideTitleFontSizeMobile"].some((key) => String(settings[key] ?? "").trim() !== String(slideTitleSizeDefaults[key] ?? "").trim());
+            settings.slideTitleFontSizeMode = ["auto", "custom"].includes(settings.slideTitleFontSizeMode)
+                ? settings.slideTitleFontSizeMode
+                : (hasLegacySlideTitleSize ? "custom" : "auto");
             settings.arrowsPosition = ["inside", "outside"].includes(settings.arrowsPosition)
                 ? settings.arrowsPosition
                 : "inside";

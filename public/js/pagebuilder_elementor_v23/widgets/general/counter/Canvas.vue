@@ -7,6 +7,7 @@
 
 <script>
 const TITLE_TAGS = Object.freeze(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p']);
+const TITLE_TAG_FONT_SIZES = Object.freeze({ h1: '40px', h2: '34px', h3: '29px', h4: '24px', h5: '20px', h6: '16px', div: '16px', span: '16px', p: '16px' });
 const POSITIONS = Object.freeze(['above', 'below', 'left', 'right']);
 const NUMBER_POSITIONS = Object.freeze(['left', 'center', 'right', 'stretch']);
 
@@ -30,7 +31,7 @@ export default {
 			return { display: 'flex', flexDirection: ['left', 'right'].includes(this.position) ? (this.position === 'right' ? 'row-reverse' : 'row') : 'column', alignItems: ['left', 'right'].includes(this.position) ? 'center' : horizontal, textAlign: this.titleAlign, gap: this.cssSize(this.responsiveValue('titleGap', '8px'), '8px'), width: this.numberPosition === 'stretch' ? '100%' : undefined };
 		},
 		numberStyle() { return { ...this.typographyStyle('number', { color: this.safeColor(this.settings.numberColor, '#101828'), WebkitTextStrokeWidth: this.cssSize(this.responsiveValue('numberTextStrokeWidth', '0px'), '0px'), WebkitTextStrokeColor: this.safeColor(this.settings.numberTextStrokeColor, 'currentColor'), textShadow: this.safeShadow(this.settings.numberTextShadow) }), textAlign: this.numberPosition === 'stretch' ? 'center' : this.numberPosition }; },
-		titleStyle() { return { ...this.typographyStyle('title', { color: this.safeColor(this.settings.titleColor, '#344054'), WebkitTextStrokeWidth: this.cssSize(this.responsiveValue('titleTextStrokeWidth', '0px'), '0px'), WebkitTextStrokeColor: this.safeColor(this.settings.titleTextStrokeColor, 'currentColor'), textShadow: this.safeShadow(this.settings.titleTextShadow) }), alignSelf: this.position === 'above' || this.position === 'below' ? this.flexAlignment(this.titleAlign) : undefined }; },
+		titleStyle() { return { ...this.typographyStyle('title', { color: this.safeColor(this.settings.titleColor, '#344054'), WebkitTextStrokeWidth: this.cssSize(this.responsiveValue('titleTextStrokeWidth', '0px'), '0px'), WebkitTextStrokeColor: this.safeColor(this.settings.titleTextStrokeColor, 'currentColor'), textShadow: this.safeShadow(this.settings.titleTextShadow), fontSize: this.settings.titleFontSizeMode === 'custom' ? this.cssSize(this.responsiveValue('titleFontSize', '16px'), '16px') : (TITLE_TAG_FONT_SIZES[this.safeTitleTag] || '16px') }), alignSelf: this.position === 'above' || this.position === 'below' ? this.flexAlignment(this.titleAlign) : undefined }; },
 		formattedNumber() {
 			const number = Number.isFinite(Number(this.displayedNumber)) ? Number(this.displayedNumber) : 0;
 			if (!this.settings.thousandSeparator) return String(Math.round(number * 100) / 100);

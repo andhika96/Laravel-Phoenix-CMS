@@ -5455,6 +5455,11 @@ body {
 }
 
 .pb-panel.left .pb-widget-settings--basic-gallery .pb-collapsible-body > .pb-form-group,
+.pb-panel.left .pb-widget-settings--icon-list .pb-collapsible-body > .pb-form-group {
+	min-width: 0;
+}
+
+.pb-panel.left .pb-widget-settings--basic-gallery .pb-collapsible-body > .pb-form-group,
 .pb-panel.left .pb-widget-settings--basic-gallery .pb-collapsible-body > .pb-subsection-title,
 .pb-panel.left .pb-widget-settings--basic-gallery .pb-carousel-custom-resolution,
 .pb-panel.left .pb-widget-settings--icon-list .pb-collapsible-body > .pb-form-group,
@@ -7622,7 +7627,7 @@ body {
 }
 
 .pb-panel.left .pb-tabs-settings .pb-tabs-item-fields {
-	padding: 10px 10px 2px;
+	padding: 10px 10px 12px;
 }
 
 .pb-panel.left .pb-tabs-settings .pb-tabs-item-fields .pb-form-label,
@@ -7837,6 +7842,58 @@ body {
 .pb-panel.left .pb-accordion-settings .pb-accordion-item-fields .pb-form-label,
 .pb-panel.left .pb-accordion-settings .pb-accordion-item-fields .pb-input {
 	font-size: 11px;
+}
+
+/* Repeater rows share the Hero Slider density while preserving each widget's
+   own reorder/drag and action contract. */
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-header {
+	grid-template-columns: minmax(0, 1fr) 30px 30px;
+	gap: 2px;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-main,
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-main {
+	min-height: 34px;
+	justify-content: flex-start;
+	gap: 6px;
+	padding: 4px 6px;
+	font-size: 11px;
+	font-weight: 600;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-main,
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-main {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-main > span,
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-main > span {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-disclosure,
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-disclosure {
+	flex: 0 0 16px;
+	width: 16px;
+	font-size: 9px;
+	transform: none !important;
+	transition: none;
+}
+
+.pb-panel.left .pb-tabs-settings .pb-tabs-item-action,
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-action {
+	width: 30px;
+	min-height: 34px;
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-accordion-settings .pb-accordion-item-header {
+	grid-template-columns: minmax(0, 1fr) 30px 30px;
+	gap: 2px;
 }
 
 .pb-panel.left .pb-accordion-settings .pb-accordion-add-btn {
@@ -11218,8 +11275,8 @@ body {
 }
 
 .side-panel.pb-panel.left .v23-properties-section .pb-widget-settings.pb-hero-slider-settings .pb-hero-slider-slide__header {
-	min-height: 34px;
-	padding: 4px 8px;
+	min-height: 36px;
+	padding: 4px 6px;
 	gap: 4px;
 }
 
@@ -11228,7 +11285,7 @@ body {
 	flex: 1 1 auto;
 	min-width: 0;
 	align-items: center;
-	gap: 3px;
+	gap: 6px;
 }
 
 .side-panel.pb-panel.left .v23-properties-section .pb-widget-settings.pb-hero-slider-settings .pb-hero-slider-slide__title > i {

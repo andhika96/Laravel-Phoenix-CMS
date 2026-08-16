@@ -45,6 +45,8 @@ assert.ok((settings.match(/class="pb-seg-btn"/g) || []).length >= 6, 'Hero segme
 assert.equal((settings.match(/<ToggleField/g) || []).length, 4, 'Hero boolean controls must reuse one compact toggle component');
 assert.doesNotMatch(settings, /pb-switch-row/, 'Hero settings must not render unstyled native checkbox rows');
 assert.match(settings, /:deep\(\.pb-hero-devices button\)/);
+assert.match(settings, /:deep\(\.pb-hero-devices button\)\{[^}]*gap:5px/, 'Hero responsive device tab icons and labels should have a consistent 5px gap');
+assert.match(settings, /:deep\(\.pb-hero-devices span\)\{margin-left:0\}/, 'Hero responsive device tabs should not add a second label offset');
 assert.equal((settings.match(/'has-action'/g) || []).length, 3, 'Hero media fields must mark only fields with a visible picker action');
 assert.match(settings, /\.pb-hero-devices\{[^}]*padding:3px;[^}]*border:1px solid var\(--line\);[^}]*border-radius:9px;[^}]*background:var\(--soft\)/);
 assert.match(settings, /:deep\(\.pb-hero-devices button\)\{[^}]*border:0!important;[^}]*border-radius:6px!important;[^}]*background:transparent/);

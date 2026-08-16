@@ -65,6 +65,7 @@
         contentGapMobile: '10px',
         overlayColor: 'rgba(255,255,255,0)',
         titleColor: '#292d32',
+        titleFontSizeMode: 'auto',
         titleFontSize: '48px',
         titleFontSizeTablet: '38px',
         titleFontSizeMobile: '34px',
@@ -127,6 +128,8 @@
         settings.contentOrder = [...suppliedOrder, ...allowedOrder.filter((key) => !suppliedOrder.includes(key))];
         settings.positioningMode = settings.positioningMode === 'independent' ? 'independent' : 'grouped';
         settings.titleTag = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div'].includes(settings.titleTag) ? settings.titleTag : 'h2';
+        const legacyTitleSize = ['titleFontSize', 'titleFontSizeTablet', 'titleFontSizeMobile'].some((key) => settings[key] !== '' && settings[key] !== baseline[key]);
+        settings.titleFontSizeMode = ['auto', 'custom'].includes(settings.titleFontSizeMode) ? settings.titleFontSizeMode : (legacyTitleSize ? 'custom' : 'auto');
         settings.subtitleTag = ['p', 'div', 'span'].includes(settings.subtitleTag) ? settings.subtitleTag : 'p';
         ['showTitle', 'showSubtitle', 'showButtons'].forEach((key) => { settings[key] = settings[key] !== false; });
         return node;

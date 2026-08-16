@@ -18,6 +18,8 @@
 	$animationDuration = max(0, min(5000, (int) ($accordionSettings['animationDuration'] ?? 400)));
 	$titleTag = strtolower(trim((string) ($accordionSettings['titleTag'] ?? 'div')));
 	if (!in_array($titleTag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p'], true)) $titleTag = 'div';
+	$titleTagFontSizes = ['h1' => '40px', 'h2' => '34px', 'h3' => '29px', 'h4' => '24px', 'h5' => '20px', 'h6' => '16px', 'div' => '16px', 'span' => '16px', 'p' => '16px'];
+	$headerFontSizeMode = ($accordionSettings['headerFontSizeMode'] ?? 'auto') === 'custom' ? 'custom' : 'auto';
 	$items = is_array($node['accordionItems'] ?? null) && count($node['accordionItems'])
 		? array_values($node['accordionItems'])
 		: [['id' => 'item-1', 'title' => 'Item #1', 'cssId' => '', 'children' => []]];
@@ -90,7 +92,7 @@
 		'--accordion-border-radius:' . $cssToken($responsiveValue('accordionBorderRadius', '', '0px'), '0px'),
 		'--accordion-padding:' . $cssToken($responsiveValue('accordionPadding', '', '0px'), '0px'),
 		'--accordion-header-font-family:' . $headerFontFamily,
-		'--accordion-header-font-size:' . $cssToken($responsiveValue('headerFontSize', '', '16px'), '16px'),
+		'--accordion-header-font-size:' . $cssToken($headerFontSizeMode === 'custom' ? $responsiveValue('headerFontSize', '', '16px') : ($titleTagFontSizes[$titleTag] ?? '16px'), '16px'),
 		'--accordion-header-font-weight:' . (trim((string) ($accordionSettings['headerFontWeight'] ?? '600')) ?: '600'),
 		'--accordion-header-line-height:' . $lineHeightToken($responsiveValue('headerLineHeight', '', '1.4'), '1.4'),
 		'--accordion-header-letter-spacing:' . $cssToken($responsiveValue('headerLetterSpacing', '', '0px'), '0px'),
@@ -371,7 +373,7 @@
 			'--accordion-content-distance:' . $cssToken($responsiveValue('accordionContentDistance', $suffix, '0px'), '0px'),
 			'--accordion-border-radius:' . $cssToken($responsiveValue('accordionBorderRadius', $suffix, '0px'), '0px'),
 			'--accordion-padding:' . $cssToken($responsiveValue('accordionPadding', $suffix, '0px'), '0px'),
-			'--accordion-header-font-size:' . $cssToken($responsiveValue('headerFontSize', $suffix, '16px'), '16px'),
+			'--accordion-header-font-size:' . $cssToken($headerFontSizeMode === 'custom' ? $responsiveValue('headerFontSize', $suffix, '16px') : ($titleTagFontSizes[$titleTag] ?? '16px'), '16px'),
 			'--accordion-header-line-height:' . $lineHeightToken($responsiveValue('headerLineHeight', $suffix, '1.4'), '1.4'),
 			'--accordion-header-letter-spacing:' . $cssToken($responsiveValue('headerLetterSpacing', $suffix, '0px'), '0px'),
 			'--accordion-header-word-spacing:' . $cssToken($responsiveValue('headerWordSpacing', $suffix, '0px'), '0px'),

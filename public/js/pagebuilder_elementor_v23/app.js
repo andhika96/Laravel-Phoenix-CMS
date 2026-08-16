@@ -107,7 +107,7 @@
 		if (!_wcache[type]) {
 			const path = widgetRegistry?.get(type)?.canvas;
 			_wcache[type] = path
-				? defineAsyncComponent(() => loader.loadModule(path, sfcOptions))
+				? defineAsyncComponent(() => loadSfcModule(path))
 				: { template: '<div style="color:red">??' + type + '</div>' };
 		}
 		return _wcache[type];
@@ -126,107 +126,16 @@
 				})
 				: { template: '<div class="pb-form-note">Settings module is unavailable for this widget.</div>' };
 		}
-		return _sfcResolvedModules[path] || _settingsCache[type];
+		return _settingsCache[type];
 	}
 
-	function preloadSettingsModuleAtIdle(modulePaths, cursor, onComplete) {
-		if (cursor >= modulePaths.length) {
-			onComplete();
-			return;
-		}
-
-		const run = () => {
-			if (document.body.classList.contains('pb-is-dragging') || window.navigator?.scheduling?.isInputPending?.({ includeContinuous: true })) {
-				window.setTimeout(() => preloadSettingsModuleAtIdle(modulePaths, cursor, onComplete), 200);
-				return;
-			}
-
-			const path = modulePaths[cursor];
-			Promise.resolve()
-				.then(() => loadSfcModule(path))
-				.catch(error => {
-					console.warn('[PB] Settings preload failed:', path, error);
-				})
-				.finally(() => {
-					preloadSettingsModuleAtIdle(modulePaths, cursor + 1, onComplete);
-				});
-		};
-
-		if ('requestIdleCallback' in window) {
-			window.requestIdleCallback(run);
-			return;
-		}
-
-		window.setTimeout(run, 300);
-	}
-
-	function preloadWidgetSettingsModules() {
-		const modulePaths = [...new Set([
-			...Object.values(sharedControlPaths),
-			...(widgetRegistry?.all() || []).map(definition => definition.settings).filter(Boolean),
-		])];
-
-		return new Promise(resolve => {
-			preloadSettingsModuleAtIdle(modulePaths, 0, resolve);
+	function warmWidgetModules(type) {
+		const definition = widgetRegistry?.get(type);
+		const paths = [definition?.canvas, definition?.settings].filter(Boolean);
+		paths.forEach(path => {
+			if (_sfcResolvedModules[path]) return;
+			loadSfcModule(path).catch(() => {});
 		});
-	}
-
-	let _settingsPreloadFirstDragStarted = false;
-	function scheduleWidgetSettingsPreloadAfterFirstGesture() {
-		let started = false;
-		let idleHandle = null;
-		let paintScheduled = false;
-		const hasPendingInput = () => Boolean(
-			window.navigator?.scheduling?.isInputPending?.({ includeContinuous: true })
-		);
-		const shouldWaitForInput = () => document.body.classList.contains('pb-is-dragging') || hasPendingInput();
-		const run = () => {
-			idleHandle = null;
-			if (started) return;
-			if (shouldWaitForInput()) {
-				deferUntilPaint();
-				return;
-			}
-			started = true;
-			preloadWidgetSettingsModules().catch(error => {
-				console.warn('[PB] Settings preload initialization failed:', error);
-			});
-		};
-		const queueIdle = () => {
-			if (started || idleHandle !== null) return;
-			if ('requestIdleCallback' in window) {
-				idleHandle = window.requestIdleCallback(run);
-				return;
-			}
-			idleHandle = window.setTimeout(run, 300);
-		};
-		const deferUntilPaint = () => {
-			if (started || paintScheduled || idleHandle !== null) return;
-			paintScheduled = true;
-			window.requestAnimationFrame(() => {
-				window.requestAnimationFrame(() => {
-					paintScheduled = false;
-					queueIdle();
-				});
-			});
-		};
-		const settleAfterDrag = () => {
-			_settingsPreloadFirstDragStarted = false;
-			deferUntilPaint();
-		};
-		const finishFirstGesture = () => {
-			if (_settingsPreloadFirstDragStarted || document.body.classList.contains('pb-is-dragging')) {
-				window.addEventListener('dragend', settleAfterDrag, { once: true });
-				return;
-			}
-			deferUntilPaint();
-		};
-		const observeFirstGesture = () => {
-			window.addEventListener('pointerup', finishFirstGesture, { once: true, passive: true });
-		};
-
-		window.addEventListener('pointerdown', observeFirstGesture, { once: true, passive: true });
-		window.addEventListener('keydown', deferUntilPaint, { once: true });
 	}
 
 	function hasRegisteredWidget(type) {
@@ -1305,6 +1214,7 @@
 			accordionPaddingTablet: '',
 			accordionPaddingMobile: '',
 			headerFontFamily: 'inherit',
+			headerFontSizeMode: 'auto',
 			headerFontSize: '16px',
 			headerFontSizeTablet: '',
 			headerFontSizeMobile: '',
@@ -2105,6 +2015,7 @@
 		share_buttons: 'Share Buttons',
 		progress_tracker: 'Progress Tracker',
 		video_playlist: 'Video Playlist',
+		product_color_selector: 'Product Color Selector',
 	});
 
 	const NODE_LABEL_ICONS = Object.freeze({
@@ -2153,6 +2064,7 @@
 		share_buttons: 'fas fa-share-alt',
 		progress_tracker: 'fas fa-tasks',
 		video_playlist: 'fas fa-list',
+		product_color_selector: 'fas fa-palette',
 	});
 
 	function baseNodeLabel(type, fallback = 'Widget') {
@@ -2396,7 +2308,7 @@
 			hasSharedAdvancedControls() { return this.isTabsNode || this.isAccordionNode || this.node.type === 'image' || this.node.type === 'image_box' || this.node.type === 'icon_box' || this.node.type === 'image_carousel' || this.node.type === 'basic_gallery' || this.node.type === 'icon_list' || this.node.type === 'heading' || this.node.type === 'google_maps'; },
 		hasNewGeneralAdvancedControls() {
 			return ['counter', 'progress_bar', 'testimonial', 'social_icons', 'alert', 'rating', 'text_path'].includes(this.node.type)
-				|| ['form', 'slides', 'animated_headline', 'hotspot', 'price_list', 'price_table', 'call_to_action', 'countdown', 'carousel', 'reviews', 'testimonial_carousel', 'media_carousel', 'flip_box', 'code_highlight', 'blockquote', 'share_buttons', 'progress_tracker', 'video_playlist', 'hero_banner', 'hero_slider'].includes(this.node.type);
+				|| ['form', 'slides', 'animated_headline', 'hotspot', 'price_list', 'price_table', 'call_to_action', 'countdown', 'carousel', 'reviews', 'testimonial_carousel', 'media_carousel', 'flip_box', 'code_highlight', 'blockquote', 'share_buttons', 'progress_tracker', 'video_playlist', 'hero_banner', 'hero_slider', 'product_color_selector'].includes(this.node.type);
 		},
 			isWidgetNode() { return !isCont(this.node.type) && !isGrid(this.node.type); },
 			label()   {
@@ -3521,6 +3433,7 @@
 				window.addEventListener('scroll', lockWindowScrollPosition, { passive: true });
 				window.addEventListener('focusin', keepFocusedEditorControlInPanel);
 				document.addEventListener('keydown', handlePageSettingsKeydown);
+				bindHistoryInteractionListeners();
 				scheduleColorisInit();
 			});
 			onBeforeUnmount(() => {
@@ -3531,6 +3444,7 @@
 				window.removeEventListener('scroll', lockWindowScrollPosition);
 				window.removeEventListener('focusin', keepFocusedEditorControlInPanel);
 				document.removeEventListener('keydown', handlePageSettingsKeydown);
+				unbindHistoryInteractionListeners();
 			});
 			const selectedId  = ref('');
 			const hoveredId   = ref('');
@@ -3669,6 +3583,7 @@
 			const hist    = ref([]);
 			const histIdx = ref(-1);
 			const traveling = ref(false);
+			let snapTimer = null;
 
 			function snap() {
 				if (traveling.value || suppressHistory.value) return;
@@ -3678,8 +3593,44 @@
 				hist.value.push(s);
 				histIdx.value = hist.value.length - 1;
 			}
+			function cancelScheduledSnap() {
+				if (snapTimer !== null) {
+					clearTimeout(snapTimer);
+					snapTimer = null;
+				}
+			}
+			function scheduleSnap() {
+				cancelScheduledSnap();
+				if (traveling.value || suppressHistory.value) return;
+				snapTimer = setTimeout(() => {
+					snapTimer = null;
+					snap();
+				}, 120);
+			}
+			const historyInteractionEventTypes = Object.freeze([
+				'input', 'change', 'click', 'keydown', 'pointerup', 'drop', 'dragend', 'compositionend',
+			]);
+			function scheduleHistorySnapshotFromEvent(event) {
+				if (traveling.value || suppressHistory.value) return;
+				const appRoot = document.getElementById('pbElementorV23App');
+				const target = event && event.target;
+				if (!appRoot || !target || typeof appRoot.contains !== 'function' || !appRoot.contains(target)) return;
+				scheduleSnap();
+			}
+			function bindHistoryInteractionListeners() {
+				historyInteractionEventTypes.forEach((type) => {
+					document.addEventListener(type, scheduleHistorySnapshotFromEvent, true);
+				});
+			}
+			function unbindHistoryInteractionListeners() {
+				historyInteractionEventTypes.forEach((type) => {
+					document.removeEventListener(type, scheduleHistorySnapshotFromEvent, true);
+				});
+			}
+			onBeforeUnmount(cancelScheduledSnap);
 			function undo() {
 				if (histIdx.value <= 0) return;
+				cancelScheduledSnap();
 				traveling.value = true; histIdx.value--;
 				rootNodes.value = norm(JSON.parse(hist.value[histIdx.value]));
 				selectedId.value = '';
@@ -3687,6 +3638,7 @@
 			}
 			function redo() {
 				if (histIdx.value >= hist.value.length - 1) return;
+				cancelScheduledSnap();
 				traveling.value = true; histIdx.value++;
 				rootNodes.value = norm(JSON.parse(hist.value[histIdx.value]));
 				selectedId.value = '';
@@ -3849,6 +3801,10 @@
 						c.settings.defaultState = c.settings.defaultState === 'all-collapsed' ? 'all-collapsed' : 'first-expanded';
 						c.settings.maxExpanded = c.settings.maxExpanded === 'multiple' ? 'multiple' : 'one';
 						c.settings.animationDuration = clamp(Number(c.settings.animationDuration) || 400, 0, 5000);
+						c.settings.titleTag = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p'].includes(String(c.settings.titleTag || '').toLowerCase()) ? String(c.settings.titleTag).toLowerCase() : 'div';
+						const defaultAccordionHeaderSize = '16px';
+						const hasLegacyAccordionHeaderSize = ['headerFontSize', 'headerFontSizeTablet', 'headerFontSizeMobile'].some((key) => c.settings[key] !== '' && c.settings[key] !== defaultAccordionHeaderSize);
+						c.settings.headerFontSizeMode = ['auto', 'custom'].includes(c.settings.headerFontSizeMode) ? c.settings.headerFontSizeMode : (hasLegacyAccordionHeaderSize ? 'custom' : 'auto');
 						c.settings.cssClass = String(c.settings.cssClass || '').trim();
 						const rawItems = Array.isArray(c.accordionItems) && c.accordionItems.length
 							? c.accordionItems
@@ -3892,7 +3848,7 @@
 				saveMsg.value = 'Legacy layout ready to save';
 			}
 			snap();
-			watch(rootNodes, snap, { deep: true });
+			watch(rootNodes, scheduleSnap, { flush: 'post' });
 
 			// ── Find ─────────────────────────────────────────────────────────
 			function findById(nodes, id) {
@@ -4340,10 +4296,11 @@
 				if (!text.length) return 'Empty';
 				return text.length + ' chars';
 			});
-			function setTextEditorHtml(value) {
+		function setTextEditorHtml(value) {
 				if (selectedType.value !== 'text_editor' || !selectedNode.value) return;
 				if (!selectedNode.value.settings) selectedNode.value.settings = {};
 				selectedNode.value.settings.html = value || '';
+				scheduleSnap();
 			}
 			function openTextEditorModal() {
 				if (selectedType.value !== 'text_editor') return;
@@ -4460,6 +4417,18 @@
 			function insertToolAtRoot(toolDef) {
 				const item = toolClone(toolDef);
 				if (!item) return false;
+				if (isWgt(item.type)) {
+					const container = makeNode('container');
+					if (!container) return false;
+					container.settings.displayType = 'flex';
+					container.settings.direction = 'column';
+					seedResponsiveSettings(container.settings, true);
+					container.children = [item];
+					delete container.columns;
+					rootNodes.value.push(container);
+					selectedId.value = item.id;
+					return true;
+				}
 				rootNodes.value.push(item);
 				selectedId.value = item.id;
 				onRootAdd({
@@ -6268,6 +6237,7 @@
 				const connectorPath = new URL('/assets/plugins/ckfinder/core/connector/php/connector.php', window.location.origin).toString();
 				const setUrl = (url) => {
 					targetObj[safeKey] = String(url || '').trim();
+					scheduleSnap();
 				};
 				ckf.popup({
 					basePath,
@@ -6295,6 +6265,7 @@
 				const nextUrl = window.prompt(promptLabel, current);
 				if (nextUrl === null) return;
 				targetObj[safeKey] = String(nextUrl).trim();
+				scheduleSnap();
 			}
 			function chooseMediaGallery(targetObj, propName) {
 				if (!targetObj || !propName) return;
@@ -6313,6 +6284,7 @@
 						return normalizeImageCarouselImage({ id: uid('carousel-image'), url, alt: title, title, caption: '', description: '' }, existing.length + index);
 					}).filter(Boolean);
 					targetObj[safeKey] = [...existing, ...additions];
+					scheduleSnap();
 				};
 				if (!ckf || typeof ckf.popup !== 'function') {
 					const nextUrl = window.prompt('Paste image URL');
@@ -6340,6 +6312,7 @@
 				if (!targetObj || !propName) return;
 				const safeKey = String(propName);
 				targetObj[safeKey] = (Array.isArray(targetObj[safeKey]) ? targetObj[safeKey] : []).filter((item) => String(item?.id || '') !== String(itemId || ''));
+				scheduleSnap();
 			}
 			function moveMediaGalleryItem(targetObj, propName, itemId, offset) {
 				if (!targetObj || !propName) return;
@@ -6350,10 +6323,12 @@
 				if (index < 0 || targetIndex < 0 || targetIndex >= items.length) return;
 				[items[index], items[targetIndex]] = [items[targetIndex], items[index]];
 				targetObj[safeKey] = items;
+				scheduleSnap();
 			}
 			function clearMedia(targetObj, propName) {
 				if (!targetObj || !propName) return;
 				targetObj[String(propName)] = '';
+				scheduleSnap();
 			}
 			function chooseBgImage(node, key = 'bgImage') {
 				if (!node || !node.settings) return;
@@ -6416,7 +6391,6 @@
 				toolboxDragImageEl = dragImage;
 			}
 			function onDragStart() {
-				_settingsPreloadFirstDragStarted = true;
 				clearPendingInsertTarget();
 				hoveredId.value = '';
 				document.body.classList.add('pb-is-dragging');
@@ -6551,20 +6525,18 @@
 
 				// Widget → bungkus dalam container 1 kolom
 				if (isWgt(item.type)) {
-					nextTick(() => {
-						const live = findById(rootNodes.value, item.id) || rootNodes.value[idx];
-						if (!live) return;
-						const realIdx = rootNodes.value.indexOf(live);
-						const saved = jclone(live); saved.id = live.id;
-						const c = makeNode('container');
-						if (!c) return;
-						c.settings.displayType = 'flex';
-						c.settings.direction = 'column';
-						seedResponsiveSettings(c.settings, true);
-						c.children = [saved];
-						delete c.columns;
-						rootNodes.value.splice(realIdx, 1, c);
-					});
+					const live = findById(rootNodes.value, item.id) || rootNodes.value[idx];
+					if (!live) return;
+					const realIdx = rootNodes.value.indexOf(live);
+					const c = makeNode('container');
+					if (!c || realIdx < 0) return;
+					c.settings.displayType = 'flex';
+					c.settings.direction = 'column';
+					seedResponsiveSettings(c.settings, true);
+					c.children = [live];
+					delete c.columns;
+					rootNodes.value.splice(realIdx, 1, c);
+					selectedId.value = live.id;
 					return;
 				}
 
@@ -6982,7 +6954,7 @@
 			const appTitle = computed(() => mode.value==='edit' ? 'Edit Page Builder' : 'Create Page Builder');
 
 			return {
-				appTitle, pageSettingsOpen, openPageSettings, closePageSettings, toolbox, elementSearch, filteredToolboxGroups, leftCollapsed, previewMode, rootNodes, loadWidget, loadWidgetSettings, hasRegisteredWidget, widgetEditorServices,
+				appTitle, pageSettingsOpen, openPageSettings, closePageSettings, toolbox, elementSearch, filteredToolboxGroups, leftCollapsed, previewMode, rootNodes, loadWidget, loadWidgetSettings, warmWidgetModules, hasRegisteredWidget, widgetEditorServices,
 				toolClone, sidebarContGroup, sidebarGridGroup, sidebarWgtGroup, rootGroup,
 				selectedId, hoveredId, settingsTab, imageBoxImageState, iconBoxIconState, selectedNode, selectedType, activeSettingsTabs, selectedNodeKind,
 				responsiveDevice, responsiveDevices, responsiveCanvasLabel, canvasZoom, showCanvasGrid, changeCanvasZoom, fontFamilies, desktopPreviewWidth, desktopPreviewWidths, widthPreviewMenuOpen, previewCanvasWidthLabel, previewCanvasStyle, activeResponsiveKey, syncResponsiveSides, syncGridGap,
@@ -7075,7 +7047,7 @@
 		<div class="topbar-center">
 			<div class="device-switcher" aria-label="Responsive preview">
 				<button class="device-btn" :class="{ active: responsiveDevice==='desktop' }" title="Desktop" @click="setResponsiveDevice('desktop')"><i class="bi bi-display"></i></button>
-				<button class="device-btn" :class="{ active: responsiveDevice==='tablet' }" title="Tablet" @click="setResponsiveDevice('tablet')"><i class="bi bi-tablet"></i></button>
+				<button class="device-btn" :class="{ active: responsiveDevice==='tablet' }" title="Tablet" @click="setResponsiveDevice('tablet')"><i class="bi bi-tablet-landscape"></i></button>
 				<button class="device-btn" :class="{ active: responsiveDevice==='mobile' }" title="Mobile" @click="setResponsiveDevice('mobile')"><i class="bi bi-phone"></i></button>
 			</div>
 			<div class="zoom-control">{{ canvasZoom }}%</div>
@@ -7210,7 +7182,7 @@
 						@end="onDragEnd"
 					>
 						<template #item="{ element }">
-							<div class="pb-tool-item" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
+							<div class="pb-tool-item" @pointerenter="warmWidgetModules(element.type)" @focus="warmWidgetModules(element.type)" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
 						</template>
 					</draggable>
 				</div>
@@ -7228,7 +7200,7 @@
 						@end="onDragEnd"
 					>
 						<template #item="{ element }">
-							<div class="pb-tool-item" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
+							<div class="pb-tool-item" @pointerenter="warmWidgetModules(element.type)" @focus="warmWidgetModules(element.type)" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
 						</template>
 					</draggable>
 				</div>
@@ -7246,7 +7218,7 @@
 						@end="onDragEnd"
 					>
 						<template #item="{ element }">
-							<div class="pb-tool-item" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
+							<div class="pb-tool-item" @pointerenter="warmWidgetModules(element.type)" @focus="warmWidgetModules(element.type)" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
 						</template>
 					</draggable>
 				</div>
@@ -7264,7 +7236,7 @@
 						@end="onDragEnd"
 					>
 						<template #item="{ element }">
-							<div class="pb-tool-item" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
+							<div class="pb-tool-item" @pointerenter="warmWidgetModules(element.type)" @focus="warmWidgetModules(element.type)" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
 						</template>
 					</draggable>
 				</div>
@@ -7282,7 +7254,7 @@
 						@end="onDragEnd"
 					>
 						<template #item="{ element }">
-							<div class="pb-tool-item" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
+							<div class="pb-tool-item" @pointerenter="warmWidgetModules(element.type)" @focus="warmWidgetModules(element.type)" @click="onToolboxItemClick(element)"><i :class="element.icon"></i><span>{{ element.label }}</span></div>
 						</template>
 					</draggable>
 				</div>
@@ -7662,5 +7634,4 @@
 </div>
 		`,
 	}).mount('#pbElementorV23App');
-	scheduleWidgetSettingsPreloadAfterFirstGesture();
 })();

@@ -42,6 +42,7 @@
 </template>
 
 <script>
+const TITLE_TAG_FONT_SIZES = Object.freeze({ h1: '40px', h2: '34px', h3: '29px', h4: '24px', h5: '20px', h6: '16px', div: '16px', span: '16px', p: '16px' });
 export default {
 	name: 'AdvancedAccordion',
 	props: {
@@ -93,7 +94,7 @@ export default {
 				'--accordion-border-radius': this.cssToken(this.responsiveValue('accordionBorderRadius', '0px'), '0px'),
 				'--accordion-padding': this.cssToken(this.responsiveValue('accordionPadding', '0px'), '0px'),
 				'--accordion-header-font-family': String(this.settings.headerFontFamily || 'inherit'),
-				'--accordion-header-font-size': this.cssToken(this.responsiveValue('headerFontSize', '16px'), '16px'),
+				'--accordion-header-font-size': this.settings.headerFontSizeMode === 'custom' ? this.cssToken(this.responsiveValue('headerFontSize', '16px'), '16px') : (TITLE_TAG_FONT_SIZES[this.titleTag] || '16px'),
 				'--accordion-header-font-weight': String(this.settings.headerFontWeight || '600'),
 				'--accordion-header-line-height': this.lineHeightToken(this.responsiveValue('headerLineHeight', '1.4'), '1.4'),
 				'--accordion-header-letter-spacing': this.cssToken(this.responsiveValue('headerLetterSpacing', '0px'), '0px'),

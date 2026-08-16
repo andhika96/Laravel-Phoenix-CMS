@@ -21,6 +21,7 @@ class PageBuilderElementorV23AssetIsolationTest extends TestCase
             'widgets/basic/google-maps.blade.php',
             'widgets/pro/hero-banner.blade.php',
             'widgets/pro/hero-slider.blade.php',
+            'widgets/pro/product-color-selector.blade.php',
         ], array_values(array_diff($v23Views, $v20Views)));
 
         $files = [

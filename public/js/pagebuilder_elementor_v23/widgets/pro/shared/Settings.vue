@@ -28,7 +28,7 @@
             </button>
         </div>
 
-        <div v-show="editor.settingsTab === 'content'" class="pb-tab-content">
+        <div v-if="editor.settingsTab === 'content'" class="pb-tab-content">
             <template v-if="type === 'form'">
                 <section-box title="Form Fields" :open="true"
                     ><text-control
@@ -38,6 +38,7 @@
                         item-label="Field"
                         @add="addItem('fields')"
                         @remove="removeItem('fields', $event)"
+                        @move="moveItem('fields', $event)"
                         ><template #default="{ item }"
                             ><text-control
                                 label="Label"
@@ -283,6 +284,7 @@
                         item-label="Slide"
                         @add="addItem('slides')"
                         @remove="removeItem('slides', $event)"
+                        @move="moveItem('slides', $event)"
                         ><template #default="{ item }"
                             ><text-control
                                 label="Title"
@@ -458,6 +460,7 @@
                         item-label="Hotspot"
                         @add="addItem('hotspots')"
                         @remove="removeItem('hotspots', $event)"
+                        @move="moveItem('hotspots', $event)"
                         ><template #default="{ item }"
                             ><text-control
                                 label="Label"
@@ -506,6 +509,7 @@
                         item-label="List Item"
                         @add="addItem('items')"
                         @remove="removeItem('items', $event)"
+                        @move="moveItem('items', $event)"
                         ><template #default="{ item }"
                             ><text-control
                                 label="Title"
@@ -565,6 +569,7 @@
                         item-label="Feature"
                         @add="addItem('features')"
                         @remove="removeItem('features', $event)"
+                        @move="moveItem('features', $event)"
                         ><template #default="{ item }"
                             ><text-control
                                 label="Text"
@@ -723,7 +728,7 @@
                     <text-control label="Playlist Name" v-model="s.playlistName" />
                     <select-control label="HTML Tag" v-model="s.playlistTitleTag" :options="playlistTagOptions" />
                     <div class="pb-subsection-title">Playlist Items</div>
-                    <repeater-list :items="s.items" item-label="Playlist Items" :duplicate="true" @add="addItem('items')" @duplicate="duplicateItem('items', $event)" @remove="removeItem('items', $event)">
+                    <repeater-list :items="s.items" item-label="Playlist Items" :duplicate="true" @add="addItem('items')" @duplicate="duplicateItem('items', $event)" @remove="removeItem('items', $event)" @move="moveItem('items', $event)">
                         <template #default="{ item }">
                             <select-control label="Type" v-model="item.type" :options="videoPlaylistTypeOptions" />
                             <media-control v-if="item.type === 'self_hosted'" label="Link" v-model="item.link" :editor="editor" :settings="item" setting-key="link" />
@@ -792,6 +797,7 @@
                         item-label="Carousel Item"
                         @add="addItem('items')"
                         @remove="removeItem('items', $event)"
+                        @move="moveItem('items', $event)"
                         ><template #default="{ item }"
                             ><text-control
                                 label="Title"
@@ -880,7 +886,7 @@
                 <section-box title="Slides" :open="true">
                     <select-control label="Skin" v-model="s.skin" :options="mediaCarouselSkinOptions" />
                     <text-control label="Slides Name" v-model="s.slidesName" />
-                    <repeater-list :items="s.items" item-label="Media" :duplicate="true" @add="addItem('items')" @duplicate="duplicateItem('items', $event)" @remove="removeItem('items', $event)">
+                    <repeater-list :items="s.items" item-label="Media" :duplicate="true" @add="addItem('items')" @duplicate="duplicateItem('items', $event)" @remove="removeItem('items', $event)" @move="moveItem('items', $event)">
                         <template #default="{ item }">
                             <select-control label="Type" v-model="item.type" :options="mediaCarouselTypeOptions" />
                             <media-control label="Image" v-model="item.imageUrl" :editor="editor" :settings="item" setting-key="imageUrl" />
@@ -939,6 +945,7 @@
                         item-label="Review"
                         @add="addItem('items')"
                         @remove="removeItem('items', $event)"
+                        @move="moveItem('items', $event)"
                         ><template #default="{ item }"
                             ><media-control
                                 label="Image"
@@ -1043,7 +1050,7 @@
             <template v-else-if="type === 'testimonial_carousel'">
                 <section-box title="Slides" :open="true">
                     <text-control label="Slides Name" v-model="s.slidesName" />
-                    <repeater-list :items="s.items" item-label="Testimonial" :duplicate="true" @add="addItem('items')" @duplicate="duplicateItem('items', $event)" @remove="removeItem('items', $event)">
+                    <repeater-list :items="s.items" item-label="Testimonial" :duplicate="true" @add="addItem('items')" @duplicate="duplicateItem('items', $event)" @remove="removeItem('items', $event)" @move="moveItem('items', $event)">
                         <template #default="{ item }">
                             <textarea-control label="Content" v-model="item.content" />
                             <media-control label="Image" v-model="item.imageUrl" :editor="editor" :settings="item" setting-key="imageUrl" />
@@ -1108,7 +1115,7 @@
             </template>
             <template v-else-if="type === 'share_buttons'">
                 <section-box title="Share Buttons" :open="true">
-                    <repeater-list :items="s.items" item-label="Network" :duplicate="true" @add="addItem('items')" @duplicate="duplicateItem('items', $event)" @remove="removeItem('items', $event)">
+                    <repeater-list :items="s.items" item-label="Network" :duplicate="true" @add="addItem('items')" @duplicate="duplicateItem('items', $event)" @remove="removeItem('items', $event)" @move="moveItem('items', $event)">
                         <template #default="{ item }">
                             <select-control label="Network" v-model="item.network" :options="shareNetworkOptions" />
                             <text-control label="Custom Label" v-model="item.customLabel" />
@@ -1184,7 +1191,7 @@
             </template>
         </div>
 
-        <div v-show="editor.settingsTab === 'style'" class="pb-tab-content">
+        <div v-if="editor.settingsTab === 'style'" class="pb-tab-content">
             <template v-if="type === 'form'">
                 <section-box title="Form" :open="true"
                     ><size-control
@@ -1330,6 +1337,7 @@
                         :settings="s"
                         :responsive-device="editor.responsiveDevice"
                         :font-families="editor.fontFamilies"
+                        font-size-mode-key="slideTitleFontSizeMode"
                         @responsive-device="editor.setResponsiveDevice"
                 /></section-box>
                 <section-box title="Description"
@@ -1442,6 +1450,7 @@
                         :settings="s"
                         :responsive-device="editor.responsiveDevice"
                         :font-families="editor.fontFamilies"
+                        font-size-mode-key="headlineFontSizeMode"
                         @responsive-device="editor.setResponsiveDevice"
                 /></section-box>
                 <section-box title="Animated Text"
@@ -1654,6 +1663,7 @@
                         :settings="s"
                         :responsive-device="editor.responsiveDevice"
                         :font-families="editor.fontFamilies"
+                        font-size-mode-key="priceListTitleFontSizeMode"
                         @responsive-device="editor.setResponsiveDevice"
                 /></section-box>
                 <section-box title="Price"
@@ -1727,6 +1737,7 @@
                         :settings="s"
                         :responsive-device="editor.responsiveDevice"
                         :font-families="editor.fontFamilies"
+                        font-size-mode-key="priceTableHeaderFontSizeMode"
                         @responsive-device="editor.setResponsiveDevice"
                 /></section-box>
                 <section-box title="Pricing"
@@ -2015,7 +2026,7 @@
                 <section-box title="Top Bar" :open="true">
                     <color-control label="Background" v-model="s.playlistNameBackground" />
                     <color-control label="Playlist Name Color" v-model="s.playlistNameColor" />
-                    <component :is="editor.typographyControl" prefix="videoPlaylistName" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                    <component :is="editor.typographyControl" prefix="videoPlaylistName" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" font-size-mode-key="playlistNameFontSizeMode" @responsive-device="editor.setResponsiveDevice" />
                     <color-control label="Video Count Color" v-model="s.videoCountColor" />
                     <component :is="editor.typographyControl" prefix="videoPlaylistCount" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
                 </section-box>
@@ -2029,7 +2040,7 @@
                     <div class="pb-subsection-title">Active</div>
                     <color-control label="Background" v-model="s.itemBackgroundActive" />
                     <color-control label="Color" v-model="s.itemColorActive" />
-                    <component :is="editor.typographyControl" prefix="videoPlaylistItem" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
+                    <component :is="editor.typographyControl" prefix="videoPlaylistItem" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" font-size-mode-key="videoPlaylistItemFontSizeMode" @responsive-device="editor.setResponsiveDevice" />
                     <div class="pb-subsection-title">Duration</div>
                     <color-control label="Color" v-model="s.durationColor" />
                     <component :is="editor.typographyControl" prefix="videoPlaylistDuration" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" @responsive-device="editor.setResponsiveDevice" />
@@ -2676,7 +2687,7 @@
             </template>
         </div>
 
-        <div v-show="editor.settingsTab === 'advanced'" class="pb-tab-content">
+        <div v-if="editor.settingsTab === 'advanced'" class="pb-tab-content">
             <component
                 :is="editor.widgetAdvancedControls"
                 :node="node"
@@ -2870,9 +2881,22 @@ const ResponsiveChoice = {
     template: `<div class="pb-form-group"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">{{label}}</label><responsive-menu :editor="editor" :id="controlId"/></div><div class="pb-btn-group pb-compact-choice"><button v-for="option in options" :key="base+'-'+option.value" type="button" class="pb-seg-btn" :class="{active:value===option.value}" :title="option.label" :aria-label="option.label" @click="editor.setResponsiveSetting(node.settings,base,option.value)"><i :class="option.icon"></i><span class="sr-only">{{option.label}}</span></button></div></div>`,
 };
 const RepeaterList = {
-    props: ["items", "itemLabel", "duplicate"],
-    emits: ["add", "duplicate", "remove"],
-    template: `<div class="pb-pro-repeater"><details v-for="(item,index) in items" :key="item.id||index" class="pb-pro-repeater__item"><summary><span>{{item.label||item.name||item.title||item.text||itemLabel+' #'+(index+1)}}</span><span class="pb-pro-repeater__summary-actions"><button v-if="duplicate" type="button" title="Duplicate" @click.prevent.stop="$emit('duplicate',index)"><i class="fas fa-copy"></i></button><button type="button" title="Remove" @click.prevent.stop="$emit('remove',index)"><i class="fas fa-trash"></i></button></span></summary><div class="pb-pro-repeater__body"><slot :item="item" :index="index"/></div></details><button type="button" class="pb-pro-repeater__add" @click="$emit('add')"><i class="fas fa-plus"></i> Add Item</button></div>`,
+    props: {
+        items: { type: Array, default: () => [] },
+        itemLabel: { type: String, default: "Item" },
+        duplicate: { type: Boolean, default: false },
+        reorder: { type: Boolean, default: true },
+    },
+    emits: ["add", "duplicate", "remove", "move"],
+    data() {
+        return { expandedIndex: 0 };
+    },
+    methods: {
+        toggle(index) {
+            this.expandedIndex = this.expandedIndex === index ? -1 : index;
+        },
+    },
+    template: `<div class="pb-pro-repeater"><div v-for="(item,index) in items" :key="item.id||index" class="pb-pro-repeater__item" :class="{'is-open':expandedIndex===index}"><div class="pb-pro-repeater__header" role="button" tabindex="0" :aria-expanded="expandedIndex===index?'true':'false'" @click="toggle(index)" @keydown.enter.prevent="toggle(index)" @keydown.space.prevent="toggle(index)"><button type="button" class="pb-pro-repeater__disclosure" :title="expandedIndex===index?'Collapse '+itemLabel:'Expand '+itemLabel" :aria-label="expandedIndex===index?'Collapse '+itemLabel:'Expand '+itemLabel" @click.stop="toggle(index)"><i class="fas" :class="expandedIndex===index?'fa-chevron-up':'fa-chevron-down'"></i></button><span class="pb-pro-repeater__label"><i class="fas fa-grip-vertical" aria-hidden="true"></i><strong>{{item.label||item.name||item.title||item.text||itemLabel+' #'+(index+1)}}</strong></span><span class="pb-pro-repeater__summary-actions"><button v-if="reorder" type="button" title="Move Up" aria-label="Move item up" :disabled="index===0" @click.stop="$emit('move',{index,direction:-1})"><i class="fas fa-arrow-up"></i></button><button v-if="reorder" type="button" title="Move Down" aria-label="Move item down" :disabled="index===items.length-1" @click.stop="$emit('move',{index,direction:1})"><i class="fas fa-arrow-down"></i></button><button v-if="duplicate" type="button" title="Duplicate" aria-label="Duplicate item" @click.stop="$emit('duplicate',index)"><i class="far fa-copy"></i></button><button type="button" title="Remove" aria-label="Remove item" :disabled="items.length<=1" @click.stop="$emit('remove',index)"><i class="fas fa-times"></i></button></span></div><div v-show="expandedIndex===index" class="pb-pro-repeater__body"><slot :item="item" :index="index"/></div></div><button type="button" class="pb-pro-repeater__add" @click="$emit('add')"><i class="fas fa-plus"></i> Add Item</button></div>`,
 };
 const ProIconPicker = {
     props: {
@@ -3773,6 +3797,14 @@ export default {
             clone.id = `${key}-${Date.now()}`;
             this.s[key].splice(index + 1, 0, clone);
         },
+        moveItem(key, payload) {
+            const list = this.s[key];
+            const index = Number(payload?.index);
+            const direction = Number(payload?.direction);
+            const target = index + direction;
+            if (!Array.isArray(list) || !list[index] || !Number.isInteger(target) || target < 0 || target >= list.length) return;
+            [list[index], list[target]] = [list[target], list[index]];
+        },
         addRotating() {
             (this.s.rotatingTexts ||= []).push("Animated Text");
         },
@@ -3823,38 +3855,94 @@ export default {
     background: #fff;
     overflow: hidden;
 }
-.pb-pro-repeater__item > summary {
+.pb-pro-repeater__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     min-height: 36px;
-    padding: 7px 9px;
+    gap: 4px;
+    padding: 4px 6px;
     cursor: pointer;
     color: #344054;
     font-size: 12px;
     font-weight: 600;
 }
-.pb-pro-repeater__item > summary button {
-    width: 28px;
-    height: 28px;
+.pb-pro-repeater__header:focus-visible {
+    outline: 2px solid #8ea7ff;
+    outline-offset: -2px;
+}
+.pb-pro-repeater__disclosure {
+    display: grid;
+    flex: 0 0 16px;
+    width: 16px;
+    height: 26px;
+    place-items: center;
+    padding: 0;
     border: 0;
     background: transparent;
-    color: #98a2b3;
+    color: #8795ad;
+    font-size: 9px;
+}
+.pb-pro-repeater__label {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+    text-align: left;
+}
+.pb-pro-repeater__label > i {
+    flex: 0 0 12px;
+    color: #6979f8;
+    font-size: 12px;
+}
+.pb-pro-repeater__label strong {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 11px;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.pb-pro-repeater__summary-actions {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 2px;
+}
+.pb-pro-repeater__summary-actions button {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid #d7dfed;
+    border-radius: 5px;
+    background: #fff;
+    color: #526987;
+    cursor: pointer;
+}
+.pb-pro-repeater__summary-actions button:hover:not(:disabled) {
+    border-color: #aebdf7;
+    color: #5367ff;
+    background: #eef1ff;
+}
+.pb-pro-repeater__summary-actions button:disabled {
+    cursor: not-allowed;
+    opacity: .35;
 }
 .pb-pro-repeater__body {
     padding: 10px;
     border-top: 1px solid #e4e7ec;
+    background: #f9fafb;
 }
 .pb-pro-repeater__add {
-    min-width: 104px;
-    min-height: 31px;
-    justify-self: center;
-    padding: 6px 12px;
+    width: 100%;
+    min-height: 34px;
+    padding: 7px 12px;
     border: 1px dashed #aebdf7;
     border-radius: 5px;
     background: #f4f6ff;
     color: #5367ff;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
 }
 .pb-pro-responsive-unit .pb-control-device-btn {

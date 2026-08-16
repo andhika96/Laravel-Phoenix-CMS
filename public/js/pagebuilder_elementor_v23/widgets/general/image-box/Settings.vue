@@ -6,7 +6,7 @@
 								<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:editor.settingsTab==='advanced'}" @click="editor.settingsTab='advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
 							</div>
 
-							<div v-show="editor.settingsTab==='content'" class="pb-tab-content">
+							<div v-if="editor.settingsTab==='content'" class="pb-tab-content">
 								<details class="pb-collapsible" open>
 									<summary>Image Box</summary>
 									<div class="pb-collapsible-body">
@@ -32,7 +32,7 @@
 								</details>
 							</div>
 
-							<div v-show="editor.settingsTab==='style'" class="pb-tab-content pb-image-box-style-settings">
+							<div v-if="editor.settingsTab==='style'" class="pb-tab-content pb-image-box-style-settings">
 								<details class="pb-collapsible" open>
 									<summary>Box</summary>
 									<div class="pb-collapsible-body">
@@ -73,7 +73,7 @@
 								</details>
 							</div>
 
-							<div v-show="editor.settingsTab==='advanced'" class="pb-tab-content pb-image-box-advanced-settings">
+							<div v-if="editor.settingsTab==='advanced'" class="pb-tab-content pb-image-box-advanced-settings">
 								<component :is="editor.widgetAdvancedControls" :node="node" :responsive-device="editor.responsiveDevice" :show-display-conditions="false" :show-cache-settings="false" :elementor-choices="true" @responsive-device="editor.setResponsiveDevice" @choose-media="editor.chooseMedia(node.settings,$event)" @clear-media="editor.clearMedia(node.settings,$event)" @unavailable-ai="editor.showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')" />
 							</div>
 						</div>

@@ -7,6 +7,7 @@
 
 <script>
 const ALLOWED_HEADING_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p'];
+const HEADING_TAG_FONT_SIZES = Object.freeze({ h1: '40px', h2: '34px', h3: '29px', h4: '24px', h5: '20px', h6: '16px', div: '29px', span: '29px', p: '29px' });
 const ALLOWED_ALIGNMENTS = ['left', 'center', 'right', 'justify'];
 const ALLOWED_BLEND_MODES = ['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'saturation', 'color', 'difference', 'exclusion', 'hue', 'luminosity'];
 
@@ -58,7 +59,9 @@ export default {
 				textAlign: ALLOWED_ALIGNMENTS.includes(alignment) ? alignment : 'left',
 				color: this.safeColor(this.settings.color, '#101828'),
 				fontFamily: String(this.settings.headingFontFamily || 'inherit'),
-				fontSize: this.cssSize(this.responsiveValue('headingFontSize', '32px'), '32px'),
+				fontSize: this.settings.headingFontSizeMode === 'custom'
+					? this.cssSize(this.responsiveValue('headingFontSize', '32px'), '32px')
+					: (HEADING_TAG_FONT_SIZES[this.safeTag] || '32px'),
 				fontWeight: String(this.settings.headingFontWeight || '600'),
 				lineHeight: this.cssSize(this.responsiveValue('headingLineHeight', '1.2em'), '1.2em'),
 				letterSpacing: this.cssSize(this.responsiveValue('headingLetterSpacing', '0px'), '0px'),

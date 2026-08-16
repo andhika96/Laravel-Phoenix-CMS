@@ -6,7 +6,7 @@
 								<button class="pb-tab-btn pb-tab-btn-icon" :class="{active:editor.settingsTab==='advanced'}" @click="editor.settingsTab='advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
 							</div>
 						<!-- TAB LAYOUT -->
-						<div v-show="editor.settingsTab==='layout'" class="pb-tab-content pb-layout-settings__tab">
+						<div v-if="editor.settingsTab==='layout'" class="pb-tab-content pb-layout-settings__tab">
 							<details class="pb-collapsible" open>
 								<summary>Container</summary>
 								<div class="pb-collapsible-body">
@@ -366,7 +366,7 @@
 							</details>
 						</div><!-- /tab layout container -->
 						<!-- TAB STYLE -->
-						<div v-show="editor.settingsTab==='style'" class="pb-tab-content pb-layout-settings__tab">
+						<div v-if="editor.settingsTab==='style'" class="pb-tab-content pb-layout-settings__tab">
 							<details class="pb-collapsible" open>
 								<summary>Background</summary>
 								<div class="pb-collapsible-body">
@@ -660,7 +660,7 @@
 							</details>
 						</div><!-- /tab style container -->
 						<!-- TAB ADVANCED -->
-						<div v-show="editor.settingsTab==='advanced'" class="pb-tab-content pb-layout-settings__tab">
+						<div v-if="editor.settingsTab==='advanced'" class="pb-tab-content pb-layout-settings__tab">
 							<details class="pb-collapsible" open>
 								<summary>Layout</summary>
 								<div class="pb-collapsible-body">

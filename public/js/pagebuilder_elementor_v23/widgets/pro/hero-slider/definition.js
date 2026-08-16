@@ -163,6 +163,7 @@
             slideButtonBackground: '',
             slideButtonTextColorHover: '',
             slideButtonBackgroundHover: '',
+            slideTitleFontSizeMode: 'auto',
             slideTitleFontSize: '',
             slideTitleFontSizeTablet: '',
             slideTitleFontSizeMobile: '',
@@ -214,7 +215,7 @@
         overlayColor: 'rgba(0,0,0,.2)',
         titleColor: '#fff', subtitleColor: '#fff', buttonTextColor: '#fff',
         buttonBackground: '#30343a', buttonTextColorHover: '#fff', buttonBackgroundHover: '#1f2328',
-        titleFontSize: '52px', titleFontSizeTablet: '42px', titleFontSizeMobile: '34px', titleFontWeight: '700',
+        titleFontSizeMode: 'auto', titleFontSize: '52px', titleFontSizeTablet: '42px', titleFontSizeMobile: '34px', titleFontWeight: '700',
         subtitleFontSize: '22px', subtitleFontSizeTablet: '18px', subtitleFontSizeMobile: '16px', subtitleFontWeight: '400',
         contentGap: '12px', contentGapTablet: '10px', contentGapMobile: '9px',
         buttonRadius: '999px', buttonPaddingX: '18px', buttonPaddingY: '10px',
@@ -276,6 +277,10 @@
             contentOrder: [...suppliedOrder, ...allowedOrder.filter((key) => !suppliedOrder.includes(key))],
             styleOverride: !!merged.styleOverride,
         };
+        const hasCustomSlideTitleSize = ['slideTitleFontSize', 'slideTitleFontSizeTablet', 'slideTitleFontSizeMobile'].some((key) => cleanString(merged[key]) !== '');
+        output.slideTitleFontSizeMode = ['auto', 'custom'].includes(cleanString(merged.slideTitleFontSizeMode).toLowerCase())
+            ? cleanString(merged.slideTitleFontSizeMode).toLowerCase()
+            : (hasCustomSlideTitleSize ? 'custom' : 'auto');
         ['group', 'title', 'subtitle', 'buttons'].forEach((target) => ['', 'Tablet', 'Mobile'].forEach((suffix) => {
             const anchorKey = target + 'Anchor' + suffix;
             const alignKey = target + 'Align' + suffix;
@@ -341,6 +346,10 @@
         const incomingSettings = normalized.settings && typeof normalized.settings === 'object' ? normalized.settings : {};
         const defaultSettings = defaults();
         const settings = normalized.settings = { ...defaultSettings, ...incomingSettings };
+        const hasLegacyTitleSize = ['titleFontSize', 'titleFontSizeTablet', 'titleFontSizeMobile'].some((key) => settings[key] !== defaultSettings[key]);
+        settings.titleFontSizeMode = ['auto', 'custom'].includes(cleanString(settings.titleFontSizeMode).toLowerCase())
+            ? cleanString(settings.titleFontSizeMode).toLowerCase()
+            : (hasLegacyTitleSize ? 'custom' : 'auto');
         settings.slides = (Array.isArray(settings.slides) ? settings.slides : [])
             .slice(0, 30)
             .map(normalizeSlide);

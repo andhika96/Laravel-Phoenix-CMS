@@ -6,7 +6,7 @@
 			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active: editor.settingsTab === 'advanced'}" @click="editor.settingsTab = 'advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
 		</div>
 
-		<div v-show="editor.settingsTab === 'content'" class="pb-tab-content">
+		<div v-if="editor.settingsTab === 'content'" class="pb-tab-content">
 			<details class="pb-collapsible" open>
 				<summary>Video</summary>
 				<div class="pb-collapsible-body">
@@ -41,7 +41,7 @@
 			</details>
 		</div>
 
-		<div v-show="editor.settingsTab === 'style'" class="pb-tab-content">
+		<div v-if="editor.settingsTab === 'style'" class="pb-tab-content">
 			<details class="pb-collapsible" open>
 				<summary>Player</summary>
 				<div class="pb-collapsible-body">
@@ -51,7 +51,7 @@
 			</details>
 		</div>
 
-		<div v-show="editor.settingsTab === 'advanced'" class="pb-tab-content">
+		<div v-if="editor.settingsTab === 'advanced'" class="pb-tab-content">
 			<details class="pb-collapsible" open>
 				<summary>Attributes</summary>
 				<div class="pb-collapsible-body"><div class="pb-form-group"><label class="pb-form-label">CSS Class</label><input class="pb-input" v-model="node.settings.cssClass" placeholder="custom-video"></div></div>

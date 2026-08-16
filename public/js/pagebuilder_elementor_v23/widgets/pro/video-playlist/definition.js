@@ -108,6 +108,10 @@
         ...advanced(),
         playlistName: "Playlist",
         playlistTitleTag: "h3",
+        playlistNameFontSizeMode: "auto",
+        playlistNameFontSize: "20px",
+        playlistNameFontSizeTablet: "",
+        playlistNameFontSizeMobile: "",
         items: [1, 2, 3].map((index) => item(`video-${index}`, index)),
         tabsCollapsible: false,
         readMoreLabel: "Read More",
@@ -140,6 +144,7 @@
         dropdownIconSvg: "",
         videoPosition: "left",
         videoHeight: "360px",
+        videoPlaylistItemFontSizeMode: "auto",
         playlistNameBackground: "#101828",
         playlistNameColor: "#ffffff",
         videoCountColor: "#667085",
@@ -190,7 +195,16 @@
             const base = defaults();
             const s = (node.settings = { ...base, ...(node.settings || {}) });
             s.playlistName = String(s.playlistName ?? base.playlistName);
-            s.playlistTitleTag = tag(s.playlistTitleTag, "h3");
+        s.playlistTitleTag = tag(s.playlistTitleTag, "h3");
+            const playlistNameSizeBase = base;
+            const hasLegacyPlaylistNameSize = ["videoPlaylistNameFontSize", "videoPlaylistNameFontSizeTablet", "videoPlaylistNameFontSizeMobile"].some((key) => String(s[key] ?? "").trim() !== String(playlistNameSizeBase[key] ?? "").trim());
+            s.playlistNameFontSizeMode = ["auto", "custom"].includes(s.playlistNameFontSizeMode)
+                ? s.playlistNameFontSizeMode
+                : (hasLegacyPlaylistNameSize ? "custom" : "auto");
+            const hasLegacyPlaylistItemSize = ["videoPlaylistItemFontSize", "videoPlaylistItemFontSizeTablet", "videoPlaylistItemFontSizeMobile"].some((key) => String(s[key] ?? "").trim() !== String(playlistNameSizeBase[key] ?? "").trim());
+            s.videoPlaylistItemFontSizeMode = ["auto", "custom"].includes(s.videoPlaylistItemFontSizeMode)
+                ? s.videoPlaylistItemFontSizeMode
+                : (hasLegacyPlaylistItemSize ? "custom" : "auto");
             s.tabsCollapsible = bool(s.tabsCollapsible);
             s.imageOverlay = bool(s.imageOverlay);
             s.autoplayOnLoad = bool(s.autoplayOnLoad);

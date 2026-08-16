@@ -6,7 +6,7 @@
 			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active: editor.settingsTab === 'advanced'}" @click="editor.settingsTab = 'advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
 		</div>
 
-		<div v-show="editor.settingsTab === 'content'" class="pb-tab-content">
+		<div v-if="editor.settingsTab === 'content'" class="pb-tab-content">
 			<details class="pb-collapsible" open>
 				<summary>Tabs</summary>
 				<div class="pb-collapsible-body">
@@ -15,7 +15,7 @@
 						<div class="pb-tabs-items-list">
 							<div v-for="(item, index) in editor.tabsItemsForNode(node)" :key="item.id" class="pb-tabs-item-row" :class="{ active: node.settings.activeTabId === item.id, expanded: isItemExpanded(item) }">
 								<div class="pb-tabs-item-header">
-									<button type="button" class="pb-tabs-item-main" :aria-expanded="isItemExpanded(item)" @click="toggleTabsItem(item.id)"><span>{{ editor.tabsItemSummary(item, index) }}</span><i class="fas fa-chevron-down pb-tabs-item-disclosure" aria-hidden="true"></i></button>
+									<button type="button" class="pb-tabs-item-main" :aria-expanded="isItemExpanded(item)" @click="toggleTabsItem(item.id)"><i class="fas pb-tabs-item-disclosure" :class="isItemExpanded(item)?'fa-chevron-up':'fa-chevron-down'" aria-hidden="true"></i><span>{{ editor.tabsItemSummary(item, index) }}</span></button>
 									<button type="button" class="pb-tabs-item-action" title="Duplicate" aria-label="Duplicate tab" @click="duplicateTabsItem(item.id)"><i class="far fa-copy"></i></button>
 									<button type="button" class="pb-tabs-item-action" title="Remove" aria-label="Remove tab" :disabled="editor.tabsItemsForNode(node).length <= 1" @click="removeTabsItem(item.id)"><i class="fas fa-times"></i></button>
 								</div>
@@ -46,7 +46,7 @@
 			<a class="pb-tabs-help-link" href="https://go.elementor.com/widget-nested-tabs" target="_blank" rel="noopener noreferrer">Need Help <i class="fas fa-external-link-alt"></i></a>
 		</div>
 
-		<div v-show="editor.settingsTab === 'style'" class="pb-tab-content pb-tabs-style-settings">
+		<div v-if="editor.settingsTab === 'style'" class="pb-tab-content pb-tabs-style-settings">
 			<details class="pb-collapsible" open>
 				<summary>Tabs</summary>
 				<div class="pb-collapsible-body">
@@ -99,7 +99,7 @@
 			<a class="pb-tabs-help-link" href="https://go.elementor.com/widget-nested-tabs" target="_blank" rel="noopener noreferrer">Need Help <i class="fas fa-external-link-alt"></i></a>
 		</div>
 
-		<div v-show="editor.settingsTab === 'advanced'" class="pb-tab-content">
+		<div v-if="editor.settingsTab === 'advanced'" class="pb-tab-content">
 			<component :is="editor.widgetAdvancedControls" :node="node" :responsive-device="editor.responsiveDevice" :show-display-conditions="false" :show-cache-settings="false" :elementor-choices="true" @responsive-device="editor.setResponsiveDevice" @choose-media="editor.chooseMedia(node.settings, $event)" @clear-media="editor.clearMedia(node.settings, $event)" @unavailable-ai="editor.showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')" />
 			<a class="pb-tabs-help-link" href="https://go.elementor.com/widget-nested-tabs" target="_blank" rel="noopener noreferrer">Need Help <i class="fas fa-external-link-alt"></i></a>
 		</div>

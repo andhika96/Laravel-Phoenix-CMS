@@ -6,7 +6,7 @@
 			<button type="button" class="pb-tab-btn pb-tab-btn-icon" :class="{active:editor.settingsTab==='advanced'}" @click="editor.settingsTab='advanced'"><i class="fas fa-gear"></i><span>Advanced</span></button>
 		</div>
 
-		<div v-show="editor.settingsTab==='content'" class="pb-tab-content">
+		<div v-if="editor.settingsTab==='content'" class="pb-tab-content">
 			<details class="pb-collapsible" open>
 				<summary>Heading</summary>
 				<div class="pb-collapsible-body">
@@ -17,12 +17,12 @@
 			</details>
 		</div>
 
-		<div v-show="editor.settingsTab==='style'" class="pb-tab-content pb-heading-style-settings">
+		<div v-if="editor.settingsTab==='style'" class="pb-tab-content pb-heading-style-settings">
 			<details class="pb-collapsible" open>
 				<summary>Heading</summary>
 				<div class="pb-collapsible-body">
 					<div class="pb-form-group pb-heading-choice-row"><div class="pb-label-row pb-label-row-device"><label class="pb-form-label mb-0">Alignment</label><div class="pb-control-device-wrap"><button type="button" class="pb-control-device-btn" @click.stop="editor.openControlResponsiveMenu('heading-alignment')" :title="'Responsive: ' + editor.responsiveDeviceLabel()"><i :class="editor.responsiveDeviceIcon()"></i></button><div v-if="editor.isControlResponsiveMenuOpen('heading-alignment')" class="pb-control-device-menu"><button v-for="device in editor.responsiveDevices" :key="'heading-alignment-'+device.value" type="button" class="pb-control-device-item" :class="{active:editor.responsiveDevice===device.value}" @click.stop="editor.applyResponsiveDevice('heading-alignment', device.value)"><i :class="device.icon"></i><span>{{ editor.deviceOptionLabel(device) }}</span></button></div></div></div><div class="pb-btn-group pb-heading-segmented"><button v-for="option in [{value:'left',icon:'fas fa-align-left',label:'Left'},{value:'center',icon:'fas fa-align-center',label:'Center'},{value:'right',icon:'fas fa-align-right',label:'Right'},{value:'justify',icon:'fas fa-align-justify',label:'Justified'}]" :key="option.value" type="button" class="pb-seg-btn" :class="{active:node.settings[editor.activeResponsiveKey('align')]===option.value}" :aria-pressed="node.settings[editor.activeResponsiveKey('align')]===option.value" :title="option.label" @click.prevent="editor.setResponsiveSetting(node.settings, 'align', option.value)"><i :class="option.icon"></i><span class="sr-only">{{ option.label }}</span></button></div></div>
-					<component :is="editor.typographyControl" prefix="heading" :settings="node.settings" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" :reset-defaults="{FontSize:'32px',FontWeight:'600',LineHeight:'1.2em'}" @responsive-device="editor.setResponsiveDevice" />
+					<component :is="editor.typographyControl" prefix="heading" :settings="node.settings" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" :reset-defaults="{FontSize:'32px',FontWeight:'600',LineHeight:'1.2em'}" font-size-mode-key="headingFontSizeMode" @responsive-device="editor.setResponsiveDevice" />
 					<component :is="editor.textStrokeControl" :settings="node.settings" width-key="headingTextStrokeWidth" color-key="headingTextStrokeColor" :responsive-device="editor.responsiveDevice" control-id="heading-stroke" :open="activeTextEffect==='heading-stroke'" @request-open="activeTextEffect=$event" />
 					<component :is="editor.textShadowControl" :model-value="node.settings.headingTextShadow" control-id="heading-shadow" :open="activeTextEffect==='heading-shadow'" @request-open="activeTextEffect=$event" @update:modelValue="node.settings.headingTextShadow=$event" />
 					<div class="pb-form-group"><label class="pb-form-label">Blend Mode</label><select class="pb-select" v-model="node.settings.blendMode"><option v-for="mode in blendModes" :key="mode.value" :value="mode.value">{{ mode.label }}</option></select></div>
@@ -33,7 +33,7 @@
 			</details>
 		</div>
 
-		<div v-show="editor.settingsTab==='advanced'" class="pb-tab-content">
+		<div v-if="editor.settingsTab==='advanced'" class="pb-tab-content">
 			<component :is="editor.widgetAdvancedControls" :node="node" :responsive-device="editor.responsiveDevice" :show-display-conditions="false" :show-cache-settings="false" @responsive-device="editor.setResponsiveDevice" @choose-media="editor.chooseMedia(node.settings,$event)" @clear-media="editor.clearMedia(node.settings,$event)" @unavailable-ai="editor.showUnsupportedControlNotice('Animate With AI', 'AI service is not connected to this page builder.')" />
 		</div>
 	</div>

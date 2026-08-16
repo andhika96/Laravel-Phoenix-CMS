@@ -408,11 +408,13 @@
                 <component
                     :is="safeTag(s.titleTag, 'h3')"
                     :style="
-                        typographyStyle(
+                        tagTypographyStyle(
                             'priceTableHeader',
+                            s.titleTag,
                             '24px',
                             '600',
                             '1.2em',
+                            'priceTableHeaderFontSizeMode',
                         )
                     "
                     >{{ s.title }}</component
@@ -619,7 +621,7 @@
             <div class="pb-pro-video-playlist__body">
                 <section class="pb-pro-video-playlist__player" data-playlist-player>
                     <div v-if="videoPlaylistActiveItem?.type === 'section'" class="pb-pro-video-playlist__section" :style="videoPlaylistSectionStyle">
-                        <component :is="safeTag(videoPlaylistActiveItem.titleTag, 'h4')" :style="videoPlaylistItemTitleStyle">{{ videoPlaylistActiveItem.title }}</component>
+                        <component :is="safeTag(videoPlaylistActiveItem.titleTag, 'h4')" :style="videoPlaylistItemTitleStyle(videoPlaylistActiveItem)">{{ videoPlaylistActiveItem.title }}</component>
                         <p>{{ videoPlaylistActiveItem.sectionContent }}</p>
                     </div>
                     <div v-else class="pb-pro-video-playlist__media">
@@ -633,7 +635,7 @@
                     <button v-for="(entry, index) in videoPlaylistItems" :key="entry.id || index" type="button" class="pb-pro-video-playlist__item" :class="{ 'is-active': index === activePlaylistIndex, 'is-watched': playlistWatched.includes(index) }" :data-playlist-index="index" :style="videoPlaylistItemStyle(index)" @click.stop="selectVideoPlaylistItem(index)">
                         <span v-if="s.showThumbnails !== false" class="pb-pro-video-playlist__thumbnail"><img v-if="videoPlaylistThumbnail(entry)" :src="videoPlaylistThumbnail(entry)" alt="" /><span v-else class="pb-pro-video-playlist__thumbnail-placeholder"><i :class="videoPlaylistIconClass(index)"></i></span></span>
                         <span class="pb-pro-video-playlist__item-copy">
-                            <component :is="safeTag(entry.titleTag, 'h4')" :style="videoPlaylistItemTitleStyle">{{ entry.title }}</component>
+                            <component :is="safeTag(entry.titleTag, 'h4')" :style="videoPlaylistItemTitleStyle(entry)">{{ entry.title }}</component>
                             <span v-if="s.showDuration !== false && entry.duration" class="pb-pro-video-playlist__duration" :style="videoPlaylistDurationStyle">{{ entry.duration }}</span>
                         </span>
                         <span class="pb-pro-video-playlist__item-icon" :style="videoPlaylistIconStyle(index)"><i :class="videoPlaylistIconClass(index)"></i></span>
@@ -1180,6 +1182,12 @@
 </template>
 
 <script>
+const TAG_FONT_SIZES = Object.freeze({
+    desktop: { h1: "40px", h2: "34px", h3: "29px", h4: "24px", h5: "20px", h6: "16px", div: "16px", span: "16px", p: "16px" },
+    tablet: { h1: "34px", h2: "29px", h3: "24px", h4: "20px", h5: "18px", h6: "16px", div: "16px", span: "16px", p: "16px" },
+    mobile: { h1: "29px", h2: "24px", h3: "20px", h4: "18px", h5: "16px", h6: "15px", div: "15px", span: "15px", p: "15px" },
+});
+
 export default {
     name: "ProWidgetCanvas",
     props: {
@@ -1867,7 +1875,7 @@ export default {
         },
         headlineStyle() {
             return {
-                ...this.typographyStyle("headline", "36px", "600", "1.2em"),
+                ...this.tagTypographyStyle("headline", this.s.tag, "36px", "600", "1.2em", "headlineFontSizeMode"),
                 textAlign: this.s.alignment || "left",
                 color: this.s.titleColor || "#101828",
             };
@@ -2057,11 +2065,13 @@ export default {
         },
         priceListTitleStyle() {
             return {
-                ...this.typographyStyle(
+                ...this.tagTypographyStyle(
                     "priceListTitle",
+                    this.s.titleTag,
                     "18px",
                     "600",
                     "1.3em",
+                    "priceListTitleFontSizeMode",
                 ),
                 color: this.s.titleColor || "#101828",
             };
@@ -2338,13 +2348,10 @@ export default {
             };
         },
         videoPlaylistNameStyle() {
-            return { ...this.typographyStyle("videoPlaylistName", "20px", "600", "1.3em"), color: "var(--video-playlist-name-color)" };
+            return { ...this.tagTypographyStyle("videoPlaylistName", this.s.playlistTitleTag, "20px", "600", "1.3em", "playlistNameFontSizeMode"), color: "var(--video-playlist-name-color)" };
         },
         videoPlaylistCountStyle() {
             return { ...this.typographyStyle("videoPlaylistCount", "13px", "400", "1.4em"), color: "var(--video-playlist-count-color)" };
-        },
-        videoPlaylistItemTitleStyle() {
-            return this.typographyStyle("videoPlaylistItem", "14px", "500", "1.3em");
         },
         videoPlaylistDurationStyle() {
             return { ...this.typographyStyle("videoPlaylistDuration", "12px", "400", "1.3em"), color: "var(--video-playlist-duration-color)" };
@@ -3029,6 +3036,9 @@ export default {
                 ? this.proIconClass(this.s, "playedIcon", "fas fa-check")
                 : this.proIconClass(this.s, "playIcon", "fas fa-play");
         },
+        videoPlaylistItemTitleStyle(entry = {}) {
+            return this.tagTypographyStyle("videoPlaylistItem", entry.titleTag, "14px", "500", "1.3em", "videoPlaylistItemFontSizeMode");
+        },
         selectVideoPlaylistItem(index) {
             const next = Math.max(0, Math.min(this.videoPlaylistItems.length - 1, Number(index) || 0));
             if (this.s.indicateWatched && this.activePlaylistIndex !== next) {
@@ -3300,7 +3310,7 @@ export default {
         },
         slideTitleStyle(slide) {
             return {
-                ...this.typographyStyle("slideTitle", "32px", "600", "1.2em"),
+                ...this.tagTypographyStyle("slideTitle", this.s.titleTag, "32px", "600", "1.2em", "slideTitleFontSizeMode"),
                 color: slide.titleColor || this.s.titleColor || "#fff",
             };
         },
@@ -3677,6 +3687,16 @@ export default {
                     "none",
                 ),
             };
+        },
+        tagFontSize(tag, fallback = "16px") {
+            const device = ["tablet", "mobile"].includes(this.responsiveDevice) ? this.responsiveDevice : "desktop";
+            const safeTag = this.safeTag(tag, "div");
+            return TAG_FONT_SIZES[device]?.[safeTag] || fallback;
+        },
+        tagTypographyStyle(prefix, tag, size, weight, lineHeight, modeKey) {
+            const style = this.typographyStyle(prefix, size, weight, lineHeight);
+            if (this.s[modeKey] !== "custom") style.fontSize = this.tagFontSize(tag, size);
+            return style;
         },
         responsiveValue(base, fallback = "") {
             const d = ["tablet", "mobile"].includes(this.responsiveDevice)
