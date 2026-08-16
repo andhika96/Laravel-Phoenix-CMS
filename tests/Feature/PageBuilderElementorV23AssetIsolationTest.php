@@ -18,6 +18,7 @@ class PageBuilderElementorV23AssetIsolationTest extends TestCase
         $v23Views = $this->activeRelativeFiles(resource_path('views/pagebuilder_elementor_v23'));
         $this->assertSame([], array_values(array_diff($v20Views, $v23Views)));
         $this->assertSame([
+            'partials/render_feature_showcase.blade.php',
             'widgets/basic/google-maps.blade.php',
             'widgets/pro/hero-banner.blade.php',
             'widgets/pro/hero-slider.blade.php',

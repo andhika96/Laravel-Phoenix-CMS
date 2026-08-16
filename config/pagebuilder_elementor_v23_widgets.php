@@ -122,6 +122,17 @@ return [
         'view' => 'pagebuilder_elementor_v23.partials.render_basic_gallery',
         'toolbox' => true,
     ],
+    'feature_showcase' => [
+        'type' => 'feature_showcase',
+        'label' => 'Feature Showcase',
+        'category' => 'general',
+        'icon' => 'fas fa-layer-group',
+        'definition' => 'js/pagebuilder_elementor_v23/widgets/general/feature-showcase/definition.js',
+        'canvas' => 'js/pagebuilder_elementor_v23/widgets/general/feature-showcase/Canvas.vue',
+        'settings' => 'js/pagebuilder_elementor_v23/widgets/general/feature-showcase/Settings.vue',
+        'view' => 'pagebuilder_elementor_v23.partials.render_feature_showcase',
+        'toolbox' => true,
+    ],
     'icon_list' => [
         'type' => 'icon_list',
         'label' => 'Icon List',

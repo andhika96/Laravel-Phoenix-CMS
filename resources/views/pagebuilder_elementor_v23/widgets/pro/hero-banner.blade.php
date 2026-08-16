@@ -35,7 +35,9 @@
         return $fallback;
     };
     $heroPercent = static function ($value, $fallback) {
-        $number = is_numeric($value) ? (float) $value : $fallback;
+        $raw = trim((string) $value);
+        $number = is_numeric($raw) ? (float) $raw : $fallback;
+        if (!is_numeric($raw) && preg_match('/^(-?\d+(?:\.\d+)?)%$/', $raw, $matches)) $number = (float) $matches[1];
         return max(0, min(100, $number)) . '%';
     };
     $heroPosition = static function ($target, $suffix) use ($heroResponsive, $heroEnum, $heroPercent) {
@@ -47,9 +49,11 @@
         $flex = ['left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end'][$align];
         return 'left:' . $heroPercent($heroResponsive($target . 'X', $suffix, 0), 0) . ';top:' . $heroPercent($heroResponsive($target . 'Y', $suffix, 0), 0) . ';width:' . $heroPercent($heroResponsive($target . 'Width', $suffix, 40), 40) . ';text-align:' . $align . ';transform:translate(' . $translateX . ',' . $translateY . ');--hero-content-align:' . $flex;
     };
-    $heroButtonLayout = static function ($suffix) use ($heroResponsive, $heroEnum, $heroLength) {
+    $heroButtonLayout = static function ($suffix) use ($heroResponsive, $heroEnum, $heroLength, $heroMode) {
         $direction = $heroEnum($heroResponsive('buttonDirection', $suffix, 'row'), ['row','column'], 'row');
-        $align = $heroEnum($heroResponsive('buttonAlign', $suffix, 'left'), ['left','center','right'], 'left');
+        $alignMode = $heroEnum($heroResponsive('buttonAlignMode', $suffix, 'inherit'), ['inherit','custom'], 'inherit');
+        $alignTarget = $heroMode === 'grouped' ? 'group' : 'buttons';
+        $align = $heroEnum($heroResponsive($alignMode === 'inherit' ? $alignTarget . 'Align' : 'buttonAlign', $suffix, 'left'), ['left','center','right'], 'left');
         $flex = ['left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end'][$align];
         $wrap = $heroResponsive('buttonWrap', $suffix, true) ? 'wrap' : 'nowrap';
         return 'flex-direction:' . $direction . ';gap:' . $heroLength($heroResponsive('buttonGap', $suffix, '10px'), '10px') . ';flex-wrap:' . $wrap . ';justify-content:' . ($direction === 'row' ? $flex : 'initial') . ';align-items:' . ($direction === 'column' ? $flex : 'initial');

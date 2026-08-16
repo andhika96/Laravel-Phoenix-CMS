@@ -1,0 +1,72 @@
+<template>
+    <section class="pb-hero-banner" data-hero-banner :style="rootStyle">
+        <img v-if="imageUrl" class="pb-hero-banner__media" :src="imageUrl" :alt="imageAlt" :style="imageStyle">
+        <div v-else class="pb-hero-banner__empty"><i class="far fa-image"></i><span>Choose a hero image</span></div>
+        <div class="pb-hero-banner__overlay"></div>
+
+        <div v-if="positioningMode==='grouped'" class="pb-hero-banner__content" :style="positionStyle('group')">
+            <template v-for="key in contentOrder" :key="key">
+                <component :is="titleTag" v-if="key==='title'&&settings.showTitle" class="pb-hero-banner__title">{{settings.title}}</component>
+                <component :is="subtitleTag" v-if="key==='subtitle'&&settings.showSubtitle" class="pb-hero-banner__subtitle">{{settings.subtitle}}</component>
+                <HeroButtons v-if="key==='buttons'&&settings.showButtons" :buttons="buttons" :layout-style="buttonLayoutStyle" :modal-settings="modalSettings" />
+            </template>
+        </div>
+
+        <template v-else>
+            <div v-if="settings.showTitle" class="pb-hero-banner__independent" :style="positionStyle('title')"><component :is="titleTag" class="pb-hero-banner__title">{{settings.title}}</component></div>
+            <div v-if="settings.showSubtitle" class="pb-hero-banner__independent" :style="positionStyle('subtitle')"><component :is="subtitleTag" class="pb-hero-banner__subtitle">{{settings.subtitle}}</component></div>
+            <div v-if="settings.showButtons" class="pb-hero-banner__independent" :style="positionStyle('buttons')"><HeroButtons :buttons="buttons" :layout-style="buttonLayoutStyle" :modal-settings="modalSettings" /></div>
+        </template>
+    </section>
+</template>
+
+<script>
+const TITLE_TAG_FONT_SIZES = Object.freeze({ h1: '56px', h2: '48px', h3: '40px', h4: '32px', h5: '24px', h6: '18px', div: '48px' });
+const HeroButtons={
+    props:{buttons:{type:Array,default:()=>[]},layoutStyle:{type:Object,default:()=>({})},modalSettings:{type:Object,default:()=>({})}},
+    methods:{
+        safeUrl(value,link=false){const raw=String(value||'').trim();if(!raw||raw.startsWith('//'))return'';const pattern=link?/^(?:https?:|mailto:|tel:|\/|#)/i:/^(?:https?:|\/)/i;return pattern.test(raw)?raw:'';},
+        safeAttributes(button){const output={};const allowed=/^(?:aria-[a-z0-9_-]+|data-[a-z0-9_-]+|title|download|hreflang)$/i;(Array.isArray(button.linkCustomAttributes)?button.linkCustomAttributes:[]).forEach(attribute=>{const key=String(attribute?.key||attribute?.name||'').trim();if(allowed.test(key))output[key]=String(attribute?.value??'');});return output;},
+        linkRel(button){const rel=[];if(button.linkTarget==='_blank')rel.push('noopener','noreferrer');if(button.linkNofollow)rel.push('nofollow');return[...new Set(rel)].join(' ')||null;},
+        videoUrl(button){const raw=this.safeUrl(button.videoUrl);if(!raw)return'';if(button.videoSource==='self_hosted')return raw;let url;try{url=new URL(raw,window.location.origin);}catch(_){return'';}const host=url.hostname.replace(/^www\./,'');let id='';if(button.videoSource==='youtube'&&['youtube.com','youtu.be'].includes(host)){id=host==='youtu.be'?url.pathname.split('/').filter(Boolean)[0]:url.searchParams.get('v')||url.pathname.split('/').filter(Boolean).pop();return id?`https://www.youtube.com/embed/${id}`:'';}if(button.videoSource==='vimeo'&&host==='vimeo.com'){id=url.pathname.split('/').filter(Boolean).pop();return /^\d+$/.test(id||'')?`https://player.vimeo.com/video/${id}`:'';}if(button.videoSource==='dailymotion'&&['dailymotion.com','dai.ly'].includes(host)){id=url.pathname.split('/').filter(Boolean).pop();return id?`https://www.dailymotion.com/embed/video/${id}`:'';}return'';},
+        popupSource(button){return button.actionType==='image_popup'?this.safeUrl(button.imageUrl):this.videoUrl(button);},
+        open(button){const source=this.popupSource(button);if(!source)return;window.PageBuilderElementorV23Runtime?.openMediaLightbox(source,button.actionType==='video_popup'?'video':'image',button.imageAlt||button.text||'',this.modalSettings);},
+        icon(button){return button.actionType==='video_popup'?'fas fa-play':button.actionType==='image_popup'?'far fa-image':'fas fa-arrow-right';},
+    },
+    template:`<div class="pb-hero-banner__buttons" :style="layoutStyle"><template v-for="button in buttons" :key="button.id"><a v-if="button.actionType==='link'&&safeUrl(button.linkUrl,true)" class="pb-hero-banner__button" :href="safeUrl(button.linkUrl,true)" :target="button.linkTarget==='_blank'?'_blank':null" :rel="linkRel(button)" v-bind="safeAttributes(button)" data-pb-interactive="true"><span>{{button.text||'Button'}}</span><i :class="icon(button)"></i></a><button v-else-if="button.actionType==='link'" type="button" class="pb-hero-banner__button is-disabled" disabled><span>{{button.text||'Button'}}</span><i :class="icon(button)"></i></button><button v-else type="button" class="pb-hero-banner__button" :disabled="!popupSource(button)" data-pb-interactive="true" @click.stop="open(button)"><span>{{button.text||'Button'}}</span><i :class="icon(button)"></i></button></template></div>`,
+};
+
+export default{
+    name:'HeroBannerCanvas',components:{HeroButtons},props:{item:{type:Object,required:true},responsiveDevice:{type:String,default:'desktop'}},
+    computed:{
+        settings(){return this.item.settings||{};},
+        positioningMode(){return this.settings.positioningMode==='independent'?'independent':'grouped';},
+        contentOrder(){const allowed=['title','subtitle','buttons'];const source=Array.isArray(this.settings.contentOrder)?this.settings.contentOrder:allowed;return[...source.filter((key,index)=>allowed.includes(key)&&source.indexOf(key)===index),...allowed.filter(key=>!source.includes(key))];},
+        buttons(){const source=Array.isArray(this.settings.buttons)&&this.settings.buttons.length?this.settings.buttons:[];return source.slice(0,3);},
+        titleTag(){return['h1','h2','h3','h4','h5','h6','div'].includes(this.settings.titleTag)?this.settings.titleTag:'h2';},
+        automaticTitleFontSize(){return TITLE_TAG_FONT_SIZES[this.titleTag]||'48px';},
+        subtitleTag(){return['p','div','span'].includes(this.settings.subtitleTag)?this.settings.subtitleTag:'p';},
+        imageUrl(){return this.safeMedia(this.responsiveValue('imageUrl',''));},
+        imageAlt(){return String(this.responsiveValue('imageAlt',this.settings.imageAlt||''));},
+        imageStyle(){return{objectFit:this.enumValue(this.responsiveValue('objectFit','cover'),['cover','contain','fill'],'cover'),objectPosition:String(this.responsiveValue('objectPosition','center center'))};},
+        rootStyle(){return{minHeight:this.cssLength(this.responsiveValue('minHeight','500px'),'500px'),'--hero-overlay':this.safeColor(this.settings.overlayColor,'rgba(255,255,255,0)'),'--hero-content-gap':this.cssLength(this.responsiveValue('contentGap','14px'),'14px'),'--hero-title-color':this.safeColor(this.settings.titleColor,'#292d32'),'--hero-title-size':this.settings.titleFontSizeMode==='custom'?this.cssLength(this.responsiveValue('titleFontSize','48px'),'48px'):this.automaticTitleFontSize,'--hero-title-weight':this.fontWeight(this.settings.titleFontWeight,'700'),'--hero-subtitle-color':this.safeColor(this.settings.subtitleColor,'#292d32'),'--hero-subtitle-size':this.cssLength(this.responsiveValue('subtitleFontSize','22px'),'22px'),'--hero-subtitle-weight':this.fontWeight(this.settings.subtitleFontWeight,'400'),'--hero-button-color':this.safeColor(this.settings.buttonTextColor,'#fff'),'--hero-button-bg':this.safeColor(this.settings.buttonBackground,'#30343a'),'--hero-button-hover-color':this.safeColor(this.settings.buttonTextColorHover,'#fff'),'--hero-button-hover-bg':this.safeColor(this.settings.buttonBackgroundHover,'#1f2328'),'--hero-button-radius':this.cssLength(this.settings.buttonRadius,'999px'),'--hero-button-pad-x':this.cssLength(this.settings.buttonPaddingX,'18px'),'--hero-button-pad-y':this.cssLength(this.settings.buttonPaddingY,'10px')};},
+        buttonAlignment(){const mode=this.enumValue(this.responsiveValue('buttonAlignMode','inherit'),['inherit','custom'],'inherit');const target=this.positioningMode==='grouped'?'group':'buttons';const value=mode==='inherit'?this.responsiveValue(target+'Align','left'):this.responsiveValue('buttonAlign','left');return this.enumValue(value,['left','center','right'],'left');},
+        buttonLayoutStyle(){const direction=this.enumValue(this.responsiveValue('buttonDirection','row'),['row','column'],'row');const align=this.buttonAlignment();const flex={left:'flex-start',center:'center',right:'flex-end'}[align];return{flexDirection:direction,gap:this.cssLength(this.responsiveValue('buttonGap','10px'),'10px'),flexWrap:this.responsiveValue('buttonWrap',true)?'wrap':'nowrap',justifyContent:direction==='row'?flex:undefined,alignItems:direction==='column'?flex:undefined};},
+        modalSettings(){return{background:this.safeColor(this.settings.modalBackground,'rgba(0,0,0,.92)'),uiColor:this.safeColor(this.settings.modalUiColor,'#fff'),uiHoverColor:this.safeColor(this.settings.modalUiHoverColor,'#6979f8'),videoWidth:this.cssLength(this.settings.modalVideoWidth,'75%')};},
+    },
+    methods:{
+        responsiveValue(base,fallback=''){const d=['tablet','mobile'].includes(this.responsiveDevice)?this.responsiveDevice:'desktop';const keys=d==='mobile'?[base+'Mobile',base+'Tablet',base]:d==='tablet'?[base+'Tablet',base]:[base];for(const key of keys){if(this.settings[key]!==''&&this.settings[key]!=null)return this.settings[key];}return fallback;},
+        positionStyle(target){const anchor=this.enumValue(this.responsiveValue(target+'Anchor','center-left'),['top-left','top-center','top-right','center-left','center','center-right','bottom-left','bottom-center','bottom-right'],'center-left');const parts=anchor==='center'?['center','center']:anchor.split('-');const transform=`translate(${parts[1]==='center'?'-50%':parts[1]==='right'?'-100%':'0'}, ${parts[0]==='center'?'-50%':parts[0]==='bottom'?'-100%':'0'})`;const align=this.enumValue(this.responsiveValue(target+'Align','left'),['left','center','right'],'left');return{left:this.percent(this.responsiveValue(target+'X',0),0),top:this.percent(this.responsiveValue(target+'Y',0),0),width:this.percent(this.responsiveValue(target+'Width',40),40),textAlign:align,transform,'--hero-content-align':{left:'flex-start',center:'center',right:'flex-end'}[align]};},
+        safeMedia(value){const raw=String(value||'').trim();return raw&&!raw.startsWith('//')&&/^(?:https?:|\/)/i.test(raw)?raw:'';},
+        enumValue(value,allowed,fallback){return allowed.includes(value)?value:fallback;},
+        cssLength(value,fallback){const raw=String(value??'').trim();return/^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i.test(raw)?raw:fallback;},
+        percent(value,fallback){const raw=String(value??'').trim();const match=raw.match(/^(-?\d+(?:\.\d+)?)%$/);const number=Number.isFinite(Number(raw))?Number(raw):(match?Number(match[1]):fallback);return`${Number.isFinite(number)?Math.min(100,Math.max(0,number)):fallback}%`;},
+        safeColor(value,fallback){const raw=String(value||'').trim();return raw&&/^[#a-z0-9(),.%\s-]+$/i.test(raw)?raw:fallback;},
+        fontWeight(value,fallback){const raw=String(value||'');return/^(?:normal|bold|[1-9]00)$/i.test(raw)?raw:fallback;},
+    },
+};
+</script>
+
+<style scoped>
+.pb-hero-banner{position:relative;width:100%;min-width:0;overflow:hidden;background:#e8eaeb}.pb-hero-banner__media,.pb-hero-banner__overlay,.pb-hero-banner__empty{position:absolute;inset:0;width:100%;height:100%}.pb-hero-banner__media{display:block}.pb-hero-banner__overlay{z-index:1;background:var(--hero-overlay)}.pb-hero-banner__empty{display:grid;place-content:center;justify-items:center;gap:8px;color:#98a2b3;background:#eef1f4}.pb-hero-banner__empty i{font-size:40px}.pb-hero-banner__content,.pb-hero-banner__independent{position:absolute;z-index:2;color:#292d32}.pb-hero-banner__content{display:flex;flex-direction:column;align-items:var(--hero-content-align);gap:var(--hero-content-gap)}.pb-hero-banner__title{width:100%;margin:0;color:var(--hero-title-color);font-size:var(--hero-title-size);font-weight:var(--hero-title-weight);line-height:1.05}.pb-hero-banner__subtitle{width:100%;margin:0;color:var(--hero-subtitle-color);font-size:var(--hero-subtitle-size);font-weight:var(--hero-subtitle-weight);line-height:1.35}:deep(.pb-hero-banner__buttons){width:100%;display:flex}:deep(.pb-hero-banner__button){display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:var(--hero-button-pad-y) var(--hero-button-pad-x);border:0;border-radius:var(--hero-button-radius);color:var(--hero-button-color);background:var(--hero-button-bg);font:inherit;text-decoration:none;white-space:nowrap;cursor:pointer;transition:color .2s ease,background-color .2s ease}:deep(.pb-hero-banner__button:hover),:deep(.pb-hero-banner__button:focus-visible){color:var(--hero-button-hover-color);background:var(--hero-button-hover-bg)}:deep(.pb-hero-banner__button:disabled),:deep(.pb-hero-banner__button.is-disabled){cursor:not-allowed;opacity:.55}@media(prefers-reduced-motion:reduce){:deep(.pb-hero-banner__button){transition:none}}
+</style>

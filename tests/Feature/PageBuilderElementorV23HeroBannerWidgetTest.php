@@ -76,4 +76,51 @@ class PageBuilderElementorV23HeroBannerWidgetTest extends TestCase
         $this->assertStringContainsString('https://www.dailymotion.com/embed/video/x9demo', $html);
         $this->assertStringContainsString('data-media-src="/media/hero.webm"', $html);
     }
+
+    public function test_frontend_renderer_applies_center_anchor_geometry_from_percent_settings(): void
+    {
+        $module = config('pagebuilder_elementor_v23_widgets.hero_banner');
+        $html = view($module['view'], [
+            'node' => [
+                'id' => 'hero-center-anchor',
+                'type' => 'hero_banner',
+                'settings' => [
+                    'positioningMode' => 'grouped',
+                    'groupAnchor' => 'center',
+                    'groupX' => '50%',
+                    'groupY' => '50%',
+                    'groupWidth' => '70%',
+                    'groupAlign' => 'center',
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('left:50%;top:50%;width:70%;text-align:center;transform:translate(-50%,-50%);--hero-content-align:center', $html);
+    }
+
+    public function test_frontend_renderer_follows_group_alignment_until_button_override(): void
+    {
+        $module = config('pagebuilder_elementor_v23_widgets.hero_banner');
+        $base = [
+            'positioningMode' => 'grouped',
+            'groupAlign' => 'center',
+            'buttons' => [['text' => 'Watch', 'actionType' => 'link', 'linkUrl' => '/watch']],
+        ];
+
+        $inherited = view($module['view'], [
+            'node' => ['id' => 'hero-follow-content', 'type' => 'hero_banner', 'settings' => $base],
+        ])->render();
+
+        $this->assertStringContainsString('justify-content:center;align-items:initial', $inherited);
+
+        $overridden = view($module['view'], [
+            'node' => [
+                'id' => 'hero-button-override',
+                'type' => 'hero_banner',
+                'settings' => $base + ['buttonAlignMode' => 'custom', 'buttonAlign' => 'left'],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('justify-content:flex-start;align-items:initial', $overridden);
+    }
 }

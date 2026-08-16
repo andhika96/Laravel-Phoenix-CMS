@@ -1,7 +1,7 @@
 <template>
 	<div class="pb-typography-control">
 		<div class="pb-typography-trigger-row">
-			<span>Typography</span>
+				<span>{{ label }}</span>
 			<div class="pb-typography-trigger-actions">
 				<button type="button" class="pb-typography-trigger" :class="{ active: popoverOpen && familyMenuOpen }" title="Choose a font family" aria-label="Choose a font family" @click="openFontPicker">
 					<i class="fas fa-globe"></i>
@@ -14,7 +14,7 @@
 
 		<div v-if="popoverOpen" class="pb-typography-popover">
 			<div class="pb-typography-popover-head">
-				<strong>Typography</strong>
+				<strong>{{ label }}</strong>
 				<button type="button" title="Reset typography" aria-label="Reset typography" @click="resetTypography">
 					<i class="fas fa-undo-alt"></i>
 				</button>
@@ -208,6 +208,7 @@ export default {
 		responsiveDevice: { type: String, default: 'desktop' },
 		fontFamilies: { type: [Array, Object], default: () => [] },
 		prefix: { type: String, default: 'header' },
+		label: { type: String, default: 'Typography' },
 		resetDefaults: { type: Object, default: () => ({}) },
 		fontSizeModeKey: { type: String, default: '' },
 	},

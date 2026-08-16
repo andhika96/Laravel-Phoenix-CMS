@@ -69,14 +69,14 @@
 	$duration = fn (mixed $value): string => max(0, min(10, (float) $value)).'s';
 	$rootVariables = function (string $suffix = '') use ($layout, $settings, $responsive, $cssLength, $cssColor, $enum, $alignValue, $iconAlignValue, $dividerStyle, $duration): string {
 		return implode(';', [
-			'--pb-icon-list-space-between:'.$cssLength($responsive('spaceBetween', $suffix, '0px'), '0px'),
+			'--pb-icon-list-space-between:'.$cssLength($responsive('spaceBetween', $suffix, '15px'), '15px'),
 			'--pb-icon-list-align:'.$alignValue($suffix),
 			'--pb-icon-list-divider-style:'.$dividerStyle,
 			'--pb-icon-list-divider-weight:'.$cssLength($settings['dividerWeight'] ?? '1px', '1px'),
 			'--pb-icon-list-divider-size:'.$cssLength($layout === 'inline' ? ($settings['dividerHeight'] ?? '100%') : ($settings['dividerWidth'] ?? '100%'), '100%'),
 			'--pb-icon-list-divider-color:'.$cssColor($settings['dividerColor'] ?? '#dddddd', '#dddddd'),
 			'--pb-icon-list-icon-size:'.$cssLength($responsive('iconSize', $suffix, '14px'), '14px'),
-			'--pb-icon-list-icon-gap:'.$cssLength($responsive('iconGap', $suffix, '8px'), '8px'),
+			'--pb-icon-list-icon-gap:'.$cssLength($responsive('iconGap', $suffix, '20px'), '20px'),
 			'--pb-icon-list-icon-offset:'.$cssLength($responsive('iconVerticalOffset', $suffix, '0px'), '0px'),
 			'--pb-icon-list-icon-align:'.$iconAlignValue($suffix),
 			'--pb-icon-list-icon-vertical:'.$enum($responsive('iconVerticalAlignment', $suffix, 'center'), ['flex-start','center','flex-end'], 'center'),

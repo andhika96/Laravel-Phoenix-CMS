@@ -1,0 +1,236 @@
+@php
+	$settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
+	$nodeId = trim((string) ($node['id'] ?? 'feature-showcase')) ?: 'feature-showcase';
+	$safeUrl = function (mixed $value): string {
+		$url = trim((string) $value);
+		if ($url === '' || str_starts_with($url, '//') || preg_match('/[\x00-\x1f\x7f]/', $url)) return '';
+		if (preg_match('/^(?:javascript|vbscript|data):/i', $url)) return '';
+		return preg_match('/^(?:https?:\/\/|\/)/i', $url) ? $url : '';
+	};
+	$cssLength = function (mixed $value, string $fallback = '0px'): string {
+		$raw = trim((string) $value);
+		return preg_match('/^(?:\d+(?:\.\d+)?)(?:px|pt|%|em|rem|vw|vh|auto)$/i', $raw) ? $raw : $fallback;
+	};
+	$cssColor = function (mixed $value, string $fallback = 'inherit'): string {
+		$raw = trim((string) $value);
+		return $raw !== '' && preg_match('/^[#a-z0-9(),.%\s-]+$/i', $raw) ? $raw : $fallback;
+	};
+	$cssFontFamily = function (mixed $value): string {
+		$raw = trim((string) $value);
+		return $raw !== '' && preg_match('/^[A-Za-z0-9 _,\'"-]+$/', $raw) ? $raw : 'inherit';
+	};
+	$cssShadow = function (mixed $value): string {
+		$raw = trim((string) $value);
+		return $raw !== '' && preg_match('/^[#a-z0-9(),.%\s-]+$/i', $raw) ? $raw : 'none';
+	};
+	$enum = function (mixed $value, array $allowed, string $fallback): string {
+		$raw = strtolower(trim((string) $value));
+		return in_array($raw, $allowed, true) ? $raw : $fallback;
+	};
+	$responsive = function (string $base, string $suffix = '', mixed $fallback = '') use ($settings): mixed {
+		$keys = $suffix === 'Mobile' ? [$base.'Mobile', $base.'Tablet', $base] : ($suffix === 'Tablet' ? [$base.'Tablet', $base] : [$base]);
+		foreach ($keys as $key) {
+			$value = $settings[$key] ?? null;
+			if ($value !== '' && $value !== null) return $value;
+		}
+		return $fallback;
+	};
+	$template = $enum($settings['template'] ?? 'specifications_metrics', ['specifications_metrics', 'specifications_hero', 'performance_collage', 'exterior_gallery', 'feature_image'], 'specifications_metrics');
+	$title = (string) ($settings['title'] ?? '');
+	$subtitle = (string) ($settings['subtitle'] ?? '');
+	$description = (string) ($settings['description'] ?? '');
+	$heroTitle = $title !== '' ? $title : 'Full Specifications';
+	$heroSubtitle = $subtitle !== '' ? $subtitle : 'Redefining the meaning of driving MG 5 GT';
+	$specificationMetricDefaults = [
+		['label' => 'Wheelbase', 'value' => '2680', 'unit' => 'MM'],
+		['label' => 'Max Horsepower', 'value' => '114', 'unit' => 'PS'],
+		['label' => 'Max Torque', 'value' => '150', 'unit' => 'NM'],
+		['label' => '', 'value' => '', 'unit' => ''],
+	];
+	$metrics = [];
+	$metricSource = is_array($settings['metrics'] ?? null) && count($settings['metrics']) > 0 ? array_slice($settings['metrics'], 0, 4) : [[], [], []];
+	foreach ($metricSource as $metric) {
+		if (!is_array($metric)) $metric = [];
+		$metrics[] = ['label' => (string) ($metric['label'] ?? ''), 'value' => (string) ($metric['value'] ?? ''), 'unit' => (string) ($metric['unit'] ?? '')];
+	}
+	while (count($metrics) < 1) $metrics[] = ['label' => '', 'value' => '', 'unit' => ''];
+	foreach ($metrics as $index => &$metric) {
+		$defaults = $specificationMetricDefaults[$index] ?? $specificationMetricDefaults[0];
+		$metric['label'] = $metric['label'] !== '' ? $metric['label'] : $defaults['label'];
+		$metric['value'] = $metric['value'] !== '' ? $metric['value'] : $defaults['value'];
+		$metric['unit'] = $metric['unit'] !== '' ? $metric['unit'] : $defaults['unit'];
+	}
+	unset($metric);
+	$heroMetrics = array_slice($metrics, 1, 2);
+	$mediaBySlot = [];
+	foreach (is_array($settings['images'] ?? null) ? array_slice($settings['images'], 0, 3) : [] as $index => $media) {
+		if (!is_array($media)) $media = [];
+		$mediaBySlot[(string) ($index + 1)] = ['url' => $safeUrl($media['url'] ?? ''), 'alt' => (string) ($media['alt'] ?? '')];
+	}
+	foreach (['1', '2', '3'] as $slot) $mediaBySlot[$slot] ??= ['url' => '', 'alt' => ''];
+	$order = is_array($settings['mediaOrder'] ?? null) ? array_map('strval', $settings['mediaOrder']) : ['1', '2', '3'];
+	$order = array_values(array_unique(array_filter($order, fn (string $slot): bool => in_array($slot, ['1', '2', '3'], true))));
+	foreach (['1', '2', '3'] as $slot) if (!in_array($slot, $order, true)) $order[] = $slot;
+	$orderedMedia = array_map(fn (string $slot): array => ['slot' => $slot, 'image' => $mediaBySlot[$slot]], $order);
+	$primaryMedia = $orderedMedia[0]['image'] ?? $mediaBySlot['1'];
+	$featuredSlot = in_array((string) ($responsive('featuredImagePosition', '', '1')), ['1', '2', '3'], true) ? (string) $responsive('featuredImagePosition', '', '1') : '1';
+	$featuredMedia = ['slot' => $featuredSlot, 'image' => $mediaBySlot[$featuredSlot]];
+	$secondaryMedia = array_values(array_filter($orderedMedia, fn (array $media): bool => $media['slot'] !== $featuredSlot));
+	$tallMedia = $orderedMedia[0] ?? ['slot' => '1', 'image' => $mediaBySlot['1']];
+	$sideMedia = array_slice($orderedMedia, 1, 2);
+	$desktopTextPosition = $enum($responsive('textPosition', '', 'left'), ['top', 'bottom', 'left', 'right'], 'left');
+	$desktopImagePosition = $enum($responsive('imagePosition', '', 'right'), ['top', 'bottom', 'left', 'right'], 'right');
+	$desktopTextAlign = $enum($responsive('textAlign', '', 'left'), ['left', 'center', 'right'], 'left');
+	$desktopVerticalAlign = $enum($responsive('verticalAlign', '', 'center'), ['start', 'center', 'end'], 'center');
+	$threeMetricPosition = $enum($responsive('threeMetricPosition', '', 'left'), ['left', 'center'], 'left');
+	$metricsPositionClass = count($metrics) === 3 && $threeMetricPosition === 'center' ? 'is-three-center' : '';
+	$desktopMobileOrder = $enum($responsive('mobileOrder', '', 'text-first'), ['text-first', 'image-first'], 'text-first');
+	$desktopFeatureImageClass = in_array($desktopImagePosition, ['top', 'left'], true) ? 'is-image-top' : 'is-image-bottom';
+	$splitDirection = function (string $imagePosition): string {
+		return match ($imagePosition) {
+			'left' => 'row-reverse',
+			'top' => 'column-reverse',
+			'bottom' => 'column',
+			default => 'row',
+		};
+	};
+	$fontWeight = function (mixed $value, string $fallback = '400'): string {
+		$raw = trim((string) $value);
+		return preg_match('/^(?:normal|bold|[1-9]00)$/', $raw) ? $raw : $fallback;
+	};
+	$scaleCssLength = function (string $value, float $factor): string {
+		if ($factor >= 0.999) return $value;
+		if (!preg_match('/^(\d+(?:\.\d+)?)(px|%|rem|em|vw|vh)$/i', trim($value), $matches)) return $value;
+		$scaled = max(0.01, (float) $matches[1] * $factor);
+		$number = rtrim(rtrim(number_format($scaled, 2, '.', ''), '0'), '.');
+		return $number.$matches[2];
+	};
+	$metricAutoFit = function (string $imagePosition, string $contentWidth): float {
+		if ($imagePosition !== 'left') return 1.0;
+		if (preg_match('/^(\d+(?:\.\d+)?)%$/', trim($contentWidth), $matches)) return min(1.0, max(0.72, ((float) $matches[1] / 42) * 0.88));
+		return 0.88;
+	};
+	$typographyStyle = function (string $prefix, string $suffix = '', float $fontScale = 1.0, bool $important = false) use ($settings, $responsive, $cssLength, $cssColor, $cssFontFamily, $cssShadow, $enum, $fontWeight, $scaleCssLength): string {
+		$defaults = [
+			'title' => ['48px', '1.2em', '700'],
+			'subtitle' => ['20px', '1.5em', '400'],
+			'description' => ['16px', '1.5em', '400'],
+			'metricLabel' => ['20px', '1.3em', '400'],
+			'metricValue' => ['74px', '1em', '700'],
+			'metricUnit' => ['20px', '1em', '400'],
+		];
+		[$fontSizeFallback, $lineHeightFallback, $fontWeightFallback] = $defaults[$prefix] ?? ['16px', '1.5em', '400'];
+		$fontSizeValue = $cssLength($responsive($prefix.'FontSize', $suffix, $fontSizeFallback), $fontSizeFallback);
+		$fontSize = $scaleCssLength($fontSizeValue, $fontScale);
+		if ($prefix === 'metricValue' && $suffix === 'Mobile' && trim((string) ($settings[$prefix.'FontSizeMobile'] ?? '')) === '') {
+			$desktopMetricSize = $cssLength($responsive($prefix.'FontSize', '', $fontSizeFallback), $fontSizeFallback);
+			if (preg_match('/^(\d+(?:\.\d+)?)px$/i', $desktopMetricSize, $matches)) {
+				$maxMetricSize = (float) $matches[1] * $fontScale;
+				$minMetricSize = min(48.0, $maxMetricSize);
+				$fluidMetricScale = rtrim(rtrim(number_format(15 * $fontScale, 2, '.', ''), '0'), '.');
+				$fontSize = 'clamp('.rtrim(rtrim(number_format($minMetricSize, 2, '.', ''), '0'), '.').'px,'.$fluidMetricScale.'vw,'.$scaleCssLength($desktopMetricSize, $fontScale).')';
+			}
+		}
+		$declarations = [
+			'font-family:'.$cssFontFamily($settings[$prefix.'FontFamily'] ?? 'inherit'),
+			'font-size:'.$fontSize,
+			'font-weight:'.$fontWeight($settings[$prefix.'FontWeight'] ?? $fontWeightFallback, $fontWeightFallback),
+			'line-height:'.$cssLength($responsive($prefix.'LineHeight', $suffix, $lineHeightFallback), $lineHeightFallback),
+			'letter-spacing:'.$cssLength($responsive($prefix.'LetterSpacing', $suffix, '0px'), '0px'),
+			'word-spacing:'.$cssLength($responsive($prefix.'WordSpacing', $suffix, '0px'), '0px'),
+			'text-transform:'.$enum($settings[$prefix.'TextTransform'] ?? 'none', ['none', 'uppercase', 'lowercase', 'capitalize'], 'none'),
+			'font-style:'.$enum($settings[$prefix.'FontStyle'] ?? 'normal', ['normal', 'italic', 'oblique'], 'normal'),
+			'text-decoration:'.$enum($settings[$prefix.'TextDecoration'] ?? 'none', ['none', 'underline', 'overline', 'line-through'], 'none'),
+			'color:'.$cssColor($settings[$prefix.'Color'] ?? '', 'inherit'),
+			'text-shadow:'.$cssShadow($settings[$prefix.'TextShadow'] ?? 'none'),
+		];
+		return implode(';', array_map(fn (string $declaration): string => $important ? $declaration.' !important' : $declaration, $declarations));
+	};
+	$advanced = app(\App\Support\PageBuilderElementorV23\WidgetAdvancedStyleResolver::class)->resolve($settings, $nodeId, request());
+	$rootClasses = array_values(array_unique(array_merge(['el-widget-feature-showcase', 'pb-feature-showcase', 'pb-feature-showcase--'.$template, 'pb-feature-showcase--text-'.$desktopTextPosition, 'pb-feature-showcase--image-'.$desktopImagePosition, 'pb-feature-showcase--mobile-'.$desktopMobileOrder], $advanced['classes'])));
+	$rootStyle = implode(';', [
+		'--pb-feature-container-width:'.$cssLength($responsive('containerWidth', '', '1140px'), '1140px'),
+		'--pb-feature-gap:'.$cssLength($responsive('gap', '', '24px'), '24px'),
+		'--pb-feature-radius:'.$cssLength($responsive('imageRadius', '', '45px'), '45px'),
+		'--pb-feature-content-width:'.$cssLength($responsive('contentWidth', '', '42%'), '42%'),
+		'--pb-feature-image-width:'.$cssLength($responsive('imageWidth', '', '58%'), '58%'),
+		'--pb-feature-background:'.$cssColor($settings['backgroundColor'] ?? '', '#ffffff'),
+		'--pb-feature-performance-background:'.$cssColor($settings['performanceBackgroundColor'] ?? '', '#212529'),
+		'--pb-feature-gradient-start:'.$cssColor($settings['headingGradientStart'] ?? '', '#0099d5'),
+		'--pb-feature-gradient-end:'.$cssColor($settings['headingGradientEnd'] ?? '', '#2be581'),
+	]);
+	$renderImage = function (array $media, string $label = 'Choose image'): void {
+		if ($media['url'] !== '') {
+			echo '<img src="'.e($media['url']).'" alt="'.e($media['alt']).'">';
+			return;
+		}
+		echo '<div class="pb-feature-showcase__placeholder" role="img" aria-label="'.e($label).'"><i class="far fa-image" aria-hidden="true"></i><span>'.e($label).'</span></div>';
+	};
+	$mediaRules = '';
+	foreach (['Tablet' => 1024, 'Mobile' => 767] as $suffix => $breakpoint) {
+		$currentImagePosition = $enum($responsive('imagePosition', $suffix, 'right'), ['top', 'bottom', 'left', 'right'], 'right');
+		$currentTextPosition = $enum($responsive('textPosition', $suffix, 'left'), ['top', 'bottom', 'left', 'right'], 'left');
+		$currentTextAlign = $enum($responsive('textAlign', $suffix, 'left'), ['left', 'center', 'right'], 'left');
+		$currentVerticalAlign = $enum($responsive('verticalAlign', $suffix, 'center'), ['start', 'center', 'end'], 'center');
+		$currentThreeMetricPosition = $enum($responsive('threeMetricPosition', $suffix, 'left'), ['left', 'center'], 'left');
+		$currentMobileOrder = $enum($responsive('mobileOrder', $suffix, 'text-first'), ['text-first', 'image-first'], 'text-first');
+		$currentFeatureImageClass = in_array($currentImagePosition, ['top', 'left'], true) ? 'is-image-top' : 'is-image-bottom';
+		$currentFeaturedSlot = in_array((string) $responsive('featuredImagePosition', $suffix, '1'), ['1', '2', '3'], true) ? (string) $responsive('featuredImagePosition', $suffix, '1') : '1';
+		$currentTallImagePosition = $enum($responsive('tallImagePosition', $suffix, 'left'), ['left', 'right'], 'left');
+		$currentDirection = $splitDirection($currentImagePosition);
+		$currentContentWidth = $cssLength($responsive('contentWidth', $suffix, '42%'), '42%');
+		$currentImageWidth = $cssLength($responsive('imageWidth', $suffix, '58%'), '58%');
+		$currentAlignSelf = $currentVerticalAlign === 'start' ? 'flex-start' : ($currentVerticalAlign === 'end' ? 'flex-end' : 'center');
+		$currentMetricFitFactor = $metricAutoFit($currentImagePosition, $currentContentWidth);
+		$currentTitleStyle = $typographyStyle('title', $suffix);
+		$currentSubtitleStyle = $typographyStyle('subtitle', $suffix);
+		$currentDescriptionStyle = $typographyStyle('description', $suffix);
+		$currentMetricLabelStyle = $typographyStyle('metricLabel', $suffix, $currentMetricFitFactor, true);
+		$currentMetricValueStyle = $typographyStyle('metricValue', $suffix, $currentMetricFitFactor, true);
+		$currentMetricUnitStyle = $typographyStyle('metricUnit', $suffix, $currentMetricFitFactor, true);
+		$mediaRules .= '@media(max-width:'.$breakpoint.'px){#'.$advanced['id'].' .pb-feature-showcase__split{flex-direction:'.$currentDirection.';text-align:'.$currentTextAlign.'}#'.$advanced['id'].' .pb-feature-showcase__split .pb-feature-showcase__content{width:'.$currentContentWidth.';align-self:'.$currentAlignSelf.'}#'.$advanced['id'].' .pb-feature-showcase__split .pb-feature-showcase__media{width:'.$currentImageWidth.'}#'.$advanced['id'].' .pb-feature-showcase__title{'.$currentTitleStyle.'}#'.$advanced['id'].' .pb-feature-showcase__subtitle{'.$currentSubtitleStyle.'}#'.$advanced['id'].' .pb-feature-showcase__description{'.$currentDescriptionStyle.'}#'.$advanced['id'].' .pb-feature-showcase__metric-label{'.$currentMetricLabelStyle.'}#'.$advanced['id'].' .pb-feature-showcase__metric-value{'.$currentMetricValueStyle.'}#'.$advanced['id'].' .pb-feature-showcase__metric-value small{'.$currentMetricUnitStyle.'}';
+		if ($currentMobileOrder === 'image-first') $mediaRules .= '#'.$advanced['id'].' .pb-feature-showcase__split .pb-feature-showcase__media{order:-1}';
+		if ($template === 'specifications_metrics' && count($metrics) === 3) {
+			$mediaRules .= $currentThreeMetricPosition === 'center'
+				? '#'.$advanced['id'].' .pb-feature-showcase__metrics .pb-feature-showcase__metric:last-child{grid-column:1 / -1;justify-self:center;width:max-content;max-width:100%}'
+				: '#'.$advanced['id'].' .pb-feature-showcase__metrics .pb-feature-showcase__metric:last-child{grid-column:auto;justify-self:auto;width:auto;max-width:none}';
+		}
+		if ($currentTextPosition === 'bottom') $mediaRules .= '#'.$advanced['id'].' .pb-feature-showcase__performance-content,#'.$advanced['id'].' .pb-feature-showcase__gallery-content,#'.$advanced['id'].' .pb-feature-showcase__feature-content{order:2;margin:var(--pb-feature-gap) 0 0}';
+		$mediaRules .= '#'.$advanced['id'].' .pb-feature-showcase__feature-media{order:'.($currentFeatureImageClass === 'is-image-top' ? '-1' : '1').';margin-'.($currentFeatureImageClass === 'is-image-top' ? 'bottom' : 'top').':var(--pb-feature-gap)}';
+		$mediaRules .= '#'.$advanced['id'].' .pb-feature-showcase__collage{direction:'.($currentTallImagePosition === 'right' ? 'rtl' : 'ltr').'}#'.$advanced['id'].' .pb-feature-showcase__collage>*{direction:ltr}';
+		$mediaRules .= '#'.$advanced['id'].' .pb-feature-showcase__gallery-featured-option,#'.$advanced['id'].' .pb-feature-showcase__gallery-secondary-option{display:none}#'.$advanced['id'].' .pb-feature-showcase__gallery-featured-option.is-slot-'.$currentFeaturedSlot.'{display:block}#'.$advanced['id'].' .pb-feature-showcase__gallery-secondary-option{display:block}#'.$advanced['id'].' .pb-feature-showcase__gallery-secondary-option.is-slot-'.$currentFeaturedSlot.'{display:none}';
+		$mediaRules .= '}';
+	}
+@endphp
+
+<section id="{{ $advanced['id'] }}" class="{{ implode(' ', $rootClasses) }}" style="{{ $rootStyle }}" data-feature-showcase data-template="{{ $template }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName => $attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach>
+	<div class="pb-feature-showcase__container">
+		@if($template === 'specifications_metrics')
+			<div class="pb-feature-showcase__split pb-feature-showcase__media-object is-image-{{ $desktopImagePosition }} is-mobile-{{ $desktopMobileOrder }} is-vertical-{{ $desktopVerticalAlign }}">
+				<div class="pb-feature-showcase__content" style="text-align:{{ $desktopTextAlign }};align-self:{{ $desktopVerticalAlign === 'start' ? 'flex-start' : ($desktopVerticalAlign === 'end' ? 'flex-end' : 'center') }};width:{{ $cssLength($responsive('contentWidth', '', '42%'), '42%') }}">
+					@if($title !== '')<h2 class="pb-feature-showcase__title" style="{{ $typographyStyle('title') }}">{{ $title }}</h2>@endif
+					@if($subtitle !== '')<p class="pb-feature-showcase__subtitle" style="{{ $typographyStyle('subtitle') }}">{{ $subtitle }}</p>@endif
+					<div class="pb-feature-showcase__metrics{{ $metricsPositionClass !== '' ? ' '.$metricsPositionClass : '' }}">@foreach($metrics as $metric)<div class="pb-feature-showcase__metric"><span class="pb-feature-showcase__metric-label" style="{{ $typographyStyle('metricLabel', '', $metricAutoFit($desktopImagePosition, $cssLength($responsive('contentWidth', '', '42%'), '42%'))) }}">{{ $metric['label'] }}</span><span class="pb-feature-showcase__metric-value" style="{{ $typographyStyle('metricValue', '', $metricAutoFit($desktopImagePosition, $cssLength($responsive('contentWidth', '', '42%'), '42%'))) }}"><span class="pb-feature-showcase__metric-number{{ strlen($metric['value']) > 12 ? ' is-long' : '' }}">{{ $metric['value'] }}</span>@if($metric['unit'] !== '')<small style="{{ $typographyStyle('metricUnit', '', $metricAutoFit($desktopImagePosition, $cssLength($responsive('contentWidth', '', '42%'), '42%'))) }}">{{ $metric['unit'] }}</small>@endif</span></div>@endforeach</div>
+				</div>
+				<div class="pb-feature-showcase__media" style="width:{{ $cssLength($responsive('imageWidth', '', '58%'), '58%') }}">@php($renderImage($primaryMedia))</div>
+			</div>
+		@elseif($template === 'specifications_hero')
+			<div class="pb-feature-showcase__hero-heading" style="text-align:{{ $desktopTextAlign }}"><h2 class="pb-feature-showcase__title" style="{{ $typographyStyle('title') }}">{{ $heroTitle }}</h2><p class="pb-feature-showcase__subtitle" style="{{ $typographyStyle('subtitle') }}">{{ $heroSubtitle }}</p></div>
+			<div class="pb-feature-showcase__split pb-feature-showcase__split--hero is-image-{{ $desktopImagePosition }} is-mobile-{{ $desktopMobileOrder }} is-vertical-{{ $desktopVerticalAlign }}"><div class="pb-feature-showcase__content" style="text-align:{{ $desktopTextAlign }};width:{{ $cssLength($responsive('contentWidth', '', '42%'), '42%') }}"><div class="pb-feature-showcase__metrics">@foreach($heroMetrics as $metric)<div class="pb-feature-showcase__metric"><span class="pb-feature-showcase__metric-label" style="{{ $typographyStyle('metricLabel', '', $metricAutoFit($desktopImagePosition, $cssLength($responsive('contentWidth', '', '42%'), '42%'))) }}">{{ $metric['label'] }}</span><span class="pb-feature-showcase__metric-value" style="{{ $typographyStyle('metricValue', '', $metricAutoFit($desktopImagePosition, $cssLength($responsive('contentWidth', '', '42%'), '42%'))) }}"><span class="pb-feature-showcase__metric-number{{ strlen($metric['value']) > 12 ? ' is-long' : '' }}">{{ $metric['value'] }}</span>@if($metric['unit'] !== '')<small style="{{ $typographyStyle('metricUnit', '', $metricAutoFit($desktopImagePosition, $cssLength($responsive('contentWidth', '', '42%'), '42%'))) }}">{{ $metric['unit'] }}</small>@endif</span></div>@endforeach</div></div><div class="pb-feature-showcase__media" style="width:{{ $cssLength($responsive('imageWidth', '', '58%'), '58%') }}">@php($renderImage($primaryMedia))</div></div>
+		@elseif($template === 'performance_collage')
+			<div class="pb-feature-showcase__performance-content {{ $desktopTextPosition === 'bottom' ? 'is-content-bottom' : 'is-content-top' }}" style="text-align:{{ $desktopTextAlign }}"><h2 class="pb-feature-showcase__title pb-feature-showcase__title--gradient" style="{{ $typographyStyle('title') }}">{{ $title }}@if($subtitle !== '')<br><strong>{{ $subtitle }}</strong>@endif</h2>@if($description !== '')<p class="pb-feature-showcase__description" style="{{ $typographyStyle('description') }}">{{ $description }}</p>@endif</div>
+			<div class="pb-feature-showcase__collage {{ ($responsive('tallImagePosition', '', 'left') === 'right') ? 'is-tall-right' : 'is-tall-left' }}"><div class="pb-feature-showcase__collage-tall">@php($renderImage($tallMedia['image']))</div><div class="pb-feature-showcase__collage-side">@foreach($sideMedia as $media)<div class="pb-feature-showcase__collage-small">@php($renderImage($media['image']))</div>@endforeach</div></div>
+		@elseif($template === 'exterior_gallery')
+			<div class="pb-feature-showcase__gallery-content {{ $desktopTextPosition === 'bottom' ? 'is-content-bottom' : 'is-content-top' }}" style="text-align:{{ $desktopTextAlign }}"><h2 class="pb-feature-showcase__title" style="{{ $typographyStyle('title') }}">{{ $title }}</h2>@if($description !== '')<p class="pb-feature-showcase__description" style="{{ $typographyStyle('description') }}">{{ $description }}</p>@endif</div>
+			<div class="pb-feature-showcase__gallery"><div class="pb-feature-showcase__gallery-featured">@foreach(['1', '2', '3'] as $slot)<div class="pb-feature-showcase__gallery-featured-option is-slot-{{ $slot }} {{ $slot === $featuredSlot ? 'is-featured-desktop' : '' }}">@php($renderImage($mediaBySlot[$slot], 'Featured image'))</div>@endforeach</div><div class="pb-feature-showcase__gallery-row">@foreach(['1', '2', '3'] as $slot)<div class="pb-feature-showcase__gallery-secondary-option is-slot-{{ $slot }} {{ $slot === $featuredSlot ? 'is-featured-desktop' : '' }}">@php($renderImage($mediaBySlot[$slot]))</div>@endforeach</div></div>
+		@elseif($template === 'feature_image')
+			<div class="pb-feature-showcase__feature-content {{ $desktopTextPosition === 'bottom' ? 'is-content-bottom' : 'is-content-top' }}" style="text-align:{{ $desktopTextAlign }}"><h2 class="pb-feature-showcase__title" style="{{ $typographyStyle('title') }}">{{ $title }}</h2>@if($description !== '')<p class="pb-feature-showcase__description" style="{{ $typographyStyle('description') }}">{{ $description }}</p>@endif</div><div class="pb-feature-showcase__feature-media {{ $desktopFeatureImageClass }}">@php($renderImage($primaryMedia))</div>
+		@endif
+	</div>
+</section>
+<style>{!! $advanced['css'].$mediaRules !!}
+.pb-feature-showcase{width:100%;min-width:0;background:var(--pb-feature-background,#fff);color:#212529}.pb-feature-showcase__container{width:min(100%,var(--pb-feature-container-width,1140px));margin-inline:auto;padding:42px 12px;box-sizing:border-box}.pb-feature-showcase__split{display:flex;gap:var(--pb-feature-gap,24px);min-width:0}.pb-feature-showcase__media-object{align-items:center}.pb-feature-showcase__split.is-image-left{flex-direction:row-reverse}.pb-feature-showcase__split.is-image-top{flex-direction:column-reverse}.pb-feature-showcase__split.is-image-bottom{flex-direction:column}.pb-feature-showcase__content,.pb-feature-showcase__media{min-width:0}.pb-feature-showcase__content{flex:0 1 var(--pb-feature-content-width,42%);display:flex;flex-direction:column;justify-content:center}.pb-feature-showcase__media{flex:1 1 var(--pb-feature-image-width,58%);display:flex;flex-wrap:wrap;align-items:center;gap:var(--pb-feature-gap,24px)}.pb-feature-showcase__media img{display:block;width:100%;height:auto;max-width:100%;object-fit:cover;border-radius:var(--pb-feature-radius,45px)}.pb-feature-showcase__title{margin:0 0 18px;overflow-wrap:anywhere}.pb-feature-showcase__subtitle,.pb-feature-showcase__description{margin:0 0 24px;overflow-wrap:anywhere}.pb-feature-showcase__metrics{display:grid;gap:28px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__split{min-height:420px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__metrics{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px;row-gap:72px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__metrics.is-three-center .pb-feature-showcase__metric:last-child{grid-column:1 / -1;justify-self:center;width:max-content;max-width:100%}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media{min-height:420px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media img{height:420px;object-fit:contain;border-radius:0}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media>.pb-feature-showcase__placeholder{height:420px;min-height:0;border-radius:0}.pb-feature-showcase__metric{display:flex;flex-direction:column;gap:5px;min-width:0}.pb-feature-showcase__metric-label{display:block;overflow-wrap:anywhere}.pb-feature-showcase__metric-value{display:flex;align-items:baseline;gap:5px;line-height:1}.pb-feature-showcase__metric-value small{font-size:.28em;font-weight:400}.pb-feature-showcase__hero-heading{margin-bottom:32px}.pb-feature-showcase__hero-heading .pb-feature-showcase__title{margin-bottom:8px}.pb-feature-showcase--performance_collage{background:var(--pb-feature-performance-background,#212529);color:#fff}.pb-feature-showcase--performance_collage .pb-feature-showcase__container{padding-block:64px}.pb-feature-showcase__title--gradient strong{display:inline-block;background:linear-gradient(149deg,var(--pb-feature-gradient-start,#0099d5) 0%,var(--pb-feature-gradient-end,#2be581) 25%);-webkit-background-clip:text;background-clip:text;color:transparent}.pb-feature-showcase__performance-content,.pb-feature-showcase__gallery-content,.pb-feature-showcase__feature-content{margin-bottom:32px}.pb-feature-showcase__performance-content.is-content-bottom,.pb-feature-showcase__gallery-content.is-content-bottom,.pb-feature-showcase__feature-content.is-content-bottom{order:2;margin:32px 0 0}.pb-feature-showcase__collage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--pb-feature-gap,24px);align-items:stretch}.pb-feature-showcase__collage.is-tall-right{direction:rtl}.pb-feature-showcase__collage.is-tall-right>*{direction:ltr}.pb-feature-showcase__collage-tall{min-height:520px}.pb-feature-showcase__collage-side{display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:var(--pb-feature-gap,24px)}.pb-feature-showcase__collage img,.pb-feature-showcase__gallery img,.pb-feature-showcase__feature-media img{display:block;width:100%;height:100%;object-fit:cover;border-radius:var(--pb-feature-radius,45px)}.pb-feature-showcase__collage-small,.pb-feature-showcase__collage-tall,.pb-feature-showcase__gallery-featured,.pb-feature-showcase__gallery-secondary,.pb-feature-showcase__feature-media,.pb-feature-showcase__gallery-featured-option,.pb-feature-showcase__gallery-secondary-option{min-width:0;overflow:hidden}.pb-feature-showcase__placeholder{min-height:150px;height:100%;display:grid;place-items:center;align-content:center;gap:8px;border:1px dashed #b8c0cc;border-radius:var(--pb-feature-radius,45px);background:rgba(148,163,184,.12);color:#8490a0;text-align:center}.pb-feature-showcase__placeholder i{font-size:30px}.pb-feature-showcase--performance_collage .pb-feature-showcase__placeholder{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);color:#cbd5e1}.pb-feature-showcase__gallery-featured{height:460px;margin-bottom:var(--pb-feature-gap,24px)}.pb-feature-showcase__gallery-featured-option{display:none;height:100%}.pb-feature-showcase__gallery-featured-option.is-featured-desktop{display:block}.pb-feature-showcase__gallery-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--pb-feature-gap,24px)}.pb-feature-showcase__gallery-secondary{height:280px}.pb-feature-showcase__gallery-secondary-option{display:block;height:100%}.pb-feature-showcase__gallery-secondary-option.is-featured-desktop{display:none}.pb-feature-showcase__feature-media{height:460px}.pb-feature-showcase__feature-media.is-image-top{order:-1;margin-bottom:var(--pb-feature-gap,24px)}.pb-feature-showcase__feature-media.is-image-bottom{order:1;margin-top:var(--pb-feature-gap,24px)}.pb-feature-showcase__gallery img,.pb-feature-showcase__feature-media img{display:block;width:100%;height:100%;object-fit:cover}
+@media(max-width:1024px){.pb-feature-showcase__container{padding-block:32px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__split{min-height:340px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media{min-height:340px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media img{height:340px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media>.pb-feature-showcase__placeholder{height:340px}.pb-feature-showcase__collage-tall{min-height:430px}.pb-feature-showcase__gallery-featured,.pb-feature-showcase__feature-media{height:360px}.pb-feature-showcase__gallery-secondary{height:220px}}
+@media(max-width:767px){.pb-feature-showcase__container{padding:28px 16px}.pb-feature-showcase__split{flex-direction:column!important}.pb-feature-showcase__split .pb-feature-showcase__content,.pb-feature-showcase__split .pb-feature-showcase__media{width:100%!important;flex-basis:auto}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__metrics{grid-template-columns:1fr;row-gap:28px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__split{min-height:0}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media{min-height:280px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media img{height:280px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media>.pb-feature-showcase__placeholder{height:280px}.pb-feature-showcase__collage{grid-template-columns:1fr}.pb-feature-showcase__collage-tall{min-height:320px}.pb-feature-showcase__collage-side{grid-template-rows:none;grid-template-columns:repeat(2,minmax(0,1fr))}.pb-feature-showcase__gallery-featured,.pb-feature-showcase__feature-media{height:260px}.pb-feature-showcase__gallery-secondary{height:170px}.pb-feature-showcase__gallery-row{gap:16px}.pb-feature-showcase__title{font-size:clamp(30px,8vw,48px)!important}.pb-feature-showcase__metric-value{font-size:clamp(48px,15vw,74px)!important}}
+.pb-feature-showcase__metric{max-width:100%}.pb-feature-showcase__metric-value{min-width:0;max-width:100%;flex-wrap:nowrap;overflow-wrap:anywhere;word-break:break-word}.pb-feature-showcase__metric-number{min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:break-word}.pb-feature-showcase__metric-number:not(.is-long){flex:0 1 auto;white-space:nowrap}.pb-feature-showcase__metric-number.is-long{flex:1 1 auto;white-space:normal}.pb-feature-showcase__metric-value small{flex:0 0 auto;white-space:nowrap}
+</style>

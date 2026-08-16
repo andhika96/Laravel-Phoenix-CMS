@@ -1,0 +1,122 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const read = (relative) => fs.existsSync(path.join(root, relative))
+	? fs.readFileSync(path.join(root, relative), 'utf8')
+	: '';
+
+const definition = read('public/js/pagebuilder_elementor_v23/widgets/general/feature-showcase/definition.js');
+const settings = read('public/js/pagebuilder_elementor_v23/widgets/general/feature-showcase/Settings.vue');
+const canvas = read('public/js/pagebuilder_elementor_v23/widgets/general/feature-showcase/Canvas.vue');
+const blade = read('resources/views/pagebuilder_elementor_v23/partials/render_feature_showcase.blade.php');
+const config = read('config/pagebuilder_elementor_v23_widgets.php');
+const app = read('public/js/pagebuilder_elementor_v23/app.js');
+
+const templates = [
+	'specifications_metrics',
+	'specifications_hero',
+	'performance_collage',
+	'exterior_gallery',
+	'feature_image',
+];
+
+assert.ok(definition, 'Feature Showcase definition must exist');
+assert.match(definition, /type:\s*['"]feature_showcase['"]/);
+assert.match(definition, /label:\s*['"]Feature Showcase['"]/);
+assert.match(definition, /category:\s*['"]general['"]/);
+assert.match(definition, /feature_showcase/);
+
+assert.match(config, /'feature_showcase'\s*=>/);
+assert.match(config, /widgets\/general\/feature-showcase\/definition\.js/);
+assert.match(config, /widgets\/general\/feature-showcase\/Canvas\.vue/);
+assert.match(config, /widgets\/general\/feature-showcase\/Settings\.vue/);
+assert.match(config, /pagebuilder_elementor_v23\.partials\.render_feature_showcase/);
+
+for (const template of templates) {
+	assert.match(app, new RegExp(template), `app.js must know ${template}`);
+	assert.match(canvas, new RegExp(template), `Canvas must render ${template}`);
+	assert.match(blade, new RegExp(template), `Blade must render ${template}`);
+}
+
+for (const marker of [
+	"template: 'specifications_metrics'",
+	"title: ''",
+	"subtitle: ''",
+	"description: ''",
+	"textPosition: 'left'",
+	"imagePosition: 'right'",
+	"textAlign: 'left'",
+	"verticalAlign: 'center'",
+	"contentWidth: '42%'",
+	"imageWidth: '58%'",
+	"mobileOrder: 'text-first'",
+	'function normalizeFeatureShowcaseSettings',
+]) {
+	assert.ok(app.includes(marker), `app.js must include ${marker}`);
+}
+
+assert.match(settings, /class="pb-widget-settings pb-widget-settings--general-new/);
+assert.match(settings, /Content/);
+assert.match(settings, /Style/);
+assert.match(settings, /Advanced/);
+assert.match(settings, /pb-collapsible/);
+assert.match(settings, /pb-form-group/);
+assert.match(settings, /pb-form-row/);
+assert.match(settings, /pb-seg-btn/);
+assert.match(settings, /responsiveDevices/);
+assert.match(settings, /setResponsiveSetting/);
+assert.match(settings, /editor\.chooseMedia/);
+assert.match(settings, /editor\.clearMedia/);
+assert.match(settings, /editor\.typographyControl/);
+assert.match(settings, /editor\.textShadowControl/);
+assert.match(settings, /editor\.widgetAdvancedControls/);
+assert.match(settings, /coloris pb-coloris-input/);
+assert.match(settings, /Text Position/);
+assert.match(settings, /Image Position/);
+assert.match(settings, /Mobile Order/);
+assert.match(settings, /Featured Image Position/);
+assert.match(settings, /Tall Image Position/);
+assert.match(settings, /Add Metric/);
+assert.match(settings, /removeMetric/);
+assert.match(settings, /Third Metric Position/);
+assert.match(settings, /threeMetricPosition/);
+
+assert.match(canvas, /data-feature-showcase/);
+assert.match(canvas, /responsiveValue\(/);
+assert.match(canvas, /mobileOrder/);
+assert.match(canvas, /featuredImagePosition/);
+assert.match(canvas, /tallImagePosition/);
+assert.match(canvas, /primaryMedia/);
+assert.match(canvas, /featureMediaClass/);
+assert.match(canvas, /SPECIFICATION_METRICS_DEFAULTS/);
+assert.match(canvas, /is-three-center/);
+assert.match(canvas, /threeMetricPosition/);
+assert.match(canvas, /Math\.max\(1, source\.length\)/);
+assert.match(canvas, /v-if="settings\.title"/);
+assert.match(canvas, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+
+assert.match(blade, /data-feature-showcase/);
+assert.match(blade, /@media\(max-width:1024px\)/);
+assert.match(blade, /@media\(max-width:767px\)/);
+assert.match(blade, /\$safeUrl/);
+assert.match(blade, /javascript/i);
+assert.match(blade, /1140px/);
+assert.match(blade, /45px/);
+assert.match(blade, /#212529/);
+assert.match(blade, /#0099d5/);
+assert.match(blade, /#2be581/);
+assert.match(blade, /gallery-featured-option/);
+assert.match(blade, /\$specificationMetricDefaults/);
+assert.match(blade, /\$threeMetricPosition/);
+assert.match(blade, /is-three-center/);
+assert.match(blade, /grid-column:1 \/ -1/);
+assert.match(blade, /@if\(\$title !== ''\)/);
+assert.match(blade, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+assert.match(app, /slice\(0,\s*4\)/);
+assert.match(app, /threeMetricPosition/);
+assert.match(app, /settings\.metrics\.length < 1/);
+
+console.log('pagebuilder v2.3 feature showcase widget parity test passed');

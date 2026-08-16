@@ -1,0 +1,212 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const read = (relative) => fs.existsSync(path.join(root, relative))
+	? fs.readFileSync(path.join(root, relative), 'utf8')
+	: '';
+
+const definition = read('public/js/pagebuilder_elementor_v23/widgets/general/feature-showcase/definition.js');
+const settings = read('public/js/pagebuilder_elementor_v23/widgets/general/feature-showcase/Settings.vue');
+const canvas = read('public/js/pagebuilder_elementor_v23/widgets/general/feature-showcase/Canvas.vue');
+const blade = read('resources/views/pagebuilder_elementor_v23/partials/render_feature_showcase.blade.php');
+const config = read('config/pagebuilder_elementor_v23_widgets.php');
+const app = read('public/js/pagebuilder_elementor_v23/app.js');
+
+const templates = [
+	'specifications_metrics',
+	'specifications_hero',
+	'performance_collage',
+	'exterior_gallery',
+	'feature_image',
+];
+
+assert.ok(definition, 'Feature Showcase definition must exist');
+assert.match(definition, /type:\s*['"]feature_showcase['"]/);
+assert.match(definition, /label:\s*['"]Feature Showcase['"]/);
+assert.match(definition, /category:\s*['"]general['"]/);
+assert.match(definition, /feature_showcase/);
+
+assert.match(config, /'feature_showcase'\s*=>/);
+assert.match(config, /widgets\/general\/feature-showcase\/definition\.js/);
+assert.match(config, /widgets\/general\/feature-showcase\/Canvas\.vue/);
+assert.match(config, /widgets\/general\/feature-showcase\/Settings\.vue/);
+assert.match(config, /pagebuilder_elementor_v23\.partials\.render_feature_showcase/);
+
+for (const template of templates) {
+	assert.match(app, new RegExp(template), `app.js must know ${template}`);
+	assert.match(canvas, new RegExp(template), `Canvas must render ${template}`);
+	assert.match(blade, new RegExp(template), `Blade must render ${template}`);
+}
+
+for (const marker of [
+	"template: 'specifications_metrics'",
+	"title: ''",
+	"subtitle: ''",
+	"description: ''",
+	"textPosition: 'left'",
+	"imagePosition: 'right'",
+	"textAlign: 'left'",
+	"verticalAlign: 'center'",
+	"horizontalAlign: 'center'",
+	"metricColumns: '2'",
+	"contentWidth: '42%'",
+	"imageWidth: '58%'",
+	"imageHeight: '420px'",
+	"imageHeightTablet: '340px'",
+	"imageHeightMobile: '220px'",
+	'function normalizeFeatureShowcaseSettings',
+]) {
+	assert.ok(app.includes(marker), `app.js must include ${marker}`);
+}
+
+assert.match(settings, /class="pb-widget-settings pb-widget-settings--general-new/);
+assert.match(settings, /Content/);
+assert.match(settings, /Style/);
+assert.match(settings, /Advanced/);
+assert.match(settings, /pb-collapsible/);
+assert.match(settings, /pb-form-group/);
+assert.match(settings, /pb-form-row/);
+assert.match(settings, /pb-seg-btn/);
+assert.match(settings, /responsiveDevices/);
+assert.match(settings, /setResponsiveSetting/);
+assert.match(settings, /editor\.chooseMedia/);
+assert.match(settings, /editor\.clearMedia/);
+assert.match(settings, /editor\.typographyControl/);
+assert.match(settings, /label="Metric Label"/);
+assert.match(settings, /prefix="metricLabel"/);
+assert.match(settings, /label="Metric Value"/);
+assert.match(settings, /prefix="metricValue"/);
+assert.match(settings, /label="Metric Unit"/);
+assert.match(settings, /prefix="metricUnit"/);
+assert.match(settings, /editor\.textShadowControl/);
+assert.match(settings, /editor\.widgetAdvancedControls/);
+assert.match(settings, /coloris pb-coloris-input/);
+assert.match(settings, /textPosition/);
+assert.match(settings, /Image Position/);
+assert.match(settings, /Horizontal Alignment/);
+assert.match(settings, /horizontalAlignOptions/);
+assert.match(settings, /v-if="showImagePosition"/);
+assert.match(settings, /v-if="showVerticalAlignment"/);
+assert.ok(settings.indexOf('label="Horizontal Alignment"') > settings.indexOf('label="Vertical Alignment"'), 'Horizontal Alignment must follow Vertical Alignment');
+assert.match(settings, /imagePositionOptions/);
+assert.doesNotMatch(settings, /<responsive-choice label="Text Position"/);
+assert.doesNotMatch(settings, /Mobile Order/);
+assert.match(settings, /Image Height/);
+assert.match(settings, /imageHeight/);
+assert.match(settings, /mobileImagePositionOptions/);
+assert.match(settings, /Featured Image Position/);
+assert.match(settings, /Tall Image Position/);
+assert.match(settings, /Add Metric/);
+assert.match(settings, /removeMetric/);
+assert.match(settings, /Third Metric Position/);
+assert.match(settings, /threeMetricPosition/);
+assert.match(settings, /Metric Columns/);
+assert.match(settings, /metricColumns/);
+assert.match(settings, /:disabled="metrics\.length !== 3"/);
+assert.match(settings, /Image Source/);
+assert.match(settings, /mediaSlotLabel/);
+assert.match(settings, /Specification Image/);
+assert.match(settings, /Tall Image/);
+assert.match(settings, /Feature Image/);
+assert.match(settings, /CKFinder \/ Media Library/);
+assert.match(settings, /External URL/);
+assert.match(settings, /Image URL/);
+assert.match(settings, /imageSource/);
+assert.match(settings, /pb-feature-metric-fields/);
+assert.match(settings, /gap:6px/);
+
+assert.match(canvas, /data-feature-showcase/);
+assert.match(canvas, /data-responsive-device/);
+assert.match(canvas, /responsiveValue\(/);
+assert.doesNotMatch(canvas, /mobileOrder/);
+assert.match(canvas, /imageHeight/);
+assert.match(canvas, /horizontalAlign/);
+assert.match(canvas, /pb-feature-showcase--device-mobile/);
+assert.match(canvas, /flex-direction:column-reverse!important/);
+assert.match(canvas, /featuredImagePosition/);
+assert.match(canvas, /tallImagePosition/);
+assert.match(canvas, /primaryMedia/);
+assert.match(canvas, /featureMediaClass/);
+assert.match(canvas, /SPECIFICATION_METRICS_DEFAULTS/);
+assert.match(canvas, /is-three-center/);
+assert.match(canvas, /threeMetricPosition/);
+assert.match(canvas, /metricColumns/);
+assert.match(canvas, /--pb-feature-metric-columns/);
+assert.match(canvas, /Math\.max\(1, source\.length\)/);
+assert.match(canvas, /metricTypographyStyle/);
+assert.match(canvas, /autoFitMetricFontSize/);
+assert.match(canvas, /imagePosition === 'left'/);
+assert.match(canvas, /metricContentStyle/);
+assert.match(canvas, /metricStyle/);
+assert.match(canvas, /metricContentStyle\(\)\s*\{[\s\S]{0,500}horizontalAlign/);
+assert.match(canvas, /metricStyle\(\)\s*\{[\s\S]{0,500}alignSelf/);
+assert.doesNotMatch(canvas, /imageStyle\(\)\s*\{[\s\S]{0,500}horizontalAlign/);
+assert.doesNotMatch(canvas, /is-horizontal-left \.pb-feature-showcase__media/);
+assert.doesNotMatch(canvas, /is-horizontal-center \.pb-feature-showcase__media/);
+assert.doesNotMatch(canvas, /is-horizontal-right \.pb-feature-showcase__media/);
+assert.match(canvas, /pb-feature-showcase__metric-intro/);
+assert.match(canvas, /column-gap:12px/);
+assert.match(canvas, /flex:0 0 auto;white-space:nowrap/);
+assert.match(canvas, /border-radius:var\(--pb-feature-radius,45px\)/);
+assert.doesNotMatch(canvas, /specifications_metrics[\s\S]*border-radius:0/);
+assert.match(canvas, /gallery-content[\s\S]*displaySubtitle/);
+assert.match(canvas, /feature-content[\s\S]*displaySubtitle/);
+assert.match(canvas, /pb-feature-showcase__metric-number/);
+assert.match(canvas, /overflow-wrap:anywhere/);
+assert.match(canvas, /v-if="settings\.title"/);
+assert.match(canvas, /grid-template-columns:repeat\(var\(--pb-feature-metric-columns,2\),minmax\(0,1fr\)\)/);
+assert.match(canvas, /@media \(max-width:767px\)\{\.pb-feature-showcase--specifications_metrics \.pb-feature-showcase__metrics\{grid-template-columns:repeat\(var\(--pb-feature-metric-columns,2\),minmax\(0,1fr\)\)\}\}/);
+
+assert.match(blade, /data-feature-showcase/);
+assert.doesNotMatch(blade, /mobileOrder/);
+assert.match(blade, /imageHeight/);
+assert.match(blade, /horizontalAlign/);
+assert.match(blade, /@media\(max-width:1024px\)/);
+assert.match(blade, /@media\(max-width:767px\)/);
+assert.match(blade, /\$safeUrl/);
+assert.match(blade, /javascript/i);
+assert.match(blade, /1140px/);
+assert.match(blade, /45px/);
+assert.match(blade, /#212529/);
+assert.match(blade, /#0099d5/);
+assert.match(blade, /#2be581/);
+assert.match(blade, /gallery-featured-option/);
+assert.match(blade, /\$specificationMetricDefaults/);
+assert.match(blade, /metricUnit/);
+assert.match(blade, /metricAutoFit/);
+assert.match(blade, /\$threeMetricPosition/);
+assert.match(blade, /\$currentThreeMetricPosition/);
+assert.match(blade, /\$desktopMetricColumns/);
+assert.match(blade, /\$currentMetricColumns/);
+assert.match(blade, /metricColumns/);
+assert.match(blade, /is-three-center/);
+assert.match(blade, /grid-column:1 \/ -1/);
+assert.match(blade, /pb-feature-showcase__metric-number/);
+assert.match(blade, /overflow-wrap:anywhere/);
+assert.match(blade, /@if\(\$title !== ''\)/);
+assert.match(blade, /pb-feature-showcase__metric-intro/);
+assert.match(blade, /column-gap:12px/);
+assert.match(blade, /flex:0 0 auto;white-space:nowrap/);
+assert.match(blade, /\$desktopMetricContentAlignSelf/);
+assert.match(blade, /\$currentMetricContentAlignSelf/);
+assert.match(blade, /pb-feature-showcase__metrics--specifications[^}]*align-self/);
+assert.doesNotMatch(blade, /__media\{width:\$currentImageWidth;align-self:\$currentAlignSelf;justify-content:/);
+assert.match(blade, /border-radius:var\(--pb-feature-radius,45px\)/);
+assert.match(blade, /specifications_metrics \.pb-feature-showcase__media img\{height:420px;object-fit:contain;border-radius:var\(--pb-feature-radius,45px\)/);
+assert.match(blade, /gallery-content[\s\S]*subtitle/);
+assert.match(blade, /feature-content[\s\S]*subtitle/);
+assert.match(blade, /split\{flex-direction:[^}]*\}/);
+assert.match(blade, /grid-template-columns:repeat\(var\(--pb-feature-metric-columns,2\),minmax\(0,1fr\)\)/);
+assert.match(app, /slice\(0,\s*4\)/);
+assert.match(app, /threeMetricPosition/);
+assert.match(app, /metricColumns/);
+assert.match(app, /settings\.metrics\.length < 1/);
+assert.match(app, /imageSource: 'ckfinder'/);
+assert.match(app, /metricUnitFontFamily: 'inherit'/);
+assert.match(app, /metricUnitFontSize: '20px'/);
+assert.match(app, /normalizeFeatureShowcaseMedia/);
+
+console.log('pagebuilder v2.3 feature showcase widget parity test passed');

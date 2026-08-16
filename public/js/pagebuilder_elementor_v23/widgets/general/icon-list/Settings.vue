@@ -23,7 +23,7 @@
 
 		<div v-if="editor.settingsTab==='style'" class="pb-tab-content">
 			<details class="pb-collapsible" open><summary>List</summary><div class="pb-collapsible-body">
-				<size-control label="Space Between" base="spaceBetween" control-id="icon-list-space-between" fallback="0px" :node="node" :editor="editor" />
+				<size-control label="Space Between" base="spaceBetween" control-id="icon-list-space-between" fallback="15px" :node="node" :editor="editor" />
 				<responsive-choice label="Alignment" base="alignment" control-id="icon-list-alignment" :node="node" :editor="editor" :options="alignmentOptions" />
 				<toggle-control label="Divider" setting-key="divider" :node="node" />
 				<template v-if="node.settings.divider">
@@ -40,7 +40,7 @@
 				<color-control label="Color" :setting-key="iconState==='hover'?'iconColorHover':'iconColor'" :node="node" />
 				<div v-if="iconState==='hover'" class="pb-form-group"><label class="pb-form-label">Transition Duration</label><input class="pb-input" type="number" min="0" max="10" step="0.1" v-model.number="node.settings.iconTransitionDuration"></div>
 				<size-control label="Size" base="iconSize" control-id="icon-list-icon-size" fallback="14px" :node="node" :editor="editor" />
-				<size-control label="Gap" base="iconGap" control-id="icon-list-icon-gap" fallback="8px" :node="node" :editor="editor" />
+				<size-control label="Gap" base="iconGap" control-id="icon-list-icon-gap" fallback="20px" :node="node" :editor="editor" />
 				<responsive-choice label="Horizontal Alignment" base="iconHorizontalAlignment" control-id="icon-list-icon-horizontal" :node="node" :editor="editor" :options="iconHorizontalOptions" />
 				<responsive-choice label="Vertical Alignment" base="iconVerticalAlignment" control-id="icon-list-icon-vertical" :node="node" :editor="editor" :options="iconVerticalOptions" />
 				<size-control label="Adjust Vertical Position" base="iconVerticalOffset" control-id="icon-list-icon-offset" fallback="0px" :node="node" :editor="editor" :min="-15" :max="15" />

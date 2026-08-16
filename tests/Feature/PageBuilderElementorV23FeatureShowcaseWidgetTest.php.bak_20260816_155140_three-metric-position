@@ -1,0 +1,131 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class PageBuilderElementorV23FeatureShowcaseWidgetTest extends TestCase
+{
+    public function test_feature_showcase_is_registered_as_a_general_widget(): void
+    {
+        $module = config('pagebuilder_elementor_v23_widgets.feature_showcase');
+
+        $this->assertIsArray($module);
+        $this->assertSame('feature_showcase', $module['type'] ?? null);
+        $this->assertSame('Feature Showcase', $module['label'] ?? null);
+        $this->assertSame('general', $module['category'] ?? null);
+        $this->assertSame('js/pagebuilder_elementor_v23/widgets/general/feature-showcase/Canvas.vue', $module['canvas'] ?? null);
+        $this->assertSame('js/pagebuilder_elementor_v23/widgets/general/feature-showcase/Settings.vue', $module['settings'] ?? null);
+        $this->assertSame('pagebuilder_elementor_v23.partials.render_feature_showcase', $module['view'] ?? null);
+        $this->assertFileExists(public_path($module['definition'] ?? ''));
+        $this->assertFileExists(public_path($module['canvas'] ?? ''));
+        $this->assertFileExists(public_path($module['settings'] ?? ''));
+    }
+
+    public function test_frontend_renderer_supports_all_templates_and_responsive_positions(): void
+    {
+        $module = config('pagebuilder_elementor_v23_widgets.feature_showcase');
+        $templates = [
+            'specifications_metrics',
+            'specifications_hero',
+            'performance_collage',
+            'exterior_gallery',
+            'feature_image',
+        ];
+
+        foreach ($templates as $template) {
+            $html = view($module['view'], [
+                'node' => [
+                    'id' => 'showcase-' . $template,
+                    'type' => 'feature_showcase',
+                    'settings' => [
+                        'template' => $template,
+                        'title' => '<Unsafe title>',
+                        'subtitle' => 'Subtitle',
+                        'description' => 'Description',
+                        'metrics' => [
+                            ['label' => 'Wheelbase', 'value' => '2680', 'unit' => 'MM'],
+                            ['label' => 'Power', 'value' => '114', 'unit' => 'PS'],
+                            ['label' => 'Torque', 'value' => '150', 'unit' => 'NM'],
+                        ],
+                        'images' => [
+                            ['url' => '/assets/one.webp', 'alt' => 'One'],
+                            ['url' => '/assets/two.webp', 'alt' => 'Two'],
+                            ['url' => 'javascript:alert(1)', 'alt' => 'Unsafe'],
+                        ],
+                        'textPosition' => 'right',
+                        'imagePosition' => 'left',
+                        'textAlign' => 'center',
+                        'verticalAlign' => 'end',
+                        'contentWidth' => '40%',
+                        'imageWidth' => '60%',
+                        'mobileOrder' => 'image-first',
+                        'featuredImagePosition' => '2',
+                        'tallImagePosition' => 'right',
+                        'mediaOrder' => ['2', '1', '3'],
+                    ],
+                ],
+            ])->render();
+
+            $this->assertStringContainsString('data-feature-showcase', $html);
+            $this->assertStringContainsString('data-template="' . $template . '"', $html);
+            $this->assertStringContainsString('&lt;Unsafe title&gt;', $html);
+            if ($template === 'specifications_metrics') {
+                $this->assertStringContainsString('2680', $html);
+            }
+            if ($template === 'specifications_hero') {
+                $this->assertStringContainsString('114', $html);
+                $this->assertStringContainsString('150', $html);
+            }
+            $this->assertTrue(str_contains($html, '/assets/one.webp') || str_contains($html, '/assets/two.webp'));
+            if (in_array($template, ['performance_collage', 'exterior_gallery'], true)) {
+                $this->assertStringContainsString('/assets/one.webp', $html);
+                $this->assertStringContainsString('/assets/two.webp', $html);
+            }
+            $this->assertStringNotContainsString('javascript:', $html);
+            $this->assertStringContainsString('@media(max-width:1024px)', $html);
+            $this->assertStringContainsString('@media(max-width:767px)', $html);
+        }
+    }
+
+    public function test_frontend_renderer_uses_safe_placeholders_when_media_is_missing(): void
+    {
+        $module = config('pagebuilder_elementor_v23_widgets.feature_showcase');
+        $html = view($module['view'], [
+            'node' => [
+                'id' => 'showcase-placeholder',
+                'type' => 'feature_showcase',
+                'settings' => [
+                    'template' => 'exterior_gallery',
+                    'title' => 'Gallery',
+                    'images' => [],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('pb-feature-showcase__placeholder', $html);
+        $this->assertStringNotContainsString('javascript:', $html);
+    }
+
+    public function test_specifications_metrics_matches_media_object_reference_structure(): void
+    {
+        $module = config('pagebuilder_elementor_v23_widgets.feature_showcase');
+        $html = view($module['view'], [
+            'node' => [
+                'id' => 'showcase-specifications-metrics-default',
+                'type' => 'feature_showcase',
+                'settings' => [
+                    'template' => 'specifications_metrics',
+                    'metrics' => [],
+                    'images' => [],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('Wheelbase', $html);
+        $this->assertStringContainsString('Max Horsepower', $html);
+        $this->assertStringContainsString('Max Torque', $html);
+        $this->assertStringContainsString('grid-template-columns:repeat(2,minmax(0,1fr))', $html);
+        $this->assertStringNotContainsString('<h2 class="pb-feature-showcase__title"', $html);
+    }
+}

@@ -54,6 +54,9 @@
         buttonAlign: 'left',
         buttonAlignTablet: '',
         buttonAlignMobile: 'center',
+        buttonAlignMode: 'inherit',
+        buttonAlignModeTablet: '',
+        buttonAlignModeMobile: '',
         buttonGap: '10px',
         buttonGapTablet: '',
         buttonGapMobile: '9px',
@@ -131,6 +134,10 @@
         const legacyTitleSize = ['titleFontSize', 'titleFontSizeTablet', 'titleFontSizeMobile'].some((key) => settings[key] !== '' && settings[key] !== baseline[key]);
         settings.titleFontSizeMode = ['auto', 'custom'].includes(settings.titleFontSizeMode) ? settings.titleFontSizeMode : (legacyTitleSize ? 'custom' : 'auto');
         settings.subtitleTag = ['p', 'div', 'span'].includes(settings.subtitleTag) ? settings.subtitleTag : 'p';
+        settings.buttonAlignMode = ['inherit', 'custom'].includes(settings.buttonAlignMode) ? settings.buttonAlignMode : 'inherit';
+        ['buttonAlignModeTablet', 'buttonAlignModeMobile'].forEach((key) => {
+            if (!['', 'inherit', 'custom'].includes(settings[key])) settings[key] = '';
+        });
         ['showTitle', 'showSubtitle', 'showButtons'].forEach((key) => { settings[key] = settings[key] !== false; });
         return node;
     }

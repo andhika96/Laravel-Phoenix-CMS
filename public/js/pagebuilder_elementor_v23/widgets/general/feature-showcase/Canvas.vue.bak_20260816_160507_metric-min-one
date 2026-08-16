@@ -1,0 +1,157 @@
+<template>
+	<section class="pb-feature-showcase" :class="templateClasses" :style="rootStyle" data-feature-showcase :data-template="template">
+		<div class="pb-feature-showcase__container">
+			<template v-if="template === 'specifications_metrics'">
+				<div class="pb-feature-showcase__split pb-feature-showcase__media-object" :class="splitClasses">
+					<div class="pb-feature-showcase__content" :style="contentStyle">
+						<h2 v-if="settings.title" class="pb-feature-showcase__title" :style="titleStyle">{{ settings.title }}</h2>
+						<p v-if="displaySubtitle" class="pb-feature-showcase__subtitle" :style="subtitleStyle">{{ displaySubtitle }}</p>
+						<div class="pb-feature-showcase__metrics pb-feature-showcase__metrics--specifications" :class="metricsPositionClass">
+							<div v-for="(metric, index) in metrics" :key="'metrics-' + index" class="pb-feature-showcase__metric">
+								<span class="pb-feature-showcase__metric-label" :style="metricLabelStyle">{{ metric.label }}</span>
+								<span class="pb-feature-showcase__metric-value" :style="metricValueStyle">{{ metric.value }}<small v-if="metric.unit" :style="metricUnitStyle">{{ metric.unit }}</small></span>
+							</div>
+						</div>
+					</div>
+					<div class="pb-feature-showcase__media" :style="imageStyle"><img v-if="safeUrl(primaryMedia.url)" :src="safeUrl(primaryMedia.url)" :alt="primaryMedia.alt || ''"><div v-else class="pb-feature-showcase__placeholder"><i class="far fa-image"></i><span>Choose image</span></div></div>
+				</div>
+			</template>
+
+			<template v-else-if="template === 'specifications_hero'">
+				<div class="pb-feature-showcase__hero-heading" :style="textStyle">
+					<h2 class="pb-feature-showcase__title" :style="titleStyle">{{ displayTitle('Full Specifications') }}</h2>
+					<p v-if="heroSubtitle" class="pb-feature-showcase__subtitle" :style="subtitleStyle">{{ heroSubtitle }}</p>
+				</div>
+				<div class="pb-feature-showcase__split pb-feature-showcase__split--hero" :class="splitClasses">
+					<div class="pb-feature-showcase__content" :style="contentStyle">
+						<div class="pb-feature-showcase__metrics">
+							<div v-for="(metric, index) in heroMetrics" :key="'hero-metric-' + index" class="pb-feature-showcase__metric">
+								<span class="pb-feature-showcase__metric-label" :style="metricLabelStyle">{{ metric.label }}</span>
+								<span class="pb-feature-showcase__metric-value" :style="metricValueStyle">{{ metric.value }}<small v-if="metric.unit" :style="metricUnitStyle">{{ metric.unit }}</small></span>
+							</div>
+						</div>
+					</div>
+					<div class="pb-feature-showcase__media" :style="imageStyle"><img v-if="safeUrl(primaryMedia.url)" :src="safeUrl(primaryMedia.url)" :alt="primaryMedia.alt || ''"><div v-else class="pb-feature-showcase__placeholder"><i class="far fa-image"></i><span>Choose image</span></div></div>
+				</div>
+			</template>
+
+			<template v-else-if="template === 'performance_collage'">
+				<div class="pb-feature-showcase__performance-content" :class="contentPositionClass" :style="textStyle">
+					<h2 class="pb-feature-showcase__title pb-feature-showcase__title--gradient" :style="titleStyle">{{ displayTitle('Refined') }}<br><strong>{{ displaySubtitle || 'Performance & Efficiency' }}</strong></h2>
+					<p v-if="description" class="pb-feature-showcase__description" :style="descriptionStyle">{{ description }}</p>
+				</div>
+				<div class="pb-feature-showcase__collage" :class="tallImageClass">
+					<div class="pb-feature-showcase__collage-tall"><template v-if="tallMedia"><img v-if="safeUrl(tallMedia.image.url)" :src="safeUrl(tallMedia.image.url)" :alt="tallMedia.image.alt || ''"><div v-else class="pb-feature-showcase__placeholder"><i class="far fa-image"></i><span>Choose image</span></div></template></div>
+					<div class="pb-feature-showcase__collage-side">
+						<div v-for="media in sideMedia" :key="'collage-' + media.slot" class="pb-feature-showcase__collage-small"><img v-if="safeUrl(media.image.url)" :src="safeUrl(media.image.url)" :alt="media.image.alt || ''"><div v-else class="pb-feature-showcase__placeholder"><i class="far fa-image"></i><span>Choose image</span></div></div>
+					</div>
+				</div>
+			</template>
+
+			<template v-else-if="template === 'exterior_gallery'">
+				<div class="pb-feature-showcase__gallery-content" :class="contentPositionClass" :style="textStyle">
+					<h2 class="pb-feature-showcase__title" :style="titleStyle">{{ displayTitle('Refined Exterior Design') }}</h2>
+					<p v-if="description" class="pb-feature-showcase__description" :style="descriptionStyle">{{ description }}</p>
+				</div>
+				<div class="pb-feature-showcase__gallery">
+					<div class="pb-feature-showcase__gallery-featured"><img v-if="safeUrl(featuredMedia.image.url)" :src="safeUrl(featuredMedia.image.url)" :alt="featuredMedia.image.alt || ''"><div v-else class="pb-feature-showcase__placeholder"><i class="far fa-image"></i><span>Featured image</span></div></div>
+					<div class="pb-feature-showcase__gallery-row"><div v-for="media in secondaryMedia" :key="'gallery-' + media.slot" class="pb-feature-showcase__gallery-secondary"><img v-if="safeUrl(media.image.url)" :src="safeUrl(media.image.url)" :alt="media.image.alt || ''"><div v-else class="pb-feature-showcase__placeholder"><i class="far fa-image"></i><span>Choose image</span></div></div></div>
+				</div>
+			</template>
+
+			<template v-else-if="template === 'feature_image'">
+				<div class="pb-feature-showcase__feature-content" :class="contentPositionClass" :style="textStyle">
+					<h2 class="pb-feature-showcase__title" :style="titleStyle">{{ displayTitle('Light Up Desire') }}</h2>
+					<p v-if="description" class="pb-feature-showcase__description" :style="descriptionStyle">{{ description }}</p>
+				</div>
+				<div class="pb-feature-showcase__feature-media" :class="featureMediaClass"><img v-if="safeUrl(primaryMedia.url)" :src="safeUrl(primaryMedia.url)" :alt="primaryMedia.alt || ''"><div v-else class="pb-feature-showcase__placeholder"><i class="far fa-image"></i><span>Choose image</span></div></div>
+			</template>
+		</div>
+	</section>
+</template>
+
+<script>
+const TEMPLATES = Object.freeze(['specifications_metrics', 'specifications_hero', 'performance_collage', 'exterior_gallery', 'feature_image']);
+const POSITIONS = Object.freeze(['top', 'bottom', 'left', 'right']);
+const ALIGNMENTS = Object.freeze(['left', 'center', 'right']);
+const VERTICAL_ALIGNMENTS = Object.freeze(['start', 'center', 'end']);
+const SPECIFICATION_METRICS_DEFAULTS = Object.freeze([
+	Object.freeze({ label: 'Wheelbase', value: '2680', unit: 'MM' }),
+	Object.freeze({ label: 'Max Horsepower', value: '114', unit: 'PS' }),
+	Object.freeze({ label: 'Max Torque', value: '150', unit: 'NM' }),
+	Object.freeze({ label: '', value: '', unit: '' }),
+]);
+
+export default {
+	name: 'GeneralFeatureShowcase',
+	props: { item: { type: Object, required: true }, responsiveDevice: { type: String, default: 'desktop' } },
+	computed: {
+		settings() { return this.item.settings || {}; },
+		template() { const value = String(this.settings.template || 'specifications_metrics'); return TEMPLATES.includes(value) ? value : 'specifications_metrics'; },
+		metrics() {
+			const source = Array.isArray(this.settings.metrics) ? this.settings.metrics : [];
+			const count = Math.min(4, Math.max(3, source.length));
+			return Array.from({ length: count }, (_, index) => {
+				const preset = SPECIFICATION_METRICS_DEFAULTS[index] || SPECIFICATION_METRICS_DEFAULTS[3];
+				const metric = source[index] || {};
+				return {
+					label: String(metric.label || preset.label),
+					value: String(metric.value || preset.value),
+					unit: String(metric.unit || preset.unit),
+				};
+			});
+		},
+		heroMetrics() { return this.metrics.slice(1, 3); },
+		threeMetricPosition() { const value = this.responsiveValue('threeMetricPosition', 'left'); return ['left', 'center'].includes(value) ? value : 'left'; },
+		metricsPositionClass() { return this.template === 'specifications_metrics' && this.metrics.length === 3 && this.threeMetricPosition === 'center' ? 'is-three-center' : ''; },
+		images() { const source = Array.isArray(this.settings.images) ? this.settings.images : []; return [0, 1, 2].map((index) => ({ url: String(source[index]?.url || ''), alt: String(source[index]?.alt || '') })); },
+		orderedMedia() {
+			const order = Array.isArray(this.settings.mediaOrder) ? this.settings.mediaOrder.map((value) => String(value)) : ['1', '2', '3'];
+			return order.map((slot) => ({ slot, image: this.images[Number(slot) - 1] || { url: '', alt: '' } }));
+		},
+		primaryMedia() { return this.orderedMedia[0]?.image || { url: '', alt: '' }; },
+		featuredMedia() { const slot = String(this.responsiveValue('featuredImagePosition', '1')); return this.orderedMedia.find((media) => media.slot === slot) || this.orderedMedia[0] || { slot: '1', image: { url: '', alt: '' } }; },
+		secondaryMedia() { return this.orderedMedia.filter((media) => media.slot !== this.featuredMedia.slot).slice(0, 2); },
+		tallMedia() { return this.orderedMedia[0] || null; },
+		sideMedia() { return this.orderedMedia.slice(1, 3); },
+		description() { return String(this.settings.description || ''); },
+		displaySubtitle() { return String(this.settings.subtitle || ''); },
+		heroSubtitle() { return this.displaySubtitle || 'Redefining the meaning of driving MG 5 GT'; },
+		textPosition() { const value = this.responsiveValue('textPosition', 'left'); return POSITIONS.includes(value) ? value : 'left'; },
+		imagePosition() { const value = this.responsiveValue('imagePosition', 'right'); return POSITIONS.includes(value) ? value : 'right'; },
+		textAlign() { const value = this.responsiveValue('textAlign', 'left'); return ALIGNMENTS.includes(value) ? value : 'left'; },
+		verticalAlign() { const value = this.responsiveValue('verticalAlign', 'center'); return VERTICAL_ALIGNMENTS.includes(value) ? value : 'center'; },
+		mobileOrder() { return this.responsiveValue('mobileOrder', 'text-first') === 'image-first' ? 'image-first' : 'text-first'; },
+		templateClasses() { return [`pb-feature-showcase--${this.template}`, `pb-feature-showcase--text-${this.textPosition}`, `pb-feature-showcase--image-${this.imagePosition}`, `pb-feature-showcase--mobile-${this.mobileOrder}`]; },
+		splitClasses() { return [`is-text-${this.textPosition}`, `is-image-${this.imagePosition}`, `is-mobile-${this.mobileOrder}`, `is-vertical-${this.verticalAlign}`]; },
+		contentPositionClass() { return this.textPosition === 'bottom' ? 'is-content-bottom' : 'is-content-top'; },
+		featureMediaClass() { return ['top', 'left'].includes(this.imagePosition) ? 'is-image-top' : 'is-image-bottom'; },
+		tallImageClass() { return this.responsiveValue('tallImagePosition', 'left') === 'right' ? 'is-tall-right' : 'is-tall-left'; },
+		rootStyle() { return { '--pb-feature-container-width': this.cssSize(this.settings.containerWidth, '1140px'), '--pb-feature-gap': this.cssSize(this.responsiveValue('gap', '24px'), '24px'), '--pb-feature-radius': this.cssSize(this.responsiveValue('imageRadius', '45px'), '45px'), '--pb-feature-content-width': this.cssSize(this.responsiveValue('contentWidth', '42%'), '42%'), '--pb-feature-image-width': this.cssSize(this.responsiveValue('imageWidth', '58%'), '58%'), '--pb-feature-background': this.safeColor(this.settings.backgroundColor, '#fff'), '--pb-feature-performance-background': this.safeColor(this.settings.performanceBackgroundColor, '#212529'), '--pb-feature-gradient-start': this.safeColor(this.settings.headingGradientStart, '#0099d5'), '--pb-feature-gradient-end': this.safeColor(this.settings.headingGradientEnd, '#2be581') }; },
+		contentStyle() { return { textAlign: this.textAlign, alignSelf: this.verticalAlign === 'end' ? 'flex-end' : (this.verticalAlign === 'start' ? 'flex-start' : 'center') }; },
+		textStyle() { return { textAlign: this.textAlign }; },
+		titleStyle() { return this.typographyStyle('title', { color: this.safeColor(this.settings.titleColor, 'inherit'), textShadow: this.safeShadow(this.settings.titleTextShadow) }); },
+		subtitleStyle() { return this.typographyStyle('subtitle', { color: this.safeColor(this.settings.subtitleColor, 'inherit'), textShadow: this.safeShadow(this.settings.subtitleTextShadow) }); },
+		descriptionStyle() { return this.typographyStyle('description', { color: this.safeColor(this.settings.descriptionColor, 'inherit'), textShadow: this.safeShadow(this.settings.descriptionTextShadow) }); },
+		metricLabelStyle() { return this.typographyStyle('metricLabel', { color: this.safeColor(this.settings.metricLabelColor, 'inherit') }); },
+		metricValueStyle() { return this.typographyStyle('metricValue', { color: this.safeColor(this.settings.metricValueColor, 'inherit') }); },
+		metricUnitStyle() { return { color: this.safeColor(this.settings.metricUnitColor, 'inherit') }; },
+		imageStyle() { return { alignSelf: this.verticalAlign === 'end' ? 'flex-end' : (this.verticalAlign === 'start' ? 'flex-start' : 'center') }; },
+	},
+	methods: {
+		responsiveValue(base, fallback = '') { const device = ['tablet', 'mobile'].includes(this.responsiveDevice) ? this.responsiveDevice : 'desktop'; const keys = device === 'mobile' ? [base + 'Mobile', base + 'Tablet', base] : (device === 'tablet' ? [base + 'Tablet', base] : [base]); for (const key of keys) { const value = this.settings[key]; if (value !== '' && value !== null && value !== undefined) return value; } return fallback; },
+		safeUrl(value) { const url = String(value || '').trim(); return /^(?:https?:\/\/|\/)/i.test(url) && !url.startsWith('//') && !/^(?:javascript|vbscript|data):/i.test(url) ? url : ''; },
+		displayTitle(fallback) { return String(this.settings.title || fallback); },
+		cssSize(value, fallback = '0px') { const raw = String(value ?? '').trim(); return /^(?:\d+(?:\.\d+)?)(?:px|%|rem|em|vw|vh|auto)$/i.test(raw) ? raw : fallback; },
+		safeColor(value, fallback = 'inherit') { const raw = String(value || '').trim(); return raw && /^[#a-z0-9(),.%\s-]+$/i.test(raw) ? raw : fallback; },
+		safeShadow(value) { const raw = String(value || '').trim(); return raw && /^[#a-z0-9(),.%\s-]+$/i.test(raw) ? raw : 'none'; },
+		typographyStyle(prefix, additions = {}) { return { fontFamily: String(this.settings[prefix + 'FontFamily'] || 'inherit'), fontSize: this.cssSize(this.responsiveValue(prefix + 'FontSize', prefix === 'title' ? '48px' : '16px'), prefix === 'title' ? '48px' : '16px'), fontWeight: String(this.settings[prefix + 'FontWeight'] || '400'), lineHeight: this.cssSize(this.responsiveValue(prefix + 'LineHeight', prefix === 'title' ? '1.2em' : '1.5em'), prefix === 'title' ? '1.2em' : '1.5em'), letterSpacing: this.cssSize(this.responsiveValue(prefix + 'LetterSpacing', '0px'), '0px'), wordSpacing: this.cssSize(this.responsiveValue(prefix + 'WordSpacing', '0px'), '0px'), textTransform: ['none', 'uppercase', 'lowercase', 'capitalize'].includes(this.settings[prefix + 'TextTransform']) ? this.settings[prefix + 'TextTransform'] : 'none', fontStyle: ['normal', 'italic', 'oblique'].includes(this.settings[prefix + 'FontStyle']) ? this.settings[prefix + 'FontStyle'] : 'normal', textDecoration: ['none', 'underline', 'overline', 'line-through'].includes(this.settings[prefix + 'TextDecoration']) ? this.settings[prefix + 'TextDecoration'] : 'none', ...additions }; },
+	},
+};
+</script>
+
+<style scoped>
+.pb-feature-showcase{width:100%;min-width:0;background:var(--pb-feature-background,#fff);color:#212529}.pb-feature-showcase__container{width:min(100%,var(--pb-feature-container-width,1140px));margin-inline:auto;padding:42px 12px;box-sizing:border-box}.pb-feature-showcase__split{display:flex;gap:var(--pb-feature-gap,24px);min-width:0}.pb-feature-showcase__media-object{align-items:center}.pb-feature-showcase__split.is-image-left{flex-direction:row-reverse}.pb-feature-showcase__split.is-image-top{flex-direction:column-reverse}.pb-feature-showcase__split.is-image-bottom{flex-direction:column}.pb-feature-showcase__content,.pb-feature-showcase__media{min-width:0}.pb-feature-showcase__content{flex:0 1 var(--pb-feature-content-width,42%);width:var(--pb-feature-content-width,42%);display:flex;flex-direction:column;justify-content:center}.pb-feature-showcase__media{flex:1 1 var(--pb-feature-image-width,58%);width:var(--pb-feature-image-width,58%);display:flex;flex-wrap:wrap;align-items:center;gap:var(--pb-feature-gap,24px)}.pb-feature-showcase__media img{display:block;width:100%;height:auto;max-width:100%;object-fit:cover;border-radius:var(--pb-feature-radius,45px)}.pb-feature-showcase__media>.pb-feature-showcase__placeholder{width:100%}.pb-feature-showcase__title{margin:0 0 18px;overflow-wrap:anywhere}.pb-feature-showcase__subtitle,.pb-feature-showcase__description{margin:0 0 24px;overflow-wrap:anywhere}.pb-feature-showcase__metrics{display:grid;gap:28px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__split{min-height:420px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__metrics{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px;row-gap:72px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__metrics.is-three-center .pb-feature-showcase__metric:last-child{grid-column:1 / -1;justify-self:center;width:max-content;max-width:100%}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media{min-height:420px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media img{height:420px;object-fit:contain;border-radius:0}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media>.pb-feature-showcase__placeholder{height:420px;min-height:0;border-radius:0}.pb-feature-showcase__metric{display:flex;flex-direction:column;gap:5px;min-width:0}.pb-feature-showcase__metric-label{display:block;overflow-wrap:anywhere}.pb-feature-showcase__metric-value{display:flex;align-items:baseline;gap:5px;line-height:1}.pb-feature-showcase__metric-value small{font-size:.28em;font-weight:400}.pb-feature-showcase__hero-heading{margin-bottom:32px}.pb-feature-showcase__hero-heading .pb-feature-showcase__title{margin-bottom:8px}.pb-feature-showcase--performance_collage{background:var(--pb-feature-performance-background,#212529);color:#fff}.pb-feature-showcase--performance_collage .pb-feature-showcase__container{padding-block:64px}.pb-feature-showcase__title--gradient strong{display:inline-block;background:linear-gradient(149deg,var(--pb-feature-gradient-start,#0099d5) 0%,var(--pb-feature-gradient-end,#2be581) 25%);-webkit-background-clip:text;background-clip:text;color:transparent}.pb-feature-showcase__performance-content,.pb-feature-showcase__gallery-content,.pb-feature-showcase__feature-content{margin-bottom:32px}.pb-feature-showcase__performance-content.is-content-bottom,.pb-feature-showcase__gallery-content.is-content-bottom,.pb-feature-showcase__feature-content.is-content-bottom{order:2;margin:32px 0 0}.pb-feature-showcase__collage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--pb-feature-gap,24px);align-items:stretch}.pb-feature-showcase__collage.is-tall-right{direction:rtl}.pb-feature-showcase__collage.is-tall-right>*{direction:ltr}.pb-feature-showcase__collage-tall{min-height:520px}.pb-feature-showcase__collage-side{display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:var(--pb-feature-gap,24px)}.pb-feature-showcase__collage img,.pb-feature-showcase__gallery img,.pb-feature-showcase__feature-media img{display:block;width:100%;height:100%;object-fit:cover;border-radius:var(--pb-feature-radius,45px)}.pb-feature-showcase__collage-small,.pb-feature-showcase__collage-tall,.pb-feature-showcase__gallery-featured,.pb-feature-showcase__gallery-secondary,.pb-feature-showcase__feature-media{min-width:0;overflow:hidden}.pb-feature-showcase__gallery-featured{height:460px;margin-bottom:var(--pb-feature-gap,24px)}.pb-feature-showcase__gallery-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--pb-feature-gap,24px)}.pb-feature-showcase__gallery-secondary{height:280px}.pb-feature-showcase__feature-media{height:460px}.pb-feature-showcase__feature-media.is-image-top{order:-1;margin-bottom:var(--pb-feature-gap,24px)}.pb-feature-showcase__feature-media.is-image-bottom{order:1}.pb-feature-showcase__placeholder{min-height:150px;height:100%;display:grid;place-items:center;align-content:center;gap:8px;border:1px dashed #b8c0cc;border-radius:var(--pb-feature-radius,45px);background:rgba(148,163,184,.12);color:#8490a0;text-align:center}.pb-feature-showcase__placeholder i{font-size:30px}.pb-feature-showcase--performance_collage .pb-feature-showcase__placeholder{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);color:#cbd5e1}
+@media (max-width:1024px){.pb-feature-showcase__container{padding-block:32px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__split{min-height:340px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media{min-height:340px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media img{height:340px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media>.pb-feature-showcase__placeholder{height:340px}.pb-feature-showcase__collage-tall{min-height:430px}.pb-feature-showcase__gallery-featured,.pb-feature-showcase__feature-media{height:360px}.pb-feature-showcase__gallery-secondary{height:220px}}
+@media (max-width:767px){.pb-feature-showcase__container{padding:28px 16px}.pb-feature-showcase__split{flex-direction:column!important}.pb-feature-showcase__split.is-mobile-image-first .pb-feature-showcase__media{order:-1}.pb-feature-showcase__content,.pb-feature-showcase__media{width:100%;flex-basis:auto}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__metrics{grid-template-columns:1fr;row-gap:28px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__split{min-height:0}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media{min-height:280px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media img{height:280px}.pb-feature-showcase--specifications_metrics .pb-feature-showcase__media>.pb-feature-showcase__placeholder{height:280px}.pb-feature-showcase__collage{grid-template-columns:1fr}.pb-feature-showcase__collage-tall{min-height:320px}.pb-feature-showcase__collage-side{grid-template-rows:none;grid-template-columns:repeat(2,minmax(0,1fr))}.pb-feature-showcase__gallery-featured,.pb-feature-showcase__feature-media{height:260px}.pb-feature-showcase__gallery-secondary{height:170px}.pb-feature-showcase__gallery-row{gap:16px}.pb-feature-showcase__title{font-size:clamp(30px,8vw,48px)!important}.pb-feature-showcase__metric-value{font-size:clamp(48px,15vw,74px)!important}}
+</style>
