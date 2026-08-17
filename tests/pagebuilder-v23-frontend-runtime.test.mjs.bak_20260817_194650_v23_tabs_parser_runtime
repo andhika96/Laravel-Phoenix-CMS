@@ -188,79 +188,14 @@ test("actual Pro Hotspot runtime opens a linked tooltip before navigation", () =
 });
 
 test("actual Pro Flip Box runtime ignores nested interactive controls", () => {
-	const root = rootBase();
-	runtime.initProFlipBox(root);
+    const root = rootBase();
+    runtime.initProFlipBox(root);
 
     root.handlers.get("click")({ target: { closest: () => ({}) } });
     assert.equal(root.classList.contains("is-flipped"), false);
 
     root.handlers.get("click")({ target: { closest: () => null } });
-	assert.equal(root.classList.contains("is-flipped"), true);
-});
-
-test("Tabs runtime keeps the parsed frontend synchronized with Canvas selection", () => {
-	const makeElement = (attributes = {}) => {
-		const target = eventTarget();
-		const values = new Map(Object.entries(attributes));
-		return {
-			...target,
-			classList: classList(),
-			hidden: false,
-			getAttribute: (name) => values.get(name) || "",
-			setAttribute: (name, value) => values.set(name, String(value)),
-			focus() { this.focused = true; },
-		};
-	};
-	const root = rootBase();
-	root.contains = () => true;
-	const desktopTabs = [
-		makeElement({ role: "tab", "data-tab-target": "first", "aria-selected": "true" }),
-		makeElement({ role: "tab", "data-tab-target": "second", "aria-selected": "false" }),
-	];
-	const accordionTabs = [
-		makeElement({ "data-tab-accordion-target": "first", "data-tab-target": "first", "aria-expanded": "true" }),
-		makeElement({ "data-tab-accordion-target": "second", "data-tab-target": "second", "aria-expanded": "false" }),
-	];
-	const panels = [
-		makeElement({ "data-tab-panel": "first" }),
-		makeElement({ "data-tab-panel": "second" }),
-	];
-	for (const element of [...desktopTabs, ...accordionTabs]) {
-		element.closest = (selector) => {
-			if (selector === "[data-tabs-widget]") return root;
-			if (selector === "[data-tab-target]") return element;
-			return null;
-		};
-	}
-	root.querySelectorAll = (selector) => {
-		if (selector.includes('[role="tab"]')) return desktopTabs;
-		if (selector.includes("data-tab-target")) return [...desktopTabs, ...accordionTabs];
-		if (selector.includes("data-tab-panel")) return panels;
-		return [];
-	};
-
-	runtime.initTabs(root);
-	assert.equal(desktopTabs[0].getAttribute("tabindex"), "0");
-	assert.equal(desktopTabs[1].getAttribute("tabindex"), "-1");
-	assert.equal(accordionTabs[0].getAttribute("aria-expanded"), "true");
-	assert.equal(panels[0].hidden, false);
-	assert.equal(panels[1].hidden, true);
-
-	root.handlers.get("click")({ target: accordionTabs[1] });
-	assert.equal(desktopTabs[1].getAttribute("aria-selected"), "true");
-	assert.equal(accordionTabs[1].getAttribute("aria-expanded"), "true");
-	assert.equal(panels[0].hidden, true);
-	assert.equal(panels[1].hidden, false);
-
-	let prevented = false;
-	root.handlers.get("keydown")({
-		target: desktopTabs[1],
-		key: "ArrowLeft",
-		preventDefault() { prevented = true; },
-	});
-	assert.equal(prevented, true);
-	assert.equal(desktopTabs[0].getAttribute("aria-selected"), "true");
-	assert.equal(desktopTabs[0].focused, true);
+    assert.equal(root.classList.contains("is-flipped"), true);
 });
 
 test("actual Code Highlight runtime copies the exact source and reports status", async () => {

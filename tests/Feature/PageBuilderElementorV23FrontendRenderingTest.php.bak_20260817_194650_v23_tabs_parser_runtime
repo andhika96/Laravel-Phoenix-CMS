@@ -232,35 +232,6 @@ class PageBuilderElementorV23FrontendRenderingTest extends TestCase
         $this->assertSame(2, substr_count($legacy, 'class="el-grid-col"'));
     }
 
-    public function test_v23_tabs_parser_emits_the_canvas_compatible_accordion_structure(): void
-    {
-        $html = $this->renderNode([
-            'id' => 'tabs-parser-v23',
-            'type' => 'tabs',
-            'settings' => [
-                'direction' => 'row',
-                'breakpoint' => 'mobile',
-                'activeTabId' => 'first',
-            ],
-            'tabItems' => [
-                ['id' => 'first', 'title' => 'First', 'children' => []],
-                ['id' => 'second', 'title' => 'Second', 'children' => []],
-            ],
-        ]);
-
-        $this->assertStringContainsString('data-tabs-widget', $html);
-        $this->assertStringContainsString('is-direction-row', $html);
-        $this->assertStringContainsString('is-breakpoint-mobile', $html);
-        $this->assertStringContainsString('data-tabs-nav', $html);
-        $this->assertStringContainsString('el-widget-tabs__accordion-title', $html);
-        $this->assertStringNotContainsString('<script>(function(){const root=document.getElementById(', $html);
-
-        $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor_v23.css'));
-        $this->assertIsString($frontendCss);
-        $this->assertStringContainsString('.el-widget-tabs.is-breakpoint-mobile .el-widget-tabs__pane--accordion {', $frontendCss);
-        $this->assertStringContainsString('padding: 0;', substr($frontendCss, strpos($frontendCss, '.el-widget-tabs.is-breakpoint-mobile .el-widget-tabs__pane--accordion {')));
-    }
-
     private function renderNode(array $node, ?Page_Builder $page = null): string
     {
         return view('pagebuilder_elementor_v23.partials.render_node', [

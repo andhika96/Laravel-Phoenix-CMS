@@ -124,25 +124,6 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
         $this->assertStringNotContainsString('js/pagebuilder_elementor/frontend-runtime.js', $html);
     }
 
-    public function test_public_pages_route_renders_only_published_v23_pages(): void
-    {
-        $this->insertPage('public-v23-page', 'Public V23 Page', Page_Builder::EDITOR_VERSION_V23, json_encode([
-            ['id' => 'public-heading', 'type' => 'heading', 'settings' => ['text' => 'Public V23 Content']],
-        ], JSON_THROW_ON_ERROR));
-        $this->insertPage('draft-v23-page', 'Draft V23 Page', Page_Builder::EDITOR_VERSION_V23, '[]', 'draft');
-
-        $html = $this->get('/pages/public-v23-page')
-            ->assertOk()
-            ->getContent();
-
-        $this->assertStringContainsString('<title>Public V23 Page</title>', $html);
-        $this->assertStringContainsString('Public V23 Content', $html);
-        $this->assertStringContainsString('assets/css/frontend_elementor_v23.css', $html);
-        $this->assertStringContainsString('js/pagebuilder_elementor_v23/frontend-runtime.js', $html);
-        $this->get('/pages/draft-v23-page')->assertNotFound();
-        $this->get('/pages/v20-page')->assertNotFound();
-    }
-
     public function test_v23_editing_a_legacy_layout_does_not_mutate_its_vars_or_timestamp(): void
     {
         $legacyVars = json_encode([
@@ -252,7 +233,7 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
         ], JSON_THROW_ON_ERROR);
     }
 
-    private function insertPage(string $uri, string $pageName, string $editorVersion, string $vars, string $status = 'publish'): void
+    private function insertPage(string $uri, string $pageName, string $editorVersion, string $vars): void
     {
         DB::table('page_builder')->insert([
             'user_id' => 1,
@@ -260,7 +241,7 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
             'page_name' => $pageName,
             'custom_css' => '',
             'vars' => $vars,
-            'status' => $status,
+            'status' => 'publish',
             'editor_version' => $editorVersion,
             'created_at' => now(),
             'updated_at' => now(),

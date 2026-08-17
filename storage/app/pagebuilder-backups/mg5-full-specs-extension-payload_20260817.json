@@ -1,0 +1,866 @@
+{
+  "nodes": [
+    {
+      "id": "n_mg5specificationhero",
+      "type": "feature_showcase",
+      "settings": {
+        "cssId": "mg5-specification",
+        "cssClass": "mg5-specification-hero",
+        "template": "specifications_hero",
+        "title": "Full Specifications",
+        "subtitle": "Redefining the meaning of driving MG 5 GT",
+        "description": "",
+        "metrics": [
+          {
+            "label": "Wheelbase",
+            "value": "2680",
+            "unit": "MM"
+          },
+          {
+            "label": "Max Horsepower",
+            "value": "114",
+            "unit": "PS"
+          },
+          {
+            "label": "Max Torque",
+            "value": "150",
+            "unit": "NM"
+          }
+        ],
+        "images": [
+          {
+            "imageSource": "url",
+            "url": "https://assets.mgmotor.id/contents/userfiles/mgmodels/overview/202307/61664cc0b0e8b76dd31029692dfe2d64.webp",
+            "alt": "MG 5 GT Full Specifications"
+          },
+          {
+            "imageSource": "url",
+            "url": "",
+            "alt": ""
+          },
+          {
+            "imageSource": "url",
+            "url": "",
+            "alt": ""
+          }
+        ],
+        "textAlign": "center",
+        "imagePosition": "right",
+        "verticalAlign": "center",
+        "horizontalAlign": "left",
+        "contentWidth": "34%",
+        "imageWidth": "66%",
+        "containerWidth": "1140px",
+        "gap": "32px",
+        "backgroundColor": "#ffffff",
+        "imageRadius": "0px",
+        "titleColor": "#171717",
+        "subtitleColor": "#5f6368",
+        "metricLabelColor": "#171717",
+        "metricValueColor": "#171717",
+        "metricUnitColor": "#171717",
+        "titleFontSize": "40px",
+        "subtitleFontSize": "16px",
+        "metricLabelFontSize": "18px",
+        "metricValueFontSize": "72px",
+        "metricUnitFontSize": "16px"
+      }
+    },
+    {
+      "id": "n_mg5spectabs",
+      "type": "tabs",
+      "settings": {
+        "cssId": "mg5-spec-tabs",
+        "cssClass": "mg5-spec-tabs",
+        "direction": "row",
+        "justify": "center",
+        "alignTitle": "center",
+        "breakpoint": "mobile",
+        "horizontalScroll": true,
+        "activeTabId": "tab-activate",
+        "tabsGap": "0px",
+        "tabsContentDistance": "26px",
+        "tabsTitleFontFamily": "inherit",
+        "tabsTitleFontSize": "15px",
+        "tabsTitleFontWeight": "500",
+        "tabsTitleLineHeight": "1.35em",
+        "tabsNormalTextColor": "#8a8a8a",
+        "tabsNormalIconColor": "#8a8a8a",
+        "tabsNormalBackgroundType": "classic",
+        "tabsNormalBackgroundColor": "transparent",
+        "tabsNormalBorderType": "solid",
+        "tabsNormalBorderWidth": "0px 0px 1px 0px",
+        "tabsNormalBorderColor": "#d9d9d9",
+        "tabsNormalBorderRadius": "0px",
+        "tabsNormalPadding": "13px 28px",
+        "tabsHoverTextColor": "#171717",
+        "tabsHoverIconColor": "#171717",
+        "tabsHoverBackgroundType": "classic",
+        "tabsHoverBackgroundColor": "transparent",
+        "tabsHoverBorderType": "solid",
+        "tabsHoverBorderWidth": "0px 0px 2px 0px",
+        "tabsHoverBorderColor": "#777777",
+        "tabsHoverBorderRadius": "0px",
+        "tabsHoverPadding": "13px 28px",
+        "tabsActiveTextColor": "#171717",
+        "tabsActiveIconColor": "#171717",
+        "tabsActiveBackgroundType": "classic",
+        "tabsActiveBackgroundColor": "transparent",
+        "tabsActiveBorderType": "solid",
+        "tabsActiveBorderWidth": "0px 0px 3px 0px",
+        "tabsActiveBorderColor": "#171717",
+        "tabsActiveBorderRadius": "0px",
+        "tabsActivePadding": "13px 28px",
+        "tabsContentBackgroundType": "classic",
+        "tabsContentBackgroundColor": "transparent",
+        "tabsContentTextColor": "#202124",
+        "tabsContentBorderType": "none",
+        "tabsContentBorderWidth": "0px",
+        "tabsContentPadding": "0px"
+      },
+      "tabItems": [
+        {
+          "id": "tab-activate",
+          "title": "Activate",
+          "iconSource": "none",
+          "iconClass": "",
+          "iconSvg": "",
+          "activeIconClass": "",
+          "cssId": "",
+          "dynamicBindings": {
+            "title": "",
+            "cssId": ""
+          },
+          "children": [
+            {
+              "id": "n_mg5accordion_activate",
+              "type": "accordion",
+              "settings": {
+                "cssClass": "mg5-spec-accordion",
+                "defaultState": "first-expanded",
+                "maxExpanded": "one",
+                "animationDuration": 300,
+                "titleTag": "div",
+                "iconPosition": "end",
+                "expandIconSource": "library",
+                "expandIconClass": "far fa-angle-down",
+                "collapseIconSource": "library",
+                "collapseIconClass": "far fa-angle-up",
+                "itemPosition": "stretch",
+                "accordionItemGap": "22px",
+                "accordionContentDistance": "0px",
+                "accordionBorderRadius": "28px",
+                "accordionPadding": "0px",
+                "headerFontSizeMode": "custom",
+                "headerFontSize": "16px",
+                "headerFontWeight": "600",
+                "headerLineHeight": "1.4em",
+                "headerIconSize": "16px",
+                "headerIconSpacing": "12px",
+                "contentBackgroundType": "classic",
+                "contentBackgroundColor": "#ffffff",
+                "contentBorderType": "none",
+                "contentBorderWidth": "0px",
+                "contentBorderColor": "transparent",
+                "contentBorderRadius": "0px",
+                "contentPadding": "20px 26px 6px",
+                "accordionNormalBackgroundType": "classic",
+                "accordionNormalBackgroundColor": "#f4f4f4",
+                "accordionNormalBorderType": "none",
+                "accordionNormalBorderWidth": "0px",
+                "accordionNormalBorderColor": "transparent",
+                "headerTitleColorNormal": "#171717",
+                "headerIconColorNormal": "#171717",
+                "accordionHoverBackgroundType": "classic",
+                "accordionHoverBackgroundColor": "#eeeeee",
+                "accordionHoverBorderType": "none",
+                "accordionHoverBorderWidth": "0px",
+                "accordionHoverBorderColor": "transparent",
+                "headerTitleColorHover": "#171717",
+                "headerIconColorHover": "#171717",
+                "accordionActiveBackgroundType": "classic",
+                "accordionActiveBackgroundColor": "#f4f4f4",
+                "accordionActiveBorderType": "none",
+                "accordionActiveBorderWidth": "0px",
+                "accordionActiveBorderColor": "transparent",
+                "headerTitleColorActive": "#171717",
+                "headerIconColorActive": "#171717",
+                "cssId": "mg5-accordion-activate"
+              },
+              "accordionItems": [
+                {
+                  "id": "mg5-activate-category-1",
+                  "title": "Dimension",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_activate_1",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Panjang / Length (mm.)</span></span><strong class=\"mg5-spec-value\">4,675</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Lebar / Width (mm.)</span></span><strong class=\"mg5-spec-value\">1,842</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Tinggi / Height (mm.)</span></span><strong class=\"mg5-spec-value\">1,473</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Jarak Sumbu Roda / Wheelbase (mm.)</span></span><strong class=\"mg5-spec-value\">2,680</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Jarak Sasis / Ground Clearance (mm.)</span></span><strong class=\"mg5-spec-value\">138</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Kapasitas Tangki Bahan Bakar / Fuel Tank Capacity (L)</span></span><strong class=\"mg5-spec-value\">45</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Roda dan Ban / Wheels and Tires</span></span><strong class=\"mg5-spec-value\">Alloy Wheel 16&quot; 205/55 R16</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-activate-category-2",
+                  "title": "Capacity",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_activate_2",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Tipe Mesin / Engine Type</span></span><strong class=\"mg5-spec-value\">DOHC 4 Cylinder 16 Valve VTi - TECH</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Tipe Injeksi / Injection type</span></span><strong class=\"mg5-spec-value\">Multi - Point Fuel Injection</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Isi Silinder / Displacement (cc.)</span></span><strong class=\"mg5-spec-value\">1,498</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Diameter x Langkah / Bore x Stroke (mm.)</span></span><strong class=\"mg5-spec-value\">75 x 84.8</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rasio Kompresi / Compression Ratio</span></span><strong class=\"mg5-spec-value\">11.5 : 1</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Daya Maksimum / Max Power (kW (PS)/rpm)</span></span><strong class=\"mg5-spec-value\">84 (114) / 6,000</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Torsi Maksimum / Max Torque (Nm/rpm)</span></span><strong class=\"mg5-spec-value\">150 / 4,500</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-activate-category-3",
+                  "title": "Driving System And Suspension",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_activate_3",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Transmisi / Transmission</span></span><strong class=\"mg5-spec-value\">CVT 8 Speed Automatic Transmission</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rasio Gigi / Gear Ratio</span></span><strong class=\"mg5-spec-value\">2.453~0.396</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rasio Gigi Mundur / Reverse Gear Ratio</span></span><strong class=\"mg5-spec-value\">2.58</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rasio Gigi Belakang / Rear Gear Ratio</span></span><strong class=\"mg5-spec-value\">5.73</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Tipe / Type</span></span><strong class=\"mg5-spec-value\">Rack and pinion, Electrically Controlled (EPS)</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Driving Mode</span></span><strong class=\"mg5-spec-value\">3 Mode (Urban / Normal / Dynamic)</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Radius Putar Rendah / Minimum Turning Radius (m.)</span></span><strong class=\"mg5-spec-value\">5.6</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Suspensi Depan / Front Suspension</span></span><strong class=\"mg5-spec-value\">Independent MacPherson Strut with Stabilizer Bar</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Suspensi Belakang / Rear Suspension</span></span><strong class=\"mg5-spec-value\">Torsion Beam</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Sistem Rem Depan / Front Brake</span></span><strong class=\"mg5-spec-value\">Ventilation Disc Brake</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Sistem Rem Belakang / Rear Brake</span></span><strong class=\"mg5-spec-value\">Disc Brake</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>2-Way Adjustable Steering Wheel (Tilt)</span></span><strong class=\"mg5-spec-value\">✓</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-activate-category-4",
+                  "title": "Exterior",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_activate_4",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>LED Headlamp</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Front Headlamp Auto On-off</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Power Adjust Door Mirror with Turning Lamps</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Folding Door Mirror</span></span><strong class=\"mg5-spec-value\">Manual</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>LED Daytime Running Lights</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear Fog Lamp</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>LED Taillight</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>LED Hight Mount Stop Lamp</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear Defogger</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Electric Sunroof</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Follow Me Home Light</span></span><strong class=\"mg5-spec-value\">✓</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-activate-category-5",
+                  "title": "Interior",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_activate_5",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Interior Color</span></span><strong class=\"mg5-spec-value\">Black</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Seat Material</span></span><strong class=\"mg5-spec-value\">Fabric</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Seat Pocket</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>6-ways Adjustable Driver Seat</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>4-ways Adjustable Front Passenger Seat</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Front Armrest</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear Fodable Seat</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Steering Tilt Adjust</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Multi Function Steering Wheel</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>7-Inch Digital Instrument Cluster</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>One Touch Up-Down Electric Windows on the Driver&#039;s Side</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Manual Rearview Mirror Dimming</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Digital Air Conditioning System</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Air Vents for Rear Passenger</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Push Start Button</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>PM 2.5 Air Filter</span></span><strong class=\"mg5-spec-value\">✓</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-activate-category-6",
+                  "title": "Safety System",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_activate_6",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>FSF (Full Space Frame)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>EPB (Electronic Parking Brake)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>AVH (Auto Vehicle Hold)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>ABS (Anti-lock Braking System) &amp; EBD (Electronic Brake force Distribution)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>EBA (Electronic Brake Assist)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>XDS (Electronic Differential System)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>TCS (Traction Control System)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>SCS (Stability Control System)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>HSA (Hill Start Assist System)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>ESS (Emergency Stop Signal)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>RDA (Rear Driver Assistance System) -</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>BSD (Blind Spot Detection)</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>LCA (Lane Change Assist)</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>RCTA (Rear Cross Traffic Alert)</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>RCW (Rear Collision Warning)</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>ISOFIX</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Speed Sensing Door Lock</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Front Seat 3-point Seatbelts (3 Positions)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Front Airbags</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Side Airbags</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Side Curtain Airbags</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear View Camera</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear Parking Sensors</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Immobilizer Safety Key System</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Spare Tire</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Cruise Control</span></span><strong class=\"mg5-spec-value\">—</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-activate-category-7",
+                  "title": "Entertainment",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_activate_7",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Multi-function Steering Wheel Mounted Audio &amp; Hands-free Telephone Switches</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Speakers</span></span><strong class=\"mg5-spec-value\">4</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>10 inch Infotaintment System</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Number of USB Ports</span></span><strong class=\"mg5-spec-value\">3</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Bluetooth Connectivity</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Apple CarPlay &amp; Android Auto Smartphone Connection</span></span><strong class=\"mg5-spec-value\">✓ (Wired)</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "tab-ignite",
+          "title": "Ignite",
+          "iconSource": "none",
+          "iconClass": "",
+          "iconSvg": "",
+          "activeIconClass": "",
+          "cssId": "",
+          "dynamicBindings": {
+            "title": "",
+            "cssId": ""
+          },
+          "children": [
+            {
+              "id": "n_mg5accordion_ignite",
+              "type": "accordion",
+              "settings": {
+                "cssClass": "mg5-spec-accordion",
+                "defaultState": "first-expanded",
+                "maxExpanded": "one",
+                "animationDuration": 300,
+                "titleTag": "div",
+                "iconPosition": "end",
+                "expandIconSource": "library",
+                "expandIconClass": "far fa-angle-down",
+                "collapseIconSource": "library",
+                "collapseIconClass": "far fa-angle-up",
+                "itemPosition": "stretch",
+                "accordionItemGap": "22px",
+                "accordionContentDistance": "0px",
+                "accordionBorderRadius": "28px",
+                "accordionPadding": "0px",
+                "headerFontSizeMode": "custom",
+                "headerFontSize": "16px",
+                "headerFontWeight": "600",
+                "headerLineHeight": "1.4em",
+                "headerIconSize": "16px",
+                "headerIconSpacing": "12px",
+                "contentBackgroundType": "classic",
+                "contentBackgroundColor": "#ffffff",
+                "contentBorderType": "none",
+                "contentBorderWidth": "0px",
+                "contentBorderColor": "transparent",
+                "contentBorderRadius": "0px",
+                "contentPadding": "20px 26px 6px",
+                "accordionNormalBackgroundType": "classic",
+                "accordionNormalBackgroundColor": "#f4f4f4",
+                "accordionNormalBorderType": "none",
+                "accordionNormalBorderWidth": "0px",
+                "accordionNormalBorderColor": "transparent",
+                "headerTitleColorNormal": "#171717",
+                "headerIconColorNormal": "#171717",
+                "accordionHoverBackgroundType": "classic",
+                "accordionHoverBackgroundColor": "#eeeeee",
+                "accordionHoverBorderType": "none",
+                "accordionHoverBorderWidth": "0px",
+                "accordionHoverBorderColor": "transparent",
+                "headerTitleColorHover": "#171717",
+                "headerIconColorHover": "#171717",
+                "accordionActiveBackgroundType": "classic",
+                "accordionActiveBackgroundColor": "#f4f4f4",
+                "accordionActiveBorderType": "none",
+                "accordionActiveBorderWidth": "0px",
+                "accordionActiveBorderColor": "transparent",
+                "headerTitleColorActive": "#171717",
+                "headerIconColorActive": "#171717",
+                "cssId": "mg5-accordion-ignite"
+              },
+              "accordionItems": [
+                {
+                  "id": "mg5-ignite-category-1",
+                  "title": "Dimension",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_ignite_1",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Panjang / Length (mm.)</span></span><strong class=\"mg5-spec-value\">4,675</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Lebar / Width (mm.)</span></span><strong class=\"mg5-spec-value\">1,842</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Tinggi / Height (mm.)</span></span><strong class=\"mg5-spec-value\">1,473</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Jarak Sumbu Roda / Wheelbase (mm.)</span></span><strong class=\"mg5-spec-value\">2,680</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Jarak Sasis / Ground Clearance (mm.)</span></span><strong class=\"mg5-spec-value\">138</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Kapasitas Tangki Bahan Bakar / Fuel Tank Capacity (L)</span></span><strong class=\"mg5-spec-value\">45</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Roda dan Ban / Wheels and Tires</span></span><strong class=\"mg5-spec-value\">Alloy Wheel 17&quot; 215/55 R17</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-ignite-category-2",
+                  "title": "Capacity",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_ignite_2",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Tipe Mesin / Engine Type</span></span><strong class=\"mg5-spec-value\">DOHC 4 Cylinder 16 Valve VTi - TECH</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Tipe Injeksi / Injection Type</span></span><strong class=\"mg5-spec-value\">Multi - Point Fuel Injection</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Isi Silinder / Displacement (cc.)</span></span><strong class=\"mg5-spec-value\">1,498</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Diameter x Langkah / Bore x Stroke (mm.)</span></span><strong class=\"mg5-spec-value\">75 x 84.8</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rasio Kompresi / Compression Ratio</span></span><strong class=\"mg5-spec-value\">11.5 : 1</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Daya Maksimum / Max Power (kW (PS)/rpm)</span></span><strong class=\"mg5-spec-value\">84 (114) / 6,000</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Torsi Maksimum / Max Torque (Nm/rpm)</span></span><strong class=\"mg5-spec-value\">150 / 4,500</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-ignite-category-3",
+                  "title": "Driving System And Suspension",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_ignite_3",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Transmisi / Transmission</span></span><strong class=\"mg5-spec-value\">CVT 8 Speed Automatic Transmission</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rasio Gigi / Gear Ratio</span></span><strong class=\"mg5-spec-value\">2.453~0.396</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rasio Gigi Mundur / Reverse Gear Ratio</span></span><strong class=\"mg5-spec-value\">2.58</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rasio Gigi Belakang / Rear Gear Ratio</span></span><strong class=\"mg5-spec-value\">5.73</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Tipe / Type</span></span><strong class=\"mg5-spec-value\">Rack and pinion, electrically controlled (EPS)</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Driving Mode</span></span><strong class=\"mg5-spec-value\">3 Mode (Urban / Normal / Dynamic</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Radius Putar Rendah / Minimum Turning Radius (m.)</span></span><strong class=\"mg5-spec-value\">5.6</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Suspensi Depan / Front Suspension</span></span><strong class=\"mg5-spec-value\">Independent MacPherson Strut with Stabilizer Bar</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Suspensi Belakang / Rear Suspension</span></span><strong class=\"mg5-spec-value\">Torsion Beam</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Sistem Rem Depan / Front Brake</span></span><strong class=\"mg5-spec-value\">Ventilation Disc Brake</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Sistem Rem Belakang / Rear Brake</span></span><strong class=\"mg5-spec-value\">Disc Brake</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>2-Way Adjustable Steering Wheel (Tilt)</span></span><strong class=\"mg5-spec-value\">✓</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-ignite-category-4",
+                  "title": "Exterior",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_ignite_4",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>LED Headlamp</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Front Headlamp Auto On-off</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Electric Adjustable Door Mirror with Side Turn Lamp</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Folding Door Mirror</span></span><strong class=\"mg5-spec-value\">Electric</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Daytime Running Lights</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear Fog Lamp</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>LED Hight Mount Stop Lamp</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear Defogger</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Electric Sunroof</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Follow Me Home Light</span></span><strong class=\"mg5-spec-value\">✓</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-ignite-category-5",
+                  "title": "Interior",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_ignite_5",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Interior Color</span></span><strong class=\"mg5-spec-value\">Black with Red Accent</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Seat Material</span></span><strong class=\"mg5-spec-value\">Leather</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Seat Pocket</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>6-ways Adjustable Driver Seat</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>4-ways Adjustable Front Passenger Seat</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Front Armrest</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear Fodable Seat</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Steering Tilt Adjust</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Multi Function Steering Wheel</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>7-Inch Digital Instrument Cluster</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>One Touch Up-Down Electric Windows on the Driver&#039;s Side</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Manual Rearview Mirror Dimming</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Digital Air Conditioning System</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Air Vents for Rear Passenger</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Push Start Button</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>PM 2.5 Air Filter</span></span><strong class=\"mg5-spec-value\">✓</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-ignite-category-6",
+                  "title": "Safety System",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_ignite_6",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>FSF (Full Space Frame)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>EPB (Electronic Parking Brake)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>AVH (Auto Vehicle Hold)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>ABS (Anti-lock Braking System) &amp; EBD (Electronic Brake force Distribution)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>EBA (Electronic Brake Assist)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>XDS (Electronic Differential System)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>TCS (Traction Control System)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>SCS (Stability Control System)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>HSA (Hill Start Assist System)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>ESS (Emergency Stop Signal)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>RDA (Rear Driver Assistance System) -</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>BSD (Blind Spot Detection)</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>LCA (Lane Change Assist)</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>RCTA (Rear Cross Traffic Alert)</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>RCW (Rear Collision Warning)</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>ISOFIX</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Speed Sensing Door Lock</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Front Seat 3-point Seatbelts (3 Positions)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Front Airbags</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Side Airbags</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Side Curtain Airbags</span></span><strong class=\"mg5-spec-value\">—</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear View Camera</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>360 omni Directional Camera</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear Parking Sensors</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Immobilizer Safety Key System</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Spare Tire</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Cruise Control</span></span><strong class=\"mg5-spec-value\">✓</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-ignite-category-7",
+                  "title": "Entertainment",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_ignite_7",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Multi-function Steering Wheel Mounted Audio &amp; Hands-free Telephone Switches</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Number of Speakers</span></span><strong class=\"mg5-spec-value\">6</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>10 inch Infotaintment System</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Number of USB Ports</span></span><strong class=\"mg5-spec-value\">3</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Bluetooth Connectivity</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Apple CarPlay &amp; Android Auto Smartphone Connection</span></span><strong class=\"mg5-spec-value\">✓ (Wired)</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "tab-magnify",
+          "title": "Magnify",
+          "iconSource": "none",
+          "iconClass": "",
+          "iconSvg": "",
+          "activeIconClass": "",
+          "cssId": "",
+          "dynamicBindings": {
+            "title": "",
+            "cssId": ""
+          },
+          "children": [
+            {
+              "id": "n_mg5accordion_magnify",
+              "type": "accordion",
+              "settings": {
+                "cssClass": "mg5-spec-accordion",
+                "defaultState": "first-expanded",
+                "maxExpanded": "one",
+                "animationDuration": 300,
+                "titleTag": "div",
+                "iconPosition": "end",
+                "expandIconSource": "library",
+                "expandIconClass": "far fa-angle-down",
+                "collapseIconSource": "library",
+                "collapseIconClass": "far fa-angle-up",
+                "itemPosition": "stretch",
+                "accordionItemGap": "22px",
+                "accordionContentDistance": "0px",
+                "accordionBorderRadius": "28px",
+                "accordionPadding": "0px",
+                "headerFontSizeMode": "custom",
+                "headerFontSize": "16px",
+                "headerFontWeight": "600",
+                "headerLineHeight": "1.4em",
+                "headerIconSize": "16px",
+                "headerIconSpacing": "12px",
+                "contentBackgroundType": "classic",
+                "contentBackgroundColor": "#ffffff",
+                "contentBorderType": "none",
+                "contentBorderWidth": "0px",
+                "contentBorderColor": "transparent",
+                "contentBorderRadius": "0px",
+                "contentPadding": "20px 26px 6px",
+                "accordionNormalBackgroundType": "classic",
+                "accordionNormalBackgroundColor": "#f4f4f4",
+                "accordionNormalBorderType": "none",
+                "accordionNormalBorderWidth": "0px",
+                "accordionNormalBorderColor": "transparent",
+                "headerTitleColorNormal": "#171717",
+                "headerIconColorNormal": "#171717",
+                "accordionHoverBackgroundType": "classic",
+                "accordionHoverBackgroundColor": "#eeeeee",
+                "accordionHoverBorderType": "none",
+                "accordionHoverBorderWidth": "0px",
+                "accordionHoverBorderColor": "transparent",
+                "headerTitleColorHover": "#171717",
+                "headerIconColorHover": "#171717",
+                "accordionActiveBackgroundType": "classic",
+                "accordionActiveBackgroundColor": "#f4f4f4",
+                "accordionActiveBorderType": "none",
+                "accordionActiveBorderWidth": "0px",
+                "accordionActiveBorderColor": "transparent",
+                "headerTitleColorActive": "#171717",
+                "headerIconColorActive": "#171717",
+                "cssId": "mg5-accordion-magnify"
+              },
+              "accordionItems": [
+                {
+                  "id": "mg5-magnify-category-1",
+                  "title": "Dimension",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_magnify_1",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Panjang / Length (mm.)</span></span><strong class=\"mg5-spec-value\">4,675</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Lebar / Width (mm.)</span></span><strong class=\"mg5-spec-value\">1,842</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Tinggi / Height (mm.)</span></span><strong class=\"mg5-spec-value\">1,480</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Jarak Sumbu Roda / Wheelbase (mm.)</span></span><strong class=\"mg5-spec-value\">2,680</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Jarak Sasis / Ground Clearance (mm.)</span></span><strong class=\"mg5-spec-value\">138</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Kapasitas Tangki Bahan Bakar / Fuel Tank Capacity (L)</span></span><strong class=\"mg5-spec-value\">45</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Roda dan Ban / Wheels and Tires</span></span><strong class=\"mg5-spec-value\">Alloy Wheel 17&quot; 215/50 R17</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-magnify-category-2",
+                  "title": "Capacity",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_magnify_2",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Tipe Mesin / Engine Type</span></span><strong class=\"mg5-spec-value\">DOHC 4 Cylinder 16 Valve VTi - TECH</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Tipe Injeksi / Injection Type</span></span><strong class=\"mg5-spec-value\">Multi - Point Fuel Injection</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Isi Silinder / Displacement (cc.)</span></span><strong class=\"mg5-spec-value\">1,498</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Diameter x Langkah / Bore x Stroke (mm.)</span></span><strong class=\"mg5-spec-value\">75 x 84.8</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rasio Kompresi / Compression Ratio</span></span><strong class=\"mg5-spec-value\">11.5 : 1</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Daya Maksimum / Max Power (kW (PS)/rpm)</span></span><strong class=\"mg5-spec-value\">84 (114) / 6,000</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Torsi Maksimum / Max Torque (Nm/rpm)</span></span><strong class=\"mg5-spec-value\">150 / 4,500</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-magnify-category-3",
+                  "title": "Driving System And Suspension",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_magnify_3",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Transmisi / Transmission</span></span><strong class=\"mg5-spec-value\">CVT 8 Speed Automatic Transmission</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rasio Gigi / Gear Ratio</span></span><strong class=\"mg5-spec-value\">2.453~0.396</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rasio Gigi Mundur / Reverse Gear Ratio</span></span><strong class=\"mg5-spec-value\">2.58</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rasio Gigi Belakang / Rear Gear Ratio</span></span><strong class=\"mg5-spec-value\">5.73</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Tipe / Type</span></span><strong class=\"mg5-spec-value\">Rack and pinion, electrically controlled (EPS)</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Driving Mode</span></span><strong class=\"mg5-spec-value\">3 Mode (Urban / Normal / Dynamic)</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Radius Putar Rendah / Minimum Turning Radius (m.)</span></span><strong class=\"mg5-spec-value\">5.6</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Suspensi Depan / Front Suspension</span></span><strong class=\"mg5-spec-value\">Independent MacPherson Strut with Stabilizer Bar</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Suspensi Belakang / Rear Suspension</span></span><strong class=\"mg5-spec-value\">Torsion Beam</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Sistem Rem Depan / Front Brake</span></span><strong class=\"mg5-spec-value\">Ventilation Disc Brake</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Sistem Rem Belakang / Rear Brake</span></span><strong class=\"mg5-spec-value\">Disc Brake</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>2-Way Adjustable Steering Wheel (Tilt)</span></span><strong class=\"mg5-spec-value\">✓</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-magnify-category-4",
+                  "title": "Exterior",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_magnify_4",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>LED Headlamp</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Front Headlamp Auto On-off</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Electric Adjustable Door Mirror with Side Turn Lamp</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Folding Door Mirror</span></span><strong class=\"mg5-spec-value\">Electric</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Daytime Running Lights</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear Fog Lamp</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>LED Hight Mount Stop Lamp</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear Defogger</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Electric Sunroof</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Follow Me Home Light</span></span><strong class=\"mg5-spec-value\">✓</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-magnify-category-5",
+                  "title": "Interior",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_magnify_5",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Interior Color</span></span><strong class=\"mg5-spec-value\">Black with Red Accent</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Seat Material</span></span><strong class=\"mg5-spec-value\">Leather</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Seat Pocket</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>6-ways Adjustable Driver Seat</span></span><strong class=\"mg5-spec-value\">Electric Adjustment</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>4-ways Adjustable Front Passenger Seat</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Front Armrest</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear Fodable Seat</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Steering Tilt Adjust</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Multi Function Steering Wheel</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>7-Inch Digital Instrument Cluster</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>One Touch Up-Down Electric Windows on the Driver&#039;s Side</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Manual Rearview Mirror Dimming</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Digital Air Conditioning System</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Air Vents for Rear Passenger</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Push Start Button</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>PM 2.5 Air Filter</span></span><strong class=\"mg5-spec-value\">✓</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-magnify-category-6",
+                  "title": "Safety System",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_magnify_6",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>FSF (Full Space Frame)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>EPB (Electronic Parking Brake)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>AVH (Auto Vehicle Hold)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>ABS (Anti-lock Braking System) &amp; EBD (Electronic Brake force Distribution)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>EBA (Electronic Brake Assist)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>XDS (Electronic Differential System)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>TCS (Traction Control System)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>SCS (Stability Control System)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>HSA (Hill Start Assist System)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>ESS (Emergency Stop Signal)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>RDA (Rear Driver Assistance System) -</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>BSD (Blind Spot Detection)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>LCA (Lane Change Assist)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>RCTA (Rear Cross Traffic Alert)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>RCW (Rear Collision Warning)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>ISOFIX</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Speed Sensing Door Lock</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Front Seat 3-point Seatbelts (3 Positions)</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Front Airbags</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Side Airbags</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Side Curtain Airbags</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear View Camera</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>360 omni Directional Camera</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Rear Parking Sensors</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Immobilizer Safety Key System</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Spare Tire</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Cruise Control</span></span><strong class=\"mg5-spec-value\">✓</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "mg5-magnify-category-7",
+                  "title": "Entertainment",
+                  "cssId": "",
+                  "children": [
+                    {
+                      "id": "n_mg5spec_magnify_7",
+                      "type": "text_editor",
+                      "settings": {
+                        "html": "<div class=\"mg5-spec-table\"><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Multi-function Steering Wheel Mounted Audio &amp; Hands-free Telephone Switches</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Number of Speakers</span></span><strong class=\"mg5-spec-value\">6</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>10 inch Infotaintment System</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Number of USB Ports</span></span><strong class=\"mg5-spec-value\">3</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Bluetooth Connectivity</span></span><strong class=\"mg5-spec-value\">✓</strong></div><div class=\"mg5-spec-row\"><span class=\"mg5-spec-label\"><i class=\"fad fa-check-circle\" aria-hidden=\"true\"></i><span>Apple CarPlay &amp; Android Auto Smartphone Connection</span></span><strong class=\"mg5-spec-value\">✓ (Wired)</strong></div></div>",
+                        "align": "left",
+                        "cssClass": "mg5-spec-table-widget",
+                        "paragraphSpacing": "0",
+                        "textEditorTextColor": "#202124"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n_mg5specactions",
+      "type": "text_editor",
+      "settings": {
+        "html": "<div class=\"mg5-spec-actions\"><a href=\"https://www.mgmotor.id/contents/userfiles/mgmodels/brochure/202508/dc73f2037d6f6bd5ebaf1409f6c5aff2.pdf\" target=\"_blank\" rel=\"noopener\">Download Brochure <i class=\"far fa-download\" aria-hidden=\"true\"></i></a><a class=\"mg5-spec-actions__primary\" href=\"https://www.mgmotor.id/testdrive?model=mg5gt\">Test Drive <i class=\"far fa-angle-right\" aria-hidden=\"true\"></i></a></div>",
+        "align": "center",
+        "cssClass": "mg5-spec-actions-widget",
+        "paragraphSpacing": "0"
+      }
+    },
+    {
+      "id": "n_mg5price",
+      "type": "text_editor",
+      "settings": {
+        "html": "<section id=\"mg5-price\" class=\"mg5-price-section\"><h2>Price</h2><div class=\"mg5-price-grid\"><article><h3>MG 5 GT Activate</h3><strong>Rp351,300,000*</strong></article><article><h3>MG 5 GT Ignite</h3><strong>Rp381,600,000*</strong></article><article><h3>MG 5 GT Magnify</h3><strong>Rp412,000,000*</strong></article></div><p class=\"mg5-price-note\">*Harga OTR Jakarta</p><p class=\"mg5-price-disclaimer\">* Harga dapat berubah sesuai kebijakan yang berlaku. Untuk harga terbaru, silakan cek langsung ke dealer resmi MG terdekat.</p></section>",
+        "align": "center",
+        "cssClass": "mg5-price-widget",
+        "paragraphSpacing": "0",
+        "textEditorTextColor": "#171717"
+      }
+    },
+    {
+      "id": "n_mg5seeheading",
+      "type": "text_editor",
+      "settings": {
+        "html": "<section id=\"mg5-colors\" class=\"mg5-see-heading\"><h2>See For Yourself</h2></section>",
+        "align": "center",
+        "cssClass": "mg5-see-heading-widget",
+        "paragraphSpacing": "0",
+        "textEditorTextColor": "#171717"
+      }
+    },
+    {
+      "id": "n_mg5colors",
+      "type": "product_color_selector",
+      "settings": {
+        "cssId": "mg5-color-selector",
+        "cssClass": "mg5-color-selector",
+        "title": "Get a Feel For Your Own",
+        "showTitle": true,
+        "description": "",
+        "showDescription": false,
+        "titleTag": "h2",
+        "titleAlignment": "left",
+        "titleAlignmentTablet": "left",
+        "titleAlignmentMobile": "center",
+        "defaultItemId": "mg5-color-yellow",
+        "listPosition": "bottom",
+        "listPositionTablet": "bottom",
+        "listPositionMobile": "bottom",
+        "listAlignment": "center",
+        "listAlignmentTablet": "center",
+        "listAlignmentMobile": "center",
+        "imageAspectRatio": "1264 / 464",
+        "imageAspectRatioTablet": "1264 / 464",
+        "imageAspectRatioMobile": "16 / 9",
+        "imageFit": "contain",
+        "imageFitTablet": "contain",
+        "imageFitMobile": "contain",
+        "imagePosition": "center center",
+        "transition": "fade",
+        "transitionDuration": "300ms",
+        "surfaceBackground": "#f7f9fa",
+        "surfaceRadius": "0px",
+        "surfacePadding": "46px 0px 54px",
+        "imageRadius": "0px",
+        "swatchWidth": "180px",
+        "swatchHeight": "104px",
+        "swatchRadius": "0px",
+        "listGap": "0px",
+        "itemTextGap": "8px",
+        "activeIndicatorColor": "#ffffff",
+        "activeIndicatorSize": "30px",
+        "titleColor": "#171717",
+        "itemNameColor": "#777777",
+        "titleFontSizeMode": "custom",
+        "titleFontSize": "40px",
+        "titleFontSizeTablet": "34px",
+        "titleFontSizeMobile": "30px",
+        "itemNameFontSize": "14px",
+        "items": [
+          {
+            "id": "mg5-color-yellow",
+            "name": "Nuclear Yellow",
+            "description": "",
+            "swatchColor": "#F1C232",
+            "imageSource": "url",
+            "imageUrl": "https://assets.mgmotor.id/contents/userfiles/mgmodels/design/202307/06cccf9a1b7e1ea68921c5aa36a2f50d.webp",
+            "imageAlt": "MG 5 GT Nuclear Yellow"
+          },
+          {
+            "id": "mg5-color-red",
+            "name": "Flare Red",
+            "description": "",
+            "swatchColor": "#CE3D43",
+            "imageSource": "url",
+            "imageUrl": "https://assets.mgmotor.id/contents/userfiles/mgmodels/design/202307/79f310f85928e9174fa7548ac845fed0.webp",
+            "imageAlt": "MG 5 GT Flare Red"
+          },
+          {
+            "id": "mg5-color-grey",
+            "name": "Metal Ash Grey",
+            "description": "",
+            "swatchColor": "#575d59",
+            "imageSource": "url",
+            "imageUrl": "https://assets.mgmotor.id/contents/userfiles/mgmodels/design/202308/4e7368e8fdb487f43773c063096645af.webp",
+            "imageAlt": "MG 5 GT Metal Ash Grey"
+          },
+          {
+            "id": "mg5-color-white",
+            "name": "York White",
+            "description": "",
+            "swatchColor": "#ffffff",
+            "imageSource": "url",
+            "imageUrl": "https://assets.mgmotor.id/contents/userfiles/mgmodels/design/202308/07823c72ae88c3f984e8efaedbb4b9b5.webp",
+            "imageAlt": "MG 5 GT York White"
+          },
+          {
+            "id": "mg5-color-black",
+            "name": "Black Pearl",
+            "description": "",
+            "swatchColor": "#000000",
+            "imageSource": "url",
+            "imageUrl": "https://assets.mgmotor.id/contents/userfiles/mgmodels/design/202307/52927fcf68291074a2de4878ed9eb546.webp",
+            "imageAlt": "MG 5 GT Black Pearl"
+          }
+        ]
+      }
+    },
+    {
+      "id": "n_mg5services",
+      "type": "text_editor",
+      "settings": {
+        "html": "<section id=\"mg5-services\" class=\"mg5-service-grid\"><a class=\"mg5-service-card\" href=\"https://www.mgmotor.id/mgdealer\"><img src=\"https://www.mgmotor.id/assets/statics/homepage/Compass.svg\" alt=\"\" aria-hidden=\"true\"><h3>Find MG Dealer</h3><span>Learn more <i class=\"far fa-angle-right\" aria-hidden=\"true\"></i></span></a><a class=\"mg5-service-card\" href=\"https://www.mgmotor.id/mgcare\"><img src=\"https://www.mgmotor.id/assets/statics/homepage/Headset.svg\" alt=\"\" aria-hidden=\"true\"><h3>MG Care</h3><span>Learn more <i class=\"far fa-angle-right\" aria-hidden=\"true\"></i></span></a><a class=\"mg5-service-card\" href=\"https://www.mgmotor.id/joinmg\"><img src=\"https://www.mgmotor.id/assets/statics/homepage/ChatsCircle.svg\" alt=\"\" aria-hidden=\"true\"><h3>Join MG Dealer</h3><span>Learn more <i class=\"far fa-angle-right\" aria-hidden=\"true\"></i></span></a></section>",
+        "align": "center",
+        "cssClass": "mg5-services-widget",
+        "paragraphSpacing": "0",
+        "textEditorLinkColor": "#111111",
+        "textEditorTextColor": "#111111",
+        "textEditorLinkColorHover": "#111111",
+        "textEditorTextColorHover": "#111111"
+      }
+    }
+  ],
+  "css": "\n/* MG5 full specifications extension */\n#mg5-specification,#mg5-price,#mg5-colors,#mg5-services{scroll-margin-top:85px}\n#mg5-specification .pb-feature-showcase__container{padding-top:94px;padding-bottom:28px}\n#mg5-specification .pb-feature-showcase__hero-heading{margin-bottom:54px}\n#mg5-specification .pb-feature-showcase__hero-heading .pb-feature-showcase__title{margin-bottom:14px}\n#mg5-specification .pb-feature-showcase__split--hero{align-items:center;min-height:390px}\n#mg5-specification .pb-feature-showcase__metrics{gap:62px}\n#mg5-specification .pb-feature-showcase__metric-label{margin-bottom:4px}\n#mg5-specification .pb-feature-showcase__media img{height:auto;max-height:435px;object-fit:contain}\n#mg5-spec-tabs{width:min(100% - 40px,950px);margin:0 auto;padding:4px 0 62px}\n#mg5-spec-tabs .el-widget-tabs__nav{border-bottom:1px solid #d9d9d9}\n#mg5-spec-tabs .el-widget-tabs__title{flex:1 1 0}\n#mg5-spec-tabs .el-widget-tabs__content{padding-top:28px}\n#mg5-spec-tabs .el-widget-accordion__summary{min-height:60px;padding:16px 25px}\n#mg5-spec-tabs .el-widget-accordion__item{overflow:hidden}\n#mg5-spec-tabs .el-widget-accordion__content{padding:0!important}\n.mg5-spec-table{width:100%}\n.mg5-spec-row{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(180px,.55fr);gap:32px;align-items:start;padding:13px 0;border-bottom:1px solid #ededed;font-size:14px;line-height:1.45}\n.mg5-spec-row:last-child{border-bottom:0}\n.mg5-spec-label{display:flex;align-items:flex-start;gap:11px;color:#3b3b3b}\n.mg5-spec-label i{flex:0 0 auto;margin-top:2px;color:#28a745;font-size:16px}\n.mg5-spec-value{color:#171717;font-weight:600;text-align:left}\n.mg5-spec-actions{display:flex;justify-content:center;gap:18px;padding:0 20px 96px}\n.mg5-spec-actions a{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:190px;padding:13px 24px;border:1px solid #171717;border-radius:999px;color:#171717!important;font-weight:600;text-decoration:none!important}\n.mg5-spec-actions__primary{border-color:#d71920!important;background:#d71920;color:#fff!important}\n.mg5-price-section{padding:84px clamp(20px,7vw,104px) 94px;background:#f5f5f5;color:#171717}\n.mg5-price-section h2,.mg5-see-heading h2{margin:0;font-size:40px;line-height:1.15}\n.mg5-price-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:42px;margin:64px auto 38px;max-width:1120px}\n.mg5-price-grid article{min-width:0}\n.mg5-price-grid h3{margin:0 0 14px;font-size:18px;font-weight:500}\n.mg5-price-grid strong{display:block;font-size:clamp(22px,2.1vw,30px);font-weight:700;white-space:nowrap}\n.mg5-price-note{margin:0 0 12px;font-size:14px;font-weight:600}\n.mg5-price-disclaimer{max-width:780px;margin:0 auto;color:#686868;font-size:12px;line-height:1.55}\n.mg5-see-heading{padding:92px 20px 46px;background:#fff}\n#mg5-color-selector{display:grid;grid-template-columns:minmax(230px,25%) minmax(0,75%);align-items:center;column-gap:28px}\n#mg5-color-selector .pb-product-color-selector__header{grid-column:1;margin:0;padding:0 0 0 clamp(24px,5.5vw,86px)}\n#mg5-color-selector .pb-product-color-selector__body{display:contents}\n#mg5-color-selector .pb-product-color-selector__stage{grid-column:2;width:100%;background:transparent}\n#mg5-color-selector .pb-product-color-selector__list{grid-column:1 / -1;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin-top:34px;padding:0 clamp(22px,6vw,92px)}\n#mg5-color-selector .pb-product-color-selector__item{min-width:0!important}\n#mg5-color-selector .pb-product-color-selector__swatch{border:1px solid rgba(0,0,0,.16)}\n#mg5-color-selector .pb-product-color-selector__copy{align-items:center}\n#mg5-color-selector .pb-product-color-selector__item.is-active .pb-product-color-selector__copy strong{color:#171717}\n.mg5-service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:50px;padding:108px clamp(28px,9vw,180px) 128px;background:#fff}\n.mg5-service-card{display:flex;min-width:0;flex-direction:column;align-items:center;color:#111!important;text-decoration:none!important}\n.mg5-service-card img{width:56px;height:56px;margin-bottom:18px;object-fit:contain}\n.mg5-service-card h3{margin:0 0 12px;font-size:22px;font-weight:500;line-height:1.25}\n.mg5-service-card span{display:inline-flex;align-items:center;gap:10px;color:#111;font-size:15px;font-weight:600;text-decoration:underline;text-underline-offset:3px}\n@media(max-width:900px){\n  #mg5-specification,#mg5-price,#mg5-colors,#mg5-services{scroll-margin-top:132px}\n  #mg5-specification .pb-feature-showcase__split--hero{min-height:320px}\n  #mg5-specification .pb-feature-showcase__metrics{gap:36px}\n  #mg5-spec-tabs{width:min(100% - 30px,950px)}\n  .mg5-price-grid{gap:22px}\n  #mg5-color-selector{grid-template-columns:minmax(190px,30%) minmax(0,70%)}\n  #mg5-color-selector .pb-product-color-selector__header{padding-left:28px}\n  .mg5-service-grid{padding-inline:54px}\n}\n@media(max-width:767px){\n  #mg5-specification .pb-feature-showcase__container{padding-top:58px}\n  #mg5-specification .pb-feature-showcase__hero-heading{margin-bottom:24px}\n  #mg5-specification .pb-feature-showcase__split--hero{min-height:0}\n  #mg5-specification .pb-feature-showcase__metrics{grid-template-columns:repeat(2,minmax(0,1fr));width:100%!important;gap:18px}\n  #mg5-specification .pb-feature-showcase__metric-value{font-size:clamp(38px,13vw,58px)!important}\n  #mg5-spec-tabs{width:calc(100% - 24px);padding-bottom:48px}\n  #mg5-spec-tabs .el-widget-tabs__content{padding-top:18px}\n  #mg5-spec-tabs .el-widget-accordion__summary{min-height:54px;padding:14px 18px}\n  .mg5-spec-row{grid-template-columns:1fr;gap:5px;padding:12px 0}\n  .mg5-spec-value{padding-left:27px}\n  .mg5-spec-actions{flex-direction:column;align-items:stretch;padding:0 18px 66px}\n  .mg5-spec-actions a{width:100%;box-sizing:border-box}\n  .mg5-price-section{padding:62px 18px 70px}\n  .mg5-price-section h2,.mg5-see-heading h2{font-size:34px}\n  .mg5-price-grid{grid-template-columns:1fr;gap:30px;margin:46px auto 32px}\n  .mg5-price-grid strong{white-space:normal}\n  .mg5-see-heading{padding:66px 18px 34px}\n  #mg5-color-selector{display:block;padding:30px 12px 42px!important}\n  #mg5-color-selector .pb-product-color-selector__header{margin-bottom:22px;padding:0}\n  #mg5-color-selector .pb-product-color-selector__body{display:flex}\n  #mg5-color-selector .pb-product-color-selector__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:20px;padding:0}\n  #mg5-color-selector .pb-product-color-selector__item:last-child{grid-column:1 / -1}\n  .mg5-service-grid{grid-template-columns:1fr;gap:58px;padding:72px 24px 82px}\n}\n.pb-canvas.is-tablet #mg5-spec-tabs{width:min(100% - 30px,950px)}\n.pb-canvas.is-tablet #mg5-color-selector{grid-template-columns:minmax(190px,30%) minmax(0,70%)}\n.pb-canvas.is-tablet .mg5-service-grid{padding-inline:54px}\n.pb-canvas.is-mobile #mg5-specification .pb-feature-showcase__split--hero{min-height:0}\n.pb-canvas.is-mobile #mg5-spec-tabs{width:calc(100% - 24px);padding-bottom:48px}\n.pb-canvas.is-mobile .mg5-spec-row{grid-template-columns:1fr;gap:5px}\n.pb-canvas.is-mobile .mg5-spec-value{padding-left:27px}\n.pb-canvas.is-mobile .mg5-spec-actions{flex-direction:column;align-items:stretch;padding:0 18px 66px}\n.pb-canvas.is-mobile .mg5-price-grid{grid-template-columns:1fr}\n.pb-canvas.is-mobile #mg5-color-selector{display:block;padding:30px 12px 42px!important}\n.pb-canvas.is-mobile #mg5-color-selector .pb-product-color-selector__header{margin-bottom:22px;padding:0}\n.pb-canvas.is-mobile #mg5-color-selector .pb-product-color-selector__body{display:flex}\n.pb-canvas.is-mobile #mg5-color-selector .pb-product-color-selector__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:20px;padding:0}\n.pb-canvas.is-mobile .mg5-service-grid{grid-template-columns:1fr;gap:58px;padding:72px 24px 82px}\n"
+}

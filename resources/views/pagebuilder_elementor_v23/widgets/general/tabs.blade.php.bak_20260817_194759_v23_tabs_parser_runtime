@@ -166,9 +166,9 @@
 	$advanced = app(\App\Support\PageBuilderElementorV23\WidgetAdvancedStyleResolver::class)->resolve($settings, $nodeId, request());
 	$rootClasses = array_values(array_filter(array_unique(array_merge([
 		'el-widget-tabs',
-		'is-direction-' . $direction,
-		'is-breakpoint-' . $breakpoint,
-		!empty($settings['horizontalScroll']) ? 'is-scroll-enabled' : '',
+		'el-widget-tabs--' . $direction,
+		'el-widget-tabs--breakpoint-' . $breakpoint,
+		!empty($settings['horizontalScroll']) ? 'el-widget-tabs--scroll' : '',
 		$justify === 'stretch' ? 'is-justify-stretch' : '',
 		'align-title-' . $align,
 	], $advanced['classes']))));
@@ -176,7 +176,7 @@
 	$mediaRules .= '@media(max-width:767px){#' . $advanced['id'] . '{' . $rootVariables('Mobile') . '}}';
 @endphp
 <div id="{{ $advanced['id'] }}" class="{{ implode(' ', $rootClasses) }}" style="{{ $rootVariables() }}" data-tabs-widget data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach>
-	<div class="el-widget-tabs__nav el-tabs-nav" role="tablist" data-tabs-nav style="@if($width !== '')--pb-tabs-width:{{ $width }};@endif">
+	<div class="el-widget-tabs__nav el-tabs-nav" role="tablist" style="@if($width !== '')--pb-tabs-width:{{ $width }};@endif">
 		@foreach($items as $index => $item)
 			@php
 				$itemId=(string)($item['id']??'tab-'.$index);$selected=$itemId===$activeId;$bindings=is_array($item['dynamicBindings']??null)?$item['dynamicBindings']:[];
@@ -187,29 +187,24 @@
 				$iconSource=in_array($item['iconSource']??'', ['none','library','svg'], true)?$item['iconSource']:(trim((string)($item['iconClass']??''))!==''?'library':'none');
 				$iconClass=$iconSource==='library'?trim((string)($item['iconClass']??'')):'';$iconSvg=$iconSource==='svg'?$sanitizeSvg($item['iconSvg']??''):'';$hasIcon=$iconClass!==''||$iconSvg!=='';
 			@endphp
-			<button id="{{ $tabId }}" type="button" class="el-tabs-nav-item el-widget-tabs__tab{{ $selected?' is-active':'' }}{{ $hasIcon ? ' has-icon' : '' }}" role="tab" aria-selected="{{ $selected?'true':'false' }}" aria-controls="{{ $panelId }}" tabindex="{{ $selected?'0':'-1' }}" data-tab-id="{{ $itemId }}" data-tab-target="{{ $itemId }}">
+			<button id="{{ $tabId }}" class="el-tabs-nav-item el-widget-tabs__tab{{ $selected?' is-active':'' }}{{ $hasIcon ? ' has-icon' : '' }}" role="tab" aria-selected="{{ $selected?'true':'false' }}" aria-controls="{{ $panelId }}" data-tab-id="{{ $itemId }}" data-tab-target="{{ $itemId }}">
 				@if($iconSvg !== '')<img class="el-widget-tabs__icon-svg" src="data:image/svg+xml;base64,{{ base64_encode($iconSvg) }}" alt="" aria-hidden="true">@elseif($iconClass !== '')<i class="{{ e($iconClass) }}" aria-hidden="true"></i>@endif
 				<span>{{ $resolvedTitle }}</span>
 			</button>
 		@endforeach
 	</div>
-	<div class="el-tabs-content el-widget-tabs__accordion">
+	<div class="el-tabs-content">
 		@foreach($items as $index => $item)
 			@php
 				$itemId=(string)($item['id']??'tab-'.$index);$selected=$itemId===$activeId;$bindings=is_array($item['dynamicBindings']??null)?$item['dynamicBindings']:[];
 				$resolvedCssId=$dynamicResolver->resolve('cssId',$item['cssId']??'',$bindings,$dynamicContext);$customTabId=trim(preg_replace('/[^A-Za-z0-9_\-]/','-', (string)$resolvedCssId),'-');
 				$tabId=$customTabId!==''?$customTabId:$advanced['id'].'-tab-'.preg_replace('/[^A-Za-z0-9_\-]/','-',$itemId);$panelId=$advanced['id'].'-panel-'.preg_replace('/[^A-Za-z0-9_\-]/','-',$itemId);
 			@endphp
-			<div class="el-widget-tabs__accordion-item">
-				<button type="button" class="el-widget-tabs__tab el-widget-tabs__accordion-title{{ $selected?' is-active':'' }}{{ $hasIcon ? ' has-icon' : '' }}" aria-controls="{{ $panelId }}" aria-expanded="{{ $selected?'true':'false' }}" data-tab-id="{{ $itemId }}" data-tab-target="{{ $itemId }}" data-tab-accordion-target="{{ $itemId }}">
-					@if($iconSvg !== '')<img class="el-widget-tabs__icon-svg" src="data:image/svg+xml;base64,{{ base64_encode($iconSvg) }}" alt="" aria-hidden="true">@elseif($iconClass !== '')<i class="{{ e($iconClass) }}" aria-hidden="true"></i>@endif
-					<span>{{ $resolvedTitle }}</span>
-				</button>
-				<div id="{{ $panelId }}" class="el-tabs-panel el-widget-tabs__pane el-widget-tabs__pane--accordion{{ $selected?' is-active':'' }}" role="tabpanel" aria-labelledby="{{ $tabId }}" data-tab-panel="{{ $itemId }}" @if(!$selected) hidden @endif>
-					@foreach(($item['children'] ?? []) as $child) @include('pagebuilder_elementor_v23.partials.render_node',['node'=>$child]) @endforeach
-				</div>
+			<div id="{{ $panelId }}" class="el-tabs-panel el-widget-tabs__pane{{ $selected?' is-active':'' }}" role="tabpanel" aria-labelledby="{{ $tabId }}" data-tab-panel="{{ $itemId }}" @if(!$selected) hidden @endif>
+				@foreach(($item['children'] ?? []) as $child) @include('pagebuilder_elementor_v23.partials.render_node',['node'=>$child]) @endforeach
 			</div>
 		@endforeach
 	</div>
 </div>
 <style>{!! $mediaRules . $advanced['css'] !!}</style>
+<script>(function(){const root=document.getElementById(@json($advanced['id']));if(!root||root.dataset.tabsBound==='1')return;root.dataset.tabsBound='1';root.addEventListener('click',function(event){const button=event.target.closest('[data-tab-target]');if(!button||!root.contains(button))return;const target=button.getAttribute('data-tab-target');root.querySelectorAll('[data-tab-target]').forEach(el=>{const active=el.getAttribute('data-tab-target')===target;el.classList.toggle('is-active',active);el.setAttribute('aria-selected',active?'true':'false');});root.querySelectorAll('[data-tab-panel]').forEach(el=>{const active=el.getAttribute('data-tab-panel')===target;el.classList.toggle('is-active',active);el.hidden=!active;});});})();</script>

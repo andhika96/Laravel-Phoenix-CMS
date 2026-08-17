@@ -104,49 +104,6 @@ The browser-rendered prototype and corrected production screenshot were opened t
 
 final result: passed
 
-# Design QA - MG 5 GT Full Specifications Extension
-
-Date: 2026-08-17
-
-## Comparison target
-
-- Official source: `https://www.mgmotor.id/mgmodels/mg5gt`.
-- User CTA reference: `C:\Users\aruna\AppData\Local\Temp\codex-clipboard-defa4ca6-6878-4aaf-be54-6e2b25ce27f1.png`.
-- Public runtime: `https://laravel-13-phoenix.aruna/pages/mg-5-gt-showcase-v23`.
-- Editor runtime: `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/edit/mg-5-gt-showcase-v23`.
-- Same-viewport comparison artifacts: `storage/app/pagebuilder-backups/mg5-spec-extension-audit_20260817/comparison-spec.png`, `comparison-tabs.png`, and `comparison-cta.png`.
-- Viewport: 1280 x 720 CSS pixels for the official/runtime pairs. The supplied CTA screenshot is 1918 x 390 and was used as an additional composition reference.
-
-The official MG states and Page Builder v2.3 states were captured at matching viewport sizes and aligned scroll positions, then placed together in the same comparison images. The official site's global header, footer, support chat, and floating contact controls are outside the page-body builder scope.
-
-## Verified visual and runtime states
-
-- `Full Specifications` uses the official yellow MG 5 GT asset, two metric blocks, title, and subtitle in the existing Feature Showcase widget.
-- Activate, Ignite, and Magnify render all seven official categories and 85 rows per variant. Tabs switch state correctly and each variant uses a one-open-at-a-time Accordion.
-- Accordion headers use the official light-gray pill treatment; expanded specification rows retain the green status icon, bilingual labels, values, and a contained white panel.
-- Price renders the three official variants and prices plus both official notes.
-- Product Color Selector uses all five official MG assets and swatches. Selecting Flare Red changed the selected tab, visible panel, and image URL; exactly one panel and one check indicator remained visible.
-- The final CTA row uses the official Compass, Headset, and ChatsCircle SVG assets and the official dealer, care, and join links.
-- Canvas Desktop and Mobile states render all added sections. Mobile computed one-column price/services layouts, a two-column color list, and a stacked specifications hero.
-- Frontend console reported zero entries. Editor console reported only the normal Page Builder load message and no warning or error.
-
-## Corrections made during visual QA
-
-- Forced the new root widgets to occupy full flex rows so Feature Showcase, Tabs, price, color selector, and CTA no longer shrink beside sibling widgets.
-- Centered the Tabs navigation and content at a 950px maximum width.
-- Restored Product Color Selector `hidden` behavior and forced its desktop grid layout, removing duplicate check indicators and the overlaid empty-image placeholder.
-- Added explicit gray Accordion summary styling and expanded-panel border treatment after the widget-local stylesheet won the initial cascade.
-- Preserved Canvas-specific Tablet/Mobile rules so the editor preview follows the frontend layout.
-
-## Boundaries
-
-- The page record was intentionally saved because this task explicitly requested continuing the existing published MG page.
-- The official MG support chat overlays appear in source captures but were not copied.
-- No footer was added because the requested endpoint is the CTA section shown by the user.
-- The final accordion correction was rechecked through computed runtime styles after a later browser screenshot capture timed out; earlier same-viewport screenshots and the final DOM/style checks remain available in the audit folder.
-
-final result: passed
-
 # Design QA - Grid Layout Responsive Select
 
 Date: 2026-08-15

@@ -253,18 +253,14 @@ class PageBuilderElementorV23Controller extends Controller
 			return $this->missingOrVersionConflict($idOrSlug, false);
 		}
 
-		return $this->renderFrontendPage($pageData);
-	}
+		$nodes = is_array($pageData->vars)
+			? $pageData->vars
+			: (json_decode($pageData->vars ?? '[]', true) ?? []);
 
-	public function showPublishedPage(string $uri)
-	{
-		$pageData = Page_Builder::query()
-			->where('editor_version', Page_Builder::EDITOR_VERSION_V23)
-			->where('status', 'publish')
-			->where('uri', $uri)
-			->firstOrFail();
-
-		return $this->renderFrontendPage($pageData);
+		return view('pagebuilder_elementor_v23.frontend_renderer', [
+			'pageData' => $pageData,
+			'nodes'    => $nodes,
+		]);
 	}
 
 	public function submitForm(Request $request, $idOrSlug, $nodeId, FormSubmissionHandler $handler)
@@ -400,18 +396,6 @@ class PageBuilderElementorV23Controller extends Controller
 		}
 
 		abort(409, 'This page belongs to a different editor version.');
-	}
-
-	private function renderFrontendPage(Page_Builder $pageData)
-	{
-		$nodes = is_array($pageData->vars)
-			? $pageData->vars
-			: (json_decode($pageData->vars ?? '[]', true) ?? []);
-
-		return view('pagebuilder_elementor_v23.frontend_renderer', [
-			'pageData' => $pageData,
-			'nodes'    => $nodes,
-		]);
 	}
 
 	private function normalizeLayoutPayload($layout): string
