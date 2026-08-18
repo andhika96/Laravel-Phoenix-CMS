@@ -96,6 +96,16 @@
     $heroDesktopImage = $heroSafeMedia($heroResponsive('imageUrl', '', ''));
     $heroTabletImage = $heroSafeMedia($heroResponsive('imageUrl', 'Tablet', $heroDesktopImage)) ?: $heroDesktopImage;
     $heroMobileImage = $heroSafeMedia($heroResponsive('imageUrl', 'Mobile', $heroTabletImage)) ?: $heroTabletImage;
+    $heroImageLayout = static function ($suffix) use ($heroResponsive, $heroEnum) {
+        return $heroEnum(strtolower(trim((string) $heroResponsive('imageLayout', $suffix, 'cover'))), ['cover', 'natural'], 'cover');
+    };
+    $heroImageLayoutDesktop = $heroImageLayout('');
+    $heroImageLayoutTablet = $heroImageLayout('Tablet');
+    $heroImageLayoutMobile = $heroImageLayout('Mobile');
+    $heroNaturalClasses = [];
+    if ($heroImageLayoutDesktop === 'natural') $heroNaturalClasses[] = 'is-natural-image is-natural-image-desktop';
+    if ($heroImageLayoutTablet === 'natural') $heroNaturalClasses[] = 'is-natural-image-tablet';
+    if ($heroImageLayoutMobile === 'natural') $heroNaturalClasses[] = 'is-natural-image-mobile';
     $heroTitleTag = $heroEnum($heroSettings['titleTag'] ?? 'h2', ['h1','h2','h3','h4','h5','h6','div'], 'h2');
     $heroTitleTagFontSizes = ['h1' => '56px', 'h2' => '48px', 'h3' => '40px', 'h4' => '32px', 'h5' => '24px', 'h6' => '18px', 'div' => '48px'];
     $heroTitleTagFontSizesTablet = ['h1' => '46px', 'h2' => '38px', 'h3' => '32px', 'h4' => '28px', 'h5' => '22px', 'h6' => '18px', 'div' => '38px'];
@@ -133,7 +143,7 @@
 @media(max-width:767px){#{{ $heroId }}{min-height:{{ $heroLength($heroResponsive('minHeight','Mobile','680px'),'680px') }};--hero-content-gap:{{ $heroLength($heroResponsive('contentGap','Mobile','10px'),'10px') }};--hero-title-size:{{ $heroLength($heroTitleFontSizeMode === 'custom' ? $heroResponsive('titleFontSize','Mobile','34px') : ($heroTitleTagFontSizesMobile[$heroTitleTag] ?? '34px'),'34px') }};--hero-subtitle-size:{{ $heroLength($heroResponsive('subtitleFontSize','Mobile','17px'),'17px') }}}#{{ $heroId }} .pb-hero-banner__media{object-fit:{{ $heroEnum($heroResponsive('objectFit','Mobile','cover'),['cover','contain','fill'],'cover') }};object-position:{{ $heroObjectPosition('Mobile','center top') }}}#{{ $heroId }} .pb-hero-banner__buttons{ {{ $heroButtonLayout('Mobile') }} }@if($heroMode==='grouped')#{{ $heroId }} .pb-hero-banner__content{ {{ $heroPosition('group','Mobile') }} }@else @foreach(['title','subtitle','buttons'] as $target)#{{ $heroId }} .pb-hero-banner__block--{{ $target }}{ {{ $heroPosition($target,'Mobile') }} }@endforeach @endif}
 </style>
 
-<section id="{{ $heroId }}" class="pb-hero-banner is-{{ $heroMode }}" data-hero-banner style="{{ $heroRootStyle }}">
+<section id="{{ $heroId }}" class="pb-hero-banner is-{{ $heroMode }}{{ $heroNaturalClasses ? ' ' . implode(' ', $heroNaturalClasses) : '' }}" data-hero-banner data-hero-image-layout="{{ $heroImageLayoutDesktop }}" style="{{ $heroRootStyle }}">
     @if($heroDesktopImage)
         <picture class="pb-hero-banner__picture">
             @if($heroMobileImage && $heroMobileImage !== $heroTabletImage)<source media="(max-width:767px)" srcset="{{ $heroMobileImage }}">@endif

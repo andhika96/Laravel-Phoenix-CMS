@@ -212,6 +212,27 @@ test('Hero Slider maps basic pagination alignment to the direction edge', () => 
     assert.equal(vertical.pagination.getAttribute('data-position'), 'bottom-right');
 });
 
+test('Hero Slider lets a Natural Image slide use its intrinsic ratio below the configured minimum height', () => {
+    const image = node();
+    Object.assign(image, { tagName: 'IMG', naturalWidth: 1200, naturalHeight: 500 });
+    const slide = node({ 'data-hero-image-layout': 'natural' });
+    slide.querySelector = (selector) => selector.includes('data-hero-video') ? null : (selector.includes('img,video,iframe') ? image : null);
+    const fixture = sliderRoot({
+        direction: 'horizontal',
+        autoplay: false,
+        heightMode: 'adaptive',
+        minHeight: '420px',
+        slides: [{ imageLayout: 'natural', videoAspectRatio: '16/9' }],
+    }, [slide]);
+    fixture.root.clientWidth = 600;
+    fixture.root.getBoundingClientRect = () => ({ width: 600 });
+
+    runtime.initHeroSlider(fixture.root);
+
+    assert.equal(fixture.root.style.height, '250px');
+    assert.equal(fixture.root.style.minHeight, '0px');
+});
+
 test('Hero Slider pauses inactive native video and resumes the preserved currentTime', async () => {
     const firstVideo = node();
     const secondVideo = node();

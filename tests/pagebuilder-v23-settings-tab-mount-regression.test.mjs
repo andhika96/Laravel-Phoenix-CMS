@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = 'D:/Laragon/www/laravel-13-phoenix';
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 const settingsSources = {
   'Hero Slider': readFileSync(

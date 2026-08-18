@@ -196,7 +196,7 @@
     };
     $defaultSlide = function ($index) {
         return [
-            'id' => 'hero-slider-slide-' . $index, 'mediaType' => 'image', 'imageUrl' => '', 'imageUrlTablet' => '', 'imageUrlMobile' => '', 'imageAlt' => '', 'imageAltTablet' => '', 'imageAltMobile' => '', 'objectFit' => 'cover', 'objectPosition' => 'center center',
+            'id' => 'hero-slider-slide-' . $index, 'mediaType' => 'image', 'imageUrl' => '', 'imageUrlTablet' => '', 'imageUrlMobile' => '', 'imageAlt' => '', 'imageAltTablet' => '', 'imageAltMobile' => '', 'imageLayout' => 'cover', 'imageLayoutTablet' => '', 'imageLayoutMobile' => '', 'objectFit' => 'cover', 'objectPosition' => 'center center',
             'videoProvider' => 'self_hosted', 'videoUrl' => '', 'videoPoster' => '', 'videoPosterTablet' => '', 'videoPosterMobile' => '', 'videoAutoplay' => 'inherit', 'videoLoop' => false, 'videoControls' => true, 'videoMuted' => true, 'videoResume' => true, 'videoAspectRatio' => '16/9',
             'title' => '', 'subtitle' => '', 'titleTag' => 'h2', 'subtitleTag' => 'p', 'showTitle' => true, 'showSubtitle' => true, 'showButtons' => true, 'contentOrder' => ['title','subtitle','buttons'], 'positioningMode' => 'grouped', 'slideTitleFontSizeMode' => 'auto',
             'groupAnchor' => 'bottom-left', 'groupX' => '8%', 'groupY' => '86%', 'groupWidth' => '70%', 'groupAlign' => 'left', 'groupAnchorMobile' => 'bottom-center', 'groupXMobile' => '50%', 'groupYMobile' => '90%', 'groupWidthMobile' => '84%', 'groupAlignMobile' => 'center',
@@ -239,6 +239,9 @@
             'imageAlt' => trim((string) ($slide['imageAlt'] ?? '')),
             'imageAltTablet' => trim((string) ($slide['imageAltTablet'] ?? '')),
             'imageAltMobile' => trim((string) ($slide['imageAltMobile'] ?? '')),
+            'imageLayout' => $enum(strtolower(trim((string) ($slide['imageLayout'] ?? 'cover'))), ['cover', 'natural'], 'cover'),
+            'imageLayoutTablet' => $enum(strtolower(trim((string) ($slide['imageLayoutTablet'] ?? ''))), ['', 'cover', 'natural'], ''),
+            'imageLayoutMobile' => $enum(strtolower(trim((string) ($slide['imageLayoutMobile'] ?? ''))), ['', 'cover', 'natural'], ''),
             'positioningMode' => ($slide['positioningMode'] ?? 'grouped') === 'independent' ? 'independent' : 'grouped',
             'buttons' => array_slice(array_values(array_filter((array) ($slide['buttons'] ?? []), 'is_array')), 0, 3),
             'videoProvider' => $provider,
@@ -256,7 +259,7 @@
     }
     $runtimeSlides = array_map(function ($slide) {
         return [
-            'id' => $slide['id'], 'mediaType' => $slide['mediaType'], 'videoProvider' => $slide['videoProvider'], 'videoUrl' => $slide['videoUrl'],
+            'id' => $slide['id'], 'mediaType' => $slide['mediaType'], 'imageLayout' => $slide['imageLayout'], 'imageLayoutTablet' => $slide['imageLayoutTablet'], 'imageLayoutMobile' => $slide['imageLayoutMobile'], 'videoProvider' => $slide['videoProvider'], 'videoUrl' => $slide['videoUrl'],
             'videoAutoplay' => $slide['videoAutoplay'], 'videoLoop' => $slide['videoLoop'], 'videoMuted' => $slide['videoMuted'], 'videoResume' => $slide['videoResume'], 'videoAspectRatio' => $slide['videoAspectRatio'], 'videoPoster' => $slide['videoPoster'], 'videoPosterTablet' => $slide['videoPosterTablet'], 'videoPosterMobile' => $slide['videoPosterMobile'],
         ];
     }, $normalizedSlides);
@@ -342,7 +345,7 @@
                     }
                     $imageFallback = $slide['imageUrl'] ?: ($slide['imageUrlTablet'] ?: $slide['imageUrlMobile']);
                 @endphp
-                <article class="pb-hero-slider__slide {{ $slideMode === 'independent' ? 'is-independent' : 'is-grouped' }}{{ $index === 0 ? ' is-active' : '' }}" data-hero-slide data-index="{{ $index }}" data-video-autoplay="{{ $autoplaySlide ? 'true' : 'false' }}" data-video-provider="{{ $isVideo ? $provider : '' }}" data-video-duration-supported="{{ $durationSupported ? 'true' : 'false' }}" data-video-resume="{{ ($slide['videoResume'] && $videoResume) ? 'true' : 'false' }}" data-video-loop="{{ ($slide['videoLoop'] || $videoLoop) ? 'true' : 'false' }}" data-video-muted="{{ $muted ? 'true' : 'false' }}" data-video-poster="{{ e($slide['videoPoster']) }}" data-video-poster-tablet="{{ e($slide['videoPosterTablet']) }}" data-video-poster-mobile="{{ e($slide['videoPosterMobile']) }}" aria-hidden="{{ $index === 0 ? 'false' : 'true' }}" @if($slideStyle !== '') style="{{ $slideStyle }}" @endif>
+                <article class="pb-hero-slider__slide {{ $slideMode === 'independent' ? 'is-independent' : 'is-grouped' }}{{ $index === 0 ? ' is-active' : '' }}" data-hero-slide data-index="{{ $index }}" data-hero-image-layout="{{ $slide['imageLayout'] }}" data-hero-image-layout-tablet="{{ $slide['imageLayoutTablet'] }}" data-hero-image-layout-mobile="{{ $slide['imageLayoutMobile'] }}" data-video-autoplay="{{ $autoplaySlide ? 'true' : 'false' }}" data-video-provider="{{ $isVideo ? $provider : '' }}" data-video-duration-supported="{{ $durationSupported ? 'true' : 'false' }}" data-video-resume="{{ ($slide['videoResume'] && $videoResume) ? 'true' : 'false' }}" data-video-loop="{{ ($slide['videoLoop'] || $videoLoop) ? 'true' : 'false' }}" data-video-muted="{{ $muted ? 'true' : 'false' }}" data-video-poster="{{ e($slide['videoPoster']) }}" data-video-poster-tablet="{{ e($slide['videoPosterTablet']) }}" data-video-poster-mobile="{{ e($slide['videoPosterMobile']) }}" aria-hidden="{{ $index === 0 ? 'false' : 'true' }}" @if($slideStyle !== '') style="{{ $slideStyle }}" @endif>
                     <div class="pb-hero-slider__media">
                         @if(!$isVideo)
                             @if($imageFallback !== '')

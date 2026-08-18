@@ -123,4 +123,23 @@ class PageBuilderElementorV23HeroBannerWidgetTest extends TestCase
 
         $this->assertStringContainsString('justify-content:flex-start;align-items:initial', $overridden);
     }
+
+    public function test_frontend_renderer_outputs_natural_image_layout_with_its_image_element(): void
+    {
+        $module = config('pagebuilder_elementor_v23_widgets.hero_banner');
+        $html = view($module['view'], [
+            'node' => [
+                'id' => 'hero-natural-image',
+                'type' => 'hero_banner',
+                'settings' => [
+                    'imageUrl' => '/assets/hero-natural.webp',
+                    'imageLayout' => 'natural',
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('is-natural-image', $html);
+        $this->assertStringContainsString('<picture class="pb-hero-banner__picture">', $html);
+        $this->assertStringContainsString('src="/assets/hero-natural.webp"', $html);
+    }
 }

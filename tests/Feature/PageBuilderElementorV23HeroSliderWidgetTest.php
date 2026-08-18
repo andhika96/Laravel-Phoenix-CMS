@@ -209,4 +209,25 @@ class PageBuilderElementorV23HeroSliderWidgetTest extends TestCase
         $this->assertStringContainsString('--hero-slider-pagination-offset-y:8px', $html);
         $this->assertStringContainsString('&amp;quot;paginationOffsetXHorizontal&amp;quot;:&amp;quot;-12px&amp;quot;', $html);
     }
+
+    public function test_frontend_renderer_exposes_natural_image_layout_for_an_image_slide(): void
+    {
+        $module = config('pagebuilder_elementor_v23_widgets.hero_slider');
+        $html = view($module['view'], [
+            'node' => [
+                'id' => 'hero-slider-natural-image',
+                'type' => 'hero_slider',
+                'settings' => [
+                    'slides' => [[
+                        'mediaType' => 'image',
+                        'imageUrl' => '/assets/hero-natural.webp',
+                        'imageLayout' => 'natural',
+                    ]],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('data-hero-image-layout="natural"', $html);
+        $this->assertStringContainsString('&amp;quot;imageLayout&amp;quot;:&amp;quot;natural&amp;quot;', $html);
+    }
 }

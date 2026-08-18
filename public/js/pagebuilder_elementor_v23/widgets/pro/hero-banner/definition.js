@@ -38,6 +38,9 @@
         imageAlt: 'Hero banner image',
         imageAltTablet: '',
         imageAltMobile: '',
+        imageLayout: 'cover',
+        imageLayoutTablet: '',
+        imageLayoutMobile: '',
         objectFit: 'cover',
         objectFitTablet: '',
         objectFitMobile: '',
@@ -139,6 +142,11 @@
             if (!['', 'inherit', 'custom'].includes(settings[key])) settings[key] = '';
         });
         ['showTitle', 'showSubtitle', 'showButtons'].forEach((key) => { settings[key] = settings[key] !== false; });
+        ['', 'Tablet', 'Mobile'].forEach((suffix) => {
+            const key = 'imageLayout' + suffix;
+            const value = String(settings[key] ?? '').trim().toLowerCase();
+            settings[key] = ['cover', 'natural'].includes(value) ? value : (suffix ? '' : 'cover');
+        });
         return node;
     }
 

@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = 'D:/Laragon/www/laravel-13-phoenix';
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (relative) => readFileSync(`${root}/${relative}`, 'utf8');
 
 const app = read('public/js/pagebuilder_elementor_v23/app.js');

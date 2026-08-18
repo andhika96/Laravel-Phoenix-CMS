@@ -1371,6 +1371,18 @@
 			if (suffix && config[base + suffix] !== '' && config[base + suffix] != null) return config[base + suffix];
 			return config[base] === '' || config[base] == null ? fallback : config[base];
 		}
+		function slideResponsiveValue(slideConfig, base, fallback = '') {
+			const width = Number(window.innerWidth || document.documentElement?.clientWidth || 0);
+			const suffix = width <= 767 ? 'Mobile' : (width <= 1024 ? 'Tablet' : '');
+			const keys = suffix === 'Mobile' ? [base + 'Mobile', base + 'Tablet', base] : (suffix === 'Tablet' ? [base + 'Tablet', base] : [base]);
+			for (const key of keys) if (slideConfig?.[key] !== '' && slideConfig?.[key] != null) return slideConfig[key];
+			return fallback;
+		}
+		function imageLayoutFor(index) {
+			const slideConfig = config.slides?.[index] || {};
+			if (String(slideConfig.mediaType || 'image') !== 'image') return 'cover';
+			return slideResponsiveValue(slideConfig, 'imageLayout', 'cover') === 'natural' ? 'natural' : 'cover';
+		}
 		function direction() { return deviceValue('direction', 'horizontal') === 'vertical' ? 'vertical' : 'horizontal'; }
 		function paginationPosition() {
 			const vertical = direction() === 'vertical';
@@ -1495,6 +1507,9 @@
 		function render(index) {
 			active = normalize(index);
 			const currentDirection = direction();
+			const imageLayout = imageLayoutFor(active);
+			root.classList?.toggle('is-natural-image', imageLayout === 'natural');
+			root.setAttribute('data-hero-image-layout', imageLayout);
 			root.setAttribute('data-direction', currentDirection); if (root.dataset) root.dataset.direction = currentDirection;
 			root.setAttribute('aria-orientation', currentDirection);
 			if (track) { track.style.transitionDuration = (prefersReducedMotion() ? 0 : Math.max(0, Number(config.transitionSpeed) || 600)) + 'ms'; track.style.transform = config.transition === 'fade' ? '' : (currentDirection === 'vertical' ? 'translate3d(0,-' + (active * 100) + '%,0)' : 'translate3d(-' + (active * 100) + '%,0,0)'); }
@@ -1512,16 +1527,21 @@
 			stopTimer(); waitingForDuration = false; pauseState(states[active]); active = target; render(active); prepareActive();
 		}
 		function updateHeight() {
-			if (config.heightMode === 'fixed') return;
 			const slide = slides[active]; const state = states[active]; if (!slide) return;
-			const minimum = Number.parseFloat(String(deviceValue('minHeight', '0'))) || 0;
+			const naturalImage = imageLayoutFor(active) === 'natural';
+			if (config.heightMode === 'fixed' && !naturalImage) {
+				root.style.height = deviceValue('fixedHeight', '520px');
+				root.style.minHeight = '';
+				return;
+			}
+			const minimum = naturalImage ? 0 : (Number.parseFloat(String(deviceValue('minHeight', '0'))) || 0);
 			const width = Number(root.clientWidth || root.getBoundingClientRect?.().width || 0); if (!width) return;
 			const media = state?.media || slide.querySelector?.('img,video,iframe');
 			let height = 0;
 			if (media?.tagName === 'IMG' && media.naturalWidth && media.naturalHeight) height = width * media.naturalHeight / media.naturalWidth;
 			if (media?.tagName === 'VIDEO' && media.videoWidth && media.videoHeight) height = width * media.videoHeight / media.videoWidth;
 			if (!height) { const ratio = String(config.slides?.[active]?.videoAspectRatio || '16/9').split('/').map(Number); height = width * ((ratio[1] || 9) / (ratio[0] || 16)); }
-			root.style.transition = prefersReducedMotion() ? 'none' : 'height .3s ease'; root.style.height = Math.max(minimum, Math.round(height)) + 'px';
+			root.style.transition = prefersReducedMotion() ? 'none' : 'height .3s ease'; root.style.minHeight = naturalImage ? '0px' : ''; root.style.height = Math.max(minimum, Math.round(height)) + 'px';
 		}
 		function bindControls() {
 			slides.forEach(function (slide, slideIndex) {

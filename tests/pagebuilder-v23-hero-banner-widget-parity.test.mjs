@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -15,6 +16,7 @@ const config = read('config/pagebuilder_elementor_v23_widgets.php');
 const app = read('public/js/pagebuilder_elementor_v23/app.js');
 const runtime = read('public/js/pagebuilder_elementor_v23/frontend-runtime.js');
 const frontendCss = read('public/assets/css/frontend_elementor.css');
+const frontendV23Css = read('public/assets/css/frontend_elementor_v23.css');
 const editorCss = read('public/assets/css/pagebuilder_elementor_v23.css');
 const prototypeCss = read('mockups/pagebuilder-v23-responsive-hero-prototype/src/styles.css');
 const prototype = read('public/mockups/pagebuilder-editor-redesign-prototype-v2.3.html');
@@ -26,6 +28,23 @@ assert.match(definition, /category:\s*['"]pro['"]/);
 assert.match(definition, /\.slice\(0,\s*3\)/);
 assert.match(definition, /contentOrder/);
 
+const registrations = [];
+vm.runInNewContext(definition, {
+    window: {
+        PageBuilderElementorV23ComplexWidgetRuntime: { image_box: { defaults: () => ({}) } },
+        PageBuilderElementorV23Widgets: { register(widget) { registrations.push(widget); } },
+    },
+});
+assert.equal(registrations.length, 1, 'Hero Banner must register exactly once');
+const bannerWidget = registrations[0];
+assert.equal(bannerWidget.defaults().imageLayout, 'cover');
+const normalizedNaturalLayout = bannerWidget.normalize({
+    settings: { imageLayout: 'unsupported', imageLayoutTablet: 'natural', imageLayoutMobile: 'unsupported' },
+}).settings;
+assert.equal(normalizedNaturalLayout.imageLayout, 'cover');
+assert.equal(normalizedNaturalLayout.imageLayoutTablet, 'natural');
+assert.equal(normalizedNaturalLayout.imageLayoutMobile, '');
+
 assert.match(config, /'hero_banner'\s*=>/);
 assert.match(config, /widgets\/pro\/hero-banner\/definition\.js/);
 assert.match(config, /widgets\/pro\/hero-banner\/Canvas\.vue/);
@@ -35,7 +54,7 @@ assert.match(app, /hero_banner:\s*'Hero Banner'/);
 assert.match(app, /hero_banner:\s*'fas fa-image'/);
 assert.match(app, /video_playlist',\s*'hero_banner'/);
 
-for (const marker of ['Content Behavior', 'Content Order', 'Add Button', 'Action Type', 'Video Source', 'Image Source', 'Responsive Position', 'Button Group Layout', 'Responsive Media', "editor.linkControl", 'editor.chooseMedia', "editor.settingsTab==='style'", "editor.settingsTab==='advanced'"]) {
+for (const marker of ['Content Behavior', 'Content Order', 'Add Button', 'Action Type', 'Video Source', 'Image Source', 'Image Layout', 'Natural Image Ratio', 'Responsive Position', 'Button Group Layout', 'Responsive Media', "editor.linkControl", 'editor.chooseMedia', "editor.settingsTab==='style'", "editor.settingsTab==='advanced'"]) {
   assert.ok(settings.includes(marker), `Settings must include ${marker}`);
 }
 assert.match(settings, /buttons\.length\s*>=\s*3/);
@@ -106,6 +125,8 @@ assert.match(canvas, /responsiveValue\(/);
 assert.match(canvas, /buttonAlignment\(\)\{/);
 assert.match(canvas, /const align=this\.buttonAlignment;/, 'Hero Banner button layout should consume the computed alignment value');
 assert.match(canvas, /target\+'Align'/, 'Hero Banner button alignment should resolve the grouped or independent alignment target dynamically');
+assert.match(canvas, /is-natural-image/);
+assert.match(canvas, /imageLayout\(\)/);
 assert.ok(canvas.includes("percent(value,fallback){const raw=String(value??'').trim();"), 'Hero Banner Canvas must parse percentage position values');
 
 assert.match(blade, /data-hero-banner/);
@@ -115,6 +136,7 @@ assert.match(blade, /alignTarget \. 'Align'/, 'Hero Banner Blade renderer should
 assert.match(blade, /@media\(max-width:1024px\)/);
 assert.match(blade, /@media\(max-width:767px\)/);
 assert.match(frontendCss, /\.pb-hero-banner/);
+assert.match(frontendV23Css, /\.pb-hero-banner\.is-natural-image/);
 assert.match(editorCss, /\.pb-node\.pb-node-hero_banner \[data-pb-interactive="true"\]\s*\{[^}]*pointer-events:\s*auto/s);
 
 assert.match(runtime, /function initHeroBanner\(/);

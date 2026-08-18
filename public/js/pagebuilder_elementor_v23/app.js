@@ -888,6 +888,9 @@
 			activeTabId: '',
 			tabsGap: '8px', tabsGapTablet: '', tabsGapMobile: '',
 			tabsContentDistance: '16px', tabsContentDistanceTablet: '', tabsContentDistanceMobile: '',
+			tabsNavBorderType: 'none',
+			tabsNavBorderWidth: '0px',
+			tabsNavBorderColor: 'transparent',
 			tabsNormalTextColor: '#4f5f78',
 			tabsNormalTextShadow: 'none', tabsNormalTextStrokeWidth: '0px', tabsNormalTextStrokeColor: '#4f5f78', tabsNormalIconColor: '#4f5f78',
 			tabsNormalBackgroundType: 'classic', tabsNormalGradientColorOne: '#f3f5fa', tabsNormalGradientColorTwo: '#ffffff', tabsNormalGradientType: 'linear', tabsNormalGradientAngle: 180, tabsNormalGradientPosition: 'center center',
@@ -3265,7 +3268,11 @@
 				node.settings.activeTabId = node.tabItems[0].id;
 				return node;
 			},
-			normalize: (node) => node,
+			normalize(node) {
+				const normalized = node && typeof node === 'object' ? node : {};
+				normalized.settings = { ...tabsWidgetDefaults(), ...(normalized.settings || {}) };
+				return normalized;
+			},
 		},
 		accordion: {
 			defaults: accordionWidgetDefaults,

@@ -20,6 +20,7 @@ const config = read('config/pagebuilder_elementor_v23_widgets.php');
 const app = read('public/js/pagebuilder_elementor_v23/app.js');
 const runtime = read('public/js/pagebuilder_elementor_v23/frontend-runtime.js');
 const frontendCss = read('public/assets/css/frontend_elementor.css');
+const frontendV23Css = read('public/assets/css/frontend_elementor_v23.css');
 const editorCss = read('public/assets/css/pagebuilder_elementor_v23.css');
 
 assert.ok(definition, 'Hero Slider definition must exist');
@@ -60,6 +61,7 @@ const defaults = widget.defaults();
 assert.equal(widget.type, 'hero_slider');
 assert.ok(Array.isArray(defaults.slides) && defaults.slides.length >= 2);
 assert.equal(defaults.slides[0].mediaType, 'image');
+assert.equal(defaults.slides[0].imageLayout, 'cover');
 assert.equal(defaults.slides[0].videoAutoplay, 'inherit');
 assert.equal(defaults.slides[0].positioningMode, 'grouped');
 assert.equal(defaults.slides[0].titleTag, 'h2');
@@ -120,7 +122,7 @@ const normalizedNode = widget.normalize({
         arrowPosition: 'floating',
         arrowPositionTablet: 'outside',
         slides: [
-            { id: 'image', mediaType: 'image', imageUrl: '/hero.webp' },
+            { id: 'image', mediaType: 'image', imageUrl: '/hero.webp', imageLayout: 'unsupported', imageLayoutTablet: 'natural', imageLayoutMobile: 'unsupported' },
             { id: 'youtube', mediaType: 'video', videoProvider: 'youtube', videoUrl: 'https://youtu.be/demo123' },
             { id: 'unknown', mediaType: 'video', videoProvider: 'unknown-provider', videoUrl: 'https://example.com/embed/demo' },
         ],
@@ -130,6 +132,9 @@ assert.equal(normalizedNode.settings.direction, 'horizontal', 'invalid direction
 assert.equal(normalizedNode.settings.videoDurationMode, 'interval', 'invalid duration mode must use interval fallback');
 assert.equal(normalizedNode.settings.slides[1].videoAutoplay, 'inherit');
 assert.equal(normalizedNode.settings.slides[2].videoProvider, 'embed', 'unknown providers must use generic embed fallback');
+assert.equal(normalizedNode.settings.slides[0].imageLayout, 'cover');
+assert.equal(normalizedNode.settings.slides[0].imageLayoutTablet, 'natural');
+assert.equal(normalizedNode.settings.slides[0].imageLayoutMobile, '');
 assert.equal(normalizedNode.settings.slides.length, 3);
 assert.equal(normalizedNode.settings.position, 'default', 'Advanced Position must default to shared Default');
 assert.equal(normalizedNode.settings.horizontalOrientation, 'left');
@@ -215,7 +220,7 @@ assert.match(app, /hero_slider:\s*'fas fa-photo-video'/);
 assert.match(app, /video_playlist',\s*'hero_banner',\s*'hero_slider'/);
 
 for (const marker of [
-    'Slides', 'Add Slide', 'Media Type', 'Video Provider', 'Video URL', 'Poster Image',
+  'Slides', 'Add Slide', 'Media Type', 'Image Layout', 'Natural Image Ratio', 'Video Provider', 'Video URL', 'Poster Image',
   'Content Behavior', 'Grouped', 'Independent', 'Content Order', 'Responsive Position', 'Button Group Layout',
   'Button Items', 'Action Type', 'Video Popup', 'Image Popup', 'Override Slide Style',
   'Global Video Autoplay', 'Video Duration Mode', 'Video Autoplay Fallback',
@@ -332,6 +337,8 @@ assert.match(canvas, /--hero-slider-arrow-button-size/);
 assert.match(canvas, /arrowPlacement/);
 assert.match(canvas, /--hero-slider-arrow-edge-position/);
 assert.match(canvas, /--hero-slider-arrow-overflow/);
+assert.match(canvas, /is-natural-image/);
+assert.match(canvas, /imageLayout\(slide\)/);
 assert.match(canvas, /\.pb-hero-slider\.pb-hero-slider\{overflow:var\(--hero-slider-arrow-overflow/);
 
 const canvasDescriptor = parse(canvas, { filename: 'HeroSliderCanvas.vue' }).descriptor;
@@ -371,6 +378,12 @@ assert.equal(
     canvasMethods.imageUrl.call(responsiveImageContext, { imageUrl: '', imageUrlTablet: '/hero-tablet.webp', imageUrlMobile: '/hero-mobile.webp' }),
     '/hero-mobile.webp',
     'Mobile canvas must prefer its responsive image even when the desktop Image URL is empty',
+);
+responsiveImageContext.responsiveDevice = 'tablet';
+assert.equal(
+    canvasMethods.imageLayout.call(responsiveImageContext, { imageLayout: 'cover', imageLayoutTablet: 'natural', imageLayoutMobile: '' }),
+    'natural',
+    'Tablet canvas must honor its Natural Image layout override',
 );
 const canvasNavigation = {
     activeIndex: 0,
@@ -413,6 +426,8 @@ assert.match(blade, /player\.vimeo\.com\/video/);
 assert.match(blade, /dailymotion\.com\/embed\/video/);
 assert.match(blade, /playsinline/);
 assert.match(blade, /adaptive/);
+assert.match(blade, /data-hero-image-layout/);
+assert.match(blade, /imageLayout/);
 
 assert.match(runtime, /function initHeroSlider\(/);
 assert.match(runtime, /function loadHeroSliderScript\(/);
@@ -432,6 +447,7 @@ assert.match(runtime, /data-hero-media/);
 assert.match(runtime, /data-position/);
 assert.match(runtime, /data-hero-slider/);
 assert.match(runtime, /initHeroSlider/);
+assert.match(runtime, /data-hero-image-layout/);
 assert.match(runtime, /PageBuilderElementorV23Runtime\s*=\s*Object\.freeze\(\{[^}]*initHeroSlider/s);
 
 assert.match(frontendCss, /\.pb-hero-slider/);
@@ -447,6 +463,7 @@ assert.match(frontendCss, /--hero-slider-arrow-icon-size/);
 assert.match(frontendCss, /--hero-slider-arrow-edge-position/);
 assert.match(frontendCss, /--hero-slider-arrow-overflow/);
 assert.match(frontendCss, /prefers-reduced-motion/);
+assert.match(frontendV23Css, /\.pb-hero-slider/);
 assert.match(editorCss, /\.pb-node\.pb-node-hero_slider \[data-pb-interactive="true"\]/);
 assert.match(editorCss, /\.side-panel\.pb-panel\.left \.v23-properties-section \.pb-widget-settings\.pb-hero-slider-settings/);
 assert.match(editorCss, /\.pb-hero-slider-settings \.pb-media-field\.has-action\s*\{[\s\S]*?display:\s*flex/);

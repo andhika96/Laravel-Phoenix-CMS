@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readdirSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = 'D:/Laragon/www/laravel-13-phoenix/public/js/pagebuilder_elementor_v23/widgets';
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '../public/js/pagebuilder_elementor_v23/widgets');
 
 function findSettingsFiles(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
