@@ -74,7 +74,6 @@
 		cssFilter: '/js/pagebuilder_elementor_v23/widgets/shared/CssFilterControl.vue',
 		textStroke: '/js/pagebuilder_elementor_v23/widgets/shared/TextStrokeControl.vue',
 		textShadow: '/js/pagebuilder_elementor_v23/widgets/shared/TextShadowControl.vue',
-		gridColumnStyle: '/js/pagebuilder_elementor_v23/widgets/shared/GridColumnStyleControls.vue',
 	});
 	const WidgetAdvancedControls = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.advanced));
 	const TypographyControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.typography));
@@ -83,7 +82,6 @@
 	const CssFilterControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.cssFilter));
 	const TextStrokeControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.textStroke));
 	const TextShadowControl = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.textShadow));
-	const GridColumnStyleControls = defineAsyncComponent(() => loadSfcModule(sharedControlPaths.gridColumnStyle));
 
 	const WidgetSettingsLoading = {
 		name: 'WidgetSettingsLoading',
@@ -386,170 +384,6 @@
 		return child;
 	}
 
-	function gridColumnStyleDefaults() {
-		const defaults = {
-			borderType: 'none',
-			borderColor: 'transparent',
-			borderWidthTop: '0px', borderWidthRight: '0px', borderWidthBottom: '0px', borderWidthLeft: '0px',
-			borderRadiusTL: '0px', borderRadiusTR: '0px', borderRadiusBR: '0px', borderRadiusBL: '0px',
-			borderWidthLinked: true,
-			borderRadiusLinked: true,
-			bgType: 'none', bgColor: '#ffffff', bgOpacity: 1,
-			bgGradientType: 'linear', bgGradientAngle: 90, bgGradientStart: '#ffffff', bgGradientEnd: '#000000', bgGradientPosition: 50,
-			bgImage: '', bgSize: 'cover', bgPosition: 'center center', bgRepeat: 'no-repeat', bgAttachment: 'scroll',
-		};
-		[
-			'borderType', 'borderColor',
-			'borderWidthTop', 'borderWidthRight', 'borderWidthBottom', 'borderWidthLeft',
-			'borderRadiusTL', 'borderRadiusTR', 'borderRadiusBR', 'borderRadiusBL',
-			'bgType', 'bgColor', 'bgOpacity', 'bgGradientType', 'bgGradientAngle', 'bgGradientStart', 'bgGradientEnd', 'bgGradientPosition',
-			'bgImage', 'bgSize', 'bgPosition', 'bgRepeat', 'bgAttachment',
-		].forEach((key) => {
-			defaults[key + 'Tablet'] = '';
-			defaults[key + 'Mobile'] = '';
-		});
-		return defaults;
-	}
-
-	function normalizeGridColumnStyle(source, sparse = false) {
-		const input = source && typeof source === 'object' && !Array.isArray(source) ? source : {};
-		const defaults = gridColumnStyleDefaults();
-		const output = sparse ? {} : { ...defaults };
-		const borderTypes = ['none', 'solid', 'double', 'dotted', 'dashed', 'groove'];
-		const backgroundTypes = ['none', 'color', 'gradient', 'image'];
-
-		Object.keys(defaults).forEach((key) => {
-			if (!Object.prototype.hasOwnProperty.call(input, key)) return;
-			const raw = input[key];
-			if (sparse && (raw === '' || raw === null || raw === undefined)) return;
-			if (!sparse && (raw === '' || raw === null || raw === undefined)) {
-				output[key] = defaults[key];
-				return;
-			}
-			if (key.startsWith('borderType')) {
-				output[key] = borderTypes.includes(String(raw || '').trim().toLowerCase()) ? String(raw).trim().toLowerCase() : (sparse ? 'none' : defaults[key]);
-				return;
-			}
-			if (key.startsWith('bgType')) {
-				output[key] = backgroundTypes.includes(String(raw || '').trim().toLowerCase()) ? String(raw).trim().toLowerCase() : (sparse ? 'none' : defaults[key]);
-				return;
-			}
-			if (key.endsWith('Opacity') || key === 'bgOpacity' || key === 'bgOpacityTablet' || key === 'bgOpacityMobile') {
-				const opacity = Number(raw);
-				output[key] = Number.isFinite(opacity) ? Math.min(1, Math.max(0, opacity)) : (sparse ? 1 : defaults[key]);
-				return;
-			}
-			if (key.startsWith('bgGradientAngle') || key.startsWith('bgGradientPosition')) {
-				const numeric = Number(raw);
-				output[key] = Number.isFinite(numeric) ? numeric : (sparse ? raw : defaults[key]);
-				return;
-			}
-			output[key] = typeof raw === 'string' ? raw.trim() : raw;
-		});
-
-		return output;
-	}
-
-	function gridColumnResponsiveValue(source, key, device = 'desktop', fallback = undefined) {
-		const settings = source && typeof source === 'object' ? source : {};
-		const suffix = device === 'tablet' ? 'Tablet' : (device === 'mobile' ? 'Mobile' : '');
-		const responsive = settings[key + suffix];
-		if (responsive !== '' && responsive !== null && responsive !== undefined) return responsive;
-		const base = settings[key];
-		return base !== '' && base !== null && base !== undefined ? base : fallback;
-	}
-
-	function reconcileGridColumnStyles(node, trackCount) {
-		if (!node || typeof node !== 'object') return [];
-		const count = Math.min(12, Math.max(1, Math.floor(Number(trackCount) || 1)));
-		const current = Array.isArray(node.columnStyles) ? node.columnStyles : [];
-		node.columnStyles = Array.from({ length: count }, (_, index) => normalizeGridColumnStyle(current[index], false));
-		return node.columnStyles;
-	}
-
-	function resolveGridColumnStyle(trackStyle, cellOverrides, device = 'desktop') {
-		const track = normalizeGridColumnStyle(trackStyle, false);
-		const cell = normalizeGridColumnStyle(cellOverrides, true);
-		const defaults = gridColumnStyleDefaults();
-		const baseKeys = Object.keys(defaults).filter((key) => !key.endsWith('Tablet') && !key.endsWith('Mobile'));
-		const resolved = {};
-
-		baseKeys.forEach((key) => {
-			const cellValue = gridColumnResponsiveValue(cell, key, device, undefined);
-			resolved[key] = cellValue === undefined ? gridColumnResponsiveValue(track, key, device, defaults[key]) : cellValue;
-		});
-
-		return resolved;
-	}
-
-	function resetGridColumnStyleOverrides(cell) {
-		if (!cell || typeof cell !== 'object') return;
-		cell.styleOverrides = {};
-	}
-
-	function gridColumnCountForNode(node) {
-		const settings = node && node.settings && typeof node.settings === 'object' ? node.settings : {};
-		const raw = ['container', 'container_fluid'].includes(node && node.type) && (settings.displayType || 'flex') === 'grid'
-			? settings.gridColumns
-			: settings.columns;
-		return Math.min(12, Math.max(1, Math.floor(Number(raw) || 1)));
-	}
-
-	function gridColumnStyleSafeMediaUrl(value) {
-		const url = String(value == null ? '' : value).trim();
-		if (!url || /[\u0000-\u001f\u007f"'()]/.test(url) || /^(?:javascript|vbscript|data):/i.test(url) || url.startsWith('//')) return '';
-		return /^(?:https?:\/\/|\/)/i.test(url) ? url : '';
-	}
-
-	function gridColumnStyleSafeColor(value, fallback = 'transparent') {
-		const color = String(value == null ? '' : value).trim();
-		if (!color || /[;{}]/.test(color)) return fallback;
-		return /^(?:#[0-9a-f]{3,8}|(?:rgb|rgba|hsl|hsla)\([^(){};]+\)|[a-z]+)$/i.test(color) ? color : fallback;
-	}
-
-	function gridColumnStyleToCss(style) {
-		const source = style && typeof style === 'object' ? style : gridColumnStyleDefaults();
-		const borderType = ['none', 'solid', 'double', 'dotted', 'dashed', 'groove'].includes(String(source.borderType || '').toLowerCase())
-			? String(source.borderType).toLowerCase()
-			: 'none';
-		const css = {
-			boxSizing: 'border-box',
-			borderStyle: borderType,
-			borderWidth: borderType === 'none' ? '0' : [source.borderWidthTop, source.borderWidthRight, source.borderWidthBottom, source.borderWidthLeft].map((value) => cssSize(value, '0')).join(' '),
-			borderRadius: [source.borderRadiusTL, source.borderRadiusTR, source.borderRadiusBR, source.borderRadiusBL].map((value) => cssSize(value, '0')).join(' '),
-		};
-		if (borderType !== 'none') css.borderColor = gridColumnStyleSafeColor(source.borderColor, 'transparent');
-
-		if (source.bgType === 'color') {
-			css.backgroundColor = colorWithOpacity(gridColumnStyleSafeColor(source.bgColor, '#ffffff'), source.bgOpacity == null ? 1 : source.bgOpacity);
-			css['--pb-grid-column-background'] = css.backgroundColor;
-		} else if (source.bgType === 'gradient') {
-			const start = gridColumnStyleSafeColor(source.bgGradientStart, '#ffffff');
-			const end = gridColumnStyleSafeColor(source.bgGradientEnd, '#000000');
-			const position = Number(source.bgGradientPosition == null ? 50 : source.bgGradientPosition);
-			css.backgroundImage = source.bgGradientType === 'radial'
-				? 'radial-gradient(circle, ' + start + ' 0%, ' + end + ' ' + position + '%)'
-				: 'linear-gradient(' + (Number(source.bgGradientAngle) || 90) + 'deg, ' + start + ' 0%, ' + end + ' ' + position + '%)';
-			css['--pb-grid-column-background'] = css.backgroundImage;
-		} else if (source.bgType === 'image') {
-			const imageUrl = gridColumnStyleSafeMediaUrl(source.bgImage);
-			if (imageUrl) {
-				css.backgroundImage = 'url("' + imageUrl + '")';
-				css.backgroundSize = source.bgSize === 'stretch' ? '100% 100%' : (source.bgSize || 'cover');
-				css.backgroundPosition = source.bgPosition || 'center center';
-				css.backgroundRepeat = source.bgRepeat || 'no-repeat';
-				css.backgroundAttachment = source.bgAttachment || 'scroll';
-				css['--pb-grid-column-background'] = css.backgroundImage;
-				css['--pb-grid-column-background-size'] = css.backgroundSize;
-				css['--pb-grid-column-background-position'] = css.backgroundPosition;
-				css['--pb-grid-column-background-repeat'] = css.backgroundRepeat;
-				css['--pb-grid-column-background-attachment'] = css.backgroundAttachment;
-			}
-		}
-
-		return css;
-	}
-
 	function gridSlotCount(columns, rows) {
 		const columnCount = Math.min(12, Math.max(1, Math.floor(Number(columns) || 1)));
 		const rowMatch = String(rows == null ? '' : rows).trim().match(/^(\d+)/);
@@ -602,12 +436,7 @@
 		if (!impact.canRemove) return false;
 		const removedIndexes = new Set(impact.removedIndexes);
 		node.columns = (Array.isArray(node.columns) ? node.columns : [])
-			.filter((column, columnIndex) => !removedIndexes.has(columnIndex))
-			.map((column) => ({
-				...(column && typeof column === 'object' ? column : {}),
-				styleOverrides: normalizeGridColumnStyle(column && column.styleOverrides, true),
-			}));
-		if (Array.isArray(node.columnStyles)) node.columnStyles.splice(impact.trackIndex, 1);
+			.filter((column, columnIndex) => !removedIndexes.has(columnIndex));
 		if (!node.settings || typeof node.settings !== 'object') node.settings = {};
 		if (['container', 'container_fluid'].includes(node.type) && (node.settings.displayType || 'flex') === 'grid') {
 			node.settings.gridColumns = impact.columnCount - 1;
@@ -643,11 +472,10 @@
 				...column,
 				id: nextId(column.id),
 				children: Array.isArray(column.children) ? column.children : [],
-				styleOverrides: normalizeGridColumnStyle(column.styleOverrides, true),
 			};
 		});
 		const targetCount = gridSlotCount(columns, rows);
-		while (slots.length < targetCount) slots.push({ id: nextId(''), children: [], styleOverrides: {} });
+		while (slots.length < targetCount) slots.push({ id: nextId(''), children: [] });
 		if (slots.length > targetCount) {
 			const kept = slots.slice(0, targetCount);
 			const finalSlot = kept[targetCount - 1];
@@ -770,7 +598,6 @@
 			if (Array.isArray(node.columns)) {
 				node.columns = node.columns.map((column) => ({
 					...(column && typeof column === 'object' ? column : {}),
-					styleOverrides: normalizeGridColumnStyle(column && column.styleOverrides, true),
 					children: visit(column && column.children),
 				}));
 			}
@@ -2848,24 +2675,6 @@
 			},
 		},
 		methods: {
-			gridColumnTrackIndex(cellIndex) {
-				return Math.max(0, Number(cellIndex) || 0) % gridColumnCountForNode(this.node);
-			},
-			gridColumnCellStyle(column, cellIndex) {
-				const trackIndex = this.gridColumnTrackIndex(cellIndex);
-				const trackStyle = Array.isArray(this.node.columnStyles) ? this.node.columnStyles[trackIndex] : null;
-				return gridColumnStyleToCss(resolveGridColumnStyle(trackStyle, column && column.styleOverrides, this.responsiveDevice || 'desktop'));
-			},
-			gridColumnHasCustomBorder(column, cellIndex) {
-				const trackIndex = this.gridColumnTrackIndex(cellIndex);
-				const trackStyle = Array.isArray(this.node.columnStyles) ? this.node.columnStyles[trackIndex] : null;
-				return resolveGridColumnStyle(trackStyle, column && column.styleOverrides, this.responsiveDevice || 'desktop').borderType !== 'none';
-			},
-			gridColumnHasCustomBackground(column, cellIndex) {
-				const trackIndex = this.gridColumnTrackIndex(cellIndex);
-				const trackStyle = Array.isArray(this.node.columnStyles) ? this.node.columnStyles[trackIndex] : null;
-				return resolveGridColumnStyle(trackStyle, column && column.styleOverrides, this.responsiveDevice || 'desktop').bgType !== 'none';
-			},
 			queueOutOfFlowShellMeasure() {
 				if (this.outOfFlowShellRaf) cancelAnimationFrame(this.outOfFlowShellRaf);
 				this.outOfFlowShellRaf = requestAnimationFrame(() => {
@@ -3148,7 +2957,7 @@
 		<template v-if="isCont">
 			<component :is="loadWidget(node.type)" :item="node" :responsive-device="responsiveDevice" :fill-editor-shell="!!parentNode">
 				<div v-if="(node.settings?.displayType || 'flex') === 'grid'" class="el-cont-columns" :style="contColumnsStyle">
-					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col" :style="gridColumnCellStyle(col, ci)" :data-col-index="ci" :data-pb-grid-track="gridColumnTrackIndex(ci)" :data-pb-grid-cell="col.id" :data-pb-grid-custom-border="gridColumnHasCustomBorder(col, ci) ? 'true' : null" :data-pb-grid-custom-background="gridColumnHasCustomBackground(col, ci) ? 'true' : null" @contextmenu.stop.prevent="onContextMenu($event, { kind: 'gridColumn', node: node, column: col, columnIndex: ci })">
+					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col" :data-col-index="ci" @contextmenu.stop.prevent="onContextMenu($event, { kind: 'gridColumn', node: node, column: col, columnIndex: ci })">
 						<draggable
 							v-model="col.children"
 							item-key="id"
@@ -3232,7 +3041,7 @@
 		<template v-else-if="isGrid">
 			<component :is="loadWidget(node.type)" :item="node">
 				<div class="el-grid-columns" :style="gridStyle">
-					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col" :style="gridColumnCellStyle(col, ci)" :data-col-index="ci" :data-pb-grid-track="gridColumnTrackIndex(ci)" :data-pb-grid-cell="col.id" :data-pb-grid-custom-border="gridColumnHasCustomBorder(col, ci) ? 'true' : null" :data-pb-grid-custom-background="gridColumnHasCustomBackground(col, ci) ? 'true' : null" @contextmenu.stop.prevent="onContextMenu($event, { kind: 'gridColumn', node: node, column: col, columnIndex: ci })">
+					<div v-for="(col, ci) in node.columns" :key="col.id" class="el-grid-col pb-grid-col" :data-col-index="ci" @contextmenu.stop.prevent="onContextMenu($event, { kind: 'gridColumn', node: node, column: col, columnIndex: ci })">
 						<draggable
 							v-model="col.children"
 							item-key="id"
@@ -3789,7 +3598,6 @@
 			const suppressHistory = ref(false);
 			const containerResizeOverlay = ref({ visible: false, text: '', x: 0, y: 0 });
 			const pendingInsertTarget = ref(null);
-			const selectedGridColumnStyleTarget = ref(null);
 			const accordionRuntimeState = ref({});
 			const accordionStyleState = ref('normal');
 			const accordionTitleStyleState = ref('normal');
@@ -6147,14 +5955,10 @@
 			function ensureNodeGridColumns(node) {
 				if (!node || !node.settings) return [];
 				if (isCont(node.type) && (node.settings.displayType || 'flex') === 'grid') {
-					const slots = reconcileGridColumns(node, node.settings.gridColumns || 3, node.settings.gridRows || 1, () => uid('c'));
-					reconcileGridColumnStyles(node, node.settings.gridColumns || 3);
-					return slots;
+					return reconcileGridColumns(node, node.settings.gridColumns || 3, node.settings.gridRows || 1, () => uid('c'));
 				}
 				if (isGrid(node.type)) {
-					const slots = reconcileGridColumns(node, node.settings.columns || 3, node.settings.gridRows || 1, () => uid('c'));
-					reconcileGridColumnStyles(node, node.settings.columns || 3);
-					return slots;
+					return reconcileGridColumns(node, node.settings.columns || 3, node.settings.gridRows || 1, () => uid('c'));
 				}
 				return [];
 			}
@@ -6351,7 +6155,6 @@
 			watch(selectedId, (nextId) => {
 				const type = selectedNode.value?.type;
 				settingsTab.value = type && !isCont(type) && !isGrid(type) ? 'content' : 'layout';
-				if (!nextId || selectedGridColumnStyleTarget.value?.nodeId !== String(nextId)) clearGridColumnStyleTarget();
 				nextTick(resetPropertiesPanelScroll);
 				closeControlResponsiveMenu();
 				closeWidthPreviewMenu();
@@ -6401,104 +6204,8 @@
 						label: 'Column ' + (index + 1),
 						itemCount: currentImpact.itemCount,
 						canRemove: currentImpact.canRemove,
-						hasOverride: gridColumnTrackCells(node, index).some((cell) => cell.hasOverride),
 					};
 				});
-			}
-			function gridColumnTrackCells(node, trackIndex) {
-				const columnCount = gridColumnCountForNode(node);
-				const settings = node && node.settings && typeof node.settings === 'object' ? node.settings : {};
-				const rawRows = String(settings.gridRows == null ? '' : settings.gridRows).trim().match(/^(\d+)/);
-				const rowCount = Math.min(12, Math.max(1, Math.floor(Number(rawRows && rawRows[1]) || 1)));
-				const safeTrackIndex = Math.min(columnCount - 1, Math.max(0, Math.floor(Number(trackIndex) || 0)));
-				const columns = Array.isArray(node && node.columns) ? node.columns : [];
-
-				return Array.from({ length: rowCount }, (_, rowIndex) => {
-					const cellIndex = (rowIndex * columnCount) + safeTrackIndex;
-					const cell = columns[cellIndex] && typeof columns[cellIndex] === 'object' ? columns[cellIndex] : { id: '', children: [] };
-					const overrides = cell.styleOverrides && typeof cell.styleOverrides === 'object' ? cell.styleOverrides : {};
-					return {
-						rowIndex,
-						cellIndex,
-						label: 'Row ' + (rowIndex + 1),
-						itemCount: Array.isArray(cell.children) ? cell.children.length : 0,
-						hasOverride: Object.keys(overrides).length > 0,
-						cell,
-					};
-				});
-			}
-			function clearGridColumnStyleTarget() {
-				selectedGridColumnStyleTarget.value = null;
-			}
-			function selectGridColumnStyleTarget(node, trackIndex, cellIndex = -1) {
-				if (!node || !node.id) return;
-				const columnCount = gridColumnCountForNode(node);
-				const safeTrackIndex = Math.min(columnCount - 1, Math.max(0, Math.floor(Number(trackIndex) || 0)));
-				const safeCellIndex = Number.isFinite(Number(cellIndex)) && Number(cellIndex) >= 0 ? Math.floor(Number(cellIndex)) : -1;
-				selectedGridColumnStyleTarget.value = { nodeId: String(node.id), trackIndex: safeTrackIndex, cellIndex: safeCellIndex };
-				settingsTab.value = 'style';
-				nextTick(() => {
-					resetPropertiesPanelScroll();
-					scheduleColorisInit();
-				});
-			}
-			function gridColumnStyleTargetFor(node) {
-				const target = selectedGridColumnStyleTarget.value;
-				if (!node || !target || String(target.nodeId) !== String(node.id)) return null;
-				return target;
-			}
-			function gridColumnStyleTargetLabel(node) {
-				const target = gridColumnStyleTargetFor(node);
-				if (!target) return '';
-				const columnLabel = 'Column ' + (target.trackIndex + 1);
-				return target.cellIndex >= 0 ? 'Cell Override — ' + columnLabel + ' / Row ' + (Math.floor(target.cellIndex / gridColumnCountForNode(node)) + 1) : 'Column Style — ' + columnLabel;
-			}
-			function gridColumnStyleTargetIsCell(node) {
-				return !!(gridColumnStyleTargetFor(node) && gridColumnStyleTargetFor(node).cellIndex >= 0);
-			}
-			function gridColumnStyleTargetSettings(node) {
-				const target = gridColumnStyleTargetFor(node);
-				if (!target) return null;
-				reconcileGridColumnStyles(node, gridColumnCountForNode(node));
-				if (target.cellIndex >= 0) {
-					const cell = Array.isArray(node.columns) ? node.columns[target.cellIndex] : null;
-					if (!cell) return null;
-					if (!cell.styleOverrides || typeof cell.styleOverrides !== 'object') cell.styleOverrides = {};
-					return cell.styleOverrides;
-				}
-				return node.columnStyles[target.trackIndex] || null;
-			}
-			function gridColumnStyleValue(node, key) {
-				const target = gridColumnStyleTargetFor(node);
-				if (!target) return '';
-				const track = Array.isArray(node.columnStyles) ? node.columnStyles[target.trackIndex] : null;
-				const cell = target.cellIndex >= 0 && Array.isArray(node.columns) ? node.columns[target.cellIndex]?.styleOverrides : null;
-				return resolveGridColumnStyle(track, cell, responsiveDevice.value)[key];
-			}
-			function setGridColumnStyleValue(node, key, value) {
-				const targetSettings = gridColumnStyleTargetSettings(node);
-				if (!targetSettings) return;
-				const activeKey = key.endsWith('Linked') ? key : responsiveKey(key, normalizeResponsiveDevice(responsiveDevice.value));
-				targetSettings[activeKey] = value;
-				scheduleSnap();
-			}
-			function resetSelectedGridColumnStyle(node) {
-				const target = gridColumnStyleTargetFor(node);
-				if (!target || target.cellIndex < 0) return;
-				const cell = Array.isArray(node.columns) ? node.columns[target.cellIndex] : null;
-				resetGridColumnStyleOverrides(cell);
-				scheduleSnap();
-			}
-			function chooseGridColumnBgImage(node) {
-				const targetSettings = gridColumnStyleTargetSettings(node);
-				if (!targetSettings) return;
-				chooseMedia(targetSettings, responsiveKey('bgImage', normalizeResponsiveDevice(responsiveDevice.value)), 'Paste image URL');
-			}
-			function clearGridColumnBgImage(node) {
-				const targetSettings = gridColumnStyleTargetSettings(node);
-				if (!targetSettings) return;
-				targetSettings[responsiveKey('bgImage', normalizeResponsiveDevice(responsiveDevice.value))] = '';
-				scheduleSnap();
 			}
 			function emptyDeleteConfirmation() {
 				return {
@@ -7317,21 +7024,10 @@
 				dynamicTagControl: DynamicTagControl,
 				textStrokeControl: TextStrokeControl,
 				textShadowControl: TextShadowControl,
-				gridColumnStyleControls: GridColumnStyleControls,
 				linkControl: LinkControl,
 				cssFilterControl: CssFilterControl,
 				typographyControl: TypographyControl,
 				widgetAdvancedControls: WidgetAdvancedControls,
-				gridColumnTrackCells,
-				selectGridColumnStyleTarget,
-				clearGridColumnStyleTarget,
-				gridColumnStyleTargetLabel,
-				gridColumnStyleTargetIsCell,
-				gridColumnStyleValue,
-				setGridColumnStyleValue,
-				resetSelectedGridColumnStyle,
-				chooseGridColumnBgImage,
-				clearGridColumnBgImage,
 				draggable,
 				tabsItemsForNode,
 				tabsActiveItem,

@@ -31,26 +31,20 @@
 									<label class="pb-form-label">Rows</label>
 									<input class="pb-input" :value="editor.gridRowsValue(node)" @input="editor.setGridRowsValue(node, $event.target.value)" type="number" min="1" max="12">
 								</div>
-				<div class="pb-form-group">
-					<label class="pb-form-label">Column Structure</label>
-					<div class="pb-layout-item-list">
-						<div v-for="track in editor.gridColumnTracks(node)" :key="track.index" class="pb-layout-item-row pb-grid-column-track-row" :class="{'is-active': editor.gridColumnStyleTargetLabel(node) === 'Column Style — ' + track.label}">
-							<button type="button" class="pb-layout-item-main pb-grid-column-track-trigger" @click="expandedGridTrack = expandedGridTrack === track.index ? -1 : track.index; editor.selectGridColumnStyleTarget(node, track.index)">
-								<span class="pb-layout-item-icon"><i class="fas fa-columns"></i></span>
-								<span class="pb-layout-item-copy"><strong>{{ track.label }}</strong><small>{{ track.itemCount }} item{{ track.itemCount === 1 ? '' : 's' }}<em v-if="track.hasOverride"> · Custom</em></small></span>
-								<i class="fas pb-grid-column-track-chevron" :class="expandedGridTrack === track.index ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
-							</button>
-							<button type="button" class="pb-layout-item-delete" :disabled="!track.canRemove" :aria-label="'Delete ' + track.label" @click.stop="editor.requestGridColumnRemoval(node, track.index)">
-								<i class="fas fa-trash"></i>
-							</button>
-							<div v-if="expandedGridTrack === track.index" class="pb-grid-column-cell-list">
-								<button v-for="cell in editor.gridColumnTrackCells(node, track.index)" :key="cell.cellIndex" type="button" class="pb-grid-column-cell-row" :class="{'is-active': editor.gridColumnStyleTargetLabel(node) === 'Cell Override — ' + track.label + ' / Row ' + (cell.rowIndex + 1)}" @click.stop="editor.selectGridColumnStyleTarget(node, track.index, cell.cellIndex)">
-									<span class="pb-layout-item-icon"><i class="fas fa-square"></i></span><span class="pb-layout-item-copy"><strong>{{ cell.label }}</strong><small>{{ cell.itemCount }} item{{ cell.itemCount === 1 ? '' : 's' }}<em v-if="cell.hasOverride"> · Custom</em></small></span>
-								</button>
-							</div>
-						</div>
-					</div>
-					<div class="pb-form-note">The final column cannot be deleted.</div>
+								<div class="pb-form-group">
+									<label class="pb-form-label">Column Structure</label>
+									<div class="pb-layout-item-list">
+										<div v-for="track in editor.gridColumnTracks(node)" :key="track.index" class="pb-layout-item-row">
+											<div class="pb-layout-item-main pb-layout-item-main--static">
+												<span class="pb-layout-item-icon"><i class="fas fa-columns"></i></span>
+												<span class="pb-layout-item-copy"><strong>{{ track.label }}</strong><small>{{ track.itemCount }} item{{ track.itemCount === 1 ? '' : 's' }}</small></span>
+											</div>
+											<button type="button" class="pb-layout-item-delete" :disabled="!track.canRemove" :aria-label="'Delete ' + track.label" @click.stop="editor.requestGridColumnRemoval(node, track.index)">
+												<i class="fas fa-trash"></i>
+											</button>
+										</div>
+									</div>
+									<div class="pb-form-note">The final column cannot be deleted.</div>
 								</div>
 								<div class="pb-form-group" v-if="editor.responsiveDevice==='desktop'">
 									<label class="pb-form-label">Grid Template Columns</label>
@@ -91,10 +85,9 @@
 								</div>
 							</div>
 						</div>
-		<!-- TAB STYLE (GRID) -->
-		<div v-if="editor.settingsTab==='style'" class="pb-tab-content pb-grid-settings__tab">
-			<component v-if="editor.gridColumnStyleTargetLabel(node)" :is="editor.gridColumnStyleControls" :node="node" :editor="editor" />
-			<div class="pb-prop-section pb-grid-settings__group">
+						<!-- TAB STYLE (GRID) -->
+						<div v-if="editor.settingsTab==='style'" class="pb-tab-content pb-grid-settings__tab">
+							<div class="pb-prop-section pb-grid-settings__group">
 								<div class="pb-label-row pb-grid-settings__section-head">
 									<div class="pb-prop-section-title mb-0">Spacing</div>
 								</div>
@@ -435,7 +428,6 @@
 export default {
 	name: 'GridWidgetSettings',
 	props: { node: { type: Object, required: true }, editor: { type: Object, required: true } },
-	data() { return { expandedGridTrack: -1 }; },
 	methods: {
 		dimensionParts(key, fallbackUnit = 'px') {
 			const raw = String(this.node.settings[key] ?? '').trim();

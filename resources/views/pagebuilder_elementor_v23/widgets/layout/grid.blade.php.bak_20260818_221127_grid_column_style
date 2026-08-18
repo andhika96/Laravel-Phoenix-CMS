@@ -39,8 +39,6 @@
 		}
 
 		$colCount = max(1, min(12, (int) ($s['columns'] ?? 3)));
-		$columns = is_array($columns ?? null) ? $columns : [];
-		$columnStyles = is_array($node['columnStyles'] ?? null) ? $node['columnStyles'] : [];
 		$gridCols = $s['gridTemplateColumns'] ?? $grid_columns_template($colCount);
 		$gridStyles = [
 			'display:grid',
@@ -70,19 +68,6 @@
 		$attrBag = $attribute_pairs($s['attributes'] ?? []);
 		if (!empty($s['cssId'])) $attrBag['data-css-id'] = (string) $s['cssId'];
 		$nodeDomId = 'pb-node-' . ($node['id'] ?? '');
-		$cellRenderStyles = [];
-		$columnMediaRules = ['tablet' => [], 'mobile' => []];
-		foreach ($columns as $cellIndex => $col) {
-			$trackIndex = ((int) $cellIndex) % $colCount;
-			$trackStyle = $columnStyles[$trackIndex] ?? [];
-			$cellOverrides = is_array($col['styleOverrides'] ?? null) ? $col['styleOverrides'] : [];
-			$cellRenderStyles[$cellIndex] = $grid_column_style_css($grid_column_style_resolve($trackStyle, $cellOverrides));
-			if (!$grid_column_style_has_responsive_values($trackStyle) && !$grid_column_style_has_responsive_values($cellOverrides)) continue;
-			$cellId = preg_replace('/[^A-Za-z0-9_-]/', '', (string) ($col['id'] ?? '')) ?: ('cell-' . $cellIndex);
-			$selector = '#' . $nodeDomId . ' > .el-grid-columns > .el-grid-col[data-pb-grid-cell="' . $cellId . '"]';
-			$columnMediaRules['tablet'][] = $selector . '{' . $grid_column_style_css($grid_column_style_resolve($trackStyle, $cellOverrides, 'Tablet')) . '}';
-			$columnMediaRules['mobile'][] = $selector . '{' . $grid_column_style_css($grid_column_style_resolve($trackStyle, $cellOverrides, 'Mobile')) . '}';
-		}
 
 		$tabletRootRules = array_merge(
 			$responsive_side_rules($s, 'Tablet', 'padding', fn ($value) => $css_value($value, '0')),
@@ -120,8 +105,6 @@
 			if ($mobileGridRules) $css[] = '#' . $nodeDomId . ' > .el-grid-columns{' . implode(';', $mobileGridRules) . '}';
 			$styleBlocks[] = '@media (max-width: 767px){' . implode('', $css) . '}';
 		}
-		if ($columnMediaRules['tablet']) $styleBlocks[] = '@media (max-width: 1024px){' . implode('', $columnMediaRules['tablet']) . '}';
-		if ($columnMediaRules['mobile']) $styleBlocks[] = '@media (max-width: 767px){' . implode('', $columnMediaRules['mobile']) . '}';
 		$customScopedCss = $scoped_css($node['id'] ?? null, $s['customCssCode'] ?? '');
 		if ($customScopedCss !== '') $styleBlocks[] = $customScopedCss;
 	@endphp
@@ -131,9 +114,8 @@
 		@endforeach
 	>
 		<div class="el-grid-columns" style="{{ $gridStyle }}">
-			@foreach($columns as $cellIndex => $col)
-				@php $cellId = preg_replace('/[^A-Za-z0-9_-]/', '', (string) ($col['id'] ?? '')) ?: ('cell-' . $cellIndex); @endphp
-				<div class="el-grid-col" data-pb-grid-track="{{ $cellIndex % $colCount }}" data-pb-grid-cell="{{ $cellId }}" style="{{ $cellRenderStyles[$cellIndex] ?? '' }}">
+			@foreach($columns as $col)
+				<div class="el-grid-col">
 					@foreach(($col['children'] ?? []) as $child)
 						@include('pagebuilder_elementor_v23.partials.render_node', ['node' => $child])
 					@endforeach

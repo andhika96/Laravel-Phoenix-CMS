@@ -281,20 +281,14 @@
 								<div class="pb-form-group">
 									<label class="pb-form-label">Column Structure</label>
 									<div class="pb-layout-item-list">
-										<div v-for="track in editor.gridColumnTracks(node)" :key="track.index" class="pb-layout-item-row pb-grid-column-track-row" :class="{'is-active': editor.gridColumnStyleTargetLabel(node) === 'Column Style — ' + track.label}">
-											<button type="button" class="pb-layout-item-main pb-grid-column-track-trigger" @click="expandedGridTrack = expandedGridTrack === track.index ? -1 : track.index; editor.selectGridColumnStyleTarget(node, track.index)">
+										<div v-for="track in editor.gridColumnTracks(node)" :key="track.index" class="pb-layout-item-row">
+											<div class="pb-layout-item-main pb-layout-item-main--static">
 												<span class="pb-layout-item-icon"><i class="fas fa-columns"></i></span>
-												<span class="pb-layout-item-copy"><strong>{{ track.label }}</strong><small>{{ track.itemCount }} item{{ track.itemCount === 1 ? '' : 's' }}<em v-if="track.hasOverride"> · Custom</em></small></span>
-												<i class="fas pb-grid-column-track-chevron" :class="expandedGridTrack === track.index ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
-											</button>
+												<span class="pb-layout-item-copy"><strong>{{ track.label }}</strong><small>{{ track.itemCount }} item{{ track.itemCount === 1 ? '' : 's' }}</small></span>
+											</div>
 											<button type="button" class="pb-layout-item-delete" :disabled="!track.canRemove" :aria-label="'Delete ' + track.label" @click.stop="editor.requestGridColumnRemoval(node, track.index)">
 												<i class="fas fa-trash"></i>
 											</button>
-											<div v-if="expandedGridTrack === track.index" class="pb-grid-column-cell-list">
-												<button v-for="cell in editor.gridColumnTrackCells(node, track.index)" :key="cell.cellIndex" type="button" class="pb-grid-column-cell-row" :class="{'is-active': editor.gridColumnStyleTargetLabel(node) === 'Cell Override — ' + track.label + ' / Row ' + (cell.rowIndex + 1)}" @click.stop="editor.selectGridColumnStyleTarget(node, track.index, cell.cellIndex)">
-													<span class="pb-layout-item-icon"><i class="fas fa-square"></i></span><span class="pb-layout-item-copy"><strong>{{ cell.label }}</strong><small>{{ cell.itemCount }} item{{ cell.itemCount === 1 ? '' : 's' }}<em v-if="cell.hasOverride"> · Custom</em></small></span>
-												</button>
-											</div>
 										</div>
 									</div>
 									<div class="pb-form-note">The final column cannot be deleted.</div>
@@ -418,10 +412,9 @@
 								</div>
 							</details>
 						</div><!-- /tab layout container -->
-		<!-- TAB STYLE -->
-		<div v-if="editor.settingsTab==='style'" class="pb-tab-content pb-layout-settings__tab">
-			<component v-if="editor.gridColumnStyleTargetLabel(node)" :is="editor.gridColumnStyleControls" :node="node" :editor="editor" />
-			<details class="pb-collapsible" open>
+						<!-- TAB STYLE -->
+						<div v-if="editor.settingsTab==='style'" class="pb-tab-content pb-layout-settings__tab">
+							<details class="pb-collapsible" open>
 								<summary>Background</summary>
 								<div class="pb-collapsible-body">
 								<div class="pb-mini-tab-nav">
@@ -1097,7 +1090,6 @@
 export default {
 	name: 'ContainerWidgetSettings',
 	props: { node: { type: Object, required: true }, editor: { type: Object, required: true } },
-	data() { return { expandedGridTrack: -1 }; },
 	methods: {
 		dimensionParts(key, fallbackUnit = 'px') {
 			const raw = String(this.node.settings[key] ?? '').trim();

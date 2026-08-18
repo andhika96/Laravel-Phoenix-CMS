@@ -151,7 +151,6 @@
 			$normalizedColumns[] = [
 				'id' => $c['id'] ?? ('col-' . ($idx + 1)),
 				'flexBasis' => $c['flexBasis'] ?? null,
-				'styleOverrides' => is_array($c['styleOverrides'] ?? null) ? $c['styleOverrides'] : [],
 				'children' => is_array($colChildren) ? $colChildren : [],
 			];
 		}
@@ -281,23 +280,6 @@
 			if (($s['gridRowsTablet'] ?? '') !== '') $tabletColsRules[] = 'grid-template-rows:' . ($container_grid_rows_template($s['gridRowsTablet']) ?: 'none');
 			if (($s['gridRowsMobile'] ?? '') !== '') $mobileColsRules[] = 'grid-template-rows:' . ($container_grid_rows_template($s['gridRowsMobile']) ?: 'none');
 		}
-		$gridColumnDesktopStyles = [];
-		$gridColumnMediaRules = ['tablet' => [], 'mobile' => []];
-		if ($display === 'grid') {
-			$gridColumnCount = max(1, min(12, (int) ($s['gridColumns'] ?? 3)));
-			$gridColumnStyles = is_array($node['columnStyles'] ?? null) ? $node['columnStyles'] : [];
-			foreach ($normalizedColumns as $cellIndex => $col) {
-				$trackIndex = ((int) $cellIndex) % $gridColumnCount;
-				$trackStyle = $gridColumnStyles[$trackIndex] ?? [];
-				$cellOverrides = is_array($col['styleOverrides'] ?? null) ? $col['styleOverrides'] : [];
-				$gridColumnDesktopStyles[$cellIndex] = $grid_column_style_css($grid_column_style_resolve($trackStyle, $cellOverrides));
-				if (!$grid_column_style_has_responsive_values($trackStyle) && !$grid_column_style_has_responsive_values($cellOverrides)) continue;
-				$cellId = preg_replace('/[^A-Za-z0-9_-]/', '', (string) ($col['id'] ?? '')) ?: ('cell-' . $cellIndex);
-				$selector = '#' . $nodeDomId . ' > .el-cont-columns > .el-grid-col[data-pb-grid-cell="' . $cellId . '"]';
-				$gridColumnMediaRules['tablet'][] = $selector . '{' . $grid_column_style_css($grid_column_style_resolve($trackStyle, $cellOverrides, 'Tablet')) . '}';
-				$gridColumnMediaRules['mobile'][] = $selector . '{' . $grid_column_style_css($grid_column_style_resolve($trackStyle, $cellOverrides, 'Mobile')) . '}';
-			}
-		}
 		$styleBlocks = [];
 		if ($tabletRules || $tabletColsRules) {
 			$css = [];
@@ -311,8 +293,6 @@
 			if ($mobileColsRules) $css[] = '#' . $nodeDomId . ' > .el-cont-columns{' . implode(';', $mobileColsRules) . '}';
 			$styleBlocks[] = '@media (max-width: 767px){' . implode('', $css) . '}';
 		}
-		if ($gridColumnMediaRules['tablet']) $styleBlocks[] = '@media (max-width: 1024px){' . implode('', $gridColumnMediaRules['tablet']) . '}';
-		if ($gridColumnMediaRules['mobile']) $styleBlocks[] = '@media (max-width: 767px){' . implode('', $gridColumnMediaRules['mobile']) . '}';
 
 		$hoverStyles = array_merge(
 			$background_styles($s, 'Hover'),
@@ -400,13 +380,12 @@
 					@include('pagebuilder_elementor_v23.partials.render_node', ['node' => $child])
 				@endforeach
 			@else
-			@foreach($normalizedColumns as $colIndex => $col)
+			@foreach($normalizedColumns as $col)
 				@php
 					$colStyles = [];
 					$colChildren = is_array($col['children'] ?? null) ? $col['children'] : [];
 					$childCount = count($colChildren);
 					$childWrapperStyles = [];
-					$gridCellId = preg_replace('/[^A-Za-z0-9_-]/', '', (string) ($col['id'] ?? '')) ?: ('cell-' . $colIndex);
 					if ($display === 'flex') {
 						$rawBasis = trim((string) ($col['flexBasis'] ?? ''));
 						$hasBasis = $rawBasis !== '';
@@ -524,11 +503,10 @@
 							$colStyles[] = 'justify-content:' . ($mainAxisMap[$alignItems] ?? 'flex-start');
 							$colStyles[] = 'min-height:68px';
 						}
-						$colStyles[] = $gridColumnDesktopStyles[$colIndex] ?? '';
 					}
 					$colStyle = implode(';', array_filter($colStyles));
 				@endphp
-				<div class="el-grid-col" @if($display === 'grid') data-pb-grid-track="{{ $colIndex % max(1, $gridColumnCount ?? 1) }}" data-pb-grid-cell="{{ $gridCellId }}" @endif style="{{ $colStyle }}">
+				<div class="el-grid-col" style="{{ $colStyle }}">
 					@foreach($colChildren as $child)
 						@if($display === 'grid')
 							@php

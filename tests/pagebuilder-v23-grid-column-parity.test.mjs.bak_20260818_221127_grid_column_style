@@ -77,8 +77,6 @@ function namedFunction(name) {
 function loadGridHelpers() {
     const names = [
         'gridSlotCount',
-        'gridColumnStyleDefaults',
-        'normalizeGridColumnStyle',
         'reconcileGridColumns',
         'gridColumnHasContent',
         'isGridColumnLockedSequentially',
@@ -90,7 +88,7 @@ function loadGridHelpers() {
 }
 
 function loadGridRemovalHelpers() {
-    const names = ['gridColumnStyleDefaults', 'normalizeGridColumnStyle', 'gridColumnTrackRemovalImpact', 'removeGridColumnTrack'];
+    const names = ['gridColumnTrackRemovalImpact', 'removeGridColumnTrack'];
     const context = vm.createContext({ console });
     vm.runInContext(`${names.map(namedFunction).join('\n')}\nthis.api = { ${names.join(', ')} };`, context);
     return context.api;

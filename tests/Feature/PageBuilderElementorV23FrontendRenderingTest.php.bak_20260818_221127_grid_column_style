@@ -195,58 +195,6 @@ class PageBuilderElementorV23FrontendRenderingTest extends TestCase
         $this->assertLessThan(strpos($grid, 'Nested Grid'), strpos($grid, 'Nested Container'));
     }
 
-    public function test_v23_grid_column_styles_render_on_standalone_and_container_grid(): void
-    {
-        $columnStyle = [
-            'borderType' => 'solid',
-            'borderWidthTop' => '1px',
-            'borderWidthRight' => '2px',
-            'borderWidthBottom' => '3px',
-            'borderWidthLeft' => '4px',
-            'borderColor' => '#112233',
-            'borderColorTablet' => '#445566',
-            'borderRadiusTL' => '8px',
-            'borderRadiusTR' => '9px',
-            'borderRadiusBR' => '10px',
-            'borderRadiusBL' => '11px',
-            'bgType' => 'color',
-            'bgColor' => '#abcdef',
-        ];
-        $standalone = $this->renderNode([
-            'id' => 'styled-grid',
-            'type' => 'grid',
-            'settings' => ['columns' => 2, 'gridRows' => 1],
-            'columnStyles' => [$columnStyle, []],
-            'columns' => [
-                ['id' => 'styled-cell-1', 'children' => []],
-                ['id' => 'styled-cell-2', 'styleOverrides' => ['bgType' => 'color', 'bgColor' => '#fedcba'], 'children' => []],
-            ],
-        ]);
-        $container = $this->renderNode([
-            'id' => 'styled-container-grid',
-            'type' => 'container',
-            'settings' => ['displayType' => 'grid', 'gridColumns' => 2, 'gridRows' => '1'],
-            'columnStyles' => [$columnStyle, []],
-            'columns' => [
-                ['id' => 'container-styled-cell-1', 'children' => []],
-                ['id' => 'container-styled-cell-2', 'children' => []],
-            ],
-        ]);
-
-        foreach ([$standalone, $container] as $html) {
-            $this->assertStringContainsString('data-pb-grid-track="0"', $html);
-            $this->assertStringContainsString('data-pb-grid-cell=', $html);
-            $this->assertStringContainsString('border-style:solid', $html);
-            $this->assertStringContainsString('border-width:1px 2px 3px 4px', $html);
-            $this->assertStringContainsString('border-radius:8px 9px 10px 11px', $html);
-            $this->assertStringContainsString('background-color:#abcdef', $html);
-            $this->assertStringContainsString('@media (max-width: 1024px)', $html);
-            $this->assertStringContainsString('#445566', $html);
-        }
-
-        $this->assertStringContainsString('background-color:#fedcba', $standalone);
-    }
-
     public function test_v23_legacy_fallback_never_merges_extra_columns_into_the_last_cell(): void
     {
         $legacy = $this->renderNode([
