@@ -1,0 +1,110 @@
+<?php
+
+namespace App\Support\PageBuilderElementorV23;
+
+final class FormConditionalLogicEvaluator
+{
+    private const OPERATORS = ['equals', 'not_equals', 'contains', 'empty', 'not_empty'];
+
+    public function fieldIsVisible(array $field, array $values): bool
+    {
+        $logic = is_array($field['conditionalLogic'] ?? null) ? $field['conditionalLogic'] : [];
+        $rules = array_values(array_filter(array_map(
+            function ($rule): ?array {
+                if (! is_array($rule) || trim((string) ($rule['fieldId'] ?? '')) === '') {
+                    return null;
+                }
+
+                $parentFieldId = trim((string) ($rule['parentFieldId'] ?? ''));
+                $valueSource = ($rule['valueSource'] ?? '') === 'selectedParent' && $parentFieldId !== ''
+                    ? 'selectedParent'
+                    : 'manual';
+                $selectedParent = $valueSource === 'selectedParent';
+
+                return [
+                    'fieldId' => $selectedParent ? $parentFieldId : trim((string) $rule['fieldId']),
+                    'operator' => in_array($rule['operator'] ?? '', self::OPERATORS, true) ? $rule['operator'] : 'equals',
+                    'valueSource' => $valueSource,
+                    'parentFieldId' => $selectedParent ? $parentFieldId : '',
+                    'parentValue' => $selectedParent ? trim((string) ($rule['parentValue'] ?? $rule['value'] ?? '')) : '',
+                    'value' => $selectedParent ? '' : (string) ($rule['value'] ?? ''),
+                ];
+            },
+            is_array($logic['rules'] ?? null) ? $logic['rules'] : [],
+        )));
+
+        if (($logic['enabled'] ?? false) !== true || $rules === []) {
+            return true;
+        }
+
+        $matches = array_map(fn (array $rule): bool => $this->ruleMatches($rule, $values), $rules);
+
+        return ($logic['relation'] ?? 'all') === 'any'
+            ? in_array(true, $matches, true)
+            : ! in_array(false, $matches, true);
+    }
+
+    private function ruleMatches(array $rule, array $values): bool
+    {
+        $selectedParent = $rule['valueSource'] === 'selectedParent' && $rule['parentFieldId'] !== '';
+        $actual = $selectedParent
+            ? ($values[$rule['parentFieldId']] ?? '')
+            : ($values[$rule['fieldId']] ?? '');
+        $expected = $selectedParent ? ($rule['parentValue'] ?? '') : ($rule['value'] ?? '');
+
+        if ($selectedParent && in_array($rule['operator'], ['equals', 'not_equals', 'contains'], true) && $this->isEmpty($expected)) {
+            return false;
+        }
+
+        return match ($rule['operator']) {
+            'empty' => $this->isEmpty($actual),
+            'not_empty' => ! $this->isEmpty($actual),
+            'contains' => $this->containsValue($actual, $expected),
+            'not_equals' => ! $this->equalsValue($actual, $expected),
+            default => $this->equalsValue($actual, $expected),
+        };
+    }
+
+    private function equalsValue(mixed $actual, mixed $expected): bool
+    {
+        foreach ($this->valueList($actual) as $actualValue) {
+            foreach ($this->valueList($expected) as $expectedValue) {
+                if (mb_strtolower($actualValue) === mb_strtolower($expectedValue)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private function containsValue(mixed $actual, mixed $expected): bool
+    {
+        foreach ($this->valueList($actual) as $actualValue) {
+            foreach ($this->valueList($expected) as $expectedValue) {
+                if (str_contains(mb_strtolower($actualValue), mb_strtolower($expectedValue))) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private function valueList(mixed $value): array
+    {
+        return array_map(
+            fn ($entry): string => trim((string) $entry),
+            is_array($value) ? array_values($value) : [$value],
+        );
+    }
+
+    private function isEmpty(mixed $value): bool
+    {
+        if (is_array($value)) {
+            return $value === [] || count(array_filter($value, fn ($entry): bool => trim((string) $entry) !== '')) === 0;
+        }
+
+        return trim((string) $value) === '';
+    }
+}

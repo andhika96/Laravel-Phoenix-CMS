@@ -54,7 +54,6 @@ class PageBuilderElementorV23Controller extends Controller
 			'pageData' => null,
 			'mode' => 'create',
 			'saveUrl' => route('cms.core.pagebuilder_elementor_v23.store'),
-			'formDatasetEndpoints' => $this->formDatasetEndpoints(),
 		]);
 	}
 
@@ -76,7 +75,6 @@ class PageBuilderElementorV23Controller extends Controller
 				'pageData' => $pageData,
 				'mode' => 'edit',
 				'saveUrl' => route('cms.core.pagebuilder_elementor_v23.update', $pageData->uri),
-				'formDatasetEndpoints' => $this->formDatasetEndpoints(),
 			]);
 		}
 
@@ -414,15 +412,6 @@ class PageBuilderElementorV23Controller extends Controller
 			'pageData' => $pageData,
 			'nodes'    => $nodes,
 		]);
-	}
-
-	private function formDatasetEndpoints(): array
-	{
-		return [
-			'index' => route('cms.core.pagebuilder_elementor_v23.datasets.index'),
-			'store' => route('cms.core.pagebuilder_elementor_v23.datasets.store'),
-			'update' => route('cms.core.pagebuilder_elementor_v23.datasets.update', ['datasetId' => '__DATASET_ID__']),
-		];
 	}
 
 	private function normalizeLayoutPayload($layout): string

@@ -940,20 +940,14 @@
 			return Array.isArray(value) ? value.length === 0 || value.every(function (entry) { return String(entry || '') === ''; }) : String(value || '').trim() === '';
 		}
 		function conditionRuleMatches(rule, values) {
-			const selectedParent = rule && rule.valueSource === 'selectedParent' && rule.parentFieldId;
-			const actual = selectedParent ? values[rule.parentFieldId] : values[rule.fieldId];
-			const expectedSource = selectedParent ? rule.parentValue : rule.value;
-			if (selectedParent && ['equals', 'not_equals', 'contains'].includes(rule.operator) && conditionEmpty(expectedSource)) return false;
-			const expectedValues = (Array.isArray(expectedSource) ? expectedSource : [expectedSource]).map(function (entry) { return String(entry || '').trim(); });
+			const actual = values[rule.fieldId];
+			const expected = String(rule.value || '').trim();
 			const normalized = Array.isArray(actual) ? actual.map(function (entry) { return String(entry || '').trim(); }) : String(actual || '').trim();
-			const equalsExpected = function (entry) {
-				return expectedValues.some(function (expected) { return String(entry || '').toLowerCase() === expected.toLowerCase(); });
-			};
 			if (rule.operator === 'empty') return conditionEmpty(actual);
 			if (rule.operator === 'not_empty') return !conditionEmpty(actual);
-			if (rule.operator === 'contains') return Array.isArray(normalized) ? normalized.some(function (entry) { return expectedValues.some(function (expected) { return entry.toLowerCase().includes(expected.toLowerCase()); }); }) : expectedValues.some(function (expected) { return normalized.toLowerCase().includes(expected.toLowerCase()); });
-			if (rule.operator === 'not_equals') return Array.isArray(normalized) ? !normalized.some(equalsExpected) : !equalsExpected(normalized);
-			return Array.isArray(normalized) ? normalized.some(equalsExpected) : equalsExpected(normalized);
+			if (rule.operator === 'contains') return Array.isArray(normalized) ? normalized.includes(expected) : normalized.toLowerCase().includes(expected.toLowerCase());
+			if (rule.operator === 'not_equals') return Array.isArray(normalized) ? !normalized.includes(expected) : normalized.toLowerCase() !== expected.toLowerCase();
+			return Array.isArray(normalized) ? normalized.includes(expected) : normalized.toLowerCase() === expected.toLowerCase();
 		}
 		function conditionalVisible(wrapper, values) {
 			let condition = {};

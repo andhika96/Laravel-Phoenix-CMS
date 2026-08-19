@@ -35,12 +35,9 @@
                     activeFormStep.description
                 }}</small>
             </div>
-            <template
+            <div
                 v-for="field in activeFormStep.fields"
                 :key="field.id"
-            >
-            <div
-                v-if="formFieldVisible(field)"
                 class="pb-pro-form__field"
                 :class="{ 'is-inline': field.inlineList }"
                 :style="{ width: (field.width || 100) + '%' }"
@@ -78,9 +75,7 @@
                     <input
                         type="checkbox"
                         :required="field.required"
-                        :checked="formFieldValue(field) === true || formFieldValue(field) === '1'"
                         :style="formInputStyle"
-                        @change="setFormFieldValue(field, $event)"
                     />
                     <span>{{ field.acceptanceText }}</span>
                 </label>
@@ -90,24 +85,21 @@
                     :placeholder="field.placeholder"
                     :required="field.required"
                     :rows="Math.max(1, Number(field.rows) || 4)"
-                    :value="formFieldValue(field, field.defaultValue)"
+                    :value="field.defaultValue"
                     :style="formInputStyle"
-                    @input="setFormFieldValue(field, $event)"
                 ></textarea>
                 <select
                     v-else-if="field.type === 'select'"
                     :id="item.id + '-' + field.id"
                     :required="field.required"
                     :multiple="field.multiple"
-                    :value="formFieldValue(field, field.multiple ? [] : '')"
                     :style="formInputStyle"
-                    @change="setFormFieldValue(field, $event)"
                 >
                     <option v-if="field.placeholder" value="">
                         {{ field.placeholder }}
                     </option>
                     <option
-                        v-for="option in formFieldOptions(field)"
+                        v-for="option in parseFormOptions(field)"
                         :key="option.value"
                         :value="option.value"
                     >
@@ -126,7 +118,7 @@
                     </legend>
                     <div class="pb-pro-form__choices">
                         <label
-                            v-for="option in formFieldOptions(field)"
+                            v-for="option in parseFormOptions(field)"
                             :key="option.value"
                             class="pb-pro-form__choice"
                         >
@@ -134,10 +126,8 @@
                                 :type="field.type"
                                 :name="item.id + '-' + field.id"
                                 :value="option.value"
-                                :checked="formChoiceChecked(field, option.value)"
                                 :required="field.required"
                                 :style="formInputStyle"
-                                @change="setFormFieldValue(field, $event)"
                             />
                             <span>{{ option.label }}</span>
                         </label>
@@ -149,7 +139,9 @@
                     :type="safeInputType(field.type)"
                     :placeholder="field.placeholder"
                     :required="field.required"
-                    :value="field.type === 'file' ? undefined : formFieldValue(field, field.defaultValue)"
+                    :value="
+                        field.type === 'file' ? undefined : field.defaultValue
+                    "
                     :accept="
                         field.type === 'file' ? field.fileTypes : undefined
                     "
@@ -159,11 +151,8 @@
                     :step="field.step || undefined"
                     :autocomplete="field.autocomplete || undefined"
                     :style="formInputStyle"
-                    @input="setFormFieldValue(field, $event)"
-                    @change="setFormFieldValue(field, $event)"
                 />
             </div>
-            </template>
             <div class="pb-pro-form__actions" :style="formActionsStyle">
                 <button
                     v-if="currentFormStep > 0"
@@ -1209,8 +1198,6 @@ export default {
         return {
             activeIndex: 0,
             currentFormStep: 0,
-            formValues: {},
-            formDatasetCache: {},
             openHotspot: -1,
             hotspotImageUrl: "",
             hotspotRenditionRequest: 0,
@@ -3900,110 +3887,6 @@ export default {
             ].includes(value)
                 ? value
                 : "text";
-        },
-        formFieldValue(field, fallback = "") {
-            return Object.prototype.hasOwnProperty.call(this.formValues || {}, field?.id)
-                ? this.formValues[field.id]
-                : fallback;
-        },
-        formConditionValueEmpty(value) {
-            if (Array.isArray(value)) return value.length === 0 || value.every((entry) => String(entry || "") === "");
-            return String(value ?? "").trim() === "";
-        },
-        formConditionRuleMatches(rule) {
-            const selectedParent = rule?.valueSource === "selectedParent" && rule.parentFieldId;
-            const actual = selectedParent
-                ? this.formFieldValue({ id: rule.parentFieldId }, "")
-                : this.formFieldValue({ id: rule.fieldId }, "");
-            const expectedSource = selectedParent ? rule?.parentValue : rule?.value;
-            if (selectedParent && ["equals", "not_equals", "contains"].includes(rule.operator) && this.formConditionValueEmpty(expectedSource)) {
-                return false;
-            }
-            const expectedValues = (Array.isArray(expectedSource) ? expectedSource : [expectedSource])
-                .map((entry) => String(entry ?? "").trim());
-            const normalized = Array.isArray(actual)
-                ? actual.map((entry) => String(entry ?? "").trim())
-                : String(actual ?? "").trim();
-            const equalsExpected = (entry) => expectedValues.some(
-                (expected) => String(entry ?? "").toLowerCase() === expected.toLowerCase(),
-            );
-            if (rule.operator === "empty") return this.formConditionValueEmpty(actual);
-            if (rule.operator === "not_empty") return !this.formConditionValueEmpty(actual);
-            if (rule.operator === "contains") {
-                return Array.isArray(normalized)
-                    ? normalized.some((entry) => expectedValues.some((expected) => entry.toLowerCase().includes(expected.toLowerCase())))
-                    : expectedValues.some((expected) => normalized.toLowerCase().includes(expected.toLowerCase()));
-            }
-            if (rule.operator === "not_equals") {
-                return Array.isArray(normalized)
-                    ? !normalized.some(equalsExpected)
-                    : !equalsExpected(normalized);
-            }
-            return Array.isArray(normalized)
-                ? normalized.some(equalsExpected)
-                : equalsExpected(normalized);
-        },
-        formFieldVisible(field) {
-            const logic = field?.conditionalLogic;
-            const rules = Array.isArray(logic?.rules)
-                ? logic.rules.filter((rule) => rule && rule.fieldId && rule.fieldId !== field.id)
-                : [];
-            if (logic?.enabled !== true || !rules.length) return true;
-            const results = rules.map((rule) => this.formConditionRuleMatches(rule));
-            return logic.relation === "any" ? results.some(Boolean) : results.every(Boolean);
-        },
-        formDatasetOptions(field) {
-            const datasets = Array.isArray(window.PAGE_BUILDER_ELEMENTOR_V23_FORM_DATASETS)
-                ? window.PAGE_BUILDER_ELEMENTOR_V23_FORM_DATASETS
-                : [];
-            const dataset = datasets.find((entry) => String(entry.id) === String(field.datasetId));
-            const nodes = Array.isArray(dataset?.nodes) ? dataset.nodes : [];
-            const parentFieldId = String(field.datasetParentFieldId || "");
-            if (!parentFieldId) {
-                return nodes
-                    .filter((node) => node && node.active !== false && (node.parentId ?? null) === null)
-                    .sort((left, right) => (Number(left.sortOrder) || 0) - (Number(right.sortOrder) || 0));
-            }
-            const parentValue = this.formFieldValue({ id: parentFieldId }, "");
-            const values = Array.isArray(parentValue) ? parentValue : [parentValue];
-            const parentIds = nodes
-                .filter((node) => values.some((value) => String(node.id) === String(value) || String(node.value) === String(value)))
-                .map((node) => String(node.id));
-            return nodes
-                .filter((node) => node && node.active !== false && parentIds.includes(String(node.parentId)))
-                .sort((left, right) => (Number(left.sortOrder) || 0) - (Number(right.sortOrder) || 0));
-        },
-        formFieldOptions(field) {
-            return field?.datasetMode === "dataset" && field.datasetId
-                ? this.formDatasetOptions(field)
-                : this.parseFormOptions(field);
-        },
-        formChoiceChecked(field, value) {
-            const current = this.formFieldValue(field, field.multiple || field.type === "checkbox" ? [] : "");
-            return Array.isArray(current) ? current.includes(String(value)) : String(current) === String(value);
-        },
-        setFormFieldValue(field, event) {
-            const target = event?.target;
-            if (!target) return;
-            const next = { ...(this.formValues || {}) };
-            if (field.type === "checkbox") {
-                const current = Array.isArray(next[field.id]) ? [...next[field.id]] : [];
-                const value = String(target.value || "1");
-                next[field.id] = target.checked
-                    ? Array.from(new Set([...current, value]))
-                    : current.filter((entry) => String(entry) !== value);
-            } else if (field.type === "radio") {
-                if (!target.checked) return;
-                next[field.id] = target.value;
-            } else if (target.multiple) {
-                next[field.id] = Array.from(target.selectedOptions || []).map((option) => option.value);
-            } else {
-                next[field.id] = target.value;
-            }
-            (this.s.fields || []).forEach((dependent) => {
-                if (dependent.datasetParentFieldId === field.id && dependent.id !== field.id) delete next[dependent.id];
-            });
-            this.formValues = next;
         },
         sanitizeFormHtml(value) {
             const template = document.createElement("template");

@@ -914,109 +914,11 @@
 		const validation = root.dataset.validation === 'custom' ? 'custom' : 'browser';
 		const steps = Array.from(root.querySelectorAll(':scope [data-pro-form-step]'));
 		const indicators = Array.from(root.querySelectorAll('[data-pro-step-indicator]'));
-		const fieldRoots = function () { return Array.from(root.querySelectorAll('[data-pro-form-field]')); };
 		let activeStep = 0;
-		function fieldValues() {
-			const values = {};
-			fieldRoots().forEach(function (wrapper) {
-				const fieldId = wrapper.getAttribute('data-pro-form-field');
-				if (!fieldId) return;
-				const controls = Array.from(wrapper.querySelectorAll('input,textarea,select'));
-				if (!controls.length) return;
-				const first = controls[0];
-				if (first.type === 'checkbox') {
-					values[fieldId] = controls.filter(function (control) { return control.checked; }).map(function (control) { return control.value; });
-				} else if (first.type === 'radio') {
-					values[fieldId] = controls.find(function (control) { return control.checked; })?.value || '';
-				} else if (first.multiple) {
-					values[fieldId] = Array.from(first.selectedOptions || []).map(function (option) { return option.value; });
-				} else {
-					values[fieldId] = first.value || '';
-				}
-			});
-			return values;
-		}
-		function conditionEmpty(value) {
-			return Array.isArray(value) ? value.length === 0 || value.every(function (entry) { return String(entry || '') === ''; }) : String(value || '').trim() === '';
-		}
-		function conditionRuleMatches(rule, values) {
-			const selectedParent = rule && rule.valueSource === 'selectedParent' && rule.parentFieldId;
-			const actual = selectedParent ? values[rule.parentFieldId] : values[rule.fieldId];
-			const expectedSource = selectedParent ? rule.parentValue : rule.value;
-			if (selectedParent && ['equals', 'not_equals', 'contains'].includes(rule.operator) && conditionEmpty(expectedSource)) return false;
-			const expectedValues = (Array.isArray(expectedSource) ? expectedSource : [expectedSource]).map(function (entry) { return String(entry || '').trim(); });
-			const normalized = Array.isArray(actual) ? actual.map(function (entry) { return String(entry || '').trim(); }) : String(actual || '').trim();
-			const equalsExpected = function (entry) {
-				return expectedValues.some(function (expected) { return String(entry || '').toLowerCase() === expected.toLowerCase(); });
-			};
-			if (rule.operator === 'empty') return conditionEmpty(actual);
-			if (rule.operator === 'not_empty') return !conditionEmpty(actual);
-			if (rule.operator === 'contains') return Array.isArray(normalized) ? normalized.some(function (entry) { return expectedValues.some(function (expected) { return entry.toLowerCase().includes(expected.toLowerCase()); }); }) : expectedValues.some(function (expected) { return normalized.toLowerCase().includes(expected.toLowerCase()); });
-			if (rule.operator === 'not_equals') return Array.isArray(normalized) ? !normalized.some(equalsExpected) : !equalsExpected(normalized);
-			return Array.isArray(normalized) ? normalized.some(equalsExpected) : equalsExpected(normalized);
-		}
-		function conditionalVisible(wrapper, values) {
-			let condition = {};
-			try { condition = JSON.parse(wrapper.getAttribute('data-pro-conditional') || '{}'); } catch (_) { condition = {}; }
-			const rules = Array.isArray(condition.rules) ? condition.rules.filter(function (rule) { return rule && rule.fieldId; }) : [];
-			if (condition.enabled !== true || !rules.length) return true;
-			const results = rules.map(function (rule) { return conditionRuleMatches(rule, values); });
-			return condition.relation === 'any' ? results.some(Boolean) : results.every(Boolean);
-		}
-		function datasetOptions(wrapper, values) {
-			const datasetId = wrapper.getAttribute('data-pro-dataset-id');
-			if (!datasetId || !Array.isArray(config.datasets)) return null;
-			const dataset = config.datasets.find(function (entry) { return String(entry.id) === String(datasetId); });
-			if (!dataset || !Array.isArray(dataset.nodes)) return [];
-			const parentFieldId = wrapper.getAttribute('data-pro-dataset-parent') || '';
-			const parentValue = parentFieldId ? values[parentFieldId] : null;
-			const parentValues = Array.isArray(parentValue) ? parentValue : [parentValue];
-			const parentIds = parentFieldId
-				? dataset.nodes.filter(function (node) { return parentValues.some(function (value) { return String(node.id) === String(value) || String(node.value) === String(value); }); }).map(function (node) { return String(node.id); })
-				: [null];
-			return dataset.nodes.filter(function (node) { return node && node.active !== false && parentIds.includes(node.parentId == null ? null : String(node.parentId)); }).sort(function (left, right) { return (Number(left.sortOrder) || 0) - (Number(right.sortOrder) || 0); });
-		}
-		function syncDatasetSelect(wrapper, values) {
-			const select = wrapper.querySelector('select');
-			const options = datasetOptions(wrapper, values);
-			if (!select || options === null) return;
-			const currentValue = select.value;
-			const placeholder = Array.from(select.options || []).find(function (option) { return option.value === ''; });
-			select.innerHTML = '';
-			if (placeholder) select.appendChild(placeholder.cloneNode(true));
-			options.forEach(function (node) {
-				const option = document.createElement('option');
-				option.value = String(node.value ?? node.code ?? node.id ?? '');
-				option.textContent = String(node.label ?? node.name ?? option.value);
-				select.appendChild(option);
-			});
-			if (options.some(function (node) { return String(node.value ?? node.code ?? node.id ?? '') === currentValue; })) select.value = currentValue;
-			else select.value = '';
-		}
-		function syncConditionalFields() {
-			const values = fieldValues();
-			fieldRoots().forEach(function (wrapper) {
-				const visible = conditionalVisible(wrapper, values);
-				wrapper.hidden = !visible;
-				wrapper.classList.toggle('is-conditional-hidden', !visible);
-				const controls = Array.from(wrapper.querySelectorAll('input,textarea,select'));
-				controls.forEach(function (control) {
-					if (!control.dataset.originalRequired) control.dataset.originalRequired = control.required ? '1' : '0';
-					control.required = visible && control.dataset.originalRequired === '1';
-					control.disabled = !visible;
-					if (!visible) {
-						if (control.type === 'checkbox' || control.type === 'radio') control.checked = false;
-						else if (control.type !== 'file') control.value = '';
-					}
-				});
-				if (visible) syncDatasetSelect(wrapper, values);
-			});
-		}
 		function renderStep(index) {
 			activeStep = Math.max(0, Math.min(steps.length - 1, Number(index) || 0));
 			steps.forEach(function (step, stepIndex) { step.hidden = stepIndex !== activeStep; });
 			indicators.forEach(function (indicator, stepIndex) { indicator.classList.toggle('active', stepIndex <= activeStep); });
-			syncConditionalFields();
 		}
 		function validateStep() {
 			const fields = steps[activeStep]?.querySelectorAll('input,textarea,select') || [];
@@ -1030,11 +932,8 @@
 		}
 		root.querySelectorAll('[data-pro-next]').forEach(function (button) { button.addEventListener('click', function () { if (validateStep()) renderStep(activeStep + 1); }); });
 		root.querySelectorAll('[data-pro-previous]').forEach(function (button) { button.addEventListener('click', function () { renderStep(activeStep - 1); }); });
-		root.addEventListener('input', syncConditionalFields);
-		root.addEventListener('change', syncConditionalFields);
 		root.addEventListener('submit', async function (event) {
 			event.preventDefault();
-			syncConditionalFields();
 			const message = root.querySelector('[data-pro-form-message]');
 			if (!root.checkValidity()) { if (validation === 'browser') root.reportValidity(); else root.querySelector(':invalid')?.focus?.(); if (message) { message.classList.add('is-error'); message.textContent = root.dataset.errorMessage || 'Please check the form fields.'; } return; }
 			const actions = config.actions || [];

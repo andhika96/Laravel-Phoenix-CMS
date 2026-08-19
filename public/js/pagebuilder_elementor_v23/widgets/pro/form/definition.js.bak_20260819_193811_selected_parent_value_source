@@ -144,22 +144,11 @@
                           const rules = Array.isArray(logic.rules)
                               ? logic.rules
                                     .filter((rule) => rule && typeof rule === "object")
-                                    .map((rule) => {
-                                        const fieldId = String(rule.fieldId || "").trim();
-                                        const parentFieldId = String(rule.parentFieldId || "").trim();
-                                        const valueSource = ["manual", "selectedParent"].includes(rule.valueSource) && parentFieldId
-                                            ? rule.valueSource
-                                            : "manual";
-                                        const selectedParent = valueSource === "selectedParent";
-                                        return {
-                                            fieldId: selectedParent ? parentFieldId : fieldId,
-                                            operator: ["equals", "not_equals", "contains", "empty", "not_empty"].includes(rule.operator) ? rule.operator : "equals",
-                                            valueSource,
-                                            parentFieldId: valueSource === "selectedParent" ? parentFieldId : "",
-                                            parentValue: selectedParent ? String(rule.parentValue ?? rule.value ?? "").trim() : "",
-                                            value: selectedParent ? "" : String(rule.value ?? ""),
-                                        };
-                                    })
+                                    .map((rule) => ({
+                                        fieldId: String(rule.fieldId || "").trim(),
+                                        operator: ["equals", "not_equals", "contains", "empty", "not_empty"].includes(rule.operator) ? rule.operator : "equals",
+                                        value: String(rule.value ?? ""),
+                                    }))
                                     .filter((rule) => rule.fieldId && rule.fieldId !== normalized.id)
                               : [];
                           normalized.conditionalLogic = {

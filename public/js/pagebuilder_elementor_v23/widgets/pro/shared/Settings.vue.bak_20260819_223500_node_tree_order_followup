@@ -3168,7 +3168,7 @@ const FormDatasetManager = {
                     schemaVersion: Number(parsed.schemaVersion) || 1,
                     nodes: parsed.nodes,
                 };
-                this.selectedNodeId = this.sortedNodes[0]?.id || "";
+                this.selectedNodeId = this.draftDataset.nodes[0]?.id || "";
                 this.error = "";
             } catch (error) {
                 this.error = error.message || "Invalid JSON.";
@@ -3177,7 +3177,7 @@ const FormDatasetManager = {
         normalizeConditionRule(rule = {}, selectedParentFieldId = "") {
             const valueSource = rule.valueSource === "selectedParent" ? "selectedParent" : "manual";
             const parentFieldId = valueSource === "selectedParent"
-                ? String(rule.parentFieldId || selectedParentFieldId || "").trim()
+                ? String(selectedParentFieldId || rule.parentFieldId || "").trim()
                 : String(rule.parentFieldId || "").trim();
             const selectedParent = valueSource === "selectedParent" && parentFieldId;
             return {
@@ -3213,15 +3213,6 @@ const FormDatasetManager = {
                 if (rule.parentValue && !entries.some((entry) => entry.value === rule.parentValue)) rule.parentValue = "";
             });
         },
-        setConditionParentField(rule, fieldId) {
-            const parentFieldId = String(fieldId || "").trim();
-            this.draftField.datasetParentFieldId = parentFieldId;
-            this.syncSelectedParentRules();
-            rule.fieldId = parentFieldId;
-            rule.parentFieldId = parentFieldId;
-            const entries = this.parentValueEntries(rule);
-            if (rule.parentValue && !entries.some((entry) => entry.value === rule.parentValue)) rule.parentValue = "";
-        },
         selectParentValue(rule, value) {
             rule.parentValue = String(value ?? "");
             rule.fieldId = String(this.draftField?.datasetParentFieldId || "");
@@ -3248,7 +3239,7 @@ const FormDatasetManager = {
                 });
         },
         parentFieldForRule(rule) {
-            const parentFieldId = String(rule?.parentFieldId || this.draftField?.datasetParentFieldId || "").trim();
+            const parentFieldId = String(this.draftField?.datasetParentFieldId || "").trim();
             return this.parentFields.find((field) => field.id === parentFieldId) || null;
         },
         parentValueEntries(rule) {
@@ -3293,24 +3284,8 @@ FormDatasetManager.template = FormDatasetManager.template
         "Selected parent menampilkan daftar nilai dari Parent field di atas. Pilih satu nilai dari daftar tersebut. Equals menampilkan field saat parent memilih nilai itu; Does not equal menampilkan field saat parent memilih nilai lain. Parent field di bagian atas tetap mengatur filter pilihan dependent select.",
     )
     .replace(
-        '<div v-if="draftField.datasetMode === \'dataset\'" class="pb-form-group"><label class="pb-form-label">Parent field</label>',
-        '<div v-if="draftField.datasetMode === \'dataset\' && mode !== \'conditions\'" class="pb-form-group"><label class="pb-form-label">Parent field</label>',
-    )
-    .replace(
         '<span v-for="entry in parentValueEntries(rule)" :key="entry.value">{{ entry.label }} · {{ entry.value }}</span>',
         '<button v-for="entry in parentValueEntries(rule)" :key="entry.value" type="button" class="pb-form-dataset-parent-value" :class="{active:entry.value === rule.parentValue}" :aria-pressed="entry.value === rule.parentValue ? \'true\' : \'false\'" @click="selectParentValue(rule, entry.value)">{{ entry.label }} · {{ entry.value }}</button>',
-    )
-    .replace(
-        '<button type="button" class="pb-btn icon" @click="removeConditionRule(index)" aria-label="Remove rule"><i class="fas fa-trash"></i></button>',
-        '',
-    )
-    .replace(
-        '<div v-for="(rule,index) in draftField.conditionalLogic.rules" :key="index" class="pb-form-dataset-condition-row">',
-        `<div v-for="(rule,index) in draftField.conditionalLogic.rules" :key="index" class="pb-form-dataset-condition-row pb-form-dataset-condition-card" :class="{'pb-form-dataset-condition-card--selected-parent':rule.valueSource === 'selectedParent'}"><div class="pb-form-dataset-condition-card__header"><strong>Condition {{ index + 1 }}</strong><button type="button" class="pb-btn pb-form-dataset-condition-remove" @click="removeConditionRule(index)" aria-label="Remove condition"><i class="fas fa-trash"></i></button></div>`,
-    )
-    .replace(
-        /<template v-else><div class="pb-form-dataset-parent-values">.*?<\/div><\/template>/,
-        `<template v-else><div class="pb-form-dataset-selected-parent-grid"><label class="pb-form-dataset-condition-control"><span>Parent field</span><select class="pb-select" aria-label="Parent field" :value="rule.parentFieldId || draftField.datasetParentFieldId" @change="setConditionParentField(rule, $event.target.value)"><option value="">Select parent field</option><option v-for="parent in parentFields" :key="parent.id" :value="parent.id">{{ parent.label }} ({{ parent.id }})</option></select></label><label class="pb-form-dataset-condition-control"><span>Parent value</span><select class="pb-select" aria-label="Parent value" v-model="rule.parentValue"><option value="">Select parent value</option><option v-for="entry in parentValueEntries(rule)" :key="entry.value" :value="entry.value">{{ entry.label }} · {{ entry.value }}</option></select></label><small class="pb-form-dataset-selected-parent-help">Shows this field when the selected parent value matches.</small></div></template>`,
     )
     .replace(
         ':class="{active:node.id===selectedNodeId}"',
@@ -4695,7 +4670,7 @@ export default {
 }
 .pb-form-dataset-conditions--tab {
     flex: 1 1 auto;
-    min-height: min(520px, max(120px, calc(90vh - 296px)));
+    min-height: min(440px, max(120px, calc(90vh - 296px)));
     overflow: auto;
     padding: 28px;
     border-top: 0;
@@ -4910,69 +4885,6 @@ export default {
     font-size: 10px;
     line-height: 1.45;
 }
-.pb-form-dataset-condition-card {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    padding: 0 14px 14px;
-    border: 1px solid #dfe5f0;
-    border-radius: 8px;
-    background: #fff;
-}
-.pb-form-dataset-condition-card--selected-parent {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-.pb-form-dataset-condition-card__header {
-    display: flex;
-    grid-column: 1 / -1;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 42px;
-    margin: 0 -14px 2px;
-    padding: 6px 12px;
-    border-bottom: 1px solid #edf0f6;
-}
-.pb-form-dataset-condition-card__header strong {
-    color: #243047;
-    font-size: 12px;
-    font-weight: 700;
-}
-.pb-form-dataset-condition-remove {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    padding: 0;
-    border: 0;
-    border-radius: 6px;
-    color: #fff;
-    background: #dc3545;
-    font-size: 12px;
-}
-.pb-form-dataset-condition-remove:hover,
-.pb-form-dataset-condition-remove:focus-visible {
-    border-color: transparent;
-    color: #fff;
-    background: #bb2d3b;
-}
-.pb-form-dataset-condition-card .pb-form-dataset-condition-manual-value {
-    grid-column: 1 / -1;
-}
-.pb-form-dataset-selected-parent-grid {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px 14px;
-    margin-top: 2px;
-}
-.pb-form-dataset-selected-parent-help {
-    grid-column: 1 / -1;
-    margin-top: -2px;
-    color: #8a96aa;
-    font-size: 10px;
-    line-height: 1.4;
-}
 .pb-form-dataset-condition-heading {
     position: relative;
 }
@@ -5076,15 +4988,6 @@ export default {
     .pb-form-dataset-condition-row > .pb-btn.icon {
         grid-column: 1;
         grid-row: auto;
-    }
-    .pb-form-dataset-condition-card,
-    .pb-form-dataset-condition-card--selected-parent,
-    .pb-form-dataset-selected-parent-grid {
-        grid-template-columns: 1fr;
-    }
-    .pb-form-dataset-condition-card__header,
-    .pb-form-dataset-selected-parent-help {
-        grid-column: 1;
     }
 }
 .pb-pro-repeater {

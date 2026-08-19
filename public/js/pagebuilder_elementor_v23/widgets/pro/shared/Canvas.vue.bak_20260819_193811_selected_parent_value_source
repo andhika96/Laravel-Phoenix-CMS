@@ -3911,37 +3911,26 @@ export default {
             return String(value ?? "").trim() === "";
         },
         formConditionRuleMatches(rule) {
-            const selectedParent = rule?.valueSource === "selectedParent" && rule.parentFieldId;
-            const actual = selectedParent
-                ? this.formFieldValue({ id: rule.parentFieldId }, "")
-                : this.formFieldValue({ id: rule.fieldId }, "");
-            const expectedSource = selectedParent ? rule?.parentValue : rule?.value;
-            if (selectedParent && ["equals", "not_equals", "contains"].includes(rule.operator) && this.formConditionValueEmpty(expectedSource)) {
-                return false;
-            }
-            const expectedValues = (Array.isArray(expectedSource) ? expectedSource : [expectedSource])
-                .map((entry) => String(entry ?? "").trim());
+            const actual = this.formFieldValue({ id: rule.fieldId }, "");
+            const expected = String(rule.value ?? "").trim();
             const normalized = Array.isArray(actual)
                 ? actual.map((entry) => String(entry ?? "").trim())
                 : String(actual ?? "").trim();
-            const equalsExpected = (entry) => expectedValues.some(
-                (expected) => String(entry ?? "").toLowerCase() === expected.toLowerCase(),
-            );
             if (rule.operator === "empty") return this.formConditionValueEmpty(actual);
             if (rule.operator === "not_empty") return !this.formConditionValueEmpty(actual);
             if (rule.operator === "contains") {
                 return Array.isArray(normalized)
-                    ? normalized.some((entry) => expectedValues.some((expected) => entry.toLowerCase().includes(expected.toLowerCase())))
-                    : expectedValues.some((expected) => normalized.toLowerCase().includes(expected.toLowerCase()));
+                    ? normalized.includes(expected)
+                    : normalized.toLowerCase().includes(expected.toLowerCase());
             }
             if (rule.operator === "not_equals") {
                 return Array.isArray(normalized)
-                    ? !normalized.some(equalsExpected)
-                    : !equalsExpected(normalized);
+                    ? !normalized.includes(expected)
+                    : normalized.toLowerCase() !== expected.toLowerCase();
             }
             return Array.isArray(normalized)
-                ? normalized.some(equalsExpected)
-                : equalsExpected(normalized);
+                ? normalized.includes(expected)
+                : normalized.toLowerCase() === expected.toLowerCase();
         },
         formFieldVisible(field) {
             const logic = field?.conditionalLogic;

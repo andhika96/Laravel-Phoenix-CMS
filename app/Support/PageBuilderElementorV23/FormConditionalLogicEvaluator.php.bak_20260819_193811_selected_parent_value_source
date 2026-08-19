@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Support\PageBuilderElementorV23;
+
+final class FormConditionalLogicEvaluator
+{
+    private const OPERATORS = ['equals', 'not_equals', 'contains', 'empty', 'not_empty'];
+
+    public function fieldIsVisible(array $field, array $values): bool
+    {
+        $logic = is_array($field['conditionalLogic'] ?? null) ? $field['conditionalLogic'] : [];
+        $rules = array_values(array_filter(array_map(
+            fn ($rule): ?array => is_array($rule) && trim((string) ($rule['fieldId'] ?? '')) !== ''
+                ? [
+                    'fieldId' => trim((string) $rule['fieldId']),
+                    'operator' => in_array($rule['operator'] ?? '', self::OPERATORS, true) ? $rule['operator'] : 'equals',
+                    'value' => (string) ($rule['value'] ?? ''),
+                ]
+                : null,
+            is_array($logic['rules'] ?? null) ? $logic['rules'] : [],
+        )));
+
+        if (($logic['enabled'] ?? false) !== true || $rules === []) {
+            return true;
+        }
+
+        $matches = array_map(fn (array $rule): bool => $this->ruleMatches($rule, $values), $rules);
+
+        return ($logic['relation'] ?? 'all') === 'any'
+            ? in_array(true, $matches, true)
+            : ! in_array(false, $matches, true);
+    }
+
+    private function ruleMatches(array $rule, array $values): bool
+    {
+        $actual = $values[$rule['fieldId']] ?? '';
+        $expected = trim((string) ($rule['value'] ?? ''));
+
+        return match ($rule['operator']) {
+            'empty' => $this->isEmpty($actual),
+            'not_empty' => ! $this->isEmpty($actual),
+            'contains' => is_array($actual)
+                ? in_array($expected, array_map('strval', $actual), true)
+                : str_contains(mb_strtolower((string) $actual), mb_strtolower($expected)),
+            'not_equals' => is_array($actual)
+                ? ! in_array($expected, array_map('strval', $actual), true)
+                : mb_strtolower(trim((string) $actual)) !== mb_strtolower($expected),
+            default => is_array($actual)
+                ? in_array($expected, array_map('strval', $actual), true)
+                : mb_strtolower(trim((string) $actual)) === mb_strtolower($expected),
+        };
+    }
+
+    private function isEmpty(mixed $value): bool
+    {
+        if (is_array($value)) {
+            return $value === [] || count(array_filter($value, fn ($entry): bool => trim((string) $entry) !== '')) === 0;
+        }
+
+        return trim((string) $value) === '';
+    }
+}

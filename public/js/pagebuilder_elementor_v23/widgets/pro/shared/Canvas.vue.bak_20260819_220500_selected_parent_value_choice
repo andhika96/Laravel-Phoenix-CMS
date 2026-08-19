@@ -3911,14 +3911,10 @@ export default {
             return String(value ?? "").trim() === "";
         },
         formConditionRuleMatches(rule) {
-            const selectedParent = rule?.valueSource === "selectedParent" && rule.parentFieldId;
-            const actual = selectedParent
+            const actual = this.formFieldValue({ id: rule.fieldId }, "");
+            const expectedSource = rule?.valueSource === "selectedParent" && rule.parentFieldId
                 ? this.formFieldValue({ id: rule.parentFieldId }, "")
-                : this.formFieldValue({ id: rule.fieldId }, "");
-            const expectedSource = selectedParent ? rule?.parentValue : rule?.value;
-            if (selectedParent && ["equals", "not_equals", "contains"].includes(rule.operator) && this.formConditionValueEmpty(expectedSource)) {
-                return false;
-            }
+                : rule?.value;
             const expectedValues = (Array.isArray(expectedSource) ? expectedSource : [expectedSource])
                 .map((entry) => String(entry ?? "").trim());
             const normalized = Array.isArray(actual)

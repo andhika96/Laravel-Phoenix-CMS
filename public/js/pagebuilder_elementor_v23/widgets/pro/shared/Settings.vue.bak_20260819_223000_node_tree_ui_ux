@@ -3025,17 +3025,10 @@ const FormDatasetManager = {
             return this.draftDataset?.nodes?.find((node) => node.id === this.selectedNodeId) || null;
         },
         sortedNodes() {
-            const ordered = [];
-            const visited = new Set();
-            const visit = (node) => {
-                if (!node || visited.has(node.id)) return;
-                visited.add(node.id);
-                ordered.push(node);
-                this.children(node.id).forEach(visit);
-            };
-            this.children(null).forEach(visit);
-            (this.draftDataset?.nodes || []).forEach(visit);
-            return ordered;
+            return [...(this.draftDataset?.nodes || [])].sort((left, right) => {
+                const depth = this.nodeDepth(left) - this.nodeDepth(right);
+                return depth || (Number(left.sortOrder) || 0) - (Number(right.sortOrder) || 0) || String(left.label || "").localeCompare(String(right.label || ""));
+            });
         },
     },
     watch: {
@@ -3080,7 +3073,7 @@ const FormDatasetManager = {
             const dataset = (this.datasets || []).find((entry) => String(entry.id) === String(field.datasetId));
             this.draftField = field;
             this.draftDataset = dataset ? this.clone(dataset) : this.emptyDataset();
-            this.selectedNodeId = this.sortedNodes[0]?.id || "";
+            this.selectedNodeId = this.draftDataset.nodes?.[0]?.id || "";
             this.jsonText = JSON.stringify(this.draftDataset, null, 2);
             this.error = "";
             this.conditionHelpOpen = false;
@@ -3089,7 +3082,7 @@ const FormDatasetManager = {
         selectDataset() {
             const dataset = (this.datasets || []).find((entry) => String(entry.id) === String(this.draftField.datasetId));
             this.draftDataset = dataset ? this.clone(dataset) : this.emptyDataset();
-            this.selectedNodeId = this.sortedNodes[0]?.id || "";
+            this.selectedNodeId = this.draftDataset.nodes?.[0]?.id || "";
             this.jsonText = JSON.stringify(this.draftDataset, null, 2);
             this.error = "";
         },
@@ -3115,14 +3108,6 @@ const FormDatasetManager = {
                 parentId = this.draftDataset?.nodes?.find((item) => item.id === parentId)?.parentId || null;
             }
             return depth;
-        },
-        nodeCanAddChild(node) {
-            return !node?.parentId || this.children(node.id).length > 0;
-        },
-        selectedNodeParentLabel() {
-            const parentId = this.selectedNode?.parentId;
-            if (!parentId) return "Root item";
-            return this.draftDataset?.nodes?.find((node) => node.id === parentId)?.label || parentId;
         },
         descendants(nodeId) {
             const ids = new Set();
@@ -3156,7 +3141,7 @@ const FormDatasetManager = {
             if (!this.selectedNode) return;
             const removed = new Set([this.selectedNode.id, ...this.descendants(this.selectedNode.id)]);
             this.draftDataset.nodes = this.draftDataset.nodes.filter((node) => !removed.has(node.id));
-            this.selectedNodeId = this.sortedNodes[0]?.id || "";
+            this.selectedNodeId = this.draftDataset.nodes[0]?.id || "";
         },
         validateJson() {
             try {
@@ -3168,7 +3153,7 @@ const FormDatasetManager = {
                     schemaVersion: Number(parsed.schemaVersion) || 1,
                     nodes: parsed.nodes,
                 };
-                this.selectedNodeId = this.sortedNodes[0]?.id || "";
+                this.selectedNodeId = this.draftDataset.nodes[0]?.id || "";
                 this.error = "";
             } catch (error) {
                 this.error = error.message || "Invalid JSON.";
@@ -3177,7 +3162,7 @@ const FormDatasetManager = {
         normalizeConditionRule(rule = {}, selectedParentFieldId = "") {
             const valueSource = rule.valueSource === "selectedParent" ? "selectedParent" : "manual";
             const parentFieldId = valueSource === "selectedParent"
-                ? String(rule.parentFieldId || selectedParentFieldId || "").trim()
+                ? String(selectedParentFieldId || rule.parentFieldId || "").trim()
                 : String(rule.parentFieldId || "").trim();
             const selectedParent = valueSource === "selectedParent" && parentFieldId;
             return {
@@ -3213,15 +3198,6 @@ const FormDatasetManager = {
                 if (rule.parentValue && !entries.some((entry) => entry.value === rule.parentValue)) rule.parentValue = "";
             });
         },
-        setConditionParentField(rule, fieldId) {
-            const parentFieldId = String(fieldId || "").trim();
-            this.draftField.datasetParentFieldId = parentFieldId;
-            this.syncSelectedParentRules();
-            rule.fieldId = parentFieldId;
-            rule.parentFieldId = parentFieldId;
-            const entries = this.parentValueEntries(rule);
-            if (rule.parentValue && !entries.some((entry) => entry.value === rule.parentValue)) rule.parentValue = "";
-        },
         selectParentValue(rule, value) {
             rule.parentValue = String(value ?? "");
             rule.fieldId = String(this.draftField?.datasetParentFieldId || "");
@@ -3248,7 +3224,7 @@ const FormDatasetManager = {
                 });
         },
         parentFieldForRule(rule) {
-            const parentFieldId = String(rule?.parentFieldId || this.draftField?.datasetParentFieldId || "").trim();
+            const parentFieldId = String(this.draftField?.datasetParentFieldId || "").trim();
             return this.parentFields.find((field) => field.id === parentFieldId) || null;
         },
         parentValueEntries(rule) {
@@ -3293,56 +3269,8 @@ FormDatasetManager.template = FormDatasetManager.template
         "Selected parent menampilkan daftar nilai dari Parent field di atas. Pilih satu nilai dari daftar tersebut. Equals menampilkan field saat parent memilih nilai itu; Does not equal menampilkan field saat parent memilih nilai lain. Parent field di bagian atas tetap mengatur filter pilihan dependent select.",
     )
     .replace(
-        '<div v-if="draftField.datasetMode === \'dataset\'" class="pb-form-group"><label class="pb-form-label">Parent field</label>',
-        '<div v-if="draftField.datasetMode === \'dataset\' && mode !== \'conditions\'" class="pb-form-group"><label class="pb-form-label">Parent field</label>',
-    )
-    .replace(
         '<span v-for="entry in parentValueEntries(rule)" :key="entry.value">{{ entry.label }} · {{ entry.value }}</span>',
         '<button v-for="entry in parentValueEntries(rule)" :key="entry.value" type="button" class="pb-form-dataset-parent-value" :class="{active:entry.value === rule.parentValue}" :aria-pressed="entry.value === rule.parentValue ? \'true\' : \'false\'" @click="selectParentValue(rule, entry.value)">{{ entry.label }} · {{ entry.value }}</button>',
-    )
-    .replace(
-        '<button type="button" class="pb-btn icon" @click="removeConditionRule(index)" aria-label="Remove rule"><i class="fas fa-trash"></i></button>',
-        '',
-    )
-    .replace(
-        '<div v-for="(rule,index) in draftField.conditionalLogic.rules" :key="index" class="pb-form-dataset-condition-row">',
-        `<div v-for="(rule,index) in draftField.conditionalLogic.rules" :key="index" class="pb-form-dataset-condition-row pb-form-dataset-condition-card" :class="{'pb-form-dataset-condition-card--selected-parent':rule.valueSource === 'selectedParent'}"><div class="pb-form-dataset-condition-card__header"><strong>Condition {{ index + 1 }}</strong><button type="button" class="pb-btn pb-form-dataset-condition-remove" @click="removeConditionRule(index)" aria-label="Remove condition"><i class="fas fa-trash"></i></button></div>`,
-    )
-    .replace(
-        /<template v-else><div class="pb-form-dataset-parent-values">.*?<\/div><\/template>/,
-        `<template v-else><div class="pb-form-dataset-selected-parent-grid"><label class="pb-form-dataset-condition-control"><span>Parent field</span><select class="pb-select" aria-label="Parent field" :value="rule.parentFieldId || draftField.datasetParentFieldId" @change="setConditionParentField(rule, $event.target.value)"><option value="">Select parent field</option><option v-for="parent in parentFields" :key="parent.id" :value="parent.id">{{ parent.label }} ({{ parent.id }})</option></select></label><label class="pb-form-dataset-condition-control"><span>Parent value</span><select class="pb-select" aria-label="Parent value" v-model="rule.parentValue"><option value="">Select parent value</option><option v-for="entry in parentValueEntries(rule)" :key="entry.value" :value="entry.value">{{ entry.label }} · {{ entry.value }}</option></select></label><small class="pb-form-dataset-selected-parent-help">Shows this field when the selected parent value matches.</small></div></template>`,
-    )
-    .replace(
-        ':class="{active:node.id===selectedNodeId}"',
-        ':class="{active:node.id===selectedNodeId,\'is-root\':!node.parentId,\'is-leaf\':!children(node.id).length}"',
-    )
-    .replace(
-        ':style="{paddingLeft:(8 + nodeDepth(node)*18)+\'px\'}"',
-        ':style="{paddingLeft:(8 + nodeDepth(node)*18)+\'px\',\'--node-indent\':(nodeDepth(node)*18)+\'px\'}"',
-    )
-    .replace(
-        `<i class="fas" :class="children(node.id).length ? 'fa-chevron-down' : 'fa-circle'"></i>`,
-        `<i class="fas" :class="children(node.id).length ? 'fa-chevron-down' : (node.parentId ? 'fa-circle' : 'fa-chevron-right')"></i>`,
-    )
-    .replace(
-        '<span class="pb-form-dataset-node__add" role="button" title="Add child node" aria-label="Add child node" @click.stop="addNode(node.id)"><i class="fas fa-plus"></i></span>',
-        '<span v-if="nodeCanAddChild(node)" class="pb-form-dataset-node__add" role="button" title="Add child node" aria-label="Add child node" @click.stop="addNode(node.id)"><i class="fas fa-plus"></i></span>',
-    )
-    .replace(
-        'parentId: {{ selectedNode?.parentId || \'root\' }}',
-        'Belongs to: {{ selectedNodeParentLabel() }}',
-    )
-    .replace(
-        '<text-control label="Kind" v-model="selectedNode.kind" />',
-        '',
-    )
-    .replace(
-        '<select-control label="Parent" v-model="selectedNode.parentId"',
-        '<select-control label="Belongs to" v-model="selectedNode.parentId"',
-    )
-    .replace(
-        '<button type="button" class="pb-btn" @click="addNode(selectedNode.id)"><i class="fas fa-plus"></i> Add child</button><button type="button" class="pb-btn" @click="removeSelectedNode"><i class="fas fa-trash"></i> Delete node</button>',
-        '<div class="pb-form-dataset-node-actions"><button type="button" class="pb-btn pb-form-dataset-node-actions__add" @click="addNode(selectedNode.id)"><i class="fas fa-plus"></i> Add child</button><button type="button" class="pb-btn pb-form-dataset-node-actions__delete" @click="removeSelectedNode"><i class="fas fa-trash"></i> Delete node</button></div>',
     );
 const option = (value, label = value) => ({ value, label });
 export default {
@@ -4520,7 +4448,6 @@ export default {
     overflow: auto;
 }
 .pb-form-dataset-node {
-    position: relative;
     display: grid;
     grid-template-columns: 14px minmax(0, 1fr) auto 26px;
     align-items: center;
@@ -4533,25 +4460,6 @@ export default {
     color: #243047;
     text-align: left;
     cursor: pointer;
-}
-.pb-form-dataset-node:not(.is-root) {
-    margin-left: 4px;
-}
-.pb-form-dataset-node:not(.is-root)::before {
-    position: absolute;
-    top: -5px;
-    bottom: -5px;
-    left: calc(var(--node-indent, 18px) + 5px);
-    border-left: 1px solid #dfe5f0;
-    content: "";
-}
-.pb-form-dataset-node:not(.is-root)::after {
-    position: absolute;
-    top: 50%;
-    left: calc(var(--node-indent, 18px) - 7px);
-    width: 12px;
-    border-top: 1px solid #dfe5f0;
-    content: "";
 }
 .pb-form-dataset-node.active {
     border-color: rgba(91, 108, 255, .25);
@@ -4584,13 +4492,6 @@ export default {
     background: #fff;
     color: #5367ff;
     font-size: 10px;
-    cursor: pointer;
-    transition: border-color 120ms ease, background 120ms ease;
-}
-.pb-form-dataset-node__add:hover,
-.pb-form-dataset-node__add:focus-visible {
-    border-color: #5367ff;
-    background: #f1f4ff;
 }
 .pb-form-dataset-context {
     padding: 4px 7px;
@@ -4632,39 +4533,6 @@ export default {
     grid-column: 1 / -1;
     justify-self: start;
 }
-.pb-form-dataset-node-actions {
-    display: flex;
-    grid-column: 1 / -1;
-    align-items: center;
-    gap: 8px;
-    margin-top: 2px;
-    padding-top: 14px;
-    border-top: 1px solid #edf0f6;
-}
-.pb-form-dataset-node-actions .pb-btn {
-    min-height: 34px;
-}
-.pb-form-dataset-node-actions__add {
-    border-color: #cfd8ff;
-    color: #5367ff;
-    background: #fff;
-}
-.pb-form-dataset-node-actions__add:hover,
-.pb-form-dataset-node-actions__add:focus-visible {
-    border-color: #5367ff;
-    background: #f1f4ff;
-}
-.pb-form-dataset-node-actions__delete {
-    border-color: #f2c7c7;
-    color: #c44747;
-    background: #fff;
-}
-.pb-form-dataset-node-actions__delete:hover,
-.pb-form-dataset-node-actions__delete:focus-visible {
-    border-color: #d65555;
-    color: #a92f2f;
-    background: #fff6f6;
-}
 .pb-form-dataset-static,
 .pb-form-dataset-json {
     flex: 1 1 auto;
@@ -4695,7 +4563,7 @@ export default {
 }
 .pb-form-dataset-conditions--tab {
     flex: 1 1 auto;
-    min-height: min(520px, max(120px, calc(90vh - 296px)));
+    min-height: min(440px, max(120px, calc(90vh - 296px)));
     overflow: auto;
     padding: 28px;
     border-top: 0;
@@ -4910,69 +4778,6 @@ export default {
     font-size: 10px;
     line-height: 1.45;
 }
-.pb-form-dataset-condition-card {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    padding: 0 14px 14px;
-    border: 1px solid #dfe5f0;
-    border-radius: 8px;
-    background: #fff;
-}
-.pb-form-dataset-condition-card--selected-parent {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-.pb-form-dataset-condition-card__header {
-    display: flex;
-    grid-column: 1 / -1;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 42px;
-    margin: 0 -14px 2px;
-    padding: 6px 12px;
-    border-bottom: 1px solid #edf0f6;
-}
-.pb-form-dataset-condition-card__header strong {
-    color: #243047;
-    font-size: 12px;
-    font-weight: 700;
-}
-.pb-form-dataset-condition-remove {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    padding: 0;
-    border: 0;
-    border-radius: 6px;
-    color: #fff;
-    background: #dc3545;
-    font-size: 12px;
-}
-.pb-form-dataset-condition-remove:hover,
-.pb-form-dataset-condition-remove:focus-visible {
-    border-color: transparent;
-    color: #fff;
-    background: #bb2d3b;
-}
-.pb-form-dataset-condition-card .pb-form-dataset-condition-manual-value {
-    grid-column: 1 / -1;
-}
-.pb-form-dataset-selected-parent-grid {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px 14px;
-    margin-top: 2px;
-}
-.pb-form-dataset-selected-parent-help {
-    grid-column: 1 / -1;
-    margin-top: -2px;
-    color: #8a96aa;
-    font-size: 10px;
-    line-height: 1.4;
-}
 .pb-form-dataset-condition-heading {
     position: relative;
 }
@@ -5076,15 +4881,6 @@ export default {
     .pb-form-dataset-condition-row > .pb-btn.icon {
         grid-column: 1;
         grid-row: auto;
-    }
-    .pb-form-dataset-condition-card,
-    .pb-form-dataset-condition-card--selected-parent,
-    .pb-form-dataset-selected-parent-grid {
-        grid-template-columns: 1fr;
-    }
-    .pb-form-dataset-condition-card__header,
-    .pb-form-dataset-selected-parent-help {
-        grid-column: 1;
     }
 }
 .pb-pro-repeater {

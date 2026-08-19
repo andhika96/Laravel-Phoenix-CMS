@@ -4,7 +4,6 @@ namespace App\Support\PageBuilderElementorV23;
 
 use App\Mail\PageBuilderElementorV23FormMail;
 use App\Models\Page_Builder\Page_Builder;
-use App\Models\PageBuilderElementorV23\FormDataset;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -18,10 +17,6 @@ class FormSubmissionHandler
 {
     private const ACTIONS = ['message', 'collect', 'email', 'email2', 'redirect', 'webhook'];
 
-    public function __construct(private readonly FormConditionalLogicEvaluator $conditionalLogic)
-    {
-    }
-
     public function handle(Page_Builder $page, string $nodeId, Request $request): array
     {
         $node = $this->findFormNode($this->layout($page), $nodeId);
@@ -32,11 +27,6 @@ class FormSubmissionHandler
 
         $settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
         $definitions = $this->fieldDefinitions($settings['fields'] ?? []);
-        $definitions = $this->resolveDatasetOptions($page, $definitions, $request->all());
-        $definitions = array_filter(
-            $definitions,
-            fn (array $field): bool => $this->conditionalLogic->fieldIsVisible($field, $request->all()),
-        );
         $validated = Validator::make($request->all(), $this->rules($definitions))->validate();
         [$fields, $files] = $this->submissionValues($definitions, $validated);
         $actions = array_values(array_intersect((array) ($settings['submitActions'] ?? ['message']), self::ACTIONS));
@@ -162,7 +152,7 @@ class FormSubmissionHandler
         foreach ($definitions as $id => $field) {
             $type = (string) ($field['type'] ?? 'text');
             $multiple = ! empty($field['multiple']) || $type === 'checkbox';
-            $options = $this->optionValues($field, $field['resolvedOptions'] ?? null);
+            $options = $this->optionValues($field);
             $fileRule = $this->fileTypeRule($field);
             $fieldRules = [! empty($field['required']) ? 'required' : 'nullable'];
 
@@ -195,9 +185,7 @@ class FormSubmissionHandler
                 $fieldRules[] = 'max:10000';
             }
 
-            $constrainOptions = in_array($type, ['select', 'radio'], true)
-                && ($options !== [] || ($field['datasetMode'] ?? 'static') === 'dataset');
-            if (! $multiple && $constrainOptions) {
+            if (! $multiple && in_array($type, ['select', 'radio'], true) && $options !== []) {
                 $fieldRules[] = Rule::in($options);
             }
 
@@ -208,8 +196,7 @@ class FormSubmissionHandler
                 if ($type === 'file' && $fileRule) {
                     $itemRules[] = $fileRule;
                 }
-                if (in_array($type, ['select', 'checkbox'], true)
-                    && ($options !== [] || ($field['datasetMode'] ?? 'static') === 'dataset')) {
+                if (in_array($type, ['select', 'checkbox'], true) && $options !== []) {
                     $itemRules[] = Rule::in($options);
                 }
                 $rules[$id.'.*'] = $itemRules;
@@ -219,15 +206,8 @@ class FormSubmissionHandler
         return $rules;
     }
 
-    private function optionValues(array $field, ?array $resolvedOptions = null): array
+    private function optionValues(array $field): array
     {
-        if ($resolvedOptions !== null) {
-            return array_values(array_unique(array_filter(array_map(
-                fn ($option) => is_array($option) ? (string) ($option['value'] ?? $option['label'] ?? '') : (string) $option,
-                $resolvedOptions,
-            ), fn ($value) => $value !== '')));
-        }
-
         if (is_array($field['options'] ?? null)) {
             return array_values(array_filter(array_map(
                 fn ($option) => is_array($option) ? (string) ($option['value'] ?? $option['label'] ?? '') : (string) $option,
@@ -246,50 +226,6 @@ class FormSubmissionHandler
         }
 
         return array_values(array_unique($values));
-    }
-
-    private function resolveDatasetOptions(Page_Builder $page, array $definitions, array $values): array
-    {
-        $ownerId = (int) ($page->user_id ?? 1);
-
-        foreach ($definitions as $id => &$field) {
-            if (($field['datasetMode'] ?? 'static') !== 'dataset') {
-                continue;
-            }
-
-            $datasetId = (int) ($field['datasetId'] ?? 0);
-            $dataset = $datasetId > 0
-                ? FormDataset::query()->where('user_id', $ownerId)->find($datasetId)
-                : null;
-            $nodes = is_array($dataset?->nodes) ? $dataset->nodes : [];
-            $parentFieldId = trim((string) ($field['datasetParentFieldId'] ?? ''));
-            $parentValues = $parentFieldId === ''
-                ? []
-                : (array) ($values[$parentFieldId] ?? []);
-            $parentValues = array_values(array_filter(array_map('strval', $parentValues), fn ($value) => $value !== ''));
-
-            if ($parentFieldId === '') {
-                $parentIds = [null];
-            } else {
-                $parentIds = array_values(array_map(
-                    fn (array $node): string => (string) $node['id'],
-                    array_filter($nodes, fn (array $node): bool => in_array((string) ($node['id'] ?? ''), $parentValues, true)
-                        || in_array((string) ($node['value'] ?? ''), $parentValues, true)),
-                ));
-            }
-
-            $field['resolvedOptions'] = array_values(array_map(
-                fn (array $node): array => [
-                    'label' => (string) ($node['label'] ?? $node['name'] ?? $node['value'] ?? ''),
-                    'value' => (string) ($node['value'] ?? $node['code'] ?? $node['id'] ?? ''),
-                ],
-                array_filter($nodes, fn (array $node): bool => ($node['active'] ?? true)
-                    && in_array($node['parentId'] ?? null, $parentIds, true)),
-            ));
-        }
-        unset($field);
-
-        return $definitions;
     }
 
     private function fileTypeRule(array $field): ?string

@@ -423,20 +423,7 @@
             }
             $formSteps=array_values(array_filter($formSteps,fn($step)=>count($step['fields'])));
             if(!$formSteps)$formSteps=[['title'=>'','description'=>'','nextButton'=>'Next','previousButton'=>'Previous','fields'=>[]]];
-            $formDatasets=[];
-            $datasetOwnerId=(int)($pageData->user_id??1);
-            foreach($fields as $datasetField){
-                if(($datasetField['datasetMode']??'static')!=='dataset')continue;
-                $datasetId=(int)($datasetField['datasetId']??0);
-                if($datasetId<=0)continue;
-                $dataset=\App\Models\PageBuilderElementorV23\FormDataset::query()->where('user_id',$datasetOwnerId)->find($datasetId);
-                if($dataset)$formDatasets[(string)$dataset->getKey()]=['id'=>$dataset->getKey(),'name'=>$dataset->name,'schemaVersion'=>(int)$dataset->schema_version,'nodes'=>is_array($dataset->nodes)?$dataset->nodes:[]];
-            }
-            $parseFormOptions=function(array $field) use($formDatasets):array{
-                if(($field['datasetMode']??'static')==='dataset'&&!empty($field['datasetId'])&&isset($formDatasets[(string)$field['datasetId']])){
-                    $nodes=$formDatasets[(string)$field['datasetId']]['nodes'];
-                    return array_values(array_map(fn($entry)=>['label'=>(string)($entry['label']??$entry['name']??$entry['value']??''),'value'=>(string)($entry['value']??$entry['code']??$entry['id']??'')],array_filter($nodes,fn($entry)=>is_array($entry)&&($entry['active']??true)&&(($entry['parentId']??null)===null))));
-                }
+            $parseFormOptions=function(array $field):array{
                 if(is_array($field['options']??null)&&count($field['options']))return array_map(fn($entry)=>is_array($entry)?['label'=>(string)($entry['label']??$entry['value']??''),'value'=>(string)($entry['value']??$entry['label']??'')]:['label'=>(string)$entry,'value'=>(string)$entry],$field['options']);
                 $result=[];foreach(preg_split('/\r?\n/',(string)($field['optionsText']??'')) as $line){$line=trim($line);if($line==='')continue;[$label,$value]=array_pad(explode('|',$line,2),2,null);$result[]=['label'=>trim($label),'value'=>trim($value??$label)];}return $result;
             };
@@ -444,7 +431,7 @@
             $formPageUri=(string)($pageData->uri??request()->route('idOrSlug')??'');
             $formSubmitUrl=$formPageUri!==''?route('cms.core.pagebuilder_elementor_v23.form.submit',['idOrSlug'=>$formPageUri,'nodeId'=>$nodeId]):'';
             $formRedirect=in_array('redirect',$formActions,true)?$safeUrl($settings['redirectUrl']??''):'';
-            $formConfig=['actions'=>$formActions,'submitUrl'=>$formSubmitUrl,'datasets'=>array_values($formDatasets)];
+            $formConfig=['actions'=>$formActions,'submitUrl'=>$formSubmitUrl];
             $fieldHeight=['extra-small'=>'31px','small'=>'36px','medium'=>'42px','large'=>'50px','extra-large'=>'58px'][$settings['inputSize']??'small']??'36px';
             $buttonHeight=['extra-small'=>'31px','small'=>'36px','medium'=>'42px','large'=>'50px','extra-large'=>'58px'][$settings['buttonSize']??'small']??'36px';
             $buttonWidth=max(20,min(100,(int)($settings['buttonWidth']??100))).'%';
@@ -474,7 +461,7 @@
                             $fieldType=in_array(($field['type']??''),['text','email','textarea','number','tel','url','select','checkbox','radio','date','time','file','hidden','acceptance','html'],true)?$field['type']:'text';
                             $required=!empty($field['required']);$options=$parseFormOptions((array)$field);$fieldDomId=$advanced['id'].'-'.$fieldId;
                         @endphp
-                        <div class="pb-pro-form__field{{ !empty($field['inlineList'])?' is-inline':'' }}" style="width:{{ max(20,min(100,(int)($field['width']??100))) }}%" data-pro-form-field="{{ e($fieldId) }}" data-pro-conditional="{{ e(json_encode($field['conditionalLogic']??[])) }}" @if(($field['datasetMode']??'static')==='dataset'&&!empty($field['datasetId'])) data-pro-dataset-id="{{ e((string)$field['datasetId']) }}" data-pro-dataset-parent="{{ e((string)($field['datasetParentFieldId']??'')) }}" @endif>
+                        <div class="pb-pro-form__field{{ !empty($field['inlineList'])?' is-inline':'' }}" style="width:{{ max(20,min(100,(int)($field['width']??100))) }}%">
                             @if(!in_array($fieldType,['hidden','html','acceptance','checkbox','radio'],true))<label @if(empty($settings['showLabels'])) class="pb-visually-hidden" @endif for="{{ $fieldDomId }}">{{ e($field['label']??'Field') }}@if($required&&!empty($settings['markRequired'])) <span aria-hidden="true">*</span>@endif</label>@endif
                             @if($fieldType==='html')<div class="pb-pro-form__html">{!! $safeHtml($field['html']??'') !!}</div>
                             @elseif($fieldType==='acceptance')<label class="pb-pro-form__choice"><input id="{{ $fieldDomId }}" name="{{ $fieldId }}" type="checkbox" value="1" @required($required)><span>{{ e($field['acceptanceText']??'') }}</span></label>

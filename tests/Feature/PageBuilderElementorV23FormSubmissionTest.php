@@ -51,6 +51,17 @@ class PageBuilderElementorV23FormSubmissionTest extends TestCase
             $table->json('meta')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('pagebuilder_elementor_v23_form_datasets', function (Blueprint $table): void {
+            $table->id();
+            $table->unsignedBigInteger('user_id')->default(1)->index();
+            $table->string('name', 120);
+            $table->string('slug', 140);
+            $table->unsignedTinyInteger('schema_version')->default(1);
+            $table->json('nodes');
+            $table->timestamps();
+            $table->unique(['user_id', 'slug']);
+        });
     }
 
     protected function tearDown(): void
@@ -205,6 +216,66 @@ class PageBuilderElementorV23FormSubmissionTest extends TestCase
         );
 
         $response->assertUnprocessable()->assertJsonValidationErrors(['plan', 'score', 'resume']);
+    }
+
+    public function test_conditional_required_field_is_validated_only_when_visible(): void
+    {
+        $this->createPageWithForm([
+            'submitActions' => ['message'],
+            'fields' => [
+                ['id' => 'country', 'label' => 'Country', 'type' => 'select', 'required' => true, 'optionsText' => "Indonesia|ID\nMalaysia|MY"],
+                [
+                    'id' => 'province',
+                    'label' => 'Province',
+                    'type' => 'text',
+                    'required' => true,
+                    'conditionalLogic' => [
+                        'enabled' => true,
+                        'relation' => 'all',
+                        'rules' => [['fieldId' => 'country', 'operator' => 'equals', 'value' => 'ID']],
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->postJson('/pagebuilder-elementor/v2.3/form/contact-page/form-contact', [
+            'country' => 'MY',
+        ])->assertOk();
+
+        $this->postJson('/pagebuilder-elementor/v2.3/form/contact-page/form-contact', [
+            'country' => 'ID',
+        ])->assertUnprocessable()->assertJsonValidationErrors(['province']);
+    }
+
+    public function test_dataset_select_rejects_a_child_value_from_the_wrong_parent(): void
+    {
+        DB::table('pagebuilder_elementor_v23_form_datasets')->insert([
+            'user_id' => 1,
+            'name' => 'Locations',
+            'slug' => 'locations',
+            'schema_version' => 1,
+            'nodes' => json_encode([
+                ['id' => 'id', 'parentId' => null, 'label' => 'Indonesia', 'value' => 'ID', 'active' => true],
+                ['id' => 'id-jb', 'parentId' => 'id', 'label' => 'Jawa Barat', 'value' => 'ID-JB', 'active' => true],
+                ['id' => 'my', 'parentId' => null, 'label' => 'Malaysia', 'value' => 'MY', 'active' => true],
+                ['id' => 'my-selangor', 'parentId' => 'my', 'label' => 'Selangor', 'value' => 'MY-10', 'active' => true],
+            ], JSON_THROW_ON_ERROR),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $this->createPageWithForm([
+            'submitActions' => ['message'],
+            'fields' => [
+                ['id' => 'country', 'label' => 'Country', 'type' => 'select', 'datasetMode' => 'dataset', 'datasetId' => 1, 'required' => true],
+                ['id' => 'province', 'label' => 'Province', 'type' => 'select', 'datasetMode' => 'dataset', 'datasetId' => 1, 'datasetParentFieldId' => 'country', 'required' => true],
+            ],
+        ]);
+
+        $this->postJson('/pagebuilder-elementor/v2.3/form/contact-page/form-contact', [
+            'country' => 'ID',
+            'province' => 'MY-10',
+        ])->assertUnprocessable()->assertJsonValidationErrors(['province']);
     }
 
     public function test_saved_form_renderer_exposes_only_its_server_submit_endpoint(): void
