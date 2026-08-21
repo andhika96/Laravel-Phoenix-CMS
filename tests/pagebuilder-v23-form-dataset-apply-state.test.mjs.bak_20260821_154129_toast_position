@@ -1,0 +1,22 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+
+const settings = fs.readFileSync(
+    new URL("../public/js/pagebuilder_elementor_v23/widgets/pro/shared/Settings.vue", import.meta.url),
+    "utf8",
+);
+
+test("Apply dataset stays in the modal and exposes a Manage Role-style notice toast", () => {
+    const saveMethod = settings.match(/async saveFormDataset\([\s\S]*?\n        \},/u)?.[0] || "";
+    assert.notEqual(saveMethod, "");
+    assert.doesNotMatch(saveMethod, /this\.closeFormDatasetModal\(\)/);
+    assert.match(settings, /responsePayload\?\.success\s*!==\s*true/);
+    assert.match(settings, /pb-form-dataset-toast/);
+    assert.match(settings, /Dataset (?:created|updated) successfully/);
+    assert.match(settings, /clearFormDatasetNotice/);
+});
+
+test("confirmation buttons keep an accessible gap between the icon and label", () => {
+    assert.match(settings, /pb-form-dataset-delete-modal__confirm[\s\S]*?gap:\s*6px/);
+});

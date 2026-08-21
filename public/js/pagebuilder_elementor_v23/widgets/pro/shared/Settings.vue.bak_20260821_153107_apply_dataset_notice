@@ -2721,11 +2721,9 @@
             :endpoints="formDatasetEndpoints()"
             :notice="formDatasetNotice"
             :server-error="formDatasetError"
-            :loading="formDatasetLoading"
             @close="closeFormDatasetModal"
             @save="saveFormDataset"
             @deleted="handleDeletedDataset"
-            @clear-notice="clearFormDatasetNotice"
         />
     </div>
 </template>
@@ -3009,9 +3007,8 @@ const FormDatasetManager = {
         endpoints: { type: Object, default: () => ({}) },
         notice: { type: String, default: "" },
         serverError: { type: String, default: "" },
-        loading: { type: Boolean, default: false },
     },
-    emits: ["close", "save", "deleted", "clear-notice"],
+    emits: ["close", "save", "deleted"],
     components: { TextControl, SelectControl },
     data() {
         return {
@@ -3028,7 +3025,6 @@ const FormDatasetManager = {
             deleteError: "",
             conditionDeleteConfirmationOpen: false,
             conditionDeleteIndex: null,
-            conditionDeleteNotice: "",
         };
     },
     mounted() {
@@ -3114,7 +3110,6 @@ const FormDatasetManager = {
             this.deleteError = "";
             this.conditionDeleteConfirmationOpen = false;
             this.conditionDeleteIndex = null;
-            this.conditionDeleteNotice = "";
             this.mode = "visual";
         },
         selectDataset() {
@@ -3384,14 +3379,9 @@ const FormDatasetManager = {
             if (this.conditionDeleteIndex === null) return;
             this.removeConditionRule(this.conditionDeleteIndex);
             this.closeConditionDeleteConfirmation();
-            this.conditionDeleteNotice = "Condition removed. Click Apply dataset to save.";
-        },
-        clearNotice() {
-            this.conditionDeleteNotice = "";
-            this.$emit("clear-notice");
         },
         apply() {
-            if (!this.draftField || this.loading || this.deleteLoading) return;
+            if (!this.draftField) return;
             if (this.draftField.datasetMode === "dataset" && !this.draftDataset) {
                 this.error = "Select or create a dataset first.";
                 return;
@@ -3463,10 +3453,6 @@ FormDatasetManager.template = FormDatasetManager.template
         `<div v-if="draftField.datasetMode === 'dataset'" class="pb-form-group"><label class="pb-form-label">Shared dataset</label><div class="pb-form-dataset-picker" @click.stop><button type="button" class="pb-select pb-form-dataset-picker__trigger" aria-haspopup="listbox" :aria-expanded="datasetMenuOpen ? 'true' : 'false'" @click="toggleDatasetMenu"><span>{{ selectedDatasetLabel }}</span><i class="fas fa-chevron-down"></i></button><div v-if="datasetMenuOpen" class="pb-form-dataset-picker__menu" role="listbox" aria-label="Shared datasets"><button type="button" class="pb-form-dataset-picker__option" role="option" :aria-selected="!draftField.datasetId ? 'true' : 'false'" @click="chooseDataset('')">Create or select dataset</button><button v-for="dataset in datasets" :key="dataset.id" type="button" class="pb-form-dataset-picker__option" role="option" :aria-selected="String(dataset.id) === String(draftField.datasetId) ? 'true' : 'false'" @click="chooseDataset(dataset.id)">{{ dataset.name }} · {{ dataset.nodes?.length || 0 }} nodes</button><div v-if="selectedDataset" class="pb-form-dataset-picker__separator" role="separator"></div><button v-if="selectedDataset" type="button" class="pb-form-dataset-picker__delete" @click="openDeleteConfirmation"><i class="fas fa-trash-alt"></i><span>Delete selected dataset</span></button></div></div></div>`,
     )
     .replace(
-        '<div class="pb-form-dataset-modal__header">',
-        `<div v-if="notice || serverError || conditionDeleteNotice" class="ph-notice" v-cloak><div aria-live="polite" aria-atomic="true" class="position-relative"><div class="toast-container position-fixed top-0 end-0 p-3 pb-form-dataset-toast-container"><div class="toast ph-notice-toast ph-callout-no-border show" :class="serverError ? 'ph-callout-danger' : 'ph-callout-success'" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000"><div class="toast-header px-3 pt-3 pb-1 border-0" :class="serverError ? 'ph-callout-danger' : 'ph-callout-success'"><strong class="toast-header-title toast-header-icon me-auto">Notice</strong><small>just now</small><button type="button" class="btn-close" aria-label="Close notice" @click="clearNotice"></button></div><div class="toast-body p-3 text-start">{{ serverError || notice || conditionDeleteNotice }}</div></div></div></div></div><div class="pb-form-dataset-modal__header">`,
-    )
-    .replace(
         '<div class="pb-form-dataset-modal__footer">',
         `<div v-if="deleteConfirmationOpen" class="pb-modal-backdrop pb-form-dataset-delete-backdrop" @click.self="closeDeleteConfirmation" @keydown.esc.window="closeDeleteConfirmation"><div class="pb-modal pb-form-dataset-delete-modal" role="dialog" aria-modal="true" aria-labelledby="pb-form-dataset-delete-title" aria-describedby="pb-form-dataset-delete-message"><div class="pb-form-dataset-delete-modal__icon" aria-hidden="true"><i class="fas fa-trash-alt"></i></div><h2 id="pb-form-dataset-delete-title">Delete dataset?</h2><p id="pb-form-dataset-delete-message">This will disconnect every form field using <strong>{{ selectedDataset?.name }}</strong>.</p><p v-if="deleteError" class="pb-form-dataset-delete-modal__error" role="alert">{{ deleteError }}</p><div class="pb-form-dataset-delete-modal__actions"><button type="button" class="pb-btn" @click="closeDeleteConfirmation" :disabled="deleteLoading">Cancel</button><button type="button" class="pb-btn pb-form-dataset-delete-modal__confirm" @click="confirmDeleteDataset" :disabled="deleteLoading"><i v-if="deleteLoading" class="fas fa-spinner fa-spin"></i><i v-else class="fas fa-trash-alt"></i>{{ deleteLoading ? 'Deleting…' : 'Delete dataset' }}</button></div></div></div><div class="pb-form-dataset-modal__footer">`,
     )
@@ -3476,11 +3462,7 @@ FormDatasetManager.template = FormDatasetManager.template
     )
     .replace(
         '<span><i class="fas fa-info-circle"></i> Changes apply after Apply dataset.</span>',
-        '<span><i class="fas fa-info-circle"></i> Changes apply after Apply dataset.</span>',
-    )
-    .replace(
-        '<button type="button" class="pb-btn primary" @click="apply">Apply dataset</button>',
-        '<button type="button" class="pb-btn primary" @click="apply" :disabled="loading || deleteLoading"><i v-if="loading" class="fas fa-spinner fa-spin"></i>{{ loading ? \'Saving…\' : \'Apply dataset\' }}</button>',
+        '<span v-if="notice" class="pb-form-dataset-notice" role="status"><i class="fas fa-check-circle"></i> {{ notice }}</span><span v-else-if="serverError" class="pb-form-dataset-server-error" role="alert"><i class="fas fa-exclamation-circle"></i> {{ serverError }}</span><span v-else><i class="fas fa-info-circle"></i> Changes apply after Apply dataset.</span>',
     )
     .replace(
         '<div class="pb-modal pb-form-dataset-modal" role="dialog"',
@@ -4377,29 +4359,23 @@ export default {
             if (!field || !payload?.field || !dataset) return;
             if (payload.field.datasetMode !== "dataset") {
                 Object.assign(field, payload.field, { datasetMode: "static", datasetId: "", datasetParentFieldId: "" });
-                this.formDatasetError = "";
-                this.formDatasetNotice = "Dataset options applied successfully.";
+                this.closeFormDatasetModal();
                 return;
             }
             this.formDatasetLoading = true;
-            this.formDatasetError = "";
             try {
                 const endpoints = this.formDatasetEndpoints();
                 const existingId = dataset.id ? String(dataset.id) : "";
                 const url = existingId
                     ? String(endpoints.update || "").replace("__DATASET_ID__", encodeURIComponent(existingId))
                     : endpoints.store;
-                const csrfToken = window.PAGE_BUILDER_ELEMENTOR_V23_CONTEXT?.csrfToken || document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
                 const response = await fetch(url, {
                     method: existingId ? "PUT" : "POST",
-                    cache: "no-store",
-                    credentials: "same-origin",
-                    redirect: "manual",
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "application/json",
                         "X-Requested-With": "XMLHttpRequest",
-                        "X-CSRF-TOKEN": csrfToken,
+                        "X-CSRF-TOKEN": window.PAGE_BUILDER_ELEMENTOR_V23_CONTEXT?.csrfToken || "",
                     },
                     body: JSON.stringify({
                         name: dataset.name || `${payload.field.label || "Form"} Dataset`,
@@ -4407,11 +4383,9 @@ export default {
                         nodes: Array.isArray(dataset.nodes) ? dataset.nodes : [],
                     }),
                 });
-                const responsePayload = await response.json().catch(() => null);
-                if (!response.ok || responsePayload?.success !== true || !responsePayload.data) {
-                    throw new Error(responsePayload?.message || (response.redirected || response.type === "opaqueredirect" ? "Your session expired. Refresh the editor and try again." : "Could not save the shared dataset."));
-                }
-                const saved = responsePayload.data;
+                const responsePayload = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(responsePayload.message || "Could not save the shared dataset.");
+                const saved = responsePayload.data || dataset;
                 Object.assign(field, payload.field, {
                     datasetMode: "dataset",
                     datasetId: String(saved.id || dataset.id || ""),
@@ -4421,17 +4395,13 @@ export default {
                 else this.formDatasets.push(saved);
                 window.PAGE_BUILDER_ELEMENTOR_V23_FORM_DATASETS = this.formDatasets;
                 this.formDatasetsLoaded = true;
-                this.formDatasetNotice = existingId ? "Dataset updated successfully." : "Dataset created successfully.";
+                this.closeFormDatasetModal();
             } catch (error) {
                 this.formDatasetError = error.message || "Could not save the shared dataset.";
                 console.error(error);
             } finally {
                 this.formDatasetLoading = false;
             }
-        },
-        clearFormDatasetNotice() {
-            this.formDatasetNotice = "";
-            this.formDatasetError = "";
         },
         async handleDeletedDataset({ datasetId } = {}) {
             const id = String(datasetId || "");
@@ -4540,7 +4510,6 @@ export default {
 .pb-form-dataset-modal {
     display: flex;
     flex-direction: column;
-    position: relative;
     width: min(1080px, calc(100vw - 48px));
     max-width: 96vw;
     max-height: 90vh;
@@ -4750,9 +4719,6 @@ export default {
     margin-top: 24px;
 }
 .pb-form-dataset-delete-modal__confirm {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
     border-color: #c73545;
     background: #c73545;
     color: #fff;
@@ -4762,97 +4728,19 @@ export default {
     border-color: #ae2938;
     background: #ae2938;
 }
-.pb-form-dataset-toast-container {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 10005;
-    pointer-events: none;
-}
-.pb-form-dataset-modal__footer .pb-btn.primary {
+.pb-form-dataset-notice,
+.pb-form-dataset-server-error {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
 }
-.pb-form-dataset-toast-container .toast {
-    pointer-events: auto;
-    min-width: 300px;
-    max-width: 440px;
-    border: 1px solid #dfe5f0;
-    box-shadow: 0 12px 30px rgba(15, 20, 40, .16);
+.pb-form-dataset-notice {
+    color: #067647;
 }
-.pb-form-dataset-toast-container .ph-notice-toast {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-    background-clip: padding-box;
-    background-color: #f8f9fa;
-}
-.pb-form-dataset-toast-container .ph-callout-no-border {
-    border: 0;
-}
-.pb-form-dataset-toast-container .ph-callout-success {
-    color: #0f5132;
-    background-color: #e9f7ef;
-}
-.pb-form-dataset-toast-container .ph-callout-danger {
-    color: #842029;
-    background-color: #fff5f5;
-}
-.pb-form-dataset-toast-container .ph-callout-success::before,
-.pb-form-dataset-toast-container .ph-callout-danger::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 4px;
-    inset-block-start: 0;
-    inset-inline-start: 0;
-}
-.pb-form-dataset-toast-container .ph-callout-success::before {
-    background-color: #198754;
-}
-.pb-form-dataset-toast-container .ph-callout-danger::before {
-    background-color: #dc3545;
-}
-.pb-form-dataset-toast-container .toast-header-title {
-    position: relative;
-    padding-left: 2rem;
-}
-.pb-form-dataset-toast-container .toast-header-title::before,
-.pb-form-dataset-toast-container .toast-header-title::after {
-    font-weight: 900;
-    font-family: "Font Awesome 5 Duotone";
-    left: 0;
-    top: 50%;
-    width: 1.25em;
-    position: absolute;
-    text-align: center;
-    line-height: .75em;
-    display: inline-block;
-    transform: translateY(-50%);
-}
-.pb-form-dataset-toast-container .toast-header-title::before {
-    color: inherit;
-    opacity: 1;
-}
-.pb-form-dataset-toast-container .toast-header-title::after {
-    color: inherit;
-    opacity: .4;
-}
-.pb-form-dataset-toast-container .ph-callout-success .toast-header-icon::before {
-    content: "\f058";
-}
-.pb-form-dataset-toast-container .ph-callout-success .toast-header-icon::after {
-    content: "\10f058";
-}
-.pb-form-dataset-toast-container .ph-callout-danger .toast-header-icon::before {
-    content: "\f057";
-}
-.pb-form-dataset-toast-container .ph-callout-danger .toast-header-icon::after {
-    content: "\10f057";
-}
-.pb-form-dataset-toast-container .toast-body {
-    color: #344054;
+.pb-form-dataset-server-error {
+    color: #b42318;
 }
 .pb-form-dataset-tabs {
     flex: 0 0 auto;

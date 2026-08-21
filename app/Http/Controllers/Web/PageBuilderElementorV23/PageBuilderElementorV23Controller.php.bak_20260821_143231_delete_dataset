@@ -422,7 +422,6 @@ class PageBuilderElementorV23Controller extends Controller
 			'index' => route('cms.core.pagebuilder_elementor_v23.datasets.index'),
 			'store' => route('cms.core.pagebuilder_elementor_v23.datasets.store'),
 			'update' => route('cms.core.pagebuilder_elementor_v23.datasets.update', ['datasetId' => '__DATASET_ID__']),
-			'destroy' => route('cms.core.pagebuilder_elementor_v23.datasets.destroy', ['datasetId' => '__DATASET_ID__']),
 		];
 	}
 

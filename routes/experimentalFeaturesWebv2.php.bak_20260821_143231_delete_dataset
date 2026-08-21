@@ -54,7 +54,6 @@ Route::controller(App\Http\Controllers\Web\PageBuilderElementorV23\FormDatasetCo
 		Route::get('/', 'index')->name('cms.core.pagebuilder_elementor_v23.datasets.index');
 		Route::post('/', 'store')->name('cms.core.pagebuilder_elementor_v23.datasets.store');
 		Route::put('/{datasetId}', 'update')->name('cms.core.pagebuilder_elementor_v23.datasets.update');
-		Route::delete('/{datasetId}', 'destroy')->name('cms.core.pagebuilder_elementor_v23.datasets.destroy');
 	});
 
 Route::get('/pages/{uri}', [App\Http\Controllers\Web\PageBuilderElementorV23\PageBuilderElementorV23Controller::class, 'showPublishedPage'])

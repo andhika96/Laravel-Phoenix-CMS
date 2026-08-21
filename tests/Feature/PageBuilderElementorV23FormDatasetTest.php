@@ -34,6 +34,18 @@ class PageBuilderElementorV23FormDatasetTest extends TestCase
             $table->timestamps();
             $table->unique(['user_id', 'slug']);
         });
+
+        Schema::create('page_builder', function (Blueprint $table): void {
+            $table->id();
+            $table->unsignedBigInteger('user_id')->default(1);
+            $table->string('uri')->unique();
+            $table->string('page_name')->nullable();
+            $table->text('custom_css')->nullable();
+            $table->text('vars');
+            $table->string('status')->default('publish');
+            $table->string('editor_version', 10)->default('2.0');
+            $table->timestamps();
+        });
     }
 
     protected function tearDown(): void
@@ -92,5 +104,57 @@ class PageBuilderElementorV23FormDatasetTest extends TestCase
         ])->assertUnprocessable()->assertJsonPath('success', false);
 
         $this->assertSame(0, DB::table('pagebuilder_elementor_v23_form_datasets')->count());
+    }
+
+    public function test_delete_removes_dataset_and_disconnects_only_owned_v23_page_fields(): void
+    {
+        $now = now();
+        $datasetId = DB::table('pagebuilder_elementor_v23_form_datasets')->insertGetId([
+            'user_id' => 1,
+            'name' => 'Location Dataset',
+            'slug' => 'location-dataset',
+            'schema_version' => 1,
+            'nodes' => json_encode([['id' => 'id', 'parentId' => null, 'label' => 'Indonesia', 'value' => 'ID']]),
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        $v23Layout = [[
+            'id' => 'form-root',
+            'type' => 'form',
+            'settings' => [
+                'fields' => [
+                    ['id' => 'country', 'type' => 'select', 'datasetMode' => 'dataset', 'datasetId' => $datasetId],
+                    ['id' => 'province', 'type' => 'select', 'datasetMode' => 'dataset', 'datasetId' => (string) $datasetId, 'datasetParentFieldId' => 'country'],
+                ],
+            ],
+        ]];
+        $legacyLayout = [[
+            'id' => 'legacy-form',
+            'type' => 'form',
+            'settings' => ['fields' => [['id' => 'legacy', 'datasetMode' => 'dataset', 'datasetId' => $datasetId]],],
+        ]];
+
+        DB::table('page_builder')->insert([
+            ['user_id' => 1, 'uri' => 'owned-v23', 'page_name' => 'Owned V23', 'vars' => json_encode($v23Layout), 'editor_version' => '2.3', 'status' => 'publish', 'created_at' => $now, 'updated_at' => $now],
+            ['user_id' => 1, 'uri' => 'owned-v20', 'page_name' => 'Owned V20', 'vars' => json_encode($legacyLayout), 'editor_version' => '2.0', 'status' => 'publish', 'created_at' => $now, 'updated_at' => $now],
+            ['user_id' => 2, 'uri' => 'other-v23', 'page_name' => 'Other V23', 'vars' => json_encode($legacyLayout), 'editor_version' => '2.3', 'status' => 'publish', 'created_at' => $now, 'updated_at' => $now],
+        ]);
+
+        $this->deleteJson('/pagebuilder-elementor/v2.3/datasets/'.$datasetId)
+            ->assertOk()
+            ->assertJsonPath('data.id', $datasetId)
+            ->assertJsonPath('data.disconnectedFields', 2);
+
+        $this->assertDatabaseMissing('pagebuilder_elementor_v23_form_datasets', ['id' => $datasetId]);
+
+        $owned = json_decode((string) DB::table('page_builder')->where('uri', 'owned-v23')->value('vars'), true, flags: JSON_THROW_ON_ERROR);
+        $this->assertSame('static', $owned[0]['settings']['fields'][0]['datasetMode']);
+        $this->assertSame('', $owned[0]['settings']['fields'][0]['datasetId']);
+        $this->assertSame('static', $owned[0]['settings']['fields'][1]['datasetMode']);
+        $this->assertSame('', $owned[0]['settings']['fields'][1]['datasetParentFieldId']);
+
+        $this->assertStringContainsString('"datasetMode":"dataset"', (string) DB::table('page_builder')->where('uri', 'owned-v20')->value('vars'));
+        $this->assertStringContainsString('"datasetMode":"dataset"', (string) DB::table('page_builder')->where('uri', 'other-v23')->value('vars'));
     }
 }
