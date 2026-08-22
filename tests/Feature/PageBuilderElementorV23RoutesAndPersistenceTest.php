@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Awesome_Admin\Account;
 use App\Models\Page_Builder\Page_Builder;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Events\Dispatcher;
@@ -47,6 +48,7 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
 
         $this->insertPage('v20-page', 'V20 Page', Page_Builder::EDITOR_VERSION_V20, $this->formLayout());
         $this->insertPage('0', 'V20 Zero Page', Page_Builder::EDITOR_VERSION_V20, '[]');
+        $this->actingAsEditor();
     }
 
     protected function tearDown(): void
@@ -82,6 +84,28 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
             'page_name' => 'V23 Page',
             'editor_version' => Page_Builder::EDITOR_VERSION_V23,
         ]);
+    }
+
+    public function test_v23_store_and_identifier_routes_are_scoped_to_the_authenticated_owner(): void
+    {
+        $this->actingAsEditor(7);
+        $this->postJson(route('cms.core.pagebuilder_elementor_v23.store'), [
+            'pageName' => 'Owner Seven Page',
+            'pageStatus' => 'draft',
+            'layout' => '[]',
+        ])->assertOk();
+
+        $page = Page_Builder::query()->where('page_name', 'Owner Seven Page')->firstOrFail();
+        $this->assertSame(7, (int) $page->user_id);
+
+        $this->actingAsEditor(8);
+        $this->get('/pagebuilder-elementor/v2.3/edit/'.$page->uri)->assertNotFound();
+        $this->getJson('/pagebuilder-elementor/v2.3/data/'.$page->uri)->assertNotFound();
+        $this->postJson('/pagebuilder-elementor/v2.3/update/'.$page->uri, [
+            'pageName' => 'Must Not Change Owner',
+            'pageStatus' => 'draft',
+            'layout' => '[]',
+        ])->assertNotFound();
     }
 
     public function test_v23_identifier_endpoints_reject_a_v20_page_without_mutating_it(): void
@@ -252,10 +276,10 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
         ], JSON_THROW_ON_ERROR);
     }
 
-    private function insertPage(string $uri, string $pageName, string $editorVersion, string $vars, string $status = 'publish'): void
+    private function insertPage(string $uri, string $pageName, string $editorVersion, string $vars, string $status = 'publish', int $ownerId = 1): void
     {
         DB::table('page_builder')->insert([
-            'user_id' => 1,
+            'user_id' => $ownerId,
             'uri' => $uri,
             'page_name' => $pageName,
             'custom_css' => '',
@@ -265,5 +289,18 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+    }
+
+    private function actingAsEditor(int $id = 1): void
+    {
+        $account = new Account();
+        $account->forceFill([
+            'id' => $id,
+            'email' => 'editor-'.$id.'@example.com',
+            'suspended_at' => null,
+        ]);
+        $account->exists = true;
+        $account->setRelation('roles', collect());
+        $this->actingAs($account);
     }
 }

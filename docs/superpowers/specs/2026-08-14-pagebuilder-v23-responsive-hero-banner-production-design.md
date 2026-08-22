@@ -6,7 +6,7 @@
 
 Widget bernama **Hero Banner**, type internal `hero_banner`, category `pro`, dan icon `fas fa-image`. Category Pro hanya pengelompokan toolbox; tidak menambah licensing atau feature gate.
 
-Prototype yang disetujui di `mockups/pagebuilder-v23-responsive-hero-prototype` adalah visual dan interaction source of truth. Implementasi hanya untuk Page Builder v2.3.
+Prototype yang disetujui di `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype` adalah visual dan interaction source of truth. Implementasi hanya untuk Page Builder v2.3.
 
 ## Production Contract
 

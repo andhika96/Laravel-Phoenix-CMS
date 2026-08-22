@@ -28,10 +28,7 @@ yarn-error.log
 /.tmp-chrome-profile
 /.worktrees
 /graphify-out/
-
-**/caddy
-frankenphp
-frankenphp-worker.php
+/project-artifacts/backups/
 
 **/caddy
 frankenphp

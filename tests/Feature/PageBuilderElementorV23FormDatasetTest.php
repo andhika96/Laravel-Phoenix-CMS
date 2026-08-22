@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Awesome_Admin\Account;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -46,6 +47,8 @@ class PageBuilderElementorV23FormDatasetTest extends TestCase
             $table->string('editor_version', 10)->default('2.0');
             $table->timestamps();
         });
+
+        $this->actingAsEditor();
     }
 
     protected function tearDown(): void
@@ -156,5 +159,17 @@ class PageBuilderElementorV23FormDatasetTest extends TestCase
 
         $this->assertStringContainsString('"datasetMode":"dataset"', (string) DB::table('page_builder')->where('uri', 'owned-v20')->value('vars'));
         $this->assertStringContainsString('"datasetMode":"dataset"', (string) DB::table('page_builder')->where('uri', 'other-v23')->value('vars'));
+    }
+
+    private function actingAsEditor(int $id = 1): void
+    {
+        $account = new Account();
+        $account->forceFill([
+            'id' => $id,
+            'email' => 'editor-'.$id.'@example.com',
+            'suspended_at' => null,
+        ]);
+        $account->exists = true;
+        $this->actingAs($account);
     }
 }

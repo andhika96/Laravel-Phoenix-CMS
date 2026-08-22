@@ -222,18 +222,23 @@ test('only the first/current empty Grid column is unlocked', () => {
 
 test('Grid column Sortable accepts Widget, Container, and Grid sources but rejects a locked target', () => {
     const body = methodBody('colGroup');
+    const isFormLayoutDrag = (value) => String(
+        typeof value === 'string'
+            ? value
+            : value?.options?.group?.name || value?.dataset?.formLayoutGroup || '',
+    ).startsWith('pb-form-grid:');
     let lockArguments = [];
-    const unlocked = new Function(body).call({
+    const unlocked = new Function('isFormLayoutDrag', body).call({
         getTargetColumnIndexFromDropzone: () => 0,
         isSequentialColumnLocked: (...args) => {
             lockArguments = args;
             return false;
         },
-    });
-    const locked = new Function(body).call({
+    }, isFormLayoutDrag);
+    const locked = new Function('isFormLayoutDrag', body).call({
         getTargetColumnIndexFromDropzone: () => 2,
         isSequentialColumnLocked: () => true,
-    });
+    }, isFormLayoutDrag);
     const target = { el: { dataset: { colIndex: '0' } } };
 
     for (const [group, nodeType] of [['pb-col', 'heading'], ['pb-root', 'container'], ['pb-container', 'grid']]) {
@@ -242,6 +247,7 @@ test('Grid column Sortable accepts Widget, Container, and Grid sources but rejec
         assert.deepEqual(lockArguments, [0], 'pre-drop lock checks must use the intact source column state');
         assert.equal(locked.put(target, from, { dataset: { nodeType } }), false, `${nodeType} should not skip an earlier empty Grid column`);
     }
+    assert.equal(unlocked.put(target, { options: { group: { name: 'pb-form-grid:form-1' } } }, { dataset: { nodeType: 'form-field' } }), false, 'internal Form fields must not enter page Grid columns');
 });
 
 test('an existing Grid item can move into its next empty unlocked column', () => {

@@ -42,4 +42,4 @@ Field semantik yang memang bebas tetap berupa text input, misalnya URL, CSS ID/C
 
 ## Runtime visual QA
 
-Before-state tersedia di `output/design-qa/image-box-advanced-background-before.png`. Post-patch browser capture belum tersedia karena browser automation tidak dapat dijalankan pada Windows ACL sandbox saat sesi ini. Karena itu hasil visual belum dinyatakan approved; pengguna perlu refresh halaman existing dan memeriksa control panels secara langsung.
+Before-state tersedia di `project-artifacts/qa/pagebuilder/design-qa/image-box-advanced-background-before.png`. Post-patch browser capture belum tersedia karena browser automation tidak dapat dijalankan pada Windows ACL sandbox saat sesi ini. Karena itu hasil visual belum dinyatakan approved; pengguna perlu refresh halaman existing dan memeriksa control panels secara langsung.

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Mail\PageBuilderElementorV23FormMail;
+use App\Models\Awesome_Admin\Account;
 use App\Models\Page_Builder\Page_Builder;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\UploadedFile;
@@ -129,6 +130,158 @@ class PageBuilderElementorV23FormSubmissionTest extends TestCase
                 && $request['form']['name'] === 'Contact Form'
                 && $request['fields']['email'] === 'aruna@example.com';
         });
+    }
+
+    public function test_editor_draft_route_requires_authentication_and_keeps_editor_middleware(): void
+    {
+        $route = app('router')->getRoutes()->getByName('cms.core.pagebuilder_elementor_v23.form.editor_draft');
+
+        $this->assertNotNull($route);
+        $this->assertContains('auth', $route->gatherMiddleware());
+        $this->assertContains('checkSuspended', $route->gatherMiddleware());
+        $this->assertContains('throttle:10,1', $route->gatherMiddleware());
+
+        $this->postJson('/pagebuilder-elementor/v2.3/form/editor-draft', [
+            '__pb_editor_node' => json_encode($this->draftFormNode(), JSON_THROW_ON_ERROR),
+            'name' => 'Aruna',
+            'email' => 'aruna@example.com',
+        ])->assertUnauthorized();
+    }
+
+    public function test_editor_and_dataset_routes_share_auth_boundary_while_published_form_submission_stays_public(): void
+    {
+        $protectedRoutes = [
+            'cms.core.pagebuilder_elementor_v23.create',
+            'cms.core.pagebuilder_elementor_v23.store',
+            'cms.core.pagebuilder_elementor_v23.edit',
+            'cms.core.pagebuilder_elementor_v23.update',
+            'cms.core.pagebuilder_elementor_v23.data',
+            'cms.core.pagebuilder_elementor_v23.image_rendition',
+            'cms.core.pagebuilder_elementor_v23.preview',
+            'cms.core.pagebuilder_elementor_v23.form.editor_draft',
+            'cms.core.pagebuilder_elementor_v23.datasets.index',
+            'cms.core.pagebuilder_elementor_v23.datasets.store',
+            'cms.core.pagebuilder_elementor_v23.datasets.update',
+            'cms.core.pagebuilder_elementor_v23.datasets.destroy',
+        ];
+
+        foreach ($protectedRoutes as $routeName) {
+            $route = app('router')->getRoutes()->getByName($routeName);
+            $this->assertNotNull($route, $routeName.' should exist');
+            $this->assertContains('auth', $route->gatherMiddleware(), $routeName.' should require auth');
+            $this->assertContains('checkSuspended', $route->gatherMiddleware(), $routeName.' should reject suspended accounts');
+        }
+
+        $publicForm = app('router')->getRoutes()->getByName('cms.core.pagebuilder_elementor_v23.form.submit');
+        $this->assertNotNull($publicForm);
+        $this->assertNotContains('auth', $publicForm->gatherMiddleware());
+        $this->assertContains('throttle:20,1', $publicForm->gatherMiddleware());
+    }
+
+    public function test_editor_draft_executes_current_unsaved_actions_and_marks_collected_data_as_test(): void
+    {
+        $this->actingAsEditor();
+        Mail::fake();
+        Http::fake(['https://hooks.example.com/*' => Http::response('', 204)]);
+        $node = $this->draftFormNode([
+            'submitActions' => ['message', 'collect', 'email', 'email2', 'webhook', 'redirect'],
+            'emailTo' => 'owner@example.com',
+            'emailSubject' => 'Editor test from [field id="name"]',
+            'emailContent' => '[all-fields]',
+            'email2To' => 'visitor@example.com',
+            'email2Subject' => 'Editor copy',
+            'email2Content' => 'Hello [field id="name"]',
+            'webhookUrl' => 'https://hooks.example.com/forms',
+            'redirectUrl' => '/thank-you',
+            'customMessages' => true,
+            'successMessage' => 'Draft actions completed.',
+        ]);
+
+        $response = $this->postJson('/pagebuilder-elementor/v2.3/form/editor-draft', [
+            '__pb_editor_node' => json_encode($node, JSON_THROW_ON_ERROR),
+            'name' => 'Aruna',
+            'email' => 'aruna@example.com',
+            'message' => 'Unsaved draft value',
+        ]);
+
+        $response->assertOk()->assertJson([
+            'success' => true,
+            'editorTest' => true,
+            'message' => 'Draft actions completed.',
+            'redirect' => '/thank-you',
+        ]);
+        $stored = DB::table('page_builder_elementor_form_submissions')->sole();
+        $meta = json_decode($stored->meta, true, flags: JSON_THROW_ON_ERROR);
+        $this->assertNull($stored->page_builder_id);
+        $this->assertSame('editor-draft', $stored->page_uri);
+        $this->assertTrue($meta['editor_test']);
+        $this->assertSame('create', $meta['editor_mode']);
+        $this->assertSame(1, $meta['editor_user_id']);
+        Mail::assertSent(PageBuilderElementorV23FormMail::class, 2);
+        Http::assertSent(fn ($request): bool => $request->url() === 'https://hooks.example.com/forms'
+            && $request['meta']['editor_test'] === true
+            && $request['fields']['message'] === 'Unsaved draft value');
+    }
+
+    public function test_editor_draft_uses_current_node_settings_and_keeps_the_owned_saved_page_identity(): void
+    {
+        $this->actingAsEditor();
+        $this->createPageWithForm([
+            'submitActions' => ['message'],
+            'customMessages' => true,
+            'successMessage' => 'Saved settings were used.',
+        ]);
+        $node = $this->draftFormNode([
+            'submitActions' => ['message', 'collect', 'redirect'],
+            'customMessages' => true,
+            'successMessage' => 'Unsaved settings were used.',
+            'redirectUrl' => '/draft-thanks',
+        ]);
+
+        $response = $this->postJson('/pagebuilder-elementor/v2.3/form/editor-draft', [
+            '__pb_editor_node' => json_encode($node, JSON_THROW_ON_ERROR),
+            '__pb_editor_page' => 'contact-page',
+            'name' => 'Aruna',
+            'email' => 'aruna@example.com',
+            'message' => 'Current Canvas value',
+        ]);
+
+        $response->assertOk()->assertJson([
+            'editorTest' => true,
+            'message' => 'Unsaved settings were used.',
+            'redirect' => '/draft-thanks',
+        ]);
+        $stored = DB::table('page_builder_elementor_form_submissions')->sole();
+        $page = Page_Builder::query()->where('uri', 'contact-page')->firstOrFail();
+        $meta = json_decode($stored->meta, true, flags: JSON_THROW_ON_ERROR);
+        $this->assertSame($page->getKey(), $stored->page_builder_id);
+        $this->assertSame('contact-page', $stored->page_uri);
+        $this->assertSame('edit', $meta['editor_mode']);
+    }
+
+    public function test_editor_draft_rejects_a_saved_page_owned_by_another_account(): void
+    {
+        $this->actingAsEditor(1);
+        $this->createPageWithForm([], Page_Builder::EDITOR_VERSION_V23, 2);
+
+        $this->postJson('/pagebuilder-elementor/v2.3/form/editor-draft', [
+            '__pb_editor_node' => json_encode($this->draftFormNode(), JSON_THROW_ON_ERROR),
+            '__pb_editor_page' => 'contact-page',
+            'name' => 'Aruna',
+            'email' => 'aruna@example.com',
+        ])->assertNotFound();
+    }
+
+    public function test_editor_draft_rejects_non_object_json_as_validation_error(): void
+    {
+        $this->actingAsEditor();
+
+        $this->postJson('/pagebuilder-elementor/v2.3/form/editor-draft', [
+            '__pb_editor_node' => json_encode('not-a-form-node', JSON_THROW_ON_ERROR),
+            'name' => 'Aruna',
+        ])->assertUnprocessable()->assertJsonValidationErrors('__pb_editor_node');
+
+        $this->assertSame(0, DB::table('page_builder_elementor_form_submissions')->count());
     }
 
     public function test_server_validation_uses_the_saved_form_definition_before_running_actions(): void
@@ -366,9 +519,30 @@ class PageBuilderElementorV23FormSubmissionTest extends TestCase
         ]);
     }
 
-    private function createPageWithForm(array $settings, string $editorVersion = Page_Builder::EDITOR_VERSION_V23): void
+    private function createPageWithForm(array $settings, string $editorVersion = Page_Builder::EDITOR_VERSION_V23, int $ownerId = 1): void
     {
-        $form = [
+        $form = $this->draftFormNode($settings);
+
+        DB::table('page_builder')->insert([
+            'user_id' => $ownerId,
+            'uri' => 'contact-page',
+            'page_name' => 'Contact Page',
+            'custom_css' => '',
+            'vars' => json_encode([[
+                'id' => 'root-container',
+                'type' => 'container',
+                'children' => [$form],
+            ]], JSON_THROW_ON_ERROR),
+            'status' => 'publish',
+            'editor_version' => $editorVersion,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    private function draftFormNode(array $settings = []): array
+    {
+        return [
             'id' => 'form-contact',
             'type' => 'form',
             'settings' => array_merge([
@@ -383,21 +557,17 @@ class PageBuilderElementorV23FormSubmissionTest extends TestCase
                 'errorMessage' => 'An error occurred.',
             ], $settings),
         ];
+    }
 
-        DB::table('page_builder')->insert([
-            'user_id' => 1,
-            'uri' => 'contact-page',
-            'page_name' => 'Contact Page',
-            'custom_css' => '',
-            'vars' => json_encode([[
-                'id' => 'root-container',
-                'type' => 'container',
-                'children' => [$form],
-            ]], JSON_THROW_ON_ERROR),
-            'status' => 'publish',
-            'editor_version' => $editorVersion,
-            'created_at' => now(),
-            'updated_at' => now(),
+    private function actingAsEditor(int $id = 1): void
+    {
+        $account = new Account();
+        $account->forceFill([
+            'id' => $id,
+            'email' => 'editor-'.$id.'@example.com',
+            'suspended_at' => null,
         ]);
+        $account->exists = true;
+        $this->actingAs($account);
     }
 }

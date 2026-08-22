@@ -120,7 +120,7 @@ class FormDatasetController extends Controller
 
     private function ownerId(Request $request): int
     {
-        return (int) ($request->user()?->getAuthIdentifier() ?: 1);
+        return (int) $request->user()->getAuthIdentifier();
     }
 
     private function uniqueSlug(Request $request, string $name): string

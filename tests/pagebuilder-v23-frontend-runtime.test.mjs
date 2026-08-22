@@ -478,6 +478,60 @@ test("actual Pro Form runtime keeps the form usable after a server error", async
     assert.equal(root.getAttribute("aria-busy"), "false");
 });
 
+test("actual Pro Form runtime renders and dismisses a structured custom message", async () => {
+    const title = { textContent: "" };
+    const text = { textContent: "" };
+    const icon = { className: "" };
+    const close = eventTarget();
+    const layer = {
+        hidden: true,
+        classList: classList(),
+        querySelector(selector) {
+            if (selector === "[data-pro-form-message-title]") return title;
+            if (selector === "[data-pro-form-message-text]") return text;
+            if (selector === "[data-pro-form-message-icon]") return icon;
+            if (selector === "[data-pro-form-message-close]") return close;
+            return null;
+        },
+    };
+    const message = {
+        classList: classList(),
+        textContent: "",
+        closest: (selector) => selector === "[data-pro-form-message-layer]" ? layer : null,
+        querySelector: (selector) => layer.querySelector(selector),
+    };
+    const root = rootBase({
+        "data-pro-config": JSON.stringify({ actions: ["message"], submitUrl: "" }),
+    });
+    root.dataset.validation = "browser";
+    root.dataset.successTitle = "Message sent";
+    root.dataset.successMessage = "Your form was submitted successfully.";
+    root.dataset.errorTitle = "Submission failed";
+    root.dataset.errorMessage = "Please retry.";
+    root.querySelectorAll = () => [];
+    root.querySelector = (selector) => selector === "[data-pro-form-message]" ? message : null;
+    root.checkValidity = () => true;
+    root.dispatchEvent = () => {};
+
+    const originalFormData = globalThis.FormData;
+    globalThis.FormData = class FormData {};
+    try {
+        runtime.initProForm(root);
+        await root.handlers.get("submit")({ preventDefault() {} });
+    } finally {
+        globalThis.FormData = originalFormData;
+    }
+
+    assert.equal(layer.hidden, false);
+    assert.equal(layer.classList.contains("is-success"), true);
+    assert.equal(layer.classList.contains("is-error"), false);
+    assert.equal(title.textContent, "Message sent");
+    assert.equal(text.textContent, "Your form was submitted successfully.");
+    assert.match(icon.className, /fa-check-circle/);
+    close.handlers.get("click")({ preventDefault() {} });
+    assert.equal(layer.hidden, true);
+});
+
 test("Animated Headline initializer is part of the public runtime contract", () => {
     assert.equal(typeof runtime.initProAnimatedHeadline, "function");
 });

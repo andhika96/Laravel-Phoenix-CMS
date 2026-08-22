@@ -56,6 +56,7 @@
 			mode: @json($mode),
 			editorVersion: '2.3',
 			saveUrl: @json($saveUrl),
+			formDraftSubmitUrl: @json(route('cms.core.pagebuilder_elementor_v23.form.editor_draft')),
 			csrfToken: @json(csrf_token()),
 			formDatasetEndpoints: @json($formDatasetEndpoints ?? []),
 			pageData: @json($pageData),

@@ -18,11 +18,14 @@ class FormSubmissionHandler
 {
     private const ACTIONS = ['message', 'collect', 'email', 'email2', 'redirect', 'webhook'];
 
-    public function __construct(private readonly FormConditionalLogicEvaluator $conditionalLogic)
+    public function __construct(
+        private readonly FormConditionalLogicEvaluator $conditionalLogic,
+        private readonly FormRowGridNormalizer $formRowGrid,
+    )
     {
     }
 
-    public function handle(Page_Builder $page, string $nodeId, Request $request): array
+    public function handle(Page_Builder $page, string $nodeId, Request $request, array $contextMeta = []): array
     {
         $node = $this->findFormNode($this->layout($page), $nodeId);
 
@@ -31,6 +34,7 @@ class FormSubmissionHandler
         }
 
         $settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
+        $settings = $this->formRowGrid->normalizeSettings($settings);
         $definitions = $this->fieldDefinitions($settings['fields'] ?? []);
         $definitions = $this->resolveDatasetOptions($page, $definitions, $request->all());
         $definitions = array_filter(
@@ -46,6 +50,7 @@ class FormSubmissionHandler
             'page_url' => (string) $request->headers->get('referer', ''),
             'user_agent' => (string) $request->userAgent(),
             'remote_ip' => (string) $request->ip(),
+            ...$contextMeta,
         ];
 
         if (in_array('collect', $actions, true)) {

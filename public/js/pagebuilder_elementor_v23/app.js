@@ -156,6 +156,50 @@
 		return lists.some(list => Array.isArray(list) && list.some(child => child && (child.id === targetId || nodeContainsDescendantId(child, targetId))));
 	}
 
+	// V23_CONTEXT_TARGET_HELPERS_START
+	function contextTargetNode(target) {
+		return target && ['gridColumn', 'formField'].includes(target.kind) ? target.node : target;
+	}
+	function isContextMenuClickInsideMenu(event) {
+		return !!event?.target?.closest?.('.pb-context-menu');
+	}
+	function resolveContextMenuTarget(event, target) {
+		if (target?.kind === 'gridColumn' || target?.kind === 'formField') return target;
+		const node = contextTargetNode(target);
+		if (!node || node.type !== 'form') return target;
+		const itemElement = event?.target?.closest?.('[data-form-item-id]') || null;
+		const fieldElement = event?.target?.closest?.('[data-pro-form-field]')
+			|| itemElement?.querySelector?.('[data-pro-form-field]')
+			|| null;
+		if (!fieldElement && !itemElement) return target;
+		const ownerElement = itemElement?.closest?.('[data-node-id]') || fieldElement?.closest?.('[data-node-id]');
+		const ownerId = String(ownerElement?.dataset?.nodeId || '').trim();
+		if (ownerId && ownerId !== String(node.id)) return target;
+		const fieldId = String(fieldElement?.dataset?.proFormField || '').trim();
+		const itemId = String(itemElement?.dataset?.formItemId
+			|| fieldElement?.closest?.('[data-form-item-id]')?.dataset?.formItemId
+			|| '').trim();
+		if (!fieldId && !itemId) return target;
+		return { kind: 'formField', node, fieldId, itemId };
+	}
+	function findFormFieldRecord(node, target = {}) {
+		const itemId = String(target.itemId || '').trim();
+		const fieldId = String(target.fieldId || '').trim();
+		for (const step of node?.settings?.rowGrid?.steps || []) {
+			for (const row of step?.rows || []) {
+				for (const column of row?.columns || []) {
+					const index = (column?.items || []).findIndex((item) => item?.kind === 'field' && (
+						(itemId && String(item.id) === itemId)
+						|| (fieldId && String(item.field?.id) === fieldId)
+					));
+					if (index >= 0) return { step, row, column, item: column.items[index], index };
+				}
+			}
+		}
+		return null;
+	}
+	// V23_CONTEXT_TARGET_HELPERS_END
+
 	function uid(p)       { return p + '_' + Math.random().toString(36).slice(2, 9); }
 	function jclone(v)    { return JSON.parse(JSON.stringify(v)); }
 	const CONTEXT_CLIPBOARD_SOURCE = 'phoenix-pagebuilder-v23';
@@ -206,6 +250,12 @@
 	function isTabs(t)    { return t === 'tabs'; }
 	function isAccordion(t) { return t === 'accordion'; }
 	function isWgt(t)     { return !isCont(t) && !isGrid(t); }
+	function isFormLayoutDrag(value) {
+		const group = typeof value === 'string'
+			? value
+			: value?.options?.group?.name || value?.dataset?.formLayoutGroup || '';
+		return String(group).startsWith('pb-form-grid:');
+	}
 	// V23_CHILD_CONTAINER_HELPERS_START
 	function validCanonicalId(value) {
 		return /^[A-Za-z0-9_-]+$/.test(String(value || '').trim());
@@ -2388,6 +2438,8 @@
 			{ id: 'saveGlobal', label: 'Save as global' },
 			{ id: 'separator-structure', separator: true },
 			{ id: 'structure', label: 'Structure', shortcut: 'Ctrl + I' },
+			{ id: 'separator-inspect', separator: true },
+			{ id: 'inspect', label: 'Inspect element' },
 			{ id: 'separator-delete', separator: true },
 			{ id: 'delete', label: 'Delete', shortcut: 'Delete', danger: true },
 		]),
@@ -2406,6 +2458,8 @@
 			{ id: 'saveTemplate', label: 'Save as Template' },
 			{ id: 'separator-structure', separator: true },
 			{ id: 'structure', label: 'Structure', shortcut: 'Ctrl + I' },
+			{ id: 'separator-inspect', separator: true },
+			{ id: 'inspect', label: 'Inspect element' },
 			{ id: 'separator-delete', separator: true },
 			{ id: 'delete', label: 'Delete', shortcut: 'Delete', danger: true },
 		]),
@@ -2424,6 +2478,8 @@
 			{ id: 'saveTemplate', label: 'Save as Template' },
 			{ id: 'separator-structure', separator: true },
 			{ id: 'structure', label: 'Structure', shortcut: 'Ctrl + I' },
+			{ id: 'separator-inspect', separator: true },
+			{ id: 'inspect', label: 'Inspect element' },
 			{ id: 'separator-delete', separator: true },
 			{ id: 'delete', label: 'Delete', shortcut: 'Delete', danger: true },
 		]),
@@ -2442,8 +2498,19 @@
 			{ id: 'saveTemplate', label: 'Save as Template' },
 			{ id: 'separator-structure', separator: true },
 			{ id: 'structure', label: 'Structure', shortcut: 'Ctrl + I' },
+			{ id: 'separator-inspect', separator: true },
+			{ id: 'inspect', label: 'Inspect element' },
 			{ id: 'separator-delete', separator: true },
 			{ id: 'delete', label: 'Delete', shortcut: 'Delete', danger: true },
+		]),
+		formField: Object.freeze([
+			{ id: 'edit', label: 'Edit Field' },
+			{ id: 'duplicate', label: 'Duplicate Field', shortcut: 'Ctrl + D' },
+			{ id: 'copy', label: 'Copy Field', shortcut: 'Ctrl + C' },
+			{ id: 'separator-inspect', separator: true },
+			{ id: 'inspect', label: 'Inspect element' },
+			{ id: 'separator-delete', separator: true },
+			{ id: 'delete', label: 'Delete Field', shortcut: 'Delete', danger: true },
 		]),
 	});
 
@@ -2554,6 +2621,7 @@
 			hoveredId:   { type: String,   default: '' },
 			responsiveDevice: { type: String, default: 'desktop' },
 			dynamicContext: { type: Object, default: () => ({}) },
+			editorServices: { type: Object, default: () => ({}) },
 			// Handlers dari app
 			onAddContainer: { type: Function, required: true },
 			onAddCol:       { type: Function, required: true },
@@ -2618,8 +2686,13 @@
 			isAncestorVisualActive() {
 				return this.selectedId !== this.node.id && nodeContainsDescendantId(this.node, this.selectedId);
 			},
+			isHoveredDescendant() {
+				return !!this.hoveredId
+					&& this.hoveredId !== this.node.id
+					&& nodeContainsDescendantId(this.node, this.hoveredId);
+			},
 			isToolbarVisible() {
-				if (this.selectedId === this.node.id) return true;
+				if (this.selectedId === this.node.id) return !this.isHoveredDescendant;
 				const focusId = this.hoveredId || this.selectedId || '';
 				return focusId === this.node.id || (!this.hoveredId && this.isAncestorVisualActive);
 			},
@@ -2776,6 +2849,7 @@
 					name: 'pb-container',
 					put(to, from, element) {
 						const fromGroup = from?.options?.group?.name;
+						if (isFormLayoutDrag(from) || isFormLayoutDrag(to) || isFormLayoutDrag(element)) return false;
 						const draggedType = String(element?.dataset?.nodeType || '').trim();
 						const hasChildContainers = (Array.isArray(owner.node?.children) ? owner.node.children : [])
 							.some((child) => ['container', 'container_fluid'].includes(child?.type));
@@ -2793,7 +2867,8 @@
 				const owner = this;
 				return {
 					name: 'pb-col',
-					put(to) {
+					put(to, from, element) {
+						if (isFormLayoutDrag(from) || isFormLayoutDrag(to) || isFormLayoutDrag(element)) return false;
 						const targetIndex = owner.getTargetColumnIndexFromDropzone(to);
 						return targetIndex < 0 || !owner.isSequentialColumnLocked(targetIndex);
 					},
@@ -2964,6 +3039,7 @@
 					hoveredId:      this.hoveredId,
 					responsiveDevice: this.responsiveDevice,
 					dynamicContext: this.dynamicContext,
+					editorServices: this.editorServices,
 					onAddContainer: this.onAddContainer,
 					onAddCol:       this.onAddCol,
 					onSelect:       this.onSelect,
@@ -3377,7 +3453,7 @@
 		<template v-else>
 			<div class="pb-preview">
 				<div class="pb-preview-inner">
-					<component :is="loadWidget(node.type)" :item="node" :responsive-device="responsiveDevice" :dynamic-context="dynamicContext" />
+					<component :is="loadWidget(node.type)" :item="node" :responsive-device="responsiveDevice" :dynamic-context="dynamicContext" :editor="editorServices" />
 				</div>
 			</div>
 		</template>
@@ -3810,6 +3886,15 @@
 			const contextMenu = ref(emptyContextMenuState());
 			const contextClipboard = ref(null);
 			const contextStyleClipboard = ref(null);
+			const formFieldClipboard = ref(null);
+			const formFieldEditRequest = ref({ nodeId: '', fieldId: '', itemId: '', requestId: 0 });
+			let formFieldEditRequestId = 0;
+			let inspectedElement = null;
+			let inspectHighlightTimer = null;
+			onBeforeUnmount(() => {
+				if (inspectHighlightTimer) clearTimeout(inspectHighlightTimer);
+				inspectedElement?.classList?.remove('pb-inspect-target');
+			});
 			const responsiveDevices = [
 				{ value: 'desktop', label: 'Desktop', menuLabel: 'Desktop', icon: 'fas fa-desktop' },
 				{ value: 'tablet', label: 'Tablet', menuLabel: 'Tablet Portrait', icon: 'fas fa-tablet-alt' },
@@ -4190,13 +4275,14 @@
 				return !!node && (isGrid(node.type) || (isCont(node.type) && (node.settings?.displayType || 'flex') === 'grid'));
 			}
 			function contextMenuScopeFor(node, target = null) {
+				if (target && target.kind === 'formField') return 'formField';
 				if (target && target.kind === 'gridColumn') return 'gridColumn';
 				if (isGridLayoutNode(node)) return 'grid';
 				if (isCont(node && node.type)) return 'container';
 				return 'widget';
 			}
 			function contextMenuNodeFromTarget(target) {
-				return target && target.kind === 'gridColumn' ? target.node : target;
+				return contextTargetNode(target);
 			}
 			function contextMenuMetaFor(target) {
 				const node = contextMenuNodeFromTarget(target);
@@ -4208,18 +4294,24 @@
 					scope,
 					columnId: target && target.kind === 'gridColumn' ? String(target.column?.id || '') : '',
 					columnIndex: target && target.kind === 'gridColumn' ? Number(target.columnIndex) : -1,
+					fieldId: target && target.kind === 'formField' ? String(target.fieldId || '') : '',
+					itemId: target && target.kind === 'formField' ? String(target.itemId || '') : '',
 				};
 			}
-			function contextMenuEditLabel(scope, node) {
+			function contextMenuEditLabel(scope, node, meta = {}) {
+				if (scope === 'formField') {
+					const record = findFormFieldRecord(node, meta);
+					return 'Edit ' + String(record?.item?.field?.label || record?.item?.field?.id || 'Field');
+				}
 				if (scope === 'widget') return 'Edit ' + displayNodeLabel(node);
 				if (scope === 'grid' || scope === 'gridColumn') return 'Edit Grid';
 				return 'Edit Container';
 			}
-			function contextMenuItemsFor(scope, node) {
+			function contextMenuItemsFor(scope, node, meta = {}) {
 				const definitions = contextMenuDefinitions[scope] || contextMenuDefinitions.widget;
 				return definitions.map((item) => item.separator
 					? { ...item }
-					: { ...item, label: item.id === 'edit' ? contextMenuEditLabel(scope, node) : item.label });
+					: { ...item, label: item.id === 'edit' ? contextMenuEditLabel(scope, node, meta) : item.label });
 			}
 			function contextMenuPosition(event, itemCount = 12) {
 				const gutter = 12;
@@ -4237,22 +4329,27 @@
 			function closeContextMenu() {
 				contextMenu.value = emptyContextMenuState();
 			}
+			function closeContextMenuFromOutside(event) {
+				if (!isContextMenuClickInsideMenu(event)) closeContextMenu();
+			}
 			function openContextMenu(event, target) {
-				const meta = contextMenuMetaFor(target);
+				const resolvedTarget = resolveContextMenuTarget(event, target);
+				const meta = contextMenuMetaFor(resolvedTarget);
 				if (!event || !meta) return;
-				const node = findById(rootNodes.value, meta.nodeId) || contextMenuNodeFromTarget(target);
+				const node = findById(rootNodes.value, meta.nodeId) || contextMenuNodeFromTarget(resolvedTarget);
 				if (!node || !node.id) return;
 				event.preventDefault();
 				event.stopPropagation();
 				selectNode(node);
-				const position = contextMenuPosition(event, (contextMenuDefinitions[meta.scope] || []).length);
+				const items = contextMenuItemsFor(meta.scope, node, meta);
+				const position = contextMenuPosition(event, items.length);
 				contextMenu.value = {
 					visible: true,
 					x: position.x,
 					y: position.y,
 					scope: meta.scope,
 					target: meta,
-					items: contextMenuItemsFor(meta.scope, node),
+					items,
 				};
 			}
 			function onCanvasContextMenu(event) {
@@ -4493,11 +4590,144 @@
 				}
 				showUnsupportedControlNotice('Structure', 'Structure untuk widget akan memakai Navigator pada tahap berikutnya.');
 			}
+			function syncContextFormFields(node) {
+				const api = window.PageBuilderElementorV23FormRowGrid;
+				if (!node?.settings?.rowGrid || typeof api?.projectFields !== 'function') return false;
+				node.settings.fields = api.projectFields(node.settings.rowGrid);
+				scheduleSnap();
+				return true;
+			}
+			function requestContextFormFieldEdit(node, meta = {}) {
+				const record = findFormFieldRecord(node, meta);
+				if (!record) return false;
+				selectNode(node, { revealPanel: true });
+				settingsTab.value = 'content';
+				formFieldEditRequest.value = {
+					nodeId: String(node.id),
+					fieldId: String(record.item.field?.id || ''),
+					itemId: String(record.item.id || ''),
+					requestId: ++formFieldEditRequestId,
+				};
+				nextTick(resetPropertiesPanelScroll);
+				return true;
+			}
+			function duplicateContextFormField(node, meta = {}) {
+				const api = window.PageBuilderElementorV23FormRowGrid;
+				const record = findFormFieldRecord(node, meta);
+				if (!record || typeof api?.fieldItem !== 'function') return false;
+				const field = jclone(record.item.field || {});
+				field.id = uid((String(field.id || 'field') + '_copy').replace(/[^A-Za-z0-9_-]/g, '_'));
+				const item = api.fieldItem(field);
+				record.column.items.splice(record.index + 1, 0, item);
+				syncContextFormFields(node);
+				requestContextFormFieldEdit(node, { fieldId: item.field?.id, itemId: item.id });
+				showSaveToast('success', String(item.field?.label || 'Field') + ' duplicated.');
+				return true;
+			}
+			async function copyContextFormField(node, meta = {}) {
+				const record = findFormFieldRecord(node, meta);
+				if (!record) return false;
+				const field = jclone(record.item.field || {});
+				formFieldClipboard.value = { field, label: String(field.label || field.id || 'Field') };
+				const clipboard = window.navigator?.clipboard;
+				if (!clipboard || typeof clipboard.writeText !== 'function') {
+					showSaveToast('info', formFieldClipboard.value.label + ' copied untuk sesi editor ini.');
+					return true;
+				}
+				try {
+					await clipboard.writeText(JSON.stringify({
+						source: CONTEXT_CLIPBOARD_SOURCE,
+						version: CONTEXT_CLIPBOARD_VERSION,
+						kind: 'form-field',
+						field,
+					}));
+					showSaveToast('success', formFieldClipboard.value.label + ' copied ke clipboard.');
+				} catch (_) {
+					showSaveToast('info', formFieldClipboard.value.label + ' copied untuk sesi editor ini. Akses clipboard browser ditolak.');
+				}
+				return true;
+			}
+			function deleteContextFormField(node, meta = {}) {
+				const api = window.PageBuilderElementorV23FormRowGrid;
+				const record = findFormFieldRecord(node, meta);
+				if (!record) return false;
+				const removed = typeof api?.removeItem === 'function'
+					? api.removeItem(node.settings.rowGrid, record.item.id)
+					: Boolean(record.column.items.splice(record.index, 1).length);
+				if (!removed) return false;
+				syncContextFormFields(node);
+				showSaveToast('success', String(record.item.field?.label || 'Field') + ' deleted.');
+				return true;
+			}
+			function contextTargetElement(meta = {}) {
+				const nodeElement = Array.from(document.querySelectorAll('.pb-node[data-node-id]'))
+					.find((element) => String(element.dataset?.nodeId || '') === String(meta.nodeId || ''));
+				if (!nodeElement) return null;
+				if (meta.scope === 'formField') {
+					return Array.from(nodeElement.querySelectorAll('[data-pro-form-field]'))
+						.find((element) => String(element.dataset?.proFormField || '') === String(meta.fieldId || ''))
+						|| nodeElement;
+				}
+				if (meta.scope === 'gridColumn') {
+					return Array.from(nodeElement.querySelectorAll('.pb-grid-col[data-pb-grid-cell]'))
+						.find((element) => String(element.dataset?.pbGridCell || '') === String(meta.columnId || ''))
+						|| nodeElement;
+				}
+				return nodeElement;
+			}
+			function contextTargetSelector(meta = {}) {
+				const quoted = (value) => String(value || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+				const nodeSelector = `[data-node-id="${quoted(meta.nodeId)}"]`;
+				if (meta.scope === 'formField') return `${nodeSelector} [data-pro-form-field="${quoted(meta.fieldId)}"]`;
+				if (meta.scope === 'gridColumn') return `${nodeSelector} [data-pb-grid-cell="${quoted(meta.columnId)}"]`;
+				return nodeSelector;
+			}
+			function inspectContextTarget(meta, node) {
+				const element = contextTargetElement(meta);
+				if (!element) {
+					showSaveToast('info', 'Element target tidak ditemukan di canvas.');
+					return false;
+				}
+				if (inspectHighlightTimer) clearTimeout(inspectHighlightTimer);
+				inspectedElement?.classList?.remove('pb-inspect-target');
+				inspectedElement = element;
+				element.classList.add('pb-inspect-target');
+				window.__PB_INSPECTED_ELEMENT__ = element;
+				window.__PB_INSPECTED_META__ = { ...meta, nodeType: String(node?.type || '') };
+				const selector = contextTargetSelector(meta);
+				console.groupCollapsed('[Page Builder] Inspect element');
+				console.info('Selector:', selector);
+				console.info('Metadata:', window.__PB_INSPECTED_META__);
+				console.dir(element);
+				console.groupEnd();
+				window.navigator?.clipboard?.writeText?.(selector)?.catch?.(() => {});
+				inspectHighlightTimer = setTimeout(() => {
+					element.classList.remove('pb-inspect-target');
+					if (inspectedElement === element) inspectedElement = null;
+					inspectHighlightTimer = null;
+				}, 5000);
+				showSaveToast('info', 'Element ditandai. Buka DevTools lalu gunakan window.__PB_INSPECTED_ELEMENT__.');
+				return true;
+			}
 			function runContextMenuAction(item) {
 				const meta = contextMenu.value.target;
 				const node = contextMenuTargetNode(meta);
 				closeContextMenu();
 				if (!item || !node) return;
+				if (item.id === 'inspect') {
+					inspectContextTarget(meta, node);
+					return;
+				}
+				if (meta?.scope === 'formField') {
+					switch (item.id) {
+						case 'edit': requestContextFormFieldEdit(node, meta); break;
+						case 'duplicate': duplicateContextFormField(node, meta); break;
+						case 'copy': copyContextFormField(node, meta); break;
+						case 'delete': deleteContextFormField(node, meta); break;
+						default: break;
+					}
+					return;
+				}
 				switch (item.id) {
 					case 'edit':
 						selectNode(node, { revealPanel: true });
@@ -4540,6 +4770,7 @@
 				}
 			}
 			function canMoveCanvasNode(event) {
+				if (isFormLayoutDrag(event?.from) || isFormLayoutDrag(event?.to) || isFormLayoutDrag(event?.dragged)) return false;
 				const draggedId = String(event && event.dragged && event.dragged.dataset && event.dragged.dataset.nodeId || '').trim();
 				const targetDropzone = event && event.to;
 				const targetOwner = targetDropzone && typeof targetDropzone.closest === 'function'
@@ -5083,6 +5314,7 @@
 			function resolveProIconTarget(targetKey, itemId, node = selectedNode.value) {
 				const targets = {
 					formButton: { type: 'form', prefix: 'buttonIcon' },
+					formStep: { type: 'form', prefix: 'icon', collection: 'rowGrid.steps' },
 					priceTableFeature: { type: 'price_table', prefix: 'icon', collection: 'features' },
 					reviewsItem: { type: 'reviews', prefix: 'icon', collection: 'items' },
 					flipBoxFront: { type: 'flip_box', prefix: 'frontIcon' },
@@ -5091,7 +5323,9 @@
 				if (!target || !node || node.type !== target.type) return null;
 				let entry = node.settings || (node.settings = {});
 				if (target.collection) {
-					const items = Array.isArray(entry[target.collection]) ? entry[target.collection] : [];
+					const items = target.collection === 'rowGrid.steps'
+						? (Array.isArray(entry.rowGrid?.steps) ? entry.rowGrid.steps : [])
+						: (Array.isArray(entry[target.collection]) ? entry[target.collection] : []);
 					entry = items.find((item) => String(item.id) === String(itemId));
 				}
 				if (!entry) return null;
@@ -7103,6 +7337,7 @@
 				const rootGroup = {
 					name: 'pb-root',
 					put: (to, from, el) => {
+						if (isFormLayoutDrag(from) || isFormLayoutDrag(to) || isFormLayoutDrag(el)) return false;
 						const fromGroup = from.options && from.options.group && from.options.group.name;
 						if (fromGroup === 'pb-col') {
 							if (isSidebarWidgetDrag(el)) return true;
@@ -7145,6 +7380,29 @@
 			});
 
 			// ── Save ──────────────────────────────────────────────────────────
+			async function submitFormDraft(node, form) {
+				const endpoint = String(PBC.formDraftSubmitUrl || '');
+				if (!endpoint || !node || node.type !== 'form' || !form) {
+					throw new Error('The editor Form test endpoint is unavailable.');
+				}
+				const data = new FormData(form);
+				data.set('__pb_editor_node', JSON.stringify({
+					id: node.id,
+					type: node.type,
+					settings: node.settings || {},
+				}));
+				const pageIdentity = pd?.uri || pd?.id || '';
+				if (pageIdentity) data.set('__pb_editor_page', String(pageIdentity));
+				const response = await axios.post(endpoint, data, {
+					headers: {
+						'X-CSRF-TOKEN': PBC.csrfToken,
+						'X-Requested-With': 'XMLHttpRequest',
+						Accept: 'application/json',
+					},
+				});
+				return response.data || {};
+			}
+
 			async function savePage() {
 				if (saveState.value === 'saving') return;
 				saveState.value = 'saving';
@@ -7179,6 +7437,7 @@
 
 			const widgetEditorServices = {
 				ckEditorField: CkEditorField,
+				submitFormDraft,
 				get responsiveDevice() { return responsiveDevice.value; },
 				responsiveDevices,
 				sizeControlUnits,
@@ -7244,6 +7503,7 @@
 				isIconLinkOptionsOpen,
 				get settingsTab() { return settingsTab.value; },
 				set settingsTab(value) { settingsTab.value = value; },
+				get formFieldEditRequest() { return formFieldEditRequest.value; },
 				get imageBoxImageState() { return imageBoxImageState.value; },
 				set imageBoxImageState(value) { imageBoxImageState.value = value; },
 				get iconBoxIconState() { return iconBoxIconState.value; },
@@ -7416,7 +7676,7 @@
 				displayNodeLabel, nodeLabelIcon,
 				selectNode, clearSel, clearCurrentSelection, selectSettingsTab, setHoveredNode, clearHoveredNode, showToolboxPanel, removeNode, dupNode, chooseBgImage, clearBgImage, chooseMedia, chooseMediaGallery, removeMediaGalleryItem, moveMediaGalleryItem, clearMedia,
 				deleteConfirmation, closeDeleteConfirmation, confirmPendingDeletion,
-				contextMenu, openContextMenu, onCanvasContextMenu, closeContextMenu, runContextMenuAction,
+				contextMenu, openContextMenu, onCanvasContextMenu, closeContextMenu, closeContextMenuFromOutside, runContextMenuAction,
 				iconLibraryGroups, showIconLibraryModal, iconLibraryGroup, iconLibrarySearch, iconLibraryLoading, iconLibraryError, iconLibrarySelected, filteredIconLibraryIcons,
 				openIconLibrary, openProIconLibrary, openIconListItemIconLibrary, openTabsItemIconLibrary, openAccordionIconLibrary, openImageCarouselArrowIconLibrary, openSocialIconLibrary, openAlertIconLibrary, chooseButtonSvg, chooseSocialIconSvg, chooseAlertIconSvg, chooseProIconSvg, chooseRatingSvg, chooseAccordionSvg, chooseTabsItemSvg, chooseImageCarouselArrowSvg, closeIconLibrary, selectIconLibraryItem, insertSelectedIcon,
 				fontAwesomeStyleLabel, iconWidgetUsesShape, iconWidgetCurrentLabel, iconWidgetCurrentStyleLabel, toggleIconLinkOptions, isIconLinkOptionsOpen,
@@ -7445,7 +7705,7 @@
 		},
 
 		template: `
-		<div class="builder-app" @click="closePageSettings" @keydown.esc.window="closeContextMenu">
+		<div class="builder-app" @click="closePageSettings" @click.capture="closeContextMenuFromOutside" @keydown.esc.window="closeContextMenu">
 	<header class="topbar">
 		<div class="topbar-left">
 			<div class="brand-lockup">
@@ -7773,6 +8033,7 @@
 								:hovered-id="hoveredId"
 								:responsive-device="responsiveDevice"
 								:dynamic-context="dynamicPreviewContext"
+								:editor-services="widgetEditorServices"
 								:on-add-container="onAddContainer"
 								:on-add-col="onAddCol"
 								:on-select="selectNode"

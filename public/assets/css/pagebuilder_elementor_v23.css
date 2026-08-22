@@ -11229,6 +11229,11 @@ body {
 	overscroll-behavior: contain;
 }
 
+.pb-inspect-target {
+	outline: 3px solid #f59e0b !important;
+	outline-offset: -3px;
+}
+
 .pb-context-menu-item {
 	display: flex;
 	width: 100%;

@@ -80,6 +80,20 @@ test('a selected canvas node keeps its toolbar while the pointer crosses another
     }), true, 'selection must take priority over a transient ancestor hover');
 });
 
+test('a selected layout toolbar yields while its descendant widget is hovered', () => {
+    const methodBody = app.match(/isToolbarVisible\(\)\s*\{([\s\S]*?)\n\s*\},/)?.[1];
+    assert.ok(methodBody, 'BuilderNode.isToolbarVisible should exist');
+
+    const isToolbarVisible = new Function(methodBody);
+    assert.equal(isToolbarVisible.call({
+        selectedId: 'grid-1',
+        hoveredId: 'heading-1',
+        node: { id: 'grid-1' },
+        isHoveredDescendant: true,
+        isAncestorVisualActive: false,
+    }), false, 'a selected Grid toolbar must not cover its hovered child widget actions');
+});
+
 test('widget label and action hit areas bridge the visual gap above the node', () => {
     assert.match(css, /\.webpage-frame \.pb-node-widget > \.pb-node-toolbar > :is\(\.pb-node-label, \.pb-node-actions\)::after\s*\{[\s\S]*?bottom:\s*-10px;[\s\S]*?height:\s*10px;/);
 });

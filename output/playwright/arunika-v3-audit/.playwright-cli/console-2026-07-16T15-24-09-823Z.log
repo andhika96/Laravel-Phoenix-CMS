@@ -1,5 +1,0 @@
-[     255ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://laravel-13-phoenix.aruna/auth/login:0
-[   20487ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://laravel-13-phoenix.aruna/auth/login:0
-[   20628ms] [ERROR] Failed to load resource: the server responded with a status of 419 (unknown status) @ http://laravel-13-phoenix.aruna/auth/login:0
-[   34245ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://laravel-13-phoenix.aruna/auth/login:0
-[   36682ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0

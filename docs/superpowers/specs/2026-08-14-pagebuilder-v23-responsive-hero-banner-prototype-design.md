@@ -8,7 +8,7 @@
 
 Klien membutuhkan hero banner yang tidak dapat diwakili secara aman oleh background image ditambah beberapa widget dengan absolute positioning manual. Komposisi dapat berubah antar-klien: jumlah button 1–3, urutan Title dan Subtitle berbeda, tindakan button dapat berupa link, video popup, atau image popup, dan aset hero dapat berbeda pada Desktop, Tablet, dan Mobile.
 
-Prototype awal di `mockups/pagebuilder-v23-responsive-hero-prototype` sudah membuktikan dua perilaku positioning: Grouped dan Independent. Perluasan berikutnya tetap berada di prototype terisolasi. Source produksi Page Builder v2.3 tidak diubah pada fase ini.
+Prototype awal di `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype` sudah membuktikan dua perilaku positioning: Grouped dan Independent. Perluasan berikutnya tetap berada di prototype terisolasi. Source produksi Page Builder v2.3 tidak diubah pada fase ini.
 
 Runtime MG5 GT telah diverifikasi: tombol **Watch Video** membuka modal berisi YouTube iframe. Source aktif v2.3 juga sudah memiliki `RepeaterList`, `LinkControl`, video URL normalization, CKFinder-backed media selection, serta image/video lightbox. Implementasi produksi nantinya harus memakai ulang seam tersebut dan tidak membuat sistem modal atau URL parser kedua.
 
@@ -244,11 +244,11 @@ Design QA diperbarui dengan source truth, full view, focused modal/button states
 
 ## Expected Prototype File Scope
 
-- `mockups/pagebuilder-v23-responsive-hero-prototype/src/App.jsx`
-- `mockups/pagebuilder-v23-responsive-hero-prototype/src/styles.css`
-- `mockups/pagebuilder-v23-responsive-hero-prototype/src/positioning.js`
-- `mockups/pagebuilder-v23-responsive-hero-prototype/scripts/self-check.mjs`
-- `mockups/pagebuilder-v23-responsive-hero-prototype/design-qa.md`
+- `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/src/App.jsx`
+- `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/src/styles.css`
+- `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/src/positioning.js`
+- `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/scripts/self-check.mjs`
+- `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/design-qa.md`
 - Aset QA baru hanya jika diperlukan untuk membuktikan modal dan responsive media states.
 
 File yang sudah ada harus dibackup dengan timestamp sebelum dimodifikasi. Source Page Builder produksi, Graphify output, dan Page Builder saved data tidak masuk scope perubahan.

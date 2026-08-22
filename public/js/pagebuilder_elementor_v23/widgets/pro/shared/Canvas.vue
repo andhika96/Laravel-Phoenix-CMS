@@ -12,22 +12,55 @@
             class="pb-pro-form"
             :style="formStyle"
             :novalidate="s.validation === 'custom'"
-            @submit.prevent
+            :aria-busy="formSubmitState === 'sending' ? 'true' : 'false'"
+            @submit.prevent="submitEditorForm"
             @click.stop
         >
             <div
                 v-if="formSteps.length > 1 && s.stepType !== 'none'"
                 class="pb-pro-form__progress"
+                :class="'type-' + s.stepType"
             >
+                <template v-if="s.stepType === 'progress'">
+                    <div
+                        class="pb-pro-form__progress-bar"
+                        role="progressbar"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        :aria-valuenow="formStepProgress"
+                    ><span data-pro-step-progress-fill :style="{ width: formStepProgress + '%' }"></span></div>
+                    <small data-pro-step-progress-text>Step {{ clampedFormStep + 1 }} of {{ formSteps.length }} · {{ formStepProgress }}%</small>
+                </template>
                 <span
+                    v-else
                     v-for="(step, index) in formSteps"
                     :key="'step-' + index"
-                    :class="[
-                        'shape-' + s.stepShape,
-                        { active: index <= currentFormStep },
-                    ]"
-                    >{{ index + 1 }}<small>{{ step.title }}</small></span
+                    class="pb-pro-form__step-indicator"
+                    data-pro-step-indicator
+                    :class="{ active: index <= clampedFormStep }"
+                    :aria-current="index === clampedFormStep ? 'step' : null"
                 >
+                    <b
+                        v-if="stepIndicatorShowsNumber"
+                        class="pb-pro-form__step-marker"
+                        :class="'shape-' + s.stepShape"
+                        data-pro-step-marker
+                    >{{ index + 1 }}</b>
+                    <b
+                        v-else-if="stepIndicatorShowsIcon"
+                        class="pb-pro-form__step-marker"
+                        :class="'shape-' + s.stepShape"
+                        data-pro-step-marker
+                    >
+                        <span
+                            v-if="proIconSvg(step, 'icon')"
+                            class="pb-pro-icon-svg"
+                            v-html="proIconSvg(step, 'icon')"
+                        ></span>
+                        <i v-else :class="proIconClass(step, 'icon', 'fas fa-check')"></i>
+                    </b>
+                    <small v-if="stepIndicatorShowsText" data-pro-step-label>{{ step.title || ('Step ' + (index + 1)) }}</small>
+                </span>
             </div>
             <div class="pb-pro-form__step-title" v-if="activeFormStep.title">
                 <strong>{{ activeFormStep.title }}</strong
@@ -35,15 +68,21 @@
                     activeFormStep.description
                 }}</small>
             </div>
-            <template
-                v-for="field in activeFormStep.fields"
-                :key="field.id"
+            <form-row-grid-canvas
+                :layout="s.rowGrid"
+                :node-id="item.id"
+                :editor="editor"
+                :current-step="clampedFormStep"
+                :responsive-device="responsiveDevice"
+                @sync="syncFormRowGrid"
             >
+            <template #field="{ field }">
             <div
                 v-if="formFieldVisible(field)"
                 class="pb-pro-form__field"
+                data-pb-interactive="true"
+                :data-pro-form-field="field.id"
                 :class="{ 'is-inline': field.inlineList }"
-                :style="{ width: (field.width || 100) + '%' }"
             >
                 <label
                     v-if="
@@ -77,6 +116,8 @@
                 >
                     <input
                         type="checkbox"
+                        :name="fieldInputName(field)"
+                        value="1"
                         :required="field.required"
                         :checked="formFieldValue(field) === true || formFieldValue(field) === '1'"
                         :style="formInputStyle"
@@ -87,16 +128,18 @@
                 <textarea
                     v-else-if="field.type === 'textarea'"
                     :id="item.id + '-' + field.id"
+                    :name="fieldInputName(field)"
                     :placeholder="field.placeholder"
                     :required="field.required"
                     :rows="Math.max(1, Number(field.rows) || 4)"
                     :value="formFieldValue(field, field.defaultValue)"
-                    :style="formInputStyle"
+                    :style="formTextareaStyle"
                     @input="setFormFieldValue(field, $event)"
                 ></textarea>
                 <select
                     v-else-if="field.type === 'select'"
                     :id="item.id + '-' + field.id"
+                    :name="fieldInputName(field)"
                     :required="field.required"
                     :multiple="field.multiple"
                     :value="formFieldValue(field, field.multiple ? [] : '')"
@@ -132,7 +175,7 @@
                         >
                             <input
                                 :type="field.type"
-                                :name="item.id + '-' + field.id"
+                                :name="fieldInputName(field)"
                                 :value="option.value"
                                 :checked="formChoiceChecked(field, option.value)"
                                 :required="field.required"
@@ -146,6 +189,7 @@
                 <input
                     v-else
                     :id="item.id + '-' + field.id"
+                    :name="fieldInputName(field)"
                     :type="safeInputType(field.type)"
                     :placeholder="field.placeholder"
                     :required="field.required"
@@ -162,32 +206,16 @@
                     @input="setFormFieldValue(field, $event)"
                     @change="setFormFieldValue(field, $event)"
                 />
-            </div>
+             </div>
             </template>
-            <div class="pb-pro-form__actions" :style="formActionsStyle">
+            <template #submit>
                 <button
-                    v-if="currentFormStep > 0"
-                    type="button"
-                    data-pb-interactive="true"
-                    :style="formButtonStyle"
-                    @click.stop="currentFormStep--"
-                >
-                    {{ activeFormStep.previousButton || "Previous" }}
-                </button>
-                <button
-                    v-if="currentFormStep < formSteps.length - 1"
-                    type="button"
-                    data-pb-interactive="true"
-                    :style="formButtonStyle"
-                    @click.stop="currentFormStep++"
-                >
-                    {{ activeFormStep.nextButton || "Next" }}
-                </button>
-                <button
-                    v-else
                     :id="safeDomId(s.buttonId)"
                     type="submit"
+                    data-pb-interactive="true"
                     :style="formButtonStyle"
+                    :disabled="formSubmitState === 'sending'"
+                    @click.stop
                 >
                     <template v-if="s.buttonIconPosition !== 'after'">
                         <span
@@ -200,7 +228,7 @@
                             :class="proIconClass(s, 'buttonIcon')"
                         ></i>
                     </template>
-                    <span>{{ s.buttonText || "Send" }}</span>
+                    <span>{{ formSubmitState === "sending" ? "Sending..." : (s.buttonText || "Send") }}</span>
                     <template v-if="s.buttonIconPosition === 'after'">
                         <span
                             v-if="proIconSvg(s, 'buttonIcon')"
@@ -213,8 +241,72 @@
                         ></i>
                     </template>
                 </button>
+            </template>
+            </form-row-grid-canvas>
+            <div
+                v-if="formSteps.length > 1"
+                class="pb-pro-form__actions"
+                :style="formActionsStyle"
+            >
+                <button
+                    v-if="clampedFormStep > 0"
+                    type="button"
+                    data-pb-interactive="true"
+                    :style="formButtonStyle"
+                    @click.stop="currentFormStep=clampedFormStep-1"
+                >
+                    {{ activeFormStep.previousButton || "Previous" }}
+                </button>
+                <button
+                    v-if="clampedFormStep < formSteps.length - 1"
+                    type="button"
+                    data-pb-interactive="true"
+                    :style="formButtonStyle"
+                    @click.stop="currentFormStep=clampedFormStep+1"
+                >
+                    {{ activeFormStep.nextButton || "Next" }}
+                </button>
             </div>
-            <div aria-live="polite" class="pb-pro-form__message"></div>
+            <div
+                v-if="formSubmitMessage"
+                data-pro-form-message-layer
+                class="pb-pro-form__message-layer"
+                :class="[
+                    'display-' + formMessageDisplay,
+                    { 'is-error': formSubmitState === 'error', 'is-success': formSubmitState === 'success' },
+                ]"
+                @click.self="formMessageDisplay === 'modal' && formMessageDismissible && clearFormMessage()"
+            >
+                <div
+                    data-pro-form-message
+                    class="pb-pro-form__message"
+                    :role="formMessageDisplay === 'modal' ? 'alertdialog' : 'status'"
+                    aria-live="polite"
+                >
+                    <i
+                        v-if="formMessageDisplay !== 'basic' && formMessageShowIcon"
+                        data-pro-form-message-icon
+                        :class="formMessageIconClass"
+                        aria-hidden="true"
+                    ></i>
+                    <span class="pb-pro-form__message-content">
+                        <strong
+                            v-if="formMessageDisplay !== 'basic'"
+                            data-pro-form-message-title
+                        >{{ formMessageTitle }}</strong>
+                        <span data-pro-form-message-text>{{ formSubmitMessage }}</span>
+                        <small v-if="formSubmitRedirect">Redirect configured: {{ formSubmitRedirect }}. The editor stays open.</small>
+                    </span>
+                    <button
+                        v-if="formMessageDisplay !== 'basic' && formMessageDismissible && formSubmitState !== 'sending'"
+                        type="button"
+                        data-pro-form-message-close
+                        data-pb-interactive="true"
+                        aria-label="Dismiss message"
+                        @click.stop="clearFormMessage"
+                    ><i class="fas fa-times" aria-hidden="true"></i></button>
+                </div>
+            </div>
         </form>
 
         <div
@@ -1199,17 +1291,286 @@ const TAG_FONT_SIZES = Object.freeze({
     mobile: { h1: "29px", h2: "24px", h3: "20px", h4: "18px", h5: "16px", h6: "15px", div: "15px", span: "15px", p: "15px" },
 });
 
+const FormRowGridCanvas = {
+    props: {
+        layout: { type: Object, default: () => ({ steps: [] }) },
+        nodeId: { type: [String, Number], required: true },
+        editor: { type: Object, required: true },
+        currentStep: { type: Number, default: 0 },
+        responsiveDevice: { type: String, default: "desktop" },
+    },
+    emits: ["sync"],
+    data() {
+        return {
+            dragSource: null,
+            pendingCrossStep: null,
+            dragging: false,
+            selectedItemId: "",
+        };
+    },
+    computed: {
+        api() {
+            return window.PageBuilderElementorV23FormRowGrid || {};
+        },
+        groupName() {
+            return `pb-form-grid:${this.nodeId}`;
+        },
+        draggableComponent() {
+            return (this.editor && this.editor.draggable) || "div";
+        },
+        layoutSteps() {
+            return Array.isArray(this.layout?.steps) ? this.layout.steps : [];
+        },
+        finalStepId() {
+            const steps = this.layoutSteps;
+            return steps.length ? String(steps[steps.length - 1].id) : "";
+        },
+    },
+    methods: {
+        rowPlan(row) {
+            return this.api.trackPlan?.(row, this.responsiveDevice, false) || {
+                columnCount: 1,
+                totalRows: 1,
+                placements: [],
+            };
+        },
+        rowStyle(row) {
+            const plan = this.rowPlan(row);
+            return {
+                gridTemplateColumns: `repeat(${plan.columnCount}, minmax(0, 1fr))`,
+                gridTemplateRows: `repeat(${plan.totalRows}, minmax(56px, auto))`,
+            };
+        },
+        columnStyle(row, columnIndex) {
+            const placement = this.rowPlan(row).placements[columnIndex] || {
+                gridColumn: 1,
+                rowStart: 1,
+                rowSpan: 1,
+            };
+            return {
+                gridColumn: String(placement.gridColumn),
+                gridRow: `${placement.rowStart} / span ${placement.rowSpan}`,
+            };
+        },
+        rowSpan(field) {
+            return Math.min(4, Math.max(1, Number(field?.rowSpan?.[this.responsiveDevice]) || 1));
+        },
+        itemStyle(item) {
+            return item?.kind === "field" ? { gridRow: `span ${this.rowSpan(item.field)}` } : {};
+        },
+        selectItem(item) {
+            if (item?.kind === "field") this.selectedItemId = String(item.id);
+        },
+        adjustRowSpan(field, delta) {
+            field.rowSpan ||= { desktop: 1, tablet: 1, mobile: 1 };
+            field.rowSpan[this.responsiveDevice] = Math.min(4, Math.max(1, this.rowSpan(field) + delta));
+            this.$emit("sync");
+        },
+        groupFor() {
+            const name = this.groupName;
+            return {
+                name,
+                pull: true,
+                put: (to, from) => this.api.canAcceptSortableGroup?.(
+                    to,
+                    from,
+                    String(this.nodeId),
+                    name,
+                ) === true,
+            };
+        },
+        meta(step, row, column, itemId = "", index = 0) {
+            return {
+                ownerId: String(this.nodeId),
+                group: this.groupName,
+                stepId: String(step.id),
+                rowId: String(row.id),
+                columnId: String(column.id),
+                itemId: String(itemId || ""),
+                index: Math.max(0, Number(index) || 0),
+                kind: "field",
+            };
+        },
+        metaFromElement(element) {
+            const data = element?.dataset || {};
+            return {
+                ownerId: data.formLayoutOwner || "",
+                group: data.formLayoutGroup || "",
+                stepId: data.stepId || "",
+                rowId: data.rowId || "",
+                columnId: data.columnId || "",
+                itemId: "",
+                index: 0,
+                kind: "field",
+            };
+        },
+        fallbackGhostOffset(sourceWidth, ghostWidth) {
+            return Math.max(0, (Math.max(0, Number(sourceWidth) || 0) - Math.max(0, Number(ghostWidth) || 0)) / 2);
+        },
+        positionFallbackGhost(event) {
+            const sourceWidth = event?.item?.getBoundingClientRect?.().width || 0;
+            const applyOffset = () => {
+                const fallback = Array.from(document.querySelectorAll(".pb-pro-form__layout-item.sortable-fallback"))
+                    .find((element) => String(element.dataset?.formLayoutOwner || "") === String(this.nodeId));
+                if (!fallback) return false;
+                const ghostWidth = fallback.getBoundingClientRect().width || 0;
+                fallback.style.setProperty(
+                    "--pb-form-drag-offset-x",
+                    `${this.fallbackGhostOffset(sourceWidth, ghostWidth)}px`,
+                );
+                return true;
+            };
+            if (!applyOffset() && typeof window !== "undefined" && typeof window.requestAnimationFrame === "function") {
+                window.requestAnimationFrame(applyOffset);
+            }
+        },
+        onStart(event, step, row, column) {
+            const itemId = event?.item?.dataset?.formItemId || "";
+            const index = Number(event?.oldIndex) || 0;
+            this.dragSource = this.meta(step, row, column, itemId, index);
+            this.dragging = true;
+            this.positionFallbackGhost(event);
+        },
+        relativeInsertDirection(event) {
+            const related = event?.related;
+            if (!related?.classList?.contains("pb-pro-form__layout-item") || related === event?.dragged) {
+                return true;
+            }
+            const pointerY = Number(event?.originalEvent?.clientY);
+            const rect = related.getBoundingClientRect?.();
+            if (!Number.isFinite(pointerY) || !rect) return true;
+            return pointerY < rect.top + (rect.height / 2) ? -1 : 1;
+        },
+        onMove(event) {
+            const source = this.dragSource || this.metaFromElement(event?.from);
+            const target = this.metaFromElement(event?.to);
+            target.index = Math.max(
+                0,
+                Number(event?.draggedContext?.futureIndex ?? event?.relatedContext?.index ?? 0) || 0,
+            );
+            if (!this.api.canAcceptDrop?.(source, target)) return false;
+            if (source.stepId !== target.stepId) {
+                this.pendingCrossStep = { source: { ...source }, target: { ...target } };
+                return false;
+            }
+            return this.relativeInsertDirection(event);
+        },
+        onChange() {
+            this.$emit("sync");
+        },
+        onEnd() {
+            this.dragging = false;
+            this.dragSource = null;
+            this.$emit("sync");
+        },
+        cancelCrossStep() {
+            this.pendingCrossStep = null;
+        },
+        confirmCrossStep() {
+            const pending = this.pendingCrossStep;
+            if (!pending || !this.api.moveItem) return;
+            const result = this.api.moveItem(this.layout, pending.source, pending.target, { confirmed: true });
+            this.pendingCrossStep = null;
+            if (result?.ok) this.$emit("sync");
+        },
+    },
+    template: `
+        <div class="pb-pro-form__rows">
+            <div v-for="(step,stepIndex) in layoutSteps" v-show="stepIndex===currentStep" :key="step.id" class="pb-pro-form__layout-step">
+                <div v-for="row in step.rows" :key="row.id" class="pb-pro-form__row" :style="rowStyle(row)">
+                    <div
+                        v-for="(column,columnIndex) in row.columns"
+                        :key="column.id"
+                        class="pb-pro-form__column"
+                        :class="{'is-dragging':dragging}"
+                        :style="columnStyle(row,columnIndex)"
+                    >
+                        <component
+                            :is="draggableComponent"
+                            v-model="column.items"
+                            item-key="id"
+                            :draggable="'.pb-pro-form__layout-item'"
+                            :group="groupFor()"
+                            :sort="true"
+                            :move="onMove"
+                            :handle="'.pb-pro-form__drag-handle'"
+                            :force-fallback="true"
+                            :fallback-on-body="true"
+                            :fallback-tolerance="4"
+                            :empty-insert-threshold="36"
+                            :swap-threshold="0.55"
+                            :dragover-bubble="false"
+                            ghost-class="pb-pro-form__sortable-ghost"
+                            drag-class="pb-pro-form__sortable-drag"
+                            class="pb-pro-form__dropzone"
+                            :class="{'is-empty':!column.items.length}"
+                            :data-form-layout-owner="nodeId"
+                            :data-form-layout-group="groupName"
+                            :data-step-id="step.id"
+                            :data-row-id="row.id"
+                            :data-column-id="column.id"
+                            @start="onStart($event,step,row,column)"
+                            @change="onChange"
+                            @end="onEnd"
+                        >
+                            <template #item="{element}">
+                                <div
+                                    class="pb-pro-form__layout-item"
+                                    :class="{'is-selected':selectedItemId===String(element.id)}"
+                                    :style="itemStyle(element)"
+                                    :data-form-item-id="element.id"
+                                    :data-form-item-kind="element.kind"
+                                    :data-form-layout-owner="nodeId"
+                                    @click="selectItem(element)"
+                                >
+                                    <div v-if="selectedItemId===String(element.id)" class="pb-pro-form__row-span-toolbar" data-pb-interactive="true" @click.stop>
+                                        <span>Row span</span>
+                                        <button type="button" aria-label="Decrease Row Span" :disabled="rowSpan(element.field)<=1" @click="adjustRowSpan(element.field,-1)"><i class="fas fa-minus"></i></button>
+                                        <strong>{{ rowSpan(element.field) }}</strong>
+                                        <button type="button" aria-label="Increase Row Span" :disabled="rowSpan(element.field)>=4" @click="adjustRowSpan(element.field,1)"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                    <div class="pb-pro-form__drag-ghost-label" aria-hidden="true"><i class="fas fa-grip-vertical"></i><span>{{element.field?.label||element.field?.id||'Field'}}</span></div>
+                                    <button type="button" class="pb-pro-form__drag-handle" title="Drag field" data-pb-interactive="true" @click.stop><i class="fas fa-grip-vertical"></i></button>
+                                    <slot name="field" :field="element.field" :item="element"/>
+                                </div>
+                            </template>
+                            <template #footer>
+                                <div class="pb-pro-form__dropzone-tail" :class="{'is-empty':!column.items.length,'is-dragging':dragging}">
+                                    <i class="fas fa-arrow-down" aria-hidden="true"></i>
+                                    <span>Drop field here</span>
+                                </div>
+                            </template>
+                        </component>
+                    </div>
+                </div>
+                <div v-if="String(step.id)===finalStepId" class="pb-pro-form__submit-footer">
+                    <slot name="submit" :step="step"/>
+                </div>
+            </div>
+            <div v-if="pendingCrossStep && !dragging" class="pb-pro-form__confirm-backdrop" role="presentation"><div class="pb-pro-form__confirm" role="dialog" aria-modal="true"><strong>Move field to another step?</strong><p>Confirm to move this field into the selected step.</p><div><button type="button" @click="cancelCrossStep">Cancel</button><button type="button" class="primary" @click="confirmCrossStep">Move field</button></div></div></div>
+        </div>
+    `,
+};
+
 export default {
     name: "ProWidgetCanvas",
     props: {
         item: { type: Object, required: true },
         responsiveDevice: { type: String, default: "desktop" },
+        editor: { type: Object, default: () => ({}) },
+    },
+    components: {
+        FormRowGridCanvas,
     },
     data() {
         return {
             activeIndex: 0,
             currentFormStep: 0,
             formValues: {},
+            formSubmitState: "idle",
+            formSubmitMessage: "",
+            formSubmitRedirect: "",
+            formMessagePreviewHandler: null,
             formDatasetCache: {},
             openHotspot: -1,
             hotspotImageUrl: "",
@@ -1737,6 +2098,10 @@ export default {
                     this.responsiveValue("rowGap", "10px"),
                     "10px",
                 ),
+                "--row-gap": this.safeLength(
+                    this.responsiveValue("rowGap", "10px"),
+                    "10px",
+                ),
                 "--column-gap": this.safeLength(
                     this.responsiveValue("columnGap", "10px"),
                     "10px",
@@ -1753,38 +2118,76 @@ export default {
                 "--form-error": this.s.errorColor || "#b42318",
                 "--step-active": this.s.stepActiveColor || "#6979f8",
                 "--step-inactive": this.s.stepInactiveColor || "#d0d5dd",
+                "--form-button-align":
+                    { left: "flex-start", center: "center", right: "flex-end" }[
+                        this.s.buttonAlign
+                    ] || "flex-start",
             };
         },
-        formSteps() {
-            const steps = [{ title: "", description: "", fields: [] }];
-            for (const field of this.s.fields || []) {
-                if (field.type === "step") {
-                    const target = steps[steps.length - 1].fields.length
-                        ? { fields: [] }
-                        : steps[steps.length - 1];
-                    Object.assign(target, {
-                        title: field.stepTitle || "Step",
-                        description: field.stepDescription || "",
-                        nextButton: field.nextButton || "Next",
-                        previousButton: field.previousButton || "Previous",
-                    });
-                    if (target !== steps[steps.length - 1]) steps.push(target);
-                } else steps[steps.length - 1].fields.push(field);
+        formMessageDisplay() {
+            if (!this.s.customMessages || this.formSubmitState === "sending") return "basic";
+            return this.safeEnum(
+                this.s.messageDisplay,
+                ["basic", "above-form", "toast", "modal"],
+                "basic",
+            );
+        },
+        formMessageTitle() {
+            if (this.formSubmitState === "error") {
+                return this.s.customMessages
+                    ? String(this.s.errorTitle || "Submission failed")
+                    : "Submission failed";
             }
-            return steps.filter((step) => step.fields.length);
+            return this.s.customMessages
+                ? String(this.s.successTitle || "Message sent")
+                : "Message sent";
+        },
+        formMessageShowIcon() {
+            return this.s.customMessages && this.s.messageShowIcon !== false;
+        },
+        formMessageDismissible() {
+            return this.s.customMessages && this.s.messageDismissible !== false;
+        },
+        formMessageIconClass() {
+            return this.formSubmitState === "error"
+                ? "fas fa-exclamation-circle"
+                : "fas fa-check-circle";
+        },
+        formSteps() {
+            const api = window.PageBuilderElementorV23FormRowGrid;
+            const layout = this.s.rowGrid || api?.normalizeLayout?.(null, this.s.fields) || { steps: [] };
+            return (layout.steps || []).map((step) => ({
+                ...step,
+                fields: (step.rows || []).flatMap((row) =>
+                    (row.columns || []).flatMap((column) =>
+                        (column.items || [])
+                            .filter((entry) => entry?.kind === "field" && entry.field)
+                            .map((entry) => entry.field),
+                    ),
+                ),
+            }));
+        },
+        clampedFormStep() {
+            return Math.max(0, Math.min(this.currentFormStep, this.formSteps.length - 1));
         },
         activeFormStep() {
             return (
-                this.formSteps[
-                    Math.max(
-                        0,
-                        Math.min(
-                            this.currentFormStep,
-                            this.formSteps.length - 1,
-                        ),
-                    )
-                ] || { fields: [] }
+                this.formSteps[this.clampedFormStep] || { fields: [] }
             );
+        },
+        formStepProgress() {
+            return this.formSteps.length
+                ? Math.round(((this.clampedFormStep + 1) / this.formSteps.length) * 100)
+                : 0;
+        },
+        stepIndicatorShowsNumber() {
+            return ["number", "number-text"].includes(this.s.stepType);
+        },
+        stepIndicatorShowsIcon() {
+            return ["icon", "icon-text"].includes(this.s.stepType);
+        },
+        stepIndicatorShowsText() {
+            return ["text", "number-text", "icon-text"].includes(this.s.stepType);
         },
         formInputStyle() {
             const heights = {
@@ -1803,6 +2206,13 @@ export default {
                 "--field-focus-border":
                     this.s.fieldFocusBorderColor || "#6979f8",
                 "--field-focus-bg": this.s.fieldFocusBackground || "#fff",
+            };
+        },
+        formTextareaStyle() {
+            return {
+                ...this.formInputStyle,
+                height: "auto",
+                resize: "none",
             };
         },
         formButtonStyle() {
@@ -2920,6 +3330,13 @@ export default {
                 window.addEventListener("resize", this.progressResizeHandler, { passive: true });
                 this.updateProgressTracker();
             }
+            if (this.type === "form") {
+                this.formMessagePreviewHandler = (event) => this.handleFormMessagePreview(event);
+                window.addEventListener(
+                    "pagebuilder:v23-form-message-preview",
+                    this.formMessagePreviewHandler,
+                );
+            }
             if (
             this.type === "animated_headline" &&
             this.s.headlineStyle === "rotating" &&
@@ -2947,8 +3364,65 @@ export default {
         window.clearTimeout(this.shareActionStatusTimer);
         if (this.progressScrollHandler) window.removeEventListener("scroll", this.progressScrollHandler);
         if (this.progressResizeHandler) window.removeEventListener("resize", this.progressResizeHandler);
+        if (this.formMessagePreviewHandler) {
+            window.removeEventListener(
+                "pagebuilder:v23-form-message-preview",
+                this.formMessagePreviewHandler,
+            );
+        }
     },
     methods: {
+        syncFormRowGrid() {
+            const api = window.PageBuilderElementorV23FormRowGrid;
+            if (!api || !this.s.rowGrid) return;
+            this.s.fields = api.projectFields(this.s.rowGrid);
+        },
+        previewFormMessage(state = "success") {
+            const nextState = state === "error" ? "error" : "success";
+            this.formSubmitState = nextState;
+            this.formSubmitMessage = nextState === "error"
+                ? String(this.s.errorMessage || "An error occurred.")
+                : String(this.s.successMessage || "The form was sent successfully.");
+            this.formSubmitRedirect = "";
+        },
+        handleFormMessagePreview(event) {
+            if (String(event?.detail?.nodeId || "") !== String(this.item.id)) return;
+            this.previewFormMessage(event?.detail?.state);
+        },
+        clearFormMessage() {
+            this.formSubmitState = "idle";
+            this.formSubmitMessage = "";
+            this.formSubmitRedirect = "";
+        },
+        async submitEditorForm(event) {
+            if (this.formSubmitState === "sending") return;
+            if (typeof this.editor?.submitFormDraft !== "function") {
+                this.formSubmitState = "error";
+                this.formSubmitMessage = "The editor Form test endpoint is unavailable.";
+                this.formSubmitRedirect = "";
+                return;
+            }
+            this.formSubmitState = "sending";
+            this.formSubmitMessage = "Sending...";
+            this.formSubmitRedirect = "";
+            try {
+                const payload = await this.editor.submitFormDraft(this.item, event?.currentTarget);
+                if (payload?.success !== true) throw payload || new Error("Form submission failed.");
+                this.formSubmitState = "success";
+                this.formSubmitMessage = payload.message || "Form actions completed.";
+                this.formSubmitRedirect = /^(?:https?:\/\/|\/|#)/i.test(String(payload.redirect || ""))
+                    ? String(payload.redirect)
+                    : "";
+            } catch (error) {
+                const payload = error?.response?.data || error || {};
+                const firstError = Object.values(payload.errors || {}).flat()[0];
+                this.formSubmitState = "error";
+                this.formSubmitMessage = Number(error?.response?.status) === 401
+                    ? "Your editor session has expired. Please sign in again, then retry."
+                    : String(firstError || payload.message || "An error occurred while testing the form.");
+                this.formSubmitRedirect = "";
+            }
+        },
         async resolveReviewImages() {
             const requestId = ++this.reviewRenditionRequest;
             const entries = Array.isArray(this.s.items) ? this.s.items : [];
@@ -3901,6 +4375,13 @@ export default {
                 ? value
                 : "text";
         },
+        fieldInputName(field) {
+            const id = String(field?.id || "").replace(/[^A-Za-z0-9_-]/g, "");
+            const multiple = field?.type === "checkbox"
+                || (field?.type === "select" && field?.multiple)
+                || (field?.type === "file" && field?.multiple);
+            return id + (id && multiple ? "[]" : "");
+        },
         formFieldValue(field, fallback = "") {
             return Object.prototype.hasOwnProperty.call(this.formValues || {}, field?.id)
                 ? this.formValues[field.id]
@@ -4110,12 +4591,286 @@ export default {
     min-width: 0;
 }
 .pb-pro-form {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     column-gap: var(--column-gap);
 }
+:global(.pb-pro-form__rows) {
+    display: grid;
+    width: 100%;
+    gap: var(--row-gap, 10px);
+}
+:global(.pb-pro-form__layout-step) {
+    display: contents;
+}
+:global(.pb-pro-form__row) {
+    display: grid;
+    width: 100%;
+    column-gap: var(--column-gap);
+    row-gap: var(--row-gap, 10px);
+    align-items: stretch;
+}
+:global(.pb-pro-form__column) {
+    display: grid;
+    position: relative;
+    min-width: 0;
+    grid-template-rows: subgrid;
+    padding-right: 0;
+    border: 1px dashed transparent;
+    border-radius: 4px;
+    transition: border-color .15s ease, background .15s ease;
+}
+:global(.pb-pro-form__column.is-dragging),
+:global(.pb-pro-form__column:hover) {
+    border-color: color-mix(in srgb, var(--step-active, #6979f8) 30%, transparent);
+}
+:global(.pb-pro-form__dropzone) {
+    display: grid;
+    grid-row: 1 / -1;
+    grid-template-rows: subgrid;
+    min-height: 72px;
+    width: 100%;
+    align-content: start;
+}
+:global(.pb-pro-form__dropzone-tail) {
+    display: grid;
+    min-height: 56px;
+    box-sizing: border-box;
+    grid-template-columns: auto auto;
+    align-content: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 14px;
+    place-items: center;
+    border: 1px dashed #cbd5e7;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--step-active, #6979f8) 2%, #fff);
+    color: #98a2b3;
+    font-size: 12px;
+    text-align: center;
+    transition: min-height .15s ease, border-color .15s ease, background .15s ease, color .15s ease;
+}
+:global(.pb-pro-form__dropzone-tail:not(.is-empty)) {
+    min-height: 0;
+    height: 0;
+    overflow: hidden;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+:global(.pb-pro-form__dropzone-tail i) {
+    font-size: 9px;
+}
+:global(.pb-pro-form__column.is-dragging .pb-pro-form__dropzone-tail) {
+    border-color: color-mix(in srgb, var(--step-active, #6979f8) 58%, #cbd5e7);
+    background: color-mix(in srgb, var(--step-active, #6979f8) 7%, #fff);
+    color: var(--step-active, #6979f8);
+}
+:global(.pb-pro-form__layout-item) {
+    position: relative;
+    height: 100%;
+    min-width: 0;
+    width: 100%;
+    border-radius: 4px;
+    transition: box-shadow .15s ease;
+}
+:global(.pb-pro-form__layout-item:hover) {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--step-active, #6979f8) 58%, transparent);
+}
+:global(.pb-pro-form__layout-item.is-selected) {
+    z-index: 4;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--step-active, #6979f8) 82%, transparent);
+}
+:global(.pb-pro-form__sortable-ghost) {
+    border-radius: 6px;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--step-active, #6979f8) 70%, transparent);
+    opacity: .35;
+}
+:global(.pb-pro-form__submit-footer) {
+    display: flex;
+    width: 100%;
+    justify-content: var(--form-button-align, flex-start);
+    margin-top: var(--row-gap, 10px);
+}
+:global(.pb-pro-form__drag-ghost-label) {
+    display: none;
+}
+:global(.pb-pro-form__layout-item.sortable-fallback) {
+    display: flex !important;
+    width: min(220px, calc(100vw - 32px)) !important;
+    max-width: 220px;
+    height: 44px !important;
+    min-height: 44px;
+    align-items: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 10px 12px;
+    pointer-events: none;
+    border: 1px solid #6979f8;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 12px 28px rgba(52, 64, 84, .18);
+    opacity: .92 !important;
+    translate: var(--pb-form-drag-offset-x, 0px) 0;
+}
+:global(.pb-pro-form__layout-item.sortable-fallback > :not(.pb-pro-form__drag-ghost-label)) {
+    display: none;
+}
+:global(.pb-pro-form__layout-item.sortable-fallback .pb-pro-form__drag-ghost-label) {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 600;
+}
+:global(.pb-pro-form__layout-item.sortable-fallback .pb-pro-form__drag-ghost-label span) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+:global(.pb-pro-form__row-span-toolbar) {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    right: 0;
+    display: flex;
+    width: max-content;
+    max-width: calc(100% - 16px);
+    min-height: 34px;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid #d9d6ff;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(52, 43, 137, .14);
+    color: #344054;
+    font-size: 11px;
+}
+:global(.pb-pro-form__row-span-toolbar > span) {
+    padding: 0 10px;
+    font-weight: 600;
+}
+:global(.pb-pro-form__row-span-toolbar button),
+:global(.pb-pro-form__row-span-toolbar strong) {
+    display: grid;
+    width: 34px;
+    min-width: 34px;
+    height: 32px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid #e4e1ff;
+    background: #fff;
+    color: #5547df;
+}
+:global(.pb-pro-form__row-span-toolbar button) {
+    cursor: pointer;
+}
+:global(.pb-pro-form__row-span-toolbar button:hover:not(:disabled)) {
+    background: #f4f3ff;
+}
+:global(.pb-pro-form__row-span-toolbar button:disabled) {
+    color: #c5c9d3;
+    cursor: not-allowed;
+}
+:global(.pb-pro-form .pb-pro-form__drag-handle) {
+    position: absolute;
+    z-index: 3;
+    top: -13px;
+    left: 50%;
+    display: grid;
+    width: 26px !important;
+    min-width: 26px !important;
+    height: 26px !important;
+    min-height: 26px !important;
+    place-items: center;
+    padding: 0 !important;
+    border: 1px solid #d9d6ff !important;
+    border-radius: 999px !important;
+    background: #fff !important;
+    box-shadow: 0 2px 7px rgba(52, 43, 137, .16);
+    color: #6558e8 !important;
+    cursor: grab;
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: opacity .15s ease, border-color .15s ease, background .15s ease;
+}
+:global(.pb-pro-form__layout-item:hover .pb-pro-form__drag-handle),
+:global(.pb-pro-form__layout-item.is-selected .pb-pro-form__drag-handle),
+:global(.pb-pro-form .pb-pro-form__drag-handle:focus-visible) {
+    opacity: 1;
+}
+:global(.pb-pro-form .pb-pro-form__drag-handle:hover) {
+    border-color: #7467f5 !important;
+    background: #f4f3ff !important;
+    color: #5547df !important;
+}
+:global(.pb-pro-form .pb-pro-form__drag-handle i) {
+    font-size: 10px;
+    line-height: 1;
+}
+@media (hover: none) {
+    :global(.pb-pro-form .pb-pro-form__drag-handle) {
+        opacity: .75;
+    }
+}
+:global(.pb-pro-form__confirm-backdrop) {
+    position: fixed;
+    z-index: 10000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(16, 24, 40, .35);
+}
+:global(.pb-pro-form__confirm) {
+    display: grid;
+    gap: 10px;
+    width: min(360px, calc(100% - 32px));
+    padding: 16px;
+    border-radius: 8px;
+    background: #fff;
+    color: #344054;
+    box-shadow: 0 12px 36px rgba(16, 24, 40, .2);
+}
+:global(.pb-pro-form__confirm p) {
+    margin: 0;
+    color: #667085;
+    font-size: 12px;
+}
+:global(.pb-pro-form__confirm > div) {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+}
+:global(.pb-pro-form__confirm button) {
+    min-height: 30px;
+    padding: 5px 10px;
+    border: 1px solid #d4dceb;
+    border-radius: 5px;
+    background: #fff;
+    color: #344054;
+    font-size: 11px;
+}
+:global(.pb-pro-form__confirm button.primary) {
+    border-color: #6979f8;
+    background: #6979f8;
+    color: #fff;
+}
 .pb-pro-form__field {
+    display: flex;
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+    flex-direction: column;
     padding-right: var(--column-gap);
+}
+.pb-pro-form__field > textarea {
+    min-height: 0;
+    flex: 1 1 auto;
 }
 .pb-pro-form__choice-group {
     min-width: 0;
@@ -4189,30 +4944,78 @@ export default {
 }
 .pb-pro-form__progress {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     gap: 10px;
 }
-.pb-pro-form__progress > span {
+.pb-pro-form__step-indicator {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+    color: var(--step-inactive, #d0d5dd);
+}
+.pb-pro-form__step-indicator.active {
+    color: var(--step-active, #6979f8);
+}
+.pb-pro-form__step-marker {
     display: grid;
+    width: 30px;
     min-width: 30px;
-    min-height: 30px;
+    height: 30px;
     place-items: center;
     border-radius: 50%;
     background: var(--step-inactive, #d0d5dd);
     color: #fff;
+    font-size: 12px;
 }
-.pb-pro-form__progress > span.active {
+.pb-pro-form__step-indicator.active .pb-pro-form__step-marker {
     background: var(--step-active, #6979f8);
 }
-.pb-pro-form__progress > span.shape-square {
+.pb-pro-form__step-marker.shape-square {
     border-radius: 0;
 }
-.pb-pro-form__progress > span.shape-rounded {
+.pb-pro-form__step-marker.shape-rounded {
     border-radius: 7px;
 }
-.pb-pro-form__progress small {
+.pb-pro-form__step-marker.shape-none {
+    background: transparent;
     color: inherit;
-    font-size: 10px;
+}
+.pb-pro-form__step-indicator.active .pb-pro-form__step-marker.shape-none {
+    background: transparent;
+}
+.pb-pro-form__step-indicator [data-pro-step-label] {
+    overflow: hidden;
+    color: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.pb-pro-form__progress.type-progress {
+    display: grid;
+    justify-content: stretch;
+    gap: 6px;
+}
+.pb-pro-form__progress-bar {
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--step-inactive, #d0d5dd);
+}
+.pb-pro-form__progress-bar > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--step-active, #6979f8);
+    transition: width .2s ease;
+}
+.pb-pro-form__progress.type-progress > small {
+    color: #667085;
+    font-size: 11px;
+    font-weight: 600;
 }
 .pb-pro-form__step-title {
     display: grid;
@@ -4223,9 +5026,110 @@ export default {
     width: 100%;
     gap: 8px;
 }
-.pb-pro-form__message {
+.pb-pro-form__message-layer {
     width: 100%;
+    margin-top: 4px;
     color: var(--form-success, #067647);
+}
+.pb-pro-form__message-layer.is-error {
+    color: var(--form-error, #b42318);
+}
+.pb-pro-form__message-layer.display-above-form {
+    order: -20;
+    margin: 0 0 var(--row-gap, 10px);
+}
+.pb-pro-form__message-layer.display-toast {
+    position: absolute;
+    z-index: 12;
+    top: 16px;
+    right: 16px;
+    width: min(360px, calc(100% - 32px));
+    margin: 0;
+}
+.pb-pro-form__message-layer.display-modal {
+    position: absolute;
+    z-index: 14;
+    inset: 0;
+    display: grid;
+    width: auto;
+    min-height: 260px;
+    place-items: center;
+    margin: 0;
+    padding: 24px;
+    background: rgba(16, 24, 40, .42);
+}
+.pb-pro-form__message {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 11px;
+}
+.pb-pro-form__message-layer.display-basic .pb-pro-form__message {
+    display: block;
+}
+.pb-pro-form__message-layer.display-above-form .pb-pro-form__message,
+.pb-pro-form__message-layer.display-toast .pb-pro-form__message,
+.pb-pro-form__message-layer.display-modal .pb-pro-form__message {
+    padding: 14px 16px;
+    border: 1px solid currentColor;
+    border-radius: 8px;
+    background: color-mix(in srgb, currentColor 7%, #fff);
+    box-shadow: 0 10px 26px rgba(16, 24, 40, .12);
+}
+.pb-pro-form__message-layer.display-modal .pb-pro-form__message {
+    position: relative;
+    grid-template-columns: 1fr;
+    width: min(390px, 100%);
+    justify-items: center;
+    padding: 26px;
+    border-color: #e4e7ec;
+    background: #fff;
+    box-shadow: 0 24px 60px rgba(16, 24, 40, .24);
+    text-align: center;
+}
+.pb-pro-form__message-layer.display-toast .pb-pro-form__message {
+    border-top-width: 4px;
+}
+.pb-pro-form__message-layer.display-modal .pb-pro-form__message > [data-pro-form-message-icon] {
+    font-size: 42px;
+}
+.pb-pro-form__message-layer.display-modal .pb-pro-form__message button[data-pro-form-message-close] {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.pb-pro-form__message > [data-pro-form-message-icon] {
+    margin-top: 2px;
+    font-size: 20px;
+}
+.pb-pro-form__message-content {
+    display: grid;
+    min-width: 0;
+    gap: 4px;
+}
+.pb-pro-form__message-content strong {
+    color: inherit;
+    font-size: 14px;
+}
+.pb-pro-form__message-content > span {
+    color: inherit;
+    font-size: 13px;
+}
+.pb-pro-form__message button[data-pro-form-message-close] {
+    width: 28px;
+    min-height: 28px;
+    padding: 0;
+    border: 0;
+    background: transparent !important;
+    color: inherit !important;
+}
+.pb-pro-form__message small {
+    color: #667085;
+    font-size: 11px;
+}
+.pb-pro-form button:disabled {
+    cursor: wait;
+    opacity: .7;
 }
 .pb-pro-button,
 .pb-pro-form button {

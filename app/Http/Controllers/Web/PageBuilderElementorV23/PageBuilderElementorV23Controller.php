@@ -96,7 +96,7 @@ class PageBuilderElementorV23Controller extends Controller
 				$layoutPayload = $this->normalizeLayoutPayload($request->input('layout', '[]'));
 
 				$newData = [
-					'user_id' => 1,
+					'user_id' => (int) $request->user()->getAuthIdentifier(),
 					'uri' => $uri,
 					'page_name' => $pageName,
 					'custom_css' => $this->normalizeCustomCssPayload($request->input('customCss', '')),
@@ -271,11 +271,16 @@ class PageBuilderElementorV23Controller extends Controller
 
 	public function submitForm(Request $request, $idOrSlug, $nodeId, FormSubmissionHandler $handler)
 	{
-		$pageData = $this->resolveOwnedPage($idOrSlug);
+		$pageData = Page_Builder::query()
+			->where('editor_version', Page_Builder::EDITOR_VERSION_V23)
+			->where(fn ($query) => $query
+				->where('uri', $idOrSlug)
+				->orWhere('id', $idOrSlug))
+			->first();
 
 		if (! $pageData)
 		{
-			return $this->missingOrVersionConflict($idOrSlug, true);
+			return $this->missingOrVersionConflict($idOrSlug, true, false);
 		}
 
 		try
@@ -301,6 +306,99 @@ class PageBuilderElementorV23Controller extends Controller
 			return response()->json([
 				'success' => false,
 				'message' => 'An error occurred while submitting the form.',
+			], 500);
+		}
+	}
+
+	public function submitEditorDraftForm(Request $request, FormSubmissionHandler $handler)
+	{
+		$validated = $request->validate([
+			'__pb_editor_node' => ['required', 'string', 'max:1048576'],
+			'__pb_editor_page' => ['nullable', 'string', 'max:255'],
+		]);
+
+		try
+		{
+			$node = json_decode($validated['__pb_editor_node'], true, flags: JSON_THROW_ON_ERROR);
+		}
+		catch (\JsonException)
+		{
+			throw ValidationException::withMessages([
+				'__pb_editor_node' => 'The editor Form draft is invalid.',
+			]);
+		}
+
+		$nodeId = preg_replace('/[^A-Za-z0-9_-]/', '', (string) ($node['id'] ?? ''));
+		if (! is_array($node) || ($node['type'] ?? '') !== 'form' || $nodeId === '' || ! is_array($node['settings'] ?? null))
+		{
+			throw ValidationException::withMessages([
+				'__pb_editor_node' => 'Only a valid Form widget can be tested in the editor.',
+			]);
+		}
+
+		$userId = (int) $request->user()->getAuthIdentifier();
+		$pageIdentity = trim((string) ($validated['__pb_editor_page'] ?? ''));
+		$pageData = null;
+		if ($pageIdentity !== '')
+		{
+			$pageData = Page_Builder::query()
+				->where('editor_version', Page_Builder::EDITOR_VERSION_V23)
+				->where('user_id', $userId)
+				->where(fn ($query) => $query
+					->where('uri', $pageIdentity)
+					->orWhere('id', $pageIdentity))
+				->first();
+
+			if (! $pageData)
+			{
+				abort(404);
+			}
+		}
+
+		$draftPage = $pageData ? clone $pageData : new Page_Builder();
+		$draftPage->forceFill([
+			'user_id' => $userId,
+			'uri' => (string) ($pageData->uri ?? 'editor-draft'),
+			'page_name' => (string) ($pageData->page_name ?? 'Editor Draft'),
+			'vars' => [$node],
+			'status' => (string) ($pageData->status ?? 'draft'),
+			'editor_version' => Page_Builder::EDITOR_VERSION_V23,
+		]);
+		$request->request->remove('__pb_editor_node');
+		$request->request->remove('__pb_editor_page');
+
+		try
+		{
+			$result = $handler->handle($draftPage, $nodeId, $request, [
+				'editor_test' => true,
+				'editor_mode' => $pageData ? 'edit' : 'create',
+				'editor_user_id' => $userId,
+			]);
+			$result['editorTest'] = true;
+
+			return response()->json($result);
+		}
+		catch (ValidationException $exception)
+		{
+			return response()->json([
+				'success' => false,
+				'editorTest' => true,
+				'message' => collect($exception->errors())->flatten()->first() ?: 'Please check the form fields.',
+				'errors' => $exception->errors(),
+			], 422);
+		}
+		catch (HttpExceptionInterface $exception)
+		{
+			throw $exception;
+		}
+		catch (\Throwable $exception)
+		{
+			report($exception);
+
+			return response()->json([
+				'success' => false,
+				'editorTest' => true,
+				'message' => 'An error occurred while testing the form.',
 			], 500);
 		}
 	}
@@ -363,15 +461,21 @@ class PageBuilderElementorV23Controller extends Controller
 	{
 		return Page_Builder::query()
 			->where('editor_version', Page_Builder::EDITOR_VERSION_V23)
+			->where('user_id', (int) auth()->id())
 			->where(fn ($query) => $query
 				->where('uri', $idOrSlug)
 				->orWhere('id', $idOrSlug))
 			->first();
 	}
 
-	private function missingOrVersionConflict(string|int $idOrSlug, bool $wantsJson)
+	private function missingOrVersionConflict(string|int $idOrSlug, bool $wantsJson, bool $owned = true)
 	{
-		$page = Page_Builder::query()
+		$query = Page_Builder::query();
+		if ($owned)
+		{
+			$query->where('user_id', (int) auth()->id());
+		}
+		$page = $query
 			->where(fn ($query) => $query
 				->where('uri', $idOrSlug)
 				->orWhere('id', $idOrSlug))

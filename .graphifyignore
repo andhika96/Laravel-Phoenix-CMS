@@ -7,7 +7,7 @@ public/storage/
 public/assets/plugins/
 public/assets/vendor/
 public/mockups/
-mockups/file-manager-v2-ckbox/dist/
+project-artifacts/mockups/file-manager-v2-ckbox/dist/
 storage/
 bootstrap/cache/
 
@@ -22,14 +22,12 @@ bootstrap/cache/
 .tmp-chrome-profile/
 .worktrees/
 
-# Historical copies and temporary exports are not active source
-backup/
-backups/
-tmp/
-output/
+# Historical copies and visual QA artifacts are not active source
+project-artifacts/backups/
+project-artifacts/qa/
+project-artifacts/previews/
 graphify-out/
 docs/superpowers/
-design-qa.md
 *.bak
 *.bak_*
 *.backup-*

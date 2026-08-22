@@ -15,8 +15,8 @@
 ### Task 1: Back up the current prototype and establish failing model checks
 
 **Files:**
-- Modify: `mockups/pagebuilder-v23-responsive-hero-prototype/scripts/self-check.mjs`
-- Test: `mockups/pagebuilder-v23-responsive-hero-prototype/scripts/self-check.mjs`
+- Modify: `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/scripts/self-check.mjs`
+- Test: `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/scripts/self-check.mjs`
 
 **Step 1: Create timestamped backups**
 
@@ -41,8 +41,8 @@ Expected: FAIL with `ERR_MODULE_NOT_FOUND` for `src/hero-model.js`.
 ### Task 2: Add the minimum pure hero behavior model
 
 **Files:**
-- Create: `mockups/pagebuilder-v23-responsive-hero-prototype/src/hero-model.js`
-- Test: `mockups/pagebuilder-v23-responsive-hero-prototype/scripts/self-check.mjs`
+- Create: `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/src/hero-model.js`
+- Test: `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/scripts/self-check.mjs`
 
 **Step 1: Implement the pure helpers**
 
@@ -67,8 +67,8 @@ Expected: PASS.
 ### Task 3: Wire content order and the button repeater into the prototype
 
 **Files:**
-- Modify: `mockups/pagebuilder-v23-responsive-hero-prototype/src/App.jsx`
-- Modify: `mockups/pagebuilder-v23-responsive-hero-prototype/src/styles.css`
+- Modify: `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/src/App.jsx`
+- Modify: `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/src/styles.css`
 
 **Step 1: Add grouped content ordering**
 
@@ -89,8 +89,8 @@ Support:
 ### Task 4: Add responsive button layout and media inheritance
 
 **Files:**
-- Modify: `mockups/pagebuilder-v23-responsive-hero-prototype/src/App.jsx`
-- Modify: `mockups/pagebuilder-v23-responsive-hero-prototype/src/styles.css`
+- Modify: `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/src/App.jsx`
+- Modify: `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/src/styles.css`
 
 **Step 1: Implement device inheritance**
 
@@ -107,8 +107,8 @@ Expose source type, media URL or simulated picker, alt text, object fit, and obj
 ### Task 5: Add one accessible shared popup
 
 **Files:**
-- Modify: `mockups/pagebuilder-v23-responsive-hero-prototype/src/App.jsx`
-- Modify: `mockups/pagebuilder-v23-responsive-hero-prototype/src/styles.css`
+- Modify: `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/src/App.jsx`
+- Modify: `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/src/styles.css`
 
 **Step 1: Render button actions safely**
 
@@ -121,8 +121,8 @@ Support close button, Escape, backdrop close, body scroll lock, focus into the m
 ### Task 6: Build and run browser/design QA
 
 **Files:**
-- Modify: `mockups/pagebuilder-v23-responsive-hero-prototype/design-qa.md`
-- Optional assets: `mockups/pagebuilder-v23-responsive-hero-prototype/public/assets/qa-*.png`
+- Modify: `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/design-qa.md`
+- Optional assets: `project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/public/assets/qa-*.png`
 
 **Step 1: Run static verification**
 

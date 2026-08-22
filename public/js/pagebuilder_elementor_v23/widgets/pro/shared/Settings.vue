@@ -33,13 +33,26 @@
                 <section-box title="Form Fields" :open="true"
                     ><text-control
                         label="Form Name"
-                        v-model="s.formName" /><repeater-list
-                        :items="s.fields"
-                        item-label="Field"
-                        @add="addItem('fields')"
-                        @remove="removeItem('fields', $event)"
-                        @move="moveItem('fields', $event)"
-                        ><template #default="{ item }"
+                        v-model="s.formName" /><form-row-grid-editor
+                        :layout="s.rowGrid"
+                        :node-id="node.id"
+                        :editor="editor"
+                        :button-width="s.buttonWidth"
+                        @sync="syncFormRowGrid"
+                        @remove-field="removeFormRowGridField"
+                        @update:button-width="s.buttonWidth=$event"
+                        ><template #step="{ step }"><pro-icon-picker
+                                v-if="['icon','icon-text'].includes(s.stepType)"
+                                label="Step Icon"
+                                prefix="icon"
+                                target-key="formStep"
+                                :item-id="step.id"
+                                :entry="step"
+                                :node="node"
+                                :editor="editor"
+                                fallback-class="fas fa-check"
+                                fallback-name="check"
+                            /></template><template #field="{ item, device, setRowSpan, cycleRowSpanDevice, rowSpanDeviceIcon }"
                             ><text-control
                                 label="Label"
                                 v-model="item.label" /><select-control
@@ -52,7 +65,16 @@
                                     formTypesWithPlaceholder.includes(item.type)
                                 "
                                 label="Placeholder"
-                                v-model="item.placeholder" /><text-control
+                                v-model="item.placeholder" /><toggle-control
+                                v-if="
+                                    !['hidden', 'html'].includes(
+                                        item.type,
+                                    )
+                                "
+                                label="Required"
+                                v-model="item.required" /><details
+                                class="pb-form-field-more"
+                            ><summary>More field options</summary><div class="pb-form-field-more__body"><text-control
                                 v-if="formTypesWithDefault.includes(item.type)"
                                 label="Default Value"
                                 v-model="item.defaultValue" /><text-control
@@ -116,34 +138,17 @@
                                 v-model="item.fileTypes" /><toggle-control
                                 v-if="item.type === 'file'"
                                 label="Multiple Files"
-                                v-model="item.multiple" /><template
-                                v-if="item.type === 'step'"
-                                ><text-control
-                                    label="Step Title"
-                                    v-model="item.stepTitle" /><textarea-control
-                                    label="Step Description"
-                                    v-model="
-                                        item.stepDescription
-                                    " /><text-control
-                                    label="Next Button"
-                                    v-model="item.nextButton" /><text-control
-                                    label="Previous Button"
-                                    v-model="item.previousButton" /></template
-                            ><number-control
-                                v-if="item.type !== 'step'"
-                                label="Column Width (%)"
-                                v-model="item.width"
-                                :min="20"
-                                :max="100" /><toggle-control
-                                v-if="
-                                    !['hidden', 'html', 'step'].includes(
-                                        item.type,
-                                    )
-                                "
-                                label="Required"
-                                v-model="
-                                    item.required
-                                " /></template></repeater-list
+                                v-model="item.multiple" /><div class="pb-form-row-span-control"><label>Row Span</label><div><select
+                                    :value="item.rowSpan?.[device] || 1"
+                                    :aria-label="'Row Span for ' + device"
+                                    @change="setRowSpan(item,$event.target.value)"
+                                ><option v-for="span in [1,2,3,4]" :key="span" :value="span">{{ span }} {{ span === 1 ? 'row' : 'rows' }}</option></select><button
+                                    type="button"
+                                    class="pb-form-row-span-control__device"
+                                    :title="'Row Span device: ' + device"
+                                    :aria-label="'Change Row Span device. Current: ' + device"
+                                    @click="cycleRowSpanDevice"
+                                ><i :class="rowSpanDeviceIcon"></i><i class="fas fa-chevron-down"></i></button></div></div></div></details></template></form-row-grid-editor
                     ><select-control
                         label="Input Size"
                         v-model="s.inputSize"
@@ -158,7 +163,7 @@
                         label="Size"
                         v-model="s.buttonSize"
                         :options="sizeOptions" /><select-control
-                        label="Column Width"
+                        label="Button Width"
                         v-model="s.buttonWidth"
                         :options="widthOptions" /><text-control
                         label="Button Text"
@@ -258,26 +263,74 @@
                         label="Type"
                         v-model="s.stepType"
                         :options="stepTypes" /><select-control
+                        v-if="['icon','number','icon-text','number-text'].includes(s.stepType)"
                         label="Shape"
                         v-model="s.stepShape"
-                        :options="shapeOptions"
-                /></section-box>
+                        :options="shapeOptions" /><p
+                        v-if="s.stepType !== 'none' && (s.rowGrid?.steps?.length || 0) < 2"
+                        class="pb-form-step-help"
+                    ><i class="fas fa-info-circle" aria-hidden="true"></i><span>Add at least one more step in Row Grid to display the step indicator and navigation.</span></p></section-box>
+                <section-box title="Messages" :open="s.customMessages"
+                    ><toggle-control
+                        label="Custom Messages"
+                        v-model="s.customMessages"
+                    /><template v-if="s.customMessages"
+                        ><div class="pb-form-message-display"><label>Display Type</label><div class="pb-form-message-display__grid"><button
+                            v-for="mode in [
+                                { value: 'basic', label: 'Basic', icon: 'fas fa-minus' },
+                                { value: 'above-form', label: 'Above Form', icon: 'fas fa-window-maximize' },
+                                { value: 'toast', label: 'Toast', icon: 'fas fa-bell' },
+                                { value: 'modal', label: 'Modal', icon: 'fas fa-clone' },
+                            ]"
+                            :key="mode.value"
+                            type="button"
+                            :class="{ active: s.messageDisplay === mode.value }"
+                            :aria-pressed="s.messageDisplay === mode.value ? 'true' : 'false'"
+                            @click="s.messageDisplay = mode.value"
+                        ><i :class="mode.icon" aria-hidden="true"></i><span>{{ mode.label }}</span></button></div></div><div
+                            class="pb-form-message-state-tabs"
+                            role="tablist"
+                            aria-label="Message state"
+                        ><button
+                            type="button"
+                            role="tab"
+                            :aria-selected="formMessageEditorState === 'success' ? 'true' : 'false'"
+                            :class="{ active: formMessageEditorState === 'success' }"
+                            @click="formMessageEditorState = 'success'"
+                        >Success</button><button
+                            type="button"
+                            role="tab"
+                            :aria-selected="formMessageEditorState === 'error' ? 'true' : 'false'"
+                            :class="{ active: formMessageEditorState === 'error' }"
+                            @click="formMessageEditorState = 'error'"
+                        >Error</button></div><text-control
+                            v-if="s.messageDisplay !== 'basic'"
+                            label="Title"
+                            v-model="formMessageTitleModel"
+                        /><textarea-control
+                            :label="formMessageEditorState === 'success' ? 'Success Message' : 'Error Message'"
+                            v-model="formMessageTextModel"
+                        /><toggle-control
+                            v-if="s.messageDisplay !== 'basic'"
+                            label="Show Icon"
+                            v-model="s.messageShowIcon"
+                        /><toggle-control
+                            v-if="s.messageDisplay !== 'basic'"
+                            label="Dismissible"
+                            v-model="s.messageDismissible"
+                        /><button
+                            type="button"
+                            class="pb-form-message-preview"
+                            @click="previewFormMessage"
+                        ><i class="fas fa-eye" aria-hidden="true"></i><span>Preview message</span></button></template
+                ></section-box>
                 <section-box title="Additional Options"
                     ><text-control
                         label="Form ID"
                         v-model="s.formId" /><select-control
                         label="Form Validation"
                         v-model="s.validation"
-                        :options="validationOptions" /><toggle-control
-                        label="Custom Messages"
-                        v-model="s.customMessages" /><template
-                        v-if="s.customMessages"
-                        ><text-control
-                            label="Success Message"
-                            v-model="s.successMessage" /><text-control
-                            label="Error Message"
-                            v-model="s.errorMessage" /></template
-                ></section-box>
+                        :options="validationOptions" /></section-box>
             </template>
 
             <template v-else-if="type === 'slides'">
@@ -2919,6 +2972,350 @@ const RepeaterList = {
     },
     template: `<div class="pb-pro-repeater"><div v-for="(item,index) in items" :key="item.id||index" class="pb-pro-repeater__item" :class="{'is-open':expandedIndex===index}"><div class="pb-pro-repeater__header" role="button" tabindex="0" :aria-expanded="expandedIndex===index?'true':'false'" @click="toggle(index)" @keydown.enter.prevent="toggle(index)" @keydown.space.prevent="toggle(index)"><button type="button" class="pb-pro-repeater__disclosure" :title="expandedIndex===index?'Collapse '+itemLabel:'Expand '+itemLabel" :aria-label="expandedIndex===index?'Collapse '+itemLabel:'Expand '+itemLabel" @click.stop="toggle(index)"><i class="fas" :class="expandedIndex===index?'fa-chevron-up':'fa-chevron-down'"></i></button><span class="pb-pro-repeater__label"><i class="fas fa-grip-vertical" aria-hidden="true"></i><strong>{{item.label||item.name||item.title||item.text||itemLabel+' #'+(index+1)}}</strong></span><span class="pb-pro-repeater__summary-actions"><button v-if="reorder" type="button" title="Move Up" aria-label="Move item up" :disabled="index===0" @click.stop="$emit('move',{index,direction:-1})"><i class="fas fa-arrow-up"></i></button><button v-if="reorder" type="button" title="Move Down" aria-label="Move item down" :disabled="index===items.length-1" @click.stop="$emit('move',{index,direction:1})"><i class="fas fa-arrow-down"></i></button><button v-if="duplicate" type="button" title="Duplicate" aria-label="Duplicate item" @click.stop="$emit('duplicate',index)"><i class="far fa-copy"></i></button><button type="button" title="Remove" aria-label="Remove item" :disabled="items.length<=1" @click.stop="$emit('remove',index)"><i class="fas fa-times"></i></button></span></div><div v-show="expandedIndex===index" class="pb-pro-repeater__body"><slot :item="item" :index="index"/></div></div><button type="button" class="pb-pro-repeater__add" @click="$emit('add')"><i class="fas fa-plus"></i> Add Item</button></div>`,
 };
+const FormRowGridEditor = {
+    props: {
+        layout: { type: Object, default: () => ({ steps: [] }) },
+        nodeId: { type: String, default: "" },
+        editor: { type: Object, default: () => ({}) },
+        buttonWidth: { type: [String, Number], default: "100" },
+    },
+    emits: ["sync", "remove-field", "update:button-width"],
+    data() {
+        return {
+            device: "desktop",
+            expandedItemId: "",
+            expandedRowId: "",
+        };
+    },
+    computed: {
+        api() {
+            return window.PageBuilderElementorV23FormRowGrid || {};
+        },
+        layoutSteps() {
+            return Array.isArray(this.layout?.steps) ? this.layout.steps : [];
+        },
+        normalizedButtonWidth() {
+            return String(Math.max(20, Math.min(100, Number(this.buttonWidth) || 100)));
+        },
+        fieldEditRequest() {
+            return this.editor?.formFieldEditRequest || null;
+        },
+    },
+    mounted() {
+        for (const step of this.layoutSteps) {
+            for (const row of step.rows || []) {
+                if (!this.expandedRowId) this.expandedRowId = String(row.id);
+                const item = (row.columns || []).flatMap((column) => column.items || []).find((entry) => entry?.kind === "field");
+                if (item) {
+                    this.expandedItemId = String(item.id);
+                    return;
+                }
+            }
+        }
+    },
+    watch: {
+        fieldEditRequest: {
+            immediate: true,
+            deep: true,
+            handler(request) {
+                this.applyFieldEditRequest(request);
+            },
+        },
+    },
+    methods: {
+        applyFieldEditRequest(request) {
+            if (!request || String(request.nodeId || "") !== String(this.nodeId || "")) return false;
+            const itemId = String(request.itemId || "");
+            const fieldId = String(request.fieldId || "");
+            for (const step of this.layout?.steps || []) {
+                for (const row of step?.rows || []) {
+                    for (const column of row?.columns || []) {
+                        const item = (column?.items || []).find((entry) => entry?.kind === "field" && (
+                            (itemId && String(entry.id) === itemId)
+                            || (fieldId && String(entry.field?.id) === fieldId)
+                        ));
+                        if (!item) continue;
+                        this.expandedRowId = String(row.id);
+                        this.expandedItemId = String(item.id);
+                        this.$nextTick?.(() => {
+                            const cards = Array.from(this.$el?.querySelectorAll?.("[data-form-field-item-id]") || []);
+                            cards.find((card) => String(card.dataset?.formFieldItemId || "") === String(item.id))
+                                ?.scrollIntoView?.({ block: "nearest" });
+                        });
+                        return true;
+                    }
+                }
+            }
+            return false;
+        },
+        toggleRow(rowId) {
+            const id = String(rowId || "");
+            this.expandedRowId = this.expandedRowId === id ? "" : id;
+        },
+        toggleItem(itemId) {
+            const id = String(itemId || "");
+            this.expandedItemId = this.expandedItemId === id ? "" : id;
+        },
+        itemTypeLabel(item) {
+            const type = String(item?.field?.type || "Field");
+            return type.charAt(0).toUpperCase() + type.slice(1).replaceAll("_", " ");
+        },
+        rowItems(row) {
+            const columns = row?.columns || [];
+            const length = Math.max(0, ...columns.map((column) => (column.items || []).length));
+            const records = [];
+            for (let itemIndex = 0; itemIndex < length; itemIndex += 1) {
+                columns.forEach((column) => {
+                    const item = column.items?.[itemIndex];
+                    if (item?.kind === "field") records.push({ item, column });
+                });
+            }
+            return records;
+        },
+        columnLabel(row, column) {
+            const columns = row?.columns || [];
+            const index = columns.findIndex((entry) => String(entry.id) === String(column?.id));
+            return `Column ${Math.max(0, index) + 1}`;
+        },
+        addField(step, row) {
+            if (!this.api.createField || !this.api.fieldItem || !this.api.appendFieldToRow) return;
+            const field = this.api.createField({
+                id: `field-${Date.now()}`,
+                label: "New Field",
+                type: "text",
+            });
+            const item = this.api.fieldItem(field);
+            if (!this.api.appendFieldToRow(this.layout, step.id, row.id, item)) return;
+            this.expandedRowId = String(row.id);
+            this.$emit("sync");
+        },
+        addStep() {
+            const step = this.api.appendStep?.(this.layout, {
+                title: `Step ${this.layoutSteps.length + 1}`,
+            });
+            if (!step) return;
+            this.expandedRowId = String(step.rows?.[0]?.id || "");
+            this.expandedItemId = "";
+            this.$emit("sync");
+        },
+        deleteStep(step) {
+            if (!this.api.deleteStep?.(this.layout, step.id)) return;
+            this.expandedRowId = String(this.layoutSteps[0]?.rows?.[0]?.id || "");
+            this.expandedItemId = "";
+            this.$emit("sync");
+        },
+        addRow(step) {
+            if (!this.api.createRow) return;
+            const row = this.api.createRow();
+            step.rows.push(row);
+            this.expandedRowId = String(row.id);
+            this.$emit("sync");
+        },
+        deleteRow(step, row) {
+            if (!this.api.deleteRow?.(this.layout, step.id, row.id)) return;
+            if (this.expandedRowId === String(row.id)) {
+                this.expandedRowId = String(step.rows?.[0]?.id || "");
+            }
+            this.$emit("sync");
+        },
+        setColumnCount(row, device, value) {
+            row.columnCounts ||= { desktop: 1, tablet: 1, mobile: 1 };
+            row.columnCounts[device] = Math.min(4, Math.max(1, Number(value) || 1));
+            this.api.ensureColumns?.(row);
+            this.$emit("sync");
+        },
+        setRowSpan(field, value) {
+            field.rowSpan ||= { desktop: 1, tablet: 1, mobile: 1 };
+            field.rowSpan[this.device] = Math.min(4, Math.max(1, Number(value) || 1));
+            this.$emit("sync");
+        },
+        cycleRowSpanDevice() {
+            const devices = ["desktop", "tablet", "mobile"];
+            this.device = devices[(devices.indexOf(this.device) + 1) % devices.length];
+        },
+        rowSpanDeviceIcon() {
+            return {
+                desktop: "fas fa-desktop",
+                tablet: "fas fa-tablet-alt",
+                mobile: "fas fa-mobile-alt",
+            }[this.device];
+        },
+        itemLabel(item) {
+            return item?.field?.label || item?.field?.id || "Field";
+        },
+        setButtonWidth(value) {
+            const width = String(Math.max(20, Math.min(100, Number(value) || 100)));
+            this.$emit("update:button-width", width);
+        },
+    },
+    template: `
+        <div class="pb-form-row-grid-editor">
+            <div class="pb-form-row-grid-editor__toolbar">
+                <strong>Row Grid</strong>
+                <div class="pb-form-row-grid-editor__devices" aria-label="Responsive layout device">
+                    <button
+                        v-for="option in [{value:'desktop',label:'Desktop'},{value:'tablet',label:'Tablet'},{value:'mobile',label:'Mobile'}]"
+                        :key="option.value"
+                        type="button"
+                        :class="{active:device===option.value}"
+                        @click="device=option.value"
+                    >{{ option.label }}</button>
+                </div>
+            </div>
+
+            <div v-for="(step,stepIndex) in layoutSteps" :key="step.id" class="pb-form-row-grid-editor__step">
+                <button
+                    v-if="layoutSteps.length>1"
+                    type="button"
+                    class="pb-form-row-grid-editor__step-delete"
+                    :title="'Delete Step ' + (stepIndex + 1)"
+                    :aria-label="'Delete Step ' + (stepIndex + 1)"
+                    @click="deleteStep(step)"
+                ><i class="far fa-trash-alt"></i></button>
+                <details class="pb-form-row-grid-editor__step-settings" :class="{'has-delete':layoutSteps.length>1}">
+                    <summary>
+                        <span>
+                            <strong>Step {{ stepIndex + 1 }}</strong>
+                            <small v-if="step.title">{{ step.title }}</small>
+                        </span>
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </summary>
+                    <div class="pb-form-row-grid-editor__step-content">
+                        <input class="pb-input" v-model="step.title" placeholder="Step title" @input="$emit('sync')"/>
+                        <textarea class="pb-textarea" rows="2" v-model="step.description" placeholder="Step description" @input="$emit('sync')"></textarea>
+                        <input class="pb-input" v-model="step.nextButton" placeholder="Next button" @input="$emit('sync')"/>
+                        <input class="pb-input" v-model="step.previousButton" placeholder="Previous button" @input="$emit('sync')"/>
+                        <slot name="step" :step="step"/>
+                    </div>
+                </details>
+
+                <section v-for="(row,rowIndex) in step.rows" :key="row.id" class="pb-form-row-grid-editor__row">
+                    <div class="pb-form-row-grid-editor__row-heading">
+                        <button
+                            type="button"
+                            class="pb-form-row-grid-editor__row-toggle"
+                            :aria-expanded="expandedRowId===String(row.id)"
+                            @click="toggleRow(row.id)"
+                        >
+                            <i class="fas fa-th-large" aria-hidden="true"></i>
+                            <strong>Row {{ rowIndex + 1 }}</strong>
+                            <i
+                                class="fas pb-form-row-grid-editor__row-chevron"
+                                :class="expandedRowId===String(row.id)?'fa-chevron-up':'fa-chevron-down'"
+                                aria-hidden="true"
+                            ></i>
+                        </button>
+                        <select
+                            class="pb-form-row-grid-editor__row-count"
+                            :value="row.columnCounts[device]"
+                            :aria-label="'Columns for ' + device"
+                            @change="setColumnCount(row,device,$event.target.value)"
+                        >
+                            <option v-for="count in [1,2,3,4]" :key="count" :value="count">
+                                {{ count }} {{ count === 1 ? 'column' : 'columns' }}
+                            </option>
+                        </select>
+                        <button
+                            type="button"
+                            class="pb-form-row-grid-editor__delete"
+                            title="Delete row"
+                            aria-label="Delete row"
+                            :disabled="step.rows.length<=1"
+                            @click="deleteRow(step,row)"
+                        ><i class="far fa-trash-alt"></i></button>
+                    </div>
+
+                    <div
+                        v-show="expandedRowId===String(row.id)"
+                        class="pb-form-row-grid-editor__row-body"
+                    >
+                        <div class="pb-form-row-grid-editor__subheading">Fields in this row</div>
+                        <div class="pb-form-row-grid-editor__field-list">
+                            <div
+                                v-for="record in rowItems(row)"
+                                :key="record.item.id"
+                                class="pb-form-row-grid-editor__field-list-item"
+                                :data-form-field-item-id="record.item.id"
+                                :class="{'is-open':expandedItemId===String(record.item.id)}"
+                            >
+                                <div class="pb-form-row-grid-editor__field-header">
+                                    <button
+                                        type="button"
+                                        class="pb-form-row-grid-editor__field-select"
+                                        :aria-expanded="expandedItemId===String(record.item.id)"
+                                        @click="toggleItem(record.item.id)"
+                                    >
+                                        <i
+                                            class="fas pb-form-row-grid-editor__field-chevron"
+                                            :class="expandedItemId===String(record.item.id)?'fa-chevron-up':'fa-chevron-down'"
+                                            aria-hidden="true"
+                                        ></i>
+                                        <strong>{{ itemLabel(record.item) }}</strong>
+                                        <span class="pb-form-row-grid-editor__type">{{ itemTypeLabel(record.item) }}</span>
+                                        <span class="pb-form-row-grid-editor__column-badge">{{ columnLabel(row,record.column) }}</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="pb-form-row-grid-editor__remove"
+                                        :title="'Remove ' + itemLabel(record.item)"
+                                        :aria-label="'Remove ' + itemLabel(record.item)"
+                                        @click.stop="$emit('remove-field',record.item.id)"
+                                    ><i class="fas fa-times"></i></button>
+                                </div>
+                                <div
+                                    v-show="expandedItemId===String(record.item.id)"
+                                    class="pb-form-row-grid-editor__field-body"
+                                >
+                                    <slot
+                                        name="field"
+                                        :item="record.item.field"
+                                        :item-record="record.item"
+                                        :device="device"
+                                        :set-row-span="setRowSpan"
+                                        :cycle-row-span-device="cycleRowSpanDevice"
+                                        :row-span-device-icon="rowSpanDeviceIcon()"
+                                    />
+                                </div>
+                            </div>
+                            <div v-if="!rowItems(row).length" class="pb-form-row-grid-editor__field-list-empty">
+                                No fields in this row
+                            </div>
+                        </div>
+                        <button
+                            type="button"
+                            class="pb-form-row-grid-editor__row-add"
+                            @click="addField(step,row)"
+                        ><i class="fas fa-plus"></i> Add Field</button>
+                    </div>
+                </section>
+
+                <div v-if="stepIndex===layoutSteps.length-1" class="pb-form-row-grid-editor__form-actions">
+                    <i class="far fa-paper-plane" aria-hidden="true"></i>
+                    <span><strong>Submit button</strong><small>Final step footer</small></span>
+                    <select
+                        class="pb-form-row-grid-editor__footer-width"
+                        aria-label="Submit button width"
+                        :value="normalizedButtonWidth"
+                        @change="setButtonWidth($event.target.value)"
+                    >
+                        <option v-for="width in [20,25,30,33,40,50,60,66,70,75,80,100]" :key="width" :value="width">{{ width }}%</option>
+                    </select>
+                </div>
+
+                <div class="pb-form-row-grid-editor__actions is-single">
+                    <button type="button" @click="addRow(step)">
+                        <i class="fas fa-plus"></i> Add Row
+                    </button>
+                </div>
+            </div>
+            <div class="pb-form-row-grid-editor__actions is-single pb-form-row-grid-editor__add-step">
+                <button type="button" @click="addStep">
+                    <i class="fas fa-plus"></i> Add Step
+                </button>
+            </div>
+        </div>
+    `,
+};
 const ProIconPicker = {
     props: {
         label: { type: String, default: "Icon" },
@@ -3509,6 +3906,7 @@ export default {
         ResponsiveNumber,
         ResponsiveChoice,
         RepeaterList,
+        FormRowGridEditor,
         ProIconPicker,
         ArrowIconPicker,
         FormDatasetManager,
@@ -3529,7 +3927,11 @@ export default {
             formDatasetLoading: false,
             formDatasetError: "",
             formDatasetNotice: "",
+            formMessageEditorState: "success",
         };
+    },
+    created() {
+        this.ensureFormRowGrid();
     },
     computed: {
         type() {
@@ -3537,6 +3939,28 @@ export default {
         },
         s() {
             return this.node.settings || {};
+        },
+        formMessageTitleModel: {
+            get() {
+                return this.formMessageEditorState === "error"
+                    ? this.s.errorTitle
+                    : this.s.successTitle;
+            },
+            set(value) {
+                if (this.formMessageEditorState === "error") this.s.errorTitle = value;
+                else this.s.successTitle = value;
+            },
+        },
+        formMessageTextModel: {
+            get() {
+                return this.formMessageEditorState === "error"
+                    ? this.s.errorMessage
+                    : this.s.successMessage;
+            },
+            set(value) {
+                if (this.formMessageEditorState === "error") this.s.errorMessage = value;
+                else this.s.successMessage = value;
+            },
         },
         fieldTypes() {
             return [
@@ -3555,7 +3979,6 @@ export default {
                 "hidden",
                 "acceptance",
                 "html",
-                "step",
             ].map((v) => option(v, v[0].toUpperCase() + v.slice(1)));
         },
         formTypesWithPlaceholder() {
@@ -3619,14 +4042,14 @@ export default {
         },
         stepTypes() {
             return [
-                "none",
-                "text",
-                "icon",
-                "number",
-                "progress",
-                "number-text",
-                "icon-text",
-            ].map((v) => option(v));
+                option("none", "None"),
+                option("text", "Text"),
+                option("icon", "Icon"),
+                option("number", "Number"),
+                option("progress", "Progress Bar"),
+                option("number-text", "Number & Text"),
+                option("icon-text", "Icon & Text"),
+            ];
         },
         shapeOptions() {
             return ["circle", "square", "rounded", "none"].map((v) =>
@@ -4151,6 +4574,35 @@ export default {
         },
     },
     methods: {
+        ensureFormRowGrid() {
+            if (this.type !== "form") return;
+            const api = window.PageBuilderElementorV23FormRowGrid;
+            if (!api || !this.s) return;
+            if (!this.s.rowGrid || !Array.isArray(this.s.rowGrid.steps)) {
+                const normalized = api.normalizeSettings(this.s);
+                this.s.rowGrid = normalized.rowGrid;
+                this.s.fields = normalized.fields;
+            }
+        },
+        syncFormRowGrid() {
+            const api = window.PageBuilderElementorV23FormRowGrid;
+            if (!api || !this.s.rowGrid) return;
+            this.s.fields = api.projectFields(this.s.rowGrid);
+        },
+        removeFormRowGridField(itemId) {
+            const api = window.PageBuilderElementorV23FormRowGrid;
+            if (!api || !this.s.rowGrid) return;
+            api.removeItem(this.s.rowGrid, itemId);
+            this.syncFormRowGrid();
+        },
+        previewFormMessage() {
+            window.dispatchEvent(new CustomEvent("pagebuilder:v23-form-message-preview", {
+                detail: {
+                    nodeId: String(this.node.id),
+                    state: this.formMessageEditorState === "error" ? "error" : "success",
+                },
+            }));
+        },
         syncNavigation(value) {
             const navigation = ["both", "arrows", "dots", "none"].includes(value)
                 ? value
@@ -4471,6 +4923,721 @@ export default {
 </script>
 
 <style>
+.pb-form-row-grid-editor {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+.pb-form-row-grid-editor__toolbar,
+.pb-form-row-grid-editor__row-heading,
+.pb-form-row-grid-editor__item-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.pb-form-row-grid-editor__toolbar {
+    color: #243047;
+    font-size: 12px;
+}
+.pb-form-row-grid-editor__devices,
+.pb-form-row-grid-editor__row-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+}
+.pb-form-row-grid-editor__devices button,
+.pb-form-row-grid-editor__row-controls button,
+.pb-form-row-grid-editor__row-controls select,
+.pb-form-row-grid-editor__step-actions input {
+    min-height: 28px;
+    padding: 4px 7px;
+    border: 1px solid #d4dceb;
+    border-radius: 5px;
+    background: #fff;
+    color: #526987;
+    font-size: 10px;
+}
+.pb-form-row-grid-editor__devices button.active {
+    border-color: #6979f8;
+    background: #eef1ff;
+    color: #5367ff;
+}
+.pb-form-row-grid-editor__step,
+.pb-form-row-grid-editor__row {
+    display: grid;
+    gap: 8px;
+    padding: 9px;
+    border: 1px solid #dfe5f0;
+    border-radius: 7px;
+    background: #fbfcfe;
+}
+.pb-form-row-grid-editor__step-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(104px, .65fr);
+    gap: 8px;
+}
+.pb-form-row-grid-editor__step-heading > div:first-child {
+    display: grid;
+    gap: 5px;
+}
+.pb-form-row-grid-editor__eyebrow {
+    color: #6979f8;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.pb-form-row-grid-editor__step-actions {
+    display: grid;
+    align-content: start;
+    gap: 5px;
+}
+.pb-form-row-grid-editor__columns {
+    display: grid;
+    gap: 7px;
+    align-items: stretch;
+}
+.pb-form-row-grid-editor__column {
+    min-width: 0;
+    min-height: 54px;
+    padding: 5px;
+    border: 1px dashed #b9c6e3;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, .82);
+    transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+.pb-form-row-grid-editor__column.is-full {
+    grid-column: 1 / -1;
+}
+.pb-form-row-grid-editor__column.is-dragging {
+    border-color: #6979f8;
+    background: #f3f5ff;
+}
+.pb-form-row-grid-editor__dropzone {
+    min-height: 42px;
+}
+.pb-form-row-grid-editor__empty {
+    display: grid;
+    min-height: 40px;
+    place-items: center;
+    color: #8492aa;
+    font-size: 10px;
+    text-align: center;
+}
+.pb-form-row-grid-editor__item {
+    padding: 6px;
+    border: 1px solid #d3dcef;
+    border-radius: 6px;
+    background: #fff;
+}
+.pb-form-row-grid-editor__item-heading {
+    min-height: 25px;
+    color: #344054;
+    font-size: 11px;
+}
+.pb-form-row-grid-editor__remove {
+    display: grid;
+    width: 25px;
+    height: 25px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid #d4dceb;
+    border-radius: 5px;
+    background: #fff;
+    color: #6979f8;
+    color: #667085;
+    cursor: pointer;
+}
+.pb-form-row-grid-editor__add-row {
+    min-height: 30px;
+    padding: 5px 8px;
+    border: 1px dashed #aebdf7;
+    border-radius: 5px;
+    background: #f4f6ff;
+    color: #5367ff;
+    font-size: 10px;
+    font-weight: 700;
+}
+/* Compact internal Form Row Grid editor. */
+.pb-form-row-grid-editor {
+    gap: 8px;
+}
+.pb-form-row-grid-editor__toolbar {
+    font-size: 13px;
+}
+.pb-form-row-grid-editor__devices {
+    flex-wrap: nowrap;
+    gap: 0;
+    overflow: hidden;
+    border: 1px solid #d7deeb;
+    border-radius: 7px;
+    background: #fff;
+}
+.pb-form-row-grid-editor__devices button {
+    min-height: 31px;
+    padding: 5px 10px;
+    border: 0;
+    border-right: 1px solid #e4e8f0;
+    border-radius: 0;
+    color: #667085;
+    font-size: 11px;
+    cursor: pointer;
+}
+.pb-form-row-grid-editor__devices button:last-child {
+    border-right: 0;
+}
+.pb-form-row-grid-editor__devices button.active {
+    border-color: transparent;
+    background: #f0efff;
+    color: #5b4df6;
+    font-weight: 700;
+}
+.pb-form-row-grid-editor__step {
+    position: relative;
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+.pb-form-row-grid-editor__step-delete {
+    position: absolute;
+    z-index: 2;
+    top: 5px;
+    right: 7px;
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid #d7deeb;
+    border-radius: 6px;
+    background: #fff;
+    color: #667085;
+    cursor: pointer;
+}
+.pb-form-row-grid-editor__step-delete:hover {
+    border-color: #f0b4b4;
+    background: #fff5f5;
+    color: #b42318;
+}
+.pb-form-row-grid-editor__step-settings,
+.pb-form-row-grid-editor__row {
+    border: 1px solid #dfe5f0;
+    border-radius: 8px;
+    background: #fff;
+}
+.pb-form-row-grid-editor__step-settings summary {
+    display: flex;
+    min-height: 38px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 10px;
+    color: #344054;
+    font-size: 11px;
+    cursor: pointer;
+    list-style: none;
+}
+.pb-form-row-grid-editor__step-settings.has-delete summary {
+    padding-right: 43px;
+}
+.pb-form-row-grid-editor__step-settings summary::-webkit-details-marker {
+    display: none;
+}
+.pb-form-row-grid-editor__step-settings summary::marker {
+    content: "";
+}
+.pb-form-row-grid-editor__step-settings > summary::before {
+    display: none !important;
+    margin: 0 !important;
+    content: none !important;
+}
+.pb-form-row-grid-editor__step-settings summary > span {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 7px;
+}
+.pb-form-row-grid-editor__step-settings summary small {
+    overflow: hidden;
+    color: #98a2b3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.pb-form-row-grid-editor__step-settings summary > i {
+    color: #98a2b3;
+    font-size: 9px;
+    transition: transform .15s ease;
+}
+.pb-form-row-grid-editor__step-settings[open] summary > i {
+    transform: rotate(90deg);
+}
+.pb-form-row-grid-editor__step-content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 0 10px 10px;
+}
+.pb-form-row-grid-editor__step-content textarea {
+    grid-column: 1 / -1;
+}
+.pb-form-row-grid-editor__row {
+    gap: 7px;
+    padding: 8px;
+    background: #f8f9fc;
+}
+.pb-form-row-grid-editor__row-title {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+    color: #344054;
+    font-size: 11px;
+}
+.pb-form-row-grid-editor__row-title i {
+    color: #7165ee;
+    font-size: 10px;
+}
+.pb-form-row-grid-editor__row-count {
+    min-width: 88px;
+    min-height: 29px;
+    margin-left: auto;
+    padding: 4px 25px 4px 8px;
+    border: 1px solid #d7deeb;
+    border-radius: 6px;
+    background: #fff;
+    color: #475467;
+    font-size: 10px;
+}
+.pb-form-row-grid-editor__delete {
+    display: grid;
+    width: 29px;
+    height: 29px;
+    flex: 0 0 29px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid #d7deeb;
+    border-radius: 6px;
+    background: #fff;
+    color: #667085;
+    cursor: pointer;
+}
+.pb-form-row-grid-editor__delete:disabled {
+    cursor: not-allowed;
+    opacity: .4;
+}
+.pb-form-row-grid-editor__columns {
+    gap: 6px;
+}
+.pb-form-row-grid-editor__column {
+    min-height: 45px;
+    padding: 0;
+    border-color: #c8d1e3;
+    border-radius: 7px;
+    background: #fff;
+}
+.pb-form-row-grid-editor__column.is-dragging {
+    border-color: #7467f5;
+    background: #f4f3ff;
+}
+.pb-form-row-grid-editor__dropzone {
+    min-height: 43px;
+    width: 100%;
+}
+.pb-form-row-grid-editor__empty {
+    min-height: 41px;
+}
+.pb-form-row-grid-editor__item {
+    overflow: hidden;
+    padding: 0;
+    border: 0;
+    border-radius: 7px;
+}
+.pb-form-row-grid-editor__item-heading {
+    min-height: 41px;
+    padding: 5px 6px;
+}
+.pb-form-row-grid-editor__remove,
+.pb-form-row-grid-editor__disclosure {
+    display: grid;
+    height: 29px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+.pb-form-row-grid-editor__remove {
+    width: 27px;
+    flex: 0 0 27px;
+    border-radius: 5px;
+}
+.pb-form-row-grid-editor__remove:hover {
+    background: #f1f2f6;
+}
+.pb-form-row-grid-editor__disclosure {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    gap: 7px;
+    overflow: hidden;
+    color: #344054;
+    cursor: pointer;
+    text-align: left;
+}
+.pb-form-row-grid-editor__disclosure i {
+    width: 9px;
+    color: #98a2b3;
+    font-size: 8px;
+}
+.pb-form-row-grid-editor__disclosure strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.pb-form-row-grid-editor__disclosure.is-static {
+    padding-left: 5px;
+    cursor: default;
+}
+.pb-form-row-grid-editor__type {
+    flex: 0 1 auto;
+    overflow: hidden;
+    color: #98a2b3;
+    font-size: 9px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.pb-form-row-grid-editor__item-body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 8px;
+    padding: 10px;
+    border-top: 1px solid #eaecf0;
+}
+.pb-form-row-grid-editor__item-body > .pb-form-group,
+.pb-form-row-grid-editor__item-body > .pb-form-dataset-trigger {
+    min-width: 0;
+    margin-bottom: 0;
+}
+.pb-form-row-grid-editor__item-body > .pb-form-dataset-trigger,
+.pb-form-row-grid-editor__item-body > .pb-control--toggle {
+    grid-column: 1 / -1;
+}
+.pb-form-row-grid-editor__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+}
+.pb-form-row-grid-editor__actions.is-single {
+    grid-template-columns: 1fr;
+}
+.pb-form-row-grid-editor__actions button {
+    min-height: 34px;
+    padding: 6px 8px;
+    border: 1px dashed #aebdf7;
+    border-radius: 7px;
+    background: #f7f7ff;
+    color: #5b4df6;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.pb-form-row-grid-editor__actions button:hover {
+    border-color: #7467f5;
+    background: #f0efff;
+}
+.pb-form-row-grid-editor__row-toggle {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 7px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #344054;
+    font-size: 11px;
+    text-align: left;
+    cursor: pointer;
+}
+.pb-form-row-grid-editor__row-toggle > i:first-child {
+    color: #7165ee;
+    font-size: 10px;
+}
+.pb-form-row-grid-editor__row-chevron {
+    margin-left: auto;
+    color: #98a2b3;
+    font-size: 8px;
+}
+.pb-form-row-grid-editor__row-body {
+    display: grid;
+    gap: 9px;
+}
+.pb-form-row-grid-editor__subheading {
+    color: #475467;
+    font-size: 10px;
+    font-weight: 700;
+}
+.pb-form-field-more {
+    grid-column: 1 / -1;
+    border-top: 1px solid #eaecf0;
+}
+.pb-form-field-more > summary {
+    display: flex;
+    min-height: 34px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0;
+    color: #667085;
+    font-size: 9px;
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+}
+.pb-form-field-more > summary::-webkit-details-marker {
+    display: none;
+}
+.pb-form-field-more > summary::marker,
+.pb-form-field-more > summary::before {
+    display: none !important;
+    content: none !important;
+}
+.pb-form-field-more > summary::after {
+    color: #98a2b3;
+    content: "+";
+    font-size: 13px;
+    font-weight: 500;
+}
+.pb-form-field-more[open] > summary::after {
+    content: "−";
+}
+.pb-form-field-more__body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 8px;
+    padding-top: 6px;
+}
+.pb-form-field-more__body > .pb-form-group,
+.pb-form-field-more__body > .pb-form-dataset-trigger {
+    min-width: 0;
+    margin-bottom: 0;
+}
+.pb-form-field-more__body > .pb-form-dataset-trigger,
+.pb-form-field-more__body > .pb-toggle-label-row {
+    grid-column: 1 / -1;
+}
+.pb-form-row-span-control {
+    display: grid;
+    grid-column: 1 / -1;
+    gap: 5px;
+}
+.pb-form-row-span-control > label {
+    color: #475467;
+    font-size: 9px;
+    font-weight: 600;
+}
+.pb-form-row-span-control > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 42px;
+    gap: 6px;
+}
+.pb-form-row-span-control select,
+.pb-form-row-span-control__device {
+    min-height: 31px;
+    border: 1px solid #d7deeb;
+    border-radius: 6px;
+    background: #fff;
+    color: #344054;
+    font-size: 10px;
+}
+.pb-form-row-span-control select {
+    min-width: 0;
+    padding: 5px 8px;
+}
+.pb-form-row-span-control__device {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0;
+    color: #6558e8;
+    cursor: pointer;
+}
+.pb-form-row-span-control__device .fa-chevron-down {
+    color: #98a2b3;
+    font-size: 7px;
+}
+.pb-form-row-grid-editor__field-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+}
+.pb-form-row-grid-editor__field-list-item {
+    overflow: hidden;
+    border: 1px solid #dfe5f0;
+    border-radius: 7px;
+    background: #fff;
+}
+.pb-form-row-grid-editor__field-list-item.is-open {
+    border-color: #c9c4ff;
+    box-shadow: 0 0 0 1px rgba(101, 88, 232, .05);
+}
+.pb-form-row-grid-editor__field-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 29px;
+    align-items: center;
+    background: #fff;
+}
+.pb-form-row-grid-editor__field-select {
+    display: grid;
+    min-width: 0;
+    min-height: 38px;
+    grid-template-columns: 18px minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 4px 5px 8px;
+    border: 0;
+    background: transparent;
+    color: #344054;
+    font-size: 10px;
+    text-align: left;
+    cursor: pointer;
+}
+.pb-form-row-grid-editor__field-select:disabled {
+    cursor: default;
+    opacity: 1;
+}
+.pb-form-row-grid-editor__field-select > i {
+    color: #8a7df0;
+    font-size: 9px;
+}
+.pb-form-row-grid-editor__field-chevron {
+    width: 10px;
+    color: #98a2b3 !important;
+}
+.pb-form-row-grid-editor__field-select strong,
+.pb-form-row-grid-editor__field-select .pb-form-row-grid-editor__type {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.pb-form-row-grid-editor__column-badge {
+    padding: 3px 5px;
+    border-radius: 4px;
+    background: #f0efff;
+    color: #6558e8;
+    font-size: 8px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.pb-form-row-grid-editor__field-header > .pb-form-row-grid-editor__remove {
+    margin-right: 2px;
+}
+.pb-form-row-grid-editor__field-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px 8px;
+    padding: 10px;
+    border-top: 1px solid #eaecf0;
+    background: #fff;
+}
+.pb-form-row-grid-editor__field-body .pb-form-field-more__body {
+    grid-template-columns: 1fr;
+}
+.pb-form-row-grid-editor__field-body > .pb-form-group,
+.pb-form-row-grid-editor__field-body > .pb-form-dataset-trigger {
+    min-width: 0;
+    margin-bottom: 0;
+}
+.pb-form-row-grid-editor__field-body > .pb-form-dataset-trigger,
+.pb-form-row-grid-editor__field-body > .pb-toggle-label-row,
+.pb-form-row-grid-editor__field-body > .pb-control--toggle {
+    grid-column: 1 / -1;
+}
+.pb-form-row-grid-editor__field-list-empty {
+    padding: 9px;
+    color: #98a2b3;
+    font-size: 9px;
+    text-align: center;
+}
+.pb-form-row-grid-editor__row-add {
+    min-height: 34px;
+    padding: 6px 8px;
+    border: 1px dashed #aebdf7;
+    border-radius: 7px;
+    background: #fff;
+    color: #5b4df6;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.pb-form-row-grid-editor__row-add:hover {
+    border-color: #7467f5;
+    background: #f0efff;
+}
+.pb-form-row-grid-editor__form-actions {
+    display: grid;
+    min-height: 42px;
+    grid-template-columns: 22px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border: 1px solid #dfe5f0;
+    border-radius: 8px;
+    background: #fff;
+    color: #344054;
+}
+.pb-form-row-grid-editor__form-actions > i {
+    color: #6558e8;
+    font-size: 11px;
+}
+.pb-form-row-grid-editor__form-actions > span:nth-child(2) {
+    display: grid;
+    min-width: 0;
+    gap: 1px;
+}
+.pb-form-row-grid-editor__form-actions strong {
+    font-size: 10px;
+}
+.pb-form-row-grid-editor__form-actions small {
+    color: #98a2b3;
+    font-size: 8px;
+}
+.pb-form-row-grid-editor__footer-width {
+    min-width: 68px;
+    min-height: 29px;
+    padding: 4px 24px 4px 8px;
+    border: 1px solid #d7deeb;
+    border-radius: 6px;
+    background: #fff;
+    color: #5547df;
+    font-size: 9px;
+    font-weight: 700;
+}
+.pb-form-row-grid-editor__add-step {
+    margin-top: 1px;
+}
+.pb-form-step-help {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin: 2px 0 0;
+    padding: 9px 10px;
+    border: 1px solid #e1defe;
+    border-radius: 7px;
+    background: #f8f7ff;
+    color: #667085;
+    font-size: 10px;
+    line-height: 1.45;
+}
+.pb-form-step-help i {
+    margin-top: 2px;
+    color: #6558e8;
+}
+.pb-form-row-grid-editor + .pb-form-group {
+    margin-top: 18px;
+}
 .pb-widget-settings--pro .pb-form-group {
     margin-bottom: 14px;
 }
@@ -5672,5 +6839,87 @@ export default {
     border-color: #aebdf7;
     background: #eef1ff;
     color: #5367ff;
+}
+.pb-form-message-display > label {
+    display: block;
+    margin-bottom: 8px;
+    color: #344054;
+    font-size: 12px;
+    font-weight: 600;
+}
+.pb-form-message-display__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 14px;
+}
+.pb-form-message-display__grid button {
+    display: grid;
+    min-height: 64px;
+    place-items: center;
+    align-content: center;
+    gap: 7px;
+    padding: 8px;
+    border: 1px solid #d5ddea;
+    border-radius: 7px;
+    background: #fff;
+    color: #667085;
+    font-size: 11px;
+}
+.pb-form-message-display__grid button i {
+    color: #98a2b3;
+    font-size: 15px;
+}
+.pb-form-message-display__grid button:hover,
+.pb-form-message-display__grid button.active {
+    border-color: #6979f8;
+    background: #f5f3ff;
+    color: #5d4cf0;
+    box-shadow: inset 0 0 0 1px #6979f8;
+}
+.pb-form-message-display__grid button.active i {
+    color: #5d4cf0;
+}
+.pb-form-message-state-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 0 0 14px;
+    padding: 3px;
+    border-radius: 7px;
+    background: #f2f4f7;
+}
+.pb-form-message-state-tabs button {
+    min-height: 31px;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: #667085;
+    font-size: 11px;
+}
+.pb-form-message-state-tabs button.active {
+    background: #fff;
+    color: #5367ff;
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(16, 24, 40, .1);
+}
+.pb-form-message-preview {
+    display: inline-flex;
+    width: 100%;
+    min-height: 36px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 4px;
+    border: 1px solid #aebdf7;
+    border-radius: 6px;
+    background: #fff;
+    color: #5367ff;
+    font-size: 11px;
+    font-weight: 600;
+}
+.pb-form-message-preview:hover,
+.pb-form-message-preview:focus-visible {
+    border-color: #6979f8;
+    background: #f4f6ff;
 }
 </style>

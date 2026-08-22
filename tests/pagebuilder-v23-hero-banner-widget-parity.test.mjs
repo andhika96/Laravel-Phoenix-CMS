@@ -18,7 +18,7 @@ const runtime = read('public/js/pagebuilder_elementor_v23/frontend-runtime.js');
 const frontendCss = read('public/assets/css/frontend_elementor.css');
 const frontendV23Css = read('public/assets/css/frontend_elementor_v23.css');
 const editorCss = read('public/assets/css/pagebuilder_elementor_v23.css');
-const prototypeCss = read('mockups/pagebuilder-v23-responsive-hero-prototype/src/styles.css');
+const prototypeCss = read('project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/src/styles.css');
 const prototype = read('public/mockups/pagebuilder-editor-redesign-prototype-v2.3.html');
 
 assert.ok(definition, 'Hero Banner definition must exist');

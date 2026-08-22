@@ -463,7 +463,13 @@ test('toolbox and existing widgets can enter canonical child Container dropzones
     const contGroupBody = app.match(/contGroup\(\) \{([\s\S]*?)\n\s*\},\n\s*colGroup\(\)/)?.[1];
     assert.ok(contGroupBody, 'BuilderNode.contGroup should exist');
 
-    const groupFor = (children = []) => new Function(contGroupBody).call({ node: { children } });
+    const isFormLayoutDrag = (value) => String(
+        typeof value === 'string'
+            ? value
+            : value?.options?.group?.name || value?.dataset?.formLayoutGroup || '',
+    ).startsWith('pb-form-grid:');
+    const groupFor = (children = []) => new Function('isFormLayoutDrag', contGroupBody)
+        .call({ node: { children } }, isFormLayoutDrag);
     const accepts = (group, groupName, nestedTarget = true, nodeType = '') => typeof group.put === 'function'
         ? group.put(
             { el: { dataset: nestedTarget ? { pbNestedDropzone: 'true' } : {} } },
@@ -483,6 +489,7 @@ test('toolbox and existing widgets can enter canonical child Container dropzones
     assert.equal(accepts(leafGroup, 'pb-col', false), false, 'shared Tabs and Accordion groups must not gain sidebar drop behavior');
     assert.equal(accepts(leafGroup, 'pb-root', true, 'heading'), true, 'leaf child Containers must accept widgets moved from the page root');
     assert.equal(accepts(leafGroup, 'pb-container', true, 'heading'), true, 'leaf child Containers must accept sibling widget moves');
+    assert.equal(accepts(leafGroup, 'pb-form-grid:form-1', true, 'form-field'), false, 'internal Form fields must not leave their Form owner');
 
     assert.equal(accepts(structuralParentGroup, 'pb-col'), false, 'sidebar widgets must not enter a Flexbox parent beside child Containers');
     assert.equal(accepts(structuralParentGroup, 'pb-container', true, 'heading'), false, 'existing widgets must not move beside Flexbox child Containers');

@@ -914,8 +914,38 @@
 		const validation = root.dataset.validation === 'custom' ? 'custom' : 'browser';
 		const steps = Array.from(root.querySelectorAll(':scope [data-pro-form-step]'));
 		const indicators = Array.from(root.querySelectorAll('[data-pro-step-indicator]'));
+		const stepProgressBar = root.querySelector('[role="progressbar"]');
+		const stepProgressFill = root.querySelector('[data-pro-step-progress-fill]');
+		const stepProgressText = root.querySelector('[data-pro-step-progress-text]');
+		const message = root.querySelector('[data-pro-form-message]');
+		const messageLayer = message?.closest?.('[data-pro-form-message-layer]') || message;
+		const messageTitle = message?.querySelector?.('[data-pro-form-message-title]') || null;
+		const messageText = message?.querySelector?.('[data-pro-form-message-text]') || null;
+		const messageIcon = message?.querySelector?.('[data-pro-form-message-icon]') || null;
+		const messageClose = message?.querySelector?.('[data-pro-form-message-close]') || null;
 		const fieldRoots = function () { return Array.from(root.querySelectorAll('[data-pro-form-field]')); };
 		let activeStep = 0;
+		function hideMessage() {
+			if (messageLayer) messageLayer.hidden = true;
+		}
+		function showMessage(state, copy, title = '') {
+			if (!message) return;
+			const text = String(copy || '');
+			const isError = state === 'error';
+			message.classList.toggle('is-error', isError);
+			message.classList.toggle('is-success', state === 'success');
+			messageLayer?.classList?.toggle('is-error', isError);
+			messageLayer?.classList?.toggle('is-success', state === 'success');
+			if (messageTitle) messageTitle.textContent = title || (isError ? root.dataset.errorTitle || 'Submission failed' : root.dataset.successTitle || 'Message sent');
+			if (messageText) messageText.textContent = text;
+			else message.textContent = text;
+			if (messageIcon) messageIcon.className = isError ? 'fas fa-exclamation-circle' : state === 'sending' ? 'fas fa-spinner fa-spin' : 'fas fa-check-circle';
+			if (messageLayer) messageLayer.hidden = text === '';
+		}
+		messageClose?.addEventListener('click', function (event) { event.preventDefault(); hideMessage(); });
+		messageLayer?.addEventListener?.('click', function (event) {
+			if (event.target === messageLayer && root.dataset.messageDisplay === 'modal' && root.dataset.messageDismissible === '1') hideMessage();
+		});
 		function fieldValues() {
 			const values = {};
 			fieldRoots().forEach(function (wrapper) {
@@ -1015,7 +1045,15 @@
 		function renderStep(index) {
 			activeStep = Math.max(0, Math.min(steps.length - 1, Number(index) || 0));
 			steps.forEach(function (step, stepIndex) { step.hidden = stepIndex !== activeStep; });
-			indicators.forEach(function (indicator, stepIndex) { indicator.classList.toggle('active', stepIndex <= activeStep); });
+			indicators.forEach(function (indicator, stepIndex) {
+				indicator.classList.toggle('active', stepIndex <= activeStep);
+				if (stepIndex === activeStep) indicator.setAttribute('aria-current', 'step');
+				else indicator.removeAttribute('aria-current');
+			});
+			const progress = steps.length ? Math.round(((activeStep + 1) / steps.length) * 100) : 0;
+			if (stepProgressBar) stepProgressBar.setAttribute('aria-valuenow', String(progress));
+			if (stepProgressFill) stepProgressFill.style.width = progress + '%';
+			if (stepProgressText) stepProgressText.textContent = 'Step ' + (activeStep + 1) + ' of ' + steps.length + ' · ' + progress + '%';
 			syncConditionalFields();
 		}
 		function validateStep() {
@@ -1035,27 +1073,27 @@
 		root.addEventListener('submit', async function (event) {
 			event.preventDefault();
 			syncConditionalFields();
-			const message = root.querySelector('[data-pro-form-message]');
-			if (!root.checkValidity()) { if (validation === 'browser') root.reportValidity(); else root.querySelector(':invalid')?.focus?.(); if (message) { message.classList.add('is-error'); message.textContent = root.dataset.errorMessage || 'Please check the form fields.'; } return; }
+			if (!root.checkValidity()) { if (validation === 'browser') root.reportValidity(); else root.querySelector(':invalid')?.focus?.(); showMessage('error', root.dataset.errorMessage || 'Please check the form fields.', root.dataset.errorTitle || 'Submission failed'); return; }
 			const actions = config.actions || [];
 			const data = new FormData(root);
 			const submit = root.querySelector('button[type="submit"]');
 			if (!config.submitUrl) {
-				if (message) { message.classList.toggle('is-error', actions.some(function (action) { return !['message', 'redirect'].includes(action); })); message.textContent = actions.every(function (action) { return ['message', 'redirect'].includes(action); }) ? root.dataset.successMessage || 'The form was sent successfully.' : root.dataset.errorMessage || 'This form is not connected yet.'; }
+				const localOnly = actions.every(function (action) { return ['message', 'redirect'].includes(action); });
+				showMessage(localOnly ? 'success' : 'error', localOnly ? root.dataset.successMessage || 'The form was sent successfully.' : root.dataset.errorMessage || 'This form is not connected yet.');
 				return;
 			}
 			if (submit) submit.disabled = true;
 			root.setAttribute('aria-busy', 'true');
-			if (message) { message.classList.remove('is-error'); message.textContent = 'Sending...'; }
+			showMessage('sending', 'Sending...', '');
 			try {
 				const response = await fetch(config.submitUrl, { method: 'POST', headers: { Accept: 'application/json' }, body: data });
 				const payload = await response.json().catch(function () { return {}; });
 				if (!response.ok) throw payload;
-				if (message) message.textContent = payload.message || ((actions.includes('message')) ? root.dataset.successMessage || 'The form was sent successfully.' : '');
+				showMessage('success', payload.message || ((actions.includes('message')) ? root.dataset.successMessage || 'The form was sent successfully.' : ''));
 				root.dispatchEvent(new CustomEvent('pagebuilder:form-submit', { bubbles: true, detail: { form: root, data, actions, response: payload } }));
 				if (payload.redirect && /^(?:https?:\/\/|\/|#)/i.test(String(payload.redirect))) window.location.assign(payload.redirect);
 			} catch (error) {
-				if (message) { message.classList.add('is-error'); message.textContent = error?.message || root.dataset.errorMessage || 'An error occurred.'; }
+				showMessage('error', error?.message || root.dataset.errorMessage || 'An error occurred.');
 			} finally {
 				if (submit) submit.disabled = false;
 				root.setAttribute('aria-busy', 'false');
