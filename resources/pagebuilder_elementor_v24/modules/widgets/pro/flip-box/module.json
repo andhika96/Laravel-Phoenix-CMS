@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "type": "flip_box",
+  "label": "Flip Box",
+  "category": "pro",
+  "icon": "fas fa-sync-alt",
+  "order": 150,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "runtime": "runtime.js"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  },
+  "capabilities": [
+    "icon-source",
+    "pro-icon-targets"
+  ]
+}

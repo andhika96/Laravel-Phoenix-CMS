@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "type": "rating",
+  "label": "Rating",
+  "category": "general",
+  "icon": "fas fa-star-half-alt",
+  "order": 140,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  },
+  "capabilities": [
+    "icon-source",
+    "rating-icon",
+    "primary-icon"
+  ]
+}

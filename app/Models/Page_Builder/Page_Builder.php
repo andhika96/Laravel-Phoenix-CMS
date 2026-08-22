@@ -13,6 +13,7 @@ class Page_Builder extends Model
 
 	public const EDITOR_VERSION_V20 = '2.0';
 	public const EDITOR_VERSION_V23 = '2.3';
+	public const EDITOR_VERSION_V24 = '2.4';
 
 	protected $table = 'page_builder';
 

@@ -1,0 +1,747 @@
+.pb-node.pb-node-button .pb-preview {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+}
+
+.pb-node.pb-node-button .pb-preview {
+	min-height: 82px;
+	padding: 14px 18px;
+}
+
+.pb-node.pb-node-button .pb-preview > .pb-preview-inner > * {
+	width: var(--pb-widget-content-width, 100%);
+	max-width: 100%;
+	min-width: 0;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) {
+	padding-top: 0;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) > .pb-collapsible > summary {
+	padding-bottom: 8px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) > .pb-collapsible > .pb-collapsible-body {
+	padding-bottom: 8px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-form-group {
+	margin-bottom: 15px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-form-group:last-child {
+	margin-bottom: 0;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) :is(.pb-input, .pb-select, .pb-textarea, .pb-mini-unit) {
+	height: auto;
+	min-height: 32px;
+	padding: 7px 10px;
+	border-radius: 4px;
+	font-size: 12px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) :is(.pb-select, .pb-mini-unit) {
+	padding-right: 24px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-label-row.pb-label-row-device {
+	min-height: 28px;
+	align-items: center;
+	justify-content: space-between;
+	gap: 6px;
+	margin-bottom: 7px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-label-row.pb-label-row-device > .pb-form-label {
+	margin-bottom: 0;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-label-tools {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	margin-left: auto;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-control-device-btn {
+	width: 28px !important;
+	height: 28px !important;
+	min-width: 28px !important;
+	padding: 6px !important;
+	border-radius: 6px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-control-device-menu {
+	width: 138px;
+	min-width: 138px;
+	max-width: 138px;
+	padding: 4px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-control-device-item {
+	height: 27px;
+	gap: 6px;
+	padding: 0 7px;
+	font-size: 10px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-basic-responsive-choice .pb-btn-group {
+	gap: 4px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-basic-responsive-choice .pb-basic-segmented {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 5px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-basic-responsive-choice .pb-basic-segmented .pb-seg-btn {
+	width: 100%;
+	flex: 0 1 auto;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-basic-responsive-choice .pb-seg-btn {
+	height: 30px;
+	min-height: 30px;
+	min-width: 0;
+	padding: 0 7px;
+	border-radius: 7px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-state-tabs {
+	margin: 4px 0 16px;
+	border-radius: 8px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-state-tabs button {
+	height: 34px;
+	min-height: 34px;
+	padding: 1px 6px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .clr-field {
+	height: auto;
+	min-height: 32px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .clr-field .pb-coloris-input {
+	height: auto;
+	min-height: 32px;
+	padding: 7px 48px 7px 10px;
+	font-size: 12px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .clr-field button {
+	width: 36px;
+	height: 100%;
+	border-radius: 0 8px 8px 0;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-range-value-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 68px;
+	gap: 8px;
+	width: min(100%, 300px);
+	margin-left: auto;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-range-value-row .pb-input-compact {
+	width: 68px;
+	min-width: 68px;
+	height: 30px;
+	min-height: 30px;
+	padding: 4px 6px;
+	font-size: 11px;
+	text-align: center;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-box-control .pb-label-row {
+	min-height: 28px;
+	margin-bottom: 7px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-box-control .pb-label-tools .pb-mini-unit {
+	width: 52px;
+	min-width: 52px;
+	height: 30px;
+	min-height: 30px;
+	padding: 3px 20px 3px 7px;
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-box-control .pb-four-sides-with-link {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr)) 26px;
+	gap: 0;
+	align-items: start;
+	width: min(100%, 300px);
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-box-control .pb-side-input {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+	align-items: center;
+	gap: 3px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-box-control .pb-side-input .pb-input {
+	width: 100%;
+	min-width: 0;
+	height: 30px;
+	min-height: 30px;
+	padding: 3px 4px;
+	border-radius: 0;
+	border-right-width: 0;
+	font-size: 11px;
+	text-align: center;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-box-control .pb-side-input:first-child .pb-input {
+	border-radius: 5px 0 0 5px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-box-control .pb-side-input span {
+	font-size: 9px;
+	line-height: 1.25;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-box-control .pb-side-link-cell {
+	display: flex;
+	align-items: flex-start;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-box-control .pb-link-btn {
+	width: 26px;
+	min-width: 26px;
+	height: 30px;
+	min-height: 30px;
+	padding: 0;
+	border-radius: 0 5px 5px 0;
+	font-size: 10px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-background-control {
+	margin-bottom: 15px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-background-control .pb-label-row {
+	min-height: 30px;
+	justify-content: space-between;
+	margin-bottom: 0;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-background-control .pb-seg-group {
+	display: inline-flex;
+	flex: 0 0 auto;
+	gap: 0;
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-background-control .pb-seg-group .pb-seg-btn {
+	flex: 0 0 30px;
+	width: 30px;
+	min-width: 30px;
+	height: 30px;
+	min-height: 30px;
+	margin: 0;
+	padding: 0;
+	border-radius: 0;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-background-control .pb-seg-btn:first-child {
+	border-radius: 6px 0 0 6px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-background-control .pb-seg-btn:last-child {
+	border-radius: 0 6px 6px 0;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-inline-editor {
+	display: block;
+	width: 100%;
+	margin: 0 0 15px;
+	border: 0;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-inline-editor__summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	min-height: 32px;
+	padding: 0;
+	color: #344054;
+	font-size: 12px;
+	font-weight: 500;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-inline-editor__summary > span:first-child {
+	flex: 1 1 auto;
+	min-width: 0;
+	text-align: left;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-shadow-actions {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	gap: 4px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings :is(.pb-basic-edit-button, .pb-basic-reset-button) {
+	display: inline-flex;
+	width: 30px;
+	min-width: 30px;
+	height: 30px;
+	min-height: 30px;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border: 1px solid #d3dae6;
+	border-radius: 5px;
+	background: #ffffff;
+	color: #526178;
+	font-size: 11px;
+	cursor: pointer;
+}
+
+.pb-panel.left .pb-basic-button-style-settings :is(.pb-basic-edit-button:hover, .pb-basic-edit-button.active, .pb-basic-reset-button:hover) {
+	border-color: #8c9aff;
+	background: #eef1ff;
+	color: #5b6cff;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-reset-button:disabled {
+	opacity: .45;
+	cursor: not-allowed;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-inline-editor__body {
+	margin-top: 8px;
+	padding: 12px;
+	border: 1px solid #e2e7ef;
+	border-radius: 6px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-shadow-fields {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	margin-bottom: 12px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-shadow-field {
+	color: #344054;
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-shadow-field__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-bottom: 6px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-shadow-field__head label {
+	margin: 0;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-shadow-field__head span {
+	color: #7a8699;
+	font-size: 10px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-shadow-field .pb-range-value-row {
+	width: 100%;
+	margin-left: 0;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-shadow-field .pb-input-compact {
+	width: 68px;
+	min-width: 68px;
+}
+
+.pb-panel.left .pb-basic-button-style-settings .pb-basic-shadow-position {
+	margin-bottom: 0;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-control {
+	margin-bottom: 15px;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-label-row {
+	gap: 8px;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-status {
+	min-width: 0;
+	overflow: hidden;
+	color: #7a8699;
+	font-size: 10px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-source-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 5px;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-position {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 5px;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-position {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-source-btn {
+	min-width: 0;
+	min-height: 30px;
+	border: 1px solid #d3dae6;
+	border-radius: 6px;
+	background: #ffffff;
+	color: #526178;
+	font-size: 10px;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-action {
+	min-width: 0;
+	min-height: 30px;
+	border: 1px solid #d3dae6;
+	border-radius: 6px;
+	background: #ffffff;
+	color: #526178;
+	font-size: 10px;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-source-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	padding: 0 5px;
+}
+
+.pb-panel.left .pb-widget-settings--button :is(.pb-basic-button-icon-source-btn.active, .pb-basic-button-icon-source-btn:hover, .pb-basic-button-icon-action:hover) {
+	border-color: #8c9aff;
+	background: #eef1ff;
+	color: #5b6cff;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-selected {
+	display: grid;
+	grid-template-columns: 30px minmax(0, 1fr) auto;
+	gap: 8px;
+	align-items: center;
+	min-height: 42px;
+	margin-top: 8px;
+	padding: 6px 7px;
+	border: 1px solid #e2e7ef;
+	border-radius: 6px;
+	background: #fbfcff;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-preview {
+	display: inline-flex;
+	width: 30px;
+	height: 30px;
+	align-items: center;
+	justify-content: center;
+	color: #526178;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-preview i {
+	font-size: 16px;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-preview img {
+	width: 22px;
+	height: 22px;
+	object-fit: contain;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-copy {
+	min-width: 0;
+	display: grid;
+	gap: 2px;
+}
+
+.pb-panel.left .pb-widget-settings--button :is(.pb-basic-button-icon-copy strong, .pb-basic-button-icon-copy small) {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-copy strong {
+	color: #344054;
+	font-size: 11px;
+	font-weight: 600;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-copy small {
+	color: #7a8699;
+	font-size: 10px;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-actions {
+	display: inline-flex;
+	gap: 4px;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-action {
+	width: 28px;
+	min-width: 28px;
+	height: 28px;
+	min-height: 28px;
+	padding: 0;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-action.is-remove:hover {
+	border-color: #e8a2aa;
+	background: #fff5f6;
+	color: #b4233b;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-option {
+	margin-top: 15px;
+	margin-bottom: 0;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-spacing .pb-label-row-device {
+	align-items: center;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-spacing .pb-mini-unit {
+	width: 52px;
+	min-width: 52px;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-spacing-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 92px;
+	gap: 8px;
+	align-items: center;
+}
+
+.pb-panel.left .pb-widget-settings--button .pb-basic-button-icon-spacing-row .pb-input-compact {
+	width: 68px;
+	min-width: 68px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-control {
+	margin-bottom: 15px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-trigger-row {
+	min-height: 32px;
+	gap: 8px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-trigger-actions {
+	gap: 4px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-trigger {
+	width: 30px;
+	height: 30px;
+	border-right-width: 1px;
+	border-radius: 6px;
+	font-size: 10px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-trigger:first-child {
+	border-radius: 6px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-trigger:last-child {
+	border-radius: 6px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-popover {
+	margin-top: 6px;
+	padding: 10px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-popover-head {
+	min-height: 28px;
+	margin-bottom: 8px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-field {
+	margin-bottom: 10px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-family-field > label {
+	margin-bottom: 5px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-font-family-button {
+	height: 30px;
+	padding: 5px 8px;
+	border-radius: 5px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-select-field {
+	grid-template-columns: minmax(0, 1fr) 118px;
+	gap: 8px;
+	margin-bottom: 8px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-select-field .pb-select {
+	height: 30px;
+	min-height: 30px;
+	padding: 4px 24px 4px 8px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-dimension {
+	margin-bottom: 10px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-dimension-head {
+	min-height: 28px;
+	gap: 8px;
+	margin-bottom: 5px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-dimension-tools {
+	gap: 4px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-dimension-tools .pb-mini-unit {
+	width: 52px;
+	min-width: 52px;
+	height: 30px;
+	min-height: 30px;
+	padding: 3px 20px 3px 7px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-range-row {
+	grid-template-columns: minmax(0, 1fr) 68px;
+	gap: 8px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-typography-range-row .pb-input {
+	width: 68px;
+	height: 30px;
+	min-height: 30px;
+	padding: 4px 6px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-text-effect-control {
+	margin-bottom: 15px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-text-effect-trigger-row {
+	min-height: 32px;
+	gap: 8px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-text-effect-trigger {
+	width: 30px;
+	height: 28px;
+	border-radius: 6px;
+	font-size: 10px;
+}
+
+.pb-panel.left :is(.pb-widget-settings--button, .pb-widget-settings--divider, .pb-widget-settings--icon, .pb-widget-settings--text-editor) .pb-collapsible-body > .pb-form-group {
+	margin-bottom: 15px;
+}
+
+.pb-panel.left :is(.pb-widget-settings--button, .pb-widget-settings--divider, .pb-widget-settings--icon, .pb-widget-settings--text-editor) .pb-collapsible-body > .pb-form-group:last-child {
+	margin-bottom: 0;
+}
+
+.pb-panel.left :is(.pb-widget-settings--button, .pb-widget-settings--divider, .pb-widget-settings--icon, .pb-widget-settings--text-editor) .pb-collapsible-body > .pb-form-group > .pb-label-row {
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 7px;
+}
+
+.pb-panel.left :is(.pb-widget-settings--button, .pb-widget-settings--divider, .pb-widget-settings--icon, .pb-widget-settings--text-editor) .pb-btn-group {
+	gap: 5px;
+}
+
+.pb-panel.left :is(.pb-widget-settings--button, .pb-widget-settings--divider, .pb-widget-settings--icon, .pb-widget-settings--text-editor) .pb-seg-btn {
+	min-width: 30px;
+	height: 30px;
+	min-height: 30px;
+	padding: 0 7px;
+	border-radius: 7px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-text-effect-popover {
+	margin-top: 6px;
+	padding: 10px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-text-effect-popover-head {
+	min-height: 28px;
+	margin-bottom: 8px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-text-effect-color-field {
+	margin-bottom: 10px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-text-effect-color-field span {
+	margin-bottom: 5px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-text-effect-field > label {
+	margin-bottom: 5px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-text-effect-color-field .pb-input {
+	height: 30px;
+	min-height: 30px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-text-effect-field {
+	margin-bottom: 10px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-text-effect-range-row {
+	grid-template-columns: minmax(0, 1fr) 60px;
+	gap: 8px;
+}
+
+.pb-panel.left :is(.pb-basic-button-style-settings, .pb-basic-text-style-settings, .pb-basic-icon-style-settings) .pb-text-effect-range-row .pb-input {
+	width: 60px;
+	height: 30px;
+	min-height: 30px;
+	padding: 4px 6px;
+	font-size: 11px;
+}
+
+.el-widget-button {
+	box-sizing: border-box;
+	display: inline-flex;
+}

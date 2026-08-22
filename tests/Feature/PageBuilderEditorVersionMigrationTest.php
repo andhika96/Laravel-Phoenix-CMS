@@ -34,5 +34,6 @@ class PageBuilderEditorVersionMigrationTest extends TestCase
         $this->assertSame('2.0', DB::table('page_builder')->where('uri', 'new')->value('editor_version'));
         $this->assertSame('2.0', Page_Builder::EDITOR_VERSION_V20);
         $this->assertSame('2.3', Page_Builder::EDITOR_VERSION_V23);
+        $this->assertSame('2.4', Page_Builder::EDITOR_VERSION_V24);
     }
 }

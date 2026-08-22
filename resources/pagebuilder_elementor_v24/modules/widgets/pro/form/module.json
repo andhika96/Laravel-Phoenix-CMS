@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "type": "form",
+  "label": "Form",
+  "category": "pro",
+  "icon": "fab fa-wpforms",
+  "order": 10,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "runtime": "runtime.js",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  },
+  "capabilities": [
+    "form-submission",
+    "form-fields",
+    "draft-form",
+    "pro-icon-targets"
+  ]
+}

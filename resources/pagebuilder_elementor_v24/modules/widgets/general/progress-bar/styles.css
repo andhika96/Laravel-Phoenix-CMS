@@ -1,0 +1,8 @@
+.el-widget-progress-bar.pb-progress-bar { min-width: 0; box-sizing: border-box; }
+.el-widget-progress-bar .pb-progress-bar__title { display: block; margin: 0 0 8px; }
+.el-widget-progress-bar .pb-progress-bar__track { position: relative; width: 100%; min-height: 14px; overflow: hidden; border-radius: 999px; }
+.el-widget-progress-bar .pb-progress-bar__fill { min-height: 14px; display: flex; align-items: center; justify-content: flex-end; padding: 0 8px; border-radius: inherit; box-sizing: border-box; transition: width .6s ease; }
+.el-widget-progress-bar .pb-progress-bar__inner-text { font-size: 11px; line-height: 1; white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) {
+    .el-widget-progress-bar .pb-progress-bar__fill { transition: none !important; animation: none !important; }
+}

@@ -1,0 +1,54 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import test from 'node:test';
+
+const root = path.resolve(import.meta.dirname, '..');
+const modulesRoot = path.join(root, 'resources', 'pagebuilder_elementor_v24', 'modules');
+const sharedRoot = path.join(root, 'resources', 'pagebuilder_elementor_v24', 'shared');
+
+function walk(directory, filename) {
+    if (!fs.existsSync(directory)) return [];
+    return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+        const target = path.join(directory, entry.name);
+        return entry.isDirectory() ? walk(target, filename) : entry.name === filename ? [target] : [];
+    });
+}
+
+test('v2.4 owns exactly one canonical shared Advanced source', () => {
+    const advancedFiles = walk(path.join(root, 'resources', 'pagebuilder_elementor_v24'), 'AdvancedControls.vue');
+    assert.deepEqual(advancedFiles, [path.join(sharedRoot, 'AdvancedControls.vue')]);
+});
+
+test('all 49 module Settings use the canonical Advanced component contract', () => {
+    const settingsFiles = walk(modulesRoot, 'Settings.vue');
+    assert.equal(settingsFiles.length, 49);
+
+    for (const file of settingsFiles) {
+        const source = fs.readFileSync(file, 'utf8');
+        assert.match(source, /editor\.widgetAdvancedControls/, path.relative(root, file));
+    }
+});
+
+test('app loads shared controls only through fixed authenticated shared-asset routes', () => {
+    const app = fs.readFileSync(path.join(root, 'public', 'js', 'pagebuilder_elementor_v24', 'app.js'), 'utf8');
+    for (const key of ['advanced', 'typography', 'link', 'dynamic-tag', 'css-filter', 'text-stroke', 'text-shadow', 'grid-column-style']) {
+        assert.match(app, new RegExp(`/pagebuilder-elementor/v2\\.4/shared-assets/${key}\\.vue`));
+    }
+    assert.doesNotMatch(app, /pagebuilder_elementor_v24\/widgets\/shared/);
+});
+
+test('manifest capabilities drive legacy layout and minimal class compatibility in one shared source', () => {
+    const manifest = (relative) => JSON.parse(fs.readFileSync(path.join(modulesRoot, relative, 'module.json'), 'utf8'));
+    assert.deepEqual(manifest(path.join('layout', 'container')).advanced.capabilities, ['legacy-layout', 'display-conditions']);
+    assert.deepEqual(manifest(path.join('layout', 'grid')).advanced.capabilities, ['legacy-layout']);
+    assert.deepEqual(manifest(path.join('widgets', 'basic', 'button')).advanced.capabilities, ['minimal-advanced', 'class-name']);
+    assert.deepEqual(manifest(path.join('widgets', 'basic', 'video')).advanced.capabilities, ['minimal-advanced']);
+
+    const shared = fs.readFileSync(path.join(sharedRoot, 'AdvancedControls.vue'), 'utf8');
+    for (const key of ['scrollEffectType', 'scrollDirection', 'scrollSpeed', 'stickyOnDesktop', 'transformScaleX', 'overflow']) {
+        assert.match(shared, new RegExp(key));
+    }
+    assert.match(shared, /cssClassSettingKey/);
+    assert.doesNotMatch(shared, /(?:button|divider|container|grid|row_grid)\s*===/);
+});

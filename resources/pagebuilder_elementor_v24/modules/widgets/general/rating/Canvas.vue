@@ -1,0 +1,23 @@
+<template>
+	<div class="pb-rating" :class="customClass" :style="rootStyle" role="img" :aria-label="ariaLabel">
+		<span v-for="index in scale" :key="index" class="pb-rating__item" :style="{'--pb-rating-fill':fillPercent(index)+'%'}">
+			<span class="pb-rating__glyph pb-rating__glyph--unmarked" aria-hidden="true"><span v-if="svgIcon" v-html="svgIcon"></span><i v-else :class="iconClass"></i></span>
+			<span class="pb-rating__glyph pb-rating__glyph--marked" aria-hidden="true"><span v-if="svgIcon" v-html="svgIcon"></span><i v-else :class="iconClass"></i></span>
+		</span>
+	</div>
+</template>
+
+<script>
+export default{
+	name:'GeneralRating',props:{item:{type:Object,required:true},responsiveDevice:{type:String,default:'desktop'}},
+	computed:{
+		settings(){return this.item.settings||{}},scale(){return Math.max(1,Math.min(10,Math.round(Number(this.settings.ratingScale)||5)))},value(){return Math.max(0,Math.min(this.scale,Number(this.settings.rating)||0))},ariaLabel(){return `Rated ${this.value} out of ${this.scale}`},iconClass(){return /^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i.test(String(this.settings.iconClass||''))?this.settings.iconClass:'fas fa-star'},svgIcon(){return this.settings.iconSource==='svg'?this.sanitizeSvg(this.settings.iconSvg):''},customClass(){return String(this.settings.cssClass||'').split(/\s+/).map(token=>token.replace(/^\.+/,'').replace(/[^a-zA-Z0-9_-]/g,'')).filter(Boolean).join(' ')},
+		rootStyle(){const alignment=this.responsiveValue('alignment','left');return{justifyContent:alignment==='center'?'center':(alignment==='right'?'flex-end':'flex-start'),'--pb-rating-size':this.safeLength(this.responsiveValue('iconSize','18px'),'18px'),'--pb-rating-gap':this.safeLength(this.responsiveValue('iconSpacing','4px'),'4px'),'--pb-rating-marked':this.safeColor(this.settings.markedColor,'#f0ad4e'),'--pb-rating-unmarked':this.safeColor(this.settings.unmarkedColor,'#ccd2dc')}}
+	},
+	methods:{fillPercent(index){return Math.max(0,Math.min(1,this.value-(index-1)))*100},responsiveValue(base,fallback=''){const device=['tablet','mobile'].includes(this.responsiveDevice)?this.responsiveDevice:'desktop';const keys=device==='mobile'?[base+'Mobile',base+'Tablet',base]:(device==='tablet'?[base+'Tablet',base]:[base]);for(const key of keys){const value=this.settings[key];if(value!==''&&value!==null&&value!==undefined)return value}return fallback},safeLength(value,fallback){const raw=String(value??'').trim();return /^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i.test(raw)?raw:fallback},safeColor(value,fallback){const raw=String(value||'').trim();return raw&&/^[#a-z0-9(),.%\s-]+$/i.test(raw)?raw:fallback},sanitizeSvg(value){const raw=String(value||'').trim();if(!raw||typeof DOMParser==='undefined')return'';const doc=new DOMParser().parseFromString(raw,'image/svg+xml');const root=doc.documentElement;if(!root||root.nodeName.toLowerCase()!=='svg'||doc.querySelector('parsererror'))return'';const allowed=new Set(['svg','g','path','circle','ellipse','rect','line','polyline','polygon','title','desc']);root.querySelectorAll('*').forEach(element=>{if(!allowed.has(element.nodeName.toLowerCase())){element.remove();return}Array.from(element.attributes).forEach(attribute=>{const name=attribute.name.toLowerCase();if(name.startsWith('on')||name==='style'||name.includes('href'))element.removeAttribute(attribute.name)})});return root.outerHTML}}
+};
+</script>
+
+<style scoped>
+.pb-rating{display:flex;align-items:center;gap:var(--pb-rating-gap);width:100%;min-width:0}.pb-rating__item{position:relative;display:inline-grid;flex:0 0 auto;height:var(--pb-rating-size);font-size:var(--pb-rating-size);line-height:1}.pb-rating__glyph{grid-area:1/1;display:inline-grid;place-items:center;width:max-content;min-width:1em;height:1em}.pb-rating__glyph--unmarked{position:relative;color:var(--pb-rating-unmarked)}.pb-rating__glyph--marked{position:absolute;inset:0;width:100%;color:var(--pb-rating-marked);clip-path:inset(0 calc(100% - var(--pb-rating-fill)) 0 0)}.pb-rating__glyph>span,.pb-rating__glyph :deep(svg){display:block;width:1em;height:1em;fill:currentColor}.pb-rating__glyph i{display:block;line-height:1}
+</style>

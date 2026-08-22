@@ -1,0 +1,176 @@
+<template>
+    <section class="pb-product-color-selector" :class="['is-position-' + position, 'is-' + orientation]" :style="rootStyle" data-product-color-selector :data-position="position" :data-orientation="orientation" :data-active-item="activeId" data-editor-preview="true" @click.stop>
+        <header v-if="showHeader" class="pb-product-color-selector__header">
+            <component :is="titleTag" v-if="settings.title && settings.showTitle !== false" class="pb-product-color-selector__title">{{ settings.title }}</component>
+            <component :is="descriptionTag" v-if="settings.description && settings.showDescription !== false" class="pb-product-color-selector__description">{{ settings.description }}</component>
+        </header>
+
+        <div v-if="items.length" class="pb-product-color-selector__body">
+            <div id="pb-product-color-selector-stage" class="pb-product-color-selector__stage" data-product-color-stage>
+                <div v-if="activeItem" :id="panelId(activeItem)" class="pb-product-color-selector__panel is-active" data-product-color-panel :data-product-color-id="activeItem.id" role="tabpanel" :aria-label="activeItem.name || 'Selected color'">
+                    <img v-if="activeImageAvailable" :src="imageUrl(activeItem)" :alt="imageAlt(activeItem)" class="pb-product-color-selector__image" @error="markImageError(activeItem)">
+                    <div v-else class="pb-product-color-selector__empty" data-product-color-empty role="img" aria-label="Product image unavailable">
+                        <i class="far fa-image" aria-hidden="true"></i><span>Choose an image</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pb-product-color-selector__list" role="tablist" :aria-orientation="orientation" aria-label="Product color options">
+                <button
+                    v-for="(item, index) in items"
+                    :key="item.id"
+                    :ref="el => setButtonRef(el, index)"
+                    type="button"
+                    class="pb-product-color-selector__item"
+                    :class="{ 'is-active': item.id === activeId }"
+                    role="tab"
+                    :aria-selected="item.id === activeId ? 'true' : 'false'"
+                    :aria-controls="panelId(item)"
+                    data-pb-interactive="true"
+                    @click.stop="select(item.id)"
+                    @keydown="onKeydown($event, index)"
+                >
+                    <span class="pb-product-color-selector__swatch" :style="{ backgroundColor: safeColor(item.swatchColor, '#d9dee8') }">
+                        <span v-if="item.id === activeId" class="pb-product-color-selector__indicator" aria-hidden="true"><i class="fas fa-check"></i></span>
+                    </span>
+                    <span class="pb-product-color-selector__copy">
+                        <strong>{{ item.name || 'Color ' + (index + 1) }}</strong>
+                        <small v-if="item.description">{{ item.description }}</small>
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div v-else class="pb-product-color-selector__empty-state"><i class="fas fa-palette" aria-hidden="true"></i><span>Add a product color</span></div>
+    </section>
+</template>
+
+<script>
+const TITLE_TAG_FONT_SIZES = Object.freeze({ h1: '56px', h2: '48px', h3: '40px', h4: '32px', h5: '24px', h6: '18px', div: '48px' });
+export default {
+    name: 'ProductColorSelectorCanvas',
+    props: { item: { type: Object, required: true }, responsiveDevice: { type: String, default: 'desktop' } },
+    data() { return { activeId: '', buttonRefs: [], failedImageIds: [] }; },
+    computed: {
+        settings() { return this.item.settings || {}; },
+        items() {
+            return (Array.isArray(this.settings.items) ? this.settings.items : [])
+                .filter(item => item && typeof item === 'object' && String(item.id || '').trim())
+                .map(item => ({ ...item, id: String(item.id) }));
+        },
+        currentDevice() {
+            const value = String(this.responsiveDevice || 'desktop').toLowerCase();
+            return ['tablet', 'mobile'].includes(value) ? value : 'desktop';
+        },
+        position() {
+            return ['top', 'right', 'bottom', 'left'].includes(this.responsiveValue('listPosition', 'bottom')) ? this.responsiveValue('listPosition', 'bottom') : 'bottom';
+        },
+        orientation() { return ['left', 'right'].includes(this.position) ? 'vertical' : 'horizontal'; },
+        alignment() {
+            const value = this.responsiveValue('listAlignment', 'auto');
+            if (value === 'auto') return 'auto';
+            const allowed = this.orientation === 'vertical' ? ['top', 'center', 'bottom'] : ['left', 'center', 'right'];
+            return allowed.includes(value) ? value : 'auto';
+        },
+        justifyAlignment() {
+            if (this.alignment === 'auto' || this.alignment === 'center') return 'center';
+            return ['right', 'bottom'].includes(this.alignment) ? 'flex-end' : 'flex-start';
+        },
+        activeItem() { return this.items.find(item => item.id === this.activeId) || this.items[0] || null; },
+        activeImageAvailable() { return !!this.activeItem && !!this.imageUrl(this.activeItem) && !this.failedImageIds.includes(this.activeItem.id); },
+        titleTag() { return this.safeTag(this.settings.titleTag, 'h2', ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div']); },
+        automaticTitleFontSize() { return TITLE_TAG_FONT_SIZES[this.titleTag] || '48px'; },
+        descriptionTag() { return this.safeTag(this.settings.descriptionTag, 'p', ['p', 'div', 'span']); },
+        showHeader() { return (this.settings.showTitle !== false && String(this.settings.title || '').trim()) || (this.settings.showDescription !== false && String(this.settings.description || '').trim()); },
+        rootStyle() {
+            const ratio = this.cssRatio(this.responsiveValue('imageAspectRatio', '16/9'), '16 / 9');
+            return {
+                '--pb-pcs-surface-background': this.safeColor(this.settings.surfaceBackground, '#f7f9fa'),
+                '--pb-pcs-surface-radius': this.cssLength(this.settings.surfaceRadius, '10px'),
+                '--pb-pcs-surface-padding': this.cssLength(this.settings.surfacePadding, '16px'),
+                '--pb-pcs-image-radius': this.cssLength(this.settings.imageRadius, '20px'),
+                '--pb-pcs-swatch-width': this.cssLength(this.responsiveValue('swatchWidth', '180px'), '180px'),
+                '--pb-pcs-swatch-height': this.cssLength(this.responsiveValue('swatchHeight', '104px'), '104px'),
+                '--pb-pcs-swatch-radius': this.cssLength(this.settings.swatchRadius, '0px'),
+                '--pb-pcs-list-gap': this.cssLength(this.responsiveValue('listGap', '16px'), '16px'),
+                '--pb-pcs-item-text-gap': this.cssLength(this.settings.itemTextGap, '8px'),
+                '--pb-pcs-active-indicator-color': this.safeColor(this.settings.activeIndicatorColor, '#ffffff'),
+                '--pb-pcs-active-indicator-size': this.cssLength(this.settings.activeIndicatorSize, '34px'),
+                '--pb-pcs-title-color': this.safeColor(this.settings.titleColor, '#292d32'),
+                '--pb-pcs-description-color': this.safeColor(this.settings.descriptionColor, '#69727d'),
+                '--pb-pcs-item-name-color': this.safeColor(this.settings.itemNameColor, '#69727d'),
+                '--pb-pcs-item-description-color': this.safeColor(this.settings.itemDescriptionColor, '#69727d'),
+                '--pb-pcs-title-size': this.settings.titleFontSizeMode === 'custom' ? this.cssLength(this.responsiveValue('titleFontSize', '48px'), '48px') : this.automaticTitleFontSize,
+                '--pb-pcs-description-size': this.cssLength(this.responsiveValue('descriptionFontSize', '18px'), '18px'),
+                '--pb-pcs-item-name-size': this.cssLength(this.responsiveValue('itemNameFontSize', '16px'), '16px'),
+                '--pb-pcs-item-description-size': this.cssLength(this.responsiveValue('itemDescriptionFontSize', '13px'), '13px'),
+                '--pb-pcs-image-fit': ['contain', 'cover', 'fill'].includes(this.responsiveValue('imageFit', 'contain')) ? this.responsiveValue('imageFit', 'contain') : 'contain',
+                '--pb-pcs-image-position': this.safeObjectPosition(this.responsiveValue('imagePosition', 'center center')),
+                '--pb-pcs-transition': this.settings.transition === 'none' ? 'none' : `${Math.max(0, Number(this.settings.transitionDuration) || 300)}ms`,
+                '--pb-pcs-header-align': ['left', 'center', 'right'].includes(this.responsiveValue('titleAlignment', 'left')) ? this.responsiveValue('titleAlignment', 'left') : 'left',
+                '--pb-pcs-list-justify': this.justifyAlignment,
+                '--pb-pcs-image-aspect-ratio': ratio,
+            };
+        },
+    },
+    watch: {
+        items: { immediate: true, handler() { this.ensureActive(); } },
+        'settings.defaultItemId'() { this.ensureActive(true); },
+    },
+    methods: {
+        ensureActive(preferDefault = false) {
+            if (!this.items.length) { this.activeId = ''; return; }
+            const preferred = String(this.settings.defaultItemId || '');
+            if (preferDefault && this.items.some(item => item.id === preferred)) { this.activeId = preferred; return; }
+            if (!this.items.some(item => item.id === this.activeId)) this.activeId = this.items.some(item => item.id === preferred) ? preferred : this.items[0].id;
+        },
+        select(id) { if (this.items.some(item => item.id === id)) this.activeId = id; },
+        markImageError(item) { if (item && !this.failedImageIds.includes(item.id)) this.failedImageIds.push(item.id); },
+        setButtonRef(element, index) { if (element) this.buttonRefs[index] = element; },
+        onKeydown(event, index) {
+            const vertical = this.orientation === 'vertical';
+            let next = index;
+            if ((!vertical && event.key === 'ArrowLeft') || (vertical && event.key === 'ArrowUp')) next = Math.max(0, index - 1);
+            if ((!vertical && event.key === 'ArrowRight') || (vertical && event.key === 'ArrowDown')) next = Math.min(this.items.length - 1, index + 1);
+            if (event.key === 'Home') next = 0;
+            if (event.key === 'End') next = this.items.length - 1;
+            if (next === index) return;
+            event.preventDefault(); this.select(this.items[next].id); this.$nextTick(() => this.buttonRefs[next]?.focus?.());
+        },
+        panelId(item) { return `pb-pcs-panel-${String(item.id).replace(/[^a-zA-Z0-9_-]/g, '-')}`; },
+        responsiveValue(base, fallback = '') {
+            const suffix = this.currentDevice === 'mobile' ? 'Mobile' : (this.currentDevice === 'tablet' ? 'Tablet' : '');
+            if (suffix && this.settings[base + suffix] !== '' && this.settings[base + suffix] != null) return this.settings[base + suffix];
+            return this.settings[base] === '' || this.settings[base] == null ? fallback : this.settings[base];
+        },
+        itemResponsiveValue(item, base, fallback = '') {
+            const suffix = this.currentDevice === 'mobile' ? 'Mobile' : (this.currentDevice === 'tablet' ? 'Tablet' : '');
+            if (suffix && item[base + suffix] !== '' && item[base + suffix] != null) return item[base + suffix];
+            return item[base] === '' || item[base] == null ? fallback : item[base];
+        },
+        imageUrl(item) {
+            return this.safeUrl(this.itemResponsiveValue(item, 'imageUrl', ''))
+                || this.safeUrl(item.imageUrlTablet)
+                || this.safeUrl(item.imageUrlMobile);
+        },
+        imageAlt(item) { return String(this.itemResponsiveValue(item, 'imageAlt', item.name || 'Product color') || item.imageAlt || item.imageAltTablet || item.imageAltMobile).trim(); },
+        safeTag(value, fallback, allowed) { const tag = String(value || '').toLowerCase(); return allowed.includes(tag) ? tag : fallback; },
+        safeUrl(value) { const raw = String(value || '').trim(); return /^(?:https?:\/\/|\/)[^\u0000-\u001f"'()\\]*$/i.test(raw) ? raw : ''; },
+        safeColor(value, fallback) { const raw = String(value || '').trim(); return raw && /^[#a-z0-9(),.%\s-]+$/i.test(raw) ? raw : fallback; },
+        cssLength(value, fallback) { const raw = String(value ?? '').trim(); return /^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i.test(raw) ? raw : fallback; },
+        cssRatio(value, fallback) { const raw = String(value || '').trim(); return /^\d+(?:\.\d+)?\s*\/\s*\d+(?:\.\d+)?$/.test(raw) ? raw.replace('/', ' / ') : fallback; },
+        safeObjectPosition(value) { const raw = String(value || '').trim(); return ['left top','left center','left bottom','center top','center center','center bottom','right top','right center','right bottom'].includes(raw) ? raw : 'center center'; },
+    },
+};
+</script>
+
+<style scoped>
+.pb-product-color-selector{box-sizing:border-box;width:100%;min-width:0;padding:var(--pb-pcs-surface-padding);border-radius:var(--pb-pcs-surface-radius);background:var(--pb-pcs-surface-background);color:var(--pb-pcs-title-color)}
+.pb-product-color-selector__header{margin-bottom:18px;text-align:var(--pb-pcs-header-align)}
+.pb-product-color-selector__title,.pb-product-color-selector__description{margin:0}.pb-product-color-selector__title{color:var(--pb-pcs-title-color);font-size:var(--pb-pcs-title-size);font-weight:700;line-height:1.1}.pb-product-color-selector__description{margin-top:8px;color:var(--pb-pcs-description-color);font-size:var(--pb-pcs-description-size);line-height:1.45}
+.pb-product-color-selector__body{display:flex;align-items:stretch;gap:var(--pb-pcs-list-gap);min-width:0}.pb-product-color-selector__stage{position:relative;flex:1 1 auto;min-width:0;overflow:hidden;aspect-ratio:var(--pb-pcs-image-aspect-ratio);border-radius:var(--pb-pcs-image-radius);background:#eef1f4}.pb-product-color-selector__panel{position:absolute;inset:0;display:block;opacity:1;transition:opacity var(--pb-pcs-transition) ease}.pb-product-color-selector__image{display:block;width:100%;height:100%;object-fit:var(--pb-pcs-image-fit);object-position:var(--pb-pcs-image-position)}
+.pb-product-color-selector__list{display:flex;flex:0 1 auto;justify-content:var(--pb-pcs-list-justify,center);gap:var(--pb-pcs-list-gap);min-width:0;align-content:flex-start;align-items:flex-start;flex-wrap:wrap}.is-horizontal .pb-product-color-selector__list{width:100%;flex:1 1 100%}.is-vertical .pb-product-color-selector__list{width:clamp(150px,30%,280px);flex-direction:column;flex-wrap:nowrap;overflow:auto}.is-position-top .pb-product-color-selector__list{order:-1}.is-position-bottom .pb-product-color-selector__list{order:1}.is-position-left .pb-product-color-selector__list{order:-1}.is-position-right .pb-product-color-selector__list{order:1}.is-horizontal .pb-product-color-selector__body{flex-direction:column}.is-position-left .pb-product-color-selector__body{flex-direction:row}.is-position-right .pb-product-color-selector__body{flex-direction:row}
+.is-horizontal .pb-product-color-selector__item{flex:1 1 var(--pb-pcs-swatch-width);min-width:var(--pb-pcs-swatch-width)}.is-vertical .pb-product-color-selector__item{display:grid;grid-template-columns:minmax(70px,var(--pb-pcs-swatch-width)) 1fr;align-items:center;width:100%}
+.pb-product-color-selector__item{display:flex;flex-direction:column;gap:var(--pb-pcs-item-text-gap);padding:0;border:0;background:transparent;text-align:left;cursor:pointer}.pb-product-color-selector__item:focus-visible{outline:2px solid #6979f8;outline-offset:3px}.pb-product-color-selector__swatch{position:relative;display:grid;width:100%;height:var(--pb-pcs-swatch-height);place-items:center;border:1px solid transparent;border-radius:var(--pb-pcs-swatch-radius);box-sizing:border-box}.pb-product-color-selector__item.is-active .pb-product-color-selector__swatch{border-color:var(--pb-pcs-item-name-color)}.pb-product-color-selector__indicator{display:grid;width:var(--pb-pcs-active-indicator-size);height:var(--pb-pcs-active-indicator-size);place-items:center;border-radius:50%;color:#222;background:var(--pb-pcs-active-indicator-color);box-shadow:0 1px 3px rgba(0,0,0,.2)}.pb-product-color-selector__copy{display:flex;flex-direction:column;gap:3px;min-width:0}.pb-product-color-selector__copy strong{overflow:hidden;color:var(--pb-pcs-item-name-color);font-size:var(--pb-pcs-item-name-size);font-weight:400;line-height:1.3;text-overflow:ellipsis}.pb-product-color-selector__copy small{color:var(--pb-pcs-item-description-color);font-size:var(--pb-pcs-item-description-size);line-height:1.35}.pb-product-color-selector__empty,.pb-product-color-selector__empty-state{display:grid;place-content:center;justify-items:center;gap:8px;color:#98a2b3}.pb-product-color-selector__empty{position:absolute;inset:0}.pb-product-color-selector__empty i,.pb-product-color-selector__empty-state i{font-size:32px}.pb-product-color-selector__empty-state{min-height:180px;border:1px dashed #d0d5dd;border-radius:8px;background:#eef1f4}
+@media(max-width:767px){.pb-product-color-selector{padding:12px}.pb-product-color-selector__title{font-size:var(--pb-pcs-title-size)}.is-vertical .pb-product-color-selector__list{width:100%}.is-position-left .pb-product-color-selector__body,.is-position-right .pb-product-color-selector__body{flex-direction:column}.is-vertical .pb-product-color-selector__item{grid-template-columns:minmax(70px,120px) 1fr}}
+@media(prefers-reduced-motion:reduce){.pb-product-color-selector__panel{transition:none}}
+</style>

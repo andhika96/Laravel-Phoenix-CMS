@@ -1,0 +1,19 @@
+{
+    "schemaVersion": 1,
+    "type": "google_maps",
+    "label": "Google Maps",
+    "category": "basic",
+    "icon": "fas fa-map-marker-alt",
+    "order": 30,
+    "toolbox": true,
+    "assets": {
+        "definition": "definition.js",
+        "canvas": "Canvas.vue",
+        "settings": "Settings.vue",
+        "view": "frontend.blade.php"
+    },
+    "advanced": {
+        "profile": "widget",
+        "capabilities": []
+    }
+}

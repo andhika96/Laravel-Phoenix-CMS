@@ -1,0 +1,235 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\Concerns\InteractsWithPageBuilderElementorV24Modules;
+use Tests\TestCase;
+
+class PageBuilderElementorV24HeroSliderWidgetTest extends TestCase
+{
+    use InteractsWithPageBuilderElementorV24Modules;
+    public function test_hero_slider_is_registered_as_a_dedicated_pro_widget(): void
+    {
+        $module = $this->pageBuilderV24Module('hero_slider');
+
+        $this->assertSame('Hero Slider', $module['label'] ?? null);
+        $this->assertSame('pro', $module['category'] ?? null);
+        $this->assertSame('fas fa-photo-video', $module['icon'] ?? null);
+        foreach (['definition', 'canvas', 'settings', 'view'] as $asset) {
+            $this->assertFileExists($module['assets'][$asset] ?? 'missing');
+        }
+    }
+
+    public function test_frontend_renderer_outputs_mixed_media_and_responsive_runtime_config(): void
+    {
+        $module = $this->pageBuilderV24Module('hero_slider');
+        $html = $this->pageBuilderV24ModuleView($module, [
+            'node' => [
+                'id' => 'hero-slider-test',
+                'type' => 'hero_slider',
+                'settings' => [
+                    'direction' => 'vertical',
+                    'directionTablet' => 'horizontal',
+                    'directionMobile' => 'vertical',
+                    'autoplay' => true,
+                    'videoAutoplay' => true,
+                    'videoDurationMode' => 'duration',
+                    'heightMode' => 'adaptive',
+                    'slides' => [
+                        [
+                            'id' => 'image-slide',
+                            'mediaType' => 'image',
+                            'imageUrl' => '/assets/hero.webp',
+                            'imageUrlTablet' => '/assets/hero-tablet.webp',
+                            'imageUrlMobile' => '/assets/hero-mobile.webp',
+                            'imageAlt' => '<unsafe alt>',
+                            'title' => '<Unsafe title>',
+                            'positioningMode' => 'independent',
+                            'titleAnchor' => 'top-center',
+                            'titleX' => '50%',
+                            'titleY' => '12%',
+                            'titleWidth' => '80%',
+                            'titleAlign' => 'center',
+                            'styleOverride' => true,
+                            'slideTitleColor' => '#123456',
+                            'buttons' => [[
+                                'text' => 'Watch',
+                                'actionType' => 'video_popup',
+                                'videoSource' => 'youtube',
+                                'videoUrl' => 'https://www.youtube.com/watch?v=h529sg3pEV4',
+                                'cssClass' => 'campaign-cta .secondary <unsafe>',
+                            ]],
+                        ],
+                        [
+                            'id' => 'video-slide',
+                            'mediaType' => 'video',
+                            'videoProvider' => 'youtube',
+                            'videoUrl' => 'https://www.youtube.com/watch?v=h529sg3pEV4',
+                            'videoPoster' => '/assets/poster.webp',
+                            'videoAutoplay' => 'on',
+                        ],
+                        [
+                            'id' => 'vimeo-slide',
+                            'mediaType' => 'video',
+                            'videoProvider' => 'vimeo',
+                            'videoUrl' => 'https://vimeo.com/235215203',
+                        ],
+                        [
+                            'id' => 'dailymotion-slide',
+                            'mediaType' => 'video',
+                            'videoProvider' => 'dailymotion',
+                            'videoUrl' => 'https://www.dailymotion.com/video/x9demo',
+                        ],
+                    ],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('data-hero-slider', $html);
+        $this->assertStringContainsString('data-hero-slider-config', $html);
+        $this->assertStringContainsString('data-hero-slide', $html);
+        $this->assertStringContainsString('data-hero-video', $html);
+        $this->assertStringContainsString('https://www.youtube.com/embed/h529sg3pEV4', $html);
+        $this->assertStringContainsString('player.vimeo.com/video/235215203', $html);
+        $this->assertStringContainsString('https://www.dailymotion.com/embed/video/x9demo', $html);
+        $this->assertStringContainsString('/assets/poster.webp', $html);
+        $this->assertStringContainsString('/assets/hero-tablet.webp', $html);
+        $this->assertStringContainsString('/assets/hero-mobile.webp', $html);
+        $this->assertStringContainsString('is-independent', $html);
+        $this->assertStringContainsString('data-hero-media', $html);
+        $this->assertStringContainsString('class="pb-hero-slider__button campaign-cta secondary unsafe"', $html);
+        $this->assertStringContainsString('--hero-slider-title-color:#123456', $html);
+        $this->assertStringContainsString('adaptive', $html);
+        $this->assertStringNotContainsString('javascript:', $html);
+        $this->assertStringNotContainsString('<Unsafe title>', $html);
+    }
+
+    public function test_frontend_renderer_keeps_generic_embed_as_safe_interval_fallback(): void
+    {
+        $module = $this->pageBuilderV24Module('hero_slider');
+        $html = $this->pageBuilderV24ModuleView($module, [
+            'node' => [
+                'id' => 'hero-slider-embed',
+                'type' => 'hero_slider',
+                'settings' => [
+                    'videoDurationMode' => 'duration',
+                    'videoAutoplayFallback' => 'interval',
+                    'slides' => [[
+                        'mediaType' => 'video',
+                        'videoProvider' => 'unknown-provider',
+                        'videoUrl' => 'https://example.com/embed/video-1',
+                    ]],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('data-video-provider="embed"', $html);
+        $this->assertStringContainsString('https://example.com/embed/video-1', $html);
+        $this->assertStringContainsString('data-video-duration-supported="false"', $html);
+    }
+
+    public function test_frontend_renderer_keeps_legacy_slide_content_at_the_normalizer_position(): void
+    {
+        $module = $this->pageBuilderV24Module('hero_slider');
+        $html = $this->pageBuilderV24ModuleView($module, [
+            'node' => [
+                'id' => 'hero-slider-legacy-position',
+                'type' => 'hero_slider',
+                'settings' => [
+                    'slides' => [[
+                        'mediaType' => 'image',
+                        'title' => 'Legacy content',
+                    ]],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('is-grouped', $html);
+        $this->assertStringContainsString('left:8%;top:86%;width:70%', $html);
+        $this->assertStringContainsString('transform:translate(0,-100%)', $html);
+    }
+
+    public function test_frontend_renderer_accepts_responsive_image_without_desktop_source_and_custom_arrow_icons(): void
+    {
+        $module = $this->pageBuilderV24Module('hero_slider');
+        $html = $this->pageBuilderV24ModuleView($module, [
+            'node' => [
+                'id' => 'hero-slider-responsive-image',
+                'type' => 'hero_slider',
+                'settings' => [
+                    'previousArrowIcon' => 'fas fa-circle-left',
+                    'nextArrowIcon' => 'fas fa-circle-right',
+                    'arrowButtonSize' => '44px',
+                    'arrowIconSize' => '18px',
+                    'arrowPosition' => 'outside',
+                    'arrowEdgeOffset' => '12px',
+                    'arrowPositionTablet' => 'inside',
+                    'arrowEdgeOffsetTablet' => '20px',
+                    'slides' => [
+                        ['mediaType' => 'image', 'imageUrl' => '', 'imageUrlTablet' => '/assets/tablet-only.webp', 'imageUrlMobile' => '/assets/mobile-only.webp'],
+                        ['mediaType' => 'image', 'imageUrl' => '/assets/second.webp'],
+                    ],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('<picture>', $html);
+        $this->assertStringContainsString('src="/assets/tablet-only.webp"', $html);
+        $this->assertStringContainsString('srcset="/assets/mobile-only.webp"', $html);
+        $this->assertStringContainsString('class="fas fa-circle-left"', $html);
+        $this->assertStringContainsString('class="fas fa-circle-right"', $html);
+        $this->assertStringContainsString('--hero-slider-arrow-button-size:44px', $html);
+        $this->assertStringContainsString('--hero-slider-arrow-icon-size:18px', $html);
+        $this->assertStringContainsString('--hero-slider-arrow-edge-position:calc(0px - var(--hero-slider-arrow-button-size) - 12px)', $html);
+        $this->assertStringContainsString('--hero-slider-arrow-overflow:visible', $html);
+        $this->assertStringContainsString('--hero-slider-arrow-edge-position:20px', $html);
+    }
+
+    public function test_frontend_renderer_exposes_exact_custom_pagination_offsets(): void
+    {
+        $module = $this->pageBuilderV24Module('hero_slider');
+        $html = $this->pageBuilderV24ModuleView($module, [
+            'node' => [
+                'id' => 'hero-slider-pagination-offsets',
+                'type' => 'hero_slider',
+                'settings' => [
+                    'direction' => 'horizontal',
+                    'paginationPlacementModeHorizontal' => 'custom',
+                    'paginationPositionHorizontal' => 'center',
+                    'paginationOffsetXHorizontal' => '-12px',
+                    'paginationOffsetYHorizontal' => '8px',
+                    'slides' => [
+                        ['mediaType' => 'image', 'imageUrl' => '/assets/first.webp'],
+                        ['mediaType' => 'image', 'imageUrl' => '/assets/second.webp'],
+                    ],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('data-position="center"', $html);
+        $this->assertStringContainsString('--hero-slider-pagination-offset-x:-12px', $html);
+        $this->assertStringContainsString('--hero-slider-pagination-offset-y:8px', $html);
+        $this->assertStringContainsString('&amp;quot;paginationOffsetXHorizontal&amp;quot;:&amp;quot;-12px&amp;quot;', $html);
+    }
+
+    public function test_frontend_renderer_exposes_natural_image_layout_for_an_image_slide(): void
+    {
+        $module = $this->pageBuilderV24Module('hero_slider');
+        $html = $this->pageBuilderV24ModuleView($module, [
+            'node' => [
+                'id' => 'hero-slider-natural-image',
+                'type' => 'hero_slider',
+                'settings' => [
+                    'slides' => [[
+                        'mediaType' => 'image',
+                        'imageUrl' => '/assets/hero-natural.webp',
+                        'imageLayout' => 'natural',
+                    ]],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('data-hero-image-layout="natural"', $html);
+        $this->assertStringContainsString('&amp;quot;imageLayout&amp;quot;:&amp;quot;natural&amp;quot;', $html);
+    }
+}

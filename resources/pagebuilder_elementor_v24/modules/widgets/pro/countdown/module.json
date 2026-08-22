@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "type": "countdown",
+  "label": "Countdown",
+  "category": "pro",
+  "icon": "fas fa-hourglass-half",
+  "order": 80,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "runtime": "runtime.js"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  }
+}

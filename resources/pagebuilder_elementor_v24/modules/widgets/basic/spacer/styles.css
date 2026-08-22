@@ -1,0 +1,24 @@
+.pb-node.pb-node-spacer .pb-preview {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+}
+
+.pb-node.pb-node-spacer .pb-preview {
+	min-height: 74px;
+	padding: 0 18px;
+}
+
+.pb-node.pb-node-spacer .pb-preview > .pb-preview-inner > * {
+	width: var(--pb-widget-content-width, 100%);
+	max-width: 100%;
+	min-width: 0;
+}
+
+.el-widget-spacer {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+}

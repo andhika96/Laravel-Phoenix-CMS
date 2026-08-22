@@ -1,0 +1,148 @@
+.pb-panel.left .pb-widget-settings--icon-list .pb-form-group {
+	margin-bottom: 12px;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-collapsible-body {
+	display: grid;
+	gap: 14px;
+	padding: 12px 0 10px;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-collapsible-body > .pb-form-group {
+	min-width: 0;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-collapsible-body > .pb-form-group {
+	margin-bottom: 0;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-collapsible-body > .pb-subsection-title {
+	margin-bottom: 0;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-label-row.pb-label-row-device {
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-label-row.pb-label-row-device > .pb-form-label {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-label-row.pb-label-row-device > .pb-control-device-wrap {
+	margin-left: auto;
+	flex: 0 0 auto;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-label-row.pb-label-row-device > .pb-label-tools {
+	margin-left: auto;
+	flex: 0 0 auto;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-label-row.pb-label-row-device > .pb-label-tools > .pb-mini-unit {
+	margin-left: 0;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-form-label {
+	margin-bottom: 5px;
+	font-size: 12px;
+	line-height: 1.3;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-input {
+	min-height: 30px;
+	padding: 6px 9px;
+	font-size: 12px;
+	border-radius: 5px;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-select {
+	min-height: 30px;
+	padding: 6px 9px;
+	font-size: 12px;
+	border-radius: 5px;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-textarea {
+	min-height: 30px;
+	padding: 6px 9px;
+	font-size: 12px;
+	border-radius: 5px;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-icon-list-add {
+	min-height: 30px;
+	padding: 6px 8px;
+	font-size: 13px;
+	line-height: 1.2;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-icon-list-add i {
+	font-size: 14px;
+	line-height: 1;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-icon-list-repeater__actions button {
+	width: 24px;
+	height: 24px;
+	min-width: 24px;
+	min-height: 24px;
+	padding: 0;
+	font-size: 11px;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-icon-list-repeater__item > .pb-icon-list-repeater__header {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	width: 100%;
+	min-height: 36px;
+	padding: 6px 8px;
+	border: 0;
+	background: #fff;
+	text-align: left;
+	cursor: pointer;
+}
+
+.pb-panel.left .pb-widget-settings--icon-list .pb-icon-list-repeater__body {
+	padding: 8px;
+}
+
+.pb-panel.left :is(.pb-widget-settings--icon-list, .pb-widget-settings--basic-gallery, .pb-widget-settings--image-carousel, .pb-widget-settings--image-box, .pb-widget-settings--icon-box) .pb-form-label {
+	margin-bottom: 6px;
+	font-size: 11px;
+	line-height: 1.3;
+}
+
+.pb-panel.left :is(.pb-widget-settings--icon-list, .pb-widget-settings--basic-gallery, .pb-widget-settings--image-carousel, .pb-widget-settings--image-box, .pb-widget-settings--icon-box) :is(.pb-input, .pb-select, .pb-textarea, .pb-mini-unit) {
+	min-height: 30px;
+	padding: 5px 8px;
+	font-size: 11px;
+	border-radius: 5px;
+}
+
+.pb-panel.left :is(.pb-widget-settings--icon-list, .pb-widget-settings--basic-gallery, .pb-widget-settings--image-carousel, .pb-widget-settings--image-box, .pb-widget-settings--icon-box) .pb-textarea {
+	min-height: 78px;
+	line-height: 1.45;
+}
+
+.side-panel.pb-panel.left .v24-properties-section :is(.pb-carousel-gallery__add, .pb-basic-gallery-picker__add, .pb-social-add, .pb-icon-list-add, .pb-pro-repeater__add) {
+	height: 34px;
+	min-height: 34px;
+	padding: 0 8px;
+	font-size: 10px;
+	line-height: 1.2;
+}
+
+.side-panel.pb-panel.left .v24-properties-section :is(.pb-carousel-gallery__add, .pb-basic-gallery-picker__add, .pb-social-add, .pb-icon-list-add, .pb-pro-repeater__add) i {
+	font-size: 10px;
+}
+
+.pb-icon-list{box-sizing:border-box}
+
+.pb-icon-list{list-style:none}
+
+.pb-icon-list__item{list-style:none}
+
+.pb-icon-list__content{box-sizing:border-box}

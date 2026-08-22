@@ -63,9 +63,6 @@ Route::controller(App\Http\Controllers\Web\PageBuilderElementorV23\FormDatasetCo
 		Route::delete('/{datasetId}', 'destroy')->name('cms.core.pagebuilder_elementor_v23.datasets.destroy');
 	});
 
-Route::get('/pages/{uri}', [App\Http\Controllers\Web\PageBuilderElementorV23\PageBuilderElementorV23Controller::class, 'showPublishedPage'])
-	->name('cms.public.pagebuilder_elementor_v23.show');
-
 /* New Arunika Themes */
 
 Route::controller(App\Http\Controllers\Web\Themes\Themes_Controller::class)->group(function()

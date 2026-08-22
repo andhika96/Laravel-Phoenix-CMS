@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "type": "container",
+  "label": "Container",
+  "category": "layout",
+  "icon": "fas fa-cube",
+  "order": 10,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "layout",
+    "capabilities": [
+      "legacy-layout",
+      "display-conditions"
+    ]
+  },
+  "capabilities": [
+    "structure-container"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "type": "image_carousel",
+  "label": "Image Carousel",
+  "category": "general",
+  "icon": "fas fa-images",
+  "order": 30,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "runtime": "runtime.js",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  },
+  "capabilities": [
+    "icon-source",
+    "carousel-arrow-icons"
+  ]
+}

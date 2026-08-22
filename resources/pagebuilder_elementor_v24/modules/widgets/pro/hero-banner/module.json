@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "type": "hero_banner",
+  "label": "Hero Banner",
+  "category": "pro",
+  "icon": "fas fa-image",
+  "order": 130,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "runtime": "runtime.js",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  }
+}

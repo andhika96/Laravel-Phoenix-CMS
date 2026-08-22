@@ -1,0 +1,4 @@
+node_modules/
+dist/
+.npm-cache/
+public/assets/qa-prototype-1024.png

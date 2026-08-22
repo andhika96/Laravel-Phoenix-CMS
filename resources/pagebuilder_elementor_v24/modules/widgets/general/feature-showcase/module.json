@@ -1,0 +1,19 @@
+{
+    "schemaVersion": 1,
+    "type": "feature_showcase",
+    "label": "Feature Showcase",
+    "category": "general",
+    "icon": "fas fa-layer-group",
+    "order": 50,
+    "toolbox": true,
+    "assets": {
+        "definition": "definition.js",
+        "canvas": "Canvas.vue",
+        "settings": "Settings.vue",
+        "view": "frontend.blade.php"
+    },
+    "advanced": {
+        "profile": "widget",
+        "capabilities": []
+    }
+}

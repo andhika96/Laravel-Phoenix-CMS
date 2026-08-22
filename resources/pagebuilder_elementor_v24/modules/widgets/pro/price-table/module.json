@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "type": "price_table",
+  "label": "Price Table",
+  "category": "pro",
+  "icon": "fas fa-tags",
+  "order": 60,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  },
+  "capabilities": [
+    "icon-source",
+    "pro-icon-targets"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "type": "alert",
+  "label": "Alert",
+  "category": "general",
+  "icon": "fas fa-exclamation-triangle",
+  "order": 130,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  },
+  "capabilities": [
+    "icon-source",
+    "dismiss-icon"
+  ]
+}

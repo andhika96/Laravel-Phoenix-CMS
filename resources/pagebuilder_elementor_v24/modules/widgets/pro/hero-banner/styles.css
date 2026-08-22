@@ -1,0 +1,198 @@
+.pb-node.pb-node-hero_banner [data-pb-interactive="true"] {
+	pointer-events: auto;
+}
+.pb-hero-banner {
+	position: relative;
+	width: 100%;
+	min-width: 0;
+	overflow: hidden;
+	isolation: isolate;
+	background: #e8eaeb;
+}
+.pb-hero-banner__picture {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+.pb-hero-banner__media {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+.pb-hero-banner__overlay {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+.pb-hero-banner__empty {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+.pb-hero-banner__picture {
+	display: block;
+}
+.pb-hero-banner__media {
+	display: block;
+}
+.pb-hero-banner__overlay {
+	z-index: 1;
+	background: var(--hero-overlay);
+}
+.pb-hero-banner__empty {
+	display: grid;
+	place-content: center;
+	justify-items: center;
+	gap: 8px;
+	color: #98a2b3;
+	background: #eef1f4;
+}
+.pb-hero-banner__empty i {
+	font-size: 40px;
+}
+.pb-hero-banner__content {
+	position: absolute;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: var(--hero-content-align);
+	gap: var(--hero-content-gap);
+	color: #292d32;
+}
+.pb-hero-banner.is-independent .pb-hero-banner__content {
+	position: static;
+}
+.pb-hero-banner.is-independent .pb-hero-banner__block {
+	position: absolute;
+	z-index: 2;
+}
+.pb-hero-banner__title {
+	width: 100%;
+	margin: 0;
+	color: var(--hero-title-color);
+	font-size: var(--hero-title-size);
+	font-weight: var(--hero-title-weight);
+	line-height: 1.05;
+}
+.pb-hero-banner__subtitle {
+	width: 100%;
+	margin: 0;
+	color: var(--hero-subtitle-color);
+	font-size: var(--hero-subtitle-size);
+	font-weight: var(--hero-subtitle-weight);
+	line-height: 1.35;
+}
+.pb-hero-banner__buttons {
+	width: 100%;
+	display: flex;
+}
+.pb-hero-banner__button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 7px;
+	padding: var(--hero-button-pad-y) var(--hero-button-pad-x);
+	border: 0;
+	border-radius: var(--hero-button-radius);
+	color: var(--hero-button-color);
+	background: var(--hero-button-bg);
+	font: inherit;
+	text-decoration: none;
+	white-space: nowrap;
+	cursor: pointer;
+	transition: color .2s ease, background-color .2s ease;
+}
+.pb-hero-banner__button:hover {
+	color: var(--hero-button-hover-color);
+	background: var(--hero-button-hover-bg);
+}
+.pb-hero-banner__button:focus-visible {
+	color: var(--hero-button-hover-color);
+	background: var(--hero-button-hover-bg);
+}
+.pb-hero-banner__button:disabled {
+	cursor: not-allowed;
+	opacity: .55;
+}
+.pb-hero-banner__button.is-disabled {
+	cursor: not-allowed;
+	opacity: .55;
+}
+@media (prefers-reduced-motion: reduce) {
+	.pb-hero-banner__button {
+		transition: none;
+	}
+}
+@media (min-width: 1025px) {
+	.pb-hero-banner.is-natural-image.is-natural-image-desktop {
+		min-height: 0 !important;
+	}
+}
+@media (min-width: 1025px) {
+
+	.pb-hero-banner.is-natural-image.is-natural-image-desktop .pb-hero-banner__picture {
+		position: relative;
+		inset: auto;
+		width: 100%;
+		height: auto;
+	}
+}
+@media (min-width: 1025px) {
+
+	.pb-hero-banner.is-natural-image.is-natural-image-desktop .pb-hero-banner__media {
+		position: relative;
+		inset: auto;
+		width: 100%;
+		height: auto;
+	}
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+	.pb-hero-banner.is-natural-image-tablet {
+		min-height: 0 !important;
+	}
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+
+	.pb-hero-banner.is-natural-image-tablet .pb-hero-banner__picture {
+		position: relative;
+		inset: auto;
+		width: 100%;
+		height: auto;
+	}
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+
+	.pb-hero-banner.is-natural-image-tablet .pb-hero-banner__media {
+		position: relative;
+		inset: auto;
+		width: 100%;
+		height: auto;
+	}
+}
+@media (max-width: 767px) {
+	.pb-hero-banner.is-natural-image-mobile {
+		min-height: 0 !important;
+	}
+}
+@media (max-width: 767px) {
+
+	.pb-hero-banner.is-natural-image-mobile .pb-hero-banner__picture {
+		position: relative;
+		inset: auto;
+		width: 100%;
+		height: auto;
+	}
+}
+@media (max-width: 767px) {
+
+	.pb-hero-banner.is-natural-image-mobile .pb-hero-banner__media {
+		position: relative;
+		inset: auto;
+		width: 100%;
+		height: auto;
+	}
+}

@@ -1,0 +1,98 @@
+.pb-node.pb-node-divider .pb-preview {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+}
+
+.pb-node.pb-node-divider .pb-preview {
+	min-height: 62px;
+	padding: 0 18px;
+}
+
+.pb-node.pb-node-divider .pb-preview > .pb-preview-inner > * {
+	width: var(--pb-widget-content-width, 100%);
+	max-width: 100%;
+	min-width: 0;
+}
+
+.pb-panel.left .pb-widget-settings--divider .pb-value-with-unit .pb-mini-unit {
+	width: 52px;
+	min-width: 52px;
+	height: 30px;
+	min-height: 30px;
+	padding: 3px 20px 3px 7px;
+	font-size: 11px;
+}
+
+.pb-panel.left :is(.pb-widget-settings--button, .pb-widget-settings--divider, .pb-widget-settings--icon, .pb-widget-settings--text-editor) .pb-collapsible-body > .pb-form-group {
+	margin-bottom: 15px;
+}
+
+.pb-panel.left :is(.pb-widget-settings--button, .pb-widget-settings--divider, .pb-widget-settings--icon, .pb-widget-settings--text-editor) .pb-collapsible-body > .pb-form-group:last-child {
+	margin-bottom: 0;
+}
+
+.pb-panel.left :is(.pb-widget-settings--button, .pb-widget-settings--divider, .pb-widget-settings--icon, .pb-widget-settings--text-editor) .pb-collapsible-body > .pb-form-group > .pb-label-row {
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 7px;
+}
+
+.pb-panel.left :is(.pb-widget-settings--button, .pb-widget-settings--divider, .pb-widget-settings--icon, .pb-widget-settings--text-editor) .pb-btn-group {
+	gap: 5px;
+}
+
+.pb-panel.left :is(.pb-widget-settings--button, .pb-widget-settings--divider, .pb-widget-settings--icon, .pb-widget-settings--text-editor) .pb-seg-btn {
+	min-width: 30px;
+	height: 30px;
+	min-height: 30px;
+	padding: 0 7px;
+	border-radius: 7px;
+}
+
+.pb-panel.left .pb-basic-divider-style-settings .pb-control-device-btn {
+	width: 28px !important;
+	height: 28px !important;
+	min-width: 28px !important;
+	padding: 6px !important;
+	border-radius: 6px;
+}
+
+.pb-panel.left .pb-basic-divider-style-settings .pb-range-value-row {
+	grid-template-columns: minmax(0, 1fr) 128px;
+	gap: 10px;
+	width: min(100%, 300px);
+	margin-left: auto;
+}
+
+.pb-panel.left .pb-basic-divider-style-settings .pb-value-with-unit {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 52px;
+	gap: 6px;
+	align-items: center;
+}
+
+.pb-panel.left .pb-basic-divider-style-settings .pb-value-with-unit .pb-input-compact {
+	width: 68px;
+	min-width: 68px;
+	height: 30px;
+	min-height: 30px;
+	padding: 4px 6px;
+	font-size: 11px;
+	text-align: center;
+}
+
+.el-widget-divider {
+	width: 100%;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+}
+
+.el-widget-divider hr {
+	margin: 0;
+	border: none;
+	flex: 1;
+}

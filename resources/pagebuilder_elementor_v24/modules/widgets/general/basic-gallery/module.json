@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "type": "basic_gallery",
+  "label": "Basic Gallery",
+  "category": "general",
+  "icon": "fas fa-th",
+  "order": 40,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "runtime": "runtime.js",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  }
+}

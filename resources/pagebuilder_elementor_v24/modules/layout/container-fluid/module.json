@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "type": "container_fluid",
+  "label": "Container Fluid",
+  "category": "layout",
+  "icon": "fas fa-cube",
+  "order": 20,
+  "toolbox": false,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "layout",
+    "capabilities": [
+      "legacy-layout",
+      "display-conditions"
+    ]
+  },
+  "capabilities": [
+    "structure-container",
+    "fluid-content"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "type": "testimonial_carousel",
+  "label": "Testimonial Carousel",
+  "category": "pro",
+  "icon": "fas fa-quote-right",
+  "order": 110,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "runtime": "runtime.js"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  },
+  "capabilities": [
+    "icon-source",
+    "carousel-arrow-icons"
+  ]
+}

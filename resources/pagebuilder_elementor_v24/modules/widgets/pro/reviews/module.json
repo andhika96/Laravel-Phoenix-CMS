@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "type": "reviews",
+  "label": "Reviews",
+  "category": "pro",
+  "icon": "fas fa-comments",
+  "order": 100,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "runtime": "runtime.js"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  },
+  "capabilities": [
+    "icon-source",
+    "pro-icon-targets"
+  ]
+}

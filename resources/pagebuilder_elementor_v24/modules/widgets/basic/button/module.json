@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "type": "button",
+  "label": "Button",
+  "category": "basic",
+  "icon": "fas fa-link",
+  "order": 60,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": [
+      "minimal-advanced",
+      "class-name"
+    ]
+  },
+  "capabilities": [
+    "shrinkable-inline",
+    "icon-source",
+    "primary-icon"
+  ]
+}

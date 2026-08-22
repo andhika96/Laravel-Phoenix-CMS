@@ -1,0 +1,4 @@
+.el-widget-counter.pb-counter { min-width: 0; box-sizing: border-box; }
+.el-widget-counter .pb-counter__number { margin: 0; }
+.el-widget-counter .pb-counter__title { margin: 0; }
+.el-widget-counter .pb-counter__number { display: inline-flex; align-items: baseline; justify-content: center; gap: .08em; }

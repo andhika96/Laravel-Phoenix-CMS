@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "type": "icon_list",
+  "label": "Icon List",
+  "category": "general",
+  "icon": "fas fa-list-ul",
+  "order": 60,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  },
+  "capabilities": [
+    "icon-source",
+    "repeater-icon-list",
+    "icon-list-items"
+  ]
+}

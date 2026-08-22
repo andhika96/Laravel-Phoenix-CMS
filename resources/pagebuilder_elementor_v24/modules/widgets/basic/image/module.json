@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "type": "image",
+  "label": "Image",
+  "category": "basic",
+  "icon": "far fa-image",
+  "order": 50,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "runtime": "runtime.js",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  }
+}

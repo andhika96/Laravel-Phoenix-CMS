@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "type": "price_list",
+  "label": "Price List",
+  "category": "pro",
+  "icon": "fas fa-list-alt",
+  "order": 50,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  }
+}

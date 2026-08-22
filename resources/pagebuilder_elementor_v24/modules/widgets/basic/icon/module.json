@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "type": "icon",
+  "label": "Icon",
+  "category": "basic",
+  "icon": "far fa-star",
+  "order": 90,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": [
+      "minimal-advanced"
+    ]
+  },
+  "capabilities": [
+    "icon-source",
+    "primary-icon",
+    "icon-link-options"
+  ]
+}

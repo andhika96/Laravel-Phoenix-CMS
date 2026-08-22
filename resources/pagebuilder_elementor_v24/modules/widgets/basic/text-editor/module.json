@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "type": "text_editor",
+  "label": "Text Editor",
+  "category": "basic",
+  "icon": "fas fa-edit",
+  "order": 40,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": [
+      "minimal-advanced"
+    ]
+  },
+  "capabilities": [
+    "rich-text-modal"
+  ]
+}

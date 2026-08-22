@@ -1,0 +1,43 @@
+.side-panel.pb-panel.left .v24-properties-section :is(.pb-carousel-gallery__add, .pb-basic-gallery-picker__add, .pb-social-add, .pb-icon-list-add, .pb-pro-repeater__add) {
+	height: 34px;
+	min-height: 34px;
+	padding: 0 8px;
+	font-size: 10px;
+	line-height: 1.2;
+}
+
+.side-panel.pb-panel.left .v24-properties-section :is(.pb-carousel-gallery__add, .pb-basic-gallery-picker__add, .pb-social-add, .pb-icon-list-add, .pb-pro-repeater__add) i {
+	font-size: 10px;
+}
+
+.el-widget-social-icons.pb-social-icons { min-width: 0; box-sizing: border-box; }
+
+.el-widget-social-icons.pb-social-icons { display: grid; align-items: center; justify-content: start; gap: var(--pb-social-row-gap, 8px) var(--pb-social-spacing, 8px); width: 100%; }
+
+.el-widget-social-icons.pb-social-icons.pb-social-icons--align-center { justify-content: center; }
+
+.el-widget-social-icons.pb-social-icons.pb-social-icons--align-right { justify-content: end; }
+
+.el-widget-social-icons .pb-social-icons__item { display: inline-flex; align-items: center; justify-content: center; width: max-content; min-width: calc(var(--pb-social-size, 18px) + (var(--pb-social-padding, 10px) * 2)); min-height: calc(var(--pb-social-size, 18px) + (var(--pb-social-padding, 10px) * 2)); padding: var(--pb-social-padding, 10px); box-sizing: border-box; color: var(--pb-social-secondary, #fff); background: var(--pb-social-primary, #405de6); border: var(--pb-social-border-width, 1px) var(--pb-social-border-style, none) var(--pb-social-border-color, transparent); border-radius: var(--pb-social-border-radius, 4px); text-decoration: none; font-size: var(--pb-social-size, 18px); line-height: 1; transition: color var(--pb-social-duration, .3s) ease, background-color var(--pb-social-duration, .3s) ease, transform var(--pb-social-duration, .3s) ease; }
+
+.el-widget-social-icons.pb-social-icons--shape-circle .pb-social-icons__item { border-radius: 50%; }
+
+.el-widget-social-icons.pb-social-icons--shape-square .pb-social-icons__item { border-radius: 0; }
+
+.el-widget-social-icons .pb-social-icons__item:hover { color: var(--pb-social-hover-secondary, #fff); background: var(--pb-social-hover-primary, #4f46e5); transform: translateY(-1px); }
+
+.el-widget-social-icons .pb-social-icons__item:focus-visible { color: var(--pb-social-hover-secondary, #fff); background: var(--pb-social-hover-primary, #4f46e5); transform: translateY(-1px); }
+
+.el-widget-social-icons.pb-social-icons--hover-grow .pb-social-icons__item:hover { transform: scale(1.08); }
+
+.el-widget-social-icons.pb-social-icons--hover-shrink .pb-social-icons__item:hover { transform: scale(.94); }
+
+.el-widget-social-icons.pb-social-icons--hover-rotate .pb-social-icons__item:hover { transform: rotate(8deg); }
+
+.el-widget-social-icons.pb-social-icons--hover-pulse .pb-social-icons__item:hover { animation: pb-social-icons-pulse .8s ease-in-out; }
+
+.el-widget-social-icons .pb-social-icons__item svg { width: 1em; height: 1em; fill: currentColor; }
+
+@media (prefers-reduced-motion: reduce) {
+    .el-widget-social-icons .pb-social-icons__item { transition: none !important; animation: none !important; }
+}

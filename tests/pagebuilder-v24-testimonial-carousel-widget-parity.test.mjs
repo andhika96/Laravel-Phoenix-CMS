@@ -1,0 +1,241 @@
+import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+import { dirname, join, resolve } from 'node:path';
+import test from 'node:test';
+import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
+import { compile } from '@vue/compiler-dom';
+import { parse } from '@vue/compiler-sfc';
+import { renderToString } from '@vue/server-renderer';
+import * as Vue from 'vue';
+import { configureSingleModule } from './helpers/pagebuilder-v24-module-test.mjs';
+
+globalThis.window ??= globalThis;
+globalThis.window.matchMedia ??= () => ({
+  matches: false,
+  addEventListener() {},
+  removeEventListener() {},
+});
+
+const testDir = dirname(fileURLToPath(import.meta.url));
+const rootDir = resolve(testDir, '..');
+
+async function source(relativePath) {
+  return readFile(join(rootDir, relativePath), 'utf8');
+}
+
+async function loadSfc(relativePath) {
+  const filename = join(rootDir, relativePath);
+  const contents = await readFile(filename, 'utf8');
+  const { descriptor, errors } = parse(contents, { filename });
+  assert.deepEqual(errors, []);
+  const component = Function(descriptor.script.content.replace(/export\s+default/, 'return'))();
+  component.render = Function('Vue', compile(descriptor.template.content, { mode: 'function', prefixIdentifiers: true }).code)(Vue);
+  return component;
+}
+
+function editorFor(settingsTab) {
+  const EmptyControl = { template: '<div></div>' };
+  return {
+    settingsTab,
+    responsiveDevice: 'desktop',
+    responsiveDevices: [],
+    widgetAdvancedControls: EmptyControl,
+    linkControl: EmptyControl,
+    typographyControl: { template: '<div>Typography</div>' },
+    textStrokeControl: { template: '<div>Text Stroke</div>' },
+    textShadowControl: { template: '<div>Text Shadow</div>' },
+    fontFamilies: [],
+    chooseMedia() {},
+    openProIconLibrary() {},
+    chooseProIconSvg() {},
+    openImageCarouselArrowIconLibrary() {},
+    chooseImageCarouselArrowSvg() {},
+    setResponsiveDevice() {},
+    openControlResponsiveMenu() {},
+    applyResponsiveDevice() {},
+    responsiveDeviceLabel: () => 'Desktop',
+    responsiveDeviceIcon: () => 'fas fa-desktop',
+    isControlResponsiveMenuOpen: () => false,
+    deviceOptionLabel: () => '',
+    activeResponsiveKey: (key) => key,
+    setResponsiveSetting(target, key, value) { target[key] = value; },
+    sizeControlDisplayValue: (node, key, fallback) => Number.parseFloat(node.settings[key] || fallback) || 0,
+    sizeControlUnit: (node, key, fallback) => String(node.settings[key] || fallback).match(/[a-z%]+$/i)?.[0] || 'px',
+    onSizeControlInput() {},
+    setSizeControlUnit() {},
+    fontAwesomeStyleLabel: () => 'Brands',
+  };
+}
+
+const testimonialSettings = {
+  slidesName: 'Customer Testimonials',
+  items: [
+    { id: 'testimonial-1', imageUrl: '/avatar.jpg', name: 'John Doe', title: 'CEO', content: 'Excellent service' },
+    { id: 'testimonial-2', imageUrl: '', name: 'Jane Doe', title: 'Designer', content: 'Great experience' },
+  ],
+  skin: 'default',
+  layout: 'image_inline',
+  alignment: 'center',
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  width: '100%',
+  arrows: true,
+  previousArrowIcon: 'fas fa-angle-left',
+  previousArrowIconSource: 'library',
+  previousArrowIconSvg: '',
+  nextArrowIcon: 'fas fa-angle-right',
+  nextArrowIconSource: 'library',
+  nextArrowIconSvg: '',
+  arrowPosition: 'outside',
+  arrowEdgeOffset: '12px',
+  arrowButtonSize: '44px',
+  arrowIconSize: '19px',
+  arrowColor: '#112233',
+  arrowBackground: '#ddeeff',
+  arrowHoverColor: '#ffffff',
+  arrowHoverBackground: '#334455',
+  arrowRadiusTop: '4px',
+  arrowRadiusRight: '8px',
+  arrowRadiusBottom: '12px',
+  arrowRadiusLeft: '16px',
+  pagination: 'dots',
+  transitionSpeed: 500,
+  autoplay: true,
+  autoplaySpeed: 5000,
+  infiniteLoop: true,
+  pauseOnHover: true,
+  pauseOnInteraction: true,
+  imageResolution: 'full',
+  lazyLoad: false,
+  imageBorder: true,
+  imageBorderColor: '#000000',
+  imageBorderWidth: '1px',
+  testimonialCarouselContentTextStrokeWidth: '1px',
+  testimonialCarouselContentTextStrokeColor: '#111111',
+  testimonialCarouselContentTextShadow: '1px 1px 0 rgba(0,0,0,.1)',
+};
+
+test('Testimonial Carousel registers as a Pro widget with mapped Elementor defaults', async () => {
+  const definitionPath = join(rootDir, 'resources/pagebuilder_elementor_v24/modules/widgets/pro/testimonial-carousel/definition.js');
+  assert.equal(existsSync(definitionPath), true, 'testimonial-carousel definition must exist');
+
+  const context = { window: {} };
+  vm.runInNewContext(await source('public/js/pagebuilder_elementor_v24/widget-registry.js'), context);
+  configureSingleModule(context, await source('resources/pagebuilder_elementor_v24/modules/widgets/pro/testimonial-carousel/module.json'));
+  vm.runInNewContext(await source('resources/pagebuilder_elementor_v24/modules/widgets/pro/testimonial-carousel/definition.js'), context);
+
+  const definition = context.window.PageBuilderElementorV24Widgets.get('testimonial_carousel');
+  const defaults = definition.defaults();
+
+  assert.equal(definition.category, 'pro');
+  assert.equal(definition.label, 'Testimonial Carousel');
+  assert.equal(defaults.items.length, 3);
+  assert.equal(defaults.items[0].name, 'John Doe');
+  assert.equal(defaults.items[0].title, 'CEO');
+  assert.equal(defaults.skin, 'default');
+  assert.equal(defaults.layout, 'image_inline');
+  assert.equal(defaults.slidesToShow, 1);
+  assert.equal(defaults.slidesToScroll, 1);
+  assert.equal(defaults.pagination, 'dots');
+  assert.equal(defaults.transitionSpeed, 500);
+  assert.equal(defaults.autoplaySpeed, 5000);
+  assert.equal(defaults.imageResolution, 'full');
+  assert.equal(defaults.previousArrowIcon, 'fas fa-chevron-left');
+  assert.equal(defaults.nextArrowIcon, 'fas fa-chevron-right');
+  assert.equal(defaults.arrowPosition, 'inside');
+  assert.equal(defaults.arrowEdgeOffset, '46px');
+  assert.equal(defaults.arrowButtonSize, '20px');
+  assert.equal(defaults.arrowIconSize, '10px');
+
+  const normalized = definition.normalize({ settings: { skin: 'invalid', layout: 'invalid', pagination: 'invalid', items: [] } });
+  assert.equal(normalized.settings.skin, 'default');
+  assert.equal(normalized.settings.layout, 'image_inline');
+  assert.equal(normalized.settings.pagination, 'dots');
+  assert.equal(normalized.settings.items.length, 3);
+
+  const legacy = definition.normalize({ settings: { arrowsSize: '34px' } });
+  assert.equal(legacy.settings.arrowButtonSize, '34px');
+  assert.equal(legacy.settings.arrowIconSize, '16px');
+});
+
+test('Testimonial Carousel settings expose mapped Content, Style, responsive, and Advanced controls', async () => {
+  const component = await loadSfc('resources/pagebuilder_elementor_v24/modules/widgets/pro/testimonial-carousel/Settings.vue');
+
+  const contentHtml = await renderToString(Vue.createSSRApp(component, {
+    node: { type: 'testimonial_carousel', settings: { ...testimonialSettings, imageResolution: 'custom' } },
+    editor: editorFor('content'),
+  }));
+  for (const label of ['Slides Name', 'Content', 'Image', 'Name', 'Title', 'Skin', 'Layout', 'Alignment', 'Slides Per View', 'Slides to Scroll', 'Width', 'Additional Options', 'Arrows', 'Pagination', 'Transition Duration', 'Autoplay', 'Autoplay Speed', 'Infinite Loop', 'Pause on Hover', 'Pause on Interaction', 'Image Resolution', 'Custom Width', 'Custom Height', 'Lazy Load']) {
+    assert.match(contentHtml, new RegExp(label));
+  }
+
+  const styleHtml = await renderToString(Vue.createSSRApp(component, {
+    node: { type: 'testimonial_carousel', settings: testimonialSettings },
+    editor: editorFor('style'),
+  }));
+  for (const label of ['Space Between', 'Background Color', 'Border Width', 'Border Radius', 'Padding', 'Gap', 'Text Color', 'Text Stroke', 'Text Shadow', 'Name', 'Title', 'Size', 'Image', 'Border Color', 'Navigation', 'Previous Arrow Icon', 'Next Arrow Icon', 'Position', 'Edge Offset', 'Button Size', 'Icon Size', 'Icon Color', 'Button Background', 'Hover Icon Color', 'Hover Background', 'Button Radius', 'Space Between Dots', 'Active Color']) {
+    assert.match(styleHtml, new RegExp(label));
+  }
+
+  const advancedHtml = await renderToString(Vue.createSSRApp(component, {
+    node: { type: 'testimonial_carousel', settings: testimonialSettings },
+    editor: editorFor('advanced'),
+  }));
+  assert.match(advancedHtml, /Advanced/);
+});
+
+test('Testimonial Carousel canvas renders safe content and interactive carousel controls', async () => {
+  const component = await loadSfc('resources/pagebuilder_elementor_v24/modules/widgets/pro/testimonial-carousel/Canvas.vue');
+  const html = await renderToString(Vue.createSSRApp(component, {
+    item: {
+      id: 'testimonial-test',
+      type: 'testimonial_carousel',
+      settings: { ...testimonialSettings, alignment: 'right' },
+    },
+    responsiveDevice: 'desktop',
+  }));
+
+  assert.match(html, /data-pro-carousel/);
+  assert.match(html, /pb-pro-testimonial-carousel__slide/);
+  assert.match(html, /John Doe/);
+  assert.match(html, /CEO/);
+  assert.match(html, /Excellent service/);
+  assert.match(html, /avatar\.jpg/);
+  assert.match(html, /Previous slide/);
+  assert.match(html, /Next slide/);
+  assert.match(html, /arrow-position-outside/);
+  assert.match(html, /fa-angle-left/);
+  assert.match(html, /fa-angle-right/);
+  assert.match(html, /--carousel-arrow-button-size:44px/);
+  assert.match(html, /--carousel-arrow-icon-size:19px/);
+  assert.match(html, /--carousel-arrow-edge-position:calc\(0px - 44px - 12px\)/);
+  assert.match(html, /--carousel-arrow-color:#112233/);
+  assert.match(html, /--carousel-arrow-background:#ddeeff/);
+  assert.match(html, /--carousel-arrow-hover-color:#ffffff/);
+  assert.match(html, /--carousel-arrow-hover-background:#334455/);
+  assert.match(html, /--carousel-arrow-radius:4px 8px 12px 16px/);
+  assert.match(html, /testimonial-identity-align:flex-end/);
+  assert.match(html, /text-shadow/);
+  assert.match(html, /webkit-text-stroke/);
+
+  const canvasSource = await source('resources/pagebuilder_elementor_v24/modules/widgets/pro/testimonial-carousel/Canvas.vue');
+  const rendererSource = await source('resources/pagebuilder_elementor_v24/modules/widgets/pro/testimonial-carousel/frontend.blade.php');
+  assert.match(canvasSource, /\.pb-pro-testimonial-carousel \.pb-pro-arrow--prev[\s\S]*?left: var\(--carousel-arrow-edge-position, 46px\)/);
+  assert.match(canvasSource, /\.pb-pro-testimonial-carousel \.pb-pro-arrow--next[\s\S]*?right: var\(--carousel-arrow-edge-position, 46px\)/);
+  assert.match(rendererSource, /\.pb-pro-testimonial-carousel \.pb-pro-arrow--prev\{left:var\(--carousel-arrow-edge-position,46px\)/);
+  assert.match(rendererSource, /\.pb-pro-testimonial-carousel \.pb-pro-arrow--next\{right:var\(--carousel-arrow-edge-position,46px\)/);
+});
+
+test('Testimonial Carousel bubble skin emits a CSS quote escape, not a literal backslash', async () => {
+  const canvasSource = await source('resources/pagebuilder_elementor_v24/modules/widgets/pro/testimonial-carousel/Canvas.vue');
+  const bladeSource = await source('resources/pagebuilder_elementor_v24/modules/widgets/pro/testimonial-carousel/frontend.blade.php');
+  const quote = String.fromCharCode(92) + '201C';
+  const literalBackslashQuote = String.fromCharCode(92, 92) + '201C';
+
+  assert.ok(canvasSource.includes('content: "' + quote + '";'));
+  assert.ok(bladeSource.includes('content:"' + quote + '";'));
+  assert.equal(canvasSource.includes('content: "' + literalBackslashQuote + '";'), false);
+  assert.equal(bladeSource.includes('content:"' + literalBackslashQuote + '";'), false);
+});

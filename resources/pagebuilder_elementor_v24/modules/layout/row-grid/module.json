@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "type": "row_grid",
+  "label": "Row Grid",
+  "category": "layout",
+  "icon": "fas fa-th-large",
+  "order": 40,
+  "toolbox": false,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "layout",
+    "capabilities": [
+      "legacy-layout"
+    ]
+  },
+  "capabilities": [
+    "structure-grid"
+  ]
+}

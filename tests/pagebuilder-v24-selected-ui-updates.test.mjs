@@ -1,0 +1,211 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import postcss from 'postcss';
+import vm from 'node:vm';
+import { readPageBuilderV24EditorStyles } from './helpers/pagebuilder-v24-module-source.mjs';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const root = resolve(here, '..');
+const app = readFileSync(resolve(root, 'public/js/pagebuilder_elementor_v24/app.js'), 'utf8');
+const css = readPageBuilderV24EditorStyles(root);
+const shell = readFileSync(resolve(root, 'resources/views/pagebuilder_elementor_v24/editor_shell.blade.php'), 'utf8');
+const containerDefinition = readFileSync(resolve(root, 'resources/pagebuilder_elementor_v24/modules/layout/container/definition.js'), 'utf8');
+const stylesheet = postcss.parse(css);
+
+function cssDeclarations(selector) {
+    let matchedRule;
+    stylesheet.walkRules((rule) => {
+        if (rule.selectors?.includes(selector)) matchedRule = rule;
+    });
+    assert.ok(matchedRule, `CSS rule should exist: ${selector}`);
+
+    const declarations = {};
+    matchedRule.walkDecls((declaration) => {
+        declarations[declaration.prop] = declaration.value;
+    });
+    return declarations;
+}
+
+function containerDefaults() {
+    let definition;
+    const context = {
+        window: {
+            PageBuilderElementorV24Widgets: {
+                register(value) {
+                    definition = value;
+                },
+            },
+        },
+    };
+    vm.runInNewContext(containerDefinition, context);
+    return JSON.parse(JSON.stringify(definition.defaults()));
+}
+
+test('new containers start with linked 1rem padding visible in the settings state', () => {
+    const defaults = containerDefaults();
+
+    assert.deepEqual(
+        [defaults.paddingTop, defaults.paddingRight, defaults.paddingBottom, defaults.paddingLeft],
+        ['1rem', '1rem', '1rem', '1rem'],
+    );
+    assert.equal(defaults.paddingUnit, 'rem');
+    assert.equal(defaults.paddingLinked, true);
+});
+
+test('desktop canvas starts and resets at 100 percent zoom', () => {
+    assert.match(app, /const canvasZoom = ref\(100\);/);
+    assert.match(app, /safeDevice === 'desktop' \? 100 :/);
+    assert.match(app, /title="Reset zoom" @click="canvasZoom = 100"/);
+});
+
+test('Text Editor keeps the complete Article toolbar while allowing narrow-sidebar overflow grouping', () => {
+    assert.match(shell, /assets\/plugins\/ckeditor5\/build\/ckeditor\.js['"]\) \}\}\?v=0\.0\.1/);
+    assert.doesNotMatch(shell, /ckeditor5-build-classic@/);
+    assert.match(app, /ClassicEditor\.create\(el,\s*\{[\s\S]*?toolbar:\s*\{[\s\S]*?shouldNotGroupWhenFull:\s*false/);
+
+    for (const item of [
+        'heading', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'todoList',
+        'outdent', 'indent', 'alignment', 'undo', 'redo', 'CKFinder', 'imageUpload',
+        'imageInsert', 'blockQuote', 'insertTable', 'removeFormat', 'underline',
+        'fontFamily', 'fontSize', 'fontColor', 'highlight', 'selectAll',
+    ]) {
+        assert.match(app, new RegExp(`['"]${item}['"]`), `${item} should be available in Text Editor`);
+    }
+});
+
+test('widget label and opposite action buttons use the approved slightly larger geometry', () => {
+    assert.match(css, /\.webpage-frame \.pb-node-widget\s*\{[^}]*border-radius:\s*0;/);
+    assert.match(css, /\.webpage-frame \.pb-node-label\.widget-label\s*\{[^}]*height:\s*22px;[^}]*font-size:\s*9px;/);
+    assert.match(css, /\.pb-node-widget > \.pb-node-toolbar > \.pb-node-actions\s*\{[^}]*height:\s*22px;/);
+    assert.match(css, /\.pb-node-widget > \.pb-node-toolbar > \.pb-node-actions \.pb-node-btn\s*\{[^}]*width:\s*24px;[^}]*height:\s*22px;[^}]*font-size:\s*9px;/);
+});
+
+test('approved root insertion rail is a native button that opens the root toolbox', () => {
+    assert.match(app, /<button v-else type="button" class="pb-root-followup-hint"[^>]*@click\.stop="showToolboxPanel\(\)"/);
+    assert.match(app, /class="pb-root-followup-icon"[^>]*>[\s\S]*?bi bi-plus-lg/);
+    assert.match(app, /class="root-drop-label">Add to page root<[\s\S]*?<span>Container, Grid, or Widget<\/span>/);
+    assert.doesNotMatch(app, /class="pb-root-followup-hint" role="button"/);
+    assert.match(css, /\.webpage-frame \.pb-root-followup-hint::before\s*\{[^}]*border-top:\s*1px dashed/);
+    assert.match(css, /\.webpage-frame \.pb-root-followup-icon\s*\{[^}]*width:\s*32px;[^}]*height:\s*32px;[^}]*border-radius:\s*50%;/);
+    assert.match(css, /\.webpage-frame \.pb-root-followup-hint:focus-visible\s*\{/);
+});
+
+test('toolbox clone stays a readable 40px card inside canvas dropzones', () => {
+    const clone = cssDeclarations('.pb-is-dragging .pb-dropzone > .element-card');
+    const icon = cssDeclarations('.pb-is-dragging .pb-dropzone > .element-card i');
+    const label = cssDeclarations('.pb-is-dragging .pb-dropzone > .element-card strong');
+    const type = cssDeclarations('.pb-is-dragging .pb-dropzone > .element-card small');
+
+    assert.deepEqual(
+        {
+            display: clone.display,
+            alignItems: clone['align-items'],
+            gap: clone.gap,
+            width: clone.width,
+            minWidth: clone['min-width'],
+            minHeight: clone['min-height'],
+            height: clone.height,
+            flex: clone.flex,
+            padding: clone.padding,
+            pointerEvents: clone['pointer-events'],
+        },
+        {
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            width: '100%',
+            minWidth: '0',
+            minHeight: '40px',
+            height: '40px',
+            flex: '0 0 auto',
+            padding: '10px',
+            pointerEvents: 'none',
+        },
+    );
+    assert.equal(icon.display, 'inline-flex');
+    assert.equal(icon.margin, '0');
+    assert.equal(label.display, 'block');
+    assert.equal(type.display, 'none');
+    assert.doesNotMatch(css, /\.pb-is-dragging \.pb-dropzone > \.element-card > \*\s*\{[^}]*display:\s*none;/);
+});
+
+test('horizontal Flexbox lets the in-canvas toolbox clone shrink inside the row', () => {
+    const clone = cssDeclarations('.pb-is-dragging .pb-dropzone-container-children[style*="flex-direction: row"] > .element-card');
+    const shorthandClone = cssDeclarations('.pb-is-dragging .pb-dropzone-container-children[style*="flex-flow: row"] > .element-card');
+
+    assert.deepEqual(shorthandClone, clone);
+
+    assert.deepEqual(
+        {
+            flex: clone.flex,
+            width: clone.width,
+            minWidth: clone['min-width'],
+            maxWidth: clone['max-width'],
+            alignSelf: clone['align-self'],
+        },
+        {
+            flex: '0 1 100%',
+            width: '100%',
+            minWidth: '0',
+            maxWidth: '100%',
+            alignSelf: 'stretch',
+        },
+    );
+});
+
+test('active toolbox uses a visible compact card for the native drag image', () => {
+    const activeToolbox = app.match(/<draggable\s*\n\s*:list="group\.items"[\s\S]*?<\/draggable>/)?.[0];
+    const preview = cssDeclarations('.pb-toolbox-drag-preview');
+
+    assert.ok(activeToolbox, 'active toolbox draggable should exist');
+    assert.doesNotMatch(activeToolbox, /force-fallback|fallback-on-body|fallback-class/);
+    assert.match(activeToolbox, /:set-data="setToolboxDragData"/);
+    assert.match(app, /const dragImage = dragElement\.cloneNode\(true\);/);
+    assert.match(app, /dragImage\.classList\.add\('pb-toolbox-drag-preview'\);/);
+    assert.match(app, /setDragImage\(dragImage,\s*18,\s*20\)/);
+    assert.deepEqual(
+        {
+            display: preview.display,
+            alignItems: preview['align-items'],
+            width: preview.width,
+            minHeight: preview['min-height'],
+            height: preview.height,
+            padding: preview.padding,
+            pointerEvents: preview['pointer-events'],
+        },
+        {
+            display: 'flex',
+            alignItems: 'center',
+            width: '133px',
+            minHeight: '40px',
+            height: '40px',
+            padding: '10px',
+            pointerEvents: 'none',
+        },
+    );
+});
+
+test('drag feedback restores the original root and nested dropzone states', () => {
+    const hover = cssDeclarations('.pb-dropzone.is-drop-hover');
+    const dragging = cssDeclarations('.pb-is-dragging .pb-dropzone');
+    const rootDragging = cssDeclarations('.pb-is-dragging .pb-dropzone-root');
+
+    assert.equal(hover['border-color'], '#86a0ea');
+    assert.equal(hover.background, '#f7faff');
+    assert.equal(dragging['border-color'], '#d7c0f6');
+    assert.equal(dragging.background, 'rgba(255, 251, 255, 0.72)');
+    assert.equal(rootDragging['border-color'], '#c9b3ee');
+    assert.equal(rootDragging.background, '#fdf9ff');
+    assert.doesNotMatch(css, /\.pb-dropzone:not\(\.pb-dropzone-root\)\.is-drop-hover/);
+});
+
+test('toast notice wrapper cannot create an extra builder grid row above the workspace', () => {
+    assert.match(
+        css,
+        /\.builder-app > \.pb-notice\s*\{[^}]*position:\s*fixed;[^}]*width:\s*0;[^}]*height:\s*0;[^}]*pointer-events:\s*none;/,
+    );
+    assert.match(css, /\.builder-app > \.pb-notice \.toast-container\s*\{[^}]*pointer-events:\s*auto;/);
+});

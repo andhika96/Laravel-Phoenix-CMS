@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "type": "counter",
+  "label": "Counter",
+  "category": "general",
+  "icon": "fas fa-sort-numeric-up",
+  "order": 90,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  }
+}

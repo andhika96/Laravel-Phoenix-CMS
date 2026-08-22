@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "type": "product_color_selector",
+  "label": "Product Color Selector",
+  "category": "pro",
+  "icon": "fas fa-palette",
+  "order": 210,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "runtime": "runtime.js"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  }
+}
