@@ -55,6 +55,7 @@
                     <select-control label="Media Position" v-model="s.productMediaPosition" :options="productDesktopPositionOptions" />
                     <select-control label="Tablet Media Position" v-model="s.productMediaPositionTablet" :options="productTabletPositionOptions" />
                     <select-control label="Mobile Media Position" v-model="s.productMediaPositionMobile" :options="productMobilePositionOptions" />
+                    <select-control label="Product Title Placement" v-model="s.productTitlePlacement" :options="productTitlePlacementOptions" />
                     <toggle-control label="Show Product Title" v-model="s.showProductTitle" />
                     <toggle-control label="Show Description" v-model="s.showProductDescription" />
                     <toggle-control label="Show Detail Link" v-model="s.showProductDetailLink" />
@@ -400,7 +401,7 @@
                     <size-control label="Selector Gap" base="productSelectorGap" fallback="24px" :node="node" :editor="editor" />
                     <size-control label="Media / Form Gap" base="productBodyGap" fallback="32px" :node="node" :editor="editor" />
                     <size-control label="Media Width" base="productMediaWidth" fallback="50%" :node="node" :editor="editor" />
-                    <color-control label="Product Title Color" v-model="s.productTitleColor" />
+                    <responsive-select label="Form Vertical Alignment" base="productFormVerticalAlign" control-id="product-lead-form-vertical-align" :node="node" :editor="editor" :options="productFormVerticalAlignOptions" />
                     <color-control label="Description Color" v-model="s.productDescriptionColor" />
                     <color-control label="Detail Link Color" v-model="s.productDetailColor" />
                     <color-control label="Detail Link Hover" v-model="s.productDetailColorHover" />
@@ -414,6 +415,11 @@
                     <color-control v-if="s.productImageBorderType !== 'none'" label="Border Color" v-model="s.productImageBorderColor" />
                     <size-control label="Border Radius" base="productImageRadius" fallback="8px" :node="node" :editor="editor" />
                     <component :is="editor.textShadowControl" aria-label="Box Shadow" :model-value="s.productImageShadow" control-id="product-lead-main-image-shadow" @update:modelValue="s.productImageShadow = $event" />
+                    <div class="pb-subsection-title">Product Title</div>
+                    <responsive-select label="Title Alignment" base="productTitleAlign" control-id="product-lead-title-align" :node="node" :editor="editor" :options="productTitleAlignOptions" />
+                    <size-control label="Title Gap" base="productTitleGap" fallback="4px" :node="node" :editor="editor" :max="100" :allowed-units="['px','%','em','rem']" />
+                    <color-control label="Product Title Color" v-model="s.productTitleColor" />
+                    <component :is="editor.typographyControl" prefix="productTitle" :settings="s" :responsive-device="editor.responsiveDevice" :font-families="editor.fontFamilies" :reset-defaults="{FontSize:'32px',FontWeight:'600',LineHeight:'1.2em'}" @responsive-device="editor.setResponsiveDevice" />
                 </section-box>
                 <section-box title="Selector Cards">
                     <select-control
@@ -1925,6 +1931,15 @@ export default {
         },
         productMobilePositionOptions() {
             return [option("top", "Top"), option("bottom", "Bottom")];
+        },
+        productTitlePlacementOptions() {
+            return [option("media-above", "Above Image"), option("media-below", "Below Image"), option("form-above", "Above Form")];
+        },
+        productTitleAlignOptions() {
+            return [option("left", "Left"), option("center", "Center"), option("right", "Right")];
+        },
+        productFormVerticalAlignOptions() {
+            return [option("top", "Top"), option("center", "Center"), option("bottom", "Bottom")];
         },
         productImageFitOptions() {
             return ["cover", "contain", "fill", "scale-down"].map((value) => option(value, value.replace("-", " ")));

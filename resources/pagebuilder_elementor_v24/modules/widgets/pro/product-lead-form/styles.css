@@ -2,11 +2,18 @@
 .pb-product-lead { display:grid;width:100%;min-width:0;gap:28px; }
 .pb-product-lead__selectors,.pb-product-lead__cards { display:grid;min-width:0; }
 .pb-product-lead__card[hidden],.pb-product-lead__select-field option[hidden] { display:none; }
-.pb-product-lead__body { display:grid;min-width:0;grid-template-columns:minmax(0,var(--product-lead-media-width,50%)) minmax(0,1fr);gap:var(--product-lead-gap,32px); }
-.pb-product-lead[data-media-position="right"] .pb-product-lead__body { grid-template-columns:minmax(0,1fr) minmax(0,var(--product-lead-media-width,50%)); }
-.pb-product-lead[data-media-position="right"] .pb-product-lead__media { order:2; }
+.pb-product-lead__body { display:grid;min-width:0;grid-template-columns:minmax(0,var(--product-lead-media-width,50%)) minmax(0,1fr);align-items:start;gap:var(--product-lead-gap,32px); }
+.pb-product-lead__body[data-media-position="right"] { grid-template-columns:minmax(0,1fr) minmax(0,var(--product-lead-media-width,50%)); }
+.pb-product-lead__body[data-media-position="right"] .pb-product-lead__media { order:2; }
+.pb-product-lead__body[data-media-position="top"],.pb-product-lead__body[data-media-position="bottom"] { grid-template-columns:minmax(0,1fr); }
+.pb-product-lead__body[data-media-position="bottom"] .pb-product-lead__media { order:2; }
 .pb-product-lead__media { display:grid;min-width:0;gap:10px; }
 .pb-product-lead__media [hidden] { display:none!important; }
+.pb-product-lead__media h2,.pb-product-lead__form-title { margin:0;color:var(--product-title-color,#101828);text-align:var(--product-title-align,left); }
+.pb-product-lead__media[data-title-placement="media-above"] h2 { margin-bottom:var(--product-title-gap,4px); }
+.pb-product-lead__media[data-title-placement="media-below"] h2 { margin-top:var(--product-title-gap,4px); }
+.pb-product-lead__form-title { width:100%;margin:0 0 var(--product-title-gap,4px); }
+.pb-product-lead__body>.pb-pro-form { min-width:0;align-self:var(--product-form-vertical-align,start); }
 @media(max-width:767px){.pb-product-lead__body{grid-template-columns:minmax(0,1fr)}}
 .pb-pro-form__message-layer[hidden] { display: none !important; }
 .pb-pro-form__message-layer {

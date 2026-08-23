@@ -903,6 +903,16 @@
         productMediaPosition: "left",
         productMediaPositionTablet: "",
         productMediaPositionMobile: "top",
+        productTitlePlacement: "media-below",
+        productTitleAlign: "left",
+        productTitleAlignTablet: "",
+        productTitleAlignMobile: "",
+        productTitleGap: "4px",
+        productTitleGapTablet: "",
+        productTitleGapMobile: "",
+        productFormVerticalAlign: "top",
+        productFormVerticalAlignTablet: "",
+        productFormVerticalAlignMobile: "",
         productMediaWidth: "50%",
         productMediaWidthTablet: "45%",
         productMediaWidthMobile: "100%",
@@ -1021,6 +1031,13 @@
             settings.productMediaPosition = enumValue(settings.productMediaPosition, ["left", "right"], "left");
             settings.productMediaPositionTablet = enumValue(settings.productMediaPositionTablet, ["", "left", "right"], "");
             settings.productMediaPositionMobile = enumValue(settings.productMediaPositionMobile, ["top", "bottom"], "top");
+            settings.productTitlePlacement = enumValue(settings.productTitlePlacement, ["media-above", "media-below", "form-above"], "media-below");
+            settings.productTitleAlign = enumValue(settings.productTitleAlign, ["left", "center", "right"], "left");
+            settings.productTitleAlignTablet = enumValue(settings.productTitleAlignTablet, ["", "left", "center", "right"], "");
+            settings.productTitleAlignMobile = enumValue(settings.productTitleAlignMobile, ["", "left", "center", "right"], "");
+            settings.productFormVerticalAlign = enumValue(settings.productFormVerticalAlign, ["top", "center", "bottom"], "top");
+            settings.productFormVerticalAlignTablet = enumValue(settings.productFormVerticalAlignTablet, ["", "top", "center", "bottom"], "");
+            settings.productFormVerticalAlignMobile = enumValue(settings.productFormVerticalAlignMobile, ["", "top", "center", "bottom"], "");
             settings.productImageFit = enumValue(settings.productImageFit, ["cover", "contain", "fill", "scale-down"], "cover");
             settings.productImageBorderType = enumValue(settings.productImageBorderType, ["none", "solid", "double", "dotted", "dashed"], "none");
             settings.syncProductQuery = settings.syncProductQuery !== false;

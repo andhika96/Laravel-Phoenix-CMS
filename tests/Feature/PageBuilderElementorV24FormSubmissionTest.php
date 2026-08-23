@@ -699,6 +699,60 @@ class PageBuilderElementorV24FormSubmissionTest extends TestCase
         $this->assertStringContainsString('--product-card-border-width-selected:4px', $html);
     }
 
+    public function test_product_lead_renderer_supports_title_placements_and_responsive_form_alignment(): void
+    {
+        $datasetId = $this->createProductDataset();
+        $this->createPageWithProductLeadForm($datasetId);
+        $page = Page_Builder::query()->where('uri', 'contact-page')->firstOrFail();
+
+        $cases = [
+            ['placement' => 'media-above', 'media' => 'right', 'align' => 'right', 'gap' => '12px', 'formAlign' => 'bottom'],
+            ['placement' => 'media-below', 'media' => 'left', 'align' => 'left', 'gap' => '4px', 'formAlign' => 'top'],
+            ['placement' => 'form-above', 'media' => 'right', 'align' => 'center', 'gap' => '8px', 'formAlign' => 'center'],
+        ];
+
+        foreach ($cases as $case) {
+            $node = $this->productLeadNode($datasetId, [
+                'productTitlePlacement' => $case['placement'],
+                'productMediaPosition' => $case['media'],
+                'productTitleAlign' => $case['align'],
+                'productTitleAlignTablet' => 'center',
+                'productTitleAlignMobile' => 'right',
+                'productTitleGap' => $case['gap'],
+                'productFormVerticalAlign' => $case['formAlign'],
+                'productFormVerticalAlignTablet' => 'center',
+                'productFormVerticalAlignMobile' => 'bottom',
+            ]);
+
+            $html = $this->pageBuilderV24ModuleViewByType('product_lead_form', [
+                'node' => $node,
+                'pageData' => $page,
+            ])->render();
+            $markup = explode('<style>', $html, 2)[0];
+
+            $this->assertStringContainsString('data-title-placement="'.$case['placement'].'"', $html);
+            $this->assertStringContainsString('data-media-position="'.$case['media'].'"', $html);
+            $this->assertStringContainsString('--product-title-align:'.$case['align'], $html);
+            $this->assertStringContainsString('--product-title-gap:'.$case['gap'], $html);
+            $this->assertStringContainsString('--product-form-vertical-align:', $html);
+
+            $titlePosition = strpos($markup, 'data-product-title');
+            $imagePosition = strpos($markup, 'data-product-main-image');
+            $this->assertIsInt($titlePosition);
+            $this->assertIsInt($imagePosition);
+
+            if ($case['placement'] === 'media-above') {
+                $this->assertLessThan($imagePosition, $titlePosition);
+                $this->assertStringNotContainsString('pb-product-lead__form-title', $markup);
+            } elseif ($case['placement'] === 'media-below') {
+                $this->assertGreaterThan($imagePosition, $titlePosition);
+                $this->assertStringNotContainsString('pb-product-lead__form-title', $markup);
+            } else {
+                $this->assertStringContainsString('class="pb-product-lead__form-title" data-product-title', $markup);
+            }
+        }
+    }
+
     public function test_invalid_action_configuration_fails_before_any_side_effect(): void
     {
         Mail::fake();

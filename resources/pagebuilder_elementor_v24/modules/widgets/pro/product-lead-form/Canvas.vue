@@ -83,13 +83,22 @@
             </template>
         </section>
 
-        <div class="pb-product-lead__body" :data-media-position="activeProductMediaPosition" :style="productLeadBodyStyle">
-            <aside class="pb-product-lead__media" aria-live="polite">
+        <div class="pb-product-lead__body" :data-media-position="activeProductMediaPosition" :data-title-placement="productTitlePlacement" :style="productLeadBodyStyle">
+            <aside class="pb-product-lead__media" :data-title-placement="productTitlePlacement" aria-live="polite">
+                <h2
+                    v-if="productTitlePlacement === 'media-above' && s.showProductTitle !== false && activeProductNode"
+                    :data-title-placement="productTitlePlacement"
+                    :style="productTitleStyle"
+                >{{ activeProductNode.label }}</h2>
                 <img v-if="productImageUrl" :src="productImageUrl" :alt="productImageAlt" :style="productImageStyle" />
                 <div v-else class="pb-product-lead__media-empty" role="img" aria-label="Product image unavailable">
                     <i class="far fa-image" aria-hidden="true"></i>
                 </div>
-                <h2 v-if="s.showProductTitle !== false && activeProductNode">{{ activeProductNode.label }}</h2>
+                <h2
+                    v-if="productTitlePlacement === 'media-below' && s.showProductTitle !== false && activeProductNode"
+                    :data-title-placement="productTitlePlacement"
+                    :style="productTitleStyle"
+                >{{ activeProductNode.label }}</h2>
                 <p v-if="s.showProductDescription !== false && activeProductMeta.description">{{ activeProductMeta.description }}</p>
                 <a
                     v-if="s.showProductDetailLink !== false && safeLinkUrl(activeProductMeta.detailUrl)"
@@ -115,6 +124,12 @@
                 :name="level.fieldId"
                 :value="productSelectionValue(levelIndex)"
             />
+            <h2
+                v-if="productTitlePlacement === 'form-above' && s.showProductTitle !== false && activeProductNode"
+                class="pb-product-lead__form-title"
+                :data-title-placement="productTitlePlacement"
+                :style="productTitleStyle"
+            >{{ activeProductNode.label }}</h2>
             <div
                 v-if="formSteps.length > 1 && s.stepType !== 'none'"
                 class="pb-pro-form__progress"
@@ -879,6 +894,29 @@ export default {
             if (this.responsiveDevice === "tablet") return this.safeEnum(this.s.productMediaPositionTablet || this.s.productMediaPosition, ["left", "right"], "left");
             return this.safeEnum(this.s.productMediaPosition, ["left", "right"], "left");
         },
+        productTitlePlacement() {
+            return this.safeEnum(this.s.productTitlePlacement, ["media-above", "media-below", "form-above"], "media-below");
+        },
+        productTitleAlign() {
+            return this.safeEnum(this.responsiveValue("productTitleAlign", "left"), ["left", "center", "right"], "left");
+        },
+        productTitleGap() {
+            return this.safeLength(this.responsiveValue("productTitleGap", "4px"), "4px");
+        },
+        productFormVerticalAlign() {
+            return {
+                top: "start",
+                center: "center",
+                bottom: "end",
+            }[this.safeEnum(this.responsiveValue("productFormVerticalAlign", "top"), ["top", "center", "bottom"], "top")] || "start";
+        },
+        productTitleStyle() {
+            return {
+                ...this.typographyStyle("productTitle", "32px", "600", "1.2em"),
+                color: this.safeColor(this.s.productTitleColor, "#101828"),
+                textAlign: this.productTitleAlign,
+            };
+        },
         productSelectorStyle() {
             return { gap: this.safeLength(this.responsiveValue("productSelectorGap", "24px"), "24px") };
         },
@@ -886,6 +924,9 @@ export default {
             return {
                 "--product-lead-gap": this.safeLength(this.responsiveValue("productBodyGap", "32px"), "32px"),
                 "--product-lead-media-width": this.safeLength(this.responsiveValue("productMediaWidth", "50%"), "50%"),
+                "--product-title-align": this.productTitleAlign,
+                "--product-title-gap": this.productTitleGap,
+                "--product-form-vertical-align": this.productFormVerticalAlign,
                 "--product-title-color": this.safeColor(this.s.productTitleColor, "#101828"),
                 "--product-description-color": this.safeColor(this.s.productDescriptionColor, "#475467"),
                 "--product-detail-color": this.safeColor(this.s.productDetailColor, "#6979f8"),
@@ -1420,6 +1461,7 @@ export default {
                     { left: "flex-start", center: "center", right: "flex-end" }[
                         this.s.buttonAlign
                     ] || "flex-start",
+                alignSelf: this.productFormVerticalAlign,
             };
         },
         formMessageDisplay() {
@@ -6170,11 +6212,14 @@ export default {
 .pb-product-lead__media { display:grid;min-width:0;gap:10px; }
 .pb-product-lead__media>img { display:block;max-width:100%; }
 .pb-product-lead__media-empty { display:grid;width:100%;min-height:220px;place-items:center;border:1px dashed #d0d5dd;border-radius:8px;background:#f8fafc;color:#98a2b3;font-size:36px; }
-.pb-product-lead__media h2 { margin:4px 0 0;color:var(--product-title-color,#101828); }
+.pb-product-lead__media h2,.pb-product-lead__form-title { margin:0;color:var(--product-title-color,#101828);text-align:var(--product-title-align,left); }
+.pb-product-lead__media[data-title-placement="media-above"] h2 { margin-bottom:var(--product-title-gap,4px); }
+.pb-product-lead__media[data-title-placement="media-below"] h2 { margin-top:var(--product-title-gap,4px); }
+.pb-product-lead__form-title { width:100%;margin:0 0 var(--product-title-gap,4px); }
 .pb-product-lead__media p { margin:0;color:var(--product-description-color,#475467); }
 .pb-product-lead__detail-link { color:var(--product-detail-color,#6979f8);font-weight:700;text-decoration:none; }
 .pb-product-lead__detail-link:hover { color:var(--product-detail-hover,#3443c4);text-decoration:underline; }
-.pb-product-lead__body>.pb-pro-form { min-width:0; }
+.pb-product-lead__body>.pb-pro-form { min-width:0;align-self:var(--product-form-vertical-align,start); }
 .pb-product-lead__body .pb-pro-form input,.pb-product-lead__body .pb-pro-form textarea,.pb-product-lead__body .pb-pro-form select { pointer-events:auto;user-select:text;-webkit-user-select:text;touch-action:auto; }
 .pb-product-lead__body .pb-pro-form select { cursor:pointer; }
 @media (prefers-reduced-motion: reduce) {

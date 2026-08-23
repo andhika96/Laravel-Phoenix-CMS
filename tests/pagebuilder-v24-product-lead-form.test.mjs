@@ -71,6 +71,12 @@ test('Product Lead Form defaults expose a shared dataset and three configurable 
     ]);
     assert.equal(node.settings.productMediaPosition, 'left');
     assert.equal(node.settings.productMediaPositionMobile, 'top');
+    assert.equal(node.settings.productTitlePlacement, 'media-below');
+    assert.equal(node.settings.productTitleAlign, 'left');
+    assert.equal(node.settings.productTitleAlignTablet, '');
+    assert.equal(node.settings.productTitleAlignMobile, '');
+    assert.equal(node.settings.productTitleGap, '4px');
+    assert.equal(node.settings.productFormVerticalAlign, 'top');
     assert.equal(node.settings.syncProductQuery, true);
     assert.equal(node.settings.productLevelStyles.length, 3);
     assert.equal(node.settings.productLevelStyles[0].imageWidth, '120px');
@@ -98,6 +104,31 @@ test('Product Lead Form defaults expose a shared dataset and three configurable 
     assert.equal(node.settings.productLevelStyles[0].selectedCheckColor, '#ffffff');
     assert.equal(node.settings.productLevelStyles[0].selectedCheckBackground, '#6979f8');
     assert.equal(node.settings.productImageFit, 'cover');
+});
+
+test('product title placement and form alignment normalize legacy or invalid enum values safely', () => {
+    const { definition } = loadDefinition();
+    const settings = definition.normalize({
+        id: 'lead-title-placement-1',
+        type: 'product_lead_form',
+        settings: {
+            productTitlePlacement: 'invalid',
+            productTitleAlign: 'invalid',
+            productTitleAlignTablet: 'right',
+            productTitleAlignMobile: 'invalid',
+            productFormVerticalAlign: 'center',
+            productFormVerticalAlignTablet: 'bottom',
+            productFormVerticalAlignMobile: 'invalid',
+        },
+    }).settings;
+
+    assert.equal(settings.productTitlePlacement, 'media-below');
+    assert.equal(settings.productTitleAlign, 'left');
+    assert.equal(settings.productTitleAlignTablet, 'right');
+    assert.equal(settings.productTitleAlignMobile, '');
+    assert.equal(settings.productFormVerticalAlign, 'center');
+    assert.equal(settings.productFormVerticalAlignTablet, 'bottom');
+    assert.equal(settings.productFormVerticalAlignMobile, '');
 });
 
 test('a unique standalone variant query infers its type and model ancestors', () => {
@@ -336,6 +367,12 @@ test('Product Lead Form Canvas and Settings compile with product dataset, select
         'productSelectionValid',
         'productLevelOptions',
         'productMediaPosition',
+        'productTitlePlacement',
+        'productTitleAlign',
+        'productTitleGap',
+        'productFormVerticalAlign',
+        'pb-product-lead__form-title',
+        'data-title-placement',
         'data-pb-interactive="true"',
         'Add child items under',
         'pagebuilder:v24-form-datasets-loaded',
@@ -363,6 +400,7 @@ test('Product Lead Form Canvas and Settings compile with product dataset, select
         'Data Source',
         'Selector & Levels',
         'Product Presentation',
+        'Product Title Placement',
         'Form Structure',
         'Submit Button',
         'Submit Actions',
@@ -371,6 +409,10 @@ test('Product Lead Form Canvas and Settings compile with product dataset, select
         'Form Identity & Validation',
         'Overall Layout',
         'Product Detail Media',
+        'Product Title',
+        'Title Alignment',
+        'Title Gap',
+        'Form Vertical Alignment',
         'Selector Cards',
         'Thumbnail Source',
         'Main Image Source',
@@ -402,7 +444,7 @@ test('Product Lead Form Canvas and Settings compile with product dataset, select
     ]) assert.ok(settings.includes(marker), `Settings must include ${marker}`);
 
     const frontend = fs.readFileSync(path.join(moduleRoot, 'frontend.blade.php'), 'utf8');
-    for (const marker of ['product-card-check', 'pb-product-lead__card-media', '--product-card-width', '--product-card-padding', '--product-card-label-gap', '--product-card-border-width-hover', '--product-card-border-width-selected', '--product-card-check-position', '--product-card-image-radius', '--product-card-check-icon-size']) {
+    for (const marker of ['product-card-check', 'pb-product-lead__card-media', '--product-card-width', '--product-card-padding', '--product-card-label-gap', '--product-card-border-width-hover', '--product-card-border-width-selected', '--product-card-check-position', '--product-card-image-radius', '--product-card-check-icon-size', '$productTitlePlacement', '$productTitleAlign', '$productTitleGap', '$productFormVerticalAlign', 'pb-product-lead__form-title', 'data-title-placement', '--product-form-vertical-align']) {
         assert.ok(frontend.includes(marker), `frontend must include ${marker}`);
     }
 
@@ -457,4 +499,8 @@ test('Product Lead Form Canvas and Settings compile with product dataset, select
     assert.match(frontend, /\.pb-product-lead__card-media\s*\{[^}]*padding:var\(--product-card-image-padding/);
     assert.match(canvas, /\.pb-product-lead__card-media img\s*\{[^}]*object-fit:var\(--product-card-image-fit/);
     assert.match(frontend, /\.pb-product-lead__card-media img\s*\{[^}]*object-fit:var\(--product-card-image-fit/);
+    assert.match(canvas, /productTitlePlacement === 'media-above'[\s\S]*?productTitlePlacement === 'media-below'/);
+    assert.match(canvas, /productTitlePlacement === 'form-above'[\s\S]*?pb-product-lead__form-title/);
+    assert.match(frontend, /data-title-placement="\{\{ \$productTitlePlacement \}\}"/);
+    assert.match(frontend, /pb-product-lead__form-title[\s\S]*?data-product-title/);
 });
