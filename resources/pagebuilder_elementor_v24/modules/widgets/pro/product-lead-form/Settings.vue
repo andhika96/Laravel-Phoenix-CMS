@@ -56,6 +56,7 @@
                     <select-control label="Tablet Media Position" v-model="s.productMediaPositionTablet" :options="productTabletPositionOptions" />
                     <select-control label="Mobile Media Position" v-model="s.productMediaPositionMobile" :options="productMobilePositionOptions" />
                     <select-control label="Product Title Placement" v-model="s.productTitlePlacement" :options="productTitlePlacementOptions" />
+                    <select-control label="Product Description Placement" v-model="s.productDescriptionPlacement" :options="productTitlePlacementOptions" />
                     <toggle-control label="Show Product Title" v-model="s.showProductTitle" />
                     <toggle-control label="Show Description" v-model="s.showProductDescription" />
                     <toggle-control label="Show Detail Link" v-model="s.showProductDetailLink" />

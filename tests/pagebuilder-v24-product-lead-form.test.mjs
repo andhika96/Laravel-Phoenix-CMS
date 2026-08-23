@@ -76,6 +76,7 @@ test('Product Lead Form defaults expose a shared dataset and three configurable 
     assert.equal(node.settings.productTitleAlignTablet, '');
     assert.equal(node.settings.productTitleAlignMobile, '');
     assert.equal(node.settings.productTitleGap, '4px');
+    assert.equal(node.settings.productDescriptionPlacement, 'media-below');
     assert.equal(node.settings.productFormVerticalAlign, 'top');
     assert.equal(node.settings.syncProductQuery, true);
     assert.equal(node.settings.productLevelStyles.length, 3);
@@ -116,6 +117,7 @@ test('product title placement and form alignment normalize legacy or invalid enu
             productTitleAlign: 'invalid',
             productTitleAlignTablet: 'right',
             productTitleAlignMobile: 'invalid',
+            productDescriptionPlacement: 'invalid',
             productFormVerticalAlign: 'center',
             productFormVerticalAlignTablet: 'bottom',
             productFormVerticalAlignMobile: 'invalid',
@@ -126,6 +128,7 @@ test('product title placement and form alignment normalize legacy or invalid enu
     assert.equal(settings.productTitleAlign, 'left');
     assert.equal(settings.productTitleAlignTablet, 'right');
     assert.equal(settings.productTitleAlignMobile, '');
+    assert.equal(settings.productDescriptionPlacement, 'media-below');
     assert.equal(settings.productFormVerticalAlign, 'center');
     assert.equal(settings.productFormVerticalAlignTablet, 'bottom');
     assert.equal(settings.productFormVerticalAlignMobile, '');
@@ -370,8 +373,10 @@ test('Product Lead Form Canvas and Settings compile with product dataset, select
         'productTitlePlacement',
         'productTitleAlign',
         'productTitleGap',
+        'productDescriptionPlacement',
         'productFormVerticalAlign',
         'pb-product-lead__form-title',
+        'pb-product-lead__form-description',
         'data-title-placement',
         'data-pb-interactive="true"',
         'Add child items under',
@@ -401,6 +406,7 @@ test('Product Lead Form Canvas and Settings compile with product dataset, select
         'Selector & Levels',
         'Product Presentation',
         'Product Title Placement',
+        'Product Description Placement',
         'Form Structure',
         'Submit Button',
         'Submit Actions',
@@ -444,7 +450,7 @@ test('Product Lead Form Canvas and Settings compile with product dataset, select
     ]) assert.ok(settings.includes(marker), `Settings must include ${marker}`);
 
     const frontend = fs.readFileSync(path.join(moduleRoot, 'frontend.blade.php'), 'utf8');
-    for (const marker of ['product-card-check', 'pb-product-lead__card-media', '--product-card-width', '--product-card-padding', '--product-card-label-gap', '--product-card-border-width-hover', '--product-card-border-width-selected', '--product-card-check-position', '--product-card-image-radius', '--product-card-check-icon-size', '$productTitlePlacement', '$productTitleAlign', '$productTitleGap', '$productFormVerticalAlign', 'pb-product-lead__form-title', 'data-title-placement', '--product-form-vertical-align']) {
+    for (const marker of ['product-card-check', 'pb-product-lead__card-media', '--product-card-width', '--product-card-padding', '--product-card-label-gap', '--product-card-border-width-hover', '--product-card-border-width-selected', '--product-card-check-position', '--product-card-image-radius', '--product-card-check-icon-size', '$productTitlePlacement', '$productTitleAlign', '$productTitleGap', '$productDescriptionPlacement', 'productDescriptionPlacement', '$productFormVerticalAlign', 'pb-product-lead__form-title', 'pb-product-lead__form-description', 'data-title-placement', 'data-description-placement', '--product-form-vertical-align']) {
         assert.ok(frontend.includes(marker), `frontend must include ${marker}`);
     }
 
@@ -501,6 +507,10 @@ test('Product Lead Form Canvas and Settings compile with product dataset, select
     assert.match(frontend, /\.pb-product-lead__card-media img\s*\{[^}]*object-fit:var\(--product-card-image-fit/);
     assert.match(canvas, /productTitlePlacement === 'media-above'[\s\S]*?productTitlePlacement === 'media-below'/);
     assert.match(canvas, /productTitlePlacement === 'form-above'[\s\S]*?pb-product-lead__form-title/);
+    assert.match(canvas, /productDescriptionPlacement === 'media-above'[\s\S]*?productDescriptionPlacement === 'media-below'/);
+    assert.match(canvas, /productDescriptionPlacement === 'form-above'[\s\S]*?pb-product-lead__form-description/);
     assert.match(frontend, /data-title-placement="\{\{ \$productTitlePlacement \}\}"/);
+    assert.match(frontend, /data-description-placement="\{\{ \$productDescriptionPlacement \}\}"/);
     assert.match(frontend, /pb-product-lead__form-title[\s\S]*?data-product-title/);
+    assert.match(frontend, /pb-product-lead__form-description[\s\S]*?data-product-description/);
 });

@@ -910,6 +910,7 @@
         productTitleGap: "4px",
         productTitleGapTablet: "",
         productTitleGapMobile: "",
+        productDescriptionPlacement: "media-below",
         productFormVerticalAlign: "top",
         productFormVerticalAlignTablet: "",
         productFormVerticalAlignMobile: "",
@@ -1035,6 +1036,7 @@
             settings.productTitleAlign = enumValue(settings.productTitleAlign, ["left", "center", "right"], "left");
             settings.productTitleAlignTablet = enumValue(settings.productTitleAlignTablet, ["", "left", "center", "right"], "");
             settings.productTitleAlignMobile = enumValue(settings.productTitleAlignMobile, ["", "left", "center", "right"], "");
+            settings.productDescriptionPlacement = enumValue(settings.productDescriptionPlacement, ["media-above", "media-below", "form-above"], "media-below");
             settings.productFormVerticalAlign = enumValue(settings.productFormVerticalAlign, ["top", "center", "bottom"], "top");
             settings.productFormVerticalAlignTablet = enumValue(settings.productFormVerticalAlignTablet, ["", "top", "center", "bottom"], "");
             settings.productFormVerticalAlignMobile = enumValue(settings.productFormVerticalAlignMobile, ["", "top", "center", "bottom"], "");

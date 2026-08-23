@@ -83,13 +83,18 @@
             </template>
         </section>
 
-        <div class="pb-product-lead__body" :data-media-position="activeProductMediaPosition" :data-title-placement="productTitlePlacement" :style="productLeadBodyStyle">
-            <aside class="pb-product-lead__media" :data-title-placement="productTitlePlacement" aria-live="polite">
+        <div class="pb-product-lead__body" :data-media-position="activeProductMediaPosition" :data-title-placement="productTitlePlacement" :data-description-placement="productDescriptionPlacement" :style="productLeadBodyStyle">
+            <aside class="pb-product-lead__media" :data-title-placement="productTitlePlacement" :data-description-placement="productDescriptionPlacement" aria-live="polite">
                 <h2
                     v-if="productTitlePlacement === 'media-above' && s.showProductTitle !== false && activeProductNode"
                     :data-title-placement="productTitlePlacement"
                     :style="productTitleStyle"
                 >{{ activeProductNode.label }}</h2>
+                <p
+                    v-if="productDescriptionPlacement === 'media-above' && s.showProductDescription !== false && activeProductMeta.description"
+                    data-product-description
+                    :data-description-placement="productDescriptionPlacement"
+                >{{ activeProductMeta.description }}</p>
                 <img v-if="productImageUrl" :src="productImageUrl" :alt="productImageAlt" :style="productImageStyle" />
                 <div v-else class="pb-product-lead__media-empty" role="img" aria-label="Product image unavailable">
                     <i class="far fa-image" aria-hidden="true"></i>
@@ -99,7 +104,11 @@
                     :data-title-placement="productTitlePlacement"
                     :style="productTitleStyle"
                 >{{ activeProductNode.label }}</h2>
-                <p v-if="s.showProductDescription !== false && activeProductMeta.description">{{ activeProductMeta.description }}</p>
+                <p
+                    v-if="productDescriptionPlacement === 'media-below' && s.showProductDescription !== false && activeProductMeta.description"
+                    data-product-description
+                    :data-description-placement="productDescriptionPlacement"
+                >{{ activeProductMeta.description }}</p>
                 <a
                     v-if="s.showProductDetailLink !== false && safeLinkUrl(activeProductMeta.detailUrl)"
                     :href="safeLinkUrl(activeProductMeta.detailUrl)"
@@ -130,6 +139,12 @@
                 :data-title-placement="productTitlePlacement"
                 :style="productTitleStyle"
             >{{ activeProductNode.label }}</h2>
+            <p
+                v-if="productDescriptionPlacement === 'form-above' && s.showProductDescription !== false && activeProductMeta.description"
+                class="pb-product-lead__form-description"
+                data-product-description
+                :data-description-placement="productDescriptionPlacement"
+            >{{ activeProductMeta.description }}</p>
             <div
                 v-if="formSteps.length > 1 && s.stepType !== 'none'"
                 class="pb-pro-form__progress"
@@ -896,6 +911,9 @@ export default {
         },
         productTitlePlacement() {
             return this.safeEnum(this.s.productTitlePlacement, ["media-above", "media-below", "form-above"], "media-below");
+        },
+        productDescriptionPlacement() {
+            return this.safeEnum(this.s.productDescriptionPlacement, ["media-above", "media-below", "form-above"], "media-below");
         },
         productTitleAlign() {
             return this.safeEnum(this.responsiveValue("productTitleAlign", "left"), ["left", "center", "right"], "left");
@@ -6217,6 +6235,7 @@ export default {
 .pb-product-lead__media[data-title-placement="media-below"] h2 { margin-top:var(--product-title-gap,4px); }
 .pb-product-lead__form-title { width:100%;margin:0 0 var(--product-title-gap,4px); }
 .pb-product-lead__media p { margin:0;color:var(--product-description-color,#475467); }
+.pb-product-lead__form-description { width:100%;margin:0 0 var(--row-gap,10px);color:var(--product-description-color,#475467); }
 .pb-product-lead__detail-link { color:var(--product-detail-color,#6979f8);font-weight:700;text-decoration:none; }
 .pb-product-lead__detail-link:hover { color:var(--product-detail-hover,#3443c4);text-decoration:underline; }
 .pb-product-lead__body>.pb-pro-form { min-width:0;align-self:var(--product-form-vertical-align,start); }

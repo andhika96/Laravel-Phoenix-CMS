@@ -706,14 +706,15 @@ class PageBuilderElementorV24FormSubmissionTest extends TestCase
         $page = Page_Builder::query()->where('uri', 'contact-page')->firstOrFail();
 
         $cases = [
-            ['placement' => 'media-above', 'media' => 'right', 'align' => 'right', 'gap' => '12px', 'formAlign' => 'bottom'],
-            ['placement' => 'media-below', 'media' => 'left', 'align' => 'left', 'gap' => '4px', 'formAlign' => 'top'],
-            ['placement' => 'form-above', 'media' => 'right', 'align' => 'center', 'gap' => '8px', 'formAlign' => 'center'],
+            ['placement' => 'media-above', 'descriptionPlacement' => 'media-above', 'media' => 'right', 'align' => 'right', 'gap' => '12px', 'formAlign' => 'bottom'],
+            ['placement' => 'media-below', 'descriptionPlacement' => 'media-below', 'media' => 'left', 'align' => 'left', 'gap' => '4px', 'formAlign' => 'top'],
+            ['placement' => 'form-above', 'descriptionPlacement' => 'form-above', 'media' => 'right', 'align' => 'center', 'gap' => '8px', 'formAlign' => 'center'],
         ];
 
         foreach ($cases as $case) {
             $node = $this->productLeadNode($datasetId, [
                 'productTitlePlacement' => $case['placement'],
+                'productDescriptionPlacement' => $case['descriptionPlacement'],
                 'productMediaPosition' => $case['media'],
                 'productTitleAlign' => $case['align'],
                 'productTitleAlignTablet' => 'center',
@@ -731,14 +732,17 @@ class PageBuilderElementorV24FormSubmissionTest extends TestCase
             $markup = explode('<style>', $html, 2)[0];
 
             $this->assertStringContainsString('data-title-placement="'.$case['placement'].'"', $html);
+            $this->assertStringContainsString('data-description-placement="'.$case['descriptionPlacement'].'"', $html);
             $this->assertStringContainsString('data-media-position="'.$case['media'].'"', $html);
             $this->assertStringContainsString('--product-title-align:'.$case['align'], $html);
             $this->assertStringContainsString('--product-title-gap:'.$case['gap'], $html);
             $this->assertStringContainsString('--product-form-vertical-align:', $html);
 
             $titlePosition = strpos($markup, 'data-product-title');
+            $descriptionPosition = strpos($markup, 'data-product-description');
             $imagePosition = strpos($markup, 'data-product-main-image');
             $this->assertIsInt($titlePosition);
+            $this->assertIsInt($descriptionPosition);
             $this->assertIsInt($imagePosition);
 
             if ($case['placement'] === 'media-above') {
@@ -750,6 +754,18 @@ class PageBuilderElementorV24FormSubmissionTest extends TestCase
             } else {
                 $this->assertStringContainsString('class="pb-product-lead__form-title" data-product-title', $markup);
             }
+
+            if ($case['descriptionPlacement'] === 'media-above') {
+                $this->assertLessThan($imagePosition, $descriptionPosition);
+                $this->assertStringNotContainsString('pb-product-lead__form-description', $markup);
+            } elseif ($case['descriptionPlacement'] === 'media-below') {
+                $this->assertGreaterThan($imagePosition, $descriptionPosition);
+                $this->assertStringNotContainsString('pb-product-lead__form-description', $markup);
+            } else {
+                $this->assertStringContainsString('class="pb-product-lead__form-description" data-product-description', $markup);
+            }
+
+            $this->assertLessThan($descriptionPosition, $titlePosition, 'Title must precede description when both use the same placement.');
         }
     }
 

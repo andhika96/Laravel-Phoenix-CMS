@@ -13,6 +13,7 @@
 .pb-product-lead__media[data-title-placement="media-above"] h2 { margin-bottom:var(--product-title-gap,4px); }
 .pb-product-lead__media[data-title-placement="media-below"] h2 { margin-top:var(--product-title-gap,4px); }
 .pb-product-lead__form-title { width:100%;margin:0 0 var(--product-title-gap,4px); }
+.pb-product-lead__form-description { width:100%;margin:0 0 var(--row-gap,10px);color:var(--product-description-color,#475467); }
 .pb-product-lead__body>.pb-pro-form { min-width:0;align-self:var(--product-form-vertical-align,start); }
 @media(max-width:767px){.pb-product-lead__body{grid-template-columns:minmax(0,1fr)}}
 .pb-pro-form__message-layer[hidden] { display: none !important; }
