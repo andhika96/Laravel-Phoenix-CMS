@@ -68,7 +68,7 @@ class PageBuilderElementorV24FrontendRenderingTest extends TestCase
     public function test_every_registered_v24_renderer_view_is_owned_by_the_v24_tree(): void
     {
         $modules = app(ModuleCatalog::class)->all();
-        $this->assertCount(49, $modules);
+        $this->assertCount(50, $modules);
 
         foreach ($modules as $type => $module) {
             $view = (string) ($module['assets']['view'] ?? '');

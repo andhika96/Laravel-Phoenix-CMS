@@ -1,0 +1,6188 @@
+<template>
+    <div
+        class="pb-pro-canvas"
+        :class="['pb-pro-canvas--' + type, customClass]"
+        :style="advancedStyle"
+        :data-pro-widget="type"
+        data-product-lead-form
+    >
+        <section class="pb-product-lead__selectors" :style="productSelectorStyle" aria-label="Product selection" data-pb-interactive="true" @click.stop>
+            <h3 v-if="s.showProductSelectorTitle !== false" class="pb-product-lead__selector-title">{{ s.productSelectorTitle || 'Select Product' }}</h3>
+            <div v-if="!productDataset" class="pb-product-lead__configuration" role="status">
+                <i class="fas fa-database" aria-hidden="true"></i>
+                <span>Choose a shared Product Dataset in Settings.</span>
+            </div>
+            <template v-else>
+                <div v-for="(level, levelIndex) in activeProductLevels" :key="level.key" class="pb-product-lead__level">
+                    <div v-if="!productLevelOptions(levelIndex).length" class="pb-product-lead__level-empty" role="status">
+                        <i class="fas fa-sitemap" aria-hidden="true"></i>
+                        <span>Add child items under the selected {{ activeProductLevels[levelIndex - 1]?.label || 'product' }} in Product Dataset.</span>
+                    </div>
+                    <fieldset v-else-if="level.presentation === 'cards'" class="pb-product-lead__fieldset">
+                        <legend>{{ level.label }}</legend>
+                        <div class="pb-product-lead__cards" role="radiogroup" :aria-label="level.label" :style="productLevelGridStyle(levelIndex)">
+                            <label
+                                v-for="option in productLevelOptions(levelIndex)"
+                                :key="option.id"
+                                class="pb-product-lead__card"
+                                :class="{
+                                    'is-selected': productSelectionNodeId(levelIndex) === String(option.id),
+                                    'is-label-above': productLevelLabelPlacement(levelIndex) === 'above',
+                                    'is-label-below': productLevelLabelPlacement(levelIndex) === 'below',
+                                    'is-label-inside': productLevelLabelPlacement(levelIndex) === 'inside',
+                                    'is-label-outside': productLevelLabelPlacement(levelIndex) !== 'inside',
+                                    'is-preview-hover': productCardPreviewState === 'hover',
+                                    'is-preview-selected': productCardPreviewState === 'selected',
+                                }"
+                                :data-product-label-placement="productLevelLabelPlacement(levelIndex)"
+                                :style="productLevelCardStyle(levelIndex)"
+                                data-pb-interactive="true"
+                                @click.stop
+                            >
+                                <input
+                                    type="radio"
+                                    :name="level.fieldId + '-preview-' + item.id"
+                                    :value="option.value"
+                                    :checked="productSelectionNodeId(levelIndex) === String(option.id)"
+                                    @change="selectProductLevel(levelIndex, option.id)"
+                                />
+                                <div class="pb-product-lead__card-media">
+                                    <img
+                                        v-if="productThumbnailUrl(option)"
+                                        :src="productThumbnailUrl(option)"
+                                        :alt="productThumbnailAlt(option)"
+                                        :style="productLevelImageStyle(levelIndex)"
+                                    />
+                                    <i
+                                        v-if="productSelectionNodeId(levelIndex) === String(option.id) && productLevelStyle(levelIndex).selectedCheckVisible !== false"
+                                        class="product-card-check fas fa-check"
+                                        :style="productLevelCheckIconStyle(levelIndex)"
+                                        aria-hidden="true"
+                                    ></i>
+                                </div>
+                                <span>{{ option.label }}</span>
+                            </label>
+                        </div>
+                    </fieldset>
+                    <label v-else class="pb-product-lead__select-field">
+                        <span>{{ level.label }}</span>
+                        <select
+                            data-pb-interactive="true"
+                            :data-product-level-index="levelIndex"
+                            :value="productSelectionNodeId(levelIndex)"
+                            :required="level.required"
+                            :disabled="!productLevelOptions(levelIndex).length"
+                            @click.stop
+                            @change="selectProductLevel(levelIndex, $event.target.value)"
+                        >
+                            <option v-if="!level.required" value="">Select {{ level.label }}</option>
+                            <option v-for="option in productLevelOptions(levelIndex)" :key="option.id" :value="option.id">{{ option.label }}</option>
+                        </select>
+                    </label>
+                </div>
+            </template>
+        </section>
+
+        <div class="pb-product-lead__body" :data-media-position="activeProductMediaPosition" :style="productLeadBodyStyle">
+            <aside class="pb-product-lead__media" aria-live="polite">
+                <img v-if="productImageUrl" :src="productImageUrl" :alt="productImageAlt" :style="productImageStyle" />
+                <div v-else class="pb-product-lead__media-empty" role="img" aria-label="Product image unavailable">
+                    <i class="far fa-image" aria-hidden="true"></i>
+                </div>
+                <h2 v-if="s.showProductTitle !== false && activeProductNode">{{ activeProductNode.label }}</h2>
+                <p v-if="s.showProductDescription !== false && activeProductMeta.description">{{ activeProductMeta.description }}</p>
+                <a
+                    v-if="s.showProductDetailLink !== false && safeLinkUrl(activeProductMeta.detailUrl)"
+                    :href="safeLinkUrl(activeProductMeta.detailUrl)"
+                    class="pb-product-lead__detail-link"
+                >{{ activeProductMeta.detailLabel || 'Learn More' }}</a>
+            </aside>
+        <form
+            
+            data-pro-form
+            data-pb-interactive="true"
+            class="pb-pro-form"
+            :style="formStyle"
+            :novalidate="s.validation === 'custom'"
+            :aria-busy="formSubmitState === 'sending' ? 'true' : 'false'"
+            @submit.prevent="submitEditorForm"
+            @click.stop
+        >
+            <input
+                v-for="(level, levelIndex) in activeProductLevels"
+                :key="'product-value-' + level.key"
+                type="hidden"
+                :name="level.fieldId"
+                :value="productSelectionValue(levelIndex)"
+            />
+            <div
+                v-if="formSteps.length > 1 && s.stepType !== 'none'"
+                class="pb-pro-form__progress"
+                :class="'type-' + s.stepType"
+            >
+                <template v-if="s.stepType === 'progress'">
+                    <div
+                        class="pb-pro-form__progress-bar"
+                        role="progressbar"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        :aria-valuenow="formStepProgress"
+                    ><span data-pro-step-progress-fill :style="{ width: formStepProgress + '%' }"></span></div>
+                    <small data-pro-step-progress-text>Step {{ clampedFormStep + 1 }} of {{ formSteps.length }} · {{ formStepProgress }}%</small>
+                </template>
+                <span
+                    v-else
+                    v-for="(step, index) in formSteps"
+                    :key="'step-' + index"
+                    class="pb-pro-form__step-indicator"
+                    data-pro-step-indicator
+                    :class="{ active: index <= clampedFormStep }"
+                    :aria-current="index === clampedFormStep ? 'step' : null"
+                >
+                    <b
+                        v-if="stepIndicatorShowsNumber"
+                        class="pb-pro-form__step-marker"
+                        :class="'shape-' + s.stepShape"
+                        data-pro-step-marker
+                    >{{ index + 1 }}</b>
+                    <b
+                        v-else-if="stepIndicatorShowsIcon"
+                        class="pb-pro-form__step-marker"
+                        :class="'shape-' + s.stepShape"
+                        data-pro-step-marker
+                    >
+                        <span
+                            v-if="proIconSvg(step, 'icon')"
+                            class="pb-pro-icon-svg"
+                            v-html="proIconSvg(step, 'icon')"
+                        ></span>
+                        <i v-else :class="proIconClass(step, 'icon', 'fas fa-check')"></i>
+                    </b>
+                    <small v-if="stepIndicatorShowsText" data-pro-step-label>{{ step.title || ('Step ' + (index + 1)) }}</small>
+                </span>
+            </div>
+            <div class="pb-pro-form__step-title" v-if="activeFormStep.title">
+                <strong>{{ activeFormStep.title }}</strong
+                ><small v-if="activeFormStep.description">{{
+                    activeFormStep.description
+                }}</small>
+            </div>
+            <form-row-grid-canvas
+                :layout="s.rowGrid"
+                :node-id="item.id"
+                :editor="editor"
+                :current-step="clampedFormStep"
+                :responsive-device="responsiveDevice"
+                @sync="syncFormRowGrid"
+            >
+            <template #field="{ field }">
+            <div
+                v-if="formFieldVisible(field)"
+                class="pb-pro-form__field"
+                data-pb-interactive="true"
+                :data-pro-form-field="field.id"
+                :class="{ 'is-inline': field.inlineList }"
+            >
+                <label
+                    v-if="
+                        ![
+                            'hidden',
+                            'html',
+                            'acceptance',
+                            'checkbox',
+                            'radio',
+                        ].includes(field.type)
+                    "
+                    :for="item.id + '-' + field.id"
+                    :class="{ 'pb-visually-hidden': !s.showLabels }"
+                    :style="[
+                        typographyStyle('formLabel', '14px', '400', '1.4em'),
+                        { color: s.labelColor || '#344054' },
+                    ]"
+                    >{{ field.label
+                    }}<span v-if="field.required && s.markRequired">
+                        *</span
+                    ></label
+                >
+                <div
+                    v-if="field.type === 'html'"
+                    class="pb-pro-form__html"
+                    v-html="sanitizeFormHtml(field.html)"
+                ></div>
+                <label
+                    v-else-if="field.type === 'acceptance'"
+                    class="pb-pro-form__choice"
+                >
+                    <input
+                        type="checkbox"
+                        data-pb-interactive="true"
+                        :name="fieldInputName(field)"
+                        value="1"
+                        :required="field.required"
+                        :checked="formFieldValue(field) === true || formFieldValue(field) === '1'"
+                        :style="formInputStyle"
+                        @change="setFormFieldValue(field, $event)"
+                        @click.stop
+                    />
+                    <span>{{ field.acceptanceText }}</span>
+                </label>
+                <textarea
+                    v-else-if="field.type === 'textarea'"
+                    data-pb-interactive="true"
+                    :id="item.id + '-' + field.id"
+                    :name="fieldInputName(field)"
+                    :placeholder="field.placeholder"
+                    :required="field.required"
+                    :rows="Math.max(1, Number(field.rows) || 4)"
+                    :value="formFieldValue(field, field.defaultValue)"
+                    :style="formTextareaStyle"
+                    @input="setFormFieldValue(field, $event)"
+                    @click.stop
+                ></textarea>
+                <select
+                    v-else-if="field.type === 'select'"
+                    data-pb-interactive="true"
+                    :id="item.id + '-' + field.id"
+                    :name="fieldInputName(field)"
+                    :required="field.required"
+                    :multiple="field.multiple"
+                    :value="formFieldValue(field, field.multiple ? [] : '')"
+                    :style="formInputStyle"
+                    @change="setFormFieldValue(field, $event)"
+                    @click.stop
+                >
+                    <option v-if="field.placeholder" value="">
+                        {{ field.placeholder }}
+                    </option>
+                    <option
+                        v-for="option in formFieldOptions(field)"
+                        :key="option.value"
+                        :value="option.value"
+                    >
+                        {{ option.label }}
+                    </option>
+                </select>
+                <fieldset
+                    v-else-if="['checkbox', 'radio'].includes(field.type)"
+                    class="pb-pro-form__choice-group"
+                >
+                    <legend :class="{ 'pb-visually-hidden': !s.showLabels }">
+                        {{ field.label
+                        }}<span v-if="field.required && s.markRequired">
+                            *</span
+                        >
+                    </legend>
+                    <div class="pb-pro-form__choices">
+                        <label
+                            v-for="option in formFieldOptions(field)"
+                            :key="option.value"
+                            class="pb-pro-form__choice"
+                        >
+                            <input
+                                :type="field.type"
+                                data-pb-interactive="true"
+                                :name="fieldInputName(field)"
+                                :value="option.value"
+                                :checked="formChoiceChecked(field, option.value)"
+                                :required="field.required"
+                                :style="formInputStyle"
+                                @change="setFormFieldValue(field, $event)"
+                                @click.stop
+                            />
+                            <span>{{ option.label }}</span>
+                        </label>
+                    </div>
+                </fieldset>
+                <input
+                    v-else
+                    data-pb-interactive="true"
+                    :id="item.id + '-' + field.id"
+                    :name="fieldInputName(field)"
+                    :type="safeInputType(field.type)"
+                    :placeholder="field.placeholder"
+                    :required="field.required"
+                    :value="field.type === 'file' ? undefined : formFieldValue(field, field.defaultValue)"
+                    :accept="
+                        field.type === 'file' ? field.fileTypes : undefined
+                    "
+                    :multiple="field.type === 'file' && field.multiple"
+                    :min="field.min || undefined"
+                    :max="field.max || undefined"
+                    :step="field.step || undefined"
+                    :autocomplete="field.autocomplete || undefined"
+                    :style="formInputStyle"
+                    @input="setFormFieldValue(field, $event)"
+                    @change="setFormFieldValue(field, $event)"
+                    @click.stop
+                />
+             </div>
+            </template>
+            <template #submit>
+                <button
+                    :id="safeDomId(s.buttonId)"
+                    type="submit"
+                    data-pb-interactive="true"
+                    :style="formButtonStyle"
+                    :disabled="formSubmitState === 'sending' || !productSelectionValid"
+                    @click.stop
+                >
+                    <template v-if="s.buttonIconPosition !== 'after'">
+                        <span
+                            v-if="proIconSvg(s, 'buttonIcon')"
+                            class="pb-pro-icon-svg"
+                            v-html="proIconSvg(s, 'buttonIcon')"
+                        ></span>
+                        <i
+                            v-else-if="proIconClass(s, 'buttonIcon')"
+                            :class="proIconClass(s, 'buttonIcon')"
+                        ></i>
+                    </template>
+                    <span>{{ formSubmitState === "sending" ? "Sending..." : (s.buttonText || "Send") }}</span>
+                    <template v-if="s.buttonIconPosition === 'after'">
+                        <span
+                            v-if="proIconSvg(s, 'buttonIcon')"
+                            class="pb-pro-icon-svg"
+                            v-html="proIconSvg(s, 'buttonIcon')"
+                        ></span>
+                        <i
+                            v-else-if="proIconClass(s, 'buttonIcon')"
+                            :class="proIconClass(s, 'buttonIcon')"
+                        ></i>
+                    </template>
+                </button>
+            </template>
+            </form-row-grid-canvas>
+            <div
+                v-if="formSteps.length > 1"
+                class="pb-pro-form__actions"
+                :style="formActionsStyle"
+            >
+                <button
+                    v-if="clampedFormStep > 0"
+                    type="button"
+                    data-pb-interactive="true"
+                    :style="formButtonStyle"
+                    @click.stop="currentFormStep=clampedFormStep-1"
+                >
+                    {{ activeFormStep.previousButton || "Previous" }}
+                </button>
+                <button
+                    v-if="clampedFormStep < formSteps.length - 1"
+                    type="button"
+                    data-pb-interactive="true"
+                    :style="formButtonStyle"
+                    @click.stop="currentFormStep=clampedFormStep+1"
+                >
+                    {{ activeFormStep.nextButton || "Next" }}
+                </button>
+            </div>
+            <div
+                v-if="formSubmitMessage && ['basic', 'above-form'].includes(formMessageDisplay)"
+                data-pro-form-message-layer
+                class="pb-pro-form__message-layer"
+                :class="[
+                    'display-' + formMessageDisplay,
+                    { 'is-error': formSubmitState === 'error', 'is-success': formSubmitState === 'success' },
+                ]"
+                @click.self="formMessageDisplay === 'modal' && formMessageDismissible && clearFormMessage()"
+            >
+                <div
+                    data-pro-form-message
+                    class="pb-pro-form__message"
+                    :role="formMessageDisplay === 'modal' ? 'alertdialog' : 'status'"
+                    aria-live="polite"
+                >
+                    <i
+                        v-if="formMessageDisplay !== 'basic' && formMessageShowIcon"
+                        data-pro-form-message-icon
+                        :class="formMessageIconClass"
+                        aria-hidden="true"
+                    ></i>
+                    <span class="pb-pro-form__message-content">
+                        <strong
+                            v-if="formMessageDisplay !== 'basic'"
+                            data-pro-form-message-title
+                        >{{ formMessageTitle }}</strong>
+                        <span data-pro-form-message-text>{{ formSubmitMessage }}</span>
+                        <small v-if="formSubmitRedirect">Redirect configured: {{ formSubmitRedirect }}. The editor stays open.</small>
+                    </span>
+                    <button
+                        v-if="formMessageDisplay !== 'basic' && formMessageDismissible && formSubmitState !== 'sending'"
+                        type="button"
+                        data-pro-form-message-close
+                        data-pb-interactive="true"
+                        aria-label="Dismiss message"
+                        @click.stop="clearFormMessage"
+                    ><i class="fas fa-times" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </form>
+        </div>
+
+        <Teleport
+            v-if="formSubmitMessage && ['toast', 'modal'].includes(formMessageDisplay)"
+            to=".webpage-frame"
+        >
+            <div
+                data-pro-form-message-layer
+                data-pb-interactive="true"
+                class="pb-pro-form__message-layer pb-pro-form__message-layer--canvas"
+                :class="[
+                    'display-' + formMessageDisplay,
+                    { 'is-error': formSubmitState === 'error', 'is-success': formSubmitState === 'success' },
+                ]"
+                @click.self="formMessageDisplay === 'modal' && formMessageDismissible && clearFormMessage()"
+            >
+                <div
+                    data-pro-form-message
+                    class="pb-pro-form__message"
+                    :role="formMessageDisplay === 'modal' ? 'alertdialog' : 'status'"
+                    aria-live="polite"
+                >
+                    <i
+                        v-if="formMessageShowIcon"
+                        data-pro-form-message-icon
+                        :class="formMessageIconClass"
+                        aria-hidden="true"
+                    ></i>
+                    <span class="pb-pro-form__message-content">
+                        <strong data-pro-form-message-title>{{ formMessageTitle }}</strong>
+                        <span data-pro-form-message-text>{{ formSubmitMessage }}</span>
+                        <small v-if="formSubmitRedirect">Redirect configured: {{ formSubmitRedirect }}. The editor stays open.</small>
+                    </span>
+                    <button
+                        v-if="formMessageDismissible && formSubmitState !== 'sending'"
+                        type="button"
+                        data-pro-form-message-close
+                        data-pb-interactive="true"
+                        aria-label="Dismiss message"
+                        @click.stop="clearFormMessage"
+                    ><i class="fas fa-times" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </Teleport>
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+    </div>
+</template>
+
+<script>
+const TAG_FONT_SIZES = Object.freeze({
+    desktop: { h1: "40px", h2: "34px", h3: "29px", h4: "24px", h5: "20px", h6: "16px", div: "16px", span: "16px", p: "16px" },
+    tablet: { h1: "34px", h2: "29px", h3: "24px", h4: "20px", h5: "18px", h6: "16px", div: "16px", span: "16px", p: "16px" },
+    mobile: { h1: "29px", h2: "24px", h3: "20px", h4: "18px", h5: "16px", h6: "15px", div: "15px", span: "15px", p: "15px" },
+});
+
+const FormRowGridCanvas = {
+    props: {
+        layout: { type: Object, default: () => ({ steps: [] }) },
+        nodeId: { type: [String, Number], required: true },
+        editor: { type: Object, required: true },
+        currentStep: { type: Number, default: 0 },
+        responsiveDevice: { type: String, default: "desktop" },
+    },
+    emits: ["sync"],
+    data() {
+        return {
+            dragSource: null,
+            pendingCrossStep: null,
+            dragging: false,
+            selectedItemId: "",
+        };
+    },
+    computed: {
+        api() {
+            return window.PageBuilderElementorV24FormRowGrid || {};
+        },
+        groupName() {
+            return `pb-form-grid:${this.nodeId}`;
+        },
+        draggableComponent() {
+            return (this.editor && this.editor.draggable) || "div";
+        },
+        layoutSteps() {
+            return Array.isArray(this.layout?.steps) ? this.layout.steps : [];
+        },
+        finalStepId() {
+            const steps = this.layoutSteps;
+            return steps.length ? String(steps[steps.length - 1].id) : "";
+        },
+    },
+    methods: {
+        rowPlan(row) {
+            return this.api.trackPlan?.(row, this.responsiveDevice, false) || {
+                columnCount: 1,
+                totalRows: 1,
+                placements: [],
+            };
+        },
+        rowStyle(row) {
+            const plan = this.rowPlan(row);
+            return {
+                gridTemplateColumns: `repeat(${plan.columnCount}, minmax(0, 1fr))`,
+                gridTemplateRows: `repeat(${plan.totalRows}, minmax(56px, auto))`,
+            };
+        },
+        columnStyle(row, columnIndex) {
+            const placement = this.rowPlan(row).placements[columnIndex] || {
+                gridColumn: 1,
+                rowStart: 1,
+                rowSpan: 1,
+            };
+            return {
+                gridColumn: String(placement.gridColumn),
+                gridRow: `${placement.rowStart} / span ${placement.rowSpan}`,
+            };
+        },
+        rowSpan(field) {
+            return Math.min(4, Math.max(1, Number(field?.rowSpan?.[this.responsiveDevice]) || 1));
+        },
+        itemStyle(item) {
+            return item?.kind === "field" ? { gridRow: `span ${this.rowSpan(item.field)}` } : {};
+        },
+        selectItem(item) {
+            if (item?.kind === "field") this.selectedItemId = String(item.id);
+        },
+        adjustRowSpan(field, delta) {
+            field.rowSpan ||= { desktop: 1, tablet: 1, mobile: 1 };
+            field.rowSpan[this.responsiveDevice] = Math.min(4, Math.max(1, this.rowSpan(field) + delta));
+            this.$emit("sync");
+        },
+        groupFor() {
+            const name = this.groupName;
+            return {
+                name,
+                pull: true,
+                put: (to, from) => this.api.canAcceptSortableGroup?.(
+                    to,
+                    from,
+                    String(this.nodeId),
+                    name,
+                ) === true,
+            };
+        },
+        meta(step, row, column, itemId = "", index = 0) {
+            return {
+                ownerId: String(this.nodeId),
+                group: this.groupName,
+                stepId: String(step.id),
+                rowId: String(row.id),
+                columnId: String(column.id),
+                itemId: String(itemId || ""),
+                index: Math.max(0, Number(index) || 0),
+                kind: "field",
+            };
+        },
+        metaFromElement(element) {
+            const data = element?.dataset || {};
+            return {
+                ownerId: data.formLayoutOwner || "",
+                group: data.formLayoutGroup || "",
+                stepId: data.stepId || "",
+                rowId: data.rowId || "",
+                columnId: data.columnId || "",
+                itemId: "",
+                index: 0,
+                kind: "field",
+            };
+        },
+        fallbackGhostOffset(sourceWidth, ghostWidth) {
+            return Math.max(0, (Math.max(0, Number(sourceWidth) || 0) - Math.max(0, Number(ghostWidth) || 0)) / 2);
+        },
+        positionFallbackGhost(event) {
+            const sourceWidth = event?.item?.getBoundingClientRect?.().width || 0;
+            const applyOffset = () => {
+                const fallback = Array.from(document.querySelectorAll(".pb-pro-form__layout-item.sortable-fallback"))
+                    .find((element) => String(element.dataset?.formLayoutOwner || "") === String(this.nodeId));
+                if (!fallback) return false;
+                const ghostWidth = fallback.getBoundingClientRect().width || 0;
+                fallback.style.setProperty(
+                    "--pb-form-drag-offset-x",
+                    `${this.fallbackGhostOffset(sourceWidth, ghostWidth)}px`,
+                );
+                return true;
+            };
+            if (!applyOffset() && typeof window !== "undefined" && typeof window.requestAnimationFrame === "function") {
+                window.requestAnimationFrame(applyOffset);
+            }
+        },
+        onStart(event, step, row, column) {
+            const itemId = event?.item?.dataset?.formItemId || "";
+            const index = Number(event?.oldIndex) || 0;
+            this.dragSource = this.meta(step, row, column, itemId, index);
+            this.dragging = true;
+            this.positionFallbackGhost(event);
+        },
+        relativeInsertDirection(event) {
+            const related = event?.related;
+            if (!related?.classList?.contains("pb-pro-form__layout-item") || related === event?.dragged) {
+                return true;
+            }
+            const pointerY = Number(event?.originalEvent?.clientY);
+            const rect = related.getBoundingClientRect?.();
+            if (!Number.isFinite(pointerY) || !rect) return true;
+            return pointerY < rect.top + (rect.height / 2) ? -1 : 1;
+        },
+        onMove(event) {
+            const source = this.dragSource || this.metaFromElement(event?.from);
+            const target = this.metaFromElement(event?.to);
+            target.index = Math.max(
+                0,
+                Number(event?.draggedContext?.futureIndex ?? event?.relatedContext?.index ?? 0) || 0,
+            );
+            if (!this.api.canAcceptDrop?.(source, target)) return false;
+            if (source.stepId !== target.stepId) {
+                this.pendingCrossStep = { source: { ...source }, target: { ...target } };
+                return false;
+            }
+            return this.relativeInsertDirection(event);
+        },
+        onChange() {
+            this.$emit("sync");
+        },
+        onEnd() {
+            this.dragging = false;
+            this.dragSource = null;
+            this.$emit("sync");
+        },
+        cancelCrossStep() {
+            this.pendingCrossStep = null;
+        },
+        confirmCrossStep() {
+            const pending = this.pendingCrossStep;
+            if (!pending || !this.api.moveItem) return;
+            const result = this.api.moveItem(this.layout, pending.source, pending.target, { confirmed: true });
+            this.pendingCrossStep = null;
+            if (result?.ok) this.$emit("sync");
+        },
+    },
+    template: `
+        <div class="pb-pro-form__rows">
+            <div v-for="(step,stepIndex) in layoutSteps" v-show="stepIndex===currentStep" :key="step.id" class="pb-pro-form__layout-step">
+                <div v-for="row in step.rows" :key="row.id" class="pb-pro-form__row" :style="rowStyle(row)">
+                    <div
+                        v-for="(column,columnIndex) in row.columns"
+                        :key="column.id"
+                        class="pb-pro-form__column"
+                        :class="{'is-dragging':dragging}"
+                        :style="columnStyle(row,columnIndex)"
+                    >
+                        <component
+                            :is="draggableComponent"
+                            v-model="column.items"
+                            item-key="id"
+                            :draggable="'.pb-pro-form__layout-item'"
+                            :group="groupFor()"
+                            :sort="true"
+                            :move="onMove"
+                            :handle="'.pb-pro-form__drag-handle'"
+                            :force-fallback="true"
+                            :fallback-on-body="true"
+                            :fallback-tolerance="4"
+                            :empty-insert-threshold="36"
+                            :swap-threshold="0.55"
+                            :dragover-bubble="false"
+                            ghost-class="pb-pro-form__sortable-ghost"
+                            drag-class="pb-pro-form__sortable-drag"
+                            class="pb-pro-form__dropzone"
+                            :class="{'is-empty':!column.items.length}"
+                            :data-form-layout-owner="nodeId"
+                            :data-form-layout-group="groupName"
+                            :data-step-id="step.id"
+                            :data-row-id="row.id"
+                            :data-column-id="column.id"
+                            @start="onStart($event,step,row,column)"
+                            @change="onChange"
+                            @end="onEnd"
+                        >
+                            <template #item="{element}">
+                                <div
+                                    class="pb-pro-form__layout-item"
+                                    :class="{'is-selected':selectedItemId===String(element.id)}"
+                                    :style="itemStyle(element)"
+                                    :data-form-item-id="element.id"
+                                    :data-form-item-kind="element.kind"
+                                    :data-form-layout-owner="nodeId"
+                                    @click="selectItem(element)"
+                                >
+                                    <div v-if="selectedItemId===String(element.id)" class="pb-pro-form__row-span-toolbar" data-pb-interactive="true" @click.stop>
+                                        <span>Row span</span>
+                                        <button type="button" aria-label="Decrease Row Span" :disabled="rowSpan(element.field)<=1" @click="adjustRowSpan(element.field,-1)"><i class="fas fa-minus"></i></button>
+                                        <strong>{{ rowSpan(element.field) }}</strong>
+                                        <button type="button" aria-label="Increase Row Span" :disabled="rowSpan(element.field)>=4" @click="adjustRowSpan(element.field,1)"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                    <div class="pb-pro-form__drag-ghost-label" aria-hidden="true"><i class="fas fa-grip-vertical"></i><span>{{element.field?.label||element.field?.id||'Field'}}</span></div>
+                                    <button type="button" class="pb-pro-form__drag-handle" title="Drag field" data-pb-interactive="true" @click.stop><i class="fas fa-grip-vertical"></i></button>
+                                    <slot name="field" :field="element.field" :item="element"/>
+                                </div>
+                            </template>
+                            <template #footer>
+                                <div class="pb-pro-form__dropzone-tail" :class="{'is-empty':!column.items.length,'is-dragging':dragging}">
+                                    <i class="fas fa-arrow-down" aria-hidden="true"></i>
+                                    <span>Drop field here</span>
+                                </div>
+                            </template>
+                        </component>
+                    </div>
+                </div>
+                <div v-if="String(step.id)===finalStepId" class="pb-pro-form__submit-footer">
+                    <slot name="submit" :step="step"/>
+                </div>
+            </div>
+            <div v-if="pendingCrossStep && !dragging" class="pb-pro-form__confirm-backdrop" role="presentation"><div class="pb-pro-form__confirm" role="dialog" aria-modal="true"><strong>Move field to another step?</strong><p>Confirm to move this field into the selected step.</p><div><button type="button" @click="cancelCrossStep">Cancel</button><button type="button" class="primary" @click="confirmCrossStep">Move field</button></div></div></div>
+        </div>
+    `,
+};
+
+export default {
+    name: "ProWidgetCanvas",
+    props: {
+        item: { type: Object, required: true },
+        responsiveDevice: { type: String, default: "desktop" },
+        editor: { type: Object, default: () => ({}) },
+    },
+    components: {
+        FormRowGridCanvas,
+    },
+    data() {
+        return {
+            activeIndex: 0,
+            currentFormStep: 0,
+            formValues: {},
+            formSubmitState: "idle",
+            formSubmitMessage: "",
+            formSubmitRedirect: "",
+            productSelectionIds: [],
+            productDatasetRevision: 0,
+            productDatasetRefreshHandler: null,
+            productCardPreviewState: "normal",
+            productCardStatePreviewHandler: null,
+            formMessagePreviewHandler: null,
+            formDatasetCache: {},
+            openHotspot: -1,
+            hotspotImageUrl: "",
+            hotspotRenditionRequest: 0,
+            reviewImageUrls: {},
+            reviewRenditionRequest: 0,
+            mediaLightbox: null,
+            flipActive: false,
+            now: Date.now(),
+            timer: 0,
+            wordIndex: 0,
+            wordTimer: 0,
+            sliderTimer: 0,
+            sliderHovered: false,
+            sliderInteractionPaused: false,
+            codeCopyStatus: "",
+            codeCopyStatusTimer: 0,
+            shareActionStatus: "",
+            shareActionStatusTimer: 0,
+            progressValue: 50,
+            progressScrollHandler: null,
+            progressResizeHandler: null,
+            activePlaylistIndex: 0,
+            activePlaylistTab: 0,
+            playlistTabsExpanded: true,
+            playlistWatched: [],
+            reducedMotion:
+                typeof matchMedia === "function" &&
+                matchMedia("(prefers-reduced-motion: reduce)").matches,
+        };
+    },
+    computed: {
+        type() {
+            return this.item.type;
+        },
+        s() {
+            return this.item.settings || {};
+        },
+        productDataset() {
+            this.productDatasetRevision;
+            const datasets = Array.isArray(window.PAGE_BUILDER_ELEMENTOR_V24_FORM_DATASETS)
+                ? window.PAGE_BUILDER_ELEMENTOR_V24_FORM_DATASETS
+                : [];
+            const datasetId = String(this.s.productData?.datasetId || "");
+            return datasets.find((entry) => String(entry.id) === datasetId) || null;
+        },
+        productNodes() {
+            return Array.isArray(this.productDataset?.nodes) ? this.productDataset.nodes : [];
+        },
+        activeProductLevels() {
+            const count = Math.max(1, Math.min(3, Number(this.s.productLevelCount) || 3));
+            return (Array.isArray(this.s.productLevels) ? this.s.productLevels : []).slice(0, count);
+        },
+        productSelectionQuery() {
+            const query = {};
+            this.productSelectionIds.forEach((id, index) => {
+                const node = this.productNodes.find((entry) => String(entry?.id) === String(id));
+                const key = this.activeProductLevels[index]?.queryKey;
+                if (node && key) query[key] = String(node.code || "");
+            });
+            return query;
+        },
+        productSelection() {
+            const logic = window.PageBuilderElementorV24ProductLeadFormLogic;
+            return logic?.resolveSelection?.(this.productNodes, this.s, this.productSelectionQuery)
+                || { nodes: [], ids: [], codes: [], values: [], invalidQueryKeys: [] };
+        },
+        activeProductNode() {
+            return this.productSelection.nodes.at(-1) || null;
+        },
+        activeProductMeta() {
+            const logic = window.PageBuilderElementorV24ProductLeadFormLogic;
+            return logic?.inheritedMeta?.(this.productSelection.nodes) || {};
+        },
+        productImageUrl() {
+            return this.safeMediaUrl(this.activeProductMeta.imageUrl || this.activeProductMeta.thumbnailUrl);
+        },
+        productImageAlt() {
+            return String(this.activeProductMeta.imageAlt || this.activeProductMeta.thumbnailAlt || this.activeProductNode?.label || "Product image");
+        },
+        productSelectionValid() {
+            if (!this.productDataset) return false;
+            return this.activeProductLevels.every((level, index) => !level.required || Boolean(this.productSelection.nodes[index]));
+        },
+        activeProductMediaPosition() {
+            if (this.responsiveDevice === "mobile") return this.safeEnum(this.s.productMediaPositionMobile, ["top", "bottom"], "top");
+            if (this.responsiveDevice === "tablet") return this.safeEnum(this.s.productMediaPositionTablet || this.s.productMediaPosition, ["left", "right"], "left");
+            return this.safeEnum(this.s.productMediaPosition, ["left", "right"], "left");
+        },
+        productSelectorStyle() {
+            return { gap: this.safeLength(this.responsiveValue("productSelectorGap", "24px"), "24px") };
+        },
+        productLeadBodyStyle() {
+            return {
+                "--product-lead-gap": this.safeLength(this.responsiveValue("productBodyGap", "32px"), "32px"),
+                "--product-lead-media-width": this.safeLength(this.responsiveValue("productMediaWidth", "50%"), "50%"),
+                "--product-title-color": this.safeColor(this.s.productTitleColor, "#101828"),
+                "--product-description-color": this.safeColor(this.s.productDescriptionColor, "#475467"),
+                "--product-detail-color": this.safeColor(this.s.productDetailColor, "#6979f8"),
+                "--product-detail-hover": this.safeColor(this.s.productDetailColorHover, "#3443c4"),
+            };
+        },
+        productImageStyle() {
+            const borderType = this.safeEnum(this.s.productImageBorderType, ["none", "solid", "double", "dotted", "dashed"], "none");
+            return {
+                width: this.safeLength(this.responsiveValue("productImageWidth", "100%"), "100%"),
+                height: this.safeLength(this.responsiveValue("productImageHeight", "420px"), "420px"),
+                objectFit: this.safeEnum(this.s.productImageFit, ["cover", "contain", "fill", "scale-down"], "cover"),
+                objectPosition: String(this.s.productImagePosition || "center center"),
+                borderStyle: borderType,
+                borderWidth: borderType === "none" ? "0" : this.safeLength(this.s.productImageBorderWidth, "1px"),
+                borderColor: this.safeColor(this.s.productImageBorderColor, "#d0d5dd"),
+                borderRadius: this.safeLength(this.s.productImageRadius, "8px"),
+                boxShadow: this.safeTextShadow(this.s.productImageShadow, "none"),
+            };
+        },
+        codeLanguage() {
+            return this.safeEnum(
+                this.s.language,
+                [
+                    "plain-text",
+                    "markup",
+                    "html",
+                    "xml",
+                    "svg",
+                    "mathml",
+                    "ssml",
+                    "atom",
+                    "rss",
+                    "css",
+                    "less",
+                    "sass",
+                    "scss",
+                    "javascript",
+                    "typescript",
+                    "actionscript",
+                    "c",
+                    "cpp",
+                    "csharp",
+                    "java",
+                    "kotlin",
+                    "dart",
+                    "go",
+                    "rust",
+                    "swift",
+                    "objectivec",
+                    "php",
+                    "python",
+                    "ruby",
+                    "perl",
+                    "lua",
+                    "r",
+                    "matlab",
+                    "sql",
+                    "plsql",
+                    "json",
+                    "json5",
+                    "yaml",
+                    "toml",
+                    "markdown",
+                    "mdx",
+                    "bash",
+                    "shell",
+                    "powershell",
+                    "batch",
+                    "docker",
+                    "git",
+                    "diff",
+                    "http",
+                    "graphql",
+                    "jsx",
+                    "tsx",
+                    "vue",
+                    "twig",
+                    "blade",
+                    "pascal",
+                    "haskell",
+                    "scala",
+                    "groovy",
+                    "elixir",
+                    "erlang",
+                    "clojure",
+                    "fsharp",
+                    "fortran",
+                    "cobol",
+                    "basic",
+                    "arduino",
+                ],
+                "javascript",
+            );
+        },
+        codeTheme() {
+            return this.safeEnum(this.s.theme, ["light", "dark"], "dark");
+        },
+        codeLanguageLabel() {
+            const labels = {
+                "plain-text": "Plain Text",
+                markup: "Markup",
+                html: "HTML",
+                xml: "XML",
+                svg: "SVG",
+                mathml: "MathML",
+                ssml: "SSML",
+                atom: "Atom",
+                rss: "RSS",
+                css: "CSS",
+                less: "Less",
+                sass: "Sass",
+                scss: "SCSS",
+                javascript: "JavaScript",
+                typescript: "TypeScript",
+                actionscript: "ActionScript",
+                c: "C",
+                cpp: "C++",
+                csharp: "C#",
+                java: "Java",
+                kotlin: "Kotlin",
+                dart: "Dart",
+                go: "Go",
+                rust: "Rust",
+                swift: "Swift",
+                objectivec: "Objective-C",
+                php: "PHP",
+                python: "Python",
+                ruby: "Ruby",
+                perl: "Perl",
+                lua: "Lua",
+                r: "R",
+                matlab: "MATLAB",
+                sql: "SQL",
+                plsql: "PL/SQL",
+                json: "JSON",
+                json5: "JSON5",
+                yaml: "YAML",
+                toml: "TOML",
+                markdown: "Markdown",
+                mdx: "MDX",
+                bash: "Bash",
+                shell: "Shell",
+                powershell: "PowerShell",
+                batch: "Batch",
+                docker: "Docker",
+                git: "Git",
+                diff: "Diff",
+                http: "HTTP",
+                graphql: "GraphQL",
+                jsx: "JSX",
+                tsx: "TSX",
+                vue: "Vue",
+                twig: "Twig",
+                blade: "Blade",
+                pascal: "Pascal",
+                haskell: "Haskell",
+                scala: "Scala",
+                groovy: "Groovy",
+                elixir: "Elixir",
+                erlang: "Erlang",
+                clojure: "Clojure",
+                fsharp: "F#",
+                fortran: "Fortran",
+                cobol: "COBOL",
+                basic: "BASIC",
+                arduino: "Arduino",
+            };
+            return labels[this.codeLanguage] || "Code";
+        },
+        highlightedCodeLines() {
+            const lines = new Set();
+            for (const segment of String(this.s.highlightLines || "").split(",")) {
+                const raw = segment.trim();
+                const range = raw.match(/^(\d+)\s*-\s*(\d+)$/);
+                if (range) {
+                    const start = Math.max(1, Number(range[1]));
+                    const end = Math.max(1, Number(range[2]));
+                    for (let line = Math.min(start, end); line <= Math.max(start, end); line++) lines.add(line);
+                } else if (/^\d+$/.test(raw) && Number(raw) > 0) lines.add(Number(raw));
+            }
+            return lines;
+        },
+        codeLines() {
+            return String(this.s.code ?? "").split(/\r\n|\r|\n/).map((source, index) => ({
+                number: index + 1,
+                source,
+                highlighted: this.highlightedCodeLines.has(index + 1),
+                html: this.highlightCodeLine(source, this.codeLanguage),
+            }));
+        },
+        codeHighlightRootStyle() {
+            const light = this.codeTheme === "light";
+            return {
+                "--code-highlight-height": this.safeLength(this.responsiveValue("height", "300px"), "300px"),
+                "--code-highlight-font-size": this.safeLength(this.responsiveValue("fontSize", "14px"), "14px"),
+                "--code-highlight-text": this.safeColor(this.s.codeTextColor, light ? "#101828" : "#e6edf3"),
+                "--code-highlight-background": this.safeColor(this.s.codeBackground, light ? "#f8fafc" : "#0d1117"),
+                "--code-highlight-line-number": this.safeColor(this.s.lineNumberColor, light ? "#667085" : "#8b949e"),
+                "--code-highlight-line-number-background": this.safeColor(this.s.lineNumberBackground, light ? "#f2f4f7" : "#161b22"),
+                "--code-highlight-gutter-width": this.safeLength(this.responsiveValue("gutterWidth", "34px"), "34px"),
+                "--code-highlight-line-background": this.safeColor(this.s.highlightLineColor, light ? "#e0e7ff" : "#1f6feb33"),
+                "--code-highlight-line-border": this.safeColor(this.s.highlightLineBorderColor, light ? "#6979f8" : "#58a6ff"),
+                "--code-highlight-padding": this.responsiveBoxValue("codePadding", "20px"),
+                "--code-highlight-padding-top": this.safeLength(this.responsiveValue("codePaddingTop", "20px"), "20px"),
+                "--code-highlight-padding-right": this.safeLength(this.responsiveValue("codePaddingRight", "20px"), "20px"),
+                "--code-highlight-padding-bottom": this.safeLength(this.responsiveValue("codePaddingBottom", "20px"), "20px"),
+                "--code-highlight-padding-left": this.safeLength(this.responsiveValue("codePaddingLeft", "20px"), "20px"),
+                "--code-highlight-radius": this.responsiveBoxValue("codeRadius", "6px"),
+                "--code-highlight-copy-text-hover": this.safeColor(this.s.copyButtonTextColorHover, "#fff"),
+                "--code-highlight-copy-background-hover": this.safeColor(this.s.copyButtonBackgroundHover, "#5868e8"),
+            };
+        },
+        codeHighlightCodeStyle() {
+            return {
+                ...this.typographyStyle("codeHighlight", "14px", "400", "1.5em"),
+                fontSize: "var(--code-highlight-font-size)",
+                color: "var(--code-highlight-text)",
+            };
+        },
+        codeCopyButtonStyle() {
+            return {
+                ...this.typographyStyle("codeHighlightCopyButton", "12px", "600", "1.2em"),
+                color: this.safeColor(this.s.copyButtonTextColor, "#fff"),
+                background: this.safeColor(this.s.copyButtonBackground, "#6979f8"),
+                padding: this.responsiveBoxValue("copyButtonPadding", "8px"),
+                borderRadius: this.responsiveBoxValue("copyButtonRadius", "4px"),
+            };
+        },
+        blockquoteSkin() {
+            return this.safeEnum(this.s.skin, ["border", "quotation", "boxed", "clean"], "border");
+        },
+        blockquoteAlignment() {
+            return this.safeEnum(this.responsiveValue("alignment", "left"), ["left", "center", "right"], "left");
+        },
+        blockquoteRootStyle() {
+            return {
+                "--blockquote-content-gap": this.safeLength(this.responsiveValue("contentGap", "16px"), "16px"),
+                "--blockquote-content-color": this.safeColor(this.s.contentColor, "#344054"),
+                "--blockquote-author-color": this.safeColor(this.s.authorColor, "#101828"),
+                "--blockquote-border-color": this.safeColor(this.s.borderColor, "#6979f8"),
+                "--blockquote-border-width": this.responsiveBoxValue("borderWidth", "0px"),
+                "--blockquote-border-gap": this.safeLength(this.responsiveValue("borderGap", "16px"), "16px"),
+                "--blockquote-border-padding": this.safeLength(this.responsiveValue("borderVerticalPadding", "8px"), "8px"),
+                "--blockquote-border-duration": String(Math.max(0, Math.min(10, Number(this.s.borderTransitionDuration) || 0))) + "s",
+                "--blockquote-quote-color": this.safeColor(this.s.quoteColor, "#6979f8"),
+                "--blockquote-quote-size": this.safeLength(this.responsiveValue("quoteSize", "48px"), "48px"),
+                "--blockquote-quote-gap": this.safeLength(this.responsiveValue("quoteGap", "12px"), "12px"),
+                "--blockquote-box-padding": this.responsiveBoxValue("boxPadding", "24px"),
+                "--blockquote-box-background": this.safeColor(this.s.boxBackground, "#f8fafc"),
+                "--blockquote-box-background-hover": this.safeColor(this.s.boxBackgroundHover, "#eef2ff"),
+                "--blockquote-box-border-type": this.safeEnum(this.s.boxBorderType, ["none", "solid", "double", "dotted", "dashed"], "none"),
+                "--blockquote-box-border-width": this.responsiveBoxValue("boxBorderWidth", "1px"),
+                "--blockquote-box-border-color": this.safeColor(this.s.boxBorderColor, "#e4e7ec"),
+                "--blockquote-box-border-color-hover": this.safeColor(this.s.boxBorderColorHover, "#6979f8"),
+                "--blockquote-box-radius": this.responsiveBoxValue("boxRadius", "8px"),
+                "--blockquote-box-shadow": this.safeTextShadow(this.s.boxShadow, "none"),
+                "--blockquote-box-shadow-hover": this.safeTextShadow(this.s.boxShadowHover, "none"),
+                "--blockquote-box-duration": String(Math.max(0, Math.min(10, Number(this.s.boxTransitionDuration) || 0))) + "s",
+            };
+        },
+        blockquoteContentStyle() {
+            return this.typographyStyle("blockquoteContent", "18px", "400", "1.5em");
+        },
+        blockquoteAuthorStyle() {
+            return {
+                ...this.typographyStyle("blockquoteAuthor", "14px", "600", "1.4em"),
+                color: "var(--blockquote-author-color)",
+            };
+        },
+        blockquoteTweetStyle() {
+            const official = {
+                background: "#1da1f2",
+                color: "#ffffff",
+                hoverBackground: "#0d8bd0",
+                hoverColor: "#ffffff",
+            };
+            return {
+                ...this.typographyStyle("blockquoteTweet", "13px", "600", "1.2em"),
+                "--blockquote-tweet-background": this.safeColor(this.s.tweetColorMode === "custom" ? this.s.tweetPrimaryColor : official.background, official.background),
+                "--blockquote-tweet-color": this.safeColor(this.s.tweetColorMode === "custom" ? this.s.tweetSecondaryColor : official.color, official.color),
+                "--blockquote-tweet-background-hover": this.safeColor(this.s.tweetColorMode === "custom" ? this.s.tweetPrimaryColorHover : official.hoverBackground, official.hoverBackground),
+                "--blockquote-tweet-color-hover": this.safeColor(this.s.tweetColorMode === "custom" ? this.s.tweetSecondaryColorHover : official.hoverColor, official.hoverColor),
+                "--blockquote-tweet-size": this.safeLength(this.responsiveValue("tweetSize", "14px"), "14px"),
+                "--blockquote-tweet-radius": this.safeLength(this.responsiveValue("tweetBorderRadius", "4px"), "4px"),
+                "--blockquote-tweet-duration": String(Math.max(0, Math.min(10, Number(this.s.tweetTransitionDuration) || 0))) + "s",
+                "--blockquote-tweet-gap": this.safeLength(this.responsiveValue("tweetGap", "8px"), "8px"),
+            };
+        },
+        blockquoteTweetHref() {
+            const target = this.s.tweetTarget === "custom"
+                ? this.safeLinkUrl(this.s.tweetUrl)
+                : this.s.tweetTarget === "none"
+                  ? ""
+                  : this.currentPreviewUrl;
+            const query = new URLSearchParams();
+            query.set("text", String(this.s.content || ""));
+            if (target) query.set("url", target);
+            if (String(this.s.tweetUsername || "").trim()) query.set("via", String(this.s.tweetUsername).replace(/^@+/, ""));
+            return "https://twitter.com/intent/tweet?" + query.toString();
+        },
+        currentPreviewUrl() {
+            return this.safeLinkUrl(typeof window !== "undefined" && window.location?.href ? window.location.href : "https://example.com/") || "https://example.com/";
+        },
+        shareItems() {
+            return Array.isArray(this.s.items) ? this.s.items : [];
+        },
+        shareSkin() {
+            return this.safeEnum(this.s.skin, ["flat", "gradient", "minimal", "framed", "box", "3d"], "flat");
+        },
+        shareShape() {
+            return this.safeEnum(this.s.shape, ["rounded", "square", "circle", "none"], "rounded");
+        },
+        shareAlignment() {
+            return this.safeEnum(this.s.alignment, ["left", "center", "right"], "left");
+        },
+        shareColumnsClass() {
+            const value = this.safeEnum(String(this.s.columns || "auto"), ["auto", "1", "2", "3", "4", "5", "6"], "auto");
+            return value === "auto" ? "columns-auto" : "columns-" + value;
+        },
+        shareTargetUrl() {
+            return this.s.targetUrl === "custom" ? this.safeLinkUrl(this.s.customUrl) || this.currentPreviewUrl : this.currentPreviewUrl;
+        },
+        shareButtonsRootStyle() {
+            return {
+                "--share-columns-gap": this.safeLength(this.responsiveValue("columnsGap", "8px"), "8px"),
+                "--share-rows-gap": this.safeLength(this.responsiveValue("rowsGap", "8px"), "8px"),
+                "--share-button-size": this.safeLength(this.responsiveValue("buttonSize", "40px"), "40px"),
+                "--share-icon-size": this.safeLength(this.responsiveValue("iconSize", "16px"), "16px"),
+                "--share-button-height": this.safeLength(this.responsiveValue("buttonHeight", "40px"), "40px"),
+            };
+        },
+        hotspotRenditionKey() {
+            if (this.type !== "hotspot") return "";
+            return `${String(this.s.imageUrl || "")}|${String(this.s.imageResolution || "full")}`;
+        },
+        reviewRenditionKey() {
+            if (!["reviews", "media_carousel", "testimonial_carousel"].includes(this.type)) return "";
+            return JSON.stringify({
+                images: (this.s.items || []).map((entry) => [entry.id, entry.imageUrl]),
+                size: this.s.imageResolution || "full",
+                width: this.s.customImageWidth || 300,
+                height: this.s.customImageHeight || 300,
+            });
+        },
+        customClass() {
+            return String(this.s.cssClass || "")
+                .split(/\s+/)
+                .map((v) => v.replace(/[^A-Za-z0-9_-]/g, ""))
+                .filter(Boolean)
+                .join(" ");
+        },
+        advancedStyle() {
+            return {};
+        },
+        itemCount() {
+            return this.type === "slides"
+                ? (this.s.slides || []).length
+                : (this.s.items || []).length;
+        },
+        carouselVisible() {
+            if (
+                this.type === "media_carousel" &&
+                (this.s.skin === "slideshow" || ["fade", "cube"].includes(this.s.effect))
+            ) return 1;
+            const fallback = ["reviews", "testimonial_carousel"].includes(this.type) ? 1 : 3;
+            const n = Number(this.responsiveValue("slidesToShow", fallback)) || 1;
+            return Math.max(1, Math.min(n, this.itemCount || 1));
+        },
+        carouselStep() {
+            return Math.max(
+                1,
+                Math.min(
+                    this.carouselVisible,
+                    Number(this.responsiveValue("slidesToScroll", 1)) || 1,
+                ),
+            );
+        },
+        carouselMaxIndex() {
+            return Math.max(0, this.itemCount - this.carouselVisible);
+        },
+        carouselPageCount() {
+            return Math.max(
+                1,
+                Math.ceil(this.carouselMaxIndex / this.carouselStep) + 1,
+            );
+        },
+        carouselDotIndex() {
+            return Math.min(
+                this.carouselPageCount - 1,
+                Math.round(this.activeIndex / this.carouselStep),
+            );
+        },
+        carouselRootStyle() {
+            const fallbackButtonSize = {
+                carousel: "34px",
+                reviews: "24px",
+                media_carousel: "20px",
+                testimonial_carousel: "20px",
+            }[this.type] || "34px";
+            const buttonSize = this.safeLength(
+                this.responsiveValue("arrowButtonSize", this.responsiveValue("arrowsSize", fallbackButtonSize)),
+                fallbackButtonSize,
+            );
+            const edgeOffset = this.safeLength(this.responsiveValue("arrowEdgeOffset", "46px"), "46px");
+            return {
+                "--arrow-color": this.s.arrowColor || "#344054",
+                "--arrow-background": this.s.arrowBackground || "#fff",
+                "--carousel-arrow-size": buttonSize,
+                "--carousel-arrow-button-size": buttonSize,
+                "--carousel-arrow-icon-size": this.safeLength(this.responsiveValue("arrowIconSize", "10px"), "10px"),
+                "--carousel-arrow-edge-position": this.carouselArrowPosition === "outside" ? `calc(0px - ${buttonSize} - ${edgeOffset})` : edgeOffset,
+                "--carousel-arrow-overflow": this.carouselArrowPosition === "outside" ? "visible" : "hidden",
+                "--carousel-arrow-color": this.safeColor(this.s.arrowColor, "#344054"),
+                "--carousel-arrow-background": this.safeColor(this.s.arrowBackground, "#fff"),
+                "--carousel-arrow-hover-color": this.safeColor(this.s.arrowHoverColor, this.safeColor(this.s.arrowColor, "#344054")),
+                "--carousel-arrow-hover-background": this.safeColor(this.s.arrowHoverBackground, this.safeColor(this.s.arrowBackground, "#fff")),
+                "--carousel-arrow-radius": this.responsiveBoxValue("arrowRadius", "50%"),
+                "--carousel-dot-gap": this.safeLength(
+                    this.responsiveValue("dotsGap", "8px"),
+                    "8px",
+                ),
+                "--carousel-dot-size": this.safeLength(
+                    this.responsiveValue("dotsSize", "8px"),
+                    "8px",
+                ),
+                "--pagination-color": this.s.paginationColor || "#d0d5dd",
+                "--pagination-active-color":
+                    this.s.paginationActiveColor || "#6979f8",
+                "--carousel-pagination-color": this.s.paginationColor || "#d0d5dd",
+                "--carousel-pagination-active": this.s.paginationActiveColor || "#6979f8",
+                "--carousel-content-gap": this.safeLength(this.responsiveValue("contentGap", "10px"), "10px"),
+                "--carousel-image-fit": this.safeEnum(this.s.imageFit, ["cover", "contain", "auto"], "cover"),
+                "--carousel-title-color": this.safeColor(this.s.carouselTitleColor, "#101828"),
+                "--carousel-description-color": this.safeColor(this.s.carouselDescriptionColor, "#344054"),
+            };
+        },
+        carouselArrowPosition() {
+            return this.safeEnum(this.responsiveValue("arrowPosition", "inside"), ["inside", "outside"], "inside");
+        },
+        navigationMode() {
+            if (["both", "arrows", "dots", "none"].includes(this.s.navigation)) return this.s.navigation;
+            if (this.s.arrows) return this.s.pagination === "none" ? "arrows" : "both";
+            return this.s.pagination === "none" ? "none" : "dots";
+        },
+        maxIndex() {
+            return ["carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type)
+                ? this.carouselMaxIndex
+                : Math.max(0, this.itemCount - 1);
+        },
+        hasArrows() {
+            if (["reviews", "media_carousel", "testimonial_carousel"].includes(this.type)) {
+                return (this.type === "reviews" ? ["both", "arrows"].includes(this.navigationMode) : Boolean(this.s.arrows)) && this.maxIndex > 0;
+            }
+            return (
+                ["both", "arrows"].includes(this.s.navigation) &&
+                this.maxIndex > 0
+            );
+        },
+        hasDots() {
+            const enabled = ["slides", "carousel", "reviews"].includes(this.type)
+                ? ["both", "dots"].includes(this.navigationMode) && (this.type === "slides" || this.s.pagination !== "none")
+                : this.s.pagination !== "none";
+            return enabled && this.maxIndex > 0;
+        },
+        buttonTypographyPrefix() {
+            return (
+                {
+                    form: "formButton",
+                    product_lead_form: "formButton",
+                    slides: "slideButton",
+                    price_table: "priceTableButton",
+                    call_to_action: "ctaButton",
+                    flip_box: "flipButton",
+                }[this.type] || "ctaButton"
+            );
+        },
+        buttonStyle() {
+            return {
+                ...this.typographyStyle(
+                    this.buttonTypographyPrefix,
+                    "14px",
+                    "600",
+                    "1.2em",
+                ),
+                background: this.s.buttonBackground || "#6979f8",
+                color: this.s.buttonTextColor || "#fff",
+                borderRadius: this.safeLength(
+                    this.responsiveValue(
+                        "buttonRadius",
+                        this.responsiveValue("slideRadius", "4px"),
+                    ),
+                    "4px",
+                ),
+                "--pb-button-hover-bg":
+                    this.s.buttonBackgroundHover ||
+                    this.s.buttonBackground ||
+                    "#6979f8",
+                "--pb-button-hover-color":
+                    this.s.buttonTextColorHover ||
+                    this.s.buttonTextColor ||
+                    "#fff",
+            };
+        },
+        formStyle() {
+            return {
+                gap: this.safeLength(
+                    this.responsiveValue("rowGap", "10px"),
+                    "10px",
+                ),
+                "--row-gap": this.safeLength(
+                    this.responsiveValue("rowGap", "10px"),
+                    "10px",
+                ),
+                "--column-gap": this.safeLength(
+                    this.responsiveValue("columnGap", "10px"),
+                    "10px",
+                ),
+                "--field-bg": this.s.fieldBackground || "#fff",
+                "--field-border": this.s.fieldBorderColor || "#d0d5dd",
+                "--field-color": this.s.fieldTextColor || "#344054",
+                "--field-radius": this.safeLength(
+                    this.responsiveValue("fieldRadius", "4px"),
+                    "4px",
+                ),
+                "--form-html-color": this.s.htmlColor || "#344054",
+                "--form-success": this.s.successColor || "#067647",
+                "--form-error": this.s.errorColor || "#b42318",
+                "--step-active": this.s.stepActiveColor || "#6979f8",
+                "--step-inactive": this.s.stepInactiveColor || "#d0d5dd",
+                "--form-button-align":
+                    { left: "flex-start", center: "center", right: "flex-end" }[
+                        this.s.buttonAlign
+                    ] || "flex-start",
+            };
+        },
+        formMessageDisplay() {
+            if (!this.s.customMessages || this.formSubmitState === "sending") return "basic";
+            return this.safeEnum(
+                this.s.messageDisplay,
+                ["basic", "above-form", "toast", "modal"],
+                "basic",
+            );
+        },
+        formMessageTitle() {
+            if (this.formSubmitState === "error") {
+                return this.s.customMessages
+                    ? String(this.s.errorTitle || "Submission failed")
+                    : "Submission failed";
+            }
+            return this.s.customMessages
+                ? String(this.s.successTitle || "Message sent")
+                : "Message sent";
+        },
+        formMessageShowIcon() {
+            return this.s.customMessages && this.s.messageShowIcon !== false;
+        },
+        formMessageDismissible() {
+            return this.s.customMessages && this.s.messageDismissible !== false;
+        },
+        formMessageIconClass() {
+            return this.formSubmitState === "error"
+                ? "fas fa-exclamation-circle"
+                : "fas fa-check-circle";
+        },
+        formSteps() {
+            const api = window.PageBuilderElementorV24FormRowGrid;
+            const layout = this.s.rowGrid || api?.normalizeLayout?.(null, this.s.fields) || { steps: [] };
+            return (layout.steps || []).map((step) => ({
+                ...step,
+                fields: (step.rows || []).flatMap((row) =>
+                    (row.columns || []).flatMap((column) =>
+                        (column.items || [])
+                            .filter((entry) => entry?.kind === "field" && entry.field)
+                            .map((entry) => entry.field),
+                    ),
+                ),
+            }));
+        },
+        clampedFormStep() {
+            return Math.max(0, Math.min(this.currentFormStep, this.formSteps.length - 1));
+        },
+        activeFormStep() {
+            return (
+                this.formSteps[this.clampedFormStep] || { fields: [] }
+            );
+        },
+        formStepProgress() {
+            return this.formSteps.length
+                ? Math.round(((this.clampedFormStep + 1) / this.formSteps.length) * 100)
+                : 0;
+        },
+        stepIndicatorShowsNumber() {
+            return ["number", "number-text"].includes(this.s.stepType);
+        },
+        stepIndicatorShowsIcon() {
+            return ["icon", "icon-text"].includes(this.s.stepType);
+        },
+        stepIndicatorShowsText() {
+            return ["text", "number-text", "icon-text"].includes(this.s.stepType);
+        },
+        formInputStyle() {
+            const heights = {
+                "extra-small": "31px",
+                small: "36px",
+                medium: "42px",
+                large: "50px",
+                "extra-large": "58px",
+            };
+            return {
+                minHeight: heights[this.s.inputSize] || "36px",
+                borderWidth: this.safeLength(
+                    this.responsiveValue("fieldBorderWidth", "1px"),
+                    "1px",
+                ),
+                "--field-focus-border":
+                    this.s.fieldFocusBorderColor || "#6979f8",
+                "--field-focus-bg": this.s.fieldFocusBackground || "#fff",
+            };
+        },
+        formTextareaStyle() {
+            return {
+                ...this.formInputStyle,
+                height: "auto",
+                resize: "none",
+            };
+        },
+        formButtonStyle() {
+            const heights = {
+                "extra-small": "31px",
+                small: "36px",
+                medium: "42px",
+                large: "50px",
+                "extra-large": "58px",
+            };
+            const width = Math.max(
+                20,
+                Math.min(100, Number(this.s.buttonWidth) || 100),
+            );
+            return {
+                ...this.buttonStyle,
+                minHeight: heights[this.s.buttonSize] || "36px",
+                width: `${width}%`,
+                gap: this.safeLength(
+                    this.responsiveValue("buttonIconSpacing", "5px"),
+                    "5px",
+                ),
+            };
+        },
+        formActionsStyle() {
+            return {
+                justifyContent:
+                    { left: "flex-start", center: "center", right: "flex-end" }[
+                        this.s.buttonAlign
+                    ] || "flex-start",
+            };
+        },
+        slidesStyle() {
+            const arrowsPosition = this.safeEnum(this.responsiveValue("arrowsPosition", "inside"), ["inside", "outside"], "inside");
+            const dotsPosition = this.safeEnum(this.responsiveValue("dotsPosition", "inside"), ["inside", "outside"], "inside");
+            const arrowsOutside = arrowsPosition === "outside";
+            const dotsOutside = dotsPosition === "outside";
+            const buttonSize = this.safeLength(this.responsiveValue("arrowButtonSize", "34px"), "34px");
+            const edgeOffset = this.safeLength(this.responsiveValue("arrowEdgeOffset", "10px"), "10px");
+            return {
+                height: this.safeLength(
+                    this.responsiveValue("height", "400px"),
+                    "400px",
+                ),
+                overflow: arrowsOutside || dotsOutside ? "visible" : "hidden",
+                "--slides-arrow-offset": arrowsOutside ? `calc(0px - ${buttonSize} - ${edgeOffset})` : edgeOffset,
+                "--slides-dot-offset": dotsOutside ? "-24px" : "12px",
+                "--slides-arrow-button-size": buttonSize,
+                "--slides-arrow-icon-size": this.safeLength(this.responsiveValue("arrowIconSize", "10px"), "10px"),
+                "--slides-arrow-color": this.safeColor(this.s.arrowColor, this.safeColor(this.s.arrowsColor, "#fff")),
+                "--slides-arrow-background": this.safeColor(this.s.arrowBackground, "rgba(16,24,40,.5)"),
+                "--slides-arrow-hover-color": this.safeColor(this.s.arrowHoverColor, this.safeColor(this.s.arrowColor, "#fff")),
+                "--slides-arrow-hover-background": this.safeColor(this.s.arrowHoverBackground, "rgba(16,24,40,.7)"),
+                "--slides-arrow-radius": this.responsiveBoxValue("arrowRadius", "50%"),
+                "--slides-dot-gap": this.safeLength(
+                    this.responsiveValue("dotsGap", "8px"),
+                    "8px",
+                ),
+                "--slides-dot-size": this.safeLength(
+                    this.responsiveValue("dotsSize", "8px"),
+                    "8px",
+                ),
+                "--slides-dot-color": this.s.dotsColor || "#ffffff80",
+                "--slides-dot-active-color": this.s.dotsActiveColor || "#fff",
+            };
+        },
+        slidesContentStyle() {
+            return {
+                width: this.safeLength(
+                    this.responsiveValue("contentWidth", "66%"),
+                    "66%",
+                ),
+                padding: this.safeLength(
+                    this.responsiveValue("slidesPadding", "30px"),
+                    "30px",
+                ),
+                textAlign: this.s.textAlign || "center",
+                zIndex: 1,
+            };
+        },
+        slidesArrowStyle() {
+            return {};
+        },
+        headlineStyle() {
+            return {
+                ...this.tagTypographyStyle("headline", this.s.tag, "36px", "600", "1.2em", "headlineFontSizeMode"),
+                textAlign: this.s.alignment || "left",
+                color: this.s.titleColor || "#101828",
+            };
+        },
+        headlineAnimatedClasses() {
+            return [
+                "is-" + this.s.headlineStyle,
+                "marker-" + (this.s.marker || "circle"),
+                "effect-" + (this.s.rotationEffect || "typing"),
+                { "is-changing": this.s.headlineStyle === "rotating" },
+                this.s.bringToFront ? "is-front" : "is-back",
+                this.s.roundedEdges ? "is-rounded" : "is-square",
+            ];
+        },
+        headlineAnimatedStyle() {
+            return {
+                ...this.typographyStyle("animatedText", "36px", "600", "1.2em"),
+                color: this.s.animatedColor || "#6979f8",
+                "--headline-marker-color": this.s.markerColor || "#6979f8",
+                "--headline-stroke-width": this.safeLength(
+                    this.responsiveValue("strokeWidth", "8px"),
+                    "8px",
+                ),
+                "--headline-duration": `${Math.max(100, Number(this.s.duration) || 1200)}ms`,
+            };
+        },
+        animatedWord() {
+            if (this.s.headlineStyle !== "rotating")
+                return this.s.animatedText || "";
+            const words = this.s.rotatingTexts || [];
+            return words[this.wordIndex % Math.max(1, words.length)] || "";
+        },
+        hotspotRootStyle() {
+            const alignment = this.safeEnum(
+                this.s.imageAlignment,
+                ["left", "center", "right"],
+                "center",
+            );
+            return {
+                width: this.safeLength(
+                    this.responsiveValue("imageWidth", "100%"),
+                    "100%",
+                ),
+                maxWidth: this.safeLength(
+                    this.responsiveValue("imageMaxWidth", "100%"),
+                    "100%",
+                ),
+                marginLeft: alignment === "left" ? "0" : "auto",
+                marginRight: alignment === "right" ? "0" : "auto",
+            };
+        },
+        hotspotImageStyle() {
+            const borderType = this.safeEnum(
+                this.s.imageBorderType,
+                ["none", "solid", "double", "dotted", "dashed"],
+                "none",
+            );
+            const opacity = Math.max(
+                0,
+                Math.min(1, Number(this.s.imageOpacity ?? 1)),
+            );
+            const filter = [
+                `brightness(${Math.max(0, Number(this.s.imageBrightness) || 100)}%)`,
+                `contrast(${Math.max(0, Number(this.s.imageContrast) || 100)}%)`,
+                `saturate(${Math.max(0, Number(this.s.imageSaturation) || 100)}%)`,
+                `blur(${Math.max(0, Number(this.s.imageBlur) || 0)}px)`,
+                `hue-rotate(${Math.max(0, Number(this.s.imageHue) || 0)}deg)`,
+            ].join(" ");
+            return {
+                height: this.safeLength(
+                    this.responsiveValue("imageHeight", "auto"),
+                    "auto",
+                ),
+                objectFit: this.safeEnum(
+                    this.s.imageObjectFit,
+                    ["cover", "contain", "fill", "none", "scale-down"],
+                    "cover",
+                ),
+                objectPosition: this.safeEnum(
+                    this.s.imageObjectPosition,
+                    [
+                        "top left",
+                        "top center",
+                        "top right",
+                        "center left",
+                        "center center",
+                        "center right",
+                        "bottom left",
+                        "bottom center",
+                        "bottom right",
+                    ],
+                    "center center",
+                ),
+                opacity,
+                filter,
+                transitionDuration: `${Math.max(0, Number(this.s.imageTransitionDuration) || 0)}s`,
+                border:
+                    borderType === "none"
+                        ? "0 solid transparent"
+                        : `${this.safeLength(this.responsiveValue("imageBorderWidth", "1px"), "1px")} ${borderType} ${this.s.imageBorderColor || "transparent"}`,
+                borderRadius: this.safeLength(
+                    this.responsiveValue("imageRadius", "0px"),
+                    "0px",
+                ),
+                boxShadow: `${this.safeLength(this.responsiveValue("imageShadowHorizontal", "0px"), "0px")} ${this.safeLength(this.responsiveValue("imageShadowVertical", "0px"), "0px")} ${this.safeLength(this.responsiveValue("imageShadowBlur", "0px"), "0px")} ${this.safeLength(this.responsiveValue("imageShadowSpread", "0px"), "0px")} ${this.s.imageShadowColor || "transparent"}`,
+            };
+        },
+        hotspotTooltipStyle() {
+            return {
+                color: this.s.tooltipTextColor || "#fff",
+                background: this.s.tooltipColor || "#101828",
+                textAlign: this.safeEnum(
+                    this.s.tooltipAlign,
+                    ["left", "center", "right"],
+                    "center",
+                ),
+                minWidth: this.safeLength(
+                    this.responsiveValue("tooltipMinWidth", "120px"),
+                    "120px",
+                ),
+                maxWidth: this.safeLength(
+                    this.responsiveValue("tooltipMaxWidth", "240px"),
+                    "240px",
+                ),
+                padding: this.safeLength(
+                    this.responsiveValue("tooltipPadding", "10px"),
+                    "10px",
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("tooltipRadius", "4px"),
+                    "4px",
+                ),
+                transitionDuration: `${Math.max(0, Number(this.s.tooltipDuration) || 0)}ms`,
+            };
+        },
+        priceListRootStyle() {
+            return {
+                gap: this.safeLength(
+                    this.responsiveValue("rowGap", "20px"),
+                    "20px",
+                ),
+            };
+        },
+        priceListItemStyle() {
+            return {
+                alignItems:
+                    { top: "flex-start", middle: "center", bottom: "flex-end" }[
+                        this.s.verticalAlign
+                    ] || "flex-start",
+                gap: this.safeLength(
+                    this.responsiveValue("imageSpacing", "16px"),
+                    "16px",
+                ),
+            };
+        },
+        priceListSeparatorStyle() {
+            return {
+                borderBottomStyle: this.safeEnum(
+                    this.s.separatorStyle,
+                    ["solid", "dotted", "dashed", "double", "none"],
+                    "dotted",
+                ),
+                borderBottomWidth: this.safeLength(
+                    this.responsiveValue("separatorWeight", "1px"),
+                    "1px",
+                ),
+                borderBottomColor: this.s.separatorColor || "#d0d5dd",
+                marginInline: this.safeLength(
+                    this.responsiveValue("separatorSpacing", "8px"),
+                    "8px",
+                ),
+            };
+        },
+        priceListImageStyle() {
+            const size = this.safeLength(
+                this.responsiveValue("imageSize", "56px"),
+                "56px",
+            );
+            return {
+                width: size,
+                height: size,
+                borderRadius: this.safeLength(
+                    this.responsiveValue("imageRadius", "4px"),
+                    "4px",
+                ),
+            };
+        },
+        priceListTitleStyle() {
+            return {
+                ...this.tagTypographyStyle(
+                    "priceListTitle",
+                    this.s.titleTag,
+                    "18px",
+                    "600",
+                    "1.3em",
+                    "priceListTitleFontSizeMode",
+                ),
+                color: this.s.titleColor || "#101828",
+            };
+        },
+        priceListPriceStyle() {
+            return {
+                ...this.typographyStyle(
+                    "priceListPrice",
+                    "18px",
+                    "600",
+                    "1.3em",
+                ),
+                color: this.s.priceColor || "#6979f8",
+            };
+        },
+        priceListDescriptionStyle() {
+            return {
+                ...this.typographyStyle(
+                    "priceListDescription",
+                    "14px",
+                    "400",
+                    "1.5em",
+                ),
+                color: this.s.descriptionColor || "#667085",
+            };
+        },
+        formattedPrice() {
+            return this.formatPrice(this.s.price);
+        },
+        formattedOriginalPrice() {
+            return this.formatPrice(this.s.originalPrice);
+        },
+        priceTableFeaturesStyle() {
+            return {
+                background: this.s.featuresBackground || "#fff",
+                color: this.s.featuresColor || "#344054",
+            };
+        },
+        priceTableFeatureStyle() {
+            return {
+                borderBottomColor: this.s.featureDividerColor || "#e4e7ec",
+                borderBottomStyle: this.s.featureDivider ? "solid" : "none",
+                borderBottomWidth: this.s.featureDivider
+                    ? this.safeLength(
+                          this.responsiveValue("featureDividerWidth", "1px"),
+                          "1px",
+                      )
+                    : "0px",
+            };
+        },
+        priceTableRibbonStyle() {
+            return {
+                background: this.s.ribbonBackground || "#f04438",
+                color: this.s.ribbonTextColor || "#fff",
+            };
+        },
+        countdownTarget() {
+            if (this.s.countdownType === "evergreen") {
+                const seconds =
+                    (Number(this.s.evergreenDays) || 0) * 86400 +
+                    (Number(this.s.evergreenHours) || 0) * 3600 +
+                    (Number(this.s.evergreenMinutes) || 0) * 60;
+                return (
+                    this._evergreenStart ||
+                    (this._evergreenStart = Date.now() + seconds * 1000)
+                );
+            }
+            const parsed = Date.parse(this.s.dueDate);
+            return Number.isFinite(parsed) ? parsed : Date.now();
+        },
+        countdownRemaining() {
+            return Math.max(
+                0,
+                Math.floor((this.countdownTarget - this.now) / 1000),
+            );
+        },
+        countdownExpired() {
+            return this.countdownRemaining <= 0;
+        },
+        countdownMessageVisible() {
+            return this.countdownExpired && this.s.expireAction === "message";
+        },
+        countdownShouldHide() {
+            return this.countdownExpired && this.s.expireAction === "hide";
+        },
+        countdownParts() {
+            let remaining = this.countdownRemaining;
+            const days = Math.floor(remaining / 86400);
+            remaining %= 86400;
+            const hours = Math.floor(remaining / 3600);
+            remaining %= 3600;
+            const minutes = Math.floor(remaining / 60);
+            const seconds = remaining % 60;
+            return [
+                {
+                    key: "days",
+                    value: String(days).padStart(2, "0"),
+                    label: this.s.customLabels
+                        ? this.s.daysLabel || "Days"
+                        : "Days",
+                    show: this.s.showDays !== false,
+                },
+                {
+                    key: "hours",
+                    value: String(hours).padStart(2, "0"),
+                    label: this.s.customLabels
+                        ? this.s.hoursLabel || "Hours"
+                        : "Hours",
+                    show: this.s.showHours !== false,
+                },
+                {
+                    key: "minutes",
+                    value: String(minutes).padStart(2, "0"),
+                    label: this.s.customLabels
+                        ? this.s.minutesLabel || "Minutes"
+                        : "Minutes",
+                    show: this.s.showMinutes !== false,
+                },
+                {
+                    key: "seconds",
+                    value: String(seconds).padStart(2, "0"),
+                    label: this.s.customLabels
+                        ? this.s.secondsLabel || "Seconds"
+                        : "Seconds",
+                    show: this.s.showSeconds !== false,
+                },
+            ];
+        },
+        countdownRootStyle() {
+            return {
+                width: this.safeLength(
+                    this.responsiveValue("containerWidth", "100%"),
+                    "100%",
+                ),
+                gap: this.safeLength(
+                    this.responsiveValue("boxSpacing", "10px"),
+                    "10px",
+                ),
+            };
+        },
+        countdownBoxStyle() {
+            return {
+                background: this.s.boxBackground || "#101828",
+                color: this.s.digitColor || "#fff",
+                padding: this.safeLength(
+                    this.responsiveValue("boxPadding", "18px"),
+                    "18px",
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("boxRadius", "4px"),
+                    "4px",
+                ),
+                border:
+                    this.safeLength(
+                        this.responsiveValue("boxBorderWidth", "0px"),
+                        "0px",
+                    ) +
+                    " solid " +
+                    (this.s.boxBorderColor || "transparent"),
+                flexDirection:
+                    this.s.labelDisplay === "inline" ? "row" : "column",
+            };
+        },
+        countdownLabelStyle() {
+            return { color: this.s.labelColor || "#d0d5dd" };
+        },
+        progressTrackerType() {
+            return this.safeEnum(this.s.trackerType, ["horizontal", "circular"], "horizontal");
+        },
+        progressTrackerAlignment() {
+            return this.safeEnum(this.responsiveValue("direction", "left"), ["left", "center", "right"], "left");
+        },
+        progressTrackerPercent() {
+            return Math.max(0, Math.min(100, Math.round(Number(this.progressValue) || 0)));
+        },
+        progressTrackerCircleCircumference() {
+            return 2 * Math.PI * 52;
+        },
+        progressTrackerRootStyle() {
+            return {
+                "--progress-tracker-size": this.safeLength(this.responsiveValue("trackerSize", "6px"), "6px"),
+                "--progress-tracker-circle-size": this.safeLength(this.responsiveValue("circleSize", "140px"), "140px"),
+                "--progress-tracker-indicator": this.safeColor(this.s.indicatorColor, "#6979f8"),
+                "--progress-tracker-indicator-width": this.safeLength(this.responsiveValue("indicatorWidth", "4px"), "4px"),
+                "--progress-tracker-background": this.safeColor(this.s.backgroundColor, "#e4e7ec"),
+                "--progress-tracker-background-width": this.safeLength(this.responsiveValue("backgroundWidth", "4px"), "4px"),
+                "--progress-tracker-percentage": this.safeColor(this.s.percentageColor, "#101828"),
+            };
+        },
+        progressTrackerIndicatorStyle() {
+            return {
+                width: this.progressTrackerPercent + "%",
+                marginLeft: this.progressTrackerAlignment === "right" ? "auto" : this.progressTrackerAlignment === "center" ? "auto" : "0",
+                marginRight: this.progressTrackerAlignment === "center" ? "auto" : "0",
+            };
+        },
+        progressTrackerCircleTrackStyle() {
+            return {
+                fill: "none",
+                stroke: "var(--progress-tracker-background)",
+                strokeWidth: "var(--progress-tracker-background-width)",
+            };
+        },
+        progressTrackerCircleIndicatorStyle() {
+            return {
+                fill: "none",
+                stroke: "var(--progress-tracker-indicator)",
+                strokeWidth: "var(--progress-tracker-indicator-width)",
+                strokeDasharray: this.progressTrackerCircleCircumference,
+                strokeDashoffset: this.progressTrackerCircleCircumference * (1 - this.progressTrackerPercent / 100),
+            };
+        },
+        progressTrackerPercentageStyle() {
+            return {
+                ...this.typographyStyle("progressTrackerPercentage", "14px", "600", "1.2em"),
+                color: "var(--progress-tracker-percentage)",
+                textShadow: this.safeTextShadow(this.s.progressTrackerPercentageTextShadow, "none"),
+            };
+        },
+        videoPlaylistItems() {
+            return Array.isArray(this.s.items) ? this.s.items : [];
+        },
+        videoPlaylistPosition() {
+            return this.safeEnum(this.responsiveValue("videoPosition", "left"), ["left", "right"], "left");
+        },
+        videoPlaylistActiveItem() {
+            return this.videoPlaylistItems[this.activePlaylistIndex] || this.videoPlaylistItems[0] || { type: "section", title: "Playlist", sectionContent: "" };
+        },
+        videoPlaylistOverlayImage() {
+            if (!this.s.imageOverlay) return "";
+            return this.safeMediaUrl(this.s.overlayImageUrl) || this.videoPlaylistThumbnail(this.videoPlaylistActiveItem);
+        },
+        videoPlaylistTabs() {
+            const entry = this.videoPlaylistActiveItem;
+            if (!entry || entry.type === "section" || !entry.showContentTabs) return [];
+            return [
+                { title: String(entry.contentTabOneTitle || "Overview"), content: String(entry.contentTabOneContent || "") },
+                { title: String(entry.contentTabTwoTitle || "Notes"), content: String(entry.contentTabTwoContent || "") },
+            ].filter((tab) => tab.title || tab.content);
+        },
+        videoPlaylistRootStyle() {
+            return {
+                "--video-playlist-height": this.safeLength(this.responsiveValue("videoHeight", "360px"), "360px"),
+                "--video-playlist-name-background": this.safeColor(this.s.playlistNameBackground, "#101828"),
+                "--video-playlist-name-color": this.safeColor(this.s.playlistNameColor, "#fff"),
+                "--video-playlist-count-color": this.safeColor(this.s.videoCountColor, "#667085"),
+                "--video-playlist-item-background": this.safeColor(this.s.itemBackground, "#fff"),
+                "--video-playlist-item-background-hover": this.safeColor(this.s.itemBackgroundHover, "#f2f4f7"),
+                "--video-playlist-item-background-active": this.safeColor(this.s.itemBackgroundActive, "#eef2ff"),
+                "--video-playlist-item-color": this.safeColor(this.s.itemColor, "#344054"),
+                "--video-playlist-item-color-hover": this.safeColor(this.s.itemColorHover, "#101828"),
+                "--video-playlist-item-color-active": this.safeColor(this.s.itemColorActive, "#101828"),
+                "--video-playlist-duration-color": this.safeColor(this.s.durationColor, "#667085"),
+                "--video-playlist-icon-color": this.safeColor(this.s.iconColor, "#6979f8"),
+                "--video-playlist-icon-background": this.safeColor(this.s.iconBackground, "#fff"),
+                "--video-playlist-icon-shadow": this.safeTextShadow(this.s.iconShadow, "none"),
+                "--video-playlist-icon-size": this.safeLength(this.responsiveValue("iconSize", "18px"), "18px"),
+                "--video-playlist-section-background": this.safeColor(this.s.sectionBackground, "#f8fafc"),
+                "--video-playlist-section-border-color": this.safeColor(this.s.sectionBorderColor, "#e4e7ec"),
+                "--video-playlist-section-border-type": this.safeEnum(this.s.sectionBorderType, ["none", "solid", "double", "dotted", "dashed"], "solid"),
+                "--video-playlist-section-border-width": this.safeLength(this.responsiveValue("sectionBorderWidth", "1px"), "1px"),
+                "--video-playlist-section-radius": this.safeLength(this.responsiveValue("sectionRadius", "6px"), "6px"),
+                "--video-playlist-section-padding": this.safeLength(this.responsiveValue("sectionPadding", "12px"), "12px"),
+                "--video-playlist-section-shadow": this.safeTextShadow(this.s.sectionBoxShadow, "none"),
+                "--video-playlist-tabs-border-width": this.safeLength(this.responsiveValue("tabsBorderWidth", "1px"), "1px"),
+                "--video-playlist-tabs-border-color": this.safeColor(this.s.tabsBorderColor, "#e4e7ec"),
+                "--video-playlist-tabs-background": this.safeColor(this.s.tabsBackground, "#fff"),
+                "--video-playlist-tabs-title-color": this.safeColor(this.s.tabsTitleColor, "#667085"),
+                "--video-playlist-tabs-title-active": this.safeColor(this.s.tabsTitleActiveColor, "#6979f8"),
+                "--video-playlist-tabs-content-color": this.safeColor(this.s.tabsContentColor, "#344054"),
+                "--video-playlist-tabs-content-padding": this.safeLength(this.responsiveValue("tabsContentPadding", "14px"), "14px"),
+                "--video-playlist-show-more": this.safeColor(this.s.showMoreColor, "#6979f8"),
+                "--video-playlist-show-more-hover": this.safeColor(this.s.showMoreColorHover, "#5868e8"),
+            };
+        },
+        videoPlaylistNameStyle() {
+            return { ...this.tagTypographyStyle("videoPlaylistName", this.s.playlistTitleTag, "20px", "600", "1.3em", "playlistNameFontSizeMode"), color: "var(--video-playlist-name-color)" };
+        },
+        videoPlaylistCountStyle() {
+            return { ...this.typographyStyle("videoPlaylistCount", "13px", "400", "1.4em"), color: "var(--video-playlist-count-color)" };
+        },
+        videoPlaylistDurationStyle() {
+            return { ...this.typographyStyle("videoPlaylistDuration", "12px", "400", "1.3em"), color: "var(--video-playlist-duration-color)" };
+        },
+        videoPlaylistSectionStyle() {
+            return { background: "var(--video-playlist-section-background)", border: "var(--video-playlist-section-border-width) var(--video-playlist-section-border-type, solid) var(--video-playlist-section-border-color)", borderRadius: "var(--video-playlist-section-radius)", padding: "var(--video-playlist-section-padding)", boxShadow: this.safeTextShadow(this.s.sectionBoxShadow, "none") };
+        },
+        videoPlaylistItemStyle() {
+            return (index) => {
+                const active = index === this.activePlaylistIndex;
+                return { background: active ? "var(--video-playlist-item-background-active)" : "var(--video-playlist-item-background)", color: active ? "var(--video-playlist-item-color-active)" : "var(--video-playlist-item-color)" };
+            };
+        },
+        videoPlaylistIconStyle() {
+            return (index) => ({ color: index === this.activePlaylistIndex ? this.safeColor(this.s.dropdownIconColorActive, "#6979f8") : this.safeColor(this.s.iconColor, "#6979f8"), background: "var(--video-playlist-icon-background)", boxShadow: this.safeTextShadow(this.s.iconShadow, "none"), fontSize: "var(--video-playlist-icon-size)" });
+        },
+        videoPlaylistTabButtonStyle() {
+            return (index) => ({ ...this.typographyStyle("videoPlaylistTabTitle", "14px", "600", "1.3em"), color: index === this.activePlaylistTab ? "var(--video-playlist-tabs-title-active)" : "var(--video-playlist-tabs-title-color)" });
+        },
+        videoPlaylistTabContentStyle() {
+            return { ...this.typographyStyle("videoPlaylistTabContent", "14px", "400", "1.5em"), color: "var(--video-playlist-tabs-content-color)" };
+        },
+        videoPlaylistShowMoreStyle() {
+            return { ...this.typographyStyle("videoPlaylistShowMore", "13px", "600", "1.3em"), color: this.safeColor(this.s.showMoreColor, "#6979f8") };
+        },
+        carouselTrackStyle() {
+            const gap = this.safeLength(
+                this.responsiveValue("gap", "20px"),
+                "20px",
+            );
+            const match = gap.match(/^(-?\d+(?:\.\d+)?)([a-z%]*)$/i);
+            const gapPitch = match
+                ? `${Number(
+                      (
+                          (Number(match[1]) * this.activeIndex) /
+                          this.carouselVisible
+                      ).toFixed(4),
+                  )}${match[2] || "px"}`
+                : "0px";
+            return {
+                transform: `translate3d(calc(-${this.activeIndex * (100 / this.carouselVisible)}% - ${gapPitch}),0,0)`,
+                gap,
+                transitionDuration:
+                    Math.max(0, Number(this.s.transitionSpeed) || 0) + "ms",
+                alignItems: this.s.equalHeight ? "stretch" : "flex-start",
+            };
+        },
+        carouselSlideStyle() {
+            return {
+                flex: `0 0 calc(${100 / this.carouselVisible}% - ${this.carouselGapOffset})`,
+                background: this.s.slideBackground || "#fff",
+                padding: this.safeLength(
+                    this.responsiveValue("slidePadding", "20px"),
+                    "20px",
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("slideRadius", "8px"),
+                    "8px",
+                ),
+                border:
+                    this.safeLength(
+                        this.responsiveValue("slideBorderWidth", "1px"),
+                        "1px",
+                    ) +
+                    " solid " +
+                    (this.s.slideBorderColor || "#e4e7ec"),
+                height: this.s.equalHeight ? "auto" : "max-content",
+            };
+        },
+        carouselTitleStyle() {
+            return {
+                ...this.typographyStyle("carouselTitle", "20px", "600", "1.3em"),
+                color: this.safeColor(this.s.carouselTitleColor, "#101828"),
+            };
+        },
+        carouselDescriptionStyle() {
+            return {
+                ...this.typographyStyle("carouselDescription", "14px", "400", "1.5em"),
+                color: this.safeColor(this.s.carouselDescriptionColor, "#344054"),
+            };
+        },
+        mediaArrowPosition() {
+            return this.safeEnum(this.responsiveValue("arrowPosition", "inside"), ["inside", "outside"], "inside");
+        },
+        mediaCarouselRootStyle() {
+            const buttonSize = this.safeLength(this.responsiveValue("arrowButtonSize", this.responsiveValue("arrowsSize", "20px")), "20px");
+            const edgeOffset = this.safeLength(this.responsiveValue("arrowEdgeOffset", "46px"), "46px");
+            return {
+                ...this.carouselRootStyle,
+                "--carousel-arrow-button-size": buttonSize,
+                "--carousel-arrow-icon-size": this.safeLength(this.responsiveValue("arrowIconSize", "10px"), "10px"),
+                "--carousel-arrow-edge-position": this.mediaArrowPosition === "outside" ? `calc(0px - ${buttonSize} - ${edgeOffset})` : edgeOffset,
+                "--carousel-arrow-overflow": this.mediaArrowPosition === "outside" ? "visible" : "hidden",
+                "--arrow-color": this.safeColor(this.s.arrowColor, "#fff"),
+                "--arrow-background": this.safeColor(this.s.arrowBackground, "rgba(16,24,40,.5)"),
+                "--arrow-hover-color": this.safeColor(this.s.arrowHoverColor, this.safeColor(this.s.arrowColor, "#fff")),
+                "--arrow-hover-background": this.safeColor(this.s.arrowHoverBackground, this.safeColor(this.s.arrowBackground, "rgba(16,24,40,.5)")),
+                "--carousel-arrow-radius": this.responsiveBoxValue("arrowRadius", "50%"),
+                width: this.safeLength(this.responsiveValue("width", "100%"), "100%"),
+                "--media-height": this.safeLength(this.responsiveValue("height", "300px"), "300px"),
+                "--media-fit": ["cover", "contain", "auto"].includes(this.s.imageFit) ? this.s.imageFit : "cover",
+                "--media-overlay-background": this.s.overlayBackground || "rgba(0,0,0,.5)",
+                "--media-overlay-color": this.s.overlayTextColor || "#fff",
+                "--media-overlay-icon-size": this.safeLength(this.responsiveValue("overlayIconSize", "32px"), "32px"),
+                "--media-play-color": this.s.playIconColor || "#fff",
+                "--media-play-size": this.safeLength(this.responsiveValue("playIconSize", "80px"), "80px"),
+                "--media-play-shadow": this.s.playIconShadow || "0 1px 6px rgba(0,0,0,.35)",
+                "--media-lightbox-background": this.s.lightboxBackground || "rgba(0,0,0,.92)",
+                "--media-lightbox-ui": this.s.lightboxUiColor || "#fff",
+                "--media-lightbox-ui-hover": this.s.lightboxUiHoverColor || "#6979f8",
+                "--media-lightbox-video-width": this.safeLength(this.responsiveValue("lightboxVideoWidth", "75%"), "75%"),
+            };
+        },
+        mediaCarouselSlideStyle() {
+            return {
+                flex: `0 0 calc(${100 / this.carouselVisible}% - ${this.carouselGapOffset})`,
+                background: this.s.slideBackground || "#fff",
+                padding: this.responsiveBoxValue("slidePadding", "0px"),
+                borderStyle: "solid",
+                borderColor: this.s.slideBorderColor || "transparent",
+                borderWidth: this.responsiveBoxValue("slideBorder", "0px"),
+                borderRadius: this.responsiveBoxValue("slideRadius", "0px"),
+            };
+        },
+        mediaOverlayIconClass() {
+            return {
+                "plus-circle": "fas fa-plus-circle",
+                eye: "fas fa-eye",
+                link: "fas fa-link",
+                "search-plus": "fas fa-search-plus",
+            }[this.s.overlayIcon] || "fas fa-search-plus";
+        },
+        reviewRootStyle() {
+            return {
+                ...this.carouselRootStyle,
+                width: this.safeLength(
+                    this.responsiveValue("reviewsWidth", "100%"),
+                    "100%",
+                ),
+                "--reviews-header-background": this.s.headerBackground || "#fff",
+                "--reviews-header-gap": this.safeLength(
+                    this.responsiveValue("headerGap", "15px"),
+                    "15px",
+                ),
+                "--reviews-separator-color": this.s.separatorColor || "#e4e7ec",
+                "--reviews-separator-size": this.safeLength(
+                    this.responsiveValue("separatorSize", "1px"),
+                    "1px",
+                ),
+                "--reviews-image-size": this.safeLength(
+                    this.responsiveValue("imageSize", "50px"),
+                    "50px",
+                ),
+                "--reviews-image-gap": this.safeLength(
+                    this.responsiveValue("imageGap", "15px"),
+                    "15px",
+                ),
+                "--reviews-image-radius": this.responsiveBoxValue("imageRadius", "50%"),
+                "--reviews-image-fit": this.safeEnum(this.s.imageFit, ["cover", "contain", "auto"], "cover"),
+                "--reviews-image-border-color": this.safeColor(this.s.imageBorderColor, "#e4e7ec"),
+                "--reviews-image-border": this.s.imageBorder ? this.responsiveBoxValue("imageBorder", "1px") : "0px",
+                "--reviews-icon-size": this.safeLength(
+                    this.responsiveValue("iconSize", "20px"),
+                    "20px",
+                ),
+                "--reviews-rating-size": this.safeLength(
+                    this.responsiveValue("ratingSize", "16px"),
+                    "16px",
+                ),
+                "--reviews-rating-spacing": this.safeLength(
+                    this.responsiveValue("ratingSpacing", "2px"),
+                    "2px",
+                ),
+                "--reviews-rating-color": this.s.ratingColor || "#f0ad4e",
+                "--reviews-rating-unmarked": this.s.ratingUnmarkedColor || "#ccd6df",
+            };
+        },
+        reviewSlideStyle() {
+            return {
+                flex: `0 0 calc(${100 / this.carouselVisible}% - ${this.carouselGapOffset})`,
+                background: this.s.slideBackground || "#fff",
+                padding: this.responsiveBoxValue("slidePadding", "0px"),
+                borderStyle: "solid",
+                borderColor: this.s.slideBorderColor || "#e4e7ec",
+                borderWidth: this.responsiveBoxValue("slideBorder", "1px"),
+                borderRadius: this.responsiveBoxValue("slideRadius", "0px"),
+            };
+        },
+        reviewImageStyle() {
+            return {
+                objectFit: this.safeEnum(this.s.imageFit, ["cover", "contain", "auto"], "cover"),
+                borderStyle: "solid",
+                borderColor: this.safeColor(this.s.imageBorderColor, "#e4e7ec"),
+                borderWidth: this.s.imageBorder ? this.responsiveBoxValue("imageBorder", "1px") : "0px",
+            };
+        },
+        reviewNameStyle() {
+            return {
+                ...this.typographyStyle("reviewName", "16px", "600", "1.3em"),
+                color: this.s.nameColor || "#101828",
+            };
+        },
+        reviewTitleStyle() {
+            return {
+                ...this.typographyStyle("reviewTitle", "13px", "400", "1.4em"),
+                color: this.s.titleColor || "#667085",
+            };
+        },
+        reviewTextStyle() {
+            return {
+                ...this.typographyStyle("reviewText", "14px", "400", "1.6em"),
+                color: this.s.reviewColor || "#344054",
+            };
+        },
+        testimonialArrowPosition() {
+            return this.safeEnum(this.responsiveValue("arrowPosition", "inside"), ["inside", "outside"], "inside");
+        },
+        testimonialRootStyle() {
+            const alignment = this.safeEnum(
+                this.responsiveValue("alignment", "center"),
+                ["left", "center", "right"],
+                "center",
+            );
+            const buttonSize = this.safeLength(this.responsiveValue("arrowButtonSize", this.responsiveValue("arrowsSize", "20px")), "20px");
+            const edgeOffset = this.safeLength(this.responsiveValue("arrowEdgeOffset", "46px"), "46px");
+            return {
+                ...this.carouselRootStyle,
+                "--carousel-arrow-button-size": buttonSize,
+                "--carousel-arrow-icon-size": this.safeLength(this.responsiveValue("arrowIconSize", "10px"), "10px"),
+                "--carousel-arrow-edge-position": this.testimonialArrowPosition === "outside" ? `calc(0px - ${buttonSize} - ${edgeOffset})` : edgeOffset,
+                "--carousel-arrow-overflow": this.testimonialArrowPosition === "outside" ? "visible" : "hidden",
+                "--carousel-arrow-color": this.safeColor(this.s.arrowColor, "#344054"),
+                "--carousel-arrow-background": this.safeColor(this.s.arrowBackground, "#fff"),
+                "--carousel-arrow-hover-color": this.safeColor(this.s.arrowHoverColor, this.safeColor(this.s.arrowColor, "#344054")),
+                "--carousel-arrow-hover-background": this.safeColor(this.s.arrowHoverBackground, this.safeColor(this.s.arrowBackground, "#fff")),
+                "--carousel-arrow-radius": this.responsiveBoxValue("arrowRadius", "50%"),
+                width: this.safeLength(this.responsiveValue("width", "100%"), "100%"),
+                textAlign: alignment,
+                "--testimonial-identity-align":
+                    { left: "flex-start", center: "center", right: "flex-end" }[alignment] ||
+                    "center",
+                "--testimonial-content-gap": this.safeLength(
+                    this.responsiveValue("contentGap", "10px"),
+                    "10px",
+                ),
+                "--testimonial-image-size": this.safeLength(
+                    this.responsiveValue("imageSize", "50px"),
+                    "50px",
+                ),
+                "--testimonial-image-gap": this.safeLength(
+                    this.responsiveValue("imageGap", "10px"),
+                    "10px",
+                ),
+                "--testimonial-image-radius": this.responsiveBoxValue("imageRadius", "50%"),
+            };
+        },
+        testimonialSlideStyle() {
+            return {
+                flex: `0 0 calc(${100 / this.carouselVisible}% - ${this.carouselGapOffset})`,
+                background: this.safeColor(this.s.slideBackground, "#fff"),
+                padding: this.responsiveBoxValue("slidePadding", "20px"),
+                borderStyle: "solid",
+                borderColor: this.safeColor(this.s.slideBorderColor, "#e4e7ec"),
+                borderWidth: this.responsiveBoxValue("slideBorder", "1px"),
+                borderRadius: this.responsiveBoxValue("slideRadius", "0px"),
+            };
+        },
+        testimonialContentStyle() {
+            const strokeWidth = this.safeLength(
+                this.responsiveValue("testimonialCarouselContentTextStrokeWidth", "0px"),
+                "0px",
+            );
+            return {
+                ...this.typographyStyle(
+                    "testimonialCarouselContent",
+                    "16px",
+                    "400",
+                    "1.5em",
+                ),
+                color: this.safeColor(this.s.contentColor, "#344054"),
+                textShadow: this.safeTextShadow(
+                    this.s.testimonialCarouselContentTextShadow,
+                    "none",
+                ),
+                WebkitTextStroke: `${strokeWidth} ${this.safeColor(this.s.testimonialCarouselContentTextStrokeColor, "#000")}`,
+            };
+        },
+        testimonialNameStyle() {
+            return {
+                ...this.typographyStyle(
+                    "testimonialCarouselName",
+                    "18px",
+                    "600",
+                    "1.3em",
+                ),
+                color: this.safeColor(this.s.nameColor, "#101828"),
+            };
+        },
+        testimonialTitleStyle() {
+            return {
+                ...this.typographyStyle(
+                    "testimonialCarouselTitle",
+                    "14px",
+                    "400",
+                    "1.4em",
+                ),
+                color: this.safeColor(this.s.titleColor, "#667085"),
+            };
+        },
+        testimonialImageStyle() {
+            return {
+                width: "var(--testimonial-image-size, 50px)",
+                height: "var(--testimonial-image-size, 50px)",
+                borderStyle: "solid",
+                borderColor: this.safeColor(this.s.imageBorderColor, "#e4e7ec"),
+                borderWidth: this.s.imageBorder
+                    ? this.responsiveBoxValue("imageBorder", "1px")
+                    : "0px",
+                borderRadius: "var(--testimonial-image-radius, 50%)",
+                objectFit: "cover",
+            };
+        },
+        carouselGapOffset() {
+            const gap = this.safeLength(
+                this.responsiveValue("gap", "20px"),
+                "20px",
+            );
+            const match = gap.match(/^(-?\d+(?:\.\d+)?)([a-z%]*)$/i);
+            if (!match || this.carouselVisible <= 1) return "0px";
+            const value =
+                (Number(match[1]) * (this.carouselVisible - 1)) /
+                this.carouselVisible;
+            return `${Number(value.toFixed(4))}${match[2] || "px"}`;
+        },
+        carouselArrowStyle() {
+            return {};
+        },
+        ctaStyle() {
+            return {
+                minHeight: this.safeLength(
+                    this.responsiveValue("height", "300px"),
+                    "300px",
+                ),
+                background: this.s.boxBackground || "#f2f4f7",
+                padding: this.safeLength(
+                    this.responsiveValue("padding", "30px"),
+                    "30px",
+                ),
+                flexDirection:
+                    {
+                        left: "row",
+                        right: "row-reverse",
+                        above: "column",
+                        below: "column-reverse",
+                    }[this.s.imagePosition] || "row",
+            };
+        },
+        ctaImageStyle() {
+            return {
+                backgroundImage: this.safeCssUrl(this.s.imageUrl),
+                width: this.safeLength(
+                    this.responsiveValue("imageWidth", "40%"),
+                    "40%",
+                ),
+                height: this.safeLength(
+                    this.responsiveValue("imageHeight", "300px"),
+                    "300px",
+                ),
+            };
+        },
+        ctaContentStyle() {
+            return {
+                alignSelf:
+                    { top: "flex-start", middle: "center", bottom: "flex-end" }[
+                        this.s.verticalPosition
+                    ] || "center",
+                textAlign: this.safeEnum(
+                    this.s.alignment,
+                    ["left", "center", "right"],
+                    "left",
+                ),
+            };
+        },
+        ctaOverlayStyle() {
+            return { background: this.s.overlayColor || "#00000033" };
+        },
+        ctaRibbonStyle() {
+            return {
+                background: this.s.ribbonBackground || "#f04438",
+                color: this.s.ribbonTextColor || "#fff",
+            };
+        },
+        flipRootStyle() {
+            return {
+                height: this.safeLength(
+                    this.responsiveValue("height", "300px"),
+                    "300px",
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("borderRadius", "8px"),
+                    "8px",
+                ),
+            };
+        },
+        flipFrontStyle() {
+            return {
+                background: this.s.frontBackground || "#14b8a6",
+                padding: this.safeLength(
+                    this.responsiveValue("frontPadding", "30px"),
+                    "30px",
+                ),
+                textAlign: this.safeEnum(
+                    this.s.frontAlignment,
+                    ["left", "center", "right"],
+                    "center",
+                ),
+                justifyContent:
+                    { top: "flex-start", middle: "center", bottom: "flex-end" }[
+                        this.s.verticalPosition
+                    ] || "center",
+                border:
+                    this.safeLength(
+                        this.responsiveValue("frontBorderWidth", "0px"),
+                        "0px",
+                    ) +
+                    " solid " +
+                    (this.s.frontBorderColor || "transparent"),
+            };
+        },
+        flipBackStyle() {
+            return {
+                background: this.s.backBackground || "#6979f8",
+                padding: this.safeLength(
+                    this.responsiveValue("backPadding", "30px"),
+                    "30px",
+                ),
+                textAlign: this.safeEnum(
+                    this.s.backAlignment,
+                    ["left", "center", "right"],
+                    "center",
+                ),
+                justifyContent:
+                    { top: "flex-start", middle: "center", bottom: "flex-end" }[
+                        this.s.verticalPosition
+                    ] || "center",
+                border:
+                    this.safeLength(
+                        this.responsiveValue("backBorderWidth", "0px"),
+                        "0px",
+                    ) +
+                    " solid " +
+                    (this.s.backBorderColor || "transparent"),
+            };
+        },
+        flipFrontTitleStyle() {
+            return {
+                ...this.typographyStyle(
+                    "flipFrontTitle",
+                    "24px",
+                    "600",
+                    "1.2em",
+                ),
+                color: this.s.frontTitleColor || "#fff",
+            };
+        },
+        flipFrontDescriptionStyle() {
+            return { color: this.s.frontDescriptionColor || "#fff" };
+        },
+        flipBackTitleStyle() {
+            return {
+                ...this.typographyStyle(
+                    "flipBackTitle",
+                    "24px",
+                    "600",
+                    "1.2em",
+                ),
+                color: this.s.backTitleColor || "#fff",
+            };
+        },
+        flipBackDescriptionStyle() {
+            return { color: this.s.backDescriptionColor || "#fff" };
+        },
+        flipImageStyle() {
+            return {
+                width: this.safeLength(
+                    this.responsiveValue("frontImageWidth", "30%"),
+                    "30%",
+                ),
+                opacity: Math.max(
+                    0,
+                    Math.min(1, Number(this.s.frontImageOpacity) || 0),
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("frontImageRadius", "0px"),
+                    "0px",
+                ),
+                marginBottom: this.safeLength(
+                    this.responsiveValue("frontGraphicSpacing", "16px"),
+                    "16px",
+                ),
+            };
+        },
+        flipIconStyle() {
+            return {
+                fontSize: this.safeLength(
+                    this.responsiveValue("iconSize", "48px"),
+                    "48px",
+                ),
+                color: this.s.iconColor || "#fff",
+                background: this.s.iconBackground || "transparent",
+                padding: this.safeLength(
+                    this.responsiveValue("iconPadding", "0px"),
+                    "0px",
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("iconRadius", "0px"),
+                    "0px",
+                ),
+                transform: `rotate(${Math.max(-360, Math.min(360, Number(this.s.iconRotation) || 0))}deg)`,
+                marginBottom: this.safeLength(
+                    this.responsiveValue("frontGraphicSpacing", "16px"),
+                    "16px",
+                ),
+            };
+        },
+    },
+    watch: {
+        hotspotRenditionKey: {
+            immediate: true,
+            handler() {
+                this.resolveHotspotImage();
+            },
+        },
+        reviewRenditionKey: {
+            immediate: true,
+            handler() {
+                this.resolveReviewImages();
+            },
+        },
+        responsiveDevice() {
+            this.goTo(this.activeIndex);
+            this.startSliderAutoplay();
+        },
+    },
+        mounted() {
+            this.productDatasetRefreshHandler = () => { this.productDatasetRevision += 1; };
+            window.addEventListener("pagebuilder:v24-form-datasets-loaded", this.productDatasetRefreshHandler);
+            this.timer = window.setInterval(() => {
+                this.now = Date.now();
+            }, 1000);
+            if (this.type === "progress_tracker") {
+                this.progressScrollHandler = () => this.updateProgressTracker();
+                this.progressResizeHandler = () => this.updateProgressTracker();
+                window.addEventListener("scroll", this.progressScrollHandler, { passive: true });
+                window.addEventListener("resize", this.progressResizeHandler, { passive: true });
+                this.updateProgressTracker();
+            }
+            if (this.type === "product_lead_form") {
+                this.formMessagePreviewHandler = (event) => this.handleFormMessagePreview(event);
+                window.addEventListener(
+                    "pagebuilder:v24-form-message-preview",
+                    this.formMessagePreviewHandler,
+                );
+                this.productCardStatePreviewHandler = (event) => {
+                    if (String(event?.detail?.nodeId || "") !== String(this.item.id)) return;
+                    this.productCardPreviewState = ["normal", "hover", "selected"].includes(event?.detail?.state)
+                        ? event.detail.state
+                        : "normal";
+                };
+                window.addEventListener("pagebuilder:v24-product-card-state-preview", this.productCardStatePreviewHandler);
+            }
+            if (
+            this.type === "animated_headline" &&
+            this.s.headlineStyle === "rotating" &&
+            !this.reducedMotion
+        )
+            this.wordTimer = window.setInterval(
+                () => {
+                    const words = this.s.rotatingTexts || [];
+                    if (!this.s.loop && this.wordIndex >= words.length - 1) {
+                        window.clearInterval(this.wordTimer);
+                        this.wordTimer = 0;
+                        return;
+                    }
+                    this.wordIndex++;
+                },
+                Math.max(400, Number(this.s.delay) || 2500),
+            );
+        this.startSliderAutoplay();
+    },
+    beforeUnmount() {
+        window.clearInterval(this.timer);
+        window.clearInterval(this.wordTimer);
+        window.clearInterval(this.sliderTimer);
+        window.clearTimeout(this.codeCopyStatusTimer);
+        window.clearTimeout(this.shareActionStatusTimer);
+        if (this.progressScrollHandler) window.removeEventListener("scroll", this.progressScrollHandler);
+        if (this.progressResizeHandler) window.removeEventListener("resize", this.progressResizeHandler);
+        if (this.formMessagePreviewHandler) {
+            window.removeEventListener(
+                "pagebuilder:v24-form-message-preview",
+                this.formMessagePreviewHandler,
+            );
+        }
+        if (this.productCardStatePreviewHandler) {
+            window.removeEventListener("pagebuilder:v24-product-card-state-preview", this.productCardStatePreviewHandler);
+        }
+        if (this.productDatasetRefreshHandler) {
+            window.removeEventListener("pagebuilder:v24-form-datasets-loaded", this.productDatasetRefreshHandler);
+        }
+    },
+    methods: {
+        productNodeDepth(node) {
+            const byId = new Map(this.productNodes.map((entry) => [String(entry?.id || ""), entry]));
+            let depth = 0;
+            let parentId = node?.parentId == null ? "" : String(node.parentId);
+            const seen = new Set([String(node?.id || "")]);
+            while (parentId && byId.has(parentId) && !seen.has(parentId)) {
+                seen.add(parentId);
+                depth += 1;
+                parentId = byId.get(parentId)?.parentId == null ? "" : String(byId.get(parentId).parentId);
+            }
+            return parentId ? -1 : depth;
+        },
+        productLevelOptions(levelIndex) {
+            const parentId = levelIndex === 0 ? null : this.productSelectionNodeId(levelIndex - 1);
+            return this.productNodes
+                .filter((node) => node && node.active !== false && this.productNodeDepth(node) === levelIndex && (levelIndex === 0
+                    ? node.parentId == null || String(node.parentId) === ""
+                    : String(node.parentId) === String(parentId)))
+                .sort((left, right) => (Number(left.sortOrder) || 0) - (Number(right.sortOrder) || 0));
+        },
+        productSelectionNodeId(levelIndex) {
+            return String(this.productSelection.ids[levelIndex] || "");
+        },
+        productSelectionValue(levelIndex) {
+            return String(this.productSelection.values[levelIndex] || "");
+        },
+        selectProductLevel(levelIndex, nodeId) {
+            const current = this.productSelection.ids.slice(0, levelIndex);
+            this.productSelectionIds = [...current, String(nodeId || "")].filter(Boolean);
+        },
+        productThumbnailUrl(node) {
+            return this.safeMediaUrl(node?.meta?.thumbnailUrl || node?.meta?.imageUrl);
+        },
+        productThumbnailAlt(node) {
+            return String(node?.meta?.thumbnailAlt || node?.meta?.imageAlt || node?.label || "Product thumbnail");
+        },
+        productLevelStyle(levelIndex) {
+            return this.s.productLevelStyles?.[levelIndex] || {};
+        },
+        productStyleResponsiveValue(style, base, fallback = "") {
+            const suffix = this.responsiveDevice === "mobile" ? "Mobile" : (this.responsiveDevice === "tablet" ? "Tablet" : "");
+            const responsiveKeys = {
+                gap: { Tablet: "gapTablet", Mobile: "gapMobile" },
+                cardAlign: { Tablet: "cardAlignTablet", Mobile: "cardAlignMobile" },
+                cardWidth: { Tablet: "cardWidthTablet", Mobile: "cardWidthMobile" },
+                cardMinWidth: { Tablet: "cardMinWidthTablet", Mobile: "cardMinWidthMobile" },
+                cardHeight: { Tablet: "cardHeightTablet", Mobile: "cardHeightMobile" },
+                cardPadding: { Tablet: "cardPaddingTablet", Mobile: "cardPaddingMobile" },
+                cardMargin: { Tablet: "cardMarginTablet", Mobile: "cardMarginMobile" },
+                contentGap: { Tablet: "contentGapTablet", Mobile: "contentGapMobile" },
+                imageWidth: { Tablet: "imageWidthTablet", Mobile: "imageWidthMobile" },
+                imageHeight: { Tablet: "imageHeightTablet", Mobile: "imageHeightMobile" },
+                selectedCheckPosition: { Tablet: "selectedCheckPositionTablet", Mobile: "selectedCheckPositionMobile" },
+                selectedCheckSize: { Tablet: "selectedCheckSizeTablet", Mobile: "selectedCheckSizeMobile" },
+                selectedCheckIconSize: { Tablet: "selectedCheckIconSizeTablet", Mobile: "selectedCheckIconSizeMobile" },
+                selectedCheckOffset: { Tablet: "selectedCheckOffsetTablet", Mobile: "selectedCheckOffsetMobile" },
+            };
+            const mapped = responsiveKeys[base] || {};
+            const keys = suffix === "Mobile" ? [mapped.Mobile || base + "Mobile", mapped.Tablet || base + "Tablet", base] : (suffix === "Tablet" ? [mapped.Tablet || base + "Tablet", base] : [base]);
+            for (const key of keys) {
+                if (style?.[key] !== "" && style?.[key] != null) return style[key];
+            }
+            return fallback;
+        },
+        productStyleResponsiveSidesValue(style, base, fallback = "0px") {
+            const sides = ["Top", "Right", "Bottom", "Left"];
+            const hasSideValues = sides.some((side) => style?.[base + side] !== "" && style?.[base + side] != null);
+            if (!hasSideValues) return this.safeBox(this.productStyleResponsiveValue(style, base, fallback), fallback);
+            return sides.map((side) => this.safeLength(this.productStyleResponsiveValue(style, base + side, fallback), fallback)).join(" ");
+        },
+        productStyleLabelGap(style) {
+            const suffix = this.responsiveDevice === "mobile" ? "Mobile" : (this.responsiveDevice === "tablet" ? "Tablet" : "");
+            const contentGap = this.productStyleResponsiveValue(style, "contentGap", suffix === "Mobile" ? "8px" : (suffix === "Tablet" ? "10px" : "12px"));
+            const rawLabelGap = this.productStyleResponsiveValue(style, "imageLabelGap", "");
+            const defaultLabelGap = suffix === "Mobile" ? "8px" : (suffix === "Tablet" ? "10px" : "12px");
+            const explicitResponsiveGap = suffix !== "" && style?.["imageLabelGap" + suffix] !== "" && style?.["imageLabelGap" + suffix] != null;
+            const inheritedDesktopDefault = suffix !== "" && !explicitResponsiveGap && rawLabelGap === "12px";
+            const labelGap = rawLabelGap && rawLabelGap !== defaultLabelGap && !inheritedDesktopDefault ? rawLabelGap : contentGap;
+            return this.safeLength(labelGap, this.safeLength(contentGap, "12px"));
+        },
+        productLevelGridStyle(levelIndex) {
+            const style = this.productLevelStyle(levelIndex);
+            const key = this.responsiveDevice === "mobile" ? "columnsMobile" : (this.responsiveDevice === "tablet" ? "columnsTablet" : "columns");
+            const columns = Math.max(1, Math.min(this.responsiveDevice === "mobile" ? 4 : 8, Number(style[key]) || 1));
+            return {
+                gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+                gap: this.safeLength(this.productStyleResponsiveValue(style, "gap", "12px"), "12px"),
+            };
+        },
+        productLevelCardStyle(levelIndex) {
+            const style = this.productLevelStyle(levelIndex);
+            const borderType = this.safeEnum(style.borderType, ["none", "solid", "double", "dotted", "dashed"], "solid");
+            const imageBorderType = this.safeEnum(style.imageBorderType, ["none", "solid", "double", "dotted", "dashed"], "none");
+            const cardWidth = this.productStyleResponsiveValue(style, "cardWidth", "100%");
+            const cardMinWidth = this.productStyleResponsiveValue(style, "cardMinWidth", "0px");
+            const cardHeight = this.productStyleResponsiveValue(style, "cardHeight", "220px");
+            const cardHeightMode = this.safeEnum(style.cardHeightMode, ["auto", "fixed"], "auto");
+            const cardPadding = this.productStyleResponsiveSidesValue(style, "cardPadding", "16px");
+            const cardMargin = this.productStyleResponsiveSidesValue(style, "cardMargin", "0px");
+            const cardAlign = this.productStyleResponsiveValue(style, "cardAlign", "center");
+            const contentGap = this.productStyleResponsiveValue(style, "contentGap", "12px");
+            const imageShape = this.safeEnum(style.imageShape, ["circle", "rounded", "custom"], levelIndex === 0 ? "circle" : "rounded");
+            const imageFit = this.safeEnum(style.imageFit, ["cover", "contain", "fill", "scale-down"], levelIndex === 0 ? "cover" : "contain");
+            const imagePadding = this.productStyleResponsiveSidesValue(style, "imagePadding", "0px");
+            const imageRadius = imageShape === "circle" ? "50%" : (imageShape === "rounded" ? "8px" : this.productStyleResponsiveSidesValue(style, "imageRadius", "8px"));
+            return {
+                "--product-card-width": this.safeLength(cardWidth, "100%"),
+                "--product-card-min-width": this.safeLength(cardMinWidth, "0px"),
+                "--product-card-height": cardHeightMode === "fixed" ? this.safeLength(cardHeight, "220px") : "auto",
+                "--product-card-content-align": cardHeightMode === "fixed" ? "center" : "start",
+                "--product-card-self-align": cardHeightMode === "fixed" ? "stretch" : "start",
+                "--product-card-padding": cardPadding,
+                "--product-card-margin": cardMargin,
+                "--product-card-align": this.safeEnum(cardAlign, ["left", "center", "right"], "center"),
+                "--product-card-content-gap": this.safeLength(contentGap, "12px"),
+                "--product-card-label-gap": this.productStyleLabelGap(style),
+                "--product-card-border-style": borderType,
+                "--product-card-border-width": borderType === "none" ? "0" : this.productStyleResponsiveSidesValue(style, "borderWidth", "1px"),
+                "--product-card-border-width-hover": borderType === "none" ? "0" : this.productStyleResponsiveSidesValue(style, "hoverBorderWidth", "1px"),
+                "--product-card-border-width-selected": borderType === "none" ? "0" : this.productStyleResponsiveSidesValue(style, "selectedBorderWidth", "1px"),
+                "--product-card-radius": this.productStyleResponsiveSidesValue(style, "borderRadius", "8px"),
+                "--product-card-border": this.safeColor(style.normalBorderColor, "#d0d5dd"),
+                "--product-card-border-hover": this.safeColor(style.hoverBorderColor, "#98a2b3"),
+                "--product-card-border-selected": this.safeColor(style.selectedBorderColor, "#6979f8"),
+                "--product-card-bg": this.safeColor(style.normalBackground, "#fff"),
+                "--product-card-bg-hover": this.safeColor(style.hoverBackground, "#f8fafc"),
+                "--product-card-bg-selected": this.safeColor(style.selectedBackground, "#eef2ff"),
+                "--product-card-shadow": this.safeTextShadow(style.normalShadow, "none"),
+                "--product-card-shadow-hover": this.safeTextShadow(style.hoverShadow, "none"),
+                "--product-card-shadow-selected": this.safeTextShadow(style.selectedShadow, "none"),
+                "--product-card-label": this.safeColor(style.labelColor, "#101828"),
+                "--product-card-label-selected": this.safeColor(style.selectedLabelColor, "#3443c4"),
+                "--product-card-image-width": this.safeLength(this.productStyleResponsiveValue(style, "imageWidth", "96px"), "96px"),
+                "--product-card-image-height": this.safeLength(this.productStyleResponsiveValue(style, "imageHeight", "96px"), "96px"),
+                "--product-card-image-fit": imageFit,
+                "--product-card-image-radius": imageRadius,
+                "--product-card-image-padding": imagePadding,
+                "--product-card-image-border-style": imageBorderType,
+                "--product-card-image-border-width": imageBorderType === "none" ? "0" : this.productStyleResponsiveSidesValue(style, "imageBorderWidth", "1px"),
+                "--product-card-image-border-color": this.safeColor(style.imageBorderColor, "#d0d5dd"),
+                "--product-card-check-position": this.safeEnum(this.productStyleResponsiveValue(style, "selectedCheckPosition", "top-right"), ["top-left", "top-right", "bottom-left", "bottom-right"], "top-right"),
+                "--product-card-check-size": this.safeLength(this.productStyleResponsiveValue(style, "selectedCheckSize", "20px"), "20px"),
+                "--product-card-check-icon-size": this.safeLength(this.productStyleResponsiveValue(style, "selectedCheckIconSize", "10px"), "10px"),
+                "--product-card-check-offset": this.safeLength(this.productStyleResponsiveValue(style, "selectedCheckOffset", "14px"), "14px"),
+                "--product-card-check-color": this.safeColor(style.selectedCheckColor, "#fff"),
+                "--product-card-check-background": this.safeColor(style.selectedCheckBackground, "#6979f8"),
+                "--product-card-check-radius": this.productStyleResponsiveSidesValue(style, "selectedCheckRadius", "50%"),
+            };
+        },
+        productLevelCheckIconStyle(levelIndex) {
+            const style = this.productLevelStyle(levelIndex);
+            const position = this.safeEnum(this.productStyleResponsiveValue(style, "selectedCheckPosition", "top-right"), ["top-left", "top-right", "bottom-left", "bottom-right"], "top-right");
+            const offset = this.safeLength(this.productStyleResponsiveValue(style, "selectedCheckOffset", "14px"), "14px");
+            const checkSize = this.safeLength(this.productStyleResponsiveValue(style, "selectedCheckSize", "20px"), "20px");
+            const checkIconSize = this.safeLength(this.productStyleResponsiveValue(style, "selectedCheckIconSize", "10px"), "10px");
+            const iconStyle = {
+                color: this.safeColor(style.selectedCheckColor, "#fff"),
+                backgroundColor: this.safeColor(style.selectedCheckBackground, "#6979f8"),
+                width: checkSize,
+                height: checkSize,
+                fontSize: checkIconSize,
+                borderRadius: this.productStyleResponsiveSidesValue(style, "selectedCheckRadius", "50%"),
+            };
+            iconStyle[position.includes("top") ? "top" : "bottom"] = offset;
+            iconStyle[position.includes("left") ? "left" : "right"] = offset;
+            return iconStyle;
+        },
+        productLevelLabelPlacement(levelIndex) {
+            return this.safeEnum(this.productStyleResponsiveValue(this.productLevelStyle(levelIndex), "imageLabelPlacement", "below"), ["above", "below", "inside"], "below");
+        },
+        productLevelImageStyle(levelIndex) {
+            const style = this.productLevelStyle(levelIndex);
+            const shape = this.safeEnum(style.imageShape, ["circle", "rounded", "custom"], levelIndex === 0 ? "circle" : "rounded");
+            return {
+                width: "100%",
+                height: "100%",
+                objectFit: this.safeEnum(style.imageFit, ["cover", "contain", "fill", "scale-down"], levelIndex === 0 ? "cover" : "contain"),
+                borderRadius: shape === "circle" ? "50%" : (shape === "rounded" ? "8px" : this.productStyleResponsiveSidesValue(style, "imageRadius", "8px")),
+            };
+        },
+        syncFormRowGrid() {
+            const api = window.PageBuilderElementorV24FormRowGrid;
+            if (!api || !this.s.rowGrid) return;
+            this.s.fields = api.projectFields(this.s.rowGrid);
+        },
+        previewFormMessage(state = "success") {
+            const nextState = state === "error" ? "error" : "success";
+            this.formSubmitState = nextState;
+            this.formSubmitMessage = nextState === "error"
+                ? String(this.s.errorMessage || "An error occurred.")
+                : String(this.s.successMessage || "The form was sent successfully.");
+            this.formSubmitRedirect = "";
+        },
+        handleFormMessagePreview(event) {
+            if (String(event?.detail?.nodeId || "") !== String(this.item.id)) return;
+            this.previewFormMessage(event?.detail?.state);
+        },
+        clearFormMessage() {
+            this.formSubmitState = "idle";
+            this.formSubmitMessage = "";
+            this.formSubmitRedirect = "";
+        },
+        async submitEditorForm(event) {
+            if (this.formSubmitState === "sending") return;
+            if (typeof this.editor?.submitFormDraft !== "function") {
+                this.formSubmitState = "error";
+                this.formSubmitMessage = "The editor Form test endpoint is unavailable.";
+                this.formSubmitRedirect = "";
+                return;
+            }
+            this.formSubmitState = "sending";
+            this.formSubmitMessage = "Sending...";
+            this.formSubmitRedirect = "";
+            try {
+                const payload = await this.editor.submitFormDraft(this.item, event?.currentTarget);
+                if (payload?.success !== true) throw payload || new Error("Form submission failed.");
+                this.formSubmitState = "success";
+                this.formSubmitMessage = payload.message || "Form actions completed.";
+                this.formSubmitRedirect = /^(?:https?:\/\/|\/|#)/i.test(String(payload.redirect || ""))
+                    ? String(payload.redirect)
+                    : "";
+            } catch (error) {
+                const payload = error?.response?.data || error || {};
+                const firstError = Object.values(payload.errors || {}).flat()[0];
+                this.formSubmitState = "error";
+                this.formSubmitMessage = Number(error?.response?.status) === 401
+                    ? "Your editor session has expired. Please sign in again, then retry."
+                    : String(firstError || payload.message || "An error occurred while testing the form.");
+                this.formSubmitRedirect = "";
+            }
+        },
+        async resolveReviewImages() {
+            const requestId = ++this.reviewRenditionRequest;
+            const entries = Array.isArray(this.s.items) ? this.s.items : [];
+            const initial = {};
+            entries.forEach((entry) => {
+                initial[entry.id] = this.safeMediaUrl(entry.imageUrl);
+            });
+            this.reviewImageUrls = initial;
+            const endpoint = String(
+                window.PAGE_BUILDER_ELEMENTOR_V24_CONTEXT?.imageRenditionUrl || "",
+            );
+            const size = String(this.s.imageResolution || "full");
+            if (
+                !["carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type) ||
+                size === "full" ||
+                !endpoint ||
+                !window.axios
+            )
+                return;
+            const resolved = { ...initial };
+            await Promise.all(
+                entries.map(async (entry) => {
+                    const source = this.safeMediaUrl(entry.imageUrl);
+                    if (!source) return;
+                    try {
+                        const response = await window.axios.get(endpoint, {
+                            params: {
+                                url: source,
+                                size,
+                                ...(size === "custom"
+                                    ? {
+                                          width: Math.max(
+                                              1,
+                                              Math.min(4096, Number(this.s.customImageWidth) || 300),
+                                          ),
+                                          height: Math.max(
+                                              1,
+                                              Math.min(4096, Number(this.s.customImageHeight) || 300),
+                                          ),
+                                      }
+                                    : {}),
+                            },
+                        });
+                        resolved[entry.id] = this.safeMediaUrl(response?.data?.url) || source;
+                    } catch {
+                        resolved[entry.id] = source;
+                    }
+                }),
+            );
+            if (requestId === this.reviewRenditionRequest) this.reviewImageUrls = resolved;
+        },
+        reviewImageUrl(entry) {
+            return this.reviewImageUrls[entry?.id] || this.safeMediaUrl(entry?.imageUrl);
+        },
+        mediaOverlayText(entry) {
+            const key = ["title", "caption", "description"].includes(this.s.captionSource)
+                ? this.s.captionSource
+                : "title";
+            return String(entry?.[key] || "");
+        },
+        safeVideoEmbedUrl(value) {
+            const raw = String(value || "").trim();
+            if (!/^https?:\/\//i.test(raw)) return "";
+            try {
+                const url = new URL(raw);
+                const host = url.hostname.toLowerCase().replace(/^www\./, "");
+                if (host === "youtu.be") return `https://www.youtube.com/embed/${encodeURIComponent(url.pathname.slice(1))}`;
+                if (["youtube.com", "m.youtube.com"].includes(host)) {
+                    const id = url.searchParams.get("v") || url.pathname.split("/").filter(Boolean).pop();
+                    return id ? `https://www.youtube.com/embed/${encodeURIComponent(id)}` : "";
+                }
+                if (host === "vimeo.com" || host === "player.vimeo.com") {
+                    const id = url.pathname.split("/").filter(Boolean).pop();
+                    return /^\d+$/.test(id || "") ? `https://player.vimeo.com/video/${id}` : "";
+                }
+            } catch (_) {
+                return "";
+            }
+            return "";
+        },
+        videoPlaylistEmbedUrl(entry) {
+            if (!entry || !["youtube", "vimeo"].includes(entry.type)) return "";
+            const base = this.safeVideoEmbedUrl(entry.link);
+            if (!base) return "";
+            if (!this.s.autoplayOnLoad) return base;
+            return base + (base.includes("?") ? "&" : "?") + "autoplay=1";
+        },
+        videoPlaylistThumbnail(entry) {
+            const custom = this.safeMediaUrl(entry?.thumbnailUrl);
+            if (custom) return custom;
+            const raw = String(entry?.link || "");
+            const match = raw.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/i);
+            return match ? `https://img.youtube.com/vi/${encodeURIComponent(match[1])}/hqdefault.jpg` : "";
+        },
+        videoPlaylistIconClass(index) {
+            const watched = this.s.indicateWatched && this.playlistWatched.includes(index);
+            return watched
+                ? this.proIconClass(this.s, "playedIcon", "fas fa-check")
+                : this.proIconClass(this.s, "playIcon", "fas fa-play");
+        },
+        videoPlaylistItemTitleStyle(entry = {}) {
+            return this.tagTypographyStyle("videoPlaylistItem", entry.titleTag, "14px", "500", "1.3em", "videoPlaylistItemFontSizeMode");
+        },
+        selectVideoPlaylistItem(index) {
+            const next = Math.max(0, Math.min(this.videoPlaylistItems.length - 1, Number(index) || 0));
+            if (this.s.indicateWatched && this.activePlaylistIndex !== next) {
+                this.playlistWatched = Array.from(new Set([...this.playlistWatched, this.activePlaylistIndex]));
+            }
+            this.activePlaylistIndex = next;
+            this.activePlaylistTab = 0;
+        },
+        playNextVideo() {
+            if (this.s.indicateWatched) this.playlistWatched = Array.from(new Set([...this.playlistWatched, this.activePlaylistIndex]));
+            if (this.s.autoplayNext && this.activePlaylistIndex < this.videoPlaylistItems.length - 1) this.selectVideoPlaylistItem(this.activePlaylistIndex + 1);
+        },
+        progressTrackerTarget() {
+            if (typeof document === "undefined") return null;
+            if (this.s.relativeTo === "selector") {
+                try { return document.querySelector(String(this.s.selector || "")); } catch (_) { return null; }
+            }
+            if (this.s.relativeTo === "post_content") return document.querySelector(".post-content, .entry-content, article, main") || document.documentElement;
+            return document.documentElement;
+        },
+        updateProgressTracker() {
+            if (this.type !== "progress_tracker" || typeof window === "undefined" || typeof document === "undefined") return;
+            const viewport = Math.max(1, window.innerHeight || document.documentElement.clientHeight || 1);
+            const scrollTop = Math.max(0, window.scrollY || document.documentElement.scrollTop || 0);
+            const target = this.progressTrackerTarget();
+            if (!target) { this.progressValue = 0; return; }
+            if (this.s.relativeTo === "page") {
+                const max = Math.max(0, document.documentElement.scrollHeight - viewport);
+                this.progressValue = max ? (scrollTop / max) * 100 : 50;
+                return;
+            }
+            const rect = target.getBoundingClientRect ? target.getBoundingClientRect() : { top: 0, height: target.scrollHeight || 0 };
+            const top = rect.top + scrollTop;
+            const height = Math.max(1, rect.height || target.scrollHeight || 1);
+            this.progressValue = Math.max(0, Math.min(100, ((scrollTop - top + viewport) / (height + viewport)) * 100));
+        },
+        openMediaLightbox(entry) {
+            const isVideo = entry?.type === "video";
+            const url = this.mediaLightboxUrl(entry);
+            if (!url) return;
+            this.mediaLightbox = { type: isVideo ? "video" : "image", url, alt: String(entry?.title || "") };
+        },
+        mediaLightboxUrl(entry) {
+            return entry?.type === "video"
+                ? this.safeVideoEmbedUrl(entry?.videoUrl)
+                : this.reviewImageUrl(entry);
+        },
+        closeMediaLightbox() {
+            this.mediaLightbox = null;
+        },
+        async resolveHotspotImage() {
+            const requestId = ++this.hotspotRenditionRequest;
+            const sourceUrl = String(this.s.imageUrl || "");
+            this.hotspotImageUrl = sourceUrl;
+            const endpoint = String(
+                window.PAGE_BUILDER_ELEMENTOR_V24_CONTEXT?.imageRenditionUrl || "",
+            );
+            const requestedSize = String(this.s.imageResolution || "full");
+            const size = ["thumbnail", "medium", "large", "full"].includes(
+                requestedSize,
+            )
+                ? requestedSize
+                : "full";
+            if (
+                this.type !== "hotspot" ||
+                !sourceUrl ||
+                !endpoint ||
+                !window.axios ||
+                size === "full"
+            )
+                return;
+            try {
+                const response = await window.axios.get(endpoint, {
+                    params: { url: sourceUrl, size },
+                });
+                if (requestId === this.hotspotRenditionRequest)
+                    this.hotspotImageUrl = String(
+                        response.data?.url || sourceUrl,
+                    );
+            } catch (_) {
+                if (requestId === this.hotspotRenditionRequest)
+                    this.hotspotImageUrl = sourceUrl;
+            }
+        },
+        formatPrice(value) {
+            const raw = String(value ?? "").trim();
+            const normalized = raw.replace(/[^\d.-]/g, "");
+            const number = Number(normalized);
+            if (!Number.isFinite(number)) return raw;
+            const [integer, decimal = ""] = number
+                .toFixed(Math.min(2, (normalized.split(".")[1] || "").length))
+                .split(".");
+            const thousands = this.s.currencyFormat === "period" ? "." : ",";
+            const decimalMark = this.s.currencyFormat === "period" ? "," : ".";
+            return (
+                integer.replace(/\B(?=(\d{3})+(?!\d))/g, thousands) +
+                (decimal ? decimalMark + decimal : "")
+            );
+        },
+        goTo(index) {
+            let next = Number(index) || 0;
+            if (this.s.infiniteLoop && this.maxIndex > 0) {
+                if (next > this.maxIndex) next = 0;
+                if (next < 0) next = this.maxIndex;
+            } else next = Math.max(0, Math.min(this.maxIndex, next));
+            this.activeIndex = next;
+        },
+        previous() {
+            this.goTo(
+                this.activeIndex -
+                    (["carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type)
+                        ? this.carouselStep
+                        : 1),
+            );
+            this.afterSliderInteraction();
+        },
+        next() {
+            this.goTo(
+                this.activeIndex +
+                    (["carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type)
+                        ? this.carouselStep
+                        : 1),
+            );
+            this.afterSliderInteraction();
+        },
+        selectSlide(index) {
+            this.goTo(index);
+            this.afterSliderInteraction();
+        },
+        afterSliderInteraction() {
+            if (!["slides", "carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type)) return;
+            if (this.s.pauseOnInteraction) {
+                this.sliderInteractionPaused = true;
+                this.stopSliderAutoplay();
+            } else this.startSliderAutoplay();
+        },
+        onSliderHover(hovered) {
+            this.sliderHovered = hovered;
+            this.startSliderAutoplay();
+        },
+        stopSliderAutoplay() {
+            window.clearInterval(this.sliderTimer);
+            this.sliderTimer = 0;
+        },
+        startSliderAutoplay() {
+            this.stopSliderAutoplay();
+            if (
+                !["slides", "carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type) ||
+                !this.s.autoplay ||
+                this.reducedMotion ||
+                this.sliderInteractionPaused ||
+                (this.s.pauseOnHover && this.sliderHovered) ||
+                this.maxIndex <= 0
+            )
+                return;
+            this.sliderTimer = window.setInterval(
+                () =>
+                    this.goTo(
+                        this.activeIndex +
+                            (["carousel", "reviews", "media_carousel", "testimonial_carousel"].includes(this.type)
+                                ? this.carouselStep
+                                : 1),
+                    ),
+                Math.max(100, Number(this.s.autoplaySpeed) || 5000),
+            );
+        },
+        carouselDotStyle(active) {
+            return {
+                background: active
+                    ? this.s.paginationActiveColor || "#6979f8"
+                    : this.s.paginationColor || "#d0d5dd",
+            };
+        },
+        onCarouselKeydown(event) {
+            if (event.key === "Escape" && this.mediaLightbox) {
+                event.preventDefault();
+                this.closeMediaLightbox();
+                return;
+            }
+            if (event.key === "ArrowLeft") {
+                event.preventDefault();
+                this.previous();
+            }
+            if (event.key === "ArrowRight") {
+                event.preventDefault();
+                this.next();
+            }
+        },
+        toggleFlip(event) {
+            const target = event?.target;
+            if (
+                target?.closest &&
+                target.closest("a,button,input,select,textarea")
+            )
+                return;
+            this.flipActive = !this.flipActive;
+        },
+        toggleHotspot(index) {
+            if (this.s.tooltipTrigger === "none") return;
+            this.openHotspot = this.openHotspot === index ? -1 : index;
+        },
+        hotspotStyle(spot, index = 0) {
+            return {
+                ...this.typographyStyle("hotspot", "14px", "600", "1.2em"),
+                left: Math.max(0, Math.min(100, Number(spot.x) || 0)) + "%",
+                top: Math.max(0, Math.min(100, Number(spot.y) || 0)) + "%",
+                color: this.s.hotspotColor || "#fff",
+                background: this.s.hotspotBoxColor || "#6979f8",
+                minWidth: this.safeLength(
+                    this.responsiveValue("hotspotMinWidth", "32px"),
+                    "32px",
+                ),
+                minHeight: this.safeLength(
+                    this.responsiveValue("hotspotMinHeight", "32px"),
+                    "32px",
+                ),
+                padding: this.safeLength(
+                    this.responsiveValue("hotspotPadding", "8px"),
+                    "8px",
+                ),
+                borderRadius: this.safeLength(
+                    this.responsiveValue("hotspotRadius", "50%"),
+                    "50%",
+                ),
+                animationDelay: this.s.sequencedAnimation
+                    ? `${Math.max(0, index) * 150}ms`
+                    : "0ms",
+            };
+        },
+        slideStyle(slide) {
+            const horizontal =
+                { left: "flex-start", center: "center", right: "flex-end" }[
+                    this.s.horizontalPosition
+                ] || "center";
+            const vertical =
+                { top: "flex-start", middle: "center", bottom: "flex-end" }[
+                    this.s.verticalPosition
+                ] || "center";
+            return {
+                backgroundImage: slide.backgroundImage
+                    ? this.safeCssUrl(slide.backgroundImage)
+                    : "none",
+                backgroundColor: slide.backgroundColor || "#6979f8",
+                backgroundPosition: this.safeEnum(
+                    slide.backgroundPosition,
+                    [
+                        "top left",
+                        "top center",
+                        "top right",
+                        "center left",
+                        "center center",
+                        "center right",
+                        "bottom left",
+                        "bottom center",
+                        "bottom right",
+                    ],
+                    "center center",
+                ),
+                backgroundSize: this.safeEnum(
+                    slide.backgroundSize,
+                    ["cover", "contain", "auto"],
+                    "cover",
+                ),
+                justifyContent: horizontal,
+                alignItems: vertical,
+                "--slide-overlay-color":
+                    slide.backgroundOverlay || "transparent",
+            };
+        },
+        slideTitleStyle(slide) {
+            return {
+                ...this.tagTypographyStyle("slideTitle", this.s.titleTag, "32px", "600", "1.2em", "slideTitleFontSizeMode"),
+                color: slide.titleColor || this.s.titleColor || "#fff",
+            };
+        },
+        slideDescriptionStyle(slide) {
+            return {
+                ...this.typographyStyle(
+                    "slideDescription",
+                    "16px",
+                    "400",
+                    "1.5em",
+                ),
+                color:
+                    slide.descriptionColor || this.s.descriptionColor || "#fff",
+            };
+        },
+        slidesDotStyle(active) {
+            return {
+                background: active
+                    ? this.s.dotsActiveColor || "#fff"
+                    : this.s.dotsColor || "#ffffff80",
+            };
+        },
+        async copyCode() {
+            const value = String(this.s.code ?? "");
+            try {
+                if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(value);
+                } else if (!this.copyCodeFallback(value)) {
+                    throw new Error("Clipboard unavailable");
+                }
+                this.codeCopyStatus = "Copied";
+            } catch (_) {
+                this.codeCopyStatus = "Copy failed";
+            }
+            window.clearTimeout(this.codeCopyStatusTimer);
+            this.codeCopyStatusTimer = window.setTimeout(() => {
+                this.codeCopyStatus = "";
+            }, 1800);
+        },
+        copyCodeFallback(value) {
+            if (typeof document === "undefined" || !document.body) return false;
+            const textarea = document.createElement("textarea");
+            textarea.value = value;
+            textarea.setAttribute("readonly", "");
+            textarea.style.position = "fixed";
+            textarea.style.opacity = "0";
+            document.body.appendChild(textarea);
+            textarea.select();
+            let copied = false;
+            try {
+                copied = Boolean(document.execCommand("copy"));
+            } catch (_) {
+                copied = false;
+            }
+            textarea.remove();
+            return copied;
+        },
+        shareNetwork(value) {
+            const allowed = [
+                "facebook",
+                "twitter",
+                "x",
+                "threads",
+                "linkedin",
+                "pinterest",
+                "reddit",
+                "whatsapp",
+                "telegram",
+                "email",
+                "print",
+                "copy",
+                "vk",
+                "tumblr",
+                "skype",
+                "digg",
+                "stumbleupon",
+                "pocket",
+                "flipboard",
+                "buffer",
+                "weibo",
+                "blogger",
+                "odnoklassniki",
+            ];
+            return this.safeEnum(String(value || ""), allowed, "facebook");
+        },
+        shareNetworkLabel(value) {
+            const labels = {
+                facebook: "Facebook",
+                twitter: "Twitter",
+                x: "X",
+                threads: "Threads",
+                linkedin: "LinkedIn",
+                pinterest: "Pinterest",
+                reddit: "Reddit",
+                whatsapp: "WhatsApp",
+                telegram: "Telegram",
+                email: "Email",
+                print: "Print",
+                copy: "Copy Link",
+                vk: "VK",
+                tumblr: "Tumblr",
+                skype: "Skype",
+                digg: "Digg",
+                stumbleupon: "StumbleUpon",
+                pocket: "Pocket",
+                flipboard: "Flipboard",
+                buffer: "Buffer",
+                weibo: "Weibo",
+                blogger: "Blogger",
+                odnoklassniki: "Odnoklassniki",
+            };
+            return labels[this.shareNetwork(value)] || "Share";
+        },
+        shareNetworkIcon(value) {
+            const icons = {
+                facebook: "fab fa-facebook-f",
+                twitter: "fab fa-twitter",
+                x: "fab fa-x-twitter",
+                threads: "fab fa-threads",
+                linkedin: "fab fa-linkedin-in",
+                pinterest: "fab fa-pinterest-p",
+                reddit: "fab fa-reddit-alien",
+                whatsapp: "fab fa-whatsapp",
+                telegram: "fab fa-telegram-plane",
+                email: "fas fa-envelope",
+                print: "fas fa-print",
+                copy: "fas fa-link",
+                vk: "fab fa-vk",
+                tumblr: "fab fa-tumblr",
+                skype: "fab fa-skype",
+                digg: "fab fa-digg",
+                stumbleupon: "fab fa-stumbleupon",
+                pocket: "fab fa-get-pocket",
+                flipboard: "fas fa-book-open",
+                buffer: "fab fa-buffer",
+                weibo: "fab fa-weibo",
+                blogger: "fab fa-blogger-b",
+                odnoklassniki: "fab fa-odnoklassniki",
+            };
+            return icons[this.shareNetwork(value)] || "fas fa-share-alt";
+        },
+        shareNetworkColors(value) {
+            const colors = {
+                facebook: ["#1877f2", "#ffffff", "#0d6efd"],
+                twitter: ["#1da1f2", "#ffffff", "#0d8bd0"],
+                x: ["#000000", "#ffffff", "#333333"],
+                threads: ["#000000", "#ffffff", "#333333"],
+                linkedin: ["#0a66c2", "#ffffff", "#004182"],
+                pinterest: ["#bd081c", "#ffffff", "#8c0615"],
+                reddit: ["#ff4500", "#ffffff", "#d93600"],
+                whatsapp: ["#25d366", "#ffffff", "#1da851"],
+                telegram: ["#229ed9", "#ffffff", "#147eb0"],
+                email: ["#667085", "#ffffff", "#475467"],
+                print: ["#667085", "#ffffff", "#475467"],
+                copy: ["#667085", "#ffffff", "#475467"],
+            };
+            const entry = colors[this.shareNetwork(value)] || ["#6979f8", "#ffffff", "#5367ff"];
+            return {
+                primary: entry[0],
+                secondary: entry[1],
+                hoverPrimary: entry[2],
+                hoverSecondary: entry[1],
+            };
+        },
+        shareButtonStyle(entry) {
+            const colors = this.shareNetworkColors(entry?.network);
+            const custom = this.s.colorMode === "custom";
+            return {
+                ...this.typographyStyle("shareButtons", "14px", "600", "1.2em"),
+                "--share-button-background": this.safeColor(custom ? this.s.primaryColor : colors.primary, colors.primary),
+                "--share-button-color": this.safeColor(custom ? this.s.secondaryColor : colors.secondary, colors.secondary),
+                "--share-button-background-hover": this.safeColor(custom ? this.s.primaryColorHover : colors.hoverPrimary, colors.hoverPrimary),
+                "--share-button-color-hover": this.safeColor(custom ? this.s.secondaryColorHover : colors.hoverSecondary, colors.hoverSecondary),
+            };
+        },
+        shareAction(value) {
+            const network = this.shareNetwork(value);
+            return ["copy", "print"].includes(network) ? network : "";
+        },
+        shareButtonHref(entry) {
+            const network = this.shareNetwork(entry?.network);
+            const url = encodeURIComponent(this.shareTargetUrl);
+            const text = encodeURIComponent(String(this.s.shareText || (typeof document !== "undefined" ? document.title : "") || ""));
+            const label = encodeURIComponent(String(entry?.customLabel || this.shareNetworkLabel(network)));
+            const builders = {
+                facebook: "https://www.facebook.com/sharer/sharer.php?u=" + url,
+                twitter: "https://twitter.com/intent/tweet?url=" + url + "&text=" + text,
+                x: "https://x.com/intent/post?url=" + url + "&text=" + text,
+                threads: "https://www.threads.net/intent/post?text=" + encodeURIComponent(String(this.s.shareText || "") + " " + this.shareTargetUrl),
+                linkedin: "https://www.linkedin.com/sharing/share-offsite/?url=" + url,
+                pinterest: "https://pinterest.com/pin/create/button/?url=" + url + "&description=" + text,
+                reddit: "https://www.reddit.com/submit?url=" + url + "&title=" + text,
+                whatsapp: "https://wa.me/?text=" + encodeURIComponent(String(this.s.shareText || "") + " " + this.shareTargetUrl),
+                telegram: "https://t.me/share/url?url=" + url + "&text=" + text,
+                email: "mailto:?subject=" + label + "&body=" + encodeURIComponent(this.shareTargetUrl),
+                vk: "https://vk.com/share.php?url=" + url,
+                tumblr: "https://www.tumblr.com/widgets/share/tool?canonicalUrl=" + url,
+                skype: "https://web.skype.com/share?url=" + url,
+                digg: "https://digg.com/submit?url=" + url,
+                stumbleupon: "https://www.stumbleupon.com/submit?url=" + url,
+                pocket: "https://getpocket.com/save?url=" + url,
+                flipboard: "https://share.flipboard.com/bookmarklet/popout?v=2&url=" + url,
+                buffer: "https://buffer.com/add?url=" + url + "&text=" + text,
+                weibo: "https://service.weibo.com/share/share.php?url=" + url + "&title=" + text,
+                blogger: "https://www.blogger.com/blog-this.g?u=" + url + "&n=" + text,
+                odnoklassniki: "https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=" + url,
+            };
+            return builders[network] || "#";
+        },
+        shareButtonTarget(entry) {
+            return this.shareAction(entry?.network) ? undefined : "_blank";
+        },
+        shareButtonRel(entry) {
+            return this.shareAction(entry?.network) ? undefined : "noopener noreferrer";
+        },
+        async handleShareAction(entry, event) {
+            const action = this.shareAction(entry?.network);
+            if (!action) return;
+            event.preventDefault();
+            if (action === "print") {
+                if (typeof window !== "undefined" && typeof window.print === "function") window.print();
+                return;
+            }
+            try {
+                if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(this.shareTargetUrl);
+                } else if (!this.copyCodeFallback(this.shareTargetUrl)) {
+                    throw new Error("Clipboard unavailable");
+                }
+                this.shareActionStatus = "Copied";
+            } catch (_) {
+                this.shareActionStatus = "Copy failed";
+            }
+            window.clearTimeout(this.shareActionStatusTimer);
+            this.shareActionStatusTimer = window.setTimeout(() => {
+                this.shareActionStatus = "";
+            }, 1800);
+        },
+        escapeCodeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        },
+        codeKeywords(language) {
+            const aliases = {
+                jsx: "javascript",
+                tsx: "typescript",
+                vue: "javascript",
+                scss: "css",
+                sass: "css",
+                less: "css",
+                json5: "json",
+                mdx: "markdown",
+                shell: "bash",
+                powershell: "bash",
+                batch: "bash",
+                docker: "bash",
+                plsql: "sql",
+                graphql: "javascript",
+                twig: "php",
+                blade: "php",
+                actionscript: "javascript",
+                kotlin: "java",
+                dart: "java",
+                objectivec: "c",
+                swift: "c",
+                arduino: "cpp",
+                fsharp: "csharp",
+            };
+            const key = aliases[language] || language;
+            return {
+                javascript: ["as", "async", "await", "break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete", "else", "export", "extends", "finally", "for", "from", "function", "if", "import", "in", "instanceof", "let", "new", "of", "return", "static", "switch", "this", "throw", "try", "typeof", "var", "while", "with", "yield"],
+                typescript: ["as", "async", "await", "boolean", "break", "case", "catch", "class", "const", "continue", "declare", "default", "else", "export", "extends", "finally", "for", "from", "function", "if", "implements", "import", "interface", "keyof", "let", "new", "number", "of", "private", "public", "return", "string", "switch", "this", "throw", "try", "type", "typeof", "var", "void", "while"],
+                json: ["true", "false", "null"],
+                php: ["abstract", "array", "as", "break", "case", "class", "const", "continue", "echo", "else", "extends", "final", "for", "foreach", "function", "if", "implements", "include", "namespace", "new", "private", "protected", "public", "require", "return", "static", "switch", "throw", "trait", "try", "use", "while"],
+                python: ["and", "as", "assert", "async", "await", "break", "class", "continue", "def", "del", "elif", "else", "except", "finally", "for", "from", "global", "if", "import", "in", "is", "lambda", "nonlocal", "not", "or", "pass", "raise", "return", "try", "while", "with", "yield"],
+                bash: ["case", "do", "done", "elif", "else", "esac", "fi", "for", "function", "if", "in", "select", "then", "until", "while"],
+                sql: ["alter", "and", "as", "by", "case", "create", "delete", "desc", "distinct", "drop", "from", "group", "having", "in", "insert", "into", "join", "limit", "not", "null", "on", "or", "order", "select", "set", "table", "then", "union", "update", "values", "when", "where"],
+                java: ["abstract", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do", "double", "else", "extends", "final", "finally", "float", "for", "if", "implements", "import", "instanceof", "int", "interface", "long", "new", "package", "private", "protected", "public", "return", "short", "static", "super", "switch", "this", "throw", "throws", "try", "void", "while"],
+                csharp: ["abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else", "enum", "event", "explicit", "false", "finally", "float", "for", "foreach", "if", "implicit", "in", "int", "interface", "internal", "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out", "override", "params", "private", "protected", "public", "readonly", "ref", "return", "sealed", "static", "string", "struct", "switch", "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "using", "virtual", "void", "volatile", "while"],
+                cpp: ["alignas", "auto", "bool", "break", "case", "catch", "char", "class", "const", "constexpr", "continue", "default", "delete", "do", "double", "else", "enum", "explicit", "false", "float", "for", "if", "include", "inline", "int", "long", "namespace", "new", "nullptr", "operator", "private", "protected", "public", "return", "short", "signed", "sizeof", "static", "struct", "switch", "template", "this", "throw", "true", "try", "typedef", "typename", "union", "unsigned", "using", "virtual", "void", "volatile", "while"],
+                c: ["auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while"],
+                go: ["break", "case", "chan", "const", "continue", "default", "defer", "else", "fallthrough", "for", "func", "go", "goto", "if", "import", "interface", "map", "package", "range", "return", "select", "struct", "switch", "type", "var"],
+                rust: ["as", "async", "await", "break", "const", "continue", "crate", "else", "enum", "extern", "fn", "for", "if", "impl", "in", "let", "loop", "match", "mod", "move", "mut", "pub", "ref", "return", "self", "Self", "static", "struct", "super", "trait", "type", "unsafe", "use", "where", "while"],
+                ruby: ["alias", "and", "begin", "break", "case", "class", "def", "defined", "do", "else", "elsif", "end", "ensure", "for", "if", "in", "module", "next", "nil", "not", "or", "redo", "rescue", "retry", "return", "self", "super", "then", "undef", "unless", "until", "when", "while", "yield"],
+                css: ["and", "from", "important", "not", "or", "supports", "to"],
+                yaml: ["false", "null", "true"],
+                markdown: [],
+                toml: ["true", "false"],
+                pascal: ["and", "array", "begin", "case", "class", "const", "div", "do", "else", "end", "for", "function", "if", "in", "mod", "not", "of", "or", "procedure", "program", "record", "repeat", "then", "type", "until", "uses", "var", "while", "with"],
+                haskell: ["case", "class", "data", "default", "deriving", "do", "else", "foreign", "if", "import", "in", "infix", "instance", "let", "module", "newtype", "of", "then", "type", "where", "without"],
+                scala: ["abstract", "case", "catch", "class", "def", "do", "else", "extends", "final", "finally", "for", "if", "implicit", "import", "lazy", "match", "new", "object", "override", "package", "private", "protected", "return", "sealed", "this", "throw", "trait", "try", "type", "val", "var", "while", "with", "yield"],
+                groovy: ["as", "assert", "break", "case", "catch", "class", "const", "continue", "def", "default", "do", "else", "enum", "extends", "false", "final", "finally", "for", "if", "implements", "import", "in", "instanceof", "interface", "new", "null", "package", "private", "protected", "public", "return", "static", "switch", "this", "throw", "trait", "true", "try", "while"],
+                elixir: ["alias", "case", "cond", "def", "defmodule", "defp", "do", "else", "end", "fn", "for", "if", "import", "in", "nil", "not", "or", "raise", "receive", "rescue", "try", "unless", "use", "when"],
+                erlang: ["after", "begin", "case", "catch", "cond", "end", "fun", "if", "let", "of", "query", "receive", "try", "when"],
+                clojure: ["and", "def", "defn", "do", "fn", "if", "let", "loop", "map", "nil", "or", "quote", "recur", "require", "set!", "throw", "try", "when"],
+            }[key] || [];
+        },
+        highlightCodePlain(value, language) {
+            let html = this.escapeCodeHtml(value);
+            const keywords = this.codeKeywords(language);
+            if (keywords.length) {
+                const escapedKeywords = keywords.map((keyword) => keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+                html = html.replace(new RegExp(`\\b(?:${escapedKeywords.join("|")})\\b`, "g"), '<span class="pb-pro-code-token pb-pro-code-token--keyword">$&</span>');
+            }
+            html = html.replace(/\b(?:true|false|null|undefined|None|True|False|nil)\b/g, '<span class="pb-pro-code-token pb-pro-code-token--literal">$&</span>');
+            html = html.replace(/\b\d+(?:\.\d+)?\b/g, '<span class="pb-pro-code-token pb-pro-code-token--number">$&</span>');
+            html = html.replace(/\b[A-Za-z_$][\w$]*(?=\s*\()/g, '<span class="pb-pro-code-token pb-pro-code-token--function">$&</span>');
+            if (["markup", "html", "xml", "svg", "mathml", "ssml", "atom", "rss", "vue"].includes(language)) html = html.replace(/(&lt;\/?[A-Za-z][^&]*?&gt;)/gi, '<span class="pb-pro-code-token pb-pro-code-token--tag">$&</span>');
+            return html;
+        },
+        highlightCodeLine(value, language) {
+            const raw = String(value ?? "");
+            const hashComments = ["bash", "shell", "powershell", "batch", "docker", "php", "python", "ruby", "yaml", "toml", "r", "perl", "lua"].includes(language);
+            const pattern = hashComments
+                ? /\/\/.*$|#.*$|\/\*.*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`/gm
+                : /\/\/.*$|\/\*.*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`/gm;
+            let html = "";
+            let cursor = 0;
+            let match;
+            while ((match = pattern.exec(raw))) {
+                html += this.highlightCodePlain(raw.slice(cursor, match.index), language);
+                const token = match[0];
+                const kind = /^(?:\/\/|#|\/\*)/.test(token) ? "comment" : "string";
+                html += `<span class="pb-pro-code-token pb-pro-code-token--${kind}">${this.escapeCodeHtml(token)}</span>`;
+                cursor = match.index + token.length;
+            }
+            return html + this.highlightCodePlain(raw.slice(cursor), language);
+        },
+        typographyStyle(
+            prefix,
+            size = "16px",
+            weight = "400",
+            lineHeight = "1.4em",
+        ) {
+            return {
+                fontFamily: this.safeFontFamily(this.s[prefix + "FontFamily"]),
+                fontSize: this.safeLength(
+                    this.responsiveValue(prefix + "FontSize", size),
+                    size,
+                ),
+                fontWeight: this.safeFontWeight(
+                    this.s[prefix + "FontWeight"],
+                    weight,
+                ),
+                lineHeight: this.safeLength(
+                    this.responsiveValue(prefix + "LineHeight", lineHeight),
+                    lineHeight,
+                ),
+                letterSpacing: this.safeLength(
+                    this.responsiveValue(prefix + "LetterSpacing", "0px"),
+                    "0px",
+                ),
+                wordSpacing: this.safeLength(
+                    this.responsiveValue(prefix + "WordSpacing", "0px"),
+                    "0px",
+                ),
+                textTransform: this.safeEnum(
+                    this.s[prefix + "TextTransform"],
+                    ["none", "uppercase", "lowercase", "capitalize"],
+                    "none",
+                ),
+                fontStyle: this.safeEnum(
+                    this.s[prefix + "FontStyle"],
+                    ["normal", "italic", "oblique"],
+                    "normal",
+                ),
+                textDecoration: this.safeEnum(
+                    this.s[prefix + "TextDecoration"],
+                    ["none", "underline", "overline", "line-through"],
+                    "none",
+                ),
+            };
+        },
+        tagFontSize(tag, fallback = "16px") {
+            const device = ["tablet", "mobile"].includes(this.responsiveDevice) ? this.responsiveDevice : "desktop";
+            const safeTag = this.safeTag(tag, "div");
+            return TAG_FONT_SIZES[device]?.[safeTag] || fallback;
+        },
+        tagTypographyStyle(prefix, tag, size, weight, lineHeight, modeKey) {
+            const style = this.typographyStyle(prefix, size, weight, lineHeight);
+            if (this.s[modeKey] !== "custom") style.fontSize = this.tagFontSize(tag, size);
+            return style;
+        },
+        responsiveValue(base, fallback = "") {
+            const d = ["tablet", "mobile"].includes(this.responsiveDevice)
+                ? this.responsiveDevice
+                : "desktop";
+            const keys =
+                d === "mobile"
+                    ? [base + "Mobile", base + "Tablet", base]
+                    : d === "tablet"
+                      ? [base + "Tablet", base]
+                      : [base];
+            for (const key of keys) {
+                const value = this.s[key];
+                if (value !== "" && value != null) return value;
+            }
+            return fallback;
+        },
+        safeLength(value, fallback) {
+            const raw = String(value ?? "").trim();
+            return /^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i.test(raw)
+                ? raw
+                : fallback;
+        },
+        safeBox(value, fallback) {
+            const raw = String(value ?? "").trim();
+            const token = /^(?:-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?)$/i;
+            const parts = raw.split(/\s+/).filter(Boolean);
+            return parts.length >= 1 && parts.length <= 4 && parts.every((part) => token.test(part))
+                ? raw
+                : fallback;
+        },
+        safeFontFamily(value) {
+            const raw = String(value || "inherit").trim();
+            return raw && /^[A-Za-z0-9 _,.'"-]+$/.test(raw) ? raw : "inherit";
+        },
+        safeFontWeight(value, fallback) {
+            const raw = String(value || "");
+            return /^(?:normal|bold|[1-9]00)$/.test(raw) ? raw : fallback;
+        },
+        safeColor(value, fallback) {
+            const raw = String(value || "").trim();
+            return raw && /^[#a-z0-9(),.%\s-]+$/i.test(raw) ? raw : fallback;
+        },
+        safeTextShadow(value, fallback = "none") {
+            const raw = String(value || "").trim();
+            return raw === "none" || /^(?:0|-?\d+(?:\.\d+)?(?:px|em|rem))\s+(?:0|-?\d+(?:\.\d+)?(?:px|em|rem))(?:\s+(?:0|\d+(?:\.\d+)?(?:px|em|rem))){0,2}\s+(?:#[0-9a-f]{3,8}|rgba?\([0-9.,%\s]+\))$/i.test(raw)
+                ? raw
+                : fallback;
+        },
+        safeEnum(value, allowed, fallback) {
+            return allowed.includes(value) ? value : fallback;
+        },
+        safeMediaUrl(value) {
+            const raw = String(value || "").trim();
+            return /^(?:https?:\/\/|\/)[^\u0000-\u001f"'()\\]*$/i.test(raw)
+                ? raw
+                : "";
+        },
+        safeLinkUrl(value) {
+            const raw = String(value || "").trim();
+            if (!raw || raw.startsWith("//") || /[\u0000-\u001f\u007f]/.test(raw))
+                return "";
+            return /^(?:https?:\/\/|\/|#|mailto:|tel:)/i.test(raw) ? raw : "";
+        },
+        responsiveBoxValue(base, fallback) {
+            return ["Top", "Right", "Bottom", "Left"]
+                .map((side) =>
+                    this.safeLength(
+                        this.responsiveValue(base + side, fallback),
+                        fallback,
+                    ),
+                )
+                .join(" ");
+        },
+        reviewRating(entry) {
+            const rating = Number(entry?.rating);
+            return Number.isFinite(rating) ? Math.max(0, Math.min(5, rating)) : 0;
+        },
+        reviewStarFill(entry, index) {
+            return Math.max(0, Math.min(100, (this.reviewRating(entry) - index) * 100));
+        },
+        reviewOfficialIconColor(entry) {
+            const icon = String(entry?.iconClass || "").toLowerCase();
+            if (icon.includes("twitter")) return "#1da1f2";
+            if (icon.includes("facebook")) return "#1877f2";
+            if (icon.includes("instagram")) return "#e4405f";
+            if (icon.includes("linkedin")) return "#0a66c2";
+            if (icon.includes("youtube")) return "#ff0000";
+            return "#6979f8";
+        },
+        reviewIconStyle(entry) {
+            return {
+                color:
+                    this.s.iconColorMode === "custom"
+                        ? this.s.iconColor || "#1da1f2"
+                        : this.reviewOfficialIconColor(entry),
+            };
+        },
+        safeCssUrl(value) {
+            const raw = this.safeMediaUrl(value);
+            return raw ? `url("${raw}")` : "none";
+        },
+        safeTag(value, fallback) {
+            return [
+                "h1",
+                "h2",
+                "h3",
+                "h4",
+                "h5",
+                "h6",
+                "div",
+                "span",
+                "p",
+            ].includes(String(value || "").toLowerCase())
+                ? String(value).toLowerCase()
+                : fallback;
+        },
+        sanitizeSvg(value) {
+            const raw = String(value || "").trim();
+            if (!raw || typeof DOMParser === "undefined") return "";
+            const doc = new DOMParser().parseFromString(raw, "image/svg+xml");
+            const root = doc.documentElement;
+            if (
+                !root ||
+                root.nodeName.toLowerCase() !== "svg" ||
+                doc.querySelector("parsererror")
+            )
+                return "";
+            const allowed = new Set([
+                "svg",
+                "g",
+                "path",
+                "circle",
+                "ellipse",
+                "rect",
+                "line",
+                "polyline",
+                "polygon",
+                "title",
+                "desc",
+            ]);
+            [root, ...root.querySelectorAll("*")].forEach((element) => {
+                if (!allowed.has(element.nodeName.toLowerCase())) {
+                    element.remove();
+                    return;
+                }
+                Array.from(element.attributes).forEach((attribute) => {
+                    const name = attribute.name.toLowerCase();
+                    if (
+                        name.startsWith("on") ||
+                        name === "style" ||
+                        name.includes("href")
+                    )
+                        element.removeAttribute(attribute.name);
+                });
+            });
+            return root.outerHTML;
+        },
+        proIconSvg(entry, prefix) {
+            return entry?.[prefix + "Source"] === "svg"
+                ? this.sanitizeSvg(entry[prefix + "Svg"])
+                : "";
+        },
+        proIconClass(entry, prefix, fallback = "") {
+            if (entry?.[prefix + "Source"] === "none") return "";
+            const iconClass = String(entry?.[prefix + "Class"] || "").trim();
+            return /^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i.test(
+                iconClass,
+            )
+                ? iconClass
+                : fallback;
+        },
+        mediaArrowIconSvg(role) {
+            const key = role === "next" ? "nextArrowIcon" : "previousArrowIcon";
+            return this.s[key + "Source"] === "svg" ? this.sanitizeSvg(this.s[key + "Svg"]) : "";
+        },
+        mediaArrowIconClass(role) {
+            const key = role === "next" ? "nextArrowIcon" : "previousArrowIcon";
+            const fallback = role === "next" ? "fas fa-chevron-right" : "fas fa-chevron-left";
+            const iconClass = String(this.s[key] || "").trim();
+            return /^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i.test(iconClass) ? iconClass : fallback;
+        },
+        safeInputType(value) {
+            return [
+                "text",
+                "email",
+                "number",
+                "tel",
+                "url",
+                "date",
+                "time",
+                "file",
+                "hidden",
+                "checkbox",
+                "radio",
+            ].includes(value)
+                ? value
+                : "text";
+        },
+        fieldInputName(field) {
+            const id = String(field?.id || "").replace(/[^A-Za-z0-9_-]/g, "");
+            const multiple = field?.type === "checkbox"
+                || (field?.type === "select" && field?.multiple)
+                || (field?.type === "file" && field?.multiple);
+            return id + (id && multiple ? "[]" : "");
+        },
+        formFieldValue(field, fallback = "") {
+            return Object.prototype.hasOwnProperty.call(this.formValues || {}, field?.id)
+                ? this.formValues[field.id]
+                : fallback;
+        },
+        formConditionValueEmpty(value) {
+            if (Array.isArray(value)) return value.length === 0 || value.every((entry) => String(entry || "") === "");
+            return String(value ?? "").trim() === "";
+        },
+        formConditionRuleMatches(rule) {
+            const selectedParent = rule?.valueSource === "selectedParent" && rule.parentFieldId;
+            const actual = selectedParent
+                ? this.formFieldValue({ id: rule.parentFieldId }, "")
+                : this.formFieldValue({ id: rule.fieldId }, "");
+            const expectedSource = selectedParent ? rule?.parentValue : rule?.value;
+            if (selectedParent && ["equals", "not_equals", "contains"].includes(rule.operator) && this.formConditionValueEmpty(expectedSource)) {
+                return false;
+            }
+            const expectedValues = (Array.isArray(expectedSource) ? expectedSource : [expectedSource])
+                .map((entry) => String(entry ?? "").trim());
+            const normalized = Array.isArray(actual)
+                ? actual.map((entry) => String(entry ?? "").trim())
+                : String(actual ?? "").trim();
+            const equalsExpected = (entry) => expectedValues.some(
+                (expected) => String(entry ?? "").toLowerCase() === expected.toLowerCase(),
+            );
+            if (rule.operator === "empty") return this.formConditionValueEmpty(actual);
+            if (rule.operator === "not_empty") return !this.formConditionValueEmpty(actual);
+            if (rule.operator === "contains") {
+                return Array.isArray(normalized)
+                    ? normalized.some((entry) => expectedValues.some((expected) => entry.toLowerCase().includes(expected.toLowerCase())))
+                    : expectedValues.some((expected) => normalized.toLowerCase().includes(expected.toLowerCase()));
+            }
+            if (rule.operator === "not_equals") {
+                return Array.isArray(normalized)
+                    ? !normalized.some(equalsExpected)
+                    : !equalsExpected(normalized);
+            }
+            return Array.isArray(normalized)
+                ? normalized.some(equalsExpected)
+                : equalsExpected(normalized);
+        },
+        formFieldVisible(field) {
+            const logic = field?.conditionalLogic;
+            const rules = Array.isArray(logic?.rules)
+                ? logic.rules.filter((rule) => rule && rule.fieldId && rule.fieldId !== field.id)
+                : [];
+            if (logic?.enabled !== true || !rules.length) return true;
+            const results = rules.map((rule) => this.formConditionRuleMatches(rule));
+            return logic.relation === "any" ? results.some(Boolean) : results.every(Boolean);
+        },
+        formDatasetOptions(field) {
+            const datasets = Array.isArray(window.PAGE_BUILDER_ELEMENTOR_V24_FORM_DATASETS)
+                ? window.PAGE_BUILDER_ELEMENTOR_V24_FORM_DATASETS
+                : [];
+            const dataset = datasets.find((entry) => String(entry.id) === String(field.datasetId));
+            const nodes = Array.isArray(dataset?.nodes) ? dataset.nodes : [];
+            const parentFieldId = String(field.datasetParentFieldId || "");
+            if (!parentFieldId) {
+                return nodes
+                    .filter((node) => node && node.active !== false && (node.parentId ?? null) === null)
+                    .sort((left, right) => (Number(left.sortOrder) || 0) - (Number(right.sortOrder) || 0));
+            }
+            const parentValue = this.formFieldValue({ id: parentFieldId }, "");
+            const values = Array.isArray(parentValue) ? parentValue : [parentValue];
+            const parentIds = nodes
+                .filter((node) => values.some((value) => String(node.id) === String(value) || String(node.value) === String(value)))
+                .map((node) => String(node.id));
+            return nodes
+                .filter((node) => node && node.active !== false && parentIds.includes(String(node.parentId)))
+                .sort((left, right) => (Number(left.sortOrder) || 0) - (Number(right.sortOrder) || 0));
+        },
+        formFieldOptions(field) {
+            return field?.datasetMode === "dataset" && field.datasetId
+                ? this.formDatasetOptions(field)
+                : this.parseFormOptions(field);
+        },
+        formChoiceChecked(field, value) {
+            const current = this.formFieldValue(field, field.multiple || field.type === "checkbox" ? [] : "");
+            return Array.isArray(current) ? current.includes(String(value)) : String(current) === String(value);
+        },
+        setFormFieldValue(field, event) {
+            const target = event?.target;
+            if (!target) return;
+            const next = { ...(this.formValues || {}) };
+            if (field.type === "checkbox") {
+                const current = Array.isArray(next[field.id]) ? [...next[field.id]] : [];
+                const value = String(target.value || "1");
+                next[field.id] = target.checked
+                    ? Array.from(new Set([...current, value]))
+                    : current.filter((entry) => String(entry) !== value);
+            } else if (field.type === "radio") {
+                if (!target.checked) return;
+                next[field.id] = target.value;
+            } else if (target.multiple) {
+                next[field.id] = Array.from(target.selectedOptions || []).map((option) => option.value);
+            } else {
+                next[field.id] = target.value;
+            }
+            (this.s.fields || []).forEach((dependent) => {
+                if (dependent.datasetParentFieldId === field.id && dependent.id !== field.id) delete next[dependent.id];
+            });
+            this.formValues = next;
+        },
+        sanitizeFormHtml(value) {
+            const template = document.createElement("template");
+            template.innerHTML = String(value || "");
+            const allowed = new Set([
+                "A",
+                "B",
+                "BR",
+                "EM",
+                "I",
+                "LI",
+                "OL",
+                "P",
+                "SPAN",
+                "STRONG",
+                "U",
+                "UL",
+            ]);
+            const safeHref = /^(?:https?:\/\/|mailto:|tel:|\/|#)/i;
+            const clean = (parent) => {
+                Array.from(parent.childNodes).forEach((node) => {
+                    if (node.nodeType !== 1) return;
+                    if (!allowed.has(node.tagName)) {
+                        if (
+                            ["SCRIPT", "STYLE", "IFRAME", "OBJECT"].includes(
+                                node.tagName,
+                            )
+                        )
+                            node.remove();
+                        else {
+                            clean(node);
+                            node.replaceWith(...node.childNodes);
+                        }
+                        return;
+                    }
+                    Array.from(node.attributes).forEach((attribute) => {
+                        const name = attribute.name.toLowerCase();
+                        if (
+                            node.tagName !== "A" ||
+                            !["href", "target", "rel"].includes(name)
+                        )
+                            node.removeAttribute(attribute.name);
+                    });
+                    if (node.tagName === "A") {
+                        if (!safeHref.test(node.getAttribute("href") || ""))
+                            node.removeAttribute("href");
+                        if (node.getAttribute("target") === "_blank")
+                            node.setAttribute("rel", "noopener noreferrer");
+                        else node.removeAttribute("target");
+                    }
+                    clean(node);
+                });
+            };
+            clean(template.content);
+            return template.innerHTML;
+        },
+        parseFormOptions(field) {
+            if (Array.isArray(field.options) && field.options.length) {
+                return field.options.map((entry) =>
+                    typeof entry === "object"
+                        ? {
+                              label: String(entry.label ?? entry.value ?? ""),
+                              value: String(entry.value ?? entry.label ?? ""),
+                          }
+                        : { label: String(entry), value: String(entry) },
+                );
+            }
+            return String(field.optionsText || "")
+                .split(/\r?\n/)
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map((line) => {
+                    const [label, ...value] = line.split("|");
+                    return {
+                        label: label.trim(),
+                        value: (value.join("|") || label).trim(),
+                    };
+                });
+        },
+        formActionEnabled(action) {
+            return (
+                Array.isArray(this.s.submitActions) &&
+                this.s.submitActions.includes(action)
+            );
+        },
+        safeDomId(value) {
+            return String(value || "").replace(/[^A-Za-z0-9_-]/g, "");
+        },
+    },
+};
+</script>
+
+<style scoped>
+:global(.pb-node .pb-pro-canvas [data-pb-interactive="true"]) {
+    pointer-events: auto;
+}
+.pb-pro-button:hover,
+.pb-pro-form button:hover {
+    background: var(--pb-button-hover-bg) !important;
+    color: var(--pb-button-hover-color) !important;
+}
+.pb-pro-canvas {
+    width: 100%;
+    min-width: 0;
+}
+.pb-pro-form {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--column-gap);
+}
+:global(.pb-pro-form__rows) {
+    display: grid;
+    width: 100%;
+    gap: var(--row-gap, 10px);
+}
+:global(.pb-pro-form__layout-step) {
+    display: contents;
+}
+:global(.pb-pro-form__row) {
+    display: grid;
+    width: 100%;
+    column-gap: var(--column-gap);
+    row-gap: var(--row-gap, 10px);
+    align-items: stretch;
+}
+:global(.pb-pro-form__column) {
+    display: grid;
+    position: relative;
+    min-width: 0;
+    grid-template-rows: subgrid;
+    padding-right: 0;
+    border: 1px dashed transparent;
+    border-radius: 4px;
+    transition: border-color .15s ease, background .15s ease;
+}
+:global(.pb-pro-form__column.is-dragging),
+:global(.pb-pro-form__column:hover) {
+    border-color: color-mix(in srgb, var(--step-active, #6979f8) 30%, transparent);
+}
+:global(.pb-pro-form__dropzone) {
+    display: grid;
+    grid-row: 1 / -1;
+    grid-template-rows: subgrid;
+    min-height: 72px;
+    width: 100%;
+    align-content: start;
+}
+:global(.pb-pro-form__dropzone-tail) {
+    display: grid;
+    min-height: 56px;
+    box-sizing: border-box;
+    grid-template-columns: auto auto;
+    align-content: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 14px;
+    place-items: center;
+    border: 1px dashed #cbd5e7;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--step-active, #6979f8) 2%, #fff);
+    color: #98a2b3;
+    font-size: 12px;
+    text-align: center;
+    transition: min-height .15s ease, border-color .15s ease, background .15s ease, color .15s ease;
+}
+:global(.pb-pro-form__dropzone-tail:not(.is-empty)) {
+    min-height: 0;
+    height: 0;
+    overflow: hidden;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+:global(.pb-pro-form__dropzone-tail i) {
+    font-size: 9px;
+}
+:global(.pb-pro-form__column.is-dragging .pb-pro-form__dropzone-tail) {
+    border-color: color-mix(in srgb, var(--step-active, #6979f8) 58%, #cbd5e7);
+    background: color-mix(in srgb, var(--step-active, #6979f8) 7%, #fff);
+    color: var(--step-active, #6979f8);
+}
+:global(.pb-pro-form__layout-item) {
+    position: relative;
+    height: 100%;
+    min-width: 0;
+    width: 100%;
+    border-radius: 4px;
+    transition: box-shadow .15s ease;
+}
+:global(.pb-pro-form__layout-item:hover) {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--step-active, #6979f8) 58%, transparent);
+}
+:global(.pb-pro-form__layout-item.is-selected) {
+    z-index: 4;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--step-active, #6979f8) 82%, transparent);
+}
+:global(.pb-pro-form__sortable-ghost) {
+    border-radius: 6px;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--step-active, #6979f8) 70%, transparent);
+    opacity: .35;
+}
+:global(.pb-pro-form__submit-footer) {
+    display: flex;
+    width: 100%;
+    justify-content: var(--form-button-align, flex-start);
+    margin-top: var(--row-gap, 10px);
+}
+:global(.pb-pro-form__drag-ghost-label) {
+    display: none;
+}
+:global(.pb-pro-form__layout-item.sortable-fallback) {
+    display: flex !important;
+    width: min(220px, calc(100vw - 32px)) !important;
+    max-width: 220px;
+    height: 44px !important;
+    min-height: 44px;
+    align-items: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 10px 12px;
+    pointer-events: none;
+    border: 1px solid #6979f8;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 12px 28px rgba(52, 64, 84, .18);
+    opacity: .92 !important;
+    translate: var(--pb-form-drag-offset-x, 0px) 0;
+}
+:global(.pb-pro-form__layout-item.sortable-fallback > :not(.pb-pro-form__drag-ghost-label)) {
+    display: none;
+}
+:global(.pb-pro-form__layout-item.sortable-fallback .pb-pro-form__drag-ghost-label) {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 600;
+}
+:global(.pb-pro-form__layout-item.sortable-fallback .pb-pro-form__drag-ghost-label span) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+:global(.pb-pro-form__row-span-toolbar) {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    right: 0;
+    display: flex;
+    width: max-content;
+    max-width: calc(100% - 16px);
+    min-height: 34px;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid #d9d6ff;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(52, 43, 137, .14);
+    color: #344054;
+    font-size: 11px;
+}
+:global(.pb-pro-form__row-span-toolbar > span) {
+    padding: 0 10px;
+    font-weight: 600;
+}
+:global(.pb-pro-form__row-span-toolbar button),
+:global(.pb-pro-form__row-span-toolbar strong) {
+    display: grid;
+    width: 34px;
+    min-width: 34px;
+    height: 32px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid #e4e1ff;
+    background: #fff;
+    color: #5547df;
+}
+:global(.pb-pro-form__row-span-toolbar button) {
+    cursor: pointer;
+}
+:global(.pb-pro-form__row-span-toolbar button:hover:not(:disabled)) {
+    background: #f4f3ff;
+}
+:global(.pb-pro-form__row-span-toolbar button:disabled) {
+    color: #c5c9d3;
+    cursor: not-allowed;
+}
+:global(.pb-pro-form .pb-pro-form__drag-handle) {
+    position: absolute;
+    z-index: 3;
+    top: -13px;
+    left: 50%;
+    display: grid;
+    width: 26px !important;
+    min-width: 26px !important;
+    height: 26px !important;
+    min-height: 26px !important;
+    place-items: center;
+    padding: 0 !important;
+    border: 1px solid #d9d6ff !important;
+    border-radius: 999px !important;
+    background: #fff !important;
+    box-shadow: 0 2px 7px rgba(52, 43, 137, .16);
+    color: #6558e8 !important;
+    cursor: grab;
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: opacity .15s ease, border-color .15s ease, background .15s ease;
+}
+:global(.pb-pro-form__layout-item:hover .pb-pro-form__drag-handle),
+:global(.pb-pro-form__layout-item.is-selected .pb-pro-form__drag-handle),
+:global(.pb-pro-form .pb-pro-form__drag-handle:focus-visible) {
+    opacity: 1;
+}
+:global(.pb-pro-form .pb-pro-form__drag-handle:hover) {
+    border-color: #7467f5 !important;
+    background: #f4f3ff !important;
+    color: #5547df !important;
+}
+:global(.pb-pro-form .pb-pro-form__drag-handle i) {
+    font-size: 10px;
+    line-height: 1;
+}
+@media (hover: none) {
+    :global(.pb-pro-form .pb-pro-form__drag-handle) {
+        opacity: .75;
+    }
+}
+:global(.pb-pro-form__confirm-backdrop) {
+    position: fixed;
+    z-index: 10000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(16, 24, 40, .35);
+}
+:global(.pb-pro-form__confirm) {
+    display: grid;
+    gap: 10px;
+    width: min(360px, calc(100% - 32px));
+    padding: 16px;
+    border-radius: 8px;
+    background: #fff;
+    color: #344054;
+    box-shadow: 0 12px 36px rgba(16, 24, 40, .2);
+}
+:global(.pb-pro-form__confirm p) {
+    margin: 0;
+    color: #667085;
+    font-size: 12px;
+}
+:global(.pb-pro-form__confirm > div) {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+}
+:global(.pb-pro-form__confirm button) {
+    min-height: 30px;
+    padding: 5px 10px;
+    border: 1px solid #d4dceb;
+    border-radius: 5px;
+    background: #fff;
+    color: #344054;
+    font-size: 11px;
+}
+:global(.pb-pro-form__confirm button.primary) {
+    border-color: #6979f8;
+    background: #6979f8;
+    color: #fff;
+}
+.pb-pro-form__field {
+    display: flex;
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+    flex-direction: column;
+    padding-right: var(--column-gap);
+}
+.pb-pro-form__field > textarea {
+    min-height: 0;
+    flex: 1 1 auto;
+}
+.pb-pro-form__choice-group {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+.pb-pro-form__choice-group legend {
+    margin-bottom: 6px;
+    padding: 0;
+    font-size: 13px;
+}
+.pb-visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+.pb-pro-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+.pb-pro-form input,
+.pb-pro-form textarea,
+.pb-pro-form select {
+    width: 100%;
+    min-height: 36px;
+    padding: 8px 10px;
+    border: 1px solid var(--field-border);
+    border-radius: var(--field-radius);
+    background: var(--field-bg);
+    color: var(--field-color);
+}
+.pb-pro-form input:focus,
+.pb-pro-form textarea:focus,
+.pb-pro-form select:focus {
+    border-color: var(--field-focus-border, #6979f8);
+    background: var(--field-focus-bg, #fff);
+    outline: 0;
+}
+.pb-pro-form__html {
+    color: var(--form-html-color, #344054);
+}
+.pb-pro-form__choices {
+    display: grid;
+    gap: 8px;
+}
+.pb-pro-form__field.is-inline .pb-pro-form__choices {
+    display: flex;
+    flex-wrap: wrap;
+}
+.pb-pro-form .pb-pro-form__choice {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0 12px 0 0;
+}
+.pb-pro-form .pb-pro-form__choice input {
+    width: auto;
+    min-height: 0;
+}
+.pb-pro-form__progress,
+.pb-pro-form__step-title {
+    width: 100%;
+}
+.pb-pro-form__progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.pb-pro-form__step-indicator {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+    color: var(--step-inactive, #d0d5dd);
+}
+.pb-pro-form__step-indicator.active {
+    color: var(--step-active, #6979f8);
+}
+.pb-pro-form__step-marker {
+    display: grid;
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--step-inactive, #d0d5dd);
+    color: #fff;
+    font-size: 12px;
+}
+.pb-pro-form__step-indicator.active .pb-pro-form__step-marker {
+    background: var(--step-active, #6979f8);
+}
+.pb-pro-form__step-marker.shape-square {
+    border-radius: 0;
+}
+.pb-pro-form__step-marker.shape-rounded {
+    border-radius: 7px;
+}
+.pb-pro-form__step-marker.shape-none {
+    background: transparent;
+    color: inherit;
+}
+.pb-pro-form__step-indicator.active .pb-pro-form__step-marker.shape-none {
+    background: transparent;
+}
+.pb-pro-form__step-indicator [data-pro-step-label] {
+    overflow: hidden;
+    color: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.pb-pro-form__progress.type-progress {
+    display: grid;
+    justify-content: stretch;
+    gap: 6px;
+}
+.pb-pro-form__progress-bar {
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--step-inactive, #d0d5dd);
+}
+.pb-pro-form__progress-bar > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--step-active, #6979f8);
+    transition: width .2s ease;
+}
+.pb-pro-form__progress.type-progress > small {
+    color: #667085;
+    font-size: 11px;
+    font-weight: 600;
+}
+.pb-pro-form__step-title {
+    display: grid;
+    gap: 3px;
+}
+.pb-pro-form__actions {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+}
+.pb-pro-form__message-layer {
+    width: 100%;
+    margin-top: 4px;
+    color: var(--form-success, #067647);
+}
+.pb-pro-form__message-layer.is-error {
+    color: var(--form-error, #b42318);
+}
+:global(.webpage-frame > .pb-pro-form__message-layer--canvas) {
+    z-index: 200 !important;
+    pointer-events: auto;
+}
+.pb-pro-form__message-layer.display-above-form {
+    order: -20;
+    margin: 0 0 var(--row-gap, 10px);
+}
+.pb-pro-form__message-layer.display-toast {
+    position: absolute;
+    z-index: 12;
+    top: 16px;
+    right: 16px;
+    width: min(360px, calc(100% - 32px));
+    margin: 0;
+}
+.pb-pro-form__message-layer.display-modal {
+    position: absolute;
+    z-index: 14;
+    inset: 0;
+    display: grid;
+    width: auto;
+    min-height: 260px;
+    place-items: center;
+    margin: 0;
+    padding: 24px;
+    background: rgba(16, 24, 40, .42);
+}
+.pb-pro-form__message {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 11px;
+}
+.pb-pro-form__message-layer.display-basic .pb-pro-form__message {
+    display: block;
+}
+.pb-pro-form__message-layer.display-above-form .pb-pro-form__message,
+.pb-pro-form__message-layer.display-toast .pb-pro-form__message,
+.pb-pro-form__message-layer.display-modal .pb-pro-form__message {
+    padding: 14px 16px;
+    border: 1px solid currentColor;
+    border-radius: 8px;
+    background: color-mix(in srgb, currentColor 7%, #fff);
+    box-shadow: 0 10px 26px rgba(16, 24, 40, .12);
+}
+.pb-pro-form__message-layer.display-modal .pb-pro-form__message {
+    position: relative;
+    grid-template-columns: 1fr;
+    width: min(390px, 100%);
+    justify-items: center;
+    padding: 26px;
+    border-color: #e4e7ec;
+    background: #fff;
+    box-shadow: 0 24px 60px rgba(16, 24, 40, .24);
+    text-align: center;
+}
+.pb-pro-form__message-layer.display-toast .pb-pro-form__message {
+    border-top-width: 4px;
+}
+.pb-pro-form__message-layer.display-modal .pb-pro-form__message > [data-pro-form-message-icon] {
+    font-size: 42px;
+}
+.pb-pro-form__message-layer.display-modal .pb-pro-form__message button[data-pro-form-message-close] {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.pb-pro-form__message > [data-pro-form-message-icon] {
+    margin-top: 2px;
+    font-size: 20px;
+}
+.pb-pro-form__message-content {
+    display: grid;
+    min-width: 0;
+    gap: 4px;
+}
+.pb-pro-form__message-content strong {
+    color: inherit;
+    font-size: 14px;
+}
+.pb-pro-form__message-content > span {
+    color: inherit;
+    font-size: 13px;
+}
+.pb-pro-form__message button[data-pro-form-message-close] {
+    width: 28px;
+    min-height: 28px;
+    padding: 0;
+    border: 0;
+    background: transparent !important;
+    color: inherit !important;
+}
+.pb-pro-form__message small {
+    color: #667085;
+    font-size: 11px;
+}
+.pb-pro-form button:disabled {
+    cursor: wait;
+    opacity: .7;
+}
+.pb-pro-button,
+.pb-pro-form button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 9px 18px;
+    border: 0;
+    text-decoration: none;
+}
+.pb-pro-slides {
+    position: relative;
+    overflow: hidden;
+}
+.pb-pro-slides__slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    background-size: cover;
+    background-position: center;
+}
+.pb-pro-slides__slide::before {
+    position: absolute;
+    inset: 0;
+    background: var(--slide-overlay-color, transparent);
+    content: "";
+}
+.pb-pro-slides__content {
+    position: relative;
+}
+.pb-pro-slides__title {
+    margin: 0 0 12px;
+    color: inherit;
+}
+.pb-pro-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 3;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    background: #fff;
+    color: #344054;
+    box-shadow: 0 4px 12px #10182822;
+}
+.pb-pro-arrow--prev {
+    left: var(--slides-arrow-offset, 10px);
+}
+.pb-pro-arrow--next {
+    right: var(--slides-arrow-offset, 10px);
+}
+.pb-pro-dots {
+    position: absolute;
+    left: 50%;
+    bottom: var(--slides-dot-offset, 12px);
+    display: flex;
+    gap: var(--slides-dot-gap, 8px);
+    transform: translateX(-50%);
+}
+.pb-pro-dots button {
+    width: var(--slides-dot-size, 8px);
+    height: var(--slides-dot-size, 8px);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--slides-dot-color, #d0d5dd);
+}
+.pb-pro-dots button.active {
+    background: var(--slides-dot-active-color, #6979f8);
+}
+.pb-pro-slides .pb-pro-arrow {
+    display: grid;
+    width: var(--slides-arrow-button-size, 34px);
+    height: var(--slides-arrow-button-size, 34px);
+    place-items: center;
+    padding: 0;
+    border-radius: var(--slides-arrow-radius, 50%);
+    color: var(--slides-arrow-color, #fff);
+    background: var(--slides-arrow-background, rgba(16, 24, 40, 0.5));
+    font-size: var(--slides-arrow-icon-size, 10px);
+    line-height: 1;
+}
+.pb-pro-slides .pb-pro-arrow:hover,
+.pb-pro-slides .pb-pro-arrow:focus-visible {
+    color: var(--slides-arrow-hover-color, var(--slides-arrow-color, #fff));
+    background: var(--slides-arrow-hover-background, var(--slides-arrow-background, rgba(16, 24, 40, 0.5)));
+}
+.pb-pro-slides .pb-pro-arrow > i,
+.pb-pro-slides .pb-pro-arrow__svg,
+.pb-pro-slides .pb-pro-arrow__svg > svg {
+    display: block;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+}
+.pb-pro-slides .pb-pro-arrow__svg > svg {
+    fill: currentColor;
+}
+.pb-pro-slides__slide.transition-fade {
+    animation: pb-pro-slides-fade 0.5s ease both;
+}
+.pb-pro-slides__slide.transition-slide {
+    animation: pb-pro-slides-slide 0.5s ease both;
+}
+.pb-pro-slides__content.animation-down {
+    animation: pb-pro-content-down 0.5s ease both;
+}
+.pb-pro-slides__content.animation-up {
+    animation: pb-pro-content-up 0.5s ease both;
+}
+.pb-pro-slides__content.animation-right {
+    animation: pb-pro-content-right 0.5s ease both;
+}
+.pb-pro-slides__content.animation-left {
+    animation: pb-pro-content-left 0.5s ease both;
+}
+.pb-pro-slides__content.animation-zoom {
+    animation: pb-pro-content-zoom 0.5s ease both;
+}
+@keyframes pb-pro-slides-fade {
+    from {
+        opacity: 0;
+    }
+}
+@keyframes pb-pro-slides-slide {
+    from {
+        opacity: 0.35;
+        transform: translateX(7%);
+    }
+}
+@keyframes pb-pro-content-down {
+    from {
+        opacity: 0;
+        transform: translateY(-24px);
+    }
+}
+@keyframes pb-pro-content-up {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+}
+@keyframes pb-pro-content-right {
+    from {
+        opacity: 0;
+        transform: translateX(-24px);
+    }
+}
+@keyframes pb-pro-content-left {
+    from {
+        opacity: 0;
+        transform: translateX(24px);
+    }
+}
+@keyframes pb-pro-content-zoom {
+    from {
+        opacity: 0;
+        transform: scale(0.82);
+    }
+}
+.pb-pro-headline__animated {
+    position: relative;
+    color: var(--animated-color, #6979f8);
+}
+.pb-pro-headline__animated.is-highlighted {
+    padding: 0 0.2em;
+}
+.pb-pro-headline__animated.is-highlighted::before,
+.pb-pro-headline__animated.is-highlighted::after {
+    position: absolute;
+    z-index: -1;
+    border-color: var(--headline-marker-color, currentColor);
+    content: "";
+    pointer-events: none;
+}
+.pb-pro-headline__animated.is-front::before,
+.pb-pro-headline__animated.is-front::after {
+    z-index: 1;
+}
+.pb-pro-headline__animated.marker-circle::before {
+    inset: -0.18em -0.28em;
+    border-width: var(--headline-stroke-width, 3px);
+    border-style: solid;
+    border-radius: 50%;
+}
+.pb-pro-headline__animated.is-square::before {
+    border-radius: 0;
+}
+.pb-pro-headline__animated.marker-underline::after,
+.pb-pro-headline__animated.marker-double-underline::before,
+.pb-pro-headline__animated.marker-double-underline::after,
+.pb-pro-headline__animated.marker-underline-zigzag::after {
+    right: 0;
+    bottom: -0.12em;
+    left: 0;
+    border-bottom-width: var(--headline-stroke-width, 3px);
+    border-bottom-style: solid;
+}
+.pb-pro-headline__animated.marker-double-underline::before {
+    bottom: 0.05em;
+}
+.pb-pro-headline__animated.marker-underline-zigzag::after {
+    border-bottom-style: wavy;
+}
+.pb-pro-headline__animated.marker-strikethrough::after {
+    top: 52%;
+    right: -0.1em;
+    left: -0.1em;
+    border-top: var(--headline-stroke-width, 3px) solid
+        var(--headline-marker-color, currentColor);
+}
+.pb-pro-headline__animated.marker-diagonal::after,
+.pb-pro-headline__animated.marker-x::before,
+.pb-pro-headline__animated.marker-x::after {
+    top: 50%;
+    right: -0.1em;
+    left: -0.1em;
+    border-top: var(--headline-stroke-width, 3px) solid
+        var(--headline-marker-color, currentColor);
+    transform: rotate(-8deg);
+}
+.pb-pro-headline__animated.marker-x::before {
+    transform: rotate(12deg);
+}
+.pb-pro-headline__animated.marker-curly::after {
+    right: 0;
+    bottom: -0.15em;
+    left: 0;
+    border-bottom: var(--headline-stroke-width, 3px) wavy
+        var(--headline-marker-color, currentColor);
+}
+.pb-pro-headline__animated.marker-double::before {
+    inset: -0.2em -0.3em;
+    border: var(--headline-stroke-width, 3px) solid
+        var(--headline-marker-color, currentColor);
+    border-radius: 50%;
+}
+.pb-pro-headline__animated.marker-double::after {
+    inset: -0.08em -0.16em;
+    border: calc(var(--headline-stroke-width, 3px) / 2) solid
+        var(--headline-marker-color, currentColor);
+    border-radius: 50%;
+}
+.pb-pro-headline__animated.is-rotating {
+    display: inline-block;
+}
+.pb-pro-headline__animated.is-changing.effect-typing {
+    animation: pb-pro-headline-typing var(--headline-duration, 1200ms)
+        steps(8, end) both;
+}
+.pb-pro-headline__animated.is-changing.effect-clip {
+    animation: pb-pro-headline-clip var(--headline-duration, 1200ms) ease both;
+}
+.pb-pro-headline__animated.is-changing.effect-flip {
+    animation: pb-pro-headline-flip var(--headline-duration, 1200ms) ease both;
+}
+.pb-pro-headline__animated.is-changing.effect-swirl {
+    animation: pb-pro-headline-swirl var(--headline-duration, 1200ms) ease both;
+}
+.pb-pro-headline__animated.is-changing.effect-blinds {
+    animation: pb-pro-headline-blinds var(--headline-duration, 1200ms) ease both;
+}
+.pb-pro-headline__animated.is-changing.effect-drop-in {
+    animation: pb-pro-headline-drop-in var(--headline-duration, 1200ms) ease
+        both;
+}
+.pb-pro-headline__animated.is-changing.effect-wave {
+    animation: pb-pro-headline-wave var(--headline-duration, 1200ms) ease both;
+}
+.pb-pro-headline__animated.is-changing.effect-slide {
+    animation: pb-pro-headline-slide var(--headline-duration, 1200ms) ease both;
+}
+@keyframes pb-pro-headline-typing {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+}
+@keyframes pb-pro-headline-clip {
+    from {
+        opacity: 0;
+        transform: scaleX(0.2);
+    }
+}
+@keyframes pb-pro-headline-flip {
+    from {
+        opacity: 0;
+        transform: rotateX(-90deg);
+    }
+}
+@keyframes pb-pro-headline-swirl {
+    from {
+        opacity: 0;
+        transform: rotate(-18deg) scale(0.6);
+    }
+}
+@keyframes pb-pro-headline-blinds {
+    from {
+        opacity: 0;
+        transform: scaleY(0.1);
+    }
+}
+@keyframes pb-pro-headline-drop-in {
+    from {
+        opacity: 0;
+        transform: translateY(-0.8em);
+    }
+}
+@keyframes pb-pro-headline-wave {
+    from {
+        opacity: 0;
+        transform: skewY(10deg) translateY(0.3em);
+    }
+}
+@keyframes pb-pro-headline-slide {
+    from {
+        opacity: 0;
+        transform: translateX(-0.8em);
+    }
+}
+.pb-pro-hotspot {
+    position: relative;
+    min-height: 220px;
+    margin: auto;
+}
+.pb-pro-hotspot > img {
+    display: block;
+    width: 100%;
+    transition-property: opacity, filter, transform;
+}
+.pb-pro-hotspot__placeholder {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    min-height: 220px;
+    background: #f2f4f7;
+    color: #98a2b3;
+}
+.pb-pro-hotspot__placeholder i {
+    font-size: 34px;
+}
+.pb-pro-hotspot__marker {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    transform: translate(-50%, -50%);
+    border: 0;
+}
+.pb-pro-hotspot__marker.is-soft-beat {
+    animation: pb-pro-hotspot-soft-beat 1.4s ease-in-out infinite;
+}
+.pb-pro-hotspot__marker.is-expand {
+    animation: pb-pro-hotspot-expand 1.8s ease-out infinite;
+}
+.pb-pro-hotspot__marker.is-overlay::after {
+    position: absolute;
+    inset: -6px;
+    border-radius: inherit;
+    background: currentColor;
+    content: "";
+    opacity: 0.2;
+    animation: pb-pro-hotspot-overlay 1.8s ease-out infinite;
+}
+.pb-pro-hotspot__tooltip {
+    position: absolute;
+    z-index: 4;
+    width: max-content;
+    max-width: 240px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    background: #101828;
+    color: #fff;
+    font-size: 12px;
+    opacity: 1;
+    transition-property: opacity, transform;
+}
+.pb-pro-hotspot__tooltip.is-grow {
+    animation: pb-pro-tooltip-grow var(--tooltip-duration, 300ms) ease both;
+}
+.pb-pro-hotspot__tooltip.is-directional-fade {
+    animation: pb-pro-tooltip-fade var(--tooltip-duration, 300ms) ease both;
+}
+.pb-pro-hotspot__tooltip.is-directional-slide {
+    animation: pb-pro-tooltip-slide var(--tooltip-duration, 300ms) ease both;
+}
+@keyframes pb-pro-hotspot-soft-beat {
+    50% {
+        transform: translate(-50%, -50%) scale(1.12);
+    }
+}
+@keyframes pb-pro-hotspot-expand {
+    50% {
+        box-shadow: 0 0 0 10px rgb(105 121 248 / 0);
+    }
+}
+@keyframes pb-pro-hotspot-overlay {
+    to {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+@keyframes pb-pro-tooltip-grow {
+    from {
+        opacity: 0;
+        scale: 0.85;
+    }
+}
+@keyframes pb-pro-tooltip-fade {
+    from {
+        opacity: 0;
+    }
+}
+@keyframes pb-pro-tooltip-slide {
+    from {
+        opacity: 0;
+        translate: 0 6px;
+    }
+}
+.pb-pro-hotspot__tooltip.is-top {
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+}
+.pb-pro-hotspot__tooltip.is-bottom {
+    left: 50%;
+    top: calc(100% + 8px);
+    transform: translateX(-50%);
+}
+.pb-pro-hotspot__tooltip.is-left {
+    right: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+}
+.pb-pro-hotspot__tooltip.is-right {
+    left: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+}
+.pb-pro-price-list {
+    display: grid;
+    gap: var(--row-gap);
+}
+.pb-pro-price-list__item {
+    display: flex;
+    gap: 16px;
+}
+.pb-pro-price-list__item img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+}
+.pb-pro-price-list__body {
+    flex: 1;
+}
+.pb-pro-price-list__line {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+.pb-pro-price-list__line h3 {
+    margin: 0;
+}
+.pb-pro-price-list__line > span {
+    flex: 1;
+    border-bottom: 1px dotted #d0d5dd;
+}
+.pb-pro-price-table {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e4e7ec;
+    border-radius: 8px;
+    text-align: center;
+}
+.pb-pro-price-table header,
+.pb-pro-price-table__price,
+.pb-pro-price-table footer {
+    padding: 22px;
+}
+.pb-pro-price-table header h3 {
+    margin: 0;
+}
+.pb-pro-price-table__price strong {
+    font-size: 44px;
+}
+.pb-pro-price-table__original-price {
+    display: block;
+    opacity: 0.65;
+}
+.pb-pro-price-table__price small {
+    display: block;
+}
+.pb-pro-price-table ul {
+    list-style: none;
+    margin: 0;
+    padding: 20px;
+}
+.pb-pro-price-table li {
+    padding: 8px;
+}
+.pb-pro-price-table li:last-child {
+    border-bottom-width: 0 !important;
+}
+.pb-pro-price-table li i {
+    margin-right: 8px;
+}
+.pb-pro-price-table li .pb-pro-icon-svg {
+    margin-right: 8px;
+}
+.pb-pro-icon-svg {
+    display: inline-flex;
+    width: 1em;
+    height: 1em;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    vertical-align: -0.125em;
+}
+.pb-pro-icon-svg :deep(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+.pb-pro-flip-box__front-icon {
+    margin-bottom: var(--flip-graphic-spacing, 16px);
+}
+.pb-pro-price-table footer small {
+    display: block;
+    margin-top: 10px;
+}
+.pb-pro-price-table__ribbon,
+.pb-pro-cta__ribbon {
+    position: absolute;
+    z-index: 4;
+    top: 18px;
+    padding: 5px 28px;
+    background: #f04438;
+    color: #fff;
+}
+.pb-pro-price-table__ribbon.is-right,
+.pb-pro-cta__ribbon.is-right {
+    right: -28px;
+    transform: rotate(45deg);
+}
+.pb-pro-price-table__ribbon.is-left,
+.pb-pro-cta__ribbon.is-left {
+    left: -28px;
+    transform: rotate(-45deg);
+}
+.pb-pro-cta {
+    position: relative;
+    display: flex;
+    gap: 24px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+.pb-pro-cta__image {
+    flex: 0 0 auto;
+    min-height: 220px;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s ease;
+}
+.pb-pro-cta__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+.pb-pro-cta__content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+.pb-pro-cta__ribbon {
+    z-index: 3;
+}
+.pb-pro-cta.is-cover .pb-pro-cta__image {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+.pb-pro-cta.effect-zoom-in:hover .pb-pro-cta__image {
+    transform: scale(1.08);
+}
+.pb-pro-cta.effect-zoom-out .pb-pro-cta__image {
+    transform: scale(1.08);
+}
+.pb-pro-cta.effect-zoom-out:hover .pb-pro-cta__image {
+    transform: scale(1);
+}
+.pb-pro-cta.effect-move-left:hover .pb-pro-cta__image {
+    transform: translateX(-12px);
+}
+.pb-pro-cta.effect-move-right:hover .pb-pro-cta__image {
+    transform: translateX(12px);
+}
+.pb-pro-cta.effect-move-up:hover .pb-pro-cta__image {
+    transform: translateY(-12px);
+}
+.pb-pro-cta.effect-move-down:hover .pb-pro-cta__image {
+    transform: translateY(12px);
+}
+.pb-pro-countdown {
+    display: flex;
+    justify-content: center;
+}
+.pb-pro-countdown__box {
+    min-width: 76px;
+    text-align: center;
+}
+.pb-pro-countdown__box strong {
+    display: block;
+    font-size: 30px;
+}
+.pb-pro-countdown__box span {
+    display: block;
+    font-size: 12px;
+    color: inherit;
+    opacity: 0.75;
+}
+.pb-pro-countdown__expired {
+    padding: 16px;
+}
+.pb-pro-progress-tracker {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-height: 28px;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--progress-tracker-percentage, #101828);
+}
+.pb-pro-progress-tracker.align-left { justify-content: flex-start; }
+.pb-pro-progress-tracker.align-right { justify-content: flex-end; }
+.pb-pro-progress-tracker--horizontal .pb-pro-progress-tracker__horizontal {
+    width: 100%;
+}
+.pb-pro-progress-tracker__track {
+    display: block;
+    width: 100%;
+    height: var(--progress-tracker-background-width, 4px);
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--progress-tracker-background, #e4e7ec);
+}
+.pb-pro-progress-tracker__indicator {
+    display: block;
+    height: var(--progress-tracker-indicator-width, 4px);
+    min-width: 0;
+    border-radius: inherit;
+    background: var(--progress-tracker-indicator, #6979f8);
+    transition: width .25s ease;
+}
+.pb-pro-progress-tracker--circular {
+    width: var(--progress-tracker-circle-size, 140px);
+    min-height: var(--progress-tracker-circle-size, 140px);
+    flex-direction: column;
+}
+.pb-pro-progress-tracker__circular,
+.pb-pro-progress-tracker__circular svg {
+    width: var(--progress-tracker-circle-size, 140px);
+    height: var(--progress-tracker-circle-size, 140px);
+}
+.pb-pro-progress-tracker__circular svg { overflow: visible; }
+.pb-pro-progress-tracker__circle-indicator {
+    transform: rotate(-90deg);
+    transform-origin: 60px 60px;
+    transition: stroke-dashoffset .25s ease;
+}
+.pb-pro-progress-tracker--circular .pb-pro-progress-tracker__percentage {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+}
+.pb-pro-video-playlist {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid #e4e7ec;
+    border-radius: 6px;
+    background: var(--video-playlist-item-background, #fff);
+}
+.pb-pro-video-playlist__topbar {
+    display: flex;
+    min-height: 52px;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--video-playlist-name-background, #101828);
+}
+.pb-pro-video-playlist__name { margin: 0; }
+.pb-pro-video-playlist__count { margin-left: auto; }
+.pb-pro-video-playlist__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 32%);
+    min-width: 0;
+}
+.pb-pro-video-playlist.position-right .pb-pro-video-playlist__body { grid-template-columns: minmax(220px, 32%) minmax(0, 1fr); }
+.pb-pro-video-playlist.position-right .pb-pro-video-playlist__items { order: -1; }
+.pb-pro-video-playlist__player {
+    min-width: 0;
+    min-height: var(--video-playlist-height, 360px);
+    background: #101828;
+}
+.pb-pro-video-playlist__media,
+.pb-pro-video-playlist__media iframe,
+.pb-pro-video-playlist__media video {
+    display: block;
+    width: 100%;
+    height: var(--video-playlist-height, 360px);
+    border: 0;
+}
+.pb-pro-video-playlist__media { position: relative; }
+.pb-pro-video-playlist__overlay-image {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: .9;
+    pointer-events: none;
+}
+.pb-pro-video-playlist__placeholder {
+    display: grid;
+    height: var(--video-playlist-height, 360px);
+    place-items: center;
+    color: #fff;
+    opacity: .72;
+}
+.pb-pro-video-playlist__items {
+    max-height: var(--video-playlist-height, 360px);
+    overflow: auto;
+    background: var(--video-playlist-item-background, #fff);
+}
+.pb-pro-video-playlist__item {
+    display: flex;
+    width: 100%;
+    min-height: 76px;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 0;
+    border-bottom: 1px solid #e4e7ec;
+    color: var(--video-playlist-item-color, #344054);
+    text-align: left;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+}
+.pb-pro-video-playlist__item:hover,
+.pb-pro-video-playlist__item:focus-visible { background: var(--video-playlist-item-background-hover, #f2f4f7) !important; color: var(--video-playlist-item-color-hover, #101828) !important; }
+.pb-pro-video-playlist__thumbnail {
+    display: grid;
+    flex: 0 0 82px;
+    width: 82px;
+    height: 48px;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #f2f4f7;
+}
+.pb-pro-video-playlist__thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+.pb-pro-video-playlist__thumbnail-placeholder { color: var(--video-playlist-icon-color, #6979f8); }
+.pb-pro-video-playlist__item-copy { display: grid; min-width: 0; flex: 1 1 auto; gap: 4px; }
+.pb-pro-video-playlist__item-copy h3,
+.pb-pro-video-playlist__item-copy h4,
+.pb-pro-video-playlist__item-copy h5,
+.pb-pro-video-playlist__item-copy h6,
+.pb-pro-video-playlist__item-copy div,
+.pb-pro-video-playlist__item-copy span { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pb-pro-video-playlist__duration { display: block; }
+.pb-pro-video-playlist__item-icon {
+    display: grid;
+    flex: 0 0 var(--video-playlist-icon-size, 18px);
+    width: var(--video-playlist-icon-size, 18px);
+    height: var(--video-playlist-icon-size, 18px);
+    place-items: center;
+    border-radius: 50%;
+}
+.pb-pro-video-playlist__section { height: 100%; min-height: var(--video-playlist-height, 360px); margin: 0; }
+.pb-pro-video-playlist__section h3,
+.pb-pro-video-playlist__section h4,
+.pb-pro-video-playlist__section h5,
+.pb-pro-video-playlist__section h6 { margin-top: 0; }
+.pb-pro-video-playlist__tabs {
+    border-top: var(--video-playlist-tabs-border-width, 1px) solid var(--video-playlist-tabs-border-color, #e4e7ec);
+    background: var(--video-playlist-tabs-background, #fff);
+}
+.pb-pro-video-playlist__tab-buttons { display: flex; gap: 4px; padding: 10px 14px 0; }
+.pb-pro-video-playlist__tab-buttons button { padding: 8px 10px; border: 0; border-bottom: 2px solid transparent; background: transparent; cursor: pointer; }
+.pb-pro-video-playlist__tab-buttons button.is-active { border-bottom-color: var(--video-playlist-tabs-title-active, #6979f8); }
+.pb-pro-video-playlist__tab-content { min-height: 40px; padding: var(--video-playlist-tabs-content-padding, 14px); white-space: pre-line; }
+.pb-pro-video-playlist__show-more { display: block; margin: 0 auto 10px; padding: 4px 10px; border: 0; background: transparent; color: var(--video-playlist-show-more, #6979f8); cursor: pointer; }
+.pb-pro-video-playlist__show-more:hover { color: var(--video-playlist-show-more-hover, #5868e8); }
+@media (max-width: 700px) {
+    .pb-pro-video-playlist__body,
+    .pb-pro-video-playlist.position-right .pb-pro-video-playlist__body { grid-template-columns: 1fr; }
+    .pb-pro-video-playlist.position-right .pb-pro-video-playlist__items { order: 0; }
+    .pb-pro-video-playlist__items { max-height: none; }
+}
+.pb-pro-carousel {
+    --carousel-arrow-gutter: 46px;
+    position: relative;
+    padding: 0 var(--carousel-arrow-gutter) 24px;
+}
+.pb-pro-carousel__viewport {
+    overflow: hidden;
+}
+.pb-pro-carousel__track {
+    display: flex;
+    transition: transform 0.4s ease;
+}
+.pb-pro-carousel .pb-pro-arrow {
+    display: grid;
+    width: var(--carousel-arrow-button-size, var(--carousel-arrow-size, 34px));
+    height: var(--carousel-arrow-button-size, var(--carousel-arrow-size, 34px));
+    place-items: center;
+    padding: 0;
+    border-radius: var(--carousel-arrow-radius, 50%);
+    color: var(--carousel-arrow-color, var(--arrow-color, #344054));
+    background: var(--carousel-arrow-background, var(--arrow-background, #fff));
+    font-size: var(--carousel-arrow-icon-size, 10px);
+    line-height: 1;
+}
+.pb-pro-carousel .pb-pro-arrow:hover,
+.pb-pro-carousel .pb-pro-arrow:focus-visible {
+    color: var(--carousel-arrow-hover-color, var(--carousel-arrow-color, var(--arrow-color, #344054)));
+    background: var(--carousel-arrow-hover-background, var(--carousel-arrow-background, var(--arrow-background, #fff)));
+}
+.pb-pro-carousel .pb-pro-arrow > i,
+.pb-pro-carousel .pb-pro-arrow__svg,
+.pb-pro-carousel .pb-pro-arrow__svg > svg {
+    display: block;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+}
+.pb-pro-carousel .pb-pro-arrow__svg > svg { fill: currentColor; }
+.pb-pro-carousel .pb-pro-arrow--prev {
+    left: var(--carousel-arrow-edge-position, 46px);
+    transform: translateY(-50%);
+}
+.pb-pro-carousel .pb-pro-arrow--next {
+    right: var(--carousel-arrow-edge-position, 46px);
+    transform: translateY(-50%);
+}
+.pb-pro-carousel { overflow: var(--carousel-arrow-overflow, hidden); }
+.pb-pro-carousel.pagination-inside { padding-bottom: 0; }
+.pb-pro-carousel.pagination-inside .pb-pro-dots { bottom: 12px; }
+.pb-pro-carousel.pagination-outside .pb-pro-dots { bottom: 0; }
+.pb-pro-media-carousel .pb-pro-arrow,
+.pb-pro-testimonial-carousel .pb-pro-arrow {
+    display: grid;
+    width: var(--carousel-arrow-button-size, 20px);
+    height: var(--carousel-arrow-button-size, 20px);
+    place-items: center;
+    padding: 0;
+    border-radius: var(--carousel-arrow-radius, 50%);
+    color: var(--carousel-arrow-color, var(--arrow-color, #fff));
+    background: var(--carousel-arrow-background, var(--arrow-background, rgba(16, 24, 40, 0.5)));
+    font-size: var(--carousel-arrow-icon-size, 10px);
+    line-height: 1;
+}
+.pb-pro-media-carousel .pb-pro-arrow:hover,
+.pb-pro-media-carousel .pb-pro-arrow:focus-visible,
+.pb-pro-testimonial-carousel .pb-pro-arrow:hover,
+.pb-pro-testimonial-carousel .pb-pro-arrow:focus-visible {
+    color: var(--carousel-arrow-hover-color, var(--arrow-hover-color, var(--carousel-arrow-color, var(--arrow-color))));
+    background: var(--carousel-arrow-hover-background, var(--arrow-hover-background, var(--carousel-arrow-background, var(--arrow-background))));
+}
+.pb-pro-media-carousel .pb-pro-arrow > i,
+.pb-pro-media-carousel .pb-pro-arrow__svg,
+.pb-pro-media-carousel .pb-pro-arrow__svg > svg,
+.pb-pro-testimonial-carousel .pb-pro-arrow > i,
+.pb-pro-testimonial-carousel .pb-pro-arrow__svg,
+.pb-pro-testimonial-carousel .pb-pro-arrow__svg > svg {
+    display: block;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+}
+.pb-pro-media-carousel .pb-pro-arrow__svg > svg,
+.pb-pro-testimonial-carousel .pb-pro-arrow__svg > svg { fill: currentColor; }
+.pb-pro-media-carousel .pb-pro-arrow--prev,
+.pb-pro-testimonial-carousel .pb-pro-arrow--prev {
+    left: var(--carousel-arrow-edge-position, 46px);
+    transform: translateY(-50%);
+}
+.pb-pro-media-carousel .pb-pro-arrow--next,
+.pb-pro-testimonial-carousel .pb-pro-arrow--next {
+    right: var(--carousel-arrow-edge-position, 46px);
+    transform: translateY(-50%);
+}
+.pb-pro-media-carousel,
+.pb-pro-testimonial-carousel { overflow: var(--carousel-arrow-overflow, hidden); }
+.pb-pro-carousel .pb-pro-dots {
+    gap: var(--carousel-dot-gap, 8px);
+}
+.pb-pro-carousel .pb-pro-dots button {
+    width: var(--carousel-dot-size, 8px);
+    height: var(--carousel-dot-size, 8px);
+    background: var(--carousel-pagination-color, var(--pagination-color, #d0d5dd));
+}
+.pb-pro-carousel .pb-pro-dots button.active {
+    background: var(--carousel-pagination-active, var(--pagination-active-color, #6979f8));
+}
+.pb-pro-carousel__slide {
+    min-width: 0;
+}
+.pb-pro-carousel:not(.pb-pro-media-carousel):not(.pb-pro-reviews):not(.pb-pro-testimonial-carousel) .pb-pro-carousel__slide {
+    display: flex;
+    flex-direction: column;
+    gap: var(--carousel-content-gap, 10px);
+}
+.pb-pro-carousel__slide img {
+    width: 100%;
+    height: 140px;
+    object-fit: var(--carousel-image-fit, cover);
+}
+.pb-pro-carousel.is-image-stretch .pb-pro-carousel__slide img { height: auto; }
+.pb-pro-carousel__title { margin: 0; color: var(--carousel-title-color, #101828); }
+.pb-pro-carousel__description { margin: 0; color: var(--carousel-description-color, #344054); }
+.pb-pro-media-carousel {
+    position: relative;
+    max-width: 100%;
+    margin-inline: auto;
+}
+.pb-pro-media-carousel__slide {
+    position: relative;
+    min-height: var(--media-height, 300px);
+    overflow: hidden;
+}
+.pb-pro-media-carousel__media {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+    color: inherit;
+}
+.pb-pro-media-carousel__media img,
+.pb-pro-media-carousel__slide > div > img {
+    width: 100%;
+    height: var(--media-height, 300px);
+    object-fit: var(--media-fit, cover);
+}
+.pb-pro-media-carousel__play,
+.pb-pro-media-carousel__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+.pb-pro-media-carousel__play {
+    color: var(--media-play-color, #fff);
+    font-size: var(--media-play-size, 80px);
+    filter: drop-shadow(var(--media-play-shadow, 0 1px 6px rgba(0,0,0,.35)));
+}
+.pb-pro-media-carousel__overlay {
+    padding: 20px;
+    background: var(--media-overlay-background, rgba(0,0,0,.5));
+    color: var(--media-overlay-color, #fff);
+    font-size: var(--media-overlay-icon-size, 32px);
+    opacity: 0;
+    transition: opacity .25s ease, transform .25s ease;
+}
+.pb-pro-media-carousel__slide:hover .pb-pro-media-carousel__overlay,
+.pb-pro-media-carousel__slide:focus-within .pb-pro-media-carousel__overlay { opacity: 1; transform: none; }
+.pb-pro-media-carousel__overlay.animation-slide-up { transform: translateY(24px); }
+.pb-pro-media-carousel__overlay.animation-slide-down { transform: translateY(-24px); }
+.pb-pro-media-carousel__overlay.animation-slide-left { transform: translateX(24px); }
+.pb-pro-media-carousel__overlay.animation-slide-right { transform: translateX(-24px); }
+.pb-pro-media-carousel__overlay.animation-zoom-in { transform: scale(.82); }
+.pb-pro-media-carousel__thumbnails {
+    display: flex;
+    justify-content: center;
+    gap: var(--carousel-dot-gap, 8px);
+    margin-top: 12px;
+    overflow: hidden;
+}
+.pb-pro-media-carousel__thumbnail {
+    flex: 0 0 min(120px, 20%);
+    padding: 2px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    opacity: .55;
+}
+.pb-pro-media-carousel__thumbnail.active { border-color: var(--pagination-active-color, #6979f8); opacity: 1; }
+.pb-pro-media-carousel__thumbnail img { width: 100%; height: 54px; object-fit: cover; }
+.pb-pro-media-carousel--coverflow .pb-pro-media-carousel__slide { transform: scale(.86) rotateY(10deg); opacity: .65; transition: transform .35s ease, opacity .35s ease; }
+.pb-pro-media-carousel--coverflow .pb-pro-media-carousel__slide.is-active { transform: scale(1) rotateY(0); opacity: 1; }
+.pb-pro-media-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: var(--media-lightbox-background, rgba(0,0,0,.92));
+}
+.pb-pro-media-lightbox img { max-width: 92vw; max-height: 88vh; object-fit: contain; }
+.pb-pro-media-lightbox iframe { width: var(--media-lightbox-video-width, 75%); max-width: 1100px; aspect-ratio: 16/9; border: 0; }
+.pb-pro-media-lightbox__close { position: absolute; top: 18px; right: 22px; border: 0; background: transparent; color: var(--media-lightbox-ui, #fff); font-size: 28px; }
+.pb-pro-media-lightbox__close:hover,
+.pb-pro-media-lightbox__close:focus-visible { color: var(--media-lightbox-ui-hover, #6979f8); }
+.pb-pro-reviews {
+    max-width: 100%;
+    margin-inline: auto;
+}
+.pb-pro-reviews__slide {
+    overflow: hidden;
+}
+.pb-pro-reviews__header {
+    display: flex;
+    align-items: center;
+    gap: var(--reviews-image-gap, 15px);
+    padding: var(--reviews-header-gap, 15px);
+    background: var(--reviews-header-background, #fff);
+}
+.pb-pro-reviews__header.has-separator {
+    border-bottom: var(--reviews-separator-size, 1px) solid
+        var(--reviews-separator-color, #e4e7ec);
+}
+.pb-pro-reviews__image {
+    flex: 0 0 var(--reviews-image-size, 50px);
+    width: var(--reviews-image-size, 50px) !important;
+    height: var(--reviews-image-size, 50px) !important;
+    border-radius: var(--reviews-image-radius, 50%);
+    border: solid var(--reviews-image-border-color, #e4e7ec);
+    border-width: var(--reviews-image-border, 0px);
+    object-fit: var(--reviews-image-fit, cover);
+}
+.pb-pro-reviews__identity {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+}
+.pb-pro-reviews__icon {
+    display: inline-flex;
+    width: 1em;
+    height: 1em;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    color: inherit;
+    font-size: var(--reviews-icon-size, 20px);
+    text-decoration: none;
+}
+.pb-pro-reviews__text {
+    margin: 0;
+    padding: var(--reviews-header-gap, 15px);
+    white-space: pre-line;
+}
+.pb-pro-reviews__rating {
+    display: flex;
+    gap: var(--reviews-rating-spacing, 2px);
+    color: var(--reviews-rating-unmarked, #ccd6df);
+    font-size: var(--reviews-rating-size, 16px);
+    line-height: 1;
+}
+.pb-pro-reviews__star {
+    position: relative;
+    display: inline-block;
+}
+.pb-pro-reviews__star-marked {
+    position: absolute;
+    inset: 0 auto 0 0;
+    display: block;
+    overflow: hidden;
+    color: var(--reviews-rating-color, #f0ad4e);
+    white-space: nowrap;
+}
+.pb-pro-testimonial-carousel {
+    max-width: 100%;
+    margin-inline: auto;
+}
+.pb-pro-testimonial-carousel__slide {
+    overflow: hidden;
+    text-align: inherit;
+}
+.pb-pro-testimonial-carousel__inner {
+    display: grid;
+    gap: var(--testimonial-content-gap, 10px);
+    min-width: 0;
+}
+.pb-pro-testimonial-carousel__content {
+    margin: 0;
+    white-space: pre-line;
+}
+.pb-pro-testimonial-carousel__identity {
+    display: flex;
+    align-items: center;
+    justify-content: var(--testimonial-identity-align, center);
+    gap: var(--testimonial-image-gap, 10px);
+    min-width: 0;
+}
+.pb-pro-testimonial-carousel__image {
+    flex: 0 0 var(--testimonial-image-size, 50px);
+    width: var(--testimonial-image-size, 50px) !important;
+    height: var(--testimonial-image-size, 50px) !important;
+}
+.pb-pro-testimonial-carousel__meta {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+}
+.pb-pro-testimonial-carousel.layout-image_stacked .pb-pro-testimonial-carousel__identity,
+.pb-pro-testimonial-carousel.layout-image_above .pb-pro-testimonial-carousel__identity {
+    flex-direction: column;
+    align-items: var(--testimonial-identity-align, center);
+}
+.pb-pro-testimonial-carousel.layout-image_right .pb-pro-testimonial-carousel__identity {
+    flex-direction: row-reverse;
+}
+.pb-pro-testimonial-carousel.skin-bubble .pb-pro-testimonial-carousel__slide {
+    box-shadow: 0 8px 24px rgb(16 24 40 / 0.08);
+}
+.pb-pro-testimonial-carousel.skin-bubble .pb-pro-testimonial-carousel__content {
+    position: relative;
+    padding-top: 24px;
+}
+.pb-pro-testimonial-carousel.skin-bubble .pb-pro-testimonial-carousel__content::before {
+    position: absolute;
+    top: -0.1em;
+    left: 0;
+    color: #6979f8;
+    content: "\201C";
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1;
+}
+.pb-pro-code-highlight {
+    position: relative;
+    min-width: 0;
+    height: var(--code-highlight-height, 300px);
+    overflow: hidden;
+    border-radius: var(--code-highlight-radius, 6px);
+    background: var(--code-highlight-background, #0d1117);
+    color: var(--code-highlight-text, #e6edf3);
+}
+.pb-pro-code-highlight__toolbar {
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px;
+    background: color-mix(in srgb, var(--code-highlight-background, #0d1117) 88%, #fff);
+}
+.pb-pro-code-highlight__language {
+    font-family: var(--code-highlight-font-family, monospace);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    opacity: 0.75;
+}
+.pb-pro-code-highlight__copy {
+    display: inline-flex;
+    min-height: 28px;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    border: 0;
+    cursor: pointer;
+}
+.pb-pro-code-highlight__copy:hover,
+.pb-pro-code-highlight__copy:focus-visible {
+    background: var(--code-highlight-copy-background-hover, #5868e8) !important;
+    color: var(--code-highlight-copy-text-hover, #fff) !important;
+}
+.pb-pro-code-highlight__viewport {
+    height: calc(100% - 42px);
+    overflow: auto;
+}
+.pb-pro-code-highlight__pre {
+    min-height: 100%;
+    margin: 0;
+    padding: var(--code-highlight-padding, 20px);
+    overflow: visible;
+    background: transparent;
+    white-space: pre;
+}
+.pb-pro-code-highlight.is-word-wrap .pb-pro-code-highlight__pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+.pb-pro-code-highlight__code {
+    display: block;
+    min-width: max-content;
+    tab-size: 4;
+}
+.pb-pro-code-highlight.is-word-wrap .pb-pro-code-highlight__code {
+    min-width: 100%;
+}
+.pb-pro-code-highlight__line {
+    display: flex;
+    min-height: 1.5em;
+    margin-inline: calc(var(--code-highlight-padding-left, 20px) * -1) calc(var(--code-highlight-padding-right, 20px) * -1);
+    padding-inline: var(--code-highlight-padding-left, 20px) var(--code-highlight-padding-right, 20px);
+    border-left: 3px solid transparent;
+}
+.pb-pro-code-highlight__line.is-highlighted {
+    border-left-color: var(--code-highlight-line-border, #58a6ff);
+    background: var(--code-highlight-line-background, #1f6feb33);
+}
+.pb-pro-code-highlight__line-number {
+    flex: 0 0 var(--code-highlight-gutter-width, 34px);
+    width: var(--code-highlight-gutter-width, 34px);
+    margin-right: 12px;
+    padding-right: 10px;
+    background: var(--code-highlight-line-number-background, #161b22);
+    color: var(--code-highlight-line-number, #8b949e);
+    text-align: right;
+    user-select: none;
+}
+.pb-pro-code-highlight__line-content {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+.pb-pro-code-token--comment { color: #8b949e; }
+.pb-pro-code-token--string { color: #a5d6ff; }
+.pb-pro-code-token--keyword { color: #ff7b72; }
+.pb-pro-code-token--literal { color: #79c0ff; }
+.pb-pro-code-token--number { color: #79c0ff; }
+.pb-pro-code-token--function { color: #d2a8ff; }
+.pb-pro-code-token--tag { color: #7ee787; }
+.theme-light .pb-pro-code-token--comment { color: #667085; }
+.theme-light .pb-pro-code-token--string { color: #0f766e; }
+.theme-light .pb-pro-code-token--keyword { color: #b42318; }
+.theme-light .pb-pro-code-token--literal,
+.theme-light .pb-pro-code-token--number { color: #175cd3; }
+.theme-light .pb-pro-code-token--function { color: #6941c6; }
+.theme-light .pb-pro-code-token--tag { color: #027a48; }
+.pb-pro-carousel__fraction {
+    padding-top: 12px;
+    color: var(--pagination-active-color, #6979f8);
+    text-align: center;
+}
+.pb-pro-carousel__progress {
+    height: 4px;
+    margin-top: 16px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--pagination-color, #d0d5dd);
+}
+.pb-pro-carousel__progress span {
+    display: block;
+    height: 100%;
+    background: var(--pagination-active-color, #6979f8);
+    transition: width 0.3s ease;
+}
+.pb-pro-flip-box {
+    perspective: 1000px;
+    overflow: hidden;
+}
+.pb-pro-flip-box__inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+}
+.pb-pro-flip-box__face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    backface-visibility: hidden;
+}
+.pb-pro-flip-box.effect-flip.direction-left .pb-pro-flip-box__back {
+    transform: rotateY(180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-left.flipped .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-flip.direction-left:hover .pb-pro-flip-box__inner {
+    transform: rotateY(-180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-right .pb-pro-flip-box__back {
+    transform: rotateY(-180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-right.flipped .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-flip.direction-right:hover .pb-pro-flip-box__inner {
+    transform: rotateY(180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-up .pb-pro-flip-box__back {
+    transform: rotateX(-180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-up.flipped .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-flip.direction-up:hover .pb-pro-flip-box__inner {
+    transform: rotateX(180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-down .pb-pro-flip-box__back {
+    transform: rotateX(180deg);
+}
+.pb-pro-flip-box.effect-flip.direction-down.flipped .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-flip.direction-down:hover .pb-pro-flip-box__inner {
+    transform: rotateX(-180deg);
+}
+.pb-pro-flip-box.effect-slide .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-push .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-zoom-in .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-zoom-out .pb-pro-flip-box__inner,
+.pb-pro-flip-box.effect-fade .pb-pro-flip-box__inner {
+    transform: none;
+}
+.pb-pro-flip-box.effect-slide .pb-pro-flip-box__face,
+.pb-pro-flip-box.effect-push .pb-pro-flip-box__face,
+.pb-pro-flip-box.effect-zoom-in .pb-pro-flip-box__face,
+.pb-pro-flip-box.effect-zoom-out .pb-pro-flip-box__face,
+.pb-pro-flip-box.effect-fade .pb-pro-flip-box__face {
+    transition:
+        transform 0.6s ease,
+        opacity 0.6s ease;
+}
+.pb-pro-flip-box.effect-slide.direction-up .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-push.direction-up .pb-pro-flip-box__back {
+    transform: translateY(100%);
+}
+.pb-pro-flip-box.effect-slide.direction-down .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-push.direction-down .pb-pro-flip-box__back {
+    transform: translateY(-100%);
+}
+.pb-pro-flip-box.effect-slide.direction-left .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-push.direction-left .pb-pro-flip-box__back {
+    transform: translateX(100%);
+}
+.pb-pro-flip-box.effect-slide.direction-right .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-push.direction-right .pb-pro-flip-box__back {
+    transform: translateX(-100%);
+}
+.pb-pro-flip-box.effect-slide.flipped .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-slide:hover .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-push.flipped .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-push:hover .pb-pro-flip-box__back {
+    transform: translate(0);
+}
+.pb-pro-flip-box.effect-zoom-in .pb-pro-flip-box__back {
+    transform: scale(0.65);
+    opacity: 0;
+}
+.pb-pro-flip-box.effect-zoom-out .pb-pro-flip-box__back {
+    transform: scale(1.35);
+    opacity: 0;
+}
+.pb-pro-flip-box.effect-fade .pb-pro-flip-box__back {
+    transform: none;
+    opacity: 0;
+}
+.pb-pro-flip-box.effect-zoom-in.flipped .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-zoom-in:hover .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-zoom-out.flipped .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-zoom-out:hover .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-fade.flipped .pb-pro-flip-box__back,
+.pb-pro-flip-box.effect-fade:hover .pb-pro-flip-box__back {
+    transform: scale(1);
+    opacity: 1;
+}
+.pb-pro-flip-box.effect-zoom-in.flipped .pb-pro-flip-box__front,
+.pb-pro-flip-box.effect-zoom-in:hover .pb-pro-flip-box__front,
+.pb-pro-flip-box.effect-zoom-out.flipped .pb-pro-flip-box__front,
+.pb-pro-flip-box.effect-zoom-out:hover .pb-pro-flip-box__front,
+.pb-pro-flip-box.effect-fade.flipped .pb-pro-flip-box__front,
+.pb-pro-flip-box.effect-fade:hover .pb-pro-flip-box__front {
+    opacity: 0;
+}
+.pb-pro-blockquote {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    color: var(--blockquote-content-color, #344054);
+    text-align: left;
+}
+.pb-pro-blockquote.align-center { text-align: center; }
+.pb-pro-blockquote.align-right { text-align: right; }
+.pb-pro-blockquote.skin-border {
+    border-width: var(--blockquote-border-width, 3px 0 0 0);
+    border-style: solid;
+    border-color: var(--blockquote-border-color, #6979f8);
+    padding-block: var(--blockquote-border-padding, 8px);
+    transition: border-color var(--blockquote-border-duration, 0.3s), padding var(--blockquote-border-duration, 0.3s);
+}
+.pb-pro-blockquote.skin-quotation { padding-top: calc(var(--blockquote-quote-size, 48px) + var(--blockquote-quote-gap, 12px)); }
+.pb-pro-blockquote__quote-mark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--blockquote-quote-color, #6979f8);
+    font-family: Georgia, serif;
+    font-size: var(--blockquote-quote-size, 48px);
+    line-height: 1;
+}
+.pb-pro-blockquote.align-center .pb-pro-blockquote__quote-mark { left: 50%; transform: translateX(-50%); }
+.pb-pro-blockquote.align-right .pb-pro-blockquote__quote-mark { right: 0; left: auto; }
+.pb-pro-blockquote__content { color: var(--blockquote-content-color, #344054); }
+.pb-pro-blockquote__author { margin-top: var(--blockquote-content-gap, 16px); color: var(--blockquote-author-color, #101828); }
+.pb-pro-blockquote__author::before { content: "— "; }
+.pb-pro-blockquote.skin-boxed {
+    padding: var(--blockquote-box-padding, 24px);
+    border: var(--blockquote-box-border-width, 1px) var(--blockquote-box-border-type, none) var(--blockquote-box-border-color, #e4e7ec);
+    border-radius: var(--blockquote-box-radius, 8px);
+    background: var(--blockquote-box-background, #f8fafc);
+    box-shadow: var(--blockquote-box-shadow, none);
+    transition: background var(--blockquote-box-duration, 0.3s), border-color var(--blockquote-box-duration, 0.3s), box-shadow var(--blockquote-box-duration, 0.3s), border-radius var(--blockquote-box-duration, 0.3s);
+}
+.pb-pro-blockquote.skin-boxed:hover {
+    background: var(--blockquote-box-background-hover, #eef2ff);
+    border-color: var(--blockquote-box-border-color-hover, #6979f8);
+    box-shadow: var(--blockquote-box-shadow-hover, none);
+}
+.pb-pro-blockquote__tweet {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--blockquote-tweet-gap, 8px);
+    min-height: var(--blockquote-tweet-size, 14px);
+    margin-top: var(--blockquote-content-gap, 16px);
+    padding: 7px 12px;
+    border-radius: var(--blockquote-tweet-radius, 4px);
+    background: var(--blockquote-tweet-background, #1da1f2);
+    color: var(--blockquote-tweet-color, #fff);
+    font-size: var(--blockquote-tweet-size, 14px);
+    text-decoration: none;
+    transition: background var(--blockquote-tweet-duration, 0.3s), color var(--blockquote-tweet-duration, 0.3s);
+}
+.pb-pro-blockquote__tweet:hover { background: var(--blockquote-tweet-background-hover, #0d8bd0); color: var(--blockquote-tweet-color-hover, #fff); }
+.pb-pro-blockquote__tweet.tweet-skin-bubble { border-radius: 999px; }
+.pb-pro-blockquote__tweet.tweet-skin-link { padding: 0; background: transparent; color: var(--blockquote-tweet-background, #1da1f2); }
+.pb-pro-blockquote__tweet.tweet-skin-link:hover { background: transparent; color: var(--blockquote-tweet-background-hover, #0d8bd0); }
+.pb-pro-share-buttons {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: var(--share-rows-gap, 8px) var(--share-columns-gap, 8px);
+}
+.pb-pro-share-buttons.align-center { justify-content: center; }
+.pb-pro-share-buttons.align-right { justify-content: flex-end; }
+.pb-pro-share-buttons__button {
+    display: inline-flex;
+    min-width: var(--share-button-size, 40px);
+    height: var(--share-button-height, 40px);
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 0;
+    background: var(--share-button-background, #6979f8);
+    color: var(--share-button-color, #fff);
+    text-decoration: none;
+    transition: background 0.25s, color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+.pb-pro-share-buttons__button:hover { background: var(--share-button-background-hover, #5367ff); color: var(--share-button-color-hover, #fff); }
+.pb-pro-share-buttons__button i { font-size: var(--share-icon-size, 16px); }
+.pb-pro-share-buttons.shape-rounded .pb-pro-share-buttons__button { border-radius: 6px; }
+.pb-pro-share-buttons.shape-circle .pb-pro-share-buttons__button { width: var(--share-button-size, 40px); padding: 0; border-radius: 50%; }
+.pb-pro-share-buttons.shape-circle .pb-pro-share-buttons__button span { display: none; }
+.pb-pro-share-buttons.shape-none .pb-pro-share-buttons__button { padding-inline: 0; background: transparent; color: var(--share-button-background, #6979f8); }
+.pb-pro-share-buttons.skin-gradient .pb-pro-share-buttons__button { background: linear-gradient(135deg, var(--share-button-background, #6979f8), var(--share-button-background-hover, #5367ff)); }
+.pb-pro-share-buttons.skin-minimal .pb-pro-share-buttons__button { background: transparent; color: var(--share-button-background, #6979f8); }
+.pb-pro-share-buttons.skin-framed .pb-pro-share-buttons__button { border: 1px solid var(--share-button-background, #6979f8); background: transparent; color: var(--share-button-background, #6979f8); }
+.pb-pro-share-buttons.skin-box .pb-pro-share-buttons__button { border-radius: 3px; box-shadow: 0 2px 6px #10182822; }
+.pb-pro-share-buttons.skin-3d .pb-pro-share-buttons__button { box-shadow: inset 0 -3px 0 #00000026, 0 2px 4px #10182822; transform: translateY(0); }
+.pb-pro-share-buttons.skin-3d .pb-pro-share-buttons__button:hover { transform: translateY(1px); }
+.pb-pro-share-buttons.columns-1 .pb-pro-share-buttons__button { flex-basis: 100%; }
+.pb-pro-share-buttons.columns-2 .pb-pro-share-buttons__button { flex-basis: calc((100% - var(--share-columns-gap, 8px)) / 2); }
+.pb-pro-share-buttons.columns-3 .pb-pro-share-buttons__button { flex-basis: calc((100% - (2 * var(--share-columns-gap, 8px))) / 3); }
+.pb-pro-share-buttons.columns-4 .pb-pro-share-buttons__button { flex-basis: calc((100% - (3 * var(--share-columns-gap, 8px))) / 4); }
+.pb-pro-share-buttons.columns-5 .pb-pro-share-buttons__button { flex-basis: calc((100% - (4 * var(--share-columns-gap, 8px))) / 5); }
+.pb-pro-share-buttons.columns-6 .pb-pro-share-buttons__button { flex-basis: calc((100% - (5 * var(--share-columns-gap, 8px))) / 6); }
+.pb-pro-canvas--product_lead_form { display:grid;width:100%;min-width:0;gap:28px; }
+.pb-product-lead__selectors { display:grid;width:100%;min-width:0; }
+.pb-product-lead__selector-title,.pb-product-lead__level,.pb-product-lead__fieldset,.pb-product-lead__fieldset legend { margin:0; }
+.pb-product-lead__selector-title { color:var(--product-title-color,#101828);font-size:18px;font-weight:700; }
+.pb-product-lead__configuration { display:flex;min-height:84px;align-items:center;justify-content:center;gap:10px;padding:18px;border:1px dashed #b8c2d5;border-radius:8px;background:#f8fafc;color:#667085; }
+.pb-product-lead__fieldset { min-width:0;padding:0;border:0; }
+.pb-product-lead__fieldset legend,.pb-product-lead__select-field>span { display:block;margin-bottom:10px;color:#344054;font-size:13px;font-weight:700; }
+.pb-product-lead__cards { display:grid;min-width:0; }
+.pb-product-lead__card { position:relative;display:grid;width:var(--product-card-width,100%);min-width:var(--product-card-min-width,0);height:var(--product-card-height,auto);min-height:0;align-self:var(--product-card-self-align,start);align-content:var(--product-card-content-align,start);justify-items:var(--product-card-align,center);gap:var(--product-card-content-gap,12px);padding:var(--product-card-padding,16px);margin:var(--product-card-margin,0);border:var(--product-card-border-width,1px) var(--product-card-border-style,solid) var(--product-card-border,#d0d5dd);border-radius:var(--product-card-radius,8px);background:var(--product-card-bg,#fff);box-shadow:var(--product-card-shadow,none);color:var(--product-card-label,#101828);text-align:var(--product-card-align,center);cursor:pointer;transition:border-color .2s,background .2s,box-shadow .2s,color .2s,transform .2s; }
+.pb-product-lead__card:hover,.pb-product-lead__card:focus-within { border-color:var(--product-card-border-hover,#98a2b3);background:var(--product-card-bg-hover,#f8fafc);box-shadow:var(--product-card-shadow-hover,none);transform:translateY(-1px); }
+.pb-product-lead__card.is-selected { border-color:var(--product-card-border-selected,#6979f8);background:var(--product-card-bg-selected,#eef2ff);box-shadow:var(--product-card-shadow-selected,none);color:var(--product-card-label-selected,#3443c4); }
+.pb-product-lead__card:hover,.pb-product-lead__card:focus-within { border-width:var(--product-card-border-width-hover,var(--product-card-border-width,1px)); }
+.pb-product-lead__card.is-selected { border-width:var(--product-card-border-width-selected,var(--product-card-border-width,1px)); }
+.pb-product-lead__card.is-preview-hover { border-color:var(--product-card-border-hover,#98a2b3);border-width:var(--product-card-border-width-hover,var(--product-card-border-width,1px));background:var(--product-card-bg-hover,#f8fafc);box-shadow:var(--product-card-shadow-hover,none);color:var(--product-card-label,#101828);transform:none; }
+.pb-product-lead__card.is-preview-selected { border-color:var(--product-card-border-selected,#6979f8);border-width:var(--product-card-border-width-selected,var(--product-card-border-width,1px));background:var(--product-card-bg-selected,#eef2ff);box-shadow:var(--product-card-shadow-selected,none);color:var(--product-card-label-selected,#3443c4);transform:none; }
+.pb-product-lead__card input { position:absolute;width:1px;height:1px;opacity:0;pointer-events:none; }
+.pb-product-lead__card img { display:block;max-width:100%;border:var(--product-card-image-border-width,0) var(--product-card-image-border-style,none) var(--product-card-image-border-color,transparent); }
+.pb-product-lead__card .product-card-check { position:absolute;z-index:1;display:grid;place-items:center;pointer-events:none;line-height:1;box-sizing:border-box;box-shadow:0 0 0 2px var(--product-card-bg-selected,#eef2ff); }
+.pb-product-lead__card>span { overflow-wrap:anywhere;font-size:13px;font-weight:700; }
+.pb-product-lead__card-media { position:relative;display:grid;width:var(--product-card-image-width,96px);height:var(--product-card-image-height,96px);max-width:100%;min-width:0;min-height:0;overflow:hidden;box-sizing:border-box;padding:var(--product-card-image-padding,0);aspect-ratio:1 / 1;place-items:center; }
+.pb-product-lead__card-media img { display:block;width:100%;height:100%;object-fit:var(--product-card-image-fit,contain);object-position:center; }
+.pb-product-lead__card.is-label-outside { padding:var(--product-card-padding,16px);border-color:transparent;background:transparent;box-shadow:none;transform:none;row-gap:var(--product-card-label-gap,var(--product-card-content-gap,12px)); }
+.pb-product-lead__card.is-label-outside:hover,.pb-product-lead__card.is-label-outside:focus-within { border-color:transparent;background:transparent;box-shadow:none;transform:none; }
+.pb-product-lead__card.is-label-outside .pb-product-lead__card-media { border:var(--product-card-border-width,1px) var(--product-card-border-style,solid) var(--product-card-border,#d0d5dd);border-radius:var(--product-card-radius,8px);background:var(--product-card-bg,#fff);box-shadow:var(--product-card-shadow,none); }
+.pb-product-lead__card.is-label-outside:hover .pb-product-lead__card-media,.pb-product-lead__card.is-label-outside:focus-within .pb-product-lead__card-media { border-color:var(--product-card-border-hover,#98a2b3);background:var(--product-card-bg-hover,#f8fafc);box-shadow:var(--product-card-shadow-hover,none); }
+.pb-product-lead__card.is-label-outside.is-selected .pb-product-lead__card-media { border-color:var(--product-card-border-selected,#6979f8);background:var(--product-card-bg-selected,#eef2ff);box-shadow:var(--product-card-shadow-selected,none); }
+.pb-product-lead__card.is-label-outside:hover .pb-product-lead__card-media,.pb-product-lead__card.is-label-outside:focus-within .pb-product-lead__card-media { border-width:var(--product-card-border-width-hover,var(--product-card-border-width,1px)); }
+.pb-product-lead__card.is-label-outside.is-selected .pb-product-lead__card-media { border-width:var(--product-card-border-width-selected,var(--product-card-border-width,1px)); }
+.pb-product-lead__card.is-label-outside.is-preview-hover .pb-product-lead__card-media { border-color:var(--product-card-border-hover,#98a2b3);border-width:var(--product-card-border-width-hover,var(--product-card-border-width,1px));background:var(--product-card-bg-hover,#f8fafc);box-shadow:var(--product-card-shadow-hover,none); }
+.pb-product-lead__card.is-label-outside.is-preview-selected .pb-product-lead__card-media { border-color:var(--product-card-border-selected,#6979f8);border-width:var(--product-card-border-width-selected,var(--product-card-border-width,1px));background:var(--product-card-bg-selected,#eef2ff);box-shadow:var(--product-card-shadow-selected,none); }
+.pb-product-lead__card.is-label-above>span { order:1; }
+.pb-product-lead__card.is-label-above .pb-product-lead__card-media { order:2; }
+.pb-product-lead__card.is-label-below>span { order:2; }
+.pb-product-lead__card.is-label-below .pb-product-lead__card-media { order:1; }
+.pb-product-lead__card.is-label-inside .pb-product-lead__card-media { grid-area:1/1; }
+.pb-product-lead__card.is-label-inside>span { position:absolute;z-index:2;right:12px;bottom:12px;left:12px;padding:6px 8px;border-radius:4px;background:rgba(16,24,40,.68);color:inherit; }
+.pb-product-lead__card { border-width:var(--product-card-border-width,1px);border-style:var(--product-card-border-style,solid);border-color:var(--product-card-border,#d0d5dd); }
+.pb-product-lead__card img { border-width:var(--product-card-image-border-width,0);border-style:var(--product-card-image-border-style,none);border-color:var(--product-card-image-border-color,transparent); }
+.pb-product-lead__card.is-label-outside .pb-product-lead__card-media { border-width:var(--product-card-border-width,1px);border-style:var(--product-card-border-style,solid);border-color:var(--product-card-border,#d0d5dd); }
+.pb-product-lead__select-field { display:grid;min-width:0; }
+.pb-product-lead__select-field select { width:100%;min-height:42px;padding:8px 12px;border:1px solid #d0d5dd;border-radius:6px;background:#fff;color:#344054; }
+.pb-product-lead__level-empty { display:flex;min-height:54px;align-items:center;gap:9px;padding:12px;border:1px dashed #cbd5e1;border-radius:7px;background:#f8fafc;color:#667085;font-size:12px; }
+.pb-product-lead__body { display:grid;min-width:0;grid-template-columns:minmax(0,var(--product-lead-media-width,50%)) minmax(0,1fr);align-items:start;gap:var(--product-lead-gap,32px); }
+.pb-product-lead__body[data-media-position="right"] { grid-template-columns:minmax(0,1fr) minmax(0,var(--product-lead-media-width,50%)); }
+.pb-product-lead__body[data-media-position="right"] .pb-product-lead__media { order:2; }
+.pb-product-lead__body[data-media-position="top"],.pb-product-lead__body[data-media-position="bottom"] { grid-template-columns:minmax(0,1fr); }
+.pb-product-lead__body[data-media-position="bottom"] .pb-product-lead__media { order:2; }
+.pb-product-lead__media { display:grid;min-width:0;gap:10px; }
+.pb-product-lead__media>img { display:block;max-width:100%; }
+.pb-product-lead__media-empty { display:grid;width:100%;min-height:220px;place-items:center;border:1px dashed #d0d5dd;border-radius:8px;background:#f8fafc;color:#98a2b3;font-size:36px; }
+.pb-product-lead__media h2 { margin:4px 0 0;color:var(--product-title-color,#101828); }
+.pb-product-lead__media p { margin:0;color:var(--product-description-color,#475467); }
+.pb-product-lead__detail-link { color:var(--product-detail-color,#6979f8);font-weight:700;text-decoration:none; }
+.pb-product-lead__detail-link:hover { color:var(--product-detail-hover,#3443c4);text-decoration:underline; }
+.pb-product-lead__body>.pb-pro-form { min-width:0; }
+.pb-product-lead__body .pb-pro-form input,.pb-product-lead__body .pb-pro-form textarea,.pb-product-lead__body .pb-pro-form select { pointer-events:auto;user-select:text;-webkit-user-select:text;touch-action:auto; }
+.pb-product-lead__body .pb-pro-form select { cursor:pointer; }
+@media (prefers-reduced-motion: reduce) {
+    .pb-pro-carousel__track,
+    .pb-pro-cta,
+    .pb-pro-cta__image,
+    .pb-pro-flip-box__inner {
+        transition: none !important;
+    }
+}
+</style>

@@ -58,6 +58,30 @@ final class ModuleCatalog
         return $this->find($type) !== null;
     }
 
+    public function supports(string $type, string $capability): bool
+    {
+        $module = $this->find($type);
+
+        return is_array($module)
+            && in_array(trim($capability), $module['capabilities'] ?? [], true);
+    }
+
+    public function anySupports(string $capability): bool
+    {
+        $needle = trim($capability);
+        if ($needle === '') {
+            return false;
+        }
+
+        foreach ($this->all() as $module) {
+            if (in_array($needle, $module['capabilities'] ?? [], true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function toolbox(): array
     {
         $groups = [];

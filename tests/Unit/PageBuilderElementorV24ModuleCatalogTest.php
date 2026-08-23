@@ -156,6 +156,31 @@ class PageBuilderElementorV24ModuleCatalogTest extends TestCase
         $this->assertSame(['zeta'], array_column($catalog->toolbox()['general'], 'type'));
     }
 
+    public function test_capability_queries_are_driven_by_active_module_manifests(): void
+    {
+        $this->writeModule('widgets/pro/form', [
+            'type' => 'form',
+            'label' => 'Form',
+            'category' => 'pro',
+            'capabilities' => ['form-submission', 'form-datasets'],
+        ]);
+        $this->writeModule('widgets/pro/product-lead-form', [
+            'type' => 'product_lead_form',
+            'label' => 'Product Lead Form',
+            'category' => 'pro',
+            'capabilities' => ['form-submission', 'form-datasets', 'product-selection'],
+        ]);
+
+        $catalog = new ModuleCatalog($this->modulesRoot);
+
+        $this->assertTrue($catalog->supports('form', 'form-submission'));
+        $this->assertTrue($catalog->supports('product_lead_form', 'product-selection'));
+        $this->assertFalse($catalog->supports('form', 'product-selection'));
+        $this->assertFalse($catalog->supports('missing', 'form-submission'));
+        $this->assertTrue($catalog->anySupports('form-datasets'));
+        $this->assertFalse($catalog->anySupports('missing-capability'));
+    }
+
     public function test_moving_a_module_folder_outside_the_root_removes_it_and_restoring_the_folder_adds_it_back(): void
     {
         $modulePath = $this->writeModule('widgets/basic/button', ['type' => 'button', 'label' => 'Button']);

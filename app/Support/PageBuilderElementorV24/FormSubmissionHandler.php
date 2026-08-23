@@ -21,13 +21,15 @@ class FormSubmissionHandler
     public function __construct(
         private readonly FormConditionalLogicEvaluator $conditionalLogic,
         private readonly FormRowGridNormalizer $formRowGrid,
+        private readonly ModuleCatalog $moduleCatalog,
+        private readonly ProductSelectionResolver $productSelection,
     )
     {
     }
 
     public function handle(Page_Builder $page, string $nodeId, Request $request, array $contextMeta = []): array
     {
-        $node = $this->findFormNode($this->layout($page), $nodeId);
+        $node = $this->findSubmittableNode($this->layout($page), $nodeId);
 
         if (! $node) {
             abort(404);
@@ -36,13 +38,19 @@ class FormSubmissionHandler
         $settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
         $settings = $this->formRowGrid->normalizeSettings($settings);
         $definitions = $this->fieldDefinitions($settings['fields'] ?? []);
-        $definitions = $this->resolveDatasetOptions($page, $definitions, $request->all());
+        $product = $this->moduleCatalog->supports((string) ($node['type'] ?? ''), 'product-selection')
+            ? $this->productSelection->resolve($page, $settings, $request->all(), array_keys($definitions))
+            : ['fields' => [], 'definitions' => [], 'meta' => []];
+        $conditionValues = array_replace($request->all(), $product['fields']);
+        $definitions = $this->resolveDatasetOptions($page, $definitions, $conditionValues);
         $definitions = array_filter(
             $definitions,
-            fn (array $field): bool => $this->conditionalLogic->fieldIsVisible($field, $request->all()),
+            fn (array $field): bool => $this->conditionalLogic->fieldIsVisible($field, $conditionValues),
         );
         $validated = Validator::make($request->all(), $this->rules($definitions))->validate();
         [$fields, $files] = $this->submissionValues($definitions, $validated);
+        $fields = $product['fields'] + $fields;
+        $definitions = $product['definitions'] + $definitions;
         $actions = array_values(array_intersect((array) ($settings['submitActions'] ?? ['message']), self::ACTIONS));
         $webhookUrl = $this->validateActionConfiguration($actions, $settings);
         $meta = [
@@ -50,6 +58,7 @@ class FormSubmissionHandler
             'page_url' => (string) $request->headers->get('referer', ''),
             'user_agent' => (string) $request->userAgent(),
             'remote_ip' => (string) $request->ip(),
+            ...($product['meta'] === [] ? [] : ['product_selection' => $product['meta']]),
             ...$contextMeta,
         ];
 
@@ -122,20 +131,31 @@ class FormSubmissionHandler
         return is_array($decoded) ? $decoded : [];
     }
 
-    private function findFormNode(array $nodes, string $nodeId): ?array
+    private function findSubmittableNode(array $nodes, string $nodeId): ?array
     {
         foreach ($nodes as $node) {
             if (! is_array($node)) {
                 continue;
             }
 
-            if (($node['id'] ?? '') === $nodeId && ($node['type'] ?? '') === 'form') {
+            if (($node['id'] ?? '') === $nodeId
+                && $this->moduleCatalog->supports((string) ($node['type'] ?? ''), 'form-submission')) {
                 return $node;
             }
 
-            $children = is_array($node['children'] ?? null) ? $node['children'] : [];
-            if ($found = $this->findFormNode($children, $nodeId)) {
-                return $found;
+            $childLists = [is_array($node['children'] ?? null) ? $node['children'] : []];
+            foreach (['columns', 'tabItems', 'accordionItems'] as $collection) {
+                foreach (is_array($node[$collection] ?? null) ? $node[$collection] : [] as $entry) {
+                    if (is_array($entry['children'] ?? null)) {
+                        $childLists[] = $entry['children'];
+                    }
+                }
+            }
+
+            foreach ($childLists as $children) {
+                if ($found = $this->findSubmittableNode($children, $nodeId)) {
+                    return $found;
+                }
             }
         }
 

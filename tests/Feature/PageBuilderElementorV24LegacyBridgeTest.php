@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class PageBuilderElementorV24LegacyBridgeTest extends TestCase
 {
-    public function test_legacy_bridge_is_empty_after_all_forty_nine_modules_are_discovered(): void
+    public function test_legacy_bridge_is_empty_after_all_fifty_modules_are_discovered(): void
     {
         $this->assertSame([], config('pagebuilder_elementor_v24_widgets', []));
     }
@@ -35,6 +35,7 @@ class PageBuilderElementorV24LegacyBridgeTest extends TestCase
                 'data-pb-module-definition="heading"',
                 'data-pb-module-definition="image_box"',
                 'data-pb-module-definition="form"',
+                'data-pb-module-definition="product_lead_form"',
                 'data-pb-module-definition="media_carousel"',
                 'data-pb-module-definition="hero_banner"',
                 'data-pb-module-definition="hero_slider"',

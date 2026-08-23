@@ -82,6 +82,7 @@ class PageBuilderElementorV24ProductionModuleCatalogTest extends TestCase
     {
         $this->assertCategoryModules('pro', [
             'form',
+            'product_lead_form',
             'slides',
             'animated_headline',
             'hotspot',

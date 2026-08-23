@@ -33,7 +33,7 @@ final class FormDatasetNormalizer
                     'kind' => trim((string) ($node['kind'] ?? 'item')) ?: 'item',
                     'sortOrder' => is_numeric($node['sortOrder'] ?? null) ? (int) $node['sortOrder'] : $index,
                     'active' => array_key_exists('active', $node) ? (bool) $node['active'] : true,
-                    ...((is_array($node['meta'] ?? null)) ? ['meta' => $node['meta']] : []),
+                    ...$this->normalizedMetaEntry($node['meta'] ?? null),
                 ];
             }, $nodes, array_keys($nodes))),
         ];
@@ -129,6 +129,24 @@ final class FormDatasetNormalizer
             $maxDepth = max($maxDepth, $depth((string) $id));
         }
 
+        $codesByDepth = [];
+        foreach ($dataset['nodes'] as $index => $node) {
+            $code = mb_strtolower(trim((string) $node['code']));
+            if ($code === '' || $node['id'] === '') {
+                continue;
+            }
+            $key = $depth($node['id']).'|'.$code;
+            if (isset($codesByDepth[$key])) {
+                $errors[] = [
+                    'code' => 'duplicate-code',
+                    'path' => "nodes.{$index}.code",
+                    'message' => "Duplicate code at the same level: {$node['code']}.",
+                ];
+                continue;
+            }
+            $codesByDepth[$key] = true;
+        }
+
         return [
             'valid' => $errors === [],
             'errors' => $errors,
@@ -139,5 +157,36 @@ final class FormDatasetNormalizer
                 'maxDepth' => $maxDepth,
             ],
         ];
+    }
+
+    private function normalizedMetaEntry(mixed $value): array
+    {
+        if (! is_array($value)) {
+            return [];
+        }
+
+        $source = static fn (mixed $entry): string => ($entry === 'url' ? 'url' : 'ckfinder');
+        $text = static fn (mixed $entry): string => trim((string) $entry);
+        $url = function (mixed $entry): string {
+            $raw = trim((string) $entry);
+            if ($raw === '' || str_starts_with($raw, '//') || preg_match('/[\x00-\x1F\x7F]/', $raw)) {
+                return '';
+            }
+
+            return preg_match('/^(?:https?:\/\/|\/)[^\s"\'<>]*$/i', $raw) ? $raw : '';
+        };
+
+        $meta = $value;
+        $meta['thumbnailSource'] = $source($value['thumbnailSource'] ?? 'ckfinder');
+        $meta['thumbnailUrl'] = $url($value['thumbnailUrl'] ?? '');
+        $meta['thumbnailAlt'] = $text($value['thumbnailAlt'] ?? '');
+        $meta['imageSource'] = $source($value['imageSource'] ?? 'ckfinder');
+        $meta['imageUrl'] = $url($value['imageUrl'] ?? '');
+        $meta['imageAlt'] = $text($value['imageAlt'] ?? '');
+        $meta['description'] = $text($value['description'] ?? '');
+        $meta['detailUrl'] = $url($value['detailUrl'] ?? '');
+        $meta['detailLabel'] = $text($value['detailLabel'] ?? '');
+
+        return ['meta' => $meta];
     }
 }

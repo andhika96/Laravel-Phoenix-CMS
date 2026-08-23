@@ -135,6 +135,158 @@ class PageBuilderElementorV24FormSubmissionTest extends TestCase
         });
     }
 
+    public function test_product_lead_form_validates_and_prepends_trusted_product_selection_to_all_actions(): void
+    {
+        Mail::fake();
+        Http::fake(['https://hooks.example.com/*' => Http::response('', 204)]);
+        $datasetId = $this->createProductDataset();
+        $this->createPageWithProductLeadForm($datasetId, [
+            'submitActions' => ['message', 'collect', 'email', 'webhook'],
+            'emailTo' => 'owner@example.com',
+            'emailSubject' => 'Lead for [field id="product_model"]',
+            'emailContent' => '[all-fields]',
+            'webhookUrl' => 'https://hooks.example.com/product-leads',
+        ]);
+
+        $this->postJson('/pagebuilder-elementor/v2.4/form/contact-page/product-lead-contact', [
+            'product_model' => 'MGS5_EV',
+            'product_type' => 'LUXURY',
+            'product_variant' => 'LONG_RANGE',
+            'name' => 'Aruna',
+            'email' => 'aruna@example.com',
+        ])->assertOk()->assertJsonPath('success', true);
+
+        $stored = DB::table('page_builder_elementor_form_submissions')->sole();
+        $fields = json_decode($stored->fields, true, flags: JSON_THROW_ON_ERROR);
+        $meta = json_decode($stored->meta, true, flags: JSON_THROW_ON_ERROR);
+        $this->assertSame([
+            'product_model' => 'MGS5_EV',
+            'product_type' => 'LUXURY',
+            'product_variant' => 'LONG_RANGE',
+            'name' => 'Aruna',
+            'email' => 'aruna@example.com',
+        ], $fields);
+        $this->assertSame(['model-s5', 'type-luxury', 'variant-long-range'], array_column($meta['product_selection'], 'id'));
+        $this->assertSame(['mgs5ev', 'luxury', 'long-range'], array_column($meta['product_selection'], 'code'));
+
+        Mail::assertSent(PageBuilderElementorV24FormMail::class, fn (PageBuilderElementorV24FormMail $mail): bool =>
+            $mail->subjectLine === 'Lead for MGS5_EV'
+            && str_contains($mail->body, 'LONG_RANGE')
+        );
+        Http::assertSent(fn ($request): bool =>
+            $request->url() === 'https://hooks.example.com/product-leads'
+            && $request['fields']['product_variant'] === 'LONG_RANGE'
+            && $request['meta']['product_selection'][2]['id'] === 'variant-long-range'
+        );
+    }
+
+    public function test_product_lead_form_rejects_tampered_or_cross_parent_product_values_before_side_effects(): void
+    {
+        Mail::fake();
+        Http::fake();
+        $datasetId = $this->createProductDataset();
+        $this->createPageWithProductLeadForm($datasetId, [
+            'submitActions' => ['collect', 'email', 'webhook'],
+            'emailTo' => 'owner@example.com',
+            'webhookUrl' => 'https://hooks.example.com/product-leads',
+        ]);
+
+        $this->postJson('/pagebuilder-elementor/v2.4/form/contact-page/product-lead-contact', [
+            'product_model' => 'MGS5_EV',
+            'product_type' => 'ACTIVATE',
+            'product_variant' => 'HIDDEN',
+            'name' => 'Aruna',
+            'email' => 'aruna@example.com',
+        ])->assertUnprocessable()->assertJsonPath('success', false);
+
+        $this->assertSame(0, DB::table('page_builder_elementor_form_submissions')->count());
+        Mail::assertNothingSent();
+        Http::assertNothingSent();
+    }
+
+    public function test_editor_draft_accepts_product_lead_form_through_the_same_capability_boundary(): void
+    {
+        $this->actingAsEditor();
+        $datasetId = $this->createProductDataset();
+        $node = $this->productLeadNode($datasetId, ['submitActions' => ['message']]);
+
+        $this->postJson('/pagebuilder-elementor/v2.4/form/editor-draft', [
+            '__pb_editor_node' => json_encode($node, JSON_THROW_ON_ERROR),
+            'product_model' => 'MGS5_EV',
+            'product_type' => 'LUXURY',
+            'product_variant' => 'LONG_RANGE',
+            'name' => 'Aruna',
+            'email' => 'aruna@example.com',
+        ])->assertOk()->assertJson([
+            'success' => true,
+            'editorTest' => true,
+        ]);
+    }
+
+    public function test_product_selection_values_drive_existing_form_conditional_logic(): void
+    {
+        $datasetId = $this->createProductDataset();
+        $this->createPageWithProductLeadForm($datasetId, [
+            'productLevelCount' => 1,
+            'fields' => [
+                ['id' => 'name', 'label' => 'Name', 'type' => 'text', 'required' => true],
+                [
+                    'id' => 'interest',
+                    'label' => 'Interest',
+                    'type' => 'text',
+                    'required' => true,
+                    'conditionalLogic' => [
+                        'enabled' => true,
+                        'relation' => 'all',
+                        'rules' => [['fieldId' => 'product_model', 'operator' => 'equals', 'value' => 'MGS5_EV']],
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->postJson('/pagebuilder-elementor/v2.4/form/contact-page/product-lead-contact', [
+            'product_model' => 'MGS5_EV',
+            'name' => 'Aruna',
+        ])->assertUnprocessable()->assertJsonValidationErrors(['interest']);
+
+        $this->postJson('/pagebuilder-elementor/v2.4/form/contact-page/product-lead-contact', [
+            'product_model' => 'MG_ZS',
+            'name' => 'Aruna',
+        ])->assertOk()->assertJsonPath('success', true);
+    }
+
+    public function test_product_lead_form_submits_when_nested_in_a_grid_column(): void
+    {
+        $datasetId = $this->createProductDataset();
+        DB::table('page_builder')->insert([
+            'user_id' => 1,
+            'uri' => 'contact-page',
+            'page_name' => 'Grid Product Lead',
+            'custom_css' => '',
+            'vars' => json_encode([[
+                'id' => 'grid-root',
+                'type' => 'grid',
+                'columns' => [[
+                    'id' => 'grid-column-1',
+                    'children' => [$this->productLeadNode($datasetId)],
+                ]],
+                'children' => [],
+            ]], JSON_THROW_ON_ERROR),
+            'status' => 'publish',
+            'editor_version' => Page_Builder::EDITOR_VERSION_V24,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $this->postJson('/pagebuilder-elementor/v2.4/form/contact-page/product-lead-contact', [
+            'product_model' => 'MGS5_EV',
+            'product_type' => 'LUXURY',
+            'product_variant' => 'LONG_RANGE',
+            'name' => 'Aruna',
+            'email' => 'aruna@example.com',
+        ])->assertOk()->assertJsonPath('success', true);
+    }
+
     public function test_editor_draft_route_requires_authentication_and_keeps_editor_middleware(): void
     {
         $route = app('router')->getRoutes()->getByName('cms.core.pagebuilder_elementor_v24.form.editor_draft');
@@ -458,6 +610,95 @@ class PageBuilderElementorV24FormSubmissionTest extends TestCase
         $this->assertStringNotContainsString('webhookUrl', $html);
     }
 
+    public function test_product_lead_renderer_infers_query_ancestors_and_renders_media_selectors_and_trusted_values(): void
+    {
+        $datasetId = $this->createProductDataset();
+        $this->createPageWithProductLeadForm($datasetId);
+        $page = Page_Builder::query()->where('uri', 'contact-page')->firstOrFail();
+        $node = json_decode($page->vars, true, flags: JSON_THROW_ON_ERROR)[0]['children'][0];
+        request()->query->replace(['variant' => 'long-range', 'utm_source' => 'qa']);
+
+        try {
+            $html = $this->pageBuilderV24ModuleViewByType('product_lead_form', [
+                'node' => $node,
+                'pageData' => $page,
+            ])->render();
+        } finally {
+            request()->query->replace([]);
+        }
+
+        $this->assertStringContainsString('data-product-lead-form', $html);
+        $this->assertStringContainsString('data-product-lead-config=', $html);
+        $this->assertStringContainsString('data-product-level="model"', $html);
+        $this->assertStringContainsString('data-product-node-id="model-s5"', $html);
+        $this->assertStringContainsString('data-product-label-placement="below"', $html);
+        $this->assertStringContainsString('--product-card-height:auto', $html);
+        $this->assertStringContainsString('--product-card-image-radius:50%', $html);
+        $this->assertStringContainsString('--product-card-check-icon-size:10px', $html);
+        $this->assertStringContainsString('--product-card-label-gap:12px', $html);
+        $this->assertStringContainsString('--product-card-border-width-hover:1px', $html);
+        $this->assertStringContainsString('--product-card-border-width-selected:1px', $html);
+        $this->assertStringContainsString('name="product_model" value="MGS5_EV"', $html);
+        $this->assertStringContainsString('name="product_type" value="LUXURY"', $html);
+        $this->assertStringContainsString('name="product_variant" value="LONG_RANGE"', $html);
+        $this->assertStringContainsString('src="/assets/s5-luxury.webp"', $html);
+        $this->assertStringContainsString('Because Everyone Matters', $html);
+        $this->assertStringContainsString('Explore Long Range', $html);
+        $this->assertStringContainsString('action="'.route('cms.core.pagebuilder_elementor_v24.form.submit', ['idOrSlug' => 'contact-page', 'nodeId' => 'product-lead-contact']).'"', $html);
+    }
+
+    public function test_product_lead_renderer_applies_selected_card_dimensions_spacing_and_check_icon_style(): void
+    {
+        $datasetId = $this->createProductDataset();
+        $this->createPageWithProductLeadForm($datasetId, [
+            'productLevelStyles' => [
+                [
+                    'cardWidth' => '42%',
+                    'cardWidthTablet' => '60%',
+                    'cardHeightMode' => 'fixed',
+                    'cardHeight' => '240px',
+                    'cardPadding' => '20px 24px',
+                    'cardMargin' => '4px',
+                    'selectedBorderColor' => '#123456',
+                    'hoverBorderColor' => '#abcdef',
+                    'hoverBorderWidth' => '3px',
+                    'selectedBorderWidth' => '4px',
+                    'selectedBackground' => '#fef3c7',
+                    'selectedCheckVisible' => true,
+                    'selectedCheckPosition' => 'bottom-left',
+                    'selectedCheckSize' => '24px',
+                    'selectedCheckColor' => '#ffffff',
+                    'selectedCheckBackground' => '#d97706',
+                ],
+            ],
+        ]);
+        $page = Page_Builder::query()->where('uri', 'contact-page')->firstOrFail();
+        request()->query->replace(['model' => 'mgs5ev']);
+
+        try {
+            $html = $this->pageBuilderV24ModuleViewByType('product_lead_form', [
+                'node' => json_decode($page->vars, true, flags: JSON_THROW_ON_ERROR)[0]['children'][0],
+                'pageData' => $page,
+            ])->render();
+        } finally {
+            request()->query->replace([]);
+        }
+
+        $this->assertStringContainsString('--product-card-width:42%', $html);
+        $this->assertStringContainsString('--product-card-height:240px', $html);
+        $this->assertStringContainsString('--product-card-padding:20px 24px', $html);
+        $this->assertStringContainsString('--product-card-margin:4px', $html);
+        $this->assertStringContainsString('--product-card-border-selected:#123456', $html);
+        $this->assertStringContainsString('--product-card-bg-selected:#fef3c7', $html);
+        $this->assertStringContainsString('product-card-check is-bottom-left fas fa-check', $html);
+        $this->assertStringContainsString('--product-card-check-size:24px', $html);
+        $this->assertStringContainsString('--product-card-check-background:#d97706', $html);
+        $this->assertStringContainsString('--product-card-width:60%', $html);
+        $this->assertStringContainsString('--product-card-border-hover:#abcdef', $html);
+        $this->assertStringContainsString('--product-card-border-width-hover:3px', $html);
+        $this->assertStringContainsString('--product-card-border-width-selected:4px', $html);
+    }
+
     public function test_invalid_action_configuration_fails_before_any_side_effect(): void
     {
         Mail::fake();
@@ -574,6 +815,72 @@ class PageBuilderElementorV24FormSubmissionTest extends TestCase
             'editor_version' => $editorVersion,
             'created_at' => now(),
             'updated_at' => now(),
+        ]);
+    }
+
+    private function createPageWithProductLeadForm(int $datasetId, array $settings = [], int $ownerId = 1): void
+    {
+        DB::table('page_builder')->insert([
+            'user_id' => $ownerId,
+            'uri' => 'contact-page',
+            'page_name' => 'Product Lead Page',
+            'custom_css' => '',
+            'vars' => json_encode([[
+                'id' => 'root-container',
+                'type' => 'container',
+                'children' => [$this->productLeadNode($datasetId, $settings)],
+            ]], JSON_THROW_ON_ERROR),
+            'status' => 'publish',
+            'editor_version' => Page_Builder::EDITOR_VERSION_V24,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    private function productLeadNode(int $datasetId, array $settings = []): array
+    {
+        return [
+            'id' => 'product-lead-contact',
+            'type' => 'product_lead_form',
+            'settings' => array_merge([
+                'formName' => 'Product Lead Form',
+                'productData' => ['datasetMode' => 'dataset', 'datasetId' => (string) $datasetId],
+                'productLevelCount' => 3,
+                'productLevels' => [
+                    ['key' => 'model', 'label' => 'Model', 'fieldId' => 'product_model', 'queryKey' => 'model', 'presentation' => 'cards', 'required' => true, 'defaultNodeId' => ''],
+                    ['key' => 'type', 'label' => 'Type', 'fieldId' => 'product_type', 'queryKey' => 'type', 'presentation' => 'select', 'required' => true, 'defaultNodeId' => ''],
+                    ['key' => 'variant', 'label' => 'Variant', 'fieldId' => 'product_variant', 'queryKey' => 'variant', 'presentation' => 'select', 'required' => true, 'defaultNodeId' => ''],
+                ],
+                'fields' => [
+                    ['id' => 'name', 'label' => 'Name', 'type' => 'text', 'required' => true],
+                    ['id' => 'email', 'label' => 'Email', 'type' => 'email', 'required' => true],
+                ],
+                'submitActions' => ['message'],
+                'successMessage' => 'The form was sent successfully.',
+                'errorMessage' => 'An error occurred.',
+            ], $settings),
+        ];
+    }
+
+    private function createProductDataset(): int
+    {
+        $now = now();
+
+        return DB::table('pagebuilder_elementor_v24_form_datasets')->insertGetId([
+            'user_id' => 1,
+            'name' => 'Vehicle Catalog',
+            'slug' => 'vehicle-catalog',
+            'schema_version' => 1,
+            'nodes' => json_encode([
+                ['id' => 'model-s5', 'parentId' => null, 'label' => 'MGS5 EV', 'code' => 'mgs5ev', 'value' => 'MGS5_EV', 'active' => true, 'sortOrder' => 1, 'meta' => ['thumbnailSource' => 'ckfinder', 'thumbnailUrl' => '/assets/s5-thumb.webp', 'thumbnailAlt' => 'MGS5 EV thumbnail', 'imageSource' => 'ckfinder', 'imageUrl' => '/assets/s5.webp', 'imageAlt' => 'MGS5 EV', 'description' => 'Because Everyone Matters', 'detailUrl' => '/models/mgs5ev', 'detailLabel' => 'Learn More']],
+                ['id' => 'type-luxury', 'parentId' => 'model-s5', 'label' => 'Luxury', 'code' => 'luxury', 'value' => 'LUXURY', 'active' => true, 'sortOrder' => 1, 'meta' => ['imageSource' => 'ckfinder', 'imageUrl' => '/assets/s5-luxury.webp', 'imageAlt' => 'MGS5 EV Luxury']],
+                ['id' => 'variant-long-range', 'parentId' => 'type-luxury', 'label' => 'Long Range', 'code' => 'long-range', 'value' => 'LONG_RANGE', 'active' => true, 'sortOrder' => 1, 'meta' => ['detailLabel' => 'Explore Long Range']],
+                ['id' => 'model-zs', 'parentId' => null, 'label' => 'MG ZS', 'code' => 'mgzs', 'value' => 'MG_ZS', 'active' => true, 'sortOrder' => 2],
+                ['id' => 'type-activate', 'parentId' => 'model-zs', 'label' => 'Activate', 'code' => 'activate', 'value' => 'ACTIVATE', 'active' => true, 'sortOrder' => 1],
+                ['id' => 'variant-hidden', 'parentId' => 'type-activate', 'label' => 'Hidden', 'code' => 'hidden', 'value' => 'HIDDEN', 'active' => false, 'sortOrder' => 1],
+            ], JSON_THROW_ON_ERROR),
+            'created_at' => $now,
+            'updated_at' => $now,
         ]);
     }
 

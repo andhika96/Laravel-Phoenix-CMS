@@ -281,7 +281,7 @@ class PageBuilderElementorV24Controller extends Controller
 
 	public function submitForm(Request $request, ModuleCatalog $moduleCatalog, $idOrSlug, $nodeId, FormSubmissionHandler $handler)
 	{
-		$this->requireModuleCapability($moduleCatalog, 'form', 'form-submission');
+		abort_unless($moduleCatalog->anySupports('form-submission'), 404);
 
 		$pageData = Page_Builder::query()
 			->where('editor_version', Page_Builder::EDITOR_VERSION_V24)
@@ -324,7 +324,7 @@ class PageBuilderElementorV24Controller extends Controller
 
 	public function submitEditorDraftForm(Request $request, FormSubmissionHandler $handler, ModuleCatalog $moduleCatalog)
 	{
-		$this->requireModuleCapability($moduleCatalog, 'form', 'form-submission');
+		abort_unless($moduleCatalog->anySupports('form-submission'), 404);
 
 		$validated = $request->validate([
 			'__pb_editor_node' => ['required', 'string', 'max:1048576'],
@@ -343,10 +343,13 @@ class PageBuilderElementorV24Controller extends Controller
 		}
 
 		$nodeId = preg_replace('/[^A-Za-z0-9_-]/', '', (string) ($node['id'] ?? ''));
-		if (! is_array($node) || ($node['type'] ?? '') !== 'form' || $nodeId === '' || ! is_array($node['settings'] ?? null))
+		if (! is_array($node)
+			|| ! $moduleCatalog->supports((string) ($node['type'] ?? ''), 'form-submission')
+			|| $nodeId === ''
+			|| ! is_array($node['settings'] ?? null))
 		{
 			throw ValidationException::withMessages([
-				'__pb_editor_node' => 'Only a valid Form widget can be tested in the editor.',
+				'__pb_editor_node' => 'Only a valid form-submission widget can be tested in the editor.',
 			]);
 		}
 
@@ -432,15 +435,6 @@ class PageBuilderElementorV24Controller extends Controller
 			'status' => 'success',
 			'data' => $pageData,
 		]);
-	}
-
-	private function requireModuleCapability(ModuleCatalog $moduleCatalog, string $type, string $capability): void
-	{
-		$module = $moduleCatalog->find($type);
-		abort_unless(
-			is_array($module) && in_array($capability, $module['capabilities'] ?? [], true),
-			404,
-		);
 	}
 
 	private function buildUniqueUri($pageName, $ignoreId = null)

@@ -36,6 +36,7 @@ for (const path of [
     "../resources/pagebuilder_elementor_v24/modules/widgets/pro/code-highlight/runtime.js",
     "../resources/pagebuilder_elementor_v24/modules/widgets/pro/share-buttons/runtime.js",
     "../resources/pagebuilder_elementor_v24/modules/widgets/pro/form/runtime.js",
+    "../resources/pagebuilder_elementor_v24/modules/widgets/pro/product-lead-form/runtime.js",
     "../resources/pagebuilder_elementor_v24/modules/widgets/pro/animated-headline/runtime.js",
     "../resources/pagebuilder_elementor_v24/modules/widgets/pro/slides/runtime.js",
     "../resources/pagebuilder_elementor_v24/modules/widgets/pro/countdown/runtime.js",
@@ -50,6 +51,12 @@ const runtime = new Proxy(coreRuntime, {
         }
         return undefined;
     },
+});
+
+test("Product Lead Form runtime exposes deep-link selection without replacing Form runtime", () => {
+    assert.equal(typeof window.PageBuilderElementorV24ModuleRuntimes.form?.initProForm, "function");
+    assert.equal(typeof window.PageBuilderElementorV24ModuleRuntimes.product_lead_form?.initProductLeadForm, "function");
+    assert.equal(typeof window.PageBuilderElementorV24ModuleRuntimes.product_lead_form?.resolveProductSelection, "function");
 });
 
 function classList() {

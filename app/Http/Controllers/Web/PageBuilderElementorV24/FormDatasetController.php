@@ -131,11 +131,7 @@ class FormDatasetController extends Controller
 
     private function requireFormModule(): void
     {
-        $module = $this->moduleCatalog->find('form');
-        abort_unless(
-            is_array($module) && in_array('form-submission', $module['capabilities'] ?? [], true),
-            404,
-        );
+        abort_unless($this->moduleCatalog->anySupports('form-datasets'), 404);
     }
 
     private function ownerId(Request $request): int

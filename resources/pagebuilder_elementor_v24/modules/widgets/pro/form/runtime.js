@@ -225,7 +225,7 @@ function initProForm(root) {
 
 	function init(scope) {
 		const root = scope && typeof scope.querySelectorAll === 'function' ? scope : document;
-		root.querySelectorAll("[data-pro-form]").forEach(initProForm);
+		root.querySelectorAll("[data-pro-form]:not([data-product-lead-form])").forEach(initProForm);
 	}
 
 	const runtimes = window.PageBuilderElementorV24ModuleRuntimes ||= {};

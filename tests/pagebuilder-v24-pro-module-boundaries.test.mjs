@@ -8,6 +8,7 @@ const root = path.resolve(import.meta.dirname, '..');
 const proRoot = path.join(root, 'resources', 'pagebuilder_elementor_v24', 'modules', 'widgets', 'pro');
 const modules = {
     form: ['form', 'data-pro-form'],
+    product_lead_form: ['product-lead-form', 'data-product-lead-form'],
     slides: ['slides', 'pb-pro-slides'],
     animated_headline: ['animated-headline', 'pb-pro-headline'],
     hotspot: ['hotspot', 'pb-pro-hotspot'],

@@ -1,0 +1,232 @@
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24AssetIsolationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mv24 owns a thin core and manifest discovered modules without v23 re[39m[90m…[39m [90m0.45s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24BaselineIsolationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mv24 version contract and route family are registered separately[39m[90m     [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 has its own active source boundaries[39m[90m                            [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpublic page route uses the version neutral dispatcher[39m[90m               [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mauthenticated v23 and v24 shells load only their own assets[39m[90m         [39m [90m0.15s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24BlockquoteShareButtonsWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mblockquote is registered and renders safe tweet markup[39m[90m              [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mshare buttons are registered and render allow listed network action[39m[90m…[39m [90m0.07s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24CodeHighlightWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mcode highlight is registered and frontend renderer outputs safe mar[39m[90m…[39m [90m0.07s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24FeatureShowcaseWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mfeature showcase is registered as a general widget[39m[90m                  [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer supports all templates and responsive positions[39m[90m   [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer uses safe placeholders when media is missing[39m[90m      [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mspecifications metrics matches media object reference structure[39m[90m     [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mspecifications metrics supports four metrics and centered third met[39m[90m…[39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer accepts direct asset image urls and rejects unsaf[39m[90m…[39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmetric typography supports label value unit and image left auto fit[39m[90m [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mspecifications metrics scopes alignment and applies radius and unit[39m[90m…[39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mspecifications metrics uses responsive image height and mobile posi[39m[90m…[39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mspecifications metrics horizontal alignment positions metrics block[39m[90m [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mspecifications hero horizontal alignment positions metrics block[39m[90m    [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mspecifications metrics support responsive metric columns and third[39m[90m… [39m [90m0.07s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24FormDatasetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mdataset api lists creates and updates shared parent child data[39m[90m      [39m [90m0.15s[39m  
+  [32;1m✓[39;22m[90m [39m[90mdataset api rejects invalid hierarchy without persisting it[39m[90m         [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mdelete removes dataset and disconnects only owned v24 page fields[39m[90m   [39m [90m0.06s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24FormRowGridRenderTest[39m
+  [32;1m✓[39;22m[90m [39m[90mcolumn lists render multiple fields and submit as the final step fo[39m[90m…[39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmultiple steps and submit width render from canonical settings[39m[90m      [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90micon text step indicator renders the step icon label and shape[39m[90m      [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mprogress step indicator renders a runtime progressbar instead of nu[39m[90m…[39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcustom message modes render a structured accessible message layer[39m[90m   [39m [90m0.15s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24FormSubmissionTest[39m
+  [32;1m✓[39;22m[90m [39m[90msaved form executes collect email email2 webhook and returns redire[39m[90m…[39m [90m0.15s[39m  
+  [32;1m✓[39;22m[90m [39m[90mproduct lead form validates and prepends trusted product selection[39m[90m… [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mproduct lead form rejects tampered or cross parent product values b[39m[90m…[39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90meditor draft accepts product lead form through the same capability[39m[90m… [39m [90m0.10s[39m  
+  [32;1m✓[39;22m[90m [39m[90mproduct selection values drive existing form conditional logic[39m[90m      [39m [90m0.16s[39m  
+  [32;1m✓[39;22m[90m [39m[90mproduct lead form submits when nested in a grid column[39m[90m              [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90meditor draft route requires authentication and keeps editor middlew[39m[90m…[39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90meditor and dataset routes share auth boundary while published form[39m[90m… [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90meditor draft executes current unsaved actions and marks collected d[39m[90m…[39m [90m0.10s[39m  
+  [32;1m✓[39;22m[90m [39m[90meditor draft uses current node settings and keeps the owned saved p[39m[90m…[39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90meditor draft rejects a saved page owned by another account[39m[90m          [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90meditor draft rejects non object json as validation error[39m[90m            [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mserver validation uses the saved form definition before running act[39m[90m…[39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mform submission rejects unknown nodes and private webhook targets[39m[90m   [39m [90m0.12s[39m  
+  [32;1m✓[39;22m[90m [39m[90msaved option numeric and file constraints cannot be bypassed[39m[90m        [39m [90m0.11s[39m  
+  [32;1m✓[39;22m[90m [39m[90mconditional required field is validated only when visible[39m[90m           [39m [90m0.14s[39m  
+  [32;1m✓[39;22m[90m [39m[90mdataset select rejects a child value from the wrong parent[39m[90m          [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90msaved form renderer exposes only its server submit endpoint[39m[90m         [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mproduct lead renderer infers query ancestors and renders media sele[39m[90m…[39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mproduct lead renderer applies selected card dimensions spacing and[39m[90m… [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90minvalid action configuration fails before any side effect[39m[90m           [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 form route rejects a v20 page without side effects[39m[90m              [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 form route keeps the submission throttle[39m[90m                        [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mform backend endpoints fail closed when the form module is inactive[39m[90m [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 form discards an unsafe redirect target[39m[90m                         [39m [90m0.09s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24FrontendRenderingTest[39m
+  [32;1m✓[39;22m[90m [39m[90mv24 renders representative layout basic general and pro nodes[39m[90m       [39m [90m0.16s[39m  
+  [32;1m✓[39;22m[90m [39m[90mevery registered v24 renderer view is owned by the v24 tree[39m[90m         [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 grid link renders safe frontend attributes[39m[90m                      [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 container renders canonical and legacy layouts without content[39m[90m… [39m [90m0.25s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 grid columns render widgets containers and nested grids[39m[90m         [39m [90m0.20s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 grid column styles render on standalone and container grid[39m[90m      [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 legacy fallback never merges extra columns into the last cell[39m[90m   [39m [90m0.15s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 legacy fallback recovers loose children before columns[39m[90m          [39m [90m0.19s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 tabs parser emits the canvas compatible accordion structure[39m[90m     [39m [90m0.08s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24FullModularityTest[39m
+  [32;1m✓[39;22m[90m [39m[90minactive module renders a deterministic marker without mutating its[39m[90m…[39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mproduction cutover has no legacy catalog or widget copy tree[39m[90m        [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmodule frontends do not include legacy widget or renderer views[39m[90m     [39m [90m0.05s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24GoogleMapsWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mgoogle maps is registered and frontend renderer outputs safe embed[39m[90m… [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mgoogle maps without location renders placeholder without iframe[39m[90m     [39m [90m0.07s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24HeroBannerWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mhero banner is registered as a dedicated pro widget[39m[90m                 [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer outputs responsive safe actions and limits button[39m[90m…[39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer supports dailymotion and self hosted video source[39m[90m…[39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer applies center anchor geometry from percent setti[39m[90m…[39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer follows group alignment until button override[39m[90m     [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer outputs natural image layout with its image eleme[39m[90m…[39m [90m0.06s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24HeroSliderWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mhero slider is registered as a dedicated pro widget[39m[90m                 [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer outputs mixed media and responsive runtime config[39m[90m [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer keeps generic embed as safe interval fallback[39m[90m     [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer keeps legacy slide content at the normalizer posi[39m[90m…[39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer accepts responsive image without desktop source a[39m[90m…[39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer exposes exact custom pagination offsets[39m[90m           [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer exposes natural image layout for an image slide[39m[90m   [39m [90m0.08s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24ImageBoxWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mhorizontal and responsive image box widths are owned by the media t[39m[90m…[39m [90m0.08s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24ImageCarouselArrowWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer applies complete responsive arrow button contract[39m[90m [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer preserves legacy arrow size for old saved nodes[39m[90m   [39m [90m0.06s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24ImageWidgetParityTest[39m
+  [32;1m✓[39;22m[90m [39m[90mfrontend image renderer outputs content style responsive and advanc[39m[90m…[39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend image renderer rejects unsafe image and link urls[39m[90m          [39m [90m0.06s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24LegacyBridgeTest[39m
+  [32;1m✓[39;22m[90m [39m[90mlegacy bridge is empty after all fifty modules are discovered[39m[90m       [39m [90m0.05s[39m  
+  [32;1m✓[39;22m[90m [39m[90mshell keeps baseline category and pro module order across the bridg[39m[90m…[39m [90m0.10s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24MediaCarouselWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mmedia carousel is registered and frontend renderer outputs safe int[39m[90m…[39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer preserves legacy arrow size for old saved nodes[39m[90m   [39m [90m0.06s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24ModuleAssetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mmodule assets require an authenticated v24 editor session[39m[90m           [39m [90m0.05s[39m  
+  [32;1m✓[39;22m[90m [39m[90mwhitelisted editor assets are served with cache validators and corr[39m[90m…[39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90munknown inactive and non browser asset keys fail closed[39m[90m             [39m [90m0.06s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24ModuleFrontendAssetsTest[39m
+  [32;1m✓[39;22m[90m [39m[90mfrontend emits only optional assets for used module types[39m[90m           [39m [90m0.14s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24ModulePilotTest[39m
+  [32;1m✓[39;22m[90m [39m[90mproduction button module is discovered from the canonical root[39m[90m      [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mauthenticated shell configures the catalog and loads discovered def[39m[90m…[39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mauthenticated shell inlines editor module code and styles without a[39m[90m…[39m [90m0.13s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer prefers an active module view over the legacy con[39m[90m…[39m [90m0.04s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24ProductColorSelectorWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mproduct color selector is registered as a pro widget with its defin[39m[90m…[39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mproduct color selector renders responsive media and safe fallbacks[39m[90m  [39m [90m0.06s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24ProductionModuleCatalogTest[39m
+  [32;1m✓[39;22m[90m [39m[90mall layout types are complete canonical modules in baseline order[39m[90m   [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mall basic types are complete canonical modules in baseline order[39m[90m    [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mall general types are complete canonical modules in baseline order[39m[90m  [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mdedicated pro types are complete canonical modules[39m[90m                  [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mall pro types are complete canonical modules in baseline order[39m[90m      [39m [90m0.06s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24ProgressTrackerVideoPlaylistWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mprogress tracker is registered and renders horizontal and circular[39m[90m… [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mvideo playlist is registered and renders safe interactive markup[39m[90m    [39m [90m0.06s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24ProModuleBoundaryTest[39m
+  [32;1m✓[39;22m[90m [39m[90mall eighteen shared pro types resolve to independent module views[39m[90m   [39m [90m0.62s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24ReviewsWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mreviews widget is registered and frontend renderer outputs safe int[39m[90m…[39m [90m0.07s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24RoutesAndPersistenceTest[39m
+  [32;1m✓[39;22m[90m [39m[90mv24 route family resolves all eight named routes[39m[90m                    [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 store creates a v24 page[39m[90m                                        [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 store and identifier routes are scoped to the authenticated own[39m[90m…[39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 identifier endpoints reject a v20 page without mutating it[39m[90m      [39m [90m0.60s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 ownership guard treats zero uri as a valid v20 identifier[39m[90m       [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 rejects a v23 page and v23 rejects a v24 page without mutation[39m[90m  [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 preview uses only the v24 renderer shell[39m[90m                        [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpublic pages route renders only published v24 pages[39m[90m                 [39m [90m0.11s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpublic dispatcher keeps published v23 pages on the v23 renderer[39m[90m     [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 editing a legacy layout does not mutate its vars or timestamp[39m[90m   [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 update persists flex children and grid columns[39m[90m                  [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 update validation failure leaves vars byte for byte unchanged[39m[90m   [39m [90m0.05s[39m  
+  [32;1m✓[39;22m[90m [39m[90mv24 update returns an error when persistence is rejected[39m[90m            [39m [90m0.05s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24SharedAssetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mauthenticated editor can fetch only whitelisted shared vue assets[39m[90m   [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mshared asset route rejects guests unknown keys blade and traversal[39m[90m  [39m [90m0.06s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24ShellTest[39m
+  [32;1m✓[39;22m[90m [39m[90mv24 create shell loads only the v24 editor context and runtime[39m[90m      [39m [90m0.09s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24SlidesWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mslides name labels the frontend carousel[39m[90m                            [39m [90m0.08s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24TestimonialCarouselWidgetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mtestimonial carousel is registered and frontend renderer outputs sa[39m[90m…[39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mfrontend renderer preserves legacy testimonial arrow size[39m[90m           [39m [90m0.09s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PageBuilderElementorV24WidgetParityTest[39m
+  [32;1m✓[39;22m[90m [39m[90mv24 catalog contains v20 and owns every module and renderer[39m[90m         [39m [90m0.08s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\PageBuilderElementorV24FormConditionalLogicEvaluatorTest[39m
+  [32;1m✓[39;22m[90m [39m[90mit evaluates all and any rules against submitted values[39m[90m             [39m [90m0.05s[39m  
+  [32;1m✓[39;22m[90m [39m[90minvalid or disabled logic defaults to visible[39m[90m                       [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mselected parent is used as the expected value source[39m[90m                [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mselected parent not equals hides only for the chosen parent value[39m[90m   [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mselected parent without a chosen value stays hidden for comparison[39m[90m… [39m [90m0.05s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\PageBuilderElementorV24FormDatasetNormalizerTest[39m
+  [32;1m✓[39;22m[90m [39m[90mit normalizes nodes and preserves parent links[39m[90m                      [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit rejects duplicate missing parent and circular nodes[39m[90m              [39m [90m0.05s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit normalizes product media metadata and rejects unsafe urls[39m[90m        [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit rejects duplicate product codes at the same depth[39m[90m                [39m [90m0.04s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\PageBuilderElementorV24FormRowGridNormalizerTest[39m
+  [32;1m✓[39;22m[90m [39m[90mit normalizes legacy fields into version two column lists[39m[90m           [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mstep icon configuration survives legacy migration and projection[39m[90m    [39m [90m0.05s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit migrates the old cell matrix to unlimited track items and remove[39m[90m…[39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit inserts a cross row item without swapping the target[39m[90m             [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit reorders within one column using an insertion index[39m[90m              [39m [90m0.05s[39m  
+  [32;1m✓[39;22m[90m [39m[90mempty rows keep persistent columns and never store submit[39m[90m           [39m [90m0.05s[39m  
+  [32;1m✓[39;22m[90m [39m[90mprojection preserves visual row order and conditional data[39m[90m          [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mresponsive row span and owner guard remain compatible[39m[90m               [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mshared track plan aligns row spans across responsive column groups[39m[90m  [39m [90m0.03s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\PageBuilderElementorV24ModuleCatalogTest[39m
+  [32;1m✓[39;22m[90m [39m[90mit discovers a valid module and builds a browser safe catalog[39m[90m       [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit skips invalid json schema missing assets and traversal paths wit[39m[90m…[39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mduplicate types are all disabled instead of using first wins[39m[90m        [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mtoolbox order is deterministic and hidden runtime modules stay regi[39m[90m…[39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcapability queries are driven by active module manifests[39m[90m            [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmoving a module folder outside the root removes it and restoring th[39m[90m…[39m [90m0.06s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\PageBuilderElementorV24ModuleUsageCollectorTest[39m
+  [32;1m✓[39;22m[90m [39m[90mtypes walks nested children and grid columns in first seen order[39m
+  [32;1m✓[39;22m[90m [39m[90mtypes ignores invalid values and walks tab and accordion collections[39m
+
+  [90mTests:[39m    [32;1m154 passed[39;22m[90m (10310 assertions)[39m
+  [90mDuration:[39m [39m13.44s[39m
+

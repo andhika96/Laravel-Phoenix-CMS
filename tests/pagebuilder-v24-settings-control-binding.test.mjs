@@ -21,7 +21,7 @@ test('every discovered v2.4 Settings control has a live consumer', () => {
         origins: control.origins,
     })));
 
-    assert.equal(report.summary.modules, 49);
+    assert.equal(report.summary.modules, 50);
     assert.ok(report.summary.controls >= 1600, 'expected the complete Settings control surface');
     assert.deepEqual(gaps, []);
 });

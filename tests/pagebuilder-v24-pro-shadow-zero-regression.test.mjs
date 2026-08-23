@@ -13,7 +13,7 @@ const canvases = files.filter((file) => file.endsWith('Canvas.vue') && readFileS
 const frontends = files.filter((file) => file.endsWith('frontend.blade.php') && readFileSync(file, 'utf8').includes('$safeShadow = function'));
 
 test('every Pro Canvas accepts unitless zero in otherwise unit-qualified CSS shadows', () => {
-    assert.equal(canvases.length, 18);
+    assert.equal(canvases.length, 19);
     for (const file of canvases) {
         const source = readFileSync(file, 'utf8');
         const { descriptor, errors } = parse(source, { filename: file });
@@ -28,7 +28,7 @@ test('every Pro Canvas accepts unitless zero in otherwise unit-qualified CSS sha
 });
 
 test('every Pro frontend sanitizer accepts the same unitless-zero shadow grammar', () => {
-    assert.equal(frontends.length, 18);
+    assert.equal(frontends.length, 19);
     for (const file of frontends) {
         const source = readFileSync(file, 'utf8');
         assert.match(source, /\^\(\?:0\|-\?\\d\+/, file);

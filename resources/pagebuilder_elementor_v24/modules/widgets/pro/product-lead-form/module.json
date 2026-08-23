@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "type": "product_lead_form",
+  "label": "Product Lead Form",
+  "category": "pro",
+  "icon": "fas fa-clipboard-list",
+  "order": 15,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "runtime": "runtime.js",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  },
+  "capabilities": [
+    "form-submission",
+    "form-fields",
+    "draft-form",
+    "form-datasets",
+    "product-selection",
+    "pro-icon-targets"
+  ]
+}
