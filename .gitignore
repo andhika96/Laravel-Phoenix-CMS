@@ -3,6 +3,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/assets/pagebuilder_elementor/renditions/
 /storage/*.key
 /storage/app/public
 /storage/app/fm_thumbs

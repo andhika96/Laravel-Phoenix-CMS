@@ -4,6 +4,7 @@ node_modules/
 public/build/
 public/hot
 public/storage/
+public/assets/pagebuilder_elementor/renditions/
 public/assets/plugins/
 public/assets/vendor/
 public/mockups/
