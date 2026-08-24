@@ -3,19 +3,7 @@
 @php
 	$siteConfig = site_config();
 	$siteName = $siteConfig->site_name;
-	$siteFontFamilyCode = strtolower(str_replace([' ', '-'], '_', trim($siteConfig->font_family ?? 'nunito')));
-	$siteFontFamilyCode = preg_match('/^[a-z0-9_]+$/', $siteFontFamilyCode) === 1 && Storage::exists('public/fonts/'.$siteFontFamilyCode.'/fonts.css')
-		? $siteFontFamilyCode
-		: 'nunito';
-	$siteFontFamilyName = ucwords(str_replace('_', ' ', $siteFontFamilyCode));
-	$siteFontSizeUnit = in_array($siteConfig->font_size_unit ?? 'px', ['px', 'em', 'rem'], true)
-		? $siteConfig->font_size_unit
-		: 'px';
-	$siteFontSizeMin = $siteFontSizeUnit === 'px' ? 8 : .5;
-	$siteFontSizeMax = $siteFontSizeUnit === 'px' ? 72 : 4.5;
-	$siteFontSizeValue = is_numeric($siteConfig->font_size ?? null) ? (float) $siteConfig->font_size : ($siteFontSizeUnit === 'px' ? 14 : .875);
-	$siteFontSizeValue = min($siteFontSizeMax, max($siteFontSizeMin, $siteFontSizeValue));
-	$siteFontSize = rtrim(rtrim(number_format($siteFontSizeValue, 3, '.', ''), '0'), '.').$siteFontSizeUnit;
+	$siteTypography = app(\App\Support\SiteTypography::class)->resolve($siteConfig);
 	$hasCustomSiteLogo = filled($siteConfig->site_logo);
 	$siteLogoWidthUnit = in_array($siteConfig->site_logo_width_unit ?? '%', ['%', 'px', 'em', 'rem', 'pt'], true)
 		? $siteConfig->site_logo_width_unit
@@ -32,7 +20,7 @@
 @endphp
 
 <!DOCTYPE html>
-<html lang="en" style="--ph-font-family: '{{ $siteFontFamilyName }}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --ph-font-size: {{ $siteFontSize }};">
+<html lang="en" style="--ph-font-family: '{{ $siteTypography['fontFamilyName'] }}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --ph-font-size: {{ $siteTypography['fontSize'] }};">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,7 +35,7 @@
 		<link href="{{ url('assets/plugins/fontawesome/5.15.3/css/all.min.css') }}" rel="stylesheet">
 
 		<!-- Font -->
-		<link id="arunikaActiveFontStylesheet" data-font-base-url="{{ asset('storage/fonts') }}" href="{{ asset('storage/fonts/'.$siteFontFamilyCode.'/fonts.css?v=').time() }}" rel="stylesheet">
+		<link id="arunikaActiveFontStylesheet" data-font-base-url="{{ asset('storage/fonts') }}" href="{{ asset('storage/fonts/'.$siteTypography['fontFamilyCode'].'/fonts.css?v=').time() }}" rel="stylesheet">
 
 		<!-- Vue Select CSS --->
 		<link rel="stylesheet" href="{{ url('assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css') }}">

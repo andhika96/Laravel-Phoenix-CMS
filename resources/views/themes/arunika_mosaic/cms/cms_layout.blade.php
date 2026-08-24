@@ -1,7 +1,12 @@
 @include('themes.arunika_mosaic.components.menu')
 
+@php
+	$siteConfig = site_config();
+	$siteTypography = app(\App\Support\SiteTypography::class)->resolve($siteConfig);
+@endphp
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="--ph-font-family: '{{ $siteTypography['fontFamilyName'] }}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --ph-font-size: {{ $siteTypography['fontSize'] }};">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +21,7 @@
 		<link href="{{ url('assets/plugins/fontawesome/5.15.3/css/all.min.css') }}" rel="stylesheet">
 
 		<!-- Font -->
-		<link href="{{ asset('storage/fonts/nunito/fonts.css?v=').time() }}" rel="stylesheet">	
+		<link id="arunikaActiveFontStylesheet" data-font-base-url="{{ asset('storage/fonts') }}" href="{{ asset('storage/fonts/'.$siteTypography['fontFamilyCode'].'/fonts.css?v=').time() }}" rel="stylesheet">
 
 		<!-- Vue Select CSS --->
 		<link rel="stylesheet" href="{{ url('assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css') }}">

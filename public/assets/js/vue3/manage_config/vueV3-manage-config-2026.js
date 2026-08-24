@@ -366,6 +366,12 @@ const SiteConfigVue3 = createApp(
 				? { min: 8, max: 72, step: 1 }
 				: { min: .5, max: 4.5, step: .001 };
 		},
+		siteTypographyRootFontSize: function()
+		{
+			let value = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+
+			return Number.isFinite(value) && value > 0 ? value : ROOT_FONT_SIZE_PX;
+		},
 		siteTypographyFontSize: function(unit)
 		{
 			let selectedUnit = ALLOWED_FONT_SIZE_UNITS.includes(unit) ? unit : DEFAULT_FONT_SIZE_UNIT;
@@ -374,7 +380,7 @@ const SiteConfigVue3 = createApp(
 
 			if ( ! Number.isFinite(value))
 			{
-				value = selectedUnit === 'px' ? DEFAULT_FONT_SIZE : DEFAULT_FONT_SIZE / ROOT_FONT_SIZE_PX;
+				value = selectedUnit === 'px' ? DEFAULT_FONT_SIZE : DEFAULT_FONT_SIZE / this.siteTypographyRootFontSize();
 			}
 
 			return Math.min(limits.max, Math.max(limits.min, value));
@@ -424,8 +430,9 @@ const SiteConfigVue3 = createApp(
 				? this.responseData.font_size_unit
 				: DEFAULT_FONT_SIZE_UNIT;
 			let oldValue = this.siteTypographyFontSize(oldUnit);
-			let sizeInPixels = oldUnit === 'px' ? oldValue : oldValue * ROOT_FONT_SIZE_PX;
-			let convertedValue = newUnit === 'px' ? sizeInPixels : sizeInPixels / ROOT_FONT_SIZE_PX;
+			let rootFontSize = this.siteTypographyRootFontSize();
+			let sizeInPixels = oldUnit === 'px' ? oldValue : oldValue * rootFontSize;
+			let convertedValue = newUnit === 'px' ? sizeInPixels : sizeInPixels / rootFontSize;
 			let limits = this.siteTypographyFontSizeLimits(newUnit);
 
 			convertedValue = Math.min(limits.max, Math.max(limits.min, convertedValue));

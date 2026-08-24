@@ -10,13 +10,11 @@ const themeLayouts = [
     'resources/views/themes/arunika_equinox/cms/cms_layout.blade.php',
     'resources/views/themes/arunika_mosaic/cms/cms_layout.blade.php',
     'resources/views/themes/arunika_prism/cms/cms_layout.blade.php',
-    'resources/views/themes/calm_green/cms/cms_layout.blade.php',
-    'resources/views/themes/default/cms/cms_layout.blade.php',
 ].map((file) => path.join(root, file));
 
 const read = (filePath) => readFileSync(filePath, 'utf8');
 
-test('every CMS theme loads the shared File Manager V2 responsive typography asset', () => {
+test('every manageable Arunika CMS theme loads the shared responsive typography asset', () => {
     assert.equal(
         existsSync(typographyPath),
         true,
@@ -59,7 +57,7 @@ test('wide, short viewports use compact heading caps without overriding theme-ow
     );
     assert.match(
         css,
-        /body :where\(\.ph-content, \.ph-scrollable-content, \.arv7-main-side, \.arv7-main-content, \.arv7-content, main\) :where\(h1, \.h1\)/,
+        /body :where\(\.ph-content, \.ph-scrollable-content, \.arv7-main-side, \.arv7-main-content, \.arv7-content, main, \.modal, \.dropdown-menu, \.collapse, \.collapsing, \.accordion\) :where\(h1, \.h1\)/,
     );
     assert.doesNotMatch(css, /body :is\(\.ph-content/);
 });
@@ -70,6 +68,7 @@ test('compact desktop derives operational and sidebar text from Site Config', ()
     assert.match(css, /--ph-adaptive-font-size:\s*var\(--ph-font-size, 1rem\);/);
     assert.match(css, /--ph-adaptive-font-size:\s*min\(var\(--ph-font-size, 1rem\), max\(12px, calc\(var\(--ph-font-size, 1rem\) - 1\.5px\)\)\);/);
     assert.match(css, /body\s*\{\s*font-size:\s*var\(--ph-adaptive-font-size\);/);
+    assert.match(css, /font-family:\s*var\(--ph-font-family\);/);
     assert.match(css, /\.form-control/);
     assert.match(css, /\.ph-sidebar/);
     assert.match(css, /\.arv7-sidebar/);

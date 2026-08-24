@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Responsive Typography Audit Harness</title>
+    <link rel="stylesheet" href="https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css">
+    <link id="auditThemeStylesheet" rel="stylesheet">
+    <link rel="stylesheet" href="https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=20260824-global-fix">
+    <script>
+        const auditParams = new URLSearchParams(window.location.search);
+        const themeStylesheets = {
+            calm_green: 'assets/css/themes/calm_green/phoenix-cms-calm-green.css',
+            mosaic: 'assets/css/themes/arunika_mosaic/arunika_mosaic.css',
+        };
+        const themeStylesheet = themeStylesheets[auditParams.get('theme')];
+        if (themeStylesheet) {
+            document.getElementById('auditThemeStylesheet').href = `https://laravel-13-phoenix.aruna/${themeStylesheet}`;
+        }
+    </script>
+</head>
+<body>
+    <main class="ph-content">
+        <h1 id="auditHeading">Responsive heading</h1>
+        <button id="auditControl" class="btn btn-primary" type="button">Operational control</button>
+    </main>
+
+    <aside class="ph-sidebar">
+        <span id="auditNavigation" class="ph-nav-text">Navigation</span>
+    </aside>
+
+    <div class="ph-header-profile-menu">
+        <a id="auditProfileItem" class="dropdown-item" href="#">Profile</a>
+        <div class="ph-profile-menu-identity">
+            <strong id="auditProfileName">Administrator</strong>
+            <span id="auditProfileRole">Administrator role</span>
+        </div>
+    </div>
+
+    <script>
+        const size = auditParams.get('size');
+        if (size && size !== 'unset') {
+            document.documentElement.style.setProperty('--ph-font-size', size);
+        }
+
+        const family = auditParams.get('family');
+        if (family) {
+            document.documentElement.style.setProperty('--ph-font-family', `"${family}", sans-serif`);
+        }
+    </script>
+</body>
+</html>

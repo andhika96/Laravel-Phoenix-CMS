@@ -1,0 +1,53 @@
+{
+  "asset": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css",
+  "render_matrix": {
+    "configured_value": "15px",
+    "themes_with_matching_root_variables": 4,
+    "supported_themes": 4,
+    "themes": [
+      "arunika_mosaic",
+      "arunika_aurora",
+      "arunika_prism",
+      "arunika_equinox"
+    ]
+  },
+  "console_errors_or_warnings": 0,
+  "measurements": {
+    "desktop_normal_1440x1100_15px": {
+      "compact_query": false,
+      "body": "15px",
+      "control": "15px",
+      "navigation": "15px",
+      "heading_h1": "40px",
+      "profile_item": "13px",
+      "font_family": "Noto Sans, sans-serif"
+    },
+    "desktop_compact_1440x900_15px": {
+      "compact_query": true,
+      "body": "13.5px",
+      "control": "13.5px",
+      "navigation": "13.5px",
+      "heading_h1": "32px",
+      "profile_item": "12.5px",
+      "font_family": "Noto Sans, sans-serif"
+    },
+    "tablet_1024x768_15px": {
+      "compact_query": false,
+      "body": "15px",
+      "control": "15px",
+      "heading_h1": "37.36px"
+    },
+    "desktop_compact_1440x900_0_9375rem": {
+      "compact_query": true,
+      "body": "13.5px",
+      "control": "13.5px"
+    },
+    "desktop_compact_1440x900_explicit_10px": {
+      "compact_query": true,
+      "body": "10px",
+      "control": "10px",
+      "navigation": "10px",
+      "note": "An explicit Site Config value below 12px remains authoritative and is never enlarged."
+    }
+  }
+}

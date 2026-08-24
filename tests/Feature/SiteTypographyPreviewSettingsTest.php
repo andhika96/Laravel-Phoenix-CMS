@@ -114,10 +114,20 @@ class SiteTypographyPreviewSettingsTest extends TestCase
 		}
 	}
 
-	public function test_saved_typography_is_rendered_as_global_arunika_aurora_css_variables(): void
+	public function test_saved_typography_is_rendered_by_every_manageable_arunika_cms_theme(): void
 	{
 		$this->actingAsAdministrator();
 		$originalConfig = Site_Config::findOrFail(1)->getAttributes();
+		$originalThemeSetting = (array) DB::table('theme_settings')->where('id', 1)->first();
+		$themeCodes = [
+			'arunika_mosaic',
+			'arunika_aurora',
+			'arunika_prism',
+			'arunika_equinox',
+		];
+		$themes = DB::table('themes')->whereIn('theme_code', $themeCodes)->get()->keyBy('theme_code');
+
+		$this->assertCount(count($themeCodes), $themes);
 
 		try
 		{
@@ -127,18 +137,33 @@ class SiteTypographyPreviewSettingsTest extends TestCase
 				'font_size_unit' => 'px',
 			]);
 
-			$response = $this->get(route('cms.admin.awesome_admin.config'));
+			foreach ($themeCodes as $themeCode)
+			{
+				$theme = $themes->get($themeCode);
+				DB::table('theme_settings')->where('id', 1)->update([
+					'theme_id' => $theme->id,
+					'theme_code' => $theme->theme_code,
+					'theme_name' => $theme->theme_name,
+				]);
 
-			$response->assertOk();
-			$response->assertSee('id="arunikaActiveFontStylesheet"', false);
-			$response->assertSee('storage/fonts/fira_sans/fonts.css', false);
-			$response->assertSee("--ph-font-family: 'Fira Sans'", false);
-			$response->assertSee('--ph-font-size: 15px', false);
+				$html = $this->get(route('cms.admin.awesome_admin.config'))
+					->assertOk()
+					->getContent();
+
+				$this->assertTrue(str_contains($html, 'theme-responsive-typography.css'), $themeCode.' missing shared typography asset.');
+				$this->assertTrue(str_contains($html, 'id="arunikaActiveFontStylesheet"'), $themeCode.' missing live font stylesheet.');
+				$this->assertTrue(str_contains($html, 'storage/fonts/fira_sans/fonts.css'), $themeCode.' missing configured font asset.');
+				$this->assertTrue(str_contains($html, "--ph-font-family: 'Fira Sans'"), $themeCode.' missing configured font family variable.');
+				$this->assertTrue(str_contains($html, '--ph-font-size: 15px'), $themeCode.' missing configured font size variable.');
+			}
 		}
 		finally
 		{
 			DB::table('site_config')->where('id', 1)->update(
 				collect($originalConfig)->except('id')->all()
+			);
+			DB::table('theme_settings')->where('id', 1)->update(
+				collect($originalThemeSetting)->except('id')->all()
 			);
 		}
 	}

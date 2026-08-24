@@ -1,0 +1,55 @@
+{
+  "asset": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css",
+  "console_errors_or_warnings": 0,
+  "measurements": {
+    "desktop_normal_1440x1100_14px": {
+      "compact_query": false,
+      "body": "14px",
+      "control": "14px",
+      "navigation": "14px",
+      "heading_h1": "40px",
+      "profile_item": "13px"
+    },
+    "desktop_compact_1440x900_14px": {
+      "compact_query": true,
+      "body": "12.5px",
+      "control": "12.5px",
+      "navigation": "12.5px",
+      "heading_h1": "32px",
+      "profile_item": "11.5px",
+      "profile_name": "12.5px",
+      "profile_role": "10.5px"
+    },
+    "tablet_1024x768_14px": {
+      "compact_query": false,
+      "body": "14px",
+      "heading_h1": "37.36px"
+    },
+    "desktop_compact_1440x900_0_875rem": {
+      "compact_query": true,
+      "body": "12.5px",
+      "control": "12.5px"
+    },
+    "desktop_compact_1440x900_8px": {
+      "compact_query": true,
+      "body": "8px",
+      "control": "8px",
+      "navigation": "8px",
+      "profile_item": "11px"
+    }
+  },
+  "unwired_theme_fallbacks_at_1440x900": {
+    "default": {
+      "root_ph_font_size": "unset",
+      "body": "14.5px"
+    },
+    "calm_green": {
+      "root_ph_font_size": "14px static",
+      "body": "12.5px"
+    },
+    "arunika_mosaic": {
+      "root_ph_font_size": "14px static",
+      "body": "12.5px"
+    }
+  }
+}

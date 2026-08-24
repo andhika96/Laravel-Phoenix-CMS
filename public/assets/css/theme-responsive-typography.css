@@ -37,6 +37,7 @@
 		--ph-fmv2-rfs-h2: clamp(1.5rem, calc(1.325rem + .75vw), 1.75rem);
 		--ph-fmv2-rfs-h3: clamp(1.375rem, calc(1.3rem + .5vw), 1.5rem);
 		--ph-fmv2-rfs-h4: clamp(1.25rem, calc(1.2rem + .25vw), 1.375rem);
+		/* Never enlarge a smaller value explicitly chosen in Site Config. */
 		--ph-adaptive-font-size: min(var(--ph-font-size, 1rem), max(12px, calc(var(--ph-font-size, 1rem) - 1.5px)));
 	}
 }
@@ -44,6 +45,7 @@
 body
 {
 	font-size: var(--ph-adaptive-font-size);
+	font-family: var(--ph-font-family);
 }
 
 body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(.form-control, .form-select, .btn, .dropdown-item, .table, .form-label, .page-link, .input-group-text, .form-check-label, .form-check-input)
@@ -99,44 +101,23 @@ body :where(.ph-sidebar, .arv7-sidebar) :where(.ph-app-logo-text, .arv7-brand-te
 }
 
 
-/* Main content areas of the Arunika and Awesome Admin shells. */
-body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main) :where(h1, .h1)
+/* Main shells plus overlays that Bootstrap may attach directly under body. */
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h1, .h1)
 {
 	font-size: var(--ph-fmv2-rfs-h1);
 }
 
-body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main) :where(h2, .h2)
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h2, .h2)
 {
 	font-size: var(--ph-fmv2-rfs-h2);
 }
 
-body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main) :where(h3, .h3)
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h3, .h3)
 {
 	font-size: var(--ph-fmv2-rfs-h3);
 }
 
-body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main) :where(h4, .h4)
-{
-	font-size: var(--ph-fmv2-rfs-h4);
-}
-
-/* Bootstrap overlays and expandable panels can be teleported outside main. */
-body :where(.modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h1, .h1)
-{
-	font-size: var(--ph-fmv2-rfs-h1);
-}
-
-body :where(.modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h2, .h2)
-{
-	font-size: var(--ph-fmv2-rfs-h2);
-}
-
-body :where(.modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h3, .h3)
-{
-	font-size: var(--ph-fmv2-rfs-h3);
-}
-
-body :where(.modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h4, .h4)
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h4, .h4)
 {
 	font-size: var(--ph-fmv2-rfs-h4);
 }
