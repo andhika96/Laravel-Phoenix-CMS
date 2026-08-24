@@ -34,8 +34,6 @@ return Application::configure(basePath: dirname(__DIR__))
 		[
 			'permission' => ArunaPermission::class,
 			'checkSuspended' => CheckSuspended::class,
-			'fm.auth' => \App\Http\Middleware\FileManagerAuth::class, // Added 28032026
-			'fm.admin' => \App\Http\Middleware\FmAdminMiddleware::class, // Added 28032026
 		]);
 
 		$middleware->validateCsrfTokens(except: 

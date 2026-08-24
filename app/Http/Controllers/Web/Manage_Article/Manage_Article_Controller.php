@@ -39,6 +39,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 
 use App\Events\CMS\ArticleCreated;
 use App\Events\CMS\ArticleUpdated;
+use App\Support\CkfinderSessionBridge;
 
 class Manage_Article_Controller extends Controller
 {
@@ -61,10 +62,7 @@ class Manage_Article_Controller extends Controller
 	 */
 	public function add(Request $request)
 	{
-		session_start();
-
-		$_SESSION['CKFinder_UserRole_UUID'] = auth()->user()->uuid;
-		$_SESSION['CKFinder_UserRole'] = $request->session()->get('LaraCKFinder_UserRole');
+		app(CkfinderSessionBridge::class)->prepare($request);
 
 		return view('manage_article.manage_article_add', ['categories' => Article_Categories::get()]);
 	}
@@ -284,10 +282,7 @@ class Manage_Article_Controller extends Controller
 
 		if ($getArticleDetail)
 		{
-			session_start();
-
-			$_SESSION['CKFinder_UserRole_UUID'] = auth()->user()->uuid;
-			$_SESSION['CKFinder_UserRole'] = $request->session()->get('LaraCKFinder_UserRole');
+			app(CkfinderSessionBridge::class)->prepare($request);
 
 			return view('manage_article.manage_article_edit', ['article' => $getArticleDetail, 'categories' => Article_Categories::get()]);
 		}

@@ -141,16 +141,6 @@
 						<span class="lead">{{ t('Manage Themes') }}</span>
 					</a>
 				</div>
-
-				<div class="col-6 col-md-3 col-xl-2">
-					<a href="{{ url('awesome_admin/filemanager') }}" class="text-decoration-none">
-						<div class="d-block mb-2">
-							<i class="fad fa-file-alt fa-3x"></i>
-						</div>
-
-						<span class="lead">{{ t('File Manager') }}</span>
-					</a>
-				</div>
 			</div>
 		</div>
 	</div>

@@ -224,13 +224,6 @@ Breadcrumbs::for('awesome_admin.themes', function (BreadcrumbTrail $trail)
 	$trail->push(t('Manage Themes'), route('cms.admin.awesome_admin.themes'));
 });
 
-// Awesome Admin > File Manager
-Breadcrumbs::for('awesome_admin.file_manager', function (BreadcrumbTrail $trail) 
-{
-	$trail->parent('awesome_admin');
-	$trail->push(t('File Manager'), route('cms.admin.awesome_admin.file_manager'));
-});
-
 // Blog
 Breadcrumbs::for('manage_article', function (BreadcrumbTrail $trail) 
 {

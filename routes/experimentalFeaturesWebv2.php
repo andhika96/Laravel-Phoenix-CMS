@@ -73,17 +73,6 @@ Route::controller(App\Http\Controllers\Web\Themes\Themes_Controller::class)->gro
 });
 
 
-/* File Manager v2 */
-// Bisa diakses tanpa session (standalone dengan API key)
-// Session auth juga tetap bekerja untuk akses internal
-Route::get('/filemanager', function () 
-{
-	return view('filemanager.filemanager');
-
-})->name('filemanager');
-
-Route::get('/filemanager/thumbnail', [\App\Http\Controllers\Api\V1\FileManagerController::class, 'imagePreview'])->middleware('auth')->name('filemanager.thumbnail');
-
 /* Installation Setup */
 
 Route::controller(App\Http\Controllers\Web\Setup\Setup_Controller::class)->group(function()

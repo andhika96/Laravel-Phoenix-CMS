@@ -8,6 +8,7 @@ use App\Http\Requests\Page_Builder_Elementor_V23\EditPageBuilderElementorV23Requ
 use App\Models\Page_Builder\Page_Builder;
 use App\Support\PageBuilderElementorV23\FormSubmissionHandler;
 use App\Support\PageBuilderElementorV23\ImageRenditionResolver;
+use App\Support\CkfinderSessionBridge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -47,7 +48,7 @@ class PageBuilderElementorV23Controller extends Controller
 
 	public function create(Request $request)
 	{
-		$this->prepareCkfinderSession($request);
+		app(CkfinderSessionBridge::class)->prepare($request);
 
 		return view('pagebuilder_elementor_v23.editor_shell',
 		[
@@ -60,7 +61,7 @@ class PageBuilderElementorV23Controller extends Controller
 
 	public function edit(Request $request, $idOrSlug)
 	{
-		$this->prepareCkfinderSession($request);
+		app(CkfinderSessionBridge::class)->prepare($request);
 
 		$pageData = $this->resolveOwnedPage($idOrSlug);
 
@@ -578,48 +579,4 @@ class PageBuilderElementorV23Controller extends Controller
 		return '';
 	}
 
-	private function prepareCkfinderSession(Request $request): void
-	{
-		if (session_status() === PHP_SESSION_NONE)
-		{
-			@session_start();
-		}
-
-		$user = auth()->user();
-		if (! $user)
-		{
-			return;
-		}
-
-		$role = $request->session()->get('LaraCKFinder_UserRole');
-		if (empty($role) && method_exists($user, 'getRoleNames'))
-		{
-			$role = $user->getRoleNames()->first();
-		}
-
-		$role = $this->normalizeCkfinderRole($role);
-
-		$_SESSION['CKFinder_UserRole_UUID'] = $user->uuid ?? '';
-		$_SESSION['CKFinder_UserRole'] = $role;
-	}
-
-	private function normalizeCkfinderRole($role): string
-	{
-		$raw = is_scalar($role) || $role === null ? (string) $role : '';
-		$normalized = strtolower(trim($raw));
-		$normalized = preg_replace('/[^a-z]/', '', $normalized);
-
-		if ($normalized === 'superadmin')
-		{
-			return 'Super Admin';
-		}
-
-		if ($normalized === 'administrator' || $normalized === 'admin')
-		{
-			return 'Administrator';
-		}
-
-		// Fallback supaya ACL CKFinder tetap match dan tidak blank loading.
-		return 'Administrator';
-	}
 }

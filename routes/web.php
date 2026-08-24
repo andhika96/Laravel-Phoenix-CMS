@@ -184,17 +184,6 @@ Route::name('cms.core.')
 	});
 
 Route::name('cms.core.')
-	->prefix('file_manager')
-	->namespace('App\Http\Controllers\Web\File_Manager')
-	->group(function() 
-	{
-		Route::controller(\File_Manager_Controller::class)->group(function()
-		{
-			Route::get('/', 'index')->name('file_manager')->middleware('auth', 'checkSuspended');
-		});
-	});
-
-Route::name('cms.core.')
 	->prefix('notification')
 	->namespace('App\Http\Controllers\Web\Notification')
 	->group(function() 
@@ -505,11 +494,6 @@ Route::name('cms.admin.')
 		{
 			Route::get('/themes', 'index')->name('awesome_admin.themes')->middleware('auth', 'checkSuspended');
 			Route::post('/themes/update', 'update')->name('awesome_admin.themes.update')->middleware('auth', 'checkSuspended');
-		});
-
-		Route::controller(\Awesome_Admin_File_Manager_Controller::class)->group(function()
-		{
-			Route::get('/filemanager', 'index')->name('awesome_admin.file_manager')->middleware('auth', 'checkSuspended');
 		});
 	});
 

@@ -12,6 +12,7 @@ use App\Mail\ForgotPasswordMail;
 use App\Models\Awesome_Admin\Account;
 use App\Models\Awesome_Admin\Account_Status;
 use App\Models\Awesome_Admin\Account_Information;
+use App\Support\CkfinderSessionBridge;
 
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Validation\ValidationException;
@@ -314,6 +315,8 @@ class Auth_Controller extends Controller
 
 	public function logout(Request $request): RedirectResponse
 	{
+		app(CkfinderSessionBridge::class)->clear($request);
+
 		Auth::logout();
 	 
 		$request->session()->invalidate();
@@ -325,6 +328,8 @@ class Auth_Controller extends Controller
 
 	public function logoutSSO(Request $request) 
 	{
+		app(CkfinderSessionBridge::class)->clear($request);
+
 		Auth::guard()->logout();
 
 		$request->session()->flush();

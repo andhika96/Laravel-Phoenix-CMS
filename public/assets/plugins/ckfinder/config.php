@@ -1,46 +1,15 @@
 <?php
 
-function getLaravelUser()
-{
-    define('LARAVEL_START', microtime(true));
-
-    $getDir = str_replace("public\assets\plugins\ckfinder", "", __DIR__);
-
-    // Register the Composer autoloader...
-    require $getDir.'/vendor/autoload.php';
-
-    // Bootstrap Laravel and handle the request...
-    $app = require_once $getDir.'/bootstrap/app.php';
-    $app->handle(Illuminate\Http\Request::capture());
-
-    $id = $app['encrypter']->decryptString($_COOKIE[$app['config']['session.cookie']]);
-    $app['session']->driver()->setId($id);
-    $app['session']->driver()->start();
-
-    // return $app;
-    return $app['auth']->user();
-    // return $app['session']->get('CKFinder_UserRole');
+if (session_status() === PHP_SESSION_NONE) {
+    @session_start();
 }
 
-session_start();
-
-// use Illuminate\Support\Facades\DB;
-
-// $_SESSION['CKFinder_UserRole'] = getLaravelUser()->roles[0]['name'];
-
-// print_r(getLaravelUser()->roles[0]['name']);
-// print_r(getLaravelUser()->uuid);
-
-// print_r(getLaravelUser()['db']->table('accounts')->get());
-
-// print_r(getLaravelUser()['filesystem']->allFiles('public/fonts'));
-
-// foreach (getLaravelUser()['filesystem']->disk('local')->allFiles('storage') as $key => $value) 
-// {
-//  echo $value;
-// }
-
-// exit;
+$ckfinderAllowedRoles = ['Super Admin', 'Administrator', 'General Member'];
+$ckfinderUserScope = isset($_SESSION['CKFinder_UserRole_UUID'])
+    && is_string($_SESSION['CKFinder_UserRole_UUID'])
+    && preg_match('/\A[A-Za-z0-9_-]+\z/D', $_SESSION['CKFinder_UserRole_UUID'])
+        ? $_SESSION['CKFinder_UserRole_UUID']
+        : '__unauthenticated__';
 
 /*
  * CKFinder Configuration File
@@ -80,9 +49,20 @@ $ckfinderStorageRoot = rtrim(str_replace('public\\assets\\plugins\\ckfinder', ''
 /*============================ Enable PHP Connector HERE ==============================*/
 // https://ckeditor.com/docs/ckfinder/ckfinder3-php/configuration.html#configuration_options_authentication
 
-$config['authentication'] = function() 
-{
-    return true;
+$config['authentication'] = static function () use ($ckfinderAllowedRoles): bool {
+    $userId = $_SESSION['CKFinder_UserId'] ?? null;
+    $scope = $_SESSION['CKFinder_UserRole_UUID'] ?? null;
+    $role = $_SESSION['CKFinder_UserRole'] ?? null;
+    $expiresAt = $_SESSION['CKFinder_AuthExpiresAt'] ?? null;
+
+    return is_scalar($userId)
+        && trim((string) $userId) !== ''
+        && is_string($scope)
+        && preg_match('/\A[A-Za-z0-9_-]+\z/D', $scope) === 1
+        && is_string($role)
+        && in_array($role, $ckfinderAllowedRoles, true)
+        && is_int($expiresAt)
+        && $expiresAt >= time();
 };
 
 /*============================ License Key ============================================*/
@@ -116,52 +96,9 @@ $config['backends'][] = array(
     'adapter'               => 'local',
     'baseUrl'               => '/storage/ckfinder/',
     'root'                  => $ckfinderStorageRoot,
-    'chmodFiles'            => 0777,
+    'chmodFiles'            => 0644,
     'chmodFolders'          => 0755,
     'filesystemEncoding'    => 'UTF-8',
-);
-
-// AWS
-$config['backends'][] = array(
-    'name'          => 'aws0',
-    'adapter'       => 's3',
-    'bucket'        => 'mgmotorid-assets',
-    'visibility'    => 'public',
-    'region'        => 'ap-southeast-3',
-    'key'           => 'AKIAZJDUNPZ7CYOS6Y7O',
-    'secret'        => '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',
-    'root'          => 'contents/ckfinder',
-    'baseUrl'       => 'https://mgmotorid-assets.s3.ap-southeast-3.amazonaws.com/contents/ckfinder/',
-);
-
-// IDCloudHost
-$config['backends'][] = array(
-    'name'              => 'aws',
-    'adapter'           => 's3compatible',
-    'bucket'            => 'arunadevs3',
-    'visibility'        => 'public',
-    'region'            => 'ap-southeast-3',
-    'key'               => '7HB226KS01NTA8W0TKI1',
-    'secret'            => 'zknPppPnPNSoaUumuWNIEIlOwAa2OOwcdMdq5V9m',
-    'root'              => 'ckfinder',
-    'baseUrl'           => 'https://is3.cloudhost.id/arunadevs3/ckfinder/',
-    'endPoint'          => 'https://is3.cloudhost.id/',
-    'useProxyCommand'   => false
-);
-
-// DigitalOcean Spaces
-$config['backends'][] = array(
-    'name'              => 'digitalocean',
-    'adapter'           => 's3compatible',
-    'bucket'            => 'arunadevs3',
-    'visibility'        => 'public',
-    'region'            => 'ap-southeast-3',
-    'key'               => 'DO00AWE2NHGLR9YXVK9E',
-    'secret'            => 'in8U5UvQqpWT9J9XDGEsQSMWTN2myaV0XpTxT2F+aK4',
-    'root'              => 'ckfinder',
-    'baseUrl'           => 'https://sgp1.digitaloceanspaces.com/arunadevs3/ckfinder/',
-    'endPoint'          => 'https://sgp1.digitaloceanspaces.com',
-    'useProxyCommand'   => false
 );
 
 /*============================ CKFinder Internal Directory ============================*/
@@ -191,7 +128,7 @@ $config['resourceTypes'][] = array(
 
 $config['resourceTypes'][] = array(
     'name'              => 'User Files', // Single quotes not allowed.
-    'directory'         => 'userfiles/'.$_SESSION['CKFinder_UserRole_UUID'],
+    'directory'         => 'userfiles/'.$ckfinderUserScope,
     'maxSize'           => 0,
     'allowedExtensions' => '7z,aiff,asf,avi,bmp,csv,doc,docx,fla,flv,gif,gz,gzip,jpeg,jpg,mid,mov,mp3,mp4,mpc,mpeg,mpg,ods,odt,pdf,png,ppt,pptx,qt,ram,rar,rm,rmi,rmvb,rtf,sdc,swf,sxc,sxw,tar,tgz,tif,tiff,txt,vsd,wav,webp,wma,wmv,xls,xlsx,zip',
     'deniedExtensions'  => '',
@@ -401,44 +338,6 @@ $config['accessControl'][] = array(
     'IMAGE_RESIZE_CUSTOM' => true
 );
 
-$config['accessControl'][] = array(
-    'role'                => 'General Member',
-    'resourceType'        => 'Articles',
-    'folder'              => '/',
-
-    'FOLDER_VIEW'         => true,
-    'FOLDER_CREATE'       => true,
-    'FOLDER_RENAME'       => true,
-    'FOLDER_DELETE'       => true,
-
-    'FILE_VIEW'           => true,
-    'FILE_CREATE'         => true,
-    'FILE_RENAME'         => true,
-    'FILE_DELETE'         => true,
-
-    'IMAGE_RESIZE'        => true,
-    'IMAGE_RESIZE_CUSTOM' => true
-);
-
-$config['accessControl'][] = array(
-    'role'                => 'General Member',
-    'resourceType'        => 'Events',
-    'folder'              => '/',
-
-    'FOLDER_VIEW'         => true,
-    'FOLDER_CREATE'       => true,
-    'FOLDER_RENAME'       => true,
-    'FOLDER_DELETE'       => true,
-
-    'FILE_VIEW'           => true,
-    'FILE_CREATE'         => true,
-    'FILE_RENAME'         => true,
-    'FILE_DELETE'         => true,
-
-    'IMAGE_RESIZE'        => true,
-    'IMAGE_RESIZE_CUSTOM' => true
-);
-
 /*================================ Other Settings =====================================*/
 // https://ckeditor.com/docs/ckfinder/ckfinder3-php/configuration.html
 
@@ -454,7 +353,7 @@ $config['forceAscii'] = false;
 $config['xSendfile'] = false;
 
 // https://ckeditor.com/docs/ckfinder/ckfinder3-php/configuration.html#configuration_options_debug
-$config['debug'] = true;
+$config['debug'] = false;
 
 /*==================================== Plugins ========================================*/
 // https://ckeditor.com/docs/ckfinder/ckfinder3-php/configuration.html#configuration_options_plugins

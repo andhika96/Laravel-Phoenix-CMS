@@ -29,11 +29,4 @@ Route::prefix('v1')
 				Route::get('/benchmark-db2', 'benchmark2')->name('testing.benchmark2')->withoutMiddleware('throttle:api');
 			});
 		});
-
-		require base_path('routes/filemanager.php');
     });
-
-	// Route::prefix('v1')->group(function () 
-	// {
-	// 	require base_path('routes/filemanager.php');
-	// });

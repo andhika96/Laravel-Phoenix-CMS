@@ -827,26 +827,6 @@ class MigrationsSeeder extends Seeder
             'id' => 164,
             'migration' => '2025_11_04_140126_create_credits_table',
             'batch' => 6
-        ],
-        [
-            'id' => 165,
-            'migration' => '2025_01_01_000004_create_fm_api_keys_table',
-            'batch' => 7
-        ],
-        [
-            'id' => 166,
-            'migration' => '2025_01_01_000001_create_file_manager_folders_table',
-            'batch' => 8
-        ],
-        [
-            'id' => 167,
-            'migration' => '2025_01_01_000003_create_file_manager_quotas_table',
-            'batch' => 9
-        ],
-        [
-            'id' => 168,
-            'migration' => '2025_01_01_000002_create_file_manager_files_table',
-            'batch' => 10
         ]
         ]);
     }
