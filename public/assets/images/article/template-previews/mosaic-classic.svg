@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Mosaic Classic template preview">
+  <rect width="320" height="200" fill="#fbfcfe"/>
+  <rect x="18" y="18" width="102" height="10" rx="5" fill="#7152d8"/>
+  <rect x="18" y="42" width="178" height="112" rx="8" fill="#e2e6ee"/>
+  <path d="M20 142l52-57 38 34 39-45 44 68z" fill="#b6c0d1"/>
+  <rect x="213" y="42" width="89" height="42" rx="6" fill="#e6eaf1"/>
+  <rect x="213" y="94" width="78" height="8" rx="4" fill="#374258"/>
+  <rect x="213" y="109" width="67" height="6" rx="3" fill="#ccd3df"/>
+  <rect x="213" y="127" width="89" height="42" rx="6" fill="#e6eaf1"/>
+  <rect x="18" y="166" width="178" height="8" rx="4" fill="#374258"/>
+  <rect x="18" y="181" width="132" height="6" rx="3" fill="#ccd3df"/>
+</svg>

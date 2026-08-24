@@ -10,6 +10,7 @@ class MenuParentmenuJsonSeeder extends Seeder
         $active = [
             $this->menu('hBMt85z8I4p3dgfZCt1sf4', 'manage_article', 'Manage Articles', ['Administrator', 'Super Admin'], 'uIxTa0lV3L4EaV9A6BvJ7x', '<i class="fal fa-newspaper fa-fw"></i>'),
             $this->menu('ktGbOw0EloeZX73WIs50VO', 'manage_coverimage', 'Manage Cover Image', [], 'uIxTa0lV3L4EaV9A6BvJ7x', '<i class="fal fa-puzzle-piece fa-fw"></i>'),
+            $this->menu('evT7uJ4nM8pQ2xL5cR9sK1', 'manage_event', 'Manage Event', ['Administrator', 'Super Admin'], 'uIxTa0lV3L4EaV9A6BvJ7x', '<i class="fal fa-calendar-star fa-fw"></i>'),
         ];
 
         $backup = [

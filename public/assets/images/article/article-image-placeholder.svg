@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="Article image placeholder">
+  <rect width="800" height="500" fill="#f5f6fa"/>
+  <rect x="58" y="48" width="684" height="404" rx="24" fill="#ffffff" stroke="#dce1eb" stroke-width="8"/>
+  <rect x="104" y="96" width="250" height="150" rx="14" fill="#e7eaf1"/>
+  <circle cx="145" cy="135" r="18" fill="#d0d6e2"/>
+  <path d="M104 227l72-68 44 40 38-34 96 62v19H104z" fill="#b9c1d0"/>
+  <path d="M104 228l45-44 31 28 53-53 76 68v19H104z" fill="#cbd1dc"/>
+  <rect x="390" y="108" width="224" height="18" rx="9" fill="#cbd1dc"/>
+  <rect x="390" y="146" width="180" height="14" rx="7" fill="#e1e4eb"/>
+  <rect x="390" y="180" width="256" height="14" rx="7" fill="#e1e4eb"/>
+  <rect x="390" y="214" width="140" height="14" rx="7" fill="#e1e4eb"/>
+  <rect x="104" y="286" width="592" height="14" rx="7" fill="#e1e4eb"/>
+  <rect x="104" y="320" width="548" height="14" rx="7" fill="#e1e4eb"/>
+  <rect x="104" y="354" width="500" height="14" rx="7" fill="#e1e4eb"/>
+  <rect x="104" y="388" width="216" height="14" rx="7" fill="#d7dce6"/>
+</svg>

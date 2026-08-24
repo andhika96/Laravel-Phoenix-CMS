@@ -251,18 +251,7 @@
 
 							<div class="ph-content card mb-3">
 								<div class="card-body">
-									<h6 class="card-title border-bottom pb-3 mb-3">{{ t('Thumbnail') }}</h6>
-
-									<div>
-										<div class="input-group rounded mb-3">
-											<input type="file" id="formFile" name="thumbnail" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" class="form-control font-size-inherit" v-on:focus="focusForm($event)" v-on:blur="blurForm" @change="previewImage($event)">
-											<button v-if="showButtonRemoveImage == true" v-on:click="removePreviewImage" class="btn btn-outline-danger" type="button" id="inputGroupFileAddon04" v-cloak><i class="fas fa-trash-alt fa-fw"></i></button>
-										</div>
-
-										<div class="position-relative text-center d-flex justify-content-center" style="width: auto;height: 350px;background-image: linear-gradient(45deg,#c3c4c7 25%,transparent 25%,transparent 75%,#c3c4c7 75%,#c3c4c7),linear-gradient(45deg,#c3c4c7 25%,transparent 25%,transparent 75%,#c3c4c7 75%,#c3c4c7);background-position: 0 0,10px 10px;background-size: 20px 20px;">
-											<img :src="imageEncoded" id="img-preview" class="img-fluid object-fit-contain">
-										</div>
-									</div>
+									@include('manage_article.partials.thumbnail')
 								</div>
 							</div>
 

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Knowledge table of contents template preview">
+  <rect width="320" height="200" fill="#fbfcfe"/>
+  <rect x="22" y="20" width="164" height="8" rx="4" fill="#7152d8"/>
+  <rect x="22" y="42" width="182" height="17" rx="8.5" fill="#263249"/>
+  <rect x="22" y="72" width="188" height="55" rx="7" fill="#e4e8f0"/>
+  <path d="M24 118l47-36 29 23 34-31 70 44z" fill="#bec7d7"/>
+  <g fill="#ccd3df"><rect x="22" y="139" width="172" height="6" rx="3"/><rect x="22" y="153" width="156" height="6" rx="3"/><rect x="22" y="167" width="168" height="6" rx="3"/></g>
+  <rect x="232" y="42" width="66" height="138" rx="7" fill="#f1f3f7"/>
+  <rect x="244" y="58" width="42" height="8" rx="4" fill="#374258"/>
+  <g fill="#c9d0dc"><rect x="244" y="80" width="35" height="6" rx="3"/><rect x="244" y="96" width="42" height="6" rx="3"/><rect x="244" y="112" width="31" height="6" rx="3"/><rect x="244" y="128" width="39" height="6" rx="3"/></g>
+</svg>

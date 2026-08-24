@@ -2,6 +2,7 @@
 
 namespace App\Models\Article;
 
+use App\Models\Awesome_Admin\Account;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,5 +23,15 @@ class Article extends Model
 	public function getStatus(): BelongsTo
 	{
 		return $this->belongsTo(Article_Status::class, 'status', 'id');
+	}
+
+	public function category(): BelongsTo
+	{
+		return $this->belongsTo(Article_Categories::class, 'category_id');
+	}
+
+	public function author(): BelongsTo
+	{
+		return $this->belongsTo(Account::class, 'user_id');
 	}
 }

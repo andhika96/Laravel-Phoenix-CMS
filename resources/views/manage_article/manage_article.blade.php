@@ -175,6 +175,7 @@
 
 									<div class="col-md-auto d-flex align-items-center">
 										<a href="{{ url('manage_article/add') }}" class="btn ph-btn-theme font-size-inherit"><i class="fas fa-plus fa-fw me-1"></i> {{ t('Add Post') }}</a>
+										<a href="{{ route('cms.core.manage_article.templates') }}" class="btn ph-btn-theme-outline ms-2 font-size-inherit"><i class="fas fa-layer-group fa-fw me-1"></i> {{ t('Article Templates') }}</a>
 										<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#ph-submit-data-category-modalRead" class="btn ph-btn-theme-outline ms-2 ar-fetch-detail-data-category-modalRead-categoryList" data-url="{{ url('manage_article/listdata/category') }}" v-on:click="showModalCategory('modalRead', 'categoryList', false)">{{ t('Category List') }}</a>
 									</div>
 								</div>

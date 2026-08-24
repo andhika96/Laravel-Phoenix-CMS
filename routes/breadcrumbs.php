@@ -244,6 +244,32 @@ Breadcrumbs::for('manage_article.edit', function (BreadcrumbTrail $trail)
 	$trail->push(t('Edit Post'), route('cms.core.manage_article.edit', 'idOrSlug'));
 });
 
+Breadcrumbs::for('manage_article.templates', function (BreadcrumbTrail $trail)
+{
+	$trail->parent('manage_article');
+	$trail->push(t('Manage Article Templates'), route('cms.core.manage_article.templates'));
+});
+
+// Event
+Breadcrumbs::for('manage_event', function (BreadcrumbTrail $trail)
+{
+	$trail->push(t('Manage Event'), route('cms.core.manage_event'));
+});
+
+// Event > Add
+Breadcrumbs::for('manage_event.add', function (BreadcrumbTrail $trail)
+{
+	$trail->parent('manage_event');
+	$trail->push(t('Add Event'), route('cms.core.manage_event.add'));
+});
+
+// Event > Edit
+Breadcrumbs::for('manage_event.edit', function (BreadcrumbTrail $trail)
+{
+	$trail->parent('manage_event');
+	$trail->push(t('Edit Event'), route('cms.core.manage_event.edit', 'idOrSlug'));
+});
+
 // Blog
 Breadcrumbs::for('manage_coverimage', function (BreadcrumbTrail $trail) 
 {

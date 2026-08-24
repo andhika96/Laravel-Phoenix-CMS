@@ -24,14 +24,13 @@ Route::controller(App\Http\Controllers\Web\Homepage\Homepage_Controller::class)-
 
 Route::name('cms.core.')
 	->prefix('article')
-	->namespace('App\Http\Controllers\Web\Articles')
 	->group(function() 
 	{
-		Route::controller(App\Http\Controllers\Web\Articles\Article_Controller::class)->group(function()
+		Route::controller(App\Http\Controllers\Web\Article\ArticleFrontendController::class)->group(function()
 		{
 			Route::get('/', 'index')->name('article')->middleware('auth', 'checkSuspended', 'permission:read data');
-			Route::get('/{idOrSlug}', 'detail')->name('article.detail')->middleware('auth', 'checkSuspended', 'permission:update data');
 			Route::get('/listdata', 'listData')->name('article.listdata')->middleware('auth', 'checkSuspended', 'permission:read data');
+			Route::get('/{idOrSlug}', 'detail')->name('article.detail')->middleware('auth', 'checkSuspended', 'permission:read data');
 		});
 	});
 
@@ -137,6 +136,9 @@ Route::name('cms.core.')
 		Route::controller(App\Http\Controllers\Web\Manage_Article\Manage_Article_Controller::class)->group(function()
 		{
 			Route::get('/', 'index')->name('manage_article')->middleware('auth', 'checkSuspended', 'permission:read data');
+			Route::get('/templates', [App\Http\Controllers\Web\Manage_Article\ManageArticleTemplateController::class, 'index'])->name('manage_article.templates')->middleware('auth', 'checkSuspended', 'permission:read data');
+			Route::post('/templates', [App\Http\Controllers\Web\Manage_Article\ManageArticleTemplateController::class, 'update'])->name('manage_article.templates.update')->middleware('auth', 'checkSuspended', 'permission:submit data');
+			Route::get('/templates/preview/{surface}/{template}', [App\Http\Controllers\Web\Manage_Article\ManageArticleTemplateController::class, 'preview'])->name('manage_article.templates.preview')->middleware('auth', 'checkSuspended', 'permission:read data');
 			
 			Route::get('/add', 'add')->name('manage_article.add')->middleware('auth', 'checkSuspended', 'permission:add data');
 			Route::post('create', 'store')->name('manage_article.store')->middleware('auth', 'checkSuspended', 'permission:submit data');
@@ -180,6 +182,55 @@ Route::name('cms.core.')
 
 			Route::get('/detaildata/{idOrSlug}', 'detailData')->name('manage_coverimage.detaildata')->middleware('auth', 'checkSuspended', 'permission:read data');
 			Route::get('/listdata', 'listData')->name('manage_coverimage.listdata')->middleware('auth', 'checkSuspended', 'permission:read data');
+		});
+	});
+
+Route::name('cms.core.')
+	->prefix('manage_event')
+	->namespace('App\\Http\\Controllers\\Web\\Manage_Event')
+	->group(function()
+	{
+		Route::controller(App\Http\Controllers\Web\Manage_Event\Manage_Event_Controller::class)->group(function()
+		{
+			Route::get('/', 'index')->name('manage_event')->middleware('auth', 'checkSuspended', 'permission:read data');
+			Route::get('/add', 'add')->name('manage_event.add')->middleware('auth', 'checkSuspended', 'permission:add data');
+			Route::post('/create', 'store')->name('manage_event.store')->middleware('auth', 'checkSuspended', 'permission:submit data');
+			Route::post('/update/category', 'updateCategory')->name('manage_event.update.category')->middleware('auth', 'checkSuspended', 'permission:submit data');
+			Route::get('/edit/{idOrSlug}', 'edit')->name('manage_event.edit')->middleware('auth', 'checkSuspended', 'permission:update data');
+			Route::post('/update/{idOrSlug}', 'update')->name('manage_event.update')->middleware('auth', 'checkSuspended', 'permission:submit data');
+			Route::post('/bulk_update', 'bulkUpdate')->name('manage_event.bulk_update')->middleware('auth', 'checkSuspended', 'permission:update data');
+			Route::post('/delete/{idOrSlug}', 'delete')->name('manage_event.delete')->middleware('auth', 'checkSuspended', 'permission:delete data');
+			Route::get('/detaildata/{idOrSlug}', 'detailData')->name('manage_event.detaildata')->middleware('auth', 'checkSuspended', 'permission:read data');
+			Route::get('/listdata', 'listData')->name('manage_event.listdata')->middleware('auth', 'checkSuspended', 'permission:read data');
+			Route::get('/listdata/category', 'listCategories')->name('manage_event.listdata.category')->middleware('auth', 'checkSuspended', 'permission:read data');
+			Route::post('/create/category', 'storeCategory')->name('manage_event.store.category')->middleware('auth', 'checkSuspended', 'permission:submit data');
+			Route::post('/delete/category/{idOrSlug}', 'deleteCategory')->name('manage_event.delete.category')->middleware('auth', 'checkSuspended', 'permission:delete data');
+
+			Route::get('/occurrences/{idOrSlug}', 'listOccurrences')->name('manage_event.occurrences')->middleware('auth', 'checkSuspended', 'permission:read data');
+			Route::post('/occurrences/{idOrSlug}', 'storeOccurrence')->name('manage_event.occurrences.store')->middleware('auth', 'checkSuspended', 'permission:submit data');
+			Route::post('/occurrences/{idOrSlug}/{occurrenceId}', 'updateOccurrence')->name('manage_event.occurrences.update')->middleware('auth', 'checkSuspended', 'permission:submit data');
+			Route::post('/occurrences/{idOrSlug}/{occurrenceId}/cancel', 'cancelOccurrence')->name('manage_event.occurrences.cancel')->middleware('auth', 'checkSuspended', 'permission:submit data');
+			Route::post('/occurrences/{idOrSlug}/{occurrenceId}/delete', 'deleteOccurrence')->name('manage_event.occurrences.delete')->middleware('auth', 'checkSuspended', 'permission:delete data');
+			Route::get('/registrations/{idOrSlug}', 'registrations')->name('manage_event.registrations')->middleware('auth', 'checkSuspended', 'permission:read data');
+			Route::post('/registrations/{registrationId}/attendance', 'markAttendance')->name('manage_event.registrations.attendance')->middleware('auth', 'checkSuspended', 'permission:update data');
+		});
+	});
+
+Route::name('cms.core.')
+	->prefix('event')
+	->namespace('App\\Http\\Controllers\\Web\\Event')
+	->middleware(['auth', 'checkSuspended'])
+	->group(function()
+	{
+		Route::controller(App\Http\Controllers\Web\Event\Event_Controller::class)->group(function()
+		{
+			Route::get('/', 'index')->name('event');
+			Route::get('/listdata', 'listData')->name('event.listdata');
+			Route::get('/registrations', 'registrations')->name('event.registrations');
+			Route::get('/occurrence/{occurrenceId}', 'occurrence')->name('event.occurrence');
+			Route::post('/occurrence/{occurrenceId}/register', 'register')->name('event.occurrence.register');
+			Route::post('/occurrence/{occurrenceId}/cancel', 'cancel')->name('event.occurrence.cancel');
+			Route::get('/{idOrSlug}', 'detail')->name('event.detail');
 		});
 	});
 

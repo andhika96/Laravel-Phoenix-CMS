@@ -43,6 +43,12 @@ const ManageArticleVue3 = createApp(
 			autoBlockButtonMobile: '',
 			imageEncoded: '',
 			showButtonRemoveImage: false,
+			thumbnailOriginalPreview: '',
+			thumbnailFileSelected: false,
+			thumbnailSource: 'upload',
+			thumbnailCkfinderUrl: '',
+			thumbnailCkfinderLabel: '',
+			articleThumbnailRemove: false,
 			showButtonRemoveQuerySearch: false,
 			getfilterByStatus: '',
 			getfilterByCategory: '',
@@ -881,7 +887,14 @@ const ManageArticleVue3 = createApp(
 					this.article.hours 			= response.data.data.created_at_hours;
 					this.article.minutes 		= response.data.data.created_at_minutes;
 
-					this.imageEncoded 			= this.responseDetailData.thumbnail_large_url;
+					this.imageEncoded 			= this.responseDetailData.thumbnail_large_url || this.responseDetailData.thumbnail_small_url || '';
+					this.thumbnailOriginalPreview = this.imageEncoded;
+					this.thumbnailSource = 'upload';
+					this.thumbnailCkfinderUrl = '';
+					this.thumbnailCkfinderLabel = '';
+					this.thumbnailFileSelected = false;
+					this.articleThumbnailRemove = false;
+					this.showButtonRemoveImage = Boolean(this.imageEncoded);
 
 					// console.log(this.imageEncoded);
 				})
@@ -1878,55 +1891,127 @@ const ManageArticleVue3 = createApp(
 				}
 			}
 		},
-		previewImage: function(event)
+		previewArticleThumbnail: function(event)
 		{
-			const fileReader = new FileReader();
-			const image = new Image();
-			const files = event.target.files;
+			const file = event.target.files?.[0];
 
-			const imagePreview = document.getElementById("img-preview");
-
-			const filename = files[0].name;
-			fileReader.addEventListener('load', () => 
+			if (!file)
 			{
-				image.src = fileReader.result;
+				return;
+			}
 
-				image.addEventListener('load', () => 
-				{
-					// console.log(image.width+' x '+image.height);
-
-					if (image.width > image.height)
-					{
-						imagePreview.classList.remove("h-100");
-
-						// console.log('Its Landscape');
-					} 
-					else if (image.width < image.height)
-					{
-						imagePreview.classList.add("h-100");
-
-						// console.log('Its Portrait');
-					}
-					else if (image.width == 0 && image.height == 0)
-					{
-						imagePreview.classList.add("h-100");
-					}
-					else
-					{
-						imagePreview.classList.remove("h-100");
-
-						// console.log('Its Square');
-					}
-
-					this.imageEncoded = fileReader.result;
-
-					this.showButtonRemoveImage = true;
-
-					// console.log(this.imageEncoded);
-				});
+			const fileReader = new FileReader();
+			fileReader.addEventListener('load', () =>
+			{
+				this.thumbnailSource = 'upload';
+				this.thumbnailCkfinderUrl = '';
+				this.thumbnailCkfinderLabel = '';
+				this.imageEncoded = fileReader.result;
+				this.articleThumbnailRemove = false;
+				this.thumbnailFileSelected = true;
+				this.showButtonRemoveImage = true;
 			});
 
-			fileReader.readAsDataURL(files[0]);
+			fileReader.readAsDataURL(file);
+		},
+		previewImage: function(event)
+		{
+			this.previewArticleThumbnail(event);
+		},
+		setArticleThumbnailSource: function(source)
+		{
+			const nextSource = source === 'ckfinder' ? 'ckfinder' : 'upload';
+			if (nextSource === this.thumbnailSource)
+			{
+				return;
+			}
+
+			const input = this.$refs.thumbnailInput;
+			if (nextSource === 'ckfinder' && this.thumbnailFileSelected)
+			{
+				if (input) input.value = '';
+				this.thumbnailFileSelected = false;
+				this.imageEncoded = this.thumbnailOriginalPreview || '';
+				this.showButtonRemoveImage = Boolean(this.imageEncoded);
+			}
+
+			if (nextSource === 'upload' && this.thumbnailCkfinderUrl)
+			{
+				this.thumbnailCkfinderUrl = '';
+				this.thumbnailCkfinderLabel = '';
+				this.imageEncoded = this.thumbnailOriginalPreview || '';
+				this.thumbnailFileSelected = false;
+				this.showButtonRemoveImage = Boolean(this.imageEncoded);
+			}
+
+			this.thumbnailSource = nextSource;
+		},
+		openArticleThumbnailCkfinder: function()
+		{
+			if (typeof CKFinder === 'undefined')
+			{
+				console.warn('CKFinder is not available');
+				return;
+			}
+
+			CKFinder.modal({
+				chooseFiles: true,
+				resourceType: 'Articles',
+				width: 800,
+				height: 600,
+				onInit: (finder) => finder.on('files:choose', (event) =>
+				{
+					const file = event.data.files.first();
+					this.selectArticleCkfinderThumbnail(file.getUrl(), file.get('name'));
+				}),
+			});
+		},
+		selectArticleCkfinderThumbnail: function(url, name = '')
+		{
+			const selectedUrl = String(url || '').trim();
+			if (!this.isArticleCkfinderImage(selectedUrl))
+			{
+				console.warn('Choose an image from the Articles folder');
+				return;
+			}
+
+			this.thumbnailSource = 'ckfinder';
+			this.thumbnailCkfinderUrl = selectedUrl;
+			this.thumbnailCkfinderLabel = this.articleCkfinderThumbnailLabel(selectedUrl, name);
+			this.imageEncoded = selectedUrl;
+			this.articleThumbnailRemove = false;
+			this.thumbnailFileSelected = false;
+			this.showButtonRemoveImage = true;
+		},
+		isArticleCkfinderImage: function(url)
+		{
+			try
+			{
+				return new URL(url, window.location.origin).pathname.startsWith('/storage/ckfinder/articles/');
+			}
+			catch
+			{
+				return false;
+			}
+		},
+		articleCkfinderThumbnailLabel: function(url, name = '')
+		{
+			const filename = String(name || new URL(url, window.location.origin).pathname.split('/').pop() || '').trim();
+			return filename ? `Articles / ${filename}` : 'Articles';
+		},
+		removeArticleThumbnailPreview: function()
+		{
+			const input = this.$refs.thumbnailInput;
+			if (input) input.value = '';
+
+			const restoreOriginal = this.thumbnailFileSelected && this.thumbnailOriginalPreview;
+			this.imageEncoded = restoreOriginal ? this.thumbnailOriginalPreview : '';
+			this.articleThumbnailRemove = !restoreOriginal && Boolean(this.thumbnailOriginalPreview);
+			this.thumbnailCkfinderUrl = '';
+			this.thumbnailCkfinderLabel = '';
+			this.thumbnailFileSelected = false;
+			if (restoreOriginal) this.thumbnailSource = 'upload';
+			this.showButtonRemoveImage = Boolean(this.imageEncoded);
 		},
 		previewImageExist: function()
 		{
@@ -1943,11 +2028,12 @@ const ManageArticleVue3 = createApp(
 
 					if (response.data[0].status != 'failed')
 					{
-						this.imageEncode = response.data[0].get_thumbnail;
+						this.imageEncoded = response.data[0].get_thumbnail;
+						this.thumbnailOriginalPreview = this.imageEncoded;
 
 						this.showButtonRemoveImage = true;
 
-						image.src = this.imageEncode;
+						image.src = this.imageEncoded;
 
 						image.onload = function()
 						{
@@ -1996,16 +2082,7 @@ const ManageArticleVue3 = createApp(
 		},
 		removePreviewImage: function()
 		{
-			const inputThumbnail = document.querySelector('input[name="thumbnail"]');
-			const imagePreview = document.querySelector('img[id="img-preview"]');
-
-			inputThumbnail.value = '';
-			imagePreview.src = '';
-
-			this.imageEncode = '';
-			this.showButtonRemoveImage = false;
-		
-			// console.log(imagePreview);
+			this.removeArticleThumbnailPreview();
 		},
 		removeQuerySearch: function()
 		{

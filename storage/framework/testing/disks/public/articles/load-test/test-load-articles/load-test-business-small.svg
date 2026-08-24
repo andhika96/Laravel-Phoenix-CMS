@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 405" role="img" aria-label="Load Test Business load-test thumbnail">
+  <defs>
+    <linearGradient id="background" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#0f766e"/><stop offset="1" stop-color="#34d399"/></linearGradient>
+  </defs>
+  <rect width="720" height="405" fill="url(#background)"/>
+  <circle cx="720" cy="0" r="405" fill="#ffffff" fill-opacity=".12"/>
+  <path d="M0 405L202 170L360 284L518 113L720 251V405H0Z" fill="#ffffff" fill-opacity=".16"/>
+  <rect x="72" y="72" width="576" height="261" rx="36" fill="#0f172a" fill-opacity=".2"/>
+  <text x="120" y="194" fill="#ffffff" font-family="Arial, sans-serif" font-size="26" font-weight="700">Load Test Business</text>
+  <text x="120" y="251" fill="#ffffff" fill-opacity=".86" font-family="Arial, sans-serif" font-size="16">Article performance dataset</text>
+</svg>

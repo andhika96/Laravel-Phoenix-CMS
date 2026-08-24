@@ -68,7 +68,7 @@ class MenuSeeder extends Seeder
             'menu_parent_code' => 'manage_event',
             'menu_parent_name' => 'Manage Event',
             'menu_name' => 'Add New',
-            'url' => 'manage_event/addpost',
+            'url' => 'manage_event/add',
             'icon' => '<i class=\\"fad fa-plus fa-fw me-2\\"></i>',
             'roles' => '99',
             'status' => 0
@@ -81,7 +81,7 @@ class MenuSeeder extends Seeder
             'menu_parent_code' => 'manage_event',
             'menu_parent_name' => 'Manage Event',
             'menu_name' => 'Event Categories',
-            'url' => 'manage_event/category',
+            'url' => 'manage_event?panel=categories',
             'icon' => '<i class=\\"fad fa-folder fa-fw me-2\\"></i>',
             'roles' => '99',
             'status' => 0
@@ -97,7 +97,7 @@ class MenuSeeder extends Seeder
             'url' => 'manage_event/layout',
             'icon' => '<i class=\\"fad fa-swatchbook fa-fw me-2\\"></i>',
             'roles' => '99',
-            'status' => 0
+            'status' => 1
         ],
         [
             'id' => 8,

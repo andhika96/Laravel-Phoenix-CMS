@@ -34,7 +34,10 @@ class AddArticleRequest extends FormRequest
 			$data['password_protected'] = 'required';
 		}
 
-		$data['thumbnail'] = [...$this->isPrecognitive() ? [] : ['image', 'mimes:jpg,png,webp', 'max:15000']];
+		$data['thumbnail'] = [...$this->isPrecognitive() ? [] : ['image', 'mimes:jpg,jpeg,png,webp', 'max:15000']];
+		$data['remove_thumbnail'] = ['nullable', 'boolean'];
+		$data['thumbnail_source'] = ['nullable', Rule::in(['upload', 'ckfinder'])];
+		$data['thumbnail_ckfinder_url'] = ['nullable', 'required_if:thumbnail_source,ckfinder', 'string', 'max:2048', 'regex:#^(?:https?://[^/]+)?/storage/ckfinder/articles/[A-Za-z0-9._/-]+$#'];
 
 		return $data;
 	}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Minimal Reading List template preview">
+  <rect width="320" height="200" fill="#fbfcfe"/>
+  <rect x="18" y="18" width="112" height="10" rx="5" fill="#7152d8"/>
+  <rect x="18" y="42" width="202" height="8" rx="4" fill="#cbd2df"/>
+  <g fill="#e4e8f0"><rect x="18" y="66" width="68" height="48" rx="6"/><rect x="18" y="128" width="68" height="48" rx="6"/></g>
+  <g fill="#c4ccda"><path d="M21 107l20-22 15 14 13-11 14 19H21z"/><path d="M21 169l18-20 16 14 12-10 15 16H21z"/></g>
+  <g fill="#394357"><rect x="100" y="70" width="155" height="10" rx="5"/><rect x="100" y="132" width="142" height="10" rx="5"/></g>
+  <g fill="#cbd2df"><rect x="100" y="89" width="178" height="7" rx="3.5"/><rect x="100" y="103" width="124" height="7" rx="3.5"/><rect x="100" y="151" width="168" height="7" rx="3.5"/><rect x="100" y="165" width="112" height="7" rx="3.5"/></g>
+</svg>

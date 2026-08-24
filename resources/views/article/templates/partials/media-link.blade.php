@@ -1,0 +1,1 @@
+<a href="{{ $href }}" class="{{ $class }} article-media-frame article-background-media" style="--article-media-image: url('{{ $mediaUrl }}')" aria-label="{{ $title }}"><span class="visually-hidden">{{ $title }}</span></a>

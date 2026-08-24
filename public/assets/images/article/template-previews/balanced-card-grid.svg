@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Balanced Card Grid template preview">
+  <rect width="320" height="200" fill="#fbfcfe"/>
+  <rect x="18" y="18" width="128" height="10" rx="5" fill="#7152d8"/>
+  <rect x="18" y="43" width="84" height="55" rx="7" fill="#e4e8f0"/>
+  <rect x="118" y="43" width="84" height="55" rx="7" fill="#e4e8f0"/>
+  <rect x="218" y="43" width="84" height="55" rx="7" fill="#e4e8f0"/>
+  <g fill="#bfc8d8"><path d="M21 91l24-25 19 17 17-20 18 28z"/><path d="M121 91l24-25 19 17 17-20 18 28z"/><path d="M221 91l24-25 19 17 17-20 18 28z"/></g>
+  <g fill="#354057"><rect x="18" y="109" width="76" height="8" rx="4"/><rect x="118" y="109" width="76" height="8" rx="4"/><rect x="218" y="109" width="76" height="8" rx="4"/></g>
+  <g fill="#ccd3df"><rect x="18" y="126" width="66" height="6" rx="3"/><rect x="118" y="126" width="66" height="6" rx="3"/><rect x="218" y="126" width="66" height="6" rx="3"/></g>
+  <rect x="18" y="153" width="84" height="32" rx="6" fill="#e4e8f0"/><rect x="118" y="153" width="84" height="32" rx="6" fill="#e4e8f0"/><rect x="218" y="153" width="84" height="32" rx="6" fill="#e4e8f0"/>
+</svg>

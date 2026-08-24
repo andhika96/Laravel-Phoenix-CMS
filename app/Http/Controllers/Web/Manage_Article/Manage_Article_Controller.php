@@ -126,6 +126,10 @@ class Manage_Article_Controller extends Controller
 						$getArticleData->fill($new_data_thumbnail);
 						$getArticleData->save();
 					}
+					elseif ($request->input('thumbnail_source') === 'ckfinder' && ($thumbnail = $this->storeCkfinderThumbnail($request->input('thumbnail_ckfinder_url'))))
+					{
+						$article->fill($thumbnail)->save();
+					}
 
 					DB::commit();
 
@@ -370,6 +374,20 @@ class Manage_Article_Controller extends Controller
 						}
 						
 						$new_data['thumb_s'] ??= $this->uploadThumbnailSmall($request->file('thumbnail'));
+					}
+					elseif ($request->input('thumbnail_source') === 'ckfinder' && ($thumbnail = $this->storeCkfinderThumbnail($request->input('thumbnail_ckfinder_url'))))
+					{
+						$this->deleteFile($getArticleData->thumb_l);
+						$this->deleteFile($getArticleData->thumb_s);
+						$new_data['thumb_l'] ??= $thumbnail['thumb_l'];
+						$new_data['thumb_s'] ??= $thumbnail['thumb_s'];
+					}
+					elseif ($request->boolean('remove_thumbnail'))
+					{
+						$this->deleteFile($getArticleData->thumb_l);
+						$this->deleteFile($getArticleData->thumb_s);
+						$new_data['thumb_l'] ??= null;
+						$new_data['thumb_s'] ??= null;
 					}
 
 					$getArticleData->fill($new_data);
@@ -1181,6 +1199,42 @@ class Manage_Article_Controller extends Controller
 
 			return $uploadedFile;
 		}
+	}
+
+	protected function storeCkfinderThumbnail(?string $url): ?array
+	{
+		$urlPath = parse_url(trim((string) $url), PHP_URL_PATH);
+		$prefix = '/storage/ckfinder/articles/';
+		if (! is_string($urlPath) || ! str_starts_with($urlPath, $prefix))
+		{
+			return null;
+		}
+
+		$source = 'ckfinder/articles/'.ltrim(rawurldecode(substr($urlPath, strlen($prefix))), '/');
+		$extension = strtolower(pathinfo($source, PATHINFO_EXTENSION));
+		if ($source === 'ckfinder/articles/' || str_contains($source, '..') || ! in_array($extension, ['jpg', 'jpeg', 'png', 'webp'], true))
+		{
+			return null;
+		}
+
+		$disk = Storage::disk('public');
+		if (! $disk->exists($source))
+		{
+			return null;
+		}
+
+		$folder = 'articles/'.date('mY').'/date_'.date('d');
+		$large = $folder.'/'.random_string('md5').'.'.$extension;
+		$small = $folder.'/'.random_string('md5').'_small.'.$extension;
+		$disk->makeDirectory($folder);
+		$disk->copy($source, $large);
+
+		$manager = new ImageManager(Driver::class);
+		$image = $manager->read($disk->path($source));
+		$image->scale(width: 720);
+		$image->save($disk->path($small));
+
+		return ['thumb_l' => $large, 'thumb_s' => $small];
 	}
 
 	protected function uploadFile($file, $path)

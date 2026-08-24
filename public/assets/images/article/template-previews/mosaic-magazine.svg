@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Mosaic Magazine template preview">
+  <rect width="320" height="200" fill="#f7f8fc"/>
+  <rect x="18" y="18" width="122" height="10" rx="5" fill="#7152d8"/>
+  <rect x="18" y="44" width="284" height="100" rx="10" fill="#202c42"/>
+  <rect x="18" y="44" width="172" height="100" rx="10" fill="#dce2eb"/>
+  <path d="M22 132l50-50 33 31 35-43 46 62z" fill="#b6c0d1"/>
+  <rect x="208" y="64" width="54" height="8" rx="4" fill="#b7a7f0"/>
+  <rect x="208" y="82" width="73" height="16" rx="8" fill="#ffffff"/>
+  <rect x="208" y="109" width="76" height="7" rx="3.5" fill="#b9c4d6"/>
+  <g fill="#e1e6ee"><rect x="18" y="158" width="86" height="28" rx="5"/><rect x="117" y="158" width="86" height="28" rx="5"/><rect x="216" y="158" width="86" height="28" rx="5"/></g>
+</svg>
