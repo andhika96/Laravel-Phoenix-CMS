@@ -28,9 +28,10 @@ Route::name('cms.core.')
 	{
 		Route::controller(App\Http\Controllers\Web\Article\ArticleFrontendController::class)->group(function()
 		{
-			Route::get('/', 'index')->name('article')->middleware('auth', 'checkSuspended', 'permission:read data');
-			Route::get('/listdata', 'listData')->name('article.listdata')->middleware('auth', 'checkSuspended', 'permission:read data');
-			Route::get('/{idOrSlug}', 'detail')->name('article.detail')->middleware('auth', 'checkSuspended', 'permission:read data');
+			Route::get('/', 'index')->name('article');
+			Route::get('/listdata', 'listData')->name('article.listdata');
+			Route::post('/{idOrSlug}/unlock', 'unlock')->name('article.unlock')->middleware('throttle:5,1');
+			Route::get('/{idOrSlug}', 'detail')->name('article.detail');
 		});
 	});
 

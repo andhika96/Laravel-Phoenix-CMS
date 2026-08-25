@@ -145,7 +145,7 @@
 
 														<div v-if="temporary_article.visibility == 'password_protected'" class="form-group mb-3" v-cloak>
 															<label for="enterPasswordFormControlInput1" class="form-label">{{ t('Password') }}</label>
-															<input type="text" name="password_protected" maxlength="32" class="form-control font-size-inherit" id="enterPasswordFormControlInput1" value="@if ($article->visibility == 'password_protected'){{ $article->password_protected }}@endif">
+															<input type="password" name="password_protected" minlength="8" maxlength="128" autocomplete="new-password" class="form-control font-size-inherit" id="enterPasswordFormControlInput1" placeholder="{{ t('Leave blank to keep the current password') }}">
 														</div>
 
 														<div class="row g-1">

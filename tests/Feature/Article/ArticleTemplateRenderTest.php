@@ -4,6 +4,7 @@ namespace Tests\Feature\Article;
 
 use App\Models\Article\Article;
 use App\Support\Article\ArticleTemplateCatalog;
+use App\Support\Article\ArticleTemplateOptions;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Tests\TestCase;
 
@@ -34,9 +35,11 @@ class ArticleTemplateRenderTest extends TestCase
             $this->assertStringContainsString("route('cms.core.article.detail'", $source);
             $this->assertStringContainsString("article.templates.partials.pagination", $source);
             $this->assertStringContainsString('article-image-placeholder.svg', $source);
-            $this->assertStringContainsString('article-title-clamp', $source);
             $this->assertStringContainsString('article-excerpt-clamp', $source);
             $this->assertStringContainsString('article.templates.partials.media-link', $source);
+            $this->assertStringContainsString('article.templates.partials.archive-title', $source);
+            $this->assertStringContainsString('article.templates.partials.template-shell-attributes', $source);
+            $this->assertStringNotContainsString('<h4 class="article-title-clamp">', $source);
         }
 
         $sharedMedia = file_get_contents(resource_path('views/article/templates/partials/media-link.blade.php'));
@@ -53,6 +56,7 @@ class ArticleTemplateRenderTest extends TestCase
             $this->assertStringContainsString('article-image-placeholder.svg', $source);
             $this->assertStringContainsString('article.templates.partials.detail-navigation', $source);
             $this->assertStringContainsString('article-detail__header', $source);
+            $this->assertStringContainsString('article.templates.partials.template-shell-attributes', $source);
         }
 
         $pagination = file_get_contents(resource_path('views/article/templates/partials/pagination.blade.php'));
@@ -83,6 +87,45 @@ class ArticleTemplateRenderTest extends TestCase
         $this->assertStringContainsString('mosaic-classic-test', $html);
     }
 
+    public function test_every_archive_renderer_places_stable_vue_slots_inside_the_shell_before_server_pagination(): void
+    {
+        $article = new Article([
+            'uri' => 'archive-footer-slot-test',
+            'title' => 'Archive Footer Slot Test',
+            'content' => '<p>Preview content</p>',
+        ]);
+        $article->setRelation('category', null);
+        $article->created_at = now();
+        $articles = new LengthAwarePaginator([$article], 24, 12, 1, [
+            'path' => route('cms.core.article'),
+        ]);
+
+        foreach (app(ArticleTemplateCatalog::class)->archive() as $key => $template) {
+            $html = view($template['view'], [
+                'articles' => $articles,
+                'templateSettings' => null,
+                'templateOptions' => [],
+                'articleCategories' => collect(),
+            ])->render();
+
+            $shell = strpos($html, 'article-shell');
+            $stateSlot = strpos($html, 'data-article-vue-list-state-slot');
+            $listContent = strpos($html, 'data-article-vue-list-content');
+            $controlSlot = strpos($html, 'data-article-vue-control-slot');
+            $pagination = strpos($html, 'article-pagination--ssr');
+
+            $this->assertNotFalse($shell, $key.' must render an article shell');
+            $this->assertNotFalse($stateSlot, $key.' must render a stable Vue loading slot');
+            $this->assertNotFalse($listContent, $key.' must render the Vue list content wrapper');
+            $this->assertNotFalse($controlSlot, $key.' must render a stable Vue pagination slot');
+            $this->assertNotFalse($pagination, $key.' must render SSR pagination fallback');
+            $this->assertGreaterThan($shell, $stateSlot, $key.' loading slot must stay inside its article shell');
+            $this->assertGreaterThan($stateSlot, $listContent, $key.' list content must follow the loading slot');
+            $this->assertGreaterThan($listContent, $controlSlot, $key.' pagination slot must follow the list content');
+            $this->assertGreaterThan($controlSlot, $pagination, $key.' SSR pagination must remain after the Vue pagination slot');
+        }
+    }
+
     public function test_public_pagination_uses_the_cms_visual_contract_with_result_context(): void
     {
         $articles = new LengthAwarePaginator(range(1, 12), 96, 12, 5, [
@@ -97,5 +140,89 @@ class ArticleTemplateRenderTest extends TestCase
         $this->assertStringContainsString('aria-label="First page"', $html);
         $this->assertStringContainsString('aria-label="Last page"', $html);
         $this->assertStringContainsString('data-article-pagination-link', $html);
+    }
+
+    public function test_shared_archive_fragments_render_safe_heading_media_and_shell_variables(): void
+    {
+        $article = new Article([
+            'uri' => 'styled-article',
+            'title' => 'Styled Article',
+            'content' => '<p>Preview content</p>',
+        ]);
+        $options = app(ArticleTemplateOptions::class)->archive('minimal-reading-list', [
+            'article_title' => ['tag' => 'h2'],
+            'thumbnail' => [
+                'mode' => 'asset',
+                'fit' => 'contain',
+                'frame' => ['enabled' => true, 'border_width' => '2px', 'radius' => '8px'],
+            ],
+            'shell' => [
+                'padding' => ['enabled' => true, 'desktop' => ['top' => '2rem', 'right' => '1rem', 'bottom' => '2rem', 'left' => '1rem']],
+                'frame' => ['enabled' => true, 'border_width' => '1px', 'radius' => '12px'],
+            ],
+        ]);
+
+        $title = view('article.templates.partials.archive-title', compact('article', 'options'))->render();
+        $media = view('article.templates.partials.media-link', [
+            'href' => route('cms.core.article.detail', $article->uri),
+            'class' => 'article-reading-list__media',
+            'mediaUrl' => asset('assets/images/article/article-image-placeholder.svg'),
+            'title' => $article->title,
+            'templateOptions' => $options,
+        ])->render();
+        $shell = view('article.templates.partials.template-shell-attributes', ['templateOptions' => $options])->render();
+
+        $this->assertStringContainsString('<h2 class="article-title-clamp">', $title);
+        $this->assertStringContainsString('article-asset-media', $media);
+        $this->assertStringContainsString('article-thumbnail-frame--custom', $media);
+        $this->assertStringContainsString('data-article-shell-padding="true"', $shell);
+        $this->assertStringContainsString('--article-shell-padding-desktop-top:2rem', $shell);
+        $this->assertStringContainsString('data-article-shell-frame="true"', $shell);
+    }
+
+    public function test_every_archive_and_detail_renderer_receives_normalized_structured_template_styles(): void
+    {
+        $article = new Article([
+            'uri' => 'template-style-render-test',
+            'title' => 'Template Style Render Test',
+            'content' => '<p>Preview content</p><h2>Section</h2>',
+        ]);
+        $article->setRelation('category', null);
+        $article->setRelation('author', null);
+        $article->created_at = now();
+        $articles = new LengthAwarePaginator([$article], 24, 12, 1, ['path' => route('cms.core.article')]);
+        $normalizer = app(ArticleTemplateOptions::class);
+
+        foreach (app(ArticleTemplateCatalog::class)->archive() as $key => $template) {
+            $options = $normalizer->archive($key, [
+                'thumbnail' => ['mode' => 'asset', 'fit' => 'contain', 'frame' => ['enabled' => true]],
+                'shell' => ['padding' => ['enabled' => true, 'desktop' => ['top' => '2rem', 'right' => '1rem', 'bottom' => '2rem', 'left' => '1rem']]],
+            ]);
+            $html = view($template['view'], compact('articles', 'options') + [
+                'templateOptions' => $options,
+                'templateSettings' => null,
+                'articleCategories' => collect(),
+            ])->render();
+
+            $this->assertStringContainsString('data-article-shell-padding="true"', $html, $key.' must receive shell padding variables');
+            $this->assertStringContainsString('--article-shell-padding-desktop-top:2rem', $html, $key.' must expose normalized shell variables');
+            $this->assertStringContainsString('article-asset-media', $html, $key.' must use the shared asset thumbnail mode');
+        }
+
+        foreach (app(ArticleTemplateCatalog::class)->detail() as $key => $template) {
+            $options = $normalizer->detail($key, [
+                'shell' => ['frame' => ['enabled' => true, 'border_width' => '2pt', 'radius' => '1rem']],
+            ]);
+            $html = view($template['view'], [
+                'article' => $article,
+                'templateOptions' => $options,
+                'templateSettings' => null,
+                'previousArticle' => null,
+                'nextArticle' => null,
+            ])->render();
+
+            $this->assertStringContainsString('data-article-shell-frame="true"', $html, $key.' must receive the detail shell frame');
+            $this->assertStringContainsString('--article-shell-frame-border-width:2pt', $html, $key.' must expose normalized detail shell variables');
+        }
     }
 }

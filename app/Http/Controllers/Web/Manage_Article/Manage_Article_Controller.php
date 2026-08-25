@@ -39,11 +39,12 @@ use Intervention\Image\ImageManagerStatic as Image;
 
 use App\Events\CMS\ArticleCreated;
 use App\Events\CMS\ArticleUpdated;
+use App\Support\Article\ArticlePasswordAccess;
 use App\Support\CkfinderSessionBridge;
 
 class Manage_Article_Controller extends Controller
 {
-	public function __construct()
+	public function __construct(private readonly ArticlePasswordAccess $articlePasswordAccess)
 	{
 		// We manually set timezone to Asia Jakarta, Indonesia
 		date_default_timezone_set('Asia/Jakarta');
@@ -104,7 +105,7 @@ class Manage_Article_Controller extends Controller
 
 				if ($request->input('visibility') == 'password_protected')
 				{
-					$new_data['password_protected']	??= $request->input('password_protected');
+					$new_data['password_protected']	??= $this->articlePasswordAccess->hashForStorage((string) $request->input('password_protected'));
 				}
 
 				if ($request->input('created_at'))
@@ -333,7 +334,9 @@ class Manage_Article_Controller extends Controller
 
 					if ($request->input('visibility') == 'password_protected')
 					{
-						$new_data['password_protected']	??= $request->input('password_protected');
+					$new_data['password_protected']	??= filled($request->input('password_protected'))
+						? $this->articlePasswordAccess->hashForStorage((string) $request->input('password_protected'))
+						: $getArticleData->password_protected;
 					}
 					else
 					{

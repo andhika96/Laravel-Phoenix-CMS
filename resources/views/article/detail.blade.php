@@ -8,7 +8,7 @@
 
 @section('content')
     <main id="ph-article-detail">
-        @include($detailView, ['article' => $article, 'templateSettings' => $templateSettings, 'previousArticle' => $previousArticle ?? null, 'nextArticle' => $nextArticle ?? null])
+        @include($detailView, ['article' => $article, 'templateSettings' => $templateSettings, 'templateOptions' => $templateOptions, 'previousArticle' => $previousArticle ?? null, 'nextArticle' => $nextArticle ?? null])
     </main>
 @endsection
 

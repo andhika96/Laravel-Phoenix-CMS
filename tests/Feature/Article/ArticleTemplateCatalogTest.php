@@ -59,6 +59,7 @@ class ArticleTemplateCatalogTest extends TestCase
 
         $migration = require database_path('migrations/2026_08_24_000007_create_article_template_settings_table.php');
         $migration->up();
+        (require database_path('migrations/2026_08_25_000009_add_template_options_to_article_template_settings_table.php'))->up();
     }
 
     public function test_catalog_exposes_the_approved_archive_and_detail_templates(): void

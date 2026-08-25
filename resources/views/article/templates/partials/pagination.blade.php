@@ -6,15 +6,34 @@
         $endPage = min($lastPage, $currentPage + 1);
         $windowStart = max(2, $startPage);
         $windowEnd = min($lastPage - 1, $endPage);
+        $paginationOptions = data_get($templateOptions ?? [], 'pagination', []);
+        $paginationPosition = data_get($paginationOptions, 'position', 'right');
+        $paginationPosition = in_array($paginationPosition, ['left', 'center', 'right'], true) ? $paginationPosition : 'right';
+        $paginationShowTotal = data_get($paginationOptions, 'show_total', true) !== false;
+        $paginationFrame = data_get($paginationOptions, 'frame.enabled', true) !== false;
+        $paginationPadding = data_get($paginationOptions, 'padding', []);
+        $paginationMargin = data_get($paginationOptions, 'margin', []);
+        $paginationStyle = '';
+        foreach (['desktop', 'tablet', 'mobile'] as $device) {
+            foreach (['top', 'right', 'bottom', 'left'] as $side) {
+                $paginationStyle .= '--article-pagination-padding-'.$device.'-'.$side.':'.data_get($paginationPadding, $device.'.'.$side, '0px').';';
+                $paginationStyle .= '--article-pagination-margin-'.$device.'-'.$side.':'.data_get($paginationMargin, $device.'.'.$side, '0px').';';
+            }
+        }
+        $paginationStyle .= '--article-pagination-frame-border-color:'.data_get($paginationOptions, 'frame.border_color', '#e6e9ef').';';
+        $paginationStyle .= '--article-pagination-frame-border-width:'.data_get($paginationOptions, 'frame.border_width', '1px').';';
+        $paginationStyle .= '--article-pagination-frame-radius:'.data_get($paginationOptions, 'frame.radius', '.75rem').';';
+        $paginationStyle .= '--article-pagination-frame-background:'.data_get($paginationOptions, 'frame.background_color', '#ffffff').';';
     @endphp
-    <nav class="article-pagination" aria-label="{{ t('Article pagination') }}">
-        <p class="article-pagination__summary">{{ t('Showing') }} {{ $articles->firstItem() }}–{{ $articles->lastItem() }} {{ t('of') }} {{ $articles->total() }} {{ t('articles') }}</p>
-        <ul class="pagination ph-pagination mb-0">
+    <nav class="article-pagination article-pagination--ssr article-pagination--position-{{ $paginationPosition }} {{ $paginationShowTotal ? 'article-pagination--with-total' : 'article-pagination--without-total' }} {{ $paginationFrame ? 'article-pagination--with-frame' : 'article-pagination--without-frame' }} {{ !empty($paginationPadding['enabled']) ? 'article-pagination--padding-enabled' : 'article-pagination--padding-default' }} {{ !empty($paginationMargin['enabled']) ? 'article-pagination--margin-enabled' : 'article-pagination--margin-default' }}" style="{{ $paginationStyle }}" aria-label="{{ t('Article pagination') }}">
+        <div class="article-pagination__layout">
+        @if($paginationShowTotal)<p class="article-pagination__summary article-pagination__context"><strong>{{ t('Total Data') }}: {{ $articles->total() }}</strong><span>{{ t('Showing') }} {{ $articles->firstItem() }}–{{ $articles->lastItem() }} {{ t('of') }} {{ $articles->total() }} {{ t('articles') }}</span></p>@endif
+        <div class="article-pagination__pager"><ul class="pagination ph-pagination mb-0">
             <li class="page-item {{ $articles->onFirstPage() ? 'disabled' : '' }}">
                 @if ($articles->onFirstPage())
-                    <span class="page-link" aria-disabled="true"><i class="far fa-chevron-left" aria-hidden="true"></i><span class="visually-hidden">{{ t('Previous') }}</span></span>
+                    <span class="page-link" aria-disabled="true"><i class="fas fa-chevron-left" aria-hidden="true"></i><span class="visually-hidden">{{ t('Previous') }}</span></span>
                 @else
-                    <a class="page-link" href="{{ $articles->previousPageUrl() }}" rel="prev" aria-label="{{ t('Previous') }}" data-article-pagination-link><i class="far fa-chevron-left" aria-hidden="true"></i><span class="visually-hidden">{{ t('Previous') }}</span></a>
+                    <a class="page-link" href="{{ $articles->previousPageUrl() }}" rel="prev" aria-label="{{ t('Previous') }}" data-article-pagination-link><i class="fas fa-chevron-left" aria-hidden="true"></i><span class="visually-hidden">{{ t('Previous') }}</span></a>
                 @endif
             </li>
 
@@ -54,11 +73,12 @@
 
             <li class="page-item {{ $articles->hasMorePages() ? '' : 'disabled' }}">
                 @if ($articles->hasMorePages())
-                    <a class="page-link" href="{{ $articles->nextPageUrl() }}" rel="next" aria-label="{{ t('Next') }}" data-article-pagination-link><i class="far fa-chevron-right" aria-hidden="true"></i><span class="visually-hidden">{{ t('Next') }}</span></a>
+                    <a class="page-link" href="{{ $articles->nextPageUrl() }}" rel="next" aria-label="{{ t('Next') }}" data-article-pagination-link><i class="fas fa-chevron-right" aria-hidden="true"></i><span class="visually-hidden">{{ t('Next') }}</span></a>
                 @else
-                    <span class="page-link" aria-disabled="true"><i class="far fa-chevron-right" aria-hidden="true"></i><span class="visually-hidden">{{ t('Next') }}</span></span>
+                    <span class="page-link" aria-disabled="true"><i class="fas fa-chevron-right" aria-hidden="true"></i><span class="visually-hidden">{{ t('Next') }}</span></span>
                 @endif
             </li>
-        </ul>
+        </ul></div>
+        </div>
     </nav>
 @endif

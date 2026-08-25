@@ -16,7 +16,14 @@ class ArticleTemplateSetting extends Model
         'archive_template',
         'detail_template',
         'archive_per_page',
+        'archive_template_options',
+        'detail_template_options',
         'updated_by',
+    ];
+
+    protected $casts = [
+        'archive_template_options' => 'array',
+        'detail_template_options' => 'array',
     ];
 
     public static function current(): self

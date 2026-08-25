@@ -8,6 +8,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event as EventFacade;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -60,7 +61,7 @@ class ManageArticleThumbnailTest extends TestCase
             $table->string('thumb_s', 255)->nullable();
             $table->string('thumb_l', 255)->nullable();
             $table->string('visibility', 32)->default('public');
-            $table->string('password_protected', 32)->nullable();
+            $table->string('password_protected', 255)->nullable();
             $table->string('status', 32)->default('draft');
             $table->string('scheduled', 8)->default('false');
             $table->timestamps();
@@ -187,6 +188,58 @@ class ManageArticleThumbnailTest extends TestCase
             'visibility' => 'public',
             'thumbnail_source' => 'ckfinder',
             'thumbnail_ckfinder_url' => '/storage/ckfinder/events/not-allowed.jpg',
+        ])->assertStatus(422);
+    }
+
+    public function test_article_password_protection_hashes_new_password_retains_existing_password_and_requires_a_password_when_enabling_protection(): void
+    {
+        $admin = Account::create(['email' => 'article-password-admin@example.test', 'username' => 'article-password-admin', 'fullname' => 'Article Password Admin']);
+        $categoryId = DB::table('article_categories')->insertGetId(['name' => 'Security', 'code' => 'security', 'created_at' => now(), 'updated_at' => now()]);
+
+        $this->withoutMiddleware()->actingAs($admin, 'web')->postJson(route('cms.core.manage_article.store'), [
+            'title' => 'Protected Article',
+            'content' => '<p>Protected content</p>',
+            'category_id' => $categoryId,
+            'status' => 'publish',
+            'visibility' => 'password_protected',
+            'password_protected' => 'open-sesame',
+        ])->assertOk()->assertJsonPath('success', true);
+
+        $protected = Article::query()->where('title', 'Protected Article')->firstOrFail();
+        $originalHash = $protected->password_protected;
+        $this->assertNotSame('open-sesame', $originalHash);
+        $this->assertTrue(Hash::check('open-sesame', $originalHash));
+
+        $this->withoutMiddleware()->actingAs($admin, 'web')->postJson(route('cms.core.manage_article.update', $protected->id), [
+            'title' => $protected->title,
+            'uri' => $protected->uri,
+            'content' => $protected->content,
+            'category_id' => $categoryId,
+            'status' => 'publish',
+            'visibility' => 'password_protected',
+            'password_protected' => '',
+        ])->assertOk()->assertJsonPath('success', true);
+
+        $this->assertSame($originalHash, $protected->fresh()->password_protected);
+
+        $public = Article::create([
+            'uri' => 'public-to-protected',
+            'user_id' => $admin->id,
+            'category_id' => $categoryId,
+            'title' => 'Public Article',
+            'content' => '<p>Public content</p>',
+            'status' => 'publish',
+            'visibility' => 'public',
+        ]);
+
+        $this->withoutMiddleware()->actingAs($admin, 'web')->postJson(route('cms.core.manage_article.update', $public->id), [
+            'title' => $public->title,
+            'uri' => $public->uri,
+            'content' => $public->content,
+            'category_id' => $categoryId,
+            'status' => 'publish',
+            'visibility' => 'password_protected',
+            'password_protected' => '',
         ])->assertStatus(422);
     }
 }

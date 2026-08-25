@@ -16,11 +16,13 @@ function loadOptions(timerAdapter = {}) {
 			clearTimeout() {},
 			...timerAdapter,
 		},
+		URLSearchParams,
 		console,
 	};
 
 	vm.createContext(sandbox);
-	vm.runInContext(`${source}\n;globalThis.__options = ManageArticleTemplateVue3;`, sandbox, { filename: sourcePath });
+	vm.runInContext(`${source}\n;globalThis.__options = ManageArticleTemplateVue3;globalThis.__unitControls = ArticleTemplateUnitControls;`, sandbox, { filename: sourcePath });
+	sandbox.__options.__unitControls = sandbox.__unitControls;
 
 	return sandbox.__options;
 }
@@ -63,6 +65,43 @@ test('manager passes the active CMS accent into the isolated preview and refresh
 	assert.match(source, /getComputedStyle\(document\.documentElement\)\.getPropertyValue\('--ph-theme-primary'\)/);
 	assert.match(source, /theme_color/);
 	assert.match(source, /MutationObserver/);
+});
+
+test('manager serializes the active template option draft into the iframe URL without saving it', () => {
+	const options = loadOptions();
+	const state = {
+		surface: 'archive',
+		draft: { archive_template: 'editorial-journal', detail_template: 'focused-reader' },
+		previewBaseUrl: '/manage_article/templates/preview/__SURFACE__/__TEMPLATE__',
+		previewUrl: '',
+		previewLoading: false,
+		previewLoadTimer: null,
+		activeThemeColor() { return ''; },
+		activeTemplateOptions() { return { grid: { desktop: 4, tablet: 3, mobile: 2 } }; },
+		get activeTemplateKey() { return this.draft.archive_template; },
+	};
+
+	options.methods.rebuildPreview.call(state);
+
+	const url = new URL(`https://example.test${state.previewUrl}`);
+	assert.deepEqual(JSON.parse(url.searchParams.get('template_options')), { grid: { desktop: 4, tablet: 3, mobile: 2 } });
+});
+
+test('applying modal options updates only the active draft and rebuilds the preview', () => {
+	const options = loadOptions();
+	const state = {
+		optionsModal: { key: 'editorial-journal', surface: 'archive', value: { grid: { desktop: 4, tablet: 3, mobile: 2 } } },
+		draft: { archive_template_options: {}, detail_template_options: {} },
+		cloneOptions: options.methods.cloneOptions,
+		rebuildPreview() { this.previewRebuilt = true; },
+		closeTemplateOptions() { this.modalClosed = true; },
+	};
+
+	options.methods.applyTemplateOptions.call(state);
+
+	assert.equal(JSON.stringify(state.draft.archive_template_options['editorial-journal']), JSON.stringify({ grid: { desktop: 4, tablet: 3, mobile: 2 } }));
+	assert.equal(state.previewRebuilt, true);
+	assert.equal(state.modalClosed, true);
 });
 
 test('an unsaved preview selection is selected, not the persisted default', () => {
@@ -197,4 +236,78 @@ test('manager source exposes an accessible preview-loading overlay bound to ifra
 	assert.match(view, /v-on:load="onPreviewLoad"/);
 	assert.match(view, /:aria-busy="previewLoading/);
 	assert.match(css, /\.article-template-manager__preview-loading/);
+});
+
+test('manager exposes an Add User-style template options modal with draft-only apply behavior', () => {
+	const view = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
+	const css = readFileSync(path.join(process.cwd(), 'public/assets/css/article/article-template-manager-2026.css'), 'utf8');
+
+	assert.match(source, /openTemplateOptions/);
+	assert.match(source, /applyTemplateOptions/);
+	assert.match(source, /template_options/);
+	assert.match(source, /archive_template_options/);
+	assert.match(source, /detail_template_options/);
+	assert.match(view, /modalArticleTemplateOptions/);
+	assert.match(view, /Template Options/);
+	assert.match(view, /modal-dialog-centered/);
+	assert.match(view, /Apply changes/);
+	assert.match(css, /\.article-template-options-modal/);
+});
+
+test('template option dimensions use the requested unit allowlists with deterministic linked-side behavior', () => {
+	const controls = loadOptions().__unitControls;
+	const box = { top: '1rem', right: '2px', bottom: '3%', left: '4pt' };
+
+	assert.deepEqual([...controls.units('spacing')], ['px', 'em', 'rem', '%', 'pt']);
+	assert.deepEqual([...controls.units('border')], ['px', 'em', 'rem', 'pt']);
+	assert.deepEqual(JSON.parse(JSON.stringify(controls.parse('1.25rem', '0px', 'spacing'))), { value: 1.25, unit: 'rem' });
+	assert.equal(controls.step('rem'), 0.01);
+	assert.equal(controls.step('pt'), 1);
+	assert.equal(controls.withUnit('16px', '%', 'border'), '16px');
+
+	controls.setBoxValue(box, 'top', '1.25', true, 'spacing');
+	assert.deepEqual(JSON.parse(JSON.stringify(box)), { top: '1.25rem', right: '1.25rem', bottom: '1.25rem', left: '1.25rem' });
+
+	controls.setBoxUnit(box, 'pt', 'spacing');
+	assert.deepEqual(JSON.parse(JSON.stringify(box)), { top: '1.25pt', right: '1.25pt', bottom: '1.25pt', left: '1.25pt' });
+
+	controls.setBoxValue(box, 'left', '10', false, 'spacing');
+	assert.deepEqual(JSON.parse(JSON.stringify(box)), { top: '1.25pt', right: '1.25pt', bottom: '1.25pt', left: '10pt' });
+});
+
+test('template options modal exposes only structured archive and detail styling controls', () => {
+	const view = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
+	const styling = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/partials/options-styling.blade.php'), 'utf8');
+	const css = readFileSync(path.join(process.cwd(), 'public/assets/css/article/article-template-manager-2026.css'), 'utf8');
+
+	assert.match(view, /options-styling/);
+	assert.match(styling, /Thumbnail/);
+	assert.match(styling, /Pagination/);
+	assert.match(styling, /Article title tag/);
+	assert.match(styling, /Archive shell/);
+	assert.match(styling, /Detail shell/);
+	assert.match(styling, /article-template-unit-control/);
+	assert.match(styling, /article-template-box-control/);
+	assert.doesNotMatch(styling, /custom css/i);
+	assert.doesNotMatch(styling, /custom class/i);
+	assert.match(css, /\.article-template-unit-control/);
+	assert.match(css, /\.article-template-box-control/);
+});
+
+test('template options uses the local Page Builder Coloris pattern and equal box-control geometry', () => {
+	const view = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
+	const styling = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/partials/options-styling.blade.php'), 'utf8');
+	const css = readFileSync(path.join(process.cwd(), 'public/assets/css/article/article-template-manager-2026.css'), 'utf8');
+
+	assert.match(view, /assets\/vendor\/coloris\/coloris\.min\.css/);
+	assert.match(view, /assets\/vendor\/coloris\/coloris\.min\.js/);
+	assert.match(source, /initColorisPicker/);
+	assert.match(source, /theme:\s*'pill'/);
+	assert.match(source, /formatToggle:\s*true/);
+	assert.match(source, /closeButton:\s*true/);
+	assert.match(styling, /article-template-coloris/);
+	assert.doesNotMatch(styling, /type="color"/);
+	assert.match(css, /--article-template-control-height/);
+	assert.match(css, /article-template-box-control__inputs > label \.form-control[\s\S]*?height: var\(--article-template-control-height\)/);
+	assert.match(css, /article-template-box-control__link[\s\S]*?height: var\(--article-template-control-height\)/);
 });

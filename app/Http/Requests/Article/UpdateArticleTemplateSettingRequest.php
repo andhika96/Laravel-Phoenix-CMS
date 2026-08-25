@@ -21,6 +21,8 @@ class UpdateArticleTemplateSettingRequest extends FormRequest
             'archive_template' => ['required', 'string', Rule::in(array_keys($catalog->archive()))],
             'detail_template' => ['required', 'string', Rule::in(array_keys($catalog->detail()))],
             'archive_per_page' => ['required', 'integer', Rule::in([12, 18, 24])],
+            'archive_template_options' => ['nullable', 'array'],
+            'detail_template_options' => ['nullable', 'array'],
         ];
     }
 }

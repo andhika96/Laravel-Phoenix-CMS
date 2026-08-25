@@ -3,13 +3,10 @@
     <header class="article-feature-hero article-media-frame">
         <img src="{{ $coverUrl }}" alt="{{ $article->title }}">
         <div class="article-feature-hero__overlay article-detail__header">
-            <span class="article-chip">{{ $article->category?->name ?? t('Uncategorized') }}</span>
-            <p class="article-detail__meta">{{ optional($article->created_at)->format('d M Y') }} · {{ t('By') }} {{ $article->author?->fullname ?: $article->author?->username }}</p>
-            <h1>{{ $article->title }}</h1>
-            <p class="article-detail__dek">{{ \Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 180) }}</p>
+            @include('article.templates.partials.detail-header-copy', ['defaultEyebrow' => $article->category?->name ?? t('Uncategorized'), 'defaultDescription' => \Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 180), 'metaText' => optional($article->created_at)->format('d M Y').' · '.t('By').' '.($article->author?->fullname ?: $article->author?->username)])
         </div>
     </header>
-    <div class="article-detail__shell">
+    <div class="article-detail__shell" @include('article.templates.partials.template-shell-attributes', ['templateOptions' => $templateOptions ?? []])>
         <a href="{{ route('cms.core.article') }}" class="article-back-link"><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ t('Back to articles') }}</a>
         <div class="article-rich-content article-rich-content--feature">{!! $article->content !!}</div>
         @include('article.templates.partials.detail-navigation', ['previousArticle' => $previousArticle ?? null, 'nextArticle' => $nextArticle ?? null])

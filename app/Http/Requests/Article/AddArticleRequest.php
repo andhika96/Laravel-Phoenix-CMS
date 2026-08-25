@@ -31,7 +31,7 @@ class AddArticleRequest extends FormRequest
 
 		if ($this->visibility == 'password_protected')
 		{
-			$data['password_protected'] = 'required';
+			$data['password_protected'] = ['required', 'string', 'min:8', 'max:128'];
 		}
 
 		$data['thumbnail'] = [...$this->isPrecognitive() ? [] : ['image', 'mimes:jpg,jpeg,png,webp', 'max:15000']];

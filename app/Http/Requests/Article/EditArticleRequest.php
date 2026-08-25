@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Article;
 
+use App\Models\Article\Article;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Contracts\Validation\Validator;
@@ -28,6 +29,14 @@ class EditArticleRequest extends FormRequest
 
 		$data['title'] = 'required';
 		$data['content'] = 'required';
+
+		if ($this->input('visibility') === 'password_protected')
+		{
+			$data['password_protected'] = [
+				...blank($this->existingPassword()) ? ['required'] : ['nullable'],
+				'string', 'min:8', 'max:128',
+			];
+		}
 		$data['thumbnail'] = [...$this->isPrecognitive() ? [] : ['image', 'mimes:jpg,jpeg,png,webp', 'max:15000']];
 		$data['remove_thumbnail'] = ['nullable', 'boolean'];
 		$data['thumbnail_source'] = ['nullable', Rule::in(['upload', 'ckfinder'])];
@@ -46,8 +55,22 @@ class EditArticleRequest extends FormRequest
 		return 
 		[
 			'title.required' => t('Title required'),
-			'content.required' => t('Content required')
+			'content.required' => t('Content required'),
+			'password_protected.required' => t('Password protected required'),
 		];
+	}
+
+	private function existingPassword(): ?string
+	{
+		$idOrSlug = (string) $this->route('idOrSlug');
+		if ($idOrSlug === '')
+		{
+			return null;
+		}
+
+		return Article::query()
+			->where(is_numeric($idOrSlug) ? 'id' : 'uri', $idOrSlug)
+			->value('password_protected');
 	}
 
 	protected function failedValidation(Validator $validator)

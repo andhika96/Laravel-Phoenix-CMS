@@ -8,6 +8,8 @@ final class ArticleTemplateCatalog
         'minimal-reading-list' => [
             'label' => 'Minimal Reading List',
             'description' => 'Focused rows for calm, long-form discovery.',
+            'eyebrow' => 'Journal',
+            'header_description' => 'Thoughtful reads on design, technology, and the web.',
             'best_for' => 'Long-form reading',
             'view' => 'article.templates.archive.minimal-reading-list',
             'preview_image' => 'assets/images/article/template-previews/minimal-reading-list.svg',
@@ -15,6 +17,8 @@ final class ArticleTemplateCatalog
         'editorial-journal' => [
             'label' => 'Editorial Journal',
             'description' => 'Featured story and balanced editorial grid.',
+            'eyebrow' => 'Stories',
+            'header_description' => 'Featured ideas and useful perspectives.',
             'best_for' => 'Featured stories',
             'view' => 'article.templates.archive.editorial-journal',
             'preview_image' => 'assets/images/article/template-previews/editorial-journal.svg',
@@ -22,6 +26,8 @@ final class ArticleTemplateCatalog
         'mosaic-magazine' => [
             'label' => 'Mosaic Magazine',
             'description' => 'Visual lead story with varied editorial cards.',
+            'eyebrow' => 'Journal',
+            'header_description' => '',
             'best_for' => 'Visual storytelling',
             'view' => 'article.templates.archive.mosaic-magazine',
             'preview_image' => 'assets/images/article/template-previews/mosaic-magazine.svg',
@@ -29,6 +35,8 @@ final class ArticleTemplateCatalog
         'mosaic-classic' => [
             'label' => 'Mosaic Classic',
             'description' => 'Feature mosaic with a classic editorial rhythm.',
+            'eyebrow' => 'Journal',
+            'header_description' => '',
             'best_for' => 'Lead + side stories',
             'view' => 'article.templates.archive.mosaic-classic',
             'preview_image' => 'assets/images/article/template-previews/mosaic-classic.svg',
@@ -36,6 +44,8 @@ final class ArticleTemplateCatalog
         'balanced-card-grid' => [
             'label' => 'Balanced Card Grid',
             'description' => 'Equal-weight cards for broad article discovery.',
+            'eyebrow' => 'Explore',
+            'header_description' => '',
             'best_for' => 'Visual discovery',
             'view' => 'article.templates.archive.balanced-card-grid',
             'preview_image' => 'assets/images/article/template-previews/balanced-card-grid.svg',
