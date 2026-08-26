@@ -1,7 +1,8 @@
 @php
 	$settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
 	$nodeToken = preg_replace('/[^A-Za-z0-9_-]+/', '-', trim((string) ($node['id'] ?? 'icon'))) ?: 'icon';
-	$nodeDomId = 'pb-basic-icon-' . $nodeToken;
+	$advanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($settings, $nodeToken, request());
+	$nodeDomId = $advanced['id'];
 	$cleanClasses = fn ($value) => implode(' ', array_filter(array_map(fn ($token) => preg_replace('/[^A-Za-z0-9_-]/', '', ltrim((string) $token, '.')), preg_split('/\s+/', trim((string) $value)) ?: [])));
 	$customClass = $cleanClasses($settings['cssClass'] ?? '');
 	$iconClass = $cleanClasses($settings['iconClass'] ?? '') ?: 'far fa-star';
@@ -42,7 +43,7 @@
 	$glyphStyle = function (string $suffix = '') use ($settings, $responsive, $cssLength, $cssAngle): string {
 		return 'font-size:' . $cssLength($responsive('iconSize', $suffix, '52px'), '52px') . ';transform:rotate(' . $cssAngle($responsive('iconRotate', $suffix, '0deg'), '0deg') . ')';
 	};
-	$className = trim(implode(' ', array_filter(['el-widget-icon', 'is-view-' . $view, $view !== 'default' ? 'is-shape-' . $shape : '', $customClass])));
+	$className = implode(' ', array_values(array_unique(array_merge(['el-widget-icon', 'is-view-' . $view, $view !== 'default' ? 'is-shape-' . $shape : ''], $advanced['classes']))));
 	$styleBlocks = [
 		'#' . $nodeDomId . ' .el-widget-icon-link{color:var(--pb-icon-primary)!important;transition:color ' . $duration . 's ease}',
 		'#' . $nodeDomId . ' .el-widget-icon-link:hover{color:var(--pb-icon-primary-hover)!important}',
@@ -55,10 +56,10 @@
 		$styleBlocks[] = '@media (max-width:' . $breakpoint . 'px){#' . $nodeDomId . '{' . $rootStyle($suffix) . '}#' . $nodeDomId . ' .el-widget-icon-link>i,#' . $nodeDomId . ' .el-widget-icon-box>i{' . $glyphStyle($suffix) . '}}';
 	}
 @endphp
-<div id="{{ $nodeDomId }}" class="{{ $className }}" style="{{ $rootStyle() }}">
+<div id="{{ $nodeDomId }}" class="{{ $className }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach style="{{ $rootStyle() }}">
 	@if($link !== '')<a href="{{ $link }}" class="el-widget-icon-link" @if($openInNewWindow) target="_blank" @endif @if($relAttr !== '') rel="{{ $relAttr }}" @endif @foreach($attrBag as $attrName => $attrValue) {{ $attrName }}="{{ e($attrValue) }}" @endforeach>
 	@else<span class="el-widget-icon-link" @foreach($attrBag as $attrName => $attrValue) {{ $attrName }}="{{ e($attrValue) }}" @endforeach>@endif
 		@if($view !== 'default')<span class="el-widget-icon-box"><i class="{{ $iconClass }}" style="{{ $glyphStyle() }}" aria-hidden="true"></i></span>@else<i class="{{ $iconClass }}" style="{{ $glyphStyle() }}" aria-hidden="true"></i>@endif
 	@if($link !== '')</a>@else</span>@endif
 </div>
-<style>{!! implode("\n", $styleBlocks) !!}</style>
+<style>{!! $advanced['css'] !!}{!! implode("\n", $styleBlocks) !!}</style>

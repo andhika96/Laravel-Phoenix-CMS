@@ -1,7 +1,8 @@
 @php
 	$settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
 	$nodeToken = preg_replace('/[^A-Za-z0-9_-]+/', '-', trim((string) ($node['id'] ?? 'button'))) ?: 'button';
-	$nodeDomId = 'pb-basic-button-' . $nodeToken;
+	$advanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($settings, $nodeToken, request());
+	$nodeDomId = $advanced['id'];
 	$cleanClasses = fn ($value) => implode(' ', array_filter(array_map(fn ($token) => preg_replace('/[^A-Za-z0-9_-]/', '', ltrim((string) $token, '.')), preg_split('/\s+/', trim((string) $value)) ?: [])));
 	$cssLength = function ($value, string $fallback = '0px'): string {
 		$raw = trim((string) ($value ?? ''));
@@ -98,6 +99,7 @@
 	$align = $responsive('align', '', 'left');
 	$wrapStyle = 'display:flex;justify-content:' . ($align === 'center' ? 'center' : ($align === 'right' ? 'flex-end' : 'flex-start'));
 	$buttonClass = $cleanClasses($settings['className'] ?? 'btn btn-primary') ?: 'btn btn-primary';
+	$rootClasses = array_values(array_unique(array_merge(['pb-basic-button-canvas'], $advanced['classes'])));
 	$normalBorder = $border(); $hoverBorder = $border('Hover');
 	$hoverRules = implode(';', [
 		'color:' . $cssColor($settings['buttonTextColorHover'] ?? null, $settings['buttonTextColor'] ?? '#ffffff'), 'background:' . $background('Hover'),
@@ -112,7 +114,7 @@
 		$styleBlocks[] = '@media (max-width:' . $breakpoint . 'px){#' . $nodeDomId . '{' . $mediaWrap . '}#' . $nodeDomId . ' .el-widget-button{' . $mediaButton . '}}';
 	}
 @endphp
-<div id="{{ $nodeDomId }}" class="pb-basic-button-canvas" style="{{ $wrapStyle }}">
+<div id="{{ $nodeDomId }}" class="{{ implode(' ', $rootClasses) }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach style="{{ $wrapStyle }}">
 	<a href="{{ $settings['url'] ?? '#' }}" class="el-widget-button {{ $buttonClass }}" @if(!empty($settings['newTab'])) target="_blank" rel="noopener" @endif style="{{ $buttonStyle() }}@if($align === 'stretch');width:100%@endif">@if($buttonHasIcon)<span class="el-widget-button__icon" aria-hidden="true">@if($iconSource === 'svg')<img class="el-widget-button__icon-svg" src="{{ 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($iconSvg) }}" alt="">@else<i class="{{ $iconClass }}"></i>@endif</span>@endif<span class="el-widget-button__text">{{ $settings['text'] ?? 'Click here' }}</span></a>
 </div>
-<style>{!! implode("\n", $styleBlocks) !!}</style>
+<style>{!! $advanced['css'] !!}{!! implode("\n", $styleBlocks) !!}</style>

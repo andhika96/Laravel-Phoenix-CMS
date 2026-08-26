@@ -228,6 +228,17 @@ to {
 	will-change: transform, opacity, filter;
 }
 
+/* Full Bleed is a responsive outer-edge contract; internal widget padding stays untouched. */
+@media (min-width: 1025px) {
+	.pb-full-bleed-desktop { width: 100%; max-width: 100%; align-self: stretch; }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+	.pb-full-bleed-tablet { width: 100%; max-width: 100%; align-self: stretch; }
+}
+@media (max-width: 767px) {
+	.pb-full-bleed-mobile { width: 100%; max-width: 100%; align-self: stretch; }
+}
+
 .pb-advanced-entrance {
 	opacity: 0;
 	animation-play-state: paused;

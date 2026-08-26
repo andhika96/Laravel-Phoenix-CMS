@@ -1,7 +1,8 @@
 @php
 	$settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
 	$nodeId = trim((string) ($node['id'] ?? ''));
-	$nodeDomId = $nodeId !== '' ? 'pb-node-' . $nodeId : '';
+	$advanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($settings, $nodeId !== '' ? $nodeId : 'video', request());
+	$nodeDomId = $advanced['id'];
 	$customClass = trim(preg_replace('/\s+/', ' ', preg_replace('/[^A-Za-z0-9_\-\s]/', ' ', (string) ($settings['cssClass'] ?? ''))));
 	$sourceTypeRaw = strtolower(trim((string) ($settings['sourceType'] ?? 'youtube')));
 	$sourceType = $sourceTypeRaw === 'file' ? 'self_hosted' : $sourceTypeRaw;
@@ -134,12 +135,12 @@
 			$mediaHtml = '<video ' . implode(' ', $attributes) . '></video>';
 		}
 	}
-	$className = trim(implode(' ', array_filter(['el-widget-video', $customClass])));
+	$className = implode(' ', array_values(array_unique(array_merge(['el-widget-video'], $advanced['classes']))));
 	$styleBlocks = [];
 	if (($settings['ratioTablet'] ?? '') !== '' && $nodeDomId !== '') $styleBlocks[] = '@media (max-width: 1024px){#' . $nodeDomId . ' > .el-widget-video-wrapper{padding-bottom:' . $paddingPercent($settings['ratioTablet']) . '}}';
 	if (($settings['ratioMobile'] ?? '') !== '' && $nodeDomId !== '') $styleBlocks[] = '@media (max-width: 767px){#' . $nodeDomId . ' > .el-widget-video-wrapper{padding-bottom:' . $paddingPercent($settings['ratioMobile']) . '}}';
 @endphp
-<div @if($nodeDomId !== '') id="{{ $nodeDomId }}" @endif class="{{ $className }}">
+<div id="{{ $nodeDomId }}" class="{{ $className }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach>
 	<div class="el-widget-video-wrapper" style="padding-bottom:{{ $paddingPercent($settings['ratio'] ?? '16/9') }}">
 		@if($overlayEnabled && $mediaHtml !== '')
 			<button type="button" class="el-video-overlay" style="background-image:url('{{ e($overlayImage) }}')" data-video-html="{{ e($mediaHtml) }}"><span class="el-video-overlay-play" aria-hidden="true"></span></button>
@@ -148,7 +149,7 @@
 		@endif
 	</div>
 </div>
-@if($styleBlocks)<style>{!! implode("\n", $styleBlocks) !!}</style>@endif
+<style>{!! $advanced['css'] !!}{!! implode("\n", $styleBlocks) !!}</style>
 @if($overlayEnabled && $mediaHtml !== '' && $nodeDomId !== '')
 	<script>(function(){const root=document.getElementById(@json($nodeDomId));if(!root)return;const overlay=root.querySelector('.el-video-overlay[data-video-html]');if(!overlay||overlay.dataset.bound==='1')return;overlay.dataset.bound='1';overlay.addEventListener('click',function(){const wrapper=overlay.parentElement;const html=overlay.getAttribute('data-video-html')||'';if(!wrapper||!html)return;overlay.remove();wrapper.insertAdjacentHTML('beforeend',html);});})();</script>
 @endif

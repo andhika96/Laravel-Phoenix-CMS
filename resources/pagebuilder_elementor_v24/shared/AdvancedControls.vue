@@ -1,5 +1,6 @@
 <template>
 	<div class="pb-widget-advanced-controls">
+		<div v-if="advancedProfile === 'widget'" class="pb-advanced-field pb-advanced-responsive-field"><div class="pb-advanced-control-head"><span>Full Bleed</span><ResponsiveDeviceControl :icon="deviceIcon" /></div><select class="pb-select" :value="effectiveResponsiveValue('fullBleed', false) ? 'full' : 'default'" @change="setResponsiveSetting('fullBleed', $event.target.value === 'full')"><option value="default">Default</option><option value="full">Full Bleed</option></select></div>
 		<details v-if="minimalAdvanced" class="pb-collapsible" open>
 			<summary>Attributes</summary>
 			<div class="pb-collapsible-body">
@@ -178,10 +179,10 @@ const ChoiceButtons = {
 };
 
 const DEFAULT_DIMENSION_UNITS = ['px', 'pt', 'em', 'rem', '%'];
-const SPACING_DIMENSION_UNITS = ['px', '%', 'em', 'rem', 'vw'];
+const SPACING_DIMENSION_UNITS = ['px', '%', 'em', 'rem', 'vw', 'vh', 'pt'];
 function parseDimension(value, fallback = '0px', units = DEFAULT_DIMENSION_UNITS) {
 	const raw = String(value ?? '').trim() || String(fallback || '0px');
-	const match = raw.match(/^(-?\d+(?:\.\d+)?)(px|%|em|rem|pt|vw|deg)?$/i);
+	const match = raw.match(/^(-?\d+(?:\.\d+)?)(px|%|em|rem|pt|vw|vh|deg)?$/i);
 	const fallbackMatch = String(fallback || '0px').match(/^(-?\d+(?:\.\d+)?)([a-z%]+)?$/i);
 	const unit = match?.[2] || fallbackMatch?.[2] || units[0] || 'px';
 	return {
@@ -190,7 +191,7 @@ function parseDimension(value, fallback = '0px', units = DEFAULT_DIMENSION_UNITS
 	};
 }
 function dimensionLimit(unit) {
-	if (unit === '%' || unit === 'vw' || unit === 'deg') return unit === 'deg' ? 360 : 100;
+	if (unit === '%' || unit === 'vw' || unit === 'vh' || unit === 'deg') return unit === 'deg' ? 360 : 100;
 	if (unit === 'em' || unit === 'rem') return 30;
 	if (unit === 'pt') return 720;
 	return 1600;

@@ -1,9 +1,10 @@
 @php
 	$settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
 	$nodeToken = preg_replace('/[^A-Za-z0-9_-]+/', '-', trim((string) ($node['id'] ?? 'text-editor'))) ?: 'text-editor';
-	$nodeDomId = 'pb-basic-text-editor-' . $nodeToken;
+	$advanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($settings, $nodeToken, request());
+	$nodeDomId = $advanced['id'];
 	$customClass = implode(' ', array_filter(array_map(fn ($token) => preg_replace('/[^A-Za-z0-9_-]/', '', ltrim((string) $token, '.')), preg_split('/\s+/', trim((string) ($settings['cssClass'] ?? ''))) ?: [])));
-	$className = trim(implode(' ', array_filter(['el-widget-text-editor', $customClass])));
+	$className = implode(' ', array_values(array_unique(array_merge(['el-widget-text-editor'], $advanced['classes']))));
 	$cssLength = fn ($value, string $fallback = '0px') => (($raw = trim((string) ($value ?? ''))) !== '' && preg_match('/^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i', $raw)) ? $raw : $fallback;
 	$cssColor = fn ($value, string $fallback = 'inherit') => (($raw = trim((string) ($value ?? ''))) !== '' && preg_match('/^[#a-z0-9(),.%\s-]+$/i', $raw)) ? $raw : $fallback;
 	$cssFontFamily = fn ($value) => (($raw = trim((string) ($value ?? 'inherit'))) !== '' && preg_match('/^[A-Za-z0-9 _,\'"-]+$/', $raw)) ? $raw : 'inherit';
@@ -53,5 +54,5 @@
 		$styleBlocks[] = '@media (max-width:' . $breakpoint . 'px){#' . $nodeDomId . '{' . $rootStyle($suffix) . '}#' . $nodeDomId . ' p{margin-bottom:var(--pb-text-editor-paragraph-spacing,1em)}}';
 	}
 @endphp
-<div id="{{ $nodeDomId }}" class="{{ $className }}" style="{{ $rootStyle() }}">{!! $settings['html'] ?? '' !!}</div>
-<style>{!! implode("\n", $styleBlocks) !!}</style>
+<div id="{{ $nodeDomId }}" class="{{ $className }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach style="{{ $rootStyle() }}">{!! $settings['html'] ?? '' !!}</div>
+<style>{!! $advanced['css'] !!}{!! implode("\n", $styleBlocks) !!}</style>

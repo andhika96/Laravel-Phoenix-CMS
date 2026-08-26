@@ -2,17 +2,8 @@
 	$accordionSettings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
 	$nodeId = trim((string) ($node['id'] ?? 'accordion'));
 	$safeNodeToken = preg_replace('/[^A-Za-z0-9_-]+/', '-', $nodeId) ?: 'accordion';
-	$internalNodeDomId = 'pb-node-' . $safeNodeToken;
-	$requestedCssId = trim((string) ($accordionSettings['cssId'] ?? ''));
-	$requestedCssId = preg_match('/^[A-Za-z][A-Za-z0-9_-]*$/', $requestedCssId) ? $requestedCssId : '';
-	$usedCssIds = request()->attributes->get('_pagebuilder_elementor_css_ids', []);
-	if (!is_array($usedCssIds)) $usedCssIds = [];
-	$nodeDomId = $internalNodeDomId;
-	if ($requestedCssId !== '' && !in_array($requestedCssId, $usedCssIds, true)) {
-		$nodeDomId = $requestedCssId;
-		$usedCssIds[] = $requestedCssId;
-		request()->attributes->set('_pagebuilder_elementor_css_ids', $usedCssIds);
-	}
+	$advanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($accordionSettings, $safeNodeToken, request());
+	$nodeDomId = $advanced['id'];
 	$defaultState = ($accordionSettings['defaultState'] ?? 'first-expanded') === 'all-collapsed' ? 'all-collapsed' : 'first-expanded';
 	$maxExpanded = ($accordionSettings['maxExpanded'] ?? 'one') === 'multiple' ? 'multiple' : 'one';
 	$animationDuration = max(0, min(5000, (int) ($accordionSettings['animationDuration'] ?? 400)));
@@ -273,7 +264,7 @@
 	$iconPosition = strtolower(trim((string) ($responsiveValue('iconPosition', '', 'start')))) === 'end' ? 'end' : 'start';
 	$customClasses = preg_split('/\s+/', trim((string) ($accordionSettings['cssClass'] ?? ''))) ?: [];
 	$customClasses = array_values(array_filter(array_map(fn ($value) => preg_replace('/[^A-Za-z0-9_-]/', '', $value), $customClasses)));
-	$rootClasses = array_merge(['el-widget-accordion', 'pb-advanced-widget', 'is-item-position-' . $itemPosition, 'is-icon-position-' . $iconPosition], $customClasses);
+	$rootClasses = array_values(array_unique(array_merge(['el-widget-accordion', 'is-item-position-' . $itemPosition, 'is-icon-position-' . $iconPosition], $advanced['classes'], $customClasses)));
 	if (!empty($accordionSettings['hideDesktop'])) $rootClasses[] = 'pb-hide-desktop';
 	if (!empty($accordionSettings['hideTablet'])) $rootClasses[] = 'pb-hide-tablet';
 	if (!empty($accordionSettings['hideMobile'])) $rootClasses[] = 'pb-hide-mobile';
@@ -550,7 +541,7 @@
 		</details>
 	@endforeach
 </div>
-<style>{!! implode('', $responsiveRules) !!}</style>
+<style>{!! $advanced['css'] !!}{!! implode('', $responsiveRules) !!}</style>
 @if($faqJson !== '')
 	<script type="application/ld+json">{!! $faqJson !!}</script>
 @endif

@@ -952,7 +952,7 @@ body {
 }
 
 .pb-preview {
-	padding: 6px;
+	padding: var(--pb-preview-padding, 6px);
 	pointer-events: none;
 	user-select: none;
 	-webkit-user-select: none;

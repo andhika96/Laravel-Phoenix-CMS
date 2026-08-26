@@ -33,6 +33,15 @@ final class WidgetAdvancedStyleResolver
         if ($this->truthy($settings['hideDesktop'] ?? false)) $classes[] = 'pb-hide-desktop';
         if ($this->truthy($settings['hideTablet'] ?? false)) $classes[] = 'pb-hide-tablet';
         if ($this->truthy($settings['hideMobile'] ?? false)) $classes[] = 'pb-hide-mobile';
+        $fullBleedByDevice = [
+            'desktop' => $this->truthy($this->responsive($settings, 'fullBleed', '', false)),
+            'tablet' => $this->truthy($this->responsive($settings, 'fullBleed', 'Tablet', false)),
+            'mobile' => $this->truthy($this->responsive($settings, 'fullBleed', 'Mobile', false)),
+        ];
+        if (in_array(true, $fullBleedByDevice, true)) $classes[] = 'pb-full-bleed';
+        foreach ($fullBleedByDevice as $device => $enabled) {
+            if ($enabled) $classes[] = 'pb-full-bleed-'.$device;
+        }
         if ($this->truthy($settings['scrollingEffects'] ?? false)) {
             $classes[] = 'pb-motion-scroll';
             if (! $this->truthy($settings['scrollApplyDesktop'] ?? true)) $classes[] = 'pb-scroll-off-desktop';
@@ -121,6 +130,11 @@ final class WidgetAdvancedStyleResolver
             'custom' => $this->length($this->responsive($settings, 'customWidth', $suffix, ''), 'auto'),
             default => 'auto',
         };
+        if ($this->truthy($this->responsive($settings, 'fullBleed', $suffix, false))) {
+            $rules[] = 'width:100%';
+            $rules[] = 'max-width:100%';
+            $rules[] = 'align-self:stretch';
+        }
 
         $alignSelf = strtolower(trim((string) $this->responsive($settings, 'alignSelf', $suffix, 'auto')));
         if (in_array($alignSelf, ['auto', 'flex-start', 'center', 'flex-end', 'stretch'], true)) {

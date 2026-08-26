@@ -1,7 +1,9 @@
 @php
     $settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
     $nodeId = preg_replace('/[^A-Za-z0-9_-]/', '', (string) ($node['id'] ?? ''));
-    $heroId = $nodeId !== '' ? 'pb-node-' . $nodeId : 'pb-hero-slider-' . substr(md5(uniqid('', true)), 0, 8);
+    $advancedNodeId = $nodeId !== '' ? $nodeId : 'hero-slider-' . substr(md5(uniqid('', true)), 0, 8);
+    $advanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($settings, $advancedNodeId, request());
+    $heroId = $advanced['id'];
     $safeMedia = function ($value) {
         $raw = trim((string) ($value ?? ''));
         return preg_match("~^(?:https?://|/)[^\"'\\s<>\\\\]+$~i", $raw) ? $raw : '';
@@ -282,6 +284,7 @@
         'modalBackground' => $safeColor($settings['modalBackground'] ?? '', 'rgba(0,0,0,.92)'), 'modalUiColor' => $safeColor($settings['modalUiColor'] ?? '', '#fff'), 'modalUiHoverColor' => $safeColor($settings['modalUiHoverColor'] ?? '', '#6979f8'), 'modalVideoWidth' => $cssLength($settings['modalVideoWidth'] ?? '', '75%'), 'slides' => $runtimeSlides,
     ];
     $customClass = $safeClass($settings['cssClass'] ?? '');
+    $rootClasses = array_values(array_unique(array_merge(['pb-hero-slider'], $advanced['classes'])));
     $legacyRadius = $cssLength($settings['buttonRadius'] ?? '', '999px');
     $legacyPaddingX = $cssLength($settings['buttonPaddingX'] ?? '', '18px');
     $legacyPaddingY = $cssLength($settings['buttonPaddingY'] ?? '', '10px');
@@ -319,7 +322,7 @@
     $tabletMinHeight = $cssLength($settings['minHeightTablet'] ?? '', '360px');
     $mobileMinHeight = $cssLength($settings['minHeightMobile'] ?? '', '280px');
 @endphp
-<section id="{{ $heroId }}" class="pb-hero-slider{{ $customClass !== '' ? ' ' . $customClass : '' }}" data-hero-slider data-arrow-icons="{{ $arrowIconsMode }}" data-arrow-position="{{ $arrowPlacementDesktop }}" data-direction="{{ $direction }}" data-pagination-position-horizontal="{{ $paginationPositionHorizontal }}" data-pagination-position-vertical="{{ $paginationPositionVertical }}" data-height-mode="{{ $heightMode }}" data-hero-slider-config="{{ e(json_encode($runtimeConfig, JSON_UNESCAPED_SLASHES)) }}" style="{{ $rootStyle }}">
+<section id="{{ $heroId }}" class="{{ implode(' ', $rootClasses) }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach data-hero-slider data-arrow-icons="{{ $arrowIconsMode }}" data-arrow-position="{{ $arrowPlacementDesktop }}" data-direction="{{ $direction }}" data-pagination-position-horizontal="{{ $paginationPositionHorizontal }}" data-pagination-position-vertical="{{ $paginationPositionVertical }}" data-height-mode="{{ $heightMode }}" data-hero-slider-config="{{ e(json_encode($runtimeConfig, JSON_UNESCAPED_SLASHES)) }}" style="{{ $rootStyle }}">
     <div class="pb-hero-slider__viewport">
         <div class="pb-hero-slider__track{{ $transition === 'fade' ? ' is-fade' : '' }}" data-hero-slider-track>
             @foreach($normalizedSlides as $index => $slide)
@@ -425,6 +428,7 @@
     @if($bool('progress', true))<div class="pb-hero-slider__progress" data-hero-slider-progress><span></span></div>@endif
 </section>
 <style>
+{!! $advanced['css'] !!}
 #{{ $heroId }}{--hero-slider-gap:{{ $cssLength($settings['gap'] ?? '', '0px') }};--hero-slider-padding:{{ $cssLength($settings['padding'] ?? '', '0px') }}}
 @foreach($normalizedSlides as $index => $slide)
 #{{ $heroId }} .pb-hero-slider__slide:nth-child({{ $index + 1 }}) .pb-hero-slider__media img{object-fit:{{ $enum($slideResponsive($slide,'objectFit','','cover'),['cover','contain','fill'],'cover') }};object-position:{{ $enum($slideResponsive($slide,'objectPosition','','center center'),['left top','left center','left bottom','center top','center center','center bottom','right top','right center','right bottom'],'center center') }}}

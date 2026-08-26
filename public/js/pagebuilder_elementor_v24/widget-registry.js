@@ -12,6 +12,7 @@
 	function advancedDefaults() {
 		const defaults = {
 			widthMode: 'default',
+			fullBleed: false,
 			position: 'default', horizontalOrientation: 'left', verticalOrientation: 'top',
 			cssId: '', cssClass: '',
 			displayConditions: [], cacheMode: 'default',
@@ -46,7 +47,7 @@
 		const responsiveDefaults = {
 			marginTop: '0px', marginRight: '0px', marginBottom: '0px', marginLeft: '0px',
 			paddingTop: '0px', paddingRight: '0px', paddingBottom: '0px', paddingLeft: '0px',
-			widthMode: 'default', customWidth: '', alignSelf: 'auto', orderMode: 'default', order: '', sizeMode: 'none', flexGrow: 0, flexShrink: 1, gridColumnSpan: 1, gridRowSpan: 1,
+			fullBleed: false, widthMode: 'default', customWidth: '', alignSelf: 'auto', orderMode: 'default', order: '', sizeMode: 'none', flexGrow: 0, flexShrink: 1, gridColumnSpan: 1, gridRowSpan: 1,
 			positionX: '0px', positionY: '0px', zIndex: '', stickyOffset: '0px',
 			transformRotate: '0deg', transformPerspective: '0px', transformRotateX: '0deg', transformRotateY: '0deg', transformOffsetX: '0px', transformOffsetY: '0px', transformScale: 1, transformSkewX: '0deg', transformSkewY: '0deg', transformFlipHorizontal: false, transformFlipVertical: false,
 			transformRotateHover: '0deg', transformPerspectiveHover: '0px', transformRotateXHover: '0deg', transformRotateYHover: '0deg', transformOffsetXHover: '0px', transformOffsetYHover: '0px', transformScaleHover: 1, transformSkewXHover: '0deg', transformSkewYHover: '0deg', transformFlipHorizontalHover: false, transformFlipVerticalHover: false,
@@ -79,6 +80,14 @@
 		settings.cacheMode = ['default', 'inactive', 'active'].includes(settings.cacheMode) ? settings.cacheMode : 'default';
 		const widthModes = ['default', 'full', 'inline', 'custom'];
 		settings.widthMode = widthModes.includes(settings.widthMode) ? settings.widthMode : 'default';
+		const normalizeBoolean = (value, fallback = false) => {
+			if (value === '' || value == null) return fallback;
+			return value === true || value === 1 || value === '1' || value === 'true';
+		};
+		settings.fullBleed = normalizeBoolean(settings.fullBleed);
+		for (const key of ['fullBleedTablet', 'fullBleedMobile']) {
+			settings[key] = settings[key] === '' || settings[key] == null ? '' : normalizeBoolean(settings[key]);
+		}
 		for (const key of ['widthModeTablet', 'widthModeMobile']) {
 			const value = settings[key];
 			settings[key] = value === '' || value == null ? '' : (widthModes.includes(value) ? value : '');

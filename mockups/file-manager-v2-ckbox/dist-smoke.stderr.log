@@ -1,0 +1,16 @@
+[Fri Jul 24 16:37:52 2026] PHP 8.4.20 Development Server (http://127.0.0.1:4178) started
+[Fri Jul 24 16:37:54 2026] 127.0.0.1:56505 Accepted
+[Fri Jul 24 16:37:54 2026] 127.0.0.1:56505 [200]: GET /
+[Fri Jul 24 16:37:54 2026] 127.0.0.1:56505 Closing
+[Fri Jul 24 16:37:54 2026] 127.0.0.1:56507 Accepted
+[Fri Jul 24 16:37:54 2026] 127.0.0.1:56507 [200]: GET /assets/index-DVftPJcz.js
+[Fri Jul 24 16:37:54 2026] 127.0.0.1:56507 Closing
+[Fri Jul 24 16:38:11 2026] 127.0.0.1:56589 Accepted
+[Fri Jul 24 16:38:11 2026] 127.0.0.1:56589 [200]: GET /
+[Fri Jul 24 16:38:11 2026] 127.0.0.1:56589 Closing
+[Fri Jul 24 16:38:11 2026] 127.0.0.1:56591 Accepted
+[Fri Jul 24 16:38:11 2026] 127.0.0.1:56591 [200]: GET /assets/index-DVftPJcz.js
+[Fri Jul 24 16:38:11 2026] 127.0.0.1:56591 Closing
+[Fri Jul 24 16:38:53 2026] 127.0.0.1:54992 Accepted
+[Fri Jul 24 16:38:53 2026] 127.0.0.1:54992 [200]: GET /
+[Fri Jul 24 16:38:53 2026] 127.0.0.1:54992 Closing

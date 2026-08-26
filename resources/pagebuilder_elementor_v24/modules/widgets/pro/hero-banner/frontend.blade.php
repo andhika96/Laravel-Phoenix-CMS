@@ -1,6 +1,8 @@
 @php
     $heroSettings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
-    $heroId = 'pb-hero-' . preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($node['id'] ?? uniqid()));
+    $heroNodeId = preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($node['id'] ?? '')) ?: 'hero-banner-' . substr(md5(uniqid('', true)), 0, 8);
+    $advanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($heroSettings, $heroNodeId, request());
+    $heroId = $advanced['id'];
     $heroMode = ($heroSettings['positioningMode'] ?? 'grouped') === 'independent' ? 'independent' : 'grouped';
     $heroAllowedOrder = ['title', 'subtitle', 'buttons'];
     $heroOrder = [];
@@ -135,6 +137,7 @@
 @endphp
 
 <style>
+{!! $advanced['css'] !!}
 #{{ $heroId }}{min-height:{{ $heroLength($heroResponsive('minHeight','','500px'),'500px') }};--hero-content-gap:{{ $heroLength($heroResponsive('contentGap','','14px'),'14px') }};--hero-title-size:{{ $heroLength($heroTitleFontSizeMode === 'custom' ? $heroResponsive('titleFontSize','','48px') : ($heroTitleTagFontSizes[$heroTitleTag] ?? '48px'),'48px') }};--hero-subtitle-size:{{ $heroLength($heroResponsive('subtitleFontSize','','22px'),'22px') }}}
 #{{ $heroId }} .pb-hero-banner__media{object-fit:{{ $heroEnum($heroResponsive('objectFit','','cover'),['cover','contain','fill'],'cover') }};object-position:{{ $heroObjectPosition('','center center') }}}
 #{{ $heroId }} .pb-hero-banner__buttons{ {{ $heroButtonLayout('') }} }
@@ -143,7 +146,7 @@
 @media(max-width:767px){#{{ $heroId }}{min-height:{{ $heroLength($heroResponsive('minHeight','Mobile','680px'),'680px') }};--hero-content-gap:{{ $heroLength($heroResponsive('contentGap','Mobile','10px'),'10px') }};--hero-title-size:{{ $heroLength($heroTitleFontSizeMode === 'custom' ? $heroResponsive('titleFontSize','Mobile','34px') : ($heroTitleTagFontSizesMobile[$heroTitleTag] ?? '34px'),'34px') }};--hero-subtitle-size:{{ $heroLength($heroResponsive('subtitleFontSize','Mobile','17px'),'17px') }}}#{{ $heroId }} .pb-hero-banner__media{object-fit:{{ $heroEnum($heroResponsive('objectFit','Mobile','cover'),['cover','contain','fill'],'cover') }};object-position:{{ $heroObjectPosition('Mobile','center top') }}}#{{ $heroId }} .pb-hero-banner__buttons{ {{ $heroButtonLayout('Mobile') }} }@if($heroMode==='grouped')#{{ $heroId }} .pb-hero-banner__content{ {{ $heroPosition('group','Mobile') }} }@else @foreach(['title','subtitle','buttons'] as $target)#{{ $heroId }} .pb-hero-banner__block--{{ $target }}{ {{ $heroPosition($target,'Mobile') }} }@endforeach @endif}
 </style>
 
-<section id="{{ $heroId }}" class="pb-hero-banner is-{{ $heroMode }}{{ $heroNaturalClasses ? ' ' . implode(' ', $heroNaturalClasses) : '' }}" data-hero-banner data-hero-image-layout="{{ $heroImageLayoutDesktop }}" style="{{ $heroRootStyle }}">
+<section id="{{ $heroId }}" class="{{ implode(' ', array_values(array_unique(array_merge(['pb-hero-banner', 'is-' . $heroMode], $heroNaturalClasses, $advanced['classes'])))) }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach data-hero-banner data-hero-image-layout="{{ $heroImageLayoutDesktop }}" style="{{ $heroRootStyle }}">
     @if($heroDesktopImage)
         <picture class="pb-hero-banner__picture">
             @if($heroMobileImage && $heroMobileImage !== $heroTabletImage)<source media="(max-width:767px)" srcset="{{ $heroMobileImage }}">@endif

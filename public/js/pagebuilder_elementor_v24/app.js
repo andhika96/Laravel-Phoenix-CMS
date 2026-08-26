@@ -1251,6 +1251,12 @@
 		else if (widthMode === 'inline') style.width = 'fit-content';
 		else if (widthMode === 'custom') style.width = cssSize(get('customWidth', ''), 'auto');
 		else style.width = '100%';
+		const fullBleed = get('fullBleed', false) === true || get('fullBleed', false) === 1 || get('fullBleed', false) === '1' || get('fullBleed', false) === 'true';
+		if (fullBleed) {
+			style.width = '100%';
+			style.maxWidth = '100%';
+			style.alignSelf = 'stretch';
+		}
 		const orderMode = get('orderMode', 'default');
 		if (orderMode === 'start') style.order = -9999;
 		if (orderMode === 'end') style.order = 9999;
@@ -2603,6 +2609,8 @@
 				if (s.entranceAnimation) classes.push('pb-advanced-entrance', 'pb-anim-' + String(s.entranceAnimation).replace(/[^A-Za-z0-9_-]/g, ''));
 				if (s.scrollingEffects) classes.push('pb-motion-scroll');
 				if (s.mouseEffects) classes.push('pb-motion-mouse');
+				const fullBleed = this.nodeResponsiveValue('fullBleed', false);
+				if (fullBleed === true || fullBleed === 1 || fullBleed === '1' || fullBleed === 'true') classes.push('pb-full-bleed');
 				return classes;
 			},
 			nodeShellStyle() {
@@ -2682,6 +2690,12 @@
 				return {
 					minHeight: this.outOfFlowShellHeight + 'px',
 				};
+			},
+			widgetPreviewShellStyle() {
+				if (!this.isWidgetNode) return {};
+				const fullBleed = this.nodeResponsiveValue('fullBleed', false);
+				const enabled = fullBleed === true || fullBleed === 1 || fullBleed === '1' || fullBleed === 'true';
+				return { '--pb-preview-padding': enabled ? '0px' : '6px' };
 			},
 			gridCols() { return this.node.settings?.gridTemplateColumns || 'repeat(' + clamp(Number(this.node.settings?.columns || 2), 1, 12) + ', minmax(0, 1fr))'; },
 			gridStyle() {
@@ -3317,7 +3331,7 @@
 
 		<!-- WIDGET -->
 		<template v-else>
-			<div class="pb-preview">
+			<div class="pb-preview" :style="widgetPreviewShellStyle">
 				<div class="pb-preview-inner">
 					<component :is="loadWidget(node.type)" :item="node" :responsive-device="responsiveDevice" :dynamic-context="dynamicContext" :editor="editorServices" />
 				</div>
