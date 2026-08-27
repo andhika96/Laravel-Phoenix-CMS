@@ -94,7 +94,6 @@
         imagePosition: 'center center',
         imagePositionTablet: '',
         imagePositionMobile: '',
-        imageRenderMode: 'image',
         transition: 'fade',
         transitionDuration: '300ms',
         surfaceBackground: '#f7f9fa',
@@ -105,9 +104,6 @@
         swatchHeight: '104px',
         swatchRadius: '0px',
         listGap: '16px',
-        variantListSpacing: '16px',
-        variantListSpacingTablet: '',
-        variantListSpacingMobile: '',
         itemTextGap: '8px',
         activeIndicatorColor: '#ffffff',
         activeIndicatorSize: '34px',
@@ -214,7 +210,6 @@
             ['imagePositionTablet', 'imagePositionMobile'].forEach((key) => {
                 s[key] = imagePosition(s[key], '', true);
             });
-            s.imageRenderMode = enumValue(text(s.imageRenderMode).toLowerCase(), ['image', 'background'], base.imageRenderMode);
             s.transition = enumValue(s.transition, ['none', 'fade', 'slide'], base.transition);
             s.transitionDuration = duration(s.transitionDuration, base.transitionDuration);
 
@@ -254,19 +249,10 @@
             s.unselectedRingBorderWidth = borderWidth(s.unselectedRingBorderWidth, base.unselectedRingBorderWidth);
             s.unselectedRingBackground = color(s.unselectedRingBackground, base.unselectedRingBackground);
 
-            const legacyListGap = length(s.listGap, base.listGap);
-            s.variantListSpacing = length(hasIncoming('variantListSpacing') ? s.variantListSpacing : legacyListGap, base.variantListSpacing);
-            ['variantListSpacingTablet', 'variantListSpacingMobile'].forEach((key, index) => {
-                const suffix = index === 0 ? 'Tablet' : 'Mobile';
-                const legacyKey = 'listGap' + suffix;
-                const raw = hasIncoming(key) ? s[key] : (hasIncoming(legacyKey) ? s[legacyKey] : '');
-                s[key] = raw === '' ? '' : length(raw, s.variantListSpacing);
-            });
-
-            ['surfaceRadius', 'surfacePadding', 'imageRadius', 'swatchWidth', 'swatchHeight', 'swatchRadius', 'listGap', 'variantListSpacing', 'itemTextGap', 'activeIndicatorSize', 'titleFontSize', 'descriptionFontSize', 'itemNameFontSize', 'itemDescriptionFontSize'].forEach((key) => {
+            ['surfaceRadius', 'surfacePadding', 'imageRadius', 'swatchWidth', 'swatchHeight', 'swatchRadius', 'listGap', 'itemTextGap', 'activeIndicatorSize', 'titleFontSize', 'descriptionFontSize', 'itemNameFontSize', 'itemDescriptionFontSize'].forEach((key) => {
                 s[key] = length(s[key], base[key]);
             });
-            ['variantListSpacingTablet', 'variantListSpacingMobile', 'titleFontSizeTablet', 'titleFontSizeMobile', 'descriptionFontSizeTablet', 'descriptionFontSizeMobile', 'itemNameFontSizeTablet', 'itemNameFontSizeMobile', 'itemDescriptionFontSizeTablet', 'itemDescriptionFontSizeMobile'].forEach((key) => {
+            ['titleFontSizeTablet', 'titleFontSizeMobile', 'descriptionFontSizeTablet', 'descriptionFontSizeMobile', 'itemNameFontSizeTablet', 'itemNameFontSizeMobile', 'itemDescriptionFontSizeTablet', 'itemDescriptionFontSizeMobile'].forEach((key) => {
                 s[key] = length(s[key], '', true);
             });
             ['surfaceBackground', 'activeIndicatorColor', 'titleColor', 'descriptionColor', 'itemNameColor', 'itemDescriptionColor'].forEach((key) => {

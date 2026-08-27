@@ -18,10 +18,6 @@
         $raw = trim((string) $value);
         return preg_match('/^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i', $raw) ? $raw : $fallback;
     };
-    $safeBorderWidth = static function ($value, $fallback) {
-        $raw = trim((string) $value);
-        return preg_match('/^\d+(?:\.\d+)?(?:px|pt|em|rem)?$/i', $raw) ? $raw : $fallback;
-    };
     $safeRatio = static function ($value, $fallback) {
         $raw = trim((string) $value);
         return preg_match('/^\d+(?:\.\d+)?\s*\/\s*\d+(?:\.\d+)?$/', $raw) ? preg_replace('/\s+/', '', $raw) : $fallback;
@@ -35,13 +31,6 @@
         foreach ($keys as $key) if (array_key_exists($key, $settings) && $settings[$key] !== '' && $settings[$key] !== null) return $settings[$key];
         return $fallback;
     };
-    $variantSpacing = static function ($suffix, $fallback = '16px') use ($settings, $responsive, $safeLength) {
-        $key = 'variantListSpacing' . $suffix;
-        $raw = array_key_exists($key, $settings) && $settings[$key] !== '' && $settings[$key] !== null
-            ? $settings[$key]
-            : $responsive('listGap', $suffix, $fallback);
-        return $safeLength($raw, $fallback);
-    };
     $itemResponsive = static function (array $item, $base, $suffix, $fallback = '') {
         $keys = $suffix === 'Mobile' ? [$base . 'Mobile', $base . 'Tablet', $base] : ($suffix === 'Tablet' ? [$base . 'Tablet', $base] : [$base]);
         foreach ($keys as $key) if (array_key_exists($key, $item) && $item[$key] !== '' && $item[$key] !== null) return $item[$key];
@@ -52,38 +41,6 @@
     $objectPosition = static function ($value, $fallback = 'center center') {
         $allowed = ['left top', 'left center', 'left bottom', 'center top', 'center center', 'center bottom', 'right top', 'right center', 'right bottom'];
         return in_array($value, $allowed, true) ? $value : $fallback;
-    };
-    $selectedPosition = static function ($value, $fallback = 'top-right') {
-        $allowed = ['center', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
-        return in_array($value, $allowed, true) ? $value : $fallback;
-    };
-    $selectedPlacement = static function ($position, $offset) {
-        if ($position === 'center') return ['top' => '50%', 'right' => 'auto', 'bottom' => 'auto', 'left' => '50%', 'transform' => 'translate(-50%, -50%)'];
-        $top = str_starts_with($position, 'top') ? $offset : 'auto';
-        $right = str_ends_with($position, 'right') ? $offset : 'auto';
-        $bottom = str_starts_with($position, 'bottom') ? $offset : 'auto';
-        $left = str_ends_with($position, 'left') ? $offset : 'auto';
-        return ['top' => $top, 'right' => $right, 'bottom' => $bottom, 'left' => $left, 'transform' => 'none'];
-    };
-    $selectedRadius = static function ($suffix, $settings, $safeLength) {
-        $fallback = '50%';
-        $shortKey = 'selectedCheckRadius' . $suffix;
-        $raw = array_key_exists($shortKey, $settings) && $settings[$shortKey] !== '' ? (string) $settings[$shortKey] : (string) ($settings['selectedCheckRadius'] ?? $fallback);
-        $values = preg_split('/\s+/', trim($raw), -1, PREG_SPLIT_NO_EMPTY) ?: [$fallback];
-        if (count($values) === 1) $values = array_fill(0, 4, $values[0]);
-        elseif (count($values) === 2) $values = [$values[0], $values[1], $values[0], $values[1]];
-        elseif (count($values) === 3) $values = [$values[0], $values[1], $values[2], $values[1]];
-        $values = array_pad(array_slice($values, 0, 4), 4, $fallback);
-        foreach (['Top', 'Right', 'Bottom', 'Left'] as $index => $side) {
-            $key = 'selectedCheckRadius' . $side . $suffix;
-            $legacyKey = 'selectedCheckRadius' . $suffix . $side;
-            $desktopKey = 'selectedCheckRadius' . $side;
-            $sideValue = $suffix !== '' && array_key_exists($key, $settings) && $settings[$key] !== ''
-                ? $settings[$key]
-                : ($suffix !== '' && array_key_exists($legacyKey, $settings) && $settings[$legacyKey] !== '' ? $settings[$legacyKey] : ($settings[$desktopKey] ?? $values[$index]));
-            $values[$index] = $safeLength($sideValue, $values[$index]);
-        }
-        return implode(' ', $values);
     };
 
     $itemDefaults = static function ($index) {
@@ -126,50 +83,14 @@
     $desktopFit = in_array($responsive('imageFit', '', 'contain'), ['contain', 'cover', 'fill'], true) ? $responsive('imageFit', '', 'contain') : 'contain';
     $tabletFit = in_array($responsive('imageFit', 'Tablet', $desktopFit), ['contain', 'cover', 'fill'], true) ? $responsive('imageFit', 'Tablet', $desktopFit) : $desktopFit;
     $mobileFit = in_array($responsive('imageFit', 'Mobile', $tabletFit), ['contain', 'cover', 'fill'], true) ? $responsive('imageFit', 'Mobile', $tabletFit) : $tabletFit;
-    $imageRenderMode = in_array(strtolower(trim((string) ($settings['imageRenderMode'] ?? 'image'))), ['image', 'background'], true) ? strtolower(trim((string) ($settings['imageRenderMode'] ?? 'image'))) : 'image';
-    $desktopBackgroundSize = $desktopFit === 'fill' ? '100% 100%' : $desktopFit;
-    $tabletBackgroundSize = $tabletFit === 'fill' ? '100% 100%' : $tabletFit;
-    $mobileBackgroundSize = $mobileFit === 'fill' ? '100% 100%' : $mobileFit;
     $desktopObjectPosition = $objectPosition($responsive('imagePosition', '', 'center center'));
     $tabletObjectPosition = $objectPosition($responsive('imagePosition', 'Tablet', $desktopObjectPosition), $desktopObjectPosition);
     $mobileObjectPosition = $objectPosition($responsive('imagePosition', 'Mobile', $tabletObjectPosition), $tabletObjectPosition);
-    $desktopVariantSpacing = $variantSpacing('', '16px');
-    $tabletVariantSpacing = $variantSpacing('Tablet', $desktopVariantSpacing);
-    $mobileVariantSpacing = $variantSpacing('Mobile', $tabletVariantSpacing);
     $titleTag = $safeTag($settings['titleTag'] ?? 'h2', ['h1','h2','h3','h4','h5','h6','div'], 'h2');
     $pcsTitleTagFontSizes = ['h1' => '56px', 'h2' => '48px', 'h3' => '40px', 'h4' => '32px', 'h5' => '24px', 'h6' => '18px', 'div' => '48px'];
     $pcsTitleTagFontSizesTablet = ['h1' => '46px', 'h2' => '38px', 'h3' => '32px', 'h4' => '28px', 'h5' => '22px', 'h6' => '18px', 'div' => '38px'];
     $pcsTitleTagFontSizesMobile = ['h1' => '40px', 'h2' => '34px', 'h3' => '29px', 'h4' => '24px', 'h5' => '20px', 'h6' => '16px', 'div' => '34px'];
     $pcsTitleFontSizeMode = ($settings['titleFontSizeMode'] ?? 'auto') === 'custom' ? 'custom' : 'auto';
-    $legacyIndicatorSize = $settings['activeIndicatorSize'] ?? '34px';
-    $legacyIndicatorColor = $settings['activeIndicatorColor'] ?? '#ffffff';
-    $hasSelectedPosition = array_key_exists('selectedCheckPosition', $settings);
-    $selectedPositionFallback = $hasSelectedPosition ? 'top-right' : (array_key_exists('activeIndicatorSize', $settings) ? 'center' : 'top-right');
-    $selectedDesktopPosition = $selectedPosition($responsive('selectedCheckPosition', '', $selectedPositionFallback), $selectedPositionFallback);
-    $selectedTabletPosition = $selectedPosition($responsive('selectedCheckPosition', 'Tablet', $selectedDesktopPosition), $selectedDesktopPosition);
-    $selectedMobilePosition = $selectedPosition($responsive('selectedCheckPosition', 'Mobile', $selectedTabletPosition), $selectedTabletPosition);
-    $selectedDesktopOffset = $safeLength($responsive('selectedCheckOffset', '', '14px'), '14px');
-    $selectedTabletOffset = $safeLength($responsive('selectedCheckOffset', 'Tablet', $selectedDesktopOffset), $selectedDesktopOffset);
-    $selectedMobileOffset = $safeLength($responsive('selectedCheckOffset', 'Mobile', $selectedTabletOffset), $selectedTabletOffset);
-    $selectedDesktopSize = $safeLength($responsive('selectedCheckSize', '', $legacyIndicatorSize), $legacyIndicatorSize);
-    $selectedTabletSize = $safeLength($responsive('selectedCheckSize', 'Tablet', $selectedDesktopSize), $selectedDesktopSize);
-    $selectedMobileSize = $safeLength($responsive('selectedCheckSize', 'Mobile', $selectedTabletSize), $selectedTabletSize);
-    $selectedDesktopIconSize = $safeLength($responsive('selectedCheckIconSize', '', '10px'), '10px');
-    $selectedTabletIconSize = $safeLength($responsive('selectedCheckIconSize', 'Tablet', $selectedDesktopIconSize), $selectedDesktopIconSize);
-    $selectedMobileIconSize = $safeLength($responsive('selectedCheckIconSize', 'Mobile', $selectedTabletIconSize), $selectedTabletIconSize);
-    $selectedDesktopRadius = $selectedRadius('', $settings, $safeLength);
-    $selectedTabletRadius = $selectedRadius('Tablet', $settings, $safeLength);
-    $selectedMobileRadius = $selectedRadius('Mobile', $settings, $safeLength);
-    $selectedColor = $safeColor($settings['selectedCheckColor'] ?? '#ffffff', '#ffffff');
-    $selectedBackground = $safeColor($settings['selectedCheckBackground'] ?? $legacyIndicatorColor, $legacyIndicatorColor);
-    $selectedCheckVisible = ($settings['selectedCheckVisible'] ?? true) !== false;
-    $unselectedRingVisible = ($settings['unselectedRingVisible'] ?? false) === true;
-    $unselectedRingColor = $safeColor($settings['unselectedRingColor'] ?? '', '#ffffff');
-    $unselectedRingBorderWidth = $safeBorderWidth($settings['unselectedRingBorderWidth'] ?? '', '2px');
-    $unselectedRingBackground = $safeColor($settings['unselectedRingBackground'] ?? '', 'transparent');
-    $selectedDesktopPlacement = $selectedPlacement($selectedDesktopPosition, $selectedDesktopOffset);
-    $selectedTabletPlacement = $selectedPlacement($selectedTabletPosition, $selectedTabletOffset);
-    $selectedMobilePlacement = $selectedPlacement($selectedMobilePosition, $selectedMobileOffset);
     $jsonConfig = e(json_encode([
         'defaultItemId' => $defaultItemId,
         'listPosition' => $desktopPosition, 'listPositionTablet' => $tabletPosition, 'listPositionMobile' => $mobilePosition,
@@ -217,23 +138,14 @@
 @endphp
 
 <style>
-#{{ $selectorId }}{--pb-pcs-variant-list-spacing:{{ $desktopVariantSpacing }};}
-#{{ $selectorId }}{--pb-pcs-image-background-size:{{ $desktopBackgroundSize }};}
-#{{ $selectorId }}{--pb-pcs-selected-check-size:{{ $selectedDesktopSize }};--pb-pcs-selected-check-icon-size:{{ $selectedDesktopIconSize }};--pb-pcs-selected-check-offset:{{ $selectedDesktopOffset }};--pb-pcs-selected-check-color:{{ $selectedColor }};--pb-pcs-selected-check-background:{{ $selectedBackground }};--pb-pcs-selected-check-radius:{{ $selectedDesktopRadius }};--pb-pcs-selected-check-top:{{ $selectedDesktopPlacement['top'] }};--pb-pcs-selected-check-right:{{ $selectedDesktopPlacement['right'] }};--pb-pcs-selected-check-bottom:{{ $selectedDesktopPlacement['bottom'] }};--pb-pcs-selected-check-left:{{ $selectedDesktopPlacement['left'] }};--pb-pcs-selected-check-transform:{{ $selectedDesktopPlacement['transform'] }};--pb-pcs-unselected-ring-color:{{ $unselectedRingColor }};--pb-pcs-unselected-ring-border-width:{{ $unselectedRingBorderWidth }};--pb-pcs-unselected-ring-background:{{ $unselectedRingBackground }};}
 #{{ $selectorId }}{--pb-pcs-image-aspect-ratio:{{ str_replace('/', ' / ', $desktopRatio) }};--pb-pcs-header-align:{{ $rootStyle ? (in_array($responsive('titleAlignment', '', 'left'), ['left','center','right'], true) ? $responsive('titleAlignment', '', 'left') : 'left') : 'left' }};}
 #{{ $selectorId }} .pb-product-color-selector__panel{transition:opacity {{ max(0, min(2000, (int) ($settings['transitionDuration'] ?? 300))) }}ms ease}
 #{{ $selectorId }}[data-transition="none"] .pb-product-color-selector__panel{transition:none}
-@media(max-width:1024px){#{{ $selectorId }}{--pb-pcs-variant-list-spacing:{{ $tabletVariantSpacing }};}}
-@media(max-width:767px){#{{ $selectorId }}{--pb-pcs-variant-list-spacing:{{ $mobileVariantSpacing }};}}
-@media(max-width:1024px){#{{ $selectorId }}{--pb-pcs-image-background-size:{{ $tabletBackgroundSize }};}}
-@media(max-width:767px){#{{ $selectorId }}{--pb-pcs-image-background-size:{{ $mobileBackgroundSize }};}}
-@media(max-width:1024px){#{{ $selectorId }}{--pb-pcs-selected-check-size:{{ $selectedTabletSize }};--pb-pcs-selected-check-icon-size:{{ $selectedTabletIconSize }};--pb-pcs-selected-check-offset:{{ $selectedTabletOffset }};--pb-pcs-selected-check-radius:{{ $selectedTabletRadius }};--pb-pcs-selected-check-top:{{ $selectedTabletPlacement['top'] }};--pb-pcs-selected-check-right:{{ $selectedTabletPlacement['right'] }};--pb-pcs-selected-check-bottom:{{ $selectedTabletPlacement['bottom'] }};--pb-pcs-selected-check-left:{{ $selectedTabletPlacement['left'] }};--pb-pcs-selected-check-transform:{{ $selectedTabletPlacement['transform'] }};}}
-@media(max-width:767px){#{{ $selectorId }}{--pb-pcs-selected-check-size:{{ $selectedMobileSize }};--pb-pcs-selected-check-icon-size:{{ $selectedMobileIconSize }};--pb-pcs-selected-check-offset:{{ $selectedMobileOffset }};--pb-pcs-selected-check-radius:{{ $selectedMobileRadius }};--pb-pcs-selected-check-top:{{ $selectedMobilePlacement['top'] }};--pb-pcs-selected-check-right:{{ $selectedMobilePlacement['right'] }};--pb-pcs-selected-check-bottom:{{ $selectedMobilePlacement['bottom'] }};--pb-pcs-selected-check-left:{{ $selectedMobilePlacement['left'] }};--pb-pcs-selected-check-transform:{{ $selectedMobilePlacement['transform'] }};}}
 @media(max-width:1024px){#{{ $selectorId }}{--pb-pcs-image-aspect-ratio:{{ str_replace('/', ' / ', $tabletRatio) }};--pb-pcs-image-fit:{{ $tabletFit }};--pb-pcs-image-position:{{ $tabletObjectPosition }};--pb-pcs-header-align:{{ in_array($responsive('titleAlignment', 'Tablet', 'left'), ['left','center','right'], true) ? $responsive('titleAlignment', 'Tablet', 'left') : 'left' }};--pb-pcs-title-size:{{ $safeLength($pcsTitleFontSizeMode === 'custom' ? $responsive('titleFontSize', 'Tablet', $settings['titleFontSize'] ?? '48px') : ($pcsTitleTagFontSizesTablet[$titleTag] ?? '38px'), '38px') }};--pb-pcs-description-size:{{ $safeLength($responsive('descriptionFontSize', 'Tablet', $settings['descriptionFontSize'] ?? '18px'), '18px') }};--pb-pcs-item-name-size:{{ $safeLength($responsive('itemNameFontSize', 'Tablet', $settings['itemNameFontSize'] ?? '16px'), '16px') }};--pb-pcs-item-description-size:{{ $safeLength($responsive('itemDescriptionFontSize', 'Tablet', $settings['itemDescriptionFontSize'] ?? '13px'), '13px') }};}}
 @media(max-width:767px){#{{ $selectorId }}{--pb-pcs-image-aspect-ratio:{{ str_replace('/', ' / ', $mobileRatio) }};--pb-pcs-image-fit:{{ $mobileFit }};--pb-pcs-image-position:{{ $mobileObjectPosition }};--pb-pcs-header-align:{{ in_array($responsive('titleAlignment', 'Mobile', 'left'), ['left','center','right'], true) ? $responsive('titleAlignment', 'Mobile', 'left') : 'left' }};--pb-pcs-title-size:{{ $safeLength($pcsTitleFontSizeMode === 'custom' ? $responsive('titleFontSize', 'Mobile', $responsive('titleFontSize', 'Tablet', $settings['titleFontSize'] ?? '48px')) : ($pcsTitleTagFontSizesMobile[$titleTag] ?? '34px'), '34px') }};--pb-pcs-description-size:{{ $safeLength($responsive('descriptionFontSize', 'Mobile', $responsive('descriptionFontSize', 'Tablet', $settings['descriptionFontSize'] ?? '18px')), '18px') }};--pb-pcs-item-name-size:{{ $safeLength($responsive('itemNameFontSize', 'Mobile', $responsive('itemNameFontSize', 'Tablet', $settings['itemNameFontSize'] ?? '16px')), '16px') }};--pb-pcs-item-description-size:{{ $safeLength($responsive('itemDescriptionFontSize', 'Mobile', $responsive('itemDescriptionFontSize', 'Tablet', $settings['itemDescriptionFontSize'] ?? '13px')), '13px') }};}}
 </style>
 
-<section id="{{ $selectorId }}" class="{{ implode(' ', $rootClasses) }}" data-product-color-selector data-default-item="{{ e($defaultItemId) }}" data-image-render-mode="{{ $imageRenderMode }}" data-product-color-selected-check="{{ $selectedCheckVisible ? 'true' : 'false' }}" data-product-color-unselected-ring="{{ $unselectedRingVisible ? 'true' : 'false' }}" data-product-color-config="{{ $jsonConfig }}" data-transition="{{ ($settings['transition'] ?? 'fade') === 'none' ? 'none' : 'fade' }}" data-position="{{ $desktopPosition }}" data-orientation="{{ in_array($desktopPosition, ['left', 'right'], true) ? 'vertical' : 'horizontal' }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" tabindex="0" style="{{ $rootStyle }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach>
+<section id="{{ $selectorId }}" class="{{ implode(' ', $rootClasses) }}" data-product-color-selector data-default-item="{{ e($defaultItemId) }}" data-product-color-config="{{ $jsonConfig }}" data-transition="{{ ($settings['transition'] ?? 'fade') === 'none' ? 'none' : 'fade' }}" data-position="{{ $desktopPosition }}" data-orientation="{{ in_array($desktopPosition, ['left', 'right'], true) ? 'vertical' : 'horizontal' }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" tabindex="0" style="{{ $rootStyle }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach>
     @if(($settings['showTitle'] ?? true) !== false && trim((string) ($settings['title'] ?? '')) !== '')<header class="pb-product-color-selector__header"><{{ $titleTag }} class="pb-product-color-selector__title">{{ $settings['title'] }}</{{ $titleTag }}>@if(($settings['showDescription'] ?? true) !== false && trim((string) ($settings['description'] ?? '')) !== '')<{{ $descriptionTag }} class="pb-product-color-selector__description">{{ $settings['description'] }}</{{ $descriptionTag }}>@endif</header>@elseif(($settings['showDescription'] ?? true) !== false && trim((string) ($settings['description'] ?? '')) !== '')<header class="pb-product-color-selector__header"><{{ $descriptionTag }} class="pb-product-color-selector__description">{{ $settings['description'] }}</{{ $descriptionTag }}></header>@endif
     <div class="pb-product-color-selector__body">
         <div id="{{ $selectorId }}-stage" class="pb-product-color-selector__stage" data-product-color-stage>
@@ -249,16 +161,7 @@
                     $isActive = $item['id'] === $defaultItemId;
                 @endphp
                 <div id="{{ $panelId($item['id']) }}" class="pb-product-color-selector__panel{{ $isActive ? ' is-active' : '' }}" data-product-color-panel data-product-color-id="{{ e($item['id']) }}" role="tabpanel" aria-labelledby="{{ $buttonId($item['id']) }}" @if(!$isActive) hidden @endif>
-                    @if($desktopImage)
-                        @if($imageRenderMode === 'background')
-                            <div class="pb-product-color-selector__image pb-product-color-selector__image--background" role="img" aria-label="{{ e($desktopAlt) }}" style="--pb-pcs-panel-image:url('{{ e($desktopImage) }}');--pb-pcs-panel-image-tablet:url('{{ e($tabletImage) }}');--pb-pcs-panel-image-mobile:url('{{ e($mobileImage) }}');"></div>
-                        @else
-                            <picture>@if($mobileImage && $mobileImage !== $tabletImage)<source media="(max-width:767px)" srcset="{{ $mobileImage }}">@endif @if($tabletImage && $tabletImage !== $desktopImage)<source media="(max-width:1024px)" srcset="{{ $tabletImage }}">@endif<img class="pb-product-color-selector__image" src="{{ $desktopImage }}" alt="{{ e($desktopAlt) }}"></picture>
-                        @endif
-                        <div class="pb-product-color-selector__empty" data-product-color-empty role="img" aria-label="Product image unavailable" hidden><i class="far fa-image" aria-hidden="true"></i><span>Choose an image</span></div>
-                    @else
-                        <div class="pb-product-color-selector__empty" data-product-color-empty role="img" aria-label="Product image unavailable"><i class="far fa-image" aria-hidden="true"></i><span>Choose an image</span></div>
-                    @endif
+                    @if($desktopImage)<picture>@if($mobileImage && $mobileImage !== $tabletImage)<source media="(max-width:767px)" srcset="{{ $mobileImage }}">@endif @if($tabletImage && $tabletImage !== $desktopImage)<source media="(max-width:1024px)" srcset="{{ $tabletImage }}">@endif<img class="pb-product-color-selector__image" src="{{ $desktopImage }}" alt="{{ e($desktopAlt) }}"></picture><div class="pb-product-color-selector__empty" data-product-color-empty role="img" aria-label="Product image unavailable" hidden><i class="far fa-image" aria-hidden="true"></i><span>Choose an image</span></div>@else<div class="pb-product-color-selector__empty" data-product-color-empty role="img" aria-label="Product image unavailable"><i class="far fa-image" aria-hidden="true"></i><span>Choose an image</span></div>@endif
                 </div>
             @endforeach
         </div>
@@ -266,7 +169,7 @@
             @foreach($items as $index => $item)
                 @php $swatch = $safeColor($item['swatchColor'] ?? '', '#d9dee8'); $isActive = $item['id'] === $defaultItemId; @endphp
                 <button id="{{ $buttonId($item['id']) }}" type="button" class="pb-product-color-selector__item{{ $isActive ? ' is-active' : '' }}" data-product-color-index="{{ $index }}" data-product-color-id="{{ e($item['id']) }}" role="tab" aria-selected="{{ $isActive ? 'true' : 'false' }}" aria-controls="{{ $panelId($item['id']) }}" tabindex="{{ $isActive ? '0' : '-1' }}" data-pb-interactive="true">
-                    <span class="pb-product-color-selector__swatch" style="background-color:{{ $swatch }}">@if($selectedCheckVisible || $unselectedRingVisible)<span class="pb-product-color-selector__indicator {{ $isActive ? 'is-selected' : 'is-unselected' }}" aria-hidden="true" @if(($isActive && !$selectedCheckVisible) || (!$isActive && !$unselectedRingVisible)) hidden @endif>@if($isActive)<i class="fas fa-check"></i>@endif</span>@endif</span>
+                    <span class="pb-product-color-selector__swatch" style="background-color:{{ $swatch }}"><span class="pb-product-color-selector__indicator" aria-hidden="true" @if(!$isActive) hidden @endif><i class="fas fa-check"></i></span></span>
                     <span class="pb-product-color-selector__copy"><strong>{{ $item['name'] ?: 'Color ' . ($index + 1) }}</strong>@if(trim((string) ($item['description'] ?? '')) !== '')<small>{{ $item['description'] }}</small>@endif</span>
                 </button>
             @endforeach
@@ -276,13 +179,9 @@
 
 <style>
 #{{ $selectorId }}{box-sizing:border-box;width:100%;min-width:0;padding:var(--pb-pcs-surface-padding);border-radius:var(--pb-pcs-surface-radius);background:var(--pb-pcs-surface-background);color:var(--pb-pcs-title-color)}
-#{{ $selectorId }} .pb-product-color-selector__body{gap:var(--pb-pcs-variant-list-spacing)}
-#{{ $selectorId }} .pb-product-color-selector__image--background{background-image:var(--pb-pcs-panel-image);background-repeat:no-repeat;background-size:var(--pb-pcs-image-background-size);background-position:var(--pb-pcs-image-position)}
-@media(max-width:1024px){#{{ $selectorId }} .pb-product-color-selector__image--background{background-image:var(--pb-pcs-panel-image-tablet)}}
-@media(max-width:767px){#{{ $selectorId }} .pb-product-color-selector__image--background{background-image:var(--pb-pcs-panel-image-mobile)}}
 #{{ $selectorId }} .pb-product-color-selector__header{margin-bottom:18px;text-align:var(--pb-pcs-header-align)}#{{ $selectorId }} .pb-product-color-selector__title,#{{ $selectorId }} .pb-product-color-selector__description{margin:0}#{{ $selectorId }} .pb-product-color-selector__title{color:var(--pb-pcs-title-color);font-size:var(--pb-pcs-title-size);font-weight:700;line-height:1.1}#{{ $selectorId }} .pb-product-color-selector__description{margin-top:8px;color:var(--pb-pcs-description-color);font-size:var(--pb-pcs-description-size);line-height:1.45}
 #{{ $selectorId }} .pb-product-color-selector__body{display:flex;align-items:stretch;gap:var(--pb-pcs-list-gap);min-width:0}#{{ $selectorId }} .pb-product-color-selector__stage{position:relative;flex:1 1 auto;min-width:0;overflow:hidden;aspect-ratio:var(--pb-pcs-image-aspect-ratio);border-radius:var(--pb-pcs-image-radius);background:#eef1f4}#{{ $selectorId }} .pb-product-color-selector__panel{position:absolute;inset:0;display:block;opacity:1;transition:opacity var(--pb-pcs-transition) ease}#{{ $selectorId }} .pb-product-color-selector__panel[hidden]{display:none}#{{ $selectorId }} .pb-product-color-selector__image,#{{ $selectorId }} .pb-product-color-selector__panel picture{display:block;width:100%;height:100%;border:0}#{{ $selectorId }} .pb-product-color-selector__image{object-fit:var(--pb-pcs-image-fit);object-position:var(--pb-pcs-image-position)}
-#{{ $selectorId }} .pb-product-color-selector__list{display:flex;flex:0 1 auto;justify-content:var(--pb-pcs-list-justify,center);gap:var(--pb-pcs-list-gap);min-width:0;align-content:flex-start;align-items:flex-start;flex-wrap:wrap}#{{ $selectorId }} .pb-product-color-selector__item{display:flex;flex-direction:column;gap:var(--pb-pcs-item-text-gap);padding:0;border:0;background:transparent;text-align:left;cursor:pointer}#{{ $selectorId }} .pb-product-color-selector__item:focus-visible{outline:2px solid #6979f8;outline-offset:3px}#{{ $selectorId }} .pb-product-color-selector__swatch{position:relative;display:grid;width:100%;height:var(--pb-pcs-swatch-height);place-items:center;border:1px solid transparent;border-radius:var(--pb-pcs-swatch-radius);box-sizing:border-box}#{{ $selectorId }} .pb-product-color-selector__item.is-active .pb-product-color-selector__swatch{border-color:var(--pb-pcs-item-name-color)}#{{ $selectorId }} .pb-product-color-selector__indicator{position:absolute;z-index:1;top:var(--pb-pcs-selected-check-top);right:var(--pb-pcs-selected-check-right);bottom:var(--pb-pcs-selected-check-bottom);left:var(--pb-pcs-selected-check-left);display:grid;width:var(--pb-pcs-selected-check-size);height:var(--pb-pcs-selected-check-size);place-items:center;transform:var(--pb-pcs-selected-check-transform);border-radius:var(--pb-pcs-selected-check-radius);color:var(--pb-pcs-selected-check-color);background:var(--pb-pcs-selected-check-background);font-size:var(--pb-pcs-selected-check-icon-size);box-shadow:0 1px 3px rgba(16,24,40,.2)}#{{ $selectorId }} .pb-product-color-selector__indicator.is-unselected{border:var(--pb-pcs-unselected-ring-border-width) solid var(--pb-pcs-unselected-ring-color);color:transparent;background:var(--pb-pcs-unselected-ring-background);box-shadow:none}#{{ $selectorId }} .pb-product-color-selector__copy{display:flex;flex-direction:column;gap:3px;min-width:0}#{{ $selectorId }} .pb-product-color-selector__copy strong{overflow:hidden;color:var(--pb-pcs-item-name-color);font-size:var(--pb-pcs-item-name-size);font-weight:400;line-height:1.3;text-overflow:ellipsis;white-space:nowrap}#{{ $selectorId }} .pb-product-color-selector__copy small{color:var(--pb-pcs-item-description-color);font-size:var(--pb-pcs-item-description-size);line-height:1.35}
+#{{ $selectorId }} .pb-product-color-selector__list{display:flex;flex:0 1 auto;justify-content:var(--pb-pcs-list-justify,center);gap:var(--pb-pcs-list-gap);min-width:0;align-content:flex-start;align-items:flex-start;flex-wrap:wrap}#{{ $selectorId }} .pb-product-color-selector__item{display:flex;flex-direction:column;gap:var(--pb-pcs-item-text-gap);padding:0;border:0;background:transparent;text-align:left;cursor:pointer}#{{ $selectorId }} .pb-product-color-selector__item:focus-visible{outline:2px solid #6979f8;outline-offset:3px}#{{ $selectorId }} .pb-product-color-selector__swatch{position:relative;display:grid;width:100%;height:var(--pb-pcs-swatch-height);place-items:center;border:1px solid transparent;border-radius:var(--pb-pcs-swatch-radius);box-sizing:border-box}#{{ $selectorId }} .pb-product-color-selector__item.is-active .pb-product-color-selector__swatch{border-color:var(--pb-pcs-item-name-color)}#{{ $selectorId }} .pb-product-color-selector__indicator{display:grid;width:var(--pb-pcs-active-indicator-size);height:var(--pb-pcs-active-indicator-size);place-items:center;border-radius:50%;color:#222;background:var(--pb-pcs-active-indicator-color);box-shadow:0 1px 3px rgba(16,24,40,.2)}#{{ $selectorId }} .pb-product-color-selector__copy{display:flex;flex-direction:column;gap:3px;min-width:0}#{{ $selectorId }} .pb-product-color-selector__copy strong{overflow:hidden;color:var(--pb-pcs-item-name-color);font-size:var(--pb-pcs-item-name-size);font-weight:400;line-height:1.3;text-overflow:ellipsis;white-space:nowrap}#{{ $selectorId }} .pb-product-color-selector__copy small{color:var(--pb-pcs-item-description-color);font-size:var(--pb-pcs-item-description-size);line-height:1.35}
 #{{ $selectorId }}[data-position="top"] .pb-product-color-selector__body,#{{ $selectorId }}[data-position="bottom"] .pb-product-color-selector__body{flex-direction:column}#{{ $selectorId }}[data-position="top"] .pb-product-color-selector__list{order:-1}#{{ $selectorId }}[data-position="bottom"] .pb-product-color-selector__list{order:1}#{{ $selectorId }}[data-position="top"] .pb-product-color-selector__item,#{{ $selectorId }}[data-position="bottom"] .pb-product-color-selector__item{flex:1 1 var(--pb-pcs-swatch-width);min-width:var(--pb-pcs-swatch-width)}#{{ $selectorId }}[data-position="left"] .pb-product-color-selector__body,#{{ $selectorId }}[data-position="right"] .pb-product-color-selector__body{flex-direction:row}#{{ $selectorId }}[data-position="left"] .pb-product-color-selector__list,#{{ $selectorId }}[data-position="right"] .pb-product-color-selector__list{width:clamp(150px,30%,280px);flex-direction:column;flex-wrap:nowrap;overflow:auto}#{{ $selectorId }}[data-position="left"] .pb-product-color-selector__list{order:-1}#{{ $selectorId }}[data-position="right"] .pb-product-color-selector__list{order:1}#{{ $selectorId }}[data-position="left"] .pb-product-color-selector__item,#{{ $selectorId }}[data-position="right"] .pb-product-color-selector__item{display:grid;grid-template-columns:minmax(70px,var(--pb-pcs-swatch-width)) 1fr;align-items:center;width:100%}
 #{{ $selectorId }} .pb-product-color-selector__empty{display:grid;position:absolute;inset:0;place-content:center;justify-items:center;gap:8px;color:#98a2b3}#{{ $selectorId }} .pb-product-color-selector__empty i{font-size:32px}@media(max-width:767px){#{{ $selectorId }}{padding:12px}#{{ $selectorId }}[data-position="left"] .pb-product-color-selector__body,#{{ $selectorId }}[data-position="right"] .pb-product-color-selector__body{flex-direction:column}#{{ $selectorId }}[data-position="left"] .pb-product-color-selector__list,#{{ $selectorId }}[data-position="right"] .pb-product-color-selector__list{width:100%}#{{ $selectorId }}[data-position="left"] .pb-product-color-selector__item,#{{ $selectorId }}[data-position="right"] .pb-product-color-selector__item{grid-template-columns:minmax(70px,120px) 1fr}}
 @media(prefers-reduced-motion:reduce){#{{ $selectorId }} .pb-product-color-selector__panel{transition:none!important}}

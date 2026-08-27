@@ -572,8 +572,8 @@ test("v2.4 public runtime retains Slides and Countdown initializers", () => {
     assert.equal(typeof runtime.initProCountdown, "function");
 });
 
-test("Product Color Selector runtime switches active panels and checklist indicator on direct click", () => {
-    const makeElement = (attributes = {}, indicator = null) => {
+test("Product Color Selector runtime switches active panels and follows responsive position", () => {
+    const makeElement = (attributes = {}) => {
         const target = eventTarget();
         const values = new Map(Object.entries(attributes));
         return {
@@ -583,14 +583,13 @@ test("Product Color Selector runtime switches active panels and checklist indica
             getAttribute: (name) => values.get(name) || "",
             setAttribute: (name, value) => values.set(name, String(value)),
             focus() { this.focused = true; },
-            querySelector: (selector) => selector.includes("pb-product-color-selector__indicator") ? indicator : null,
+            querySelector: () => null,
             querySelectorAll: () => [],
         };
     };
-    const indicators = [{ hidden: false }, { hidden: true }];
     const tabs = [
-        makeElement({ "data-product-color-id": "black" }, indicators[0]),
-        makeElement({ "data-product-color-id": "red" }, indicators[1]),
+        makeElement({ "data-product-color-id": "black" }),
+        makeElement({ "data-product-color-id": "red" }),
     ];
     const panels = [
         makeElement({ "data-product-color-id": "black" }),
@@ -616,14 +615,8 @@ test("Product Color Selector runtime switches active panels and checklist indica
     assert.equal(panels[0].hidden, false);
     assert.equal(panels[1].hidden, true);
 
-    tabs[1].handlers.get("click")({ preventDefault() {} });
-    assert.equal(tabs[0].getAttribute("aria-selected"), "false");
-    assert.equal(tabs[1].getAttribute("aria-selected"), "true");
-    assert.equal(panels[0].hidden, true);
-    assert.equal(panels[1].hidden, false);
-    assert.equal(indicators[0].hidden, true);
-    assert.equal(indicators[1].hidden, false);
-
+    tabs[0].handlers.get("click")({ preventDefault() {} });
+    assert.equal(tabs[0].getAttribute("aria-selected"), "true");
     tabs[0].handlers.get("keydown")({ key: "ArrowRight", preventDefault() {} });
     assert.equal(tabs[1].getAttribute("aria-selected"), "true");
     assert.equal(panels[0].hidden, true);
@@ -634,48 +627,4 @@ test("Product Color Selector runtime switches active panels and checklist indica
     assert.equal(root.getAttribute("data-position"), "right");
     assert.equal(root.getAttribute("data-orientation"), "vertical");
     assert.equal(list.getAttribute("aria-orientation"), "vertical");
-});
-
-test("Product Color Selector runtime preserves unselected rings only when opt-in is enabled", () => {
-    const makeElement = (attributes = {}, indicator = null) => {
-        const target = eventTarget();
-        const values = new Map(Object.entries(attributes));
-        return {
-            ...target,
-            classList: classList(),
-            hidden: false,
-            getAttribute: (name) => values.get(name) || "",
-            setAttribute: (name, value) => values.set(name, String(value)),
-            querySelector: (selector) => selector.includes("pb-product-color-selector__indicator") ? indicator : null,
-            querySelectorAll: () => [],
-        };
-    };
-    const indicators = [{ hidden: false }, { hidden: true }];
-    const tabs = [
-        makeElement({ "data-product-color-id": "black" }, indicators[0]),
-        makeElement({ "data-product-color-id": "red" }, indicators[1]),
-    ];
-    const panels = [
-        makeElement({ "data-product-color-id": "black" }),
-        makeElement({ "data-product-color-id": "red" }),
-    ];
-    const root = rootBase({
-        "data-default-item": "black",
-        "data-product-color-unselected-ring": "true",
-        "data-product-color-config": JSON.stringify({ defaultItemId: "black", listPosition: "bottom" }),
-    });
-    root.querySelectorAll = (selector) => selector.includes('role="tab"') ? tabs : (selector.includes("data-product-color-panel") ? panels : []);
-    root.querySelector = () => null;
-
-    runtime.initProductColorSelector(root);
-    assert.equal(indicators[0].hidden, false);
-    assert.equal(indicators[1].hidden, false);
-    assert.equal(tabs[0].classList.contains("is-selected"), true);
-    assert.equal(tabs[1].classList.contains("is-unselected"), true);
-
-    tabs[1].handlers.get("click")({ preventDefault() {} });
-    assert.equal(indicators[0].hidden, false);
-    assert.equal(indicators[1].hidden, false);
-    assert.equal(tabs[0].classList.contains("is-unselected"), true);
-    assert.equal(tabs[1].classList.contains("is-selected"), true);
 });

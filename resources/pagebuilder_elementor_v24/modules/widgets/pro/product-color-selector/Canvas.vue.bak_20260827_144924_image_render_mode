@@ -1,5 +1,5 @@
 <template>
-    <section class="pb-product-color-selector" :class="['is-position-' + position, 'is-' + orientation, 'is-check-' + selectedCheckPosition]" :style="rootStyle" data-product-color-selector :data-position="position" :data-orientation="orientation" :data-active-item="activeId" :data-image-render-mode="imageRenderMode" data-editor-preview="true" @click.stop>
+    <section class="pb-product-color-selector" :class="['is-position-' + position, 'is-' + orientation, 'is-check-' + selectedCheckPosition]" :style="rootStyle" data-product-color-selector :data-position="position" :data-orientation="orientation" :data-active-item="activeId" data-editor-preview="true" @click.stop>
         <header v-if="showHeader" class="pb-product-color-selector__header">
             <component :is="titleTag" v-if="settings.title && settings.showTitle !== false" class="pb-product-color-selector__title">{{ settings.title }}</component>
             <component :is="descriptionTag" v-if="settings.description && settings.showDescription !== false" class="pb-product-color-selector__description">{{ settings.description }}</component>
@@ -8,8 +8,7 @@
         <div v-if="items.length" class="pb-product-color-selector__body">
             <div id="pb-product-color-selector-stage" class="pb-product-color-selector__stage" data-product-color-stage>
                 <div v-if="activeItem" :id="panelId(activeItem)" class="pb-product-color-selector__panel is-active" data-product-color-panel :data-product-color-id="activeItem.id" role="tabpanel" :aria-label="activeItem.name || 'Selected color'">
-                    <img v-if="activeImageAvailable && imageRenderMode === 'image'" :src="imageUrl(activeItem)" :alt="imageAlt(activeItem)" class="pb-product-color-selector__image" @error="markImageError(activeItem)">
-                    <div v-else-if="activeImageAvailable" class="pb-product-color-selector__image pb-product-color-selector__image--background" role="img" :aria-label="imageAlt(activeItem)" :style="backgroundImageStyle"></div>
+                    <img v-if="activeImageAvailable" :src="imageUrl(activeItem)" :alt="imageAlt(activeItem)" class="pb-product-color-selector__image" @error="markImageError(activeItem)">
                     <div v-else class="pb-product-color-selector__empty" data-product-color-empty role="img" aria-label="Product image unavailable">
                         <i class="far fa-image" aria-hidden="true"></i><span>Choose an image</span>
                     </div>
@@ -78,8 +77,6 @@ export default {
         },
         activeItem() { return this.items.find(item => item.id === this.activeId) || this.items[0] || null; },
         activeImageAvailable() { return !!this.activeItem && !!this.imageUrl(this.activeItem) && !this.failedImageIds.includes(this.activeItem.id); },
-        imageRenderMode() { const value = String(this.settings.imageRenderMode || 'image').toLowerCase(); return ['image', 'background'].includes(value) ? value : 'image'; },
-        backgroundImageStyle() { return this.activeImageAvailable && this.imageRenderMode === 'background' ? { backgroundImage: `url("${this.imageUrl(this.activeItem)}")` } : {}; },
         titleTag() { return this.safeTag(this.settings.titleTag, 'h2', ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div']); },
         automaticTitleFontSize() { return TITLE_TAG_FONT_SIZES[this.titleTag] || '48px'; },
         descriptionTag() { return this.safeTag(this.settings.descriptionTag, 'p', ['p', 'div', 'span']); },
@@ -96,7 +93,6 @@ export default {
         },
         rootStyle() {
             const ratio = this.cssRatio(this.responsiveValue('imageAspectRatio', '16/9'), '16 / 9');
-            const imageFit = ['contain', 'cover', 'fill'].includes(this.responsiveValue('imageFit', 'contain')) ? this.responsiveValue('imageFit', 'contain') : 'contain';
             const legacySize = this.settings.activeIndicatorSize || '34px';
             const legacyColor = this.settings.activeIndicatorColor || '#ffffff';
             return {
@@ -129,8 +125,7 @@ export default {
                 '--pb-pcs-description-size': this.cssLength(this.responsiveValue('descriptionFontSize', '18px'), '18px'),
                 '--pb-pcs-item-name-size': this.cssLength(this.responsiveValue('itemNameFontSize', '16px'), '16px'),
                 '--pb-pcs-item-description-size': this.cssLength(this.responsiveValue('itemDescriptionFontSize', '13px'), '13px'),
-                '--pb-pcs-image-fit': imageFit,
-                '--pb-pcs-image-background-size': imageFit === 'fill' ? '100% 100%' : imageFit,
+                '--pb-pcs-image-fit': ['contain', 'cover', 'fill'].includes(this.responsiveValue('imageFit', 'contain')) ? this.responsiveValue('imageFit', 'contain') : 'contain',
                 '--pb-pcs-image-position': this.safeObjectPosition(this.responsiveValue('imagePosition', 'center center')),
                 '--pb-pcs-transition': this.settings.transition === 'none' ? 'none' : `${Math.max(0, Number(this.settings.transitionDuration) || 300)}ms`,
                 '--pb-pcs-header-align': ['left', 'center', 'right'].includes(this.responsiveValue('titleAlignment', 'left')) ? this.responsiveValue('titleAlignment', 'left') : 'left',
@@ -207,7 +202,6 @@ export default {
 </script>
 
 <style scoped>
-.pb-product-color-selector__image--background{background-repeat:no-repeat;background-size:var(--pb-pcs-image-background-size);background-position:var(--pb-pcs-image-position)}
 .pb-product-color-selector{box-sizing:border-box;width:100%;min-width:0;padding:var(--pb-pcs-surface-padding);border-radius:var(--pb-pcs-surface-radius);background:var(--pb-pcs-surface-background);color:var(--pb-pcs-title-color)}
 .pb-product-color-selector__header{margin-bottom:18px;text-align:var(--pb-pcs-header-align)}
 .pb-product-color-selector__title,.pb-product-color-selector__description{margin:0}.pb-product-color-selector__title{color:var(--pb-pcs-title-color);font-size:var(--pb-pcs-title-size);font-weight:700;line-height:1.1}.pb-product-color-selector__description{margin-top:8px;color:var(--pb-pcs-description-color);font-size:var(--pb-pcs-description-size);line-height:1.45}

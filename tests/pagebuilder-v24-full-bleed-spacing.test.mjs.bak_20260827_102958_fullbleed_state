@@ -31,9 +31,6 @@ test('v2.4 shared Advanced defaults expose responsive Full Bleed without changin
     assert.equal(normalized.fullBleed, true);
     assert.equal(normalized.fullBleedTablet, false);
     assert.equal(normalized.fullBleedMobile, '');
-
-    const legacyNormalized = registry.normalizeAdvanced({ fullBleed: 'full' });
-    assert.equal(legacyNormalized.fullBleed, true);
 });
 
 test('v2.4 Advanced spacing keeps the shared form and accepts screen plus print units', () => {
@@ -50,7 +47,6 @@ test('v2.4 Advanced spacing keeps the shared form and accepts screen plus print 
 test('v2.4 Canvas makes the editor gutter responsive instead of hard-coding it per widget', () => {
     const app = read('public/js/pagebuilder_elementor_v24/app.js');
     const css = read('public/assets/css/pagebuilder_elementor_v24.css');
-    assert.match(app, /function isFullBleedValue\(value\)/);
     assert.match(app, /widgetPreviewShellStyle\(\)/);
     assert.match(app, /class="pb-preview"[^>]*:style="widgetPreviewShellStyle"/);
     assert.match(css, /\.pb-preview\s*\{[\s\S]*padding:\s*var\(--pb-preview-padding,\s*6px\)/);

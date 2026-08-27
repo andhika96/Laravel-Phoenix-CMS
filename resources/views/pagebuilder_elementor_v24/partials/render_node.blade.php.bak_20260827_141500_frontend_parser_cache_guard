@@ -26,9 +26,7 @@
 	$__pbDiscoveredView = is_array($__pbDiscoveredModule) ? ($__pbDiscoveredModule['assets']['view'] ?? '') : '';
 	$__pbHasDiscoveredView = is_string($__pbDiscoveredView) && $__pbDiscoveredView !== '' && is_file($__pbDiscoveredView);
 
-	if ($__pbHasDiscoveredView
-		&& ($settings['cacheMode'] ?? 'default') === 'active'
-		&& (($__pbDiscoveredModule['category'] ?? '') !== 'layout')) {
+	if ($__pbHasDiscoveredView && ($settings['cacheMode'] ?? 'default') === 'active') {
 		$__pbRoles = [];
 		if ($__pbUser && method_exists($__pbUser, 'getRoleNames')) {
 			$__pbRoles = collect($__pbUser->getRoleNames())->map(fn ($role) => (string) $role)->all();

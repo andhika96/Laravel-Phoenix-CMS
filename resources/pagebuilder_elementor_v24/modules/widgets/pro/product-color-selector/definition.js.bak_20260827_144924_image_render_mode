@@ -94,7 +94,6 @@
         imagePosition: 'center center',
         imagePositionTablet: '',
         imagePositionMobile: '',
-        imageRenderMode: 'image',
         transition: 'fade',
         transitionDuration: '300ms',
         surfaceBackground: '#f7f9fa',
@@ -214,7 +213,6 @@
             ['imagePositionTablet', 'imagePositionMobile'].forEach((key) => {
                 s[key] = imagePosition(s[key], '', true);
             });
-            s.imageRenderMode = enumValue(text(s.imageRenderMode).toLowerCase(), ['image', 'background'], base.imageRenderMode);
             s.transition = enumValue(s.transition, ['none', 'fade', 'slide'], base.transition);
             s.transitionDuration = duration(s.transitionDuration, base.transitionDuration);
 

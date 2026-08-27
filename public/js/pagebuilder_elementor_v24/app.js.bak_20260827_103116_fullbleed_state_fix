@@ -1219,10 +1219,6 @@
 	function accordionWidgetDefaultItems() {
 		return [accordionItemDefaults(0), accordionItemDefaults(1), accordionItemDefaults(2)];
 	}
-	function isFullBleedValue(value) {
-		const normalized = String(value ?? '').trim().toLowerCase();
-		return value === true || value === 1 || normalized === '1' || normalized === 'true' || normalized === 'full';
-	}
 	function widgetAdvancedDefaults() { return widgetRegistry.advancedDefaults(); }
 	function normalizeWidgetAdvancedSettings(settings) { return widgetRegistry.normalizeAdvanced(settings); }
 	function widgetAdvancedPreviewStyle(settings, device) {
@@ -1255,7 +1251,7 @@
 		else if (widthMode === 'inline') style.width = 'fit-content';
 		else if (widthMode === 'custom') style.width = cssSize(get('customWidth', ''), 'auto');
 		else style.width = '100%';
-		const fullBleed = isFullBleedValue(get('fullBleed', false));
+		const fullBleed = get('fullBleed', false) === true || get('fullBleed', false) === 1 || get('fullBleed', false) === '1' || get('fullBleed', false) === 'true';
 		if (fullBleed) {
 			style.width = '100%';
 			style.maxWidth = '100%';
@@ -2614,7 +2610,7 @@
 				if (s.scrollingEffects) classes.push('pb-motion-scroll');
 				if (s.mouseEffects) classes.push('pb-motion-mouse');
 				const fullBleed = this.nodeResponsiveValue('fullBleed', false);
-				if (isFullBleedValue(fullBleed)) classes.push('pb-full-bleed');
+				if (fullBleed === true || fullBleed === 1 || fullBleed === '1' || fullBleed === 'true') classes.push('pb-full-bleed');
 				return classes;
 			},
 			nodeShellStyle() {
@@ -2698,7 +2694,7 @@
 			widgetPreviewShellStyle() {
 				if (!this.isWidgetNode) return {};
 				const fullBleed = this.nodeResponsiveValue('fullBleed', false);
-				const enabled = isFullBleedValue(fullBleed);
+				const enabled = fullBleed === true || fullBleed === 1 || fullBleed === '1' || fullBleed === 'true';
 				return { '--pb-preview-padding': enabled ? '0px' : '6px' };
 			},
 			gridCols() { return this.node.settings?.gridTemplateColumns || 'repeat(' + clamp(Number(this.node.settings?.columns || 2), 1, 12) + ', minmax(0, 1fr))'; },

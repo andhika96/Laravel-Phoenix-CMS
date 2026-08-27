@@ -12,10 +12,6 @@
         if (allowEmpty && raw === '') return '';
         return /^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i.test(raw) ? raw : fallback;
     };
-    const borderWidth = (value, fallback) => {
-        const raw = text(value).trim();
-        return /^\d+(?:\.\d+)?(?:px|pt|em|rem)?$/i.test(raw) ? raw : fallback;
-    };
     const aspectRatio = (value, fallback, allowEmpty = false) => {
         const raw = text(value).trim();
         if (allowEmpty && raw === '') return '';
@@ -38,13 +34,6 @@
         const raw = text(value).trim();
         if (/^\d+(?:\.\d+)?$/.test(raw)) return `${Math.max(0, Math.min(2000, Number(raw)))}ms`;
         return /^\d+(?:\.\d+)?(?:ms|s)$/i.test(raw) ? raw : fallback;
-    };
-    const boxValues = (value, fallback) => {
-        const values = text(value, fallback).trim().split(/\s+/).filter(Boolean);
-        if (values.length === 1) return [values[0], values[0], values[0], values[0]];
-        if (values.length === 2) return [values[0], values[1], values[0], values[1]];
-        if (values.length === 3) return [values[0], values[1], values[2], values[1]];
-        return (values.length ? values : [fallback, fallback, fallback, fallback]).slice(0, 4);
     };
     const item = (id, name, swatchColor) => ({
         id,
@@ -94,7 +83,6 @@
         imagePosition: 'center center',
         imagePositionTablet: '',
         imagePositionMobile: '',
-        imageRenderMode: 'image',
         transition: 'fade',
         transitionDuration: '300ms',
         surfaceBackground: '#f7f9fa',
@@ -105,54 +93,9 @@
         swatchHeight: '104px',
         swatchRadius: '0px',
         listGap: '16px',
-        variantListSpacing: '16px',
-        variantListSpacingTablet: '',
-        variantListSpacingMobile: '',
         itemTextGap: '8px',
         activeIndicatorColor: '#ffffff',
         activeIndicatorSize: '34px',
-        selectedCheckVisible: true,
-        selectedCheckPosition: 'top-right',
-        selectedCheckPositionTablet: '',
-        selectedCheckPositionMobile: '',
-        selectedCheckSize: '20px',
-        selectedCheckSizeTablet: '',
-        selectedCheckSizeMobile: '',
-        selectedCheckIconSize: '10px',
-        selectedCheckIconSizeTablet: '',
-        selectedCheckIconSizeMobile: '',
-        selectedCheckOffset: '14px',
-        selectedCheckOffsetTablet: '',
-        selectedCheckOffsetMobile: '',
-        selectedCheckRadius: '50%',
-        selectedCheckRadiusTablet: '',
-        selectedCheckRadiusMobile: '',
-        selectedCheckRadiusTop: '50%',
-        selectedCheckRadiusRight: '50%',
-        selectedCheckRadiusBottom: '50%',
-        selectedCheckRadiusLeft: '50%',
-        selectedCheckRadiusTabletTop: '',
-        selectedCheckRadiusTabletRight: '',
-        selectedCheckRadiusTabletBottom: '',
-        selectedCheckRadiusTabletLeft: '',
-        selectedCheckRadiusTopTablet: '',
-        selectedCheckRadiusRightTablet: '',
-        selectedCheckRadiusBottomTablet: '',
-        selectedCheckRadiusLeftTablet: '',
-        selectedCheckRadiusMobileTop: '',
-        selectedCheckRadiusMobileRight: '',
-        selectedCheckRadiusMobileBottom: '',
-        selectedCheckRadiusMobileLeft: '',
-        selectedCheckRadiusTopMobile: '',
-        selectedCheckRadiusRightMobile: '',
-        selectedCheckRadiusBottomMobile: '',
-        selectedCheckRadiusLeftMobile: '',
-        selectedCheckColor: '#ffffff',
-        selectedCheckBackground: '#6979f8',
-        unselectedRingVisible: false,
-        unselectedRingColor: '#ffffff',
-        unselectedRingBorderWidth: '2px',
-        unselectedRingBackground: 'transparent',
         titleColor: '#101828',
         descriptionColor: '#475467',
         itemNameColor: '#101828',
@@ -174,9 +117,7 @@
 
     registry.register({type: 'product_color_selector',defaults,normalize(node) {
             const base = defaults();
-            const incoming = node.settings && typeof node.settings === 'object' ? node.settings : {};
-            const s = node.settings = { ...base, ...incoming };
-            const hasIncoming = (key) => Object.prototype.hasOwnProperty.call(incoming, key);
+            const s = node.settings = { ...base, ...(node.settings || {}) };
             const textTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span'];
             const alignments = ['left', 'center', 'right', 'justify'];
             const positions = ['top', 'bottom', 'left', 'right'];
@@ -214,59 +155,13 @@
             ['imagePositionTablet', 'imagePositionMobile'].forEach((key) => {
                 s[key] = imagePosition(s[key], '', true);
             });
-            s.imageRenderMode = enumValue(text(s.imageRenderMode).toLowerCase(), ['image', 'background'], base.imageRenderMode);
             s.transition = enumValue(s.transition, ['none', 'fade', 'slide'], base.transition);
             s.transitionDuration = duration(s.transitionDuration, base.transitionDuration);
 
-            s.selectedCheckVisible = s.selectedCheckVisible !== false;
-            // Existing PCS pages had a centered indicator. Keep that visual
-            // when the new position setting is absent; new nodes use the
-            // Product Lead Form-compatible top-right default.
-            if (!hasIncoming('selectedCheckPosition') && hasIncoming('activeIndicatorSize')) s.selectedCheckPosition = 'center';
-            s.selectedCheckPosition = enumValue(s.selectedCheckPosition, ['center', 'top-left', 'top-right', 'bottom-left', 'bottom-right'], base.selectedCheckPosition);
-            ['selectedCheckPositionTablet', 'selectedCheckPositionMobile'].forEach((key) => {
-                s[key] = s[key] === '' ? '' : enumValue(s[key], ['center', 'top-left', 'top-right', 'bottom-left', 'bottom-right'], '');
-            });
-            s.selectedCheckSize = length(hasIncoming('selectedCheckSize') ? s.selectedCheckSize : incoming.activeIndicatorSize, base.selectedCheckSize);
-            s.selectedCheckIconSize = length(s.selectedCheckIconSize, base.selectedCheckIconSize);
-            s.selectedCheckOffset = length(s.selectedCheckOffset, base.selectedCheckOffset);
-            ['selectedCheckSizeTablet', 'selectedCheckSizeMobile', 'selectedCheckIconSizeTablet', 'selectedCheckIconSizeMobile', 'selectedCheckOffsetTablet', 'selectedCheckOffsetMobile'].forEach((key) => {
-                s[key] = length(s[key], '', true);
-            });
-            ['selectedCheckRadius', 'selectedCheckRadiusTablet', 'selectedCheckRadiusMobile'].forEach((baseKey, baseIndex) => {
-                const fallback = baseIndex === 0 ? base.selectedCheckRadius : s.selectedCheckRadius;
-                const values = boxValues(hasIncoming(baseKey) ? incoming[baseKey] : fallback, fallback);
-                const safeValues = values.map((value) => length(value, fallback));
-                s[baseKey] = safeValues.join(' ');
-                ['Top', 'Right', 'Bottom', 'Left'].forEach((side, sideIndex) => {
-                    const legacyKey = baseKey + side;
-                    const suffix = baseIndex === 0 ? '' : baseIndex === 1 ? 'Tablet' : 'Mobile';
-                    const key = 'selectedCheckRadius' + side + suffix;
-                    const raw = hasIncoming(key) ? incoming[key] : (hasIncoming(legacyKey) ? incoming[legacyKey] : safeValues[sideIndex]);
-                    s[key] = length(raw, safeValues[sideIndex]);
-                    if (baseIndex > 0 && hasIncoming(legacyKey)) s[legacyKey] = s[key];
-                });
-            });
-            s.selectedCheckColor = color(hasIncoming('selectedCheckColor') ? s.selectedCheckColor : '', base.selectedCheckColor);
-            s.selectedCheckBackground = color(hasIncoming('selectedCheckBackground') ? s.selectedCheckBackground : incoming.activeIndicatorColor, base.selectedCheckBackground);
-            s.unselectedRingVisible = s.unselectedRingVisible === true;
-            s.unselectedRingColor = color(s.unselectedRingColor, base.unselectedRingColor);
-            s.unselectedRingBorderWidth = borderWidth(s.unselectedRingBorderWidth, base.unselectedRingBorderWidth);
-            s.unselectedRingBackground = color(s.unselectedRingBackground, base.unselectedRingBackground);
-
-            const legacyListGap = length(s.listGap, base.listGap);
-            s.variantListSpacing = length(hasIncoming('variantListSpacing') ? s.variantListSpacing : legacyListGap, base.variantListSpacing);
-            ['variantListSpacingTablet', 'variantListSpacingMobile'].forEach((key, index) => {
-                const suffix = index === 0 ? 'Tablet' : 'Mobile';
-                const legacyKey = 'listGap' + suffix;
-                const raw = hasIncoming(key) ? s[key] : (hasIncoming(legacyKey) ? s[legacyKey] : '');
-                s[key] = raw === '' ? '' : length(raw, s.variantListSpacing);
-            });
-
-            ['surfaceRadius', 'surfacePadding', 'imageRadius', 'swatchWidth', 'swatchHeight', 'swatchRadius', 'listGap', 'variantListSpacing', 'itemTextGap', 'activeIndicatorSize', 'titleFontSize', 'descriptionFontSize', 'itemNameFontSize', 'itemDescriptionFontSize'].forEach((key) => {
+            ['surfaceRadius', 'surfacePadding', 'imageRadius', 'swatchWidth', 'swatchHeight', 'swatchRadius', 'listGap', 'itemTextGap', 'activeIndicatorSize', 'titleFontSize', 'descriptionFontSize', 'itemNameFontSize', 'itemDescriptionFontSize'].forEach((key) => {
                 s[key] = length(s[key], base[key]);
             });
-            ['variantListSpacingTablet', 'variantListSpacingMobile', 'titleFontSizeTablet', 'titleFontSizeMobile', 'descriptionFontSizeTablet', 'descriptionFontSizeMobile', 'itemNameFontSizeTablet', 'itemNameFontSizeMobile', 'itemDescriptionFontSizeTablet', 'itemDescriptionFontSizeMobile'].forEach((key) => {
+            ['titleFontSizeTablet', 'titleFontSizeMobile', 'descriptionFontSizeTablet', 'descriptionFontSizeMobile', 'itemNameFontSizeTablet', 'itemNameFontSizeMobile', 'itemDescriptionFontSizeTablet', 'itemDescriptionFontSizeMobile'].forEach((key) => {
                 s[key] = length(s[key], '', true);
             });
             ['surfaceBackground', 'activeIndicatorColor', 'titleColor', 'descriptionColor', 'itemNameColor', 'itemDescriptionColor'].forEach((key) => {

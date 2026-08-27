@@ -34,9 +34,9 @@ final class WidgetAdvancedStyleResolver
         if ($this->truthy($settings['hideTablet'] ?? false)) $classes[] = 'pb-hide-tablet';
         if ($this->truthy($settings['hideMobile'] ?? false)) $classes[] = 'pb-hide-mobile';
         $fullBleedByDevice = [
-            'desktop' => $this->fullBleedEnabled($this->responsive($settings, 'fullBleed', '', false)),
-            'tablet' => $this->fullBleedEnabled($this->responsive($settings, 'fullBleed', 'Tablet', false)),
-            'mobile' => $this->fullBleedEnabled($this->responsive($settings, 'fullBleed', 'Mobile', false)),
+            'desktop' => $this->truthy($this->responsive($settings, 'fullBleed', '', false)),
+            'tablet' => $this->truthy($this->responsive($settings, 'fullBleed', 'Tablet', false)),
+            'mobile' => $this->truthy($this->responsive($settings, 'fullBleed', 'Mobile', false)),
         ];
         if (in_array(true, $fullBleedByDevice, true)) $classes[] = 'pb-full-bleed';
         foreach ($fullBleedByDevice as $device => $enabled) {
@@ -130,7 +130,7 @@ final class WidgetAdvancedStyleResolver
             'custom' => $this->length($this->responsive($settings, 'customWidth', $suffix, ''), 'auto'),
             default => 'auto',
         };
-        if ($this->fullBleedEnabled($this->responsive($settings, 'fullBleed', $suffix, false))) {
+        if ($this->truthy($this->responsive($settings, 'fullBleed', $suffix, false))) {
             $rules[] = 'width:100%';
             $rules[] = 'max-width:100%';
             $rules[] = 'align-self:stretch';
@@ -471,10 +471,5 @@ final class WidgetAdvancedStyleResolver
     private function truthy(mixed $value): bool
     {
         return in_array($value, [true, 1, '1', 'true'], true);
-    }
-
-    private function fullBleedEnabled(mixed $value): bool
-    {
-        return $this->truthy($value) || strtolower(trim((string) $value)) === 'full';
     }
 }

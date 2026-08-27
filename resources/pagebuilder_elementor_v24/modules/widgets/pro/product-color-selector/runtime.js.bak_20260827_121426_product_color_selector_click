@@ -27,8 +27,6 @@ function initProductColorSelector(root) {
 		if (!root || root.getAttribute('data-editor-preview') === 'true' || boundProductColorSelectorRoots.has(root)) return;
 		boundProductColorSelectorRoots.add(root);
 		const config = parseProductColorSelectorConfig(root);
-		const showSelectedCheck = root.getAttribute('data-product-color-selected-check') !== 'false';
-		const showUnselectedRing = root.getAttribute('data-product-color-unselected-ring') === 'true';
 		const tabs = Array.from(root.querySelectorAll(':scope [role="tab"][data-product-color-id]'));
 		const panels = Array.from(root.querySelectorAll(':scope [data-product-color-panel][data-product-color-id]'));
 		const list = root.querySelector(':scope [data-product-color-list]') || root.querySelector(':scope [role="tablist"]');
@@ -104,14 +102,6 @@ function initProductColorSelector(root) {
 			tabs.forEach(function (tab) {
 				const selected = tab.getAttribute('data-product-color-id') === activeId;
 				tab.classList?.toggle?.('is-active', selected);
-				tab.classList?.toggle?.('is-selected', selected);
-				tab.classList?.toggle?.('is-unselected', !selected);
-				const indicator = tab.querySelector?.(':scope .pb-product-color-selector__indicator');
-				if (indicator) {
-					indicator.classList?.toggle?.('is-selected', selected);
-					indicator.classList?.toggle?.('is-unselected', !selected);
-					indicator.hidden = selected ? !showSelectedCheck : !showUnselectedRing;
-				}
 				tab.setAttribute('aria-selected', selected ? 'true' : 'false');
 				tab.setAttribute('tabindex', selected ? '0' : '-1');
 			});

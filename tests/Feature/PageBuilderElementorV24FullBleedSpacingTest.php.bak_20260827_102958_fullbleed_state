@@ -13,7 +13,7 @@ class PageBuilderElementorV24FullBleedSpacingTest extends TestCase
     public function test_shared_resolver_preserves_custom_units_and_emits_full_bleed_width(): void
     {
         $result = app(WidgetAdvancedStyleResolver::class)->resolve([
-            'fullBleed' => 'full',
+            'fullBleed' => true,
             'paddingTop' => '2em',
             'paddingRight' => '3rem',
             'paddingBottom' => '4pt',
@@ -57,3 +57,4 @@ class PageBuilderElementorV24FullBleedSpacingTest extends TestCase
         $this->assertStringNotContainsString('pb-preview', $html);
     }
 }
+

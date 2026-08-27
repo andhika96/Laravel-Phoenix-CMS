@@ -164,7 +164,7 @@ class PageBuilderElementorV24ProductColorSelectorWidgetTest extends TestCase
 
         $this->assertStringContainsString('data-image-render-mode="image"', $direct);
         $this->assertStringContainsString('<img class="pb-product-color-selector__image"', $direct);
-        $this->assertStringNotContainsString('<div class="pb-product-color-selector__image pb-product-color-selector__image--background"', $direct);
+        $this->assertStringNotContainsString('pb-product-color-selector__image--background', $direct);
         $this->assertStringContainsString('data-image-render-mode="background"', $background);
         $this->assertStringContainsString('pb-product-color-selector__image--background', $background);
         $this->assertStringContainsString('--pb-pcs-panel-image:url(', $background);

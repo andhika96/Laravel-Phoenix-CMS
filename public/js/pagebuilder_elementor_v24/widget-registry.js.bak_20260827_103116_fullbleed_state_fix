@@ -82,8 +82,7 @@
 		settings.widthMode = widthModes.includes(settings.widthMode) ? settings.widthMode : 'default';
 		const normalizeBoolean = (value, fallback = false) => {
 			if (value === '' || value == null) return fallback;
-			const normalized = String(value).trim().toLowerCase();
-			return value === true || value === 1 || normalized === '1' || normalized === 'true' || normalized === 'full';
+			return value === true || value === 1 || value === '1' || value === 'true';
 		};
 		settings.fullBleed = normalizeBoolean(settings.fullBleed);
 		for (const key of ['fullBleedTablet', 'fullBleedMobile']) {
