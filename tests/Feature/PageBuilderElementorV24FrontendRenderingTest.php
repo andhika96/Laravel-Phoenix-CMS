@@ -156,6 +156,61 @@ class PageBuilderElementorV24FrontendRenderingTest extends TestCase
         $this->assertStringContainsString('id="pb-node-canonical-right"', $canonical);
     }
 
+    public function test_v24_layout_frontend_nodes_expose_motion_runtime_contract(): void
+    {
+        foreach (['container', 'container_fluid', 'grid', 'row_grid'] as $type) {
+            $html = $this->renderNode([
+                'id' => 'motion-'.$type,
+                'type' => $type,
+                'settings' => [
+                    'entranceAnimation' => 'fadeIn',
+                    'entranceDelay' => 250,
+                    'entranceDuration' => 'fast',
+                    'scrollingEffects' => true,
+                    'mouseEffects' => true,
+                ],
+                'children' => [],
+                'columns' => [],
+            ]);
+
+            $this->assertStringContainsString('data-pb-motion=', $html, $type);
+            $this->assertStringContainsString('data-entrance-delay="250"', $html, $type);
+            $this->assertStringContainsString('data-entrance-duration="fast"', $html, $type);
+        }
+    }
+
+    public function test_every_v24_frontend_renderer_exposes_motion_runtime_contract(): void
+    {
+        foreach (app(ModuleCatalog::class)->all() as $type => $module) {
+            $html = $this->renderNode([
+                'id' => 'motion-all-'.$type,
+                'type' => $type,
+                'settings' => ['scrollingEffects' => true, 'mouseEffects' => true, 'entranceAnimation' => 'fadeIn'],
+                'children' => [],
+                'columns' => [],
+            ]);
+
+            $this->assertStringContainsString('data-pb-motion=', $html, $type);
+        }
+    }
+
+    public function test_v24_text_editor_sanitizes_active_html_without_removing_safe_rich_text(): void
+    {
+        $html = $this->renderNode([
+            'id' => 'text-editor-xss',
+            'type' => 'text_editor',
+            'settings' => [
+                'html' => '<p><strong>Safe</strong> <a href="/docs" onclick="alert(1)">link</a><script>alert(1)</script><img src=x onerror=alert(1)></p>',
+            ],
+        ]);
+
+        $this->assertStringContainsString('<strong>Safe</strong>', $html);
+        $this->assertStringContainsString('href="/docs"', $html);
+        $this->assertStringNotContainsString('<script', $html);
+        $this->assertStringNotContainsString('onclick=', $html);
+        $this->assertStringNotContainsString('onerror=', $html);
+    }
+
     public function test_v24_grid_columns_render_widgets_containers_and_nested_grids(): void
     {
         $grid = $this->renderNode([

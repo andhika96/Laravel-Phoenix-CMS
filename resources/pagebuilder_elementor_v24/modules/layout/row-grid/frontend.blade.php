@@ -1,5 +1,6 @@
 	@php
-		$s = $settings;
+	$s = $settings;
+	$__pbLayoutAdvanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($s, (string) ($node['id'] ?? ''));
 		$wrapStyles = ['width:100%', 'box-sizing:border-box'];
 		if ($type === 'grid') {
 			$wrapStyles[] = 'flex:1 1 100%';
@@ -126,6 +127,7 @@
 		if ($customScopedCss !== '') $styleBlocks[] = $customScopedCss;
 	@endphp
 	<div id="{{ $nodeDomId }}" class="{{ $wrapClass }}" style="{{ $wrapStyle }}"
+		data-pb-motion="{{ $__pbLayoutAdvanced['motion'] }}" data-entrance-delay="{{ $__pbLayoutAdvanced['entranceDelay'] }}" data-entrance-duration="{{ $__pbLayoutAdvanced['entranceDuration'] }}"
 		@foreach($attrBag as $attrName => $attrValue)
 			{{ $attrName }}="{{ e($attrValue) }}"
 		@endforeach

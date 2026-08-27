@@ -1,5 +1,6 @@
 	@php
-		$s = $settings;
+	$s = $settings;
+	$__pbLayoutAdvanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($s, (string) ($node['id'] ?? ''));
 		$display = $s['displayType'] ?? 'flex';
 		$fullMode = $type === 'container_fluid' || in_array(($s['contentWidth'] ?? ''), ['full', 'fluid'], true);
 		$backgroundType = strtolower(trim((string) ($s['bgType'] ?? 'none')));
@@ -364,6 +365,7 @@
 		if ($customScopedCss !== '') $styleBlocks[] = $customScopedCss;
 	@endphp
 	<{{ $rootTag }} id="{{ $nodeDomId }}" class="{{ $classes }}" style="{{ $style }}"
+		data-pb-motion="{{ $__pbLayoutAdvanced['motion'] }}" data-entrance-delay="{{ $__pbLayoutAdvanced['entranceDelay'] }}" data-entrance-duration="{{ $__pbLayoutAdvanced['entranceDuration'] }}"
 		@foreach($attrBag as $attrName => $attrValue)
 			{{ $attrName }}="{{ e($attrValue) }}"
 		@endforeach

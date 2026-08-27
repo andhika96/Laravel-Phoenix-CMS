@@ -1,5 +1,44 @@
 @php
 	$settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
+	$sanitizeHtml = static function ($value): string {
+		$raw = trim((string) ($value ?? ''));
+		if ($raw === '' || !class_exists('DOMDocument')) return strip_tags($raw);
+
+		$dom = new \DOMDocument('1.0', 'UTF-8');
+		$previousErrors = libxml_use_internal_errors(true);
+		$dom->loadHTML('<!DOCTYPE html><html><body><div id="pb-text-root">'.$raw.'</div></body></html>', LIBXML_HTML_NODEFDTD | LIBXML_COMPACT);
+		libxml_clear_errors();
+		libxml_use_internal_errors($previousErrors);
+		$root = $dom->getElementById('pb-text-root');
+		if (!$root) return strip_tags($raw);
+
+		$allowedTags = ['P', 'BR', 'STRONG', 'EM', 'B', 'I', 'A', 'UL', 'OL', 'LI', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE'];
+		$allowedAttributes = ['A' => ['href', 'title', 'target', 'rel'], '*' => ['class']];
+		$sanitizeNode = static function (\DOMNode $parent) use (&$sanitizeNode, $allowedTags, $allowedAttributes): void {
+			foreach (iterator_to_array($parent->childNodes) as $child) {
+				if ($child->nodeType !== XML_ELEMENT_NODE) continue;
+				$tag = strtoupper($child->nodeName);
+				if (!in_array($tag, $allowedTags, true)) {
+					while ($child->firstChild) $parent->insertBefore($child->firstChild, $child);
+					$parent->removeChild($child);
+					continue;
+				}
+				$allowed = array_merge($allowedAttributes['*'], $allowedAttributes[$tag] ?? []);
+				foreach (iterator_to_array($child->attributes) as $attribute) {
+					$name = strtolower($attribute->name);
+					$value = (string) $attribute->value;
+					if (!in_array($name, $allowed, true) || str_starts_with($name, 'on') || ($name === 'href' && !preg_match('/^(?:https?:|mailto:|tel:|\/|#)/i', $value))) {
+						$child->removeAttribute($attribute->name);
+					}
+				}
+				$sanitizeNode($child);
+			}
+		};
+		$sanitizeNode($root);
+		$output = '';
+		foreach (iterator_to_array($root->childNodes) as $child) $output .= $dom->saveHTML($child);
+		return $output;
+	};
 	$nodeToken = preg_replace('/[^A-Za-z0-9_-]+/', '-', trim((string) ($node['id'] ?? 'text-editor'))) ?: 'text-editor';
 	$advanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($settings, $nodeToken, request());
 	$nodeDomId = $advanced['id'];
@@ -54,5 +93,5 @@
 		$styleBlocks[] = '@media (max-width:' . $breakpoint . 'px){#' . $nodeDomId . '{' . $rootStyle($suffix) . '}#' . $nodeDomId . ' p{margin-bottom:var(--pb-text-editor-paragraph-spacing,1em)}}';
 	}
 @endphp
-<div id="{{ $nodeDomId }}" class="{{ $className }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach style="{{ $rootStyle() }}">{!! $settings['html'] ?? '' !!}</div>
+<div id="{{ $nodeDomId }}" class="{{ $className }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach style="{{ $rootStyle() }}">{!! $sanitizeHtml($settings['html'] ?? '') !!}</div>
 <style>{!! $advanced['css'] !!}{!! implode("\n", $styleBlocks) !!}</style>
