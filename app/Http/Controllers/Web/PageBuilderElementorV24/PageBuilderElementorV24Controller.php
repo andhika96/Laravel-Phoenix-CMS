@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Web\PageBuilderElementorV24;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Page_Builder_Elementor_V24\AddPageBuilderElementorV24Request;
 use App\Http\Requests\Page_Builder_Elementor_V24\EditPageBuilderElementorV24Request;
+use App\Http\Requests\Page_Builder_Elementor_V24\ImportStaticPageRequest;
 use App\Models\Page_Builder\Page_Builder;
 use App\Support\PageBuilderElementorV24\FormSubmissionHandler;
 use App\Support\PageBuilderElementorV24\ImageRenditionResolver;
 use App\Support\PageBuilderElementorV24\ModuleCatalog;
+use App\Support\PageBuilderElementorV24\StaticImport\StaticPageImportService;
 use App\Support\CkfinderSessionBridge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class PageBuilderElementorV24Controller extends Controller
@@ -60,6 +63,28 @@ class PageBuilderElementorV24Controller extends Controller
 			'moduleCatalog' => $this->editorModuleCatalog($moduleCatalog),
 			'moduleSources' => $moduleCatalog->all(),
 		]);
+	}
+
+	public function importStatic(ImportStaticPageRequest $request, StaticPageImportService $service)
+	{
+		try
+		{
+			$result = $service->convert(
+				$request->file('source'),
+				$request->input('framework', 'auto'),
+				$request->input('entry'),
+			);
+
+			return response()->json(['success' => true] + $result);
+		}
+		catch (InvalidArgumentException $exception)
+		{
+			return response()->json([
+				'success' => false,
+				'status' => 'failed',
+				'message' => $exception->getMessage(),
+			], 422);
+		}
 	}
 
 	public function edit(Request $request, ModuleCatalog $moduleCatalog, $idOrSlug)

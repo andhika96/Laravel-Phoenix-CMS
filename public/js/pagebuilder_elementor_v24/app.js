@@ -3363,6 +3363,11 @@
 			const dynamicPreviewContext = computed(() => ({ ...(PBC.dynamicPreviewContext || {}), page_title: pageName.value }));
 			const pageStatus = ref(pd?.status || 'draft');
 			const customCss  = ref(pd?.custom_css || '');
+			const staticImportInput = ref(null);
+			const staticImportBusy = ref(false);
+			const staticImportReport = ref(null);
+			const staticImportPayload = ref(null);
+			const staticImportFramework = ref('auto');
 			const pageSettingsOpen = ref(false);
 			const showCssEditor = ref(false);
 			const cssEditorFullscreen = ref(false);
@@ -7191,6 +7196,63 @@
 				}
 			}
 
+			function openStaticImport() {
+				if (staticImportBusy.value) return;
+				staticImportInput.value?.click?.();
+			}
+
+			async function importStaticFile(event) {
+				const file = event?.target?.files?.[0];
+				if (!file || staticImportBusy.value || !PBC.staticImportUrl) return;
+				staticImportBusy.value = true;
+				try {
+					const data = new FormData();
+					data.append('source', file);
+					data.append('framework', staticImportFramework.value);
+					const response = await axios.post(PBC.staticImportUrl, data, {
+						headers: {
+							'X-CSRF-TOKEN': PBC.csrfToken,
+							'X-Requested-With': 'XMLHttpRequest',
+							Accept: 'application/json',
+						},
+					});
+					const result = response.data || {};
+					if (!Array.isArray(result.layout)) throw new Error('Import response does not contain a layout.');
+					rootNodes.value = norm(result.layout);
+					customCss.value = String(result.customCss || '');
+					if (result.pageName) pageName.value = String(result.pageName);
+					staticImportReport.value = result.report || null;
+					staticImportPayload.value = result;
+					saveState.value = 'dirty';
+					const warningCount = Array.isArray(result.report?.warnings) ? result.report.warnings.length : 0;
+					showSaveToast(result.status === 'partial' ? 'info' : 'success', result.status === 'partial'
+						? `Static page masuk dengan ${warningCount} warning. Periksa hasil Canvas sebelum Save.`
+						: 'Static page berhasil dikonversi ke Canvas.');
+				} catch (error) {
+					showSaveToast('failed', error.response?.data?.message || error.message || 'Static import gagal.');
+				} finally {
+					staticImportBusy.value = false;
+					if (event?.target) event.target.value = '';
+				}
+			}
+
+			function showStaticImportReport() {
+				const report = staticImportReport.value || {};
+				const warnings = Array.isArray(report.warnings) ? report.warnings.length : 0;
+				showSaveToast('info', `Import report: ${report.mappedNodes || 0} node mapped, ${report.placeholderNodes || 0} placeholder, ${warnings} warning.`);
+			}
+
+			function downloadStaticImportJson() {
+				if (!staticImportPayload.value || typeof URL === 'undefined' || typeof Blob === 'undefined') return;
+				const blob = new Blob([JSON.stringify(staticImportPayload.value, null, 2)], { type: 'application/json' });
+				const url = URL.createObjectURL(blob);
+				const link = document.createElement('a');
+				link.href = url;
+				link.download = 'pagebuilder-v24-static-import.json';
+				link.click();
+				URL.revokeObjectURL(url);
+			}
+
 			const widgetEditorServices = {
 				ckEditorField: CkEditorField,
 				submitFormDraft,
@@ -7448,6 +7510,7 @@
 				tabsBreakpointOptions: TABS_WIDGET_BREAKPOINT_OPTIONS, tabsWidthUnits: TABS_WIDGET_WIDTH_UNITS,
 				iconWidgetViewOptions: ICON_WIDGET_VIEW_OPTIONS, iconWidgetShapeOptions: ICON_WIDGET_SHAPE_OPTIONS,
 				pageName, pageStatus, customCss, dynamicPreviewContext, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
+				staticImportInput, staticImportBusy, staticImportReport, staticImportPayload, staticImportFramework, openStaticImport, importStaticFile, showStaticImportReport, downloadStaticImportJson,
 				showTextEditorModal, textEditorModalFullscreen, textEditorModalSummary, setTextEditorHtml, openTextEditorModal, closeTextEditorModal,
 				customCssGotoLine, customCssSearchQuery, customCssActiveLine, customCssCharCount, customCssLineCount, customCssLineNumbers, customCssSummary,
 				openCustomCssEditor, closeCustomCssEditor, applyCustomCssEditorChanges, clearCustomCss, handleCustomCssTab, syncCustomCssEditorScroll, goToCustomCssLine, searchCustomCssCode, savePage, saveState, saveMsg,
@@ -7462,6 +7525,7 @@
 
 		template: `
 		<div class="builder-app" @click="closePageSettings" @click.capture="closeContextMenuFromOutside" @keydown.esc.window="closeContextMenu">
+		<input ref="staticImportInput" type="file" accept=".html,.htm,.zip,text/html,application/zip" class="d-none" @change="importStaticFile">
 	<header class="topbar">
 		<div class="topbar-left">
 			<div class="brand-lockup">
@@ -7511,6 +7575,10 @@
 				<button class="icon-btn" :disabled="!canUndo" @click="undo" title="Undo"><i class="bi bi-arrow-counterclockwise"></i></button>
 				<button class="icon-btn" :disabled="!canRedo" @click="redo" title="Redo"><i class="bi bi-arrow-clockwise"></i></button>
 			</div>
+			<button class="top-action" :disabled="staticImportBusy" @click="openStaticImport"><i class="bi bi-file-earmark-arrow-up me-1"></i>{{ staticImportBusy ? 'Importing' : 'Import Static' }}</button>
+			<select v-model="staticImportFramework" class="pb-select pb-import-framework" aria-label="Static import framework" title="Static import framework"><option value="auto">Auto</option><option value="bootstrap5">Bootstrap 5</option><option value="tailwind">Tailwind</option></select>
+			<button v-if="staticImportReport" class="top-action" @click.stop="showStaticImportReport" title="Import report"><i class="bi bi-info-circle me-1"></i>Report</button>
+			<button v-if="staticImportPayload" class="top-action" @click.stop="downloadStaticImportJson" title="Download imported JSON"><i class="bi bi-filetype-json me-1"></i>JSON</button>
 			<button class="top-action" @click="previewMode = !previewMode"><i class="bi me-1" :class="previewMode ? 'bi-layout-sidebar-inset' : 'bi-play-circle'"></i>{{ previewMode ? 'Editor' : 'Preview' }}</button>
 			<button class="top-action primary" :class="{ 'is-loading': saveState==='saving' }" :disabled="saveState==='saving'" @click="savePage">
 				<span v-if="saveState==='saving'" class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
