@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "type": "event_media_grid",
+  "label": "Event Media Grid",
+  "category": "general",
+  "icon": "fas fa-images",
+  "order": 57,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  },
+  "capabilities": ["pro-icon-targets"]
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "type": "static_html",
+  "label": "Static HTML Preview",
+  "category": "basic",
+  "icon": "fas fa-code",
+  "order": 100,
+  "toolbox": false,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php",
+    "runtime": "runtime.js",
+    "styles": "styles.css"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": ["minimal-advanced"]
+  },
+  "capabilities": ["content-only-settings", "static-import-source"]
+}

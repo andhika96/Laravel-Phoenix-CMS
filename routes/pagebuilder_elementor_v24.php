@@ -34,7 +34,8 @@ Route::controller(PageBuilderElementorV24Controller::class)
             Route::get('/data/{idOrSlug}', 'getData')->name('cms.core.pagebuilder_elementor_v24.data');
             Route::get('/image-rendition', 'imageRendition')->name('cms.core.pagebuilder_elementor_v24.image_rendition');
             Route::get('/preview/{idOrSlug}', 'preview')->name('cms.core.pagebuilder_elementor_v24.preview');
-            Route::post('/import/static', 'importStatic')->name('cms.core.pagebuilder_elementor_v24.import_static');
+            Route::post('/compiled-native/automatic/analyze', 'analyzeAutomaticCompiledNative')
+                ->name('cms.core.pagebuilder_elementor_v24.compiled_native.automatic_analyze');
             Route::post('/form/editor-draft', 'submitEditorDraftForm')
                 ->middleware('throttle:10,1')
                 ->name('cms.core.pagebuilder_elementor_v24.form.editor_draft');

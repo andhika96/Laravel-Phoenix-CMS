@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "type": "event_highlight",
+  "label": "Event Highlight",
+  "category": "general",
+  "icon": "fas fa-calendar-check",
+  "order": 55,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  }
+}

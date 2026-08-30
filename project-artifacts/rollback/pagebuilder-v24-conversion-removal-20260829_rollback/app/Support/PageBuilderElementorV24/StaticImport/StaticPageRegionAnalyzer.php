@@ -1,0 +1,295 @@
+<?php
+
+namespace App\Support\PageBuilderElementorV24\StaticImport;
+
+use App\Support\PageBuilderElementorV24\ModuleCatalog;
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+
+final class StaticPageRegionAnalyzer
+{
+    /** @var array<int, string> */
+    private const NON_CONTENT_TAGS = ['base', 'link', 'meta', 'noscript', 'script', 'style'];
+
+    /** @var array<int, string> */
+    private const UNSUPPORTED_INTERACTIVE_TAGS = ['audio', 'canvas', 'embed', 'iframe', 'object'];
+
+    private readonly StaticImportWidgetCompatibility $compatibility;
+
+    public function __construct(
+        private readonly string $sourceHash = '',
+        /** @var array<int, string> */
+        private readonly array $frameworks = [],
+        /** @var array<string, mixed> */
+        private readonly array $report = [],
+        ?StaticImportWidgetCompatibility $compatibility = null,
+    ) {
+        $this->compatibility = $compatibility ?? new StaticImportWidgetCompatibility(new ModuleCatalog());
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    public function analyze(DOMDocument $dom): array
+    {
+        $body = $dom->getElementsByTagName('body')->item(0);
+        if (! $body instanceof DOMElement) return [];
+
+        $children = array_values(array_filter(
+            iterator_to_array($body->childNodes),
+            fn (mixed $child): bool => $child instanceof DOMElement
+                && ! in_array(strtolower($child->tagName), self::NON_CONTENT_TAGS, true)
+                && $this->isVisible($child),
+        ));
+        $landmarks = $this->landmarks($children);
+        $candidates = $landmarks !== [] ? $landmarks : $children;
+
+        $counts = ['header' => 0, 'section' => 0, 'footer' => 0];
+        foreach ($candidates as $candidate) $counts[$this->kindFor($candidate)]++;
+        $seen = ['header' => 0, 'section' => 0, 'footer' => 0];
+        $regions = [];
+
+        foreach ($candidates as $candidate) {
+            $marker = $this->marker($candidate);
+            if ($marker === '') continue;
+
+            $kind = $this->kindFor($candidate);
+            $seen[$kind]++;
+            $blocks = [];
+            foreach (iterator_to_array($candidate->childNodes) as $child) {
+                if (! $child instanceof DOMElement) continue;
+                $block = $this->block($child, null);
+                if ($block !== null) $blocks[] = $block;
+            }
+
+            $stats = $this->stats($candidate);
+            $stats['blocks'] = $this->countBlocks($blocks);
+            $warnings = [];
+            if ($stats['unsupportedInteractive'] > 0) $warnings[] = 'unsupported-interactive-elements';
+            if ($this->hasHorizontalScrollStructure($candidate)) $warnings[] = 'horizontal-scroll-structure';
+            $warnings = array_values(array_unique(array_merge($warnings, $this->blockWarnings($blocks))));
+
+            $regions[] = [
+                'id' => 'region-'.$marker,
+                'marker' => $marker,
+                'kind' => $kind,
+                'role' => 'layout',
+                'sourceId' => $this->sourceId($candidate),
+                'label' => $this->label($candidate, $kind, $counts[$kind], $seen[$kind]),
+                'order' => count($regions),
+                'allowedWidgets' => $this->compatibility->allowedWidgets('layout'),
+                'recommendedWidget' => $this->compatibility->recommendedWidget('layout', $candidate),
+                'recommendedStrategy' => $warnings === [] ? 'auto_native' : 'guided_native',
+                'confidence' => $warnings === [] ? 0.94 : 0.75,
+                'warnings' => $warnings,
+                'stats' => $stats,
+                'blocks' => $blocks,
+            ];
+        }
+
+        return $regions;
+    }
+
+    /** @param array<int, DOMElement> $children @return array<int, DOMElement> */
+    private function landmarks(array $children): array
+    {
+        $landmarks = [];
+        foreach ($children as $child) {
+            if (strtolower($child->tagName) !== 'main') {
+                if ($this->isLandmark($child)) $landmarks[] = $child;
+                continue;
+            }
+
+            $mainSections = array_values(array_filter(
+                iterator_to_array($child->childNodes),
+                fn (mixed $nested): bool => $nested instanceof DOMElement
+                    && strtolower($nested->tagName) === 'section'
+                    && $this->isVisible($nested),
+            ));
+            foreach ($mainSections as $section) $landmarks[] = $section;
+            if ($mainSections === []) $landmarks[] = $child;
+        }
+        return $landmarks;
+    }
+
+    private function isLandmark(DOMElement $element): bool
+    {
+        $tag = strtolower($element->tagName);
+        return in_array($tag, ['footer', 'header', 'main', 'section'], true)
+            || strtolower(trim($element->getAttribute('role'))) === 'banner'
+            || strtolower(trim($element->getAttribute('role'))) === 'contentinfo';
+    }
+
+    private function kindFor(DOMElement $element): string
+    {
+        $tag = strtolower($element->tagName);
+        if ($tag === 'header' || strtolower(trim($element->getAttribute('role'))) === 'banner') return 'header';
+        if ($tag === 'footer' || strtolower(trim($element->getAttribute('role'))) === 'contentinfo') return 'footer';
+        return 'section';
+    }
+
+    private function label(DOMElement $element, string $kind, int $total, int $order): string
+    {
+        foreach (['aria-label', 'data-label'] as $attribute) {
+            $label = trim($element->getAttribute($attribute));
+            if ($label !== '') return $label;
+        }
+
+        $label = ucfirst($kind);
+        return $kind === 'section' || $total > 1 ? $label.' '.$order : $label;
+    }
+
+    /** @return array<string, mixed>|null */
+    private function block(DOMElement $element, ?string $parentId): ?array
+    {
+        if (! $this->isVisible($element) || in_array(strtolower($element->tagName), self::NON_CONTENT_TAGS, true)) return null;
+
+        $marker = $this->marker($element);
+        if ($marker === '') return null;
+        $id = 'block-'.$marker;
+        $children = [];
+        if (strtolower($element->tagName) !== 'form') {
+            foreach (iterator_to_array($element->childNodes) as $child) {
+                if (! $child instanceof DOMElement) continue;
+                $nested = $this->block($child, $id);
+                if ($nested !== null) $children[] = $nested;
+            }
+        }
+
+        $textPreview = $this->textPreview($element);
+        return [
+            'id' => $id,
+            'marker' => $marker,
+            'parentId' => $parentId,
+            'role' => $this->roleFor($element),
+            'tag' => strtolower($element->tagName),
+            'sourceId' => $this->sourceId($element),
+            'label' => $textPreview,
+            'textPreview' => $textPreview,
+            'allowedWidgets' => $this->compatibility->allowedWidgets($this->roleFor($element)),
+            'recommendedWidget' => $this->compatibility->recommendedWidget($this->roleFor($element), $element),
+            'confidence' => $this->blockConfidence($element),
+            'warnings' => $this->blockWarningsFor($element),
+            'children' => $children,
+        ];
+    }
+
+    /** @return array<string, int> */
+    private function stats(DOMElement $root): array
+    {
+        $stats = ['elements' => 0, 'blocks' => 0, 'images' => 0, 'forms' => 0, 'unsupportedInteractive' => 0];
+        $walk = function (DOMElement $element) use (&$walk, &$stats): void {
+            if (! $this->isVisible($element) || in_array(strtolower($element->tagName), self::NON_CONTENT_TAGS, true)) return;
+            $stats['elements']++;
+            $tag = strtolower($element->tagName);
+            if ($tag === 'img') $stats['images']++;
+            if ($tag === 'form') $stats['forms']++;
+            if (in_array($tag, self::UNSUPPORTED_INTERACTIVE_TAGS, true)) $stats['unsupportedInteractive']++;
+            foreach (iterator_to_array($element->childNodes) as $child) {
+                if ($child instanceof DOMElement) $walk($child);
+            }
+        };
+        $walk($root);
+        return $stats;
+    }
+
+    /** @param array<int, array<string, mixed>> $blocks */
+    private function countBlocks(array $blocks): int
+    {
+        $count = 0;
+        foreach ($blocks as $block) {
+            $count++;
+            $count += $this->countBlocks(is_array($block['children'] ?? null) ? $block['children'] : []);
+        }
+        return $count;
+    }
+
+    private function isVisible(DOMElement $element): bool
+    {
+        if ($element->hasAttribute('hidden') || strtolower(trim($element->getAttribute('aria-hidden'))) === 'true') return false;
+        if (preg_match('/(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:!\s*important\s*)?(?:;|$)/i', $element->getAttribute('style'))) return false;
+        return ! in_array('hidden', $this->classes($element), true) && ! in_array('invisible', $this->classes($element), true);
+    }
+
+    private function marker(DOMElement $element): string
+    {
+        $marker = trim($element->getAttribute('data-pb-import-node'));
+        return preg_match('/^import-node-[A-Za-z0-9_-]+$/', $marker) === 1 ? $marker : '';
+    }
+
+    private function sourceId(DOMElement $element): string
+    {
+        $sourceId = trim($element->getAttribute('id'));
+        return preg_match('/^[A-Za-z][A-Za-z0-9_-]*$/', $sourceId) === 1 ? $sourceId : '';
+    }
+
+    private function roleFor(DOMElement $element): string
+    {
+        return $this->compatibility->roleFor($element);
+    }
+
+    /** @param array<int, array<string, mixed>> $blocks @return array<int, string> */
+    private function blockWarnings(array $blocks): array
+    {
+        $warnings = [];
+        foreach ($blocks as $block) {
+            foreach (is_array($block['warnings'] ?? null) ? $block['warnings'] : [] as $warning) $warnings[] = $warning;
+            $warnings = array_merge($warnings, $this->blockWarnings(is_array($block['children'] ?? null) ? $block['children'] : []));
+        }
+        return array_values(array_unique($warnings));
+    }
+
+    /** @return array<int, string> */
+    private function blockWarningsFor(DOMElement $element): array
+    {
+        return $this->compatibility->recommendedWidget($this->roleFor($element), $element) === null
+            ? ['unmapped-structure']
+            : [];
+    }
+
+    private function blockConfidence(DOMElement $element): float
+    {
+        return $this->compatibility->recommendedWidget($this->roleFor($element), $element) === null ? 0.25 : 0.95;
+    }
+
+    private function hasHorizontalScrollStructure(DOMElement $root): bool
+    {
+        $walk = function (DOMElement $element) use (&$walk): bool {
+            $classes = $this->classes($element);
+            $style = strtolower($element->getAttribute('style'));
+            if (array_intersect($classes, ['snap-track', 'snap-x', 'overflow-x-auto', 'overflow-x-scroll']) !== []) return true;
+            if (preg_match('/(?:overflow-x|scroll-snap-type)\s*:\s*(?:auto|scroll|[^;]*\bx\b)/i', $style) === 1) return true;
+            foreach (iterator_to_array($element->childNodes) as $child) {
+                if ($child instanceof DOMElement && $walk($child)) return true;
+            }
+            return false;
+        };
+
+        return $walk($root);
+    }
+
+    /** @return array<int, string> */
+    private function classes(DOMElement $element): array
+    {
+        return array_values(array_filter(preg_split('/\s+/', trim($element->getAttribute('class'))) ?: []));
+    }
+
+    private function textPreview(DOMElement $element): string
+    {
+        $text = preg_replace('/\s+/', ' ', trim($this->visibleText($element))) ?: '';
+        return mb_substr($text, 0, 160);
+    }
+
+    private function visibleText(DOMNode $node): string
+    {
+        if ($node->nodeType === XML_TEXT_NODE) return (string) $node->nodeValue;
+        if ($node instanceof DOMElement) {
+            if (in_array(strtolower($node->tagName), self::NON_CONTENT_TAGS, true) || ! $this->isVisible($node)) return '';
+        }
+
+        $text = '';
+        foreach (iterator_to_array($node->childNodes ?? []) as $child) {
+            $text .= $this->visibleText($child);
+        }
+        return $text;
+    }
+}

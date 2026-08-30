@@ -1,0 +1,209 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeFrameworkLoader;
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeSource;
+use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
+use ZipArchive;
+
+class PageBuilderElementorV24AutomaticCompiledNativeSourceTest extends TestCase
+{
+    public function test_html_upload_keeps_nested_source_and_inline_class_id_styles_without_runtime_scripts(): void
+    {
+        $upload = $this->htmlUpload('landing.html', <<<'HTML'
+<!doctype html>
+<html><head><style>
+    #hero { padding: 32px 40px; }
+    .copy { margin: 0 auto; border: 2px solid #d5b56b; }
+</style></head><body>
+    <section id="hero" class="hero"><div class="copy" style="width: 60%;"><h1>Hero</h1></div></section>
+    <script>window.shouldNeverRun = true;</script>
+</body></html>
+HTML);
+
+        $source = AutomaticCompiledNativeSource::fromUpload($upload);
+        $bundle = (new AutomaticCompiledNativeFrameworkLoader)->prepare($source, 'auto');
+
+        $this->assertSame('landing.html', $source->entry);
+        $this->assertStringContainsString('id="hero"', $bundle->html);
+        $this->assertStringContainsString('padding: 32px 40px', $bundle->css);
+        $this->assertStringContainsString('width: 60%', $bundle->html);
+        $this->assertStringNotContainsString('<script', strtolower($bundle->html));
+        $this->assertSame([], $bundle->runtimeScripts);
+
+        $source->cleanup();
+    }
+
+    public function test_zip_upload_chooses_home_before_index_and_never_extracts_parent_paths(): void
+    {
+        $upload = $this->zipUpload([
+            '../outside.html' => '<h1>outside</h1>',
+            'index.html' => '<h1>index</h1>',
+            'home.html' => '<h1>home</h1>',
+            'assets/hero.jpg' => 'image-bytes',
+        ]);
+
+        $source = AutomaticCompiledNativeSource::fromUpload($upload);
+
+        $this->assertSame('home.html', $source->entry);
+        $this->assertStringContainsString('home', $source->html);
+        $this->assertContains('assets/hero.jpg', $source->files);
+        $this->assertFileDoesNotExist(dirname($source->workspacePath).DIRECTORY_SEPARATOR.'outside.html');
+        $this->assertNotEmpty($source->diagnostics);
+
+        $source->cleanup();
+    }
+
+    public function test_tailwind_classes_are_compiled_to_static_css_without_play_cdn_runtime(): void
+    {
+        $upload = $this->htmlUpload('tailwind.html', <<<'HTML'
+<!doctype html>
+<html><body><section class="grid grid-cols-3 gap-6 px-8 py-12 bg-slate-900 text-white"><div>One</div><div>Two</div><div>Three</div></section></body></html>
+HTML);
+
+        $source = AutomaticCompiledNativeSource::fromUpload($upload);
+        $bundle = (new AutomaticCompiledNativeFrameworkLoader)->prepare($source, 'auto');
+
+        $this->assertSame('tailwind_static', $bundle->framework);
+        $this->assertContains('tailwind_static', $bundle->detectedFrameworks);
+        $this->assertMatchesRegularExpression('/\.grid\s*\{/', $bundle->css);
+        $this->assertStringNotContainsString('cdn.tailwindcss.com', $bundle->html.$bundle->css);
+        $this->assertSame([], $bundle->runtimeScripts);
+
+        $source->cleanup();
+    }
+
+    public function test_tailwind_arbitrary_values_are_kept_in_the_static_bundle(): void
+    {
+        $upload = $this->htmlUpload('tailwind-arbitrary.html', '<section class="grid grid-cols-[42%_58%] gap-[18px] p-[37px]"><div>Copy</div><div>Media</div></section>');
+
+        $source = AutomaticCompiledNativeSource::fromUpload($upload);
+        $bundle = (new AutomaticCompiledNativeFrameworkLoader)->prepare($source, 'tailwind');
+
+        $this->assertSame('tailwind_static', $bundle->framework);
+        $this->assertMatchesRegularExpression('/grid-template-columns:\s*42%\s+58%/', $bundle->css);
+        $this->assertStringContainsString('padding: 37px', $bundle->css);
+        $this->assertStringContainsString('gap: 18px', $bundle->css);
+
+        $source->cleanup();
+    }
+
+    public function test_bootstrap_stylesheet_is_classified_without_treating_javascript_as_layout_css(): void
+    {
+        $upload = $this->htmlUpload('bootstrap.html', <<<'HTML'
+<!doctype html>
+<html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"></head><body><div class="container"><div class="row"><div class="col-md-6">Copy</div></div></div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script></body></html>
+HTML);
+
+        $source = AutomaticCompiledNativeSource::fromUpload($upload);
+        $bundle = (new AutomaticCompiledNativeFrameworkLoader)->prepare($source, 'auto');
+
+        $this->assertSame('bootstrap_css', $bundle->framework);
+        $this->assertContains('bootstrap_css', $bundle->detectedFrameworks);
+        $this->assertContains('https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css', $bundle->externalStylesheets);
+        $this->assertSame([], $bundle->runtimeScripts);
+        $this->assertStringNotContainsString('bootstrap.bundle.min.js', $bundle->html);
+
+        $source->cleanup();
+    }
+
+    public function test_auto_detection_does_not_call_flex_row_a_bootstrap_signal(): void
+    {
+        $upload = $this->htmlUpload('plain.html', '<section class="flex flex-row items-center gap-4"><div>Copy</div></section>');
+
+        $source = AutomaticCompiledNativeSource::fromUpload($upload);
+        $bundle = (new AutomaticCompiledNativeFrameworkLoader)->prepare($source, 'auto');
+
+        $this->assertSame('tailwind_static', $bundle->framework);
+        $this->assertNotContains('bootstrap_css', $bundle->detectedFrameworks);
+
+        $source->cleanup();
+    }
+
+    public function test_nested_zip_entry_resolves_relative_stylesheet_and_css_asset_paths(): void
+    {
+        $upload = $this->zipUpload([
+            'pages/index.html' => '<!doctype html><html><head><link rel="stylesheet" href="../css/site.css"></head><body><section id="hero">Hero</section></body></html>',
+            'css/site.css' => '#hero{display:grid;grid-template-columns:42% 58%;background:url(../assets/bg.svg)}',
+            'assets/bg.svg' => '<svg xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1"/></svg>',
+        ]);
+
+        $source = AutomaticCompiledNativeSource::fromUpload($upload);
+        $bundle = (new AutomaticCompiledNativeFrameworkLoader)->prepare($source, 'auto');
+
+        $this->assertSame('pages/index.html', $source->entry);
+        $this->assertStringContainsString('grid-template-columns', $bundle->css);
+        $this->assertNotContains('stylesheet-not-found', array_column($bundle->diagnostics, 'code'));
+        $asset = collect($bundle->assetManifest)->firstWhere('url', '../assets/bg.svg');
+        $this->assertIsArray($asset);
+        $this->assertStringEndsWith('assets'.DIRECTORY_SEPARATOR.'bg.svg', (string) $asset['resolvedPath']);
+
+        $source->cleanup();
+    }
+
+    public function test_external_stylesheet_is_never_resolved_against_a_same_named_local_file(): void
+    {
+        $upload = $this->zipUpload([
+            'index.html' => '<!doctype html><html><head><link rel="stylesheet" href="https://cdn.example.com/style.css"></head><body><main>Page</main></body></html>',
+            'style.css' => 'main{display:grid;grid-template-columns:1fr 1fr}',
+        ]);
+
+        $source = AutomaticCompiledNativeSource::fromUpload($upload);
+        $bundle = (new AutomaticCompiledNativeFrameworkLoader)->prepare($source, 'auto');
+
+        $this->assertContains('https://cdn.example.com/style.css', $bundle->externalStylesheets);
+        $this->assertStringNotContainsString('grid-template-columns', $bundle->css);
+
+        $source->cleanup();
+    }
+
+    public function test_generic_plain_grid_class_does_not_trigger_tailwind_static_compilation(): void
+    {
+        $upload = $this->htmlUpload('plain-grid.html', '<!doctype html><html><head><style>.grid{display:grid;grid-template-columns:1fr 1fr}</style></head><body><section class="grid"><div>A</div><div>B</div></section></body></html>');
+
+        $source = AutomaticCompiledNativeSource::fromUpload($upload);
+        $bundle = (new AutomaticCompiledNativeFrameworkLoader)->prepare($source, 'auto');
+
+        $this->assertSame('plain_css', $bundle->framework);
+        $this->assertSame([], $bundle->detectedFrameworks);
+
+        $source->cleanup();
+    }
+
+    public function test_generic_container_and_row_classes_do_not_trigger_bootstrap_without_css_markers(): void
+    {
+        $upload = $this->htmlUpload('plain-layout-classes.html', '<main class="container"><div class="row"><div>Plain CSS</div></div></main>');
+
+        $source = AutomaticCompiledNativeSource::fromUpload($upload);
+        $bundle = (new AutomaticCompiledNativeFrameworkLoader)->prepare($source, 'auto');
+
+        $this->assertSame('plain_css', $bundle->framework);
+        $this->assertSame([], $bundle->detectedFrameworks);
+
+        $source->cleanup();
+    }
+
+    private function htmlUpload(string $name, string $contents): UploadedFile
+    {
+        $path = tempnam(sys_get_temp_dir(), 'pb-v24-auto-html-');
+        file_put_contents($path, $contents);
+
+        return new UploadedFile($path, $name, 'text/html', UPLOAD_ERR_OK, true);
+    }
+
+    /** @param array<string,string> $files */
+    private function zipUpload(array $files): UploadedFile
+    {
+        $path = tempnam(sys_get_temp_dir(), 'pb-v24-auto-zip-');
+        $zip = new ZipArchive();
+        $zip->open($path, ZipArchive::OVERWRITE);
+        foreach ($files as $name => $contents) {
+            $zip->addFromString($name, $contents);
+        }
+        $zip->close();
+
+        return new UploadedFile($path, 'site.zip', 'application/zip', UPLOAD_ERR_OK, true);
+    }
+}

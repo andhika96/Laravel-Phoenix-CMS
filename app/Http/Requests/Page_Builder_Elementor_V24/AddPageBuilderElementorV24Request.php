@@ -5,6 +5,7 @@ namespace App\Http\Requests\Page_Builder_Elementor_V24;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class AddPageBuilderElementorV24Request extends FormRequest
 {
@@ -18,6 +19,8 @@ class AddPageBuilderElementorV24Request extends FormRequest
 		return [
 			'pageName' => [['required'], 'unique:page_builder,page_name'],
 			'pageStatus' => 'required',
+			'customJs' => ['nullable', 'string', 'max:102400'],
+			'customJsMode' => ['nullable', 'string', Rule::in(['disabled', 'published'])],
 		];
 	}
 

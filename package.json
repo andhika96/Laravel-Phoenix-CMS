@@ -7,12 +7,14 @@
         "build:filemanager-v2": "vite build --config vite.filemanager-v2.config.js"
     },
     "devDependencies": {
+        "@tailwindcss/cli": "^4.3.3",
         "@vitejs/plugin-vue": "^5.2.4",
         "axios": "^1.6.4",
         "laravel-echo": "^2.3.4",
         "laravel-vite-plugin": "^1.0",
         "pusher-js": "^8.5.0",
         "sass": "^1.78.0",
+        "tailwindcss": "^4.3.3",
         "vite": "^5.0"
     },
     "name": "laravel-12-phoenix",

@@ -1,0 +1,105 @@
+<?php
+
+namespace App\Support\PageBuilderElementorV24\CompiledNative;
+
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
+final readonly class SourcePackage
+{
+    /**
+     * @param array<int,string> $files
+     * @param array<int,array<string,mixed>> $diagnostics
+     */
+    public function __construct(
+        public string $html,
+        public string $entry,
+        public string $workspacePath,
+        public array $files = [],
+        public array $diagnostics = [],
+    ) {
+    }
+
+    public function entryPath(): string
+    {
+        return $this->workspacePath.DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $this->entry);
+    }
+
+    public function filePath(string $relativePath, ?string $baseEntry = null): ?string
+    {
+        $normalized = str_replace('\\', '/', trim($relativePath));
+        if ($normalized === '' || str_contains($normalized, "\0") || preg_match('~^(?:[a-z][a-z0-9+.-]*:|//)~i', $normalized)) {
+            return null;
+        }
+
+        $path = parse_url($normalized, PHP_URL_PATH);
+        if (! is_string($path) || $path === '' || preg_match('/^[A-Za-z]:[\\\/]/', $path)) {
+            return null;
+        }
+
+        $parts = [];
+        if (! str_starts_with($path, '/')) {
+            $base = $baseEntry === null ? dirname($this->entry) : trim(str_replace('\\', '/', $baseEntry), '/');
+            if ($base !== '' && $base !== '.') {
+                foreach (explode('/', $base) as $basePart) {
+                    if ($basePart !== '' && $basePart !== '.') {
+                        $parts[] = $basePart;
+                    }
+                }
+            }
+        }
+        foreach (explode('/', ltrim($path, '/')) as $part) {
+            if ($part === '' || $part === '.') {
+                continue;
+            }
+            if ($part === '..') {
+                if ($parts === []) {
+                    return null;
+                }
+                array_pop($parts);
+                continue;
+            }
+            $parts[] = $part;
+        }
+
+        if ($parts === []) {
+            return null;
+        }
+
+        $path = realpath($this->workspacePath.DIRECTORY_SEPARATOR.implode(DIRECTORY_SEPARATOR, $parts));
+        $root = realpath($this->workspacePath);
+        if ($path === false || $root === false) {
+            return null;
+        }
+
+        $rootPrefix = rtrim($root, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+        return $path === $root || str_starts_with($path, $rootPrefix) ? $path : null;
+    }
+
+    public function workspaceFilePath(string $relativePath): ?string
+    {
+        return $this->filePath($relativePath, '');
+    }
+
+    public function cleanup(): void
+    {
+        $root = realpath($this->workspacePath);
+        if ($root === false || ! is_dir($root)) {
+            return;
+        }
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST,
+        );
+        foreach ($iterator as $item) {
+            if ($item->isDir()) {
+                @rmdir($item->getPathname());
+            } else {
+                @unlink($item->getPathname());
+            }
+        }
+        @rmdir($root);
+    }
+}

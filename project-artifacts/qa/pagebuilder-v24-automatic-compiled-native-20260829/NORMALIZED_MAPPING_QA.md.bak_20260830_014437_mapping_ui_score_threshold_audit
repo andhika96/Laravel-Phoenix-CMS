@@ -1,0 +1,55 @@
+# Normalized visual mapping QA
+
+Date: 2026-08-30
+Project: `D:\Laragon\www\laravel-13-phoenix`
+Scope: Recursive nested-DOM projection, composite block grouping, widget signatures, and v2.4 target payload integration.
+
+## Implemented behavior
+
+- Raw measured DOM remains available with source IDs, parent relationships, attributes, HTML, computed styles, rectangles, and viewport data.
+- A separate normalized projection exposes `mappingRoots`, `mappingNodes`, `childMappingIds`, `memberSourceIds`, `mappingRole`, and `mappingKind`.
+- Structural Grid/Flex wrappers remain layout nodes even when they contain media or icons.
+- Layout-neutral wrappers are promoted without dropping their content.
+- Semantic text elements with inline descendants remain one content mapping unit; `span`, `br`, and decorative `i` become members.
+- `div > dt(icon/label) + dd(value)` is represented as an `icon_box` composite shape.
+- `figure > img + overlay` is represented as an `image_box` composite shape with members retained for traceability.
+- Thin textless visual rules are suggested as `divider`.
+- High-confidence candidate widget types prefill the UI select; user selection remains editable and is the only value consumed by target compilation.
+- Normalized/import-only metadata is stripped at the final Canvas payload boundary.
+
+## Real-source replay
+
+Source: `E:\Apps\Laragon\www\ceo-masters\index.html`
+
+- Framework: `tailwind_static`
+- Raw Section 1 nodes: 38
+- Normalized Section 1 mapping nodes: 18
+- Section 1 mapping root: `node-33` (`Grid`, 2-column evidence)
+- Left wrapper: `node-34` (`Container`)
+- CTA wrapper: `node-42` (`Container`/Flex)
+- CTA children: `node-46`, `node-47` (`Button` candidates)
+- Metadata wrappers: `node-50`, `node-51`, `node-52` (`Icon Box` candidates)
+- Divider: `node-37` (`Divider` candidate)
+- Poster wrapper: `node-62` (`Image Box` candidate)
+
+The result confirms that nested `div` elements are not discarded or treated as duplicate IDs. They are retained when they establish a visual/layout boundary and otherwise promoted when they are layout-neutral.
+
+## Verification
+
+- Normalizer/signature/classifier/mapper/analyze focused slice: **67 passed, 345 assertions**.
+- Full v2.4 Node suite: **414 passed, 0 failed**.
+- `node --check public/js/pagebuilder_elementor_v24/app.js`: passed.
+- Vue app template compilation with `@vue/compiler-dom`: passed.
+- PHP lint for controller, request, route, and 15 Compiled Native classes: **18 files passed**.
+- `git diff --check`: passed.
+- Graphify refreshed after source changes: **21,074 nodes, 38,885 links**; query confirms the normalizer/signature/mapper/controller path.
+- Chrome read-only reload: editor root and Compiled Native entry point visible; no new error after the normalized mapping changes. The captured `automaticCompiledNativeSourceBlockCount` error is the historical pre-fix log entry from the earlier session.
+- Post-QA Vue binding regression: the focused Canvas-flow test failed first (**1 failed, 2 passed**) for the missing `FindSourceNode`/`SourceStyle` setup bindings, then passed after the minimal fix (**3 passed, 0 failed**); helper audit reports **8 template function references / 0 missing setup bindings**.
+
+## Boundaries
+
+- The normalized tree is now ready for subsequent widget-suggestion refinement, but no candidate score is treated as proof of pixel parity.
+- A composite with an overlay may still require an explicit user decision between a composite widget and an expanded Container/Image/overlay structure.
+- Local package assets still require persistent asset mapping before Apply; server filesystem paths are not exposed.
+- Save and Apply were not executed during QA.
+- The existing unrelated full PHP filter 419 CSRF failures remain outside this scope.

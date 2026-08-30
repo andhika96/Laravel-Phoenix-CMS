@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Http\Requests\Page_Builder_Elementor_V24;
+
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
+
+class ImportStaticPageRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'source' => ['required', 'file', 'mimes:html,htm,zip', 'max:20480'],
+            'framework' => ['nullable', Rule::in(['auto', 'bootstrap5', 'tailwind'])],
+            'mode' => ['nullable', Rule::in(['native', 'exact'])],
+            'entry' => ['nullable', 'string', 'max:255'],
+        ];
+    }
+
+    protected function failedValidation(Validator $validator): void
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'status' => 'failed',
+            'message' => $validator->errors(),
+        ], 422));
+    }
+}

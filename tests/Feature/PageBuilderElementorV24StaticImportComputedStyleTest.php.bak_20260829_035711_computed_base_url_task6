@@ -1,0 +1,39 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Awesome_Admin\Account;
+use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
+
+class PageBuilderElementorV24StaticImportComputedStyleTest extends TestCase
+{
+    public function test_compiled_response_keeps_scanner_contract_separate_from_saved_layout(): void
+    {
+        $account = new Account();
+        $account->forceFill(['id' => 1, 'email' => 'computed-style@example.com', 'suspended_at' => null]);
+        $account->exists = true;
+        $account->setRelation('roles', collect());
+        $this->actingAs($account);
+        $this->withoutMiddleware();
+
+        $response = $this->postJson(route('cms.core.pagebuilder_elementor_v24.import_static'), [
+            'source' => UploadedFile::fake()->createWithContent(
+                'computed-style.html',
+                '<html><body><section id="hero"><div class="px-5"><h1>Hero</h1></div></section></body></html>',
+            ),
+            'framework' => 'tailwind',
+            'mode' => 'compiled',
+        ])->assertOk();
+
+        $response->assertJsonPath('mode', 'compiled');
+        $response->assertJsonPath('compilePayload.viewports.0.key', 'mobile');
+        $response->assertJsonPath('compilePayload.viewports.0.width', 390);
+        $response->assertJsonPath('compilePayload.sections.0.sourceId', 'hero');
+        $response->assertJsonPath('compilePayload.sections.0.fallback', false);
+        $response->assertJsonPath('report.fallbackSections', 0);
+        $response->assertJsonPath('report.compiledSections', 1);
+        $this->assertSame('', (string) $response->json('customCss'));
+        $this->assertNotEmpty($response->json('layout.0.settings.staticImport'));
+    }
+}

@@ -1,0 +1,253 @@
+<?php
+
+namespace App\Support\PageBuilderElementorV24\StaticImport;
+
+use DOMDocument;
+use DOMElement;
+
+final class StaticPageCssProcessor
+{
+    /** @return array{css:string,stylesheets:array<int,string>,warnings:array<int,string>,dropped:int} */
+    public function process(DOMDocument $dom, string $html): array
+    {
+        $dropped = 0;
+        $stylesheets = [];
+        foreach (iterator_to_array($dom->getElementsByTagName('link')) as $link) {
+            if (! $link instanceof DOMElement || ! str_contains(strtolower($link->getAttribute('rel')), 'stylesheet')) continue;
+            $url = $this->safeStylesheetUrl($link->getAttribute('href'));
+            if ($url !== '') $stylesheets[] = $url;
+            elseif (trim($link->getAttribute('href')) !== '') $dropped++;
+        }
+
+        $blocks = [];
+        foreach (iterator_to_array($dom->getElementsByTagName('style')) as $style) {
+            if (! $style instanceof DOMElement) continue;
+            $processed = $this->processBlock((string) $style->textContent, $dropped);
+            if ($processed !== '') $blocks[] = $processed;
+        }
+
+        return [
+            'css' => implode("\n", $blocks),
+            'stylesheets' => array_slice(array_values(array_unique($stylesheets)), 0, 8),
+            'warnings' => $dropped > 0 ? ['Unsafe or unsupported imported CSS was omitted.'] : [],
+            'dropped' => $dropped,
+        ];
+    }
+
+    private function safeStylesheetUrl(string $value): string
+    {
+        $value = trim($value);
+        if ($value === '' || ! filter_var($value, FILTER_VALIDATE_URL)) return '';
+        $parts = parse_url($value);
+        $host = strtolower((string) ($parts['host'] ?? ''));
+        if (strtolower((string) ($parts['scheme'] ?? '')) !== 'https') return '';
+        return in_array($host, ['fonts.googleapis.com', 'fonts.gstatic.com'], true) ? $value : '';
+    }
+
+    private function processBlock(string $css, int &$dropped): string
+    {
+        $css = preg_replace('~/\*.*?\*/~s', '', $css) ?? '';
+        $css = preg_replace_callback('/@(import|charset|namespace)\b[^;]*;/i', function () use (&$dropped): string {
+            $dropped++;
+            return '';
+        }, $css) ?? '';
+
+        $output = [];
+        $offset = 0;
+        $length = strlen($css);
+        while ($offset < $length) {
+            while ($offset < $length && ctype_space($css[$offset])) $offset++;
+            if ($offset >= $length) break;
+
+            $open = $this->findNextBrace($css, $offset);
+            if ($open < 0) break;
+            $prelude = trim(substr($css, $offset, $open - $offset));
+            $close = $this->findMatchingBrace($css, $open);
+            if ($close < 0) {
+                $dropped++;
+                break;
+            }
+            $body = substr($css, $open + 1, $close - $open - 1);
+            $offset = $close + 1;
+            if ($prelude === '') continue;
+
+            if (str_starts_with($prelude, '@')) {
+                if (preg_match('/^@(media|supports|container|layer)\b/i', $prelude)) {
+                    $nested = $this->processBlock($body, $dropped);
+                    if ($nested !== '') $output[] = preg_replace('/\s+/', ' ', $prelude).'{'.$nested.'}';
+                } else {
+                    $dropped++;
+                }
+                continue;
+            }
+
+            $selectors = $this->scopeSelectors($prelude, $dropped);
+            $declarations = $this->sanitizeDeclarations($body, $dropped);
+            if ($selectors !== '' && $declarations !== '') $output[] = $selectors.'{'.$declarations.'}';
+        }
+        return implode('', $output);
+    }
+
+    private function scopeSelectors(string $source, int &$dropped): string
+    {
+        $selectors = [];
+        foreach ($this->splitTopLevel($source, ',') as $selector) {
+            $selector = trim(preg_replace('/\s+/', ' ', $selector) ?? '');
+            if ($selector === '' || str_contains($selector, '{') || str_contains($selector, '}')) {
+                $dropped++;
+                continue;
+            }
+            $selector = preg_replace_callback('/#([A-Za-z][A-Za-z0-9_-]*)/', fn (array $match): string => ':is(#'.$match[1].',[data-css-id="'.$match[1].'"])', $selector) ?? $selector;
+            $selector = preg_replace('/(^|[\s>+~])(?::root|html|body)(?=$|[\s>+~.:#\[])/i', '$1.pb-import-root', $selector) ?? $selector;
+            if (! str_contains($selector, '.pb-import-root')) $selector = '.pb-import-root '.$selector;
+            $selectors[] = trim($selector);
+        }
+        return implode(',', array_values(array_unique($selectors)));
+    }
+
+    private function sanitizeDeclarations(string $source, int &$dropped): string
+    {
+        $declarations = [];
+        foreach ($this->splitTopLevel($source, ';') as $declaration) {
+            $declaration = trim($declaration);
+            if ($declaration === '') continue;
+            $separator = $this->findTopLevelColon($declaration);
+            if ($separator < 1) {
+                $dropped++;
+                continue;
+            }
+            $property = strtolower(trim(substr($declaration, 0, $separator)));
+            $value = trim(substr($declaration, $separator + 1));
+            if (! preg_match('/^(?:--[A-Za-z0-9_-]+|[A-Za-z-]+)$/', $property)
+                || $value === ''
+                || preg_match('/(?:expression\s*\(|javascript:|vbscript:|-moz-binding|behavior\s*:)/i', $value)
+                || str_contains($value, '{')
+                || str_contains($value, '}')
+                || ! $this->safeUrls($value)
+            ) {
+                $dropped++;
+                continue;
+            }
+            $declarations[] = $property.':'.(preg_replace('/\s+/', ' ', $value) ?? $value);
+        }
+        return implode(';', $declarations);
+    }
+
+    private function safeUrls(string $value): bool
+    {
+        if (! preg_match_all('/url\(\s*([^)]+?)\s*\)/i', $value, $matches)) return true;
+        foreach ($matches[1] as $raw) {
+            $url = trim((string) $raw, " \t\n\r\0\x0B\"'");
+            if (! preg_match('#^(?:https://|/|data:image/(?:png|gif|jpe?g|webp|svg\+xml)[;,])#i', $url)) return false;
+        }
+        return true;
+    }
+
+    /** @return array<int,string> */
+    private function splitTopLevel(string $source, string $delimiter): array
+    {
+        $parts = [];
+        $part = '';
+        $depth = 0;
+        $quote = '';
+        $escaped = false;
+        for ($index = 0, $length = strlen($source); $index < $length; $index++) {
+            $character = $source[$index];
+            if ($escaped) {
+                $part .= $character;
+                $escaped = false;
+                continue;
+            }
+            if ($character === '\\') {
+                $part .= $character;
+                $escaped = true;
+                continue;
+            }
+            if ($quote !== '') {
+                $part .= $character;
+                if ($character === $quote) $quote = '';
+                continue;
+            }
+            if ($character === '"' || $character === "'") {
+                $quote = $character;
+                $part .= $character;
+                continue;
+            }
+            if ($character === '(' || $character === '[') $depth++;
+            if ($character === ')' || $character === ']') $depth = max(0, $depth - 1);
+            if ($character === $delimiter && $depth === 0) {
+                $parts[] = $part;
+                $part = '';
+                continue;
+            }
+            $part .= $character;
+        }
+        $parts[] = $part;
+        return $parts;
+    }
+
+    private function findTopLevelColon(string $source): int
+    {
+        $parts = $this->splitTopLevel($source, ':');
+        return count($parts) > 1 ? strlen($parts[0]) : -1;
+    }
+
+    private function findNextBrace(string $source, int $offset): int
+    {
+        $quote = '';
+        $escaped = false;
+        for ($index = $offset, $length = strlen($source); $index < $length; $index++) {
+            $character = $source[$index];
+            if ($escaped) {
+                $escaped = false;
+                continue;
+            }
+            if ($character === '\\') {
+                $escaped = true;
+                continue;
+            }
+            if ($quote !== '') {
+                if ($character === $quote) $quote = '';
+                continue;
+            }
+            if ($character === '"' || $character === "'") {
+                $quote = $character;
+                continue;
+            }
+            if ($character === '{') return $index;
+        }
+        return -1;
+    }
+
+    private function findMatchingBrace(string $source, int $open): int
+    {
+        $depth = 0;
+        $quote = '';
+        $escaped = false;
+        for ($index = $open, $length = strlen($source); $index < $length; $index++) {
+            $character = $source[$index];
+            if ($escaped) {
+                $escaped = false;
+                continue;
+            }
+            if ($character === '\\') {
+                $escaped = true;
+                continue;
+            }
+            if ($quote !== '') {
+                if ($character === $quote) $quote = '';
+                continue;
+            }
+            if ($character === '"' || $character === "'") {
+                $quote = $character;
+                continue;
+            }
+            if ($character === '{') $depth++;
+            if ($character === '}') {
+                $depth--;
+                if ($depth === 0) return $index;
+            }
+        }
+        return -1;
+    }
+}

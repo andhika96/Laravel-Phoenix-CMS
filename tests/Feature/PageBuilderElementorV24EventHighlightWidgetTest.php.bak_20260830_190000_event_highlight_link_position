@@ -1,0 +1,99 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\Concerns\InteractsWithPageBuilderElementorV24Modules;
+use Tests\TestCase;
+
+class PageBuilderElementorV24EventHighlightWidgetTest extends TestCase
+{
+    use InteractsWithPageBuilderElementorV24Modules;
+
+    public function test_event_highlight_is_registered_as_a_general_widget(): void
+    {
+        $module = $this->pageBuilderV24Module('event_highlight');
+
+        $this->assertSame('event_highlight', $module['type'] ?? null);
+        $this->assertSame('Event Highlight', $module['label'] ?? null);
+        $this->assertSame('general', $module['category'] ?? null);
+        $this->assertSame(55, $module['order'] ?? null);
+        $this->assertSame('widget', $module['advanced']['profile'] ?? null);
+
+        foreach (['definition', 'canvas', 'settings', 'view'] as $asset) {
+            $this->assertFileExists($module['assets'][$asset] ?? 'missing');
+        }
+    }
+
+    public function test_frontend_renders_both_text_orders_and_safe_cta_link(): void
+    {
+        $base = [
+            'heading' => 'Heading text',
+            'subheading' => 'Subheading text',
+            'linkText' => 'Register interest',
+            'linkUrl' => 'https://example.com/register',
+            'linkTarget' => '_blank',
+            'linkNofollow' => true,
+            'showArrow' => true,
+            'headingBorderMode' => 'box',
+            'headingBorderWidthMode' => 'full',
+            'subheadingBorderMode' => 'underline',
+            'subheadingBorderWidthMode' => 'content',
+            'layoutDirection' => 'row',
+            'layoutDirectionMobile' => 'column',
+            'linkVerticalPosition' => 'bottom',
+            'linkHorizontalAlign' => 'right',
+        ];
+
+        $subheadingFirst = $this->pageBuilderV24ModuleViewByType('event_highlight', [
+            'node' => ['id' => 'event-highlight-subheading-first', 'type' => 'event_highlight', 'settings' => array_replace($base, ['textOrder' => 'subheading-first'])],
+        ])->render();
+
+        $this->assertStringContainsString('data-event-highlight', $subheadingFirst);
+        $this->assertStringContainsString('Subheading text', $subheadingFirst);
+        $this->assertStringContainsString('Heading text', $subheadingFirst);
+        $this->assertStringContainsString('href="https://example.com/register"', $subheadingFirst);
+        $this->assertStringContainsString('target="_blank"', $subheadingFirst);
+        $this->assertStringContainsString('noopener', $subheadingFirst);
+        $this->assertStringContainsString('nofollow', $subheadingFirst);
+        $this->assertStringContainsString('border-width-mode-full', $subheadingFirst);
+        $this->assertStringContainsString('border-width-mode-content', $subheadingFirst);
+        $this->assertLessThan(strpos($subheadingFirst, 'Heading text'), strpos($subheadingFirst, 'Subheading text'));
+
+        $headingFirst = $this->pageBuilderV24ModuleViewByType('event_highlight', [
+            'node' => ['id' => 'event-highlight-heading-first', 'type' => 'event_highlight', 'settings' => array_replace($base, ['textOrder' => 'heading-first'])],
+        ])->render();
+        $this->assertTrue(strpos($headingFirst, 'Heading text') < strpos($headingFirst, 'Subheading text'));
+
+        $unsafe = $this->pageBuilderV24ModuleViewByType('event_highlight', [
+            'node' => ['id' => 'event-highlight-unsafe', 'type' => 'event_highlight', 'settings' => array_replace($base, ['linkUrl' => 'javascript:alert(1)'])],
+        ])->render();
+        $this->assertStringNotContainsString('javascript:', $unsafe);
+        $this->assertStringNotContainsString('<a ', $unsafe);
+    }
+
+    public function test_settings_and_frontend_keep_responsive_layout_contract(): void
+    {
+        $html = $this->pageBuilderV24ModuleViewByType('event_highlight', [
+            'node' => [
+                'id' => 'event-highlight-responsive',
+                'type' => 'event_highlight',
+                'settings' => [
+                    'heading' => 'Responsive heading',
+                    'subheading' => 'Responsive subheading',
+                    'layoutDirection' => 'row',
+                    'layoutDirectionTablet' => 'column',
+                    'layoutDirectionMobile' => 'column',
+                    'linkVerticalPosition' => 'top',
+                    'linkHorizontalAlign' => 'center',
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringContainsString('layout-direction-row', $html);
+        $this->assertStringContainsString('flex-direction:column', $html);
+        $this->assertStringContainsString('@media (max-width: 767px)', $html);
+        $this->assertStringContainsString('link-position-top', $html);
+        $this->assertStringContainsString('link-align-center', $html);
+        $this->assertStringContainsString('overflow-wrap:anywhere', $html);
+    }
+}

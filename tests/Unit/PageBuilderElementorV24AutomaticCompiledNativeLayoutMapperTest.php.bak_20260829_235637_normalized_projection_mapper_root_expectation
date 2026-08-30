@@ -1,0 +1,202 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeLayoutMapper;
+use Tests\TestCase;
+
+class PageBuilderElementorV24AutomaticCompiledNativeLayoutMapperTest extends TestCase
+{
+    public function test_one_column_stack_maps_to_a_block_container_and_preserves_box_model(): void
+    {
+        $result = (new AutomaticCompiledNativeLayoutMapper)->toPhoenixLayout($this->blueprint([
+            'id' => 'single',
+            'sourceSelector' => '#single',
+            'layoutByViewport' => [
+                'desktop' => $this->layout('stack', 1, ['1fr']),
+            ],
+            'nodes' => [$this->node('single', 'section', null, [
+                'paddingTop' => '32px', 'paddingRight' => '24px', 'paddingBottom' => '32px', 'paddingLeft' => '24px',
+                'marginTop' => '12px', 'marginRight' => '0px', 'marginBottom' => '20px', 'marginLeft' => '0px',
+                'backgroundColor' => 'rgb(245, 241, 232)',
+            ])],
+        ]));
+
+        $node = $result['nodes'][0];
+        $this->assertSame('container', $node['type']);
+        $this->assertSame('block', $node['settings']['displayType']);
+        $this->assertSame('32px', $node['settings']['paddingTop']);
+        $this->assertSame('24px', $node['settings']['paddingRight']);
+        $this->assertSame('12px', $node['settings']['marginTop']);
+        $this->assertSame([], $node['children']);
+        $this->assertSame('single', $node['sourceSectionId']);
+    }
+
+    public function test_two_column_grid_maps_to_canonical_grid_slots_and_track_widths(): void
+    {
+        $result = (new AutomaticCompiledNativeLayoutMapper)->toPhoenixLayout($this->blueprint([
+            'id' => 'hero',
+            'layoutByViewport' => [
+                'desktop' => $this->layout('grid', 2, ['42%', '58%'], '32px'),
+            ],
+            'nodes' => [
+                $this->node('hero', 'section'),
+                $this->node('copy', 'div', 'hero', [], ['x' => 0, 'width' => 400]),
+                $this->node('media', 'div', 'hero', [], ['x' => 432, 'width' => 500]),
+            ],
+        ]));
+
+        $node = $result['nodes'][0];
+        $this->assertSame('grid', $node['type']);
+        $this->assertSame(2, $node['settings']['columns']);
+        $this->assertSame('42% 58%', $node['settings']['gridTemplateColumns']);
+        $this->assertSame('32px', $node['settings']['columnGap']);
+        $this->assertCount(2, $node['columns']);
+        $this->assertSame(['copy'], $node['columns'][0]['sourceBlockIds']);
+        $this->assertSame(['media'], $node['columns'][1]['sourceBlockIds']);
+        $this->assertSame([], $node['columns'][0]['children']);
+    }
+
+    public function test_three_column_grid_and_flex_row_do_not_use_a_fixed_two_column_assumption(): void
+    {
+        $mapper = new AutomaticCompiledNativeLayoutMapper;
+        $grid = $mapper->toPhoenixLayout($this->blueprint([
+            'id' => 'cards',
+            'layoutByViewport' => ['desktop' => $this->layout('grid', 3, ['1fr', '2fr', '1fr'])],
+            'nodes' => [$this->node('cards', 'section')],
+        ]))['nodes'][0];
+        $flex = $mapper->toPhoenixLayout($this->blueprint([
+            'id' => 'row',
+            'layoutByViewport' => ['desktop' => $this->layout('flex', 3, ['240px', '320px', '180px'])],
+            'nodes' => [$this->node('row', 'section')],
+        ]))['nodes'][0];
+
+        $this->assertSame(3, $grid['settings']['columns']);
+        $this->assertCount(3, $grid['columns']);
+        $this->assertSame('flex', $flex['settings']['displayType']);
+        $this->assertSame('nowrap', $flex['settings']['flexWrap']);
+        $this->assertSame([], $flex['children']);
+    }
+
+    public function test_responsive_columns_and_nested_source_relationships_are_retained(): void
+    {
+        $result = (new AutomaticCompiledNativeLayoutMapper)->toPhoenixLayout($this->blueprint([
+            'id' => 'responsive',
+            'layoutByViewport' => [
+                'desktop' => $this->layout('grid', 3, ['1fr', '1fr', '1fr']),
+                'tablet' => $this->layout('grid', 2, ['1fr', '1fr']),
+                'mobile' => $this->layout('stack', 1, ['1fr']),
+            ],
+            'nodes' => [
+                $this->node('responsive', 'section'),
+                $this->node('wrapper', 'div', 'responsive'),
+                $this->node('heading', 'h2', 'wrapper'),
+            ],
+        ]));
+
+        $node = $result['nodes'][0];
+        $this->assertSame(3, $node['settings']['columns']);
+        $this->assertSame(2, $node['settings']['columnsTablet']);
+        $this->assertSame(1, $node['settings']['columnsMobile']);
+        $this->assertSame(['wrapper', 'heading'], array_column($node['sourceBlocks'], 'sourceId'));
+        $this->assertSame('wrapper', $node['sourceBlocks'][1]['parentSourceId']);
+    }
+
+    public function test_normalized_mapping_tree_reaches_phoenix_layout_without_replacing_raw_source_blocks(): void
+    {
+        $result = (new AutomaticCompiledNativeLayoutMapper)->toPhoenixLayout($this->blueprint([
+            'id' => 'hero',
+            'layoutByViewport' => ['desktop' => $this->layout('stack', 1, ['1fr'])],
+            'nodes' => [
+                $this->node('hero', 'section'),
+                $this->node('wrapper', 'div', 'hero', ['display' => 'grid', 'gridTemplateColumns' => '1fr 1fr']),
+                $this->node('heading', 'h1', 'wrapper'),
+                $this->node('break', 'br', 'heading'),
+                $this->node('accent', 'span', 'wrapper'),
+            ],
+        ]));
+
+        $node = $result['nodes'][0];
+
+        $this->assertSame(['wrapper'], $node['normalizedBlocks']['mappingRoots']);
+        $this->assertSame('layout', $node['normalizedBlocks']['mappingNodes'][0]['mappingRole']);
+        $this->assertSame(['hero', 'wrapper', 'heading', 'break', 'accent'], array_column($node['sourceBlocks'], 'sourceId'));
+        $this->assertSame(['wrapper'], $result['sections'][0]['normalizedBlocks']['mappingRoots']);
+    }
+
+    public function test_unclassified_layout_is_reported_as_unsupported_and_not_mapped_as_a_grid(): void
+    {
+        $blueprint = $this->blueprint([
+            'id' => 'overlay',
+            'layoutByViewport' => ['desktop' => $this->layout('unclassified', 1, ['1fr'])],
+            'nodes' => [$this->node('overlay', 'section')],
+        ]);
+
+        $mapper = new AutomaticCompiledNativeLayoutMapper;
+        $unsupported = $mapper->unsupported($blueprint);
+        $result = $mapper->toPhoenixLayout($blueprint);
+
+        $this->assertContains('layout-unclassified', array_column($unsupported, 'code'));
+        $this->assertSame('unclassified', $result['nodes'][0]['compileStatus']);
+        $this->assertSame([], $result['nodes'][0]['children']);
+    }
+
+    /** @param array<string,mixed> $section */
+    private function blueprint(array $section): array
+    {
+        return [
+            'version' => 1,
+            'viewports' => [
+                ['name' => 'desktop', 'width' => 1180, 'height' => 900],
+                ['name' => 'tablet', 'width' => 768, 'height' => 1024],
+                ['name' => 'mobile', 'width' => 390, 'height' => 900],
+            ],
+            'sections' => [$section],
+        ];
+    }
+
+    private function layout(string $mode, int $columns, array $tracks, string $gap = ''): array
+    {
+        return [
+            'mode' => $mode,
+            'columns' => $columns,
+            'tracks' => $tracks,
+            'gap' => $gap,
+            'evidence' => ['rule' => 'test'],
+            'diagnostics' => [],
+        ];
+    }
+
+    /** @param array<string,string> $style @param array<string,int|float> $rect */
+    private function node(string $id, string $tag, ?string $parent = null, array $style = [], array $rect = []): array
+    {
+        $baseStyle = [
+            'display' => 'block',
+            'position' => 'static',
+            'boxSizing' => 'border-box',
+            'paddingTop' => '0px', 'paddingRight' => '0px', 'paddingBottom' => '0px', 'paddingLeft' => '0px',
+            'marginTop' => '0px', 'marginRight' => '0px', 'marginBottom' => '0px', 'marginLeft' => '0px',
+            'borderTopWidth' => '0px', 'borderRightWidth' => '0px', 'borderBottomWidth' => '0px', 'borderLeftWidth' => '0px',
+            'borderTopStyle' => 'none', 'borderRightStyle' => 'none', 'borderBottomStyle' => 'none', 'borderLeftStyle' => 'none',
+            'borderRadius' => '0px', 'backgroundColor' => 'rgba(0, 0, 0, 0)', 'backgroundImage' => 'none',
+            'width' => '900px', 'height' => '300px', 'minHeight' => '0px', 'maxWidth' => 'none',
+            'overflow' => 'visible', 'zIndex' => 'auto', 'transform' => 'none',
+        ];
+        $computedStyle = array_merge($baseStyle, $style);
+        $record = [
+            'x' => (float) ($rect['x'] ?? 0), 'y' => (float) ($rect['y'] ?? 0),
+            'width' => (float) ($rect['width'] ?? 900), 'height' => (float) ($rect['height'] ?? 300),
+        ];
+
+        return [
+            'sourceId' => $id,
+            'tag' => $tag,
+            'id' => $id,
+            'classList' => [],
+            'parentSourceId' => $parent,
+            'layoutRole' => 'container',
+            'rectByViewport' => ['desktop' => $record],
+            'computedStyleByViewport' => ['desktop' => $computedStyle],
+        ];
+    }
+}

@@ -1,0 +1,421 @@
+{{-- pro-icon-targets is declared by module.json for the existing icon-library editor service. --}}
+@php
+	$cardIconDefaults = [
+		['golf-ball', 'fal fa-golf-ball', 'Championship Golf', "Play one of Indonesia’s most prestigious championship courses."],
+		['handshake', 'fal fa-handshake', 'Executive Networking', 'Connect with CEOs, investors, entrepreneurs and senior business leaders.'],
+		['wine-glass', 'fal fa-wine-glass', 'Premium Hospitality', 'A carefully curated experience on and off the golf course.'],
+		['trophy', 'fal fa-trophy', 'Awards & Gala Dinner', 'Celebrate the championship with entertainment and awards.'],
+		['plane', 'fal fa-plane', 'International Finale', 'Earn your place at the CEO Masters Grand Finale in Dubai.'],
+	];
+	$defaultCard = function (int $index) use ($cardIconDefaults): array {
+		$icon = $cardIconDefaults[$index] ?? $cardIconDefaults[0];
+		return [
+			'id' => 'event-highlights-grid-card-'.($index + 1),
+			'mediaMode' => 'icon',
+			'mediaIconStyle' => 'light',
+			'mediaIconName' => $icon[0],
+			'mediaIconClass' => $icon[1],
+			'mediaIconSource' => 'library',
+			'mediaIconSvg' => '',
+			'imageSource' => 'ckfinder',
+			'imageUrl' => '',
+			'imageAlt' => '',
+			'mediaText' => '',
+			'title' => $icon[2] ?? 'Card '.($index + 1),
+			'description' => $icon[3] ?? 'Add a short description.',
+			'mediaColor' => '',
+			'titleColor' => '',
+			'descriptionColor' => '',
+			'surface' => 'inherit',
+			'customBackgroundColor' => '',
+			'customBorderColor' => '',
+		];
+	};
+	$eventHighlightsGridSettings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
+	$eventHighlightsGridSettings += [
+		'heading' => 'Five reasons to be on the first tee.',
+		'subheading' => 'EVENT HIGHLIGHTS',
+		'textOrder' => 'subheading-first',
+		'linkText' => 'REGISTER INTEREST',
+		'showLink' => true,
+		'showArrow' => true,
+		'layoutDirection' => 'row',
+		'layoutDirectionMobile' => 'column',
+		'linkVerticalPosition' => 'bottom',
+		'linkHorizontalAlign' => 'right',
+		'textGap' => '12px',
+		'gridColumns' => '5',
+		'gridColumnsTablet' => '3',
+		'gridColumnsMobile' => '1',
+		'columnGap' => '20px',
+		'columnGapTablet' => '16px',
+		'columnGapMobile' => '16px',
+		'rowGap' => '20px',
+		'rowGapTablet' => '16px',
+		'rowGapMobile' => '16px',
+		'headerCardsGap' => '64px',
+		'headerCardsGapTablet' => '48px',
+		'headerCardsGapMobile' => '32px',
+		'cardWidthMode' => 'equal',
+		'cardMinWidth' => '180px',
+		'cardHeightMode' => 'custom',
+		'cardHeightModeTablet' => '',
+		'cardHeightModeMobile' => 'auto',
+		'cardHeight' => '385px',
+		'cardHeightTablet' => '360px',
+		'cardHeightMobile' => '',
+		'cardMediaPosition' => 'top',
+		'cardAlignment' => 'left',
+		'cardMediaGap' => '32px',
+		'cardMediaGapTablet' => '28px',
+		'cardMediaGapMobile' => '24px',
+		'cardContentGap' => '24px',
+		'cardMediaSize' => '38px',
+		'cardImageWidth' => '64px',
+		'cardImageHeight' => '64px',
+		'cardImageObjectFit' => 'contain',
+		'cardMediaColor' => '#d8ad5e',
+		'cardTitleColor' => '#f4efe4',
+		'cardDescriptionColor' => '#aab6c8',
+		'cardBackgroundColor' => '#0a1e33',
+		'cardBackgroundColorHover' => 'rgba(216,173,94,.06)',
+		'cardBorderType' => 'solid',
+		'cardBorderTypeHover' => 'solid',
+		'cardBorderColor' => '#3a413f',
+		'cardBorderColorHover' => '#d8ad5e',
+		'cardBorderWidthTop' => '1px',
+		'cardBorderWidthRight' => '1px',
+		'cardBorderWidthBottom' => '1px',
+		'cardBorderWidthLeft' => '1px',
+		'cardRadiusTL' => '0px',
+		'cardRadiusTR' => '0px',
+		'cardRadiusBR' => '0px',
+		'cardRadiusBL' => '0px',
+		'cardPaddingTop' => '40px',
+		'cardPaddingRight' => '40px',
+		'cardPaddingBottom' => '40px',
+		'cardPaddingLeft' => '40px',
+		'advancedBackgroundType' => 'classic',
+		'advancedBackgroundColor' => '#091d31',
+		'advancedBorderType' => 'none',
+		'advancedBorderWidth' => '0px',
+		'advancedBorderColor' => '#091d31',
+		'paddingTop' => '88px',
+		'paddingRight' => '32px',
+		'paddingBottom' => '104px',
+		'paddingLeft' => '32px',
+		'paddingTopTablet' => '64px',
+		'paddingRightTablet' => '32px',
+		'paddingBottomTablet' => '72px',
+		'paddingLeftTablet' => '32px',
+		'paddingTopMobile' => '48px',
+		'paddingRightMobile' => '20px',
+		'paddingBottomMobile' => '56px',
+		'paddingLeftMobile' => '20px',
+		'headingFontFamily' => 'Georgia, serif',
+		'headingFontSize' => '56px',
+		'headingFontSizeTablet' => '42px',
+		'headingFontSizeMobile' => '32px',
+		'headingFontWeight' => '400',
+		'headingColor' => '#f4efe4',
+		'headingLineHeight' => '1.05em',
+		'subheadingFontFamily' => 'inherit',
+		'subheadingFontSize' => '14px',
+		'subheadingFontWeight' => '700',
+		'subheadingColor' => '#d8ad5e',
+		'subheadingLineHeight' => '1.2em',
+		'linkFontFamily' => 'inherit',
+		'linkFontSize' => '14px',
+		'linkFontWeight' => '700',
+		'linkColor' => '#d8ad5e',
+		'linkLineHeight' => '1.2em',
+		'cards' => array_map($defaultCard, range(0, 4)),
+	];
+	$nodeId = trim((string) ($node['id'] ?? 'event-highlights-grid')) ?: 'event-highlights-grid';
+	$dynamicBindings = is_array($eventHighlightsGridSettings['dynamicBindings'] ?? null) ? $eventHighlightsGridSettings['dynamicBindings'] : [];
+	$dynamicContext = request()->attributes->get('pagebuilder_dynamic_context', []);
+	$dynamicContext = is_array($dynamicContext) ? $dynamicContext : [];
+	if (!array_key_exists('page', $dynamicContext) && isset($pageData)) $dynamicContext['page'] = $pageData;
+	$dynamicContext['page_url'] ??= url()->current();
+	$dynamicContext['site_title'] ??= config('app.name');
+	$dynamicContext['site_url'] ??= config('app.url');
+	$dynamicContext['user'] ??= request()->user();
+	$dynamicResolver = app(\App\Support\PageBuilderElementorV24\DynamicTagResolver::class);
+	$resolveDynamic = fn (string $field, mixed $fallback): mixed => $dynamicResolver->resolve($field, $fallback, $dynamicBindings, $dynamicContext);
+	$heading = (string) $resolveDynamic('heading', $eventHighlightsGridSettings['heading']);
+	$subheading = (string) $resolveDynamic('subheading', $eventHighlightsGridSettings['subheading']);
+	$linkText = (string) $resolveDynamic('linkText', $eventHighlightsGridSettings['linkText']);
+	$enum = function (mixed $value, array $allowed, string $fallback): string {
+		$value = strtolower(trim((string) $value));
+		return in_array($value, $allowed, true) ? $value : $fallback;
+	};
+	$safeLinkUrl = function (mixed $value): string {
+		$url = trim((string) $value);
+		if ($url === '' || str_starts_with($url, '//') || preg_match('/[\x00-\x1F\x7F]/', $url)) return '';
+		if (preg_match('/^(?:javascript|vbscript|data):/i', $url)) return '';
+		return preg_match('/^(?:https?:\/\/|mailto:|tel:|\/|#)/i', $url) ? $url : '';
+	};
+	$safeImageUrl = function (mixed $value): string {
+		$url = trim((string) $value);
+		if ($url === '' || str_starts_with($url, '//') || preg_match('/[\x00-\x1F\x7F]/', $url)) return '';
+		if (preg_match('/^(?:javascript|vbscript|data):/i', $url)) return '';
+		return preg_match('/^(?:https?:\/\/|\/)/i', $url) ? $url : '';
+	};
+	$safeSvg = function (mixed $value): string {
+		$svg = trim((string) $value);
+		if ($svg === '' || strlen($svg) > 20000 || ! preg_match('/^<svg\b/i', $svg)) return '';
+		if (preg_match('/<script\b|<foreignObject\b|<iframe\b|<object\b|<embed\b|<a\b|\bon[a-z]+\s*=|javascript:/i', $svg)) return '';
+		return $svg;
+	};
+	$safeIconClass = function (mixed $value): string {
+		$class = trim((string) $value);
+		if (preg_match('/^(?:fas|far|fab|fal|fad)\s+fa-golf-ball-tee$/i', $class)) return 'fal fa-golf-ball';
+		return preg_match('/^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i', $class) ? $class : 'fal fa-star';
+	};
+	$cssLength = function (mixed $value, string $fallback = '0px'): string {
+		$raw = trim((string) $value);
+		return preg_match('/^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh|deg)?$/i', $raw) ? $raw : $fallback;
+	};
+	$cssColor = function (mixed $value, string $fallback = 'inherit'): string {
+		$raw = trim((string) $value);
+		return $raw !== '' && preg_match('/^[#a-z0-9(),.%\s\/-]+$/i', $raw) ? $raw : $fallback;
+	};
+	$fontFamily = function (mixed $value): string {
+		$raw = trim((string) $value);
+		return $raw !== '' && preg_match('/^[A-Za-z0-9 _,\'"-]+$/', $raw) ? substr($raw, 0, 160) : 'inherit';
+	};
+	$responsive = function (string $base, string $suffix = '', mixed $fallback = '') use ($eventHighlightsGridSettings): mixed {
+		$keys = $suffix === 'Mobile' ? [$base.'Mobile', $base.'Tablet', $base] : ($suffix === 'Tablet' ? [$base.'Tablet', $base] : [$base]);
+		foreach ($keys as $key) {
+			$value = $eventHighlightsGridSettings[$key] ?? null;
+			if ($value !== '' && $value !== null) return $value;
+		}
+		return $fallback;
+	};
+	$typographyStyle = function (string $prefix, string $suffix = '', mixed $color = null) use ($eventHighlightsGridSettings, $responsive, $cssLength, $cssColor, $fontFamily, $enum): string {
+		$defaults = $prefix === 'heading' ? ['size' => '56px', 'line' => '1.05em', 'weight' => '400'] : ($prefix === 'cardTitle' ? ['size' => '28px', 'line' => '1.5em', 'weight' => '400'] : ($prefix === 'cardDescription' ? ['size' => '18px', 'line' => '1.8em', 'weight' => '400'] : ($prefix === 'cardMedia' ? ['size' => '16px', 'line' => '1.2em', 'weight' => '700'] : ['size' => '14px', 'line' => '1.2em', 'weight' => '700'])));
+		$weight = trim((string) ($eventHighlightsGridSettings[$prefix.'FontWeight'] ?? $defaults['weight']));
+		if (! preg_match('/^(?:inherit|normal|bold|[1-9]00)$/', $weight)) $weight = $defaults['weight'];
+		return implode(';', [
+			'font-family:'.$fontFamily($eventHighlightsGridSettings[$prefix.'FontFamily'] ?? 'inherit'),
+			'font-size:'.$cssLength($responsive($prefix.'FontSize', $suffix, $defaults['size']), $defaults['size']),
+			'font-weight:'.$weight,
+			'line-height:'.$cssLength($responsive($prefix.'LineHeight', $suffix, $defaults['line']), $defaults['line']),
+			'letter-spacing:'.$cssLength($responsive($prefix.'LetterSpacing', $suffix, '0px'), '0px'),
+			'word-spacing:'.$cssLength($responsive($prefix.'WordSpacing', $suffix, '0px'), '0px'),
+			'text-transform:'.$enum($eventHighlightsGridSettings[$prefix.'TextTransform'] ?? 'none', ['none','uppercase','lowercase','capitalize'], 'none'),
+			'font-style:'.$enum($eventHighlightsGridSettings[$prefix.'FontStyle'] ?? 'normal', ['normal','italic','oblique'], 'normal'),
+			'text-decoration:'.$enum($eventHighlightsGridSettings[$prefix.'TextDecoration'] ?? 'none', ['none','underline','overline','line-through'], 'none'),
+			'color:'.$cssColor($color ?? ($eventHighlightsGridSettings[$prefix.'Color'] ?? ''), 'inherit'),
+		]);
+	};
+	$textBoxKeys = [
+		'heading' => ['mode' => 'headingBorderMode', 'width' => 'headingBorderWidthMode', 'type' => 'headingBorderType', 'thickness' => 'headingBorderThickness', 'color' => 'headingBorderColor', 'radius' => 'headingBorderRadius', 'padding' => 'headingPadding', 'margin' => 'headingMargin'],
+		'subheading' => ['mode' => 'subheadingBorderMode', 'width' => 'subheadingBorderWidthMode', 'type' => 'subheadingBorderType', 'thickness' => 'subheadingBorderThickness', 'color' => 'subheadingBorderColor', 'radius' => 'subheadingBorderRadius', 'padding' => 'subheadingPadding', 'margin' => 'subheadingMargin'],
+	];
+	$textBoxStyle = function (string $prefix, string $suffix = '') use ($responsive, $cssLength, $cssColor, $enum, $textBoxKeys): string {
+		$keys = $textBoxKeys[$prefix] ?? $textBoxKeys['heading'];
+		$mode = $enum($responsive($keys['mode'], $suffix, 'none'), ['none','box','underline'], 'none');
+		$width = $enum($responsive($keys['width'], $suffix, 'content'), ['content','full'], 'content');
+		$type = $enum($responsive($keys['type'], $suffix, 'solid'), ['solid','dashed','dotted','double','groove'], 'solid');
+		$thickness = $cssLength($responsive($keys['thickness'], $suffix, '1px'), '1px');
+		return implode(';', [
+			'box-sizing:border-box',
+			'width:'.($width === 'full' ? '100%' : 'max-content'),
+			'max-width:100%',
+			'padding-top:'.$cssLength($responsive($keys['padding'].'Top', $suffix, '0px'), '0px'),
+			'padding-right:'.$cssLength($responsive($keys['padding'].'Right', $suffix, '0px'), '0px'),
+			'padding-bottom:'.$cssLength($responsive($keys['padding'].'Bottom', $suffix, '0px'), '0px'),
+			'padding-left:'.$cssLength($responsive($keys['padding'].'Left', $suffix, '0px'), '0px'),
+			'margin-top:'.$cssLength($responsive($keys['margin'].'Top', $suffix, '0px'), '0px'),
+			'margin-right:'.$cssLength($responsive($keys['margin'].'Right', $suffix, '0px'), '0px'),
+			'margin-bottom:'.$cssLength($responsive($keys['margin'].'Bottom', $suffix, '0px'), '0px'),
+			'margin-left:'.$cssLength($responsive($keys['margin'].'Left', $suffix, '0px'), '0px'),
+			'border-style:'.($mode === 'none' ? 'none' : $type),
+			'border-color:'.($mode === 'none' ? 'transparent' : $cssColor($responsive($keys['color'], $suffix, '#d8ad5e'), '#d8ad5e')),
+			'border-width:'.($mode === 'box' ? $thickness : ($mode === 'underline' ? '0 0 '.$thickness.' 0' : '0')),
+			'border-radius:'.($mode === 'none' ? '0' : $cssLength($responsive($keys['radius'], $suffix, '0px'), '0px')),
+		]);
+	};
+	$direction = fn (string $suffix = ''): string => $enum($responsive('layoutDirection', $suffix, 'row'), ['row','column'], 'row');
+	$verticalPosition = fn (string $suffix = ''): string => $enum($responsive('linkVerticalPosition', $suffix, 'bottom'), ['top','center','bottom'], 'bottom');
+	$horizontalAlign = fn (string $suffix = ''): string => $enum($responsive('linkHorizontalAlign', $suffix, 'right'), ['left','center','right'], 'right');
+	$align = fn (string $value): string => in_array($value, ['left','top'], true) ? 'flex-start' : (in_array($value, ['right','bottom'], true) ? 'flex-end' : 'center');
+	$desktopDirection = $direction();
+	$desktopVerticalPosition = $verticalPosition();
+	$desktopHorizontalAlign = $horizontalAlign();
+	$textOrder = $enum($eventHighlightsGridSettings['textOrder'] ?? 'subheading-first', ['heading-first','subheading-first'], 'subheading-first');
+	$showArrow = in_array($eventHighlightsGridSettings['showArrow'] ?? false, [true, 1, '1', 'true'], true);
+	$showLink = in_array($eventHighlightsGridSettings['showLink'] ?? true, [true, 1, '1', 'true'], true);
+	$linkUrl = $safeLinkUrl($resolveDynamic('linkUrl', $eventHighlightsGridSettings['linkUrl'] ?? ''));
+	$linkTarget = ($eventHighlightsGridSettings['linkTarget'] ?? '') === '_blank' ? '_blank' : '';
+	$relTokens = $linkTarget === '_blank' ? ['noopener', 'noreferrer'] : [];
+	if (in_array($eventHighlightsGridSettings['linkNofollow'] ?? false, [true, 1, '1', 'true'], true)) $relTokens[] = 'nofollow';
+	$linkRel = implode(' ', array_values(array_unique($relTokens)));
+	$linkAttributes = [];
+	foreach (($eventHighlightsGridSettings['linkCustomAttributes'] ?? []) as $attribute) {
+		if (!is_array($attribute)) continue;
+		$name = strtolower(trim((string) ($attribute['key'] ?? $attribute['name'] ?? '')));
+		if (!preg_match('/^(?:aria-[a-z0-9_-]+|data-[a-z0-9_-]+|title|download|hreflang)$/', $name)) continue;
+		$linkAttributes[$name] = (string) ($attribute['value'] ?? '');
+	}
+	$cards = is_array($eventHighlightsGridSettings['cards'] ?? null) ? array_values(array_slice($eventHighlightsGridSettings['cards'], 0, 5)) : [];
+	if ($cards === []) $cards = array_map($defaultCard, range(0, 4));
+	$cards = array_values(array_map(function (mixed $card, int $index) use ($defaultCard, $safeImageUrl, $safeIconClass, $safeSvg): array {
+		$defaults = $defaultCard($index);
+		$source = is_array($card) ? $card : [];
+		return array_replace($defaults, $source, [
+			'id' => trim((string) ($source['id'] ?? $defaults['id'])) ?: $defaults['id'],
+			'mediaMode' => in_array($source['mediaMode'] ?? null, ['icon','image','text'], true) ? $source['mediaMode'] : 'icon',
+			'mediaIconClass' => $safeIconClass($source['mediaIconClass'] ?? $defaults['mediaIconClass']),
+			'mediaIconSource' => ($source['mediaIconSource'] ?? '') === 'svg' && $safeSvg($source['mediaIconSvg'] ?? '') !== '' ? 'svg' : 'library',
+			'mediaIconSvg' => $safeSvg($source['mediaIconSvg'] ?? ''),
+			'title' => (string) ($source['title'] ?? $defaults['title']),
+			'description' => (string) ($source['description'] ?? $defaults['description']),
+			'imageUrl' => $safeImageUrl($source['imageUrl'] ?? ''),
+			'imageAlt' => (string) ($source['imageAlt'] ?? ''),
+			'mediaText' => (string) ($source['mediaText'] ?? ''),
+			'surface' => in_array($source['surface'] ?? null, ['inherit','light','dark','accent','custom'], true) ? $source['surface'] : 'inherit',
+		]);
+	}, $cards, array_keys($cards)));
+	$surfacePalette = function (array $card) use ($eventHighlightsGridSettings, $cssColor, $enum): array {
+		$surface = $enum($card['surface'] ?? 'inherit', ['inherit','light','dark','accent','custom'], 'inherit');
+		$presets = [
+			'inherit' => ['background' => $cssColor($eventHighlightsGridSettings['cardBackgroundColor'] ?? '', '#0a1e33'), 'border' => $cssColor($eventHighlightsGridSettings['cardBorderColor'] ?? '', '#3a413f'), 'media' => $cssColor($eventHighlightsGridSettings['cardMediaColor'] ?? '', '#d8ad5e'), 'title' => $cssColor($eventHighlightsGridSettings['cardTitleColor'] ?? '', '#f4efe4'), 'description' => $cssColor($eventHighlightsGridSettings['cardDescriptionColor'] ?? '', '#aab6c8')],
+			'light' => ['background' => '#f8f4ea', 'border' => '#d8d2c4', 'media' => '#a37a2f', 'title' => '#081d30', 'description' => '#526173'],
+			'dark' => ['background' => '#091d31', 'border' => '#3a413f', 'media' => '#d8ad5e', 'title' => '#f4efe4', 'description' => '#aab6c8'],
+			'accent' => ['background' => '#d8ad5e', 'border' => '#d8ad5e', 'media' => '#081d30', 'title' => '#081d30', 'description' => '#26374a'],
+			'custom' => ['background' => $cssColor($card['customBackgroundColor'] ?? '', $cssColor($eventHighlightsGridSettings['cardBackgroundColor'] ?? '', '#0a1e33')), 'border' => $cssColor($card['customBorderColor'] ?? '', $cssColor($eventHighlightsGridSettings['cardBorderColor'] ?? '', '#3a413f')), 'media' => $cssColor($eventHighlightsGridSettings['cardMediaColor'] ?? '', '#d8ad5e'), 'title' => $cssColor($eventHighlightsGridSettings['cardTitleColor'] ?? '', '#f4efe4'), 'description' => $cssColor($eventHighlightsGridSettings['cardDescriptionColor'] ?? '', '#aab6c8')],
+		];
+		$preset = $presets[$surface];
+		return [
+			'surface' => $surface,
+			'background' => $cssColor($card['surface'] === 'custom' ? ($card['customBackgroundColor'] ?? '') : '', $preset['background']),
+			'border' => $cssColor($card['surface'] === 'custom' ? ($card['customBorderColor'] ?? '') : '', $preset['border']),
+			'media' => $cssColor($card['mediaColor'] ?? '', $preset['media']),
+			'title' => $cssColor($card['titleColor'] ?? '', $preset['title']),
+			'description' => $cssColor($card['descriptionColor'] ?? '', $preset['description']),
+		];
+	};
+	$cardStyle = function (array $card, string $suffix = '') use ($eventHighlightsGridSettings, $responsive, $cssLength, $cssColor, $enum, $surfacePalette): string {
+		$palette = $surfacePalette($card);
+		$position = $enum($responsive('cardMediaPosition', $suffix, 'top'), ['top','left','right'], 'top');
+		$alignment = $enum($responsive('cardAlignment', $suffix, 'left'), ['left','center','right'], 'left');
+		$widthMode = $enum($responsive('cardWidthMode', $suffix, 'equal'), ['equal','soft-min'], 'equal');
+		$heightMode = $enum($responsive('cardHeightMode', $suffix, 'custom'), ['auto','custom'], 'custom');
+		$borderType = $enum($eventHighlightsGridSettings['cardBorderType'] ?? 'solid', ['none','solid','dashed','dotted','double','groove'], 'solid');
+		$borderWidth = implode(' ', array_map(fn ($side) => $cssLength($responsive('cardBorderWidth'.$side, $suffix, '1px'), '1px'), ['Top','Right','Bottom','Left']));
+		$radius = implode(' ', array_map(fn ($corner) => $cssLength($responsive('cardRadius'.$corner, $suffix, '0px'), '0px'), ['TL','TR','BR','BL']));
+		$padding = [];
+		foreach (['Top','Right','Bottom','Left'] as $side) $padding[] = 'padding-'.strtolower($side).':'.$cssLength($responsive('cardPadding'.$side, $suffix, '40px'), '40px');
+		$rules = [
+			'display:flex',
+			'flex-direction:'.($position === 'right' ? 'row-reverse' : ($position === 'left' ? 'row' : 'column')),
+			'align-items:'.($position === 'top' ? ($alignment === 'left' ? 'flex-start' : ($alignment === 'right' ? 'flex-end' : 'center')) : 'stretch'),
+			'gap:'.$cssLength($responsive('cardMediaGap', $suffix, '32px'), '32px'),
+			'text-align:'.$alignment,
+			'min-width:'.($widthMode === 'soft-min' ? 'min(100%,'.$cssLength($responsive('cardMinWidth', $suffix, '180px'), '180px').')' : '0'),
+			'min-height:'.($heightMode === 'custom' ? $cssLength($responsive('cardHeight', $suffix, '385px'), '385px') : '0'),
+			'box-sizing:border-box',
+			'border-style:'.$borderType,
+			'border-width:'.$borderWidth,
+			'border-color:'.$palette['border'],
+			'border-radius:'.$radius,
+			'background-color:'.$palette['background'],
+			'--event-highlights-grid-card-background-hover:'.$cssColor($eventHighlightsGridSettings['cardBackgroundColorHover'] ?? '', $palette['background']),
+			'--event-highlights-grid-card-border-hover:'.$cssColor($eventHighlightsGridSettings['cardBorderColorHover'] ?? '', $palette['border']),
+			'--event-highlights-grid-card-border-type-hover:'.$enum($eventHighlightsGridSettings['cardBorderTypeHover'] ?? 'solid', ['none','solid','dashed','dotted','double','groove'], $borderType),
+		];
+		return implode(';', array_merge($rules, $padding));
+	};
+	$mediaStyle = fn (array $card): string => 'color:'.$surfacePalette($card)['media'];
+	$mediaIconStyle = fn (array $card, string $suffix = ''): string => 'font-size:'.$cssLength($responsive('cardMediaSize', $suffix, '38px'), '38px').';color:'.$surfacePalette($card)['media'];
+	$mediaTextStyle = fn (array $card, string $suffix = ''): string => $typographyStyle('cardMedia', $suffix, $surfacePalette($card)['media']).';font-size:'.$cssLength($responsive('cardMediaSize', $suffix, '38px'), '38px');
+	$titleStyle = fn (array $card, string $suffix = ''): string => $typographyStyle('cardTitle', $suffix, $surfacePalette($card)['title']);
+	$descriptionStyle = fn (array $card, string $suffix = ''): string => $typographyStyle('cardDescription', $suffix, $surfacePalette($card)['description']);
+	$desktopTextGap = $cssLength($responsive('textGap', '', '12px'), '12px');
+	$desktopHeaderStyle = implode(';', ['display:flex', 'flex-direction:'.$desktopDirection, 'align-items:stretch', 'width:100%', 'min-width:0', 'max-width:1636px', 'margin-left:auto', 'margin-right:auto', 'gap:'.$desktopTextGap, 'overflow-wrap:anywhere']);
+	$desktopHeaderTextStyle = implode(';', ['display:flex', 'flex-direction:column', 'min-width:0', 'max-width:100%', 'gap:'.$desktopTextGap, 'overflow-wrap:anywhere']);
+	$desktopCtaStyle = implode(';', ['display:flex', 'flex:0 1 auto', 'min-width:0', 'max-width:100%', 'align-self:'.($desktopDirection === 'row' ? $align($desktopVerticalPosition) : $align($desktopHorizontalAlign)), 'text-align:'.($desktopDirection === 'row' ? 'left' : $desktopHorizontalAlign), 'overflow-wrap:anywhere']);
+	$desktopLinkStyle = implode(';', [$typographyStyle('link', '', $cssColor($eventHighlightsGridSettings['linkColor'] ?? '', '#d8ad5e')), 'display:inline-flex', 'align-items:center', 'gap:.55em', 'max-width:100%', 'overflow-wrap:anywhere', 'text-decoration:none']);
+	$advanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($eventHighlightsGridSettings, $nodeId, request());
+	$headingMode = $enum($responsive('headingBorderMode', '', 'none'), ['none','box','underline'], 'none');
+	$headingWidth = $enum($responsive('headingBorderWidthMode', '', 'content'), ['content','full'], 'content');
+	$subheadingMode = $enum($responsive('subheadingBorderMode', '', 'none'), ['none','box','underline'], 'none');
+	$subheadingWidth = $enum($responsive('subheadingBorderWidthMode', '', 'content'), ['content','full'], 'content');
+	$rootClasses = array_values(array_unique(array_merge(['el-widget-event-highlights-grid','pb-advanced-widget','pb-event-highlights-grid','header-direction-'.$desktopDirection,'header-link-position-'.$desktopVerticalPosition,'header-link-align-'.$desktopHorizontalAlign,'text-order-'.$textOrder,'grid-columns-'.(string) $responsive('gridColumns', '', '5')], $advanced['classes'])));
+	$rootStyle = implode(';', ['display:flex', 'flex-direction:column', 'width:100%', 'min-width:0', 'max-width:100%', 'box-sizing:border-box', 'overflow-wrap:anywhere']);
+	$mediaRules = [];
+	foreach (['Tablet' => 1024, 'Mobile' => 767] as $suffix => $breakpoint) {
+		$currentDirection = $direction($suffix);
+		$currentVerticalPosition = $verticalPosition($suffix);
+		$currentHorizontalAlign = $horizontalAlign($suffix);
+		$currentColumns = $enum($responsive('gridColumns', $suffix, '5'), ['1','2','3','4','5'], '5');
+		$currentColumnGap = $cssLength($responsive('columnGap', $suffix, '20px'), '20px');
+		$currentRowGap = $cssLength($responsive('rowGap', $suffix, '20px'), '20px');
+		$currentHeaderCardsGap = $cssLength($responsive('headerCardsGap', $suffix, '64px'), '64px');
+		$currentTextGap = $cssLength($responsive('textGap', $suffix, '12px'), '12px');
+		$currentCtaAlign = $currentDirection === 'row' ? $align($currentVerticalPosition) : $align($currentHorizontalAlign);
+		$currentTextAlign = $currentDirection === 'row' ? 'left' : $currentHorizontalAlign;
+		$cardRules = [];
+		foreach ($cards as $index => $card) {
+			$cardId = preg_replace('/[^A-Za-z0-9_-]/', '-', (string) ($card['id'] ?? 'card-'.$index)) ?: 'card-'.$index;
+			$cardRules[] = '#'.$advanced['id'].' .event-highlights-grid__card[data-card-id="'.e($cardId).'"]{'.$cardStyle($card, $suffix).'}';
+			$cardRules[] = '#'.$advanced['id'].' .event-highlights-grid__card[data-card-id="'.e($cardId).'"] .event-highlights-grid__media-icon{'.$mediaIconStyle($card, $suffix).'}';
+			$cardRules[] = '#'.$advanced['id'].' .event-highlights-grid__card[data-card-id="'.e($cardId).'"] .event-highlights-grid__media-text{'.$mediaTextStyle($card, $suffix).'}';
+			$cardRules[] = '#'.$advanced['id'].' .event-highlights-grid__card[data-card-id="'.e($cardId).'"] .event-highlights-grid__media-image{width:'.$cssLength($responsive('cardImageWidth', $suffix, '64px'), '64px').';height:'.$cssLength($responsive('cardImageHeight', $suffix, '64px'), '64px').';object-fit:'.$enum($eventHighlightsGridSettings['cardImageObjectFit'] ?? 'contain', ['contain','cover','fill','none'], 'contain').'}';
+			$cardRules[] = '#'.$advanced['id'].' .event-highlights-grid__card[data-card-id="'.e($cardId).'"] .event-highlights-grid__card-body{gap:'.$cssLength($responsive('cardContentGap', $suffix, '24px'), '24px').'}';
+			$cardRules[] = '#'.$advanced['id'].' .event-highlights-grid__card[data-card-id="'.e($cardId).'"] .event-highlights-grid__title{'.$titleStyle($card, $suffix).'}';
+			$cardRules[] = '#'.$advanced['id'].' .event-highlights-grid__card[data-card-id="'.e($cardId).'"] .event-highlights-grid__description{'.$descriptionStyle($card, $suffix).'}';
+		}
+		$mediaRules[] = '@media (max-width: '.$breakpoint.'px){#'.$advanced['id'].' .event-highlights-grid__header{flex-direction:'.$currentDirection.';gap:'.$currentTextGap.'}#'.$advanced['id'].' .event-highlights-grid__header-text{gap:'.$currentTextGap.'}#'.$advanced['id'].' .event-highlights-grid__header-cta{align-self:'.$currentCtaAlign.';text-align:'.$currentTextAlign.'}#'.$advanced['id'].' .event-highlights-grid__cards{grid-template-columns:repeat('.$currentColumns.',minmax(0,1fr));column-gap:'.$currentColumnGap.';row-gap:'.$currentRowGap.';margin-top:'.$currentHeaderCardsGap.'}#'.$advanced['id'].' .event-highlights-grid__header-heading{'.$typographyStyle('heading', $suffix, $cssColor($eventHighlightsGridSettings['headingColor'] ?? '', '#f4efe4')).';'.$textBoxStyle('heading', $suffix).'}#'.$advanced['id'].' .event-highlights-grid__header-subheading{'.$typographyStyle('subheading', $suffix, $cssColor($eventHighlightsGridSettings['subheadingColor'] ?? '', '#d8ad5e')).';'.$textBoxStyle('subheading', $suffix).'}#'.$advanced['id'].' .event-highlights-grid__header-link{'.$typographyStyle('link', $suffix, $cssColor($eventHighlightsGridSettings['linkColor'] ?? '', '#d8ad5e')).';display:inline-flex;align-items:center;gap:.55em;max-width:100%;overflow-wrap:anywhere;text-decoration:none}'.implode('', $cardRules).'}';
+	}
+	$cardClass = fn (array $card): string => 'event-highlights-grid__card surface-'.($surfacePalette($card)['surface']).' media-position-'.($enum($responsive('cardMediaPosition', '', 'top'), ['top','left','right'], 'top')).' card-alignment-'.($enum($responsive('cardAlignment', '', 'left'), ['left','center','right'], 'left')).' card-width-mode-'.($enum($responsive('cardWidthMode', '', 'equal'), ['equal','soft-min'], 'equal')).' card-height-mode-'.($enum($responsive('cardHeightMode', '', 'auto'), ['auto','custom'], 'auto'));
+@endphp
+
+<div id="{{ $advanced['id'] }}" class="{{ implode(' ', $rootClasses) }}" style="{{ $rootStyle }}" data-event-highlights-grid data-text-order="{{ $textOrder }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach>
+	<div class="event-highlights-grid__header" style="{{ $desktopHeaderStyle }}">
+		<div class="event-highlights-grid__header-content" style="flex:1 1 auto;min-width:0;max-width:100%">
+			<div class="event-highlights-grid__header-text" style="{{ $desktopHeaderTextStyle }}">
+				@if($textOrder === 'heading-first')
+					@if($heading !== '')<h2 class="event-highlights-grid__header-heading border-mode-{{ $headingMode }} border-width-mode-{{ $headingWidth }}" style="{{ $typographyStyle('heading', '', $cssColor($eventHighlightsGridSettings['headingColor'] ?? '', '#f4efe4')) }};{{ $textBoxStyle('heading') }}">{{ $heading }}</h2>@endif
+					@if($subheading !== '')<p class="event-highlights-grid__header-subheading border-mode-{{ $subheadingMode }} border-width-mode-{{ $subheadingWidth }}" style="{{ $typographyStyle('subheading', '', $cssColor($eventHighlightsGridSettings['subheadingColor'] ?? '', '#d8ad5e')) }};{{ $textBoxStyle('subheading') }}">{{ $subheading }}</p>@endif
+				@else
+					@if($subheading !== '')<p class="event-highlights-grid__header-subheading border-mode-{{ $subheadingMode }} border-width-mode-{{ $subheadingWidth }}" style="{{ $typographyStyle('subheading', '', $cssColor($eventHighlightsGridSettings['subheadingColor'] ?? '', '#d8ad5e')) }};{{ $textBoxStyle('subheading') }}">{{ $subheading }}</p>@endif
+					@if($heading !== '')<h2 class="event-highlights-grid__header-heading border-mode-{{ $headingMode }} border-width-mode-{{ $headingWidth }}" style="{{ $typographyStyle('heading', '', $cssColor($eventHighlightsGridSettings['headingColor'] ?? '', '#f4efe4')) }};{{ $textBoxStyle('heading') }}">{{ $heading }}</h2>@endif
+				@endif
+			</div>
+		</div>
+		@if($showLink)
+			<div class="event-highlights-grid__header-cta" style="{{ $desktopCtaStyle }}">
+				@if($linkText !== '' && $linkUrl !== '')<a class="event-highlights-grid__header-link" href="{{ $linkUrl }}" style="{{ $desktopLinkStyle }}" @if($linkTarget !== '') target="{{ $linkTarget }}" @endif @if($linkRel !== '') rel="{{ $linkRel }}" @endif @foreach($linkAttributes as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach><span>{{ $linkText }}</span>@if($showArrow)<span class="event-highlights-grid__arrow" aria-hidden="true">→</span>@endif</a>
+				@elseif($linkText !== '')<span class="event-highlights-grid__header-link" style="{{ $desktopLinkStyle }}"><span>{{ $linkText }}</span>@if($showArrow)<span class="event-highlights-grid__arrow" aria-hidden="true">→</span>@endif</span>@endif
+			</div>
+		@endif
+	</div>
+	<div class="event-highlights-grid__cards" style="display:grid;width:100%;min-width:0;max-width:1636px;margin-left:auto;margin-right:auto;box-sizing:border-box;grid-template-columns:repeat({{ $enum($responsive('gridColumns', '', '5'), ['1','2','3','4','5'], '5') }},minmax(0,1fr));column-gap:{{ $cssLength($responsive('columnGap', '', '20px'), '20px') }};row-gap:{{ $cssLength($responsive('rowGap', '', '20px'), '20px') }};margin-top:{{ $cssLength($responsive('headerCardsGap', '', '64px'), '64px') }}">
+		@foreach($cards as $index=>$card)
+			@php
+				$palette = $surfacePalette($card);
+				$cardId = preg_replace('/[^A-Za-z0-9_-]/', '-', (string) ($card['id'] ?? 'card-'.$index)) ?: 'card-'.$index;
+				$mediaMode = $enum($card['mediaMode'] ?? 'icon', ['icon','image','text'], 'icon');
+				$svg = $mediaMode === 'icon' && ($card['mediaIconSource'] ?? '') === 'svg' ? $safeSvg($card['mediaIconSvg'] ?? '') : '';
+				$imageUrl = $safeImageUrl($card['imageUrl'] ?? '');
+			@endphp
+			<article class="{{ $cardClass($card) }}" data-card-id="{{ $cardId }}" style="{{ $cardStyle($card) }}">
+				<div class="event-highlights-grid__media" style="{{ $mediaStyle($card) }}">
+					@if($svg !== '')<span class="event-highlights-grid__media-svg" aria-hidden="true">{!! $svg !!}</span>
+					@elseif($mediaMode === 'icon')<i class="event-highlights-grid__media-icon {{ $safeIconClass($card['mediaIconClass'] ?? '') }}" style="{{ $mediaIconStyle($card) }}" aria-hidden="true"></i>
+					@elseif($mediaMode === 'image' && $imageUrl !== '')<img class="event-highlights-grid__media-image" src="{{ $imageUrl }}" alt="{{ $card['imageAlt'] ?: ($card['title'] ?? '') }}" style="width:{{ $cssLength($responsive('cardImageWidth', '', '64px'), '64px') }};height:{{ $cssLength($responsive('cardImageHeight', '', '64px'), '64px') }};object-fit:{{ $enum($eventHighlightsGridSettings['cardImageObjectFit'] ?? 'contain', ['contain','cover','fill','none'], 'contain') }}">
+					@elseif($mediaMode === 'image')<span class="event-highlights-grid__media-placeholder" aria-hidden="true"><i class="far fa-image"></i></span>
+					@else<span class="event-highlights-grid__media-text" style="{{ $mediaTextStyle($card) }}">{{ $card['mediaText'] ?? '' }}</span>@endif
+				</div>
+				<div class="event-highlights-grid__card-body" style="display:flex;flex:1 1 auto;flex-direction:column;min-width:0;max-width:100%;gap:{{ $cssLength($responsive('cardContentGap', '', '24px'), '24px') }};overflow-wrap:anywhere">
+					@if(($card['title'] ?? '') !== '')<h3 class="event-highlights-grid__title" style="{{ $titleStyle($card) }}">{{ $card['title'] }}</h3>@endif
+					@if(($card['description'] ?? '') !== '')<p class="event-highlights-grid__description" style="{{ $descriptionStyle($card) }}">{{ $card['description'] }}</p>@endif
+				</div>
+			</article>
+		@endforeach
+	</div>
+</div>
+<style>{!! $advanced['css'] . implode('', $mediaRules) !!}.event-highlights-grid__card{overflow-wrap:anywhere;transition:background-color .25s ease,border-color .25s ease}.event-highlights-grid__card:hover{background-color:var(--event-highlights-grid-card-background-hover);border-color:var(--event-highlights-grid-card-border-hover);border-style:var(--event-highlights-grid-card-border-type-hover)}.event-highlights-grid__media{display:flex;flex:0 0 auto;align-items:center;justify-content:center;min-width:0;max-width:100%;line-height:1}.event-highlights-grid__media-image{display:block;max-width:100%;border:0}.event-highlights-grid__media-svg{display:inline-flex;align-items:center;justify-content:center;max-width:100%;line-height:1}.event-highlights-grid__media-svg svg{display:block;width:1em;height:1em;max-width:100%;fill:currentColor}.event-highlights-grid__media-placeholder{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;color:inherit;opacity:.65}.event-highlights-grid__media-text,.event-highlights-grid__title,.event-highlights-grid__description{max-width:100%;overflow-wrap:anywhere}.event-highlights-grid__card-body{overflow-wrap:anywhere}@media(prefers-reduced-motion:reduce){.event-highlights-grid__card{transition:none}}</style>

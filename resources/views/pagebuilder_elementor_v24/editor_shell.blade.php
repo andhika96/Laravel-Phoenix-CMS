@@ -66,7 +66,7 @@
 			formDatasetEndpoints: @json($formDatasetEndpoints ?? []),
 			pageData: @json($pageData),
 			imageRenditionUrl: @json(route('cms.core.pagebuilder_elementor_v24.image_rendition')),
-			staticImportUrl: @json(route('cms.core.pagebuilder_elementor_v24.import_static')),
+			automaticCompiledNativeAnalyzeUrl: @json(route('cms.core.pagebuilder_elementor_v24.compiled_native.automatic_analyze')),
 			previewUrl: @json($pageData ? route('cms.core.pagebuilder_elementor_v24.preview', $pageData->uri) : ''),
 			dynamicPreviewContext: {
 				page_excerpt: @json((string) ($pageData->description ?? $pageData->excerpt ?? '')),

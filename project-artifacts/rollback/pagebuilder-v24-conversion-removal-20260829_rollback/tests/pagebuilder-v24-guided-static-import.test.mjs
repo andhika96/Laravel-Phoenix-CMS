@@ -1,0 +1,288 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const helperPath = path.join(root, 'public/js/pagebuilder_elementor_v24/static-import-guided.js');
+
+function helper() {
+  const source = readFileSync(helperPath, 'utf8');
+  const context = { window: {} };
+  vm.runInNewContext(source, context, { filename: helperPath });
+  return context.window.PhoenixGuidedStaticImport;
+}
+
+function analysis() {
+  return {
+    sourceHash: 'a'.repeat(64),
+    previewPayload: {
+      html: '<!doctype html><html><head><style data-pb-source-css>.hero{color:red}</style></head><body><section data-pb-import-node="import-node-1">Hero</section></body></html>',
+      sourceCss: '.hero{color:red}',
+      frameworks: ['tailwind'],
+    },
+    regions: [
+      {
+        id: 'region-import-node-1',
+        marker: 'import-node-1',
+        kind: 'section',
+        sourceId: 'hero',
+        label: 'Hero',
+        order: 0,
+        recommendedStrategy: 'auto_native',
+        confidence: 0.94,
+        warnings: [],
+        blocks: [
+          {
+            id: 'block-import-node-2',
+            marker: 'import-node-2',
+            role: 'heading',
+            tag: 'h1',
+            label: 'Hero heading',
+            textPreview: 'Hero heading',
+            recommendedWidget: 'heading',
+            allowedWidgets: ['heading', 'text_editor'],
+            confidence: 0.95,
+            warnings: [],
+            children: [],
+          },
+          {
+            id: 'block-import-node-3',
+            marker: 'import-node-3',
+            role: 'image',
+            tag: 'img',
+            label: 'Hero image',
+            textPreview: '',
+            recommendedWidget: 'image',
+            allowedWidgets: ['image', 'image_box'],
+            confidence: 0.95,
+            warnings: [],
+            children: [],
+          },
+        ],
+      },
+    ],
+  };
+}
+
+const catalog = {
+  heading: { type: 'heading', label: 'Heading', category: 'basic' },
+  text_editor: { type: 'text_editor', label: 'Text Editor', category: 'basic' },
+  image: { type: 'image', label: 'Image', category: 'basic' },
+  image_box: { type: 'image_box', label: 'Image Box', category: 'general' },
+};
+
+test('guided helper exposes a clean initial state', () => {
+	const api = helper();
+	assert.deepEqual(JSON.parse(JSON.stringify(api.createState())), {
+    phase: 'idle',
+    sourceFile: null,
+    sourceHash: '',
+    analysis: null,
+    selectedRegionId: '',
+    expandedBlockIds: [],
+    regionMappings: {},
+    errors: [],
+  });
+});
+
+test('normalizeAnalysis keeps stable IDs and only active catalog widget IDs', () => {
+  const api = helper();
+  const normalized = api.normalizeAnalysis(analysis(), { ...catalog, inactive: null });
+
+  assert.equal(normalized.regions[0].id, 'region-import-node-1');
+	assert.deepEqual(Array.from(normalized.regions[0].blocks[0].allowedWidgets), ['heading', 'text_editor']);
+  assert.equal(normalized.regions[0].blocks[0].recommendedWidget, 'heading');
+  assert.equal(normalized.regions[0].blocks[1].recommendedWidget, 'image');
+  assert.equal(normalized.regions[0].blocks[0].widgetOptions[0].label, 'Heading');
+});
+
+test('region and block transitions are immutable and preserve mapping IDs', () => {
+  const api = helper();
+  const normalized = api.normalizeAnalysis(analysis(), catalog);
+  const initial = api.createState();
+  const mapped = { ...initial, analysis: normalized, sourceHash: normalized.sourceHash };
+  const guided = api.setRegionStrategy(mapped, 'region-import-node-1', 'guided_native');
+  const changed = api.setBlockWidget(guided, 'region-import-node-1', 'block-import-node-2', 'text_editor');
+
+  assert.equal(mapped.regionMappings['region-import-node-1'], undefined);
+  assert.equal(guided.regionMappings['region-import-node-1'].strategy, 'guided_native');
+	assert.deepEqual(JSON.parse(JSON.stringify(changed.regionMappings['region-import-node-1'].blocks)), {
+    'block-import-node-2': 'text_editor',
+  });
+});
+
+test('regionValidation returns unresolved and incompatible block diagnostics', () => {
+  const api = helper();
+  const normalized = api.normalizeAnalysis(analysis(), catalog);
+  const initial = { ...api.createState(), analysis: normalized };
+  const guided = api.setRegionStrategy(initial, 'region-import-node-1', 'guided_native');
+  const missing = api.regionValidation(guided, 'region-import-node-1');
+  assert.equal(missing.valid, false);
+	assert.deepEqual(Array.from(missing.errors).map((error) => error.code), ['unresolved-block', 'unresolved-block']);
+
+	const incompatible = {
+		...guided,
+		regionMappings: {
+			...guided.regionMappings,
+			'region-import-node-1': {
+				strategy: 'guided_native',
+				blocks: { 'block-import-node-2': 'image' },
+			},
+		},
+	};
+	const validation = api.regionValidation(incompatible, 'region-import-node-1');
+  assert.equal(validation.valid, false);
+  assert.equal(validation.errors[0].code, 'incompatible-widget');
+  assert.equal(validation.errors[0].blockId, 'block-import-node-2');
+});
+
+test('buildCompileMapping serializes only stable mapping fields and never sourceFile', () => {
+  const api = helper();
+  const normalized = api.normalizeAnalysis(analysis(), catalog);
+  let state = {
+    ...api.createState(),
+    sourceFile: { name: 'private-source.html', contents: '<script>secret()</script>' },
+    sourceHash: normalized.sourceHash,
+    analysis: normalized,
+  };
+  state = api.setRegionStrategy(state, 'region-import-node-1', 'guided_native');
+  state = api.setBlockWidget(state, 'region-import-node-1', 'block-import-node-2', 'heading');
+  state = api.setBlockWidget(state, 'region-import-node-1', 'block-import-node-3', 'image');
+
+  const mapping = api.buildCompileMapping(state);
+  const serialized = JSON.stringify(mapping);
+	assert.deepEqual(JSON.parse(JSON.stringify(mapping)), {
+    version: 1,
+    regions: [{
+      regionId: 'region-import-node-1',
+      strategy: 'guided_native',
+      blocks: [
+        { blockId: 'block-import-node-2', widgetType: 'heading' },
+        { blockId: 'block-import-node-3', widgetType: 'image' },
+      ],
+    }],
+  });
+  assert.equal(serialized.includes('private-source.html'), false);
+  assert.equal(serialized.includes('Hero heading'), false);
+  assert.equal(serialized.includes('confidence'), false);
+  assert.equal(serialized.includes('<script>'), false);
+});
+
+test('resetState clears analysis and mapping without touching external page state', () => {
+  const api = helper();
+  const normalized = api.normalizeAnalysis(analysis(), catalog);
+  const state = api.setRegionStrategy({ ...api.createState(), analysis: normalized }, 'region-import-node-1', 'skip');
+  const reset = api.resetState(state);
+
+  assert.equal(reset.phase, 'idle');
+  assert.equal(reset.analysis, null);
+	assert.deepEqual(JSON.parse(JSON.stringify(reset.regionMappings)), {});
+  assert.equal(reset.sourceFile, null);
+	assert.deepEqual(Array.from(reset.expandedBlockIds), []);
+});
+
+test('buildRegionPreviewSrcdoc creates a sanitized region preview document', () => {
+  const api = helper();
+  const srcdoc = api.buildRegionPreviewSrcdoc(analysis().previewPayload, 'import-node-1');
+
+  assert.match(srcdoc, /<section[^>]*data-pb-import-node="import-node-1"/);
+  assert.match(srcdoc, /\.hero\{color:red\}/);
+  assert.match(srcdoc, /<body class="pb-import-root">/);
+	assert.equal(srcdoc.includes('<script'), false);
+});
+
+test('guided state binds one analyzed File and source hash until compile', () => {
+	const api = helper();
+	const file = { name: 'same-source.html' };
+	const state = api.setAnalysis(api.createState(), analysis(), catalog, file);
+
+	assert.equal(state.phase, 'mapping');
+	assert.equal(state.sourceFile, file);
+	assert.equal(state.selectedRegionId, 'region-import-node-1');
+	assert.equal(api.sourceIsCurrent(state, file, 'a'.repeat(64)), true);
+	assert.equal(api.sourceIsCurrent(state, { name: 'same-source.html' }, 'a'.repeat(64)), false);
+	assert.equal(api.sourceIsCurrent(state, file, 'b'.repeat(64)), false);
+});
+
+test('guided wizard exposes the region review UI and scoped responsive layout contract', () => {
+	const app = readFileSync(path.join(root, 'public/js/pagebuilder_elementor_v24/app.js'), 'utf8');
+	const css = readFileSync(path.join(root, 'public/assets/css/pagebuilder_elementor_v24.css'), 'utf8');
+
+	assert.match(app, /showGuidedStaticImportModal/);
+	assert.match(app, /pb-guided-static-import-modal/);
+	assert.match(app, /guidedStaticImportActiveRegion/);
+	assert.match(app, /guidedStaticImportRegionValidation/);
+	assert.match(app, /guidedStaticImportVisibleBlocks/);
+	assert.match(app, /aria-expanded/);
+	assert.match(app, /Compile selected regions/);
+	assert.match(app, /staticImportTrigger/);
+	assert.match(app, /sandbox=""/);
+	assert.match(css, /\.pb-guided-static-import-workspace\s*\{[^}]*grid-template-columns:\s*minmax\(190px, 220px\) minmax\(300px, 1\.25fr\) minmax\(320px, 1fr\)/s);
+	assert.match(css, /@media \(max-width: 1023px\)[\s\S]*\.pb-guided-static-import-workspace\s*\{[^}]*grid-template-columns:\s*1fr/s);
+});
+
+test('guided Analyze state cannot mutate Canvas roots or Custom CSS before mapping confirmation', () => {
+	const app = readFileSync(path.join(root, 'public/js/pagebuilder_elementor_v24/app.js'), 'utf8');
+	const start = app.indexOf('function beginGuidedStaticImportAnalysis');
+	const end = app.indexOf('const staticImportCompileStages', start);
+	assert.ok(start >= 0 && end > start, 'guided analysis state transition must exist');
+	const analysisSegment = app.slice(start, end);
+
+	assert.match(analysisSegment, /phase: 'analyzing'/);
+	assert.doesNotMatch(analysisSegment, /rootNodes\.value/);
+	assert.doesNotMatch(analysisSegment, /customCss\.value/);
+});
+
+test('Compiled Native uses Analyze first, resends the source for Compile, and hydrates before Canvas writes', () => {
+	const app = readFileSync(path.join(root, 'public/js/pagebuilder_elementor_v24/app.js'), 'utf8');
+	const importStart = app.indexOf('async function importStaticFile');
+	const importEnd = app.indexOf('\n\t\t\tfunction showStaticImportReport', importStart);
+	const importSegment = app.slice(importStart, importEnd);
+	const guidedCompileStart = app.indexOf('async function guidedStaticImportCompileSelected');
+	const guidedCompileEnd = app.indexOf('const staticImportCompileStages', guidedCompileStart);
+	const guidedCompileSegment = app.slice(guidedCompileStart, guidedCompileEnd);
+	const hydration = app.indexOf('await hydrateCompiledStaticImport', guidedCompileStart);
+	const guidedBeforeHydration = app.slice(guidedCompileStart, hydration);
+
+	assert.match(importSegment, /data\.append\('phase', 'analyze'\)/);
+	assert.match(importSegment, /guidedStaticImportState/);
+	assert.match(app, /buildCompileMapping/);
+	assert.match(guidedCompileSegment, /data\.append\('sourceHash'/);
+	assert.match(guidedCompileSegment, /data\.append\('mapping'/);
+	assert.ok(hydration > guidedCompileStart, 'guided compile must call the existing hydration gate');
+	assert.doesNotMatch(guidedBeforeHydration, /rootNodes\.value\s*=|customCss\.value\s*=/);
+	assert.match(app.slice(hydration), /rootNodes\.value\s*=\s*norm\(result\.layout\)/);
+	assert.match(importSegment, /staticImportMode\.value !== 'compiled'|compiledAttempt/);
+});
+
+test('guided failure handling keeps mapping, supports safe Re-analyze, and reports mapping counters', () => {
+	const app = readFileSync(path.join(root, 'public/js/pagebuilder_elementor_v24/app.js'), 'utf8');
+	const css = readFileSync(path.join(root, 'public/assets/css/pagebuilder_elementor_v24.css'), 'utf8');
+
+	assert.match(app, /guidedStaticImportReanalyze/);
+	assert.match(app, /source-hash-mismatch/);
+	assert.match(app, /inactive-widget/);
+	assert.match(app, /guidedStaticImportState\.value.*failed/);
+	assert.match(app, /mappingReport/);
+	assert.match(app, /detectedRegions/);
+	assert.match(app, /relativeAssets/);
+	assert.match(app, /sourceScripts/);
+	assert.match(app, /browser-compiler-failed/);
+	assert.match(app, /mapping tetap tersedia/);
+	assert.match(app, /Re-analyze source/);
+	assert.match(css, /pb-guided-static-import-error-summary/);
+});
+
+test('Analyze result is not exposed as JSON download until final native layout exists', () => {
+	const app = readFileSync(path.join(root, 'public/js/pagebuilder_elementor_v24/app.js'), 'utf8');
+	const analyzeStart = app.indexOf("data.append('phase', 'analyze')");
+	const analyzeEnd = app.indexOf("staticImportCompileController.value = null", analyzeStart);
+	const analyzeSegment = app.slice(analyzeStart, analyzeEnd);
+
+	assert.ok(analyzeStart >= 0 && analyzeEnd > analyzeStart);
+	assert.doesNotMatch(analyzeSegment, /staticImportPayload\.value\s*=\s*result/);
+	assert.match(app, /staticImportPayload\.value\s*=\s*result/);
+});

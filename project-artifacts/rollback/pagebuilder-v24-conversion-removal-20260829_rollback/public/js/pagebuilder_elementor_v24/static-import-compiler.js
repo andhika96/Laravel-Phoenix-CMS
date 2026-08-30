@@ -1,0 +1,959 @@
+(function (root) {
+	'use strict';
+
+	const BOOTSTRAP_CSS_URL = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css';
+	const TAILWIND_CDN_URL = 'https://cdn.tailwindcss.com';
+	const MAX_CSS_BYTES = 512 * 1024;
+	const COMPILE_TIMEOUT_MS = 12000;
+	const SCAN_TIMEOUT_MS = 20000;
+	const COMPILED_CSS_START_MARKER = '/* PHOENIX_STATIC_IMPORT_COMPILED_START */';
+	const COMPILED_CSS_END_MARKER = '/* PHOENIX_STATIC_IMPORT_COMPILED_END */';
+	const IMPORT_MARKER_PATTERN = /^import-node-[A-Za-z0-9_-]+$/;
+	const COMPUTED_STYLE_FIELDS = Object.freeze([
+		'display', 'position', 'inset', 'top', 'right', 'bottom', 'left', 'zIndex',
+		'width', 'minWidth', 'maxWidth', 'height', 'minHeight', 'maxHeight',
+		'boxSizing', 'flex', 'flexBasis', 'flexGrow', 'flexShrink', 'flexDirection', 'flexWrap',
+		'gridTemplateColumns', 'gridTemplateRows', 'gridAutoFlow', 'gap', 'rowGap', 'columnGap',
+		'alignItems', 'alignContent', 'alignSelf', 'justifyContent', 'justifyItems', 'justifySelf', 'order',
+		'marginTop', 'marginRight', 'marginBottom', 'marginLeft',
+		'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+		'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',
+		'borderTopStyle', 'borderRightStyle', 'borderBottomStyle', 'borderLeftStyle',
+		'borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor',
+		'borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomRightRadius', 'borderBottomLeftRadius',
+		'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'lineHeight', 'letterSpacing', 'wordSpacing',
+		'textAlign', 'textTransform', 'textDecoration', 'color', 'backgroundColor', 'backgroundImage',
+		'backgroundSize', 'backgroundPosition', 'backgroundRepeat', 'backgroundBlendMode', 'opacity',
+		'boxShadow', 'filter', 'objectFit', 'objectPosition', 'overflow', 'overflowX', 'overflowY',
+		'scrollSnapType', 'scrollSnapAlign', 'whiteSpace',
+	]);
+
+	function byteLength(value) {
+		const source = String(value || '');
+		if (typeof TextEncoder === 'function') return new TextEncoder().encode(source).length;
+		if (typeof Blob === 'function') return new Blob([source]).size;
+		return source.length;
+	}
+
+	function cssPropertyName(field) {
+		return String(field || '').replace(/[A-Z]/g, (match) => '-' + match.toLowerCase());
+	}
+
+	function serializeComputedStyle(style) {
+		const output = {};
+		COMPUTED_STYLE_FIELDS.forEach((field) => {
+			const property = cssPropertyName(field);
+			let value = '';
+			if (style && typeof style.getPropertyValue === 'function') value = style.getPropertyValue(property);
+			if (!value && style) value = style[field];
+			if (value !== undefined && value !== null && String(value).trim() !== '') output[field] = String(value).trim();
+		});
+		return output;
+	}
+
+	function roundMetric(value) {
+		const numeric = Number(value);
+		return Number.isFinite(numeric) ? Math.round(numeric * 1000) / 1000 : 0;
+	}
+
+	function serializeBounds(rect) {
+		return {
+			x: roundMetric(rect && rect.left),
+			y: roundMetric(rect && rect.top),
+			top: roundMetric(rect && rect.top),
+			right: roundMetric(rect && rect.right),
+			bottom: roundMetric(rect && rect.bottom),
+			width: roundMetric(rect && rect.width),
+			height: roundMetric(rect && rect.height),
+		};
+	}
+
+	function normalizeLineEndings(value) {
+		return String(value || '').replace(/\r\n?/g, '\n');
+	}
+
+	function unique(values) {
+		return Array.from(new Set((Array.isArray(values) ? values : []).filter(Boolean)));
+	}
+
+	function decodeCssIdentifier(value) {
+		return String(value || '')
+			.replace(/\\([0-9a-f]{1,6})(?:\s)?/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+			.replace(/\\(.)/g, '$1');
+	}
+
+	function splitTopLevel(value, delimiter) {
+		const parts = [];
+		let part = '';
+		let parentheses = 0;
+		let brackets = 0;
+		let quote = '';
+		let escaped = false;
+		const source = String(value || '');
+		for (let index = 0; index < source.length; index += 1) {
+			const character = source[index];
+			if (escaped) {
+				part += character;
+				escaped = false;
+				continue;
+			}
+			if (character === '\\') {
+				part += character;
+				escaped = true;
+				continue;
+			}
+			if (quote) {
+				part += character;
+				if (character === quote) quote = '';
+				continue;
+			}
+			if (character === '"' || character === "'") {
+				quote = character;
+				part += character;
+				continue;
+			}
+			if (character === '(') parentheses += 1;
+			if (character === ')') parentheses = Math.max(0, parentheses - 1);
+			if (character === '[') brackets += 1;
+			if (character === ']') brackets = Math.max(0, brackets - 1);
+			if (character === delimiter && parentheses === 0 && brackets === 0) {
+				parts.push(part);
+				part = '';
+				continue;
+			}
+			part += character;
+		}
+		parts.push(part);
+		return parts;
+	}
+
+	function findNextBrace(source, offset) {
+		const text = String(source || '');
+		let quote = '';
+		let escaped = false;
+		let comment = false;
+		for (let index = offset; index < text.length; index += 1) {
+			const character = text[index];
+			const next = text[index + 1];
+			if (comment) {
+				if (character === '*' && next === '/') {
+					comment = false;
+					index += 1;
+				}
+				continue;
+			}
+			if (!quote && character === '/' && next === '*') {
+				comment = true;
+				index += 1;
+				continue;
+			}
+			if (escaped) {
+				escaped = false;
+				continue;
+			}
+			if (character === '\\') {
+				escaped = true;
+				continue;
+			}
+			if (quote) {
+				if (character === quote) quote = '';
+				continue;
+			}
+			if (character === '"' || character === "'") {
+				quote = character;
+				continue;
+			}
+			if (character === '{') return index;
+		}
+		return -1;
+	}
+
+	function findMatchingBrace(source, open) {
+		const text = String(source || '');
+		let depth = 0;
+		let quote = '';
+		let escaped = false;
+		let comment = false;
+		for (let index = open; index < text.length; index += 1) {
+			const character = text[index];
+			const next = text[index + 1];
+			if (comment) {
+				if (character === '*' && next === '/') {
+					comment = false;
+					index += 1;
+				}
+				continue;
+			}
+			if (!quote && character === '/' && next === '*') {
+				comment = true;
+				index += 1;
+				continue;
+			}
+			if (escaped) {
+				escaped = false;
+				continue;
+			}
+			if (character === '\\') {
+				escaped = true;
+				continue;
+			}
+			if (quote) {
+				if (character === quote) quote = '';
+				continue;
+			}
+			if (character === '"' || character === "'") {
+				quote = character;
+				continue;
+			}
+			if (character === '{') depth += 1;
+			if (character === '}') {
+				depth -= 1;
+				if (depth === 0) return index;
+			}
+		}
+		return -1;
+	}
+
+	function markerSelector(markers) {
+		const safeMarkers = unique(markers).filter((marker) => IMPORT_MARKER_PATTERN.test(String(marker)));
+		if (!safeMarkers.length) return '';
+		const selectors = safeMarkers.map((marker) => '[data-pb-import-node="' + marker + '"]');
+		return selectors.length === 1 ? selectors[0] : ':is(' + selectors.join(',') + ')';
+	}
+
+	const DISPLAY_UTILITY_NAMES = new Set([
+		'block', 'contents', 'flex', 'flow-root', 'grid', 'inline', 'inline-block',
+		'inline-flex', 'inline-grid', 'inline-table', 'hidden', 'table', 'table-caption',
+		'table-cell', 'table-column', 'table-column-group', 'table-footer-group',
+		'table-header-group', 'table-row', 'table-row-group',
+	]);
+
+	function isDisplayUtilityKey(value) {
+		const token = String(value || '').trim();
+		const utility = token.includes(':') ? token.slice(token.lastIndexOf(':') + 1) : token;
+		return DISPLAY_UTILITY_NAMES.has(utility);
+	}
+
+	function replaceMappedSelectors(selector, payload) {
+		const classMap = payload && payload.classMap && typeof payload.classMap === 'object' ? payload.classMap : {};
+		const idMap = payload && payload.idMap && typeof payload.idMap === 'object' ? payload.idMap : {};
+		let rewritten = false;
+		let displayControl = false;
+		let output = String(selector || '').replace(/\.((?:(?:\\[0-9a-f]{1,6}\s?)|\\.|[A-Za-z0-9_-])+)/gi, (full, encoded) => {
+			const key = decodeCssIdentifier(encoded);
+			if (key === 'pb-import-root') return full;
+			if (isDisplayUtilityKey(key)) displayControl = true;
+			const replacement = markerSelector(classMap[key]);
+			if (!replacement) return full;
+			rewritten = true;
+			return replacement;
+		});
+		output = output.replace(/#((?:(?:\\[0-9a-f]{1,6}\s?)|\\.|[A-Za-z0-9_-])+)/gi, (full, encoded) => {
+			const key = decodeCssIdentifier(encoded);
+			const replacement = markerSelector(idMap[key]);
+			if (!replacement) return full;
+			rewritten = true;
+			return replacement;
+		});
+		return { selector: output, rewritten, displayControl };
+	}
+
+	function scopeSelector(selector) {
+		let value = String(selector || '').trim().replace(/\s+/g, ' ');
+		if (!value) return '';
+		value = value.replace(/(^|[\s>+~])(?:html|body)(?=$|[\s>+~.:#\[])/i, '$1.pb-import-root');
+		value = value.replace(/:root\b/gi, '.pb-import-root');
+		if (value.includes('.pb-import-root')) return value;
+		if (value === '*') return '.pb-import-root *';
+		if (/^(?:::before|::after|:before|:after)/i.test(value)) return '.pb-import-root' + value;
+		return '.pb-import-root ' + value;
+	}
+
+	const STRUCTURAL_CSS_PROPERTIES = new Set([
+		'display', 'position', 'inset', 'top', 'right', 'bottom', 'left', 'z-index',
+		'width', 'min-width', 'max-width', 'height', 'min-height', 'max-height',
+		'flex', 'flex-basis', 'flex-grow', 'flex-shrink', 'flex-direction', 'flex-wrap',
+		'flex-flow', 'grid', 'grid-template', 'grid-template-columns', 'grid-template-rows',
+		'grid-auto-flow', 'grid-auto-columns', 'grid-auto-rows', 'grid-column', 'grid-column-start',
+		'grid-column-end', 'grid-row', 'grid-row-start', 'grid-row-end', 'gap', 'row-gap',
+		'column-gap', 'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
+		'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left', 'overflow',
+		'overflow-x', 'overflow-y', 'box-sizing', 'align-items', 'align-content', 'align-self',
+		'justify-content', 'justify-items', 'justify-self', 'order', 'object-fit', 'object-position',
+		'border', 'border-width', 'border-style', 'border-color', 'border-radius',
+		'border-top', 'border-right', 'border-bottom', 'border-left',
+		'border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width',
+		'border-top-style', 'border-right-style', 'border-bottom-style', 'border-left-style',
+		'border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color',
+		'border-top-left-radius', 'border-top-right-radius', 'border-bottom-right-radius', 'border-bottom-left-radius',
+		'scroll-snap-type', 'scroll-snap-align', 'scroll-snap-stop', 'scroll-behavior',
+		'transform', 'transform-origin',
+	]);
+
+	function isStructuralCssProperty(property) {
+		const value = String(property || '').toLowerCase();
+		return STRUCTURAL_CSS_PROPERTIES.has(value)
+			|| value.startsWith('grid-')
+			|| value.startsWith('flex-')
+			|| value.startsWith('scroll-');
+	}
+
+	function selectorHasInteractiveState(selector) {
+		return /::?(?:before|after)|:(?:hover|focus|active|visited|focus-visible|focus-within|disabled|checked|open|target)\b/i.test(String(selector || ''));
+	}
+
+	function selectorHasKnownImportMarker(selector, markers) {
+		const known = markers instanceof Set ? markers : new Set();
+		const matches = String(selector || '').matchAll(/data-pb-import-node\s*=\s*["']([^"']+)["']/gi);
+		for (const match of matches) if (known.has(match[1])) return true;
+		return false;
+	}
+
+	function filterResidualCss(source, snapshot, options = {}) {
+		const markerSource = Array.isArray(options?.ownedMarkers)
+			? options.ownedMarkers
+			: (Array.isArray(snapshot?.nodes) ? snapshot.nodes.map((node) => node?.marker) : []);
+		const knownMarkers = new Set(markerSource
+			.map((node) => String(typeof node === 'string' ? node : (node?.marker || '')).trim())
+			.filter((marker) => IMPORT_MARKER_PATTERN.test(marker)));
+		const stats = { removedProperties: 0, filteredRules: 0 };
+		if (!knownMarkers.size) return { css: String(source || ''), stats };
+
+		function filterDeclarations(body, selector) {
+			const structural = selectorHasKnownImportMarker(selector, knownMarkers) && !selectorHasInteractiveState(selector);
+			const declarations = [];
+			for (const rawDeclaration of splitTopLevel(String(body || '').replace(/\/\*.*?\*\//gs, ''), ';')) {
+				const declaration = rawDeclaration.trim();
+				const separator = declaration.indexOf(':');
+				if (separator < 1) continue;
+				const property = declaration.slice(0, separator).trim().toLowerCase();
+				if (structural && isStructuralCssProperty(property)) {
+					stats.removedProperties += 1;
+					continue;
+				}
+				const safe = sanitizeDeclarations(declaration, { droppedRules: 0 }, { stripUrls: false });
+				if (safe) declarations.push(safe);
+			}
+			return declarations.join(';');
+		}
+
+		function walk(css) {
+			const text = String(css || '').replace(/\/\*.*?\*\//gs, '');
+			let output = '';
+			let offset = 0;
+			while (offset < text.length) {
+				while (/\s/.test(text[offset] || '')) offset += 1;
+				if (offset >= text.length) break;
+				const open = findNextBrace(text, offset);
+				if (open < 0) break;
+				const prelude = text.slice(offset, open).trim();
+				const close = findMatchingBrace(text, open);
+				if (close < 0) return String(source || '');
+				const body = text.slice(open + 1, close);
+				offset = close + 1;
+				if (!prelude) continue;
+				if (prelude.startsWith('@')) {
+					if (/^@(media|supports|container|layer|document|scope)\b/i.test(prelude)) {
+						const nested = walk(body);
+						if (nested) output += prelude.replace(/\s+/g, ' ') + '{' + nested + '}';
+						continue;
+					}
+					output += prelude.replace(/\s+/g, ' ') + '{' + body + '}';
+					continue;
+				}
+				const selectors = splitTopLevel(prelude, ',');
+				const filtered = selectors.map((selector) => selector.trim()).filter(Boolean).map((selector) => ({ selector, declarations: filterDeclarations(body, selector) })).filter((entry) => entry.declarations);
+				if (!filtered.length) {
+					stats.filteredRules += 1;
+					continue;
+				}
+				output += filtered.map((entry) => entry.selector + '{' + entry.declarations + '}').join('');
+			}
+			return output;
+		}
+
+		return { css: walk(source), stats };
+	}
+
+	function sanitizeDeclarations(source, stats, options = {}) {
+		const declarations = [];
+		for (const rawDeclaration of splitTopLevel(String(source || '').replace(/\/\*.*?\*\//gs, ''), ';')) {
+			const declaration = rawDeclaration.trim();
+			if (!declaration) continue;
+			const separator = declaration.indexOf(':');
+			if (separator < 1) {
+				stats.droppedRules += 1;
+				continue;
+			}
+			const property = declaration.slice(0, separator).trim().toLowerCase().replace(/--tw-/g, '--pb-import-');
+			let value = declaration.slice(separator + 1).trim().replace(/--tw-/g, '--pb-import-');
+			if (!/^(?:--[a-z0-9_-]+|[a-z-]+)$/i.test(property) || !value || /(?:expression\s*\(|javascript:|vbscript:|@import|[{}<>])/i.test(value)) {
+				stats.droppedRules += 1;
+				continue;
+			}
+			if (options.stripUrls !== false) value = value.replace(/url\(\s*[^)]*\)/gi, '');
+			value = value.replace(/\s+/g, ' ').trim();
+			if (!value) {
+				stats.droppedRules += 1;
+				continue;
+			}
+			const forceImportant = (options.forceDisplayImportant && property === 'display')
+				|| (options.forceVisualImportant && !isStructuralCssProperty(property));
+			if (forceImportant && !/\s!important$/i.test(value)) value += ' !important';
+			declarations.push(property + ':' + value);
+		}
+		return declarations.join(';');
+	}
+
+	function rewriteCss(source, payload, options = {}) {
+		const stats = {
+			sourceClasses: Object.keys(payload && payload.classMap && typeof payload.classMap === 'object' ? payload.classMap : {}).length,
+			generatedRules: 0,
+			rewrittenRules: 0,
+			droppedRules: 0,
+		};
+
+		function walk(css) {
+			const text = String(css || '').replace(/\/\*.*?\*\//gs, '');
+			let output = '';
+			let offset = 0;
+			while (offset < text.length) {
+				while (/\s/.test(text[offset] || '')) offset += 1;
+				if (offset >= text.length) break;
+				const open = findNextBrace(text, offset);
+				if (open < 0) break;
+				const prelude = text.slice(offset, open).trim();
+				const close = findMatchingBrace(text, open);
+				if (close < 0) {
+					stats.droppedRules += 1;
+					break;
+				}
+				const body = text.slice(open + 1, close);
+				offset = close + 1;
+				if (!prelude) continue;
+				if (prelude.startsWith('@')) {
+					const safePrelude = prelude.replace(/--tw-/g, '--pb-import-');
+					if (/^@(media|supports|container|layer|document|scope)\b/i.test(prelude)) {
+						const nested = walk(body);
+						if (nested) output += safePrelude.replace(/\s+/g, ' ') + '{' + nested + '}';
+						continue;
+					}
+					if (/^@(keyframes|\-webkit-keyframes)\b/i.test(prelude)) {
+						const keyframeBody = body.replace(/--tw-/g, '--pb-import-').replace(options.stripUrls === false ? /$^/ : /url\(\s*[^)]*\)/gi, '');
+						output += safePrelude.replace(/\s+/g, ' ') + '{' + keyframeBody + '}';
+						continue;
+					}
+					if (/^@(font-face|property|counter-style|page|viewport)\b/i.test(prelude)) {
+						const declarations = sanitizeDeclarations(body, stats, options);
+						if (declarations) output += safePrelude.replace(/\s+/g, ' ') + '{' + declarations + '}';
+						continue;
+					}
+					stats.droppedRules += 1;
+					continue;
+				}
+
+				const selectors = [];
+				let changed = false;
+				let displayControl = false;
+				for (const candidate of splitTopLevel(prelude, ',')) {
+					const mapped = replaceMappedSelectors(candidate, payload);
+					const scoped = scopeSelector(mapped.selector);
+					if (!scoped) continue;
+					selectors.push(scoped);
+					changed = changed || mapped.rewritten;
+					displayControl = displayControl || mapped.displayControl;
+				}
+				const declarations = sanitizeDeclarations(body, stats, { ...options, forceDisplayImportant: displayControl });
+				if (!selectors.length || !declarations) {
+					stats.droppedRules += 1;
+					continue;
+				}
+				stats.generatedRules += 1;
+				if (changed) stats.rewrittenRules += 1;
+				output += unique(selectors).join(',') + '{' + declarations + '}';
+			}
+			return output;
+		}
+
+		return { css: walk(normalizeLineEndings(source)), stats };
+	}
+
+	function canvasMediaWidthRange(prelude) {
+		const query = String(prelude || '').replace(/^@media\s+/i, '').trim();
+		if (!query || query.includes(',')) return null;
+		const matches = [...query.matchAll(/\(\s*(min|max)-width\s*:\s*([0-9]+(?:\.[0-9]+)?)\s*(px|rem|em)\s*\)/gi)];
+		if (!matches.length) return null;
+		const remainder = query
+			.replace(/\(\s*(min|max)-width\s*:\s*[0-9]+(?:\.[0-9]+)?\s*(?:px|rem|em)\s*\)/gi, '')
+			.replace(/\b(?:all|screen)\b/gi, '')
+			.replace(/\band\b/gi, '')
+			.trim();
+		if (remainder) return null;
+		const range = { min: 0, max: Infinity };
+		matches.forEach((match) => {
+			const value = Number(match[2]) * (match[3].toLowerCase() === 'px' ? 1 : 16);
+			if (match[1].toLowerCase() === 'min') range.min = Math.max(range.min, value);
+			else range.max = Math.min(range.max, value);
+		});
+		return range;
+	}
+
+	function adaptCanvasMediaRules(source, canvasWidth) {
+		const width = Number(canvasWidth);
+		if (!Number.isFinite(width) || width < 0) return String(source || '');
+		const text = normalizeLineEndings(source).replace(/\/\*.*?\*\//gs, '');
+		let output = '';
+		let offset = 0;
+		while (offset < text.length) {
+			while (/\s/.test(text[offset] || '')) offset += 1;
+			if (offset >= text.length) break;
+			const open = findNextBrace(text, offset);
+			if (open < 0) break;
+			const prelude = text.slice(offset, open).trim();
+			const close = findMatchingBrace(text, open);
+			if (close < 0) return String(source || '');
+			const body = text.slice(open + 1, close);
+			offset = close + 1;
+			if (!prelude) continue;
+
+			if (/^@media\b/i.test(prelude)) {
+				const range = canvasMediaWidthRange(prelude);
+				if (range && width >= range.min && width <= range.max) output += adaptCanvasMediaRules(body, width);
+				else if (range === null) output += prelude + '{' + adaptCanvasMediaRules(body, width) + '}';
+				continue;
+			}
+			if (/^@(supports|container|layer|scope|document)\b/i.test(prelude)) {
+				output += prelude + '{' + adaptCanvasMediaRules(body, width) + '}';
+				continue;
+			}
+			output += prelude + '{' + body + '}';
+		}
+		return output;
+	}
+
+	function adaptCompiledCssForCanvas(source, canvasWidth) {
+		const text = String(source || '');
+		if (!text.includes(COMPILED_CSS_START_MARKER) || !text.includes(COMPILED_CSS_END_MARKER)) return text;
+		let output = '';
+		let cursor = 0;
+		while (cursor < text.length) {
+			const start = text.indexOf(COMPILED_CSS_START_MARKER, cursor);
+			if (start < 0) {
+				output += text.slice(cursor);
+				break;
+			}
+			output += text.slice(cursor, start + COMPILED_CSS_START_MARKER.length);
+			const contentStart = start + COMPILED_CSS_START_MARKER.length;
+			const end = text.indexOf(COMPILED_CSS_END_MARKER, contentStart);
+			if (end < 0) return text;
+			output += adaptCanvasMediaRules(text.slice(contentStart, end), canvasWidth);
+			output += COMPILED_CSS_END_MARKER;
+			cursor = end + COMPILED_CSS_END_MARKER.length;
+		}
+		return output;
+	}
+
+	function hasBalancedBraces(source) {
+		const text = String(source || '');
+		let depth = 0;
+		let quote = '';
+		let escaped = false;
+		for (let index = 0; index < text.length; index += 1) {
+			const character = text[index];
+			if (escaped) {
+				escaped = false;
+				continue;
+			}
+			if (character === '\\') {
+				escaped = true;
+				continue;
+			}
+			if (quote) {
+				if (character === quote) quote = '';
+				continue;
+			}
+			if (character === '"' || character === "'") {
+				quote = character;
+				continue;
+			}
+			if (character === '{') depth += 1;
+			if (character === '}') {
+				depth -= 1;
+				if (depth < 0) return false;
+			}
+		}
+		return depth === 0 && quote === '';
+	}
+
+	function validateCompiledCss(css) {
+		const value = String(css || '').trim();
+		const warnings = [];
+		if (byteLength(value) > MAX_CSS_BYTES) warnings.push('generated-css-too-large');
+		if (/tailwind|bootstrap|cdn\.tailwindcss|--tw-/i.test(value)) warnings.push('forbidden-framework-marker');
+		if (!hasBalancedBraces(value)) warnings.push('unbalanced-generated-css');
+		return { valid: warnings.length === 0, warnings };
+	}
+
+	function safeStylesheet(value) {
+		try {
+			const url = new URL(String(value || ''));
+			return url.protocol === 'https:' && ['fonts.googleapis.com', 'fonts.gstatic.com'].includes(url.hostname) ? url.href : '';
+		} catch (_) {
+			return '';
+		}
+	}
+
+	function escapeScriptText(value) {
+		return String(value || '').replace(/<\/script/gi, '<\\/script');
+	}
+
+	function escapeStyleText(value) {
+		return String(value || '').replace(/<\/style/gi, '<\\/style');
+	}
+
+	function scannerCollector(requestId) {
+		const fields = JSON.stringify(COMPUTED_STYLE_FIELDS);
+		return '<script>(function(){'
+			+ 'var fields=' + fields + ';'
+			+ 'var cssName=function(name){return String(name||"").replace(/[A-Z]/g,function(match){return "-"+match.toLowerCase();});};'
+			+ 'var metric=function(value){var number=Number(value);return isFinite(number)?Math.round(number*1000)/1000:0;};'
+			+ 'var bounds=function(rect){return {x:metric(rect&&rect.left),y:metric(rect&&rect.top),top:metric(rect&&rect.top),right:metric(rect&&rect.right),bottom:metric(rect&&rect.bottom),width:metric(rect&&rect.width),height:metric(rect&&rect.height)};};'
+			+ 'var styles=function(node,pseudo){var style;try{style=getComputedStyle(node,pseudo||null);}catch(_){return {};};var result={};fields.forEach(function(field){var value=style.getPropertyValue(cssName(field))||style[field];if(value!==undefined&&value!==null&&String(value).trim()!=="")result[field]=String(value).trim();});return result;};'
+			+ 'var pseudo=function(node,pseudoName){return styles(node,pseudoName);};'
+			+ 'var wait=function(milliseconds){return new Promise(function(resolve){setTimeout(resolve,milliseconds);});};'
+			+ 'var waitAssets=function(){var fonts=document.fonts&&document.fonts.ready?document.fonts.ready.catch(function(){}):Promise.resolve();var images=Array.prototype.slice.call(document.images||[]).slice(0,200);return fonts.then(function(){return Promise.all(images.map(function(image){if(image.complete)return image.decode?image.decode().catch(function(){}):Promise.resolve();return new Promise(function(resolve){var done=function(){resolve();};image.addEventListener("load",done,{once:true});image.addEventListener("error",done,{once:true});setTimeout(done,2500);});}));}).then(function(){return wait(50);});};'
+			+ 'var parentMarker=function(node){var parent=node&&node.parentElement;while(parent){var marker=parent.getAttribute("data-pb-import-node");if(marker)return marker;parent=parent.parentElement;}return "";};'
+			+ 'var sectionElements=function(){var found=Array.prototype.slice.call(document.querySelectorAll("header,section,footer"));if(found.length)return found;return Array.prototype.slice.call(document.body?document.body.children:[]).filter(function(node){return node&&node.nodeType===1&&!["SCRIPT","STYLE","LINK","META","NOSCRIPT"].includes(node.tagName);});};'
+			+ 'var scan=function(viewport){return waitAssets().then(function(){var elements=Array.prototype.slice.call(document.querySelectorAll("[data-pb-import-node]")).slice(0,1000);var sections=sectionElements().map(function(node,index){return {marker:node.getAttribute("data-pb-import-node")||"",tag:String(node.tagName||"").toLowerCase(),sourceId:node.getAttribute("id")||"",order:index,bounds:bounds(node.getBoundingClientRect()),fallback:false};}).filter(function(section){return section.marker;});var nodes=elements.map(function(node){var marker=node.getAttribute("data-pb-import-node")||"";var computed=styles(node);var before=pseudo(node,"::before");var after=pseudo(node,"::after");var text=node.children.length?"":String(node.textContent||"").trim().slice(0,500);var assets=["src","poster","href"].map(function(name){return node.getAttribute(name)||"";}).filter(Boolean);return {marker:marker,parentMarker:parentMarker(node),tag:String(node.tagName||"").toLowerCase(),id:node.getAttribute("id")||"",classes:String(node.getAttribute("class")||"").split(/\\s+/).filter(Boolean),text:text,bounds:bounds(node.getBoundingClientRect()),computed:computed,pseudo:{before:before,after:after},assets:assets,interaction:{sourceEvents:false,sourceScripts:false}};}).filter(function(node){return node.marker;});parent.postMessage({type:"pb-static-import-scan-result",requestId:' + JSON.stringify(requestId) + ',viewport:viewport,sections:sections,nodes:nodes,stats:{nodes:nodes.length,sections:sections.length,measuredNodes:nodes.length}},"*");});};'
+			+ 'window.addEventListener("message",function(event){var data=event&&event.data||{};if(data.type!=="pb-static-import-scan"||data.requestId!==' + JSON.stringify(requestId) + ')return;scan(data.viewport).catch(function(error){parent.postMessage({type:"pb-static-import-scan-error",requestId:' + JSON.stringify(requestId) + ',message:String(error&&error.message||error)},"*");});});'
+			+ 'parent.postMessage({type:"pb-static-import-scan-ready",requestId:' + JSON.stringify(requestId) + '},"*");'
+			+ '})();</script>';
+	}
+
+	function compilerDocument(payload, bootstrapCss, requestId, mode = 'compile') {
+		let html = String(payload && payload.html || '')
+			.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, '')
+			.replace(/<script\b[^>]*\/?>/gi, '');
+		if (!/^\s*<!doctype|^\s*<html\b/i.test(html)) html = '<!doctype html><html><head></head><body>' + html + '</body></html>';
+		const frameworks = Array.isArray(payload && payload.frameworks) ? payload.frameworks : [];
+		const fontLinks = (Array.isArray(payload && payload.stylesheets) ? payload.stylesheets : [])
+			.map(safeStylesheet)
+			.filter(Boolean)
+			.map((href) => '<link rel="stylesheet" href="' + href.replace(/"/g, '&quot;') + '">')
+			.join('');
+		const bootstrapStyle = frameworks.includes('bootstrap5') && bootstrapCss
+			? '<style data-pb-compiled-bootstrap>' + escapeStyleText(bootstrapCss) + '</style>'
+			: '';
+		const tailwindConfig = JSON.stringify({
+			...(payload && payload.tailwindConfig && typeof payload.tailwindConfig === 'object' ? payload.tailwindConfig : {}),
+			corePlugins: { preflight: false },
+			important: '.pb-import-root',
+		}).replace(/</g, '\\u003c');
+		const tailwindLoader = frameworks.includes('tailwind')
+			? '<script>window.tailwind=window.tailwind||{};window.tailwind.config=' + tailwindConfig + ';</script><script src="' + TAILWIND_CDN_URL + '"></script>'
+			: '';
+		const collector = mode === 'scan'
+			? scannerCollector(requestId)
+			: '<script>(function(){var attempts=0;var collect=function(){var css=Array.prototype.map.call(document.querySelectorAll("style:not([data-pb-source-css])"),function(style){return style.textContent||"";}).join("\\n");if(css||attempts>=30){parent.postMessage({type:"pb-static-import-compiled-css",requestId:' + JSON.stringify(requestId) + ',css:css},"*");return;}attempts+=1;setTimeout(collect,100);};collect();})();</script>';
+		const headInjection = fontLinks + bootstrapStyle + tailwindLoader;
+		if (/<\/head\s*>/i.test(html)) html = html.replace(/<\/head\s*>/i, headInjection + '</head>');
+		else html = headInjection + html;
+		if (/<\/body\s*>/i.test(html)) html = html.replace(/<\/body\s*>/i, collector + '</body>');
+		else html += collector;
+		return html;
+	}
+
+	class StaticImportCompileError extends Error {
+		constructor(message, code = 'compile-failed') {
+			super(message);
+			this.name = 'StaticImportCompileError';
+			this.code = code;
+		}
+	}
+
+	class StaticImportCompileCancelledError extends StaticImportCompileError {
+		constructor() {
+			super('Compiled Native import was cancelled.', 'compile-cancelled');
+			this.name = 'StaticImportCompileCancelledError';
+		}
+	}
+
+	class StaticImportScanError extends StaticImportCompileError {
+		constructor(message, code = 'scan-failed') {
+			super(message, code);
+			this.name = 'StaticImportScanError';
+		}
+	}
+
+	class StaticImportScanCancelledError extends StaticImportScanError {
+		constructor() {
+			super('Computed-style scan was cancelled.', 'scan-cancelled');
+			this.name = 'StaticImportScanCancelledError';
+		}
+	}
+
+	function reportProgress(options, stage) {
+		if (typeof options?.onProgress !== 'function') return;
+		try { options.onProgress(stage); } catch (_) { /* Progress UI must not break compilation. */ }
+	}
+
+	async function fetchBootstrapCss(options, signal) {
+		try {
+			if (typeof options?.fetchText === 'function') return options.fetchText(BOOTSTRAP_CSS_URL, { signal });
+			if (typeof fetch !== 'function') throw new StaticImportCompileError('Bootstrap CSS fetch is unavailable.', 'framework-fetch-unavailable');
+			const response = await fetch(BOOTSTRAP_CSS_URL, { signal, credentials: 'omit' });
+			if (!response.ok) throw new StaticImportCompileError('Bootstrap CSS could not be fetched.', 'framework-fetch-failed');
+			return response.text();
+		} catch (error) {
+			if (signal?.aborted) throw new StaticImportCompileCancelledError();
+			throw error;
+		}
+	}
+
+	function normalizeScanViewports(value) {
+		const defaults = [
+			{ key: 'mobile', width: 390, height: 900 },
+			{ key: 'tablet', width: 768, height: 1024 },
+			{ key: 'desktop', width: 1180, height: 900 },
+		];
+		const input = Array.isArray(value) && value.length ? value : defaults;
+		const seen = new Set();
+		return input.map((viewport) => {
+			const key = String(viewport?.key || '').trim().toLowerCase();
+			const width = Math.min(3840, Math.max(1, Math.round(Number(viewport?.width) || 0)));
+			const height = Math.min(5000, Math.max(1, Math.round(Number(viewport?.height) || 0)));
+			return { key, width, height };
+		}).filter((viewport) => {
+			if (!/^[a-z][a-z0-9_-]{0,31}$/.test(viewport.key) || !viewport.width || !viewport.height || seen.has(viewport.key)) return false;
+			seen.add(viewport.key);
+			return true;
+		});
+	}
+
+	function mergeComputedSnapshots(parts) {
+		const sections = new Map();
+		const nodes = new Map();
+		(parts || []).forEach((part) => {
+			const key = String(part?.viewport?.key || '').trim();
+			if (!key) return;
+			(part.sections || []).forEach((section) => {
+				const marker = String(section?.marker || '').trim();
+				if (!marker) return;
+				const current = sections.get(marker) || { ...section, bounds: {} };
+				current.bounds[key] = section.bounds || {};
+				sections.set(marker, current);
+			});
+			(part.nodes || []).forEach((node) => {
+				const marker = String(node?.marker || '').trim();
+				if (!marker) return;
+				const current = nodes.get(marker) || { ...node, bounds: {}, computed: {}, pseudo: {} };
+				current.bounds[key] = node.bounds || {};
+				current.computed[key] = node.computed || {};
+				current.pseudo[key] = node.pseudo || {};
+				nodes.set(marker, current);
+			});
+		});
+		return {
+			sections: Array.from(sections.values()).map((section, index) => ({ ...section, order: index })),
+			nodes: Array.from(nodes.values()),
+			warnings: [],
+			stats: {
+				sections: sections.size,
+				nodes: nodes.size,
+				measuredNodes: nodes.size,
+				fallbackSections: 0,
+			},
+		};
+	}
+
+	async function scanComputedStyles(payload, options = {}) {
+		if (!payload || typeof payload !== 'object') throw new StaticImportScanError('Computed-style scan payload is invalid.', 'invalid-payload');
+		const signal = options.signal;
+		if (signal?.aborted) throw new StaticImportScanCancelledError();
+		const viewports = normalizeScanViewports(options.viewports || payload.viewports);
+		if (!viewports.length) throw new StaticImportScanError('Computed-style scan has no valid viewports.', 'invalid-viewports');
+		const frameworks = Array.isArray(payload.frameworks) ? payload.frameworks : [];
+		let bootstrapCss = '';
+		if (frameworks.includes('bootstrap5')) bootstrapCss = String(await fetchBootstrapCss(options, signal) || '');
+		if (typeof document === 'undefined' || !document.body) throw new StaticImportScanError('Scanner iframe cannot be created.', 'scanner-document-unavailable');
+
+		const iframe = document.createElement('iframe');
+		iframe.setAttribute('sandbox', 'allow-scripts');
+		iframe.setAttribute('data-pb-compiler', 'computed-style-scanner');
+		iframe.setAttribute('aria-hidden', 'true');
+		iframe.style.position = 'fixed';
+		iframe.style.width = viewports[0].width + 'px';
+		iframe.style.height = viewports[0].height + 'px';
+		iframe.style.left = '-10000px';
+		iframe.style.top = '-10000px';
+		iframe.style.opacity = '0';
+		iframe.style.pointerEvents = 'none';
+		const requestId = 'pb-scan-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+		let timeoutId = null;
+		let abortHandler = null;
+		let messageHandler = null;
+
+		return new Promise((resolve, reject) => {
+			let viewportIndex = 0;
+			let ready = false;
+			const parts = [];
+			const finish = (callback, value) => {
+				if (timeoutId) clearTimeout(timeoutId);
+				timeoutId = null;
+				if (signal && abortHandler) signal.removeEventListener('abort', abortHandler);
+				callback(value);
+			};
+			const sendViewport = () => {
+				const viewport = viewports[viewportIndex];
+				if (!viewport || !iframe.contentWindow?.postMessage) {
+					finish(reject, new StaticImportScanError('Scanner viewport channel is unavailable.', 'scanner-channel-unavailable'));
+					return;
+				}
+				iframe.style.width = viewport.width + 'px';
+				iframe.style.height = viewport.height + 'px';
+				iframe.contentWindow.postMessage({ type: 'pb-static-import-scan', requestId, viewport }, '*');
+			};
+			const onMessage = (event) => {
+				if (event.source !== iframe.contentWindow || event.data?.requestId !== requestId) return;
+				if (event.data.type === 'pb-static-import-scan-ready') {
+					ready = true;
+					reportProgress(options, 'scan-sections');
+					sendViewport();
+					return;
+				}
+				if (event.data.type === 'pb-static-import-scan-error') {
+					finish(reject, new StaticImportScanError(String(event.data.message || 'Computed-style scan failed.'), 'scan-failed'));
+					return;
+				}
+				if (event.data.type !== 'pb-static-import-scan-result' || !ready) return;
+				parts.push(event.data);
+				reportProgress(options, 'measure-layout');
+				viewportIndex += 1;
+				if (viewportIndex < viewports.length) {
+					sendViewport();
+					return;
+				}
+				finish(resolve, mergeComputedSnapshots(parts));
+			};
+			const onAbort = () => finish(reject, new StaticImportScanCancelledError());
+			messageHandler = onMessage;
+			abortHandler = onAbort;
+			root.addEventListener('message', onMessage);
+			if (signal) signal.addEventListener('abort', onAbort, { once: true });
+			timeoutId = setTimeout(() => finish(reject, new StaticImportScanError('Computed-style scanner timed out.', 'scan-timeout')), SCAN_TIMEOUT_MS);
+			iframe.srcdoc = compilerDocument(payload, bootstrapCss, requestId, 'scan');
+			document.body.appendChild(iframe);
+		}).finally(() => {
+			if (timeoutId) clearTimeout(timeoutId);
+			if (signal && abortHandler) signal.removeEventListener('abort', abortHandler);
+			if (messageHandler) root.removeEventListener('message', messageHandler);
+			if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+			reportProgress(options, 'cleanup');
+		});
+	}
+
+	async function compile(payload, options = {}) {
+		if (!payload || typeof payload !== 'object') throw new StaticImportCompileError('Compiled Native payload is invalid.', 'invalid-payload');
+		const signal = options.signal;
+		if (signal?.aborted) throw new StaticImportCompileCancelledError();
+		const frameworks = Array.isArray(payload.frameworks) ? payload.frameworks : [];
+		reportProgress(options, 'prepare');
+		let bootstrapCss = '';
+		if (frameworks.includes('tailwind') || frameworks.includes('bootstrap5')) reportProgress(options, 'load-framework');
+		if (frameworks.includes('bootstrap5')) {
+			bootstrapCss = String(await fetchBootstrapCss(options, signal) || '');
+		}
+		const sourceCssResult = rewriteCss(payload.sourceCss || '', payload, { stripUrls: false });
+		const needsIframe = frameworks.includes('tailwind') || frameworks.includes('bootstrap5');
+		if (!needsIframe) {
+			reportProgress(options, 'extract');
+			const validation = validateCompiledCss(sourceCssResult.css);
+			if (!validation.valid) throw new StaticImportCompileError('Compiled CSS validation failed: ' + validation.warnings.join(', '), validation.warnings[0]);
+			reportProgress(options, 'rewrite');
+			reportProgress(options, 'validate');
+			reportProgress(options, 'cleanup');
+			return { css: sourceCssResult.css, warnings: validation.warnings, stats: sourceCssResult.stats };
+		}
+
+		if (typeof document === 'undefined' || !document.body) throw new StaticImportCompileError('Compiler iframe cannot be created.', 'compiler-document-unavailable');
+		const iframe = document.createElement('iframe');
+		// The compiler is intentionally ephemeral and sandboxed: sandbox="allow-scripts".
+		iframe.setAttribute('sandbox', 'allow-scripts');
+		iframe.setAttribute('aria-hidden', 'true');
+		iframe.style.position = 'fixed';
+		iframe.style.width = '1px';
+		iframe.style.height = '1px';
+		iframe.style.left = '-10000px';
+		iframe.style.top = '-10000px';
+		iframe.style.opacity = '0';
+		iframe.style.pointerEvents = 'none';
+		const requestId = 'pb-compile-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+		let timeoutId = null;
+		let abortHandler = null;
+		let messageHandler = null;
+		reportProgress(options, 'compile');
+		try {
+			const result = await new Promise((resolve, reject) => {
+				const finish = (callback, value) => {
+					if (timeoutId) clearTimeout(timeoutId);
+					timeoutId = null;
+					if (signal && abortHandler) signal.removeEventListener('abort', abortHandler);
+					callback(value);
+				};
+				const onMessage = (event) => {
+					if (event.source !== iframe.contentWindow || event.data?.type !== 'pb-static-import-compiled-css' || event.data?.requestId !== requestId) return;
+					finish(resolve, String(event.data.css || ''));
+				};
+				const onAbort = () => finish(reject, new StaticImportCompileCancelledError());
+				messageHandler = onMessage;
+				abortHandler = onAbort;
+				root.addEventListener('message', onMessage);
+				if (signal) signal.addEventListener('abort', onAbort, { once: true });
+				timeoutId = setTimeout(() => finish(reject, new StaticImportCompileError('Compiler timed out while waiting for framework CSS.', 'compile-timeout')), COMPILE_TIMEOUT_MS);
+				iframe.srcdoc = compilerDocument(payload, bootstrapCss, requestId);
+				document.body.appendChild(iframe);
+			}).finally(() => {
+				if (messageHandler) root.removeEventListener('message', messageHandler);
+				messageHandler = null;
+			});
+			reportProgress(options, 'extract');
+			const frameworkCssResult = rewriteCss(result, payload);
+			reportProgress(options, 'rewrite');
+			const combinedCss = [sourceCssResult.css, frameworkCssResult.css].filter(Boolean).join('\n');
+			const validation = validateCompiledCss(combinedCss);
+			reportProgress(options, 'validate');
+			if (!validation.valid) throw new StaticImportCompileError('Compiled CSS validation failed: ' + validation.warnings.join(', '), validation.warnings[0]);
+			return {
+				css: combinedCss,
+				warnings: unique([...(sourceCssResult.warnings || []), ...(frameworkCssResult.warnings || []), ...validation.warnings]),
+				stats: {
+					sourceClasses: sourceCssResult.stats.sourceClasses,
+					generatedRules: sourceCssResult.stats.generatedRules + frameworkCssResult.stats.generatedRules,
+					rewrittenRules: sourceCssResult.stats.rewrittenRules + frameworkCssResult.stats.rewrittenRules,
+					droppedRules: sourceCssResult.stats.droppedRules + frameworkCssResult.stats.droppedRules,
+				},
+			};
+		} finally {
+			if (timeoutId) clearTimeout(timeoutId);
+			if (signal && abortHandler) signal.removeEventListener('abort', abortHandler);
+			if (messageHandler) root.removeEventListener('message', messageHandler);
+			if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+			reportProgress(options, 'cleanup');
+		}
+	}
+
+	root.PhoenixStaticImportCompiler = {
+		BOOTSTRAP_CSS_URL,
+		TAILWIND_CDN_URL,
+		MAX_CSS_BYTES,
+		compile,
+		scanComputedStyles,
+		StaticImportCompileError,
+		StaticImportCompileCancelledError,
+		StaticImportScanError,
+		StaticImportScanCancelledError,
+		adaptCompiledCssForCanvas,
+		filterResidualCss,
+		__test: { adaptCanvasMediaRules, adaptCompiledCssForCanvas, byteLength, canvasMediaWidthRange, compilerDocument, cssPropertyName, decodeCssIdentifier, filterResidualCss, hasBalancedBraces, mergeComputedSnapshots, normalizeScanViewports, rewriteCss, scopeSelector, serializeBounds, serializeComputedStyle, validateCompiledCss },
+	};
+})(typeof window !== 'undefined' ? window : globalThis);

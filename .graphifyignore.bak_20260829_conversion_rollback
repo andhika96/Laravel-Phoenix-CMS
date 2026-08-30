@@ -1,0 +1,62 @@
+# Dependencies and generated/runtime output
+vendor/
+node_modules/
+public/build/
+public/hot
+public/storage/
+public/assets/pagebuilder_elementor/renditions/
+public/assets/plugins/
+public/assets/vendor/
+public/mockups/
+project-artifacts/mockups/file-manager-v2-ckbox/dist/
+storage/
+bootstrap/cache/
+
+# Local tooling and temporary browser state
+.git/
+.agents/
+.codex/
+.kiro/
+.npm-cache/
+.playwright-cli/
+.playwright-daemon/
+.tmp-chrome-profile/
+.worktrees/
+
+# Historical copies and visual QA artifacts are not active source
+project-artifacts/backups/
+project-artifacts/qa/
+project-artifacts/previews/
+graphify-out/
+docs/superpowers/
+*.bak
+*.bak_*
+*.backup-*
+*.log
+tmp_*
+
+# Secrets and generated lock/cache files
+.env
+.env.*
+!.env.example
+.phpunit.result.cache
+composer.lock
+package-lock.json
+
+# Binary/media assets are not code relationships
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.ico
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.zip
+*.pdf
+
+# Raw data files unsupported by the code-relationship extractor
+database/sql/laravel_11.sql
+resources/data/pagebuilder_elementor_shapes.json

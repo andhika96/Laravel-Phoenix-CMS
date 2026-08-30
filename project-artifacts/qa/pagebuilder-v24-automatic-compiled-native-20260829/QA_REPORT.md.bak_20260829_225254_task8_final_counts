@@ -1,0 +1,82 @@
+# Page Builder Elementor v2.4 — Automatic Compiled Native QA
+
+Date: 2026-08-29
+Project: `D:\Laragon\www\laravel-13-phoenix`
+Plan: `project-artifacts/plans/2026-08-29-pagebuilder-v24-automatic-layout-analyzer-compiled-native-plan.md`
+
+## Scope
+
+Implemented the measurement-driven automatic Compiled Native analyzer in the isolated v2.4 surface. The pipeline accepts HTML/HTM/ZIP, collects the applicable CSS universe, measures the sanitized source in a script-disabled browser, detects Header/Section/Footer boundaries, classifies dynamic Stack/Flex/Grid layouts per viewport, preserves computed box-model evidence, maps only layout structure to existing v2.4 node shapes, and reports source-vs-target deltas.
+
+The analyzer does not choose widgets automatically, does not use Exact Visual or recommendation fallbacks, and does not silently save or replace the Canvas tree. After analysis, the wizard requires an explicit widget choice for every mapped source block, builds a draft target, validates structural evidence, and only then supports an explicit in-memory Apply to Canvas; the normal Save action remains separate. The flow does not modify v2.3 or the main responsive engine.
+
+## Files added
+
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeBlueprint.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeEvidence.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeSource.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeFrameworkLoader.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/FrameworkBundle.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeMeasurement.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeSectionDetector.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/SectionIndex.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeLayoutClassifier.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeResponsiveClassifier.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeLayoutMapper.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeValidator.php`
+- `app/Http/Requests/Page_Builder_Elementor_V24/AutomaticCompiledNativeAnalyzeRequest.php`
+- `tools/pagebuilder-v24/automatic-compiled-native-measure.mjs`
+- `tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-*.html`
+- automatic Compiled Native PHPUnit and Node test files under `tests/`
+
+## Existing files modified
+
+- `app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php`
+- `routes/pagebuilder_elementor_v24.php`
+- `public/js/pagebuilder_elementor_v24/app.js`
+- `public/assets/css/pagebuilder_elementor_v24.css`
+- `resources/views/pagebuilder_elementor_v24/editor_shell.blade.php`
+- `package.json` and `package-lock.json` (Tailwind static CLI/compiler dev dependencies)
+
+## Verification results
+
+- Automatic focused PHPUnit suite: **51 passed, 255 assertions**.
+- Full active v2.4 Node suite: **414 passed, 0 failed**.
+- Automatic browser measurement contract: **3 passed**.
+- Automatic review UI contract: **3 passed**.
+- Automatic Canvas-flow contract: **3 passed** (layout-blueprint binding, manual widget selection, target preview, explicit Apply gate, and clean Canvas payload).
+- Automatic validation measurement contract: **3 passed**.
+- PHP syntax: **16 files passed `php -l`**, including all Compiled Native classes, request, controller, and v2.4 route.
+- `node --check public/js/pagebuilder_elementor_v24/app.js`: passed.
+- `git diff --check`: passed.
+- Route helper resolves `/pagebuilder-elementor/v2.4/compiled-native/automatic/analyze`.
+- Graphify was updated after the latest source changes; a focused query confirms the controller → measurement → detector → classifier → mapper/validator path.
+- Read-only fixture browser QA: **18 screenshots** captured at 1180px, 768px, and 390px for six fixtures. Flex-wrap measured as 4/2/1 columns; responsive grid measured as 3/2/1; one-column and nested fixtures stayed Stack 1.
+- Real source audit: `E:\Apps\Laragon\www\ceo-masters\index.html` loaded through the active importer and measured successfully as `tailwind_static`; the bundle contained **33,738 HTML bytes, 25,471 CSS bytes, 351 measured nodes, 15 asset references, and 11 detected Header/Section/Footer entries**.
+
+## Security and isolation
+
+- Browser measurement runs with JavaScript disabled.
+- Source scripts, inline handlers, and `javascript:` URLs are removed from the bundle.
+- Critical stylesheet load failures fail closed.
+- ZIP traversal paths are rejected and extraction is confined to a random temporary workspace under `storage/app/pagebuilder-v24-compiled-native`.
+- Analysis is read-only with no `Page_Builder::create`, `DB::`, Canvas replacement, or public save call in the analysis method. The Canvas mutation exists only behind the explicit client-side Apply action after target validation; it marks the editor dirty and tells the user to click Save.
+- Static isolation tests found no v2.3 reference in the new Compiled Native classes or analysis route.
+
+## Known boundaries
+
+- The live authenticated editor wizard was not runtime-click-tested from headless QA because the host redirected the unauthenticated browser to `/auth/login`; the UI has static contract coverage and the source fixture browser evidence above.
+- The full v2.4 PHP filter still has the previously known 419 CSRF failures: 195 tests passed and 30 request assertions were stopped by 419. This was explicitly left out of scope by the user and was not changed.
+- `route:list` remains unavailable because an unrelated existing route references the missing `App\\Http\\Controllers\\Api\\v1\\Testing\\Testing_Controller`; named route resolution and automatic feature tests pass.
+- Widget assignment is now an explicit mapping stage. `sourceBlocks` retain source identity, tag, attributes, text/HTML, rectangles, and computed styles; the user selects a registered v2.4 widget for each block and no recommendation selector is used.
+- The target screen currently provides a structural target preview and Apply gate from the measured blueprint. The standalone validator contract compares source/target snapshots at one-pixel tolerance, but a full target DOM re-measurement for every user-specific widget mapping still requires authenticated editor runtime QA; pixel parity is therefore not claimed.
+- Local package assets are listed with availability but server filesystem paths are never returned. A relative local image needs persistent asset mapping before an Image widget can be applied; external/data/root-relative URLs remain eligible.
+- `npm install` reports existing dependency audit findings (2 moderate, 7 high); no automatic audit fix was run.
+
+## Backups
+
+Timestamped backups were created before modifying existing files. SHA-256 hashes were verified for the measurement wrapper, controller, request, v2.4 app, v2.4 CSS, editor shell, package manifests, and route file. Backup files remain in place for manual recovery.
+
+## Status
+
+The automatic layout analyzer and the explicit manual widget-to-Canvas workflow are implemented through the planned review, mapping, target-preview, Apply, isolation, and automated QA stages. The live authenticated editor click-through remains unverified because the available headless session redirects to `/auth/login`; no Save or Apply was executed during QA. No commit, reset, cleanup of existing user changes, deployment, or database mutation was performed.

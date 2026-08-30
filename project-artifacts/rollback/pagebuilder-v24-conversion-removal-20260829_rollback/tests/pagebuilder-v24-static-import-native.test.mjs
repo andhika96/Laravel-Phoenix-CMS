@@ -1,0 +1,136 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import fs from 'node:fs';
+import vm from 'node:vm';
+
+const root = new URL('../', import.meta.url);
+const source = fs.readFileSync(new URL('public/js/pagebuilder_elementor_v24/static-import-native.js', root), 'utf8');
+
+function api() {
+  const window = {};
+  vm.runInNewContext(source, { window, globalThis: window });
+  return window.PhoenixStaticImportNative;
+}
+
+test('native snapshot mapper applies responsive computed box model and typography by marker', () => {
+  const native = api();
+  const layout = [{
+    id: 'native-root',
+    type: 'container',
+    settings: { importNodeKey: 'import-node-root', paddingTop: '0px', paddingRight: '0px', paddingBottom: '0px', paddingLeft: '0px' },
+    children: [{
+      id: 'native-heading',
+      type: 'heading',
+      settings: { importNodeKey: 'import-node-heading' },
+    }],
+  }];
+  native.applyComputedSnapshot(layout, {
+    nodes: [{
+      marker: 'import-node-root',
+      tag: 'section',
+      computed: {
+        mobile: { paddingTop: '0px', paddingRight: '0px', paddingBottom: '0px', paddingLeft: '0px', marginTop: '0px', marginRight: '0px', marginBottom: '0px', marginLeft: '0px', width: '390px' },
+        tablet: { paddingTop: '16px', paddingRight: '20px', paddingBottom: '16px', paddingLeft: '20px', marginTop: '8px', marginRight: '0px', marginBottom: '12px', marginLeft: '0px', width: '768px' },
+        desktop: { paddingTop: '24px', paddingRight: '32px', paddingBottom: '24px', paddingLeft: '32px', marginTop: '10px', marginRight: '0px', marginBottom: '18px', marginLeft: '0px', width: '1180px' },
+      },
+    }, {
+      marker: 'import-node-heading',
+      tag: 'h1',
+      computed: {
+        mobile: { fontFamily: 'Cormorant Garamond', fontSize: '48px', fontWeight: '600', lineHeight: '52px', color: 'rgb(244, 237, 223)', textAlign: 'center' },
+        tablet: { fontFamily: 'Cormorant Garamond', fontSize: '58px', fontWeight: '600', lineHeight: '62px', color: 'rgb(244, 237, 223)', textAlign: 'left' },
+        desktop: { fontFamily: 'Cormorant Garamond', fontSize: '72px', fontWeight: '600', lineHeight: '76px', color: 'rgb(244, 237, 223)', textAlign: 'left' },
+      },
+    }],
+  });
+
+  assert.equal(layout[0].settings.paddingTop, '24px');
+  assert.equal(layout[0].settings.paddingLeftTablet, '20px');
+  assert.equal(layout[0].settings.marginBottomMobile, '0px');
+  assert.equal(layout[0].settings.containerWidth, '1180px');
+  assert.equal(layout[0].children[0].settings.headingFontSize, '72px');
+  assert.equal(layout[0].children[0].settings.headingFontSizeTablet, '58px');
+  assert.equal(layout[0].children[0].settings.headingFontSizeMobile, '48px');
+  assert.equal(layout[0].children[0].settings.headingFontFamily, 'Cormorant Garamond');
+  assert.equal(layout[0].children[0].settings.color, 'rgb(244, 237, 223)');
+  assert.equal(layout[0].children[0].settings.align, 'left');
+});
+
+test('native snapshot mapper traverses grid columns and preserves explicit zero values', () => {
+  const native = api();
+  const layout = [{
+    id: 'native-grid',
+    type: 'container',
+    settings: { importNodeKey: 'import-node-grid', displayType: 'grid', paddingTop: '0px', paddingRight: '0px', paddingBottom: '0px', paddingLeft: '0px' },
+    columns: [{ id: 'cell-1', children: [{ id: 'native-card', type: 'container', settings: { importNodeKey: 'import-node-card' } }] }, { id: 'cell-2', children: [] }],
+  }];
+  native.applyComputedSnapshot(layout, {
+    nodes: [{
+      marker: 'import-node-grid',
+      tag: 'div',
+      computed: { desktop: { display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '24px', rowGap: '16px', paddingTop: '0px', paddingRight: '0px', paddingBottom: '0px', paddingLeft: '0px' } },
+    }, {
+      marker: 'import-node-card',
+      tag: 'article',
+      computed: { desktop: { paddingTop: '0px', paddingRight: '0px', paddingBottom: '0px', paddingLeft: '0px', borderTopWidth: '1px', borderTopStyle: 'solid', borderTopColor: 'rgb(0, 0, 0)', borderTopLeftRadius: '8px' } },
+    }],
+  });
+
+  assert.equal(layout[0].settings.gridColumns, 2);
+  assert.equal(layout[0].settings.gridColumnGap, '24px');
+  assert.equal(layout[0].settings.gridRowGap, '16px');
+  assert.equal(layout[0].settings.paddingTop, '0px');
+  assert.equal(layout[0].columns[0].children[0].settings.paddingLeft, '0px');
+  assert.equal(layout[0].columns[0].children[0].settings.borderType, 'solid');
+});
+
+test('native snapshot mapper replaces only marked fallback sections and keeps other nodes native', () => {
+  const native = api();
+  const layout = [{
+    id: 'root',
+    type: 'container',
+    settings: { importNodeKey: 'import-node-root' },
+    children: [
+      { id: 'features', type: 'container', settings: { importNodeKey: 'import-node-features' }, children: [] },
+      { id: 'hero', type: 'container', settings: { importNodeKey: 'import-node-hero' }, children: [] },
+    ],
+  }];
+
+  native.replaceFallbackSections(layout, [
+    { marker: 'import-node-features', fallback: true, fallbackReasons: ['horizontal-snap-layout'] },
+  ], (section, current) => ({ id: current.id + '-fallback', type: 'static_html', settings: { title: section.sourceId || 'Fallback' } }));
+
+  assert.equal(layout[0].children[0].type, 'static_html');
+  assert.equal(layout[0].children[0].id, 'features-fallback');
+  assert.equal(layout[0].children[1].type, 'container');
+});
+
+test('native snapshot mapper carries absolute overlay orientation, offsets, z-index, and responsive visibility', () => {
+  const native = api();
+  const layout = [{
+    id: 'overlay',
+    type: 'icon',
+    settings: { importNodeKey: 'import-node-overlay' },
+  }, {
+    id: 'hidden',
+    type: 'heading',
+    settings: { importNodeKey: 'import-node-hidden' },
+  }];
+  native.applyComputedSnapshot(layout, {
+    nodes: [{
+      marker: 'import-node-overlay',
+      computed: { desktop: { position: 'absolute', left: 'auto', right: '-28px', top: 'auto', bottom: '-32px', zIndex: '3', display: 'block' } },
+    }, {
+      marker: 'import-node-hidden',
+      computed: { desktop: { position: 'static', display: 'none' } },
+    }],
+  });
+
+  assert.equal(layout[0].settings.position, 'absolute');
+  assert.equal(layout[0].settings.horizontalOrientation, 'right');
+  assert.equal(layout[0].settings.positionX, '-28px');
+  assert.equal(layout[0].settings.verticalOrientation, 'bottom');
+  assert.equal(layout[0].settings.positionY, '-32px');
+  assert.equal(layout[0].settings.zIndex, '3');
+  assert.equal(layout[1].settings.hideDesktop, true);
+});

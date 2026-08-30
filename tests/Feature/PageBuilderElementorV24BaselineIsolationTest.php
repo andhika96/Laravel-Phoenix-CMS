@@ -66,7 +66,7 @@ class PageBuilderElementorV24BaselineIsolationTest extends TestCase
 
         $this->assertDirectoryExists(resource_path('pagebuilder_elementor_v24/modules'));
         $this->assertFileExists(resource_path('pagebuilder_elementor_v24/shared/AdvancedControls.vue'));
-        $this->assertCount(50, (new ModuleCatalog)->all());
+        $this->assertCount(53, (new ModuleCatalog)->all());
         $this->assertFileDoesNotExist(config_path('pagebuilder_elementor_v24_widgets.php'));
         $this->assertDirectoryDoesNotExist(public_path('js/pagebuilder_elementor_v24/widgets'));
     }

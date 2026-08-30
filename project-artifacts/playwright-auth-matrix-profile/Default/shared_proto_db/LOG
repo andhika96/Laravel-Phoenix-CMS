@@ -1,2 +1,3 @@
-2026/08/27-21:14:14.379 22e4 Creating DB D:\Laragon\www\laravel-13-phoenix\project-artifacts\playwright-auth-matrix-profile\Default\shared_proto_db since it was missing.
-2026/08/27-21:14:14.396 22e4 Reusing MANIFEST D:\Laragon\www\laravel-13-phoenix\project-artifacts\playwright-auth-matrix-profile\Default\shared_proto_db/MANIFEST-000001
+2026/08/30-11:07:58.080 9e94 Reusing MANIFEST D:\Laragon\www\laravel-13-phoenix\project-artifacts\playwright-auth-matrix-profile\Default\shared_proto_db/MANIFEST-000001
+2026/08/30-11:07:58.080 9e94 Recovering log #3
+2026/08/30-11:07:58.081 9e94 Reusing old log D:\Laragon\www\laravel-13-phoenix\project-artifacts\playwright-auth-matrix-profile\Default\shared_proto_db/000003.log 

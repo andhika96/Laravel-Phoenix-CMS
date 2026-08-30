@@ -1,0 +1,46 @@
+# Import and source-extraction audit
+
+Date: 2026-08-29
+Scope: `AutomaticCompiledNativeSource`, `AutomaticCompiledNativeFrameworkLoader`, Tailwind/Bootstrap/plain CSS loading, and the browser measurement hand-off.
+
+## Findings before remediation
+
+### P1 — nested ZIP stylesheet references were dropped
+
+Reproduction: ZIP entry `pages/index.html` referenced `../css/site.css`. The source workspace contained the stylesheet. `SourcePackage::filePath()` resolved every path from the workspace root and rejected `..`, so the loader returned `stylesheet-not-found`, omitted the CSS, and measurement saw the section without its real Grid/layout rules.
+
+Observed output:
+
+```json
+{"entry":"pages/index.html","diagnostics":[{"code":"stylesheet-not-found","href":"../css/site.css"}],"cssHasGrid":false}
+```
+
+Impact: nested ZIP pages were not measured in their actual CSS universe.
+
+### P1 — external stylesheet could be mistaken for a local file
+
+Reproduction: an external `https://cdn.example.com/style.css` link was processed through `filePath()` before external URL classification. With a local `style.css` in the ZIP, the external stylesheet was silently inlined and removed from the HTML; `externalStylesheets` became empty.
+
+Impact: the CSS universe could be incorrect and external provenance was lost.
+
+### P2 — plain `.grid` class was a Tailwind false positive
+
+Reproduction: a plain stylesheet defined `.grid { display: grid; ... }`. Auto detection saw the generic `grid` token and selected `tailwind_static` even though the page had no Tailwind marker.
+
+Impact: a Tailwind reset/base bundle could be injected into ordinary CSS pages and alter measured typography/box-model behavior.
+
+## Passing controls observed during the audit
+
+- Inline CSS, Tailwind static utility compilation, Tailwind arbitrary values, Bootstrap CSS package loading, script/handler/javascript-URL removal, ZIP traversal rejection, and critical stylesheet fail-closed behavior had passing focused coverage.
+- Browser measurement uses JavaScript disabled and captures computed styles plus rectangles at desktop/tablet/mobile.
+
+## Remediation gate
+
+The three findings above were fixed with regression tests before continuing to the Canvas workflow:
+
+- `SourcePackage::filePath()` now resolves relative to the selected HTML entry or CSS file, while `workspaceFilePath()` handles archive-root paths.
+- External stylesheet schemes are rejected by the local resolver before any local file lookup.
+- Tailwind/Bootstrap auto detection now requires utility/framework markers; generic `.grid`, `.container`, and `.row` names remain plain CSS unless stronger evidence exists.
+- Measurement preserves linked CSS files as file-backed sources, so relative `url(...)` and `@import` bases remain correct in the isolated browser.
+
+Post-remediation result: Source/measurement tests **10 + 2 passed**, including nested ZIP CSS, CSS asset resolution, external URL isolation, plain-class false positives, and browser measurement. Existing v2.4/v2.3 engine files remain out of scope.

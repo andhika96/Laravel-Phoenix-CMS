@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Support\PageBuilderElementorV24\CompiledNative;
+
+final class AutomaticCompiledNativeWidgetSignatures
+{
+    /** @param array<string,mixed> $mappingNode @param array<string,array<string,mixed>> $rawNodesById @return array<int,array<string,mixed>> */
+    public function candidates(array $mappingNode, array $rawNodesById = []): array
+    {
+        $role = strtolower((string) ($mappingNode['mappingRole'] ?? ''));
+        $kind = strtolower((string) ($mappingNode['mappingKind'] ?? ''));
+        $tag = strtolower((string) ($mappingNode['tag'] ?? 'div'));
+        $members = array_values(array_map('strval', is_array($mappingNode['memberSourceIds'] ?? null) ? $mappingNode['memberSourceIds'] : []));
+
+        if ($kind === 'icon_box') {
+            return [$this->candidate('icon_box', 0.96, [
+                'icon member detected',
+                'label/value content pair detected',
+                'nested wrapper is a single visual item',
+            ], $members)];
+        }
+
+        if ($kind === 'image_box') {
+            $reasons = ['media member detected', 'nested media wrapper detected'];
+            if ($this->hasTextMember($members, $rawNodesById)) {
+                $reasons[] = 'overlay/text member requires review';
+            }
+
+            return [$this->candidate('image_box', 0.9, $reasons, $members)];
+        }
+
+        if ($role === 'layout') {
+            $display = strtolower(trim((string) (($mappingNode['computedStyleByViewport']['desktop']['display'] ?? $mappingNode['computedStyle']['display'] ?? ''))));
+            if ($display === 'grid') {
+                return [$this->candidate('grid', 0.98, ['computed display is grid', 'dynamic track evidence is available'], $members)];
+            }
+            if (in_array($display, ['flex', 'inline-flex'], true)) {
+                return [$this->candidate('container', 0.98, ['computed display is flex', 'child placement is a flow layout'], $members)];
+            }
+
+            return [$this->candidate('container', 0.82, ['structural layout role detected'], $members)];
+        }
+
+        if ($role === 'content') {
+            return match (true) {
+                preg_match('/^h[1-6]$/', $tag) === 1 => [$this->candidate('heading', 0.98, ['semantic heading tag detected'], $members)],
+                in_array($tag, ['p', 'blockquote', 'pre', 'code'], true) => [$this->candidate('text_editor', 0.94, ['semantic text content detected'], $members)],
+                in_array($tag, ['img', 'picture'], true) => [$this->candidate('image', 0.98, ['media source element detected'], $members)],
+                $tag === 'video' => [$this->candidate('video', 0.94, ['video media element detected'], $members)],
+                $tag === 'form' => [$this->candidate('form', 0.94, ['form element detected'], $members)],
+                $tag === 'button' || ($tag === 'a' && $this->hasAttribute($mappingNode, 'href')) => [$this->candidate('button', $tag === 'button' ? 0.98 : 0.88, ['action element detected', 'href/interaction attribute detected'], $members)],
+                default => [$this->candidate('text_editor', 0.68, ['text-bearing content needs review'], $members)],
+            };
+        }
+
+        return [];
+    }
+
+    /** @param array<string,mixed> $normalized @return array<string,mixed> */
+    public function withCandidates(array $normalized): array
+    {
+        $rawNodesById = is_array($normalized['rawNodesById'] ?? null) ? $normalized['rawNodesById'] : [];
+        foreach (is_array($normalized['mappingNodes'] ?? null) ? $normalized['mappingNodes'] : [] as &$mappingNode) {
+            if (is_array($mappingNode)) {
+                $mappingNode['candidateWidgets'] = $this->candidates($mappingNode, $rawNodesById);
+            }
+        }
+        unset($mappingNode);
+
+        return $normalized;
+    }
+
+    /** @param array<int,string> $members @param array<int,string> $reasons @return array<string,mixed> */
+    private function candidate(string $type, float $score, array $reasons, array $members): array
+    {
+        return [
+            'type' => $type,
+            'score' => $score,
+            'confidence' => $score >= 0.85 ? 'high' : ($score >= 0.7 ? 'medium' : 'low'),
+            'reasons' => array_values($reasons),
+            'memberSourceIds' => array_values($members),
+            'diagnostics' => [],
+        ];
+    }
+
+    /** @param array<int,string> $members @param array<string,array<string,mixed>> $rawNodesById */
+    private function hasTextMember(array $members, array $rawNodesById): bool
+    {
+        foreach ($members as $memberId) {
+            if (trim((string) ($rawNodesById[$memberId]['textContent'] ?? '')) !== '') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** @param array<string,mixed> $node */
+    private function hasAttribute(array $node, string $name): bool
+    {
+        foreach (is_array($node['attributes'] ?? null) ? $node['attributes'] : [] as $attribute) {
+            if (strtolower((string) ($attribute['name'] ?? '')) === strtolower($name) && trim((string) ($attribute['value'] ?? '')) !== '') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}

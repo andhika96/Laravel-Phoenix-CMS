@@ -1,0 +1,35 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeMeasurement;
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeSource;
+use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
+
+class PageBuilderElementorV24AutomaticCompiledNativeMeasurementTest extends TestCase
+{
+    public function test_measurement_wrapper_returns_normalized_multi_viewport_snapshot(): void
+    {
+        $fixture = base_path('tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-two-column-grid.html');
+        $source = new UploadedFile($fixture, 'automatic-two-column-grid.html', 'text/html', UPLOAD_ERR_OK, true);
+        $package = AutomaticCompiledNativeSource::fromUpload($source);
+
+        try {
+            $snapshot = (new AutomaticCompiledNativeMeasurement)->measure($package, [
+                ['name' => 'desktop', 'width' => 1180, 'height' => 900],
+                ['name' => 'tablet', 'width' => 768, 'height' => 1024],
+            ]);
+
+            $hero = collect($snapshot['nodes'])->firstWhere('id', 'hero');
+            $this->assertIsArray($hero);
+            $this->assertSame('grid', $hero['computedStyle']['display']);
+            $this->assertSame('80px', $hero['computedStyle']['paddingTop']);
+            $this->assertArrayHasKey('desktop', $hero['rectByViewport']);
+            $this->assertArrayHasKey('tablet', $hero['rectByViewport']);
+            $this->assertIsFloat($hero['rectByViewport']['desktop']['width']);
+        } finally {
+            $package->cleanup();
+        }
+    }
+}

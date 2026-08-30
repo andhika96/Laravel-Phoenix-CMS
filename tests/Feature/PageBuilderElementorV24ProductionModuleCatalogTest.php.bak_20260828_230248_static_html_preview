@@ -1,0 +1,134 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Support\PageBuilderElementorV24\ModuleCatalog;
+use Tests\TestCase;
+
+class PageBuilderElementorV24ProductionModuleCatalogTest extends TestCase
+{
+    public function test_all_layout_types_are_complete_canonical_modules_in_baseline_order(): void
+    {
+        $this->assertCategoryModules('layout', [
+            'container',
+            'container_fluid',
+            'grid',
+            'row_grid',
+        ]);
+
+        $catalog = app(ModuleCatalog::class);
+        $this->assertTrue($catalog->find('container')['toolbox']);
+        $this->assertFalse($catalog->find('container_fluid')['toolbox']);
+        $this->assertTrue($catalog->find('grid')['toolbox']);
+        $this->assertFalse($catalog->find('row_grid')['toolbox']);
+    }
+
+    public function test_all_basic_types_are_complete_canonical_modules_in_baseline_order(): void
+    {
+        $this->assertCategoryModules('basic', [
+            'heading',
+            'video',
+            'google_maps',
+            'text_editor',
+            'image',
+            'button',
+            'divider',
+            'spacer',
+            'icon',
+        ]);
+    }
+
+    public function test_all_general_types_are_complete_canonical_modules_in_baseline_order(): void
+    {
+        $this->assertCategoryModules('general', [
+            'image_box',
+            'icon_box',
+            'image_carousel',
+            'basic_gallery',
+            'feature_showcase',
+            'icon_list',
+            'tabs',
+            'accordion',
+            'counter',
+            'progress_bar',
+            'testimonial',
+            'social_icons',
+            'alert',
+            'rating',
+            'text_path',
+        ]);
+    }
+
+    public function test_dedicated_pro_types_are_complete_canonical_modules(): void
+    {
+        $catalog = app(ModuleCatalog::class);
+
+        foreach (['hero_banner', 'hero_slider', 'product_color_selector'] as $type) {
+            $module = $catalog->find($type);
+            $this->assertIsArray($module, 'Missing canonical Pro module: '.$type);
+            $this->assertSame('pro', $module['category']);
+			$this->assertSame([], array_diff(
+				['definition', 'canvas', 'settings', 'view'],
+				array_keys($module['assets']),
+			));
+            $this->assertStringContainsString(
+                str_replace('\\', '/', resource_path('pagebuilder_elementor_v24/modules/widgets/pro')).'/',
+                str_replace('\\', '/', $module['directory']),
+            );
+        }
+    }
+
+    public function test_all_pro_types_are_complete_canonical_modules_in_baseline_order(): void
+    {
+        $this->assertCategoryModules('pro', [
+            'form',
+            'product_lead_form',
+            'slides',
+            'animated_headline',
+            'hotspot',
+            'price_list',
+            'price_table',
+            'call_to_action',
+            'countdown',
+            'carousel',
+            'reviews',
+            'testimonial_carousel',
+            'media_carousel',
+            'hero_banner',
+            'hero_slider',
+            'flip_box',
+            'code_highlight',
+            'blockquote',
+            'share_buttons',
+            'progress_tracker',
+            'video_playlist',
+            'product_color_selector',
+        ]);
+    }
+
+    private function assertCategoryModules(string $category, array $expectedTypes): void
+    {
+        $catalog = app(ModuleCatalog::class);
+        $modules = array_filter(
+            $catalog->all(),
+            static fn (array $module): bool => $module['category'] === $category,
+        );
+
+        $this->assertSame($expectedTypes, array_keys($modules));
+
+        foreach ($modules as $type => $module) {
+            $this->assertSame($type, $module['type']);
+			$this->assertSame([], array_diff(
+				['definition', 'canvas', 'settings', 'view'],
+				array_keys($module['assets']),
+			));
+
+            foreach ($module['assets'] as $assetPath) {
+                $this->assertStringContainsString(
+                    str_replace('\\', '/', resource_path('pagebuilder_elementor_v24/modules')).'/',
+                    str_replace('\\', '/', $assetPath),
+                );
+            }
+        }
+    }
+}

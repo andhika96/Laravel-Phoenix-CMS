@@ -1,0 +1,213 @@
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { chromium } from 'playwright-core';
+
+const DEFAULT_BROWSER_PATHS = [
+  'C:/Program Files/Google/Chrome/Application/chrome.exe',
+  'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+  'C:/Program Files/Microsoft/Edge/Application/msedge.exe',
+  'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
+];
+
+const STYLE_PROPERTIES = [
+  'display', 'boxSizing', 'position', 'visibility', 'opacity', 'overflow', 'overflowX', 'overflowY',
+  'width', 'height', 'minWidth', 'minHeight', 'maxWidth', 'maxHeight', 'top', 'right', 'bottom', 'left',
+  'marginTop', 'marginRight', 'marginBottom', 'marginLeft',
+  'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+  'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',
+  'borderTopStyle', 'borderRightStyle', 'borderBottomStyle', 'borderLeftStyle',
+  'borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor',
+  'borderRadius', 'gap', 'rowGap', 'columnGap',
+  'flex', 'flexDirection', 'flexWrap', 'flexBasis', 'flexGrow', 'flexShrink', 'alignItems', 'alignContent', 'alignSelf', 'justifyContent', 'order',
+  'gridTemplateColumns', 'gridTemplateRows', 'gridColumnStart', 'gridColumnEnd', 'gridRowStart', 'gridRowEnd', 'gridAutoFlow', 'gridAutoColumns', 'gridAutoRows',
+  'color', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'lineHeight', 'letterSpacing', 'textAlign', 'textTransform', 'textDecorationLine',
+  'backgroundColor', 'backgroundImage', 'backgroundSize', 'backgroundPosition', 'backgroundRepeat', 'boxShadow', 'objectFit', 'objectPosition', 'transform',
+];
+
+function parseArguments(argv) {
+  const args = {};
+  for (let index = 0; index < argv.length; index += 1) {
+    const token = argv[index];
+    if (!token.startsWith('--')) continue;
+    const key = token.slice(2);
+    args[key] = argv[index + 1] && !argv[index + 1].startsWith('--') ? argv[++index] : true;
+  }
+  return args;
+}
+
+function browserExecutable() {
+  const configured = process.env.PB_CHROMIUM_EXECUTABLE;
+  if (configured && existsSync(configured)) return configured;
+  return DEFAULT_BROWSER_PATHS.find((candidate) => existsSync(candidate));
+}
+
+function normalizeViewports(raw) {
+  const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+  if (!Array.isArray(parsed) || parsed.length === 0) throw new Error('At least one viewport is required.');
+  const seen = new Set();
+  return parsed.map((viewport, index) => {
+    if (!viewport || typeof viewport !== 'object') throw new Error(`Viewport ${index} must be an object.`);
+    const name = String(viewport.name || '').trim().toLowerCase();
+    const width = Number(viewport.width);
+    const height = Number(viewport.height);
+    if (!/^[a-z][a-z0-9_-]{0,31}$/.test(name) || seen.has(name)) throw new Error(`Viewport ${index} has an invalid or duplicate name.`);
+    if (!Number.isFinite(width) || width <= 0 || !Number.isFinite(height) || height <= 0) throw new Error(`Viewport ${name} must have positive dimensions.`);
+    seen.add(name);
+    return { name, width, height };
+  }).sort((left, right) => {
+    const priority = { desktop: 0, tablet: 1, mobile: 2 };
+    return (priority[left.name] ?? 3) - (priority[right.name] ?? 3);
+  });
+}
+
+function measureViewport(page, viewport) {
+  return page.evaluate(({ viewportName, styleProperties }) => {
+    const ignoredTags = new Set(['SCRIPT', 'STYLE', 'LINK', 'META', 'TITLE', 'NOSCRIPT', 'TEMPLATE']);
+    const elements = [];
+    const sourceIds = new WeakMap();
+    const usedIds = new Map();
+    let generatedId = 0;
+
+    function stableSourceId(element) {
+      const existing = sourceIds.get(element);
+      if (existing) return existing;
+      const requested = String(element.getAttribute('data-pb-source-id') || element.id || '').trim();
+      const base = requested || `node-${++generatedId}`;
+      const count = (usedIds.get(base) || 0) + 1;
+      usedIds.set(base, count);
+      const result = count === 1 ? base : `${base}-${count}`;
+      sourceIds.set(element, result);
+      return result;
+    }
+
+    function number(value) {
+      const result = Number(value);
+      return Number.isFinite(result) ? result : 0;
+    }
+
+    function rect(element) {
+      const value = element.getBoundingClientRect();
+      return { x: number(value.x), y: number(value.y), width: number(value.width), height: number(value.height) };
+    }
+
+    function computedStyle(element) {
+      const computed = getComputedStyle(element);
+      return Object.fromEntries(styleProperties.map((property) => [property, computed[property] || '']));
+    }
+
+    function bounded(value, limit = 50000) {
+      const text = String(value || '');
+      return text.length > limit ? text.slice(0, limit) : text;
+    }
+
+    function attributes(element) {
+      return Array.from(element.attributes).map((attribute) => ({
+        name: attribute.name,
+        value: bounded(attribute.value, 4096),
+      }));
+    }
+
+    function walk(element, parentSourceId = null) {
+      if (!(element instanceof Element) || ignoredTags.has(element.tagName)) return;
+      const sourceId = stableSourceId(element);
+      const children = Array.from(element.children)
+        .filter((child) => !ignoredTags.has(child.tagName))
+        .map((child) => stableSourceId(child));
+      elements.push({
+        sourceId,
+        tag: element.tagName.toLowerCase(),
+        id: String(element.id || ''),
+        classList: Array.from(element.classList),
+        parentSourceId,
+        textContent: bounded(element.textContent),
+        innerHTML: bounded(element.innerHTML),
+        attributes: attributes(element),
+        computedStyle: computedStyle(element),
+        computedStyleByViewport: { [viewportName]: computedStyle(element) },
+        rectByViewport: { [viewportName]: rect(element) },
+        scrollSizeByViewport: { [viewportName]: { width: number(element.scrollWidth), height: number(element.scrollHeight) } },
+        pseudoState: 'default',
+        stylesheetSources: Array.from(document.styleSheets).map((stylesheet) => {
+          try { return stylesheet.href || 'inline'; } catch (_) { return 'cross-origin'; }
+        }),
+        children,
+      });
+      Array.from(element.children).forEach((child) => walk(child, sourceId));
+    }
+
+    walk(document.body);
+    return elements;
+  }, { viewportName: viewport.name, styleProperties: STYLE_PROPERTIES });
+}
+
+async function measure(input, viewports) {
+  const executablePath = browserExecutable();
+  if (!executablePath) throw new Error('No Chrome or Edge executable was found. Set PB_CHROMIUM_EXECUTABLE to an absolute browser path.');
+  const browser = await chromium.launch({ executablePath, headless: true });
+  const context = await browser.newContext({ javaScriptEnabled: false, deviceScaleFactor: 1 });
+  const page = await context.newPage();
+  const diagnostics = [];
+  const criticalFailures = [];
+  page.on('requestfailed', (request) => {
+    const diagnostic = { code: 'resource-failed', url: request.url(), message: request.failure()?.errorText || 'Resource request failed.' };
+    diagnostics.push(diagnostic);
+    if (request.resourceType() === 'stylesheet' || /\.css(?:[?#]|$)/i.test(request.url())) criticalFailures.push(diagnostic);
+  });
+  page.on('pageerror', (error) => diagnostics.push({ code: 'page-error', message: error.message }));
+
+  try {
+    await page.goto(pathToFileURL(resolve(input)).href, { waitUntil: 'load', timeout: 30000 });
+    if (criticalFailures.length > 0) {
+      throw new Error(`Critical stylesheet/resource failed to load: ${criticalFailures.map(({ url }) => url).join(', ')}`);
+    }
+    const nodes = new Map();
+    for (const viewport of viewports) {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await page.waitForTimeout(50);
+      const records = await measureViewport(page, viewport);
+      for (const record of records) {
+        const current = nodes.get(record.sourceId) || {
+          sourceId: record.sourceId,
+          tag: record.tag,
+          id: record.id,
+          classList: record.classList,
+          parentSourceId: record.parentSourceId,
+          textContent: record.textContent,
+          innerHTML: record.innerHTML,
+          attributes: record.attributes,
+          computedStyle: record.computedStyle,
+          computedStyleByViewport: {},
+          rectByViewport: {},
+          scrollSizeByViewport: {},
+          pseudoState: record.pseudoState,
+          stylesheetSources: record.stylesheetSources,
+          children: record.children,
+        };
+        current.computedStyleByViewport[viewport.name] = record.computedStyle;
+        current.rectByViewport[viewport.name] = record.rectByViewport[viewport.name];
+        current.scrollSizeByViewport[viewport.name] = record.scrollSizeByViewport[viewport.name];
+        nodes.set(record.sourceId, current);
+      }
+    }
+
+    return { version: 1, viewports, nodes: Array.from(nodes.values()), diagnostics };
+  } finally {
+    await browser.close();
+  }
+}
+
+async function main() {
+  const args = parseArguments(process.argv.slice(2));
+  if (typeof args.input !== 'string' || typeof args.output !== 'string' || typeof args.viewports !== 'string') {
+    throw new Error('Usage: node automatic-compiled-native-measure.mjs --input <path> --viewports <json> --output <path>');
+  }
+  const snapshot = await measure(args.input, normalizeViewports(args.viewports));
+  mkdirSync(dirname(resolve(args.output)), { recursive: true });
+  writeFileSync(resolve(args.output), `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8');
+}
+
+main().catch((error) => {
+  process.stderr.write(`${error.message}\n`);
+  process.exitCode = 1;
+});

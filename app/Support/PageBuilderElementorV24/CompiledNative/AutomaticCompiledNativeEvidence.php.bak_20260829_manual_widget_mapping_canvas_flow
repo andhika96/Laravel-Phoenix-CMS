@@ -1,0 +1,250 @@
+<?php
+
+namespace App\Support\PageBuilderElementorV24\CompiledNative;
+
+use InvalidArgumentException;
+
+final class AutomaticCompiledNativeEvidence
+{
+    /**
+     * Normalize a browser measurement snapshot without making layout decisions.
+     *
+     * @return array{version:int,viewports:array<int,array{name:string,width:float,height:float}>,nodes:array<int,array<string,mixed>>,diagnostics:array<int,mixed>}
+     */
+    public static function fromSnapshot(array $snapshot): array
+    {
+        if (($snapshot['version'] ?? null) !== 1) {
+            throw new InvalidArgumentException('The measurement snapshot version must be 1.');
+        }
+
+        $viewports = self::viewports($snapshot['viewports'] ?? null);
+        if ($viewports === []) {
+            throw new InvalidArgumentException('The measurement snapshot must contain at least one viewport.');
+        }
+
+        $viewportNames = array_fill_keys(array_column($viewports, 'name'), true);
+        $rawNodes = $snapshot['nodes'] ?? null;
+        if (! is_array($rawNodes)) {
+            throw new InvalidArgumentException('The measurement snapshot nodes must be an array.');
+        }
+
+        $nodes = [];
+        $seenIds = [];
+        foreach ($rawNodes as $index => $rawNode) {
+            if (! is_array($rawNode)) {
+                throw new InvalidArgumentException("Measurement node {$index} must be an object.");
+            }
+
+            $sourceId = self::requiredString($rawNode['sourceId'] ?? null, "Measurement node {$index} sourceId");
+            if (isset($seenIds[$sourceId])) {
+                throw new InvalidArgumentException("Measurement sourceId '{$sourceId}' is duplicated.");
+            }
+            $seenIds[$sourceId] = true;
+
+            $tag = strtolower(self::requiredString($rawNode['tag'] ?? null, "Measurement node {$sourceId} tag"));
+            if (! preg_match('/^[a-z][a-z0-9-]*$/', $tag)) {
+                throw new InvalidArgumentException("Measurement node {$sourceId} has an invalid tag.");
+            }
+
+            $computedStyle = $rawNode['computedStyle'] ?? [];
+            if (! is_array($computedStyle)) {
+                throw new InvalidArgumentException("Measurement node {$sourceId} computedStyle must be an object.");
+            }
+            $computedStyleByViewport = self::styleViewportRecords($rawNode['computedStyleByViewport'] ?? [], $viewportNames, $sourceId);
+
+            $rects = self::viewportRecords($rawNode['rectByViewport'] ?? [], $viewportNames, $sourceId, 'rectByViewport');
+            $scrollSizes = self::viewportRecords($rawNode['scrollSizeByViewport'] ?? [], $viewportNames, $sourceId, 'scrollSizeByViewport', false);
+
+            $parentSourceId = $rawNode['parentSourceId'] ?? null;
+            if ($parentSourceId !== null && (! is_string($parentSourceId) || trim($parentSourceId) === '')) {
+                throw new InvalidArgumentException("Measurement node {$sourceId} parentSourceId must be null or a string.");
+            }
+
+            $nodes[] = [
+                'sourceId' => $sourceId,
+                'tag' => $tag,
+                'id' => self::optionalString($rawNode['id'] ?? null),
+                'classList' => self::stringList($rawNode['classList'] ?? []),
+                'parentSourceId' => $parentSourceId === null ? null : trim($parentSourceId),
+                'computedStyle' => self::styleMap($computedStyle),
+                'computedStyleByViewport' => $computedStyleByViewport,
+                'rectByViewport' => $rects,
+                'scrollSizeByViewport' => $scrollSizes,
+                'pseudoState' => self::optionalString($rawNode['pseudoState'] ?? null),
+                'stylesheetSources' => self::stringList($rawNode['stylesheetSources'] ?? []),
+                'children' => self::stringList($rawNode['children'] ?? []),
+            ];
+        }
+
+        return [
+            'version' => 1,
+            'viewports' => $viewports,
+            'nodes' => $nodes,
+            'diagnostics' => is_array($snapshot['diagnostics'] ?? null) ? array_values($snapshot['diagnostics']) : [],
+        ];
+    }
+
+    /** @return array<int,array{name:string,width:float,height:float}> */
+    private static function viewports(mixed $value): array
+    {
+        if (! is_array($value)) {
+            throw new InvalidArgumentException('The measurement snapshot viewports must be an array.');
+        }
+
+        $result = [];
+        $seen = [];
+        foreach ($value as $index => $viewport) {
+            if (! is_array($viewport)) {
+                throw new InvalidArgumentException("Viewport {$index} must be an object.");
+            }
+
+            $name = strtolower(self::requiredString($viewport['name'] ?? null, "Viewport {$index} name"));
+            if (! preg_match('/^[a-z][a-z0-9_-]{0,31}$/', $name)) {
+                throw new InvalidArgumentException("Viewport {$name} has an invalid name.");
+            }
+            if (isset($seen[$name])) {
+                throw new InvalidArgumentException("Viewport '{$name}' is duplicated.");
+            }
+            $seen[$name] = true;
+
+            $result[] = [
+                'name' => $name,
+                'width' => self::positiveNumber($viewport['width'] ?? null, "Viewport {$name} width"),
+                'height' => self::positiveNumber($viewport['height'] ?? null, "Viewport {$name} height"),
+            ];
+        }
+
+        $priority = ['desktop' => 0, 'tablet' => 1, 'mobile' => 2];
+        usort($result, static fn (array $left, array $right): int => ($priority[$left['name']] ?? 3) <=> ($priority[$right['name']] ?? 3));
+
+        return $result;
+    }
+
+    /** @return array<string,array{x:float,y:float,width:float,height:float}> */
+    private static function viewportRecords(mixed $value, array $viewportNames, string $sourceId, string $field, bool $required = true): array
+    {
+        if (! is_array($value)) {
+            throw new InvalidArgumentException("Measurement node {$sourceId} {$field} must be an object.");
+        }
+
+        $result = [];
+        foreach ($value as $viewport => $record) {
+            if (! isset($viewportNames[$viewport])) {
+                throw new InvalidArgumentException("Measurement node {$sourceId} {$field} contains unknown viewport '{$viewport}'.");
+            }
+            if (! is_array($record)) {
+                throw new InvalidArgumentException("Measurement node {$sourceId} {$field}.{$viewport} must be an object.");
+            }
+
+            $result[$viewport] = [
+                'x' => self::finiteNumber($record['x'] ?? ($required ? null : 0), "Measurement node {$sourceId} {$field}.{$viewport}.x"),
+                'y' => self::finiteNumber($record['y'] ?? ($required ? null : 0), "Measurement node {$sourceId} {$field}.{$viewport}.y"),
+                'width' => self::nonNegativeNumber($record['width'] ?? null, "Measurement node {$sourceId} {$field}.{$viewport}.width"),
+                'height' => self::nonNegativeNumber($record['height'] ?? null, "Measurement node {$sourceId} {$field}.{$viewport}.height"),
+            ];
+        }
+
+        return $result;
+    }
+
+    /** @return array<string,array<string,string>> */
+    private static function styleViewportRecords(mixed $value, array $viewportNames, string $sourceId): array
+    {
+        if (! is_array($value)) {
+            throw new InvalidArgumentException("Measurement node {$sourceId} computedStyleByViewport must be an object.");
+        }
+
+        $result = [];
+        foreach ($value as $viewport => $style) {
+            if (! isset($viewportNames[$viewport])) {
+                throw new InvalidArgumentException("Measurement node {$sourceId} computedStyleByViewport contains unknown viewport '{$viewport}'.");
+            }
+            if (! is_array($style)) {
+                throw new InvalidArgumentException("Measurement node {$sourceId} computedStyleByViewport.{$viewport} must be an object.");
+            }
+            $result[$viewport] = self::styleMap($style);
+        }
+
+        return $result;
+    }
+
+    /** @return array<string,string> */
+    private static function styleMap(array $value): array
+    {
+        $result = [];
+        foreach ($value as $property => $rawValue) {
+            if (! is_string($property) || trim($property) === '' || ! is_scalar($rawValue) && $rawValue !== null) {
+                continue;
+            }
+            $result[$property] = $rawValue === null ? '' : (string) $rawValue;
+        }
+
+        return $result;
+    }
+
+    /** @return array<int,string> */
+    private static function stringList(mixed $value): array
+    {
+        if (! is_array($value)) {
+            throw new InvalidArgumentException('String list values must be arrays.');
+        }
+
+        $result = [];
+        foreach ($value as $item) {
+            if (! is_string($item) || trim($item) === '') {
+                continue;
+            }
+            $result[] = trim($item);
+        }
+
+        return array_values(array_unique($result));
+    }
+
+    private static function requiredString(mixed $value, string $label): string
+    {
+        if (! is_string($value) || trim($value) === '') {
+            throw new InvalidArgumentException("{$label} is required.");
+        }
+
+        return trim($value);
+    }
+
+    private static function optionalString(mixed $value): string
+    {
+        return is_string($value) ? trim($value) : '';
+    }
+
+    private static function positiveNumber(mixed $value, string $label): float
+    {
+        $number = self::finiteNumber($value, $label);
+        if ($number <= 0) {
+            throw new InvalidArgumentException("{$label} must be greater than zero.");
+        }
+
+        return $number;
+    }
+
+    private static function nonNegativeNumber(mixed $value, string $label): float
+    {
+        $number = self::finiteNumber($value, $label);
+        if ($number < 0) {
+            throw new InvalidArgumentException("{$label} must not be negative.");
+        }
+
+        return $number;
+    }
+
+    private static function finiteNumber(mixed $value, string $label): float
+    {
+        if (! is_int($value) && ! is_float($value) && ! (is_string($value) && is_numeric(trim($value)))) {
+            throw new InvalidArgumentException("{$label} must be numeric.");
+        }
+
+        $number = (float) $value;
+        if (! is_finite($number)) {
+            throw new InvalidArgumentException("{$label} must be finite.");
+        }
+
+        return $number;
+    }
+}

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <style>
+        .responsive { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; padding: 40px; }
+        @media (max-width: 800px) { .responsive { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 520px) { .responsive { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <main>
+        <section id="responsive" class="responsive">
+            <div>One</div><div>Two</div><div>Three</div>
+        </section>
+    </main>
+</body>
+</html>

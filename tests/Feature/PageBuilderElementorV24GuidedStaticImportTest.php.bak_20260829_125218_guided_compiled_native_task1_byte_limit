@@ -1,0 +1,99 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Awesome_Admin\Account;
+use App\Http\Requests\Page_Builder_Elementor_V24\ImportStaticPageRequest;
+use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
+
+class PageBuilderElementorV24GuidedStaticImportTest extends TestCase
+{
+    public function test_static_import_rejects_an_invalid_phase_before_service_invocation(): void
+    {
+        $this->authenticateEditor();
+
+        $this->postJson(route('cms.core.pagebuilder_elementor_v24.import_static'), [
+            'phase' => 'invalid-phase',
+            'mode' => 'compiled',
+            'source' => UploadedFile::fake()->createWithContent('regions.html', '<section>Hero</section>'),
+        ])->assertUnprocessable()->assertJsonValidationErrors('phase');
+    }
+
+    public function test_compile_phase_requires_source_hash_and_mapping_before_service_invocation(): void
+    {
+        $this->authenticateEditor();
+
+        $this->postJson(route('cms.core.pagebuilder_elementor_v24.import_static'), [
+            'phase' => 'compile',
+            'mode' => 'compiled',
+            'source' => UploadedFile::fake()->createWithContent('regions.html', '<section>Hero</section>'),
+        ])->assertUnprocessable()->assertJsonValidationErrors(['sourceHash', 'mapping']);
+    }
+
+    public function test_compile_phase_rejects_mapping_larger_than_512_kilobytes(): void
+    {
+        $this->authenticateEditor();
+
+        $mapping = json_encode(['version' => 1, 'nodes' => str_repeat('x', 524288)], JSON_THROW_ON_ERROR);
+
+        $this->postJson(route('cms.core.pagebuilder_elementor_v24.import_static'), $this->compilePayload($mapping))
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('mapping');
+    }
+
+    public function test_compile_phase_rejects_malformed_mapping_json(): void
+    {
+        $this->authenticateEditor();
+
+        $this->postJson(route('cms.core.pagebuilder_elementor_v24.import_static'), $this->compilePayload('{invalid-json'))
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('mapping');
+    }
+
+    public function test_compile_phase_rejects_an_unsupported_mapping_version(): void
+    {
+        $this->authenticateEditor();
+
+        $this->postJson(route('cms.core.pagebuilder_elementor_v24.import_static'), $this->compilePayload('{"version":2}'))
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('mapping');
+    }
+
+    public function test_request_normalizes_the_phase_and_decodes_the_mapping_payload(): void
+    {
+        $analyze = ImportStaticPageRequest::create('/import/static', 'POST');
+        $compile = ImportStaticPageRequest::create('/import/static', 'POST', [
+            'phase' => 'compile',
+            'mapping' => '{"version":1,"regions":["hero"]}',
+        ]);
+
+        $this->assertSame('analyze', $analyze->phase());
+        $this->assertSame([], $analyze->mappingPayload());
+        $this->assertSame('compile', $compile->phase());
+        $this->assertSame(['version' => 1, 'regions' => ['hero']], $compile->mappingPayload());
+    }
+
+    private function authenticateEditor(): void
+    {
+        $this->withoutMiddleware();
+
+        $account = new Account();
+        $account->forceFill(['id' => 1, 'email' => 'guided-import@example.com', 'suspended_at' => null]);
+        $account->exists = true;
+        $account->setRelation('roles', collect());
+
+        $this->actingAs($account);
+    }
+
+    private function compilePayload(string $mapping): array
+    {
+        return [
+            'phase' => 'compile',
+            'mode' => 'compiled',
+            'sourceHash' => str_repeat('a', 64),
+            'mapping' => $mapping,
+            'source' => UploadedFile::fake()->createWithContent('regions.html', '<section>Hero</section>'),
+        ];
+    }
+}

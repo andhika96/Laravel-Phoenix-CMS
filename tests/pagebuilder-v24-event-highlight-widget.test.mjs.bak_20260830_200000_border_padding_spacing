@@ -1,0 +1,186 @@
+import assert from 'node:assert/strict';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import test from 'node:test';
+import vm from 'node:vm';
+import { compile } from '@vue/compiler-dom';
+import { parse } from '@vue/compiler-sfc';
+import { renderToString } from '@vue/server-renderer';
+import * as Vue from 'vue';
+
+const root = resolve(import.meta.dirname, '..');
+const moduleRoot = 'resources/pagebuilder_elementor_v24/modules/widgets/general/event-highlight';
+const read = (relativePath) => {
+    const path = resolve(root, relativePath);
+    return existsSync(path) ? readFileSync(path, 'utf8') : '';
+};
+const manifestSource = read(`${moduleRoot}/module.json`);
+const manifest = manifestSource ? JSON.parse(manifestSource) : {};
+const definitionSource = read(`${moduleRoot}/definition.js`);
+const settingsSource = read(`${moduleRoot}/Settings.vue`);
+const canvasSource = read(`${moduleRoot}/Canvas.vue`);
+const frontendSource = read(`${moduleRoot}/frontend.blade.php`);
+
+function loadDefinition() {
+    const registrations = [];
+    const registry = {
+        advancedDefaults: () => ({ advancedBackgroundType: 'none' }),
+        normalizeAdvanced(settings) { return settings; },
+        register(definition) { registrations.push(definition); },
+    };
+    vm.runInNewContext(definitionSource, { window: { PageBuilderElementorV24Widgets: registry } });
+    assert.equal(registrations.length, 1);
+    return registrations[0];
+}
+
+function loadSfc(source, filename) {
+    const { descriptor, errors } = parse(source, { filename });
+    assert.deepEqual(errors, [], `${filename} should parse as an SFC`);
+    const component = Function(descriptor.script.content.replace(/export\s+default/, 'return'))();
+    component.render = Function('Vue', compile(descriptor.template.content, { mode: 'function' }).code)(Vue);
+    return component;
+}
+
+async function renderComponent(component, props) {
+    return renderToString(Vue.createSSRApp(component, props));
+}
+
+test('Event Highlight is a discovered General module with the canonical assets', () => {
+    assert.deepEqual(manifest, {
+        schemaVersion: 1,
+        type: 'event_highlight',
+        label: 'Event Highlight',
+        category: 'general',
+        icon: 'fas fa-calendar-check',
+        order: 55,
+        toolbox: true,
+        assets: {
+            definition: 'definition.js',
+            canvas: 'Canvas.vue',
+            settings: 'Settings.vue',
+            view: 'frontend.blade.php',
+        },
+        advanced: { profile: 'widget', capabilities: [] },
+    });
+    assert.match(definitionSource, /type:\s*['"]event_highlight['"]/);
+});
+
+test('Event Highlight defaults and normalization keep the content contract safe', () => {
+    const definition = loadDefinition();
+    const defaults = definition.defaults();
+
+    assert.equal(defaults.heading, 'Five reasons to be on the first tee.');
+    assert.equal(defaults.subheading, 'EVENT HIGHLIGHTS');
+    assert.equal(defaults.textOrder, 'subheading-first');
+    assert.equal(defaults.linkText, 'REGISTER INTEREST');
+    assert.equal(defaults.showArrow, true);
+    assert.equal(defaults.layoutDirection, 'row');
+    assert.equal(defaults.layoutDirectionMobile, 'column');
+    assert.equal(defaults.linkVerticalPosition, 'center');
+    assert.equal(defaults.linkHorizontalAlign, 'right');
+    assert.equal(defaults.headingBorderMode, 'none');
+    assert.equal(defaults.headingBorderWidthMode, 'content');
+
+    const node = definition.normalize({ settings: {
+        textOrder: 'heading-first',
+        layoutDirection: 'invalid',
+        layoutDirectionMobile: 'row',
+        linkVerticalPosition: 'bottom',
+        linkHorizontalAlign: 'center',
+        headingBorderMode: 'underline',
+        headingBorderWidthMode: 'full',
+        linkUrl: 'javascript:alert(1)',
+    } });
+
+    assert.equal(node.settings.textOrder, 'heading-first');
+    assert.equal(node.settings.layoutDirection, 'row');
+    assert.equal(node.settings.layoutDirectionMobile, 'row');
+    assert.equal(node.settings.headingBorderMode, 'underline');
+    assert.equal(node.settings.headingBorderWidthMode, 'full');
+    assert.equal(node.settings.linkUrl, '');
+});
+
+test('Event Highlight Settings follows the shared v2.4 form and control contract', () => {
+    const { descriptor, errors } = parse(settingsSource, { filename: 'EventHighlightSettings.vue' });
+    assert.deepEqual(errors, []);
+    const compiled = compile(descriptor.template.content, { mode: 'function' });
+    assert.deepEqual(compiled.errors ?? [], [], 'Settings template should compile without errors');
+
+    for (const marker of [
+        'pb-tab-nav', 'pb-tab-btn-icon', 'Content', 'Style', 'Advanced',
+        'pb-tab-content', 'pb-collapsible', 'pb-collapsible-body',
+        'pb-form-group', 'pb-form-label', 'pb-input', 'pb-select', 'pb-textarea',
+        'pb-form-row', 'Text Content', 'CTA Link', 'Layout', 'Heading', 'Subheading', 'Link',
+        'pb-event-highlight-link-position-controls',
+        'editor.typographyControl', 'editor.linkControl', 'coloris pb-coloris-input',
+        'pb-range-value-row', 'pb-mini-unit', 'responsive-menu', 'responsiveDevice',
+        'aria-label', 'title="Reset',
+    ]) {
+        assert.match(settingsSource, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `missing Settings marker: ${marker}`);
+    }
+    assert.doesNotMatch(settingsSource, /<template\s+v-if=/, 'Settings must not hide controls in inert native templates');
+});
+
+test('Event Highlight Canvas renders both text orders, responsive layout, link and border modes', async () => {
+    const parsed = parse(canvasSource, { filename: 'EventHighlightCanvas.vue' });
+    assert.deepEqual(parsed.errors, []);
+    assert.deepEqual(compile(parsed.descriptor.template.content, { mode: 'function' }).errors ?? [], []);
+    const component = loadSfc(canvasSource, 'EventHighlightCanvas.vue');
+    const baseSettings = {
+        heading: 'Heading text',
+        subheading: 'Subheading text',
+        textOrder: 'subheading-first',
+        linkText: 'Register interest',
+        linkUrl: 'https://example.com/register',
+        linkTarget: '_blank',
+        linkNofollow: true,
+        showArrow: true,
+        layoutDirection: 'row',
+        layoutDirectionMobile: 'column',
+        linkVerticalPosition: 'bottom',
+        linkHorizontalAlign: 'right',
+        headingBorderMode: 'box',
+        headingBorderWidthMode: 'full',
+        subheadingBorderMode: 'underline',
+        subheadingBorderWidthMode: 'content',
+    };
+
+    const subheadingFirst = await renderComponent(component, { item: { settings: baseSettings }, responsiveDevice: 'desktop' });
+    assert.ok(subheadingFirst.indexOf('Subheading text') < subheadingFirst.indexOf('Heading text'));
+    assert.match(subheadingFirst, /data-event-highlight/);
+    assert.match(subheadingFirst, /event-highlight__heading/);
+    assert.match(subheadingFirst, /event-highlight__subheading/);
+    assert.match(subheadingFirst, /event-highlight__link/);
+    assert.match(subheadingFirst, /<div class="pb-event-highlight__cta"[^>]*style="align-self:flex-end;"/);
+    assert.match(subheadingFirst, /target="_blank"/);
+    assert.match(subheadingFirst, /rel="noopener noreferrer nofollow"|rel="nofollow noopener noreferrer"/);
+    assert.match(subheadingFirst, /border-width-mode-full/);
+    assert.match(subheadingFirst, /border-width-mode-content/);
+
+    const headingFirst = await renderComponent(component, {
+        item: { settings: { ...baseSettings, textOrder: 'heading-first' } },
+        responsiveDevice: 'mobile',
+    });
+    assert.ok(headingFirst.indexOf('Heading text') < headingFirst.indexOf('Subheading text'));
+    assert.match(headingFirst, /data-responsive-device="mobile"/);
+    assert.match(headingFirst, /layout-direction-column/);
+    assert.match(headingFirst, /<div class="pb-event-highlight__cta"[^>]*style="align-self:flex-end;text-align:right;"/);
+});
+
+test('Event Highlight Canvas and frontend Blade share the public structure and safety markers', () => {
+    for (const marker of [
+        'data-event-highlight', 'event-highlight__content', 'event-highlight__heading',
+        'event-highlight__subheading', 'event-highlight__link', 'textOrder',
+        'layoutDirection', 'linkVerticalPosition', 'linkHorizontalAlign',
+        'headingBorderMode', 'headingBorderWidthMode', 'subheadingBorderMode',
+        'overflow-wrap:anywhere', 'noopener', 'nofollow',
+    ]) {
+        assert.match(canvasSource, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Canvas missing ${marker}`);
+        assert.match(frontendSource, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Blade missing ${marker}`);
+    }
+    assert.match(frontendSource, /in_array\(\$value, \['left','top'\], true\)[\s\S]*in_array\(\$value, \['right','bottom'\], true\)/);
+    assert.doesNotMatch(frontendSource, /pb-node-toolbar|pb-dropzone|selection outline/i);
+    assert.match(frontendSource, /safeLinkUrl/);
+});
+
+console.log('pagebuilder v2.4 event highlight widget contract test passed');

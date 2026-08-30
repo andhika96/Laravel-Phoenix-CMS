@@ -1,0 +1,66 @@
+# Compiled Native mapper expansion QA
+
+Date: 2026-08-30
+Project: `D:\Laragon\www\laravel-13-phoenix`
+Plan: `project-artifacts/plans/2026-08-30-pagebuilder-v24-compiled-native-mapper-expansion-plan.md`
+
+## Outcome
+
+The v2.4 Compiled Native pipeline now retains measured DOM evidence and adds a relationship layer for normal flow, positioned layers, containing blocks, overlap pairs, stacking order, pseudo-elements, and responsive property deltas. A valid Stack/Grid/Flex root is no longer rejected solely because a reconstructable absolute/fixed child exists.
+
+Positioned children are mapped to existing Advanced settings (`position`, horizontal/vertical orientation, responsive X/Y offsets, z-index, and custom width). Grid desktop → one-column mobile transitions use the existing responsive Grid settings; Flex ↔ Grid transitions remain explicit manual decisions because the existing node type cannot switch safely at runtime.
+
+Widget candidates remain evidence-based and editable. Structural wrappers are kept as Container/Grid, while Icon Box/Image Box/composite candidates use nested members without duplicate mapping rows. Registered candidates with score `>= 0.60` are preselected.
+
+## Asset and residual-style behavior
+
+Local package assets receive stable `mappingId`, safe `sourcePath`, availability, and nullable `targetUrl`; filesystem paths are removed before the browser response. The target preview exposes explicit Local asset mapping inputs and does not upload or persist files during analysis. Unresolved Image/Image Box and local background assets remain visible as `pendingAssets` warnings, while partial Apply uses the registered empty-image state and complete visual finalization still requires a safe persistent URL.
+
+Native-safe style is applied to Canvas settings. Unsupported-but-safe residuals produce scoped CSS patches as review notes. Custom JavaScript is not used for layout or CSS fallback. Transform/overlap ambiguity, missing layout evidence, unsupported mode transitions, and missing widget mappings remain blocking with source/viewport remediation; unresolved assets are warnings for partial Apply.
+
+## Real-source replay
+
+Source: `E:\Apps\Laragon\www\ceo-masters\index.html`
+
+- Framework: `tailwind_static`
+- Measured nodes: `351`
+- `home`: Stack on desktop/tablet/mobile, `layout-ready`, 17 normalized mapping nodes, 24 responsive-delta nodes, one non-blocking box-sizing review note.
+- `register`: Stack on desktop/tablet/mobile, `layout-ready`, 16 normalized mapping nodes, 11 responsive-delta nodes, one non-blocking box-sizing review note.
+- `register` positioned-layer blockers: none in the current replay. The earlier `register desktop/tablet/mobile` message came from the previous classifier rejection path; the updated classifier now preserves a valid root layout.
+- No server filesystem path appeared in the browser-facing asset manifest.
+
+Replay output: `MAPPER_EXPANSION_REPLAY.json` in this QA directory.
+
+## Verification
+
+- Automatic Compiled Native PHPUnit suite: **81 passed, 389 assertions**.
+- Full v2.4 Node suite: **427 passed, 0 failed**.
+- Focused mapping Canvas-flow contract: **12 passed, 0 failed**.
+- Measurement contract including pseudo-elements: **4 passed, 0 failed**.
+- Runtime Vue 3.4.38 template compilation after outer JavaScript template-literal evaluation: passed; the asset-filter regex regression is covered.
+- `node --check public/js/pagebuilder_elementor_v24/app.js`: passed.
+- PHP lint for Compiled Native sources/controller/request/route: passed for **19 files** in the final lint gate.
+- `git diff --check`: passed.
+- Graphify refreshed after source changes: **21,143 nodes / 39,017 edges**.
+- Graphify explain/path queries confirmed the scanner → relationship graph → classifier → mapper → target validation path.
+- v2.3 diff audit: `V23_DIFF=NONE`.
+
+## Partial asset Apply — 2026-08-30
+
+The approved workflow now permits an explicit partial Apply when the only remaining asset findings are unresolved local images or local CSS background images. The target report retains each item in `assetWarnings` and `pendingAssets` with `blocking: false`, exposes `canApplyComplete: false`, and changes the action label to `Apply partial · N asset(s) pending`. Structural blockers and incomplete widget mapping still prevent Apply. Image and Image Box nodes receive an empty-image placeholder through their existing v2.4 widget contracts; raw local filesystem paths are never sent to Canvas.
+
+## Runtime blank-screen regression
+
+Chrome read-only reload reproduced the reported failure as:
+
+`Uncaught (in promise) SyntaxError: Invalid regular expression: /^(?:https?:|/: Unterminated group`
+
+The cause was the `/` escape inside the outer JavaScript template literal. JavaScript removed the escape before Vue compiled the target-stage template, leaving an invalid regular expression in the `v-if` expression. The fix moves residual-CSS and local-asset filtering into setup-level computed values (`automaticCompiledNativeReviewCssNotes` and `automaticCompiledNativeLocalAssets`); the template now only reads their lengths/items. A fresh Chrome reload returned the full editor DOM and produced no new error entry. The previous `automaticCompiledNativeSourceBlockCount` error remains only as historical console-buffer evidence from an earlier session.
+
+## Boundaries
+
+- Live authenticated import click-through at all three viewports was not executed in this QA session; fixture measurement and static/runtime contracts cover the behavior, but this is not a substitute for live browser evidence.
+- No Save or Apply action was executed.
+- Local asset mapping currently accepts a persistent URL explicitly; a dedicated File Manager picker/upload flow is not part of this slice.
+- Complex transforms, fixed layers tied to viewport behavior, pseudo-elements that need to become editable widgets, fonts, and JavaScript interactions may still require explicit review.
+- Pixel parity is not claimed from candidate scores or structural validation alone.

@@ -1,0 +1,102 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import test from 'node:test';
+
+const app = readFileSync('public/js/pagebuilder_elementor_v24/app.js', 'utf8');
+const css = readFileSync('public/assets/css/pagebuilder_elementor_v24.css', 'utf8');
+
+test('automatic flow binds review to the layout blueprint and exposes manual source-block mapping', () => {
+    assert.match(app, /state\.layoutBlueprint\?\.sections \|\| state\.sectionIndex\?\.sections/);
+    assert.match(app, /automaticCompiledNativeMapping/);
+    assert.match(app, /automaticCompiledNativeMappingComplete/);
+    assert.match(app, /automaticCompiledNativeMissingBlockCount/);
+    assert.match(app, /mappingSuggestions/);
+    assert.match(app, /normalized = section\?\.normalizedBlocks/);
+    assert.match(app, /mappingRoots/);
+    assert.match(app, /memberSourceIds/);
+    assert.match(app, /childMappingIds/);
+    assert.match(app, /Raw DOM details/);
+    assert.match(app, /setAutomaticCompiledNativeWidget/);
+    assert.match(app, /automaticCompiledNativeSourceBlockCount, automaticCompiledNativeTargetPreview/);
+    assert.match(app, /automaticCompiledNativeFindSourceNode, automaticCompiledNativeSourceStyle, automaticCompiledNativeFormatStyle/);
+    assert.match(app, /Select widget manually/);
+    assert.doesNotMatch(app, /automaticCompiledNative.*Use recommendations/i);
+});
+
+test('automatic flow builds target nodes and only applies them through an explicit Canvas action', () => {
+    assert.match(app, /automaticCompiledNativeBuildTarget/);
+    assert.match(app, /automaticCompiledNativeTargetReport/);
+    assert.match(app, /automaticCompiledNativeSourceUrlForMapping/);
+    assert.match(app, /function applyAutomaticCompiledNativeToCanvas\(\)/);
+    assert.match(app, /rootNodes\.value\s*=\s*target/);
+    assert.match(app, /function automaticCompiledNativeCanvasPayload\(nodes\)/);
+    assert.match(app, /delete node\[key\]/);
+    assert.match(app, /delete cleanColumn\.sourceBlockIds/);
+    assert.match(app, /scheduleSnap\(\);/);
+    assert.match(app, /advancedBackgroundType/);
+    assert.match(app, /advancedBorderType/);
+    assert.match(app, /buttonBorderType/);
+    assert.match(app, /customWidth/);
+    assert.match(app, /saveState\.value\s*=\s*'dirty'/);
+    assert.match(app, /Apply to Canvas/);
+    assert.match(app, /is-validation-blocked/);
+    assert.match(app, /Choose a registered widget for every source block before preview/);
+});
+
+test('automatic flow keeps target preview and mapping surfaces responsive without horizontal overflow', () => {
+    assert.match(app, /automaticCompiledNativeTargetPreview/);
+    assert.match(css, /\.pb-automatic-compiled-native-mapping/);
+    assert.match(css, /\.pb-automatic-compiled-native-target-preview/);
+    assert.match(css, /overflow-x:\s*hidden/);
+});
+
+test('automatic mapping preselects the top registered candidate at or above 60 percent', () => {
+    assert.match(app, /const suggestionScore = Number\(suggestion\?\.score \|\| 0\)/);
+    assert.match(app, /suggestionScore >= 0\.6/);
+    assert.match(app, /hasRegisteredWidget\(suggestionType\)/);
+    assert.doesNotMatch(app, /suggestion\?\.confidence === 'high' \? String\(suggestion\.type \|\| ''\) : ''/);
+});
+
+test('automatic mapping cards keep copy, widget selection and raw details readable', () => {
+    assert.match(css, /\.pb-automatic-compiled-native-source-block\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)\s+minmax\(220px,\s*230px\)/);
+    assert.match(css, /\.pb-automatic-compiled-native-source-block-copy\s*\{[^}]*width:\s*100%;[^}]*min-width:\s*0/);
+    assert.match(css, /\.pb-automatic-compiled-native-raw-details\s*\{[^}]*grid-column:\s*1\s*\/\s*-1;[^}]*min-width:\s*0/);
+    assert.match(css, /\.pb-automatic-compiled-native-widget-select\s*\{[^}]*min-width:\s*0/);
+    assert.match(css, /@media \(max-width:\s*720px\)[\s\S]*\.pb-automatic-compiled-native-source-block\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/);
+});
+
+test('automatic target validation distinguishes review notes from blocking errors', () => {
+    assert.match(app, /reviewNotes/);
+    assert.match(app, /blocking/);
+    assert.match(app, /surface/);
+    assert.match(app, /Custom CSS/);
+    assert.match(app, /const findingLabel = finding\.blocking === false \? 'Review note' : 'Blocking'/);
+    assert.match(app, /message: `\$\{findingLabel\}\$\{findingSurface\}/);
+    assert.match(app, /Blocking \[layout\]/);
+    assert.match(app, /structuralErrors: \[\.\.\.errors, \.\.\.mappingErrors, \.\.\.reviewNotes\]/);
+});
+
+test('automatic target maps measured positioned layers to existing Advanced settings', () => {
+    assert.match(app, /automaticCompiledNativeApplyPositionedLayerSettings/);
+    assert.match(app, /settings\.position = position/);
+    assert.match(app, /settings\['positionX' \+ suffix\]/);
+    assert.match(app, /settings\['positionY' \+ suffix\]/);
+    assert.match(app, /settings\['zIndex' \+ suffix\]/);
+    assert.match(app, /automaticCompiledNativeHasPositionedChild/);
+});
+
+test('automatic target requires explicit asset URL mapping for local package images', () => {
+    assert.match(app, /assetManifest/);
+    assert.match(app, /assetMappings/);
+    assert.match(app, /automaticCompiledNativeResolvedAssetUrl/);
+    assert.match(app, /setAutomaticCompiledNativeAssetMapping/);
+    assert.match(app, /targetUrl/);
+});
+
+test('automatic validation preserves scoped residual CSS patches as review notes', () => {
+    assert.match(app, /cssPatch/);
+    assert.match(app, /reviewNotes/);
+    assert.doesNotMatch(app, /customJs\.value\s*\+=.*cssPatch/);
+});
+
+console.log('Automatic Compiled Native Canvas flow contract passed.');

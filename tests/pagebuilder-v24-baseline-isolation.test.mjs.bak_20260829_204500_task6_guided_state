@@ -1,0 +1,65 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { pageBuilderV24Modules } from './helpers/pagebuilder-v24-module-source.mjs';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const v23Root = path.join(root, 'public/js/pagebuilder_elementor_v23');
+const v24Root = path.join(root, 'public/js/pagebuilder_elementor_v24');
+
+function activeFiles(directory, base = directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    if (entry.name.includes('.bak')) return [];
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) return activeFiles(absolute, base);
+    return [path.relative(base, absolute).replaceAll('\\', '/')];
+  }).sort();
+}
+
+test('v24 owns an isolated core plus complete manifest-discovered module tree', () => {
+  assert.equal(existsSync(v24Root), true, 'public/js/pagebuilder_elementor_v24 must exist');
+  assert.deepEqual(activeFiles(v24Root), ['app.js', 'frontend-runtime.js', 'static-import-compiler.js', 'static-import-css.js', 'static-import-guided.js', 'static-import-native.js', 'vue-draggable-plus.iife.js', 'widget-registry.js']);
+  assert.equal(existsSync(path.join(v24Root, 'widgets')), false, 'v2.4 must not retain the legacy public widget tree');
+  assert.equal(existsSync(v23Root), true, 'the isolated v2.3 baseline must remain present');
+
+  const modules = pageBuilderV24Modules(root);
+  assert.equal(modules.length, 51, 'all v2.4 Layout, Grid, and Widget modules must be discoverable');
+  for (const { directory, manifest } of modules) {
+    for (const asset of ['definition', 'canvas', 'settings', 'view']) {
+      assert.equal(
+        existsSync(path.resolve(directory, manifest.assets[asset])),
+        true,
+        `${manifest.type} must own ${asset}`,
+      );
+    }
+  }
+});
+
+test('v24 JavaScript and Vue files contain no internal v23 marker', () => {
+  assert.equal(existsSync(v24Root), true, 'public/js/pagebuilder_elementor_v24 must exist');
+
+  const forbidden = [
+    'pagebuilder_elementor_v23',
+    'PageBuilderElementorV23',
+    'Page_Builder_Elementor_V23',
+    'EDITOR_VERSION_V23',
+    'pagebuilder-elementor-v23',
+    'pagebuilder:v23-',
+    'phoenix-pagebuilder-v23',
+    'phoenix.pagebuilder.v23',
+    'V23_',
+    '.v23-',
+    'Page Builder 2.3',
+    'Page Builder v2.3',
+    'Phoenix v2.3',
+  ];
+
+  for (const relative of activeFiles(v24Root)) {
+    const source = readFileSync(path.join(v24Root, relative), 'utf8');
+    for (const marker of forbidden) {
+      assert.equal(source.includes(marker), false, `${relative} contains ${marker}`);
+    }
+  }
+});

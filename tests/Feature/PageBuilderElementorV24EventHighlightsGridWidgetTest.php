@@ -1,0 +1,162 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\Concerns\InteractsWithPageBuilderElementorV24Modules;
+use Tests\TestCase;
+
+class PageBuilderElementorV24EventHighlightsGridWidgetTest extends TestCase
+{
+    use InteractsWithPageBuilderElementorV24Modules;
+
+    public function test_event_highlights_grid_is_registered_as_a_general_widget(): void
+    {
+        $module = $this->pageBuilderV24Module('event_highlights_grid');
+
+        $this->assertSame('event_highlights_grid', $module['type'] ?? null);
+        $this->assertSame('Event Highlights Grid', $module['label'] ?? null);
+        $this->assertSame('general', $module['category'] ?? null);
+        $this->assertSame(56, $module['order'] ?? null);
+        $this->assertSame('widget', $module['advanced']['profile'] ?? null);
+        $this->assertContains('pro-icon-targets', $module['capabilities'] ?? []);
+
+        foreach (['definition', 'canvas', 'settings', 'view'] as $asset) {
+            $this->assertFileExists($module['assets'][$asset] ?? 'missing');
+        }
+    }
+
+    public function test_frontend_renders_header_and_three_card_media_modes(): void
+    {
+        $settings = [
+            'heading' => 'Compete in Jakarta. Qualify for Dubai.',
+            'subheading' => 'THE CHAMPIONSHIP PATHWAY',
+            'textOrder' => 'subheading-first',
+            'linkText' => 'REGISTER INTEREST',
+            'linkUrl' => 'https://example.com/register',
+            'linkTarget' => '_blank',
+            'linkNofollow' => true,
+            'showArrow' => true,
+            'gridColumns' => '5',
+            'gridColumnsTablet' => '3',
+            'gridColumnsMobile' => '1',
+            'columnGap' => '20px',
+            'rowGap' => '20px',
+            'headerCardsGap' => '48px',
+            'cardWidthMode' => 'soft-min',
+            'cardMinWidth' => '180px',
+            'cardHeightMode' => 'custom',
+            'cardHeight' => '320px',
+            'cardMediaGap' => '40px',
+            'cardBorderType' => 'solid',
+            'cardBorderColor' => 'rgba(216,173,94,.35)',
+            'cardBackgroundColor' => 'transparent',
+            'cards' => [
+                ['id' => 'icon', 'mediaMode' => 'icon', 'mediaIconClass' => 'fas fa-star', 'title' => 'Icon card', 'description' => 'Icon description', 'surface' => 'inherit'],
+                ['id' => 'image', 'mediaMode' => 'image', 'imageUrl' => 'https://example.com/card.webp', 'imageAlt' => 'Card image', 'title' => 'Image card', 'description' => 'Image description', 'surface' => 'light'],
+                ['id' => 'text', 'mediaMode' => 'text', 'mediaText' => '03', 'title' => 'Text card', 'description' => 'Text description', 'surface' => 'custom', 'customBackgroundColor' => '#112233', 'customBorderColor' => '#d8ad5e'],
+            ],
+        ];
+
+        $html = $this->pageBuilderV24ModuleViewByType('event_highlights_grid', [
+            'node' => ['id' => 'event-highlights-grid-modes', 'type' => 'event_highlights_grid', 'settings' => $settings],
+        ])->render();
+
+        $this->assertStringContainsString('data-event-highlights-grid', $html);
+        $this->assertSame(3, preg_match_all('/class="event-highlights-grid__card(?:\s|\")/', $html, $matches));
+        $this->assertStringContainsString('event-highlights-grid__media-icon', $html);
+        $this->assertStringContainsString('event-highlights-grid__media-image', $html);
+        $this->assertStringContainsString('event-highlights-grid__media-text', $html);
+        $this->assertStringContainsString('src="https://example.com/card.webp"', $html);
+        $this->assertStringContainsString('alt="Card image"', $html);
+        $this->assertStringContainsString('target="_blank"', $html);
+        $this->assertStringContainsString('noopener noreferrer', $html);
+        $this->assertStringContainsString('nofollow', $html);
+        $this->assertStringContainsString('surface-light', $html);
+        $this->assertStringContainsString('surface-custom', $html);
+        $this->assertStringContainsString('min-height:320px', $html);
+        $this->assertStringContainsString('gap:40px', $html);
+        $this->assertMatchesRegularExpression('/grid-template-columns:repeat\(5,\s*minmax\(0,\s*1fr\)\)/', $html);
+        $this->assertMatchesRegularExpression('/@media \(max-width: 1024px\).*grid-template-columns:repeat\(3/s', $html);
+        $this->assertMatchesRegularExpression('/@media \(max-width: 767px\).*grid-template-columns:repeat\(1/s', $html);
+        $this->assertStringContainsString('overflow-wrap:anywhere', $html);
+
+        $fullWidthHtml = $this->pageBuilderV24ModuleViewByType('event_highlights_grid', [
+            'node' => ['id' => 'event-highlights-grid-full-width', 'type' => 'event_highlights_grid', 'settings' => array_replace($settings, ['gridContentWidthMode' => 'full'])],
+        ])->render();
+        $this->assertMatchesRegularExpression('/class="event-highlights-grid__header" style="[^\"]*max-width:100%/', $fullWidthHtml);
+        $this->assertMatchesRegularExpression('/class="event-highlights-grid__cards" style="[^\"]*max-width:100%/', $fullWidthHtml);
+        $this->assertStringContainsString('event-highlights-grid__header,#', $fullWidthHtml);
+        $this->assertStringContainsString('max-width:100% !important', $fullWidthHtml);
+
+        $customWidthHtml = $this->pageBuilderV24ModuleViewByType('event_highlights_grid', [
+            'node' => ['id' => 'event-highlights-grid-custom-width', 'type' => 'event_highlights_grid', 'settings' => array_replace($settings, ['gridContentMaxWidth' => '1200px'])],
+        ])->render();
+        $this->assertMatchesRegularExpression('/class="event-highlights-grid__header" style="[^\"]*max-width:1200px/', $customWidthHtml);
+        $this->assertMatchesRegularExpression('/class="event-highlights-grid__cards" style="[^\"]*max-width:1200px/', $customWidthHtml);
+    }
+
+    public function test_default_visual_contract_matches_the_supplied_editorial_reference(): void
+    {
+        $html = $this->pageBuilderV24ModuleViewByType('event_highlights_grid', [
+            'node' => ['id' => 'event-highlights-grid-reference', 'type' => 'event_highlights_grid', 'settings' => []],
+        ])->render();
+
+        $this->assertSame(5, preg_match_all('/class="event-highlights-grid__card(?:\s|\")/', $html, $matches));
+        $this->assertStringContainsString('#091d31', $html);
+        $this->assertStringContainsString('#0a1e33', $html);
+        $this->assertStringContainsString('border-color:#3a413f', $html);
+        $this->assertStringContainsString('padding-top:88px', $html);
+        $this->assertStringContainsString('padding-bottom:104px', $html);
+        $this->assertStringContainsString('max-width:1636px', $html);
+        $this->assertStringContainsString('min-height:385px', $html);
+        $this->assertStringContainsString('gap:32px', $html);
+        $this->assertStringContainsString('fal fa-golf-ball', $html);
+        $this->assertStringContainsString('Championship Golf', $html);
+        $this->assertStringContainsString('International Finale', $html);
+    }
+
+    public function test_frontend_rejects_unsafe_header_url_and_escapes_card_content(): void
+    {
+        $html = $this->pageBuilderV24ModuleViewByType('event_highlights_grid', [
+            'node' => [
+                'id' => 'event-highlights-grid-safe',
+                'type' => 'event_highlights_grid',
+                'settings' => [
+                    'heading' => '<script>alert(1)</script>',
+                    'subheading' => 'Subheading',
+                    'linkText' => 'CTA',
+                    'linkUrl' => 'javascript:alert(1)',
+                    'cards' => [
+                        ['id' => 'safe', 'mediaMode' => 'text', 'mediaText' => '<b>01</b>', 'title' => '<img src=x onerror=alert(1)>', 'description' => '<script>alert(2)</script>'],
+                    ],
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringNotContainsString('javascript:', $html);
+        $this->assertStringNotContainsString('<script>', $html);
+        $this->assertStringNotContainsString('<img src=x', $html);
+        $this->assertStringNotContainsString('<a ', $html);
+        $this->assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $html);
+        $this->assertStringContainsString('&lt;img src=x onerror=alert(1)&gt;', $html);
+    }
+
+    public function test_show_link_toggle_hides_the_complete_header_cta(): void
+    {
+        $html = $this->pageBuilderV24ModuleViewByType('event_highlights_grid', [
+            'node' => [
+                'id' => 'event-highlights-grid-no-cta',
+                'type' => 'event_highlights_grid',
+                'settings' => [
+                    'heading' => 'Heading',
+                    'subheading' => 'Subheading',
+                    'linkText' => 'CTA',
+                    'linkUrl' => 'https://example.com/register',
+                    'showLink' => false,
+                ],
+            ],
+        ])->render();
+
+        $this->assertStringNotContainsString('<div class="event-highlights-grid__header-cta"', $html);
+    }
+}

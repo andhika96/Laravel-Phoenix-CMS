@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Support\PageBuilderElementorV24\CompiledNative;
+
+use InvalidArgumentException;
+use Symfony\Component\Process\Process;
+
+final class AutomaticCompiledNativeMeasurement
+{
+    /** @param array<int,array{name:string,width:int|float,height:int|float}> $viewports */
+    public function measure(SourcePackage $source, array $viewports): array
+    {
+        if (! is_file($source->entryPath())) {
+            throw new InvalidArgumentException('The source entry is not available for browser measurement.');
+        }
+        if ($viewports === []) {
+            throw new InvalidArgumentException('At least one measurement viewport is required.');
+        }
+
+        $output = $source->workspacePath.DIRECTORY_SEPARATOR.'.phoenix-measurement.json';
+        $script = base_path('tools/pagebuilder-v24/automatic-compiled-native-measure.mjs');
+        if (! is_file($script)) {
+            throw new InvalidArgumentException('The automatic measurement adapter is not available.');
+        }
+
+        $quote = static fn (string $value): string => '"'.str_replace(['\\', '"'], ['\\\\', '\\"'], $value).'"';
+        $viewportsJson = json_encode($viewports, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+        $command = 'node '.$quote($script)
+            .' --input '.$quote($source->entryPath())
+            .' --viewports '.$quote($viewportsJson)
+            .' --output '.$quote($output);
+        $process = Process::fromShellCommandline($command, base_path());
+        $process->setTimeout(120);
+        $process->run();
+        if (! $process->isSuccessful() || ! is_file($output)) {
+            throw new InvalidArgumentException('Browser measurement failed: '.trim($process->getErrorOutput() ?: $process->getOutput() ?: 'no output'));
+        }
+
+        $snapshot = json_decode((string) file_get_contents($output), true, 512, JSON_THROW_ON_ERROR);
+        return AutomaticCompiledNativeEvidence::fromSnapshot($snapshot);
+    }
+}

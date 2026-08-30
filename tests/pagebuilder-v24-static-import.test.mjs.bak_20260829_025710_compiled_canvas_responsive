@@ -1,0 +1,151 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import fs from 'node:fs';
+
+const root = new URL('../', import.meta.url);
+const read = (path) => fs.readFileSync(new URL(path, root), 'utf8');
+
+test('v2.4 exposes an authenticated static import endpoint and Canvas trigger', () => {
+  const route = read('routes/pagebuilder_elementor_v24.php');
+  const shell = read('resources/views/pagebuilder_elementor_v24/editor_shell.blade.php');
+  const app = read('public/js/pagebuilder_elementor_v24/app.js');
+
+  assert.match(route, /Route::post\('\/import\/static', 'importStatic'\)/);
+  assert.match(shell, /staticImportUrl:/);
+  assert.match(app, /async function importStaticFile\(event\)/);
+  assert.match(app, /rootNodes\.value = norm\(result\.layout\)/);
+  assert.match(app, /class="top-action"[^\n]*Import Static/);
+  assert.match(app, /accept="\.html,\.htm,\.zip/);
+  assert.match(app, /staticImportFramework/);
+  assert.match(app, /staticImportMode/);
+  assert.match(app, /data\.append\('mode', staticImportMode\.value\)/);
+  assert.match(app, /value="compiled"/);
+  assert.match(app, /Compiled Native/);
+  assert.match(app, /PhoenixStaticImportCompiler/);
+  assert.match(app, /replaceGeneratedStaticImportCss/);
+  assert.match(app, /customCssHasGeneratedBlock/);
+  assert.match(app, /Generated CSS/);
+  assert.match(shell, /static-import-compiler\.js/);
+  assert.match(shell, /static-import-css\.js/);
+  assert.match(app, /staticImportCompileController/);
+  assert.match(app, /cancelStaticImportCompile/);
+  assert.match(app, /useExactStaticImportFallback/);
+  assert.match(app, /pb-static-import-compile-modal/);
+  assert.match(app, /function showStaticImportReport\(\)/);
+  assert.match(app, /showStaticImportReportModal/);
+  assert.match(app, /includeScripts/);
+  assert.match(app, /requestCopyDetectedStaticScripts/);
+  assert.match(app, /copyDetectedStaticScriptsToCustomJavaScript/);
+  assert.match(app, /Copy detected scripts to Custom JavaScript/);
+  assert.match(app, /function downloadStaticImportJson\(\)/);
+});
+
+test('v2.4 synchronizes imported framework dependencies without changing manual layouts', () => {
+  const app = read('public/js/pagebuilder_elementor_v24/app.js');
+
+  assert.match(app, /function staticImportMetadata\(nodes\)/);
+  assert.match(app, /function syncStaticImportDependencies\(nodes\)/);
+  assert.match(app, /corePlugins:\s*\{\s*preflight:\s*false\s*\}/);
+  assert.match(app, /important:\s*'\.pb-import-root'/);
+  assert.match(app, /metadata\.mode === 'compiled'/);
+  assert.match(app, /syncStaticImportDependencies\(rootNodes\.value\)/);
+  assert.match(app, /data-pb-static-import/);
+  assert.match(app, /querySelectorAll\('\[data-pb-static-import\]'\)/);
+});
+
+test('imported CTA classes can own their visual styling without changing manual button defaults', () => {
+  const canvas = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/button/Canvas.vue');
+  const frontend = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/button/frontend.blade.php');
+
+  assert.match(canvas, /sourceClassStyles/);
+  assert.match(canvas, /pb-import-source-button/);
+  assert.match(canvas, /:not\(\.pb-import-source-button\):hover/);
+  assert.match(frontend, /sourceClassStyles/);
+  assert.match(frontend, /pb-import-source-button/);
+});
+
+test('imported heading line breaks are opt-in', () => {
+  const canvas = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/heading/Canvas.vue');
+  const frontend = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/heading/frontend.blade.php');
+
+  assert.match(canvas, /sourceLineBreaks/);
+  assert.match(canvas, /sourceLineBreaks[^\n]+pre-line/);
+  assert.match(frontend, /sourceLineBreaks/);
+  assert.match(frontend, /white-space:pre-line/);
+});
+
+test('static html preview is a hidden v2.4 source module', () => {
+  const manifest = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/static-html/module.json');
+  const canvas = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/static-html/Canvas.vue');
+  const frontend = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/static-html/frontend.blade.php');
+
+  assert.match(manifest, /"type": "static_html"/);
+  assert.match(manifest, /"toolbox": false/);
+  assert.match(canvas, /sandbox="allow-scripts"/);
+  assert.match(canvas, /pb-static-html-preview--canvas/);
+  assert.match(frontend, /sandbox="allow-scripts"/);
+  assert.doesNotMatch(frontend, /allow-same-origin|allow-forms|allow-popups|allow-top-navigation/);
+});
+
+test('source scripts require an explicit copy request and exact sandbox stays isolated', () => {
+  const service = read('app/Support/PageBuilderElementorV24/StaticImport/StaticPageImportService.php');
+  const frontend = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/static-html/frontend.blade.php');
+
+  assert.match(service, /sourceScriptReport/);
+  assert.match(service, /includeSourceScripts/);
+  assert.match(service, /copyRequested/);
+  assert.match(service, /inlineCode/);
+  assert.match(frontend, /custom_js_mode/);
+  assert.match(frontend, /data-pb-custom-javascript="sandbox"/);
+});
+
+test('compiled marker attributes are available in the shared resolver and native Canvas roots', () => {
+  const resolver = read('app/Support/PageBuilderElementorV24/WidgetAdvancedStyleResolver.php');
+  const canvasFiles = [
+    'resources/pagebuilder_elementor_v24/modules/layout/container/Canvas.vue',
+    'resources/pagebuilder_elementor_v24/modules/layout/container-fluid/Canvas.vue',
+    'resources/pagebuilder_elementor_v24/modules/layout/grid/Canvas.vue',
+    'resources/pagebuilder_elementor_v24/modules/layout/row-grid/Canvas.vue',
+    'resources/pagebuilder_elementor_v24/modules/widgets/basic/heading/Canvas.vue',
+    'resources/pagebuilder_elementor_v24/modules/widgets/basic/text-editor/Canvas.vue',
+    'resources/pagebuilder_elementor_v24/modules/widgets/basic/image/Canvas.vue',
+    'resources/pagebuilder_elementor_v24/modules/widgets/basic/button/Canvas.vue',
+    'resources/pagebuilder_elementor_v24/modules/widgets/basic/icon/Canvas.vue',
+    'resources/pagebuilder_elementor_v24/modules/widgets/basic/divider/Canvas.vue',
+  ];
+
+  assert.match(resolver, /data-pb-import-node/);
+  canvasFiles.forEach((path) => assert.match(read(path), /data-pb-import-node|importNodeKey/));
+});
+
+test('compiled marker attributes reach native frontend roots without changing unmarked output paths', () => {
+  const frontendFiles = [
+    'resources/pagebuilder_elementor_v24/modules/layout/container/frontend.blade.php',
+    'resources/pagebuilder_elementor_v24/modules/layout/container-fluid/frontend.blade.php',
+    'resources/pagebuilder_elementor_v24/modules/layout/grid/frontend.blade.php',
+    'resources/pagebuilder_elementor_v24/modules/layout/row-grid/frontend.blade.php',
+    'resources/pagebuilder_elementor_v24/modules/widgets/basic/heading/frontend.blade.php',
+    'resources/pagebuilder_elementor_v24/modules/widgets/basic/text-editor/frontend.blade.php',
+    'resources/pagebuilder_elementor_v24/modules/widgets/basic/image/frontend.blade.php',
+    'resources/pagebuilder_elementor_v24/modules/widgets/basic/button/frontend.blade.php',
+    'resources/pagebuilder_elementor_v24/modules/widgets/basic/icon/frontend.blade.php',
+    'resources/pagebuilder_elementor_v24/modules/widgets/basic/divider/frontend.blade.php',
+  ];
+
+  frontendFiles.forEach((path) => assert.match(read(path), /data-pb-import-node/));
+  assert.match(read('app/Support/PageBuilderElementorV24/WidgetAdvancedStyleResolver.php'), /importNodeKey/);
+});
+
+test('v2.4 exposes an isolated Custom JavaScript page setting contract', () => {
+  const app = read('public/js/pagebuilder_elementor_v24/app.js');
+  const frontend = read('resources/views/pagebuilder_elementor_v24/frontend_renderer.blade.php');
+
+  assert.match(app, /customJs/);
+  assert.match(app, /customJsMode/);
+  assert.match(app, /customJsMode.*disabled/);
+  assert.match(app, /customJs:/);
+  assert.match(frontend, /data-pb-custom-javascript/);
+  assert.match(frontend, /custom_js_mode/);
+  assert.match(frontend, /routeIs\('cms\.public\.pagebuilder_elementor_v23\.show'\)/);
+  assert.doesNotMatch(app, /eval\s*\(|new Function\s*\(/);
+});

@@ -1,0 +1,173 @@
+<template>
+	<div class="el-widget-event-highlight pb-advanced-widget pb-event-highlight" :class="rootClasses" :style="rootStyle" data-event-highlight :data-responsive-device="responsiveDeviceClass">
+		<div class="pb-event-highlight__content">
+			<div class="pb-event-highlight__text" :style="textStyle">
+				<h2 v-if="textOrder==='heading-first' && heading" class="pb-event-highlight__heading" :class="headingClasses" :style="headingStyle">{{ heading }}</h2>
+				<p v-if="textOrder==='heading-first' && subheading" class="pb-event-highlight__subheading" :class="subheadingClasses" :style="subheadingStyle">{{ subheading }}</p>
+				<p v-if="textOrder!=='heading-first' && subheading" class="pb-event-highlight__subheading" :class="subheadingClasses" :style="subheadingStyle">{{ subheading }}</p>
+				<h2 v-if="textOrder!=='heading-first' && heading" class="pb-event-highlight__heading" :class="headingClasses" :style="headingStyle">{{ heading }}</h2>
+			</div>
+		</div>
+		<div class="pb-event-highlight__cta" :style="ctaStyle">
+			<a v-if="linkText && safeLinkUrl" class="pb-event-highlight__link" :style="linkStyle" v-bind="linkAttributes"><span>{{ linkText }}</span><span v-if="showArrow" class="pb-event-highlight__arrow" aria-hidden="true">→</span></a>
+			<span v-else-if="linkText" class="pb-event-highlight__link" :style="linkStyle"><span>{{ linkText }}</span><span v-if="showArrow" class="pb-event-highlight__arrow" aria-hidden="true">→</span></span>
+		</div>
+	</div>
+</template>
+
+<script>
+const DIRECTIONS = ['row', 'column'];
+const TEXT_ORDERS = ['heading-first', 'subheading-first'];
+const VERTICAL_POSITIONS = ['top', 'center', 'bottom'];
+const HORIZONTAL_ALIGNMENTS = ['left', 'center', 'right'];
+const BORDER_MODES = ['none', 'box', 'underline'];
+const BORDER_WIDTH_MODES = ['content', 'full'];
+const BORDER_TYPES = ['solid', 'dashed', 'dotted', 'double', 'groove'];
+const TEXT_BOX_KEYS = Object.freeze({
+	heading: { mode: 'headingBorderMode', widthMode: 'headingBorderWidthMode', type: 'headingBorderType', thickness: 'headingBorderThickness', color: 'headingBorderColor', radius: 'headingBorderRadius', padding: 'headingPadding', margin: 'headingMargin' },
+	subheading: { mode: 'subheadingBorderMode', widthMode: 'subheadingBorderWidthMode', type: 'subheadingBorderType', thickness: 'subheadingBorderThickness', color: 'subheadingBorderColor', radius: 'subheadingBorderRadius', padding: 'subheadingPadding', margin: 'subheadingMargin' },
+});
+
+export default {
+	name: 'GeneralEventHighlight',
+	props: {
+		item: { type: Object, required: true },
+		responsiveDevice: { type: String, default: 'desktop' },
+		dynamicContext: { type: Object, default: () => ({}) },
+	},
+	computed: {
+		settings() { return this.item.settings || {}; },
+		heading() { return String(this.resolveDynamicValue('heading', this.settings.heading || '')); },
+		subheading() { return String(this.resolveDynamicValue('subheading', this.settings.subheading || '')); },
+		linkText() { return String(this.resolveDynamicValue('linkText', this.settings.linkText || '')); },
+		textOrder() { const value = String(this.settings.textOrder || 'subheading-first'); return TEXT_ORDERS.includes(value) ? value : 'subheading-first'; },
+		showArrow() { return this.settings.showArrow !== false && this.settings.showArrow !== 'false' && this.settings.showArrow !== 0 && this.settings.showArrow !== '0'; },
+		direction() { const value = String(this.responsiveValue('layoutDirection', 'row')); return DIRECTIONS.includes(value) ? value : 'row'; },
+		verticalPosition() { const value = String(this.responsiveValue('linkVerticalPosition', 'center')); return VERTICAL_POSITIONS.includes(value) ? value : 'center'; },
+		horizontalAlign() { const value = String(this.responsiveValue('linkHorizontalAlign', 'right')); return HORIZONTAL_ALIGNMENTS.includes(value) ? value : 'right'; },
+		textGap() { return this.cssDimension(this.responsiveValue('textGap', '12px'), '12px'); },
+		responsiveDeviceClass() { return ['desktop', 'tablet', 'mobile'].includes(this.responsiveDevice) ? this.responsiveDevice : 'desktop'; },
+		safeLinkUrl() { return this.safeUrl(this.resolveDynamicValue('linkUrl', this.settings.linkUrl || '')); },
+		linkAttributes() {
+			const attrs = {};
+			if (this.safeLinkUrl) attrs.href = this.safeLinkUrl;
+			if (this.settings.linkTarget === '_blank') { attrs.target = '_blank'; attrs.rel = 'noopener noreferrer'; }
+			if (this.settings.linkNofollow) attrs.rel = [attrs.rel, 'nofollow'].filter(Boolean).join(' ');
+			Object.assign(attrs, this.safeCustomAttributes);
+			return attrs;
+		},
+		safeCustomAttributes() {
+			const output = {};
+			const attributes = Array.isArray(this.settings.linkCustomAttributes) ? this.settings.linkCustomAttributes : [];
+			attributes.forEach((attribute) => {
+				const key = String(attribute?.key || attribute?.name || '').trim();
+				if (/^(?:aria-[a-z0-9_-]+|data-[a-z0-9_-]+|title|download|hreflang)$/i.test(key)) output[key] = String(attribute?.value ?? '');
+			});
+			return output;
+		},
+		rootClasses() { return [`layout-direction-${this.direction}`, `link-position-${this.verticalPosition}`, `link-align-${this.horizontalAlign}`, `text-order-${this.textOrder}`]; },
+		headingClasses() { return this.textBoxClasses('heading'); },
+		subheadingClasses() { return this.textBoxClasses('subheading'); },
+		rootStyle() {
+			return {
+				flexDirection: this.direction,
+				'--pb-event-highlight-text-gap': this.textGap,
+			};
+		},
+		textStyle() { return { gap: this.textGap }; },
+		headingStyle() { return this.textBoxStyle('heading', this.typographyStyle('heading')); },
+		subheadingStyle() { return this.textBoxStyle('subheading', this.typographyStyle('subheading')); },
+		linkStyle() { return this.typographyStyle('link', { color: this.safeColor(this.settings.linkColor, '#d8ad5e'), textDecoration: 'none' }); },
+		ctaStyle() {
+			if (this.direction === 'row') return { alignSelf: this.flexAlignment(this.verticalPosition) };
+			return { alignSelf: this.flexAlignment(this.horizontalAlign), textAlign: this.horizontalAlign };
+		},
+	},
+	methods: {
+		resolveDynamicValue(field, fallback) {
+			const binding = String(this.settings.dynamicBindings?.[field] || '');
+			return binding && Object.prototype.hasOwnProperty.call(this.dynamicContext, binding) && this.dynamicContext[binding] != null ? this.dynamicContext[binding] : fallback;
+		},
+		responsiveValue(base, fallback = '') {
+			const device = ['tablet', 'mobile'].includes(this.responsiveDevice) ? this.responsiveDevice : 'desktop';
+			const keys = device === 'mobile' ? [base + 'Mobile', base + 'Tablet', base] : (device === 'tablet' ? [base + 'Tablet', base] : [base]);
+			for (const key of keys) {
+				const value = this.settings[key];
+				if (value !== '' && value !== null && value !== undefined) return value;
+			}
+			return fallback;
+		},
+		flexAlignment(value) { return value === 'left' || value === 'top' ? 'flex-start' : (value === 'right' || value === 'bottom' ? 'flex-end' : 'center'); },
+		cssDimension(value, fallback = '0px') {
+			const raw = String(value ?? '').trim();
+			return /^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh|deg)?$/i.test(raw) ? raw : fallback;
+		},
+		safeColor(value, fallback = 'inherit') {
+			const raw = String(value || '').trim();
+			return raw && /^[#a-z0-9(),.%\s/-]+$/i.test(raw) ? raw : fallback;
+		},
+		safeFontFamily(value) {
+			const raw = String(value || '').trim();
+			return raw && !/[;{}<>"']/g.test(raw) ? raw.slice(0, 160) : 'inherit';
+		},
+		safeUrl(value) {
+			const raw = String(value || '').trim();
+			if (!raw || raw.startsWith('//') || /[\u0000-\u001f\u007f]/.test(raw) || /^(?:javascript|vbscript|data):/i.test(raw)) return '';
+			return /^(?:https?:\/\/|mailto:|tel:|\/|#)/i.test(raw) ? raw : '';
+		},
+		safeEnum(value, allowed, fallback) { return allowed.includes(value) ? value : fallback; },
+		textBoxClasses(prefix) {
+			const keys = TEXT_BOX_KEYS[prefix] || TEXT_BOX_KEYS.heading;
+			const mode = this.safeEnum(String(this.responsiveValue(keys.mode, 'none')), BORDER_MODES, 'none');
+			const width = this.safeEnum(String(this.responsiveValue(keys.widthMode, 'content')), BORDER_WIDTH_MODES, 'content');
+			return [`border-mode-${mode}`, `border-width-mode-${width}`];
+		},
+		typographyStyle(prefix, additions = {}) {
+			const defaults = prefix === 'heading' ? { size: '56px', lineHeight: '1.05em' } : { size: '14px', lineHeight: '1.2em' };
+			return {
+				fontFamily: this.safeFontFamily(this.settings[prefix + 'FontFamily']),
+				fontSize: this.cssDimension(this.responsiveValue(prefix + 'FontSize', defaults.size), defaults.size),
+				fontWeight: /^(?:inherit|normal|bold|[1-9]00)$/.test(String(this.settings[prefix + 'FontWeight'] || '400')) ? String(this.settings[prefix + 'FontWeight']) : '400',
+				lineHeight: this.cssDimension(this.responsiveValue(prefix + 'LineHeight', defaults.lineHeight), defaults.lineHeight),
+				letterSpacing: this.cssDimension(this.responsiveValue(prefix + 'LetterSpacing', '0px'), '0px'),
+				wordSpacing: this.cssDimension(this.responsiveValue(prefix + 'WordSpacing', '0px'), '0px'),
+				textTransform: ['none', 'uppercase', 'lowercase', 'capitalize'].includes(this.settings[prefix + 'TextTransform']) ? this.settings[prefix + 'TextTransform'] : 'none',
+				fontStyle: ['normal', 'italic', 'oblique'].includes(this.settings[prefix + 'FontStyle']) ? this.settings[prefix + 'FontStyle'] : 'normal',
+				textDecoration: ['none', 'underline', 'overline', 'line-through'].includes(this.settings[prefix + 'TextDecoration']) ? this.settings[prefix + 'TextDecoration'] : 'none',
+				color: this.safeColor(this.settings[prefix + 'Color'], 'inherit'),
+				...additions,
+			};
+		},
+		textBoxStyle(prefix, additions = {}) {
+			const keys = TEXT_BOX_KEYS[prefix] || TEXT_BOX_KEYS.heading;
+			const mode = this.safeEnum(String(this.responsiveValue(keys.mode, 'none')), BORDER_MODES, 'none');
+			const widthMode = this.safeEnum(String(this.responsiveValue(keys.widthMode, 'content')), BORDER_WIDTH_MODES, 'content');
+			const borderType = this.safeEnum(String(this.responsiveValue(keys.type, 'solid')), BORDER_TYPES, 'solid');
+			const thickness = this.cssDimension(this.responsiveValue(keys.thickness, '1px'), '1px');
+			const borderColor = this.safeColor(this.responsiveValue(keys.color, '#d8ad5e'), '#d8ad5e');
+			return {
+				boxSizing: 'border-box',
+				width: widthMode === 'full' ? '100%' : 'max-content',
+				maxWidth: '100%',
+				paddingTop: this.cssDimension(this.responsiveValue(keys.padding + 'Top', '0px'), '0px'),
+				paddingRight: this.cssDimension(this.responsiveValue(keys.padding + 'Right', '0px'), '0px'),
+				paddingBottom: this.cssDimension(this.responsiveValue(keys.padding + 'Bottom', '0px'), '0px'),
+				paddingLeft: this.cssDimension(this.responsiveValue(keys.padding + 'Left', '0px'), '0px'),
+				marginTop: this.cssDimension(this.responsiveValue(keys.margin + 'Top', '0px'), '0px'),
+				marginRight: this.cssDimension(this.responsiveValue(keys.margin + 'Right', '0px'), '0px'),
+				marginBottom: this.cssDimension(this.responsiveValue(keys.margin + 'Bottom', '0px'), '0px'),
+				marginLeft: this.cssDimension(this.responsiveValue(keys.margin + 'Left', '0px'), '0px'),
+				borderStyle: mode === 'none' ? 'none' : borderType,
+				borderColor: mode === 'none' ? 'transparent' : borderColor,
+				borderWidth: mode === 'box' ? thickness : (mode === 'underline' ? `0 0 ${thickness} 0` : '0'),
+				borderRadius: mode === 'none' ? '0' : this.cssDimension(this.responsiveValue(keys.radius, '0px'), '0px'),
+				...additions,
+			};
+		},
+	},
+};
+</script>
+
+<style scoped>
+.pb-event-highlight{display:flex;width:100%;min-width:0;box-sizing:border-box;align-items:stretch;overflow:hidden;overflow-wrap:anywhere}.pb-event-highlight__content{flex:1 1 auto;min-width:0;max-width:100%}.pb-event-highlight__text{display:flex;flex-direction:column;min-width:0;max-width:100%;gap:var(--pb-event-highlight-text-gap,12px)}.pb-event-highlight__heading,.pb-event-highlight__subheading{display:block;max-width:100%;overflow-wrap:anywhere}.pb-event-highlight__heading{flex:0 1 auto}.pb-event-highlight__subheading{flex:0 1 auto}.pb-event-highlight__cta{display:flex;flex:0 1 auto;min-width:0;max-width:100%;overflow-wrap:anywhere}.pb-event-highlight__link{display:inline-flex;align-items:center;justify-content:inherit;gap:.55em;max-width:100%;overflow-wrap:anywhere}.pb-event-highlight__arrow{display:inline-block;flex:0 0 auto;font-size:1em;line-height:1}.pb-event-highlight.layout-direction-column .pb-event-highlight__link{max-width:100%}
+</style>

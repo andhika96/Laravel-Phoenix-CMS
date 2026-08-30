@@ -1,0 +1,306 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeLayoutClassifier;
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeResponsiveClassifier;
+use App\Support\PageBuilderElementorV24\CompiledNative\SectionIndex;
+use Tests\TestCase;
+
+class PageBuilderElementorV24AutomaticCompiledNativeLayoutClassifierTest extends TestCase
+{
+    public function test_grid_repeat_three_is_classified_as_three_columns_with_track_evidence(): void
+    {
+        $snapshot = $this->snapshot('desktop', [
+            $this->node('cards', 'section', null, ['one', 'two', 'three'], [
+                'display' => 'grid',
+                'gridTemplateColumns' => 'repeat(3, minmax(0, 1fr))',
+                'columnGap' => '20px',
+            ]),
+            $this->node('one', 'article', 'cards', [], [], ['x' => 0, 'y' => 0, 'width' => 300, 'height' => 120]),
+            $this->node('two', 'article', 'cards', [], [], ['x' => 320, 'y' => 0, 'width' => 300, 'height' => 120]),
+            $this->node('three', 'article', 'cards', [], [], ['x' => 640, 'y' => 0, 'width' => 300, 'height' => 120]),
+        ]);
+
+        $result = (new AutomaticCompiledNativeLayoutClassifier)->classify(
+            new SectionIndex([$this->section('cards')]),
+            $snapshot,
+        );
+        $layout = $result['sections'][0]['layoutByViewport']['desktop'];
+
+        $this->assertSame('grid', $layout['mode']);
+        $this->assertSame(3, $layout['columns']);
+        $this->assertSame(['minmax(0, 1fr)', 'minmax(0, 1fr)', 'minmax(0, 1fr)'], $layout['tracks']);
+        $this->assertSame('computedStyle.gridTemplateColumns', $layout['evidence']['rule']);
+    }
+
+    public function test_arbitrary_fraction_tracks_are_preserved_as_two_columns(): void
+    {
+        $snapshot = $this->snapshot('desktop', [
+            $this->node('hero', 'section', null, ['copy', 'media'], [
+                'display' => 'grid',
+                'gridTemplateColumns' => '0.9fr 1.1fr',
+            ]),
+            $this->node('copy', 'div', 'hero'),
+            $this->node('media', 'div', 'hero'),
+        ]);
+
+        $layout = (new AutomaticCompiledNativeLayoutClassifier)->classify(
+            new SectionIndex([$this->section('hero')]),
+            $snapshot,
+        )['sections'][0]['layoutByViewport']['desktop'];
+
+        $this->assertSame('grid', $layout['mode']);
+        $this->assertSame(2, $layout['columns']);
+        $this->assertSame(['0.9fr', '1.1fr'], $layout['tracks']);
+    }
+
+    public function test_vertical_block_flow_stays_a_one_column_stack_without_grid(): void
+    {
+        $snapshot = $this->snapshot('desktop', [
+            $this->node('single', 'section', null, ['heading', 'copy'], ['display' => 'block']),
+            $this->node('heading', 'h2', 'single', [], [], ['x' => 0, 'y' => 0, 'width' => 600, 'height' => 40]),
+            $this->node('copy', 'p', 'single', [], [], ['x' => 0, 'y' => 56, 'width' => 600, 'height' => 80]),
+        ]);
+
+        $layout = (new AutomaticCompiledNativeLayoutClassifier)->classify(
+            new SectionIndex([$this->section('single')]),
+            $snapshot,
+        )['sections'][0]['layoutByViewport']['desktop'];
+
+        $this->assertSame('stack', $layout['mode']);
+        $this->assertSame(1, $layout['columns']);
+        $this->assertSame(['computedStyle.display'], $layout['evidence']['rules']);
+    }
+
+    public function test_flex_wrap_uses_geometry_to_report_the_maximum_items_per_line(): void
+    {
+        $snapshot = $this->snapshot('desktop', [
+            $this->node('wrap', 'section', null, ['one', 'two', 'three', 'four'], [
+                'display' => 'flex',
+                'flexDirection' => 'row',
+                'flexWrap' => 'wrap',
+                'gap' => '16px',
+            ], ['width' => 800, 'height' => 260]),
+            $this->node('one', 'div', 'wrap', [], [], ['x' => 0, 'y' => 0, 'width' => 240, 'height' => 100]),
+            $this->node('two', 'div', 'wrap', [], [], ['x' => 256, 'y' => 0, 'width' => 240, 'height' => 100]),
+            $this->node('three', 'div', 'wrap', [], [], ['x' => 512, 'y' => 0, 'width' => 240, 'height' => 100]),
+            $this->node('four', 'div', 'wrap', [], [], ['x' => 0, 'y' => 116, 'width' => 240, 'height' => 100]),
+        ]);
+
+        $result = (new AutomaticCompiledNativeLayoutClassifier)->classify(
+            new SectionIndex([$this->section('wrap')]),
+            $snapshot,
+        );
+        $layout = $result['sections'][0]['layoutByViewport']['desktop'];
+
+        $this->assertSame('flex', $layout['mode']);
+        $this->assertSame(3, $layout['columns']);
+        $this->assertSame([['one', 'two', 'three'], ['four']], $layout['lines']);
+        $this->assertContains('children.rectByViewport.desktop', $layout['evidence']['rules']);
+    }
+
+    public function test_absolute_overlap_is_unclassified_with_an_explicit_diagnostic(): void
+    {
+        $snapshot = $this->snapshot('desktop', [
+            $this->node('overlay', 'section', null, ['background', 'badge'], ['display' => 'block']),
+            $this->node('background', 'div', 'overlay', [], [], ['x' => 0, 'y' => 0, 'width' => 600, 'height' => 300]),
+            $this->node('badge', 'div', 'overlay', [], ['position' => 'absolute'], ['x' => 480, 'y' => 20, 'width' => 100, 'height' => 40]),
+        ]);
+
+        $layout = (new AutomaticCompiledNativeLayoutClassifier)->classify(
+            new SectionIndex([$this->section('overlay')]),
+            $snapshot,
+        )['sections'][0]['layoutByViewport']['desktop'];
+
+        $this->assertSame('unclassified', $layout['mode']);
+        $this->assertSame(1, $layout['columns']);
+        $this->assertContains('absolute-or-transformed-child', array_column($layout['diagnostics'], 'code'));
+    }
+
+    public function test_transform_is_unclassified_instead_of_being_forced_into_columns(): void
+    {
+        $snapshot = $this->snapshot('desktop', [
+            $this->node('transformed', 'section', null, ['content'], ['display' => 'block']),
+            $this->node('content', 'div', 'transformed', [], ['transform' => 'translateX(12px)']),
+        ]);
+
+        $layout = (new AutomaticCompiledNativeLayoutClassifier)->classify(
+            new SectionIndex([$this->section('transformed')]),
+            $snapshot,
+        )['sections'][0]['layoutByViewport']['desktop'];
+
+        $this->assertSame('unclassified', $layout['mode']);
+        $this->assertContains('absolute-or-transformed-child', array_column($layout['diagnostics'], 'code'));
+    }
+
+    public function test_hidden_flex_children_do_not_inflate_the_column_count(): void
+    {
+        $snapshot = $this->snapshot('desktop', [
+            $this->node('visible-row', 'section', null, ['visible', 'hidden'], [
+                'display' => 'flex',
+                'flexDirection' => 'row',
+                'flexWrap' => 'nowrap',
+            ]),
+            $this->node('visible', 'div', 'visible-row', [], [], ['x' => 0, 'y' => 0, 'width' => 400, 'height' => 80]),
+            $this->node('hidden', 'div', 'visible-row', [], ['display' => 'none'], ['x' => 400, 'y' => 0, 'width' => 400, 'height' => 80]),
+        ]);
+
+        $layout = (new AutomaticCompiledNativeLayoutClassifier)->classify(
+            new SectionIndex([$this->section('visible-row')]),
+            $snapshot,
+        )['sections'][0]['layoutByViewport']['desktop'];
+
+        $this->assertSame('flex', $layout['mode']);
+        $this->assertSame(1, $layout['columns']);
+        $this->assertSame([['visible']], $layout['lines']);
+    }
+
+    public function test_grid_geometry_is_used_when_the_computed_track_list_is_unavailable(): void
+    {
+        $snapshot = $this->snapshot('desktop', [
+            $this->node('measured-grid', 'section', null, ['left', 'right'], [
+                'display' => 'grid',
+                'gridTemplateColumns' => 'none',
+            ]),
+            $this->node('left', 'div', 'measured-grid', [], [], ['x' => 0, 'y' => 0, 'width' => 360, 'height' => 100]),
+            $this->node('right', 'div', 'measured-grid', [], [], ['x' => 380, 'y' => 0, 'width' => 520, 'height' => 100]),
+        ]);
+
+        $layout = (new AutomaticCompiledNativeLayoutClassifier)->classify(
+            new SectionIndex([$this->section('measured-grid')]),
+            $snapshot,
+        )['sections'][0]['layoutByViewport']['desktop'];
+
+        $this->assertSame('grid', $layout['mode']);
+        $this->assertSame(2, $layout['columns']);
+        $this->assertSame(['360px', '520px'], $layout['tracks']);
+        $this->assertSame('children.rectByViewport.desktop', $layout['evidence']['rule']);
+    }
+
+    public function test_nested_source_nodes_are_retained_for_later_mapping(): void
+    {
+        $snapshot = $this->snapshot('desktop', [
+            $this->node('nested', 'section', null, ['wrapper'], ['display' => 'block']),
+            $this->node('wrapper', 'div', 'nested', ['heading'], ['display' => 'block']),
+            $this->node('heading', 'h2', 'wrapper'),
+        ]);
+
+        $section = $this->section('nested', ['nested', 'wrapper', 'heading']);
+        $result = (new AutomaticCompiledNativeLayoutClassifier)->classify(new SectionIndex([$section]), $snapshot);
+
+        $this->assertSame(['nested', 'wrapper', 'heading'], array_column($result['sections'][0]['nodes'], 'sourceId'));
+        $this->assertSame('container', $result['sections'][0]['nodes'][1]['layoutRole']);
+        $this->assertSame('wrapper', $result['sections'][0]['nodes'][2]['parentSourceId']);
+    }
+
+    public function test_section_exposes_normalized_mapping_projection_without_removing_raw_nodes(): void
+    {
+        $snapshot = $this->snapshot('desktop', [
+            $this->node('nested', 'section', null, ['wrapper'], ['display' => 'block']),
+            $this->node('wrapper', 'div', 'nested', ['heading', 'copy'], ['display' => 'grid', 'gridTemplateColumns' => '1fr 1fr']),
+            $this->node('heading', 'h2', 'wrapper'),
+            $this->node('copy', 'p', 'wrapper'),
+        ]);
+
+        $section = $this->section('nested', ['nested', 'wrapper', 'heading', 'copy']);
+        $result = (new AutomaticCompiledNativeLayoutClassifier)->classify(new SectionIndex([$section]), $snapshot);
+        $classified = $result['sections'][0];
+
+        $this->assertArrayHasKey('normalizedBlocks', $classified);
+        $this->assertSame(['wrapper'], $classified['normalizedBlocks']['mappingRoots']);
+        $this->assertSame(['nested', 'wrapper', 'heading', 'copy'], array_column($classified['nodes'], 'sourceId'));
+        $this->assertSame('layout', $classified['normalizedBlocks']['mappingNodes'][0]['mappingRole']);
+    }
+
+    public function test_responsive_classifier_preserves_three_to_two_to_one_column_transition(): void
+    {
+        $classifier = new AutomaticCompiledNativeResponsiveClassifier;
+        $result = $classifier->classify([
+            'desktop' => $this->snapshot('desktop', [$this->gridNode('responsive', 'repeat(3, 1fr)')]),
+            'tablet' => $this->snapshot('tablet', [$this->gridNode('responsive', 'repeat(2, 1fr)')]),
+            'mobile' => $this->snapshot('mobile', [$this->gridNode('responsive', '1fr')]),
+        ]);
+
+        $this->assertSame(3, $result['viewports']['desktop']['columns']);
+        $this->assertSame(2, $result['viewports']['tablet']['columns']);
+        $this->assertSame(1, $result['viewports']['mobile']['columns']);
+        $this->assertSame(['desktop:3→tablet:2', 'tablet:2→mobile:1'], $result['transitions']);
+    }
+
+    private function section(string $id, array $nodeIds = []): array
+    {
+        return ['id' => $id, 'sourceId' => $id, 'kind' => 'section', 'nodeIds' => $nodeIds === [] ? [$id] : $nodeIds];
+    }
+
+    private function gridNode(string $id, string $tracks): array
+    {
+        return $this->node($id, 'section', null, ['child-1', 'child-2', 'child-3'], [
+            'display' => 'grid',
+            'gridTemplateColumns' => $tracks,
+        ]);
+    }
+
+    /** @param array<int,array<string,mixed>> $nodes */
+    private function snapshot(string $viewport, array $nodes): array
+    {
+        $nodes = array_map(static function (array $node) use ($viewport): array {
+            $style = $node['computedStyle'] ?? [];
+            $rect = $node['rectByViewport']['desktop'] ?? [
+                'x' => 0.0,
+                'y' => 0.0,
+                'width' => 600.0,
+                'height' => 100.0,
+            ];
+
+            return [
+                ...$node,
+                'computedStyleByViewport' => [$viewport => $style],
+                'rectByViewport' => [$viewport => $rect],
+                'scrollSizeByViewport' => [$viewport => [
+                    'width' => (float) ($rect['width'] ?? 0),
+                    'height' => (float) ($rect['height'] ?? 0),
+                ]],
+            ];
+        }, $nodes);
+
+        return [
+            'version' => 1,
+            'viewports' => [['name' => $viewport, 'width' => $viewport === 'mobile' ? 390 : ($viewport === 'tablet' ? 768 : 1180), 'height' => 900]],
+            'nodes' => $nodes,
+        ];
+    }
+
+    /** @param array<int,string> $children @param array<string,string> $style @param array<string,int|float> $rect */
+    private function node(string $id, string $tag, ?string $parent, array $children = [], array $style = [], array $rect = []): array
+    {
+        $computedStyle = array_merge([
+            'display' => 'block',
+            'position' => 'static',
+            'flexDirection' => 'row',
+            'flexWrap' => 'nowrap',
+            'gridTemplateColumns' => 'none',
+            'gap' => '0px',
+            'columnGap' => '0px',
+        ], $style);
+        $record = [
+            'x' => (float) ($rect['x'] ?? 0),
+            'y' => (float) ($rect['y'] ?? 0),
+            'width' => (float) ($rect['width'] ?? 600),
+            'height' => (float) ($rect['height'] ?? 100),
+        ];
+
+        return [
+            'sourceId' => $id,
+            'tag' => $tag,
+            'id' => $id,
+            'classList' => [],
+            'parentSourceId' => $parent,
+            'computedStyle' => $computedStyle,
+            'computedStyleByViewport' => ['desktop' => $computedStyle],
+            'rectByViewport' => ['desktop' => $record],
+            'scrollSizeByViewport' => ['desktop' => ['width' => $record['width'], 'height' => $record['height']]],
+            'children' => $children,
+        ];
+    }
+}

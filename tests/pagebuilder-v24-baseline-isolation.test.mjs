@@ -25,7 +25,7 @@ test('v24 owns an isolated core plus complete manifest-discovered module tree', 
   assert.equal(existsSync(v23Root), true, 'the isolated v2.3 baseline must remain present');
 
   const modules = pageBuilderV24Modules(root);
-  assert.equal(modules.length, 50, 'all v2.4 Layout, Grid, and Widget modules must be discoverable');
+  assert.equal(modules.length, 53, 'all v2.4 Layout, Grid, and Widget modules must be discoverable');
   for (const { directory, manifest } of modules) {
     for (const asset of ['definition', 'canvas', 'settings', 'view']) {
       assert.equal(

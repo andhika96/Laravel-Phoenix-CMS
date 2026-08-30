@@ -18,6 +18,20 @@
 		if (!is_array($pbUsedModule)) continue;
 		$pbUsedModuleAssets[$pbUsedModuleType] = $pbUsedModule['assets'];
 	}
+	$pbCustomJavaScriptPolicy = app(\App\Support\PageBuilderElementorV24\CustomJavaScriptPolicy::class);
+	$pbCustomJavaScript = $pbCustomJavaScriptPolicy->normalize(
+		data_get($pageData ?? null, 'custom_js', ''),
+		data_get($pageData ?? null, 'custom_js_mode', 'disabled'),
+	);
+	$pbShouldRenderPublishedCustomJavaScript = static function ($page, $request, array $payload): bool {
+		return $request->routeIs('cms.public.pagebuilder_elementor_v23.show')
+			&& data_get($page, 'status') === 'publish'
+			&& $payload['mode'] === 'published'
+			&& $payload['blocked'] === []
+			&& $payload['code'] !== '';
+	};
+	$pbRenderPublishedCustomJavaScript = $pbShouldRenderPublishedCustomJavaScript($pageData ?? null, request(), $pbCustomJavaScript);
+	$pbPublishedCustomJavaScript = preg_replace('/<\/script/i', '<\\/script', $pbCustomJavaScript['code']) ?? '';
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -59,6 +73,9 @@
 <script data-pb-module-runtime="{{ $pbUsedModuleType }}">{!! file_get_contents($pbUsedAssets['runtime']) !!}</script>
 @endif
 @endforeach
+@if($pbRenderPublishedCustomJavaScript)
+<script data-pb-custom-javascript="published">{!! $pbPublishedCustomJavaScript !!}</script>
+@endif
 
 </body>
 </html>

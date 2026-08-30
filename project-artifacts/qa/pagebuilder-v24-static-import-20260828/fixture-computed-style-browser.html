@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Computed Style Scanner browser QA</title>
+  <script src="/public/js/pagebuilder_elementor_v24/static-import-compiler.js"></script>
+  <script src="/public/js/pagebuilder_elementor_v24/static-import-native.js"></script>
+  <style>
+    body { margin: 0; padding: 24px; font-family: sans-serif; }
+    #run { min-height: 44px; padding: 8px 14px; }
+    #result { white-space: pre-wrap; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <button id="run" type="button">Run computed-style scanner QA</button>
+  <pre id="result" aria-live="polite">idle</pre>
+  <script>
+    const payload = {
+      html: '<!doctype html><html><head></head><body class="bg-slate-900 text-white"><section id="hero" data-pb-import-node="import-node-hero" class="px-5 py-16"><div data-pb-import-node="import-node-hero-inner" class="mx-auto grid max-w-7xl items-center gap-6 lg:grid-cols-2"><h1 data-pb-import-node="import-node-title" class="text-4xl font-semibold leading-tight lg:text-6xl">CEO Masters Indonesia</h1><p data-pb-import-node="import-node-copy" class="text-base leading-7">Play. Connect. Lead.</p></div></section><section id="features" data-pb-import-node="import-node-features" class="px-5 py-16"><div data-pb-import-node="import-node-feature-grid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"><article data-pb-import-node="import-node-card-1" class="p-6">One</article><article data-pb-import-node="import-node-card-2" class="p-6">Two</article><article data-pb-import-node="import-node-card-3" class="p-6">Three</article></div></section></body></html>',
+      frameworks: ['tailwind'],
+      stylesheets: [],
+      tailwindConfig: {},
+      sourceCss: '',
+      classMap: {
+        'bg-slate-900': ['import-node-body'],
+        'text-white': ['import-node-body'],
+        'px-5': ['import-node-hero', 'import-node-features'],
+        'py-16': ['import-node-hero', 'import-node-features'],
+        'mx-auto': ['import-node-hero-inner'],
+        'grid': ['import-node-hero-inner', 'import-node-feature-grid'],
+        'max-w-7xl': ['import-node-hero-inner'],
+        'items-center': ['import-node-hero-inner'],
+        'gap-6': ['import-node-hero-inner'],
+        'lg:grid-cols-2': ['import-node-hero-inner'],
+        'text-4xl': ['import-node-title'],
+        'font-semibold': ['import-node-title'],
+        'leading-tight': ['import-node-title'],
+        'lg:text-6xl': ['import-node-title'],
+        'text-base': ['import-node-copy'],
+        'leading-7': ['import-node-copy'],
+        'gap-4': ['import-node-feature-grid'],
+        'sm:grid-cols-2': ['import-node-feature-grid'],
+        'lg:grid-cols-3': ['import-node-feature-grid'],
+        'p-6': ['import-node-card-1', 'import-node-card-2', 'import-node-card-3']
+      },
+      idMap: { hero: ['import-node-hero'], features: ['import-node-features'] },
+      viewports: [
+        { key: 'mobile', width: 390, height: 900 },
+        { key: 'tablet', width: 768, height: 1024 },
+        { key: 'desktop', width: 1180, height: 900 }
+      ],
+      sections: [
+        { marker: 'import-node-hero', sourceId: 'hero', tag: 'section', fallback: false },
+        { marker: 'import-node-features', sourceId: 'features', tag: 'section', fallback: false }
+      ]
+    };
+
+    const layout = [{
+      id: 'native-root',
+      type: 'container',
+      settings: { importNodeKey: 'import-node-body' },
+      children: [
+        { id: 'native-hero', type: 'container', settings: { importNodeKey: 'import-node-hero' }, children: [{ id: 'native-hero-inner', type: 'container', settings: { importNodeKey: 'import-node-hero-inner' }, children: [{ id: 'native-title', type: 'heading', settings: { importNodeKey: 'import-node-title' } }, { id: 'native-copy', type: 'text_editor', settings: { importNodeKey: 'import-node-copy' } }] }] },
+        { id: 'native-features', type: 'container', settings: { importNodeKey: 'import-node-features' }, children: [{ id: 'native-grid', type: 'container', settings: { importNodeKey: 'import-node-feature-grid' }, children: [{ id: 'native-card-1', type: 'container', settings: { importNodeKey: 'import-node-card-1' } }, { id: 'native-card-2', type: 'container', settings: { importNodeKey: 'import-node-card-2' } }, { id: 'native-card-3', type: 'container', settings: { importNodeKey: 'import-node-card-3' } }] }] }
+      ]
+    }];
+
+    document.getElementById('run').addEventListener('click', async () => {
+      const stages = [];
+      try {
+        const compiler = window.PhoenixStaticImportCompiler;
+        const compiled = await compiler.compile(payload, { onProgress: stage => stages.push(stage) });
+        const snapshot = await compiler.scanComputedStyles(payload, { onProgress: stage => stages.push(stage) });
+        const residual = compiler.filterResidualCss(compiled.css, snapshot);
+        window.PhoenixStaticImportNative.applyComputedSnapshot(layout, snapshot);
+        const title = layout[0].children[0].children[0].children[0];
+        const hero = layout[0].children[0];
+        const viewports = Object.fromEntries(payload.viewports.map(viewport => [viewport.key, viewport.width]));
+        const overlaps = [];
+        const horizontalOverflow = [];
+        Object.entries(viewports).forEach(([viewport, width]) => {
+          snapshot.nodes.forEach(node => {
+            const bounds = node.bounds?.[viewport];
+            if (!bounds || bounds.width <= 0 || bounds.height <= 0) return;
+            if (bounds.x < -1 || bounds.right > width + 1) horizontalOverflow.push({ viewport, marker: node.marker, right: bounds.right, width });
+          });
+          const groups = new Map();
+          snapshot.nodes.forEach(node => {
+            const bounds = node.bounds?.[viewport];
+            if (!bounds || bounds.width <= 0 || bounds.height <= 0) return;
+            const group = groups.get(node.parentMarker || '__root__') || [];
+            group.push({ marker: node.marker, bounds });
+            groups.set(node.parentMarker || '__root__', group);
+          });
+          groups.forEach((group, parentMarker) => group.forEach((left, index) => group.slice(index + 1).forEach(right => {
+            const intersects = left.bounds.x < right.bounds.right && left.bounds.right > right.bounds.x && left.bounds.y < right.bounds.bottom && left.bounds.bottom > right.bounds.y;
+            if (intersects) overlaps.push({ viewport, parentMarker, left: left.marker, right: right.marker });
+          })));
+        });
+        const result = {
+          stages,
+          stats: { compile: compiled.stats, scan: snapshot.stats, residual: residual.stats },
+          viewports: Object.keys(title.settings).filter(key => /headingFontSize/.test(key)).sort(),
+          title: { desktop: title.settings.headingFontSize, tablet: title.settings.headingFontSizeTablet, mobile: title.settings.headingFontSizeMobile },
+          heroPadding: { desktop: hero.settings.paddingTop, tablet: hero.settings.paddingTopTablet, mobile: hero.settings.paddingTopMobile },
+          frameworkFreeResidual: !/(tailwind|bootstrap|cdn\.tailwindcss|--tw-)/i.test(residual.css),
+          compilerIframesAfterCleanup: document.querySelectorAll('iframe[data-pb-compiler]').length,
+          snapshotSections: snapshot.sections.length,
+          snapshotNodes: snapshot.nodes.length,
+          geometry: { nonCarouselHorizontalOverflow: horizontalOverflow, siblingOverlaps: overlaps },
+          layout: layout
+        };
+        document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+      } catch (error) {
+        document.getElementById('result').textContent = JSON.stringify({ stages, error: { name: error.name, code: error.code, message: error.message }, compilerIframesAfterCleanup: document.querySelectorAll('iframe[data-pb-compiler]').length }, null, 2);
+      }
+    });
+  </script>
+</body>
+</html>

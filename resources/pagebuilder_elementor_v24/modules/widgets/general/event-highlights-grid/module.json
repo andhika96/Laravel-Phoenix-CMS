@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "type": "event_highlights_grid",
+  "label": "Event Highlights Grid",
+  "category": "general",
+  "icon": "fas fa-th-large",
+  "order": 56,
+  "toolbox": true,
+  "assets": {
+    "definition": "definition.js",
+    "canvas": "Canvas.vue",
+    "settings": "Settings.vue",
+    "view": "frontend.blade.php"
+  },
+  "advanced": {
+    "profile": "widget",
+    "capabilities": []
+  },
+  "capabilities": [
+    "pro-icon-targets"
+  ]
+}

@@ -2620,8 +2620,7 @@
 			nodeShellStyle() {
 				const s = this.node.settings || {};
 				const device = this.responsiveDevice || 'desktop';
-                if (this.hasNewGeneralAdvancedControls) return widgetAdvancedPreviewStyle(s, device);
-                if (this.hasSharedAdvancedControls) return widgetAdvancedPreviewStyle(s, device);
+                if (this.isWidgetNode && this.hasNewGeneralAdvancedControls) return widgetAdvancedPreviewStyle(s, device);
 				if (!this.isCont) return {};
 				const currentHideValue = device === 'tablet'
 					? s.hideTablet
@@ -3363,12 +3362,57 @@
 			const dynamicPreviewContext = computed(() => ({ ...(PBC.dynamicPreviewContext || {}), page_title: pageName.value }));
 			const pageStatus = ref(pd?.status || 'draft');
 			const customCss  = ref(pd?.custom_css || '');
-			const staticImportInput = ref(null);
-			const staticImportBusy = ref(false);
-			const staticImportReport = ref(null);
-			const staticImportPayload = ref(null);
-			const staticImportFramework = ref('auto');
+			const customJs = ref(String(pd?.custom_js || ''));
+			const customJsModes = Object.freeze({
+				disabled: 'Disabled',
+				published: 'Published frontend',
+			});
+			const hasInitialCustomJs = String(pd?.custom_js || '').trim() !== '';
+			const initialCustomJsMode = hasInitialCustomJs && ['disabled', 'published'].includes(pd?.custom_js_mode)
+				? pd.custom_js_mode
+				: 'disabled';
+			const customJsMode = ref(initialCustomJsMode);
+			const customJsSavedCode = ref(String(pd?.custom_js || ''));
+			const customJsSavedMode = ref(initialCustomJsMode);
+			const customJsDiagnostics = ref([]);
+			const showJsEditor = ref(false);
+			const jsEditorFullscreen = ref(false);
+			const customJsPublishAcknowledged = ref(false);
+			const customJsEditorTextarea = ref(null);
+			const customJsEditorGutter = ref(null);
+			const customJsGotoLine = ref('');
+			const customJsSearchQuery = ref('');
+			const customJsActiveLine = ref(0);
 			const pageSettingsOpen = ref(false);
+			const automaticCompiledNativeFileInput = ref(null);
+			const automaticCompiledNativeState = ref({
+				visible: false,
+				status: 'idle',
+				file: null,
+				fileName: '',
+				framework: 'auto',
+				source: null,
+				viewports: [],
+				measurement: null,
+				sectionIndex: null,
+				layoutBlueprint: null,
+				phoenixLayout: null,
+				stage: 'review',
+				mapping: {},
+				mappingSuggestions: {},
+				assetManifest: [],
+				assetMappings: {},
+				mappingExpanded: {},
+				selectedMappingBlockId: '',
+				targetNodes: [],
+				targetReport: null,
+				applyMode: 'append',
+				applied: false,
+				selectedSectionId: '',
+				selectedViewport: 'desktop',
+				corrections: [],
+				error: '',
+			});
 			const showCssEditor = ref(false);
 			const cssEditorFullscreen = ref(false);
 			const showTextEditorModal = ref(false);
@@ -3563,6 +3607,889 @@
 				pageSettingsOpen.value = false;
 				closeContextMenu();
 			}
+			function automaticCompiledNativeSectionMappingNodes(section) {
+				const normalized = section?.normalizedBlocks;
+				if (Array.isArray(normalized?.mappingNodes)) return normalized.mappingNodes;
+				const rootId = String(section?.sourceId || section?.id || '');
+				return (section?.nodes || []).filter((node) => String(node.sourceId) !== rootId);
+			}
+			const automaticCompiledNativeSections = computed(() => {
+				const state = automaticCompiledNativeState.value;
+				return state.layoutBlueprint?.sections || state.sectionIndex?.sections || [];
+			});
+			const automaticCompiledNativeSelectedSection = computed(() => automaticCompiledNativeSections.value.find((section) => String(section.id) === String(automaticCompiledNativeState.value.selectedSectionId)) || automaticCompiledNativeSections.value[0] || null);
+			const automaticCompiledNativeSelectedLayout = computed(() => {
+				const section = automaticCompiledNativeSelectedSection.value;
+				const viewport = automaticCompiledNativeState.value.selectedViewport || 'desktop';
+				return section?.layoutByViewport?.[viewport] || section?.layoutByViewport?.desktop || null;
+			});
+			const automaticCompiledNativeSelectedSourceNode = computed(() => {
+				const section = automaticCompiledNativeSelectedSection.value;
+				const sourceId = section?.sourceId || section?.id || '';
+				return automaticCompiledNativeState.value.measurement?.nodes?.find((node) => String(node.sourceId) === String(sourceId)) || null;
+			});
+			const automaticCompiledNativeSelectedSourceBlocks = computed(() => {
+				const section = automaticCompiledNativeSelectedSection.value;
+				return automaticCompiledNativeSectionMappingNodes(section);
+			});
+			const automaticCompiledNativeSelectedMappingRows = computed(() => {
+				const section = automaticCompiledNativeSelectedSection.value;
+				const nodes = automaticCompiledNativeSectionMappingNodes(section);
+				const byId = new Map(nodes.map((node) => [String(node.sourceId), node]));
+				const roots = Array.isArray(section?.normalizedBlocks?.mappingRoots)
+					? section.normalizedBlocks.mappingRoots.map(String).filter((id) => byId.has(id))
+					: nodes.filter((node) => !byId.has(String(node.parentMappingId))).map((node) => String(node.sourceId));
+				const rows = [];
+				const visit = (sourceId, depth) => {
+					const node = byId.get(String(sourceId));
+					if (!node) return;
+					const childIds = Array.isArray(node.childMappingIds) ? node.childMappingIds.map(String).filter((id) => byId.has(id)) : [];
+					rows.push({ ...node, depth, hasMappingChildren: childIds.length > 0, expanded: automaticCompiledNativeState.value.mappingExpanded?.[node.sourceId] !== false });
+					if (rows.at(-1).expanded) childIds.forEach((childId) => visit(childId, depth + 1));
+				};
+				roots.forEach((sourceId) => visit(sourceId, 0));
+				return rows;
+			});
+			const automaticCompiledNativeSelectedMappingBlock = computed(() => {
+				const selectedId = String(automaticCompiledNativeState.value.selectedMappingBlockId || '');
+				return automaticCompiledNativeSelectedSourceBlocks.value.find((block) => String(block.sourceId) === selectedId)
+					|| automaticCompiledNativeSelectedSourceBlocks.value[0]
+					|| null;
+			});
+			const automaticCompiledNativeMappableSections = computed(() => automaticCompiledNativeSections.value.filter((section) => section.kind !== 'header' && section.kind !== 'footer' && section.compile !== false));
+			const automaticCompiledNativeWidgetOptions = computed(() => {
+				const groups = ['layout', 'basic', 'general', 'pro', 'advanced'];
+				return groups.flatMap((group) => (toolbox[group] || []).map((item) => ({ ...item, group })));
+			});
+			const automaticCompiledNativeMappingComplete = computed(() => {
+				const sections = automaticCompiledNativeSections.value.filter((section) => section.kind !== 'header' && section.kind !== 'footer' && section.compile !== false);
+				const blocks = sections.flatMap((section) => automaticCompiledNativeSectionMappingNodes(section));
+				return blocks.every((block) => {
+					const type = String(automaticCompiledNativeState.value.mapping?.[block.sourceId] || '').trim();
+					return type !== '' && hasRegisteredWidget(type);
+				});
+			});
+			const automaticCompiledNativeMissingBlockCount = computed(() => {
+				const sections = automaticCompiledNativeSections.value.filter((section) => section.kind !== 'header' && section.kind !== 'footer' && section.compile !== false);
+				return sections.flatMap((section) => automaticCompiledNativeSectionMappingNodes(section))
+					.filter((block) => !hasRegisteredWidget(automaticCompiledNativeState.value.mapping?.[block.sourceId] || '')).length;
+			});
+			const automaticCompiledNativeMappedBlockCount = computed(() => Object.values(automaticCompiledNativeState.value.mapping || {}).filter((type) => type && hasRegisteredWidget(type)).length);
+			const automaticCompiledNativeTargetPreview = computed(() => automaticCompiledNativeState.value.targetNodes || []);
+			const automaticCompiledNativeTargetReport = computed(() => automaticCompiledNativeState.value.targetReport || { canApply: false, structuralErrors: [], reviewNotes: [], assetWarnings: [], pendingAssets: [], mappedBlocks: 0, targetSections: 0 });
+			const automaticCompiledNativeReviewCssNotes = computed(() => {
+				const notes = automaticCompiledNativeTargetReport.value?.reviewNotes;
+				return (Array.isArray(notes) ? notes : []).filter((note) => note && note.cssPatch);
+			});
+			const automaticCompiledNativeLocalAssets = computed(() => {
+				const assets = automaticCompiledNativeState.value.assetManifest;
+				return (Array.isArray(assets) ? assets : []).filter((asset) => asset
+					&& asset.available
+					&& !/^(?:https?:|\/|#|data:)/i.test(String(asset.sourcePath || '')));
+			});
+			const automaticCompiledNativePendingAssetCount = computed(() => {
+				const assets = automaticCompiledNativeTargetReport.value?.pendingAssets;
+				return Array.isArray(assets) ? assets.length : 0;
+			});
+			const automaticCompiledNativeApplyLabel = computed(() => automaticCompiledNativePendingAssetCount.value
+				? `Apply partial · ${automaticCompiledNativePendingAssetCount.value} asset${automaticCompiledNativePendingAssetCount.value === 1 ? '' : 's'} pending`
+				: 'Apply to Canvas');
+			const automaticCompiledNativeCanCompile = computed(() => {
+				const state = automaticCompiledNativeState.value;
+				return state.stage === 'target' && state.targetReport?.canApply === true;
+			});
+			const automaticCompiledNativeSourceDoc = computed(() => {
+				const source = automaticCompiledNativeState.value.source || {};
+				let html = String(source.html || '');
+				const css = String(source.css || '').trim();
+				const selector = String(automaticCompiledNativeSelectedSection.value?.sourceSelector || '').trim();
+				if (selector && typeof DOMParser === 'function') {
+					try {
+						const document = new DOMParser().parseFromString(html, 'text/html');
+						const selected = document.querySelector(selector);
+						if (selected) html = '<!doctype html><html><head></head><body>' + selected.outerHTML + '</body></html>';
+					} catch (_) {
+						// Keep the complete source preview when a selector is not queryable.
+					}
+				}
+				html = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '').replace(/\s+on[a-z]+\s*=\s*(["']).*?\1/gi, '');
+				if (css) {
+					const style = '<style data-pb-automatic-compiled-native="true">' + css + '</style>';
+					const withHead = html.replace(/<\/head>/i, style + '</head>');
+					html = withHead === html ? style + html : withHead;
+				}
+				return html;
+			});
+			function resetAutomaticCompiledNativeState() {
+				automaticCompiledNativeState.value = {
+					...automaticCompiledNativeState.value,
+					status: 'idle', file: null, fileName: '', source: null, viewports: [], measurement: null,
+					sectionIndex: null, layoutBlueprint: null, phoenixLayout: null,
+					stage: 'review', mapping: {}, mappingSuggestions: {}, assetManifest: [], assetMappings: {}, mappingExpanded: {}, selectedMappingBlockId: '', targetNodes: [], targetReport: null, applyMode: 'append', applied: false,
+					selectedSectionId: '', selectedViewport: 'desktop', corrections: [], error: '',
+				};
+			}
+			function openAutomaticCompiledNativeImport() {
+				closePageSettings();
+				resetAutomaticCompiledNativeState();
+				automaticCompiledNativeState.value.visible = true;
+				nextTick(() => automaticCompiledNativeFileInput.value?.click());
+			}
+			function closeAutomaticCompiledNativeImport() {
+				automaticCompiledNativeState.value.visible = false;
+			}
+			function selectAutomaticCompiledNativeSection(section) {
+				if (!section) return;
+				automaticCompiledNativeState.value.selectedSectionId = String(section.id || section.sourceId || '');
+				const nodes = automaticCompiledNativeSectionMappingNodes(section);
+				automaticCompiledNativeState.value.selectedMappingBlockId = String(section.normalizedBlocks?.mappingRoots?.[0] || nodes[0]?.sourceId || '');
+			}
+			function onAutomaticCompiledNativeFileChange(event) {
+				const file = event?.target?.files?.[0];
+				if (file) analyzeAutomaticCompiledNative(file);
+				if (event?.target) event.target.value = '';
+			}
+			async function analyzeAutomaticCompiledNative(file) {
+				const state = automaticCompiledNativeState.value;
+				state.status = 'loading';
+				state.file = file;
+				state.fileName = file.name;
+				state.error = '';
+				const form = new FormData();
+				form.append('source', file);
+				form.append('framework', state.framework || 'auto');
+				try {
+					const response = await axios.post(PBC.automaticCompiledNativeAnalyzeUrl || '', form, {
+						headers: { 'X-CSRF-TOKEN': PBC.csrfToken, 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
+						timeout: 180000,
+					});
+					const payload = response.data || {};
+					state.status = 'ready';
+					state.source = { html: payload.html || '', css: payload.css || '', entry: payload.entry || file.name, framework: payload.framework || 'plain_css' };
+					state.viewports = payload.viewports || [];
+					state.measurement = payload.measurement || null;
+					state.sectionIndex = payload.sectionIndex || null;
+					state.layoutBlueprint = payload.layoutBlueprint || null;
+					state.phoenixLayout = payload.phoenixLayout || null;
+					state.assetManifest = Array.isArray(payload.assetManifest) ? payload.assetManifest : [];
+					state.assetMappings = Object.fromEntries(state.assetManifest.map((asset) => [String(asset.mappingId || ''), String(asset.targetUrl || '')]).filter(([id]) => id));
+					state.stage = 'review';
+					state.mapping = {};
+					state.mappingSuggestions = {};
+					state.mappingExpanded = {};
+					state.selectedMappingBlockId = '';
+					state.targetNodes = [];
+					state.targetReport = null;
+					state.applyMode = 'append';
+					state.applied = false;
+					(state.layoutBlueprint?.sections || []).forEach((section) => {
+						if (section.kind === 'header' || section.kind === 'footer' || section.compile === false) return;
+						automaticCompiledNativeSectionMappingNodes(section).forEach((node) => {
+							const suggestion = node.candidateWidgets?.[0] || null;
+							state.mappingSuggestions[node.sourceId] = suggestion;
+							const suggestionType = String(suggestion?.type || '');
+							const suggestionScore = Number(suggestion?.score || 0);
+							state.mapping[node.sourceId] = suggestionScore >= 0.6 && hasRegisteredWidget(suggestionType) ? suggestionType : '';
+						});
+					(section.normalizedBlocks?.mappingRoots || []).forEach((sourceId) => { state.mappingExpanded[String(sourceId)] = true; });
+					});
+					state.corrections = [];
+					state.selectedSectionId = String(payload.layoutBlueprint?.sections?.find((section) => section.kind === 'section')?.id || payload.layoutBlueprint?.sections?.[0]?.id || '');
+					const selectedSection = (state.layoutBlueprint?.sections || []).find((section) => String(section.id) === state.selectedSectionId);
+					state.selectedMappingBlockId = String(selectedSection?.normalizedBlocks?.mappingRoots?.[0] || automaticCompiledNativeSectionMappingNodes(selectedSection)[0]?.sourceId || '');
+					state.selectedViewport = 'desktop';
+					if (Array.isArray(payload.diagnostics) && payload.diagnostics.length) showSaveToast('info', payload.diagnostics.map((item) => item.message || item.code || item).join(' '));
+				} catch (error) {
+					state.status = 'error';
+					state.error = normalizeNoticeMessage(error?.response?.data?.message || error?.message || 'Automatic measurement failed.').message;
+					showSaveToast('failed', state.error);
+				}
+			}
+			function onAutomaticCompiledNativeFrameworkChange() {
+				const file = automaticCompiledNativeState.value.file;
+				if (file && automaticCompiledNativeState.value.status !== 'loading') analyzeAutomaticCompiledNative(file);
+			}
+			function startAutomaticCompiledNativeMapping() {
+				if (!automaticCompiledNativeState.value.layoutBlueprint) return;
+				automaticCompiledNativeState.value.stage = 'mapping';
+				if (!automaticCompiledNativeState.value.selectedMappingBlockId) {
+					automaticCompiledNativeState.value.selectedMappingBlockId = String(automaticCompiledNativeSelectedSourceBlocks.value[0]?.sourceId || '');
+				}
+				automaticCompiledNativeState.value.targetNodes = [];
+				automaticCompiledNativeState.value.targetReport = null;
+			}
+			function backToAutomaticCompiledNativeReview() {
+				automaticCompiledNativeState.value.stage = 'review';
+			}
+			function backToAutomaticCompiledNativeMapping() {
+				automaticCompiledNativeState.value.stage = 'mapping';
+			}
+			function automaticCompiledNativeMappingValue(sourceId) {
+				return String(automaticCompiledNativeState.value.mapping?.[sourceId] || '');
+			}
+			function automaticCompiledNativeSourceBlockCount(section) {
+				return automaticCompiledNativeSectionMappingNodes(section).length;
+			}
+			function automaticCompiledNativeMappingNode(sourceId) {
+				const targetId = String(sourceId || '');
+				return automaticCompiledNativeSections.value.flatMap((section) => automaticCompiledNativeSectionMappingNodes(section)).find((node) => String(node.sourceId) === targetId) || null;
+			}
+			function automaticCompiledNativeMappingChildren(sourceId) {
+				const node = automaticCompiledNativeMappingNode(sourceId);
+				return Array.isArray(node?.childMappingIds) ? node.childMappingIds.map(String) : [];
+			}
+			function selectAutomaticCompiledNativeMappingBlock(block) {
+				if (!block) return;
+				automaticCompiledNativeState.value.selectedMappingBlockId = String(block.sourceId || '');
+			}
+			function toggleAutomaticCompiledNativeMappingNode(block) {
+				if (!block?.sourceId) return;
+				const expanded = automaticCompiledNativeState.value.mappingExpanded || {};
+				automaticCompiledNativeState.value.mappingExpanded = { ...expanded, [block.sourceId]: expanded[block.sourceId] === false };
+			}
+			function setAutomaticCompiledNativeWidget(sourceId, eventOrType) {
+				const type = typeof eventOrType === 'string' ? eventOrType : String(eventOrType?.target?.value || '');
+				if (type !== '' && !hasRegisteredWidget(type)) return;
+				automaticCompiledNativeState.value.mapping[sourceId] = type;
+				automaticCompiledNativeState.value.targetNodes = [];
+				automaticCompiledNativeState.value.targetReport = null;
+			}
+			function automaticCompiledNativeFindSourceNode(sourceId) {
+				const targetId = String(sourceId || '');
+				return automaticCompiledNativeState.value.measurement?.nodes?.find((node) => String(node.sourceId) === targetId)
+					|| automaticCompiledNativeSections.value.flatMap((section) => section.nodes || []).find((node) => String(node.sourceId) === targetId)
+					|| null;
+			}
+			function automaticCompiledNativeSourceStyle(sourceNode, viewport = 'desktop') {
+				const styles = sourceNode?.computedStyleByViewport || {};
+				return styles[viewport] || styles.desktop || sourceNode?.computedStyle || {};
+			}
+			function automaticCompiledNativeSourceAttribute(sourceNode, name) {
+				const attribute = (sourceNode?.attributes || []).find((item) => String(item?.name || '').toLowerCase() === name.toLowerCase());
+				return String(attribute?.value || '');
+			}
+			function automaticCompiledNativeSafeSourceUrl(value, fallback = '') {
+				const url = String(value || '').trim();
+				if (!url || /^(?:javascript|vbscript):/i.test(url) || /^data:text\//i.test(url)) return fallback;
+				return url;
+			}
+			function automaticCompiledNativeAssetForUrl(value) {
+				const url = String(value || '').trim();
+				return (automaticCompiledNativeState.value.assetManifest || []).find((asset) => String(asset?.url || '').trim() === url || String(asset?.sourcePath || '').trim() === url) || null;
+			}
+			function automaticCompiledNativeResolvedAssetUrl(value) {
+				const url = automaticCompiledNativeSafeSourceUrl(value);
+				if (!url || /^(?:https?:|\/|#|data:image\/)/i.test(url)) return url;
+				const asset = automaticCompiledNativeAssetForUrl(url);
+				return automaticCompiledNativeSafeSourceUrl(automaticCompiledNativeState.value.assetMappings?.[asset?.mappingId] || '');
+			}
+			function setAutomaticCompiledNativeAssetMapping(mappingId, eventOrValue) {
+				const targetUrl = typeof eventOrValue === 'string' ? eventOrValue : String(eventOrValue?.target?.value || '');
+				automaticCompiledNativeState.value.assetMappings[String(mappingId || '')] = automaticCompiledNativeSafeSourceUrl(targetUrl);
+				automaticCompiledNativeState.value.targetNodes = [];
+				automaticCompiledNativeState.value.targetReport = null;
+			}
+			function automaticCompiledNativeEscapeHtml(value) {
+				return String(value || '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[character]);
+			}
+			function automaticCompiledNativeSourceChildren(sourceId) {
+				const sourceNode = automaticCompiledNativeFindSourceNode(sourceId);
+				if (Array.isArray(sourceNode?.children) && sourceNode.children.length) return sourceNode.children.map(String);
+				return (automaticCompiledNativeState.value.measurement?.nodes || []).filter((node) => String(node.parentSourceId || '') === String(sourceId)).map((node) => String(node.sourceId));
+			}
+			function automaticCompiledNativeInferColumns(sourceNode) {
+				const style = automaticCompiledNativeSourceStyle(sourceNode);
+				const rawTracks = String(style.gridTemplateColumns || '').trim();
+				const repeat = rawTracks.match(/^repeat\(\s*(\d+)\s*,/i);
+				if (repeat) return Math.max(1, Math.min(12, Number(repeat[1])));
+				if (rawTracks && rawTracks !== 'none' && rawTracks !== 'auto') {
+					const tokens = rawTracks.match(/(?:[^\s(]+\([^)]*\)|[^\s]+)/g) || [];
+					if (tokens.length > 0) return Math.max(1, Math.min(12, tokens.length));
+				}
+				const positions = automaticCompiledNativeSourceChildren(sourceNode?.sourceId).map((id) => {
+					const child = automaticCompiledNativeFindSourceNode(id);
+					const rect = child?.rectByViewport?.desktop;
+					return rect && Number(rect.width) > 0 && Number(rect.height) > 0 ? Number(rect.x) : null;
+				}).filter((position) => position !== null).sort((left, right) => left - right);
+				const clusters = [];
+				positions.forEach((position) => {
+					if (!clusters.length || Math.abs(position - clusters[clusters.length - 1]) > 3) clusters.push(position);
+				});
+				return Math.max(1, Math.min(12, clusters.length || 1));
+			}
+			function automaticCompiledNativeApplySourceStyle(settings, style, type = '') {
+				const internalSurface = type === 'button' || type === 'image';
+				const spacingKeys = ['marginTop', 'marginRight', 'marginBottom', 'marginLeft'];
+				if (type !== 'button') spacingKeys.push('paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft');
+				spacingKeys.forEach((key) => {
+					if (style[key] !== undefined && style[key] !== '') settings[key] = String(style[key]);
+				});
+				if (style.borderRadius) {
+					const radius = String(style.borderRadius).trim().split(/\s+/);
+					const values = radius.length === 1 ? [radius[0], radius[0], radius[0], radius[0]] : radius.length === 2 ? [radius[0], radius[1], radius[0], radius[1]] : radius.length === 3 ? [radius[0], radius[1], radius[2], radius[1]] : radius;
+					['borderRadiusTL', 'borderRadiusTR', 'borderRadiusBR', 'borderRadiusBL'].forEach((key, index) => { settings[key] = values[index] || '0'; });
+					if (!internalSurface && !isCont(type) && !isGrid(type)) settings.advancedBorderRadius = values[0] || '0';
+				}
+				const borderType = ['solid', 'double', 'dotted', 'dashed', 'groove'].includes(String(style.borderTopStyle || '').toLowerCase()) ? String(style.borderTopStyle).toLowerCase() : 'none';
+				if (isCont(type) || isGrid(type)) {
+					settings.borderType = borderType;
+					settings.borderWidth = borderType === 'none' ? '0' : (style.borderTopWidth || '0');
+					settings.borderColor = style.borderTopColor || '#000000';
+				} else if (!internalSurface) {
+					settings.advancedBorderType = borderType;
+					settings.advancedBorderWidth = borderType === 'none' ? '0' : (style.borderTopWidth || '0');
+					settings.advancedBorderColor = style.borderTopColor || 'transparent';
+				}
+				if (type === 'image') {
+					settings.imageBorderType = borderType;
+					settings.imageBorderWidth = borderType === 'none' ? '0' : (style.borderTopWidth || '0');
+					settings.imageBorderColor = style.borderTopColor || '#000000';
+					settings.imageBorderRadius = style.borderRadius || '0';
+				}
+				const backgroundColor = String(style.backgroundColor || '').trim();
+				if (!internalSurface && backgroundColor && !['transparent', 'rgba(0, 0, 0, 0)'].includes(backgroundColor.toLowerCase())) {
+					if (isCont(type) || isGrid(type)) {
+						settings.bgType = 'classic';
+						settings.bgColor = backgroundColor;
+					} else {
+						settings.advancedBackgroundType = 'classic';
+						settings.advancedBackgroundColor = backgroundColor;
+					}
+				}
+				const backgroundImage = String(style.backgroundImage || '').trim();
+				const backgroundMatch = backgroundImage.match(/^url\((?:"([^"]+)"|'([^']+)'|([^\)]+))\)$/i);
+				const backgroundUrl = backgroundMatch ? String(backgroundMatch[1] || backgroundMatch[2] || backgroundMatch[3] || '').trim() : '';
+				if (backgroundUrl && !/^file:/i.test(backgroundUrl)) {
+					if (isCont(type) || isGrid(type)) {
+						settings.bgType = 'classic';
+						settings.bgImage = automaticCompiledNativeSafeSourceUrl(backgroundUrl);
+					} else {
+						settings.advancedBackgroundType = 'classic';
+						settings.advancedBackgroundImage = automaticCompiledNativeSafeSourceUrl(backgroundUrl);
+					}
+				}
+				if (!isCont(type) && !isGrid(type) && style.width && !['auto', '100%'].includes(String(style.width).trim().toLowerCase())) {
+					settings.widthMode = 'custom';
+					settings.customWidth = String(style.width);
+				}
+			}
+			function automaticCompiledNativeLayoutRelationshipFor(sourceId) {
+				const targetId = String(sourceId || '');
+				for (const section of automaticCompiledNativeSections.value) {
+					const relationships = section?.layoutRelationships;
+					const layer = Array.isArray(relationships?.positionedLayers)
+						? relationships.positionedLayers.find((item) => String(item?.sourceId || '') === targetId)
+						: null;
+					if (layer) return { section, relationships, layer };
+				}
+				return null;
+			}
+			function automaticCompiledNativeHasPositionedChild(sourceId) {
+				return automaticCompiledNativeSections.value.some((section) => (section?.layoutRelationships?.positionedLayers || []).some((layer) => String(layer?.containingBlockId || '') === String(sourceId || '')));
+			}
+			function automaticCompiledNativeApplyPositionedLayerSettings(settings, sourceNode) {
+				const relationship = automaticCompiledNativeLayoutRelationshipFor(sourceNode?.sourceId);
+				if (!relationship?.layer) {
+					if (automaticCompiledNativeHasPositionedChild(sourceNode?.sourceId) && String(settings.position || 'default') === 'default') settings.position = 'relative';
+					return;
+				}
+				const layer = relationship.layer;
+				const records = layer.positionByViewport || {};
+				const apply = (record, suffix = '') => {
+					if (!record) return;
+					const position = String(record.position || 'absolute');
+					const rect = record.relativeRect || {};
+					settings.position = position;
+					if (position === 'absolute' || position === 'fixed') {
+						settings.horizontalOrientation = 'left';
+						settings.verticalOrientation = 'top';
+						settings['positionX' + suffix] = `${Number(rect.x || 0)}px`;
+						settings['positionY' + suffix] = `${Number(rect.y || 0)}px`;
+					}
+					if (record.zIndex !== 0 && record.zIndex !== undefined) settings['zIndex' + suffix] = Number(record.zIndex);
+					if (rect.width !== undefined) {
+						settings['widthMode' + suffix] = 'custom';
+						settings['customWidth' + suffix] = `${Number(rect.width || 0)}px`;
+					}
+				};
+				apply(records.desktop || records[Object.keys(records)[0]] || null);
+				apply(records.tablet || null, 'Tablet');
+				apply(records.mobile || null, 'Mobile');
+			}
+			function automaticCompiledNativeMappingMemberNodes(mappingNode, sourceNode) {
+				const ids = [mappingNode?.sourceId, ...(Array.isArray(mappingNode?.memberSourceIds) ? mappingNode.memberSourceIds : [])].filter(Boolean).map(String);
+				const memberNodes = ids.map((sourceId) => automaticCompiledNativeFindSourceNode(sourceId)).filter(Boolean).filter((node, index, nodes) => nodes.findIndex((item) => String(item.sourceId) === String(node.sourceId)) === index);
+				return memberNodes.length ? memberNodes : [sourceNode].filter(Boolean);
+			}
+			function automaticCompiledNativeMemberText(nodes, tags = []) {
+				const allowed = tags.length ? nodes.filter((node) => tags.includes(String(node.tag || '').toLowerCase())) : nodes;
+				return String(allowed.find((node) => String(node.textContent || '').trim())?.textContent || '').trim();
+			}
+			function automaticCompiledNativeMapWidget(sourceNode, type, mappingNode = null) {
+				const node = makeNode(type);
+				if (!node || !sourceNode) return null;
+				const settings = node.settings || {};
+				const style = automaticCompiledNativeSourceStyle(sourceNode);
+				const memberNodes = automaticCompiledNativeMappingMemberNodes(mappingNode, sourceNode);
+				const text = String(sourceNode.textContent || '').trim();
+				const tag = String(sourceNode.tag || 'div').toLowerCase();
+				const innerHTML = String(sourceNode.innerHTML || '').trim();
+				const imageSrc = automaticCompiledNativeResolvedAssetUrl(automaticCompiledNativeSourceAttribute(sourceNode, 'src'));
+				const href = automaticCompiledNativeSafeSourceUrl(automaticCompiledNativeSourceAttribute(sourceNode, 'href'), '#');
+				const memberImage = memberNodes.find((member) => ['img', 'video'].includes(String(member.tag || '').toLowerCase()));
+				const memberIcon = memberNodes.find((member) => ['i', 'svg'].includes(String(member.tag || '').toLowerCase()));
+				const memberImageSrc = automaticCompiledNativeResolvedAssetUrl(automaticCompiledNativeSourceAttribute(memberImage, 'src'));
+				const memberImageAlt = automaticCompiledNativeSourceAttribute(memberImage, 'alt');
+				const memberTitle = automaticCompiledNativeMemberText(memberNodes, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'dt']);
+				const memberDescription = automaticCompiledNativeMemberText(memberNodes, ['p', 'dd']);
+				if (type === 'icon_box') {
+					settings.title = memberTitle || text || settings.title;
+					settings.description = memberDescription || (memberTitle && text !== memberTitle ? text : settings.description);
+					settings.titleTag = /^h[1-6]$/.test(String(memberNodes.find((member) => /^h[1-6]$/.test(String(member.tag || '').toLowerCase()))?.tag || '')) ? String(memberNodes.find((member) => /^h[1-6]$/.test(String(member.tag || '').toLowerCase())).tag).toLowerCase() : settings.titleTag;
+					settings.alignment = ['left', 'center', 'right', 'justify'].includes(style.textAlign) ? style.textAlign : settings.alignment;
+					const iconClass = automaticCompiledNativeSourceAttribute(memberIcon, 'class');
+					if (/^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i.test(iconClass)) {
+						settings.iconSource = 'library';
+						settings.iconClass = iconClass;
+					}
+				} else if (type === 'image_box') {
+					settings.imageUrl = memberImageSrc || imageSrc;
+					settings.imageAlt = memberImageAlt || automaticCompiledNativeSourceAttribute(sourceNode, 'alt') || '';
+					settings.title = memberTitle || text || settings.title;
+					settings.description = memberDescription || (memberTitle && text !== memberTitle ? text : settings.description);
+					const memberHeading = memberNodes.find((member) => /^h[1-6]$/.test(String(member.tag || '').toLowerCase()));
+					if (memberHeading) settings.titleTag = String(memberHeading.tag).toLowerCase();
+					settings.alignment = ['left', 'center', 'right', 'justify'].includes(style.textAlign) ? style.textAlign : settings.alignment;
+					settings.imagePosition = 'top';
+					settings.imageWidth = '100%';
+				}
+				if (type === 'heading') {
+					settings.text = text || 'Heading';
+					settings.tag = /^h[1-6]$/.test(tag) ? tag : 'h2';
+					settings.color = style.color || settings.color;
+					settings.headingFontFamily = style.fontFamily || settings.headingFontFamily;
+					settings.headingFontSize = style.fontSize || settings.headingFontSize;
+					settings.headingFontSizeMode = 'custom';
+					settings.headingFontWeight = style.fontWeight || settings.headingFontWeight;
+					settings.headingLineHeight = style.lineHeight || settings.headingLineHeight;
+					settings.headingLetterSpacing = style.letterSpacing || settings.headingLetterSpacing;
+					settings.headingWordSpacing = style.wordSpacing || settings.headingWordSpacing;
+					settings.headingTextTransform = style.textTransform || settings.headingTextTransform;
+					settings.headingFontStyle = style.fontStyle || settings.headingFontStyle;
+					settings.headingTextDecoration = style.textDecoration || settings.headingTextDecoration;
+					settings.headingTextShadow = style.textShadow || settings.headingTextShadow;
+					settings.align = ['left', 'center', 'right', 'justify'].includes(style.textAlign) ? style.textAlign : settings.align;
+				} else if (type === 'text_editor') {
+					settings.html = innerHTML || (text ? '<p>' + automaticCompiledNativeEscapeHtml(text) + '</p>' : settings.html);
+					settings.textEditorTextColor = style.color || settings.textEditorTextColor;
+					settings.textEditorFontFamily = style.fontFamily || settings.textEditorFontFamily;
+					settings.textEditorFontSize = style.fontSize || settings.textEditorFontSize;
+					settings.textEditorFontWeight = style.fontWeight || settings.textEditorFontWeight;
+					settings.textEditorLineHeight = style.lineHeight || settings.textEditorLineHeight;
+					settings.textEditorLetterSpacing = style.letterSpacing || settings.textEditorLetterSpacing;
+					settings.textEditorWordSpacing = style.wordSpacing || settings.textEditorWordSpacing;
+					settings.textEditorTextTransform = style.textTransform || settings.textEditorTextTransform;
+					settings.textEditorFontStyle = style.fontStyle || settings.textEditorFontStyle;
+					settings.textEditorTextDecoration = style.textDecoration || settings.textEditorTextDecoration;
+					settings.textEditorTextShadow = style.textShadow || settings.textEditorTextShadow;
+					settings.align = ['left', 'center', 'right', 'justify'].includes(style.textAlign) ? style.textAlign : settings.align;
+				} else if (type === 'image') {
+					settings.src = imageSrc;
+					settings.imageSource = imageSrc ? 'url' : settings.imageSource;
+					settings.alt = automaticCompiledNativeSourceAttribute(sourceNode, 'alt') || text || settings.alt;
+					settings.width = style.width || settings.width;
+					settings.height = style.height || settings.height;
+					settings.maxWidth = style.maxWidth || settings.maxWidth;
+					settings.objectFit = ['fill', 'cover', 'contain', 'scale-down'].includes(style.objectFit) ? style.objectFit : settings.objectFit;
+					settings.objectPosition = style.objectPosition || settings.objectPosition;
+				} else if (type === 'button') {
+					settings.text = text || 'Button';
+					settings.url = href;
+					settings.newTab = automaticCompiledNativeSourceAttribute(sourceNode, 'target') === '_blank';
+					settings.buttonTextColor = style.color || settings.buttonTextColor;
+					settings.buttonFontFamily = style.fontFamily || settings.buttonFontFamily;
+					settings.buttonFontSize = style.fontSize || settings.buttonFontSize;
+					settings.buttonFontWeight = style.fontWeight || settings.buttonFontWeight;
+					settings.buttonLineHeight = style.lineHeight || settings.buttonLineHeight;
+					settings.buttonLetterSpacing = style.letterSpacing || settings.buttonLetterSpacing;
+					settings.buttonWordSpacing = style.wordSpacing || settings.buttonWordSpacing;
+					settings.buttonTextTransform = style.textTransform || settings.buttonTextTransform;
+					settings.buttonFontStyle = style.fontStyle || settings.buttonFontStyle;
+					settings.buttonTextDecoration = style.textDecoration || settings.buttonTextDecoration;
+					settings.buttonTextShadow = style.textShadow || settings.buttonTextShadow;
+					const buttonBorderType = ['none', 'solid', 'double', 'dotted', 'dashed', 'groove'].includes(String(style.borderTopStyle || '').toLowerCase()) ? String(style.borderTopStyle).toLowerCase() : 'none';
+					settings.buttonBorderType = buttonBorderType;
+					settings.buttonBorderWidth = buttonBorderType === 'none' ? '0' : (style.borderTopWidth || settings.buttonBorderWidth);
+					settings.buttonBorderColor = style.borderTopColor || settings.buttonBorderColor;
+					settings.buttonBorderRadius = style.borderRadius || settings.buttonBorderRadius;
+					settings.buttonBackgroundType = 'classic';
+					settings.buttonBackgroundColor = style.backgroundColor || settings.buttonBackgroundColor;
+					settings.buttonPadding = [style.paddingTop, style.paddingRight, style.paddingBottom, style.paddingLeft].filter((value) => value !== undefined && value !== '').join(' ') || settings.buttonPadding;
+				}
+				['tablet', 'mobile'].forEach((viewport) => {
+					const suffix = viewport[0].toUpperCase() + viewport.slice(1);
+					const responsiveStyle = automaticCompiledNativeSourceStyle(sourceNode, viewport);
+					const responsiveSpacingKeys = ['marginTop', 'marginRight', 'marginBottom', 'marginLeft'];
+					if (type !== 'button') responsiveSpacingKeys.push('paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft');
+					responsiveSpacingKeys.forEach((key) => {
+						if (responsiveStyle[key] !== undefined && responsiveStyle[key] !== '') settings[key + suffix] = String(responsiveStyle[key]);
+					});
+					if (type === 'heading') {
+						settings['headingFontSize' + suffix] = responsiveStyle.fontSize || '';
+						settings['headingLineHeight' + suffix] = responsiveStyle.lineHeight || '';
+						settings['headingLetterSpacing' + suffix] = responsiveStyle.letterSpacing || '';
+						settings['headingWordSpacing' + suffix] = responsiveStyle.wordSpacing || '';
+						settings['headingFontStyle' + suffix] = responsiveStyle.fontStyle || '';
+						settings['headingTextDecoration' + suffix] = responsiveStyle.textDecoration || '';
+						settings['headingTextShadow' + suffix] = responsiveStyle.textShadow || '';
+						settings['align' + suffix] = ['left', 'center', 'right', 'justify'].includes(responsiveStyle.textAlign) ? responsiveStyle.textAlign : '';
+					} else if (type === 'text_editor') {
+						settings['textEditorFontSize' + suffix] = responsiveStyle.fontSize || '';
+						settings['textEditorLineHeight' + suffix] = responsiveStyle.lineHeight || '';
+						settings['textEditorLetterSpacing' + suffix] = responsiveStyle.letterSpacing || '';
+						settings['textEditorWordSpacing' + suffix] = responsiveStyle.wordSpacing || '';
+						settings['textEditorTextTransform' + suffix] = responsiveStyle.textTransform || '';
+						settings['textEditorFontStyle' + suffix] = responsiveStyle.fontStyle || '';
+						settings['textEditorTextDecoration' + suffix] = responsiveStyle.textDecoration || '';
+						settings['textEditorTextShadow' + suffix] = responsiveStyle.textShadow || '';
+						settings['align' + suffix] = ['left', 'center', 'right', 'justify'].includes(responsiveStyle.textAlign) ? responsiveStyle.textAlign : '';
+					} else if (type === 'image') {
+						settings['width' + suffix] = responsiveStyle.width || '';
+						settings['height' + suffix] = responsiveStyle.height || '';
+						settings['maxWidth' + suffix] = responsiveStyle.maxWidth || '';
+						settings['objectFit' + suffix] = ['fill', 'cover', 'contain', 'scale-down'].includes(responsiveStyle.objectFit) ? responsiveStyle.objectFit : '';
+						settings['objectPosition' + suffix] = responsiveStyle.objectPosition || '';
+					}
+					if (type === 'button') {
+						settings['buttonLineHeight' + suffix] = responsiveStyle.lineHeight || '';
+						settings['buttonLetterSpacing' + suffix] = responsiveStyle.letterSpacing || '';
+						settings['buttonWordSpacing' + suffix] = responsiveStyle.wordSpacing || '';
+						settings['buttonPadding' + suffix] = [responsiveStyle.paddingTop, responsiveStyle.paddingRight, responsiveStyle.paddingBottom, responsiveStyle.paddingLeft].filter((value) => value !== undefined && value !== '').join(' ');
+					}
+				});
+				if (isCont(type) || isGrid(type)) {
+					const display = String(style.display || 'block').toLowerCase();
+					if (isCont(type)) {
+						settings.displayType = display === 'grid' ? 'grid' : display === 'flex' || display === 'inline-flex' ? 'flex' : 'block';
+						settings.direction = style.flexDirection || settings.direction;
+						settings.flexWrap = style.flexWrap || settings.flexWrap;
+						settings.gap = style.gap || settings.gap;
+						settings.flexRowGap = style.rowGap || settings.flexRowGap;
+						settings.flexColumnGap = style.columnGap || settings.flexColumnGap;
+					}
+					if (isGrid(type) || settings.displayType === 'grid') {
+						const columns = automaticCompiledNativeInferColumns(sourceNode);
+						settings.columns = columns;
+						settings.gridTemplateColumns = style.gridTemplateColumns && style.gridTemplateColumns !== 'none' ? style.gridTemplateColumns : settings.gridTemplateColumns;
+						settings.columnGap = style.columnGap || settings.columnGap;
+						settings.rowGap = style.rowGap || settings.rowGap;
+					}
+				}
+				automaticCompiledNativeApplySourceStyle(settings, style, type);
+				automaticCompiledNativeApplyPositionedLayerSettings(settings, sourceNode);
+				node.settings = settings;
+				node.label = text ? text.slice(0, 70) : (type + ' · ' + String(sourceNode.tag || 'source'));
+				node.labelSuffix = 'Source ' + String(sourceNode.sourceId);
+				node.sourceId = String(sourceNode.sourceId);
+				node.sourceTag = String(sourceNode.tag || 'div');
+				node.sourceTextContent = text;
+				node.sourceRectByViewport = jclone(sourceNode.rectByViewport || {});
+				node.sourceAttributes = jclone(sourceNode.attributes || []);
+				node.sourceMemberIds = Array.isArray(mappingNode?.memberSourceIds) ? jclone(mappingNode.memberSourceIds) : [];
+				moduleDefinition(type)?.normalize?.(node);
+				return node;
+			}
+			function automaticCompiledNativeEnsureGridColumns(node, count) {
+				const safeCount = Math.max(1, Math.min(12, Number(count) || 1));
+				node.columns = Array.from({ length: safeCount }, (_, index) => ({
+					id: node.columns?.[index]?.id || uid('compiled-cell'),
+					children: [],
+					styleOverrides: {},
+				}));
+				if (node.settings) {
+					node.settings.columns = safeCount;
+					node.settings.gridColumns = safeCount;
+				}
+			}
+			function automaticCompiledNativeSourceColumn(sourceId, parentSourceId, count) {
+				if (count <= 1) return 0;
+				const siblings = automaticCompiledNativeSourceChildren(parentSourceId).map((id) => automaticCompiledNativeFindSourceNode(id)).filter(Boolean);
+				const positions = siblings.map((node) => Number(node.rectByViewport?.desktop?.x)).filter(Number.isFinite).sort((left, right) => left - right);
+				const clusters = [];
+				positions.forEach((position) => { if (!clusters.length || Math.abs(position - clusters[clusters.length - 1]) > 3) clusters.push(position); });
+				const child = automaticCompiledNativeFindSourceNode(sourceId);
+				const x = Number(child?.rectByViewport?.desktop?.x);
+				let closest = 0;
+				let distance = Number.POSITIVE_INFINITY;
+				clusters.forEach((position, index) => { if (Math.abs(x - position) < distance) { closest = index; distance = Math.abs(x - position); } });
+				return Math.max(0, Math.min(count - 1, closest));
+			}
+			function automaticCompiledNativeBuildSourceBlock(sourceId, activePath = new Set()) {
+				const id = String(sourceId);
+				if (activePath.has(id)) return null;
+				const type = automaticCompiledNativeMappingValue(id);
+				const sourceNode = automaticCompiledNativeFindSourceNode(id);
+				if (!type || !sourceNode) return null;
+				const target = automaticCompiledNativeMapWidget(sourceNode, type, automaticCompiledNativeMappingNode(id));
+				if (!target) return null;
+				const nextPath = new Set(activePath);
+				nextPath.add(id);
+				const children = automaticCompiledNativeMappingChildren(id).map((childId) => automaticCompiledNativeBuildSourceBlock(childId, nextPath)).filter(Boolean);
+				if (isGrid(target.type) || (isCont(target.type) && target.settings?.displayType === 'grid')) {
+					const count = automaticCompiledNativeInferColumns(sourceNode);
+					automaticCompiledNativeEnsureGridColumns(target, count);
+					children.forEach((child) => {
+						const childColumn = automaticCompiledNativeSourceColumn(child.sourceId, id, count);
+						target.columns[childColumn].children.push(child);
+					});
+				} else if (isCont(target.type)) {
+					target.children = children;
+				} else if (children.length) {
+					target.sourceChildIds = children.map((child) => child.sourceId);
+				}
+				return target;
+			}
+			function automaticCompiledNativeUniqueNodeId(preferred, used) {
+				let id = String(preferred || uid('compiled'));
+				while (used.has(id)) id = uid('compiled');
+				used.add(id);
+				return id;
+			}
+			function automaticCompiledNativeCollectNodeIds(nodes, used = new Set()) {
+				(nodes || []).forEach((node) => {
+					if (!node || typeof node !== 'object') return;
+					if (node.id) used.add(String(node.id));
+					automaticCompiledNativeCollectNodeIds(node.children, used);
+					(node.columns || []).forEach((column) => automaticCompiledNativeCollectNodeIds(column?.children, used));
+				});
+				return used;
+			}
+			function automaticCompiledNativeSyncTargetRoot(target, section) {
+				const layouts = section?.layoutByViewport || {};
+				const desktop = layouts.desktop || Object.values(layouts)[0] || {};
+				const desiredType = desktop.mode === 'grid' ? 'grid' : 'container';
+				if (target.type !== desiredType) {
+					const replacement = makeNode(desiredType);
+					target = { ...(replacement || {}), ...target, type: desiredType, settings: { ...(replacement?.settings || {}), ...(target.settings || {}) } };
+				}
+				if (!target.settings) target.settings = {};
+				if (desktop.mode === 'flex') target.settings.displayType = 'flex';
+				if (desktop.mode === 'stack') target.settings.displayType = 'block';
+				if (desktop.mode === 'grid') {
+					target.settings.columns = Math.max(1, Number(desktop.columns) || 1);
+					target.settings.gridColumns = target.settings.columns;
+					target.settings.gridTemplateColumns = (desktop.tracks || []).join(' ');
+					automaticCompiledNativeEnsureGridColumns(target, Math.max(...Object.values(layouts).map((layout) => Number(layout?.columns) || 1), target.settings.columns));
+				} else {
+					delete target.columns;
+				}
+				['tablet', 'mobile'].forEach((viewport) => {
+					const layout = layouts[viewport];
+					if (!layout) return;
+					const suffix = viewport[0].toUpperCase() + viewport.slice(1);
+					if (desiredType === 'grid') target.settings['columns' + suffix] = Math.max(1, Number(layout.columns) || 1);
+					if (desiredType === 'container' && desktop.mode === 'flex') {
+						target.settings['direction' + suffix] = target.settings['direction' + suffix] || '';
+						target.settings['flexWrap' + suffix] = target.settings['flexWrap' + suffix] || '';
+					}
+				});
+				return target;
+			}
+			function automaticCompiledNativeBuildTarget() {
+				const state = automaticCompiledNativeState.value;
+				const blueprintSections = automaticCompiledNativeSections.value.filter((section) => section.kind !== 'header' && section.kind !== 'footer' && section.compile !== false);
+				const phoenixNodes = state.phoenixLayout?.nodes || [];
+				const used = automaticCompiledNativeCollectNodeIds(rootNodes.value);
+				const targetNodes = [];
+				const errors = [];
+				const reviewNotes = [];
+				const assetWarnings = [];
+				const pendingAssets = [];
+				const addPendingAsset = (issue) => {
+					const key = [issue.sectionId || '', issue.sourceId || '', issue.reasonCode || issue.code || 'asset-mapping'].join('|');
+					if (pendingAssets.some((item) => [item.sectionId || '', item.sourceId || '', item.reasonCode || item.code || 'asset-mapping'].join('|') === key)) return;
+					const warning = { ...issue, severity: 'warning', blocking: false, surface: 'asset-mapping' };
+					pendingAssets.push(warning);
+					assetWarnings.push(warning);
+				};
+				blueprintSections.forEach((section) => {
+					const sectionId = String(section.sourceId || section.id || '');
+					const mappedRoot = phoenixNodes.find((node) => String(node.sourceSectionId) === sectionId);
+					const representabilityFindings = Array.isArray(mappedRoot?.unsupported) ? mappedRoot.unsupported : [];
+					representabilityFindings.forEach((finding) => {
+						const pendingAsset = finding.code === 'background-image-local-asset';
+						const findingLabel = pendingAsset || finding.blocking === false ? 'Review note' : 'Blocking';
+						const findingSurface = pendingAsset ? ' [asset-mapping]' : (finding.surface ? ` [${finding.surface}]` : '');
+						const issue = {
+							...finding,
+							code: 'target-layout-unsupported',
+							reasonCode: finding.code,
+							sectionId,
+							cssPatch: finding.cssPatch || '',
+							message: `${findingLabel}${findingSurface}: ${finding.message || 'The measured section has a representability finding.'}${pendingAsset ? ' Apply partial will keep the background image pending until its asset is mapped.' : ''}`,
+						};
+						if (pendingAsset) addPendingAsset(issue);
+						else if (finding.blocking === false) reviewNotes.push(issue);
+						else errors.push(issue);
+					});
+					let target = jclone(mappedRoot || makeNode(defaultContainerType()));
+					if (!target) {
+						errors.push({ code: 'target-root-missing', sectionId, message: 'No target layout root was created for this section.' });
+						return;
+					}
+					target = automaticCompiledNativeSyncTargetRoot(target, section);
+					if (automaticCompiledNativeHasPositionedChild(sectionId) && String(target.settings?.position || 'default') === 'default') target.settings.position = 'relative';
+					target.id = automaticCompiledNativeUniqueNodeId(target.id || ('compiled-' + sectionId), used);
+					target.sourceSectionId = sectionId;
+					target.sourceSelector = section.sourceSelector || '';
+					target.children = [];
+					if (Array.isArray(target.columns)) target.columns.forEach((column) => { column.children = []; });
+					const normalized = section.normalizedBlocks || {};
+					const directChildren = Array.isArray(normalized.mappingRoots) && normalized.mappingRoots.length
+						? normalized.mappingRoots.map(String)
+						: automaticCompiledNativeSourceChildren(sectionId);
+					const childTargets = directChildren.map((childId) => automaticCompiledNativeBuildSourceBlock(childId)).filter(Boolean);
+					if (target.type === 'grid' || (isCont(target.type) && target.settings?.displayType === 'grid')) {
+						const count = Math.max(1, Number(target.settings?.columns || target.settings?.gridColumns || 1));
+						automaticCompiledNativeEnsureGridColumns(target, Math.max(count, target.columns?.length || 0));
+						childTargets.forEach((child) => target.columns[automaticCompiledNativeSourceColumn(child.sourceId, sectionId, target.columns.length)].children.push(child));
+					} else {
+						target.children = childTargets;
+					}
+					target.sourceBlockIds = automaticCompiledNativeSectionMappingNodes(section).map((node) => String(node.sourceId));
+					target.sourceBlocks = automaticCompiledNativeSectionMappingNodes(section);
+					targetNodes.push(target);
+				});
+				const mappingErrors = [];
+				blueprintSections.forEach((section) => {
+					const sectionId = String(section.sourceId || section.id || '');
+					automaticCompiledNativeSectionMappingNodes(section).forEach((node) => {
+						const type = automaticCompiledNativeMappingValue(node.sourceId);
+						if (!type || !hasRegisteredWidget(type)) mappingErrors.push({ code: 'widget-mapping-missing', sectionId, sourceId: node.sourceId, message: 'Every source block requires an explicit registered widget.' });
+						if (type === 'image' || type === 'image_box') {
+							const rawImageUrl = automaticCompiledNativeRawSourceUrlForMapping(node);
+							const imageUrl = automaticCompiledNativeSourceUrlForMapping(node);
+							const asset = automaticCompiledNativeAssetForUrl(rawImageUrl);
+							if (!rawImageUrl) addPendingAsset({ code: 'image-source-missing', reasonCode: 'image-source-missing', sectionId, sourceId: node.sourceId, mappingId: asset?.mappingId || '', message: 'Review note [asset-mapping]: The selected image widget has no source URL; Apply partial will use the empty-image placeholder.', remediation: 'Provide an image URL in Canvas after Apply or map a persistent asset.' });
+							else if (!imageUrl || !/^(?:https?:|\/|#|data:image\/)/i.test(imageUrl)) addPendingAsset({ code: 'image-source-needs-asset', reasonCode: 'image-source-needs-asset', sectionId, sourceId: node.sourceId, mappingId: asset?.mappingId || '', sourcePath: asset?.sourcePath || rawImageUrl, message: 'Review note [asset-mapping]: The image source is local to the import package and remains pending asset mapping; Apply partial will use the empty-image placeholder.', remediation: 'Choose a persistent File Manager/public URL now or complete the image in Canvas after Apply.' });
+						}
+					});
+					Object.entries(section.layoutByViewport || {}).forEach(([viewport, layout]) => {
+						if (!layout?.evidence || layout.mode === 'unclassified') {
+							const reasonCode = layout.mode === 'unclassified' ? 'layout-unclassified' : 'layout-evidence-missing';
+							const alreadyReported = errors.some((item) => item.sectionId === sectionId && item.viewport === viewport && item.reasonCode === reasonCode);
+							if (!alreadyReported) mappingErrors.push({ code: 'layout-not-applyable', reasonCode, severity: 'blocking', blocking: true, surface: 'layout', sectionId, viewport, message: `Blocking [layout]: ${layout.diagnostics?.[0]?.message || 'The section layout still needs an explicit valid correction.'}`, remediation: 'Correct the measured layout or provide valid layout evidence before Apply.' });
+						}
+					});
+				});
+				return {
+					nodes: targetNodes,
+					report: {
+						canApply: errors.length === 0 && mappingErrors.length === 0 && targetNodes.length === blueprintSections.length,
+						structuralErrors: [...errors, ...mappingErrors, ...assetWarnings, ...reviewNotes],
+						reviewNotes,
+						assetWarnings,
+						pendingAssets,
+						assetMappings: { ...(state.assetMappings || {}) },
+						mappedBlocks: Object.values(state.mapping || {}).filter(Boolean).length,
+						targetSections: targetNodes.length,
+						canApplyComplete: errors.length === 0 && mappingErrors.length === 0 && pendingAssets.length === 0 && targetNodes.length === blueprintSections.length,
+					},
+				};
+			}
+			function automaticCompiledNativeSourceUrlForMapping(mappingNode) {
+				return automaticCompiledNativeResolvedAssetUrl(automaticCompiledNativeRawSourceUrlForMapping(mappingNode));
+			}
+			function automaticCompiledNativeRawSourceUrlForMapping(mappingNode) {
+				const ids = [mappingNode?.sourceId, ...(Array.isArray(mappingNode?.memberSourceIds) ? mappingNode.memberSourceIds : [])].filter(Boolean).map(String);
+				for (const sourceId of ids) {
+					const source = automaticCompiledNativeFindSourceNode(sourceId);
+					const url = automaticCompiledNativeSourceAttribute(source, 'src');
+					if (url) return url;
+				}
+				return '';
+			}
+			function automaticCompiledNativeCanvasPayload(nodes) {
+				const metadata = ['sourceId', 'sourceTag', 'sourceTextContent', 'sourceRectByViewport', 'sourceAttributes', 'sourceMemberIds', 'sourceSectionId', 'sourceSelector', 'sourceBlockIds', 'sourceBlocks', 'normalizedBlocks', 'layoutByViewport', 'compileStatus', 'unsupported'];
+				return jclone(nodes || []).map((node) => {
+					if (!node || typeof node !== 'object') return node;
+					metadata.forEach((key) => { delete node[key]; });
+					if (Array.isArray(node.children)) node.children = automaticCompiledNativeCanvasPayload(node.children);
+					if (Array.isArray(node.columns)) node.columns = node.columns.map((column) => {
+						const cleanColumn = { ...(column || {}) };
+						delete cleanColumn.sourceBlockIds;
+						cleanColumn.children = automaticCompiledNativeCanvasPayload(column?.children || []);
+						return cleanColumn;
+					});
+					return node;
+				});
+			}
+			function buildAutomaticCompiledNativeTarget() {
+				if (!automaticCompiledNativeMappingComplete.value) {
+					showSaveToast('info', 'Pilih widget secara manual untuk setiap source block terlebih dahulu.');
+					return;
+				}
+				const built = automaticCompiledNativeBuildTarget();
+				automaticCompiledNativeState.value.targetNodes = norm(built.nodes);
+				automaticCompiledNativeState.value.targetReport = built.report;
+				automaticCompiledNativeState.value.stage = 'target';
+			}
+			function applyAutomaticCompiledNativeToCanvas() {
+				const state = automaticCompiledNativeState.value;
+				if (!state.targetReport?.canApply) {
+					showSaveToast('info', 'Target belum boleh diterapkan. Selesaikan mapping atau koreksi yang ditampilkan.');
+					return;
+				}
+				const pendingAssetCount = Array.isArray(state.targetReport.pendingAssets) ? state.targetReport.pendingAssets.length : 0;
+				const target = automaticCompiledNativeCanvasPayload(state.targetNodes || []);
+				if (state.applyMode === 'replace' && rootNodes.value.length && !window.confirm('Replace the current Canvas tree with this compiled layout?')) return;
+				if (state.applyMode === 'replace') rootNodes.value = target;
+				else rootNodes.value = rootNodes.value.concat(target);
+				scheduleSnap();
+				selectedId.value = target.at(-1)?.id || '';
+				saveState.value = 'dirty';
+				saveMsg.value = pendingAssetCount
+					? `Compiled Native partial layout applied. ${pendingAssetCount} asset${pendingAssetCount === 1 ? '' : 's'} still need mapping. Click Save to persist.`
+					: 'Compiled Native layout applied. Click Save to persist.';
+				state.applied = true;
+				state.visible = false;
+				state.stage = 'review';
+				showSaveToast('success', pendingAssetCount
+					? `Compiled Native partial layout berhasil dimasukkan ke Canvas. ${pendingAssetCount} asset masih perlu dipetakan.`
+					: 'Compiled Native layout berhasil dimasukkan ke Canvas. Klik Save untuk menyimpan.');
+			}
+			function overrideAutomaticLayout(sectionId, viewport, patch) {
+				const blueprint = automaticCompiledNativeState.value.layoutBlueprint;
+				const section = blueprint?.sections?.find((item) => String(item.id) === String(sectionId));
+				if (!section) return;
+				if (!section.layoutByViewport) section.layoutByViewport = {};
+				const current = section.layoutByViewport[viewport] || { mode: 'unclassified', columns: 1, tracks: ['1fr'], evidence: {} };
+				const next = { ...current, ...patch, evidence: { ...(current.evidence || {}), rule: 'user.override', rules: ['user.override'], originalRule: current.evidence?.rule || '' } };
+				if (next.mode === 'stack') {
+					next.columns = 1;
+					next.tracks = ['1fr'];
+				}
+				if (Number(next.columns) < 1) next.columns = 1;
+				if (!Array.isArray(next.tracks) || next.tracks.length !== Number(next.columns)) next.tracks = Array.from({ length: Number(next.columns) }, () => '1fr');
+				section.layoutByViewport[viewport] = next;
+				automaticCompiledNativeState.value.corrections.push({ sectionId: String(sectionId), viewport, patch: { ...patch } });
+			}
+			function automaticCompiledNativeOverrideMode(event) {
+				overrideAutomaticLayout(automaticCompiledNativeState.value.selectedSectionId, automaticCompiledNativeState.value.selectedViewport, { mode: event.target.value });
+			}
+			function automaticCompiledNativeOverrideColumns(event) {
+				const columns = Math.max(1, Math.min(12, Number.parseInt(event.target.value, 10) || 1));
+				overrideAutomaticLayout(automaticCompiledNativeState.value.selectedSectionId, automaticCompiledNativeState.value.selectedViewport, { columns });
+			}
+			function automaticCompiledNativeOverrideTracks(event) {
+				const tracks = String(event.target.value || '').trim().split(/\s+/).filter(Boolean);
+				const current = automaticCompiledNativeSelectedLayout.value;
+				if (!tracks.length || tracks.length !== Number(current?.columns || 1)) return;
+				overrideAutomaticLayout(automaticCompiledNativeState.value.selectedSectionId, automaticCompiledNativeState.value.selectedViewport, { tracks });
+			}
+			function automaticCompiledNativeFormatStyle(style) {
+				return JSON.stringify(style || {}, null, 2);
+			}
 			function handlePageSettingsKeydown(event) {
 				if (event.key === 'Escape') closePageSettings();
 			}
@@ -3615,6 +4542,180 @@
 					syncCustomCssEditorScroll();
 				});
 			}
+			function normalizeCustomJsEditorValue(source) {
+				return String(source || '').replace(/\r\n?/g, '\n').trim();
+			}
+			function customJsLines() {
+				return String(customJs.value || '').split('\n');
+			}
+			function customJsByteLength(source) {
+				const value = String(source || '');
+				if (typeof TextEncoder === 'function') return new TextEncoder().encode(value).length;
+				if (typeof Blob === 'function') return new Blob([value]).size;
+				return value.length;
+			}
+			const customJsCharCount = computed(() => String(customJs.value || '').length);
+			const customJsByteCount = computed(() => customJsByteLength(customJs.value));
+			const customJsLineCount = computed(() => customJsLines().length);
+			const customJsLineNumbers = computed(() => Array.from({ length: customJsLineCount.value }, (_, index) => index + 1));
+			const customJsModeLabel = computed(() => customJsModes[customJsMode.value] || customJsModes.disabled);
+			const customJsDirty = computed(() => String(customJs.value || '') !== customJsSavedCode.value || customJsMode.value !== customJsSavedMode.value);
+			const customJsSummary = computed(() => {
+				if (!customJsCharCount.value) return customJsMode.value === 'disabled' ? 'Disabled' : 'No code · Disabled';
+				return customJsModeLabel.value + ' · ' + customJsCharCount.value + ' chars';
+			});
+			const customJsDiagnosticsCount = computed(() => customJsDiagnostics.value.length);
+			const customJsHasBlockingDiagnostic = computed(() => customJsDiagnostics.value.some(item => item.severity === 'blocked'));
+			const customJsBlockedPatterns = [
+				{ key: 'script-wrapper', pattern: /<\s*\/?\s*script\b/i, message: 'Gunakan kode JavaScript saja, tanpa wrapper script.' },
+				{ key: 'external-script', pattern: /<\s*script\b[^>]*\bsrc\s*=|\bsrc\s*=\s*["']https?:/i, message: 'External script tag tidak diperbolehkan pada field ini.' },
+				{ key: 'javascript-url', pattern: /\bjavascript\s*:/i, message: 'javascript URL tidak diperbolehkan.' },
+				{ key: 'eval', pattern: /\beval\s*\(/i, message: 'Dynamic code evaluation diblokir oleh policy.' },
+				{ key: 'new-function', pattern: /\bnew\s+Function\s*\(/i, message: 'Dynamic function constructor diblokir oleh policy.' },
+			];
+			const customJsWarningPatterns = [
+				{ key: 'document.cookie', pattern: /\bdocument\s*\.\s*cookie\b/i, message: 'Kode membaca cookie browser.' },
+				{ key: 'localStorage', pattern: /\blocalStorage\b/i, message: 'Kode mengakses localStorage.' },
+				{ key: 'sessionStorage', pattern: /\bsessionStorage\b/i, message: 'Kode mengakses sessionStorage.' },
+				{ key: 'fetch', pattern: /\bfetch\s*\(/i, message: 'Kode dapat mengirim browser request dengan fetch.' },
+				{ key: 'XMLHttpRequest', pattern: /\bXMLHttpRequest\b/i, message: 'Kode dapat membuat XMLHttpRequest.' },
+				{ key: 'WebSocket', pattern: /\bWebSocket\s*\(/i, message: 'Kode dapat membuka WebSocket.' },
+				{ key: 'window.open', pattern: /\bwindow\s*\.\s*open\s*\(/i, message: 'Kode dapat mencoba membuka window baru.' },
+				{ key: 'form submission', pattern: /\b(?:form|document)\s*\.\s*submit\s*\(|\bsubmit\b/i, message: 'Kode dapat mengirim form browser.' },
+				{ key: 'timers', pattern: /\b(?:setTimeout|setInterval|requestAnimationFrame)\s*\(/i, message: 'Kode menggunakan timer atau animation frame.' },
+				{ key: 'DOM mutation', pattern: /\b(?:appendChild|insertBefore|removeChild|innerHTML|outerHTML|classList)\b/i, message: 'Kode dapat mengubah DOM halaman.' },
+				{ key: 'cross-origin URL', pattern: /https?:\/\//i, message: 'Kode memuat URL absolut yang mungkin lintas origin.' },
+			];
+			function analyzeCustomJavaScript(source = customJs.value) {
+				const value = normalizeCustomJsEditorValue(source);
+				const diagnostics = [];
+				if (!value) {
+					customJsDiagnostics.value = diagnostics;
+					return diagnostics;
+				}
+				if (customJsByteLength(value) > 102400) {
+					diagnostics.push({ severity: 'blocked', key: 'max-size', message: 'Kode melebihi batas 100 KB.' });
+				}
+				customJsBlockedPatterns.forEach(item => {
+					if (item.pattern.test(value)) diagnostics.push({ severity: 'blocked', key: item.key, message: item.message });
+				});
+				customJsWarningPatterns.forEach(item => {
+					if (item.pattern.test(value)) diagnostics.push({ severity: 'warning', key: item.key, message: item.message });
+				});
+				customJsDiagnostics.value = diagnostics.filter((item, index, all) => all.findIndex(candidate => candidate.key === item.key) === index);
+				return customJsDiagnostics.value;
+			}
+			function syncCustomJsEditorScroll() {
+				const textarea = customJsEditorTextarea.value;
+				const gutter = customJsEditorGutter.value;
+				if (textarea && gutter) gutter.scrollTop = textarea.scrollTop;
+			}
+			function customJsLineStartIndex(lineNumber) {
+				const lines = customJsLines();
+				const safeLine = Math.max(1, Math.min(Number(lineNumber) || 1, lines.length));
+				let index = 0;
+				for (let i = 0; i < safeLine - 1; i++) index += lines[i].length + 1;
+				return index;
+			}
+			function customJsLineEndIndex(lineNumber) {
+				const lines = customJsLines();
+				const safeLine = Math.max(1, Math.min(Number(lineNumber) || 1, lines.length));
+				return customJsLineStartIndex(safeLine) + lines[safeLine - 1].length;
+			}
+			function customJsLineFromIndex(index) {
+				return String(customJs.value || '').slice(0, Math.max(0, index)).split('\n').length;
+			}
+			function selectCustomJsRange(start, end, lineNumber) {
+				const textarea = customJsEditorTextarea.value;
+				customJsActiveLine.value = Number(lineNumber) || 0;
+				if (!textarea) return;
+				nextTick(() => {
+					const lineHeight = parseFloat(window.getComputedStyle(textarea).lineHeight) || 21;
+					textarea.focus();
+					textarea.scrollTop = Math.max(0, (customJsActiveLine.value - 1) * lineHeight - (textarea.clientHeight / 2) + (lineHeight * 2));
+					textarea.setSelectionRange(start, Math.max(start, end));
+					syncCustomJsEditorScroll();
+				});
+			}
+			function goToCustomJsLine() {
+				const requested = Number.parseInt(String(customJsGotoLine.value || '').trim(), 10);
+				if (!Number.isFinite(requested) || requested < 1 || requested > customJsLineCount.value) {
+					customJsActiveLine.value = 0;
+					showSaveToast('info', 'Line code tidak ditemukan. Total line: ' + customJsLineCount.value + '.');
+					return;
+				}
+				selectCustomJsRange(customJsLineStartIndex(requested), customJsLineEndIndex(requested), requested);
+			}
+			function searchCustomJsCode() {
+				const query = String(customJsSearchQuery.value || '').trim();
+				if (!query) return;
+				const index = String(customJs.value || '').toLowerCase().indexOf(query.toLowerCase());
+				if (index < 0) {
+					showSaveToast('info', 'Kode tidak ditemukan di Custom JavaScript.');
+					return;
+				}
+				selectCustomJsRange(index, index + query.length, customJsLineFromIndex(index));
+			}
+			function handleCustomJsTab(event) {
+				const textarea = event && event.target;
+				if (!textarea || typeof textarea.selectionStart !== 'number') return;
+				const start = textarea.selectionStart;
+				const end = textarea.selectionEnd;
+				const insert = '  ';
+				customJs.value = String(customJs.value || '').slice(0, start) + insert + String(customJs.value || '').slice(end);
+				nextTick(() => { textarea.selectionStart = textarea.selectionEnd = start + insert.length; });
+			}
+			function onCustomJsModeChange() {
+				if (customJsMode.value === 'published') customJsPublishAcknowledged.value = false;
+				analyzeCustomJavaScript();
+			}
+			function openCustomJsEditor() {
+				closePageSettings();
+				showJsEditor.value = true;
+				customJsPublishAcknowledged.value = false;
+				analyzeCustomJavaScript();
+				nextTick(() => {
+					if (customJsEditorTextarea.value && typeof customJsEditorTextarea.value.focus === 'function') customJsEditorTextarea.value.focus();
+					syncCustomJsEditorScroll();
+				});
+			}
+			function closeCustomJsEditor() {
+				showJsEditor.value = false;
+				jsEditorFullscreen.value = false;
+			}
+			function clearCustomJs() {
+				customJs.value = '';
+				customJsMode.value = 'disabled';
+				customJsPublishAcknowledged.value = false;
+				analyzeCustomJavaScript();
+			}
+			function trapCustomJsModalFocus(event) {
+				if (event.key !== 'Tab' || event.target === customJsEditorTextarea.value) return;
+				const panel = event.currentTarget?.querySelector?.('.pb-js-editor-panel');
+				const focusable = panel ? Array.from(panel.querySelectorAll('button, input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter(element => !element.disabled) : [];
+				if (!focusable.length) return;
+				const currentIndex = focusable.indexOf(document.activeElement);
+				const nextIndex = event.shiftKey
+					? (currentIndex <= 0 ? focusable.length - 1 : currentIndex - 1)
+					: (currentIndex === focusable.length - 1 ? 0 : currentIndex + 1);
+				event.preventDefault();
+				focusable[nextIndex]?.focus();
+			}
+			function applyCustomJsEditorChanges() {
+				customJs.value = normalizeCustomJsEditorValue(customJs.value);
+				const diagnostics = analyzeCustomJavaScript();
+				if (diagnostics.some(item => item.severity === 'blocked')) {
+					showSaveToast('failed', 'Custom JavaScript belum dapat diterapkan. Periksa diagnostic yang diblokir.');
+					return;
+				}
+				if (customJsMode.value === 'published' && !customJsPublishAcknowledged.value) {
+					showSaveToast('info', 'Centang konfirmasi Published frontend sebelum menerapkan kode.');
+					return;
+				}
+				if (!customJs.value) customJsMode.value = 'disabled';
+				closeCustomJsEditor();
+				if (diagnostics.some(item => item.severity === 'warning')) showSaveToast('info', 'Custom JavaScript diterapkan dengan warning. Periksa kembali sebelum Save.');
+			}
 			function initColorisPlugin() {
 				if (typeof window.Coloris !== 'function') return;
 				window.Coloris({
@@ -3634,6 +4735,15 @@
 			watch(customCss, () => {
 				nextTick(syncCustomCssEditorScroll);
 				if (String(customCssSearchQuery.value || '').trim()) scheduleCustomCssSearch(false);
+			});
+			watch(customJs, () => {
+				analyzeCustomJavaScript();
+				nextTick(syncCustomJsEditorScroll);
+				if (customJsDirty.value) saveState.value = 'dirty';
+			});
+			watch(customJsMode, () => {
+				analyzeCustomJavaScript();
+				if (customJsDirty.value) saveState.value = 'dirty';
 			});
 			onMounted(() => {
 				lockWindowScrollPosition();
@@ -7173,12 +8283,18 @@
 					if (normalizedCustomCss.changed) {
 						customCss.value = normalizedCustomCss.value;
 					}
+					const normalizedCustomJs = normalizeCustomJsEditorValue(customJs.value);
+					if (normalizedCustomJs !== customJs.value) customJs.value = normalizedCustomJs;
+					const normalizedCustomJsMode = normalizedCustomJs ? customJsMode.value : 'disabled';
+					if (!normalizedCustomJs) customJsMode.value = 'disabled';
 					const layoutPayload = canonicalLayoutForSave(rootNodes.value);
 					const res = await axios.post(saveUrl.value,
-						{ pageName:pageName.value, pageStatus:pageStatus.value, customCss:normalizedCustomCss.value, layout:layoutPayload },
+						{ pageName:pageName.value, pageStatus:pageStatus.value, customCss:normalizedCustomCss.value, customJs:normalizedCustomJs, customJsMode:normalizedCustomJsMode, layout:layoutPayload },
 						{ headers:{ 'X-CSRF-TOKEN':PBC.csrfToken, 'X-Requested-With':'XMLHttpRequest', Accept:'application/json' } }
 					);
 					legacyMigrationPending.value = false;
+					customJsSavedCode.value = normalizedCustomJs;
+					customJsSavedMode.value = normalizedCustomJsMode;
 					const successMessage = res.data?.message || 'Saved';
 					saveState.value = 'success';
 					closePageSettings();
@@ -7194,63 +8310,6 @@
 					saveMsg.value = normalized.isArray ? normalized.message.join(' | ') : normalized.message;
 					showSaveToast('failed', errorPayload);
 				}
-			}
-
-			function openStaticImport() {
-				if (staticImportBusy.value) return;
-				staticImportInput.value?.click?.();
-			}
-
-			async function importStaticFile(event) {
-				const file = event?.target?.files?.[0];
-				if (!file || staticImportBusy.value || !PBC.staticImportUrl) return;
-				staticImportBusy.value = true;
-				try {
-					const data = new FormData();
-					data.append('source', file);
-					data.append('framework', staticImportFramework.value);
-					const response = await axios.post(PBC.staticImportUrl, data, {
-						headers: {
-							'X-CSRF-TOKEN': PBC.csrfToken,
-							'X-Requested-With': 'XMLHttpRequest',
-							Accept: 'application/json',
-						},
-					});
-					const result = response.data || {};
-					if (!Array.isArray(result.layout)) throw new Error('Import response does not contain a layout.');
-					rootNodes.value = norm(result.layout);
-					customCss.value = String(result.customCss || '');
-					if (result.pageName) pageName.value = String(result.pageName);
-					staticImportReport.value = result.report || null;
-					staticImportPayload.value = result;
-					saveState.value = 'dirty';
-					const warningCount = Array.isArray(result.report?.warnings) ? result.report.warnings.length : 0;
-					showSaveToast(result.status === 'partial' ? 'info' : 'success', result.status === 'partial'
-						? `Static page masuk dengan ${warningCount} warning. Periksa hasil Canvas sebelum Save.`
-						: 'Static page berhasil dikonversi ke Canvas.');
-				} catch (error) {
-					showSaveToast('failed', error.response?.data?.message || error.message || 'Static import gagal.');
-				} finally {
-					staticImportBusy.value = false;
-					if (event?.target) event.target.value = '';
-				}
-			}
-
-			function showStaticImportReport() {
-				const report = staticImportReport.value || {};
-				const warnings = Array.isArray(report.warnings) ? report.warnings.length : 0;
-				showSaveToast('info', `Import report: ${report.mappedNodes || 0} node mapped, ${report.placeholderNodes || 0} placeholder, ${warnings} warning.`);
-			}
-
-			function downloadStaticImportJson() {
-				if (!staticImportPayload.value || typeof URL === 'undefined' || typeof Blob === 'undefined') return;
-				const blob = new Blob([JSON.stringify(staticImportPayload.value, null, 2)], { type: 'application/json' });
-				const url = URL.createObjectURL(blob);
-				const link = document.createElement('a');
-				link.href = url;
-				link.download = 'pagebuilder-v24-static-import.json';
-				link.click();
-				URL.revokeObjectURL(url);
 			}
 
 			const widgetEditorServices = {
@@ -7509,11 +8568,14 @@
 				accordionStyleStates: ACCORDION_STYLE_STATES, accordionBorderTypes: ACCORDION_BORDER_TYPES, accordionGradientTypes: ACCORDION_GRADIENT_TYPES,
 				tabsBreakpointOptions: TABS_WIDGET_BREAKPOINT_OPTIONS, tabsWidthUnits: TABS_WIDGET_WIDTH_UNITS,
 				iconWidgetViewOptions: ICON_WIDGET_VIEW_OPTIONS, iconWidgetShapeOptions: ICON_WIDGET_SHAPE_OPTIONS,
-				pageName, pageStatus, customCss, dynamicPreviewContext, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
-				staticImportInput, staticImportBusy, staticImportReport, staticImportPayload, staticImportFramework, openStaticImport, importStaticFile, showStaticImportReport, downloadStaticImportJson,
+				pageName, pageStatus, customCss, customJs, customJsMode, customJsDiagnostics, customJsDirty, dynamicPreviewContext, customCssEditorTextarea, customCssEditorGutter, showCssEditor, cssEditorFullscreen,
+				automaticCompiledNativeFileInput, automaticCompiledNativeState, automaticCompiledNativeSections, automaticCompiledNativeMappableSections, automaticCompiledNativeSelectedSection, automaticCompiledNativeSelectedLayout, automaticCompiledNativeSelectedSourceNode, automaticCompiledNativeSelectedSourceBlocks, automaticCompiledNativeSelectedMappingRows, automaticCompiledNativeSelectedMappingBlock, automaticCompiledNativeWidgetOptions, automaticCompiledNativeMappingComplete, automaticCompiledNativeMissingBlockCount, automaticCompiledNativeMappedBlockCount, automaticCompiledNativeSourceBlockCount, automaticCompiledNativeTargetPreview, automaticCompiledNativeTargetReport, automaticCompiledNativeReviewCssNotes, automaticCompiledNativeLocalAssets, automaticCompiledNativePendingAssetCount, automaticCompiledNativeApplyLabel, automaticCompiledNativeCanCompile, automaticCompiledNativeSourceDoc,
+				openAutomaticCompiledNativeImport, closeAutomaticCompiledNativeImport, onAutomaticCompiledNativeFileChange, analyzeAutomaticCompiledNative, onAutomaticCompiledNativeFrameworkChange, startAutomaticCompiledNativeMapping, backToAutomaticCompiledNativeReview, backToAutomaticCompiledNativeMapping, selectAutomaticCompiledNativeSection, selectAutomaticCompiledNativeMappingBlock, toggleAutomaticCompiledNativeMappingNode, automaticCompiledNativeMappingValue, setAutomaticCompiledNativeWidget, setAutomaticCompiledNativeAssetMapping, overrideAutomaticLayout, automaticCompiledNativeOverrideMode, automaticCompiledNativeOverrideColumns, automaticCompiledNativeOverrideTracks, automaticCompiledNativeFindSourceNode, automaticCompiledNativeSourceStyle, automaticCompiledNativeFormatStyle, buildAutomaticCompiledNativeTarget, applyAutomaticCompiledNativeToCanvas,
 				showTextEditorModal, textEditorModalFullscreen, textEditorModalSummary, setTextEditorHtml, openTextEditorModal, closeTextEditorModal,
 				customCssGotoLine, customCssSearchQuery, customCssActiveLine, customCssCharCount, customCssLineCount, customCssLineNumbers, customCssSummary,
 				openCustomCssEditor, closeCustomCssEditor, applyCustomCssEditorChanges, clearCustomCss, handleCustomCssTab, syncCustomCssEditorScroll, goToCustomCssLine, searchCustomCssCode, savePage, saveState, saveMsg,
+				showJsEditor, jsEditorFullscreen, customJsPublishAcknowledged, customJsEditorTextarea, customJsEditorGutter, customJsGotoLine, customJsSearchQuery, customJsActiveLine, customJsCharCount, customJsByteCount, customJsLineCount, customJsLineNumbers, customJsSummary, customJsModeLabel, customJsDiagnosticsCount, customJsHasBlockingDiagnostic,
+				openCustomJsEditor, closeCustomJsEditor, applyCustomJsEditorChanges, clearCustomJs, handleCustomJsTab, syncCustomJsEditorScroll, goToCustomJsLine, searchCustomJsCode, analyzeCustomJavaScript, onCustomJsModeChange, trapCustomJsModalFocus,
 				toastVisible, responseStatusToast, isArrayMessageAfterSubmit, responseMessageAfterSubmit, closeToast, showUnsupportedControlNotice,
 				setToolboxDragData, onDragStart, onDragEnd, canMoveCanvasNode, startContainerEdgeResize,
 				onAddCol, onAddContainer, onRootAdd,
@@ -7525,7 +8587,6 @@
 
 		template: `
 		<div class="builder-app" @click="closePageSettings" @click.capture="closeContextMenuFromOutside" @keydown.esc.window="closeContextMenu">
-		<input ref="staticImportInput" type="file" accept=".html,.htm,.zip,text/html,application/zip" class="d-none" @change="importStaticFile">
 	<header class="topbar">
 		<div class="topbar-left">
 			<div class="brand-lockup">
@@ -7551,6 +8612,10 @@
 								<div><span>Custom CSS</span><small>{{ customCssSummary }}</small></div>
 								<button type="button" @click="openCustomCssEditor"><i class="bi bi-code-slash"></i>Open editor</button>
 							</div>
+							<div class="page-settings-javascript">
+								<div><span>Custom JavaScript</span><small>{{ customJsSummary }}<em v-if="customJsDirty"> · Unsaved changes</em></small></div>
+								<button type="button" @click="openCustomJsEditor"><i class="bi bi-filetype-js"></i>Open editor</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -7575,10 +8640,7 @@
 				<button class="icon-btn" :disabled="!canUndo" @click="undo" title="Undo"><i class="bi bi-arrow-counterclockwise"></i></button>
 				<button class="icon-btn" :disabled="!canRedo" @click="redo" title="Redo"><i class="bi bi-arrow-clockwise"></i></button>
 			</div>
-			<button class="top-action" :disabled="staticImportBusy" @click="openStaticImport"><i class="bi bi-file-earmark-arrow-up me-1"></i>{{ staticImportBusy ? 'Importing' : 'Import Static' }}</button>
-			<select v-model="staticImportFramework" class="pb-select pb-import-framework" aria-label="Static import framework" title="Static import framework"><option value="auto">Auto</option><option value="bootstrap5">Bootstrap 5</option><option value="tailwind">Tailwind</option></select>
-			<button v-if="staticImportReport" class="top-action" @click.stop="showStaticImportReport" title="Import report"><i class="bi bi-info-circle me-1"></i>Report</button>
-			<button v-if="staticImportPayload" class="top-action" @click.stop="downloadStaticImportJson" title="Download imported JSON"><i class="bi bi-filetype-json me-1"></i>JSON</button>
+			<button class="top-action automatic-compiled-native-trigger" @click.stop="openAutomaticCompiledNativeImport"><i class="bi bi-file-earmark-code me-1"></i>Compiled Native</button>
 			<button class="top-action" @click="previewMode = !previewMode"><i class="bi me-1" :class="previewMode ? 'bi-layout-sidebar-inset' : 'bi-play-circle'"></i>{{ previewMode ? 'Editor' : 'Preview' }}</button>
 			<button class="top-action primary" :class="{ 'is-loading': saveState==='saving' }" :disabled="saveState==='saving'" @click="savePage">
 				<span v-if="saveState==='saving'" class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
@@ -7923,6 +8985,91 @@
 	<div v-if="containerResizeOverlay.visible" class="pb-container-resize-overlay" :style="{ left: containerResizeOverlay.x + 'px', top: containerResizeOverlay.y + 'px' }">{{ containerResizeOverlay.text }}</div>
 
 	<teleport to="body">
+		<div v-if="automaticCompiledNativeState.visible" class="pb-automatic-compiled-native-modal" role="dialog" aria-modal="true" aria-labelledby="pb-automatic-compiled-native-title" @click.self="closeAutomaticCompiledNativeImport" @keydown.esc="closeAutomaticCompiledNativeImport">
+			<input ref="automaticCompiledNativeFileInput" class="pb-automatic-compiled-native-file-input" type="file" accept=".html,.htm,.zip,text/html,application/zip" @change="onAutomaticCompiledNativeFileChange">
+			<div class="pb-automatic-compiled-native-panel">
+				<header class="pb-automatic-compiled-native-header">
+					<div>
+						<span class="pb-automatic-compiled-native-eyebrow">MEASUREMENT-DRIVEN IMPORT</span>
+						<h2 id="pb-automatic-compiled-native-title">Compiled Native layout analyzer</h2>
+						<p>Source CSS diukur pada browser terisolasi. Tidak ada widget atau layout yang dipilih diam-diam.</p>
+					</div>
+					<div class="pb-automatic-compiled-native-header-actions">
+						<span v-if="automaticCompiledNativeState.status==='loading'" class="pb-automatic-compiled-native-status is-loading"><i class="bi bi-arrow-repeat"></i> Measuring…</span>
+						<span v-else-if="automaticCompiledNativeState.status==='ready'" class="pb-automatic-compiled-native-status is-ready"><i class="bi bi-check-circle"></i> Measurement ready</span>
+						<button type="button" class="pb-automatic-compiled-native-close" title="Close" @click="closeAutomaticCompiledNativeImport"><i class="bi bi-x-lg"></i></button>
+					</div>
+				</header>
+
+				<div v-if="automaticCompiledNativeState.status==='idle'" class="pb-automatic-compiled-native-empty">
+					<i class="bi bi-file-earmark-code"></i>
+					<strong>Choose an HTML, HTM, or ZIP source</strong>
+					<span>Framework CSS akan dikumpulkan terlebih dahulu, lalu source diukur pada desktop, tablet, dan mobile.</span>
+					<button type="button" class="pb-automatic-compiled-native-primary" @click="automaticCompiledNativeFileInput?.click()"><i class="bi bi-upload"></i> Choose source</button>
+				</div>
+				<div v-else-if="automaticCompiledNativeState.status==='loading'" class="pb-automatic-compiled-native-loading">
+					<div class="pb-automatic-compiled-native-spinner" aria-hidden="true"></div>
+					<strong>Measuring source layout…</strong>
+					<span>{{ automaticCompiledNativeState.fileName }}</span>
+				</div>
+				<div v-else-if="automaticCompiledNativeState.status==='error'" class="pb-automatic-compiled-native-error" role="alert">
+					<i class="bi bi-exclamation-triangle"></i><strong>Analysis failed</strong><span>{{ automaticCompiledNativeState.error }}</span>
+					<button type="button" class="pb-automatic-compiled-native-primary" @click="automaticCompiledNativeFileInput?.click()">Choose another source</button>
+				</div>
+				<template v-else>
+					<template v-if="automaticCompiledNativeState.stage==='review'">
+					<div class="pb-automatic-compiled-native-toolbar">
+						<div class="pb-automatic-compiled-native-file-meta"><i class="bi bi-file-earmark-code"></i><div><strong>{{ automaticCompiledNativeState.fileName }}</strong><small>{{ automaticCompiledNativeState.source?.entry }} · {{ automaticCompiledNativeState.source?.framework }}</small></div></div>
+						<div class="pb-automatic-compiled-native-toolbar-actions"><label>CSS universe<select v-model="automaticCompiledNativeState.framework" aria-label="CSS framework" @change="onAutomaticCompiledNativeFrameworkChange"><option value="auto">Auto detect</option><option value="plain_css">Plain CSS</option><option value="tailwind">Tailwind static</option><option value="bootstrap5">Bootstrap 5 CSS</option></select></label><button type="button" class="pb-automatic-compiled-native-secondary" @click="automaticCompiledNativeFileInput?.click()"><i class="bi bi-arrow-repeat"></i> Analyze another</button></div>
+					</div>
+					<div class="pb-automatic-compiled-native-body">
+						<aside class="pb-automatic-compiled-native-sections" aria-label="Detected source sections">
+							<div class="pb-automatic-compiled-native-panel-label"><span>Source sections</span><strong>{{ automaticCompiledNativeSections.length }}</strong></div>
+							<button v-for="section in automaticCompiledNativeSections" :key="'auto-cn-section-'+section.id" type="button" class="pb-automatic-compiled-native-section-item" :class="{ active: String(automaticCompiledNativeState.selectedSectionId)===String(section.id) }" @click="selectAutomaticCompiledNativeSection(section)">
+								<span class="pb-automatic-compiled-native-section-kind">{{ section.kind }}</span><strong>{{ section.label || section.id }}</strong><small>{{ Math.round(Number(section.boundaryConfidence || 0) * 100) }}% boundary confidence</small>
+								<span v-if="section.diagnostics?.length" class="pb-automatic-compiled-native-warning"><i class="bi bi-exclamation-triangle"></i>{{ section.diagnostics.length }}</span>
+							</button>
+						</aside>
+						<section class="pb-automatic-compiled-native-preview" aria-label="Source preview">
+							<div class="pb-automatic-compiled-native-panel-label"><span>Source preview</span><small>{{ automaticCompiledNativeSelectedSection?.sourceSelector || 'Full source' }}</small></div>
+							<div class="pb-automatic-compiled-native-iframe-shell"><iframe :srcdoc="automaticCompiledNativeSourceDoc" title="Isolated imported source preview" sandbox=""></iframe></div>
+						</section>
+						<aside class="pb-automatic-compiled-native-inspector" aria-label="Measured layout evidence">
+							<div class="pb-automatic-compiled-native-inspector-heading"><div><span class="pb-automatic-compiled-native-panel-label">Measured layout</span><strong>{{ automaticCompiledNativeSelectedSection?.label || 'Select a section' }}</strong></div><select v-model="automaticCompiledNativeState.selectedViewport" aria-label="Measurement viewport"><option v-for="viewport in automaticCompiledNativeState.viewports" :key="'auto-cn-viewport-'+viewport.name" :value="viewport.name">{{ viewport.name }} · {{ viewport.width }}px</option></select></div>
+							<div v-if="automaticCompiledNativeSelectedLayout" class="pb-automatic-compiled-native-layout-card">
+								<div class="pb-automatic-compiled-native-metric-row"><span>Mode</span><select :value="automaticCompiledNativeSelectedLayout.mode" @change="automaticCompiledNativeOverrideMode"><option value="stack">Stack</option><option value="flex">Flex</option><option value="grid">Grid</option><option value="unclassified">Unclassified</option></select></div>
+								<div class="pb-automatic-compiled-native-metric-grid"><label>Columns<input type="number" min="1" max="12" :value="automaticCompiledNativeSelectedLayout.columns" @change="automaticCompiledNativeOverrideColumns"></label><div><span>Confidence</span><strong>{{ Math.round(Number(automaticCompiledNativeSelectedLayout.confidence || 0) * 100) }}%</strong></div></div>
+								<label class="pb-automatic-compiled-native-track-field">Tracks<input type="text" :value="(automaticCompiledNativeSelectedLayout.tracks || []).join(' ')" @change="automaticCompiledNativeOverrideTracks"><small>Space-separated CSS track values; count must match columns.</small></label>
+								<div class="pb-automatic-compiled-native-facts"><span>Gap <strong>{{ automaticCompiledNativeSelectedLayout.gap || '0' }}</strong></span><span>Rule <strong>{{ automaticCompiledNativeSelectedLayout.evidence?.rule || '—' }}</strong></span></div>
+							</div>
+							<div v-else class="pb-automatic-compiled-native-inspector-empty">No layout evidence for this section.</div>
+							<details v-if="automaticCompiledNativeSelectedLayout?.evidence" class="pb-automatic-compiled-native-evidence" open><summary>Decision evidence</summary><div class="pb-automatic-compiled-native-rule-list"><span v-for="rule in (automaticCompiledNativeSelectedLayout.evidence.rules || [])" :key="rule"><i class="bi bi-check2"></i>{{ rule }}</span></div><pre>{{ automaticCompiledNativeFormatStyle(automaticCompiledNativeSelectedLayout.evidence.computedStyle) }}</pre></details>
+							<details v-if="automaticCompiledNativeSelectedSourceNode" class="pb-automatic-compiled-native-evidence"><summary>Source box model</summary><pre>{{ automaticCompiledNativeFormatStyle(automaticCompiledNativeSelectedSourceNode.computedStyleByViewport?.[automaticCompiledNativeState.selectedViewport] || automaticCompiledNativeSelectedSourceNode.computedStyle) }}</pre></details>
+							<div v-if="automaticCompiledNativeSelectedLayout?.diagnostics?.length" class="pb-automatic-compiled-native-diagnostics"><strong><i class="bi bi-exclamation-triangle"></i> Diagnostics</strong><span v-for="diagnostic in automaticCompiledNativeSelectedLayout.diagnostics" :key="diagnostic.code">{{ diagnostic.message }}</span></div>
+						</aside>
+					</div>
+					<footer class="pb-automatic-compiled-native-footer"><div><span v-if="automaticCompiledNativeState.corrections.length">{{ automaticCompiledNativeState.corrections.length }} explicit correction(s) recorded</span><span v-else>Automatic decisions remain reviewable and traceable.</span></div><div class="pb-automatic-compiled-native-footer-actions"><span class="pb-automatic-compiled-native-blocked"><i class="bi bi-hand-index"></i> Widget choice is manual</span><button type="button" class="pb-automatic-compiled-native-primary" @click="startAutomaticCompiledNativeMapping">Continue to widget mapping</button><button type="button" class="pb-automatic-compiled-native-secondary" @click="closeAutomaticCompiledNativeImport">Close review</button></div></footer>
+					</template>
+					<template v-else-if="automaticCompiledNativeState.stage==='mapping'">
+						<div class="pb-automatic-compiled-native-mapping">
+							<aside class="pb-automatic-compiled-native-mapping-sections"><div class="pb-automatic-compiled-native-panel-label"><span>Sections to map</span><strong>{{ automaticCompiledNativeMappableSections.length }}</strong></div><template v-for="section in automaticCompiledNativeMappableSections" :key="'auto-cn-map-section-'+section.id"><button type="button" class="pb-automatic-compiled-native-map-section" :class="{ active: String(automaticCompiledNativeState.selectedSectionId)===String(section.id) }" @click="selectAutomaticCompiledNativeSection(section)"><strong>{{ section.label || section.id }}</strong><small>{{ automaticCompiledNativeSourceBlockCount(section) }} visual blocks</small></button></template></aside>
+							<section class="pb-automatic-compiled-native-mapping-source-preview"><div class="pb-automatic-compiled-native-panel-label"><span>Source preview</span><small>{{ automaticCompiledNativeSelectedSection?.sourceSelector || 'Full source' }}</small></div><div class="pb-automatic-compiled-native-iframe-shell"><iframe :srcdoc="automaticCompiledNativeSourceDoc" title="Isolated normalized source preview" sandbox=""></iframe></div><div v-if="automaticCompiledNativeSelectedMappingBlock" class="pb-automatic-compiled-native-selection-summary"><span>Selected visual block</span><strong>{{ automaticCompiledNativeSelectedMappingBlock.id || automaticCompiledNativeSelectedMappingBlock.sourceId }}</strong><small>{{ automaticCompiledNativeSelectedMappingBlock.mappingRole }} · {{ automaticCompiledNativeSelectedMappingBlock.mappingKind }}</small></div></section>
+							<section class="pb-automatic-compiled-native-mapping-content"><div class="pb-automatic-compiled-native-mapping-heading"><div><span class="pb-automatic-compiled-native-eyebrow">MANUAL TARGET SELECTION</span><h3>{{ automaticCompiledNativeSelectedSection?.label || 'Section' }}</h3><p>Mapping unit mengikuti struktur visual; inline member tetap berada di dalam parent.</p></div><div class="pb-automatic-compiled-native-root-layout"><span>Root layout</span><strong>{{ automaticCompiledNativeSelectedLayout?.mode || '—' }} · {{ automaticCompiledNativeSelectedLayout?.columns || 1 }} col</strong></div></div><div v-if="automaticCompiledNativeSelectedMappingRows.length" class="pb-automatic-compiled-native-source-block-list"><article v-for="block in automaticCompiledNativeSelectedMappingRows" :key="'auto-cn-block-'+block.sourceId" class="pb-automatic-compiled-native-source-block" :class="{ active: String(automaticCompiledNativeState.selectedMappingBlockId)===String(block.sourceId) }" :style="{ '--pb-map-depth': block.depth }" @click="selectAutomaticCompiledNativeMappingBlock(block)"><div class="pb-automatic-compiled-native-source-block-copy"><div class="pb-automatic-compiled-native-source-block-meta"><button v-if="block.hasMappingChildren" type="button" class="pb-automatic-compiled-native-tree-toggle" :aria-expanded="block.expanded ? 'true' : 'false'" :title="block.expanded ? 'Collapse nested blocks' : 'Expand nested blocks'" @click.stop="toggleAutomaticCompiledNativeMappingNode(block)">{{ block.expanded ? '−' : '+' }}</button><span class="pb-automatic-compiled-native-source-tag">{{ block.mappingRole || 'content' }} · {{ block.tag }}</span></div><strong>{{ block.id || block.sourceId }}</strong><p v-if="block.mappingRole === 'content' || block.mappingRole === 'composite'">{{ block.textSummary || 'No text content · inspect source HTML' }}</p><small v-else>{{ block.childMappingIds?.length || 0 }} nested block(s) · {{ block.memberSourceIds?.length || 0 }} inline/raw member(s)</small><div v-if="block.candidateWidgets?.length" class="pb-automatic-compiled-native-suggestion"><span>Suggested: {{ block.candidateWidgets[0].type }} · {{ Math.round(Number(block.candidateWidgets[0].score || 0) * 100) }}%</span><small>{{ (block.candidateWidgets[0].reasons || []).join(' · ') }}</small></div></div><label class="pb-automatic-compiled-native-widget-select"><span>Target widget</span><select :value="automaticCompiledNativeMappingValue(block.sourceId)" @change="setAutomaticCompiledNativeWidget(block.sourceId, $event)"><option value="">Select widget manually</option><option v-for="option in automaticCompiledNativeWidgetOptions" :key="'auto-cn-option-'+option.type" :value="option.type">{{ option.label }} · {{ option.group }}</option></select></label><details v-if="block.memberSourceIds?.length" class="pb-automatic-compiled-native-raw-details" @click.stop><summary>Raw DOM details ({{ block.memberSourceIds.length }} member(s))</summary><ul><li v-for="memberId in block.memberSourceIds" :key="'auto-cn-member-'+block.sourceId+'-'+memberId"><code>{{ memberId }}</code> · {{ automaticCompiledNativeFindSourceNode(memberId)?.tag || 'node' }}<span v-if="automaticCompiledNativeFindSourceNode(memberId)?.textContent"> · {{ automaticCompiledNativeFindSourceNode(memberId).textContent.slice(0, 90) }}</span></li></ul></details></article></div><div v-else class="pb-automatic-compiled-native-inspector-empty">Section ini tidak memiliki visual mapping block yang dapat dipetakan.</div><div v-if="automaticCompiledNativeSelectedMappingBlock" class="pb-automatic-compiled-native-block-style-inspector"><div class="pb-automatic-compiled-native-block-style-heading"><div><span class="pb-automatic-compiled-native-eyebrow">BLOCK EVIDENCE</span><strong>{{ automaticCompiledNativeSelectedMappingBlock.id || automaticCompiledNativeSelectedMappingBlock.sourceId }}</strong></div><span>{{ automaticCompiledNativeSelectedMappingBlock.mappingRole }} · {{ automaticCompiledNativeSelectedMappingBlock.mappingKind }}</span></div><div class="pb-automatic-compiled-native-block-style-facts"><span>Tag <strong>{{ automaticCompiledNativeSelectedMappingBlock.tag }}</strong></span><span>Children <strong>{{ automaticCompiledNativeSelectedMappingBlock.childMappingIds?.length || 0 }}</strong></span><span>Members <strong>{{ automaticCompiledNativeSelectedMappingBlock.memberSourceIds?.length || 0 }}</strong></span></div><details open><summary>Computed style · {{ automaticCompiledNativeState.selectedViewport }}</summary><pre>{{ automaticCompiledNativeFormatStyle(automaticCompiledNativeSourceStyle(automaticCompiledNativeSelectedMappingBlock, automaticCompiledNativeState.selectedViewport)) }}</pre></details><details><summary>Raw HTML / attributes</summary><div class="pb-automatic-compiled-native-raw-html">{{ automaticCompiledNativeSelectedMappingBlock.innerHTML || '(empty)' }}</div><pre>{{ automaticCompiledNativeFormatStyle(automaticCompiledNativeSelectedMappingBlock.attributes || []) }}</pre></details></div></section>
+						</div>
+						<footer class="pb-automatic-compiled-native-footer"><div><span>{{ automaticCompiledNativeMappedBlockCount }} mapped block(s)</span><span v-if="automaticCompiledNativeMissingBlockCount"> · {{ automaticCompiledNativeMissingBlockCount }} block(s) still need a widget</span></div><div class="pb-automatic-compiled-native-footer-actions"><button type="button" class="pb-automatic-compiled-native-secondary" @click="backToAutomaticCompiledNativeReview">Back to layout review</button><button type="button" class="pb-automatic-compiled-native-primary" :class="{ 'is-validation-blocked': automaticCompiledNativeMissingBlockCount > 0 }" :aria-disabled="automaticCompiledNativeMissingBlockCount > 0" :title="automaticCompiledNativeMissingBlockCount ? 'Choose a registered widget for every source block before preview.' : 'Preview the generated target.'" @click="buildAutomaticCompiledNativeTarget">Preview target</button></div></footer>
+					</template>
+					<template v-else>
+						<div v-if="automaticCompiledNativeReviewCssNotes.length" class="pb-automatic-compiled-native-residual-css"><strong>Scoped Custom CSS review</strong><p>These patches preserve residual visual styles. Review them before copying to Custom CSS; they are never sent to Custom JavaScript.</p><pre v-for="note in automaticCompiledNativeReviewCssNotes" :key="note.reasonCode+'-'+note.sectionId">{{ note.cssPatch }}</pre></div>
+						<div v-if="automaticCompiledNativeLocalAssets.length" class="pb-automatic-compiled-native-asset-mappings"><strong>Local asset mapping</strong><p>Choose or paste a persistent File Manager/public URL before Apply.</p><label v-for="asset in automaticCompiledNativeLocalAssets" :key="asset.mappingId"><span>{{ asset.sourcePath }}</span><input type="url" :value="automaticCompiledNativeState.assetMappings[asset.mappingId] || ''" placeholder="/storage/... or https://..." @input="setAutomaticCompiledNativeAssetMapping(asset.mappingId, $event)"></label></div>
+						<div class="pb-automatic-compiled-native-target-preview"><div class="pb-automatic-compiled-native-target-heading"><div><span class="pb-automatic-compiled-native-eyebrow">TARGET BLUEPRINT</span><h3>Canvas preview before Apply</h3><p>Node target dibuat dari widget yang Anda pilih. Canvas belum berubah.</p></div><label>Canvas action<select v-model="automaticCompiledNativeState.applyMode"><option value="append">Add to current Canvas</option><option value="replace">Replace current Canvas</option></select></label></div><div v-if="automaticCompiledNativeTargetPreview.length" class="pb-automatic-compiled-native-target-list"><article v-for="node in automaticCompiledNativeTargetPreview" :key="'auto-cn-target-'+node.id" class="pb-automatic-compiled-native-target-card"><header><div><strong>{{ node.label }}</strong><small>{{ node.type }} · {{ node.settings?.displayType || (isGrid(node.type) ? 'grid' : 'layout') }} · source {{ node.sourceSectionId }}</small></div><span>{{ node.settings?.columns || node.settings?.gridColumns || (node.children || []).length || 1 }} columns</span></header><div v-if="node.columns" class="pb-automatic-compiled-native-target-columns"><div v-for="(column, index) in node.columns" :key="column.id" class="pb-automatic-compiled-native-target-column"><span>Column {{ index + 1 }}</span><div v-for="child in column.children" :key="child.id" class="pb-automatic-compiled-native-target-widget"><i class="bi bi-box"></i>{{ child.type }} <small>{{ child.sourceId }}</small></div></div></div><div v-else class="pb-automatic-compiled-native-target-columns is-flow"><div v-for="child in (node.children || [])" :key="child.id" class="pb-automatic-compiled-native-target-widget"><i class="bi bi-box"></i>{{ child.type }} <small>{{ child.sourceId }}</small></div></div></article></div><div v-else class="pb-automatic-compiled-native-inspector-empty">Target belum terbentuk.</div><details class="pb-automatic-compiled-native-target-report" open><summary>Pre-apply validation</summary><div class="pb-automatic-compiled-native-target-report-grid"><span>Mapped blocks <strong>{{ automaticCompiledNativeTargetReport.mappedBlocks }}</strong></span><span>Target sections <strong>{{ automaticCompiledNativeTargetReport.targetSections }}</strong></span><span :class="automaticCompiledNativeTargetReport.canApply ? 'is-valid' : 'is-blocked'">{{ automaticCompiledNativeTargetReport.canApply ? (automaticCompiledNativePendingAssetCount ? 'Ready for partial apply' : 'Ready to apply') : 'Blocked' }}</span><span v-if="automaticCompiledNativePendingAssetCount" class="is-partial">{{ automaticCompiledNativePendingAssetCount }} asset(s) pending</span></div><ul v-if="automaticCompiledNativeTargetReport.structuralErrors?.length"><li v-for="error in automaticCompiledNativeTargetReport.structuralErrors" :key="error.code+'-'+(error.sourceId || '')+'-'+(error.viewport || '')">{{ error.message }} <small>{{ error.sourceId || error.sectionId || '' }} {{ error.viewport || '' }}</small></li></ul></details></div>
+						<footer class="pb-automatic-compiled-native-footer"><div><span v-if="automaticCompiledNativePendingAssetCount" class="pb-automatic-compiled-native-partial"><i class="bi bi-exclamation-circle"></i> Ready for partial apply · {{ automaticCompiledNativePendingAssetCount }} asset(s) pending</span><span v-else-if="automaticCompiledNativeTargetReport.canApply" class="pb-automatic-compiled-native-ready"><i class="bi bi-check-circle"></i> Target passed structural validation</span><span v-else class="pb-automatic-compiled-native-blocked"><i class="bi bi-lock"></i> Apply blocked until validation passes</span></div><div class="pb-automatic-compiled-native-footer-actions"><button type="button" class="pb-automatic-compiled-native-secondary" @click="backToAutomaticCompiledNativeMapping">Back to mapping</button><button type="button" class="pb-automatic-compiled-native-primary" :disabled="!automaticCompiledNativeCanCompile" :title="automaticCompiledNativePendingAssetCount ? 'Apply layout now; map pending assets later.' : 'Apply target to Canvas.'" @click="applyAutomaticCompiledNativeToCanvas">{{ automaticCompiledNativeApplyLabel }}</button></div></footer>
+					</template>
+				</template>
+			</div>
+		</div>
+	</teleport>
+
+	<teleport to="body">
 		<div v-if="showCssEditor" class="pb-css-editor-modal" @click.self="closeCustomCssEditor">
 			<div class="pb-css-editor-panel" :class="{ fullscreen: cssEditorFullscreen }">
 				<div class="pb-css-editor-header">
@@ -7937,7 +9084,7 @@
 				<div class="pb-css-editor-body">
 					<div class="pb-css-editor-hint">
 						<i class="fas fa-info-circle"></i>
-						<span>Tulis CSS kustom di sini. Gunakan <code>.class-name</code> atau <code>#id-name</code> dari field CSS ID / CSS Class pada widget, column, atau container.</span>
+						<div><span>Tulis CSS kustom di sini. Gunakan <code>.class-name</code> atau <code>#id-name</code> dari field CSS ID / CSS Class pada widget, column, atau container.</span></div>
 					</div>
 					<div class="pb-css-editor-toolbar">
 						<form class="pb-css-editor-tool" @submit.prevent="goToCustomCssLine">
@@ -7988,6 +9135,69 @@
 					<div class="pb-css-editor-footer-actions">
 						<button type="button" class="pb-css-editor-btn danger" @click="clearCustomCss"><i class="fas fa-trash"></i> Clear</button>
 						<button type="button" class="pb-css-editor-btn primary" @click="applyCustomCssEditorChanges"><i class="fas fa-check"></i> Apply & Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</teleport>
+
+	<teleport to="body">
+		<div v-if="showJsEditor" class="pb-js-editor-modal" role="dialog" aria-modal="true" aria-labelledby="pb-js-editor-title" @click.self="closeCustomJsEditor" @keydown.esc="closeCustomJsEditor" @keydown="trapCustomJsModalFocus">
+			<div class="pb-js-editor-panel" :class="{ fullscreen: jsEditorFullscreen }">
+				<div class="pb-js-editor-header">
+					<div class="pb-js-editor-title" id="pb-js-editor-title"><i class="bi bi-filetype-js"></i><span>Custom JavaScript Editor</span></div>
+					<div class="pb-js-editor-actions">
+						<button type="button" class="pb-js-editor-icon-btn" :title="jsEditorFullscreen ? 'Exit fullscreen' : 'Fullscreen'" @click="jsEditorFullscreen = !jsEditorFullscreen">
+							<i class="fas" :class="jsEditorFullscreen ? 'fa-compress' : 'fa-expand'"></i>
+						</button>
+						<button type="button" class="pb-js-editor-icon-btn danger" title="Close" @click="closeCustomJsEditor"><i class="fas fa-times"></i></button>
+					</div>
+				</div>
+				<div class="pb-js-editor-body">
+					<div class="pb-js-editor-hint">
+						<i class="fas fa-shield-alt" aria-hidden="true"></i>
+						<span>Kode dianalisis tanpa dijalankan di editor. Perubahan halaman tidak otomatis menimpa Custom JavaScript page ini.</span>
+					</div>
+					<div class="pb-js-editor-toolbar">
+						<form class="pb-js-editor-tool" @submit.prevent="goToCustomJsLine">
+							<label for="pb-js-editor-line">Line</label>
+							<input id="pb-js-editor-line" class="pb-js-editor-tool-input is-line" type="number" min="1" :max="customJsLineCount" v-model="customJsGotoLine" placeholder="Line">
+							<button type="submit" class="pb-js-editor-tool-btn" title="Go to line"><i class="fas fa-arrow-down"></i></button>
+						</form>
+						<div class="pb-js-editor-tool is-search">
+							<label for="pb-js-editor-search">Search</label>
+							<input id="pb-js-editor-search" class="pb-js-editor-tool-input" type="search" v-model="customJsSearchQuery" placeholder="Search code...">
+							<button type="button" class="pb-js-editor-tool-btn" title="Find now" @click="searchCustomJsCode"><i class="fas fa-search"></i></button>
+						</div>
+						<label class="pb-js-editor-mode-field">
+							<span>Execution mode</span>
+							<select v-model="customJsMode" @change="onCustomJsModeChange">
+								<option value="disabled">Disabled — store only</option>
+								<option value="published">Published frontend — explicit opt-in</option>
+							</select>
+						</label>
+					</div>
+					<div class="pb-js-editor-code-shell">
+						<div ref="customJsEditorGutter" class="pb-js-editor-gutter" aria-hidden="true">
+							<button v-for="line in customJsLineNumbers" :key="'custom-js-line-'+line" type="button" class="pb-js-editor-line-number" :class="{ active: customJsActiveLine===line }" @click="customJsGotoLine = line; goToCustomJsLine()">{{ line }}</button>
+						</div>
+						<textarea ref="customJsEditorTextarea" class="pb-js-editor-textarea" v-model="customJs" placeholder="document.querySelector('.my-element')?.classList.add('is-ready');" aria-label="Custom JavaScript code" @input="analyzeCustomJavaScript" @keydown.tab.prevent="handleCustomJsTab" @scroll="syncCustomJsEditorScroll" spellcheck="false" autocomplete="off"></textarea>
+					</div>
+					<div class="pb-js-editor-diagnostics" aria-live="polite" aria-atomic="false">
+						<div v-if="!customJsDiagnosticsCount" class="pb-js-editor-diagnostic is-clean"><i class="fas fa-check-circle"></i><span>No diagnostic terdeteksi. Kode tetap dianggap arbitrary dan mengikuti execution mode.</span></div>
+						<div v-for="item in customJsDiagnostics" :key="'custom-js-diagnostic-'+item.key" class="pb-js-editor-diagnostic" :class="item.severity === 'blocked' ? 'is-blocked' : 'is-warning'">
+							<i class="fas" :class="item.severity === 'blocked' ? 'fa-ban' : 'fa-exclamation-triangle'"></i><span>{{ item.message }}</span>
+						</div>
+					</div>
+					<div v-if="customJsMode === 'published'" class="pb-js-editor-policy-note is-published">
+						<label><input type="checkbox" v-model="customJsPublishAcknowledged"> <span>Saya memahami kode ini dapat membaca atau mengubah DOM halaman publik dan membuat browser request.</span></label>
+					</div>
+				</div>
+				<div class="pb-js-editor-footer">
+					<div class="pb-js-editor-count"><i class="bi bi-filetype-js"></i> {{ customJsCharCount }} chars / {{ customJsByteCount }} bytes / {{ customJsLineCount }} lines</div>
+					<div class="pb-js-editor-footer-actions">
+						<button type="button" class="pb-js-editor-btn danger" @click="clearCustomJs"><i class="fas fa-trash"></i> Clear</button>
+						<button type="button" class="pb-js-editor-btn primary" @click="applyCustomJsEditorChanges">Save as Custom JavaScript</button>
 					</div>
 				</div>
 			</div>

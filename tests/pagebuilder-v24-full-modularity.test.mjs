@@ -25,7 +25,7 @@ function moduleManifests(directory = moduleRoot) {
 const modules = moduleManifests();
 
 test('all module definitions rely on manifest metadata and no legacy host runtime', () => {
-  assert.equal(modules.length, 50);
+  assert.equal(modules.length, 53);
   for (const module of modules) {
     const definition = readFileSync(join(module.directory, module.manifest.assets.definition), 'utf8');
     assert.doesNotMatch(definition, /\/js\/pagebuilder_elementor_v24\/widgets\//, module.manifest.type);

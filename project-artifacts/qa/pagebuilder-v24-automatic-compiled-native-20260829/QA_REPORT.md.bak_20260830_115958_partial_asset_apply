@@ -1,0 +1,139 @@
+# Page Builder Elementor v2.4 — Automatic Compiled Native QA
+
+Date: 2026-08-29
+Project: `D:\Laragon\www\laravel-13-phoenix`
+Plan: `project-artifacts/plans/2026-08-29-pagebuilder-v24-automatic-layout-analyzer-compiled-native-plan.md`
+
+## Scope
+
+Implemented the measurement-driven automatic Compiled Native analyzer in the isolated v2.4 surface. The pipeline accepts HTML/HTM/ZIP, collects the applicable CSS universe, measures the sanitized source in a script-disabled browser, detects Header/Section/Footer boundaries, classifies dynamic Stack/Flex/Grid layouts per viewport, preserves computed box-model evidence, maps only layout structure to existing v2.4 node shapes, and reports source-vs-target deltas.
+
+The analyzer does not choose widgets automatically, does not use Exact Visual or recommendation fallbacks, and does not silently save or replace the Canvas tree. After analysis, the wizard requires an explicit widget choice for every mapped source block, builds a draft target, validates structural evidence, and only then supports an explicit in-memory Apply to Canvas; the normal Save action remains separate. The flow does not modify v2.3 or the main responsive engine.
+
+## Files added
+
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeBlueprint.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeEvidence.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeSource.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeFrameworkLoader.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/FrameworkBundle.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeMeasurement.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeSectionDetector.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/SectionIndex.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeLayoutClassifier.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeResponsiveClassifier.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeLayoutMapper.php`
+- `app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeValidator.php`
+- `app/Http/Requests/Page_Builder_Elementor_V24/AutomaticCompiledNativeAnalyzeRequest.php`
+- `tools/pagebuilder-v24/automatic-compiled-native-measure.mjs`
+- `tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-*.html`
+- automatic Compiled Native PHPUnit and Node test files under `tests/`
+
+## Existing files modified
+
+- `app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php`
+- `routes/pagebuilder_elementor_v24.php`
+- `public/js/pagebuilder_elementor_v24/app.js`
+- `public/assets/css/pagebuilder_elementor_v24.css`
+- `resources/views/pagebuilder_elementor_v24/editor_shell.blade.php`
+- `package.json` and `package-lock.json` (Tailwind static CLI/compiler dev dependencies)
+
+## Verification results
+
+- Automatic focused PHPUnit suite: **51 passed, 255 assertions**.
+- Full active v2.4 Node suite: **414 passed, 0 failed**.
+- Automatic browser measurement contract: **3 passed**.
+- Automatic review UI contract: **3 passed**.
+- Automatic Canvas-flow contract: **3 passed** (layout-blueprint binding, manual widget selection, target preview, explicit Apply gate, and clean Canvas payload).
+- Automatic validation measurement contract: **3 passed**.
+- PHP syntax: **16 files passed `php -l`**, including all Compiled Native classes, request, controller, and v2.4 route.
+- `node --check public/js/pagebuilder_elementor_v24/app.js`: passed.
+- `git diff --check`: passed.
+- Route helper resolves `/pagebuilder-elementor/v2.4/compiled-native/automatic/analyze`.
+- Graphify was updated after the latest source changes: **21,011 nodes, 38,750 edges**; a focused query confirms the controller → measurement → detector → classifier → mapper/validator path.
+- Read-only fixture browser QA: **18 screenshots** captured at 1180px, 768px, and 390px for six fixtures. Flex-wrap measured as 4/2/1 columns; responsive grid measured as 3/2/1; one-column and nested fixtures stayed Stack 1.
+- Real source audit: `E:\Apps\Laragon\www\ceo-masters\index.html` loaded through the active importer and measured successfully as `tailwind_static`; the bundle contained **33,738 HTML bytes, 25,471 CSS bytes, 351 measured nodes, 15 asset references, and 11 detected Header/Section/Footer entries**.
+- Widget style adapter verification: spacing, typography, Advanced background/border, button-specific padding/background/border, and image-specific size/object-fit/border fields are mapped without duplicating button/image inner-surface styles.
+- Chrome takeover regression: before the fix, clicking `Continue to widget mapping` produced `TypeError: automaticCompiledNativeSourceBlockCount is not a function` and blanked the Vue render. After adding the missing `setup()` return binding and reloading, `#pbElementorV24App` and the Compiled Native button were visible; the only captured error remained the pre-fix entry at `2026-08-29T16:00:57.524Z`, with no new error at `2026-08-29T16:03:57.700Z`.
+- Preview-target UX regression: partial mapping showed a blue-looking but genuinely disabled button, so a click appeared to do nothing. The button now remains clickable for an explicit validation message, displays the remaining unmapped-block count, and uses a visibly blocked style; it still cannot build a target until every block has a registered widget.
+
+## Security and isolation
+
+- Browser measurement runs with JavaScript disabled.
+- Source scripts, inline handlers, and `javascript:` URLs are removed from the bundle.
+- Critical stylesheet load failures fail closed.
+- ZIP traversal paths are rejected and extraction is confined to a random temporary workspace under `storage/app/pagebuilder-v24-compiled-native`.
+- Analysis is read-only with no `Page_Builder::create`, `DB::`, Canvas replacement, or public save call in the analysis method. The Canvas mutation exists only behind the explicit client-side Apply action after target validation; it marks the editor dirty and tells the user to click Save.
+- Static isolation tests found no v2.3 reference in the new Compiled Native classes or analysis route.
+
+## Known boundaries
+
+- The live authenticated editor wizard was not runtime-click-tested from headless QA because the host redirected the unauthenticated browser to `/auth/login`; the UI has static contract coverage and the source fixture browser evidence above.
+- The full v2.4 PHP filter still has the previously known 419 CSRF failures: 195 tests passed and 30 request assertions were stopped by 419. This was explicitly left out of scope by the user and was not changed.
+- `route:list` remains unavailable because an unrelated existing route references the missing `App\\Http\\Controllers\\Api\\v1\\Testing\\Testing_Controller`; named route resolution and automatic feature tests pass.
+- Widget assignment is now an explicit mapping stage. `sourceBlocks` retain source identity, tag, attributes, text/HTML, rectangles, and computed styles; the user selects a registered v2.4 widget for each block and no recommendation selector is used.
+- The target screen currently provides a structural target preview and Apply gate from the measured blueprint. The standalone validator contract compares source/target snapshots at one-pixel tolerance, but a full target DOM re-measurement for every user-specific widget mapping still requires authenticated editor runtime QA; pixel parity is therefore not claimed.
+- Local package assets are listed with availability but server filesystem paths are never returned. A relative local image needs persistent asset mapping before an Image widget can be applied; external/data/root-relative URLs remain eligible.
+- `npm install` reports existing dependency audit findings (2 moderate, 7 high); no automatic audit fix was run.
+
+## Backups
+
+Timestamped backups were created before modifying existing files. SHA-256 hashes were verified for the measurement wrapper, controller, request, v2.4 app, v2.4 CSS, editor shell, package manifests, and route file. Backup files remain in place for manual recovery.
+
+## Status
+
+The automatic layout analyzer and the explicit manual widget-to-Canvas workflow are implemented through the planned review, mapping, target-preview, Apply, isolation, and automated QA stages. The live authenticated editor click-through remains unverified because the available headless session redirects to `/auth/login`; no Save or Apply was executed during QA. No commit, reset, cleanup of existing user changes, deployment, or database mutation was performed.
+
+The missing `automaticCompiledNativeSourceBlockCount` Vue binding discovered during Chrome takeover has been fixed and covered by the Canvas-flow contract test.
+
+## Normalized visual mapping extension — 2026-08-30
+
+The mapping stage now consumes a recursive normalized visual projection rather than presenting every measured DOM element as an independent flat source block. Raw measured nodes remain intact with source IDs, parent relationships, attributes, HTML, computed styles, rectangles, and viewport evidence. Normalized nodes expose `mappingRoots`, `childMappingIds`, `memberSourceIds`, `mappingRole`, `mappingKind`, and deterministic widget candidates.
+
+Nested structural `div` elements are retained when they establish Grid/Flex or a distinct visual boundary. Layout-neutral wrappers are promoted without dropping their content. Semantic text with inline descendants stays one mapping unit, while `span`, `br`, and decorative `i` remain expandable members. The projection recognizes composite shapes such as `div > dt(icon/label) + dd(value)` as `icon_box`, `figure > img + overlay` as `image_box` with retained members, and thin textless visual rules as `divider`. Structural Grid/Flex evidence wins over composite heuristics, so media or icons inside a layout wrapper do not collapse the wrapper into a widget.
+
+On the real source replay (`E:\Apps\Laragon\www\ceo-masters\index.html`), Section 1 reduced from 38 raw nodes to 18 normalized mapping nodes. Its root is the measured two-column Grid (`node-33`), with a left Container (`node-34`), CTA Container (`node-42`), Button candidates (`node-46`, `node-47`), Icon Box candidates (`node-50`, `node-51`, `node-52`), Divider (`node-37`), and Image Box candidate (`node-62`). High-confidence candidates prefill the widget select; the user-selected value remains editable and is the only value consumed by target compilation.
+
+Current extension verification: **67 PHPUnit tests passed with 345 assertions**, **414 Node tests passed with 0 failures**, Vue template compilation passed, 18 scoped PHP files passed lint, `git diff --check` passed, and Graphify was refreshed to **21,074 nodes / 38,885 links** with the normalized controller → classifier → mapper path query confirmed. Chrome read-only reload showed the editor root and Compiled Native entry point after the prior blank-screen fix; no new error was observed after reload.
+
+The normalized layer does not claim pixel parity from a candidate score. Overlay composites may still need an explicit choice between a composite widget and an expanded Container/Image/overlay structure, and local package assets still need persistent asset mapping before Apply. The unrelated 419 CSRF baseline remains out of scope. No Save or Apply action was executed.
+
+## Post-QA blank-screen regression — 2026-08-30
+
+The next live test exposed another Vue render failure: `automaticCompiledNativeFindSourceNode is not a function`. Root-cause tracing found that both `automaticCompiledNativeFindSourceNode()` and `automaticCompiledNativeSourceStyle()` were defined inside `setup()` but omitted from its returned template bindings. Both helpers are now exposed through the v2.4 app setup contract.
+
+The regression test was observed failing first (**1 failed, 2 passed**) and then passing after the minimal binding change (**3 passed, 0 failed**). A static helper audit now compares every `automaticCompiledNative*` function referenced by the Compiled Native template against the setup return object: **8 references, 0 missing bindings**. `node --check` and `git diff --check` also pass. This patch remains isolated to `public/js/pagebuilder_elementor_v24/app.js`; no v2.3 or main Page Builder engine file was changed.
+
+## Cross-surface mapping UI and score-threshold audit — 2026-08-30
+
+The complete analyzer surface was reviewed: modal/header/toolbar, section navigation, source preview, mapping content, mapping cards, raw-detail disclosure, style inspector, target preview, footer actions, and responsive breakpoints. The confirmed UI defect was shared by every mapping card: a row flex container combined with `Raw DOM details` using `flex-basis: 100%`, forcing the copy column to collapse. Mapping cards now use a bounded two-column CSS Grid for copy and widget select; raw details occupy a full grid row; all columns are shrink-safe; mobile switches to one column.
+
+Candidate preselection now uses the top registered candidate's numeric score: score **>= 0.60** is selected automatically, including the 68% example, while scores below the threshold remain manually selectable. The selected widget remains editable and validation still requires registered widget types.
+
+Cross-surface regression coverage now reports **416 Node tests passed, 0 failed**, including the score-threshold and mapping-card layout tests. Server probes returned the updated JavaScript and CSS rules successfully, `node --check` and `git diff --check` passed, and no v2.3 diff was detected.
+
+## Mapper expansion completion — 2026-08-30
+
+The approved mapper expansion is implemented through relationship evidence, overlay classification, Advanced positioning mapping, responsive delta reconciliation, composite signatures, explicit local asset mapping, pseudo-element measurement, and representability diagnostics. The real CEO Masters replay now reports both `home` and `register` as `layout-ready` across Desktop/Tablet/Mobile; `register` no longer emits the previous positioned/overlap blocker.
+
+Verification after the complete expansion: **80 Automatic Compiled Native PHPUnit tests passed with 384 assertions**, **423 v2.4 Node tests passed with 0 failures**, measurement contract **4/4**, Canvas-flow contract **9/9**, `node --check`, PHP lint, and `git diff --check` passed. Graphify was refreshed to **21,142 nodes / 39,014 edges**, the scanner → relationship graph → mapper → validation path was queried, and the v2.3 diff audit remains `V23_DIFF=NONE`.
+
+The only unverified boundary is the live authenticated import click-through at all three viewports. Fixture measurement covers 1180px, 768px, and 390px. No Save or Apply action was executed. A dedicated File Manager picker/upload flow for local assets and complex transform/interaction fidelity remain future extensions; the current slice requires an explicit persistent asset URL and keeps genuinely ambiguous cases blocking.
+
+## Representability-aware pre-apply validation — 2026-08-30
+
+The pre-apply gate now distinguishes structural blockers from style findings that can safely remain review notes. Every mapper finding carries its original `code`, `severity`, `blocking`, `surface`, `viewport`, `message`, and remediation guidance. A style-only finding such as box shadow, asymmetric border, non-default box sizing, or a non-simple background is classified as a non-blocking `Review note [custom-css]`; it no longer changes the entire section to `unclassified`. The native node can therefore proceed while the residual visual difference remains explicit for Custom CSS review.
+
+Structural uncertainty remains blocking. Unclassified layouts, missing layout evidence, transformed or overlapping children, responsive layout-mode transitions that need an explicit decision, and unresolved local assets continue to prevent Apply. Classifier diagnostics such as `absolute-or-transformed-child` are preserved instead of being hidden behind the generic `layout-unclassified` message. Target validation labels these items as `Blocking [layout]`, `Blocking [asset-mapping]`, or the relevant surface and displays the source section/viewport.
+
+Custom JavaScript is intentionally not used as a layout or styling fallback. It remains reserved for published runtime behavior. The target report now exposes both `structuralErrors` and `reviewNotes`; only blocking errors participate in `canApply`, while review notes remain visible in the same pre-apply report.
+
+Fresh verification after this change: **69 Automatic Compiled Native PHPUnit tests passed with 352 assertions**, **417 v2.4 Node tests passed with 0 failures**, focused mapper coverage passed **8 tests / 39 assertions**, focused Canvas-flow coverage passed **6 tests**, `node --check` passed, `git diff --check` passed, and Graphify was refreshed to **21,076 nodes / 38,893 edges**. No v2.3 or main Page Builder engine file was modified.
+
+## Final runtime template regression closure — 2026-08-30
+
+Chrome read-only reload reproduced the latest blank-screen report as `Invalid regular expression: /^(?:https?:|/: Unterminated group`. The failing expression was inside the outer JavaScript template literal used by the v2.4 root Vue template: its escaped slash was consumed before Vue compiled the `v-if` expression. The target-stage residual-CSS and local-asset filters now run in setup-level computed values (`automaticCompiledNativeReviewCssNotes` and `automaticCompiledNativeLocalAssets`), and the template only consumes their prepared arrays.
+
+The regression test was observed failing first, then passed after the minimal change. Fresh verification: **80 Automatic Compiled Native PHPUnit tests passed with 385 assertions**, **425 v2.4 Node tests passed with 0 failures**, the Canvas-flow contract passed **11/11**, measurement passed **4/4**, runtime Vue **3.4.38** template compilation passed after JavaScript template-literal evaluation, `node --check` passed, PHP lint passed for **19 files**, and `git diff --check` passed. Graphify was refreshed to **21,143 nodes / 39,017 edges** and the updated classifier/mapper path was queried.
+
+After a fresh Chrome reload, the Page Builder root and Compiled Native entry point were visible and no new console error was recorded. Historical console-buffer entries for earlier binding errors remain preserved as evidence; they were not reintroduced. No Save or Apply action was executed, and v2.3/main Page Builder files remain outside the diff.

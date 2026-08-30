@@ -37,8 +37,8 @@ test('v2.4 owns every v2.0 widget type and may add isolated v2.4 modules', () =>
     const v24Types = modules.map(({ manifest }) => manifest.type);
 
     assert.deepEqual([...new Set(v20Types())].filter((type) => !v24Types.includes(type)), []);
-    assert.equal(modules.length, 50);
-    assert.equal(new Set(v24Types).size, 50);
+    assert.equal(modules.length, 53);
+    assert.equal(new Set(v24Types).size, 53);
 });
 
 test('every v2.4 definition owns a valid isolated module contract', () => {

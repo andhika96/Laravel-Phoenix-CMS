@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Compiled Native browser smoke</title>
+  <script src="../../../public/js/pagebuilder_elementor_v24/static-import-css.js"></script>
+  <script src="../../../public/js/pagebuilder_elementor_v24/static-import-compiler.js"></script>
+  <style>
+    body { margin: 0; padding: 24px; font-family: sans-serif; }
+    #run { min-height: 44px; padding: 8px 14px; }
+    #result { white-space: pre-wrap; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <button id="run" type="button">Run Compiled Native smoke</button>
+  <pre id="result" aria-live="polite">idle</pre>
+  <script>
+    const payload = {
+      html: '<!doctype html><html><head></head><body class="bg-slate-900"><main id="hero" class="grid grid-cols-1 lg:grid-cols-2 lg:text-[6.2rem] text-white"><h1 class="font-bold">CEO Masters</h1></main></body></html>',
+      frameworks: ['tailwind'],
+      stylesheets: [],
+      tailwindConfig: {},
+      sourceCss: '.hero{color:#f4eddf}',
+      classMap: {
+        'bg-slate-900': ['import-node-body'],
+        'grid': ['import-node-1'],
+        'grid-cols-1': ['import-node-1'],
+        'lg:grid-cols-2': ['import-node-1'],
+        'lg:text-[6.2rem]': ['import-node-1'],
+        'text-white': ['import-node-1'],
+        'font-bold': ['import-node-2']
+      },
+      idMap: { hero: ['import-node-1'] },
+      sourceHash: 'browser-smoke'
+    };
+    document.getElementById('run').addEventListener('click', async () => {
+      const stages = [];
+      try {
+        const result = await window.PhoenixStaticImportCompiler.compile(payload, { onProgress: stage => stages.push(stage) });
+        const merged = window.PhoenixStaticImportCss.replaceGeneratedStaticImportCss('', result.css, { sourceHash: payload.sourceHash, stats: result.stats });
+        document.getElementById('result').textContent = JSON.stringify({ stages, stats: result.stats, valid: merged.valid, css: merged.css, compilerIframes: document.querySelectorAll('iframe').length }, null, 2);
+      } catch (error) {
+        document.getElementById('result').textContent = JSON.stringify({ stages, error: { name: error.name, code: error.code, message: error.message }, compilerIframes: document.querySelectorAll('iframe').length }, null, 2);
+      }
+    });
+  </script>
+</body>
+</html>

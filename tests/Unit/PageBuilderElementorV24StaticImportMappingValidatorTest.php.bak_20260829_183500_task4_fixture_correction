@@ -1,0 +1,225 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Support\PageBuilderElementorV24\ModuleCatalog;
+use App\Support\PageBuilderElementorV24\StaticImport\StaticImportMappingValidator;
+use App\Support\PageBuilderElementorV24\StaticImport\StaticImportWidgetCompatibility;
+use App\Support\PageBuilderElementorV24\StaticImport\StaticPageImportService;
+use Tests\TestCase;
+
+class PageBuilderElementorV24StaticImportMappingValidatorTest extends TestCase
+{
+    private const ACTUAL_HASH = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+
+    public function test_it_rejects_a_source_hash_mismatch_without_exposing_source_data(): void
+    {
+        $result = $this->validate($this->mapping([
+            $this->region('region-import-node-1', 'skip'),
+        ]), 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+
+        $this->assertFalse($result['valid']);
+        $this->assertSame(['source-hash-mismatch'], $this->codes($result));
+        $this->assertStringNotContainsString('<script>', json_encode($result, JSON_THROW_ON_ERROR));
+    }
+
+    public function test_it_rejects_unknown_and_duplicate_regions(): void
+    {
+        $result = $this->validate($this->mapping([
+            $this->region('region-unknown', 'skip'),
+            $this->region('region-import-node-1', 'skip'),
+            $this->region('region-import-node-1', 'skip'),
+        ]));
+
+        $this->assertContains('unknown-region', $this->codes($result));
+        $this->assertContains('duplicate-region-mapping', $this->codes($result));
+    }
+
+    public function test_it_rejects_unknown_duplicate_and_cross_region_blocks(): void
+    {
+        $result = $this->validate($this->mapping([
+            $this->region('region-import-node-1', 'guided_native', [
+                ['blockId' => 'block-unknown', 'widgetType' => 'heading'],
+                ['blockId' => 'block-import-node-2', 'widgetType' => 'heading'],
+                ['blockId' => 'block-import-node-2', 'widgetType' => 'heading'],
+                ['blockId' => 'block-import-node-10', 'widgetType' => 'heading'],
+            ]),
+        ]));
+
+        $this->assertContains('unknown-block', $this->codes($result));
+        $this->assertContains('duplicate-block-mapping', $this->codes($result));
+        $this->assertContains('block-region-mismatch', $this->codes($result));
+    }
+
+    public function test_it_distinguishes_inactive_and_incompatible_widgets(): void
+    {
+        $result = $this->validate($this->mapping([
+            $this->region('region-import-node-1', 'guided_native', [
+                ['blockId' => 'block-import-node-2', 'widgetType' => 'heading'],
+                ['blockId' => 'block-import-node-3', 'widgetType' => 'heading'],
+                ['blockId' => 'block-import-node-4', 'widgetType' => 'missing_widget'],
+            ]),
+        ]));
+
+        $this->assertContains('incompatible-widget', $this->codes($result));
+        $this->assertContains('inactive-widget', $this->codes($result));
+    }
+
+    public function test_it_rejects_invalid_strategies_and_unresolved_native_blocks(): void
+    {
+        $invalidStrategy = $this->validate($this->mapping([
+            $this->region('region-import-node-1', 'native'),
+        ]));
+        $this->assertContains('invalid-strategy', $this->codes($invalidStrategy));
+
+        $unresolved = $this->validate($this->mapping([
+            $this->region('region-import-node-1', 'guided_native', [
+                ['blockId' => 'block-import-node-2', 'widgetType' => 'heading'],
+            ]),
+        ]));
+        $this->assertContains('unresolved-block', $this->codes($unresolved));
+    }
+
+    public function test_skip_and_exact_visual_require_no_block_mappings(): void
+    {
+        $result = $this->validate($this->mapping([
+            $this->region('region-import-node-1', 'exact_visual'),
+            $this->region('region-import-node-10', 'skip'),
+        ]));
+
+        $this->assertTrue($result['valid']);
+        $this->assertSame([
+            'region-import-node-1',
+            'region-import-node-10',
+        ], array_column($result['mapping']['regions'], 'regionId'));
+        $this->assertSame([[], []], array_column($result['mapping']['regions'], 'blocks'));
+    }
+
+    public function test_exact_visual_and_skip_reject_block_mappings(): void
+    {
+        $result = $this->validate($this->mapping([
+            $this->region('region-import-node-1', 'exact_visual', [
+                ['blockId' => 'block-import-node-2', 'widgetType' => 'heading'],
+            ]),
+        ]));
+
+        $this->assertContains('strategy-blocks-not-allowed', $this->codes($result));
+    }
+
+    public function test_auto_native_ignores_user_widget_overrides_and_uses_recommendations(): void
+    {
+        $result = $this->validate($this->mapping([
+            $this->region('region-import-node-1', 'auto_native', [
+                ['blockId' => 'block-import-node-2', 'widgetType' => 'text_editor'],
+                ['blockId' => 'block-import-node-3', 'widgetType' => 'missing_widget'],
+            ]),
+        ]));
+
+        $this->assertTrue($result['valid']);
+        $this->assertSame(['heading', 'image'], array_column($result['mapping']['regions'][0]['blocks'], 'widgetType'));
+    }
+
+    public function test_guided_native_is_normalized_in_source_tree_order_and_rejects_extra_properties(): void
+    {
+        $mapping = $this->mapping([
+            $this->region('region-import-node-1', 'guided_native', [
+                ['blockId' => 'block-import-node-3', 'widgetType' => 'image'],
+                ['blockId' => 'block-import-node-2', 'widgetType' => 'heading'],
+            ]),
+        ]);
+        $mapping['extra'] = 'must-not-persist';
+
+        $result = $this->validate($mapping);
+
+        $this->assertFalse($result['valid']);
+        $this->assertContains('mapping-extra-property', $this->codes($result));
+        $this->assertStringNotContainsString('must-not-persist', json_encode($result, JSON_THROW_ON_ERROR));
+
+        unset($mapping['extra']);
+        $result = $this->validate($mapping);
+        $this->assertTrue($result['valid']);
+        $this->assertSame(
+            ['block-import-node-2', 'block-import-node-3'],
+            array_column($result['mapping']['regions'][0]['blocks'], 'blockId'),
+        );
+    }
+
+    public function test_service_exposes_the_validator_without_changing_direct_import_modes(): void
+    {
+        $service = new StaticPageImportService();
+        $result = $service->validateCompiledMapping(
+            $this->analysis(),
+            $this->mapping([
+                $this->region('region-import-node-10', 'skip'),
+            ]),
+            self::ACTUAL_HASH,
+            self::ACTUAL_HASH,
+        );
+
+        $this->assertTrue($result['valid']);
+        $this->assertSame('skip', $result['mapping']['regions'][0]['strategy']);
+    }
+
+    /** @param array<int, array<string, mixed>> $regions */
+    private function mapping(array $regions): array
+    {
+        return ['version' => 1, 'regions' => $regions];
+    }
+
+    /** @param array<int, array<string, mixed>> $blocks */
+    private function region(string $regionId, string $strategy, array $blocks = []): array
+    {
+        return ['regionId' => $regionId, 'strategy' => $strategy, 'blocks' => $blocks];
+    }
+
+    /** @return array<string, mixed> */
+    private function validate(array $mapping, string $submittedHash = self::ACTUAL_HASH): array
+    {
+        return (new StaticImportMappingValidator(
+            new StaticImportWidgetCompatibility(app(ModuleCatalog::class)),
+        ))->validate($this->analysis(), $mapping, self::ACTUAL_HASH, $submittedHash);
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    private function codes(array $result): array
+    {
+        return array_column($result['errors'] ?? [], 'code');
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    private function analysis(): array
+    {
+        return [
+            [
+                'id' => 'region-import-node-1',
+                'kind' => 'header',
+                'blocks' => [
+                    [
+                        'id' => 'block-import-node-2',
+                        'role' => 'heading',
+                        'recommendedWidget' => 'heading',
+                        'children' => [],
+                    ],
+                    [
+                        'id' => 'block-import-node-3',
+                        'role' => 'image',
+                        'recommendedWidget' => 'image',
+                        'children' => [],
+                    ],
+                ],
+            ],
+            [
+                'id' => 'region-import-node-10',
+                'kind' => 'section',
+                'blocks' => [
+                    [
+                        'id' => 'block-import-node-10',
+                        'role' => 'text',
+                        'recommendedWidget' => 'text_editor',
+                        'children' => [],
+                    ],
+                ],
+            ],
+        ];
+    }
+}

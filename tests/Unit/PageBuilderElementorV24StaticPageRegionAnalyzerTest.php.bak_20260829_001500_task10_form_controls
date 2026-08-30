@@ -1,0 +1,292 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Support\PageBuilderElementorV24\StaticImport\StaticPageRegionAnalyzer;
+use DOMDocument;
+use Tests\TestCase;
+
+class PageBuilderElementorV24StaticPageRegionAnalyzerTest extends TestCase
+{
+    public function test_it_detects_semantic_regions_in_source_order_with_stable_ids_and_labels(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><body>
+<header id="site-header" data-pb-import-node="import-node-1"><nav data-pb-import-node="import-node-2">Menu</nav></header>
+<section id="hero" data-pb-import-node="import-node-3"><h1 data-pb-import-node="import-node-4">Hero</h1></section>
+<section id="features" data-pb-import-node="import-node-5"><p data-pb-import-node="import-node-6">Features</p></section>
+<footer id="site-footer" data-pb-import-node="import-node-7">Footer</footer>
+</body></html>
+HTML);
+
+        $this->assertSame(['header', 'section', 'section', 'footer'], array_column($regions, 'kind'));
+        $this->assertSame([
+            'region-import-node-1',
+            'region-import-node-3',
+            'region-import-node-5',
+            'region-import-node-7',
+        ], array_column($regions, 'id'));
+        $this->assertSame(['site-header', 'hero', 'features', 'site-footer'], array_column($regions, 'sourceId'));
+        $this->assertSame(['Header', 'Section 1', 'Section 2', 'Footer'], array_column($regions, 'label'));
+        $this->assertSame([0, 1, 2, 3], array_column($regions, 'order'));
+    }
+
+    public function test_nested_sections_remain_blocks_of_the_parent_region(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><body>
+<section id="outer" data-pb-import-node="import-node-1">
+    <div data-pb-import-node="import-node-2">
+        <section id="inner" data-pb-import-node="import-node-3"><h2 data-pb-import-node="import-node-4">Inner</h2></section>
+    </div>
+</section>
+HTML);
+
+        $this->assertCount(1, $regions);
+        $this->assertSame('region-import-node-1', $regions[0]['id']);
+        $this->assertSame('block-import-node-2', $regions[0]['blocks'][0]['id']);
+        $this->assertSame('block-import-node-3', $regions[0]['blocks'][0]['children'][0]['id']);
+        $this->assertSame('inner', $regions[0]['blocks'][0]['children'][0]['sourceId']);
+        $this->assertSame(3, $regions[0]['stats']['blocks']);
+    }
+
+    public function test_without_semantic_tags_it_uses_visible_body_direct_children_only(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><head><meta name="viewport" content="width=device-width"></head><body>
+<script data-pb-import-node="import-node-1">alert('must not execute')</script>
+<style data-pb-import-node="import-node-2">.hidden { display:none }</style>
+<div id="visible-one" data-pb-import-node="import-node-3"><p data-pb-import-node="import-node-4">One</p></div>
+<div id="hidden" hidden data-pb-import-node="import-node-5">Hidden</div>
+<article id="visible-two" data-pb-import-node="import-node-6">Two</article>
+</body></html>
+HTML);
+
+        $this->assertSame(['section', 'section'], array_column($regions, 'kind'));
+        $this->assertSame(['visible-one', 'visible-two'], array_column($regions, 'sourceId'));
+        $this->assertSame(['Section 1', 'Section 2'], array_column($regions, 'label'));
+        $this->assertStringNotContainsString('alert', json_encode($regions, JSON_THROW_ON_ERROR));
+    }
+
+    public function test_it_numbers_multiple_headers_and_footers_while_preserving_order(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><body>
+<header id="header-one" data-pb-import-node="import-node-1">One</header>
+<header id="header-two" data-pb-import-node="import-node-2">Two</header>
+<section id="content" data-pb-import-node="import-node-3">Content</section>
+<footer id="footer-one" data-pb-import-node="import-node-4">One</footer>
+<footer id="footer-two" data-pb-import-node="import-node-5">Two</footer>
+</body></html>
+HTML);
+
+        $this->assertSame(['Header 1', 'Header 2', 'Section 1', 'Footer 1', 'Footer 2'], array_column($regions, 'label'));
+        $this->assertSame(['header-one', 'header-two', 'content', 'footer-one', 'footer-two'], array_column($regions, 'sourceId'));
+    }
+
+    public function test_main_is_a_landmark_wrapper_but_its_top_level_sections_are_regions(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><body>
+<header data-pb-import-node="import-node-1">Header</header>
+<main data-pb-import-node="import-node-2">
+    <section id="one" data-pb-import-node="import-node-3">One</section>
+    <section id="two" data-pb-import-node="import-node-4">Two</section>
+</main>
+<footer data-pb-import-node="import-node-5">Footer</footer>
+</body></html>
+HTML);
+
+        $this->assertSame(['header', 'section', 'section', 'footer'], array_column($regions, 'kind'));
+        $this->assertSame(['', 'one', 'two', ''], array_column($regions, 'sourceId'));
+        $this->assertSame(['region-import-node-1', 'region-import-node-3', 'region-import-node-4', 'region-import-node-5'], array_column($regions, 'id'));
+    }
+
+    public function test_it_reports_region_stats_without_returning_executable_source(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><body>
+<section id="stats" data-pb-import-node="import-node-1">
+    <img data-pb-import-node="import-node-2" src="https://example.com/hero.jpg" alt="Hero">
+    <form data-pb-import-node="import-node-3"><input data-pb-import-node="import-node-4" name="email"></form>
+    <video data-pb-import-node="import-node-5" src="https://example.com/movie.mp4"></video>
+    <script data-pb-import-node="import-node-6">document.body.innerHTML = 'unsafe';</script>
+</section>
+</body></html>
+HTML);
+
+        $this->assertSame([
+            'elements' => 5,
+            'blocks' => 4,
+            'images' => 1,
+            'forms' => 1,
+            'unsupportedInteractive' => 0,
+        ], $regions[0]['stats']);
+        $this->assertStringNotContainsString('document.body', json_encode($regions, JSON_THROW_ON_ERROR));
+        $this->assertStringNotContainsString('<script', json_encode($regions, JSON_THROW_ON_ERROR));
+    }
+
+    public function test_text_preview_collects_only_visible_text_nodes(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><body>
+<section data-pb-import-node="import-node-1">
+    <div data-pb-import-node="import-node-2">
+        Visible <span data-pb-import-node="import-node-3">text</span>
+        <script data-pb-import-node="import-node-4">secretExecutable()</script>
+        <span hidden data-pb-import-node="import-node-5">hidden text</span>
+    </div>
+</section>
+HTML);
+
+        $this->assertSame('Visible text', $regions[0]['blocks'][0]['textPreview']);
+        $this->assertStringNotContainsString('secretExecutable', json_encode($regions, JSON_THROW_ON_ERROR));
+        $this->assertStringNotContainsString('hidden text', json_encode($regions, JSON_THROW_ON_ERROR));
+    }
+
+    public function test_it_builds_a_hero_block_tree_with_native_recommendations_and_parent_links(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><body>
+<section id="hero" data-pb-import-node="import-node-1">
+    <div data-pb-import-node="import-node-2">
+        <h1 data-pb-import-node="import-node-3">CEO Masters</h1>
+        <p data-pb-import-node="import-node-4">Lead with clarity.</p>
+        <div data-pb-import-node="import-node-5">
+            <a href="/start" role="button" data-pb-import-node="import-node-6">Start</a>
+        </div>
+        <img src="hero.jpg" alt="Hero" data-pb-import-node="import-node-7">
+    </div>
+</section>
+HTML);
+
+        $this->assertSame('container', $regions[0]['recommendedWidget']);
+        $root = $regions[0]['blocks'][0];
+        $this->assertSame('layout', $root['role']);
+        $this->assertSame('container', $root['recommendedWidget']);
+        $this->assertSame(null, $root['parentId']);
+        $this->assertSame(['block-import-node-3', 'block-import-node-4', 'block-import-node-5', 'block-import-node-7'], array_column($root['children'], 'id'));
+        $this->assertSame('block-import-node-2', $root['children'][0]['parentId']);
+        $this->assertSame(['heading', 'text', 'layout', 'image'], array_column($root['children'], 'role'));
+        $this->assertSame(['heading', 'text_editor', 'container', 'image'], array_column($root['children'], 'recommendedWidget'));
+        $this->assertSame(['heading', 'text_editor'], $root['children'][0]['allowedWidgets']);
+        $this->assertSame('button', $root['children'][2]['children'][0]['recommendedWidget']);
+    }
+
+    public function test_it_recommends_native_widgets_for_supported_elements_and_card_collections(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><body>
+<section data-pb-import-node="import-node-1">
+    <form data-pb-import-node="import-node-2"><input name="email" data-pb-import-node="import-node-3"></form>
+    <video src="movie.mp4" data-pb-import-node="import-node-4"></video>
+    <hr data-pb-import-node="import-node-5">
+    <div data-pb-import-node="import-node-6">
+        <article data-pb-import-node="import-node-7">One</article>
+        <article data-pb-import-node="import-node-8">Two</article>
+    </div>
+</section>
+HTML);
+
+        $blocks = $this->flatten($regions[0]['blocks']);
+        $byMarker = [];
+        foreach ($blocks as $block) $byMarker[$block['marker']] = $block;
+
+        $this->assertSame(['form', 'form'], [$byMarker['import-node-2']['role'], $byMarker['import-node-2']['recommendedWidget']]);
+        $this->assertSame(['video', 'video'], [$byMarker['import-node-4']['role'], $byMarker['import-node-4']['recommendedWidget']]);
+        $this->assertSame(['divider', 'divider'], [$byMarker['import-node-5']['role'], $byMarker['import-node-5']['recommendedWidget']]);
+        $this->assertSame(['card_collection', 'carousel'], [$byMarker['import-node-6']['role'], $byMarker['import-node-6']['recommendedWidget']]);
+        $this->assertSame('guided_native', $regions[0]['recommendedStrategy']);
+    }
+
+    public function test_horizontal_snap_card_collection_requires_guided_strategy(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><body>
+<section id="about" data-pb-import-node="import-node-1">
+    <div class="snap-track overflow-x-auto" data-pb-import-node="import-node-2">
+        <article data-pb-import-node="import-node-3">One</article>
+        <article data-pb-import-node="import-node-4">Two</article>
+    </div>
+</section>
+HTML);
+
+        $this->assertSame('guided_native', $regions[0]['recommendedStrategy']);
+        $this->assertContains('card_collection', array_column($regions[0]['blocks'], 'role'));
+        $collection = $regions[0]['blocks'][0];
+        $this->assertContains('container', $collection['allowedWidgets']);
+        $this->assertContains('grid', $collection['allowedWidgets']);
+        $this->assertContains('carousel', $collection['allowedWidgets']);
+    }
+
+    public function test_header_and_footer_regions_use_layout_root_recommendations(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><body>
+<header data-pb-import-node="import-node-1">Header</header>
+<footer data-pb-import-node="import-node-2">Footer</footer>
+</body></html>
+HTML);
+
+        $this->assertSame(['container', 'container'], array_column($regions, 'recommendedWidget'));
+        $this->assertSame(['layout', 'layout'], array_column($regions, 'role'));
+        $this->assertNotContains('header', $regions[0]['allowedWidgets']);
+        $this->assertNotContains('footer', $regions[1]['allowedWidgets']);
+    }
+
+    public function test_unknown_meaningful_subtrees_are_guided_and_not_mapped_to_empty_text(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><body>
+<section data-pb-import-node="import-node-1"><custom-widget data-pb-import-node="import-node-2">Important content</custom-widget></section>
+</body></html>
+HTML);
+
+        $unknown = $regions[0]['blocks'][0];
+        $this->assertSame('unknown', $unknown['role']);
+        $this->assertNull($unknown['recommendedWidget']);
+        $this->assertSame([], $unknown['allowedWidgets']);
+        $this->assertContains('unmapped-structure', $unknown['warnings']);
+        $this->assertSame('guided_native', $regions[0]['recommendedStrategy']);
+        $this->assertContains('unmapped-structure', $regions[0]['warnings']);
+    }
+
+    public function test_important_hidden_visibility_declarations_are_excluded(): void
+    {
+        $regions = $this->analyze(<<<'HTML'
+<!doctype html><html><body>
+<section data-pb-import-node="import-node-1">
+    <div style="display:none!important" data-pb-import-node="import-node-2">Display hidden</div>
+    <div style="visibility: hidden !important" data-pb-import-node="import-node-3">Visibility hidden</div>
+    <p data-pb-import-node="import-node-4">Visible</p>
+</section>
+HTML);
+
+        $this->assertSame(['block-import-node-4'], array_column($regions[0]['blocks'], 'id'));
+        $this->assertSame(2, $regions[0]['stats']['elements']);
+        $this->assertSame(1, $regions[0]['stats']['blocks']);
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    private function analyze(string $html): array
+    {
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $previous = libxml_use_internal_errors(true);
+        $dom->loadHTML('<?xml encoding="UTF-8">'.$html, LIBXML_NONET | LIBXML_HTML_NODEFDTD | LIBXML_COMPACT);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+
+        return (new StaticPageRegionAnalyzer())->analyze($dom);
+    }
+
+    /** @param array<int, array<string, mixed>> $blocks @return array<int, array<string, mixed>> */
+    private function flatten(array $blocks): array
+    {
+        $flat = [];
+        foreach ($blocks as $block) {
+            $flat[] = $block;
+            $flat = array_merge($flat, $this->flatten(is_array($block['children'] ?? null) ? $block['children'] : []));
+        }
+        return $flat;
+    }
+}

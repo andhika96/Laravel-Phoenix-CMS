@@ -1,0 +1,727 @@
+{
+    "source": "E:\\Apps\\Laragon\\www\\ceo-masters\\index.html",
+    "framework": "tailwind_static",
+    "measuredNodes": 351,
+    "sections": {
+        "home": {
+            "layoutByViewport": {
+                "desktop": {
+                    "mode": "stack",
+                    "columns": 1,
+                    "evidenceRule": "computedStyle.display",
+                    "diagnostics": []
+                },
+                "tablet": {
+                    "mode": "stack",
+                    "columns": 1,
+                    "evidenceRule": "computedStyle.display",
+                    "diagnostics": []
+                },
+                "mobile": {
+                    "mode": "stack",
+                    "columns": 1,
+                    "evidenceRule": "computedStyle.display",
+                    "diagnostics": []
+                }
+            },
+            "positionedLayers": [],
+            "overlapPairs": [],
+            "responsiveDeltas": {
+                "home": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    },
+                    "height": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "2037.09px",
+                            "2037.09px",
+                            "2147.31px"
+                        ]
+                    }
+                },
+                "node-33": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    },
+                    "height": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "2037.09px",
+                            "2037.09px",
+                            "2147.31px"
+                        ]
+                    }
+                },
+                "node-34": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    },
+                    "height": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "410.094px",
+                            "410.094px",
+                            "520.312px"
+                        ]
+                    }
+                },
+                "node-36": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    },
+                    "height": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "15.2188px",
+                            "15.2188px",
+                            "30.4375px"
+                        ]
+                    }
+                },
+                "node-37": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-38": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-39": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-40": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    },
+                    "height": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "19px",
+                            "19px",
+                            "38px"
+                        ]
+                    }
+                },
+                "node-41": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    },
+                    "height": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "38px",
+                            "38px",
+                            "95px"
+                        ]
+                    }
+                },
+                "node-42": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    },
+                    "height": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "19px",
+                            "19px",
+                            "38px"
+                        ]
+                    }
+                },
+                "node-43": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-50": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-53": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-54": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1124px",
+                            "712px",
+                            "334px"
+                        ]
+                    }
+                },
+                "node-51": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-56": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-57": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1124px",
+                            "712px",
+                            "334px"
+                        ]
+                    }
+                },
+                "node-52": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-59": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-60": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1124px",
+                            "712px",
+                            "334px"
+                        ]
+                    }
+                },
+                "node-35": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-62": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1082px",
+                            "670px",
+                            "292px"
+                        ]
+                    }
+                },
+                "node-65": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1082px",
+                            "670px",
+                            "292px"
+                        ]
+                    }
+                },
+                "node-63": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                }
+            },
+            "mappingNodes": 17,
+            "compileStatus": "layout-ready",
+            "unsupported": [
+                {
+                    "code": "box-sizing-not-representable",
+                    "sectionId": "home",
+                    "viewport": "desktop",
+                    "message": "The target layout renderer is border-box, while the source root uses another box-sizing mode.",
+                    "severity": "review",
+                    "blocking": false,
+                    "surface": "custom-css",
+                    "remediation": "The native node can be applied, but this residual style should be reviewed or preserved as scoped Custom CSS.",
+                    "property": "box-sizing",
+                    "sourceValue": "content-box",
+                    "cssPatch": "#compiled-home{box-sizing:content-box;}"
+                }
+            ]
+        },
+        "register": {
+            "layoutByViewport": {
+                "desktop": {
+                    "mode": "stack",
+                    "columns": 1,
+                    "evidenceRule": "computedStyle.display",
+                    "diagnostics": []
+                },
+                "tablet": {
+                    "mode": "stack",
+                    "columns": 1,
+                    "evidenceRule": "computedStyle.display",
+                    "diagnostics": []
+                },
+                "mobile": {
+                    "mode": "stack",
+                    "columns": 1,
+                    "evidenceRule": "computedStyle.display",
+                    "diagnostics": []
+                }
+            },
+            "positionedLayers": [],
+            "overlapPairs": [],
+            "responsiveDeltas": {
+                "register": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    },
+                    "height": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1700.88px",
+                            "1719.88px",
+                            "1757.88px"
+                        ]
+                    }
+                },
+                "node-244": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-245": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    },
+                    "height": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "486px",
+                            "505px",
+                            "543px"
+                        ]
+                    }
+                },
+                "node-246": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    },
+                    "height": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "186.031px",
+                            "205.031px",
+                            "243.031px"
+                        ]
+                    }
+                },
+                "node-248": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-249": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-250": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    },
+                    "height": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "19px",
+                            "38px",
+                            "57px"
+                        ]
+                    }
+                },
+                "node-251": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    },
+                    "height": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "19px",
+                            "19px",
+                            "38px"
+                        ]
+                    }
+                },
+                "node-252": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-247": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                },
+                "node-261": {
+                    "width": {
+                        "viewports": [
+                            "desktop",
+                            "tablet",
+                            "mobile"
+                        ],
+                        "values": [
+                            "1164px",
+                            "752px",
+                            "374px"
+                        ]
+                    }
+                }
+            },
+            "mappingNodes": 16,
+            "compileStatus": "layout-ready",
+            "unsupported": [
+                {
+                    "code": "box-sizing-not-representable",
+                    "sectionId": "register",
+                    "viewport": "desktop",
+                    "message": "The target layout renderer is border-box, while the source root uses another box-sizing mode.",
+                    "severity": "review",
+                    "blocking": false,
+                    "surface": "custom-css",
+                    "remediation": "The native node can be applied, but this residual style should be reviewed or preserved as scoped Custom CSS.",
+                    "property": "box-sizing",
+                    "sourceValue": "content-box",
+                    "cssPatch": "#compiled-register{box-sizing:content-box;}"
+                }
+            ]
+        }
+    }
+}

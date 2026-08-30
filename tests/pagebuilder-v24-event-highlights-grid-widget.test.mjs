@@ -1,0 +1,367 @@
+import assert from 'node:assert/strict';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import test from 'node:test';
+import vm from 'node:vm';
+import { compile } from '@vue/compiler-dom';
+import { parse } from '@vue/compiler-sfc';
+import { renderToString } from '@vue/server-renderer';
+import * as Vue from 'vue';
+
+const root = resolve(import.meta.dirname, '..');
+const moduleRoot = 'resources/pagebuilder_elementor_v24/modules/widgets/general/event-highlights-grid';
+const read = (relativePath) => {
+    const path = resolve(root, relativePath);
+    return existsSync(path) ? readFileSync(path, 'utf8') : '';
+};
+
+const manifestSource = read(`${moduleRoot}/module.json`);
+const manifest = manifestSource ? JSON.parse(manifestSource) : {};
+const definitionSource = read(`${moduleRoot}/definition.js`);
+const settingsSource = read(`${moduleRoot}/Settings.vue`);
+const canvasSource = read(`${moduleRoot}/Canvas.vue`);
+const frontendSource = read(`${moduleRoot}/frontend.blade.php`);
+
+function loadDefinition() {
+    const registrations = [];
+    const registry = {
+        advancedDefaults: () => ({ advancedBackgroundType: 'none' }),
+        normalizeAdvanced(settings) { return settings; },
+        register(definition) { registrations.push(definition); },
+    };
+    vm.runInNewContext(definitionSource, { window: { PageBuilderElementorV24Widgets: registry } });
+    assert.equal(registrations.length, 1);
+    return registrations[0];
+}
+
+function loadSfc(source, filename) {
+    assert.ok(source, `${filename} must exist`);
+    const { descriptor, errors } = parse(source, { filename });
+    assert.deepEqual(errors, [], `${filename} should parse as an SFC`);
+    const component = Function(descriptor.script.content.replace(/export\s+default/, 'return'))();
+    component.render = Function('Vue', compile(descriptor.template.content, { mode: 'function' }).code)(Vue);
+    return component;
+}
+
+async function renderComponent(component, props) {
+    return renderToString(Vue.createSSRApp(component, props));
+}
+
+test('Event Highlights Grid is a discovered General module with the canonical assets', () => {
+    assert.deepEqual(manifest, {
+        schemaVersion: 1,
+        type: 'event_highlights_grid',
+        label: 'Event Highlights Grid',
+        category: 'general',
+        icon: 'fas fa-th-large',
+        order: 56,
+        toolbox: true,
+        assets: {
+            definition: 'definition.js',
+            canvas: 'Canvas.vue',
+            settings: 'Settings.vue',
+            view: 'frontend.blade.php',
+        },
+        advanced: { profile: 'widget', capabilities: [] },
+        capabilities: ['pro-icon-targets'],
+    });
+});
+
+test('Event Highlights Grid defaults and normalizer enforce the five-card contract', () => {
+    const definition = loadDefinition();
+    const defaults = definition.defaults();
+
+    assert.equal(defaults.cards.length, 5);
+    assert.deepEqual(Array.from(defaults.cards, (card) => card.mediaMode), ['icon', 'icon', 'icon', 'icon', 'icon']);
+    assert.deepEqual(Array.from(defaults.cards, (card) => card.mediaIconClass), ['fal fa-golf-ball', 'fal fa-handshake', 'fal fa-wine-glass', 'fal fa-trophy', 'fal fa-plane']);
+    assert.deepEqual(Array.from(defaults.cards, (card) => card.mediaIconStyle), ['light', 'light', 'light', 'light', 'light']);
+    assert.deepEqual(Array.from(defaults.cards, (card) => card.title), ['Championship Golf', 'Executive Networking', 'Premium Hospitality', 'Awards & Gala Dinner', 'International Finale']);
+    assert.deepEqual(Array.from(defaults.cards, (card) => card.description), [
+        'Play one of Indonesia’s most prestigious championship courses.',
+        'Connect with CEOs, investors, entrepreneurs and senior business leaders.',
+        'A carefully curated experience on and off the golf course.',
+        'Celebrate the championship with entertainment and awards.',
+        'Earn your place at the CEO Masters Grand Finale in Dubai.',
+    ]);
+    assert.equal(defaults.gridColumns, '5');
+    assert.equal(defaults.gridColumnsTablet, '3');
+    assert.equal(defaults.gridColumnsMobile, '1');
+    assert.equal(defaults.gridContentWidthMode, 'max');
+    assert.equal(defaults.gridContentMaxWidth, '1636px');
+    assert.equal(defaults.columnGap, '20px');
+    assert.equal(defaults.rowGap, '20px');
+    assert.equal(defaults.headerCardsGap, '64px');
+    assert.equal(defaults.linkVerticalPosition, 'bottom');
+    assert.equal(defaults.cardWidthMode, 'equal');
+    assert.equal(defaults.cardMinWidth, '180px');
+    assert.equal(defaults.cardHeightMode, 'custom');
+    assert.equal(defaults.cardHeight, '385px');
+    assert.equal(defaults.cardBackgroundColor, '#0a1e33');
+    assert.equal(defaults.cardBorderType, 'solid');
+    assert.equal(defaults.cardBorderColor, '#3a413f');
+    assert.equal(defaults.cardMediaPosition, 'top');
+    assert.equal(defaults.cardAlignment, 'left');
+    assert.equal(defaults.cardContentGap, '24px');
+    assert.equal(defaults.cardMediaGap, '32px');
+    assert.equal(defaults.cardMediaSize, '38px');
+    assert.equal(defaults.cardPaddingTop, '40px');
+    assert.equal(defaults.cardPaddingRight, '40px');
+    assert.equal(defaults.cardPaddingBottom, '40px');
+    assert.equal(defaults.cardPaddingLeft, '40px');
+    assert.equal(defaults.cardTitleLineHeight, '1.5em');
+    assert.equal(defaults.cardDescriptionFontSize, '18px');
+    assert.equal(defaults.cardDescriptionLineHeight, '1.8em');
+    assert.equal(defaults.advancedBackgroundType, 'classic');
+    assert.equal(defaults.advancedBackgroundColor, '#091d31');
+    assert.equal(defaults.paddingTop, '88px');
+    assert.equal(defaults.paddingRight, '32px');
+    assert.equal(defaults.paddingBottom, '104px');
+    assert.equal(defaults.paddingLeft, '32px');
+    assert.equal(defaults.showLink, true);
+    assert.equal(JSON.stringify(definition.editor.iconTargets), JSON.stringify({ cardMedia: { prefix: 'mediaIcon', collection: 'cards' } }));
+
+    const normalized = definition.normalize({ settings: {
+        gridColumns: '99',
+        gridColumnsMobile: '99',
+        gridContentWidthMode: 'invalid',
+        gridContentMaxWidth: '1200px',
+        cardWidthMode: 'invalid',
+        cardHeightMode: 'invalid',
+        showLink: false,
+        cardMediaGap: '44px',
+        cardBackgroundColor: 'red; color: blue',
+        cards: [
+            { id: 'duplicate', mediaMode: 'invalid', imageUrl: 'javascript:alert(1)', surface: 'invalid' },
+            { id: 'duplicate', mediaMode: 'image', imageUrl: 'https://example.com/image.webp' },
+            { id: 'three', mediaMode: 'text', mediaText: '03' },
+            { id: 'four' },
+            { id: 'five' },
+            { id: 'six' },
+        ],
+    } });
+
+    assert.equal(normalized.settings.gridColumns, '5');
+    assert.equal(normalized.settings.gridColumnsMobile, '');
+    assert.equal(normalized.settings.gridContentWidthMode, 'max');
+    assert.equal(normalized.settings.gridContentMaxWidth, '1200px');
+    assert.equal(normalized.settings.cardWidthMode, 'equal');
+    assert.equal(normalized.settings.cardHeightMode, 'auto');
+    assert.equal(normalized.settings.cardMediaGap, '44px');
+    assert.equal(normalized.settings.showLink, false);
+    assert.equal(normalized.settings.cards.length, 5);
+    assert.equal(new Set(normalized.settings.cards.map((card) => card.id)).size, 5);
+    assert.equal(normalized.settings.cards[0].mediaMode, 'icon');
+    assert.equal(normalized.settings.cards[0].imageUrl, '');
+    assert.equal(normalized.settings.cards[0].surface, 'inherit');
+    assert.equal(normalized.settings.cards[1].imageUrl, 'https://example.com/image.webp');
+
+    const legacy = definition.normalize({ settings: { cards: [
+        { id: 'legacy', mediaIconName: 'golf-ball-tee', mediaIconStyle: 'solid', mediaIconClass: 'fas fa-golf-ball-tee', title: 'Championship Golf', description: "Play one of Indonesia’s most prestigious championship courses." },
+        { id: 'legacy-handshake', mediaIconStyle: 'solid', mediaIconClass: 'fas fa-handshake', title: 'Executive Networking', description: 'Connect with CEOs, investors, entrepreneurs and senior business leaders.' },
+    ] } });
+    assert.equal(legacy.settings.cards[0].mediaIconClass, 'fal fa-golf-ball');
+    assert.equal(legacy.settings.cards[0].mediaIconName, 'golf-ball');
+    assert.equal(legacy.settings.cards[0].mediaIconStyle, 'light');
+    assert.equal(legacy.settings.cards[1].mediaIconClass, 'fal fa-handshake');
+    assert.equal(legacy.settings.cards[1].mediaIconStyle, 'light');
+
+    const empty = definition.normalize({ settings: { cards: [] } });
+    assert.equal(empty.settings.cards.length, 5);
+});
+
+test('Event Highlights Grid Settings follows the shared v2.4 repeater and form contract', () => {
+    const { descriptor, errors } = parse(settingsSource, { filename: 'EventHighlightsGridSettings.vue' });
+    assert.deepEqual(errors, []);
+    assert.deepEqual(compile(descriptor.template.content, { mode: 'function' }).errors ?? [], []);
+
+    for (const marker of [
+        'pb-tab-nav', 'pb-tab-btn', 'pb-tab-btn-icon', 'Content', 'Style', 'Advanced',
+        'pb-tab-content', 'pb-collapsible', 'pb-collapsible-body', 'pb-form-group',
+        'pb-form-label', 'pb-input', 'pb-select', 'pb-textarea', 'pb-form-row',
+        'Text Content', 'CTA Link', 'Show Link', 'showLink', 'Cards', 'Move Up', 'Move Down', 'Duplicate',
+        'Remove', 'Add Card', 'Media Type', 'Icon', 'Image', 'Text', 'pb-pro-repeater',
+        'openProIconLibrary', 'chooseMedia', 'editor.linkControl', 'editor.typographyControl',
+        'editor.widgetAdvancedControls', 'pb-range-value-row', 'pb-four-sides pb-four-sides-with-link',
+        'coloris pb-coloris-input', 'Card Layout', 'Card Media', 'Card Title', 'Card Description',
+        'Card Box', 'surface', 'min-height', 'Media–Title Gap', 'cardMediaGap', 'Content Width', 'gridContentWidthMode', 'gridContentMaxWidth', 'aria-label',
+    ]) {
+        assert.match(settingsSource, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `missing Settings marker: ${marker}`);
+    }
+    assert.doesNotMatch(settingsSource, /<template\s+v-if=/, 'Settings must not hide controls in inert native templates');
+});
+
+test('Event Highlights Grid default visual contract matches the supplied editorial reference', async () => {
+    const component = loadSfc(canvasSource, 'EventHighlightsGridCanvas.vue');
+    const defaults = loadDefinition().defaults();
+    const html = await renderComponent(component, { item: { settings: defaults }, responsiveDevice: 'desktop' });
+
+    assert.match(canvasSource, /contentWidthStyle/);
+    assert.match(canvasSource, /gridContentWidthMode/);
+    assert.match(frontendSource, /gridContentWidthMode/);
+    assert.match(frontendSource, /gridContentMaxWidth/);
+    const rootOpeningTag = html.match(/<div class="el-widget-event-highlights-grid[^>]+>/)?.[0] || '';
+    assert.doesNotMatch(rootOpeningTag, /background-color:/, 'Canvas must not duplicate Advanced background on the inner widget');
+    assert.doesNotMatch(rootOpeningTag, /padding-(?:top|right|bottom|left):/, 'Canvas must not duplicate Advanced padding on the inner widget');
+    assert.match(html, /min-height:385px/);
+    assert.match(html, /gap:32px/);
+    assert.match(html, /fal fa-golf-ball/);
+    assert.match(html, /<div class="event-highlights-grid__header" style="[^\"]*max-width:1636px/);
+    assert.match(html, /<div class="event-highlights-grid__cards" style="[^\"]*max-width:1636px/);
+    assert.match(html, /event-highlights-grid__header-heading[^\"]*\"[^>]*style=\"[^\"]*color:#f4efe4/);
+    assert.match(html, /event-highlights-grid__header-subheading[^\"]*\"[^>]*style=\"[^\"]*color:#d8ad5e/);
+    assert.match(html, /Championship Golf/);
+    assert.match(html, /Play one of Indonesia’s most prestigious championship courses\./);
+    assert.match(settingsSource, /label="Header–Cards Gap"[^>]*fallback="64px"/);
+    assert.match(settingsSource, /base="cardHeightMode"[^>]*fallback="custom"/);
+    assert.match(settingsSource, /base="cardHeight"[^>]*fallback="385px"/);
+    assert.match(settingsSource, /base="cardPadding"[^>]*fallback="40px"/);
+
+    const fullWidthHtml = await renderComponent(component, { item: { settings: { ...defaults, gridContentWidthMode: 'full' } }, responsiveDevice: 'desktop' });
+    assert.match(fullWidthHtml, /<div class="event-highlights-grid__header" style="[^\"]*max-width:100%/);
+    assert.match(fullWidthHtml, /<div class="event-highlights-grid__cards" style="[^\"]*max-width:100%/);
+
+    const customWidthHtml = await renderComponent(component, { item: { settings: { ...defaults, gridContentMaxWidth: '1200px' } }, responsiveDevice: 'desktop' });
+    assert.match(customWidthHtml, /<div class="event-highlights-grid__header" style="[^\"]*max-width:1200px/);
+    assert.match(customWidthHtml, /<div class="event-highlights-grid__cards" style="[^\"]*max-width:1200px/);
+
+    const mobileFullWidthHtml = await renderComponent(component, { item: { settings: { ...defaults, gridContentWidthModeMobile: 'full' } }, responsiveDevice: 'mobile' });
+    assert.match(mobileFullWidthHtml, /<div class="event-highlights-grid__header" style="[^\"]*max-width:100%/);
+    assert.match(mobileFullWidthHtml, /<div class="event-highlights-grid__cards" style="[^\"]*max-width:100%/);
+
+    const customHtml = await renderComponent(component, { item: { settings: {
+        ...defaults,
+        headingColor: '#123456',
+        subheadingColor: '#654321',
+        paddingTop: '28px',
+        paddingBottom: '28px',
+    } }, responsiveDevice: 'desktop' });
+    const customRootOpeningTag = customHtml.match(/<div class="el-widget-event-highlights-grid[^>]+>/)?.[0] || '';
+    assert.match(customHtml, /event-highlights-grid__header-heading[^\"]*\"[^>]*style=\"[^\"]*color:#123456/);
+    assert.match(customHtml, /event-highlights-grid__header-subheading[^\"]*\"[^>]*style=\"[^\"]*color:#654321/);
+    assert.doesNotMatch(customRootOpeningTag, /padding-top:28px|padding-bottom:28px/);
+});
+
+test('Event Highlights Grid repeater actions stay compact and item color overrides stack full width', () => {
+    assert.match(settingsSource, /pb-event-highlights-grid-color-overrides/);
+    assert.match(settingsSource, /\.pb-event-highlights-grid-color-overrides\{[^}]*grid-template-columns:minmax\(0,1fr\)/);
+    assert.match(settingsSource, /\.pb-event-highlights-grid-card-edit \.pb-form-row--two\{[^}]*grid-template-columns:minmax\(0,1fr\)/);
+    assert.match(settingsSource, /pb-pro-repeater__summary-actions button\)\{[^}]*width:24px;[^}]*height:24px;[^}]*min-width:24px;[^}]*min-height:24px/);
+    assert.match(settingsSource, /pb-pro-repeater__summary-actions button i\)\{[^}]*font-size:12px;[^}]*line-height:1/);
+});
+
+test('Event Highlights Grid border and card box controls keep ideal vertical spacing', () => {
+    assert.match(settingsSource, /pb-event-highlights-grid-border-settings\)\{display:grid;gap:12px;margin-bottom:16px/);
+    assert.match(settingsSource, /pb-event-highlights-grid-card-box-controls/);
+    assert.match(settingsSource, /pb-event-highlights-grid-card-box-controls\)\{display:grid;gap:12px/);
+});
+
+test('Event Highlights Grid header link position controls stack full width', () => {
+    assert.match(settingsSource, /pb-event-highlights-grid-header-link-controls/);
+    assert.match(settingsSource, /\.pb-event-highlights-grid-header-link-controls\{[^}]*grid-template-columns:minmax\(0,1fr\)/);
+});
+
+test('Event Highlights Grid Canvas renders header, all media modes, responsive grid, and card surfaces', async () => {
+    const component = loadSfc(canvasSource, 'EventHighlightsGridCanvas.vue');
+    const settings = {
+        heading: 'Compete in Jakarta. Qualify for Dubai.',
+        subheading: 'THE CHAMPIONSHIP PATHWAY',
+        textOrder: 'subheading-first',
+        linkText: 'REGISTER INTEREST',
+        linkUrl: 'https://example.com/register',
+        linkTarget: '_blank',
+        linkNofollow: true,
+        showLink: true,
+        showArrow: true,
+        gridColumns: '5',
+        gridColumnsTablet: '3',
+        gridColumnsMobile: '1',
+        columnGap: '20px',
+        rowGap: '20px',
+        cardWidthMode: 'soft-min',
+        cardMinWidth: '180px',
+        cardHeightMode: 'custom',
+        cardHeight: '320px',
+        cardMediaGap: '40px',
+        cardBackgroundColor: 'transparent',
+        cardBorderType: 'solid',
+        cardBorderColor: 'rgba(216,173,94,.35)',
+        cards: [
+            { id: 'icon', mediaMode: 'icon', mediaIconClass: 'fas fa-star', title: 'Icon card', description: 'Icon description', surface: 'inherit' },
+            { id: 'image', mediaMode: 'image', imageUrl: 'https://example.com/card.webp', imageAlt: 'Card image', title: 'Image card', description: 'Image description', surface: 'light' },
+            { id: 'text', mediaMode: 'text', mediaText: '03', title: 'Text card', description: 'Text description', surface: 'custom', customBackgroundColor: '#112233', customBorderColor: '#d8ad5e' },
+        ],
+    };
+
+    const desktop = await renderComponent(component, { item: { settings }, responsiveDevice: 'desktop' });
+    assert.match(desktop, /data-event-highlights-grid/);
+    assert.match(desktop, /event-highlights-grid__header/);
+    assert.match(desktop, /event-highlights-grid__cards/);
+    assert.equal((desktop.match(/class="event-highlights-grid__card(?:\s|\")/g) || []).length, 3);
+    assert.match(desktop, /event-highlights-grid__media-icon/);
+    assert.match(desktop, /event-highlights-grid__media-image/);
+    assert.match(desktop, /event-highlights-grid__media-text/);
+    assert.match(desktop, /<h2[\s\S]*Compete in Jakarta/);
+    assert.match(desktop, /<h3[\s\S]*Icon card/);
+    assert.match(desktop, /grid-columns-5/);
+    assert.match(desktop, /surface-light/);
+    assert.match(desktop, /surface-custom/);
+    assert.match(desktop, /target="_blank"/);
+    assert.match(desktop, /rel="noopener noreferrer nofollow"|rel="nofollow noopener noreferrer"/);
+    assert.match(desktop, /min-height:320px/);
+    assert.match(desktop, /gap:40px/);
+
+    const mobile = await renderComponent(component, { item: { settings }, responsiveDevice: 'mobile' });
+    assert.match(mobile, /data-responsive-device="mobile"/);
+    assert.match(mobile, /grid-columns-1/);
+    assert.match(mobile, /grid-template-columns:repeat\(1/);
+});
+
+test('Event Highlights Grid Canvas maps header link positions to the correct flex axis', async () => {
+    const component = loadSfc(canvasSource, 'EventHighlightsGridCanvas.vue');
+    const baseSettings = { heading: 'Heading', subheading: 'Subheading', linkText: 'Link', linkUrl: '#', cards: [] };
+    const renderCta = async (overrides) => {
+        const app = Vue.createSSRApp(component, { item: { settings: { ...baseSettings, ...overrides } }, responsiveDevice: 'desktop' });
+        app.config.warnHandler = () => {};
+        const html = await renderToString(app);
+        return html.match(/<div class="event-highlights-grid__header-cta"[^>]*>/)?.[0] || '';
+    };
+
+    assert.match(await renderCta({ layoutDirection: 'row', linkVerticalPosition: 'top' }), /style="align-self:flex-start;"/);
+    assert.match(await renderCta({ layoutDirection: 'row', linkVerticalPosition: 'bottom' }), /style="align-self:flex-end;"/);
+    assert.match(await renderCta({ layoutDirection: 'column', linkHorizontalAlign: 'left' }), /style="align-self:flex-start;text-align:left;"/);
+    assert.match(await renderCta({ layoutDirection: 'column', linkHorizontalAlign: 'right' }), /style="align-self:flex-end;text-align:right;"/);
+    assert.match(frontendSource, /in_array\(\$value, \['left','top'\], true\)[\s\S]*in_array\(\$value, \['right','bottom'\], true\)/);
+});
+
+test('Event Highlights Grid can disable the complete header CTA link', async () => {
+    const component = loadSfc(canvasSource, 'EventHighlightsGridCanvas.vue');
+    const app = Vue.createSSRApp(component, {
+        item: { settings: { heading: 'Heading', subheading: 'Subheading', linkText: 'Link', linkUrl: 'https://example.com', showLink: false, cards: [] } },
+        responsiveDevice: 'desktop',
+    });
+    app.config.warnHandler = () => {};
+    const html = await renderToString(app);
+
+    assert.doesNotMatch(html, /event-highlights-grid__header-cta/);
+    assert.match(settingsSource, /v-model="node\.settings\.showLink"/);
+    assert.match(frontendSource, /\$showLink\s*=\s*in_array/);
+});
+
+test('Event Highlights Grid Canvas and Blade share the public structure and safety contract', () => {
+    for (const marker of [
+        'data-event-highlights-grid', 'event-highlights-grid__header', 'event-highlights-grid__cards',
+        'event-highlights-grid__card', 'event-highlights-grid__media', 'event-highlights-grid__title',
+        'event-highlights-grid__description', 'gridColumns', 'columnGap', 'rowGap', 'headerCardsGap',
+        'cardWidthMode', 'cardMinWidth', 'cardHeightMode', 'cardBorderType', 'cardBackgroundColor',
+        'surface', 'overflow-wrap:anywhere', 'noopener',
+    ]) {
+        assert.match(canvasSource, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Canvas missing ${marker}`);
+        assert.match(frontendSource, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Blade missing ${marker}`);
+    }
+    assert.match(manifestSource, /pro-icon-targets/);
+    assert.match(frontendSource, /pro-icon-targets/);
+    assert.doesNotMatch(frontendSource, /pb-node-toolbar|pb-dropzone|selection outline/i);
+    assert.match(frontendSource, /safe.*(?:Url|Svg)/i);
+});
+
+console.log('pagebuilder v2.4 event highlights grid widget contract test passed');

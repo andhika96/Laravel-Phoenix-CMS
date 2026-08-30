@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Http\Requests\Page_Builder_Elementor_V24;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class AutomaticCompiledNativeAnalyzeRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'source' => ['required', 'file', 'mimes:html,htm,zip', 'max:20480'],
+            'framework' => ['nullable', 'string', Rule::in(['auto', 'plain', 'plain_css', 'tailwind', 'bootstrap5', 'bootstrap_css'])],
+            'entry' => ['nullable', 'string', 'max:255'],
+        ];
+    }
+}

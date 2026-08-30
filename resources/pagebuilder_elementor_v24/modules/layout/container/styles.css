@@ -87,7 +87,7 @@
 	--pb-container-resizer-hit-size: 52px;
 	position: absolute;
 	top: 50%;
-	right: calc((var(--pb-container-resizer-hit-size) + var(--pb-flex-column-gap, 0px)) / -2);
+	right: calc(var(--pb-container-resizer-hit-size) / -2);
 	width: var(--pb-container-resizer-hit-size);
 	height: 52px;
 	transform: translateY(-50%);

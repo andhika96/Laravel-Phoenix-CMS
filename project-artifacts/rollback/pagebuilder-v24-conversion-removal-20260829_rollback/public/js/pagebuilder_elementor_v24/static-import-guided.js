@@ -1,0 +1,295 @@
+(function (root) {
+	'use strict';
+
+	const STRATEGIES = Object.freeze(['auto_native', 'guided_native', 'exact_visual', 'skip']);
+
+	function createState() {
+		return {
+			phase: 'idle',
+			sourceFile: null,
+			sourceHash: '',
+			analysis: null,
+			selectedRegionId: '',
+			expandedBlockIds: [],
+			regionMappings: {},
+			errors: [],
+		};
+	}
+
+	function cloneState(state) {
+		const mappings = {};
+		Object.entries(state?.regionMappings || {}).forEach(([regionId, mapping]) => {
+			mappings[regionId] = {
+				strategy: String(mapping?.strategy || ''),
+				blocks: { ...(mapping?.blocks || {}) },
+			};
+		});
+
+		return {
+			...createState(),
+			...(state || {}),
+			expandedBlockIds: [...(state?.expandedBlockIds || [])],
+			regionMappings: mappings,
+			errors: [...(state?.errors || [])],
+		};
+	}
+
+	function catalogMap(moduleCatalog) {
+		if (Array.isArray(moduleCatalog)) {
+			return Object.fromEntries(moduleCatalog
+				.filter((module) => module && typeof module.type === 'string')
+				.map((module) => [module.type, module]));
+		}
+		return moduleCatalog && typeof moduleCatalog === 'object' ? moduleCatalog : {};
+	}
+
+	function isActiveWidget(moduleCatalog, widgetType) {
+		const type = String(widgetType || '');
+		return type !== '' && Object.prototype.hasOwnProperty.call(catalogMap(moduleCatalog), type);
+	}
+
+	function flattenBlocks(blocks, result = []) {
+		(blocks || []).forEach((block) => {
+			if (!block || typeof block !== 'object') return;
+			result.push(block);
+			flattenBlocks(block.children, result);
+		});
+		return result;
+	}
+
+	function normalizeBlock(block, modules) {
+		const catalog = catalogMap(modules);
+		const allowedWidgets = [...new Set((Array.isArray(block?.allowedWidgets) ? block.allowedWidgets : [])
+			.filter((type) => typeof type === 'string' && isActiveWidget(catalog, type)))];
+		const recommendedWidget = typeof block?.recommendedWidget === 'string'
+			&& allowedWidgets.includes(block.recommendedWidget)
+			? block.recommendedWidget
+			: null;
+		const widgetOptions = allowedWidgets.map((type) => ({
+			type,
+			label: String(catalog[type]?.label || type),
+			icon: String(catalog[type]?.icon || ''),
+			category: String(catalog[type]?.category || ''),
+		}));
+
+		return {
+			id: String(block?.id || ''),
+			marker: String(block?.marker || ''),
+			parentId: block?.parentId == null ? null : String(block.parentId),
+			role: String(block?.role || 'unknown'),
+			tag: String(block?.tag || ''),
+			sourceId: String(block?.sourceId || ''),
+			label: String(block?.label || ''),
+			textPreview: String(block?.textPreview || ''),
+			recommendedWidget,
+			allowedWidgets,
+			widgetOptions,
+			confidence: Number.isFinite(Number(block?.confidence)) ? Number(block.confidence) : 0,
+			warnings: Array.isArray(block?.warnings) ? [...block.warnings].map(String) : [],
+			children: Array.isArray(block?.children) ? block.children.map((child) => normalizeBlock(child, catalog)) : [],
+		};
+	}
+
+	function normalizeAnalysis(payload, moduleCatalog) {
+		const modules = catalogMap(moduleCatalog);
+		const regions = Array.isArray(payload?.regions) ? payload.regions.map((region, index) => ({
+			id: String(region?.id || ''),
+			marker: String(region?.marker || ''),
+			kind: String(region?.kind || 'section'),
+			sourceId: String(region?.sourceId || ''),
+			label: String(region?.label || `Section ${index + 1}`),
+			order: Number.isFinite(Number(region?.order)) ? Number(region.order) : index,
+			recommendedStrategy: STRATEGIES.includes(region?.recommendedStrategy) ? region.recommendedStrategy : 'guided_native',
+			confidence: Number.isFinite(Number(region?.confidence)) ? Number(region.confidence) : 0,
+			warnings: Array.isArray(region?.warnings) ? [...region.warnings].map(String) : [],
+			stats: region?.stats && typeof region.stats === 'object' ? { ...region.stats } : {},
+			allowedWidgets: Array.isArray(region?.allowedWidgets)
+				? [...new Set(region.allowedWidgets.filter((type) => typeof type === 'string' && isActiveWidget(modules, type)))]
+				: [],
+			recommendedWidget: typeof region?.recommendedWidget === 'string' && isActiveWidget(modules, region.recommendedWidget)
+				? region.recommendedWidget
+				: null,
+			blocks: Array.isArray(region?.blocks) ? region.blocks.map((block) => normalizeBlock(block, modules)) : [],
+		})).sort((left, right) => left.order - right.order) : [];
+
+		return {
+			sourceHash: String(payload?.sourceHash || ''),
+			frameworks: Array.isArray(payload?.frameworks) ? [...payload.frameworks].map(String) : [],
+			previewPayload: payload?.previewPayload && typeof payload.previewPayload === 'object'
+				? { ...payload.previewPayload }
+				: { html: '', sourceCss: '', frameworks: [] },
+			regions,
+		};
+	}
+
+	function setPhase(state, phase, patch = {}) {
+		const next = cloneState(state);
+		if (!['idle', 'analyzing', 'mapping', 'compiling', 'complete', 'failed'].includes(phase)) {
+			return appendError(next, { code: 'invalid-phase' });
+		}
+		return { ...next, ...patch, phase };
+	}
+
+	function setAnalysis(state, payload, moduleCatalog, sourceFile) {
+		const normalized = normalizeAnalysis(payload, moduleCatalog);
+		return setPhase(state, 'mapping', {
+			sourceFile: sourceFile || null,
+			sourceHash: normalized.sourceHash,
+			analysis: normalized,
+			selectedRegionId: normalized.regions[0]?.id || '',
+			expandedBlockIds: [],
+			regionMappings: {},
+			errors: [],
+		});
+	}
+
+	function sourceIsCurrent(state, sourceFile, sourceHash) {
+		return Boolean(state?.sourceFile && sourceFile && state.sourceFile === sourceFile && state.sourceHash === sourceHash);
+	}
+
+	function appendError(state, error) {
+		const next = cloneState(state);
+		const signature = JSON.stringify(error);
+		if (!next.errors.some((item) => JSON.stringify(item) === signature)) next.errors.push(error);
+		return next;
+	}
+
+	function findRegion(state, regionId) {
+		return state?.analysis?.regions?.find((region) => region.id === regionId) || null;
+	}
+
+	function findBlock(region, blockId) {
+		return flattenBlocks(region?.blocks).find((block) => block.id === blockId) || null;
+	}
+
+	function setRegionStrategy(state, regionId, strategy) {
+		const next = cloneState(state);
+		const region = findRegion(next, regionId);
+		if (!region) return appendError(next, { code: 'unknown-region', regionId: String(regionId || '') });
+		if (!STRATEGIES.includes(strategy)) return appendError(next, { code: 'invalid-strategy', regionId });
+		next.selectedRegionId = regionId;
+		next.regionMappings[regionId] = {
+			strategy,
+			blocks: strategy === 'guided_native' ? { ...(next.regionMappings[regionId]?.blocks || {}) } : {},
+		};
+		return next;
+	}
+
+	function setBlockWidget(state, regionId, blockId, widgetType) {
+		const next = cloneState(state);
+		const region = findRegion(next, regionId);
+		if (!region) return appendError(next, { code: 'unknown-region', regionId: String(regionId || '') });
+		const block = findBlock(region, blockId);
+		if (!block) return appendError(next, { code: 'unknown-block', regionId, blockId });
+		if (!block.allowedWidgets.includes(widgetType)) return appendError(next, { code: 'incompatible-widget', regionId, blockId });
+		next.selectedRegionId = regionId;
+		next.regionMappings[regionId] = {
+			strategy: next.regionMappings[regionId]?.strategy || 'guided_native',
+			blocks: { ...(next.regionMappings[regionId]?.blocks || {}), [blockId]: widgetType },
+		};
+		return next;
+	}
+
+	function regionValidation(state, regionId) {
+		const region = findRegion(state, regionId);
+		if (!region) return { valid: false, errors: [{ code: 'unknown-region', regionId }] };
+		const mapping = state.regionMappings?.[regionId] || {};
+		const strategy = mapping.strategy || region.recommendedStrategy || 'guided_native';
+		const errors = [];
+		const blocks = flattenBlocks(region.blocks);
+		const mappedBlocks = mapping.blocks && typeof mapping.blocks === 'object' ? mapping.blocks : {};
+
+		if (!STRATEGIES.includes(strategy)) errors.push({ code: 'invalid-strategy', regionId });
+		if (strategy === 'skip' || strategy === 'exact_visual') {
+			if (Object.keys(mappedBlocks).length > 0) errors.push({ code: 'strategy-blocks-not-allowed', regionId });
+			return { valid: errors.length === 0, errors };
+		}
+
+		blocks.forEach((block) => {
+			const widgetType = strategy === 'auto_native' ? block.recommendedWidget : mappedBlocks[block.id];
+			if (!widgetType) {
+				errors.push({ code: 'unresolved-block', regionId, blockId: block.id });
+				return;
+			}
+			if (!block.allowedWidgets.includes(widgetType)) errors.push({ code: 'incompatible-widget', regionId, blockId: block.id });
+		});
+		return { valid: errors.length === 0, errors };
+	}
+
+	function buildCompileMapping(state) {
+		const regions = Array.isArray(state?.analysis?.regions) ? state.analysis.regions : [];
+		return {
+			version: 1,
+			regions: regions.map((region) => {
+				const stateMapping = state.regionMappings?.[region.id] || {};
+				const strategy = STRATEGIES.includes(stateMapping.strategy)
+					? stateMapping.strategy
+					: (region.recommendedStrategy || 'guided_native');
+				const blocks = strategy === 'guided_native'
+					? flattenBlocks(region.blocks).flatMap((block) => {
+						const widgetType = stateMapping.blocks?.[block.id] || block.recommendedWidget;
+						return widgetType ? [{ blockId: block.id, widgetType }] : [];
+					})
+					: [];
+				return {
+					regionId: region.id,
+					strategy,
+					blocks,
+				};
+			}),
+		};
+	}
+
+	function resetState() {
+		return createState();
+	}
+
+	function extractRegion(html, marker) {
+		const escapedMarker = String(marker || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		const opening = new RegExp(`<([a-z][\\w:-]*)\\b[^>]*data-pb-import-node\\s*=\\s*["']${escapedMarker}["'][^>]*>`, 'i');
+		const match = opening.exec(String(html || ''));
+		if (!match) return '';
+		const tag = match[1];
+		const start = match.index;
+		const token = new RegExp(`</?${tag}\\b[^>]*>`, 'gi');
+		token.lastIndex = start;
+		let depth = 0;
+		let end = start;
+		let tokenMatch;
+		while ((tokenMatch = token.exec(String(html || '')))) {
+			const value = tokenMatch[0];
+			if (/^<\//.test(value)) depth -= 1;
+			else if (!/\/\s*>$/.test(value)) depth += 1;
+			if (depth === 0) {
+				end = token.lastIndex;
+				break;
+			}
+		}
+		return (String(html || '').slice(start, end || start)).replace(/<script\b[\s\S]*?<\/script\s*>/gi, '');
+	}
+
+	function buildRegionPreviewSrcdoc(previewPayload, regionMarker) {
+		const html = String(previewPayload?.html || '');
+		const sourceCss = String(previewPayload?.sourceCss || '')
+			.replace(/<\/style/gi, '<\\/style')
+			.replace(/<script\b[\s\S]*?<\/script\s*>/gi, '');
+		const fragment = extractRegion(html, regionMarker);
+		return `<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${sourceCss}</style></head><body class="pb-import-root">${fragment}</body></html>`;
+	}
+
+	root.PhoenixGuidedStaticImport = {
+		STRATEGIES,
+		createState,
+		normalizeAnalysis,
+		setPhase,
+		setAnalysis,
+		sourceIsCurrent,
+		setRegionStrategy,
+		setBlockWidget,
+		regionValidation,
+		buildCompileMapping,
+		buildRegionPreviewSrcdoc,
+		resetState,
+		flattenBlocks,
+	};
+}(typeof window !== 'undefined' ? window : globalThis));

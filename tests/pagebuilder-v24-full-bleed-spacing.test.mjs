@@ -59,7 +59,7 @@ test('v2.4 Canvas makes the editor gutter responsive instead of hard-coding it p
 test('every v2.4 widget renderer uses the shared Advanced resolver at its own root', () => {
     const widgetRoot = path.join(root, 'resources', 'pagebuilder_elementor_v24', 'modules', 'widgets');
     const frontendFiles = walk(widgetRoot, 'frontend.blade.php');
-    assert.equal(frontendFiles.length, 46);
+    assert.equal(frontendFiles.length, 49);
     for (const file of frontendFiles) {
         const source = fs.readFileSync(file, 'utf8');
         assert.match(source, /WidgetAdvancedStyleResolver::class/, path.relative(root, file));

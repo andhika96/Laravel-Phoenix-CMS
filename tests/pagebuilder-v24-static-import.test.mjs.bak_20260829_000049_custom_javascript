@@ -1,0 +1,69 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import fs from 'node:fs';
+
+const root = new URL('../', import.meta.url);
+const read = (path) => fs.readFileSync(new URL(path, root), 'utf8');
+
+test('v2.4 exposes an authenticated static import endpoint and Canvas trigger', () => {
+  const route = read('routes/pagebuilder_elementor_v24.php');
+  const shell = read('resources/views/pagebuilder_elementor_v24/editor_shell.blade.php');
+  const app = read('public/js/pagebuilder_elementor_v24/app.js');
+
+  assert.match(route, /Route::post\('\/import\/static', 'importStatic'\)/);
+  assert.match(shell, /staticImportUrl:/);
+  assert.match(app, /async function importStaticFile\(event\)/);
+  assert.match(app, /rootNodes\.value = norm\(result\.layout\)/);
+  assert.match(app, /class="top-action"[^\n]*Import Static/);
+  assert.match(app, /accept="\.html,\.htm,\.zip/);
+  assert.match(app, /staticImportFramework/);
+  assert.match(app, /staticImportMode/);
+  assert.match(app, /data\.append\('mode', staticImportMode\.value\)/);
+  assert.match(app, /function showStaticImportReport\(\)/);
+  assert.match(app, /function downloadStaticImportJson\(\)/);
+});
+
+test('v2.4 synchronizes imported framework dependencies without changing manual layouts', () => {
+  const app = read('public/js/pagebuilder_elementor_v24/app.js');
+
+  assert.match(app, /function staticImportMetadata\(nodes\)/);
+  assert.match(app, /function syncStaticImportDependencies\(nodes\)/);
+  assert.match(app, /corePlugins:\s*\{\s*preflight:\s*false\s*\}/);
+  assert.match(app, /important:\s*'\.pb-import-root'/);
+  assert.match(app, /syncStaticImportDependencies\(rootNodes\.value\)/);
+  assert.match(app, /data-pb-static-import/);
+  assert.match(app, /querySelectorAll\('\[data-pb-static-import\]'\)/);
+});
+
+test('imported CTA classes can own their visual styling without changing manual button defaults', () => {
+  const canvas = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/button/Canvas.vue');
+  const frontend = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/button/frontend.blade.php');
+
+  assert.match(canvas, /sourceClassStyles/);
+  assert.match(canvas, /pb-import-source-button/);
+  assert.match(canvas, /:not\(\.pb-import-source-button\):hover/);
+  assert.match(frontend, /sourceClassStyles/);
+  assert.match(frontend, /pb-import-source-button/);
+});
+
+test('imported heading line breaks are opt-in', () => {
+  const canvas = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/heading/Canvas.vue');
+  const frontend = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/heading/frontend.blade.php');
+
+  assert.match(canvas, /sourceLineBreaks/);
+  assert.match(canvas, /sourceLineBreaks[^\n]+pre-line/);
+  assert.match(frontend, /sourceLineBreaks/);
+  assert.match(frontend, /white-space:pre-line/);
+});
+
+test('static html preview is a hidden v2.4 source module', () => {
+  const manifest = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/static-html/module.json');
+  const canvas = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/static-html/Canvas.vue');
+  const frontend = read('resources/pagebuilder_elementor_v24/modules/widgets/basic/static-html/frontend.blade.php');
+
+  assert.match(manifest, /"type": "static_html"/);
+  assert.match(manifest, /"toolbox": false/);
+  assert.match(canvas, /sandbox="allow-scripts"/);
+  assert.match(canvas, /pb-static-html-preview--canvas/);
+  assert.match(frontend, /sandbox="allow-scripts"/);
+});

@@ -43,7 +43,7 @@ class PageBuilderElementorV24FrontendParserDefaultsTest extends TestCase
             restore_error_handler();
         }
 
-        $this->assertCount(50, $modules);
+        $this->assertCount(53, $modules);
         $this->assertSame([], $warnings, json_encode($warnings, JSON_UNESCAPED_SLASHES));
     }
 

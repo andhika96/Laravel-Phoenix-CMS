@@ -1,0 +1,168 @@
+<template>
+	<div class="pb-basic-button-canvas" :style="wrapperStyle">
+		<a :href="href" :target="target" :rel="rel" :class="['el-widget-button', buttonClass, { 'pb-import-source-button': sourceClassStyles }]" :style="buttonStyle" :data-pb-import-node="importNodeKey"><template v-if="hasIcon"><img v-if="iconSource === 'svg'" class="el-widget-button__icon-svg" :src="iconSvgDataUri" alt="" aria-hidden="true"><i v-else class="el-widget-button__icon" :class="iconClass" :data-pb-import-node="iconImportNodeKey" aria-hidden="true"></i></template><span class="el-widget-button__text">{{ text }}</span></a>
+	</div>
+</template>
+
+<script>
+const ALLOWED_ALIGNMENTS = ['left', 'center', 'right', 'stretch'];
+const ALLOWED_BORDER_TYPES = ['none', 'solid', 'double', 'dotted', 'dashed', 'groove'];
+
+export default {
+	name: 'BasicButton',
+	props: {
+		item: { type: Object, required: true },
+		responsiveDevice: { type: String, default: 'desktop' },
+	},
+	computed: {
+		settings() { return this.item.settings || {}; },
+		importNodeKey() {
+			const value = String(this.settings.importNodeKey || '').trim();
+			return /^import-node-[A-Za-z0-9_-]+$/.test(value) ? value : null;
+		},
+		iconImportNodeKey() {
+			const value = String(this.settings.iconImportNodeKey || '').trim();
+			return /^import-node-[A-Za-z0-9_-]+$/.test(value) ? value : null;
+		},
+		text() { return this.item.settings?.text ?? 'Click here'; },
+		href() { return this.settings.url ?? '#'; },
+		target() { return this.settings.newTab ? '_blank' : null; },
+		rel() { return this.item.settings?.newTab ? 'noopener' : null; },
+		buttonClass() {
+			const value = String(this.settings.className || 'btn btn-primary').trim();
+			if (this.sourceClassStyles) return value.split(/\s+/).filter((token) => /^[A-Za-z0-9_:/\\[\\]\\-.%]+$/.test(token)).join(' ') || 'btn btn-primary';
+			return value.split(/\s+/).map((token) => token.replace(/^\.+/, '').replace(/[^A-Za-z0-9_-]/g, '')).filter(Boolean).join(' ') || 'btn btn-primary';
+		},
+		sourceClassStyles() { return this.settings.sourceClassStyles === true; },
+		iconSource() {
+			const source = String(this.settings.iconSource || 'none').trim().toLowerCase();
+			if (source === 'svg' && String(this.settings.iconSvg || '').trim().startsWith('<svg')) return 'svg';
+			if (source === 'library' && /^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i.test(String(this.settings.iconClass || '').trim())) return 'library';
+			return 'none';
+		},
+		hasIcon() { return this.iconSource !== 'none'; },
+		iconClass() {
+			const value = String(this.settings.iconClass || '').trim();
+			return /^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i.test(value) ? value : 'fas fa-star';
+		},
+		iconSvgDataUri() {
+			const markup = String(this.settings.iconSvg || '').trim();
+			return markup.startsWith('<svg') ? 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(markup) : '';
+		},
+		iconPosition() { return ['row', 'row-reverse'].includes(this.settings.buttonIconPosition) ? this.settings.buttonIconPosition : 'row'; },
+		alignment() { return this.responsiveValue('align', 'left'); },
+		wrapperStyle() {
+			return {
+				display: 'flex',
+				justifyContent: this.alignment === 'center' ? 'center' : (this.alignment === 'right' ? 'flex-end' : 'flex-start'),
+			};
+		},
+		buttonStyle() {
+			if (this.sourceClassStyles) return { boxSizing: 'border-box' };
+			const background = this.backgroundStyle('normal');
+			const hoverBackground = this.backgroundStyle('hover');
+			const border = this.borderStyle('normal');
+			const hoverBorder = this.borderStyle('hover');
+			return {
+				boxSizing: 'border-box',
+				display: 'inline-flex',
+				alignItems: 'center',
+				justifyContent: 'center',
+				flexDirection: this.hasIcon ? this.iconPosition : 'row',
+				gap: this.hasIcon ? this.safeLength(this.responsiveValue('buttonIconSpacing', '8px'), '8px') : '0px',
+				width: this.alignment === 'stretch' ? '100%' : 'auto',
+				padding: this.safeLength(this.responsiveValue('buttonPadding', '12px 24px'), '12px 24px'),
+				borderRadius: this.safeLength(this.responsiveValue('buttonBorderRadius', '5px'), '5px'),
+				borderStyle: border.style,
+				borderWidth: border.width,
+				borderColor: border.color,
+				color: this.safeColor(this.settings.buttonTextColor, '#ffffff'),
+				background: background,
+				boxShadow: this.boxShadowStyle('normal'),
+				fontFamily: this.safeFontFamily(this.settings.buttonFontFamily),
+				fontSize: this.safeLength(this.responsiveValue('buttonFontSize', '16px'), '16px'),
+				fontWeight: this.safeFontWeight(this.settings.buttonFontWeight, '600'),
+				lineHeight: this.safeLength(this.responsiveValue('buttonLineHeight', '1.2em'), '1.2em'),
+				letterSpacing: this.safeLength(this.responsiveValue('buttonLetterSpacing', '0px'), '0px'),
+				wordSpacing: this.safeLength(this.responsiveValue('buttonWordSpacing', '0px'), '0px'),
+				textTransform: ['none', 'uppercase', 'lowercase', 'capitalize'].includes(this.settings.buttonTextTransform) ? this.settings.buttonTextTransform : 'none',
+				fontStyle: ['normal', 'italic', 'oblique'].includes(this.settings.buttonFontStyle) ? this.settings.buttonFontStyle : 'normal',
+				textDecoration: ['none', 'underline', 'overline', 'line-through'].includes(this.settings.buttonTextDecoration) ? this.settings.buttonTextDecoration : 'none',
+				textShadow: this.safeShadow(this.settings.buttonTextShadow),
+				transition: `color ${this.duration()}s ease, background ${this.duration()}s ease, border ${this.duration()}s ease, box-shadow ${this.duration()}s ease`,
+				'--pb-button-hover-color': this.safeColor(this.settings.buttonTextColorHover, this.settings.buttonTextColor || '#ffffff'),
+				'--pb-button-hover-background': hoverBackground,
+				'--pb-button-hover-border-style': hoverBorder.style,
+				'--pb-button-hover-border-width': hoverBorder.width,
+				'--pb-button-hover-border-color': hoverBorder.color,
+				'--pb-button-hover-box-shadow': this.boxShadowStyle('hover'),
+				'--pb-button-transition-duration': `${this.duration()}s`,
+			};
+		},
+	},
+	methods: {
+		responsiveValue(base, fallback = '') {
+			const device = ['tablet', 'mobile'].includes(String(this.responsiveDevice).toLowerCase()) ? String(this.responsiveDevice).toLowerCase() : 'desktop';
+			const keys = device === 'mobile' ? [base + 'Mobile', base + 'Tablet', base] : (device === 'tablet' ? [base + 'Tablet', base] : [base]);
+			for (const key of keys) {
+				const value = this.settings[key];
+				if (value !== '' && value !== null && value !== undefined) return value;
+			}
+			return fallback;
+		},
+		stateSuffix(state) { return state === 'hover' ? 'Hover' : ''; },
+		backgroundStyle(state) {
+			const suffix = this.stateSuffix(state);
+			const type = ['classic', 'gradient'].includes(this.settings['buttonBackgroundType' + suffix]) ? this.settings['buttonBackgroundType' + suffix] : 'classic';
+			if (type === 'gradient') {
+				const first = this.safeColor(this.settings['buttonGradientColorOne' + suffix], '#0d6efd');
+				const second = this.safeColor(this.settings['buttonGradientColorTwo' + suffix], '#6f42c1');
+				const angle = Number(this.settings['buttonGradientAngle' + suffix]);
+				return `linear-gradient(${Number.isFinite(angle) ? Math.min(360, Math.max(0, angle)) : 90}deg, ${first}, ${second})`;
+			}
+			return this.safeColor(this.settings['buttonBackgroundColor' + suffix], state === 'hover' ? this.settings.buttonBackgroundColor : '#0d6efd');
+		},
+		borderStyle(state) {
+			const suffix = this.stateSuffix(state);
+			const type = ALLOWED_BORDER_TYPES.includes(this.settings['buttonBorderType' + suffix]) ? this.settings['buttonBorderType' + suffix] : 'none';
+			return {
+				style: type,
+				width: type === 'none' ? '0' : this.safeLength(this.settings['buttonBorderWidth' + suffix], '1px'),
+				color: this.safeColor(this.settings['buttonBorderColor' + suffix], '#0d6efd'),
+			};
+		},
+		boxShadowStyle(state) {
+			const suffix = this.stateSuffix(state);
+			const prefix = 'buttonBoxShadow';
+			if (!this.settings[prefix + 'Enabled' + suffix]) return 'none';
+			const inset = this.settings[prefix + 'Inset' + suffix] ? ' inset' : '';
+			return `${this.safeLength(this.settings[prefix + 'X' + suffix], '0px')} ${this.safeLength(this.settings[prefix + 'Y' + suffix], '4px')} ${this.safeLength(this.settings[prefix + 'Blur' + suffix], '12px')} ${this.safeLength(this.settings[prefix + 'Spread' + suffix], '0px')} ${this.safeColor(this.settings[prefix + 'Color' + suffix], 'rgba(0,0,0,.16)')}${inset}`;
+		},
+		safeLength(value, fallback = '0px') {
+			const raw = String(value ?? '').trim();
+			return /^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?(?:\s+-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?){0,3}$/i.test(raw) ? raw : fallback;
+		},
+		safeColor(value, fallback = 'inherit') {
+			const raw = String(value || '').trim();
+			return raw && /^[#a-z0-9(),.%\s-]+$/i.test(raw) ? raw : fallback;
+		},
+		safeShadow(value) { return this.safeColor(value, 'none'); },
+		safeFontFamily(value) {
+			const raw = String(value || 'inherit').trim();
+			return raw && /^[A-Za-z0-9 _,.'"-]+$/.test(raw) ? raw : 'inherit';
+		},
+		safeFontWeight(value, fallback) { return /^(?:normal|bold|[1-9]00)$/.test(String(value || '')) ? String(value) : fallback; },
+		duration() { const value = Number(this.settings.buttonTransitionDuration); return Number.isFinite(value) ? Math.min(10, Math.max(0, value)) : 0.3; },
+	},
+};
+</script>
+
+<style scoped>
+.el-widget-button { text-decoration: none; }
+.el-widget-button__icon, .el-widget-button__icon-svg { flex: 0 0 auto; }
+.el-widget-button__icon { line-height: 1; }
+.el-widget-button__icon-svg { width: 1em; height: 1em; object-fit: contain; }
+.el-widget-button__text { min-width: 0; white-space: nowrap; }
+.el-widget-button:not(.pb-import-source-button):hover { color: var(--pb-button-hover-color, currentColor) !important; background: var(--pb-button-hover-background, inherit) !important; border-style: var(--pb-button-hover-border-style, inherit) !important; border-width: var(--pb-button-hover-border-width, inherit) !important; border-color: var(--pb-button-hover-border-color, inherit) !important; box-shadow: var(--pb-button-hover-box-shadow, none) !important; }
+@media (prefers-reduced-motion: reduce) { .el-widget-button { transition: none !important; } }
+</style>

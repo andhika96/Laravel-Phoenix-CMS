@@ -1,0 +1,304 @@
+<?php
+
+namespace App\Support\PageBuilderElementorV24\CompiledNative;
+
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
+use Symfony\Component\Process\Process;
+
+final class AutomaticCompiledNativeFrameworkLoader
+{
+    public function prepare(SourcePackage $source, string $framework = 'auto'): FrameworkBundle
+    {
+        $requested = strtolower(trim($framework));
+        if (! in_array($requested, ['auto', 'plain', 'plain_css', 'tailwind', 'bootstrap5', 'bootstrap_css'], true)) {
+            throw new InvalidArgumentException('Framework must be auto, plain, tailwind, or bootstrap5.');
+        }
+
+        [$dom, $xpath] = $this->parse($source->html);
+        $inlineStyles = [];
+        $cssParts = [];
+        $externalStylesheets = [];
+        $diagnostics = $source->diagnostics;
+
+        foreach ($xpath->query('//style') ?: [] as $style) {
+            $css = trim((string) $style->textContent);
+            if ($css === '') {
+                continue;
+            }
+            $inlineStyles[] = $css;
+            $cssParts[] = $css;
+        }
+
+        foreach ($xpath->query('//link[contains(concat(" ", translate(normalize-space(@rel), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), " "), " stylesheet ")]') ?: [] as $link) {
+            if (! $link instanceof DOMElement) {
+                continue;
+            }
+            $href = trim((string) $link->getAttribute('href'));
+            if ($href === '') {
+                continue;
+            }
+
+            $localPath = $source->filePath($href);
+            if ($localPath !== null) {
+                $css = file_get_contents($localPath);
+                if ($css !== false) {
+                    $cssParts[] = $css;
+                    $link->parentNode?->removeChild($link);
+                    continue;
+                }
+            }
+
+            if ($this->isExternalStylesheet($href)) {
+                $externalStylesheets[] = $href;
+                $knownCss = $this->knownPackageStylesheet($href);
+                if ($knownCss !== null) {
+                    $css = file_get_contents($knownCss);
+                    if ($css !== false) {
+                        $cssParts[] = $css;
+                        $link->parentNode?->removeChild($link);
+                    }
+                }
+            } else {
+                $diagnostics[] = [
+                    'code' => 'stylesheet-not-found',
+                    'href' => $href,
+                    'message' => 'A local stylesheet reference could not be resolved.',
+                ];
+            }
+        }
+
+        $classTokens = $this->classTokens($xpath);
+        $rawCss = implode("\n", $cssParts);
+        $detectedFrameworks = $this->detectedFrameworks($classTokens, $rawCss, $externalStylesheets);
+        if (count($detectedFrameworks) > 1) {
+            $diagnostics[] = [
+                'code' => 'multiple-framework-signals',
+                'frameworks' => $detectedFrameworks,
+                'message' => 'More than one framework signal was detected; all collected CSS remains available for measurement.',
+            ];
+        }
+
+        $selectedFramework = match ($requested) {
+            'tailwind' => 'tailwind_static',
+            'bootstrap5', 'bootstrap_css' => 'bootstrap_css',
+            'plain', 'plain_css' => 'plain_css',
+            default => $detectedFrameworks[0] ?? 'plain_css',
+        };
+
+        if ($selectedFramework === 'tailwind_static') {
+            $tailwind = $this->compileTailwind($source);
+            if ($tailwind['css'] !== '') {
+                $cssParts[] = $tailwind['css'];
+            }
+            $diagnostics = [...$diagnostics, ...$tailwind['diagnostics']];
+        }
+
+        $removedScripts = 0;
+        foreach ($xpath->query('//script') ?: [] as $script) {
+            $script->parentNode?->removeChild($script);
+            $removedScripts++;
+        }
+        if ($removedScripts > 0) {
+            $diagnostics[] = [
+                'code' => 'source-scripts-removed',
+                'count' => $removedScripts,
+                'message' => 'Imported scripts are kept out of the measurement bundle.',
+            ];
+        }
+
+        $this->sanitizeUnsafeAttributes($xpath, $diagnostics);
+        $html = $dom->saveHTML() ?: '';
+        $assetManifest = $this->assetManifest($xpath, $source, $rawCss);
+
+        return new FrameworkBundle(
+            html: $html,
+            css: trim(implode("\n", array_filter($cssParts, static fn (mixed $css): bool => is_string($css) && trim($css) !== ''))),
+            framework: $selectedFramework,
+            detectedFrameworks: $detectedFrameworks,
+            inlineStyles: $inlineStyles,
+            externalStylesheets: array_values(array_unique($externalStylesheets)),
+            assetManifest: $assetManifest,
+            runtimeScripts: [],
+            diagnostics: $diagnostics,
+        );
+    }
+
+    /** @return array{0:DOMDocument,1:DOMXPath} */
+    private function parse(string $html): array
+    {
+        $previous = libxml_use_internal_errors(true);
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $dom->loadHTML($html, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+
+        return [$dom, new DOMXPath($dom)];
+    }
+
+    /** @return array<int,string> */
+    private function classTokens(DOMXPath $xpath): array
+    {
+        $tokens = [];
+        foreach ($xpath->query('//*[@class]') ?: [] as $element) {
+            if (! $element instanceof DOMElement) {
+                continue;
+            }
+            foreach (preg_split('/\s+/', trim((string) $element->getAttribute('class'))) ?: [] as $token) {
+                if ($token !== '') {
+                    $tokens[] = $token;
+                }
+            }
+        }
+
+        return array_values(array_unique($tokens));
+    }
+
+    /** @param array<int,string> $tokens @param array<int,string> $externalStylesheets @return array<int,string> */
+    private function detectedFrameworks(array $tokens, string $css, array $externalStylesheets): array
+    {
+        $tailwind = (bool) preg_match('/(?:^|\s)(?:[a-z0-9-]+:)*(?:flex|grid|inline-flex|items-[^\s]+|justify-[^\s]+|gap(?:-[xy])?-[^\s]+|(?:p|px|py|pt|pr|pb|pl|m|mx|my|mt|mr|mb|ml|w|h|max-w|min-w|text|bg|font|rounded|shadow)-[^\s]+)(?:\s|$)/i', implode(' ', $tokens))
+            || (bool) preg_match('/@tailwind\b|--tw-|tailwindcss/i', $css.' '.implode(' ', $externalStylesheets));
+        $bootstrap = (bool) preg_match('~bootstrap(?:@|[-./]|$)~i', implode(' ', $externalStylesheets))
+            || (bool) preg_match('/--bs-[a-z0-9-]+/i', $css);
+
+        $detected = [];
+        if ($tailwind) {
+            $detected[] = 'tailwind_static';
+        }
+        if ($bootstrap) {
+            $detected[] = 'bootstrap_css';
+        }
+
+        return $detected;
+    }
+
+    /** @return array{css:string,diagnostics:array<int,array<string,mixed>>} */
+    private function compileTailwind(SourcePackage $source): array
+    {
+        $binary = base_path('node_modules/.bin/tailwindcss.cmd');
+        if (! is_file($binary)) {
+            $binary = base_path('node_modules/.bin/tailwindcss');
+        }
+        if (! is_file($binary)) {
+            return [
+                'css' => '',
+                'diagnostics' => [[
+                    'code' => 'tailwind-compiler-unavailable',
+                    'message' => 'Tailwind static compiler is not installed.',
+                ]],
+            ];
+        }
+
+        $input = $source->workspacePath.DIRECTORY_SEPARATOR.'.phoenix-tailwind-input.css';
+        $output = $source->workspacePath.DIRECTORY_SEPARATOR.'.phoenix-tailwind-output.css';
+        $sourcePath = str_replace('\\', '/', $source->entry);
+        $config = in_array('tailwind.config.js', $source->files, true) ? '@config "./tailwind.config.js";'.PHP_EOL : '';
+        $inputCss = $config.'@import "tailwindcss";'.PHP_EOL.'@source "./'.str_replace('"', '\\"', $sourcePath).'";'.PHP_EOL;
+        file_put_contents($input, $inputCss);
+
+        $quote = static fn (string $value): string => '"'.str_replace(['\\', '"'], ['\\\\', '\\"'], $value).'"';
+        $command = $quote($binary).' --input '.$quote($input).' --output '.$quote($output).' --cwd '.$quote($source->workspacePath);
+        $process = Process::fromShellCommandline($command, $source->workspacePath);
+        $process->setTimeout(60);
+        $process->run();
+
+        $css = is_file($output) ? (file_get_contents($output) ?: '') : '';
+        if (! $process->isSuccessful() || trim($css) === '') {
+            return [
+                'css' => '',
+                'diagnostics' => [[
+                    'code' => 'tailwind-compile-failed',
+                    'message' => Str::limit(trim($process->getErrorOutput() ?: $process->getOutput() ?: 'Tailwind compiler returned no CSS.'), 500),
+                ]],
+            ];
+        }
+
+        return ['css' => $css, 'diagnostics' => []];
+    }
+
+    private function isExternalStylesheet(string $href): bool
+    {
+        return (bool) preg_match('/^(?:https?:)?\/\//i', $href);
+    }
+
+    private function knownPackageStylesheet(string $href): ?string
+    {
+        if (preg_match('~bootstrap(?:@|[-./])~i', $href)) {
+            $path = base_path('node_modules/bootstrap/dist/css/bootstrap.min.css');
+            return is_file($path) ? $path : null;
+        }
+
+        return null;
+    }
+
+    /** @param array<int,array<string,mixed>> $diagnostics */
+    private function sanitizeUnsafeAttributes(DOMXPath $xpath, array &$diagnostics): void
+    {
+        foreach ($xpath->query('//*') ?: [] as $element) {
+            if (! $element instanceof DOMElement) {
+                continue;
+            }
+            for ($index = $element->attributes->length - 1; $index >= 0; $index--) {
+                $attribute = $element->attributes->item($index);
+                if ($attribute === null) {
+                    continue;
+                }
+                $name = strtolower($attribute->name);
+                $value = trim($attribute->value);
+                if (str_starts_with($name, 'on')) {
+                    $element->removeAttributeNode($attribute);
+                    continue;
+                }
+                if (in_array($name, ['href', 'src', 'action', 'formaction'], true) && preg_match('/^javascript\s*:/i', $value)) {
+                    $element->removeAttributeNode($attribute);
+                    $diagnostics[] = [
+                        'code' => 'unsafe-url-removed',
+                        'attribute' => $name,
+                        'message' => 'A javascript URL was removed from the source preview.',
+                    ];
+                }
+            }
+        }
+    }
+
+    /** @return array<int,array<string,mixed>> */
+    private function assetManifest(DOMXPath $xpath, SourcePackage $source, string $css): array
+    {
+        $assets = [];
+        foreach ($xpath->query('//*[@src or @poster]') ?: [] as $element) {
+            if (! $element instanceof DOMElement) {
+                continue;
+            }
+            foreach (['src', 'poster'] as $attribute) {
+                $url = trim((string) $element->getAttribute($attribute));
+                if ($url === '') {
+                    continue;
+                }
+                $assets[] = [
+                    'kind' => $attribute,
+                    'url' => $url,
+                    'resolvedPath' => $source->filePath($url),
+                ];
+            }
+        }
+        if (preg_match_all('/url\(\s*["\']?([^"\')]+)["\']?\s*\)/i', $css, $matches)) {
+            foreach ($matches[1] as $url) {
+                $url = trim($url);
+                if ($url === '' || str_starts_with($url, 'data:')) {
+                    continue;
+                }
+                $assets[] = [
+                    'kind' => 'css-url',
+                    'url' => $url,
+                    'resolvedPath' => $source->filePath($url),
+                ];
+            }
+        }
+
+        return $assets;
+    }
+}

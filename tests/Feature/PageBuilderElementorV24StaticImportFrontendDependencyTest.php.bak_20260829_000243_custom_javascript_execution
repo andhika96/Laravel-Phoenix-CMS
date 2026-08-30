@@ -1,0 +1,84 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Page_Builder\Page_Builder;
+use Tests\TestCase;
+
+class PageBuilderElementorV24StaticImportFrontendDependencyTest extends TestCase
+{
+    public function test_frontend_loads_import_dependencies_only_for_an_imported_root(): void
+    {
+        $page = (new Page_Builder())->forceFill([
+            'page_name' => 'Imported Page',
+            'custom_css' => '.pb-import-root{color:red}',
+            'editor_version' => Page_Builder::EDITOR_VERSION_V24,
+        ]);
+        $importedNodes = [[
+            'id' => 'import-root',
+            'type' => 'container',
+            'settings' => [
+                'cssClass' => 'pb-import-root',
+                'staticImport' => [
+                    'frameworks' => ['tailwind', 'bootstrap5', 'unsafe'],
+                    'stylesheets' => [
+                        'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap',
+                        'https://evil.example.com/site.css',
+                    ],
+                ],
+            ],
+            'children' => [],
+        ]];
+
+        $imported = view('pagebuilder_elementor_v24.frontend_renderer', [
+            'page' => $page, 'pageData' => $page, 'nodes' => $importedNodes,
+        ])->render();
+
+        $this->assertStringContainsString('data-pb-static-import="bootstrap5"', $imported);
+        $this->assertStringContainsString('bootstrap@5.3.3/dist/css/bootstrap.min.css', $imported);
+        $this->assertStringContainsString('data-pb-static-import="tailwind"', $imported);
+        $this->assertStringContainsString('https://cdn.tailwindcss.com', $imported);
+        $this->assertStringContainsString('corePlugins: { preflight: false }', $imported);
+        $this->assertStringContainsString("important: '.pb-import-root'", $imported);
+        $this->assertStringContainsString('fonts.googleapis.com/css2?family=Montserrat', $imported);
+        $this->assertStringNotContainsString('evil.example.com', $imported);
+
+        $manualNodes = [[
+            'id' => 'manual-root', 'type' => 'container', 'settings' => [], 'children' => [],
+        ]];
+        $manual = view('pagebuilder_elementor_v24.frontend_renderer', [
+            'page' => $page, 'pageData' => $page, 'nodes' => $manualNodes,
+        ])->render();
+
+        $this->assertStringNotContainsString('data-pb-static-import=', $manual);
+        $this->assertStringNotContainsString('cdn.tailwindcss.com', $manual);
+        $this->assertStringNotContainsString('bootstrap@5.3.3/dist/css/bootstrap.min.css', $manual);
+    }
+
+    public function test_static_html_widget_renders_a_sandboxed_source_document(): void
+    {
+        $page = (new Page_Builder())->forceFill([
+            'page_name' => 'Exact Page',
+            'custom_css' => '',
+            'editor_version' => Page_Builder::EDITOR_VERSION_V24,
+        ]);
+        $nodes = [[
+            'id' => 'static-source',
+            'type' => 'static_html',
+            'settings' => [
+                'srcdoc' => '<!doctype html><html><body><main id="hero">Exact</main></body></html>',
+                'title' => 'Exact Page',
+                'height' => '1200px',
+            ],
+        ]];
+
+        $html = view('pagebuilder_elementor_v24.frontend_renderer', [
+            'page' => $page, 'pageData' => $page, 'nodes' => $nodes,
+        ])->render();
+
+        $this->assertStringContainsString('data-pb-static-html="true"', $html);
+        $this->assertStringContainsString('sandbox="allow-scripts"', $html);
+        $this->assertStringContainsString('srcdoc=', $html);
+        $this->assertStringContainsString('Exact Page', $html);
+    }
+}

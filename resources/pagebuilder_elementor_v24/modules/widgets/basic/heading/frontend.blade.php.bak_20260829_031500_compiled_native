@@ -1,0 +1,134 @@
+@php
+	$settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
+	$nodeId = trim((string) ($node['id'] ?? 'heading')) ?: 'heading';
+	$dynamicBindings = is_array($settings['dynamicBindings'] ?? null) ? $settings['dynamicBindings'] : [];
+	$dynamicContext = request()->attributes->get('pagebuilder_dynamic_context', []);
+	$dynamicContext = is_array($dynamicContext) ? $dynamicContext : [];
+	if (!array_key_exists('page', $dynamicContext) && isset($pageData)) $dynamicContext['page'] = $pageData;
+	$dynamicContext['page_url'] ??= url()->current();
+	$dynamicContext['site_title'] ??= config('app.name');
+	$dynamicContext['site_url'] ??= config('app.url');
+	$dynamicContext['user'] ??= request()->user();
+	$dynamicResolver = app(\App\Support\PageBuilderElementorV24\DynamicTagResolver::class);
+	$resolveDynamic = fn (string $field, mixed $fallback): mixed => $dynamicResolver->resolve($field, $fallback, $dynamicBindings, $dynamicContext);
+
+	$title = (string) $resolveDynamic('title', $settings['text'] ?? 'Add your heading text');
+	$tag = strtolower(trim((string) ($settings['tag'] ?? 'h2')));
+	if (!in_array($tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p'], true)) $tag = 'h2';
+	$headingTagFontSizes = ['h1' => '40px', 'h2' => '34px', 'h3' => '29px', 'h4' => '24px', 'h5' => '20px', 'h6' => '16px', 'div' => '29px', 'span' => '29px', 'p' => '29px'];
+	$headingFontSizeMode = ($settings['headingFontSizeMode'] ?? 'auto') === 'custom' ? 'custom' : 'auto';
+
+	$safeLinkUrl = function (mixed $value): string {
+		$url = trim((string) $value);
+		if ($url === '' || str_starts_with($url, '//')) return '';
+		return preg_match('/^(?:https?:|mailto:|tel:|\/|#)/i', $url) ? $url : '';
+	};
+	$linkUrl = $safeLinkUrl($resolveDynamic('linkUrl', $settings['linkUrl'] ?? ''));
+	$linkTarget = ($settings['linkTarget'] ?? '') === '_blank' ? '_blank' : '';
+	$relTokens = [];
+	if (in_array($settings['linkNofollow'] ?? false, [true, 1, '1', 'true'], true)) $relTokens[] = 'nofollow';
+	if ($linkTarget === '_blank') $relTokens = array_merge($relTokens, ['noopener', 'noreferrer']);
+	$linkRel = implode(' ', array_values(array_unique($relTokens)));
+	$linkAttributes = [];
+	foreach (($settings['linkCustomAttributes'] ?? []) as $attribute) {
+		if (!is_array($attribute)) continue;
+		$name = strtolower(trim((string) ($attribute['key'] ?? $attribute['name'] ?? '')));
+		if (!preg_match('/^(?:aria-[a-z0-9_-]+|data-[a-z0-9_-]+|title|download|hreflang)$/', $name)) continue;
+		$linkAttributes[$name] = (string) ($attribute['value'] ?? '');
+	}
+
+	$responsive = function (string $base, string $suffix = '', mixed $fallback = '') use ($settings): mixed {
+		$keys = $suffix === 'Mobile'
+			? [$base . 'Mobile', $base . 'Tablet', $base]
+			: ($suffix === 'Tablet' ? [$base . 'Tablet', $base] : [$base]);
+		foreach ($keys as $key) {
+			$value = $settings[$key] ?? null;
+			if ($value !== '' && $value !== null) return $value;
+		}
+		return $fallback;
+	};
+	$cssLength = function (mixed $value, string $fallback = ''): string {
+		$raw = trim((string) $value);
+		return preg_match('/^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh)?$/i', $raw) ? $raw : $fallback;
+	};
+	$cssColor = function (mixed $value, string $fallback = 'inherit'): string {
+		$raw = trim((string) $value);
+		return $raw !== '' && preg_match('/^[#a-z0-9(),.%\s-]+$/i', $raw) ? $raw : $fallback;
+	};
+	$cssShadow = function (mixed $value): string {
+		$raw = trim((string) $value);
+		return $raw !== '' && preg_match('/^[#a-z0-9(),.%\s-]+$/i', $raw) ? $raw : 'none';
+	};
+	$cssFontFamily = function (mixed $value): string {
+		$raw = trim((string) $value);
+		return $raw !== '' && preg_match('/^[A-Za-z0-9 _,\'"-]+$/', $raw) ? $raw : 'inherit';
+	};
+	$enum = function (mixed $value, array $allowed, string $fallback): string {
+		$value = strtolower(trim((string) $value));
+		return in_array($value, $allowed, true) ? $value : $fallback;
+	};
+	$duration = fn (mixed $value): float => is_numeric($value) ? max(0, min(10, (float) $value)) : 0.3;
+	$alignments = ['left', 'center', 'right', 'justify'];
+	$blendModes = ['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'saturation', 'color', 'difference', 'exclusion', 'hue', 'luminosity'];
+	$typographyStyle = function (string $suffix = '') use ($settings, $responsive, $cssLength, $cssColor, $cssShadow, $cssFontFamily, $enum, $alignments, $blendModes, $headingFontSizeMode, $headingTagFontSizes, $tag): string {
+		$styles = [
+			'text-align:' . $enum($responsive('align', $suffix, 'left'), $alignments, 'left'),
+			'color:' . $cssColor($settings['color'] ?? '#101828', '#101828'),
+			'font-family:' . $cssFontFamily($settings['headingFontFamily'] ?? 'inherit'),
+			'font-size:' . $cssLength($headingFontSizeMode === 'custom' ? $responsive('headingFontSize', $suffix, $settings['fontSize'] ?? '32px') : ($headingTagFontSizes[$tag] ?? '32px'), '32px'),
+			'font-weight:' . (preg_match('/^(?:normal|bold|[1-9]00)$/', trim((string) ($settings['headingFontWeight'] ?? $settings['fontWeight'] ?? '600'))) ? trim((string) ($settings['headingFontWeight'] ?? $settings['fontWeight'] ?? '600')) : '600'),
+			'line-height:' . $cssLength($responsive('headingLineHeight', $suffix, '1.2em'), '1.2em'),
+			'letter-spacing:' . $cssLength($responsive('headingLetterSpacing', $suffix, '0px'), '0px'),
+			'word-spacing:' . $cssLength($responsive('headingWordSpacing', $suffix, '0px'), '0px'),
+			'text-transform:' . $enum($settings['headingTextTransform'] ?? 'none', ['none', 'uppercase', 'lowercase', 'capitalize'], 'none'),
+			'font-style:' . $enum($settings['headingFontStyle'] ?? 'normal', ['normal', 'italic', 'oblique'], 'normal'),
+			'text-decoration:' . $enum($settings['headingTextDecoration'] ?? 'none', ['none', 'underline', 'overline', 'line-through'], 'none'),
+			'-webkit-text-stroke:' . $cssLength($responsive('headingTextStrokeWidth', $suffix, '0px'), '0px') . ' ' . $cssColor($settings['headingTextStrokeColor'] ?? 'currentColor', 'currentColor'),
+			'text-shadow:' . $cssShadow($settings['headingTextShadow'] ?? 'none'),
+			'mix-blend-mode:' . $enum($settings['blendMode'] ?? 'normal', $blendModes, 'normal'),
+			'margin:0',
+		];
+		if (($settings['sourceLineBreaks'] ?? false) === true) $styles[] = 'white-space:pre-line';
+		return implode(';', $styles);
+	};
+
+	$advanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($settings, $nodeId, request());
+	$customClass = implode(' ', array_filter(array_map(
+		fn ($token) => preg_replace('/[^A-Za-z0-9_-]/', '', ltrim((string) $token, '.')),
+		preg_split('/\s+/', trim((string) ($settings['cssClass'] ?? ''))) ?: []
+	)));
+	$rootClasses = array_values(array_unique(array_merge(['el-widget-heading', 'pb-heading-widget'], $advanced['classes'])));
+	$titleClasses = trim(implode(' ', array_filter(['el-widget-heading', 'elementor-heading-title', $customClass])));
+	$hoverColor = $cssColor($settings['hoverColor'] ?? '', $settings['color'] ?? '#101828');
+	$hoverDuration = $duration($settings['hoverTransitionDuration'] ?? .3);
+	$headingCss = '#'.$advanced['id'].' .elementor-heading-title{'.$typographyStyle().'}';
+	$headingCss .= '#'.$advanced['id'].' .heading-title-link{color:inherit;text-decoration:inherit;transition:color '.$hoverDuration.'s ease}';
+	$headingCss .= '#'.$advanced['id'].' .heading-title-link:hover{color:'.$hoverColor.'}';
+	foreach (['Tablet' => 1024, 'Mobile' => 767] as $suffix => $breakpoint) {
+		$headingCss .= '@media (max-width:'.$breakpoint.'px){#'.$advanced['id'].' .elementor-heading-title{'.$typographyStyle($suffix).'}}';
+	}
+@endphp
+
+<div
+	id="{{ $advanced['id'] }}"
+	class="{{ implode(' ', $rootClasses) }}"
+	data-pb-motion="{{ $advanced['motion'] }}"
+	data-entrance-delay="{{ $advanced['entranceDelay'] }}"
+	data-entrance-duration="{{ $advanced['entranceDuration'] }}"
+	@foreach($advanced['attributes'] as $attributeName => $attributeValue)
+		{{ $attributeName }}="{{ e($attributeValue) }}"
+	@endforeach
+>
+	<{{ $tag }} class="{{ $titleClasses }}" style="{{ $typographyStyle() }}">
+		@if($linkUrl !== '')
+			<a class="heading-title-link" href="{{ $linkUrl }}" @if($linkTarget !== '') target="{{ $linkTarget }}" @endif @if($linkRel !== '') rel="{{ $linkRel }}" @endif
+				@foreach($linkAttributes as $attributeName => $attributeValue)
+					{{ $attributeName }}="{{ e($attributeValue) }}"
+				@endforeach
+			>{{ $title }}</a>
+		@else
+			{{ $title }}
+		@endif
+	</{{ $tag }}>
+</div>
+<style>{!! $advanced['css'] . $headingCss !!}</style>

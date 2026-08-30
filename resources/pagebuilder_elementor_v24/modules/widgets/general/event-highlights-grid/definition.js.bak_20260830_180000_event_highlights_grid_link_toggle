@@ -1,0 +1,343 @@
+(function (registry) {
+	'use strict';
+
+	if (!registry) throw new Error('Page Builder Elementor widget registry is not loaded.');
+
+	const widgetAdvancedDefaults = () => registry.advancedDefaults();
+	const normalizeWidgetAdvancedSettings = (settings) => registry.normalizeAdvanced(settings);
+	const clone = (value) => value && typeof value === 'object' ? JSON.parse(JSON.stringify(value)) : value;
+
+	const DIRECTIONS = ['row', 'column'];
+	const TEXT_ORDERS = ['heading-first', 'subheading-first'];
+	const VERTICAL_POSITIONS = ['top', 'center', 'bottom'];
+	const HORIZONTAL_ALIGNMENTS = ['left', 'center', 'right'];
+	const GRID_COLUMNS = ['1', '2', '3', '4', '5'];
+	const WIDTH_MODES = ['equal', 'soft-min'];
+	const HEIGHT_MODES = ['auto', 'custom'];
+	const MEDIA_POSITIONS = ['top', 'left', 'right'];
+	const ALIGNMENTS = ['left', 'center', 'right'];
+	const MEDIA_MODES = ['icon', 'image', 'text'];
+	const IMAGE_SOURCES = ['ckfinder', 'url'];
+	const SURFACES = ['inherit', 'light', 'dark', 'accent', 'custom'];
+	const BORDER_TYPES = ['none', 'solid', 'dashed', 'dotted', 'double', 'groove'];
+	const OBJECT_FITS = ['contain', 'cover', 'fill', 'none'];
+
+	function normalizeDimension(value, fallback) {
+		const raw = String(value == null ? '' : value).trim();
+		return /^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh|deg)?$/i.test(raw) ? raw : fallback;
+	}
+
+	function normalizeColor(value, fallback = '') {
+		const raw = String(value == null ? '' : value).trim();
+		return raw && !/[;{}<>]/.test(raw) && /^[#a-z0-9(),.%\s/-]+$/i.test(raw) ? raw : fallback;
+	}
+
+	function normalizeFontFamily(value, fallback) {
+		const raw = String(value == null ? '' : value).trim();
+		return raw && !/[;{}<>"']/g.test(raw) ? raw.slice(0, 160) : fallback;
+	}
+
+	function normalizeWeight(value, fallback) {
+		const raw = String(value == null ? '' : value).trim().toLowerCase();
+		return /^(?:inherit|normal|bold|[1-9]00)$/.test(raw) ? raw : fallback;
+	}
+
+	function normalizeLinkUrl(value) {
+		const raw = String(value == null ? '' : value).trim();
+		if (!raw || raw.startsWith('//') || /[\u0000-\u001f\u007f]/.test(raw)) return '';
+		if (/^(?:javascript|vbscript|data):/i.test(raw)) return '';
+		return /^(?:https?:\/\/|mailto:|tel:|\/|#)/i.test(raw) ? raw : '';
+	}
+
+	function normalizeImageUrl(value) {
+		const raw = String(value == null ? '' : value).trim();
+		if (!raw || raw.startsWith('//') || /[\u0000-\u001f\u007f]/.test(raw)) return '';
+		if (/^(?:javascript|vbscript|data):/i.test(raw)) return '';
+		return /^(?:https?:\/\/|\/)/i.test(raw) ? raw : '';
+	}
+
+	function normalizeSvg(value) {
+		const raw = String(value == null ? '' : value).trim();
+		if (!raw || raw.length > 20000 || !/^<svg\b/i.test(raw)) return '';
+		if (/<script\b|<foreignObject\b|\bon[a-z]+\s*=|javascript:/i.test(raw)) return '';
+		return raw;
+	}
+
+	function normalizeAttributes(value) {
+		if (!Array.isArray(value)) return [];
+		return value.map((entry) => ({
+			key: String(entry?.key || entry?.name || '').trim(),
+			value: String(entry?.value == null ? '' : entry.value),
+		})).filter((entry) => entry.key);
+	}
+
+	function normalizeResponsiveEnum(settings, base, allowed, fallback) {
+		settings[base] = allowed.includes(String(settings[base] || '').trim()) ? String(settings[base]).trim() : fallback;
+		for (const suffix of ['Tablet', 'Mobile']) {
+			const key = base + suffix;
+			const value = String(settings[key] == null ? '' : settings[key]).trim();
+			settings[key] = value === '' || allowed.includes(value) ? value : '';
+		}
+	}
+
+	function normalizeResponsiveDimension(settings, base, fallback) {
+		settings[base] = normalizeDimension(settings[base], fallback);
+		for (const suffix of ['Tablet', 'Mobile']) {
+			const key = base + suffix;
+			const value = String(settings[key] == null ? '' : settings[key]).trim();
+			settings[key] = value === '' ? '' : normalizeDimension(value, '');
+		}
+	}
+
+	function normalizeTypography(settings, prefix, fallback) {
+		settings[prefix + 'FontFamily'] = normalizeFontFamily(settings[prefix + 'FontFamily'], fallback.fontFamily);
+		settings[prefix + 'FontWeight'] = normalizeWeight(settings[prefix + 'FontWeight'], fallback.fontWeight);
+		settings[prefix + 'Color'] = normalizeColor(settings[prefix + 'Color'], fallback.color);
+		for (const key of ['FontSize', 'LineHeight', 'LetterSpacing', 'WordSpacing']) {
+			settings[prefix + key] = normalizeDimension(settings[prefix + key], fallback[key.toLowerCase()] || '0px');
+			for (const suffix of ['Tablet', 'Mobile']) {
+				const responsiveKey = prefix + key + suffix;
+				const value = String(settings[responsiveKey] == null ? '' : settings[responsiveKey]).trim();
+				settings[responsiveKey] = value === '' ? '' : normalizeDimension(value, '');
+			}
+		}
+		for (const key of ['TextTransform', 'FontStyle', 'TextDecoration']) {
+			const allowed = key === 'TextTransform'
+				? ['none', 'uppercase', 'lowercase', 'capitalize']
+				: (key === 'FontStyle' ? ['normal', 'italic', 'oblique'] : ['none', 'underline', 'overline', 'line-through']);
+			settings[prefix + key] = allowed.includes(settings[prefix + key]) ? settings[prefix + key] : 'none';
+		}
+	}
+
+	function normalizeTextBox(settings, prefix) {
+		settings[prefix + 'BorderMode'] = ['none', 'box', 'underline'].includes(settings[prefix + 'BorderMode']) ? settings[prefix + 'BorderMode'] : 'none';
+		settings[prefix + 'BorderWidthMode'] = ['content', 'full'].includes(settings[prefix + 'BorderWidthMode']) ? settings[prefix + 'BorderWidthMode'] : 'content';
+		settings[prefix + 'BorderType'] = ['solid', 'dashed', 'dotted', 'double', 'groove'].includes(settings[prefix + 'BorderType']) ? settings[prefix + 'BorderType'] : 'solid';
+		settings[prefix + 'BorderThickness'] = normalizeDimension(settings[prefix + 'BorderThickness'], '1px');
+		settings[prefix + 'BorderColor'] = normalizeColor(settings[prefix + 'BorderColor'], '#d8ad5e');
+		settings[prefix + 'BorderRadius'] = normalizeDimension(settings[prefix + 'BorderRadius'], '0px');
+		for (const suffix of ['Tablet', 'Mobile']) {
+			for (const key of ['BorderMode', 'BorderWidthMode', 'BorderType']) {
+				const responsiveKey = prefix + key + suffix;
+				const allowed = key === 'BorderMode' ? ['none', 'box', 'underline'] : (key === 'BorderWidthMode' ? ['content', 'full'] : ['solid', 'dashed', 'dotted', 'double', 'groove']);
+				const value = String(settings[responsiveKey] == null ? '' : settings[responsiveKey]).trim();
+				settings[responsiveKey] = value === '' || allowed.includes(value) ? value : '';
+			}
+			for (const key of ['BorderThickness', 'BorderColor', 'BorderRadius']) {
+				const responsiveKey = prefix + key + suffix;
+				const value = String(settings[responsiveKey] == null ? '' : settings[responsiveKey]).trim();
+				settings[responsiveKey] = value === '' ? '' : (key === 'BorderColor' ? normalizeColor(value, '') : normalizeDimension(value, ''));
+			}
+		}
+	}
+
+	function normalizeBoxSpacing(settings, prefix) {
+		for (const kind of ['Padding', 'Margin']) {
+			for (const side of ['Top', 'Right', 'Bottom', 'Left']) {
+				const base = prefix + kind + side;
+				settings[base] = normalizeDimension(settings[base], '0px');
+				for (const suffix of ['Tablet', 'Mobile']) {
+					const key = base + suffix;
+					const value = String(settings[key] == null ? '' : settings[key]).trim();
+					settings[key] = value === '' ? '' : normalizeDimension(value, '');
+				}
+			}
+		}
+	}
+
+	function cardDefaults(index) {
+		const icons = [
+			['star', 'fas fa-star'],
+			['handshake', 'fas fa-handshake'],
+			['award', 'fas fa-award'],
+			['flag', 'fas fa-flag'],
+			['globe', 'fas fa-globe'],
+		];
+		const icon = icons[index] || icons[0];
+		return {
+			id: 'event-highlights-grid-card-' + (index + 1),
+			mediaMode: 'icon',
+			mediaIconStyle: 'solid',
+			mediaIconName: icon[0],
+			mediaIconClass: icon[1],
+			mediaIconSource: 'library',
+			mediaIconSvg: '',
+			imageSource: 'ckfinder',
+			imageUrl: '',
+			imageAlt: '',
+			mediaText: '',
+			title: 'Card ' + (index + 1),
+			description: 'Add a short description.',
+			mediaColor: '',
+			titleColor: '',
+			descriptionColor: '',
+			surface: 'inherit',
+			customBackgroundColor: '',
+			customBorderColor: '',
+		};
+	}
+
+	function headerDefaults() {
+		return {
+			heading: 'Five reasons to be on the first tee.',
+			subheading: 'EVENT HIGHLIGHTS',
+			textOrder: 'subheading-first',
+			linkText: 'REGISTER INTEREST',
+			linkUrl: '',
+			linkTarget: '',
+			linkNofollow: false,
+			linkCustomAttributes: [],
+			showArrow: true,
+			layoutDirection: 'row', layoutDirectionTablet: '', layoutDirectionMobile: 'column',
+			linkVerticalPosition: 'center', linkVerticalPositionTablet: '', linkVerticalPositionMobile: '',
+			linkHorizontalAlign: 'right', linkHorizontalAlignTablet: '', linkHorizontalAlignMobile: '',
+			textGap: '12px', textGapTablet: '', textGapMobile: '',
+
+			headingFontFamily: 'Georgia, serif', headingFontSize: '56px', headingFontSizeTablet: '42px', headingFontSizeMobile: '32px', headingFontWeight: '400', headingColor: '#f4efe4',
+			headingLineHeight: '1.05em', headingLineHeightTablet: '', headingLineHeightMobile: '', headingLetterSpacing: '0px', headingLetterSpacingTablet: '', headingLetterSpacingMobile: '', headingWordSpacing: '0px', headingWordSpacingTablet: '', headingWordSpacingMobile: '', headingTextTransform: 'none', headingFontStyle: 'normal', headingTextDecoration: 'none', headingTextShadow: 'none',
+			subheadingFontFamily: 'inherit', subheadingFontSize: '14px', subheadingFontSizeTablet: '', subheadingFontSizeMobile: '', subheadingFontWeight: '700', subheadingColor: '#d8ad5e',
+			subheadingLineHeight: '1.2em', subheadingLineHeightTablet: '', subheadingLineHeightMobile: '', subheadingLetterSpacing: '3px', subheadingLetterSpacingTablet: '', subheadingLetterSpacingMobile: '', subheadingWordSpacing: '0px', subheadingWordSpacingTablet: '', subheadingWordSpacingMobile: '', subheadingTextTransform: 'uppercase', subheadingFontStyle: 'normal', subheadingTextDecoration: 'none', subheadingTextShadow: 'none',
+			linkFontFamily: 'inherit', linkFontSize: '14px', linkFontSizeTablet: '', linkFontSizeMobile: '', linkFontWeight: '700', linkColor: '#d8ad5e',
+			linkLineHeight: '1.2em', linkLineHeightTablet: '', linkLineHeightMobile: '', linkLetterSpacing: '2px', linkLetterSpacingTablet: '', linkLetterSpacingMobile: '', linkWordSpacing: '0px', linkWordSpacingTablet: '', linkWordSpacingMobile: '', linkTextTransform: 'uppercase', linkFontStyle: 'normal', linkTextDecoration: 'none', linkTextShadow: 'none',
+
+		headingBorderMode: 'none', headingBorderModeTablet: '', headingBorderModeMobile: '', headingBorderWidthMode: 'content', headingBorderWidthModeTablet: '', headingBorderWidthModeMobile: '', headingBorderType: 'solid', headingBorderTypeTablet: '', headingBorderTypeMobile: '', headingBorderThickness: '1px', headingBorderThicknessTablet: '', headingBorderThicknessMobile: '', headingBorderColor: '#d8ad5e', headingBorderColorTablet: '', headingBorderColorMobile: '', headingBorderRadius: '0px', headingBorderRadiusTablet: '', headingBorderRadiusMobile: '',
+			subheadingBorderMode: 'none', subheadingBorderModeTablet: '', subheadingBorderModeMobile: '', subheadingBorderWidthMode: 'content', subheadingBorderWidthModeTablet: '', subheadingBorderWidthModeMobile: '', subheadingBorderType: 'solid', subheadingBorderTypeTablet: '', subheadingBorderTypeMobile: '', subheadingBorderThickness: '1px', subheadingBorderThicknessTablet: '', subheadingBorderThicknessMobile: '', subheadingBorderColor: '#d8ad5e', subheadingBorderColorTablet: '', subheadingBorderColorMobile: '', subheadingBorderRadius: '0px', subheadingBorderRadiusTablet: '', subheadingBorderRadiusMobile: '',
+
+		headingPaddingTop: '0px', headingPaddingRight: '0px', headingPaddingBottom: '0px', headingPaddingLeft: '0px', headingPaddingTopTablet: '', headingPaddingRightTablet: '', headingPaddingBottomTablet: '', headingPaddingLeftTablet: '', headingPaddingTopMobile: '', headingPaddingRightMobile: '', headingPaddingBottomMobile: '', headingPaddingLeftMobile: '', headingMarginTop: '0px', headingMarginRight: '0px', headingMarginBottom: '0px', headingMarginLeft: '0px', headingMarginTopTablet: '', headingMarginRightTablet: '', headingMarginBottomTablet: '', headingMarginLeftTablet: '', headingMarginTopMobile: '', headingMarginRightMobile: '', headingMarginBottomMobile: '', headingMarginLeftMobile: '',
+			subheadingPaddingTop: '0px', subheadingPaddingRight: '0px', subheadingPaddingBottom: '0px', subheadingPaddingLeft: '0px', subheadingPaddingTopTablet: '', subheadingPaddingRightTablet: '', subheadingPaddingBottomTablet: '', subheadingPaddingLeftTablet: '', subheadingPaddingTopMobile: '', subheadingPaddingRightMobile: '', subheadingPaddingBottomMobile: '', subheadingPaddingLeftMobile: '', subheadingMarginTop: '0px', subheadingMarginRight: '0px', subheadingMarginBottom: '0px', subheadingMarginLeft: '0px', subheadingMarginTopTablet: '', subheadingMarginRightTablet: '', subheadingMarginBottomTablet: '', subheadingMarginLeftTablet: '', subheadingMarginTopMobile: '', subheadingMarginRightMobile: '', subheadingMarginBottomMobile: '', subheadingMarginLeftMobile: '',
+		};
+	}
+
+	function eventHighlightsGridDefaults() {
+		return {
+			...widgetAdvancedDefaults(),
+			...headerDefaults(),
+			gridColumns: '5', gridColumnsTablet: '3', gridColumnsMobile: '1',
+			columnGap: '20px', columnGapTablet: '16px', columnGapMobile: '16px',
+			rowGap: '20px', rowGapTablet: '16px', rowGapMobile: '16px',
+			headerCardsGap: '48px', headerCardsGapTablet: '36px', headerCardsGapMobile: '28px',
+			cardWidthMode: 'equal', cardWidthModeTablet: '', cardWidthModeMobile: '',
+			cardMinWidth: '180px', cardMinWidthTablet: '', cardMinWidthMobile: '',
+			cardHeightMode: 'auto', cardHeightModeTablet: '', cardHeightModeMobile: '',
+			cardHeight: '320px', cardHeightTablet: '', cardHeightMobile: '',
+			cardMediaPosition: 'top', cardMediaPositionTablet: '', cardMediaPositionMobile: '',
+			cardAlignment: 'left', cardAlignmentTablet: '', cardAlignmentMobile: '',
+			cardContentGap: '24px', cardContentGapTablet: '', cardContentGapMobile: '',
+			cardMediaSize: '38px', cardMediaSizeTablet: '', cardMediaSizeMobile: '',
+			cardImageWidth: '64px', cardImageWidthTablet: '', cardImageWidthMobile: '',
+			cardImageHeight: '64px', cardImageHeightTablet: '', cardImageHeightMobile: '',
+			cardImageObjectFit: 'contain',
+			cardMediaColor: '#d8ad5e', cardTitleColor: '#f4efe4', cardDescriptionColor: '#aab6c8',
+			cardMediaFontFamily: 'inherit', cardMediaFontSize: '16px', cardMediaFontSizeTablet: '', cardMediaFontSizeMobile: '', cardMediaFontWeight: '700', cardMediaLineHeight: '1.2em', cardMediaLineHeightTablet: '', cardMediaLineHeightMobile: '', cardMediaLetterSpacing: '0px', cardMediaLetterSpacingTablet: '', cardMediaLetterSpacingMobile: '', cardMediaWordSpacing: '0px', cardMediaWordSpacingTablet: '', cardMediaWordSpacingMobile: '', cardMediaTextTransform: 'none', cardMediaFontStyle: 'normal', cardMediaTextDecoration: 'none', cardMediaTextShadow: 'none',
+			cardTitleFontFamily: 'Georgia, serif', cardTitleFontSize: '28px', cardTitleFontSizeTablet: '', cardTitleFontSizeMobile: '', cardTitleFontWeight: '400', cardTitleLineHeight: '1.25em', cardTitleLineHeightTablet: '', cardTitleLineHeightMobile: '', cardTitleLetterSpacing: '0px', cardTitleLetterSpacingTablet: '', cardTitleLetterSpacingMobile: '', cardTitleWordSpacing: '0px', cardTitleWordSpacingTablet: '', cardTitleWordSpacingMobile: '', cardTitleTextTransform: 'none', cardTitleFontStyle: 'normal', cardTitleTextDecoration: 'none', cardTitleTextShadow: 'none',
+			cardDescriptionFontFamily: 'inherit', cardDescriptionFontSize: '16px', cardDescriptionFontSizeTablet: '', cardDescriptionFontSizeMobile: '', cardDescriptionFontWeight: '400', cardDescriptionLineHeight: '1.5em', cardDescriptionLineHeightTablet: '', cardDescriptionLineHeightMobile: '', cardDescriptionLetterSpacing: '0px', cardDescriptionLetterSpacingTablet: '', cardDescriptionLetterSpacingMobile: '', cardDescriptionWordSpacing: '0px', cardDescriptionWordSpacingTablet: '', cardDescriptionWordSpacingMobile: '', cardDescriptionTextTransform: 'none', cardDescriptionFontStyle: 'normal', cardDescriptionTextDecoration: 'none', cardDescriptionTextShadow: 'none',
+
+			cardBackgroundColor: 'transparent', cardBackgroundColorHover: 'rgba(216,173,94,.06)', cardBorderType: 'solid', cardBorderTypeHover: 'solid', cardBorderColor: 'rgba(216,173,94,.35)', cardBorderColorHover: '#d8ad5e',
+			cardBorderWidthTop: '1px', cardBorderWidthRight: '1px', cardBorderWidthBottom: '1px', cardBorderWidthLeft: '1px', cardBorderWidthTopTablet: '', cardBorderWidthRightTablet: '', cardBorderWidthBottomTablet: '', cardBorderWidthLeftTablet: '', cardBorderWidthTopMobile: '', cardBorderWidthRightMobile: '', cardBorderWidthBottomMobile: '', cardBorderWidthLeftMobile: '',
+			cardRadiusTL: '0px', cardRadiusTR: '0px', cardRadiusBR: '0px', cardRadiusBL: '0px', cardRadiusTLTablet: '', cardRadiusTRTablet: '', cardRadiusBRTablet: '', cardRadiusBLTablet: '', cardRadiusTLMobile: '', cardRadiusTRMobile: '', cardRadiusBRMobile: '', cardRadiusBLMobile: '',
+			cardPaddingTop: '32px', cardPaddingRight: '32px', cardPaddingBottom: '32px', cardPaddingLeft: '32px', cardPaddingTopTablet: '', cardPaddingRightTablet: '', cardPaddingBottomTablet: '', cardPaddingLeftTablet: '', cardPaddingTopMobile: '', cardPaddingRightMobile: '', cardPaddingBottomMobile: '', cardPaddingLeftMobile: '',
+			cards: [0, 1, 2, 3, 4].map(cardDefaults),
+		};
+	}
+
+	function normalizeCard(card, index, usedIds) {
+		const defaults = cardDefaults(index);
+		const source = card && typeof card === 'object' && !Array.isArray(card) ? card : {};
+		let id = String(source.id || defaults.id).trim().replace(/[^A-Za-z0-9_-]/g, '-').replace(/^-+|-+$/g, '') || defaults.id;
+		const originalId = id;
+		let suffix = 2;
+		while (usedIds.has(id)) id = originalId + '-' + suffix++;
+		usedIds.add(id);
+		const mode = MEDIA_MODES.includes(source.mediaMode) ? source.mediaMode : defaults.mediaMode;
+		const iconClass = /^(?:fas|far|fab|fal|fad)\s+fa-[a-z0-9-]+$/i.test(String(source.mediaIconClass || '').trim()) ? String(source.mediaIconClass).trim() : defaults.mediaIconClass;
+		return {
+			...defaults,
+			...source,
+			id,
+			mediaMode: mode,
+			mediaIconStyle: ['solid', 'regular', 'brands'].includes(source.mediaIconStyle) ? source.mediaIconStyle : defaults.mediaIconStyle,
+			mediaIconName: String(source.mediaIconName || defaults.mediaIconName).trim().replace(/[^a-z0-9-]/gi, '') || defaults.mediaIconName,
+			mediaIconClass: iconClass,
+			mediaIconSource: source.mediaIconSource === 'svg' && normalizeSvg(source.mediaIconSvg) ? 'svg' : 'library',
+			mediaIconSvg: normalizeSvg(source.mediaIconSvg),
+			imageSource: IMAGE_SOURCES.includes(source.imageSource) ? source.imageSource : defaults.imageSource,
+			imageUrl: normalizeImageUrl(source.imageUrl),
+			imageAlt: String(source.imageAlt == null ? '' : source.imageAlt).trim(),
+			mediaText: String(source.mediaText == null ? '' : source.mediaText),
+			title: String(source.title == null ? defaults.title : source.title),
+			description: String(source.description == null ? defaults.description : source.description),
+			mediaColor: normalizeColor(source.mediaColor, ''),
+			titleColor: normalizeColor(source.titleColor, ''),
+			descriptionColor: normalizeColor(source.descriptionColor, ''),
+			surface: SURFACES.includes(source.surface) ? source.surface : defaults.surface,
+			customBackgroundColor: normalizeColor(source.customBackgroundColor, ''),
+			customBorderColor: normalizeColor(source.customBorderColor, ''),
+		};
+	}
+
+	function normalizeEventHighlightsGridSettings(settings) {
+		const defaults = eventHighlightsGridDefaults();
+		Object.keys(defaults).forEach((key) => {
+			if (settings[key] === undefined) settings[key] = clone(defaults[key]);
+		});
+		settings.heading = String(settings.heading == null ? '' : settings.heading);
+		settings.subheading = String(settings.subheading == null ? '' : settings.subheading);
+		settings.linkText = String(settings.linkText == null ? '' : settings.linkText);
+		settings.linkUrl = normalizeLinkUrl(settings.linkUrl);
+		settings.linkTarget = settings.linkTarget === '_blank' ? '_blank' : '';
+		settings.linkNofollow = !!settings.linkNofollow;
+		settings.linkCustomAttributes = normalizeAttributes(settings.linkCustomAttributes);
+		settings.showArrow = settings.showArrow !== false && settings.showArrow !== 'false' && settings.showArrow !== 0 && settings.showArrow !== '0';
+		settings.textOrder = TEXT_ORDERS.includes(settings.textOrder) ? settings.textOrder : 'subheading-first';
+		normalizeResponsiveEnum(settings, 'layoutDirection', DIRECTIONS, 'row');
+		normalizeResponsiveEnum(settings, 'linkVerticalPosition', VERTICAL_POSITIONS, 'center');
+		normalizeResponsiveEnum(settings, 'linkHorizontalAlign', HORIZONTAL_ALIGNMENTS, 'right');
+		normalizeResponsiveDimension(settings, 'textGap', '12px');
+
+		normalizeTypography(settings, 'heading', { fontFamily: 'Georgia, serif', fontsize: '56px', lineheight: '1.05em', letterspacing: '0px', wordspacing: '0px', fontWeight: '400', color: '#f4efe4' });
+		normalizeTypography(settings, 'subheading', { fontFamily: 'inherit', fontsize: '14px', lineheight: '1.2em', letterspacing: '3px', wordspacing: '0px', fontWeight: '700', color: '#d8ad5e' });
+		normalizeTypography(settings, 'link', { fontFamily: 'inherit', fontsize: '14px', lineheight: '1.2em', letterspacing: '2px', wordspacing: '0px', fontWeight: '700', color: '#d8ad5e' });
+		normalizeTextBox(settings, 'heading'); normalizeTextBox(settings, 'subheading');
+	normalizeBoxSpacing(settings, 'heading'); normalizeBoxSpacing(settings, 'subheading');
+
+		normalizeResponsiveEnum(settings, 'gridColumns', GRID_COLUMNS, '5');
+		normalizeResponsiveDimension(settings, 'columnGap', '20px'); normalizeResponsiveDimension(settings, 'rowGap', '20px'); normalizeResponsiveDimension(settings, 'headerCardsGap', '48px');
+		normalizeResponsiveEnum(settings, 'cardWidthMode', WIDTH_MODES, 'equal'); normalizeResponsiveDimension(settings, 'cardMinWidth', '180px');
+		normalizeResponsiveEnum(settings, 'cardHeightMode', HEIGHT_MODES, 'auto'); normalizeResponsiveDimension(settings, 'cardHeight', '320px');
+		normalizeResponsiveEnum(settings, 'cardMediaPosition', MEDIA_POSITIONS, 'top'); normalizeResponsiveEnum(settings, 'cardAlignment', ALIGNMENTS, 'left');
+		normalizeResponsiveDimension(settings, 'cardContentGap', '24px'); normalizeResponsiveDimension(settings, 'cardMediaSize', '38px'); normalizeResponsiveDimension(settings, 'cardImageWidth', '64px'); normalizeResponsiveDimension(settings, 'cardImageHeight', '64px');
+		settings.cardImageObjectFit = OBJECT_FITS.includes(settings.cardImageObjectFit) ? settings.cardImageObjectFit : 'contain';
+		settings.cardMediaColor = normalizeColor(settings.cardMediaColor, '#d8ad5e'); settings.cardTitleColor = normalizeColor(settings.cardTitleColor, '#f4efe4'); settings.cardDescriptionColor = normalizeColor(settings.cardDescriptionColor, '#aab6c8');
+		normalizeTypography(settings, 'cardMedia', { fontFamily: 'inherit', fontsize: '16px', lineheight: '1.2em', letterspacing: '0px', wordspacing: '0px', fontWeight: '700', color: '#d8ad5e' });
+		normalizeTypography(settings, 'cardTitle', { fontFamily: 'Georgia, serif', fontsize: '28px', lineheight: '1.25em', letterspacing: '0px', wordspacing: '0px', fontWeight: '400', color: '#f4efe4' });
+		normalizeTypography(settings, 'cardDescription', { fontFamily: 'inherit', fontsize: '16px', lineheight: '1.5em', letterspacing: '0px', wordspacing: '0px', fontWeight: '400', color: '#aab6c8' });
+		settings.cardBackgroundColor = normalizeColor(settings.cardBackgroundColor, 'transparent'); settings.cardBackgroundColorHover = normalizeColor(settings.cardBackgroundColorHover, 'transparent');
+		settings.cardBorderType = BORDER_TYPES.includes(settings.cardBorderType) ? settings.cardBorderType : 'solid'; settings.cardBorderTypeHover = BORDER_TYPES.includes(settings.cardBorderTypeHover) ? settings.cardBorderTypeHover : 'solid';
+		settings.cardBorderColor = normalizeColor(settings.cardBorderColor, 'rgba(216,173,94,.35)'); settings.cardBorderColorHover = normalizeColor(settings.cardBorderColorHover, '#d8ad5e');
+		for (const side of ['Top', 'Right', 'Bottom', 'Left']) {
+			const widthKey = 'cardBorderWidth' + side; settings[widthKey] = normalizeDimension(settings[widthKey], '1px');
+			const paddingKey = 'cardPadding' + side; settings[paddingKey] = normalizeDimension(settings[paddingKey], '32px');
+			for (const suffix of ['Tablet', 'Mobile']) { settings[widthKey + suffix] = String(settings[widthKey + suffix] || '').trim() === '' ? '' : normalizeDimension(settings[widthKey + suffix], ''); settings[paddingKey + suffix] = String(settings[paddingKey + suffix] || '').trim() === '' ? '' : normalizeDimension(settings[paddingKey + suffix], ''); }
+		}
+		for (const corner of ['TL', 'TR', 'BR', 'BL']) { const key = 'cardRadius' + corner; settings[key] = normalizeDimension(settings[key], '0px'); for (const suffix of ['Tablet', 'Mobile']) settings[key + suffix] = String(settings[key + suffix] || '').trim() === '' ? '' : normalizeDimension(settings[key + suffix], ''); }
+
+		const incoming = Array.isArray(settings.cards) ? settings.cards : [];
+		const sourceCards = incoming.length ? incoming.slice(0, 5) : defaults.cards;
+		const usedIds = new Set();
+		settings.cards = sourceCards.map((card, index) => normalizeCard(card, index, usedIds));
+		normalizeWidgetAdvancedSettings(settings);
+		return settings;
+	}
+
+	registry.register({
+		type: 'event_highlights_grid',
+		editor: { iconTargets: { cardMedia: { prefix: 'mediaIcon', collection: 'cards' } } },
+		defaults: eventHighlightsGridDefaults,
+		normalize(node) {
+			const normalized = node && typeof node === 'object' ? node : {};
+			normalized.settings = { ...eventHighlightsGridDefaults(), ...(normalized.settings || {}) };
+			normalizeEventHighlightsGridSettings(normalized.settings);
+			return normalized;
+		},
+	});
+})(window.PageBuilderElementorV24Widgets);

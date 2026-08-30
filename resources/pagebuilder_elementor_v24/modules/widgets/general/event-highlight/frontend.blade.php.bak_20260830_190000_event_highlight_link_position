@@ -1,0 +1,208 @@
+@php
+	$eventHighlightSettings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
+	$eventHighlightSettings += [
+		'heading' => 'Five reasons to be on the first tee.',
+		'subheading' => 'EVENT HIGHLIGHTS',
+		'textOrder' => 'subheading-first',
+		'linkText' => 'REGISTER INTEREST',
+		'showArrow' => true,
+		'layoutDirection' => 'row',
+		'layoutDirectionMobile' => 'column',
+		'linkVerticalPosition' => 'center',
+		'linkHorizontalAlign' => 'right',
+		'textGap' => '12px',
+		'headingFontFamily' => 'Georgia, serif',
+		'headingFontSize' => '56px',
+		'headingFontWeight' => '400',
+		'headingColor' => '#f4efe4',
+		'headingLineHeight' => '1.05em',
+		'subheadingFontFamily' => 'inherit',
+		'subheadingFontSize' => '14px',
+		'subheadingFontWeight' => '700',
+		'subheadingColor' => '#d8ad5e',
+		'subheadingLineHeight' => '1.2em',
+		'linkFontFamily' => 'inherit',
+		'linkFontSize' => '14px',
+		'linkFontWeight' => '700',
+		'linkColor' => '#d8ad5e',
+		'linkLineHeight' => '1.2em',
+		'advancedBackgroundType' => 'classic',
+		'advancedBackgroundColor' => '#081d30',
+		'advancedBorderType' => 'none',
+		'advancedBorderWidth' => '0px',
+		'advancedBorderColor' => '#081d30',
+		'paddingTop' => '28px',
+		'paddingRight' => '32px',
+		'paddingBottom' => '28px',
+		'paddingLeft' => '32px',
+	];
+	$nodeId = trim((string) ($node['id'] ?? 'event-highlight')) ?: 'event-highlight';
+	$dynamicBindings = is_array($eventHighlightSettings['dynamicBindings'] ?? null) ? $eventHighlightSettings['dynamicBindings'] : [];
+	$dynamicContext = request()->attributes->get('pagebuilder_dynamic_context', []);
+	$dynamicContext = is_array($dynamicContext) ? $dynamicContext : [];
+	if (!array_key_exists('page', $dynamicContext) && isset($pageData)) $dynamicContext['page'] = $pageData;
+	$dynamicContext['page_url'] ??= url()->current();
+	$dynamicContext['site_title'] ??= config('app.name');
+	$dynamicContext['site_url'] ??= config('app.url');
+	$dynamicContext['user'] ??= request()->user();
+	$dynamicResolver = app(\App\Support\PageBuilderElementorV24\DynamicTagResolver::class);
+	$resolveDynamic = fn (string $field, mixed $fallback): mixed => $dynamicResolver->resolve($field, $fallback, $dynamicBindings, $dynamicContext);
+	$heading = (string) $resolveDynamic('heading', $eventHighlightSettings['heading']);
+	$subheading = (string) $resolveDynamic('subheading', $eventHighlightSettings['subheading']);
+	$linkText = (string) $resolveDynamic('linkText', $eventHighlightSettings['linkText']);
+	$enum = function (mixed $value, array $allowed, string $fallback): string {
+		$value = strtolower(trim((string) $value));
+		return in_array($value, $allowed, true) ? $value : $fallback;
+	};
+	$safeLinkUrl = function (mixed $value): string {
+		$url = trim((string) $value);
+		if ($url === '' || str_starts_with($url, '//') || preg_match('/[\x00-\x1F\x7F]/', $url)) return '';
+		if (preg_match('/^(?:javascript|vbscript|data):/i', $url)) return '';
+		return preg_match('/^(?:https?:\/\/|mailto:|tel:|\/|#)/i', $url) ? $url : '';
+	};
+	$linkUrl = $safeLinkUrl($resolveDynamic('linkUrl', $eventHighlightSettings['linkUrl'] ?? ''));
+	$cssLength = function (mixed $value, string $fallback = '0px'): string {
+		$raw = trim((string) $value);
+		return preg_match('/^-?\d+(?:\.\d+)?(?:px|pt|%|em|rem|vw|vh|deg)?$/i', $raw) ? $raw : $fallback;
+	};
+	$cssColor = function (mixed $value, string $fallback = 'inherit'): string {
+		$raw = trim((string) $value);
+		return $raw !== '' && preg_match('/^[#a-z0-9(),.%\s\/-]+$/i', $raw) ? $raw : $fallback;
+	};
+	$fontFamily = function (mixed $value): string {
+		$raw = trim((string) $value);
+		return $raw !== '' && preg_match('/^[A-Za-z0-9 _,\'"-]+$/', $raw) ? substr($raw, 0, 160) : 'inherit';
+	};
+	$responsive = function (string $base, string $suffix = '', mixed $fallback = '') use ($eventHighlightSettings): mixed {
+		$keys = $suffix === 'Mobile' ? [$base.'Mobile', $base.'Tablet', $base] : ($suffix === 'Tablet' ? [$base.'Tablet', $base] : [$base]);
+		foreach ($keys as $key) {
+			$value = $eventHighlightSettings[$key] ?? null;
+			if ($value !== '' && $value !== null) return $value;
+		}
+		return $fallback;
+	};
+	$textBoxSettingKeys = [
+		'heading' => ['mode' => 'headingBorderMode', 'widthMode' => 'headingBorderWidthMode', 'type' => 'headingBorderType', 'thickness' => 'headingBorderThickness', 'color' => 'headingBorderColor', 'radius' => 'headingBorderRadius', 'padding' => 'headingPadding', 'margin' => 'headingMargin'],
+		'subheading' => ['mode' => 'subheadingBorderMode', 'widthMode' => 'subheadingBorderWidthMode', 'type' => 'subheadingBorderType', 'thickness' => 'subheadingBorderThickness', 'color' => 'subheadingBorderColor', 'radius' => 'subheadingBorderRadius', 'padding' => 'subheadingPadding', 'margin' => 'subheadingMargin'],
+	];
+	$typographyStyle = function (string $prefix, string $suffix = '') use ($eventHighlightSettings, $responsive, $cssLength, $cssColor, $fontFamily, $enum): string {
+		$isHeading = $prefix === 'heading';
+		$fontSize = $isHeading ? '56px' : '14px';
+		$lineHeight = $isHeading ? '1.05em' : '1.2em';
+		$weight = trim((string) ($eventHighlightSettings[$prefix.'FontWeight'] ?? '400'));
+		if (!preg_match('/^(?:inherit|normal|bold|[1-9]00)$/', $weight)) $weight = '400';
+		return implode(';', [
+			'font-family:'.$fontFamily($eventHighlightSettings[$prefix.'FontFamily'] ?? 'inherit'),
+			'font-size:'.$cssLength($responsive($prefix.'FontSize', $suffix, $fontSize), $fontSize),
+			'font-weight:'.$weight,
+			'line-height:'.$cssLength($responsive($prefix.'LineHeight', $suffix, $lineHeight), $lineHeight),
+			'letter-spacing:'.$cssLength($responsive($prefix.'LetterSpacing', $suffix, '0px'), '0px'),
+			'word-spacing:'.$cssLength($responsive($prefix.'WordSpacing', $suffix, '0px'), '0px'),
+			'text-transform:'.$enum($eventHighlightSettings[$prefix.'TextTransform'] ?? 'none', ['none','uppercase','lowercase','capitalize'], 'none'),
+			'font-style:'.$enum($eventHighlightSettings[$prefix.'FontStyle'] ?? 'normal', ['normal','italic','oblique'], 'normal'),
+			'text-decoration:'.$enum($eventHighlightSettings[$prefix.'TextDecoration'] ?? 'none', ['none','underline','overline','line-through'], 'none'),
+			'color:'.$cssColor($eventHighlightSettings[$prefix.'Color'] ?? '', 'inherit'),
+		]);
+	};
+	$textBoxStyle = function (string $prefix, string $suffix = '') use ($eventHighlightSettings, $responsive, $cssLength, $cssColor, $enum, $textBoxSettingKeys): string {
+		$keys = $textBoxSettingKeys[$prefix] ?? $textBoxSettingKeys['heading'];
+		$mode = $enum($responsive($keys['mode'], $suffix, 'none'), ['none','box','underline'], 'none');
+		$widthMode = $enum($responsive($keys['widthMode'], $suffix, 'content'), ['content','full'], 'content');
+		$borderType = $enum($responsive($keys['type'], $suffix, 'solid'), ['solid','dashed','dotted','double','groove'], 'solid');
+		$thickness = $cssLength($responsive($keys['thickness'], $suffix, '1px'), '1px');
+		$borderColor = $cssColor($responsive($keys['color'], $suffix, '#d8ad5e'), '#d8ad5e');
+		return implode(';', [
+			'box-sizing:border-box',
+			'width:'.($widthMode === 'full' ? '100%' : 'max-content'),
+			'max-width:100%',
+			'padding-top:'.$cssLength($responsive($keys['padding'].'Top', $suffix, '0px'), '0px'),
+			'padding-right:'.$cssLength($responsive($keys['padding'].'Right', $suffix, '0px'), '0px'),
+			'padding-bottom:'.$cssLength($responsive($keys['padding'].'Bottom', $suffix, '0px'), '0px'),
+			'padding-left:'.$cssLength($responsive($keys['padding'].'Left', $suffix, '0px'), '0px'),
+			'margin-top:'.$cssLength($responsive($keys['margin'].'Top', $suffix, '0px'), '0px'),
+			'margin-right:'.$cssLength($responsive($keys['margin'].'Right', $suffix, '0px'), '0px'),
+			'margin-bottom:'.$cssLength($responsive($keys['margin'].'Bottom', $suffix, '0px'), '0px'),
+			'margin-left:'.$cssLength($responsive($keys['margin'].'Left', $suffix, '0px'), '0px'),
+			'border-style:'.($mode === 'none' ? 'none' : $borderType),
+			'border-color:'.($mode === 'none' ? 'transparent' : $borderColor),
+			'border-width:'.($mode === 'box' ? $thickness : ($mode === 'underline' ? '0 0 '.$thickness.' 0' : '0')),
+			'border-radius:'.($mode === 'none' ? '0' : $cssLength($responsive($keys['radius'], $suffix, '0px'), '0px')),
+		]);
+	};
+	$direction = fn (string $suffix = ''): string => $enum($responsive('layoutDirection', $suffix, 'row'), ['row','column'], 'row');
+	$verticalPosition = fn (string $suffix = ''): string => $enum($responsive('linkVerticalPosition', $suffix, 'center'), ['top','center','bottom'], 'center');
+	$horizontalAlign = fn (string $suffix = ''): string => $enum($responsive('linkHorizontalAlign', $suffix, 'right'), ['left','center','right'], 'right');
+	$align = fn (string $value): string => $value === 'left' ? 'flex-start' : ($value === 'right' ? 'flex-end' : 'center');
+	$desktopDirection = $direction();
+	$desktopVerticalPosition = $verticalPosition();
+	$desktopHorizontalAlign = $horizontalAlign();
+	$textOrder = $enum($eventHighlightSettings['textOrder'] ?? 'subheading-first', ['heading-first','subheading-first'], 'subheading-first');
+	$showArrow = in_array($eventHighlightSettings['showArrow'] ?? false, [true, 1, '1', 'true'], true);
+	$linkTarget = ($eventHighlightSettings['linkTarget'] ?? '') === '_blank' ? '_blank' : '';
+	$relTokens = $linkTarget === '_blank' ? ['noopener', 'noreferrer'] : [];
+	if (in_array($eventHighlightSettings['linkNofollow'] ?? false, [true, 1, '1', 'true'], true)) $relTokens[] = 'nofollow';
+	$linkRel = implode(' ', array_values(array_unique($relTokens)));
+	$linkAttributes = [];
+	foreach (($eventHighlightSettings['linkCustomAttributes'] ?? []) as $attribute) {
+		if (!is_array($attribute)) continue;
+		$name = strtolower(trim((string) ($attribute['key'] ?? $attribute['name'] ?? '')));
+		if (!preg_match('/^(?:aria-[a-z0-9_-]+|data-[a-z0-9_-]+|title|download|hreflang)$/', $name)) continue;
+		$linkAttributes[$name] = (string) ($attribute['value'] ?? '');
+	}
+	$advanced = app(\App\Support\PageBuilderElementorV24\WidgetAdvancedStyleResolver::class)->resolve($eventHighlightSettings, $nodeId, request());
+	$headingMode = $enum($responsive('headingBorderMode', '', 'none'), ['none','box','underline'], 'none');
+	$headingWidthMode = $enum($responsive('headingBorderWidthMode', '', 'content'), ['content','full'], 'content');
+	$subheadingMode = $enum($responsive('subheadingBorderMode', '', 'none'), ['none','box','underline'], 'none');
+	$subheadingWidthMode = $enum($responsive('subheadingBorderWidthMode', '', 'content'), ['content','full'], 'content');
+	$rootClasses = array_values(array_unique(array_merge([
+		'el-widget-event-highlight',
+		'pb-event-highlight',
+		'layout-direction-'.$desktopDirection,
+		'link-position-'.$desktopVerticalPosition,
+		'link-align-'.$desktopHorizontalAlign,
+		'text-order-'.$textOrder,
+	], $advanced['classes'])));
+	$rootStyle = implode(';', [
+		'display:flex',
+		'width:100%',
+		'min-width:0',
+		'box-sizing:border-box',
+		'flex-direction:'.$desktopDirection,
+		'align-items:stretch',
+		'gap:'.$cssLength($responsive('textGap', '', '12px'), '12px'),
+		'overflow-wrap:anywhere',
+	]);
+	$textStyle = implode(';', ['display:flex', 'flex-direction:column', 'min-width:0', 'max-width:100%', 'gap:'.$cssLength($responsive('textGap', '', '12px'), '12px'), 'overflow-wrap:anywhere']);
+	$ctaAlign = $desktopDirection === 'row' ? $align($desktopVerticalPosition) : $align($desktopHorizontalAlign);
+	$ctaStyle = implode(';', ['display:flex', 'flex:0 1 auto', 'min-width:0', 'max-width:100%', 'align-self:'.$ctaAlign, 'text-align:'.($desktopDirection === 'row' ? 'left' : $desktopHorizontalAlign), 'overflow-wrap:anywhere']);
+	$linkStyle = implode(';', [$typographyStyle('link'), 'display:inline-flex', 'align-items:center', 'gap:.55em', 'max-width:100%', 'overflow-wrap:anywhere', 'text-decoration:none']);
+	$mediaRules = [];
+	foreach (['Tablet' => 1024, 'Mobile' => 767] as $suffix => $breakpoint) {
+		$currentDirection = $direction($suffix);
+		$currentVerticalPosition = $verticalPosition($suffix);
+		$currentHorizontalAlign = $horizontalAlign($suffix);
+		$currentCtaAlign = $currentDirection === 'row' ? $align($currentVerticalPosition) : $align($currentHorizontalAlign);
+		$currentTextAlign = $currentDirection === 'row' ? 'left' : $currentHorizontalAlign;
+		$currentGap = $cssLength($responsive('textGap', $suffix, '12px'), '12px');
+		$mediaRules[] = '@media (max-width: '.$breakpoint.'px){#'.$advanced['id'].'{flex-direction:'.$currentDirection.';gap:'.$currentGap.'}#'.$advanced['id'].' .pb-event-highlight__text{gap:'.$currentGap.'}#'.$advanced['id'].' .pb-event-highlight__cta{align-self:'.$currentCtaAlign.';text-align:'.$currentTextAlign.'}#'.$advanced['id'].' .pb-event-highlight__heading{'.$typographyStyle('heading', $suffix).';'.$textBoxStyle('heading', $suffix).'}#'.$advanced['id'].' .pb-event-highlight__subheading{'.$typographyStyle('subheading', $suffix).';'.$textBoxStyle('subheading', $suffix).'}#'.$advanced['id'].' .pb-event-highlight__link{'.$typographyStyle('link', $suffix).';display:inline-flex;align-items:center;gap:.55em;max-width:100%;overflow-wrap:anywhere;text-decoration:none}}';
+	}
+@endphp
+
+<div id="{{ $advanced['id'] }}" class="{{ implode(' ', $rootClasses) }}" style="{{ $rootStyle }}" data-event-highlight data-text-order="{{ $textOrder }}" data-pb-motion="{{ $advanced['motion'] }}" data-entrance-delay="{{ $advanced['entranceDelay'] }}" data-entrance-duration="{{ $advanced['entranceDuration'] }}" @foreach($advanced['attributes'] as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach>
+	<div class="pb-event-highlight__content">
+		<div class="pb-event-highlight__text" style="{{ $textStyle }}">
+			@if($textOrder === 'heading-first')
+				@if($heading !== '')<h2 class="pb-event-highlight__heading border-mode-{{ $headingMode }} border-width-mode-{{ $headingWidthMode }}" style="{{ $typographyStyle('heading') }};{{ $textBoxStyle('heading') }}">{{ $heading }}</h2>@endif
+				@if($subheading !== '')<p class="pb-event-highlight__subheading border-mode-{{ $subheadingMode }} border-width-mode-{{ $subheadingWidthMode }}" style="{{ $typographyStyle('subheading') }};{{ $textBoxStyle('subheading') }}">{{ $subheading }}</p>@endif
+			@else
+				@if($subheading !== '')<p class="pb-event-highlight__subheading border-mode-{{ $subheadingMode }} border-width-mode-{{ $subheadingWidthMode }}" style="{{ $typographyStyle('subheading') }};{{ $textBoxStyle('subheading') }}">{{ $subheading }}</p>@endif
+				@if($heading !== '')<h2 class="pb-event-highlight__heading border-mode-{{ $headingMode }} border-width-mode-{{ $headingWidthMode }}" style="{{ $typographyStyle('heading') }};{{ $textBoxStyle('heading') }}">{{ $heading }}</h2>@endif
+			@endif
+		</div>
+	</div>
+	<div class="pb-event-highlight__cta" style="{{ $ctaStyle }}">
+		@if($linkText !== '' && $linkUrl !== '')<a class="pb-event-highlight__link" href="{{ $linkUrl }}" style="{{ $linkStyle }}" @if($linkTarget !== '') target="{{ $linkTarget }}" @endif @if($linkRel !== '') rel="{{ $linkRel }}" @endif @foreach($linkAttributes as $attributeName=>$attributeValue) {{ $attributeName }}="{{ e($attributeValue) }}" @endforeach><span>{{ $linkText }}</span>@if($showArrow)<span class="pb-event-highlight__arrow" aria-hidden="true">→</span>@endif</a>
+		@elseif($linkText !== '')<span class="pb-event-highlight__link" style="{{ $linkStyle }}"><span>{{ $linkText }}</span>@if($showArrow)<span class="pb-event-highlight__arrow" aria-hidden="true">→</span>@endif</span>@endif
+	</div>
+</div>
+<style>{!! $advanced['css'] . implode('', $mediaRules) !!}</style>

@@ -1,0 +1,556 @@
+<?php
+
+namespace App\Support\PageBuilderElementorV24\CompiledNative;
+
+final class AutomaticCompiledNativeLayoutMapper
+{
+    /**
+     * Convert the automatic layout blueprint into existing v2.4 layout nodes.
+     * Content is intentionally kept as sourceBlocks until a widget mapping stage
+     * assigns a registered widget type.
+     *
+     * @return array<string,mixed>
+     */
+    public function toPhoenixLayout(array $blueprint): array
+    {
+        $blueprint = AutomaticCompiledNativeBlueprint::normalize($blueprint);
+        $sourceIndex = $this->sourceIndex($blueprint);
+        $mappedChildren = $this->mapChildren($blueprint, $sourceIndex);
+        $unsupported = $this->unsupported($blueprint);
+        $unsupportedBySection = [];
+        foreach ($unsupported as $reason) {
+            $sectionId = (string) ($reason['sectionId'] ?? '');
+            if ($sectionId !== '') {
+                $unsupportedBySection[$sectionId][] = $reason;
+            }
+        }
+
+        $nodes = [];
+        $navigation = [];
+        $sections = [];
+        foreach ($blueprint['sections'] as $section) {
+            $sectionId = (string) ($section['sourceId'] ?? $section['id'] ?? '');
+            $kind = strtolower((string) ($section['kind'] ?? 'section'));
+            if (in_array($kind, ['header', 'footer'], true) || ($section['compile'] ?? true) === false) {
+                $navigation[] = [
+                    'sourceSectionId' => $sectionId,
+                    'label' => (string) ($section['label'] ?? ucfirst($kind)),
+                    'kind' => $kind,
+                    'sourceSelector' => (string) ($section['sourceSelector'] ?? ''),
+                ];
+                continue;
+            }
+
+            $layouts = is_array($section['layoutByViewport'] ?? null) ? $section['layoutByViewport'] : [];
+            $desktopLayout = $this->preferredLayout($layouts);
+            if ($desktopLayout === []) {
+                $desktopLayout = [
+                    'mode' => 'unclassified',
+                    'columns' => 1,
+                    'tracks' => ['1fr'],
+                    'evidence' => [],
+                    'diagnostics' => [],
+                ];
+            }
+            $sectionNodes = $mappedChildren['sections'][$sectionId] ?? ['sourceBlocks' => [], 'columns' => []];
+            $node = $this->layoutNode($section, $desktopLayout, $layouts, $sourceIndex[$sectionId] ?? [], $sectionNodes);
+            $node['compileStatus'] = isset($unsupportedBySection[$sectionId]) ? 'unclassified' : 'layout-ready';
+            $node['unsupported'] = $unsupportedBySection[$sectionId] ?? [];
+            $nodes[] = $node;
+            $sections[] = [
+                'sourceSectionId' => $sectionId,
+                'targetNodeId' => $node['id'],
+                'compileStatus' => $node['compileStatus'],
+                'sourceBlockIds' => array_values(array_map(static fn (array $block): string => $block['sourceId'], $sectionNodes['sourceBlocks'])),
+            ];
+        }
+
+        return [
+            'version' => 1,
+            'nodes' => $nodes,
+            'sections' => $sections,
+            'navigation' => $navigation,
+            'sourceIndex' => $sourceIndex,
+            'unsupported' => $unsupported,
+            'diagnostics' => $blueprint['diagnostics'] ?? [],
+        ];
+    }
+
+    /**
+     * Preserve source order and parent relationships without selecting widgets.
+     *
+     * @param array<string,mixed> $blueprint
+     * @param array<string,array<string,mixed>> $sourceIndex
+     * @return array<string,mixed>
+     */
+    public function mapChildren(array $blueprint, array $sourceIndex = []): array
+    {
+        $blueprint = AutomaticCompiledNativeBlueprint::normalize($blueprint);
+        $sourceIndex = $sourceIndex !== [] ? $sourceIndex : $this->sourceIndex($blueprint);
+        $mapped = ['sections' => []];
+
+        foreach ($blueprint['sections'] as $section) {
+            $sectionId = (string) ($section['sourceId'] ?? $section['id'] ?? '');
+            $rootId = $sectionId;
+            $allNodes = array_values($sourceIndex[$sectionId] ?? []);
+            $sourceBlocks = [];
+            foreach ($allNodes as $order => $node) {
+                $sourceId = (string) ($node['sourceId'] ?? '');
+                if ($sourceId === '' || $sourceId === $rootId) {
+                    continue;
+                }
+                $sourceBlocks[] = [
+                    'sourceId' => $sourceId,
+                    'tag' => (string) ($node['tag'] ?? 'div'),
+                    'id' => (string) ($node['id'] ?? ''),
+                    'classList' => is_array($node['classList'] ?? null) ? array_values($node['classList']) : [],
+                    'parentSourceId' => $node['parentSourceId'] ?? null,
+                    'textContent' => (string) ($node['textContent'] ?? ''),
+                    'innerHTML' => (string) ($node['innerHTML'] ?? ''),
+                    'attributes' => is_array($node['attributes'] ?? null) ? array_values($node['attributes']) : [],
+                    'order' => $order,
+                    'layoutRole' => (string) ($node['layoutRole'] ?? 'content'),
+                    'rectByViewport' => is_array($node['rectByViewport'] ?? null) ? $node['rectByViewport'] : [],
+                    'computedStyleByViewport' => is_array($node['computedStyleByViewport'] ?? null) ? $node['computedStyleByViewport'] : [],
+                    'targetWidgetType' => null,
+                    'widgetCandidates' => [],
+                ];
+            }
+
+            $desktopLayout = $this->preferredLayout($section['layoutByViewport'] ?? []);
+            $columns = max(1, (int) ($desktopLayout['columns'] ?? 1));
+            $columnBlocks = array_fill(0, $columns, []);
+            $directBlocks = array_values(array_filter($sourceBlocks, static fn (array $block): bool => ($block['parentSourceId'] ?? null) === $rootId));
+            foreach ($sourceBlocks as $block) {
+                if (($block['parentSourceId'] ?? null) !== $rootId) {
+                    continue;
+                }
+                $column = $this->columnForBlock($block, $directBlocks, $columns);
+                $columnBlocks[$column][] = $block['sourceId'];
+            }
+
+            $mapped['sections'][$sectionId] = [
+                'sourceBlocks' => $sourceBlocks,
+                'columns' => array_map(static fn (array $ids, int $index): array => [
+                    'index' => $index,
+                    'sourceBlockIds' => array_values($ids),
+                ], $columnBlocks, array_keys($columnBlocks)),
+            ];
+        }
+
+        return $mapped;
+    }
+
+    /**
+     * Return reasons that prevent a safe direct Apply of the layout blueprint.
+     *
+     * @return array<int,array<string,mixed>>
+     */
+    public function unsupported(array $blueprint): array
+    {
+        $blueprint = AutomaticCompiledNativeBlueprint::normalize($blueprint);
+        $sourceIndex = $this->sourceIndex($blueprint);
+        $reasons = [];
+        foreach ($blueprint['sections'] as $section) {
+            $sectionId = (string) ($section['sourceId'] ?? $section['id'] ?? '');
+            $layouts = is_array($section['layoutByViewport'] ?? null) ? $section['layoutByViewport'] : [];
+            $modes = [];
+            foreach ($layouts as $viewport => $layout) {
+                if (! is_array($layout)) {
+                    continue;
+                }
+                $mode = strtolower((string) ($layout['mode'] ?? 'unclassified'));
+                $modes[$viewport] = $mode;
+                if ($mode === 'unclassified') {
+                    $reasons[] = $this->reason('layout-unclassified', $sectionId, (string) $viewport, 'The measured layout is explicitly unclassified and needs review.');
+                }
+                if (($layout['evidence'] ?? []) === []) {
+                    $reasons[] = $this->reason('layout-evidence-missing', $sectionId, (string) $viewport, 'The automatic layout has no decision evidence.');
+                }
+            }
+            if (count(array_unique(array_values($modes))) > 1) {
+                $reasons[] = $this->reason('layout-mode-transition', $sectionId, '', 'The source changes layout mode between viewports; the existing node schema has no responsive displayType setting.');
+            }
+
+            $root = $sourceIndex[$sectionId][0] ?? null;
+            if (! is_array($root)) {
+                continue;
+            }
+            $desktopStyle = $this->styleFor($root, 'desktop');
+            if (strtolower((string) ($desktopStyle['boxSizing'] ?? 'border-box')) !== 'border-box') {
+                $reasons[] = $this->reason('box-sizing-not-representable', $sectionId, 'desktop', 'The target layout renderer is border-box, while the source root uses another box-sizing mode.');
+            }
+            if ($this->hasAsymmetricBorder($desktopStyle)) {
+                $reasons[] = $this->reason('asymmetric-border-not-representable', $sectionId, 'desktop', 'The source uses different border values per side and the target layout control is a single border setting.');
+            }
+            $shadow = strtolower(trim((string) ($desktopStyle['boxShadow'] ?? 'none')));
+            if ($shadow !== '' && $shadow !== 'none') {
+                $reasons[] = $this->reason('box-shadow-review-required', $sectionId, 'desktop', 'The source box shadow is retained as evidence but is not parsed automatically.');
+            }
+            $backgroundImage = strtolower(trim((string) ($desktopStyle['backgroundImage'] ?? 'none')));
+            if ($backgroundImage !== '' && $backgroundImage !== 'none' && ! str_starts_with($backgroundImage, 'url(')) {
+                $reasons[] = $this->reason('background-image-review-required', $sectionId, 'desktop', 'The source background image is not a simple URL and needs explicit mapping.');
+            }
+        }
+
+        return $this->uniqueReasons($reasons);
+    }
+
+    /** @param array<string,mixed> $section @param array<string,mixed> $desktopLayout @param array<string,array<string,mixed>> $layouts @param array<int,array<string,mixed>> $sourceNodes @param array<string,mixed> $mappedChildren @return array<string,mixed> */
+    private function layoutNode(array $section, array $desktopLayout, array $layouts, array $sourceNodes, array $mappedChildren): array
+    {
+        $sectionId = (string) ($section['sourceId'] ?? $section['id'] ?? 'section');
+        $root = $sourceNodes[0] ?? [];
+        $mode = strtolower((string) ($desktopLayout['mode'] ?? 'unclassified'));
+        $type = $mode === 'grid' ? 'grid' : 'container';
+        $settings = $this->rootSettings($root);
+        $settings['displayType'] = $mode === 'flex' ? 'flex' : ($mode === 'stack' ? 'block' : ($mode === 'grid' ? null : 'block'));
+        if ($settings['displayType'] === null) {
+            unset($settings['displayType']);
+        }
+
+        if ($type === 'grid') {
+            $settings = array_merge($settings, $this->gridSettings($desktopLayout, $layouts, $root));
+            $maxColumns = max(array_map(static fn (mixed $layout): int => is_array($layout) ? max(1, (int) ($layout['columns'] ?? 1)) : 1, $layouts ?: [$desktopLayout]));
+            $columns = [];
+            for ($index = 0; $index < $maxColumns; $index++) {
+                $mappedColumn = $mappedChildren['columns'][$index] ?? ['sourceBlockIds' => []];
+                $columns[] = [
+                    'id' => 'compiled-cell-'.($index + 1),
+                    'children' => [],
+                    'sourceBlockIds' => $mappedColumn['sourceBlockIds'] ?? [],
+                    'styleOverrides' => [],
+                ];
+            }
+        } else {
+            $settings = array_merge($settings, $this->flowSettings($desktopLayout, $layouts, $root));
+            $columns = null;
+        }
+
+        return [
+            'id' => $this->targetId($sectionId),
+            'type' => $type,
+            'label' => (string) ($section['label'] ?? ucfirst((string) ($section['kind'] ?? 'section'))),
+            'labelSuffix' => '',
+            'settings' => $settings,
+            'children' => [],
+            ...($columns === null ? [] : ['columns' => $columns]),
+            'sourceSectionId' => $sectionId,
+            'sourceSelector' => (string) ($section['sourceSelector'] ?? ''),
+            'sourceBlockIds' => array_values(array_map(static fn (array $block): string => $block['sourceId'], $mappedChildren['sourceBlocks'] ?? [])),
+            'sourceBlocks' => array_values($mappedChildren['sourceBlocks'] ?? []),
+            'layoutByViewport' => $layouts,
+        ];
+    }
+
+    /** @param array<string,mixed> $layout @param array<string,array<string,mixed>> $layouts @param array<string,mixed> $root @return array<string,mixed> */
+    private function gridSettings(array $layout, array $layouts, array $root): array
+    {
+        $style = $this->styleFor($root, 'desktop');
+        $tracks = $this->tracks($layout);
+        $settings = [
+            'columns' => max(1, (int) ($layout['columns'] ?? count($tracks) ?: 1)),
+            'columnsTablet' => '',
+            'columnsMobile' => '',
+            'gridTemplateColumns' => $tracks !== [] ? implode(' ', $tracks) : '',
+            'columnGap' => $this->firstCssValue($layout['gap'] ?? '', $style['columnGap'] ?? '20px'),
+            'rowGap' => $this->firstCssValue($style['rowGap'] ?? '', $style['columnGap'] ?? '20px'),
+            'gridRows' => $this->cssValue($style['gridTemplateRows'] ?? 'auto', 'auto'),
+            'autoFlow' => $this->cssValue($style['gridAutoFlow'] ?? 'row', 'row'),
+        ];
+        foreach (['tablet', 'mobile'] as $viewport) {
+            if (! isset($layouts[$viewport]) || ! is_array($layouts[$viewport])) {
+                continue;
+            }
+            $suffix = ucfirst($viewport);
+            $settings['columns'.$suffix] = max(1, (int) ($layouts[$viewport]['columns'] ?? 1));
+            $viewportStyle = $this->styleFor($root, $viewport);
+            $settings['columnGap'.$suffix] = $this->cssValue($viewportStyle['columnGap'] ?? $settings['columnGap'], $settings['columnGap']);
+            $settings['rowGap'.$suffix] = $this->cssValue($viewportStyle['rowGap'] ?? $settings['rowGap'], $settings['rowGap']);
+            $settings['gridRows'.$suffix] = $this->cssValue($viewportStyle['gridTemplateRows'] ?? '', '');
+        }
+
+        return $settings;
+    }
+
+    /** @param array<string,mixed> $layout @param array<string,array<string,mixed>> $layouts @param array<string,mixed> $root @return array<string,mixed> */
+    private function flowSettings(array $layout, array $layouts, array $root): array
+    {
+        $style = $this->styleFor($root, 'desktop');
+        $settings = [
+            'direction' => $this->cssValue($style['flexDirection'] ?? 'row', 'row'),
+            'flexWrap' => $this->cssValue($style['flexWrap'] ?? 'nowrap', 'nowrap'),
+            'justifyContent' => $this->cssValue($style['justifyContent'] ?? 'flex-start', 'flex-start'),
+            'alignItems' => $this->cssValue($style['alignItems'] ?? 'flex-start', 'flex-start'),
+            'alignContent' => $this->cssValue($style['alignContent'] ?? 'stretch', 'stretch'),
+            'gap' => $this->cssValue($style['gap'] ?? '0', '0'),
+            'flexRowGap' => $this->cssValue($style['rowGap'] ?? $style['gap'] ?? '0', '0'),
+            'flexColumnGap' => $this->cssValue($style['columnGap'] ?? $style['gap'] ?? '0', '0'),
+        ];
+        foreach (['tablet', 'mobile'] as $viewport) {
+            if (! isset($layouts[$viewport]) || ! is_array($layouts[$viewport])) {
+                continue;
+            }
+            $suffix = ucfirst($viewport);
+            $viewportStyle = $this->styleFor($root, $viewport);
+            $settings['direction'.$suffix] = $this->cssValue($viewportStyle['flexDirection'] ?? '', '');
+            $settings['flexWrap'.$suffix] = $this->cssValue($viewportStyle['flexWrap'] ?? '', '');
+            $settings['flexRowGap'.$suffix] = $this->cssValue($viewportStyle['rowGap'] ?? '', '');
+            $settings['flexColumnGap'.$suffix] = $this->cssValue($viewportStyle['columnGap'] ?? '', '');
+        }
+
+        return $settings;
+    }
+
+    /** @param array<string,mixed> $root @return array<string,mixed> */
+    private function rootSettings(array $root): array
+    {
+        $style = $this->styleFor($root, 'desktop');
+        $settings = [
+            'contentWidth' => 'full',
+            'containerWidth' => '100%',
+            'maxWidth' => $this->cssValue($style['maxWidth'] ?? 'auto', 'auto'),
+            'minHeight' => $this->cssValue($style['minHeight'] ?? 'auto', 'auto'),
+            'paddingTop' => $this->cssValue($style['paddingTop'] ?? '0', '0'),
+            'paddingRight' => $this->cssValue($style['paddingRight'] ?? '0', '0'),
+            'paddingBottom' => $this->cssValue($style['paddingBottom'] ?? '0', '0'),
+            'paddingLeft' => $this->cssValue($style['paddingLeft'] ?? '0', '0'),
+            'marginTop' => $this->cssValue($style['marginTop'] ?? '0', '0'),
+            'marginRight' => $this->cssValue($style['marginRight'] ?? '0', '0'),
+            'marginBottom' => $this->cssValue($style['marginBottom'] ?? '0', '0'),
+            'marginLeft' => $this->cssValue($style['marginLeft'] ?? '0', '0'),
+            'overflow' => $this->cssValue($style['overflow'] ?? 'visible', 'visible'),
+            'cssId' => $this->validCssId((string) ($root['id'] ?? '')),
+            'cssClass' => '',
+            'borderType' => $this->cssValue($style['borderTopStyle'] ?? 'none', 'none'),
+            'borderWidth' => $this->cssValue($style['borderTopWidth'] ?? '0', '0'),
+            'borderColor' => $this->cssValue($style['borderTopColor'] ?? '#000000', '#000000'),
+            'borderRadiusTL' => '0', 'borderRadiusTR' => '0', 'borderRadiusBR' => '0', 'borderRadiusBL' => '0',
+            'bgType' => 'none',
+            'bgColor' => '#ffffff',
+            'bgOpacity' => 1,
+            'bgImage' => '',
+            'bgSize' => $this->cssValue($style['backgroundSize'] ?? 'cover', 'cover'),
+            'bgPosition' => $this->cssValue($style['backgroundPosition'] ?? 'center center', 'center center'),
+            'bgRepeat' => $this->cssValue($style['backgroundRepeat'] ?? 'no-repeat', 'no-repeat'),
+            'shadowEnabled' => false,
+        ];
+        $radius = $this->splitCssValues($style['borderRadius'] ?? '0px');
+        [$settings['borderRadiusTL'], $settings['borderRadiusTR'], $settings['borderRadiusBR'], $settings['borderRadiusBL']] = $this->fourValues($radius);
+
+        $background = trim((string) ($style['backgroundColor'] ?? ''));
+        if ($background !== '' && ! in_array(strtolower($background), ['transparent', 'rgba(0, 0, 0, 0)'], true)) {
+            $settings['bgType'] = 'classic';
+            $settings['bgColor'] = $background;
+        }
+        $backgroundImage = trim((string) ($style['backgroundImage'] ?? 'none'));
+        if (preg_match('/^url\((?:"([^"]+)"|\'([^\']+)\'|([^\)]+))\)$/i', $backgroundImage, $match)) {
+            $settings['bgType'] = 'classic';
+            $settings['bgImage'] = trim((string) ($match[1] ?: ($match[2] ?: $match[3])));
+        }
+        foreach (['tablet', 'mobile'] as $viewport) {
+            $viewportStyle = $this->styleFor($root, $viewport);
+            if ($viewportStyle === []) {
+                continue;
+            }
+            $suffix = ucfirst($viewport);
+            foreach (['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'marginTop', 'marginRight', 'marginBottom', 'marginLeft'] as $key) {
+                $settings[$key.$suffix] = $this->cssValue($viewportStyle[$key] ?? '', '');
+            }
+            $settings['minHeight'.$suffix] = $this->cssValue($viewportStyle['minHeight'] ?? '', '');
+        }
+
+        return $settings;
+    }
+
+    /** @param array<string,mixed> $blueprint @return array<string,array<int,array<string,mixed>>> */
+    private function sourceIndex(array $blueprint): array
+    {
+        $index = [];
+        foreach ($blueprint['sections'] ?? [] as $section) {
+            $sectionId = (string) ($section['sourceId'] ?? $section['id'] ?? '');
+            $index[$sectionId] = [];
+            foreach ($section['nodes'] ?? [] as $node) {
+                if (is_array($node) && trim((string) ($node['sourceId'] ?? '')) !== '') {
+                    $index[$sectionId][] = $node;
+                }
+            }
+            if ($index[$sectionId] === [] && $sectionId !== '') {
+                $index[$sectionId][] = [
+                    'sourceId' => $sectionId,
+                    'tag' => 'section',
+                    'id' => $sectionId,
+                    'classList' => [],
+                    'parentSourceId' => null,
+                    'rectByViewport' => [],
+                    'computedStyleByViewport' => [],
+                ];
+            }
+        }
+
+        return $index;
+    }
+
+    /** @param array<string,mixed> $layouts @return array<string,mixed> */
+    private function preferredLayout(array $layouts): array
+    {
+        if (is_array($layouts['desktop'] ?? null)) {
+            return $layouts['desktop'];
+        }
+        foreach ($layouts as $layout) {
+            if (is_array($layout)) {
+                return $layout;
+            }
+        }
+
+        return [];
+    }
+
+    /** @param array<string,mixed> $block @param array<int,array<string,mixed>> $siblings */
+    private function columnForBlock(array $block, array $siblings, int $columns): int
+    {
+        $rect = is_array($block['rectByViewport']['desktop'] ?? null) ? $block['rectByViewport']['desktop'] : [];
+        if ($rect === []) {
+            return 0;
+        }
+        if ($columns <= 1) {
+            return 0;
+        }
+        $positions = [];
+        foreach ($siblings as $sibling) {
+            $siblingRect = is_array($sibling['rectByViewport']['desktop'] ?? null) ? $sibling['rectByViewport']['desktop'] : [];
+            if ($siblingRect !== []) {
+                $positions[] = (float) ($siblingRect['x'] ?? 0);
+            }
+        }
+        sort($positions);
+        $clusters = [];
+        foreach (array_values(array_unique(array_map(static fn (float $position): string => number_format($position, 3, '.', ''), $positions))) as $position) {
+            $position = (float) $position;
+            $last = array_key_last($clusters);
+            if ($last === null || abs($position - $clusters[$last]) > 3.0) {
+                $clusters[] = $position;
+            }
+        }
+        $x = (float) ($rect['x'] ?? 0);
+        if ($clusters === []) {
+            return 0;
+        }
+        $closest = 0;
+        $distance = PHP_FLOAT_MAX;
+        foreach ($clusters as $index => $position) {
+            if (abs($x - $position) < $distance) {
+                $closest = $index;
+                $distance = abs($x - $position);
+            }
+        }
+
+        return min($columns - 1, $closest);
+    }
+
+    /** @param array<string,mixed> $node @return array<string,string> */
+    private function styleFor(array $node, string $viewport): array
+    {
+        $styles = is_array($node['computedStyleByViewport'] ?? null) ? $node['computedStyleByViewport'] : [];
+        $style = $styles[$viewport] ?? ($node['computedStyle'] ?? []);
+
+        return is_array($style) ? $style : [];
+    }
+
+    /** @param array<string,mixed> $layout @return array<int,string> */
+    private function tracks(array $layout): array
+    {
+        return array_values(array_map(static fn (mixed $track): string => trim((string) $track), is_array($layout['tracks'] ?? null) ? $layout['tracks'] : []));
+    }
+
+    /** @param array<string,mixed> $style */
+    private function hasAsymmetricBorder(array $style): bool
+    {
+        $widths = array_values(array_unique(array_map(static fn (string $key): string => trim((string) ($style[$key] ?? '0px')), ['borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth'])));
+        $types = array_values(array_unique(array_map(static fn (string $key): string => strtolower(trim((string) ($style[$key] ?? 'none'))), ['borderTopStyle', 'borderRightStyle', 'borderBottomStyle', 'borderLeftStyle'])));
+        $colors = array_values(array_unique(array_map(static fn (string $key): string => strtolower(trim((string) ($style[$key] ?? ''))), ['borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor'])));
+
+        return count($widths) > 1 || count($types) > 1 || count($colors) > 1;
+    }
+
+    /** @return array<int,string> */
+    private function splitCssValues(mixed $value): array
+    {
+        $raw = trim((string) $value);
+        if ($raw === '') {
+            return ['0'];
+        }
+
+        return preg_split('/\s+/', $raw) ?: ['0'];
+    }
+
+    /** @param array<int,string> $values @return array{0:string,1:string,2:string,3:string} */
+    private function fourValues(array $values): array
+    {
+        return match (count($values)) {
+            1 => [$values[0], $values[0], $values[0], $values[0]],
+            2 => [$values[0], $values[1], $values[0], $values[1]],
+            3 => [$values[0], $values[1], $values[2], $values[1]],
+            default => [$values[0], $values[1], $values[2], $values[3]],
+        };
+    }
+
+    private function targetId(string $sectionId): string
+    {
+        $safe = preg_replace('/[^A-Za-z0-9_-]+/', '-', trim($sectionId)) ?: 'section';
+
+        return 'compiled-'.$safe;
+    }
+
+    private function validCssId(string $value): string
+    {
+        return preg_match('/^[A-Za-z][A-Za-z0-9_-]*$/', $value) ? $value : '';
+    }
+
+    private function cssValue(mixed $value, string $fallback): string
+    {
+        $value = trim((string) $value);
+
+        return $value === '' ? $fallback : $value;
+    }
+
+    private function firstCssValue(mixed ...$values): string
+    {
+        foreach ($values as $value) {
+            $value = trim((string) $value);
+            if ($value !== '' && $value !== 'normal') {
+                return $value;
+            }
+        }
+
+        return '0';
+    }
+
+    /** @return array<string,mixed> */
+    private function reason(string $code, string $sectionId, string $viewport, string $message): array
+    {
+        return [
+            'code' => $code,
+            'sectionId' => $sectionId,
+            'viewport' => $viewport,
+            'message' => $message,
+        ];
+    }
+
+    /** @param array<int,array<string,mixed>> $reasons @return array<int,array<string,mixed>> */
+    private function uniqueReasons(array $reasons): array
+    {
+        $unique = [];
+        $seen = [];
+        foreach ($reasons as $reason) {
+            $key = implode('|', [(string) ($reason['code'] ?? ''), (string) ($reason['sectionId'] ?? ''), (string) ($reason['viewport'] ?? '')]);
+            if (isset($seen[$key])) {
+                continue;
+            }
+            $seen[$key] = true;
+            $unique[] = $reason;
+        }
+
+        return $unique;
+    }
+}

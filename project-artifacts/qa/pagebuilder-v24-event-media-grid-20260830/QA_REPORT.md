@@ -1,0 +1,53 @@
+# Event Media Grid — QA Report
+
+- Date: 2026-08-30
+- Project: `D:\Laragon\www\laravel-13-phoenix`
+- Target: v2.4 General widget `event_media_grid`
+- Scope: module discovery, settings, Canvas, frontend Blade, safety, responsive contract, and regression counts.
+
+## Implemented contract
+
+- Six default cards from the supplied reference, with empty image sources rendered as safe placeholders.
+- Repeater normalized to 1–12 cards, with per-card Image/Icon/Text content, image element/background modes, icon library/custom SVG, color overrides, and surface presets.
+- Responsive grid defaults `3 / 2 / 1`, up to 12 columns, configurable max/full content width, gaps, image dimensions, card height, card padding, icon–title gap, typography, footer position/alignment, border, background, hover, and shared Advanced controls.
+- Canvas and Blade share the `event-media-grid__*` DOM contract; Blade contains no editor toolbar/dropzone chrome.
+- Root motion attributes were added after the generic v2.4 renderer contract exposed the new module as the only failing renderer.
+
+## Automated verification
+
+- `node --check resources/pagebuilder_elementor_v24/modules/widgets/general/event-media-grid/definition.js` — PASS.
+- `node --test tests/pagebuilder-v24-event-media-grid-widget.test.mjs` — PASS, 6/6.
+- `node --test tests/pagebuilder-v24-*.test.mjs` — PASS, 456/456.
+- `php -l tests/Feature/PageBuilderElementorV24EventMediaGridWidgetTest.php` — PASS.
+- `php artisan test --filter=PageBuilderElementorV24EventMediaGridWidgetTest` — PASS, 4 tests / 44 assertions.
+- Relevant v2.4 PHP regression filter — PASS, 36 tests / 9,438 assertions.
+- `npm run build` — PASS, Vite production build completed.
+- `node project-artifacts/scripts/audit-pagebuilder-v24-control-bindings.mjs` — PASS for consumer coverage: 53 modules / 1,928 controls / 0 consumerless controls; Event Media Grid has no undeclared or consumerless controls.
+- Scoped `git diff --check` for widget, tests, and updated baselines — PASS.
+
+## Broad-suite boundary
+
+- `php artisan test --filter=PageBuilderElementorV24` — 244 passed, 30 failed. The failures are existing FormDataset, FormSubmission, and Routes/Persistence requests returning HTTP 419 before their expected statuses; no Event Media Grid test failed in that run.
+- Global `git diff --check` reports trailing whitespace in pre-existing browser profile log files under `project-artifacts/playwright-auth-matrix-profile`; the scoped implementation check passes.
+
+## Browser QA boundary
+
+- Read-only navigation to `https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.4/create` redirected to `/auth/login` in the available browser session.
+- Authenticated toolbox, repeater, media modes, responsive viewport checks, computed layout, and console checks at 1180px/768px/390px could not be observed.
+- No credentials were entered and no Save, Reset, Apply, submit, upload, or other mutating browser action was performed.
+
+## Graphify
+
+- Incremental command: `graphify . --update --no-viz --code-only`.
+- Final result: 21,513 nodes / 37,400 edges; 2 changed code files re-extracted and 1,620 cached files retained.
+- The initial update emitted a non-fatal warning that `module.json` produced zero nodes in `--code-only`; the final incremental update completed without a new warning, and the JavaScript, Vue, PHP, and test source paths were indexed.
+- Query used: `Event Media Grid event_media_grid definition Settings Canvas frontend ModuleCatalog WidgetAdvancedStyleResolver`.
+
+## Backups
+
+- Existing v2.4 baseline expectation tests were backed up with suffix `_20260830_194428_event_media_grid` before count/order updates.
+- Event Media Grid source revisions were backed up before subsequent fixes with timestamped `*.bak_*_event_media_grid_*` files in the module directory.
+
+## Result
+
+Static, renderer, focused runtime, regression, build, and control-consumer checks pass for Event Media Grid. Full authenticated browser QA remains pending until an authenticated editor session is available.

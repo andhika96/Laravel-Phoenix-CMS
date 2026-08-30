@@ -1,0 +1,66 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeResponsiveDelta;
+use Tests\TestCase;
+
+class PageBuilderElementorV24AutomaticCompiledNativeResponsiveDeltaTest extends TestCase
+{
+    public function test_compares_grid_flex_visibility_position_dimensions_spacing_and_order(): void
+    {
+        $nodes = [[
+            'sourceId' => 'hero',
+            'computedStyleByViewport' => [
+                'desktop' => $this->style(['display' => 'grid', 'gridTemplateColumns' => '1fr 1fr', 'gap' => '32px', 'order' => '0']),
+                'tablet' => $this->style(['display' => 'grid', 'gridTemplateColumns' => '1fr 1fr', 'gap' => '20px', 'order' => '0']),
+                'mobile' => $this->style(['display' => 'grid', 'gridTemplateColumns' => '1fr', 'gap' => '12px', 'order' => '2', 'visibility' => 'hidden']),
+            ],
+            'rectByViewport' => [
+                'desktop' => ['x' => 0, 'y' => 0, 'width' => 900, 'height' => 400],
+                'tablet' => ['x' => 0, 'y' => 0, 'width' => 700, 'height' => 400],
+                'mobile' => ['x' => 0, 'y' => 0, 'width' => 390, 'height' => 600],
+            ],
+        ]];
+
+        $result = (new AutomaticCompiledNativeResponsiveDelta)->compare($nodes, $this->viewports());
+        $delta = $result['hero'];
+
+        $this->assertSame([2, 2, 1], $delta['columns']['values']);
+        $this->assertSame(['32px', '20px', '12px'], $delta['gap']['values']);
+        $this->assertSame(['visible', 'visible', 'hidden'], $delta['visibility']['values']);
+        $this->assertSame([0, 0, 2], $delta['order']['values']);
+        $this->assertSame('native', (new AutomaticCompiledNativeResponsiveDelta)->strategy($delta));
+    }
+
+    public function test_mode_change_is_manual_only_when_no_native_equivalent_is_known(): void
+    {
+        $delta = ['mode' => ['values' => ['grid', 'flex'], 'viewports' => ['desktop', 'mobile']]];
+        $this->assertSame('manual-decision', (new AutomaticCompiledNativeResponsiveDelta)->strategy($delta));
+    }
+
+    public function test_grid_to_stack_one_column_uses_native_grid_responsive_strategy(): void
+    {
+        $delta = ['mode' => ['values' => ['grid', 'stack'], 'viewports' => ['desktop', 'mobile']]];
+        $this->assertSame('native', (new AutomaticCompiledNativeResponsiveDelta)->strategy($delta));
+    }
+
+    private function viewports(): array
+    {
+        return [
+            ['name' => 'desktop', 'width' => 1180, 'height' => 900],
+            ['name' => 'tablet', 'width' => 768, 'height' => 1024],
+            ['name' => 'mobile', 'width' => 390, 'height' => 900],
+        ];
+    }
+
+    private function style(array $override): array
+    {
+        return array_merge([
+            'display' => 'block', 'gridTemplateColumns' => 'none', 'flexDirection' => 'row',
+            'position' => 'static', 'left' => 'auto', 'top' => 'auto', 'width' => 'auto', 'height' => 'auto',
+            'gap' => '0px', 'visibility' => 'visible', 'order' => '0',
+            'paddingTop' => '0px', 'paddingRight' => '0px', 'paddingBottom' => '0px', 'paddingLeft' => '0px',
+        ], $override);
+    }
+}

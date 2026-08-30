@@ -1,0 +1,195 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const helperPath = path.join(root, 'public/js/pagebuilder_elementor_v24/static-import-guided.js');
+
+function helper() {
+  const source = readFileSync(helperPath, 'utf8');
+  const context = { window: {} };
+  vm.runInNewContext(source, context, { filename: helperPath });
+  return context.window.PhoenixGuidedStaticImport;
+}
+
+function analysis() {
+  return {
+    sourceHash: 'a'.repeat(64),
+    previewPayload: {
+      html: '<!doctype html><html><head><style data-pb-source-css>.hero{color:red}</style></head><body><section data-pb-import-node="import-node-1">Hero</section></body></html>',
+      sourceCss: '.hero{color:red}',
+      frameworks: ['tailwind'],
+    },
+    regions: [
+      {
+        id: 'region-import-node-1',
+        marker: 'import-node-1',
+        kind: 'section',
+        sourceId: 'hero',
+        label: 'Hero',
+        order: 0,
+        recommendedStrategy: 'auto_native',
+        confidence: 0.94,
+        warnings: [],
+        blocks: [
+          {
+            id: 'block-import-node-2',
+            marker: 'import-node-2',
+            role: 'heading',
+            tag: 'h1',
+            label: 'Hero heading',
+            textPreview: 'Hero heading',
+            recommendedWidget: 'heading',
+            allowedWidgets: ['heading', 'text_editor'],
+            confidence: 0.95,
+            warnings: [],
+            children: [],
+          },
+          {
+            id: 'block-import-node-3',
+            marker: 'import-node-3',
+            role: 'image',
+            tag: 'img',
+            label: 'Hero image',
+            textPreview: '',
+            recommendedWidget: 'image',
+            allowedWidgets: ['image', 'image_box'],
+            confidence: 0.95,
+            warnings: [],
+            children: [],
+          },
+        ],
+      },
+    ],
+  };
+}
+
+const catalog = {
+  heading: { type: 'heading', label: 'Heading', category: 'basic' },
+  text_editor: { type: 'text_editor', label: 'Text Editor', category: 'basic' },
+  image: { type: 'image', label: 'Image', category: 'basic' },
+  image_box: { type: 'image_box', label: 'Image Box', category: 'general' },
+};
+
+test('guided helper exposes a clean initial state', () => {
+	const api = helper();
+	assert.deepEqual(JSON.parse(JSON.stringify(api.createState())), {
+    phase: 'idle',
+    sourceFile: null,
+    sourceHash: '',
+    analysis: null,
+    selectedRegionId: '',
+    expandedBlockIds: [],
+    regionMappings: {},
+    errors: [],
+  });
+});
+
+test('normalizeAnalysis keeps stable IDs and only active catalog widget IDs', () => {
+  const api = helper();
+  const normalized = api.normalizeAnalysis(analysis(), { ...catalog, inactive: null });
+
+  assert.equal(normalized.regions[0].id, 'region-import-node-1');
+	assert.deepEqual(Array.from(normalized.regions[0].blocks[0].allowedWidgets), ['heading', 'text_editor']);
+  assert.equal(normalized.regions[0].blocks[0].recommendedWidget, 'heading');
+  assert.equal(normalized.regions[0].blocks[1].recommendedWidget, 'image');
+  assert.equal(normalized.regions[0].blocks[0].widgetOptions[0].label, 'Heading');
+});
+
+test('region and block transitions are immutable and preserve mapping IDs', () => {
+  const api = helper();
+  const normalized = api.normalizeAnalysis(analysis(), catalog);
+  const initial = api.createState();
+  const mapped = { ...initial, analysis: normalized, sourceHash: normalized.sourceHash };
+  const guided = api.setRegionStrategy(mapped, 'region-import-node-1', 'guided_native');
+  const changed = api.setBlockWidget(guided, 'region-import-node-1', 'block-import-node-2', 'text_editor');
+
+  assert.equal(mapped.regionMappings['region-import-node-1'], undefined);
+  assert.equal(guided.regionMappings['region-import-node-1'].strategy, 'guided_native');
+	assert.deepEqual(JSON.parse(JSON.stringify(changed.regionMappings['region-import-node-1'].blocks)), {
+    'block-import-node-2': 'text_editor',
+  });
+});
+
+test('regionValidation returns unresolved and incompatible block diagnostics', () => {
+  const api = helper();
+  const normalized = api.normalizeAnalysis(analysis(), catalog);
+  const initial = { ...api.createState(), analysis: normalized };
+  const guided = api.setRegionStrategy(initial, 'region-import-node-1', 'guided_native');
+  const missing = api.regionValidation(guided, 'region-import-node-1');
+  assert.equal(missing.valid, false);
+	assert.deepEqual(Array.from(missing.errors).map((error) => error.code), ['unresolved-block', 'unresolved-block']);
+
+	const incompatible = {
+		...guided,
+		regionMappings: {
+			...guided.regionMappings,
+			'region-import-node-1': {
+				strategy: 'guided_native',
+				blocks: { 'block-import-node-2': 'image' },
+			},
+		},
+	};
+	const validation = api.regionValidation(incompatible, 'region-import-node-1');
+  assert.equal(validation.valid, false);
+  assert.equal(validation.errors[0].code, 'incompatible-widget');
+  assert.equal(validation.errors[0].blockId, 'block-import-node-2');
+});
+
+test('buildCompileMapping serializes only stable mapping fields and never sourceFile', () => {
+  const api = helper();
+  const normalized = api.normalizeAnalysis(analysis(), catalog);
+  let state = {
+    ...api.createState(),
+    sourceFile: { name: 'private-source.html', contents: '<script>secret()</script>' },
+    sourceHash: normalized.sourceHash,
+    analysis: normalized,
+  };
+  state = api.setRegionStrategy(state, 'region-import-node-1', 'guided_native');
+  state = api.setBlockWidget(state, 'region-import-node-1', 'block-import-node-2', 'heading');
+  state = api.setBlockWidget(state, 'region-import-node-1', 'block-import-node-3', 'image');
+
+  const mapping = api.buildCompileMapping(state);
+  const serialized = JSON.stringify(mapping);
+	assert.deepEqual(JSON.parse(JSON.stringify(mapping)), {
+    version: 1,
+    regions: [{
+      regionId: 'region-import-node-1',
+      strategy: 'guided_native',
+      blocks: [
+        { blockId: 'block-import-node-2', widgetType: 'heading' },
+        { blockId: 'block-import-node-3', widgetType: 'image' },
+      ],
+    }],
+  });
+  assert.equal(serialized.includes('private-source.html'), false);
+  assert.equal(serialized.includes('Hero heading'), false);
+  assert.equal(serialized.includes('confidence'), false);
+  assert.equal(serialized.includes('<script>'), false);
+});
+
+test('resetState clears analysis and mapping without touching external page state', () => {
+  const api = helper();
+  const normalized = api.normalizeAnalysis(analysis(), catalog);
+  const state = api.setRegionStrategy({ ...api.createState(), analysis: normalized }, 'region-import-node-1', 'skip');
+  const reset = api.resetState(state);
+
+  assert.equal(reset.phase, 'idle');
+  assert.equal(reset.analysis, null);
+	assert.deepEqual(JSON.parse(JSON.stringify(reset.regionMappings)), {});
+  assert.equal(reset.sourceFile, null);
+	assert.deepEqual(Array.from(reset.expandedBlockIds), []);
+});
+
+test('buildRegionPreviewSrcdoc creates a sanitized region preview document', () => {
+  const api = helper();
+  const srcdoc = api.buildRegionPreviewSrcdoc(analysis().previewPayload, 'import-node-1');
+
+  assert.match(srcdoc, /<section[^>]*data-pb-import-node="import-node-1"/);
+  assert.match(srcdoc, /\.hero\{color:red\}/);
+  assert.match(srcdoc, /<body class="pb-import-root">/);
+  assert.equal(srcdoc.includes('<script'), false);
+});

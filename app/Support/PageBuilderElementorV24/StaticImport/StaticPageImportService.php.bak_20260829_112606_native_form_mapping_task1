@@ -1,0 +1,1485 @@
+<?php
+
+namespace App\Support\PageBuilderElementorV24\StaticImport;
+
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+use Illuminate\Http\UploadedFile;
+use InvalidArgumentException;
+use ZipArchive;
+
+final class StaticPageImportService
+{
+    private int $sequence = 0;
+    private bool $compiledNative = false;
+    private ?string $assetBaseUrl = null;
+
+    /** @return array<string, mixed> */
+    public function convert(UploadedFile $source, string $framework = 'auto', ?string $entry = null, string $mode = 'native', bool $includeSourceScripts = false, ?string $baseUrl = null): array
+    {
+        $mode = in_array($mode, ['native', 'exact', 'compiled'], true) ? $mode : 'native';
+        $this->assetBaseUrl = $this->normalizeAssetBaseUrl($baseUrl);
+        $extension = strtolower((string) ($source->getClientOriginalExtension() ?: pathinfo($source->getClientOriginalName(), PATHINFO_EXTENSION)));
+        if ($extension === 'zip') {
+            return $this->convertZip($source, $framework, $entry, $mode, $includeSourceScripts);
+        }
+        if (! in_array($extension, ['html', 'htm'], true)) {
+            throw new InvalidArgumentException('Only HTML or ZIP files are supported.');
+        }
+        if (($source->getSize() ?: 0) > 2 * 1024 * 1024) {
+            throw new InvalidArgumentException('HTML source exceeds the conservative 2 MB limit.');
+        }
+
+        $html = file_get_contents($source->getRealPath());
+        if ($html === false || trim($html) === '') {
+            throw new InvalidArgumentException('The HTML file is empty or unreadable.');
+        }
+
+        return $this->convertHtml($html, $framework, pathinfo($source->getClientOriginalName(), PATHINFO_FILENAME), [], $mode, $includeSourceScripts);
+    }
+
+    /** @return array<string, mixed> */
+    private function convertZip(UploadedFile $source, string $framework, ?string $requestedEntry, string $mode, bool $includeSourceScripts = false): array
+    {
+        if (($source->getSize() ?: 0) > 20 * 1024 * 1024) {
+            throw new InvalidArgumentException('ZIP source exceeds the 20 MB compressed limit.');
+        }
+
+        $zip = new ZipArchive();
+        if ($zip->open($source->getRealPath()) !== true) {
+            throw new InvalidArgumentException('The ZIP source could not be opened.');
+        }
+
+        $htmlEntries = [];
+        $assetCount = 0;
+        $expandedBytes = 0;
+        try {
+            if ($zip->numFiles > 500) throw new InvalidArgumentException('ZIP contains more than 500 files.');
+            for ($index = 0; $index < $zip->numFiles; $index++) {
+                $stat = $zip->statIndex($index);
+                $name = str_replace('\\', '/', (string) ($stat['name'] ?? ''));
+                if ($name === '' || str_ends_with($name, '/')) continue;
+                if (str_starts_with($name, '/') || preg_match('/^[A-Za-z]:/', $name) || preg_match('~(^|/)\.\.(?:/|$)~', $name)) {
+                    throw new InvalidArgumentException('ZIP contains an unsafe path.');
+                }
+                if (substr_count(trim($name, '/'), '/') > 8) throw new InvalidArgumentException('ZIP path depth exceeds the limit.');
+                $expandedBytes += max(0, (int) ($stat['size'] ?? 0));
+                if ($expandedBytes > 100 * 1024 * 1024) throw new InvalidArgumentException('ZIP expanded content exceeds the 100 MB limit.');
+                $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                if (in_array($extension, ['html', 'htm'], true)) $htmlEntries[] = $name;
+                if (in_array($extension, ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'woff', 'woff2', 'ttf', 'otf'], true)) $assetCount++;
+            }
+
+            $entry = $this->selectZipEntry($htmlEntries, $requestedEntry);
+            $html = $zip->getFromName($entry);
+            if ($html === false || trim($html) === '') throw new InvalidArgumentException('The selected ZIP HTML entry is empty.');
+        } finally {
+            $zip->close();
+        }
+
+        // ponytail: ZIP assets stay as reported paths in this vertical slice; promote through FileManagerV2 batches when asset persistence is scheduled.
+        $result = $this->convertHtml($html, $framework, pathinfo($entry, PATHINFO_FILENAME), [
+            'entry' => $entry,
+            'missingAssets' => $assetCount,
+        ], $mode, $includeSourceScripts);
+        if ($assetCount > 0) {
+            $result['report']['warnings'][] = 'ZIP assets were detected but are not uploaded to File Manager in this slice.';
+            $result['status'] = 'partial';
+        }
+        return $result;
+    }
+
+    /** @param array<int, string> $entries */
+    private function selectZipEntry(array $entries, ?string $requestedEntry): string
+    {
+        $normalized = array_values(array_unique($entries));
+        if ($requestedEntry !== null && trim($requestedEntry) !== '') {
+            $requested = str_replace('\\', '/', trim($requestedEntry));
+            foreach ($normalized as $entry) if (strcasecmp($entry, $requested) === 0) return $entry;
+            throw new InvalidArgumentException('Requested ZIP HTML entry was not found.');
+        }
+        foreach (['home.html', 'index.html'] as $preferred) {
+            foreach ($normalized as $entry) if (strcasecmp(basename($entry), $preferred) === 0) return $entry;
+        }
+        if (count($normalized) === 1) return $normalized[0];
+        throw new InvalidArgumentException('ZIP must contain home.html, index.html, or one unambiguous HTML entry.');
+    }
+
+    /** @return array<string, mixed> */
+    private function convertHtml(string $html, string $framework, string $fallbackName, array $reportOverrides = [], string $mode = 'native', bool $includeSourceScripts = false): array
+    {
+        $this->sequence = 0;
+        $this->compiledNative = $mode === 'compiled';
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $previous = libxml_use_internal_errors(true);
+        $loaded = $dom->loadHTML('<?xml encoding="UTF-8"?>'.$html, LIBXML_NONET | LIBXML_HTML_NODEFDTD | LIBXML_COMPACT);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+
+        if (! $loaded) {
+            throw new InvalidArgumentException('The HTML document could not be parsed.');
+        }
+
+        $styleImport = app(StaticPageCssProcessor::class)->process($dom, $html);
+        $sourceScripts = $this->sourceScriptReport($dom, $includeSourceScripts);
+
+        $report = array_merge([
+            'frameworks' => $this->detectFrameworks($dom, $html, $framework),
+            'entry' => $fallbackName.'.html',
+            'mappedNodes' => 0,
+            'placeholderNodes' => 0,
+            'preservedIds' => 0,
+            'preservedClasses' => 0,
+            'rejectedSourceAttributes' => 0,
+            'importedAssets' => 0,
+            'missingAssets' => 0,
+            'droppedScripts' => 0,
+            'sourceScripts' => $sourceScripts,
+            'compileEligibleNodes' => 0,
+            'compileSourceClasses' => 0,
+            'compileWarnings' => [],
+            'relativeAssets' => [],
+            'droppedStyles' => $styleImport['dropped'],
+            'processedStyles' => $dom->getElementsByTagName('style')->length,
+            'importedStylesheets' => count($styleImport['stylesheets']),
+            'warnings' => $styleImport['warnings'],
+        ], $reportOverrides);
+
+        $exactFallback = null;
+        $compilePayload = null;
+        if ($mode === 'compiled') {
+            $exactReport = $report;
+            $exactFallback = $this->exactResult($this->duplicateDocument($dom), $styleImport, $fallbackName, $exactReport);
+            $this->sequence = 0;
+            $this->assignCompileMarkers($dom, $report);
+            $compilePayload = $this->buildCompilePayload($dom, $styleImport, $fallbackName, $report);
+        }
+
+        if ($mode === 'exact') {
+            return $this->exactResult($dom, $styleImport, $fallbackName, $report);
+        }
+
+        foreach (['script', 'link', 'style'] as $tag) {
+            $elements = iterator_to_array($dom->getElementsByTagName($tag));
+            foreach ($elements as $element) {
+                if ($tag === 'script') $report['droppedScripts']++;
+                $element->parentNode?->removeChild($element);
+            }
+        }
+        if ($report['droppedScripts'] > 0) {
+            $report['warnings'][] = 'Scripts and inline behavior were removed from the imported page.';
+        }
+
+        $title = '';
+        $titles = $dom->getElementsByTagName('title');
+        if ($titles->length > 0) $title = trim((string) $titles->item(0)?->textContent);
+        $body = $dom->getElementsByTagName('body')->item(0);
+        $children = [];
+        if ($body instanceof DOMElement) {
+            foreach (iterator_to_array($body->childNodes) as $child) {
+                $mapped = $this->mapNode($child, $report);
+                if ($mapped !== null) $children[] = $mapped;
+            }
+        }
+
+        if ($children === []) {
+            $report['warnings'][] = 'No supported visible body content was found.';
+        }
+
+        $staticImportSettings = $mode === 'compiled'
+            ? ['mode' => 'compiled']
+            : [
+                'mode' => $mode,
+                'frameworks' => array_values(array_intersect($report['frameworks'], ['tailwind', 'bootstrap5'])),
+                'stylesheets' => $styleImport['stylesheets'],
+                'tailwindConfig' => $styleImport['tailwindConfig'],
+            ];
+        $rootSettings = [
+            'displayType' => 'flex',
+            'direction' => 'column',
+            'contentWidth' => 'full',
+            'cssClass' => 'pb-import-root',
+            'staticImport' => $staticImportSettings,
+        ];
+        if ($mode === 'compiled') {
+            $rootSettings = array_merge($this->compiledLayoutDefaults(), $rootSettings);
+            $bodyForRoot = $dom->getElementsByTagName('body')->item(0);
+            if ($bodyForRoot instanceof DOMElement) $rootSettings = array_merge($rootSettings, $this->sourceSettings($bodyForRoot, $report));
+        }
+        $layout = [$this->node('container', $rootSettings, $children)];
+        if ($mode === 'compiled') {
+            $compilePayload['markerMap'] = $this->markerMapForLayout($layout);
+            $compilePayload['sections'] = $this->compileSectionMetadata($dom);
+            $report['compiledSections'] = count($compilePayload['sections']);
+            $report['fallbackSections'] = count(array_filter($compilePayload['sections'], static fn (array $section): bool => (bool) ($section['fallback'] ?? false)));
+            $report['compileWarnings'] = array_values(array_unique($report['warnings']));
+        }
+
+        $result = [
+            'mode' => $mode,
+            'status' => $report['warnings'] === [] ? 'success' : 'partial',
+            'frameworks' => $report['frameworks'],
+            'pageName' => $title !== '' ? $title : ($fallbackName !== '' ? $fallbackName : 'Imported Page'),
+            'layout' => $layout,
+            'customCss' => $mode === 'compiled' ? '' : $styleImport['css'],
+            'assetBatchId' => null,
+            'report' => $report,
+        ];
+        if ($mode === 'compiled') {
+            $result['compilePayload'] = $compilePayload;
+            $result['exactFallback'] = $exactFallback;
+        }
+        return $result;
+    }
+
+    /**
+     * Build a safe source-script inventory. Inline source is intentionally
+     * omitted unless the caller explicitly requested copy candidates.
+     *
+     * @return array<string, mixed>
+     */
+    private function sourceScriptReport(DOMDocument $dom, bool $includeSourceScripts): array
+    {
+        $total = 0;
+        $inline = 0;
+        $external = 0;
+        $eventSelectors = [];
+        $warnings = [];
+        $inlineCode = [];
+        $copySkippedOversize = 0;
+
+        foreach (iterator_to_array($dom->getElementsByTagName('script')) as $script) {
+            if (! $script instanceof DOMElement) continue;
+            $total++;
+            $source = trim($script->getAttribute('src'));
+            if ($source !== '') {
+                $external++;
+                continue;
+            }
+
+            $inline++;
+            $code = str_replace(["\r\n", "\r"], "\n", (string) $script->textContent);
+            $selectors = $this->sourceScriptEventSelectors($code);
+            $eventSelectors = array_values(array_unique(array_merge($eventSelectors, $selectors)));
+
+            $diagnostics = app(\App\Support\PageBuilderElementorV24\CustomJavaScriptPolicy::class)->normalize($code, 'disabled');
+            $diagnosticKeys = array_values(array_unique(array_merge($diagnostics['blocked'], $diagnostics['warnings'])));
+            if ($diagnosticKeys !== []) {
+                $warnings[] = 'Inline script #'.$inline.' diagnostics: '.implode(', ', $diagnosticKeys).'.';
+            }
+
+            if ($includeSourceScripts && trim($code) !== '') {
+                if (strlen($code) <= \App\Support\PageBuilderElementorV24\CustomJavaScriptPolicy::MAX_BYTES) {
+                    $inlineCode[] = trim($code);
+                } else {
+                    $copySkippedOversize++;
+                }
+            }
+        }
+
+        $result = [
+            'total' => $total,
+            'inline' => $inline,
+            'external' => $external,
+            'eventSelectors' => array_slice($eventSelectors, 0, 100),
+            'warnings' => array_values(array_unique($warnings)),
+            'copyRequested' => $includeSourceScripts,
+            'copyAvailable' => $includeSourceScripts && $inlineCode !== [],
+        ];
+        if ($includeSourceScripts) {
+            $result['inlineCode'] = $inlineCode;
+            $result['copySkippedOversize'] = $copySkippedOversize;
+        }
+        return $result;
+    }
+
+    private function duplicateDocument(DOMDocument $dom): DOMDocument
+    {
+        $copy = new DOMDocument('1.0', 'UTF-8');
+        $previous = libxml_use_internal_errors(true);
+        $loaded = $copy->loadHTML(
+            '<?xml encoding="UTF-8"?>'.($dom->saveHTML() ?: ''),
+            LIBXML_NONET | LIBXML_HTML_NODEFDTD | LIBXML_COMPACT,
+        );
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+        if (! $loaded) throw new InvalidArgumentException('The source document could not be copied for compiled import.');
+        return $copy;
+    }
+
+    /** @param array<string, mixed> $report */
+    private function assignCompileMarkers(DOMDocument $dom, array &$report): void
+    {
+        $body = $dom->getElementsByTagName('body')->item(0);
+        if (! $body instanceof DOMElement) return;
+
+        $markerSequence = 0;
+        $relativeAssets = [];
+        $body->setAttribute('data-pb-import-node', 'import-node-body');
+        $report['compileEligibleNodes']++;
+        foreach (['src', 'poster'] as $attributeName) {
+            $value = trim($body->getAttribute($attributeName));
+            if ($value !== '' && ! preg_match('/^(?:https?:|\/|#|data:)/i', $value)) $relativeAssets[] = $value;
+        }
+        foreach (iterator_to_array($body->getElementsByTagName('*')) as $element) {
+            if (! $element instanceof DOMElement) continue;
+            if (in_array(strtolower($element->tagName), ['script', 'style', 'link', 'meta', 'base', 'noscript', 'iframe', 'object', 'embed'], true)) continue;
+            $marker = 'import-node-'.(++$markerSequence);
+            $element->setAttribute('data-pb-import-node', $marker);
+            $report['compileEligibleNodes']++;
+
+            foreach (['src', 'poster'] as $attributeName) {
+                $value = trim($element->getAttribute($attributeName));
+                if ($value !== '' && ! preg_match('/^(?:https?:|\/|#|data:)/i', $value)) $relativeAssets[] = $value;
+            }
+        }
+        $report['relativeAssets'] = array_slice(array_values(array_unique($relativeAssets)), 0, 100);
+    }
+
+    /** @param array<string, mixed> $styleImport @param array<string, mixed> $report */
+    private function buildCompilePayload(DOMDocument $dom, array $styleImport, string $fallbackName, array &$report): array
+    {
+        $compileDom = $this->duplicateDocument($dom);
+        foreach (['script', 'link', 'meta', 'base', 'noscript', 'iframe', 'object', 'embed', 'style'] as $tag) {
+            foreach (iterator_to_array($compileDom->getElementsByTagName($tag)) as $element) {
+                $element->parentNode?->removeChild($element);
+            }
+        }
+
+        $body = $compileDom->getElementsByTagName('body')->item(0);
+        $bodyHtml = '';
+        $bodyAttributes = 'class="pb-import-root"';
+        if ($body instanceof DOMElement) {
+            $this->sanitizeCompileTree($body);
+            $bodyAttributes = $this->compileBodyAttributes($body);
+            foreach (iterator_to_array($body->childNodes) as $child) $bodyHtml .= $compileDom->saveHTML($child) ?: '';
+        }
+
+        $classMap = [];
+        $idMap = [];
+        if ($body instanceof DOMElement) {
+            $compileElements = array_merge([$body], iterator_to_array($body->getElementsByTagName('*')));
+            foreach ($compileElements as $element) {
+                if (! $element instanceof DOMElement) continue;
+                $marker = trim($element->getAttribute('data-pb-import-node'));
+                if (! $this->safeImportNodeKey($marker)) continue;
+                foreach ($this->safeSourceClasses($element->getAttribute('class')) as $class) {
+                    if ($class === 'pb-import-root') continue;
+                    $classMap[$class] ??= [];
+                    $classMap[$class][] = $marker;
+                }
+                $id = $this->safeSourceId($element->getAttribute('id'));
+                if ($id !== '') {
+                    $idMap[$id] ??= [];
+                    $idMap[$id][] = $marker;
+                }
+            }
+        }
+        foreach ($classMap as $class => $markers) $classMap[$class] = array_values(array_unique($markers));
+        foreach ($idMap as $id => $markers) $idMap[$id] = array_values(array_unique($markers));
+        ksort($classMap);
+        ksort($idMap);
+        $report['compileSourceClasses'] = count($classMap);
+
+        $sourceCss = preg_replace('/<\/?(?:script|style)\b[^>]*>/i', '', (string) ($styleImport['css'] ?? '')) ?? '';
+        $sourceCss = str_replace('</style', '<\\/style', $sourceCss);
+        $compileHtml = '<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style data-pb-source-css>'.$sourceCss.'</style></head><body '.$bodyAttributes.'>'.$bodyHtml.'</body></html>';
+        $frameworks = array_values(array_intersect($report['frameworks'] ?? [], ['tailwind', 'bootstrap5']));
+        $report['compileWarnings'] = array_values(array_unique(array_merge($report['compileWarnings'], $styleImport['warnings'] ?? [])));
+
+        return [
+            'mode' => 'compiled',
+            'html' => $compileHtml,
+            'frameworks' => $frameworks,
+            'stylesheets' => $styleImport['stylesheets'] ?? [],
+            'tailwindConfig' => $styleImport['tailwindConfig'] ?? [],
+            'sourceCss' => $sourceCss,
+            'classMap' => $classMap,
+            'idMap' => $idMap,
+            'markerMap' => [],
+            'viewports' => [
+                ['key' => 'mobile', 'width' => 390, 'height' => 900],
+                ['key' => 'tablet', 'width' => 768, 'height' => 1024],
+                ['key' => 'desktop', 'width' => 1180, 'height' => 900],
+            ],
+            'sections' => [],
+            'sourceHash' => hash('sha256', $compileHtml),
+        ];
+    }
+
+    /** @return array<string, string> */
+    private function compiledLayoutDefaults(): array
+    {
+        return [
+            'paddingTop' => '0px',
+            'paddingRight' => '0px',
+            'paddingBottom' => '0px',
+            'paddingLeft' => '0px',
+            'marginTop' => '0px',
+            'marginRight' => '0px',
+            'marginBottom' => '0px',
+            'marginLeft' => '0px',
+        ];
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    private function compileSectionMetadata(DOMDocument $dom): array
+    {
+        $body = $dom->getElementsByTagName('body')->item(0);
+        if (! $body instanceof DOMElement) return [];
+
+        $sections = [];
+        foreach (iterator_to_array($body->getElementsByTagName('*')) as $element) {
+            if (! $element instanceof DOMElement) continue;
+            $tag = strtolower($element->tagName);
+            if (! in_array($tag, ['header', 'section', 'footer'], true)) continue;
+            $marker = trim($element->getAttribute('data-pb-import-node'));
+            if (! $this->safeImportNodeKey($marker)) continue;
+            $sourceId = $this->safeSourceId($element->getAttribute('id'));
+            $fallbackReasons = $this->sectionFallbackReasons($element);
+            $sections[] = [
+                'marker' => $marker,
+                'tag' => $tag,
+                'sourceId' => $sourceId,
+                'order' => count($sections),
+                'fallback' => $fallbackReasons !== [],
+                'fallbackReasons' => $fallbackReasons,
+            ];
+        }
+
+        if ($sections !== []) return $sections;
+
+        foreach (iterator_to_array($body->childNodes) as $child) {
+            if (! $child instanceof DOMElement || in_array(strtolower($child->tagName), ['script', 'style', 'link', 'meta', 'noscript'], true)) continue;
+            $marker = trim($child->getAttribute('data-pb-import-node'));
+            if (! $this->safeImportNodeKey($marker)) continue;
+            $fallbackReasons = $this->sectionFallbackReasons($child);
+            $sections[] = [
+                'marker' => $marker,
+                'tag' => strtolower($child->tagName),
+                'sourceId' => $this->safeSourceId($child->getAttribute('id')),
+                'order' => count($sections),
+                'fallback' => $fallbackReasons !== [],
+                'fallbackReasons' => $fallbackReasons,
+            ];
+        }
+
+        return $sections;
+    }
+
+    /** @return array<int, string> */
+    private function sectionFallbackReasons(DOMElement $section): array
+    {
+        $reasons = [];
+        $elements = array_merge([$section], iterator_to_array($section->getElementsByTagName('*')));
+        $hasHorizontalSnap = false;
+        foreach ($elements as $element) {
+            if (! $element instanceof DOMElement) continue;
+            $tag = strtolower($element->tagName);
+            if ($tag === 'form') $reasons[] = 'contains-unsupported-form';
+            if (in_array($tag, ['input', 'textarea', 'select', 'video', 'audio', 'canvas', 'svg', 'iframe', 'object', 'embed'], true)) {
+                $reasons[] = 'contains-unsupported-'.$tag;
+            }
+            foreach ($this->classes($element) as $class) {
+                if (in_array($class, ['snap-track', 'snap-x', 'snap-mandatory'], true)) $hasHorizontalSnap = true;
+                if ($class === 'overflow-x-auto') $hasHorizontalSnap = true;
+            }
+        }
+        if ($hasHorizontalSnap) $reasons[] = 'horizontal-snap-layout';
+        return array_values(array_unique($reasons));
+    }
+
+    private function safeImportNodeKey(string $value): bool
+    {
+        return preg_match('/^import-node-[A-Za-z0-9_-]+$/', trim($value)) === 1;
+    }
+
+    private function compileBodyAttributes(DOMElement $body): string
+    {
+        $attributes = [];
+        foreach (iterator_to_array($body->attributes ?? []) as $attribute) {
+            $name = strtolower($attribute->name);
+            $value = trim($attribute->value);
+            if ($name === 'id') {
+                $safe = $this->safeSourceId($value);
+                if ($safe !== '') $attributes['id'] = $safe;
+                continue;
+            }
+            if ($name === 'class') {
+                $classes = $this->safeSourceClasses($value);
+                $classes[] = 'pb-import-root';
+                $attributes['class'] = implode(' ', array_values(array_unique($classes)));
+                continue;
+            }
+            if (preg_match('/^(?:aria-[a-z0-9_-]+|data-[a-z0-9_-]+|lang|dir|role|tabindex)$/i', $name)) $attributes[$name] = $value;
+        }
+        $attributes['class'] ??= 'pb-import-root';
+        return implode(' ', array_map(fn (string $name, string $value): string => $name.'="'.htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8').'"', array_keys($attributes), $attributes));
+    }
+
+    private function sanitizeCompileTree(DOMElement $root): void
+    {
+        $allowedAttributes = ['id', 'class', 'href', 'src', 'poster', 'alt', 'title', 'target', 'rel', 'name', 'value', 'type', 'placeholder', 'for', 'role', 'tabindex'];
+        foreach (iterator_to_array($root->getElementsByTagName('*')) as $element) {
+            if (! $element instanceof DOMElement) continue;
+            foreach (iterator_to_array($element->attributes ?? []) as $attribute) {
+                $name = strtolower($attribute->name);
+                $value = trim($attribute->value);
+                if ($name === 'data-pb-import-node') {
+                    if (! $this->safeImportNodeKey($value)) $element->removeAttribute($attribute->name);
+                    continue;
+                }
+                if (str_starts_with($name, 'on') || in_array($name, ['action', 'formaction', 'srcdoc', 'integrity', 'style'], true)) {
+                    if ($name === 'style' && $this->safeExactInlineStyle($value)) continue;
+                    $element->removeAttribute($attribute->name);
+                    continue;
+                }
+                if (str_starts_with($name, 'aria-') || str_starts_with($name, 'data-')) continue;
+                if (! in_array($name, $allowedAttributes, true)) {
+                    $element->removeAttribute($attribute->name);
+                    continue;
+                }
+                if (in_array($name, ['href', 'src', 'poster'], true)) {
+                    $safeUrl = $this->safeUrl($value);
+                    if ($safeUrl === '') $element->removeAttribute($attribute->name);
+                    else $element->setAttribute($attribute->name, $safeUrl);
+                    continue;
+                }
+                if ($name === 'class') {
+                    $classes = $this->safeSourceClasses($value);
+                    if ($classes === []) $element->removeAttribute($attribute->name);
+                    else $element->setAttribute($attribute->name, implode(' ', $classes));
+                }
+            }
+        }
+    }
+
+    /** @param array<int, array<string, mixed>> $nodes @return array<string, string> */
+    private function markerMapForLayout(array $nodes): array
+    {
+        $map = [];
+        $walk = function (array $items) use (&$walk, &$map): void {
+            foreach ($items as $node) {
+                if (! is_array($node)) continue;
+                $settings = is_array($node['settings'] ?? null) ? $node['settings'] : [];
+                $marker = trim((string) ($settings['importNodeKey'] ?? ''));
+                if ($this->safeImportNodeKey($marker)) $map[$marker] = (string) ($node['id'] ?? '');
+                if (is_array($node['children'] ?? null)) $walk($node['children']);
+                foreach (($node['columns'] ?? []) as $column) if (is_array($column) && is_array($column['children'] ?? null)) $walk($column['children']);
+                foreach (['tabItems', 'accordionItems'] as $key) foreach (($node[$key] ?? []) as $item) if (is_array($item) && is_array($item['children'] ?? null)) $walk($item['children']);
+            }
+        };
+        $walk($nodes);
+        return $map;
+    }
+
+    /** @return array<int, string> */
+    private function sourceScriptEventSelectors(string $code): array
+    {
+        $selectors = [];
+        $patterns = [
+            '/\bquerySelector(?:All)?\s*\(\s*([\'\"])(.*?)\1/s',
+            '/\bgetElementById\s*\(\s*([\'\"])(.*?)\1/s',
+            '/\bgetElementsByClassName\s*\(\s*([\'\"])(.*?)\1/s',
+        ];
+        foreach ($patterns as $pattern) {
+            if (! preg_match_all($pattern, $code, $matches)) continue;
+            foreach ($matches[2] ?? [] as $selector) {
+                $selector = trim((string) $selector);
+                if ($selector !== '' && strlen($selector) <= 512) $selectors[] = $selector;
+            }
+        }
+        return array_values(array_unique($selectors));
+    }
+
+    /**
+     * @param array<string, mixed> $styleImport
+     * @param array<string, mixed> $report
+     * @return array<string, mixed>
+     */
+    private function exactResult(DOMDocument $dom, array $styleImport, string $fallbackName, array $report): array
+    {
+        $title = trim((string) ($dom->getElementsByTagName('title')->item(0)?->textContent ?? ''));
+        $phosphor = false;
+        foreach (iterator_to_array($dom->getElementsByTagName('script')) as $script) {
+            if ($script instanceof DOMElement && $this->isAllowedExactAssetScript($script->getAttribute('src'))) {
+                $phosphor = true;
+                $script->parentNode?->removeChild($script);
+                continue;
+            }
+            $report['droppedScripts']++;
+            $script->parentNode?->removeChild($script);
+        }
+        foreach (['style', 'link', 'meta', 'base', 'noscript', 'iframe', 'object', 'embed'] as $tag) {
+            foreach (iterator_to_array($dom->getElementsByTagName($tag)) as $element) {
+                $element->parentNode?->removeChild($element);
+            }
+        }
+
+        $body = $dom->getElementsByTagName('body')->item(0);
+        $bodyHtml = '';
+        $bodyAttributes = 'class="pb-import-root"';
+        if ($body instanceof DOMElement) {
+            $this->sanitizeExactTree($body, $report);
+            $bodyAttributes = $this->exactBodyAttributes($body);
+            foreach (iterator_to_array($body->childNodes) as $child) {
+                $bodyHtml .= $dom->saveHTML($child) ?: '';
+            }
+        }
+
+        if ($report['droppedScripts'] > 0) {
+            $report['warnings'][] = 'Source scripts were removed; only the isolated framework loader is allowed in Exact Visual mode.';
+        }
+        $report['mappedNodes'] = 1;
+        $srcdoc = $this->buildExactSrcdoc(
+            $bodyHtml,
+            $bodyAttributes,
+            $styleImport,
+            array_values(array_intersect($report['frameworks'], ['tailwind', 'bootstrap5'])),
+            $title !== '' ? $title : $fallbackName,
+            $phosphor,
+        );
+
+        return [
+            'mode' => 'exact',
+            'status' => $report['warnings'] === [] ? 'success' : 'partial',
+            'frameworks' => $report['frameworks'],
+            'pageName' => $title !== '' ? $title : ($fallbackName !== '' ? $fallbackName : 'Imported Page'),
+            'layout' => [$this->node('static_html', [
+                'srcdoc' => $srcdoc,
+                'title' => $title !== '' ? $title : 'Imported page exact preview',
+                'height' => '1200px',
+                'importMode' => 'exact',
+            ], null, 'Static HTML Preview')],
+            'customCss' => '',
+            'assetBatchId' => null,
+            'report' => $report,
+        ];
+    }
+
+    private function exactBodyAttributes(DOMElement $body): string
+    {
+        $attributes = [];
+        foreach (iterator_to_array($body->attributes ?? []) as $attribute) {
+            $name = strtolower($attribute->name);
+            $value = trim($attribute->value);
+            if (str_starts_with($name, 'on') || in_array($name, ['action', 'formaction', 'srcdoc'], true)) continue;
+            if ($name === 'id') {
+                $safe = $this->safeSourceId($value);
+                if ($safe !== '') $attributes['id'] = $safe;
+                continue;
+            }
+            if ($name === 'class') {
+                $classes = $this->safeSourceClasses($value);
+                $classes[] = 'pb-import-root';
+                $attributes['class'] = implode(' ', array_values(array_unique($classes)));
+                continue;
+            }
+            if ($name === 'style') {
+                if ($this->safeExactInlineStyle($value)) $attributes['style'] = $value;
+                continue;
+            }
+            if (preg_match('/^(?:aria-[a-z0-9_-]+|data-[a-z0-9_-]+|lang|dir|role|tabindex)$/i', $name)) {
+                $attributes[$name] = $value;
+            }
+        }
+        $attributes['class'] ??= 'pb-import-root';
+        $output = [];
+        foreach ($attributes as $name => $value) $output[] = $name.'="'.htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8').'"';
+        return implode(' ', $output);
+    }
+
+    /** @param array<string, mixed> $report */
+    private function sanitizeExactTree(DOMElement $root, array &$report): void
+    {
+        foreach (iterator_to_array($root->getElementsByTagName('*')) as $element) {
+            if (! $element instanceof DOMElement) continue;
+            foreach (iterator_to_array($element->attributes ?? []) as $attribute) {
+                $name = strtolower($attribute->name);
+                $value = trim($attribute->value);
+                if (str_starts_with($name, 'on') || in_array($name, ['srcdoc', 'action', 'formaction', 'integrity'], true)) {
+                    $element->removeAttribute($attribute->name);
+                    continue;
+                }
+                if (in_array($name, ['href', 'src', 'poster'], true)) {
+                    $safe = $this->safeUrl($value);
+                    if ($safe === '') {
+                        if ($name !== 'href' && $value !== '') $report['missingAssets']++;
+                        $element->removeAttribute($attribute->name);
+                    } else {
+                        $element->setAttribute($attribute->name, $safe);
+                    }
+                    continue;
+                }
+                if ($name === 'style' && ! $this->safeExactInlineStyle($value)) {
+                    $element->removeAttribute('style');
+                }
+            }
+        }
+        foreach (iterator_to_array($root->getElementsByTagName('form')) as $form) {
+            if ($form instanceof DOMElement) {
+                $form->removeAttribute('action');
+                $form->setAttribute('data-pb-static-form', 'disabled');
+            }
+        }
+    }
+
+    private function safeExactInlineStyle(string $value): bool
+    {
+        return $value !== ''
+            && strlen($value) <= 4096
+            && ! preg_match('/(?:expression\s*\(|javascript:|vbscript:|-moz-binding|behavior\s*:|@import|[{}<>])/i', $value)
+            && ! preg_match('/url\s*\(\s*["\']?(?!https:\/\/|data:image\/)/i', $value);
+    }
+
+    private function isAllowedExactAssetScript(string $source): bool
+    {
+        return preg_match('#^https://unpkg\.com/@phosphor-icons/web@2\.1\.1(?:/index\.js)?$#i', trim($source)) === 1;
+    }
+
+    /** @param array<string, mixed> $styleImport @param array<int, string> $frameworks */
+    private function buildExactSrcdoc(string $bodyHtml, string $bodyAttributes, array $styleImport, array $frameworks, string $title, bool $phosphor): string
+    {
+        $head = [
+            '<meta charset="UTF-8">',
+            '<meta name="viewport" content="width=device-width,initial-scale=1">',
+            '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; img-src https: data:; style-src \'unsafe-inline\' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.jsdelivr.net; font-src https://fonts.gstatic.com https://cdn.jsdelivr.net data:; script-src \'unsafe-inline\' https://cdn.tailwindcss.com; connect-src \'none\'; frame-src \'none\'; object-src \'none\'; form-action \'none\'; base-uri \'none\'">',
+            '<title>'.htmlspecialchars($title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8').'</title>',
+        ];
+        foreach ($styleImport['stylesheets'] ?? [] as $stylesheet) {
+            $head[] = '<link rel="stylesheet" href="'.htmlspecialchars((string) $stylesheet, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8').'">';
+        }
+        if (in_array('bootstrap5', $frameworks, true)) {
+            $head[] = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">';
+        }
+        if ($phosphor) {
+            $head[] = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">';
+        }
+        if (in_array('tailwind', $frameworks, true)) {
+            $config = json_encode($styleImport['tailwindConfig'] ?? [], JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?: '{}';
+            $head[] = '<script>window.tailwind=window.tailwind||{};window.tailwind.config='.$config.';</script>';
+            $head[] = '<script src="https://cdn.tailwindcss.com"></script>';
+        }
+        $head[] = '<style>html,body{margin:0;min-height:100%;width:100%}*,*:before,*:after{box-sizing:border-box}'.($styleImport['css'] ?? '').'</style>';
+        $resizeScript = '<script>(function(){var send=function(){parent.postMessage({type:"pb-static-html-height",height:Math.max(document.documentElement.scrollHeight,document.body.scrollHeight)},"*")};addEventListener("load",send);new ResizeObserver(send).observe(document.documentElement);setTimeout(send,500)})();</script>';
+
+        return '<!doctype html><html><head>'.implode('', $head).'</head><body '.$bodyAttributes.'>'.$bodyHtml.$resizeScript.'</body></html>';
+    }
+
+    /** @param array<string, mixed> $report */
+    private function mapNode(DOMNode $source, array &$report): ?array
+    {
+        if ($source->nodeType === XML_TEXT_NODE) {
+            return trim((string) $source->textContent) === '' ? null : $this->textNode((string) $source->textContent, $report);
+        }
+        if (! $source instanceof DOMElement) return null;
+
+        $tag = strtolower($source->tagName);
+        if (in_array($tag, ['script', 'style', 'link', 'meta', 'noscript', 'iframe', 'object', 'embed'], true)) return null;
+        if ($tag === 'form') {
+            $report['placeholderNodes']++;
+            $report['warnings'][] = 'Form markup was kept as a static placeholder; submit behavior was not imported.';
+            return $this->textNode('Imported form (static preview only).', $report, true, $source);
+        }
+
+        if (preg_match('/^h([1-6])$/', $tag, $match)) {
+            $report['mappedNodes']++;
+            return $this->node('heading', array_merge([
+                'text' => $this->textContentWithBreaks($source),
+                'tag' => 'h'.$match[1],
+                'sourceLineBreaks' => stripos($this->innerHtml($source), '<br') !== false,
+            ], $this->sourceSettings($source, $report)));
+        }
+
+        if ($tag === 'img') {
+            $report['mappedNodes']++;
+            $src = $this->safeUrl($source->getAttribute('src'));
+            if ($src === '') {
+                $report['missingAssets']++;
+                $report['warnings'][] = 'An image source was unsafe or empty and was omitted.';
+            }
+            return $this->node('image', array_merge([
+                'src' => $src,
+                'alt' => trim($source->getAttribute('alt')),
+                'imageSource' => 'url',
+            ], $this->sourceSettings($source, $report)));
+        }
+
+        if ($tag === 'hr') {
+            $report['mappedNodes']++;
+            return $this->node('divider', $this->sourceSettings($source, $report));
+        }
+
+        if ($this->isButtonElement($source)) {
+            $report['mappedNodes']++;
+            $buttonText = trim((string) $source->textContent);
+            $settings = [
+                'text' => $buttonText,
+                'url' => $tag === 'a' ? ($this->safeUrl($source->getAttribute('href')) ?: '#') : '#',
+                'className' => $this->sourceButtonClassName($source),
+                'sourceClassStyles' => ! $this->compiledNative,
+            ];
+            $icon = $this->descendantIconSettings($source);
+            if ($icon !== []) $settings = array_merge($settings, $icon);
+            if ($buttonText === '' && $icon === []) $settings['text'] = 'Button';
+            return $this->node('button', array_merge($settings, $this->sourceSettings($source, $report)));
+        }
+
+        if ($tag === 'i' && ($icon = $this->iconSettings($source)) !== []) {
+            $report['mappedNodes']++;
+            return $this->node('icon', array_merge($icon, $this->sourceSettings($source, $report)));
+        }
+
+        if (in_array($tag, ['p', 'span', 'strong', 'em', 'b', 'i', 'a', 'ul', 'ol', 'li', 'blockquote'], true)) {
+            return $this->textNode($this->innerHtml($source), $report, false, $source);
+        }
+
+        $childNodes = [];
+        foreach (iterator_to_array($source->childNodes) as $child) {
+            $mapped = $this->mapNode($child, $report);
+            if ($mapped !== null) $childNodes[] = $mapped;
+        }
+        if ($childNodes === []) {
+            return trim((string) $source->textContent) === '' ? null : $this->textNode($this->innerHtml($source), $report);
+        }
+
+        $settings = array_merge($this->layoutSettings($source, $report), $this->sourceSettings($source, $report));
+        $type = $this->hasClass($source, 'container-fluid') ? 'container_fluid' : 'container';
+        $report['mappedNodes']++;
+        if (($settings['displayType'] ?? 'flex') === 'grid') {
+            $node = $this->node($type, $settings, []);
+            $node['settings']['gridRows'] = (string) max(1, (int) ceil(max(1, count($childNodes)) / max(1, (int) ($settings['gridColumns'] ?? 1))));
+            $node['settings']['gridRowsTablet'] = (string) max(1, (int) ceil(max(1, count($childNodes)) / max(1, (int) ($settings['gridColumnsTablet'] ?? $settings['gridColumns'] ?? 1))));
+            $node['settings']['gridRowsMobile'] = (string) max(1, (int) ceil(max(1, count($childNodes)) / max(1, (int) ($settings['gridColumnsMobile'] ?? $settings['gridColumns'] ?? 1))));
+            $node['columns'] = $this->canonicalGridColumns($node['id'], $childNodes, $node['settings'], $report);
+            return $node;
+        }
+        return $this->node($type, $settings, $childNodes);
+    }
+
+    /** @param array<string, mixed> $report */
+    private function textNode(string $html, array &$report, bool $placeholder = false, ?DOMElement $source = null): array
+    {
+        $report['mappedNodes']++;
+        $settings = ['html' => $this->sanitizeHtml($html), 'align' => 'left'];
+        if ($source instanceof DOMElement) $settings = array_merge($settings, $this->sourceSettings($source, $report));
+        return $this->node('text_editor', $settings, null, $placeholder ? 'Imported Placeholder' : null);
+    }
+
+    /** @param array<string, mixed> $report */
+    private function layoutSettings(DOMElement $element, array &$report): array
+    {
+        $classes = $this->classes($element);
+        $settings = [
+            'displayType' => in_array('grid', $classes, true) ? 'grid' : 'flex',
+            'direction' => 'column',
+            'contentWidth' => 'full',
+        ];
+        if ($this->compiledNative) $settings = array_merge($this->compiledLayoutDefaults(), $settings);
+        $directions = [];
+        $directionPriorities = [];
+        $gridColumns = [];
+        $gridColumnPriorities = [];
+        $gridTemplates = [];
+        $gridTemplatePriorities = [];
+        $gridGaps = ['row' => [], 'column' => []];
+        $gridGapPriorities = ['row' => [], 'column' => []];
+        $flexGaps = ['row' => [], 'column' => []];
+        $flexGapPriorities = ['row' => [], 'column' => []];
+        $paddingValues = [];
+        $paddingPriorities = [];
+        $columnWidths = [];
+        $columnWidthPriorities = [];
+        $visibility = [];
+        $visibilityPriorities = [];
+
+        foreach (['top', 'right', 'bottom', 'left'] as $side) {
+            $paddingValues[$side] = [];
+            $paddingPriorities[$side] = [];
+        }
+
+        foreach ($classes as $class) {
+            [$bucket, $utility, $priority, $prefix] = $this->responsiveClass($class);
+
+            if ($utility === 'grid') {
+                if ($prefix !== null) {
+                    $report['warnings'][] = 'Responsive display variants were reduced to the supported Canvas layout controls.';
+                }
+                $settings['displayType'] = 'grid';
+                continue;
+            }
+            if ($utility === 'hidden') {
+                $targets = $prefix === null ? ['mobile', 'tablet', 'desktop'] : [$bucket];
+                foreach ($targets as $target) {
+                    $this->assignResponsiveValue($visibility, $visibilityPriorities, $target, $prefix === null ? 0 : $priority, true);
+                }
+                continue;
+            }
+            if ($utility === 'flex' || $utility === 'inline-flex') {
+                $settings['displayType'] = 'flex';
+                if ($directions === [] && $prefix === null) $settings['direction'] = 'row';
+                if ($prefix === null) {
+                    foreach (['mobile', 'tablet', 'desktop'] as $target) {
+                        $this->assignResponsiveValue($visibility, $visibilityPriorities, $target, 0, false);
+                    }
+                } else {
+                    $this->assignResponsiveValue($directions, $directionPriorities, $bucket, $priority, 'row');
+                    $this->assignResponsiveValue($visibility, $visibilityPriorities, $bucket, $priority, false);
+                }
+                continue;
+            }
+            if (preg_match('/^flex-(row|row-reverse|col|col-reverse)$/', $utility, $match)) {
+                $direction = str_starts_with($match[1], 'col') ? 'column' : 'row';
+                if (str_ends_with($match[1], 'reverse')) $direction .= '-reverse';
+                $this->assignResponsiveValue($directions, $directionPriorities, $bucket, $priority, $direction);
+                continue;
+            }
+            if ($utility === 'row') {
+                $settings['displayType'] = 'flex';
+                $settings['direction'] = 'row';
+                $settings['flexWrap'] = 'wrap';
+                continue;
+            }
+            if (preg_match('/^grid-cols-([1-9]|1[0-2])$/', $utility, $match)) {
+                $settings['displayType'] = 'grid';
+                $this->assignResponsiveValue($gridColumns, $gridColumnPriorities, $bucket, $priority, (int) $match[1]);
+                $this->assignResponsiveValue($gridTemplates, $gridTemplatePriorities, $bucket, $priority, '');
+                continue;
+            }
+            if (preg_match('/^grid-cols-\[([^\]]+)\]$/', $utility, $match)) {
+                $settings['displayType'] = 'grid';
+                $template = $this->safeGridTemplate($match[1]);
+                if ($template === null) {
+                    $report['warnings'][] = 'An arbitrary Tailwind grid template was rejected as unsafe.';
+                    continue;
+                }
+                $this->assignResponsiveValue($gridColumns, $gridColumnPriorities, $bucket, $priority, $this->gridTrackCount($template));
+                $this->assignResponsiveValue($gridTemplates, $gridTemplatePriorities, $bucket, $priority, $template);
+                if ($bucket !== 'desktop') {
+                    $report['warnings'][] = 'Responsive arbitrary Tailwind grid tracks were reduced to a numeric column count.';
+                }
+                continue;
+            }
+            if (preg_match('/^gap(?:-([xy]))?-([0-9]+)$/', $utility, $match)) {
+                $axis = $match[1] ?? null;
+                $value = $this->tailwindSpacing($match[2]);
+                $targets = $axis === 'x' ? ['column'] : ($axis === 'y' ? ['row'] : ['row', 'column']);
+                foreach ($targets as $target) {
+                    $this->assignResponsiveValue($gridGaps[$target], $gridGapPriorities[$target], $bucket, $priority, $value);
+                    $this->assignResponsiveValue($flexGaps[$target], $flexGapPriorities[$target], $bucket, $priority, $value);
+                }
+                continue;
+            }
+            if (preg_match('/^(p|px|py|pt|pr|pb|pl)-([0-9]+)$/', $utility, $match)) {
+                $value = $this->spacing($match[2]);
+                $sides = match ($match[1]) {
+                    'p' => ['top', 'right', 'bottom', 'left'],
+                    'px' => ['right', 'left'],
+                    'py' => ['top', 'bottom'],
+                    'pt' => ['top'],
+                    'pr' => ['right'],
+                    'pb' => ['bottom'],
+                    'pl' => ['left'],
+                };
+                foreach ($sides as $side) {
+                    $this->assignResponsiveValue($paddingValues[$side], $paddingPriorities[$side], $bucket, $priority, $value);
+                }
+                continue;
+            }
+            if (preg_match('/^col(?:-(sm|md|lg|xl|xxl))?(?:-([1-9]|1[0-2]))?$/', $utility, $match)) {
+                $breakpoint = $match[1] ?? null;
+                $width = $this->percentFromColumns($match[2] ?: '12');
+                if ($breakpoint === null) {
+                    foreach (['mobile', 'tablet', 'desktop'] as $widthBucket) {
+                        $this->assignResponsiveValue($columnWidths, $columnWidthPriorities, $widthBucket, 0, $width);
+                    }
+                } elseif (in_array($breakpoint, ['sm', 'md'], true)) {
+                    $breakpointPriority = $breakpoint === 'md' ? 2 : 1;
+                    $this->assignResponsiveValue($columnWidths, $columnWidthPriorities, 'mobile', $breakpointPriority, '100%');
+                    $this->assignResponsiveValue($columnWidths, $columnWidthPriorities, 'tablet', $breakpointPriority, $width);
+                    $this->assignResponsiveValue($columnWidths, $columnWidthPriorities, 'desktop', $breakpointPriority, $width);
+                } else {
+                    $breakpointPriority = ['lg' => 3, 'xl' => 4, 'xxl' => 5][$breakpoint];
+                    $this->assignResponsiveValue($columnWidths, $columnWidthPriorities, 'mobile', $breakpointPriority, '100%');
+                    $this->assignResponsiveValue($columnWidths, $columnWidthPriorities, 'tablet', $breakpointPriority, '100%');
+                    $this->assignResponsiveValue($columnWidths, $columnWidthPriorities, 'desktop', $breakpointPriority, $width);
+                }
+            }
+        }
+
+        if ($directions !== []) {
+            $resolvedDirections = $this->resolveResponsiveValues($directions, $settings['direction']);
+            $settings['direction'] = $resolvedDirections['desktop'];
+            $settings['directionTablet'] = $resolvedDirections['tablet'];
+            $settings['directionMobile'] = $resolvedDirections['mobile'];
+        }
+
+        if ($settings['displayType'] === 'grid') {
+            $resolvedColumns = $this->resolveResponsiveValues($gridColumns, 1);
+            $settings['gridColumns'] = $resolvedColumns['desktop'];
+            $settings['gridColumnsTablet'] = $resolvedColumns['tablet'];
+            $settings['gridColumnsMobile'] = $resolvedColumns['mobile'];
+            if ($gridTemplates !== []) {
+                $resolvedTemplates = $this->resolveResponsiveValues($gridTemplates, '');
+                if ($resolvedTemplates['desktop'] !== '') $settings['gridTemplateColumns'] = $resolvedTemplates['desktop'];
+            }
+            $this->applyResponsiveGapSettings($settings, $gridGaps, 'grid');
+        } else {
+            $this->applyResponsiveGapSettings($settings, $flexGaps, 'flex');
+        }
+
+        if ($columnWidths !== []) {
+            $resolvedWidths = $this->resolveResponsiveValues($columnWidths, '100%');
+            $settings['containerWidth'] = $resolvedWidths['desktop'];
+            $settings['containerWidthTablet'] = $resolvedWidths['tablet'];
+            $settings['containerWidthMobile'] = $resolvedWidths['mobile'];
+        }
+
+        foreach (['top', 'right', 'bottom', 'left'] as $side) {
+            if ($paddingValues[$side] === []) continue;
+            $resolvedPadding = $this->resolveResponsiveValues($paddingValues[$side], '0');
+            $settings['padding'.ucfirst($side)] = $resolvedPadding['desktop'];
+            $settings['padding'.ucfirst($side).'Tablet'] = $resolvedPadding['tablet'];
+            $settings['padding'.ucfirst($side).'Mobile'] = $resolvedPadding['mobile'];
+        }
+
+        if ($visibility !== []) {
+            $resolvedVisibility = $this->resolveResponsiveValues($visibility, false);
+            $settings['hideDesktop'] = (bool) $resolvedVisibility['desktop'];
+            $settings['hideTablet'] = (bool) $resolvedVisibility['tablet'];
+            $settings['hideMobile'] = (bool) $resolvedVisibility['mobile'];
+        }
+
+        return $settings;
+    }
+
+    /** @return array<int, string> */
+    private function detectFrameworks(DOMDocument $dom, string $html, string $requested): array
+    {
+        $source = strtolower($html);
+        $tokens = [];
+        foreach (iterator_to_array($dom->getElementsByTagName('*')) as $element) {
+            if (! $element instanceof DOMElement) continue;
+            foreach ($this->classes($element) as $class) $tokens[] = $class;
+        }
+
+        $bootstrap = str_contains($source, 'bootstrap@5')
+            || str_contains($source, 'bootstrap.min.css');
+        $tailwind = str_contains($source, 'cdn.tailwindcss.com')
+            || str_contains($source, '@tailwind');
+
+        foreach ($tokens as $class) {
+            [, $utility] = $this->responsiveClass($class);
+            if ($utility === 'row'
+                || $utility === 'container-fluid'
+                || preg_match('/^row-cols-[1-6]$/', $utility)
+                || preg_match('/^col(?:-(?:sm|md|lg|xl|xxl))?(?:-([1-9]|1[0-2]))?$/', $utility)
+            ) {
+                $bootstrap = true;
+            }
+            if ($utility === 'flex'
+                || $utility === 'grid'
+                || preg_match('/^(?:inline-)?flex-(?:row|col)(?:-reverse)?$/', $utility)
+                || preg_match('/^grid-cols-(?:[1-9]|1[0-2]|\[[^\]]+\])$/', $utility)
+                || preg_match('/^(?:gap|gap-[xy]|p|px|py|pt|pr|pb|pl)-[0-9]+$/', $utility)
+                || preg_match('/^max-w-[A-Za-z0-9[\]._-]+$/', $utility)
+            ) {
+                $tailwind = true;
+            }
+        }
+
+        if ($requested === 'bootstrap5') $bootstrap = true;
+        if ($requested === 'tailwind') $tailwind = true;
+        $frameworks = [];
+        if ($bootstrap) $frameworks[] = 'bootstrap5';
+        if ($tailwind) $frameworks[] = 'tailwind';
+        return $frameworks ?: ['unknown'];
+    }
+
+    /** @return array{0: string, 1: string, 2: int, 3: string|null} */
+    private function responsiveClass(string $class): array
+    {
+        $class = trim($class);
+        if (preg_match('/^(sm|md|lg|xl|2xl):(.*)$/', $class, $match)) {
+            $prefix = $match[1];
+            $bucket = in_array($prefix, ['sm', 'md'], true) ? 'tablet' : 'desktop';
+            $priority = ['sm' => 1, 'md' => 2, 'lg' => 3, 'xl' => 4, '2xl' => 5][$prefix];
+            return [$bucket, $match[2], $priority, $prefix];
+        }
+        return ['mobile', $class, 0, null];
+    }
+
+    /** @param array<string, mixed> $values */
+    /** @param array<string, int> $priorities */
+    private function assignResponsiveValue(array &$values, array &$priorities, string $bucket, int $priority, mixed $value): void
+    {
+        if (! array_key_exists($bucket, $priorities) || $priority >= $priorities[$bucket]) {
+            $values[$bucket] = $value;
+            $priorities[$bucket] = $priority;
+        }
+    }
+
+    /** @param array<string, mixed> $values */
+    /** @return array{desktop: mixed, tablet: mixed, mobile: mixed} */
+    private function resolveResponsiveValues(array $values, mixed $default): array
+    {
+        $mobile = array_key_exists('mobile', $values) ? $values['mobile'] : $default;
+        $tablet = array_key_exists('tablet', $values) ? $values['tablet'] : $mobile;
+        $desktop = array_key_exists('desktop', $values) ? $values['desktop'] : $tablet;
+        return ['desktop' => $desktop, 'tablet' => $tablet, 'mobile' => $mobile];
+    }
+
+    /** @param array<string, mixed> $settings */
+    /** @param array<string, array<string, mixed>> $values */
+    private function applyResponsiveGapSettings(array &$settings, array $values, string $layout): void
+    {
+        foreach (['row', 'column'] as $axis) {
+            if ($values[$axis] === []) continue;
+            $resolved = $this->resolveResponsiveValues($values[$axis], '0');
+            if ($layout === 'grid') {
+                $base = $axis === 'row' ? 'gridRowGap' : 'gridColumnGap';
+            } else {
+                $base = $axis === 'row' ? 'flexRowGap' : 'flexColumnGap';
+            }
+            $settings[$base] = $resolved['desktop'];
+            $settings[$base.'Tablet'] = $resolved['tablet'];
+            $settings[$base.'Mobile'] = $resolved['mobile'];
+        }
+    }
+
+    /** @param array<int, array<string, mixed>> $children */
+    /** @param array<string, mixed> $settings */
+    /** @param array<string, mixed> $report */
+    /** @return array<int, array<string, mixed>> */
+    private function canonicalGridColumns(string $nodeId, array $children, array $settings, array &$report): array
+    {
+        $columnCount = max(1, min(12, (int) ($settings['gridColumns'] ?? 1)));
+        $rowCount = max(1, min(12, (int) ($settings['gridRows'] ?? 1)));
+        $slotCount = $columnCount * $rowCount;
+        if (count($children) > $slotCount) {
+            $report['warnings'][] = 'Grid content exceeded the 12-row Canvas limit; overflow was grouped in the final cell.';
+        }
+
+        $columns = [];
+        for ($index = 0; $index < $slotCount; $index++) {
+            $columns[] = [
+                'id' => $nodeId.'-cell-'.($index + 1),
+                'styleOverrides' => [],
+                'children' => [],
+            ];
+        }
+        foreach ($children as $index => $child) {
+            $slot = min($index, $slotCount - 1);
+            $columns[$slot]['children'][] = $child;
+        }
+        return $columns;
+    }
+
+    private function safeGridTemplate(string $value): ?string
+    {
+        $template = trim(str_replace('_', ' ', $value));
+        if ($template === '' || strlen($template) > 256) return null;
+        if (preg_match('/[;{}"\']|(?:url|var|env|attr|expression|javascript|--)/i', $template)) return null;
+        if (! preg_match('/^[A-Za-z0-9\s.,%()+*\/-]+$/', $template)) return null;
+
+        $depth = 0;
+        for ($index = 0, $length = strlen($template); $index < $length; $index++) {
+            if ($template[$index] === '(') $depth++;
+            if ($template[$index] === ')') $depth--;
+            if ($depth < 0) return null;
+        }
+        if ($depth !== 0) return null;
+        if (preg_match_all('/([A-Za-z][A-Za-z0-9-]*)\s*\(/', $template, $matches)) {
+            foreach ($matches[1] as $function) {
+                if (! in_array(strtolower($function), ['repeat', 'minmax', 'fit-content', 'min', 'max', 'clamp'], true)) return null;
+            }
+        }
+        return preg_replace('/\s+/', ' ', $template) ?: null;
+    }
+
+    private function gridTrackCount(string $template): int
+    {
+        $parts = [];
+        $token = '';
+        $depth = 0;
+        for ($index = 0, $length = strlen($template); $index < $length; $index++) {
+            $character = $template[$index];
+            if ($character === '(') $depth++;
+            if ($character === ')') $depth--;
+            if (ctype_space($character) && $depth === 0) {
+                if ($token !== '') {
+                    $parts[] = $token;
+                    $token = '';
+                }
+                continue;
+            }
+            $token .= $character;
+        }
+        if ($token !== '') $parts[] = $token;
+
+        $count = 0;
+        foreach ($parts as $part) {
+            if (preg_match('/^repeat\(\s*([1-9]|1[0-2])\s*,/i', $part, $match)) {
+                $count += (int) $match[1];
+            } else {
+                $count++;
+            }
+        }
+        return max(1, min(12, $count));
+    }
+
+    private function spacing(string $value): string
+    {
+        return [
+            '0' => '0', '1' => '.25rem', '2' => '.5rem', '3' => '.75rem', '4' => '1rem',
+            '5' => '1.25rem', '6' => '1.5rem', '8' => '2rem', '10' => '2.5rem', '12' => '3rem',
+            '16' => '4rem', '20' => '5rem', '24' => '6rem',
+        ][$value] ?? '0';
+    }
+
+    private function tailwindSpacing(string $value): string
+    {
+        return $this->spacing($value);
+    }
+
+    private function percentFromColumns(string $columns): string
+    {
+        return (string) (round((max(1, min(12, (int) $columns)) / 12) * 100, 4)).'%';
+    }
+
+    /** @return array<int, string> */
+    private function classes(DOMElement $element): array
+    {
+        return array_values(array_filter(preg_split('/\s+/', trim($element->getAttribute('class'))) ?: []));
+    }
+
+    /** @param array<string, mixed> $report */
+    /** @return array<string, string> */
+    private function sourceSettings(DOMElement $element, array &$report): array
+    {
+        $settings = [];
+        $importNodeKey = trim($element->getAttribute('data-pb-import-node'));
+        if ($this->safeImportNodeKey($importNodeKey)) $settings['importNodeKey'] = $importNodeKey;
+        $sourceId = trim($element->getAttribute('id'));
+        if ($sourceId !== '') {
+            $safeId = $this->safeSourceId($sourceId);
+            if ($safeId !== '') {
+                $settings['cssId'] = $safeId;
+                $report['preservedIds']++;
+            } else {
+                $report['rejectedSourceAttributes']++;
+                $report['warnings'][] = 'An unsafe source id was omitted from the imported node.';
+            }
+        }
+
+        $rawClasses = $this->classes($element);
+        $sourceClasses = $this->safeSourceClasses($element->getAttribute('class'));
+        $rejectedClasses = max(0, count($rawClasses) - count($sourceClasses));
+        if ($rejectedClasses > 0) {
+            $report['rejectedSourceAttributes'] += $rejectedClasses;
+            $report['warnings'][] = 'An unsafe source class was omitted from the imported node.';
+        }
+        if ($sourceClasses !== [] && ! $this->compiledNative) {
+            $settings['cssClass'] = implode(' ', $sourceClasses);
+            $settings['preserveCssClasses'] = true;
+            $report['preservedClasses'] += count($sourceClasses);
+        }
+        return $settings;
+    }
+
+    private function safeSourceId(string $value): string
+    {
+        $value = trim($value);
+        return preg_match('/^[A-Za-z][A-Za-z0-9_-]*$/', $value) ? $value : '';
+    }
+
+    /** @return array<int, string> */
+    private function safeSourceClasses(string $value): array
+    {
+        $tokens = array_values(array_filter(preg_split('/\s+/', trim($value)) ?: []));
+        $tokens = array_filter($tokens, fn (string $token): bool => ! preg_match('/[\x00-\x20\x7F"\'<>;{}]/', $token));
+        return array_values(array_unique($tokens));
+    }
+
+    private function hasClass(DOMElement $element, string $class): bool
+    {
+        return in_array($class, $this->classes($element), true);
+    }
+
+    private function isButtonElement(DOMElement $element): bool
+    {
+        $tag = strtolower($element->tagName);
+        if ($tag === 'button') return true;
+        if ($tag !== 'a') return false;
+        if (strtolower(trim($element->getAttribute('role'))) === 'button') return true;
+        foreach ($this->safeSourceClasses($element->getAttribute('class')) as $class) {
+            if ($class === 'btn' || preg_match('/-button$/i', $class)) return true;
+        }
+        return false;
+    }
+
+    private function sourceButtonClassName(DOMElement $element): string
+    {
+        if ($this->compiledNative) return 'pb-compiled-button';
+        $classes = $this->safeSourceClasses($element->getAttribute('class'));
+        return $classes !== [] ? implode(' ', $classes) : 'btn btn-primary';
+    }
+
+    /** @return array<string, string> */
+    private function descendantIconSettings(DOMElement $element): array
+    {
+        foreach ($element->getElementsByTagName('i') as $icon) {
+            if ($icon instanceof DOMElement && ($settings = $this->iconSettings($icon)) !== []) {
+                $marker = trim($icon->getAttribute('data-pb-import-node'));
+                if ($this->safeImportNodeKey($marker)) $settings['iconImportNodeKey'] = $marker;
+                return $settings;
+            }
+        }
+        return [];
+    }
+
+    /** @return array<string, string> */
+    private function iconSettings(DOMElement $element): array
+    {
+        $mappedClass = $this->mappedIconClass($element);
+        if ($mappedClass === '') return [];
+        [$prefix, $name] = explode(' ', $mappedClass, 2);
+        return [
+            'iconSource' => 'library',
+            'iconStyle' => $prefix === 'far' ? 'regular' : ($prefix === 'fab' ? 'brands' : 'solid'),
+            'iconName' => preg_replace('/^fa-/', '', $name) ?: 'star',
+            'iconClass' => $mappedClass,
+        ];
+    }
+
+    private function mappedIconClass(DOMElement $element): string
+    {
+        $map = [
+            'airplane' => 'fas fa-plane', 'airplane-tilt' => 'fas fa-plane',
+            'arrow-down-right' => 'fas fa-arrow-down', 'arrow-up-right' => 'fas fa-arrow-right',
+            'buildings' => 'fas fa-building', 'calendar-blank' => 'far fa-calendar',
+            'car' => 'fas fa-car', 'confetti' => 'fas fa-glass-cheers', 'crown' => 'fas fa-crown',
+            'currency-circle-dollar' => 'fas fa-dollar-sign', 'diamond' => 'fas fa-gem',
+            'flag-banner' => 'fas fa-flag', 'golf' => 'fas fa-golf-ball', 'handshake' => 'fas fa-handshake',
+            'lightning' => 'fas fa-bolt', 'list' => 'fas fa-bars', 'map-pin' => 'fas fa-map-marker-alt',
+            'medal' => 'fas fa-medal', 'seal-check' => 'fas fa-check-circle', 'shield-check' => 'fas fa-shield-alt',
+            'star' => 'fas fa-star', 'trophy' => 'fas fa-trophy', 'users-three' => 'fas fa-users',
+            'whatsapp-logo' => 'fab fa-whatsapp', 'wine' => 'fas fa-wine-glass', 'x' => 'fas fa-times',
+        ];
+        foreach ($this->classes($element) as $class) {
+            if (preg_match('/^ph-(.+)$/', $class, $match) && isset($map[$match[1]])) return $map[$match[1]];
+        }
+        return '';
+    }
+
+    private function safeUrl(string $value): string
+    {
+        $value = trim($value);
+        if ($value === '' || str_starts_with($value, '//')) return '';
+        if (preg_match('/^(?:https?:|\/|#|data:image\/(?:png|gif|jpe?g|webp);base64,)/i', $value)) return $value;
+        if ($this->assetBaseUrl === null || preg_match('~(^|/)\.\.(?:/|$)~', $value)) return '';
+        $resolved = rtrim($this->assetBaseUrl, '/').'/'.ltrim($value, '/');
+        return preg_match('/^https?:\/\/[^\s"<>]+$/i', $resolved) ? $resolved : '';
+    }
+
+    private function normalizeAssetBaseUrl(?string $value): ?string
+    {
+        $value = trim((string) $value);
+        if ($value === '') return null;
+        if (strlen($value) > 2048 || ! preg_match('/^https?:\/\/[^\s"<>]+$/i', $value)) {
+            throw new InvalidArgumentException('Asset Base URL must be a valid HTTP(S) URL.');
+        }
+        $parts = parse_url($value);
+        if (! is_array($parts) || empty($parts['host']) || isset($parts['user']) || isset($parts['pass']) || isset($parts['fragment'])) {
+            throw new InvalidArgumentException('Asset Base URL must not contain credentials or a fragment.');
+        }
+        return rtrim($value, '/').'/';
+    }
+
+    private function innerHtml(DOMElement $element): string
+    {
+        $html = '';
+        foreach (iterator_to_array($element->childNodes) as $child) $html .= $element->ownerDocument?->saveHTML($child) ?: '';
+        return $html !== '' ? $html : trim((string) $element->textContent);
+    }
+
+    private function textContentWithBreaks(DOMNode $node): string
+    {
+        if ($node instanceof DOMElement && strtolower($node->tagName) === 'br') return "\n";
+        if ($node->nodeType === XML_TEXT_NODE) return (string) $node->textContent;
+        $text = '';
+        foreach (iterator_to_array($node->childNodes ?? []) as $child) $text .= $this->textContentWithBreaks($child);
+        return trim($text);
+    }
+
+    private function sanitizeHtml(string $html): string
+    {
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $previous = libxml_use_internal_errors(true);
+        $dom->loadHTML('<?xml encoding="UTF-8"?><!doctype html><html><body><div id="pb-import-text">'.$html.'</div></body></html>', LIBXML_NONET | LIBXML_HTML_NODEFDTD | LIBXML_COMPACT);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+        $root = $dom->getElementById('pb-import-text');
+        if (! $root) return strip_tags($html);
+        $allowed = ['P', 'BR', 'SPAN', 'STRONG', 'EM', 'B', 'I', 'A', 'UL', 'OL', 'LI', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE'];
+        $walk = function (DOMNode $parent) use (&$walk, $allowed): void {
+            foreach (iterator_to_array($parent->childNodes) as $child) {
+                if (! $child instanceof DOMElement) continue;
+                $tag = strtoupper($child->tagName);
+                if (! in_array($tag, $allowed, true)) {
+                    while ($child->firstChild) $parent->insertBefore($child->firstChild, $child);
+                    $parent->removeChild($child);
+                    continue;
+                }
+                foreach (iterator_to_array($child->attributes) as $attribute) {
+                    $name = strtolower($attribute->name);
+                    $value = (string) $attribute->value;
+                    if ($name === 'data-pb-import-node') {
+                        if (! $this->compiledNative || ! $this->safeImportNodeKey($value)) $child->removeAttribute($attribute->name);
+                        continue;
+                    }
+                    if ($name === 'id') {
+                        $safeId = $this->safeSourceId($value);
+                        if ($safeId !== '') $child->setAttribute('id', $safeId);
+                        else $child->removeAttribute($attribute->name);
+                        continue;
+                    }
+                    if ($name === 'class') {
+                        if ($this->compiledNative) {
+                            $child->removeAttribute($attribute->name);
+                            continue;
+                        }
+                        $safeClasses = $this->safeSourceClasses($value);
+                        if ($safeClasses !== []) $child->setAttribute('class', implode(' ', $safeClasses));
+                        else $child->removeAttribute($attribute->name);
+                        continue;
+                    }
+                    $allowedAttribute = $tag === 'A' && in_array($name, ['href', 'title', 'target', 'rel'], true);
+                    if (! $allowedAttribute || ($name === 'href' && ! preg_match('/^(?:https?:|mailto:|tel:|\/|#)/i', $value))) {
+                        $child->removeAttribute($attribute->name);
+                    }
+                }
+                $walk($child);
+            }
+        };
+        $walk($root);
+        $output = '';
+        foreach (iterator_to_array($root->childNodes) as $child) $output .= $dom->saveHTML($child) ?: '';
+        return $output;
+    }
+
+    /** @param array<string, mixed> $settings */
+    private function node(string $type, array $settings, ?array $children = null, ?string $label = null): array
+    {
+        $node = [
+            'id' => 'import-node-'.$this->sequence++,
+            'type' => $type,
+            'label' => $label ?: ucwords(str_replace('_', ' ', $type)),
+            'labelSuffix' => '',
+            'settings' => $settings,
+        ];
+        if ($children !== null) $node['children'] = $children;
+        return $node;
+    }
+}

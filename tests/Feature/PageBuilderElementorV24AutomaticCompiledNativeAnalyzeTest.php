@@ -1,0 +1,98 @@
+<?php
+
+namespace Tests\Feature;
+
+use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
+
+class PageBuilderElementorV24AutomaticCompiledNativeAnalyzeTest extends TestCase
+{
+    public function test_automatic_compiled_native_analyze_returns_css_universe_without_mutating_page_data(): void
+    {
+        $this->withoutMiddleware();
+
+        $response = $this->postJson(route('cms.core.pagebuilder_elementor_v24.compiled_native.automatic_analyze'), [
+            'source' => UploadedFile::fake()->createWithContent(
+                'hero.html',
+                '<!doctype html><html><head><style>.hero{display:grid;grid-template-columns:1fr 1fr;padding:40px}</style></head><body><section class="hero"><h1>Hero</h1></section></body></html>',
+            ),
+            'framework' => 'auto',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('framework', 'plain_css')
+            ->assertJsonPath('entry', 'hero.html')
+            ->assertJsonMissingPath('layout')
+            ->assertJsonMissingPath('page');
+    }
+
+    public function test_automatic_compiled_native_analyze_accepts_explicit_tailwind_override(): void
+    {
+        $this->withoutMiddleware();
+
+        $this->postJson(route('cms.core.pagebuilder_elementor_v24.compiled_native.automatic_analyze'), [
+            'source' => UploadedFile::fake()->createWithContent(
+                'section.html',
+                '<section class="grid grid-cols-2 gap-4"><div>A</div><div>B</div></section>',
+            ),
+            'framework' => 'tailwind',
+        ])->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('framework', 'tailwind_static');
+    }
+
+    public function test_automatic_compiled_native_analyze_rejects_an_unsupported_framework_override(): void
+    {
+        $this->withoutMiddleware();
+
+        $this->postJson(route('cms.core.pagebuilder_elementor_v24.compiled_native.automatic_analyze'), [
+            'source' => UploadedFile::fake()->createWithContent('page.html', '<main>Page</main>'),
+            'framework' => 'foundation',
+        ])->assertUnprocessable();
+    }
+
+    public function test_automatic_compiled_native_analyze_does_not_expose_server_filesystem_paths_in_asset_manifest(): void
+    {
+        $this->withoutMiddleware();
+
+        $response = $this->postJson(route('cms.core.pagebuilder_elementor_v24.compiled_native.automatic_analyze'), [
+            'source' => UploadedFile::fake()->createWithContent(
+                'asset.html',
+                '<!doctype html><html><body><section id="hero"><img src="images/hero.jpg" alt="Hero"></section></body></html>',
+            ),
+        ])->assertOk();
+
+        $asset = $response->json('assetManifest.0');
+        $this->assertIsArray($asset);
+        $this->assertArrayNotHasKey('resolvedPath', $asset);
+        $this->assertArrayHasKey('available', $asset);
+        $this->assertArrayHasKey('mappingId', $asset);
+        $this->assertArrayHasKey('sourcePath', $asset);
+        $this->assertNull($asset['targetUrl']);
+    }
+
+    public function test_automatic_compiled_native_analyze_exposes_normalized_nested_mapping_projection(): void
+    {
+        $this->withoutMiddleware();
+
+        $response = $this->postJson(route('cms.core.pagebuilder_elementor_v24.compiled_native.automatic_analyze'), [
+            'source' => UploadedFile::fake()->createWithContent(
+                'nested.html',
+                '<!doctype html><html><head><style>.layout{display:grid;grid-template-columns:1fr 1fr}.meta{padding:8px}</style></head><body><section id="hero"><div class="layout"><div><h1>Title</h1></div><div class="meta"><dt><i>Calendar</i>Date</dt><dd>10 October</dd></div></div></section></body></html>',
+            ),
+        ])->assertOk();
+
+        $response->assertJsonPath('success', true)
+            ->assertJsonStructure([
+                'layoutBlueprint' => [
+                    'sections' => [['normalizedBlocks' => ['mappingNodes', 'mappingRoots']]],
+                ],
+                'phoenixLayout' => [
+                    'nodes' => [['normalizedBlocks' => ['mappingNodes', 'mappingRoots']]],
+                    'sections' => [['normalizedBlocks' => ['mappingNodes', 'mappingRoots']]],
+                ],
+            ]);
+        $this->assertNotEmpty($response->json('layoutBlueprint.sections.0.normalizedBlocks.mappingRoots'));
+    }
+}

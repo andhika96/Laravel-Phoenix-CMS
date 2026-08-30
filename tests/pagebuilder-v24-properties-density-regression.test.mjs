@@ -25,6 +25,10 @@ const widgetRoot = resolve(root, 'resources/pagebuilder_elementor_v24/modules');
 const widgetSources = collectFiles(widgetRoot, 'Settings.vue')
     .map((path) => readFileSync(path, 'utf8'))
     .join('\n');
+const eventHighlightsGridSettings = readFileSync(
+    resolve(root, 'resources/pagebuilder_elementor_v24/modules/widgets/general/event-highlights-grid/Settings.vue'),
+    'utf8',
+);
 const widgetVueSources = collectFiles(widgetRoot, '.vue')
     .map((path) => readFileSync(path, 'utf8'))
     .join('\n');
@@ -188,9 +192,12 @@ test('the shared density contract covers every active four-side and three-cell r
     const classValues = [...widgetSources.matchAll(/class="([^"]*)"/g)].map((match) => match[1].split(/\s+/));
     const plainSides = classValues.filter((tokens) => tokens.includes('pb-four-sides') && !tokens.includes('pb-four-sides-with-link'));
     const linkedSides = classValues.filter((tokens) => tokens.includes('pb-four-sides-with-link'));
+    const eventHighlightsGridBoxControlUses = (eventHighlightsGridSettings.match(/<box-control\b[^>]*control-id="event-highlights-grid-card-(?:border-width|radius|padding)"/g) || []).length;
+    const reusableLinkedSideInstances = Math.max(0, eventHighlightsGridBoxControlUses - 1);
 
     assert.equal(plainSides.length, 4, 'all four standalone module-owned four-side controls remain covered');
-    assert.equal(linkedSides.length, 35, 'all active module-owned linked four-side controls remain covered');
+    assert.equal(eventHighlightsGridBoxControlUses, 3, 'Event Highlights Grid exposes border width, radius, and padding controls');
+    assert.equal(linkedSides.length + reusableLinkedSideInstances, 40, 'all active module-owned linked four-side control instances remain covered');
     assert.equal((sharedAdvancedSource.match(/pb-advanced-edge-fields/g) || []).length >= 1, true, 'shared Advanced edge controls remain covered');
     assert.equal((widgetSources.match(/pb-container-gap-control__values/g) || []).length, 4, 'Container and Container Fluid expose all four linked gap controls');
     assert.equal((widgetSources.match(/pb-range-number/g) || []).length, 4, 'Grid and Row Grid expose four direct three-cell range rows');
@@ -204,7 +211,10 @@ test('every responsive spacing side uses a numeric input with native steppers', 
 
     assert.equal(spacingInputs.length, 4, 'all four layout-module spacing input templates are audited');
     spacingInputs.forEach((input) => assert.match(input, /\btype="number"/, input));
-    assert.equal(sideInputs.length, 35, 'all active module-owned side-input definitions are audited');
+    const eventHighlightsGridBoxControlUses = (eventHighlightsGridSettings.match(/<box-control\b[^>]*control-id="event-highlights-grid-card-(?:border-width|radius|padding)"/g) || []).length;
+    const reusableSideInputInstances = Math.max(0, eventHighlightsGridBoxControlUses - 1);
+    assert.equal(eventHighlightsGridBoxControlUses, 3, 'Event Highlights Grid exposes three reusable side-input instances');
+    assert.equal(sideInputs.length + reusableSideInputInstances, 40, 'all active module-owned side-input instances are audited');
     sideInputs.forEach((input) => assert.match(input, /\btype="number"/, input));
     assert.match(sharedAdvancedSource, /class="pb-advanced-edge-fields"[\s\S]*?type="number"/, 'the single shared Advanced file must keep numeric edge controls');
 });

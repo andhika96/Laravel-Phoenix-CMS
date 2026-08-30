@@ -4,18 +4,23 @@ namespace App\Http\Controllers\Web\PageBuilderElementorV24;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Page_Builder_Elementor_V24\AddPageBuilderElementorV24Request;
+use App\Http\Requests\Page_Builder_Elementor_V24\AutomaticCompiledNativeAnalyzeRequest;
 use App\Http\Requests\Page_Builder_Elementor_V24\EditPageBuilderElementorV24Request;
-use App\Http\Requests\Page_Builder_Elementor_V24\ImportStaticPageRequest;
 use App\Models\Page_Builder\Page_Builder;
 use App\Support\PageBuilderElementorV24\FormSubmissionHandler;
+use App\Support\PageBuilderElementorV24\CustomJavaScriptPolicy;
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeFrameworkLoader;
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeLayoutClassifier;
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeLayoutMapper;
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeMeasurement;
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeSectionDetector;
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeSource;
 use App\Support\PageBuilderElementorV24\ImageRenditionResolver;
 use App\Support\PageBuilderElementorV24\ModuleCatalog;
-use App\Support\PageBuilderElementorV24\StaticImport\StaticPageImportService;
 use App\Support\CkfinderSessionBridge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
-use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class PageBuilderElementorV24Controller extends Controller
@@ -65,28 +70,6 @@ class PageBuilderElementorV24Controller extends Controller
 		]);
 	}
 
-	public function importStatic(ImportStaticPageRequest $request, StaticPageImportService $service)
-	{
-		try
-		{
-			$result = $service->convert(
-				$request->file('source'),
-				$request->input('framework', 'auto'),
-				$request->input('entry'),
-			);
-
-			return response()->json(['success' => true] + $result);
-		}
-		catch (InvalidArgumentException $exception)
-		{
-			return response()->json([
-				'success' => false,
-				'status' => 'failed',
-				'message' => $exception->getMessage(),
-			], 422);
-		}
-	}
-
 	public function edit(Request $request, ModuleCatalog $moduleCatalog, $idOrSlug)
 	{
 		app(CkfinderSessionBridge::class)->prepare($request);
@@ -119,8 +102,106 @@ class PageBuilderElementorV24Controller extends Controller
 		return $moduleCatalog->clientCatalog();
 	}
 
-	public function store(AddPageBuilderElementorV24Request $request)
+    public function analyzeAutomaticCompiledNative(
+        AutomaticCompiledNativeAnalyzeRequest $request,
+        AutomaticCompiledNativeFrameworkLoader $frameworkLoader,
+        AutomaticCompiledNativeMeasurement $measurement,
+        AutomaticCompiledNativeSectionDetector $sectionDetector,
+        AutomaticCompiledNativeLayoutClassifier $layoutClassifier,
+        AutomaticCompiledNativeLayoutMapper $layoutMapper,
+    )
 	{
+		$source = AutomaticCompiledNativeSource::fromUpload(
+			$request->file('source'),
+			$request->input('entry'),
+		);
+
+        try
+        {
+            $bundle = $frameworkLoader->prepare($source, (string) $request->input('framework', 'auto'));
+            $viewports = $this->automaticCompiledNativeViewports($request->input('viewports'));
+            $measurementSnapshot = $measurement->measure($source, $viewports, $bundle);
+            $sectionIndex = $sectionDetector->detect($measurementSnapshot);
+            $layoutBlueprint = $layoutClassifier->classify($sectionIndex, $measurementSnapshot);
+            $phoenixLayout = $layoutMapper->toPhoenixLayout($layoutBlueprint);
+
+            return response()->json([
+                'success' => true,
+                'phase' => 'automatic-layout-analysis',
+                'entry' => $source->entry,
+                'framework' => $bundle->framework,
+                'detectedFrameworks' => $bundle->detectedFrameworks,
+				'html' => $bundle->html,
+				'css' => $bundle->css,
+				'externalStylesheets' => $bundle->externalStylesheets,
+                'assetManifest' => $this->automaticCompiledNativeAssetManifest($bundle->assetManifest),
+                'runtimeScripts' => $bundle->runtimeScripts,
+                'diagnostics' => $bundle->diagnostics,
+                'viewports' => $viewports,
+                'measurement' => $measurementSnapshot,
+                'sectionIndex' => $sectionIndex->toArray(),
+                'layoutBlueprint' => $layoutBlueprint,
+                'phoenixLayout' => $phoenixLayout,
+            ]);
+		}
+		finally
+		{
+			$source->cleanup();
+        }
+    }
+
+    /** @param array<int,array<string,mixed>> $assets @return array<int,array<string,mixed>> */
+    private function automaticCompiledNativeAssetManifest(array $assets): array
+    {
+        return array_map(static function (array $asset): array {
+            $asset['available'] = is_string($asset['resolvedPath'] ?? null) && is_file($asset['resolvedPath']);
+            $sourcePath = trim(str_replace('\\', '/', (string) ($asset['url'] ?? '')));
+            $asset['mappingId'] = 'asset-'.substr(hash('sha256', implode('|', [(string) ($asset['kind'] ?? ''), (string) ($asset['basePath'] ?? ''), $sourcePath])), 0, 16);
+            $asset['sourcePath'] = $sourcePath;
+            $asset['targetUrl'] = null;
+            unset($asset['resolvedPath']);
+
+            return $asset;
+        }, $assets);
+    }
+
+    /** @return array<int,array{name:string,width:int,height:int}> */
+    private function automaticCompiledNativeViewports(mixed $requested): array
+    {
+        $defaults = [
+            ['name' => 'desktop', 'width' => 1180, 'height' => 900],
+            ['name' => 'tablet', 'width' => 768, 'height' => 1024],
+            ['name' => 'mobile', 'width' => 390, 'height' => 900],
+        ];
+        if (! is_array($requested) || $requested === []) {
+            return $defaults;
+        }
+
+        $viewports = [];
+        $seen = [];
+        foreach ($requested as $viewport) {
+            if (! is_array($viewport)) {
+                continue;
+            }
+            $name = strtolower(trim((string) ($viewport['name'] ?? '')));
+            if ($name === '' || isset($seen[$name])) {
+                continue;
+            }
+            $seen[$name] = true;
+            $viewports[] = [
+                'name' => $name,
+                'width' => (int) ($viewport['width'] ?? 0),
+                'height' => (int) ($viewport['height'] ?? 0),
+            ];
+        }
+
+        return $viewports !== [] ? $viewports : $defaults;
+    }
+
+	public function store(AddPageBuilderElementorV24Request $request, CustomJavaScriptPolicy $customJavaScriptPolicy)
+	{
+		$customJavaScript = $this->customJavaScriptPayload($request, $customJavaScriptPolicy);
+		if ($customJavaScript instanceof \Illuminate\Http\JsonResponse || $customJavaScript instanceof \Illuminate\Http\RedirectResponse) return $customJavaScript;
 		if ($request->validated())
 		{
 			DB::beginTransaction();
@@ -136,6 +217,8 @@ class PageBuilderElementorV24Controller extends Controller
 					'uri' => $uri,
 					'page_name' => $pageName,
 					'custom_css' => $this->normalizeCustomCssPayload($request->input('customCss', '')),
+					'custom_js' => $customJavaScript['code'],
+					'custom_js_mode' => $customJavaScript['mode'],
 					'vars' => $layoutPayload,
 					'status' => $request->input('pageStatus', 'draft'),
 					'editor_version' => Page_Builder::EDITOR_VERSION_V24,
@@ -198,8 +281,10 @@ class PageBuilderElementorV24Controller extends Controller
 		}
 	}
 
-	public function update(EditPageBuilderElementorV24Request $request, $idOrSlug)
+	public function update(EditPageBuilderElementorV24Request $request, $idOrSlug, CustomJavaScriptPolicy $customJavaScriptPolicy)
 	{
+		$customJavaScript = $this->customJavaScriptPayload($request, $customJavaScriptPolicy);
+		if ($customJavaScript instanceof \Illuminate\Http\JsonResponse || $customJavaScript instanceof \Illuminate\Http\RedirectResponse) return $customJavaScript;
 		$pageData = $this->resolveOwnedPage($idOrSlug);
 
 		if (! $pageData)
@@ -222,6 +307,8 @@ class PageBuilderElementorV24Controller extends Controller
 					'uri' => $uri,
 					'page_name' => $pageName,
 					'custom_css' => $this->normalizeCustomCssPayload($request->input('customCss', '')),
+					'custom_js' => $customJavaScript['code'],
+					'custom_js_mode' => $customJavaScript['mode'],
 					'vars' => $layoutPayload,
 					'status' => $request->input('pageStatus', 'draft'),
 				];
@@ -619,6 +706,20 @@ class PageBuilderElementorV24Controller extends Controller
 		}
 
 		return '';
+	}
+
+	/** @return array{code:string,mode:string,warnings:array<int,string>,blocked:array<int,string>}|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse */
+	private function customJavaScriptPayload(Request $request, CustomJavaScriptPolicy $policy): array|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+	{
+		$payload = $policy->normalize($request->input('customJs', ''), $request->input('customJsMode', 'disabled'));
+		if ($payload['blocked'] === []) return $payload;
+
+		$message = 'Custom JavaScript rejected: '.implode(', ', $payload['blocked']);
+		if ($request->wantsJson()) {
+			return response()->json(['success' => false, 'status' => 'failed', 'message' => $message, 'customJsDiagnostics' => $payload], 422);
+		}
+
+		return redirect()->back()->withInput()->withErrors(['customJs' => $message]);
 	}
 
 }

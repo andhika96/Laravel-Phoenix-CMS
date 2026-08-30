@@ -1,0 +1,486 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Support\PageBuilderElementorV24\StaticImport\StaticPageImportService;
+use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
+
+class PageBuilderElementorV24StaticPageImportServiceTest extends TestCase
+{
+    public function test_it_rejects_an_html_source_over_the_conservative_limit(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('2 MB');
+
+        app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent('large.html', str_repeat('x', 2 * 1024 * 1024 + 1)),
+        );
+    }
+
+    public function test_it_rejects_zip_path_traversal(): void
+    {
+        $path = tempnam(sys_get_temp_dir(), 'pb-import-unsafe-');
+        $zip = new \ZipArchive();
+        $zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        $zip->addFromString('../home.html', '<h1>Unsafe</h1>');
+        $zip->close();
+
+        try {
+            $this->expectException(\InvalidArgumentException::class);
+            $this->expectExceptionMessage('unsafe path');
+            app(StaticPageImportService::class)->convert(new UploadedFile($path, 'unsafe.zip', 'application/zip', null, true));
+        } finally {
+            @unlink($path);
+        }
+    }
+
+    public function test_it_reads_home_html_from_a_zip_without_executing_scripts(): void
+    {
+        $path = tempnam(sys_get_temp_dir(), 'pb-import-');
+        $zip = new \ZipArchive();
+        $zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        $zip->addFromString('home.html', '<html><head><title>ZIP Home</title><script>alert(1)</script></head><body><h1>ZIP</h1></body></html>');
+        $zip->addFromString('assets/hero.jpg', 'not-an-image');
+        $zip->close();
+
+        try {
+            $result = app(StaticPageImportService::class)->convert(
+                new UploadedFile($path, 'landing.zip', 'application/zip', null, true),
+            );
+
+            $this->assertSame('ZIP Home', $result['pageName']);
+            $this->assertSame(1, $result['report']['droppedScripts']);
+            $this->assertSame('heading', $result['layout'][0]['children'][0]['type']);
+        } finally {
+            @unlink($path);
+        }
+    }
+
+    public function test_it_maps_bootstrap_markup_to_editable_v24_nodes_and_drops_scripts(): void
+    {
+        $html = <<<'HTML'
+<!doctype html>
+<html><head><title>Bootstrap Home</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"></head>
+<body><div class="container"><div class="row"><div class="col-md-6"><h1>Welcome</h1><p>Intro <strong>copy</strong>.</p><a class="btn btn-primary" href="/start">Start</a><img src="/images/hero.jpg" alt="Hero"><script>alert(1)</script></div></div></div></body></html>
+HTML;
+
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent('home.html', $html),
+        );
+
+        $this->assertSame(['bootstrap5'], $result['frameworks']);
+        $this->assertSame('Bootstrap Home', $result['pageName']);
+        $this->assertCount(1, $result['layout']);
+        $this->assertSame('container', $result['layout'][0]['type']);
+        $this->assertSame('column', $result['layout'][0]['settings']['direction']);
+        $this->assertSame('container', $result['layout'][0]['children'][0]['type']);
+        $row = $result['layout'][0]['children'][0]['children'][0];
+        $this->assertSame('row', $row['settings']['direction']);
+
+        $column = $row['children'][0];
+        $this->assertSame('50%', $column['settings']['containerWidth']);
+        $this->assertSame('50%', $column['settings']['containerWidthTablet']);
+        $this->assertSame('100%', $column['settings']['containerWidthMobile']);
+        $this->assertSame('wrap', $row['settings']['flexWrap']);
+        $this->assertSame('heading', $column['children'][0]['type']);
+        $this->assertSame('Welcome', $column['children'][0]['settings']['text']);
+        $this->assertSame('text_editor', $column['children'][1]['type']);
+        $this->assertStringContainsString('<strong>copy</strong>', $column['children'][1]['settings']['html']);
+        $this->assertSame('button', $column['children'][2]['type']);
+        $this->assertSame('/start', $column['children'][2]['settings']['url']);
+        $this->assertSame('image', $column['children'][3]['type']);
+        $this->assertSame('/images/hero.jpg', $column['children'][3]['settings']['src']);
+        $this->assertSame(1, $result['report']['droppedScripts']);
+        $this->assertStringNotContainsString('alert', json_encode($result['layout']));
+    }
+
+    public function test_it_maps_tailwind_layout_and_spacing_utilities(): void
+    {
+        $html = <<<'HTML'
+<!doctype html><html><head><title>Tailwind Home</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body><main class="flex flex-col gap-4 p-6"><h2 class="text-xl font-bold">Tailwind</h2><p class="text-gray-600">Body</p></main></body></html>
+HTML;
+
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent('home.html', $html),
+        );
+
+        $this->assertSame(['tailwind'], $result['frameworks']);
+        $main = $result['layout'][0]['children'][0];
+        $this->assertSame('container', $main['type']);
+        $this->assertSame('column', $main['settings']['direction']);
+        $this->assertSame('1rem', $main['settings']['flexRowGap']);
+        $this->assertSame('1.5rem', $main['settings']['paddingTop']);
+        $this->assertSame('heading', $main['children'][0]['type']);
+        $this->assertSame('text_editor', $main['children'][1]['type']);
+        $this->assertSame(1, $result['report']['droppedScripts']);
+    }
+
+    public function test_it_does_not_detect_bootstrap_from_a_tailwind_flex_row_class(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent(
+                'home.html',
+                '<main class="flex flex-row gap-4"><h1>Tailwind row</h1></main>',
+            ),
+        );
+
+        $this->assertSame(['tailwind'], $result['frameworks']);
+        $this->assertSame('row', $result['layout'][0]['children'][0]['settings']['direction']);
+    }
+
+    public function test_it_emits_canonical_tailwind_grid_columns_and_responsive_counts(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent(
+                'home.html',
+                '<section class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[.9fr_1.1fr]"><h2>A</h2><h2>B</h2><h2>C</h2></section>',
+            ),
+        );
+
+        $grid = $result['layout'][0]['children'][0];
+
+        $this->assertSame('grid', $grid['settings']['displayType']);
+        $this->assertSame(2, $grid['settings']['gridColumns']);
+        $this->assertSame(2, $grid['settings']['gridColumnsTablet']);
+        $this->assertSame(1, $grid['settings']['gridColumnsMobile']);
+        $this->assertSame('.9fr 1.1fr', $grid['settings']['gridTemplateColumns']);
+        $this->assertSame('2', $grid['settings']['gridRows']);
+        $this->assertSame([], $grid['children'] ?? []);
+        $this->assertCount(4, $grid['columns']);
+        $this->assertSame('A', $grid['columns'][0]['children'][0]['settings']['text']);
+        $this->assertSame('B', $grid['columns'][1]['children'][0]['settings']['text']);
+        $this->assertSame('C', $grid['columns'][2]['children'][0]['settings']['text']);
+        $this->assertSame([], $grid['columns'][3]['children']);
+    }
+
+    public function test_it_maps_tailwind_responsive_grid_gaps_to_the_matching_settings(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent(
+                'home.html',
+                '<section class="grid grid-cols-1 gap-3 sm:gap-5 lg:gap-8"><h2>Gap</h2></section>',
+            ),
+        );
+
+        $settings = $result['layout'][0]['children'][0]['settings'];
+
+        $this->assertSame('2rem', $settings['gridColumnGap']);
+        $this->assertSame('1.25rem', $settings['gridColumnGapTablet']);
+        $this->assertSame('.75rem', $settings['gridColumnGapMobile']);
+        $this->assertSame('2rem', $settings['gridRowGap']);
+        $this->assertSame('1.25rem', $settings['gridRowGapTablet']);
+        $this->assertSame('.75rem', $settings['gridRowGapMobile']);
+    }
+
+    public function test_it_does_not_carry_an_arbitrary_grid_template_past_a_numeric_override(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent(
+                'home.html',
+                '<section class="grid grid-cols-[.5fr_1fr] lg:grid-cols-3"><h2>Override</h2></section>',
+            ),
+        );
+
+        $settings = $result['layout'][0]['children'][0]['settings'];
+
+        $this->assertSame(3, $settings['gridColumns']);
+        $this->assertArrayNotHasKey('gridTemplateColumns', $settings);
+    }
+
+    public function test_it_maps_unclassified_wrappers_to_vertical_flex_flow(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent(
+                'home.html',
+                '<div><h2>First</h2><p>Second</p></div>',
+            ),
+        );
+
+        $wrapper = $result['layout'][0]['children'][0];
+
+        $this->assertSame('flex', $wrapper['settings']['displayType']);
+        $this->assertSame('column', $wrapper['settings']['direction']);
+        $this->assertSame('heading', $wrapper['children'][0]['type']);
+        $this->assertSame('text_editor', $wrapper['children'][1]['type']);
+    }
+
+    public function test_it_keeps_explicit_tailwind_flex_rows_and_responsive_visibility_distinct(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent(
+                'home.html',
+                '<div class="flex"><span>One</span><span>Two</span></div><nav class="hidden items-center xl:flex"><a>Desktop</a></nav><div class="hidden xl:hidden"><p>Mobile</p></div>',
+            ),
+        );
+
+        $flex = $result['layout'][0]['children'][0];
+        $desktopNav = $result['layout'][0]['children'][1];
+        $mobileMenu = $result['layout'][0]['children'][2];
+
+        $this->assertSame('row', $flex['settings']['direction']);
+        $this->assertFalse($desktopNav['settings']['hideDesktop']);
+        $this->assertTrue($desktopNav['settings']['hideTablet']);
+        $this->assertTrue($desktopNav['settings']['hideMobile']);
+        $this->assertTrue($mobileMenu['settings']['hideDesktop']);
+        $this->assertTrue($mobileMenu['settings']['hideTablet']);
+        $this->assertTrue($mobileMenu['settings']['hideMobile']);
+    }
+
+    public function test_it_preserves_safe_source_ids_and_classes_on_native_nodes(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent(
+                'home.html',
+                '<div id="hero-section" class="hero-section mx-auto lg:max-w-7xl hover:bg-white/5"><h1 id="hero-title" class="display text-6xl font-semibold">CEO</h1></div>',
+            ),
+        );
+
+        $wrapper = $result['layout'][0]['children'][0];
+        $heading = $wrapper['children'][0];
+
+        $this->assertSame('hero-section', $wrapper['settings']['cssId']);
+        $this->assertTrue($wrapper['settings']['preserveCssClasses']);
+        $this->assertSame('hero-section mx-auto lg:max-w-7xl hover:bg-white/5', $wrapper['settings']['cssClass']);
+        $this->assertSame('hero-title', $heading['settings']['cssId']);
+        $this->assertSame('display text-6xl font-semibold', $heading['settings']['cssClass']);
+    }
+
+    public function test_it_preserves_utf8_text_through_document_and_rich_text_parsing(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent(
+                'home.html',
+                '<main><h1>CEO Masters Indonesia ©</h1><p>October · 2026 → Jakarta</p></main>',
+            ),
+        );
+
+        $main = $result['layout'][0]['children'][0];
+
+        $this->assertSame('CEO Masters Indonesia ©', $main['children'][0]['settings']['text']);
+        $this->assertStringContainsString('October · 2026 → Jakarta', $main['children'][1]['settings']['html']);
+    }
+
+    public function test_it_preserves_heading_line_breaks_without_changing_manual_heading_defaults(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent('home.html', '<h1>CEO Masters<br>Indonesia 2026</h1>'),
+        );
+
+        $heading = $result['layout'][0]['children'][0];
+        $this->assertSame("CEO Masters\nIndonesia 2026", $heading['settings']['text']);
+        $this->assertTrue($heading['settings']['sourceLineBreaks']);
+    }
+
+    public function test_it_preserves_safe_nested_rich_text_classes_and_ids(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent(
+                'home.html',
+                '<p class="copy"><span id="event-date" class="text-gold font-semibold">October · 2026</span></p>',
+            ),
+        );
+
+        $textEditor = $result['layout'][0]['children'][0];
+
+        $this->assertSame('copy', $textEditor['settings']['cssClass']);
+        $this->assertStringContainsString('id="event-date"', $textEditor['settings']['html']);
+        $this->assertStringContainsString('class="text-gold font-semibold"', $textEditor['settings']['html']);
+    }
+
+    public function test_it_attaches_scoped_css_and_framework_dependencies_only_to_the_imported_root(): void
+    {
+        $html = <<<'HTML'
+<!doctype html><html><head>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:"#061426"}}}};</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+<style>:root { --ink: #061426; } .hero { color: var(--ink); }</style>
+</head><body><main class="hero"><h1>Imported</h1></main></body></html>
+HTML;
+
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent('home.html', $html),
+        );
+
+        $metadata = $result['layout'][0]['settings']['staticImport'];
+        $this->assertSame(['tailwind'], $metadata['frameworks']);
+        $this->assertSame(
+            ['https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap'],
+            $metadata['stylesheets'],
+        );
+        $this->assertSame('#061426', $metadata['tailwindConfig']['theme']['extend']['colors']['ink']);
+        $this->assertStringContainsString('.pb-import-root{--ink:#061426}', $result['customCss']);
+        $this->assertStringContainsString('.pb-import-root .hero{color:var(--ink)}', $result['customCss']);
+        $this->assertSame(1, $result['report']['processedStyles']);
+        $this->assertSame(1, $result['report']['importedStylesheets']);
+    }
+
+    public function test_it_maps_semantic_ctas_and_phosphor_icons_without_converting_navigation_links(): void
+    {
+        $html = <<<'HTML'
+<main>
+  <a class="gold-button inline-flex px-6" href="/register"><i class="ph ph-arrow-up-right"></i>Register</a>
+  <button class="ghost-button inline-flex justify-center" type="button">Send</button>
+  <a class="text-link" href="#about">About</a>
+  <i class="ph ph-calendar-blank"></i>
+</main>
+HTML;
+
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent('home.html', $html),
+        );
+
+        $children = $result['layout'][0]['children'][0]['children'];
+        $this->assertSame('button', $children[0]['type']);
+        $this->assertStringContainsString('gold-button', $children[0]['settings']['className']);
+        $this->assertStringContainsString('inline-flex', $children[0]['settings']['className']);
+        $this->assertTrue($children[0]['settings']['sourceClassStyles']);
+        $this->assertSame('library', $children[0]['settings']['iconSource']);
+        $this->assertSame('fas fa-arrow-right', $children[0]['settings']['iconClass']);
+        $this->assertSame('gold-button inline-flex px-6', $children[0]['settings']['cssClass']);
+        $this->assertSame('button', $children[1]['type']);
+        $this->assertStringContainsString('ghost-button', $children[1]['settings']['className']);
+        $this->assertStringContainsString('justify-center', $children[1]['settings']['className']);
+        $this->assertTrue($children[1]['settings']['sourceClassStyles']);
+        $this->assertSame('text_editor', $children[2]['type']);
+        $this->assertSame('icon', $children[3]['type']);
+        $this->assertSame('far fa-calendar', $children[3]['settings']['iconClass']);
+    }
+
+    public function test_it_does_not_invent_button_label_for_icon_only_source_buttons(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent('home.html', '<button class="menu"><i class="ph ph-list"></i></button>'),
+        );
+
+        $button = $result['layout'][0]['children'][0];
+        $this->assertSame('', $button['settings']['text']);
+        $this->assertSame('fas fa-bars', $button['settings']['iconClass']);
+    }
+
+    public function test_it_keeps_remote_image_urls_direct_and_leaves_relative_assets_unresolved(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent(
+                'home.html',
+                '<main><img src="https://images.unsplash.com/photo.jpg?auto=format&amp;w=1400" alt="Remote"><img src="assets/local.jpg" alt="Local"></main>',
+            ),
+        );
+
+        $images = $result['layout'][0]['children'][0]['children'];
+        $this->assertSame('https://images.unsplash.com/photo.jpg?auto=format&w=1400', $images[0]['settings']['src']);
+        $this->assertSame('', $images[1]['settings']['src']);
+        $this->assertSame(1, $result['report']['missingAssets']);
+    }
+
+    public function test_it_reports_source_scripts_without_returning_executable_code_by_default(): void
+    {
+        $html = <<<'HTML'
+<!doctype html><html><head>
+<script>document.querySelector('#hero')?.addEventListener('click', () => console.log('clicked'));</script>
+<script src="https://cdn.example.com/site.js"></script>
+</head><body><main id="hero"><h1>Source</h1></main></body></html>
+HTML;
+
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent('source-scripts.html', $html),
+        );
+
+        $scripts = $result['report']['sourceScripts'];
+        $this->assertSame(2, $scripts['total']);
+        $this->assertSame(1, $scripts['inline']);
+        $this->assertSame(1, $scripts['external']);
+        $this->assertSame(['#hero'], $scripts['eventSelectors']);
+        $this->assertArrayNotHasKey('inlineCode', $scripts);
+        $this->assertSame(1, $result['report']['droppedScripts']);
+    }
+
+    public function test_it_returns_inline_source_scripts_only_after_an_explicit_copy_request(): void
+    {
+        $code = "document.querySelector('#hero')?.classList.add('ready');";
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent(
+                'source-scripts.html',
+                '<main id="hero"><h1>Source</h1><script>'.$code.'</script></main>',
+            ),
+            'auto',
+            null,
+            'native',
+            true,
+        );
+
+        $this->assertSame([$code], $result['report']['sourceScripts']['inlineCode']);
+        $this->assertTrue($result['report']['sourceScripts']['copyRequested']);
+    }
+
+    public function test_exact_mode_keeps_the_source_dom_inside_a_static_html_widget(): void
+    {
+        $html = <<<'HTML'
+<!doctype html><html><head><title>Exact Landing</title>
+<script>alert('must not run')</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>#hero { color: #fff; }</style>
+</head><body id="source-body" class="js source-page" lang="en"><main id="hero" class="grid grid-cols-2"><h1>Exact <span>DOM</span></h1><img src="https://example.com/hero.jpg" alt="Hero"></main></body></html>
+HTML;
+
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent('exact.html', $html),
+            'auto',
+            null,
+            'exact',
+        );
+
+        $node = $result['layout'][0];
+        $this->assertSame('static_html', $node['type']);
+        $this->assertSame('Exact Landing', $result['pageName']);
+        $this->assertStringContainsString('<main id="hero" class="grid grid-cols-2">', $node['settings']['srcdoc']);
+        $this->assertStringContainsString('<body id="source-body" class="js source-page pb-import-root" lang="en">', $node['settings']['srcdoc']);
+        $this->assertStringContainsString('https://cdn.tailwindcss.com', $node['settings']['srcdoc']);
+        $this->assertStringContainsString('.pb-import-root :is(#hero,[data-css-id="hero"])', $node['settings']['srcdoc']);
+        $this->assertStringContainsString('https://example.com/hero.jpg', $node['settings']['srcdoc']);
+        $this->assertStringNotContainsString("alert('must not run')", $node['settings']['srcdoc']);
+        $this->assertStringNotContainsString('<script>alert', $node['settings']['srcdoc']);
+        $this->assertSame(2, $result['report']['droppedScripts']);
+    }
+
+    public function test_native_mode_remains_the_backward_compatible_default(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent('native.html', '<main><h1>Native</h1></main>'),
+        );
+
+        $this->assertSame('container', $result['layout'][0]['type']);
+        $this->assertSame('heading', $result['layout'][0]['children'][0]['children'][0]['type']);
+    }
+
+	public function test_exact_mode_allowlists_the_known_phosphor_stylesheet_but_drops_other_scripts(): void
+	{
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent(
+                'icons.html',
+                '<html><head><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script><script>window.bad=true</script></head><body><i class="ph ph-star"></i></body></html>',
+            ),
+            'auto',
+            null,
+            'exact',
+        );
+
+        $srcdoc = $result['layout'][0]['settings']['srcdoc'];
+        $this->assertStringContainsString('cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css', $srcdoc);
+        $this->assertStringNotContainsString('window.bad', $srcdoc);
+        $this->assertSame(1, $result['report']['droppedScripts']);
+    }
+
+    public function test_it_sanitizes_unsafe_links_while_preserving_safe_rich_text(): void
+    {
+        $result = app(StaticPageImportService::class)->convert(
+            UploadedFile::fake()->createWithContent('home.html', '<p><strong>Safe</strong> <a href="javascript:alert(1)">link</a></p>'),
+        );
+
+        $html = $result['layout'][0]['children'][0]['settings']['html'];
+        $this->assertStringContainsString('<strong>Safe</strong>', $html);
+        $this->assertStringNotContainsString('javascript:', $html);
+    }
+}

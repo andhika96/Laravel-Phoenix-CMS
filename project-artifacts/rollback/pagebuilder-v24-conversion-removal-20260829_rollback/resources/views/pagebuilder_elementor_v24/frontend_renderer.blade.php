@@ -1,0 +1,131 @@
+@php
+	$pbElementorFontStylesheets = [];
+	$pbElementorFontDirectories = \Illuminate\Support\Facades\Storage::exists('public/fonts')
+		? \Illuminate\Support\Facades\Storage::directories('public/fonts')
+		: [];
+	foreach ($pbElementorFontDirectories as $fontDirectory) {
+		$fontCode = basename(str_replace('\\', '/', $fontDirectory));
+		$fontCssPath = 'public/fonts/' . $fontCode . '/fonts.css';
+		if (!preg_match('/^[A-Za-z0-9_-]+$/', $fontCode) || !\Illuminate\Support\Facades\Storage::exists($fontCssPath)) continue;
+		$pbElementorFontStylesheets[] = asset('storage/fonts/' . $fontCode . '/fonts.css');
+	}
+	$pbElementorFontStylesheets = array_values(array_unique($pbElementorFontStylesheets));
+	$pbModuleCatalog = app(\App\Support\PageBuilderElementorV24\ModuleCatalog::class);
+	$pbUsedModuleTypes = app(\App\Support\PageBuilderElementorV24\ModuleUsageCollector::class)->types(is_array($nodes ?? null) ? $nodes : []);
+	$pbUsedModuleAssets = [];
+	foreach ($pbUsedModuleTypes as $pbUsedModuleType) {
+		$pbUsedModule = $pbModuleCatalog->find($pbUsedModuleType);
+		if (!is_array($pbUsedModule)) continue;
+		$pbUsedModuleAssets[$pbUsedModuleType] = $pbUsedModule['assets'];
+	}
+	$pbStaticImportMetadata = data_get($nodes ?? [], '0.settings.staticImport');
+	$pbStaticImportMetadata = is_array($pbStaticImportMetadata) ? $pbStaticImportMetadata : [];
+	$pbStaticImportIsCompiled = ($pbStaticImportMetadata['mode'] ?? '') === 'compiled';
+	$pbStaticImportFrameworks = array_values(array_intersect(
+		$pbStaticImportIsCompiled ? [] : array_filter($pbStaticImportMetadata['frameworks'] ?? [], 'is_string'),
+		['tailwind', 'bootstrap5'],
+	));
+	$pbStaticImportStylesheets = [];
+	$pbStaticImportStylesheetSources = $pbStaticImportIsCompiled ? [] : ($pbStaticImportMetadata['stylesheets'] ?? []);
+	foreach ($pbStaticImportStylesheetSources as $stylesheet) {
+		if (!is_string($stylesheet) || !filter_var($stylesheet, FILTER_VALIDATE_URL)) continue;
+		$parts = parse_url($stylesheet);
+		$host = strtolower((string) ($parts['host'] ?? ''));
+		if (strtolower((string) ($parts['scheme'] ?? '')) !== 'https') continue;
+		if (!in_array($host, ['fonts.googleapis.com', 'fonts.gstatic.com'], true)) continue;
+		$pbStaticImportStylesheets[] = $stylesheet;
+	}
+	$pbStaticImportStylesheets = array_slice(array_values(array_unique($pbStaticImportStylesheets)), 0, 8);
+	$pbStaticImportTailwindExtend = [];
+	$pbRawTailwindExtend = data_get($pbStaticImportMetadata, 'tailwindConfig.theme.extend', []);
+	if (is_array($pbRawTailwindExtend)) {
+		foreach (['colors', 'boxShadow'] as $section) {
+			$values = is_array($pbRawTailwindExtend[$section] ?? null) ? $pbRawTailwindExtend[$section] : [];
+			foreach (array_slice($values, 0, 64, true) as $key => $value) {
+				if (!is_string($key) || !preg_match('/^[A-Za-z][A-Za-z0-9_-]*$/', $key) || !is_string($value)) continue;
+				if ($value === '' || strlen($value) > 180 || preg_match('/[<>{};]|(?:javascript:|expression\s*\(|url\s*\()/i', $value)) continue;
+				$pbStaticImportTailwindExtend[$section][$key] = $value;
+			}
+		}
+		$fontFamilies = is_array($pbRawTailwindExtend['fontFamily'] ?? null) ? $pbRawTailwindExtend['fontFamily'] : [];
+		foreach (array_slice($fontFamilies, 0, 32, true) as $key => $fonts) {
+			if (!is_string($key) || !preg_match('/^[A-Za-z][A-Za-z0-9_-]*$/', $key) || !is_array($fonts)) continue;
+			$safeFonts = array_values(array_filter(array_slice($fonts, 0, 8), fn ($font) => is_string($font) && preg_match('/^[A-Za-z0-9 ._-]{1,80}$/', $font)));
+			if ($safeFonts !== []) $pbStaticImportTailwindExtend['fontFamily'][$key] = $safeFonts;
+		}
+	}
+	$pbStaticImportTailwindConfig = $pbStaticImportTailwindExtend === [] ? [] : ['theme' => ['extend' => $pbStaticImportTailwindExtend]];
+	$pbCustomJavaScriptPolicy = app(\App\Support\PageBuilderElementorV24\CustomJavaScriptPolicy::class);
+	$pbCustomJavaScript = $pbCustomJavaScriptPolicy->normalize(
+		data_get($pageData ?? null, 'custom_js', ''),
+		data_get($pageData ?? null, 'custom_js_mode', 'disabled'),
+	);
+	$pbShouldRenderPublishedCustomJavaScript = static function ($page, $request, array $payload): bool {
+		return $request->routeIs('cms.public.pagebuilder_elementor_v23.show')
+			&& data_get($page, 'status') === 'publish'
+			&& $payload['mode'] === 'published'
+			&& $payload['blocked'] === []
+			&& $payload['code'] !== '';
+	};
+	$pbRenderPublishedCustomJavaScript = $pbShouldRenderPublishedCustomJavaScript($pageData ?? null, request(), $pbCustomJavaScript);
+	$pbPublishedCustomJavaScript = preg_replace('/<\/script/i', '<\\/script', $pbCustomJavaScript['code']) ?? '';
+@endphp
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{ $pageData->page_name ?? 'Page' }}</title>
+
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	@foreach($pbStaticImportStylesheets as $pbStaticImportStylesheet)
+	<link data-pb-static-import="stylesheet" href="{{ $pbStaticImportStylesheet }}" rel="stylesheet">
+	@endforeach
+	@if(in_array('bootstrap5', $pbStaticImportFrameworks, true))
+	<link data-pb-static-import="bootstrap5" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	@endif
+	@if(in_array('tailwind', $pbStaticImportFrameworks, true))
+	<script data-pb-static-import="tailwind-config">
+		window.tailwind = window.tailwind || {};
+		window.tailwind.config = { ...{{ Illuminate\Support\Js::from($pbStaticImportTailwindConfig) }}, corePlugins: { preflight: false }, important: '.pb-import-root' };
+	</script>
+	<script data-pb-static-import="tailwind" src="https://cdn.tailwindcss.com"></script>
+	@endif
+	@foreach($pbElementorFontStylesheets as $fontStylesheet)
+	<link href="{{ $fontStylesheet }}" rel="stylesheet">
+	@endforeach
+	<link href="{{ asset('assets/plugins/fontawesome/5.15.3/css/all.min.css') }}?v={{ @filemtime(public_path('assets/plugins/fontawesome/5.15.3/css/all.min.css')) }}" rel="stylesheet">
+	{{-- SAMA PERSIS dengan canvas builder — WYSIWYG terjamin --}}
+	<link href="{{ asset('assets/css/frontend_elementor_v24.css') }}?v={{ @filemtime(public_path('assets/css/frontend_elementor_v24.css')) }}" rel="stylesheet">
+	@foreach($pbUsedModuleAssets as $pbUsedModuleType => $pbUsedAssets)
+	@if(isset($pbUsedAssets['styles']) && is_file($pbUsedAssets['styles']))
+	<style data-pb-module-style="{{ $pbUsedModuleType }}">{!! file_get_contents($pbUsedAssets['styles']) !!}</style>
+	@endif
+	@endforeach
+
+	@if(!empty($pageData->custom_css))
+	<style>
+		{!! $pageData->custom_css !!}
+	</style>
+	@endif
+</head>
+<body>
+
+<div class="el-page-wrapper">
+	@foreach($nodes as $node)
+		@include('pagebuilder_elementor_v24.partials.render_node', ['node' => $node])
+	@endforeach
+</div>
+
+<script src="{{ asset('js/pagebuilder_elementor_v24/frontend-runtime.js') }}?v={{ @filemtime(public_path('js/pagebuilder_elementor_v24/frontend-runtime.js')) }}"></script>
+@foreach($pbUsedModuleAssets as $pbUsedModuleType => $pbUsedAssets)
+@if(isset($pbUsedAssets['runtime']) && is_file($pbUsedAssets['runtime']))
+<script data-pb-module-runtime="{{ $pbUsedModuleType }}">{!! file_get_contents($pbUsedAssets['runtime']) !!}</script>
+@endif
+@endforeach
+@if($pbRenderPublishedCustomJavaScript)
+<script data-pb-custom-javascript="published">{!! $pbPublishedCustomJavaScript !!}</script>
+@endif
+
+</body>
+</html>

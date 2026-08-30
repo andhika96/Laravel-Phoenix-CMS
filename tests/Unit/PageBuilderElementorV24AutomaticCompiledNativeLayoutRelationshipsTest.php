@@ -1,0 +1,83 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeLayoutRelationships;
+use Tests\TestCase;
+
+class PageBuilderElementorV24AutomaticCompiledNativeLayoutRelationshipsTest extends TestCase
+{
+    public function test_builds_containing_block_and_absolute_layer_relationships_per_viewport(): void
+    {
+        $result = (new AutomaticCompiledNativeLayoutRelationships)->build(
+            $this->nodes(),
+            $this->viewports(),
+        );
+
+        $this->assertSame(['hero'], $result['normalFlowGroups'][0]['sourceIds']);
+        $this->assertSame(['poster'], collect($result['normalFlowGroups'])->firstWhere('parentSourceId', 'hero')['sourceIds']);
+        $this->assertSame('hero', $result['containingBlocks']['badge']['sourceId']);
+        $this->assertSame('hero', $result['positionedLayers'][0]['containingBlockId']);
+        $this->assertSame('absolute', $result['positionedLayers'][0]['positionByViewport']['desktop']['position']);
+        $this->assertSame(420.0, $result['positionedLayers'][0]['positionByViewport']['desktop']['relativeRect']['x']);
+    }
+
+    public function test_records_overlap_pair_and_stacking_order_without_creating_duplicate_nodes(): void
+    {
+        $result = (new AutomaticCompiledNativeLayoutRelationships)->build($this->nodes(), $this->viewports());
+
+        $this->assertSame([
+            ['lower' => 'poster', 'upper' => 'badge', 'viewport' => 'desktop'],
+            ['lower' => 'poster', 'upper' => 'badge', 'viewport' => 'mobile'],
+        ], $result['overlapPairs']);
+        $this->assertSame(['poster', 'badge'], $result['stackingOrder']['desktop']['hero']);
+    }
+
+    public function test_records_pseudo_element_and_responsive_position_delta(): void
+    {
+        $nodes = $this->nodes();
+        $nodes['badge']['computedStyleByViewport']['mobile']['left'] = '12px';
+        $nodes['badge']['rectByViewport']['mobile'] = ['x' => 12, 'y' => 18, 'width' => 80, 'height' => 30];
+        $nodes['hero']['pseudoElementsByViewport'] = ['desktop' => ['before' => ['content' => '""', 'position' => 'absolute']]];
+
+        $result = (new AutomaticCompiledNativeLayoutRelationships)->build($nodes, $this->viewports());
+
+        $this->assertSame(['hero'], array_column($result['pseudoElements'], 'sourceId'));
+        $this->assertSame('420px → 12px', $result['responsiveDeltas']['badge']['positionX']);
+    }
+
+    private function viewports(): array
+    {
+        return [
+            ['name' => 'desktop', 'width' => 1180, 'height' => 900],
+            ['name' => 'mobile', 'width' => 390, 'height' => 900],
+        ];
+    }
+
+    /** @return array<string,array<string,mixed>> */
+    private function nodes(): array
+    {
+        return [
+            'hero' => $this->node('hero', null, 'relative', ['x' => 0, 'y' => 0, 'width' => 600, 'height' => 300]),
+            'poster' => $this->node('poster', 'hero', 'static', ['x' => 0, 'y' => 0, 'width' => 600, 'height' => 300], ['zIndex' => '1']),
+            'badge' => $this->node('badge', 'hero', 'absolute', ['x' => 420, 'y' => 18, 'width' => 80, 'height' => 30], ['zIndex' => '2', 'left' => '420px', 'top' => '18px']),
+        ];
+    }
+
+    /** @param array<string,int|float> $rect @param array<string,string> $style */
+    private function node(string $id, ?string $parent, string $position, array $rect, array $style = []): array
+    {
+        $base = [
+            'display' => 'block', 'position' => $position, 'zIndex' => 'auto',
+            'left' => 'auto', 'right' => 'auto', 'top' => 'auto', 'bottom' => 'auto',
+            'transform' => 'none', 'visibility' => 'visible', 'opacity' => '1',
+        ];
+        $computed = array_merge($base, $style);
+        return [
+            'sourceId' => $id, 'tag' => 'div', 'parentSourceId' => $parent,
+            'computedStyleByViewport' => ['desktop' => $computed],
+            'rectByViewport' => ['desktop' => $rect],
+            'children' => [],
+        ];
+    }
+}

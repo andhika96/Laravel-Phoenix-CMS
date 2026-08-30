@@ -27,6 +27,8 @@ class EditPageBuilderElementorV24Request extends FormRequest
 				Rule::unique('page_builder', 'page_name')->ignore($currentId),
 			],
 			'pageStatus' => 'required',
+			'customJs' => ['nullable', 'string', 'max:102400'],
+			'customJsMode' => ['nullable', 'string', Rule::in(['disabled', 'published'])],
 		];
 	}
 

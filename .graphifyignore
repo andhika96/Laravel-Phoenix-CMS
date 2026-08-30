@@ -25,6 +25,7 @@ bootstrap/cache/
 
 # Historical copies and visual QA artifacts are not active source
 project-artifacts/backups/
+project-artifacts/rollback/
 project-artifacts/qa/
 project-artifacts/previews/
 graphify-out/

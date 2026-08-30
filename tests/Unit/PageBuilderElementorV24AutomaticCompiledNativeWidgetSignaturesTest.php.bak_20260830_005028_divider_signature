@@ -1,0 +1,84 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Support\PageBuilderElementorV24\CompiledNative\AutomaticCompiledNativeWidgetSignatures;
+use Tests\TestCase;
+
+class PageBuilderElementorV24AutomaticCompiledNativeWidgetSignaturesTest extends TestCase
+{
+    public function test_icon_box_composition_gets_a_high_confidence_icon_box_candidate(): void
+    {
+        $candidates = (new AutomaticCompiledNativeWidgetSignatures)->candidates(
+            $this->mappingNode('date', 'div', 'composite', 'icon_box', ['label', 'calendar', 'value']),
+            [
+                'label' => $this->rawNode('label', 'dt', 'Date'),
+                'calendar' => $this->rawNode('calendar', 'i', ''),
+                'value' => $this->rawNode('value', 'dd', '10 October 2026'),
+            ],
+        );
+
+        $this->assertSame('icon_box', $candidates[0]['type']);
+        $this->assertGreaterThanOrEqual(0.9, $candidates[0]['score']);
+        $this->assertNotEmpty($candidates[0]['reasons']);
+        $this->assertSame(['label', 'calendar', 'value'], $candidates[0]['memberSourceIds']);
+    }
+
+    public function test_image_box_composition_gets_image_box_and_explicit_overlay_evidence(): void
+    {
+        $candidates = (new AutomaticCompiledNativeWidgetSignatures)->candidates(
+            $this->mappingNode('figure', 'figure', 'composite', 'image_box', ['image', 'overlay']),
+            [
+                'image' => $this->rawNode('image', 'img', ''),
+                'overlay' => $this->rawNode('overlay', 'div', 'Saturday 10'),
+            ],
+        );
+
+        $this->assertSame('image_box', $candidates[0]['type']);
+        $this->assertGreaterThanOrEqual(0.85, $candidates[0]['score']);
+        $this->assertContains('media member detected', $candidates[0]['reasons']);
+        $this->assertContains('overlay/text member requires review', $candidates[0]['reasons']);
+    }
+
+    public function test_layout_and_semantic_content_signatures_do_not_depend_on_generic_div_names(): void
+    {
+        $signatures = new AutomaticCompiledNativeWidgetSignatures;
+        $grid = $signatures->candidates($this->mappingNode('wrapper', 'div', 'layout', 'layout', [], ['display' => 'grid']), []);
+        $container = $signatures->candidates($this->mappingNode('card', 'div', 'container', 'container'), []);
+        $heading = $signatures->candidates($this->mappingNode('title', 'h1', 'content', 'content'), []);
+        $button = $signatures->candidates($this->mappingNode('cta', 'a', 'content', 'content', [], [], ['href' => '#contact'], ['Register']));
+
+        $this->assertSame('grid', $grid[0]['type']);
+        $this->assertSame('container', $container[0]['type']);
+        $this->assertSame('heading', $heading[0]['type']);
+        $this->assertSame('button', $button[0]['type']);
+    }
+
+    /** @param array<int,string> $members @param array<string,string> $style @param array<string,string> $attributes @param array<int,string> $classes */
+    private function mappingNode(string $id, string $tag, string $role, string $kind, array $members = [], array $style = [], array $attributes = [], array $classes = []): array
+    {
+        return [
+            'sourceId' => $id,
+            'tag' => $tag,
+            'mappingRole' => $role,
+            'mappingKind' => $kind,
+            'memberSourceIds' => $members,
+            'classList' => $classes,
+            'attributes' => array_map(static fn (string $name, string $value): array => ['name' => $name, 'value' => $value], array_keys($attributes), $attributes),
+            'computedStyleByViewport' => ['desktop' => array_merge(['display' => 'block'], $style)],
+        ];
+    }
+
+    /** @return array<string,mixed> */
+    private function rawNode(string $id, string $tag, string $text): array
+    {
+        return [
+            'sourceId' => $id,
+            'tag' => $tag,
+            'textContent' => $text,
+            'classList' => [],
+            'attributes' => [],
+            'computedStyleByViewport' => ['desktop' => ['display' => 'block']],
+        ];
+    }
+}

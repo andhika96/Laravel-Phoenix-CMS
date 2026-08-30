@@ -82,7 +82,7 @@ class PageBuilderElementorV24AssetIsolationTest extends TestCase
         }
 
         $catalog = (new ModuleCatalog)->all();
-        $this->assertCount(50, $catalog);
+        $this->assertCount(53, $catalog);
 
         foreach ($catalog as $module) {
             foreach (['definition', 'canvas', 'settings', 'view'] as $asset) {

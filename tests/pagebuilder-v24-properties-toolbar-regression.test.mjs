@@ -57,7 +57,7 @@ test('every registered Layout and Widget exposes exactly the tabs implemented by
     const helpers = mountPropertyHelpers();
     const widgets = registeredWidgets();
 
-	assert.equal(widgets.length, 50, 'all active v2.4 registry entries should be audited');
+	assert.equal(widgets.length, 53, 'all active v2.4 registry entries should be audited');
 
     for (const widget of widgets) {
         const tabs = JSON.parse(JSON.stringify(helpers.propertyTabsForNodeType(widget.type)));

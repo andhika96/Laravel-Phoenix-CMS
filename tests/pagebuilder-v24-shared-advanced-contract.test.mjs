@@ -20,9 +20,9 @@ test('v2.4 owns exactly one canonical shared Advanced source', () => {
     assert.deepEqual(advancedFiles, [path.join(sharedRoot, 'AdvancedControls.vue')]);
 });
 
-test('all 50 module Settings use the canonical Advanced component contract', () => {
+test('all active module Settings use the canonical Advanced component contract', () => {
     const settingsFiles = walk(modulesRoot, 'Settings.vue');
-    assert.equal(settingsFiles.length, 50);
+    assert.equal(settingsFiles.length, 53);
 
     for (const file of settingsFiles) {
         const source = fs.readFileSync(file, 'utf8');

@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Http\Requests\Page_Builder_Elementor_V24;
+
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
+
+class ImportStaticPageRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'source' => ['required', 'file', 'mimes:html,htm,zip', 'max:20480'],
+            'framework' => ['nullable', Rule::in(['auto', 'bootstrap5', 'tailwind'])],
+            'mode' => ['nullable', Rule::in(['native', 'exact', 'compiled'])],
+            'phase' => ['nullable', 'in:analyze,compile'],
+            'sourceHash' => ['nullable', 'string', 'regex:/^[a-f0-9]{64}$/', 'required_if:phase,compile'],
+            'mapping' => ['nullable', 'string', 'json', 'max:524288', 'required_if:phase,compile'],
+            'entry' => ['nullable', 'string', 'max:255'],
+            'includeScripts' => ['nullable', 'boolean'],
+            'baseUrl' => ['nullable', 'string', 'url:http,https', 'max:2048'],
+        ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            if ($validator->errors()->has('mapping') || $this->input('mapping') === null) {
+                return;
+            }
+
+            $mapping = json_decode((string) $this->input('mapping'), true);
+
+            if (! is_array($mapping) || ($mapping['version'] ?? null) !== 1) {
+                $validator->errors()->add('mapping', 'The mapping version must be 1.');
+            }
+        });
+    }
+
+    public function phase(): string
+    {
+        return $this->input('phase') === 'compile' ? 'compile' : 'analyze';
+    }
+
+    public function mappingPayload(): array
+    {
+        $mapping = $this->input('mapping');
+
+        if ($mapping === null && $this->phase() !== 'compile') {
+            return [];
+        }
+
+        return json_decode((string) $mapping, true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    protected function failedValidation(Validator $validator): void
+    {
+        $errors = $validator->errors();
+
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'status' => 'failed',
+            'message' => $errors,
+            'errors' => $errors,
+        ], 422));
+    }
+}
