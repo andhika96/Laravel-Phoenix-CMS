@@ -140,8 +140,6 @@ test('Event Media Grid Settings follows shared tabs, controls, repeater, and med
     assert.equal(typeof settingsModule.BoxControl.methods?.setValue, 'function');
     assert.equal(typeof settingsModule.BoxControl.methods?.setUnit, 'function');
     assert.equal(settingsModule.BoxControl.computed.value, undefined);
-    assert.deepEqual(compile(settingsModule.component.components.ResponsiveSelect.components.ResponsiveMenu.template, { mode: 'function' }).errors ?? [], []);
-    assert.deepEqual(compile(settingsModule.BoxControl.template, { mode: 'function' }).errors ?? [], []);
 
     for (const marker of [
         'pb-tab-nav', 'pb-tab-btn', 'pb-tab-btn-icon', 'Content', 'Style', 'Advanced',

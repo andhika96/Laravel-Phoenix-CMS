@@ -8,7 +8,7 @@
 					<div v-else-if="card.imagePresentation==='background' && safeImageUrl(card.imageUrl)" class="event-media-grid__image-background" :style="imageBackgroundStyle(card)" role="img" :aria-label="card.imageAlt || card.title || 'Image'"></div>
 					<div v-else class="event-media-grid__image-placeholder" :style="placeholderStyle" aria-hidden="true"><i class="far fa-image"></i></div>
 				</div>
-				<div class="event-media-grid__body" :style="cardBodyStyle()">
+				<div class="event-media-grid__body" :style="cardBodyStyle">
 					<div v-if="card.showIcon || card.title" class="event-media-grid__title-group" :style="iconTitleGroupStyle">
 						<div v-if="card.showIcon" class="event-media-grid__icon" :style="iconStyle(card)">
 							<span v-if="safeIconSvg(card)" class="event-media-grid__icon-svg" v-html="safeIconSvg(card)" aria-hidden="true"></span>

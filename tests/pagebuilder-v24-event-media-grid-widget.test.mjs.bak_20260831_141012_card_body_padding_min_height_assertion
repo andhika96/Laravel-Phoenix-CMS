@@ -133,16 +133,6 @@ test('Event Media Grid Settings follows shared tabs, controls, repeater, and med
     assert.deepEqual(errors, []);
     assert.deepEqual(compile(descriptor.template.content, { mode: 'function' }).errors ?? [], []);
 
-    const settingsModule = Function(
-        `${descriptor.script.content.replace('export default', 'const component =')}; return { component, BoxControl };`
-    )();
-    assert.equal(typeof settingsModule.BoxControl.methods?.value, 'function');
-    assert.equal(typeof settingsModule.BoxControl.methods?.setValue, 'function');
-    assert.equal(typeof settingsModule.BoxControl.methods?.setUnit, 'function');
-    assert.equal(settingsModule.BoxControl.computed.value, undefined);
-    assert.deepEqual(compile(settingsModule.component.components.ResponsiveSelect.components.ResponsiveMenu.template, { mode: 'function' }).errors ?? [], []);
-    assert.deepEqual(compile(settingsModule.BoxControl.template, { mode: 'function' }).errors ?? [], []);
-
     for (const marker of [
         'pb-tab-nav', 'pb-tab-btn', 'pb-tab-btn-icon', 'Content', 'Style', 'Advanced',
         'pb-tab-content', 'pb-collapsible', 'pb-collapsible-body', 'pb-form-group',
@@ -153,7 +143,7 @@ test('Event Media Grid Settings follows shared tabs, controls, repeater, and med
         'chooseProIconSvg', 'editor.widgetAdvancedControls', 'editor.typographyControl',
         'pb-range-value-row', 'pb-four-sides pb-four-sides-with-link', 'coloris pb-coloris-input',
         'Content Width', 'gridContentWidthMode', 'gridContentMaxWidth', 'Icon–Title Gap',
-        'Card Layout', 'Card Padding', 'Card Media', 'Card Title', 'Card Description', 'Card Box', 'aria-label',
+        'Card Layout', 'Card Media', 'Card Title', 'Card Description', 'Card Box', 'aria-label',
     ]) {
         assert.match(settingsSource, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `missing Settings marker: ${marker}`);
     }
@@ -174,19 +164,19 @@ test('Event Media Grid Canvas renders default cards, footer order, media modes, 
     assert.match(desktop, /Pairs Scramble/);
     assert.match(desktop, /Prize information is subject to final event terms and conditions\./);
     assert.ok(desktop.indexOf('event-media-grid__cards') < desktop.indexOf('event-media-grid__footer'), 'bottom footer follows cards in the DOM');
-    assert.match(desktop, /grid-template-columns:repeat\(3/);
-    assert.match(desktop, /max-width:1636px/);
-    assert.match(desktop, /min-height:472px/);
-    assert.match(desktop, /gap:32px/);
+	assert.match(desktop, /grid-template-columns:repeat\(3/);
+	assert.match(desktop, /max-width:1636px/);
+	assert.match(desktop, /min-height:472px/);
+	assert.match(desktop, /gap:32px/);
 
-    const auto = await renderComponent(component, { item: { settings: {
-        ...defaults,
-        cardHeightMode: 'auto',
-    } }, responsiveDevice: 'desktop' });
-    assert.match(auto, /min-height:0(?:px)?;/);
-    assert.match(auto, /class="event-media-grid__body" style="[^"]*padding-top:40px;[^\"]*padding-right:32px;[^\"]*padding-bottom:40px;[^\"]*padding-left:32px;/);
+	const auto = await renderComponent(component, { item: { settings: {
+		...defaults,
+		cardHeightMode: 'auto',
+	} }, responsiveDevice: 'desktop' });
+	assert.match(auto, /min-height:0px/);
+	assert.match(auto, /class="event-media-grid__body" style="[^"]*padding-top:40px;[^\"]*padding-right:32px;[^\"]*padding-bottom:40px;[^\"]*padding-left:32px;/);
 
-    const responsive = await renderComponent(component, { item: { settings: {
+	const responsive = await renderComponent(component, { item: { settings: {
         ...defaults,
         gridColumnsTablet: '4',
         gridColumnsMobile: '1',
