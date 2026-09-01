@@ -1,0 +1,51 @@
+{
+  "asset": {
+    "path": "public/assets/images/themes/arunika_equinox/arunika-equinox-sidebar-landscape.png",
+    "format": "PNG RGBA",
+    "dimensions": "923x1705",
+    "lightOpacity": "0.72",
+    "darkOpacity": "0.22",
+    "collapsedOpacity": "0",
+    "backgroundPosition": "center calc(100% + 24px)",
+    "backgroundSize": "100% auto"
+  },
+  "desktop": {
+    "viewport": "1717x916",
+    "sidebar": {
+      "width": 256,
+      "height": 888,
+      "left": 14,
+      "top": 14,
+      "borderRadius": "20px"
+    },
+    "landscape": {
+      "pseudoHeight": "240px",
+      "backgroundImageLoaded": true,
+      "opacity": "0.72"
+    },
+    "hover": {
+      "backgroundColor": "rgba(255, 255, 255, 0.88)",
+      "boxShadow": "0 5px 16px rgba(60, 44, 78, 0.05)"
+    },
+    "active": {
+      "backgroundColor": "color-mix(teal 7%, white 93%)",
+      "color": "rgb(15, 118, 110)"
+    },
+    "horizontalOverflow": false,
+    "verticalOverflow": false
+  },
+  "dark": {
+    "landscapeOpacity": "0.22",
+    "hoverBackgroundColor": "rgba(255, 255, 255, 0.075)",
+    "activeBackgroundColor": "rgba(255, 255, 255, 0.13)",
+    "activeColor": "rgb(245, 255, 252)"
+  },
+  "mobile": {
+    "viewport": "375x800",
+    "sidebarLeft": -258.8,
+    "landscapeVisible": false,
+    "titleFontSize": "23px",
+    "horizontalOverflow": false,
+    "verticalOverflow": false
+  }
+}

@@ -1683,6 +1683,7 @@ a:hover
 {
 	background: var(--ph-bg-hover);
 	color: var(--ph-text-main);
+	box-shadow: 0 2px 8px rgba(42, 35, 57, 0.06);
 }
 
 .ph-sidebar .list-group-item.active,
@@ -2053,7 +2054,7 @@ a:hover
 	--ph-top-bar-height: 72px;
 	--ph-shell-border: #e9e7e8;
 	--ph-shell-soft: #f7f6f8;
-	--ph-shell-hover: var(--ph-theme-hover-surface, color-mix(in srgb, var(--ph-theme-primary), white 84%));
+	--ph-shell-hover: var(--ph-theme-hover-surface, color-mix(in srgb, var(--ph-theme-primary), white 94%));
 	--ph-shell-shadow: 0 8px 24px rgba(38, 31, 52, 0.06);
 }
 
@@ -2076,6 +2077,8 @@ a:hover
 	--ph-theme-text-accessible: #17151a;
 	--ph-theme-primary-subtle: var(--ph-theme-hover-surface, color-mix(in srgb, var(--ph-theme-primary), white 90%));
 	--ph-border-color: var(--ph-shell-border);
+	--ph-aurora-menu-hover: rgba(255, 255, 255, 0.86);
+	--ph-aurora-menu-hover-shadow: 0 5px 16px rgba(60, 44, 78, 0.05);
 }
 
 [data-bs-theme=dark]
@@ -2397,11 +2400,12 @@ body::after
 	margin-bottom: 8px;
 }
 
-.ph-sidebar .list-group-item-action:hover,
-.ph-sidebar .list-group-item-action:focus
+html[data-bs-theme=light] .ph-sidebar .list-group-item-action:hover,
+html[data-bs-theme=light] .ph-sidebar .list-group-item-action:focus
 {
-	background: var(--ph-bg-hover);
+	background: var(--ph-aurora-menu-hover);
 	color: var(--ph-text-main);
+	box-shadow: var(--ph-aurora-menu-hover-shadow);
 }
 
 .ph-sidebar .list-group-item.active,

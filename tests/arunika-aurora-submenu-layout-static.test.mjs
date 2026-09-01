@@ -35,13 +35,28 @@ const finalNavTextRule = navTextRules.filter(([, body]) => /font-size:/.test(bod
 
 assert.match(
   css,
-  /--ph-shell-hover:\s*color-mix\(in srgb, var\(--ph-theme-primary\), white 84%\);/,
-  'light sidebar hover should derive its soft tint from the selected theme color',
+  /--ph-shell-hover:\s*var\(--ph-theme-hover-surface,\s*color-mix\(in srgb,\s*var\(--ph-theme-primary\),\s*white 94%\)\);/,
+  'light sidebar hover should use the softer Prism-compatible tint',
+);
+assert.match(
+  css,
+  /--ph-aurora-menu-hover:\s*rgba\(255,\s*255,\s*255,\s*0\.86\);/,
+  'light sidebar menu hover should use the screenshot white surface',
+);
+assert.match(
+  css,
+  /--ph-aurora-menu-hover-shadow:\s*0 5px 16px rgba\(60,\s*44,\s*78,\s*0\.05\);/,
+  'light sidebar menu hover should use the screenshot shadow',
 );
 assert.match(
   css,
   /\.ph-sidebar \.list-group-item-action:hover,\s*\.ph-sidebar \.list-group-item-action:focus\s*\{[^}]*background:\s*var\(--ph-bg-hover\);/s,
   'main menu hover should use the shared sidebar hover token',
+);
+assert.match(
+  css,
+  /html\[data-bs-theme=light\]\s+\.ph-sidebar \.list-group-item-action:hover,\s*html\[data-bs-theme=light\]\s+\.ph-sidebar \.list-group-item-action:focus\s*\{[^}]*background:\s*var\(--ph-aurora-menu-hover\);[^}]*box-shadow:\s*var\(--ph-aurora-menu-hover-shadow\);/s,
+  'light main menu hover should use the screenshot surface and elevation tokens',
 );
 assert.match(
   css,

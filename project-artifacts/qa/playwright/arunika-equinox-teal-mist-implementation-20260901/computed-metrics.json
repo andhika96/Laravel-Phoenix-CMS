@@ -1,0 +1,67 @@
+{
+  "viewport": {
+    "width": 1717,
+    "height": 916
+  },
+  "light": {
+    "canvasBackgroundImage": "radial-gradient at 88% 88% with 5% teal tint + linear-gradient #f7faf9 to canvas",
+    "sidebar": {
+      "width": 256,
+      "height": 888,
+      "top": 14,
+      "left": 14,
+      "borderRadius": "20px",
+      "boxShadow": "0 12px 28px rgba(48, 103, 89, 0.08), 0 2px 6px rgba(48, 103, 89, 0.04)"
+    },
+    "hero": {
+      "height": 152,
+      "borderRadius": "16px",
+      "titleFontSize": "28px",
+      "subtitleFontSize": "15px"
+    },
+    "dashboardGrid": {
+      "borderRadius": "16px",
+      "labelFontSize": "15px"
+    },
+    "menu": {
+      "beforeHover": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(82, 108, 103)",
+        "boxShadow": "none"
+      },
+      "hover": {
+        "backgroundColor": "rgba(255, 255, 255, 0.88)",
+        "color": "rgb(23, 51, 47)",
+        "boxShadow": "0 5px 16px rgba(60, 44, 78, 0.05)",
+        "borderRadius": "10px"
+      },
+      "active": {
+        "backgroundColor": "color-mix teal 7% + white 93%",
+        "color": "rgb(15, 118, 110)",
+        "boxShadow": "none"
+      }
+    },
+    "horizontalOverflow": false,
+    "verticalOverflow": false
+  },
+  "dark": {
+    "hoverBackgroundColor": "rgba(255, 255, 255, 0.075)",
+    "hoverBoxShadow": "0 2px 8px rgba(0, 0, 0, 0.18)",
+    "activeBackgroundColor": "rgba(255, 255, 255, 0.13)",
+    "activeColor": "rgb(245, 255, 252)"
+  },
+  "mobile": {
+    "viewport": "375x800",
+    "sidebarClosedWidth": 256,
+    "sidebarClosedLeft": -258.8,
+    "heroWidth": 347,
+    "gridWidth": 347,
+    "titleFontSize": "23px",
+    "horizontalOverflow": false,
+    "verticalOverflow": false
+  },
+  "sourceCss": "public/assets/css/themes/arunika_equinox/arunika_equinox.css",
+  "sourceView": "resources/views/awesome_admin/awesome_admin.blade.php",
+  "liveRoute": "http://laravel-13-phoenix.aruna/awesome_admin",
+  "liveRouteResult": "redirected to /auth/login during read-only QA"
+}

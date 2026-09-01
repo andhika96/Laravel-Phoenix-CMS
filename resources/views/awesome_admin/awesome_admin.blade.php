@@ -5,16 +5,35 @@
 @endsection
 
 @section('content')
+	@php($isEquinoxTheme = custom_theme('cms') === 'arunika_equinox')
+
 	<div>
-		<div class="ph-content p-3 mb-3 rounded">
-			<div class="row g-3">
-				<div class="col-md-6 d-flex align-items-center">
-					<h4 class="mb-0">{{ t('Awesome Admin Panel') }}</h4>
+		<div class="ph-content p-3 mb-3 rounded{{ $isEquinoxTheme ? ' ph-equinox-dashboard-hero' : '' }}">
+			@if($isEquinoxTheme)
+				<div class="row g-3 align-items-center">
+					<div class="col-auto">
+						<div class="ph-equinox-dashboard-hero-icon" aria-hidden="true">
+							<i class="fad fa-users-class"></i>
+						</div>
+					</div>
+
+					<div class="col d-flex align-items-center">
+						<div>
+							<h4 class="mb-0">{{ t('Awesome Admin Panel') }}</h4>
+							<p class="ph-equinox-dashboard-hero-subtitle mb-0">{{ t('Manage and control your CMS with ease') }}</p>
+						</div>
+					</div>
 				</div>
-			</div>
+			@else
+				<div class="row g-3">
+					<div class="col-md-6 d-flex align-items-center">
+						<h4 class="mb-0">{{ t('Awesome Admin Panel') }}</h4>
+					</div>
+				</div>
+			@endif
 		</div>
 
-		<div class="ph-content p-4 rounded">
+		<div class="ph-content p-4 rounded{{ $isEquinoxTheme ? ' ph-equinox-dashboard-grid' : '' }}">
 			<div class="row g-5 g-lg-4 mt-0 text-center">
 				<div class="col-6 col-md-3 col-xl-2">
 					<a href="{{ url('awesome_admin/config') }}" class="text-decoration-none">

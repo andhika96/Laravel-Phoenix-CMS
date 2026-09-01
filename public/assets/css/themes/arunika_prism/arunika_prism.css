@@ -3082,6 +3082,12 @@ html[data-bs-theme=dark] .ph-theme-arunika-prism
 	--ph-content-bg: #202120;
 }
 
+html[data-bs-theme=light][data-ph-theme-color="cool-gray"] .ph-theme-arunika-prism
+{
+	--ph-prism-sidebar-hover: rgba(255, 255, 255, 0.86);
+	--ph-prism-sidebar-hover-shadow: 0 5px 16px rgba(60, 44, 78, 0.05);
+}
+
 .ph-theme-arunika-prism .ph-main-panel,
 .ph-theme-arunika-prism .ph-scrollable-content
 {

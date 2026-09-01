@@ -1,0 +1,203 @@
+<!doctype html>
+<html data-bs-theme="light" style="--ph-theme-primary: #0F766E; --ph-theme-surface-tint: #0F766E;">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Arunika Equinox Teal Mist implementation harness</title>
+	<link rel="stylesheet" href="../../../../public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css">
+	<link rel="stylesheet" href="../../../../public/assets/plugins/fontawesome/5.15.3/css/all.min.css">
+	<link rel="stylesheet" href="../../../../public/assets/css/themes/arunika_equinox/arunika_equinox.css">
+	<style>
+		html,
+		body
+		{
+			width: 100%;
+			height: 100%;
+		}
+
+		*,
+		*::before,
+		*::after
+		{
+			box-sizing: border-box;
+		}
+
+		.ph-app-shell
+		{
+			display: flex !important;
+			flex-direction: row;
+			min-height: 100%;
+		}
+
+		.ph-sidebar
+		{
+			flex: 0 0 auto;
+		}
+
+		.ph-layout-right
+		{
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+
+		.ph-equinox-dashboard-hero > .row
+		{
+			display: flex !important;
+			flex-wrap: nowrap;
+			column-gap: 16px;
+		}
+
+		.ph-equinox-dashboard-hero > .row > .col-auto
+		{
+			width: auto;
+			flex: 0 0 auto;
+		}
+
+		.ph-equinox-dashboard-hero > .row > .col
+		{
+			width: auto;
+			flex: 1 0 0%;
+		}
+
+		.ph-theme-arunika-equinox .ph-sidebar::after
+		{
+			background-image: url("http://laravel-13-phoenix.aruna/assets/images/themes/arunika_equinox/arunika-equinox-sidebar-landscape.png");
+		}
+
+		.ph-sidebar-toggle
+		{
+			width: 40px;
+			height: 40px;
+			border: 0;
+			color: var(--ph-equinox-muted);
+			background: transparent;
+		}
+
+		.ph-header-user-avatar
+		{
+			width: 36px;
+			height: 36px;
+			display: grid;
+			place-items: center;
+			border-radius: 50%;
+			color: #ffffff;
+			background: var(--ph-equinox-accent);
+		}
+
+		.ph-header-profile
+		{
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			color: var(--ph-equinox-text);
+		}
+
+		.ph-header-profile strong,
+		.ph-header-profile small
+		{
+			display: block;
+		}
+
+		.ph-header-profile small
+		{
+			color: var(--ph-equinox-muted);
+		}
+
+		.ph-equinox-dashboard-grid .row
+		{
+			row-gap: 24px;
+		}
+	</style>
+</head>
+<body class="ph-theme-arunika-equinox">
+	<div class="ph-app-shell d-flex w-100 h-100">
+		<aside class="ph-sidebar ph-expanded" aria-label="Main navigation">
+			<div class="ph-sidebar-logo-container">
+				<span class="ph-app-logo-initial" aria-hidden="true">L</span>
+				<span class="ph-app-logo-text">LaraPhoenix CMS</span>
+			</div>
+			<div id="sidebar-scroll-content">
+				<div class="ph-list-group-wrapper">
+					<a class="list-group-item list-group-item-action" href="#visit-site">
+						<span class="ph-nav-icon"><i class="fal fa-link" aria-hidden="true"></i></span>
+						<span class="ph-nav-text">Visit Site</span>
+					</a>
+					<a id="dashboard" class="list-group-item list-group-item-action active" href="#dashboard">
+						<span class="ph-nav-icon"><i class="fal fa-home" aria-hidden="true"></i></span>
+						<span class="ph-nav-text">Dashboard</span>
+					</a>
+					<div class="ph-nav-category">ALL MENUS</div>
+					<a id="manage-articles" class="list-group-item list-group-item-action" href="#manage-articles">
+						<span class="ph-nav-icon"><i class="fal fa-newspaper" aria-hidden="true"></i></span>
+						<span class="ph-nav-text">Manage Articles</span>
+					</a>
+					<a class="list-group-item list-group-item-action" href="#manage-cover-image">
+						<span class="ph-nav-icon"><i class="fal fa-puzzle-piece" aria-hidden="true"></i></span>
+						<span class="ph-nav-text">Manage Cover Image</span>
+					</a>
+					<a class="list-group-item list-group-item-action" href="#manage-event">
+						<span class="ph-nav-icon"><i class="fal fa-calendar-star" aria-hidden="true"></i></span>
+						<span class="ph-nav-text">Manage Event</span>
+					</a>
+				</div>
+			</div>
+		</aside>
+
+		<div class="ph-layout-right">
+			<header class="ph-top-bar">
+				<button class="ph-sidebar-toggle" type="button" aria-label="Toggle navigation">
+					<i class="fal fa-sidebar" aria-hidden="true"></i>
+				</button>
+				<div class="ph-search-container ms-4">
+					<i class="fal fa-search me-3" aria-hidden="true"></i>
+					<span class="ph-search-input">Find something</span>
+				</div>
+				<div class="ph-header-actions ms-auto">
+					<div class="ph-header-profile">
+						<span class="ph-header-user-avatar" aria-hidden="true">A</span>
+						<span>
+							<strong>Administrator</strong>
+							<small>Super Admin</small>
+						</span>
+					</div>
+				</div>
+			</header>
+
+			<main class="ph-main-panel">
+				<div class="ph-scrollable-content">
+					<section class="ph-content p-3 mb-3 rounded ph-equinox-dashboard-hero">
+						<div class="row g-3 align-items-center">
+							<div class="col-auto">
+								<div class="ph-equinox-dashboard-hero-icon" aria-hidden="true">
+									<i class="fad fa-users-class"></i>
+								</div>
+							</div>
+							<div class="col d-flex align-items-center">
+								<div>
+									<h4 class="mb-0">Awesome Admin Panel</h4>
+									<p class="ph-equinox-dashboard-hero-subtitle mb-0">Manage and control your CMS with ease</p>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<section class="ph-content p-4 rounded ph-equinox-dashboard-grid">
+						<div class="row g-5 g-lg-4 mt-0 text-center">
+							<div class="col-6 col-md-3 col-xl-2"><a href="#site-settings"><div class="d-block mb-2"><i class="fad fa-cogs fa-3x"></i></div><span class="lead">Site Settings</span></a></div>
+							<div class="col-6 col-md-3 col-xl-2"><a href="#menu-access"><div class="d-block mb-2"><i class="fad fa-users-class fa-3x"></i></div><span class="lead">Manage Menu Access</span></a></div>
+							<div class="col-6 col-md-3 col-xl-2"><a href="#header-navigation"><div class="d-block mb-2"><i class="fad fa-browser fa-3x"></i></div><span class="lead">Manage Header Navigation</span></a></div>
+							<div class="col-6 col-md-3 col-xl-2"><a href="#users"><div class="d-block mb-2"><i class="fad fa-users fa-3x"></i></div><span class="lead">Manage Users</span></a></div>
+							<div class="col-6 col-md-3 col-xl-2"><a href="#roles"><div class="d-block mb-2"><i class="fad fa-project-diagram fa-3x"></i></div><span class="lead">Manage Roles</span></a></div>
+							<div class="col-6 col-md-3 col-xl-2"><a href="#permissions"><div class="d-block mb-2"><i class="fad fa-chart-network fa-3x"></i></div><span class="lead">Manage Permissions</span></a></div>
+							<div class="col-6 col-md-3 col-xl-2"><a href="#smtp"><div class="d-block mb-2"><i class="fad fa-envelope fa-3x"></i></div><span class="lead">SMTP Settings</span></a></div>
+							<div class="col-6 col-md-3 col-xl-2"><a href="#languages"><div class="d-block mb-2"><i class="fad fa-language fa-3x"></i></div><span class="lead">Manage Languages</span></a></div>
+							<div class="col-6 col-md-3 col-xl-2"><a href="#appearance"><div class="d-block mb-2"><i class="fad fa-puzzle-piece fa-3x"></i></div><span class="lead">Manage Appearance</span></a></div>
+							<div class="col-6 col-md-3 col-xl-2"><a href="#themes"><div class="d-block mb-2"><i class="fad fa-swatchbook fa-3x"></i></div><span class="lead">Manage Themes</span></a></div>
+						</div>
+					</section>
+				</div>
+			</main>
+		</div>
+	</div>
+</body>
+</html>

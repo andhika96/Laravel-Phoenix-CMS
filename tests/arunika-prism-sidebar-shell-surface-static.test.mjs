@@ -29,14 +29,22 @@ test('Arunika Prism app shell paints one continuous sidebar gradient without an 
 test('Arunika Prism decouples sidebar hover contrast from the ambient gradient', () => {
   assert.match(
     css,
-    /\.ph-theme-arunika-prism\s*\{[^}]*--ph-prism-sidebar-hover:\s*color-mix\(in srgb, var\(--ph-theme-primary\), white 94%\);[^}]*--ph-prism-sidebar-hover-shadow:\s*0 2px 8px rgba\(42, 35, 57, 0\.06\);/s,
+    /\.ph-theme-arunika-prism\s*\{[^}]*--ph-prism-sidebar-hover:\s*var\(--ph-theme-hover-surface,\s*color-mix\(in srgb,\s*var\(--ph-theme-primary\),\s*white 94%\)\);[^}]*--ph-prism-sidebar-hover-shadow:\s*0 2px 8px rgba\(42,\s*35,\s*57,\s*0\.06\);/s,
   );
   assert.match(
     css,
-    /html\[data-bs-theme=dark\]\s+\.ph-theme-arunika-prism\s*\{[^}]*--ph-prism-sidebar-hover:\s*rgba\(255, 255, 255, 0\.09\);[^}]*--ph-prism-sidebar-hover-shadow:\s*0 2px 8px rgba\(0, 0, 0, 0\.18\);/s,
+    /html\[data-bs-theme=dark\]\s+\.ph-theme-arunika-prism\s*\{[^}]*--ph-prism-sidebar-hover:\s*var\(--ph-theme-hover-surface,\s*rgba\(255,\s*255,\s*255,\s*0\.09\)\);[^}]*--ph-prism-sidebar-hover-shadow:\s*0 2px 8px rgba\(0,\s*0,\s*0,\s*0\.18\);/s,
   );
   assert.match(
     css,
     /\.ph-theme-arunika-prism\s+\.ph-sidebar\s+\.list-group-item-action:hover,\s*\.ph-theme-arunika-prism\s+\.ph-sidebar\s+\.list-group-item-action:focus\s*\{[^}]*background:\s*var\(--ph-prism-sidebar-hover\);[^}]*box-shadow:\s*var\(--ph-prism-sidebar-hover-shadow\);/s,
+  );
+});
+
+test('Arunika Prism matches Aurora hover treatment for light cool-gray', () => {
+  assert.match(
+    css,
+    /html\[data-bs-theme=light\]\[data-ph-theme-color="cool-gray"\]\s+\.ph-theme-arunika-prism\s*\{[^}]*--ph-prism-sidebar-hover:\s*rgba\(255,\s*255,\s*255,\s*0\.86\);[^}]*--ph-prism-sidebar-hover-shadow:\s*0 5px 16px rgba\(60,\s*44,\s*78,\s*0\.05\);/s,
+    'light cool-gray Prism should use the same white hover surface and shadow as Aurora',
   );
 });

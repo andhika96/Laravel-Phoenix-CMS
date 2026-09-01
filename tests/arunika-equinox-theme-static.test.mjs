@@ -7,11 +7,13 @@ const root = process.cwd();
 const paths = {
   auth: 'resources/views/themes/arunika_equinox/auth/auth_layout.blade.php',
   layout: 'resources/views/themes/arunika_equinox/cms/cms_layout.blade.php',
+  dashboard: 'resources/views/awesome_admin/awesome_admin.blade.php',
   menu: 'resources/views/themes/arunika_equinox/components/menu.blade.php',
   frontend: 'resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php',
   css: 'public/assets/css/themes/arunika_equinox/arunika_equinox.css',
   js: 'public/assets/js/themes/arunika_equinox/arunika_equinox.js',
   preview: 'public/assets/images/themes/previews/arunika-equinox-theme-preview.png',
+  sidebarLandscape: 'public/assets/images/themes/arunika_equinox/arunika-equinox-sidebar-landscape.png',
   migration: 'database/migrations/2026_07_18_143000_add_arunika_equinox_theme.php',
 };
 
@@ -25,11 +27,15 @@ test('Arunika Equinox owns an isolated runtime theme and preview', () => {
 
 test('Arunika Equinox V2 preserves dynamic CMS content with a reference-aligned header profile', () => {
   const layout = read(paths.layout);
+  const dashboard = read(paths.dashboard);
 
   assert.match(layout, /themes\.arunika_equinox\.components\.menu/);
   assert.match(layout, /assets\/css\/themes\/arunika_equinox\/arunika_equinox\.css/);
   assert.match(layout, /assets\/js\/themes\/arunika_equinox\/arunika_equinox\.js/);
   assert.match(layout, /class="ph-theme-arunika-equinox"/);
+  assert.match(dashboard, /ph-equinox-dashboard-hero/);
+  assert.match(dashboard, /ph-equinox-dashboard-grid/);
+  assert.match(dashboard, /Manage and control your CMS with ease/);
   assert.match(layout, /menu_versioning\(\)/);
   assert.match(layout, /@yield\('content'\)/);
   assert.match(layout, /class="dropdown ph-header-profile"/);
@@ -90,23 +96,23 @@ test('Arunika Equinox V2 defines the approved mint light and deep teal dark syst
   assert.match(css, /--ph-equinox-accent:\s*var\(--ph-theme-primary\)/i);
   assert.match(
     css,
-    /--ph-equinox-canvas:\s*color-mix\(in srgb,\s*var\(--ph-theme-surface-tint\) 10%,\s*#eaf2ef 90%\)/i,
+    /--ph-equinox-canvas:\s*color-mix\(in srgb,\s*var\(--ph-theme-surface-tint\) 3%,\s*#f7faf9 97%\)/i,
   );
   assert.match(
     css,
-    /--ph-equinox-sidebar-start:\s*color-mix\(in srgb,\s*var\(--ph-theme-surface-tint\) 14%,\s*#dfece7 86%\)/i,
+    /--ph-equinox-sidebar-start:\s*color-mix\(in srgb,\s*var\(--ph-theme-surface-tint\) 6%,\s*#edf6f3 94%\)/i,
   );
   assert.match(
     css,
-    /--ph-equinox-sidebar-end:\s*color-mix\(in srgb,\s*var\(--ph-theme-surface-tint\) 5%,\s*#f2ebe3 95%\)/i,
+    /--ph-equinox-sidebar-end:\s*color-mix\(in srgb,\s*var\(--ph-theme-surface-tint\) 2%,\s*#f2f3f1 98%\)/i,
   );
-  assert.match(css, /--ph-equinox-panel:\s*rgba\(249,\s*253,\s*251,\s*0\.46\)/i);
+  assert.match(css, /--ph-equinox-panel:\s*rgba\(255,\s*255,\s*255,\s*0\.86\)/i);
   assert.match(
     css,
-    /--ph-equinox-border:\s*color-mix\(in srgb,\s*var\(--ph-theme-surface-tint\) 18%,\s*#c8d8d3 82%\)/i,
+    /--ph-equinox-border:\s*color-mix\(in srgb,\s*var\(--ph-theme-surface-tint\) 8%,\s*#dce8e4 92%\)/i,
   );
-  assert.match(css, /--ph-equinox-text:\s*#142a27/i);
-  assert.match(css, /--ph-equinox-muted:\s*#647a76/i);
+  assert.match(css, /--ph-equinox-text:\s*#17332f/i);
+  assert.match(css, /--ph-equinox-muted:\s*#526c67/i);
   assert.match(
     css,
     /html\[data-bs-theme=dark\]\s+body\.ph-theme-arunika-equinox\s*\{[^}]*--ph-equinox-canvas:\s*#03433f;[^}]*--ph-equinox-sidebar-start:\s*#0c514c;[^}]*--ph-equinox-text:\s*#f5fffc;/s,
@@ -134,7 +140,7 @@ test('Arunika Equinox V2 recreates the edge-to-edge reference shell', () => {
   );
   assert.match(
     css,
-    /\.ph-theme-arunika-equinox\s+\.ph-sidebar,\s*\.ph-theme-arunika-equinox\s+\.ph-sidebar\.ph-expanded\s*\{[^}]*height:\s*calc\(100% - 28px\);[^}]*margin:\s*14px 0 14px 14px;[^}]*background:\s*linear-gradient\(180deg,\s*var\(--ph-equinox-sidebar-start\)[^}]*border:\s*1px solid var\(--ph-equinox-sidebar-border-strong\);[^}]*border-radius:\s*26px;[^}]*box-shadow:\s*var\(--ph-equinox-sidebar-shadow\);/s,
+    /\.ph-theme-arunika-equinox\s+\.ph-sidebar,\s*\.ph-theme-arunika-equinox\s+\.ph-sidebar\.ph-expanded\s*\{[^}]*height:\s*calc\(100% - 28px\);[^}]*margin:\s*14px 0 14px 14px;[^}]*background:\s*linear-gradient\(180deg,\s*var\(--ph-equinox-sidebar-start\)[^}]*border:\s*1px solid var\(--ph-equinox-sidebar-border-strong\);[^}]*border-radius:\s*20px;[^}]*box-shadow:\s*var\(--ph-equinox-sidebar-shadow\);/s,
   );
   assert.match(
     css,
@@ -187,6 +193,47 @@ test('Arunika Equinox V2 recreates the edge-to-edge reference shell', () => {
   assert.match(
     css,
     /\.ph-theme-arunika-equinox\s+\.ph-sidebar:not\(\.ph-expanded\)\s+\.list-group-item\s*\{[^}]*width:\s*44px;[^}]*margin:\s*2px auto;[^}]*padding:\s*0;[^}]*justify-content:\s*center;/s,
+  );
+});
+
+test('Arunika Equinox Teal Mist uses compact dashboard hierarchy and clear states', () => {
+  const css = read(paths.css);
+
+  assert.match(css, /--ph-equinox-menu-hover:\s*rgba\(255,\s*255,\s*255,\s*0\.88\)/i);
+  assert.match(css, /--ph-equinox-menu-hover-shadow:\s*0 5px 16px rgba\(60,\s*44,\s*78,\s*0\.05\)/i);
+  assert.match(css, /--ph-equinox-menu-active:\s*color-mix\(in srgb,\s*var\(--ph-equinox-accent\) 7%,\s*#ffffff 93%\)/i);
+  assert.match(
+    css,
+    /\.ph-theme-arunika-equinox\s+\.ph-sidebar\s+\.list-group-item-action:hover,\s*\.ph-theme-arunika-equinox\s+\.ph-sidebar\s+\.list-group-item-action:focus\s*\{[^}]*background:\s*var\(--ph-equinox-menu-hover\);[^}]*box-shadow:\s*var\(--ph-equinox-menu-hover-shadow\);/s,
+  );
+  assert.match(
+    css,
+    /\.ph-theme-arunika-equinox\s+\.ph-sidebar\s+\.list-group-item\.active,\s*\.ph-theme-arunika-equinox\s+\.ph-sidebar\s+\.list-group-item\[aria-expanded="true"\]\s*\{[^}]*color:\s*var\(--ph-equinox-accent\);[^}]*background:\s*var\(--ph-equinox-menu-active\);/s,
+  );
+  assert.match(
+    css,
+    /\.ph-theme-arunika-equinox\s+\.ph-equinox-dashboard-grid[\s\S]*?a:hover,[\s\S]*?\{[^}]*background:\s*var\(--ph-equinox-menu-hover\);[^}]*box-shadow:\s*var\(--ph-equinox-menu-hover-shadow\);/s,
+  );
+  assert.match(
+    css,
+    /html\[data-bs-theme=dark\]\s+\.ph-theme-arunika-equinox\s+\.ph-sidebar\s+\.list-group-item\.active,\s*html\[data-bs-theme=dark\]\s+\.ph-theme-arunika-equinox\s+\.ph-sidebar\s+\.list-group-item\[aria-expanded="true"\]\s*\{[^}]*color:\s*var\(--ph-equinox-text\);/s,
+  );
+  assert.match(css, /\.ph-theme-arunika-equinox\s+\.ph-equinox-dashboard-hero\s*\{[^}]*min-height:\s*152px;/s);
+  assert.match(css, /\.ph-theme-arunika-equinox\s+\.ph-equinox-dashboard-hero\s+h4\s*\{[^}]*font-size:\s*28px;/s);
+  assert.match(css, /\.ph-theme-arunika-equinox\s+\.ph-equinox-dashboard-grid\s+\.lead\s*\{[^}]*font-size:\s*15px;/s);
+  assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/s);
+});
+
+test('Arunika Equinox renders the approved mountain landscape only on the expanded sidebar', () => {
+  const css = read(paths.css);
+
+  assert.match(
+    css,
+    /\.ph-theme-arunika-equinox\s+\.ph-sidebar::after\s*\{[^}]*background:\s*url\("\.\.\/\.\.\/\.\.\/images\/themes\/arunika_equinox\/arunika-equinox-sidebar-landscape\.png"\)\s+center\s+calc\(100%\s+\+\s+24px\)\s+\/\s+100%\s+auto\s+no-repeat;/s,
+  );
+  assert.match(
+    css,
+    /\.ph-theme-arunika-equinox\s+\.ph-sidebar:not\(\.ph-expanded\)::after\s*\{[^}]*opacity:\s*0;/s,
   );
 });
 
