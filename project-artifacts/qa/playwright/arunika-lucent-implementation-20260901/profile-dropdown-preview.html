@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light" style="--ph-theme-primary:#1FA675;--ph-theme-surface-tint:#1FA675;">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="data:,">
+	<title>Arunika Lucent profile dropdown recommendation</title>
+	<link rel="stylesheet" href="../../../../public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css">
+	<link rel="stylesheet" href="../../../../public/assets/plugins/fontawesome/5.15.3/css/all.min.css">
+	<link rel="stylesheet" href="../../../../public/assets/css/theme-responsive-typography.css">
+	<link rel="stylesheet" href="../../../../public/assets/css/themes/arunika_lucent/arunika_lucent.css">
+	<style>
+		html,
+		body
+		{
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			background: #ffffff;
+		}
+
+		*,
+		*::before,
+		*::after
+		{
+			box-sizing: border-box;
+		}
+
+		body
+		{
+			font-family: Arial, sans-serif;
+		}
+
+		.ph-app-shell
+		{
+			display: flex !important;
+			width: 100%;
+			height: 100%;
+			flex-direction: row;
+		}
+
+		.ph-sidebar
+		{
+			flex: 0 0 384px;
+			width: 384px !important;
+			min-width: 384px !important;
+			background: #fafafa !important;
+		}
+
+		.ph-layout-right
+		{
+			flex: 1 1 auto;
+			min-width: 0;
+			background: #ffffff !important;
+		}
+
+		.ph-lucent-sidebar-account
+		{
+			grid-template-columns: minmax(0, 1fr) 36px;
+			gap: 12px !important;
+			padding: 20px 20px 14px !important;
+		}
+
+		.ph-lucent-sidebar-account .ph-sidebar-user-avatar
+		{
+			border: 1px solid #dfe4e1;
+			box-shadow: 0 0 0 3px #ffffff;
+			background: #ffffff;
+		}
+
+		.ph-lucent-sidebar-account .ph-sidebar-user-avatar img
+		{
+			border: 1px solid #e7e9e8;
+		}
+
+		.ph-lucent-sidebar-account .ph-sidebar-profile-menu.show
+		{
+			position: absolute !important;
+			top: calc(100% + 12px) !important;
+			left: 0 !important;
+			width: min(327px, calc(100vw - 32px));
+			margin: 0 !important;
+			padding: 8px;
+			border: 1px solid #dfe4e1;
+			border-radius: 14px;
+			background: #ffffff;
+			box-shadow: 0 14px 30px rgba(27, 39, 33, 0.14);
+		}
+
+		.ph-lucent-sidebar-account .ph-sidebar-profile-menu.show::before
+		{
+			content: "";
+			position: absolute;
+			top: -7px;
+			left: 38px;
+			width: 13px;
+			height: 13px;
+			border-top: 1px solid #dfe4e1;
+			border-left: 1px solid #dfe4e1;
+			background: #ffffff;
+			transform: rotate(45deg);
+		}
+
+		.ph-sidebar-user-card
+		{
+			cursor: default !important;
+		}
+
+		.ph-sidebar-user-card:hover
+		{
+			background: transparent !important;
+		}
+
+		.ph-profile-menu-user
+		{
+			border: 1px solid #e7e9e8;
+			border-radius: 12px;
+			background: #f8fbfa;
+		}
+
+		.ph-profile-menu-section
+		{
+			padding: 5px 0;
+		}
+
+		.ph-profile-menu-section + .ph-profile-menu-section
+		{
+			border-top: 1px solid #e7e9e8;
+		}
+
+		.ph-profile-menu-section .dropdown-item
+		{
+			min-height: 44px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			border-radius: 8px;
+			color: #171717;
+		}
+
+		.ph-profile-menu-section .dropdown-item:hover
+		{
+			background: #f1f2f2;
+		}
+
+		.ph-profile-menu-section .dropdown-item i
+		{
+			width: 20px;
+			color: #5f6361;
+			text-align: center;
+		}
+
+		.ph-profile-switch
+		{
+			margin-left: auto;
+		}
+
+		.ph-profile-menu-footer .dropdown-item.text-danger,
+		.ph-profile-menu-footer .dropdown-item.text-danger i
+		{
+			color: #e74c55 !important;
+		}
+
+		.ph-preview-content
+		{
+			margin: 32px;
+			padding: 24px;
+			border: 1px solid #e7e9e8;
+			border-radius: 10px;
+			color: #171717;
+			background: #ffffff;
+		}
+
+		.ph-preview-content h1
+		{
+			margin: 0 0 14px;
+			font-size: 24px;
+		}
+
+		.ph-preview-content p
+		{
+			max-width: 560px;
+			color: #5f6361;
+			font-size: 14px;
+			line-height: 1.6;
+		}
+	</style>
+</head>
+<body class="ph-theme-arunika-lucent">
+	<div class="ph-app-shell">
+		<aside class="ph-sidebar ph-expanded" id="sidebar" aria-label="Main navigation">
+			<div class="ph-lucent-sidebar-account" aria-label="Account">
+				<div class="dropdown ph-sidebar-profile">
+					<button class="ph-sidebar-user-card" type="button" aria-label="Open profile menu">
+						<span class="ph-sidebar-user-avatar"><img src="../../../../public/assets/logos/laraphoenix_onlybird_colored.png" alt=""></span>
+						<span class="ph-sidebar-user-meta"><strong>Administrator</strong><span>Super Admin</span></span>
+						<i class="fal fa-ellipsis-v ph-lucent-account-menu" aria-hidden="true"></i>
+					</button>
+					<div class="dropdown-menu ph-header-profile-menu ph-sidebar-profile-menu show">
+						<div class="ph-profile-menu-user">
+							<span class="ph-profile-menu-avatar"><img src="../../../../public/assets/logos/laraphoenix_onlybird_colored.png" alt=""></span>
+							<span class="ph-profile-menu-identity"><strong>Administrator</strong><span>Super Admin</span></span>
+						</div>
+						<div class="ph-profile-menu-section">
+							<a class="dropdown-item" href="#profile"><i class="fal fa-user-circle fa-fw" aria-hidden="true"></i><span>Profile</span></a>
+							<a class="dropdown-item" href="#settings"><i class="fal fa-cog fa-fw" aria-hidden="true"></i><span>Settings</span></a>
+							<button class="dropdown-item" type="button"><i class="fas fa-sun fa-fw" aria-hidden="true"></i><span>Dark Mode</span><span class="ph-profile-switch" aria-hidden="true"><span></span></span></button>
+							<a class="dropdown-item" href="#color"><i class="fal fa-palette fa-fw" aria-hidden="true"></i><span>Theme Color</span><i class="fal fa-chevron-right ms-auto" aria-hidden="true"></i></a>
+						</div>
+						<div class="ph-profile-menu-section ph-profile-menu-footer"><a class="dropdown-item text-danger" href="#logout"><i class="fal fa-sign-out-alt fa-fw" aria-hidden="true"></i><span>Logout</span></a></div>
+					</div>
+				</div>
+				<button class="ph-lucent-sidebar-toggle" type="button" aria-label="Hide sidebar" aria-expanded="true" title="Hide sidebar"><svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect><path d="M8.25 3.25V20.75"></path><path d="M16 8.75L12.75 12L16 15.25"></path></svg></button>
+			</div>
+			<div id="sidebar-scroll-content">
+				<div class="list-group list-group-flush w-100">
+					<div class="ph-list-group-wrapper">
+						<a class="list-group-item list-group-item-action" href="#dashboard"><span class="ph-nav-icon"><i class="fal fa-home" aria-hidden="true"></i></span><span class="ph-nav-text">Dashboard</span></a>
+						<a class="list-group-item list-group-item-action" href="#site"><span class="ph-nav-icon"><i class="fal fa-desktop" aria-hidden="true"></i></span><span class="ph-nav-text">View site</span></a>
+						<a class="list-group-item list-group-item-action active" href="#articles"><span class="ph-nav-icon"><i class="fal fa-newspaper" aria-hidden="true"></i></span><span class="ph-nav-text">Manage Articles</span></a>
+						<a class="list-group-item list-group-item-action" href="#cover"><span class="ph-nav-icon"><i class="fal fa-puzzle-piece" aria-hidden="true"></i></span><span class="ph-nav-text">Manage Cover Image</span></a>
+						<a class="list-group-item list-group-item-action" href="#event"><span class="ph-nav-icon"><i class="fal fa-calendar-star" aria-hidden="true"></i></span><span class="ph-nav-text">Manage Event</span></a>
+					</div>
+				</div>
+			</div>
+			<div class="ph-lucent-sidebar-utilities"><a href="#admin"><i class="fal fa-user-secret" aria-hidden="true"></i><span>Awesome Admin</span></a><a href="#settings"><i class="fal fa-cog" aria-hidden="true"></i><span>Settings</span></a></div>
+		</aside>
+		<main class="ph-layout-right"><section class="ph-preview-content"><h1>Manage Article</h1><p>Preview posisi profile dropdown, border foto, dan jarak tombol hide/show sidebar. Konten CMS tetap menggunakan section dinamis dengan panel border dan padding.</p></section></main>
+	</div>
+</body>
+</html>

@@ -103,7 +103,19 @@ class ThemesSeeder extends Seeder
 			'theme_version' => '1.0.0',
 			'updated_at' => '2026-07-18 00:00:00',
 			'created_at' => '2026-07-18 00:00:00'
-        ]
-        ]);
+		],
+		[
+			'id' => 9,
+			'theme_code' => 'arunika_lucent',
+			'theme_name' => 'Arunika Lucent',
+			'theme_foldername' => 'arunika_lucent',
+			'theme_cms' => 'cms_layout',
+			'theme_auth' => 'auth_layout',
+			'theme_frontend' => 'frontend_layout',
+			'theme_version' => '1.0.0',
+			'updated_at' => '2026-09-01 00:00:00',
+			'created_at' => '2026-09-01 00:00:00'
+		]
+		]);
     }
 }

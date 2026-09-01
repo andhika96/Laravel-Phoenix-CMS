@@ -6,15 +6,18 @@ import test from 'node:test';
 const root = process.cwd();
 const typographyPath = path.join(root, 'public/assets/css/theme-responsive-typography.css');
 const themeLayouts = [
+    'resources/views/themes/default/cms/cms_layout.blade.php',
+    'resources/views/themes/calm_green/cms/cms_layout.blade.php',
     'resources/views/themes/arunika_aurora/cms/cms_layout.blade.php',
     'resources/views/themes/arunika_equinox/cms/cms_layout.blade.php',
     'resources/views/themes/arunika_mosaic/cms/cms_layout.blade.php',
     'resources/views/themes/arunika_prism/cms/cms_layout.blade.php',
+    'resources/views/themes/arunika_lucent/cms/cms_layout.blade.php',
 ].map((file) => path.join(root, file));
 
 const read = (filePath) => readFileSync(filePath, 'utf8');
 
-test('every manageable Arunika CMS theme loads the shared responsive typography asset', () => {
+test('every active CMS theme loads the shared responsive typography asset', () => {
     assert.equal(
         existsSync(typographyPath),
         true,
@@ -66,7 +69,7 @@ test('compact desktop derives operational and sidebar text from Site Config', ()
     const css = read(typographyPath);
 
     assert.match(css, /--ph-adaptive-font-size:\s*var\(--ph-font-size, 1rem\);/);
-    assert.match(css, /--ph-adaptive-font-size:\s*min\(var\(--ph-font-size, 1rem\), max\(12px, calc\(var\(--ph-font-size, 1rem\) - 1\.5px\)\)\);/);
+    assert.match(css, /--ph-adaptive-font-size:\s*min\(var\(--ph-font-size, 1rem\), max\(13px, calc\(var\(--ph-font-size, 1rem\) - 1\.5px\)\)\);/);
     assert.match(css, /body\s*\{\s*font-size:\s*var\(--ph-adaptive-font-size\);/);
     assert.match(css, /font-family:\s*var\(--ph-font-family\);/);
     assert.match(css, /\.form-control/);
@@ -85,7 +88,7 @@ test('operational controls inherit the computed Site Config size for px, em, and
     );
     assert.match(
         css,
-        /:where\(\.list-group-item, \.ph-nav-text, \.arv7-parent-menu-name, \.arv7-menu-name\)\s*\{\s*font-size:\s*inherit !important;/,
+        /:where\(\.list-group-item, \.ph-nav-text, \.arv7-parent-menu-name, \.arv7-menu-name\)\s*\{\s*font-size:\s*min\(13px, var\(--ph-adaptive-font-size\)\) !important;/,
     );
 });
 
@@ -121,4 +124,21 @@ test('profile dropdown uses the compact Site Config scale while preserving its h
         css,
         /body \.ph-header-profile-menu :where\(\.ph-profile-menu-identity span, \.ph-profile-color-label\)\s*\{\s*font-size:\s*min\(11px, max\(10px, calc\(var\(--ph-profile-menu-font-size\) - 1px\)\)\) !important;/,
     );
+});
+
+test('global typography matrix covers mobile tablet and compact laptop ranges', () => {
+    const css = read(typographyPath);
+
+    assert.match(css, /body\s+:where\(p\)\s*\{\s*font-size:\s*1em;/);
+    assert.match(css, /body\s+:where\(small\)\s*\{\s*font-size:\s*0\.875em;/);
+    assert.match(css, /body\s+:where\(label, \.form-label, button, input, select, textarea\)\s*\{\s*font-size:\s*inherit\s*!important;/);
+    assert.match(css, /:where\(h5, \.h5\)/);
+    assert.match(css, /:where\(h6, \.h6\)/);
+    assert.match(css, /@media \(max-width: 575px\)/);
+    assert.match(css, /@media \(min-width: 576px\) and \(max-width: 767px\)/);
+    assert.match(css, /@media \(min-width: 768px\) and \(max-width: 991px\)/);
+    assert.match(css, /@media \(min-width: 992px\) and \(max-width: 1199px\)/);
+    assert.match(css, /@media \(min-width: 1200px\) and \(max-height: 1100px\)/);
+    assert.match(css, /--ph-global-rfs-h1:\s*1\.5rem/);
+    assert.match(css, /--ph-global-rfs-h6:\s*0\.95rem/);
 });

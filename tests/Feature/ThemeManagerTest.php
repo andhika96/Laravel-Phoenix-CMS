@@ -26,6 +26,7 @@ class ThemeManagerTest extends TestCase
 			->assertSee('Arunika Aurora')
 			->assertSee('Arunika Prism')
 			->assertSee('Arunika Equinox')
+			->assertSee('Arunika Lucent')
 			->assertDontSee('Browse installed themes');
 	}
 

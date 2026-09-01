@@ -4,7 +4,7 @@ import path from 'node:path';
 import test from 'node:test';
 
 const coolGray = '#C7CCD8';
-const themes = ['arunika_mosaic', 'arunika_aurora', 'arunika_prism', 'arunika_equinox'];
+const themes = ['arunika_mosaic', 'arunika_aurora', 'arunika_prism', 'arunika_equinox', 'arunika_lucent'];
 
 for (const theme of themes) {
     test(`${theme} exposes cool gray once as the final theme color`, () => {

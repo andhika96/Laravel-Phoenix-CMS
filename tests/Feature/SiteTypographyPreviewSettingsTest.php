@@ -124,6 +124,7 @@ class SiteTypographyPreviewSettingsTest extends TestCase
 			'arunika_aurora',
 			'arunika_prism',
 			'arunika_equinox',
+			'arunika_lucent',
 		];
 		$themes = DB::table('themes')->whereIn('theme_code', $themeCodes)->get()->keyBy('theme_code');
 

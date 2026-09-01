@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light" style="--ph-font-family: Arial, sans-serif; --ph-font-size: 14px; --ph-theme-primary:#1FA675; --ph-theme-surface-tint:#1FA675;">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="data:,">
+	<title>Global responsive typography audit</title>
+	<link rel="stylesheet" href="../../../../public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css">
+	<link rel="stylesheet" href="../../../../public/assets/css/themes/arunika_lucent/arunika_lucent.css">
+	<link rel="stylesheet" href="../../../../public/assets/css/theme-responsive-typography.css">
+	<style>
+		html, body { width: 100%; min-height: 100%; margin: 0; }
+		* { box-sizing: border-box; }
+		.audit-shell { display: grid; grid-template-columns: minmax(160px, 240px) minmax(0, 1fr); min-height: 100vh; }
+		.ph-sidebar { position: static !important; width: auto !important; min-width: 0 !important; transform: none !important; padding: 20px 14px; border-right: 1px solid #e7e9e8; }
+		.ph-sidebar .list-group-item { width: 100% !important; justify-content: flex-start !important; }
+		.audit-main { min-width: 0; padding: 20px; }
+		.ph-content { padding: 20px; }
+		.audit-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+		.ph-header-profile-menu { position: static; display: block; width: 260px; margin-top: 18px; }
+		.ph-lucent-sidebar-utilities { position: static; margin-top: 24px; padding: 0 !important; }
+		@media (max-width: 767px) { .audit-shell { grid-template-columns: 1fr; } .ph-sidebar { display: none; } .audit-main { padding: 12px; } .ph-content { padding: 16px; } }
+	</style>
+</head>
+<body class="ph-theme-arunika-lucent">
+	<div class="audit-shell">
+		<aside class="ph-sidebar ph-expanded">
+			<div class="list-group ph-list-group-wrapper">
+				<a class="list-group-item"><span class="ph-nav-text">Main menu item</span></a>
+			</div>
+			<div class="ph-lucent-sidebar-utilities"><a><span>Awesome Admin</span></a><a><span>Settings</span></a></div>
+			<div class="ph-header-profile-menu"><a class="dropdown-item">Dropdown item</a></div>
+		</aside>
+		<main class="audit-main">
+			<section class="ph-content">
+				<h1>Heading H1</h1>
+				<h2>Heading H2</h2>
+				<h3>Heading H3</h3>
+				<h4>Heading H4</h4>
+				<h5>Heading H5</h5>
+				<h6>Heading H6</h6>
+				<p>Paragraph text for responsive typography measurement.</p>
+				<small>Small supporting text</small>
+				<div class="audit-controls">
+					<label class="form-label" for="audit-input">Form label</label>
+					<input class="form-control" id="audit-input" value="Input text">
+					<button class="btn btn-primary" type="button">Button text</button>
+					<table class="table"><tbody><tr><td>Table text</td></tr></tbody></table>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>

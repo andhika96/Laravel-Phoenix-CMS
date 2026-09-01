@@ -1,0 +1,28 @@
+[Tue Sep  1 23:49:02 2026] PHP 8.4.16 Development Server (http://127.0.0.1:8768) started
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:65094 Accepted
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:65094 [200]: GET /project-artifacts/qa/playwright/arunika-lucent-implementation-20260901/harness.html
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:65094 Closing
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:63700 Accepted
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:53952 Accepted
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:53267 Accepted
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:63700 [200]: GET /public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:55709 Accepted
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:53952 [200]: GET /public/assets/plugins/fontawesome/5.15.3/css/all.min.css
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:55709 [200]: GET /public/assets/css/theme-responsive-typography.css
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:65467 Accepted
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:63700 Closing
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:53952 Closing
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:53267 [200]: GET /public/assets/css/phoenix-cms.css
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:65467 [200]: GET /public/assets/css/themes/arunika_lucent/arunika_lucent.css
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:55709 Closing
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:53267 Closing
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:65467 Closing
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:61112 Accepted
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:61112 [200]: GET /public/assets/plugins/fontawesome/5.15.3/webfonts/fa-light-300.woff2
+[Tue Sep  1 23:49:16 2026] 127.0.0.1:61112 Closing
+[Tue Sep  1 23:53:04 2026] 127.0.0.1:56463 Accepted
+[Tue Sep  1 23:53:04 2026] 127.0.0.1:56463 [200]: GET /public/assets/css/theme-responsive-typography.css
+[Tue Sep  1 23:53:04 2026] 127.0.0.1:56463 Closing
+[Tue Sep  1 23:53:04 2026] 127.0.0.1:56464 Accepted
+[Tue Sep  1 23:53:04 2026] 127.0.0.1:56464 [200]: GET /public/assets/css/themes/arunika_lucent/arunika_lucent.css
+[Tue Sep  1 23:53:04 2026] 127.0.0.1:56464 Closing

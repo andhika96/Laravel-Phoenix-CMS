@@ -25,6 +25,11 @@ const concepts = [
         displayName: 'Arunika Equinox',
         preview: 'arunika-equinox-theme-preview.png',
     },
+    {
+        code: 'arunika_lucent',
+        displayName: 'Arunika Lucent',
+        preview: 'arunika-lucent-theme-preview.png',
+    },
 ];
 
 const activeRoots = [

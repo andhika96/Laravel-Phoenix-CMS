@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light" style="--ph-theme-primary: #1FA675; --ph-theme-surface-tint: #1FA675;">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="data:,">
+	<title>Arunika Lucent implementation harness</title>
+	<link rel="stylesheet" href="../../../../public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css">
+	<link rel="stylesheet" href="../../../../public/assets/plugins/fontawesome/5.15.3/css/all.min.css">
+	<link rel="stylesheet" href="../../../../public/assets/css/phoenix-cms.css">
+	<link rel="stylesheet" href="../../../../public/assets/css/theme-responsive-typography.css">
+	<link rel="stylesheet" href="../../../../public/assets/css/themes/arunika_lucent/arunika_lucent.css">
+	<style>
+		html,
+		body
+		{
+			width: 100%;
+			height: 100%;
+			margin: 0;
+		}
+
+		*,
+		*::before,
+		*::after
+		{
+			box-sizing: border-box;
+		}
+
+		.ph-app-shell
+		{
+			display: flex !important;
+			flex-direction: row;
+			min-height: 100%;
+		}
+
+		.ph-sidebar
+		{
+			flex: 0 0 auto;
+		}
+
+		.ph-layout-right
+		{
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+
+		.ph-lucent-appearance-page
+		{
+			max-width: none;
+			margin: 0;
+		}
+
+		.ph-lucent-page-header
+		{
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 18px;
+			padding-bottom: 18px;
+			border-bottom: 1px solid var(--ph-lucent-border);
+		}
+
+		.ph-lucent-page-header h1
+		{
+			margin: 0;
+			font-size: clamp(1.35rem, 1.6vw, 1.5rem);
+			font-weight: 750;
+			letter-spacing: -0.035em;
+		}
+
+		.ph-header-actions,
+		.ph-header-profile
+		{
+			display: flex;
+			align-items: center;
+		}
+
+		.ph-header-actions
+		{
+			gap: 12px;
+		}
+
+		.ph-header-profile
+		{
+			gap: 10px;
+			color: var(--ph-text-main);
+		}
+
+		.ph-header-profile strong,
+		.ph-header-profile small
+		{
+			display: block;
+		}
+
+		.ph-header-profile small
+		{
+			margin-top: 2px;
+			color: var(--ph-lucent-muted);
+			font-size: 12px;
+		}
+
+		.ph-header-user-avatar
+		{
+			width: 32px;
+			height: 32px;
+			display: grid;
+			place-items: center;
+			border: 1px solid var(--ph-lucent-border);
+			border-radius: 50%;
+			color: var(--ph-lucent-accent);
+			background: var(--ph-lucent-hover);
+			font-size: 13px;
+			font-weight: 750;
+		}
+
+		.ph-lucent-kebab
+		{
+			width: 34px;
+			height: 34px;
+			border: 0;
+			border-radius: 7px;
+			color: var(--ph-lucent-muted);
+			background: transparent;
+		}
+
+		.ph-lucent-kebab:hover
+		{
+			background: var(--ph-lucent-hover);
+			color: var(--ph-lucent-accent);
+		}
+
+		.ph-lucent-settings
+		{
+			padding: 6px 0 0;
+		}
+
+		.ph-lucent-setting-row
+		{
+			display: grid;
+			grid-template-columns: minmax(260px, 300px) minmax(0, 1fr);
+			gap: 36px;
+			align-items: center;
+			min-height: 82px;
+			padding: 18px 0;
+			border-bottom: 1px solid var(--ph-lucent-border);
+		}
+
+		.ph-lucent-setting-label strong,
+		.ph-lucent-setting-label span
+		{
+			display: block;
+		}
+
+		.ph-lucent-setting-label strong
+		{
+			font-size: 13px;
+			font-weight: 750;
+		}
+
+		.ph-lucent-setting-label span
+		{
+			margin-top: 4px;
+			color: var(--ph-lucent-muted);
+			font-size: 12px;
+			line-height: 1.45;
+		}
+
+		.ph-lucent-logo-control,
+		.ph-lucent-theme-options
+		{
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			flex-wrap: wrap;
+		}
+
+		.ph-lucent-logo-mark
+		{
+			width: 52px;
+			height: 52px;
+			display: grid;
+			place-items: center;
+			border: 1px solid var(--ph-lucent-border);
+			border-radius: 10px;
+			color: var(--ph-lucent-accent);
+			background: var(--ph-lucent-hover);
+			font-size: 21px;
+		}
+
+		.ph-lucent-color-dot
+		{
+			width: 24px;
+			height: 24px;
+			border: 2px solid transparent;
+			border-radius: 50%;
+			background: var(--dot-color);
+			box-shadow: 0 0 0 1px rgba(32, 38, 36, 0.12);
+		}
+
+		.ph-lucent-color-dot.is-selected
+		{
+			border-color: #ffffff;
+			box-shadow: 0 0 0 2px var(--ph-lucent-accent);
+		}
+
+		.ph-lucent-preview-card
+		{
+			width: 160px;
+			padding: 5px;
+			border: 2px solid var(--ph-lucent-accent);
+			border-radius: 9px;
+			background: var(--ph-lucent-content-surface);
+		}
+
+		.ph-lucent-preview-card > div
+		{
+			height: 66px;
+			border-radius: 5px;
+			background: linear-gradient(90deg, #ffffff 0 25%, #f2f4f3 25% 100%);
+		}
+
+		.ph-lucent-switch
+		{
+			position: relative;
+			width: 40px;
+			height: 22px;
+			border: 0;
+			border-radius: 999px;
+			background: var(--ph-lucent-accent);
+		}
+
+		.ph-lucent-switch::after
+		{
+			content: "";
+			position: absolute;
+			top: 3px;
+			right: 3px;
+			width: 16px;
+			height: 16px;
+			border-radius: 50%;
+			background: #ffffff;
+		}
+
+		.ph-lucent-select
+		{
+			width: min(280px, 100%);
+			min-height: 38px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0 12px;
+			border: 1px solid var(--ph-lucent-border);
+			border-radius: 7px;
+			color: var(--ph-text-main);
+			background: var(--ph-lucent-content-surface);
+			font-size: 13px;
+		}
+
+		.ph-lucent-actions
+		{
+			display: flex;
+			justify-content: flex-end;
+			gap: 10px;
+			padding-top: 22px;
+		}
+
+		@media (max-width: 700px)
+		{
+			.ph-lucent-setting-row
+			{
+				grid-template-columns: 1fr;
+				gap: 10px;
+			}
+
+			.ph-lucent-page-header
+			{
+				padding-bottom: 14px;
+			}
+		}
+	</style>
+</head>
+<body class="ph-theme-arunika-lucent">
+	<div class="ph-app-shell">
+		<aside class="ph-sidebar ph-expanded" id="sidebar" aria-label="Main navigation">
+			<div class="ph-lucent-sidebar-account" aria-label="Account">
+				<div class="dropdown ph-sidebar-profile">
+					<button class="ph-sidebar-user-card" type="button" aria-label="Open profile menu">
+						<span class="ph-sidebar-user-avatar">M</span>
+						<span class="ph-sidebar-user-meta"><strong>Mathilde Lewis</strong><span>Administrator</span></span>
+						<i class="fal fa-ellipsis-v ph-lucent-account-menu" aria-hidden="true"></i>
+					</button>
+				</div>
+				<button class="ph-lucent-sidebar-toggle" id="ph-lucent-sidebar-toggle" type="button" aria-label="Hide sidebar" aria-expanded="true" title="Hide sidebar">
+					<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect><path d="M8.25 3.25V20.75"></path><path d="M16 8.75L12.75 12L16 15.25"></path></svg>
+				</button>
+				<button class="ph-mobile-sidebar-close" type="button" aria-label="Close navigation">
+					<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect><path d="M8.25 3.25V20.75"></path><path d="M16 8.75L12.75 12L16 15.25"></path></svg>
+				</button>
+			</div>
+			<div id="sidebar-scroll-content">
+				<div class="list-group list-group-flush w-100">
+					<div class="ph-list-group-wrapper">
+						<a class="list-group-item list-group-item-action" href="#dashboard"><span class="ph-nav-icon"><i class="fal fa-home" aria-hidden="true"></i></span><span class="ph-nav-text">Dashboard</span></a>
+						<a class="list-group-item list-group-item-action" href="#visit-site"><span class="ph-nav-icon"><i class="fal fa-desktop" aria-hidden="true"></i></span><span class="ph-nav-text">View site</span></a>
+					</div>
+					<div class="ph-nav-category">ALL MENUS</div>
+					<div class="ph-list-group-wrapper">
+						<a id="manage-articles" class="list-group-item list-group-item-action" href="#articles"><span class="ph-nav-icon"><i class="fal fa-newspaper" aria-hidden="true"></i></span><span class="ph-nav-text">Posts</span></a>
+						<a class="list-group-item list-group-item-action" href="#pages"><span class="ph-nav-icon"><i class="fal fa-browser" aria-hidden="true"></i></span><span class="ph-nav-text">Pages</span></a>
+						<a class="list-group-item list-group-item-action" href="#performance"><span class="ph-nav-icon"><i class="fal fa-chart-line" aria-hidden="true"></i></span><span class="ph-nav-text">Performance</span></a>
+						<a class="list-group-item list-group-item-action" href="#tags"><span class="ph-nav-icon"><i class="fal fa-tags" aria-hidden="true"></i></span><span class="ph-nav-text">Tags</span></a>
+						<a class="list-group-item list-group-item-action" href="#members"><span class="ph-nav-icon"><i class="fal fa-users" aria-hidden="true"></i></span><span class="ph-nav-text">Members</span></a>
+						<a class="list-group-item list-group-item-action" href="#appearance"><span class="ph-nav-icon"><i class="fal fa-palette" aria-hidden="true"></i></span><span class="ph-nav-text">Appearance</span></a>
+						<a id="settings" class="list-group-item list-group-item-action active" href="#settings"><span class="ph-nav-icon"><i class="fal fa-cog" aria-hidden="true"></i></span><span class="ph-nav-text">Settings</span></a>
+					</div>
+				</div>
+			</div>
+			<div class="ph-lucent-sidebar-utilities" aria-label="Administration and settings">
+				<a class="ph-lucent-sidebar-admin" href="#admin"><i class="fal fa-user-secret" aria-hidden="true"></i><span>Awesome Admin</span></a>
+				<a href="#settings"><i class="fal fa-cog" aria-hidden="true"></i><span>Settings</span></a>
+			</div>
+		</aside>
+
+		<div class="ph-layout-right" id="ph-layout-right">
+			<header class="ph-top-bar" id="ph-top-bar">
+				<button class="ph-mobile-sidebar-trigger" type="button" aria-label="Open navigation" aria-expanded="false"><svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect><path d="M8.25 3.25V20.75"></path><path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path></svg></button>
+				<div class="ph-header-nav-control"><button class="ph-sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Toggle sidebar" aria-expanded="true"><svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect><path d="M8.25 3.25V20.75"></path><path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path></svg></button><span class="ph-header-divider" aria-hidden="true"></span></div>
+				<label class="ph-search-container" for="ph-global-search"><i class="fal fa-search" aria-hidden="true"></i><input type="search" class="ph-search-input" id="ph-global-search" placeholder="Find something" autocomplete="off"></label>
+				<div class="ph-header-actions"><button class="ph-btn-action-icon" type="button" aria-label="Notifications"><i class="fal fa-bell" aria-hidden="true"></i></button><div class="ph-header-profile"><span class="ph-header-user-avatar">A</span><span><strong>Administrator</strong><small>Super Admin</small></span></div></div>
+			</header>
+
+			<main class="ph-main-panel">
+				<div class="ph-scrollable-content">
+					<section class="ph-content ph-section ph-lucent-appearance-page">
+						<div class="ph-lucent-page-header"><h1>Appearance</h1><button class="ph-lucent-kebab" type="button" aria-label="More options"><i class="fal fa-ellipsis-v"></i></button></div>
+						<div class="ph-lucent-settings">
+							<div class="ph-lucent-setting-row"><div class="ph-lucent-setting-label"><strong>Company logo</strong><span>Update your company logo.</span></div><div class="ph-lucent-logo-control"><div class="ph-lucent-logo-mark"><i class="fal fa-sun"></i></div><button class="btn btn-outline-primary btn-sm" type="button">Replace logo</button><button class="btn btn-link btn-sm" type="button">Remove</button></div></div>
+							<div class="ph-lucent-setting-row"><div class="ph-lucent-setting-label"><strong>Brand color</strong><span>Select or customize your brand color.</span></div><div class="ph-lucent-theme-options"><span class="ph-lucent-color-dot" style="--dot-color:#222222"></span><span class="ph-lucent-color-dot" style="--dot-color:#7d45db"></span><span class="ph-lucent-color-dot" style="--dot-color:#3e65d6"></span><span class="ph-lucent-color-dot is-selected" style="--dot-color:#1FA675"></span><span class="ph-lucent-color-dot" style="--dot-color:#e9ab49"></span><code class="text-primary">#1FA675</code></div></div>
+							<div class="ph-lucent-setting-row"><div class="ph-lucent-setting-label"><strong>Interface theme</strong><span>Select or customize your UI theme.</span></div><div class="ph-lucent-theme-options"><div class="ph-lucent-preview-card"><div></div><strong>System preference</strong></div><div class="ph-lucent-preview-card" style="border-color:var(--ph-lucent-border)"><div></div><span>Light</span></div><div class="ph-lucent-preview-card" style="border-color:var(--ph-lucent-border)"><div style="background:linear-gradient(90deg,#2c332f 0 25%,#151b18 25% 100%)"></div><span>Dark</span></div></div></div>
+							<div class="ph-lucent-setting-row"><div class="ph-lucent-setting-label"><strong>Transparent sidebar</strong><span>Make the desktop sidebar transparent.</span></div><button class="ph-lucent-switch" type="button" aria-label="Transparent sidebar enabled"></button></div>
+							<div class="ph-lucent-setting-row"><div class="ph-lucent-setting-label"><strong>Sidebar feature</strong><span>What shows in the desktop sidebar.</span></div><button class="ph-lucent-select" type="button">Recent changes <i class="fal fa-chevron-down"></i></button></div>
+							<div class="ph-lucent-setting-row"><div class="ph-lucent-setting-label"><strong>Tables view</strong><span>How are tables displayed in the app.</span></div><div class="ph-lucent-theme-options"><div class="ph-lucent-preview-card"><div></div><strong>Default</strong></div><div class="ph-lucent-preview-card" style="border-color:var(--ph-lucent-border)"><div></div><span>Compact</span></div></div></div>
+						</div>
+						<div class="ph-lucent-actions"><button class="btn btn-outline-secondary" type="button">Cancel</button><button class="btn btn-primary" type="button">Save changes</button></div>
+					</section>
+				</div>
+			</main>
+		</div>
+	</div>
+	<script>
+		const harnessSidebar = document.getElementById('sidebar');
+		const harnessToggle = document.getElementById('ph-lucent-sidebar-toggle');
+		const harnessMobileTrigger = document.querySelector('.ph-mobile-sidebar-trigger');
+		const syncHarnessSidebar = () =>
+		{
+			const expanded = harnessSidebar.classList.contains('ph-expanded');
+			harnessToggle.setAttribute('aria-expanded', String(expanded));
+			harnessToggle.setAttribute('aria-label', expanded ? 'Hide sidebar' : 'Show sidebar');
+			harnessToggle.title = expanded ? 'Hide sidebar' : 'Show sidebar';
+			harnessMobileTrigger.setAttribute('aria-expanded', String(expanded));
+		};
+		const toggleHarnessSidebar = () =>
+		{
+			harnessSidebar.classList.toggle('ph-expanded');
+			syncHarnessSidebar();
+		};
+		harnessToggle.addEventListener('click', toggleHarnessSidebar);
+		harnessMobileTrigger.addEventListener('click', toggleHarnessSidebar);
+		document.querySelector('.ph-mobile-sidebar-close').addEventListener('click', toggleHarnessSidebar);
+		syncHarnessSidebar();
+	</script>
+</body>
+</html>

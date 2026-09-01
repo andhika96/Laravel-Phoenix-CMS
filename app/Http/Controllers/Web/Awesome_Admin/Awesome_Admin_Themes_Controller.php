@@ -19,6 +19,7 @@ class Awesome_Admin_Themes_Controller extends Controller
 		'arunika_aurora',
 		'arunika_prism',
 		'arunika_equinox',
+		'arunika_lucent',
 	];
 
 	public function __construct(Account $user)
@@ -52,11 +53,16 @@ class Awesome_Admin_Themes_Controller extends Controller
 				'preview_image' => 'assets/images/themes/previews/arunika-equinox-theme-preview.png',
 				'description' => 'A balanced mint-and-teal dashboard that moves cleanly between airy light and deep dark surfaces.',
 			],
+			'arunika_lucent' => [
+				'display_name' => 'Arunika Lucent',
+				'preview_image' => 'assets/images/themes/previews/arunika-lucent-theme-preview.png',
+				'description' => 'A clean Swiss-inspired admin shell with a bright neutral canvas and a calm green action system.',
+			],
 		];
 
 		$themes = Themes::query()
 			->whereIn('theme_code', self::MANAGEABLE_THEME_CODES)
-			->orderByRaw("CASE theme_code WHEN 'arunika_mosaic' THEN 1 WHEN 'arunika_aurora' THEN 2 WHEN 'arunika_prism' THEN 3 WHEN 'arunika_equinox' THEN 4 ELSE 5 END")
+			->orderByRaw("CASE theme_code WHEN 'arunika_mosaic' THEN 1 WHEN 'arunika_aurora' THEN 2 WHEN 'arunika_prism' THEN 3 WHEN 'arunika_equinox' THEN 4 WHEN 'arunika_lucent' THEN 5 ELSE 6 END")
 			->get()
 			->map(function (Themes $theme) use ($themeMetadata): array
 			{
