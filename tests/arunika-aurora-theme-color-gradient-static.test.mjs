@@ -14,7 +14,7 @@ const shellStyles = stylesheet.slice(stylesheet.indexOf('/* ARUNIKA AURORA - WEI
 test('places the Arunika Aurora color palette immediately before the theme mode toggle', () =>
 {
 	const paletteIndex = layout.indexOf('ph-theme-color-picker');
-	const themeToggleIndex = layout.indexOf('ph-theme-toggle');
+	const themeToggleIndex = layout.indexOf('ph-theme-toggle', paletteIndex);
 
 	assert.notEqual(paletteIndex, -1, 'The header must contain the theme color palette control.');
 	assert.notEqual(themeToggleIndex, -1, 'The header must retain the dark and light mode toggle.');

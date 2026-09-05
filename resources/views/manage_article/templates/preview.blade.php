@@ -15,7 +15,7 @@
 <body @if ($isPreviewFixture ?? false) data-preview-fixture="true" @endif>
     @if ($isPreviewFixture ?? false)<span class="article-preview-fixture-note">{{ t('Sample editorial content') }}</span>@endif
     @if ($surface === 'archive')
-        @include($templateView, ['articles' => $articles, 'templateSettings' => $templateSettings, 'templateOptions' => $templateOptions, 'previousArticle' => $previousArticle, 'nextArticle' => $nextArticle, 'articleCategories' => $articleCategories ?? collect()])
+        @include($templateView, ['articles' => $articles, 'templateSettings' => $templateSettings, 'templateOptions' => $templateOptions, 'previousArticle' => $previousArticle, 'nextArticle' => $nextArticle, 'articleCategories' => $articleCategories ?? collect(), 'popularArticles' => $popularArticles ?? collect(), 'previewDevice' => $previewDevice ?? null])
     @elseif ($article)
         @include($templateView, ['article' => $article, 'templateSettings' => $templateSettings, 'templateOptions' => $templateOptions, 'previousArticle' => $previousArticle, 'nextArticle' => $nextArticle])
     @else

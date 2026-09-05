@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <title>Minimal Reading List — responsive article-list preview</title>
+    <style>
+        :root {
+            --ink: #172033;
+            --muted: #667085;
+            --subtle: #8b95a7;
+            --line: #e4e8ee;
+            --accent: #16a579;
+            --accent-dark: #087956;
+            --accent-soft: #e9f8f2;
+            --canvas: #eef2f5;
+            --surface: #ffffff;
+            --radius: 18px;
+            --content: 1180px;
+        }
+
+        * { box-sizing: border-box; }
+        html { background: var(--canvas); }
+        body { margin: 0; min-width: 320px; background: var(--canvas); color: var(--ink); font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+        button, input, select { font: inherit; }
+        button { cursor: pointer; }
+        .preview-controls { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 18px 16px; }
+        .preview-controls button { min-height: 36px; padding: 0 14px; border: 1px solid #cfd7e2; border-radius: 9px; background: var(--surface); color: var(--muted); font-size: 13px; font-weight: 700; }
+        .preview-controls button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: #fff; }
+        .preview-controls__hint { margin-left: 8px; color: var(--subtle); font-size: 12px; }
+        .stage { container-type: inline-size; width: min(var(--content), calc(100vw - 48px)); min-height: 720px; margin: 0 auto 28px; overflow: hidden; border: 1px solid #dce3eb; border-radius: var(--radius); background: var(--surface); box-shadow: 0 18px 44px rgb(16 24 40 / .1); }
+        .stage[data-device="tablet"] { width: min(768px, calc(100vw - 32px)); }
+        .stage[data-device="mobile"] { width: min(390px, calc(100vw - 24px)); }
+        .reading-page { padding: 56px 64px 48px; }
+        .reading-header { max-width: 740px; margin-bottom: 34px; }
+        .reading-header__eyebrow { margin: 0 0 10px; color: var(--accent-dark); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+        .reading-header h1 { margin: 0; font-size: clamp(34px, 4vw, 60px); letter-spacing: -.045em; line-height: 1.05; }
+        .reading-header p { max-width: 60ch; margin: 16px 0 0; color: var(--muted); font-size: 17px; line-height: 1.6; }
+        .toolbar { display: grid; grid-template-columns: minmax(0, 1fr) 190px auto; gap: 10px; margin-bottom: 34px; }
+        .toolbar input, .toolbar select { width: 100%; min-height: 44px; padding: 0 14px; border: 1px solid #cfd7e2; border-radius: 9px; background: #fff; color: var(--ink); }
+        .toolbar button { min-height: 44px; padding: 0 20px; border: 1px solid var(--accent); border-radius: 9px; background: var(--accent); color: #fff; font-weight: 800; }
+        .toolbar button:hover { background: var(--accent-dark); }
+        .article-list { border-top: 1px solid var(--line); }
+        .article-item { display: grid; grid-template-columns: 220px minmax(0, 1fr); align-items: start; gap: 28px; padding: 24px 0; border-bottom: 1px solid var(--line); }
+        .article-item__media { display: block; width: 100%; aspect-ratio: 5 / 3; overflow: hidden; border-radius: 12px; background: #dbe3e8; }
+        .article-item__media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .2s ease; }
+        .article-item__media:hover img { transform: scale(1.03); }
+        .article-item__meta { display: flex; flex-wrap: wrap; gap: 8px; color: var(--subtle); font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+        .article-item__meta span + span::before { margin-right: 8px; color: #bdc5cf; content: "•"; }
+        .article-item h2 { margin: 7px 0 8px; font-size: clamp(22px, 2.1vw, 30px); letter-spacing: -.025em; line-height: 1.16; }
+        .article-item h2 a { color: inherit; text-decoration: none; }
+        .article-item h2 a:hover { color: var(--accent-dark); }
+        .article-item p { max-width: 66ch; margin: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
+        .article-item__link { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; color: var(--accent-dark); font-size: 14px; font-weight: 800; text-decoration: none; }
+        .article-item__link:hover { color: var(--ink); }
+        .pagination { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 24px; color: var(--muted); font-size: 13px; }
+        .pagination__buttons { display: flex; gap: 6px; }
+        .pagination__buttons button { min-width: 34px; height: 34px; border: 1px solid #d2dae4; border-radius: 8px; background: #fff; color: var(--muted); }
+        .pagination__buttons button.is-active { border-color: var(--accent); background: var(--accent); color: #fff; }
+
+        @container (max-width: 900px) {
+            .reading-page { padding: 42px 36px 40px; }
+            .reading-header { margin-bottom: 28px; }
+            .reading-header h1 { font-size: 42px; }
+            .reading-header p { font-size: 15px; }
+            .toolbar { grid-template-columns: minmax(0, 1fr) 160px; }
+            .toolbar button { grid-column: 2; }
+            .article-item { grid-template-columns: 176px minmax(0, 1fr); gap: 20px; padding: 20px 0; }
+            .article-item h2 { font-size: 23px; }
+            .article-item p { font-size: 14px; line-height: 1.55; display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+            .article-item__link { margin-top: 11px; }
+        }
+
+        @container (max-width: 560px) {
+            .reading-page { padding: 30px 20px 28px; }
+            .reading-header { margin-bottom: 24px; }
+            .reading-header__eyebrow { margin-bottom: 8px; font-size: 10px; }
+            .reading-header h1 { font-size: 34px; letter-spacing: -.04em; }
+            .reading-header p { margin-top: 12px; font-size: 14px; line-height: 1.55; }
+            .toolbar { grid-template-columns: 1fr; gap: 8px; margin-bottom: 24px; }
+            .toolbar button { grid-column: auto; width: 100%; }
+            .article-list { border-top: 1px solid var(--line); }
+            .article-item { grid-template-columns: 1fr; gap: 14px; padding: 18px 0 20px; }
+            .article-item__media { aspect-ratio: 16 / 9; border-radius: 11px; }
+            .article-item__meta { gap: 6px; font-size: 10px; }
+            .article-item__meta span + span::before { margin-right: 6px; }
+            .article-item h2 { margin: 6px 0 7px; font-size: 22px; line-height: 1.2; }
+            .article-item p { display: -webkit-box; overflow: hidden; font-size: 14px; line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+            .article-item__link { min-height: 36px; margin-top: 8px; font-size: 13px; }
+            .pagination { align-items: flex-start; flex-direction: column; padding-top: 18px; }
+        }
+
+        @media (max-width: 600px) {
+            .preview-controls { flex-wrap: wrap; }
+            .preview-controls__hint { width: 100%; margin: 0; text-align: center; }
+            .stage { min-height: 640px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="preview-controls" role="group" aria-label="Responsive preview device">
+        <button type="button" data-device="desktop" aria-pressed="true">Desktop</button>
+        <button type="button" data-device="tablet" aria-pressed="false">Tablet</button>
+        <button type="button" data-device="mobile" aria-pressed="false">Mobile</button>
+        <span class="preview-controls__hint">Responsive article-list direction · no sidebar in this focused preview</span>
+    </div>
+
+    <main class="stage" data-device="desktop">
+        <article class="reading-page" aria-label="Minimal Reading List responsive article-list preview">
+            <header class="reading-header">
+                <p class="reading-header__eyebrow">Journal · 12 stories</p>
+                <h1>Minimal Reading List</h1>
+                <p>Curated ideas on technology, design, and the art of thoughtful living.</p>
+            </header>
+
+            <form class="toolbar" role="search" onsubmit="return false">
+                <input type="search" placeholder="Search articles" aria-label="Search articles">
+                <select aria-label="Category"><option>All categories</option><option>Technology</option><option>Design</option></select>
+                <button type="submit">Search</button>
+            </form>
+
+            <section class="article-list" aria-label="Latest articles">
+                <article class="article-item">
+                    <a class="article-item__media" href="#"><img src="http://127.0.0.1:8768/public/storage/articles/template-preview-20260825/alpine-lake.png" alt="Mountain lake at dawn"></a>
+                    <div>
+                        <div class="article-item__meta"><span>Technology</span><span>24 Aug 2026</span><span>8 min read</span></div>
+                        <h2><a href="#">Building Resilient Systems at Scale</a></h2>
+                        <p>Exploring patterns and practices that help teams design systems that endure—through growth, complexity, and constant change.</p>
+                        <a class="article-item__link" href="#">Read article <span aria-hidden="true">→</span></a>
+                    </div>
+                </article>
+                <article class="article-item">
+                    <a class="article-item__media" href="#"><img src="http://127.0.0.1:8768/public/storage/articles/template-preview-20260825/design-studio.png" alt="Quiet design studio desk"></a>
+                    <div>
+                        <div class="article-item__meta"><span>Design</span><span>22 Aug 2026</span><span>6 min read</span></div>
+                        <h2><a href="#">The Quiet Power of Intentional Design</a></h2>
+                        <p>Why restraint and clarity create better experiences—for users and for the people who build them.</p>
+                        <a class="article-item__link" href="#">Read article <span aria-hidden="true">→</span></a>
+                    </div>
+                </article>
+                <article class="article-item">
+                    <a class="article-item__media" href="#"><img src="http://127.0.0.1:8768/public/storage/articles/template-preview-20260825/coastal-road.png" alt="Coastal road beside the sea"></a>
+                    <div>
+                        <div class="article-item__meta"><span>Travel</span><span>20 Aug 2026</span><span>5 min read</span></div>
+                        <h2><a href="#">A Slower Path to Meaningful Work</a></h2>
+                        <p>Rethinking ambition, boundaries, and what it means to build a career that lasts.</p>
+                        <a class="article-item__link" href="#">Read article <span aria-hidden="true">→</span></a>
+                    </div>
+                </article>
+                <article class="article-item">
+                    <a class="article-item__media" href="#"><img src="http://127.0.0.1:8768/public/storage/articles/template-preview-20260825/team-meeting.png" alt="Team meeting in a bright workspace"></a>
+                    <div>
+                        <div class="article-item__meta"><span>Workplace</span><span>18 Aug 2026</span><span>4 min read</span></div>
+                        <h2><a href="#">What Hybrid Teams Need to Do Their Best Work</a></h2>
+                        <p>Small operating principles that make collaboration more deliberate and humane.</p>
+                        <a class="article-item__link" href="#">Read article <span aria-hidden="true">→</span></a>
+                    </div>
+                </article>
+            </section>
+
+            <footer class="pagination">
+                <span>Showing 1–12 of 714 articles</span>
+                <div class="pagination__buttons" aria-label="Pagination">
+                    <button type="button" aria-label="Previous page">‹</button><button type="button" class="is-active">1</button><button type="button">2</button><button type="button">3</button><button type="button" aria-label="Next page">›</button>
+                </div>
+            </footer>
+        </article>
+    </main>
+
+    <script>
+        document.querySelectorAll('.preview-controls [data-device]').forEach((button) => button.addEventListener('click', () => {
+            const stage = document.querySelector('.stage');
+            stage.dataset.device = button.dataset.device;
+            document.querySelectorAll('.preview-controls [data-device]').forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+        }));
+    </script>
+</body>
+</html>

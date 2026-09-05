@@ -43,9 +43,11 @@ test('Awesome Admin menu and temporary production previews are present', () => {
     assert.match(menu, /cms\.admin\.awesome_admin\.themes/);
     assert.match(menu, /Manage Themes/);
     assert.doesNotMatch(mockup, /Browse installed themes/);
-    assert.equal(existsSync('public/assets/images/themes/previews/arunika-mosaic-theme-preview.png'), true);
     assert.equal(existsSync('public/assets/images/themes/previews/arunika-aurora-theme-preview.png'), true);
+    assert.equal(existsSync('public/assets/images/themes/previews/arunika-prism-theme-preview.png'), true);
     assert.equal(existsSync('public/assets/images/themes/previews/arunika-lucent-theme-preview.png'), true);
+    assert.equal(existsSync('public/assets/images/themes/previews/arunika-equinox-theme-preview.png'), true);
+    assert.equal(existsSync('public/assets/images/themes/previews/arunika-mosaic-theme-preview.png'), false);
 });
 
 test('production theme previews use the compact Manage Appearance sizing contract', () => {

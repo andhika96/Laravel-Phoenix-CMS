@@ -29,8 +29,16 @@ const ArticleFrontendPaginationControls = (() => {
         const pagination = source?.pagination && typeof source.pagination === 'object' ? source.pagination : source;
         const frame = pagination.frame && typeof pagination.frame === 'object' ? pagination.frame : {};
         const position = ['left', 'center', 'right'].includes(pagination.position) ? pagination.position : 'right';
+        const type = ['underline', 'boxed', 'soft'].includes(pagination.type) ? pagination.type : 'boxed';
+        const defaults = { desktop: 3, tablet: 3, mobile: 2 };
+        const range = Object.fromEntries(Object.entries(defaults).map(([device, fallback]) => {
+            const numeric = Number(pagination?.range?.[device]);
+            return [device, Number.isFinite(numeric) ? Math.min(9, Math.max(1, Math.round(numeric))) : fallback];
+        }));
 
         return {
+            type,
+            range,
             show_total: pagination.show_total !== false,
             position,
             frame: {
@@ -79,6 +87,7 @@ const ArticleFrontendOptions = {
                 category: '',
                 tag: '',
             },
+            categorySearch: '',
             isHydrated: false,
             isNavigating: false,
             limit: 12,
@@ -86,6 +95,7 @@ const ArticleFrontendOptions = {
             loadingData: false,
             loadingNextPage: false,
 			paginationOptions: ArticleFrontendPaginationControls.normalize(articleFrontendRoot?.dataset.templateOptions),
+			paginationDevice: 'desktop',
             paginationCopy: {
                 next: articleFrontendRoot?.dataset.paginationNext || 'Next',
                 prev: articleFrontendRoot?.dataset.paginationPrev || 'Previous',
@@ -113,6 +123,7 @@ const ArticleFrontendOptions = {
         },
 		paginationClasses() {
 			return [
+				`article-pagination--model-${this.paginationOptions.type || 'boxed'}`,
 				`article-pagination--position-${this.paginationOptions.position}`,
 				this.paginationOptions.show_total ? 'article-pagination--with-total' : 'article-pagination--without-total',
 				this.paginationOptions.frame.enabled ? 'article-pagination--with-frame' : 'article-pagination--without-frame',
@@ -123,20 +134,45 @@ const ArticleFrontendOptions = {
 		paginationStyle() {
 			return ArticleFrontendPaginationControls.style(this.paginationOptions);
 		},
+		paginationRange() {
+			return this.paginationOptions.range?.[this.paginationDevice] || 3;
+		},
     },
     methods: {
+        syncPaginationDevice() {
+            const width = Number(window.innerWidth || 1440);
+            const device = width <= 575.98 ? 'mobile' : (width <= 991.98 ? 'tablet' : 'desktop');
+
+            if (this.paginationDevice !== device) this.paginationDevice = device;
+        },
         handleClick(event) {
+            if (event.target?.closest?.('[data-article-category-link]')) {
+                this.navigateCategory(event);
+                return;
+            }
+
             if (event.target?.closest?.('[data-article-pagination-link]')) {
                 this.navigate(event);
             }
         },
         syncFilterInput(event) {
             const input = event.target;
+            if (input?.matches?.('[data-article-category-search]')) {
+                this.categorySearch = String(input.value || '');
+                this.filterCategoryOptions();
+                return;
+            }
+
             if (!input?.closest?.('[data-article-filter]')) return;
 
             const name = String(input.name || '').trim();
             if (Object.prototype.hasOwnProperty.call(this.filters, name)) {
                 this.filters[name] = String(input.value || '');
+            }
+
+            if (input.matches?.('[data-article-category-select]')) {
+                const form = input.closest('[data-article-filter]');
+                if (form) this.submitFilter({ preventDefault() {}, target: form });
             }
         },
         handleSubmit(event) {
@@ -152,6 +188,15 @@ const ArticleFrontendOptions = {
 
             this.isNavigating = true;
             this.loadArchive(new URL(href, window.location.origin), 'page');
+        },
+        navigateCategory(event) {
+            event.preventDefault();
+            const link = event.target?.closest?.('[data-article-category-link]') || event.currentTarget;
+            const href = link?.href;
+            if (!href) return;
+
+            this.isNavigating = true;
+            this.loadArchive(new URL(href, window.location.origin), 'data');
         },
         submitFilter(event) {
             event.preventDefault();
@@ -207,6 +252,40 @@ const ArticleFrontendOptions = {
             currentList.innerHTML = nextList.innerHTML;
             this.syncFilterControls();
         },
+        filterCategoryOptions() {
+            const query = String(this.categorySearch || '').trim().toLocaleLowerCase();
+            const options = articleFrontendRoot?.querySelectorAll('[data-article-category-link]') || [];
+            let visibleOptions = 0;
+
+            options.forEach((link) => {
+                const label = String(link.dataset.categoryLabel || link.textContent || '').trim().toLocaleLowerCase();
+                const matches = !query || label.includes(query);
+                link.hidden = !matches;
+                if (matches) visibleOptions += 1;
+            });
+
+            const noResults = articleFrontendRoot?.querySelector('[data-article-category-no-results]');
+            if (noResults) noResults.hidden = options.length === 0 || visibleOptions > 0;
+        },
+        syncCategoryControls() {
+            const currentCategory = String(this.filters.category || '');
+            articleFrontendRoot?.querySelectorAll('[data-article-category-link]').forEach((link) => {
+                const active = String(link.dataset.categoryId || '') === currentCategory;
+                link.classList.toggle('is-active', active);
+                if (active) link.setAttribute('aria-current', 'page');
+                else link.removeAttribute('aria-current');
+            });
+
+            articleFrontendRoot?.querySelectorAll('[data-article-category-search]').forEach((input) => {
+                input.value = this.categorySearch;
+            });
+            this.filterCategoryOptions();
+        },
+        syncPaginationAccessibility() {
+            articleFrontendRoot?.querySelectorAll('[data-article-vue-control-slot] .page-item.active .page-link').forEach((link) => {
+                link.setAttribute('aria-current', 'page');
+            });
+        },
         syncFiltersFromUrl(url) {
             const params = new URL(url, window.location.origin).searchParams;
             Object.keys(this.filters).forEach((name) => {
@@ -221,6 +300,7 @@ const ArticleFrontendOptions = {
                     if (control && 'value' in control) control.value = value;
                 });
             });
+            this.syncCategoryControls();
         },
         goToPage(page, sourceUrl = window.location.href) {
             const destination = new URL(sourceUrl, window.location.origin);
@@ -266,11 +346,17 @@ const ArticleFrontendOptions = {
         },
     },
     mounted() {
+        this.syncPaginationDevice();
         this.loadArchive(new URL(window.location.href), 'data', 'replace');
         window.addEventListener('popstate', this.handlePopstate);
+        window.addEventListener('resize', this.syncPaginationDevice);
+    },
+    updated() {
+        this.syncPaginationAccessibility();
     },
     beforeUnmount() {
         window.removeEventListener('popstate', this.handlePopstate);
+        window.removeEventListener('resize', this.syncPaginationDevice);
     },
 };
 

@@ -7,7 +7,7 @@ import vm from 'node:vm';
 const sourcePath = path.join(process.cwd(), 'public/assets/js/vue3/article/vueV3-article-frontend-2026.js');
 const source = readFileSync(sourcePath, 'utf8');
 
-function loadOptions({ assignments = [], fetchImpl = null, fetchResponse = null } = {}) {
+function loadOptions({ assignments = [], fetchImpl = null, fetchResponse = null, viewportWidth = 1440 } = {}) {
 	const historyActions = [];
 	const listeners = {};
 	const sandbox = {
@@ -22,6 +22,7 @@ function loadOptions({ assignments = [], fetchImpl = null, fetchResponse = null 
 			querySelectorAll() { return []; },
 		},
 		window: {
+			innerWidth: viewportWidth,
 			location: {
 				origin: 'https://laravel-13-phoenix.aruna',
 				href: 'https://laravel-13-phoenix.aruna/article',
@@ -380,15 +381,19 @@ test('archive pagination maps template options into a responsive Vue footer cont
 	const options = loadOptions().article;
 	const state = {
 		paginationOptions: {
+			type: 'soft',
 			show_total: false,
 			position: 'center',
+			range: { desktop: 7, tablet: 4, mobile: 2 },
 			frame: { enabled: false, border_color: '#123456', border_width: '2pt', radius: '1rem', background_color: '#ffffff' },
 			padding: { enabled: true, desktop: { top: '1rem', right: '2px', bottom: '3%', left: '4pt' }, tablet: {}, mobile: {} },
 			margin: { enabled: false, desktop: {}, tablet: {}, mobile: {} },
 		},
+		paginationDevice: 'tablet',
 	};
 
 	assert.deepEqual([...options.computed.paginationClasses.call(state)], [
+		'article-pagination--model-soft',
 		'article-pagination--position-center',
 		'article-pagination--without-total',
 		'article-pagination--without-frame',
@@ -411,4 +416,37 @@ test('archive pagination maps template options into a responsive Vue footer cont
 	assert.match(css, /article-pagination--position-center/);
 	assert.match(css, /article-pagination--without-frame/);
 	assert.match(css, /article-pagination-padding-desktop-top/);
+});
+
+test('article pagination exposes named models and selects the range for the active device', () => {
+	const options = loadOptions().article;
+	const state = {
+		paginationOptions: {
+			type: 'soft',
+			range: { desktop: 7, tablet: 4, mobile: 2 },
+		},
+		paginationDevice: 'mobile',
+	};
+	const archive = readFileSync(path.join(process.cwd(), 'resources/views/article/archive.blade.php'), 'utf8');
+	const pagination = readFileSync(path.join(process.cwd(), 'resources/views/article/templates/partials/pagination.blade.php'), 'utf8');
+	const css = readFileSync(path.join(process.cwd(), 'public/assets/css/article/article-frontend-2026.css'), 'utf8');
+
+	assert.equal(options.computed.paginationRange.call(state), 2);
+	assert.match(archive, /:page-range="paginationRange"/);
+	assert.match(pagination, /article-pagination--model-/);
+	assert.match(pagination, /data-pagination-range-desktop/);
+	assert.match(pagination, /data-pagination-range-tablet/);
+	assert.match(pagination, /data-pagination-range-mobile/);
+	assert.match(css, /article-pagination--model-underline/);
+	assert.match(css, /article-pagination--model-boxed/);
+	assert.match(css, /article-pagination--model-soft/);
+});
+
+test('article pagination maps viewport width to the matching device range', () => {
+	const options = loadOptions({ viewportWidth: 390 }).article;
+	const state = { paginationDevice: 'desktop' };
+
+	options.methods.syncPaginationDevice.call(state);
+
+	assert.equal(state.paginationDevice, 'mobile');
 });

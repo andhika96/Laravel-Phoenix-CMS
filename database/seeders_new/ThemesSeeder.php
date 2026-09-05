@@ -57,18 +57,6 @@ class ThemesSeeder extends Seeder
             'created_at' => '2025-06-18 03:54:21'
         ],
         [
-            'id' => 5,
-            'theme_code' => 'arunika_mosaic',
-            'theme_name' => 'Arunika Mosaic',
-            'theme_foldername' => 'arunika_mosaic',
-            'theme_cms' => 'cms_layout',
-            'theme_auth' => 'auth_layout',
-            'theme_frontend' => 'frontend_layout',
-            'theme_version' => '1.0.0',
-            'updated_at' => '2025-06-18 03:54:21',
-            'created_at' => '2025-06-18 03:54:21'
-        ],
-        [
             'id' => 6,
             'theme_code' => 'arunika_aurora',
             'theme_name' => 'Arunika Aurora',

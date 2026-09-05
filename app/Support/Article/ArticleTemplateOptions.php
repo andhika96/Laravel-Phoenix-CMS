@@ -8,6 +8,14 @@ final class ArticleTemplateOptions
 {
     private const POSITIONS = ['left', 'center', 'right'];
 
+    private const PAGINATION_TYPES = ['underline', 'boxed', 'soft'];
+
+    private const PAGINATION_RANGE_DEFAULTS = [
+        'desktop' => 3,
+        'tablet' => 3,
+        'mobile' => 2,
+    ];
+
     private const GRID_TEMPLATES = ['editorial-journal', 'mosaic-magazine', 'balanced-card-grid'];
 
     private const HEADING_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -28,7 +36,7 @@ final class ArticleTemplateOptions
     {
         $definition = $this->catalog->archive()[$template] ?? $this->catalog->archive()['minimal-reading-list'];
         $toolbarDefaults = match ($template) {
-            'minimal-reading-list' => ['search' => [true, 'left'], 'category' => [false, 'right']],
+            'minimal-reading-list' => ['search' => [true, 'left'], 'category' => [true, 'right']],
             'mosaic-magazine', 'mosaic-classic' => ['search' => [true, 'right'], 'category' => [false, 'right']],
             'balanced-card-grid' => ['search' => [false, 'left'], 'category' => [true, 'right']],
             default => ['search' => [false, 'left'], 'category' => [false, 'right']],
@@ -44,13 +52,21 @@ final class ArticleTemplateOptions
                 'search' => $this->toolbarOption($input, 'search', $toolbarDefaults['search'][0], $toolbarDefaults['search'][1]),
                 'category' => $this->toolbarOption($input, 'category', $toolbarDefaults['category'][0], $toolbarDefaults['category'][1]),
             ],
-            'thumbnail' => $this->thumbnail($input),
+            'thumbnail' => $this->thumbnail($input, $template),
             'pagination' => $this->pagination($input),
             'article_title' => [
                 'tag' => $this->headingTag(data_get($input, 'article_title.tag')),
             ],
             'shell' => $this->shell($input),
         ];
+
+        if ($template === 'minimal-reading-list') {
+            $result['toolbar']['category']['mode'] = $this->categoryMode($input);
+            $result['post_list'] = [
+                'item_gap' => $this->dimension(data_get($input, 'post_list.item_gap'), '0.75rem', self::DIMENSION_UNITS),
+            ];
+            $result['sidebar'] = $this->sidebar($input);
+        }
 
         if (in_array($template, self::GRID_TEMPLATES, true)) {
             $result['grid'] = [
@@ -127,19 +143,28 @@ final class ArticleTemplateOptions
         ];
     }
 
+    private function categoryMode(array $input): string
+    {
+        $mode = data_get($input, 'toolbar.category.mode', 'button-list');
+
+        return in_array($mode, ['select', 'button-list'], true) ? $mode : 'button-list';
+    }
+
     private function column(array $input, string $device, int $default, int $maximum): int
     {
         return min($maximum, max(1, (int) data_get($input, "grid.{$device}", $default)));
     }
 
-    private function thumbnail(array $input): array
+    private function thumbnail(array $input, string $template = 'minimal-reading-list'): array
     {
         $mode = data_get($input, 'thumbnail.mode', 'background');
         $fit = data_get($input, 'thumbnail.fit', 'cover');
+        $defaultHeight = $template === 'minimal-reading-list' ? '9.3rem' : '5.625rem';
 
         return [
             'mode' => in_array($mode, ['background', 'asset'], true) ? $mode : 'background',
             'fit' => in_array($fit, ['cover', 'contain'], true) ? $fit : 'cover',
+            'height' => $this->dimension(data_get($input, 'thumbnail.height'), $defaultHeight, self::DIMENSION_UNITS),
             'background_color' => $this->color(data_get($input, 'thumbnail.background_color'), '#f2f4f7'),
             'frame' => $this->frame($input, 'thumbnail.frame', false, '#e1e6ee', '#f2f4f7'),
         ];
@@ -150,12 +175,67 @@ final class ArticleTemplateOptions
         $position = data_get($input, 'pagination.position', 'right');
 
         return [
+            'type' => $this->paginationType($input),
+            'range' => $this->paginationRange($input),
             'show_total' => $this->boolean(data_get($input, 'pagination.show_total'), true),
             'position' => in_array($position, self::POSITIONS, true) ? $position : 'right',
             'frame' => $this->frame($input, 'pagination.frame', true, '#e6e9ef', '#ffffff'),
             'padding' => $this->responsiveBox($input, 'pagination.padding'),
             'margin' => $this->responsiveBox($input, 'pagination.margin'),
         ];
+    }
+
+    private function paginationType(array $input): string
+    {
+        $type = data_get($input, 'pagination.type', 'boxed');
+
+        return in_array($type, self::PAGINATION_TYPES, true) ? $type : 'boxed';
+    }
+
+    /** @return array{desktop: int, tablet: int, mobile: int} */
+    private function paginationRange(array $input): array
+    {
+        $range = [];
+
+        foreach (self::PAGINATION_RANGE_DEFAULTS as $device => $default) {
+            $range[$device] = $this->paginationRangeValue(
+                data_get($input, "pagination.range.{$device}"),
+                $default,
+            );
+        }
+
+        return $range;
+    }
+
+    private function paginationRangeValue(mixed $value, int $default): int
+    {
+        if (!is_int($value) && !is_float($value) && !(is_string($value) && is_numeric(trim($value)))) {
+            return $default;
+        }
+
+        return min(9, max(1, (int) round((float) $value)));
+    }
+
+    private function sidebar(array $input): array
+    {
+        return [
+            'enabled' => $this->boolean(data_get($input, 'sidebar.enabled'), true),
+            'categories' => [
+                'enabled' => $this->boolean(data_get($input, 'sidebar.categories.enabled'), true),
+                'position' => $this->sidebarPosition($input, 'sidebar.categories.position'),
+            ],
+            'popular' => [
+                'enabled' => $this->boolean(data_get($input, 'sidebar.popular.enabled'), true),
+                'position' => $this->sidebarPosition($input, 'sidebar.popular.position'),
+            ],
+        ];
+    }
+
+    private function sidebarPosition(array $input, string $path): string
+    {
+        $position = data_get($input, $path, 'static');
+
+        return in_array($position, ['static', 'sticky'], true) ? $position : 'static';
     }
 
     private function shell(array $input): array
@@ -173,9 +253,39 @@ final class ArticleTemplateOptions
             'enabled' => $this->boolean(data_get($input, "{$path}.enabled"), $defaultEnabled),
             'border_color' => $this->color(data_get($input, "{$path}.border_color"), $defaultBorderColor),
             'border_width' => $this->dimension(data_get($input, "{$path}.border_width"), '1px', self::BORDER_UNITS),
-            'radius' => $this->dimension(data_get($input, "{$path}.radius"), '1rem', self::DIMENSION_UNITS),
+            'radius' => $this->radius(data_get($input, "{$path}.radius"), '1rem'),
             'background_color' => $this->color(data_get($input, "{$path}.background_color"), $defaultBackgroundColor),
         ];
+    }
+
+    private function radius(mixed $value, string $default): string
+    {
+        $fallback = $this->parseDimension($default, self::DIMENSION_UNITS);
+        if ($fallback === null) {
+            $fallback = ['value' => 0.0, 'unit' => 'px'];
+        }
+
+        $tokens = preg_split('/\s+/', trim((string) $value), -1, PREG_SPLIT_NO_EMPTY);
+        if ($tokens === false || $tokens === [] || count($tokens) > 4) {
+            return $this->formatDimension($fallback['value'], $fallback['unit']);
+        }
+
+        $formatted = [];
+        foreach ($tokens as $token) {
+            $parsed = $this->parseDimension($token, self::DIMENSION_UNITS, $fallback['unit']);
+            if ($parsed === null) {
+                return $this->formatDimension($fallback['value'], $fallback['unit']);
+            }
+
+            $limit = match ($parsed['unit']) {
+                '%' => 100,
+                'em', 'rem' => 30,
+                default => 400,
+            };
+            $formatted[] = $this->formatDimension(min($limit, max(0, $parsed['value'])), $parsed['unit']);
+        }
+
+        return implode(' ', $formatted);
     }
 
     private function responsiveBox(array $input, string $path): array

@@ -28,6 +28,8 @@ test('Arunika Prism layout keeps dynamic content and uses only Prism theme asset
   assert.match(layout, /@yield\('content'\)/);
   assert.match(layout, /class="ph-theme-arunika-prism"/);
   assert.match(layout, /ph-header-profile/);
+  assert.match(layout, /class="[^"]*ph-prism-mobile-profile[^"]*"/);
+  assert.match(layout, /data-ph-theme-color-picker/);
   assert.match(layout, /components\.cms-realtime-notification/);
   assert.match(
     layout,
@@ -49,7 +51,7 @@ test('Arunika Prism stylesheet contains the approved dashboard-shell tokens', ()
 
   assert.match(css, /ARUNIKA PRISM DASHBOARD SHELL/);
   assert.match(css, /--ph-prism-sidebar-surface:\s*#efefed/i);
-  assert.match(css, /--ph-prism-header-height:\s*60px/i);
+  assert.match(css, /--ph-prism-header-height:\s*52px/i);
   assert.match(css, /\.ph-theme-arunika-prism\s+\.ph-header-profile/);
   assert.match(css, /\.ph-theme-arunika-prism\s+\.ph-search-container/);
 });

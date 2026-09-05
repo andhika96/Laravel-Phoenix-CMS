@@ -22,7 +22,7 @@
                 <div class="article-pagination article-pagination--vue" :class="paginationClasses" :style="paginationStyle">
                     <div class="article-pagination__layout">
                         <div v-if="paginationOptions.show_total" class="article-pagination__context"><strong>{{ t('Total Data') }}: @{{ totalLabel }}</strong><span>{{ t('Showing') }} @{{ firstItem }}–@{{ lastItem }} {{ t('of') }} @{{ totalLabel }} {{ t('articles') }}</span></div>
-                        <div class="article-pagination__pager"><paginate v-model="currentPage" v-bind:page-count="totalPage" v-bind:force-page="currentPage" v-bind:page-range="3" v-bind:margin-pages="1" v-bind:click-handler="goToPage" v-bind:prev-text="paginationCopy.prev" v-bind:next-text="paginationCopy.next" container-class="pagination ph-pagination m-0 font-size-inherit" page-class="page-item" page-link-class="page-link" prev-class="page-item" prev-link-class="page-link" next-class="page-item" next-link-class="page-link" active-class="active" disabled-class="disabled"></paginate></div>
+                        <div class="article-pagination__pager"><paginate v-model="currentPage" v-bind:page-count="totalPage" v-bind:force-page="currentPage" v-bind:page-range="paginationRange" v-bind:margin-pages="1" v-bind:click-handler="goToPage" v-bind:prev-text="paginationCopy.prev" v-bind:next-text="paginationCopy.next" container-class="pagination ph-pagination m-0 font-size-inherit" page-class="page-item" page-link-class="page-link" prev-class="page-item" prev-link-class="page-link" next-class="page-item" next-link-class="page-link" active-class="active" disabled-class="disabled"></paginate></div>
                     </div>
                 </div>
             </Teleport>

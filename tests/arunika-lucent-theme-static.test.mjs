@@ -36,7 +36,7 @@ test('Arunika Lucent layout keeps dynamic CMS content and only Lucent assets', (
   assert.match(layout, /menu_versioning\(\)/);
   assert.match(layout, /@yield\('content'\)/);
   assert.match(layout, /theme-responsive-typography\.css/);
-  assert.match(layout, /components\.cms-realtime-notification/);
+  assert.doesNotMatch(layout, /components\.cms-realtime-notification|ph-header-notification|cmsNotifBell/);
   assert.match(auth, /assets\/css\/themes\/arunika_lucent\/arunika_lucent\.css/);
   assert.match(auth, /theme-responsive-typography\.css/);
   assert.match(auth, /SiteTypography::class/);
@@ -61,6 +61,24 @@ test('Arunika Lucent layout keeps dynamic CMS content and only Lucent assets', (
   assert.doesNotMatch(layout, /ph-sidebar-logo-container/);
   assert.doesNotMatch(layout, /themes\.arunika_prism|themes\/arunika_prism|ph-theme-arunika-prism/);
   assert.doesNotMatch(layout, /themes\.arunika_equinox|themes\/arunika_equinox|ph-theme-arunika-equinox/);
+});
+
+test('Arunika Lucent keeps auth buttons and notices styled without a data theme attribute', () => {
+  const css = read(paths.css);
+  const rootVariables = css.match(/:root\s*\{([\s\S]*?)\}/)?.[1] ?? '';
+  const defaultLightVariables = css.match(/:root,\s*\[data-bs-theme=light\]\s*\{([\s\S]*?)\}/)?.[1] ?? '';
+
+  assert.match(rootVariables, /--ph-primary:\s*var\(--ph-theme-primary\);/);
+  assert.match(rootVariables, /--ph-primary-hover-bg:\s*var\(--ph-theme-primary-hover\);/);
+  assert.match(rootVariables, /--ph-primary-hover-text:\s*#FFFFFF;/);
+  assert.match(rootVariables, /--ph-primary-active-bg:\s*var\(--ph-theme-primary\);/);
+  assert.match(rootVariables, /--ph-primary-disable-bg:/);
+
+  assert.notEqual(defaultLightVariables, '', 'Lucent must expose light-mode fallbacks on :root for auth pages.');
+  assert.match(defaultLightVariables, /--ph-callout-bg:\s*#FFFFFF;/);
+  assert.match(defaultLightVariables, /--ph-callout-color:\s*#000000;/);
+  assert.match(defaultLightVariables, /--ph-callout-danger-color:\s*#DC3545;/);
+  assert.match(defaultLightVariables, /--ph-toast-danger-rgb:\s*220,\s*53,\s*69;/);
 });
 
 test('Arunika Lucent uses a neutral Swiss shell with existing green semantic actions', () => {
@@ -89,18 +107,18 @@ test('Arunika Lucent uses a neutral Swiss shell with existing green semantic act
   assert.match(css, /\.ph-theme-arunika-lucent\s+\.ph-content\.ph-section\s*\{[^}]*border:\s*1px\s+solid\s+var\(--ph-lucent-border\)\s*!important/s);
   assert.match(faithfulShell, /\.ph-theme-arunika-lucent[\s\S]*?\.ph-scrollable-content[\s\S]*?padding:\s*24px\s+22px\s+32px/i);
   assert.match(css, /\.ph-theme-arunika-lucent[\s\S]*?\.arv7-title[\s\S]*?display:\s*none/i);
-  assert.match(css, /@media\s*\(max-width:\s*768px\)[\s\S]*?\.ph-theme-arunika-lucent\s+\.ph-top-bar\s*\{[^}]*display:\s*block/i);
+  assert.match(css, /\.ph-theme-arunika-lucent\s+\.ph-top-bar[\s\S]*?height:\s*var\(--ph-lucent-header-height\)/i);
   assert.match(css, /\.ph-theme-arunika-lucent\s+\.ph-mobile-sidebar-trigger[\s\S]*?display:\s*inline-flex/i);
-  assert.match(css, /\.ph-theme-arunika-lucent\s+\.ph-mobile-sidebar-trigger[\s\S]*?right:\s*12px/i);
+  assert.match(css, /\.ph-theme-arunika-lucent\s+\.ph-mobile-sidebar-close[\s\S]*?display:\s*none/i);
   assert.match(faithfulShell, /--ph-lucent-sidebar-icon-size:\s*clamp\(15px,\s*calc\(var\(--ph-adaptive-font-size, 14px\) \+ 2px\),\s*16px\)/i);
   assert.match(faithfulShell, /\.ph-theme-arunika-lucent\s+\.ph-nav-icon[\s\S]*?font-size:\s*var\(--ph-lucent-sidebar-icon-size\)/i);
   assert.match(faithfulShell, /\.ph-theme-arunika-lucent\s+\.ph-sidebar:not\(\.ph-expanded\)\s+\.ph-lucent-sidebar-utilities\s+span[\s\S]*?display:\s*none/i);
   assert.match(faithfulShell, /\.ph-theme-arunika-lucent\s+\.ph-sidebar:not\(\.ph-expanded\)\s+\.ph-lucent-sidebar-utilities\s+a[\s\S]*?width:\s*40px/i);
   assert.match(faithfulShell, /@media\s*\(max-width:\s*768px\)[\s\S]*?\.ph-theme-arunika-lucent\s+\.ph-section\s*\{[^}]*padding:\s*16px/s);
   assert.match(faithfulShell, /@media\s*\(max-width:\s*768px\)[\s\S]*?\.ph-theme-arunika-lucent\s+\.ph-scrollable-content\s*\{[^}]*padding:\s*18px\s+14px\s+28px/s);
-  assert.match(css, /\.ph-theme-arunika-lucent\s+a(?:\s*,|\s*\{)[\s\S]*?color:\s*var\(--ph-lucent-accent\)/s);
-  assert.match(css, /\.ph-theme-arunika-lucent\s+\.btn-primary\s*,[^}]*background-color:\s*var\(--ph-lucent-accent\)/s);
-  assert.match(css, /\.ph-theme-arunika-lucent\s+\.btn-outline-primary\s*,[\s\S]*?\{[^}]*color:\s*var\(--ph-lucent-accent\)/s);
+  assert.doesNotMatch(css, /\.ph-theme-arunika-lucent\s+a\s*,[\s\S]*?color:\s*var\(--ph-lucent-accent\)\s*!important/s);
+  assert.match(css, /\.ph-theme-arunika-lucent\s+\.btn-primary[\s\S]*?background-color:\s*var\(--ph-lucent-accent\)/s);
+  assert.match(css, /\.ph-theme-arunika-lucent\s+\.btn-outline-primary[\s\S]*?color:\s*var\(--ph-lucent-accent\)/s);
   assert.match(css, /\.ph-theme-arunika-lucent\s+\.ph-sidebar\s+\.list-group-item-action:hover[^}]*background:\s*var\(--ph-lucent-hover\)/s);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.doesNotMatch(css, /#2563EB|#3B82F6|#6542d7/i);

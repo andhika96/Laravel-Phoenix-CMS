@@ -78,7 +78,56 @@ const ArticleTemplateUnitControls = (() => {
 		return target;
 	}
 
-	return { sides, units, max, step, format, parse, withUnit, ensureBox, setBoxValue, setBoxUnit };
+	function expandRadiusTokens(tokens) {
+		if (tokens.length === 1) return [tokens[0], tokens[0], tokens[0], tokens[0]];
+		if (tokens.length === 2) return [tokens[0], tokens[1], tokens[0], tokens[1]];
+		if (tokens.length === 3) return [tokens[0], tokens[1], tokens[2], tokens[1]];
+		return tokens.slice(0, 4);
+	}
+
+	function isValidToken(value, kind = 'radius') {
+		const match = String(value || '').trim().match(dimensionPattern);
+		return Boolean(match && (!match[2] || units(kind).includes(String(match[2]).toLowerCase())));
+	}
+
+	function radiusValues(value, fallback = '0px', kind = 'radius') {
+		const fallbackToken = String(fallback || '0px').trim().split(/\s+/)[0] || '0px';
+		const rawTokens = String(value ?? '').trim().split(/\s+/).filter(Boolean);
+		const tokens = rawTokens.length >= 1 && rawTokens.length <= 4 && rawTokens.every((token) => isValidToken(token, kind))
+			? rawTokens
+			: [fallbackToken];
+		const values = expandRadiusTokens(tokens).map((token) => parse(token, fallbackToken, kind));
+
+		return { values, unit: values[0]?.unit || units(kind)[0] };
+	}
+
+	function formatRadius(values, unit, kind = 'radius') {
+		const allowed = units(kind);
+		const safeUnit = allowed.includes(unit) ? unit : allowed[0];
+
+		return values.slice(0, 4).map((item) => format(item?.value ?? item, safeUnit)).join(' ');
+	}
+
+	function setRadiusValue(value, index, raw, linked, kind = 'radius') {
+		const parsed = radiusValues(value, '0px', kind);
+		const safe = format(raw, parsed.unit);
+		const values = parsed.values.map((item) => format(item.value, parsed.unit));
+
+		if (!Number.isInteger(index) || index < 0 || index > 3 || raw === '') return values.join(' ');
+		if (linked) return [safe, safe, safe, safe].join(' ');
+
+		values[index] = safe;
+		return values.join(' ');
+	}
+
+	function setRadiusUnit(value, unit, kind = 'radius') {
+		const parsed = radiusValues(value, '0px', kind);
+		const safeUnit = units(kind).includes(unit) ? unit : parsed.unit;
+
+		return formatRadius(parsed.values, safeUnit, kind);
+	}
+
+	return { sides, units, max, step, format, parse, withUnit, ensureBox, setBoxValue, setBoxUnit, radiusValues, setRadiusValue, setRadiusUnit };
 })();
 
 const articleTemplateRoot = document.getElementById('ph-app-manage-article-templates');
@@ -118,14 +167,31 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 				archive_template_options: settings.archive_template_options || {},
 				detail_template_options: settings.detail_template_options || {},
             },
-			optionsModal: { key: null, surface: null, value: null },
+			optionsModal: { key: null, surface: null, value: null, initialJson: '', section: 'header', view: 'settings', dirty: false, dismissOpen: false },
 			optionsDevice: 'desktop',
 			optionBoxLinks: {},
+			optionsModalTriggerId: null,
+			modalPreviewUrl: '',
+			modalPreviewLoading: false,
+			modalPreviewError: '',
+			modalPreviewScale: 1,
+			modalPreviewGutter: 32,
+			modalPreviewMaxHeight: 620,
+			modalPreviewResizeObserver: null,
+			modalPreviewTimer: null,
+			modalPreviewTimeoutTimer: null,
+			modalPreviewRequestSequence: 0,
 			boxSides: [
 				{ key: 'top', label: 'Top' },
 				{ key: 'right', label: 'Right' },
 				{ key: 'bottom', label: 'Bottom' },
 				{ key: 'left', label: 'Left' },
+			],
+			radiusCorners: [
+				{ key: 'top-left', label: 'Top Left' },
+				{ key: 'top-right', label: 'Top Right' },
+				{ key: 'bottom-right', label: 'Bottom Right' },
+				{ key: 'bottom-left', label: 'Bottom Left' },
 			],
 			spacingBoxes: [
 				{ key: 'padding', label: 'Padding' },
@@ -168,7 +234,55 @@ const ManageArticleTemplateVue3 = Vue.createApp({
                 transform: `scale(${this.deviceScale})`,
             };
         },
+		optionSections() {
+			const options = this.optionsModal?.value || {};
+			const isArchive = this.surface === 'archive';
+			const isMinimal = isArchive && this.activeTemplateKey === 'minimal-reading-list';
+			const sections = [{ key: 'header', label: 'Header content', icon: 'fa-align-left' }];
+
+			if (isArchive) sections.push({ key: 'toolbar', label: 'Archive toolbar', icon: 'fa-sliders-h' });
+			if (isMinimal && options.post_list) sections.push({ key: 'post-list', label: 'Post list', icon: 'fa-list-ul' });
+			if (isMinimal && options.sidebar) sections.push({ key: 'sidebar', label: 'Reading list sidebar', icon: 'fa-columns' });
+			if (isArchive && options.grid) sections.push({ key: 'grid', label: 'Grid columns', icon: 'fa-th-large' });
+			if (isArchive) {
+				sections.push({ key: 'thumbnail', label: 'Thumbnail', icon: 'fa-image' });
+				sections.push({ key: 'pagination', label: 'Pagination', icon: 'fa-ellipsis-h' });
+				sections.push({ key: 'article-title', label: 'Article title', icon: 'fa-heading' });
+			}
+
+			sections.push({ key: 'shell', label: isArchive ? 'Archive shell' : 'Detail shell', icon: 'fa-square' });
+
+			return sections;
+		},
+		optionsPreviewDevice() {
+			return this.deviceProfiles[this.optionsDevice] || this.deviceProfiles.desktop;
+		},
+		optionsPreviewStageStyle() {
+			return {
+				width: `${Math.round(this.optionsPreviewDevice.width * this.modalPreviewScale)}px`,
+				height: `${Math.round(this.optionsPreviewDevice.height * this.modalPreviewScale)}px`,
+			};
+		},
+		optionsPreviewFrameStyle() {
+			return {
+				width: `${this.optionsPreviewDevice.width}px`,
+				height: `${this.optionsPreviewDevice.height}px`,
+				transform: `scale(${this.modalPreviewScale})`,
+			};
+		},
     },
+	watch: {
+		'optionsModal.value': {
+			deep: true,
+			handler() {
+				if (!this.optionsModal.value || !this.optionsModal.initialJson) return;
+
+				this.optionsModal.dirty = JSON.stringify(this.optionsModal.value) !== this.optionsModal.initialJson;
+				this.optionsModal.dismissOpen = false;
+				this.scheduleModalPreview();
+			},
+		},
+	},
 	methods: {
 		prepareTemplateOptions(value, surface) {
 			const options = value && typeof value === 'object' ? value : {};
@@ -202,6 +316,15 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 				if (!options.thumbnail.background_color) options.thumbnail.background_color = '#f2f4f7';
 				options.thumbnail.frame = ensureFrame(options.thumbnail.frame);
 				options.pagination = options.pagination || {};
+				if (!['underline', 'boxed', 'soft'].includes(options.pagination.type)) options.pagination.type = 'boxed';
+				options.pagination.range = options.pagination.range || {};
+				const paginationRangeDefaults = { desktop: 3, tablet: 3, mobile: 2 };
+				Object.entries(paginationRangeDefaults).forEach(([device, fallback]) => {
+					const numeric = Number(options.pagination.range[device]);
+					options.pagination.range[device] = Number.isFinite(numeric)
+						? Math.min(9, Math.max(1, Math.round(numeric)))
+						: fallback;
+				});
 				if (typeof options.pagination.show_total !== 'boolean') options.pagination.show_total = true;
 				if (!['left', 'center', 'right'].includes(options.pagination.position)) options.pagination.position = 'right';
 				options.pagination.frame = ensureFrame(options.pagination.frame, true);
@@ -209,6 +332,23 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 				options.pagination.margin = ensureBox(options.pagination.margin);
 				options.article_title = options.article_title || {};
 				if (!['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(options.article_title.tag)) options.article_title.tag = 'h4';
+				if (this.activeTemplateKey === 'minimal-reading-list') {
+					options.toolbar = options.toolbar || {};
+					options.toolbar.category = options.toolbar.category || {};
+					if (typeof options.toolbar.category.enabled !== 'boolean') options.toolbar.category.enabled = true;
+					if (!['select', 'button-list'].includes(options.toolbar.category.mode)) options.toolbar.category.mode = 'button-list';
+					options.sidebar = options.sidebar || {};
+					if (typeof options.sidebar.enabled !== 'boolean') options.sidebar.enabled = true;
+					options.sidebar.categories = options.sidebar.categories || {};
+					if (typeof options.sidebar.categories.enabled !== 'boolean') options.sidebar.categories.enabled = true;
+					if (!['static', 'sticky'].includes(options.sidebar.categories.position)) options.sidebar.categories.position = 'static';
+					options.sidebar.popular = options.sidebar.popular || {};
+					if (typeof options.sidebar.popular.enabled !== 'boolean') options.sidebar.popular.enabled = true;
+					if (!['static', 'sticky'].includes(options.sidebar.popular.position)) options.sidebar.popular.position = 'static';
+					options.post_list = options.post_list || {};
+					const postListGap = ArticleTemplateUnitControls.parse(options.post_list.item_gap, '0.75rem', 'spacing');
+					options.post_list.item_gap = ArticleTemplateUnitControls.format(postListGap.value, postListGap.unit);
+				}
 			}
 
 			return options;
@@ -240,12 +380,55 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 		dimensionStep(path, kind = 'spacing') {
 			return ArticleTemplateUnitControls.step(this.dimensionUnit(path, kind));
 		},
+		paginationRangeValue(device) {
+			const fallback = device === 'mobile' ? 2 : 3;
+			const value = Number(this.optionPath(`pagination.range.${device}`, fallback));
+
+			return Number.isFinite(value) ? Math.min(9, Math.max(1, Math.round(value))) : fallback;
+		},
+		setPaginationRange(device, raw) {
+			if (!['desktop', 'tablet', 'mobile'].includes(device) || raw === '') return;
+
+			const value = Number(raw);
+			if (!Number.isFinite(value)) return;
+
+			this.setOptionPath(`pagination.range.${device}`, Math.min(9, Math.max(1, Math.round(value))));
+		},
 		setDimensionValue(path, raw, kind = 'spacing') {
 			if (raw === '') return;
 			this.setOptionPath(path, ArticleTemplateUnitControls.format(raw, this.dimensionUnit(path, kind)));
 		},
 		setDimensionUnit(path, unit, kind = 'spacing') {
 			this.setOptionPath(path, ArticleTemplateUnitControls.withUnit(this.optionPath(path, '0px'), unit, kind));
+		},
+		radiusValue(path, index) {
+			return ArticleTemplateUnitControls.radiusValues(this.optionPath(path, '1rem'), '1rem', 'radius').values[index]?.value ?? 0;
+		},
+		radiusUnit(path) {
+			return ArticleTemplateUnitControls.radiusValues(this.optionPath(path, '1rem'), '1rem', 'radius').unit;
+		},
+		radiusMax(path) {
+			return ArticleTemplateUnitControls.max(this.radiusUnit(path));
+		},
+		radiusStep(path) {
+			return ArticleTemplateUnitControls.step(this.radiusUnit(path));
+		},
+		radiusLinkKey(path) {
+			return `${this.optionsModal.surface || this.surface}:radius:${path}`;
+		},
+		isRadiusLinked(path) {
+			return this.optionBoxLinks[this.radiusLinkKey(path)] !== false;
+		},
+		toggleRadiusLinked(path) {
+			const key = this.radiusLinkKey(path);
+			this.optionBoxLinks[key] = !this.isRadiusLinked(path);
+		},
+		setRadiusValue(path, index, raw) {
+			if (raw === '') return;
+			this.setOptionPath(path, ArticleTemplateUnitControls.setRadiusValue(this.optionPath(path, '1rem'), index, raw, this.isRadiusLinked(path), 'radius'));
+		},
+		setRadiusUnit(path, unit) {
+			this.setOptionPath(path, ArticleTemplateUnitControls.setRadiusUnit(this.optionPath(path, '1rem'), unit, 'radius'));
 		},
 		boxValue(path, device, side, kind = 'spacing') {
 			return ArticleTemplateUnitControls.parse(this.optionPath(`${path}.${device}.${side}`, '0px'), '0px', kind).value;
@@ -293,27 +476,189 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 
 			return /^#[0-9a-f]{6}$/i.test(color) ? color : '';
 		},
+		buildPreviewUrl(surface, template, templateOptions = null, previewDevice = null) {
+			const previewUrl = this.previewBaseUrl
+				.replace('__SURFACE__', surface)
+				.replace('__TEMPLATE__', template);
+			const themeColor = this.activeThemeColor?.() || '';
+			const params = new URLSearchParams();
+
+			if (themeColor) params.set('theme_color', themeColor);
+			if (templateOptions) params.set('template_options', JSON.stringify(templateOptions));
+			if (['desktop', 'tablet', 'mobile'].includes(previewDevice)) params.set('preview_device', previewDevice);
+
+			return params.toString() ? `${previewUrl}?${params.toString()}` : previewUrl;
+		},
         rebuildPreview() {
 			if (this.previewLoadTimer) {
 				window.clearTimeout(this.previewLoadTimer);
 				this.previewLoadTimer = null;
 			}
 			this.previewLoading = true;
-            const previewUrl = this.previewBaseUrl
-                .replace('__SURFACE__', this.surface)
-                .replace('__TEMPLATE__', this.activeTemplateKey);
-			const themeColor = this.activeThemeColor?.() || '';
 			const templateOptions = this.activeTemplateOptions?.() || null;
-			const params = new URLSearchParams();
-
-			if (themeColor) params.set('theme_color', themeColor);
-			if (templateOptions) params.set('template_options', JSON.stringify(templateOptions));
-
-			this.previewThemeColor = themeColor;
-			this.previewUrl = params.toString() ? `${previewUrl}?${params.toString()}` : previewUrl;
+			this.previewThemeColor = this.activeThemeColor?.() || '';
+			this.previewUrl = this.buildPreviewUrl(this.surface, this.activeTemplateKey, templateOptions, this.device);
         },
 		cloneOptions(value) {
 			return JSON.parse(JSON.stringify(value || {}));
+		},
+		createOptionsSession(value, surface, key) {
+			const clone = this.cloneOptions(value);
+
+			return {
+				key,
+				surface,
+				value: clone,
+				initialJson: JSON.stringify(clone),
+				section: 'header',
+				view: 'settings',
+				dirty: false,
+				dismissOpen: false,
+			};
+		},
+		clearModalPreviewTimers() {
+			if (this.modalPreviewTimer) {
+				window.clearTimeout(this.modalPreviewTimer);
+				this.modalPreviewTimer = null;
+			}
+			if (this.modalPreviewTimeoutTimer) {
+				window.clearTimeout(this.modalPreviewTimeoutTimer);
+				this.modalPreviewTimeoutTimer = null;
+			}
+		},
+		scheduleModalPreview() {
+			this.clearModalPreviewTimers();
+			if (!this.optionsModal?.value) return;
+
+			this.modalPreviewTimer = window.setTimeout(() => {
+				this.modalPreviewTimer = null;
+				this.rebuildModalPreview();
+			}, 350);
+		},
+		rebuildModalPreview() {
+			const modal = this.optionsModal;
+			if (!modal?.key || !modal.value) return;
+
+			this.clearModalPreviewTimers();
+			this.modalPreviewLoading = true;
+			this.modalPreviewError = '';
+			this.modalPreviewRequestSequence = Number.isFinite(this.modalPreviewRequestSequence)
+				? this.modalPreviewRequestSequence + 1
+				: 1;
+			this.modalPreviewUrl = this.buildPreviewUrl(modal.surface, modal.key, modal.value, this.optionsDevice);
+			const requestId = this.modalPreviewRequestSequence;
+
+			this.modalPreviewTimeoutTimer = window.setTimeout(() => {
+				if (requestId !== this.modalPreviewRequestSequence) return;
+
+				this.modalPreviewLoading = false;
+				this.modalPreviewError = 'Preview timed out. Try again.';
+				this.modalPreviewTimeoutTimer = null;
+			}, 8000);
+		},
+		onModalPreviewLoad(event) {
+			const source = event?.target?.getAttribute?.('src') || '';
+			if (source && this.modalPreviewUrl && source !== this.modalPreviewUrl) return;
+			const framePath = event?.target?.contentWindow?.location?.pathname || '';
+			const frameDocument = event?.target?.contentDocument;
+			if (framePath === '/auth/login' || frameDocument?.querySelector?.('.ph-app-auth')) {
+				this.clearModalPreviewTimers();
+				this.modalPreviewLoading = false;
+				this.modalPreviewError = 'Preview is unavailable. Check your session and retry.';
+				return;
+			}
+
+			this.clearModalPreviewTimers();
+			this.modalPreviewLoading = false;
+			this.modalPreviewError = '';
+		},
+		onModalPreviewError(event) {
+			const source = event?.target?.getAttribute?.('src') || '';
+			if (source && this.modalPreviewUrl && source !== this.modalPreviewUrl) return;
+
+			this.clearModalPreviewTimers();
+			this.modalPreviewLoading = false;
+			this.modalPreviewError = 'Unable to load the preview.';
+		},
+		retryModalPreview() {
+			this.rebuildModalPreview();
+		},
+		setOptionsSection(section) {
+			if (!this.optionsModal?.value || !this.optionSections.some((item) => item.key === section)) return;
+
+			this.optionsModal.section = section;
+			this.optionsModal.dismissOpen = false;
+			this.$nextTick(() => {
+				this.initColorisPicker();
+				this.$refs.optionsPanelViewport?.scrollTo?.({ top: 0, left: 0, behavior: 'auto' });
+			});
+		},
+		handleOptionsTabKeydown(event, index) {
+			const keys = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1, Home: 'first', End: 'last' };
+			const action = keys[event.key];
+			if (!action) return;
+
+			event.preventDefault();
+			const sections = this.optionSections;
+			const nextIndex = action === 'first'
+				? 0
+				: action === 'last'
+					? sections.length - 1
+					: (index + action + sections.length) % sections.length;
+			const nextSection = sections[nextIndex];
+			if (!nextSection) return;
+
+			this.setOptionsSection(nextSection.key);
+			this.$nextTick(() => document.getElementById(`article-template-option-tab-${nextSection.key}`)?.focus?.());
+		},
+		setOptionsView(view) {
+			this.optionsModal.view = view === 'preview' ? 'preview' : 'settings';
+			if (this.optionsModal.view === 'preview') this.$nextTick(() => this.fitOptionsPreview());
+		},
+		selectOptionsDevice(device) {
+			if (!this.deviceProfiles[device]) return;
+
+			this.optionsDevice = device;
+			this.$nextTick(() => {
+				this.fitOptionsPreview();
+				if (this.optionsModal?.value) this.rebuildModalPreview();
+			});
+		},
+		fitOptionsPreview() {
+			const viewportWidth = Number(this.$refs?.optionsPreviewViewport?.clientWidth || 0);
+			if (!viewportWidth) return;
+
+			this.modalPreviewScale = Math.min(
+				1,
+				Math.max(0, viewportWidth - this.modalPreviewGutter) / this.optionsPreviewDevice.width,
+				this.modalPreviewMaxHeight / this.optionsPreviewDevice.height,
+			);
+		},
+		onOptionsModalShown() {
+			this.fitOptionsPreview();
+			this.$nextTick(() => {
+				this.initColorisPicker();
+				this.fitOptionsPreview();
+				this.$refs.optionsPanelViewport?.scrollTo?.({ top: 0, left: 0, behavior: 'auto' });
+				document.getElementById(`article-template-option-tab-${this.optionsModal.section}`)?.focus?.();
+			});
+			if (typeof ResizeObserver === 'undefined' || !this.$refs.optionsPreviewViewport) return;
+
+			this.modalPreviewResizeObserver?.disconnect();
+			this.modalPreviewResizeObserver = new ResizeObserver(() => this.fitOptionsPreview());
+			this.modalPreviewResizeObserver.observe(this.$refs.optionsPreviewViewport);
+		},
+		onOptionsModalHidden() {
+			const triggerId = this.optionsModalTriggerId;
+
+			this.clearModalPreviewTimers();
+			this.modalPreviewResizeObserver?.disconnect();
+			this.modalPreviewResizeObserver = null;
+			this.modalPreviewUrl = '';
+			this.modalPreviewError = '';
+			this.optionsModal = { key: null, surface: null, value: null, initialJson: '', section: 'header', view: 'settings', dirty: false, dismissOpen: false };
+			this.optionsModalTriggerId = null;
+			this.$nextTick(() => triggerId && document.getElementById(triggerId)?.focus?.());
 		},
 		initColorisPicker() {
 			if (typeof window.Coloris !== 'function') return;
@@ -330,21 +675,39 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 			this.$nextTick(() => this.initColorisPicker());
 		},
 		openTemplateOptions() {
-			this.optionsModal = {
-				key: this.activeTemplateKey,
-				surface: this.surface,
-				value: this.prepareTemplateOptions(this.cloneOptions(this.activeTemplateOptions()), this.surface),
-			};
+			this.optionsModalTriggerId = document.activeElement?.id || 'article-template-options-trigger';
+			const value = this.prepareTemplateOptions(this.cloneOptions(this.activeTemplateOptions()), this.surface);
+			this.optionsModal = this.createOptionsSession(value, this.surface, this.activeTemplateKey);
 			this.optionsDevice = 'desktop';
 			this.optionBoxLinks = {};
 			this.$nextTick(() => {
 				this.initColorisPicker();
+				this.rebuildModalPreview();
 				bootstrap.Modal.getOrCreateInstance(document.getElementById('modalArticleTemplateOptions')).show();
 			});
 		},
 		closeTemplateOptions() {
-			bootstrap.Modal.getOrCreateInstance(document.getElementById('modalArticleTemplateOptions')).hide();
-			this.optionsModal = { key: null, surface: null, value: null };
+			if (this.optionsModal?.dirty) {
+				this.optionsModal.dismissOpen = true;
+				return;
+			}
+
+			this.discardTemplateOptions();
+		},
+		requestCloseTemplateOptions() {
+			this.closeTemplateOptions();
+		},
+		keepEditing() {
+			if (this.optionsModal) this.optionsModal.dismissOpen = false;
+		},
+		discardTemplateOptions() {
+			const modal = document.getElementById('modalArticleTemplateOptions');
+			if (modal && typeof bootstrap !== 'undefined') {
+				bootstrap.Modal.getOrCreateInstance(modal).hide();
+				return;
+			}
+
+			this.onOptionsModalHidden();
 		},
 		applyTemplateOptions() {
 			if (!this.optionsModal.key || !this.optionsModal.value) return;
@@ -352,6 +715,8 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 			const property = this.optionsModal.surface === 'detail' ? 'detail_template_options' : 'archive_template_options';
 			this.draft[property][this.optionsModal.key] = this.cloneOptions(this.optionsModal.value);
 			this.rebuildPreview();
+			this.optionsModal.dirty = false;
+			this.optionsModal.dismissOpen = false;
 			this.closeTemplateOptions();
 		},
 		columnChoices(device) {
@@ -363,6 +728,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 			if (themeColor === this.previewThemeColor) return;
 
 			this.rebuildPreview();
+			if (this.optionsModal?.value) this.rebuildModalPreview();
 		},
         onPreviewLoad() {
 			if (this.previewLoadTimer) window.clearTimeout(this.previewLoadTimer);
@@ -379,7 +745,10 @@ const ManageArticleTemplateVue3 = Vue.createApp({
             if (!this.deviceProfiles[device]) return;
 
             this.device = device;
-            this.$nextTick(() => this.fitPreview());
+            this.$nextTick(() => {
+				this.fitPreview();
+				this.rebuildPreview();
+			});
         },
         fitPreview() {
             const viewportWidth = Number(this.$refs?.previewViewport?.clientWidth || 0);
@@ -441,6 +810,9 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 		}
 
         this.$nextTick(() => {
+			const optionsModal = document.getElementById('modalArticleTemplateOptions');
+			optionsModal?.addEventListener('shown.bs.modal', this.onOptionsModalShown);
+			optionsModal?.addEventListener('hidden.bs.modal', this.onOptionsModalHidden);
             this.fitPreview();
 
             if (typeof ResizeObserver === 'undefined' || !this.$refs.previewViewport) return;
@@ -451,8 +823,13 @@ const ManageArticleTemplateVue3 = Vue.createApp({
     },
     beforeUnmount() {
 		if (this.previewLoadTimer) window.clearTimeout(this.previewLoadTimer);
+		this.clearModalPreviewTimers();
         this.previewResizeObserver?.disconnect();
 		this.previewThemeObserver?.disconnect();
+		this.modalPreviewResizeObserver?.disconnect();
+		const optionsModal = document.getElementById('modalArticleTemplateOptions');
+		optionsModal?.removeEventListener('shown.bs.modal', this.onOptionsModalShown);
+		optionsModal?.removeEventListener('hidden.bs.modal', this.onOptionsModalHidden);
     },
 }).mount('#ph-app-manage-article-templates');
 

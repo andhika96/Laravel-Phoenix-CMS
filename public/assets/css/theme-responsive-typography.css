@@ -13,6 +13,8 @@
 	--ph-fmv2-rfs-h3: calc(1.3rem + .6vw);
 	--ph-fmv2-rfs-h4: calc(1.275rem + .3vw);
 	--ph-adaptive-font-size: var(--ph-font-size, 1rem);
+	--ph-mobile-content-font-size: clamp(max(8px, calc(var(--ph-adaptive-font-size) - 1px)), calc(var(--ph-adaptive-font-size) - 2.5px + 0.5vw), var(--ph-adaptive-font-size));
+	--ph-mobile-content-heading-size: clamp(calc(var(--ph-adaptive-font-size) + 2px), calc(var(--ph-adaptive-font-size) - 0.4px + 0.8vw), calc(var(--ph-adaptive-font-size) + 3.6px));
 }
 
 @media (min-width: 1200px)
@@ -46,6 +48,24 @@ body
 {
 	font-size: var(--ph-adaptive-font-size);
 	font-family: var(--ph-font-family);
+}
+
+@media (max-width: 768px)
+{
+	body :where(.ph-scrollable-content)
+	{
+		font-size: var(--ph-mobile-content-font-size);
+	}
+
+	body :where(.ph-scrollable-content) :where(.form-control, .form-select, .form-label, .btn, .table, .breadcrumb, .dropdown-item, .input-group-text, .page-link, .form-check-label)
+	{
+		font-size: var(--ph-mobile-content-font-size) !important;
+	}
+
+	body :where(.ph-scrollable-content) :where(h4, .h4)
+	{
+		font-size: var(--ph-mobile-content-heading-size) !important;
+	}
 }
 
 body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(.form-control, .form-select, .btn, .dropdown-item, .table, .form-label, .page-link, .input-group-text, .form-check-label, .form-check-input)

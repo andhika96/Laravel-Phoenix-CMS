@@ -35,6 +35,7 @@ test('manager selection changes only the active surface and rebuilds the live pr
 		activeTemplates: { 'mosaic-magazine': { label: 'Mosaic Magazine' } },
 		previewBaseUrl: '/manage_article/templates/preview/__SURFACE__/__TEMPLATE__',
 		previewUrl: '',
+		buildPreviewUrl: options.methods.buildPreviewUrl,
 		rebuildPreview: options.methods.rebuildPreview,
 		get activeTemplateKey() { return this.surface === 'detail' ? this.draft.detail_template : this.draft.archive_template; },
 	};
@@ -55,6 +56,7 @@ test('manager passes the active CMS accent into the isolated preview and refresh
 		previewUrl: '',
 		previewLoading: false,
 		previewLoadTimer: null,
+		buildPreviewUrl: options.methods.buildPreviewUrl,
 		activeThemeColor() { return '#FF5733'; },
 		get activeTemplateKey() { return this.draft.archive_template; },
 	};
@@ -76,6 +78,7 @@ test('manager serializes the active template option draft into the iframe URL wi
 		previewUrl: '',
 		previewLoading: false,
 		previewLoadTimer: null,
+		buildPreviewUrl: options.methods.buildPreviewUrl,
 		activeThemeColor() { return ''; },
 		activeTemplateOptions() { return { grid: { desktop: 4, tablet: 3, mobile: 2 } }; },
 		get activeTemplateKey() { return this.draft.archive_template; },
@@ -170,6 +173,7 @@ test('device selection changes viewport profile and refits the preview', () => {
 		draft: { archive_template: 'minimal-reading-list', detail_template: 'focused-reader' },
 		refitCalled: false,
 		fitPreview() { this.refitCalled = true; },
+		rebuildPreview() { this.previewRebuilt = true; },
 		$nextTick(callback) { callback(); },
 	};
 
@@ -177,6 +181,7 @@ test('device selection changes viewport profile and refits the preview', () => {
 
 	assert.equal(state.device, 'mobile');
 	assert.equal(state.refitCalled, true);
+	assert.equal(state.previewRebuilt, true);
 	assert.equal(state.surface, 'detail');
 	assert.equal(state.draft.detail_template, 'focused-reader');
 });
@@ -194,6 +199,20 @@ test('manager source exposes a labelled device stage instead of max-width-only i
 	assert.doesNotMatch(css, /max-width: 390px/);
 });
 
+test('live preview stage wrappers stay square while template content keeps its own frame settings', () => {
+	const css = readFileSync(path.join(process.cwd(), 'public/assets/css/article/article-template-manager-2026.css'), 'utf8');
+	const stageRules = [
+		css.match(/\.article-template-manager__device-stage\s*\{([^}]*)\}/s)?.[1],
+		css.match(/\.article-template-options-preview__stage\s*\{([^}]*)\}/s)?.[1],
+	];
+
+	assert.ok(stageRules.every(Boolean));
+	assert.ok(stageRules.every((rule) => !/border-radius\s*:/.test(rule)));
+	assert.doesNotMatch(css, /\.article-template-manager__device-stage iframe\s*\{[^}]*border-radius\s*:/s);
+	assert.doesNotMatch(css, /\.article-template-options-preview__stage iframe\s*\{[^}]*border-radius\s*:/s);
+	assert.match(css, /\.article-template-options-modal \.modal-content\s*\{[\s\S]*?border-radius:\s*1rem/);
+});
+
 test('template selection displays a loading state until the iframe has loaded the new preview', () => {
 	const options = loadOptions();
 	const state = {
@@ -204,6 +223,7 @@ test('template selection displays a loading state until the iframe has loaded th
 		previewUrl: '',
 		previewLoading: false,
 		previewLoadTimer: null,
+		buildPreviewUrl: options.methods.buildPreviewUrl,
 		get activeTemplateKey() { return this.draft.archive_template; },
 	};
 	state.rebuildPreview = options.methods.rebuildPreview;
@@ -235,6 +255,8 @@ test('manager source exposes an accessible preview-loading overlay bound to ifra
 	assert.match(view, /article-template-manager__preview-loading/);
 	assert.match(view, /v-on:load="onPreviewLoad"/);
 	assert.match(view, /:aria-busy="previewLoading/);
+	assert.match(view, /@\{\{ copy\.loadingPreview \}\}/);
+	assert.doesNotMatch(view, /(?<!@)\{\{\s*copy\.loadingPreview\s*\}\}/);
 	assert.match(css, /\.article-template-manager__preview-loading/);
 });
 
@@ -275,6 +297,16 @@ test('template option dimensions use the requested unit allowlists with determin
 	assert.deepEqual(JSON.parse(JSON.stringify(box)), { top: '1.25pt', right: '1.25pt', bottom: '1.25pt', left: '10pt' });
 });
 
+test('border radius control follows the Page Builder four-corner linked-unit behavior', () => {
+	const controls = loadOptions().__unitControls;
+
+	assert.deepEqual(JSON.parse(JSON.stringify(controls.radiusValues('4px 8px 12px 16px', '1rem', 'radius').values.map((item) => item.value))), [4, 8, 12, 16]);
+	assert.deepEqual(JSON.parse(JSON.stringify(controls.radiusValues('4px 8px', '1rem', 'radius').values.map((item) => item.value))), [4, 8, 4, 8]);
+	assert.equal(controls.setRadiusValue('4px 8px 12px 16px', 1, '20', false, 'radius'), '4px 20px 12px 16px');
+	assert.equal(controls.setRadiusValue('4px 8px 12px 16px', 2, '20', true, 'radius'), '20px 20px 20px 20px');
+	assert.equal(controls.setRadiusUnit('4px 8px 12px 16px', 'rem', 'radius'), '4rem 8rem 12rem 16rem');
+});
+
 test('template options modal exposes only structured archive and detail styling controls', () => {
 	const view = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
 	const styling = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/partials/options-styling.blade.php'), 'utf8');
@@ -288,6 +320,8 @@ test('template options modal exposes only structured archive and detail styling 
 	assert.match(styling, /Detail shell/);
 	assert.match(styling, /article-template-unit-control/);
 	assert.match(styling, /article-template-box-control/);
+	assert.match(source, /selectOptionsDevice/);
+	assert.doesNotMatch(styling, /article-template-device-tabs--compact/);
 	assert.doesNotMatch(styling, /custom css/i);
 	assert.doesNotMatch(styling, /custom class/i);
 	assert.match(css, /\.article-template-unit-control/);
@@ -310,4 +344,259 @@ test('template options uses the local Page Builder Coloris pattern and equal box
 	assert.match(css, /--article-template-control-height/);
 	assert.match(css, /article-template-box-control__inputs > label \.form-control[\s\S]*?height: var\(--article-template-control-height\)/);
 	assert.match(css, /article-template-box-control__link[\s\S]*?height: var\(--article-template-control-height\)/);
+});
+
+test('Pagination options expose named models and independent desktop/tablet/mobile ranges', () => {
+	const styling = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/partials/options-styling.blade.php'), 'utf8');
+	const managerSource = readFileSync(path.join(process.cwd(), 'public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js'), 'utf8');
+	const css = readFileSync(path.join(process.cwd(), 'public/assets/css/article/article-template-manager-2026.css'), 'utf8');
+
+	assert.match(styling, /Pagination model/);
+	assert.match(styling, /Minimal Underline/);
+	assert.match(styling, /Classic Boxed/);
+	assert.match(styling, /Soft Highlight/);
+	assert.match(styling, /paginationRangeValue\('desktop'\)/);
+	assert.match(styling, /paginationRangeValue\('tablet'\)/);
+	assert.match(styling, /paginationRangeValue\('mobile'\)/);
+	assert.match(managerSource, /options\.pagination\.type/);
+	assert.match(managerSource, /options\.pagination\.range/);
+	assert.match(css, /article-template-pagination-range__fields[\s\S]*?grid-template-columns:\s*repeat\(3/);
+});
+
+test('template options modal exposes conditional vertical navigation and a mobile section picker', () => {
+	const view = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
+
+	assert.match(view, /article-template-options-nav/);
+	assert.match(view, /role="tablist"/);
+	assert.match(view, /aria-selected/);
+	assert.match(view, /aria-controls/);
+	assert.match(view, /role="tabpanel"/);
+	assert.match(view, /article-template-options-section-picker/);
+	assert.match(view, /data-bs-backdrop="static"/);
+	assert.match(view, /data-bs-keyboard="false"/);
+	assert.match(source, /optionSections\(\)/);
+	assert.match(source, /setOptionsSection/);
+	assert.match(source, /handleOptionsTabKeydown/);
+});
+
+test('option sections follow the active surface and template schema', () => {
+	const options = loadOptions();
+	const state = {
+		surface: 'archive',
+		activeTemplateKey: 'minimal-reading-list',
+		optionsModal: {
+			value: {
+				post_list: { item_gap: '0.75rem' },
+				sidebar: { enabled: true },
+				grid: null,
+			},
+		},
+	};
+
+	assert.deepEqual(JSON.parse(JSON.stringify(options.computed.optionSections.call(state).map((section) => section.key))), [
+		'header', 'toolbar', 'post-list', 'sidebar', 'thumbnail', 'pagination', 'article-title', 'shell',
+	]);
+
+	state.activeTemplateKey = 'editorial-journal';
+	state.optionsModal.value = { grid: { desktop: 3, tablet: 2, mobile: 1 } };
+	assert.deepEqual(JSON.parse(JSON.stringify(options.computed.optionSections.call(state).map((section) => section.key))), [
+		'header', 'toolbar', 'grid', 'thumbnail', 'pagination', 'article-title', 'shell',
+	]);
+
+	state.surface = 'detail';
+	state.activeTemplateKey = 'focused-reader';
+	state.optionsModal.value = {};
+	assert.deepEqual(JSON.parse(JSON.stringify(options.computed.optionSections.call(state).map((section) => section.key))), ['header', 'shell']);
+});
+
+test('modal preview uses the modal clone, debounces edits, and keeps the page draft untouched', () => {
+	const timers = [];
+	const options = loadOptions({
+		setTimeout(callback, delay) { timers.push({ callback, delay }); return timers.length; },
+		clearTimeout() {},
+	});
+	const state = {
+		optionsModal: {
+			surface: 'archive',
+			key: 'minimal-reading-list',
+			value: { header: { title: { text: 'Modal draft' } } },
+		},
+		draft: { archive_template_options: { 'minimal-reading-list': { header: { title: { text: 'Saved draft' } } } } },
+		previewBaseUrl: '/manage_article/templates/preview/__SURFACE__/__TEMPLATE__',
+		modalPreviewUrl: '',
+		modalPreviewLoading: false,
+		modalPreviewError: '',
+		modalPreviewTimer: null,
+		modalPreviewTimeoutTimer: null,
+		modalPreviewRequestSequence: 0,
+		activeThemeColor() { return ''; },
+		buildPreviewUrl: options.methods.buildPreviewUrl,
+		clearModalPreviewTimers: options.methods.clearModalPreviewTimers,
+	};
+
+	options.methods.rebuildModalPreview.call(state);
+	const url = new URL(`https://example.test${state.modalPreviewUrl}`);
+	assert.deepEqual(JSON.parse(url.searchParams.get('template_options')), state.optionsModal.value);
+	assert.equal(state.draft.archive_template_options['minimal-reading-list'].header.title.text, 'Saved draft');
+	assert.equal(state.modalPreviewLoading, true);
+	assert.equal(state.modalPreviewRequestSequence, 1);
+
+	options.methods.scheduleModalPreview.call(state);
+	assert.equal(timers.at(-1).delay, 350);
+});
+
+test('page and modal Minimal Reading List previews share the same read-only renderer endpoint', () => {
+	const view = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
+	const controller = readFileSync(path.join(process.cwd(), 'app/Http/Controllers/Web/Manage_Article/ManageArticleTemplateController.php'), 'utf8');
+	const options = loadOptions();
+	const state = {
+		previewBaseUrl: '/manage_article/templates/preview/__SURFACE__/__TEMPLATE__',
+		activeThemeColor() { return ''; },
+	};
+	const draft = { toolbar: { search: { enabled: true, position: 'center' } }, post_list: { item_gap: '2rem' } };
+	const pageUrl = options.methods.buildPreviewUrl.call(state, 'archive', 'minimal-reading-list', draft);
+	const modalUrl = options.methods.buildPreviewUrl.call(state, 'archive', 'minimal-reading-list', JSON.parse(JSON.stringify(draft)));
+	const mobileUrl = options.methods.buildPreviewUrl.call(state, 'archive', 'minimal-reading-list', draft, 'mobile');
+
+	assert.equal(new URL(`https://example.test${pageUrl}`).pathname, '/manage_article/templates/preview/archive/minimal-reading-list');
+	assert.equal(new URL(`https://example.test${modalUrl}`).pathname, new URL(`https://example.test${pageUrl}`).pathname);
+	assert.equal(new URL(`https://example.test${mobileUrl}`).searchParams.get('preview_device'), 'mobile');
+	assert.match(view, /:src="previewUrl"/);
+	assert.match(view, /:src="modalPreviewUrl"/);
+	assert.match(source, /this\.previewUrl = this\.buildPreviewUrl\(this\.surface, this\.activeTemplateKey, templateOptions, this\.device\)/);
+	assert.match(source, /this\.modalPreviewUrl = this\.buildPreviewUrl\(modal\.surface, modal\.key, modal\.value, this\.optionsDevice\)/);
+	assert.match(controller, /return view\('manage_article\.templates\.preview'/);
+	assert.match(controller, /private function previewOptions/);
+});
+
+test('modal session starts on Header content and isolates every edit from its source object', () => {
+	const options = loadOptions();
+	const sourceOptions = { header: { title: { text: 'Original' } } };
+	const session = options.methods.createOptionsSession.call({ cloneOptions: options.methods.cloneOptions }, sourceOptions, 'archive', 'minimal-reading-list');
+
+	assert.equal(session.section, 'header');
+	assert.equal(session.view, 'settings');
+	assert.equal(session.dirty, false);
+	session.value.header.title.text = 'Changed only in modal';
+	assert.equal(sourceOptions.header.title.text, 'Original');
+});
+
+test('modal preview uses the fixed virtual device profile when fitting its viewport', () => {
+	const options = loadOptions();
+	const state = {
+		optionsDevice: 'tablet',
+		deviceProfiles: {
+			desktop: { width: 1440, height: 900 },
+			tablet: { width: 834, height: 1112 },
+		},
+		modalPreviewScale: 1,
+		modalPreviewGutter: 32,
+		modalPreviewMaxHeight: 620,
+		$refs: { optionsPreviewViewport: { clientWidth: 700 } },
+		get optionsPreviewDevice() { return this.deviceProfiles[this.optionsDevice]; },
+	};
+
+	options.methods.fitOptionsPreview.call(state);
+
+	assert.equal(state.modalPreviewScale, 620 / 1112);
+	assert.equal(options.computed.optionsPreviewStageStyle.call(state).width, `${Math.round(834 * (620 / 1112))}px`);
+	assert.equal(options.computed.optionsPreviewFrameStyle.call(state).height, '1112px');
+});
+
+test('modal dismissal exposes an inline dirty confirmation and retryable preview lifecycle', () => {
+	const options = loadOptions();
+	const view = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
+	const state = {
+		optionsModal: { dirty: true, dismissOpen: false },
+		closeTemplateOptions: options.methods.closeTemplateOptions,
+	};
+
+	options.methods.requestCloseTemplateOptions.call(state);
+	assert.equal(state.optionsModal.dismissOpen, true);
+	options.methods.keepEditing.call(state);
+	assert.equal(state.optionsModal.dismissOpen, false);
+
+	assert.match(source, /modalPreviewTimeoutTimer/);
+	assert.match(source, /retryModalPreview/);
+	assert.match(source, /clearModalPreviewTimers/);
+	assert.match(source, /auth\/login/);
+	assert.match(source, /contentDocument/);
+	assert.match(view, /Keep editing/);
+	assert.match(view, /Discard changes/);
+	assert.match(view, /Retry/);
+	assert.match(view, /v-on:error="onModalPreviewError"/);
+	assert.doesNotMatch(view, /@error\s*=\s*"onModalPreviewError"/);
+});
+
+test('hidden modal lifecycle cancels preview timers, disconnects the observer, and clears the session', () => {
+	const options = loadOptions();
+	const observer = { disconnected: false, disconnect() { this.disconnected = true; } };
+	const state = {
+		optionsModalTriggerId: 'article-template-options-trigger',
+		optionsModal: { key: 'minimal-reading-list', surface: 'archive', value: { header: {} } },
+		modalPreviewTimer: 1,
+		modalPreviewTimeoutTimer: 2,
+		modalPreviewResizeObserver: observer,
+		modalPreviewUrl: '/preview',
+		modalPreviewError: 'error',
+		clearModalPreviewTimers: options.methods.clearModalPreviewTimers,
+		$nextTick(callback) { callback(); },
+	};
+
+	options.methods.onOptionsModalHidden.call(state);
+
+	assert.equal(state.optionsModal.value, null);
+	assert.equal(state.modalPreviewUrl, '');
+	assert.equal(state.modalPreviewError, '');
+	assert.equal(state.modalPreviewResizeObserver, null);
+	assert.equal(observer.disconnected, true);
+});
+
+test('modal preview treats an authentication redirect as an error instead of a successful load', () => {
+	const options = loadOptions();
+	const state = {
+		modalPreviewUrl: '/manage_article/templates/preview/archive/minimal-reading-list',
+		modalPreviewLoading: true,
+		modalPreviewError: '',
+		modalPreviewTimer: null,
+		modalPreviewTimeoutTimer: 1,
+		clearModalPreviewTimers: options.methods.clearModalPreviewTimers,
+	};
+
+	options.methods.onModalPreviewLoad.call(state, {
+		target: {
+			getAttribute() { return state.modalPreviewUrl; },
+			contentWindow: { location: { pathname: '/auth/login' } },
+			contentDocument: { querySelector() { return null; } },
+		},
+	});
+
+	assert.equal(state.modalPreviewLoading, false);
+	assert.match(state.modalPreviewError, /unavailable/i);
+});
+
+test('modal preview URL stays within a practical GET budget for the largest draft payload', () => {
+	const options = loadOptions();
+	const state = {
+		previewBaseUrl: '/manage_article/templates/preview/__SURFACE__/__TEMPLATE__',
+		activeThemeColor() { return '#123456'; },
+	};
+	const largestDraft = {
+		header: {
+			eyebrow: { enabled: true, text: 'x'.repeat(160) },
+			title: { enabled: true, text: 'x'.repeat(160) },
+			description: { enabled: true, text: 'x'.repeat(280) },
+		},
+		toolbar: { search: { enabled: true, position: 'center' }, category: { enabled: true, position: 'right', mode: 'button-list' } },
+		post_list: { item_gap: '30rem' },
+		sidebar: { enabled: true, categories: { enabled: true, position: 'sticky' }, popular: { enabled: true, position: 'sticky' } },
+		thumbnail: { mode: 'asset', fit: 'contain', background_color: '#123456', frame: { enabled: true, border_color: '#654321', border_width: '400pt', radius: '30rem', background_color: '#abcdef' } },
+		pagination: { show_total: true, position: 'center', frame: { enabled: true, border_color: '#123456', border_width: '400pt', radius: '30rem', background_color: '#abcdef' }, padding: { enabled: true, desktop: { top: '30rem', right: '30rem', bottom: '30rem', left: '30rem' }, tablet: { top: '30rem', right: '30rem', bottom: '30rem', left: '30rem' }, mobile: { top: '30rem', right: '30rem', bottom: '30rem', left: '30rem' } }, margin: { enabled: true, desktop: { top: '30rem', right: '30rem', bottom: '30rem', left: '30rem' }, tablet: { top: '30rem', right: '30rem', bottom: '30rem', left: '30rem' }, mobile: { top: '30rem', right: '30rem', bottom: '30rem', left: '30rem' } } },
+		article_title: { tag: 'h6' },
+		shell: { padding: { enabled: true, desktop: { top: '30rem', right: '30rem', bottom: '30rem', left: '30rem' }, tablet: { top: '30rem', right: '30rem', bottom: '30rem', left: '30rem' }, mobile: { top: '30rem', right: '30rem', bottom: '30rem', left: '30rem' } }, margin: { enabled: true, desktop: { top: '30rem', right: '30rem', bottom: '30rem', left: '30rem' }, tablet: { top: '30rem', right: '30rem', bottom: '30rem', left: '30rem' }, mobile: { top: '30rem', right: '30rem', bottom: '30rem', left: '30rem' } }, frame: { enabled: true, border_color: '#123456', border_width: '400pt', radius: '30rem', background_color: '#abcdef' } },
+	};
+
+	const previewUrl = options.methods.buildPreviewUrl.call(state, 'archive', 'minimal-reading-list', largestDraft);
+
+	assert.ok(previewUrl.length < 8000, `preview URL unexpectedly large: ${previewUrl.length}`);
 });

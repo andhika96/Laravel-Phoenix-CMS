@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lucent mobile V2 QA harness</title>
+  <link rel="stylesheet" href="/public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css">
+  <link rel="stylesheet" href="/public/assets/plugins/fontawesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="/public/assets/css/phoenix-cms.css">
+  <link rel="stylesheet" href="/public/assets/css/themes/arunika_lucent/arunika_lucent.css">
+  <link rel="stylesheet" href="/public/assets/css/themes/arunika_lucent/mobile-v2.css">
+  <style>
+    html, body { min-height: 100%; }
+    body { overflow: hidden; }
+    .qa-avatar { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: #e5f5ef; color: #148d66; }
+    .qa-menu { display: grid; gap: 4px; padding: 12px 16px; }
+    .qa-menu a, .qa-utility a { min-height: 44px; display: flex; align-items: center; gap: 12px; padding: 0 12px; color: inherit; text-decoration: none; border-radius: 8px; }
+    .qa-menu a.active { background: #e3f5ee; color: #148d66; font-weight: 700; }
+    .qa-utility { display: grid; gap: 4px; padding: 12px 16px 16px; border-top: 1px solid #e7e9e8; }
+    .qa-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .qa-buttons .btn { min-height: 44px; }
+    .qa-page { padding: 16px; }
+    .qa-card { border: 1px solid #e7e9e8; border-radius: 10px; padding: 14px; background: #fff; }
+    .qa-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  </style>
+</head>
+<body class="ph-theme-arunika-lucent" data-ph-mobile-theme="arunika_lucent">
+  <div class="ph-app-shell d-flex w-100 h-100">
+    <aside class="ph-sidebar" id="sidebar">
+      <div class="ph-lucent-sidebar-mobile-header">
+        <button class="ph-mobile-sidebar-close" type="button" aria-label="Close navigation"><i class="fas fa-times" aria-hidden="true"></i></button>
+      </div>
+      <div class="ph-lucent-sidebar-account">
+        <div class="ph-sidebar-profile">
+          <button class="ph-sidebar-user-card" type="button" aria-label="Open profile menu">
+            <span class="ph-sidebar-user-avatar qa-avatar">A</span>
+            <span class="ph-sidebar-user-meta"><strong>Administrator</strong><span>Super Admin</span></span>
+          </button>
+          <button class="ph-lucent-account-menu-button" type="button" aria-label="Open profile menu"><i class="fal fa-ellipsis-v" aria-hidden="true"></i></button>
+        </div>
+        <button class="ph-lucent-sidebar-toggle" type="button" aria-label="Hide sidebar"><i class="fal fa-chevron-left" aria-hidden="true"></i></button>
+      </div>
+      <div id="sidebar-scroll-content">
+        <div class="ph-nav-category"><span class="ph-nav-category-label">Content</span></div>
+        <nav class="qa-menu">
+          <a class="list-group-item active" href="#dashboard"><span class="ph-nav-icon"><i class="fal fa-th-large"></i></span><span class="ph-nav-text">Dashboard</span></a>
+          <a class="list-group-item" href="#site"><span class="ph-nav-icon"><i class="fal fa-external-link"></i></span><span class="ph-nav-text">View site</span></a>
+          <a class="list-group-item" href="#articles"><span class="ph-nav-icon"><i class="fal fa-file-alt"></i></span><span class="ph-nav-text">Manage Articles</span></a>
+          <a class="list-group-item" href="#cover"><span class="ph-nav-icon"><i class="fal fa-image"></i></span><span class="ph-nav-text">Manage Cover Image</span></a>
+          <a class="list-group-item" href="#event"><span class="ph-nav-icon"><i class="fal fa-calendar"></i></span><span class="ph-nav-text">Manage Event</span></a>
+        </nav>
+      </div>
+      <div class="ph-lucent-sidebar-utilities qa-utility">
+        <a href="#admin"><i class="fal fa-user-secret"></i><span>Awesome Admin</span></a>
+        <a href="#settings"><i class="fal fa-cog"></i><span>Settings</span></a>
+        <a class="ph-lucent-sidebar-logout" href="#logout"><i class="fal fa-sign-out-alt"></i><span>Logout</span></a>
+      </div>
+    </aside>
+    <button class="ph-mobile-sidebar-backdrop" type="button" hidden aria-label="Dismiss navigation backdrop"></button>
+    <main class="ph-layout-right">
+      <header class="ph-top-bar">
+        <button class="ph-mobile-sidebar-trigger" type="button" aria-label="Open navigation"><i class="fas fa-bars"></i></button>
+        <div class="ph-header-actions"></div>
+        <a class="ph-mobile-header-avatar" href="#profile" aria-label="Open profile"><span class="qa-avatar">A</span></a>
+      </header>
+      <div class="ph-main-panel"><div class="ph-scrollable-content"><div class="qa-page">
+        <div class="ph-dashboard-summary"><h4 class="ph-dashboard-title"><i class="fad fa-tachometer-alt"></i><span>Dashboard</span></h4><div class="ph-dashboard-summary-copy"><span class="ph-dashboard-summary-copy-default">Desktop copy</span><span class="ph-dashboard-summary-copy-lucent">Ringkasan bisnis Anda</span></div></div>
+        <div class="qa-grid"><div class="qa-card ph-dashboard-stat"><span class="ph-dashboard-stat-icon">♙</span><div class="ph-dashboard-stat-label">Customers</div><strong class="ph-dashboard-stat-value">36,123</strong><div class="ph-dashboard-stat-trend text-success">↑ 5.27%</div></div><div class="qa-card ph-dashboard-stat"><span class="ph-dashboard-stat-icon">◫</span><div class="ph-dashboard-stat-label">Orders</div><strong class="ph-dashboard-stat-value">5,212</strong><div class="ph-dashboard-stat-trend text-danger">↓ 1.27%</div></div></div>
+        <div class="qa-buttons"><a class="btn btn-outline-primary" href="#primary">Primary</a><a class="btn btn-outline-danger" href="#danger"><i class="fas fa-trash"></i> Delete</a><button class="btn btn-secondary" type="button">Cancel</button></div>
+        <div class="btn-group mt-3" role="group"><input class="btn-check" type="radio" name="seg" id="seg-none" checked><label class="btn btn-outline-primary" for="seg-none">None</label><input class="btn-check" type="radio" name="seg" id="seg-bootstrap"><label class="btn btn-outline-primary" for="seg-bootstrap">Bootstrap 5</label></div>
+      </div></div></div>
+    </main>
+  </div>
+  <script>
+    const accent = new URLSearchParams(location.search).get('accent');
+    if (accent) document.documentElement.style.setProperty('--ph-theme-primary', accent);
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.querySelector('.ph-mobile-sidebar-backdrop');
+    const opener = document.querySelector('.ph-mobile-sidebar-trigger');
+    const closer = document.querySelector('.ph-mobile-sidebar-close');
+    const setOpen = (open) => {
+      sidebar.classList.toggle('ph-expanded', open);
+      backdrop.hidden = !open;
+      opener.setAttribute('aria-expanded', String(open));
+    };
+    if (innerWidth > 768) sidebar.classList.add('ph-expanded');
+    opener.addEventListener('click', () => setOpen(true));
+    closer.addEventListener('click', () => setOpen(false));
+    backdrop.addEventListener('click', () => setOpen(false));
+  </script>
+</body>
+</html>

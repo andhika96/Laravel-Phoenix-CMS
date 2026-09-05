@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 
-const themes = ['arunika_mosaic', 'arunika_aurora', 'arunika_prism', 'arunika_equinox', 'arunika_lucent'];
+const themes = ['arunika_prism', 'arunika_aurora', 'arunika_lucent', 'arunika_equinox'];
 
 for (const theme of themes) {
     const script = readFileSync(

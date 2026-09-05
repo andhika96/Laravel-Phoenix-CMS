@@ -38,6 +38,12 @@ class ArticleTemplatePreviewControllerTest extends TestCase
             $table->string('status', 16)->default('active');
             $table->timestamps();
         });
+        Schema::create('language', function (Blueprint $table): void {
+            $table->id();
+            $table->string('lang', 12);
+            $table->string('lang_from', 255);
+            $table->string('lang_to', 255);
+        });
         Schema::create('articles', function (Blueprint $table): void {
             $table->id();
             $table->string('uri', 255);
@@ -88,5 +94,180 @@ class ArticleTemplatePreviewControllerTest extends TestCase
         $this->assertFalse($detailData['article']->exists);
         $this->assertNotNull($detailData['previousArticle']);
         $this->assertNotNull($detailData['nextArticle']);
+    }
+
+    public function test_preview_device_selects_the_requested_pagination_range_and_model(): void
+    {
+        $controller = app(ManageArticleTemplateController::class);
+        $draft = [
+            'pagination' => [
+                'type' => 'underline',
+                'range' => ['desktop' => 7, 'tablet' => 4, 'mobile' => 2],
+            ],
+        ];
+        $request = Request::create('/manage_article/templates/preview/archive/minimal-reading-list?preview_device=mobile&template_options='.urlencode(json_encode($draft, JSON_THROW_ON_ERROR)), 'GET');
+        $response = $controller->preview($request, 'archive', 'minimal-reading-list');
+        $data = $response->getData();
+
+        $html = view($data['templateView'], [
+            'articles' => $data['articles'],
+            'templateSettings' => $data['templateSettings'],
+            'templateOptions' => $data['templateOptions'],
+            'articleCategories' => $data['articleCategories'],
+            'popularArticles' => $data['popularArticles'],
+            'previewDevice' => $data['previewDevice'],
+        ])->render();
+
+        $this->assertSame('mobile', $data['previewDevice']);
+        $this->assertStringContainsString('article-pagination--model-underline', $html);
+        $this->assertStringContainsString('data-pagination-range-desktop="7"', $html);
+        $this->assertStringContainsString('data-pagination-range-tablet="4"', $html);
+        $this->assertStringContainsString('data-pagination-range-mobile="2"', $html);
+        $this->assertStringContainsString('data-pagination-range-active="2"', $html);
+    }
+
+    public function test_minimal_reading_list_options_reach_both_preview_and_public_renderers(): void
+    {
+        $draft = [
+            'header' => [
+                'eyebrow' => ['enabled' => true, 'text' => 'Audit eyebrow'],
+                'title' => ['enabled' => true, 'text' => 'Audit title'],
+                'description' => ['enabled' => true, 'text' => 'Audit description'],
+            ],
+            'toolbar' => [
+                'search' => ['enabled' => true, 'position' => 'center'],
+                'category' => ['enabled' => true, 'position' => 'left', 'mode' => 'button-list'],
+            ],
+            'post_list' => ['item_gap' => '2rem'],
+            'sidebar' => [
+                'enabled' => true,
+                'categories' => ['enabled' => true, 'position' => 'sticky'],
+                'popular' => ['enabled' => true, 'position' => 'sticky'],
+            ],
+            'thumbnail' => [
+                'mode' => 'background',
+                'fit' => 'contain',
+                'height' => '12rem',
+                'background_color' => '#123456',
+                'frame' => [
+                    'enabled' => true,
+                    'border_color' => '#abcdef',
+                    'border_width' => '2px',
+                    'radius' => '4px 8px 12px 16px',
+                    'background_color' => '#fefefe',
+                ],
+            ],
+            'pagination' => [
+                'show_total' => false,
+                'position' => 'left',
+                'frame' => [
+                    'enabled' => true,
+                    'border_color' => '#0f172a',
+                    'border_width' => '2px',
+                    'radius' => '4px 8px 12px 16px',
+                    'background_color' => '#f8fafc',
+                ],
+                'padding' => [
+                    'enabled' => true,
+                    'desktop' => ['top' => '3rem', 'right' => '4px', 'bottom' => '5%', 'left' => '6pt'],
+                    'tablet' => ['top' => '2rem', 'right' => '3px', 'bottom' => '4%', 'left' => '5pt'],
+                    'mobile' => ['top' => '1rem', 'right' => '2px', 'bottom' => '3%', 'left' => '4pt'],
+                ],
+                'margin' => [
+                    'enabled' => true,
+                    'desktop' => ['top' => '1rem', 'right' => '2px', 'bottom' => '3%', 'left' => '4pt'],
+                    'tablet' => ['top' => '2rem', 'right' => '3px', 'bottom' => '4%', 'left' => '5pt'],
+                    'mobile' => ['top' => '3rem', 'right' => '4px', 'bottom' => '5%', 'left' => '6pt'],
+                ],
+            ],
+            'article_title' => ['tag' => 'h6'],
+            'shell' => [
+                'padding' => [
+                    'enabled' => true,
+                    'desktop' => ['top' => '3rem', 'right' => '4px', 'bottom' => '5%', 'left' => '6pt'],
+                    'tablet' => ['top' => '2rem', 'right' => '3px', 'bottom' => '4%', 'left' => '5pt'],
+                    'mobile' => ['top' => '1rem', 'right' => '2px', 'bottom' => '3%', 'left' => '4pt'],
+                ],
+                'margin' => [
+                    'enabled' => true,
+                    'desktop' => ['top' => '1rem', 'right' => '2px', 'bottom' => '3%', 'left' => '4pt'],
+                    'tablet' => ['top' => '2rem', 'right' => '3px', 'bottom' => '4%', 'left' => '5pt'],
+                    'mobile' => ['top' => '3rem', 'right' => '4px', 'bottom' => '5%', 'left' => '6pt'],
+                ],
+                'frame' => [
+                    'enabled' => true,
+                    'border_color' => '#1d4ed8',
+                    'border_width' => '2px',
+                    'radius' => '2rem',
+                    'background_color' => '#ffffff',
+                ],
+            ],
+        ];
+
+        $controller = app(ManageArticleTemplateController::class);
+        $url = '/manage_article/templates/preview/archive/minimal-reading-list?template_options='.urlencode(json_encode($draft, JSON_THROW_ON_ERROR));
+        $previewData = $controller->preview(Request::create($url, 'GET'), 'archive', 'minimal-reading-list')->getData();
+        $options = $previewData['templateOptions'];
+
+        $this->assertSame('2rem', data_get($options, 'post_list.item_gap'));
+        $this->assertSame('sticky', data_get($options, 'sidebar.categories.position'));
+        $this->assertSame('sticky', data_get($options, 'sidebar.popular.position'));
+        $this->assertSame('12rem', data_get($options, 'thumbnail.height'));
+        $this->assertSame('h6', data_get($options, 'article_title.tag'));
+        $this->assertSame('3rem', data_get($options, 'shell.padding.desktop.top'));
+
+        $rendererData = [
+            'articles' => $previewData['articles'],
+            'templateSettings' => $previewData['templateSettings'],
+            'templateOptions' => $options,
+            'articleCategories' => $previewData['articleCategories'],
+            'popularArticles' => $previewData['popularArticles'],
+        ];
+        $previewHtml = view($previewData['templateView'], $rendererData)->render();
+        $publicHtml = view($previewData['templateView'], $rendererData)->render();
+
+        foreach ([$previewHtml, $publicHtml] as $html) {
+            $this->assertStringContainsString('Audit eyebrow', $html);
+            $this->assertStringContainsString('Audit title', $html);
+            $this->assertStringContainsString('Audit description', $html);
+            $this->assertStringContainsString('article-template-toolbar__zone--center', $html);
+            $this->assertStringContainsString('--article-reading-list-post-gap:2rem', $html);
+            $this->assertStringContainsString('article-reading-list__categories', $html);
+            $this->assertStringContainsString('data-article-sidebar-position="sticky"', $html);
+            $this->assertStringContainsString('article-reading-list__popular', $html);
+            $this->assertStringContainsString('article-background-media', $html);
+            $this->assertStringContainsString('--article-thumbnail-height:12rem', $html);
+            $this->assertStringContainsString('--article-thumbnail-fit:contain', $html);
+            $this->assertStringContainsString('article-title-clamp', $html);
+            $this->assertStringContainsString('<h6 class="article-title-clamp">', $html);
+            $this->assertStringContainsString('article-pagination--position-left', $html);
+            $this->assertStringContainsString('article-pagination--without-total', $html);
+            $this->assertStringContainsString('--article-pagination-padding-desktop-top:3rem', $html);
+            $this->assertStringContainsString('--article-pagination-margin-mobile-top:3rem', $html);
+            $this->assertStringContainsString('data-article-shell-padding="true"', $html);
+            $this->assertStringContainsString('data-article-shell-margin="true"', $html);
+            $this->assertStringContainsString('data-article-shell-frame="true"', $html);
+            $this->assertStringNotContainsString('data-article-category-select', $html);
+        }
+
+        $selectDraft = $draft;
+        $selectDraft['toolbar']['category']['mode'] = 'select';
+        $selectDraft['thumbnail']['mode'] = 'asset';
+        $selectUrl = '/manage_article/templates/preview/archive/minimal-reading-list?template_options='.urlencode(json_encode($selectDraft, JSON_THROW_ON_ERROR));
+        $selectData = $controller->preview(Request::create($selectUrl, 'GET'), 'archive', 'minimal-reading-list')->getData();
+        $selectHtml = view($selectData['templateView'], [
+            'articles' => $selectData['articles'],
+            'templateSettings' => $selectData['templateSettings'],
+            'templateOptions' => $selectData['templateOptions'],
+            'articleCategories' => $selectData['articleCategories'],
+            'popularArticles' => $selectData['popularArticles'],
+        ])->render();
+
+        $this->assertStringContainsString('data-article-category-select', $selectHtml);
+        $this->assertStringNotContainsString('article-reading-list__categories', $selectHtml);
+        $this->assertStringContainsString('article-asset-media', $selectHtml);
+        $this->assertStringContainsString('<img src=', $selectHtml);
+        $this->assertStringNotContainsString('--article-thumbnail-height:', $selectHtml);
+        $this->assertStringNotContainsString('article-background-media', $selectHtml);
     }
 }

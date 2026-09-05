@@ -1,0 +1,109 @@
+{
+  "artifact": "Lucent mobile semantic CSS harness",
+  "capturedAt": "2026-09-03T13:22:40+07:00",
+  "note": "Static DOM harness served locally because the authenticated CMS browser session was unavailable. Values validate the scoped Lucent overlay and Bootstrap cascade, not live database/menu data.",
+  "headerControls": { "hamburger": true, "brand": false, "notification": false, "avatar": true },
+  "viewports": {
+    "300x844": {
+      "closed": {
+        "overflow": false,
+        "hamburger": { "x": 10, "y": 9.67, "width": 44, "height": 44, "right": 54 },
+        "avatar": { "x": 254, "y": 13.67, "width": 36, "height": 36, "right": 290 }
+      },
+      "open": {
+        "expanded": true,
+        "overflow": false,
+        "sidebar": { "x": 0, "y": 0, "width": 240, "height": 844, "right": 240 },
+        "account": { "x": 0.67, "y": 0.67, "width": 238.67, "height": 99.67, "right": 239.33 },
+        "profile": { "x": 16.67, "y": 18.67, "width": 206.67, "height": 65, "right": 223.33 },
+        "avatar": { "x": 16.67, "y": 33.17, "width": 36, "height": 36, "right": 52.67 },
+        "meta": { "x": 72.67, "y": 32.49, "width": 150.67, "height": 37.34, "right": 223.33 },
+        "menu": { "x": 159.33, "y": 31.17, "width": 24, "height": 40, "right": 183.33 },
+        "close": { "x": 183.33, "y": 12.67, "width": 40, "height": 40, "right": 223.33 },
+        "collapse": { "x": 0, "y": 0, "width": 0, "height": 0, "right": 0 },
+        "categoryCount": 1,
+        "menuCount": 5,
+        "utilityCount": 3,
+        "brandInSidebar": false
+      }
+    },
+    "400x844": {
+      "closed": {
+        "overflow": false,
+        "hamburger": { "x": 14, "y": 9.67, "width": 44, "height": 44, "right": 58 },
+        "avatar": { "x": 350, "y": 13.67, "width": 36, "height": 36, "right": 386 }
+      },
+      "open": {
+        "expanded": true,
+        "overflow": false,
+        "sidebar": { "x": 0, "y": 0, "width": 272, "height": 844, "right": 272 },
+        "account": { "x": 0.67, "y": 0.67, "width": 270.67, "height": 99.67, "right": 271.33 },
+        "profile": { "x": 16.67, "y": 18.67, "width": 238.67, "height": 65, "right": 255.33 },
+        "avatar": { "x": 16.67, "y": 33.17, "width": 36, "height": 36, "right": 52.67 },
+        "meta": { "x": 72.67, "y": 32.49, "width": 182.67, "height": 37.34, "right": 255.33 },
+        "menu": { "x": 191.33, "y": 31.17, "width": 24, "height": 40, "right": 215.33 },
+        "close": { "x": 215.33, "y": 12.67, "width": 40, "height": 40, "right": 255.33 },
+        "collapse": { "x": 0, "y": 0, "width": 0, "height": 0, "right": 0 },
+        "categoryCount": 1,
+        "menuCount": 5,
+        "utilityCount": 3,
+        "brandInSidebar": false
+      }
+    },
+    "500x844": {
+      "closed": {
+        "overflow": false,
+        "hamburger": { "x": 14, "y": 9.67, "width": 44, "height": 44, "right": 58 },
+        "avatar": { "x": 450, "y": 13.67, "width": 36, "height": 36, "right": 486 }
+      },
+      "open": {
+        "expanded": true,
+        "overflow": false,
+        "sidebar": { "x": 0, "y": 0, "width": 292, "height": 844, "right": 292 },
+        "account": { "x": 0.67, "y": 0.67, "width": 290.67, "height": 99.67, "right": 291.33 },
+        "profile": { "x": 16.67, "y": 18.67, "width": 258.67, "height": 65, "right": 275.33 },
+        "avatar": { "x": 16.67, "y": 33.17, "width": 36, "height": 36, "right": 52.67 },
+        "meta": { "x": 72.67, "y": 32.49, "width": 202.67, "height": 37.34, "right": 275.33 },
+        "menu": { "x": 211.33, "y": 31.17, "width": 24, "height": 40, "right": 235.33 },
+        "close": { "x": 235.33, "y": 12.67, "width": 40, "height": 40, "right": 275.33 },
+        "collapse": { "x": 0, "y": 0, "width": 0, "height": 0, "right": 0 },
+        "categoryCount": 1,
+        "menuCount": 5,
+        "utilityCount": 3,
+        "brandInSidebar": false
+      }
+    }
+  },
+  "breakpoint": {
+    "768": { "mobileShell": true },
+    "769": {
+      "mobileShell": false,
+      "expanded": true,
+      "sidebar": { "x": 0, "y": 0, "width": 218.34, "height": 844, "right": 218.34 },
+      "account": { "x": 0, "y": 0, "width": 217.68, "height": 88, "right": 217.68 },
+      "profile": { "x": 20, "y": 20, "width": 129.68, "height": 65, "right": 149.68 },
+      "avatar": { "x": 20, "y": 34.5, "width": 36, "height": 36, "right": 56 },
+      "menu": { "x": 113.68, "y": 34.5, "width": 36, "height": 36, "right": 149.68 },
+      "collapse": { "x": 161.68, "y": 34.5, "width": 36, "height": 36, "right": 197.68 },
+      "headerAvatarDisplay": "none",
+      "brandInSidebar": false,
+      "overflow": false
+    }
+  },
+  "computedColors": {
+    "primaryOutline": { "color": "rgb(31, 166, 117)", "border": "rgb(31, 166, 117)" },
+    "dangerOutline": { "color": "rgb(220, 53, 69)", "border": "rgb(220, 53, 69)" },
+    "dangerIcon": { "color": "rgb(220, 53, 69)" },
+    "secondaryFilled": { "color": "rgb(255, 255, 255)", "background": "rgb(108, 117, 125)" },
+    "checkedPrimary": { "color": "rgb(255, 255, 255)", "background": "rgb(31, 166, 117)" }
+  },
+  "accentOverrideCheck": {
+    "accent": "#9D00FF",
+    "primaryOutline": "rgb(157, 0, 255)",
+    "checkedPrimaryBackground": "rgb(157, 0, 255)",
+    "dangerOutline": "rgb(220, 53, 69)",
+    "dangerIcon": "rgb(220, 53, 69)"
+  },
+  "console": "[]",
+  "liveCms": "pending authenticated read-only browser session"
+}

@@ -2,7 +2,7 @@
 let colorMainList = ['#1FA675', '#9D00FF', '#1DA1F2', '#FF5733', '#FFC107', '#E91E63', '#6C5CE7', '#C7CCD8'];
 const coolGrayThemeColor = '#C7CCD8';
 const coolGrayInteractiveColor = '#667085';
-const pickerContainer = document.getElementById('color-picker-container');
+const pickerContainers = document.querySelectorAll('[data-ph-theme-color-picker]');
 
 const patterns = {
 	// 0. NO PATTERN (Clean Mode)
@@ -69,14 +69,17 @@ const patterns = {
 	}
 };
 
-if (pickerContainer)
+if (pickerContainers.length)
 {
-	colorMainList.forEach(color =>
+	pickerContainers.forEach((pickerContainer) =>
 	{
-		const col = document.createElement('div');
-		col.className = 'col-3';
-		col.innerHTML = `<div class="ph-color-switch" style="background-color: ${color};" onclick="changeMainColor('${color}')" title="${color}"></div>`;
-		pickerContainer.appendChild(col);
+		colorMainList.forEach(color =>
+		{
+			const col = document.createElement('div');
+			col.className = 'col-3';
+			col.innerHTML = `<div class="ph-color-switch" style="background-color: ${color};" onclick="changeMainColor('${color}')" title="${color}"></div>`;
+			pickerContainer.appendChild(col);
+		});
 	});
 }
 
@@ -126,6 +129,12 @@ function initSimpleBar()
 
 function toggleSidebar()
 {
+	if (window.PhoenixMobileNavigation?.isMobile())
+	{
+		window.PhoenixMobileNavigation.toggle();
+		return;
+	}
+
 	// UPDATE: Class updated to 'ph-expanded'
 	sidebar.classList.toggle('ph-expanded');
 	const isExpanded = sidebar.classList.contains('ph-expanded');
@@ -347,19 +356,19 @@ navLinkItems.forEach(item =>
 function syncThemeControls(theme)
 {
 	const isDark = theme === 'dark';
-	const themeToggle = document.querySelector('.ph-theme-toggle');
-	const themeIcon = document.querySelector('.ph-theme-icon');
+	const themeToggles = document.querySelectorAll('.ph-theme-toggle');
+	const themeIcons = document.querySelectorAll('.ph-theme-icon');
 
-	if (themeIcon)
+	themeIcons.forEach((themeIcon) =>
 	{
 		themeIcon.className = isDark ? 'fas fa-moon ph-theme-icon' : 'fas fa-sun ph-theme-icon';
-	}
+	});
 
-	if (themeToggle)
+	themeToggles.forEach((themeToggle) =>
 	{
 		themeToggle.classList.toggle('is-dark', isDark);
 		themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-	}
+	});
 }
 
 function toggleTheme()

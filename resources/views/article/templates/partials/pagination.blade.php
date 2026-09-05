@@ -2,11 +2,24 @@
     @php
         $currentPage = $articles->currentPage();
         $lastPage = $articles->lastPage();
-        $startPage = max(1, $currentPage - 1);
-        $endPage = min($lastPage, $currentPage + 1);
+        $paginationOptions = data_get($templateOptions ?? [], 'pagination', []);
+        $paginationType = data_get($paginationOptions, 'type', 'boxed');
+        $paginationType = in_array($paginationType, ['underline', 'boxed', 'soft'], true) ? $paginationType : 'boxed';
+        $paginationRange = data_get($paginationOptions, 'range', []);
+        $paginationRangeDesktop = min(9, max(1, (int) data_get($paginationRange, 'desktop', 3)));
+        $paginationRangeTablet = min(9, max(1, (int) data_get($paginationRange, 'tablet', 3)));
+        $paginationRangeMobile = min(9, max(1, (int) data_get($paginationRange, 'mobile', 2)));
+        $paginationRenderDevice = in_array($previewDevice ?? null, ['desktop', 'tablet', 'mobile'], true) ? $previewDevice : 'desktop';
+        $paginationRenderRange = match ($paginationRenderDevice) {
+            'tablet' => $paginationRangeTablet,
+            'mobile' => $paginationRangeMobile,
+            default => $paginationRangeDesktop,
+        };
+        $paginationWindowRadius = max(1, intdiv($paginationRenderRange, 2));
+        $startPage = max(1, $currentPage - $paginationWindowRadius);
+        $endPage = min($lastPage, $currentPage + $paginationWindowRadius);
         $windowStart = max(2, $startPage);
         $windowEnd = min($lastPage - 1, $endPage);
-        $paginationOptions = data_get($templateOptions ?? [], 'pagination', []);
         $paginationPosition = data_get($paginationOptions, 'position', 'right');
         $paginationPosition = in_array($paginationPosition, ['left', 'center', 'right'], true) ? $paginationPosition : 'right';
         $paginationShowTotal = data_get($paginationOptions, 'show_total', true) !== false;
@@ -25,7 +38,7 @@
         $paginationStyle .= '--article-pagination-frame-radius:'.data_get($paginationOptions, 'frame.radius', '.75rem').';';
         $paginationStyle .= '--article-pagination-frame-background:'.data_get($paginationOptions, 'frame.background_color', '#ffffff').';';
     @endphp
-    <nav class="article-pagination article-pagination--ssr article-pagination--position-{{ $paginationPosition }} {{ $paginationShowTotal ? 'article-pagination--with-total' : 'article-pagination--without-total' }} {{ $paginationFrame ? 'article-pagination--with-frame' : 'article-pagination--without-frame' }} {{ !empty($paginationPadding['enabled']) ? 'article-pagination--padding-enabled' : 'article-pagination--padding-default' }} {{ !empty($paginationMargin['enabled']) ? 'article-pagination--margin-enabled' : 'article-pagination--margin-default' }}" style="{{ $paginationStyle }}" aria-label="{{ t('Article pagination') }}">
+    <nav class="article-pagination article-pagination--ssr article-pagination--model-{{ $paginationType }} article-pagination--position-{{ $paginationPosition }} {{ $paginationShowTotal ? 'article-pagination--with-total' : 'article-pagination--without-total' }} {{ $paginationFrame ? 'article-pagination--with-frame' : 'article-pagination--without-frame' }} {{ !empty($paginationPadding['enabled']) ? 'article-pagination--padding-enabled' : 'article-pagination--padding-default' }} {{ !empty($paginationMargin['enabled']) ? 'article-pagination--margin-enabled' : 'article-pagination--margin-default' }}" data-pagination-type="{{ $paginationType }}" data-pagination-range-desktop="{{ $paginationRangeDesktop }}" data-pagination-range-tablet="{{ $paginationRangeTablet }}" data-pagination-range-mobile="{{ $paginationRangeMobile }}" data-pagination-range-active="{{ $paginationRenderRange }}" style="{{ $paginationStyle }}" aria-label="{{ t('Article pagination') }}">
         <div class="article-pagination__layout">
         @if($paginationShowTotal)<p class="article-pagination__summary article-pagination__context"><strong>{{ t('Total Data') }}: {{ $articles->total() }}</strong><span>{{ t('Showing') }} {{ $articles->firstItem() }}–{{ $articles->lastItem() }} {{ t('of') }} {{ $articles->total() }} {{ t('articles') }}</span></p>@endif
         <div class="article-pagination__pager"><ul class="pagination ph-pagination mb-0">

@@ -10,7 +10,6 @@ const themeLayouts = [
     'resources/views/themes/calm_green/cms/cms_layout.blade.php',
     'resources/views/themes/arunika_aurora/cms/cms_layout.blade.php',
     'resources/views/themes/arunika_equinox/cms/cms_layout.blade.php',
-    'resources/views/themes/arunika_mosaic/cms/cms_layout.blade.php',
     'resources/views/themes/arunika_prism/cms/cms_layout.blade.php',
     'resources/views/themes/arunika_lucent/cms/cms_layout.blade.php',
 ].map((file) => path.join(root, file));
@@ -90,6 +89,22 @@ test('operational controls inherit the computed Site Config size for px, em, and
         css,
         /:where\(\.list-group-item, \.ph-nav-text, \.arv7-parent-menu-name, \.arv7-menu-name\)\s*\{\s*font-size:\s*min\(13px, var\(--ph-adaptive-font-size\)\) !important;/,
     );
+});
+
+test('mobile content typography derives from the adaptive Site Config scale', () => {
+    const css = read(typographyPath);
+
+    assert.match(
+        css,
+        /--ph-mobile-content-font-size:\s*clamp\(max\(8px,\s*calc\(var\(--ph-adaptive-font-size\)\s*-\s*1px\)\),\s*calc\(var\(--ph-adaptive-font-size\)\s*-\s*2\.5px\s*\+\s*0\.5vw\),\s*var\(--ph-adaptive-font-size\)\);/,
+    );
+    assert.match(
+        css,
+        /--ph-mobile-content-heading-size:\s*clamp\(calc\(var\(--ph-adaptive-font-size\)\s*\+\s*2px\),\s*calc\(var\(--ph-adaptive-font-size\)\s*-\s*0\.4px\s*\+\s*0\.8vw\),\s*calc\(var\(--ph-adaptive-font-size\)\s*\+\s*3\.6px\)\);/,
+    );
+    assert.match(css, /@media \(max-width: 768px\)[\s\S]*body :where\(\.ph-scrollable-content\)/);
+    assert.match(css, /body :where\(\.ph-scrollable-content\)\s*\{[\s\S]*?font-size:\s*var\(--ph-mobile-content-font-size\);/);
+    assert.match(css, /body :where\(\.ph-scrollable-content\)\s+:where\([\s\S]*?\)\s*\{[\s\S]*?font-size:\s*var\(--ph-mobile-content-font-size\)\s*!important;/);
 });
 
 test('input groups bypass Bootstrap one-rem text and honor font-size-normal', () => {

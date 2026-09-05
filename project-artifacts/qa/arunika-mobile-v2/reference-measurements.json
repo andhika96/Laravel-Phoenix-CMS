@@ -1,0 +1,23 @@
+{
+  "date": "2026-09-03",
+  "project": "D:/Laragon/www/laravel-13-phoenix",
+  "status": "baseline_locked",
+  "reference_note": "PNG V2 are raster design boards. Native board dimensions are recorded; screen crops and anchor coordinates require measurement during implementation.",
+  "references": [
+    {"theme":"arunika_lucent","path":"project-artifacts/mockups/arunika-mobile-theme-previews-20260903/high-resolution-v2/preview-lucent-v2.png","sha256":"2172A335567C42835B436B852EDE6BA0F8BD88B028C060391A98F349D02435C2","nativeWidth":1536,"nativeHeight":1024,"referenceMode":"light"},
+    {"theme":"arunika_mosaic","path":"project-artifacts/mockups/arunika-mobile-theme-previews-20260903/high-resolution-v2/preview-mosaic-v2.png","sha256":"03236B81211BFA7CFF9E1E769CF9342498EC038F3C559F99E8DF8CA309D16D53","nativeWidth":1024,"nativeHeight":1536,"referenceMode":"dark"},
+    {"theme":"arunika_aurora","path":"project-artifacts/mockups/arunika-mobile-theme-previews-20260903/high-resolution-v2/preview-aurora-v2.png","sha256":"009C2645B3D15B7D626D43FB15796524E629DB9636BE449B476AE33D6C78C4CA","nativeWidth":1448,"nativeHeight":1086,"referenceMode":"light"},
+    {"theme":"arunika_prism","path":"project-artifacts/mockups/arunika-mobile-theme-previews-20260903/high-resolution-v2/preview-prism-v2.png","sha256":"E6593BA33BB3A9875D72B982320EB8CD2633E242802DDEA4912F69B2D11D2C7B","nativeWidth":1496,"nativeHeight":1051,"referenceMode":"light"},
+    {"theme":"arunika_equinox","path":"project-artifacts/mockups/arunika-mobile-theme-previews-20260903/high-resolution-v2/preview-equinox-v2.png","sha256":"87DB1233DD4D294DCAD1B0005FD8C5790A7ADBE7C9FFC2DAD8311E264EDE23EB","nativeWidth":1536,"nativeHeight":1024,"referenceMode":"light"}
+  ],
+  "requiredUsabilityViewports": [{"width":300,"height":844},{"width":400,"height":844},{"width":500,"height":844}],
+  "requiredBoundaries": [{"width":768,"height":844},{"width":769,"height":844},{"width":400,"height":568}],
+  "anchorFields": ["header","mobileOpener","mobileClose","logo","avatar","drawer","firstMenu","lastMenu","footer","metricGrid","projectionTitle","projectionChart"],
+  "acceptance": {"horizontalOverflow":false,"visibleOpenerCount":1,"visibleCloseCount":1,"minHitAreaCssPx":44,"chartTitleDoesNotOverlapCanvas":true,"consoleErrors":0},
+  "unresolvedDecisions": [
+    "Lucent logo/wordmark/initial avatar must use real Site Config/profile assets or receive an explicit asset decision.",
+    "Lucent chart Jan-Jun and Prism legend copy differ from current dashboard data; no new data pipeline is authorized by the image.",
+    "PNG board screen crops and drawer ratios must be measured; prompt prose is not a geometry contract.",
+    "Only the reference mode per board is image-matched; other light/dark combinations remain compatibility checks."
+  ]
+}

@@ -180,6 +180,40 @@ class ArticleTemplateRenderTest extends TestCase
         $this->assertStringContainsString('data-article-shell-frame="true"', $shell);
     }
 
+    public function test_thumbnail_modes_render_distinct_background_and_asset_markup_with_background_height(): void
+    {
+        $normalizer = app(ArticleTemplateOptions::class);
+        $mediaArguments = [
+            'href' => route('cms.core.article.detail', 'thumbnail-mode-test'),
+            'class' => 'article-reading-list__media',
+            'mediaUrl' => asset('assets/images/article/article-image-placeholder.svg'),
+            'title' => 'Thumbnail mode test',
+        ];
+
+        $backgroundOptions = $normalizer->archive('minimal-reading-list', [
+            'thumbnail' => ['mode' => 'background', 'fit' => 'contain', 'height' => '12rem'],
+        ]);
+        $background = view('article.templates.partials.media-link', $mediaArguments + [
+            'templateOptions' => $backgroundOptions,
+        ])->render();
+
+        $assetOptions = $normalizer->archive('minimal-reading-list', [
+            'thumbnail' => ['mode' => 'asset', 'fit' => 'contain', 'height' => '12rem'],
+        ]);
+        $asset = view('article.templates.partials.media-link', $mediaArguments + [
+            'templateOptions' => $assetOptions,
+        ])->render();
+
+        $this->assertStringContainsString('article-background-media', $background);
+        $this->assertStringContainsString('--article-media-image:url(', $background);
+        $this->assertStringContainsString('--article-thumbnail-height:12rem', $background);
+        $this->assertStringNotContainsString('<img', $background);
+        $this->assertStringContainsString('article-asset-media', $asset);
+        $this->assertStringContainsString('<img src=', $asset);
+        $this->assertStringNotContainsString('article-background-media', $asset);
+        $this->assertStringNotContainsString('--article-thumbnail-height:', $asset);
+    }
+
     public function test_every_archive_and_detail_renderer_receives_normalized_structured_template_styles(): void
     {
         $article = new Article([

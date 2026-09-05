@@ -35,6 +35,7 @@
 		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/themes/arunika_lucent/arunika_lucent.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/themes/arunika_lucent/mobile-v2.css?v=').time() }}" rel="stylesheet">
 
 		@stack('css')
 
@@ -72,7 +73,7 @@
 		</script>
 	</head>
 
-	<body class="ph-theme-arunika-lucent">
+	<body class="ph-theme-arunika-lucent" data-ph-mobile-theme="arunika_lucent">
 		<div class="ph-app-shell d-flex w-100 h-100">
 			<div class="ph-sidebar ph-no-transition" id="sidebar">
 
@@ -88,16 +89,18 @@
 					}
 				})();
 				</script>
-				
+
 				<div class="ph-lucent-sidebar-account" aria-label="{{ t('Account') }}">
 					<div class="dropdown ph-sidebar-profile">
-						<button class="ph-sidebar-user-card" type="button" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="outside" aria-expanded="false" aria-label="{{ t('Open profile menu') }}">
+						<button class="ph-sidebar-user-card" type="button" aria-label="{{ t('Account') }}">
 							<span class="ph-sidebar-user-avatar">{!! get_avatar('frame', 'rounded-circle', 38) !!}</span>
 							<span class="ph-sidebar-user-meta">
 								<strong>{{ auth()->user()->fullname }}</strong>
 								<span>{{ $currentUserRole }}</span>
 							</span>
-							<i class="fal fa-ellipsis-v ph-lucent-account-menu" aria-hidden="true"></i>
+						</button>
+						<button class="ph-lucent-account-menu-button" type="button" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="outside" aria-expanded="false" aria-haspopup="true" aria-label="{{ t('Open profile menu') }}">
+							<i class="fal fa-ellipsis-v" aria-hidden="true"></i>
 						</button>
 
 						<div class="dropdown-menu ph-header-profile-menu ph-sidebar-profile-menu">
@@ -156,13 +159,6 @@
 								<path d="M16 8.75L12.75 12L16 15.25"></path>
 							</svg>
 						</button>
-					<button class="ph-mobile-sidebar-close" type="button" onclick="toggleSidebar()" aria-label="{{ t('Close navigation') }}">
-						<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
-							<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
-							<path d="M8.25 3.25V20.75"></path>
-							<path d="M16 8.75L12.75 12L16 15.25"></path>
-						</svg>
-					</button>
 				</div>
 
 				<div id="sidebar-scroll-content">
@@ -201,6 +197,10 @@
 						<i class="fal fa-cog" aria-hidden="true"></i>
 						<span>{{ t('Settings') }}</span>
 					</a>
+					<a class="ph-lucent-sidebar-logout" href="{{ url('auth/logout') }}">
+						<i class="fal fa-sign-out-alt" aria-hidden="true"></i>
+						<span>{{ t('Logout') }}</span>
+					</a>
 				</div>
 
 			</div>
@@ -238,16 +238,15 @@
 					</label>
 
 					<div class="ph-header-actions">
-						<div class="ph-header-notification is-hidden" aria-hidden="true">
-							@include('components.cms-realtime-notification')
-						</div>
-
 						@if(checkIsAdmin())
 							<a href="{{ url('awesome_admin') }}" class="ph-btn-action-icon ph-header-awesome-admin" title="{{ t('Awesome Admin') }}" aria-label="{{ t('Open Awesome Admin') }}">
 								<i class="fal fa-user-secret"></i>
 							</a>
 						@endif
 					</div>
+					<a class="ph-mobile-header-avatar" href="{{ url('profile') }}" aria-label="{{ t('Open profile') }}">
+						{!! get_avatar('no_frame', 'rounded-circle', 30) !!}
+					</a>
 				</div>
 
 				<div class="ph-main-panel">
@@ -257,6 +256,8 @@
 				</div>
 			</div>
 		</div>
+
+		<div id="ph-mobile-nav-controller" hidden aria-hidden="true"></div>
 
 		<script type="text/javascript">const site_url = '{{ url('/') }}';</script>
 
@@ -281,6 +282,7 @@
 		@stack('js')
 
 		<script src="{{ url('assets/js/themes/arunika_lucent/arunika_lucent.js?v=').time() }}"></script>
+		<script src="{{ asset('assets/js/themes/arunika-mobile-navigation-v2.js?v=').time() }}"></script>
 	</body>
 </html>
 

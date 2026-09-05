@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arunika Lucent sidebar profile QA</title>
+  <link rel="stylesheet" href="/public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css">
+  <link rel="stylesheet" href="/public/assets/plugins/fontawesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="/public/assets/css/phoenix-cms.css">
+  <link rel="stylesheet" href="/public/assets/css/themes/arunika_lucent/arunika_lucent.css">
+  <link rel="stylesheet" href="/public/assets/css/themes/arunika_lucent/mobile-v2.css">
+  <style>
+    html, body { min-height: 100%; }
+    body { margin: 0; overflow: hidden; }
+    .qa-avatar { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; border: 1px solid #e7e9e8; background: #fff; color: #123; font-size: 10px; font-weight: 700; text-align: center; }
+    .qa-avatar img { width: 42px; height: 42px; object-fit: contain; }
+    .qa-menu { display: grid; gap: 4px; padding: 12px 16px; }
+    .qa-menu a { min-height: 44px; display: flex; align-items: center; gap: 12px; padding: 0 12px; color: inherit; text-decoration: none; border-radius: 8px; }
+    .qa-menu a.active { background: #f0f0f0; color: #1fa675; font-weight: 700; }
+    .qa-utility { display: grid; gap: 4px; padding: 12px 16px 16px; border-top: 1px solid #e7e9e8; }
+    .qa-utility a { min-height: 44px; display: flex; align-items: center; gap: 12px; padding: 0 12px; color: inherit; text-decoration: none; border-radius: 8px; }
+    .qa-page { padding: 18px 14px; }
+    .qa-card { min-height: 210px; border: 1px solid #e7e9e8; border-radius: 10px; padding: 16px; background: #fff; }
+  </style>
+</head>
+<body class="ph-theme-arunika-lucent" data-ph-mobile-theme="arunika_lucent">
+  <div class="ph-app-shell d-flex w-100 h-100">
+    <aside class="ph-sidebar ph-expanded" id="sidebar">
+      <div class="ph-lucent-sidebar-account" aria-label="Account">
+        <div class="dropdown ph-sidebar-profile">
+          <button class="ph-sidebar-user-card" type="button" aria-label="Account">
+            <span class="ph-sidebar-user-avatar qa-avatar"><img src="/public/assets/logos/laraphoenix_colored.png" alt="Phoenix"></span>
+            <span class="ph-sidebar-user-meta"><strong>Administrator</strong><span>Super Admin</span></span>
+          </button>
+          <button class="ph-lucent-account-menu-button" type="button" aria-label="Open profile menu"><i class="fal fa-ellipsis-v" aria-hidden="true"></i></button>
+          <div class="dropdown-menu ph-header-profile-menu ph-sidebar-profile-menu">
+            <a class="dropdown-item" href="#profile"><i class="fal fa-user-circle fa-fw"></i><span>Profile</span></a>
+          </div>
+        </div>
+        <button class="ph-lucent-sidebar-toggle" id="ph-lucent-sidebar-toggle" type="button" aria-label="Hide sidebar" aria-expanded="true" title="Hide sidebar">
+          <svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
+            <path d="M8.25 3.25V20.75"></path>
+            <path d="M16 8.75L12.75 12L16 15.25"></path>
+          </svg>
+        </button>
+      </div>
+      <div id="sidebar-scroll-content">
+        <nav class="qa-menu">
+          <a class="list-group-item active" href="#dashboard"><span class="ph-nav-icon"><i class="fal fa-th-large"></i></span><span class="ph-nav-text">Dashboard</span></a>
+          <a class="list-group-item" href="#site"><span class="ph-nav-icon"><i class="fal fa-external-link"></i></span><span class="ph-nav-text">View site</span></a>
+        </nav>
+      </div>
+      <div class="ph-lucent-sidebar-utilities qa-utility">
+        <a href="#admin"><i class="fal fa-user-secret"></i><span>Awesome Admin</span></a>
+        <a href="#settings"><i class="fal fa-cog"></i><span>Settings</span></a>
+        <a class="ph-lucent-sidebar-logout" href="#logout"><i class="fal fa-sign-out-alt"></i><span>Logout</span></a>
+      </div>
+    </aside>
+    <main class="ph-layout-right" id="ph-layout-right">
+      <header class="ph-top-bar" id="ph-top-bar">
+        <button class="ph-mobile-sidebar-trigger" type="button" aria-label="Open navigation" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+        <a class="ph-mobile-header-avatar" href="#profile" aria-label="Open profile"><span class="qa-avatar">A</span></a>
+      </header>
+      <div class="ph-main-panel"><div class="ph-scrollable-content"><div class="qa-page"><div class="qa-card"><h1>Dashboard</h1><p>Ringkasan bisnis Anda</p></div></div></div></div>
+    </main>
+  </div>
+  <div id="ph-mobile-nav-controller" hidden aria-hidden="true"></div>
+  <script src="/public/assets/plugins/vue/core/v3/vue.3.5.21.global.prod.js"></script>
+  <script>
+    window.toggleSidebar = function () {
+      if (window.PhoenixMobileNavigation?.isMobile()) {
+        window.PhoenixMobileNavigation.toggle();
+        return;
+      }
+      document.getElementById('sidebar').classList.toggle('ph-expanded');
+    };
+  </script>
+  <script src="/public/assets/js/themes/arunika-mobile-navigation-v2.js"></script>
+  <script>
+    window.__qa = { sidebar: document.getElementById('sidebar'), topbar: document.getElementById('ph-top-bar') };
+  </script>
+</body>
+</html>

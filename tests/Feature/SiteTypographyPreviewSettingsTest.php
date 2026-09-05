@@ -120,11 +120,10 @@ class SiteTypographyPreviewSettingsTest extends TestCase
 		$originalConfig = Site_Config::findOrFail(1)->getAttributes();
 		$originalThemeSetting = (array) DB::table('theme_settings')->where('id', 1)->first();
 		$themeCodes = [
-			'arunika_mosaic',
-			'arunika_aurora',
 			'arunika_prism',
-			'arunika_equinox',
+			'arunika_aurora',
 			'arunika_lucent',
+			'arunika_equinox',
 		];
 		$themes = DB::table('themes')->whereIn('theme_code', $themeCodes)->get()->keyBy('theme_code');
 

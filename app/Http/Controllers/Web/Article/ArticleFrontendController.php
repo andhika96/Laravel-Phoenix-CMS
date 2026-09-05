@@ -43,6 +43,7 @@ class ArticleFrontendController extends Controller
             'articles' => $articles,
             'templateSettings' => $context['templateSettings'],
             'articleCategories' => $context['articleCategories'],
+            'popularArticles' => $context['popularArticles'],
             'templateOptions' => $context['templateOptions'],
         ])->render();
 
@@ -97,7 +98,7 @@ class ArticleFrontendController extends Controller
             : redirect()->to($redirect);
     }
 
-    /** @return array{articles: mixed, templateSettings: ArticleTemplateSetting, archiveView: string, articleCategories: mixed, templateOptions: array} */
+    /** @return array{articles: mixed, templateSettings: ArticleTemplateSetting, archiveView: string, articleCategories: mixed, popularArticles: mixed, templateOptions: array} */
     private function archiveContext(Request $request): array
     {
         $this->validateListRequest($request);
@@ -107,12 +108,23 @@ class ArticleFrontendController extends Controller
             ->paginate($this->perPage($settings->archive_per_page))
             ->withPath(route('cms.core.article'))
             ->withQueryString();
+        $popularArticles = collect();
+        if ($settings->archive_template === 'minimal-reading-list') {
+            // ponytail: use the latest four eligible articles until a popularity metric exists; add ranking only when product data supports it.
+            $popularArticles = $this->publicArticleQuery
+                ->eligible()
+                ->orderByDesc('created_at')
+                ->orderByDesc('id')
+                ->limit(4)
+                ->get();
+        }
 
         return [
             'articles' => $articles,
             'templateSettings' => $settings,
             'archiveView' => $this->templateCatalog->view('archive', $settings->archive_template),
             'articleCategories' => $this->publicArticleCategoryOptions->all(),
+            'popularArticles' => $popularArticles,
             'templateOptions' => $this->articleTemplateOptions->archive(
                 $settings->archive_template,
                 (array) data_get($settings->archive_template_options, $settings->archive_template, [])

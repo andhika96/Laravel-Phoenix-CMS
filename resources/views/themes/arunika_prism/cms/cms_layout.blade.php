@@ -47,6 +47,7 @@
 		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/themes/arunika_prism/arunika_prism.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/themes/arunika_prism/mobile-v2.css?v=').time() }}" rel="stylesheet">
 
 		@stack('css')
 
@@ -84,7 +85,7 @@
 		</script>
 	</head>
 
-	<body class="ph-theme-arunika-prism">
+	<body class="ph-theme-arunika-prism" data-ph-mobile-theme="arunika_prism">
 		<div class="ph-app-shell d-flex w-100 h-100">
 			<div class="ph-sidebar ph-no-transition" id="sidebar">
 
@@ -112,7 +113,7 @@
 						<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
 							<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
 							<path d="M8.25 3.25V20.75"></path>
-							<path d="M16 8.75L12.75 12L16 15.25"></path>
+							<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
 						</svg>
 					</button>
 				</div>
@@ -189,7 +190,7 @@
 									<div class="collapse ph-profile-color-collapse" id="ph-profile-theme-colors">
 										<div class="ph-profile-color-section">
 											<span class="ph-profile-color-label">{{ t('Choose Theme Color') }}</span>
-											<div class="row g-2" id="color-picker-container"></div>
+											<div class="row g-2" id="color-picker-container" data-ph-theme-color-picker></div>
 										</div>
 									</div>
 								</div>
@@ -203,6 +204,13 @@
 							</div>
 						</div>
 					</div>
+
+					@if(checkIsAdmin())
+						<a href="{{ url('awesome_admin') }}" class="ph-prism-sidebar-admin" aria-label="{{ t('Open Awesome Admin') }}">
+							<i class="fal fa-user-secret fa-fw" aria-hidden="true"></i>
+							<span>{{ t('Awesome Admin') }}</span>
+						</a>
+					@endif
 				</div>
 
 			</div>
@@ -244,6 +252,65 @@
 							@include('components.cms-realtime-notification')
 						</div>
 
+						<div class="dropdown ph-header-profile ph-prism-mobile-profile">
+							<button class="ph-header-profile-toggle" type="button" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="outside" aria-expanded="false" aria-haspopup="true" aria-label="{{ t('Open profile menu') }}">
+								<span class="ph-header-profile-avatar">{!! get_avatar('frame', 'rounded-circle', 32) !!}</span>
+								<span class="ph-header-profile-meta">
+									<strong>{{ auth()->user()->fullname }}</strong>
+									<span>{{ $currentUserRole }}</span>
+								</span>
+								<i class="fal fa-chevron-down ph-header-profile-chevron" aria-hidden="true"></i>
+							</button>
+
+							<div class="dropdown-menu ph-header-profile-menu ph-prism-mobile-profile-menu">
+								<div class="ph-profile-menu-user">
+									<span class="ph-profile-menu-avatar">{!! get_avatar('frame', 'rounded-circle', 36) !!}</span>
+									<span class="ph-profile-menu-identity">
+										<strong>{{ auth()->user()->fullname }}</strong>
+										<span>{{ $currentUserRole }}</span>
+									</span>
+								</div>
+
+								<div class="ph-profile-menu-section">
+									<a class="dropdown-item" href="{{ url('profile') }}">
+										<i class="fal fa-user-circle fa-fw"></i>
+										<span>{{ t('Profile') }}</span>
+									</a>
+
+									<a class="dropdown-item" href="{{ url('account') }}">
+										<i class="fal fa-cog fa-fw"></i>
+										<span>{{ t('Settings') }}</span>
+									</a>
+
+									<button class="dropdown-item ph-profile-theme-toggle ph-theme-toggle" type="button" onclick="toggleTheme()" aria-label="{{ t('Dark Mode') }}" aria-pressed="false">
+										<i class="fas fa-sun fa-fw ph-theme-icon"></i>
+										<span>{{ t('Dark Mode') }}</span>
+										<span class="ph-profile-switch" aria-hidden="true"><span></span></span>
+									</button>
+
+									<button class="dropdown-item ph-profile-color-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ph-prism-mobile-theme-colors" aria-expanded="false" aria-controls="ph-prism-mobile-theme-colors">
+										<i class="fal fa-palette fa-fw"></i>
+										<span>{{ t('Theme Color') }}</span>
+										<i class="fal fa-chevron-right ph-profile-color-chevron" aria-hidden="true"></i>
+									</button>
+
+									<div class="collapse ph-profile-color-collapse" id="ph-prism-mobile-theme-colors">
+										<div class="ph-profile-color-section">
+											<span class="ph-profile-color-label">{{ t('Choose Theme Color') }}</span>
+											<div class="row g-2" data-ph-theme-color-picker></div>
+										</div>
+									</div>
+								</div>
+
+								<div class="ph-profile-menu-section ph-profile-menu-footer">
+									<a class="dropdown-item text-danger" href="{{ url('auth/logout') }}">
+										<i class="fal fa-sign-out-alt fa-fw"></i>
+										<span>{{ t('Logout') }}</span>
+									</a>
+								</div>
+							</div>
+						</div>
+
 						@if(checkIsAdmin())
 							<a href="{{ url('awesome_admin') }}" class="ph-btn-action-icon ph-header-awesome-admin" title="{{ t('Awesome Admin') }}" aria-label="{{ t('Open Awesome Admin') }}">
 								<i class="fal fa-user-secret"></i>
@@ -259,6 +326,8 @@
 				</div>
 			</div>
 		</div>
+
+		<div id="ph-mobile-nav-controller" hidden aria-hidden="true"></div>
 
 		<script type="text/javascript">const site_url = '{{ url('/') }}';</script>
 
@@ -283,5 +352,6 @@
 		@stack('js')
 
 		<script src="{{ url('assets/js/themes/arunika_prism/arunika_prism.js?v=').time() }}"></script>
+		<script src="{{ asset('assets/js/themes/arunika-mobile-navigation-v2.js?v=').time() }}"></script>
 	</body>
 </html>

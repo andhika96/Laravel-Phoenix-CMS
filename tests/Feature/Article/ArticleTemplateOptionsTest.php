@@ -16,6 +16,22 @@ class ArticleTemplateOptionsTest extends TestCase
         $this->assertTrue($minimalDefaults['header']['title']['enabled']);
         $this->assertTrue($minimalDefaults['header']['description']['enabled']);
         $this->assertTrue($minimalDefaults['toolbar']['search']['enabled']);
+        $this->assertSame('9.3rem', $minimalDefaults['thumbnail']['height']);
+        $this->assertTrue($minimalDefaults['sidebar']['enabled']);
+        $this->assertTrue($minimalDefaults['sidebar']['categories']['enabled']);
+        $this->assertTrue($minimalDefaults['sidebar']['popular']['enabled']);
+
+        $minimalSidebar = $options->archive('minimal-reading-list', [
+            'sidebar' => [
+                'enabled' => false,
+                'categories' => ['enabled' => false],
+                'popular' => ['enabled' => false],
+            ],
+        ]);
+        $this->assertFalse($minimalSidebar['sidebar']['enabled']);
+        $this->assertFalse($minimalSidebar['sidebar']['categories']['enabled']);
+        $this->assertFalse($minimalSidebar['sidebar']['popular']['enabled']);
+        $this->assertArrayNotHasKey('sidebar', $options->archive('balanced-card-grid'));
 
         $focusedDefaults = $options->detail('focused-reader');
         $this->assertTrue($focusedDefaults['header']['title']['enabled']);
@@ -63,6 +79,7 @@ class ArticleTemplateOptionsTest extends TestCase
             'thumbnail' => [
                 'mode' => 'asset',
                 'fit' => 'contain',
+                'height' => '12rem',
                 'background_color' => '#123456',
                 'frame' => [
                     'enabled' => true,
@@ -114,6 +131,7 @@ class ArticleTemplateOptionsTest extends TestCase
 
         $this->assertSame('asset', $archive['thumbnail']['mode']);
         $this->assertSame('contain', $archive['thumbnail']['fit']);
+        $this->assertSame('12rem', $archive['thumbnail']['height']);
         $this->assertSame('#123456', $archive['thumbnail']['background_color']);
         $this->assertSame('1.25em', $archive['thumbnail']['frame']['border_width']);
         $this->assertSame('12%', $archive['thumbnail']['frame']['radius']);
@@ -128,12 +146,57 @@ class ArticleTemplateOptionsTest extends TestCase
         $this->assertSame('1.5em', $archive['shell']['frame']['radius']);
     }
 
+    public function test_it_normalizes_named_pagination_models_and_device_ranges(): void
+    {
+        $options = app(ArticleTemplateOptions::class);
+
+        $defaults = $options->archive('minimal-reading-list')['pagination'];
+
+        $this->assertSame('boxed', $defaults['type']);
+        $this->assertSame(['desktop' => 3, 'tablet' => 3, 'mobile' => 2], $defaults['range']);
+
+        $custom = $options->archive('minimal-reading-list', [
+            'pagination' => [
+                'type' => 'soft',
+                'range' => ['desktop' => 7, 'tablet' => 4, 'mobile' => 1],
+            ],
+        ])['pagination'];
+
+        $this->assertSame('soft', $custom['type']);
+        $this->assertSame(['desktop' => 7, 'tablet' => 4, 'mobile' => 1], $custom['range']);
+
+        $invalid = $options->archive('minimal-reading-list', [
+            'pagination' => [
+                'type' => 'legacy',
+                'range' => ['desktop' => 99, 'tablet' => 0, 'mobile' => 'calc(1rem)'],
+            ],
+        ])['pagination'];
+
+        $this->assertSame('boxed', $invalid['type']);
+        $this->assertSame(['desktop' => 9, 'tablet' => 1, 'mobile' => 2], $invalid['range']);
+    }
+
+    public function test_it_normalizes_border_radius_as_a_page_builder_style_four_value_group(): void
+    {
+        $options = app(ArticleTemplateOptions::class);
+
+        $archive = $options->archive('minimal-reading-list', [
+            'thumbnail' => ['frame' => ['radius' => '4px 8px 12px 16px']],
+            'pagination' => ['frame' => ['radius' => '2rem 3rem 4rem 5rem']],
+            'shell' => ['frame' => ['radius' => 'calc(1rem)']],
+        ]);
+
+        $this->assertSame('4px 8px 12px 16px', $archive['thumbnail']['frame']['radius']);
+        $this->assertSame('2rem 3rem 4rem 5rem', $archive['pagination']['frame']['radius']);
+        $this->assertSame('1rem', $archive['shell']['frame']['radius']);
+    }
+
     public function test_it_rejects_unsafe_styling_values_and_keeps_detail_shell_options(): void
     {
         $options = app(ArticleTemplateOptions::class);
 
         $archive = $options->archive('minimal-reading-list', [
-            'thumbnail' => ['mode' => 'script', 'fit' => 'fill', 'background_color' => 'url(javascript:alert(1))'],
+            'thumbnail' => ['mode' => 'script', 'fit' => 'fill', 'height' => 'url(javascript:alert(1))', 'background_color' => 'url(javascript:alert(1))'],
             'pagination' => ['position' => 'everywhere'],
             'article_title' => ['tag' => 'script'],
         ]);
@@ -148,6 +211,7 @@ class ArticleTemplateOptionsTest extends TestCase
 
         $this->assertSame('background', $archive['thumbnail']['mode']);
         $this->assertSame('cover', $archive['thumbnail']['fit']);
+        $this->assertSame('9.3rem', $archive['thumbnail']['height']);
         $this->assertSame('#f2f4f7', $archive['thumbnail']['background_color']);
         $this->assertSame('right', $archive['pagination']['position']);
         $this->assertSame('h4', $archive['article_title']['tag']);

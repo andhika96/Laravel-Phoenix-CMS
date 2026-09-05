@@ -47,6 +47,7 @@
 		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/themes/arunika_equinox/arunika_equinox.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/themes/arunika_equinox/mobile-v2.css?v=').time() }}" rel="stylesheet">
 
 		@stack('css')
 
@@ -86,7 +87,7 @@
 		</script>
 	</head>
 
-	<body class="ph-theme-arunika-equinox">
+	<body class="ph-theme-arunika-equinox" data-ph-mobile-theme="arunika_equinox">
 		<div class="ph-app-shell d-flex w-100 h-100">
 			<div class="ph-sidebar ph-no-transition" id="sidebar">
 
@@ -114,7 +115,7 @@
 						<svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
 							<rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
 							<path d="M8.25 3.25V20.75"></path>
-							<path d="M16 8.75L12.75 12L16 15.25"></path>
+							<path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
 						</svg>
 					</button>
 				</div>
@@ -143,6 +144,13 @@
 					</div>
 
 				</div>
+
+				@if(checkIsAdmin())
+					<a href="{{ url('awesome_admin') }}" class="ph-equinox-mobile-admin" aria-label="{{ t('Open Awesome Admin') }}">
+						<i class="fal fa-user-secret fa-fw" aria-hidden="true"></i>
+						<span>{{ t('Awesome Admin') }}</span>
+					</a>
+				@endif
 
 			</div>
 
@@ -199,6 +207,14 @@
 							</button>
 
 							<div class="dropdown-menu dropdown-menu-end ph-header-profile-menu">
+								<div class="ph-equinox-mobile-profile-user">
+									<span class="ph-profile-menu-avatar">{!! get_avatar('no_frame', 'rounded-circle', 40) !!}</span>
+									<span class="ph-profile-menu-identity">
+										<strong>{{ auth()->user()->fullname }}</strong>
+										<span>{{ $currentUserRole }}</span>
+									</span>
+								</div>
+
 								<div class="ph-profile-menu-section">
 									<a class="dropdown-item" href="{{ url('profile') }}">
 										<i class="fal fa-user-circle fa-fw"></i>
@@ -226,8 +242,8 @@
 										<div class="ph-profile-color-section">
 											<span class="ph-profile-color-label">{{ t('Choose Theme Color') }}</span>
 											<div class="row g-2" id="color-picker-container"></div>
-										</div>
-									</div>
+						</div>
+				</div>
 								</div>
 
 								<div class="ph-profile-menu-section ph-profile-menu-footer">
@@ -248,6 +264,8 @@
 				</div>
 			</div>
 		</div>
+
+		<div id="ph-mobile-nav-controller" hidden aria-hidden="true"></div>
 
 		<script type="text/javascript">const site_url = '{{ url('/') }}';</script>
 
@@ -272,5 +290,6 @@
 		@stack('js')
 
 		<script src="{{ url('assets/js/themes/arunika_equinox/arunika_equinox.js?v=').time() }}"></script>
+		<script src="{{ asset('assets/js/themes/arunika-mobile-navigation-v2.js?v=').time() }}"></script>
 	</body>
 </html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../../public/assets/css/article/article-frontend-2026.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; background: #f5f7fa; }
+        .fixture { width: min(1180px, calc(100% - 2rem)); margin: 0 auto; padding: 32px 0; display: grid; gap: 24px; }
+        .fixture h1 { margin: 0; color: #172033; font: 700 1.25rem/1.25 system-ui, sans-serif; }
+        .fixture-card { padding: 20px; border: 1px solid #e3e7ee; border-radius: 12px; background: #fff; }
+        .fixture-card h2 { margin: 0 0 14px; color: #344054; font: 700 .95rem/1.25 system-ui, sans-serif; }
+        .fixture-card .article-pagination { margin: 0; }
+        .fixture-card .article-pagination__layout { justify-content: center; }
+        .fixture-card .article-pagination__context { display: none; }
+        @media (max-width: 575.98px) {
+            .fixture { width: min(100% - 1rem, 1180px); padding: 16px 0; gap: 12px; }
+            .fixture-card { padding: 12px; }
+            .fixture-card .article-pagination .ph-pagination { gap: .2rem; }
+            .fixture-card .article-pagination .ph-pagination .page-link { min-width: 2rem; height: 2rem; padding-inline: .35rem; }
+        }
+    </style>
+</head>
+<body>
+    <main class="article-page article-page--reading-list fixture">
+        <h1>Pagination models · responsive fixture</h1>
+        <section class="fixture-card">
+            <h2>Minimal Underline</h2>
+            <nav class="article-pagination article-pagination--ssr article-pagination--model-underline article-pagination--without-total article-pagination--without-frame article-pagination--position-center" data-pagination-type="underline" data-pagination-range-desktop="3" data-pagination-range-tablet="3" data-pagination-range-mobile="2" aria-label="Article pagination">
+                <div class="article-pagination__layout"><div class="article-pagination__pager"><ul class="pagination ph-pagination mb-0">
+                    <li class="page-item"><a class="page-link" href="#">‹</a></li><li class="page-item active"><span class="page-link">1</span></li><li class="page-item"><a class="page-link" href="#">2</a></li><li class="page-item"><a class="page-link" href="#">3</a></li><li class="page-item article-pagination__ellipsis"><span class="page-link">…</span></li><li class="page-item"><a class="page-link" href="#">60</a></li><li class="page-item"><a class="page-link" href="#">›</a></li>
+                </ul></div></div>
+            </nav>
+        </section>
+        <section class="fixture-card">
+            <h2>Classic Boxed</h2>
+            <nav class="article-pagination article-pagination--ssr article-pagination--model-boxed article-pagination--without-total article-pagination--without-frame article-pagination--position-center" data-pagination-type="boxed" data-pagination-range-desktop="3" data-pagination-range-tablet="3" data-pagination-range-mobile="2" aria-label="Article pagination">
+                <div class="article-pagination__layout"><div class="article-pagination__pager"><ul class="pagination ph-pagination mb-0">
+                    <li class="page-item"><a class="page-link" href="#">‹</a></li><li class="page-item active"><span class="page-link">1</span></li><li class="page-item"><a class="page-link" href="#">2</a></li><li class="page-item"><a class="page-link" href="#">3</a></li><li class="page-item article-pagination__ellipsis"><span class="page-link">…</span></li><li class="page-item"><a class="page-link" href="#">60</a></li><li class="page-item"><a class="page-link" href="#">›</a></li>
+                </ul></div></div>
+            </nav>
+        </section>
+        <section class="fixture-card">
+            <h2>Soft Highlight</h2>
+            <nav class="article-pagination article-pagination--ssr article-pagination--model-soft article-pagination--without-total article-pagination--without-frame article-pagination--position-center" data-pagination-type="soft" data-pagination-range-desktop="3" data-pagination-range-tablet="3" data-pagination-range-mobile="2" aria-label="Article pagination">
+                <div class="article-pagination__layout"><div class="article-pagination__pager"><ul class="pagination ph-pagination mb-0">
+                    <li class="page-item"><a class="page-link" href="#">‹</a></li><li class="page-item active"><span class="page-link">1</span></li><li class="page-item"><a class="page-link" href="#">2</a></li><li class="page-item"><a class="page-link" href="#">3</a></li><li class="page-item article-pagination__ellipsis"><span class="page-link">…</span></li><li class="page-item"><a class="page-link" href="#">60</a></li><li class="page-item"><a class="page-link" href="#">›</a></li>
+                </ul></div></div>
+            </nav>
+        </section>
+    </main>
+</body>
+</html>

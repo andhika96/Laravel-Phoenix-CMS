@@ -22,12 +22,40 @@ class ThemeManagerTest extends TestCase
 		$this->get(route('cms.admin.awesome_admin.themes'))
 			->assertOk()
 			->assertSee('id="ph-app-theme-manager"', false)
-			->assertSee('Arunika Mosaic')
-			->assertSee('Arunika Aurora')
 			->assertSee('Arunika Prism')
-			->assertSee('Arunika Equinox')
+			->assertSee('Arunika Aurora')
 			->assertSee('Arunika Lucent')
+			->assertSee('Arunika Equinox')
+			->assertDontSee('Arunika Mosaic')
 			->assertDontSee('Browse installed themes');
+	}
+
+	public function test_theme_manager_lists_the_active_arunika_themes_in_the_approved_order(): void
+	{
+		$this->actingAsAdministrator();
+
+		$html = $this->get(route('cms.admin.awesome_admin.themes'))
+			->assertOk()
+			->getContent();
+
+		$positions = array_map(
+			fn (string $themeName): int => strpos($html, $themeName),
+			['Arunika Prism', 'Arunika Aurora', 'Arunika Lucent', 'Arunika Equinox'],
+		);
+
+		$this->assertNotContains(-1, $positions);
+		$sortedPositions = $positions;
+		sort($sortedPositions);
+		$this->assertSame($sortedPositions, $positions);
+	}
+
+	public function test_prism_is_the_default_cms_theme_after_mosaic_cleanup(): void
+	{
+		$this->assertDatabaseHas('theme_settings', [
+			'id' => 1,
+			'theme_code' => 'arunika_prism',
+			'theme_name' => 'Arunika Prism',
+		]);
 	}
 
 	public function test_administrator_can_activate_an_installed_arunika_theme(): void

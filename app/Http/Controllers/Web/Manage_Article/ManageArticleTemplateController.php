@@ -69,25 +69,36 @@ class ManageArticleTemplateController extends Controller
 
         $settings = ArticleTemplateSetting::current();
         $templateOptions = $this->previewOptions($request, $settings, $surface, $template);
+        $previewDevice = in_array($request->query('preview_device'), ['desktop', 'tablet', 'mobile'], true)
+            ? $request->query('preview_device')
+            : null;
         if ($surface === 'archive') {
             $previewPath = route('cms.core.manage_article.templates.preview', ['surface' => $surface, 'template' => $template]);
             if ($request->getQueryString()) {
                 $previewPath .= '?'.$request->getQueryString();
             }
+            $previewArticles = $this->previewFixture->archivePaginator(
+                $request->integer('page', 1),
+                $previewPath
+            );
+            $popularArticles = $this->previewFixture->archivePaginator(1, $previewPath)->getCollection()->take(4);
+            $previewCategories = $previewArticles->getCollection()->pluck('category')->filter()->unique('id')->values();
+            $articleCategories = $template === 'minimal-reading-list'
+                ? $previewCategories
+                : $this->publicArticleCategoryOptions->all();
 
             return view('manage_article.templates.preview', [
                 'surface' => $surface,
                 'templateView' => $this->catalog->view($surface, $template),
-                'articles' => $this->previewFixture->archivePaginator(
-                    $request->integer('page', 1),
-                    $previewPath
-                ),
+                'articles' => $previewArticles,
+                'popularArticles' => $popularArticles,
                 'templateSettings' => $settings,
                 'templateOptions' => $templateOptions,
                 'article' => null,
                 'previousArticle' => null,
                 'nextArticle' => null,
-                'articleCategories' => $this->publicArticleCategoryOptions->all(),
+                'articleCategories' => $articleCategories,
+                'previewDevice' => $previewDevice,
                 'isPreviewFixture' => true,
             ]);
         }
@@ -103,6 +114,7 @@ class ManageArticleTemplateController extends Controller
             'articles' => null,
             'previousArticle' => $neighbors['previous'],
             'nextArticle' => $neighbors['next'],
+            'previewDevice' => $previewDevice,
             'isPreviewFixture' => true,
         ]);
     }

@@ -17,6 +17,20 @@
 	--ph-theme-primary-subtle: var(--ph-theme-hover-surface, color-mix(in srgb, var(--ph-theme-primary), transparent 85%));
 	--ph-theme-primary-border-subtle: color-mix(in srgb, var(--ph-theme-primary), transparent 70%);
 
+	/* Legacy Phoenix controls still consume these Bootstrap button tokens. */
+	--ph-primary: var(--ph-theme-primary);
+	--ph-primary-hover-bg: var(--ph-theme-primary-hover);
+	--ph-primary-hover-text: #FFFFFF;
+	--ph-primary-hover-border: var(--ph-theme-primary-hover);
+	--ph-primary-focus-shadow-rgb: 31, 166, 117;
+	--ph-primary-active-bg: var(--ph-theme-primary);
+	--ph-primary-active-text: #FFFFFF;
+	--ph-primary-active-border: var(--ph-theme-primary);
+	--ph-primary-active-shadow: color-mix(in srgb, var(--ph-theme-primary), transparent 70%);
+	--ph-primary-disable-bg: color-mix(in srgb, var(--ph-theme-primary), white 35%);
+	--ph-primary-disable-text: #FFFFFF;
+	--ph-primary-disable-border: color-mix(in srgb, var(--ph-theme-primary), white 35%);
+
 	--ph-text-main: #ffffff;
 	--ph-text-muted: #a3a3a3;
 	--ph-text-emphasis: color-mix(in srgb, var(--ph-theme-primary), white 40%);
@@ -54,7 +68,8 @@ html[data-bs-theme=dark][data-ph-theme-color="cool-gray"]
 	--ph-theme-hover-surface: rgba(199, 204, 216, 0.16);
 }
 
-/* TEMA LIGHT */
+/* TEMA LIGHT: :root is the fallback for auth layouts without data-bs-theme. */
+:root,
 [data-bs-theme=light]
 {
 	--ph-bg-body: #f5f5f5;
@@ -3222,7 +3237,7 @@ html[data-bs-theme=light][data-ph-theme-color="cool-gray"] .ph-theme-arunika-luc
 	height: 18px;
 }
 
-.ph-theme-arunika-lucent .ph-sidebar:not(.ph-expanded) + .ph-layout-right .ph-mobile-sidebar-trigger .ph-sidebar-toggle-chevron
+.ph-theme-arunika-lucent .ph-sidebar:not(.ph-expanded) ~ .ph-layout-right .ph-mobile-sidebar-trigger .ph-sidebar-toggle-chevron
 {
 	transform: rotate(180deg);
 }
@@ -4163,7 +4178,7 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 	font-size: clamp(20px, 1.6vw, 24px);
 }
 
-.ph-theme-arunika-lucent a,
+.ph-theme-arunika-lucent a:not(.btn),
 .ph-theme-arunika-lucent .btn-link,
 .ph-theme-arunika-lucent .link-primary,
 .ph-theme-arunika-lucent .text-primary,
@@ -4172,7 +4187,7 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 	color: var(--ph-lucent-accent) !important;
 }
 
-.ph-theme-arunika-lucent a:hover,
+.ph-theme-arunika-lucent a:not(.btn):hover,
 .ph-theme-arunika-lucent .btn-link:hover
 {
 	color: var(--ph-lucent-accent-hover) !important;
@@ -4185,7 +4200,6 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 }
 
 .ph-theme-arunika-lucent .btn-primary,
-.ph-theme-arunika-lucent .btn-success,
 .ph-theme-arunika-lucent .ph-btn-theme
 {
 	border-color: var(--ph-lucent-accent);
@@ -4195,8 +4209,6 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 
 .ph-theme-arunika-lucent .btn-primary:hover,
 .ph-theme-arunika-lucent .btn-primary:focus,
-.ph-theme-arunika-lucent .btn-success:hover,
-.ph-theme-arunika-lucent .btn-success:focus,
 .ph-theme-arunika-lucent .ph-btn-theme:hover,
 .ph-theme-arunika-lucent .ph-btn-theme:focus
 {
@@ -4206,7 +4218,6 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 }
 
 .ph-theme-arunika-lucent .btn-outline-primary,
-.ph-theme-arunika-lucent .btn-outline-success,
 .ph-theme-arunika-lucent .ph-btn-theme-outline
 {
 	border-color: var(--ph-lucent-accent);
@@ -4216,8 +4227,6 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 
 .ph-theme-arunika-lucent .btn-outline-primary:hover,
 .ph-theme-arunika-lucent .btn-outline-primary:focus,
-.ph-theme-arunika-lucent .btn-outline-success:hover,
-.ph-theme-arunika-lucent .btn-outline-success:focus,
 .ph-theme-arunika-lucent .ph-btn-theme-outline:hover,
 .ph-theme-arunika-lucent .ph-btn-theme-outline:focus
 {
@@ -4331,8 +4340,8 @@ body.ph-theme-arunika-lucent
 	--ph-lucent-border: #e7e9e8;
 	--ph-lucent-text: #171717;
 	--ph-lucent-muted: #5f6361;
-	--ph-lucent-hover: #f1f2f2;
-	--ph-lucent-active: #f0f0f0;
+	--ph-lucent-hover: color-mix(in srgb, var(--ph-lucent-accent), white 93%);
+	--ph-lucent-active: color-mix(in srgb, var(--ph-lucent-accent), white 88%);
 	--ph-lucent-accent: var(--ph-theme-primary);
 	--ph-lucent-sidebar-icon-size: clamp(15px, calc(var(--ph-adaptive-font-size, 14px) + 2px), 16px);
 	background: var(--ph-lucent-page-surface);
@@ -4430,7 +4439,7 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 
 .ph-theme-arunika-lucent .ph-sidebar:not(.ph-expanded) .ph-lucent-sidebar-account
 {
-	grid-template-columns: 1fr;
+	grid-template-columns: 1fr !important;
 	padding-right: 12px;
 	padding-left: 12px;
 }
@@ -4443,6 +4452,8 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 .ph-theme-arunika-lucent .ph-sidebar:not(.ph-expanded) .ph-lucent-sidebar-toggle
 {
 	margin: 0 auto;
+	grid-column: 1 !important;
+	justify-self: center;
 }
 
 .ph-theme-arunika-lucent .ph-sidebar:not(.ph-expanded) .ph-lucent-sidebar-toggle .ph-sidebar-toggle-icon
@@ -4795,7 +4806,7 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 	margin-top: 14px;
 }
 
-.ph-theme-arunika-lucent a,
+.ph-theme-arunika-lucent a:not(.btn),
 .ph-theme-arunika-lucent .btn-link,
 .ph-theme-arunika-lucent .link-primary,
 .ph-theme-arunika-lucent .text-primary,
@@ -4811,7 +4822,6 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 }
 
 .ph-theme-arunika-lucent .btn-primary,
-.ph-theme-arunika-lucent .btn-success,
 .ph-theme-arunika-lucent .ph-btn-theme
 {
 	border-color: var(--ph-lucent-accent);
@@ -4821,8 +4831,6 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 
 .ph-theme-arunika-lucent .btn-primary:hover,
 .ph-theme-arunika-lucent .btn-primary:focus,
-.ph-theme-arunika-lucent .btn-success:hover,
-.ph-theme-arunika-lucent .btn-success:focus,
 .ph-theme-arunika-lucent .ph-btn-theme:hover,
 .ph-theme-arunika-lucent .ph-btn-theme:focus
 {
@@ -4832,7 +4840,6 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 }
 
 .ph-theme-arunika-lucent .btn-outline-primary,
-.ph-theme-arunika-lucent .btn-outline-success,
 .ph-theme-arunika-lucent .ph-btn-theme-outline
 {
 	border-color: var(--ph-lucent-accent);
@@ -4842,8 +4849,6 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 
 .ph-theme-arunika-lucent .btn-outline-primary:hover,
 .ph-theme-arunika-lucent .btn-outline-primary:focus,
-.ph-theme-arunika-lucent .btn-outline-success:hover,
-.ph-theme-arunika-lucent .btn-outline-success:focus,
 .ph-theme-arunika-lucent .ph-btn-theme-outline:hover,
 .ph-theme-arunika-lucent .ph-btn-theme-outline:focus
 {
@@ -4941,5 +4946,193 @@ html[data-bs-theme=dark] body.ph-theme-arunika-lucent
 	{
 		border-radius: 8px !important;
 	}
+}
+
+/* FINAL SEMANTIC OVERRIDES
+   Keep this last so legacy shell layers cannot reintroduce a theme-green
+   danger action or a blue checked primary control. */
+.ph-theme-arunika-lucent .btn-primary,
+.ph-theme-arunika-lucent .ph-btn-theme
+{
+	--bs-btn-bg: var(--ph-lucent-accent);
+	--bs-btn-border-color: var(--ph-lucent-accent);
+	--bs-btn-active-bg: var(--ph-lucent-accent);
+	--bs-btn-active-border-color: var(--ph-lucent-accent);
+	background-color: var(--ph-lucent-accent);
+	border-color: var(--ph-lucent-accent);
+	color: #ffffff !important;
+}
+
+.ph-theme-arunika-lucent .btn-outline-primary,
+.ph-theme-arunika-lucent .ph-btn-theme-outline
+{
+	--bs-btn-color: var(--ph-lucent-accent);
+	--bs-btn-border-color: var(--ph-lucent-accent);
+	--bs-btn-hover-color: #ffffff;
+	--bs-btn-hover-bg: var(--ph-lucent-accent);
+	--bs-btn-hover-border-color: var(--ph-lucent-accent);
+	--bs-btn-active-color: #ffffff;
+	--bs-btn-active-bg: var(--ph-lucent-accent);
+	--bs-btn-active-border-color: var(--ph-lucent-accent);
+	border-color: var(--ph-lucent-accent);
+	color: var(--ph-lucent-accent) !important;
+}
+
+.ph-theme-arunika-lucent .btn-outline-primary:hover,
+.ph-theme-arunika-lucent .btn-outline-primary:focus,
+.ph-theme-arunika-lucent .btn-outline-primary:active,
+.ph-theme-arunika-lucent .btn-outline-primary.active,
+.ph-theme-arunika-lucent .ph-btn-theme-outline:hover,
+.ph-theme-arunika-lucent .ph-btn-theme-outline:focus,
+.ph-theme-arunika-lucent .ph-btn-theme-outline:active
+{
+	background-color: var(--ph-lucent-accent);
+	border-color: var(--ph-lucent-accent);
+	color: #ffffff !important;
+}
+
+.ph-theme-arunika-lucent .btn-check:checked + .btn-outline-primary,
+.ph-theme-arunika-lucent .btn-check:checked + .ph-btn-theme-outline
+{
+	--bs-btn-active-color: #ffffff;
+	--bs-btn-active-bg: var(--ph-lucent-accent);
+	--bs-btn-active-border-color: var(--ph-lucent-accent);
+	background-color: var(--ph-lucent-accent) !important;
+	border-color: var(--ph-lucent-accent) !important;
+	color: #ffffff !important;
+}
+
+.ph-theme-arunika-lucent .btn-outline-danger
+{
+	--bs-btn-color: var(--bs-danger, #dc3545);
+	--bs-btn-border-color: var(--bs-danger, #dc3545);
+	--bs-btn-hover-color: #ffffff;
+	--bs-btn-hover-bg: var(--bs-danger, #dc3545);
+	--bs-btn-hover-border-color: var(--bs-danger, #dc3545);
+	--bs-btn-active-color: #ffffff;
+	--bs-btn-active-bg: var(--bs-danger, #dc3545);
+	--bs-btn-active-border-color: var(--bs-danger, #dc3545);
+	border-color: var(--bs-danger, #dc3545) !important;
+	color: var(--bs-danger, #dc3545) !important;
+}
+
+.ph-theme-arunika-lucent .btn-outline-danger:hover,
+.ph-theme-arunika-lucent .btn-outline-danger:focus,
+.ph-theme-arunika-lucent .btn-outline-danger:active,
+.ph-theme-arunika-lucent .btn-outline-danger.active
+{
+	background-color: var(--bs-danger, #dc3545) !important;
+	border-color: var(--bs-danger, #dc3545) !important;
+	color: #ffffff !important;
+}
+
+.ph-theme-arunika-lucent .btn-danger
+{
+	--bs-btn-bg: var(--bs-danger, #dc3545);
+	--bs-btn-border-color: var(--bs-danger, #dc3545);
+	background-color: var(--bs-danger, #dc3545);
+	border-color: var(--bs-danger, #dc3545);
+	color: #ffffff !important;
+}
+
+.ph-theme-arunika-lucent .text-danger,
+.ph-theme-arunika-lucent .link-danger,
+.ph-theme-arunika-lucent .text-danger:hover,
+.ph-theme-arunika-lucent .link-danger:hover,
+.ph-theme-arunika-lucent .text-danger:focus,
+.ph-theme-arunika-lucent .link-danger:focus
+{
+	color: var(--bs-danger, #dc3545) !important;
+}
+
+.ph-theme-arunika-lucent .text-success,
+.ph-theme-arunika-lucent .link-success
+{
+	color: var(--bs-success, #198754) !important;
+}
+
+.ph-theme-arunika-lucent .text-warning,
+.ph-theme-arunika-lucent .link-warning
+{
+	color: var(--bs-warning, #ffc107) !important;
+}
+
+.ph-theme-arunika-lucent .text-info,
+.ph-theme-arunika-lucent .link-info
+{
+	color: var(--bs-info, #0dcaf0) !important;
+}
+
+.ph-theme-arunika-lucent .text-secondary,
+.ph-theme-arunika-lucent .link-secondary
+{
+	color: var(--bs-secondary, #6c757d) !important;
+}
+
+.ph-theme-arunika-lucent .btn-outline-danger :is(i, svg, .fa, .fas, .far, .fal, .fad),
+.ph-theme-arunika-lucent .btn-danger :is(i, svg, .fa, .fas, .far, .fal, .fad),
+.ph-theme-arunika-lucent .text-danger :is(i, svg, .fa, .fas, .far, .fal, .fad),
+.ph-theme-arunika-lucent .link-danger :is(i, svg, .fa, .fas, .far, .fal, .fad)
+{
+	color: inherit !important;
+}
+
+/* SIDEBAR ACCOUNT ACTIONS
+   The profile menu trigger sits immediately before the collapse control. */
+.ph-theme-arunika-lucent .ph-lucent-sidebar-account .ph-sidebar-profile
+{
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 36px;
+	align-items: center;
+	gap: 12px;
+	position: relative;
+}
+
+.ph-theme-arunika-lucent .ph-lucent-sidebar-account .ph-sidebar-user-card
+{
+	grid-column: 1;
+	grid-row: 1;
+	min-width: 0;
+	grid-template-columns: 40px minmax(0, 1fr);
+}
+
+.ph-theme-arunika-lucent .ph-lucent-account-menu-button
+{
+	grid-column: 2;
+	grid-row: 1;
+	width: 36px;
+	height: 36px;
+	min-width: 36px;
+	min-height: 36px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border: 0;
+	border-radius: 8px;
+	background: transparent;
+	color: var(--ph-lucent-muted);
+	cursor: pointer;
+}
+
+.ph-theme-arunika-lucent .ph-lucent-account-menu-button:hover,
+.ph-theme-arunika-lucent .ph-lucent-account-menu-button:focus-visible
+{
+	background: var(--ph-lucent-hover);
+	color: var(--ph-lucent-text);
+}
+
+.ph-theme-arunika-lucent .ph-lucent-sidebar-account .ph-lucent-sidebar-toggle
+{
+	grid-column: 2;
+	grid-row: 1;
+}
+
+/* Frontend and auth layouts do not have the admin shell's internal scroller. */
+body.ph-theme-arunika-lucent:not(:has(.ph-app-shell))
+{
+	height: auto;
+	min-height: 100%;
+	overflow-y: auto;
 }
 

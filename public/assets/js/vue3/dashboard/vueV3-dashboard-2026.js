@@ -1,3 +1,47 @@
+const isMobileDashboardViewport = () => window.matchMedia('(max-width: 768px)').matches;
+let projectionChartInstance = null;
+
+const getProjectionChartOption = (isMobile) =>
+({
+	legend:
+	{
+		left: isMobile ? '6%' : 'auto',
+		right: isMobile ? 'auto' : '0',
+		top: isMobile ? '34px' : '0',
+		itemWidth: isMobile ? 14 : 25,
+		itemHeight: isMobile ? 10 : 14,
+		textStyle: { fontSize: isMobile ? 11 : 12 }
+	},
+	tooltip: {},
+	dataset:
+	{
+		source:
+		[
+			['Matcha', 120, 85.8],
+			['Milk', 83.1, 73.4],
+			['Cheese', 86.4, 65.2],
+			['Walnut', 76, 55],
+			['Walnut 2', 76, 55]
+		]
+	},
+	xAxis: { type: 'category', axisTick: { show: !1 }, splitLine: { show: !1 }, max: 4 },
+	yAxis: [ { type: "value", axisLine: { show: !1 } } ],
+	grid:
+	[
+		{
+			right: "6%",
+			left: "6%",
+			bottom: isMobile ? "14%" : "10%",
+			top: isMobile ? '22%' : "22%"
+		}
+	],
+	series:
+	[
+		{ name: 'Projected Revenu', type: 'bar', barWidth: isMobile ? 12 : 15, itemStyle: { barBorderRadius: [3, 3, 0, 0], borderWidth: 1 } },
+		{ name: 'Actual Revenue', type: 'bar', barWidth: isMobile ? 12 : 15, itemStyle: { barBorderRadius: [3, 3, 0, 0], borderWidth: 1 } }
+	]
+});
+
 const EChartJSVue3 = createApp(
 {
 	data()
@@ -12,6 +56,16 @@ const EChartJSVue3 = createApp(
 	},
 	methods:
 	{
+		handleDashboardResize: function()
+		{
+			if (!projectionChartInstance)
+			{
+				return;
+			}
+
+			projectionChartInstance.setOption(getProjectionChartOption(isMobileDashboardViewport()), true);
+			projectionChartInstance.resize();
+		},
 		echartLineBarGradient: function(idSubmit)
 		{
 			if (document.getElementById(idSubmit) !== null)
@@ -96,48 +150,8 @@ const EChartJSVue3 = createApp(
 		{
 			if (document.getElementById(idSubmit) !== null)
 			{
-				let chartDomSeriesSimple = document.getElementById(idSubmit);
-				let myChartSeriesSimple = echarts.init(chartDomSeriesSimple);
-				let optionSeriesSimple;
-
-				optionSeriesSimple = 
-				{
-					legend: 
-					{
-						left: 'auto',
-						right: '0'
-					},
-					tooltip: {},
-					dataset: 
-					{
-						source: 
-						[
-							['Matcha', 120, 85.8],
-							['Milk', 83.1, 73.4],
-							['Cheese', 86.4, 65.2],
-							['Walnut', 76, 55],
-							['Walnut 2', 76, 55]
-						]
-					},				
-					xAxis: { type: 'category', axisTick: { show: !1 }, splitLine: { show: !1 }, max: 4 },
-					yAxis: [ { type: "value", axisLine: { show: !1 } } ],
-					grid: 
-					[
-						{
-							right: "6%",
-							left: "6%",
-							bottom: "10%",
-							top: "22%"
-						},
-					],
-					// Declare several bar series, each will be mapped
-					// to a column of dataset.source by default.
-					series: [
-						{ name: 'Projected Revenu', type: 'bar', barWidth: 15, itemStyle: { barBorderRadius: [3, 3, 0, 0], borderWidth: 1 } }, 
-						{ name: 'Actual Revenue', type: 'bar', barWidth: 15, itemStyle: { barBorderRadius: [3, 3, 0, 0], borderWidth: 1 } }]
-				};
-
-				optionSeriesSimple && myChartSeriesSimple.setOption(optionSeriesSimple);
+				projectionChartInstance = echarts.init(document.getElementById(idSubmit));
+				projectionChartInstance.setOption(getProjectionChartOption(isMobileDashboardViewport()));
 			}
 		},
 		echartSimpleBarWithBackground: function(idSubmit)
@@ -306,5 +320,11 @@ const EChartJSVue3 = createApp(
 		this.echartDoughnutWithBorderRadius("echartDoughnutWithBorderRadius_TotalSales");
 
 		this.vectorMap("vectorMap_UserAccessByLocation");
+		window.addEventListener('resize', this.handleDashboardResize);
+	},
+	beforeUnmount()
+	{
+		window.removeEventListener('resize', this.handleDashboardResize);
+		projectionChartInstance = null;
 	}
 }).mount('#ph-app-echarts');

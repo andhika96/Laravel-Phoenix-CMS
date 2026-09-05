@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light" style="--ph-font-family: 'Nunito', sans-serif; --ph-font-size: 14px;">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Arunika Aurora mobile V3 QA</title>
+  <script>
+    window.__qaStylesReady = (async () => {
+      const urls = [
+        '/public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css',
+        '/public/assets/plugins/fontawesome/5.15.3/css/all.min.css',
+        '/public/assets/css/phoenix-cms.css',
+        '/public/assets/css/themes/arunika_aurora/arunika_aurora.css',
+        '/public/assets/css/theme-responsive-typography.css',
+        '/public/assets/css/themes/arunika_aurora/mobile-v2.css'
+      ];
+      for (const href of urls) {
+        const response = await fetch(href, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`QA stylesheet failed: ${href}`);
+        const style = document.createElement('style');
+        style.dataset.qaStylesheet = href;
+        style.textContent = (await response.text())
+          .replaceAll('../webfonts/', '/public/assets/plugins/fontawesome/5.15.3/webfonts/')
+          .replaceAll('../../../images/themes/arunika_aurora/arunika-aurora-sidebar-wave.png', '/public/assets/images/themes/arunika_aurora/arunika-aurora-sidebar-wave.png');
+        document.head.appendChild(style);
+      }
+      document.documentElement.dataset.qaStylesReady = 'true';
+    })();
+  </script>
+  <style>
+    .qa-avatar {
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--ph-shell-border);
+      border-radius: 50%;
+      background: var(--ph-bg-panel);
+      color: var(--ph-theme-primary);
+      font-weight: 800;
+    }
+
+    .qa-sidebar-avatar,
+    .qa-profile-avatar {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+    }
+
+    .qa-header-avatar {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+    }
+
+    .qa-chart {
+      min-height: 240px;
+      border-radius: 8px;
+      background: repeating-linear-gradient(to bottom, transparent 0 47px, color-mix(in srgb, var(--ph-shell-border), transparent 30%) 48px 49px);
+    }
+  </style>
+</head>
+<body data-ph-mobile-theme="arunika_aurora">
+  <div class="ph-app-shell d-flex w-100 h-100">
+    <aside class="ph-sidebar ph-expanded ph-no-transition" id="sidebar">
+      <div class="ph-sidebar-logo-container has-logo" aria-label="LaraPhoenix CMS">
+        <div class="ph-app-logo-icon qa-avatar qa-sidebar-avatar">A</div>
+        <span class="ph-app-logo-initial" aria-hidden="true">L</span>
+        <span class="ph-app-logo-text">LaraPhoenix CMS</span>
+        <button class="ph-mobile-sidebar-close" type="button" onclick="toggleSidebar()" aria-label="Close navigation">
+          <svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
+            <path d="M8.25 3.25V20.75"></path>
+            <path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
+          </svg>
+        </button>
+      </div>
+      <button class="ph-sidebar-toggle" id="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="true">
+        <svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
+          <path d="M8.25 3.25V20.75"></path>
+          <path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
+        </svg>
+      </button>
+
+      <div id="sidebar-scroll-content">
+        <div class="list-group list-group-flush w-100">
+          <div class="ph-list-group-wrapper">
+            <a href="/" class="list-group-item list-group-item-action"><div class="ph-nav-icon"><i class="fal fa-link fa-fw"></i></div><span class="ph-nav-text">Visit Site</span></a>
+            <a href="/dashboard" class="list-group-item list-group-item-action active"><div class="ph-nav-icon"><i class="fal fa-home fa-fw"></i></div><span class="ph-nav-text">Dashboard</span></a>
+          </div>
+          <div class="ph-nav-category"><span class="ph-nav-category-label">All menus</span></div>
+          <div class="ph-list-group-wrapper">
+            <a href="/articles" class="list-group-item list-group-item-action"><div class="ph-nav-icon"><i class="fal fa-newspaper fa-fw"></i></div><span class="ph-nav-text">Manage Articles</span></a>
+            <a href="/cover-image" class="list-group-item list-group-item-action"><div class="ph-nav-icon"><i class="fal fa-puzzle-piece fa-fw"></i></div><span class="ph-nav-text">Manage Cover Image</span></a>
+            <a href="/event" class="list-group-item list-group-item-action"><div class="ph-nav-icon"><i class="fal fa-calendar-star fa-fw"></i></div><span class="ph-nav-text">Manage Event</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="ph-sidebar-footer">
+        <div class="ph-sidebar-user-panel">
+          <a href="/profile" class="ph-sidebar-user-card"><span class="ph-sidebar-user-avatar qa-avatar qa-sidebar-avatar">A</span><span class="ph-sidebar-user-meta"><strong>Administrator</strong><span>admin@example.test</span></span><i class="fas fa-chevron-right ph-sidebar-user-chevron"></i></a>
+          <a href="/auth/logout" class="ph-sidebar-logout"><i class="fal fa-sign-out-alt fa-fw"></i><span>Logout</span></a>
+        </div>
+        <a href="/awesome_admin" class="ph-aurora-sidebar-admin" aria-label="Open Awesome Admin"><i class="fal fa-user-secret fa-fw" aria-hidden="true"></i><span>Awesome Admin</span></a>
+      </div>
+    </aside>
+
+    <main class="ph-layout-right" id="ph-layout-right">
+      <header class="ph-top-bar" id="ph-top-bar">
+        <button class="ph-mobile-sidebar-trigger" type="button" onclick="toggleSidebar()" aria-label="Open navigation" aria-expanded="false">
+          <svg class="ph-sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2.75" y="2.75" width="18.5" height="18.5" rx="4"></rect>
+            <path d="M8.25 3.25V20.75"></path>
+            <path class="ph-sidebar-toggle-chevron" d="M16 8.75L12.75 12L16 15.25"></path>
+          </svg>
+        </button>
+        <div class="ph-header-actions">
+          <div class="dropdown ph-aurora-mobile-profile">
+            <button class="ph-header-profile-toggle" type="button" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="outside" aria-expanded="false" aria-haspopup="true" aria-label="Open profile menu"><span class="ph-header-profile-avatar qa-avatar qa-header-avatar">A</span></button>
+            <div class="dropdown-menu ph-aurora-mobile-profile-menu">
+              <div class="ph-profile-menu-user"><span class="ph-profile-menu-avatar qa-avatar qa-profile-avatar">A</span><span class="ph-profile-menu-identity"><strong>Administrator</strong><span>Super Admin</span></span></div>
+              <div class="ph-profile-menu-section">
+                <a class="dropdown-item" href="/profile"><i class="fal fa-user-circle fa-fw"></i><span>Profile</span></a>
+                <a class="dropdown-item" href="/account"><i class="fal fa-cog fa-fw"></i><span>Settings</span></a>
+                <button class="dropdown-item ph-profile-theme-toggle ph-theme-toggle" type="button" onclick="toggleTheme()" aria-label="Dark Mode" aria-pressed="false"><i class="fas fa-sun fa-fw ph-theme-icon"></i><span>Dark Mode</span><span class="ph-profile-switch" aria-hidden="true"><span></span></span></button>
+                <button class="dropdown-item ph-profile-color-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ph-aurora-mobile-theme-colors" aria-expanded="false" aria-controls="ph-aurora-mobile-theme-colors"><i class="fal fa-palette fa-fw"></i><span>Theme Color</span><i class="fal fa-chevron-right ph-profile-color-chevron" aria-hidden="true"></i></button>
+                <div class="collapse ph-profile-color-collapse" id="ph-aurora-mobile-theme-colors"><div class="ph-profile-color-section"><span class="ph-profile-color-label">Choose Theme Color</span><div class="row g-2" data-ph-theme-color-picker></div></div></div>
+              </div>
+              <div class="ph-profile-menu-section ph-profile-menu-footer"><a class="dropdown-item text-danger" href="/logout"><i class="fal fa-sign-out-alt fa-fw"></i><span>Logout</span></a></div>
+            </div>
+          </div>
+          <div class="dropdown ph-theme-color-picker"><button class="ph-btn-action-icon" type="button" data-bs-toggle="dropdown" aria-label="Change Theme Color"><i class="fas fa-palette"></i></button><div class="dropdown-menu dropdown-menu-end ph-theme-color-menu"><h6 class="ph-theme-color-title">Choose Theme Color</h6><div class="row g-2" data-ph-theme-color-picker></div></div></div>
+          <button class="ph-btn-action-icon ph-theme-toggle" type="button" onclick="toggleTheme()" aria-label="Dark Mode" aria-pressed="false"><i class="fas fa-sun ph-theme-icon"></i></button>
+          <a href="/awesome_admin" class="ph-btn-action-icon ph-header-settings" aria-label="Admin Panel"><i class="fas fa-user-secret"></i></a>
+        </div>
+      </header>
+
+      <section class="ph-main-panel"><div class="ph-scrollable-content">
+        <div id="ph-app-echarts" class="ph-dashboard-page">
+          <div class="mb-4 ph-dashboard-summary"><h4 class="ph-dashboard-title"><i class="fad fa-tachometer-alt fa-fw me-1" aria-hidden="true"></i><span>Dashboard</span></h4><div class="ph-dashboard-summary-copy"><span class="ph-dashboard-summary-copy-default">Here’s what’s going on at your business right now</span><span class="ph-dashboard-summary-copy-lucent" aria-hidden="true">Ringkasan bisnis Anda</span></div></div>
+          <div>
+            <div class="row gx-3 mb-4">
+              <div class="col-lg-6 ph-dashboard-stats"><div class="row g-3">
+                <div class="col-lg-6"><div class="ph-content p-4 rounded ph-dashboard-stat"><span class="ph-dashboard-stat-icon" aria-hidden="true"><i class="fad fa-users"></i></span><h6 class="text-muted ph-dashboard-stat-label">Customers</h6><h4 class="fw-bold my-3 ph-dashboard-stat-value">36,123</h4><p class="mb-0 text-muted ph-dashboard-stat-trend"><span class="text-success me-2"><i class="fad fa-arrow-alt-up fa-fw"></i> 5,27%</span><span>Since last month</span></p></div></div>
+                <div class="col-lg-6"><div class="ph-content p-4 rounded ph-dashboard-stat"><span class="ph-dashboard-stat-icon" aria-hidden="true"><i class="fad fa-shopping-cart"></i></span><h6 class="text-muted ph-dashboard-stat-label">Orders</h6><h4 class="fw-bold my-3 ph-dashboard-stat-value">5,212</h4><p class="mb-0 text-muted ph-dashboard-stat-trend"><span class="text-danger me-2"><i class="fad fa-arrow-alt-down fa-fw"></i> 1,27%</span><span>Since last month</span></p></div></div>
+                <div class="col-lg-6"><div class="ph-content p-4 rounded ph-dashboard-stat"><span class="ph-dashboard-stat-icon" aria-hidden="true"><i class="fad fa-wallet"></i></span><h6 class="text-muted ph-dashboard-stat-label">Revenue</h6><h4 class="fw-bold my-3 ph-dashboard-stat-value">Rp. 500,341</h4><p class="mb-0 text-muted ph-dashboard-stat-trend"><span class="text-danger me-2"><i class="fad fa-arrow-alt-down fa-fw"></i> 6,00%</span><span>Since last month</span></p></div></div>
+                <div class="col-lg-6"><div class="ph-content p-4 rounded ph-dashboard-stat"><span class="ph-dashboard-stat-icon" aria-hidden="true"><i class="fad fa-chart-line"></i></span><h6 class="text-muted ph-dashboard-stat-label">Growth</h6><h4 class="fw-bold my-3 ph-dashboard-stat-value">+ 30.56%</h4><p class="mb-0 text-muted ph-dashboard-stat-trend"><span class="text-success me-2"><i class="fad fa-arrow-alt-up fa-fw"></i> 5,27%</span><span>Since last month</span></p></div></div>
+              </div></div>
+              <div class="col-lg-6 ph-dashboard-projection"><div class="ph-content p-4 rounded"><h6 class="text-muted ph-dashboard-projection-title">Projections Vs Actuals</h6><div class="ph-dashboard-projection-chart qa-chart"></div></div></div>
+            </div>
+            <div class="ph-content p-4 mb-4 rounded"><h6 class="text-muted">Revenue per Month</h6><div class="qa-chart"></div></div>
+          </div>
+        </div>
+      </div></section>
+    </main>
+  </div>
+  <div id="ph-mobile-nav-controller" hidden aria-hidden="true"></div>
+  <script>
+    window.__qaScriptsReady = (async () => {
+      const urls = [
+        '/public/assets/plugins/bootstrap/5.3.6/js/bootstrap.bundle.min.js',
+        '/public/assets/plugins/simplebar/6.3.1/js/simplebar.min.js',
+        '/public/assets/plugins/vue/core/v3/vue.3.5.21.global.prod.js',
+        '/public/assets/js/themes/arunika_aurora/arunika_aurora.js',
+        '/public/assets/js/themes/arunika-mobile-navigation-v2.js'
+      ];
+      for (const href of urls) {
+        const response = await fetch(href, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`QA script failed: ${href}`);
+        const script = document.createElement('script');
+        script.dataset.qaScript = href;
+        script.textContent = await response.text();
+        document.body.appendChild(script);
+      }
+      document.dispatchEvent(new Event('DOMContentLoaded'));
+      document.documentElement.dataset.qaScriptsReady = 'true';
+    })();
+  </script>
+</body>
+</html>

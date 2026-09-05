@@ -10,9 +10,9 @@ class ThemeSettingsSeeder extends Seeder
         DB::table('theme_settings')->insert([
         [
             'id' => 1,
-            'theme_id' => 5,
-            'theme_code' => 'arunika_mosaic',
-            'theme_name' => 'Arunika Mosaic'
+            'theme_id' => 7,
+            'theme_code' => 'arunika_prism',
+            'theme_name' => 'Arunika Prism'
         ]
         ]);
     }

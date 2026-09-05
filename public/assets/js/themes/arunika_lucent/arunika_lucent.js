@@ -130,6 +130,12 @@ function initSimpleBar()
 
 function toggleSidebar()
 {
+	if (window.PhoenixMobileNavigation?.isMobile())
+	{
+		window.PhoenixMobileNavigation.toggle();
+		return;
+	}
+
 	// UPDATE: Class updated to 'ph-expanded'
 	sidebar.classList.toggle('ph-expanded');
 	const isExpanded = sidebar.classList.contains('ph-expanded');
@@ -201,6 +207,11 @@ function updateSidebarToggleState()
 
 function syncSidebarForViewport()
 {
+	if (window.PhoenixMobileNavigation?.isMobile())
+	{
+		return;
+	}
+
 	const isMobile = window.innerWidth <= MOBILE_SIDEBAR_BREAKPOINT;
 
 	if (isMobile === sidebarWasMobile)

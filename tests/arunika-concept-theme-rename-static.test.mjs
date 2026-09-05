@@ -6,11 +6,6 @@ import test from 'node:test';
 const root = process.cwd();
 const concepts = [
     {
-        code: 'arunika_mosaic',
-        displayName: 'Arunika Mosaic',
-        preview: 'arunika-mosaic-theme-preview.png',
-    },
-    {
         code: 'arunika_aurora',
         displayName: 'Arunika Aurora',
         preview: 'arunika-aurora-theme-preview.png',
