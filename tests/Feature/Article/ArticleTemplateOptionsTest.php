@@ -176,6 +176,66 @@ class ArticleTemplateOptionsTest extends TestCase
         $this->assertSame(['desktop' => 9, 'tablet' => 1, 'mobile' => 2], $invalid['range']);
     }
 
+    public function test_it_normalizes_search_models_visual_overrides_and_fontawesome_icon_allowlist(): void
+    {
+        $options = app(ArticleTemplateOptions::class);
+
+        $defaults = $options->archive('minimal-reading-list')['toolbar']['search'];
+        $this->assertSame('attached', $defaults['type']);
+        $this->assertSame('0.75rem', $defaults['radius']);
+        $this->assertSame('0.75rem', $defaults['gap']);
+        $this->assertSame('fas fa-search', $defaults['icon']);
+        $this->assertNull($defaults['button_hover_background_color']);
+
+        $custom = $options->archive('minimal-reading-list', [
+            'toolbar' => [
+                'search' => [
+                    'type' => 'underline',
+                    'radius' => '1.25rem',
+                    'gap' => '12px',
+                    'icon' => 'fas fa-sliders-h',
+                    'input_background_color' => '#f8fafc',
+                    'input_text_color' => '#172033',
+                    'button_background_color' => '#16a579',
+                    'button_text_color' => '#ffffff',
+                    'button_hover_background_color' => '#087956',
+                    'button_hover_text_color' => '#ffffff',
+                    'button_active_background_color' => '#065f46',
+                    'button_active_text_color' => '#ffffff',
+                ],
+            ],
+            'pagination' => [
+                'item_radius' => '1rem',
+                'item_gap' => '10px',
+                'previous_icon' => 'fas fa-angle-left',
+                'next_icon' => 'fas fa-arrow-right',
+                'item_hover_background_color' => '#f0fdf4',
+                'item_active_text_color' => '#ffffff',
+            ],
+        ]);
+
+        $search = $custom['toolbar']['search'];
+        $pagination = $custom['pagination'];
+        $this->assertSame('underline', $search['type']);
+        $this->assertSame('1.25rem', $search['radius']);
+        $this->assertSame('12px', $search['gap']);
+        $this->assertSame('fas fa-sliders-h', $search['icon']);
+        $this->assertSame('#087956', $search['button_hover_background_color']);
+        $this->assertSame('1rem', $pagination['item_radius']);
+        $this->assertSame('10px', $pagination['item_gap']);
+        $this->assertSame('fas fa-angle-left', $pagination['previous_icon']);
+        $this->assertSame('fas fa-arrow-right', $pagination['next_icon']);
+
+        $invalid = $options->archive('minimal-reading-list', [
+            'toolbar' => ['search' => ['type' => 'legacy', 'icon' => 'javascript:alert(1)']],
+            'pagination' => ['previous_icon' => 'svg evil', 'next_icon' => 'javascript:alert(1)'],
+        ]);
+        $this->assertSame('attached', $invalid['toolbar']['search']['type']);
+        $this->assertSame('fas fa-search', $invalid['toolbar']['search']['icon']);
+        $this->assertSame('fas fa-chevron-left', $invalid['pagination']['previous_icon']);
+        $this->assertSame('fas fa-chevron-right', $invalid['pagination']['next_icon']);
+    }
+
     public function test_it_normalizes_border_radius_as_a_page_builder_style_four_value_group(): void
     {
         $options = app(ArticleTemplateOptions::class);

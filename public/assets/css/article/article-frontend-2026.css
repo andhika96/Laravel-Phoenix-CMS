@@ -2202,16 +2202,16 @@ body .article-detail .article-detail-navigation__item:focus-visible {
 
 /* Pagination models selected in Template Options. */
 .article-pagination.article-pagination--model-boxed .ph-pagination .page-link {
-	border: 1px solid #d8dce5;
-	border-radius: .45rem;
-	background: #fff;
-	color: #344054 !important;
+	border: 1px solid var(--article-pagination-item-border, #d8dce5);
+	border-radius: var(--article-pagination-item-radius, .45rem);
+	background: var(--article-pagination-item-background, #fff);
+	color: var(--article-pagination-item-text, #344054) !important;
 }
 
 .article-pagination.article-pagination--model-boxed .ph-pagination .active > .page-link {
-	border-color: var(--article-accent);
-	background: var(--article-accent);
-	color: #fff !important;
+	border-color: var(--article-pagination-item-active-background, var(--article-accent));
+	background: var(--article-pagination-item-active-background, var(--article-accent));
+	color: var(--article-pagination-item-active-text, #fff) !important;
 }
 
 .article-pagination.article-pagination--model-boxed .ph-pagination .disabled > .page-link,
@@ -2224,15 +2224,15 @@ body .article-detail .article-detail-navigation__item:focus-visible {
 .article-pagination.article-pagination--model-underline .ph-pagination .page-link {
 	border-color: transparent;
 	border-radius: 0;
-	background: transparent;
-	color: #344054 !important;
+	background: var(--article-pagination-item-background, transparent);
+	color: var(--article-pagination-item-text, #344054) !important;
 }
 
 .article-pagination.article-pagination--model-underline .ph-pagination .active > .page-link {
 	border-color: transparent;
-	border-bottom: 2px solid var(--article-accent);
-	background: transparent;
-	color: #172033 !important;
+	border-bottom: 2px solid var(--article-pagination-item-active-background, var(--article-accent));
+	background: var(--article-pagination-item-active-background, transparent);
+	color: var(--article-pagination-item-active-text, #172033) !important;
 }
 
 .article-pagination.article-pagination--model-underline .ph-pagination .disabled > .page-link,
@@ -2243,16 +2243,16 @@ body .article-detail .article-detail-navigation__item:focus-visible {
 }
 
 .article-pagination.article-pagination--model-soft .ph-pagination .page-link {
-	border-color: transparent;
-	border-radius: .55rem;
-	background: transparent;
-	color: var(--article-accent-strong) !important;
+	border-color: var(--article-pagination-item-border, transparent);
+	border-radius: var(--article-pagination-item-radius, .55rem);
+	background: var(--article-pagination-item-background, transparent);
+	color: var(--article-pagination-item-text, var(--article-accent-strong)) !important;
 }
 
 .article-pagination.article-pagination--model-soft .ph-pagination .active > .page-link {
-	border-color: transparent;
-	background: var(--article-accent-surface);
-	color: var(--article-accent-strong) !important;
+	border-color: var(--article-pagination-item-active-background, transparent);
+	background: var(--article-pagination-item-active-background, var(--article-accent-surface));
+	color: var(--article-pagination-item-active-text, var(--article-accent-strong)) !important;
 }
 
 .article-pagination.article-pagination--model-soft .ph-pagination .disabled > .page-link,
@@ -2269,4 +2269,107 @@ body .article-detail .article-detail-navigation__item:focus-visible {
 	border-color: var(--article-accent-ring);
 	background: var(--article-accent-surface);
 	color: var(--article-accent-strong) !important;
+}
+
+.article-pagination .ph-pagination {
+	gap: var(--article-pagination-item-gap, .45rem);
+}
+
+.article-pagination.article-pagination--model-boxed .ph-pagination a.page-link:hover,
+.article-pagination.article-pagination--model-boxed .ph-pagination .page-link:focus-visible,
+.article-pagination.article-pagination--model-underline .ph-pagination a.page-link:hover,
+.article-pagination.article-pagination--model-underline .ph-pagination .page-link:focus-visible,
+.article-pagination.article-pagination--model-soft .ph-pagination a.page-link:hover,
+.article-pagination.article-pagination--model-soft .ph-pagination .page-link:focus-visible {
+	border-color: var(--article-pagination-item-hover-background, var(--article-accent));
+	background: var(--article-pagination-item-hover-background, var(--article-accent-surface));
+	color: var(--article-pagination-item-hover-text, var(--article-accent-strong)) !important;
+}
+
+/* Search form models and theme-safe visual overrides. */
+.article-page .article-template-toolbar__control--search {
+	gap: var(--article-search-gap, .75rem);
+}
+
+.article-page .article-template-toolbar__control--search input {
+	border-color: var(--article-search-input-border, #d6dbe5);
+	border-radius: var(--article-search-radius, .75rem);
+	background: var(--article-search-input-background, #fff);
+	color: var(--article-search-input-text, #172033);
+}
+
+.article-page .article-template-toolbar__control--search input:hover,
+.article-page .article-template-toolbar__control--search input:focus-visible {
+	border-color: var(--article-accent);
+}
+
+.article-page .article-template-toolbar__control--search button {
+	border-color: var(--article-search-button-background, var(--article-accent));
+	border-radius: var(--article-search-radius, .75rem);
+	background: var(--article-search-button-background, var(--article-accent));
+	color: var(--article-search-button-text, #fff);
+}
+
+.article-page .article-template-toolbar__control--search button:hover,
+.article-page .article-template-toolbar__control--search button:focus-visible {
+	border-color: var(--article-search-button-hover-background, var(--article-accent-strong));
+	background: var(--article-search-button-hover-background, var(--article-accent-strong));
+	color: var(--article-search-button-hover-text, #fff);
+}
+
+.article-page .article-template-toolbar__control--search button:active {
+	border-color: var(--article-search-button-active-background, var(--article-accent));
+	background: var(--article-search-button-active-background, var(--article-accent));
+	color: var(--article-search-button-active-text, #fff);
+}
+
+.article-page .article-search-model--attached {
+	gap: 0;
+}
+
+.article-page .article-search-model--attached input {
+	border-right-width: 0;
+	border-radius: var(--article-search-radius, .75rem) 0 0 var(--article-search-radius, .75rem);
+}
+
+.article-page .article-search-model--attached button {
+	border-left-width: 0;
+	border-radius: 0 var(--article-search-radius, .75rem) var(--article-search-radius, .75rem) 0;
+}
+
+.article-page .article-search-model--soft input {
+	border-color: transparent;
+	background: var(--article-search-input-background, #f1f5f8);
+}
+
+.article-page .article-search-model--soft button {
+	border-color: var(--article-search-button-background, var(--article-accent-surface));
+	background: var(--article-search-button-background, var(--article-accent-surface));
+	color: var(--article-search-button-text, var(--article-accent-strong));
+}
+
+.article-page .article-search-model--underline {
+	border-bottom: 2px solid var(--article-search-input-border, var(--article-accent));
+	gap: var(--article-search-gap, .75rem);
+}
+
+.article-page .article-search-model--underline input {
+	min-height: 44px;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+}
+
+.article-page .article-search-model--underline button {
+	width: 44px;
+	min-height: 44px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: var(--article-search-button-background, var(--article-accent-surface));
+	color: var(--article-search-button-text, var(--article-accent-strong));
+}
+
+.article-page .article-search-model--underline button span {
+	display: none;
 }

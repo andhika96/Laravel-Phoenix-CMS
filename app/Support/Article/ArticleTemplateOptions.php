@@ -16,6 +16,19 @@ final class ArticleTemplateOptions
         'mobile' => 2,
     ];
 
+    private const SEARCH_TYPES = ['attached', 'soft', 'underline'];
+
+    private const SEARCH_ICONS = ['fas fa-search', 'fas fa-sliders-h', 'fas fa-arrow-right'];
+
+    private const PAGINATION_ARROW_ICONS = [
+        'fas fa-chevron-left',
+        'fas fa-angle-left',
+        'fas fa-arrow-left',
+        'fas fa-chevron-right',
+        'fas fa-angle-right',
+        'fas fa-arrow-right',
+    ];
+
     private const GRID_TEMPLATES = ['editorial-journal', 'mosaic-magazine', 'balanced-card-grid'];
 
     private const HEADING_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -49,7 +62,7 @@ final class ArticleTemplateOptions
                 'description' => $this->copyOption($input, 'description', (string) ($definition['header_description'] ?? ''), 280),
             ],
             'toolbar' => [
-                'search' => $this->toolbarOption($input, 'search', $toolbarDefaults['search'][0], $toolbarDefaults['search'][1]),
+                'search' => $this->searchOption($input, $toolbarDefaults['search'][0], $toolbarDefaults['search'][1]),
                 'category' => $this->toolbarOption($input, 'category', $toolbarDefaults['category'][0], $toolbarDefaults['category'][1]),
             ],
             'thumbnail' => $this->thumbnail($input, $template),
@@ -143,6 +156,42 @@ final class ArticleTemplateOptions
         ];
     }
 
+    private function searchOption(array $input, bool $enabled, string $position): array
+    {
+        return array_merge($this->toolbarOption($input, 'search', $enabled, $position), [
+            'type' => $this->searchType($input),
+            'radius' => $this->radius(data_get($input, 'toolbar.search.radius'), '0.75rem'),
+            'gap' => $this->dimension(data_get($input, 'toolbar.search.gap'), '0.75rem', self::DIMENSION_UNITS),
+            'icon' => $this->searchIcon(data_get($input, 'toolbar.search.icon')),
+            'input_background_color' => $this->optionalColor(data_get($input, 'toolbar.search.input_background_color')),
+            'input_text_color' => $this->optionalColor(data_get($input, 'toolbar.search.input_text_color')),
+            'input_border_color' => $this->optionalColor(data_get($input, 'toolbar.search.input_border_color')),
+            'button_background_color' => $this->optionalColor(data_get($input, 'toolbar.search.button_background_color')),
+            'button_text_color' => $this->optionalColor(data_get($input, 'toolbar.search.button_text_color')),
+            'button_hover_background_color' => $this->optionalColor(data_get($input, 'toolbar.search.button_hover_background_color')),
+            'button_hover_text_color' => $this->optionalColor(data_get($input, 'toolbar.search.button_hover_text_color')),
+            'button_active_background_color' => $this->optionalColor(data_get($input, 'toolbar.search.button_active_background_color')),
+            'button_active_text_color' => $this->optionalColor(data_get($input, 'toolbar.search.button_active_text_color')),
+        ]);
+    }
+
+    private function searchType(array $input): string
+    {
+        $type = data_get($input, 'toolbar.search.type', 'attached');
+
+        return in_array($type, self::SEARCH_TYPES, true) ? $type : 'attached';
+    }
+
+    private function searchIcon(mixed $value): string
+    {
+        return in_array($value, self::SEARCH_ICONS, true) ? $value : 'fas fa-search';
+    }
+
+    private function paginationArrowIcon(mixed $value, string $default): string
+    {
+        return in_array($value, self::PAGINATION_ARROW_ICONS, true) ? $value : $default;
+    }
+
     private function categoryMode(array $input): string
     {
         $mode = data_get($input, 'toolbar.category.mode', 'button-list');
@@ -177,6 +226,17 @@ final class ArticleTemplateOptions
         return [
             'type' => $this->paginationType($input),
             'range' => $this->paginationRange($input),
+            'item_radius' => $this->radius(data_get($input, 'pagination.item_radius'), '0.45rem'),
+            'item_gap' => $this->dimension(data_get($input, 'pagination.item_gap'), '0.45rem', self::DIMENSION_UNITS),
+            'item_background_color' => $this->optionalColor(data_get($input, 'pagination.item_background_color')),
+            'item_text_color' => $this->optionalColor(data_get($input, 'pagination.item_text_color')),
+            'item_border_color' => $this->optionalColor(data_get($input, 'pagination.item_border_color')),
+            'item_hover_background_color' => $this->optionalColor(data_get($input, 'pagination.item_hover_background_color')),
+            'item_hover_text_color' => $this->optionalColor(data_get($input, 'pagination.item_hover_text_color')),
+            'item_active_background_color' => $this->optionalColor(data_get($input, 'pagination.item_active_background_color')),
+            'item_active_text_color' => $this->optionalColor(data_get($input, 'pagination.item_active_text_color')),
+            'previous_icon' => $this->paginationArrowIcon(data_get($input, 'pagination.previous_icon'), 'fas fa-chevron-left'),
+            'next_icon' => $this->paginationArrowIcon(data_get($input, 'pagination.next_icon'), 'fas fa-chevron-right'),
             'show_total' => $this->boolean(data_get($input, 'pagination.show_total'), true),
             'position' => in_array($position, self::POSITIONS, true) ? $position : 'right',
             'frame' => $this->frame($input, 'pagination.frame', true, '#e6e9ef', '#ffffff'),
@@ -353,6 +413,17 @@ final class ArticleTemplateOptions
         }
 
         return $default;
+    }
+
+    private function optionalColor(mixed $value): ?string
+    {
+        if (!is_string($value) || trim($value) === '') {
+            return null;
+        }
+
+        $normalized = $this->color($value, '');
+
+        return $normalized !== '' ? $normalized : null;
     }
 
     private function dimension(mixed $value, string $default, array $units): string

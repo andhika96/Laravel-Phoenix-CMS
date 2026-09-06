@@ -363,6 +363,21 @@ test('Pagination options expose named models and independent desktop/tablet/mobi
 	assert.match(css, /article-template-pagination-range__fields[\s\S]*?grid-template-columns:\s*repeat\(3/);
 });
 
+test('Archive toolbar search exposes model, gap, Font Awesome icon, and state color controls', () => {
+	const view = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
+	const managerCss = readFileSync(path.join(process.cwd(), 'public/assets/css/article/article-template-manager-2026.css'), 'utf8');
+
+	assert.match(view, /Search model/);
+	assert.match(view, /Attached Classic/);
+	assert.match(view, /Soft Field/);
+	assert.match(view, /Minimal Underline/);
+	assert.match(view, /Search button gap/);
+	assert.match(view, /optionsModal\.value\.toolbar\.search\.icon/);
+	assert.match(view, /button_hover_background_color/);
+	assert.match(view, /button_active_background_color/);
+	assert.match(managerCss, /article-template-search-style-fields/);
+});
+
 test('template options modal exposes conditional vertical navigation and a mobile section picker', () => {
 	const view = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
 

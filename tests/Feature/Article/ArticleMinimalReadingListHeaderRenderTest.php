@@ -49,4 +49,44 @@ class ArticleMinimalReadingListHeaderRenderTest extends TestCase
         $this->assertStringContainsString('Thoughtful reads on design, technology, and the web.', $html);
         $this->assertStringContainsString('article-minimal-reading-list-search', $html);
     }
+
+    public function test_search_model_gap_icon_and_color_overrides_reach_the_archive_header(): void
+    {
+        $article = new Article([
+            'id' => 7102,
+            'uri' => 'minimal-search-style-test',
+            'title' => 'Minimal Search Style Test',
+            'content' => '<p>Preview content for search styling.</p>',
+            'created_at' => now(),
+        ]);
+        $articles = new LengthAwarePaginator([$article], 1, 1, 1, [
+            'path' => route('cms.core.article'),
+        ]);
+        $options = app(ArticleTemplateOptions::class)->archive('minimal-reading-list', [
+            'toolbar' => [
+                'search' => [
+                    'enabled' => true,
+                    'type' => 'underline',
+                    'gap' => '12px',
+                    'icon' => 'fas fa-sliders-h',
+                    'button_hover_background_color' => '#087956',
+                    'button_active_text_color' => '#ffffff',
+                ],
+            ],
+        ]);
+
+        $html = view('article.templates.archive.minimal-reading-list', [
+            'articles' => $articles,
+            'templateSettings' => null,
+            'templateOptions' => $options,
+            'articleCategories' => collect(),
+            'popularArticles' => collect(),
+        ])->render();
+
+        $this->assertStringContainsString('article-search-model--underline', $html);
+        $this->assertStringContainsString('fas fa-sliders-h', $html);
+        $this->assertStringContainsString('--article-search-gap:12px', $html);
+        $this->assertStringContainsString('--article-search-button-hover-background:#087956', $html);
+        $this->assertStringContainsString('--article-search-button-active-text:#ffffff', $html);
+    }
 }

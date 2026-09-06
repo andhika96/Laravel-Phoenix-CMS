@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="../../../public/assets/plugins/fontawesome/5.15.3/css/all.min.css">
+    <title>Minimal Reading List · Search and Pagination Models</title>
+    <style>
+        :root {
+            --ink: #172033;
+            --muted: #667085;
+            --subtle: #98a2b3;
+            --line: #e4e7ec;
+            --line-strong: #cfd5df;
+            --surface: #fff;
+            --canvas: #f3f6f9;
+            --accent: #16a579;
+            --accent-dark: #087956;
+            --accent-soft: #e5f6ef;
+            --search-radius: 12px;
+            --search-gap: 8px;
+            --search-input-bg: #fff;
+            --search-input-text: #172033;
+            --search-button-bg: #16a579;
+            --search-button-text: #fff;
+            --pagination-gap: 7px;
+            --pagination-active-bg: #16a579;
+            --pagination-active-text: #fff;
+            --pagination-link-bg: #fff;
+            --pagination-link-text: #344054;
+            --pagination-border: #d8dce5;
+            --font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --shadow: 0 26px 70px rgb(16 24 40 / .15);
+        }
+
+        * { box-sizing: border-box; }
+        html, body { min-width: 100%; min-height: 100%; }
+        body { margin: 0; padding: 24px; color: var(--ink); background: radial-gradient(circle at 8% 0%, rgb(22 165 121 / .09), transparent 28%), var(--canvas); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+        button, input, select { font: inherit; }
+        button, select, input { outline-color: var(--accent); }
+        button { cursor: pointer; }
+        button:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid rgb(22 165 121 / .25); outline-offset: 2px; }
+        .page-heading { width: min(1320px, calc(100% - 24px)); margin: 0 auto 16px; display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+        .page-heading h1 { margin: 0; font-size: clamp(1.15rem, 1rem + .5vw, 1.5rem); letter-spacing: -.025em; }
+        .page-heading p { margin: 4px 0 0; color: var(--muted); font-size: .85rem; }
+        .badge { padding: 4px 9px; border: 1px solid #bfe9d9; border-radius: 999px; background: #f2fffa; color: var(--accent-dark); font-size: .72rem; font-weight: 800; white-space: nowrap; }
+
+        .workspace { width: min(1320px, calc(100% - 24px)); min-height: 760px; margin: auto; display: grid; grid-template-rows: 76px minmax(0, 1fr) 60px; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); }
+        .workspace__header, .workspace__footer { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 24px; border-bottom: 1px solid var(--line); }
+        .workspace__footer { border-top: 1px solid var(--line); border-bottom: 0; color: var(--muted); font-size: .8rem; }
+        .workspace__title { display: flex; align-items: center; gap: 11px; min-width: 0; }
+        .workspace__mark { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 9px; background: var(--accent-soft); color: var(--accent-dark); }
+        .workspace__title h2 { margin: 0; font-size: 1.15rem; line-height: 1.2; }
+        .workspace__title p { margin: 3px 0 0; color: var(--muted); font-size: .8rem; }
+        .device-switch { display: flex; gap: 5px; }
+        .device-switch button, .model-switch button, .pagination-model-switch button { min-height: 36px; padding: 0 11px; border: 1px solid var(--line-strong); border-radius: 8px; background: #fff; color: var(--muted); font-size: .78rem; font-weight: 750; }
+        .device-switch button.is-active, .model-switch button.is-active, .pagination-model-switch button.is-active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-dark); }
+
+        .workspace__body { min-height: 0; display: grid; grid-template-columns: 230px minmax(420px, 1fr) 315px; }
+        .side-nav { min-width: 0; padding: 22px 13px; border-right: 1px solid var(--line); background: #fcfdfd; }
+        .side-nav__eyebrow { margin: 0 10px 11px; color: var(--subtle); font-size: .68rem; font-weight: 850; letter-spacing: .15em; text-transform: uppercase; }
+        .side-nav__items { display: grid; gap: 4px; }
+        .side-nav__item { display: flex; align-items: center; gap: 10px; min-height: 43px; padding: 0 10px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: #475467; text-align: left; font-size: .86rem; font-weight: 650; }
+        .side-nav__item.is-active { border-color: #27313d; background: #fff; color: var(--ink); box-shadow: 0 1px 0 rgb(16 24 40 / .04); }
+        .side-nav__item i { width: 18px; color: #7d8ca1; text-align: center; }
+        .side-nav__item.is-active i { color: var(--accent-dark); }
+
+        .preview { min-width: 0; min-height: 0; overflow: auto; padding: 25px 28px 32px; background: #fbfcfe; }
+        .preview__heading { display: flex; align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+        .preview__heading h3 { margin: 0; font-size: 1.05rem; }
+        .preview__heading p { margin: 4px 0 0; color: var(--muted); font-size: .78rem; }
+        .preview__viewport { width: 100%; min-height: 500px; padding: 26px; border: 1px solid #dce3eb; border-radius: 12px; background: #f5f7fa; }
+        .article-preview { width: min(100%, 760px); margin: 0 auto; padding: 28px clamp(18px, 4vw, 42px) 34px; border: 1px solid #e4e7ec; background: #fff; }
+        .article-preview__eyebrow { margin: 0 0 6px; color: var(--accent-dark); font-size: .67rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+        .article-preview h4 { margin: 0; font-size: clamp(1.3rem, 1.1rem + .8vw, 1.9rem); letter-spacing: -.035em; }
+        .article-preview__description { max-width: 47ch; margin: 8px 0 20px; color: var(--muted); font-size: .85rem; }
+        .search-stage { display: grid; gap: 8px; margin-bottom: 24px; }
+        .search-stage__caption { color: var(--subtle); font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+        .search-form { display: flex; align-items: stretch; gap: var(--search-gap); }
+        .search-form input { min-width: 0; min-height: 46px; flex: 1; border: 1px solid var(--line-strong); border-radius: var(--search-radius); padding: 0 14px; background: var(--search-input-bg); color: var(--search-input-text); }
+        .search-form button { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--search-button-bg); border-radius: var(--search-radius); padding: 0 15px; background: var(--search-button-bg); color: var(--search-button-text); font-size: .82rem; font-weight: 800; }
+        .search-form button:hover { filter: brightness(.93); }
+
+        .model-card { display: none; }
+        .model-card.is-active { display: block; }
+        .model-card__name { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
+        .model-card__name strong { font-size: .9rem; }
+        .model-card__name span { color: var(--muted); font-size: .72rem; }
+        .model-card--attached .search-form { gap: 0; }
+        .model-card--attached .search-form input { border-radius: var(--search-radius) 0 0 var(--search-radius); border-right: 0; }
+        .model-card--attached .search-form button { border-radius: 0 var(--search-radius) var(--search-radius) 0; }
+        .model-card--soft .search-form input { border-color: transparent; background: #f1f5f8; }
+        .model-card--soft .search-form button { border-color: var(--accent-soft); background: var(--accent-soft); color: var(--accent-dark); }
+        .model-card--underline .search-form { border-bottom: 2px solid var(--accent); gap: 12px; }
+        .model-card--underline .search-form input { min-height: 42px; border: 0; border-radius: 0; padding-left: 0; background: transparent; }
+        .model-card--underline .search-form button { width: 42px; min-height: 42px; padding: 0; border: 0; border-radius: 50%; background: var(--accent-soft); color: var(--accent-dark); }
+        .model-card--underline .search-form button span { display: none; }
+
+        .article-preview__content { display: grid; gap: 13px; }
+        .story-row { display: grid; grid-template-columns: 86px minmax(0, 1fr); gap: 13px; align-items: center; }
+        .story-row__media { height: 62px; border-radius: 9px; background: linear-gradient(135deg, #d8e6ef, #849bad); }
+        .story-row:nth-child(2) .story-row__media { background: linear-gradient(135deg, #f0ded1, #aa8267); }
+        .story-row:nth-child(3) .story-row__media { background: linear-gradient(135deg, #d7e5da, #71947c); }
+        .story-row__copy { min-width: 0; }
+        .story-row__copy small { color: var(--accent-dark); font-size: .6rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+        .story-row__copy h5 { margin: 3px 0 0; overflow: hidden; font-size: .82rem; text-overflow: ellipsis; white-space: nowrap; }
+        .story-row__copy p { margin: 4px 0 0; overflow: hidden; color: var(--muted); font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }
+
+        .customizer { min-width: 0; min-height: 0; overflow: auto; padding: 22px 18px 30px; }
+        .customizer h3 { margin: 0; font-size: 1rem; }
+        .customizer__description { margin: 5px 0 18px; color: var(--muted); font-size: .76rem; }
+        .customizer__section { display: grid; gap: 13px; padding: 16px 0; border-top: 1px solid var(--line); }
+        .customizer__section h4 { margin: 0; font-size: .82rem; }
+        .control { display: grid; gap: 6px; }
+        .control label, .control legend { color: #344054; font-size: .73rem; font-weight: 800; }
+        .control select, .control input[type="number"], .control input[type="text"] { width: 100%; min-height: 36px; border: 1px solid var(--line-strong); border-radius: 8px; padding: 0 9px; background: #fff; color: var(--ink); font-size: .78rem; }
+        .control input[type="color"] { width: 100%; height: 36px; padding: 3px; border: 1px solid var(--line-strong); border-radius: 8px; background: #fff; }
+        .control-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        .control-grid--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .swatches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+        .swatch { min-height: 32px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--muted); font-size: .66rem; font-weight: 750; }
+        .swatch.is-active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-dark); }
+        .range-note { margin: -4px 0 0; color: var(--muted); font-size: .68rem; line-height: 1.35; }
+        .pagination-preview { display: flex; justify-content: center; gap: var(--pagination-gap); margin-top: 12px; }
+        .pagination-preview button { min-width: 32px; height: 32px; border: 1px solid var(--pagination-border); border-radius: var(--pagination-radius, 8px); background: var(--pagination-link-bg); color: var(--pagination-link-text); font-size: .72rem; font-weight: 800; }
+        .pagination-preview button.is-active { border-color: var(--accent); background: var(--pagination-active-bg); color: var(--pagination-active-text); }
+        .pagination-preview button:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-dark); }
+        .pagination-preview button.icon-only { padding: 0 7px; }
+        .customizer__footer-note { margin: 0; color: var(--subtle); font-size: .68rem; line-height: 1.4; }
+
+        @media (max-width: 1120px) {
+            body { padding: 14px; }
+            .workspace { width: min(100%, 980px); grid-template-rows: 72px minmax(0, 1fr) 58px; }
+            .workspace__body { grid-template-columns: 180px minmax(0, 1fr); }
+            .customizer { display: none; }
+        }
+        @media (max-width: 680px) {
+            body { padding: 8px; }
+            .page-heading { width: calc(100% - 8px); }
+            .page-heading__badge { display: none; }
+            .workspace { width: 100%; min-height: 760px; grid-template-rows: 88px minmax(0, 1fr) 64px; border-radius: 14px; }
+            .workspace__header { align-items: flex-start; flex-direction: column; justify-content: center; padding: 12px 15px; gap: 8px; }
+            .workspace__body { grid-template-columns: 1fr; }
+            .side-nav { display: none; }
+            .preview { padding: 16px 12px 24px; }
+            .preview__viewport { padding: 10px; }
+            .article-preview { padding: 20px 13px 22px; }
+            .search-form { gap: 6px; }
+            .search-form button { width: 44px; padding: 0; }
+            .search-form button span { display: none; }
+            .story-row { grid-template-columns: 62px minmax(0, 1fr); gap: 10px; }
+            .story-row__media { height: 52px; }
+            .workspace__footer { padding: 0 14px; font-size: .7rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="page-heading">
+        <div><h1>Minimal Reading List · Search form models</h1><p>Three search directions plus the related pagination customization contract.</p></div>
+        <span class="badge">Mockup only · no production data</span>
+    </header>
+
+    <main class="workspace" id="mockup">
+        <header class="workspace__header">
+            <div class="workspace__title"><span class="workspace__mark"><i class="fas fa-search" aria-hidden="true"></i></span><div><h2>Template Options</h2><p>Minimal Reading List · Search & Pagination preview</p></div></div>
+            <div class="device-switch" role="group" aria-label="Preview device"><button type="button" data-device="desktop" class="is-active">Desktop</button><button type="button" data-device="tablet">Tablet</button><button type="button" data-device="mobile">Mobile</button></div>
+        </header>
+
+        <div class="workspace__body">
+            <nav class="side-nav" aria-label="Mockup sections">
+                <p class="side-nav__eyebrow">Customize</p>
+                <div class="side-nav__items"><button type="button" class="side-nav__item"><i class="fas fa-align-left" aria-hidden="true"></i>Header content</button><button type="button" class="side-nav__item is-active"><i class="fas fa-search" aria-hidden="true"></i>Search form</button><button type="button" class="side-nav__item"><i class="fas fa-ellipsis-h" aria-hidden="true"></i>Pagination</button><button type="button" class="side-nav__item"><i class="fas fa-columns" aria-hidden="true"></i>Reading list sidebar</button></div>
+            </nav>
+
+            <section class="preview" aria-label="Search form preview">
+                <div class="preview__heading"><div><h3>Search form preview</h3><p>Compare the hierarchy before choosing the production model.</p></div><span class="badge" id="deviceLabel">Desktop</span></div>
+                <div class="preview__viewport" id="previewViewport">
+                    <article class="article-preview">
+                        <p class="article-preview__eyebrow">Journal</p><h4>Minimal Reading List</h4><p class="article-preview__description">Thoughtful reads on design, technology, and the web.</p>
+                        <div class="search-stage">
+                            <span class="search-stage__caption">Search articles</span>
+                            <div class="model-card model-card--attached is-active" data-model-card="attached"><div class="model-card__name"><strong>Attached Classic</strong><span>Joined input + action</span></div><form class="search-form"><input type="search" value="Design systems" aria-label="Search articles"><button type="button"><i class="fas fa-search" aria-hidden="true"></i><span>Search</span></button></form></div>
+                            <div class="model-card model-card--soft" data-model-card="soft"><div class="model-card__name"><strong>Soft Field</strong><span>Quiet surface + accent action</span></div><form class="search-form"><input type="search" value="Design systems" aria-label="Search articles"><button type="button"><i class="fas fa-search" aria-hidden="true"></i><span>Search</span></button></form></div>
+                            <div class="model-card model-card--underline" data-model-card="underline"><div class="model-card__name"><strong>Minimal Underline</strong><span>Editorial line + icon action</span></div><form class="search-form"><input type="search" value="Design systems" aria-label="Search articles"><button type="button"><i class="fas fa-search" aria-hidden="true"></i><span>Search</span></button></form></div>
+                        </div>
+                        <div class="article-preview__content"><div class="story-row"><div class="story-row__media"></div><div class="story-row__copy"><small>Technology · 24 Aug 2026</small><h5>Building Resilient Systems at Scale</h5><p>Resilience is not a feature added at the end of delivery.</p></div></div><div class="story-row"><div class="story-row__media"></div><div class="story-row__copy"><small>Design · 22 Aug 2026</small><h5>Designing Spaces That Last Beyond a Trend Cycle</h5><p>How calmer systems create more confident decisions.</p></div></div><div class="story-row"><div class="story-row__media"></div><div class="story-row__copy"><small>Travel · 20 Aug 2026</small><h5>Slow Adventures Along the Coastal Road</h5><p>A quieter way to build memorable journeys.</p></div></div></div>
+                        <div class="pagination-preview" aria-label="Pagination preview"><button type="button" class="icon-only"><i class="fas fa-chevron-left" aria-hidden="true"></i></button><button type="button" class="is-active">1</button><button type="button">2</button><button type="button">3</button><button type="button">…</button><button type="button">60</button><button type="button" class="icon-only"><i class="fas fa-chevron-right" aria-hidden="true"></i></button></div>
+                    </article>
+                </div>
+            </section>
+
+            <aside class="customizer" aria-label="Mockup customization">
+                <h3>Customize preview</h3><p class="customizer__description">These controls are visual proposals for the next production setting panel.</p>
+                <section class="customizer__section"><h4>Search form model</h4><div class="model-switch" role="group" aria-label="Search model"><button type="button" data-model="attached" class="is-active">Attached</button><button type="button" data-model="soft">Soft</button><button type="button" data-model="underline">Underline</button></div><div class="control-grid"><div class="control"><label for="radius">Border radius</label><input id="radius" type="number" min="0" max="30" value="12"></div><div class="control"><label for="gap">Search button gap</label><input id="gap" type="number" min="0" max="32" value="8"><small class="range-note">Distance between the input and Search button. Attached keeps joined edges.</small></div></div><div class="control"><label for="searchIcon">Search icon · Page Builder Font Awesome</label><select id="searchIcon"><option value="fa-search">Search</option><option value="fa-sliders-h">Sliders</option><option value="fa-arrow-right">Arrow right</option></select></div><div class="control-grid"><div class="control"><label for="inputBg">Input background</label><input id="inputBg" type="color" value="#ffffff"></div><div class="control"><label for="inputText">Input text</label><input id="inputText" type="color" value="#172033"></div></div><div class="control-grid"><div class="control"><label for="buttonBg">Button background</label><input id="buttonBg" type="color" value="#16a579"></div><div class="control"><label for="buttonText">Button text</label><input id="buttonText" type="color" value="#ffffff"></div></div></section>
+                <section class="customizer__section"><h4>Pagination appearance</h4><div class="pagination-model-switch" role="group" aria-label="Pagination model"><button type="button" data-pagination-model="underline">Underline</button><button type="button" data-pagination-model="boxed" class="is-active">Boxed</button><button type="button" data-pagination-model="soft">Soft</button></div><div class="control-grid"><div class="control"><label for="pageRadius">Radius</label><input id="pageRadius" type="number" min="0" max="30" value="8"></div><div class="control"><label for="pageGap">Number gap</label><input id="pageGap" type="number" min="0" max="32" value="7"></div></div><div class="control-grid--three control-grid"><div class="control"><label for="pageNormal">Normal bg</label><input id="pageNormal" type="color" value="#ffffff"></div><div class="control"><label for="pageActive">Active bg</label><input id="pageActive" type="color" value="#16a579"></div><div class="control"><label for="pageText">Text</label><input id="pageText" type="color" value="#344054"></div></div><div class="control"><label for="arrowIcon">Arrow icon · Page Builder Font Awesome</label><select id="arrowIcon"><option value="fa-chevron">Chevron</option><option value="fa-angle">Angle</option><option value="fa-arrow">Arrow</option></select></div><p class="range-note">The production setting would keep Desktop, Tablet, and Mobile page ranges independent from this visual model.</p></section>
+                <p class="customizer__footer-note">Mockup only. No database, Graphify, or production template setting is changed.</p>
+            </aside>
+        </div>
+
+        <footer class="workspace__footer"><span><i class="fas fa-info-circle" aria-hidden="true"></i> Three Search form directions are ready for review.</span><span>Mockup · 2026-09-06</span></footer>
+    </main>
+
+    <script>
+        const root = document.documentElement;
+        const modelCards = [...document.querySelectorAll('[data-model-card]')];
+        const modelButtons = [...document.querySelectorAll('[data-model]')];
+        const deviceButtons = [...document.querySelectorAll('[data-device]')];
+        const deviceLabel = document.getElementById('deviceLabel');
+        const devices = { desktop: 'Desktop', tablet: 'Tablet', mobile: 'Mobile' };
+        function selectModel(model) { modelCards.forEach((card) => card.classList.toggle('is-active', card.dataset.modelCard === model)); modelButtons.forEach((button) => button.classList.toggle('is-active', button.dataset.model === model)); }
+        modelButtons.forEach((button) => button.addEventListener('click', () => selectModel(button.dataset.model)));
+        deviceButtons.forEach((button) => button.addEventListener('click', () => { deviceButtons.forEach((item) => item.classList.toggle('is-active', item === button)); deviceLabel.textContent = devices[button.dataset.device]; }));
+        document.getElementById('radius').addEventListener('input', (event) => root.style.setProperty('--search-radius', `${Math.max(0, Number(event.target.value) || 0)}px`));
+        document.getElementById('gap').addEventListener('input', (event) => root.style.setProperty('--search-gap', `${Math.max(0, Number(event.target.value) || 0)}px`));
+        document.getElementById('inputBg').addEventListener('input', (event) => root.style.setProperty('--search-input-bg', event.target.value));
+        document.getElementById('inputText').addEventListener('input', (event) => root.style.setProperty('--search-input-text', event.target.value));
+        document.getElementById('buttonBg').addEventListener('input', (event) => root.style.setProperty('--search-button-bg', event.target.value));
+        document.getElementById('buttonText').addEventListener('input', (event) => root.style.setProperty('--search-button-text', event.target.value));
+        document.getElementById('pageRadius').addEventListener('input', (event) => root.style.setProperty('--pagination-radius', `${Math.max(0, Number(event.target.value) || 0)}px`));
+        document.getElementById('pageGap').addEventListener('input', (event) => root.style.setProperty('--pagination-gap', `${Math.max(0, Number(event.target.value) || 0)}px`));
+        document.getElementById('pageNormal').addEventListener('input', (event) => root.style.setProperty('--pagination-link-bg', event.target.value));
+        document.getElementById('pageActive').addEventListener('input', (event) => root.style.setProperty('--pagination-active-bg', event.target.value));
+        document.getElementById('pageText').addEventListener('input', (event) => root.style.setProperty('--pagination-link-text', event.target.value));
+        document.querySelectorAll('[data-pagination-model]').forEach((button) => button.addEventListener('click', () => { document.querySelectorAll('[data-pagination-model]').forEach((item) => item.classList.toggle('is-active', item === button)); }));
+        document.getElementById('searchIcon').addEventListener('change', (event) => document.querySelectorAll('.search-form i').forEach((icon) => { icon.className = `fas ${event.target.value}`; }));
+    </script>
+</body>
+</html>

@@ -310,6 +310,17 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 			options.shell.frame = ensureFrame(options.shell.frame);
 
 			if (surface === 'archive') {
+				options.toolbar = options.toolbar || {};
+				options.toolbar.search = options.toolbar.search || {};
+				if (!['attached', 'soft', 'underline'].includes(options.toolbar.search.type)) options.toolbar.search.type = 'attached';
+				const searchRadius = ArticleTemplateUnitControls.parse(options.toolbar.search.radius, '0.75rem', 'radius');
+				options.toolbar.search.radius = ArticleTemplateUnitControls.format(searchRadius.value, searchRadius.unit);
+				const searchGap = ArticleTemplateUnitControls.parse(options.toolbar.search.gap, '0.75rem', 'spacing');
+				options.toolbar.search.gap = ArticleTemplateUnitControls.format(searchGap.value, searchGap.unit);
+				if (!['fas fa-search', 'fas fa-sliders-h', 'fas fa-arrow-right'].includes(options.toolbar.search.icon)) options.toolbar.search.icon = 'fas fa-search';
+				['input_background_color', 'input_text_color', 'input_border_color', 'button_background_color', 'button_text_color', 'button_hover_background_color', 'button_hover_text_color', 'button_active_background_color', 'button_active_text_color'].forEach((key) => {
+					if (typeof options.toolbar.search[key] !== 'string') options.toolbar.search[key] = '';
+				});
 				options.thumbnail = options.thumbnail || {};
 				if (!['background', 'asset'].includes(options.thumbnail.mode)) options.thumbnail.mode = 'background';
 				if (!['cover', 'contain'].includes(options.thumbnail.fit)) options.thumbnail.fit = 'cover';
@@ -325,6 +336,15 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 						? Math.min(9, Math.max(1, Math.round(numeric)))
 						: fallback;
 				});
+				const paginationRadius = ArticleTemplateUnitControls.parse(options.pagination.item_radius, '0.45rem', 'radius');
+				options.pagination.item_radius = ArticleTemplateUnitControls.format(paginationRadius.value, paginationRadius.unit);
+				const paginationGap = ArticleTemplateUnitControls.parse(options.pagination.item_gap, '0.45rem', 'spacing');
+				options.pagination.item_gap = ArticleTemplateUnitControls.format(paginationGap.value, paginationGap.unit);
+				['item_background_color', 'item_text_color', 'item_border_color', 'item_hover_background_color', 'item_hover_text_color', 'item_active_background_color', 'item_active_text_color'].forEach((key) => {
+					if (typeof options.pagination[key] !== 'string') options.pagination[key] = '';
+				});
+				if (!['fas fa-chevron-left', 'fas fa-angle-left', 'fas fa-arrow-left'].includes(options.pagination.previous_icon)) options.pagination.previous_icon = 'fas fa-chevron-left';
+				if (!['fas fa-chevron-right', 'fas fa-angle-right', 'fas fa-arrow-right'].includes(options.pagination.next_icon)) options.pagination.next_icon = 'fas fa-chevron-right';
 				if (typeof options.pagination.show_total !== 'boolean') options.pagination.show_total = true;
 				if (!['left', 'center', 'right'].includes(options.pagination.position)) options.pagination.position = 'right';
 				options.pagination.frame = ensureFrame(options.pagination.frame, true);

@@ -1,13 +1,12 @@
 @extends('themes.'.custom_theme('frontend'))
 
 @php($articleTypography = app(\App\Support\SiteTypography::class)->resolve(site_config()))
-
 @section('title')
     {{ t('Articles') }}
 @endsection
 
 @section('content')
-    <main id="ph-app-article-frontend" data-list-url="{{ route('cms.core.article.listdata') }}" data-template-options="{{ json_encode($templateOptions) }}" data-pagination-prev="<i class='fas fa-chevron-left' aria-hidden='true'></i><span class='visually-hidden'>{{ t('Previous') }}</span>" data-pagination-next="<i class='fas fa-chevron-right' aria-hidden='true'></i><span class='visually-hidden'>{{ t('Next') }}</span>">
+    <main id="ph-app-article-frontend" data-list-url="{{ route('cms.core.article.listdata') }}" data-template-options="{{ json_encode($templateOptions) }}" data-pagination-prev="<i class='{{ in_array(data_get($templateOptions ?? [], 'pagination.previous_icon'), ['fas fa-chevron-left', 'fas fa-angle-left', 'fas fa-arrow-left'], true) ? data_get($templateOptions ?? [], 'pagination.previous_icon') : 'fas fa-chevron-left' }}' aria-hidden='true'></i><span class='visually-hidden'>{{ t('Previous') }}</span>" data-pagination-next="<i class='{{ in_array(data_get($templateOptions ?? [], 'pagination.next_icon'), ['fas fa-chevron-right', 'fas fa-angle-right', 'fas fa-arrow-right'], true) ? data_get($templateOptions ?? [], 'pagination.next_icon') : 'fas fa-chevron-right' }}' aria-hidden='true'></i><span class='visually-hidden'>{{ t('Next') }}</span>">
         <div class="article-frontend-app" aria-live="polite" v-on:submit.prevent="handleSubmit" v-on:click="handleClick" v-on:input="syncFilterInput" v-on:change="syncFilterInput" v-bind:class="{ 'is-hydrated': isHydrated, 'is-loading-list': isLoading }" v-bind:aria-busy="isLoading ? 'true' : 'false'">
             <div class="article-frontend-runtime">
                 <div data-article-ssr v-once>

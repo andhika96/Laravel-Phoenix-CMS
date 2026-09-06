@@ -31,6 +31,8 @@ const ArticleFrontendPaginationControls = (() => {
         const position = ['left', 'center', 'right'].includes(pagination.position) ? pagination.position : 'right';
         const type = ['underline', 'boxed', 'soft'].includes(pagination.type) ? pagination.type : 'boxed';
         const defaults = { desktop: 3, tablet: 3, mobile: 2 };
+        const safeColor = (value) => typeof value === 'string' && /^(?:#[0-9a-f]{3,8}|rgba?\([^)]*\)|hsla?\([^)]*\))$/i.test(value.trim()) ? value.trim() : '';
+        const safeDimension = (value, fallback) => typeof value === 'string' && /^(?:\d+(?:\.\d+)?)(?:px|em|rem|%|pt)(?:\s+(?:\d+(?:\.\d+)?)(?:px|em|rem|%|pt)){0,3}$/i.test(value.trim()) ? value.trim() : fallback;
         const range = Object.fromEntries(Object.entries(defaults).map(([device, fallback]) => {
             const numeric = Number(pagination?.range?.[device]);
             return [device, Number.isFinite(numeric) ? Math.min(9, Math.max(1, Math.round(numeric))) : fallback];
@@ -39,6 +41,17 @@ const ArticleFrontendPaginationControls = (() => {
         return {
             type,
             range,
+            item_radius: safeDimension(pagination.item_radius, '0.45rem'),
+            item_gap: safeDimension(pagination.item_gap, '0.45rem'),
+            item_background_color: safeColor(pagination.item_background_color),
+            item_text_color: safeColor(pagination.item_text_color),
+            item_border_color: safeColor(pagination.item_border_color),
+            item_hover_background_color: safeColor(pagination.item_hover_background_color),
+            item_hover_text_color: safeColor(pagination.item_hover_text_color),
+            item_active_background_color: safeColor(pagination.item_active_background_color),
+            item_active_text_color: safeColor(pagination.item_active_text_color),
+            previous_icon: ['fas fa-chevron-left', 'fas fa-angle-left', 'fas fa-arrow-left'].includes(pagination.previous_icon) ? pagination.previous_icon : 'fas fa-chevron-left',
+            next_icon: ['fas fa-chevron-right', 'fas fa-angle-right', 'fas fa-arrow-right'].includes(pagination.next_icon) ? pagination.next_icon : 'fas fa-chevron-right',
             show_total: pagination.show_total !== false,
             position,
             frame: {
@@ -60,7 +73,22 @@ const ArticleFrontendPaginationControls = (() => {
             '--article-pagination-frame-border-width': pagination.frame.border_width,
             '--article-pagination-frame-radius': pagination.frame.radius,
             '--article-pagination-frame-background': pagination.frame.background_color,
+            '--article-pagination-item-radius': pagination.item_radius,
+            '--article-pagination-item-gap': pagination.item_gap,
         };
+
+        const customProperties = {
+            '--article-pagination-item-background': pagination.item_background_color,
+            '--article-pagination-item-text': pagination.item_text_color,
+            '--article-pagination-item-border': pagination.item_border_color,
+            '--article-pagination-item-hover-background': pagination.item_hover_background_color,
+            '--article-pagination-item-hover-text': pagination.item_hover_text_color,
+            '--article-pagination-item-active-background': pagination.item_active_background_color,
+            '--article-pagination-item-active-text': pagination.item_active_text_color,
+        };
+        Object.entries(customProperties).forEach(([property, value]) => {
+            if (value) result[property] = value;
+        });
 
         devices.forEach((device) => {
             sides.forEach((side) => {

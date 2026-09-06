@@ -13,6 +13,27 @@
     $categoryMode = data_get($category, 'mode', $isMinimalReadingList ? 'button-list' : 'select');
     $categoryMode = in_array($categoryMode, ['select', 'button-list'], true) ? $categoryMode : 'select';
     $showCategorySelect = data_get($category, 'enabled') && (!$isMinimalReadingList || $categoryMode === 'select');
+    $searchType = data_get($search, 'type', 'attached');
+    $searchType = in_array($searchType, ['attached', 'soft', 'underline'], true) ? $searchType : 'attached';
+    $searchIcon = data_get($search, 'icon', 'fas fa-search');
+    $searchIcon = in_array($searchIcon, ['fas fa-search', 'fas fa-sliders-h', 'fas fa-arrow-right'], true) ? $searchIcon : 'fas fa-search';
+    $searchStyle = '--article-search-radius:'.data_get($search, 'radius', '0.75rem').';--article-search-gap:'.data_get($search, 'gap', '0.75rem').';';
+    foreach ([
+        'input_background_color' => '--article-search-input-background',
+        'input_text_color' => '--article-search-input-text',
+        'input_border_color' => '--article-search-input-border',
+        'button_background_color' => '--article-search-button-background',
+        'button_text_color' => '--article-search-button-text',
+        'button_hover_background_color' => '--article-search-button-hover-background',
+        'button_hover_text_color' => '--article-search-button-hover-text',
+        'button_active_background_color' => '--article-search-button-active-background',
+        'button_active_text_color' => '--article-search-button-active-text',
+    ] as $key => $property) {
+        $color = data_get($search, $key);
+        if (is_string($color) && preg_match('/^(?:#[0-9a-f]{3,8}|rgba?\([^)]*\)|hsla?\([^)]*\))$/i', $color) === 1) {
+            $searchStyle .= $property.':'.$color.';';
+        }
+    }
     $positions = ['left', 'center', 'right'];
 @endphp
 <header class="article-page-heading article-template-header article-template-header--{{ $templateKey }}">
@@ -28,10 +49,10 @@
             @foreach ($positions as $position)
                 <div class="article-template-toolbar__zone article-template-toolbar__zone--{{ $position }}">
                     @if (data_get($search, 'enabled') && data_get($search, 'position') === $position)
-                        <div class="article-template-toolbar__control article-template-toolbar__control--search">
+                        <div class="article-template-toolbar__control article-template-toolbar__control--search article-search-model--{{ $searchType }}" style="{{ $searchStyle }}">
                             <label class="visually-hidden" for="article-{{ $templateKey }}-search">{{ t('Search articles') }}</label>
                             <input id="article-{{ $templateKey }}-search" name="search" type="search" value="{{ request('search') }}" placeholder="{{ t('Search articles') }}">
-                            <button type="submit" class="btn ph-btn-theme"><i class="fas fa-search" aria-hidden="true"></i><span>{{ t('Search') }}</span></button>
+                            <button type="submit" class="btn ph-btn-theme"><i class="{{ $searchIcon }}" aria-hidden="true"></i><span>{{ t('Search') }}</span></button>
                         </div>
                     @endif
                     @if ($showCategorySelect && data_get($category, 'position') === $position)

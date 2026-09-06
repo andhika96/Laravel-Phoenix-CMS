@@ -317,8 +317,8 @@ test('Article frontend compiles search, category filter, and pagination through 
 	assert.match(archive, /to="\[data-article-vue-control-slot\]"/);
 	assert.match(archive, /to="\[data-article-vue-list-state-slot\]"/);
 	assert.match(archive, /article-pagination--vue" :class="paginationClasses" :style="paginationStyle"/);
-	assert.match(archive, /data-pagination-prev="<i class='fas fa-chevron-left'/);
-	assert.match(archive, /data-pagination-next="<i class='fas fa-chevron-right'/);
+	assert.match(archive, /data-pagination-prev="<i class='\{\{ in_array\(data_get\(\$templateOptions/);
+	assert.match(archive, /data-pagination-next="<i class='\{\{ in_array\(data_get\(\$templateOptions/);
 	assert.doesNotMatch(archive, /far fa-chevron/);
 	assert.match(source, /window\.history\.pushState/);
 	assert.equal(existsSync(passwordViewPath), true);
@@ -385,6 +385,10 @@ test('archive pagination maps template options into a responsive Vue footer cont
 			show_total: false,
 			position: 'center',
 			range: { desktop: 7, tablet: 4, mobile: 2 },
+			item_radius: '1rem',
+			item_gap: '10px',
+			item_active_background_color: '#16a579',
+			item_active_text_color: '#ffffff',
 			frame: { enabled: false, border_color: '#123456', border_width: '2pt', radius: '1rem', background_color: '#ffffff' },
 			padding: { enabled: true, desktop: { top: '1rem', right: '2px', bottom: '3%', left: '4pt' }, tablet: {}, mobile: {} },
 			margin: { enabled: false, desktop: {}, tablet: {}, mobile: {} },
@@ -402,6 +406,8 @@ test('archive pagination maps template options into a responsive Vue footer cont
 	]);
 	assert.equal(options.computed.paginationStyle.call(state)['--article-pagination-padding-desktop-top'], '1rem');
 	assert.equal(options.computed.paginationStyle.call(state)['--article-pagination-frame-border-width'], '2pt');
+	assert.equal(options.computed.paginationStyle.call(state)['--article-pagination-item-gap'], '10px');
+	assert.equal(options.computed.paginationStyle.call(state)['--article-pagination-item-active-background'], '#16a579');
 
 	const archive = readFileSync(path.join(process.cwd(), 'resources/views/article/archive.blade.php'), 'utf8');
 	const pagination = readFileSync(path.join(process.cwd(), 'resources/views/article/templates/partials/pagination.blade.php'), 'utf8');

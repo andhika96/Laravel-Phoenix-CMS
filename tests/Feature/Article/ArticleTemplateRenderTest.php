@@ -142,6 +142,36 @@ class ArticleTemplateRenderTest extends TestCase
         $this->assertStringContainsString('data-article-pagination-link', $html);
     }
 
+    public function test_pagination_model_visual_overrides_and_fontawesome_arrows_reach_ssr_markup(): void
+    {
+        $articles = new LengthAwarePaginator(range(1, 12), 96, 12, 5, [
+            'path' => route('cms.core.article'),
+        ]);
+        $options = app(ArticleTemplateOptions::class)->archive('minimal-reading-list', [
+            'pagination' => [
+                'type' => 'soft',
+                'item_radius' => '1rem',
+                'item_gap' => '10px',
+                'item_active_background_color' => '#16a579',
+                'item_active_text_color' => '#ffffff',
+                'previous_icon' => 'fas fa-angle-left',
+                'next_icon' => 'fas fa-arrow-right',
+            ],
+        ]);
+
+        $html = view('article.templates.partials.pagination', [
+            'articles' => $articles,
+            'templateOptions' => $options,
+        ])->render();
+
+        $this->assertStringContainsString('article-pagination--model-soft', $html);
+        $this->assertStringContainsString('--article-pagination-item-radius:1rem', $html);
+        $this->assertStringContainsString('--article-pagination-item-gap:10px', $html);
+        $this->assertStringContainsString('--article-pagination-item-active-background:#16a579', $html);
+        $this->assertStringContainsString('fas fa-angle-left', $html);
+        $this->assertStringContainsString('fas fa-arrow-right', $html);
+    }
+
     public function test_shared_archive_fragments_render_safe_heading_media_and_shell_variables(): void
     {
         $article = new Article([
