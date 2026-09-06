@@ -127,7 +127,15 @@ const ArticleTemplateUnitControls = (() => {
 		return formatRadius(parsed.values, safeUnit, kind);
 	}
 
-	return { sides, units, max, step, format, parse, withUnit, ensureBox, setBoxValue, setBoxUnit, radiusValues, setRadiusValue, setRadiusUnit };
+	function safeMediaUrl(value) {
+		const url = String(value || '').trim();
+
+		if (!url || /["'()\\]/.test(url) || url.startsWith('//') || /^(?:javascript|vbscript|data):/i.test(url)) return '';
+
+		return /^(?:https?:\/\/|\/)/i.test(url) ? url : '';
+	}
+
+	return { sides, units, max, step, format, parse, withUnit, ensureBox, setBoxValue, setBoxUnit, radiusValues, formatRadius, setRadiusValue, setRadiusUnit, safeMediaUrl };
 })();
 
 const articleTemplateRoot = document.getElementById('ph-app-manage-article-templates');
@@ -244,6 +252,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 			if (isMinimal && options.post_list) sections.push({ key: 'post-list', label: 'Post list', icon: 'fa-list-ul' });
 			if (isMinimal && options.sidebar) sections.push({ key: 'sidebar', label: 'Reading list sidebar', icon: 'fa-columns' });
 			if (isArchive && options.grid) sections.push({ key: 'grid', label: 'Grid columns', icon: 'fa-th-large' });
+			if (isArchive && this.activeTemplateKey === 'editorial-journal' && options.editorial_journal) sections.push({ key: 'editorial-journal', label: 'Editorial Journal', icon: 'fa-newspaper' });
 			if (isArchive) {
 				sections.push({ key: 'thumbnail', label: 'Thumbnail', icon: 'fa-image' });
 				sections.push({ key: 'pagination', label: 'Pagination', icon: 'fa-ellipsis-h' });
@@ -303,6 +312,49 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 				});
 				return target;
 			};
+			const ensureRadius = (value, fallback) => {
+				const parsed = ArticleTemplateUnitControls.radiusValues(value, fallback, 'radius');
+
+				return ArticleTemplateUnitControls.formatRadius(parsed.values, parsed.unit, 'radius');
+			};
+			const ensureDimension = (value, fallback, kind = 'spacing') => {
+				const parsed = ArticleTemplateUnitControls.parse(value, fallback, kind);
+
+				return ArticleTemplateUnitControls.format(parsed.value, parsed.unit);
+			};
+			const ensureEditorialJournal = (journal) => {
+				const target = journal && typeof journal === 'object' ? journal : {};
+				target.lead_grid = target.lead_grid || {};
+				target.lead_grid.divider = target.lead_grid.divider || {};
+				if (typeof target.lead_grid.divider.enabled !== 'boolean') target.lead_grid.divider.enabled = true;
+				target.lead_grid.spacing = target.lead_grid.spacing || {};
+				target.lead_grid.spacing.with_divider = ensureDimension(target.lead_grid.spacing.with_divider, '2rem');
+				target.lead_grid.spacing.without_divider = ensureDimension(target.lead_grid.spacing.without_divider, '2rem');
+				target.thumbnail = target.thumbnail || {};
+				if (typeof target.thumbnail.edge_to_edge !== 'boolean') target.thumbnail.edge_to_edge = false;
+				target.card = target.card || {};
+				target.card.border = target.card.border || {};
+				if (typeof target.card.border.enabled !== 'boolean') target.card.border.enabled = true;
+				if (!['solid', 'double', 'dotted', 'dashed', 'groove'].includes(target.card.border.type)) target.card.border.type = 'solid';
+				target.card.border.width = ensureDimension(target.card.border.width, '1px', 'border');
+				if (!target.card.border.color) target.card.border.color = '#e6e9ef';
+				target.card.border.radius = ensureRadius(target.card.border.radius, '0.9rem');
+				target.card.background = target.card.background || {};
+				if (!['color', 'image'].includes(target.card.background.type)) target.card.background.type = 'color';
+				if (!target.card.background.color) target.card.background.color = '#ffffff';
+				target.card.background.image = ArticleTemplateUnitControls.safeMediaUrl(target.card.background.image);
+				target.card.height = target.card.height || {};
+				if (!['auto', 'fixed'].includes(target.card.height.mode)) target.card.height.mode = 'auto';
+				['desktop', 'tablet', 'mobile'].forEach((device) => {
+					target.card.height[device] = ensureDimension(target.card.height[device], '22rem');
+				});
+				target.read_more = target.read_more || {};
+				if (typeof target.read_more.enabled !== 'boolean') target.read_more.enabled = false;
+				if (!['left', 'center', 'right'].includes(target.read_more.position)) target.read_more.position = 'left';
+				if (!['fas fa-arrow-right', 'fas fa-chevron-right', 'fas fa-angle-right'].includes(target.read_more.icon)) target.read_more.icon = 'fas fa-arrow-right';
+
+				return target;
+			};
 
 			options.shell = options.shell || {};
 			options.shell.padding = ensureBox(options.shell.padding);
@@ -324,6 +376,8 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 				options.thumbnail = options.thumbnail || {};
 				if (!['background', 'asset'].includes(options.thumbnail.mode)) options.thumbnail.mode = 'background';
 				if (!['cover', 'contain'].includes(options.thumbnail.fit)) options.thumbnail.fit = 'cover';
+				const thumbnailFallback = this.activeTemplateKey === 'minimal-reading-list' ? '9.3rem' : (this.activeTemplateKey === 'editorial-journal' ? '12.5rem' : '5.625rem');
+				options.thumbnail.height = ensureDimension(options.thumbnail.height, thumbnailFallback);
 				if (!options.thumbnail.background_color) options.thumbnail.background_color = '#f2f4f7';
 				options.thumbnail.frame = ensureFrame(options.thumbnail.frame);
 				options.pagination = options.pagination || {};
@@ -369,6 +423,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 					const postListGap = ArticleTemplateUnitControls.parse(options.post_list.item_gap, '0.75rem', 'spacing');
 					options.post_list.item_gap = ArticleTemplateUnitControls.format(postListGap.value, postListGap.unit);
 				}
+				if (this.activeTemplateKey === 'editorial-journal') options.editorial_journal = ensureEditorialJournal(options.editorial_journal);
 			}
 
 			return options;
@@ -420,6 +475,67 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 		},
 		setDimensionUnit(path, unit, kind = 'spacing') {
 			this.setOptionPath(path, ArticleTemplateUnitControls.withUnit(this.optionPath(path, '0px'), unit, kind));
+		},
+		mediaUrl(value) {
+			return ArticleTemplateUnitControls.safeMediaUrl(value);
+		},
+		editorialJournalBackgroundPreviewStyle() {
+			const url = this.mediaUrl(this.optionPath('editorial_journal.card.background.image', ''));
+
+			return url ? { backgroundImage: `url("${url.replace(/"/g, '%22')}")` } : {};
+		},
+		openCkFinder(targetObj, propName) {
+			if (!targetObj || !propName) return false;
+			const ckf = window.CKFinder;
+			if (!ckf || typeof ckf.popup !== 'function') return false;
+			const safeKey = String(propName);
+			const basePath = new URL('/assets/plugins/ckfinder/', window.location.origin).toString();
+			const connectorPath = new URL('/assets/plugins/ckfinder/core/connector/php/connector.php', window.location.origin).toString();
+			const setUrl = (url) => {
+				targetObj[safeKey] = ArticleTemplateUnitControls.safeMediaUrl(url);
+				this.scheduleModalPreview();
+			};
+
+			ckf.popup({
+				basePath,
+				connectorPath,
+				chooseFiles: true,
+				onInit: (finder) => {
+					finder.on('files:choose', (evt) => {
+						const file = evt?.data?.files?.first ? evt.data.files.first() : null;
+						if (!file || typeof file.getUrl !== 'function') return;
+						setUrl(file.getUrl());
+					});
+					finder.on('file:choose:resizedImage', (evt) => {
+						const resizedUrl = evt?.data?.resizedUrl;
+						if (resizedUrl) setUrl(resizedUrl);
+					});
+				},
+			});
+
+			return true;
+		},
+		chooseMedia(targetObj, propName, promptLabel = 'Paste image URL') {
+			if (!targetObj || !propName) return;
+			if (this.openCkFinder(targetObj, propName)) return;
+			const current = ArticleTemplateUnitControls.safeMediaUrl(targetObj[propName]);
+			const nextUrl = window.prompt(promptLabel, current);
+			if (nextUrl === null) return;
+			targetObj[propName] = ArticleTemplateUnitControls.safeMediaUrl(nextUrl);
+			this.scheduleModalPreview();
+		},
+		clearMedia(targetObj, propName) {
+			if (!targetObj || !propName) return;
+			targetObj[propName] = '';
+			this.scheduleModalPreview();
+		},
+		chooseEditorialJournalBackground() {
+			const background = this.optionPath('editorial_journal.card.background', {});
+			this.chooseMedia(background, 'image', 'Paste image URL');
+		},
+		clearEditorialJournalBackground() {
+			const background = this.optionPath('editorial_journal.card.background', {});
+			this.clearMedia(background, 'image');
 		},
 		radiusValue(path, index) {
 			return ArticleTemplateUnitControls.radiusValues(this.optionPath(path, '1rem'), '1rem', 'radius').values[index]?.value ?? 0;

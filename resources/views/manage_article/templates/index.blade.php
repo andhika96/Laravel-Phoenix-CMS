@@ -166,6 +166,7 @@
 @endpush
 
 @push('js')
+    <script src="{{ asset('assets/plugins/ckfinder/ckfinder.js') }}"></script>
     <script src="{{ asset('assets/vendor/coloris/coloris.min.js?v=').time() }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.21/dist/vue.global.prod.js" crossorigin="anonymous"></script>
     <script src="{{ url('assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js?v=').time() }}"></script>

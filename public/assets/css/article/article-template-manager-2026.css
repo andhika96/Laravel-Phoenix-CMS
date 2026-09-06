@@ -2219,6 +2219,11 @@
 	margin-top: .25rem;
 }
 
+.article-template-options-panel .article-template-pagination-style-fields > .article-template-radius-control,
+.article-template-options-panel .article-template-pagination-style-fields > .article-template-pagination-number-gap {
+	grid-column: 1 / -1;
+}
+
 .article-template-options-panel .article-template-search-style-fields > label,
 .article-template-options-panel .article-template-pagination-style-fields > label {
 	display: grid;
@@ -2255,4 +2260,120 @@
 .article-template-options-panel .article-template-options-section__heading h5 {
 	margin: 0;
 	line-height: 1.25;
+}
+
+/* Editorial Journal template-specific options. */
+.article-template-options-panel .article-template-editorial-journal-fields {
+	display: grid;
+	gap: var(--article-template-form-group-gap, 1.25rem);
+}
+
+.article-template-options-panel .article-template-editorial-journal-group {
+	min-width: 0;
+	margin: 0;
+	padding: 0 0 1rem;
+	border: 0;
+	border-bottom: 1px solid var(--article-template-list-divider, #edf0f3);
+}
+
+.article-template-options-panel .article-template-editorial-journal-group:last-child {
+	padding-bottom: 0;
+	border-bottom: 0;
+}
+
+.article-template-options-panel .article-template-editorial-journal-group > legend {
+	float: left;
+	width: 100%;
+	margin: 0 0 .75rem;
+	padding: 0;
+	color: #172033;
+	font-size: .92em;
+	font-weight: 800;
+}
+
+.article-template-options-panel .article-template-editorial-journal-group > legend + * {
+	clear: both;
+}
+
+.article-template-options-panel .article-template-editorial-journal-group > .form-switch {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	min-height: var(--article-template-control-height);
+	margin-bottom: .75rem;
+}
+
+.article-template-options-panel .article-template-editorial-journal-dimensions,
+.article-template-options-panel .article-template-editorial-journal-border-fields,
+.article-template-options-panel .article-template-editorial-journal-height-fields,
+.article-template-options-panel .article-template-editorial-journal-read-more-fields {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--article-template-form-field-gap, .875rem);
+}
+
+.article-template-options-panel .article-template-editorial-journal-group label:not(.form-switch),
+.article-template-options-panel .article-template-editorial-journal-border-fields > label,
+.article-template-options-panel .article-template-editorial-journal-height-fields > label,
+.article-template-options-panel .article-template-editorial-journal-read-more-fields > label {
+	display: grid;
+	min-width: 0;
+	gap: .35rem;
+	color: #344054;
+	font-size: .78em;
+	font-weight: 700;
+}
+
+.article-template-options-panel .article-template-editorial-journal-border-fields,
+.article-template-options-panel .article-template-editorial-journal-media-field,
+.article-template-options-panel .article-template-editorial-journal-height-fields,
+.article-template-options-panel .article-template-editorial-journal-read-more-fields {
+	margin-top: .75rem;
+}
+
+.article-template-options-panel .article-template-editorial-journal-border-fields .article-template-radius-control {
+	grid-column: 1 / -1;
+}
+
+.article-template-options-panel .article-template-editorial-journal-media-field {
+	display: grid;
+	gap: .65rem;
+}
+
+.article-template-options-panel .article-template-editorial-journal-media-preview {
+	display: grid;
+	min-height: 8rem;
+	place-items: center;
+	overflow: hidden;
+	border: 1px solid var(--article-template-control-border, #d0d5dd);
+	border-radius: .65rem;
+	background-color: #f2f4f7;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	color: #667085;
+	font-size: .78em;
+}
+
+.article-template-options-panel .article-template-editorial-journal-media-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .5rem;
+}
+
+.article-template-options-panel .article-template-editorial-journal-media-actions .btn {
+	min-height: var(--article-template-action-height, 2.125rem);
+}
+
+@media (max-width: 767.98px) {
+	.article-template-options-panel .article-template-editorial-journal-dimensions,
+	.article-template-options-panel .article-template-editorial-journal-border-fields,
+	.article-template-options-panel .article-template-editorial-journal-height-fields,
+	.article-template-options-panel .article-template-editorial-journal-read-more-fields {
+		grid-template-columns: 1fr;
+	}
+
+	.article-template-options-panel .article-template-editorial-journal-border-fields .article-template-radius-control {
+		grid-column: auto;
+	}
 }

@@ -9,6 +9,7 @@ use App\Support\Article\ArticleTemplateCatalog;
 use App\Support\Article\ArticleTemplatePreviewFixture;
 use App\Support\Article\ArticleTemplateOptions;
 use App\Support\Article\PublicArticleCategoryOptions;
+use App\Support\CkfinderSessionBridge;
 use Illuminate\Http\Request;
 
 class ManageArticleTemplateController extends Controller
@@ -22,8 +23,9 @@ class ManageArticleTemplateController extends Controller
         date_default_timezone_set('Asia/Jakarta');
     }
 
-    public function index(): mixed
+    public function index(Request $request): mixed
     {
+        app(CkfinderSessionBridge::class)->prepare($request);
         $settings = ArticleTemplateSetting::current();
 
         return view('manage_article.templates.index', [

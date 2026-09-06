@@ -251,6 +251,95 @@ class ArticleTemplateOptionsTest extends TestCase
         $this->assertSame('1rem', $archive['shell']['frame']['radius']);
     }
 
+    public function test_it_normalizes_editorial_journal_options_and_keeps_the_new_thumbnail_default_template_scoped(): void
+    {
+        $options = app(ArticleTemplateOptions::class);
+
+        $defaults = $options->archive('editorial-journal');
+
+        $this->assertSame('12.5rem', $defaults['thumbnail']['height']);
+        $this->assertTrue($defaults['editorial_journal']['lead_grid']['divider']['enabled']);
+        $this->assertSame('2rem', $defaults['editorial_journal']['lead_grid']['spacing']['with_divider']);
+        $this->assertSame('2rem', $defaults['editorial_journal']['lead_grid']['spacing']['without_divider']);
+        $this->assertFalse($defaults['editorial_journal']['thumbnail']['edge_to_edge']);
+        $this->assertTrue($defaults['editorial_journal']['card']['border']['enabled']);
+        $this->assertSame('solid', $defaults['editorial_journal']['card']['border']['type']);
+        $this->assertSame('1px', $defaults['editorial_journal']['card']['border']['width']);
+        $this->assertSame('#e6e9ef', $defaults['editorial_journal']['card']['border']['color']);
+        $this->assertSame('0.9rem', $defaults['editorial_journal']['card']['border']['radius']);
+        $this->assertSame('color', $defaults['editorial_journal']['card']['background']['type']);
+        $this->assertSame('#ffffff', $defaults['editorial_journal']['card']['background']['color']);
+        $this->assertSame('', $defaults['editorial_journal']['card']['background']['image']);
+        $this->assertSame('auto', $defaults['editorial_journal']['card']['height']['mode']);
+        $this->assertSame('22rem', $defaults['editorial_journal']['card']['height']['desktop']);
+        $this->assertSame('22rem', $defaults['editorial_journal']['card']['height']['tablet']);
+        $this->assertSame('22rem', $defaults['editorial_journal']['card']['height']['mobile']);
+        $this->assertFalse($defaults['editorial_journal']['read_more']['enabled']);
+        $this->assertSame('left', $defaults['editorial_journal']['read_more']['position']);
+        $this->assertSame('fas fa-arrow-right', $defaults['editorial_journal']['read_more']['icon']);
+        $this->assertSame('5.63rem', $options->archive('mosaic-magazine')['thumbnail']['height']);
+
+        $custom = $options->archive('editorial-journal', [
+            'editorial_journal' => [
+                'lead_grid' => [
+                    'divider' => ['enabled' => false],
+                    'spacing' => ['with_divider' => '1.5rem', 'without_divider' => '3%'],
+                ],
+                'thumbnail' => ['edge_to_edge' => true],
+                'card' => [
+                    'border' => ['enabled' => false, 'type' => 'dashed', 'width' => '2pt', 'color' => '#abcdef', 'radius' => '4px 8px 12px 16px'],
+                    'background' => ['type' => 'image', 'color' => 'rgba(12, 34, 56, 0.5)', 'image' => '/userfiles/articles/editorial-bg.jpg'],
+                    'height' => ['mode' => 'fixed', 'desktop' => '22rem', 'tablet' => '20rem', 'mobile' => '18rem'],
+                ],
+                'read_more' => ['enabled' => true, 'position' => 'center', 'icon' => 'fas fa-chevron-right'],
+            ],
+        ]);
+
+        $journal = $custom['editorial_journal'];
+        $this->assertFalse($journal['lead_grid']['divider']['enabled']);
+        $this->assertSame('1.5rem', $journal['lead_grid']['spacing']['with_divider']);
+        $this->assertSame('3%', $journal['lead_grid']['spacing']['without_divider']);
+        $this->assertTrue($journal['thumbnail']['edge_to_edge']);
+        $this->assertFalse($journal['card']['border']['enabled']);
+        $this->assertSame('dashed', $journal['card']['border']['type']);
+        $this->assertSame('2pt', $journal['card']['border']['width']);
+        $this->assertSame('4px 8px 12px 16px', $journal['card']['border']['radius']);
+        $this->assertSame('image', $journal['card']['background']['type']);
+        $this->assertSame('rgba(12, 34, 56, 0.5)', $journal['card']['background']['color']);
+        $this->assertSame('/userfiles/articles/editorial-bg.jpg', $journal['card']['background']['image']);
+        $this->assertSame('fixed', $journal['card']['height']['mode']);
+        $this->assertSame('20rem', $journal['card']['height']['tablet']);
+        $this->assertTrue($journal['read_more']['enabled']);
+        $this->assertSame('center', $journal['read_more']['position']);
+        $this->assertSame('fas fa-chevron-right', $journal['read_more']['icon']);
+
+        $unsafe = $options->archive('editorial-journal', [
+            'editorial_journal' => [
+                'lead_grid' => ['spacing' => ['with_divider' => 'calc(1rem)', 'without_divider' => 'url(javascript:alert(1))']],
+                'card' => [
+                    'border' => ['type' => 'blink', 'width' => 'calc(1rem)', 'color' => 'url(javascript:alert(1))', 'radius' => 'url(javascript:alert(1))'],
+                    'background' => ['type' => 'script', 'color' => 'url(javascript:alert(1))', 'image' => 'data:image/svg+xml;base64,unsafe'],
+                    'height' => ['mode' => 'locked', 'desktop' => 'url(javascript:alert(1))'],
+                ],
+                'read_more' => ['position' => 'float', 'icon' => 'fas fa-trash'],
+            ],
+        ])['editorial_journal'];
+
+        $this->assertSame('2rem', $unsafe['lead_grid']['spacing']['with_divider']);
+        $this->assertSame('2rem', $unsafe['lead_grid']['spacing']['without_divider']);
+        $this->assertSame('solid', $unsafe['card']['border']['type']);
+        $this->assertSame('1px', $unsafe['card']['border']['width']);
+        $this->assertSame('#e6e9ef', $unsafe['card']['border']['color']);
+        $this->assertSame('0.9rem', $unsafe['card']['border']['radius']);
+        $this->assertSame('color', $unsafe['card']['background']['type']);
+        $this->assertSame('#ffffff', $unsafe['card']['background']['color']);
+        $this->assertSame('', $unsafe['card']['background']['image']);
+        $this->assertSame('auto', $unsafe['card']['height']['mode']);
+        $this->assertSame('22rem', $unsafe['card']['height']['desktop']);
+        $this->assertSame('left', $unsafe['read_more']['position']);
+        $this->assertSame('fas fa-arrow-right', $unsafe['read_more']['icon']);
+    }
+
     public function test_it_rejects_unsafe_styling_values_and_keeps_detail_shell_options(): void
     {
         $options = app(ArticleTemplateOptions::class);

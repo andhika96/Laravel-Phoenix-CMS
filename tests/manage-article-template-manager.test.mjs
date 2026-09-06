@@ -363,6 +363,52 @@ test('Pagination options expose named models and independent desktop/tablet/mobi
 	assert.match(css, /article-template-pagination-range__fields[\s\S]*?grid-template-columns:\s*repeat\(3/);
 });
 
+test('Editorial Journal options expose scoped lead, card, background, height, and read more controls', () => {
+	const view = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
+	const styling = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/partials/options-styling.blade.php'), 'utf8');
+	const managerSource = readFileSync(path.join(process.cwd(), 'public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js'), 'utf8');
+
+	assert.match(view, /assets\/plugins\/ckfinder\/ckfinder\.js/);
+	assert.match(styling, /editorial-journal/);
+	assert.match(styling, /Show divider/);
+	assert.match(styling, /Spacing with divider/);
+	assert.match(styling, /Spacing without divider/);
+	assert.match(styling, /Inset inside card/);
+	assert.match(styling, /Edge-to-edge/);
+	assert.match(styling, /Card border/);
+	assert.match(styling, /Border type/);
+	assert.match(styling, /Card background/);
+	assert.match(styling, /Choose Image/);
+	assert.match(styling, /Remove Image/);
+	assert.match(styling, /Card height/);
+	assert.match(styling, /Show Read More/);
+	assert.match(styling, /Read More position/);
+	assert.match(styling, /optionsModal\.value\.editorial_journal/);
+	assert.match(managerSource, /CKFinder/);
+	assert.match(managerSource, /connectorPath/);
+	assert.match(managerSource, /file:choose:resizedImage/);
+	assert.match(managerSource, /files:choose/);
+	assert.match(managerSource, /chooseEditorialJournalBackground/);
+});
+
+test('manager prepares Editorial Journal defaults without changing other archive option shapes', () => {
+	const options = loadOptions();
+	const state = { activeTemplateKey: 'editorial-journal', optionsModal: { value: {} } };
+	const prepared = options.methods.prepareTemplateOptions.call(state, {}, 'archive');
+
+	assert.equal(prepared.thumbnail.height, '12.5rem');
+	assert.equal(prepared.editorial_journal.lead_grid.divider.enabled, true);
+	assert.equal(prepared.editorial_journal.thumbnail.edge_to_edge, false);
+	assert.equal(prepared.editorial_journal.card.border.type, 'solid');
+	assert.equal(prepared.editorial_journal.card.background.type, 'color');
+	assert.equal(prepared.editorial_journal.card.height.mode, 'auto');
+	assert.equal(prepared.editorial_journal.read_more.enabled, false);
+
+	const minimalState = { activeTemplateKey: 'minimal-reading-list', optionsModal: { value: {} } };
+	const minimal = options.methods.prepareTemplateOptions.call(minimalState, {}, 'archive');
+	assert.equal(minimal.thumbnail.height, '9.3rem');
+});
+
 test('Archive toolbar search exposes model, gap, Font Awesome icon, and state color controls', () => {
 	const view = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
 	const managerCss = readFileSync(path.join(process.cwd(), 'public/assets/css/article/article-template-manager-2026.css'), 'utf8');

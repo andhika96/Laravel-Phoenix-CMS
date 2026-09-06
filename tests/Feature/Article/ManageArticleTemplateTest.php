@@ -134,4 +134,44 @@ class ManageArticleTemplateTest extends TestCase
         $this->assertSame('2%', data_get($detail, 'shell.padding.mobile.right'));
     }
 
+    public function test_administrator_save_persists_normalized_editorial_journal_options(): void
+    {
+        $admin = Account::create(['email' => 'editorial-journal-options-admin@example.test', 'username' => 'editorial-journal-options-admin', 'fullname' => 'Editorial Journal Options Admin']);
+
+        $this->withoutMiddleware()->actingAs($admin, 'web')->postJson(route('cms.core.manage_article.templates.update'), [
+            'archive_template' => 'editorial-journal',
+            'detail_template' => 'focused-reader',
+            'archive_per_page' => 12,
+            'archive_template_options' => [
+                'editorial-journal' => [
+                    'thumbnail' => ['height' => '12.5rem'],
+                    'editorial_journal' => [
+                        'lead_grid' => ['divider' => ['enabled' => false], 'spacing' => ['without_divider' => '3rem']],
+                        'thumbnail' => ['edge_to_edge' => true],
+                        'card' => [
+                            'border' => ['enabled' => false, 'type' => 'dashed', 'width' => '2px', 'color' => '#123456', 'radius' => '8px'],
+                            'background' => ['type' => 'image', 'image' => '/userfiles/articles/editorial-bg.jpg'],
+                            'height' => ['mode' => 'fixed', 'desktop' => '22rem', 'tablet' => '20rem', 'mobile' => '18rem'],
+                        ],
+                        'read_more' => ['enabled' => true, 'position' => 'center', 'icon' => 'fas fa-chevron-right'],
+                    ],
+                ],
+            ],
+        ])->assertOk()->assertJsonPath('success', true);
+
+        $journal = data_get(ArticleTemplateSetting::current()->archive_template_options, 'editorial-journal.editorial_journal');
+
+        $this->assertFalse(data_get($journal, 'lead_grid.divider.enabled'));
+        $this->assertSame('3rem', data_get($journal, 'lead_grid.spacing.without_divider'));
+        $this->assertTrue(data_get($journal, 'thumbnail.edge_to_edge'));
+        $this->assertFalse(data_get($journal, 'card.border.enabled'));
+        $this->assertSame('dashed', data_get($journal, 'card.border.type'));
+        $this->assertSame('/userfiles/articles/editorial-bg.jpg', data_get($journal, 'card.background.image'));
+        $this->assertSame('fixed', data_get($journal, 'card.height.mode'));
+        $this->assertSame('20rem', data_get($journal, 'card.height.tablet'));
+        $this->assertTrue(data_get($journal, 'read_more.enabled'));
+        $this->assertSame('center', data_get($journal, 'read_more.position'));
+        $this->assertSame('fas fa-chevron-right', data_get($journal, 'read_more.icon'));
+    }
+
 }

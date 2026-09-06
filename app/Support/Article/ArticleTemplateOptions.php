@@ -29,6 +29,18 @@ final class ArticleTemplateOptions
         'fas fa-arrow-right',
     ];
 
+    private const EDITORIAL_CARD_BORDER_TYPES = ['solid', 'double', 'dotted', 'dashed', 'groove'];
+
+    private const EDITORIAL_CARD_BACKGROUND_TYPES = ['color', 'image'];
+
+    private const EDITORIAL_CARD_HEIGHT_MODES = ['auto', 'fixed'];
+
+    private const EDITORIAL_READ_MORE_ICONS = [
+        'fas fa-arrow-right',
+        'fas fa-chevron-right',
+        'fas fa-angle-right',
+    ];
+
     private const GRID_TEMPLATES = ['editorial-journal', 'mosaic-magazine', 'balanced-card-grid'];
 
     private const HEADING_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -87,6 +99,10 @@ final class ArticleTemplateOptions
                 'tablet' => $this->column($input, 'tablet', 2, 3),
                 'mobile' => $this->column($input, 'mobile', 1, 2),
             ];
+        }
+
+        if ($template === 'editorial-journal') {
+            $result['editorial_journal'] = $this->editorialJournal($input);
         }
 
         return $result;
@@ -208,7 +224,11 @@ final class ArticleTemplateOptions
     {
         $mode = data_get($input, 'thumbnail.mode', 'background');
         $fit = data_get($input, 'thumbnail.fit', 'cover');
-        $defaultHeight = $template === 'minimal-reading-list' ? '9.3rem' : '5.625rem';
+        $defaultHeight = match ($template) {
+            'minimal-reading-list' => '9.3rem',
+            'editorial-journal' => '12.5rem',
+            default => '5.625rem',
+        };
 
         return [
             'mode' => in_array($mode, ['background', 'asset'], true) ? $mode : 'background',
@@ -216,6 +236,58 @@ final class ArticleTemplateOptions
             'height' => $this->dimension(data_get($input, 'thumbnail.height'), $defaultHeight, self::DIMENSION_UNITS),
             'background_color' => $this->color(data_get($input, 'thumbnail.background_color'), '#f2f4f7'),
             'frame' => $this->frame($input, 'thumbnail.frame', false, '#e1e6ee', '#f2f4f7'),
+        ];
+    }
+
+    private function editorialJournal(array $input): array
+    {
+        $divider = data_get($input, 'editorial_journal.lead_grid.divider.enabled');
+        $withDivider = data_get($input, 'editorial_journal.lead_grid.spacing.with_divider');
+        $withoutDivider = data_get($input, 'editorial_journal.lead_grid.spacing.without_divider');
+        $borderType = data_get($input, 'editorial_journal.card.border.type', 'solid');
+        $backgroundType = data_get($input, 'editorial_journal.card.background.type', 'color');
+        $heightMode = data_get($input, 'editorial_journal.card.height.mode', 'auto');
+        $readMorePosition = data_get($input, 'editorial_journal.read_more.position', 'left');
+        $readMoreIcon = data_get($input, 'editorial_journal.read_more.icon', 'fas fa-arrow-right');
+
+        return [
+            'lead_grid' => [
+                'divider' => [
+                    'enabled' => $this->boolean($divider, true),
+                ],
+                'spacing' => [
+                    'with_divider' => $this->dimension($withDivider, '2rem', self::DIMENSION_UNITS),
+                    'without_divider' => $this->dimension($withoutDivider, '2rem', self::DIMENSION_UNITS),
+                ],
+            ],
+            'thumbnail' => [
+                'edge_to_edge' => $this->boolean(data_get($input, 'editorial_journal.thumbnail.edge_to_edge'), false),
+            ],
+            'card' => [
+                'border' => [
+                    'enabled' => $this->boolean(data_get($input, 'editorial_journal.card.border.enabled'), true),
+                    'type' => in_array($borderType, self::EDITORIAL_CARD_BORDER_TYPES, true) ? $borderType : 'solid',
+                    'width' => $this->dimension(data_get($input, 'editorial_journal.card.border.width'), '1px', self::BORDER_UNITS),
+                    'color' => $this->color(data_get($input, 'editorial_journal.card.border.color'), '#e6e9ef'),
+                    'radius' => $this->radius(data_get($input, 'editorial_journal.card.border.radius'), '0.9rem'),
+                ],
+                'background' => [
+                    'type' => in_array($backgroundType, self::EDITORIAL_CARD_BACKGROUND_TYPES, true) ? $backgroundType : 'color',
+                    'color' => $this->color(data_get($input, 'editorial_journal.card.background.color'), '#ffffff'),
+                    'image' => $this->optionalMediaUrl(data_get($input, 'editorial_journal.card.background.image')),
+                ],
+                'height' => [
+                    'mode' => in_array($heightMode, self::EDITORIAL_CARD_HEIGHT_MODES, true) ? $heightMode : 'auto',
+                    'desktop' => $this->dimension(data_get($input, 'editorial_journal.card.height.desktop'), '22rem', self::DIMENSION_UNITS),
+                    'tablet' => $this->dimension(data_get($input, 'editorial_journal.card.height.tablet'), '22rem', self::DIMENSION_UNITS),
+                    'mobile' => $this->dimension(data_get($input, 'editorial_journal.card.height.mobile'), '22rem', self::DIMENSION_UNITS),
+                ],
+            ],
+            'read_more' => [
+                'enabled' => $this->boolean(data_get($input, 'editorial_journal.read_more.enabled'), false),
+                'position' => in_array($readMorePosition, self::POSITIONS, true) ? $readMorePosition : 'left',
+                'icon' => in_array($readMoreIcon, self::EDITORIAL_READ_MORE_ICONS, true) ? $readMoreIcon : 'fas fa-arrow-right',
+            ],
         ];
     }
 
@@ -424,6 +496,25 @@ final class ArticleTemplateOptions
         $normalized = $this->color($value, '');
 
         return $normalized !== '' ? $normalized : null;
+    }
+
+    private function optionalMediaUrl(mixed $value): string
+    {
+        if (!is_string($value) || trim($value) === '') {
+            return '';
+        }
+
+        $value = trim($value);
+
+        if (strpbrk($value, "\"'()\\") !== false || str_starts_with($value, '//')) {
+            return '';
+        }
+
+        if (preg_match('/^(?:javascript|vbscript|data):/i', $value) === 1) {
+            return '';
+        }
+
+        return preg_match('/^(?:https?:\/\/|\/)/i', $value) === 1 ? $value : '';
     }
 
     private function dimension(mixed $value, string $default, array $units): string

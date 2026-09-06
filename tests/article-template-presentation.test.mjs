@@ -394,6 +394,57 @@ test('border radius follows the Page Builder four-corner form-group pattern', ()
 	assert.match(css, /article-template-options-panel \.article-template-radius-fields[\s\S]*?grid-template-columns:/);
 });
 
+test('pagination button radius uses the four-corner form-group and chain link', () => {
+	const partial = readFileSync(path.join(root, 'resources/views/manage_article/templates/partials/options-styling.blade.php'), 'utf8');
+	const paginationSection = partial.match(/<section v-if="optionsModal\.section === 'pagination'[\s\S]*?<\/section>/)?.[0] ?? '';
+
+	assert.match(paginationSection, /<div class="article-template-radius-control">[\s\S]*?Pagination button radius/);
+	assert.match(paginationSection, /radiusUnit\('pagination\.item_radius'\)/);
+	assert.match(paginationSection, /setRadiusUnit\('pagination\.item_radius'/);
+	assert.match(paginationSection, /radiusValue\('pagination\.item_radius', index\)/);
+	assert.match(paginationSection, /setRadiusValue\('pagination\.item_radius', index/);
+	assert.match(paginationSection, /isRadiusLinked\('pagination\.item_radius'\)/);
+	assert.match(paginationSection, /toggleRadiusLinked\('pagination\.item_radius'\)/);
+	assert.doesNotMatch(paginationSection, /dimensionValue\('pagination\.item_radius'/);
+	assert.doesNotMatch(paginationSection, /setDimensionValue\('pagination\.item_radius'/);
+});
+
+test('pagination radius and number gap occupy separate full-width rows', () => {
+	const partial = readFileSync(path.join(root, 'resources/views/manage_article/templates/partials/options-styling.blade.php'), 'utf8');
+	const css = readFileSync(path.join(root, 'public/assets/css/article/article-template-manager-2026.css'), 'utf8');
+	const paginationSection = partial.match(/<section v-if="optionsModal\.section === 'pagination'[\s\S]*?<\/section>/)?.[0] ?? '';
+
+	assert.match(paginationSection, /class="article-template-radius-control"/);
+	assert.match(paginationSection, /class="article-template-pagination-number-gap"/);
+	assert.match(css, /article-template-pagination-style-fields > \.article-template-radius-control,[\s\S]*?article-template-pagination-number-gap[\s\S]*?grid-column:\s*1\s*\/\s*-1/);
+});
+
+test('Editorial Journal manager controls stay scoped and expose the complete new options surface', () => {
+	const styling = readFileSync(path.join(root, 'resources/views/manage_article/templates/partials/options-styling.blade.php'), 'utf8');
+	const manager = readFileSync(path.join(root, 'public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js'), 'utf8');
+	const frontend = readFileSync(path.join(root, 'resources/views/article/templates/archive/editorial-journal.blade.php'), 'utf8');
+	const css = readFileSync(path.join(root, 'public/assets/css/article/article-frontend-2026.css'), 'utf8');
+
+	assert.match(styling, /optionsModal\.section === 'editorial-journal'/);
+	assert.match(styling, /Show divider/);
+	assert.match(styling, /Spacing with divider/);
+	assert.match(styling, /Spacing without divider/);
+	assert.match(styling, /Edge-to-edge/);
+	assert.match(styling, /Border type/);
+	assert.match(styling, /Card background/);
+	assert.match(styling, /Choose Image/);
+	assert.match(styling, /Card height/);
+	assert.match(styling, /Show Read More/);
+	assert.match(manager, /editorial_journal/);
+	assert.match(manager, /chooseEditorialJournalBackground/);
+	assert.match(frontend, /article-editorial-lead--\{\{ \$dividerEnabled \? 'with' : 'without' \}\}-divider/);
+	assert.match(frontend, /article-editorial-card__body/);
+	assert.match(frontend, /article-editorial-read-more/);
+	assert.match(css, /article-editorial-card--thumbnail-edge/);
+	assert.match(css, /article-editorial-card--height-fixed/);
+	assert.match(css, /article-editorial-read-more--center/);
+});
+
 test('spacing groups mirror the Page Builder form-group hierarchy with a shared unit header', () => {
 	const partial = readFileSync(path.join(root, 'resources/views/manage_article/templates/partials/options-styling.blade.php'), 'utf8');
 	const css = readFileSync(path.join(root, 'public/assets/css/article/article-template-manager-2026.css'), 'utf8');

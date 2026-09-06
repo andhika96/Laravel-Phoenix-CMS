@@ -244,6 +244,87 @@ class ArticleTemplateRenderTest extends TestCase
         $this->assertStringNotContainsString('--article-thumbnail-height:', $asset);
     }
 
+    public function test_editorial_journal_renders_template_specific_card_and_read_more_options(): void
+    {
+        $articles = collect(range(1, 4))->map(function (int $index): Article {
+            $article = new Article([
+                'uri' => 'editorial-journal-'.$index,
+                'title' => 'Editorial Journal Article '.$index,
+                'content' => '<p>Editorial Journal preview content.</p>',
+            ]);
+            $article->setRelation('category', null);
+            $article->created_at = now()->subDays($index);
+
+            return $article;
+        });
+        $paginator = new LengthAwarePaginator($articles, 4, 12, 1, ['path' => route('cms.core.article')]);
+        $options = app(ArticleTemplateOptions::class)->archive('editorial-journal', [
+            'thumbnail' => ['mode' => 'background'],
+            'editorial_journal' => [
+                'lead_grid' => [
+                    'divider' => ['enabled' => false],
+                    'spacing' => ['with_divider' => '1rem', 'without_divider' => '3rem'],
+                ],
+                'thumbnail' => ['edge_to_edge' => true],
+                'card' => [
+                    'border' => ['enabled' => true, 'type' => 'dotted', 'width' => '2px', 'color' => '#123456', 'radius' => '4px 8px 12px 16px'],
+                    'background' => ['type' => 'image', 'color' => '#ffffff', 'image' => '/userfiles/articles/editorial-bg.jpg'],
+                    'height' => ['mode' => 'fixed', 'desktop' => '22rem', 'tablet' => '20rem', 'mobile' => '18rem'],
+                ],
+                'read_more' => ['enabled' => true, 'position' => 'right', 'icon' => 'fas fa-angle-right'],
+            ],
+        ]);
+
+        $html = view('article.templates.archive.editorial-journal', [
+            'articles' => $paginator,
+            'templateOptions' => $options,
+            'templateSettings' => null,
+            'articleCategories' => collect(),
+        ])->render();
+
+        $this->assertStringContainsString('article-editorial-lead--without-divider', $html);
+        $this->assertStringContainsString('article-editorial-grid--height-fixed', $html);
+        $this->assertStringContainsString('--article-editorial-lead-grid-spacing:3rem', $html);
+        $this->assertStringContainsString('article-editorial-card--thumbnail-edge', $html);
+        $this->assertStringContainsString('article-editorial-card--border', $html);
+        $this->assertStringContainsString('article-editorial-card__body', $html);
+        $this->assertStringContainsString('--article-editorial-card-border-style:dotted', $html);
+        $this->assertStringContainsString('--article-editorial-card-border-width:2px', $html);
+        $this->assertStringContainsString('--article-editorial-card-border-color:#123456', $html);
+        $this->assertStringContainsString('--article-editorial-card-border-radius:4px 8px 12px 16px', $html);
+        $this->assertStringContainsString('article-editorial-card--background-image', $html);
+        $this->assertStringContainsString('--article-editorial-card-background-image:url(', $html);
+        $this->assertStringContainsString('--article-editorial-card-height-desktop:22rem', $html);
+        $this->assertStringContainsString('--article-editorial-card-height-tablet:20rem', $html);
+        $this->assertStringContainsString('--article-editorial-card-height-mobile:18rem', $html);
+        $this->assertSame(4, substr_count($html, 'article-text-link article-editorial-read-more'));
+        $this->assertSame(4, substr_count($html, 'fas fa-angle-right'));
+        $this->assertStringContainsString('article-editorial-read-more--right', $html);
+    }
+
+    public function test_editorial_journal_keeps_existing_featured_link_when_optional_read_more_is_disabled(): void
+    {
+        $article = new Article([
+            'uri' => 'editorial-journal-default-link',
+            'title' => 'Editorial Journal Default Link',
+            'content' => '<p>Preview content</p>',
+        ]);
+        $article->setRelation('category', null);
+        $article->created_at = now();
+        $articles = new LengthAwarePaginator([$article], 1, 12, 1, ['path' => route('cms.core.article')]);
+        $options = app(ArticleTemplateOptions::class)->archive('editorial-journal');
+
+        $html = view('article.templates.archive.editorial-journal', [
+            'articles' => $articles,
+            'templateOptions' => $options,
+            'templateSettings' => null,
+            'articleCategories' => collect(),
+        ])->render();
+
+        $this->assertStringContainsString('Read article', $html);
+        $this->assertStringNotContainsString('article-editorial-read-more', $html);
+    }
+
     public function test_every_archive_and_detail_renderer_receives_normalized_structured_template_styles(): void
     {
         $article = new Article([

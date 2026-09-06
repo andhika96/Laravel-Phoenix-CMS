@@ -126,6 +126,45 @@ class ArticleTemplatePreviewControllerTest extends TestCase
         $this->assertStringContainsString('data-pagination-range-active="2"', $html);
     }
 
+    public function test_editorial_journal_preview_carries_normalized_template_options_into_the_blade_renderer(): void
+    {
+        $draft = [
+            'thumbnail' => ['height' => '12.5rem'],
+            'editorial_journal' => [
+                'lead_grid' => ['divider' => ['enabled' => false], 'spacing' => ['without_divider' => '3rem']],
+                'thumbnail' => ['edge_to_edge' => true],
+                'card' => [
+                    'border' => ['enabled' => false, 'type' => 'dashed', 'width' => '2px', 'color' => '#123456', 'radius' => '8px'],
+                    'background' => ['type' => 'image', 'image' => '/userfiles/articles/editorial-bg.jpg'],
+                    'height' => ['mode' => 'fixed', 'desktop' => '22rem', 'tablet' => '20rem', 'mobile' => '18rem'],
+                ],
+                'read_more' => ['enabled' => true, 'position' => 'center', 'icon' => 'fas fa-chevron-right'],
+            ],
+        ];
+        $url = '/manage_article/templates/preview/archive/editorial-journal?template_options='.urlencode(json_encode($draft, JSON_THROW_ON_ERROR));
+        $data = app(ManageArticleTemplateController::class)->preview(Request::create($url, 'GET'), 'archive', 'editorial-journal')->getData();
+
+        $this->assertSame('12.5rem', data_get($data['templateOptions'], 'thumbnail.height'));
+        $this->assertFalse(data_get($data['templateOptions'], 'editorial_journal.lead_grid.divider.enabled'));
+        $this->assertTrue(data_get($data['templateOptions'], 'editorial_journal.thumbnail.edge_to_edge'));
+        $this->assertSame('fixed', data_get($data['templateOptions'], 'editorial_journal.card.height.mode'));
+        $this->assertTrue(data_get($data['templateOptions'], 'editorial_journal.read_more.enabled'));
+
+        $html = view($data['templateView'], [
+            'articles' => $data['articles'],
+            'templateSettings' => $data['templateSettings'],
+            'templateOptions' => $data['templateOptions'],
+            'articleCategories' => $data['articleCategories'],
+            'popularArticles' => $data['popularArticles'],
+        ])->render();
+
+        $this->assertStringContainsString('article-editorial-lead--without-divider', $html);
+        $this->assertStringContainsString('article-editorial-card--thumbnail-edge', $html);
+        $this->assertStringContainsString('article-editorial-card--height-fixed', $html);
+        $this->assertStringContainsString('article-editorial-read-more--center', $html);
+        $this->assertStringContainsString('fas fa-chevron-right', $html);
+    }
+
     public function test_minimal_reading_list_options_reach_both_preview_and_public_renderers(): void
     {
         $draft = [
