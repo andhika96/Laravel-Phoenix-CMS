@@ -860,6 +860,7 @@
 
 .article-template-options-modal .modal-body {
 	display: flex;
+	flex-direction: column;
 	min-height: 0;
 	max-height: none;
 	overflow: hidden;
@@ -2376,4 +2377,166 @@
 	.article-template-options-panel .article-template-editorial-journal-border-fields .article-template-radius-control {
 		grid-column: auto;
 	}
+}
+
+/* Keep Template Options on the compact form rhythm used by the rest of the CMS. */
+.article-template-options-modal {
+	--article-template-field-font-size: clamp(.8125rem, var(--ph-adaptive-font-size, var(--ph-font-size, .875rem)), .875rem);
+	--article-template-label-font-size: clamp(.75rem, calc(var(--article-template-field-font-size) - .0625rem), .8125rem);
+	--article-template-meta-font-size: clamp(.6875rem, calc(var(--article-template-field-font-size) - .125rem), .75rem);
+	font-family: var(--ph-font-family, inherit);
+	font-size: var(--article-template-field-font-size);
+}
+
+.article-template-options-panel {
+	scroll-padding-block: 1.5rem 5rem;
+}
+
+.article-template-options-panel .article-template-options-section__heading small,
+.article-template-options-panel .article-template-header-field__help,
+.article-template-options-panel .article-template-option-row > small {
+	font-size: var(--article-template-label-font-size);
+	line-height: 1.45;
+}
+
+.article-template-options-panel .article-template-header-field__label,
+.article-template-options-panel .article-template-option-row > .form-switch,
+.article-template-options-panel .article-template-sidebar-option > .form-switch,
+.article-template-options-panel .article-template-box-control__toggle,
+.article-template-options-panel .article-template-reading-list-control,
+.article-template-options-panel .article-template-select-label,
+.article-template-options-panel .article-template-frame-fields > label,
+.article-template-options-panel .article-template-option-row--three > label,
+.article-template-options-panel .article-template-editorial-journal-group label:not(.form-switch) {
+	font-size: var(--article-template-label-font-size);
+}
+
+.article-template-options-panel :is(.form-control, .form-select) {
+	min-height: var(--article-template-control-height);
+	font-size: var(--article-template-field-font-size);
+	line-height: 1.4;
+}
+
+.article-template-options-panel .article-template-radius-side > span,
+.article-template-options-panel .article-template-box-control__inputs > label > span {
+	font-size: var(--article-template-meta-font-size);
+	line-height: 1.25;
+}
+
+.article-template-options-panel .article-template-editorial-journal-group {
+	display: grid;
+	gap: var(--article-template-form-field-gap);
+	min-width: 0;
+	margin: 0;
+	padding: 0 0 1rem;
+	border: 0;
+	border-bottom: 1px solid var(--article-template-list-divider, #edf0f3);
+	border-radius: 0;
+	background: transparent;
+}
+
+.article-template-options-panel .article-template-editorial-journal-group:last-child {
+	padding-bottom: 0;
+	border-bottom: 0;
+}
+
+.article-template-options-panel .article-template-editorial-journal-group > legend {
+	float: none;
+	width: auto;
+	margin: 0;
+	padding: 0;
+	font-size: var(--article-template-label-font-size);
+	line-height: 1.35;
+}
+
+.article-template-options-panel .article-template-editorial-journal-group > legend + * {
+	clear: none;
+}
+
+.article-template-options-panel .article-template-editorial-journal-group > .form-switch {
+	flex-direction: row-reverse;
+	gap: .75rem;
+	min-height: var(--article-template-control-height);
+	margin: 0;
+	padding-left: 0;
+}
+
+.article-template-options-panel .article-template-editorial-journal-group > .form-switch .form-check-label {
+	margin-right: auto;
+	padding-left: 0;
+	text-align: left;
+}
+
+.article-template-options-panel .article-template-editorial-journal-border-fields,
+.article-template-options-panel .article-template-editorial-journal-media-field,
+.article-template-options-panel .article-template-editorial-journal-height-fields,
+.article-template-options-panel .article-template-editorial-journal-read-more-fields {
+	margin-top: 0;
+}
+
+.article-template-options-panel .article-template-editorial-journal-border-fields,
+.article-template-options-panel .article-template-editorial-journal-height-fields,
+.article-template-options-panel .article-template-editorial-journal-read-more-fields {
+	padding-top: var(--article-template-form-field-gap);
+	border-top: 1px solid var(--article-template-list-divider, #edf0f3);
+}
+
+.article-template-options-panel input[type="number"] {
+	-moz-appearance: auto;
+	appearance: auto;
+}
+
+.article-template-options-panel input[type="number"]::-webkit-inner-spin-button,
+.article-template-options-panel input[type="number"]::-webkit-outer-spin-button {
+	margin: 0;
+	-webkit-appearance: auto;
+	opacity: 1;
+}
+
+/* Separate settings from their neighbours, while keeping labels close to their inputs. */
+.article-template-options-panel :is(
+	.article-template-options-fields,
+	.article-template-header-fields,
+	.article-template-sidebar-options,
+	.article-template-frame-fields,
+	.article-template-toolbar-option-controls,
+	.article-template-box-control__body,
+	.article-template-search-style-fields,
+	.article-template-pagination-style-fields,
+	.article-template-editorial-journal-fields,
+	.article-template-editorial-journal-group,
+	.article-template-editorial-journal-dimensions,
+	.article-template-editorial-journal-border-fields,
+	.article-template-editorial-journal-height-fields,
+	.article-template-editorial-journal-read-more-fields
+) {
+	row-gap: 1.5rem;
+}
+
+.article-template-options-panel :is(
+	.article-template-header-field,
+	.article-template-sidebar-option,
+	.article-template-reading-list-control,
+	.article-template-select-label,
+	.article-template-frame-fields > label,
+	.article-template-option-row--three > label,
+	.article-template-search-style-fields > label,
+	.article-template-pagination-style-fields > label,
+	.article-template-editorial-journal-group label:not(.form-switch)
+) {
+	gap: .5rem;
+}
+
+.article-template-options-panel .article-template-editorial-journal-group {
+	padding-bottom: 1.5rem;
+}
+
+.article-template-options-panel .article-template-editorial-journal-group:last-child {
+	padding-bottom: 0;
+}
+
+.article-template-options-panel .article-template-device-tabs {
+	margin-bottom: 1.5rem;
+	padding-bottom: 1.5rem;
+	border-bottom: 1px solid var(--article-template-list-divider, #edf0f3);
 }

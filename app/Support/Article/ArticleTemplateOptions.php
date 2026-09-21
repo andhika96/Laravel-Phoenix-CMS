@@ -226,7 +226,7 @@ final class ArticleTemplateOptions
         $fit = data_get($input, 'thumbnail.fit', 'cover');
         $defaultHeight = match ($template) {
             'minimal-reading-list' => '9.3rem',
-            'editorial-journal' => '12.5rem',
+            'editorial-journal' => '13.5rem',
             default => '5.625rem',
         };
 

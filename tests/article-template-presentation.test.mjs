@@ -469,20 +469,35 @@ test('template options switches match the approved inspector 44 by 24 geometry',
 	assert.match(css, /article-template-options-panel \.form-switch \.form-check-input[\s\S]*?background-size:\s*1\.25rem 1\.25rem/);
 });
 
-test('template options uses a two-step compact 36px form scale', () => {
+test('template options follows the normal compact CMS form scale without nested font shrinkage', () => {
 	const css = readFileSync(path.join(root, 'public/assets/css/article/article-template-manager-2026.css'), 'utf8');
-	const mockup = readFileSync(path.join(root, 'project-artifacts/mockups/template-options-20260905/forms-v3/index.html'), 'utf8');
 
 	assert.match(css, /--article-template-control-height:\s*2\.25rem/);
 	assert.match(css, /--article-template-action-height:\s*2\.125rem/);
-	assert.match(css, /--article-template-unit-width:\s*4\.75rem/);
+	assert.match(css, /--article-template-field-font-size:\s*clamp\(\.8125rem,/);
+	assert.match(css, /--article-template-label-font-size:\s*clamp\(\.75rem,/);
+	assert.match(css, /--article-template-meta-font-size:\s*clamp\(\.6875rem,/);
+	assert.match(css, /article-template-options-panel :is\(\.form-control, \.form-select\)[\s\S]*?font-size:\s*var\(--article-template-field-font-size\)/);
 	assert.match(css, /article-template-options-panel \.article-template-option-row > \.form-switch[\s\S]*?min-height:\s*var\(--article-template-control-height\)/);
 	assert.match(css, /article-template-options-panel \.article-template-position \.btn[\s\S]*?min-height:\s*var\(--article-template-action-height\)/);
-	assert.match(css, /article-template-options-panel \.article-template-unit-control[\s\S]*?var\(--article-template-unit-width\)/);
-	assert.match(mockup, /--control-v3:\s*36px/);
-	assert.match(mockup, /--action-v3:\s*34px/);
-	assert.match(mockup, /--switch-w:\s*44px/);
-	assert.match(mockup, /--switch-h:\s*24px/);
+});
+
+test('template settings reuse native fields and the established divider rhythm', () => {
+	const view = readFileSync(path.join(root, 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
+	const styling = readFileSync(path.join(root, 'resources/views/manage_article/templates/partials/options-styling.blade.php'), 'utf8');
+	const css = readFileSync(path.join(root, 'public/assets/css/article/article-template-manager-2026.css'), 'utf8');
+	const markup = `${view}\n${styling}`;
+
+	assert.doesNotMatch(markup, /article-template-segmented-control/);
+	assert.match(styling, /Thumbnail position[\s\S]*?<select[^>]*thumbnail\.edge_to_edge/);
+	assert.match(styling, /Card background[\s\S]*?<select[^>]*card\.background\.type/);
+	assert.match(styling, /Card height[\s\S]*?<select[^>]*card\.height\.mode/);
+	assert.match(styling, /Read More position[\s\S]*?<select[^>]*read_more\.position/);
+	assert.match(css, /article-template-options-panel[\s\S]*?scroll-padding-block:\s*1\.5rem 5rem/);
+	assert.match(css, /article-template-editorial-journal-group\s*\{[\s\S]*?display:\s*grid[\s\S]*?gap:\s*var\(--article-template-form-field-gap\)/);
+	assert.match(css, /article-template-editorial-journal-group\s*\{[\s\S]*?border-bottom:\s*1px solid var\(--article-template-list-divider/);
+	assert.match(css, /article-template-editorial-journal-group\s*\{[\s\S]*?background:\s*transparent/);
+	assert.doesNotMatch(css, /--article-template-setting-surface/);
 });
 
 test('compact radius controls keep all four sides usable on mobile', () => {

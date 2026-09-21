@@ -396,7 +396,7 @@ test('manager prepares Editorial Journal defaults without changing other archive
 	const state = { activeTemplateKey: 'editorial-journal', optionsModal: { value: {} } };
 	const prepared = options.methods.prepareTemplateOptions.call(state, {}, 'archive');
 
-	assert.equal(prepared.thumbnail.height, '12.5rem');
+	assert.equal(prepared.thumbnail.height, '13.5rem');
 	assert.equal(prepared.editorial_journal.lead_grid.divider.enabled, true);
 	assert.equal(prepared.editorial_journal.thumbnail.edge_to_edge, false);
 	assert.equal(prepared.editorial_journal.card.border.type, 'solid');

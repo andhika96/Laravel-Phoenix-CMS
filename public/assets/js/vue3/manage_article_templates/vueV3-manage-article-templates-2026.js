@@ -376,7 +376,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 				options.thumbnail = options.thumbnail || {};
 				if (!['background', 'asset'].includes(options.thumbnail.mode)) options.thumbnail.mode = 'background';
 				if (!['cover', 'contain'].includes(options.thumbnail.fit)) options.thumbnail.fit = 'cover';
-				const thumbnailFallback = this.activeTemplateKey === 'minimal-reading-list' ? '9.3rem' : (this.activeTemplateKey === 'editorial-journal' ? '12.5rem' : '5.625rem');
+				const thumbnailFallback = this.activeTemplateKey === 'minimal-reading-list' ? '9.3rem' : (this.activeTemplateKey === 'editorial-journal' ? '13.5rem' : '5.625rem');
 				options.thumbnail.height = ensureDimension(options.thumbnail.height, thumbnailFallback);
 				if (!options.thumbnail.background_color) options.thumbnail.background_color = '#f2f4f7';
 				options.thumbnail.frame = ensureFrame(options.thumbnail.frame);

@@ -257,7 +257,7 @@ class ArticleTemplateOptionsTest extends TestCase
 
         $defaults = $options->archive('editorial-journal');
 
-        $this->assertSame('12.5rem', $defaults['thumbnail']['height']);
+        $this->assertSame('13.5rem', $defaults['thumbnail']['height']);
         $this->assertTrue($defaults['editorial_journal']['lead_grid']['divider']['enabled']);
         $this->assertSame('2rem', $defaults['editorial_journal']['lead_grid']['spacing']['with_divider']);
         $this->assertSame('2rem', $defaults['editorial_journal']['lead_grid']['spacing']['without_divider']);

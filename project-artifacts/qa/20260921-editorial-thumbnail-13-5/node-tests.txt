@@ -1,0 +1,40 @@
+✔ manager selection changes only the active surface and rebuilds the live preview URL (3.4757ms)
+✔ manager passes the active CMS accent into the isolated preview and refreshes it when the theme changes (1.061ms)
+✔ manager serializes the active template option draft into the iframe URL without saving it (1.5401ms)
+✔ applying modal options updates only the active draft and rebuilds the preview (0.8757ms)
+✔ an unsaved preview selection is selected, not the persisted default (0.8673ms)
+✔ manager source keeps the selected visual direction and a real preview iframe (0.5258ms)
+✔ manager cards use template preview thumbnails with a local placeholder fallback (0.3552ms)
+✔ device preview uses fixed virtual viewports and scales the full frame to fit (1.6868ms)
+✔ device selection changes viewport profile and refits the preview (1.0541ms)
+✔ manager source exposes a labelled device stage instead of max-width-only iframes (0.6993ms)
+✔ live preview stage wrappers stay square while template content keeps its own frame settings (0.7641ms)
+✔ template selection displays a loading state until the iframe has loaded the new preview (1.6789ms)
+✔ manager source exposes an accessible preview-loading overlay bound to iframe load (0.4731ms)
+✔ manager exposes an Add User-style template options modal with draft-only apply behavior (1.3583ms)
+✔ template option dimensions use the requested unit allowlists with deterministic linked-side behavior (1.4846ms)
+✔ border radius control follows the Page Builder four-corner linked-unit behavior (1.4973ms)
+✔ template options modal exposes only structured archive and detail styling controls (0.6801ms)
+✔ template options uses the local Page Builder Coloris pattern and equal box-control geometry (0.6714ms)
+✔ Pagination options expose named models and independent desktop/tablet/mobile ranges (0.7031ms)
+✔ Editorial Journal options expose scoped lead, card, background, height, and read more controls (0.5294ms)
+✔ manager prepares Editorial Journal defaults without changing other archive option shapes (2.2545ms)
+✔ Archive toolbar search exposes model, gap, Font Awesome icon, and state color controls (1.7428ms)
+✔ template options modal exposes conditional vertical navigation and a mobile section picker (1.58ms)
+✔ option sections follow the active surface and template schema (2.4451ms)
+✔ modal preview uses the modal clone, debounces edits, and keeps the page draft untouched (2.4104ms)
+✔ page and modal Minimal Reading List previews share the same read-only renderer endpoint (4.9756ms)
+✔ modal session starts on Header content and isolates every edit from its source object (2.0682ms)
+✔ modal preview uses the fixed virtual device profile when fitting its viewport (2.4189ms)
+✔ modal dismissal exposes an inline dirty confirmation and retryable preview lifecycle (4.0371ms)
+✔ hidden modal lifecycle cancels preview timers, disconnects the observer, and clears the session (1.9526ms)
+✔ modal preview treats an authentication redirect as an error instead of a successful load (1.6323ms)
+✔ modal preview URL stays within a practical GET budget for the largest draft payload (1.6727ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 154.4664

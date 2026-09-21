@@ -1,0 +1,225 @@
+{
+  "desktop": [
+    {
+      "category": "Header content",
+      "numbers": [],
+      "overflow": false,
+      "panelWidth": 410,
+      "rowGaps": [
+        "24px"
+      ]
+    },
+    {
+      "category": "Archive toolbar",
+      "numbers": [],
+      "overflow": false,
+      "panelWidth": 410,
+      "rowGaps": []
+    },
+    {
+      "category": "Grid columns",
+      "numbers": [],
+      "overflow": false,
+      "panelWidth": 410,
+      "rowGaps": []
+    },
+    {
+      "category": "Editorial Journal",
+      "numbers": [
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "1"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        }
+      ],
+      "overflow": false,
+      "panelWidth": 394,
+      "rowGaps": [
+        "24px",
+        "24px",
+        "24px"
+      ]
+    },
+    {
+      "category": "Thumbnail",
+      "numbers": [
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        }
+      ],
+      "overflow": false,
+      "panelWidth": 410,
+      "rowGaps": []
+    },
+    {
+      "category": "Pagination",
+      "numbers": [
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "1"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "1"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "1"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "1"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        },
+        {
+          "appearance": "auto",
+          "height": 36,
+          "step": "0.01"
+        }
+      ],
+      "overflow": false,
+      "panelWidth": 394,
+      "rowGaps": [
+        "24px",
+        "24px"
+      ]
+    },
+    {
+      "category": "Article title tag",
+      "numbers": [],
+      "overflow": false,
+      "panelWidth": 410,
+      "rowGaps": []
+    },
+    {
+      "category": "Archive shell",
+      "numbers": [],
+      "overflow": false,
+      "panelWidth": 410,
+      "rowGaps": []
+    }
+  ],
+  "mobile": [
+    {
+      "category": "Header content",
+      "overflow": false,
+      "width": 343
+    },
+    {
+      "category": "Archive toolbar",
+      "overflow": false,
+      "width": 359
+    },
+    {
+      "category": "Grid columns",
+      "overflow": false,
+      "width": 359
+    },
+    {
+      "category": "Editorial Journal",
+      "overflow": false,
+      "width": 343
+    },
+    {
+      "category": "Thumbnail",
+      "overflow": false,
+      "width": 343
+    },
+    {
+      "category": "Pagination",
+      "overflow": false,
+      "width": 343
+    },
+    {
+      "category": "Article title tag",
+      "overflow": false,
+      "width": 359
+    },
+    {
+      "category": "Archive shell",
+      "overflow": false,
+      "width": 359
+    }
+  ],
+  "consoleErrors": [],
+  "linkedRadius": {
+    "before": 0.9,
+    "decreased": 0.89,
+    "restored": 0.9
+  }
+}
