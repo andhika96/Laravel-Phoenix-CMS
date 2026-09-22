@@ -277,7 +277,7 @@ class ArticleTemplateOptionsTest extends TestCase
         $this->assertFalse($defaults['editorial_journal']['read_more']['enabled']);
         $this->assertSame('left', $defaults['editorial_journal']['read_more']['position']);
         $this->assertSame('fas fa-arrow-right', $defaults['editorial_journal']['read_more']['icon']);
-        $this->assertSame('5.63rem', $options->archive('mosaic-magazine')['thumbnail']['height']);
+        $this->assertSame('9.3rem', $options->archive('minimal-reading-list')['thumbnail']['height']);
 
         $custom = $options->archive('editorial-journal', [
             'editorial_journal' => [

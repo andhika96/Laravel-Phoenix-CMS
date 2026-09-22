@@ -10,6 +10,7 @@
     $search = data_get($toolbar, 'search', ['enabled' => false, 'position' => 'left']);
     $category = data_get($toolbar, 'category', ['enabled' => false, 'position' => 'right']);
     $isMinimalReadingList = $templateKey === 'minimal-reading-list';
+    $usesCompactToolbar = in_array($templateKey, ['mosaic-magazine', 'mosaic-classic', 'balanced-card-grid'], true);
     $categoryMode = data_get($category, 'mode', $isMinimalReadingList ? 'button-list' : 'select');
     $categoryMode = in_array($categoryMode, ['select', 'button-list'], true) ? $categoryMode : 'select';
     $showCategorySelect = data_get($category, 'enabled') && (!$isMinimalReadingList || $categoryMode === 'select');
@@ -46,20 +47,22 @@
 
     @if (data_get($search, 'enabled') || $showCategorySelect)
         <form class="article-template-toolbar" action="{{ route('cms.core.article') }}" method="get" data-article-filter>
+            @if ($usesCompactToolbar && request()->filled('tag'))<input type="hidden" name="tag" value="{{ request('tag') }}">@endif
             @foreach ($positions as $position)
                 <div class="article-template-toolbar__zone article-template-toolbar__zone--{{ $position }}">
                     @if (data_get($search, 'enabled') && data_get($search, 'position') === $position)
                         <div class="article-template-toolbar__control article-template-toolbar__control--search article-search-model--{{ $searchType }}" style="{{ $searchStyle }}">
                             <label class="visually-hidden" for="article-{{ $templateKey }}-search">{{ t('Search articles') }}</label>
                             <input id="article-{{ $templateKey }}-search" name="search" type="search" value="{{ request('search') }}" placeholder="{{ t('Search articles') }}">
-                            <button type="submit" class="btn ph-btn-theme"><i class="{{ $searchIcon }}" aria-hidden="true"></i><span>{{ t('Search') }}</span></button>
+                            <button type="submit" class="btn ph-btn-theme"><i class="{{ $searchIcon }}" aria-hidden="true"></i><span @if($usesCompactToolbar) class="visually-hidden" @endif>{{ t('Search') }}</span></button>
                         </div>
                     @endif
                     @if ($showCategorySelect && data_get($category, 'position') === $position)
                         <div class="article-template-toolbar__control article-template-toolbar__control--category">
                             <label class="visually-hidden" for="article-{{ $templateKey }}-category">{{ t('Category') }}</label>
-                            <select id="article-{{ $templateKey }}-category" name="category" @if ($isMinimalReadingList) data-article-category-select @endif><option value="">{{ t('All categories') }}</option>@foreach ($categories as $item)<option value="{{ $item->id }}" @selected((string) $item->id === request('category'))>{{ $item->name }}</option>@endforeach</select>
-                            @if (!$isMinimalReadingList)<button type="submit" class="btn btn-outline-secondary">{{ t('Filter') }}</button>@endif
+                            <select id="article-{{ $templateKey }}-category" name="category" @if ($isMinimalReadingList || $usesCompactToolbar) data-article-category-select @endif><option value="">{{ t('All categories') }}</option>@foreach ($categories as $item)<option value="{{ $item->id }}" @selected((string) $item->id === request('category'))>{{ $item->name }}</option>@endforeach</select>
+                            @if (!$isMinimalReadingList && !$usesCompactToolbar)<button type="submit" class="btn btn-outline-secondary">{{ t('Filter') }}</button>@endif
+                            @if ($usesCompactToolbar)<noscript><button type="submit" class="btn ph-btn-theme">{{ t('Filter') }}</button></noscript>@endif
                         </div>
                     @endif
                 </div>

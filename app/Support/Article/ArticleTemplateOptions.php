@@ -41,7 +41,7 @@ final class ArticleTemplateOptions
         'fas fa-angle-right',
     ];
 
-    private const GRID_TEMPLATES = ['editorial-journal', 'mosaic-magazine', 'balanced-card-grid'];
+    private const GRID_TEMPLATES = ['editorial-journal', 'mosaic-magazine', 'mosaic-classic', 'balanced-card-grid'];
 
     private const HEADING_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
@@ -62,8 +62,8 @@ final class ArticleTemplateOptions
         $definition = $this->catalog->archive()[$template] ?? $this->catalog->archive()['minimal-reading-list'];
         $toolbarDefaults = match ($template) {
             'minimal-reading-list' => ['search' => [true, 'left'], 'category' => [true, 'right']],
-            'mosaic-magazine', 'mosaic-classic' => ['search' => [true, 'right'], 'category' => [false, 'right']],
-            'balanced-card-grid' => ['search' => [false, 'left'], 'category' => [true, 'right']],
+            'mosaic-magazine' => ['search' => [true, 'right'], 'category' => [true, 'left']],
+            'mosaic-classic', 'balanced-card-grid' => ['search' => [true, 'right'], 'category' => [true, 'left']],
             default => ['search' => [false, 'left'], 'category' => [false, 'right']],
         };
 
@@ -105,6 +105,57 @@ final class ArticleTemplateOptions
             $result['editorial_journal'] = $this->editorialJournal($input);
         }
 
+        if ($template === 'mosaic-magazine') {
+            $mosaic = $this->array(data_get($input, 'mosaic_magazine'));
+            $count = filter_var($mosaic['supporting_count'] ?? 2, FILTER_VALIDATE_INT);
+            $result['mosaic_magazine'] = [
+                'supporting_count' => min(24, max(0, $count === false ? 2 : $count)),
+                'match_grid' => $this->boolean($mosaic['match_grid'] ?? null, false),
+                'columns' => [
+                    'desktop' => $this->column(['grid' => $mosaic['columns'] ?? []], 'desktop', 2, 4),
+                    'tablet' => $this->column(['grid' => $mosaic['columns'] ?? []], 'tablet', 2, 3),
+                    'mobile' => $this->column(['grid' => $mosaic['columns'] ?? []], 'mobile', 1, 2),
+                ],
+                'proportion' => in_array($mosaic['proportion'] ?? '', ['equal', 'asymmetric'], true) ? $mosaic['proportion'] : 'equal',
+            ];
+        }
+
+        if (in_array($template, ['mosaic-classic', 'balanced-card-grid'], true)) {
+            $key = $template === 'mosaic-classic' ? 'mosaic_classic' : 'balanced_grid';
+            $result[$key] = $this->storyLayout($this->array(data_get($input, $key)), $template);
+        }
+
+        return $result;
+    }
+
+    private function storyLayout(array $input, string $template): array
+    {
+        $result = [];
+        foreach (['show_category', 'show_excerpt', 'show_date', 'show_read_more'] as $field) {
+            $result[$field] = $this->boolean($input[$field] ?? null, $field !== 'show_read_more' || $template === 'balanced-card-grid');
+        }
+        foreach (['desktop' => '2rem', 'tablet' => '1.5rem', 'mobile' => '1.25rem'] as $device => $default) {
+            $result['gap'][$device] = $this->dimension(data_get($input, 'gap.'.$device), $default, self::DIMENSION_UNITS);
+        }
+        if ($template === 'mosaic-classic') {
+            $count = filter_var($input['side_count'] ?? 3, FILTER_VALIDATE_INT);
+            $result['side_count'] = min(24, max(0, $count === false ? 3 : $count));
+            $result['side_position'] = in_array($input['side_position'] ?? '', ['left', 'right'], true) ? $input['side_position'] : 'right';
+            $result['lead_ratio'] = in_array($input['lead_ratio'] ?? '', ['50-50', '60-40', '67-33'], true) ? $input['lead_ratio'] : '67-33';
+            $result['side_layout'] = in_array($input['side_layout'] ?? '', ['list', 'stacked'], true) ? $input['side_layout'] : 'list';
+            $result['divider'] = $this->boolean($input['divider'] ?? null, true);
+            $result['side_numbers'] = $this->boolean($input['side_numbers'] ?? null, true);
+            foreach (['desktop' => '22rem', 'tablet' => '20rem', 'mobile' => '15rem'] as $device => $default) {
+                $result['lead_height'][$device] = $this->dimension(data_get($input, 'lead_height.'.$device), $default, self::BORDER_UNITS);
+                $result['side_height'][$device] = $this->dimension(data_get($input, 'side_height.'.$device), '7rem', self::BORDER_UNITS);
+            }
+        } else {
+            $result['card_style'] = in_array($input['card_style'] ?? '', ['flat', 'outline', 'elevated'], true) ? $input['card_style'] : 'outline';
+            $result['text_align'] = in_array($input['text_align'] ?? '', ['left', 'center'], true) ? $input['text_align'] : 'left';
+            $result['card_padding'] = $this->dimension($input['card_padding'] ?? null, '1.25rem', self::DIMENSION_UNITS);
+            $result['card_radius'] = $this->dimension($input['card_radius'] ?? null, '0.75rem', self::DIMENSION_UNITS);
+            $result['excerpt_lines'] = min(5, max(1, (int) ($input['excerpt_lines'] ?? 2)));
+        }
         return $result;
     }
 
@@ -227,6 +278,7 @@ final class ArticleTemplateOptions
         $defaultHeight = match ($template) {
             'minimal-reading-list' => '9.3rem',
             'editorial-journal' => '13.5rem',
+            'mosaic-magazine', 'mosaic-classic', 'balanced-card-grid' => '13.5rem',
             default => '5.625rem',
         };
 

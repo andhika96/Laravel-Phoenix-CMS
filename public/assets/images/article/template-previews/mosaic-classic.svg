@@ -1,12 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Mosaic Classic template preview">
   <rect width="320" height="200" fill="#fbfcfe"/>
-  <rect x="18" y="18" width="102" height="10" rx="5" fill="#7152d8"/>
-  <rect x="18" y="42" width="178" height="112" rx="8" fill="#e2e6ee"/>
-  <path d="M20 142l52-57 38 34 39-45 44 68z" fill="#b6c0d1"/>
-  <rect x="213" y="42" width="89" height="42" rx="6" fill="#e6eaf1"/>
-  <rect x="213" y="94" width="78" height="8" rx="4" fill="#374258"/>
-  <rect x="213" y="109" width="67" height="6" rx="3" fill="#ccd3df"/>
-  <rect x="213" y="127" width="89" height="42" rx="6" fill="#e6eaf1"/>
-  <rect x="18" y="166" width="178" height="8" rx="4" fill="#374258"/>
-  <rect x="18" y="181" width="132" height="6" rx="3" fill="#ccd3df"/>
+  <rect x="18" y="16" width="130" height="9" rx="3" fill="#344054"/>
+  <path d="M18 34h284" stroke="#e1e6ee"/>
+  <rect x="18" y="44" width="177" height="80" rx="5" fill="#dce2eb"/>
+  <path d="m20 115 48-45 34 27 34-35 56 53z" fill="#aebccc"/>
+  <rect x="18" y="132" width="151" height="8" rx="2" fill="#344054"/>
+  <rect x="18" y="147" width="122" height="4" rx="2" fill="#bfc8d8"/>
+  <path d="M207 44v107" stroke="#dce2eb"/>
+  <g fill="#dce2eb"><rect x="218" y="44" width="30" height="27" rx="3"/><rect x="218" y="81" width="30" height="27" rx="3"/><rect x="218" y="118" width="30" height="27" rx="3"/></g>
+  <g fill="#667085"><rect x="256" y="46" width="16" height="4" rx="1"/><rect x="256" y="56" width="45" height="5" rx="1"/><rect x="256" y="83" width="16" height="4" rx="1"/><rect x="256" y="93" width="45" height="5" rx="1"/><rect x="256" y="120" width="16" height="4" rx="1"/><rect x="256" y="130" width="45" height="5" rx="1"/></g>
+  <path d="M18 162h284" stroke="#e1e6ee"/>
+  <g fill="#e4e8f0"><rect x="18" y="171" width="89" height="20" rx="3"/><rect x="116" y="171" width="89" height="20" rx="3"/><rect x="214" y="171" width="88" height="20" rx="3"/></g>
 </svg>

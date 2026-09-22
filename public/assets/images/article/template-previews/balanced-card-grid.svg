@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Balanced Card Grid template preview">
   <rect width="320" height="200" fill="#fbfcfe"/>
-  <rect x="18" y="18" width="128" height="10" rx="5" fill="#7152d8"/>
-  <rect x="18" y="43" width="84" height="55" rx="7" fill="#e4e8f0"/>
-  <rect x="118" y="43" width="84" height="55" rx="7" fill="#e4e8f0"/>
-  <rect x="218" y="43" width="84" height="55" rx="7" fill="#e4e8f0"/>
-  <g fill="#bfc8d8"><path d="M21 91l24-25 19 17 17-20 18 28z"/><path d="M121 91l24-25 19 17 17-20 18 28z"/><path d="M221 91l24-25 19 17 17-20 18 28z"/></g>
-  <g fill="#354057"><rect x="18" y="109" width="76" height="8" rx="4"/><rect x="118" y="109" width="76" height="8" rx="4"/><rect x="218" y="109" width="76" height="8" rx="4"/></g>
-  <g fill="#ccd3df"><rect x="18" y="126" width="66" height="6" rx="3"/><rect x="118" y="126" width="66" height="6" rx="3"/><rect x="218" y="126" width="66" height="6" rx="3"/></g>
-  <rect x="18" y="153" width="84" height="32" rx="6" fill="#e4e8f0"/><rect x="118" y="153" width="84" height="32" rx="6" fill="#e4e8f0"/><rect x="218" y="153" width="84" height="32" rx="6" fill="#e4e8f0"/>
+  <rect x="18" y="16" width="144" height="9" rx="3" fill="#344054"/>
+  <g fill="#e4e8f0"><rect x="18" y="33" width="69" height="10" rx="3"/><rect x="216" y="33" width="86" height="10" rx="3"/></g>
+  <g fill="#fff" stroke="#dce2eb"><rect x="18" y="53" width="88" height="94" rx="6"/><rect x="116" y="53" width="88" height="94" rx="6"/><rect x="214" y="53" width="88" height="94" rx="6"/></g>
+  <g fill="#dce2eb"><rect x="19" y="54" width="86" height="43" rx="5"/><rect x="117" y="54" width="86" height="43" rx="5"/><rect x="215" y="54" width="86" height="43" rx="5"/></g>
+  <g fill="#344054"><rect x="27" y="105" width="68" height="6" rx="2"/><rect x="125" y="105" width="68" height="6" rx="2"/><rect x="223" y="105" width="68" height="6" rx="2"/></g>
+  <g fill="#bfc8d8"><rect x="27" y="117" width="61" height="4" rx="2"/><rect x="125" y="117" width="61" height="4" rx="2"/><rect x="223" y="117" width="61" height="4" rx="2"/></g>
+  <g fill="#667085"><rect x="27" y="134" width="35" height="4" rx="2"/><rect x="125" y="134" width="35" height="4" rx="2"/><rect x="223" y="134" width="35" height="4" rx="2"/></g>
+  <g fill="#e4e8f0"><rect x="18" y="158" width="88" height="31" rx="5"/><rect x="116" y="158" width="88" height="31" rx="5"/><rect x="214" y="158" width="88" height="31" rx="5"/></g>
 </svg>

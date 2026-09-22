@@ -1,0 +1,15 @@
+{
+    "changes": {
+        "mosaic-classic": {
+            "before": "5.63rem",
+            "after": "13.5rem"
+        },
+        "balanced-card-grid": {
+            "before": "5.63rem",
+            "after": "13.5rem"
+        }
+    },
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts/backups/20260922_161732-classic-balanced-revamp/article-template-settings-20260922_162910.json",
+    "active_template": "editorial-journal",
+    "other_values_unchanged": true
+}

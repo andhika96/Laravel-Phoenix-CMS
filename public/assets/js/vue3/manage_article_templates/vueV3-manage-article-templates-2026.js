@@ -253,6 +253,9 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 			if (isMinimal && options.sidebar) sections.push({ key: 'sidebar', label: 'Reading list sidebar', icon: 'fa-columns' });
 			if (isArchive && options.grid) sections.push({ key: 'grid', label: 'Grid columns', icon: 'fa-th-large' });
 			if (isArchive && this.activeTemplateKey === 'editorial-journal' && options.editorial_journal) sections.push({ key: 'editorial-journal', label: 'Editorial Journal', icon: 'fa-newspaper' });
+			if (isArchive && this.activeTemplateKey === 'mosaic-magazine' && options.mosaic_magazine) sections.push({ key: 'mosaic-magazine', label: 'Mosaic Magazine', icon: 'fa-th-large' });
+			if (isArchive && this.activeTemplateKey === 'mosaic-classic' && options.mosaic_classic) sections.push({ key: 'mosaic-classic', label: 'Mosaic Classic', icon: 'fa-columns' });
+			if (isArchive && this.activeTemplateKey === 'balanced-card-grid' && options.balanced_grid) sections.push({ key: 'balanced-card-grid', label: 'Balanced Card Grid', icon: 'fa-th' });
 			if (isArchive) {
 				sections.push({ key: 'thumbnail', label: 'Thumbnail', icon: 'fa-image' });
 				sections.push({ key: 'pagination', label: 'Pagination', icon: 'fa-ellipsis-h' });
@@ -376,7 +379,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 				options.thumbnail = options.thumbnail || {};
 				if (!['background', 'asset'].includes(options.thumbnail.mode)) options.thumbnail.mode = 'background';
 				if (!['cover', 'contain'].includes(options.thumbnail.fit)) options.thumbnail.fit = 'cover';
-				const thumbnailFallback = this.activeTemplateKey === 'minimal-reading-list' ? '9.3rem' : (this.activeTemplateKey === 'editorial-journal' ? '13.5rem' : '5.625rem');
+				const thumbnailFallback = this.activeTemplateKey === 'minimal-reading-list' ? '9.3rem' : '13.5rem';
 				options.thumbnail.height = ensureDimension(options.thumbnail.height, thumbnailFallback);
 				if (!options.thumbnail.background_color) options.thumbnail.background_color = '#f2f4f7';
 				options.thumbnail.frame = ensureFrame(options.thumbnail.frame);
@@ -424,6 +427,53 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 					options.post_list.item_gap = ArticleTemplateUnitControls.format(postListGap.value, postListGap.unit);
 				}
 				if (this.activeTemplateKey === 'editorial-journal') options.editorial_journal = ensureEditorialJournal(options.editorial_journal);
+				if (['mosaic-classic', 'balanced-card-grid'].includes(this.activeTemplateKey)) {
+					const classic = this.activeTemplateKey === 'mosaic-classic';
+					const key = classic ? 'mosaic_classic' : 'balanced_grid';
+					const layout = options[key] && typeof options[key] === 'object' ? options[key] : {};
+					for (const field of ['show_category', 'show_excerpt', 'show_date', 'show_read_more']) {
+						if (typeof layout[field] !== 'boolean') layout[field] = field !== 'show_read_more' || !classic;
+					}
+					layout.gap = layout.gap || {};
+					for (const [device, fallback] of [['desktop', '2rem'], ['tablet', '1.5rem'], ['mobile', '1.25rem']]) layout.gap[device] = ensureDimension(layout.gap[device], fallback);
+					options.grid = options.grid || { desktop: 3, tablet: 2, mobile: 1 };
+					if (classic) {
+						const count = Number(layout.side_count ?? 3);
+						layout.side_count = Number.isInteger(count) ? Math.min(24, Math.max(0, count)) : 3;
+						if (!['left', 'right'].includes(layout.side_position)) layout.side_position = 'right';
+						if (!['50-50', '60-40', '67-33'].includes(layout.lead_ratio)) layout.lead_ratio = '67-33';
+						if (!['list', 'stacked'].includes(layout.side_layout)) layout.side_layout = 'list';
+						if (typeof layout.divider !== 'boolean') layout.divider = true;
+						if (typeof layout.side_numbers !== 'boolean') layout.side_numbers = true;
+						layout.lead_height = layout.lead_height || {};
+						layout.side_height = layout.side_height || {};
+						for (const [device, fallback] of [['desktop', '22rem'], ['tablet', '20rem'], ['mobile', '15rem']]) {
+							layout.lead_height[device] = ensureDimension(layout.lead_height[device], fallback, 'border');
+							layout.side_height[device] = ensureDimension(layout.side_height[device], '7rem', 'border');
+						}
+					} else {
+						if (!['flat', 'outline', 'elevated'].includes(layout.card_style)) layout.card_style = 'outline';
+						if (!['left', 'center'].includes(layout.text_align)) layout.text_align = 'left';
+						layout.card_padding = ensureDimension(layout.card_padding, '1.25rem');
+						layout.card_radius = ensureDimension(layout.card_radius, '0.75rem', 'radius');
+						const lines = Number(layout.excerpt_lines ?? 2);
+						layout.excerpt_lines = Number.isFinite(lines) ? Math.min(5, Math.max(1, Math.trunc(lines))) : 2;
+					}
+					options[key] = layout;
+				}
+				if (this.activeTemplateKey === 'mosaic-magazine') {
+					const mosaic = options.mosaic_magazine && typeof options.mosaic_magazine === 'object' ? options.mosaic_magazine : {};
+					const count = Number(mosaic.supporting_count ?? 2);
+					mosaic.supporting_count = Number.isInteger(count) ? Math.min(24, Math.max(0, count)) : 2;
+					if (typeof mosaic.match_grid !== 'boolean') mosaic.match_grid = false;
+					mosaic.columns = mosaic.columns && typeof mosaic.columns === 'object' ? mosaic.columns : {};
+					for (const [device, fallback, max] of [['desktop', 2, 4], ['tablet', 2, 3], ['mobile', 1, 2]]) {
+						const column = Number(mosaic.columns[device] ?? fallback);
+						mosaic.columns[device] = Number.isInteger(column) ? Math.min(max, Math.max(1, column)) : fallback;
+					}
+					if (!['equal', 'asymmetric'].includes(mosaic.proportion)) mosaic.proportion = 'equal';
+					options.mosaic_magazine = mosaic;
+				}
 			}
 
 			return options;
