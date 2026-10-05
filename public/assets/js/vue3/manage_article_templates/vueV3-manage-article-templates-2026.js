@@ -441,15 +441,28 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 						const count = Number(layout.side_count ?? 3);
 						layout.side_count = Number.isInteger(count) ? Math.min(24, Math.max(0, count)) : 3;
 						if (!['left', 'right'].includes(layout.side_position)) layout.side_position = 'right';
-						if (!['50-50', '60-40', '67-33'].includes(layout.lead_ratio)) layout.lead_ratio = '67-33';
+						if (!['50-50', '60-40', '67-33'].includes(layout.lead_ratio)) layout.lead_ratio = '50-50';
 						if (!['list', 'stacked'].includes(layout.side_layout)) layout.side_layout = 'list';
 						if (typeof layout.divider !== 'boolean') layout.divider = true;
-						if (typeof layout.side_numbers !== 'boolean') layout.side_numbers = true;
+						if (typeof layout.side_numbers !== 'boolean') layout.side_numbers = false;
+						if (!['headline-first', 'image-first'].includes(layout.lead_layout)) layout.lead_layout = 'headline-first';
+						if (!['left', 'right'].includes(layout.side_image_position)) layout.side_image_position = 'right';
+						const highlights = Number(layout.highlight_count ?? 2);
+						layout.highlight_count = Number.isInteger(highlights) ? Math.min(24, Math.max(0, highlights)) : 2;
+						layout.highlight_columns = layout.highlight_columns || {};
+						for (const [device, fallback, max] of [['desktop', 2, 4], ['tablet', 2, 3], ['mobile', 1, 2]]) {
+							const columns = Number(layout.highlight_columns[device] ?? fallback);
+							layout.highlight_columns[device] = Number.isFinite(columns) ? Math.min(max, Math.max(1, Math.trunc(columns))) : fallback;
+						}
+						if (typeof layout.latest_title !== 'string') layout.latest_title = 'Latest Articles';
+						for (const field of ['show_author', 'show_reading_time']) if (typeof layout[field] !== 'boolean') layout[field] = true;
+						layout.highlight_height = layout.highlight_height || {};
 						layout.lead_height = layout.lead_height || {};
 						layout.side_height = layout.side_height || {};
 						for (const [device, fallback] of [['desktop', '22rem'], ['tablet', '20rem'], ['mobile', '15rem']]) {
 							layout.lead_height[device] = ensureDimension(layout.lead_height[device], fallback, 'border');
 							layout.side_height[device] = ensureDimension(layout.side_height[device], '7rem', 'border');
+							layout.highlight_height[device] = ensureDimension(layout.highlight_height[device], device === 'mobile' ? '14rem' : '16rem', 'border');
 						}
 					} else {
 						if (!['flat', 'outline', 'elevated'].includes(layout.card_style)) layout.card_style = 'outline';

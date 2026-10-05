@@ -1,0 +1,26 @@
+[
+  {
+    "file": "public/assets/js/vue3/workflow/workflow-graph.js",
+    "sha256": "6FAB990097F871FE7A9619FCF554F7A706064AA88F45602491E9A9D67CE17827"
+  },
+  {
+    "file": "public/assets/js/vue3/workflow/workflow-editor.js",
+    "sha256": "01A627EA7346E71B0182838135C0E445D25288D81260F5D0C2BECB7F4C43E348"
+  },
+  {
+    "file": "public/assets/js/vue3/workflow/workflow-icons.js",
+    "sha256": "D2A6E9BD3C059B3ED1E2FA8C145FBA73F922EB614C9E2E6BA3D274E8EB0C8B7E"
+  },
+  {
+    "file": "public/assets/css/workflow-editor.css",
+    "sha256": "D571D5AF9B74ECD4329505F0EF4A3708F059A1D0633E0AF25B44D36C09BB2857"
+  },
+  {
+    "file": "resources/views/workflow/editor.blade.php",
+    "sha256": "8114BF8FF99A7B929B28A933631CEBF144CAB40F1294004FE9659031B57F2F60"
+  },
+  {
+    "file": "app/Support/Workflow/WorkflowGraph.php",
+    "sha256": "7D55BE302026E701084E83CE5143BA41D22D281832CD0B886B5A7C06B02CB784"
+  }
+]

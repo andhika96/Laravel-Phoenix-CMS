@@ -12,11 +12,11 @@ final class ArticleTemplatePreviewFixture
 {
     private const MEDIA_DIRECTORY = 'articles/template-preview-20260825';
 
-    public function archivePaginator(int $page = 1, string $path = '/article'): LengthAwarePaginator
+    public function archivePaginator(int $page = 1, string $path = '/article', int $perPage = 6): LengthAwarePaginator
     {
         $articles = $this->articles();
-        $perPage = 6;
-        $page = max(1, min(8, $page));
+        $perPage = in_array($perPage, [6, 12], true) ? $perPage : 6;
+        $page = max(1, min((int) ceil(48 / $perPage), $page));
         $offset = ($page - 1) * $perPage;
         $items = collect(range(0, $perPage - 1))
             ->map(fn (int $index): Article => clone $articles[($offset + $index) % count($articles)]);
@@ -60,6 +60,15 @@ final class ArticleTemplatePreviewFixture
             ['uri' => 'preview-wellbeing', 'category' => 'Wellbeing', 'code' => 'wellbeing', 'title' => 'The Rituals That Give Busy Days More Room', 'excerpt' => 'A grounded perspective on attention, recovery, and everyday wellbeing.', 'media' => 'wellness-room.png'],
             ['uri' => 'preview-patterns-and-principles', 'category' => 'Knowledge', 'code' => 'knowledge', 'title' => 'Patterns, Principles, and the Practice of Better Decisions', 'excerpt' => 'A structured reading experience for material that benefits from a clear outline.', 'media' => 'canyon-abstract.png'],
         ];
+
+        $definitions = array_merge($definitions, [
+            ['uri' => 'preview-everyday-craft', 'category' => 'Design', 'code' => 'design', 'title' => 'The Quiet Value of Everyday Craft', 'excerpt' => 'How careful material choices turn useful objects into lasting companions.', 'media' => 'alpine-lake.png'],
+            ['uri' => 'preview-new-perspectives', 'category' => 'Travel', 'code' => 'travel', 'title' => 'A Fresh Perspective on Familiar Places', 'excerpt' => 'Finding a new story in the places we pass every day.', 'media' => 'canyon-abstract.png'],
+            ['uri' => 'preview-focused-teams', 'category' => 'Workplace', 'code' => 'workplace', 'title' => 'Building a Better Rhythm for Focused Teams', 'excerpt' => 'Small changes that give good ideas the attention they deserve.', 'media' => 'alpine-lake.png'],
+            ['uri' => 'preview-learning-together', 'category' => 'Knowledge', 'code' => 'knowledge', 'title' => 'What We Learn When We Listen Together', 'excerpt' => 'The habits that make shared learning an everyday practice.', 'media' => 'canyon-abstract.png'],
+            ['uri' => 'preview-room-for-rest', 'category' => 'Wellbeing', 'code' => 'wellbeing', 'title' => 'Making Room for Rest in a Busy Week', 'excerpt' => 'Simple ways to protect the time that restores our energy.', 'media' => 'alpine-lake.png'],
+            ['uri' => 'preview-human-technology', 'category' => 'Technology', 'code' => 'technology', 'title' => 'Technology That Makes More Room for People', 'excerpt' => 'Looking beyond features to understand the everyday experience.', 'media' => 'canyon-abstract.png'],
+        ]);
 
         return array_map(function (array $definition, int $index) use ($author, $baseDate): Article {
             $article = new Article([

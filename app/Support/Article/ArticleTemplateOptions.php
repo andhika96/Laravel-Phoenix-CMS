@@ -141,13 +141,26 @@ final class ArticleTemplateOptions
             $count = filter_var($input['side_count'] ?? 3, FILTER_VALIDATE_INT);
             $result['side_count'] = min(24, max(0, $count === false ? 3 : $count));
             $result['side_position'] = in_array($input['side_position'] ?? '', ['left', 'right'], true) ? $input['side_position'] : 'right';
-            $result['lead_ratio'] = in_array($input['lead_ratio'] ?? '', ['50-50', '60-40', '67-33'], true) ? $input['lead_ratio'] : '67-33';
+            $result['lead_ratio'] = in_array($input['lead_ratio'] ?? '', ['50-50', '60-40', '67-33'], true) ? $input['lead_ratio'] : '50-50';
             $result['side_layout'] = in_array($input['side_layout'] ?? '', ['list', 'stacked'], true) ? $input['side_layout'] : 'list';
             $result['divider'] = $this->boolean($input['divider'] ?? null, true);
-            $result['side_numbers'] = $this->boolean($input['side_numbers'] ?? null, true);
+            $result['side_numbers'] = $this->boolean($input['side_numbers'] ?? null, false);
+            $result['lead_layout'] = in_array($input['lead_layout'] ?? '', ['headline-first', 'image-first'], true) ? $input['lead_layout'] : 'headline-first';
+            $result['side_image_position'] = in_array($input['side_image_position'] ?? '', ['left', 'right'], true) ? $input['side_image_position'] : 'right';
+            $highlightCount = filter_var($input['highlight_count'] ?? 2, FILTER_VALIDATE_INT);
+            $result['highlight_count'] = min(24, max(0, $highlightCount === false ? 2 : $highlightCount));
+            $result['highlight_columns'] = [
+                'desktop' => $this->column(['grid' => $input['highlight_columns'] ?? []], 'desktop', 2, 4),
+                'tablet' => $this->column(['grid' => $input['highlight_columns'] ?? []], 'tablet', 2, 3),
+                'mobile' => $this->column(['grid' => $input['highlight_columns'] ?? []], 'mobile', 1, 2),
+            ];
+            $result['latest_title'] = $this->text($input['latest_title'] ?? null, 'Latest Articles', 80);
+            $result['show_author'] = $this->boolean($input['show_author'] ?? null, true);
+            $result['show_reading_time'] = $this->boolean($input['show_reading_time'] ?? null, true);
             foreach (['desktop' => '22rem', 'tablet' => '20rem', 'mobile' => '15rem'] as $device => $default) {
                 $result['lead_height'][$device] = $this->dimension(data_get($input, 'lead_height.'.$device), $default, self::BORDER_UNITS);
                 $result['side_height'][$device] = $this->dimension(data_get($input, 'side_height.'.$device), '7rem', self::BORDER_UNITS);
+                $result['highlight_height'][$device] = $this->dimension(data_get($input, 'highlight_height.'.$device), $device === 'mobile' ? '14rem' : '16rem', self::BORDER_UNITS);
             }
         } else {
             $result['card_style'] = in_array($input['card_style'] ?? '', ['flat', 'outline', 'elevated'], true) ? $input['card_style'] : 'outline';

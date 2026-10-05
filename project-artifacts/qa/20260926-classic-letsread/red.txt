@@ -1,0 +1,33 @@
+PHPUnit 12.5.34 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.16
+Configuration: D:\Laragon\www\laravel-13-phoenix\phpunit.xml
+
+[41;37mF[0m[41;37mF[0m[41;37mF[0m.[41;37mF[0m                                                               5 / 5 (100%)
+
+Time: 00:01.245, Memory: 70.00 MB
+
+There were 4 failures:
+
+1) Tests\Feature\Article\ClassicLetsreadTest::test_new_layout_defaults_and_validation_are_scoped_to_classic
+Failed asserting that null is identical to 'headline-first'.
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\tests\ClassicLetsreadTest.php:18
+
+2) Tests\Feature\Article\ClassicLetsreadTest::test_all_regions_partition_posts_once_even_with_zero_or_excess_counts
+Failed asserting that 0 is identical to 2.
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\tests\ClassicLetsreadTest.php:42
+
+3) Tests\Feature\Article\ClassicLetsreadTest::test_headline_first_metadata_highlights_and_custom_title_reach_render
+Failed asserting that 'article-classic-lead__media article-media-frame article-background-media ' [ASCII](length: 73) contains "article-classic-lead__body" [ASCII](length: 26).
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\tests\ClassicLetsreadTest.php:55
+
+4) Tests\Feature\Article\ClassicLetsreadTest::test_expanded_preview_has_twelve_unique_sample_stories_and_keeps_other_defaults
+Failed asserting that actual size 6 matches expected size 12.
+
+D:\Laragon\www\laravel-13-phoenix\project-artifacts\tests\ClassicLetsreadTest.php:81
+
+[37;41mFAILURES![0m
+[37;41mTests: 5[0m[37;41m, Assertions: 10[0m[37;41m, Failures: 4[0m[37;41m.[0m

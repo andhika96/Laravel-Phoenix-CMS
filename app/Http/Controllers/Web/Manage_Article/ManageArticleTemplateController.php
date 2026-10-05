@@ -81,7 +81,8 @@ class ManageArticleTemplateController extends Controller
             }
             $previewArticles = $this->previewFixture->archivePaginator(
                 $request->integer('page', 1),
-                $previewPath
+                $previewPath,
+                $template === 'mosaic-classic' ? 12 : 6
             );
             $popularArticles = $this->previewFixture->archivePaginator(1, $previewPath)->getCollection()->take(4);
             $previewCategories = $previewArticles->getCollection()->pluck('category')->filter()->unique('id')->values();

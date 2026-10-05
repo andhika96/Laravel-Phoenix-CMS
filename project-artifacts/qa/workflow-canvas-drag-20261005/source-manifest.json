@@ -1,0 +1,18 @@
+[
+  {
+    "file": "public\\assets\\js\\vue3\\workflow\\workflow-editor.js",
+    "sha256": "E38971ACE1763FDBFBC7F1303EC7A0E93D5D1A85211E99A4D8339BFB983669E9"
+  },
+  {
+    "file": "public\\assets\\css\\workflow-editor.css",
+    "sha256": "374458DA66F7ECC26077B16129F8738B2C40D521B543B5F494A47F9F31203874"
+  },
+  {
+    "file": "project-artifacts\\tests\\workflow-canvas-geometry.test.mjs",
+    "sha256": "F1510E313E0DE67076EC7CD9857C5489F65337A78B87DE1543AB118FB612B90A"
+  },
+  {
+    "file": "project-artifacts\\tests\\WorkflowEditorTest.php",
+    "sha256": "ED8F0644FF38B32D7BD84E19C0E6BEECF09FF84E6D72FB8013C664CE9A2CCBEC"
+  }
+]

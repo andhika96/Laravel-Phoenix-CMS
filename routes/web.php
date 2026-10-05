@@ -560,3 +560,5 @@ Route::get('/oauth/azure/callback', function ()
 	dd($user = Socialite::driver('azure')->stateless()->user());
 });
 */
+
+require __DIR__.'/workflow.php';

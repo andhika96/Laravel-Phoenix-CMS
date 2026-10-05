@@ -34,7 +34,7 @@ class ClassicBalancedTest extends TestCase
         ]]);
         $this->assertSame(24, $custom['mosaic_classic']['side_count']);
         $this->assertSame('right', $custom['mosaic_classic']['side_position']);
-        $this->assertSame('67-33', $custom['mosaic_classic']['lead_ratio']);
+        $this->assertSame('50-50', $custom['mosaic_classic']['lead_ratio']);
         $this->assertSame('list', $custom['mosaic_classic']['side_layout']);
         $this->assertSame('22rem', $custom['mosaic_classic']['lead_height']['desktop']);
         $this->assertFalse($custom['mosaic_classic']['show_date']);
@@ -112,6 +112,7 @@ class ClassicBalancedTest extends TestCase
 
     private function render(string $template, array $input = [], int $count = 10, array $query = []): string
     {
+        $input = array_replace_recursive(['mosaic_classic' => ['highlight_count' => 0]], $input);
         $this->app->instance('request', Request::create('/article', 'GET', $query));
         $items = collect();
         for ($id = 1; $id <= $count; $id++) {

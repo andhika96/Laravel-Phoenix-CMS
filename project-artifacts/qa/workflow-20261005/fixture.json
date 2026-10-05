@@ -1,0 +1,146 @@
+{
+    "id": 42,
+    "name": "Tabel dan Checklist",
+    "description": "",
+    "category": "general",
+    "status": "published",
+    "draft_revision": 6,
+    "published_version": 4,
+    "published_revision": 6,
+    "graph": {
+        "nodes": [
+            {
+                "id": "trigger-1",
+                "type": "trigger",
+                "label": "Trigger",
+                "x": 72,
+                "y": 168,
+                "config": {
+                    "event": "manual"
+                }
+            },
+            {
+                "id": "end-1",
+                "type": "end",
+                "label": "End",
+                "x": 708,
+                "y": 168,
+                "config": []
+            },
+            {
+                "id": "table-muuqppeb-uo7nzf",
+                "type": "table",
+                "label": "Daftar Tugas",
+                "x": 430,
+                "y": 350,
+                "config": {
+                    "rows": 5,
+                    "columns": 4,
+                    "cells": [
+                        [
+                            "Nama",
+                            "Status",
+                            "",
+                            ""
+                        ],
+                        [
+                            "Budi",
+                            "",
+                            "",
+                            ""
+                        ],
+                        [
+                            "",
+                            "",
+                            "",
+                            ""
+                        ],
+                        [
+                            "",
+                            "",
+                            "",
+                            ""
+                        ],
+                        [
+                            "",
+                            "",
+                            "",
+                            ""
+                        ]
+                    ],
+                    "columnWidths": [
+                        200,
+                        137,
+                        137,
+                        137
+                    ],
+                    "rowHeights": [
+                        110,
+                        53,
+                        53,
+                        53,
+                        53
+                    ],
+                    "header": true,
+                    "fontSize": 14,
+                    "align": "left",
+                    "textColor": "#243746",
+                    "background": "#ffffff",
+                    "headerBackground": "#e8f5ef",
+                    "borderColor": "#b7c9c0"
+                }
+            },
+            {
+                "id": "icon-muuquv6n-ja4urv",
+                "type": "icon",
+                "label": "Icon",
+                "x": 110,
+                "y": 350,
+                "config": {
+                    "iconClass": "fab fa-github",
+                    "color": "#1fa675",
+                    "size": 64,
+                    "width": 160,
+                    "height": 160
+                }
+            },
+            {
+                "id": "icon-list-muuqxh6f-avrf12",
+                "type": "icon-list",
+                "label": "Icon List",
+                "x": 110,
+                "y": 580,
+                "config": {
+                    "items": [
+                        {
+                            "iconClass": "fal fa-file-alt",
+                            "text": "Dokumentasi"
+                        },
+                        {
+                            "iconClass": "fas fa-check",
+                            "text": "Pemeriksaan"
+                        }
+                    ],
+                    "color": "#1fa675",
+                    "textColor": "#243746",
+                    "fontSize": 14,
+                    "gap": 8,
+                    "width": 280
+                }
+            }
+        ],
+        "edges": [
+            {
+                "id": "edge-1",
+                "source": "trigger-1",
+                "target": "end-1",
+                "port": "out"
+            }
+        ],
+        "viewport": {
+            "x": -5,
+            "y": 152,
+            "zoom": 0.62
+        }
+    }
+}

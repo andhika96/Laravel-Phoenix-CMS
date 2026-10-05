@@ -1,0 +1,70 @@
+[
+  {
+    "file": "resources\\views\\workflow\\index.blade.php",
+    "sha256": "9FD4274CC0FDADBF048A6413CBEB24AED21B756765150ACE0CBB682747E35A5C"
+  },
+  {
+    "file": "resources\\views\\workflow\\editor.blade.php",
+    "sha256": "B05C044B1FB2D0E76BF51E0B6BC434D90AAEF8924902180E0F88D77ECB1DA570"
+  },
+  {
+    "file": "app\\Http\\Controllers\\Web\\Workflow\\WorkflowController.php",
+    "sha256": "F3FDA64C0C65ABC27E27179B26A0C96B3662FCE146B2A1B26EBA701FDAC16CA1"
+  },
+  {
+    "file": "app\\Support\\Workflow\\WorkflowGraph.php",
+    "sha256": "D49D3C488867E9A1A78E2A9E01FE6E44F8D031EEEAE571BD7A99F5235931B6ED"
+  },
+  {
+    "file": "app\\Models\\Workflow\\WorkflowRunLog.php",
+    "sha256": "09C727CCE653D0B3168BC89797D1011168C1203DBBF725C97B783CF9F42D1CD1"
+  },
+  {
+    "file": "app\\Models\\Workflow\\WorkflowRun.php",
+    "sha256": "2651EE3BB73068E165522CD935DE21FC641862F1361A5151F03E832E8C8D9EF5"
+  },
+  {
+    "file": "app\\Models\\Workflow\\Workflow.php",
+    "sha256": "4E751999ED5BC7BFA78DBB126FC4794E669DE65C18901945D22B06AF55D93028"
+  },
+  {
+    "file": "public\\assets\\js\\vue3\\workflow\\workflow-list.js",
+    "sha256": "36D54FE9FD750CA1E016EA857997087735EC8B6FD02C0F144D781E3EAF11D0C8"
+  },
+  {
+    "file": "public\\assets\\js\\vue3\\workflow\\workflow-graph.js",
+    "sha256": "E4C3E2D37967E7C7E43AC6962F3AEDF50A9FFD8DCEDD3EA9AAB66167EDF1739A"
+  },
+  {
+    "file": "public\\assets\\js\\vue3\\workflow\\workflow-editor.js",
+    "sha256": "EEB58359420C51BB6C406E594E0B8776FCF060146ED288214BA7A3072DA929F6"
+  },
+  {
+    "file": "app/Http/Middleware/WorkflowAccess.php",
+    "sha256": "154A63BEE74DCC581E3D9BAF3965440C58CF70935C44DAF4D45CF5FC62E11606"
+  },
+  {
+    "file": "public/assets/css/workflow-editor.css",
+    "sha256": "78A8AAEF080572BC8E0F039C9CB838444258F487EFBCD9F558BB12D9C619CEBE"
+  },
+  {
+    "file": "database/migrations/2026_10_05_000001_create_workflow_tables.php",
+    "sha256": "73FAF32DA13052B03E5D9BC674B21B02F00B282467F4C7BEF037BAAAB05CB31F"
+  },
+  {
+    "file": "database/migrations/2026_10_05_000002_add_workflow_navigation.php",
+    "sha256": "E8C71E4CC70D377D64942D421E95B1575BE3C341C12451B6C36431507F9218AA"
+  },
+  {
+    "file": "routes/workflow.php",
+    "sha256": "D31FF098BF5C01F03CB13768718183BBF4A1C35FC82B129AFAC94A1883BE407E"
+  },
+  {
+    "file": "routes/web.php",
+    "sha256": "F569F68C35B234E729248C67250071E1E5B05801755E87F671D8C6944FF7ED35"
+  },
+  {
+    "file": "routes/breadcrumbs.php",
+    "sha256": "B708D598AE7B05247A45B909222A0B0CBEA97DE5DA2C7ADA2F1FD7E4CE9F4687"
+  }
+]

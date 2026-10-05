@@ -1,0 +1,195 @@
+{
+  "nodes": [
+    {
+      "id": "routes_web",
+      "label": "web.php",
+      "file_type": "code",
+      "source_file": "routes/web.php",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articlefrontendroutetest",
+      "label": "ArticleFrontendRouteTest.php",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articlefrontendroutetest_articlefrontendroutetest",
+      "label": "ArticleFrontendRouteTest",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articlefrontendroutetest_articlefrontendroutetest_setup",
+      "label": ".setUp()",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articlefrontendroutetest_articlefrontendroutetest_test_guest_can_open_archive_and_detail_while_listdata_stays_protected_and_only_eligible_articles_are_exposed",
+      "label": ".test_guest_can_open_archive_and_detail_while_listdata_stays_protected_and_only_eligible_articles_are_exposed()",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L119",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_testcase",
+      "label": "Tests\\TestCase",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    }
+  ],
+  "edges": [
+    {
+      "source": "routes_web",
+      "target": "db",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "routes/web.php",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "routes_web",
+      "target": "route",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "routes/web.php",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "routes_web",
+      "target": "socialite",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "routes/web.php",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articlefrontendroutetest",
+      "target": "article",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articlefrontendroutetest",
+      "target": "account",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articlefrontendroutetest",
+      "target": "blueprint",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articlefrontendroutetest",
+      "target": "db",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articlefrontendroutetest",
+      "target": "schema",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articlefrontendroutetest",
+      "target": "tests_testcase",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articlefrontendroutetest",
+      "target": "tests_feature_article_articlefrontendroutetest_articlefrontendroutetest",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articlefrontendroutetest_articlefrontendroutetest",
+      "target": "tests_testcase",
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articlefrontendroutetest_articlefrontendroutetest",
+      "target": "tests_feature_article_articlefrontendroutetest_articlefrontendroutetest_setup",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articlefrontendroutetest_articlefrontendroutetest",
+      "target": "tests_feature_article_articlefrontendroutetest_articlefrontendroutetest_test_guest_can_open_archive_and_detail_while_listdata_stays_protected_and_only_eligible_articles_are_exposed",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleFrontendRouteTest.php",
+      "source_location": "L119",
+      "weight": 1.0,
+      "_origin": "ast"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

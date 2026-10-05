@@ -1,5 +1,14 @@
 <?php // routes/breadcrumbs.php
 
+Breadcrumbs::for('workflow', function (\Diglactic\Breadcrumbs\Generator $trail): void {
+    $trail->push('Workflow Editor', route('cms.core.workflow.index'));
+});
+
+Breadcrumbs::for('workflow.editor', function (\Diglactic\Breadcrumbs\Generator $trail): void {
+    $trail->parent('workflow');
+    $trail->push('Editor');
+});
+
 use App\Models\Awesome_Admin\Account;
 
 // Note: Laravel will automatically resolve `Breadcrumbs::` without
