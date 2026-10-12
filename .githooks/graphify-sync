@@ -3,7 +3,8 @@
 # Portable bridge from Git for Windows hooks to the PowerShell Graphify updater.
 # Git operations must never be blocked when Graphify is unavailable or fails.
 
-[ "${GRAPHIFY_SKIP_HOOK:-0}" = "1" ] && exit 0
+# Keep Graphify updates manual; automatic runs require GRAPHIFY_SKIP_HOOK=0.
+[ "${GRAPHIFY_SKIP_HOOK:-1}" = "1" ] && exit 0
 
 EVENT_NAME=${1:-git-hook}
 REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0

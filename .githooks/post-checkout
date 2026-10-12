@@ -40,7 +40,8 @@ GIT_DIR=${GIT_DIR:-$(git rev-parse --git-dir 2>/dev/null)}
 
 # Honor the same opt-out as post-commit: without this, GRAPHIFY_SKIP_HOOK=1
 # suppressed commit-triggered rebuilds but not branch-switch ones (#1809).
-[ "${GRAPHIFY_SKIP_HOOK:-0}" = "1" ] && exit 0
+# Keep Graphify updates manual; automatic runs require GRAPHIFY_SKIP_HOOK=0.
+[ "${GRAPHIFY_SKIP_HOOK:-1}" = "1" ] && exit 0
 
 _GFY_GITDIR=$(cd "$(git rev-parse --git-dir 2>/dev/null)" 2>/dev/null && pwd)
 _GFY_COMMONDIR=$(cd "$(git rev-parse --git-common-dir 2>/dev/null)" 2>/dev/null && pwd)
