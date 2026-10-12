@@ -1,0 +1,23 @@
+.article-page--mosaic-magazine .article-mosaic-feature {border-radius:1rem}
+.article-page--mosaic-magazine .article-mosaic-feature__media {min-height:clamp(24rem,35vw,32rem)}
+.article-page--mosaic-magazine .article-mosaic-feature__body {padding:2.5rem}
+.article-page--mosaic-magazine .article-mosaic-feature__body .article-title-clamp {max-width:26ch;font-size:var(--ph-fmv2-rfs-h1,2.5em);line-height:1.2;letter-spacing:-.025em;text-wrap:balance;margin:.75rem 0}
+.article-page--mosaic-magazine .article-mosaic-feature__body .article-excerpt-clamp {font-size:1em;line-height:1.8;max-width:62ch}
+.article-page--mosaic-magazine .article-mosaic-feature__body small {font-size:.85em}
+.article-page--mosaic-magazine .article-mosaic-grid {gap:2rem 1.5rem}
+.article-page--mosaic-magazine .article-mosaic-grid--supporting {margin-top:2rem}
+.article-page--mosaic-magazine .article-mosaic-card > div {padding:1rem 0 0}
+.article-page--mosaic-magazine .article-mosaic-card .article-title-clamp {font-size:min(var(--ph-fmv2-rfs-h4,1.5em),1.4em);line-height:1.4;margin:.65rem 0;letter-spacing:-.015em;text-wrap:pretty}
+.article-page--mosaic-magazine .article-mosaic-grid--supporting .article-title-clamp {font-size:var(--ph-fmv2-rfs-h3,1.75em);line-height:1.35}
+.article-page--mosaic-magazine .article-mosaic-card p {font-size:1em;line-height:1.7}
+.article-page--mosaic-magazine .article-mosaic-card small {font-size:.85em;color:#667085}
+.article-page--mosaic-magazine .article-media-frame:not(.article-thumbnail-frame--custom) {border-radius:.75rem}
+@media(max-width:575.98px){
+  .article-page--mosaic-magazine .article-mosaic-feature {border-radius:0}
+  .article-page--mosaic-magazine .article-mosaic-feature__media {min-height:0;aspect-ratio:16/10}
+  .article-page--mosaic-magazine .article-mosaic-feature__body {padding:1.25rem 0 0}
+  .article-page--mosaic-magazine .article-mosaic-feature__body .article-title-clamp {font-size:var(--ph-fmv2-rfs-h2,1.65em);line-height:1.3}
+  .article-page--mosaic-magazine .article-mosaic-grid {gap:2rem}
+  .article-page--mosaic-magazine .article-mosaic-grid--supporting .article-title-clamp {font-size:var(--ph-mobile-content-heading-size,1.2em)}
+  .article-page--mosaic-magazine .article-mosaic-card .article-title-clamp {font-size:var(--ph-mobile-content-heading-size,1.2em)}
+}

@@ -1,0 +1,9 @@
+<?php
+
+// Translation persistence is outside this visual/Article regression run.
+function t($value, $one = '', $two = '', $three = '', $four = '')
+{
+    return str_replace(['{1}', '{2}', '{3}', '{4}'], [$one, $two, $three, $four], $value);
+}
+
+require dirname(__DIR__, 4).'/vendor/phpunit/phpunit/phpunit';

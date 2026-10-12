@@ -1,0 +1,346 @@
+"""Export human requests and final reports as local, sanitized historical memories."""
+import collections
+import datetime as dt
+import hashlib
+import json
+import re
+import sqlite3
+import subprocess
+import sys
+from urllib.parse import unquote
+from pathlib import Path
+
+BASE = Path(__file__).parent
+CODEX = Path('C:/Users/aruna/.codex')
+DESTS = [Path('E:/AI/Memories'), CODEX / 'memories/extensions/ad_hoc/notes']
+CURRENT = '01a12dcb-7978-7970-8d53-0fd4bce07a76'
+TZ = dt.timezone(dt.timedelta(hours=7))
+STAMP = '20261012-all-projects'
+UUID = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+SECRET_LABEL = r'(?:password|passwd|pwd|kata[ _-]?sandi|api[ _-]?key|(?:access|refresh|auth)[ _-]?token|client[ _-]?secret|private[ _-]?key|DB_PASSWORD)'
+SECRET_LINE = re.compile(r'(?im)^.*\b' + SECRET_LABEL + r'\b\s*[:=]\s*[^\r\n]*$')
+SENSITIVE_REQUEST = re.compile(r'(?i)\b(?:password|passwd|kata sandi|credential|kredensial)\b.{0,30}[:=]')
+REDACT = '[REDACTED_SECRET]'
+
+def clean(text):
+    text = re.sub(r'<oai-mem-citation>.*?</oai-mem-citation>', '', text, flags=re.S)
+    text = re.sub(r'-----BEGIN [^-]*PRIVATE KEY-----.*?-----END [^-]*PRIVATE KEY-----', REDACT, text, flags=re.S)
+    text = SECRET_LINE.sub(REDACT, text)
+    text = re.sub(r'(?i)(\b' + SECRET_LABEL + r'\b\s*(?:[:=]|\badalah\b|\byaitu\b)\s*)(?:[^\s,;]+)', lambda m: m[1] + REDACT, text)
+    text = re.sub(r'(?i)(\bBearer\s+)[A-Za-z0-9_.~+/-]{8,}', lambda m: m[1] + REDACT, text)
+    text = re.sub(r'\b(?:sk-[A-Za-z0-9_-]{12,}|gh[pousr]_[A-Za-z0-9_]{15,}|github_pat_[A-Za-z0-9_]{15,})\b', REDACT, text)
+    text = re.sub(r'\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b', REDACT, text)
+    text = re.sub(r'(?i)(https?://)[^/\s:@]+:[^/@\s]+@', lambda m: m[1] + REDACT + '@', text)
+    text = re.sub(r'(?i)([?&](?:token|key|password|secret|signature|access_token)=)[^&\s)]+', lambda m: m[1] + REDACT, text)
+    return text.strip()
+
+def date(value):
+    if isinstance(value, (int, float)):
+        value = dt.datetime.fromtimestamp(value, TZ)
+    elif isinstance(value, str):
+        try:
+            value = dt.datetime.fromisoformat(value.replace('Z', '+00:00')).astimezone(TZ)
+        except ValueError:
+            return value
+    return value.strftime('%Y-%m-%d %H:%M:%S WIB')
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def write_new(path, body):
+    data = body.encode('utf-8')
+    if path.exists():
+        assert path.read_bytes() == data, 'Refuse to overwrite existing content: ' + str(path)
+    else:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open('xb') as stream:
+            stream.write(data)
+
+def extract_rollout(row):
+    path = Path(row['rollout_path'].removeprefix('\\\\?\\'))
+    row.update(messages=[], patches=[], errors=[], attachment_count=0)
+    if not path.exists():
+        row['errors'].append('Rollout lokal tidak ditemukan.')
+        return row
+    seen = set()
+    for n, line in enumerate(path.open(encoding='utf-8'), 1):
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            row['errors'].append('JSON tidak valid pada baris ' + str(n))
+            continue
+        payload = event.get('payload', {})
+        if event.get('type') == 'response_item' and payload.get('type') == 'message':
+            role, channel = payload.get('role'), payload.get('channel')
+            if role != 'user' and not (role == 'assistant' and channel == 'final'):
+                continue
+            content = payload.get('content', [])
+            row['attachment_count'] += sum(c.get('type') not in ('input_text', 'output_text', 'text') for c in content if isinstance(c, dict))
+            text = '\n'.join(c.get('text', '') for c in content if isinstance(c, dict))
+            if role == 'user':
+                if '## My request:' in text:
+                    text = text.split('## My request:', 1)[1].strip()
+                text = re.sub(r'<recommended_plugins>.*?</recommended_plugins>', '', text, flags=re.S).strip()
+                if '# AGENTS.md' in text or '<INSTRUCTIONS>' in text or text.lstrip().startswith(('<environment_context>', '<permissions', '<external_codex', '<user_instructions>', '<turn_aborted>')):
+                    continue
+                if SENSITIVE_REQUEST.search(text):
+                    text = '[Pesan pemberian kredensial disembunyikan; tujuan login/verifikasi tetap tercatat pada laporan akhir.]'
+            text = clean(text)
+            key = (role, text, event.get('timestamp', '')[:19])
+            if text and key not in seen:
+                row['messages'].append({'role': role, 'timestamp': event.get('timestamp', ''), 'text': text})
+                seen.add(key)
+        elif event.get('type') == 'event_msg' and payload.get('type') == 'task_complete':
+            text = clean(payload.get('last_agent_message', '') or '')
+            if text and not any(m['role'] == 'assistant' and m['text'] == text for m in row['messages'][-3:]):
+                row['messages'].append({'role': 'assistant', 'timestamp': event.get('timestamp', ''), 'text': text})
+        elif event.get('type') == 'response_item' and payload.get('type') in ('function_call', 'custom_tool_call'):
+            args = payload.get('arguments', payload.get('input', ''))
+            if not isinstance(args, str):
+                args = json.dumps(args)
+            for match in re.finditer(r'\*\*\* (Update|Add|Delete) File: ([^\r\n";]+)', args.replace('\\n', '\n')):
+                row['patches'].append({'operation': match[1], 'path': clean(match[2].strip())})
+    row['patches'] = list({(p['operation'], p['path']): p for p in row['patches']}.values())
+    return row
+
+def extract(row):
+    database = CODEX/'thread_history_1.sqlite'
+    conn=sqlite3.connect('file:'+database.as_posix()+'?mode=ro',uri=True)
+    conn.execute('pragma temp_store=MEMORY')
+    conn.row_factory=sqlite3.Row
+    final_ids={r[0] for r in conn.execute('SELECT final_agent_item_id FROM thread_turns WHERE thread_id=?',(row['id'],)) if r[0]}
+    items=conn.execute("SELECT item_id,item_type,created_at_ms,item_json FROM thread_items WHERE thread_id=? AND item_type IN ('userMessage','agentMessage','fileChange') ORDER BY rollout_ordinal,created_at_ms",(row['id'],)).fetchall()
+    if not items:
+        conn.close()
+        row['history_source']='Rollout fallback; tidak ada item pada database riwayat.'
+        return extract_rollout(row)
+    row.update(messages=[],patches=[],errors=[],attachment_count=0,history_source=str(database)+' / thread_items + thread_turns')
+    for item_row in items:
+        item=json.loads(item_row['item_json'])
+        typ=item_row['item_type']
+        if typ=='fileChange':
+            for change in item.get('changes',[]):
+                row['patches'].append({'operation':change.get('kind',{}).get('type','unknown')+' (status '+str(item.get('status','unknown'))+')','path':clean(change.get('path',''))})
+            continue
+        if typ=='agentMessage':
+            if item.get('phase') not in ('final_answer','final') and item_row['item_id'] not in final_ids:
+                continue
+            role,text='assistant',item.get('text','')
+        else:
+            role='user'
+            content=item.get('content',[])
+            row['attachment_count']+=sum(c.get('type')!='text' for c in content if isinstance(c,dict))
+            text='\n'.join(c.get('text','') for c in content if isinstance(c,dict))
+            if '## My request:' in text:
+                text=text.split('## My request:',1)[1].strip()
+            elif '## My request for Codex:' in text:
+                text=text.split('## My request for Codex:',1)[1].strip()
+            text=re.sub(r'<recommended_plugins>.*?</recommended_plugins>','',text,flags=re.S).strip()
+            if '# AGENTS.md' in text or '<INSTRUCTIONS>' in text or text.lstrip().startswith(('<environment_context>','<permissions','<external_codex','<user_instructions>','<turn_aborted>')):
+                continue
+            if SENSITIVE_REQUEST.search(text):
+                text='[Pesan pemberian kredensial disembunyikan; tujuan login/verifikasi tetap tercatat pada laporan akhir.]'
+        text=clean(text)
+        if text:
+            row['messages'].append({'role':role,'timestamp':dt.datetime.fromtimestamp(item_row['created_at_ms']/1000,TZ).isoformat(),'text':text})
+    row['patches']=list({(p['operation'],p['path']):p for p in row['patches']}.values())
+    conn.close()
+    return row
+
+def previous_memories():
+    result = collections.defaultdict(list)
+    paths = list(DESTS[0].glob('*.md')) + list((DESTS[0] / 'rollout_summaries').glob('*.md')) + list((DESTS[0] / 'extensions/ad_hoc/notes').glob('*.md'))
+    for path in paths:
+        if '.bak' in path.name or path.name.startswith(STAMP) or 'index' in path.name.lower():
+            continue
+        text = path.read_text(encoding='utf-8-sig', errors='replace')[:3500]
+        patterns = [r'(?im)^(?:Chat ID|Thread ID|thread_id|Source thread|Source chat)\s*:\s*.{0,10}?(' + UUID + ')',
+                    r'(?im)^-?\s*Chat sumber:.*codex://threads/(' + UUID + ')']
+        ids = {m[1] for pattern in patterns for m in re.finditer(pattern, text)}
+        for ident in ids:
+            result[ident].append(str(path))
+    return result
+
+def bullets(lines, limit=20, width=1000):
+    lines = list(dict.fromkeys(clean(line).strip(' -*') for line in lines if clean(line).strip(' -*')))
+    if not lines:
+        return '- Tidak tercatat eksplisit; jangan mengasumsikan telah dilakukan.'
+    value = '\n'.join('- ' + line[:width] for line in lines[:limit])
+    if len(lines) > limit:
+        value += '\n- Rujukan tambahan tersedia di transkrip kronologis.'
+    return value
+
+def prepare():
+    db = sqlite3.connect('file:' + (CODEX / 'state_5.sqlite').as_posix() + '?mode=ro', uri=True)
+    db.row_factory = sqlite3.Row
+    rows = [dict(r) for r in db.execute("SELECT id,title,name,cwd,rollout_path,created_at,updated_at,archived,project_id FROM threads WHERE thread_source='user' AND (agent_path IS NULL OR agent_path IN ('','/root')) AND id<>? ORDER BY created_at", (CURRENT,))]
+    titles = {}
+    for line in (CODEX / 'session_index.jsonl').read_text(encoding='utf-8').splitlines():
+        value = json.loads(line)
+        titles[value['id']] = value.get('thread_name', '')
+    sidebar = json.loads((BASE / 'sidebar.json').read_text(encoding='utf-8'))
+    labels = {p['path'].lower(): p['label'] for p in json.loads((BASE / 'projects.json').read_text(encoding='utf-8'))['projects']}
+    visible = {r['id']: r for r in sidebar['threads'] + sidebar.get('pinnedThreads', [])}
+    for row in rows:
+        row['cwd'] = row['cwd'].removeprefix('\\\\?\\')
+        row['title'] = visible.get(row['id'], {}).get('title') or row.get('name') or titles.get(row['id']) or row['title'].splitlines()[-1][:140]
+        row['title'] = clean(row['title'])
+        row['project'] = labels.get(row['cwd'].lower()) or (Path(row['cwd']).name if 'laragon' in row['cwd'].lower() or 'Age of Empire' in row['cwd'] or 'LaraPhoenix Web Game' in row['cwd'] else 'Tanpa project')
+        row['kind'] = 'codex-local'
+        extract(row)
+    for remote in json.loads((BASE / 'remote-chats.json').read_text(encoding='utf-8')):
+        thread = remote['thread']
+        row = {'id':thread['id'], 'title':thread.get('title') or visible.get(thread['id'], {}).get('title') or thread['id'], 'cwd':thread.get('cwd') or '', 'created_at':thread['createdAt'], 'updated_at':thread['updatedAt'], 'archived':0, 'project':'Tanpa project (cloud)', 'kind':thread.get('kind', 'cloud'), 'rollout_path':'codex://threads/' + thread['id'], 'messages':[], 'patches':[], 'errors':[], 'attachment_count':0}
+        assert not remote['page']['hasMore']
+        for turn in reversed(remote['turns']):
+            for item in turn['items']:
+                if item['type'] == 'userMessage':
+                    text = '\n'.join(c.get('text', '') for c in item.get('content', []) if isinstance(c, dict))
+                    role = 'user'
+                elif item['type'] == 'agentMessage':
+                    text, role = item.get('text', ''), 'assistant'
+                else:
+                    continue
+                row['messages'].append({'role':role, 'timestamp':date(turn.get('startedAt') or thread['createdAt']), 'text':clean(text)})
+        rows.append(row)
+    assert len({r['id'] for r in rows}) == len(rows)
+    old = previous_memories()
+    for row in rows:
+        previous = set(old.get(row['id'], []))
+        for message in row['messages']:
+            if message['role'] != 'assistant':
+                continue
+            for match in re.finditer(r'E:[/\\]+AI[/\\]+Memories[/\\]+[^\r\n' + chr(96) + r'"<>]+?\.md\b', message['text'], re.I):
+                candidate = Path(unquote(match[0]).replace('\\', '/'))
+                if candidate.is_file() and 'index' not in candidate.name.lower() and candidate.name.lower() not in ('memory.md', 'memory_summary.md', 'readme.md'):
+                    previous.add(str(candidate))
+        row['previous'] = sorted(previous)
+        if row['project'] == 'Tanpa project':
+            topic = row['title'] + '\n' + '\n'.join(m['text'][:1500] for m in row['messages'] if m['role']=='user')
+            if re.search(r'AoE2? ?II?|Age of Empire|ArunikaAI', topic, re.I):
+                row['project'] = 'Age of Empire II DE'
+                row['project_attribution'] = 'Topik eksplisit pada chat tanpa project; cwd asli dipertahankan.'
+            elif re.search(r'newmg|MG ?Motor', row['title'], re.I):
+                row['project'] = 'New MG (chat tanpa project)'
+                row['project_attribution'] = 'Topik eksplisit; lokasi laptop dan SSD tidak disamakan.'
+        row.setdefault('project_attribution', 'Metadata cwd saat chat.')
+        row['action'] = 'pembaruan-memori' if row['previous'] else 'memori-baru-belum-terhubung-ID'
+        row['final_count'] = sum(m['role']=='assistant' for m in row['messages'])
+        row['user_count'] = sum(m['role']=='user' for m in row['messages'])
+        row['evidence_sha256'] = hashlib.sha256(json.dumps(row['messages'], ensure_ascii=False, sort_keys=True).encode()).hexdigest()
+    (BASE / 'prepared.json').write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding='utf-8')
+    plan = {'chats':len(rows), 'actions':dict(collections.Counter(r['action'] for r in rows)), 'projects':dict(collections.Counter(r['project'] for r in rows)), 'errors':[(r['id'],r['errors']) for r in rows if r['errors']], 'no_final':[(r['id'],r['title']) for r in rows if not r['final_count']], 'messages':sum(len(r['messages']) for r in rows), 'history_sources':dict(collections.Counter('database-history' if 'thread_items' in r.get('history_source','') else 'rollout-or-cloud' for r in rows)), 'current_chat_excluded':CURRENT}
+    (BASE / 'plan.json').write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding='utf-8')
+    review = [{'id':r['id'],'title':r['title'],'project':r['project'],'action':r['action'],'users':r['user_count'],'finals':r['final_count'],'latest':next((m['text'][:1200] for m in reversed(r['messages']) if m['role']=='assistant'),''),'last_request':next((m['text'][:500] for m in reversed(r['messages']) if m['role']=='user'),'')} for r in rows]
+    (BASE / 'review.json').write_text(json.dumps(review, ensure_ascii=False, indent=2), encoding='utf-8')
+    print(json.dumps(plan, ensure_ascii=False))
+
+def export():
+    rows = json.loads((BASE / 'prepared.json').read_text(encoding='utf-8'))
+    manifest = []
+    previous_hashes = {str(path):sha(path) for row in rows for name in row['previous'] for path in [Path(name)]}
+    for row in rows:
+        ident = row['id']
+        finals = [m for m in row['messages'] if m['role']=='assistant']
+        users = [m for m in row['messages'] if m['role']=='user']
+        lines = [line for m in finals for line in m['text'].splitlines()]
+        selected = lambda pattern: [line for line in lines if re.search(pattern, line, re.I)]
+        slug = re.sub('[^a-z0-9]+','-',row['title'].lower()).strip('-')[:55] or 'chat'
+        name = STAMP + '-' + slug + '-' + ident + '.md'
+        archive = BASE / 'transcripts' / (ident + '.md')
+        transcript = '# ' + row['title'] + '\n\nChat ID: ' + ident + '\n\nHanya pesan pengguna dan laporan akhir; instruksi lingkungan, reasoning, serta output tool mentah tidak diekspor. Kredensial disamarkan. Lampiran biner tetap berada di riwayat asli.\n\n'
+        transcript += '\n\n---\n\n'.join('## ' + date(m['timestamp']) + ' — ' + ('Pengguna' if m['role']=='user' else 'Laporan akhir assistant') + '\n\n' + m['text'] for m in row['messages'])
+        write_new(archive, transcript + '\n')
+        checkpoint = next((m for m in reversed(finals) if len(m['text']) >= 350 and not re.match(r'(?i)^(?:sudah|saya sudah)\s+(?:saya\s+)?(?:simpan|disimpan)', m['text'])), finals[-1] if finals else None)
+        newest = checkpoint['text'] if checkpoint else 'Tidak ada laporan akhir dalam riwayat. Pekerjaan tidak dapat dinyatakan selesai.'
+        chronology = '\n\n'.join('### ' + date(m['timestamp']) + '\n\n' + m['text'][:650] + ('\n\n[Cuplikan; laporan lengkap tersedia pada transkrip.]' if len(m['text'])>650 else '') for m in finals)
+        body = '\n'.join([
+            '# ' + row['title'], '',
+            'Tanggal penyimpanan: 12 Oktober 2026 (WIB)',
+            'Project: ' + row['project'], 'Dasar pengelompokan: ' + row['project_attribution'], 'Project saat chat: ' + row['cwd'],
+            'Chat ID: ' + ident, 'Jenis: ' + row['kind'],
+            'Rentang chat: ' + date(row['created_at']) + ' sampai ' + date(row['updated_at']),
+            'Tindakan: ' + row['action'],
+            'Evidence SHA-256: ' + row['evidence_sha256'], '',
+            '## Tujuan pekerjaan dan konteks awal', '',
+            bullets([m['text'] for m in users[:2]], 2, 1800), '',
+            '## Keputusan penting dan implementasi historis', '',
+            'Rangkuman ini berasal dari chat historis, bukan pemeriksaan source/runtime pada 12 Oktober 2026. Rencana, usulan, dan hasil uji historis tetap mengikuti tanggal laporan. Laporan terbaru menjadi checkpoint, sedangkan pending lama bisa telah ditutup oleh laporan berikutnya.',
+            '', bullets(selected(r'keputusan|disepakati|implement|diterapkan|diubah|diperbaiki|ditambahkan|perubahan|sudah|selesai'), 18), '',
+            '## Checkpoint substantif terakhir', '',
+            'Tanggal checkpoint: ' + (date(checkpoint['timestamp']) if checkpoint else 'Tidak tersedia'), '',
+            newest[:8000] + ('\n\n[Laporan lengkap tersedia pada transkrip.]' if len(newest)>8000 else ''), '',
+            '## File dibuat, dimodifikasi, atau dirujuk', '',
+            'Operasi di bawah tercatat pada panggilan patch historis; bukan perubahan pada sesi ekspor. Perubahan lewat terminal mungkin hanya tercatat dalam laporan akhir.',
+            '', bullets([p['operation'] + ': ' + p['path'] for p in row['patches']], 45),
+            '', bullets(selected(r'\.(?:php|vue|mjs|js|tsx|ts|css|sql|md|xlsx|pdf|per|ai|json)\b'), 20), '',
+            '## Backup yang tercatat', '', bullets(selected(r'backup|\.bak_|cadangan|recovery branch'), 12), '',
+            '## Hasil pengujian dan verifikasi historis', '',
+            bullets(selected(r'test|assertion|lulus|passed|verifik|QC\b|QA\b|npm run build|syntax|lint'), 20), '',
+            '## Masalah belum selesai dan langkah lanjutan', '',
+            bullets([line for line in newest.splitlines() if re.search(r'belum|pending|batas|keterbatas|terkendala|risiko|lanjut|perlu', line, re.I)], 20),
+            '', 'Untuk melanjutkan: baca checkpoint terbaru dan transkrip, verifikasi Git/source/runtime aktif sesuai project, gunakan Graphify hanya sebagai peta, lalu backup sebelum modifikasi. Jangan mengulangi operasi database atau deploy hanya berdasarkan riwayat ini.', '',
+            '## Kronologi ringkas', '', chronology or 'Tidak tersedia laporan akhir.', '',
+            '## Memori terdahulu dan sumber', '',
+            bullets(row['previous'], 12),
+            '', '- Riwayat asli: ' + row['rollout_path'],
+            '- Sumber riwayat lengkap: ' + row.get('history_source','API read_thread; seluruh pagination selesai'),
+            '- Transkrip kronologis yang disamarkan: ' + str(archive),
+            '- Pesan pengguna: ' + str(row['user_count']) + '; laporan akhir: ' + str(row['final_count']) + '; referensi lampiran nonteks: ' + str(row['attachment_count']),
+            '- Memori lama dipertahankan. Catatan ini adalah pembaruan tambahan yang mencakup seluruh pesan teks dan laporan akhir yang dapat diekstrak.',
+            '- Graphify tidak diperbarui; menunggu perintah manual pengguna.',
+            '', '## Verifikasi penyimpanan terbaru', '',
+            'Pasangan E/C, kelengkapan ID chat, transkrip, serta keutuhan memori lama diperiksa oleh export_memories.py. Ini hanya verifikasi arsip; pengujian aplikasi tidak dijalankan ulang.', ''
+        ])
+        assert ident in body and len(body)>1200
+        for dest in DESTS:
+            write_new(dest / name, body)
+        assert (DESTS[0]/name).read_bytes() == (DESTS[1]/name).read_bytes()
+        manifest.append({'id':ident, 'title':row['title'], 'project':row['project'], 'action':row['action'], 'e':str(DESTS[0]/name), 'c':str(DESTS[1]/name), 'sha256':sha(DESTS[0]/name), 'transcript':str(archive), 'transcript_sha256':sha(archive), 'errors':row['errors'], 'final_count':row['final_count']})
+    assert all(sha(Path(name))==value for name,value in previous_hashes.items())
+    index = ['# Indeks Memori Seluruh Project — 12 Oktober 2026', '',
+        'Chat ID: ' + CURRENT, '',
+        'Tujuan: menyimpan chat yang belum memiliki memori dan memperbarui rangkuman chat yang telah tersimpan, termasuk Age of Empire II DE, New MG Laptop, Laravel 13 CMS BUM, serta CMS BUM NextJS.', '',
+        'Cakupan: ' + str(len(rows)) + ' chat sebelumnya yang dapat diakses. Chat aktif ini dicatat melalui indeks ini. Chat subagent/guardian tidak menjadi entri terpisah.',
+        'Batas: cakupan riwayat lokal Codex yang tersedia dan dua chat cloud yang muncul pada sidebar. Tidak membuktikan seluruh riwayat akun ChatGPT web, perangkat lain, atau chat yang sudah dihapus.', '',
+        'Pembaruan dibuat sebagai catatan tambahan agar memori lama tetap utuh. Deteksi memori terdahulu memakai ID sumber eksplisit serta path memori pada laporan akhir yang masih ada. Memori lama yang hanya memakai judul mungkin belum terhubung otomatis.', '',
+        '## Tujuan dan keputusan penyimpanan', '',
+        '- E:/AI/Memories adalah sumber resmi; salinan C di C:/Users/aruna/.codex/memories/extensions/ad_hoc/notes.',
+        '- Artefak pada D:/Laragon/www/laravel-13-phoenix/project-artifacts/memory-sync-20261012, sesuai pilihan pengguna.',
+        '- Aplikasi, database, staging Git, commit, deployment, dan Graphify tidak dimodifikasi.',
+        '- Tidak ada file lama dimodifikasi sehingga tidak diperlukan backup sebelum perubahan. Keutuhan file memori sebelumnya diperiksa dengan SHA-256.',
+        '- Hasil uji aplikasi dalam catatan merupakan laporan historis. Verifikasi terbaru terbatas pada integritas arsip.', '',
+        '## Catatan per project', '']
+    for project in sorted({r['project'] for r in rows}):
+        index += ['### ' + project, '']
+        for item in manifest:
+            if item['project']==project:
+                index.append('- [' + item['title'].replace('[','(').replace(']',')') + '](' + Path(item['e']).name + ') — ' + item['action'] + '; ' + str(item['final_count']) + ' laporan akhir.')
+        index.append('')
+    index += ['## File dibuat dan verifikasi', '', '- Script: ' + str(BASE/'export_memories.py'), '- Manifest: ' + str(BASE/'manifest.json'), '- Verifikasi: ' + str(BASE/'verification.json'), '', '## Masalah belum selesai dan langkah lanjutan', '',
+        '- Akses ke seluruh chat ChatGPT web belum tersedia dalam inventaris ini; ekspor akun diperlukan untuk cakupan cloud yang tidak ditampilkan aplikasi.',
+        '- Lampiran gambar/dokumen biner tidak disalin; rujukan dan konteks teks tetap tersimpan.',
+        '- Laporan tanpa akhir ditandai dalam plan.json; jangan menganggap pekerjaan tersebut selesai.',
+        '- Saat pekerjaan dilanjutkan, periksa kondisi source/runtime baru karena catatan adalah riwayat.', '']
+    index_name = STAMP + '-index.md'
+    for dest in DESTS:
+        write_new(dest/index_name, '\n'.join(index))
+    assert (DESTS[0]/index_name).read_bytes() == (DESTS[1]/index_name).read_bytes()
+    for item in manifest:
+        assert sha(Path(item['e']))==item['sha256']==sha(Path(item['c']))
+        assert Path(item['e']).stat().st_size>0 and sha(Path(item['transcript']))==item['transcript_sha256']
+    verification = {'chats':len(rows), 'note_pairs_verified':len(manifest), 'index_pairs_verified':1, 'mismatched_hashes':0, 'old_memories_verified_unchanged':len(previous_hashes), 'empty_files':0, 'actions':dict(collections.Counter(r['action'] for r in rows)), 'projects':dict(collections.Counter(r['project'] for r in rows)), 'source_errors':[(r['id'],r['errors']) for r in rows if r['errors']], 'no_final':[(r['id'],r['title']) for r in rows if not r['final_count']], 'index_e':str(DESTS[0]/index_name), 'index_c':str(DESTS[1]/index_name), 'runtime_retested':False, 'graphify_updated':False}
+    (BASE/'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')
+    (BASE/'previous-hashes.json').write_text(json.dumps(previous_hashes, ensure_ascii=False, indent=2), encoding='utf-8')
+    (BASE/'verification.json').write_text(json.dumps(verification, ensure_ascii=False, indent=2), encoding='utf-8')
+    print(json.dumps(verification, ensure_ascii=False))
+
+assert 'test123' not in clean('password: test123')
+assert 'test123' not in clean('DB_PASSWORD=test123')
+assert 'abcdefghijk' not in clean('Bearer abcdefghijk')
+assert clean('Runtime belum diverifikasi.') == 'Runtime belum diverifikasi.'
+if __name__ == '__main__':
+    if '--export' in sys.argv:
+        export()
+    else:
+        prepare()

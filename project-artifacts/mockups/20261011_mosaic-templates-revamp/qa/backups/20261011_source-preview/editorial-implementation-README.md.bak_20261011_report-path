@@ -1,0 +1,36 @@
+# Editorial Journal — implementasi revamp
+
+Tanggal: 11 Oktober 2026. Project: `D:\Laragon\www\laravel-13-phoenix`.
+
+Preview yang sudah disetujui diterapkan ke Blade/CSS aktif. Typography mengikuti Site Config/CMS variables; tidak mengganti font frontend. Lead split desktop menjadi foto di atas teks pada tablet/mobile. Grid, search, category, thumbnail, dan pagination tetap menggunakan pengaturan yang sudah ada.
+
+## Perubahan source
+
+- `public/assets/css/article/article-frontend-2026.css`: header, toolbar, lead, cards, spacing, responsive layout, dan pagination mengikuti desain preview. Edge-to-edge thumbnail dan custom radius tetap dihormati.
+- `resources/views/article/templates/archive/editorial-journal.blade.php`: heading More stories berada di slot list yang diganti oleh AJAX.
+- `resources/views/article/templates/partials/archive-header.blade.php`: category select memakai filtering existing dengan noscript fallback; search label tetap tersedia.
+- `app/Support/Article/ArticleTemplateOptions.php` dan manager JS: default pagination frame OFF, dengan explicit frame settings tetap berlaku.
+- `tests/Feature/Article/ArticleTemplateOptionsTest.php`: memverifikasi default dan explicit footer frame.
+- `tests/article-theme-link-isolation.test.mjs`: ekstraksi rule CSS shared di-anchor agar tidak salah membaca selector sizing khusus template.
+
+Source lain yang dibaca mencakup ArticleTemplatePreviewFixture, media-link, pagination, shell attributes, SiteTypography/CSS typography, serta form settings Editorial. Read More dan fixed card height tetap opt-in. Search/category default mengikuti normalizer; profil QA mengaktifkannya untuk memeriksa UI.
+
+## Backup
+
+Backup awal enam file ada pada `project-artifacts/backups/20261011_012446-editorial-journal-revamp/manifest.json`, dengan SHA-256 diverifikasi. Checkpoint tambahan CSS, theme-link test, dan QA fixture ada di subfolder `settings-checkpoint-20261011_012947/`. Source aktif selalu digunakan sebagai dasar perubahan.
+
+## Pengujian
+
+`render.php` merender Blade aktif, normalizer, dan CSS frontend tanpa `preview.css` atau JS demo. Profil mencakup default, boxed, underline, soft, dan custom settings. Rendering memakai translation identity, array cache/session, dan compiled views dalam artifact, tanpa perubahan setting/database bisnis.
+
+`verify.js` dan `results.json`: 44 pemeriksaan source browser lulus, termasuk viewport 1440/1024/768/390/375/320px, CMS font scaling, responsive lead/grid, tiga model pagination, frame ON/OFF, search gap/radius, custom card height/border/background, edge-to-edge thumbnail, custom media radius, divider spacing, serta posisi/icon Read More. Pemeriksaan terakhir diulang sesudah shared changes Mosaic.
+
+Node Article/typography terakhir: 128 pass. PHP Article terakhir setelah keseluruhan revamp: 43 pass dan 625 assertions, dengan log di `../.. /20261011_mosaic-templates-revamp/implementation/` (lihat folder Mosaic yang sejajar). PHP menggunakan SQLite `:memory:`. Screenshot source terbaru tersedia sebagai `desktop-source.png` dan `mobile-source.png` di folder ini.
+
+## Memori dan Graphify
+
+Konteks memakai registry C karena `E:\AI\Memories` tidak tersedia. Kontrak `ArticleTemplateOptions` dan pilihan opt-in diverifikasi kembali terhadap source. Graphify query/explain menunjukkan Blade Editorial menggunakan partial archive-header, archive-title, media-link, pagination, dan shell attributes; include EXTRACTED diverifikasi langsung. Graph tidak di-update karena instruksi update manual.
+
+## Batas verifikasi
+
+Tidak dilakukan Apply/Save di sesi admin authenticated dan tidak mengubah template yang sedang dipilih dalam database. Verifikasi browser merupakan rendering source aktif dengan fixture; ini tidak diklaim sebagai bukti persistensi melalui UI admin. Semua perubahan lama yang tidak terkait tetap dipertahankan; tidak ada commit/push atau reset/clean.

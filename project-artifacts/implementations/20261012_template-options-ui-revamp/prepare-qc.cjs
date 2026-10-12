@@ -1,0 +1,11 @@
+const fs=require('node:fs');
+let code=fs.readFileSync('../../mockups/20261012_template-options-ui-revamp/qa/verify.js','utf8');
+code=code.replace('http://127.0.0.1:8780/','http://127.0.0.1:8781/');
+code=code.replace('project-artifacts/mockups/20261012_template-options-ui-revamp/qa/','project-artifacts/implementations/20261012_template-options-ui-revamp/');
+const comparisonStart=code.indexOf("  await page.getByRole('button',{name:'Saat ini'");
+const comparisonEnd=code.indexOf('  const templates=',comparisonStart);
+if(comparisonStart<0||comparisonEnd<0)throw Error('Comparison block not found');
+code=code.slice(0,comparisonStart)+code.slice(comparisonEnd);
+code=code.replace(/    await page.evaluate\(status=>window.prototypeVm.prototypeNotify\(status\),notice\);\r?\n    await page.locator\('\.ph-notice-toast.show'\).waitFor\(\);\r?\n/,'');
+code=code.replace("  for(const [notice,callout] of", "  if(await page.locator('.ph-notice-toast.show').count()){await page.locator('.ph-notice-toast [data-bs-dismiss=toast]').click();await page.waitForFunction(()=>!document.querySelector('.ph-notice-toast').classList.contains('show'));}\n  for(const [notice,callout] of");
+fs.writeFileSync('verify-source.js',code);

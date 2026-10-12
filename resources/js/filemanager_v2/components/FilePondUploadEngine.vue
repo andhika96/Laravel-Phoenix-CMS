@@ -4,6 +4,7 @@ import vueFilePond from 'vue-filepond';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import 'filepond/dist/filepond.min.css';
 import { ensureFolders, getUploadOptions, uploadFile } from '../data/live';
+import { prepareUploadRecovery } from '../data/uploadRecovery';
 
 const FilePond = vueFilePond(FilePondPluginFileValidateSize);
 
@@ -16,7 +17,7 @@ const pond = ref(null);
 const resumeWaiters = [];
 const releasedIds = new Set();
 const uploadOptions = getUploadOptions();
-const maxParallelUploads = computed(() => Math.max(1, Number(uploadOptions.maxParallel) || 3));
+const maxParallelUploads = computed(() => Math.max(1, Number(uploadOptions.maxParallel) || 2));
 const maxFileSize = computed(() => `${Math.max(1, Math.floor((Number(uploadOptions.maxFileSize) || (1024 * 1024 * 1024)) / (1024 * 1024)))}MB`);
 
 function waitForResume() {
@@ -35,10 +36,6 @@ function metadataFor(file) {
     relativePath: file.getMetadata('relativePath') || '',
     idempotencyKey: file.getMetadata('idempotencyKey') || '',
   };
-}
-
-function makeUploadKey() {
-  return window.crypto?.randomUUID?.() || `filepond-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
 const server = {
@@ -140,13 +137,21 @@ function handleRemoveFile(removeError, file) {
 }
 
 function addFiles(fileList, target) {
-  for (const file of Array.from(fileList || [])) {
+  const files = Array.from(fileList || []);
+  let keys;
+  try {
+    keys = prepareUploadRecovery(files, target.storage, target.path || '', true);
+  } catch (error) {
+    emit('failed', { message: error.message });
+    return;
+  }
+  for (const [index, file] of files.entries()) {
     void pond.value?.addFile(file, {
       metadata: {
         storage: target.storage,
         path: target.path || '',
         relativePath: file.webkitRelativePath || '',
-        idempotencyKey: makeUploadKey(),
+        idempotencyKey: keys[index],
       },
     });
   }

@@ -7,6 +7,27 @@ use Tests\TestCase;
 
 class ArticleTemplateOptionsTest extends TestCase
 {
+    public function test_revamped_pagination_starts_without_a_frame_but_respects_explicit_frame_settings(): void
+    {
+        $options = app(ArticleTemplateOptions::class);
+        foreach (['minimal-reading-list', 'editorial-journal', 'mosaic-magazine', 'mosaic-classic', 'balanced-card-grid'] as $template) {
+            $this->assertFalse($options->archive($template)['pagination']['frame']['enabled']);
+            $this->assertTrue($options->archive($template, ['pagination' => ['frame' => ['enabled' => true]]])['pagination']['frame']['enabled']);
+        }
+        $this->assertSame('14rem', $options->archive('mosaic-classic')['mosaic_classic']['side_height']['mobile']);
+        $this->assertSame('8rem', $options->archive('mosaic-classic', ['mosaic_classic' => ['side_height' => ['mobile' => '8rem']]])['mosaic_classic']['side_height']['mobile']);
+
+        $enabled = $options->archive('minimal-reading-list', [
+            'pagination' => ['frame' => ['enabled' => true, 'border_width' => '3px', 'radius' => '18px']],
+        ]);
+        $this->assertTrue($enabled['pagination']['frame']['enabled']);
+        $this->assertSame('3px', $enabled['pagination']['frame']['border_width']);
+        $this->assertSame('18px', $enabled['pagination']['frame']['radius']);
+        $this->assertFalse($options->archive('minimal-reading-list', [
+            'pagination' => ['frame' => ['enabled' => false]],
+        ])['pagination']['frame']['enabled']);
+    }
+
     public function test_it_provides_safe_per_template_defaults_and_normalizes_custom_options(): void
     {
         $options = app(ArticleTemplateOptions::class);

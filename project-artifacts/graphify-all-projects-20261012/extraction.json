@@ -1,0 +1,2994 @@
+{
+  "nodes": [
+    {
+      "id": "app_support_article_articletemplateoptions",
+      "label": "ArticleTemplateOptions.php",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "label": "ArticleTemplateOptions",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_construct",
+      "label": ".__construct()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L56",
+      "_origin": "ast"
+    },
+    {
+      "id": "articletemplatecatalog",
+      "label": "ArticleTemplateCatalog",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "label": ".archive()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L60",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "label": ".storyLayout()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L131",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "label": ".detail()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L175",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_archives",
+      "label": ".archives()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L187",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_details",
+      "label": ".details()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L198",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_copyoption",
+      "label": ".copyOption()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L209",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_detailcopyoption",
+      "label": ".detailCopyOption()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L217",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_toolbaroption",
+      "label": ".toolbarOption()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L229",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "label": ".searchOption()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L239",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_searchtype",
+      "label": ".searchType()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L258",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_searchicon",
+      "label": ".searchIcon()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L265",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_paginationarrowicon",
+      "label": ".paginationArrowIcon()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L270",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_categorymode",
+      "label": ".categoryMode()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L275",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_column",
+      "label": ".column()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L282",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_thumbnail",
+      "label": ".thumbnail()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L287",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "label": ".editorialJournal()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L307",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "label": ".pagination()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L359",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_paginationtype",
+      "label": ".paginationType()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L385",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrange",
+      "label": ".paginationRange()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L393",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrangevalue",
+      "label": ".paginationRangeValue()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L407",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_sidebar",
+      "label": ".sidebar()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L416",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_sidebarposition",
+      "label": ".sidebarPosition()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L431",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_shell",
+      "label": ".shell()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L438",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "label": ".frame()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L447",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "label": ".radius()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L458",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_responsivebox",
+      "label": ".responsiveBox()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L488",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_box",
+      "label": ".box()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L501",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_headingtag",
+      "label": ".headingTag()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L513",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_color",
+      "label": ".color()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L520",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_optionalcolor",
+      "label": ".optionalColor()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L555",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_optionalmediaurl",
+      "label": ".optionalMediaUrl()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L566",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "label": ".dimension()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L585",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_parsedimension",
+      "label": ".parseDimension()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L606",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_formatdimension",
+      "label": ".formatDimension()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L626",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "label": ".boolean()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L634",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_text",
+      "label": ".text()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L643",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "label": ".array()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L652",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_assets_js_vue3_manage_article_templates_vuev3_manage_article_templates_2026",
+      "label": "vueV3-manage-article-templates-2026.js",
+      "file_type": "code",
+      "source_file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_assets_js_vue3_manage_article_templates_vuev3_manage_article_templates_2026_articletemplateunitcontrols",
+      "label": "ArticleTemplateUnitControls",
+      "file_type": "code",
+      "source_file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_assets_js_vue3_manage_article_templates_vuev3_manage_article_templates_2026_articletemplateroot",
+      "label": "articleTemplateRoot",
+      "file_type": "code",
+      "source_file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "source_location": "L141",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_assets_js_vue3_manage_article_templates_vuev3_manage_article_templates_2026_managearticletemplatevue3",
+      "label": "ManageArticleTemplateVue3",
+      "file_type": "code",
+      "source_file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "source_location": "L144",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_assets_plugins_ckfinder_config",
+      "label": "config.php",
+      "file_type": "code",
+      "source_file": "public/assets/plugins/ckfinder/config.php",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_archive_editorial_journal_blade",
+      "label": "editorial-journal.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_archive_editorial_journal_blade_php_article_templates_partials_template_shell_attributes",
+      "label": "article.templates.partials.template-shell-attributes",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_archive_editorial_journal_blade_php_article_templates_partials_archive_header",
+      "label": "article.templates.partials.archive-header",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_archive_editorial_journal_blade_php_article_templates_partials_archive_title",
+      "label": "article.templates.partials.archive-title",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_archive_editorial_journal_blade_php_article_templates_partials_media_link",
+      "label": "article.templates.partials.media-link",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_archive_editorial_journal_blade_php_article_templates_partials_pagination",
+      "label": "article.templates.partials.pagination",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_archive_minimal_reading_list_blade",
+      "label": "minimal-reading-list.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_archive_minimal_reading_list_blade_php_article_templates_partials_template_shell_attributes",
+      "label": "article.templates.partials.template-shell-attributes",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_archive_minimal_reading_list_blade_php_article_templates_partials_archive_header",
+      "label": "article.templates.partials.archive-header",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_archive_minimal_reading_list_blade_php_article_templates_partials_media_link",
+      "label": "article.templates.partials.media-link",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_archive_minimal_reading_list_blade_php_article_templates_partials_archive_title",
+      "label": "article.templates.partials.archive-title",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_archive_minimal_reading_list_blade_php_article_templates_partials_pagination",
+      "label": "article.templates.partials.pagination",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_partials_archive_header_blade",
+      "label": "archive-header.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/partials/archive-header.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_vendor_authentication_log_emails_failed_blade",
+      "label": "failed.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/vendor/authentication-log/emails/failed.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_vendor_authentication_log_emails_new_blade",
+      "label": "new.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/vendor/authentication-log/emails/new.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_vendor_breadcrumbs_bootstrap4_blade",
+      "label": "bootstrap4.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/vendor/breadcrumbs/bootstrap4.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_vendor_breadcrumbs_bootstrap5_blade",
+      "label": "bootstrap5.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/vendor/breadcrumbs/bootstrap5.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_vendor_breadcrumbs_bulma_blade",
+      "label": "bulma.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/vendor/breadcrumbs/bulma.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_vendor_breadcrumbs_foundation6_blade",
+      "label": "foundation6.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/vendor/breadcrumbs/foundation6.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_vendor_breadcrumbs_json_ld",
+      "label": "json-ld.php",
+      "file_type": "code",
+      "source_file": "resources/views/vendor/breadcrumbs/json-ld.php",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_vendor_breadcrumbs_materialize_blade",
+      "label": "materialize.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/vendor/breadcrumbs/materialize.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_vendor_breadcrumbs_tailwind_blade",
+      "label": "tailwind.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/vendor/breadcrumbs/tailwind.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_vendor_breadcrumbs_uikit_blade",
+      "label": "uikit.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/vendor/breadcrumbs/uikit.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_article_minimal_reading_list_sidebar_test",
+      "label": "article-minimal-reading-list-sidebar.test.mjs",
+      "file_type": "code",
+      "source_file": "tests/article-minimal-reading-list-sidebar.test.mjs",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_article_minimal_reading_list_sidebar_test_root",
+      "label": "root",
+      "file_type": "code",
+      "source_file": "tests/article-minimal-reading-list-sidebar.test.mjs",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_article_minimal_reading_list_sidebar_test_read",
+      "label": "read()",
+      "file_type": "code",
+      "source_file": "tests/article-minimal-reading-list-sidebar.test.mjs",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_article_template_presentation_test",
+      "label": "article-template-presentation.test.mjs",
+      "file_type": "code",
+      "source_file": "tests/article-template-presentation.test.mjs",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_article_template_presentation_test_root",
+      "label": "root",
+      "file_type": "code",
+      "source_file": "tests/article-template-presentation.test.mjs",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_article_theme_link_isolation_test",
+      "label": "article-theme-link-isolation.test.mjs",
+      "file_type": "code",
+      "source_file": "tests/article-theme-link-isolation.test.mjs",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_article_theme_link_isolation_test_css",
+      "label": "css",
+      "file_type": "code",
+      "source_file": "tests/article-theme-link-isolation.test.mjs",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_article_theme_link_isolation_test_rulefor",
+      "label": "ruleFor()",
+      "file_type": "code",
+      "source_file": "tests/article-theme-link-isolation.test.mjs",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articletemplateoptionstest",
+      "label": "ArticleTemplateOptionsTest.php",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest",
+      "label": "ArticleTemplateOptionsTest",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_revamped_pagination_starts_without_a_frame_but_respects_explicit_frame_settings",
+      "label": ".test_revamped_pagination_starts_without_a_frame_but_respects_explicit_frame_settings()",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_provides_safe_per_template_defaults_and_normalizes_custom_options",
+      "label": ".test_it_provides_safe_per_template_defaults_and_normalizes_custom_options()",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L31",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_normalizes_archive_styling_and_dimension_units_without_custom_css",
+      "label": ".test_it_normalizes_archive_styling_and_dimension_units_without_custom_css()",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L95",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_normalizes_named_pagination_models_and_device_ranges",
+      "label": ".test_it_normalizes_named_pagination_models_and_device_ranges()",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L170",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_normalizes_search_models_visual_overrides_and_fontawesome_icon_allowlist",
+      "label": ".test_it_normalizes_search_models_visual_overrides_and_fontawesome_icon_allowlist()",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L200",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_normalizes_border_radius_as_a_page_builder_style_four_value_group",
+      "label": ".test_it_normalizes_border_radius_as_a_page_builder_style_four_value_group()",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L260",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_normalizes_editorial_journal_options_and_keeps_the_new_thumbnail_default_template_scoped",
+      "label": ".test_it_normalizes_editorial_journal_options_and_keeps_the_new_thumbnail_default_template_scoped()",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L275",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_rejects_unsafe_styling_values_and_keeps_detail_shell_options",
+      "label": ".test_it_rejects_unsafe_styling_values_and_keeps_detail_shell_options()",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L364",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_keeps_strictly_valid_coloris_color_formats_without_accepting_raw_css",
+      "label": ".test_it_keeps_strictly_valid_coloris_color_formats_without_accepting_raw_css()",
+      "file_type": "code",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L395",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_testcase",
+      "label": "Tests\\TestCase",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "local_metadata_phpunit_xml",
+      "label": "phpunit.xml",
+      "source_file": "phpunit.xml",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "e232db04f03301e1a45a4d7e2ef8309e61d116965a7babaa4a952ceac8dd4fce",
+      "bytes": 1191
+    },
+    {
+      "id": "local_metadata_public_assets_beta_css_new_css",
+      "label": "public/assets/beta_css/new.css",
+      "source_file": "public/assets/beta_css/new.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "887a8af15dcf49f852e49d793d867ade0a0d385c69e98b22c5345497ba884a0c",
+      "bytes": 17375
+    },
+    {
+      "id": "local_metadata_public_assets_css_article_article_frontend_2026_css",
+      "label": "public/assets/css/article/article-frontend-2026.css",
+      "source_file": "public/assets/css/article/article-frontend-2026.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "9a47b1780f3e43cacdb97e3b45b243a27d9e02dfad8473991b94a6be2a03f697",
+      "bytes": 106753
+    },
+    {
+      "id": "local_metadata_public_assets_css_workflow_editor_css",
+      "label": "public/assets/css/workflow-editor.css",
+      "source_file": "public/assets/css/workflow-editor.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "d571d5af9b74ecd4329505f0ef4a3708f059a1d0633e0af25b44d36c09bb2857",
+      "bytes": 36355
+    },
+    {
+      "id": "local_metadata_public_mockups_arunika_aurora_sidebar_interactive_mockup_html",
+      "label": "public/mockups/arunika-aurora-sidebar-interactive-mockup.html",
+      "source_file": "public/mockups/arunika-aurora-sidebar-interactive-mockup.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "974679a44cf3fd76781f3a40234f672f0181f8e09e21be7ccaae2aa821f2aea0",
+      "bytes": 31687
+    },
+    {
+      "id": "local_metadata_public_mockups_arunika_dashboard_theme_mockup_html",
+      "label": "public/mockups/arunika-dashboard-theme-mockup.html",
+      "source_file": "public/mockups/arunika-dashboard-theme-mockup.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "b7596f3dc3bbdf7b64b7ae80cacab3ead01162b5db18ddde55fb857e6495ae84",
+      "bytes": 28015
+    },
+    {
+      "id": "local_metadata_public_mockups_frontend_menu_dropdown_modal_mockup_html",
+      "label": "public/mockups/frontend-menu-dropdown-modal-mockup.html",
+      "source_file": "public/mockups/frontend-menu-dropdown-modal-mockup.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "1df35240381e3043eb480625eb5c56d4c3a87d4ac3f1a1129f244178fafb6b85",
+      "bytes": 71294
+    },
+    {
+      "id": "local_metadata_public_mockups_header_navigation_ui_mockup_html",
+      "label": "public/mockups/header-navigation-ui-mockup.html",
+      "source_file": "public/mockups/header-navigation-ui-mockup.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "9925e36282f79ef41285602cb94f8c9968fb269b857b542c9c49e38bc29c9df5",
+      "bytes": 113310
+    },
+    {
+      "id": "local_metadata_public_mockups_pagebuilder_editor_redesign_prototype_v2_3_html",
+      "label": "public/mockups/pagebuilder-editor-redesign-prototype-v2.3.html",
+      "source_file": "public/mockups/pagebuilder-editor-redesign-prototype-v2.3.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "dcebdbee6f7304e3ce6a627942093d4b7a2a2b9ffc073fe46924d6873370d423",
+      "bytes": 117552
+    },
+    {
+      "id": "local_metadata_public_mockups_pagebuilder_editor_redesign_prototype_v2_4_html",
+      "label": "public/mockups/pagebuilder-editor-redesign-prototype-v2.4.html",
+      "source_file": "public/mockups/pagebuilder-editor-redesign-prototype-v2.4.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "c33c322f3784badbd7c47a4bafdca8b432480b638a1d03819e66f63e4497928e",
+      "bytes": 117552
+    },
+    {
+      "id": "local_metadata_public_mockups_pagebuilder_editor_redesign_prototype_html",
+      "label": "public/mockups/pagebuilder-editor-redesign-prototype.html",
+      "source_file": "public/mockups/pagebuilder-editor-redesign-prototype.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "02a6727409a1b34cd1fed198da61da67d84739d65b8189237a69418521d04682",
+      "bytes": 125623
+    },
+    {
+      "id": "local_metadata_public_mockups_site_general_settings_balanced_layout_mockup_html",
+      "label": "public/mockups/site-general-settings-balanced-layout-mockup.html",
+      "source_file": "public/mockups/site-general-settings-balanced-layout-mockup.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "0e0f035eabfbdbde56eb57ec8990bb9187147a6bc8c19de297b0eba6fd3fb287",
+      "bytes": 33120
+    },
+    {
+      "id": "local_metadata_public_mockups_site_logo_upload_config_mockup_html",
+      "label": "public/mockups/site-logo-upload-config-mockup.html",
+      "source_file": "public/mockups/site-logo-upload-config-mockup.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "e7101d5451c10b34f0e417ae8bea462b8b24d40264c9c6a8680837d46a923adf",
+      "bytes": 38609
+    },
+    {
+      "id": "local_metadata_public_mockups_site_typography_preview_config_mockup_html",
+      "label": "public/mockups/site-typography-preview-config-mockup.html",
+      "source_file": "public/mockups/site-typography-preview-config-mockup.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "ecac50b8449837b370da872faf61480d6386f7f2e48c0ee3fe73cb347a8684b7",
+      "bytes": 21506
+    },
+    {
+      "id": "local_metadata_public_mockups_theme_manager_interactive_mockup_html",
+      "label": "public/mockups/theme-manager-interactive-mockup.html",
+      "source_file": "public/mockups/theme-manager-interactive-mockup.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "09391b2543742fc029cc4c5e815a35e88d13ad4290b4d674c1c95fe8cf4b9b9d",
+      "bytes": 25702
+    },
+    {
+      "id": "local_metadata_resources_js_filemanager_v2_responsive_typography_scss",
+      "label": "resources/js/filemanager_v2/responsive-typography.scss",
+      "source_file": "resources/js/filemanager_v2/responsive-typography.scss",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "40f3bb7b10e1e5325f7867c481dd023967e47e9f2d227478a68b2708f0e528f2",
+      "bytes": 1613
+    },
+    {
+      "id": "local_metadata_resources_js_filemanager_v2_styles_css",
+      "label": "resources/js/filemanager_v2/styles.css",
+      "source_file": "resources/js/filemanager_v2/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "f39d0d4da3002af0eb7c269f858e8403fd60492ce32bfe8c5caa498e26a0c5e2",
+      "bytes": 51492
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_layout_container_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/layout/container/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/layout/container/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "ab7da2f23141d3ac3431d432617a80e3db656836f7385e5fb82e3a12473a7b2a",
+      "bytes": 14538
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_layout_container_fluid_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/layout/container-fluid/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/layout/container-fluid/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "ab7da2f23141d3ac3431d432617a80e3db656836f7385e5fb82e3a12473a7b2a",
+      "bytes": 14538
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_layout_grid_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/layout/grid/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/layout/grid/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "0fae15fddbbd33e746558db318e082892380ce27170da9c4a338cd88edb9d52d",
+      "bytes": 23139
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_layout_row_grid_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/layout/row-grid/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/layout/row-grid/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "0fae15fddbbd33e746558db318e082892380ce27170da9c4a338cd88edb9d52d",
+      "bytes": 23139
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_basic_button_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/basic/button/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/basic/button/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "d3b4c2bb4a1a056d2a43c7da3602a933e4af4c64b1ea78f253eb10f6142e782d",
+      "bytes": 21839
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_basic_divider_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/basic/divider/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/basic/divider/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "f8304c90fd6ad9c8106b823c83a532ccb61558f7ed376b8779534dd96686e781",
+      "bytes": 2555
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_basic_heading_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/basic/heading/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/basic/heading/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "4ea7c7e45f859fefbc77dda4520c8a415b1db72789b981ef985a6e9985489a86",
+      "bytes": 4301
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_basic_icon_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/basic/icon/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/basic/icon/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "0bde9f6adfbca58e3a2e5d3a4b5317707e4e33f974852c209d51ac182da32065",
+      "bytes": 20648
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_basic_image_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/basic/image/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/basic/image/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "92b8da681504891dac00f4bf3e36f566195cf75e6349b93c3d02fa1cdedf3f67",
+      "bytes": 5423
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_basic_spacer_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/basic/spacer/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/basic/spacer/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "c3160ebac038ed71fc83a8a60471df7f2100cc3ac895822138c2ea47833215d7",
+      "bytes": 426
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_basic_text_editor_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/basic/text-editor/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/basic/text-editor/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "017fc28cc3aa92150e3835cb7c18118bb34e64a32416c9c19e0587e81f02ad46",
+      "bytes": 12639
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_basic_video_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/basic/video/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/basic/video/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "18537c174dd4baac2093557aeb447542bad98d5f34ff20aea034ba1ef926fd66",
+      "bytes": 4661
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_general_accordion_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/general/accordion/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/general/accordion/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "d97257059c12fc1116f99443668ef841632692e6e7fd4d39d9ef29ac71f69bc0",
+      "bytes": 40334
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_general_alert_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/general/alert/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/general/alert/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "ad03e8e69cb3333245e77370964b1de9997ab83f320945917684d913c0f23c63",
+      "bytes": 2155
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_general_basic_gallery_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/general/basic-gallery/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/general/basic-gallery/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "8c31019a178f02c5b5a9a513fa84c94fd13d8120cfa2ed0e151e85b2a4fa3a3c",
+      "bytes": 7301
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_general_counter_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/general/counter/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/general/counter/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "8b52ec9b83736b3490dbdf5acd8dc0035229de6d13827e7140d568a8f6459666",
+      "bytes": 304
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_general_icon_box_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/general/icon-box/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/general/icon-box/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "6ef339e3dbacae61bbfd4f912582a42338544121001f2ba8a4c1b143d780842f",
+      "bytes": 8119
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_general_icon_list_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/general/icon-list/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/general/icon-list/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "6ad7e02a5c36c107cfbcefa3e43b7f321a0d55ea533ec57aa3b8d1804a7a5ca3",
+      "bytes": 4026
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_general_image_box_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/general/image-box/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/general/image-box/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "309adba5ba56f6542d22552a0552ad77dd42d09e3ff7ece854c0a58204e006f0",
+      "bytes": 5038
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_general_image_carousel_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/general/image-carousel/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/general/image-carousel/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "2a1051c48ccaa35d4a69fae1cc8278bf49a201bbaaf65da2fa907ff4a04dd834",
+      "bytes": 8547
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_general_progress_bar_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/general/progress-bar/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/general/progress-bar/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "a6f08549978ceaed065d594af1ae105ab07a354d5c28a2b72c83b62ac8d446e0",
+      "bytes": 801
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_general_social_icons_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/general/social-icons/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/general/social-icons/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "784261b6388a39cac62a9c986f6472a0024d1ee7e88cb4f5feaa4e862bf71d88",
+      "bytes": 3107
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_general_tabs_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/general/tabs/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/general/tabs/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "ebc9763261edd0a70304c1815c0f9c335692c3d8a2d1b9279660641813e5966c",
+      "bytes": 45282
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_general_testimonial_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/general/testimonial/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/general/testimonial/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "e3b99f04180781f75881d4e7a1d471125b1d55b2190a2193aeb2c96f73865d2d",
+      "bytes": 1463
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_pro_form_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/pro/form/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/pro/form/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "dea20da7782b11e72e6926c18fe2972289e88e5448142aaf88e7d9ac94462986",
+      "bytes": 3619
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_pro_hero_banner_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-banner/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-banner/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "2cf06cecade35a39d346abb1501e4c9b1c7a0208006d0eac01b3bec2bd621802",
+      "bytes": 4098
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_pro_hero_slider_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-slider/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-slider/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "0e6d3e3894620e720ad4520c344fb96c700604f36e7577429ed74d59a5b5a805",
+      "bytes": 24467
+    },
+    {
+      "id": "local_metadata_resources_pagebuilder_elementor_v24_modules_widgets_pro_product_lead_form_styles_css",
+      "label": "resources/pagebuilder_elementor_v24/modules/widgets/pro/product-lead-form/styles.css",
+      "source_file": "resources/pagebuilder_elementor_v24/modules/widgets/pro/product-lead-form/styles.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "436e4ded9f46e5f59529db32e5b0a7d3ffb25ff90328a53188517cdbc3f704a1",
+      "bytes": 5412
+    },
+    {
+      "id": "local_metadata_tests_Fixtures_PageBuilderElementorV24_CompiledNative_automatic_flex_wrap_html",
+      "label": "tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-flex-wrap.html",
+      "source_file": "tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-flex-wrap.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "b09eb2b227d27b72cf100633542c9a7173cf742d0597351c92407fe7f9164b24",
+      "bytes": 464
+    },
+    {
+      "id": "local_metadata_tests_Fixtures_PageBuilderElementorV24_CompiledNative_automatic_nested_divs_html",
+      "label": "tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-nested-divs.html",
+      "source_file": "tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-nested-divs.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "b45624c77d18b7a5e91519e1ed7626399b00c0d91118b22f32706aa262683fa0",
+      "bytes": 496
+    },
+    {
+      "id": "local_metadata_tests_Fixtures_PageBuilderElementorV24_CompiledNative_automatic_one_column_html",
+      "label": "tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-one-column.html",
+      "source_file": "tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-one-column.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "a2fd3ec0a9a86f91c2122025c40410b82cecaef18e2a995702dd641a2335fe81",
+      "bytes": 408
+    },
+    {
+      "id": "local_metadata_tests_Fixtures_PageBuilderElementorV24_CompiledNative_automatic_responsive_collapse_html",
+      "label": "tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-responsive-collapse.html",
+      "source_file": "tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-responsive-collapse.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "f1485b1772cc1d7d64c7f3f071b79e417347f689705988860bdf16ebd7999d4a",
+      "bytes": 554
+    },
+    {
+      "id": "local_metadata_tests_Fixtures_PageBuilderElementorV24_CompiledNative_automatic_three_column_grid_html",
+      "label": "tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-three-column-grid.html",
+      "source_file": "tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-three-column-grid.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "a394bf2419888d1b6b0d4a86a8ccbf06cb33a02c01239d5e9b8f445673d45250",
+      "bytes": 625
+    },
+    {
+      "id": "local_metadata_tests_Fixtures_PageBuilderElementorV24_CompiledNative_automatic_two_column_grid_html",
+      "label": "tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-two-column-grid.html",
+      "source_file": "tests/Fixtures/PageBuilderElementorV24/CompiledNative/automatic-two-column-grid.html",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "7c4364e3c8eb8ace053be6eab7b5e43a76dc8040a63ed2d3c251cf6b592307cd",
+      "bytes": 569
+    }
+  ],
+  "edges": [
+    {
+      "source": "app_support_article_articletemplateoptions",
+      "target": "str",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_construct",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L56",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_construct",
+      "target": "articletemplatecatalog",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L56",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "articletemplatecatalog",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L56",
+      "weight": 1.0,
+      "context": "field",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L60",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L131",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L175",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_archives",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L187",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_details",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L198",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_copyoption",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L209",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_detailcopyoption",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L217",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_toolbaroption",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L229",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L239",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_searchtype",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L258",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_searchicon",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L265",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationarrowicon",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L270",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_categorymode",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L275",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_column",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L282",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_thumbnail",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L287",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L307",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L359",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationtype",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L385",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrange",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L393",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrangevalue",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L407",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_sidebar",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L416",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_sidebarposition",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L431",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_shell",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L438",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L447",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L458",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_responsivebox",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L488",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_box",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L501",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_headingtag",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L513",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_color",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L520",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_optionalcolor",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L555",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_optionalmediaurl",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L566",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L585",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_parsedimension",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L606",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_formatdimension",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L626",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L634",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_text",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L643",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L652",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_copyoption",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L72",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L77",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_toolbaroption",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L78",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_thumbnail",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L80",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L81",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_headingtag",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L83",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_shell",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L85",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_categorymode",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L89",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L91",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_sidebar",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L93",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_column",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L98",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L105",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L109",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L113",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L125",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L135",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L138",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_column",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L153",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_text",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L157",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_detailcopyoption",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L179",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L180",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_shell",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L183",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archives",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L191",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archives",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L192",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_details",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L202",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_details",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L203",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_copyoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L212",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_copyoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_text",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L213",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detailcopyoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L223",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detailcopyoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_text",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L225",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_toolbaroption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L234",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_toolbaroption",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L241",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_searchtype",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L242",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L243",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L244",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_searchicon",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L245",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_optionalcolor",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L246",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_thumbnail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L301",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_thumbnail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_color",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L302",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_thumbnail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L303",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L321",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L324",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_color",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L336",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L337",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_optionalmediaurl",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L342",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationtype",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L364",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrange",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L365",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L366",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L367",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_optionalcolor",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L368",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationarrowicon",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L375",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L377",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L379",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_responsivebox",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L380",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrange",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrangevalue",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L398",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_sidebar",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L419",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_sidebar",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_sidebarposition",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L422",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_shell",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_responsivebox",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L441",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_shell",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L443",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L450",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_color",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L451",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L452",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L453",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_parsedimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L460",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_formatdimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L467",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_responsivebox",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L491",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_responsivebox",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_box",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L495",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_box",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L503",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_box",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L507",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_optionalcolor",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_color",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L561",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_parsedimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L587",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_formatdimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L594",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "public_assets_js_vue3_manage_article_templates_vuev3_manage_article_templates_2026",
+      "target": "public_assets_js_vue3_manage_article_templates_vuev3_manage_article_templates_2026_articletemplateunitcontrols",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "public_assets_js_vue3_manage_article_templates_vuev3_manage_article_templates_2026",
+      "target": "public_assets_js_vue3_manage_article_templates_vuev3_manage_article_templates_2026_articletemplateroot",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "source_location": "L141",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "public_assets_js_vue3_manage_article_templates_vuev3_manage_article_templates_2026",
+      "target": "public_assets_js_vue3_manage_article_templates_vuev3_manage_article_templates_2026_managearticletemplatevue3",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+      "source_location": "L144",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_editorial_journal_blade",
+      "target": "resources_views_article_templates_archive_editorial_journal_blade_php_article_templates_partials_template_shell_attributes",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_editorial_journal_blade",
+      "target": "resources_views_article_templates_archive_editorial_journal_blade_php_article_templates_partials_archive_header",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_editorial_journal_blade",
+      "target": "resources_views_article_templates_archive_editorial_journal_blade_php_article_templates_partials_archive_title",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_editorial_journal_blade",
+      "target": "resources_views_article_templates_archive_editorial_journal_blade_php_article_templates_partials_media_link",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_editorial_journal_blade",
+      "target": "resources_views_article_templates_archive_editorial_journal_blade_php_article_templates_partials_media_link",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_editorial_journal_blade",
+      "target": "resources_views_article_templates_archive_editorial_journal_blade_php_article_templates_partials_archive_title",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_editorial_journal_blade",
+      "target": "resources_views_article_templates_archive_editorial_journal_blade_php_article_templates_partials_pagination",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_minimal_reading_list_blade",
+      "target": "resources_views_article_templates_archive_minimal_reading_list_blade_php_article_templates_partials_template_shell_attributes",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_minimal_reading_list_blade",
+      "target": "resources_views_article_templates_archive_minimal_reading_list_blade_php_article_templates_partials_archive_header",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_minimal_reading_list_blade",
+      "target": "resources_views_article_templates_archive_minimal_reading_list_blade_php_article_templates_partials_media_link",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_minimal_reading_list_blade",
+      "target": "resources_views_article_templates_archive_minimal_reading_list_blade_php_article_templates_partials_archive_title",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_minimal_reading_list_blade",
+      "target": "resources_views_article_templates_archive_minimal_reading_list_blade_php_article_templates_partials_pagination",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_archive_minimal_reading_list_blade",
+      "target": "resources_views_article_templates_archive_minimal_reading_list_blade_php_article_templates_partials_media_link",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_vendor_breadcrumbs_json_ld",
+      "target": "request",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "resources/views/vendor/breadcrumbs/json-ld.php",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_minimal_reading_list_sidebar_test",
+      "target": "ref_node_assert_strict",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-minimal-reading-list-sidebar.test.mjs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_minimal_reading_list_sidebar_test",
+      "target": "ref_node_fs",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-minimal-reading-list-sidebar.test.mjs",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_minimal_reading_list_sidebar_test",
+      "target": "ref_node_path",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-minimal-reading-list-sidebar.test.mjs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_minimal_reading_list_sidebar_test",
+      "target": "ref_node_test",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-minimal-reading-list-sidebar.test.mjs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_minimal_reading_list_sidebar_test",
+      "target": "tests_article_minimal_reading_list_sidebar_test_root",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-minimal-reading-list-sidebar.test.mjs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_minimal_reading_list_sidebar_test",
+      "target": "tests_article_minimal_reading_list_sidebar_test_read",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-minimal-reading-list-sidebar.test.mjs",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_template_presentation_test",
+      "target": "ref_node_assert_strict",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-template-presentation.test.mjs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_template_presentation_test",
+      "target": "ref_node_fs",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-template-presentation.test.mjs",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_template_presentation_test",
+      "target": "ref_node_path",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-template-presentation.test.mjs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_template_presentation_test",
+      "target": "ref_node_test",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-template-presentation.test.mjs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_template_presentation_test",
+      "target": "tests_article_template_presentation_test_root",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-template-presentation.test.mjs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_theme_link_isolation_test",
+      "target": "ref_node_assert_strict",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-theme-link-isolation.test.mjs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_theme_link_isolation_test",
+      "target": "ref_node_fs",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-theme-link-isolation.test.mjs",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_theme_link_isolation_test",
+      "target": "ref_node_path",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-theme-link-isolation.test.mjs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_theme_link_isolation_test",
+      "target": "ref_node_test",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-theme-link-isolation.test.mjs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_theme_link_isolation_test",
+      "target": "tests_article_theme_link_isolation_test_css",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-theme-link-isolation.test.mjs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_article_theme_link_isolation_test",
+      "target": "tests_article_theme_link_isolation_test_rulefor",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/article-theme-link-isolation.test.mjs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest",
+      "target": "articletemplateoptions",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest",
+      "target": "tests_testcase",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest",
+      "target": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest",
+      "target": "tests_testcase",
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest",
+      "target": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_revamped_pagination_starts_without_a_frame_but_respects_explicit_frame_settings",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest",
+      "target": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_provides_safe_per_template_defaults_and_normalizes_custom_options",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest",
+      "target": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_normalizes_archive_styling_and_dimension_units_without_custom_css",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L95",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest",
+      "target": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_normalizes_named_pagination_models_and_device_ranges",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L170",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest",
+      "target": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_normalizes_search_models_visual_overrides_and_fontawesome_icon_allowlist",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L200",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest",
+      "target": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_normalizes_border_radius_as_a_page_builder_style_four_value_group",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L260",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest",
+      "target": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_normalizes_editorial_journal_options_and_keeps_the_new_thumbnail_default_template_scoped",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L275",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest",
+      "target": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_rejects_unsafe_styling_values_and_keeps_detail_shell_options",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L364",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest",
+      "target": "tests_feature_article_articletemplateoptionstest_articletemplateoptionstest_test_it_keeps_strictly_valid_coloris_color_formats_without_accepting_raw_css",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+      "source_location": "L395",
+      "weight": 1.0,
+      "_origin": "ast"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

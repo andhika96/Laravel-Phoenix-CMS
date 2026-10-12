@@ -1,4 +1,5 @@
 import { beginFolderUploadBatch, completeFolderUploadBatch, uploadFile } from './live';
+import { prepareUploadRecovery, prepareFolderRecovery, finishFolderRecovery } from './uploadRecovery';
 
 function relativeParent(file) {
   const relativePath = String(file.webkitRelativePath || file.name || '').replace(/\\/g, '/');
@@ -38,8 +39,11 @@ export function createFolderUploadCoordinator({
   onFinished = () => {},
 }) {
   const maximumAttempts = () => Math.max(1, Number(getMaxAttempts?.() || 5));
-  const jobs = Array.from(files, (file) => ({
+  const recoveryKeys = prepareUploadRecovery(files, storage, path, true);
+  const batchKey = prepareFolderRecovery(recoveryKeys, storage, path);
+  const jobs = Array.from(files, (file, index) => ({
     id: makeId(),
+    idempotencyKey: recoveryKeys[index],
     file,
     name: file.name,
     bytes: Number(file.size || 0),
@@ -90,6 +94,7 @@ export function createFolderUploadCoordinator({
         await completeFolderUploadBatch(batch.id);
         batchCompleted = true;
       }
+      finishFolderRecovery(batchKey);
     } finally {
       finalizing = false;
       onFinished({ batch, jobs: jobs.map((job) => ({ ...job })) });
@@ -105,7 +110,7 @@ export function createFolderUploadCoordinator({
         storage,
         path: job.path,
         batchId: job.useBatchReservation ? batch?.id : null,
-        idempotencyKey: job.id,
+        idempotencyKey: job.idempotencyKey,
         waitForResume,
         onProgress: (progress) => update(job, { progress }),
         onAttempt: ({ attempt, maxAttempts }) => update(job, { status: 'uploading', attempt, maxAttempts, retryAt: null }),
@@ -162,7 +167,12 @@ export function createFolderUploadCoordinator({
           folders,
           totalBytes: jobs.reduce((total, job) => total + job.bytes, 0),
           fileCount: jobs.length,
+          idempotencyKey: batchKey,
         });
+        if (batch.completed) {
+          batchCompleted = true;
+          jobs.forEach((job) => { job.useBatchReservation = false; });
+        }
         preflightComplete = true;
         jobs.forEach((job) => onItemAdded({ ...job }));
         pump();

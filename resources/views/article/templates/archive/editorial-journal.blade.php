@@ -62,6 +62,9 @@
             @endif
 
             <div class="article-editorial-grid article-editorial-grid--height-{{ $cardHeightMode }}" style="{{ $gridStyle }}">
+                @if ($articles->count() > 1)
+                    <div class="article-editorial-section-heading"><h2>{{ t('More stories') }}</h2></div>
+                @endif
                 @foreach ($articles->slice(1) as $article)
                     @php($thumbnailUrl = $article->thumb_s && Storage::disk('public')->exists($article->thumb_s) ? Storage::url($article->thumb_s) : asset('assets/images/article/article-image-placeholder.svg'))
                     <article class="{{ $cardClass }}" style="{{ $cardStyle }}">

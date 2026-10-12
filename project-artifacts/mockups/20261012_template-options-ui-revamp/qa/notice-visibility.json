@@ -1,0 +1,8 @@
+{
+  "passed": 3,
+  "checks": [
+    "success CMS toast is fully visible above the modal",
+    "warning CMS toast is fully visible above the modal",
+    "failed CMS toast is fully visible above the modal"
+  ]
+}

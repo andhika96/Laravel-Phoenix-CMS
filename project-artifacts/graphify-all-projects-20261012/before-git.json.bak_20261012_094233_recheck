@@ -1,0 +1,5 @@
+{
+  "head": "966a8057536d6ddc53c602e68bf62c5ccf336be1",
+  "status": " M app/Support/Article/ArticleTemplateOptions.php\n M public/assets/css/article/article-frontend-2026.css\n M public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js\n M resources/views/article/templates/archive/editorial-journal.blade.php\n M resources/views/article/templates/archive/minimal-reading-list.blade.php\n M resources/views/article/templates/partials/archive-header.blade.php\n M tests/Feature/Article/ArticleTemplateOptionsTest.php\n M tests/article-minimal-reading-list-sidebar.test.mjs\n M tests/article-template-presentation.test.mjs\n M tests/article-theme-link-isolation.test.mjs\n?? project-artifacts/graphify-all-projects-20261012/\n?? project-artifacts/memory-sync-20261012/\n?? project-artifacts/mockups/20261009_minimal-reading-list-revamp/\n?? project-artifacts/mockups/20261011_balanced-card-grid-revamp/\n?? project-artifacts/mockups/20261011_editorial-journal-revamp/\n?? project-artifacts/mockups/20261011_mosaic-templates-revamp/\n",
+  "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

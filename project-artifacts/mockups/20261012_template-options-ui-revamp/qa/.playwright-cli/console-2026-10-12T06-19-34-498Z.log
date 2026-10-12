@@ -1,0 +1,51 @@
+[  895415ms] [ERROR] TypeError: t is not a function
+    at Proxy.render (eval at az (http://127.0.0.1:8780/assets/vue.js:12:318), <anonymous>:1546:134)
+    at rY (http://127.0.0.1:8780/assets/vue.js:6:26165)
+    at eC.a [as fn] (http://127.0.0.1:8780/assets/vue.js:6:16093)
+    at eC.run (http://127.0.0.1:8780/assets/vue.js:5:7071)
+    at eC.runIfDirty (http://127.0.0.1:8780/assets/vue.js:5:7380)
+    at tH (http://127.0.0.1:8780/assets/vue.js:5:20191)
+    at e (http://127.0.0.1:8780/assets/vue.js:5:21310) @ http://127.0.0.1:8780/assets/vue.js:4
+[ 1631324ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff2:0
+[ 1631404ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff:0
+[ 1631418ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.ttf:0
+[ 1632081ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff2:0
+[ 1632165ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff:0
+[ 1632198ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.ttf:0
+[ 1632751ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff2:0
+[ 1632799ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff:0
+[ 1632811ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.ttf:0
+[ 1903585ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff2:0
+[ 1903616ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff:0
+[ 1903642ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.ttf:0
+[ 1904216ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff2:0
+[ 1904263ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff:0
+[ 1904279ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.ttf:0
+[ 1904866ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff2:0
+[ 1904943ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff:0
+[ 1904953ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.ttf:0
+[ 2114029ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff2:0
+[ 2114067ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff:0
+[ 2114083ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.ttf:0
+[ 2115045ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff2:0
+[ 2115125ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff:0
+[ 2115158ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.ttf:0
+[ 2115954ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff2:0
+[ 2116038ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.woff:0
+[ 2116049ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8780/assets/fontawesome/webfonts/fa-regular-400.ttf:0
+[ 5331910ms] [ERROR] TypeError: t is not a function
+    at Proxy.render (eval at az (http://127.0.0.1:8781/assets/vue.js:12:318), <anonymous>:1524:134)
+    at rY (http://127.0.0.1:8781/assets/vue.js:6:26165)
+    at eC.a [as fn] (http://127.0.0.1:8781/assets/vue.js:6:16093)
+    at eC.run (http://127.0.0.1:8781/assets/vue.js:5:7071)
+    at eC.runIfDirty (http://127.0.0.1:8781/assets/vue.js:5:7380)
+    at tH (http://127.0.0.1:8781/assets/vue.js:5:20191)
+    at e (http://127.0.0.1:8781/assets/vue.js:5:21310) @ http://127.0.0.1:8781/assets/vue.js:4
+[ 5458339ms] [ERROR] TypeError: t is not a function
+    at Proxy.render (eval at az (http://127.0.0.1:8781/assets/vue.js:12:318), <anonymous>:1524:134)
+    at rY (http://127.0.0.1:8781/assets/vue.js:6:26165)
+    at eC.a [as fn] (http://127.0.0.1:8781/assets/vue.js:6:16093)
+    at eC.run (http://127.0.0.1:8781/assets/vue.js:5:7071)
+    at eC.runIfDirty (http://127.0.0.1:8781/assets/vue.js:5:7380)
+    at tH (http://127.0.0.1:8781/assets/vue.js:5:20191)
+    at e (http://127.0.0.1:8781/assets/vue.js:5:21310) @ http://127.0.0.1:8781/assets/vue.js:4

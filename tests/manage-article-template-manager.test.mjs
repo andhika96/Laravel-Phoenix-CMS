@@ -7,7 +7,7 @@ import vm from 'node:vm';
 const sourcePath = path.join(process.cwd(), 'public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js');
 const source = readFileSync(sourcePath, 'utf8');
 
-function loadOptions(timerAdapter = {}) {
+function loadOptions(timerAdapter = {}, services = {}) {
 	const sandbox = {
 		Vue: { createApp(options) { return { mount() { return options; } }; } },
 		document: { getElementById() { return { dataset: {} }; } },
@@ -18,6 +18,7 @@ function loadOptions(timerAdapter = {}) {
 		},
 		URLSearchParams,
 		console,
+		...services,
 	};
 
 	vm.createContext(sandbox);
@@ -98,6 +99,7 @@ test('applying modal options updates only the active draft and rebuilds the prev
 		cloneOptions: options.methods.cloneOptions,
 		rebuildPreview() { this.previewRebuilt = true; },
 		closeTemplateOptions() { this.modalClosed = true; },
+		showNotice(type, message) { this.notice = { type, message }; },
 	};
 
 	options.methods.applyTemplateOptions.call(state);
@@ -105,6 +107,8 @@ test('applying modal options updates only the active draft and rebuilds the prev
 	assert.equal(JSON.stringify(state.draft.archive_template_options['editorial-journal']), JSON.stringify({ grid: { desktop: 4, tablet: 3, mobile: 2 } }));
 	assert.equal(state.previewRebuilt, true);
 	assert.equal(state.modalClosed, true);
+	assert.equal(state.notice.type, 'success');
+	assert.match(state.notice.message, /draft.*Save Template/);
 });
 
 test('an unsaved preview selection is selected, not the persisted default', () => {
@@ -487,6 +491,7 @@ test('modal preview uses the modal clone, debounces edits, and keeps the page dr
 		modalPreviewUrl: '',
 		modalPreviewLoading: false,
 		modalPreviewError: '',
+		showNotice(type, message) { this.notice = { type, message }; },
 		modalPreviewTimer: null,
 		modalPreviewTimeoutTimer: null,
 		modalPreviewRequestSequence: 0,
@@ -570,10 +575,12 @@ test('modal dismissal exposes an inline dirty confirmation and retryable preview
 	const state = {
 		optionsModal: { dirty: true, dismissOpen: false },
 		closeTemplateOptions: options.methods.closeTemplateOptions,
+		showNotice(type, message) { this.notice = { type, message }; },
 	};
 
 	options.methods.requestCloseTemplateOptions.call(state);
 	assert.equal(state.optionsModal.dismissOpen, true);
+	assert.equal(state.notice.type, 'warning');
 	options.methods.keepEditing.call(state);
 	assert.equal(state.optionsModal.dismissOpen, false);
 
@@ -619,6 +626,7 @@ test('modal preview treats an authentication redirect as an error instead of a s
 		modalPreviewUrl: '/manage_article/templates/preview/archive/minimal-reading-list',
 		modalPreviewLoading: true,
 		modalPreviewError: '',
+		showNotice(type, message) { this.notice = { type, message }; },
 		modalPreviewTimer: null,
 		modalPreviewTimeoutTimer: 1,
 		clearModalPreviewTimers: options.methods.clearModalPreviewTimers,
@@ -634,6 +642,62 @@ test('modal preview treats an authentication redirect as an error instead of a s
 
 	assert.equal(state.modalPreviewLoading, false);
 	assert.match(state.modalPreviewError, /unavailable/i);
+	assert.equal(state.notice.type, 'danger');
+});
+
+test('CMS notices show the existing Bootstrap toast for success, warning and failed', () => {
+	const toast = {};
+	let shown = 0;
+	const options = loadOptions({}, {
+		document: { getElementById(id) { return id === 'article-template-notice' ? toast : { dataset: {} }; } },
+		bootstrap: { Toast: { getOrCreateInstance(element) { assert.equal(element, toast); return { show() { shown++; } }; } } },
+	});
+	const state = { $nextTick(callback) { callback(); } };
+	for (const [type, expected] of [['success', 'success'], ['warning', 'warning'], ['failed', 'danger']]) {
+		options.methods.showNotice.call(state, type, 'CMS notice');
+		assert.equal(state.noticeType, expected);
+		assert.equal(state.notice, 'CMS notice');
+	}
+	assert.equal(shown, 3);
+});
+
+test('template option drafts do not share references with the last saved settings', () => {
+	const payload = { settings: { archive_template_options: { 'minimal-reading-list': { header: { title: 'Saved title' } } }, detail_template_options: { 'focused-reader': { title: 'Saved detail' } } } };
+	const options = loadOptions({}, { document: { getElementById() { return { dataset: { payload: JSON.stringify(payload) } }; } } });
+	const state = options.data();
+	state.draft.archive_template_options['minimal-reading-list'].header.title = 'Draft title';
+	state.draft.detail_template_options['focused-reader'].title = 'Draft detail';
+	assert.equal(state.saved.archive_template_options['minimal-reading-list'].header.title, 'Saved title');
+	assert.equal(state.saved.detail_template_options['focused-reader'].title, 'Saved detail');
+});
+
+test('Save Template reports success only after the server responds and preserves saved state on validation failure', async () => {
+	let rejectSave = false;
+	const options = loadOptions({}, {
+		axios: { async post(url, draft) {
+			assert.equal(url, '/save');
+			assert.equal(draft.archive_template, 'minimal-reading-list');
+			if (rejectSave) throw { response: { data: { message: 'Validation failed', errors: { title: ['Title is required'], color: ['Color is invalid'] } } } };
+			return { data: { message: 'Templates saved', data: { archive_template: 'minimal-reading-list' } } };
+		} },
+	});
+	const state = {
+		saveUrl: '/save', draft: { archive_template: 'minimal-reading-list', detail_template: 'focused-reader', archive_template_options: {}, detail_template_options: {} },
+		saved: { archive_template: 'editorial-journal' },
+		showNotice(type, message) { this.notice = { type, message }; },
+		cloneOptions: options.methods.cloneOptions,
+	};
+	await options.methods.save.call(state);
+	assert.equal(state.saved.archive_template, 'minimal-reading-list');
+	assert.deepEqual(state.notice, { type: 'success', message: 'Templates saved' });
+	assert.equal(state.saving, false);
+	assert.notEqual(state.saved.archive_template_options, state.draft.archive_template_options);
+	const saved = JSON.stringify(state.saved);
+	rejectSave = true;
+	await options.methods.save.call(state);
+	assert.equal(JSON.stringify(state.saved), saved);
+	assert.deepEqual(state.notice, { type: 'danger', message: 'Title is required Color is invalid' });
+	assert.equal(state.saving, false);
 });
 
 test('modal preview URL stays within a practical GET budget for the largest draft payload', () => {

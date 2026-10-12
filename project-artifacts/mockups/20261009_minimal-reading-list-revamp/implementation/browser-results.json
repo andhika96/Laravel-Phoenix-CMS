@@ -1,0 +1,27 @@
+{
+  "passed": 22,
+  "checks": [
+    "Search input and button have a visible gap",
+    "Search controls align and are at least 48px",
+    "Search font inherits frontend CMS body scale",
+    "Result heading is inside the AJAX replacement slot",
+    "Main heading follows CMS responsive heading token",
+    "Changing CMS font size changes control text without fixed px overrides",
+    "Larger CMS text keeps aligned search controls",
+    "No horizontal overflow at 1440px",
+    "No horizontal overflow at 1024px",
+    "No horizontal overflow at 768px",
+    "No horizontal overflow at 390px",
+    "Compact thumbnail and text share a row at 390px",
+    "No horizontal overflow at 375px",
+    "Compact thumbnail and text share a row at 375px",
+    "No horizontal overflow at 320px",
+    "Compact thumbnail and text share a row at 320px",
+    "boxed footer stays open without a rounded container",
+    "boxed keeps the selected pagination appearance",
+    "underline footer stays open without a rounded container",
+    "underline keeps the selected pagination appearance",
+    "soft footer stays open without a rounded container",
+    "soft keeps the selected pagination appearance"
+  ]
+}

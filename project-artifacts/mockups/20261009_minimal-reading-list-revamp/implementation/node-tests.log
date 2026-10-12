@@ -1,0 +1,1424 @@
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\article\templates\partials\archive-header.blade.php'
+    at readFileSync (node:fs:484:20)
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/article-archive-heading-semantics.test.mjs:6:16
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\article\\templates\\partials\\archive-header.blade.php'
+}
+
+Node.js v24.19.0
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-archive-heading-semantics.test.mjs (128.3746ms)
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\js\vue3\article\vueV3-article-frontend-2026.js'
+    at readFileSync (node:fs:484:20)
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/article-frontend-pagination.test.mjs:8:16
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\js\\vue3\\article\\vueV3-article-frontend-2026.js'
+}
+
+Node.js v24.19.0
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-frontend-pagination.test.mjs (138.6561ms)
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\themes\arunika_lucent\arunika_lucent.css'
+    at readFileSync (node:fs:484:20)
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/article-frontend-scroll-contract.test.mjs:6:13
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\themes\\arunika_lucent\\arunika_lucent.css'
+}
+
+Node.js v24.19.0
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-frontend-scroll-contract.test.mjs (122.3319ms)
+✖ Minimal category filter has one option-driven mode and no duplicate controls (2.3076ms)
+✖ Vue 3 category interactions stay asynchronous and client-filter the visible category buttons (0.6904ms)
+✖ Vue category click uses the existing async archive loader and select changes submit automatically (3.4339ms)
+✖ Minimal post-list spacing and sidebar positions are normalized and exposed to the manager (0.6179ms)
+✖ Minimal Reading List starts directly with article rows after its toolbar (0.3559ms)
+✖ Minimal Reading List keeps the option-driven header copy above its search toolbar (1.896ms)
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\js\vue3\manage_article_templates\vueV3-manage-article-templates-2026.js'
+    at readFileSync (node:fs:484:20)
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-option-scope.test.mjs:9:16
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\js\\vue3\\manage_article_templates\\vueV3-manage-article-templates-2026.js'
+}
+
+Node.js v24.19.0
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-minimal-reading-list-option-scope.test.mjs (190.9696ms)
+✖ Minimal Reading List adds the blog-list sidebar without losing Vue and pagination seams (3.3318ms)
+✖ Public archive SSR and Vue list responses receive sidebar articles (0.578ms)
+✖ Manage Article template preview passes fixture articles to the Minimal Reading List sidebar (0.6103ms)
+✖ Minimal Reading List uses a responsive two-column layout and clean scoped pagination (0.4748ms)
+✖ Minimal Reading List search toolbar uses a single proportional control row (0.517ms)
+✖ Minimal Reading List sidebar visibility is part of the normalized manager options contract (0.4336ms)
+✖ sidebar dependent position controls stay under their owning toggle (0.3703ms)
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\js\vue3\article\vueV3-article-frontend-2026.js'
+    at readFileSync (node:fs:484:20)
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/article-pagination-accessibility.test.mjs:8:16
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\js\\vue3\\article\\vueV3-article-frontend-2026.js'
+}
+
+Node.js v24.19.0
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-pagination-accessibility.test.mjs (159.4412ms)
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+    at readFileSync (node:fs:484:20)
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/article-pagination-active-color.test.mjs:6:13
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+}
+
+Node.js v24.19.0
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-pagination-active-color.test.mjs (167.6695ms)
+✖ article frontend typography inherits CMS responsive typography tokens (5.3728ms)
+✖ Article title and short description use separate responsive CMS-bound scales (0.6932ms)
+✖ all Article templates provide an image fallback for empty thumbnails (0.5078ms)
+✖ archive cards use shared media, title, excerpt, and equal-height presentation contracts (1.1472ms)
+✖ detail templates use the editorial reading and neighbor-navigation contracts (0.643ms)
+✖ Article and manager accents inherit the active CMS primary color token (0.7623ms)
+✖ Archive thumbnails keep a cover fallback while allowing validated background or asset rendering (0.9418ms)
+✖ thumbnail height is conditional to background mode and both media modes keep distinct rendering paths (2.6885ms)
+✖ tablet and mobile previews compact editorial spacing and retain a visible search action (0.9149ms)
+✖ Minimal Reading List keeps compact mobile rows and CMS-bound heading typography (0.7038ms)
+✖ responsive Minimal Reading List mockup exposes focused desktop, tablet, and stacked mobile states (0.5512ms)
+✖ Balanced Card Grid uses a named category select instead of a numeric category field (0.4385ms)
+✖ archive and detail templates expose shared configurable headers and toolbar placement hooks (0.5058ms)
+✖ all archive list titles use a validated configurable heading partial with an H4 default and smaller category badges (0.4109ms)
+✖ template options revamp keeps modal regions independently scrollable and responsive (0.6845ms)
+✖ settings panel keeps a constrained flex scroll chain after form density changes (0.382ms)
+✖ template options modal places its sizing hook on the wrapper used by descendant selectors (0.5583ms)
+✖ Header content panel follows the approved vertical field layout (0.6729ms)
+✖ Template Options section headings use h5 semantics and the requested 1.8rem field gap (0.4732ms)
+✖ all option form controls use the roomy full-width panel rhythm (0.5746ms)
+✖ Minimal Reading List category filter uses progressive disclosure and a native position select (0.6529ms)
+✖ Header content descriptions use a ten-row textarea on archive and custom detail fields (0.8284ms)
+✖ Archive toolbar search position buttons use the themed hover state and category controls stay left aligned (0.5622ms)
+✖ teleported Template Options modal keeps the CMS accent token available to hover styles (0.423ms)
+✖ list settings keep consistent bottom dividers across nested and compound option groups (0.4619ms)
+✖ Template Options V3 mockup mirrors the updated textarea, toolbar hover, and left category controls (0.5552ms)
+✖ frame styling controls use one full-width row per field (0.5366ms)
+✖ border radius follows the Page Builder four-corner form-group pattern (0.7593ms)
+✖ pagination button radius uses the four-corner form-group and chain link (0.5382ms)
+✖ pagination radius and number gap occupy separate full-width rows (0.3902ms)
+✖ Editorial Journal manager controls stay scoped and expose the complete new options surface (0.4814ms)
+✖ spacing groups mirror the Page Builder form-group hierarchy with a shared unit header (0.5249ms)
+✖ template options switches match the approved inspector 44 by 24 geometry (0.4584ms)
+✖ template options follows the normal compact CMS form scale without nested font shrinkage (0.4075ms)
+✖ template settings reuse native fields and the established divider rhythm (0.4614ms)
+✖ compact radius controls keep all four sides usable on mobile (0.3976ms)
+✖ toolbar and frame groups preserve full-width controls with readable rhythm (0.416ms)
+✖ spacing form groups use the wider rhythm and linked buttons share input borders (0.4245ms)
+✖ curated template preview identifies sample content and prevents fixture links from leaving the iframe (2.6927ms)
+✖ curated template preview blocks archive toolbar submissions from leaving the draft iframe (0.6546ms)
+✖ public detail wrapper passes neighboring Articles through to every selected detail template (0.5372ms)
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+    at readFileSync (node:fs:484:20)
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/article-theme-link-isolation.test.mjs:6:13
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+}
+
+Node.js v24.19.0
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-theme-link-isolation.test.mjs (272.6097ms)
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: the standalone typography preview mockup should exist
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/arunika-aurora-typography-preview-mockup-static.test.mjs:6:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+✖ D:\Laragon\www\laravel-13-phoenix\tests\arunika-aurora-typography-preview-mockup-static.test.mjs (214.0225ms)
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\js\vue3\manage_article\vueV3-manage-article-2026.js'
+    at readFileSync (node:fs:484:20)
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/manage-article-responsive-width.test.mjs:11:16
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\js\\vue3\\manage_article\\vueV3-manage-article-2026.js'
+}
+
+Node.js v24.19.0
+✖ D:\Laragon\www\laravel-13-phoenix\tests\manage-article-responsive-width.test.mjs (232.1197ms)
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\js\vue3\manage_article_templates\vueV3-manage-article-templates-2026.js'
+    at readFileSync (node:fs:484:20)
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/manage-article-template-manager.test.mjs:8:16
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\js\\vue3\\manage_article_templates\\vueV3-manage-article-templates-2026.js'
+}
+
+Node.js v24.19.0
+✖ D:\Laragon\www\laravel-13-phoenix\tests\manage-article-template-manager.test.mjs (231.8564ms)
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\js\vue3\manage_article\vueV3-manage-article-2026.js'
+    at readFileSync (node:fs:484:20)
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/manage-article-thumbnail-source.test.mjs:12:22
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\js\\vue3\\manage_article\\vueV3-manage-article-2026.js'
+}
+
+Node.js v24.19.0
+✖ D:\Laragon\www\laravel-13-phoenix\tests\manage-article-thumbnail-source.test.mjs (229.9614ms)
+✔ TypographyControl keeps editor labels and compact inputs at the readable 12px scale (3.7941ms)
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\js\vue3\manage_config\vueV3-manage-config-2026.js'
+    at readFileSync (node:fs:484:20)
+    at file:///D:/Laragon/www/laravel-13-phoenix/tests/site-typography-config-runtime.test.mjs:7:16
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\js\\vue3\\manage_config\\vueV3-manage-config-2026.js'
+}
+
+Node.js v24.19.0
+✖ D:\Laragon\www\laravel-13-phoenix\tests\site-typography-config-runtime.test.mjs (204.3307ms)
+✖ every active CMS theme loads the shared responsive typography asset (5.4574ms)
+✖ the shared asset preserves the File Manager V2 RFS curves in content and overlays (0.8631ms)
+✖ wide, short viewports use compact heading caps without overriding theme-owned title styles (0.2863ms)
+✖ compact desktop derives operational and sidebar text from Site Config (0.2491ms)
+✖ operational controls inherit the computed Site Config size for px, em, and rem (0.1816ms)
+✖ mobile content typography derives from the adaptive Site Config scale (0.2306ms)
+✖ input groups bypass Bootstrap one-rem text and honor font-size-normal (0.1678ms)
+✖ profile dropdown uses the compact Site Config scale while preserving its hierarchy (0.1552ms)
+✖ global typography matrix covers mobile tablet and compact laptop ranges (0.2201ms)
+ℹ tests 76
+ℹ suites 0
+ℹ pass 1
+ℹ fail 75
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 509.5042
+
+✖ failing tests:
+
+test at ..\..\..\..\tests\article-archive-heading-semantics.test.mjs:1:1
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-archive-heading-semantics.test.mjs (128.3746ms)
+  'test failed'
+
+test at ..\..\..\..\tests\article-frontend-pagination.test.mjs:1:1
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-frontend-pagination.test.mjs (138.6561ms)
+  'test failed'
+
+test at ..\..\..\..\tests\article-frontend-scroll-contract.test.mjs:1:1
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-frontend-scroll-contract.test.mjs (122.3319ms)
+  'test failed'
+
+test at ..\..\..\..\tests\article-minimal-reading-list-filter.test.mjs:31:1
+✖ Minimal category filter has one option-driven mode and no duplicate controls (2.3076ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\app\Support\Article\ArticleTemplateOptions.php'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-filter.test.mjs:8:32)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-filter.test.mjs:32:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\app\\Support\\Article\\ArticleTemplateOptions.php'
+  }
+
+test at ..\..\..\..\tests\article-minimal-reading-list-filter.test.mjs:47:1
+✖ Vue 3 category interactions stay asynchronous and client-filter the visible category buttons (0.6904ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\js\vue3\article\vueV3-article-frontend-2026.js'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-filter.test.mjs:8:32)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-filter.test.mjs:48:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\js\\vue3\\article\\vueV3-article-frontend-2026.js'
+  }
+
+test at ..\..\..\..\tests\article-minimal-reading-list-filter.test.mjs:59:1
+✖ Vue category click uses the existing async archive loader and select changes submit automatically (3.4339ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\js\vue3\article\vueV3-article-frontend-2026.js'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-filter.test.mjs:8:32)
+      at loadArticleOptions (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-filter.test.mjs:26:21)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-filter.test.mjs:60:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\js\\vue3\\article\\vueV3-article-frontend-2026.js'
+  }
+
+test at ..\..\..\..\tests\article-minimal-reading-list-filter.test.mjs:98:1
+✖ Minimal post-list spacing and sidebar positions are normalized and exposed to the manager (0.6179ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\app\Support\Article\ArticleTemplateOptions.php'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-filter.test.mjs:8:32)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-filter.test.mjs:99:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\app\\Support\\Article\\ArticleTemplateOptions.php'
+  }
+
+test at ..\..\..\..\tests\article-minimal-reading-list-filter.test.mjs:127:1
+✖ Minimal Reading List starts directly with article rows after its toolbar (0.3559ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\article\templates\archive\minimal-reading-list.blade.php'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-filter.test.mjs:8:32)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-filter.test.mjs:128:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\article\\templates\\archive\\minimal-reading-list.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-minimal-reading-list-header.test.mjs:9:1
+✖ Minimal Reading List keeps the option-driven header copy above its search toolbar (1.896ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\article\templates\partials\archive-header.blade.php'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-header.test.mjs:7:32)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-header.test.mjs:10:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\article\\templates\\partials\\archive-header.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-minimal-reading-list-option-scope.test.mjs:1:1
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-minimal-reading-list-option-scope.test.mjs (190.9696ms)
+  'test failed'
+
+test at ..\..\..\..\tests\article-minimal-reading-list-sidebar.test.mjs:9:1
+✖ Minimal Reading List adds the blog-list sidebar without losing Vue and pagination seams (3.3318ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\article\templates\archive\minimal-reading-list.blade.php'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:7:32)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:10:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\article\\templates\\archive\\minimal-reading-list.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-minimal-reading-list-sidebar.test.mjs:22:1
+✖ Public archive SSR and Vue list responses receive sidebar articles (0.578ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\app\Http\Controllers\Web\Article\ArticleFrontendController.php'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:7:32)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:23:21)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\app\\Http\\Controllers\\Web\\Article\\ArticleFrontendController.php'
+  }
+
+test at ..\..\..\..\tests\article-minimal-reading-list-sidebar.test.mjs:29:1
+✖ Manage Article template preview passes fixture articles to the Minimal Reading List sidebar (0.6103ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\app\Http\Controllers\Web\Manage_Article\ManageArticleTemplateController.php'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:7:32)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:30:21)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\app\\Http\\Controllers\\Web\\Manage_Article\\ManageArticleTemplateController.php'
+  }
+
+test at ..\..\..\..\tests\article-minimal-reading-list-sidebar.test.mjs:39:1
+✖ Minimal Reading List uses a responsive two-column layout and clean scoped pagination (0.4748ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:7:32)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:40:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-minimal-reading-list-sidebar.test.mjs:52:1
+✖ Minimal Reading List search toolbar uses a single proportional control row (0.517ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:7:32)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:53:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-minimal-reading-list-sidebar.test.mjs:63:1
+✖ Minimal Reading List sidebar visibility is part of the normalized manager options contract (0.4336ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\app\Support\Article\ArticleTemplateOptions.php'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:7:32)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:64:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\app\\Support\\Article\\ArticleTemplateOptions.php'
+  }
+
+test at ..\..\..\..\tests\article-minimal-reading-list-sidebar.test.mjs:79:1
+✖ sidebar dependent position controls stay under their owning toggle (0.3703ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\index.blade.php'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:7:32)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:80:22)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\index.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-pagination-accessibility.test.mjs:1:1
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-pagination-accessibility.test.mjs (159.4412ms)
+  'test failed'
+
+test at ..\..\..\..\tests\article-pagination-active-color.test.mjs:1:1
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-pagination-active-color.test.mjs (167.6695ms)
+  'test failed'
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:8:1
+✖ article frontend typography inherits CMS responsive typography tokens (5.3728ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:9:22)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:29:1
+✖ Article title and short description use separate responsive CMS-bound scales (0.6932ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:30:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:44:1
+✖ all Article templates provide an image fallback for empty thumbnails (0.5078ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\article\templates\archive\minimal-reading-list.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:55:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\article\\templates\\archive\\minimal-reading-list.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:61:1
+✖ archive cards use shared media, title, excerpt, and equal-height presentation contracts (1.1472ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:62:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:73:1
+✖ detail templates use the editorial reading and neighbor-navigation contracts (0.643ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:74:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:82:1
+✖ Article and manager accents inherit the active CMS primary color token (0.7623ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:83:22)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:102:1
+✖ Archive thumbnails keep a cover fallback while allowing validated background or asset rendering (0.9418ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:103:22)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:127:1
+✖ thumbnail height is conditional to background mode and both media modes keep distinct rendering paths (2.6885ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\partials\options-styling.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:128:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\partials\\options-styling.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:142:1
+✖ tablet and mobile previews compact editorial spacing and retain a visible search action (0.9149ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:143:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:158:1
+✖ Minimal Reading List keeps compact mobile rows and CMS-bound heading typography (0.7038ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:159:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:169:1
+✖ responsive Minimal Reading List mockup exposes focused desktop, tablet, and stacked mobile states (0.5512ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\project-artifacts\mockups\20260905_article-minimal-reading-list-responsive\index.html'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:170:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\project-artifacts\\mockups\\20260905_article-minimal-reading-list-responsive\\index.html'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:180:1
+✖ Balanced Card Grid uses a named category select instead of a numeric category field (0.4385ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\article\templates\partials\archive-header.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:181:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\article\\templates\\partials\\archive-header.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:188:1
+✖ archive and detail templates expose shared configurable headers and toolbar placement hooks (0.5058ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\article\templates\archive\minimal-reading-list.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:196:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\article\\templates\\archive\\minimal-reading-list.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:214:1
+✖ all archive list titles use a validated configurable heading partial with an H4 default and smaller category badges (0.4109ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-frontend-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:215:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-frontend-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:240:1
+✖ template options revamp keeps modal regions independently scrollable and responsive (0.6845ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-template-manager-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:241:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-template-manager-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:260:1
+✖ settings panel keeps a constrained flex scroll chain after form density changes (0.382ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-template-manager-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:261:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-template-manager-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:269:1
+✖ template options modal places its sizing hook on the wrapper used by descendant selectors (0.5583ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\index.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:270:15)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\index.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:277:1
+✖ Header content panel follows the approved vertical field layout (0.6729ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\index.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:278:15)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\index.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:289:1
+✖ Template Options section headings use h5 semantics and the requested 1.8rem field gap (0.4732ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\index.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:290:15)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\index.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:301:1
+✖ all option form controls use the roomy full-width panel rhythm (0.5746ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-template-manager-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:302:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-template-manager-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:312:1
+✖ Minimal Reading List category filter uses progressive disclosure and a native position select (0.6529ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\index.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:313:15)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\index.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:323:1
+✖ Header content descriptions use a ten-row textarea on archive and custom detail fields (0.8284ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\index.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:324:15)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\index.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:334:1
+✖ Archive toolbar search position buttons use the themed hover state and category controls stay left aligned (0.5622ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-template-manager-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:335:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-template-manager-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:347:1
+✖ teleported Template Options modal keeps the CMS accent token available to hover styles (0.423ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-template-manager-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:348:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-template-manager-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:353:1
+✖ list settings keep consistent bottom dividers across nested and compound option groups (0.4619ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-template-manager-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:354:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-template-manager-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:362:1
+✖ Template Options V3 mockup mirrors the updated textarea, toolbar hover, and left category controls (0.5552ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\project-artifacts\mockups\template-options-20260905\forms-v3\index.html'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:363:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\project-artifacts\\mockups\\template-options-20260905\\forms-v3\\index.html'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:374:1
+✖ frame styling controls use one full-width row per field (0.5366ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-template-manager-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:375:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-template-manager-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:380:1
+✖ border radius follows the Page Builder four-corner form-group pattern (0.7593ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\partials\options-styling.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:381:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\partials\\options-styling.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:398:1
+✖ pagination button radius uses the four-corner form-group and chain link (0.5382ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\partials\options-styling.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:399:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\partials\\options-styling.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:413:1
+✖ pagination radius and number gap occupy separate full-width rows (0.3902ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\partials\options-styling.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:414:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\partials\\options-styling.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:423:1
+✖ Editorial Journal manager controls stay scoped and expose the complete new options surface (0.4814ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\partials\options-styling.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:424:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\partials\\options-styling.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:449:1
+✖ spacing groups mirror the Page Builder form-group hierarchy with a shared unit header (0.5249ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\partials\options-styling.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:450:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\partials\\options-styling.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:462:1
+✖ template options switches match the approved inspector 44 by 24 geometry (0.4584ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-template-manager-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:463:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-template-manager-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:473:1
+✖ template options follows the normal compact CMS form scale without nested font shrinkage (0.4075ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-template-manager-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:474:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-template-manager-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:486:1
+✖ template settings reuse native fields and the established divider rhythm (0.4614ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\index.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:487:15)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\index.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:504:1
+✖ compact radius controls keep all four sides usable on mobile (0.3976ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-template-manager-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:505:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-template-manager-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:512:1
+✖ toolbar and frame groups preserve full-width controls with readable rhythm (0.416ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-template-manager-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:513:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-template-manager-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-presentation.test.mjs:524:1
+✖ spacing form groups use the wider rhythm and linked buttons share input borders (0.4245ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\article\article-template-manager-2026.css'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-presentation.test.mjs:525:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\article\\article-template-manager-2026.css'
+  }
+
+test at ..\..\..\..\tests\article-template-preview-fixture.test.mjs:9:1
+✖ curated template preview identifies sample content and prevents fixture links from leaving the iframe (2.6927ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\preview.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-preview-fixture.test.mjs:10:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\preview.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-preview-fixture.test.mjs:23:1
+✖ curated template preview blocks archive toolbar submissions from leaving the draft iframe (0.6546ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\manage_article\templates\preview.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-preview-fixture.test.mjs:24:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\manage_article\\templates\\preview.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-template-preview-fixture.test.mjs:54:1
+✖ public detail wrapper passes neighboring Articles through to every selected detail template (0.5372ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\resources\views\article\detail.blade.php'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-template-preview-fixture.test.mjs:55:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\resources\\views\\article\\detail.blade.php'
+  }
+
+test at ..\..\..\..\tests\article-theme-link-isolation.test.mjs:1:1
+✖ D:\Laragon\www\laravel-13-phoenix\tests\article-theme-link-isolation.test.mjs (272.6097ms)
+  'test failed'
+
+test at ..\..\..\..\tests\arunika-aurora-typography-preview-mockup-static.test.mjs:1:1
+✖ D:\Laragon\www\laravel-13-phoenix\tests\arunika-aurora-typography-preview-mockup-static.test.mjs (214.0225ms)
+  'test failed'
+
+test at ..\..\..\..\tests\manage-article-responsive-width.test.mjs:1:1
+✖ D:\Laragon\www\laravel-13-phoenix\tests\manage-article-responsive-width.test.mjs (232.1197ms)
+  'test failed'
+
+test at ..\..\..\..\tests\manage-article-template-manager.test.mjs:1:1
+✖ D:\Laragon\www\laravel-13-phoenix\tests\manage-article-template-manager.test.mjs (231.8564ms)
+  'test failed'
+
+test at ..\..\..\..\tests\manage-article-thumbnail-source.test.mjs:1:1
+✖ D:\Laragon\www\laravel-13-phoenix\tests\manage-article-thumbnail-source.test.mjs (229.9614ms)
+  'test failed'
+
+test at ..\..\..\..\tests\site-typography-config-runtime.test.mjs:1:1
+✖ D:\Laragon\www\laravel-13-phoenix\tests\site-typography-config-runtime.test.mjs (204.3307ms)
+  'test failed'
+
+test at ..\..\..\..\tests\theme-responsive-typography-static.test.mjs:19:1
+✖ every active CMS theme loads the shared responsive typography asset (5.4574ms)
+  AssertionError [ERR_ASSERTION]: The shared responsive typography stylesheet must exist.
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:20:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ..\..\..\..\tests\theme-responsive-typography-static.test.mjs:36:1
+✖ the shared asset preserves the File Manager V2 RFS curves in content and overlays (0.8631ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\theme-responsive-typography.css'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:17:28)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:37:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\theme-responsive-typography.css'
+  }
+
+test at ..\..\..\..\tests\theme-responsive-typography-static.test.mjs:52:1
+✖ wide, short viewports use compact heading caps without overriding theme-owned title styles (0.2863ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\theme-responsive-typography.css'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:17:28)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:53:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\theme-responsive-typography.css'
+  }
+
+test at ..\..\..\..\tests\theme-responsive-typography-static.test.mjs:67:1
+✖ compact desktop derives operational and sidebar text from Site Config (0.2491ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\theme-responsive-typography.css'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:17:28)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:68:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\theme-responsive-typography.css'
+  }
+
+test at ..\..\..\..\tests\theme-responsive-typography-static.test.mjs:81:1
+✖ operational controls inherit the computed Site Config size for px, em, and rem (0.1816ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\theme-responsive-typography.css'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:17:28)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:82:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\theme-responsive-typography.css'
+  }
+
+test at ..\..\..\..\tests\theme-responsive-typography-static.test.mjs:94:1
+✖ mobile content typography derives from the adaptive Site Config scale (0.2306ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\theme-responsive-typography.css'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:17:28)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:95:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\theme-responsive-typography.css'
+  }
+
+test at ..\..\..\..\tests\theme-responsive-typography-static.test.mjs:110:1
+✖ input groups bypass Bootstrap one-rem text and honor font-size-normal (0.1678ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\theme-responsive-typography.css'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:17:28)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:111:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\theme-responsive-typography.css'
+  }
+
+test at ..\..\..\..\tests\theme-responsive-typography-static.test.mjs:123:1
+✖ profile dropdown uses the compact Site Config scale while preserving its hierarchy (0.1552ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\theme-responsive-typography.css'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:17:28)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:124:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\theme-responsive-typography.css'
+  }
+
+test at ..\..\..\..\tests\theme-responsive-typography-static.test.mjs:144:1
+✖ global typography matrix covers mobile tablet and compact laptop ranges (0.2201ms)
+  Error: ENOENT: no such file or directory, open 'D:\Laragon\www\laravel-13-phoenix\project-artifacts\mockups\20261009_minimal-reading-list-revamp\implementation\public\assets\css\theme-responsive-typography.css'
+      at readFileSync (node:fs:484:20)
+      at read (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:17:28)
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/theme-responsive-typography-static.test.mjs:145:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\mockups\\20261009_minimal-reading-list-revamp\\implementation\\public\\assets\\css\\theme-responsive-typography.css'
+  }

@@ -1,5 +1,7 @@
 import { reactive } from 'vue';
 import uploadFilePlaceholder from '../assets/file-upload-placeholder.svg';
+import { hashUploadFile } from './uploadIntegrity';
+import { finishUploadRecovery } from './uploadRecovery';
 
 const config = window.FILEMANAGER_V2_CONFIG || {};
 
@@ -25,7 +27,7 @@ export const iconForKind = {
 export const uploadOptions = reactive({
   chunkSize: 8 * 1024 * 1024,
   chunkThreshold: 16 * 1024 * 1024,
-  maxParallel: 3,
+  maxParallel: 2,
   maxFileSize: 1024 * 1024 * 1024,
   retryAttempts: 5,
 });
@@ -340,12 +342,22 @@ export async function uploadFile(file, {
     }
   });
 
+  await waitForResume();
+  onAttempt({ attempt: 1, maxAttempts: Math.max(1, Number(uploadOptions.retryAttempts) || 1) });
+  const checksum = await hashUploadFile(file, () => aborted);
+  if (aborted) throw new Error('Upload dibatalkan.');
+  const finished = (asset) => {
+    finishUploadRecovery(file, storage, path);
+    return normalizeAsset(asset);
+  };
+
   if (file.size < uploadOptions.chunkThreshold) {
     const asset = await withUploadRetry(() => {
       const data = new FormData();
       data.append('storage', storage);
       data.append('path', path);
       data.append('file', file);
+      data.append('checksum', checksum);
       if (batchId) data.append('batchId', batchId);
       if (idempotencyKey) data.append('idempotencyKey', idempotencyKey);
       return uploadFormData('/assets/upload', data, onProgress, (abort) => {
@@ -353,26 +365,34 @@ export async function uploadFile(file, {
       });
     }, { waitForResume, isAborted: () => aborted, onAttempt, onRetry });
     if (aborted) throw new Error('Upload dibatalkan.');
-    return normalizeAsset(asset);
+    return finished(asset);
   }
 
   const parts = Math.ceil(file.size / uploadOptions.chunkSize);
   const session = await withUploadRetry(() => request('/uploads', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ storage, path, name: file.name, size: file.size, parts, ...(batchId ? { batchId } : {}), ...(idempotencyKey ? { idempotencyKey } : {}) }),
+    body: JSON.stringify({ storage, path, name: file.name, size: file.size, parts, checksum, ...(batchId ? { batchId } : {}), ...(idempotencyKey ? { idempotencyKey } : {}) }),
   }), { waitForResume, isAborted: () => aborted, onAttempt, onRetry });
-  if (session.asset) return normalizeAsset(session.asset);
+  if (session.asset) return finished(session.asset);
   uploadSessionId = session.id;
+  const received = new Set(session.received || []);
 
   for (let part = 0; part < parts; part += 1) {
     await waitForResume();
     if (aborted) throw new Error('Upload dibatalkan.');
     const completedShare = part / parts;
     const partShare = 1 / parts;
+    if (received.has(part)) {
+      onProgress(Math.round(((part + 1) / parts) * 100));
+      continue;
+    }
+    const chunk = file.slice(part * uploadOptions.chunkSize, Math.min(file.size, (part + 1) * uploadOptions.chunkSize));
+    const chunkChecksum = await hashUploadFile(chunk, () => aborted);
     await withUploadRetry(() => {
       const data = new FormData();
-      data.append('chunk', file.slice(part * uploadOptions.chunkSize, Math.min(file.size, (part + 1) * uploadOptions.chunkSize)), `${file.name}.part`);
+      data.append('chunk', chunk, `${file.name}.part`);
+      data.append('checksum', chunkChecksum);
       return uploadFormData(`/uploads/${session.id}/chunks/${part}`, data, (progress) => {
         onProgress(Math.round((completedShare + ((progress / 100) * partShare)) * 100));
       }, (abort) => {
@@ -383,14 +403,14 @@ export async function uploadFile(file, {
     onProgress(Math.round(((part + 1) / parts) * 100));
   }
 
-  return normalizeAsset(await withUploadRetry(() => request(`/uploads/${session.id}/complete`, { method: 'POST' }), { waitForResume, isAborted: () => aborted, onAttempt, onRetry }));
+  return finished(await withUploadRetry(() => request(`/uploads/${session.id}/complete`, { method: 'POST' }), { waitForResume, isAborted: () => aborted, onAttempt, onRetry }));
 }
 
-export async function beginFolderUploadBatch({ storage, path = '', folders, totalBytes, fileCount }) {
+export async function beginFolderUploadBatch({ storage, path = '', folders, totalBytes, fileCount, idempotencyKey }) {
   return request('/uploads/batches', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ storage, path, folders, totalBytes, fileCount }),
+    body: JSON.stringify({ storage, path, folders, totalBytes, fileCount, idempotencyKey }),
   });
 }
 

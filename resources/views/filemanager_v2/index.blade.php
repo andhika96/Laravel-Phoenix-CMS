@@ -17,6 +17,7 @@
         window.FILEMANAGER_V2_CONFIG = {
             apiBase: @json(url('/api/v2/file-manager')),
             csrfToken: @json(csrf_token()),
+            recoveryScope: @json((string) auth()->id()),
         };
     </script>
     <script type="module" src="{{ asset('assets/plugins/filemanager_v2/filemanager-v2.js') }}?v={{ $assetVersion }}"></script>

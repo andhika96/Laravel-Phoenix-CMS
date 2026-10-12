@@ -1,0 +1,43 @@
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) {
+  --article-title-size: var(--ph-fmv2-rfs-h1,2.5em);
+  --article-description-size: 1em;
+  background:#fff;
+}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-shell:not([data-article-shell-padding="true"]) {padding-block:4rem 3rem}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-header {margin-bottom:2.25rem}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-eyebrow {font-size:.85em;letter-spacing:.1em}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar {gap:1.5rem;align-items:stretch;margin-top:1.625rem}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar__zone:not(:has(.article-template-toolbar__control)) {display:none}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar__zone:has(.article-template-toolbar__control--search) {flex:1;justify-content:flex-end}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar .article-template-toolbar__control--search {width:min(100%,42.5rem);align-items:stretch;gap:var(--article-search-gap,.75rem)}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar .article-template-toolbar__control--search input {width:auto;min-width:0;flex:1;min-height:48px;padding:.65rem 1rem;font:inherit}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar .article-search-model--attached input {border-right-width:1px;border-radius:var(--article-search-radius,.625rem)}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar .article-search-model--attached button {border-left-width:1px;border-radius:var(--article-search-radius,.625rem)}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar .article-template-toolbar__control--search button {flex:0 0 auto;width:auto;min-width:8rem;min-height:48px;gap:.55em;padding:.65rem 1.25rem;font:inherit;font-weight:700}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar .article-template-toolbar__control--search button .visually-hidden {position:static!important;width:auto!important;height:auto!important;margin:0!important;overflow:visible!important;clip:auto!important}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar .article-template-toolbar__control--category {width:14rem}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar select {min-height:48px;padding:.65rem .85rem;border-radius:.625rem;font:inherit}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-chip {font-size:.85em;letter-spacing:.045em;font-weight:700;line-height:1.5}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-text-link {min-height:44px;align-items:center;font-size:1em;gap:.6em}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-pagination--without-frame.article-pagination--padding-default {padding:1.5rem 0 0}
+:is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-pagination .ph-pagination .page-link {min-width:44px;height:44px}
+[hidden]{display:none!important}
+.preview-empty {padding:2.5rem 1rem;color:#667085;text-align:center}
+dialog {width:min(660px,calc(100% - 32px));max-height:85dvh;padding:1.5rem;border:1px solid #e6e9ef;border-radius:1rem;background:#fff;color:#172033;font:inherit}
+dialog::backdrop {background:rgb(23 32 51 / .5)}
+dialog form {display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem}
+dialog button {min-height:44px;padding:.4rem .8rem;border:1px solid #d8dce5;border-radius:.5rem;background:#fff;font:inherit}
+dialog h2 {font-size:var(--ph-fmv2-rfs-h3,1.5em);line-height:1.4}
+dialog p {color:#667085;line-height:1.8}
+@media(max-width:991.98px){
+  :is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-shell:not([data-article-shell-padding="true"]) {padding-block:2.75rem 2.5rem}
+  :is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar {flex-wrap:wrap;gap:1rem}
+}
+@media(max-width:575.98px){
+  :is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-shell:not([data-article-shell-padding="true"]) {padding-block:2rem}
+  :is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-header {margin-bottom:1.75rem}
+  :is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar {gap:.875rem}
+  :is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar .article-template-toolbar__control--category {width:100%}
+  :is(.article-page--mosaic-magazine,.article-page--mosaic-classic) .article-template-toolbar .article-template-toolbar__control--search button {min-width:6.5rem;padding-inline:.75rem}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important}}

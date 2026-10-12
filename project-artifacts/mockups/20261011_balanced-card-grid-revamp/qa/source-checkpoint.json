@@ -1,0 +1,46 @@
+[
+  {
+    "file": "app/Support/Article/ArticleTemplateOptions.php",
+    "sha256": "00E1E07152D518442956765BA572001414AFEAABADDDF75BB03081BA56FED7C3"
+  },
+  {
+    "file": "public/assets/css/article/article-frontend-2026.css",
+    "sha256": "0FD9953AAC543800C1495E05E427D4AFE54FCF9D2D22EE9618763F96568246EC"
+  },
+  {
+    "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+    "sha256": "A9E2BCB4449A42CEAC3E8613C0FA7AC1BB3526FB89E5D71220F77F39107B9C24"
+  },
+  {
+    "file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+    "sha256": "315382EE14298C0FA13B140359B3C4987DD7A7F94ADE1DFD0DEE05A46212D470"
+  },
+  {
+    "file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+    "sha256": "7B11444B14398324F809E30EF055137055A8692E6BA1E9A0E6E53411195BE72F"
+  },
+  {
+    "file": "resources/views/article/templates/partials/archive-header.blade.php",
+    "sha256": "FE8A9AFBF10C75583F7E1A9533B38E48EA80C59550B869051728B9EA50A3EC0B"
+  },
+  {
+    "file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+    "sha256": "AE4675E212884F1310B08B588FC4EE77A0DADE07664C06EFD28943BD165F4D19"
+  },
+  {
+    "file": "tests/article-minimal-reading-list-sidebar.test.mjs",
+    "sha256": "F6377F9B83F7D2785FB4C5C1ACC4C5669B5919569C5DCE8A8CDC3CF29751DDFC"
+  },
+  {
+    "file": "tests/article-template-presentation.test.mjs",
+    "sha256": "6BB296C035B91A8684988862C93AF2CF586F6AEC9C9F4066FED79AF0F1BD43A0"
+  },
+  {
+    "file": "tests/article-theme-link-isolation.test.mjs",
+    "sha256": "3FA5CE844AD945F2B46E8843C48250BEE133AE2192729AE8FA0DB194976E24A6"
+  },
+  {
+    "file": "resources/views/article/templates/archive/balanced-card-grid.blade.php",
+    "sha256": "D86F37A6CFFB38059F7479FC619721E8CB1CB0396DBAFB519AAEC59AFB2325BE"
+  }
+]

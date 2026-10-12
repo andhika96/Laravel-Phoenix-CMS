@@ -26,6 +26,9 @@ class FileManagerV2Storage
             $local['metadata_root'],
             $local['cache_root'] . DIRECTORY_SEPARATOR . 'previews',
             $local['runtime_root'] . DIRECTORY_SEPARATOR . 'uploads',
+            $local['runtime_root'] . DIRECTORY_SEPARATOR . 'receipts',
+            $local['runtime_root'] . DIRECTORY_SEPARATOR . 'locks',
+            $local['runtime_root'] . DIRECTORY_SEPARATOR . 'quota',
             config('filemanager_v2.settings.root'),
         ] as $directory) {
             File::ensureDirectoryExists($directory, 0755, true);
@@ -542,13 +545,19 @@ class FileManagerV2Storage
      * @param array<int, string> $folders Paths relative to $parent.
      * @return array<string, int|string>
      */
-    public function beginFolderUploadBatch(string $storage, string|null $parent, array $folders, int $totalBytes, int $fileCount): array
+    public function beginFolderUploadBatch(string $storage, string|null $parent, array $folders, int $totalBytes, int $fileCount, ?string $idempotencyKey = null): array
     {
         $this->prepare();
         $profile = $this->profile($storage);
         $parent = $this->path($parent);
         abort_if($totalBytes < 1 || $fileCount < 1, 422, 'Batch upload harus memiliki setidaknya satu file.');
         abort_if($fileCount > 100000 || count($folders) > 100000, 422, 'Batch upload terlalu besar.');
+        $retryKey = $idempotencyKey ? 'folder:' . $this->uploadIdempotencyCacheKey($idempotencyKey) : null;
+        if ($retryKey !== null && ($existing = $this->readUploadReceipt($retryKey))) {
+            abort_unless($existing['storage'] === $storage && $existing['path'] === $parent && $existing['totalBytes'] === $totalBytes && $existing['fileCount'] === $fileCount, 409, 'Kunci batch tidak sesuai dengan folder yang dipilih.');
+
+            return $existing;
+        }
 
         $id = (string) Str::uuid();
         $expiresAt = now()->addHours((int) config('filemanager_v2.uploads.runtime_ttl_hours'));
@@ -581,8 +590,15 @@ class FileManagerV2Storage
                 'fileCount' => $fileCount,
                 'claimedBytes' => 0,
                 'expiresAt' => $expiresAt->getTimestamp(),
+                'folderCount' => $relativeFolders->count(),
+                'retry_key' => $retryKey,
+                'completed' => false,
             ];
             $this->cache()->put($this->folderUploadBatchKey($id), $batch, $expiresAt);
+            $this->saveUploadReceipt('folder-id:' . (string) auth()->id() . ':' . $id, $batch);
+            if ($retryKey !== null) {
+                $this->saveUploadReceipt($retryKey, $batch);
+            }
             $this->bust($storage, $parent);
 
             return [
@@ -607,6 +623,11 @@ class FileManagerV2Storage
         $batch = $this->folderUploadBatch($id);
         $this->releaseFolderUploadQuota($id, (string) $batch['storage']);
         $this->cache()->forget($this->folderUploadBatchKey($id));
+        $batch['completed'] = true;
+        $this->saveUploadReceipt('folder-id:' . (string) auth()->id() . ':' . $id, $batch);
+        if (! empty($batch['retry_key'])) {
+            $this->saveUploadReceipt($batch['retry_key'], $batch);
+        }
 
         return [
             'id' => $id,
@@ -617,7 +638,7 @@ class FileManagerV2Storage
     }
 
     /** @return array{asset?: array<string, mixed>, session?: array<string, mixed>}|null */
-    private function existingIdempotentUpload(string $storage, string $parent, string $name, int $size, ?string $idempotencyKey): ?array
+    private function existingIdempotentUpload(string $storage, string $parent, string $name, int $size, ?string $idempotencyKey, ?string $checksum = null): ?array
     {
         $key = $this->normalizedIdempotencyKey($idempotencyKey);
         if ($key === null) {
@@ -625,7 +646,7 @@ class FileManagerV2Storage
         }
 
         $cacheKey = $this->uploadIdempotencyCacheKey($key);
-        $record = $this->cache()->get($cacheKey);
+        $record = $this->readUploadReceipt($cacheKey) ?? $this->cache()->get($cacheKey);
         if (! is_array($record)) {
             return null;
         }
@@ -637,6 +658,7 @@ class FileManagerV2Storage
             409,
             'Kunci retry upload sudah digunakan untuk file lain.',
         );
+        abort_if($checksum !== null && isset($record['checksum']) && ! hash_equals($record['checksum'], strtolower($checksum)), 409, 'Isi file tidak sesuai dengan upload sebelumnya.');
 
         if (($record['state'] ?? null) === 'asset' && is_string($record['path'] ?? null) && $this->disk($storage)->fileExists($record['path'])) {
             return ['asset' => $this->assetForPath($storage, $record['path'])];
@@ -649,27 +671,46 @@ class FileManagerV2Storage
             }
         }
 
+        if (($record['state'] ?? null) === 'writing') {
+            if ($this->storedUploadMatches($storage, $record['path'], $size, $record['checksum'])) {
+                $asset = $this->assetForPath($storage, $record['path']);
+                $this->rememberIdempotentAsset($storage, $parent, $name, $size, $idempotencyKey, $asset, $record['checksum']);
+
+                return ['asset' => $asset];
+            }
+
+            if (isset($record['sessionId']) && is_file($this->runtimeDirectory($record['sessionId']) . '/session.json')) {
+                return ['session' => $this->session($record['sessionId'])];
+            }
+
+            return ['pending' => $record];
+        }
+
         $this->cache()->forget($cacheKey);
+        File::delete($this->uploadReceiptPath($cacheKey));
 
         return null;
     }
 
     /** @param array<string, mixed> $asset */
-    private function rememberIdempotentAsset(string $storage, string $parent, string $name, int $size, ?string $idempotencyKey, array $asset): void
+    private function rememberIdempotentAsset(string $storage, string $parent, string $name, int $size, ?string $idempotencyKey, array $asset, ?string $checksum = null): void
     {
         $key = $this->normalizedIdempotencyKey($idempotencyKey);
         if ($key === null) {
             return;
         }
 
-        $this->cache()->put($this->uploadIdempotencyCacheKey($key), [
+        $record = [
             'state' => 'asset',
             'storage' => $storage,
             'parent' => $parent,
             'name' => $name,
             'size' => $size,
             'path' => $asset['path'],
-        ], now()->addDay());
+            'checksum' => $checksum,
+        ];
+        $this->saveUploadReceipt($this->uploadIdempotencyCacheKey($key), $record);
+        $this->cache()->put($this->uploadIdempotencyCacheKey($key), $record, now()->addDay());
     }
 
     /** @param array<string, mixed> $session */
@@ -680,14 +721,17 @@ class FileManagerV2Storage
             return;
         }
 
-        $this->cache()->put($this->uploadIdempotencyCacheKey($key), [
+        $record = [
             'state' => 'session',
             'storage' => $session['storage'],
             'parent' => $session['parent'],
             'name' => $session['name'],
             'size' => $session['size'],
             'sessionId' => $session['id'],
-        ], now()->addDay());
+            'checksum' => $session['checksum'],
+        ];
+        $this->saveUploadReceipt($this->uploadIdempotencyCacheKey($key), $record);
+        $this->cache()->put($this->uploadIdempotencyCacheKey($key), $record, now()->addDay());
     }
 
     private function forgetIdempotentUpload(?string $idempotencyKey): void
@@ -695,6 +739,7 @@ class FileManagerV2Storage
         $key = $this->normalizedIdempotencyKey($idempotencyKey);
         if ($key !== null) {
             $this->cache()->forget($this->uploadIdempotencyCacheKey($key));
+            File::delete($this->uploadReceiptPath($this->uploadIdempotencyCacheKey($key)));
         }
     }
 
@@ -707,29 +752,133 @@ class FileManagerV2Storage
 
     private function uploadIdempotencyCacheKey(string $idempotencyKey): string
     {
-        return 'filemanager_v2:upload-idempotency:' . hash('sha256', $idempotencyKey);
+        return 'filemanager_v2:upload-idempotency:' . hash('sha256', (string) auth()->id() . ':' . $idempotencyKey);
     }
 
-    public function upload(string $storage, string|null $parent, UploadedFile $file, ?string $batchId = null, ?string $idempotencyKey = null): array
+    private function uploadReceiptPath(string $key): string
+    {
+        return config('filemanager_v2.local.runtime_root') . '/receipts/' . hash('sha256', $key) . '.json';
+    }
+
+    private function saveUploadReceipt(string $key, array $record): void
+    {
+        $this->prepare();
+        $record['expiresAt'] = now()->addHours((int) config('filemanager_v2.uploads.runtime_ttl_hours'))->getTimestamp();
+        File::replace($this->uploadReceiptPath($key), json_encode($record, JSON_THROW_ON_ERROR));
+    }
+
+    private function readUploadReceipt(string $key): ?array
+    {
+        $path = $this->uploadReceiptPath($key);
+        if (! is_file($path)) {
+            return null;
+        }
+        $record = json_decode(File::get($path), true, flags: JSON_THROW_ON_ERROR);
+        if ((int) ($record['expiresAt'] ?? 0) <= now()->getTimestamp()) {
+            File::delete($path);
+
+            return null;
+        }
+
+        return $record;
+    }
+
+    private function withUploadLock(string $storage, string $parent, string $name, callable $operation): array
+    {
+        $this->prepare();
+        $path = config('filemanager_v2.local.runtime_root') . '/locks/' . hash('sha256', $storage . ':' . $parent . ':' . $name) . '.lock';
+        $lock = fopen($path, 'c');
+        if ($lock === false) {
+            throw new RuntimeException('Upload lock tidak dapat dibuka.');
+        }
+        try {
+            abort_unless(flock($lock, LOCK_EX | LOCK_NB), 429, 'File yang sama sedang diproses. Coba lagi setelah transfer selesai.');
+
+            return $operation();
+        } finally {
+            flock($lock, LOCK_UN);
+            fclose($lock);
+        }
+    }
+
+    private function storedUploadMatches(string $storage, string $path, int $size, string $checksum): bool
+    {
+        $disk = $this->disk($storage);
+        if (! $disk->fileExists($path) || (int) $disk->size($path) !== $size) {
+            return false;
+        }
+        $stream = $disk->readStream($path);
+        if (! is_resource($stream)) {
+            throw new RuntimeException('File tersimpan tidak dapat dibaca untuk verifikasi.');
+        }
+        try {
+            $hash = hash_init('sha256');
+            $read = hash_update_stream($hash, $stream);
+
+            return $read === $size && hash_equals($checksum, hash_final($hash));
+        } finally {
+            fclose($stream);
+        }
+    }
+
+    private function writeVerifiedUpload(string $storage, string $path, string $source, int $size, string $checksum): void
+    {
+        $stream = fopen($source, 'rb');
+        if (! is_resource($stream)) {
+            throw new RuntimeException('File sumber upload tidak dapat dibaca.');
+        }
+        try {
+            if (! $this->disk($storage)->writeStream($path, $stream)) {
+                throw new RuntimeException('Penulisan file ke storage gagal. Upload belum selesai.');
+            }
+        } finally {
+            fclose($stream);
+        }
+        if (! $this->storedUploadMatches($storage, $path, $size, $checksum)) {
+            throw new RuntimeException('Verifikasi file tersimpan gagal. Upload belum selesai.');
+        }
+    }
+
+    public function upload(string $storage, string|null $parent, UploadedFile $file, ?string $batchId = null, ?string $idempotencyKey = null, ?string $checksum = null): array
+    {
+        return $this->withUploadLock($storage, $this->path($parent), $this->fileName($file->getClientOriginalName()), fn (): array => $this->performDirectUpload($storage, $parent, $file, $batchId, $idempotencyKey, $checksum));
+    }
+
+    private function performDirectUpload(string $storage, string|null $parent, UploadedFile $file, ?string $batchId, ?string $idempotencyKey, ?string $checksum): array
     {
         $parent = $this->path($parent);
         $this->assertUpload($file);
         $size = (int) $file->getSize();
         $name = $this->fileName($file->getClientOriginalName());
-        if ($existing = $this->existingIdempotentUpload($storage, $parent, $name, $size, $idempotencyKey)) {
+        $sourceChecksum = hash_file('sha256', $file->getRealPath());
+        abort_if($checksum !== null && ! hash_equals(strtolower($checksum), $sourceChecksum), 422, 'Checksum file tidak cocok.');
+        $existing = $this->existingIdempotentUpload($storage, $parent, $name, $size, $idempotencyKey, $sourceChecksum);
+        if (isset($existing['asset'])) {
             return $existing['asset'];
         }
+        $reservationId = null;
         if ($batchId !== null) {
             $this->claimFolderUploadBytes($batchId, $storage, $parent, $size);
         } else {
-            $this->assertQuota($storage, $size);
+            $reservationId = (string) Str::uuid();
+            $replacedBytes = isset($existing['pending']['path']) && $this->disk($storage)->fileExists($existing['pending']['path']) ? (int) $this->disk($storage)->size($existing['pending']['path']) : 0;
+            $this->reserveFolderUploadQuota($reservationId, $storage, $this->profile($storage), max(0, $size - $replacedBytes), now()->addHours((int) config('filemanager_v2.uploads.runtime_ttl_hours'))->getTimestamp());
         }
-        $availableName = $this->availableName($storage, $parent, $name);
-        $path = $parent === '' ? $availableName : $parent . '/' . $availableName;
-
-        $stream = fopen($file->getRealPath(), 'rb');
         try {
-            $this->disk($storage)->writeStream($path, $stream);
+            $availableName = $this->availableName($storage, $parent, $name);
+            $path = $existing['pending']['path'] ?? ($parent === '' ? $availableName : $parent . '/' . $availableName);
+            if ($idempotencyKey !== null && $idempotencyKey !== '') {
+                $this->saveUploadReceipt($this->uploadIdempotencyCacheKey($idempotencyKey), [
+                    'state' => 'writing', 'storage' => $storage, 'parent' => $parent,
+                    'name' => $name, 'size' => $size, 'path' => $path, 'checksum' => $sourceChecksum,
+                ]);
+            }
+            $this->writeVerifiedUpload($storage, $path, $file->getRealPath(), $size, $sourceChecksum);
+            $this->bust($storage, $parent);
+            $asset = $this->assetForPath($storage, $path);
+            $this->rememberIdempotentAsset($storage, $parent, $name, $size, $idempotencyKey, $asset, $sourceChecksum);
+
+            return $asset;
         } catch (\Throwable $exception) {
             if ($batchId !== null) {
                 $this->releaseFolderUploadBytes($batchId, $size);
@@ -737,36 +886,42 @@ class FileManagerV2Storage
 
             throw $exception;
         } finally {
-            if (is_resource($stream)) {
-                fclose($stream);
+            if ($reservationId !== null) {
+                $this->releaseFolderUploadQuota($reservationId, $storage);
             }
         }
-
-        $this->bust($storage, $parent);
-
-        $asset = $this->assetForPath($storage, $path);
-        $this->rememberIdempotentAsset($storage, $parent, $name, $size, $idempotencyKey, $asset);
-
-        return $asset;
     }
 
     /** @return array<string, mixed> */
     public function startUpload(string $storage, string|null $parent, string $name, int $size, int $parts, ?string $checksum = null, ?string $batchId = null, ?string $idempotencyKey = null): array
+    {
+        return $this->withUploadLock($storage, $this->path($parent), $this->fileName($name), fn (): array => $this->performStartUpload($storage, $parent, $name, $size, $parts, $checksum, $batchId, $idempotencyKey));
+    }
+
+    private function performStartUpload(string $storage, string|null $parent, string $name, int $size, int $parts, ?string $checksum, ?string $batchId, ?string $idempotencyKey): array
     {
         $this->prepare();
         $this->profile($storage);
         $parent = $this->path($parent);
         $name = $this->fileName($name);
         $this->assertUploadMeta($name, $size, $parts);
-        if ($existing = $this->existingIdempotentUpload($storage, $parent, $name, $size, $idempotencyKey)) {
-            return isset($existing['asset']) ? ['asset' => $existing['asset']] : $existing['session'];
+        if ($existing = $this->existingIdempotentUpload($storage, $parent, $name, $size, $idempotencyKey, $checksum)) {
+            if (isset($existing['asset'])) {
+                return ['asset' => $existing['asset']];
+            }
+            if (isset($existing['session'])) {
+                abort_if((int) $existing['session']['parts'] !== $parts, 409, 'Ukuran chunk berubah. Gunakan pengaturan upload sebelumnya untuk melanjutkan.');
+                $existing['session']['received'] = array_values(array_filter($existing['session']['received'], fn (int $part): bool => is_file($this->runtimeDirectory($existing['session']['id']) . '/' . sprintf('%08d.part', $part))));
+
+                return $existing['session'];
+            }
         }
+        $id = (string) Str::uuid();
         if ($batchId !== null) {
             $this->claimFolderUploadBytes($batchId, $storage, $parent, $size);
         } else {
-            $this->assertQuota($storage, $size);
+            $this->reserveFolderUploadQuota($id, $storage, $this->profile($storage), $size, now()->addHours((int) config('filemanager_v2.uploads.runtime_ttl_hours'))->getTimestamp());
         }
-        $id = (string) Str::uuid();
         $directory = $this->runtimeDirectory($id);
         File::ensureDirectoryExists($directory, 0755, true);
 
@@ -779,6 +934,8 @@ class FileManagerV2Storage
             'size' => $size,
             'parts' => $parts,
             'checksum' => $checksum,
+            'owner' => auth()->id(),
+            'reservation_id' => $batchId === null ? $id : null,
             'idempotency_key' => $this->normalizedIdempotencyKey($idempotencyKey),
             'received' => [],
             'created_at' => now()->toIso8601String(),
@@ -790,13 +947,21 @@ class FileManagerV2Storage
     }
 
     /** @return array<string, mixed> */
-    public function storeChunk(string $id, int $part, UploadedFile $chunk): array
+    public function storeChunk(string $id, int $part, UploadedFile $chunk, ?string $checksum = null): array
+    {
+        $session = $this->session($id);
+
+        return $this->withUploadLock($session['storage'], $session['parent'], $session['name'], fn (): array => $this->performStoreChunk($id, $part, $chunk, $checksum));
+    }
+
+    private function performStoreChunk(string $id, int $part, UploadedFile $chunk, ?string $checksum): array
     {
         $session = $this->session($id);
         if ($part < 0 || $part >= $session['parts']) {
             abort(422, 'Nomor chunk tidak valid.');
         }
         abort_if((int) $chunk->getSize() > $this->uploadSettings()['chunk_size'], 422, 'Ukuran chunk melampaui batas upload.');
+        abort_if($checksum !== null && ! hash_equals(strtolower($checksum), hash_file('sha256', $chunk->getRealPath())), 422, 'Checksum chunk tidak cocok.');
 
         $target = $this->runtimeDirectory($id) . DIRECTORY_SEPARATOR . sprintf('%08d.part', $part);
         $chunk->move(dirname($target), basename($target));
@@ -814,6 +979,19 @@ class FileManagerV2Storage
     /** @return array<string, mixed> */
     public function completeUpload(string $id): array
     {
+        $completed = $this->readUploadReceipt('completed:' . (string) auth()->id() . ':' . $id);
+        if ($completed !== null) {
+            abort_unless($this->storedUploadMatches($completed['storage'], $completed['path'], $completed['size'], $completed['checksum']), 409, 'File hasil upload berubah atau tidak tersedia.');
+
+            return $this->assetForPath($completed['storage'], $completed['path']);
+        }
+        $session = $this->session($id);
+
+        return $this->withUploadLock($session['storage'], $session['parent'], $session['name'], fn (): array => $this->performCompleteUpload($id));
+    }
+
+    private function performCompleteUpload(string $id): array
+    {
         $session = $this->session($id);
         if (count($session['received']) !== $session['parts']) {
             abort(422, 'Masih ada chunk yang belum diupload.');
@@ -821,45 +999,81 @@ class FileManagerV2Storage
 
         $combined = $this->runtimeDirectory($id) . DIRECTORY_SEPARATOR . 'completed.upload';
         $output = fopen($combined, 'wb');
+        if (! is_resource($output)) {
+            throw new RuntimeException('File gabungan tidak dapat dibuat. Chunk upload tetap disimpan.');
+        }
 
         try {
             foreach (range(0, $session['parts'] - 1) as $part) {
                 $source = fopen($this->runtimeDirectory($id) . DIRECTORY_SEPARATOR . sprintf('%08d.part', $part), 'rb');
-                stream_copy_to_stream($source, $output);
-                fclose($source);
+                if (! is_resource($source)) {
+                    throw new RuntimeException('Chunk upload tidak dapat dibaca.');
+                }
+                try {
+                    if (stream_copy_to_stream($source, $output) === false) {
+                        throw new RuntimeException('Penggabungan chunk gagal.');
+                    }
+                } finally {
+                    fclose($source);
+                }
             }
         } finally {
             fclose($output);
         }
 
         if ((int) filesize($combined) !== (int) $session['size']) {
-            $this->deleteRuntime($id);
+            $session['received'] = [];
+            $this->saveSession($session);
             abort(422, 'Ukuran file setelah digabungkan tidak cocok.');
         }
 
         if ($session['checksum'] && ! hash_equals(strtolower($session['checksum']), hash_file('sha256', $combined))) {
-            $this->deleteRuntime($id);
+            $session['received'] = [];
+            $this->saveSession($session);
             abort(422, 'Checksum file tidak cocok.');
         }
 
-        $existing = $this->existingIdempotentUpload($session['storage'], $session['parent'], $session['name'], (int) $session['size'], $session['idempotency_key'] ?? null);
+        $checksum = hash_file('sha256', $combined);
+        $existing = $this->existingIdempotentUpload($session['storage'], $session['parent'], $session['name'], (int) $session['size'], $session['idempotency_key'] ?? null, $checksum);
         if ($existing && isset($existing['asset'])) {
+            $this->rememberCompletedUpload($session, $existing['asset']['path'], $checksum);
+            if (! empty($session['reservation_id'])) {
+                $this->releaseFolderUploadQuota($session['reservation_id'], $session['storage']);
+            }
             $this->deleteRuntime($id);
 
             return $existing['asset'];
         }
 
         $name = $this->availableName($session['storage'], $session['parent'], $session['name']);
-        $path = $session['parent'] === '' ? $name : $session['parent'] . '/' . $name;
-        $stream = fopen($combined, 'rb');
-        $this->disk($session['storage'])->writeStream($path, $stream);
-        fclose($stream);
+        $path = $session['target_path'] ?? ($session['parent'] === '' ? $name : $session['parent'] . '/' . $name);
+        $session['target_path'] = $path;
+        $this->saveSession($session);
+        if (! empty($session['idempotency_key'])) {
+            $this->saveUploadReceipt($this->uploadIdempotencyCacheKey($session['idempotency_key']), [
+                'state' => 'writing', 'storage' => $session['storage'], 'parent' => $session['parent'],
+                'name' => $session['name'], 'size' => (int) $session['size'], 'path' => $path,
+                'checksum' => $checksum, 'sessionId' => $id,
+            ]);
+        }
+        $this->writeVerifiedUpload($session['storage'], $path, $combined, (int) $session['size'], $checksum);
         $this->bust($session['storage'], $session['parent']);
         $asset = $this->assetForPath($session['storage'], $path);
-        $this->rememberIdempotentAsset($session['storage'], $session['parent'], $session['name'], (int) $session['size'], $session['idempotency_key'] ?? null, $asset);
+        $this->rememberIdempotentAsset($session['storage'], $session['parent'], $session['name'], (int) $session['size'], $session['idempotency_key'] ?? null, $asset, $checksum);
+        $this->rememberCompletedUpload($session, $path, $checksum);
+        if (! empty($session['reservation_id'])) {
+            $this->releaseFolderUploadQuota($session['reservation_id'], $session['storage']);
+        }
         $this->deleteRuntime($id);
 
         return $asset;
+    }
+
+    private function rememberCompletedUpload(array $session, string $path, string $checksum): void
+    {
+        $this->saveUploadReceipt('completed:' . (string) auth()->id() . ':' . $session['id'], [
+            'storage' => $session['storage'], 'path' => $path, 'size' => (int) $session['size'], 'checksum' => $checksum,
+        ]);
     }
 
     public function cancelUpload(string $id): void
@@ -867,6 +1081,9 @@ class FileManagerV2Storage
         $session = $this->session($id);
         if (is_string($session['batch_id'] ?? null) && $session['batch_id'] !== '') {
             $this->releaseFolderUploadBytes($session['batch_id'], (int) $session['size']);
+        }
+        if (! empty($session['reservation_id'])) {
+            $this->releaseFolderUploadQuota($session['reservation_id'], $session['storage']);
         }
         $this->forgetIdempotentUpload($session['idempotency_key'] ?? null);
 
@@ -889,6 +1106,11 @@ class FileManagerV2Storage
 
             File::deleteDirectory($directory);
             $deleted++;
+        }
+        foreach (File::files(config('filemanager_v2.local.runtime_root') . '/receipts') as $receipt) {
+            if ($receipt->getMTime() < $expiresAt->getTimestamp()) {
+                File::delete($receipt->getPathname());
+            }
         }
 
         return $deleted;
@@ -1400,7 +1622,7 @@ class FileManagerV2Storage
     /** @return array<string, mixed> */
     private function folderUploadBatch(string $id): array
     {
-        $batch = $this->cache()->get($this->folderUploadBatchKey($id));
+        $batch = $this->cache()->get($this->folderUploadBatchKey($id)) ?? $this->readUploadReceipt('folder-id:' . (string) auth()->id() . ':' . $id);
         abort_unless(is_array($batch), 410, 'Batch upload telah berakhir atau kedaluwarsa.');
         abort_if((int) ($batch['expiresAt'] ?? 0) <= now()->getTimestamp(), 410, 'Batch upload telah kedaluwarsa.');
 
@@ -1413,7 +1635,7 @@ class FileManagerV2Storage
         $this->cache()->lock('filemanager_v2:folder-upload-reservations-lock:' . $storage, 10)->block(5, function () use ($id, $storage, $profile, $bytes, $expiresAt): void {
             $key = $this->folderUploadReservationsKey($storage);
             $reservations = array_filter(
-                (array) $this->cache()->get($key, []),
+                $this->readQuotaReservations($storage),
                 fn (mixed $reservation): bool => is_array($reservation) && (int) ($reservation['expiresAt'] ?? 0) > now()->getTimestamp(),
             );
             $quota = (int) ($profile['quota_bytes'] ?? 0);
@@ -1424,16 +1646,32 @@ class FileManagerV2Storage
             }
 
             $reservations[$id] = ['bytes' => $bytes, 'expiresAt' => $expiresAt];
+            File::replace($this->quotaReservationsPath($storage), json_encode($reservations, JSON_THROW_ON_ERROR));
             $this->cache()->put($key, $reservations, now()->addSeconds(max(1, $expiresAt - now()->getTimestamp())));
         });
+    }
+
+    private function quotaReservationsPath(string $storage): string
+    {
+        return config('filemanager_v2.local.runtime_root') . '/quota/' . hash('sha256', $storage) . '.json';
+    }
+
+    private function readQuotaReservations(string $storage): array
+    {
+        $path = $this->quotaReservationsPath($storage);
+
+        return is_file($path)
+            ? json_decode(File::get($path), true, flags: JSON_THROW_ON_ERROR)
+            : (array) $this->cache()->get($this->folderUploadReservationsKey($storage), []);
     }
 
     private function releaseFolderUploadQuota(string $id, string $storage): void
     {
         $this->cache()->lock('filemanager_v2:folder-upload-reservations-lock:' . $storage, 10)->block(5, function () use ($id, $storage): void {
             $key = $this->folderUploadReservationsKey($storage);
-            $reservations = (array) $this->cache()->get($key, []);
+            $reservations = $this->readQuotaReservations($storage);
             unset($reservations[$id]);
+            File::replace($this->quotaReservationsPath($storage), json_encode($reservations, JSON_THROW_ON_ERROR));
 
             if ($reservations === []) {
                 $this->cache()->forget($key);
@@ -1451,6 +1689,7 @@ class FileManagerV2Storage
         abort_if($bytes < 1, 422, 'Ukuran file upload tidak valid.');
         $this->cache()->lock('filemanager_v2:folder-upload-batch-lock:' . $id, 10)->block(5, function () use ($id, $storage, $parent, $bytes): void {
             $batch = $this->folderUploadBatch($id);
+            abort_if(! empty($batch['completed']), 410, 'Batch upload sudah selesai. Gunakan retry individual.');
             abort_unless($batch['storage'] === $storage, 422, 'Batch upload tidak sesuai dengan storage aktif.');
             $batchPath = (string) $batch['path'];
             abort_unless($batchPath === '' || $parent === $batchPath || str_starts_with($parent, $batchPath . '/'), 422, 'Path upload berada di luar batch folder.');
@@ -1458,6 +1697,7 @@ class FileManagerV2Storage
 
             $batch['claimedBytes'] = (int) $batch['claimedBytes'] + $bytes;
             $this->cache()->put($this->folderUploadBatchKey($id), $batch, now()->addSeconds(max(1, (int) $batch['expiresAt'] - now()->getTimestamp())));
+            $this->saveUploadReceipt('folder-id:' . (string) auth()->id() . ':' . $id, $batch);
         });
     }
 
@@ -1470,6 +1710,7 @@ class FileManagerV2Storage
             }
 
             $batch['claimedBytes'] = max(0, (int) ($batch['claimedBytes'] ?? 0) - $bytes);
+            $this->saveUploadReceipt('folder-id:' . (string) auth()->id() . ':' . $id, $batch);
             $this->cache()->put($this->folderUploadBatchKey($id), $batch, now()->addSeconds(max(1, (int) ($batch['expiresAt'] ?? now()->getTimestamp()) - now()->getTimestamp())));
         });
     }
@@ -1589,7 +1830,8 @@ class FileManagerV2Storage
         $path = $this->runtimeDirectory($id) . DIRECTORY_SEPARATOR . 'session.json';
         abort_unless(is_file($path), 404, 'Upload session tidak ditemukan.');
         $session = json_decode(File::get($path), true, flags: JSON_THROW_ON_ERROR);
-        abort_if(now()->diffInHours(CarbonImmutable::parse($session['created_at'])) > config('filemanager_v2.uploads.runtime_ttl_hours'), 410, 'Upload session sudah kedaluwarsa.');
+        abort_if(array_key_exists('owner', $session) && $session['owner'] !== auth()->id(), 404, 'Upload session tidak ditemukan.');
+        abort_if(CarbonImmutable::parse($session['created_at'])->addHours((int) config('filemanager_v2.uploads.runtime_ttl_hours'))->isPast(), 410, 'Upload session sudah kedaluwarsa.');
 
         return $session;
     }
@@ -1597,7 +1839,7 @@ class FileManagerV2Storage
     /** @param array<string, mixed> $session */
     private function saveSession(array $session): void
     {
-        File::put($this->runtimeDirectory($session['id']) . DIRECTORY_SEPARATOR . 'session.json', json_encode($session, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
+        File::replace($this->runtimeDirectory($session['id']) . DIRECTORY_SEPARATOR . 'session.json', json_encode($session, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
     }
 
     private function deleteRuntime(string $id): void

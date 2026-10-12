@@ -1,0 +1,375 @@
+{
+  "passed": 183,
+  "checks": [
+    "Description uses three rows in revamp",
+    "Header controls use the CMS 36px scale",
+    "Footer is fully inside desktop viewport",
+    "All five archive and three detail templates are available",
+    "Minimal Reading List live source preview loads",
+    "Minimal Reading List / Header content has no horizontal overflow",
+    "Minimal Reading List / Header content retains native form controls",
+    "Minimal Reading List / Header content avoids nested small field fonts",
+    "Minimal Reading List / Archive toolbar has no horizontal overflow",
+    "Minimal Reading List / Archive toolbar retains native form controls",
+    "Minimal Reading List / Archive toolbar avoids nested small field fonts",
+    "Minimal Reading List / Post list has no horizontal overflow",
+    "Minimal Reading List / Post list retains native form controls",
+    "Minimal Reading List / Post list avoids nested small field fonts",
+    "Minimal Reading List / Reading list sidebar has no horizontal overflow",
+    "Minimal Reading List / Reading list sidebar retains native form controls",
+    "Minimal Reading List / Reading list sidebar avoids nested small field fonts",
+    "Minimal Reading List / Thumbnail has no horizontal overflow",
+    "Minimal Reading List / Thumbnail retains native form controls",
+    "Minimal Reading List / Thumbnail avoids nested small field fonts",
+    "Minimal Reading List / Pagination has no horizontal overflow",
+    "Minimal Reading List / Pagination retains native form controls",
+    "Minimal Reading List / Pagination avoids nested small field fonts",
+    "Minimal Reading List / Article title has no horizontal overflow",
+    "Minimal Reading List / Article title retains native form controls",
+    "Minimal Reading List / Article title avoids nested small field fonts",
+    "Minimal Reading List / Archive shell has no horizontal overflow",
+    "Minimal Reading List / Archive shell retains native form controls",
+    "Minimal Reading List / Archive shell avoids nested small field fonts",
+    "Editorial Journal live source preview loads",
+    "Editorial Journal / Header content has no horizontal overflow",
+    "Editorial Journal / Header content retains native form controls",
+    "Editorial Journal / Header content avoids nested small field fonts",
+    "Editorial Journal / Archive toolbar has no horizontal overflow",
+    "Editorial Journal / Archive toolbar retains native form controls",
+    "Editorial Journal / Archive toolbar avoids nested small field fonts",
+    "Editorial Journal / Grid columns has no horizontal overflow",
+    "Editorial Journal / Grid columns retains native form controls",
+    "Editorial Journal / Grid columns avoids nested small field fonts",
+    "Editorial Journal / Editorial Journal has no horizontal overflow",
+    "Editorial Journal / Editorial Journal retains native form controls",
+    "Editorial Journal / Editorial Journal avoids nested small field fonts",
+    "Editorial Journal / Thumbnail has no horizontal overflow",
+    "Editorial Journal / Thumbnail retains native form controls",
+    "Editorial Journal / Thumbnail avoids nested small field fonts",
+    "Editorial Journal / Pagination has no horizontal overflow",
+    "Editorial Journal / Pagination retains native form controls",
+    "Editorial Journal / Pagination avoids nested small field fonts",
+    "Editorial Journal / Article title has no horizontal overflow",
+    "Editorial Journal / Article title retains native form controls",
+    "Editorial Journal / Article title avoids nested small field fonts",
+    "Editorial Journal / Archive shell has no horizontal overflow",
+    "Editorial Journal / Archive shell retains native form controls",
+    "Editorial Journal / Archive shell avoids nested small field fonts",
+    "Mosaic Magazine live source preview loads",
+    "Mosaic Magazine / Header content has no horizontal overflow",
+    "Mosaic Magazine / Header content retains native form controls",
+    "Mosaic Magazine / Header content avoids nested small field fonts",
+    "Mosaic Magazine / Archive toolbar has no horizontal overflow",
+    "Mosaic Magazine / Archive toolbar retains native form controls",
+    "Mosaic Magazine / Archive toolbar avoids nested small field fonts",
+    "Mosaic Magazine / Grid columns has no horizontal overflow",
+    "Mosaic Magazine / Grid columns retains native form controls",
+    "Mosaic Magazine / Grid columns avoids nested small field fonts",
+    "Mosaic Magazine / Mosaic Magazine has no horizontal overflow",
+    "Mosaic Magazine / Mosaic Magazine retains native form controls",
+    "Mosaic Magazine / Mosaic Magazine avoids nested small field fonts",
+    "Mosaic Magazine / Thumbnail has no horizontal overflow",
+    "Mosaic Magazine / Thumbnail retains native form controls",
+    "Mosaic Magazine / Thumbnail avoids nested small field fonts",
+    "Mosaic Magazine / Pagination has no horizontal overflow",
+    "Mosaic Magazine / Pagination retains native form controls",
+    "Mosaic Magazine / Pagination avoids nested small field fonts",
+    "Mosaic Magazine / Article title has no horizontal overflow",
+    "Mosaic Magazine / Article title retains native form controls",
+    "Mosaic Magazine / Article title avoids nested small field fonts",
+    "Mosaic Magazine / Archive shell has no horizontal overflow",
+    "Mosaic Magazine / Archive shell retains native form controls",
+    "Mosaic Magazine / Archive shell avoids nested small field fonts",
+    "Mosaic Classic live source preview loads",
+    "Mosaic Classic / Header content has no horizontal overflow",
+    "Mosaic Classic / Header content retains native form controls",
+    "Mosaic Classic / Header content avoids nested small field fonts",
+    "Mosaic Classic / Archive toolbar has no horizontal overflow",
+    "Mosaic Classic / Archive toolbar retains native form controls",
+    "Mosaic Classic / Archive toolbar avoids nested small field fonts",
+    "Mosaic Classic / Grid columns has no horizontal overflow",
+    "Mosaic Classic / Grid columns retains native form controls",
+    "Mosaic Classic / Grid columns avoids nested small field fonts",
+    "Mosaic Classic / Mosaic Classic has no horizontal overflow",
+    "Mosaic Classic / Mosaic Classic retains native form controls",
+    "Mosaic Classic / Mosaic Classic avoids nested small field fonts",
+    "Mosaic Classic / Thumbnail has no horizontal overflow",
+    "Mosaic Classic / Thumbnail retains native form controls",
+    "Mosaic Classic / Thumbnail avoids nested small field fonts",
+    "Mosaic Classic / Pagination has no horizontal overflow",
+    "Mosaic Classic / Pagination retains native form controls",
+    "Mosaic Classic / Pagination avoids nested small field fonts",
+    "Mosaic Classic / Article title has no horizontal overflow",
+    "Mosaic Classic / Article title retains native form controls",
+    "Mosaic Classic / Article title avoids nested small field fonts",
+    "Mosaic Classic / Archive shell has no horizontal overflow",
+    "Mosaic Classic / Archive shell retains native form controls",
+    "Mosaic Classic / Archive shell avoids nested small field fonts",
+    "Balanced Card Grid live source preview loads",
+    "Balanced Card Grid / Header content has no horizontal overflow",
+    "Balanced Card Grid / Header content retains native form controls",
+    "Balanced Card Grid / Header content avoids nested small field fonts",
+    "Balanced Card Grid / Archive toolbar has no horizontal overflow",
+    "Balanced Card Grid / Archive toolbar retains native form controls",
+    "Balanced Card Grid / Archive toolbar avoids nested small field fonts",
+    "Balanced Card Grid / Grid columns has no horizontal overflow",
+    "Balanced Card Grid / Grid columns retains native form controls",
+    "Balanced Card Grid / Grid columns avoids nested small field fonts",
+    "Balanced Card Grid / Balanced Card Grid has no horizontal overflow",
+    "Balanced Card Grid / Balanced Card Grid retains native form controls",
+    "Balanced Card Grid / Balanced Card Grid avoids nested small field fonts",
+    "Balanced Card Grid / Thumbnail has no horizontal overflow",
+    "Balanced Card Grid / Thumbnail retains native form controls",
+    "Balanced Card Grid / Thumbnail avoids nested small field fonts",
+    "Balanced Card Grid / Pagination has no horizontal overflow",
+    "Balanced Card Grid / Pagination retains native form controls",
+    "Balanced Card Grid / Pagination avoids nested small field fonts",
+    "Balanced Card Grid / Article title has no horizontal overflow",
+    "Balanced Card Grid / Article title retains native form controls",
+    "Balanced Card Grid / Article title avoids nested small field fonts",
+    "Balanced Card Grid / Archive shell has no horizontal overflow",
+    "Balanced Card Grid / Archive shell retains native form controls",
+    "Balanced Card Grid / Archive shell avoids nested small field fonts",
+    "Focused Reader live source preview loads",
+    "Focused Reader / Header content has no horizontal overflow",
+    "Focused Reader / Header content retains native form controls",
+    "Focused Reader / Header content avoids nested small field fonts",
+    "Focused Reader / Detail shell has no horizontal overflow",
+    "Focused Reader / Detail shell retains native form controls",
+    "Focused Reader / Detail shell avoids nested small field fonts",
+    "Editorial Feature live source preview loads",
+    "Editorial Feature / Header content has no horizontal overflow",
+    "Editorial Feature / Header content retains native form controls",
+    "Editorial Feature / Header content avoids nested small field fonts",
+    "Editorial Feature / Detail shell has no horizontal overflow",
+    "Editorial Feature / Detail shell retains native form controls",
+    "Editorial Feature / Detail shell avoids nested small field fonts",
+    "Knowledge + TOC live source preview loads",
+    "Knowledge + TOC / Header content has no horizontal overflow",
+    "Knowledge + TOC / Header content retains native form controls",
+    "Knowledge + TOC / Header content avoids nested small field fonts",
+    "Knowledge + TOC / Detail shell has no horizontal overflow",
+    "Knowledge + TOC / Detail shell retains native form controls",
+    "Knowledge + TOC / Detail shell avoids nested small field fonts",
+    "Editing existing title updates the actual Blade preview",
+    "Dirty draft keeps the existing dismissal warning",
+    "Dismissal warning uses the CMS warning callout",
+    "success uses the Add Article CMS toast and callout",
+    "success retains the standard CMS accent strip",
+    "success notice has alert semantics and a close action",
+    "success notice is visually above the modal",
+    "warning uses the Add Article CMS toast and callout",
+    "warning retains the standard CMS accent strip",
+    "warning notice has alert semantics and a close action",
+    "warning notice is visually above the modal",
+    "failed uses the Add Article CMS toast and callout",
+    "failed retains the standard CMS accent strip",
+    "failed notice has alert semantics and a close action",
+    "failed notice is visually above the modal",
+    "Last form controls can be scrolled above the footer",
+    "Modal and footer fit at 1280px",
+    "Modal and footer fit at 1024px",
+    "Modal and footer fit at 768px",
+    "Modal and footer fit at 390px",
+    "Mobile section picker is visible at 390px",
+    "Mobile inputs are readable at 390px",
+    "Radius and unit fields fit at 390px",
+    "Modal and footer fit at 375px",
+    "Mobile section picker is visible at 375px",
+    "Mobile inputs are readable at 375px",
+    "Radius and unit fields fit at 375px",
+    "Modal and footer fit at 320px",
+    "Mobile section picker is visible at 320px",
+    "Mobile inputs are readable at 320px",
+    "Radius and unit fields fit at 320px",
+    "Mobile preview tab remains functional",
+    "All fixture requests and Vue interactions succeeded: []"
+  ],
+  "panels": [
+    {
+      "template": "archive:minimal-reading-list",
+      "section": "header"
+    },
+    {
+      "template": "archive:minimal-reading-list",
+      "section": "toolbar"
+    },
+    {
+      "template": "archive:minimal-reading-list",
+      "section": "post-list"
+    },
+    {
+      "template": "archive:minimal-reading-list",
+      "section": "sidebar"
+    },
+    {
+      "template": "archive:minimal-reading-list",
+      "section": "thumbnail"
+    },
+    {
+      "template": "archive:minimal-reading-list",
+      "section": "pagination"
+    },
+    {
+      "template": "archive:minimal-reading-list",
+      "section": "article-title"
+    },
+    {
+      "template": "archive:minimal-reading-list",
+      "section": "shell"
+    },
+    {
+      "template": "archive:editorial-journal",
+      "section": "header"
+    },
+    {
+      "template": "archive:editorial-journal",
+      "section": "toolbar"
+    },
+    {
+      "template": "archive:editorial-journal",
+      "section": "grid"
+    },
+    {
+      "template": "archive:editorial-journal",
+      "section": "editorial-journal"
+    },
+    {
+      "template": "archive:editorial-journal",
+      "section": "thumbnail"
+    },
+    {
+      "template": "archive:editorial-journal",
+      "section": "pagination"
+    },
+    {
+      "template": "archive:editorial-journal",
+      "section": "article-title"
+    },
+    {
+      "template": "archive:editorial-journal",
+      "section": "shell"
+    },
+    {
+      "template": "archive:mosaic-magazine",
+      "section": "header"
+    },
+    {
+      "template": "archive:mosaic-magazine",
+      "section": "toolbar"
+    },
+    {
+      "template": "archive:mosaic-magazine",
+      "section": "grid"
+    },
+    {
+      "template": "archive:mosaic-magazine",
+      "section": "mosaic-magazine"
+    },
+    {
+      "template": "archive:mosaic-magazine",
+      "section": "thumbnail"
+    },
+    {
+      "template": "archive:mosaic-magazine",
+      "section": "pagination"
+    },
+    {
+      "template": "archive:mosaic-magazine",
+      "section": "article-title"
+    },
+    {
+      "template": "archive:mosaic-magazine",
+      "section": "shell"
+    },
+    {
+      "template": "archive:mosaic-classic",
+      "section": "header"
+    },
+    {
+      "template": "archive:mosaic-classic",
+      "section": "toolbar"
+    },
+    {
+      "template": "archive:mosaic-classic",
+      "section": "grid"
+    },
+    {
+      "template": "archive:mosaic-classic",
+      "section": "mosaic-classic"
+    },
+    {
+      "template": "archive:mosaic-classic",
+      "section": "thumbnail"
+    },
+    {
+      "template": "archive:mosaic-classic",
+      "section": "pagination"
+    },
+    {
+      "template": "archive:mosaic-classic",
+      "section": "article-title"
+    },
+    {
+      "template": "archive:mosaic-classic",
+      "section": "shell"
+    },
+    {
+      "template": "archive:balanced-card-grid",
+      "section": "header"
+    },
+    {
+      "template": "archive:balanced-card-grid",
+      "section": "toolbar"
+    },
+    {
+      "template": "archive:balanced-card-grid",
+      "section": "grid"
+    },
+    {
+      "template": "archive:balanced-card-grid",
+      "section": "balanced-card-grid"
+    },
+    {
+      "template": "archive:balanced-card-grid",
+      "section": "thumbnail"
+    },
+    {
+      "template": "archive:balanced-card-grid",
+      "section": "pagination"
+    },
+    {
+      "template": "archive:balanced-card-grid",
+      "section": "article-title"
+    },
+    {
+      "template": "archive:balanced-card-grid",
+      "section": "shell"
+    },
+    {
+      "template": "detail:focused-reader",
+      "section": "header"
+    },
+    {
+      "template": "detail:focused-reader",
+      "section": "shell"
+    },
+    {
+      "template": "detail:editorial-feature",
+      "section": "header"
+    },
+    {
+      "template": "detail:editorial-feature",
+      "section": "shell"
+    },
+    {
+      "template": "detail:knowledge-toc",
+      "section": "header"
+    },
+    {
+      "template": "detail:knowledge-toc",
+      "section": "shell"
+    }
+  ],
+  "failures": []
+}

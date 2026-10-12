@@ -1,0 +1,38 @@
+[
+  {
+    "file": "public/assets/css/article/article-template-manager-2026.css",
+    "unchanged": true
+  },
+  {
+    "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+    "unchanged": true
+  },
+  {
+    "file": "resources/views/manage_article/templates/index.blade.php",
+    "unchanged": true
+  },
+  {
+    "file": "resources/views/manage_article/templates/partials/options-styling.blade.php",
+    "unchanged": true
+  },
+  {
+    "file": "resources/views/manage_article/templates/partials/options-classic-balanced.blade.php",
+    "unchanged": true
+  },
+  {
+    "file": "resources/views/manage_article/templates/partials/options-mosaic-magazine.blade.php",
+    "unchanged": true
+  },
+  {
+    "file": "resources/views/manage_article/manage_article_add.blade.php",
+    "unchanged": true
+  },
+  {
+    "file": "public/assets/css/phoenix-cms.css",
+    "unchanged": true
+  },
+  {
+    "file": "public/assets/css/article/article-frontend-2026.css",
+    "unchanged": true
+  }
+]

@@ -76,7 +76,7 @@ class FileManagerV2FolderBatchUploadTest extends TestCase
         $asset = $storage->upload(
             'local',
             'Plugins/fontawesome/css',
-            UploadedFile::fake()->create('all.css', 4),
+            UploadedFile::fake()->createWithContent('all.css', str_repeat('a', 4096)),
             $batch['id'],
         );
 

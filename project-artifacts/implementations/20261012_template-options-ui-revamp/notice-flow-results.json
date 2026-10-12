@@ -1,0 +1,23 @@
+{
+  "passed": 16,
+  "checks": [
+    "Cancel on a dirty draft shows a CMS warning",
+    "Dirty draft remains open for Keep editing or Discard",
+    "Apply reports draft success and asks for Save Template",
+    "Apply does not change persisted saved state",
+    "Applied title survives reopening the options draft",
+    "Preview failure shows the CMS danger notice",
+    "Preview failure retains Retry and a CMS inline callout",
+    "Save stays locked while awaiting the server",
+    "Server success shows CMS success notice",
+    "Save success releases the lock",
+    "Server validation failure shows its message in CMS danger notice",
+    "Failed save preserves prior saved state and releases the lock",
+    "Image field renders Choose Image without a Vue translation error",
+    "An image selection renders Change Image",
+    "Removing the image restores Choose Image",
+    "Notice flows have no Vue runtime errors"
+  ],
+  "errors": [],
+  "saveResponses": "Mocked in the browser; real controller persistence is covered by the SQLite feature tests."
+}

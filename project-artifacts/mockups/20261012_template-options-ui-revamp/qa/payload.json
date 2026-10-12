@@ -1,0 +1,1320 @@
+{
+    "settings": {
+        "archive_template": "minimal-reading-list",
+        "detail_template": "focused-reader",
+        "archive_per_page": 6,
+        "archive_template_options": {
+            "minimal-reading-list": {
+                "header": {
+                    "eyebrow": {
+                        "enabled": true,
+                        "text": "Journal"
+                    },
+                    "title": {
+                        "enabled": true,
+                        "text": "Minimal Reading List"
+                    },
+                    "description": {
+                        "enabled": true,
+                        "text": "Thoughtful reads on design, technology, and the web."
+                    }
+                },
+                "toolbar": {
+                    "search": {
+                        "enabled": true,
+                        "position": "left",
+                        "type": "attached",
+                        "radius": "0.75rem",
+                        "gap": "0.75rem",
+                        "icon": "fas fa-search",
+                        "input_background_color": null,
+                        "input_text_color": null,
+                        "input_border_color": null,
+                        "button_background_color": null,
+                        "button_text_color": null,
+                        "button_hover_background_color": null,
+                        "button_hover_text_color": null,
+                        "button_active_background_color": null,
+                        "button_active_text_color": null
+                    },
+                    "category": {
+                        "enabled": true,
+                        "position": "right",
+                        "mode": "button-list"
+                    }
+                },
+                "thumbnail": {
+                    "mode": "background",
+                    "fit": "cover",
+                    "height": "9.3rem",
+                    "background_color": "#f2f4f7",
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#f2f4f7"
+                    }
+                },
+                "pagination": {
+                    "type": "boxed",
+                    "range": {
+                        "desktop": 3,
+                        "tablet": 3,
+                        "mobile": 2
+                    },
+                    "item_radius": "0.45rem",
+                    "item_gap": "0.45rem",
+                    "item_background_color": null,
+                    "item_text_color": null,
+                    "item_border_color": null,
+                    "item_hover_background_color": null,
+                    "item_hover_text_color": null,
+                    "item_active_background_color": null,
+                    "item_active_text_color": null,
+                    "previous_icon": "fas fa-chevron-left",
+                    "next_icon": "fas fa-chevron-right",
+                    "show_total": true,
+                    "position": "right",
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e6e9ef",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    },
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    }
+                },
+                "article_title": {
+                    "tag": "h4"
+                },
+                "shell": {
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    }
+                },
+                "post_list": {
+                    "item_gap": "0.75rem"
+                },
+                "sidebar": {
+                    "enabled": true,
+                    "categories": {
+                        "enabled": true,
+                        "position": "static"
+                    },
+                    "popular": {
+                        "enabled": true,
+                        "position": "static"
+                    }
+                }
+            },
+            "editorial-journal": {
+                "header": {
+                    "eyebrow": {
+                        "enabled": true,
+                        "text": "Stories"
+                    },
+                    "title": {
+                        "enabled": true,
+                        "text": "Editorial Journal"
+                    },
+                    "description": {
+                        "enabled": true,
+                        "text": "Featured ideas and useful perspectives."
+                    }
+                },
+                "toolbar": {
+                    "search": {
+                        "enabled": false,
+                        "position": "left",
+                        "type": "attached",
+                        "radius": "0.75rem",
+                        "gap": "0.75rem",
+                        "icon": "fas fa-search",
+                        "input_background_color": null,
+                        "input_text_color": null,
+                        "input_border_color": null,
+                        "button_background_color": null,
+                        "button_text_color": null,
+                        "button_hover_background_color": null,
+                        "button_hover_text_color": null,
+                        "button_active_background_color": null,
+                        "button_active_text_color": null
+                    },
+                    "category": {
+                        "enabled": false,
+                        "position": "right"
+                    }
+                },
+                "thumbnail": {
+                    "mode": "background",
+                    "fit": "cover",
+                    "height": "13.5rem",
+                    "background_color": "#f2f4f7",
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#f2f4f7"
+                    }
+                },
+                "pagination": {
+                    "type": "boxed",
+                    "range": {
+                        "desktop": 3,
+                        "tablet": 3,
+                        "mobile": 2
+                    },
+                    "item_radius": "0.45rem",
+                    "item_gap": "0.45rem",
+                    "item_background_color": null,
+                    "item_text_color": null,
+                    "item_border_color": null,
+                    "item_hover_background_color": null,
+                    "item_hover_text_color": null,
+                    "item_active_background_color": null,
+                    "item_active_text_color": null,
+                    "previous_icon": "fas fa-chevron-left",
+                    "next_icon": "fas fa-chevron-right",
+                    "show_total": true,
+                    "position": "right",
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e6e9ef",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    },
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    }
+                },
+                "article_title": {
+                    "tag": "h4"
+                },
+                "shell": {
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    }
+                },
+                "grid": {
+                    "desktop": 3,
+                    "tablet": 2,
+                    "mobile": 1
+                },
+                "editorial_journal": {
+                    "lead_grid": {
+                        "divider": {
+                            "enabled": true
+                        },
+                        "spacing": {
+                            "with_divider": "2rem",
+                            "without_divider": "2rem"
+                        }
+                    },
+                    "thumbnail": {
+                        "edge_to_edge": false
+                    },
+                    "card": {
+                        "border": {
+                            "enabled": true,
+                            "type": "solid",
+                            "width": "1px",
+                            "color": "#e6e9ef",
+                            "radius": "0.9rem"
+                        },
+                        "background": {
+                            "type": "color",
+                            "color": "#ffffff",
+                            "image": ""
+                        },
+                        "height": {
+                            "mode": "auto",
+                            "desktop": "22rem",
+                            "tablet": "22rem",
+                            "mobile": "22rem"
+                        }
+                    },
+                    "read_more": {
+                        "enabled": false,
+                        "position": "left",
+                        "icon": "fas fa-arrow-right"
+                    }
+                }
+            },
+            "mosaic-magazine": {
+                "header": {
+                    "eyebrow": {
+                        "enabled": true,
+                        "text": "Journal"
+                    },
+                    "title": {
+                        "enabled": true,
+                        "text": "Mosaic Magazine"
+                    },
+                    "description": {
+                        "enabled": true,
+                        "text": ""
+                    }
+                },
+                "toolbar": {
+                    "search": {
+                        "enabled": true,
+                        "position": "right",
+                        "type": "attached",
+                        "radius": "0.75rem",
+                        "gap": "0.75rem",
+                        "icon": "fas fa-search",
+                        "input_background_color": null,
+                        "input_text_color": null,
+                        "input_border_color": null,
+                        "button_background_color": null,
+                        "button_text_color": null,
+                        "button_hover_background_color": null,
+                        "button_hover_text_color": null,
+                        "button_active_background_color": null,
+                        "button_active_text_color": null
+                    },
+                    "category": {
+                        "enabled": true,
+                        "position": "left"
+                    }
+                },
+                "thumbnail": {
+                    "mode": "background",
+                    "fit": "cover",
+                    "height": "13.5rem",
+                    "background_color": "#f2f4f7",
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#f2f4f7"
+                    }
+                },
+                "pagination": {
+                    "type": "boxed",
+                    "range": {
+                        "desktop": 3,
+                        "tablet": 3,
+                        "mobile": 2
+                    },
+                    "item_radius": "0.45rem",
+                    "item_gap": "0.45rem",
+                    "item_background_color": null,
+                    "item_text_color": null,
+                    "item_border_color": null,
+                    "item_hover_background_color": null,
+                    "item_hover_text_color": null,
+                    "item_active_background_color": null,
+                    "item_active_text_color": null,
+                    "previous_icon": "fas fa-chevron-left",
+                    "next_icon": "fas fa-chevron-right",
+                    "show_total": true,
+                    "position": "right",
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e6e9ef",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    },
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    }
+                },
+                "article_title": {
+                    "tag": "h4"
+                },
+                "shell": {
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    }
+                },
+                "grid": {
+                    "desktop": 3,
+                    "tablet": 2,
+                    "mobile": 1
+                },
+                "mosaic_magazine": {
+                    "supporting_count": 2,
+                    "match_grid": false,
+                    "columns": {
+                        "desktop": 2,
+                        "tablet": 2,
+                        "mobile": 1
+                    },
+                    "proportion": "equal"
+                }
+            },
+            "mosaic-classic": {
+                "header": {
+                    "eyebrow": {
+                        "enabled": true,
+                        "text": "Journal"
+                    },
+                    "title": {
+                        "enabled": true,
+                        "text": "Mosaic Classic"
+                    },
+                    "description": {
+                        "enabled": true,
+                        "text": ""
+                    }
+                },
+                "toolbar": {
+                    "search": {
+                        "enabled": true,
+                        "position": "right",
+                        "type": "attached",
+                        "radius": "0.75rem",
+                        "gap": "0.75rem",
+                        "icon": "fas fa-search",
+                        "input_background_color": null,
+                        "input_text_color": null,
+                        "input_border_color": null,
+                        "button_background_color": null,
+                        "button_text_color": null,
+                        "button_hover_background_color": null,
+                        "button_hover_text_color": null,
+                        "button_active_background_color": null,
+                        "button_active_text_color": null
+                    },
+                    "category": {
+                        "enabled": true,
+                        "position": "left"
+                    }
+                },
+                "thumbnail": {
+                    "mode": "background",
+                    "fit": "cover",
+                    "height": "13.5rem",
+                    "background_color": "#f2f4f7",
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#f2f4f7"
+                    }
+                },
+                "pagination": {
+                    "type": "boxed",
+                    "range": {
+                        "desktop": 3,
+                        "tablet": 3,
+                        "mobile": 2
+                    },
+                    "item_radius": "0.45rem",
+                    "item_gap": "0.45rem",
+                    "item_background_color": null,
+                    "item_text_color": null,
+                    "item_border_color": null,
+                    "item_hover_background_color": null,
+                    "item_hover_text_color": null,
+                    "item_active_background_color": null,
+                    "item_active_text_color": null,
+                    "previous_icon": "fas fa-chevron-left",
+                    "next_icon": "fas fa-chevron-right",
+                    "show_total": true,
+                    "position": "right",
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e6e9ef",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    },
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    }
+                },
+                "article_title": {
+                    "tag": "h4"
+                },
+                "shell": {
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    }
+                },
+                "grid": {
+                    "desktop": 3,
+                    "tablet": 2,
+                    "mobile": 1
+                },
+                "mosaic_classic": {
+                    "show_category": true,
+                    "show_excerpt": true,
+                    "show_date": true,
+                    "show_read_more": false,
+                    "gap": {
+                        "desktop": "2rem",
+                        "tablet": "1.5rem",
+                        "mobile": "1.25rem"
+                    },
+                    "side_count": 3,
+                    "side_position": "right",
+                    "lead_ratio": "50-50",
+                    "side_layout": "list",
+                    "divider": true,
+                    "side_numbers": false,
+                    "lead_layout": "headline-first",
+                    "side_image_position": "right",
+                    "highlight_count": 2,
+                    "highlight_columns": {
+                        "desktop": 2,
+                        "tablet": 2,
+                        "mobile": 1
+                    },
+                    "latest_title": "Latest Articles",
+                    "show_author": true,
+                    "show_reading_time": true,
+                    "lead_height": {
+                        "desktop": "22rem",
+                        "tablet": "20rem",
+                        "mobile": "15rem"
+                    },
+                    "side_height": {
+                        "desktop": "7rem",
+                        "tablet": "7rem",
+                        "mobile": "14rem"
+                    },
+                    "highlight_height": {
+                        "desktop": "16rem",
+                        "tablet": "16rem",
+                        "mobile": "14rem"
+                    }
+                }
+            },
+            "balanced-card-grid": {
+                "header": {
+                    "eyebrow": {
+                        "enabled": true,
+                        "text": "Explore"
+                    },
+                    "title": {
+                        "enabled": true,
+                        "text": "Balanced Card Grid"
+                    },
+                    "description": {
+                        "enabled": true,
+                        "text": ""
+                    }
+                },
+                "toolbar": {
+                    "search": {
+                        "enabled": true,
+                        "position": "right",
+                        "type": "attached",
+                        "radius": "0.75rem",
+                        "gap": "0.75rem",
+                        "icon": "fas fa-search",
+                        "input_background_color": null,
+                        "input_text_color": null,
+                        "input_border_color": null,
+                        "button_background_color": null,
+                        "button_text_color": null,
+                        "button_hover_background_color": null,
+                        "button_hover_text_color": null,
+                        "button_active_background_color": null,
+                        "button_active_text_color": null
+                    },
+                    "category": {
+                        "enabled": true,
+                        "position": "left"
+                    }
+                },
+                "thumbnail": {
+                    "mode": "background",
+                    "fit": "cover",
+                    "height": "13.5rem",
+                    "background_color": "#f2f4f7",
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#f2f4f7"
+                    }
+                },
+                "pagination": {
+                    "type": "boxed",
+                    "range": {
+                        "desktop": 3,
+                        "tablet": 3,
+                        "mobile": 2
+                    },
+                    "item_radius": "0.45rem",
+                    "item_gap": "0.45rem",
+                    "item_background_color": null,
+                    "item_text_color": null,
+                    "item_border_color": null,
+                    "item_hover_background_color": null,
+                    "item_hover_text_color": null,
+                    "item_active_background_color": null,
+                    "item_active_text_color": null,
+                    "previous_icon": "fas fa-chevron-left",
+                    "next_icon": "fas fa-chevron-right",
+                    "show_total": true,
+                    "position": "right",
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e6e9ef",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    },
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    }
+                },
+                "article_title": {
+                    "tag": "h4"
+                },
+                "shell": {
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    }
+                },
+                "grid": {
+                    "desktop": 3,
+                    "tablet": 2,
+                    "mobile": 1
+                },
+                "balanced_grid": {
+                    "show_category": true,
+                    "show_excerpt": true,
+                    "show_date": true,
+                    "show_read_more": true,
+                    "gap": {
+                        "desktop": "2rem",
+                        "tablet": "1.5rem",
+                        "mobile": "1.25rem"
+                    },
+                    "card_style": "outline",
+                    "text_align": "left",
+                    "card_padding": "1.25rem",
+                    "card_radius": "0.75rem",
+                    "excerpt_lines": 2
+                }
+            }
+        },
+        "detail_template_options": {
+            "focused-reader": {
+                "header": {
+                    "eyebrow": {
+                        "enabled": true,
+                        "mode": "dynamic",
+                        "text": ""
+                    },
+                    "title": {
+                        "enabled": true
+                    },
+                    "description": {
+                        "enabled": true,
+                        "mode": "dynamic",
+                        "text": ""
+                    }
+                },
+                "shell": {
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    }
+                }
+            },
+            "editorial-feature": {
+                "header": {
+                    "eyebrow": {
+                        "enabled": true,
+                        "mode": "dynamic",
+                        "text": ""
+                    },
+                    "title": {
+                        "enabled": true
+                    },
+                    "description": {
+                        "enabled": true,
+                        "mode": "dynamic",
+                        "text": ""
+                    }
+                },
+                "shell": {
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    }
+                }
+            },
+            "knowledge-toc": {
+                "header": {
+                    "eyebrow": {
+                        "enabled": true,
+                        "mode": "dynamic",
+                        "text": ""
+                    },
+                    "title": {
+                        "enabled": true
+                    },
+                    "description": {
+                        "enabled": true,
+                        "mode": "dynamic",
+                        "text": ""
+                    }
+                },
+                "shell": {
+                    "padding": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "margin": {
+                        "enabled": false,
+                        "desktop": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "tablet": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        },
+                        "mobile": {
+                            "top": "0px",
+                            "right": "0px",
+                            "bottom": "0px",
+                            "left": "0px"
+                        }
+                    },
+                    "frame": {
+                        "enabled": false,
+                        "border_color": "#e1e6ee",
+                        "border_width": "1px",
+                        "radius": "1rem",
+                        "background_color": "#ffffff"
+                    }
+                }
+            }
+        }
+    },
+    "templates": {
+        "archive": {
+            "minimal-reading-list": {
+                "label": "Minimal Reading List",
+                "description": "Focused rows for calm, long-form discovery.",
+                "eyebrow": "Journal",
+                "header_description": "Thoughtful reads on design, technology, and the web.",
+                "best_for": "Long-form reading",
+                "view": "article.templates.archive.minimal-reading-list",
+                "preview_image": "assets\/images\/article\/template-previews\/minimal-reading-list.svg"
+            },
+            "editorial-journal": {
+                "label": "Editorial Journal",
+                "description": "Featured story and balanced editorial grid.",
+                "eyebrow": "Stories",
+                "header_description": "Featured ideas and useful perspectives.",
+                "best_for": "Featured stories",
+                "view": "article.templates.archive.editorial-journal",
+                "preview_image": "assets\/images\/article\/template-previews\/editorial-journal.svg"
+            },
+            "mosaic-magazine": {
+                "label": "Mosaic Magazine",
+                "description": "Visual lead story with varied editorial cards.",
+                "eyebrow": "Journal",
+                "header_description": "",
+                "best_for": "Visual storytelling",
+                "view": "article.templates.archive.mosaic-magazine",
+                "preview_image": "assets\/images\/article\/template-previews\/mosaic-magazine.svg"
+            },
+            "mosaic-classic": {
+                "label": "Mosaic Classic",
+                "description": "Feature mosaic with a classic editorial rhythm.",
+                "eyebrow": "Journal",
+                "header_description": "",
+                "best_for": "Lead + side stories",
+                "view": "article.templates.archive.mosaic-classic",
+                "preview_image": "assets\/images\/article\/template-previews\/mosaic-classic.svg"
+            },
+            "balanced-card-grid": {
+                "label": "Balanced Card Grid",
+                "description": "Equal-weight cards for broad article discovery.",
+                "eyebrow": "Explore",
+                "header_description": "",
+                "best_for": "Visual discovery",
+                "view": "article.templates.archive.balanced-card-grid",
+                "preview_image": "assets\/images\/article\/template-previews\/balanced-card-grid.svg"
+            }
+        },
+        "detail": {
+            "focused-reader": {
+                "label": "Focused Reader",
+                "description": "Clean long-form reading without distractions.",
+                "best_for": "Quiet reading",
+                "view": "article.templates.detail.focused-reader",
+                "preview_image": "assets\/images\/article\/template-previews\/focused-reader.svg"
+            },
+            "editorial-feature": {
+                "label": "Editorial Feature",
+                "description": "Cover-led story treatment with richer metadata.",
+                "best_for": "Immersive feature",
+                "view": "article.templates.detail.editorial-feature",
+                "preview_image": "assets\/images\/article\/template-previews\/editorial-feature.svg"
+            },
+            "knowledge-toc": {
+                "label": "Knowledge + TOC",
+                "description": "Structured reading view with a table of contents.",
+                "best_for": "Structured knowledge",
+                "view": "article.templates.detail.knowledge-toc",
+                "preview_image": "assets\/images\/article\/template-previews\/knowledge-toc.svg"
+            }
+        }
+    },
+    "copy": {
+        "previewTitle": "Article template preview",
+        "desktop": "Desktop",
+        "tablet": "Tablet",
+        "mobile": "Mobile",
+        "scaledToFit": "Scaled to fit",
+        "loadingPreview": "Loading preview",
+        "search": "Search",
+        "categoryFilter": "Category filter"
+    }
+}

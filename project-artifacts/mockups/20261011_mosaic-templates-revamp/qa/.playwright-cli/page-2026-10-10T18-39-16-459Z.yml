@@ -1,0 +1,110 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - paragraph [ref=e6]: Journal
+      - heading "Mosaic Magazine" [level=1] [ref=e7]
+    - generic [ref=e8]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: Category
+        - combobox "Category" [ref=e12]:
+          - option "All categories" [selected]
+          - option "Technology"
+          - option "Design"
+          - option "Travel"
+          - option "Workplace"
+          - option "Wellbeing"
+          - option "Knowledge"
+      - generic [ref=e14]:
+        - generic [ref=e15]: Search articles
+        - searchbox "Search articles" [ref=e16]
+        - button "Search" [ref=e17] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e18]: 
+  - generic [ref=e20]:
+    - article [ref=e21]:
+      - link "Building Resilient Systems at Scale" [ref=e22] [cursor=pointer]:
+        - /url: http://laravel-13-phoenix.aruna/article/preview-resilient-systems
+      - generic:
+        - generic: Technology
+        - heading "Building Resilient Systems at Scale" [level=4]:
+          - link "Building Resilient Systems at Scale" [ref=e24] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/article/preview-resilient-systems
+        - paragraph: Resilience is not a feature added at the end of delivery. It is the accumulated result of clear priorities, observability, and teams that make room for learning. Reliable experienc...
+        - generic: 24 Aug 2026
+    - generic [ref=e25]:
+      - article [ref=e26]:
+        - link "Designing Spaces That Last Beyond a Trend Cycle" [ref=e27] [cursor=pointer]:
+          - /url: http://laravel-13-phoenix.aruna/article/preview-designs-that-last
+        - generic [ref=e29]:
+          - generic [ref=e30]: Design
+          - heading [level=4] [ref=e31]:
+            - link "Designing Spaces That Last Beyond a Trend Cycle" [ref=e32] [cursor=pointer]:
+              - /url: http://laravel-13-phoenix.aruna/article/preview-designs-that-last
+          - paragraph [ref=e33]: How calmer visual systems help teams make more confident product decisions.
+          - generic [ref=e34]: 22 Aug 2026
+      - article [ref=e35]:
+        - link "Slow Adventures Along the Coastal Road" [ref=e36] [cursor=pointer]:
+          - /url: http://laravel-13-phoenix.aruna/article/preview-slow-coastal-travel
+        - generic [ref=e38]:
+          - generic [ref=e39]: Travel
+          - heading [level=4] [ref=e40]:
+            - link "Slow Adventures Along the Coastal Road" [ref=e41] [cursor=pointer]:
+              - /url: http://laravel-13-phoenix.aruna/article/preview-slow-coastal-travel
+          - paragraph [ref=e42]: A quieter way to build memorable journeys around place, pace, and perspective.
+          - generic [ref=e43]: 20 Aug 2026
+    - generic [ref=e44]:
+      - article [ref=e45]:
+        - link "What Hybrid Teams Need to Do Their Best Work" [ref=e46] [cursor=pointer]:
+          - /url: http://laravel-13-phoenix.aruna/article/preview-hybrid-work
+        - generic [ref=e48]:
+          - generic [ref=e49]: Workplace
+          - heading [level=4] [ref=e50]:
+            - link "What Hybrid Teams Need to Do Their Best Work" [ref=e51] [cursor=pointer]:
+              - /url: http://laravel-13-phoenix.aruna/article/preview-hybrid-work
+          - paragraph [ref=e52]: Small operating principles that make collaboration more deliberate and humane.
+          - generic [ref=e53]: 18 Aug 2026
+      - article [ref=e54]:
+        - link "The Rituals That Give Busy Days More Room" [ref=e55] [cursor=pointer]:
+          - /url: http://laravel-13-phoenix.aruna/article/preview-wellbeing
+        - generic [ref=e57]:
+          - generic [ref=e58]: Wellbeing
+          - heading [level=4] [ref=e59]:
+            - link "The Rituals That Give Busy Days More Room" [ref=e60] [cursor=pointer]:
+              - /url: http://laravel-13-phoenix.aruna/article/preview-wellbeing
+          - paragraph [ref=e61]: A grounded perspective on attention, recovery, and everyday wellbeing.
+          - generic [ref=e62]: 16 Aug 2026
+      - article [ref=e63]:
+        - link "Patterns, Principles, and the Practice of Better Decisions" [ref=e64] [cursor=pointer]:
+          - /url: http://laravel-13-phoenix.aruna/article/preview-patterns-and-principles
+        - generic [ref=e66]:
+          - generic [ref=e67]: Knowledge
+          - heading [level=4] [ref=e68]:
+            - link "Patterns, Principles, and the Practice of Better Decisions" [ref=e69] [cursor=pointer]:
+              - /url: http://laravel-13-phoenix.aruna/article/preview-patterns-and-principles
+          - paragraph [ref=e70]: A structured reading experience for material that benefits from a clear outline.
+          - generic [ref=e71]: 14 Aug 2026
+  - navigation "Article pagination" [ref=e72]:
+    - generic [ref=e73]:
+      - paragraph [ref=e74]:
+        - strong [ref=e75]: "Total Data: 48"
+        - generic [ref=e76]: Showing 1–6 of 48 articles
+      - list [ref=e78]:
+        - listitem [ref=e79]:
+          - generic:
+            - generic [aria-hidden]: 
+            - generic: Previous
+        - listitem [ref=e80]:
+          - generic [ref=e81]: "1"
+        - listitem [ref=e82]:
+          - link "Page 2" [ref=e83] [cursor=pointer]:
+            - /url: /article?page=2
+            - text: "2"
+        - listitem [ref=e84]:
+          - generic [aria-hidden]: …
+        - listitem [ref=e85]:
+          - link "Last page" [ref=e86] [cursor=pointer]:
+            - /url: /article?page=8
+            - text: "8"
+        - listitem [ref=e87]:
+          - link "Next" [ref=e88] [cursor=pointer]:
+            - /url: /article?page=2
+            - generic [aria-hidden] [ref=e89]: 

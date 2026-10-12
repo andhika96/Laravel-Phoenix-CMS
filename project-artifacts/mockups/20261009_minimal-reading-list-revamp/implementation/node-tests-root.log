@@ -1,0 +1,1120 @@
+✔ archive header preserves one accessible H1 when the visual title is disabled (1.4895ms)
+✔ Vue archive navigation preserves SSR query URLs instead of clearing the current result first (11.9652ms)
+✔ Vue archive filter submit preserves its non-empty reactive values in the SSR URL (2.2884ms)
+✔ Vue owns delegated archive search and category values before a filter request (2.5076ms)
+✔ Vue replaces only the initial archive history entry and reloads browser history without pushing (2.3303ms)
+✔ Vue ignores an older page response after a newer page request wins (3.4928ms)
+✔ Vue archive data list requests the public endpoint and updates renderer HTML without navigation (3.7146ms)
+✔ Vue pagination component changes only the archive page query while preserving active filters (2.436ms)
+✔ Vue exposes distinct initial/filter and next/previous loading states while data is pending (5.6356ms)
+✔ Vue password modal exposes the incorrect-password state without navigating away (3.4209ms)
+✔ Article archive pins a Vue 3 CDN production build and keeps its server-rendered fallback (1.9642ms)
+✔ Article frontend compiles search, category filter, and pagination through Vue while retaining SSR markup (3.7965ms)
+✔ public pagination uses the CMS page-pill language and preserves SSR navigation hooks (1.5832ms)
+✔ Vue archive controls and Manage Article-style loaders use stable renderer slots (6.7202ms)
+✔ archive pagination maps template options into a responsive Vue footer contract (5.0145ms)
+✔ article pagination exposes named models and selects the range for the active device (2.5714ms)
+✔ article pagination maps viewport width to the matching device range (1.454ms)
+✔ Lucent frontend layouts release the body scroll lock without changing admin shell scrolling (2.9751ms)
+✔ Minimal category filter has one option-driven mode and no duplicate controls (6.0639ms)
+✔ Vue 3 category interactions stay asynchronous and client-filter the visible category buttons (1.0166ms)
+✔ Vue category click uses the existing async archive loader and select changes submit automatically (4.9276ms)
+✔ Minimal post-list spacing and sidebar positions are normalized and exposed to the manager (7.9359ms)
+✔ Minimal Reading List starts directly with article rows after its toolbar (0.7019ms)
+✔ Minimal Reading List keeps the option-driven header copy above its search toolbar (16.0898ms)
+✔ manager only materializes Minimal Reading List options (22.3ms)
+✔ Minimal Reading List adds the blog-list sidebar without losing Vue and pagination seams (2.3653ms)
+✔ Public archive SSR and Vue list responses receive sidebar articles (12.8187ms)
+✔ Manage Article template preview passes fixture articles to the Minimal Reading List sidebar (3.3594ms)
+✖ Minimal Reading List uses a responsive two-column layout and clean scoped pagination (7.347ms)
+✖ Minimal Reading List search toolbar uses a single proportional control row (3.2256ms)
+✔ Minimal Reading List sidebar visibility is part of the normalized manager options contract (4.2535ms)
+✔ sidebar dependent position controls stay under their owning toggle (0.8358ms)
+✔ Vue pagination exposes aria-current on the active page after hydration (7.5325ms)
+✔ Article pagination active page keeps readable text over a themed background (2.1326ms)
+✔ article frontend typography inherits CMS responsive typography tokens (11.2227ms)
+✔ Article title and short description use separate responsive CMS-bound scales (1.8417ms)
+✔ all Article templates provide an image fallback for empty thumbnails (7.5458ms)
+✔ archive cards use shared media, title, excerpt, and equal-height presentation contracts (1.0477ms)
+✔ detail templates use the editorial reading and neighbor-navigation contracts (1.1024ms)
+✔ Article and manager accents inherit the active CMS primary color token (2.8792ms)
+✔ Archive thumbnails keep a cover fallback while allowing validated background or asset rendering (2.8279ms)
+✔ thumbnail height is conditional to background mode and both media modes keep distinct rendering paths (2.8393ms)
+✔ tablet and mobile previews compact editorial spacing and retain a visible search action (2.9527ms)
+✔ Minimal Reading List keeps compact mobile rows and CMS-bound heading typography (5.3384ms)
+✔ responsive Minimal Reading List mockup exposes focused desktop, tablet, and stacked mobile states (10.5783ms)
+✔ Balanced Card Grid uses a named category select instead of a numeric category field (0.9273ms)
+✔ archive and detail templates expose shared configurable headers and toolbar placement hooks (5.0884ms)
+✔ all archive list titles use a validated configurable heading partial with an H4 default and smaller category badges (5.7512ms)
+✔ template options revamp keeps modal regions independently scrollable and responsive (1.836ms)
+✔ settings panel keeps a constrained flex scroll chain after form density changes (1.2342ms)
+✔ template options modal places its sizing hook on the wrapper used by descendant selectors (0.6422ms)
+✔ Header content panel follows the approved vertical field layout (1.1126ms)
+✔ Template Options section headings use h5 semantics and the requested 1.8rem field gap (1.6616ms)
+✔ all option form controls use the roomy full-width panel rhythm (1.0692ms)
+✔ Minimal Reading List category filter uses progressive disclosure and a native position select (0.5197ms)
+✔ Header content descriptions use a ten-row textarea on archive and custom detail fields (0.708ms)
+✔ Archive toolbar search position buttons use the themed hover state and category controls stay left aligned (1.1942ms)
+✔ teleported Template Options modal keeps the CMS accent token available to hover styles (0.5771ms)
+✔ list settings keep consistent bottom dividers across nested and compound option groups (0.9725ms)
+✔ Template Options V3 mockup mirrors the updated textarea, toolbar hover, and left category controls (3.4511ms)
+✔ frame styling controls use one full-width row per field (0.7964ms)
+✔ border radius follows the Page Builder four-corner form-group pattern (1.5169ms)
+✔ pagination button radius uses the four-corner form-group and chain link (1.0041ms)
+✔ pagination radius and number gap occupy separate full-width rows (1.1379ms)
+✔ Editorial Journal manager controls stay scoped and expose the complete new options surface (1.5809ms)
+✔ spacing groups mirror the Page Builder form-group hierarchy with a shared unit header (1.1864ms)
+✔ template options switches match the approved inspector 44 by 24 geometry (1.8905ms)
+✔ template options follows the normal compact CMS form scale without nested font shrinkage (2.2272ms)
+✔ template settings reuse native fields and the established divider rhythm (5.1562ms)
+✔ compact radius controls keep all four sides usable on mobile (2.3684ms)
+✔ toolbar and frame groups preserve full-width controls with readable rhythm (6.7128ms)
+✔ spacing form groups use the wider rhythm and linked buttons share input borders (3.4729ms)
+✔ curated template preview identifies sample content and prevents fixture links from leaving the iframe (6.1165ms)
+✔ curated template preview blocks archive toolbar submissions from leaving the draft iframe (3.484ms)
+✔ public detail wrapper passes neighboring Articles through to every selected detail template (0.7841ms)
+✖ Article link hierarchy stays readable when a CMS theme tints generic anchors (6.0223ms)
+Arunika Aurora typography preview mockup regression passed.
+✔ tests\arunika-aurora-typography-preview-mockup-static.test.mjs (175.2475ms)
+✔ usable table width excludes the browser scrollbar gutter (5.9466ms)
+✔ column measurement preserves fractional layout widths (5.9895ms)
+✔ a one pixel rounding difference does not hide Options (4.4466ms)
+✔ a material width shortage still hides Options (2.1559ms)
+✔ manager selection changes only the active surface and rebuilds the live preview URL (8.2399ms)
+✔ manager passes the active CMS accent into the isolated preview and refreshes it when the theme changes (3.409ms)
+✔ manager serializes the active template option draft into the iframe URL without saving it (4.7003ms)
+✔ applying modal options updates only the active draft and rebuilds the preview (4.0355ms)
+✔ an unsaved preview selection is selected, not the persisted default (1.4984ms)
+✔ manager source keeps the selected visual direction and a real preview iframe (0.8229ms)
+✔ manager cards use template preview thumbnails with a local placeholder fallback (1.0013ms)
+✔ device preview uses fixed virtual viewports and scales the full frame to fit (2.6507ms)
+✔ device selection changes viewport profile and refits the preview (3.994ms)
+✔ manager source exposes a labelled device stage instead of max-width-only iframes (1.8244ms)
+✔ live preview stage wrappers stay square while template content keeps its own frame settings (1.1909ms)
+✔ template selection displays a loading state until the iframe has loaded the new preview (3.6627ms)
+✔ manager source exposes an accessible preview-loading overlay bound to iframe load (1.7247ms)
+✔ manager exposes an Add User-style template options modal with draft-only apply behavior (1.5595ms)
+✔ template option dimensions use the requested unit allowlists with deterministic linked-side behavior (4.6076ms)
+✔ border radius control follows the Page Builder four-corner linked-unit behavior (3.4443ms)
+✔ template options modal exposes only structured archive and detail styling controls (1.7418ms)
+✔ template options uses the local Page Builder Coloris pattern and equal box-control geometry (1.4108ms)
+✔ Pagination options expose named models and independent desktop/tablet/mobile ranges (1.2812ms)
+✔ Editorial Journal options expose scoped lead, card, background, height, and read more controls (2.0733ms)
+✔ manager prepares Editorial Journal defaults without changing other archive option shapes (7.7754ms)
+✔ Archive toolbar search exposes model, gap, Font Awesome icon, and state color controls (0.9912ms)
+✔ template options modal exposes conditional vertical navigation and a mobile section picker (1.0596ms)
+✔ option sections follow the active surface and template schema (2.3582ms)
+✔ modal preview uses the modal clone, debounces edits, and keeps the page draft untouched (1.5713ms)
+✔ page and modal Minimal Reading List previews share the same read-only renderer endpoint (3.2404ms)
+✔ modal session starts on Header content and isolates every edit from its source object (1.7746ms)
+✔ modal preview uses the fixed virtual device profile when fitting its viewport (3.1006ms)
+✔ modal dismissal exposes an inline dirty confirmation and retryable preview lifecycle (2.2805ms)
+✔ hidden modal lifecycle cancels preview timers, disconnects the observer, and clears the session (6.4787ms)
+✔ modal preview treats an authentication redirect as an error instead of a successful load (1.7343ms)
+✔ modal preview URL stays within a practical GET budget for the largest draft payload (1.9875ms)
+✔ Article add and edit forms share the Event-style thumbnail source picker (7.3226ms)
+✔ switching from selected Article CKFinder image back to upload clears stale selection (5.291ms)
+✔ TypographyControl keeps editor labels and compact inputs at the readable 12px scale (4.3847ms)
+✔ font unit conversion uses the browser root size instead of assuming sixteen pixels (5.575ms)
+✔ em conversion uses the same computed browser root size (2.7541ms)
+✔ font unit conversion falls back to sixteen pixels when root size is invalid (1.6057ms)
+✔ every active CMS theme loads the shared responsive typography asset (13.2148ms)
+✔ the shared asset preserves the File Manager V2 RFS curves in content and overlays (0.8569ms)
+✔ wide, short viewports use compact heading caps without overriding theme-owned title styles (0.6586ms)
+✔ compact desktop derives operational and sidebar text from Site Config (0.7925ms)
+✔ operational controls inherit the computed Site Config size for px, em, and rem (0.7072ms)
+✔ mobile content typography derives from the adaptive Site Config scale (0.8348ms)
+✔ input groups bypass Bootstrap one-rem text and honor font-size-normal (0.5848ms)
+✔ profile dropdown uses the compact Site Config scale while preserving its hierarchy (0.6759ms)
+✔ global typography matrix covers mobile tablet and compact laptop ranges (0.7341ms)
+ℹ tests 128
+ℹ suites 0
+ℹ pass 125
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 563.8009
+
+✖ failing tests:
+
+test at tests\article-minimal-reading-list-sidebar.test.mjs:39:1
+✖ Minimal Reading List uses a responsive two-column layout and clean scoped pagination (7.347ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /\.article-page--reading-list \.article-reading-list-layout\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\)\s+minmax\(17rem, 20rem\)/. Input:
+  
+  ':root {\n' +
+    '\t--article-accent: #6542d7;\n' +
+    '\t--article-accent: var(--ph-theme-primary, #6542d7);\n' +
+    '\t--article-accent-strong: #5f38c9;\n' +
+    '\t--article-accent-strong: color-mix(in srgb, var(--article-accent) 88%, #000);\n' +
+    '\t--article-accent-soft: #efeaff;\n' +
+    '\t--article-accent-soft: color-mix(in srgb, var(--article-accent) 12%, #fff);\n' +
+    '\t--article-accent-surface: #f4f0ff;\n' +
+    '\t--article-accent-surface: color-mix(in srgb, var(--article-accent) 6%, #fff);\n' +
+    '\t--article-accent-border: #e6ddff;\n' +
+    '\t--article-accent-border: color-mix(in srgb, var(--article-accent) 22%, #fff);\n' +
+    '\t--article-accent-ring: #d9cbff;\n' +
+    '\t--article-accent-ring: color-mix(in srgb, var(--article-accent) 37%, #fff);\n' +
+    '}\n' +
+    '\n' +
+    '.article-page,\n' +
+    '.article-detail {\n' +
+    '\t--article-font-size: var(--ph-adaptive-font-size, var(--ph-font-size, 1rem));\n' +
+    '\t--article-title-size: min(var(--ph-fmv2-rfs-h1, 2.5rem), 1.62em);\n' +
+    '\t--article-description-size: min(var(--ph-fmv2-rfs-h4, 1.25rem), 1.22em);\n' +
+    '\tbackground: #fff;\n' +
+    '\tcolor: #172033;\n' +
+    '\tfont-family: var(--ph-font-family, inherit);\n' +
+    '\tfont-size: var(--article-font-size);\n' +
+    '}\n' +
+    '\n' +
+    '.article-page {\n' +
+    '\t--article-list-title-size: min(var(--ph-fmv2-rfs-h4, 1.25rem), 1.14em);\n' +
+    '}\n' +
+    '\n' +
+    'body[data-preview-fixture="true"] a {\n' +
+    '\tcursor: default;\n' +
+    '}\n' +
+    '\n' +
+    '.article-shell {\n' +
+    '\twidth: min(1180px, calc(100% - 2rem));\n' +
+    '\tmargin-inline: auto;\n' +
+    '\tpadding: 4.5rem 0;\n' +
+    '}\n' +
+    '\n' +
+    '.article-page-heading {\n' +
+    '\tmax-width: 720px;\n' +
+    '\tmargin-bottom: 2.5rem;\n' +
+    '}\n' +
+    '\n' +
+    '.article-page-heading--inline {\n' +
+    '\tdisplay: flex;\n' +
+    '\talign-items: end;\n' +
+    '\tjustify-content: space-between;\n' +
+    '\tmax-width: none;\n' +
+    '\tgap: 1.5rem;\n' +
+    '}\n' +
+    '\n' +
+    '.article-page-heading h1,\n' +
+    '.article-detail h1 {\n' +
+    '\tmargin: 0;\n' +
+    '\tcolor: #172033;\n' +
+    '\tfont-family: inherit;\n' +
+    '\tfont-size: var(--article-title-size);\n' +
+    '\tfont-weight: 700;\n' +
+    '\tline-height: 1.12;\n' +
+    '}\n' +
+    '\n' +
+    '.article-page-heading p:not(.article-eyebrow) {\n' +
+    '\tmargin: 1rem 0 0;\n' +
+    '\tcolor: #667085;\n' +
+    '\tfont-size: var(--article-description-size);\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-header {\n' +
+    '\tmax-width: none;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar {\n' +
+    '\tdisplay: grid;\n' +
+    '\tgrid-template-columns: repeat(3, minmax(0, 1fr));\n' +
+    '\tgap: .75rem;\n' +
+    '\tmargin-top: 1.35rem;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__zone {\n' +
+    '\tdisplay: flex;\n' +
+    '\talign-items: center;\n' +
+    '\tmin-width: 0;\n' +
+    '\tgap: .6rem;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__zone--left {\n' +
+    '\tjustify-content: flex-start;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__zone--center {\n' +
+    '\tjustify-content: center;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__zone--right {\n' +
+    '\tjustify-content: flex-end;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__control {\n' +
+    '\tdisplay: flex;\n' +
+    '\talign-items: center;\n' +
+    '\tmin-width: 0;\n' +
+    '\tgap: .5rem;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar input,\n' +
+    '.article-template-toolbar select {\n' +
+    '\tmin-width: 0;\n' +
+    '\tborder: 1px solid #d6dbe5;\n' +
+    '\tborder-radius: .6rem;\n' +
+    '\tpadding: .7rem .85rem;\n' +
+    '\tbackground: #fff;\n' +
+    '\tcolor: #344054;\n' +
+    '\tfont: inherit;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__control--search input {\n' +
+    '\twidth: min(340px, 100%);\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__control--category select {\n' +
+    '\twidth: min(230px, 100%);\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar .btn {\n' +
+    '\twhite-space: nowrap;\n' +
+    '}\n' +
+    '\n' +
+    '.article-eyebrow,\n' +
+    '.article-meta,\n' +
+    '.article-chip {\n' +
+    '\tfont-size: .75em;\n' +
+    '\tfont-weight: 700;\n' +
+    '\tletter-spacing: .06em;\n' +
+    '\ttext-transform: uppercase;\n' +
+    '}\n' +
+    '\n' +
+    '.article-eyebrow {\n' +
+    '\tmargin: 0 0 .65rem;\n' +
+    '\tcolor: var(--article-accent);\n' +
+    '}\n' +
+    '\n' +
+    '.article-filter-bar {\n' +
+    '\tdisplay: flex;\n' +
+    '\tgap: .75rem;\n' +
+    '\tpadding-bottom: 1.5rem;\n' +
+    '\tborder-bottom: 1px solid #e6e9ef;\n' +
+    '}\n' +
+    '\n' +
+    '.article-filter-bar input,\n' +
+    '.article-search-icon input,\n' +
+    '.article-filter-select input {\n' +
+    '\tmin-width: 0;\n' +
+    '\tflex: 1;\n' +
+    '\tborder: 1px solid #d6dbe5;\n' +
+    '\tborder-radius: .6rem;\n' +
+    '\tpadding: .75rem .9rem;\n' +
+    '\tbackground: #fff;\n' +
+    '\tfont: inherit;\n' +
+    '}\n' +
+    '\n' +
+    '.article-filter-bar .ph-btn-theme,\n' +
+    '.article-template-toolbar .ph-btn-theme {\n' +
+    '\tdisplay: inline-flex;\n' +
+    '\talign-items: center;\n' +
+    '\tjustify-content: center;\n' +
+    '\tborder: 1px solid var(--article-accent);\n' +
+    '\tborder-radius: .6rem;\n' +
+    '\tpadding: .75rem 1rem;\n' +
+    '\tbackground: var(--article-accent);\n' +
+    '\tcolor: #fff;\n' +
+    '\tfont: inherit;\n' +
+    '\tfont-weight: 700;\n' +
+    '\ttext-decoration: none;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list {\n' +
+    '\tborder-top: 1px solid #e6e9ef;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list__item {\n' +
+    '\tdisplay: flex;\n' +
+    '\tgap: 1.5rem;\n' +
+    '\tpadding: 1.5rem 0;\n' +
+    '\tborder-bottom: 1px solid #e6e9ef;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list__media {\n' +
+    '\twidth: 180px;\n' +
+    '\theight: 120px;\n' +
+    '\tflex: 0 0 180px;\n' +
+    '\toverflow: hidden;\n' +
+    '\tborder-radius: .7rem;\n' +
+    '\tbackground-color: #f2f4f7;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list__media img,\n' +
+    '.article-mosaic-feature__media img,\n' +
+    '.article-mosaic-card__media img,\n' +
+    '.article-editorial-lead__media img,\n' +
+    '.article-editorial-card__media img,\n' +
+    '.article-classic-lead__media img,\n' +
+    '.article-classic-sidebar__media img,\n' +
+    '.article-card__media img,\n' +
+    '.article-detail__cover,\n' +
+    '.article-feature-hero img {\n' +
+    '\twidth: 100%;\n' +
+    '\theight: 100%;\n' +
+    '\tobject-fit: cover;\n' +
+    '}\n' +
+    '\n' +
+    '.article-media-frame {\n' +
+    '\toverflow: hidden;\n' +
+    '\tborder: 1px solid #e1e6ee;\n' +
+    '\tborder-radius: 1rem;\n' +
+    '\tbox-shadow: 0 8px 18px rgb(16 24 40 / .06);\n' +
+    '}\n' +
+    '\n' +
+    '.article-background-media {\n' +
+    '\tdisplay: block;\n' +
+    '\tbackground-color: var(--article-thumbnail-background, #f2f4f7);\n' +
+    '\tbackground-image: var(--article-media-image);\n' +
+    '\tbackground-position: center;\n' +
+    '\tbackground-repeat: no-repeat;\n' +
+    '\tbackground-size: var(--article-thumbnail-fit, cover);\n' +
+    '}\n' +
+    '\n' +
+    '.article-media-frame img {\n' +
+    '\tdisplay: block;\n' +
+    '}\n' +
+    '\n' +
+    '.article-asset-media {\n' +
+    '\tdisplay: block;\n' +
+    '\tbackground: var(--article-thumbnail-background, #f2f4f7);\n' +
+    '}\n' +
+    '\n' +
+    '.article-asset-media > img {\n' +
+    '\twidth: 100%;\n' +
+    '\theight: 100%;\n' +
+    '\tobject-fit: var(--article-thumbnail-fit, cover);\n' +
+    '}\n' +
+    '\n' +
+    '.article-thumbnail-frame--custom {\n' +
+    '\tborder: var(--article-thumbnail-frame-border-width, 1px) solid var(--article-thumbnail-frame-border-color, #e1e6ee);\n' +
+    '\tborder-radius: var(--article-thumbnail-frame-radius, 1rem);\n' +
+    '}\n' +
+    '\n' +
+    '.article-title-clamp,\n' +
+    '.article-excerpt-clamp {\n' +
+    '\tdisplay: -webkit-box;\n' +
+    '\toverflow: hidden;\n' +
+    '\t-webkit-box-orient: vertical;\n' +
+    '}\n' +
+    '\n' +
+    '.article-title-clamp {\n' +
+    '\t-webkit-line-clamp: 2;\n' +
+    '}\n' +
+    '\n' +
+    '.article-excerpt-clamp {\n' +
+    '\t-webkit-line-clamp: 3;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list__body {\n' +
+    '\tmin-width: 0;\n' +
+    '}\n' +
+    '\n' +
+    '.article-meta {\n' +
+    '\tdisplay: flex;\n' +
+    '\tflex-wrap: wrap;\n' +
+    '\tgap: .5rem;\n' +
+    '\tcolor: #7a8497;\n' +
+    '}\n' +
+    '\n' +
+    '.article-meta span + span::before {\n' +
+    '\tmargin-right: .5rem;\n' +
+    '\tcolor: #b3bac7;\n' +
+    "\tcontent: '•';\n" +
+    '}\n' +
+    '\n' +
+    '.article-reading-list .article-title-clamp,\n' +
+    '.article-mosaic-card .article-title-clamp,\n' +
+    '.article-editorial-card .article-title-clamp,\n' +
+    '.article-card .article-title-clamp,\n' +
+    '.article-classic-sidebar .article-title-clamp {\n' +
+    '\tmargin: .4rem 0 .6rem;\n' +
+    '\tfont-family: inherit;\n' +
+    '\tfont-size: var(--article-list-title-size);\n' +
+    '\tfont-weight: 700;\n' +
+    '\tline-height: 1.2;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list .article-title-clamp a,\n' +
+    '.article-mosaic-feature .article-title-clamp a,\n' +
+    '.article-mosaic-card .article-title-clamp a,\n' +
+    '.article-editorial-lead .article-title-clamp a,\n' +
+    '.article-editorial-card .article-title-clamp a,\n' +
+    '.article-card .article-title-clamp a,\n' +
+    '.article-classic-lead .article-title-clamp a,\n' +
+    '.article-classic-sidebar .article-title-clamp a {\n' +
+    '\tcolor: inherit;\n' +
+    '\ttext-decoration: none;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list .article-title-clamp a:hover,\n' +
+    '.article-mosaic-feature .article-title-clamp a:hover,\n' +
+    '.article-mosaic-card .article-title-clamp a:hover,\n' +
+    '.article-editorial-lead .article-title-clamp a:hover,\n' +
+    '.article-editorial-card .article-title-clamp a:hover,\n' +
+    '.article-card .article-title-clamp a:hover,\n' +
+    '.article-classic-lead .article-title-clamp a:hover,\n' +
+    '.article-classic-sidebar .article-title-clamp a:hover {\n' +
+    '\tcolor: var(--article-accent);\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list p,\n' +
+    '.article-mosaic-feature p,\n' +
+    '.article-editorial-lead p,\n' +
+    '.article-editorial-card p,\n' +
+    '.article-card p,\n' +
+    '.article-classic-lead p,\n' +
+    '.article-classic-sidebar p {\n' +
+    '\tmargin: 0;\n' +
+    '\tcolor: #667085;\n' +
+    '\tline-height: 1.6;\n' +
+    '}\n' +
+    '\n' +
+    '.article-empty {\n' +
+    '\tpadding: 3rem 0;\n' +
+    '\tcolor: #667085;\n' +
+    '\ttext-align: center;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination {\n' +
+    '\tdisplay: flex;\n' +
+    '\talign-items: center;\n' +
+    '\tjustify-content: space-between;\n' +
+    '\tgap: 1rem;\n' +
+    '\tmargin-top: 2.5rem;\n' +
+    '\tpadding-top: 1.5rem;\n' +
+    '\tborder-top: 1px solid #e6e9ef;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination__summary {\n' +
+    '\tmargin: 0;\n' +
+    '\tcolor: #667085;\n' +
+    '\tfont-size: .88em;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination {\n' +
+    '\tdisplay: flex;\n' +
+    '\talign-items: center;\n' +
+    '\tgap: .45rem;\n' +
+    '\tmargin: 0;\n' +
+    '\tpadding: 0;\n' +
+    '\tlist-style: none;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination .page-item {\n' +
+    '\tmargin: 0;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination .page-link {\n' +
+    '\tdisplay: grid;\n' +
+    '\tmin-width: 2.35rem;\n' +
+    '\theight: 2.35rem;\n' +
+    '\tplace-items: center;\n' +
+    '\tpadding: 0 .65rem;\n' +
+    '\tborder: 1px solid #d8dce5;\n' +
+    '\tborder-radius: .45rem;\n' +
+    '\tbackground: #fff;\n' +
+    '\tcolor: #344054;\n' +
+    '\tfont-size: .9em;\n' +
+    '\tfont-weight: 700;\n' +
+    '\ttext-decoration: none;\n' +
+    '\ttransition: border-color .15s ease, background-color .15s ease, color .15s ease;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination .active > .page-link {\n' +
+    '\tborder-color: var(--article-accent);\n' +
+    '\tbackground: var(--article-accent);\n' +
+    '\tcolor: #fff !important;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination .page-link:focus-visible,\n' +
+    '.article-pagination .ph-pagination a.page-link:hover {\n' +
+    '\tborder-color: var(--article-accent);\n' +
+    '\tbackground: var(--article-accent-surface);\n' +
+    '\tcolor: var(--article-accent-strong);\n' +
+    '\toutline: 2px solid var(--article-accent-ring);\n' +
+    '\toutline-offset: 2px;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination .disabled > .page-link {\n' +
+    '\tborder-color: #edf0f4;\n' +
+    '\tbackground: #f8fafc;\n' +
+    '\tcolor: #a5adbb;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination .article-pagination__ellipsis > .page-link {\n' +
+    '\tmin-width: 1.5rem;\n' +
+    '\tpadding-inline: .15rem;\n' +
+    '\tborder-color: transparent;\n' +
+    '\tbackground: transparent;\n' +
+    '}\n' +
+    '\n' +
+    '.article-search-icon {\n' +
+    '\tdisplay: flex;\n' +
+    '\talign-items: center;\n' +
+    '\toverflow: hidden;\n' +
+    '\tborder: 1px solid #d6dbe5;\n' +
+    '\tborder-radius: .6rem;\n' +
+    '}\n' +
+    '\n' +
+    '.article-search-icon input {\n' +
+    '\tborder: 0;\n' +
+    '}\n' +
+    '\n' +
+    '.article-search-icon button {\n' +
+    '\talign-self: stretch;\n' +
+    '\tdisplay: inline-flex;\n' +
+    '\talign-items: center;\n' +
+    '\tgap: .35rem;\n' +
+    '\tborder: 0;\n' +
+    '\tbackground: transparent;\n' +
+    '\tmin-height: 44px;\n' +
+    '\tpadding: .7rem 1rem;\n' +
+    '\tcolor: #344054;\n' +
+    '\tfont: inherit;\n' +
+    '}\n' +
+    '\n' +
+    '.article-search-icon__label {\n' +
+    '\tdisplay: inline;\n' +
+    '\tline-height: 1;\n' +
+    '}\n' +
+    '\n' +
+    '.article-mosaic-feature {\n' +
+    '\tdisplay: grid;\n' +
+    '\tgrid-template-columns: minmax(0, 1fr);\n' +
+    '\tmargin-bottom: 2rem;\n' +
+    '\toverflow: hidden;\n' +
+    '\tborder-radius: .75rem;\n' +
+    '\tbackground: var(--article-accent-strong);\n' +
+    '\tcolor: #fff;\n' +
+    '}\n' +
+    '\n' +
+    '.article-mosaic-feature__media {\n' +
+    '\tgrid-area: 1 / 1;\n' +
+    '\tmin-height: clamp(22rem, 34vw, 32rem);\n' +
+    '\tbackground-color: var(--article-thumbnail-background, var(--article-accent-soft));\n' +
+    '}\n' +
+    '\n' +
+    '.article-mosaic-feature__body {\n' +
+    '\tgrid-area: 1 / 1;\n' +
+    '\tz-index: 1;\n' +
+    '\talign-self: end;\n' +
+    '\tdisplay: flex;\n' +
+    '\tflex-direction: column;\n' +
+    '\tjustify-content: end;\n' +
+    '\tpadding: 4rem clamp(1.5rem, 3vw, 3rem) 2rem;\n' +
+    '\tbackground: linear-'... 75572 more characters
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:43:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: `:root {\n\t--article-accent: #6542d7;\n\t--article-accent: var(--ph-theme-primary, #6542d7);\n\t--article-accent-strong: #5f38c9;\n\t--article-accent-strong: color-mix(in srgb, var(--article-accent) 88%, #000);\n\t--article-accent-soft: #efeaff;\n\t--article-accent-soft: color-mix(in srgb, var(--article-accent) 12%, #fff);\n\t--article-accent-surface: #f4f0ff;\n\t--article-accent-surface: color-mix(in srgb, var(--article-accent) 6%, #fff);\n\t--article-accent-border: #e6ddff;\n\t--article-accent-border: color-mix(in srgb, var(--article-accent) 22%, #fff);\n\t--article-accent-ring: #d9cbff;\n\t--article-accent-ring: color-mix(in srgb, var(--article-accent) 37%, #fff);\n}\n\n.article-page,\n.article-detail {\n\t--article-font-size: var(--ph-adaptive-font-size, var(--ph-font-size, 1rem));\n\t--article-title-size: min(var(--ph-fmv2-rfs-h1, 2.5rem), 1.62em);\n\t--article-description-size: min(var(--ph-fmv2-rfs-h4, 1.25rem), 1.22em);\n\tbackground: #fff;\n\tcolor: #172033;\n\tfont-family: var(--ph-font-family, inherit);\n\tfont-size: var(--article-font-size);\n}\n\n.article-page {\n\t--article-list-title-size: min(var(--ph-fmv2-rfs-h4, 1.25rem), 1.14em);\n}\n\nbody[data-preview-fixture="true"] a {\n\tcursor: default;\n}\n\n.article-shell {\n\twidth: min(1180px, calc(100% - 2rem));\n\tmargin-inline: auto;\n\tpadding: 4.5rem 0;\n}\n\n.article-page-heading {\n\tmax-width: 720px;\n\tmargin-bottom: 2.5rem;\n}\n\n.article-page-heading--inline {\n\tdisplay: flex;\n\talign-items: end;\n\tjustify-content: space-between;\n\tmax-width: none;\n\tgap: 1.5rem;\n}\n\n.article-page-heading h1,\n.article-detail h1 {\n\tmargin: 0;\n\tcolor: #172033;\n\tfont-family: inherit;\n\tfont-size: var(--article-title-size);\n\tfont-weight: 700;\n\tline-height: 1.12;\n}\n\n.article-page-heading p:not(.article-eyebrow) {\n\tmargin: 1rem 0 0;\n\tcolor: #667085;\n\tfont-size: var(--article-description-size);\n}\n\n.article-template-header {\n\tmax-width: none;\n}\n\n.article-template-toolbar {\n\tdisplay: grid;\n\tgrid-template-columns: repeat(3, minmax(0, 1fr));\n\tgap: .75rem;\n\tmargin-top: 1.35rem;\n}\n\n.article-template-toolbar__zone {\n\tdisplay: flex;\n\talign-items: center;\n\tmin-width: 0;\n\tgap: .6rem;\n}\n\n.article-template-toolbar__zone--left {\n\tjustify-content: flex-start;\n}\n\n.article-template-toolbar__zone--center {\n\tjustify-content: center;\n}\n\n.article-template-toolbar__zone--right {\n\tjustify-content: flex-end;\n}\n\n.article-template-toolbar__control {\n\tdisplay: flex;\n\talign-items: center;\n\tmin-width: 0;\n\tgap: .5rem;\n}\n\n.article-template-toolbar input,\n.article-template-toolbar select {\n\tmin-width: 0;\n\tborder: 1px solid #d6dbe5;\n\tborder-radius: .6rem;\n\tpadding: .7rem .85rem;\n\tbackground: #fff;\n\tcolor: #344054;\n\tfont: inherit;\n}\n\n.article-template-toolbar__control--search input {\n\twidth: min(340px, 100%);\n}\n\n.article-template-toolbar__control--category select {\n\twidth: min(230px, 100%);\n}\n\n.article-template-toolbar .btn {\n\twhite-space: nowrap;\n}\n\n.article-eyebrow,\n.article-meta,\n.article-chip {\n\tfont-size: .75em;\n\tfont-weight: 700;\n\tletter-spacing: .06em;\n\ttext-transform: uppercase;\n}\n\n.article-eyebrow {\n\tmargin: 0 0 .65rem;\n\tcolor: var(--article-accent);\n}\n\n.article-filter-bar {\n\tdisplay: flex;\n\tgap: .75rem;\n\tpadding-bottom: 1.5rem;\n\tborder-bottom: 1px solid #e6e9ef;\n}\n\n.article-filter-bar input,\n.article-search-icon input,\n.article-filter-select input {\n\tmin-width: 0;\n\tflex: 1;\n\tborder: 1px solid #d6dbe5;\n\tborder-radius: .6rem;\n\tpadding: .75rem .9rem;\n\tbackground: #fff;\n\tfont: inherit;\n}\n\n.article-filter-bar .ph-btn-theme,\n.article-template-toolbar .ph-btn-theme {\n\tdisplay: inline-flex;\n\talign-items: center;\n\tjustify-content: center;\n\tborder: 1px solid var(--article-accent);\n\tborder-radius: .6rem;\n\tpadding: .75rem 1rem;\n\tbackground: var(--article-accent);\n\tcolor: #fff;\n\tfont: inherit;\n\tfont-weight: 700;\n\ttext-decoration: none;\n}\n\n.article-reading-list {\n\tborder-top: 1px solid #e6e9ef;\n}\n\n.article-reading-list__item {\n\tdisplay: flex;\n\tgap: 1.5rem;\n\tpadding: 1.5rem 0;\n\tborder-bottom: 1px solid #e6e9ef;\n}\n\n.article-reading-list__media {\n\twidth: 180px;\n\theight: 120px;\n\tflex: 0 0 180px;\n\toverflow: hidden;\n\tborder-radius: .7rem;\n\tbackground-color: #f2f4f7;\n}\n\n.article-reading-list__media img,\n.article-mosaic-feature__media img,\n.article-mosaic-card__media img,\n.article-editorial-lead__media img,\n.article-editorial-card__media img,\n.article-classic-lead__media img,\n.article-classic-sidebar__media img,\n.article-card__media img,\n.article-detail__cover,\n.article-feature-hero img {\n\twidth: 100%;\n\theight: 100%;\n\tobject-fit: cover;\n}\n\n.article-media-frame {\n\toverflow: hidden;\n\tborder: 1px solid #e1e6ee;\n\tborder-radius: 1rem;\n\tbox-shadow: 0 8px 18px rgb(16 24 40 / .06);\n}\n\n.article-background-media {\n\tdisplay: block;\n\tbackground-color: var(--article-thumbnail-background, #f2f4f7);\n\tbackground-image: var(--article-media-image);\n\tbackground-position: center;\n\tbackground-repeat: no-repeat;\n\tbackground-size: var(--article-thumbnail-fit, cover);\n}\n\n.article-media-frame img {\n\tdisplay: block;\n}\n\n.article-asset-media {\n\tdisplay: block;\n\tbackground: var(--article-thumbnail-background, #f2f4f7);\n}\n\n.article-asset-media > img {\n\twidth: 100%;\n\theight: 100%;\n\tobject-fit: var(--article-thumbnail-fit, cover);\n}\n\n.article-thumbnail-frame--custom {\n\tborder: var(--article-thumbnail-frame-border-width, 1px) solid var(--article-thumbnail-frame-border-color, #e1e6ee);\n\tborder-radius: var(--article-thumbnail-frame-radius, 1rem);\n}\n\n.article-title-clamp,\n.article-excerpt-clamp {\n\tdisplay: -webkit-box;\n\toverflow: hidden;\n\t-webkit-box-orient: vertical;\n}\n\n.article-title-clamp {\n\t-webkit-line-clamp: 2;\n}\n\n.article-excerpt-clamp {\n\t-webkit-line-clamp: 3;\n}\n\n.article-reading-list__body {\n\tmin-width: 0;\n}\n\n.article-meta {\n\tdisplay: flex;\n\tflex-wrap: wrap;\n\tgap: .5rem;\n\tcolor: #7a8497;\n}\n\n.article-meta span + span::before {\n\tmargin-right: .5rem;\n\tcolor: #b3bac7;\n\tcontent: '•';\n}\n\n.article-reading-list .article-title-clamp,\n.article-mosaic-card .article-title-clamp,\n.article-editorial-card .article-title-clamp,\n.article-card .article-title-clamp,\n.article-classic-sidebar .article-title-clamp {\n\tmargin: .4rem 0 .6rem;\n\tfont-family: inherit;\n\tfont-size: var(--article-list-title-size);\n\tfont-weight: 700;\n\tline-height: 1.2;\n}\n\n.article-reading-list .article-title-clamp a,\n.article-mosaic-feature .article-title-clamp a,\n.article-mosaic-card .article-title-clamp a,\n.article-editorial-lead .article-title-clamp a,\n.article-editorial-card .article-title-clamp a,\n.article-card .article-title-clamp a,\n.article-classic-lead .article-title-clamp a,\n.article-classic-sidebar .article-title-clamp a {\n\tcolor: inherit;\n\ttext-decoration: none;\n}\n\n.article-reading-list .article-title-clamp a:hover,\n.article-mosaic-feature .article-title-clamp a:hover,\n.article-mosaic-card .article-title-clamp a:hover,\n.article-editorial-lead .article-title-clamp a:hover,\n.article-editorial-card .article-title-clamp a:hover,\n.article-card .article-title-clamp a:hover,\n.article-classic-lead .article-title-clamp a:hover,\n.article-classic-sidebar .article-title-clamp a:hover {\n\tcolor: var(--article-accent);\n}\n\n.article-reading-list p,\n.article-mosaic-feature p,\n.article-editorial-lead p,\n.article-editorial-card p,\n.article-card p,\n.article-classic-lead p,\n.article-classic-sidebar p {\n\tmargin: 0;\n\tcolor: #667085;\n\tline-height: 1.6;\n}\n\n.article-empty {\n\tpadding: 3rem 0;\n\tcolor: #667085;\n\ttext-align: center;\n}\n\n.article-pagination {\n\tdisplay: flex;\n\talign-items: center;\n\tjustify-content: space-between;\n\tgap: 1rem;\n\tmargin-top: 2.5rem;\n\tpadding-top: 1.5rem;\n\tborder-top: 1px solid #e6e9ef;\n}\n\n.article-pagination__summary {\n\tmargin: 0;\n\tcolor: #667085;\n\tfont-size: .88em;\n}\n\n.article-pagination .ph-pagination {\n\tdisplay: flex;\n\talign-items: center;\n\tgap: .45rem;\n\tmargin: 0;\n\tpadding: 0;\n\tlist-style: none;\n}\n\n.article-pagination .ph-pagination .page-item {\n\tmargin: 0;\n}\n\n.article-pagination .ph-pagination .page-link {\n\tdisplay: grid;\n\tmin-width: 2.35rem;\n\theight: 2.35rem;\n\tplace-items: center;\n\tpadding: 0 .65rem;\n\tborder: 1px solid #d8dce5;\n\tborder-radius: .45rem;\n\tbackground: #fff;\n\tcolor: #344054;\n\tfont-size: .9em;\n\tfont-weight: 700;\n\ttext-decoration: none;\n\ttransition: border-color .15s ease, background-color .15s ease, color .15s ease;\n}\n\n.article-pagination .ph-pagination .active > .page-link {\n\tborder-color: var(--article-accent);\n\tbackground: var(--article-accent);\n\tcolor: #fff !important;\n}\n\n.article-pagination .ph-pagination .page-link:focus-visible,\n.article-pagination .ph-pagination a.page-link:hover {\n\tborder-color: var(--article-accent);\n\tbackground: var(--article-accent-surface);\n\tcolor: var(--article-accent-strong);\n\toutline: 2px solid var(--article-accent-ring);\n\toutline-offset: 2px;\n}\n\n.article-pagination .ph-pagination .disabled > .page-link {\n\tborder-color: #edf0f4;\n\tbackground: #f8fafc;\n\tcolor: #a5adbb;\n}\n\n.article-pagination .ph-pagination .article-pagination__ellipsis > .page-link {\n\tmin-width: 1.5rem;\n\tpadding-inline: .15rem;\n\tborder-color: transparent;\n\tbackground: transparent;\n}\n\n.article-search-icon {\n\tdisplay: flex;\n\talign-items: center;\n\toverflow: hidden;\n\tborder: 1px solid #d6dbe5;\n\tborder-radius: .6rem;\n}\n\n.article-search-icon input {\n\tborder: 0;\n}\n\n.article-search-icon button {\n\talign-self: stretch;\n\tdisplay: inline-flex;\n\talign-items: center;\n\tgap: .35rem;\n\tborder: 0;\n\tbackground: transparent;\n\tmin-height: 44px;\n\tpadding: .7rem 1rem;\n\tcolor: #344054;\n\tfont: inherit;\n}\n\n.article-search-icon__label {\n\tdisplay: inline;\n\tline-height: 1;\n}\n\n.article-mosaic-feature {\n\tdisplay: grid;\n\tgrid-template-columns: minmax(0, 1fr);\n\tmargin-bottom: 2rem;\n\toverflow: hidden;\n\tborder-radius: .75rem;\n\tbackground: var(--article-accent-strong);\n\tcolor: #fff;\n}\n\n.article-mosaic-feature__media {\n\tgrid-area: 1 / 1;\n\tmin-height: clamp(22rem, 34vw, 32rem);\n\tbackground-color: var(--article-thumbnail-background, var(--article-accent-soft));\n}\n\n.article-mosaic-feature__body {\n\tgrid-area: 1 / 1;\n\tz-index: 1;\n\talign-self: end;\n\tdisplay: flex;\n\tflex-direction: column;\n\tjustify-content: end;\n\tpadding: 4rem clamp(1.5rem, 3vw, 3rem) 2rem;\n\tbackground: linear-`... 75572 more characters,
+    expected: /\.article-page--reading-list \.article-reading-list-layout\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\)\s+minmax\(17rem, 20rem\)/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at tests\article-minimal-reading-list-sidebar.test.mjs:52:1
+✖ Minimal Reading List search toolbar uses a single proportional control row (3.2256ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /\.article-page--reading-list \.article-template-toolbar__control--search\s*\{[\s\S]*?width:\s*min\(100%,\s*42rem\)/. Input:
+  
+  ':root {\n' +
+    '\t--article-accent: #6542d7;\n' +
+    '\t--article-accent: var(--ph-theme-primary, #6542d7);\n' +
+    '\t--article-accent-strong: #5f38c9;\n' +
+    '\t--article-accent-strong: color-mix(in srgb, var(--article-accent) 88%, #000);\n' +
+    '\t--article-accent-soft: #efeaff;\n' +
+    '\t--article-accent-soft: color-mix(in srgb, var(--article-accent) 12%, #fff);\n' +
+    '\t--article-accent-surface: #f4f0ff;\n' +
+    '\t--article-accent-surface: color-mix(in srgb, var(--article-accent) 6%, #fff);\n' +
+    '\t--article-accent-border: #e6ddff;\n' +
+    '\t--article-accent-border: color-mix(in srgb, var(--article-accent) 22%, #fff);\n' +
+    '\t--article-accent-ring: #d9cbff;\n' +
+    '\t--article-accent-ring: color-mix(in srgb, var(--article-accent) 37%, #fff);\n' +
+    '}\n' +
+    '\n' +
+    '.article-page,\n' +
+    '.article-detail {\n' +
+    '\t--article-font-size: var(--ph-adaptive-font-size, var(--ph-font-size, 1rem));\n' +
+    '\t--article-title-size: min(var(--ph-fmv2-rfs-h1, 2.5rem), 1.62em);\n' +
+    '\t--article-description-size: min(var(--ph-fmv2-rfs-h4, 1.25rem), 1.22em);\n' +
+    '\tbackground: #fff;\n' +
+    '\tcolor: #172033;\n' +
+    '\tfont-family: var(--ph-font-family, inherit);\n' +
+    '\tfont-size: var(--article-font-size);\n' +
+    '}\n' +
+    '\n' +
+    '.article-page {\n' +
+    '\t--article-list-title-size: min(var(--ph-fmv2-rfs-h4, 1.25rem), 1.14em);\n' +
+    '}\n' +
+    '\n' +
+    'body[data-preview-fixture="true"] a {\n' +
+    '\tcursor: default;\n' +
+    '}\n' +
+    '\n' +
+    '.article-shell {\n' +
+    '\twidth: min(1180px, calc(100% - 2rem));\n' +
+    '\tmargin-inline: auto;\n' +
+    '\tpadding: 4.5rem 0;\n' +
+    '}\n' +
+    '\n' +
+    '.article-page-heading {\n' +
+    '\tmax-width: 720px;\n' +
+    '\tmargin-bottom: 2.5rem;\n' +
+    '}\n' +
+    '\n' +
+    '.article-page-heading--inline {\n' +
+    '\tdisplay: flex;\n' +
+    '\talign-items: end;\n' +
+    '\tjustify-content: space-between;\n' +
+    '\tmax-width: none;\n' +
+    '\tgap: 1.5rem;\n' +
+    '}\n' +
+    '\n' +
+    '.article-page-heading h1,\n' +
+    '.article-detail h1 {\n' +
+    '\tmargin: 0;\n' +
+    '\tcolor: #172033;\n' +
+    '\tfont-family: inherit;\n' +
+    '\tfont-size: var(--article-title-size);\n' +
+    '\tfont-weight: 700;\n' +
+    '\tline-height: 1.12;\n' +
+    '}\n' +
+    '\n' +
+    '.article-page-heading p:not(.article-eyebrow) {\n' +
+    '\tmargin: 1rem 0 0;\n' +
+    '\tcolor: #667085;\n' +
+    '\tfont-size: var(--article-description-size);\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-header {\n' +
+    '\tmax-width: none;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar {\n' +
+    '\tdisplay: grid;\n' +
+    '\tgrid-template-columns: repeat(3, minmax(0, 1fr));\n' +
+    '\tgap: .75rem;\n' +
+    '\tmargin-top: 1.35rem;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__zone {\n' +
+    '\tdisplay: flex;\n' +
+    '\talign-items: center;\n' +
+    '\tmin-width: 0;\n' +
+    '\tgap: .6rem;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__zone--left {\n' +
+    '\tjustify-content: flex-start;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__zone--center {\n' +
+    '\tjustify-content: center;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__zone--right {\n' +
+    '\tjustify-content: flex-end;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__control {\n' +
+    '\tdisplay: flex;\n' +
+    '\talign-items: center;\n' +
+    '\tmin-width: 0;\n' +
+    '\tgap: .5rem;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar input,\n' +
+    '.article-template-toolbar select {\n' +
+    '\tmin-width: 0;\n' +
+    '\tborder: 1px solid #d6dbe5;\n' +
+    '\tborder-radius: .6rem;\n' +
+    '\tpadding: .7rem .85rem;\n' +
+    '\tbackground: #fff;\n' +
+    '\tcolor: #344054;\n' +
+    '\tfont: inherit;\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__control--search input {\n' +
+    '\twidth: min(340px, 100%);\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar__control--category select {\n' +
+    '\twidth: min(230px, 100%);\n' +
+    '}\n' +
+    '\n' +
+    '.article-template-toolbar .btn {\n' +
+    '\twhite-space: nowrap;\n' +
+    '}\n' +
+    '\n' +
+    '.article-eyebrow,\n' +
+    '.article-meta,\n' +
+    '.article-chip {\n' +
+    '\tfont-size: .75em;\n' +
+    '\tfont-weight: 700;\n' +
+    '\tletter-spacing: .06em;\n' +
+    '\ttext-transform: uppercase;\n' +
+    '}\n' +
+    '\n' +
+    '.article-eyebrow {\n' +
+    '\tmargin: 0 0 .65rem;\n' +
+    '\tcolor: var(--article-accent);\n' +
+    '}\n' +
+    '\n' +
+    '.article-filter-bar {\n' +
+    '\tdisplay: flex;\n' +
+    '\tgap: .75rem;\n' +
+    '\tpadding-bottom: 1.5rem;\n' +
+    '\tborder-bottom: 1px solid #e6e9ef;\n' +
+    '}\n' +
+    '\n' +
+    '.article-filter-bar input,\n' +
+    '.article-search-icon input,\n' +
+    '.article-filter-select input {\n' +
+    '\tmin-width: 0;\n' +
+    '\tflex: 1;\n' +
+    '\tborder: 1px solid #d6dbe5;\n' +
+    '\tborder-radius: .6rem;\n' +
+    '\tpadding: .75rem .9rem;\n' +
+    '\tbackground: #fff;\n' +
+    '\tfont: inherit;\n' +
+    '}\n' +
+    '\n' +
+    '.article-filter-bar .ph-btn-theme,\n' +
+    '.article-template-toolbar .ph-btn-theme {\n' +
+    '\tdisplay: inline-flex;\n' +
+    '\talign-items: center;\n' +
+    '\tjustify-content: center;\n' +
+    '\tborder: 1px solid var(--article-accent);\n' +
+    '\tborder-radius: .6rem;\n' +
+    '\tpadding: .75rem 1rem;\n' +
+    '\tbackground: var(--article-accent);\n' +
+    '\tcolor: #fff;\n' +
+    '\tfont: inherit;\n' +
+    '\tfont-weight: 700;\n' +
+    '\ttext-decoration: none;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list {\n' +
+    '\tborder-top: 1px solid #e6e9ef;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list__item {\n' +
+    '\tdisplay: flex;\n' +
+    '\tgap: 1.5rem;\n' +
+    '\tpadding: 1.5rem 0;\n' +
+    '\tborder-bottom: 1px solid #e6e9ef;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list__media {\n' +
+    '\twidth: 180px;\n' +
+    '\theight: 120px;\n' +
+    '\tflex: 0 0 180px;\n' +
+    '\toverflow: hidden;\n' +
+    '\tborder-radius: .7rem;\n' +
+    '\tbackground-color: #f2f4f7;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list__media img,\n' +
+    '.article-mosaic-feature__media img,\n' +
+    '.article-mosaic-card__media img,\n' +
+    '.article-editorial-lead__media img,\n' +
+    '.article-editorial-card__media img,\n' +
+    '.article-classic-lead__media img,\n' +
+    '.article-classic-sidebar__media img,\n' +
+    '.article-card__media img,\n' +
+    '.article-detail__cover,\n' +
+    '.article-feature-hero img {\n' +
+    '\twidth: 100%;\n' +
+    '\theight: 100%;\n' +
+    '\tobject-fit: cover;\n' +
+    '}\n' +
+    '\n' +
+    '.article-media-frame {\n' +
+    '\toverflow: hidden;\n' +
+    '\tborder: 1px solid #e1e6ee;\n' +
+    '\tborder-radius: 1rem;\n' +
+    '\tbox-shadow: 0 8px 18px rgb(16 24 40 / .06);\n' +
+    '}\n' +
+    '\n' +
+    '.article-background-media {\n' +
+    '\tdisplay: block;\n' +
+    '\tbackground-color: var(--article-thumbnail-background, #f2f4f7);\n' +
+    '\tbackground-image: var(--article-media-image);\n' +
+    '\tbackground-position: center;\n' +
+    '\tbackground-repeat: no-repeat;\n' +
+    '\tbackground-size: var(--article-thumbnail-fit, cover);\n' +
+    '}\n' +
+    '\n' +
+    '.article-media-frame img {\n' +
+    '\tdisplay: block;\n' +
+    '}\n' +
+    '\n' +
+    '.article-asset-media {\n' +
+    '\tdisplay: block;\n' +
+    '\tbackground: var(--article-thumbnail-background, #f2f4f7);\n' +
+    '}\n' +
+    '\n' +
+    '.article-asset-media > img {\n' +
+    '\twidth: 100%;\n' +
+    '\theight: 100%;\n' +
+    '\tobject-fit: var(--article-thumbnail-fit, cover);\n' +
+    '}\n' +
+    '\n' +
+    '.article-thumbnail-frame--custom {\n' +
+    '\tborder: var(--article-thumbnail-frame-border-width, 1px) solid var(--article-thumbnail-frame-border-color, #e1e6ee);\n' +
+    '\tborder-radius: var(--article-thumbnail-frame-radius, 1rem);\n' +
+    '}\n' +
+    '\n' +
+    '.article-title-clamp,\n' +
+    '.article-excerpt-clamp {\n' +
+    '\tdisplay: -webkit-box;\n' +
+    '\toverflow: hidden;\n' +
+    '\t-webkit-box-orient: vertical;\n' +
+    '}\n' +
+    '\n' +
+    '.article-title-clamp {\n' +
+    '\t-webkit-line-clamp: 2;\n' +
+    '}\n' +
+    '\n' +
+    '.article-excerpt-clamp {\n' +
+    '\t-webkit-line-clamp: 3;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list__body {\n' +
+    '\tmin-width: 0;\n' +
+    '}\n' +
+    '\n' +
+    '.article-meta {\n' +
+    '\tdisplay: flex;\n' +
+    '\tflex-wrap: wrap;\n' +
+    '\tgap: .5rem;\n' +
+    '\tcolor: #7a8497;\n' +
+    '}\n' +
+    '\n' +
+    '.article-meta span + span::before {\n' +
+    '\tmargin-right: .5rem;\n' +
+    '\tcolor: #b3bac7;\n' +
+    "\tcontent: '•';\n" +
+    '}\n' +
+    '\n' +
+    '.article-reading-list .article-title-clamp,\n' +
+    '.article-mosaic-card .article-title-clamp,\n' +
+    '.article-editorial-card .article-title-clamp,\n' +
+    '.article-card .article-title-clamp,\n' +
+    '.article-classic-sidebar .article-title-clamp {\n' +
+    '\tmargin: .4rem 0 .6rem;\n' +
+    '\tfont-family: inherit;\n' +
+    '\tfont-size: var(--article-list-title-size);\n' +
+    '\tfont-weight: 700;\n' +
+    '\tline-height: 1.2;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list .article-title-clamp a,\n' +
+    '.article-mosaic-feature .article-title-clamp a,\n' +
+    '.article-mosaic-card .article-title-clamp a,\n' +
+    '.article-editorial-lead .article-title-clamp a,\n' +
+    '.article-editorial-card .article-title-clamp a,\n' +
+    '.article-card .article-title-clamp a,\n' +
+    '.article-classic-lead .article-title-clamp a,\n' +
+    '.article-classic-sidebar .article-title-clamp a {\n' +
+    '\tcolor: inherit;\n' +
+    '\ttext-decoration: none;\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list .article-title-clamp a:hover,\n' +
+    '.article-mosaic-feature .article-title-clamp a:hover,\n' +
+    '.article-mosaic-card .article-title-clamp a:hover,\n' +
+    '.article-editorial-lead .article-title-clamp a:hover,\n' +
+    '.article-editorial-card .article-title-clamp a:hover,\n' +
+    '.article-card .article-title-clamp a:hover,\n' +
+    '.article-classic-lead .article-title-clamp a:hover,\n' +
+    '.article-classic-sidebar .article-title-clamp a:hover {\n' +
+    '\tcolor: var(--article-accent);\n' +
+    '}\n' +
+    '\n' +
+    '.article-reading-list p,\n' +
+    '.article-mosaic-feature p,\n' +
+    '.article-editorial-lead p,\n' +
+    '.article-editorial-card p,\n' +
+    '.article-card p,\n' +
+    '.article-classic-lead p,\n' +
+    '.article-classic-sidebar p {\n' +
+    '\tmargin: 0;\n' +
+    '\tcolor: #667085;\n' +
+    '\tline-height: 1.6;\n' +
+    '}\n' +
+    '\n' +
+    '.article-empty {\n' +
+    '\tpadding: 3rem 0;\n' +
+    '\tcolor: #667085;\n' +
+    '\ttext-align: center;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination {\n' +
+    '\tdisplay: flex;\n' +
+    '\talign-items: center;\n' +
+    '\tjustify-content: space-between;\n' +
+    '\tgap: 1rem;\n' +
+    '\tmargin-top: 2.5rem;\n' +
+    '\tpadding-top: 1.5rem;\n' +
+    '\tborder-top: 1px solid #e6e9ef;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination__summary {\n' +
+    '\tmargin: 0;\n' +
+    '\tcolor: #667085;\n' +
+    '\tfont-size: .88em;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination {\n' +
+    '\tdisplay: flex;\n' +
+    '\talign-items: center;\n' +
+    '\tgap: .45rem;\n' +
+    '\tmargin: 0;\n' +
+    '\tpadding: 0;\n' +
+    '\tlist-style: none;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination .page-item {\n' +
+    '\tmargin: 0;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination .page-link {\n' +
+    '\tdisplay: grid;\n' +
+    '\tmin-width: 2.35rem;\n' +
+    '\theight: 2.35rem;\n' +
+    '\tplace-items: center;\n' +
+    '\tpadding: 0 .65rem;\n' +
+    '\tborder: 1px solid #d8dce5;\n' +
+    '\tborder-radius: .45rem;\n' +
+    '\tbackground: #fff;\n' +
+    '\tcolor: #344054;\n' +
+    '\tfont-size: .9em;\n' +
+    '\tfont-weight: 700;\n' +
+    '\ttext-decoration: none;\n' +
+    '\ttransition: border-color .15s ease, background-color .15s ease, color .15s ease;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination .active > .page-link {\n' +
+    '\tborder-color: var(--article-accent);\n' +
+    '\tbackground: var(--article-accent);\n' +
+    '\tcolor: #fff !important;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination .page-link:focus-visible,\n' +
+    '.article-pagination .ph-pagination a.page-link:hover {\n' +
+    '\tborder-color: var(--article-accent);\n' +
+    '\tbackground: var(--article-accent-surface);\n' +
+    '\tcolor: var(--article-accent-strong);\n' +
+    '\toutline: 2px solid var(--article-accent-ring);\n' +
+    '\toutline-offset: 2px;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination .disabled > .page-link {\n' +
+    '\tborder-color: #edf0f4;\n' +
+    '\tbackground: #f8fafc;\n' +
+    '\tcolor: #a5adbb;\n' +
+    '}\n' +
+    '\n' +
+    '.article-pagination .ph-pagination .article-pagination__ellipsis > .page-link {\n' +
+    '\tmin-width: 1.5rem;\n' +
+    '\tpadding-inline: .15rem;\n' +
+    '\tborder-color: transparent;\n' +
+    '\tbackground: transparent;\n' +
+    '}\n' +
+    '\n' +
+    '.article-search-icon {\n' +
+    '\tdisplay: flex;\n' +
+    '\talign-items: center;\n' +
+    '\toverflow: hidden;\n' +
+    '\tborder: 1px solid #d6dbe5;\n' +
+    '\tborder-radius: .6rem;\n' +
+    '}\n' +
+    '\n' +
+    '.article-search-icon input {\n' +
+    '\tborder: 0;\n' +
+    '}\n' +
+    '\n' +
+    '.article-search-icon button {\n' +
+    '\talign-self: stretch;\n' +
+    '\tdisplay: inline-flex;\n' +
+    '\talign-items: center;\n' +
+    '\tgap: .35rem;\n' +
+    '\tborder: 0;\n' +
+    '\tbackground: transparent;\n' +
+    '\tmin-height: 44px;\n' +
+    '\tpadding: .7rem 1rem;\n' +
+    '\tcolor: #344054;\n' +
+    '\tfont: inherit;\n' +
+    '}\n' +
+    '\n' +
+    '.article-search-icon__label {\n' +
+    '\tdisplay: inline;\n' +
+    '\tline-height: 1;\n' +
+    '}\n' +
+    '\n' +
+    '.article-mosaic-feature {\n' +
+    '\tdisplay: grid;\n' +
+    '\tgrid-template-columns: minmax(0, 1fr);\n' +
+    '\tmargin-bottom: 2rem;\n' +
+    '\toverflow: hidden;\n' +
+    '\tborder-radius: .75rem;\n' +
+    '\tbackground: var(--article-accent-strong);\n' +
+    '\tcolor: #fff;\n' +
+    '}\n' +
+    '\n' +
+    '.article-mosaic-feature__media {\n' +
+    '\tgrid-area: 1 / 1;\n' +
+    '\tmin-height: clamp(22rem, 34vw, 32rem);\n' +
+    '\tbackground-color: var(--article-thumbnail-background, var(--article-accent-soft));\n' +
+    '}\n' +
+    '\n' +
+    '.article-mosaic-feature__body {\n' +
+    '\tgrid-area: 1 / 1;\n' +
+    '\tz-index: 1;\n' +
+    '\talign-self: end;\n' +
+    '\tdisplay: flex;\n' +
+    '\tflex-direction: column;\n' +
+    '\tjustify-content: end;\n' +
+    '\tpadding: 4rem clamp(1.5rem, 3vw, 3rem) 2rem;\n' +
+    '\tbackground: linear-'... 75572 more characters
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-minimal-reading-list-sidebar.test.mjs:57:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: `:root {\n\t--article-accent: #6542d7;\n\t--article-accent: var(--ph-theme-primary, #6542d7);\n\t--article-accent-strong: #5f38c9;\n\t--article-accent-strong: color-mix(in srgb, var(--article-accent) 88%, #000);\n\t--article-accent-soft: #efeaff;\n\t--article-accent-soft: color-mix(in srgb, var(--article-accent) 12%, #fff);\n\t--article-accent-surface: #f4f0ff;\n\t--article-accent-surface: color-mix(in srgb, var(--article-accent) 6%, #fff);\n\t--article-accent-border: #e6ddff;\n\t--article-accent-border: color-mix(in srgb, var(--article-accent) 22%, #fff);\n\t--article-accent-ring: #d9cbff;\n\t--article-accent-ring: color-mix(in srgb, var(--article-accent) 37%, #fff);\n}\n\n.article-page,\n.article-detail {\n\t--article-font-size: var(--ph-adaptive-font-size, var(--ph-font-size, 1rem));\n\t--article-title-size: min(var(--ph-fmv2-rfs-h1, 2.5rem), 1.62em);\n\t--article-description-size: min(var(--ph-fmv2-rfs-h4, 1.25rem), 1.22em);\n\tbackground: #fff;\n\tcolor: #172033;\n\tfont-family: var(--ph-font-family, inherit);\n\tfont-size: var(--article-font-size);\n}\n\n.article-page {\n\t--article-list-title-size: min(var(--ph-fmv2-rfs-h4, 1.25rem), 1.14em);\n}\n\nbody[data-preview-fixture="true"] a {\n\tcursor: default;\n}\n\n.article-shell {\n\twidth: min(1180px, calc(100% - 2rem));\n\tmargin-inline: auto;\n\tpadding: 4.5rem 0;\n}\n\n.article-page-heading {\n\tmax-width: 720px;\n\tmargin-bottom: 2.5rem;\n}\n\n.article-page-heading--inline {\n\tdisplay: flex;\n\talign-items: end;\n\tjustify-content: space-between;\n\tmax-width: none;\n\tgap: 1.5rem;\n}\n\n.article-page-heading h1,\n.article-detail h1 {\n\tmargin: 0;\n\tcolor: #172033;\n\tfont-family: inherit;\n\tfont-size: var(--article-title-size);\n\tfont-weight: 700;\n\tline-height: 1.12;\n}\n\n.article-page-heading p:not(.article-eyebrow) {\n\tmargin: 1rem 0 0;\n\tcolor: #667085;\n\tfont-size: var(--article-description-size);\n}\n\n.article-template-header {\n\tmax-width: none;\n}\n\n.article-template-toolbar {\n\tdisplay: grid;\n\tgrid-template-columns: repeat(3, minmax(0, 1fr));\n\tgap: .75rem;\n\tmargin-top: 1.35rem;\n}\n\n.article-template-toolbar__zone {\n\tdisplay: flex;\n\talign-items: center;\n\tmin-width: 0;\n\tgap: .6rem;\n}\n\n.article-template-toolbar__zone--left {\n\tjustify-content: flex-start;\n}\n\n.article-template-toolbar__zone--center {\n\tjustify-content: center;\n}\n\n.article-template-toolbar__zone--right {\n\tjustify-content: flex-end;\n}\n\n.article-template-toolbar__control {\n\tdisplay: flex;\n\talign-items: center;\n\tmin-width: 0;\n\tgap: .5rem;\n}\n\n.article-template-toolbar input,\n.article-template-toolbar select {\n\tmin-width: 0;\n\tborder: 1px solid #d6dbe5;\n\tborder-radius: .6rem;\n\tpadding: .7rem .85rem;\n\tbackground: #fff;\n\tcolor: #344054;\n\tfont: inherit;\n}\n\n.article-template-toolbar__control--search input {\n\twidth: min(340px, 100%);\n}\n\n.article-template-toolbar__control--category select {\n\twidth: min(230px, 100%);\n}\n\n.article-template-toolbar .btn {\n\twhite-space: nowrap;\n}\n\n.article-eyebrow,\n.article-meta,\n.article-chip {\n\tfont-size: .75em;\n\tfont-weight: 700;\n\tletter-spacing: .06em;\n\ttext-transform: uppercase;\n}\n\n.article-eyebrow {\n\tmargin: 0 0 .65rem;\n\tcolor: var(--article-accent);\n}\n\n.article-filter-bar {\n\tdisplay: flex;\n\tgap: .75rem;\n\tpadding-bottom: 1.5rem;\n\tborder-bottom: 1px solid #e6e9ef;\n}\n\n.article-filter-bar input,\n.article-search-icon input,\n.article-filter-select input {\n\tmin-width: 0;\n\tflex: 1;\n\tborder: 1px solid #d6dbe5;\n\tborder-radius: .6rem;\n\tpadding: .75rem .9rem;\n\tbackground: #fff;\n\tfont: inherit;\n}\n\n.article-filter-bar .ph-btn-theme,\n.article-template-toolbar .ph-btn-theme {\n\tdisplay: inline-flex;\n\talign-items: center;\n\tjustify-content: center;\n\tborder: 1px solid var(--article-accent);\n\tborder-radius: .6rem;\n\tpadding: .75rem 1rem;\n\tbackground: var(--article-accent);\n\tcolor: #fff;\n\tfont: inherit;\n\tfont-weight: 700;\n\ttext-decoration: none;\n}\n\n.article-reading-list {\n\tborder-top: 1px solid #e6e9ef;\n}\n\n.article-reading-list__item {\n\tdisplay: flex;\n\tgap: 1.5rem;\n\tpadding: 1.5rem 0;\n\tborder-bottom: 1px solid #e6e9ef;\n}\n\n.article-reading-list__media {\n\twidth: 180px;\n\theight: 120px;\n\tflex: 0 0 180px;\n\toverflow: hidden;\n\tborder-radius: .7rem;\n\tbackground-color: #f2f4f7;\n}\n\n.article-reading-list__media img,\n.article-mosaic-feature__media img,\n.article-mosaic-card__media img,\n.article-editorial-lead__media img,\n.article-editorial-card__media img,\n.article-classic-lead__media img,\n.article-classic-sidebar__media img,\n.article-card__media img,\n.article-detail__cover,\n.article-feature-hero img {\n\twidth: 100%;\n\theight: 100%;\n\tobject-fit: cover;\n}\n\n.article-media-frame {\n\toverflow: hidden;\n\tborder: 1px solid #e1e6ee;\n\tborder-radius: 1rem;\n\tbox-shadow: 0 8px 18px rgb(16 24 40 / .06);\n}\n\n.article-background-media {\n\tdisplay: block;\n\tbackground-color: var(--article-thumbnail-background, #f2f4f7);\n\tbackground-image: var(--article-media-image);\n\tbackground-position: center;\n\tbackground-repeat: no-repeat;\n\tbackground-size: var(--article-thumbnail-fit, cover);\n}\n\n.article-media-frame img {\n\tdisplay: block;\n}\n\n.article-asset-media {\n\tdisplay: block;\n\tbackground: var(--article-thumbnail-background, #f2f4f7);\n}\n\n.article-asset-media > img {\n\twidth: 100%;\n\theight: 100%;\n\tobject-fit: var(--article-thumbnail-fit, cover);\n}\n\n.article-thumbnail-frame--custom {\n\tborder: var(--article-thumbnail-frame-border-width, 1px) solid var(--article-thumbnail-frame-border-color, #e1e6ee);\n\tborder-radius: var(--article-thumbnail-frame-radius, 1rem);\n}\n\n.article-title-clamp,\n.article-excerpt-clamp {\n\tdisplay: -webkit-box;\n\toverflow: hidden;\n\t-webkit-box-orient: vertical;\n}\n\n.article-title-clamp {\n\t-webkit-line-clamp: 2;\n}\n\n.article-excerpt-clamp {\n\t-webkit-line-clamp: 3;\n}\n\n.article-reading-list__body {\n\tmin-width: 0;\n}\n\n.article-meta {\n\tdisplay: flex;\n\tflex-wrap: wrap;\n\tgap: .5rem;\n\tcolor: #7a8497;\n}\n\n.article-meta span + span::before {\n\tmargin-right: .5rem;\n\tcolor: #b3bac7;\n\tcontent: '•';\n}\n\n.article-reading-list .article-title-clamp,\n.article-mosaic-card .article-title-clamp,\n.article-editorial-card .article-title-clamp,\n.article-card .article-title-clamp,\n.article-classic-sidebar .article-title-clamp {\n\tmargin: .4rem 0 .6rem;\n\tfont-family: inherit;\n\tfont-size: var(--article-list-title-size);\n\tfont-weight: 700;\n\tline-height: 1.2;\n}\n\n.article-reading-list .article-title-clamp a,\n.article-mosaic-feature .article-title-clamp a,\n.article-mosaic-card .article-title-clamp a,\n.article-editorial-lead .article-title-clamp a,\n.article-editorial-card .article-title-clamp a,\n.article-card .article-title-clamp a,\n.article-classic-lead .article-title-clamp a,\n.article-classic-sidebar .article-title-clamp a {\n\tcolor: inherit;\n\ttext-decoration: none;\n}\n\n.article-reading-list .article-title-clamp a:hover,\n.article-mosaic-feature .article-title-clamp a:hover,\n.article-mosaic-card .article-title-clamp a:hover,\n.article-editorial-lead .article-title-clamp a:hover,\n.article-editorial-card .article-title-clamp a:hover,\n.article-card .article-title-clamp a:hover,\n.article-classic-lead .article-title-clamp a:hover,\n.article-classic-sidebar .article-title-clamp a:hover {\n\tcolor: var(--article-accent);\n}\n\n.article-reading-list p,\n.article-mosaic-feature p,\n.article-editorial-lead p,\n.article-editorial-card p,\n.article-card p,\n.article-classic-lead p,\n.article-classic-sidebar p {\n\tmargin: 0;\n\tcolor: #667085;\n\tline-height: 1.6;\n}\n\n.article-empty {\n\tpadding: 3rem 0;\n\tcolor: #667085;\n\ttext-align: center;\n}\n\n.article-pagination {\n\tdisplay: flex;\n\talign-items: center;\n\tjustify-content: space-between;\n\tgap: 1rem;\n\tmargin-top: 2.5rem;\n\tpadding-top: 1.5rem;\n\tborder-top: 1px solid #e6e9ef;\n}\n\n.article-pagination__summary {\n\tmargin: 0;\n\tcolor: #667085;\n\tfont-size: .88em;\n}\n\n.article-pagination .ph-pagination {\n\tdisplay: flex;\n\talign-items: center;\n\tgap: .45rem;\n\tmargin: 0;\n\tpadding: 0;\n\tlist-style: none;\n}\n\n.article-pagination .ph-pagination .page-item {\n\tmargin: 0;\n}\n\n.article-pagination .ph-pagination .page-link {\n\tdisplay: grid;\n\tmin-width: 2.35rem;\n\theight: 2.35rem;\n\tplace-items: center;\n\tpadding: 0 .65rem;\n\tborder: 1px solid #d8dce5;\n\tborder-radius: .45rem;\n\tbackground: #fff;\n\tcolor: #344054;\n\tfont-size: .9em;\n\tfont-weight: 700;\n\ttext-decoration: none;\n\ttransition: border-color .15s ease, background-color .15s ease, color .15s ease;\n}\n\n.article-pagination .ph-pagination .active > .page-link {\n\tborder-color: var(--article-accent);\n\tbackground: var(--article-accent);\n\tcolor: #fff !important;\n}\n\n.article-pagination .ph-pagination .page-link:focus-visible,\n.article-pagination .ph-pagination a.page-link:hover {\n\tborder-color: var(--article-accent);\n\tbackground: var(--article-accent-surface);\n\tcolor: var(--article-accent-strong);\n\toutline: 2px solid var(--article-accent-ring);\n\toutline-offset: 2px;\n}\n\n.article-pagination .ph-pagination .disabled > .page-link {\n\tborder-color: #edf0f4;\n\tbackground: #f8fafc;\n\tcolor: #a5adbb;\n}\n\n.article-pagination .ph-pagination .article-pagination__ellipsis > .page-link {\n\tmin-width: 1.5rem;\n\tpadding-inline: .15rem;\n\tborder-color: transparent;\n\tbackground: transparent;\n}\n\n.article-search-icon {\n\tdisplay: flex;\n\talign-items: center;\n\toverflow: hidden;\n\tborder: 1px solid #d6dbe5;\n\tborder-radius: .6rem;\n}\n\n.article-search-icon input {\n\tborder: 0;\n}\n\n.article-search-icon button {\n\talign-self: stretch;\n\tdisplay: inline-flex;\n\talign-items: center;\n\tgap: .35rem;\n\tborder: 0;\n\tbackground: transparent;\n\tmin-height: 44px;\n\tpadding: .7rem 1rem;\n\tcolor: #344054;\n\tfont: inherit;\n}\n\n.article-search-icon__label {\n\tdisplay: inline;\n\tline-height: 1;\n}\n\n.article-mosaic-feature {\n\tdisplay: grid;\n\tgrid-template-columns: minmax(0, 1fr);\n\tmargin-bottom: 2rem;\n\toverflow: hidden;\n\tborder-radius: .75rem;\n\tbackground: var(--article-accent-strong);\n\tcolor: #fff;\n}\n\n.article-mosaic-feature__media {\n\tgrid-area: 1 / 1;\n\tmin-height: clamp(22rem, 34vw, 32rem);\n\tbackground-color: var(--article-thumbnail-background, var(--article-accent-soft));\n}\n\n.article-mosaic-feature__body {\n\tgrid-area: 1 / 1;\n\tz-index: 1;\n\talign-self: end;\n\tdisplay: flex;\n\tflex-direction: column;\n\tjustify-content: end;\n\tpadding: 4rem clamp(1.5rem, 3vw, 3rem) 2rem;\n\tbackground: linear-`... 75572 more characters,
+    expected: /\.article-page--reading-list \.article-template-toolbar__control--search\s*\{[\s\S]*?width:\s*min\(100%,\s*42rem\)/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at tests\article-theme-link-isolation.test.mjs:15:1
+✖ Article link hierarchy stays readable when a CMS theme tints generic anchors (6.0223ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /color\s*:\s*#344054\s*!important/. Input:
+  
+  '\n\tmin-width: 44px;\n\theight: 44px;\n'
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-theme-link-isolation.test.mjs:17:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '\n\tmin-width: 44px;\n\theight: 44px;\n',
+    expected: /color\s*:\s*#344054\s*!important/,
+    operator: 'match',
+    diff: 'simple'
+  }

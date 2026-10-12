@@ -1,0 +1,54 @@
+"""Focused checks for coverage, redaction, memory integrity, and Git scope."""
+import importlib.util
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+BASE=Path(__file__).parent
+spec=importlib.util.spec_from_file_location('exporter',BASE/'export_memories.py')
+exporter=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(exporter)
+rows=json.loads((BASE/'prepared.json').read_text(encoding='utf-8'))
+assert len(rows)==len({r['id'] for r in rows})==165
+assert not any(r['errors'] for r in rows)
+assert all(r['user_count']>0 for r in rows)
+required=['Age of Empire II DE','New MG [Laptop]','Laravel 13 CMS BUM','Laravel 13 CMS BUM NextJS']
+assert all(any(r['project']==p for r in rows) for p in required)
+assert not any('# AGENTS.md instructions' in m['text'] or '<recommended_plugins>' in m['text'] for r in rows for m in r['messages'])
+secret_labels=r'(?:password|passwd|pwd|kata[ _-]?sandi|api[ _-]?key|(?:access|refresh)[ _-]?token|client[ _-]?secret|DB_PASSWORD)'
+for row in rows:
+    for message in row['messages']:
+        for line in message['text'].splitlines():
+            if re.search(r'(?i)\b'+secret_labels+r'\b["\x27\x60* ]{0,5}\s*[:=]',line):
+                assert '[REDACTED' in line,(row['id'],message['role'])
+assert 'do-not-retain' not in exporter.clean('password: do-not-retain')
+assert 'abcxyz123456' not in exporter.clean('Bearer abcxyz123456')
+map_row=next(r for r in rows if r['id']=='01a1145e-6892-7ba1-9397-e867625e99ad')
+assert map_row['user_count']>=55 and map_row['final_count']>=33
+assert any('map generator Age of Empire' in m['text'] for m in map_row['messages'] if m['role']=='user')
+result={'ok':True,'chats':len(rows),'text_messages':sum(len(r['messages']) for r in rows),'recovered_from_rollout':sum(r.get('messages_recovered_from_rollout',0) for r in rows),'mandatory_projects_covered':required,'no_source_errors':True,'redaction_checks_passed':True,'runtime_retested':False}
+if '--after' in sys.argv:
+    manifest=json.loads((BASE/'manifest.json').read_text(encoding='utf-8'))
+    assert {r['id'] for r in rows}=={r['id'] for r in manifest}
+    mandatory=['Tujuan pekerjaan','Keputusan penting','File dibuat','Backup yang tercatat','Hasil pengujian','Masalah belum selesai','Kronologi','Sumber riwayat lengkap']
+    for record in manifest:
+        e,c=Path(record['e']),Path(record['c'])
+        assert e.is_file() and c.is_file()
+        assert exporter.sha(e)==record['sha256']==exporter.sha(c)
+        body=e.read_text(encoding='utf-8')
+        assert all(heading in body for heading in mandatory)
+        assert record['id'] in body and len(body)>1200
+        transcript=Path(record['transcript'])
+        assert exporter.sha(transcript)==record['transcript_sha256']
+    for name,value in json.loads((BASE/'previous-hashes.json').read_text(encoding='utf-8')).items():
+        assert exporter.sha(Path(name))==value
+    before=(BASE/'git-before.txt').read_text(encoding='utf-8-sig').splitlines()
+    after=subprocess.check_output(['git','-C','D:/Laragon/www/laravel-13-phoenix','status','--porcelain=v1'],text=True).splitlines()
+    permitted='?? project-artifacts/memory-sync-20261012/'
+    assert sorted(line for line in after if line!=permitted)==sorted(line for line in before if line!=permitted),(before,after)
+    result.update(note_pairs_verified=len(manifest),old_memories_unchanged=True,production_git_status_unchanged=True,graphify_updated=False)
+    (BASE/'qc-after.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+else:
+    (BASE/'qc-before.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+print(json.dumps(result,ensure_ascii=False))

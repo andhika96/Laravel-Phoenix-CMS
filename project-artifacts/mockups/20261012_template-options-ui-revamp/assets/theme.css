@@ -1,0 +1,239 @@
+:root,
+[data-bs-theme=light] 
+{
+	--ph-body-color: #212529;
+
+	--ph-body-bg: #FFFFFF;
+	--ph-body-color-rgb: rgba(255, 255, 255, 1);
+
+	--ph-content-color: #000000;
+	--ph-content-bg: #FFFFFF;
+
+	/* Primary Color */
+
+	--ph-primary: #E01D24;
+	--ph-primary-rgb: rgba(224, 29, 36, 1);
+
+	--ph-primary-link: #E01D24;
+
+	--ph-primary-color-subtle: #E01D24;
+	--ph-primary-color-subtle-2: #E01D24;
+
+	--ph-primary-bg-subtle: #F9D2D3;
+	--ph-primary-bg-subtle-2: #FCE8E9;
+
+	--ph-primary-bg-subtle-color-mix: color-mix(in srgb, var(--ph-primary) 20%, transparent);
+	--ph-primary-bg-subtle-2-color-mix: color-mix(in srgb, var(--ph-primary) 10%, transparent);
+
+	--ph-primary-border-subtle: #F9D2D3;
+	--ph-primary-border-subtle: #FCE8E9;
+
+	--ph-primary-text-emphasis: #FFFFFF;
+
+	--ph-primary-hover-bg: #B9181E;
+	--ph-primary-hover-text: #FFFFFF;
+	--ph-primary-hover-border: #B9181E;
+
+	--ph-primary-focus-shadow-rgb: rgba(253, 243, 244, 1);
+
+	--ph-primary-active-bg: #E01D24;
+	--ph-primary-active-text: #FFFFFF;
+	--ph-primary-active-border: #E01D24;
+	--ph-primary-active-shadow: #FDF3F4;
+
+	--ph-primary-disable-bg: #EB6C70;
+	--ph-primary-disable-text: #FFFFFF;
+	--ph-primary-disable-border: #EB6C70;
+
+	/* Secondary Color  */
+
+	--ph-secondary: #00A4CB;
+	--ph-secondary-rgb: rgba(0, 164, 203, 1);
+
+	--ph-secondary-color-subtle: #006B84;
+	--ph-secondary-color-subtle-2: #006B84;
+
+	--ph-secondary-bg-subtle: #CCEDF5;
+	--ph-secondary-bg-subtle-2: #E5F6FA;
+
+	--ph-secondary-bg-subtle-color-mix: color-mix(in srgb, var(--ph-secondary) 20%, transparent);
+	--ph-secondary-bg-subtle-2-color-mix: color-mix(in srgb, var(--ph-secondary) 10%, transparent);
+	
+	--ph-secondary-border-subtle: #CCEDF5;
+	--ph-secondary-border-subtle-2: #E5F6FA;
+	
+	--ph-secondary-text-emphasis: #FFFFFF;
+
+	--ph-secondary-hover-bg: #0087A7;
+	--ph-secondary-hover-text: #FFFFFF;
+	--ph-secondary-hover-border: #0087A7;
+
+	--ph-secondary-focus-shadow-rgb: rgba(242, 250, 252, 1);
+
+	--ph-secondary-active-bg: #00A4CB;
+	--ph-secondary-active-text: #FFFFFF;
+	--ph-secondary-active-border: #00A4CB;
+	--ph-secondary-active-shadow: #F2FAFC;
+
+	--ph-secondary-disable-bg: #9BDBEA;
+	--ph-secondary-disable-text: #FFFFFF;
+	--ph-secondary-disable-border: #9BDBEA;
+
+	/* Callout Toast */
+
+	--ph-callout-bg: #FFFFFF;
+	--ph-callout-color: #000000;
+
+	--ph-callout-success-color: #04BB7B;
+	--ph-callout-danger-color: #DC3545;
+	--ph-callout-info-color: #0DCAF0;
+	--ph-callout-warning-color: #FFC107;
+
+	/* Default Modal CRUD  */
+
+	--ph-modal-create-width: 500px;
+	--ph-modal-read-width: 500px;
+	--ph-modal-update-width: 500px;
+	--ph-modal-delete-width: 425px;
+
+	/* Toast */
+
+	--ph-toast-success: #04bb7b;
+	--ph-toast-success-rgb: 4, 187, 123;
+	--ph-toast-danger: #dc3545;
+	--ph-toast-danger-rgb: 220, 53, 69;
+	--ph-toast-info: #0dcaf0;
+	--ph-toast-info-rgb: 13, 202, 240;
+	--ph-toast-warning: #ffc107;
+	--ph-toast-warning-rgb: 255, 193, 7;
+
+	/* Default Header Background Color  */
+
+	--page-header-background: #EC777B;
+
+	/* Other Variable CSS */
+
+	--vs-selected-bg: #F0F0F0;
+	--vs-controls-color: rgba(60, 60, 60, 0.5);
+
+	--vs-dropdown-bg: #FFFFFF;
+	--vs-dropdown-color: #000000;
+	--vs-dropdown-option-color: #000000;
+
+	--vs-dropdown-option--active-bg: #E01D24;
+	--vs-dropdown-option--active-color: #EEEEEE;
+}
+
+[data-bs-theme=dark] 
+{
+	--ph-body-color: #FFFFFF;
+
+	--ph-body-bg: #212529;
+	--ph-body-color-rgb: rgba(33, 37, 41, 1);
+
+	--ph-content-color: #FFFFFF;
+	--ph-content-bg: #36393D;
+
+	/* Primary Color  */
+
+	--ph-primary: #E01D24;
+	--ph-primary-rgb: rgba(224, 29, 36, 1);
+
+	--ph-primary-link: #EB6C71;
+
+	--ph-primary-color-subtle: #EB6C71;
+	--ph-primary-color-subtle-2: #EB6C71;
+
+	--ph-primary-bg-subtle: #472428;
+	--ph-primary-bg-subtle-2: #352429;
+
+	--ph-primary-bg-subtle-color-mix: background-color: color-mix(in srgb, var(--ph-primary) 20%, var(--ph-primary) 0%);
+	--ph-primary-bg-subtle-2-color-mix: background-color: color-mix(in srgb, var(--ph-primary) 10%, var(--ph-primary) 0%);
+
+	--ph-primary-border-subtle: #472428;
+	--ph-primary-border-subtle: #352429;
+
+	--ph-primary-text-emphasis: #FFFFFF;
+
+	--ph-primary-hover-bg: #FF2914;
+	--ph-primary-hover-text: #FFFFFF;
+	--ph-primary-hover-border: #FF2914;
+
+	--ph-primary-focus-shadow-rgb: rgba(253, 243, 244, 1);
+
+	--ph-primary-active-bg: #E01D24;
+	--ph-primary-active-text: #FFFFFF;
+	--ph-primary-active-border: #E01D24;
+	--ph-primary-active-shadow: #FDF3F4;
+
+	--ph-primary-disable-bg: #EB6C70;
+	--ph-primary-disable-text: #FFFFFF;
+	--ph-primary-disable-border: #EB6C70;
+
+	/* Secondary Color  */
+
+	--ph-secondary: #00A4CB;
+	--ph-secondary-rgb: rgba(0, 164, 203, 1);
+
+	--ph-secondary-color-subtle: #59c4dd;
+	--ph-secondary-color-subtle-2: #59c4dd;
+
+	--ph-secondary-bg-subtle: #1A3F4A;
+	--ph-secondary-bg-subtle-2: #1E323A;
+
+	--ph-secondary-bg-subtle-color-mix: color-mix(in srgb, var(--ph-secondary) 20%, transparent);
+	--ph-secondary-bg-subtle-2-color-mix: color-mix(in srgb, var(--ph-secondary) 10%, transparent);
+	
+	--ph-secondary-border-subtle: #CCEDF5;
+	--ph-secondary-border-subtle-2: #E5F6FA;
+	
+	--ph-secondary-text-emphasis: #FFFFFF;
+
+	--ph-secondary-hover-bg: #0087A7;
+	--ph-secondary-hover-text: #FFFFFF;
+	--ph-secondary-hover-border: #0087A7;
+
+	--ph-secondary-focus-shadow-rgb: rgba(242, 250, 252, 1);
+
+	--ph-secondary-active-bg: #00A4CB;
+	--ph-secondary-active-text: #FFFFFF;
+	--ph-secondary-active-border: #00A4CB;
+	--ph-secondary-active-shadow: #F2FAFC;
+
+	--ph-secondary-disable-bg: #9BDBEA;
+	--ph-secondary-disable-text: #FFFFFF;
+	--ph-secondary-disable-border: #9BDBEA;
+
+	/* Callout Toast */
+
+	--ph-callout-bg: #000000;
+	--ph-callout-color: #FFFFFF;
+
+	--ph-callout-success-color: #04BB7B;
+	--ph-callout-danger-color: #DC3545;
+	--ph-callout-info-color: #0DCAF0;
+	--ph-callout-warning-color: #FFC107;
+
+	/* Toast */
+
+	--ph-toast-success: #04bb7b;
+	--ph-toast-success-rgb: 4, 187, 123;
+	--ph-toast-danger: #dc3545;
+	--ph-toast-danger-rgb: 220, 53, 69;
+	--ph-toast-info: #0dcaf0;
+	--ph-toast-info-rgb: 13, 202, 240;
+	--ph-toast-warning: #ffc107;
+	--ph-toast-warning-rgb: 255, 193, 7;
+
+	/* Other Variable CSS */
+
+	--vs-selected-bg: #676767;
+	--vs-controls-color: rgba(255, 255, 255, 0.5);
+
+	--vs-dropdown-bg: #282C34;
+	--vs-dropdown-color: #FFFFFF;
+	--vs-dropdown-option-color: #FFFFFF;
+
+	--vs-dropdown-option--active-bg: #E01D24;
+	--vs-dropdown-option--active-color: #EEEEEE;
+}

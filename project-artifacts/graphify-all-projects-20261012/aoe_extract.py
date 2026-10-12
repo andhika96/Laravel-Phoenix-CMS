@@ -1,0 +1,96 @@
+"""Local structural extraction of AoE PER forms; never simulates gameplay."""
+import hashlib
+import re
+from pathlib import Path
+
+TOKEN=re.compile(r'"(?:\\.|[^"\\])*"|;[^\n]*|[()]|[^\s();]+')
+def forms(text):
+    tokens=[(m.group(),text.count('\n',0,m.start())+1) for m in TOKEN.finditer(text) if not m.group().startswith(';')]
+    def read(index):
+        token,line=tokens[index]
+        if token!='(':return token,line,index+1
+        values=[];index+=1
+        while index<len(tokens) and tokens[index][0]!=')':
+            value,_,index=read(index);values.append(value)
+        if index>=len(tokens):raise ValueError('Unclosed PER form at line '+str(line))
+        return values,line,index+1
+    result=[];index=0
+    while index<len(tokens):
+        if tokens[index][0]=='(':
+            value,line,index=read(index);result.append((value,line))
+        else:index+=1
+    return result
+
+def identity(kind,value):
+    return 'aoe_'+kind+'_'+hashlib.sha256(value.encode()).hexdigest()[:24]
+def namespace(rel):
+    return rel.split('/')[0] if '/' in rel else Path(rel).stem
+def atoms(value):
+    if isinstance(value,list):
+        for child in value:yield from atoms(child)
+    else:yield value
+def operators(value):
+    if isinstance(value,list):
+        if value and isinstance(value[0],str):yield value[0]
+        for child in value[1:]:yield from operators(child)
+
+def extract_aoe(changed,all_files,root):
+    root=Path(root);changed={p.relative_to(root).as_posix() for p in changed}
+    parsed={p.relative_to(root).as_posix():forms(p.read_text(encoding='utf-8-sig')) for p in all_files}
+    definitions={}
+    for rel,expressions in parsed.items():
+        for expression,line in expressions:
+            if expression and expression[0]=='defconst' and len(expression)>=3:
+                name=expression[1];key=(namespace(rel),name)
+                definitions.setdefault(key,[]).append((identity('constant',rel+':'+str(line)),rel,line,name))
+    nodes={};edges=[]
+    def node(ident,label,**data):
+        nodes[ident]={'id':ident,'label':label,'source_file':'','source_location':'','_origin':'local_aoe_structure',**data}
+        return ident
+    def edge(source,target,relation,rel,line,confidence='EXTRACTED'):
+        edges.append({'source':source,'target':target,'relation':relation,'confidence':confidence,'confidence_score':1.0 if confidence=='EXTRACTED' else 0.5,'weight':1.0,'source_file':rel,'source_location':'L'+str(line),'_origin':'local_aoe_structure','evidence':'Literal PER form/reference in current source; no gameplay inference'})
+    file_ids={rel:identity('file',rel) for rel in parsed}
+    for rel in sorted(changed):
+        file_id=node(file_ids[rel],rel,source_file=rel,source_location='L1',file_type='aoe_ai_marker' if rel.endswith('.ai') else 'aoe_per_file',representation='file_metadata_only' if rel.endswith('.ai') else 'local_per_structure',content_sha256=hashlib.sha256((root/rel).read_bytes()).hexdigest())
+        for expression,line in parsed[rel]:
+            if not expression:continue
+            head=expression[0]
+            if head=='defconst' and len(expression)>=3:
+                ident=identity('constant',rel+':'+str(line))
+                node(ident,expression[1],source_file=rel,source_location='L'+str(line),file_type='aoe_constant')
+                edge(file_id,ident,'defines_constant',rel,line)
+            elif head=='defrule':
+                ident=node(identity('rule',rel+':'+str(line)),Path(rel).stem+' defrule L'+str(line),source_file=rel,source_location='L'+str(line),file_type='aoe_rule')
+                edge(file_id,ident,'contains_rule',rel,line)
+                phase='condition_operator'
+                for child in expression[1:]:
+                    if child=='=>':phase='action_operator';continue
+                    for name in set(operators(child)):
+                        op=node(identity('operator',name),name,file_type='aoe_operator')
+                        edge(ident,op,phase,rel,line)
+                for name in set(atoms(expression[1:])):
+                    candidates=definitions.get((namespace(rel),name),[])
+                    for target,target_rel,target_line,label in candidates:
+                        if target not in nodes:
+                            node(target,label,file_type='aoe_constant_reference',**({'source_file':target_rel,'source_location':'L'+str(target_line)} if target_rel in changed else {}))
+                        edge(ident,target,'references_constant',rel,line,'EXTRACTED' if len(candidates)==1 else 'AMBIGUOUS')
+            elif head in ('load','load-random'):
+                for literal in expression[1:]:
+                    if not isinstance(literal,str) or not literal.startswith('"'):continue
+                    target=literal[1:-1].replace('\\','/')
+                    if not target.endswith('.per'):target+='.per'
+                    match=next((f for f in file_ids if f.lower()==target.lower()),None)
+                    if match:
+                        if match not in nodes and file_ids[match] not in nodes:
+                            node(file_ids[match],match,file_type='aoe_per_file',**({'source_file':match} if match in changed else {}))
+                        edge(file_id,file_ids[match],'loads_per_module',rel,line)
+    return {'nodes':list(nodes.values()),'edges':edges,'hyperedges':[]}
+
+def self_check():
+    parsed=forms('; ignore ( )\n(load "ArunikaAI_v4\\\\00-constants")\n(defrule (true) => (chat-to-all "; keep )"))')
+    assert len(parsed)==2 and parsed[1][0][0]=='defrule'
+    assert parsed[0][1]==2 and 'chat-to-all' in list(operators(parsed[1][0]))
+    try:forms('(defrule (true)')
+    except ValueError:pass
+    else:raise AssertionError('Unclosed PER form must be rejected')
+self_check()

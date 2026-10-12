@@ -78,7 +78,7 @@ final class ArticleTemplateOptions
                 'category' => $this->toolbarOption($input, 'category', $toolbarDefaults['category'][0], $toolbarDefaults['category'][1]),
             ],
             'thumbnail' => $this->thumbnail($input, $template),
-            'pagination' => $this->pagination($input),
+            'pagination' => $this->pagination($input, !in_array($template, ['minimal-reading-list', 'editorial-journal', 'mosaic-magazine', 'mosaic-classic', 'balanced-card-grid'], true)),
             'article_title' => [
                 'tag' => $this->headingTag(data_get($input, 'article_title.tag')),
             ],
@@ -159,7 +159,7 @@ final class ArticleTemplateOptions
             $result['show_reading_time'] = $this->boolean($input['show_reading_time'] ?? null, true);
             foreach (['desktop' => '22rem', 'tablet' => '20rem', 'mobile' => '15rem'] as $device => $default) {
                 $result['lead_height'][$device] = $this->dimension(data_get($input, 'lead_height.'.$device), $default, self::BORDER_UNITS);
-                $result['side_height'][$device] = $this->dimension(data_get($input, 'side_height.'.$device), '7rem', self::BORDER_UNITS);
+                $result['side_height'][$device] = $this->dimension(data_get($input, 'side_height.'.$device), $device === 'mobile' ? '14rem' : '7rem', self::BORDER_UNITS);
                 $result['highlight_height'][$device] = $this->dimension(data_get($input, 'highlight_height.'.$device), $device === 'mobile' ? '14rem' : '16rem', self::BORDER_UNITS);
             }
         } else {
@@ -356,7 +356,7 @@ final class ArticleTemplateOptions
         ];
     }
 
-    private function pagination(array $input): array
+    private function pagination(array $input, bool $frameEnabled = true): array
     {
         $position = data_get($input, 'pagination.position', 'right');
 
@@ -376,7 +376,7 @@ final class ArticleTemplateOptions
             'next_icon' => $this->paginationArrowIcon(data_get($input, 'pagination.next_icon'), 'fas fa-chevron-right'),
             'show_total' => $this->boolean(data_get($input, 'pagination.show_total'), true),
             'position' => in_array($position, self::POSITIONS, true) ? $position : 'right',
-            'frame' => $this->frame($input, 'pagination.frame', true, '#e6e9ef', '#ffffff'),
+            'frame' => $this->frame($input, 'pagination.frame', $frameEnabled, '#e6e9ef', '#ffffff'),
             'padding' => $this->responsiveBox($input, 'pagination.padding'),
             'margin' => $this->responsiveBox($input, 'pagination.margin'),
         ];

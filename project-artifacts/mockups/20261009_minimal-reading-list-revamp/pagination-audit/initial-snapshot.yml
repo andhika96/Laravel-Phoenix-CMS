@@ -1,0 +1,319 @@
+- generic [active] [ref=e1]:
+  - heading "Tiga model pagination aktif" [level=1] [ref=e2]
+  - paragraph [ref=e3]: "Snapshot CSS source aktif, settings sama pada semua template: radius .45rem, gap .45rem, footer frame aktif, warna default model. Ini pemeriksaan tampilan komponen; source aplikasi tidak diubah."
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - heading "Minimal Reading List" [level=2] [ref=e6]
+      - paragraph [ref=e7]: Minimal Underline
+      - navigation "Minimal Reading List Minimal Underline" [ref=e9]:
+        - list [ref=e12]:
+          - listitem [ref=e13]:
+            - generic [ref=e14]:
+              - generic [aria-hidden] [ref=e15]: 
+              - generic [ref=e16]: Previous
+          - listitem [ref=e17]:
+            - link "1" [ref=e18] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e19]:
+            - generic [ref=e20]: "2"
+          - listitem [ref=e21]:
+            - link "3" [ref=e22] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e23]:
+            - link "Next" [ref=e24] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e25]: 
+    - generic [ref=e27]:
+      - heading "Minimal Reading List" [level=2] [ref=e28]
+      - paragraph [ref=e29]: Classic Boxed
+      - navigation "Minimal Reading List Classic Boxed" [ref=e31]:
+        - list [ref=e34]:
+          - listitem [ref=e35]:
+            - generic [ref=e36]:
+              - generic [aria-hidden] [ref=e37]: 
+              - generic [ref=e38]: Previous
+          - listitem [ref=e39]:
+            - link "1" [ref=e40] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e41]:
+            - generic [ref=e42]: "2"
+          - listitem [ref=e43]:
+            - link "3" [ref=e44] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e45]:
+            - link "Next" [ref=e46] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e47]: 
+    - generic [ref=e49]:
+      - heading "Minimal Reading List" [level=2] [ref=e50]
+      - paragraph [ref=e51]: Soft Highlight
+      - navigation "Minimal Reading List Soft Highlight" [ref=e53]:
+        - list [ref=e56]:
+          - listitem [ref=e57]:
+            - generic [ref=e58]:
+              - generic [aria-hidden] [ref=e59]: 
+              - generic [ref=e60]: Previous
+          - listitem [ref=e61]:
+            - link "1" [ref=e62] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e63]:
+            - generic [ref=e64]: "2"
+          - listitem [ref=e65]:
+            - link "3" [ref=e66] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e67]:
+            - link "Next" [ref=e68] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e69]: 
+    - generic [ref=e71]:
+      - heading "Editorial Journal" [level=2] [ref=e72]
+      - paragraph [ref=e73]: Minimal Underline
+      - navigation "Editorial Journal Minimal Underline" [ref=e75]:
+        - list [ref=e78]:
+          - listitem [ref=e79]:
+            - generic [ref=e80]:
+              - generic [aria-hidden] [ref=e81]: 
+              - generic [ref=e82]: Previous
+          - listitem [ref=e83]:
+            - link "1" [ref=e84] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e85]:
+            - generic [ref=e86]: "2"
+          - listitem [ref=e87]:
+            - link "3" [ref=e88] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e89]:
+            - link "Next" [ref=e90] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e91]: 
+    - generic [ref=e93]:
+      - heading "Editorial Journal" [level=2] [ref=e94]
+      - paragraph [ref=e95]: Classic Boxed
+      - navigation "Editorial Journal Classic Boxed" [ref=e97]:
+        - list [ref=e100]:
+          - listitem [ref=e101]:
+            - generic [ref=e102]:
+              - generic [aria-hidden] [ref=e103]: 
+              - generic [ref=e104]: Previous
+          - listitem [ref=e105]:
+            - link "1" [ref=e106] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e107]:
+            - generic [ref=e108]: "2"
+          - listitem [ref=e109]:
+            - link "3" [ref=e110] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e111]:
+            - link "Next" [ref=e112] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e113]: 
+    - generic [ref=e115]:
+      - heading "Editorial Journal" [level=2] [ref=e116]
+      - paragraph [ref=e117]: Soft Highlight
+      - navigation "Editorial Journal Soft Highlight" [ref=e119]:
+        - list [ref=e122]:
+          - listitem [ref=e123]:
+            - generic [ref=e124]:
+              - generic [aria-hidden] [ref=e125]: 
+              - generic [ref=e126]: Previous
+          - listitem [ref=e127]:
+            - link "1" [ref=e128] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e129]:
+            - generic [ref=e130]: "2"
+          - listitem [ref=e131]:
+            - link "3" [ref=e132] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e133]:
+            - link "Next" [ref=e134] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e135]: 
+    - generic [ref=e137]:
+      - heading "Mosaic Magazine" [level=2] [ref=e138]
+      - paragraph [ref=e139]: Minimal Underline
+      - navigation "Mosaic Magazine Minimal Underline" [ref=e141]:
+        - list [ref=e144]:
+          - listitem [ref=e145]:
+            - generic [ref=e146]:
+              - generic [aria-hidden] [ref=e147]: 
+              - generic [ref=e148]: Previous
+          - listitem [ref=e149]:
+            - link "1" [ref=e150] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e151]:
+            - generic [ref=e152]: "2"
+          - listitem [ref=e153]:
+            - link "3" [ref=e154] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e155]:
+            - link "Next" [ref=e156] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e157]: 
+    - generic [ref=e159]:
+      - heading "Mosaic Magazine" [level=2] [ref=e160]
+      - paragraph [ref=e161]: Classic Boxed
+      - navigation "Mosaic Magazine Classic Boxed" [ref=e163]:
+        - list [ref=e166]:
+          - listitem [ref=e167]:
+            - generic [ref=e168]:
+              - generic [aria-hidden] [ref=e169]: 
+              - generic [ref=e170]: Previous
+          - listitem [ref=e171]:
+            - link "1" [ref=e172] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e173]:
+            - generic [ref=e174]: "2"
+          - listitem [ref=e175]:
+            - link "3" [ref=e176] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e177]:
+            - link "Next" [ref=e178] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e179]: 
+    - generic [ref=e181]:
+      - heading "Mosaic Magazine" [level=2] [ref=e182]
+      - paragraph [ref=e183]: Soft Highlight
+      - navigation "Mosaic Magazine Soft Highlight" [ref=e185]:
+        - list [ref=e188]:
+          - listitem [ref=e189]:
+            - generic [ref=e190]:
+              - generic [aria-hidden] [ref=e191]: 
+              - generic [ref=e192]: Previous
+          - listitem [ref=e193]:
+            - link "1" [ref=e194] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e195]:
+            - generic [ref=e196]: "2"
+          - listitem [ref=e197]:
+            - link "3" [ref=e198] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e199]:
+            - link "Next" [ref=e200] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e201]: 
+    - generic [ref=e203]:
+      - heading "Mosaic Classic" [level=2] [ref=e204]
+      - paragraph [ref=e205]: Minimal Underline
+      - navigation "Mosaic Classic Minimal Underline" [ref=e207]:
+        - list [ref=e210]:
+          - listitem [ref=e211]:
+            - generic [ref=e212]:
+              - generic [aria-hidden] [ref=e213]: 
+              - generic [ref=e214]: Previous
+          - listitem [ref=e215]:
+            - link "1" [ref=e216] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e217]:
+            - generic [ref=e218]: "2"
+          - listitem [ref=e219]:
+            - link "3" [ref=e220] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e221]:
+            - link "Next" [ref=e222] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e223]: 
+    - generic [ref=e225]:
+      - heading "Mosaic Classic" [level=2] [ref=e226]
+      - paragraph [ref=e227]: Classic Boxed
+      - navigation "Mosaic Classic Classic Boxed" [ref=e229]:
+        - list [ref=e232]:
+          - listitem [ref=e233]:
+            - generic [ref=e234]:
+              - generic [aria-hidden] [ref=e235]: 
+              - generic [ref=e236]: Previous
+          - listitem [ref=e237]:
+            - link "1" [ref=e238] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e239]:
+            - generic [ref=e240]: "2"
+          - listitem [ref=e241]:
+            - link "3" [ref=e242] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e243]:
+            - link "Next" [ref=e244] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e245]: 
+    - generic [ref=e247]:
+      - heading "Mosaic Classic" [level=2] [ref=e248]
+      - paragraph [ref=e249]: Soft Highlight
+      - navigation "Mosaic Classic Soft Highlight" [ref=e251]:
+        - list [ref=e254]:
+          - listitem [ref=e255]:
+            - generic [ref=e256]:
+              - generic [aria-hidden] [ref=e257]: 
+              - generic [ref=e258]: Previous
+          - listitem [ref=e259]:
+            - link "1" [ref=e260] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e261]:
+            - generic [ref=e262]: "2"
+          - listitem [ref=e263]:
+            - link "3" [ref=e264] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e265]:
+            - link "Next" [ref=e266] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e267]: 
+    - generic [ref=e269]:
+      - heading "Balanced Card Grid" [level=2] [ref=e270]
+      - paragraph [ref=e271]: Minimal Underline
+      - navigation "Balanced Card Grid Minimal Underline" [ref=e273]:
+        - list [ref=e276]:
+          - listitem [ref=e277]:
+            - generic [ref=e278]:
+              - generic [aria-hidden] [ref=e279]: 
+              - generic [ref=e280]: Previous
+          - listitem [ref=e281]:
+            - link "1" [ref=e282] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e283]:
+            - generic [ref=e284]: "2"
+          - listitem [ref=e285]:
+            - link "3" [ref=e286] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e287]:
+            - link "Next" [ref=e288] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e289]: 
+    - generic [ref=e291]:
+      - heading "Balanced Card Grid" [level=2] [ref=e292]
+      - paragraph [ref=e293]: Classic Boxed
+      - navigation "Balanced Card Grid Classic Boxed" [ref=e295]:
+        - list [ref=e298]:
+          - listitem [ref=e299]:
+            - generic [ref=e300]:
+              - generic [aria-hidden] [ref=e301]: 
+              - generic [ref=e302]: Previous
+          - listitem [ref=e303]:
+            - link "1" [ref=e304] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e305]:
+            - generic [ref=e306]: "2"
+          - listitem [ref=e307]:
+            - link "3" [ref=e308] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e309]:
+            - link "Next" [ref=e310] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e311]: 
+    - generic [ref=e313]:
+      - heading "Balanced Card Grid" [level=2] [ref=e314]
+      - paragraph [ref=e315]: Soft Highlight
+      - navigation "Balanced Card Grid Soft Highlight" [ref=e317]:
+        - list [ref=e320]:
+          - listitem [ref=e321]:
+            - generic [ref=e322]:
+              - generic [aria-hidden] [ref=e323]: 
+              - generic [ref=e324]: Previous
+          - listitem [ref=e325]:
+            - link "1" [ref=e326] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e327]:
+            - generic [ref=e328]: "2"
+          - listitem [ref=e329]:
+            - link "3" [ref=e330] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e331]:
+            - link "Next" [ref=e332] [cursor=pointer]:
+              - /url: "#"
+              - generic [aria-hidden] [ref=e333]: 

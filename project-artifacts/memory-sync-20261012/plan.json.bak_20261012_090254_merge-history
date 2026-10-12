@@ -1,0 +1,52 @@
+{
+  "chats": 165,
+  "actions": {
+    "memori-baru-belum-terhubung-ID": 47,
+    "pembaruan-memori": 118
+  },
+  "projects": {
+    "laravel-12-phoenix": 11,
+    "Laravel 13 Phoenix": 69,
+    "Laravel 13 CRM": 1,
+    "Tanpa project": 28,
+    "Age of Empire II DE": 8,
+    "Laravel 13 GEN21 AI CMS": 1,
+    "New MG (chat tanpa project)": 1,
+    "New MG [SSD Portable]": 1,
+    "New MG [Laptop]": 3,
+    "LaraPhoenix Web Game": 1,
+    "laravel-11-cms-bum": 2,
+    "Laravel 13 CMS BUM": 36,
+    "Laravel 13 CMS BUM NextJS": 1,
+    "Tanpa project (cloud)": 2
+  },
+  "errors": [],
+  "no_final": [
+    [
+      "01a04398-77b8-7640-9634-0207b5c16ff6",
+      "Audit bug Page Builder v2.4"
+    ],
+    [
+      "01a05c96-9d8e-7323-a786-c2e228baedb0",
+      "ChatGPT bantu saya untuk mengubah kalimat yang ada disurat pengunduran diri ini, diubah agar tidak sama, untuk nama dan tanggalnya biar saya"
+    ],
+    [
+      "01a06e7f-bcce-7ac2-b67b-a1f4ed03f669",
+      "Revamp UI UX Manage Template"
+    ],
+    [
+      "01a08a31-5b43-7d33-bff4-e84ae39ff110",
+      "ChatGPT bisa kamu lihat gambar SS saya ini, saya ingin kamu…"
+    ],
+    [
+      "01a11a40-9fe6-74d2-90b0-7e86b417c3d6",
+      "Rancang plan sistem API MKTI"
+    ]
+  ],
+  "messages": 3905,
+  "history_sources": {
+    "database-history": 162,
+    "rollout-or-cloud": 3
+  },
+  "current_chat_excluded": "01a12dcb-7978-7970-8d53-0fd4bce07a76"
+}

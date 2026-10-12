@@ -28,6 +28,10 @@
             <div class="article-reading-list__main">
                 <div class="article-vue-list-state-slot" data-article-vue-list-state-slot></div>
                 <div data-article-vue-list-content>
+                    <div class="article-reading-list__heading">
+                        <h2>{{ request()->filled('search') ? t('Search results') : t('All articles') }}</h2>
+                        <span>{{ number_format($articles->total()) }} {{ t('articles') }}</span>
+                    </div>
                     <div class="article-reading-list" data-article-list style="--article-reading-list-post-gap:{{ $postListGap }}">
                         @forelse ($articles as $article)
                             @php($readingMinutes = max(1, (int) ceil(str_word_count(strip_tags((string) $article->content)) / 220)))

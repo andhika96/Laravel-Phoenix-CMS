@@ -1,0 +1,77 @@
+[
+    {
+        "template": "minimal-reading-list",
+        "type": "boxed",
+        "file": "pagination-minimal-reading-list-boxed.html"
+    },
+    {
+        "template": "minimal-reading-list",
+        "type": "underline",
+        "file": "pagination-minimal-reading-list-underline.html"
+    },
+    {
+        "template": "minimal-reading-list",
+        "type": "soft",
+        "file": "pagination-minimal-reading-list-soft.html"
+    },
+    {
+        "template": "editorial-journal",
+        "type": "boxed",
+        "file": "pagination-editorial-journal-boxed.html"
+    },
+    {
+        "template": "editorial-journal",
+        "type": "underline",
+        "file": "pagination-editorial-journal-underline.html"
+    },
+    {
+        "template": "editorial-journal",
+        "type": "soft",
+        "file": "pagination-editorial-journal-soft.html"
+    },
+    {
+        "template": "mosaic-magazine",
+        "type": "boxed",
+        "file": "pagination-mosaic-magazine-boxed.html"
+    },
+    {
+        "template": "mosaic-magazine",
+        "type": "underline",
+        "file": "pagination-mosaic-magazine-underline.html"
+    },
+    {
+        "template": "mosaic-magazine",
+        "type": "soft",
+        "file": "pagination-mosaic-magazine-soft.html"
+    },
+    {
+        "template": "mosaic-classic",
+        "type": "boxed",
+        "file": "pagination-mosaic-classic-boxed.html"
+    },
+    {
+        "template": "mosaic-classic",
+        "type": "underline",
+        "file": "pagination-mosaic-classic-underline.html"
+    },
+    {
+        "template": "mosaic-classic",
+        "type": "soft",
+        "file": "pagination-mosaic-classic-soft.html"
+    },
+    {
+        "template": "balanced-card-grid",
+        "type": "boxed",
+        "file": "pagination-balanced-card-grid-boxed.html"
+    },
+    {
+        "template": "balanced-card-grid",
+        "type": "underline",
+        "file": "pagination-balanced-card-grid-underline.html"
+    },
+    {
+        "template": "balanced-card-grid",
+        "type": "soft",
+        "file": "pagination-balanced-card-grid-soft.html"
+    }
+]

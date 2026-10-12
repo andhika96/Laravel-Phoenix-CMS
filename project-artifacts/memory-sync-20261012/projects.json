@@ -1,0 +1,44 @@
+{
+  "projects": [
+    {
+      "path": "D:\\Laragon\\www\\laravel-13-cms-bum-next",
+      "label": "Laravel 13 CMS BUM NextJS"
+    },
+    {
+      "path": "D:\\Laragon\\www\\laravel-13-cms-bum",
+      "label": "Laravel 13 CMS BUM"
+    },
+    {
+      "path": "D:\\Laragon\\www\\laravel-13-phoenix-standalone",
+      "label": "Laravel 13 Phoenix Standalone"
+    },
+    {
+      "path": "C:\\Users\\aruna\\Documents\\ChatGPT\\LaraPhoenix Web Game",
+      "label": "LaraPhoenix Web Game"
+    },
+    {
+      "path": "D:\\Laragon\\www\\newmg",
+      "label": "New MG [Laptop]"
+    },
+    {
+      "path": "E:\\Apps\\Laragon\\www\\newmg",
+      "label": "New MG [SSD Portable]"
+    },
+    {
+      "path": "D:\\Laragon\\www\\laravel-13-gen21ai-cms",
+      "label": "Laravel 13 GEN21 AI CMS"
+    },
+    {
+      "path": "C:\\Users\\aruna\\Documents\\Age of Empire II DE",
+      "label": "Age of Empire II DE"
+    },
+    {
+      "path": "D:\\Laragon\\www\\laravel-13-crm",
+      "label": "Laravel 13 CRM"
+    },
+    {
+      "path": "D:\\Laragon\\www\\laravel-13-phoenix",
+      "label": "Laravel 13 Phoenix"
+    }
+  ]
+}

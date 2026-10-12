@@ -1,0 +1,15 @@
+ M app/Support/Article/ArticleTemplateOptions.php
+ M public/assets/css/article/article-frontend-2026.css
+ M public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js
+ M resources/views/article/templates/archive/editorial-journal.blade.php
+ M resources/views/article/templates/archive/minimal-reading-list.blade.php
+ M resources/views/article/templates/partials/archive-header.blade.php
+ M tests/Feature/Article/ArticleTemplateOptionsTest.php
+ M tests/article-minimal-reading-list-sidebar.test.mjs
+ M tests/article-template-presentation.test.mjs
+ M tests/article-theme-link-isolation.test.mjs
+?? project-artifacts/memory-sync-20261012/
+?? project-artifacts/mockups/20261009_minimal-reading-list-revamp/
+?? project-artifacts/mockups/20261011_balanced-card-grid-revamp/
+?? project-artifacts/mockups/20261011_editorial-journal-revamp/
+?? project-artifacts/mockups/20261011_mosaic-templates-revamp/

@@ -1,0 +1,144 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - paragraph [ref=e6]: Explore
+      - heading "Balanced Card Grid" [level=1] [ref=e7]
+    - generic [ref=e8]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: Category
+        - combobox "Category" [ref=e12]:
+          - option "All categories" [selected]
+          - option "Technology"
+          - option "Design"
+          - option "Travel"
+          - option "Workplace"
+          - option "Wellbeing"
+          - option "Knowledge"
+      - generic [ref=e14]:
+        - generic [ref=e15]: Search articles
+        - searchbox "Search articles" [ref=e16]
+        - button "Search" [ref=e17] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e18]: 
+  - generic [ref=e21]:
+    - article [ref=e22]:
+      - link "Building Resilient Systems at Scale" [ref=e23] [cursor=pointer]:
+        - /url: http://laravel-13-phoenix.aruna/article/preview-resilient-systems
+      - generic [ref=e25]:
+        - generic [ref=e26]: Technology
+        - heading [level=4] [ref=e27]:
+          - link "Building Resilient Systems at Scale" [ref=e28] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/article/preview-resilient-systems
+        - paragraph [ref=e29]: Resilience is not a feature added at the end of delivery. It is the accumulated result of clear priorities, observability, and teams that make room for learning. Reliable experiences are built in small, deliberate decisions—long before the moment they are tested. Define realistic scenarios Start wit...
+        - generic [ref=e30]:
+          - time [ref=e31]: 24 Aug 2026
+          - 'link "Read article : Building Resilient Systems at Scale" [ref=e32] [cursor=pointer]':
+            - /url: http://laravel-13-phoenix.aruna/article/preview-resilient-systems
+            - text: Read article
+            - generic [aria-hidden] [ref=e33]: 
+            - generic [ref=e34]: ": Building Resilient Systems at Scale"
+    - article [ref=e35]:
+      - link "Designing Spaces That Last Beyond a Trend Cycle" [ref=e36] [cursor=pointer]:
+        - /url: http://laravel-13-phoenix.aruna/article/preview-designs-that-last
+      - generic [ref=e38]:
+        - generic [ref=e39]: Design
+        - heading [level=4] [ref=e40]:
+          - link "Designing Spaces That Last Beyond a Trend Cycle" [ref=e41] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/article/preview-designs-that-last
+        - paragraph [ref=e42]: How calmer visual systems help teams make more confident product decisions.
+        - generic [ref=e43]:
+          - time [ref=e44]: 22 Aug 2026
+          - 'link "Read article : Designing Spaces That Last Beyond a Trend Cycle" [ref=e45] [cursor=pointer]':
+            - /url: http://laravel-13-phoenix.aruna/article/preview-designs-that-last
+            - text: Read article
+            - generic [aria-hidden] [ref=e46]: 
+            - generic [ref=e47]: ": Designing Spaces That Last Beyond a Trend Cycle"
+    - article [ref=e48]:
+      - link "Slow Adventures Along the Coastal Road" [ref=e49] [cursor=pointer]:
+        - /url: http://laravel-13-phoenix.aruna/article/preview-slow-coastal-travel
+      - generic [ref=e51]:
+        - generic [ref=e52]: Travel
+        - heading [level=4] [ref=e53]:
+          - link "Slow Adventures Along the Coastal Road" [ref=e54] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/article/preview-slow-coastal-travel
+        - paragraph [ref=e55]: A quieter way to build memorable journeys around place, pace, and perspective.
+        - generic [ref=e56]:
+          - time [ref=e57]: 20 Aug 2026
+          - 'link "Read article : Slow Adventures Along the Coastal Road" [ref=e58] [cursor=pointer]':
+            - /url: http://laravel-13-phoenix.aruna/article/preview-slow-coastal-travel
+            - text: Read article
+            - generic [aria-hidden] [ref=e59]: 
+            - generic [ref=e60]: ": Slow Adventures Along the Coastal Road"
+    - article [ref=e61]:
+      - link "What Hybrid Teams Need to Do Their Best Work" [ref=e62] [cursor=pointer]:
+        - /url: http://laravel-13-phoenix.aruna/article/preview-hybrid-work
+      - generic [ref=e64]:
+        - generic [ref=e65]: Workplace
+        - heading [level=4] [ref=e66]:
+          - link "What Hybrid Teams Need to Do Their Best Work" [ref=e67] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/article/preview-hybrid-work
+        - paragraph [ref=e68]: Small operating principles that make collaboration more deliberate and humane.
+        - generic [ref=e69]:
+          - time [ref=e70]: 18 Aug 2026
+          - 'link "Read article : What Hybrid Teams Need to Do Their Best Work" [ref=e71] [cursor=pointer]':
+            - /url: http://laravel-13-phoenix.aruna/article/preview-hybrid-work
+            - text: Read article
+            - generic [aria-hidden] [ref=e72]: 
+            - generic [ref=e73]: ": What Hybrid Teams Need to Do Their Best Work"
+    - article [ref=e74]:
+      - link "The Rituals That Give Busy Days More Room" [ref=e75] [cursor=pointer]:
+        - /url: http://laravel-13-phoenix.aruna/article/preview-wellbeing
+      - generic [ref=e77]:
+        - generic [ref=e78]: Wellbeing
+        - heading [level=4] [ref=e79]:
+          - link "The Rituals That Give Busy Days More Room" [ref=e80] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/article/preview-wellbeing
+        - paragraph [ref=e81]: A grounded perspective on attention, recovery, and everyday wellbeing.
+        - generic [ref=e82]:
+          - time [ref=e83]: 16 Aug 2026
+          - 'link "Read article : The Rituals That Give Busy Days More Room" [ref=e84] [cursor=pointer]':
+            - /url: http://laravel-13-phoenix.aruna/article/preview-wellbeing
+            - text: Read article
+            - generic [aria-hidden] [ref=e85]: 
+            - generic [ref=e86]: ": The Rituals That Give Busy Days More Room"
+    - article [ref=e87]:
+      - link "Patterns, Principles, and the Practice of Better Decisions" [ref=e88] [cursor=pointer]:
+        - /url: http://laravel-13-phoenix.aruna/article/preview-patterns-and-principles
+      - generic [ref=e90]:
+        - generic [ref=e91]: Knowledge
+        - heading [level=4] [ref=e92]:
+          - link "Patterns, Principles, and the Practice of Better Decisions" [ref=e93] [cursor=pointer]:
+            - /url: http://laravel-13-phoenix.aruna/article/preview-patterns-and-principles
+        - paragraph [ref=e94]: A structured reading experience for material that benefits from a clear outline.
+        - generic [ref=e95]:
+          - time [ref=e96]: 14 Aug 2026
+          - 'link "Read article : Patterns, Principles, and the Practice of Better Decisions" [ref=e97] [cursor=pointer]':
+            - /url: http://laravel-13-phoenix.aruna/article/preview-patterns-and-principles
+            - text: Read article
+            - generic [aria-hidden] [ref=e98]: 
+            - generic [ref=e99]: ": Patterns, Principles, and the Practice of Better Decisions"
+  - navigation "Article pagination" [ref=e100]:
+    - generic [ref=e101]:
+      - paragraph [ref=e102]:
+        - strong [ref=e103]: "Total Data: 48"
+        - generic [ref=e104]: Showing 1–6 of 48 articles
+      - list [ref=e106]:
+        - listitem [ref=e107]:
+          - generic:
+            - generic [aria-hidden]: 
+            - generic: Previous
+        - listitem [ref=e108]:
+          - generic [ref=e109]: "1"
+        - listitem [ref=e110]:
+          - link "Page 2" [ref=e111] [cursor=pointer]:
+            - /url: /article?page=2
+            - text: "2"
+        - listitem [ref=e112]:
+          - generic [aria-hidden]: …
+        - listitem [ref=e113]:
+          - link "Last page" [ref=e114] [cursor=pointer]:
+            - /url: /article?page=8
+            - text: "8"
+        - listitem [ref=e115]:
+          - link "Next" [ref=e116] [cursor=pointer]:
+            - /url: /article?page=2
+            - generic [aria-hidden] [ref=e117]: 

@@ -155,11 +155,12 @@ class FileManagerV2Controller extends Controller
             'storage' => ['required', 'string', 'max:40'],
             'path' => ['nullable', 'string', 'max:2000'],
             'file' => ['required', 'file'],
+            'checksum' => ['nullable', 'regex:/^[a-fA-F0-9]{64}$/'],
             'batchId' => ['nullable', 'uuid'],
             'idempotencyKey' => ['nullable', 'string', 'max:120'],
         ]);
 
-        return response()->json(['data' => $this->storage->upload($validated['storage'], $validated['path'] ?? '', $request->file('file'), $validated['batchId'] ?? null, $validated['idempotencyKey'] ?? null)], 201);
+        return response()->json(['data' => $this->storage->upload($validated['storage'], $validated['path'] ?? '', $request->file('file'), $validated['batchId'] ?? null, $validated['idempotencyKey'] ?? null, $validated['checksum'] ?? null)], 201);
     }
 
     public function startUpload(Request $request): JsonResponse
@@ -196,6 +197,7 @@ class FileManagerV2Controller extends Controller
             'folders.*' => ['required', 'string', 'max:2000'],
             'totalBytes' => ['required', 'integer', 'min:1'],
             'fileCount' => ['required', 'integer', 'min:1', 'max:100000'],
+            'idempotencyKey' => ['nullable', 'string', 'max:120'],
         ]);
 
         return response()->json(['data' => $this->storage->beginFolderUploadBatch(
@@ -204,6 +206,7 @@ class FileManagerV2Controller extends Controller
             $validated['folders'],
             $validated['totalBytes'],
             $validated['fileCount'],
+            $validated['idempotencyKey'] ?? null,
         )], 201);
     }
 
@@ -214,9 +217,9 @@ class FileManagerV2Controller extends Controller
 
     public function uploadChunk(Request $request, string $upload, int $part): JsonResponse
     {
-        $request->validate(['chunk' => ['required', 'file']]);
+        $validated = $request->validate(['chunk' => ['required', 'file'], 'checksum' => ['nullable', 'regex:/^[a-fA-F0-9]{64}$/']]);
 
-        return response()->json(['data' => $this->storage->storeChunk($upload, $part, $request->file('chunk'))]);
+        return response()->json(['data' => $this->storage->storeChunk($upload, $part, $request->file('chunk'), $validated['checksum'] ?? null)]);
     }
 
     public function completeUpload(string $upload): JsonResponse

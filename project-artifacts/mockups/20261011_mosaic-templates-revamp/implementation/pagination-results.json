@@ -1,0 +1,65 @@
+{
+  "passed": 27,
+  "templates": [
+    "minimal-reading-list",
+    "editorial-journal",
+    "mosaic-magazine",
+    "mosaic-classic",
+    "balanced-card-grid"
+  ],
+  "checks": [
+    "minimal-reading-list boxed uses 44px controls",
+    "minimal-reading-list underline uses 44px controls",
+    "minimal-reading-list soft uses 44px controls",
+    "editorial-journal boxed uses 44px controls",
+    "editorial-journal boxed matches the shared model",
+    "editorial-journal underline uses 44px controls",
+    "editorial-journal underline matches the shared model",
+    "editorial-journal soft uses 44px controls",
+    "editorial-journal soft matches the shared model",
+    "mosaic-magazine boxed uses 44px controls",
+    "mosaic-magazine boxed matches the shared model",
+    "mosaic-magazine underline uses 44px controls",
+    "mosaic-magazine underline matches the shared model",
+    "mosaic-magazine soft uses 44px controls",
+    "mosaic-magazine soft matches the shared model",
+    "mosaic-classic boxed uses 44px controls",
+    "mosaic-classic boxed matches the shared model",
+    "mosaic-classic underline uses 44px controls",
+    "mosaic-classic underline matches the shared model",
+    "mosaic-classic soft uses 44px controls",
+    "mosaic-classic soft matches the shared model",
+    "balanced-card-grid boxed uses 44px controls",
+    "balanced-card-grid boxed matches the shared model",
+    "balanced-card-grid underline uses 44px controls",
+    "balanced-card-grid underline matches the shared model",
+    "balanced-card-grid soft uses 44px controls",
+    "balanced-card-grid soft matches the shared model"
+  ],
+  "reference": {
+    "boxed": {
+      "height": 44,
+      "border": "1px",
+      "radius": "7.2px",
+      "background": "rgb(19, 126, 94)",
+      "color": "rgb(255, 255, 255)",
+      "fontSize": "11.7px"
+    },
+    "underline": {
+      "height": 44,
+      "border": "2px",
+      "radius": "0px",
+      "background": "rgba(0, 0, 0, 0)",
+      "color": "rgb(23, 32, 51)",
+      "fontSize": "11.7px"
+    },
+    "soft": {
+      "height": 44,
+      "border": "1px",
+      "radius": "7.2px",
+      "background": "color(srgb 0.944471 0.969647 0.962118)",
+      "color": "color(srgb 0.0655686 0.434824 0.324392)",
+      "fontSize": "11.7px"
+    }
+  }
+}

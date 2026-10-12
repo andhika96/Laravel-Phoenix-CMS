@@ -622,7 +622,7 @@ async function startFolderUpload(fileList) {
 }
 
 function handleFolderUploadInput(event) {
-  void startFolderUpload(event.target.files);
+  void startFolderUpload(event.target.files).catch((error) => notify(error.message, 'failed'));
   event.target.value = '';
 }
 
@@ -684,7 +684,10 @@ async function onPondDone({ id, asset, storage }) {
 
 function onPondFailed({ id, message }) {
   const item = uploads.value.find((candidate) => candidate.id === id);
-  if (!item) return;
+  if (!item) {
+    notify(message, 'failed');
+    return;
+  }
   item.status = 'error';
   item.error = message;
   notify(message, 'failed');

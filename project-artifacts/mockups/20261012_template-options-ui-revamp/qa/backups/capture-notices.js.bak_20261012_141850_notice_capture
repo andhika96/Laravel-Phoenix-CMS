@@ -1,0 +1,13 @@
+async page => {
+  const output='D:/Laragon/www/laravel-13-phoenix/project-artifacts/mockups/20261012_template-options-ui-revamp/qa/';
+  const checks=[];
+  await page.setViewportSize({width:1600,height:1000});await page.locator('#prototype-template').selectOption('archive:minimal-reading-list');await page.waitForFunction(()=>!window.prototypeVm.modalPreviewLoading);
+  await page.evaluate(()=>window.prototypeVm.setOptionsSection('header'));
+  for(const status of ['success','warning','failed']){
+    await page.evaluate(value=>window.prototypeVm.prototypeNotify(value),status);await page.waitForFunction(()=>parseFloat(getComputedStyle(document.querySelector('.ph-notice-toast')).opacity)>.95);
+    const onTop=await page.locator('.ph-notice-toast').evaluate(element=>{const box=element.getBoundingClientRect();return document.elementFromPoint(box.left+20,box.top+40)?.closest('.ph-notice-toast')===element;});
+    if(!onTop)throw new Error(status+' toast is covered');checks.push(status+' CMS toast is fully visible above the modal');
+    await page.screenshot({path:output+'notice-'+status+'.png'});await page.locator('.ph-notice-toast [data-bs-dismiss=toast]').click();
+  }
+  await page.evaluate(results=>{window.__noticeVisibilityResults=results;},{passed:checks.length,checks});
+}

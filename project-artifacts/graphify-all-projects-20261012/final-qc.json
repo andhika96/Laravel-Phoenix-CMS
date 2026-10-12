@@ -1,0 +1,990 @@
+{
+  "results": [
+    {
+      "ok": true,
+      "label": "Laravel 13 Phoenix",
+      "root": "D:\\Laragon\\www\\laravel-13-phoenix",
+      "nodes": 21020,
+      "edges": 37039,
+      "represented_files": 1701,
+      "code_files": 1617,
+      "metadata_files": 78,
+      "historical_active_file_references_verified": 763,
+      "code_files_metadata_only": [
+        "resources/data/pagebuilder_elementor_v23_shapes.json",
+        "resources/data/pagebuilder_elementor_v24_shapes.json",
+        "resources/pagebuilder_elementor_v24/modules/layout/container-fluid/module.json",
+        "resources/pagebuilder_elementor_v24/modules/layout/container/module.json",
+        "resources/pagebuilder_elementor_v24/modules/layout/grid/module.json",
+        "resources/pagebuilder_elementor_v24/modules/layout/row-grid/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/basic/button/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/basic/divider/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/basic/google-maps/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/basic/heading/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/basic/icon/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/basic/image/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/basic/spacer/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/basic/text-editor/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/basic/video/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/accordion/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/alert/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/basic-gallery/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/counter/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/event-highlight/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/event-highlights-grid/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/event-media-grid/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/feature-showcase/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/icon-box/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/icon-list/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/image-box/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/image-carousel/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/progress-bar/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/rating/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/social-icons/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/tabs/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/testimonial/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/general/text-path/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/animated-headline/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/blockquote/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/call-to-action/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/carousel/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/code-highlight/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/countdown/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/flip-box/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/form/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-banner/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-slider/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/hotspot/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/media-carousel/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/price-list/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/price-table/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/product-color-selector/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/product-lead-form/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/progress-tracker/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/reviews/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/share-buttons/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/slides/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/testimonial-carousel/module.json",
+        "resources/pagebuilder_elementor_v24/modules/widgets/pro/video-playlist/module.json",
+        "tests/Fixtures/PageBuilderElementorV24Modules/widgets/basic/button/module.json"
+      ],
+      "backup_files_verified": 19,
+      "source_preserved": true,
+      "head_and_staged_content_preserved": true,
+      "unchanged_nodes_preserved": true,
+      "offline_script": true,
+      "duplicate_ids": 0,
+      "dangling_edges": 0,
+      "hash_mismatch": 0,
+      "confidence": {
+        "EXTRACTED": 35762,
+        "INFERRED": 1277
+      },
+      "graph_sha256": "888cbe27c90dcf88c10ab92c4fa311422e17e128c7f82981cb0dd1799b59f1ff",
+      "health": {
+        "node_count": 21020,
+        "unverified_node_count": 0,
+        "raw_edge_count": 37039,
+        "non_object_edges": 0,
+        "missing_endpoint_edges": 0,
+        "dangling_endpoint_edges": 0,
+        "self_loop_edges": 0,
+        "valid_candidate_edges": 37039,
+        "exact_duplicate_edges": 0,
+        "directed_unique_endpoint_pairs": 37039,
+        "directed_same_endpoint_collapsed_edges": 0,
+        "undirected_unique_endpoint_pairs": 37039,
+        "undirected_same_endpoint_collapsed_edges": 0,
+        "same_endpoint_group_count": 0,
+        "relation_variant_groups": 0,
+        "source_file_variant_groups": 0,
+        "source_location_variant_groups": 0,
+        "context_variant_groups": 0,
+        "post_build_graph_type": "Graph",
+        "post_build_node_count": 21020,
+        "post_build_edge_count": 37039,
+        "post_build_error": "",
+        "producer_suppression": {
+          "path": "C:\\Users\\aruna\\AppData\\Roaming\\uv\\tools\\graphifyy\\Lib\\site-packages\\graphify\\extract.py",
+          "total_sites": 10,
+          "sites": [
+            {
+              "line": 1047,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1197,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1199,
+              "name": "seen_doc_refs",
+              "tuple_arity": 0,
+              "sample": "seen_doc_refs: set[str] = set()"
+            },
+            {
+              "line": 1622,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 2091,
+              "name": "seen_keys",
+              "tuple_arity": 0,
+              "sample": "seen_keys: set[tuple] = set()"
+            },
+            {
+              "line": 3014,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3122,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3201,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3696,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3697,
+              "name": "seen_edges",
+              "tuple_arity": 4,
+              "sample": "seen_edges: set[tuple[str, str, str, str | None]] = set()"
+            }
+          ],
+          "error": ""
+        },
+        "examples": []
+      },
+      "runtime_retested": false
+    },
+    {
+      "ok": true,
+      "label": "Laravel 13 CMS BUM",
+      "root": "D:\\Laragon\\www\\laravel-13-cms-bum",
+      "nodes": 10320,
+      "edges": 22437,
+      "represented_files": 1899,
+      "code_files": 1844,
+      "metadata_files": 55,
+      "historical_active_file_references_verified": 120,
+      "code_files_metadata_only": [
+        "tests/Fixtures/harvest_load_snapshot.json",
+        "tests/manual/reconciliation-e2e-2026-10-01.json"
+      ],
+      "backup_files_verified": 15,
+      "source_preserved": true,
+      "head_and_staged_content_preserved": true,
+      "unchanged_nodes_preserved": true,
+      "offline_script": true,
+      "duplicate_ids": 0,
+      "dangling_edges": 0,
+      "hash_mismatch": 0,
+      "confidence": {
+        "EXTRACTED": 20907,
+        "INFERRED": 1530
+      },
+      "graph_sha256": "e491f2c59e880eaba9a939b50ec1495c99ff356ebe2906262fa2d14c344097e9",
+      "health": {
+        "node_count": 10320,
+        "unverified_node_count": 0,
+        "raw_edge_count": 22437,
+        "non_object_edges": 0,
+        "missing_endpoint_edges": 0,
+        "dangling_endpoint_edges": 0,
+        "self_loop_edges": 0,
+        "valid_candidate_edges": 22437,
+        "exact_duplicate_edges": 0,
+        "directed_unique_endpoint_pairs": 22437,
+        "directed_same_endpoint_collapsed_edges": 0,
+        "undirected_unique_endpoint_pairs": 22427,
+        "undirected_same_endpoint_collapsed_edges": 10,
+        "same_endpoint_group_count": 0,
+        "relation_variant_groups": 0,
+        "source_file_variant_groups": 0,
+        "source_location_variant_groups": 0,
+        "context_variant_groups": 0,
+        "post_build_graph_type": "DiGraph",
+        "post_build_node_count": 10320,
+        "post_build_edge_count": 22437,
+        "post_build_error": "",
+        "producer_suppression": {
+          "path": "C:\\Users\\aruna\\AppData\\Roaming\\uv\\tools\\graphifyy\\Lib\\site-packages\\graphify\\extract.py",
+          "total_sites": 10,
+          "sites": [
+            {
+              "line": 1047,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1197,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1199,
+              "name": "seen_doc_refs",
+              "tuple_arity": 0,
+              "sample": "seen_doc_refs: set[str] = set()"
+            },
+            {
+              "line": 1622,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 2091,
+              "name": "seen_keys",
+              "tuple_arity": 0,
+              "sample": "seen_keys: set[tuple] = set()"
+            },
+            {
+              "line": 3014,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3122,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3201,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3696,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3697,
+              "name": "seen_edges",
+              "tuple_arity": 4,
+              "sample": "seen_edges: set[tuple[str, str, str, str | None]] = set()"
+            }
+          ],
+          "error": ""
+        },
+        "examples": []
+      },
+      "runtime_retested": false
+    },
+    {
+      "ok": true,
+      "label": "Laravel 13 Phoenix Standalone",
+      "root": "D:\\Laragon\\www\\laravel-13-phoenix-standalone",
+      "nodes": 10869,
+      "edges": 19624,
+      "represented_files": 469,
+      "code_files": 426,
+      "metadata_files": 43,
+      "historical_active_file_references_verified": 0,
+      "code_files_metadata_only": [
+        "pint.json",
+        "resources/data/shapes.json",
+        "resources/modules/layout/container-fluid/module.json",
+        "resources/modules/layout/container/module.json",
+        "resources/modules/layout/grid/module.json",
+        "resources/modules/layout/row-grid/module.json",
+        "resources/modules/widgets/basic/button/module.json",
+        "resources/modules/widgets/basic/divider/module.json",
+        "resources/modules/widgets/basic/google-maps/module.json",
+        "resources/modules/widgets/basic/heading/module.json",
+        "resources/modules/widgets/basic/icon/module.json",
+        "resources/modules/widgets/basic/image/module.json",
+        "resources/modules/widgets/basic/spacer/module.json",
+        "resources/modules/widgets/basic/text-editor/module.json",
+        "resources/modules/widgets/basic/video/module.json",
+        "resources/modules/widgets/general/accordion/module.json",
+        "resources/modules/widgets/general/alert/module.json",
+        "resources/modules/widgets/general/basic-gallery/module.json",
+        "resources/modules/widgets/general/counter/module.json",
+        "resources/modules/widgets/general/feature-showcase/module.json",
+        "resources/modules/widgets/general/icon-box/module.json",
+        "resources/modules/widgets/general/icon-list/module.json",
+        "resources/modules/widgets/general/image-box/module.json",
+        "resources/modules/widgets/general/image-carousel/module.json",
+        "resources/modules/widgets/general/progress-bar/module.json",
+        "resources/modules/widgets/general/rating/module.json",
+        "resources/modules/widgets/general/social-icons/module.json",
+        "resources/modules/widgets/general/tabs/module.json",
+        "resources/modules/widgets/general/testimonial/module.json",
+        "resources/modules/widgets/general/text-path/module.json",
+        "resources/modules/widgets/pro/animated-headline/module.json",
+        "resources/modules/widgets/pro/blockquote/module.json",
+        "resources/modules/widgets/pro/call-to-action/module.json",
+        "resources/modules/widgets/pro/carousel/module.json",
+        "resources/modules/widgets/pro/code-highlight/module.json",
+        "resources/modules/widgets/pro/countdown/module.json",
+        "resources/modules/widgets/pro/flip-box/module.json",
+        "resources/modules/widgets/pro/form/module.json",
+        "resources/modules/widgets/pro/hero-banner/module.json",
+        "resources/modules/widgets/pro/hero-slider/module.json",
+        "resources/modules/widgets/pro/hotspot/module.json",
+        "resources/modules/widgets/pro/media-carousel/module.json",
+        "resources/modules/widgets/pro/price-list/module.json",
+        "resources/modules/widgets/pro/price-table/module.json",
+        "resources/modules/widgets/pro/product-color-selector/module.json",
+        "resources/modules/widgets/pro/product-lead-form/module.json",
+        "resources/modules/widgets/pro/progress-tracker/module.json",
+        "resources/modules/widgets/pro/reviews/module.json",
+        "resources/modules/widgets/pro/share-buttons/module.json",
+        "resources/modules/widgets/pro/slides/module.json",
+        "resources/modules/widgets/pro/testimonial-carousel/module.json",
+        "resources/modules/widgets/pro/video-playlist/module.json"
+      ],
+      "backup_files_verified": 4,
+      "source_preserved": true,
+      "head_and_staged_content_preserved": true,
+      "unchanged_nodes_preserved": true,
+      "offline_script": true,
+      "duplicate_ids": 0,
+      "dangling_edges": 0,
+      "hash_mismatch": 0,
+      "confidence": {
+        "EXTRACTED": 19345,
+        "INFERRED": 279
+      },
+      "graph_sha256": "099b6b76af288cbd491c4c1a51898c9b1d138294f43ca411d9092696c90ea199",
+      "health": {
+        "node_count": 10869,
+        "unverified_node_count": 0,
+        "raw_edge_count": 19624,
+        "non_object_edges": 0,
+        "missing_endpoint_edges": 0,
+        "dangling_endpoint_edges": 0,
+        "self_loop_edges": 0,
+        "valid_candidate_edges": 19624,
+        "exact_duplicate_edges": 0,
+        "directed_unique_endpoint_pairs": 19624,
+        "directed_same_endpoint_collapsed_edges": 0,
+        "undirected_unique_endpoint_pairs": 19624,
+        "undirected_same_endpoint_collapsed_edges": 0,
+        "same_endpoint_group_count": 0,
+        "relation_variant_groups": 0,
+        "source_file_variant_groups": 0,
+        "source_location_variant_groups": 0,
+        "context_variant_groups": 0,
+        "post_build_graph_type": "Graph",
+        "post_build_node_count": 10869,
+        "post_build_edge_count": 19624,
+        "post_build_error": "",
+        "producer_suppression": {
+          "path": "C:\\Users\\aruna\\AppData\\Roaming\\uv\\tools\\graphifyy\\Lib\\site-packages\\graphify\\extract.py",
+          "total_sites": 10,
+          "sites": [
+            {
+              "line": 1047,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1197,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1199,
+              "name": "seen_doc_refs",
+              "tuple_arity": 0,
+              "sample": "seen_doc_refs: set[str] = set()"
+            },
+            {
+              "line": 1622,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 2091,
+              "name": "seen_keys",
+              "tuple_arity": 0,
+              "sample": "seen_keys: set[tuple] = set()"
+            },
+            {
+              "line": 3014,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3122,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3201,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3696,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3697,
+              "name": "seen_edges",
+              "tuple_arity": 4,
+              "sample": "seen_edges: set[tuple[str, str, str, str | None]] = set()"
+            }
+          ],
+          "error": ""
+        },
+        "examples": []
+      },
+      "runtime_retested": false
+    },
+    {
+      "ok": true,
+      "label": "New MG Laptop",
+      "root": "D:\\Laragon\\www\\newmg",
+      "nodes": 3173,
+      "edges": 3959,
+      "represented_files": 702,
+      "code_files": 599,
+      "metadata_files": 103,
+      "historical_active_file_references_verified": 7,
+      "code_files_metadata_only": [],
+      "backup_files_verified": 0,
+      "source_preserved": true,
+      "head_and_staged_content_preserved": true,
+      "unchanged_nodes_preserved": true,
+      "offline_script": true,
+      "duplicate_ids": 0,
+      "dangling_edges": 0,
+      "hash_mismatch": 0,
+      "confidence": {
+        "EXTRACTED": 3357,
+        "INFERRED": 602
+      },
+      "graph_sha256": "9be26cf509a3d74a84ac70ecb1e19448652cad58b3b27db96a5349219ac6f7d1",
+      "health": {
+        "node_count": 3173,
+        "unverified_node_count": 0,
+        "raw_edge_count": 3959,
+        "non_object_edges": 0,
+        "missing_endpoint_edges": 0,
+        "dangling_endpoint_edges": 0,
+        "self_loop_edges": 0,
+        "valid_candidate_edges": 3959,
+        "exact_duplicate_edges": 0,
+        "directed_unique_endpoint_pairs": 3959,
+        "directed_same_endpoint_collapsed_edges": 0,
+        "undirected_unique_endpoint_pairs": 3955,
+        "undirected_same_endpoint_collapsed_edges": 4,
+        "same_endpoint_group_count": 0,
+        "relation_variant_groups": 0,
+        "source_file_variant_groups": 0,
+        "source_location_variant_groups": 0,
+        "context_variant_groups": 0,
+        "post_build_graph_type": "DiGraph",
+        "post_build_node_count": 3173,
+        "post_build_edge_count": 3959,
+        "post_build_error": "",
+        "producer_suppression": {
+          "path": "C:\\Users\\aruna\\AppData\\Roaming\\uv\\tools\\graphifyy\\Lib\\site-packages\\graphify\\extract.py",
+          "total_sites": 10,
+          "sites": [
+            {
+              "line": 1047,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1197,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1199,
+              "name": "seen_doc_refs",
+              "tuple_arity": 0,
+              "sample": "seen_doc_refs: set[str] = set()"
+            },
+            {
+              "line": 1622,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 2091,
+              "name": "seen_keys",
+              "tuple_arity": 0,
+              "sample": "seen_keys: set[tuple] = set()"
+            },
+            {
+              "line": 3014,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3122,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3201,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3696,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3697,
+              "name": "seen_edges",
+              "tuple_arity": 4,
+              "sample": "seen_edges: set[tuple[str, str, str, str | None]] = set()"
+            }
+          ],
+          "error": ""
+        },
+        "examples": []
+      },
+      "runtime_retested": false
+    },
+    {
+      "ok": true,
+      "label": "Age of Empire II DE — scenario tools",
+      "root": "C:\\Users\\aruna\\Documents\\Age of Empire II DE",
+      "nodes": 65,
+      "edges": 135,
+      "represented_files": 6,
+      "code_files": 6,
+      "metadata_files": 0,
+      "historical_active_file_references_verified": 6,
+      "code_files_metadata_only": [],
+      "backup_files_verified": 0,
+      "source_preserved": true,
+      "head_and_staged_content_preserved": true,
+      "unchanged_nodes_preserved": true,
+      "offline_script": true,
+      "duplicate_ids": 0,
+      "dangling_edges": 0,
+      "hash_mismatch": 0,
+      "confidence": {
+        "EXTRACTED": 135
+      },
+      "graph_sha256": "bbca6ce3704fe1cadb975a5ee7d81ca8f4a337b36a8e239e48ca0f1ed4ae8d56",
+      "health": {
+        "node_count": 65,
+        "unverified_node_count": 0,
+        "raw_edge_count": 135,
+        "non_object_edges": 0,
+        "missing_endpoint_edges": 0,
+        "dangling_endpoint_edges": 0,
+        "self_loop_edges": 0,
+        "valid_candidate_edges": 135,
+        "exact_duplicate_edges": 0,
+        "directed_unique_endpoint_pairs": 135,
+        "directed_same_endpoint_collapsed_edges": 0,
+        "undirected_unique_endpoint_pairs": 135,
+        "undirected_same_endpoint_collapsed_edges": 0,
+        "same_endpoint_group_count": 0,
+        "relation_variant_groups": 0,
+        "source_file_variant_groups": 0,
+        "source_location_variant_groups": 0,
+        "context_variant_groups": 0,
+        "post_build_graph_type": "DiGraph",
+        "post_build_node_count": 65,
+        "post_build_edge_count": 135,
+        "post_build_error": "",
+        "producer_suppression": {
+          "path": "C:\\Users\\aruna\\AppData\\Roaming\\uv\\tools\\graphifyy\\Lib\\site-packages\\graphify\\extract.py",
+          "total_sites": 10,
+          "sites": [
+            {
+              "line": 1047,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1197,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1199,
+              "name": "seen_doc_refs",
+              "tuple_arity": 0,
+              "sample": "seen_doc_refs: set[str] = set()"
+            },
+            {
+              "line": 1622,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 2091,
+              "name": "seen_keys",
+              "tuple_arity": 0,
+              "sample": "seen_keys: set[tuple] = set()"
+            },
+            {
+              "line": 3014,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3122,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3201,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3696,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3697,
+              "name": "seen_edges",
+              "tuple_arity": 4,
+              "sample": "seen_edges: set[tuple[str, str, str, str | None]] = set()"
+            }
+          ],
+          "error": ""
+        },
+        "examples": []
+      },
+      "runtime_retested": false
+    },
+    {
+      "ok": true,
+      "label": "Age of Empire II DE — AI v4/Mini",
+      "root": "D:\\New AI Script AoE II DE",
+      "nodes": 1553,
+      "edges": 7642,
+      "represented_files": 25,
+      "code_files": 25,
+      "metadata_files": 0,
+      "historical_active_file_references_verified": 0,
+      "code_files_metadata_only": [
+        "ArunikaAI_v4.ai",
+        "ArunikaAI_v4_Mini.ai",
+        "ArunikaTributeProbe.ai"
+      ],
+      "backup_files_verified": 14,
+      "source_preserved": true,
+      "head_and_staged_content_preserved": true,
+      "unchanged_nodes_preserved": true,
+      "offline_script": true,
+      "duplicate_ids": 0,
+      "dangling_edges": 0,
+      "hash_mismatch": 0,
+      "confidence": {
+        "EXTRACTED": 7642
+      },
+      "graph_sha256": "a8abe7da8193bebcde9a7908e58baea600da66343acdc5e8a857e7924e0ba9c4",
+      "health": {
+        "node_count": 1553,
+        "unverified_node_count": 0,
+        "raw_edge_count": 7642,
+        "non_object_edges": 0,
+        "missing_endpoint_edges": 0,
+        "dangling_endpoint_edges": 0,
+        "self_loop_edges": 0,
+        "valid_candidate_edges": 7642,
+        "exact_duplicate_edges": 0,
+        "directed_unique_endpoint_pairs": 7642,
+        "directed_same_endpoint_collapsed_edges": 0,
+        "undirected_unique_endpoint_pairs": 7642,
+        "undirected_same_endpoint_collapsed_edges": 0,
+        "same_endpoint_group_count": 0,
+        "relation_variant_groups": 0,
+        "source_file_variant_groups": 0,
+        "source_location_variant_groups": 0,
+        "context_variant_groups": 0,
+        "post_build_graph_type": "DiGraph",
+        "post_build_node_count": 1553,
+        "post_build_edge_count": 7642,
+        "post_build_error": "",
+        "producer_suppression": {
+          "path": "C:\\Users\\aruna\\AppData\\Roaming\\uv\\tools\\graphifyy\\Lib\\site-packages\\graphify\\extract.py",
+          "total_sites": 10,
+          "sites": [
+            {
+              "line": 1047,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1197,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1199,
+              "name": "seen_doc_refs",
+              "tuple_arity": 0,
+              "sample": "seen_doc_refs: set[str] = set()"
+            },
+            {
+              "line": 1622,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 2091,
+              "name": "seen_keys",
+              "tuple_arity": 0,
+              "sample": "seen_keys: set[tuple] = set()"
+            },
+            {
+              "line": 3014,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3122,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3201,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3696,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3697,
+              "name": "seen_edges",
+              "tuple_arity": 4,
+              "sample": "seen_edges: set[tuple[str, str, str, str | None]] = set()"
+            }
+          ],
+          "error": ""
+        },
+        "examples": []
+      },
+      "runtime_retested": false,
+      "canonical_source_files_matched": 25,
+      "per_namespace_identities_preserved": true
+    },
+    {
+      "ok": true,
+      "label": "Arunika Map Studio",
+      "root": "D:\\Arunika Map Studio",
+      "nodes": 202,
+      "edges": 469,
+      "represented_files": 19,
+      "code_files": 16,
+      "metadata_files": 3,
+      "historical_active_file_references_verified": 15,
+      "code_files_metadata_only": [
+        "object_graphics.json",
+        "terrain_graphics.json"
+      ],
+      "backup_files_verified": 0,
+      "source_preserved": true,
+      "head_and_staged_content_preserved": true,
+      "unchanged_nodes_preserved": true,
+      "offline_script": true,
+      "duplicate_ids": 0,
+      "dangling_edges": 0,
+      "hash_mismatch": 0,
+      "confidence": {
+        "EXTRACTED": 467,
+        "INFERRED": 2
+      },
+      "graph_sha256": "72fc473c3e7eae3266ece9ee1d9ee8b9828fff6732d0c7a86440da12cf9d5b91",
+      "health": {
+        "node_count": 202,
+        "unverified_node_count": 0,
+        "raw_edge_count": 469,
+        "non_object_edges": 0,
+        "missing_endpoint_edges": 0,
+        "dangling_endpoint_edges": 0,
+        "self_loop_edges": 0,
+        "valid_candidate_edges": 469,
+        "exact_duplicate_edges": 0,
+        "directed_unique_endpoint_pairs": 469,
+        "directed_same_endpoint_collapsed_edges": 0,
+        "undirected_unique_endpoint_pairs": 469,
+        "undirected_same_endpoint_collapsed_edges": 0,
+        "same_endpoint_group_count": 0,
+        "relation_variant_groups": 0,
+        "source_file_variant_groups": 0,
+        "source_location_variant_groups": 0,
+        "context_variant_groups": 0,
+        "post_build_graph_type": "DiGraph",
+        "post_build_node_count": 202,
+        "post_build_edge_count": 469,
+        "post_build_error": "",
+        "producer_suppression": {
+          "path": "C:\\Users\\aruna\\AppData\\Roaming\\uv\\tools\\graphifyy\\Lib\\site-packages\\graphify\\extract.py",
+          "total_sites": 10,
+          "sites": [
+            {
+              "line": 1047,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1197,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 1199,
+              "name": "seen_doc_refs",
+              "tuple_arity": 0,
+              "sample": "seen_doc_refs: set[str] = set()"
+            },
+            {
+              "line": 1622,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = {n[\"id\"] for n in nodes}"
+            },
+            {
+              "line": 2091,
+              "name": "seen_keys",
+              "tuple_arity": 0,
+              "sample": "seen_keys: set[tuple] = set()"
+            },
+            {
+              "line": 3014,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3122,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3201,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3696,
+              "name": "seen_ids",
+              "tuple_arity": 0,
+              "sample": "seen_ids: set[str] = set()"
+            },
+            {
+              "line": 3697,
+              "name": "seen_edges",
+              "tuple_arity": 4,
+              "sample": "seen_edges: set[tuple[str, str, str, str | None]] = set()"
+            }
+          ],
+          "error": ""
+        },
+        "examples": []
+      },
+      "runtime_retested": false
+    }
+  ],
+  "errors": [],
+  "skipped": [
+    {
+      "label": "Laravel 13 CMS BUM NextJS",
+      "root": "D:\\Laragon\\www\\laravel-13-cms-bum-next",
+      "status": "source-root-unavailable"
+    },
+    {
+      "label": "New MG SSD Portable",
+      "root": "E:\\Apps\\Laragon\\www\\newmg",
+      "status": "artifacts-unavailable",
+      "error": "[WinError 1392] The file or directory is corrupted and unreadable: 'E:\\\\Apps\\\\Laragon\\\\www\\\\newmg\\\\project-artifacts\\\\graphify-all-projects-20261012'"
+    },
+    {
+      "label": "LaraPhoenix Web Game",
+      "root": "C:\\Users\\aruna\\Documents\\ChatGPT\\LaraPhoenix Web Game",
+      "status": "no-active-source-files",
+      "artifacts": "C:\\Users\\aruna\\Documents\\ChatGPT\\LaraPhoenix Web Game\\project-artifacts\\graphify-all-projects-20261012"
+    },
+    {
+      "label": "Laravel 13 CRM",
+      "root": "D:\\Laragon\\www\\laravel-13-crm",
+      "status": "source-root-unavailable"
+    },
+    {
+      "label": "Laravel 13 GEN21 AI CMS",
+      "root": "D:\\Laragon\\www\\laravel-13-gen21ai-cms",
+      "status": "source-root-unavailable"
+    },
+    {
+      "label": "Legacy Laravel 12 Phoenix",
+      "root": "D:\\Laragon\\www\\laravel-12-phoenix",
+      "status": "source-root-unavailable"
+    },
+    {
+      "label": "Legacy Laravel 11 CMS BUM",
+      "root": "D:\\Laragon\\www\\laravel-11-cms-bum",
+      "status": "source-root-unavailable"
+    }
+  ]
+}

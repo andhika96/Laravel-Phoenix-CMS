@@ -34,3 +34,40 @@ removes expired chunk-upload sessions from `runtime/uploads/`. Production still
 needs the normal Laravel scheduler trigger (for example a cron or Windows Task
 Scheduler entry that runs `php artisan schedule:run` each minute). This is a
 server schedule, not a browser or npm process.
+
+## Upload reliability on Laragon
+
+The active Laragon installation uses eight PHP-CGI listeners (9003–9010), while
+File Manager V2 transfers four files concurrently. Selecting five files or an
+entire folder queues the remaining files. The default chunk size is 8 MiB;
+files above 16 MiB use chunk sessions. These settings leave capacity for other
+Laravel requests while uploads run.
+
+PHP-CGI defaults to exiting after 500 requests when `PHP_FCGI_MAX_REQUESTS` is
+unset. On this workstation the Windows user environment value is now `0`, and
+the eight active PHP-CGI processes use that value. A future
+Laragon launch must inherit the updated environment: fully close and reopen
+Laragon when restarting it later. Do not launch a second Laragon instance to
+reload Nginx. Long-running CGI processes still need ordinary monitoring.
+
+The Phoenix vhost is `laravel-13-phoenix.aruna.conf` (without the `auto.`
+prefix) so Laragon preserves the private-storage deny rule. Validate Nginx
+configuration before reloading the existing master.
+
+Browser recovery keys and server upload receipts last 24 hours. After a page
+refresh or an interrupted upload, select the same files/folder, storage and
+destination again to reuse those keys. Chunk sessions return the parts already
+received; successful uploads return the saved asset instead of creating a
+duplicate. Recovery does not silently regain browser access to local files.
+Folder metadata is persisted at selection/batch boundaries, rather than
+rewriting the complete browser journal after every file.
+
+Every upload validates SHA-256 before and after storage writes. The server
+reads the stored object to verify its size and hash, so R2 uploads also incur
+read requests and verification time. Failed writes do not report success;
+chunk sessions remain available for retry. Persistent receipts, sessions and
+quota reservations must remain on the server across PHP restarts. Expired
+receipts are removed by the existing prune command.
+
+Five retries with backoff recover transient failures. They cannot guarantee
+success during a sustained network outage, exhausted quota or storage failure.

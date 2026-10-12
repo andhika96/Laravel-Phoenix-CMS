@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minimal Reading List · Design preview</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
+  <style>
+    @font-face{font-family:Nunito;src:url('assets/Nunito-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+    @font-face{font-family:Nunito;src:url('assets/Nunito-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+    @font-face{font-family:Nunito;src:url('assets/Nunito-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+    :root{color-scheme:light;--accent:#137e5e;--accent-hover:#0d6248;--soft:#eaf5ef;--ink:#182331;--muted:#657182;--line:#e4e9ee;--surface:#fff;--canvas:#f8fafb}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--canvas);color:var(--ink);font-family:Nunito,system-ui,sans-serif;font-size:16px;line-height:1.6}
+    button,input,select{font:inherit}button,a,input,select{touch-action:manipulation}
+    button,a{ -webkit-tap-highlight-color:transparent}button{cursor:pointer}
+    a{color:inherit;text-decoration:none}button:disabled{cursor:default}
+    :focus-visible{outline:3px solid #75bfa7;outline-offset:4px}
+    [hidden]{display:none!important}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .skip-link{position:absolute;top:12px;left:12px;z-index:5;padding:10px 16px;background:var(--ink);color:white;transform:translateY(-160%)}.skip-link:focus{transform:none}
+    .shell{width:min(1180px,calc(100% - 80px));margin:auto;padding:64px 0 48px}
+    .page-heading{padding-bottom:36px}
+    .eyebrow{margin:0 0 10px;color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.11em;text-transform:uppercase}
+    h1{margin:0;font-size:38px;font-weight:700;line-height:1.2;letter-spacing:-.035em;text-wrap:balance}
+    .description{margin:12px 0 0;color:var(--muted);font-size:17px;line-height:1.6}
+    .search{display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:12px;width:min(100%,680px);margin-top:26px}
+    .search input{width:100%;min-width:0;height:48px;padding:0 16px;border:1px solid #c7d0da;border-radius:10px;background:var(--surface);color:var(--ink);font-size:15px;transition:border-color .16s}
+    input::placeholder{color:#738092;opacity:1}.search input:hover{border-color:#92a7a0}.search input:focus-visible{border-color:var(--accent)}
+    .primary{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:0 18px;border:1px solid var(--accent);border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;transition:background .16s,border-color .16s}
+    .primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}.primary:active{background:#084f39}.primary i{font-size:14px}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;align-items:start}
+    .main{min-width:0}
+    .list-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+    .list-heading h2{margin:0;font-size:18px;line-height:1.4;font-weight:700;letter-spacing:-.015em}
+    .result-tools{display:flex;align-items:center;gap:14px;color:var(--muted);font-size:13px;white-space:nowrap}
+    .clear{padding:0;border:0;background:none;color:var(--accent);font-size:13px;font-weight:700;text-decoration:underline;text-underline-offset:4px;min-height:44px}
+    .article-row{display:grid;grid-template-columns:208px minmax(0,1fr);gap:26px;padding:26px 0;border-bottom:1px solid var(--line)}
+    .article-image{display:block;overflow:hidden;border-radius:10px;align-self:start;aspect-ratio:1.48;background:#e8edf0}
+    .article-image img{display:block;width:100%;height:100%;object-fit:cover}
+    .article-body{min-width:0}
+    .meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 8px;color:var(--muted);font-size:12px;line-height:1.6}
+    .meta .category{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.045em;text-transform:uppercase}
+    .meta .separator{color:#a4aeba;font-size:12px}
+    .article-row h3{margin:0;font-size:22px;line-height:1.3;font-weight:700;letter-spacing:-.022em;text-wrap:pretty}
+    .article-row h3 a{transition:color .16s}.article-row h3 a:hover{color:var(--accent)}
+    .excerpt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin:10px 0 0;color:var(--muted);font-size:15px;line-height:1.65}
+    .read-more{display:inline-flex;align-items:center;gap:9px;min-height:44px;margin-top:4px;color:var(--accent);font-size:14px;font-weight:700}
+    .read-more i{font-size:11px;transition:transform .16s}.read-more:hover i{transform:translateX(3px)}
+    .sidebar{display:grid;gap:24px;padding-top:0}
+    .panel{padding:22px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+    .panel h2{margin:0 0 18px;font-size:16px;line-height:1.4;font-weight:700;letter-spacing:-.01em}
+    .category-search{position:relative;margin-bottom:14px}.category-search i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#7d8b9a;font-size:13px;pointer-events:none}
+    .category-search input{display:block;width:100%;min-width:0;height:44px;padding:0 12px 0 35px;border:1px solid #c7d0da;border-radius:8px;background:#f9fafb;color:var(--ink);font-size:13px}
+    .category-list{display:grid;gap:4px}
+    .category-button{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;width:100%;padding:8px 12px;border:0;border-radius:7px;background:transparent;color:#536173;text-align:left;font-size:14px;font-weight:600;transition:background .16s,color .16s}
+    .category-button:hover{background:#f3f6f5;color:var(--accent)}.category-button[aria-pressed="true"]{background:var(--soft);color:var(--accent);font-weight:700}
+    .category-count{min-width:26px;padding:0 6px;border-radius:5px;color:#63746d;font-size:12px;font-weight:600;text-align:center}.category-button[aria-pressed="true"] .category-count{background:#d9eadf;color:var(--accent)}
+    .category-empty{margin:8px 0;color:var(--muted);font-size:13px}
+    .popular-list{display:grid;gap:20px}
+    .popular-item{display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+    .popular-image{display:block;aspect-ratio:1;overflow:hidden;border-radius:8px;background:#e8edf0}.popular-image img{width:100%;height:100%;object-fit:cover;display:block}
+    .popular-item h3{margin:0;font-size:13px;font-weight:700;line-height:1.45;letter-spacing:-.01em}.popular-item h3 a:hover{color:var(--accent)}
+    .popular-item time{display:block;margin-top:5px;color:var(--muted);font-size:12px;line-height:1.4}
+    .pagination{padding-top:26px;margin-top:6px}
+    .pagination-layout{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .summary{margin:0;color:var(--muted);font-size:13px;line-height:1.65}.summary strong{display:block;color:#384658;font-size:14px;font-weight:600}
+    .pager{display:flex;align-items:center;gap:8px;list-style:none;padding:0;margin:0}
+    .page-button{display:flex;align-items:center;justify-content:center;gap:9px;height:44px;min-width:44px;padding:0 12px;border:1px solid #c7d0da;border-radius:8px;background:var(--surface);color:#485668;font-size:14px;font-weight:600;transition:background .16s,border-color .16s,color .16s}
+    .page-button:hover:not(:disabled){background:var(--soft);border-color:#92bca9;color:var(--accent)}.page-button[aria-current="page"]{border-color:var(--accent);background:var(--accent);color:#fff;font-weight:700}
+    .page-button:disabled{border-color:#e2e6eb;background:#f3f5f7;color:#7b8592}.page-button i{font-size:11px}.page-button.direction{padding-inline:14px}
+    .ellipsis{display:flex;align-items:center;justify-content:center;width:24px;height:44px;color:#83909c;font-size:16px}
+    .mobile-category{display:none}
+    .empty{padding:54px 24px;text-align:center;border-bottom:1px solid var(--line)}.empty i{color:var(--accent);font-size:24px}.empty h3{margin:16px 0 8px;font-size:22px}.empty p{margin:0 auto 16px;max-width:34ch;color:var(--muted)}
+    dialog{width:min(660px,calc(100% - 40px));max-height:85dvh;padding:28px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);box-shadow:0 24px 80px #18233126}dialog::backdrop{background:#18233180}
+    .dialog-close{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}.dialog-close p{margin:0;font-size:13px;color:var(--muted)}.close-button{width:44px;height:44px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
+    dialog h2{margin:12px 0;font-size:28px;line-height:1.3}dialog img{width:100%;aspect-ratio:1.9;object-fit:cover;border-radius:8px}dialog .dialog-copy{color:var(--muted)}
+    @media (max-width:1100px){.shell{width:calc(100% - 64px)}.layout{grid-template-columns:minmax(0,1fr) 258px;gap:32px}.article-row{grid-template-columns:172px minmax(0,1fr);gap:22px}.article-row h3{font-size:20px}.panel{padding:18px}.pagination-layout{flex-wrap:wrap}}
+    @media (max-width:960px){.shell{width:calc(100% - 56px);padding-top:44px}.layout{grid-template-columns:minmax(0,1fr);gap:40px}.article-row{grid-template-columns:200px minmax(0,1fr)}.article-row h3{font-size:22px}.sidebar{padding-top:0}.categories-panel{display:none}.popular-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.mobile-category{display:grid;gap:6px;width:min(100%,680px);margin-top:18px;color:var(--muted);font-size:13px;font-weight:600}.mobile-category select{width:100%;min-height:44px;padding:8px 12px;border:1px solid #c7d0da;border-radius:8px;background:var(--surface);color:var(--ink);font-size:15px}}
+    @media (max-width:600px){.shell{width:calc(100% - 40px);padding:34px 0 32px}h1{font-size:30px;letter-spacing:-.03em}.description{font-size:16px;line-height:1.6}.page-heading{padding-bottom:28px}.search{grid-template-columns:minmax(0,1fr) 104px;margin-top:22px}.search input{padding-inline:12px;font-size:16px}.primary{padding-inline:12px;font-size:14px}.list-heading{align-items:flex-start;padding-bottom:16px}.list-heading h2{font-size:17px}.result-tools{gap:8px;font-size:12px;flex-wrap:wrap;justify-content:flex-end}.article-row{grid-template-columns:104px minmax(0,1fr);gap:18px;padding:22px 0}.article-image{aspect-ratio:.85}.meta{gap:5px;margin-bottom:6px;font-size:12px}.meta .category{font-size:12px;letter-spacing:.01em}.meta .read-time,.meta .read-separator{display:none}.article-row h3{font-size:18px;line-height:1.35;letter-spacing:-.015em}.excerpt{font-size:14px;margin-top:8px;line-height:1.6}.read-more{font-size:13px;margin-top:2px;min-height:44px}.pagination{padding-top:22px}.pagination-layout{display:grid;gap:16px}.pager{justify-content:flex-start;gap:6px}.page-button{padding-inline:10px}.page-button.direction{width:44px;padding:0}.direction-label{display:none}.summary strong{display:inline;margin-right:5px;font-size:13px}.popular-list{grid-template-columns:minmax(0,1fr);gap:20px}.panel{padding:20px}.popular-item{grid-template-columns:64px minmax(0,1fr)}.popular-item h3{font-size:14px}.sidebar{gap:20px}.layout{gap:32px}}
+    @media (max-width:360px){.article-row{grid-template-columns:88px minmax(0,1fr);gap:14px}.search{grid-template-columns:minmax(0,1fr) 96px}.primary{gap:7px}.shell{width:calc(100% - 32px)}}
+    @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <a href="#articles" class="skip-link">Skip to articles</a>
+  <main class="shell">
+    <header class="page-heading">
+      <p class="eyebrow">Journal</p>
+      <h1>Minimal Reading List</h1>
+      <p class="description">Thoughtful reads on design, technology, and the web.</p>
+      <form id="search-form" class="search" role="search">
+        <label class="sr-only" for="article-search">Search articles</label>
+        <input type="search" id="article-search" placeholder="Search articles" autocomplete="off">
+        <button class="primary" type="submit"><i class="fas fa-search" aria-hidden="true"></i><span>Search</span></button>
+      </form>
+      <label class="mobile-category" for="mobile-category">Category<select id="mobile-category"></select></label>
+    </header>
+    <div class="layout">
+      <section class="main" id="articles" aria-labelledby="list-title">
+        <div class="list-heading"><h2 id="list-title">All articles</h2><div class="result-tools"><button type="button" class="clear" id="clear-filters" hidden>Clear filters</button><span id="result-count">48 articles</span></div></div>
+        <p class="sr-only" id="results-status" role="status" aria-atomic="true"></p>
+        <div id="article-list"></div>
+        <nav class="pagination" id="pagination" aria-label="Article pagination">
+          <div class="pagination-layout"><p class="summary" id="pagination-summary"></p><ul class="pager" id="pager"></ul></div>
+        </nav>
+      </section>
+      <aside class="sidebar" aria-label="Article discovery">
+        <section class="panel categories-panel" aria-labelledby="categories-title">
+          <h2 id="categories-title">Categories</h2>
+          <div class="category-search"><i class="fas fa-search" aria-hidden="true"></i><label class="sr-only" for="category-search">Search categories</label><input type="search" id="category-search" placeholder="Search categories" autocomplete="off"></div>
+          <div class="category-list" id="category-list"></div>
+          <p class="category-empty" id="category-empty" hidden>No matching categories. Try another keyword.</p>
+        </section>
+        <section class="panel" aria-labelledby="popular-title"><h2 id="popular-title">Popular Posts</h2><div class="popular-list" id="popular-list"></div></section>
+      </aside>
+    </div>
+  </main>
+  <dialog id="article-dialog" aria-labelledby="dialog-title"><form method="dialog" class="dialog-close"><p>Sample editorial content</p><button class="close-button" aria-label="Close article"><i class="fas fa-xmark" aria-hidden="true"></i></button></form><div id="dialog-content"></div></dialog>
+  <script>
+    // Matches the active ArticleTemplatePreviewFixture: 12 sample stories, 48 items, 6 per page.
+    const stories = [
+      {category:'Technology',title:'Building Resilient Systems at Scale',excerpt:'Resilience is not a feature added at the end of delivery. It is the accumulated result of clear priorities, observability, and teams that make room for learning.',image:'alpine-lake.png'},
+      {category:'Design',title:'Designing Spaces That Last Beyond a Trend Cycle',excerpt:'How calmer visual systems help teams make more confident product decisions.',image:'design-studio.png'},
+      {category:'Travel',title:'Slow Adventures Along the Coastal Road',excerpt:'A quieter way to build memorable journeys around place, pace, and perspective.',image:'coastal-road.png'},
+      {category:'Workplace',title:'What Hybrid Teams Need to Do Their Best Work',excerpt:'Small operating principles that make collaboration more deliberate and humane.',image:'team-meeting.png'},
+      {category:'Wellbeing',title:'The Rituals That Give Busy Days More Room',excerpt:'A grounded perspective on attention, recovery, and everyday wellbeing.',image:'wellness-room.png'},
+      {category:'Knowledge',title:'Patterns, Principles, and the Practice of Better Decisions',excerpt:'A structured reading experience for material that benefits from a clear outline.',image:'canyon-abstract.png'},
+      {category:'Design',title:'The Quiet Value of Everyday Craft',excerpt:'How careful material choices turn useful objects into lasting companions.',image:'alpine-lake.png'},
+      {category:'Travel',title:'A Fresh Perspective on Familiar Places',excerpt:'Finding a new story in the places we pass every day.',image:'canyon-abstract.png'},
+      {category:'Workplace',title:'Building a Better Rhythm for Focused Teams',excerpt:'Small changes that give good ideas the attention they deserve.',image:'alpine-lake.png'},
+      {category:'Knowledge',title:'What We Learn When We Listen Together',excerpt:'The habits that make shared learning an everyday practice.',image:'canyon-abstract.png'},
+      {category:'Wellbeing',title:'Making Room for Rest in a Busy Week',excerpt:'Simple ways to protect the time that restores our energy.',image:'alpine-lake.png'},
+      {category:'Technology',title:'Technology That Makes More Room for People',excerpt:'Looking beyond features to understand the everyday experience.',image:'canyon-abstract.png'}
+    ];
+    const samples = Array.from({length:48},(_,index)=>({...stories[index%12],id:index+1,date:new Date(Date.UTC(2026,7,24-(index%12)*2))}));
+    const categories = ['Technology','Design','Travel','Workplace','Wellbeing','Knowledge'];
+    const perPage = 6;
+    let page=1, query='', category='';
+    const $ = id => document.getElementById(id);
+    const escapeHtml = value => String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    const dateText = date => new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',year:'numeric',timeZone:'UTC'}).format(date);
+    const meta = item => `<p class="meta"><span class="category">${item.category}</span><span class="separator" aria-hidden="true">·</span><time datetime="${item.date.toISOString().slice(0,10)}">${dateText(item.date)}</time><span class="separator read-separator" aria-hidden="true">·</span><span class="read-time">1 min read</span></p>`;
+    function render(){
+      const filtered=samples.filter(item=>(!category||item.category===category)&&`${item.title} ${item.excerpt}`.toLowerCase().includes(query.toLowerCase()));
+      const total=filtered.length,last=Math.max(1,Math.ceil(total/perPage));page=Math.min(Math.max(1,page),last);
+      const start=(page-1)*perPage,visible=filtered.slice(start,start+perPage);
+      $('list-title').textContent=query?'Search results':category||'All articles';
+      $('result-count').textContent=`${total} ${total===1?'article':'articles'}`;
+      $('clear-filters').hidden=!query&&!category;
+      $('article-list').innerHTML=visible.length?visible.map(item=>`<article class="article-row"><a class="article-image" href="#article-${item.id}" data-read="${item.id}" tabindex="-1" aria-hidden="true"><img src="assets/${item.image}" alt="" width="624" height="420"></a><div class="article-body">${meta(item)}<h3><a href="#article-${item.id}" data-read="${item.id}">${escapeHtml(item.title)}</a></h3><p class="excerpt">${escapeHtml(item.excerpt)}</p><a href="#article-${item.id}" data-read="${item.id}" class="read-more" aria-label="Read more: ${escapeHtml(item.title)}">Read more<i class="fas fa-arrow-right" aria-hidden="true"></i></a></div></article>`).join(''):`<div class="empty"><i class="fas fa-search" aria-hidden="true"></i><h3>No articles found</h3><p>Try a different keyword or choose another category.</p><button type="button" class="primary" data-clear>Clear filters</button></div>`;
+      $('pagination').hidden=!total;
+      $('pagination-summary').innerHTML=`<strong>${total} ${total===1?'article':'articles'}</strong><span>Showing ${start+1} to ${Math.min(start+perPage,total)}</span>`;
+      const numbers=[...new Set([1,...[page-1,page,page+1].filter(n=>n>0&&n<=last),last])].sort((a,b)=>a-b);
+      const direction=(next)=>`<li><button class="page-button direction" data-page="${page+(next?1:-1)}" aria-label="${next?'Next page':'Previous page'}" ${next?page===last?'disabled':'':page===1?'disabled':''}>${next?'<span class="direction-label">Next</span>':''}<i class="fas fa-chevron-${next?'right':'left'}" aria-hidden="true"></i>${next?'':'<span class="direction-label">Previous</span>'}</button></li>`;
+      $('pager').innerHTML=last>1?direction(false)+numbers.map((n,index)=>(index&&n-numbers[index-1]>1?'<li class="ellipsis" aria-hidden="true">…</li>':'')+`<li><button class="page-button" data-page="${n}" aria-label="Page ${n}" ${n===page?'aria-current="page"':''}>${n}</button></li>`).join('')+direction(true):'';
+      $('results-status').textContent=total?`${total} articles${category?` in ${category}`:''}. Showing ${start+1} to ${Math.min(start+perPage,total)}. Page ${page} of ${last}.`:'No articles found. Try a different keyword or choose another category.';
+      document.querySelectorAll('[data-category]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.category===category)));
+      $('mobile-category').value=category;
+    }
+    function clear(){page=1;query='';category='';$('article-search').value='';render();}
+    $('category-list').innerHTML=['',...categories].map(name=>`<button type="button" class="category-button" data-category="${name}" aria-pressed="${!name}"><span>${name||'All categories'}</span><span class="category-count">${name?samples.filter(item=>item.category===name).length:48}</span></button>`).join('');
+    $('mobile-category').innerHTML=['',...categories].map(name=>`<option value="${name}">${name||'All categories'}</option>`).join('');
+    $('popular-list').innerHTML=samples.slice(0,4).map(item=>`<article class="popular-item"><a href="#article-${item.id}" data-read="${item.id}" class="popular-image" tabindex="-1" aria-hidden="true"><img src="assets/${item.image}" alt="" width="112" height="112"></a><div><h3><a href="#article-${item.id}" data-read="${item.id}">${escapeHtml(item.title)}</a></h3><time datetime="${item.date.toISOString().slice(0,10)}">${dateText(item.date)}</time></div></article>`).join('');
+    $('search-form').addEventListener('submit',event=>{event.preventDefault();query=$('article-search').value.trim();page=1;render();});
+    $('clear-filters').addEventListener('click',clear);
+    $('category-search').addEventListener('input',event=>{const term=event.target.value.toLowerCase().trim();let matches=0;document.querySelectorAll('[data-category]').forEach(button=>{button.hidden=!!button.dataset.category&&!button.dataset.category.toLowerCase().includes(term);if(button.dataset.category&&!button.hidden)matches++;});$('category-empty').hidden=!!matches;});
+    $('mobile-category').addEventListener('change',event=>{category=event.target.value;page=1;render();});
+    document.addEventListener('click',event=>{
+      const categoryButton=event.target.closest('[data-category]');if(categoryButton){category=categoryButton.dataset.category;page=1;render();}
+      const pageButton=event.target.closest('[data-page]');if(pageButton&&!pageButton.disabled){page=Number(pageButton.dataset.page);render();document.querySelector(`[data-page="${page}"]`)?.focus({preventScroll:true});}
+      if(event.target.closest('[data-clear]'))clear();
+      const read=event.target.closest('[data-read]');if(read){event.preventDefault();const item=samples.find(story=>story.id===Number(read.dataset.read));$('dialog-content').innerHTML=`<img src="assets/${item.image}" alt="">${meta(item)}<h2 id="dialog-title">${escapeHtml(item.title)}</h2><p class="dialog-copy">${escapeHtml(item.excerpt)}</p>`;$('article-dialog').showModal();}
+    });
+    render();
+  </script>
+</body>
+</html>

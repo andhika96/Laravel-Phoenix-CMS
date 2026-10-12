@@ -155,14 +155,15 @@ test('tablet and mobile previews compact editorial spacing and retain a visible 
 	assert.match(css, /@media \(max-width: 575\.98px\)\s*\{[\s\S]*?\.article-editorial-lead\s*\{[\s\S]*?gap: 1\.25rem/);
 });
 
-test('Minimal Reading List uses distinct tablet and stacked mobile article-list layouts', () => {
+test('Minimal Reading List stacks mobile posts and keeps CMS-bound heading typography', () => {
 	const css = readFileSync(path.join(root, 'public/assets/css/article/article-frontend-2026.css'), 'utf8');
 
 	assert.match(css, /@media \(max-width: 991\.98px\)\s*\{[\s\S]*?\.article-page--reading-list \.article-reading-list__item\s*\{[\s\S]*?grid-template-columns:\s*minmax\(10rem, 13rem\)/);
-	assert.match(css, /@media \(max-width: 575\.98px\)\s*\{[\s\S]*?\.article-page--reading-list \.article-reading-list__item\s*\{[\s\S]*?grid-template-columns:\s*1fr/);
+	assert.match(css, /@media \(max-width: 575\.98px\)\s*\{[\s\S]*?\.article-page--reading-list \.article-reading-list__item\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/);
 	assert.match(css, /@media \(max-width: 575\.98px\)\s*\{[\s\S]*?\.article-page--reading-list \.article-reading-list__media[^}]*aspect-ratio:\s*16 \/ 9/);
 	assert.match(css, /@media \(max-width: 575\.98px\)\s*\{[\s\S]*?\.article-page--reading-list \.article-reading-list__body\s*\{[\s\S]*?padding-top:\s*0/);
-	assert.doesNotMatch(css, /@media \(max-width: 575\.98px\)\s*\{[\s\S]*?grid-template-columns:\s*6rem minmax\(0, 1fr\)/);
+	assert.match(css, /\.article-page--reading-list\s*\{[^}]*--article-title-size:\s*var\(--ph-fmv2-rfs-h1/);
+	assert.match(css, /font-size:\s*var\(--ph-mobile-content-heading-size/);
 });
 
 test('responsive Minimal Reading List mockup exposes focused desktop, tablet, and stacked mobile states', () => {
@@ -319,15 +320,15 @@ test('Minimal Reading List category filter uses progressive disclosure and a nat
 	assert.doesNotMatch(view, /!optionsModal\.value\.toolbar\.category\.enabled \|\| optionsModal\.value\.toolbar\.category\.mode === 'select'/);
 });
 
-test('Header content descriptions use a ten-row textarea on archive and custom detail fields', () => {
+test('Header content descriptions use a compact resizable textarea on archive and custom detail fields', () => {
 	const view = readFileSync(path.join(root, 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
 	const textareas = view.match(/<textarea\b[^>]*>/g) || [];
 
 	assert.equal(textareas.length, 2);
 	assert.equal(textareas.filter((textarea) => /field === 'description'/.test(textarea)).length, 1);
 	assert.equal(textareas.filter((textarea) => /field !== 'title'/.test(textarea)).length, 1);
-	assert.equal(textareas.filter((textarea) => /rows="10"/.test(textarea)).length, 2);
-	assert.doesNotMatch(view, /<textarea\b[^>]*rows="3"/);
+	assert.equal(textareas.filter((textarea) => /rows="3"/.test(textarea)).length, 2);
+	assert.doesNotMatch(view, /<textarea\b[^>]*rows="10"/);
 });
 
 test('Archive toolbar search position buttons use the themed hover state and category controls stay left aligned', () => {

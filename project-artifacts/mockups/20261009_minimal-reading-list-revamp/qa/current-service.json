@@ -1,0 +1,8 @@
+{
+  "url": "http://127.0.0.1:8774/preview.html",
+  "pid": 15120,
+  "scope": "project-artifacts/mockups/20261009_minimal-reading-list-revamp only",
+  "server": "qa/server.cjs",
+  "kind": "Node static server",
+  "port": 8774
+}

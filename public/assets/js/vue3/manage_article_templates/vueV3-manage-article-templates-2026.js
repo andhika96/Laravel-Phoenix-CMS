@@ -165,8 +165,8 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 			saved: {
 				archive_template: settings.archive_template || 'minimal-reading-list',
 				detail_template: settings.detail_template || 'focused-reader',
-				archive_template_options: settings.archive_template_options || {},
-				detail_template_options: settings.detail_template_options || {},
+				archive_template_options: JSON.parse(JSON.stringify(settings.archive_template_options || {})),
+				detail_template_options: JSON.parse(JSON.stringify(settings.detail_template_options || {})),
 			},
             draft: {
                 archive_template: settings.archive_template || 'minimal-reading-list',
@@ -404,7 +404,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 				if (!['fas fa-chevron-right', 'fas fa-angle-right', 'fas fa-arrow-right'].includes(options.pagination.next_icon)) options.pagination.next_icon = 'fas fa-chevron-right';
 				if (typeof options.pagination.show_total !== 'boolean') options.pagination.show_total = true;
 				if (!['left', 'center', 'right'].includes(options.pagination.position)) options.pagination.position = 'right';
-				options.pagination.frame = ensureFrame(options.pagination.frame, true);
+				options.pagination.frame = ensureFrame(options.pagination.frame, !['minimal-reading-list', 'editorial-journal', 'mosaic-magazine', 'mosaic-classic', 'balanced-card-grid'].includes(this.activeTemplateKey));
 				options.pagination.padding = ensureBox(options.pagination.padding);
 				options.pagination.margin = ensureBox(options.pagination.margin);
 				options.article_title = options.article_title || {};
@@ -461,7 +461,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 						layout.side_height = layout.side_height || {};
 						for (const [device, fallback] of [['desktop', '22rem'], ['tablet', '20rem'], ['mobile', '15rem']]) {
 							layout.lead_height[device] = ensureDimension(layout.lead_height[device], fallback, 'border');
-							layout.side_height[device] = ensureDimension(layout.side_height[device], '7rem', 'border');
+							layout.side_height[device] = ensureDimension(layout.side_height[device], device === 'mobile' ? '14rem' : '7rem', 'border');
 							layout.highlight_height[device] = ensureDimension(layout.highlight_height[device], device === 'mobile' ? '14rem' : '16rem', 'border');
 						}
 					} else {
@@ -752,6 +752,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 
 				this.modalPreviewLoading = false;
 				this.modalPreviewError = 'Preview timed out. Try again.';
+				this.showNotice('danger', this.modalPreviewError);
 				this.modalPreviewTimeoutTimer = null;
 			}, 8000);
 		},
@@ -764,6 +765,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 				this.clearModalPreviewTimers();
 				this.modalPreviewLoading = false;
 				this.modalPreviewError = 'Preview is unavailable. Check your session and retry.';
+				this.showNotice('danger', this.modalPreviewError);
 				return;
 			}
 
@@ -778,6 +780,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 			this.clearModalPreviewTimers();
 			this.modalPreviewLoading = false;
 			this.modalPreviewError = 'Unable to load the preview.';
+			this.showNotice('danger', this.modalPreviewError);
 		},
 		retryModalPreview() {
 			this.rebuildModalPreview();
@@ -888,6 +891,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 		closeTemplateOptions() {
 			if (this.optionsModal?.dirty) {
 				this.optionsModal.dismissOpen = true;
+				this.showNotice('warning', 'You have unsaved changes. Keep editing or discard them.');
 				return;
 			}
 
@@ -917,6 +921,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 			this.optionsModal.dirty = false;
 			this.optionsModal.dismissOpen = false;
 			this.closeTemplateOptions();
+			this.showNotice('success', 'Changes applied to the draft. Save Template to persist them.');
 		},
 		columnChoices(device) {
 			return device === 'desktop' ? [1, 2, 3, 4] : (device === 'tablet' ? [1, 2, 3] : [1, 2]);
@@ -979,22 +984,27 @@ const ManageArticleTemplateVue3 = Vue.createApp({
             image.dataset.placeholderApplied = 'true';
             image.src = this.placeholderThumbnail;
         },
+        showNotice(type, message) {
+            this.noticeType = ['success', 'warning'].includes(type) ? type : 'danger';
+            this.notice = message;
+            this.$nextTick(() => {
+                const toast = document.getElementById('article-template-notice');
+                if (toast && typeof bootstrap !== 'undefined') bootstrap.Toast.getOrCreateInstance(toast).show();
+            });
+        },
         async save() {
             this.saving = true;
-            this.notice = '';
             try {
                 const response = await axios.post(this.saveUrl, this.draft, { headers: { Accept: 'application/json' } });
 				const saved = response.data.data || {};
 				this.saved.archive_template = saved.archive_template || this.draft.archive_template;
 				this.saved.detail_template = saved.detail_template || this.draft.detail_template;
-				this.saved.archive_template_options = saved.archive_template_options || this.draft.archive_template_options;
-				this.saved.detail_template_options = saved.detail_template_options || this.draft.detail_template_options;
-                this.notice = response.data.message || 'Article templates saved successfully';
-                this.noticeType = 'success';
+				this.saved.archive_template_options = this.cloneOptions(saved.archive_template_options || this.draft.archive_template_options);
+				this.saved.detail_template_options = this.cloneOptions(saved.detail_template_options || this.draft.detail_template_options);
+                this.showNotice('success', response.data.message || 'Article templates saved successfully');
             } catch (error) {
-                const message = error.response?.data?.message;
-                this.notice = typeof message === 'string' ? message : Object.values(message || {}).flat().join(' ') || 'Unable to save article templates';
-                this.noticeType = 'danger';
+                const message = error.response?.data?.errors || error.response?.data?.message;
+                this.showNotice('danger', typeof message === 'string' ? message : Object.values(message || {}).flat().join(' ') || 'Unable to save article templates');
             } finally {
                 this.saving = false;
             }

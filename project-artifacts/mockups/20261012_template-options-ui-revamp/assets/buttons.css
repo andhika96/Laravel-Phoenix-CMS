@@ -1,0 +1,27 @@
+.ph-btn-theme
+{
+	background-color: var(--ph-theme-primary);
+	border: 1px solid var(--ph-theme-primary);
+	color: #ffffff;
+	font-weight: 500;
+	transition: all 0.2s;
+}
+.ph-btn-theme:hover
+{
+	background-color: var(--ph-theme-primary-hover);
+	border-color: var(--ph-theme-primary-hover);
+	color: #ffffff;
+}
+.ph-btn-theme-outline
+{
+	background-color: transparent;
+	border: 1px solid var(--ph-theme-primary);
+	color: var(--ph-theme-primary);
+	font-weight: 500;
+	transition: all 0.2s;
+}
+.ph-btn-theme-outline:hover
+{
+	background-color: var(--ph-theme-primary);
+	color: #ffffff;
+}

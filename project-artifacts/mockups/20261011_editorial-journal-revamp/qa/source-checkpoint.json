@@ -1,0 +1,30 @@
+[
+  {
+    "file": "app/Support/Article/ArticleTemplateOptions.php",
+    "sha256": "F98F5C5D1EB0AAA012DAD0F9427F562C678EEB782D4DB94A404FC25CAD749E11"
+  },
+  {
+    "file": "public/assets/css/article/article-frontend-2026.css",
+    "sha256": "ED8F6AE251754E06B8EC936A06014E92A5CB96013E1A6DDDD2ACBE01891A99FA"
+  },
+  {
+    "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+    "sha256": "FB4FA300E95A74004EC71ABB86AA7F7C4799B270C4883C9AB8C8F7037AEC9B73"
+  },
+  {
+    "file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+    "sha256": "7B11444B14398324F809E30EF055137055A8692E6BA1E9A0E6E53411195BE72F"
+  },
+  {
+    "file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+    "sha256": "D5B5C639FC1BDF3A973EF61E0EDDBD2D70487A89D74A2450AA9E883AFB562E0B"
+  },
+  {
+    "file": "tests/article-minimal-reading-list-sidebar.test.mjs",
+    "sha256": "F6377F9B83F7D2785FB4C5C1ACC4C5669B5919569C5DCE8A8CDC3CF29751DDFC"
+  },
+  {
+    "file": "tests/article-template-presentation.test.mjs",
+    "sha256": "6BB296C035B91A8684988862C93AF2CF586F6AEC9C9F4066FED79AF0F1BD43A0"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "isolatedCssProbe": true,
+  "sourceModified": false,
+  "reading": [
+    {
+      "model": "underline",
+      "padding": [
+        "16px",
+        "0px",
+        "16px",
+        "0px"
+      ]
+    },
+    {
+      "model": "boxed",
+      "padding": [
+        "16px",
+        "0px",
+        "16px",
+        "0px"
+      ]
+    },
+    {
+      "model": "soft",
+      "padding": [
+        "16px",
+        "0px",
+        "16px",
+        "0px"
+      ]
+    }
+  ],
+  "restoresBladePadding": true
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "file": "public/assets/css/article/article-template-manager-2026.css",
+    "sha256": "72E9BCEC37ED789883EF52E46E3BE983CA6A3369DB5BF2EA164CEA66303A1D20"
+  },
+  {
+    "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+    "sha256": "75C950D7243542E8E3C6B49DE7FCACE38B4AB4A58A9A5920BA848E5E09FDB681"
+  },
+  {
+    "file": "resources/views/manage_article/templates/index.blade.php",
+    "sha256": "E71F0190F165150AE87D89E0C86FF98390C241FFCCE8313EBB125CC66264C20B"
+  },
+  {
+    "file": "resources/views/manage_article/templates/partials/options-styling.blade.php",
+    "sha256": "A35FD058E535D6E0D5FF917355E0DAEE7F1C10B60D2438238D8549B77EEFC65A"
+  },
+  {
+    "file": "resources/views/manage_article/templates/partials/options-classic-balanced.blade.php",
+    "sha256": "EA4DF4060508C28ADE8DFF9DC1EDF8193FE393E82BA8A1974AA7F3678775BF76"
+  },
+  {
+    "file": "resources/views/manage_article/templates/partials/options-mosaic-magazine.blade.php",
+    "sha256": "6B19CB940789A2D8ED85FE6BAD9BC5FF872DA443DD35404B972601664E042264"
+  },
+  {
+    "file": "resources/views/manage_article/manage_article_add.blade.php",
+    "sha256": "E5C83E6A8CEFBD097C22CB8370CC2792D987336A7EDF32D64680C871C7DE9695"
+  },
+  {
+    "file": "public/assets/css/phoenix-cms.css",
+    "sha256": "34A73439E91486257B1B1DBB62731577207A6E4C67A874AADE0725FD037C9BAD"
+  },
+  {
+    "file": "public/assets/css/article/article-frontend-2026.css",
+    "sha256": "9A47B1780F3E43CACDB97E3B45B243A27D9E02DFAD8473991B94A6BE2A03F697"
+  }
+]

@@ -14,6 +14,6 @@ function ruleFor(selector) {
 
 test('Article link hierarchy stays readable when a CMS theme tints generic anchors', () => {
 	assert.match(css, /\.article-page \.article-title-clamp a,[\s\S]*?\.article-detail \.article-toc a\s*\{[^}]*color\s*:\s*inherit\s*!important/);
-	assert.match(ruleFor('\\.article-pagination \\.ph-pagination \\.page-link'), /color\s*:\s*#344054\s*!important/);
+	assert.match(ruleFor('(?:^|\\n)\\.article-pagination \\.ph-pagination \\.page-link'), /color\s*:\s*#344054\s*!important/);
 	assert.match(ruleFor('body \\.article-detail \\.article-detail-navigation__item'), /color\s*:\s*#344054\s*!important/);
 });

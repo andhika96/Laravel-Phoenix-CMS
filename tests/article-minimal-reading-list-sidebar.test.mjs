@@ -40,12 +40,13 @@ test('Minimal Reading List uses a responsive two-column layout and clean scoped 
 	const css = read('public/assets/css/article/article-frontend-2026.css');
 
 	assert.match(css, /\.article-page--reading-list \.article-reading-list-layout\s*\{[\s\S]*?display:\s*grid/);
-	assert.match(css, /\.article-page--reading-list \.article-reading-list-layout\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\)\s+minmax\(17rem, 20rem\)/);
+	assert.match(css, /\.article-page--reading-list \.article-reading-list-layout\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\)\s+17\.5rem/);
 	assert.match(css, /\.article-page--reading-list \.article-reading-list__sidebar/);
 	assert.match(css, /\.article-page--reading-list \.article-reading-list-layout--without-sidebar\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\)/);
 	assert.match(css, /\.article-page--reading-list \.article-reading-list__media:not\(\.article-thumbnail-frame--custom\)/);
 	assert.match(css, /\.article-page--reading-list \.article-reading-list__media\.article-thumbnail-frame--custom[\s\S]*?box-shadow:\s*none/);
-	assert.match(css, /\.article-page--reading-list \.article-pagination--with-frame\s*\{[\s\S]*?border:\s*0/);
+	assert.doesNotMatch(css, /\.article-page--reading-list \.article-pagination--with-frame\s*\{[^}]*border:\s*0/);
+	assert.match(css, /\.article-page--reading-list \.article-pagination--without-frame\.article-pagination--padding-default/);
 	assert.match(css, /@media \(max-width: 991\.98px\)[\s\S]*?\.article-page--reading-list \.article-reading-list-layout[\s\S]*?grid-template-columns:\s*1fr/);
 });
 
@@ -54,8 +55,8 @@ test('Minimal Reading List search toolbar uses a single proportional control row
 
 	assert.match(css, /\.article-page--reading-list \.article-template-toolbar\s*\{[\s\S]*?display:\s*flex/);
 	assert.match(css, /\.article-page--reading-list \.article-template-toolbar__zone:has\(\.article-template-toolbar__control--search\)\s*\{[\s\S]*?flex:\s*1 1 auto/);
-	assert.match(css, /\.article-page--reading-list \.article-template-toolbar__control--search\s*\{[\s\S]*?width:\s*min\(100%,\s*42rem\)/);
-	assert.match(css, /\.article-page--reading-list \.article-template-toolbar__control--search input\s*\{[\s\S]*?min-height:\s*48px/);
+	assert.match(css, /\.article-page--reading-list \.article-template-toolbar \.article-template-toolbar__control--search\s*\{[\s\S]*?width:\s*min\(100%,\s*42\.5rem\)/);
+	assert.match(css, /\.article-page--reading-list \.article-template-toolbar \.article-template-toolbar__control--search input\s*\{[\s\S]*?min-height:\s*48px/);
 	assert.match(css, /\.article-page--reading-list \.article-template-toolbar \.btn\s*\{[\s\S]*?min-height:\s*48px/);
 	assert.match(css, /@media \(max-width: 991\.98px\)[\s\S]*?\.article-page--reading-list \.article-template-toolbar\s*\{[\s\S]*?flex-direction:\s*column/);
 });

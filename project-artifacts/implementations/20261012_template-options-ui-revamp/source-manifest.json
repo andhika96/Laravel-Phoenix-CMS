@@ -1,0 +1,32 @@
+[
+  {
+    "file": "public/assets/css/article/article-template-manager-2026.css",
+    "backupVerified": true,
+    "currentSha256": "11F7A94B4A619C694335721BB99F69F042620B41670A8ABAFC52BF39EEC99956"
+  },
+  {
+    "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+    "backupVerified": true,
+    "currentSha256": "CAC46CC2E3F87ECA7958752AE042C3FA271D291C025037A8C72BE43AE32356B9"
+  },
+  {
+    "file": "resources/views/manage_article/templates/index.blade.php",
+    "backupVerified": true,
+    "currentSha256": "7261090817A0A137914664D1D4A97BA652E11352B833167C8B9A5DA172FC70F1"
+  },
+  {
+    "file": "tests/manage-article-template-manager.test.mjs",
+    "backupVerified": true,
+    "currentSha256": "12B5D66293EB1CE6DB6AA24D1348D56A6D6CA7220885BEE34ACDE55A0AC424CD"
+  },
+  {
+    "file": "tests/article-template-presentation.test.mjs",
+    "backupVerified": true,
+    "currentSha256": "FC54E84470198C8CCBD2849FD0125FBB3ABB492A05C85B13BFFF9D0FAEE7F78D"
+  },
+  {
+    "file": "resources/views/manage_article/templates/partials/options-styling.blade.php",
+    "backupVerified": true,
+    "currentSha256": "388D7E57994ED38EED41AA9BD1BBCC07E0D5FE583449E7AE516D5AFDA857EECD"
+  }
+]

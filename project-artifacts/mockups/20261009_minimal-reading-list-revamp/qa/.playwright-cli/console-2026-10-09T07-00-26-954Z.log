@@ -1,0 +1,10 @@
+[   87723ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://127.0.0.1:8774/assets/fontawesome/webfonts/fa-solid-900.woff2:0
+[   87745ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://127.0.0.1:8774/assets/wellness-room.png:0
+[   87746ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://127.0.0.1:8774/assets/coastal-road.png:0
+[   87746ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://127.0.0.1:8774/assets/fontawesome/webfonts/fa-solid-900.ttf:0
+[   87817ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://127.0.0.1:8774/assets/knowledge-preview.png:0
+[  106860ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://127.0.0.1:8774/assets/coastal-road.png:0
+[  106861ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://127.0.0.1:8774/assets/wellness-room.png:0
+[  106863ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://127.0.0.1:8774/assets/knowledge-preview.png:0
+[  106880ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://127.0.0.1:8774/assets/fontawesome/webfonts/fa-solid-900.woff2:0
+[  106899ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://127.0.0.1:8774/assets/fontawesome/webfonts/fa-solid-900.ttf:0

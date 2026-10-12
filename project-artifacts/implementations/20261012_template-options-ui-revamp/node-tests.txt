@@ -1,0 +1,466 @@
+TAP version 13
+# Subtest: article frontend typography inherits CMS responsive typography tokens
+ok 1 - article frontend typography inherits CMS responsive typography tokens
+  ---
+  duration_ms: 5.4715
+  type: 'test'
+  ...
+# Subtest: Article title and short description use separate responsive CMS-bound scales
+ok 2 - Article title and short description use separate responsive CMS-bound scales
+  ---
+  duration_ms: 1.203
+  type: 'test'
+  ...
+# Subtest: all Article templates provide an image fallback for empty thumbnails
+ok 3 - all Article templates provide an image fallback for empty thumbnails
+  ---
+  duration_ms: 6.3084
+  type: 'test'
+  ...
+# Subtest: archive cards use shared media, title, excerpt, and equal-height presentation contracts
+ok 4 - archive cards use shared media, title, excerpt, and equal-height presentation contracts
+  ---
+  duration_ms: 1.0276
+  type: 'test'
+  ...
+# Subtest: detail templates use the editorial reading and neighbor-navigation contracts
+ok 5 - detail templates use the editorial reading and neighbor-navigation contracts
+  ---
+  duration_ms: 0.7204
+  type: 'test'
+  ...
+# Subtest: Article and manager accents inherit the active CMS primary color token
+ok 6 - Article and manager accents inherit the active CMS primary color token
+  ---
+  duration_ms: 2.172
+  type: 'test'
+  ...
+# Subtest: Archive thumbnails keep a cover fallback while allowing validated background or asset rendering
+ok 7 - Archive thumbnails keep a cover fallback while allowing validated background or asset rendering
+  ---
+  duration_ms: 1.4956
+  type: 'test'
+  ...
+# Subtest: thumbnail height is conditional to background mode and both media modes keep distinct rendering paths
+ok 8 - thumbnail height is conditional to background mode and both media modes keep distinct rendering paths
+  ---
+  duration_ms: 0.8101
+  type: 'test'
+  ...
+# Subtest: tablet and mobile previews compact editorial spacing and retain a visible search action
+ok 9 - tablet and mobile previews compact editorial spacing and retain a visible search action
+  ---
+  duration_ms: 0.8945
+  type: 'test'
+  ...
+# Subtest: Minimal Reading List stacks mobile posts and keeps CMS-bound heading typography
+ok 10 - Minimal Reading List stacks mobile posts and keeps CMS-bound heading typography
+  ---
+  duration_ms: 1.143
+  type: 'test'
+  ...
+# Subtest: responsive Minimal Reading List mockup exposes focused desktop, tablet, and stacked mobile states
+ok 11 - responsive Minimal Reading List mockup exposes focused desktop, tablet, and stacked mobile states
+  ---
+  duration_ms: 1.2501
+  type: 'test'
+  ...
+# Subtest: Balanced Card Grid uses a named category select instead of a numeric category field
+ok 12 - Balanced Card Grid uses a named category select instead of a numeric category field
+  ---
+  duration_ms: 0.4912
+  type: 'test'
+  ...
+# Subtest: archive and detail templates expose shared configurable headers and toolbar placement hooks
+ok 13 - archive and detail templates expose shared configurable headers and toolbar placement hooks
+  ---
+  duration_ms: 2.0574
+  type: 'test'
+  ...
+# Subtest: all archive list titles use a validated configurable heading partial with an H4 default and smaller category badges
+ok 14 - all archive list titles use a validated configurable heading partial with an H4 default and smaller category badges
+  ---
+  duration_ms: 2.1727
+  type: 'test'
+  ...
+# Subtest: template options revamp keeps modal regions independently scrollable and responsive
+ok 15 - template options revamp keeps modal regions independently scrollable and responsive
+  ---
+  duration_ms: 1.0583
+  type: 'test'
+  ...
+# Subtest: settings panel keeps a constrained flex scroll chain after form density changes
+ok 16 - settings panel keeps a constrained flex scroll chain after form density changes
+  ---
+  duration_ms: 0.8238
+  type: 'test'
+  ...
+# Subtest: template options modal places its sizing hook on the wrapper used by descendant selectors
+ok 17 - template options modal places its sizing hook on the wrapper used by descendant selectors
+  ---
+  duration_ms: 0.5925
+  type: 'test'
+  ...
+# Subtest: Header content panel follows the approved vertical field layout
+ok 18 - Header content panel follows the approved vertical field layout
+  ---
+  duration_ms: 0.8949
+  type: 'test'
+  ...
+# Subtest: Template Options section headings use h5 semantics and the requested 1.8rem field gap
+ok 19 - Template Options section headings use h5 semantics and the requested 1.8rem field gap
+  ---
+  duration_ms: 1.442
+  type: 'test'
+  ...
+# Subtest: all option form controls use the roomy full-width panel rhythm
+ok 20 - all option form controls use the roomy full-width panel rhythm
+  ---
+  duration_ms: 0.9185
+  type: 'test'
+  ...
+# Subtest: Minimal Reading List category filter uses progressive disclosure and a native position select
+ok 21 - Minimal Reading List category filter uses progressive disclosure and a native position select
+  ---
+  duration_ms: 0.5712
+  type: 'test'
+  ...
+# Subtest: Header content descriptions use a compact resizable textarea on archive and custom detail fields
+ok 22 - Header content descriptions use a compact resizable textarea on archive and custom detail fields
+  ---
+  duration_ms: 0.6996
+  type: 'test'
+  ...
+# Subtest: Archive toolbar search position buttons use the themed hover state and category controls stay left aligned
+ok 23 - Archive toolbar search position buttons use the themed hover state and category controls stay left aligned
+  ---
+  duration_ms: 0.6472
+  type: 'test'
+  ...
+# Subtest: teleported Template Options modal keeps the CMS accent token available to hover styles
+ok 24 - teleported Template Options modal keeps the CMS accent token available to hover styles
+  ---
+  duration_ms: 0.314
+  type: 'test'
+  ...
+# Subtest: list settings keep consistent bottom dividers across nested and compound option groups
+ok 25 - list settings keep consistent bottom dividers across nested and compound option groups
+  ---
+  duration_ms: 1.179
+  type: 'test'
+  ...
+# Subtest: Template Options V3 mockup mirrors the updated textarea, toolbar hover, and left category controls
+ok 26 - Template Options V3 mockup mirrors the updated textarea, toolbar hover, and left category controls
+  ---
+  duration_ms: 1.4117
+  type: 'test'
+  ...
+# Subtest: frame styling controls use one full-width row per field
+ok 27 - frame styling controls use one full-width row per field
+  ---
+  duration_ms: 0.2949
+  type: 'test'
+  ...
+# Subtest: border radius follows the Page Builder four-corner form-group pattern
+ok 28 - border radius follows the Page Builder four-corner form-group pattern
+  ---
+  duration_ms: 0.4917
+  type: 'test'
+  ...
+# Subtest: pagination button radius uses the four-corner form-group and chain link
+ok 29 - pagination button radius uses the four-corner form-group and chain link
+  ---
+  duration_ms: 0.3293
+  type: 'test'
+  ...
+# Subtest: pagination radius and number gap occupy separate full-width rows
+ok 30 - pagination radius and number gap occupy separate full-width rows
+  ---
+  duration_ms: 0.672
+  type: 'test'
+  ...
+# Subtest: Editorial Journal manager controls stay scoped and expose the complete new options surface
+ok 31 - Editorial Journal manager controls stay scoped and expose the complete new options surface
+  ---
+  duration_ms: 0.7578
+  type: 'test'
+  ...
+# Subtest: spacing groups mirror the Page Builder form-group hierarchy with a shared unit header
+ok 32 - spacing groups mirror the Page Builder form-group hierarchy with a shared unit header
+  ---
+  duration_ms: 0.5863
+  type: 'test'
+  ...
+# Subtest: template options switches match the approved inspector 44 by 24 geometry
+ok 33 - template options switches match the approved inspector 44 by 24 geometry
+  ---
+  duration_ms: 0.5628
+  type: 'test'
+  ...
+# Subtest: template options follows the normal compact CMS form scale without nested font shrinkage
+ok 34 - template options follows the normal compact CMS form scale without nested font shrinkage
+  ---
+  duration_ms: 0.758
+  type: 'test'
+  ...
+# Subtest: template settings reuse native fields and the established divider rhythm
+ok 35 - template settings reuse native fields and the established divider rhythm
+  ---
+  duration_ms: 0.863
+  type: 'test'
+  ...
+# Subtest: compact radius controls keep all four sides usable on mobile
+ok 36 - compact radius controls keep all four sides usable on mobile
+  ---
+  duration_ms: 0.3947
+  type: 'test'
+  ...
+# Subtest: toolbar and frame groups preserve full-width controls with readable rhythm
+ok 37 - toolbar and frame groups preserve full-width controls with readable rhythm
+  ---
+  duration_ms: 0.9863
+  type: 'test'
+  ...
+# Subtest: spacing form groups use the wider rhythm and linked buttons share input borders
+ok 38 - spacing form groups use the wider rhythm and linked buttons share input borders
+  ---
+  duration_ms: 0.9117
+  type: 'test'
+  ...
+# Subtest: curated template preview identifies sample content and prevents fixture links from leaving the iframe
+ok 39 - curated template preview identifies sample content and prevents fixture links from leaving the iframe
+  ---
+  duration_ms: 1.6506
+  type: 'test'
+  ...
+# Subtest: curated template preview blocks archive toolbar submissions from leaving the draft iframe
+ok 40 - curated template preview blocks archive toolbar submissions from leaving the draft iframe
+  ---
+  duration_ms: 2.0298
+  type: 'test'
+  ...
+# Subtest: public detail wrapper passes neighboring Articles through to every selected detail template
+ok 41 - public detail wrapper passes neighboring Articles through to every selected detail template
+  ---
+  duration_ms: 0.3496
+  type: 'test'
+  ...
+# Subtest: manager selection changes only the active surface and rebuilds the live preview URL
+ok 42 - manager selection changes only the active surface and rebuilds the live preview URL
+  ---
+  duration_ms: 4.7937
+  type: 'test'
+  ...
+# Subtest: manager passes the active CMS accent into the isolated preview and refreshes it when the theme changes
+ok 43 - manager passes the active CMS accent into the isolated preview and refreshes it when the theme changes
+  ---
+  duration_ms: 1.3376
+  type: 'test'
+  ...
+# Subtest: manager serializes the active template option draft into the iframe URL without saving it
+ok 44 - manager serializes the active template option draft into the iframe URL without saving it
+  ---
+  duration_ms: 2.2525
+  type: 'test'
+  ...
+# Subtest: applying modal options updates only the active draft and rebuilds the preview
+ok 45 - applying modal options updates only the active draft and rebuilds the preview
+  ---
+  duration_ms: 1.5235
+  type: 'test'
+  ...
+# Subtest: an unsaved preview selection is selected, not the persisted default
+ok 46 - an unsaved preview selection is selected, not the persisted default
+  ---
+  duration_ms: 1.0374
+  type: 'test'
+  ...
+# Subtest: manager source keeps the selected visual direction and a real preview iframe
+ok 47 - manager source keeps the selected visual direction and a real preview iframe
+  ---
+  duration_ms: 0.5526
+  type: 'test'
+  ...
+# Subtest: manager cards use template preview thumbnails with a local placeholder fallback
+ok 48 - manager cards use template preview thumbnails with a local placeholder fallback
+  ---
+  duration_ms: 0.444
+  type: 'test'
+  ...
+# Subtest: device preview uses fixed virtual viewports and scales the full frame to fit
+ok 49 - device preview uses fixed virtual viewports and scales the full frame to fit
+  ---
+  duration_ms: 1.5138
+  type: 'test'
+  ...
+# Subtest: device selection changes viewport profile and refits the preview
+ok 50 - device selection changes viewport profile and refits the preview
+  ---
+  duration_ms: 1.7743
+  type: 'test'
+  ...
+# Subtest: manager source exposes a labelled device stage instead of max-width-only iframes
+ok 51 - manager source exposes a labelled device stage instead of max-width-only iframes
+  ---
+  duration_ms: 0.9007
+  type: 'test'
+  ...
+# Subtest: live preview stage wrappers stay square while template content keeps its own frame settings
+ok 52 - live preview stage wrappers stay square while template content keeps its own frame settings
+  ---
+  duration_ms: 0.8717
+  type: 'test'
+  ...
+# Subtest: template selection displays a loading state until the iframe has loaded the new preview
+ok 53 - template selection displays a loading state until the iframe has loaded the new preview
+  ---
+  duration_ms: 2.5046
+  type: 'test'
+  ...
+# Subtest: manager source exposes an accessible preview-loading overlay bound to iframe load
+ok 54 - manager source exposes an accessible preview-loading overlay bound to iframe load
+  ---
+  duration_ms: 0.6066
+  type: 'test'
+  ...
+# Subtest: manager exposes an Add User-style template options modal with draft-only apply behavior
+ok 55 - manager exposes an Add User-style template options modal with draft-only apply behavior
+  ---
+  duration_ms: 0.4444
+  type: 'test'
+  ...
+# Subtest: template option dimensions use the requested unit allowlists with deterministic linked-side behavior
+ok 56 - template option dimensions use the requested unit allowlists with deterministic linked-side behavior
+  ---
+  duration_ms: 1.5537
+  type: 'test'
+  ...
+# Subtest: border radius control follows the Page Builder four-corner linked-unit behavior
+ok 57 - border radius control follows the Page Builder four-corner linked-unit behavior
+  ---
+  duration_ms: 1.3464
+  type: 'test'
+  ...
+# Subtest: template options modal exposes only structured archive and detail styling controls
+ok 58 - template options modal exposes only structured archive and detail styling controls
+  ---
+  duration_ms: 0.6834
+  type: 'test'
+  ...
+# Subtest: template options uses the local Page Builder Coloris pattern and equal box-control geometry
+ok 59 - template options uses the local Page Builder Coloris pattern and equal box-control geometry
+  ---
+  duration_ms: 0.6782
+  type: 'test'
+  ...
+# Subtest: Pagination options expose named models and independent desktop/tablet/mobile ranges
+ok 60 - Pagination options expose named models and independent desktop/tablet/mobile ranges
+  ---
+  duration_ms: 0.639
+  type: 'test'
+  ...
+# Subtest: Editorial Journal options expose scoped lead, card, background, height, and read more controls
+ok 61 - Editorial Journal options expose scoped lead, card, background, height, and read more controls
+  ---
+  duration_ms: 1.4057
+  type: 'test'
+  ...
+# Subtest: manager prepares Editorial Journal defaults without changing other archive option shapes
+ok 62 - manager prepares Editorial Journal defaults without changing other archive option shapes
+  ---
+  duration_ms: 4.0199
+  type: 'test'
+  ...
+# Subtest: Archive toolbar search exposes model, gap, Font Awesome icon, and state color controls
+ok 63 - Archive toolbar search exposes model, gap, Font Awesome icon, and state color controls
+  ---
+  duration_ms: 0.8999
+  type: 'test'
+  ...
+# Subtest: template options modal exposes conditional vertical navigation and a mobile section picker
+ok 64 - template options modal exposes conditional vertical navigation and a mobile section picker
+  ---
+  duration_ms: 0.6412
+  type: 'test'
+  ...
+# Subtest: option sections follow the active surface and template schema
+ok 65 - option sections follow the active surface and template schema
+  ---
+  duration_ms: 1.772
+  type: 'test'
+  ...
+# Subtest: modal preview uses the modal clone, debounces edits, and keeps the page draft untouched
+ok 66 - modal preview uses the modal clone, debounces edits, and keeps the page draft untouched
+  ---
+  duration_ms: 1.8487
+  type: 'test'
+  ...
+# Subtest: page and modal Minimal Reading List previews share the same read-only renderer endpoint
+ok 67 - page and modal Minimal Reading List previews share the same read-only renderer endpoint
+  ---
+  duration_ms: 2.6786
+  type: 'test'
+  ...
+# Subtest: modal session starts on Header content and isolates every edit from its source object
+ok 68 - modal session starts on Header content and isolates every edit from its source object
+  ---
+  duration_ms: 0.9773
+  type: 'test'
+  ...
+# Subtest: modal preview uses the fixed virtual device profile when fitting its viewport
+ok 69 - modal preview uses the fixed virtual device profile when fitting its viewport
+  ---
+  duration_ms: 1.8814
+  type: 'test'
+  ...
+# Subtest: modal dismissal exposes an inline dirty confirmation and retryable preview lifecycle
+ok 70 - modal dismissal exposes an inline dirty confirmation and retryable preview lifecycle
+  ---
+  duration_ms: 1.5523
+  type: 'test'
+  ...
+# Subtest: hidden modal lifecycle cancels preview timers, disconnects the observer, and clears the session
+ok 71 - hidden modal lifecycle cancels preview timers, disconnects the observer, and clears the session
+  ---
+  duration_ms: 1.0117
+  type: 'test'
+  ...
+# Subtest: modal preview treats an authentication redirect as an error instead of a successful load
+ok 72 - modal preview treats an authentication redirect as an error instead of a successful load
+  ---
+  duration_ms: 1.025
+  type: 'test'
+  ...
+# Subtest: CMS notices show the existing Bootstrap toast for success, warning and failed
+ok 73 - CMS notices show the existing Bootstrap toast for success, warning and failed
+  ---
+  duration_ms: 1.2757
+  type: 'test'
+  ...
+# Subtest: template option drafts do not share references with the last saved settings
+ok 74 - template option drafts do not share references with the last saved settings
+  ---
+  duration_ms: 1.1436
+  type: 'test'
+  ...
+# Subtest: Save Template reports success only after the server responds and preserves saved state on validation failure
+ok 75 - Save Template reports success only after the server responds and preserves saved state on validation failure
+  ---
+  duration_ms: 1.3135
+  type: 'test'
+  ...
+# Subtest: modal preview URL stays within a practical GET budget for the largest draft payload
+ok 76 - modal preview URL stays within a practical GET budget for the largest draft payload
+  ---
+  duration_ms: 1.7507
+  type: 'test'
+  ...
+1..76
+# tests 76
+# suites 0
+# pass 76
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 193.9882

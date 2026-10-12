@@ -1,0 +1,117 @@
+# Minimal Reading List: implementasi revamp dan kesesuaian settings
+
+Tanggal: 9 Oktober 2026, Asia/Jakarta. Project: Laravel 13 Phoenix.
+
+Status: revamp diterapkan ke source aktif. Typography menggunakan kontrak frontend CMS. Tiga model pagination dan form settings yang sudah ada tetap digunakan.
+
+## Hasil utama
+
+- Search memiliki input/button proporsional, target minimal 48 px, ikon berjarak dari teks, dan gap/radius dari Template Options. Zone toolbar kosong tidak lagi menambah ruang.
+- Reading list memiliki heading jumlah hasil dalam slot konten Vue, thumbnail konsisten, divider tipis, serta layout mobile satu kolom dengan thumbnail penuh di atas teks.
+- Kategori memakai daftar vertikal dengan active state lembut; Popular Posts dirapikan.
+- Font family dan body scale tetap berasal dari `SiteTypography` / `--ph-font-family` / `--ph-adaptive-font-size`. Heading menggunakan token `--ph-fmv2-rfs-h1`, `--ph-fmv2-rfs-h4`, dan mobile heading token CMS.
+- Nilai font yang terbaca pada frontend saat pekerjaan ini adalah Noto Sans 14 px; compact density CMS dapat menghasilkan effective body size 13 px pada viewport tertentu. Tidak menyalin font 38/22 px atau Nunito dari prototype ke source.
+- Pagination mempertahankan Minimal Underline, Classic Boxed, dan Soft Highlight. Tombol minimal 44 px, label Previous/Next muncul pada desktop, dan radius/warna model berasal dari settings bersama.
+
+## Footer frame dan instruksi terbaru pengguna
+
+Pada tahap awal implementasi, penghapusan override legacy membuat frame dari settings terlihat sebagai box rounded. Pengguna mengoreksi bahwa preview yang disetujui tanpa box tersebut, kemudian meminta semua form settings tetap berfungsi.
+
+Hasil akhir mengikuti kedua kebutuhan melalui default dan opsi eksplisit:
+
+- Default Minimal Reading List yang tidak memiliki override frame adalah **frame OFF**.
+- Checkbox **Show footer frame OFF** menghasilkan pagination terbuka tanpa box.
+- Checkbox **Show footer frame ON** tetap menampilkan border, radius, dan background sesuai setting.
+- Radius tombol pagination berbeda dari radius container/footer frame.
+- Tidak ada CSS yang memaksa frame selalu hilang ketika user mengaktifkannya.
+- Nilai tersimpan atau draft yang secara eksplisit `enabled: true` tetap dihormati. Untuk membuat draft lama sama dengan preview tanpa box, matikan Show footer frame pada form. Pekerjaan ini tidak mengubah record settings database atau memilih template aktif.
+
+Default backend dan fallback normalizer editor diselaraskan. Default template lain tidak berubah.
+
+## File source yang diubah
+
+1. `public/assets/css/article/article-frontend-2026.css`: perubahan scoped Minimal Reading List; typography CMS, search, list/sidebar/mobile, serta styling pagination yang tetap mengikuti settings. Tinggi background thumbnail dan radius frame custom juga dihormati pada mobile.
+2. `resources/views/article/templates/archive/minimal-reading-list.blade.php`: heading jumlah hasil dalam `data-article-vue-list-content`, sehingga ikut diperbarui oleh loader Vue yang sudah ada.
+3. `app/Support/Article/ArticleTemplateOptions.php`: default footer frame OFF hanya untuk Minimal Reading List; nilai eksplisit tetap dinormalisasi.
+4. `public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js`: fallback default frame editor sama dengan backend.
+5. `tests/Feature/Article/ArticleTemplateOptionsTest.php`: regression default frame dan opsi eksplisit ON/OFF.
+6. `tests/article-minimal-reading-list-sidebar.test.mjs`: kontrak layout/search baru dan frame yang mengikuti settings.
+7. `tests/article-template-presentation.test.mjs`: kontrak mobile row dan CMS heading token.
+
+Tidak ada dependency baru, commit, push, reset, atau clean. Perubahan lama tidak dihapus.
+
+## Source lain yang dibaca
+
+`resources/views/article/archive.blade.php`, `resources/views/manage_article/templates/preview.blade.php`, shared archive-header/media-link/archive-title/pagination/template-shell-attributes, `app/Support/SiteTypography.php`, ArticleTemplateCatalog, ArticleTemplatePreviewFixture, PublicArticleCategoryOptions, ArticleTemplateSetting, frontend Vue list replacement, theme-responsive-typography.css, PHPUnit config, serta test Article/typography yang relevan.
+
+## Memori dan Graphify
+
+Drive `E:\AI\Memories` tidak tersedia. Salinan C pada `C:\Users\aruna\.codex\memories\MEMORY.md` bagian Article Template Options/pagination dipakai sebagai konteks dan diverifikasi terhadap source aktif.
+
+Graphify query: `minimal reading article frontend typography`; explain `minimal-reading-list.blade.php`. Lima include ke shell/header/media/title/pagination merupakan `EXTRACTED`, lalu source aktual dibuka. Hasil query luas yang tidak relevan tidak digunakan sebagai fakta.
+
+Graph cocok commit sebelum perubahan (`966a8057536d6ddc53c602e68bf62c5ccf336be1`). Graph belum diperbarui setelah source berubah, sesuai instruksi update manual. Jalur include tetap diverifikasi langsung.
+
+## Backup
+
+Backup source utama, hash-verified:
+
+`D:\Laragon\www\laravel-13-phoenix\project-artifacts\backups\20261009_151026-minimal-reading-list-revamp\`
+
+- `manifest.json`: CSS, Blade, dan test presentation sebelum perubahan awal.
+- `manifest-pagination-footer-*.json`: CSS checkpoint dan sidebar test sebelum koreksi footer.
+- `manifest-settings-parity-*.json`: normalizer PHP, regression PHP, CSS, serta sidebar test sebelum penyelarasan default frame.
+- `vueV3-manage-article-templates-2026.js.bak_20261009_155652_frame-default`: backup JS editor, diverifikasi hash.
+
+Checkpoint artifact/QA tersedia dalam `implementation/backups/`, termasuk source CSS sebelum koreksi thumbnail, renderer fixture, browser check, HTML, dan screenshot. Semua berada dalam project-artifacts. Source aktif tetap digunakan untuk implementasi.
+
+## Verifikasi terbaru
+
+| Pemeriksaan | Hasil |
+| --- | --- |
+| Node Article + typography | 128 tests passed, 0 failed |
+| PHP Article | 43 tests passed, 616 assertions |
+| Browser source renderer | 37 checks passed setelah koreksi mobile |
+| PHP syntax normalizer | Passed |
+| JS syntax editor dan QA script | Passed |
+| git diff --check | Passed |
+
+Browser checks mencakup:
+
+- Search gap default dan custom, tinggi/alignment input-button, radius input, font family serta perubahan font CMS.
+- Heading mengikuti token CMS dan heading hasil berada dalam slot AJAX.
+- Tidak ada horizontal overflow pada 1440, 1024, 768, 390, 375, dan 320 px.
+- Thumbnail penuh di atas teks pada mobile; desktop/tablet tetap berdampingan; tinggi background custom 280 px serta radius frame custom 18 px dihormati.
+- Tiga model pagination tetap berbeda, default footer tanpa rounded container.
+- Header text/description, sidebar OFF, title tag H2, post gap 24 px, pagination total OFF.
+- Frame ON dengan border 3 px dan radius 18 px benar-benar dirender.
+
+Logs: `node-settings-parity.log`, `php-settings-parity.log`, `browser-settings-results.json`. RED evidence: gap search lama, default frame lama, dan mobile thumbnail height yang tidak menghormati setting.
+
+PHP tests memakai SQLite `:memory:`, config-cache override lokal, dan compiled views dalam artifact. Translation helper CMS normally inserts missing strings; helper identity khusus runner QA mencegah efek tersebut pada database aktif. Normalizer, renderer, dan logic Article tetap code aktual. Translation persistence bukan objek pengujian ini.
+
+`render.php` merender Blade/normalizer/CSS aktif dengan foto fixture lokal. ID kategori di fixture QA diisi eksplisit tanpa save untuk merepresentasikan kategori database, karena model fixture lama dapat membuang ID yang guarded. Ini tidak mengubah fixture production.
+
+## Preview dan screenshot
+
+- `boxed.html`, `underline.html`, `soft.html`: hasil renderer source dengan default frame OFF.
+- `settings.html`: hasil renderer dengan nilai settings custom dan frame ON.
+- `desktop-source.png`, `mobile-source.png`: screenshot final dari source renderer.
+- `pagination-boxed.png`, `pagination-underline.png`, `pagination-soft.png`: ketiga model default tanpa box luar.
+- `frame-enabled.png`: bukti frame ON mengikuti setting.
+
+Saat server fixture lokal aktif: http://127.0.0.1:8774/implementation/boxed.html . HTML dapat dibuka dari file lokal; semua aset berada dalam artifact terkait. Untuk melihat source baru pada modal Manager yang sudah terbuka, pergantian device preview dapat memuat ulang iframe tanpa menekan Save Template.
+
+## Keterbatasan dan review
+
+- Browser test memakai hasil renderer Blade/CSS aktif di fixture lokal; full authenticated Manager Apply/Save lifecycle belum dijalankan.
+- Frontend publik `/article` yang dibaca saat awal masih memakai Editorial Journal. Pilihan template tersimpan tidak diganti otomatis.
+- Custom profile mencakup pengaturan yang berisiko terpengaruh; bukan klaim semua kombinasi nilai seluruh control telah diuji.
+- Fresh subagent review gagal berjalan karena kredit workspace tidak tersedia. Review scope/diff dilakukan sendiri dan hasil test lokal diperiksa. Tidak ada klaim review independen berhasil.
+- Beberapa run awal gagal karena server fixture berhenti, cwd Node salah, helper PHPUnit dimuat setelah autoload, atau apply_patch gagal menulis CSS. Source/backup diperiksa, runner/cwd diperbaiki, dan penulisan CSS native dengan guard selector dilakukan melalui tool yang disetujui. Hasil final di atas berasal dari run ulang yang selesai.
+
+## Langkah berikutnya
+
+Gunakan form settings yang ada. Jika draft lama masih menyalakan Show footer frame, set OFF untuk menyamai preview tanpa box. Nilai ON tetap tersedia bila pengguna menginginkan frame. Graphify dapat diperbarui manual setelah pengguna meminta.
+
+Koreksi mobile terbaru: lihat mobile-post-list-qa.md dan screenshot mobile-stacked.png. Layout mobile berdampingan pada checkpoint lama telah diganti satu kolom sesuai arahan pengguna. Pada 11 Oktober 2026, CSS server cocok dengan source dan snapshot CSS yang telah diuji; 128 test Node dan diff check kembali lulus.

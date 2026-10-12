@@ -1,0 +1,214 @@
+- generic [active] [ref=e1]:
+  - link "Skip to articles" [ref=e2] [cursor=pointer]:
+    - /url: "#articles"
+  - main [ref=e3]:
+    - generic [ref=e4]:
+      - paragraph [ref=e5]: Journal
+      - heading "Minimal Reading List" [level=1] [ref=e6]
+      - paragraph [ref=e7]: Thoughtful reads on design, technology, and the web.
+      - search [ref=e8]:
+        - generic [ref=e9]: Search articles
+        - searchbox "Search articles" [ref=e10]
+        - button "Search" [ref=e11] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e12]: 
+    - generic [ref=e14]:
+      - region [ref=e15]:
+        - generic [ref=e16]:
+          - heading "All articles" [level=2] [ref=e17]
+          - generic [ref=e18]: 48 articles
+        - status [ref=e20]: 48 articles. Showing 1 to 6. Page 1 of 8.
+        - generic [ref=e21]:
+          - article [ref=e22]:
+            - link [aria-hidden] [ref=e23] [cursor=pointer]:
+              - /url: "#article-1"
+            - generic [ref=e24]:
+              - paragraph [ref=e25]:
+                - generic [ref=e26]: Technology
+                - generic [aria-hidden] [ref=e27]: ·
+                - time [ref=e28]: 24 Aug 2026
+                - generic [aria-hidden] [ref=e29]: ·
+                - generic [ref=e30]: 1 min read
+              - heading [level=3] [ref=e31]:
+                - link "Building Resilient Systems at Scale" [ref=e32] [cursor=pointer]:
+                  - /url: "#article-1"
+              - paragraph [ref=e33]: Resilience is not a feature added at the end of delivery. It is the accumulated result of clear priorities, observability, and teams that make room for learning.
+              - 'link "Read more: Building Resilient Systems at Scale" [ref=e34] [cursor=pointer]':
+                - /url: "#article-1"
+                - text: Read more
+                - generic [aria-hidden] [ref=e35]: 
+          - article [ref=e36]:
+            - link [aria-hidden] [ref=e37] [cursor=pointer]:
+              - /url: "#article-2"
+            - generic [ref=e38]:
+              - paragraph [ref=e39]:
+                - generic [ref=e40]: Design
+                - generic [aria-hidden] [ref=e41]: ·
+                - time [ref=e42]: 22 Aug 2026
+                - generic [aria-hidden] [ref=e43]: ·
+                - generic [ref=e44]: 1 min read
+              - heading [level=3] [ref=e45]:
+                - link "Designing Spaces That Last Beyond a Trend Cycle" [ref=e46] [cursor=pointer]:
+                  - /url: "#article-2"
+              - paragraph [ref=e47]: How calmer visual systems help teams make more confident product decisions.
+              - 'link "Read more: Designing Spaces That Last Beyond a Trend Cycle" [ref=e48] [cursor=pointer]':
+                - /url: "#article-2"
+                - text: Read more
+                - generic [aria-hidden] [ref=e49]: 
+          - article [ref=e50]:
+            - link [aria-hidden] [ref=e51] [cursor=pointer]:
+              - /url: "#article-3"
+            - generic [ref=e52]:
+              - paragraph [ref=e53]:
+                - generic [ref=e54]: Travel
+                - generic [aria-hidden] [ref=e55]: ·
+                - time [ref=e56]: 20 Aug 2026
+                - generic [aria-hidden] [ref=e57]: ·
+                - generic [ref=e58]: 1 min read
+              - heading [level=3] [ref=e59]:
+                - link "Slow Adventures Along the Coastal Road" [ref=e60] [cursor=pointer]:
+                  - /url: "#article-3"
+              - paragraph [ref=e61]: A quieter way to build memorable journeys around place, pace, and perspective.
+              - 'link "Read more: Slow Adventures Along the Coastal Road" [ref=e62] [cursor=pointer]':
+                - /url: "#article-3"
+                - text: Read more
+                - generic [aria-hidden] [ref=e63]: 
+          - article [ref=e64]:
+            - link [aria-hidden] [ref=e65] [cursor=pointer]:
+              - /url: "#article-4"
+            - generic [ref=e66]:
+              - paragraph [ref=e67]:
+                - generic [ref=e68]: Workplace
+                - generic [aria-hidden] [ref=e69]: ·
+                - time [ref=e70]: 18 Aug 2026
+                - generic [aria-hidden] [ref=e71]: ·
+                - generic [ref=e72]: 1 min read
+              - heading [level=3] [ref=e73]:
+                - link "What Hybrid Teams Need to Do Their Best Work" [ref=e74] [cursor=pointer]:
+                  - /url: "#article-4"
+              - paragraph [ref=e75]: Small operating principles that make collaboration more deliberate and humane.
+              - 'link "Read more: What Hybrid Teams Need to Do Their Best Work" [ref=e76] [cursor=pointer]':
+                - /url: "#article-4"
+                - text: Read more
+                - generic [aria-hidden] [ref=e77]: 
+          - article [ref=e78]:
+            - link [aria-hidden] [ref=e79] [cursor=pointer]:
+              - /url: "#article-5"
+            - generic [ref=e80]:
+              - paragraph [ref=e81]:
+                - generic [ref=e82]: Wellbeing
+                - generic [aria-hidden] [ref=e83]: ·
+                - time [ref=e84]: 16 Aug 2026
+                - generic [aria-hidden] [ref=e85]: ·
+                - generic [ref=e86]: 1 min read
+              - heading [level=3] [ref=e87]:
+                - link "The Rituals That Give Busy Days More Room" [ref=e88] [cursor=pointer]:
+                  - /url: "#article-5"
+              - paragraph [ref=e89]: A grounded perspective on attention, recovery, and everyday wellbeing.
+              - 'link "Read more: The Rituals That Give Busy Days More Room" [ref=e90] [cursor=pointer]':
+                - /url: "#article-5"
+                - text: Read more
+                - generic [aria-hidden] [ref=e91]: 
+          - article [ref=e92]:
+            - link [aria-hidden] [ref=e93] [cursor=pointer]:
+              - /url: "#article-6"
+            - generic [ref=e94]:
+              - paragraph [ref=e95]:
+                - generic [ref=e96]: Knowledge
+                - generic [aria-hidden] [ref=e97]: ·
+                - time [ref=e98]: 14 Aug 2026
+                - generic [aria-hidden] [ref=e99]: ·
+                - generic [ref=e100]: 1 min read
+              - heading [level=3] [ref=e101]:
+                - link "Patterns, Principles, and the Practice of Better Decisions" [ref=e102] [cursor=pointer]:
+                  - /url: "#article-6"
+              - paragraph [ref=e103]: A structured reading experience for material that benefits from a clear outline.
+              - 'link "Read more: Patterns, Principles, and the Practice of Better Decisions" [ref=e104] [cursor=pointer]':
+                - /url: "#article-6"
+                - text: Read more
+                - generic [aria-hidden] [ref=e105]: 
+        - navigation "Article pagination" [ref=e106]:
+          - generic [ref=e107]:
+            - paragraph [ref=e108]:
+              - strong [ref=e109]: 48 articles
+              - text: Showing 1 to 6
+            - list [ref=e110]:
+              - listitem [ref=e111]:
+                - button "Previous page" [disabled] [ref=e112]:
+                  - generic [aria-hidden] [ref=e113]: 
+                  - generic [ref=e114]: Previous
+              - listitem [ref=e115]:
+                - button "Page 1" [ref=e116] [cursor=pointer]: "1"
+              - listitem [ref=e117]:
+                - button "Page 2" [ref=e118] [cursor=pointer]: "2"
+              - listitem [aria-hidden] [ref=e119]: …
+              - listitem [ref=e120]:
+                - button "Page 8" [ref=e121] [cursor=pointer]: "8"
+              - listitem [ref=e122]:
+                - button "Next page" [ref=e123] [cursor=pointer]:
+                  - generic [ref=e124]: Next
+                  - generic [aria-hidden] [ref=e125]: 
+      - complementary "Article discovery" [ref=e126]:
+        - region [ref=e127]:
+          - heading "Categories" [level=2] [ref=e128]
+          - generic [ref=e129]:
+            - generic [aria-hidden]: 
+            - generic [ref=e130]: Search categories
+            - searchbox "Search categories" [ref=e131]
+          - generic [ref=e132]:
+            - button "All categories 48" [pressed] [ref=e133] [cursor=pointer]:
+              - generic [ref=e134]: All categories
+              - generic [ref=e135]: "48"
+            - button "Technology 8" [ref=e136] [cursor=pointer]:
+              - generic [ref=e137]: Technology
+              - generic [ref=e138]: "8"
+            - button "Design 8" [ref=e139] [cursor=pointer]:
+              - generic [ref=e140]: Design
+              - generic [ref=e141]: "8"
+            - button "Travel 8" [ref=e142] [cursor=pointer]:
+              - generic [ref=e143]: Travel
+              - generic [ref=e144]: "8"
+            - button "Workplace 8" [ref=e145] [cursor=pointer]:
+              - generic [ref=e146]: Workplace
+              - generic [ref=e147]: "8"
+            - button "Wellbeing 8" [ref=e148] [cursor=pointer]:
+              - generic [ref=e149]: Wellbeing
+              - generic [ref=e150]: "8"
+            - button "Knowledge 8" [ref=e151] [cursor=pointer]:
+              - generic [ref=e152]: Knowledge
+              - generic [ref=e153]: "8"
+        - region [ref=e154]:
+          - heading "Popular Posts" [level=2] [ref=e155]
+          - generic [ref=e156]:
+            - article [ref=e157]:
+              - link [aria-hidden] [ref=e158] [cursor=pointer]:
+                - /url: "#article-1"
+              - generic [ref=e159]:
+                - heading [level=3] [ref=e160]:
+                  - link "Building Resilient Systems at Scale" [ref=e161] [cursor=pointer]:
+                    - /url: "#article-1"
+                - time [ref=e162]: 24 Aug 2026
+            - article [ref=e163]:
+              - link [aria-hidden] [ref=e164] [cursor=pointer]:
+                - /url: "#article-2"
+              - generic [ref=e165]:
+                - heading [level=3] [ref=e166]:
+                  - link "Designing Spaces That Last Beyond a Trend Cycle" [ref=e167] [cursor=pointer]:
+                    - /url: "#article-2"
+                - time [ref=e168]: 22 Aug 2026
+            - article [ref=e169]:
+              - link [aria-hidden] [ref=e170] [cursor=pointer]:
+                - /url: "#article-3"
+              - generic [ref=e171]:
+                - heading [level=3] [ref=e172]:
+                  - link "Slow Adventures Along the Coastal Road" [ref=e173] [cursor=pointer]:
+                    - /url: "#article-3"
+                - time [ref=e174]: 20 Aug 2026
+            - article [ref=e175]:
+              - link [aria-hidden] [ref=e176] [cursor=pointer]:
+                - /url: "#article-4"
+              - generic [ref=e177]:
+                - heading [level=3] [ref=e178]:
+                  - link "What Hybrid Teams Need to Do Their Best Work" [ref=e179] [cursor=pointer]:
+                    - /url: "#article-4"
+                - time [ref=e180]: 18 Aug 2026
+  - text: 

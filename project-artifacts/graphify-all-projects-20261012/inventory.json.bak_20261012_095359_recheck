@@ -1,0 +1,137 @@
+[
+  {
+    "label": "Laravel 13 Phoenix",
+    "root": "D:\\Laragon\\www\\laravel-13-phoenix",
+    "status": "planned",
+    "artifacts": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261012",
+    "graph_exists": true,
+    "code": 1617,
+    "metadata": 78,
+    "changed_code": 20,
+    "changed_metadata": 51,
+    "prune": 134,
+    "before_nodes": 25902,
+    "before_edges": 42070
+  },
+  {
+    "label": "Laravel 13 CMS BUM",
+    "root": "D:\\Laragon\\www\\laravel-13-cms-bum",
+    "status": "planned",
+    "artifacts": "D:\\Laragon\\www\\laravel-13-cms-bum\\project-artifacts\\graphify-all-projects-20261012",
+    "graph_exists": true,
+    "code": 1844,
+    "metadata": 55,
+    "changed_code": 0,
+    "changed_metadata": 39,
+    "prune": 0,
+    "before_nodes": 10281,
+    "before_edges": 22432
+  },
+  {
+    "label": "Laravel 13 CMS BUM NextJS",
+    "root": "D:\\Laragon\\www\\laravel-13-cms-bum-next",
+    "status": "source-root-unavailable"
+  },
+  {
+    "label": "Laravel 13 Phoenix Standalone",
+    "root": "D:\\Laragon\\www\\laravel-13-phoenix-standalone",
+    "status": "planned",
+    "artifacts": "D:\\Laragon\\www\\laravel-13-phoenix-standalone\\project-artifacts\\graphify-all-projects-20261012",
+    "graph_exists": true,
+    "code": 426,
+    "metadata": 43,
+    "changed_code": 0,
+    "changed_metadata": 43,
+    "prune": 1,
+    "before_nodes": 10786,
+    "before_edges": 19674
+  },
+  {
+    "label": "New MG Laptop",
+    "root": "D:\\Laragon\\www\\newmg",
+    "status": "planned",
+    "artifacts": "D:\\Laragon\\www\\newmg\\project-artifacts\\graphify-all-projects-20261012",
+    "graph_exists": false,
+    "code": 854,
+    "metadata": 377,
+    "changed_code": 854,
+    "changed_metadata": 377,
+    "prune": 0,
+    "before_nodes": 0,
+    "before_edges": 0
+  },
+  {
+    "label": "New MG SSD Portable",
+    "root": "E:\\Apps\\Laragon\\www\\newmg",
+    "status": "artifacts-unavailable",
+    "error": "[WinError 1392] The file or directory is corrupted and unreadable: 'E:\\\\Apps\\\\Laragon\\\\www\\\\newmg\\\\project-artifacts\\\\graphify-all-projects-20261012'"
+  },
+  {
+    "label": "Age of Empire II DE — scenario tools",
+    "root": "C:\\Users\\aruna\\Documents\\Age of Empire II DE",
+    "status": "planned",
+    "artifacts": "C:\\Users\\aruna\\Documents\\Age of Empire II DE\\project-artifacts\\graphify-all-projects-20261012",
+    "graph_exists": false,
+    "code": 6,
+    "metadata": 0,
+    "changed_code": 6,
+    "changed_metadata": 0,
+    "prune": 0,
+    "before_nodes": 0,
+    "before_edges": 0
+  },
+  {
+    "label": "Age of Empire II DE — AI v4/Mini",
+    "root": "D:\\New AI Script AoE II DE",
+    "status": "planned",
+    "artifacts": "D:\\New AI Script AoE II DE\\project-artifacts\\graphify-all-projects-20261012",
+    "graph_exists": false,
+    "code": 25,
+    "metadata": 0,
+    "changed_code": 25,
+    "changed_metadata": 0,
+    "prune": 0,
+    "before_nodes": 0,
+    "before_edges": 0
+  },
+  {
+    "label": "Arunika Map Studio",
+    "root": "D:\\Arunika Map Studio",
+    "status": "planned",
+    "artifacts": "D:\\Arunika Map Studio\\project-artifacts\\graphify-all-projects-20261012",
+    "graph_exists": false,
+    "code": 16,
+    "metadata": 3,
+    "changed_code": 16,
+    "changed_metadata": 3,
+    "prune": 0,
+    "before_nodes": 0,
+    "before_edges": 0
+  },
+  {
+    "label": "LaraPhoenix Web Game",
+    "root": "C:\\Users\\aruna\\Documents\\ChatGPT\\LaraPhoenix Web Game",
+    "status": "no-active-source-files",
+    "artifacts": "C:\\Users\\aruna\\Documents\\ChatGPT\\LaraPhoenix Web Game\\project-artifacts\\graphify-all-projects-20261012"
+  },
+  {
+    "label": "Laravel 13 CRM",
+    "root": "D:\\Laragon\\www\\laravel-13-crm",
+    "status": "source-root-unavailable"
+  },
+  {
+    "label": "Laravel 13 GEN21 AI CMS",
+    "root": "D:\\Laragon\\www\\laravel-13-gen21ai-cms",
+    "status": "source-root-unavailable"
+  },
+  {
+    "label": "Legacy Laravel 12 Phoenix",
+    "root": "D:\\Laragon\\www\\laravel-12-phoenix",
+    "status": "source-root-unavailable"
+  },
+  {
+    "label": "Legacy Laravel 11 CMS BUM",
+    "root": "D:\\Laragon\\www\\laravel-11-cms-bum",
+    "status": "source-root-unavailable"
+  }
+]

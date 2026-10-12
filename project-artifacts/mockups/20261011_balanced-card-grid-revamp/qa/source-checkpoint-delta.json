@@ -1,0 +1,46 @@
+[
+  {
+    "file": "app/Support/Article/ArticleTemplateOptions.php",
+    "unchanged": false
+  },
+  {
+    "file": "public/assets/css/article/article-frontend-2026.css",
+    "unchanged": false
+  },
+  {
+    "file": "public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js",
+    "unchanged": false
+  },
+  {
+    "file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+    "unchanged": true
+  },
+  {
+    "file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+    "unchanged": true
+  },
+  {
+    "file": "resources/views/article/templates/partials/archive-header.blade.php",
+    "unchanged": false
+  },
+  {
+    "file": "tests/Feature/Article/ArticleTemplateOptionsTest.php",
+    "unchanged": false
+  },
+  {
+    "file": "tests/article-minimal-reading-list-sidebar.test.mjs",
+    "unchanged": true
+  },
+  {
+    "file": "tests/article-template-presentation.test.mjs",
+    "unchanged": true
+  },
+  {
+    "file": "tests/article-theme-link-isolation.test.mjs",
+    "unchanged": true
+  },
+  {
+    "file": "resources/views/article/templates/archive/balanced-card-grid.blade.php",
+    "unchanged": true
+  }
+]

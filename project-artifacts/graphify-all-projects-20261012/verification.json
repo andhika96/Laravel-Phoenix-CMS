@@ -1,0 +1,26 @@
+{
+  "root": "D:\\Laragon\\www\\laravel-13-phoenix",
+  "mode": "incremental-local-AST",
+  "changed_code_files": 20,
+  "pruned_sources": 134,
+  "ast_corpus_files": 1617,
+  "metadata_files": 78,
+  "changed_metadata_files": 51,
+  "empty_ast_files_as_metadata": [
+    "resources/pagebuilder_elementor_v24/modules/widgets/pro/media-carousel/module.json"
+  ],
+  "nodes": 21020,
+  "edges": 37039,
+  "communities": 1618,
+  "duplicate_ids": 0,
+  "dangling_edges": 0,
+  "source_hash_mismatch": 0,
+  "unaffected_nodes_lost": 0,
+  "production_git_status_unchanged": true,
+  "confidence": {
+    "EXTRACTED": 35762,
+    "INFERRED": 1277
+  },
+  "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261012\\backup_20261012_095558\\graphify-out",
+  "graph_sha256": "888cbe27c90dcf88c10ab92c4fa311422e17e128c7f82981cb0dd1799b59f1ff"
+}

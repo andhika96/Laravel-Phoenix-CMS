@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "chats": 165,
+  "text_messages": 5292,
+  "recovered_from_rollout": 1387,
+  "mandatory_projects_covered": [
+    "Age of Empire II DE",
+    "New MG [Laptop]",
+    "Laravel 13 CMS BUM",
+    "Laravel 13 CMS BUM NextJS"
+  ],
+  "no_source_errors": true,
+  "redaction_checks_passed": true,
+  "runtime_retested": false,
+  "note_pairs_verified": 165,
+  "old_memories_unchanged": true,
+  "production_git_status_unchanged": true,
+  "graphify_updated": false
+}

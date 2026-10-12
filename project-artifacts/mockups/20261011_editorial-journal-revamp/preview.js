@@ -1,0 +1,22 @@
+const stories=[...document.querySelectorAll('.article-editorial-lead,.article-editorial-card')];
+const empty=document.createElement('p');
+empty.className='preview-empty';empty.textContent='No matching stories. Try another keyword or category.';empty.hidden=true;
+document.querySelector('.article-editorial-grid').append(empty);
+function filterStories(){
+  const term=document.querySelector('[name="search"]').value.trim().toLowerCase();
+  const select=document.querySelector('[name="category"]');
+  const category=select.value?select.selectedOptions[0].textContent.trim():'';
+  let count=0;
+  stories.forEach(story=>{const text=story.querySelector('.article-title-clamp').textContent+' '+story.querySelector('.article-excerpt-clamp').textContent;const label=story.querySelector('.article-chip').textContent.trim();story.hidden=!(text.toLowerCase().includes(term)&&(!category||label===category));if(!story.hidden)count++;});
+  empty.hidden=count>0;
+  document.querySelector('.editorial-section-heading').hidden=!!term||!!category;
+  document.querySelector('.article-pagination').hidden=!!term||!!category;
+}
+document.querySelector('[data-article-filter]').addEventListener('submit',event=>{event.preventDefault();filterStories();});
+document.querySelector('[name="category"]').addEventListener('change',filterStories);
+document.addEventListener('click',event=>{
+  const link=event.target.closest('a');if(!link)return;
+  event.preventDefault();
+  const story=link.closest('.article-editorial-lead,.article-editorial-card');
+  if(story){document.getElementById('dialog-title').textContent=story.querySelector('.article-title-clamp').textContent.trim();document.getElementById('dialog-copy').textContent=story.querySelector('.article-excerpt-clamp').textContent.trim();document.getElementById('article-dialog').showModal();}
+});
