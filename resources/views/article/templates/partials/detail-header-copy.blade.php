@@ -7,6 +7,13 @@
     $descriptionText = data_get($description, 'mode') === 'custom' && data_get($description, 'text') !== '' ? data_get($description, 'text') : $defaultDescription;
 @endphp
 @if (data_get($eyebrow, 'enabled') && $eyebrowText)<span class="article-chip">{{ $eyebrowText }}</span>@endif
+@php
+    $metaParts = [];
+    if (data_get($templateOptions, 'display.date', true) && $article->created_at) $metaParts[] = $article->created_at->format('d M Y');
+    $authorName = $article->author?->fullname ?: $article->author?->username;
+    if (data_get($templateOptions, 'display.author', true) && $authorName) $metaParts[] = t('By').' '.$authorName;
+    $metaText = implode(' · ', $metaParts);
+@endphp
 @if ($metaText)<p class="article-detail__meta">{{ $metaText }}</p>@endif
 @if (data_get($title, 'enabled'))<h1>{{ $article->title }}</h1>@endif
 @if (data_get($description, 'enabled') && $descriptionText)<p class="article-detail__dek">{{ $descriptionText }}</p>@endif

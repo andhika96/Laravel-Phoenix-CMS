@@ -27,7 +27,9 @@
                 @endphp
                 <article class="article-mosaic-feature" data-mosaic-region="hero">
                     @include('article.templates.partials.media-link', ['href' => route('cms.core.article.detail', $featured->uri), 'class' => 'article-mosaic-feature__media', 'mediaUrl' => $featuredThumbnailUrl, 'title' => $featured->title])
-                    <div class="article-mosaic-feature__body"><span class="article-chip">{{ $featured->category?->name ?? t('Uncategorized') }}</span>@include('article.templates.partials.archive-title')<p class="article-excerpt-clamp">{{ \Illuminate\Support\Str::limit(trim(strip_tags((string) $featured->content)), 180) }}</p><small>{{ optional($featured->created_at)->format('d M Y') }}</small></div>
+                    <div class="article-mosaic-feature__body">@if (data_get($templateOptions, 'display.category', true))<span class="article-chip">{{ $featured->category?->name ?? t('Uncategorized') }}</span>@endif
+@include('article.templates.partials.archive-title')@if (data_get($templateOptions, 'display.excerpt', true))<p class="article-excerpt-clamp">{{ \Illuminate\Support\Str::limit(trim(strip_tags((string) $featured->content)), 180) }}</p>@endif
+@if (data_get($templateOptions, 'display.date', true))<small>{{ optional($featured->created_at)->format('d M Y') }}</small>@endif</div>
                 </article>
             @endif
 
@@ -50,7 +52,9 @@
                     @endphp
                     <article class="article-mosaic-card">
                         @include('article.templates.partials.media-link', ['href' => route('cms.core.article.detail', $article->uri), 'class' => 'article-mosaic-card__media', 'mediaUrl' => $thumbnailUrl, 'title' => $article->title])
-                        <div><span class="article-chip">{{ $article->category?->name ?? t('Uncategorized') }}</span>@include('article.templates.partials.archive-title')<p class="article-excerpt-clamp">{{ \Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 92) }}</p><small>{{ optional($article->created_at)->format('d M Y') }}</small></div>
+                        <div>@if (data_get($templateOptions, 'display.category', true))<span class="article-chip">{{ $article->category?->name ?? t('Uncategorized') }}</span>@endif
+@include('article.templates.partials.archive-title')@if (data_get($templateOptions, 'display.excerpt', true))<p class="article-excerpt-clamp">{{ \Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 92) }}</p>@endif
+@if (data_get($templateOptions, 'display.date', true))<small>{{ optional($article->created_at)->format('d M Y') }}</small>@endif</div>
                     </article>
                 @endforeach
                 </div>

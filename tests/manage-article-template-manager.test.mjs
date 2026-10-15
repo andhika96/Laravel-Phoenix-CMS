@@ -459,19 +459,19 @@ test('option sections follow the active surface and template schema', () => {
 	};
 
 	assert.deepEqual(JSON.parse(JSON.stringify(options.computed.optionSections.call(state).map((section) => section.key))), [
-		'header', 'toolbar', 'post-list', 'sidebar', 'thumbnail', 'pagination', 'article-title', 'shell',
+		'header', 'display', 'toolbar', 'post-list', 'sidebar', 'thumbnail', 'pagination', 'article-title', 'shell',
 	]);
 
 	state.activeTemplateKey = 'editorial-journal';
 	state.optionsModal.value = { grid: { desktop: 3, tablet: 2, mobile: 1 } };
 	assert.deepEqual(JSON.parse(JSON.stringify(options.computed.optionSections.call(state).map((section) => section.key))), [
-		'header', 'toolbar', 'grid', 'thumbnail', 'pagination', 'article-title', 'shell',
+		'header', 'display', 'toolbar', 'grid', 'thumbnail', 'pagination', 'article-title', 'shell',
 	]);
 
 	state.surface = 'detail';
 	state.activeTemplateKey = 'focused-reader';
 	state.optionsModal.value = {};
-	assert.deepEqual(JSON.parse(JSON.stringify(options.computed.optionSections.call(state).map((section) => section.key))), ['header', 'shell']);
+	assert.deepEqual(JSON.parse(JSON.stringify(options.computed.optionSections.call(state).map((section) => section.key))), ['header', 'display', 'shell']);
 });
 
 test('modal preview uses the modal clone, debounces edits, and keeps the page draft untouched', () => {
@@ -569,18 +569,20 @@ test('modal preview uses the fixed virtual device profile when fitting its viewp
 	assert.equal(options.computed.optionsPreviewFrameStyle.call(state).height, '1112px');
 });
 
-test('modal dismissal exposes an inline dirty confirmation and retryable preview lifecycle', () => {
+test('modal dismissal uses one focused confirmation without a duplicate toast', () => {
 	const options = loadOptions();
 	const view = readFileSync(path.join(process.cwd(), 'resources/views/manage_article/templates/index.blade.php'), 'utf8');
 	const state = {
 		optionsModal: { dirty: true, dismissOpen: false },
 		closeTemplateOptions: options.methods.closeTemplateOptions,
+        $nextTick(callback) { callback(); },
+        $refs: { discardDialog: { showModal() {}, close() {} } },
 		showNotice(type, message) { this.notice = { type, message }; },
 	};
 
 	options.methods.requestCloseTemplateOptions.call(state);
 	assert.equal(state.optionsModal.dismissOpen, true);
-	assert.equal(state.notice.type, 'warning');
+	assert.equal(state.notice, undefined);
 	options.methods.keepEditing.call(state);
 	assert.equal(state.optionsModal.dismissOpen, false);
 

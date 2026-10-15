@@ -21,7 +21,18 @@
                                     <div class="article-template-options-settings">
                                         <label class="article-template-options-section-picker">Customize<select :value="optionsModal.section" @change="setOptionsSection($event.target.value)"><option v-for="section in optionSections" :key="section.key" :value="section.key">{{ section.label }}</option></select></label>
                                         <div ref="optionsPanelViewport" class="article-template-options-panel">
-                                <section v-if="optionsModal.section === 'header'" id="article-template-option-panel-header" role="tabpanel" aria-labelledby="article-template-option-tab-header" tabindex="-1" class="article-template-options-section">
+                                <section v-if="optionsModal.section === 'display'" id="article-template-option-panel-display" role="tabpanel" aria-labelledby="article-template-option-tab-display" class="article-template-options-section">
+ <div class="article-template-options-section__heading"><div><h5>Visible elements</h5><small>Choose which article details appear in this template.</small></div></div>
+ <div class="article-template-options-fields">
+  <label v-if="optionsModal.surface === 'detail' ? false : true" class="form-check form-switch"><input type="checkbox" class="form-check-input" v-model="optionsModal.value.display.category"><span class="form-check-label">Show category</span></label>
+  <label v-if="optionsModal.surface === 'detail' ? true : true" class="form-check form-switch"><input type="checkbox" class="form-check-input" v-model="optionsModal.value.display.date"><span class="form-check-label">Show date</span></label>
+  <label v-if="optionsModal.surface === 'detail' ? true : false" class="form-check form-switch"><input type="checkbox" class="form-check-input" v-model="optionsModal.value.display.author"><span class="form-check-label">Show author / editor</span></label>
+  <label v-if="optionsModal.surface === 'detail' ? false : optionsModal.key === &#039;minimal-reading-list&#039;" class="form-check form-switch"><input type="checkbox" class="form-check-input" v-model="optionsModal.value.display.reading_time"><span class="form-check-label">Show reading time</span></label>
+  <label v-if="optionsModal.surface === 'detail' ? false : true" class="form-check form-switch"><input type="checkbox" class="form-check-input" v-model="optionsModal.value.display.excerpt"><span class="form-check-label">Show excerpt</span></label>
+  <label v-if="optionsModal.surface === 'detail' ? false : optionsModal.key !== &#039;mosaic-magazine&#039;" class="form-check form-switch"><input type="checkbox" class="form-check-input" v-model="optionsModal.value.display.read_more"><span class="form-check-label">Show Read more link</span></label>
+  <label v-if="optionsModal.surface === 'detail' ? true : false" class="form-check form-switch"><input type="checkbox" class="form-check-input" v-model="optionsModal.value.display.navigation"><span class="form-check-label">Show previous and next articles</span></label>
+  </div></section>
+ <section v-if="optionsModal.section === 'header'" id="article-template-option-panel-header" role="tabpanel" aria-labelledby="article-template-option-tab-header" tabindex="-1" class="article-template-options-section">
                                     <div class="article-template-options-section__heading"><span>1</span><div><h5>Header content</h5><small>Control each visible header element for this template.</small></div></div>
                                     <div class="article-template-header-fields">
                                         <template v-for="field in ['eyebrow', 'title', 'description']" :key="field">
@@ -149,8 +160,8 @@
                                 <small>Image heights use px, em, rem, or pt because the story container has an automatic height.</small>                <small>Set the regular grid columns in Grid columns. Set regular thumbnail height and fit in Thumbnail.</small>
             </fieldset>
             <fieldset class="article-template-editorial-journal-group">
-                <legend>Story details</legend>
-                                    <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.mosaic_classic.show_author"><span class="form-check-label">Show author</span></label>
+                <legend>Story details · metadata</legend>
+                                    <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.mosaic_classic.show_author"><span class="form-check-label">Show author / editor</span></label>
                     <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.mosaic_classic.show_reading_time"><span class="form-check-label">Show reading time</span></label>
                                                     <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.mosaic_classic.show_category"><span class="form-check-label">Show category</span></label>
                                     <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.mosaic_classic.show_excerpt"><span class="form-check-label">Show excerpt</span></label>
@@ -176,7 +187,7 @@
                                                 <small>Set the regular grid columns in Grid columns. Set regular thumbnail height and fit in Thumbnail.</small>
             </fieldset>
             <fieldset class="article-template-editorial-journal-group">
-                <legend>Story details</legend>
+                <legend>Story details · metadata</legend>
                                                     <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.balanced_grid.show_category"><span class="form-check-label">Show category</span></label>
                                     <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.balanced_grid.show_excerpt"><span class="form-check-label">Show excerpt</span></label>
                                     <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.balanced_grid.show_date"><span class="form-check-label">Show date</span></label>
@@ -282,7 +293,7 @@
             <label>Next icon<select class="form-select" v-model="optionsModal.value.pagination.next_icon"><option value="fas fa-chevron-right">Chevron right</option><option value="fas fa-angle-right">Angle right</option><option value="fas fa-arrow-right">Arrow right</option></select></label>
             <label>Normal background<input class="form-control article-template-coloris" type="text" placeholder="Model default" v-model="optionsModal.value.pagination.item_background_color"></label>
             <label>Normal text<input class="form-control article-template-coloris" type="text" placeholder="Model default" v-model="optionsModal.value.pagination.item_text_color"></label>
-            <label>Border color<input class="form-control article-template-coloris" type="text" placeholder="Model default" v-model="optionsModal.value.pagination.item_border_color"></label>
+            <label>Button border width<span class="article-template-unit-control"><input class="form-control" type="number" min="0" :max="dimensionMax('pagination.item_border_width', 'border')" :step="dimensionStep('pagination.item_border_width', 'border')" :value="dimensionValue('pagination.item_border_width', 'border')" @input="setDimensionValue('pagination.item_border_width', $event.target.value, 'border')"><select class="form-select" :value="dimensionUnit('pagination.item_border_width', 'border')" @change="setDimensionUnit('pagination.item_border_width', $event.target.value, 'border')"><option v-for="unit in unitChoices('border')" :value="unit">{{ unit }}</option></select></span></label><label>Border color<input class="form-control article-template-coloris" type="text" placeholder="Model default" v-model="optionsModal.value.pagination.item_border_color"></label>
             <label>Hover background<input class="form-control article-template-coloris" type="text" placeholder="Theme surface" v-model="optionsModal.value.pagination.item_hover_background_color"></label>
             <label>Hover text<input class="form-control article-template-coloris" type="text" placeholder="Theme default" v-model="optionsModal.value.pagination.item_hover_text_color"></label>
             <label>Active background<input class="form-control article-template-coloris" type="text" placeholder="Theme accent" v-model="optionsModal.value.pagination.item_active_background_color"></label>
@@ -360,7 +371,13 @@
                                     </aside>
                                 </div>
                             </div>
-                            <div class="modal-footer" v-if="optionsModal.value"><div v-if="optionsModal.dismissOpen" class="article-template-options-dismiss ph-callout-warning ph-callout-no-border" role="alert"><span>Discard unsaved changes?</span><div><button type="button" class="btn btn-sm btn-secondary" @click="keepEditing">Keep editing</button><button type="button" class="btn btn-sm btn-danger" @click="discardTemplateOptions">Discard changes</button></div></div><div class="article-template-options-footer-main"><span class="article-template-options-footer-note"><i class="fas fa-info-circle" aria-hidden="true"></i>Changes are applied to the template draft. Save Template persists them.</span><div class="article-template-options-footer-actions"><button type="button" class="btn btn-secondary" @click="requestCloseTemplateOptions">Cancel</button><button type="button" class="btn ph-btn-theme" @click="applyTemplateOptions">Apply changes</button></div></div></div>
+                            <dialog ref="discardDialog" class="article-template-discard-dialog" aria-labelledby="article-discard-title" aria-describedby="article-discard-description" @cancel.prevent.stop="keepEditing" @keydown.esc.stop>
+ <div class="article-template-discard-dialog__icon" aria-hidden="true"><i class="fas fa-exclamation-triangle"></i></div>
+ <h5 id="article-discard-title">Discard unsaved changes?</h5>
+ <p id="article-discard-description">Your changes in Template Options have not been applied. Discard them or continue editing.</p>
+ <div class="article-template-discard-dialog__actions"><button autofocus type="button" class="btn ph-btn-theme-outline" @click="keepEditing">Keep editing</button><button type="button" class="btn btn-danger" @click="discardTemplateOptions">Discard changes</button></div>
+ </dialog>
+ <div class="modal-footer" v-if="optionsModal.value"><div class="article-template-options-footer-main"><span class="article-template-options-footer-note"><i class="fas fa-info-circle" aria-hidden="true"></i>Changes are applied to the template draft. Save Template persists them.</span><div class="article-template-options-footer-actions"><button type="button" class="btn btn-secondary" @click="requestCloseTemplateOptions">Cancel</button><button type="button" class="btn ph-btn-theme" @click="applyTemplateOptions">Apply changes</button></div></div></div>
                         </div>
                     </div>
                 </div>

@@ -41,6 +41,7 @@ const ArticleFrontendPaginationControls = (() => {
         return {
             type,
             range,
+            item_border_width: safeDimension(pagination.item_border_width, '1px'),
             item_radius: safeDimension(pagination.item_radius, '0.45rem'),
             item_gap: safeDimension(pagination.item_gap, '0.45rem'),
             item_background_color: safeColor(pagination.item_background_color),
@@ -73,6 +74,7 @@ const ArticleFrontendPaginationControls = (() => {
             '--article-pagination-frame-border-width': pagination.frame.border_width,
             '--article-pagination-frame-radius': pagination.frame.radius,
             '--article-pagination-frame-background': pagination.frame.background_color,
+            '--article-pagination-item-border-width': pagination.item_border_width,
             '--article-pagination-item-radius': pagination.item_radius,
             '--article-pagination-item-gap': pagination.item_gap,
         };

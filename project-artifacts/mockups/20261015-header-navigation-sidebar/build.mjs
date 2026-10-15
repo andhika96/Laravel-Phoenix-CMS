@@ -1,0 +1,7 @@
+import {readFile,writeFile} from 'node:fs/promises';
+const dir=new URL('./',import.meta.url);
+const base=await readFile(new URL('../20261015-header-navigation-revamp/header-navigation.html',dir),'utf8');
+const css=await readFile(new URL('sidebar.css',dir),'utf8');const js=await readFile(new URL('sidebar.js',dir),'utf8');
+const html='<div class="viz-dotted-background" style="padding:20px 0">'+base.replace('</style>',()=>css+'\n</style>')+'<script>'+js+'</script></div>';
+await writeFile(new URL('sidebar-preview.html',dir),'\uFEFF'+html);
+console.log('Created sidebar preview:',Buffer.byteLength(html),'bytes');

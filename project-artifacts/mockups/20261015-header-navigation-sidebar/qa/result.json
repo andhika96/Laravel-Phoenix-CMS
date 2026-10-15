@@ -1,0 +1,14 @@
+{
+  "result": "passed",
+  "width": 300,
+  "checks": [
+    "tabs",
+    "categories",
+    "linked sizes",
+    "responsive values",
+    "color states",
+    "shadow",
+    "transparent controls"
+  ],
+  "errors": []
+}

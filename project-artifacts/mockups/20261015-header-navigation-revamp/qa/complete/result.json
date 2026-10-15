@@ -1,0 +1,29 @@
+{
+  "result": "passed",
+  "inputsAndSelects": 50,
+  "segmentedGroups": 7,
+  "exactSourceOptions": true,
+  "checks": [
+    "all CMS controls present once",
+    "exact unit and segmented options",
+    "four responsive box controls linked and unlinked",
+    "mobile override preserved",
+    "leaf forward reverse",
+    "border color linking",
+    "alpha shadow and inset",
+    "stay disables scroll effects",
+    "fixed sticky transparent custom colors",
+    "timeline and reset",
+    "active toggle",
+    "save discard config equality",
+    "mobile menu",
+    "320 430 768 1024 widths",
+    "zero JavaScript errors",
+    "zero network requests"
+  ],
+  "limits": [
+    "sample menus, not database",
+    "session-only draft",
+    "prototype uses current CMS preview renderer, not authenticated production E2E"
+  ]
+}

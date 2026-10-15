@@ -1,0 +1,20 @@
+#headerNavigationEditor .number-stepper{display:grid;grid-template-columns:34px minmax(0,1fr) 34px;grid-template-rows:40px;height:40px;border-radius:7px}
+#headerNavigationEditor .number-stepper input{grid-column:2;grid-row:1;text-align:center;height:40px;padding:8px 4px;font-size:14px;font-variant-numeric:tabular-nums}
+#headerNavigationEditor .number-stepper .stepper-btn{grid-row:1;height:40px;border:0;background:var(--pn-bg);font-size:15px;color:var(--pn-muted)}
+#headerNavigationEditor .number-stepper .stepper-btn[data-stepper-delta="-1"]{grid-column:1;grid-row:1;border-right:1px solid var(--pn-line)}
+#headerNavigationEditor .number-stepper .stepper-btn[data-stepper-delta="1"]{grid-column:3;grid-row:1;border-left:1px solid var(--pn-line);border-bottom:0}
+#headerNavigationEditor .box-side-stepper{grid-template-columns:28px minmax(0,1fr) 28px;grid-template-rows:40px;height:40px;min-height:40px;border-radius:7px}
+#headerNavigationEditor .box-side-stepper input{grid-column:2;grid-row:1;text-align:center;height:40px;min-height:40px;padding:8px 0;font-size:13px;font-variant-numeric:tabular-nums;appearance:textfield;-moz-appearance:textfield}
+#headerNavigationEditor .box-side-stepper .box-stepper-btn{grid-row:1;height:40px;min-height:40px;border:0;background:var(--pn-bg);font-size:14px;color:var(--pn-muted)}
+#headerNavigationEditor .box-side-stepper .box-stepper-btn[data-box-stepper-delta="-1"]{grid-column:1;grid-row:1;border-right:1px solid var(--pn-line)}
+#headerNavigationEditor .box-side-stepper .box-stepper-btn[data-box-stepper-delta="1"]{grid-column:3;grid-row:1;border-left:1px solid var(--pn-line);border-bottom:0}
+#headerNavigationEditor .box-control-header{grid-template-columns:minmax(0,1fr) 28px 58px 28px;gap:6px;margin-bottom:16px}
+#headerNavigationEditor .box-control-header .form-label{font-size:12px;line-height:1.5}
+#headerNavigationEditor .box-control-row{gap:16px 10px}
+#headerNavigationEditor .box-side-label{font-size:11px;line-height:1.5;color:var(--pn-muted)}
+#headerNavigationEditor .box-control{padding-top:22px;margin-top:2px}
+#headerNavigationEditor .stepper-btn:hover,#headerNavigationEditor .box-stepper-btn:hover{background:var(--pn-soft);color:var(--pn-accent)}
+#headerNavigationEditor .stepper-btn:active,#headerNavigationEditor .box-stepper-btn:active{background:var(--pn-accent);color:#fff}
+#headerNavigationEditor .stepper-btn:disabled,#headerNavigationEditor .box-stepper-btn:disabled{opacity:.4;cursor:not-allowed}
+#headerNavigationEditor .number-stepper .stepper-btn i,#headerNavigationEditor .box-side-stepper .box-stepper-btn i{font-size:14px;line-height:1}
+@media(pointer:coarse){#headerNavigationEditor .box-side-stepper{grid-template-rows:44px;height:44px}#headerNavigationEditor .box-side-stepper input,#headerNavigationEditor .box-side-stepper .box-stepper-btn{height:44px;min-height:44px}}

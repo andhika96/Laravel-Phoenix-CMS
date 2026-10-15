@@ -7,6 +7,7 @@
 @push('css')
 	<link href="{{ asset('assets/vendor/coloris/coloris.min.css?v=').time() }}" rel="stylesheet">
 	<link href="{{ asset('assets/css/awesome-admin-header-navigation.css?v=').time() }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/awesome-admin-header-navigation-fullscreen.css?v=').time() }}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -14,10 +15,11 @@
 		{{ Breadcrumbs::render('awesome_admin.header_navigation') }}
 	</div>
 
-<div id="headerNavigationEditor" class="header-navigation-editor editorial-option-two">
+<div id="headerNavigationEditor" class="header-navigation-editor editorial-option-two header-navigation-fullscreen">
 	<main>
 		<div class="ph-content rounded p-3 mb-3 header-editor-topbar">
 				<div class="mock-topbar">
+					<a href="{{ route('cms.admin.awesome_admin') }}" class="header-editor-back" data-header-editor-exit><i class="fas fa-arrow-left" aria-hidden="true"></i><span>{{ t('Back to CMS') }}</span></a>
 					<div class="mock-topbar-copy">
 						<div class="editor-eyebrow">{{ t('Site Navigation') }}</div>
 						<h1 class="mock-title">{{ t('Manage Header Navigation') }}</h1>
@@ -32,6 +34,7 @@
 
 						<div id="headerNavigationSaveStatus" class="mock-status"><i class="fas fa-database"></i> {{ t('Ready') }}</div>
 
+						<a href="{{ route('cms.admin.awesome_admin') }}" class="btn btn-outline-secondary btn-sm" data-header-editor-exit>{{ t('Cancel') }}</a>
 						<button id="saveHeaderNavigation" type="button" class="btn btn-primary btn-sm save-header-navigation">
 							<i class="fas fa-save me-1"></i> {{ t('Save changes') }}
 						</button>
@@ -696,8 +699,8 @@
 									</div>
 								</header>
 								<section class="hero-copy">
-									<h2>Build a frontend header that follows your CMS settings.</h2>
-									<p>Preview ini menunjukkan perubahan warna, posisi menu, posisi logo, radius, container, dan efek scroll sebelum fitur masuk ke halaman Laravel asli.</p>
+									<h2>Ruang untuk ide yang lebih besar.</h2>
+									<p>Header yang tepat membantu pengunjung menemukan apa yang mereka butuhkan. Lihat perubahan navigasi Anda langsung di halaman contoh ini.</p>
 								</section>
 								<section class="page-band">
 									<div class="page-grid">
@@ -733,6 +736,14 @@
 			</div>
 		</div>
 	</main>
+	<dialog id="headerEditorExitDialog" aria-labelledby="headerEditorExitTitle" aria-describedby="headerEditorExitDescription">
+		<h2 id="headerEditorExitTitle">{{ t('Leave without saving?') }}</h2>
+		<p id="headerEditorExitDescription">{{ t('Your unsaved header navigation changes will be lost.') }}</p>
+		<div class="header-editor-dialog-actions">
+			<button type="button" class="btn btn-outline-secondary" id="headerEditorKeepEditing" autofocus>{{ t('Keep editing') }}</button>
+			<button type="button" class="btn btn-danger" id="headerEditorDiscard">{{ t('Leave without saving') }}</button>
+		</div>
+	</dialog>
 </div>
 @endsection
 
@@ -748,4 +759,5 @@
 	</script>
 	<script src="{{ asset('assets/vendor/coloris/coloris.min.js?v=').time() }}"></script>
 	<script src="{{ asset('assets/js/awesome-admin-header-navigation.js?v=').time() }}"></script>
+	<script src="{{ asset('assets/js/awesome-admin-header-navigation-fullscreen.js?v=').time() }}"></script>
 @endpush

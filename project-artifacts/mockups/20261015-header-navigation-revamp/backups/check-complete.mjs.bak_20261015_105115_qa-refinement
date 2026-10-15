@@ -1,0 +1,53 @@
+import {chromium} from 'playwright-core';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import assert from 'node:assert/strict';
+const dir=new URL('./',import.meta.url),repo=new URL('../../../',dir);
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const page=await browser.newPage({viewport:{width:1024,height:1000}}),errors=[],requests=[];
+page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>requests.push(r.url()));
+const html=await readFile(new URL('header-navigation.html',dir),'utf8');
+await page.setContent('<meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0}html{color-scheme:light}</style>'+html);
+assert.deepEqual(errors,[]);
+const manifest=JSON.parse(await readFile(new URL('cms-parity.json',dir),'utf8'));
+for(const id of manifest.controlIds)assert.equal(await page.locator('#'+id).count(),1,id);
+const source=await browser.newPage();await source.setContent(await readFile(new URL('resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php',repo),'utf8'));
+for(const id of manifest.controlIds){if(await source.locator('#'+id).evaluate(e=>e.tagName==='SELECT')){assert.deepEqual(await page.locator('#'+id+' option').evaluateAll(a=>a.map(o=>o.value)),await source.locator('#'+id+' option').evaluateAll(a=>a.map(o=>o.value)),id+' options');}}
+for(const name of manifest.segments)assert.deepEqual(await page.locator('[data-control="'+name+'"] [data-value]').evaluateAll(a=>a.map(e=>e.dataset.value)),await source.locator('[data-control="'+name+'"] [data-value]').evaluateAll(a=>a.map(e=>e.dataset.value)),name);
+await source.close();
+const config=async()=>JSON.parse(await page.locator('#jsonOutput').textContent());
+async function reveal(id){await page.locator('#'+id).evaluate(e=>{const panel=e.closest('[data-inspector-panel]');if(panel)document.querySelector('[data-inspector-tab="'+panel.dataset.inspectorPanel+'"]').click();let parent=e.parentElement;while(parent){if(parent.tagName==='DETAILS')parent.open=true;parent=parent.parentElement;}});}
+async function fill(id,value){await reveal(id);await page.locator('#'+id).fill(value);await page.locator('#'+id).dispatchEvent('change');}
+async function segment(name,value){const b=page.locator('[data-control="'+name+'"] [data-value="'+value+'"]');await b.evaluate(e=>{const panel=e.closest('[data-inspector-panel]');document.querySelector('[data-inspector-tab="'+panel.dataset.inspectorPanel+'"]').click();e.closest('details').open=true;});await b.click();}
+await segment('containerMode','fluid');assert.equal((await config()).layout.container,'fluid');
+await segment('logoPosition','center');await segment('menuPosition','center');assert.equal((await config()).layout.logo_between_menu,true);
+await fill('headerHeight','84');await page.locator('#headerHeightUnit').selectOption('pt');assert.equal((await config()).sizing.height,'84pt');
+for(const [prefix,key] of [['headerRadius','header_radius'],['headerPadding','header_padding'],['navRadius','link_radius'],['containerMargin','container_margin']]){
+await reveal(prefix+'Top');const linked=page.locator('#'+prefix+'Linked');if(await linked.getAttribute('aria-pressed')!=='true')await linked.click();await fill(prefix+'Top','12');assert.equal(await page.locator('#'+prefix+'Right').inputValue(),'12');await linked.click();await fill(prefix+'Right','21');assert.equal(await page.locator('#'+prefix+'Top').inputValue(),'12');
+await page.locator('[data-preview-device="mobile"]').click();await fill(prefix+'Top','7');await page.locator('[data-preview-device="desktop"]').click();assert.equal(await page.locator('#'+prefix+'Top').inputValue(),'12',key+' desktop preserved');
+assert((await config()).sizing[key].responsive,'responsive object '+key);
+}
+await segment('linkShape','leaf');assert.equal(await page.locator('#leafDirectionControl').isVisible(),true);await segment('leafDirection','reverse');assert.equal((await config()).sizing.leaf_direction,'reverse');
+await segment('linkShape','default');assert.equal(await page.locator('#leafDirectionControl').isVisible(),false);
+await fill('linkActive','#123456');assert.equal((await config()).colors.link_active_border,'#123456');await page.locator('#linkActiveBorderLinked').click();await fill('linkActiveBorder','#abcdef');assert.equal((await config()).colors.link_active_border,'#abcdef');
+await reveal('linkShadowEnabled');await page.locator('#linkShadowEnabled').check();await fill('linkShadowX','-3');await fill('linkShadowColor','#12345680');await page.locator('#linkShadowInset').check();assert((await config()).effects.link_shadow.value.includes('inset'));
+await segment('headerBehavior','stay');assert.equal(await page.locator('#animateScroll').isDisabled(),true);assert.equal(await page.locator('#scrollSim').isDisabled(),true);
+await segment('headerBehavior','fixed');await page.locator('#animateScroll').check();await page.locator('#transparentStart').check();await segment('transparentColorMode','custom');await fill('transparentText','#eeeeee');assert.equal((await config()).colors.transparent.header_text,'#eeeeee');
+await page.locator('[data-scroll-preset="50"]').click();assert.equal(await page.locator('#siteHeader').evaluate(e=>e.classList.contains('is-scrolled')),true);
+await page.locator('#resetPreview').click();assert.equal(await page.locator('#scrollSim').inputValue(),'0');
+await page.locator('#headerNavigationActive').uncheck();assert.equal(await page.locator('#siteHeader').isVisible(),false);await page.locator('#headerNavigationActive').check();
+await page.locator('#saveHeaderNavigation').click();const saved=await config();await fill('headerHeight','95');await page.locator('#discardPrototype').click();assert.deepEqual(await config(),saved);
+await page.locator('[data-preview-device="mobile"]').click();await page.locator('.hamburger').click();assert.equal(await page.locator('.hamburger').getAttribute('aria-expanded'),'true');
+// Reload to capture the clean initial design, separate from stress-test values.
+await page.setContent('<meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0}html{color-scheme:light}</style>'+html);
+await mkdir(new URL('qa/complete/',dir),{recursive:true});
+const shot=async name=>page.screenshot({path:fileURLToPath(new URL('qa/complete/'+name+'.png',dir)),fullPage:true});
+for(const width of [1024,768,430,320]){await page.setViewportSize({width,height:1000});await page.waitForTimeout(70);assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'overflow '+width);await shot('layout-'+width);}
+await page.setViewportSize({width:1024,height:1000});
+await page.locator('[data-inspector-tab="style"]').click();await shot('style');
+await segment('headerBehavior','sticky');await page.locator('#animateScroll').check();await page.locator('#transparentStart').check();await segment('transparentColorMode','custom');await shot('advanced');
+await page.locator('[data-inspector-tab="layout"]').click();await reveal('headerRadiusTop');await shot('sizing');
+await page.evaluate(()=>document.documentElement.style.colorScheme='dark');await shot('dark');
+assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);
+await writeFile(new URL('qa/complete/result.json',dir),JSON.stringify({result:'passed',inputsAndSelects:manifest.controlIds.length,segmentedGroups:manifest.segments.length,exactSourceOptions:true,checks:['all CMS controls present once','exact unit and segmented options','four responsive box controls linked and unlinked','mobile override preserved','leaf forward reverse','border color linking','alpha shadow and inset','stay disables scroll effects','fixed sticky transparent custom colors','timeline and reset','active toggle','save discard config equality','mobile menu','320 430 768 1024 widths','zero JavaScript errors','zero network requests'],limits:['sample menus, not database','session-only draft','prototype uses current CMS preview renderer, not authenticated production E2E']},null,2));
+await browser.close();console.log('PASS: 50 CMS inputs/selects, 7 option groups, responsive and conditional interactions, zero requests/errors.');

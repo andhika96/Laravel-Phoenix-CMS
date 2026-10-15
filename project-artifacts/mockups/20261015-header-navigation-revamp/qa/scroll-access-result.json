@@ -1,0 +1,20 @@
+{
+  "result": "passed",
+  "liveCMS": {
+    "url": "https://laravel-13-phoenix.aruna/auth/login",
+    "headerEditorPresent": 0
+  },
+  "visibleCMSFields": 49,
+  "hiddenPreviewRangeReplacedByNativeScroll": true,
+  "checks": [
+    "wheel desktop/tablet/mobile",
+    "outer page does not scroll",
+    "reach true bottom",
+    "reset actual scroll",
+    "sticky reacts to native scrolling",
+    "condition sync",
+    "every setting reachable through real category buttons",
+    "show all groups"
+  ],
+  "errors": []
+}

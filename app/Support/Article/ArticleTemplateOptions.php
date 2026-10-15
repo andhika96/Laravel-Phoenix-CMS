@@ -59,6 +59,10 @@ final class ArticleTemplateOptions
 
     public function archive(string $template, array $input = []): array
     {
+        if ($template === 'minimal-reading-list') {
+            $defaults = ['pagination.type' => 'soft', 'pagination.item_radius' => '0px', 'pagination.item_border_width' => '0px', 'pagination.item_border_color' => 'rgba(0,0,0,0)', 'pagination.frame.border_width' => '0px', 'pagination.frame.border_color' => 'rgba(0,0,0,0)', 'pagination.frame.radius' => '0px'];
+            foreach ($defaults as $path => $value) { if (!\Illuminate\Support\Arr::has($input, $path)) data_set($input, $path, $value); }
+        }
         $definition = $this->catalog->archive()[$template] ?? $this->catalog->archive()['minimal-reading-list'];
         $toolbarDefaults = match ($template) {
             'minimal-reading-list' => ['search' => [true, 'left'], 'category' => [true, 'right']],
@@ -68,6 +72,7 @@ final class ArticleTemplateOptions
         };
 
         $result = [
+            'display' => $this->displayOptions($input),
             'header' => [
                 'eyebrow' => $this->copyOption($input, 'eyebrow', (string) ($definition['eyebrow'] ?? '')),
                 'title' => $this->copyOption($input, 'title', (string) ($definition['label'] ?? '')),
@@ -128,6 +133,15 @@ final class ArticleTemplateOptions
         return $result;
     }
 
+    private function displayOptions(array $input): array
+    {
+        $result = [];
+        foreach (['category', 'date', 'author', 'reading_time', 'excerpt', 'read_more', 'navigation'] as $field) {
+            $result[$field] = $this->boolean(data_get($input, 'display.'.$field), true);
+        }
+        return $result;
+    }
+
     private function storyLayout(array $input, string $template): array
     {
         $result = [];
@@ -175,6 +189,7 @@ final class ArticleTemplateOptions
     public function detail(string $template, array $input = []): array
     {
         return [
+            'display' => $this->displayOptions($input),
             'header' => [
                 'eyebrow' => $this->detailCopyOption($input, 'eyebrow'),
                 'title' => ['enabled' => $this->boolean(data_get($input, 'header.title.enabled'), true)],
@@ -363,6 +378,7 @@ final class ArticleTemplateOptions
         return [
             'type' => $this->paginationType($input),
             'range' => $this->paginationRange($input),
+            'item_border_width' => $this->dimension(data_get($input, 'pagination.item_border_width'), '1px', self::BORDER_UNITS),
             'item_radius' => $this->radius(data_get($input, 'pagination.item_radius'), '0.45rem'),
             'item_gap' => $this->dimension(data_get($input, 'pagination.item_gap'), '0.45rem', self::DIMENSION_UNITS),
             'item_background_color' => $this->optionalColor(data_get($input, 'pagination.item_background_color')),

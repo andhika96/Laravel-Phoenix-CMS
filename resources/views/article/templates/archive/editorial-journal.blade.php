@@ -47,14 +47,14 @@
                 @php($leadThumbnailUrl = $lead->thumb_l && Storage::disk('public')->exists($lead->thumb_l) ? Storage::url($lead->thumb_l) : asset('assets/images/article/article-image-placeholder.svg'))
                 <article class="article-editorial-lead article-editorial-lead--{{ $dividerEnabled ? 'with' : 'without' }}-divider">
                     <div class="article-editorial-lead__body">
-                        <span class="article-chip">{{ $lead->category?->name ?? t('Uncategorized') }}</span>
+                        @if (data_get($templateOptions, 'display.category', true))<span class="article-chip">{{ $lead->category?->name ?? t('Uncategorized') }}</span>@endif
                         @php($article = $lead)
                         @include('article.templates.partials.archive-title')
-                        <p class="article-excerpt-clamp">{{ \Illuminate\Support\Str::limit(trim(strip_tags((string) $lead->content)), 220) }}</p>
+                        @if (data_get($templateOptions, 'display.excerpt', true))<p class="article-excerpt-clamp">{{ \Illuminate\Support\Str::limit(trim(strip_tags((string) $lead->content)), 220) }}</p>@endif
                         @if ($readMoreEnabled)
-                            <a class="article-text-link {{ $readMoreClass }}" href="{{ route('cms.core.article.detail', $lead->uri) }}">{{ t('Read more') }} <i class="{{ $readMoreIcon }}" aria-hidden="true"></i></a>
+                            @if (data_get($templateOptions, 'display.read_more', true))<a class="article-text-link {{ $readMoreClass }}" href="{{ route('cms.core.article.detail', $lead->uri) }}">{{ t('Read more') }} <i class="{{ $readMoreIcon }}" aria-hidden="true"></i></a>@endif
                         @else
-                            <a class="article-text-link" href="{{ route('cms.core.article.detail', $lead->uri) }}">{{ t('Read article') }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                            @if (data_get($templateOptions, 'display.read_more', true))<a class="article-text-link" href="{{ route('cms.core.article.detail', $lead->uri) }}">{{ t('Read article') }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>@endif
                         @endif
                     </div>
                     @include('article.templates.partials.media-link', ['href' => route('cms.core.article.detail', $lead->uri), 'class' => 'article-editorial-lead__media', 'mediaUrl' => $leadThumbnailUrl, 'title' => $lead->title])
@@ -70,12 +70,12 @@
                     <article class="{{ $cardClass }}" style="{{ $cardStyle }}">
                         @include('article.templates.partials.media-link', ['href' => route('cms.core.article.detail', $article->uri), 'class' => 'article-editorial-card__media', 'mediaUrl' => $thumbnailUrl, 'title' => $article->title])
                         <div class="article-editorial-card__body">
-                            <span class="article-chip">{{ $article->category?->name ?? t('Uncategorized') }}</span>
+                            @if (data_get($templateOptions, 'display.category', true))<span class="article-chip">{{ $article->category?->name ?? t('Uncategorized') }}</span>@endif
                             @include('article.templates.partials.archive-title')
-                            <p class="article-excerpt-clamp">{{ \Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 120) }}</p>
-                            <small>{{ optional($article->created_at)->format('d M Y') }}</small>
+                            @if (data_get($templateOptions, 'display.excerpt', true))<p class="article-excerpt-clamp">{{ \Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 120) }}</p>@endif
+                            @if (data_get($templateOptions, 'display.date', true))<small>{{ optional($article->created_at)->format('d M Y') }}</small>@endif
                             @if ($readMoreEnabled)
-                                <a class="article-text-link {{ $readMoreClass }}" href="{{ route('cms.core.article.detail', $article->uri) }}">{{ t('Read more') }} <i class="{{ $readMoreIcon }}" aria-hidden="true"></i></a>
+                                @if (data_get($templateOptions, 'display.read_more', true))<a class="article-text-link {{ $readMoreClass }}" href="{{ route('cms.core.article.detail', $article->uri) }}">{{ t('Read more') }} <i class="{{ $readMoreIcon }}" aria-hidden="true"></i></a>@endif
                             @endif
                         </div>
                     </article>

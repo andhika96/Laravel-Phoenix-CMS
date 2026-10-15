@@ -1,0 +1,31 @@
+{
+  "result": "passed",
+  "groups": [
+    {
+      "section": "logoPosition",
+      "overflow": []
+    },
+    {
+      "section": "headerHeight",
+      "overflow": []
+    },
+    {
+      "section": "headerBg",
+      "overflow": []
+    },
+    {
+      "section": "linkShadowEnabled",
+      "overflow": []
+    },
+    {
+      "section": "headerBehavior",
+      "overflow": []
+    },
+    {
+      "section": "jsonOutput",
+      "overflow": []
+    }
+  ],
+  "steppers": "all four responsive boxes plus and minus clicked",
+  "firefox": "not installed in automation runtime; CSS appearance explicitly handles Firefox"
+}

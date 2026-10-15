@@ -1,0 +1,23 @@
+#headerNavigationEditor{--pn-accent:#147d68;--pn-soft:light-dark(#e8f4ee,#263f36);border-radius:12px}
+#headerNavigationEditor .pn-tabs,#headerNavigationEditor .settings-category-nav,#headerNavigationEditor .sidebar-help{display:none!important}
+#headerNavigationEditor .pn-inspectorhead{padding:24px 20px 18px}
+#headerNavigationEditor .pn-inspectorhead strong{font-size:18px}
+#headerNavigationEditor .sidebar-device{margin:0 16px;padding:8px 12px;border:1px solid var(--pn-line);border-radius:7px;background:var(--pn-surface)}
+#headerNavigationEditor .inspector-content{padding:0 18px 20px}
+#headerNavigationEditor .detail-heading{display:flex;align-items:center;gap:12px;padding:22px 0 20px;font-size:15px;font-weight:600}
+#headerNavigationEditor .detail-heading button{border:1px solid var(--pn-line);background:var(--pn-surface);color:var(--pn-ink);border-radius:50%;height:32px;width:32px;font-size:18px}
+#headerNavigationEditor .setting-directory{padding:20px 0}
+#headerNavigationEditor .directory-label{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:var(--pn-muted);margin:18px 0 9px}
+#headerNavigationEditor .directory-label:first-child{margin-top:0}
+#headerNavigationEditor .directory-item{display:grid;grid-template-columns:32px minmax(0,1fr) 14px;align-items:center;gap:10px;width:100%;padding:15px 0;border:0;border-bottom:1px solid var(--pn-line);background:transparent;color:var(--pn-ink);text-align:left}
+#headerNavigationEditor .directory-item:hover{color:var(--pn-accent)}
+#headerNavigationEditor .directory-item strong{font-size:13px;font-weight:600;display:block}
+#headerNavigationEditor .directory-item small{font-size:11px;color:var(--pn-muted);display:block;margin-top:4px;line-height:1.5}
+#headerNavigationEditor .directory-symbol{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--pn-bg);font-size:16px;font-weight:400;color:var(--pn-muted)}
+#headerNavigationEditor .segmented{background:var(--pn-bg);padding:3px;gap:2px;border-radius:6px}
+#headerNavigationEditor .segmented button{border:0;background:transparent;border-radius:4px;min-height:33px}
+#headerNavigationEditor .segmented button.is-active{background:var(--pn-surface);color:var(--pn-ink);box-shadow:0 1px 3px #0001}
+#headerNavigationEditor .form-control,#headerNavigationEditor .form-select{background:var(--pn-bg);border-color:transparent}
+#headerNavigationEditor .form-label{font-size:12px;margin-bottom:10px}
+#headerNavigationEditor .box-link-toggle.is-active{border-color:#a2cbbb;color:var(--pn-accent)}
+#headerNavigationEditor .pn-inspector{min-height:650px}

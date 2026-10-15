@@ -1,0 +1,11 @@
+{
+  "result": "passed",
+  "checks": [
+    "labels",
+    "three states",
+    "linked disabled and explanation",
+    "unlinked enabled and explanation",
+    "desktop mobile overflow"
+  ],
+  "errors": []
+}

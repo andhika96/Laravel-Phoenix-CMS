@@ -1,0 +1,78 @@
+import {readFile,writeFile,access} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+const dir=new URL('./',import.meta.url),repo=new URL('../../../',dir);
+const read=p=>readFile(new URL(p,repo),'utf8');
+const viewPath='resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php';
+const jsPath='public/assets/js/awesome-admin-header-navigation.js';
+const cssPath='public/assets/css/awesome-admin-header-navigation.css';
+const [blade,sourceJs,sourceCss]=await Promise.all([read(viewPath),read(jsPath),read(cssPath)]);
+try{await access(new URL('base.css',dir));}catch{const active=await readFile(new URL('header-navigation.html',dir),'utf8');await writeFile(new URL('base.css',dir),active.match(/<style>([\s\S]*?)<\/style>/)[1].replaceAll('#phoenix-nav-studio','#headerNavigationEditor'));}
+let panels=[...blade.matchAll(/<section id="headerNavigation(?:Layout|Style|Advanced)Panel"[\s\S]*?<\/section>/g)].map(m=>m[0]).join('\n');
+assert.equal((panels.match(/data-inspector-panel=/g)||[]).length,3);
+panels=panels.replace(/{{\s*t\('([^']*)'\)\s*}}/g,'$1').replace(/<details class="header-setting-group" open>/g,'<details class="header-setting-group">');
+// Preserve every CMS control; only the presentation and initial disclosure state change.
+const groups=[...panels.matchAll(/<details\b[\s\S]*?<\/details>/g)];
+for(const m of groups){if(/<span>Layout<\/span>|<span>Colors<\/span>|<span>Behavior<\/span>/.test(m[0]))panels=panels.replace(m[0],m[0].replace('<details ','<details open '));}
+let js=sourceJs.replace('const editorOptions = window.headerNavigationEditorOptions || {};','const editorOptions = {}; let prototypeSaved = null; let prototypeActive = true;');
+js=js.replace(/\s*async function saveHeaderNavigation\(\)[\s\S]*?(?=\s*function updatePreviewScale)/,'\nfunction saveHeaderNavigation(){ prototypeSaved=structuredClone(currentConfig); prototypeActive=document.getElementById("headerNavigationActive").checked; syncPrototype(); setSaveStatus("success","Draft tersimpan di sesi prototipe"); }\n');
+js=js.replace(/\s*async function loadPreviewMenus\(\)[\s\S]*$/, '\nupdateAll(); prototypeSaved=structuredClone(currentConfig); syncPrototype();\n');
+js=js.replace(/function updatePreviewScale\(\)\s*{[\s\S]*?(?=\s*function updateAll)/,`function updatePreviewScale(){
+const viewport=previewViewports[controls.deviceMode.value]; const w=els.previewFrame.clientWidth; if(!w)return;
+const scale=Math.min(1,w/viewport.width,500/viewport.height);
+els.previewFrame.style.height=(viewport.height*scale)+'px';
+els.previewViewport.style.width=viewport.width+'px';els.previewViewport.style.height=viewport.height+'px';
+els.previewViewport.style.left=((w-viewport.width*scale)/2)+'px';els.previewViewport.style.top='0';els.previewViewport.style.setProperty('--preview-scale',scale);
+els.previewScaleStatus.textContent=viewport.label+' '+viewport.width+'×'+viewport.height+' · Fit '+Math.round(scale*100)+'%';
+}\n`);
+js=js.replace('updateJson();\n\t\t}\n\n\t\tdocument.querySelectorAll', 'updateJson();\n syncPrototype();\n\t\t}\n\n\t\tdocument.querySelectorAll');
+assert(js.includes('syncPrototype();\n\t\t}'));
+// The inline preview uses the CMS scroll-state simulation without a nested scrolling surface.
+js=js.replace(/els\.deviceStage\.scrollTo\([^;]+;/g,'/* Scroll state is controlled by the timeline. */');
+js=js.replace(/els\.deviceStage\.scrollTop = Math\.round\([^;]+;/g,'updateScrolledState();');
+js=js.replace(/\s*els\.deviceStage\.addEventListener\('scroll',[\s\S]*?\n\t\t}\);/,'');
+js=js.replace('tab.tabIndex = isActive ? 0 : -1;', '/* Native tab order retained. */');
+js=js.replace('els.headerInner.innerHTML = html;', `els.headerInner.innerHTML = html;
+if(controls.deviceMode.value!=='desktop'&&!els.headerInner.querySelector('.hamburger'))els.headerInner.insertAdjacentHTML('beforeend','<button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>');`);
+js=js.replaceAll('document.querySelectorAll(', 'editor.querySelectorAll(');
+js=js.replace('document.addEventListener(\'click\'', 'editor.addEventListener(\'click\'').replace('document.addEventListener(\'keydown\'', 'editor.addEventListener(\'keydown\'');
+js=js.replace("const editor = document.getElementById('headerNavigationEditor');","const editor = document.getElementById('headerNavigationEditor');");
+js+=`\nfunction syncPrototype(){
+const active=document.getElementById('headerNavigationActive').checked; els.header.hidden=!active;
+const dirty=prototypeSaved && (JSON.stringify(currentConfig)!==JSON.stringify(prototypeSaved)||active!==prototypeActive);
+document.getElementById('saveHeaderNavigation').disabled=!dirty;
+document.getElementById('discardPrototype').disabled=!dirty;
+setSaveStatus(dirty?'changed':'ready',dirty?'Perubahan belum disimpan':'Draft contoh · tidak ada perubahan tertunda');
+editor.querySelectorAll('.segmented button').forEach(b=>b.setAttribute('aria-pressed',String(b.classList.contains('is-active'))));
+editor.querySelectorAll('[data-scroll-preset]').forEach(b=>b.disabled=!scrollEffectsEnabled());
+document.getElementById('scrollHelp').textContent=scrollEffectsEnabled()?'Geser timeline untuk menguji perubahan header.':'Pilih Fixed/Sticky dan aktifkan animasi scroll pada tab Advanced.';
+editor.querySelectorAll('[data-color-for]').forEach(p=>{const input=document.getElementById(p.dataset.colorFor);p.disabled=input.disabled; if(/^#[0-9a-f]{6}/i.test(input.value))p.value=input.value.slice(0,7);});
+}
+document.getElementById('headerNavigationActive').addEventListener('change',syncPrototype);
+document.getElementById('discardPrototype').addEventListener('click',()=>{applyStoredConfig(structuredClone(prototypeSaved));document.getElementById('headerNavigationActive').checked=prototypeActive;updateAll();});
+editor.querySelectorAll('[data-coloris]').forEach(input=>{
+const row=document.createElement('div');row.className='color-picker-row';input.before(row);row.append(input);
+const picker=document.createElement('input');picker.type='color';picker.dataset.colorFor=input.id;picker.setAttribute('aria-label','Pilih warna '+input.id);row.prepend(picker);
+picker.addEventListener('input',()=>{input.value=picker.value;input.dispatchEvent(new Event('input',{bubbles:true}));});
+input.setAttribute('aria-label',input.closest('.link-color-field')?.querySelector('label')?.textContent || editor.querySelector('label[for="'+input.id+'"]')?.textContent || input.id);
+input.addEventListener('input',()=>{input.setCustomValidity(CSS.supports('color',input.value)?'':'Masukkan warna CSS yang valid.');});
+});
+els.headerInner.addEventListener('click',event=>{
+const link=event.target.closest('a');if(link){event.preventDefault();if(link.closest('.header-menu')){els.headerInner.querySelectorAll('.header-menu a').forEach(a=>a.classList.toggle('is-active',a===link));}}
+const hamburger=event.target.closest('.hamburger');if(hamburger){const open=els.deviceStage.classList.toggle('menu-open');hamburger.setAttribute('aria-expanded',String(open));}
+if(event.target.closest('.btn-demo'))document.getElementById('previewFeedback').textContent='Get started · contoh tombol frontend, tanpa navigasi keluar.';
+});
+editor.querySelectorAll('[role="tab"]').forEach((tab,index,tabs)=>tab.addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();const target=event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;tabs[target].focus();tabs[target].click();}));
+syncPrototype();
+`;
+assert(!/\bfetch\s*\(/.test(js),'Prototype must not contain network requests');
+const renderer=sourceCss.slice(sourceCss.indexOf('\t\t.site-header {'),sourceCss.indexOf('\t\t.hero-copy {')).replace(/(^|\n)(\s*)(\.[^\n]+)/g,'$1$2#headerNavigationEditor $3');
+const styles=[await readFile(new URL('base.css',dir),'utf8'),renderer,await readFile(new URL('complete.css',dir),'utf8')].join('\n');
+const shell=await readFile(new URL('complete-shell.html',dir),'utf8');
+const html=shell.replace('/*STYLES*/',()=>styles).replace('<!--PANELS-->',()=>panels).replace('/*RUNTIME*/',()=>`(()=>{\n${js}\n})();`);
+await writeFile(new URL('header-navigation.html',dir),html);
+const controlIds=[...blade.matchAll(/<(?:input|select)\b[^>]*\bid="([^"]+)"/g)].map(m=>m[1]);
+const segments=[...blade.matchAll(/data-control="([^"]+)"/g)].map(m=>m[1]);
+assert(controlIds.every(id=>html.includes('id="'+id+'"')));
+await writeFile(new URL('cms-parity.json',dir),JSON.stringify({sourceFiles:[viewPath,jsPath,cssPath].map((path,i)=>({path,sha256:createHash('sha256').update([blade,sourceJs,sourceCss][i]).digest('hex')})),controlIds,segments,network:false,scope:'All inputs, units, segmented values, conditional controls and preview logic from current CMS; draft persistence is session-only.'},null,2));
+console.log('Built complete prototype:',controlIds.length,'inputs/selects,',segments.length,'segmented groups,',Buffer.byteLength(html),'bytes');

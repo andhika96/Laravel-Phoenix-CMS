@@ -39,10 +39,10 @@
                             <article class="article-reading-list__item">
                                 <?php echo $__env->make('article.templates.partials.media-link', ['href' => route('cms.core.article.detail', $article->uri), 'class' => 'article-reading-list__media', 'mediaUrl' => $thumbnailUrl, 'title' => $article->title], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                                 <div class="article-reading-list__body">
-                                    <div class="article-meta"><span><?php echo e($article->category?->name ?? t('Uncategorized')); ?></span><span><?php echo e(optional($article->created_at)->format('d M Y')); ?></span><span><?php echo e($readingMinutes); ?> <?php echo e(t('min read')); ?></span></div>
+                                    <div class="article-meta"><?php if(data_get($templateOptions, 'display.category', true)): ?><span><?php echo e($article->category?->name ?? t('Uncategorized')); ?></span><?php endif; ?> <?php if(data_get($templateOptions, 'display.date', true)): ?><span><?php echo e(optional($article->created_at)->format('d M Y')); ?></span><?php endif; ?> <?php if(data_get($templateOptions, 'display.reading_time', true)): ?><span><?php echo e($readingMinutes); ?> <?php echo e(t('min read')); ?></span><?php endif; ?></div>
                                     <?php echo $__env->make('article.templates.partials.archive-title', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-                                    <p class="article-excerpt-clamp"><?php echo e(\Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 180)); ?></p>
-                                    <a class="article-text-link article-reading-list__read-link" href="<?php echo e(route('cms.core.article.detail', $article->uri)); ?>"><?php echo e(t('Read more')); ?> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                                    <?php if(data_get($templateOptions, 'display.excerpt', true)): ?><p class="article-excerpt-clamp"><?php echo e(\Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 180)); ?></p><?php endif; ?>
+                                    <?php if(data_get($templateOptions, 'display.read_more', true)): ?><a class="article-text-link article-reading-list__read-link" href="<?php echo e(route('cms.core.article.detail', $article->uri)); ?>"><?php echo e(t('Read more')); ?> <i class="fas fa-arrow-right" aria-hidden="true"></i></a><?php endif; ?>
                                 </div>
                             </article>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

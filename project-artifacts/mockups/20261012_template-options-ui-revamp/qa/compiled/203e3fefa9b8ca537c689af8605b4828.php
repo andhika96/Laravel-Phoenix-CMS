@@ -21,7 +21,14 @@
                                     <div class="article-template-options-settings">
                                         <label class="article-template-options-section-picker"><?php echo e(t('Customize')); ?><select :value="optionsModal.section" @change="setOptionsSection($event.target.value)"><option v-for="section in optionSections" :key="section.key" :value="section.key">{{ section.label }}</option></select></label>
                                         <div ref="optionsPanelViewport" class="article-template-options-panel">
-                                <section v-if="optionsModal.section === 'header'" id="article-template-option-panel-header" role="tabpanel" aria-labelledby="article-template-option-tab-header" tabindex="-1" class="article-template-options-section">
+                                <section v-if="optionsModal.section === 'display'" id="article-template-option-panel-display" role="tabpanel" aria-labelledby="article-template-option-tab-display" class="article-template-options-section">
+ <div class="article-template-options-section__heading"><div><h5><?php echo e(t('Visible elements')); ?></h5><small><?php echo e(t('Choose which article details appear in this template.')); ?></small></div></div>
+ <div class="article-template-options-fields">
+ <?php $__currentLoopData = ['category' => 'Show category', 'date' => 'Show date', 'author' => 'Show author / editor', 'reading_time' => 'Show reading time', 'excerpt' => 'Show excerpt', 'read_more' => 'Show Read more link', 'navigation' => 'Show previous and next articles']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $field => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+ <label v-if="optionsModal.surface === 'detail' ? <?php echo e(in_array($field, ['date', 'author', 'navigation']) ? 'true' : 'false'); ?> : <?php echo e(in_array($field, ['category','date','excerpt']) ? 'true' : ($field === 'reading_time' ? "optionsModal.key === 'minimal-reading-list'" : ($field === 'read_more' ? "optionsModal.key !== 'mosaic-magazine'" : 'false'))); ?>" class="form-check form-switch"><input type="checkbox" class="form-check-input" v-model="optionsModal.value.display.<?php echo e($field); ?>"><span class="form-check-label"><?php echo e(t($label)); ?></span></label>
+ <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+ </div></section>
+ <section v-if="optionsModal.section === 'header'" id="article-template-option-panel-header" role="tabpanel" aria-labelledby="article-template-option-tab-header" tabindex="-1" class="article-template-options-section">
                                     <div class="article-template-options-section__heading"><span>1</span><div><h5><?php echo e(t('Header content')); ?></h5><small><?php echo e(t('Control each visible header element for this template.')); ?></small></div></div>
                                     <div class="article-template-header-fields">
                                         <template v-for="field in ['eyebrow', 'title', 'description']" :key="field">
@@ -109,7 +116,13 @@
                                     </aside>
                                 </div>
                             </div>
-                            <div class="modal-footer" v-if="optionsModal.value"><div v-if="optionsModal.dismissOpen" class="article-template-options-dismiss ph-callout-warning ph-callout-no-border" role="alert"><span><?php echo e(t('Discard unsaved changes?')); ?></span><div><button type="button" class="btn btn-sm btn-secondary" @click="keepEditing"><?php echo e(t('Keep editing')); ?></button><button type="button" class="btn btn-sm btn-danger" @click="discardTemplateOptions"><?php echo e(t('Discard changes')); ?></button></div></div><div class="article-template-options-footer-main"><span class="article-template-options-footer-note"><i class="fas fa-info-circle" aria-hidden="true"></i><?php echo e(t('Changes are applied to the template draft. Save Template persists them.')); ?></span><div class="article-template-options-footer-actions"><button type="button" class="btn btn-secondary" @click="requestCloseTemplateOptions"><?php echo e(t('Cancel')); ?></button><button type="button" class="btn ph-btn-theme" @click="applyTemplateOptions"><?php echo e(t('Apply changes')); ?></button></div></div></div>
+                            <dialog ref="discardDialog" class="article-template-discard-dialog" aria-labelledby="article-discard-title" aria-describedby="article-discard-description" @cancel.prevent.stop="keepEditing" @keydown.esc.stop>
+ <div class="article-template-discard-dialog__icon" aria-hidden="true"><i class="fas fa-exclamation-triangle"></i></div>
+ <h5 id="article-discard-title"><?php echo e(t('Discard unsaved changes?')); ?></h5>
+ <p id="article-discard-description"><?php echo e(t('Your changes in Template Options have not been applied. Discard them or continue editing.')); ?></p>
+ <div class="article-template-discard-dialog__actions"><button autofocus type="button" class="btn ph-btn-theme-outline" @click="keepEditing"><?php echo e(t('Keep editing')); ?></button><button type="button" class="btn btn-danger" @click="discardTemplateOptions"><?php echo e(t('Discard changes')); ?></button></div>
+ </dialog>
+ <div class="modal-footer" v-if="optionsModal.value"><div class="article-template-options-footer-main"><span class="article-template-options-footer-note"><i class="fas fa-info-circle" aria-hidden="true"></i><?php echo e(t('Changes are applied to the template draft. Save Template persists them.')); ?></span><div class="article-template-options-footer-actions"><button type="button" class="btn btn-secondary" @click="requestCloseTemplateOptions"><?php echo e(t('Cancel')); ?></button><button type="button" class="btn ph-btn-theme" @click="applyTemplateOptions"><?php echo e(t('Apply changes')); ?></button></div></div></div>
                         </div>
                     </div>
                 </div>

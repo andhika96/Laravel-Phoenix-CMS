@@ -1,0 +1,10 @@
+{
+  "result": "passed",
+  "checks": [
+    "increase",
+    "decrease",
+    "linked values",
+    "unlinked values"
+  ],
+  "errors": []
+}

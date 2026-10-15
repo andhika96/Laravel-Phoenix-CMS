@@ -1,0 +1,79 @@
+{
+  "sourceFiles": [
+    {
+      "path": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php",
+      "sha256": "0a153bb209953715a3518f2231cc6cd4e54f0796d2ba1a64de3461de54b371ee"
+    },
+    {
+      "path": "public/assets/js/awesome-admin-header-navigation.js",
+      "sha256": "d398b6e66afeb383ceed8fced15769e1a21683b7a07800fa0bc3bdd773540d0f"
+    },
+    {
+      "path": "public/assets/css/awesome-admin-header-navigation.css",
+      "sha256": "fe97d9dcafa31ea3b06260205262ec70de75c11020abdc43e9ad6d74107036ae"
+    }
+  ],
+  "controlIds": [
+    "headerNavigationActive",
+    "deviceMode",
+    "innerBg",
+    "headerHeight",
+    "headerHeightUnit",
+    "headerRadiusUnit",
+    "headerRadiusTop",
+    "headerRadiusRight",
+    "headerRadiusBottom",
+    "headerRadiusLeft",
+    "headerPaddingUnit",
+    "headerPaddingTop",
+    "headerPaddingRight",
+    "headerPaddingBottom",
+    "headerPaddingLeft",
+    "navRadiusUnit",
+    "navRadiusTop",
+    "navRadiusRight",
+    "navRadiusBottom",
+    "navRadiusLeft",
+    "containerMarginUnit",
+    "containerMarginTop",
+    "containerMarginRight",
+    "containerMarginBottom",
+    "containerMarginLeft",
+    "headerBg",
+    "scrolledBg",
+    "headerText",
+    "linkColor",
+    "linkActive",
+    "linkActiveBorder",
+    "linkHover",
+    "linkHoverBorder",
+    "linkFocus",
+    "linkFocusBorder",
+    "linkShadowEnabled",
+    "linkShadowUnit",
+    "linkShadowX",
+    "linkShadowY",
+    "linkShadowBlur",
+    "linkShadowSpread",
+    "linkShadowColor",
+    "linkShadowInset",
+    "transparentStart",
+    "transparentText",
+    "transparentHover",
+    "transparentFocus",
+    "transparentActive",
+    "animateScroll",
+    "scrollSim"
+  ],
+  "segments": [
+    "logoPosition",
+    "menuPosition",
+    "containerMode",
+    "linkShape",
+    "leafDirection",
+    "headerBehavior",
+    "transparentColorMode"
+  ],
+  "network": false,
+  "scope": "All inputs, units, segmented values, conditional controls and preview logic from current CMS; draft persistence is session-only."
+}

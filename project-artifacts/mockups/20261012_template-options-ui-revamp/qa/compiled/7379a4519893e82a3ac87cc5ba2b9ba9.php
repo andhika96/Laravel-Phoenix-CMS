@@ -27,7 +27,9 @@
                 ?>
                 <article class="article-mosaic-feature" data-mosaic-region="hero">
                     <?php echo $__env->make('article.templates.partials.media-link', ['href' => route('cms.core.article.detail', $featured->uri), 'class' => 'article-mosaic-feature__media', 'mediaUrl' => $featuredThumbnailUrl, 'title' => $featured->title], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-                    <div class="article-mosaic-feature__body"><span class="article-chip"><?php echo e($featured->category?->name ?? t('Uncategorized')); ?></span><?php echo $__env->make('article.templates.partials.archive-title', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><p class="article-excerpt-clamp"><?php echo e(\Illuminate\Support\Str::limit(trim(strip_tags((string) $featured->content)), 180)); ?></p><small><?php echo e(optional($featured->created_at)->format('d M Y')); ?></small></div>
+                    <div class="article-mosaic-feature__body"><?php if(data_get($templateOptions, 'display.category', true)): ?><span class="article-chip"><?php echo e($featured->category?->name ?? t('Uncategorized')); ?></span><?php endif; ?>
+<?php echo $__env->make('article.templates.partials.archive-title', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php if(data_get($templateOptions, 'display.excerpt', true)): ?><p class="article-excerpt-clamp"><?php echo e(\Illuminate\Support\Str::limit(trim(strip_tags((string) $featured->content)), 180)); ?></p><?php endif; ?>
+<?php if(data_get($templateOptions, 'display.date', true)): ?><small><?php echo e(optional($featured->created_at)->format('d M Y')); ?></small><?php endif; ?></div>
                 </article>
             <?php endif; ?>
 
@@ -50,7 +52,9 @@
                     ?>
                     <article class="article-mosaic-card">
                         <?php echo $__env->make('article.templates.partials.media-link', ['href' => route('cms.core.article.detail', $article->uri), 'class' => 'article-mosaic-card__media', 'mediaUrl' => $thumbnailUrl, 'title' => $article->title], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-                        <div><span class="article-chip"><?php echo e($article->category?->name ?? t('Uncategorized')); ?></span><?php echo $__env->make('article.templates.partials.archive-title', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><p class="article-excerpt-clamp"><?php echo e(\Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 92)); ?></p><small><?php echo e(optional($article->created_at)->format('d M Y')); ?></small></div>
+                        <div><?php if(data_get($templateOptions, 'display.category', true)): ?><span class="article-chip"><?php echo e($article->category?->name ?? t('Uncategorized')); ?></span><?php endif; ?>
+<?php echo $__env->make('article.templates.partials.archive-title', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php if(data_get($templateOptions, 'display.excerpt', true)): ?><p class="article-excerpt-clamp"><?php echo e(\Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 92)); ?></p><?php endif; ?>
+<?php if(data_get($templateOptions, 'display.date', true)): ?><small><?php echo e(optional($article->created_at)->format('d M Y')); ?></small><?php endif; ?></div>
                     </article>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>

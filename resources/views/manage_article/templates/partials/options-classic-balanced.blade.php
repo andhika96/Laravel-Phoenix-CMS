@@ -47,9 +47,9 @@
                 <small>{{ t('Set the regular grid columns in Grid columns. Set regular thumbnail height and fit in Thumbnail.') }}</small>
             </fieldset>
             <fieldset class="article-template-editorial-journal-group">
-                <legend>{{ t('Story details') }}</legend>
+                <legend>{{ t('Story details · metadata') }}</legend>
                 @if ($layoutTemplate === 'mosaic-classic')
-                    <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.mosaic_classic.show_author"><span class="form-check-label">{{ t('Show author') }}</span></label>
+                    <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.mosaic_classic.show_author"><span class="form-check-label">{{ t('Show author / editor') }}</span></label>
                     <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.mosaic_classic.show_reading_time"><span class="form-check-label">{{ t('Show reading time') }}</span></label>
                 @endif
                 @foreach (['show_category' => 'Show category', 'show_excerpt' => 'Show excerpt', 'show_date' => 'Show date', 'show_read_more' => 'Show Read article link'] as $field => $label)

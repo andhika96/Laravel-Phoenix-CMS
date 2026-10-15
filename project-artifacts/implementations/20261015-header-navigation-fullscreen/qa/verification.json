@@ -1,0 +1,102 @@
+{
+  "result": "passed",
+  "liveControlsCompared": 50,
+  "groupsCompared": 7,
+  "dimensions": [
+    {
+      "root": {
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 1000,
+        "right": 1440,
+        "bottom": 1000
+      },
+      "left": {
+        "x": 0,
+        "y": 64,
+        "w": 300,
+        "h": 936,
+        "right": 300,
+        "bottom": 1000
+      },
+      "right": {
+        "x": 300,
+        "y": 64,
+        "w": 1140,
+        "h": 936,
+        "right": 1440,
+        "bottom": 1000
+      },
+      "bodyScroll": false
+    },
+    {
+      "root": {
+        "x": 0,
+        "y": 0,
+        "w": 1024,
+        "h": 768,
+        "right": 1024,
+        "bottom": 768
+      },
+      "left": {
+        "x": 0,
+        "y": 64,
+        "w": 300,
+        "h": 704,
+        "right": 300,
+        "bottom": 768
+      },
+      "right": {
+        "x": 300,
+        "y": 64,
+        "w": 724,
+        "h": 704,
+        "right": 1024,
+        "bottom": 768
+      },
+      "bodyScroll": false
+    },
+    {
+      "root": {
+        "x": 0,
+        "y": 0,
+        "w": 430,
+        "h": 932,
+        "right": 430,
+        "bottom": 932
+      },
+      "left": {
+        "x": 0,
+        "y": 523,
+        "w": 430,
+        "h": 520,
+        "right": 430,
+        "bottom": 1043
+      },
+      "right": {
+        "x": 0,
+        "y": 143,
+        "w": 430,
+        "h": 380,
+        "right": 430,
+        "bottom": 523
+      },
+      "bodyScroll": false
+    }
+  ],
+  "checks": [
+    "fullscreen viewport",
+    "left settings right preview",
+    "all source controls preserved",
+    "preview wheel and reset",
+    "device switch does not mark dirty",
+    "cancel prompts for unsaved changes",
+    "keep editing preserves edits",
+    "failed save remains dirty",
+    "successful save clears dirty",
+    "discard exits to Awesome Admin"
+  ],
+  "saveTesting": "Browser responses intercepted; no production settings POST reached server. Backend verified separately by transactional Laravel tests.",
+  "errors": []
+}

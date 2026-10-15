@@ -1,0 +1,2516 @@
+<div id="headerNavigationEditor" class="header-navigation-editor" aria-label="Phoenix Header Navigation Studio">
+<style>
+#headerNavigationEditor{--pn-bg:light-dark(#f5f6f8,#191c22);--pn-surface:light-dark(#fff,#242830);--pn-ink:light-dark(#222834,#edf0f6);--pn-muted:light-dark(#657080,#acb5c4);--pn-line:light-dark(#e3e6ec,#3a404b);--pn-accent:#c92d38;--pn-soft:light-dark(#fff0f0,#44272e);color:var(--pn-ink);background:var(--pn-bg);font:14px/1.5 'Segoe UI',sans-serif;border:1px solid var(--pn-line);border-radius:14px;overflow:hidden;container-type:inline-size}
+#headerNavigationEditor *{box-sizing:border-box}#headerNavigationEditor button,#headerNavigationEditor input,#headerNavigationEditor select{font:inherit}#headerNavigationEditor button{cursor:pointer}#headerNavigationEditor button:focus-visible,#headerNavigationEditor input:focus-visible,#headerNavigationEditor select:focus-visible{outline:3px solid #e5898f;outline-offset:3px}#headerNavigationEditor [hidden]{display:none!important}
+#headerNavigationEditor .pn-top{display:flex;align-items:center;gap:12px;padding:16px 24px;background:var(--pn-surface);border-bottom:1px solid var(--pn-line);padding-right:100px}#headerNavigationEditor .pn-mark{display:grid;place-items:center;background:var(--pn-accent);color:white;border-radius:9px;width:30px;height:30px;font-weight:700}#headerNavigationEditor .pn-crumb{color:var(--pn-muted);font-size:12px;margin-left:18px}#headerNavigationEditor .pn-titlebar{padding:25px 25px 20px;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}#headerNavigationEditor h1{font-size:24px;line-height:1.25;letter-spacing:-.7px;margin:0 0 6px;font-weight:650}#headerNavigationEditor p{margin:0;color:var(--pn-muted);font-size:13px}#headerNavigationEditor .pn-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}#headerNavigationEditor .pn-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--pn-line);border-radius:7px;background:var(--pn-surface);color:var(--pn-ink);padding:8px 12px;min-height:36px}#headerNavigationEditor .pn-button:hover{background:var(--pn-bg)}#headerNavigationEditor .pn-primary{background:var(--pn-accent);border-color:var(--pn-accent);color:#fff}#headerNavigationEditor .pn-primary:hover{background:#ad2330}#headerNavigationEditor .pn-button:disabled{opacity:.45;cursor:default}#headerNavigationEditor .pn-workspace{display:grid;grid-template-columns:minmax(0,1fr) 294px;border-top:1px solid var(--pn-line)}
+#headerNavigationEditor .pn-preview{min-width:0;padding:20px}#headerNavigationEditor .pn-previewbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}#headerNavigationEditor .pn-caption{font-size:11px;color:var(--pn-muted);text-transform:uppercase;letter-spacing:1px;font-weight:600}#headerNavigationEditor .pn-segment{display:flex;gap:3px;background:var(--pn-surface);padding:3px;border:1px solid var(--pn-line);border-radius:8px;flex-wrap:wrap}#headerNavigationEditor .pn-segment button{border:0;background:transparent;color:var(--pn-muted);padding:7px 10px;border-radius:5px;font-size:12px}#headerNavigationEditor .pn-segment button[aria-pressed=true]{background:var(--pn-soft);color:var(--pn-accent);font-weight:600}#headerNavigationEditor .pn-stage{padding:22px 14px;background:light-dark(#e9ecf1,#14171d);border-radius:10px;min-height:440px;display:flex;align-items:flex-start;justify-content:center}#headerNavigationEditor .pn-site{width:100%;max-width:100%;background:#faf9f6;color:#292b31;border:1px solid #d6dae1;border-radius:9px;box-shadow:0 12px 30px #10182812;min-height:390px;container-type:inline-size}#headerNavigationEditor .pn-browser{display:flex;align-items:center;padding:9px 12px;border-radius:9px 9px 0 0;background:#fff;border-bottom:1px solid #eceef1;color:#687180;font-size:10px;gap:6px}#headerNavigationEditor .pn-dot{width:6px;height:6px;border-radius:50%;background:#d9dce2}#headerNavigationEditor .pn-address{margin:auto}#headerNavigationEditor .pn-siteheader{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:70px;padding:12px 20px;background:#fff;border-bottom:1px solid #eceef1;position:relative;flex-wrap:wrap}#headerNavigationEditor .pn-logo{font-size:17px;font-weight:750;letter-spacing:-.7px;display:flex;align-items:center;gap:7px}#headerNavigationEditor .pn-logo span{width:13px;height:20px;background:var(--pn-accent);border-radius:3px 8px 3px 8px}#headerNavigationEditor .pn-links{display:flex;gap:3px;align-items:center;flex-wrap:wrap}#headerNavigationEditor .pn-links button{background:transparent;border:0;padding:8px;color:inherit;font-size:11px;border-radius:5px}#headerNavigationEditor .pn-links button[aria-current=page]{background:var(--pn-soft);color:var(--pn-accent)}#headerNavigationEditor .pn-links button:hover{background:var(--pn-accent);color:#fff}#headerNavigationEditor .pn-hero{padding:43px 28px 30px;min-height:235px;background:#f3f0e9}#headerNavigationEditor .pn-eyebrow{font-size:10px;letter-spacing:1.7px;color:#7e6046;font-weight:600}#headerNavigationEditor .pn-hero h2{font-family:Georgia,serif;font-size:clamp(25px,4cqw,38px);line-height:1.15;font-weight:400;letter-spacing:-1px;max-width:350px;margin:13px 0 15px}#headerNavigationEditor .pn-hero p{font-size:12px;color:#68665f;max-width:300px}#headerNavigationEditor .pn-bottom{padding:21px 28px;display:flex;gap:25px;color:#74756f;font-size:11px;flex-wrap:wrap}#headerNavigationEditor .pn-bottom strong{color:#323a38;display:block;font-size:12px}#headerNavigationEditor .pn-menutoggle{display:none;background:transparent;border:1px solid #d9dce2;padding:7px 10px;border-radius:5px;color:inherit}#headerNavigationEditor .pn-site.compact .pn-links{display:none}#headerNavigationEditor .pn-site.compact .pn-menutoggle{display:block}#headerNavigationEditor .pn-site.compact.menu-open .pn-links{display:flex;width:100%;flex-direction:column;align-items:stretch}#headerNavigationEditor .pn-site.compact .pn-hero{padding:30px 22px}#headerNavigationEditor .pn-site.compact .pn-hero h2{font-size:30px}
+#headerNavigationEditor .pn-under{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 20px;color:var(--pn-muted);font-size:11px}#headerNavigationEditor .pn-scrollbox{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--pn-surface);padding:14px 16px;border:1px solid var(--pn-line);border-radius:9px}#headerNavigationEditor .pn-scrollbox strong{font-size:12px;display:block}#headerNavigationEditor .pn-scrollbox small{color:var(--pn-muted);font-size:11px}#headerNavigationEditor .pn-inspector{background:var(--pn-surface);border-left:1px solid var(--pn-line);min-width:0}#headerNavigationEditor .pn-inspectorhead{padding:19px 18px 15px;display:flex;align-items:center;justify-content:space-between;gap:10px}#headerNavigationEditor .pn-inspectorhead strong{font-size:14px}#headerNavigationEditor .pn-badge{font-size:10px;padding:3px 7px;border-radius:4px;background:var(--pn-bg);color:var(--pn-muted)}#headerNavigationEditor .pn-tabs{display:flex;border-bottom:1px solid var(--pn-line);padding:0 12px;gap:10px}#headerNavigationEditor .pn-tabs button{font-size:12px;padding:12px 5px;background:none;border:0;border-bottom:2px solid transparent;color:var(--pn-muted)}#headerNavigationEditor .pn-tabs button[aria-pressed=true]{border-color:var(--pn-accent);color:var(--pn-accent);font-weight:600}#headerNavigationEditor .pn-panel{padding:18px}#headerNavigationEditor .pn-sectiontitle{font-weight:600;font-size:12px;margin:0 0 14px}#headerNavigationEditor .pn-field{margin-bottom:18px}#headerNavigationEditor .pn-field>label{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:7px}#headerNavigationEditor .pn-field select,#headerNavigationEditor .pn-field input[type=number]{width:100%;border:1px solid var(--pn-line);border-radius:6px;background:var(--pn-surface);color:var(--pn-ink);padding:8px 10px;min-height:36px}#headerNavigationEditor input[type=range]{width:100%;accent-color:var(--pn-accent)}#headerNavigationEditor .pn-field small{font-size:11px;color:var(--pn-muted);display:block;margin-top:6px}#headerNavigationEditor .pn-line{border:0;border-top:1px solid var(--pn-line);margin:21px 0}#headerNavigationEditor .pn-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}#headerNavigationEditor .pn-toggle{display:flex;gap:10px;align-items:flex-start;margin:17px 0;font-size:12px}#headerNavigationEditor .pn-toggle input{accent-color:var(--pn-accent);margin-top:4px}#headerNavigationEditor .pn-toggle small{display:block;color:var(--pn-muted);font-size:11px;margin-top:3px}#headerNavigationEditor .pn-color{display:flex;align-items:center;gap:10px;border:1px solid var(--pn-line);border-radius:6px;padding:5px 8px;font-size:12px}#headerNavigationEditor input[type=color]{width:27px;height:27px;border:0;padding:0;background:none}#headerNavigationEditor .pn-note{padding:12px;background:var(--pn-bg);border-radius:7px;font-size:11px;color:var(--pn-muted);line-height:1.6}#headerNavigationEditor .pn-footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 24px;border-top:1px solid var(--pn-line);background:var(--pn-surface);color:var(--pn-muted);font-size:11px}#headerNavigationEditor .pn-status{color:var(--pn-accent)}
+@container (max-width:780px){#headerNavigationEditor .pn-workspace{grid-template-columns:minmax(0,1fr) 260px}#headerNavigationEditor .pn-preview{padding:12px}#headerNavigationEditor .pn-stage{padding:12px 8px}#headerNavigationEditor .pn-crumb{display:none}}
+@container (max-width:620px){#headerNavigationEditor .pn-workspace{grid-template-columns:1fr}#headerNavigationEditor .pn-inspector{border-left:0;border-top:1px solid var(--pn-line)}#headerNavigationEditor .pn-stage{min-height:0}#headerNavigationEditor .pn-top{padding-left:16px}#headerNavigationEditor .pn-titlebar{padding:20px 16px}#headerNavigationEditor .pn-siteheader{padding:12px}#headerNavigationEditor .pn-hero{padding:28px 20px}#headerNavigationEditor .pn-tabs button{min-height:44px}#headerNavigationEditor .pn-button{min-height:44px}}
+@container (max-width:360px){#headerNavigationEditor .pn-siteheader .pn-links{display:none}#headerNavigationEditor .pn-siteheader .pn-menutoggle{display:block}#headerNavigationEditor .pn-site.menu-open .pn-links{display:flex;width:100%}}
+
+		#headerNavigationEditor .site-header {
+			top: 0;
+			left: 0;
+			right: 0;
+			z-index: 5;
+			color: var(--header-text);
+			background: var(--header-bg);
+			box-shadow: 0 1px 0 rgba(16, 24, 40, .06);
+			transition: background .32s ease, box-shadow .32s ease, border-radius .32s ease, backdrop-filter .32s ease;
+		}
+
+		#headerNavigationEditor .site-header.is-fixed {
+			position: sticky;
+		}
+
+		#headerNavigationEditor .site-header.is-stay {
+			position: relative;
+		}
+
+		#headerNavigationEditor .site-header.is-transparent:not(.is-scrolled) {
+			background: transparent !important;
+			box-shadow: none;
+		}
+
+		#headerNavigationEditor .site-header.is-transparent:not(.is-scrolled) .header-container,
+		#headerNavigationEditor .site-header.is-transparent:not(.is-scrolled) .header-inner {
+			background: transparent !important;
+			box-shadow: none;
+		}
+
+		#headerNavigationEditor .site-header.is-scrolled {
+			background: var(--scrolled-bg);
+			box-shadow: 0 12px 35px rgba(16, 24, 40, .13);
+			backdrop-filter: blur(12px);
+		}
+
+		#headerNavigationEditor .site-header.is-scrolled-transparent {
+			box-shadow: none;
+			backdrop-filter: none;
+		}
+
+		#headerNavigationEditor .header-inner {
+			min-height: var(--header-height);
+			padding: var(--header-padding);
+			display: grid;
+			align-items: center;
+			gap: clamp(28px, 2.2vw, 36px);
+			border-radius: var(--header-radius);
+			transition: background .32s ease, box-shadow .32s ease, border-radius .32s ease, padding .2s ease, min-height .2s ease;
+		}
+
+		#headerNavigationEditor .site-header.inner-bg {
+			background: transparent;
+			box-shadow: none;
+			backdrop-filter: none;
+		}
+
+		#headerNavigationEditor .site-header.inner-bg .header-container {
+			background: var(--header-bg);
+			box-shadow: 0 14px 34px rgba(16, 24, 40, .1);
+			border-radius: var(--header-radius);
+			transition: background .32s ease, box-shadow .32s ease, border-radius .32s ease;
+		}
+
+		#headerNavigationEditor .site-header.inner-bg .header-inner {
+			background: transparent;
+			box-shadow: none;
+		}
+
+		#headerNavigationEditor .site-header.inner-bg.is-scrolled {
+			background: transparent;
+		}
+
+		#headerNavigationEditor .site-header.inner-bg.is-scrolled .header-container {
+			background: var(--scrolled-bg);
+		}
+
+		#headerNavigationEditor .site-header.inner-bg.is-scrolled-transparent .header-container,
+		#headerNavigationEditor .site-header.inner-bg.is-scrolled-transparent .header-inner {
+			box-shadow: none;
+		}
+
+		#headerNavigationEditor .site-header.full-bg .header-container,
+		#headerNavigationEditor .site-header.full-bg .header-inner {
+			background: transparent;
+			box-shadow: none;
+		}
+
+		#headerNavigationEditor .header-container {
+			width: min(calc(100% - 32px - var(--header-container-margin-left) - var(--header-container-margin-right)), 1180px);
+			margin: var(--header-container-margin-top) auto var(--header-container-margin-bottom);
+			transform: translateX(calc((var(--header-container-margin-left) - var(--header-container-margin-right)) / 2));
+		}
+
+		#headerNavigationEditor .header-container.is-fluid {
+			width: calc(100% - 28px - var(--header-container-margin-left) - var(--header-container-margin-right));
+			max-width: none;
+		}
+
+		#headerNavigationEditor .header-logo {
+			display: inline-flex;
+			align-items: center;
+			gap: 11px;
+			color: var(--header-text);
+			font-weight: 900;
+			font-size: 18px;
+			white-space: nowrap;
+			text-decoration: none;
+		}
+
+		#headerNavigationEditor .logo-mark {
+			width: 36px;
+			height: 36px;
+			border-radius: 10px;
+			background: linear-gradient(135deg, #e01d24, #121826);
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-weight: 900;
+			font-size: 14px;
+			box-shadow: 0 8px 18px rgba(224, 29, 36, .24);
+		}
+
+		#headerNavigationEditor .header-menu {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			min-width: 0;
+		}
+
+		#headerNavigationEditor .header-menu a {
+			box-sizing: border-box;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			min-height: 38px;
+			padding: 8px 11px;
+			border: 1px solid transparent;
+			border-radius: var(--nav-radius);
+			color: var(--link-color);
+			text-decoration: none;
+			font-weight: 800;
+			font-size: 12.5px;
+			transition: color .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+			white-space: nowrap;
+		}
+
+		#headerNavigationEditor .header-menu .menu-label {
+			min-width: 0;
+		}
+
+		#headerNavigationEditor .header-menu .menu-dropdown-indicator {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 12px;
+			height: 12px;
+			font-size: 12px;
+			line-height: 1;
+			opacity: .8;
+			transition: transform .2s ease, opacity .2s ease;
+		}
+
+		#headerNavigationEditor .header-menu .menu-dropdown-indicator img {
+			display: block;
+			width: 12px;
+			height: 12px;
+			object-fit: contain;
+		}
+
+		#headerNavigationEditor .header-menu a.has-dropdown:hover .menu-dropdown-indicator,
+		#headerNavigationEditor .header-menu a.has-dropdown:focus .menu-dropdown-indicator {
+			opacity: 1;
+			transform: translateY(1px);
+		}
+
+		#headerNavigationEditor .header-menu a:hover {
+			color: var(--link-hover-text);
+			background: var(--link-hover);
+			border-color: var(--link-hover-border);
+		}
+
+		#headerNavigationEditor .header-menu a:focus {
+			color: var(--link-focus-text);
+			background: var(--link-focus);
+			border-color: var(--link-focus-border);
+			outline: 0;
+		}
+
+		#headerNavigationEditor .header-menu a.is-active {
+			color: var(--link-active-text);
+			background: var(--link-active);
+			border-color: var(--link-active-border);
+			box-shadow: var(--link-active-shadow);
+		}
+
+		#headerNavigationEditor .site-header.is-transparent:not(.is-scrolled) .header-logo,
+		#headerNavigationEditor .site-header.is-transparent:not(.is-scrolled) .hamburger {
+			color: var(--transparent-header-text);
+		}
+
+		#headerNavigationEditor .site-header.is-transparent:not(.is-scrolled) .header-menu a {
+			color: var(--transparent-link-color);
+		}
+
+		#headerNavigationEditor .site-header.is-transparent:not(.is-scrolled) .header-menu a:hover {
+			color: var(--transparent-hover-text);
+			background: var(--transparent-hover-bg);
+			border-color: var(--transparent-hover-border);
+		}
+
+		#headerNavigationEditor .site-header.is-transparent:not(.is-scrolled) .header-menu a:focus {
+			color: var(--transparent-focus-text);
+			background: var(--transparent-focus-bg);
+			border-color: var(--transparent-focus-border);
+		}
+
+		#headerNavigationEditor .site-header.is-transparent:not(.is-scrolled) .header-menu a.is-active {
+			color: var(--transparent-active-text);
+			background: var(--transparent-active-bg);
+			border-color: var(--transparent-active-border);
+		}
+
+		#headerNavigationEditor .header-actions {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			gap: 8px;
+		}
+
+		#headerNavigationEditor .header-actions .btn-demo {
+			border: 0;
+			background: var(--link-active);
+			color: #fff;
+			font-weight: 800;
+			border-radius: var(--nav-radius);
+			padding: 10px 16px;
+			font-size: 13px;
+			white-space: nowrap;
+			box-shadow: 0 9px 20px color-mix(in srgb, var(--link-active) 23%, transparent);
+		}
+
+		#headerNavigationEditor .hamburger {
+			display: none;
+			width: 40px;
+			height: 40px;
+			border-radius: 10px;
+			border: 1px solid rgba(16, 24, 40, .12);
+			background: rgba(255, 255, 255, .78);
+			color: var(--header-text);
+		}
+
+		#headerNavigationEditor .layout-left {
+			grid-template-columns: auto minmax(0, 1fr) auto;
+		}
+
+		#headerNavigationEditor .layout-left .header-menu {
+			justify-content: flex-start;
+		}
+
+		#headerNavigationEditor .layout-center {
+			grid-template-columns: 1fr auto 1fr;
+		}
+
+		#headerNavigationEditor .layout-center .header-logo {
+			justify-self: center;
+		}
+
+		#headerNavigationEditor .layout-center .menu-left {
+			justify-content: flex-end;
+		}
+
+		#headerNavigationEditor .layout-center .menu-right {
+			justify-content: flex-start;
+		}
+
+		#headerNavigationEditor .layout-right {
+			grid-template-columns: minmax(0, 1fr) auto auto;
+		}
+
+		#headerNavigationEditor .layout-right .header-menu {
+			justify-content: flex-end;
+		}
+
+		#headerNavigationEditor .layout-menu-center {
+			grid-template-columns: auto 1fr auto;
+		}
+
+		#headerNavigationEditor .layout-menu-center .header-menu {
+			justify-content: center;
+		}
+
+		#headerNavigationEditor .layout-logo-center-menu-left,
+		#headerNavigationEditor .layout-logo-center-menu-right {
+			grid-template-columns: 1fr auto 1fr;
+		}
+
+		#headerNavigationEditor .layout-logo-center-menu-left .header-menu {
+			justify-content: flex-start;
+		}
+
+		#headerNavigationEditor .layout-logo-center-menu-right .header-menu {
+			justify-content: flex-end;
+		}
+
+
+#headerNavigationEditor .pn-workspace{grid-template-columns:minmax(0,1fr) 350px;align-items:start}
+#headerNavigationEditor .pn-titlebar{padding:20px 24px}#headerNavigationEditor .pn-active{display:flex;gap:7px;font-size:12px;align-items:center;margin-right:5px}#headerNavigationEditor input[type=checkbox],#headerNavigationEditor input[type=range]{accent-color:var(--pn-accent)}
+#headerNavigationEditor .pn-inspector{min-height:640px}#headerNavigationEditor .pn-tabs button[aria-selected=true]{color:var(--pn-accent);border-color:var(--pn-accent);font-weight:650}#headerNavigationEditor .inspector-tab-panel{padding:0 18px 16px}#headerNavigationEditor .inspector-selection-summary{display:none}
+#headerNavigationEditor .header-setting-group{border:0;border-bottom:1px solid var(--pn-line);background:transparent}#headerNavigationEditor .header-setting-summary{padding:17px 0;list-style:none;display:flex;justify-content:space-between;align-items:center;font-weight:650;font-size:13px;cursor:pointer}#headerNavigationEditor .header-setting-summary::-webkit-details-marker{display:none}#headerNavigationEditor .header-setting-summary::after{content:'+';color:var(--pn-muted)}#headerNavigationEditor details[open]>.header-setting-summary::after{content:'−'}#headerNavigationEditor .header-setting-summary i{display:none}#headerNavigationEditor .header-setting-panel{padding:0 0 19px}
+#headerNavigationEditor .form-label{display:block;font-size:12px;margin-bottom:8px;font-weight:500;color:var(--pn-ink)}#headerNavigationEditor .mb-3{margin-bottom:18px}#headerNavigationEditor .mb-2{margin-bottom:14px}#headerNavigationEditor .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 12px;margin:0}#headerNavigationEditor .col-12{grid-column:1/-1;min-width:0}#headerNavigationEditor .col-6{min-width:0}
+#headerNavigationEditor .form-control,#headerNavigationEditor .form-select{width:100%;min-width:0;border:1px solid var(--pn-line);border-radius:6px;padding:8px;background:var(--pn-surface);color:var(--pn-ink);min-height:36px;font-size:12px}#headerNavigationEditor .segmented{display:flex;gap:4px;padding:3px;border:1px solid var(--pn-line);border-radius:7px}#headerNavigationEditor .segmented button{flex:1;min-width:0;border:0;background:transparent;color:var(--pn-muted);padding:7px 4px;border-radius:4px;font-size:12px}#headerNavigationEditor .segmented button.is-active{background:var(--pn-soft);color:var(--pn-accent);font-weight:600}#headerNavigationEditor .form-check{display:flex;gap:9px;align-items:center;font-size:12px}#headerNavigationEditor .form-check input{flex:0 0 auto;margin:0}#headerNavigationEditor button:disabled,#headerNavigationEditor input:disabled,#headerNavigationEditor select:disabled{opacity:.5;cursor:not-allowed}
+#headerNavigationEditor .unit-control{display:grid;grid-template-columns:minmax(0,1fr) 70px;gap:8px}#headerNavigationEditor .number-stepper{display:grid;grid-template-columns:32px 1fr 32px}#headerNavigationEditor .number-stepper input{text-align:center;border-radius:0}#headerNavigationEditor .stepper-btn,#headerNavigationEditor .box-stepper-btn{border:1px solid var(--pn-line);background:var(--pn-bg);color:var(--pn-ink);border-radius:5px;min-width:0}
+#headerNavigationEditor .box-control-header{display:grid;grid-template-columns:minmax(0,1fr) 34px 64px;align-items:center;gap:7px;margin-bottom:9px}#headerNavigationEditor .box-control-header .form-label{margin:0}#headerNavigationEditor .responsive-mode-control{position:relative}#headerNavigationEditor .responsive-mode-trigger{height:32px;width:34px;border:1px solid var(--pn-line);border-radius:5px;background:var(--pn-surface);color:var(--pn-ink)}#headerNavigationEditor .responsive-mode-menu{position:absolute;right:0;top:36px;z-index:20;width:170px;padding:5px;background:var(--pn-surface);border:1px solid var(--pn-line);border-radius:7px;box-shadow:0 7px 24px #0002}#headerNavigationEditor .responsive-mode-option{display:flex;gap:8px;width:100%;text-align:left;padding:9px;border:0;background:transparent;color:var(--pn-ink);font-size:12px}#headerNavigationEditor .responsive-mode-option.is-active{background:var(--pn-soft);color:var(--pn-accent)}
+#headerNavigationEditor .box-control-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 32px;gap:5px;align-items:start}#headerNavigationEditor .box-side{min-width:0}#headerNavigationEditor .box-side-stepper{display:grid;grid-template-columns:1fr 1fr;gap:0}#headerNavigationEditor .box-side-stepper input{grid-column:1/-1;grid-row:1;width:100%;min-width:0;border:1px solid var(--pn-line);border-radius:5px 5px 0 0;background:var(--pn-surface);color:var(--pn-ink);text-align:center;padding:7px 0;font-size:12px;appearance:textfield}#headerNavigationEditor .box-side-stepper input::-webkit-inner-spin-button{appearance:none}#headerNavigationEditor .box-stepper-btn{height:22px;border-radius:0}#headerNavigationEditor .box-side-label{display:block;text-align:center;font-size:10px;color:var(--pn-muted);margin-top:6px}#headerNavigationEditor .box-link-toggle{width:32px;height:34px;border:1px solid var(--pn-line);border-radius:5px;background:var(--pn-bg);color:var(--pn-muted)}#headerNavigationEditor .box-link-toggle.is-active{background:var(--pn-soft);color:var(--pn-accent);border-color:var(--pn-accent)}
+#headerNavigationEditor .fa-minus::before{content:'−'}#headerNavigationEditor .fa-plus::before{content:'+'}#headerNavigationEditor .fa-link::before{content:'↔'}#headerNavigationEditor .fa-unlink::before{content:'↛'}#headerNavigationEditor .fa-desktop::before{content:'D'}#headerNavigationEditor .fa-tablet-alt::before{content:'T'}#headerNavigationEditor .fa-mobile-alt::before{content:'M'}#headerNavigationEditor i{font-style:normal}#headerNavigationEditor .fa-bars::before{content:'☰'}
+#headerNavigationEditor .coloris-control{min-width:0}#headerNavigationEditor .coloris-field{padding-left:8px;font-family:ui-monospace,monospace;font-size:11px}#headerNavigationEditor .color-picker-row{display:grid;grid-template-columns:28px minmax(0,1fr);gap:5px;align-items:center}#headerNavigationEditor .color-picker-row input[type=color]{width:28px;height:32px;border:0;padding:0;background:transparent}#headerNavigationEditor .link-color-state-title{font-size:12px;font-weight:650;margin:8px 0 12px}#headerNavigationEditor .link-color-state-header{display:none}#headerNavigationEditor .link-color-state-row{margin-bottom:15px}#headerNavigationEditor .link-color-state-name{font-size:12px;display:block;margin-bottom:7px}#headerNavigationEditor .link-color-control{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 32px;gap:6px;align-items:end}#headerNavigationEditor .link-color-field{min-width:0}#headerNavigationEditor .link-color-field .visually-hidden{position:static!important;width:auto!important;height:auto!important;clip:auto!important;font-size:10px;color:var(--pn-muted);display:block;margin-bottom:4px}
+#headerNavigationEditor .shadow-control-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px}#headerNavigationEditor .shadow-control-header select{width:65px}#headerNavigationEditor .shadow-control-row{grid-template-columns:repeat(4,minmax(0,1fr))}#headerNavigationEditor .shadow-control-meta{margin-top:16px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}#headerNavigationEditor .transparent-color-panel{padding-top:8px}#headerNavigationEditor .transparent-custom-fields{margin-top:14px}#headerNavigationEditor .json-output{font:11px/1.6 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--pn-bg);color:var(--pn-ink);padding:12px;border-radius:6px;margin:0}
+#headerNavigationEditor .pn-scrollbox{display:block;padding:14px}#headerNavigationEditor .pn-scrollhead{display:flex;justify-content:space-between;margin-bottom:10px;font-size:12px}#headerNavigationEditor .pn-scrollbox .pn-segment{justify-content:space-between}#headerNavigationEditor #scrollSim{width:100%;margin:12px 0 4px}#headerNavigationEditor #scrollHelp{font-size:11px;line-height:1.5}#headerNavigationEditor .pn-note{margin-top:16px}#headerNavigationEditor .pn-reset{border:0;color:var(--pn-muted);background:none;font-size:11px;text-decoration:underline}#headerNavigationEditor .pn-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+#headerNavigationEditor #previewFrame{position:relative;height:400px;overflow:hidden;background:#f3f0e9;border-radius:0 0 8px 8px;border:1px solid var(--pn-line);border-top:0}#headerNavigationEditor #previewViewport{position:absolute;transform:scale(var(--preview-scale,1));transform-origin:top left}#headerNavigationEditor .device-stage{position:relative;height:100%;overflow:hidden;background:#f3f0e9;color:#292b31}#headerNavigationEditor .hero-copy{padding:90px 90px 65px;min-height:540px}#headerNavigationEditor .hero-copy>span{font-size:15px;letter-spacing:3px;color:#806448}#headerNavigationEditor .hero-copy h2{font:64px/1.1 Georgia,serif;letter-spacing:-2px;margin:28px 0;max-width:650px}#headerNavigationEditor .hero-copy p{font-size:20px;line-height:1.7;max-width:530px;color:#6d685f}#headerNavigationEditor .page-band{padding:60px 90px;background:#fff;min-height:900px}#headerNavigationEditor .page-band h3{font-size:30px;font-weight:500}#headerNavigationEditor .page-band p{font-size:20px;color:#657080}#headerNavigationEditor .device-stage.mobile-mode .hero-copy{padding:70px 28px;min-height:600px}#headerNavigationEditor .device-stage.mobile-mode .hero-copy h2{font-size:43px}#headerNavigationEditor .device-stage.mobile-mode .page-band{padding:40px 28px}#headerNavigationEditor .device-stage.tablet-mode .hero-copy{padding:80px 55px}
+#headerNavigationEditor .logo-mark{background:#c92d38;box-shadow:none}#headerNavigationEditor .header-menu a:focus-visible{outline:3px solid #d8828c;outline-offset:3px}#headerNavigationEditor .device-stage.mobile-mode .header-inner,#headerNavigationEditor .device-stage.tablet-mode .header-inner{grid-template-columns:1fr auto;gap:12px}#headerNavigationEditor .device-stage.mobile-mode .header-menu,#headerNavigationEditor .device-stage.tablet-mode .header-menu,#headerNavigationEditor .device-stage.mobile-mode .btn-demo,#headerNavigationEditor .device-stage.tablet-mode .btn-demo{display:none}#headerNavigationEditor .device-stage.mobile-mode .hamburger,#headerNavigationEditor .device-stage.tablet-mode .hamburger{display:block}#headerNavigationEditor .device-stage.menu-open .header-menu{display:flex;flex-wrap:wrap;grid-column:1/-1;background:var(--header-bg)}
+@container(max-width:760px){#headerNavigationEditor .pn-workspace{grid-template-columns:1fr}#headerNavigationEditor .pn-inspector{border-left:0;border-top:1px solid var(--pn-line);min-height:0}#headerNavigationEditor .pn-preview{padding:14px}#headerNavigationEditor .pn-titlebar{padding:20px 16px}#headerNavigationEditor .pn-actions{gap:8px}#headerNavigationEditor .pn-active{width:100%}#headerNavigationEditor .pn-crumb{display:none}}
+@media(prefers-reduced-motion:reduce){#headerNavigationEditor *,#headerNavigationEditor *::before{transition:none!important;scroll-behavior:auto!important}}
+</style>
+<header class="pn-top"><span class="pn-mark">P</span><strong>Phoenix CMS</strong><span class="pn-crumb">Appearance / Header navigation</span></header>
+<div class="pn-titlebar"><div><h1>Header navigation</h1><p>Seluruh kontrol CMS, dalam ruang kerja yang lebih teratur.</p></div><div class="pn-actions"><label class="pn-active"><input id="headerNavigationActive" type="checkbox" checked> Active on frontend</label><button class="pn-button" id="discardPrototype" disabled>Batalkan</button><button class="pn-button pn-primary" id="saveHeaderNavigation" disabled>Simpan draft</button></div></div>
+<div class="pn-workspace"><main class="pn-preview" aria-label="Preview navigasi"><div class="pn-previewbar"><span class="pn-caption">Live preview</span><div class="pn-segment" aria-label="Perangkat preview"><button data-preview-device="desktop" aria-pressed="true">Desktop</button><button data-preview-device="tablet" aria-pressed="false">Tablet</button><button data-preview-device="mobile" aria-pressed="false">Mobile</button></div></div>
+<div class="pn-browser"><span class="pn-dot"></span><span class="pn-dot"></span><span class="pn-dot"></span><span class="pn-address">phoenix.local / beranda</span></div>
+<div id="previewFrame"><div id="previewViewport"><div id="deviceStage" class="device-stage"><header id="siteHeader" class="site-header"><div id="headerContainer" class="header-container"><div id="headerInner" class="header-inner"></div></div></header><section class="hero-copy"><span>RUANG UNTUK IDE BESAR</span><h2>Hal baik dimulai<br>dari koneksi.</h2><p>Temukan solusi dan cerita yang membawa bisnis Anda selangkah lebih jauh.</p></section><section class="page-band"><h3>Dibuat untuk berkembang.</h3><p>Solusi yang mengikuti kebutuhan Anda.</p></section></div></div></div>
+<div class="pn-under"><span id="previewScaleStatus"></span><button class="pn-reset" id="resetPreview">Reset scroll</button></div>
+<section class="pn-scrollbox"><div class="pn-scrollhead"><strong>Simulasi scroll</strong><span id="scrollTimelineValue">Top · 0%</span></div><div class="pn-segment"><button data-scroll-preset="0">Top</button><button data-scroll-preset="25">Scrolled</button><button data-scroll-preset="50">Mid</button><button data-scroll-preset="75">Near bottom</button><button data-scroll-preset="100">Bottom</button></div><label class="pn-sr" for="scrollSim">Persentase scroll</label><input id="scrollSim" type="range" min="0" max="100" value="0"><p id="scrollHelp">Pilih Fixed/Sticky dan aktifkan animasi scroll pada tab Advanced.</p></section>
+<div class="pn-note" id="previewFeedback" role="status">Konten contoh · semua perubahan hanya berlaku pada prototipe.</div>
+</main><aside class="pn-inspector" aria-label="Pengaturan header"><div class="pn-inspectorhead"><strong>Pengaturan header</strong><span class="pn-badge">CMS options</span></div><div class="pn-tabs" role="tablist" aria-label="Kategori pengaturan"><button id="headerNavigationLayoutTab" data-inspector-tab="layout" role="tab" aria-controls="headerNavigationLayoutPanel" aria-selected="true">Layout</button><button id="headerNavigationStyleTab" data-inspector-tab="style" role="tab" aria-controls="headerNavigationStylePanel" aria-selected="false">Style</button><button id="headerNavigationAdvancedTab" data-inspector-tab="advanced" role="tab" aria-controls="headerNavigationAdvancedPanel" aria-selected="false">Advanced</button></div><div class="inspector-content"><section id="headerNavigationLayoutPanel" class="inspector-tab-panel is-active" data-inspector-panel="layout" role="tabpanel" aria-labelledby="headerNavigationLayoutTab">
+								<div class="inspector-selection-summary">
+									<strong>Header Navigation</strong>
+									<span>Frontend header</span>
+								</div>
+								<div class="header-settings-accordion">
+<details class="header-setting-group">
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-eye fa-fw" aria-hidden="true"></i>
+									<span>Preview</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+						<div class="row g-2">
+							<div class="col-12">
+								<label class="form-label" for="deviceMode">Device</label>
+								<select id="deviceMode" class="form-select form-select-sm">
+									<option value="desktop">Desktop</option>
+									<option value="tablet">Tablet</option>
+									<option value="mobile">Mobile</option>
+									</select>
+								</div>
+								</div>
+							</div>
+					</details>
+
+<details open class="header-setting-group">
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-columns fa-fw" aria-hidden="true"></i>
+									<span>Layout</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+						<div class="mb-3">
+							<label class="form-label">Logo position</label>
+							<div class="segmented" data-control="logoPosition">
+								<button type="button" data-value="left" class="is-active">Left</button>
+								<button type="button" data-value="center">Center</button>
+								<button type="button" data-value="right">Right</button>
+							</div>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Menu position</label>
+							<div class="segmented" data-control="menuPosition">
+								<button type="button" data-value="left" class="is-active">Left</button>
+								<button type="button" data-value="center">Center</button>
+								<button type="button" data-value="right">Right</button>
+							</div>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Header width</label>
+							<div class="segmented two" data-control="containerMode">
+								<button type="button" data-value="container" class="is-active">Container</button>
+								<button type="button" data-value="fluid">Fluid</button>
+							</div>
+						</div>
+						<div class="form-check form-switch mb-2">
+							<input id="innerBg" class="form-check-input" type="checkbox">
+							<label class="form-check-label" for="innerBg">Background mengikuti container</label>
+						</div>
+							</div>
+						</details>
+
+<details class="header-setting-group">
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-ruler-combined fa-fw" aria-hidden="true"></i>
+									<span>Sizing</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+						<div class="row g-3 gy-lg-4">
+							<div class="col-12 inspector-inline-setting">
+								<label class="form-label" for="headerHeight">Height</label>
+								<div class="unit-control">
+									<div class="number-stepper">
+										<button type="button" class="stepper-btn" data-stepper-target="headerHeight" data-stepper-delta="-1" aria-label="Decrease height"><i class="fas fa-minus"></i></button>
+										<input id="headerHeight" type="number" value="76" step="1" class="form-control form-control-sm" inputmode="decimal">
+										<button type="button" class="stepper-btn" data-stepper-target="headerHeight" data-stepper-delta="1" aria-label="Increase height"><i class="fas fa-plus"></i></button>
+									</div>
+									<select id="headerHeightUnit" class="form-select form-select-sm">
+										<option value="px" selected>px</option>
+										<option value="em">em</option>
+										<option value="rem">rem</option>
+										<option value="pt">pt</option>
+										<option value="%">%</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-12">
+								<div class="box-control" data-box-control="headerRadius">
+									<div class="box-control-header">
+										<label class="form-label">Header radius</label>
+										<div class="responsive-mode-control" data-responsive-control="headerRadius">
+											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
+											<div class="responsive-mode-menu" role="listbox" hidden>
+												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
+											</div>
+										</div>
+										<select id="headerRadiusUnit" class="form-select form-select-sm box-unit-select">
+											<option value="px" selected>px</option>
+											<option value="%">%</option>
+											<option value="em">em</option>
+											<option value="rem">rem</option>
+											<option value="pt">pt</option>
+										</select>
+									</div>
+									<div class="box-control-row">
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusTop" data-box-stepper-delta="-1" aria-label="Decrease header radius top"><i class="fas fa-minus"></i></button>
+												<input id="headerRadiusTop" type="number" value="18" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusTop" data-box-stepper-delta="1" aria-label="Increase header radius top"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerRadiusTop">Top</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusRight" data-box-stepper-delta="-1" aria-label="Decrease header radius right"><i class="fas fa-minus"></i></button>
+												<input id="headerRadiusRight" type="number" value="18" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusRight" data-box-stepper-delta="1" aria-label="Increase header radius right"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerRadiusRight">Right</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusBottom" data-box-stepper-delta="-1" aria-label="Decrease header radius bottom"><i class="fas fa-minus"></i></button>
+												<input id="headerRadiusBottom" type="number" value="18" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusBottom" data-box-stepper-delta="1" aria-label="Increase header radius bottom"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerRadiusBottom">Bottom</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusLeft" data-box-stepper-delta="-1" aria-label="Decrease header radius left"><i class="fas fa-minus"></i></button>
+												<input id="headerRadiusLeft" type="number" value="18" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusLeft" data-box-stepper-delta="1" aria-label="Increase header radius left"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerRadiusLeft">Left</label>
+										</div>
+										<button id="headerRadiusLinked" type="button" class="box-link-toggle is-active" aria-label="Link header radius values" aria-pressed="true"><i class="fas fa-link"></i></button>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="col-12">
+								<div class="box-control" data-box-control="headerPadding">
+									<div class="box-control-header">
+										<label class="form-label">Header padding</label>
+										<div class="responsive-mode-control" data-responsive-control="headerPadding">
+											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
+										<div class="responsive-mode-menu" role="listbox" hidden>
+												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
+											</div>
+										</div>
+										<select id="headerPaddingUnit" class="form-select form-select-sm box-unit-select">
+											<option value="px" selected>px</option>
+											<option value="%">%</option>
+											<option value="em">em</option>
+											<option value="rem">rem</option>
+											<option value="pt">pt</option>
+										</select>
+									</div>
+									<div class="box-control-row">
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingTop" data-box-stepper-delta="-1" aria-label="Decrease header padding top"><i class="fas fa-minus"></i></button>
+												<input id="headerPaddingTop" type="number" value="10" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingTop" data-box-stepper-delta="1" aria-label="Increase header padding top"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerPaddingTop">Top</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingRight" data-box-stepper-delta="-1" aria-label="Decrease header padding right"><i class="fas fa-minus"></i></button>
+												<input id="headerPaddingRight" type="number" value="24" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingRight" data-box-stepper-delta="1" aria-label="Increase header padding right"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerPaddingRight">Right</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingBottom" data-box-stepper-delta="-1" aria-label="Decrease header padding bottom"><i class="fas fa-minus"></i></button>
+												<input id="headerPaddingBottom" type="number" value="10" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingBottom" data-box-stepper-delta="1" aria-label="Increase header padding bottom"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerPaddingBottom">Bottom</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingLeft" data-box-stepper-delta="-1" aria-label="Decrease header padding left"><i class="fas fa-minus"></i></button>
+												<input id="headerPaddingLeft" type="number" value="24" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingLeft" data-box-stepper-delta="1" aria-label="Increase header padding left"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerPaddingLeft">Left</label>
+										</div>
+										<button id="headerPaddingLinked" type="button" class="box-link-toggle" aria-label="Link header padding values" aria-pressed="false"><i class="fas fa-link"></i></button>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-12 inspector-inline-setting">
+								<label class="form-label">Link shape</label>
+								<div class="segmented two" data-control="linkShape">
+									<button type="button" data-value="default" class="is-active">Default</button>
+									<button type="button" data-value="leaf">Leaf</button>
+								</div>
+							</div>
+
+							<div id="leafDirectionControl" class="col-12 inspector-inline-setting" hidden>
+								<label class="form-label">Leaf direction</label>
+								<div class="segmented two" data-control="leafDirection">
+									<button type="button" data-value="forward" class="is-active">Forward</button>
+									<button type="button" data-value="reverse">Reverse</button>
+								</div>
+							</div>
+
+							<div class="col-12">
+								<div class="box-control" data-box-control="navRadius">
+									<div class="box-control-header">
+										<label class="form-label">Link radius</label>
+										<div class="responsive-mode-control" data-responsive-control="navRadius">
+											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
+											<div class="responsive-mode-menu" role="listbox" hidden>
+												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
+											</div>
+										</div>
+										<select id="navRadiusUnit" class="form-select form-select-sm box-unit-select">
+											<option value="px" selected>px</option>
+											<option value="%">%</option>
+											<option value="em">em</option>
+											<option value="rem">rem</option>
+											<option value="pt">pt</option>
+										</select>
+									</div>
+									<div class="box-control-row">
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusTop" data-box-stepper-delta="-1" aria-label="Decrease link radius top left"><i class="fas fa-minus"></i></button>
+												<input id="navRadiusTop" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusTop" data-box-stepper-delta="1" aria-label="Increase link radius top left"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="navRadiusTop">Top Left</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusRight" data-box-stepper-delta="-1" aria-label="Decrease link radius top right"><i class="fas fa-minus"></i></button>
+												<input id="navRadiusRight" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusRight" data-box-stepper-delta="1" aria-label="Increase link radius top right"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="navRadiusRight">Top Right</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusBottom" data-box-stepper-delta="-1" aria-label="Decrease link radius bottom right"><i class="fas fa-minus"></i></button>
+												<input id="navRadiusBottom" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusBottom" data-box-stepper-delta="1" aria-label="Increase link radius bottom right"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="navRadiusBottom">Bottom Right</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusLeft" data-box-stepper-delta="-1" aria-label="Decrease link radius bottom left"><i class="fas fa-minus"></i></button>
+												<input id="navRadiusLeft" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusLeft" data-box-stepper-delta="1" aria-label="Increase link radius bottom left"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="navRadiusLeft">Bottom Left</label>
+										</div>
+										<button id="navRadiusLinked" type="button" class="box-link-toggle is-active" aria-label="Link nav radius values" aria-pressed="true"><i class="fas fa-link"></i></button>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-12">
+								<div class="box-control" data-box-control="containerMargin">
+									<div class="box-control-header">
+										<label class="form-label">Container margin</label>
+										<div class="responsive-mode-control" data-responsive-control="containerMargin">
+											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
+											<div class="responsive-mode-menu" role="listbox" hidden>
+												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
+											</div>
+										</div>
+										<select id="containerMarginUnit" class="form-select form-select-sm box-unit-select">
+											<option value="px" selected>px</option>
+											<option value="%">%</option>
+											<option value="em">em</option>
+											<option value="rem">rem</option>
+											<option value="pt">pt</option>
+										</select>
+									</div>
+									<div class="box-control-row">
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginTop" data-box-stepper-delta="-1" aria-label="Decrease container margin top"><i class="fas fa-minus"></i></button>
+												<input id="containerMarginTop" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginTop" data-box-stepper-delta="1" aria-label="Increase container margin top"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="containerMarginTop">Top</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginRight" data-box-stepper-delta="-1" aria-label="Decrease container margin right"><i class="fas fa-minus"></i></button>
+												<input id="containerMarginRight" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginRight" data-box-stepper-delta="1" aria-label="Increase container margin right"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="containerMarginRight">Right</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginBottom" data-box-stepper-delta="-1" aria-label="Decrease container margin bottom"><i class="fas fa-minus"></i></button>
+												<input id="containerMarginBottom" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginBottom" data-box-stepper-delta="1" aria-label="Increase container margin bottom"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="containerMarginBottom">Bottom</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginLeft" data-box-stepper-delta="-1" aria-label="Decrease container margin left"><i class="fas fa-minus"></i></button>
+												<input id="containerMarginLeft" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginLeft" data-box-stepper-delta="1" aria-label="Increase container margin left"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="containerMarginLeft">Left</label>
+										</div>
+										<button id="containerMarginLinked" type="button" class="box-link-toggle is-active" aria-label="Link container margin values" aria-pressed="true"><i class="fas fa-link"></i></button>
+									</div>
+								</div>
+							</div>
+							</div>
+							</div>
+					</details>
+						</div>
+							</section>
+<section id="headerNavigationStylePanel" class="inspector-tab-panel" data-inspector-panel="style" role="tabpanel" aria-labelledby="headerNavigationStyleTab" hidden>
+								<div class="header-settings-accordion">
+<details open class="header-setting-group">
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-palette fa-fw" aria-hidden="true"></i>
+									<span>Colors</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+						<div class="row g-2">
+							<div class="col-6">
+								<label class="form-label" for="headerBg">Header background</label>
+								<div class="coloris-control">
+									<input id="headerBg" data-coloris value="#ffffff" class="form-control form-control-sm coloris-field">
+								</div>
+							</div>
+							<div class="col-6">
+								<label class="form-label" for="scrolledBg">Scrolled background</label>
+								<div class="coloris-control">
+									<input id="scrolledBg" data-coloris value="#ffffff" class="form-control form-control-sm coloris-field">
+								</div>
+							</div>
+							<div class="col-6">
+								<label class="form-label" for="headerText">Header text</label>
+								<div class="coloris-control">
+									<input id="headerText" data-coloris value="#101828" class="form-control form-control-sm coloris-field">
+								</div>
+							</div>
+							<div class="col-6">
+								<label class="form-label" for="linkColor">Link</label>
+								<div class="coloris-control">
+									<input id="linkColor" data-coloris value="#273142" class="form-control form-control-sm coloris-field">
+								</div>
+							</div>
+							<div class="col-12 color-state-start link-color-state-group">
+								<div class="link-color-state-title">Link states</div>
+								<div class="link-color-state-header" aria-hidden="true">
+									<span>Link</span>
+									<span>Border</span>
+								</div>
+								<div class="link-color-state-list">
+									<div class="link-color-state-row" data-link-color-state="active">
+										<span class="link-color-state-name">Active</span>
+										<div class="link-color-control">
+											<div class="link-color-field">
+												<label class="visually-hidden" for="linkActive">Active link color</label>
+												<div class="coloris-control">
+													<input id="linkActive" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+												</div>
+											</div>
+											<div class="link-color-field">
+												<label class="visually-hidden" for="linkActiveBorder">Active border color</label>
+												<div class="coloris-control">
+													<input id="linkActiveBorder" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+												</div>
+											</div>
+											<button id="linkActiveBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="active" aria-label="Unlink active border color from active link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+										</div>
+									</div>
+									<div class="link-color-state-row" data-link-color-state="hover">
+										<span class="link-color-state-name">Hover</span>
+										<div class="link-color-control">
+											<div class="link-color-field">
+												<label class="visually-hidden" for="linkHover">Hover link color</label>
+												<div class="coloris-control">
+													<input id="linkHover" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+												</div>
+											</div>
+											<div class="link-color-field">
+												<label class="visually-hidden" for="linkHoverBorder">Hover border color</label>
+												<div class="coloris-control">
+													<input id="linkHoverBorder" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+												</div>
+											</div>
+											<button id="linkHoverBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="hover" aria-label="Unlink hover border color from hover link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+										</div>
+									</div>
+									<div class="link-color-state-row" data-link-color-state="focus">
+										<span class="link-color-state-name">Focus</span>
+										<div class="link-color-control">
+											<div class="link-color-field">
+												<label class="visually-hidden" for="linkFocus">Focus link color</label>
+												<div class="coloris-control">
+													<input id="linkFocus" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
+												</div>
+											</div>
+											<div class="link-color-field">
+												<label class="visually-hidden" for="linkFocusBorder">Focus border color</label>
+												<div class="coloris-control">
+													<input id="linkFocusBorder" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
+												</div>
+											</div>
+											<button id="linkFocusBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="focus" aria-label="Unlink focus border color from focus link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+										</div>
+									</div>
+								</div>
+							</div>
+							</div>
+							</div>
+						</details>
+
+						<details class="header-setting-group" data-inspector-anchor="effects">
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-sparkles fa-fw" aria-hidden="true"></i>
+									<span>Effects</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+								<div class="row g-2">
+									<div class="col-12">
+								<div class="shadow-control">
+									<div class="shadow-control-header">
+										<div class="form-check form-switch mb-0">
+											<input id="linkShadowEnabled" class="form-check-input" type="checkbox">
+											<label class="form-check-label" for="linkShadowEnabled">Link shadow</label>
+										</div>
+										<select id="linkShadowUnit" class="form-select form-select-sm box-unit-select">
+											<option value="px" selected>px</option>
+											<option value="em">em</option>
+											<option value="rem">rem</option>
+											<option value="pt">pt</option>
+										</select>
+									</div>
+									<div class="box-control-row shadow-control-row">
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowX" data-box-stepper-delta="-1" aria-label="Decrease link shadow x"><i class="fas fa-minus"></i></button>
+												<input id="linkShadowX" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowX" data-box-stepper-delta="1" aria-label="Increase link shadow x"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="linkShadowX">X</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowY" data-box-stepper-delta="-1" aria-label="Decrease link shadow y"><i class="fas fa-minus"></i></button>
+												<input id="linkShadowY" type="number" value="8" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowY" data-box-stepper-delta="1" aria-label="Increase link shadow y"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="linkShadowY">Y</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowBlur" data-box-stepper-delta="-1" aria-label="Decrease link shadow blur"><i class="fas fa-minus"></i></button>
+												<input id="linkShadowBlur" type="number" value="18" min="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowBlur" data-box-stepper-delta="1" aria-label="Increase link shadow blur"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="linkShadowBlur">Blur</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowSpread" data-box-stepper-delta="-1" aria-label="Decrease link shadow spread"><i class="fas fa-minus"></i></button>
+												<input id="linkShadowSpread" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowSpread" data-box-stepper-delta="1" aria-label="Increase link shadow spread"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="linkShadowSpread">Spread</label>
+										</div>
+									</div>
+									<div class="shadow-control-meta">
+										<div>
+											<label class="form-label" for="linkShadowColor">Shadow color</label>
+											<div class="coloris-control">
+												<input id="linkShadowColor" data-coloris value="#e01d242e" class="form-control form-control-sm coloris-field">
+											</div>
+										</div>
+										<div class="form-check form-switch shadow-inset-check">
+											<input id="linkShadowInset" class="form-check-input" type="checkbox">
+											<label class="form-check-label" for="linkShadowInset">Inset</label>
+										</div>
+									</div>
+								</div>
+							</div>
+								</div>
+							</div>
+						</details>
+								</div>
+							</section>
+<section id="headerNavigationAdvancedPanel" class="inspector-tab-panel" data-inspector-panel="advanced" role="tabpanel" aria-labelledby="headerNavigationAdvancedTab" hidden>
+								<div class="header-settings-accordion">
+<details open class="header-setting-group">
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-magic fa-fw" aria-hidden="true"></i>
+									<span>Behavior</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+						<div class="mb-3">
+							<label class="form-label">Header menu position</label>
+							<div class="segmented" data-control="headerBehavior">
+								<button type="button" data-value="fixed">Fixed</button>
+								<button type="button" data-value="sticky">Sticky</button>
+								<button type="button" data-value="stay" class="is-active">Stay</button>
+							</div>
+						</div>
+						<div class="form-check form-switch mb-2">
+							<input id="transparentStart" class="form-check-input" type="checkbox">
+							<label class="form-check-label" for="transparentStart">Transparent sebelum discroll</label>
+						</div>
+						<div id="transparentColorPanel" class="transparent-color-panel" hidden>
+							<div>
+								<label class="form-label">Transparent color mode</label>
+								<div class="segmented two" data-control="transparentColorMode">
+									<button type="button" data-value="auto" class="is-active">Auto</button>
+									<button type="button" data-value="custom">Custom</button>
+								</div>
+							</div>
+							<div id="transparentCustomFields" class="transparent-custom-fields" hidden>
+								<div class="row g-2">
+									<div class="col-6">
+										<label class="form-label" for="transparentText">Text/link</label>
+										<div class="coloris-control">
+											<input id="transparentText" data-coloris value="#ffffff" class="form-control form-control-sm coloris-field">
+										</div>
+									</div>
+									<div class="col-6">
+										<label class="form-label" for="transparentHover">Hover</label>
+										<div class="coloris-control">
+											<input id="transparentHover" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+										</div>
+									</div>
+									<div class="col-6">
+										<label class="form-label" for="transparentFocus">Focus</label>
+										<div class="coloris-control">
+											<input id="transparentFocus" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
+										</div>
+									</div>
+									<div class="col-6">
+										<label class="form-label" for="transparentActive">Active</label>
+										<div class="coloris-control">
+											<input id="transparentActive" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-check form-switch mb-3">
+							<input id="animateScroll" class="form-check-input" type="checkbox">
+							<label class="form-check-label" for="animateScroll">Animasi berubah saat discroll</label>
+						</div>
+							</div>
+						</details>
+
+<details class="header-setting-group">
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-code fa-fw" aria-hidden="true"></i>
+									<span>Config Preview</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+								<pre id="jsonOutput" class="json-output mb-0"></pre>
+							</div>
+						</details>
+								</div>
+							</section></div></aside></div>
+<footer class="pn-footer"><span id="headerNavigationSaveStatus" role="status" aria-live="polite">Draft contoh</span><span>Prototipe · tidak mengubah CMS</span></footer>
+</div>
+<script>(()=>{
+const editor = document.getElementById('headerNavigationEditor');
+		const editorOptions = {}; let prototypeSaved = null; let prototypeActive = true;
+		const previewViewports = {
+			desktop: { label: 'Desktop', width: 1440, height: 900 },
+			tablet: { label: 'Tablet', width: 820, height: 1180 },
+			mobile: { label: 'Mobile', width: 430, height: 932 }
+		};
+
+		const sampleMenus = [
+			{ label: 'Home', url: '#home', active: true },
+			{ label: 'Solutions', url: '#solutions' },
+			{ label: 'Products', url: '#products' },
+			{ label: 'Company', url: '#company' },
+			{ label: 'Contact', url: '#contact' },
+			{ label: 'Partners', url: '#partners' },
+			{ label: 'Blog', url: '#blog' },
+			{ label: 'Support', url: '#support' },
+			{ label: 'Pricing', url: '#pricing' }
+		];
+
+		let currentConfig = null;
+
+		const state = {
+			menus: sampleMenus.map((item, index) => ({ ...item, active: index === 0 })),
+			logoPosition: 'left',
+			menuPosition: 'left',
+			containerMode: 'container',
+			headerBehavior: 'stay',
+			transparentColorMode: 'auto',
+			linkShape: 'default',
+			leafDirection: 'forward'
+		};
+
+		const els = {
+			root: editor,
+			previewFrame: document.getElementById('previewFrame'),
+			previewViewport: document.getElementById('previewViewport'),
+			previewScaleStatus: document.getElementById('previewScaleStatus'),
+			header: document.getElementById('siteHeader'),
+			headerInner: document.getElementById('headerInner'),
+			headerContainer: document.getElementById('headerContainer'),
+			deviceStage: document.getElementById('deviceStage'),
+			jsonOutput: document.getElementById('jsonOutput')
+		};
+
+		const controls = {
+			headerBg: document.getElementById('headerBg'),
+			scrolledBg: document.getElementById('scrolledBg'),
+			headerText: document.getElementById('headerText'),
+			linkColor: document.getElementById('linkColor'),
+			linkHover: document.getElementById('linkHover'),
+			linkHoverBorder: document.getElementById('linkHoverBorder'),
+			linkHoverBorderLinked: document.getElementById('linkHoverBorderLinked'),
+			linkFocus: document.getElementById('linkFocus'),
+			linkFocusBorder: document.getElementById('linkFocusBorder'),
+			linkFocusBorderLinked: document.getElementById('linkFocusBorderLinked'),
+			linkActive: document.getElementById('linkActive'),
+			linkActiveBorder: document.getElementById('linkActiveBorder'),
+			linkActiveBorderLinked: document.getElementById('linkActiveBorderLinked'),
+			linkShadowEnabled: document.getElementById('linkShadowEnabled'),
+			linkShadowUnit: document.getElementById('linkShadowUnit'),
+			linkShadowX: document.getElementById('linkShadowX'),
+			linkShadowY: document.getElementById('linkShadowY'),
+			linkShadowBlur: document.getElementById('linkShadowBlur'),
+			linkShadowSpread: document.getElementById('linkShadowSpread'),
+			linkShadowColor: document.getElementById('linkShadowColor'),
+			linkShadowInset: document.getElementById('linkShadowInset'),
+			innerBg: document.getElementById('innerBg'),
+			transparentStart: document.getElementById('transparentStart'),
+			transparentColorPanel: document.getElementById('transparentColorPanel'),
+			transparentCustomFields: document.getElementById('transparentCustomFields'),
+			transparentText: document.getElementById('transparentText'),
+			transparentHover: document.getElementById('transparentHover'),
+			transparentFocus: document.getElementById('transparentFocus'),
+			transparentActive: document.getElementById('transparentActive'),
+			animateScroll: document.getElementById('animateScroll'),
+			scrollSim: document.getElementById('scrollSim'),
+			headerHeight: document.getElementById('headerHeight'),
+			headerHeightUnit: document.getElementById('headerHeightUnit'),
+			headerRadiusTop: document.getElementById('headerRadiusTop'),
+			headerRadiusRight: document.getElementById('headerRadiusRight'),
+			headerRadiusBottom: document.getElementById('headerRadiusBottom'),
+			headerRadiusLeft: document.getElementById('headerRadiusLeft'),
+			headerRadiusUnit: document.getElementById('headerRadiusUnit'),
+			headerRadiusLinked: document.getElementById('headerRadiusLinked'),
+			headerPaddingTop: document.getElementById('headerPaddingTop'),
+			headerPaddingRight: document.getElementById('headerPaddingRight'),
+			headerPaddingBottom: document.getElementById('headerPaddingBottom'),
+			headerPaddingLeft: document.getElementById('headerPaddingLeft'),
+			headerPaddingUnit: document.getElementById('headerPaddingUnit'),
+			headerPaddingLinked: document.getElementById('headerPaddingLinked'),
+			navRadiusTop: document.getElementById('navRadiusTop'),
+			navRadiusRight: document.getElementById('navRadiusRight'),
+			navRadiusBottom: document.getElementById('navRadiusBottom'),
+			navRadiusLeft: document.getElementById('navRadiusLeft'),
+			navRadiusUnit: document.getElementById('navRadiusUnit'),
+			navRadiusLinked: document.getElementById('navRadiusLinked'),
+			leafDirectionControl: document.getElementById('leafDirectionControl'),
+			containerMarginTop: document.getElementById('containerMarginTop'),
+			containerMarginRight: document.getElementById('containerMarginRight'),
+			containerMarginBottom: document.getElementById('containerMarginBottom'),
+			containerMarginLeft: document.getElementById('containerMarginLeft'),
+			containerMarginUnit: document.getElementById('containerMarginUnit'),
+			containerMarginLinked: document.getElementById('containerMarginLinked'),
+			deviceMode: document.getElementById('deviceMode')
+		};
+
+		const boxControls = {
+			headerRadius: {
+				sides: ['headerRadiusTop', 'headerRadiusRight', 'headerRadiusBottom', 'headerRadiusLeft'],
+				unit: 'headerRadiusUnit',
+				linked: 'headerRadiusLinked',
+				defaults: ['18', '18', '18', '18']
+			},
+			headerPadding: {
+				sides: ['headerPaddingTop', 'headerPaddingRight', 'headerPaddingBottom', 'headerPaddingLeft'],
+				unit: 'headerPaddingUnit',
+				linked: 'headerPaddingLinked',
+				defaults: ['10', '24', '10', '24']
+			},
+			navRadius: {
+				sides: ['navRadiusTop', 'navRadiusRight', 'navRadiusBottom', 'navRadiusLeft'],
+				unit: 'navRadiusUnit',
+				linked: 'navRadiusLinked',
+				defaults: ['0', '0', '0', '0']
+			},
+			containerMargin: {
+				sides: ['containerMarginTop', 'containerMarginRight', 'containerMarginBottom', 'containerMarginLeft'],
+				unit: 'containerMarginUnit',
+				linked: 'containerMarginLinked',
+				defaults: ['0', '0', '0', '0']
+			}
+		};
+
+		const linkedColorControls = {
+			active: {
+				source: 'linkActive',
+				target: 'linkActiveBorder',
+				linked: 'linkActiveBorderLinked',
+				fallback: '#e01d24',
+				label: 'active'
+			},
+			hover: {
+				source: 'linkHover',
+				target: 'linkHoverBorder',
+				linked: 'linkHoverBorderLinked',
+				fallback: '#e01d24',
+				label: 'hover'
+			},
+			focus: {
+				source: 'linkFocus',
+				target: 'linkFocusBorder',
+				linked: 'linkFocusBorderLinked',
+				fallback: '#c4121a',
+				label: 'focus'
+			}
+		};
+
+		const linkRadiusProfiles = {
+			default: null,
+			leafForward: null,
+			leafReverse: null
+		};
+
+		const responsiveModes = ['desktop', 'tablet', 'mobile'];
+		const responsiveDeviceModes = responsiveModes;
+		const responsiveDeviceMeta = {
+			desktop: { icon: 'fas fa-desktop', label: 'Desktop' },
+			tablet: { icon: 'fas fa-tablet-alt', label: 'Tablet Portrait' },
+			mobile: { icon: 'fas fa-mobile-alt', label: 'Mobile Portrait' }
+		};
+		let globalResponsiveMode = 'desktop';
+		let openResponsiveMenu = null;
+		const responsiveBoxProfiles = {};
+
+		function setVariable(name, value) {
+			els.root.style.setProperty(name, value);
+		}
+
+		function unitValue(inputId, fallback = '0') {
+			const numberValue = controls[inputId].value === '' ? fallback : controls[inputId].value;
+			const unit = controls[`${inputId}Unit`].value;
+			return `${numberValue}${unit}`;
+		}
+
+		function cloneBoxProfile(profile) {
+			return {
+				values: profile.values.slice(),
+				unit: profile.unit,
+				linked: profile.linked
+			};
+		}
+
+		function createBoxProfile(name, values = boxControls[name].defaults, unit = 'px', linked = isBoxLinked(name)) {
+			return {
+				values: values.slice(),
+				unit,
+				linked
+			};
+		}
+
+		function readBoxProfileFromControls(name) {
+			const config = boxControls[name];
+			return {
+				values: config.sides.map((id, index) => controls[id].value === '' ? config.defaults[index] : controls[id].value),
+				unit: controls[config.unit].value,
+				linked: isBoxLinked(name)
+			};
+		}
+
+		function writeBoxProfileToControls(name, profile) {
+			controls[boxControls[name].unit].value = profile.unit;
+			setBoxLinked(name, profile.linked);
+			setBoxValues(name, profile.values);
+		}
+
+		function normalizeResponsiveMode(mode) {
+			return responsiveModes.includes(mode) ? mode : 'desktop';
+		}
+
+		function responsiveModeMeta(mode = globalResponsiveMode) {
+			return responsiveDeviceMeta[normalizeResponsiveMode(mode)] || responsiveDeviceMeta.desktop;
+		}
+
+		function createResponsiveBoxState(profile, mode = globalResponsiveMode) {
+			return {
+				mode: normalizeResponsiveMode(mode),
+				all: cloneBoxProfile(profile),
+				desktop: null,
+				tablet: null,
+				mobile: null
+			};
+		}
+
+		function cloneResponsiveBoxState(stateValue) {
+			return {
+				mode: normalizeResponsiveMode(stateValue.mode),
+				all: cloneBoxProfile(stateValue.all),
+				desktop: stateValue.desktop ? cloneBoxProfile(stateValue.desktop) : null,
+				tablet: stateValue.tablet ? cloneBoxProfile(stateValue.tablet) : null,
+				mobile: stateValue.mobile ? cloneBoxProfile(stateValue.mobile) : null
+			};
+		}
+
+		function initResponsiveBoxProfiles() {
+			Object.keys(boxControls).forEach(name => {
+				responsiveBoxProfiles[name] = createResponsiveBoxState(readBoxProfileFromControls(name));
+			});
+			syncAllResponsiveBoxControls();
+		}
+
+		function activeResponsiveMode(name) {
+			return normalizeResponsiveMode(responsiveBoxProfiles[name]?.mode || globalResponsiveMode);
+		}
+
+		function saveActiveBoxProfile(name) {
+			const store = responsiveBoxProfiles[name];
+			if (!store) return;
+			const mode = activeResponsiveMode(name);
+			store.mode = mode;
+			store[mode] = readBoxProfileFromControls(name);
+			syncResponsiveBoxControl(name);
+		}
+
+		function profileForMode(name, mode) {
+			const store = responsiveBoxProfiles[name];
+			if (!store) return readBoxProfileFromControls(name);
+			const safeMode = normalizeResponsiveMode(mode);
+			return store[safeMode] || store.all;
+		}
+
+		function effectiveBoxProfile(name, device = controls.deviceMode.value) {
+			const mode = responsiveDeviceModes.includes(device) ? device : globalResponsiveMode;
+			return profileForMode(name, mode);
+		}
+
+		function profileCssValues(name, profile) {
+			const config = boxControls[name];
+			return config.sides.map((id, index) => {
+				const value = profile.values[index] === '' ? config.defaults[index] : profile.values[index];
+				return `${value}${profile.unit}`;
+			});
+		}
+
+		function boxControlValues(name) {
+			return profileCssValues(name, effectiveBoxProfile(name));
+		}
+
+		function boxControlCss(name) {
+			return boxControlValues(name).join(' ');
+		}
+
+		function boxProfileJson(name, profile) {
+			if (!profile) return null;
+			const [top, right, bottom, left] = profileCssValues(name, profile);
+			return {
+				top,
+				right,
+				bottom,
+				left,
+				unit: profile.unit,
+				linked: profile.linked
+			};
+		}
+
+		function boxControlJson(name) {
+			const effective = effectiveBoxProfile(name);
+			const effectiveJson = boxProfileJson(name, effective);
+			const store = responsiveBoxProfiles[name];
+			return {
+				...effectiveJson,
+				mode: activeResponsiveMode(name),
+				preview_device: controls.deviceMode.value,
+				responsive: {
+					all: boxProfileJson(name, store?.all),
+					desktop: boxProfileJson(name, store?.desktop),
+					tablet: boxProfileJson(name, store?.tablet),
+					mobile: boxProfileJson(name, store?.mobile)
+				}
+			};
+		}
+
+		function setBoxVariablePrefix(prefix, name) {
+			const [top, right, bottom, left] = boxControlValues(name);
+			setVariable(`${prefix}-top`, top);
+			setVariable(`${prefix}-right`, right);
+			setVariable(`${prefix}-bottom`, bottom);
+			setVariable(`${prefix}-left`, left);
+		}
+
+		function isBoxLinked(name) {
+			return controls[boxControls[name].linked].classList.contains('is-active');
+		}
+
+		function syncLinkedBoxValues(name, sourceId) {
+			if (!isBoxLinked(name)) return;
+
+			const sourceValue = controls[sourceId].value;
+			boxControls[name].sides.forEach(id => {
+				if (id !== sourceId) controls[id].value = sourceValue;
+			});
+		}
+
+		function setBoxValues(name, values) {
+			boxControls[name].sides.forEach((id, index) => {
+				controls[id].value = values[index];
+			});
+		}
+
+		function setBoxLinked(name, active) {
+			const button = controls[boxControls[name].linked];
+			button.classList.toggle('is-active', active);
+			button.setAttribute('aria-pressed', String(active));
+			const icon = button.querySelector('i');
+			if (icon) {
+				icon.classList.toggle('fa-link', active);
+				icon.classList.toggle('fa-unlink', !active);
+			}
+		}
+
+		function syncResponsiveBoxControl(name) {
+			const store = responsiveBoxProfiles[name];
+			if (!store) return;
+
+			const activeMode = activeResponsiveMode(name);
+			const meta = responsiveModeMeta(activeMode);
+			const isOpen = openResponsiveMenu === name;
+
+			editor.querySelectorAll(`.responsive-mode-control[data-responsive-control="${name}"]`).forEach(group => {
+				group.classList.toggle('is-open', isOpen);
+
+				const trigger = group.querySelector('[data-responsive-trigger]');
+				if (trigger) {
+					const icon = trigger.querySelector('i');
+					if (icon) icon.className = meta.icon;
+					trigger.classList.toggle('has-override', Boolean(store[activeMode]));
+					trigger.setAttribute('aria-expanded', String(isOpen));
+					trigger.setAttribute('aria-label', `Responsive device: ${meta.label}`);
+					trigger.setAttribute('title', `Responsive: ${meta.label}`);
+				}
+
+				const menu = group.querySelector('.responsive-mode-menu');
+				if (menu) menu.hidden = !isOpen;
+
+				group.querySelectorAll('button[data-responsive-mode]').forEach(button => {
+					const mode = normalizeResponsiveMode(button.dataset.responsiveMode);
+					const active = activeMode === mode;
+					const hasOverride = Boolean(store[mode]);
+					button.classList.toggle('is-active', active);
+					button.classList.toggle('has-override', hasOverride);
+					button.setAttribute('aria-selected', String(active));
+				});
+			});
+		}
+
+		function syncAllResponsiveBoxControls() {
+			Object.keys(boxControls).forEach(syncResponsiveBoxControl);
+		}
+
+		function closeResponsiveBoxMenu() {
+			if (!openResponsiveMenu) return;
+			openResponsiveMenu = null;
+			syncAllResponsiveBoxControls();
+		}
+
+		function toggleResponsiveBoxMenu(name) {
+			openResponsiveMenu = openResponsiveMenu === name ? null : name;
+			syncAllResponsiveBoxControls();
+		}
+
+		function saveAllActiveBoxProfiles() {
+			Object.keys(boxControls).forEach(saveActiveBoxProfile);
+			if (responsiveBoxProfiles.navRadius) {
+				linkRadiusProfiles[currentLinkRadiusProfileKey()] = cloneResponsiveBoxState(responsiveBoxProfiles.navRadius);
+			}
+		}
+
+		function switchResponsiveBoxMode(name, mode) {
+			const nextMode = normalizeResponsiveMode(mode);
+			saveAllActiveBoxProfiles();
+			globalResponsiveMode = nextMode;
+			controls.deviceMode.value = nextMode;
+			Object.keys(boxControls).forEach(controlName => {
+				const store = responsiveBoxProfiles[controlName];
+				if (!store) return;
+				store.mode = nextMode;
+				writeBoxProfileToControls(controlName, profileForMode(controlName, nextMode));
+			});
+			openResponsiveMenu = null;
+			syncAllResponsiveBoxControls();
+		}
+
+		function currentLinkRadiusProfileKey(shape = state.linkShape, direction = state.leafDirection) {
+			if (shape !== 'leaf') return 'default';
+			return direction === 'reverse' ? 'leafReverse' : 'leafForward';
+		}
+
+		function readLinkRadiusProfile() {
+			saveActiveBoxProfile('navRadius');
+			return cloneResponsiveBoxState(responsiveBoxProfiles.navRadius);
+		}
+
+		function defaultLinkRadiusProfile(key) {
+			if (key === 'leafReverse') {
+				return createResponsiveBoxState(createBoxProfile('navRadius', ['28', '0', '28', '0'], 'px', false));
+			}
+
+			if (key === 'leafForward') {
+				return createResponsiveBoxState(createBoxProfile('navRadius', ['0', '28', '0', '28'], 'px', false));
+			}
+
+			return createResponsiveBoxState(createBoxProfile('navRadius', ['0', '0', '0', '0'], 'px', true));
+		}
+
+		function writeLinkRadiusProfile(profile) {
+			responsiveBoxProfiles.navRadius = cloneResponsiveBoxState(profile);
+			const mode = activeResponsiveMode('navRadius');
+			writeBoxProfileToControls('navRadius', profileForMode('navRadius', mode));
+			syncResponsiveBoxControl('navRadius');
+		}
+
+		function saveCurrentLinkRadiusProfile() {
+			linkRadiusProfiles[currentLinkRadiusProfileKey()] = readLinkRadiusProfile();
+		}
+
+		function loadLinkRadiusProfile(key = currentLinkRadiusProfileKey()) {
+			if (!linkRadiusProfiles[key]) {
+				linkRadiusProfiles[key] = defaultLinkRadiusProfile(key);
+			}
+			writeLinkRadiusProfile(linkRadiusProfiles[key]);
+		}
+
+		function syncCurrentLinkRadiusProfile() {
+			saveActiveBoxProfile('navRadius');
+			linkRadiusProfiles[currentLinkRadiusProfileKey()] = cloneResponsiveBoxState(responsiveBoxProfiles.navRadius);
+		}
+
+		function switchLinkRadiusProfile(nextShape, nextDirection = state.leafDirection) {
+			saveCurrentLinkRadiusProfile();
+			state.linkShape = nextShape;
+			state.leafDirection = nextDirection;
+			loadLinkRadiusProfile();
+			syncLinkShapeControls();
+		}
+
+		function applyLinkShapePreset() {
+			loadLinkRadiusProfile();
+		}
+
+		function syncLinkShapeControls() {
+			controls.leafDirectionControl.hidden = state.linkShape !== 'leaf';
+		}
+
+		function colorValue(inputId, fallback = '#000000') {
+			const value = controls[inputId].value.trim();
+			if (value === '') return 'transparent';
+			const isHex = /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(value);
+			const isFunctional = /^(rgb|rgba|hsl|hsla)\(/i.test(value);
+			const isKeyword = value.toLowerCase() === 'transparent';
+			return isHex || isFunctional || isKeyword ? value : fallback;
+		}
+
+		function clampNumber(value, min, max) {
+			return Math.min(max, Math.max(min, value));
+		}
+
+		function parseAlpha(value) {
+			if (!value) return 1;
+			const normalized = value.trim();
+			if (normalized.endsWith('%')) return clampNumber(Number(normalized.slice(0, -1)) / 100, 0, 1);
+			return clampNumber(Number(normalized), 0, 1);
+		}
+
+		function parseColorChannel(value) {
+			const normalized = value.trim();
+			if (normalized.endsWith('%')) return Math.round(clampNumber(Number(normalized.slice(0, -1)), 0, 100) * 2.55);
+			return clampNumber(Number(normalized), 0, 255);
+		}
+
+		function hslToRgb(hue, saturation, lightness) {
+			const normalizedHue = (((hue % 360) + 360) % 360) / 360;
+			const s = clampNumber(saturation, 0, 100) / 100;
+			const l = clampNumber(lightness, 0, 100) / 100;
+
+			if (s === 0) {
+				const channel = Math.round(l * 255);
+				return { r: channel, g: channel, b: channel };
+			}
+
+			const hueToChannel = (p, q, t) => {
+				let next = t;
+				if (next < 0) next += 1;
+				if (next > 1) next -= 1;
+				if (next < 1 / 6) return p + (q - p) * 6 * next;
+				if (next < 1 / 2) return q;
+				if (next < 2 / 3) return p + (q - p) * (2 / 3 - next) * 6;
+				return p;
+			};
+
+			const q = l < .5 ? l * (1 + s) : l + s - (l * s);
+			const p = (2 * l) - q;
+			return {
+				r: Math.round(hueToChannel(p, q, normalizedHue + 1 / 3) * 255),
+				g: Math.round(hueToChannel(p, q, normalizedHue) * 255),
+				b: Math.round(hueToChannel(p, q, normalizedHue - 1 / 3) * 255)
+			};
+		}
+
+		function parseCssColor(value) {
+			const normalized = value.trim().toLowerCase();
+			if (normalized === 'transparent') return { r: 255, g: 255, b: 255, a: 0 };
+
+			const hex = normalized.match(/^#([0-9a-f]{6})([0-9a-f]{2})?$/i);
+			if (hex) {
+				return {
+					r: parseInt(hex[1].slice(0, 2), 16),
+					g: parseInt(hex[1].slice(2, 4), 16),
+					b: parseInt(hex[1].slice(4, 6), 16),
+					a: hex[2] ? parseInt(hex[2], 16) / 255 : 1
+				};
+			}
+
+			const rgb = normalized.match(/^rgba?\((.+)\)$/i);
+			if (rgb) {
+				const parts = rgb[1].replace(/\//g, ',').split(',').map(part => part.trim()).filter(Boolean);
+				if (parts.length >= 3) {
+					return {
+						r: parseColorChannel(parts[0]),
+						g: parseColorChannel(parts[1]),
+						b: parseColorChannel(parts[2]),
+						a: parseAlpha(parts[3])
+					};
+				}
+			}
+
+			const hsl = normalized.match(/^hsla?\((.+)\)$/i);
+			if (hsl) {
+				const parts = hsl[1].replace(/\//g, ',').split(',').map(part => part.trim()).filter(Boolean);
+				if (parts.length >= 3) {
+					const rgbColor = hslToRgb(Number(parts[0].replace('deg', '')), Number(parts[1].replace('%', '')), Number(parts[2].replace('%', '')));
+					return { ...rgbColor, a: parseAlpha(parts[3]) };
+				}
+			}
+
+			return { r: 224, g: 29, b: 36, a: 1 };
+		}
+
+		function compositeOnWhite(color) {
+			if (color.a >= 1) return color;
+			return {
+				r: Math.round((color.r * color.a) + (255 * (1 - color.a))),
+				g: Math.round((color.g * color.a) + (255 * (1 - color.a))),
+				b: Math.round((color.b * color.a) + (255 * (1 - color.a))),
+				a: 1
+			};
+		}
+
+		function relativeLuminance(color) {
+			const channel = value => {
+				const normalized = value / 255;
+				return normalized <= .03928 ? normalized / 12.92 : ((normalized + .055) / 1.055) ** 2.4;
+			};
+
+			return (.2126 * channel(color.r)) + (.7152 * channel(color.g)) + (.0722 * channel(color.b));
+		}
+
+		function contrastRatio(a, b) {
+			const lighter = Math.max(a, b);
+			const darker = Math.min(a, b);
+			return (lighter + .05) / (darker + .05);
+		}
+
+		function readableTextColor(background) {
+			const bg = compositeOnWhite(parseCssColor(background));
+			const bgLuminance = relativeLuminance(bg);
+			const whiteContrast = contrastRatio(1, bgLuminance);
+			const darkContrast = contrastRatio(relativeLuminance({ r: 16, g: 24, b: 40 }), bgLuminance);
+			return whiteContrast >= darkContrast ? '#ffffff' : '#101828';
+		}
+
+		function transparentModeIsCustom() {
+			return state.transparentColorMode === 'custom';
+		}
+
+		function transparentTextValue() {
+			return transparentModeIsCustom()
+				? colorValue('transparentText', '#ffffff')
+				: '#ffffff';
+		}
+
+		function transparentStateColor(stateName) {
+			const map = {
+				hover: { custom: 'transparentHover', source: 'linkHover', fallback: '#e01d24' },
+				focus: { custom: 'transparentFocus', source: 'linkFocus', fallback: '#c4121a' },
+				active: { custom: 'transparentActive', source: 'linkActive', fallback: '#e01d24' }
+			};
+			const config = map[stateName];
+			const inputId = transparentModeIsCustom() ? config.custom : config.source;
+			return colorValue(inputId, config.fallback);
+		}
+
+		function transparentColorConfig() {
+			const hover = transparentStateColor('hover');
+			const focus = transparentStateColor('focus');
+			const active = transparentStateColor('active');
+			return {
+				mode: state.transparentColorMode,
+				header_text: transparentTextValue(),
+				link: transparentTextValue(),
+				hover,
+				hover_text: readableTextColor(hover),
+				hover_border: hover,
+				focus,
+				focus_text: readableTextColor(focus),
+				focus_border: focus,
+				active,
+				active_text: readableTextColor(active),
+				active_border: active
+			};
+		}
+
+		function applyTransparentColors() {
+			const transparent = transparentColorConfig();
+			setVariable('--transparent-header-text', transparent.header_text);
+			setVariable('--transparent-link-color', transparent.link);
+			setVariable('--transparent-hover-bg', transparent.hover);
+			setVariable('--transparent-hover-text', transparent.hover_text);
+			setVariable('--transparent-hover-border', transparent.hover_border);
+			setVariable('--transparent-focus-bg', transparent.focus);
+			setVariable('--transparent-focus-text', transparent.focus_text);
+			setVariable('--transparent-focus-border', transparent.focus_border);
+			setVariable('--transparent-active-bg', transparent.active);
+			setVariable('--transparent-active-text', transparent.active_text);
+			setVariable('--transparent-active-border', transparent.active_border);
+		}
+
+		function syncTransparentColorControls() {
+			const enabled = scrollEffectsEnabled() && controls.transparentStart.checked;
+			const custom = enabled && transparentModeIsCustom();
+			controls.transparentColorPanel.hidden = !enabled;
+			controls.transparentCustomFields.hidden = !custom;
+
+			controls.transparentColorPanel.querySelectorAll('[data-control="transparentColorMode"] button').forEach(button => {
+				button.disabled = !enabled;
+				button.setAttribute('aria-disabled', String(!enabled));
+			});
+
+			[
+				'transparentText',
+				'transparentHover',
+				'transparentFocus',
+				'transparentActive'
+			].forEach(id => setControlDisabled(controls[id], !custom));
+		}
+
+		function isTransparentColor(inputId) {
+			const value = colorValue(inputId, 'transparent').replace(/\s+/g, '').toLowerCase();
+			return value === 'transparent'
+				|| value === '#00000000'
+				|| value === 'rgba(0,0,0,0)'
+				|| value === 'hsla(0,0%,0%,0)';
+		}
+
+		function updateColorisThumbnail(input) {
+			const swatch = input.closest('.clr-field')?.querySelector('button');
+			if (!swatch) return;
+			swatch.style.backgroundColor = input.value || 'transparent';
+			swatch.style.color = input.value || 'transparent';
+		}
+
+		function isLinkedColor(name) {
+			return controls[linkedColorControls[name].linked].classList.contains('is-active');
+		}
+
+		function syncLinkedColorControl(name) {
+			const config = linkedColorControls[name];
+			const linked = isLinkedColor(name);
+			if (linked) {
+				controls[config.target].value = controls[config.source].value;
+				updateColorisThumbnail(controls[config.target]);
+			}
+
+			setControlDisabled(controls[config.target], linked);
+			controls[config.linked].setAttribute('aria-pressed', String(linked));
+			controls[config.linked].setAttribute('aria-label', linked
+				? `Unlink ${config.label} border color from ${config.label} link color`
+				: `Link ${config.label} border color to ${config.label} link color`);
+
+			const icon = controls[config.linked].querySelector('i');
+			if (icon) {
+				icon.classList.toggle('fa-link', linked);
+				icon.classList.toggle('fa-unlink', !linked);
+			}
+		}
+
+		function syncLinkedColorControls() {
+			Object.keys(linkedColorControls).forEach(syncLinkedColorControl);
+		}
+
+		function linkedColorValue(name) {
+			const config = linkedColorControls[name];
+			return isLinkedColor(name)
+				? colorValue(config.source, config.fallback)
+				: colorValue(config.target, config.fallback);
+		}
+
+		function shadowUnitValue(inputId, fallback = '0') {
+			const value = controls[inputId].value === '' ? fallback : controls[inputId].value;
+			return `${value}${controls.linkShadowUnit.value}`;
+		}
+
+		function linkShadowValue() {
+			if (!controls.linkShadowEnabled.checked) return 'none';
+
+			const inset = controls.linkShadowInset.checked ? 'inset ' : '';
+			return `${inset}${shadowUnitValue('linkShadowX')} ${shadowUnitValue('linkShadowY', '8')} ${shadowUnitValue('linkShadowBlur', '18')} ${shadowUnitValue('linkShadowSpread')} ${colorValue('linkShadowColor', '#e01d242e')}`;
+		}
+
+		function syncLinkShadowControls() {
+			const disabled = !controls.linkShadowEnabled.checked;
+			controls.linkShadowEnabled.closest('.shadow-control')?.classList.toggle('is-disabled', disabled);
+			[
+				'linkShadowUnit',
+				'linkShadowX',
+				'linkShadowY',
+				'linkShadowBlur',
+				'linkShadowSpread',
+				'linkShadowColor',
+				'linkShadowInset'
+			].forEach(id => setControlDisabled(controls[id], disabled));
+			[
+				'linkShadowX',
+				'linkShadowY',
+				'linkShadowBlur',
+				'linkShadowSpread'
+			].forEach(id => {
+				editor.querySelectorAll(`.box-stepper-btn[data-box-stepper-target="${id}"]`).forEach(button => {
+					button.disabled = disabled;
+					button.setAttribute('aria-disabled', String(disabled));
+				});
+			});
+		}
+
+		function linkShadowJson() {
+			return {
+				enabled: controls.linkShadowEnabled.checked,
+				x: shadowUnitValue('linkShadowX'),
+				y: shadowUnitValue('linkShadowY', '8'),
+				blur: shadowUnitValue('linkShadowBlur', '18'),
+				spread: shadowUnitValue('linkShadowSpread'),
+				color: colorValue('linkShadowColor', '#e01d242e'),
+				inset: controls.linkShadowInset.checked,
+				value: linkShadowValue()
+			};
+		}
+
+		function scrollEffectsEnabled() {
+			return state.headerBehavior !== 'stay' && controls.animateScroll.checked;
+		}
+
+		function escapeHtml(value) {
+			return String(value || '')
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&#039;');
+		}
+
+		function safePreviewUrl(value) {
+			const url = String(value || '').trim();
+			return /^(#|\/|https?:\/\/|mailto:|tel:)/i.test(url) ? url : '#';
+		}
+
+		function safePreviewImageUrl(value) {
+			const url = String(value || '').trim();
+			return /^(\/|https?:\/\/)/i.test(url) ? url : '';
+		}
+
+		function safeIconClassFromHtml(value) {
+			const match = String(value || '').match(/<i[^>]*class=(?:"|')([^"']+)(?:"|')[^>]*>/i);
+			return match ? match[1].replace(/[^A-Za-z0-9 _-]/g, '').replace(/\s+/g, ' ').trim() : '';
+		}
+
+		function dropdownIndicatorMarkup(item) {
+			if (!item.hasDropdown || !item.showArrow) return '';
+
+			const iconUrl = item.toggleIconType === 'upload_file' ? safePreviewImageUrl(item.toggleIconUrl) : '';
+			if (iconUrl) {
+				return `<span class="menu-dropdown-indicator" aria-hidden="true"><img src="${escapeHtml(iconUrl)}" alt=""></span>`;
+			}
+
+			const iconClass = item.toggleIconType === 'custom_input' ? safeIconClassFromHtml(item.toggleIconHtml) : '';
+			if (iconClass) {
+				return `<span class="menu-dropdown-indicator" aria-hidden="true"><i class="${escapeHtml(iconClass)}"></i></span>`;
+			}
+
+			return '<span class="menu-dropdown-indicator" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>';
+		}
+
+		function setControlDisabled(control, disabled) {
+			control.disabled = disabled;
+			control.setAttribute('aria-disabled', String(disabled));
+
+			const colorisControl = control.closest('.coloris-control');
+			if (colorisControl) {
+				colorisControl.classList.toggle('is-disabled', disabled);
+				const trigger = colorisControl.querySelector('.clr-field button');
+				if (trigger) trigger.disabled = disabled;
+			}
+
+			const switchControl = control.closest('.form-check');
+			if (switchControl) {
+				switchControl.classList.toggle('is-disabled', disabled);
+			}
+		}
+
+		function syncScrollControls() {
+			const isStay = state.headerBehavior === 'stay';
+			const canUseScrolledState = scrollEffectsEnabled();
+
+			setControlDisabled(controls.animateScroll, isStay);
+			setControlDisabled(controls.transparentStart, !canUseScrolledState);
+			setControlDisabled(controls.scrolledBg, !canUseScrolledState);
+			controls.scrollSim.disabled = !canUseScrolledState;
+			syncTransparentColorControls();
+
+			if (!canUseScrolledState) {
+				controls.scrollSim.value = 0;
+				els.deviceStage.scrollTop = 0;
+			}
+		}
+
+		function menuMarkup(items, extraClass = '') {
+			return `<ul class="header-menu ${extraClass}">${items.map(item => (
+				`<li><a href="${escapeHtml(safePreviewUrl(item.url))}" class="${item.active ? 'is-active' : ''}${item.hasDropdown ? ' has-dropdown' : ''}"><span class="menu-label">${escapeHtml(item.label)}</span>${dropdownIndicatorMarkup(item)}</a></li>`
+			)).join('')}</ul>`;
+		}
+
+		function logoMarkup() {
+			return `<a href="#" class="header-logo"><span class="logo-mark">PH</span><span>Phoenix CMS</span></a>`;
+		}
+
+		function actionsMarkup() {
+			return `<div class="header-actions"><button class="btn-demo" type="button">Get started</button><button class="hamburger" type="button" aria-label="Open menu"><i class="fas fa-bars"></i></button></div>`;
+		}
+
+		function splitMenus() {
+			const total = state.menus.length;
+			const leftCount = Math.floor(total / 2);
+			return {
+				left: state.menus.slice(0, leftCount),
+				right: state.menus.slice(leftCount)
+			};
+		}
+
+		function renderHeader() {
+			const logo = logoMarkup();
+			const menu = menuMarkup(state.menus);
+			const actions = actionsMarkup();
+			let html = '';
+			let layout = 'layout-left';
+
+			if (state.logoPosition === 'center' && state.menuPosition === 'center') {
+				const split = splitMenus();
+				html = `${menuMarkup(split.left, 'menu-left')}${logo}${menuMarkup(split.right, 'menu-right')}`;
+				layout = 'layout-center';
+			} else if (state.logoPosition === 'left' && state.menuPosition === 'left') {
+				html = `${logo}${menu}${actions}`;
+				layout = 'layout-left';
+			} else if (state.logoPosition === 'left' && state.menuPosition === 'center') {
+				html = `${logo}${menu}${actions}`;
+				layout = 'layout-menu-center';
+			} else if (state.logoPosition === 'left' && state.menuPosition === 'right') {
+				html = `${logo}${menu}${actions}`;
+				layout = 'layout-right';
+			} else if (state.logoPosition === 'center' && state.menuPosition === 'left') {
+				html = `${menu}${logo}${actions}`;
+				layout = 'layout-logo-center-menu-left';
+			} else if (state.logoPosition === 'center' && state.menuPosition === 'right') {
+				html = `${actions}${logo}${menu}`;
+				layout = 'layout-logo-center-menu-right';
+			} else if (state.logoPosition === 'right' && state.menuPosition === 'right') {
+				html = `${actions}${menu}${logo}`;
+				layout = 'layout-right';
+			} else if (state.logoPosition === 'right' && state.menuPosition === 'center') {
+				html = `${actions}${menu}${logo}`;
+				layout = 'layout-menu-center';
+			} else {
+				html = `${menu}${actions}${logo}`;
+				layout = 'layout-left';
+			}
+
+			els.headerInner.className = `header-inner ${layout}`;
+			els.headerInner.innerHTML = html;
+		}
+
+		function updateHeaderClasses() {
+			syncScrollControls();
+			const canUseScrolledState = scrollEffectsEnabled();
+
+			els.header.classList.toggle('is-transparent', canUseScrolledState && controls.transparentStart.checked);
+			els.header.classList.toggle('inner-bg', controls.innerBg.checked);
+			els.header.classList.toggle('full-bg', !controls.innerBg.checked);
+			els.header.classList.toggle('is-scrolled-transparent', canUseScrolledState && isTransparentColor('scrolledBg'));
+			els.header.classList.toggle('is-fixed', state.headerBehavior === 'fixed' || state.headerBehavior === 'sticky');
+			els.header.classList.toggle('is-stay', state.headerBehavior === 'stay');
+			els.headerContainer.classList.toggle('is-fluid', state.containerMode === 'fluid');
+			els.deviceStage.classList.toggle('mobile-mode', controls.deviceMode.value === 'mobile');
+			els.deviceStage.classList.toggle('tablet-mode', controls.deviceMode.value === 'tablet');
+			if (!controls.animateScroll.checked) {
+				els.header.style.transition = 'none';
+				els.headerInner.style.transition = 'none';
+			} else {
+				els.header.style.transition = '';
+				els.headerInner.style.transition = '';
+			}
+		}
+
+		function applyColorsAndSizes() {
+			syncLinkedColorControls();
+			syncLinkShadowControls();
+			setVariable('--header-bg', colorValue('headerBg', '#ffffff'));
+			setVariable('--scrolled-bg', colorValue('scrolledBg', '#ffffff'));
+			setVariable('--header-text', colorValue('headerText', '#101828'));
+			setVariable('--link-color', colorValue('linkColor', '#273142'));
+			setVariable('--link-hover', colorValue('linkHover', '#e01d24'));
+			setVariable('--link-hover-text', readableTextColor(colorValue('linkHover', '#e01d24')));
+			setVariable('--link-hover-border', linkedColorValue('hover'));
+			setVariable('--link-focus', colorValue('linkFocus', '#c4121a'));
+			setVariable('--link-focus-text', readableTextColor(colorValue('linkFocus', '#c4121a')));
+			setVariable('--link-focus-border', linkedColorValue('focus'));
+			setVariable('--link-active', colorValue('linkActive', '#e01d24'));
+			setVariable('--link-active-text', readableTextColor(colorValue('linkActive', '#e01d24')));
+			setVariable('--link-active-border', linkedColorValue('active'));
+			setVariable('--link-active-shadow', linkShadowValue());
+			applyTransparentColors();
+			setVariable('--header-height', unitValue('headerHeight', '76'));
+			setVariable('--header-radius', boxControlCss('headerRadius'));
+			setVariable('--header-padding', boxControlCss('headerPadding'));
+			setVariable('--nav-radius', boxControlCss('navRadius'));
+			setBoxVariablePrefix('--header-container-margin', 'containerMargin');
+		}
+
+		function updateScrolledState() {
+			const scrolled = scrollEffectsEnabled() && (Number(controls.scrollSim.value) > 8 || els.deviceStage.scrollTop > 32);
+			els.header.classList.toggle('is-scrolled', scrolled);
+		}
+
+		function syncPreviewDeviceButtons() {
+			const activeDevice = controls.deviceMode.value;
+			editor.querySelectorAll('[data-preview-device]').forEach(button => {
+				const isActive = button.dataset.previewDevice === activeDevice;
+				button.classList.toggle('is-active', isActive);
+				button.setAttribute('aria-pressed', String(isActive));
+			});
+		}
+
+		function updatePreviewTimeline() {
+			const value = Math.max(0, Math.min(100, Number(controls.scrollSim.value) || 0));
+			const points = [
+				[0, 'Top'],
+				[25, 'Scrolled'],
+				[50, 'Mid'],
+				[75, 'Near bottom'],
+				[100, 'Bottom']
+			];
+			const nearest = points.reduce((current, point) => Math.abs(point[0] - value) < Math.abs(current[0] - value) ? point : current, points[0]);
+			const timelineValue = document.getElementById('scrollTimelineValue');
+			if (timelineValue) timelineValue.textContent = `${nearest[1]} · ${value}%`;
+
+			editor.querySelectorAll('[data-scroll-preset]').forEach(button => {
+				const isActive = Number(button.dataset.scrollPreset) === nearest[0];
+				button.classList.toggle('is-active', isActive);
+				button.setAttribute('aria-pressed', String(isActive));
+			});
+		}
+
+		function previewScrollMax() {
+			return Math.max(0, els.deviceStage.scrollHeight - els.deviceStage.clientHeight);
+		}
+
+		function selectInspectorTab(tabOrName, options = {}) {
+			const tabName = typeof tabOrName === 'string' ? tabOrName : tabOrName?.dataset.inspectorTab;
+			const tabs = Array.from(editor.querySelectorAll('[data-inspector-tab]'));
+			const panels = Array.from(editor.querySelectorAll('[data-inspector-panel]'));
+			const selectedTab = tabs.find(tab => tab.dataset.inspectorTab === tabName);
+			if (!selectedTab) return null;
+
+			tabs.forEach(tab => {
+				const isActive = tab === selectedTab;
+				tab.classList.toggle('is-active', isActive);
+				tab.setAttribute('aria-selected', String(isActive));
+				/* Native tab order retained. */
+			});
+
+			panels.forEach(panel => {
+				const isActive = panel.dataset.inspectorPanel === tabName;
+				panel.classList.toggle('is-active', isActive);
+				panel.hidden = !isActive;
+			});
+
+			if (options.scroll !== false) {
+				const content = editor.querySelector('.inspector-content');
+				if (content) content.scrollTop = 0;
+			}
+
+			return editor.querySelector(`[data-inspector-panel="${tabName}"]`);
+		}
+
+		function focusInspectorSection(sectionOrName) {
+			const groups = Array.from(editor.querySelectorAll('.header-setting-group'));
+			const target = typeof sectionOrName === 'string'
+				? groups.find(group => group.dataset.inspectorAnchor === sectionOrName)
+				: sectionOrName;
+			if (!target) return;
+
+			const isEffects = target.dataset.inspectorAnchor === 'effects';
+			if (isEffects) {
+				selectInspectorTab('style');
+			} else {
+				const panelName = target.closest('[data-inspector-panel]')?.dataset.inspectorPanel;
+				if (panelName) selectInspectorTab(panelName, { scroll: false });
+			}
+
+			const panel = target.closest('[data-inspector-panel]');
+			(panel ? Array.from(panel.querySelectorAll('.header-setting-group')) : groups).forEach(group => {
+				group.open = group === target;
+			});
+
+			const scrollTarget = isEffects
+				? target.querySelector('.shadow-control') || target
+				: target;
+			scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
+
+		function updateJson() {
+			const split = state.logoPosition === 'center' && state.menuPosition === 'center'
+				? { logo_between_menu: true, left_menu_count: Math.floor(state.menus.length / 2), right_menu_count: state.menus.length - Math.floor(state.menus.length / 2) }
+				: { logo_between_menu: false };
+
+			const config = {
+				colors: {
+					header_background: colorValue('headerBg', '#ffffff'),
+					scrolled_background: colorValue('scrolledBg', '#ffffff'),
+					header_text: colorValue('headerText', '#101828'),
+					link: colorValue('linkColor', '#273142'),
+					link_hover: colorValue('linkHover', '#e01d24'),
+					link_hover_text: readableTextColor(colorValue('linkHover', '#e01d24')),
+					link_hover_border: linkedColorValue('hover'),
+					link_hover_border_linked: isLinkedColor('hover'),
+					link_focus: colorValue('linkFocus', '#c4121a'),
+					link_focus_text: readableTextColor(colorValue('linkFocus', '#c4121a')),
+					link_focus_border: linkedColorValue('focus'),
+					link_focus_border_linked: isLinkedColor('focus'),
+					link_active: colorValue('linkActive', '#e01d24'),
+					link_active_text: readableTextColor(colorValue('linkActive', '#e01d24')),
+					link_active_border: linkedColorValue('active'),
+					link_active_border_linked: isLinkedColor('active'),
+					transparent: transparentColorConfig()
+				},
+				layout: {
+					logo_position: state.logoPosition,
+					menu_position: state.menuPosition,
+					container: state.containerMode,
+					background_follows_container: controls.innerBg.checked,
+					...split
+				},
+				behavior: {
+					position: state.headerBehavior,
+					transparent_before_scroll: controls.transparentStart.checked,
+					transparent_color_mode: state.transparentColorMode,
+					animate_on_scroll: controls.animateScroll.checked,
+					uses_scrolled_background: scrollEffectsEnabled()
+				},
+				effects: {
+					link_shadow: linkShadowJson()
+				},
+				sizing: {
+					height: unitValue('headerHeight', '76'),
+					header_radius: boxControlJson('headerRadius'),
+					header_padding: boxControlJson('headerPadding'),
+					link_shape: state.linkShape,
+					leaf_direction: state.linkShape === 'leaf' ? state.leafDirection : null,
+					link_radius: boxControlJson('navRadius'),
+					container_margin: boxControlJson('containerMargin')
+				}
+			};
+			currentConfig = config;
+			els.jsonOutput.textContent = JSON.stringify(config, null, 2);
+		}
+
+		function stepNumericInput(input, delta) {
+			if (!input || input.disabled) return;
+
+			const step = Number(input.step) || 1;
+			const current = Number(input.value || 0);
+			const min = input.min === '' ? -Infinity : Number(input.min);
+			const max = input.max === '' ? Infinity : Number(input.max);
+			const decimals = (String(step).split('.')[1] || '').length;
+			const next = Math.min(max, Math.max(min, current + (step * delta)));
+
+			input.value = decimals ? next.toFixed(decimals) : String(Math.round(next));
+			input.dispatchEvent(new Event('input', { bubbles: true }));
+			input.focus();
+		}
+
+		function initNumberSteppers() {
+			editor.querySelectorAll('.stepper-btn[data-stepper-target]').forEach(button => {
+				button.addEventListener('click', () => {
+					stepNumericInput(controls[button.dataset.stepperTarget], Number(button.dataset.stepperDelta) || 0);
+				});
+			});
+		}
+
+		function initBoxSteppers() {
+			editor.querySelectorAll('.box-stepper-btn[data-box-stepper-target]').forEach(button => {
+				button.addEventListener('click', () => {
+					stepNumericInput(controls[button.dataset.boxStepperTarget], Number(button.dataset.boxStepperDelta) || 0);
+				});
+			});
+		}
+
+		function initBoxControls() {
+			Object.entries(boxControls).forEach(([name, config]) => {
+				config.sides.forEach(id => {
+					const input = controls[id];
+					input.addEventListener('input', () => {
+						syncLinkedBoxValues(name, id);
+						saveActiveBoxProfile(name);
+						if (name === 'navRadius') syncCurrentLinkRadiusProfile();
+						updateAll();
+					});
+					input.addEventListener('change', () => {
+						syncLinkedBoxValues(name, id);
+						saveActiveBoxProfile(name);
+						if (name === 'navRadius') syncCurrentLinkRadiusProfile();
+						updateAll();
+					});
+				});
+
+				controls[config.unit].addEventListener('change', () => {
+					saveActiveBoxProfile(name);
+					if (name === 'navRadius') syncCurrentLinkRadiusProfile();
+					updateAll();
+				});
+				controls[config.linked].addEventListener('click', () => {
+					const button = controls[config.linked];
+					const active = !button.classList.contains('is-active');
+					setBoxLinked(name, active);
+					if (active) syncLinkedBoxValues(name, config.sides[0]);
+					saveActiveBoxProfile(name);
+					if (name === 'navRadius') syncCurrentLinkRadiusProfile();
+					updateAll();
+				});
+			});
+		}
+
+		function initResponsiveBoxModeControls() {
+			editor.querySelectorAll('.responsive-mode-control[data-responsive-control]').forEach(group => {
+				group.addEventListener('click', event => {
+					const trigger = event.target.closest('[data-responsive-trigger]');
+					if (trigger) {
+						event.stopPropagation();
+						toggleResponsiveBoxMenu(group.dataset.responsiveControl);
+						return;
+					}
+
+					const button = event.target.closest('button[data-responsive-mode]');
+					if (!button) return;
+					event.stopPropagation();
+					const name = group.dataset.responsiveControl;
+					switchResponsiveBoxMode(name, button.dataset.responsiveMode);
+					updateAll();
+				});
+			});
+
+			editor.addEventListener('click', event => {
+				if (event.target.closest('.responsive-mode-control')) return;
+				closeResponsiveBoxMenu();
+			});
+
+			editor.addEventListener('keydown', event => {
+				if (event.key === 'Escape') closeResponsiveBoxMenu();
+			});
+		}
+
+		function initLinkedColorControls() {
+			Object.entries(linkedColorControls).forEach(([name, config]) => {
+				controls[config.linked].addEventListener('click', () => {
+					const active = !controls[config.linked].classList.contains('is-active');
+					controls[config.linked].classList.toggle('is-active', active);
+					if (active) {
+						controls[config.target].value = controls[config.source].value;
+						updateColorisThumbnail(controls[config.target]);
+					}
+					updateAll();
+				});
+			});
+		}
+
+		function initColorisPicker() {
+			if (!window.Coloris) return;
+
+			Coloris({
+				el: '.coloris-field',
+				theme: 'pill',
+				themeMode: 'dark',
+				format: 'hex',
+				formatToggle: true,
+				alpha: true,
+				clearButton: true,
+				closeButton: true,
+				swatches: [
+					'#ffffff',
+					'#101828',
+					'#273142',
+					'#e01d24',
+					'#e01d242e',
+					'#c4121a',
+					'#667085',
+					'#f8fafc',
+					'#111827'
+				],
+				onChange: () => updateAll()
+			});
+		}
+
+
+		function dimensionParts(value, fallbackUnit = 'px') {
+			const match = String(value || '').trim().match(/^(-?\d+(?:\.\d+)?)(px|%|em|rem|pt)$/i);
+			return match
+				? { value: match[1], unit: match[2].toLowerCase() }
+				: { value: '0', unit: fallbackUnit };
+		}
+
+		function storedProfileToBox(name, profile) {
+			if (!profile || typeof profile !== 'object') return null;
+			const unit = ['px', '%', 'em', 'rem', 'pt'].includes(profile.unit) ? profile.unit : 'px';
+			const values = ['top', 'right', 'bottom', 'left'].map((side, index) => {
+				const parsed = dimensionParts(profile[side] || `${boxControls[name].defaults[index]}${unit}`, unit);
+				return parsed.value;
+			});
+			return createBoxProfile(name, values, unit, Boolean(profile.linked));
+		}
+
+		function applyStoredBox(name, storedBox) {
+			if (!storedBox || typeof storedBox !== 'object') return;
+			const responsive = storedBox.responsive || {};
+			const all = storedProfileToBox(name, responsive.all || storedBox)
+				|| createBoxProfile(name, boxControls[name].defaults, 'px', isBoxLinked(name));
+
+			responsiveBoxProfiles[name] = {
+				mode: normalizeResponsiveMode(storedBox.mode || storedBox.preview_device || 'desktop'),
+				all,
+				desktop: storedProfileToBox(name, responsive.desktop),
+				tablet: storedProfileToBox(name, responsive.tablet),
+				mobile: storedProfileToBox(name, responsive.mobile)
+			};
+		}
+
+		function setSegmentedValue(controlName, value) {
+			editor.querySelectorAll(`.segmented[data-control="${controlName}"] button[data-value]`).forEach(button => {
+				button.classList.toggle('is-active', button.dataset.value === value);
+			});
+		}
+
+		function setLinkedColorState(name, linked) {
+			const config = linkedColorControls[name];
+			const button = controls[config.linked];
+			button.classList.toggle('is-active', Boolean(linked));
+			button.setAttribute('aria-pressed', String(Boolean(linked)));
+		}
+
+		function applyStoredConfig(config) {
+			if (!config || typeof config !== 'object') return;
+
+			const colors = config.colors || {};
+			const transparent = colors.transparent || {};
+			const layout = config.layout || {};
+			const behavior = config.behavior || {};
+			const shadow = config.effects?.link_shadow || {};
+			const sizing = config.sizing || {};
+
+			controls.headerBg.value = colors.header_background || '#ffffff';
+			controls.scrolledBg.value = colors.scrolled_background || '#ffffff';
+			controls.headerText.value = colors.header_text || '#101828';
+			controls.linkColor.value = colors.link || '#273142';
+			controls.linkHover.value = colors.link_hover || '#e01d24';
+			controls.linkHoverBorder.value = colors.link_hover_border || controls.linkHover.value;
+			controls.linkFocus.value = colors.link_focus || '#c4121a';
+			controls.linkFocusBorder.value = colors.link_focus_border || controls.linkFocus.value;
+			controls.linkActive.value = colors.link_active || '#e01d24';
+			controls.linkActiveBorder.value = colors.link_active_border || controls.linkActive.value;
+			controls.transparentText.value = transparent.header_text || '#ffffff';
+			controls.transparentHover.value = transparent.hover || controls.linkHover.value;
+			controls.transparentFocus.value = transparent.focus || controls.linkFocus.value;
+			controls.transparentActive.value = transparent.active || controls.linkActive.value;
+
+			setLinkedColorState('hover', colors.link_hover_border_linked !== false);
+			setLinkedColorState('focus', colors.link_focus_border_linked !== false);
+			setLinkedColorState('active', colors.link_active_border_linked !== false);
+
+			state.logoPosition = layout.logo_position || 'left';
+			state.menuPosition = layout.menu_position || 'left';
+			state.containerMode = layout.container || 'container';
+			state.headerBehavior = behavior.position || 'stay';
+			state.transparentColorMode = behavior.transparent_color_mode || transparent.mode || 'auto';
+			state.linkShape = sizing.link_shape || 'default';
+			state.leafDirection = sizing.leaf_direction || 'forward';
+
+			controls.innerBg.checked = Boolean(layout.background_follows_container);
+			controls.transparentStart.checked = Boolean(behavior.transparent_before_scroll);
+			controls.animateScroll.checked = Boolean(behavior.animate_on_scroll);
+
+			setSegmentedValue('logoPosition', state.logoPosition);
+			setSegmentedValue('menuPosition', state.menuPosition);
+			setSegmentedValue('containerMode', state.containerMode);
+			setSegmentedValue('headerBehavior', state.headerBehavior);
+			setSegmentedValue('transparentColorMode', state.transparentColorMode);
+			setSegmentedValue('linkShape', state.linkShape);
+			setSegmentedValue('leafDirection', state.leafDirection);
+
+			const height = dimensionParts(sizing.height || '76px');
+			controls.headerHeight.value = height.value;
+			controls.headerHeightUnit.value = height.unit;
+
+			const shadowX = dimensionParts(shadow.x || '0px');
+			controls.linkShadowEnabled.checked = Boolean(shadow.enabled);
+			controls.linkShadowUnit.value = shadowX.unit;
+			controls.linkShadowX.value = shadowX.value;
+			controls.linkShadowY.value = dimensionParts(shadow.y || '8px', shadowX.unit).value;
+			controls.linkShadowBlur.value = dimensionParts(shadow.blur || '18px', shadowX.unit).value;
+			controls.linkShadowSpread.value = dimensionParts(shadow.spread || '0px', shadowX.unit).value;
+			controls.linkShadowColor.value = shadow.color || '#e01d242e';
+			controls.linkShadowInset.checked = Boolean(shadow.inset);
+
+			applyStoredBox('headerRadius', sizing.header_radius);
+			applyStoredBox('headerPadding', sizing.header_padding);
+			applyStoredBox('navRadius', sizing.link_radius);
+			applyStoredBox('containerMargin', sizing.container_margin);
+
+			globalResponsiveMode = normalizeResponsiveMode(sizing.header_radius?.mode || sizing.header_padding?.mode || 'desktop');
+			controls.deviceMode.value = globalResponsiveMode;
+
+			Object.keys(boxControls).forEach(name => {
+				const store = responsiveBoxProfiles[name];
+				if (!store) return;
+				store.mode = globalResponsiveMode;
+				writeBoxProfileToControls(name, profileForMode(name, globalResponsiveMode));
+			});
+
+			linkRadiusProfiles[currentLinkRadiusProfileKey()] = cloneResponsiveBoxState(responsiveBoxProfiles.navRadius);
+			syncAllResponsiveBoxControls();
+			editor.querySelectorAll('[data-coloris]').forEach(updateColorisThumbnail);
+		}
+
+		function setSaveStatus(status, message) {
+			const element = document.getElementById('headerNavigationSaveStatus');
+			if (!element) return;
+			element.classList.toggle('is-success', status === 'success');
+			element.classList.toggle('is-failed', status === 'failed');
+			const icon = status === 'success' ? 'fa-check-circle' : status === 'failed' ? 'fa-exclamation-circle' : 'fa-database';
+			element.innerHTML = `<i class="fas ${icon}"></i> `;
+			element.append(document.createTextNode(String(message || '')));
+		}
+function saveHeaderNavigation(){ prototypeSaved=structuredClone(currentConfig); prototypeActive=document.getElementById("headerNavigationActive").checked; syncPrototype(); setSaveStatus("success","Draft tersimpan di sesi prototipe"); }
+
+
+		function updatePreviewScale(){
+const viewport=previewViewports[controls.deviceMode.value]; const w=els.previewFrame.clientWidth; if(!w)return;
+const scale=Math.min(1,w/viewport.width,500/viewport.height);
+els.previewFrame.style.height=(viewport.height*scale)+'px';
+els.previewViewport.style.width=viewport.width+'px';els.previewViewport.style.height=viewport.height+'px';
+els.previewViewport.style.left=((w-viewport.width*scale)/2)+'px';els.previewViewport.style.top='0';els.previewViewport.style.setProperty('--preview-scale',scale);
+els.previewScaleStatus.textContent=viewport.label+' '+viewport.width+'×'+viewport.height+' · Fit '+Math.round(scale*100)+'%';
+}
+
+
+		function updateAll() {
+			syncLinkShapeControls();
+			applyColorsAndSizes();
+			updateHeaderClasses();
+			renderHeader();
+			updatePreviewScale();
+			updateScrolledState();
+			syncPreviewDeviceButtons();
+			updatePreviewTimeline();
+			updateJson();
+ syncPrototype();
+		}
+
+		editor.querySelectorAll('.segmented').forEach(group => {
+			group.addEventListener('click', event => {
+				const button = event.target.closest('button[data-value]');
+				if (!button) return;
+				group.querySelectorAll('button').forEach(item => item.classList.remove('is-active'));
+				button.classList.add('is-active');
+				if (group.dataset.control === 'linkShape') {
+					switchLinkRadiusProfile(button.dataset.value, state.leafDirection);
+				} else if (group.dataset.control === 'leafDirection') {
+					switchLinkRadiusProfile(state.linkShape, button.dataset.value);
+				} else {
+					state[group.dataset.control] = button.dataset.value;
+				}
+				updateAll();
+			});
+		});
+
+		[
+			'headerBg', 'scrolledBg', 'headerText', 'linkColor', 'linkHover', 'linkHoverBorder',
+			'linkFocus', 'linkFocusBorder', 'linkActive', 'linkActiveBorder', 'linkShadowEnabled',
+			'linkShadowUnit', 'linkShadowX', 'linkShadowY', 'linkShadowBlur', 'linkShadowSpread',
+			'linkShadowColor', 'linkShadowInset', 'innerBg', 'transparentStart', 'transparentText',
+			'transparentHover', 'transparentFocus', 'transparentActive', 'animateScroll', 'scrollSim',
+			'headerHeight', 'headerHeightUnit'
+		].forEach(id => {
+			controls[id].addEventListener('input', updateAll);
+			controls[id].addEventListener('change', updateAll);
+		});
+
+		controls.deviceMode.addEventListener('change', () => {
+			switchResponsiveBoxMode(null, controls.deviceMode.value);
+			updateAll();
+		});
+
+		editor.querySelectorAll('[data-preview-device]').forEach(button => {
+			button.addEventListener('click', () => {
+				switchResponsiveBoxMode(null, normalizeResponsiveMode(button.dataset.previewDevice));
+				updateAll();
+			});
+		});
+
+		editor.querySelectorAll('[data-inspector-tab]').forEach(button => {
+			button.addEventListener('click', () => selectInspectorTab(button));
+		});
+
+		editor.querySelectorAll('[data-inspector-select-tab]').forEach(button => {
+			button.addEventListener('click', () => selectInspectorTab(button.dataset.inspectorSelectTab));
+		});
+
+		selectInspectorTab('layout', { scroll: false });
+
+		editor.querySelectorAll('[data-scroll-preset]').forEach(button => {
+			button.addEventListener('click', () => {
+				const percentage = Math.max(0, Math.min(100, Number(button.dataset.scrollPreset) || 0));
+				controls.scrollSim.value = String(percentage);
+				updateAll();
+				/* Scroll state is controlled by the timeline. */
+			});
+		});
+
+		controls.scrollSim.addEventListener('input', () => {
+			if (!scrollEffectsEnabled()) return;
+			updateScrolledState();
+		});
+
+		initResponsiveBoxProfiles();
+		initNumberSteppers();
+		initBoxSteppers();
+		initBoxControls();
+		initResponsiveBoxModeControls();
+		initLinkedColorControls();
+		initColorisPicker();
+		applyStoredConfig(editorOptions.config || {});
+		document.getElementById('saveHeaderNavigation')?.addEventListener('click', saveHeaderNavigation);
+
+		const previewResizeObserver = typeof ResizeObserver === 'function'
+			? new ResizeObserver(updatePreviewScale)
+			: null;
+		previewResizeObserver?.observe(els.previewFrame);
+		window.addEventListener('resize', updatePreviewScale);
+
+		document.getElementById('resetPreview').addEventListener('click', () => {
+			/* Scroll state is controlled by the timeline. */
+			controls.scrollSim.value = 0;
+			updateAll();
+		});
+updateAll(); prototypeSaved=structuredClone(currentConfig); syncPrototype();
+
+function syncPrototype(){
+const active=document.getElementById('headerNavigationActive').checked; els.header.hidden=!active;
+const dirty=prototypeSaved && (JSON.stringify(currentConfig)!==JSON.stringify(prototypeSaved)||active!==prototypeActive);
+document.getElementById('saveHeaderNavigation').disabled=!dirty;
+document.getElementById('discardPrototype').disabled=!dirty;
+setSaveStatus(dirty?'changed':'ready',dirty?'Perubahan belum disimpan':'Draft contoh · tidak ada perubahan tertunda');
+editor.querySelectorAll('.segmented button').forEach(b=>b.setAttribute('aria-pressed',String(b.classList.contains('is-active'))));
+editor.querySelectorAll('[data-scroll-preset]').forEach(b=>b.disabled=!scrollEffectsEnabled());
+document.getElementById('scrollHelp').textContent=scrollEffectsEnabled()?'Geser timeline untuk menguji perubahan header.':'Pilih Fixed/Sticky dan aktifkan animasi scroll pada tab Advanced.';
+editor.querySelectorAll('[data-color-for]').forEach(p=>{const input=document.getElementById(p.dataset.colorFor);p.disabled=input.disabled; if(/^#[0-9a-f]{6}/i.test(input.value))p.value=input.value.slice(0,7);});
+}
+document.getElementById('headerNavigationActive').addEventListener('change',syncPrototype);
+document.getElementById('discardPrototype').addEventListener('click',()=>{applyStoredConfig(structuredClone(prototypeSaved));document.getElementById('headerNavigationActive').checked=prototypeActive;updateAll();});
+editor.querySelectorAll('[data-coloris]').forEach(input=>{
+const row=document.createElement('div');row.className='color-picker-row';input.before(row);row.append(input);
+const picker=document.createElement('input');picker.type='color';picker.dataset.colorFor=input.id;picker.setAttribute('aria-label','Pilih warna '+input.id);row.prepend(picker);
+picker.addEventListener('input',()=>{input.value=picker.value;input.dispatchEvent(new Event('input',{bubbles:true}));});
+input.setAttribute('aria-label',input.closest('.link-color-field')?.querySelector('label')?.textContent || editor.querySelector('label[for="'+input.id+'"]')?.textContent || input.id);
+input.addEventListener('input',()=>{input.setCustomValidity(CSS.supports('color',input.value)?'':'Masukkan warna CSS yang valid.');});
+});
+els.headerInner.addEventListener('click',event=>{
+const link=event.target.closest('a');if(link){event.preventDefault();if(link.closest('.header-menu')){els.headerInner.querySelectorAll('.header-menu a').forEach(a=>a.classList.toggle('is-active',a===link));}}
+const hamburger=event.target.closest('.hamburger');if(hamburger){const open=els.deviceStage.classList.toggle('menu-open');hamburger.setAttribute('aria-expanded',String(open));}
+if(event.target.closest('.btn-demo'))document.getElementById('previewFeedback').textContent='Get started · contoh tombol frontend, tanpa navigasi keluar.';
+});
+editor.querySelectorAll('[role="tab"]').forEach((tab,index,tabs)=>tab.addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();const target=event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;tabs[target].focus();tabs[target].click();}));
+syncPrototype();
+
+})();</script>

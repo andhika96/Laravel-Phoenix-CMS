@@ -37,6 +37,7 @@
         $paginationStyle .= '--article-pagination-frame-border-width:'.data_get($paginationOptions, 'frame.border_width', '1px').';';
         $paginationStyle .= '--article-pagination-frame-radius:'.data_get($paginationOptions, 'frame.radius', '.75rem').';';
         $paginationStyle .= '--article-pagination-frame-background:'.data_get($paginationOptions, 'frame.background_color', '#ffffff').';';
+        $paginationStyle .= '--article-pagination-item-border-width:'.data_get($paginationOptions, 'item_border_width', '1px').';';
         $paginationStyle .= '--article-pagination-item-radius:'.data_get($paginationOptions, 'item_radius', '0.45rem').';';
         $paginationStyle .= '--article-pagination-item-gap:'.data_get($paginationOptions, 'item_gap', '0.45rem').';';
         foreach ([

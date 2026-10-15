@@ -39,10 +39,10 @@
                             <article class="article-reading-list__item">
                                 @include('article.templates.partials.media-link', ['href' => route('cms.core.article.detail', $article->uri), 'class' => 'article-reading-list__media', 'mediaUrl' => $thumbnailUrl, 'title' => $article->title])
                                 <div class="article-reading-list__body">
-                                    <div class="article-meta"><span>{{ $article->category?->name ?? t('Uncategorized') }}</span><span>{{ optional($article->created_at)->format('d M Y') }}</span><span>{{ $readingMinutes }} {{ t('min read') }}</span></div>
+                                    <div class="article-meta">@if (data_get($templateOptions, 'display.category', true))<span>{{ $article->category?->name ?? t('Uncategorized') }}</span>@endif @if (data_get($templateOptions, 'display.date', true))<span>{{ optional($article->created_at)->format('d M Y') }}</span>@endif @if (data_get($templateOptions, 'display.reading_time', true))<span>{{ $readingMinutes }} {{ t('min read') }}</span>@endif</div>
                                     @include('article.templates.partials.archive-title')
-                                    <p class="article-excerpt-clamp">{{ \Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 180) }}</p>
-                                    <a class="article-text-link article-reading-list__read-link" href="{{ route('cms.core.article.detail', $article->uri) }}">{{ t('Read more') }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                                    @if (data_get($templateOptions, 'display.excerpt', true))<p class="article-excerpt-clamp">{{ \Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 180) }}</p>@endif
+                                    @if (data_get($templateOptions, 'display.read_more', true))<a class="article-text-link article-reading-list__read-link" href="{{ route('cms.core.article.detail', $article->uri) }}">{{ t('Read more') }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>@endif
                                 </div>
                             </article>
                         @empty

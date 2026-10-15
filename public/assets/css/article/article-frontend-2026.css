@@ -3433,3 +3433,8 @@ body .article-detail .article-detail-navigation__item:focus-visible {
     font-size: var(--ph-mobile-content-heading-size, 1.2em);
   }
 }
+
+/* Shared SSR and Vue pagination border setting. */
+.article-pagination .ph-pagination .page-link { border-width: var(--article-pagination-item-border-width, 1px); }
+.article-pagination.article-pagination--model-boxed .ph-pagination .page-link,
+.article-pagination.article-pagination--model-soft .ph-pagination .page-link { border-width: var(--article-pagination-item-border-width, 1px); }

@@ -1,0 +1,28 @@
+{
+  "result": "passed",
+  "checked": [
+    "headerHeight",
+    "headerRadiusTop",
+    "headerRadiusRight",
+    "headerRadiusBottom",
+    "headerRadiusLeft",
+    "headerPaddingTop",
+    "headerPaddingRight",
+    "headerPaddingBottom",
+    "headerPaddingLeft",
+    "navRadiusTop",
+    "navRadiusRight",
+    "navRadiusBottom",
+    "navRadiusLeft",
+    "containerMarginTop",
+    "containerMarginRight",
+    "containerMarginBottom",
+    "containerMarginLeft",
+    "linkShadowX",
+    "linkShadowY",
+    "linkShadowBlur",
+    "linkShadowSpread"
+  ],
+  "units": 6,
+  "productionSaved": false
+}

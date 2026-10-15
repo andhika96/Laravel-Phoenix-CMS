@@ -1,0 +1,91 @@
+(() => {
+    const root = document.getElementById('headerNavigationEditor');
+    if (!root?.classList.contains('header-navigation-fullscreen')) return;
+
+    // Escape the theme's scroll/transform containers while inheriting its font and color tokens.
+    document.body.append(root);
+    document.body.classList.add('header-editor-open');
+    const themeShell = [...document.body.children].filter(element => element !== root && !['SCRIPT', 'STYLE', 'LINK'].includes(element.tagName) && !element.id.startsWith('clr-'));
+    themeShell.forEach(element => { element.inert = true; });
+
+    const configOutput = root.querySelector('#jsonOutput');
+    const active = root.querySelector('#headerNavigationActive');
+    const saveButton = root.querySelector('#saveHeaderNavigation');
+    const dialog = root.querySelector('#headerEditorExitDialog');
+    let destination = root.querySelector('[data-header-editor-exit]').href;
+    let leaving = false;
+
+    function comparable(payload) {
+        const config = structuredClone(payload.config_json);
+        // Device selection and effective box values are preview metadata, not edits.
+        for (const box of Object.values(config.sizing || {})) {
+            if (box && typeof box === 'object' && box.responsive) {
+                for (const key of ['mode', 'preview_device', 'top', 'right', 'bottom', 'left', 'unit', 'linked']) delete box[key];
+            }
+        }
+        delete config.layout.left_menu_count;
+        delete config.layout.right_menu_count;
+        return JSON.stringify({ is_active: payload.is_active, config_json: config });
+    }
+    function snapshot() {
+        return comparable({ is_active: active.checked, config_json: JSON.parse(configOutput.textContent) });
+    }
+    let saved = snapshot();
+    const isDirty = () => snapshot() !== saved;
+    root.addEventListener('header-navigation:saved', event => { saved = comparable(event.detail); });
+    root.querySelectorAll('[data-header-editor-exit]').forEach(link => {
+        link.addEventListener('click', event => {
+            if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+            event.preventDefault();
+            if (saveButton.disabled) return;
+            destination = link.href;
+            if (isDirty()) dialog.showModal();
+            else { leaving = true; location.assign(destination); }
+        });
+    });
+    root.querySelector('#headerEditorKeepEditing').addEventListener('click', () => dialog.close());
+    root.querySelector('#headerEditorDiscard').addEventListener('click', () => { leaving = true; location.assign(destination); });
+    window.addEventListener('beforeunload', event => {
+        if (!leaving && isDirty()) { event.preventDefault(); event.returnValue = ''; }
+    });
+
+    const stage = root.querySelector('#deviceStage');
+    const frame = root.querySelector('#previewFrame');
+    const viewport = root.querySelector('#previewViewport');
+    const device = root.querySelector('#deviceMode');
+    const toolbar = root.querySelector('.preview-toolbar-actions');
+    const label = document.createElement('label');
+    label.className = 'header-preview-condition';
+    label.textContent = 'Preview';
+    const condition = document.createElement('select');
+    condition.id = 'headerPreviewCondition';
+    condition.className = 'form-select form-select-sm';
+    condition.setAttribute('aria-label', 'Preview scroll position');
+    condition.innerHTML = '<option value="0">Page top</option><option value="50">After scroll</option>';
+    label.append(condition);
+    toolbar.append(label);
+    condition.addEventListener('change', () => {
+        stage.scrollTop = (Number(condition.value) / 100) * (stage.scrollHeight - stage.clientHeight);
+    });
+    stage.addEventListener('scroll', () => { condition.value = stage.scrollTop > 32 ? '50' : '0'; }, { passive: true });
+
+    // Override the existing scaler: the scrollable stage must fit the visible editor area.
+    window.removeEventListener('resize', updatePreviewScale);
+    updatePreviewScale = function () {
+        const widths = { desktop: 1440, tablet: 820, mobile: 430 };
+        const width = widths[device.value] || widths.desktop;
+        if (!frame.clientWidth || !frame.clientHeight) return;
+        const scale = Math.min(1, frame.clientWidth / width);
+        viewport.style.width = `${width}px`;
+        viewport.style.height = `${frame.clientHeight / scale}px`;
+        viewport.style.left = `${Math.max(0, (frame.clientWidth - width * scale) / 2)}px`;
+        viewport.style.top = '0';
+        viewport.style.setProperty('--preview-scale', scale.toFixed(4));
+        root.querySelector('#previewScaleStatus').textContent = `${device.options[device.selectedIndex].text} · ${width}px · Fit ${Math.round(scale * 100)}%`;
+    };
+    new ResizeObserver(updatePreviewScale).observe(frame);
+    window.addEventListener('resize', updatePreviewScale);
+    // The original observer holds the original scaler; keep it from overwriting this shell's viewport.
+    previewResizeObserver?.disconnect();
+    updatePreviewScale();
+})();

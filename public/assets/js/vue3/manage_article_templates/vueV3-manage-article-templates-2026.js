@@ -247,6 +247,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 			const isArchive = this.surface === 'archive';
 			const isMinimal = isArchive && this.activeTemplateKey === 'minimal-reading-list';
 			const sections = [{ key: 'header', label: 'Header content', icon: 'fa-align-left' }];
+            if (!isArchive || ['minimal-reading-list', 'editorial-journal', 'mosaic-magazine'].includes(this.activeTemplateKey)) sections.push({ key: 'display', label: 'Visible elements', icon: 'fa-eye' });
 
 			if (isArchive) sections.push({ key: 'toolbar', label: 'Archive toolbar', icon: 'fa-sliders-h' });
 			if (isMinimal && options.post_list) sections.push({ key: 'post-list', label: 'Post list', icon: 'fa-list-ul' });
@@ -298,6 +299,8 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 	methods: {
 		prepareTemplateOptions(value, surface) {
 			const options = value && typeof value === 'object' ? value : {};
+            options.display = options.display || {};
+            for (const field of ['category', 'date', 'author', 'reading_time', 'excerpt', 'read_more', 'navigation']) if (typeof options.display[field] !== 'boolean') options.display[field] = true;
 			const ensureFrame = (frame, enabled = false) => {
 				const target = frame && typeof frame === 'object' ? frame : {};
 				if (typeof target.enabled !== 'boolean') target.enabled = enabled;
@@ -891,7 +894,11 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 		closeTemplateOptions() {
 			if (this.optionsModal?.dirty) {
 				this.optionsModal.dismissOpen = true;
-				this.showNotice('warning', 'You have unsaved changes. Keep editing or discard them.');
+				this.$nextTick(() => {
+					const toast = document.getElementById('article-template-notice');
+					if (toast && typeof bootstrap !== 'undefined') bootstrap.Toast.getInstance(toast)?.hide();
+					this.$refs.discardDialog?.showModal();
+				});
 				return;
 			}
 
@@ -902,8 +909,10 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 		},
 		keepEditing() {
 			if (this.optionsModal) this.optionsModal.dismissOpen = false;
+			this.$refs.discardDialog?.close();
 		},
 		discardTemplateOptions() {
+			this.$refs.discardDialog?.close();
 			const modal = document.getElementById('modalArticleTemplateOptions');
 			if (modal && typeof bootstrap !== 'undefined') {
 				bootstrap.Modal.getOrCreateInstance(modal).hide();

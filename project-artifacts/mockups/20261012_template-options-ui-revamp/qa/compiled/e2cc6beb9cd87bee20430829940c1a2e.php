@@ -1,4 +1,4 @@
-<?php if(($previousArticle ?? null) || ($nextArticle ?? null)): ?>
+<?php if(data_get($templateOptions ?? [], 'display.navigation', true) && (($previousArticle ?? null) || ($nextArticle ?? null))): ?>
     <nav class="article-detail-navigation" aria-label="<?php echo e(t('Article navigation')); ?>">
         <?php if($previousArticle ?? null): ?>
             <a class="article-detail-navigation__item article-detail-navigation__item--previous" href="<?php echo e(route('cms.core.article.detail', $previousArticle->uri)); ?>">

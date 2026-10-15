@@ -1,0 +1,14 @@
+{
+  "result": "passed",
+  "checks": [
+    "header text custom color",
+    "normal link custom color",
+    "hover contrast text",
+    "focus contrast text",
+    "active contrast text",
+    "transparent custom text",
+    "scrolled restores normal text",
+    "CMS back link unchanged"
+  ],
+  "productionSettingsSaved": false
+}

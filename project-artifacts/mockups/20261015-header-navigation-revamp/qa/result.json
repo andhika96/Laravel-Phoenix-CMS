@@ -1,0 +1,25 @@
+{
+  "result": "passed",
+  "widths": [
+    1024,
+    768,
+    430,
+    320
+  ],
+  "checks": [
+    "responsive values",
+    "mobile menu",
+    "discard",
+    "live color",
+    "save session",
+    "scroll behavior",
+    "enabled toggle",
+    "no horizontal overflow",
+    "no page errors"
+  ],
+  "limits": [
+    "sample data",
+    "no CMS persistence",
+    "adaptive preview rather than exact production viewport"
+  ]
+}

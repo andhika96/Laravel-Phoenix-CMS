@@ -1,0 +1,535 @@
+{
+  "authenticated": true,
+  "url": "https://laravel-13-phoenix.aruna/awesome_admin/header-navigation",
+  "liveFieldCount": 50,
+  "prototypeFieldCount": 51,
+  "missingFields": [],
+  "differingOptions": [],
+  "differingGroups": [],
+  "missingLinked": [],
+  "missingResponsive": [],
+  "liveTypography": {
+    "font": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+    "bodyFont": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+    "size": "13px"
+  },
+  "live": {
+    "fields": [
+      {
+        "id": "headerNavigationActive",
+        "tag": "INPUT",
+        "type": "checkbox",
+        "label": "Active on frontend"
+      },
+      {
+        "id": "deviceMode",
+        "tag": "SELECT",
+        "type": "select-one",
+        "options": [
+          {
+            "value": "desktop",
+            "text": "Desktop"
+          },
+          {
+            "value": "tablet",
+            "text": "Tablet"
+          },
+          {
+            "value": "mobile",
+            "text": "Mobile"
+          }
+        ],
+        "label": "Device"
+      },
+      {
+        "id": "innerBg",
+        "tag": "INPUT",
+        "type": "checkbox",
+        "label": "Background mengikuti container"
+      },
+      {
+        "id": "headerHeight",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Height"
+      },
+      {
+        "id": "headerHeightUnit",
+        "tag": "SELECT",
+        "type": "select-one",
+        "options": [
+          {
+            "value": "px",
+            "text": "px"
+          },
+          {
+            "value": "em",
+            "text": "em"
+          },
+          {
+            "value": "rem",
+            "text": "rem"
+          },
+          {
+            "value": "pt",
+            "text": "pt"
+          },
+          {
+            "value": "%",
+            "text": "%"
+          }
+        ],
+        "label": null
+      },
+      {
+        "id": "headerRadiusUnit",
+        "tag": "SELECT",
+        "type": "select-one",
+        "options": [
+          {
+            "value": "px",
+            "text": "px"
+          },
+          {
+            "value": "%",
+            "text": "%"
+          },
+          {
+            "value": "em",
+            "text": "em"
+          },
+          {
+            "value": "rem",
+            "text": "rem"
+          },
+          {
+            "value": "pt",
+            "text": "pt"
+          }
+        ],
+        "label": null
+      },
+      {
+        "id": "headerRadiusTop",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Top"
+      },
+      {
+        "id": "headerRadiusRight",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Right"
+      },
+      {
+        "id": "headerRadiusBottom",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Bottom"
+      },
+      {
+        "id": "headerRadiusLeft",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Left"
+      },
+      {
+        "id": "headerPaddingUnit",
+        "tag": "SELECT",
+        "type": "select-one",
+        "options": [
+          {
+            "value": "px",
+            "text": "px"
+          },
+          {
+            "value": "%",
+            "text": "%"
+          },
+          {
+            "value": "em",
+            "text": "em"
+          },
+          {
+            "value": "rem",
+            "text": "rem"
+          },
+          {
+            "value": "pt",
+            "text": "pt"
+          }
+        ],
+        "label": null
+      },
+      {
+        "id": "headerPaddingTop",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Top"
+      },
+      {
+        "id": "headerPaddingRight",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Right"
+      },
+      {
+        "id": "headerPaddingBottom",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Bottom"
+      },
+      {
+        "id": "headerPaddingLeft",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Left"
+      },
+      {
+        "id": "navRadiusUnit",
+        "tag": "SELECT",
+        "type": "select-one",
+        "options": [
+          {
+            "value": "px",
+            "text": "px"
+          },
+          {
+            "value": "%",
+            "text": "%"
+          },
+          {
+            "value": "em",
+            "text": "em"
+          },
+          {
+            "value": "rem",
+            "text": "rem"
+          },
+          {
+            "value": "pt",
+            "text": "pt"
+          }
+        ],
+        "label": null
+      },
+      {
+        "id": "navRadiusTop",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Top Left"
+      },
+      {
+        "id": "navRadiusRight",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Top Right"
+      },
+      {
+        "id": "navRadiusBottom",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Bottom Right"
+      },
+      {
+        "id": "navRadiusLeft",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Bottom Left"
+      },
+      {
+        "id": "containerMarginUnit",
+        "tag": "SELECT",
+        "type": "select-one",
+        "options": [
+          {
+            "value": "px",
+            "text": "px"
+          },
+          {
+            "value": "%",
+            "text": "%"
+          },
+          {
+            "value": "em",
+            "text": "em"
+          },
+          {
+            "value": "rem",
+            "text": "rem"
+          },
+          {
+            "value": "pt",
+            "text": "pt"
+          }
+        ],
+        "label": null
+      },
+      {
+        "id": "containerMarginTop",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Top"
+      },
+      {
+        "id": "containerMarginRight",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Right"
+      },
+      {
+        "id": "containerMarginBottom",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Bottom"
+      },
+      {
+        "id": "containerMarginLeft",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Left"
+      },
+      {
+        "id": "headerBg",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Header background"
+      },
+      {
+        "id": "scrolledBg",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Scrolled background"
+      },
+      {
+        "id": "headerText",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Header text"
+      },
+      {
+        "id": "linkColor",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Link"
+      },
+      {
+        "id": "linkActive",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Active link color"
+      },
+      {
+        "id": "linkActiveBorder",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Active border color"
+      },
+      {
+        "id": "linkHover",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Hover link color"
+      },
+      {
+        "id": "linkHoverBorder",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Hover border color"
+      },
+      {
+        "id": "linkFocus",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Focus link color"
+      },
+      {
+        "id": "linkFocusBorder",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Focus border color"
+      },
+      {
+        "id": "linkShadowEnabled",
+        "tag": "INPUT",
+        "type": "checkbox",
+        "label": "Link shadow"
+      },
+      {
+        "id": "linkShadowUnit",
+        "tag": "SELECT",
+        "type": "select-one",
+        "options": [
+          {
+            "value": "px",
+            "text": "px"
+          },
+          {
+            "value": "em",
+            "text": "em"
+          },
+          {
+            "value": "rem",
+            "text": "rem"
+          },
+          {
+            "value": "pt",
+            "text": "pt"
+          }
+        ],
+        "label": null
+      },
+      {
+        "id": "linkShadowX",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "X"
+      },
+      {
+        "id": "linkShadowY",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Y"
+      },
+      {
+        "id": "linkShadowBlur",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Blur"
+      },
+      {
+        "id": "linkShadowSpread",
+        "tag": "INPUT",
+        "type": "number",
+        "label": "Spread"
+      },
+      {
+        "id": "linkShadowColor",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Shadow color"
+      },
+      {
+        "id": "linkShadowInset",
+        "tag": "INPUT",
+        "type": "checkbox",
+        "label": "Inset"
+      },
+      {
+        "id": "transparentStart",
+        "tag": "INPUT",
+        "type": "checkbox",
+        "label": "Transparent sebelum discroll"
+      },
+      {
+        "id": "transparentText",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Text/link"
+      },
+      {
+        "id": "transparentHover",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Hover"
+      },
+      {
+        "id": "transparentFocus",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Focus"
+      },
+      {
+        "id": "transparentActive",
+        "tag": "INPUT",
+        "type": "text",
+        "label": "Active"
+      },
+      {
+        "id": "animateScroll",
+        "tag": "INPUT",
+        "type": "checkbox",
+        "label": "Animasi berubah saat discroll"
+      },
+      {
+        "id": "scrollSim",
+        "tag": "INPUT",
+        "type": "range",
+        "label": null
+      }
+    ],
+    "groups": [
+      {
+        "name": "logoPosition",
+        "values": [
+          "left",
+          "center",
+          "right"
+        ]
+      },
+      {
+        "name": "menuPosition",
+        "values": [
+          "left",
+          "center",
+          "right"
+        ]
+      },
+      {
+        "name": "containerMode",
+        "values": [
+          "container",
+          "fluid"
+        ]
+      },
+      {
+        "name": "linkShape",
+        "values": [
+          "default",
+          "leaf"
+        ]
+      },
+      {
+        "name": "leafDirection",
+        "values": [
+          "forward",
+          "reverse"
+        ]
+      },
+      {
+        "name": "headerBehavior",
+        "values": [
+          "fixed",
+          "sticky",
+          "stay"
+        ]
+      },
+      {
+        "name": "transparentColorMode",
+        "values": [
+          "auto",
+          "custom"
+        ]
+      }
+    ],
+    "linked": [
+      "headerRadiusLinked",
+      "headerPaddingLinked",
+      "navRadiusLinked",
+      "containerMarginLinked",
+      "linkActiveBorderLinked",
+      "linkHoverBorderLinked",
+      "linkFocusBorderLinked"
+    ],
+    "responsive": [
+      "headerRadius",
+      "headerPadding",
+      "navRadius",
+      "containerMargin"
+    ],
+    "font": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+    "bodyFont": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+    "bodyFontSize": "13px"
+  },
+  "scope": "Read-only form inspection; no settings save or reset invoked."
+}

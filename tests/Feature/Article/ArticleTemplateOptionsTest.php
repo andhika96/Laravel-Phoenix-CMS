@@ -173,7 +173,13 @@ class ArticleTemplateOptionsTest extends TestCase
 
         $defaults = $options->archive('minimal-reading-list')['pagination'];
 
-        $this->assertSame('boxed', $defaults['type']);
+        $this->assertSame('soft', $defaults['type']);
+        $this->assertSame('0px', $defaults['item_border_width']);
+        $this->assertSame('0px', $defaults['item_radius']);
+        $this->assertSame('rgba(0,0,0,0)', $defaults['item_border_color']);
+        $this->assertFalse($defaults['frame']['enabled']);
+        $this->assertSame('0px', $defaults['frame']['border_width']);
+        $this->assertSame('0px', $defaults['frame']['radius']);
         $this->assertSame(['desktop' => 3, 'tablet' => 3, 'mobile' => 2], $defaults['range']);
 
         $custom = $options->archive('minimal-reading-list', [

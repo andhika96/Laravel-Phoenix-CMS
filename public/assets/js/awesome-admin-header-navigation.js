@@ -1413,6 +1413,7 @@ const editor = document.getElementById('headerNavigationEditor');
 			button.disabled = true;
 			button.innerHTML = '<i class="fas fa-circle-notch fa-spin me-1"></i> Saving';
 			setSaveStatus('saving', 'Saving changes');
+			const savedPayload = { is_active: active.checked, config_json: currentConfig };
 
 			try {
 				const response = await fetch(editorOptions.updateUrl, {
@@ -1422,10 +1423,7 @@ const editor = document.getElementById('headerNavigationEditor');
 						'Content-Type': 'application/json',
 						'X-CSRF-TOKEN': editorOptions.csrfToken
 					},
-					body: JSON.stringify({
-						is_active: active.checked,
-						config_json: currentConfig
-					})
+					body: JSON.stringify(savedPayload)
 				});
 				const json = await response.json();
 				if (!response.ok || !json.success) {
@@ -1433,6 +1431,7 @@ const editor = document.getElementById('headerNavigationEditor');
 					throw new Error(message || 'Unable to save header navigation settings');
 				}
 				setSaveStatus('success', 'Saved to database');
+				editor.dispatchEvent(new CustomEvent('header-navigation:saved', { detail: savedPayload }));
 			} catch (error) {
 				setSaveStatus('failed', error.message || 'Save failed');
 			} finally {

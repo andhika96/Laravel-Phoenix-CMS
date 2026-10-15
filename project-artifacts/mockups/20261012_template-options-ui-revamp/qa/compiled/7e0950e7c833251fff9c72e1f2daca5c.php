@@ -47,14 +47,14 @@
                 <?php ($leadThumbnailUrl = $lead->thumb_l && Storage::disk('public')->exists($lead->thumb_l) ? Storage::url($lead->thumb_l) : asset('assets/images/article/article-image-placeholder.svg')); ?>
                 <article class="article-editorial-lead article-editorial-lead--<?php echo e($dividerEnabled ? 'with' : 'without'); ?>-divider">
                     <div class="article-editorial-lead__body">
-                        <span class="article-chip"><?php echo e($lead->category?->name ?? t('Uncategorized')); ?></span>
+                        <?php if(data_get($templateOptions, 'display.category', true)): ?><span class="article-chip"><?php echo e($lead->category?->name ?? t('Uncategorized')); ?></span><?php endif; ?>
                         <?php ($article = $lead); ?>
                         <?php echo $__env->make('article.templates.partials.archive-title', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-                        <p class="article-excerpt-clamp"><?php echo e(\Illuminate\Support\Str::limit(trim(strip_tags((string) $lead->content)), 220)); ?></p>
+                        <?php if(data_get($templateOptions, 'display.excerpt', true)): ?><p class="article-excerpt-clamp"><?php echo e(\Illuminate\Support\Str::limit(trim(strip_tags((string) $lead->content)), 220)); ?></p><?php endif; ?>
                         <?php if($readMoreEnabled): ?>
-                            <a class="article-text-link <?php echo e($readMoreClass); ?>" href="<?php echo e(route('cms.core.article.detail', $lead->uri)); ?>"><?php echo e(t('Read more')); ?> <i class="<?php echo e($readMoreIcon); ?>" aria-hidden="true"></i></a>
+                            <?php if(data_get($templateOptions, 'display.read_more', true)): ?><a class="article-text-link <?php echo e($readMoreClass); ?>" href="<?php echo e(route('cms.core.article.detail', $lead->uri)); ?>"><?php echo e(t('Read more')); ?> <i class="<?php echo e($readMoreIcon); ?>" aria-hidden="true"></i></a><?php endif; ?>
                         <?php else: ?>
-                            <a class="article-text-link" href="<?php echo e(route('cms.core.article.detail', $lead->uri)); ?>"><?php echo e(t('Read article')); ?> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                            <?php if(data_get($templateOptions, 'display.read_more', true)): ?><a class="article-text-link" href="<?php echo e(route('cms.core.article.detail', $lead->uri)); ?>"><?php echo e(t('Read article')); ?> <i class="fas fa-arrow-right" aria-hidden="true"></i></a><?php endif; ?>
                         <?php endif; ?>
                     </div>
                     <?php echo $__env->make('article.templates.partials.media-link', ['href' => route('cms.core.article.detail', $lead->uri), 'class' => 'article-editorial-lead__media', 'mediaUrl' => $leadThumbnailUrl, 'title' => $lead->title], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
@@ -70,12 +70,12 @@
                     <article class="<?php echo e($cardClass); ?>" style="<?php echo e($cardStyle); ?>">
                         <?php echo $__env->make('article.templates.partials.media-link', ['href' => route('cms.core.article.detail', $article->uri), 'class' => 'article-editorial-card__media', 'mediaUrl' => $thumbnailUrl, 'title' => $article->title], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                         <div class="article-editorial-card__body">
-                            <span class="article-chip"><?php echo e($article->category?->name ?? t('Uncategorized')); ?></span>
+                            <?php if(data_get($templateOptions, 'display.category', true)): ?><span class="article-chip"><?php echo e($article->category?->name ?? t('Uncategorized')); ?></span><?php endif; ?>
                             <?php echo $__env->make('article.templates.partials.archive-title', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-                            <p class="article-excerpt-clamp"><?php echo e(\Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 120)); ?></p>
-                            <small><?php echo e(optional($article->created_at)->format('d M Y')); ?></small>
+                            <?php if(data_get($templateOptions, 'display.excerpt', true)): ?><p class="article-excerpt-clamp"><?php echo e(\Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 120)); ?></p><?php endif; ?>
+                            <?php if(data_get($templateOptions, 'display.date', true)): ?><small><?php echo e(optional($article->created_at)->format('d M Y')); ?></small><?php endif; ?>
                             <?php if($readMoreEnabled): ?>
-                                <a class="article-text-link <?php echo e($readMoreClass); ?>" href="<?php echo e(route('cms.core.article.detail', $article->uri)); ?>"><?php echo e(t('Read more')); ?> <i class="<?php echo e($readMoreIcon); ?>" aria-hidden="true"></i></a>
+                                <?php if(data_get($templateOptions, 'display.read_more', true)): ?><a class="article-text-link <?php echo e($readMoreClass); ?>" href="<?php echo e(route('cms.core.article.detail', $article->uri)); ?>"><?php echo e(t('Read more')); ?> <i class="<?php echo e($readMoreIcon); ?>" aria-hidden="true"></i></a><?php endif; ?>
                             <?php endif; ?>
                         </div>
                     </article>

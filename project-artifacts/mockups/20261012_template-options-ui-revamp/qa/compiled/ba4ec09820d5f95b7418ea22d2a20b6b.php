@@ -47,9 +47,9 @@
                 <small><?php echo e(t('Set the regular grid columns in Grid columns. Set regular thumbnail height and fit in Thumbnail.')); ?></small>
             </fieldset>
             <fieldset class="article-template-editorial-journal-group">
-                <legend><?php echo e(t('Story details')); ?></legend>
+                <legend><?php echo e(t('Story details · metadata')); ?></legend>
                 <?php if($layoutTemplate === 'mosaic-classic'): ?>
-                    <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.mosaic_classic.show_author"><span class="form-check-label"><?php echo e(t('Show author')); ?></span></label>
+                    <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.mosaic_classic.show_author"><span class="form-check-label"><?php echo e(t('Show author / editor')); ?></span></label>
                     <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.mosaic_classic.show_reading_time"><span class="form-check-label"><?php echo e(t('Show reading time')); ?></span></label>
                 <?php endif; ?>
                 <?php $__currentLoopData = ['show_category' => 'Show category', 'show_excerpt' => 'Show excerpt', 'show_date' => 'Show date', 'show_read_more' => 'Show Read article link']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $field => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
