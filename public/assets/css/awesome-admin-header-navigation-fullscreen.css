@@ -14,7 +14,7 @@ body.header-editor-open { overflow: hidden !important; }
 #headerNavigationEditor.header-navigation-fullscreen > main { display: flex; flex-direction: column; height: 100%; min-height: 0; padding: 0; }
 #headerNavigationEditor.header-navigation-fullscreen [hidden] { display: none !important; }
 #headerNavigationEditor.header-navigation-fullscreen .header-editor-topbar {
-    flex: 0 0 auto; margin: 0 !important; padding: 10px 20px !important; border: 0; border-bottom: 1px solid var(--editor-border);
+    flex: 0 0 auto; margin: 0 !important; padding: 10px 20px !important; border: 0 !important; border-bottom: 1px solid var(--editor-border) !important;
     border-radius: 0 !important; box-shadow: none; background: #fff;
 }
 #headerNavigationEditor.header-navigation-fullscreen .mock-topbar { display: flex; align-items: center; gap: 20px; min-height: 32px; }

@@ -1,0 +1,6 @@
+### Result
+[{"width":1440,"bottom":0.666667,"style":"solid","otherBorders":["0px","0px","0px"],"sidebarExtra":"0px","previewExtra":"0px"},{"width":430,"bottom":0.666667,"style":"solid","otherBorders":["0px","0px","0px"],"sidebarExtra":"0px","previewExtra":"0px"}]
+### Ran Playwright code
+```js
+await (async page=>{await page.goto('https://laravel-13-phoenix.aruna/awesome_admin/header-navigation');await page.locator('.header-settings-tabbed').waitFor();const results=[];for(const width of [1440,430]){await page.setViewportSize({width,height:900});const s=await page.evaluate(()=>{const get=q=>getComputedStyle(document.querySelector(q));const t=get('.header-editor-topbar');return {bottom:parseFloat(t.borderBottomWidth),style:t.borderBottomStyle,otherBorders:[t.borderTopWidth,t.borderLeftWidth,t.borderRightWidth],sidebarExtra:get('.inspector-shell').borderRightWidth,previewExtra:get('.preview-card').borderLeftWidth};});if(!(s.bottom>0&&s.bottom<=1&&s.style==='solid'&&s.otherBorders.every(b=>b==='0px')&&s.sidebarExtra==='0px'&&s.previewExtra==='0px'))throw new Error('Border regression');results.push({width,...s});}await page.setViewportSize({width:1440,height:900});return results;})(page);
+```
