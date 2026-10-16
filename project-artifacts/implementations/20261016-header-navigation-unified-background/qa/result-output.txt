@@ -1,0 +1,35 @@
+### Result
+{"checks":["Single shared forest background desktop","Hero has no separate overlay desktop","Container background stays inside header desktop","Full-width background retained desktop","Single shared forest background tablet","Hero has no separate overlay tablet","Container background stays inside header tablet","Full-width background retained tablet","Single shared forest background mobile","Hero has no separate overlay mobile","Container background stays inside header mobile","Full-width background retained mobile","Transparent header uses same shared background","Scrolled state remains functional","Reset restores page top","Saved configuration unchanged"],"productionSettingsSaved":false}
+### Ran Playwright code
+```js
+await (async page => {
+    const checks=[];const check=(ok,msg)=>{if(!ok)throw new Error(msg);checks.push(msg);};
+    page.removeAllListeners('dialog');page.on('dialog',d=>d.type()==='beforeunload'?d.accept():d.dismiss());
+    await page.setViewportSize({width:1440,height:900});await page.goto('https://laravel-13-phoenix.aruna/awesome_admin/header-navigation');await page.locator('.header-settings-tabbed').waitFor();
+    const initial=await page.locator('#jsonOutput').textContent();
+    const settle=()=>page.locator('#siteHeader').evaluate(async e=>{await Promise.all(e.getAnimations({subtree:true}).map(a=>a.finished.catch(()=>{})));});
+    await page.locator('.preview-feature img').evaluate(img=>img.decode());
+    await page.locator('[data-inspector-tab=layout]').click();
+    for(const device of ['desktop','tablet','mobile']){
+        await page.locator('[data-preview-device='+device+']').click();await page.locator('#innerBg').check();
+        await settle();
+        const styles=await page.evaluate(()=>{const css=s=>getComputedStyle(document.querySelector(s));return {stage:css('#deviceStage').backgroundImage,heroImage:css('.hero-copy').backgroundImage,heroColor:css('.hero-copy').backgroundColor,outer:css('#siteHeader').backgroundColor,inner:css('#headerContainer').backgroundColor,expected:css('#headerNavigationEditor').getPropertyValue('--header-bg').trim()};});
+        check(styles.stage.includes('linear-gradient(90deg')&&styles.stage.includes('trees-on-forest'),'Single shared forest background '+device);
+        check(styles.heroImage==='none'&&styles.heroColor==='rgba(0, 0, 0, 0)','Hero has no separate overlay '+device);
+        check(styles.outer==='rgba(0, 0, 0, 0)'&&styles.inner!=='rgba(0, 0, 0, 0)','Container background stays inside header '+device);
+        await page.screenshot({path:'D:/Laragon/www/laravel-13-phoenix/project-artifacts/implementations/20261016-header-navigation-unified-background/qa/container-'+device+'.png'});
+        await page.locator('#innerBg').uncheck();
+        await settle();
+        check(await page.locator('#siteHeader').evaluate(e=>getComputedStyle(e).backgroundColor!=='rgba(0, 0, 0, 0)'),'Full-width background retained '+device);
+    }
+    await page.locator('[data-preview-device=desktop]').click();await page.locator('#innerBg').check();
+    await page.locator('[data-inspector-tab=advanced]').click();await page.locator('[data-control=headerBehavior] [data-value=sticky]').click();await page.locator('#animateScroll').check();await page.locator('#transparentStart').check();
+    await settle();
+    check(await page.locator('#headerContainer').evaluate(e=>getComputedStyle(e).backgroundColor==='rgba(0, 0, 0, 0)'),'Transparent header uses same shared background');
+    await page.locator('.header-preview-options > summary').click();await page.locator('#headerPreviewCondition').selectOption('50');await page.waitForFunction(()=>document.querySelector('#siteHeader').classList.contains('is-scrolled'));
+    check(true,'Scrolled state remains functional');await page.locator('#resetPreview').click();await page.waitForFunction(()=>document.querySelector('#deviceStage').scrollTop===0);check(true,'Reset restores page top');
+    await page.goto('https://laravel-13-phoenix.aruna/awesome_admin/header-navigation');await page.locator('.header-settings-tabbed').waitFor();check(await page.locator('#jsonOutput').textContent()===initial,'Saved configuration unchanged');
+    return {checks,productionSettingsSaved:false};
+}
+)(page);
+```

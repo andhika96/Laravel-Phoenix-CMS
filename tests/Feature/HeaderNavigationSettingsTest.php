@@ -381,8 +381,8 @@ class HeaderNavigationSettingsTest extends TestCase
 
 		foreach ([
 			'layout' => ['Preview', 'Layout', 'Sizing'],
-			'style' => ['Colors', 'Effects'],
-			'advanced' => ['Behavior', 'Config Preview'],
+			'style' => ['Colors', 'Link shadow'],
+			'advanced' => ['Behavior', 'Configuration'],
 		] as $panelName => $labels)
 		{
 			$panels = $xpath->query('//*[@data-inspector-panel="'.$panelName.'"]');
@@ -391,9 +391,15 @@ class HeaderNavigationSettingsTest extends TestCase
 
 			foreach ($labels as $label)
 			{
-				$this->assertStringContainsString("{{ t('".$label."') }}", $panelText);
+				$this->assertStringContainsString($label, $panelText);
 			}
 		}
+
+		foreach (['layout' => 'Layout', 'style' => 'Appearance', 'advanced' => 'Behavior'] as $tab => $label)
+		{
+			$this->assertSame($label, trim($xpath->query('//*[@data-inspector-tab="'.$tab.'"]')->item(0)->textContent));
+		}
+		$this->assertStringNotContainsString("{{ t('", $view);
 
 		foreach (['deviceMode', 'headerBg', 'linkActive', 'headerHeight', 'innerBg', 'jsonOutput'] as $id)
 		{

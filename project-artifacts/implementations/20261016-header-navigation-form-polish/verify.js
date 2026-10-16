@@ -1,0 +1,81 @@
+async page => {
+    const checks=[],measurements=[];
+    const check=(ok,message)=>{if(!ok)throw new Error(message);checks.push(message);};
+    page.setDefaultTimeout(8000);
+    page.removeAllListeners('dialog');page.on('dialog',d=>d.type()==='beforeunload'?d.accept():d.dismiss());
+    await page.emulateMedia({reducedMotion:'no-preference'});
+    await page.goto('https://laravel-13-phoenix.aruna/awesome_admin/header-navigation');
+    await page.locator('.header-settings-tabbed').waitFor();
+    const initial=await page.locator('#jsonOutput').textContent();
+    const settle=async locator=>locator.evaluate(async e=>{await Promise.all(e.getAnimations({subtree:true}).map(a=>a.finished.catch(()=>{})));});
+    for(const [tab,label] of [['layout','Sizing'],['style','Link shadow'],['advanced','Configuration']]){
+        await page.locator('[data-inspector-tab='+tab+']').click();
+        const summary=page.locator('summary').filter({hasText:label}),group=summary.locator('..');
+        const closed=(await group.boundingBox()).height;
+        await summary.click();
+        check(await group.evaluate(e=>e.getAnimations().length>0),'Opening animation '+label);
+        const mid=await group.evaluate(e=>{const a=e.getAnimations()[0];a.pause();a.currentTime=80;return e.getBoundingClientRect().height;});
+        await group.evaluate(e=>e.getAnimations()[0].finish());await settle(group);
+        const full=(await group.boundingBox()).height;
+        check(mid>closed&&mid<full,'Intermediate opening height '+label);
+        check(await group.getAttribute('open')!==null&&await summary.getAttribute('aria-expanded')==='true','Expanded semantics '+label);
+        await summary.click();check(await group.evaluate(e=>e.getAnimations().length>0),'Closing animation '+label);
+        await settle(group);
+        check(await group.getAttribute('open')===null&&Math.abs((await group.boundingBox()).height-closed)<2,'Closed height restored '+label);
+        await summary.focus();await page.keyboard.press('Enter');await settle(group);
+        check(await group.getAttribute('open')!==null,'Keyboard opens '+label);
+        await page.keyboard.press('Space');await settle(group);
+        check(await group.getAttribute('open')===null,'Keyboard closes '+label);
+        await summary.evaluate(e=>{e.click();e.click();e.click();});await settle(group);
+        check(await group.getAttribute('open')!==null&&await group.evaluate(e=>e.style.overflow===''),'Rapid clicks settle without clipping '+label);
+        await summary.click();await settle(group);
+        measurements.push({label,closed,mid,full});
+    }
+    check(await page.locator('#jsonOutput').textContent()===initial,'Disclosure does not change settings');
+    await page.emulateMedia({reducedMotion:'reduce'});
+    await page.locator('[data-inspector-tab=layout]').click();
+    const sizing=page.locator('summary').filter({hasText:'Sizing'}),sizingGroup=sizing.locator('..');
+    await sizing.click();
+    check(await sizingGroup.evaluate(e=>e.open&&e.getAnimations().length===0),'Reduced motion opens immediately');
+    const borderAudit=async()=>page.evaluate(()=>{
+        const root=document.querySelector('#headerNavigationEditor'),visible=e=>!!e.getBoundingClientRect().height;
+        const style=e=>{const s=getComputedStyle(e);return {id:e.id||e.className,border:parseFloat(s.borderTopWidth),radius:s.borderTopLeftRadius,shadow:s.boxShadow};};
+        return {
+            inner:[...root.querySelectorAll('.number-stepper input,.box-side-stepper input,.segmented button')].filter(visible).map(style),
+            outer:[...root.querySelectorAll('.number-stepper,.box-side-stepper,.segmented,.box-unit-select,.responsive-mode-trigger,.box-control-header>.box-link-toggle,.header-color-match,.coloris-field,#headerMenuState')].filter(visible).map(style),
+            swatches:[...root.querySelectorAll('.clr-field button')].filter(visible).map(style)
+        };
+    });
+    const audit=async label=>{const a=await borderAudit();check(a.inner.every(s=>s.border===0&&s.shadow==='none'),'No inner borders or shadows '+label);check(a.outer.every(s=>s.radius==='5px'),'Consistent 5px outer radius '+label);check(a.swatches.every(s=>s.shadow==='none'&&s.radius==='3px'),'Single swatch border '+label);};
+    await audit('layout');
+    await page.locator('#headerHeight').focus();await audit('focused height');
+    await page.locator('[data-responsive-control=headerRadius] [data-responsive-trigger]').click();
+    check(await page.locator('[data-responsive-control=headerRadius] .responsive-mode-option').evaluateAll(es=>es.every(e=>{const s=getComputedStyle(e);return s.borderTopWidth==='0px'&&s.borderRadius==='3px';})),'Responsive menu uses borderless inner options');
+    await page.keyboard.press('Escape');
+    await page.locator('#innerBg').focus();
+    check(await page.locator('#innerBg').evaluate(e=>{const s=getComputedStyle(e);return s.outlineStyle==='none'&&s.boxShadow==='none'&&s.filter!=='none';}),'Switch keyboard focus uses surface feedback without double ring');
+    await page.locator('[data-control=linkShape] [data-value=leaf]').click();await audit('leaf controls');
+    await page.locator('#containerMarginLeft').scrollIntoViewIfNeeded();await audit('all sizing controls');
+    await page.screenshot({path:'D:/Laragon/www/laravel-13-phoenix/project-artifacts/implementations/20261016-header-navigation-form-polish/qa/sizing.png'});
+    await page.locator('[data-inspector-tab=style]').click();
+    for(const state of ['normal','active','hover','focus']){await page.locator('#headerMenuState').selectOption(state);await audit('appearance '+state);}
+    await page.locator('summary').filter({hasText:'Link shadow'}).click();await page.locator('#linkShadowEnabled').check();await audit('shadow');
+    await page.locator('[data-inspector-tab=advanced]').click();await page.locator('[data-control=headerBehavior] [data-value=sticky]').click();await page.locator('#animateScroll').check();await page.locator('#transparentStart').check();await page.locator('[data-control=transparentColorMode] [data-value=custom]').click();await audit('transparent custom');
+    await page.locator('[data-inspector-tab=style]').click();
+    await page.locator('summary').filter({hasText:'Link shadow'}).click();
+    for(const width of [1440,1024,430]){
+        await page.setViewportSize({width,height:900});
+        for(const state of ['normal','active']){
+            await page.locator('#headerMenuState').selectOption(state);
+            const alignment=await page.evaluate(()=>{
+                const select=document.querySelector('#headerMenuState').getBoundingClientRect();
+                return [...document.querySelectorAll('.header-property-row input')].filter(e=>e.getBoundingClientRect().height).map(e=>{const r=e.getBoundingClientRect();return Math.abs(r.width-select.width)<1&&Math.abs(r.right-select.right)<1;});
+            });
+            check(alignment.every(Boolean),'Value widths and right edges align '+width+' '+state);
+        }
+    }
+    await page.setViewportSize({width:1440,height:900});await page.emulateMedia({reducedMotion:'no-preference'});
+    await page.goto('https://laravel-13-phoenix.aruna/awesome_admin/header-navigation');await page.locator('.header-settings-tabbed').waitFor();
+    await page.screenshot({path:'D:/Laragon/www/laravel-13-phoenix/project-artifacts/implementations/20261016-header-navigation-form-polish/qa/aligned-fields.png'});
+    return {checks,measurements,settingsSaved:false};
+}

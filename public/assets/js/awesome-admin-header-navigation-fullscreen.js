@@ -35,7 +35,16 @@
     }
     let saved = snapshot();
     const isDirty = () => snapshot() !== saved;
-    root.addEventListener('header-navigation:saved', event => { saved = comparable(event.detail); });
+    let wasDirty = false;
+    function refreshDirtyStatus() {
+        const dirty = isDirty();
+        if (dirty === wasDirty || saveButton.disabled) return;
+        wasDirty = dirty;
+        setSaveStatus(dirty ? 'changed' : 'success', dirty ? 'Unsaved changes' : 'All changes saved');
+    }
+    root.addEventListener('header-navigation:saved', event => { saved = comparable(event.detail); wasDirty = false; });
+    new MutationObserver(refreshDirtyStatus).observe(configOutput, { childList: true });
+    active.addEventListener('change', refreshDirtyStatus);
     root.querySelectorAll('[data-header-editor-exit]').forEach(link => {
         link.addEventListener('click', event => {
             if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
@@ -59,7 +68,7 @@
     const toolbar = root.querySelector('.preview-toolbar-actions');
     const label = document.createElement('label');
     label.className = 'header-preview-condition';
-    label.textContent = 'Preview';
+    label.textContent = 'Scroll position';
     const condition = document.createElement('select');
     condition.id = 'headerPreviewCondition';
     condition.className = 'form-select form-select-sm';
@@ -92,121 +101,177 @@
     previewResizeObserver?.disconnect();
     updatePreviewScale();
 
-    const inspector = root.querySelector('.inspector-content');
-    const directory = document.createElement('nav');
-    directory.className = 'header-settings-directory';
-    directory.setAttribute('aria-label', 'Header settings');
-    const detailHeading = document.createElement('div');
-    detailHeading.className = 'header-settings-detail-heading';
-    detailHeading.hidden = true;
-    const back = document.createElement('button');
-    back.type = 'button';
-    back.className = 'header-settings-detail-back';
-    back.innerHTML = '<i class="fas fa-arrow-left" aria-hidden="true"></i>';
-    back.setAttribute('aria-label', 'Back to all settings');
-    const title = document.createElement('strong');
-    detailHeading.append(back, title);
-    const deviceLabel = document.createElement('label');
-    deviceLabel.className = 'header-settings-device';
-    deviceLabel.append(document.createTextNode('Sedang mengatur'), device);
-    inspector.before(deviceLabel);
-    inspector.prepend(directory, detailHeading);
-    const groups = [...root.querySelectorAll('.header-setting-group')];
-    const entries = [
-        ['Posisi & susunan', 'Logo, menu, dan lebar header', 'fa-columns', 'logoPosition'],
-        ['Ukuran & jarak', 'Tinggi, padding, radius, dan margin', 'fa-ruler-combined', 'headerHeight'],
-        ['Warna & state', 'Header, link, hover, dan focus', 'fa-palette', 'headerBg'],
-        ['Bayangan link', 'Offset, blur, warna, dan inset', 'fa-clone', 'linkShadowEnabled'],
-        ['Perilaku scroll', 'Fixed, sticky, dan transparansi', 'fa-arrows-alt-v', 'headerBehavior'],
-        ['Konfigurasi', 'Lihat konfigurasi header', 'fa-code', 'jsonOutput']
-    ];
-    let selectedButton;
-    function showDirectory() {
-        root.querySelectorAll('[data-inspector-panel]').forEach(panel => { panel.hidden = true; });
-        directory.hidden = false;
-        detailHeading.hidden = true;
-        selectedButton?.focus();
-    }
-    entries.forEach(([label, description, icon, control]) => {
-        const target = root.querySelector(`#${control}`) || root.querySelector(`[data-control="${control}"]`);
+
+    // Reuse the original controls and tab controller; moving DOM nodes preserves their listeners.
+    const previewGroup = device.closest('.header-setting-group');
+    previewGroup.hidden = true;
+    const options = document.createElement('details');
+    options.className = 'header-preview-options';
+    const summary = document.createElement('summary');
+    summary.textContent = 'Preview options';
+    const optionsPanel = document.createElement('div');
+    optionsPanel.className = 'header-preview-options-panel';
+    options.append(summary, optionsPanel);
+    optionsPanel.append(label, root.querySelector('#previewScaleStatus'), root.querySelector('#resetPreview'));
+    toolbar.append(options);
+    root.querySelectorAll('[data-preview-device]').forEach(button => {
+        button.setAttribute('aria-label', button.textContent.trim() + ' preview');
+    });
+    document.addEventListener('click', event => {
+        if (!options.contains(event.target)) options.open = false;
+    });
+    options.addEventListener('keydown', event => {
+        if (event.key === 'Escape') { options.open = false; summary.focus(); }
+    });
+
+    function primaryGroup(control, heading) {
+        const target = root.querySelector('#' + control) || root.querySelector('[data-control="' + control + '"]');
         const group = target.closest('.header-setting-group');
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'header-settings-directory-item';
-        button.dataset.settingsSection = control;
-        button.innerHTML = `<i class="fas ${icon}" aria-hidden="true"></i><span><strong>${label}</strong><small>${description}</small></span><i class="fas fa-angle-right" aria-hidden="true"></i>`;
-        button.addEventListener('click', () => {
-            selectInspectorTab(group.closest('[data-inspector-panel]').dataset.inspectorPanel);
-            groups.forEach(item => { item.hidden = item !== group; item.open = item === group; });
-            directory.hidden = true;
-            detailHeading.hidden = false;
-            title.textContent = label;
-            selectedButton = button;
-            inspector.scrollTop = 0;
-            back.focus();
-        });
-        directory.append(button);
-    });
-    back.addEventListener('click', showDirectory);
+        const section = document.createElement('section');
+        section.className = 'header-setting-group header-setting-primary';
+        const title = document.createElement('h2');
+        title.className = 'header-inspector-heading';
+        title.textContent = heading;
+        section.append(title, group.querySelector('.header-setting-panel'));
+        group.replaceWith(section);
+        return section;
+    }
+    primaryGroup('logoPosition', 'Arrangement');
+    const colors = primaryGroup('headerBg', 'Header');
+    const behavior = primaryGroup('headerBehavior', 'Scroll behavior');
+    const activation = active.closest('label');
+    activation.classList.add('header-activation');
+    behavior.querySelector('.header-setting-panel').prepend(activation);
+    const animation = root.querySelector('#animateScroll').closest('.form-check');
+    const transparency = root.querySelector('#transparentStart').closest('.form-check');
+    transparency.before(animation);
+    const scrollHelp = document.createElement('p');
+    scrollHelp.className = 'header-setting-help';
+    scrollHelp.textContent = 'Choose Fixed or Sticky, then enable scroll animation to use transparency and the after-scroll background.';
+    behavior.querySelector('.header-setting-panel').append(scrollHelp);
     root.querySelectorAll('.box-control').forEach(box => {
-        const linked = box.querySelector('.box-link-toggle');
-        if (linked) box.querySelector('.box-control-header').append(linked);
+        box.querySelector('.box-control-header').append(box.querySelector('.box-link-toggle'));
     });
-    const stateList = root.querySelector('.link-color-state-list');
-    const stateSwitcher = document.createElement('div');
-    stateSwitcher.className = 'header-settings-state-switch';
-    stateSwitcher.setAttribute('aria-label', 'Link color state');
-    stateSwitcher.setAttribute('role', 'group');
-    ['active', 'hover', 'focus'].forEach(state => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.textContent = state.charAt(0).toUpperCase() + state.slice(1);
-        button.dataset.colorState = state;
-        button.addEventListener('click', () => {
-            stateList.querySelectorAll('[data-link-color-state]').forEach(row => { row.hidden = row.dataset.linkColorState !== state; });
-            stateSwitcher.querySelectorAll('button').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
-        });
-        stateSwitcher.append(button);
-    });
-    stateList.before(stateSwitcher);
-    root.querySelector('.link-color-state-title').textContent = 'Warna menu berdasarkan kondisi';
-    const stateHelp = document.createElement('p');
-    stateHelp.className = 'header-setting-help';
-    stateHelp.setAttribute('aria-live', 'polite');
-    stateSwitcher.after(stateHelp);
-    const descriptions = {
-        active: ['Aktif', 'Tampilan menu untuk halaman yang sedang dibuka.'],
-        hover: ['Ditunjuk', 'Tampilan menu saat pointer berada di atasnya.'],
-        focus: ['Fokus', 'Tampilan menu saat dipilih dengan tombol Tab pada keyboard.']
+
+    const stateGroup = colors.querySelector('.link-color-state-group');
+    const stateList = stateGroup.querySelector('.link-color-state-list');
+    const normal = root.querySelector('#linkColor').closest('.col-6');
+    normal.className = 'header-property-row';
+    normal.querySelector('label').textContent = 'Text';
+    stateList.prepend(normal);
+    const stateTitle = stateGroup.querySelector('.link-color-state-title');
+    stateTitle.textContent = 'Menu';
+    const stateSelect = document.createElement('select');
+    stateSelect.id = 'headerMenuState';
+    stateSelect.className = 'form-select form-select-sm';
+    stateSelect.setAttribute('aria-label', 'Menu interaction state');
+    stateSelect.innerHTML = '<option value="normal">Normal</option><option value="active">Active</option><option value="hover">Hover</option><option value="focus">Focus</option>';
+    stateTitle.append(stateSelect);
+    const stateHint = document.createElement('p');
+    stateHint.className = 'header-setting-help';
+    stateHint.setAttribute('aria-live', 'polite');
+    stateList.after(stateHint);
+    const hints = {
+        normal: '', active: 'Style for the current page.',
+        hover: 'Style when a pointer is over a menu item.', focus: 'Style when a menu item receives keyboard focus.'
     };
-    stateSwitcher.querySelectorAll('button').forEach(button => {
-        const [label, description] = descriptions[button.dataset.colorState];
-        button.textContent = label;
-        button.addEventListener('click', () => { stateHelp.textContent = description; });
-    });
+    const selectState = () => {
+        normal.hidden = stateSelect.value !== 'normal';
+        stateList.querySelectorAll('[data-link-color-state]').forEach(row => { row.hidden = row.dataset.linkColorState !== stateSelect.value; });
+        stateHint.textContent = hints[stateSelect.value];
+        stateHint.hidden = !stateHint.textContent;
+    };
+    stateSelect.addEventListener('change', selectState);
+    selectState();
+    for (const [id, text] of [['headerBg', 'Background'], ['scrolledBg', 'After scroll'], ['headerText', 'Text']]) {
+        const input = root.querySelector('#' + id);
+        input.closest('.col-6').classList.add('header-property-row');
+        root.querySelector('label[for="' + id + '"]').textContent = text;
+    }
     stateList.querySelectorAll('[data-link-color-state]').forEach(row => {
-        const labels = row.querySelectorAll('.link-color-field label');
-        labels[0].textContent = 'Latar menu';
-        labels[1].textContent = 'Garis tepi';
-        labels.forEach(label => label.classList.remove('visually-hidden'));
+        row.querySelectorAll('.link-color-field').forEach((field, index) => {
+            field.classList.add('header-property-row');
+            const label = field.querySelector('label');
+            label.textContent = index === 0 ? 'Background' : 'Border';
+            label.classList.remove('visually-hidden');
+        });
         const linked = row.querySelector('[data-linked-color]');
         linked.classList.add('header-color-match');
-        linked.innerHTML = '<i class="fas fa-link" aria-hidden="true"></i><span>Samakan dengan latar menu</span>';
+        linked.innerHTML = '<i class="fas fa-link" aria-hidden="true"></i><span>Match background</span>';
         const hint = document.createElement('p');
         hint.className = 'header-setting-help';
         hint.setAttribute('aria-live', 'polite');
         row.querySelector('.link-color-control').append(hint);
         const explainLinked = () => {
             const matches = linked.getAttribute('aria-pressed') === 'true';
-            hint.textContent = matches
-                ? 'Warna garis tepi mengikuti latar menu. Matikan penyamaan untuk memilih warna berbeda.'
-                : 'Warna garis tepi dapat dipilih sendiri.';
-            linked.title = matches ? 'Matikan penyamaan warna' : 'Samakan warna garis tepi dengan latar menu';
+            hint.textContent = matches ? 'Border follows the background. Unlink to edit.' : '';
+            hint.hidden = !matches;
+            linked.title = matches ? 'Unlink border from background' : 'Match border to background';
         };
         new MutationObserver(explainLinked).observe(linked, { attributes: true, attributeFilter: ['aria-pressed'] });
         explainLinked();
     });
-    stateSwitcher.firstElementChild.click();
-    root.classList.add('header-settings-drilldown');
-    showDirectory();
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    root.querySelectorAll('details.header-setting-group:not([hidden])').forEach((group, index) => {
+        const summary = group.querySelector('summary');
+        const panel = group.querySelector('.header-setting-panel');
+        let expanded = group.open;
+        let transition;
+        panel.id = `headerSettingPanel${index}`;
+        summary.setAttribute('aria-controls', panel.id);
+        summary.setAttribute('aria-expanded', String(expanded));
+        function finish() {
+            group.open = expanded;
+            transition?.cancel();
+            transition = null;
+            group.style.overflow = '';
+            panel.inert = false;
+        }
+        summary.addEventListener('click', event => {
+            event.preventDefault();
+            const start = group.getBoundingClientRect().height;
+            expanded = transition ? !expanded : !group.open;
+            transition?.cancel();
+            summary.setAttribute('aria-expanded', String(expanded));
+            if (reducedMotion.matches) { finish(); return; }
+            // Keep native details open until collapse finishes so its content can animate.
+            group.open = true;
+            const border = parseFloat(getComputedStyle(group).borderBottomWidth);
+            const end = expanded ? group.getBoundingClientRect().height : summary.getBoundingClientRect().height + border;
+            group.style.overflow = 'hidden';
+            panel.inert = !expanded;
+            transition = group.animate([{ height: `${start}px` }, { height: `${end}px` }], {
+                duration: 220, easing: 'cubic-bezier(.2, 0, 0, 1)'
+            });
+            transition.onfinish = finish;
+        });
+        group.addEventListener('toggle', () => {
+            if (!transition) { expanded = group.open; summary.setAttribute('aria-expanded', String(expanded)); }
+        });
+        reducedMotion.addEventListener('change', () => { if (reducedMotion.matches && transition) finish(); });
+    });
+
+    const tabs = [...root.querySelectorAll('[data-inspector-tab]')];
+    root.querySelector('.inspector-tabs').addEventListener('keydown', event => {
+        const index = tabs.indexOf(document.activeElement);
+        if (index < 0 || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1
+            : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        selectInspectorTab(tabs[next]);
+        tabs[next].focus();
+    });
+    root.querySelectorAll('.segmented').forEach(group => {
+        group.setAttribute('role', 'group');
+        group.setAttribute('aria-label', group.previousElementSibling.textContent.trim());
+        const sync = () => group.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.classList.contains('is-active'))));
+        group.addEventListener('click', sync);
+        sync();
+    });
+    configOutput.setAttribute('tabindex', '0');
+    root.querySelector('#headerNavigationSaveStatus').setAttribute('role', 'status');
+    root.setAttribute('lang', 'en');
+    root.classList.add('header-settings-tabbed');
+    selectInspectorTab('style');
 })();

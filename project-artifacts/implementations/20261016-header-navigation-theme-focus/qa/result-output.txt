@@ -1,0 +1,59 @@
+### Result
+{"checks":["Save follows theme primary","Active tab follows theme primary","Preview device follows theme primary","Accent responds to theme token changes","Theme accent does not change website preview settings","No numeric focus outline headerHeight","Group border stays neutral headerHeight","No numeric focus outline headerRadiusTop","Group border stays neutral headerRadiusTop","No numeric focus outline headerRadiusRight","Group border stays neutral headerRadiusRight","No numeric focus outline headerRadiusBottom","Group border stays neutral headerRadiusBottom","No numeric focus outline headerRadiusLeft","Group border stays neutral headerRadiusLeft","No numeric focus outline headerPaddingTop","Group border stays neutral headerPaddingTop","No numeric focus outline headerPaddingRight","Group border stays neutral headerPaddingRight","No numeric focus outline headerPaddingBottom","Group border stays neutral headerPaddingBottom","No numeric focus outline headerPaddingLeft","Group border stays neutral headerPaddingLeft","No numeric focus outline navRadiusTop","Group border stays neutral navRadiusTop","No numeric focus outline navRadiusRight","Group border stays neutral navRadiusRight","No numeric focus outline navRadiusBottom","Group border stays neutral navRadiusBottom","No numeric focus outline navRadiusLeft","Group border stays neutral navRadiusLeft","No numeric focus outline containerMarginTop","Group border stays neutral containerMarginTop","No numeric focus outline containerMarginRight","Group border stays neutral containerMarginRight","No numeric focus outline containerMarginBottom","Group border stays neutral containerMarginBottom","No numeric focus outline containerMarginLeft","Group border stays neutral containerMarginLeft","Plus hover changes background only","Pressed background is distinct","Keyboard reaches plus button","Keyboard focus uses background without ring","Linked control follows theme primary","No numeric focus outline linkShadowX","Group border stays neutral linkShadowX","No numeric focus outline linkShadowY","Group border stays neutral linkShadowY","No numeric focus outline linkShadowBlur","Group border stays neutral linkShadowBlur","No numeric focus outline linkShadowSpread","Group border stays neutral linkShadowSpread"],"theme":{"primary":"#1FA675","lucent":"#1FA675"},"numericInputs":21,"settingsSaved":false}
+### Ran Playwright code
+```js
+await (async page => {
+    page.setDefaultTimeout(8000);
+    page.removeAllListeners('dialog');
+    page.on('dialog', d => d.type()==='beforeunload' ? d.accept() : d.dismiss());
+    await page.goto('https://laravel-13-phoenix.aruna/awesome_admin/header-navigation');
+    await page.locator('.header-settings-tabbed').waitFor();
+    const checks=[];
+    const check=(ok,label)=>{if(!ok)throw new Error(label);checks.push(label);};
+    const css=async locator=>locator.evaluate(async e=>{await Promise.all(e.getAnimations().map(a=>a.finished.catch(()=>{})));const s=getComputedStyle(e);return {outline:s.outlineStyle,shadow:s.boxShadow,bg:s.backgroundColor,border:s.borderColor,bottom:s.borderBottomColor,color:s.color};});
+    const root=page.locator('#headerNavigationEditor');
+    const theme=await root.evaluate(e=>{const s=getComputedStyle(e);return {primary:s.getPropertyValue('--ph-primary').trim(),lucent:s.getPropertyValue('--ph-lucent-accent').trim()};});
+    const rgb=await root.evaluate(e=>{const probe=document.createElement('span');probe.style.color='var(--editor-accent)';e.append(probe);const c=getComputedStyle(probe).color;probe.remove();return c;});
+    check((await css(page.locator('#saveHeaderNavigation'))).bg===rgb,'Save follows theme primary');
+    check((await css(page.locator('[data-inspector-tab=style]'))).bottom===rgb,'Active tab follows theme primary');
+    check((await css(page.locator('[data-preview-device=desktop]'))).color===rgb,'Preview device follows theme primary');
+    const previewBefore=await page.locator('#siteHeader').evaluate(e=>getComputedStyle(e).getPropertyValue('--link-active'));
+    await root.evaluate(e=>e.style.setProperty('--ph-primary','#8750a0'));
+    check((await css(page.locator('#saveHeaderNavigation'))).bg==='rgb(135, 80, 160)','Accent responds to theme token changes');
+    check((await page.locator('#siteHeader').evaluate(e=>getComputedStyle(e).getPropertyValue('--link-active')))===previewBefore,'Theme accent does not change website preview settings');
+    await root.evaluate(e=>e.style.removeProperty('--ph-primary'));
+    await page.locator('[data-inspector-tab=layout]').click();await page.locator('summary').filter({hasText:'Sizing'}).click();
+    const layoutIds=await page.locator('#headerNavigationLayoutPanel input[type=number]').evaluateAll(es=>es.map(e=>e.id));
+    async function inspectNumbers(ids){
+        for(const id of ids){
+            const input=page.locator('#'+id),group=input.locator('..');
+            const before=await css(group);
+            await input.focus();
+            const [field,container]=await Promise.all([css(input),css(group)]);
+            check(field.outline==='none'&&field.shadow==='none'&&container.outline==='none'&&container.shadow==='none','No numeric focus outline '+id);
+            check(container.border===before.border,'Group border stays neutral '+id);
+        }
+    }
+    await inspectNumbers(layoutIds);
+    const plus=page.locator('[data-box-stepper-target=headerRadiusTop][data-box-stepper-delta="1"]');
+    const input=page.locator('#headerRadiusTop');
+    await page.locator('.mock-title').click();await plus.scrollIntoViewIfNeeded();
+    const idle=await css(plus);await plus.hover();const hover=await css(plus);
+    check(hover.bg!==idle.bg&&hover.color===idle.color,'Plus hover changes background only');
+    await page.mouse.down();const pressed=await css(plus);await page.mouse.up();
+    check(pressed.bg!==hover.bg,'Pressed background is distinct');
+    await page.locator('[data-box-stepper-target=headerRadiusTop][data-box-stepper-delta="-1"]').click();
+    await input.focus();await page.keyboard.press('Tab');await page.mouse.move(600,40);
+    const focus=await css(plus);
+    check(await plus.evaluate(e=>e===document.activeElement),'Keyboard reaches plus button');
+    check(focus.bg!==idle.bg&&focus.outline==='none'&&focus.shadow==='none','Keyboard focus uses background without ring');
+    check((await css(page.locator('#headerRadiusLinked'))).bg===rgb,'Linked control follows theme primary');
+    await page.screenshot({path:'D:/Laragon/www/laravel-13-phoenix/project-artifacts/implementations/20261016-header-navigation-theme-focus/qa/numeric-focus.png'});
+    await page.locator('[data-inspector-tab=style]').click();await page.locator('summary').filter({hasText:'Link shadow'}).click();await page.locator('#linkShadowEnabled').check();
+    await inspectNumbers(['linkShadowX','linkShadowY','linkShadowBlur','linkShadowSpread']);
+    await page.goto('https://laravel-13-phoenix.aruna/awesome_admin/header-navigation');await page.locator('.header-settings-tabbed').waitFor();
+    await page.screenshot({path:'D:/Laragon/www/laravel-13-phoenix/project-artifacts/implementations/20261016-header-navigation-theme-focus/qa/theme-appearance.png'});
+    return {checks,theme,numericInputs:layoutIds.length+4,settingsSaved:false};
+}
+)(page);
+```

@@ -1,0 +1,12 @@
+[
+  {
+    "source": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php",
+    "backup": "project-artifacts/implementations/20261016-header-navigation-preview-content/backups/awesome_admin_header_navigation.blade.php.bak_20261016_160125_preview_content",
+    "sha256": "C72E0FFC6ADF963B09417A34EF7B85AF56BCF4E6FD65D233BD0B46EF3155EB5A"
+  },
+  {
+    "source": "public/assets/css/awesome-admin-header-navigation-fullscreen.css",
+    "backup": "project-artifacts/implementations/20261016-header-navigation-preview-content/backups/awesome-admin-header-navigation-fullscreen.css.bak_20261016_160125_preview_content",
+    "sha256": "E5818D5BE268203F077B0B47174EF0BBA8926AE6E33DC83DF0D79D7EB8AD2866"
+  }
+]

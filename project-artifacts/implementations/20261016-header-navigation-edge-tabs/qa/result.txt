@@ -1,0 +1,6 @@
+### Result
+[{"width":1440,"leftGap":0,"rightGap":-0.000012695789337158203,"widths":[99.33333587646484,99.33333587646484,99.33333587646484]},{"width":430,"leftGap":0,"rightGap":0.000010192394256591797,"widths":[137.77084350585938,137.78125,137.78125]}]
+### Ran Playwright code
+```js
+await (async page=>{await page.goto('https://laravel-13-phoenix.aruna/awesome_admin/header-navigation');await page.locator('.header-settings-tabbed').waitFor();const results=[];for(const width of [1440,430]){await page.setViewportSize({width,height:900});const g=await page.locator('.inspector-tabs').evaluate(e=>{const r=e.getBoundingClientRect(),tabs=[...e.children].map(t=>t.getBoundingClientRect());return {leftGap:tabs[0].left-r.left,rightGap:r.right-tabs[2].right,widths:tabs.map(t=>t.width)};});if(g.leftGap>1||g.rightGap>1||Math.max(...g.widths)-Math.min(...g.widths)>1)throw new Error('Tabs not edge-to-edge');results.push({width,...g});}await page.setViewportSize({width:1440,height:900});await page.locator('[data-inspector-tab=layout]').click();await page.locator('.inspector-tabs').screenshot({path:'D:/Laragon/www/laravel-13-phoenix/project-artifacts/implementations/20261016-header-navigation-edge-tabs/qa/tabs.png'});return results;})(page);
+```

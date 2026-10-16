@@ -1,0 +1,47 @@
+{
+  "checks": [
+    "Three simple editorial notes",
+    "Native scrolling available desktop",
+    "No content horizontal overflow desktop",
+    "Content reaches bottom without blank filler desktop",
+    "Local story image loaded desktop",
+    "Native scrolling available tablet",
+    "No content horizontal overflow tablet",
+    "Content reaches bottom without blank filler tablet",
+    "Local story image loaded tablet",
+    "Native scrolling available mobile",
+    "No content horizontal overflow mobile",
+    "Content reaches bottom without blank filler mobile",
+    "Local story image loaded mobile",
+    "Header scroll state works with new content",
+    "Reset returns preview to top",
+    "Saved header configuration unchanged"
+  ],
+  "sizes": [
+    {
+      "device": "desktop",
+      "scroll": 394,
+      "overflow": 0,
+      "footerGap": 38.609867095947266,
+      "footerVisible": true,
+      "image": true
+    },
+    {
+      "device": "tablet",
+      "scroll": 658,
+      "overflow": 0,
+      "footerGap": 49.677066802978516,
+      "footerVisible": true,
+      "image": true
+    },
+    {
+      "device": "mobile",
+      "scroll": 1037,
+      "overflow": 0,
+      "footerGap": 29.3541259765625,
+      "footerVisible": true,
+      "image": true
+    }
+  ],
+  "productionSettingsSaved": false
+}

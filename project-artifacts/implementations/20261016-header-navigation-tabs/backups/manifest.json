@@ -1,0 +1,20 @@
+[
+  {
+    "source": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php",
+    "backup": "project-artifacts/implementations/20261016-header-navigation-tabs/backups/awesome_admin_header_navigation.blade.php.bak_20261016_150630_tabbed_english",
+    "sha256": "888EA26D542420309991A00740C3E212E53F5191542F725D1EE6654C87331E4A",
+    "verified": true
+  },
+  {
+    "source": "public/assets/js/awesome-admin-header-navigation-fullscreen.js",
+    "backup": "project-artifacts/implementations/20261016-header-navigation-tabs/backups/awesome-admin-header-navigation-fullscreen.js.bak_20261016_150630_tabbed_english",
+    "sha256": "EE158A42EB445203AACD12577E58AD950A77ECADDF60F0B8C2C29923B14330BD",
+    "verified": true
+  },
+  {
+    "source": "public/assets/css/awesome-admin-header-navigation-fullscreen.css",
+    "backup": "project-artifacts/implementations/20261016-header-navigation-tabs/backups/awesome-admin-header-navigation-fullscreen.css.bak_20261016_150630_tabbed_english",
+    "sha256": "8FE44E612629773BF85BDBD89DF0137E8115F8564A0D79EB65F4784EF437D99C",
+    "verified": true
+  }
+]

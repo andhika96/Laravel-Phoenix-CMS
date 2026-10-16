@@ -1,0 +1,21 @@
+{
+  "checks": [
+    "Single shared forest background desktop",
+    "Hero has no separate overlay desktop",
+    "Container background stays inside header desktop",
+    "Full-width background retained desktop",
+    "Single shared forest background tablet",
+    "Hero has no separate overlay tablet",
+    "Container background stays inside header tablet",
+    "Full-width background retained tablet",
+    "Single shared forest background mobile",
+    "Hero has no separate overlay mobile",
+    "Container background stays inside header mobile",
+    "Full-width background retained mobile",
+    "Transparent header uses same shared background",
+    "Scrolled state remains functional",
+    "Reset restores page top",
+    "Saved configuration unchanged"
+  ],
+  "productionSettingsSaved": false
+}

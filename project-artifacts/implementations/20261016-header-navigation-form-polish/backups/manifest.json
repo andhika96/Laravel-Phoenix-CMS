@@ -1,0 +1,12 @@
+[
+  {
+    "source": "public/assets/css/awesome-admin-header-navigation-fullscreen.css",
+    "backup": "project-artifacts/implementations/20261016-header-navigation-form-polish/backups/awesome-admin-header-navigation-fullscreen.css.bak_20261016_154614_form_polish",
+    "sha256": "4ACE96E6F2E5E61CBDCABA6B65CDC53EE84E8F34B4F1EB7E0FD6D596B659330C"
+  },
+  {
+    "source": "public/assets/js/awesome-admin-header-navigation-fullscreen.js",
+    "backup": "project-artifacts/implementations/20261016-header-navigation-form-polish/backups/awesome-admin-header-navigation-fullscreen.js.bak_20261016_154614_form_polish",
+    "sha256": "62951AE439F3DE8B151204B29F9B04F9F8979082E9DB72320872C58BE69C0095"
+  }
+]

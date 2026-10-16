@@ -1,0 +1,22 @@
+[
+  {
+    "source": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php",
+    "backup": "project-artifacts/implementations/20261016-header-navigation-refined/backups/awesome_admin_header_navigation.blade.php.bak_20261016_152747_refined_tabs",
+    "sha256": "888EA26D542420309991A00740C3E212E53F5191542F725D1EE6654C87331E4A"
+  },
+  {
+    "source": "public/assets/js/awesome-admin-header-navigation-fullscreen.js",
+    "backup": "project-artifacts/implementations/20261016-header-navigation-refined/backups/awesome-admin-header-navigation-fullscreen.js.bak_20261016_152747_refined_tabs",
+    "sha256": "EE158A42EB445203AACD12577E58AD950A77ECADDF60F0B8C2C29923B14330BD"
+  },
+  {
+    "source": "public/assets/css/awesome-admin-header-navigation-fullscreen.css",
+    "backup": "project-artifacts/implementations/20261016-header-navigation-refined/backups/awesome-admin-header-navigation-fullscreen.css.bak_20261016_152747_refined_tabs",
+    "sha256": "8FE44E612629773BF85BDBD89DF0137E8115F8564A0D79EB65F4784EF437D99C"
+  },
+  {
+    "source": "tests/Feature/HeaderNavigationSettingsTest.php",
+    "backup": "project-artifacts/implementations/20261016-header-navigation-refined/backups/HeaderNavigationSettingsTest.php.bak_20261016_152858_english_labels",
+    "sha256": "9C8F0969E81D7BBCB8E330372473F93526E4375F5F4D7FE0F17C50088A2502A1"
+  }
+]

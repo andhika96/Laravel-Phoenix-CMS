@@ -1,0 +1,178 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e2]:
+    - generic [ref=f4e3]:
+      - generic "Account" [ref=f4e4]:
+        - generic [ref=f4e5]:
+          - button "Account" [ref=f4e6] [cursor=pointer]:
+            - img "Current avatar image" [ref=f4e8]
+            - strong [ref=f4e10]: Administrator
+          - button "Open profile menu" [ref=f4e11] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f4e12]: 
+          - text:      
+        - button "Hide sidebar" [expanded] [ref=f4e13] [cursor=pointer]
+      - region "scrollable content" [ref=f4e21]:
+        - generic [ref=f4e23]:
+          - generic [ref=f4e24]:
+            - link " Dashboard" [ref=f4e25] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/dashboard
+              - generic [ref=f4e26]: 
+              - generic [ref=f4e28]: Dashboard
+            - link " View site" [ref=f4e29] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna
+              - generic [ref=f4e30]: 
+              - generic [ref=f4e32]: View site
+          - generic [ref=f4e33]:
+            - link " Manage Articles" [ref=f4e34] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/manage_article
+              - generic [ref=f4e35]: 
+              - generic [ref=f4e37]: Manage Articles
+            - link " Manage Cover Image" [ref=f4e38] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/manage_coverimage
+              - generic [ref=f4e39]: 
+              - generic [ref=f4e41]: Manage Cover Image
+            - link " Manage Event" [ref=f4e42] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/manage_event
+              - generic [ref=f4e43]: 
+              - generic [ref=f4e45]: Manage Event
+            - link " Workflow Editor" [ref=f4e46] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/workflow
+              - generic [ref=f4e47]: 
+              - generic [ref=f4e49]: Workflow Editor
+      - generic "Administration and settings" [ref=f4e50]:
+        - link "Awesome Admin" [ref=f4e51] [cursor=pointer]:
+          - /url: https://laravel-13-phoenix.aruna/awesome_admin
+          - generic [aria-hidden] [ref=f4e52]: 
+        - link "Settings" [ref=f4e54] [cursor=pointer]:
+          - /url: https://laravel-13-phoenix.aruna/account
+          - generic [aria-hidden] [ref=f4e55]: 
+        - text: 
+    - generic [ref=f4e57]:
+      - text:  
+      - navigation "breadcrumb" [ref=f4e61]:
+        - list [ref=f4e62]:
+          - listitem [ref=f4e63]:
+            - link "Awesome Admin" [ref=f4e64] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/awesome_admin
+          - listitem [ref=f4e65]:  Manage Header Navigation
+  - main [ref=f4e67]:
+    - generic [ref=f4e69]:
+      - link "Back to CMS" [ref=f4e70] [cursor=pointer]:
+        - /url: https://laravel-13-phoenix.aruna/awesome_admin
+        - generic [aria-hidden] [ref=f4e71]: 
+      - heading "Manage Header Navigation" [level=1] [ref=f4e74]
+      - generic [ref=f4e75]:
+        - generic [ref=f4e76]:
+          - switch "Active on frontend" [checked] [ref=f4e77] [cursor=pointer]
+          - generic [ref=f4e78]: Active on frontend
+        - generic [ref=f4e79]:
+          - generic [ref=f4e80]: 
+          - text: Ready
+        - link "Cancel" [ref=f4e81] [cursor=pointer]:
+          - /url: https://laravel-13-phoenix.aruna/awesome_admin
+        - button " Save changes" [ref=f4e82] [cursor=pointer]:
+          - generic [ref=f4e83]: 
+          - text: Save changes
+    - generic [ref=f4e84]:
+      - generic [ref=f4e87]:
+        - generic [ref=f4e88]:
+          - text: Sedang mengatur
+          - combobox "Sedang mengatur Device" [ref=f4e89]:
+            - option "Desktop" [selected]
+            - option "Tablet"
+            - option "Mobile"
+        - generic [ref=f4e90]:
+          - navigation "Header settings" [ref=f4e91]:
+            - button "Posisi & susunan Logo, menu, dan lebar header" [ref=f4e92] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f4e93]: 
+              - generic [ref=f4e94]:
+                - strong [ref=f4e95]: Posisi & susunan
+                - generic [ref=f4e96]: Logo, menu, dan lebar header
+              - generic [aria-hidden] [ref=f4e97]: 
+            - button "Ukuran & jarak Tinggi, padding, radius, dan margin" [ref=f4e98] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f4e99]: 
+              - generic [ref=f4e100]:
+                - strong [ref=f4e101]: Ukuran & jarak
+                - generic [ref=f4e102]: Tinggi, padding, radius, dan margin
+              - generic [aria-hidden] [ref=f4e103]: 
+            - button "Warna & state Header, link, hover, dan focus" [ref=f4e104] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f4e105]: 
+              - generic [ref=f4e106]:
+                - strong [ref=f4e107]: Warna & state
+                - generic [ref=f4e108]: Header, link, hover, dan focus
+              - generic [aria-hidden] [ref=f4e109]: 
+            - button "Bayangan link Offset, blur, warna, dan inset" [ref=f4e110] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f4e111]: 
+              - generic [ref=f4e112]:
+                - strong [ref=f4e113]: Bayangan link
+                - generic [ref=f4e114]: Offset, blur, warna, dan inset
+              - generic [aria-hidden] [ref=f4e115]: 
+            - button "Perilaku scroll Fixed, sticky, dan transparansi" [ref=f4e116] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f4e117]: 
+              - generic [ref=f4e118]:
+                - strong [ref=f4e119]: Perilaku scroll
+                - generic [ref=f4e120]: Fixed, sticky, dan transparansi
+              - generic [aria-hidden] [ref=f4e121]: 
+            - button "Konfigurasi Lihat konfigurasi header" [ref=f4e122] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f4e123]: 
+              - generic [ref=f4e124]:
+                - strong [ref=f4e125]: Konfigurasi
+                - generic [ref=f4e126]: Lihat konfigurasi header
+              - generic [aria-hidden] [ref=f4e127]: 
+          - text:   􏁮   􏃛   􏕆                                                         􏔿      􏢐           􏃐   􏄡 
+      - generic [ref=f4e129]:
+        - generic [ref=f4e130]:
+          - generic [ref=f4e131]:
+            - strong [ref=f4e134]: Live preview
+            - generic [ref=f4e135]: Desktop · 1440px · Fit 51%
+          - generic [ref=f4e136]:
+            - group "Preview device" [ref=f4e137]:
+              - button "Desktop" [pressed] [ref=f4e138] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f4e139]: 
+              - button "Tablet" [ref=f4e141] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f4e142]: 
+              - button "Mobile" [ref=f4e144] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f4e145]: 
+            - button " Reset" [ref=f4e147] [cursor=pointer]:
+              - generic [ref=f4e148]: 
+              - text: Reset
+            - generic [ref=f4e149]:
+              - text: Preview
+              - combobox "Preview scroll position" [ref=f4e150]:
+                - option "Page top" [selected]
+                - option "After scroll"
+        - generic [ref=f4e153]:
+          - generic [ref=f4e156]:
+            - link "PH Phoenix CMS" [ref=f4e157] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=f4e158]: PH
+              - generic [ref=f4e159]: Phoenix CMS
+            - list [ref=f4e160]:
+              - listitem [ref=f4e161]:
+                - link "Manage Articles" [ref=f4e162] [cursor=pointer]:
+                  - /url: https://laravel-13-phoenix.aruna/manage_article
+              - listitem [ref=f4e164]:
+                - link "Manage Cover Image" [ref=f4e165] [cursor=pointer]:
+                  - /url: https://laravel-13-phoenix.aruna/manage_coverimage
+              - listitem [ref=f4e167]:
+                - link "File Manager" [ref=f4e168] [cursor=pointer]:
+                  - /url: https://laravel-13-phoenix.aruna/filemanager
+              - listitem [ref=f4e170]:
+                - link "About Us" [ref=f4e171] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=f4e174]: 
+            - generic [ref=f4e175]:
+              - button "Get started" [ref=f4e176] [cursor=pointer]
+              - text: 
+          - generic [ref=f4e177]:
+            - heading "Ruang untuk ide yang lebih besar." [level=2] [ref=f4e178]
+            - paragraph [ref=f4e179]: Header yang tepat membantu pengunjung menemukan apa yang mereka butuhkan. Lihat perubahan navigasi Anda langsung di halaman contoh ini.
+          - generic [ref=f4e181]:
+            - generic [ref=f4e182]:
+              - strong [ref=f4e183]: Homepage
+              - text: Parent menu dapat langsung dipakai sebagai link header.
+            - generic [ref=f4e184]:
+              - strong [ref=f4e185]: Products
+              - text: Dropdown/submenu nanti mengambil struktur dari menu frontend.
+            - generic [ref=f4e186]:
+              - strong [ref=f4e187]: Contact
+              - text: Active, hover, dan focus state bisa dilihat di header preview.

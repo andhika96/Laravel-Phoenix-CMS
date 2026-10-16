@@ -1,7 +1,7 @@
 @extends('themes.'.custom_theme('cms'))
 
 @section('title')
-	{{ t('Manage Header Navigation') }}
+	Header Navigation
 @endsection
 
 @push('css')
@@ -19,24 +19,24 @@
 	<main>
 		<div class="ph-content rounded p-3 mb-3 header-editor-topbar">
 				<div class="mock-topbar">
-					<a href="{{ route('cms.admin.awesome_admin') }}" class="header-editor-back" data-header-editor-exit><i class="fas fa-arrow-left" aria-hidden="true"></i><span>{{ t('Back to CMS') }}</span></a>
+					<a href="{{ route('cms.admin.awesome_admin') }}" class="header-editor-back" data-header-editor-exit><i class="fas fa-arrow-left" aria-hidden="true"></i><span>Back to CMS</span></a>
 					<div class="mock-topbar-copy">
-						<div class="editor-eyebrow">{{ t('Site Navigation') }}</div>
-						<h1 class="mock-title">{{ t('Manage Header Navigation') }}</h1>
-						<p class="mock-subtitle">{{ t('Configure the frontend header layout, colors, responsive sizing, and scroll behavior with live preview.') }}</p>
+						<div class="editor-eyebrow">Site Navigation</div>
+						<h1 class="mock-title">Header Navigation</h1>
+						<p class="mock-subtitle">Configure the frontend header layout, colors, responsive sizing, and scroll behavior with live preview.</p>
 					</div>
 
 					<div class="mock-topbar-actions">
 						<label class="form-check form-switch mock-active-control" for="headerNavigationActive">
 							<input id="headerNavigationActive" class="form-check-input" type="checkbox" role="switch" @checked($is_active)>
-							<span class="form-check-label">{{ t('Active on frontend') }}</span>
+							<span class="form-check-label">Active on frontend</span>
 						</label>
 
-						<div id="headerNavigationSaveStatus" class="mock-status"><i class="fas fa-database"></i> {{ t('Ready') }}</div>
+						<div id="headerNavigationSaveStatus" class="mock-status"><i class="fas fa-database"></i> Ready</div>
 
-						<a href="{{ route('cms.admin.awesome_admin') }}" class="btn btn-outline-secondary btn-sm" data-header-editor-exit>{{ t('Cancel') }}</a>
+						<a href="{{ route('cms.admin.awesome_admin') }}" class="btn btn-outline-secondary btn-sm" data-header-editor-exit>Cancel</a>
 						<button id="saveHeaderNavigation" type="button" class="btn btn-primary btn-sm save-header-navigation">
-							<i class="fas fa-save me-1"></i> {{ t('Save changes') }}
+							<i class="fas fa-save me-1"></i> Save changes
 						</button>
 					</div>
 				</div>
@@ -46,23 +46,23 @@
 			<div class="mock-control-pane">
 				<div class="ph-content rounded p-3 control-scroll inspector-shell">
 					<div class="inspector-layout">
-						<div class="inspector-tabs" role="tablist" aria-label="{{ t('Header navigation settings') }}">
-							<button id="headerNavigationLayoutTab" type="button" class="inspector-tab is-active" data-inspector-tab="layout" role="tab" aria-controls="headerNavigationLayoutPanel" aria-selected="true">{{ t('Layout') }}</button>
-							<button id="headerNavigationStyleTab" type="button" class="inspector-tab" data-inspector-tab="style" role="tab" aria-controls="headerNavigationStylePanel" aria-selected="false">{{ t('Style') }}</button>
-							<button id="headerNavigationAdvancedTab" type="button" class="inspector-tab" data-inspector-tab="advanced" role="tab" aria-controls="headerNavigationAdvancedPanel" aria-selected="false">{{ t('Advanced') }}</button>
+						<div class="inspector-tabs" role="tablist" aria-label="Header navigation settings">
+							<button id="headerNavigationLayoutTab" type="button" class="inspector-tab is-active" data-inspector-tab="layout" role="tab" aria-controls="headerNavigationLayoutPanel" aria-selected="true">Layout</button>
+							<button id="headerNavigationStyleTab" type="button" class="inspector-tab" data-inspector-tab="style" role="tab" aria-controls="headerNavigationStylePanel" aria-selected="false">Appearance</button>
+							<button id="headerNavigationAdvancedTab" type="button" class="inspector-tab" data-inspector-tab="advanced" role="tab" aria-controls="headerNavigationAdvancedPanel" aria-selected="false">Behavior</button>
 						</div>
 						<div class="inspector-content">
 							<section id="headerNavigationLayoutPanel" class="inspector-tab-panel is-active" data-inspector-panel="layout" role="tabpanel" aria-labelledby="headerNavigationLayoutTab">
 								<div class="inspector-selection-summary">
-									<strong>{{ t('Header Navigation') }}</strong>
-									<span>{{ t('Frontend header') }}</span>
+									<strong>Header Navigation</strong>
+									<span>Frontend header</span>
 								</div>
 								<div class="header-settings-accordion">
 <details class="header-setting-group" open>
 							<summary class="header-setting-summary">
 								<span class="header-setting-summary-title">
 									<i class="fad fa-eye fa-fw" aria-hidden="true"></i>
-									<span>{{ t('Preview') }}</span>
+									<span>Preview</span>
 								</span>
 								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
 							</summary>
@@ -85,7 +85,7 @@
 							<summary class="header-setting-summary">
 								<span class="header-setting-summary-title">
 									<i class="fad fa-columns fa-fw" aria-hidden="true"></i>
-									<span>{{ t('Layout') }}</span>
+									<span>Layout</span>
 								</span>
 								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
 							</summary>
@@ -116,7 +116,7 @@
 						</div>
 						<div class="form-check form-switch mb-2">
 							<input id="innerBg" class="form-check-input" type="checkbox">
-							<label class="form-check-label" for="innerBg">Background mengikuti container</label>
+							<label class="form-check-label" for="innerBg">Background follows container</label>
 						</div>
 							</div>
 						</details>
@@ -125,7 +125,7 @@
 							<summary class="header-setting-summary">
 								<span class="header-setting-summary-title">
 									<i class="fad fa-ruler-combined fa-fw" aria-hidden="true"></i>
-									<span>{{ t('Sizing') }}</span>
+									<span>Sizing</span>
 								</span>
 								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
 							</summary>
@@ -409,7 +409,7 @@
 							<summary class="header-setting-summary">
 								<span class="header-setting-summary-title">
 									<i class="fad fa-palette fa-fw" aria-hidden="true"></i>
-									<span>{{ t('Colors') }}</span>
+									<span>Colors</span>
 								</span>
 								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
 							</summary>
@@ -511,7 +511,7 @@
 							<summary class="header-setting-summary">
 								<span class="header-setting-summary-title">
 									<i class="fad fa-sparkles fa-fw" aria-hidden="true"></i>
-									<span>{{ t('Effects') }}</span>
+									<span>Link shadow</span>
 								</span>
 								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
 							</summary>
@@ -591,14 +591,14 @@
 							<summary class="header-setting-summary">
 								<span class="header-setting-summary-title">
 									<i class="fad fa-magic fa-fw" aria-hidden="true"></i>
-									<span>{{ t('Behavior') }}</span>
+									<span>Behavior</span>
 								</span>
 								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
 							</summary>
 
 							<div class="header-setting-panel">
 						<div class="mb-3">
-							<label class="form-label">Header menu position</label>
+							<label class="form-label">Scroll behavior</label>
 							<div class="segmented" data-control="headerBehavior">
 								<button type="button" data-value="fixed">Fixed</button>
 								<button type="button" data-value="sticky">Sticky</button>
@@ -607,7 +607,7 @@
 						</div>
 						<div class="form-check form-switch mb-2">
 							<input id="transparentStart" class="form-check-input" type="checkbox">
-							<label class="form-check-label" for="transparentStart">Transparent sebelum discroll</label>
+							<label class="form-check-label" for="transparentStart">Transparent before scrolling</label>
 						</div>
 						<div id="transparentColorPanel" class="transparent-color-panel" hidden>
 							<div>
@@ -648,7 +648,7 @@
 						</div>
 						<div class="form-check form-switch mb-3">
 							<input id="animateScroll" class="form-check-input" type="checkbox">
-							<label class="form-check-label" for="animateScroll">Animasi berubah saat discroll</label>
+							<label class="form-check-label" for="animateScroll">Animate on scroll</label>
 						</div>
 							</div>
 						</details>
@@ -657,7 +657,7 @@
 							<summary class="header-setting-summary">
 								<span class="header-setting-summary-title">
 									<i class="fad fa-code fa-fw" aria-hidden="true"></i>
-									<span>{{ t('Config Preview') }}</span>
+									<span>Configuration</span>
 								</span>
 								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
 							</summary>
@@ -677,7 +677,7 @@
 				<div class="ph-content rounded preview-card">
 					<div class="preview-toolbar">
 						<div class="preview-toolbar-copy">
-							<div class="preview-toolbar-title"><span class="preview-live-dot" aria-hidden="true"></span><strong>Live preview</strong></div>
+							<div class="preview-toolbar-title"><span class="preview-live-dot" aria-hidden="true"></span><strong>Preview</strong></div>
 							<div class="preview-toolbar-hint">Scroll the artboard or choose a scroll state to see the header adapt.</div>
 							<div id="previewScaleStatus" class="preview-scale-status" aria-live="polite">Desktop 1440×900px · Fit 100%</div>
 						</div>
@@ -699,14 +699,32 @@
 									</div>
 								</header>
 								<section class="hero-copy">
-									<h2>Ruang untuk ide yang lebih besar.</h2>
-									<p>Header yang tepat membantu pengunjung menemukan apa yang mereka butuhkan. Lihat perubahan navigasi Anda langsung di halaman contoh ini.</p>
+									<h2>Room for bigger ideas.</h2>
+									<p>Clear navigation helps visitors find what they need. Preview your header changes on this sample page.</p>
 								</section>
 								<section class="page-band">
-									<div class="page-grid">
-										<div class="page-tile"><strong>Homepage</strong><span>Parent menu dapat langsung dipakai sebagai link header.</span></div>
-										<div class="page-tile"><strong>Products</strong><span>Dropdown/submenu nanti mengambil struktur dari menu frontend.</span></div>
-										<div class="page-tile"><strong>Contact</strong><span>Active, hover, dan focus state bisa dilihat di header preview.</span></div>
+									<div class="preview-journal">
+										<div class="preview-journal-intro">
+											<span class="preview-kicker">The journal</span>
+											<h2>A little space for inspiration.</h2>
+											<p>Thoughtful ideas, fresh perspectives, and small details that make a difference.</p>
+										</div>
+										<article class="preview-feature">
+											<div>
+												<span class="preview-kicker">Featured story · 5 min read</span>
+												<h3>Good ideas need room to grow.</h3>
+												<p>A quieter pace can bring a clearer perspective. Sometimes the best place to begin is with a little less noise and a little more curiosity.</p>
+												<p>Take a moment to notice what matters. Leave space for the next possibility.</p>
+											</div>
+											<img src="{{ asset('assets/images/trees-on-forest-at-daytime-1083515.jpg') }}" alt="Sunlight filtering through a quiet green forest" width="560" height="240" loading="lazy">
+										</article>
+										<section class="preview-notes" aria-labelledby="previewNotesHeading">
+											<h3 id="previewNotesHeading">Latest notes</h3>
+											<article class="preview-note"><span class="preview-note-number" aria-hidden="true">01</span><div><h4>The beauty of keeping things simple</h4><p>Find clarity by giving the essentials a little more room.</p></div><span class="preview-note-meta">Design · 3 min read</span></article>
+											<article class="preview-note"><span class="preview-note-number" aria-hidden="true">02</span><div><h4>Small details, lasting impressions</h4><p>A considered detail can make an everyday experience feel special.</p></div><span class="preview-note-meta">Perspective · 4 min read</span></article>
+											<article class="preview-note"><span class="preview-note-number" aria-hidden="true">03</span><div><h4>A fresh perspective starts here</h4><p>Stay curious about familiar places and the possibilities ahead.</p></div><span class="preview-note-meta">Inspiration · 3 min read</span></article>
+										</section>
+										<footer class="preview-journal-footer"><strong>Phoenix CMS</strong><span>Made for ideas worth sharing.</span><small>Sample preview content</small></footer>
 									</div>
 								</section>
 							</div>
@@ -737,11 +755,11 @@
 		</div>
 	</main>
 	<dialog id="headerEditorExitDialog" aria-labelledby="headerEditorExitTitle" aria-describedby="headerEditorExitDescription">
-		<h2 id="headerEditorExitTitle">{{ t('Leave without saving?') }}</h2>
-		<p id="headerEditorExitDescription">{{ t('Your unsaved header navigation changes will be lost.') }}</p>
+		<h2 id="headerEditorExitTitle">Leave without saving?</h2>
+		<p id="headerEditorExitDescription">Your unsaved header navigation changes will be lost.</p>
 		<div class="header-editor-dialog-actions">
-			<button type="button" class="btn btn-outline-secondary" id="headerEditorKeepEditing" autofocus>{{ t('Keep editing') }}</button>
-			<button type="button" class="btn btn-danger" id="headerEditorDiscard">{{ t('Leave without saving') }}</button>
+			<button type="button" class="btn btn-outline-secondary" id="headerEditorKeepEditing" autofocus>Keep editing</button>
+			<button type="button" class="btn btn-danger" id="headerEditorDiscard">Leave without saving</button>
 		</div>
 	</dialog>
 </div>
