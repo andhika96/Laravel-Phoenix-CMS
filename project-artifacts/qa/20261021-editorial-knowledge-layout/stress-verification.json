@@ -1,0 +1,18 @@
+{
+  "stress": [
+    {
+      "template": "editorial-feature",
+      "overflow": false
+    },
+    {
+      "template": "knowledge-toc",
+      "overflow": false
+    }
+  ],
+  "longToc": {
+    "links": 15,
+    "height": 826,
+    "listHeight": 740
+  },
+  "stickyTop": 24
+}

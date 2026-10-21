@@ -23,7 +23,7 @@
         <div class="article-empty">{{ t('Create a published public Article to preview a detail template.') }}</div>
     @endif
     @if ($isPreviewFixture ?? false)
-        <script>document.addEventListener('click', function (event) { if (event.target.closest('a')) event.preventDefault(); });document.addEventListener('submit', function (event) { if (event.target?.closest?.('[data-article-filter]')) event.preventDefault(); });</script>
+        <script>document.addEventListener('click', function (event) { const link = event.target.closest('a'); if (link && !link.getAttribute('href')?.startsWith('#')) event.preventDefault(); });document.addEventListener('submit', function (event) { if (event.target?.closest?.('[data-article-filter]')) event.preventDefault(); });</script>
     @endif
 </body>
 </html>

@@ -1,0 +1,106 @@
+✔ article frontend typography inherits CMS responsive typography tokens (4.7408ms)
+✔ Article title and short description use separate responsive CMS-bound scales (1.5397ms)
+✔ all Article templates provide an image fallback for empty thumbnails (3.1438ms)
+✔ archive cards use shared media, title, excerpt, and equal-height presentation contracts (1.1878ms)
+✔ detail templates use the editorial reading and neighbor-navigation contracts (1.0245ms)
+✔ Article and manager accents inherit the active CMS primary color token (2.114ms)
+✔ Archive thumbnails keep a cover fallback while allowing validated background or asset rendering (1.6257ms)
+✔ thumbnail height is conditional to background mode and both media modes keep distinct rendering paths (1.0445ms)
+✔ tablet and mobile previews compact editorial spacing and retain a visible search action (1.0299ms)
+✔ Minimal Reading List stacks mobile posts and keeps CMS-bound heading typography (1.6801ms)
+✔ responsive Minimal Reading List mockup exposes focused desktop, tablet, and stacked mobile states (0.8391ms)
+✔ Balanced Card Grid uses a named category select instead of a numeric category field (0.6155ms)
+✔ archive and detail templates expose shared configurable headers and toolbar placement hooks (3.2709ms)
+✔ all archive list titles use a validated configurable heading partial with an H4 default and smaller category badges (2.5563ms)
+✔ template options revamp keeps modal regions independently scrollable and responsive (1.1512ms)
+✔ settings panel keeps a constrained flex scroll chain after form density changes (0.7584ms)
+✔ template options modal places its sizing hook on the wrapper used by descendant selectors (0.6326ms)
+✔ Header content panel follows the approved vertical field layout (0.9731ms)
+✔ Template Options section headings use h5 semantics and the requested 1.8rem field gap (1.8788ms)
+✔ all option form controls use the roomy full-width panel rhythm (1.072ms)
+✔ Minimal Reading List category filter uses progressive disclosure and a native position select (0.7642ms)
+✔ Header content descriptions use a compact resizable textarea on archive and custom detail fields (0.6119ms)
+✔ Archive toolbar search position buttons use the themed hover state and category controls stay left aligned (0.7541ms)
+✔ teleported Template Options modal keeps the CMS accent token available to hover styles (0.4361ms)
+✔ list settings keep consistent bottom dividers across nested and compound option groups (0.6438ms)
+✔ Template Options V3 mockup mirrors the updated textarea, toolbar hover, and left category controls (0.6212ms)
+✔ frame styling controls use one full-width row per field (0.355ms)
+✔ border radius follows the Page Builder four-corner form-group pattern (1.1106ms)
+✔ pagination button radius uses the four-corner form-group and chain link (0.5694ms)
+✔ pagination radius and number gap occupy separate full-width rows (0.5505ms)
+✔ Editorial Journal manager controls stay scoped and expose the complete new options surface (0.7679ms)
+✔ spacing groups mirror the Page Builder form-group hierarchy with a shared unit header (0.5839ms)
+✔ template options switches match the approved inspector 44 by 24 geometry (0.5804ms)
+✔ template options follows the normal compact CMS form scale without nested font shrinkage (1.1743ms)
+✔ template settings reuse native fields and the established divider rhythm (1.9509ms)
+✔ compact radius controls keep all four sides usable on mobile (1.1074ms)
+✔ toolbar and frame groups preserve full-width controls with readable rhythm (0.9475ms)
+✔ spacing form groups use the wider rhythm and linked buttons share input borders (1.4445ms)
+✔ curated template preview identifies sample content and prevents fixture links from leaving the iframe (2.2157ms)
+✔ curated template preview blocks archive toolbar submissions from leaving the draft iframe (2.1757ms)
+✔ public detail wrapper passes neighboring Articles through to every selected detail template (0.5997ms)
+✖ Article link hierarchy stays readable when a CMS theme tints generic anchors (1.8723ms)
+✔ manager selection changes only the active surface and rebuilds the live preview URL (4.262ms)
+✔ manager passes the active CMS accent into the isolated preview and refreshes it when the theme changes (1.267ms)
+✔ manager serializes the active template option draft into the iframe URL without saving it (2.0083ms)
+✔ applying modal options updates only the active draft and rebuilds the preview (1.3244ms)
+✔ an unsaved preview selection is selected, not the persisted default (2.0025ms)
+✔ manager source keeps the selected visual direction and a real preview iframe (0.7149ms)
+✔ manager cards use template preview thumbnails with a local placeholder fallback (0.4559ms)
+✔ device preview uses fixed virtual viewports and scales the full frame to fit (1.4405ms)
+✔ device selection changes viewport profile and refits the preview (2.0272ms)
+✔ manager source exposes a labelled device stage instead of max-width-only iframes (1.281ms)
+✔ live preview stage wrappers stay square while template content keeps its own frame settings (1.4317ms)
+✔ template selection displays a loading state until the iframe has loaded the new preview (4.1689ms)
+✔ manager source exposes an accessible preview-loading overlay bound to iframe load (1.1418ms)
+✔ manager exposes an Add User-style template options modal with draft-only apply behavior (0.9608ms)
+✔ template option dimensions use the requested unit allowlists with deterministic linked-side behavior (3.4079ms)
+✔ border radius control follows the Page Builder four-corner linked-unit behavior (2.0609ms)
+✔ template options modal exposes only structured archive and detail styling controls (0.8711ms)
+✔ template options uses the local Page Builder Coloris pattern and equal box-control geometry (0.7657ms)
+✔ Pagination options expose named models and independent desktop/tablet/mobile ranges (1.3378ms)
+✔ Editorial Journal options expose scoped lead, card, background, height, and read more controls (0.6223ms)
+✔ manager prepares Editorial Journal defaults without changing other archive option shapes (2.5082ms)
+✔ Archive toolbar search exposes model, gap, Font Awesome icon, and state color controls (0.5589ms)
+✔ template options modal exposes conditional vertical navigation and a mobile section picker (0.3344ms)
+✔ option sections follow the active surface and template schema (1.0976ms)
+✔ modal preview uses the modal clone, debounces edits, and keeps the page draft untouched (1.1423ms)
+✔ page and modal Minimal Reading List previews share the same read-only renderer endpoint (1.6875ms)
+✔ modal session starts on Header content and isolates every edit from its source object (1.7297ms)
+✔ modal preview uses the fixed virtual device profile when fitting its viewport (1.0776ms)
+✔ modal dismissal uses one focused confirmation without a duplicate toast (1.3604ms)
+✔ hidden modal lifecycle cancels preview timers, disconnects the observer, and clears the session (0.9063ms)
+✔ modal preview treats an authentication redirect as an error instead of a successful load (0.9562ms)
+✔ CMS notices show the existing Bootstrap toast for success, warning and failed (1.5271ms)
+✔ template option drafts do not share references with the last saved settings (1.6052ms)
+✔ Save Template reports success only after the server responds and preserves saved state on validation failure (2.0862ms)
+✔ modal preview URL stays within a practical GET budget for the largest draft payload (1.1973ms)
+ℹ tests 77
+ℹ suites 0
+ℹ pass 76
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 192.1451
+
+✖ failing tests:
+
+test at tests\article-theme-link-isolation.test.mjs:15:1
+✖ Article link hierarchy stays readable when a CMS theme tints generic anchors (1.8723ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /color\s*:\s*#344054\s*!important/. Input:
+  
+  ' border-width: var(--article-pagination-item-border-width, 1px); '
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/tests/article-theme-link-isolation.test.mjs:17:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: ' border-width: var(--article-pagination-item-border-width, 1px); ',
+    expected: /color\s*:\s*#344054\s*!important/,
+    operator: 'match',
+    diff: 'simple'
+  }

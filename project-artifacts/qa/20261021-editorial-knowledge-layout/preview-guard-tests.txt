@@ -1,0 +1,1 @@
+4 fixture-link guard cases passed: local TOC allowed; external navigation blocked.

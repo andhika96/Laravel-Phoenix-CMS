@@ -24,10 +24,11 @@
     if (data_get($templateOptions, 'display.date', true) && $article->created_at) $metaParts[] = $article->created_at->format('d M Y');
     $authorName = $article->author?->fullname ?: $article->author?->username;
     if (data_get($templateOptions, 'display.author', true) && $authorName) $metaParts[] = t('By').' '.$authorName;
+    if (data_get($templateOptions, 'display.reading_time', true)) $metaParts[] = max(1, (int) ceil(str_word_count(strip_tags((string) $article->content)) / 220)).' '.t('min read');
     $metaText = implode(' · ', $metaParts);
 @endphp
-@if ($metaText)<p class="article-detail__meta">{{ $metaText }}</p>@endif
 @if (data_get($title, 'enabled'))<h1>{{ $article->title }}</h1>@endif
 @if (data_get($description, 'enabled') && $descriptionText)<p class="article-detail__dek">{{ $descriptionText }}</p>@endif
+@if ($metaText)<p class="article-detail__meta">{{ $metaText }}</p>@endif
 
 @endif
