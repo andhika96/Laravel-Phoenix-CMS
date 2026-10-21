@@ -53,6 +53,29 @@ final class ArticleTemplateOptions
 
     private const BOX_SIDES = ['top', 'right', 'bottom', 'left'];
 
+    // Shared by normalization and the Focused Reader form; values are desktop, tablet, mobile.
+    public const FOCUSED_READER_FIELDS = [
+        'title_size' => ['Header typography', 'Title size', [48, 40, 32], 24, 80, 1, 'px'],
+        'title_leading' => ['Header typography', 'Title line height', [1.12, 1.15, 1.15], 1, 2, .05, ''],
+        'description_size' => ['Header typography', 'Summary size', [19, 18, 16], 14, 28, 1, 'px'],
+        'description_leading' => ['Header typography', 'Summary line height', [1.65, 1.65, 1.65], 1.2, 2.2, .05, ''],
+        'metadata_size' => ['Metadata', 'Metadata size', [13, 13, 12], 12, 20, 1, 'px'],
+        'metadata_gap' => ['Metadata', 'Metadata item gap', [16, 16, 12], 0, 48, 1, 'px'],
+        'header_gap' => ['Spacing', 'Header element gap', [20, 20, 16], 8, 48, 1, 'px'],
+        'cover_gap' => ['Spacing', 'Header to cover gap', [32, 28, 24], 0, 96, 1, 'px'],
+        'content_gap' => ['Spacing', 'Cover to content gap', [32, 28, 24], 0, 96, 1, 'px'],
+        'paragraph_gap' => ['Spacing', 'Paragraph spacing', [24, 24, 22], 8, 64, 1, 'px'],
+        'heading_gap' => ['Spacing', 'Space before headings', [40, 36, 32], 16, 96, 1, 'px'],
+        'body_size' => ['Article content', 'Body size', [18, 18, 17], 16, 24, 1, 'px'],
+        'body_leading' => ['Article content', 'Body line height', [1.8, 1.8, 1.75], 1.4, 2.2, .05, ''],
+        'heading_size' => ['Article content', 'Section heading size', [28, 26, 24], 20, 48, 1, 'px'],
+        'quote_size' => ['Article content', 'Quote size', [23, 22, 20], 16, 32, 1, 'px'],
+        'quote_padding' => ['Article content', 'Quote left padding', [24, 24, 18], 8, 48, 1, 'px'],
+        'cover_radius' => ['Cover', 'Cover radius', [10, 10, 8], 0, 48, 1, 'px'],
+        'navigation_gap' => ['Article navigation', 'Space before navigation', [40, 36, 32], 16, 96, 1, 'px'],
+        'navigation_size' => ['Article navigation', 'Navigation title size', [16, 16, 15], 14, 24, 1, 'px'],
+    ];
+
     public function __construct(private readonly ArticleTemplateCatalog $catalog)
     {
     }
@@ -188,7 +211,7 @@ final class ArticleTemplateOptions
 
     public function detail(string $template, array $input = []): array
     {
-        return [
+        $result = [
             'display' => $this->displayOptions($input),
             'header' => [
                 'eyebrow' => $this->detailCopyOption($input, 'eyebrow'),
@@ -197,6 +220,41 @@ final class ArticleTemplateOptions
             ],
             'shell' => $this->shell($input),
         ];
+        if ($template === 'focused-reader') {
+            $result['focused_reader'] = $this->focusedReader($this->array($input['focused_reader'] ?? null));
+        }
+        return $result;
+    }
+
+    private function focusedReader(array $input): array
+    {
+        $number = static function (mixed $value, float $default, float $min, float $max): float {
+            return is_numeric($value) && is_finite((float) $value)
+                ? round(min($max, max($min, (float) $value)), 2) : $default;
+        };
+        $result = [];
+        foreach (self::FOCUSED_READER_FIELDS as $field => $spec) {
+            foreach (self::DEVICES as $index => $device) {
+                $result[$field][$device] = $number(data_get($input, "$field.$device"), $spec[2][$index], $spec[3], $spec[4]);
+            }
+        }
+        foreach (['reading_width' => [880, 480, 900], 'cover_width' => [1040, 480, 1200], 'title_width' => [800, 400, 1000]] as $field => [$default, $min, $max]) {
+            $result[$field] = $number($input[$field] ?? null, $default, $min, $max);
+        }
+        foreach (self::DEVICES as $device) {
+            $align = data_get($input, "alignment.$device");
+            $ratio = data_get($input, "cover_ratio.$device");
+            $result['alignment'][$device] = in_array($align, ['left', 'center'], true) ? $align : ($device === 'mobile' ? 'left' : 'center');
+            $result['cover_ratio'][$device] = in_array($ratio, ['auto', '5/2', '16/9', '3/2', '4/3'], true) ? $ratio : ($device === 'mobile' ? '16/9' : '5/2');
+        }
+        foreach (['cover_enabled' => true, 'navigation_thumbnails' => true, 'navigation_divider' => true, 'quote_accent' => true] as $field => $default) {
+            $result[$field] = $this->boolean($input[$field] ?? null, $default);
+        }
+        foreach (['cover_fit' => ['cover', 'contain'], 'cover_position' => ['center', 'top', 'bottom', 'left', 'right'], 'cover_width_mode' => ['wide', 'reading'], 'metadata_position' => ['after-summary', 'before-summary'], 'metadata_separator' => ['none', 'dot', 'line']] as $field => $choices) {
+            $result[$field] = in_array($input[$field] ?? null, $choices, true) ? $input[$field] : $choices[0];
+        }
+        $result['cover_caption'] = $this->text($input['cover_caption'] ?? null, '', 240);
+        return $result;
     }
 
     public function archives(array $input = []): array

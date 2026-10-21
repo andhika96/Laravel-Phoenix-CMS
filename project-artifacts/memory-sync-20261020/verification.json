@@ -1,0 +1,29 @@
+{
+  "inventoried_chats": 192,
+  "new_notes": 20,
+  "updated_notes": 11,
+  "unchanged_chats": 161,
+  "note_pairs_verified": 31,
+  "hash_mismatch": 0,
+  "old_memories_unchanged": 395,
+  "empty_notes": 0,
+  "projects": {
+    "Laravel 13 CMS BUM": 3,
+    "Laravel 13 Phoenix": 5,
+    "Tanpa project": 8,
+    "Verdant Vale RPG": 1,
+    "Codex MultiWorkspace": 2,
+    "New MG [Laptop]": 5,
+    "Arunika Map Studio": 2,
+    "ArunikaAI v4/Mini": 1,
+    "Jurassic Park Operation Genesis": 1,
+    "Tanpa project (cloud)": 3
+  },
+  "messages_read": 6036,
+  "application_runtime_retested": false,
+  "artifacts": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\memory-sync-20261020",
+  "destinations": [
+    "E:\\AI\\Memories",
+    "C:\\Users\\aruna\\.codex\\memories\\extensions\\ad_hoc\\notes"
+  ]
+}

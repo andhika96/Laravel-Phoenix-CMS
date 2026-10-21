@@ -1,0 +1,393 @@
+{
+  "generated_at": "2026-10-12T08:21:50.415381+00:00",
+  "nodes": {
+    "app_http_controllers_web_pagebuilderelementorv24_pagebuilderelementorv24controller": {
+      "code_fingerprint": "a71f815b9ed82055470acd3b4d4a112f0a722f26a31ed0b54b4914b71ba181bb",
+      "label": "PageBuilderElementorV24Controller.php",
+      "last": "2026-08-28T14:35:21.323595+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-28T14:35:21.323595+00:00",
+          "outcome": "useful",
+          "q": "Review the latest 11 Page Builder v2.4 static Tailwind import screenshots and trace the remaining visual gaps through Canvas, importer, parser, styles, and assets."
+        },
+        {
+          "date": "2026-08-28T13:02:01.008951+00:00",
+          "outcome": "useful",
+          "q": "Trace Page Builder v2.4 static HTML import through the service and Canvas normalization, focusing on Tailwind grid, responsive columns, and ZIP assets."
+        }
+      ],
+      "score": 0.710824977,
+      "source_file": "app/Http/Controllers/Web/PageBuilderElementorV24/PageBuilderElementorV24Controller.php",
+      "status": "preferred",
+      "uses": 2
+    },
+    "githooks_graphify_sync__entry": {
+      "code_fingerprint": "1e4ec66522c769ab618ed98bf7746927b80b26fc3b3201557999e8ff45ad04ec",
+      "label": "graphify-sync script",
+      "last": "2026-08-10T16:52:54.699469+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-10T16:52:54.699469+00:00",
+          "outcome": "useful",
+          "q": "How do the Git push and Graphify sync hooks relate, and how should pre-push avoid blocking Git?"
+        }
+      ],
+      "score": 0.235178871,
+      "source_file": ".githooks/graphify-sync",
+      "status": "tentative",
+      "uses": 1
+    },
+    "githooks_post_merge": {
+      "code_fingerprint": "46f3d715158e58b10fb20e273342b132c865e3346d5c6ddea57c3eaa34cdcf6b",
+      "label": "post-merge",
+      "last": "2026-08-10T16:52:54.699469+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-10T16:52:54.699469+00:00",
+          "outcome": "useful",
+          "q": "How do the Git push and Graphify sync hooks relate, and how should pre-push avoid blocking Git?"
+        }
+      ],
+      "score": 0.235178871,
+      "source_file": ".githooks/post-merge",
+      "status": "tentative",
+      "uses": 1
+    },
+    "githooks_post_rewrite": {
+      "code_fingerprint": "3027449dad71a4e44b2a81d2fa7a667e567d828da672ddec20ad57d419cbbe50",
+      "label": "post-rewrite",
+      "last": "2026-08-10T16:52:54.699469+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-10T16:52:54.699469+00:00",
+          "outcome": "useful",
+          "q": "How do the Git push and Graphify sync hooks relate, and how should pre-push avoid blocking Git?"
+        }
+      ],
+      "score": 0.235178871,
+      "source_file": ".githooks/post-rewrite",
+      "status": "tentative",
+      "uses": 1
+    },
+    "package": {
+      "code_fingerprint": "b5acdf3a84bfdf72990454dbb85f48466a451719b47b8e329b0c7b571ef2b336",
+      "label": "package.json",
+      "last": "2026-08-22T10:56:43.729572+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-22T10:56:43.729572+00:00",
+          "outcome": "useful",
+          "q": "Which docs graphify-out mockups node_modules backup output and temporary paths are used by active Laravel CMS Page Builder and File Manager features?"
+        }
+      ],
+      "score": 0.308551964,
+      "source_file": "package.json",
+      "status": "tentative",
+      "uses": 1
+    },
+    "public_js_pagebuilder_elementor_app_flexpercentbasistoken": {
+      "code_fingerprint": "7c286bc71f734dd70d0b4d62340e253f21f546b416905e885f053b20c5aef448",
+      "label": "flexPercentBasisToken()",
+      "last": "2026-08-09T04:24:54.385207+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-09T04:24:54.385207+00:00",
+          "outcome": "useful",
+          "q": "Ok nice, sekaran kita lanjut dan kembali kepembahasan yang ini rekomendasi dari kamu \"Rekomendasi saya adalah parity ketat—Flexbox memakai child Containers dan edge resize\" gimana?"
+        }
+      ],
+      "score": 0.227065761,
+      "source_file": "public/js/pagebuilder_elementor/app.js",
+      "status": "tentative",
+      "uses": 1
+    },
+    "public_js_pagebuilder_elementor_app_startcolumnresize": {
+      "code_fingerprint": "7c286bc71f734dd70d0b4d62340e253f21f546b416905e885f053b20c5aef448",
+      "label": "startColumnResize()",
+      "last": "2026-08-09T04:24:54.385207+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-09T04:24:54.385207+00:00",
+          "outcome": "useful",
+          "q": "Ok nice, sekaran kita lanjut dan kembali kepembahasan yang ini rekomendasi dari kamu \"Rekomendasi saya adalah parity ketat—Flexbox memakai child Containers dan edge resize\" gimana?"
+        }
+      ],
+      "score": 0.227065761,
+      "source_file": "public/js/pagebuilder_elementor/app.js",
+      "status": "tentative",
+      "uses": 1
+    },
+    "public_js_pagebuilder_elementor_v23_app": {
+      "code_fingerprint": "9383c82eca1b8ddf59a5e99744a09b238a94c3364311d2f886d0f082862530fb",
+      "label": "pagebuilder_elementor_v23/app.js",
+      "last": "2026-08-22T12:00:38.343994+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-22T12:00:38.343994+00:00",
+          "outcome": "useful",
+          "q": "Mengapa context menu Page Builder v2.3 tidak menutup saat klik kiri di luar popup?"
+        },
+        {
+          "date": "2026-08-12T08:51:08.463404+00:00",
+          "outcome": "useful",
+          "q": "Resume Page Builder v2.3 from memory and graph"
+        },
+        {
+          "date": "2026-08-09T05:00:35.782127+00:00",
+          "outcome": "useful",
+          "q": "Where are Page Builder v2.3 container normalization, child storage, flex grid rendering, drag drop, resize, and persistence implemented?"
+        },
+        {
+          "date": "2026-08-09T02:14:04.790706+00:00",
+          "outcome": "useful",
+          "q": "Konteks Page Builder v2.3 dari memori dan graph"
+        }
+      ],
+      "score": 1.007058847,
+      "source_file": "public/js/pagebuilder_elementor_v23/app.js",
+      "status": "preferred",
+      "uses": 4
+    },
+    "public_js_pagebuilder_elementor_v23_widget_registry": {
+      "code_fingerprint": "234c4b794938a20246806f33ac650cd0923d18ca791d549b31fd2874e4d6dda2",
+      "label": "pagebuilder_elementor_v23/widget-registry.js",
+      "last": "2026-08-22T13:38:48.286081+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-22T13:38:48.286081+00:00",
+          "outcome": "useful",
+          "q": "Untuk route page builder v2.4 dibuatkan file route terpisah aja kali yah, gimana?"
+        }
+      ],
+      "score": 0.309355404,
+      "source_file": "public/js/pagebuilder_elementor_v23/widget-registry.js",
+      "status": "tentative",
+      "uses": 1
+    },
+    "public_js_pagebuilder_elementor_v23_widgets_layout_container_canvas": {
+      "code_fingerprint": "e9118d5d905ddd521da128a110b0d1101a6dec8966692c35d06f5223825b0933",
+      "label": "pagebuilder_elementor_v23/widgets/layout/container/Canvas.vue",
+      "last": "2026-08-09T05:00:35.782127+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-09T05:00:35.782127+00:00",
+          "outcome": "useful",
+          "q": "Where are Page Builder v2.3 container normalization, child storage, flex grid rendering, drag drop, resize, and persistence implemented?"
+        }
+      ],
+      "score": 0.227195827,
+      "source_file": "public/js/pagebuilder_elementor_v23/widgets/layout/container/Canvas.vue",
+      "status": "tentative",
+      "uses": 1
+    },
+    "public_js_pagebuilder_elementor_v23_widgets_pro_shared_canvas": {
+      "code_fingerprint": "8389e978f65218c5fe8bedd217d873db390d0999d0625b29086377e1a1347f9e",
+      "label": "pagebuilder_elementor_v23/widgets/pro/shared/Canvas.vue",
+      "last": "2026-08-12T08:51:08.463404+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-12T08:51:08.463404+00:00",
+          "outcome": "useful",
+          "q": "Resume Page Builder v2.3 from memory and graph"
+        }
+      ],
+      "score": 0.244404868,
+      "source_file": "public/js/pagebuilder_elementor_v23/widgets/pro/shared/Canvas.vue",
+      "status": "tentative",
+      "uses": 1
+    },
+    "public_js_pagebuilder_elementor_widgets_basic_divider_settings": {
+      "code_fingerprint": "7be759e9e0c036c25ec114cb96a593b611e57561de12b41c041295869bfc4a81",
+      "label": "pagebuilder_elementor/widgets/basic/divider/Settings.vue",
+      "last": "2026-08-22T14:52:55.583218+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-22T14:52:55.583218+00:00",
+          "outcome": "useful",
+          "q": "Apakah sepuluh modul v2.4 mempunyai Advanced sendiri karena opsi tambahan khusus widget?"
+        }
+      ],
+      "score": 0.309723535,
+      "source_file": "public/js/pagebuilder_elementor/widgets/basic/divider/Settings.vue",
+      "status": "tentative",
+      "uses": 1
+    },
+    "resources_js_filemanager_v2_app": {
+      "code_fingerprint": "0b0937c64c681e7a3b80f92b6128055339c8ff3f3ccf7bbbf83a9d4b5bc70a8e",
+      "label": "App.vue",
+      "last": "2026-07-25T02:06:44.206287+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-25T02:06:44.206287+00:00",
+          "outcome": "useful",
+          "q": "Kita lanjut, untuk mobile view kita kesampingkan dulu, bisa kamu lihat gambar SS saya ini, font size terlalu pada kekecilan saya ingin kamu mengubah menjadi tidak kekecilan tapi tidak kebesaran juga setelah ini selesai saya ingin kamu audit font size yang lain."
+        }
+      ],
+      "score": 0.160204182,
+      "source_file": "resources/js/filemanager_v2/App.vue",
+      "status": "tentative",
+      "uses": 1
+    },
+    "scripts_graphify_readme": {
+      "code_fingerprint": "a8b498368c26ad48b0d65251d6ac06039c7051583cfc2e94bd76246b202ffcb5",
+      "label": "graphify/README.md",
+      "last": "2026-08-22T11:26:34.872198+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-22T11:26:34.872198+00:00",
+          "outcome": "useful",
+          "q": "Does Graphify still work after centralizing project mockups and pruning old graph snapshots?"
+        }
+      ],
+      "score": 0.308699791,
+      "source_file": "scripts/graphify/README.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "scripts_graphify_readme_graphify_git_sync": {
+      "code_fingerprint": "a8b498368c26ad48b0d65251d6ac06039c7051583cfc2e94bd76246b202ffcb5",
+      "label": "Graphify Git Sync",
+      "last": "2026-08-22T11:26:34.872198+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-22T11:26:34.872198+00:00",
+          "outcome": "useful",
+          "q": "Does Graphify still work after centralizing project mockups and pruning old graph snapshots?"
+        },
+        {
+          "date": "2026-08-22T10:56:43.729572+00:00",
+          "outcome": "useful",
+          "q": "Which docs graphify-out mockups node_modules backup output and temporary paths are used by active Laravel CMS Page Builder and File Manager features?"
+        }
+      ],
+      "score": 0.617251755,
+      "source_file": "scripts/graphify/README.md",
+      "status": "preferred",
+      "uses": 2
+    },
+    "scripts_graphify_update_from_git": {
+      "code_fingerprint": "bf62bb9e4379418aeea6fcfdc95d659166f3713f42095b6511774e5c4100bc3c",
+      "label": "update-from-git.ps1",
+      "last": "2026-08-10T16:52:54.699469+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-10T16:52:54.699469+00:00",
+          "outcome": "useful",
+          "q": "How do the Git push and Graphify sync hooks relate, and how should pre-push avoid blocking Git?"
+        }
+      ],
+      "score": 0.235178871,
+      "source_file": "scripts/graphify/update-from-git.ps1",
+      "status": "tentative",
+      "uses": 1
+    },
+    "tests_feature_pagebuilderelementorv23assetisolationtest_pagebuilderelementorv23assetisolationtest": {
+      "code_fingerprint": "776bf8b114115ac5e3ccd13c2e9b94b7762db61c06492ac087fe2654ebe9e79e",
+      "label": "PageBuilderElementorV23AssetIsolationTest",
+      "last": "2026-08-22T13:38:48.286081+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-22T13:38:48.286081+00:00",
+          "outcome": "useful",
+          "q": "Untuk route page builder v2.4 dibuatkan file route terpisah aja kali yah, gimana?"
+        },
+        {
+          "date": "2026-08-09T02:14:04.790706+00:00",
+          "outcome": "useful",
+          "q": "Konteks Page Builder v2.3 dari memori dan graph"
+        }
+      ],
+      "score": 0.535945027,
+      "source_file": "tests/Feature/PageBuilderElementorV23AssetIsolationTest.php",
+      "status": "preferred",
+      "uses": 2
+    },
+    "tests_feature_pagebuilderelementorv23routesandpersistencetest_pagebuilderelementorv23routesandpersistencetest": {
+      "code_fingerprint": "7676a9501b4027e4331d021add815b6ef66c6c48818e8430384450970a6bd799",
+      "label": "PageBuilderElementorV23RoutesAndPersistenceTest",
+      "last": "2026-08-22T13:38:48.286081+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-22T13:38:48.286081+00:00",
+          "outcome": "useful",
+          "q": "Untuk route page builder v2.4 dibuatkan file route terpisah aja kali yah, gimana?"
+        },
+        {
+          "date": "2026-08-12T08:51:08.463404+00:00",
+          "outcome": "useful",
+          "q": "Resume Page Builder v2.3 from memory and graph"
+        },
+        {
+          "date": "2026-08-09T05:50:53.421148+00:00",
+          "outcome": "useful",
+          "q": "Execute the approved Page Builder v2.3 child Container strict parity specification"
+        },
+        {
+          "date": "2026-08-09T05:00:35.782127+00:00",
+          "outcome": "useful",
+          "q": "Where are Page Builder v2.3 container normalization, child storage, flex grid rendering, drag drop, resize, and persistence implemented?"
+        },
+        {
+          "date": "2026-08-09T02:14:04.790706+00:00",
+          "outcome": "useful",
+          "q": "Konteks Page Builder v2.3 dari memori dan graph"
+        }
+      ],
+      "score": 1.234924963,
+      "source_file": "tests/Feature/PageBuilderElementorV23RoutesAndPersistenceTest.php",
+      "status": "preferred",
+      "uses": 5
+    },
+    "tests_feature_pagebuilderelementorwidgetregistrytest_pagebuilderelementorwidgetregistrytest": {
+      "code_fingerprint": "738991d071bcdc77a5e1eb53eaad425cd86cb3579ab49d4f5718eecd78fceeeb",
+      "label": "PageBuilderElementorWidgetRegistryTest",
+      "last": "2026-08-22T15:09:40.300261+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-22T15:09:40.300261+00:00",
+          "outcome": "useful",
+          "q": "Audit dan planning refactor Page Builder v2.4 menjadi full-stack one-folder-per-module"
+        },
+        {
+          "date": "2026-08-22T14:58:27.984498+00:00",
+          "outcome": "useful",
+          "q": "Di folder apa semua widget, layout, dan grid Page Builder v2.4 akan ditempatkan setelah modularisasi?"
+        },
+        {
+          "date": "2026-08-22T14:45:58.435001+00:00",
+          "outcome": "useful",
+          "q": "Apakah semua layout grid dan widget v2.4 tetap menggunakan satu file kategori Advanced saat refactor modular?"
+        }
+      ],
+      "score": 0.929246817,
+      "source_file": "tests/Feature/PageBuilderElementorWidgetRegistryTest.php",
+      "status": "preferred",
+      "uses": 3
+    },
+    "tests_theme_responsive_typography_static_test": {
+      "code_fingerprint": "cb537d130553522c5ef13164aa2e0e017c2fc1f4189a43be0f998734abf9bdc5",
+      "label": "theme-responsive-typography-static.test.mjs",
+      "last": "2026-08-24T10:08:17.060458+00:00",
+      "neg": 1,
+      "provenance": [
+        {
+          "date": "2026-08-24T10:08:17.060458+00:00",
+          "outcome": "corrected",
+          "q": "Apakah kode responsive font size benar-benar bekerja dan rapi, bukan spaghetti code?"
+        },
+        {
+          "date": "2026-08-24T09:19:23.638173+00:00",
+          "outcome": "useful",
+          "q": "Apakah kode responsive font size benar-benar bekerja dan rapi, bukan spaghetti code?"
+        }
+      ],
+      "score": -0.000253194,
+      "source_file": "tests/theme-responsive-typography-static.test.mjs",
+      "status": "contested",
+      "uses": 1,
+      "verdict": "dead end"
+    }
+  },
+  "version": 1
+}

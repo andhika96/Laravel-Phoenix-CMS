@@ -10,6 +10,7 @@
     <link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
     <script src="{{ url('assets/js/article/article-theme-color-sync-2026.js?v=').time() }}"></script>
     <link href="{{ url('assets/css/article/article-frontend-2026.css?v=').time() }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/article/article-editor-content.css?v=').filemtime(public_path('assets/css/article/article-editor-content.css')) }}" rel="stylesheet">
     <style>body{margin:0;background:#fff}.article-preview-fixture-note{position:fixed;top:12px;right:14px;z-index:10;padding:4px 8px;border:1px solid var(--article-accent-ring,#ded5ff);border-radius:999px;background:rgb(255 255 255 / .92);color:var(--article-accent,#6542d7);font:700 11px/1 var(--ph-font-family,Arial,sans-serif);letter-spacing:.04em;text-transform:uppercase}</style>
 </head>
 <body @if ($isPreviewFixture ?? false) data-preview-fixture="true" @endif>

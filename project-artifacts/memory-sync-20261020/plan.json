@@ -1,0 +1,32 @@
+{
+  "chats": 192,
+  "actions": {
+    "unchanged": 161,
+    "update": 11,
+    "new": 20
+  },
+  "projects": {
+    "laravel-12-phoenix": 11,
+    "Laravel 13 Phoenix": 73,
+    "Laravel 13 CRM": 1,
+    "Tanpa project": 36,
+    "Age of Empire II DE": 6,
+    "Laravel 13 GEN21 AI CMS": 1,
+    "New MG (chat tanpa project)": 1,
+    "New MG [SSD Portable]": 1,
+    "New MG [Laptop]": 8,
+    "LaraPhoenix Web Game": 1,
+    "laravel-11-cms-bum": 2,
+    "Laravel 13 CMS BUM": 38,
+    "Laravel 13 CMS BUM NextJS": 1,
+    "Verdant Vale RPG": 1,
+    "Codex MultiWorkspace": 2,
+    "Arunika Map Studio": 2,
+    "ArunikaAI v4/Mini": 1,
+    "Jurassic Park Operation Genesis": 1,
+    "Tanpa project (cloud)": 5
+  },
+  "needs_app_read": [],
+  "messages": 6036,
+  "current_chat_separate": "01a15802-6823-7731-8e79-8c5a9aa0ee52"
+}

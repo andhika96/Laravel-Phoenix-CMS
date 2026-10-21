@@ -1,0 +1,134 @@
+[
+  {
+    "name": "bold",
+    "html": "<p><strong>Kalimat pengujian fitur editor.</strong></p>"
+  },
+  {
+    "name": "italic",
+    "html": "<p><i>Kalimat pengujian fitur editor.</i></p>"
+  },
+  {
+    "name": "underline",
+    "html": "<p><u>Kalimat pengujian fitur editor.</u></p>"
+  },
+  {
+    "name": "strikethrough",
+    "html": "<p><s>Kalimat pengujian fitur editor.</s></p>"
+  },
+  {
+    "name": "code",
+    "html": "<p><code>Kalimat pengujian fitur editor.</code></p>"
+  },
+  {
+    "name": "bulletedList",
+    "html": "<ul><li>Kalimat pengujian fitur editor.</li></ul>"
+  },
+  {
+    "name": "numberedList",
+    "html": "<ol><li>Kalimat pengujian fitur editor.</li></ol>"
+  },
+  {
+    "name": "todoList",
+    "html": "<ul class=\"todo-list\"><li><label class=\"todo-list__label\"><input type=\"checkbox\" disabled=\"disabled\"><span class=\"todo-list__label__description\">Kalimat pengujian fitur editor.</span></label></li></ul>"
+  },
+  {
+    "name": "blockQuote",
+    "html": "<blockquote><p>Kalimat pengujian fitur editor.</p></blockquote>"
+  },
+  {
+    "name": "alignment:left",
+    "html": "<p>Kalimat pengujian fitur editor.</p>"
+  },
+  {
+    "name": "alignment:center",
+    "html": "<p style=\"text-align:center;\">Kalimat pengujian fitur editor.</p>"
+  },
+  {
+    "name": "alignment:right",
+    "html": "<p style=\"text-align:right;\">Kalimat pengujian fitur editor.</p>"
+  },
+  {
+    "name": "alignment:justify",
+    "html": "<p style=\"text-align:justify;\">Kalimat pengujian fitur editor.</p>"
+  },
+  {
+    "name": "fontFamily",
+    "html": "<p><span style=\"font-family:Georgia, serif;\">Kalimat pengujian fitur editor.</span></p>"
+  },
+  {
+    "name": "fontSize:tiny",
+    "html": "<p><span class=\"text-tiny\">Kalimat pengujian fitur editor.</span></p>"
+  },
+  {
+    "name": "fontSize:small",
+    "html": "<p><span class=\"text-small\">Kalimat pengujian fitur editor.</span></p>"
+  },
+  {
+    "name": "fontSize:big",
+    "html": "<p><span class=\"text-big\">Kalimat pengujian fitur editor.</span></p>"
+  },
+  {
+    "name": "fontSize:huge",
+    "html": "<p><span class=\"text-huge\">Kalimat pengujian fitur editor.</span></p>"
+  },
+  {
+    "name": "fontColor",
+    "html": "<p><span style=\"color:#b83232;\">Kalimat pengujian fitur editor.</span></p>"
+  },
+  {
+    "name": "highlight:yellowMarker",
+    "html": "<p><mark class=\"marker-yellow\">Kalimat pengujian fitur editor.</mark></p>"
+  },
+  {
+    "name": "highlight:greenMarker",
+    "html": "<p><mark class=\"marker-green\">Kalimat pengujian fitur editor.</mark></p>"
+  },
+  {
+    "name": "highlight:pinkMarker",
+    "html": "<p><mark class=\"marker-pink\">Kalimat pengujian fitur editor.</mark></p>"
+  },
+  {
+    "name": "highlight:blueMarker",
+    "html": "<p><mark class=\"marker-blue\">Kalimat pengujian fitur editor.</mark></p>"
+  },
+  {
+    "name": "highlight:redPen",
+    "html": "<p><mark class=\"pen-red\">Kalimat pengujian fitur editor.</mark></p>"
+  },
+  {
+    "name": "highlight:greenPen",
+    "html": "<p><mark class=\"pen-green\">Kalimat pengujian fitur editor.</mark></p>"
+  },
+  {
+    "name": "heading",
+    "html": "<h3>Kalimat pengujian fitur editor.</h3>"
+  },
+  {
+    "name": "removeFormat",
+    "html": "<p>Kalimat pengujian fitur editor.</p>"
+  },
+  {
+    "name": "undo-redo",
+    "html": "<p><strong>Kalimat pengujian fitur editor.</strong></p>"
+  },
+  {
+    "name": "nested-list-indent-outdent",
+    "html": "<ul><li>Satu</li><li>Dua</li></ul>"
+  },
+  {
+    "name": "link",
+    "html": "<p><a href=\"/article\">Kalimat pengujian fitur editor.</a></p>"
+  },
+  {
+    "name": "codeBlock",
+    "html": "<pre><code class=\"language-javascript\">Kalimat pengujian fitur editor.</code></pre>"
+  },
+  {
+    "name": "horizontalLine",
+    "html": "<hr><p>&nbsp;</p>"
+  },
+  {
+    "name": "selectAll",
+    "html": "<p>Kalimat pengujian fitur editor.</p>"
+  }
+]

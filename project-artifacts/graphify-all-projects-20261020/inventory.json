@@ -1,0 +1,164 @@
+[
+  {
+    "label": "Laravel 13 Phoenix",
+    "root": "D:\\Laragon\\www\\laravel-13-phoenix",
+    "status": "planned",
+    "artifacts": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020",
+    "graph_exists": true,
+    "code": 1620,
+    "metadata": 79,
+    "changed_code": 34,
+    "changed_metadata": 3,
+    "prune": 1,
+    "before_nodes": 21049,
+    "before_edges": 37144
+  },
+  {
+    "label": "Laravel 13 CMS BUM",
+    "root": "D:\\Laragon\\www\\laravel-13-cms-bum",
+    "status": "planned",
+    "artifacts": "D:\\Laragon\\www\\laravel-13-cms-bum\\project-artifacts\\graphify-all-projects-20261020",
+    "graph_exists": true,
+    "code": 2043,
+    "metadata": 57,
+    "changed_code": 327,
+    "changed_metadata": 5,
+    "prune": 1,
+    "before_nodes": 10320,
+    "before_edges": 22437
+  },
+  {
+    "label": "Laravel 13 CMS BUM NextJS",
+    "root": "D:\\Laragon\\www\\laravel-13-cms-bum-next",
+    "status": "source-root-unavailable"
+  },
+  {
+    "label": "Laravel 13 Phoenix Standalone",
+    "root": "D:\\Laragon\\www\\laravel-13-phoenix-standalone",
+    "status": "planned",
+    "artifacts": "D:\\Laragon\\www\\laravel-13-phoenix-standalone\\project-artifacts\\graphify-all-projects-20261020",
+    "graph_exists": true,
+    "code": 426,
+    "metadata": 43,
+    "changed_code": 0,
+    "changed_metadata": 0,
+    "prune": 0,
+    "before_nodes": 10869,
+    "before_edges": 19624
+  },
+  {
+    "label": "New MG Laptop",
+    "root": "D:\\Laragon\\www\\newmg",
+    "status": "planned",
+    "artifacts": "D:\\Laragon\\www\\newmg\\project-artifacts\\graphify-all-projects-20261020",
+    "graph_exists": true,
+    "code": 565,
+    "metadata": 104,
+    "changed_code": 30,
+    "changed_metadata": 1,
+    "prune": 0,
+    "before_nodes": 2836,
+    "before_edges": 3577
+  },
+  {
+    "label": "New MG SSD Portable",
+    "root": "E:\\Apps\\Laragon\\www\\newmg",
+    "status": "source-root-unavailable"
+  },
+  {
+    "label": "Age of Empire II DE — scenario tools",
+    "root": "C:\\Users\\aruna\\Documents\\Age of Empire II DE",
+    "status": "planned",
+    "artifacts": "C:\\Users\\aruna\\Documents\\Age of Empire II DE\\project-artifacts\\graphify-all-projects-20261020",
+    "graph_exists": true,
+    "code": 6,
+    "metadata": 0,
+    "changed_code": 0,
+    "changed_metadata": 0,
+    "prune": 0,
+    "before_nodes": 65,
+    "before_edges": 135
+  },
+  {
+    "label": "Age of Empire II DE — AI v4/Mini",
+    "root": "D:\\New AI Script AoE II DE",
+    "status": "planned",
+    "artifacts": "D:\\New AI Script AoE II DE\\project-artifacts\\graphify-all-projects-20261020",
+    "graph_exists": true,
+    "code": 25,
+    "metadata": 0,
+    "changed_code": 6,
+    "changed_metadata": 0,
+    "prune": 0,
+    "before_nodes": 1553,
+    "before_edges": 7642
+  },
+  {
+    "label": "Arunika Map Studio",
+    "root": "D:\\Arunika Map Studio",
+    "status": "planned",
+    "artifacts": "D:\\Arunika Map Studio\\project-artifacts\\graphify-all-projects-20261020",
+    "graph_exists": true,
+    "code": 18,
+    "metadata": 3,
+    "changed_code": 14,
+    "changed_metadata": 2,
+    "prune": 0,
+    "before_nodes": 202,
+    "before_edges": 469
+  },
+  {
+    "label": "LaraPhoenix Web Game",
+    "root": "C:\\Users\\aruna\\Documents\\ChatGPT\\LaraPhoenix Web Game",
+    "status": "no-active-source-files",
+    "artifacts": "C:\\Users\\aruna\\Documents\\ChatGPT\\LaraPhoenix Web Game\\project-artifacts\\graphify-all-projects-20261020"
+  },
+  {
+    "label": "Laravel 13 CRM",
+    "root": "D:\\Laragon\\www\\laravel-13-crm",
+    "status": "source-root-unavailable"
+  },
+  {
+    "label": "Laravel 13 GEN21 AI CMS",
+    "root": "D:\\Laragon\\www\\laravel-13-gen21ai-cms",
+    "status": "source-root-unavailable"
+  },
+  {
+    "label": "Codex MultiWorkspace",
+    "root": "D:\\Codex-MultiWorkspace",
+    "status": "planned",
+    "artifacts": "D:\\Codex-MultiWorkspace\\project-artifacts\\graphify-all-projects-20261020",
+    "graph_exists": true,
+    "code": 28,
+    "metadata": 2,
+    "changed_code": 28,
+    "changed_metadata": 2,
+    "prune": 1,
+    "before_nodes": 264,
+    "before_edges": 502
+  },
+  {
+    "label": "Verdant Vale RPG",
+    "root": "D:\\Laragon\\www\\game",
+    "status": "planned",
+    "artifacts": "D:\\Laragon\\www\\game\\project-artifacts\\graphify-all-projects-20261020",
+    "graph_exists": false,
+    "code": 8,
+    "metadata": 2,
+    "changed_code": 8,
+    "changed_metadata": 2,
+    "prune": 0,
+    "before_nodes": 0,
+    "before_edges": 0
+  },
+  {
+    "label": "Legacy Laravel 12 Phoenix",
+    "root": "D:\\Laragon\\www\\laravel-12-phoenix",
+    "status": "source-root-unavailable"
+  },
+  {
+    "label": "Legacy Laravel 11 CMS BUM",
+    "root": "D:\\Laragon\\www\\laravel-11-cms-bum",
+    "status": "source-root-unavailable"
+  }
+]

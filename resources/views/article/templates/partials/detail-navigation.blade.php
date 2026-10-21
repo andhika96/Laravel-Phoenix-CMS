@@ -1,4 +1,7 @@
 @if (data_get($templateOptions ?? [], 'display.navigation', true) && (($previousArticle ?? null) || ($nextArticle ?? null)))
+    @if ($readingCards ?? false)
+        @include('article.templates.partials.detail-reading-cards')
+    @else
     <nav class="article-detail-navigation" aria-label="{{ t('Article navigation') }}">
         @if ($previousArticle ?? null)
             <a class="article-detail-navigation__item article-detail-navigation__item--previous" href="{{ route('cms.core.article.detail', $previousArticle->uri) }}">
@@ -18,4 +21,5 @@
             <span></span>
         @endif
     </nav>
+    @endif
 @endif

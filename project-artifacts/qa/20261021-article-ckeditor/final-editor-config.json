@@ -1,0 +1,246 @@
+{
+  "toolbar": {
+    "items": [
+      "heading",
+      "|",
+      "bold",
+      "italic",
+      "link",
+      "bulletedList",
+      "numberedList",
+      "todoList",
+      "|",
+      "outdent",
+      "indent",
+      "alignment",
+      "undo",
+      "redo",
+      "|",
+      "CKFinder",
+      "imageUpload",
+      "imageInsert",
+      "blockQuote",
+      "insertTable",
+      "removeFormat",
+      "underline",
+      "strikethrough",
+      "fontFamily",
+      "fontSize",
+      "fontColor",
+      "highlight",
+      "code",
+      "codeBlock",
+      "horizontalLine",
+      "selectAll"
+    ]
+  },
+  "image": {
+    "toolbar": [
+      "imageTextAlternative",
+      "toggleImageCaption",
+      "|",
+      "imageStyle:inline",
+      "imageStyle:block",
+      "imageStyle:side",
+      "imageStyle:alignLeft",
+      "imageStyle:alignCenter",
+      "imageStyle:alignRight",
+      "imageStyle:alignBlockLeft",
+      "imageStyle:alignBlockRight",
+      "|",
+      "resizeImage",
+      "linkImage"
+    ],
+    "styles": {
+      "options": [
+        "inline",
+        "block",
+        "side",
+        "alignLeft",
+        "alignCenter",
+        "alignRight",
+        "alignBlockLeft",
+        "alignBlockRight"
+      ]
+    },
+    "resizeOptions": [
+      {
+        "name": "resizeImage:original",
+        "label": "Default image width",
+        "value": null
+      },
+      {
+        "name": "resizeImage:25",
+        "label": "25% page width",
+        "value": "25"
+      },
+      {
+        "name": "resizeImage:50",
+        "label": "50% page width",
+        "value": "50"
+      },
+      {
+        "name": "resizeImage:75",
+        "label": "75% page width",
+        "value": "75"
+      },
+      {
+        "name": "resizeImage:100",
+        "label": "100% page width",
+        "value": "100"
+      }
+    ],
+    "upload": {
+      "types": [
+        "jpeg",
+        "png",
+        "gif",
+        "bmp",
+        "webp",
+        "tiff"
+      ]
+    },
+    "resizeUnit": "%"
+  },
+  "table": {
+    "contentToolbar": [
+      "tableColumn",
+      "tableRow",
+      "mergeTableCells",
+      "tableProperties"
+    ],
+    "tableProperties": {
+      "borderColors": [
+        {
+          "color": "hsl(0, 0%, 0%)",
+          "label": "Black"
+        },
+        {
+          "color": "hsl(0, 0%, 30%)",
+          "label": "Dim grey"
+        },
+        {
+          "color": "hsl(0, 0%, 60%)",
+          "label": "Grey"
+        },
+        {
+          "color": "hsl(0, 0%, 90%)",
+          "label": "Light grey"
+        },
+        {
+          "color": "hsl(0, 0%, 100%)",
+          "label": "White",
+          "hasBorder": true
+        },
+        {
+          "color": "hsl(0, 75%, 60%)",
+          "label": "Red"
+        },
+        {
+          "color": "hsl(30, 75%, 60%)",
+          "label": "Orange"
+        },
+        {
+          "color": "hsl(60, 75%, 60%)",
+          "label": "Yellow"
+        },
+        {
+          "color": "hsl(90, 75%, 60%)",
+          "label": "Light green"
+        },
+        {
+          "color": "hsl(120, 75%, 60%)",
+          "label": "Green"
+        },
+        {
+          "color": "hsl(150, 75%, 60%)",
+          "label": "Aquamarine"
+        },
+        {
+          "color": "hsl(180, 75%, 60%)",
+          "label": "Turquoise"
+        },
+        {
+          "color": "hsl(210, 75%, 60%)",
+          "label": "Light blue"
+        },
+        {
+          "color": "hsl(240, 75%, 60%)",
+          "label": "Blue"
+        },
+        {
+          "color": "hsl(270, 75%, 60%)",
+          "label": "Purple"
+        }
+      ],
+      "backgroundColors": [
+        {
+          "color": "hsl(0, 0%, 0%)",
+          "label": "Black"
+        },
+        {
+          "color": "hsl(0, 0%, 30%)",
+          "label": "Dim grey"
+        },
+        {
+          "color": "hsl(0, 0%, 60%)",
+          "label": "Grey"
+        },
+        {
+          "color": "hsl(0, 0%, 90%)",
+          "label": "Light grey"
+        },
+        {
+          "color": "hsl(0, 0%, 100%)",
+          "label": "White",
+          "hasBorder": true
+        },
+        {
+          "color": "hsl(0, 75%, 60%)",
+          "label": "Red"
+        },
+        {
+          "color": "hsl(30, 75%, 60%)",
+          "label": "Orange"
+        },
+        {
+          "color": "hsl(60, 75%, 60%)",
+          "label": "Yellow"
+        },
+        {
+          "color": "hsl(90, 75%, 60%)",
+          "label": "Light green"
+        },
+        {
+          "color": "hsl(120, 75%, 60%)",
+          "label": "Green"
+        },
+        {
+          "color": "hsl(150, 75%, 60%)",
+          "label": "Aquamarine"
+        },
+        {
+          "color": "hsl(180, 75%, 60%)",
+          "label": "Turquoise"
+        },
+        {
+          "color": "hsl(210, 75%, 60%)",
+          "label": "Light blue"
+        },
+        {
+          "color": "hsl(240, 75%, 60%)",
+          "label": "Blue"
+        },
+        {
+          "color": "hsl(270, 75%, 60%)",
+          "label": "Purple"
+        }
+      ],
+      "defaultProperties": {}
+    },
+    "defaultHeadings": {
+      "rows": 0,
+      "columns": 0
+    }
+  }
+}

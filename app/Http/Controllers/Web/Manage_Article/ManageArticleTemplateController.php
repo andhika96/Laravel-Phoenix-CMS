@@ -9,6 +9,7 @@ use App\Support\Article\ArticleTemplateCatalog;
 use App\Support\Article\ArticleTemplatePreviewFixture;
 use App\Support\Article\ArticleTemplateOptions;
 use App\Support\Article\PublicArticleCategoryOptions;
+use App\Support\Article\PublicArticleQuery;
 use App\Support\CkfinderSessionBridge;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,7 @@ class ManageArticleTemplateController extends Controller
         private readonly ArticleTemplatePreviewFixture $previewFixture,
         private readonly PublicArticleCategoryOptions $publicArticleCategoryOptions,
         private readonly ArticleTemplateOptions $articleTemplateOptions,
+        private readonly PublicArticleQuery $publicArticleQuery,
     ) {
         date_default_timezone_set('Asia/Jakarta');
     }
@@ -28,8 +30,13 @@ class ManageArticleTemplateController extends Controller
         app(CkfinderSessionBridge::class)->prepare($request);
         $settings = ArticleTemplateSetting::current();
 
+        $frontendArticle = $this->publicArticleQuery->eligible()->withoutEagerLoads()
+            ->select(['id', 'uri'])->orderByDesc('created_at')->orderByDesc('id')->first();
+
         return view('manage_article.templates.index', [
             'settings' => $settings,
+            'frontendArchiveUrl' => route('cms.core.article'),
+            'frontendDetailUrl' => $frontendArticle ? route('cms.core.article.detail', $frontendArticle->uri ?: $frontendArticle->id) : null,
             'archiveTemplates' => $this->withPreviewUrls($this->catalog->archive()),
             'detailTemplates' => $this->withPreviewUrls($this->catalog->detail()),
             'archiveTemplateOptions' => $this->articleTemplateOptions->archives((array) $settings->archive_template_options),

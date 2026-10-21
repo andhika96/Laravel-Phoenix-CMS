@@ -17,6 +17,7 @@
     <link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
     <style>:root{--ph-font-family:'{{ $articleTypography['fontFamilyName'] }}',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--ph-font-size:{{ $articleTypography['fontSize'] }};}</style>
     <link href="{{ url('assets/css/article/article-frontend-2026.css?v=').time() }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/article/article-editor-content.css?v=').filemtime(public_path('assets/css/article/article-editor-content.css')) }}" rel="stylesheet">
 @endpush
 
 @push('js')

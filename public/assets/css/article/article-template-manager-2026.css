@@ -2623,3 +2623,14 @@
 .article-template-discard-dialog__actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
 .article-template-discard-dialog__actions .btn { min-height: 40px; font-size: 14px; padding: 8px 14px; }
 @media (max-width: 480px) { .article-template-discard-dialog { padding: 24px; } .article-template-discard-dialog__actions { display: grid; grid-template-columns: 1fr; } .article-template-discard-dialog__actions .btn { min-height: 44px; } }
+
+/* Focused Reader uses the existing options form controls. */
+.article-template-reader-fields { display: grid; gap: 24px; margin-top: 20px; }
+.article-template-reader-fields fieldset { min-width: 0; border: 0; border-top: 1px solid var(--bs-border-color, #e5e7eb); padding: 20px 0 0; margin: 0; }
+.article-template-reader-fields legend { float: none; width: auto; font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+.article-template-reader-fields .article-template-options-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.article-template-reader-fields label { min-width: 0; font-size: 13px; }
+.article-template-reader-fields .form-control, .article-template-reader-fields .form-select { min-width: 0; width: 100%; }
+.article-template-reader-fields small { display: block; margin-top: 12px; color: var(--bs-secondary-color, #667085); }
+.article-template-reader-wide { grid-column: 1 / -1; }
+@media (max-width: 575.98px) { .article-template-reader-fields .article-template-options-fields { grid-template-columns: minmax(0, 1fr); } }

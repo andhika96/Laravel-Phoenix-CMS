@@ -1,0 +1,272 @@
+[
+  {
+    "root": "D:\\Laragon\\www\\laravel-13-phoenix",
+    "flagged_count": 1,
+    "details": [
+      {
+        "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+        "target": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+        "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+        "source_location": "L89",
+        "label": "archive"
+      }
+    ]
+  },
+  {
+    "root": "D:\\Laragon\\www\\laravel-13-cms-bum",
+    "flagged_count": 32,
+    "details": [
+      {
+        "source": "app_http_controllers_api_v1_gradingcontroller_gradingcontroller_photo",
+        "target": "app_http_controllers_api_v1_gradingcontroller_gradingcontroller_photo",
+        "source_file": "app/Http/Controllers/Api/v1/GradingController.php",
+        "source_location": "L45",
+        "label": "photo"
+      },
+      {
+        "source": "app_http_controllers_api_v2_goharvest_goharvest_attendancecontroller_goharvest_attendancecontroller_update",
+        "target": "app_http_controllers_api_v2_goharvest_goharvest_attendancecontroller_goharvest_attendancecontroller_update",
+        "source_file": "app/Http/Controllers/Api/v2/GoHarvest/GoHarvest_AttendanceController.php",
+        "source_location": "L561",
+        "label": "update"
+      },
+      {
+        "source": "app_http_controllers_api_v2_gokut_gokut_driver_activitycontroller_gokut_driver_activitycontroller_destroyitem",
+        "target": "app_http_controllers_api_v2_gokut_gokut_driver_activitycontroller_gokut_driver_activitycontroller_destroyitem",
+        "source_file": "app/Http/Controllers/Api/v2/Gokut/Gokut_Driver_ActivityController.php",
+        "source_location": "L865",
+        "label": "destroyItem"
+      },
+      {
+        "source": "app_http_controllers_api_v2_gokut_gokut_driver_activitycontroller_gokut_driver_activitycontroller_update",
+        "target": "app_http_controllers_api_v2_gokut_gokut_driver_activitycontroller_gokut_driver_activitycontroller_update",
+        "source_file": "app/Http/Controllers/Api/v2/Gokut/Gokut_Driver_ActivityController.php",
+        "source_location": "L730",
+        "label": "update"
+      },
+      {
+        "source": "app_http_controllers_api_v2_gokut_gokut_driver_activitycontroller_gokut_driver_activitycontroller_updateitem",
+        "target": "app_http_controllers_api_v2_gokut_gokut_driver_activitycontroller_gokut_driver_activitycontroller_updateitem",
+        "source_file": "app/Http/Controllers/Api/v2/Gokut/Gokut_Driver_ActivityController.php",
+        "source_location": "L772",
+        "label": "updateItem"
+      },
+      {
+        "source": "app_http_controllers_api_v2_gokut_gokut_driverpayrollcontroller_gokut_driverpayrollcontroller_update",
+        "target": "app_http_controllers_api_v2_gokut_gokut_driverpayrollcontroller_gokut_driverpayrollcontroller_update",
+        "source_file": "app/Http/Controllers/Api/v2/Gokut/Gokut_DriverPayrollController.php",
+        "source_location": "L177",
+        "label": "update"
+      },
+      {
+        "source": "app_http_controllers_api_v2_gokut_gokut_formp2hcontroller_gokut_formp2hcontroller_update",
+        "target": "app_http_controllers_api_v2_gokut_gokut_formp2hcontroller_gokut_formp2hcontroller_update",
+        "source_file": "app/Http/Controllers/Api/v2/Gokut/Gokut_FormP2HController.php",
+        "source_location": "L229",
+        "label": "update"
+      },
+      {
+        "source": "app_http_controllers_api_v3_goharvest_goharvestcovercontroller_goharvestcovercontroller_cancel",
+        "target": "app_http_controllers_api_v3_goharvest_goharvestcovercontroller_goharvestcovercontroller_cancel",
+        "source_file": "app/Http/Controllers/Api/v3/GoHarvest/GoHarvestCoverController.php",
+        "source_location": "L68",
+        "label": "cancel"
+      },
+      {
+        "source": "app_http_controllers_api_v3_goharvest_goharvestcovercontroller_goharvestcovercontroller_ready",
+        "target": "app_http_controllers_api_v3_goharvest_goharvestcovercontroller_goharvestcovercontroller_ready",
+        "source_file": "app/Http/Controllers/Api/v3/GoHarvest/GoHarvestCoverController.php",
+        "source_location": "L62",
+        "label": "ready"
+      },
+      {
+        "source": "app_http_controllers_api_v3_goharvest_harvestpointcontroller_harvestpointcontroller_cancel",
+        "target": "app_http_controllers_api_v3_goharvest_harvestpointcontroller_harvestpointcontroller_cancel",
+        "source_file": "app/Http/Controllers/Api/v3/GoHarvest/HarvestPointController.php",
+        "source_location": "L94",
+        "label": "cancel"
+      },
+      {
+        "source": "app_http_controllers_api_v3_goharvest_jankosweighingcontroller_jankosweighingcontroller_finalize",
+        "target": "app_http_controllers_api_v3_goharvest_jankosweighingcontroller_jankosweighingcontroller_finalize",
+        "source_file": "app/Http/Controllers/Api/v3/GoHarvest/JankosWeighingController.php",
+        "source_location": "L96",
+        "label": "finalize"
+      },
+      {
+        "source": "app_http_controllers_api_v3_goharvest_jankosweighingcontroller_jankosweighingcontroller_tare",
+        "target": "app_http_controllers_api_v3_goharvest_jankosweighingcontroller_jankosweighingcontroller_tare",
+        "source_file": "app/Http/Controllers/Api/v3/GoHarvest/JankosWeighingController.php",
+        "source_location": "L68",
+        "label": "tare"
+      },
+      {
+        "source": "app_http_controllers_api_v3_goharvest_weighingqrcontroller_weighingqrcontroller_references",
+        "target": "app_http_controllers_api_v3_goharvest_weighingqrcontroller_weighingqrcontroller_references",
+        "source_file": "app/Http/Controllers/Api/v3/GoHarvest/WeighingQrController.php",
+        "source_location": "L35",
+        "label": "references"
+      },
+      {
+        "source": "app_http_controllers_api_v3_goharvest_weighingqrcontroller_weighingqrcontroller_retry",
+        "target": "app_http_controllers_api_v3_goharvest_weighingqrcontroller_weighingqrcontroller_retry",
+        "source_file": "app/Http/Controllers/Api/v3/GoHarvest/WeighingQrController.php",
+        "source_location": "L148",
+        "label": "retry"
+      },
+      {
+        "source": "app_http_controllers_api_v3_gokut_gokutdriveractivityv3controller_gokutdriveractivityv3controller_notifypmksdeparture",
+        "target": "app_http_controllers_api_v3_gokut_gokutdriveractivityv3controller_gokutdriveractivityv3controller_notifypmksdeparture",
+        "source_file": "app/Http/Controllers/Api/v3/Gokut/GokutDriverActivityV3Controller.php",
+        "source_location": "L207",
+        "label": "notifyPmksDeparture"
+      },
+      {
+        "source": "app_http_controllers_web_fieldtestcontroller_fieldtestcontroller_reset",
+        "target": "app_http_controllers_web_fieldtestcontroller_fieldtestcontroller_reset",
+        "source_file": "app/Http/Controllers/Web/FieldTestController.php",
+        "source_location": "L63",
+        "label": "reset"
+      },
+      {
+        "source": "app_http_controllers_web_staffing_employeeimportcentercontroller_employeeimportcentercontroller_upload",
+        "target": "app_http_controllers_web_staffing_employeeimportcentercontroller_employeeimportcentercontroller_upload",
+        "source_file": "app/Http/Controllers/Web/Staffing/EmployeeImportCenterController.php",
+        "source_location": "L147",
+        "label": "upload"
+      },
+      {
+        "source": "app_http_controllers_web_transaction_bantuanangkutcontroller_bantuanangkutcontroller_apply",
+        "target": "app_http_controllers_web_transaction_bantuanangkutcontroller_bantuanangkutcontroller_apply",
+        "source_file": "app/Http/Controllers/Web/Transaction/BantuanAngkutController.php",
+        "source_location": "L481",
+        "label": "apply"
+      },
+      {
+        "source": "app_http_controllers_web_transaction_bantuanangkutcontroller_bantuanangkutcontroller_process",
+        "target": "app_http_controllers_web_transaction_bantuanangkutcontroller_bantuanangkutcontroller_process",
+        "source_file": "app/Http/Controllers/Web/Transaction/BantuanAngkutController.php",
+        "source_location": "L411",
+        "label": "process"
+      },
+      {
+        "source": "app_http_controllers_web_transaction_bantuanangkutcontroller_bantuanangkutcontroller_reject",
+        "target": "app_http_controllers_web_transaction_bantuanangkutcontroller_bantuanangkutcontroller_reject",
+        "source_file": "app/Http/Controllers/Web/Transaction/BantuanAngkutController.php",
+        "source_location": "L420",
+        "label": "reject"
+      },
+      {
+        "source": "app_http_controllers_web_transaction_gradingcontroller_gradingcontroller_index",
+        "target": "app_http_controllers_web_transaction_gradingcontroller_gradingcontroller_index",
+        "source_file": "app/Http/Controllers/Web/Transaction/GradingController.php",
+        "source_location": "L27",
+        "label": "index"
+      },
+      {
+        "source": "app_http_controllers_web_transaction_gradingcontroller_gradingcontroller_photo",
+        "target": "app_http_controllers_web_transaction_gradingcontroller_gradingcontroller_photo",
+        "source_file": "app/Http/Controllers/Web/Transaction/GradingController.php",
+        "source_location": "L33",
+        "label": "photo"
+      },
+      {
+        "source": "app_http_controllers_web_transaction_harvestercoveradmincontroller_harvestercoveradmincontroller_apply",
+        "target": "app_http_controllers_web_transaction_harvestercoveradmincontroller_harvestercoveradmincontroller_apply",
+        "source_file": "app/Http/Controllers/Web/Transaction/HarvesterCoverAdminController.php",
+        "source_location": "L85",
+        "label": "apply"
+      },
+      {
+        "source": "app_http_controllers_web_transaction_harvestercoveradmincontroller_harvestercoveradmincontroller_reject",
+        "target": "app_http_controllers_web_transaction_harvestercoveradmincontroller_harvestercoveradmincontroller_reject",
+        "source_file": "app/Http/Controllers/Web/Transaction/HarvesterCoverAdminController.php",
+        "source_location": "L91",
+        "label": "reject"
+      },
+      {
+        "source": "app_http_controllers_web_transaction_weighingqrreviewcontroller_weighingqrreviewcontroller_retry",
+        "target": "app_http_controllers_web_transaction_weighingqrreviewcontroller_weighingqrreviewcontroller_retry",
+        "source_file": "app/Http/Controllers/Web/Transaction/WeighingQrReviewController.php",
+        "source_location": "L44",
+        "label": "retry"
+      },
+      {
+        "source": "app_services_calculation_driverpayrollservice_driverpayrollservice_getratebystatid",
+        "target": "app_services_calculation_driverpayrollservice_driverpayrollservice_getratebystatid",
+        "source_file": "app/Services/Calculation/DriverPayrollService.php",
+        "source_location": "L248",
+        "label": "getRateByStatId"
+      },
+      {
+        "source": "app_services_employeeimport_classification_classification_classification_action",
+        "target": "app_services_employeeimport_classification_classification_classification_action",
+        "source_file": "app/Services/EmployeeImport/Classification/Classification.php",
+        "source_location": "L47",
+        "label": "action"
+      },
+      {
+        "source": "tests_employeeimport_support_faultinjectingjournalfactory_append",
+        "target": "tests_employeeimport_support_faultinjectingjournalfactory_append",
+        "source_file": "tests/EmployeeImport/Support/FaultInjectingJournalFactory.php",
+        "source_location": "L45",
+        "label": "append"
+      },
+      {
+        "source": "tests_employeeimport_support_faultinjectingjournalfactory_close",
+        "target": "tests_employeeimport_support_faultinjectingjournalfactory_close",
+        "source_file": "tests/EmployeeImport/Support/FaultInjectingJournalFactory.php",
+        "source_location": "L60",
+        "label": "close"
+      },
+      {
+        "source": "tests_employeeimport_support_faultinjectingjournalfactory_entries",
+        "target": "tests_employeeimport_support_faultinjectingjournalfactory_entries",
+        "source_file": "tests/EmployeeImport/Support/FaultInjectingJournalFactory.php",
+        "source_location": "L55",
+        "label": "entries"
+      },
+      {
+        "source": "tests_unit_drivercoverrequestservicetest_drivercoverrequestservicetest_schema",
+        "target": "tests_unit_drivercoverrequestservicetest_drivercoverrequestservicetest_schema",
+        "source_file": "tests/Unit/DriverCoverRequestServiceTest.php",
+        "source_location": "L2495",
+        "label": "schema"
+      },
+      {
+        "source": "tests_unit_harvestercollaborativeworkservicetest_harvestercollaborativeworkservicetest_schema",
+        "target": "tests_unit_harvestercollaborativeworkservicetest_harvestercollaborativeworkservicetest_schema",
+        "source_file": "tests/Unit/HarvesterCollaborativeWorkServiceTest.php",
+        "source_location": "L213",
+        "label": "schema"
+      }
+    ]
+  },
+  {
+    "root": "D:\\Laragon\\www\\newmg",
+    "flagged_count": 3,
+    "details": [
+      {
+        "source": "application_libraries_aruna_s3_aruna_s3_deleteobject",
+        "target": "application_libraries_aruna_s3_aruna_s3_deleteobject",
+        "source_file": "application/libraries/Aruna_S3.php",
+        "source_location": "L55",
+        "label": "deleteObject"
+      },
+      {
+        "source": "application_libraries_aruna_s3_aruna_s3_putobject",
+        "target": "application_libraries_aruna_s3_aruna_s3_putobject",
+        "source_file": "application/libraries/Aruna_S3.php",
+        "source_location": "L32",
+        "label": "putObject"
+      },
+      {
+        "source": "assets_js_promotion_form_post",
+        "target": "assets_js_promotion_form_post",
+        "source_file": "assets/js/promotion-form.js",
+        "source_location": "L35",
+        "label": "post"
+      }
+    ]
+  }
+]

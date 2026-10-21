@@ -1,0 +1,56 @@
+<section v-if="optionsModal.section === 'focused-reader' && surface === 'detail' && activeTemplateKey === 'focused-reader' && optionsModal.value.focused_reader" id="article-template-option-panel-focused-reader" role="tabpanel" aria-labelledby="article-template-option-tab-focused-reader" tabindex="-1" class="article-template-options-section">
+    <div class="article-template-options-section__heading"><div><h5>Focused Reader</h5><small>Fine-tune the reading layout. Device settings also update the live preview.</small></div></div>
+    <div class="article-template-device-tabs" role="group" aria-label="Device">
+        <button v-for="device in ['desktop', 'tablet', 'mobile']" :key="device" type="button" :class="{ active: optionsDevice === device }" :aria-pressed="optionsDevice === device" @click="selectOptionsDevice(device)"><i :class="device === 'desktop' ? 'fas fa-desktop' : (device === 'tablet' ? 'fas fa-tablet-alt' : 'fas fa-mobile-alt')" aria-hidden="true"></i>{{ device }}</button>
+    </div>
+    <div class="article-template-reader-fields">
+        <fieldset><legend>Layout</legend><div class="article-template-options-fields">
+                            <label>Reading column max width (px)<input class="form-control" type="number" min="480" max="900" step="1" v-model.number="optionsModal.value.focused_reader.reading_width"></label>
+                            <label>Cover max width (px)<input class="form-control" type="number" min="480" max="1200" step="1" v-model.number="optionsModal.value.focused_reader.cover_width"></label>
+                            <label>Title max width (px)<input class="form-control" type="number" min="400" max="1000" step="1" v-model.number="optionsModal.value.focused_reader.title_width"></label>
+                        <label>Header alignment · {{ optionsDevice }}<select class="form-select" v-model="optionsModal.value.focused_reader.alignment[optionsDevice]"><option value="left">Left</option><option value="center">Center</option></select></label>
+        </div><small>Widths are maximums and shrink to fit the screen. Use Detail shell for page padding and margins.</small></fieldset>
+                    <fieldset><legend>Header typography · {{ optionsDevice }}</legend><div class="article-template-options-fields">
+                                    <label>Title size (px)<input class="form-control" type="number" min="24" max="80" step="1" v-model.number="optionsModal.value.focused_reader.title_size[optionsDevice]"></label>
+                                    <label>Title line height<input class="form-control" type="number" min="1" max="2" step="0.05" v-model.number="optionsModal.value.focused_reader.title_leading[optionsDevice]"></label>
+                                    <label>Summary size (px)<input class="form-control" type="number" min="14" max="28" step="1" v-model.number="optionsModal.value.focused_reader.description_size[optionsDevice]"></label>
+                                    <label>Summary line height<input class="form-control" type="number" min="1.2" max="2.2" step="0.05" v-model.number="optionsModal.value.focused_reader.description_leading[optionsDevice]"></label>
+                                            </div></fieldset>
+                    <fieldset><legend>Metadata · {{ optionsDevice }}</legend><div class="article-template-options-fields">
+                                    <label>Metadata size (px)<input class="form-control" type="number" min="12" max="20" step="1" v-model.number="optionsModal.value.focused_reader.metadata_size[optionsDevice]"></label>
+                                    <label>Metadata item gap (px)<input class="form-control" type="number" min="0" max="48" step="1" v-model.number="optionsModal.value.focused_reader.metadata_gap[optionsDevice]"></label>
+                                                    <label>Position<select class="form-select" v-model="optionsModal.value.focused_reader.metadata_position"><option value="after-summary">Below summary</option><option value="before-summary">Above summary</option></select></label>
+                    <label>Separator<select class="form-select" v-model="optionsModal.value.focused_reader.metadata_separator"><option value="none">None</option><option value="dot">Dot</option><option value="line">Line</option></select></label>
+                            </div></fieldset>
+                    <fieldset><legend>Spacing · {{ optionsDevice }}</legend><div class="article-template-options-fields">
+                                    <label>Header element gap (px)<input class="form-control" type="number" min="8" max="48" step="1" v-model.number="optionsModal.value.focused_reader.header_gap[optionsDevice]"></label>
+                                    <label>Header to cover gap (px)<input class="form-control" type="number" min="0" max="96" step="1" v-model.number="optionsModal.value.focused_reader.cover_gap[optionsDevice]"></label>
+                                    <label>Cover to content gap (px)<input class="form-control" type="number" min="0" max="96" step="1" v-model.number="optionsModal.value.focused_reader.content_gap[optionsDevice]"></label>
+                                    <label>Paragraph spacing (px)<input class="form-control" type="number" min="8" max="64" step="1" v-model.number="optionsModal.value.focused_reader.paragraph_gap[optionsDevice]"></label>
+                                    <label>Space before headings (px)<input class="form-control" type="number" min="16" max="96" step="1" v-model.number="optionsModal.value.focused_reader.heading_gap[optionsDevice]"></label>
+                                            </div></fieldset>
+                    <fieldset><legend>Article content · {{ optionsDevice }}</legend><div class="article-template-options-fields">
+                                    <label>Body size (px)<input class="form-control" type="number" min="16" max="24" step="1" v-model.number="optionsModal.value.focused_reader.body_size[optionsDevice]"></label>
+                                    <label>Body line height<input class="form-control" type="number" min="1.4" max="2.2" step="0.05" v-model.number="optionsModal.value.focused_reader.body_leading[optionsDevice]"></label>
+                                    <label>Section heading size (px)<input class="form-control" type="number" min="20" max="48" step="1" v-model.number="optionsModal.value.focused_reader.heading_size[optionsDevice]"></label>
+                                    <label>Quote size (px)<input class="form-control" type="number" min="16" max="32" step="1" v-model.number="optionsModal.value.focused_reader.quote_size[optionsDevice]"></label>
+                                    <label>Quote left padding (px)<input class="form-control" type="number" min="8" max="48" step="1" v-model.number="optionsModal.value.focused_reader.quote_padding[optionsDevice]"></label>
+                                                    <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.focused_reader.quote_accent"><span class="form-check-label">Quote accent line</span></label>
+                            </div></fieldset>
+                    <fieldset><legend>Cover · {{ optionsDevice }}</legend><div class="article-template-options-fields">
+                                    <label>Cover radius (px)<input class="form-control" type="number" min="0" max="48" step="1" v-model.number="optionsModal.value.focused_reader.cover_radius[optionsDevice]"></label>
+                                                    <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.focused_reader.cover_enabled"><span class="form-check-label">Show cover</span></label>
+                    <label>Aspect ratio<select class="form-select" v-model="optionsModal.value.focused_reader.cover_ratio[optionsDevice]"><option value="auto">Original</option><option value="16/9">16:9</option><option value="3/2">3:2</option><option value="4/3">4:3</option></select></label>
+                    <label>Cover width<select class="form-select" v-model="optionsModal.value.focused_reader.cover_width_mode"><option value="wide">Wide</option><option value="reading">Match reading column</option></select></label>
+                    <label>Image fit<select class="form-select" v-model="optionsModal.value.focused_reader.cover_fit"><option value="cover">Cover</option><option value="contain">Contain</option></select></label>
+                    <label>Crop position<select class="form-select" v-model="optionsModal.value.focused_reader.cover_position"><option value="center">Center</option><option value="top">Top</option><option value="bottom">Bottom</option><option value="left">Left</option><option value="right">Right</option></select></label>
+                    <label class="article-template-reader-wide">Template caption (optional, applies to all articles)<input class="form-control" type="text" maxlength="240" v-model="optionsModal.value.focused_reader.cover_caption"></label>
+                            </div></fieldset>
+                    <fieldset><legend>Article navigation · {{ optionsDevice }}</legend><div class="article-template-options-fields">
+                                    <label>Space before navigation (px)<input class="form-control" type="number" min="16" max="96" step="1" v-model.number="optionsModal.value.focused_reader.navigation_gap[optionsDevice]"></label>
+                                    <label>Navigation title size (px)<input class="form-control" type="number" min="14" max="24" step="1" v-model.number="optionsModal.value.focused_reader.navigation_size[optionsDevice]"></label>
+                                                    <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.focused_reader.navigation_thumbnails"><span class="form-check-label">Show thumbnails</span></label>
+                    <label class="form-check form-switch"><input class="form-check-input" type="checkbox" v-model="optionsModal.value.focused_reader.navigation_divider"><span class="form-check-label">Show divider</span></label>
+                            </div></fieldset>
+            </div>
+</section>

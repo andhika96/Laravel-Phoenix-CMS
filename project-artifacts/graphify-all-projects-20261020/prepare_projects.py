@@ -1,0 +1,162 @@
+"""Prepare source-only local Graphify work, preserving current repository state."""
+import collections
+import datetime as dt
+import shutil
+import hashlib
+import json
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+from graphify.detect import detect, _is_sensitive
+
+BASE=Path(__file__).parent
+RUN='graphify-all-projects-20261020'
+ROOTS=[
+('Laravel 13 Phoenix','D:/Laragon/www/laravel-13-phoenix'),
+('Laravel 13 CMS BUM','D:/Laragon/www/laravel-13-cms-bum'),
+('Laravel 13 CMS BUM NextJS','D:/Laragon/www/laravel-13-cms-bum-next'),
+('Laravel 13 Phoenix Standalone','D:/Laragon/www/laravel-13-phoenix-standalone'),
+('New MG Laptop','D:/Laragon/www/newmg'),
+('New MG SSD Portable','E:/Apps/Laragon/www/newmg'),
+('Age of Empire II DE — scenario tools','C:/Users/aruna/Documents/Age of Empire II DE'),
+('Age of Empire II DE — AI v4/Mini','D:/New AI Script AoE II DE'),
+('Arunika Map Studio','D:/Arunika Map Studio'),
+('LaraPhoenix Web Game','C:/Users/aruna/Documents/ChatGPT/LaraPhoenix Web Game'),
+('Laravel 13 CRM','D:/Laragon/www/laravel-13-crm'),
+('Laravel 13 GEN21 AI CMS','D:/Laragon/www/laravel-13-gen21ai-cms'),
+('Codex MultiWorkspace','D:/Codex-MultiWorkspace'),
+('Verdant Vale RPG','D:/Laragon/www/game'),
+('Legacy Laravel 12 Phoenix','D:/Laragon/www/laravel-12-phoenix'),
+('Legacy Laravel 11 CMS BUM','D:/Laragon/www/laravel-11-cms-bum')]
+BANNED={'runtime-data','profiles','bin','obj','.git','.codex','.agents','.venv','venv','env','node_modules','project-artifacts','graphify-out','backups','backup','storage','cache','__pycache__','logs','log','dist','build','out','target','.next','.gradle','.cache','.idea','.vscode','uploads','contents','output','outputs','fontawesome','archived','.history'}
+EXCLUDES=['**/data/profiles/**','**/runtime-data/**','**/data/runtime/**','**/project-artifacts/**','**/graphify-out/**','**/node_modules/**','**/vendor/**','**/.git/**','**/.codex/**','**/.agents/**','**/.venv/**','**/__pycache__/**','**/backup*/**','**/storage/**','**/bootstrap/cache/**','**/build/**','**/dist/**','**/out/**','**/.next/**','**/.gradle/**','**/fontawesome/**','**/ckfinder/**','**/ckeditor/**','**/uploads/**','**/contents/**','**/output/**','**/outputs/**','**/*.bak*','**/.env*','**/*.log','**/*.min.js','**/*.min.css','**/package-lock.json','**/composer.lock','**/*.sql','**/*.md','**/*.mdx','**/*.txt','**/*.pdf','**/*.docx','**/*.xlsx','**/*.png','**/*.jpg','**/*.jpeg','**/*.gif','**/*.webp','**/*.svg','**/*.mp4','**/*.mp3','**/*.zip','**/public/mockups/**']
+
+def safe(rel):
+    path=Path(rel)
+    parts=[p.lower() for p in path.parts]
+    if any(p in BANNED or p.startswith('.playwright') for p in parts):return False
+    if 'vendor' in parts and not rel.startswith('resources/views/vendor/'):return False
+    if parts and parts[0] in ('ckfinder','ckeditor'):return False
+    if rel.startswith('aruna/system/'):return False
+    if any(p.endswith('_old') for p in parts):return False
+    if rel.startswith('assets/plugins/') and not rel.endswith('/ckfinder/config.php'):return False
+    if rel.startswith('public/assets/plugins/') and not rel.endswith('/ckfinder/config.php'):return False
+    if rel.startswith('public/assets/master_data/gis'):return False
+    if any(p.startswith(('backup_','backup-','backups_')) for p in parts):return False
+    name=path.name.lower()
+    if name in {'no_backup_rules.xml','backup_rules.xml','data_extraction_rules.xml'}:return True
+    if rel.lower().startswith(('data/profiles/','runtime-data/','data/runtime/')):return False
+    if re.search(r'(^|[_.-])(old|backup|bak|copy|historical)([_.-]|$)',name):return False
+    if rel.lower() in ('application/config/database.php','application/config/config.php'):return False
+    return not ('.bak' in name or '.old.' in name or name.endswith('.old') or name.startswith('.env') or '.min.' in name or name in ('package-lock.json','composer.lock') or name.startswith(('sitemap','memory_save','audit-','laporan_')) or name.endswith(('.log','.sql','.sqlite','.sqlite-wal','.sqlite-shm')) or _is_sensitive(path))
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def dump(path,value):
+    if path.exists():
+        shutil.copy2(path,Path(str(path)+'.bak_'+dt.datetime.now().strftime('%Y%m%d_%H%M%S')+'_recheck'))
+    path.write_text(json.dumps(value,ensure_ascii=False,indent=2),encoding='utf-8')
+
+def state(root):
+    env=dict(os.environ,GIT_OPTIONAL_LOCKS='0')
+    args=['git','-C',str(root)]
+    head=subprocess.run(args+['rev-parse','HEAD'],capture_output=True,text=True,env=env)
+    if head.returncode:return None
+    status=subprocess.check_output(args+['status','--porcelain=v1'],text=True,env=env)
+    staged=subprocess.check_output(args+['diff','--cached','--binary'],env=env)
+    return {'head':head.stdout.strip(),'status':status,'staged_sha256':hashlib.sha256(staged).hexdigest()}
+
+def main():
+    history=json.loads(Path('D:/Laragon/www/laravel-13-phoenix/project-artifacts/memory-sync-20261020/prepared.json').read_text(encoding='utf-8'))
+    selected={str(Path(x)).lower() for x in sys.argv[1:]}
+    inventory=[]
+    for label,value in ROOTS:
+        if selected and str(Path(value)).lower() not in selected:continue
+        root=Path(value)
+        row={'label':label,'root':str(root)}
+        if not root.is_dir():
+            row['status']='source-root-unavailable';inventory.append(row);continue
+        art=root/'project-artifacts'/RUN
+        try:art.mkdir(parents=True,exist_ok=True)
+        except OSError as error:
+            row.update(status='artifacts-unavailable',error=str(error));inventory.append(row);continue
+        out=root/'graphify-out'
+        before=state(root)
+        detection=detect(root,google_workspace=False,extra_excludes=EXCLUDES,cache_root=art)
+        code={Path(p) for p in detection['files'].get('code',[]) if safe(Path(p).relative_to(root).as_posix())}
+        metadata=set()
+        for directory,dirs,names in os.walk(root,followlinks=False):
+            rel=Path(directory).relative_to(root).as_posix()
+            dirs[:]=[d for d in dirs if safe((rel+'/' if rel!='.' else '')+d+'/file.py')]
+            for name in names:
+                p=Path(directory)/name
+                relfile=p.relative_to(root).as_posix()
+                if not safe(relfile) or p.is_symlink():continue
+                if p.suffix.lower() in {'.css','.scss','.sass','.html','.xml','.ini','.cmd'}:
+                    metadata.add(p)
+                elif p.suffix.lower() in {'.per','.ai'}:
+                    code.add(p)
+                elif relfile.startswith('resources/views/vendor/') and p.suffix=='.php':
+                    code.add(p)
+        mobile=root/'mobile/android'
+        if mobile.is_dir():
+            for p in (mobile/'app/src').rglob('*'):
+                if p.is_file() and p.suffix in {'.kt','.kts','.java','.js','.json'} and safe(p.relative_to(root).as_posix()):code.add(p)
+            code.update(p for p in list(mobile.glob('*.kts'))+list((mobile/'app').glob('*.kts')) if safe(p.relative_to(root).as_posix()))
+        # Active code explicitly changed in old chats may be ignored by Git.
+        history_refs=[]
+        for chat in history:
+            for patch in chat['patches']:
+                p=Path(patch['path'])
+                if not p.is_absolute():p=Path(chat['cwd'])/p
+                try:relfile=p.relative_to(root).as_posix()
+                except ValueError:continue
+                if not safe(relfile) or not p.is_file():continue
+                history_refs.append({'chat_id':chat['id'],'file':relfile})
+                if p.suffix in {'.php','.vue','.js','.mjs','.cjs','.jsx','.ts','.tsx','.py','.kt','.kts','.java','.json','.per','.ai'}:code.add(p)
+        code=sorted(code);metadata=sorted(metadata)
+        if not code and not metadata:
+            row['status']='no-active-source-files';row['artifacts']=str(art);inventory.append(row);dump(art/'status.json',row);continue
+        old=json.loads((out/'graph.json').read_text(encoding='utf-8-sig')) if (out/'graph.json').is_file() else {'nodes':[],'links':[],'directed':True}
+        manifest=json.loads((out/'manifest.json').read_text(encoding='utf-8-sig')) if (out/'manifest.json').is_file() else {}
+        meta_manifest=json.loads((out/'metadata-manifest.json').read_text(encoding='utf-8-sig')) if (out/'metadata-manifest.json').is_file() else {}
+        active={p.relative_to(root).as_posix() for p in code}
+        sources={n.get('source_file') for n in old['nodes'] if n.get('source_file')}
+        prune=sorted(f for f in sources if not safe(f) or not (root/f).is_file())
+        retained=sorted(sources-active-set(prune))
+        for f in retained:
+            p=root/f
+            if p.suffix.lower() in {'.css','.scss','.sass','.html','.xml','.ini','.cmd'}:metadata.append(p)
+        metadata=sorted(set(metadata))
+        # A stale document remains a file/hash reference, without old semantic claims.
+        stale_docs=[root/f for f in retained if (root/f).suffix.lower() in {'.md','.txt'} and hashlib.md5((root/f).read_bytes()).hexdigest() not in [manifest.get(f,{}).get('ast_hash'),manifest.get(f,{}).get('semantic_hash')]]
+        metadata=sorted(set(metadata+stale_docs))
+        changed=[p for p in code if hashlib.md5(p.read_bytes()).hexdigest()!=manifest.get(p.relative_to(root).as_posix(),{}).get('ast_hash')]
+        changed_meta=[p for p in metadata if sha(p)!=meta_manifest.get(p.relative_to(root).as_posix())]
+        all_files=sorted(set(code+metadata+[root/f for f in retained]))
+        detection['files']={'code':[str(p) for p in code]}
+        detection['total_files']=len(all_files)
+        plan={'root':str(root),'label':label,'artifacts':str(art),'code_files':[str(p) for p in code],'changed':[str(p) for p in changed],'metadata_files':[str(p) for p in metadata],'changed_metadata':[str(p) for p in changed_meta],'prune':prune,'retained_non_ast_sources':retained,'stale_docs':[p.relative_to(root).as_posix() for p in stale_docs],'before_nodes':len(old['nodes']),'before_edges':len(old.get('links',old.get('edges',[]))),'directed':old.get('directed',True),'detection':detection}
+        dump(art/'plan.json',plan)
+        dump(art/'source-hashes-before.json',{p.relative_to(root).as_posix():sha(p) for p in all_files})
+        dump(art/'before-git.json',before)
+        dump(art/'history-coverage-input.json',history_refs)
+        row.update(status='planned',artifacts=str(art),graph_exists=bool(old['nodes']),code=len(code),metadata=len(metadata),changed_code=len(changed),changed_metadata=len(changed_meta),prune=len(prune),before_nodes=len(old['nodes']),before_edges=plan['before_edges'])
+        inventory.append(row)
+        print(json.dumps(row,ensure_ascii=False),flush=True)
+    if selected and (BASE/'inventory.json').exists():
+        old_inventory=json.loads((BASE/'inventory.json').read_text(encoding='utf-8'))
+        updates={r['label']:r for r in inventory}
+        inventory=[updates.get(r['label'],r) for r in old_inventory]
+    dump(BASE/'inventory.json',inventory)
+    print(json.dumps({'planned':sum(r['status']=='planned' for r in inventory),'unavailable':[r for r in inventory if r['status']!='planned']},ensure_ascii=False))
+
+assert safe('resources/views/vendor/pagination/default.blade.php')
+assert not safe('vendor/library/a.php')
+assert not safe('project-artifacts/mockups/a.js')
+assert not safe('app/Test.php.bak_20261020')
+assert not safe('.env')
+if __name__=='__main__':main()

@@ -1,0 +1,314 @@
+[
+  {
+    "key": "focused-reader",
+    "editor": {
+      "h2": {
+        "width": 640,
+        "height": 62.375
+      },
+      "h3": {
+        "width": 640,
+        "height": 27.03125
+      },
+      "blockquote": {
+        "width": 640,
+        "height": 91.703125
+      },
+      "pre": {
+        "width": 640,
+        "height": 86.15625
+      },
+      ".table table": {
+        "width": 576,
+        "height": 142.0625
+      },
+      ".image img": {
+        "width": 640,
+        "height": 360
+      },
+      ".image-style-align-left img": {
+        "width": 160,
+        "height": 90
+      },
+      ".image-style-align-right img": {
+        "width": 160,
+        "height": 90
+      },
+      ".image-style-align-center img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-side img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-block-align-left img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-block-align-right img": {
+        "width": 480,
+        "height": 270
+      }
+    },
+    "frontend": {
+      "h2": {
+        "width": 640,
+        "height": 62.375
+      },
+      "h3": {
+        "width": 640,
+        "height": 27.03125
+      },
+      "blockquote": {
+        "width": 640,
+        "height": 91.703125
+      },
+      "pre": {
+        "width": 640,
+        "height": 86.15625
+      },
+      ".table table": {
+        "width": 576,
+        "height": 142.0625
+      },
+      ".image img": {
+        "width": 640,
+        "height": 360
+      },
+      ".image-style-align-left img": {
+        "width": 160,
+        "height": 90
+      },
+      ".image-style-align-right img": {
+        "width": 160,
+        "height": 90
+      },
+      ".image-style-align-center img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-side img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-block-align-left img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-block-align-right img": {
+        "width": 480,
+        "height": 270
+      }
+    },
+    "differences": []
+  },
+  {
+    "key": "editorial-feature",
+    "editor": {
+      "h2": {
+        "width": 640,
+        "height": 62.375
+      },
+      "h3": {
+        "width": 640,
+        "height": 27.03125
+      },
+      "blockquote": {
+        "width": 640,
+        "height": 91.703125
+      },
+      "pre": {
+        "width": 640,
+        "height": 86.15625
+      },
+      ".table table": {
+        "width": 576,
+        "height": 142.0625
+      },
+      ".image img": {
+        "width": 640,
+        "height": 360
+      },
+      ".image-style-align-left img": {
+        "width": 160,
+        "height": 90
+      },
+      ".image-style-align-right img": {
+        "width": 160,
+        "height": 90
+      },
+      ".image-style-align-center img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-side img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-block-align-left img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-block-align-right img": {
+        "width": 480,
+        "height": 270
+      }
+    },
+    "frontend": {
+      "h2": {
+        "width": 640,
+        "height": 62.375
+      },
+      "h3": {
+        "width": 640,
+        "height": 27.03125
+      },
+      "blockquote": {
+        "width": 640,
+        "height": 91.703125
+      },
+      "pre": {
+        "width": 640,
+        "height": 86.15625
+      },
+      ".table table": {
+        "width": 576,
+        "height": 142.0625
+      },
+      ".image img": {
+        "width": 640,
+        "height": 360
+      },
+      ".image-style-align-left img": {
+        "width": 160,
+        "height": 90
+      },
+      ".image-style-align-right img": {
+        "width": 160,
+        "height": 90
+      },
+      ".image-style-align-center img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-side img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-block-align-left img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-block-align-right img": {
+        "width": 480,
+        "height": 270
+      }
+    },
+    "differences": []
+  },
+  {
+    "key": "knowledge-toc",
+    "editor": {
+      "h2": {
+        "width": 640,
+        "height": 62.375
+      },
+      "h3": {
+        "width": 640,
+        "height": 27.03125
+      },
+      "blockquote": {
+        "width": 640,
+        "height": 91.703125
+      },
+      "pre": {
+        "width": 640,
+        "height": 86.15625
+      },
+      ".table table": {
+        "width": 576,
+        "height": 142.0625
+      },
+      ".image img": {
+        "width": 640,
+        "height": 360
+      },
+      ".image-style-align-left img": {
+        "width": 160,
+        "height": 90
+      },
+      ".image-style-align-right img": {
+        "width": 160,
+        "height": 90
+      },
+      ".image-style-align-center img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-side img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-block-align-left img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-block-align-right img": {
+        "width": 480,
+        "height": 270
+      }
+    },
+    "frontend": {
+      "h2": {
+        "width": 640,
+        "height": 62.375
+      },
+      "h3": {
+        "width": 640,
+        "height": 27.03125
+      },
+      "blockquote": {
+        "width": 640,
+        "height": 91.703125
+      },
+      "pre": {
+        "width": 640,
+        "height": 86.15625
+      },
+      ".table table": {
+        "width": 576,
+        "height": 142.0625
+      },
+      ".image img": {
+        "width": 640,
+        "height": 360
+      },
+      ".image-style-align-left img": {
+        "width": 160,
+        "height": 90
+      },
+      ".image-style-align-right img": {
+        "width": 160,
+        "height": 90
+      },
+      ".image-style-align-center img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-side img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-block-align-left img": {
+        "width": 320,
+        "height": 180
+      },
+      ".image-style-block-align-right img": {
+        "width": 480,
+        "height": 270
+      }
+    },
+    "differences": []
+  }
+]

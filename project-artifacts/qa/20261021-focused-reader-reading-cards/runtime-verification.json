@@ -1,0 +1,151 @@
+{
+  "cases": [
+    {
+      "template": "focused-reader",
+      "width": 320,
+      "overflow": false,
+      "content": 280,
+      "cover": 280,
+      "ratio": "16 / 9",
+      "cards": 2,
+      "columns": 1,
+      "legacy": 0
+    },
+    {
+      "template": "focused-reader",
+      "width": 390,
+      "overflow": false,
+      "content": 350,
+      "cover": 350,
+      "ratio": "16 / 9",
+      "cards": 2,
+      "columns": 1,
+      "legacy": 0
+    },
+    {
+      "template": "focused-reader",
+      "width": 834,
+      "overflow": false,
+      "content": 770,
+      "cover": 770,
+      "ratio": "5 / 2",
+      "cards": 2,
+      "columns": 2,
+      "legacy": 0
+    },
+    {
+      "template": "focused-reader",
+      "width": 1440,
+      "overflow": false,
+      "content": 880,
+      "cover": 1040,
+      "ratio": "5 / 2",
+      "cards": 2,
+      "columns": 2,
+      "legacy": 0
+    },
+    {
+      "template": "knowledge-toc",
+      "width": 320,
+      "overflow": false,
+      "content": 288,
+      "ratio": null,
+      "cards": 0,
+      "columns": 0,
+      "legacy": 1
+    },
+    {
+      "template": "knowledge-toc",
+      "width": 390,
+      "overflow": false,
+      "content": 358,
+      "ratio": null,
+      "cards": 0,
+      "columns": 0,
+      "legacy": 1
+    },
+    {
+      "template": "knowledge-toc",
+      "width": 834,
+      "overflow": false,
+      "content": 802,
+      "ratio": null,
+      "cards": 0,
+      "columns": 0,
+      "legacy": 1
+    },
+    {
+      "template": "knowledge-toc",
+      "width": 1440,
+      "overflow": false,
+      "content": 800,
+      "ratio": null,
+      "cards": 0,
+      "columns": 0,
+      "legacy": 1
+    },
+    {
+      "template": "editorial-feature",
+      "width": 320,
+      "overflow": false,
+      "content": 288,
+      "ratio": null,
+      "cards": 0,
+      "columns": 0,
+      "legacy": 1
+    },
+    {
+      "template": "editorial-feature",
+      "width": 390,
+      "overflow": false,
+      "content": 358,
+      "ratio": null,
+      "cards": 0,
+      "columns": 0,
+      "legacy": 1
+    },
+    {
+      "template": "editorial-feature",
+      "width": 834,
+      "overflow": false,
+      "content": 802,
+      "ratio": null,
+      "cards": 0,
+      "columns": 0,
+      "legacy": 1
+    },
+    {
+      "template": "editorial-feature",
+      "width": 1440,
+      "overflow": false,
+      "content": 880,
+      "ratio": null,
+      "cards": 0,
+      "columns": 0,
+      "legacy": 1
+    }
+  ],
+  "interaction": {
+    "normal": {
+      "background": "rgb(255, 255, 255)",
+      "border": "rgb(223, 231, 231)",
+      "shadow": "none",
+      "title": "rgb(23, 32, 51)",
+      "arrow": "rgba(0, 0, 0, 0)",
+      "transform": "none",
+      "outline": "3px"
+    },
+    "hover": {
+      "background": "color(srgb 0.963765 0.955529 0.990588)",
+      "border": "rgb(101, 66, 215)",
+      "shadow": "none",
+      "title": "color(srgb 0.348549 0.227765 0.741961)",
+      "arrow": "rgb(101, 66, 215)",
+      "transform": "matrix(1, 0, 0, 1, 3, 0)",
+      "outline": "3px"
+    },
+    "keyboardFocus": true,
+    "reducedMotion": true
+  },
+  "publicNavigationRoundtrip": true
+}

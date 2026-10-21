@@ -1,0 +1,50 @@
+[
+  {
+    "Path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261021-article-ckeditor-094127\\article-editor-content-before-parity.css",
+    "Hash": "470198CD2F65F4917EA76AE17B1D45C7FBE17E3349CF42C01CB354C49C6EF0C5"
+  },
+  {
+    "Path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261021-article-ckeditor-094127\\options-focused-reader-before-final-cleanup.blade.php",
+    "Hash": "C86DAC588B703BF4EC4F93A5209006A0BE38C492704E7917070263E5D4D275EF"
+  },
+  {
+    "Path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261021-article-ckeditor-094127\\render-saved-article-initial.php",
+    "Hash": "6FF91F5BBF470834F1D23F4C58F39A96CD031A73BE875096174EB601577F260F"
+  },
+  {
+    "Path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261021-article-ckeditor-094127\\verify-render-before-font-case.cjs",
+    "Hash": "2085180C95CB3D855ED8CA8A67A8C0F70DA8EA92C8FDE441EFE9078E2762EC3C"
+  },
+  {
+    "Path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261021-article-ckeditor-094127\\verify-render-before-layout.cjs",
+    "Hash": "595E6C2026C40062AA9C2FEEF23CDDC27F3FB8DB754818AC670FCF5065A1E482"
+  },
+  {
+    "Path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261021-article-ckeditor-094127\\verify-render-initial.cjs",
+    "Hash": "5D877292AB8D198E2C401D2F58A5F72F6377D7F8977BCDA3E85EFFFF3861C06F"
+  },
+  {
+    "Path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261021-article-ckeditor-094127\\public\\assets\\js\\vue3\\manage_article\\vueV3-manage-article-2026.js",
+    "Hash": "153DE95FF08C66F72674DEAF32116E924E6479903DCB666A0E82E3B0159DDFD6"
+  },
+  {
+    "Path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261021-article-ckeditor-094127\\resources\\views\\article\\detail.blade.php",
+    "Hash": "90A906DCFAA6E7F58F462FA96151BA0172C04FDDF3A4060B979CFD64D713ED7C"
+  },
+  {
+    "Path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261021-article-ckeditor-094127\\resources\\views\\manage_article\\manage_article_add.blade.php",
+    "Hash": "E5C83E6A8CEFBD097C22CB8370CC2792D987336A7EDF32D64680C871C7DE9695"
+  },
+  {
+    "Path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261021-article-ckeditor-094127\\resources\\views\\manage_article\\manage_article_edit.blade.php",
+    "Hash": "7DAA0BD03C9542E9EC950118F34366FDE87CDF1B8496D0BB43193C18E55B1E46"
+  },
+  {
+    "Path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261021-article-ckeditor-094127\\resources\\views\\manage_article\\templates\\preview.blade.php",
+    "Hash": "C21C59C86614C2AEEBB1F6FDC18C875EB00374A600A8E61562E0006A33545FA3"
+  },
+  {
+    "Path": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261021-article-ckeditor-094127\\resources\\views\\manage_article\\templates\\partials\\options-focused-reader.blade.php",
+    "Hash": "EB2B495F797A5E08FF4507F89F676F3E9B7694C387FB83BA092BB035DBCC915A"
+  }
+]

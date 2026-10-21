@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "width": 1440,
+      "overflow": false,
+      "title": "48px",
+      "columns": "326px 326px"
+    },
+    {
+      "width": 1024,
+      "overflow": false,
+      "title": "48px",
+      "columns": "326px 326px"
+    },
+    {
+      "width": 768,
+      "overflow": false,
+      "title": "39.84px",
+      "columns": "313px 313px"
+    },
+    {
+      "width": 390,
+      "overflow": false,
+      "title": "29.848px",
+      "columns": "324px"
+    },
+    {
+      "width": 320,
+      "overflow": false,
+      "title": "28px",
+      "columns": "254px"
+    }
+  ],
+  "deviceSwitches": "passed",
+  "darkSurface": "passed",
+  "pageErrors": []
+}

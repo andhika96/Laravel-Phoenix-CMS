@@ -263,6 +263,10 @@
 	</div>
 @endsection
 
+@push('css')
+    <link href="{{ asset('assets/css/article/article-editor-content.css?v=').filemtime(public_path('assets/css/article/article-editor-content.css')) }}" rel="stylesheet">
+@endpush
+
 @push('js')
 	<script src="{{ url('assets/plugins/ckeditor5/build/ckeditor.js?v=0.0.1') }}"></script>
 	<script src="{{ url('assets/plugins/ckfinder/ckfinder.js?v=0.0.1') }}"></script>

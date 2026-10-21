@@ -1,0 +1,30 @@
+{
+  "url": "http://laravel-13-phoenix.aruna/article/qa-ckeditor-panduan-sistem-andal-uji-seluruh-format-konten",
+  "checks": [
+    {
+      "width": 320,
+      "overflow": false,
+      "images": true
+    },
+    {
+      "width": 390,
+      "overflow": false,
+      "images": true
+    },
+    {
+      "width": 834,
+      "overflow": false,
+      "images": true
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "images": true
+    }
+  ],
+  "roundTripExact": true,
+  "create": "HTTP 200",
+  "update": "HTTP 200",
+  "CKFinder": "Selected uploaded image through library; image count increased from 9 to 10, then restored before save",
+  "upload": "Real CKEditor CKFinder upload adapter succeeded"
+}

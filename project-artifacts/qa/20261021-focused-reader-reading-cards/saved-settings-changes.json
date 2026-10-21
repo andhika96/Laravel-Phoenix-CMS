@@ -1,0 +1,37 @@
+[
+  {
+    "field": "detail_template_options.focused-reader.focused_reader.reading_width",
+    "before": 680,
+    "after": 880
+  },
+  {
+    "field": "detail_template_options.focused-reader.focused_reader.cover_width",
+    "before": 880,
+    "after": 1040
+  },
+  {
+    "field": "detail_template_options.focused-reader.focused_reader.title_width",
+    "before": 680,
+    "after": 800
+  },
+  {
+    "field": "detail_template_options.focused-reader.focused_reader.cover_ratio.desktop",
+    "before": "16/9",
+    "after": "5/2"
+  },
+  {
+    "field": "detail_template_options.focused-reader.focused_reader.cover_ratio.tablet",
+    "before": "16/9",
+    "after": "5/2"
+  },
+  {
+    "field": "detail_template_options.focused-reader.focused_reader.cover_ratio.mobile",
+    "before": "4/3",
+    "after": "16/9"
+  },
+  {
+    "field": "detail_template_options.focused-reader.focused_reader.navigation_thumbnails",
+    "before": false,
+    "after": true
+  }
+]

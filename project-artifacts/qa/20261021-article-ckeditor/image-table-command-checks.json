@@ -1,0 +1,90 @@
+[
+  {
+    "feature": "imageStyle:inline",
+    "html": "<p><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></p><p>Akhir.</p>"
+  },
+  {
+    "feature": "imageStyle:block",
+    "html": "<figure class=\"image\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></figure><p>Akhir.</p>"
+  },
+  {
+    "feature": "imageStyle:side",
+    "html": "<figure class=\"image image-style-side\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></figure><p>Akhir.</p>"
+  },
+  {
+    "feature": "imageStyle:alignLeft",
+    "html": "<figure class=\"image image-style-align-left\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></figure><p>Akhir.</p>"
+  },
+  {
+    "feature": "imageStyle:alignCenter",
+    "html": "<figure class=\"image image-style-align-center\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></figure><p>Akhir.</p>"
+  },
+  {
+    "feature": "imageStyle:alignRight",
+    "html": "<figure class=\"image image-style-align-right\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></figure><p>Akhir.</p>"
+  },
+  {
+    "feature": "imageStyle:alignBlockLeft",
+    "html": "<figure class=\"image image-style-block-align-left\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></figure><p>Akhir.</p>"
+  },
+  {
+    "feature": "imageStyle:alignBlockRight",
+    "html": "<figure class=\"image image-style-block-align-right\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></figure><p>Akhir.</p>"
+  },
+  {
+    "feature": "resize:null",
+    "html": "<figure class=\"image\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></figure>"
+  },
+  {
+    "feature": "resize:25%",
+    "html": "<figure class=\"image image_resized\" style=\"width:25%;\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></figure>"
+  },
+  {
+    "feature": "resize:50%",
+    "html": "<figure class=\"image image_resized\" style=\"width:50%;\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></figure>"
+  },
+  {
+    "feature": "resize:75%",
+    "html": "<figure class=\"image image_resized\" style=\"width:75%;\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></figure>"
+  },
+  {
+    "feature": "resize:100%",
+    "html": "<figure class=\"image image_resized\" style=\"width:100%;\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\"></figure>"
+  },
+  {
+    "feature": "alt",
+    "html": "<figure class=\"image image_resized\" style=\"width:100%;\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\" alt=\"Alt dari command CKEditor\"></figure>"
+  },
+  {
+    "feature": "image-link",
+    "html": "<figure class=\"image image_resized\" style=\"width:100%;\"><a href=\"/article\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\" alt=\"Alt dari command CKEditor\"></a></figure>"
+  },
+  {
+    "feature": "caption",
+    "html": "<figure class=\"image image_resized\" style=\"width:100%;\"><a href=\"/article\"><img src=\"/storage/ckfinder/articles/qa-ckeditor-20261021-lake.png\" alt=\"Alt dari command CKEditor\"></a><figcaption>&nbsp;</figcaption></figure>"
+  },
+  {
+    "feature": "insertTableRowAbove",
+    "html": "<p>Tabel.</p><figure class=\"table\"><table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>"
+  },
+  {
+    "feature": "insertTableColumnRight",
+    "html": "<p>Tabel.</p><figure class=\"table\"><table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>"
+  },
+  {
+    "feature": "setTableRowHeader",
+    "html": "<p>Tabel.</p><figure class=\"table\"><table><thead><tr><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr><tr><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr></thead><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>"
+  },
+  {
+    "feature": "mergeTableCellRight",
+    "html": "<p>Tabel.</p><figure class=\"table\"><table><thead><tr><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr><tr><th colspan=\"2\">&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr></thead><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>"
+  },
+  {
+    "feature": "splitTableCellVertically",
+    "html": "<p>Tabel.</p><figure class=\"table\"><table><thead><tr><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr><tr><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr></thead><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>"
+  },
+  {
+    "feature": "table-properties",
+    "html": "<p>Tabel.</p><figure class=\"table\" style=\"width:90%;\"><table style=\"background-color:#eef7ff;border-color:#176b87;border-width:2px;\"><thead><tr><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr><tr><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr></thead><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>"
+  }
+]

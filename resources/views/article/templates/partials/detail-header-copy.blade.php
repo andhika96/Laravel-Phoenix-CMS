@@ -1,3 +1,15 @@
+@if ($focusedReaderHeader ?? false)
+            @if ($eyebrow['enabled'] && $eyebrowText)<span class="article-reader-category">{{ $eyebrowText }}</span>@endif
+            @if ($templateOptions['header']['title']['enabled'])<h1>{{ $article->title }}</h1>@endif
+            @if ($description['enabled'] && $descriptionText)<p class="article-detail__dek">{{ $descriptionText }}</p>@endif
+            @if ($hasMeta)
+                <div class="article-detail__meta" data-separator="{{ $reader['metadata_separator'] }}">
+                    @if ($templateOptions['display']['author'] && $authorName)<span class="article-reader-author">{{ $authorName }}</span>@endif
+                    @if ($templateOptions['display']['date'] && $article->created_at)<time datetime="{{ $article->created_at->toDateString() }}">{{ $article->created_at->format('d M Y') }}</time>@endif
+                    @if ($templateOptions['display']['reading_time'])<span>{{ $readingMinutes }} {{ t('min read') }}</span>@endif
+                </div>
+            @endif
+@else
 @php
     $header = $templateOptions['header'] ?? [];
     $eyebrow = data_get($header, 'eyebrow', ['enabled' => true, 'mode' => 'dynamic', 'text' => '']);
@@ -17,3 +29,5 @@
 @if ($metaText)<p class="article-detail__meta">{{ $metaText }}</p>@endif
 @if (data_get($title, 'enabled'))<h1>{{ $article->title }}</h1>@endif
 @if (data_get($description, 'enabled') && $descriptionText)<p class="article-detail__dek">{{ $descriptionText }}</p>@endif
+
+@endif

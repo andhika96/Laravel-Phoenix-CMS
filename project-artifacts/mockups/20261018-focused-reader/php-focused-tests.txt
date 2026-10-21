@@ -1,0 +1,13 @@
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Article\FocusedReaderTest[39m
+  [32;1m✓[39;22m[90m [39m[90madministrator can save only allowlisted global article templates[39m[90m                                            [39m [90m0.31s[39m  
+  [32;1m✓[39;22m[90m [39m[90madministrator save persists only normalized structured style options[39m[90m                                        [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90madministrator save persists normalized editorial journal options[39m[90m                                            [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mreader options are bounded idempotent and isolated[39m[90m                                                          [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mreader render honors visibility caption and shell[39m[90m                                                           [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90msaved reader options match preview and rendered variables[39m[90m                                                   [39m [90m0.10s[39m  
+  [32;1m✓[39;22m[90m [39m[90mexport actual blade and settings for browser checks[39m[90m                                                         [39m [90m0.12s[39m  
+
+  [90mTests:[39m    [32;1m7 passed[39;22m[90m (73 assertions)[39m
+  [90mDuration:[39m [39m1.13s[39m
+

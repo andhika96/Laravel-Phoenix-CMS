@@ -1,0 +1,725 @@
+{
+  "cases": [
+    {
+      "key": "focused-reader",
+      "width": 320,
+      "metrics": {
+        "width": 280,
+        "overflow": false,
+        "images": [
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 1"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 2"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 3"
+          },
+          {
+            "loaded": true,
+            "alt": "Ikon danau inline"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 4"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 5"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 6"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 7"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 8"
+          }
+        ],
+        "table": "table",
+        "checks": [
+          {
+            "checked": true,
+            "disabled": true
+          },
+          {
+            "checked": false,
+            "disabled": true
+          }
+        ],
+        "rowspan": "2",
+        "colspan": "2"
+      },
+      "differences": []
+    },
+    {
+      "key": "editorial-feature",
+      "width": 320,
+      "metrics": {
+        "width": 288,
+        "overflow": false,
+        "images": [
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 1"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 2"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 3"
+          },
+          {
+            "loaded": true,
+            "alt": "Ikon danau inline"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 4"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 5"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 6"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 7"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 8"
+          }
+        ],
+        "table": "table",
+        "checks": [
+          {
+            "checked": true,
+            "disabled": true
+          },
+          {
+            "checked": false,
+            "disabled": true
+          }
+        ],
+        "rowspan": "2",
+        "colspan": "2"
+      },
+      "differences": []
+    },
+    {
+      "key": "knowledge-toc",
+      "width": 320,
+      "metrics": {
+        "width": 288,
+        "overflow": false,
+        "images": [
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 1"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 2"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 3"
+          },
+          {
+            "loaded": true,
+            "alt": "Ikon danau inline"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 4"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 5"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 6"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 7"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 8"
+          }
+        ],
+        "table": "table",
+        "checks": [
+          {
+            "checked": true,
+            "disabled": true
+          },
+          {
+            "checked": false,
+            "disabled": true
+          }
+        ],
+        "rowspan": "2",
+        "colspan": "2"
+      },
+      "differences": []
+    },
+    {
+      "key": "focused-reader",
+      "width": 390,
+      "metrics": {
+        "width": 350,
+        "overflow": false,
+        "images": [
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 1"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 2"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 3"
+          },
+          {
+            "loaded": true,
+            "alt": "Ikon danau inline"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 4"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 5"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 6"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 7"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 8"
+          }
+        ],
+        "table": "table",
+        "checks": [
+          {
+            "checked": true,
+            "disabled": true
+          },
+          {
+            "checked": false,
+            "disabled": true
+          }
+        ],
+        "rowspan": "2",
+        "colspan": "2"
+      },
+      "differences": []
+    },
+    {
+      "key": "editorial-feature",
+      "width": 390,
+      "metrics": {
+        "width": 358,
+        "overflow": false,
+        "images": [
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 1"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 2"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 3"
+          },
+          {
+            "loaded": true,
+            "alt": "Ikon danau inline"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 4"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 5"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 6"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 7"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 8"
+          }
+        ],
+        "table": "table",
+        "checks": [
+          {
+            "checked": true,
+            "disabled": true
+          },
+          {
+            "checked": false,
+            "disabled": true
+          }
+        ],
+        "rowspan": "2",
+        "colspan": "2"
+      },
+      "differences": []
+    },
+    {
+      "key": "knowledge-toc",
+      "width": 390,
+      "metrics": {
+        "width": 358,
+        "overflow": false,
+        "images": [
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 1"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 2"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 3"
+          },
+          {
+            "loaded": true,
+            "alt": "Ikon danau inline"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 4"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 5"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 6"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 7"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 8"
+          }
+        ],
+        "table": "table",
+        "checks": [
+          {
+            "checked": true,
+            "disabled": true
+          },
+          {
+            "checked": false,
+            "disabled": true
+          }
+        ],
+        "rowspan": "2",
+        "colspan": "2"
+      },
+      "differences": []
+    },
+    {
+      "key": "focused-reader",
+      "width": 834,
+      "metrics": {
+        "width": 770,
+        "overflow": false,
+        "images": [
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 1"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 2"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 3"
+          },
+          {
+            "loaded": true,
+            "alt": "Ikon danau inline"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 4"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 5"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 6"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 7"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 8"
+          }
+        ],
+        "table": "table",
+        "checks": [
+          {
+            "checked": true,
+            "disabled": true
+          },
+          {
+            "checked": false,
+            "disabled": true
+          }
+        ],
+        "rowspan": "2",
+        "colspan": "2"
+      },
+      "differences": []
+    },
+    {
+      "key": "editorial-feature",
+      "width": 834,
+      "metrics": {
+        "width": 802,
+        "overflow": false,
+        "images": [
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 1"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 2"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 3"
+          },
+          {
+            "loaded": true,
+            "alt": "Ikon danau inline"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 4"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 5"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 6"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 7"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 8"
+          }
+        ],
+        "table": "table",
+        "checks": [
+          {
+            "checked": true,
+            "disabled": true
+          },
+          {
+            "checked": false,
+            "disabled": true
+          }
+        ],
+        "rowspan": "2",
+        "colspan": "2"
+      },
+      "differences": []
+    },
+    {
+      "key": "knowledge-toc",
+      "width": 834,
+      "metrics": {
+        "width": 802,
+        "overflow": false,
+        "images": [
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 1"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 2"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 3"
+          },
+          {
+            "loaded": true,
+            "alt": "Ikon danau inline"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 4"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 5"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 6"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 7"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 8"
+          }
+        ],
+        "table": "table",
+        "checks": [
+          {
+            "checked": true,
+            "disabled": true
+          },
+          {
+            "checked": false,
+            "disabled": true
+          }
+        ],
+        "rowspan": "2",
+        "colspan": "2"
+      },
+      "differences": []
+    },
+    {
+      "key": "focused-reader",
+      "width": 1440,
+      "metrics": {
+        "width": 880,
+        "overflow": false,
+        "images": [
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 1"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 2"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 3"
+          },
+          {
+            "loaded": true,
+            "alt": "Ikon danau inline"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 4"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 5"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 6"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 7"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 8"
+          }
+        ],
+        "table": "table",
+        "checks": [
+          {
+            "checked": true,
+            "disabled": true
+          },
+          {
+            "checked": false,
+            "disabled": true
+          }
+        ],
+        "rowspan": "2",
+        "colspan": "2"
+      },
+      "differences": []
+    },
+    {
+      "key": "editorial-feature",
+      "width": 1440,
+      "metrics": {
+        "width": 880,
+        "overflow": false,
+        "images": [
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 1"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 2"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 3"
+          },
+          {
+            "loaded": true,
+            "alt": "Ikon danau inline"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 4"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 5"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 6"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 7"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 8"
+          }
+        ],
+        "table": "table",
+        "checks": [
+          {
+            "checked": true,
+            "disabled": true
+          },
+          {
+            "checked": false,
+            "disabled": true
+          }
+        ],
+        "rowspan": "2",
+        "colspan": "2"
+      },
+      "differences": []
+    },
+    {
+      "key": "knowledge-toc",
+      "width": 1440,
+      "metrics": {
+        "width": 800,
+        "overflow": false,
+        "images": [
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 1"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 2"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 3"
+          },
+          {
+            "loaded": true,
+            "alt": "Ikon danau inline"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 4"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 5"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 6"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 7"
+          },
+          {
+            "loaded": true,
+            "alt": "Ilustrasi danau pegunungan — pengujian gambar 8"
+          }
+        ],
+        "table": "table",
+        "checks": [
+          {
+            "checked": true,
+            "disabled": true
+          },
+          {
+            "checked": false,
+            "disabled": true
+          }
+        ],
+        "rowspan": "2",
+        "colspan": "2"
+      },
+      "differences": []
+    }
+  ],
+  "differences": []
+}

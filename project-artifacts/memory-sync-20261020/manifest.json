@@ -1,0 +1,250 @@
+[
+  {
+    "id": "01a11a40-9fe6-74d2-90b0-7e86b417c3d6",
+    "title": "Rancang plan sistem API MKTI",
+    "project": "Laravel 13 CMS BUM",
+    "action": "update",
+    "name": "20261020-delta-rancang-plan-sistem-api-mkti-01a11a40-9fe6-74d2-90b0-7e86b417c3d6.md",
+    "sha256": "22eaafd4d94502c4392efea567422285a8009920864524156bc67b8583e4745c"
+  },
+  {
+    "id": "01a11f5a-7603-7833-b17d-e4b76e874b4f",
+    "title": "Revamp Minimal Reading List",
+    "project": "Laravel 13 Phoenix",
+    "action": "update",
+    "name": "20261020-delta-revamp-minimal-reading-list-01a11f5a-7603-7833-b17d-e4b76e874b4f.md",
+    "sha256": "0b7766494278aa0e2907fb8c3ec3a44ef129a2bbde36e4650f8122267e241676"
+  },
+  {
+    "id": "01a12dcb-7978-7970-8d53-0fd4bce07a76",
+    "title": "Simpan chat lama ke memori",
+    "project": "Tanpa project",
+    "action": "update",
+    "name": "20261020-delta-simpan-chat-lama-ke-memori-01a12dcb-7978-7970-8d53-0fd4bce07a76.md",
+    "sha256": "cdb17c06310591c26c7d8cf91537deab9f87c23b6afe4be82bc8f095f82fca4b"
+  },
+  {
+    "id": "01a12df9-4bab-74b0-8126-5d843975a99a",
+    "title": "Buat mod Townsmen APK",
+    "project": "Tanpa project",
+    "action": "new",
+    "name": "20261020-delta-buat-mod-townsmen-apk-01a12df9-4bab-74b0-8126-5d843975a99a.md",
+    "sha256": "0ac376571dfeb39137de2209deca980593599a608bc6d6a2adc8dd43e88655ff"
+  },
+  {
+    "id": "01a12e22-6c7e-7390-b3ac-59bf4ab001af",
+    "title": "Analisis ukuran project-artifacts",
+    "project": "Laravel 13 CMS BUM",
+    "action": "new",
+    "name": "20261020-delta-analisis-ukuran-project-artifacts-01a12e22-6c7e-7390-b3ac-59bf4ab001af.md",
+    "sha256": "c4c433054952df60eed205b1978ba30a60e6ae39005ff370b0582120b8561c29"
+  },
+  {
+    "id": "01a12e3f-32bc-7ae2-b47d-a3f96f3edad3",
+    "title": "Periksa penggunaan ruang drive E",
+    "project": "Tanpa project",
+    "action": "new",
+    "name": "20261020-delta-periksa-penggunaan-ruang-drive-e-01a12e3f-32bc-7ae2-b47d-a3f96f3edad3.md",
+    "sha256": "60f154a1bfc992b4bd3b32295e48dffbfc1df3970afb8f2875b7b671661c7948"
+  },
+  {
+    "id": "01a12e61-bd70-7d11-abab-1c563cc52528",
+    "title": "Periksa kendala worker File Manager",
+    "project": "Laravel 13 Phoenix",
+    "action": "new",
+    "name": "20261020-delta-periksa-kendala-worker-file-manager-01a12e61-bd70-7d11-abab-1c563cc52528.md",
+    "sha256": "e15eb3064195530d00852e89291082dd4c628b60e608d57c20129f4f1c527ec1"
+  },
+  {
+    "id": "01a12ec1-5987-7351-aacb-6faeca0c2918",
+    "title": "Rancang RPG web dengan inventory",
+    "project": "Verdant Vale RPG",
+    "action": "new",
+    "name": "20261020-delta-rancang-rpg-web-dengan-inventory-01a12ec1-5987-7351-aacb-6faeca0c2918.md",
+    "sha256": "b7226de53a98df98a813f7e59613ca7419d3c614b12f4337d05bf2309a5603c9"
+  },
+  {
+    "id": "01a13344-052e-77d1-a905-f721ea0fcb6b",
+    "title": "Rancang Codex multi-workspace",
+    "project": "Codex MultiWorkspace",
+    "action": "update",
+    "name": "20261020-delta-rancang-codex-multi-workspace-01a13344-052e-77d1-a905-f721ea0fcb6b.md",
+    "sha256": "31809f9bad5317180e34536f52a82a655d66431aaec6d90ebab16395f8c92084"
+  },
+  {
+    "id": "01a13496-a598-7b40-a808-06f1616f5351",
+    "title": "Install Graphify di Codex",
+    "project": "Tanpa project",
+    "action": "new",
+    "name": "20261020-delta-install-graphify-di-codex-01a13496-a598-7b40-a808-06f1616f5351.md",
+    "sha256": "a2b17bc513323b54943fdc4e7f356844090db358e529fccba9c49e2363cdd3b7"
+  },
+  {
+    "id": "01a1349b-2d90-70f1-8f0f-a2d44ebb3599",
+    "title": "Periksa custom instruction",
+    "project": "Tanpa project",
+    "action": "new",
+    "name": "20261020-delta-periksa-custom-instruction-01a1349b-2d90-70f1-8f0f-a2d44ebb3599.md",
+    "sha256": "f332146dc97d376a556503fdb41903716eab1cf9ad90feab1c99fcfacdcb5361"
+  },
+  {
+    "id": "01a13562-b6a4-7332-b010-91bfda6c01f8",
+    "title": "Buat preview halaman Pre-book",
+    "project": "New MG [Laptop]",
+    "action": "update",
+    "name": "20261020-delta-buat-preview-halaman-pre-book-01a13562-b6a4-7332-b010-91bfda6c01f8.md",
+    "sha256": "ced3b1a0cd67b035b017e79b7202447c46483868758e65ec52ff64451ceb2387"
+  },
+  {
+    "id": "01a13573-7e7e-7ff1-9372-0bc1f57bbaba",
+    "title": "Lacak snippet yang harus dihapus",
+    "project": "New MG [Laptop]",
+    "action": "new",
+    "name": "20261020-delta-lacak-snippet-yang-harus-dihapus-01a13573-7e7e-7ff1-9372-0bc1f57bbaba.md",
+    "sha256": "7e0cd25dc41fff9767a3900064bce03ad26dcf7ded8685a96deabbf82f72d58e"
+  },
+  {
+    "id": "01a13861-b815-76c2-a096-8e7e7dc33da5",
+    "title": "Perbaiki izin dan Windows setup Codе",
+    "project": "Codex MultiWorkspace",
+    "action": "new",
+    "name": "20261020-delta-perbaiki-izin-dan-windows-setup-cod-01a13861-b815-76c2-a096-8e7e7dc33da5.md",
+    "sha256": "4f429fdbc81496423b2b6405bc26e0147f838da24ed78f6bb699d9f8d64f0682"
+  },
+  {
+    "id": "01a1145e-6892-7ba1-9397-e867625e99ad",
+    "title": "Rancang generator map AoE II DE",
+    "project": "Arunika Map Studio",
+    "action": "update",
+    "name": "20261020-delta-rancang-generator-map-aoe-ii-de-01a1145e-6892-7ba1-9397-e867625e99ad.md",
+    "sha256": "8db517459fbcae2fbcf73ec68a337325d2c9433636f1a253d164c0a64b47db7d"
+  },
+  {
+    "id": "01a1389a-72a3-71b2-863e-8ee69d321992",
+    "title": "Lanjutkan generator map AoE II DE",
+    "project": "Arunika Map Studio",
+    "action": "update",
+    "name": "20261020-delta-lanjutkan-generator-map-aoe-ii-de-01a1389a-72a3-71b2-863e-8ee69d321992.md",
+    "sha256": "4a20437906f095c59a651ceda3723203b2597bae9ede34d02753c6bba8b0c36e"
+  },
+  {
+    "id": "01a1057d-66ec-7431-a0c2-2ed92bb8b0b0",
+    "title": "Pelajari ulang AI v4",
+    "project": "ArunikaAI v4/Mini",
+    "action": "update",
+    "name": "20261020-delta-pelajari-ulang-ai-v4-01a1057d-66ec-7431-a0c2-2ed92bb8b0b0.md",
+    "sha256": "8e17aa8a1b2390e9114566e1fbd9347ba2ba58c6d7c92fe78855ef7b4a3b6da3"
+  },
+  {
+    "id": "01a12f1a-35fc-7700-84f8-a05514630319",
+    "title": "Cek penambahan dinosaurus JPOG",
+    "project": "Jurassic Park Operation Genesis",
+    "action": "update",
+    "name": "20261020-delta-cek-penambahan-dinosaurus-jpog-01a12f1a-35fc-7700-84f8-a05514630319.md",
+    "sha256": "d913ccfae37a89e05d11295ed3cca5bf2962c3228037c9af400d1b2feefa935d"
+  },
+  {
+    "id": "01a13d63-a88a-78f0-9bb0-02bf3fa9a42c",
+    "title": "Trace penyebab kegagalan",
+    "project": "New MG [Laptop]",
+    "action": "new",
+    "name": "20261020-delta-trace-penyebab-kegagalan-01a13d63-a88a-78f0-9bb0-02bf3fa9a42c.md",
+    "sha256": "238b09a7d516991af9dfd80d45ca573805bb8d3ede2ef131a87eb390a0f54e1a"
+  },
+  {
+    "id": "01a13d63-e985-7f81-aa3b-93db5947c3eb",
+    "title": "Update data Graphify",
+    "project": "New MG [Laptop]",
+    "action": "new",
+    "name": "20261020-delta-update-data-graphify-01a13d63-e985-7f81-aa3b-93db5947c3eb.md",
+    "sha256": "d13c8d34198dd5b2761409ee5a77b53a8867046583a8de8b4a19a76ebea87d2e"
+  },
+  {
+    "id": "01a13d7b-be06-7ed0-84c9-61ca9b6b0bcc",
+    "title": "Revamp prototype header navigation",
+    "project": "Laravel 13 Phoenix",
+    "action": "update",
+    "name": "20261020-delta-revamp-prototype-header-navigation-01a13d7b-be06-7ed0-84c9-61ca9b6b0bcc.md",
+    "sha256": "e5ee248e740625d35429dad64076c378317f467a4ac065a522850b0bc200913e"
+  },
+  {
+    "id": "01a13e46-a032-7102-9986-d731e45b676a",
+    "title": "Simpan percakapan ke drive E",
+    "project": "Tanpa project",
+    "action": "new",
+    "name": "20261020-delta-simpan-percakapan-ke-drive-e-01a13e46-a032-7102-9986-d731e45b676a.md",
+    "sha256": "7fb3ab590b62051b876c1a37232da6cf0c8f60502edd232f1748576c950766b0"
+  },
+  {
+    "id": "01a14373-5206-7e03-a127-0a1534567bcc",
+    "title": "Periksa notifikasi SSD Portable",
+    "project": "Tanpa project",
+    "action": "new",
+    "name": "20261020-delta-periksa-notifikasi-ssd-portable-01a14373-5206-7e03-a127-0a1534567bcc.md",
+    "sha256": "f78e1f152fa6ccb8dcf7c548dc7e386476341edf82d49e7031cba4200d7755f0"
+  },
+  {
+    "id": "01a143a5-ec0f-76e3-8d3b-bec51221cf21",
+    "title": "Rapikan revamp UI",
+    "project": "Laravel 13 Phoenix",
+    "action": "update",
+    "name": "20261020-delta-rapikan-revamp-ui-01a143a5-ec0f-76e3-8d3b-bec51221cf21.md",
+    "sha256": "f14dd92cac47c5e955f2ecd16389dfea282f20e5daa98bba1b3934398b7b4e1d"
+  },
+  {
+    "id": "01a14ef8-cc2f-78d3-b204-f92352ffbb78",
+    "title": "Revamp Focused Reader",
+    "project": "Laravel 13 Phoenix",
+    "action": "new",
+    "name": "20261020-delta-revamp-focused-reader-01a14ef8-cc2f-78d3-b204-f92352ffbb78.md",
+    "sha256": "31a3eed0bf929ff6d289921c736556f7ab586bd9ce03f5de10b9047c76575c51"
+  },
+  {
+    "id": "01a14f21-ecf3-77b3-9ed3-c8ddb01e3b7e",
+    "title": "Cari daya port DC ASUS A1404VA",
+    "project": "Tanpa project",
+    "action": "new",
+    "name": "20261020-delta-cari-daya-port-dc-asus-a1404va-01a14f21-ecf3-77b3-9ed3-c8ddb01e3b7e.md",
+    "sha256": "8fddcfbd937ced35bb28672b963907ec759afdaf2b16d1ed1c81f90eb4045508"
+  },
+  {
+    "id": "01a1541b-03a0-7fa1-beee-21f89d4362ed",
+    "title": "Audit perbaikan CAPTCHA dan SEO MG",
+    "project": "New MG [Laptop]",
+    "action": "new",
+    "name": "20261020-delta-audit-perbaikan-captcha-dan-seo-mg-01a1541b-03a0-7fa1-beee-21f89d4362ed.md",
+    "sha256": "62ff8c9a3254ff53be77e852ecf21f76dae4464b292f8c0c42a974384519a119"
+  },
+  {
+    "id": "01a157f8-389d-7b33-aad1-20ee3a47ea21",
+    "title": "Perbaiki masalah yang dimaksud",
+    "project": "Laravel 13 CMS BUM",
+    "action": "new",
+    "name": "20261020-delta-perbaiki-masalah-yang-dimaksud-01a157f8-389d-7b33-aad1-20ee3a47ea21.md",
+    "sha256": "72a2521f738b6e186de38cfbb1e81f9792b10b56f27aae01b8d35a51378a6fd3"
+  },
+  {
+    "id": "6acf562c-a158-83ec-b25e-b1606c37c936",
+    "title": "Buat Stiker Lucu",
+    "project": "Tanpa project (cloud)",
+    "action": "new",
+    "name": "20261020-delta-buat-stiker-lucu-6acf562c-a158-83ec-b25e-b1606c37c936.md",
+    "sha256": "bcd0804b318ae2e7d743f51695352c8538082b3826c4523e85dca613ba336e0f"
+  },
+  {
+    "id": "6acf5615-e198-83ec-bd42-31b8d07cbe59",
+    "title": "Build decision board",
+    "project": "Tanpa project (cloud)",
+    "action": "new",
+    "name": "20261020-delta-build-decision-board-6acf5615-e198-83ec-bd42-31b8d07cbe59.md",
+    "sha256": "723dc66fad396839e97a99a1b9f389b28eb6f4637110732697b45ad77d9ecf19"
+  },
+  {
+    "id": "01a139e8-7f77-7591-84f4-47269c253095",
+    "title": "01a139e8-7f77-7591-84f4-47269c253095",
+    "project": "Tanpa project (cloud)",
+    "action": "new",
+    "name": "20261020-delta-01a139e8-7f77-7591-84f4-47269c253095-01a139e8-7f77-7591-84f4-47269c253095.md",
+    "sha256": "cfd0f959c49af2b1a8343a9534152a22bd3428bf5872697d003c8ead1a94dd67"
+  }
+]

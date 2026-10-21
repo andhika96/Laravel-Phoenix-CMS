@@ -1,0 +1,196 @@
+{
+  "results": [
+    {
+      "name": "runtime-default.html",
+      "width": 320,
+      "overflow": false,
+      "title": "32px",
+      "alignment": "left",
+      "body": "17px",
+      "ratio": "4 / 3"
+    },
+    {
+      "name": "runtime-default.html",
+      "width": 390,
+      "overflow": false,
+      "title": "32px",
+      "alignment": "left",
+      "body": "17px",
+      "ratio": "4 / 3"
+    },
+    {
+      "name": "runtime-default.html",
+      "width": 576,
+      "overflow": false,
+      "title": "40px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": "16 / 9"
+    },
+    {
+      "name": "runtime-default.html",
+      "width": 768,
+      "overflow": false,
+      "title": "40px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": "16 / 9"
+    },
+    {
+      "name": "runtime-default.html",
+      "width": 834,
+      "overflow": false,
+      "title": "40px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": "16 / 9"
+    },
+    {
+      "name": "runtime-default.html",
+      "width": 1024,
+      "overflow": false,
+      "title": "48px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": "16 / 9"
+    },
+    {
+      "name": "runtime-default.html",
+      "width": 1440,
+      "overflow": false,
+      "title": "48px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": "16 / 9"
+    },
+    {
+      "name": "runtime-stress.html",
+      "width": 320,
+      "overflow": false,
+      "title": "32px",
+      "alignment": "left",
+      "body": "17px",
+      "ratio": "4 / 3"
+    },
+    {
+      "name": "runtime-stress.html",
+      "width": 390,
+      "overflow": false,
+      "title": "32px",
+      "alignment": "left",
+      "body": "17px",
+      "ratio": "4 / 3"
+    },
+    {
+      "name": "runtime-stress.html",
+      "width": 576,
+      "overflow": false,
+      "title": "40px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": "16 / 9"
+    },
+    {
+      "name": "runtime-stress.html",
+      "width": 768,
+      "overflow": false,
+      "title": "40px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": "16 / 9"
+    },
+    {
+      "name": "runtime-stress.html",
+      "width": 834,
+      "overflow": false,
+      "title": "40px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": "16 / 9"
+    },
+    {
+      "name": "runtime-stress.html",
+      "width": 1024,
+      "overflow": false,
+      "title": "48px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": "16 / 9"
+    },
+    {
+      "name": "runtime-stress.html",
+      "width": 1440,
+      "overflow": false,
+      "title": "48px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": "16 / 9"
+    },
+    {
+      "name": "runtime-custom.html",
+      "width": 320,
+      "overflow": false,
+      "title": "28px",
+      "alignment": "center",
+      "body": "17px",
+      "ratio": null
+    },
+    {
+      "name": "runtime-custom.html",
+      "width": 390,
+      "overflow": false,
+      "title": "28px",
+      "alignment": "center",
+      "body": "17px",
+      "ratio": null
+    },
+    {
+      "name": "runtime-custom.html",
+      "width": 576,
+      "overflow": false,
+      "title": "40px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": null
+    },
+    {
+      "name": "runtime-custom.html",
+      "width": 768,
+      "overflow": false,
+      "title": "40px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": null
+    },
+    {
+      "name": "runtime-custom.html",
+      "width": 834,
+      "overflow": false,
+      "title": "40px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": null
+    },
+    {
+      "name": "runtime-custom.html",
+      "width": 1024,
+      "overflow": false,
+      "title": "48px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": null
+    },
+    {
+      "name": "runtime-custom.html",
+      "width": 1440,
+      "overflow": false,
+      "title": "48px",
+      "alignment": "center",
+      "body": "18px",
+      "ratio": null
+    }
+  ],
+  "settings": "Vue bindings and Apply passed",
+  "previewUrlLength": 3922,
+  "pageErrors": []
+}

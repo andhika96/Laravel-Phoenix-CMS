@@ -1,0 +1,83 @@
+{
+  "checks": [
+    {
+      "variant": "Reading Cards",
+      "width": 320,
+      "overflow": false,
+      "contentWidth": 262,
+      "columns": "262px"
+    },
+    {
+      "variant": "Reading Cards",
+      "width": 390,
+      "overflow": false,
+      "contentWidth": 332,
+      "columns": "332px"
+    },
+    {
+      "variant": "Reading Cards",
+      "width": 768,
+      "overflow": false,
+      "contentWidth": 686,
+      "columns": "335px 335px"
+    },
+    {
+      "variant": "Reading Cards",
+      "width": 1024,
+      "overflow": false,
+      "contentWidth": 880,
+      "columns": "432px 432px"
+    },
+    {
+      "variant": "Reading Cards",
+      "width": 1440,
+      "overflow": false,
+      "contentWidth": 880,
+      "columns": "432px 432px"
+    },
+    {
+      "variant": "Editorial Flow",
+      "width": 320,
+      "overflow": false,
+      "contentWidth": 262,
+      "columns": "262px"
+    },
+    {
+      "variant": "Editorial Flow",
+      "width": 390,
+      "overflow": false,
+      "contentWidth": 332,
+      "columns": "332px"
+    },
+    {
+      "variant": "Editorial Flow",
+      "width": 768,
+      "overflow": false,
+      "contentWidth": 686,
+      "columns": "343px 343px"
+    },
+    {
+      "variant": "Editorial Flow",
+      "width": 1024,
+      "overflow": false,
+      "contentWidth": 926,
+      "columns": "463px 463px"
+    },
+    {
+      "variant": "Editorial Flow",
+      "width": 1440,
+      "overflow": false,
+      "contentWidth": 960,
+      "columns": "480px 480px"
+    }
+  ],
+  "deviceSwitches": "passed",
+  "hover": {
+    "normal": "rgb(255, 255, 255)",
+    "hover": "rgb(237, 248, 243)"
+  },
+  "localNavigation": "passed",
+  "keyboardFocus": "passed",
+  "reducedMotion": "passed",
+  "errors": []
+}

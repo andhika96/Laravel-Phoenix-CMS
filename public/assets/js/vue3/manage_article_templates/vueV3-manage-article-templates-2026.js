@@ -148,6 +148,8 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 
         return {
             surface: 'archive',
+            frontendArchiveUrl: articleTemplateRoot?.dataset.frontendArchiveUrl || '',
+            frontendDetailUrl: articleTemplateRoot?.dataset.frontendDetailUrl || '',
             device: 'desktop',
             deviceProfiles: {
                 desktop: { label: copy.desktop || 'Desktop', width: 1440, height: 900 },
@@ -247,6 +249,7 @@ const ManageArticleTemplateVue3 = Vue.createApp({
 			const isArchive = this.surface === 'archive';
 			const isMinimal = isArchive && this.activeTemplateKey === 'minimal-reading-list';
 			const sections = [{ key: 'header', label: 'Header content', icon: 'fa-align-left' }];
+            if (!isArchive && this.activeTemplateKey === 'focused-reader' && options.focused_reader) sections.push({ key: 'focused-reader', label: 'Focused Reader', icon: 'fa-book-open' });
             if (!isArchive || ['minimal-reading-list', 'editorial-journal', 'mosaic-magazine'].includes(this.activeTemplateKey)) sections.push({ key: 'display', label: 'Visible elements', icon: 'fa-eye' });
 
 			if (isArchive) sections.push({ key: 'toolbar', label: 'Archive toolbar', icon: 'fa-sliders-h' });

@@ -1,0 +1,30 @@
+[
+  {
+    "Backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261018-focused-reader-193342\\app\\Support\\Article\\ArticleTemplateOptions.php",
+    "SHA256": "5731C0C9049EDCE7C55A642BB7B8AFFF8C1ADAF9E1F29D6AD49F254695EC3D41"
+  },
+  {
+    "Backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261018-focused-reader-193342\\public\\assets\\css\\article\\article-frontend-2026.css",
+    "SHA256": "9FCCD3302E7C461DEA03185A633CD0160B9C51EE007DD848D38799DF9D14DDC9"
+  },
+  {
+    "Backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261018-focused-reader-193342\\public\\assets\\css\\article\\article-template-manager-2026.css",
+    "SHA256": "1D8467B4FD35E703B931AF3F9A19373E9FE7075538A9A0AB04BDAACA4C6EB00C"
+  },
+  {
+    "Backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261018-focused-reader-193342\\public\\assets\\js\\vue3\\manage_article_templates\\vueV3-manage-article-templates-2026.js",
+    "SHA256": "44E08F16F35058AD6B757800866DE62D84A2C2EEDE2603EBFEC614C9563957A8"
+  },
+  {
+    "Backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261018-focused-reader-193342\\resources\\views\\article\\templates\\detail\\focused-reader.blade.php",
+    "SHA256": "AFBAD8800303291DA132E0AF1EDAA17AE35142F863503B2974AA5F891278A4A8"
+  },
+  {
+    "Backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261018-focused-reader-193342\\resources\\views\\article\\templates\\partials\\detail-header-copy.blade.php",
+    "SHA256": "9022BF7C61CEC776BBE0D6E42B30714A62BC8F47DB2B8863F46AAB1B5BAA6031"
+  },
+  {
+    "Backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\backups\\20261018-focused-reader-193342\\resources\\views\\manage_article\\templates\\index.blade.php",
+    "SHA256": "5D5ACEAF84DBA74808CC4A6F805B5E5978D7B0E46EA54D239E5BE7852665A804"
+  }
+]

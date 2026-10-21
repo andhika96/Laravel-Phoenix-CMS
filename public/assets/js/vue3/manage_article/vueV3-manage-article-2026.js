@@ -1798,20 +1798,22 @@ const ManageArticleVue3 = createApp(
 								// 'mediaEmbed',
 								'removeFormat',
 								'underline',
+								'strikethrough',
 								'fontFamily',
 								'fontSize',
 								'fontColor',
 								// 'fontBackgroundColor',
 								'highlight',
-								// 'code',
-								// 'codeBlock',
+								'code',
+								'codeBlock',
+								'horizontalLine',
 								// 'sourceEditing',
 								'selectAll'
 							]
 						},
 						language: 'en',
 						image: {
-							styles: [ 'alignCenter', 'alignLeft', 'alignRight' ],
+							styles: { options: ['inline', 'block', 'side', 'alignLeft', 'alignCenter', 'alignRight', 'alignBlockLeft', 'alignBlockRight'] },
 							resizeOptions: [
 								{
 									name: 'resizeImage:original',
@@ -1842,7 +1844,8 @@ const ManageArticleVue3 = createApp(
 							toolbar: [
 								'imageTextAlternative', 'toggleImageCaption',
 								'|',
-								'imageStyle:inline', 'imageStyle:wrapText', 'imageStyle:breakText', 'imageStyle:side',
+								'imageStyle:inline', 'imageStyle:block', 'imageStyle:side',
+								'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight', 'imageStyle:alignBlockLeft', 'imageStyle:alignBlockRight',
 								'|',
 								'resizeImage',
 								'linkImage'
@@ -1853,13 +1856,17 @@ const ManageArticleVue3 = createApp(
 								'tableColumn',
 								'tableRow',
 								'mergeTableCells',
-								'tableCellProperties',
 								'tableProperties'
 							]
 						},
 						ckfinder: 
 						{
 							openerMethod: "modal",
+							options: {
+								basePath: site_url + '/assets/plugins/ckfinder/',
+								connectorPath: site_url + '/assets/plugins/ckfinder/core/connector/php/connector.php',
+								resourceType: 'Articles',
+							},
 							uploadUrl: site_url+"/assets/plugins/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Articles&responseType=json"
 						},
 						wordCount:
@@ -1871,6 +1878,7 @@ const ManageArticleVue3 = createApp(
 					.then(editor => 
 					{
 						window.editor = editor;
+						editor.ui.getEditableElement().classList.add('article-rich-content');
 
 						editor.model.document.on("change:data", () => 
 						{

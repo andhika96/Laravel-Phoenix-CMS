@@ -9,6 +9,8 @@
         data-save-url="{{ route('cms.core.manage_article.templates.update') }}"
         data-preview-base-url="{{ url('manage_article/templates/preview/__SURFACE__/__TEMPLATE__') }}"
         data-placeholder-thumbnail="{{ asset('assets/images/article/article-image-placeholder.svg') }}"
+        data-frontend-archive-url="{{ $frontendArchiveUrl ?? route('cms.core.article') }}"
+        data-frontend-detail-url="{{ $frontendDetailUrl ?? '' }}"
         data-payload="{{ json_encode(['settings' => ['archive_template' => $settings->archive_template, 'detail_template' => $settings->detail_template, 'archive_per_page' => (int) $settings->archive_per_page, 'archive_template_options' => $archiveTemplateOptions, 'detail_template_options' => $detailTemplateOptions], 'templates' => ['archive' => $archiveTemplates, 'detail' => $detailTemplates], 'copy' => ['archiveHint' => t('Choose an archive template to manage and preview.'), 'detailHint' => t('Choose a detail template to manage and preview.'), 'previewTitle' => t('Article template preview'), 'desktop' => t('Desktop'), 'tablet' => t('Tablet'), 'mobile' => t('Mobile'), 'scaledToFit' => t('Scaled to fit'), 'loadingPreview' => t('Loading preview'), 'search' => t('Search'), 'categoryFilter' => t('Category filter')]]) }}">
         <div class="mb-3">{{ Breadcrumbs::render('manage_article.templates') }}</div>
         <section class="article-template-manager ph-content rounded">
@@ -29,7 +31,7 @@
                 </aside>
                 <section class="article-template-manager__preview">
                     <div class="article-template-manager__preview-bar">
-                        <div><strong>{{ t('Preview') }}: @{{ activeTemplate?.label }}</strong><small>{{ t('Live preview of the selected template.') }}</small></div>
+                        <div><strong>{{ t('Preview') }}: @{{ activeTemplate?.label }}</strong><small>{{ t('Live preview of the selected template.') }}</small><div class="mt-2"><a v-if="surface === 'archive' ? frontendArchiveUrl : frontendDetailUrl" :href="surface === 'archive' ? frontendArchiveUrl : frontendDetailUrl" target="_blank" rel="noopener noreferrer" class="btn btn-sm ph-btn-theme-outline" title="{{ t('Opens the public page using the last saved template and settings.') }}"><i class="fas fa-external-link-alt me-1" aria-hidden="true"></i>{{ t('View frontend') }}</a><span v-else class="text-muted small">{{ t('Publish a public article to open its frontend page.') }}</span><small>{{ t('Frontend uses saved settings. Save Template to publish changes.') }}</small></div></div>
                         <div class="article-template-manager__preview-controls">
                             <div class="article-template-manager__device-meta" aria-live="polite"><strong>@{{ activeDevice.label }} · @{{ activeDevice.width }} × @{{ activeDevice.height }}</strong><small>@{{ copy.scaledToFit }}</small></div>
                             <div class="article-template-manager__devices" role="group" aria-label="{{ t('Preview device') }}">
@@ -69,7 +71,7 @@
  <div class="article-template-options-section__heading"><div><h5>{{ t('Visible elements') }}</h5><small>{{ t('Choose which article details appear in this template.') }}</small></div></div>
  <div class="article-template-options-fields">
  @foreach (['category' => 'Show category', 'date' => 'Show date', 'author' => 'Show author / editor', 'reading_time' => 'Show reading time', 'excerpt' => 'Show excerpt', 'read_more' => 'Show Read more link', 'navigation' => 'Show previous and next articles'] as $field => $label)
- <label v-if="optionsModal.surface === 'detail' ? {{ in_array($field, ['date', 'author', 'navigation']) ? 'true' : 'false' }} : {{ in_array($field, ['category','date','excerpt']) ? 'true' : ($field === 'reading_time' ? "optionsModal.key === 'minimal-reading-list'" : ($field === 'read_more' ? "optionsModal.key !== 'mosaic-magazine'" : 'false')) }}" class="form-check form-switch"><input type="checkbox" class="form-check-input" v-model="optionsModal.value.display.{{ $field }}"><span class="form-check-label">{{ t($label) }}</span></label>
+ <label v-if="optionsModal.surface === 'detail' ? {{ in_array($field, ['date', 'author', 'navigation']) ? 'true' : ($field === 'reading_time' ? "optionsModal.key === 'focused-reader'" : 'false') }} : {{ in_array($field, ['category','date','excerpt']) ? 'true' : ($field === 'reading_time' ? "optionsModal.key === 'minimal-reading-list'" : ($field === 'read_more' ? "optionsModal.key !== 'mosaic-magazine'" : 'false')) }}" class="form-check form-switch"><input type="checkbox" class="form-check-input" v-model="optionsModal.value.display.{{ $field }}"><span class="form-check-label">{{ t($label) }}</span></label>
  @endforeach
  </div></section>
  <section v-if="optionsModal.section === 'header'" id="article-template-option-panel-header" role="tabpanel" aria-labelledby="article-template-option-tab-header" tabindex="-1" class="article-template-options-section">
@@ -149,6 +151,7 @@
                                 </section>
                                 <section v-if="optionsModal.section === 'grid' && surface === 'archive' && optionsModal.value.grid" id="article-template-option-panel-grid" role="tabpanel" aria-labelledby="article-template-option-tab-grid" tabindex="-1" class="article-template-options-section"><div class="article-template-options-section__heading"><span>3</span><div><h5>{{ t('Grid columns') }}</h5><small>{{ t('Set the Article grid for each device.') }}</small></div></div><div class="article-template-device-tabs" role="group" aria-label="{{ t('Device') }}"><button v-for="device in ['desktop', 'tablet', 'mobile']" :key="device" type="button" :class="{ active: optionsDevice === device }" :aria-pressed="optionsDevice === device" @click="selectOptionsDevice(device)"><i :class="device === 'desktop' ? 'fas fa-desktop' : (device === 'tablet' ? 'fas fa-tablet-alt' : 'fas fa-mobile-alt')" aria-hidden="true"></i>@{{ device }}</button></div><div class="article-template-columns" role="group" aria-label="{{ t('Grid columns') }}"><button v-for="column in columnChoices(optionsDevice)" :key="column" type="button" :class="{ active: optionsModal.value.grid[optionsDevice] === column }" :aria-pressed="optionsModal.value.grid[optionsDevice] === column" @click="optionsModal.value.grid[optionsDevice] = column">@{{ column }} {{ t('columns') }}</button></div></section>
                                 @include('manage_article.templates.partials.options-mosaic-magazine')
+                                @include('manage_article.templates.partials.options-focused-reader')
                                 @include('manage_article.templates.partials.options-classic-balanced')
                                 @include('manage_article.templates.partials.options-styling')
                                         </div>

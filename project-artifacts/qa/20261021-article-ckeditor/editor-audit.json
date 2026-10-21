@@ -1,0 +1,398 @@
+{
+  "toolbar": [
+    "heading",
+    "|",
+    "bold",
+    "italic",
+    "link",
+    "bulletedList",
+    "numberedList",
+    "todoList",
+    "|",
+    "outdent",
+    "indent",
+    "alignment",
+    "undo",
+    "redo",
+    "|",
+    "CKFinder",
+    "imageUpload",
+    "imageInsert",
+    "blockQuote",
+    "insertTable",
+    "removeFormat",
+    "underline",
+    "fontFamily",
+    "fontSize",
+    "fontColor",
+    "highlight",
+    "selectAll"
+  ],
+  "image": {
+    "toolbar": [
+      "imageTextAlternative",
+      "toggleImageCaption",
+      "|",
+      "imageStyle:inline",
+      "imageStyle:wrapText",
+      "imageStyle:breakText",
+      "imageStyle:side",
+      "|",
+      "resizeImage",
+      "linkImage"
+    ],
+    "styles": {
+      "options": [
+        "inline",
+        "alignLeft",
+        "alignRight",
+        "alignCenter",
+        "alignBlockLeft",
+        "alignBlockRight",
+        "block",
+        "side"
+      ]
+    },
+    "resizeOptions": [
+      {
+        "name": "resizeImage:original",
+        "label": "Default image width",
+        "value": null
+      },
+      {
+        "name": "resizeImage:25",
+        "label": "25% page width",
+        "value": "25"
+      },
+      {
+        "name": "resizeImage:50",
+        "label": "50% page width",
+        "value": "50"
+      },
+      {
+        "name": "resizeImage:75",
+        "label": "75% page width",
+        "value": "75"
+      },
+      {
+        "name": "resizeImage:100",
+        "label": "100% page width",
+        "value": "100"
+      }
+    ],
+    "upload": {
+      "types": [
+        "jpeg",
+        "png",
+        "gif",
+        "bmp",
+        "webp",
+        "tiff"
+      ]
+    },
+    "resizeUnit": "%"
+  },
+  "table": {
+    "contentToolbar": [
+      "tableColumn",
+      "tableRow",
+      "mergeTableCells",
+      "tableCellProperties",
+      "tableProperties"
+    ],
+    "tableProperties": {
+      "borderColors": [
+        {
+          "color": "hsl(0, 0%, 0%)",
+          "label": "Black"
+        },
+        {
+          "color": "hsl(0, 0%, 30%)",
+          "label": "Dim grey"
+        },
+        {
+          "color": "hsl(0, 0%, 60%)",
+          "label": "Grey"
+        },
+        {
+          "color": "hsl(0, 0%, 90%)",
+          "label": "Light grey"
+        },
+        {
+          "color": "hsl(0, 0%, 100%)",
+          "label": "White",
+          "hasBorder": true
+        },
+        {
+          "color": "hsl(0, 75%, 60%)",
+          "label": "Red"
+        },
+        {
+          "color": "hsl(30, 75%, 60%)",
+          "label": "Orange"
+        },
+        {
+          "color": "hsl(60, 75%, 60%)",
+          "label": "Yellow"
+        },
+        {
+          "color": "hsl(90, 75%, 60%)",
+          "label": "Light green"
+        },
+        {
+          "color": "hsl(120, 75%, 60%)",
+          "label": "Green"
+        },
+        {
+          "color": "hsl(150, 75%, 60%)",
+          "label": "Aquamarine"
+        },
+        {
+          "color": "hsl(180, 75%, 60%)",
+          "label": "Turquoise"
+        },
+        {
+          "color": "hsl(210, 75%, 60%)",
+          "label": "Light blue"
+        },
+        {
+          "color": "hsl(240, 75%, 60%)",
+          "label": "Blue"
+        },
+        {
+          "color": "hsl(270, 75%, 60%)",
+          "label": "Purple"
+        }
+      ],
+      "backgroundColors": [
+        {
+          "color": "hsl(0, 0%, 0%)",
+          "label": "Black"
+        },
+        {
+          "color": "hsl(0, 0%, 30%)",
+          "label": "Dim grey"
+        },
+        {
+          "color": "hsl(0, 0%, 60%)",
+          "label": "Grey"
+        },
+        {
+          "color": "hsl(0, 0%, 90%)",
+          "label": "Light grey"
+        },
+        {
+          "color": "hsl(0, 0%, 100%)",
+          "label": "White",
+          "hasBorder": true
+        },
+        {
+          "color": "hsl(0, 75%, 60%)",
+          "label": "Red"
+        },
+        {
+          "color": "hsl(30, 75%, 60%)",
+          "label": "Orange"
+        },
+        {
+          "color": "hsl(60, 75%, 60%)",
+          "label": "Yellow"
+        },
+        {
+          "color": "hsl(90, 75%, 60%)",
+          "label": "Light green"
+        },
+        {
+          "color": "hsl(120, 75%, 60%)",
+          "label": "Green"
+        },
+        {
+          "color": "hsl(150, 75%, 60%)",
+          "label": "Aquamarine"
+        },
+        {
+          "color": "hsl(180, 75%, 60%)",
+          "label": "Turquoise"
+        },
+        {
+          "color": "hsl(210, 75%, 60%)",
+          "label": "Light blue"
+        },
+        {
+          "color": "hsl(240, 75%, 60%)",
+          "label": "Blue"
+        },
+        {
+          "color": "hsl(270, 75%, 60%)",
+          "label": "Purple"
+        }
+      ],
+      "defaultProperties": {}
+    },
+    "defaultHeadings": {
+      "rows": 0,
+      "columns": 0
+    }
+  },
+  "commands": [
+    "fontColor",
+    "alignment",
+    "deleteForward",
+    "forwardDelete",
+    "delete",
+    "enter",
+    "blockQuote",
+    "bold",
+    "insertText",
+    "input",
+    "link",
+    "unlink",
+    "ckfinder",
+    "code",
+    "shiftEnter",
+    "codeBlock",
+    "indentCodeBlock",
+    "outdentCodeBlock",
+    "selectAll",
+    "undo",
+    "redo",
+    "fontFamily",
+    "fontSize",
+    "paragraph",
+    "insertParagraph",
+    "heading",
+    "highlight",
+    "horizontalLine",
+    "htmlEmbed",
+    "insertImage",
+    "replaceImageSource",
+    "imageInsert",
+    "imageTypeBlock",
+    "imageTextAlternative",
+    "imageTypeInline",
+    "toggleImageCaption",
+    "uploadImage",
+    "imageUpload",
+    "resizeImage",
+    "imageResize",
+    "imageStyle",
+    "indent",
+    "outdent",
+    "italic",
+    "numberedList",
+    "bulletedList",
+    "indentList",
+    "outdentList",
+    "mediaEmbed",
+    "pageBreak",
+    "removeFormat",
+    "showBlocks",
+    "strikethrough",
+    "style",
+    "insertTable",
+    "insertTableRowAbove",
+    "insertTableRowBelow",
+    "insertTableColumnLeft",
+    "insertTableColumnRight",
+    "removeTableRow",
+    "removeTableColumn",
+    "splitTableCellVertically",
+    "splitTableCellHorizontally",
+    "mergeTableCells",
+    "mergeTableCellRight",
+    "mergeTableCellLeft",
+    "mergeTableCellDown",
+    "mergeTableCellUp",
+    "setTableColumnHeader",
+    "setTableRowHeader",
+    "selectTableRow",
+    "selectTableColumn",
+    "toggleTableCaption",
+    "resizeTableWidth",
+    "resizeColumnWidths",
+    "tableCellWidth",
+    "tableBorderColor",
+    "tableBorderStyle",
+    "tableBorderWidth",
+    "tableAlignment",
+    "tableWidth",
+    "tableHeight",
+    "tableBackgroundColor",
+    "todoList",
+    "checkTodoList",
+    "todoListCheck",
+    "underline"
+  ],
+  "warnings": [],
+  "rules": [
+    ".ck-content blockquote { border-left: 5px solid rgb(204, 204, 204); font-style: italic; margin-left: 0px; margin-right: 0px; overflow: hidden; padding-left: 1.5em; padding-right: 1.5em; }",
+    ".ck-content[dir=\"rtl\"] blockquote { border-left: 0px; border-right: 5px solid rgb(204, 204, 204); }",
+    ".ck-content code { background-color: rgba(199, 199, 199, 0.3); border-radius: 2px; padding: 0.15em; }",
+    ".ck-content pre { background: rgba(199, 199, 199, 0.3); border: 1px solid rgb(196, 196, 196); border-radius: 2px; color: rgb(53, 53, 53); direction: ltr; font-style: normal; min-width: 200px; padding: 1em; tab-size: 4; text-align: left; white-space: pre-wrap; }",
+    ".ck-content pre code { background: unset; border-radius: 0px; padding: 0px; }",
+    ".ck-content .text-tiny { font-size: 0.7em; }",
+    ".ck-content .text-small { font-size: 0.85em; }",
+    ".ck-content .text-big { font-size: 1.4em; }",
+    ".ck-content .text-huge { font-size: 1.8em; }",
+    ".ck-content .marker-yellow { background-color: var(--ck-highlight-marker-yellow); }",
+    ".ck-content .marker-green { background-color: var(--ck-highlight-marker-green); }",
+    ".ck-content .marker-pink { background-color: var(--ck-highlight-marker-pink); }",
+    ".ck-content .marker-blue { background-color: var(--ck-highlight-marker-blue); }",
+    ".ck-content .pen-red { background-color: transparent; color: var(--ck-highlight-pen-red); }",
+    ".ck-content .pen-green { background-color: transparent; color: var(--ck-highlight-pen-green); }",
+    ".ck-content hr { background: rgb(222, 222, 222); border: 0px; height: 4px; margin: 15px 0px; }",
+    ".ck-content .image { clear: both; display: table; margin: 0.9em auto; min-width: 50px; text-align: center; }",
+    ".ck-content .image img { display: block; margin: 0px auto; max-width: 100%; min-width: 100%; }",
+    ".ck-content .image-inline { align-items: flex-start; display: inline-flex; max-width: 100%; }",
+    ".ck-content .image-inline picture { display: flex; }",
+    ".ck-content .image-inline img, .ck-content .image-inline picture { flex-grow: 1; flex-shrink: 1; max-width: 100%; }",
+    ".ck-content .image > figcaption { background-color: var(--ck-color-image-caption-background); caption-side: bottom; color: var(--ck-color-image-caption-text); display: table-caption; font-size: 0.75em; outline-offset: -1px; padding: 0.6em; word-break: break-word; }",
+    ".ck-content .image.image_resized { box-sizing: border-box; display: block; max-width: 100%; }",
+    ".ck-content .image.image_resized img { width: 100%; }",
+    ".ck-content .image.image_resized > figcaption { display: block; }",
+    ".ck-content .image-style-block-align-left, .ck-content .image-style-block-align-right { max-width: calc(100% - var(--ck-image-style-spacing)); }",
+    ".ck-content .image-style-align-left, .ck-content .image-style-align-right { clear: none; }",
+    ".ck-content .image-style-side { float: right; margin-left: var(--ck-image-style-spacing); max-width: 50%; }",
+    ".ck-content .image-style-align-left { float: left; margin-right: var(--ck-image-style-spacing); }",
+    ".ck-content .image-style-align-center { margin-left: auto; margin-right: auto; }",
+    ".ck-content .image-style-align-right { float: right; margin-left: var(--ck-image-style-spacing); }",
+    ".ck-content .image-style-block-align-right { margin-left: auto; margin-right: 0px; }",
+    ".ck-content .image-style-block-align-left { margin-left: 0px; margin-right: auto; }",
+    ".ck-content p + .image-style-align-left, .ck-content p + .image-style-align-right, .ck-content p + .image-style-side { margin-top: 0px; }",
+    ".ck-content .image-inline.image-style-align-left, .ck-content .image-inline.image-style-align-right { margin-bottom: var(--ck-inline-image-style-spacing); margin-top: var(--ck-inline-image-style-spacing); }",
+    ".ck-content .image-inline.image-style-align-left { margin-right: var(--ck-inline-image-style-spacing); }",
+    ".ck-content .image-inline.image-style-align-right { margin-left: var(--ck-inline-image-style-spacing); }",
+    ".ck-content ol { list-style-type: decimal; }",
+    ".ck-content ol ol { list-style-type: lower-latin; }",
+    ".ck-content ol ol ol { list-style-type: lower-roman; }",
+    ".ck-content ol ol ol ol { list-style-type: upper-latin; }",
+    ".ck-content ol ol ol ol ol { list-style-type: upper-roman; }",
+    ".ck-content ul { list-style-type: disc; }",
+    ".ck-content ul ul { list-style-type: circle; }",
+    ".ck-content ul ul ul, .ck-content ul ul ul ul { list-style-type: square; }",
+    ".ck-content .media { clear: both; display: block; margin: 0.9em 0px; min-width: 15em; }",
+    ".ck-content .page-break { align-items: center; clear: both; display: flex; justify-content: center; padding: 5px 0px; position: relative; }",
+    ".ck-content .page-break::after { border-bottom: 2px dashed rgb(196, 196, 196); content: \"\"; position: absolute; width: 100%; }",
+    ".ck-content .page-break__label { background: rgb(255, 255, 255); border: 1px solid rgb(196, 196, 196); border-radius: 2px; box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 1px; color: rgb(51, 51, 51); display: block; font-family: Helvetica, Arial, Tahoma, Verdana, sans-serif; font-size: 0.75em; font-weight: 700; padding: 0.3em 0.6em; position: relative; text-transform: uppercase; user-select: none; z-index: 1; }",
+    "@media print {\n  .ck-content .page-break { padding: 0px; }\n  .ck-content .page-break::after { display: none; }\n}",
+    ".ck-content .table { display: table; margin: 0.9em auto; }",
+    ".ck-content .table table { border: 1px double rgb(179, 179, 179); border-collapse: collapse; border-spacing: 0px; height: 100%; width: 100%; }",
+    ".ck-content .table table td, .ck-content .table table th { border: 1px solid rgb(191, 191, 191); min-width: 2em; padding: 0.4em; }",
+    ".ck-content .table table th { background: rgba(0, 0, 0, 0.05); font-weight: 700; }",
+    ".ck-content[dir=\"rtl\"] .table th { text-align: right; }",
+    ".ck-content[dir=\"ltr\"] .table th { text-align: left; }",
+    ".ck-content .table > figcaption { background-color: var(--ck-color-table-caption-background); caption-side: top; color: var(--ck-color-table-caption-text); display: table-caption; font-size: 0.75em; outline-offset: -1px; padding: 0.6em; text-align: center; word-break: break-word; }",
+    ".ck-content .table .ck-table-resized { table-layout: fixed; }",
+    ".ck-content .table table { overflow: hidden; }",
+    ".ck-content .table td, .ck-content .table th { overflow-wrap: break-word; position: relative; }",
+    ".ck-content .todo-list { list-style: none; }",
+    ".ck-content .todo-list li { margin-bottom: 5px; }",
+    ".ck-content .todo-list li .todo-list { margin-top: 5px; }",
+    ".ck-content .todo-list .todo-list__label > input { appearance: none; border: 0px; display: inline-block; height: var(--ck-todo-list-checkmark-size); left: -25px; margin-left: 0px; margin-right: -15px; position: relative; right: 0px; vertical-align: middle; width: var(--ck-todo-list-checkmark-size); }",
+    ".ck-content .todo-list .todo-list__label > input::before { border: 1px solid rgb(51, 51, 51); border-radius: 2px; box-sizing: border-box; content: \"\"; display: block; height: 100%; position: absolute; transition: box-shadow 0.25s ease-in-out, background 0.25s ease-in-out, border 0.25s ease-in-out; width: 100%; }",
+    ".ck-content .todo-list .todo-list__label > input::after { border-color: transparent; border-style: solid; border-width: 0 calc(var(--ck-todo-list-checkmark-size)/8) calc(var(--ck-todo-list-checkmark-size)/8) 0; box-sizing: content-box; content: \"\"; display: block; height: calc(var(--ck-todo-list-checkmark-size)/2.6); left: calc(var(--ck-todo-list-checkmark-size)/3); pointer-events: none; position: absolute; top: calc(var(--ck-todo-list-checkmark-size)/5.3); transform: rotate(45deg); width: calc(var(--ck-todo-list-checkmark-size)/5.3); }",
+    ".ck-content .todo-list .todo-list__label > input[checked]::before { background: rgb(38, 171, 51); border-color: rgb(38, 171, 51); }",
+    ".ck-content .todo-list .todo-list__label > input[checked]::after { border-color: rgb(255, 255, 255); }",
+    ".ck-content .todo-list .todo-list__label .todo-list__label__description { vertical-align: middle; }"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  ".graphify_analysis.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.graphify_analysis.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "01e16c3bfd301bc2857ce389303ff8c29909aeeee8432f97846072f1e9882b7d"
+  },
+  ".graphify_ast.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.graphify_ast.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "6f2b9de8805c63c172f182f33f31add4c817fe9d0a7e25d101227c6b184e664d"
+  },
+  ".graphify_detect.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.graphify_detect.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "045c5ff541c004d7e4119427b19837e100f42b28b7453dcaccdda3343c59a23c"
+  },
+  ".graphify_extract.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.graphify_extract.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "5b9e53d02a5b8b7d705c5e8a65d3bc1abf962eae138060e0b70169363129c1db"
+  },
+  ".graphify_incremental.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.graphify_incremental.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "d05e00dd6d2afe00c42c5303c9936820a373cb3aa1dc9d408c855ebbe2f3ca05"
+  },
+  ".graphify_labels.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.graphify_labels.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "2508deb4944c7602db55eb7c1ac71f959c1e610456becb5099fd8f6710d4b7ea"
+  },
+  ".graphify_labels.json.sig": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.graphify_labels.json.sig.bak_20261020_134349_cms-history-sync",
+    "sha256": "f0a786ca12e95fac5fa7736ecd4dd6cccac114c3f6753f2bb793df0edd1bee6d"
+  },
+  ".graphify_learning.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.graphify_learning.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "e561d816f2e872ab0af7eed184c29201c9e8e7af40ccc16fea105f107441a7b5"
+  },
+  ".graphify_old.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.graphify_old.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "1f32643ae851391070413f7192dbf3ac688c0a0ef4a6ff7f539a1b5db3fb1b83"
+  },
+  ".graphify_python": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.graphify_python.bak_20261020_134349_cms-history-sync",
+    "sha256": "952b76c85b3f5456947d49ae0603a70fb4d005a2467c9f2913ce6aa52bb97318"
+  },
+  ".graphify_root": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.graphify_root.bak_20261020_134349_cms-history-sync",
+    "sha256": "58a115cc3e2b876d6bd84a7f0603f248e258ab0775e1b5bccc334a14ed3be1e6"
+  },
+  ".graphify_semantic.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.graphify_semantic.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "802d501cd854b9065d965f8474d03256b3d3e0e79c2bdcdea6da97e7533721d1"
+  },
+  ".vocab.txt": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\.vocab.txt.bak_20261020_134349_cms-history-sync",
+    "sha256": "e37b19b368f522df969a9b2416234b01191422e4af92acd941b0b4261873bfda"
+  },
+  "cost.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\cost.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "3d999f958bd2d1e180c29c4d6ccd28e4d5a677090dea7c48b7ebbe5c9c21bba4"
+  },
+  "graph.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\graph.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "bc9f5839efcd842823319dbe8c1d54b7b2f55ba9f27151299a7b39bbe14134bd"
+  },
+  "GRAPH_REPORT.md": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\GRAPH_REPORT.md.bak_20261020_134349_cms-history-sync",
+    "sha256": "8ace5ed0991e12609c6d2b86cd97c5ba1d8c779a74a6e0f333bd47f5bcad9ef3"
+  },
+  "manifest.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\manifest.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "9d5643b8c49013980df36e10b57ec177efda952f2d7c33df929451aee7ef9b21"
+  },
+  "metadata-manifest.json": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\metadata-manifest.json.bak_20261020_134349_cms-history-sync",
+    "sha256": "f5ac9abacfabf788ba9f43f4164247c7549d3ec58c0014c34a3e2d7c7a678e81"
+  },
+  "README.md": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\README.md.bak_20261020_134349_cms-history-sync",
+    "sha256": "848dfbe9073fae46cbec6d20b52eef40870c8a191055e4debe7f4cd745262bc4"
+  },
+  "vis-network.min.js": {
+    "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-all-projects-20261020\\backup_20261020_134349\\graphify-out\\vis-network.min.js.bak_20261020_134349_cms-history-sync",
+    "sha256": "576bb887733eb01bb52ee75b90ef46d818454de5fddb5b616fb8a298d307ca12"
+  }
+}

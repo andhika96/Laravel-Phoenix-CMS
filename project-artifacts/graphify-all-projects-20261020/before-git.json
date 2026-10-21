@@ -1,0 +1,5 @@
+{
+  "head": "1fb2f638a17932e67bb072c54c29606faf63fe99",
+  "status": " M app/Http/Controllers/Web/Manage_Article/ManageArticleTemplateController.php\n M app/Support/Article/ArticleTemplateOptions.php\n M public/assets/css/article/article-frontend-2026.css\n M public/assets/css/article/article-template-manager-2026.css\n M public/assets/js/vue3/manage_article_templates/vueV3-manage-article-templates-2026.js\n M resources/views/article/templates/detail/focused-reader.blade.php\n M resources/views/article/templates/partials/detail-header-copy.blade.php\n M resources/views/manage_article/templates/index.blade.php\n?? project-artifacts/graphify-all-projects-20261020/\n?? project-artifacts/memory-sync-20261020/\n?? project-artifacts/mockups/20261018-focused-reader/\n?? resources/views/manage_article/templates/partials/options-focused-reader.blade.php\n",
+  "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

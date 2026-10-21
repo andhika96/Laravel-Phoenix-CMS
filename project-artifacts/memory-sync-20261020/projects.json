@@ -1,0 +1,92 @@
+[
+  {
+    "projectId": "3afeb309-a6f8-482f-952c-293880b003b1",
+    "projectKind": "local",
+    "label": "Laravel 13 CMS BUM NextJS",
+    "path": "D:\\Laragon\\www\\laravel-13-cms-bum-next",
+    "hostId": "local",
+    "hostDisplayName": null,
+    "isGitRepository": false
+  },
+  {
+    "projectId": "14b106dd-8831-4093-9b11-842e94ca7141",
+    "projectKind": "local",
+    "label": "Laravel 11 CMS BUM",
+    "path": "D:\\Laragon\\www\\laravel-13-cms-bum",
+    "hostId": "local",
+    "hostDisplayName": null,
+    "isGitRepository": true
+  },
+  {
+    "projectId": "51502641-4d18-4a41-be47-910d53b194ca",
+    "projectKind": "local",
+    "label": "Laravel 13 Phoenix Standalone",
+    "path": "D:\\Laragon\\www\\laravel-13-phoenix-standalone",
+    "hostId": "local",
+    "hostDisplayName": null,
+    "isGitRepository": true
+  },
+  {
+    "projectId": "240ce6c7-de21-4a6f-b0fb-3d28c5bd1c0e",
+    "projectKind": "local",
+    "label": "LaraPhoenix Web Game",
+    "path": "C:\\Users\\aruna\\Documents\\ChatGPT\\LaraPhoenix Web Game",
+    "hostId": "local",
+    "hostDisplayName": null,
+    "isGitRepository": true
+  },
+  {
+    "projectId": "local-7e8edeca907fb928dd55d7de0cbec74f",
+    "projectKind": "local",
+    "label": "New MG [Laptop]",
+    "path": "D:\\Laragon\\www\\newmg",
+    "hostId": "local",
+    "hostDisplayName": null,
+    "isGitRepository": true
+  },
+  {
+    "projectId": "local-01898f065c5af974b2046cf68e6e1830",
+    "projectKind": "local",
+    "label": "New MG [SSD Portable]",
+    "path": "E:\\Apps\\Laragon\\www\\newmg",
+    "hostId": "local",
+    "hostDisplayName": null,
+    "isGitRepository": false
+  },
+  {
+    "projectId": "local-8c8676735e00919932e6c202746aa873",
+    "projectKind": "local",
+    "label": "Laravel 13 GEN21 AI CMS",
+    "path": "D:\\Laragon\\www\\laravel-13-gen21ai-cms",
+    "hostId": "local",
+    "hostDisplayName": null,
+    "isGitRepository": false
+  },
+  {
+    "projectId": "local-a394f6d238c89e1d31e9ef4055a4fc0c",
+    "projectKind": "local",
+    "label": "Age of Empire II DE",
+    "path": "C:\\Users\\aruna\\Documents\\Age of Empire II DE",
+    "hostId": "local",
+    "hostDisplayName": null,
+    "isGitRepository": true
+  },
+  {
+    "projectId": "local-eb51425c76ea7b4a67d4a1d686513020",
+    "projectKind": "local",
+    "label": "Laravel 13 CRM",
+    "path": "D:\\Laragon\\www\\laravel-13-crm",
+    "hostId": "local",
+    "hostDisplayName": null,
+    "isGitRepository": false
+  },
+  {
+    "projectId": "local-58a115cc3e2b876d6bd84a7f0603f248",
+    "projectKind": "local",
+    "label": "Laravel 13 Phoenix",
+    "path": "D:\\Laragon\\www\\laravel-13-phoenix",
+    "hostId": "local",
+    "hostDisplayName": null,
+    "isGitRepository": true
+  }
+]

@@ -1,0 +1,1154 @@
+[
+  {
+    "id": "019ec099-66b4-70b3-b6fa-c26130603f85",
+    "project": "Age of Empire II DE",
+    "name": "20261012-all-projects-buat-script-ai-aoe2de-019ec099-66b4-70b3-b6fa-c26130603f85.md",
+    "sha256": "a5f0b4aa3c82a55a5665f23d5732ba4630a3bc6a17d986b539254cdb31db068e"
+  },
+  {
+    "id": "019ec0ea-ece4-7d50-8331-e8f3e92fc507",
+    "project": "Age of Empire II DE",
+    "name": "20261012-all-projects-cari-penyebab-aoe2-de-crash-019ec0ea-ece4-7d50-8331-e8f3e92fc507.md",
+    "sha256": "d8d2279b59af46a3ab1720f0c14e680e592ff3ce49fdb6f279488b27c131c5bc"
+  },
+  {
+    "id": "019ec464-779e-71a2-a73d-426728715649",
+    "project": "Age of Empire II DE",
+    "name": "20261012-all-projects-baca-memori-proyek-ai-aoe-ii-019ec464-779e-71a2-a73d-426728715649.md",
+    "sha256": "0bfdd9fd9ce9000b558ba3588ced516b7887eb71916364137f80f1ff5861266f"
+  },
+  {
+    "id": "019ec67c-e14f-7aa3-8053-52c66c024132",
+    "project": "Age of Empire II DE",
+    "name": "20261012-all-projects-test-test-019ec67c-e14f-7aa3-8053-52c66c024132.md",
+    "sha256": "e078c819e59d080b593b0cd5d97860eb9d1cab065e57fdc8cf9d9b89cab7d4bc"
+  },
+  {
+    "id": "019ece6f-18c2-7580-b5f1-d060cf5a5862",
+    "project": "Age of Empire II DE",
+    "name": "20261012-all-projects-patch-enemy-tribute-responses-019ece6f-18c2-7580-b5f1-d060cf5a5862.md",
+    "sha256": "8d1f220def6f9bddfe7c36ecdc1637d795f4fd3436dae83bb1b14abb7f4397f6"
+  },
+  {
+    "id": "019ee63f-3176-7a63-a601-9df0a239bc01",
+    "project": "Age of Empire II DE",
+    "name": "20261012-all-projects-buat-ai-script-mini-v4-019ee63f-3176-7a63-a601-9df0a239bc01.md",
+    "sha256": "f8ca0a14288af8f9e1187e18c86c9514aada66db4026984fc193227b82d404ea"
+  },
+  {
+    "id": "01a1145e-6892-7ba1-9397-e867625e99ad",
+    "project": "Arunika Map Studio",
+    "name": "20261020-delta-rancang-generator-map-aoe-ii-de-01a1145e-6892-7ba1-9397-e867625e99ad.md",
+    "sha256": "8db517459fbcae2fbcf73ec68a337325d2c9433636f1a253d164c0a64b47db7d"
+  },
+  {
+    "id": "01a1389a-72a3-71b2-863e-8ee69d321992",
+    "project": "Arunika Map Studio",
+    "name": "20261020-delta-lanjutkan-generator-map-aoe-ii-de-01a1389a-72a3-71b2-863e-8ee69d321992.md",
+    "sha256": "4a20437906f095c59a651ceda3723203b2597bae9ede34d02753c6bba8b0c36e"
+  },
+  {
+    "id": "01a1057d-66ec-7431-a0c2-2ed92bb8b0b0",
+    "project": "ArunikaAI v4/Mini",
+    "name": "20261020-delta-pelajari-ulang-ai-v4-01a1057d-66ec-7431-a0c2-2ed92bb8b0b0.md",
+    "sha256": "8e17aa8a1b2390e9114566e1fbd9347ba2ba58c6d7c92fe78855ef7b4a3b6da3"
+  },
+  {
+    "id": "01a13344-052e-77d1-a905-f721ea0fcb6b",
+    "project": "Codex MultiWorkspace",
+    "name": "20261020-delta-rancang-codex-multi-workspace-01a13344-052e-77d1-a905-f721ea0fcb6b.md",
+    "sha256": "31809f9bad5317180e34536f52a82a655d66431aaec6d90ebab16395f8c92084"
+  },
+  {
+    "id": "01a13861-b815-76c2-a096-8e7e7dc33da5",
+    "project": "Codex MultiWorkspace",
+    "name": "20261020-delta-perbaiki-izin-dan-windows-setup-cod-01a13861-b815-76c2-a096-8e7e7dc33da5.md",
+    "sha256": "4f429fdbc81496423b2b6405bc26e0147f838da24ed78f6bb699d9f8d64f0682"
+  },
+  {
+    "id": "01a12f1a-35fc-7700-84f8-a05514630319",
+    "project": "Jurassic Park Operation Genesis",
+    "name": "20261020-delta-cek-penambahan-dinosaurus-jpog-01a12f1a-35fc-7700-84f8-a05514630319.md",
+    "sha256": "d913ccfae37a89e05d11295ed3cca5bf2962c3228037c9af400d1b2feefa935d"
+  },
+  {
+    "id": "019ff60e-7104-7c42-8f0a-f77146642e19",
+    "project": "LaraPhoenix Web Game",
+    "name": "20261012-all-projects-cari-memori-game-city-builder-019ff60e-7104-7c42-8f0a-f77146642e19.md",
+    "sha256": "d8fe6ad19a8bbfdcc5e0b72be0b3a1be37ffc8f3f09c3a7f832bec2c57ccc8d0"
+  },
+  {
+    "id": "01a07e9c-4ce9-7881-b34e-7e556f685207",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-trace-route-optimize-error-01a07e9c-4ce9-7881-b34e-7e556f685207.md",
+    "sha256": "75df884e6e272e434ee5195a87ddc58f3e1da1d1213eb58492230b381ca7282e"
+  },
+  {
+    "id": "01a07fc9-5ff9-7073-8b1a-1ff06448e9eb",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-diagnose-chatgpt-issue-01a07fc9-5ff9-7073-8b1a-1ff06448e9eb.md",
+    "sha256": "8aa58ef8edaca49e8e62ff7d551544192404d66d0a1ede43e4e60ff1d3b63fa5"
+  },
+  {
+    "id": "01a07fff-fef7-7730-ae27-7e234c9ceabe",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-diagnose-proses-terhenti-01a07fff-fef7-7730-ae27-7e234c9ceabe.md",
+    "sha256": "f8fd648b2d7c0875a3b56ddf40d932e3c8c2556354b24eea9974a2075d7ac1ff"
+  },
+  {
+    "id": "01a08907-4c3f-74e0-9d12-4954dc543091",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-check-data-graphify-project-01a08907-4c3f-74e0-9d12-4954dc543091.md",
+    "sha256": "cc71480434f74d2d7b8b3ea53c6aeda0b9cad95f4a16e207c07ab57418f8b839"
+  },
+  {
+    "id": "01a08936-f846-7300-a624-50889c19da2f",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-jalankan-ulang-migration-view-db-01a08936-f846-7300-a624-50889c19da2f.md",
+    "sha256": "bcaf8005fe5a0917b489515f2ce1eafdee11852d25a751e6d34ca6ef941c3625"
+  },
+  {
+    "id": "01a08a42-7e55-7512-acc7-9198084ab85e",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-chatgpt-bisa-kah-kamu-men-download-dokumen-ini-termasuk-01a08a42-7e55-7512-acc7-9198084ab85e.md",
+    "sha256": "847d155d23d8530327c7b9478ade8e33d6d9b9ab8a9437c4fc7232458f31476f"
+  },
+  {
+    "id": "01a08aa9-4fa7-79b3-8e43-578972dba4fc",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-perbaiki-commit-artifact-besar-01a08aa9-4fa7-79b3-8e43-578972dba4fc.md",
+    "sha256": "5cb4b0de85d9f5acb1bd8975e76b77bbca1c154177486568c70284d5362c178e"
+  },
+  {
+    "id": "01a08a62-59e9-7132-9674-c1f937959a42",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-diskusikan-optimasi-file-mbtiles-01a08a62-59e9-7132-9674-c1f937959a42.md",
+    "sha256": "22ad77b921d43f30861883750a49c2fb754684d6a560dc1f0e9925f296f81eef"
+  },
+  {
+    "id": "01a09d8a-80bd-78c2-bde2-cc0ad1265f12",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-bandingkan-dan-sesuaikan-console-php-01a09d8a-80bd-78c2-bde2-cc0ad1265f12.md",
+    "sha256": "f0ee7c746b39f7c70895aa3197acd91718e24ab963a22d6be029ee7eb6c900d4"
+  },
+  {
+    "id": "01a09dac-fb3f-7193-b160-a330dde11bcc",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-cari-command-queue-gis-lokal-01a09dac-fb3f-7193-b160-a330dde11bcc.md",
+    "sha256": "c343c17f0adb72a02a323498f4a2374c7f2f2f578659e7eea189293dd438acdd"
+  },
+  {
+    "id": "01a09e8d-2c8d-7e63-bd1d-52ed70cd6317",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-perbaiki-error-artisan-migrate-01a09e8d-2c8d-7e63-bd1d-52ed70cd6317.md",
+    "sha256": "15b0854c2df55f0a41fa7c2363459b513afd33ac0d3886b9bf159ce6a9e1c1b8"
+  },
+  {
+    "id": "01a0a068-3b20-74e0-a813-164c343974ce",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-tambah-foto-detail-daily-activity-01a0a068-3b20-74e0-a813-164c343974ce.md",
+    "sha256": "90ede54a121f856216e3c5a1ab6e64c9fdc7eeebd440eefe213b6825dceeb175"
+  },
+  {
+    "id": "01a0a30d-58c9-7b93-bcca-b40d4225ae3c",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-trace-bottleneck-route-jalan-tbs-01a0a30d-58c9-7b93-bcca-b40d4225ae3c.md",
+    "sha256": "8473ed831a1367f4ac33ae99b3bebda6c17835ffc18cfcf9ec4d237b496a2f8f"
+  },
+  {
+    "id": "01a0a349-3a5a-7740-831b-0fd8195bf7fe",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-periksa-data-sebelum-import-01a0a349-3a5a-7740-831b-0fd8195bf7fe.md",
+    "sha256": "d1accb0b3a95bf444298e955a1ece62298eaa911fcd90385d8a157631e65547a"
+  },
+  {
+    "id": "01a0a5a2-b141-71d2-bfaf-9c13ea4d4b8d",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-perbaiki-query-filter-block-01a0a5a2-b141-71d2-bfaf-9c13ea4d4b8d.md",
+    "sha256": "b6e8840e619f33679583bdb43bbf7d6ec732ab67f62389bb6fd03307d7f2efc1"
+  },
+  {
+    "id": "01a0ad34-04e5-7e53-96da-b1b4b690453c",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-cek-vibe-coding-dengan-koneksi-01a0ad34-04e5-7e53-96da-b1b4b690453c.md",
+    "sha256": "0bcd3041749831a8b463ce038bc0f0fb71752ab251d3139360a38bbc05bb9d73"
+  },
+  {
+    "id": "01a0ad4d-ae77-7f01-b637-e684507d7cbf",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-perbarui-data-graphify-01a0ad4d-ae77-7f01-b637-e684507d7cbf.md",
+    "sha256": "c2647a966705f50ab6d9d5646f7e3bf708a46af9f82d110a39fca1ddc411146c"
+  },
+  {
+    "id": "01a0adc2-0586-74c2-b6cd-4fc0a858e648",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-rencanakan-halaman-aktivitas-panen-01a0adc2-0586-74c2-b6cd-4fc0a858e648.md",
+    "sha256": "ec5721224748d7c92efff20936c50252c8cc71d010d66fba204fa6939534cfbd"
+  },
+  {
+    "id": "01a0aec0-4421-7231-9875-6f24594e3de3",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-analisa-glitch-tab-gokut-dashboard-01a0aec0-4421-7231-9875-6f24594e3de3.md",
+    "sha256": "6bab54f417189a913b0b7cb6b250f607f06a9c03122088862c0df465d199432d"
+  },
+  {
+    "id": "01a0af32-488a-7670-8351-64fd77e602af",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-perbaiki-block-limit-styling-01a0af32-488a-7670-8351-64fd77e602af.md",
+    "sha256": "72cbc2ce5e74efa92c5e1d0ec2e3fcac59f009e1eef63377d9573cd91506c91d"
+  },
+  {
+    "id": "01a0b41b-e368-7be2-a64a-38929c43c3c9",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-analisis-view-map-satelit-01a0b41b-e368-7be2-a64a-38929c43c3c9.md",
+    "sha256": "0bb562900037bea1c3a7e2ce2867d38e5bee68fe5babf34fc24df1bd2f62731b"
+  },
+  {
+    "id": "01a0b4ca-3c5d-7863-88b4-c70c12ce3cce",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-diagnose-format-validation-issue-01a0b4ca-3c5d-7863-88b4-c70c12ce3cce.md",
+    "sha256": "0ca12d1b392dfdd5bbbc74bd22f700379c5aaaad1aa426f3fbe1f9251ec3c574"
+  },
+  {
+    "id": "01a0b52b-ff6e-70c2-aba4-17d9e20fe901",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-ubah-filter-ke-date-range-01a0b52b-ff6e-70c2-aba4-17d9e20fe901.md",
+    "sha256": "52c1f25184a17cb30f6c427143c431df4c8b42f310150ad39a839340b63b0234"
+  },
+  {
+    "id": "01a0b908-8b14-7362-9c1c-f9b296f95e3f",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-update-data-graphify-sebelumnya-01a0b908-8b14-7362-9c1c-f9b296f95e3f.md",
+    "sha256": "a7b8678573dab4bf99407766c69bbd11a6f417a0ce98a4c0635013fe93a1a1d6"
+  },
+  {
+    "id": "01a0c493-9b2a-7911-9551-8e042da4d410",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-periksa-progres-import-stuck-01a0c493-9b2a-7911-9551-8e042da4d410.md",
+    "sha256": "91222e0515e0e713c0ac47ceab1a9235417871a4b1f80186028fe787b1642ef3"
+  },
+  {
+    "id": "01a0c78e-6eef-7111-9fd5-4d61e151c3df",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-cari-lokasi-file-mbtiles-01a0c78e-6eef-7111-9fd5-4d61e151c3df.md",
+    "sha256": "bf2f3b3ff6ea2cd6bafb913a228ea7532ccd5626b815428282e9fb33a8263f91"
+  },
+  {
+    "id": "01a0cb6f-39eb-7083-b3e7-ca149e24b0bd",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-bandingkan-chatgpt-6-luna-dan-sol-01a0cb6f-39eb-7083-b3e7-ca149e24b0bd.md",
+    "sha256": "b7b96403a297be58202ba817efdf2c1a7ba88d32b5999b8fa633ee376683f2f8"
+  },
+  {
+    "id": "01a0cb8f-6bd4-7c41-b7d0-d0b771fc0fbc",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-telusuri-hitungan-gaji-p2h-01a0cb8f-6bd4-7c41-b7d0-d0b771fc0fbc.md",
+    "sha256": "d83db30f302e3a2a0d27e82dd2ab9726db2bc3b97364b64cd3632398069ea609"
+  },
+  {
+    "id": "01a0cc86-d4fe-7201-b6a5-f247028a1cab",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-periksa-auto-refresh-gis-master-01a0cc86-d4fe-7201-b6a5-f247028a1cab.md",
+    "sha256": "6d97e28c7851c96660cfb324ca46bd235598be9bb59cf84688d60d22eaadd02c"
+  },
+  {
+    "id": "01a0ad4c-441c-78c1-a0be-e8964110b92f",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-jelaskan-mkti-untuk-pemupukan-sawit-01a0ad4c-441c-78c1-a0be-e8964110b92f.md",
+    "sha256": "dc2cf656612ef47de9a52a62508ef818943b6c8a60bf06a627d420300ade1da2"
+  },
+  {
+    "id": "01a1057f-a966-72d2-8a6e-a21319914fe1",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-buat-memori-update-cms-sebelumnya-01a1057f-a966-72d2-8a6e-a21319914fe1.md",
+    "sha256": "c43f3f0527aa48e7f554d02b5412b99b0f079d167b71c3dc854a03bef100dc43"
+  },
+  {
+    "id": "01a109c2-5120-7662-9b39-3731ca336c09",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-jelaskan-fitur-allow-all-01a109c2-5120-7662-9b39-3731ca336c09.md",
+    "sha256": "db8c50d841fa4833a8e014ea3e254ac1dfd5edbec16097f9d52a821f0ef209bd"
+  },
+  {
+    "id": "01a11136-ccad-7002-8ece-b40b8ed618b3",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-buat-daftar-menu-sidebar-cms-01a11136-ccad-7002-8ece-b40b8ed618b3.md",
+    "sha256": "c150d17a9d3b986a20f14f93b7ae5b1a9f9ad6ba68a0cfb4432fed2850d90065"
+  },
+  {
+    "id": "01a11a40-9fe6-74d2-90b0-7e86b417c3d6",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261020-delta-rancang-plan-sistem-api-mkti-01a11a40-9fe6-74d2-90b0-7e86b417c3d6.md",
+    "sha256": "22eaafd4d94502c4392efea567422285a8009920864524156bc67b8583e4745c"
+  },
+  {
+    "id": "01a11a63-9c8b-7cc3-aeef-2bb672ecb7e0",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-jelaskan-rumus-excel-dan-istilah-mki-01a11a63-9c8b-7cc3-aeef-2bb672ecb7e0.md",
+    "sha256": "2e23f1f09dc2a9a2fbc9634ece09185e49361d2f875632737e67a6d3ef71046c"
+  },
+  {
+    "id": "01a11af9-1344-7073-b3c0-d67ab2247649",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261012-all-projects-perbarui-data-graphify-cms-bum-01a11af9-1344-7073-b3c0-d67ab2247649.md",
+    "sha256": "bfd42d5d0e33dec84f8290430d5f0816944b7f3c8903f0ca31f5c20a083804c0"
+  },
+  {
+    "id": "01a12e22-6c7e-7390-b3ac-59bf4ab001af",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261020-delta-analisis-ukuran-project-artifacts-01a12e22-6c7e-7390-b3ac-59bf4ab001af.md",
+    "sha256": "c4c433054952df60eed205b1978ba30a60e6ae39005ff370b0582120b8561c29"
+  },
+  {
+    "id": "01a157f8-389d-7b33-aad1-20ee3a47ea21",
+    "project": "Laravel 13 CMS BUM",
+    "name": "20261020-delta-perbaiki-masalah-yang-dimaksud-01a157f8-389d-7b33-aad1-20ee3a47ea21.md",
+    "sha256": "72a2521f738b6e186de38cfbb1e81f9792b10b56f27aae01b8d35a51378a6fd3"
+  },
+  {
+    "id": "01a0cce7-14e4-7f20-902d-b076fefb6fa3",
+    "project": "Laravel 13 CMS BUM NextJS",
+    "name": "20261012-all-projects-rancang-pemisahan-cms-nextjs-01a0cce7-14e4-7f20-902d-b076fefb6fa3.md",
+    "sha256": "64e9f6c396d5ad4ea2fad5ba2686e12a5fbadfd6b7020ec436e909d3a4d75954"
+  },
+  {
+    "id": "019e83bc-f1fa-7eb1-8bcc-5255a6d53589",
+    "project": "Laravel 13 CRM",
+    "name": "20261012-all-projects-lanjutkan-development-crm-laravel-019e83bc-f1fa-7eb1-8bcc-5255a6d53589.md",
+    "sha256": "3b28efe455f682691c4bd3a45ed8a2e6b8f6ca3469784d9b44cee031c6eb59ed"
+  },
+  {
+    "id": "019f099c-22eb-7221-ab13-753545c558da",
+    "project": "Laravel 13 GEN21 AI CMS",
+    "name": "20261012-all-projects-konversi-statics-ke-laravel-019f099c-22eb-7221-ab13-753545c558da.md",
+    "sha256": "614f0df31affda7ddfc6fa0aa552b7d7c407c70950c93b420c6022e199bb16ed"
+  },
+  {
+    "id": "019e78ec-e371-7890-9da5-ac51a28b6c9e",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-page-builder-019e78ec-e371-7890-9da5-ac51a28b6c9e.md",
+    "sha256": "624e5ba8777b4828951e76760715e2439ce840a8e100e6d975e5064cae0e07a1"
+  },
+  {
+    "id": "019e9b46-53d9-7e43-be8e-b41e17ab7dbf",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-kembangkan-page-builder-baru-019e9b46-53d9-7e43-be8e-b41e17ab7dbf.md",
+    "sha256": "930865af48270c04c27961a57d895e4c5b97ff85a8d43b4942716f7a23e0ff38"
+  },
+  {
+    "id": "019e9d53-bcfd-7a60-85b5-5763a3cfbcdb",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-pagebuilder-elementor-flexbox-alignment-sweep-019e9d53-bcfd-7a60-85b5-5763a3cfbcdb.md",
+    "sha256": "40452239487929a636993ea000f440323cc85c03072184b71f4cd1ba8e684e50"
+  },
+  {
+    "id": "019e9df7-2203-7b00-ac2e-eba5a0ed6774",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-baca-memori-pagebuilder-019e9df7-2203-7b00-ac2e-eba5a0ed6774.md",
+    "sha256": "53f38776f99d31121a79463d2a73a2d23eb715afe6957f5b376b3943d86f2537"
+  },
+  {
+    "id": "019e9fe2-df19-7422-9ee5-cb0c41814575",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-tinjau-progress-page-builder-019e9fe2-df19-7422-9ee5-cb0c41814575.md",
+    "sha256": "fdcb1c9962407bc84d401a3e00dc5cbefa44c85750da352972bd88bf963a2f75"
+  },
+  {
+    "id": "019ee53f-e8ee-7bc0-aac6-b0d08fb09c2a",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-preview-header-019ee53f-e8ee-7bc0-aac6-b0d08fb09c2a.md",
+    "sha256": "e6dde6c4c029cbd9a5620205f7436d27f81ec8b15df3813ee5f4edf2b28195ad"
+  },
+  {
+    "id": "019f2e55-5304-7001-9cac-f142ed2cdcb7",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-mockup-header-menu-019f2e55-5304-7001-9cac-f142ed2cdcb7.md",
+    "sha256": "4c3c6d9840f5c12956163cbefa90b9c0d495590d07f51c94f06441944bb29e4f"
+  },
+  {
+    "id": "019f305d-7de8-70a0-b636-9f99550ea206",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-mockup-header-menu-019f305d-7de8-70a0-b636-9f99550ea206.md",
+    "sha256": "9d0780ac0145a3a2cdc4db49a208c243e576f35d650fea46f4862309fac4d9b2"
+  },
+  {
+    "id": "019f47e7-a38d-74a3-907c-6fa672a90e39",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-manage-dropdown-menu-019f47e7-a38d-74a3-907c-6fa672a90e39.md",
+    "sha256": "7667047defc9315f21929b3b1cd7be06d536ae5f67cb304cd9e254eed119e8e4"
+  },
+  {
+    "id": "019f4af0-bc5d-72f3-9db9-6d33e7eb84b5",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-tinjau-state-header-menu-019f4af0-bc5d-72f3-9db9-6d33e7eb84b5.md",
+    "sha256": "5880752ebd2f39f1e56926119aa5bbac12817f37035aa87b2b945f0dbf615681"
+  },
+  {
+    "id": "019f51fb-c9e9-70b2-b0c8-2a0d4f84e5f1",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-tinjau-manage-menu-navigation-019f51fb-c9e9-70b2-b0c8-2a0d4f84e5f1.md",
+    "sha256": "cd146d8ca03b38709d10feec0c90f955875e936c480338e21c73a89e1e3a0367"
+  },
+  {
+    "id": "019f55fa-085a-71b2-ab98-6356df5a2a52",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-implementasikan-arunika-v2-019f55fa-085a-71b2-ab98-6356df5a2a52.md",
+    "sha256": "732d8f6b3d1c9cc071cbd05397e2a69e7f6a2181019075b656dff93b5c3115b9"
+  },
+  {
+    "id": "019f6b4e-fae7-7f40-8fdb-0a7f83a5161a",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-arunika-v3-019f6b4e-fae7-7f40-8fdb-0a7f83a5161a.md",
+    "sha256": "86b227ee0f6548145981efa772b2f5b0b1076294c8bd7bc394b925c6dcb0d206"
+  },
+  {
+    "id": "019f706f-9d30-7583-8c1f-d79d7bf0d46e",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-perbaiki-tema-mobile-terbaru-019f706f-9d30-7583-8c1f-d79d7bf0d46e.md",
+    "sha256": "ae6535e698b3f64198029051d694e9b00861348bb546a9912420ade04f72dc46"
+  },
+  {
+    "id": "019f72f1-3ad3-79f1-8056-17cb23da9172",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-optimalkan-mobile-view-arunika-019f72f1-3ad3-79f1-8056-17cb23da9172.md",
+    "sha256": "c9b8d1ba14944414b66938a6d73461bbc46425619150344f28106283eef45ff0"
+  },
+  {
+    "id": "019f7882-c46e-7ad3-83f6-e40b9fa6b5ba",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-tinjau-update-page-builder-019f7882-c46e-7ad3-83f6-e40b9fa6b5ba.md",
+    "sha256": "ae1cc566aa1529a8d5d563534d1c09db9917751a29fd5aade05d9f07abe364f8"
+  },
+  {
+    "id": "019f943a-e895-7843-b0cf-eb8ed1d66d16",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-install-dan-sinkronkan-graphify-019f943a-e895-7843-b0cf-eb8ed1d66d16.md",
+    "sha256": "4348987a962d6cf7b0d3bf0ba921fe3aaab37e8ccdf9099689e179413bfdc687"
+  },
+  {
+    "id": "019f9458-360e-7a42-a08e-d2021edfe6d8",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-mockup-file-manager-019f9458-360e-7a42-a08e-d2021edfe6d8.md",
+    "sha256": "0ab512aa4666b0301c4b99265352e0e3c9d070f605de70343d6aef889b775695"
+  },
+  {
+    "id": "019f9adc-2763-72b0-940d-4e4736c3c593",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-tinjau-status-file-manager-v2-019f9adc-2763-72b0-940d-4e4736c3c593.md",
+    "sha256": "54d55622cab13c4a0b17705fc8b3a88719d48913cee380abe51ed6af64af7d3d"
+  },
+  {
+    "id": "019f9b28-f474-7b92-9336-98354ed9d02b",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-tambahkan-responsive-font-semua-tema-019f9b28-f474-7b92-9336-98354ed9d02b.md",
+    "sha256": "082cd4d46c0a676553f1ca4d41baa18e864f2bcc17c612968a0f188e33fbc029"
+  },
+  {
+    "id": "019f9e11-83e4-7861-b3bd-7a6c238c8d50",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-tinjau-status-file-manager-v2-019f9e11-83e4-7861-b3bd-7a6c238c8d50.md",
+    "sha256": "0ec496b0b50ff16efe511e701bd98203e9d18bb83476dd2b43c8b190655942e8"
+  },
+  {
+    "id": "019fb8f1-946c-7be3-981e-6aa968ae3192",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-pengembangan-page-builder-019fb8f1-946c-7be3-981e-6aa968ae3192.md",
+    "sha256": "179ff79a10eebb1c41a04c7e6b19c21ac05b778098d96648292035e232c47b3c"
+  },
+  {
+    "id": "019fbdd5-b415-7610-936e-fbb0393f239c",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-samakan-ui-ux-widget-tabs-019fbdd5-b415-7610-936e-fbb0393f239c.md",
+    "sha256": "9d6517a678665437398303a6c3e3036b939271138578804e1fb523c61c9e3489"
+  },
+  {
+    "id": "019fc2b2-19cc-7941-ac04-9bc557713efa",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-rancang-prd-booking-ruang-meeting-019fc2b2-19cc-7941-ac04-9bc557713efa.md",
+    "sha256": "146a6b70c645343b94fa92c262a44120859e49356c47fe08c3a734f7254fbafc"
+  },
+  {
+    "id": "019fd534-067f-7770-b0ac-459320ad15d3",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-pengembangan-page-builder-019fd534-067f-7770-b0ac-459320ad15d3.md",
+    "sha256": "d754e7fc4b8c2a4f7d3d208ea44f9ee124ce447f98af74e76bcaf2aed3fbdf85"
+  },
+  {
+    "id": "019fdc71-1abe-7003-8663-92def86c7e2f",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-perbarui-status-page-builder-019fdc71-1abe-7003-8663-92def86c7e2f.md",
+    "sha256": "f0d267fe60eed675e12fb86c10de6a416d09a3e7fb1b69a954fbe410419e8e56"
+  },
+  {
+    "id": "019fe004-9384-79f2-9c90-5e29049a9f4b",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-pengembangan-page-builder-019fe004-9384-79f2-9c90-5e29049a9f4b.md",
+    "sha256": "cf831dc626438b29888c3f44073e7144c3027fa4ae93a64d1217303bf14e78a8"
+  },
+  {
+    "id": "019fe447-e16a-7cf3-8dd0-c510cd1ada60",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-pengembangan-page-builder-019fe447-e16a-7cf3-8dd0-c510cd1ada60.md",
+    "sha256": "7997bd2332080a7b4b2a81457b0abc23797c8227424a70dd487a9c0a6c2f4473"
+  },
+  {
+    "id": "019fe99b-7938-7963-86dd-0676deabbb3f",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-diagnose-github-push-issue-019fe99b-7938-7963-86dd-0676deabbb3f.md",
+    "sha256": "3246cbaced0d7ce6f5dcecc859e7076fc8ac0528e15d26ef456d91dc27ec3027"
+  },
+  {
+    "id": "019febc7-af32-7a60-94fd-cc21952380ec",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-uji-page-builder-v2-3-mg5-gt-019febc7-af32-7a60-94fd-cc21952380ec.md",
+    "sha256": "69dc27f07512cc883b43da2575832fde13e71ba2b147caded8f4e5bdb171eb5f"
+  },
+  {
+    "id": "019ff526-6635-7bc1-9cdc-f21f36076f41",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-page-builder-v2-3-019ff526-6635-7bc1-9cdc-f21f36076f41.md",
+    "sha256": "589740ec14bbddedd8c45c16410578592f802f4599b2e3e2af83320b106710fb"
+  },
+  {
+    "id": "019ff61e-0fed-7c52-ae4d-9d96e5b6fbc2",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-buat-preview-ui-header-baru-019ff61e-0fed-7c52-ae4d-9d96e5b6fbc2.md",
+    "sha256": "578f204f491a39c268d9550cfe22f5c076af6d278a29a83d7c1c409ed999ef58"
+  },
+  {
+    "id": "019ff67e-98f9-7302-a664-bf118afaab8f",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-diagnose-git-push-failure-019ff67e-98f9-7302-a664-bf118afaab8f.md",
+    "sha256": "1d5c25b04f84ba378f4a4a17d30322882d0fd6c16d5677733f26e207457b59a8"
+  },
+  {
+    "id": "01a0012c-44dc-7aa1-8596-c10205c6a8e0",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-page-builder-v2-3-01a0012c-44dc-7aa1-8596-c10205c6a8e0.md",
+    "sha256": "7addee0080486b63ce7d8b97bb5b41d80f1d2477bee5b9b8b22e8008ca7da133"
+  },
+  {
+    "id": "01a00653-24fd-7e12-a28e-35218504f1d6",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-page-builder-v2-3-01a00653-24fd-7e12-a28e-35218504f1d6.md",
+    "sha256": "2ed15de5b5634d50b8e7ad91cb7111f006295508c0c01db48feca6b2af5e0e91"
+  },
+  {
+    "id": "01a00faf-f2ca-7882-a206-170f40dcbbdd",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-page-builder-v2-3-01a00faf-f2ca-7882-a206-170f40dcbbdd.md",
+    "sha256": "89ee053b0d9c9ca204200c827937c2a5109aeb0b925e2671255c8493831d2fb5"
+  },
+  {
+    "id": "01a01533-e52b-7b72-b1d5-f5498d729d7c",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-page-builder-v2-3-01a01533-e52b-7b72-b1d5-f5498d729d7c.md",
+    "sha256": "839262ab2fc4fa53532cadf60bd10e2e9e7199e34c5028d50d3cd98f14b2a7ac"
+  },
+  {
+    "id": "01a01550-f5b1-74f2-9e2e-f62a3d1f6e15",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-pengembangan-page-builder-01a01550-f5b1-74f2-9e2e-f62a3d1f6e15.md",
+    "sha256": "16339c67fd821a1697a76b7b07edbf0cd74380d0ccfc2f957b43645e7d552dd1"
+  },
+  {
+    "id": "01a01825-94dd-7d61-bb0d-5e6fa9d9ea54",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-form-conditional-logic-01a01825-94dd-7d61-bb0d-5e6fa9d9ea54.md",
+    "sha256": "476f307ec79fd1eaa501f636ff8d03439d82971229c9a6c53337185c091425cc"
+  },
+  {
+    "id": "01a019c3-5619-7ca3-bcc5-deb047365654",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-form-dataset-modal-v2-3-01a019c3-5619-7ca3-bcc5-deb047365654.md",
+    "sha256": "85a5ec20d04ad19caa347ebcda089ff8dbc215211375c575f52be7c7bb1a5084"
+  },
+  {
+    "id": "01a0246e-a0b3-7091-bb4f-3b4f1821d073",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-page-builder-v2-3-01a0246e-a0b3-7091-bb4f-3b4f1821d073.md",
+    "sha256": "d985d20df414a8bb51b3d270b86ac8dac25191a31afb44d527802abc37439e27"
+  },
+  {
+    "id": "01a0290f-3322-7553-8f88-5551f77a4298",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-rapikan-folder-dan-berkas-proyek-01a0290f-3322-7553-8f88-5551f77a4298.md",
+    "sha256": "df9837ecd7e4629e608e6a856efcf80df1648b9f7e4b727e5cb144a0a95c3950"
+  },
+  {
+    "id": "01a029ae-b655-7db1-b9aa-57619cc1d24e",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-diagnose-git-push-failure-01a029ae-b655-7db1-b9aa-57619cc1d24e.md",
+    "sha256": "2c51138c7453f3d78bd2b1088307ea6b1508a0ff5c1fd42bd352f528771e7a52"
+  },
+  {
+    "id": "01a02949-d566-7480-a830-e7cc6b8b207e",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-page-builder-v2-3-01a02949-d566-7480-a830-e7cc6b8b207e.md",
+    "sha256": "2b0bb2b3bf6e2f1bb227c9a2e9a0d1a9a011cd538a13340e5ebd18f1ac82dfef"
+  },
+  {
+    "id": "01a02b26-de2e-76b1-ac95-596e536d7ada",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-tambah-widget-page-builder-v2-4-01a02b26-de2e-76b1-ac95-596e536d7ada.md",
+    "sha256": "8955b94ef21b9e921f49b24248102f52bebd89ef08339e2d5353a3b3ed491c99"
+  },
+  {
+    "id": "01a02e61-192e-7ba0-89f3-d7fac7db743a",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-eksekusi-plan-widget-v2-4-01a02e61-192e-7ba0-89f3-d7fac7db743a.md",
+    "sha256": "ab616055311e0fb09905638668e94e1240c568aecf8018933621ca6015302f3b"
+  },
+  {
+    "id": "01a02eb7-c07a-7e01-a71f-b4e651e3803b",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-audit-folder-public-dan-resources-01a02eb7-c07a-7e01-a71f-b4e651e3803b.md",
+    "sha256": "1a5e21fefd3918cb954af9fea69e8d7b157d87257ad0e319b67b6dde5d3d221d"
+  },
+  {
+    "id": "01a03189-0911-7b02-b68c-8d9a31b764ad",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-audit-keamanan-cms-phoenix-01a03189-0911-7b02-b68c-8d9a31b764ad.md",
+    "sha256": "21ce0d112f951d332a25b1280228b668b82a2593a2416f1bb611cf128613c5e4"
+  },
+  {
+    "id": "01a02960-ebf2-7e23-a215-72c87ce16968",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-rancang-package-standalone-laravel-01a02960-ebf2-7e23-a215-72c87ce16968.md",
+    "sha256": "8d0449175da688ec8a896a40e9d82c0ddb1c7e11fd1ba9416f574d4e16be8386"
+  },
+  {
+    "id": "01a03356-5d0e-7ce0-9598-76df8b6eafcb",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-rencanakan-fitur-manage-event-01a03356-5d0e-7ce0-9598-76df8b6eafcb.md",
+    "sha256": "7306d2c33755d94fde709373c4ae2cb4f577bb5466a1c53096de9c17cd7c0a0b"
+  },
+  {
+    "id": "01a04374-8fcd-7f00-a358-4486a18df71c",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-audit-sinkronisasi-parser-frontend-01a04374-8fcd-7f00-a358-4486a18df71c.md",
+    "sha256": "589a9b0876027baaab620ee96cac3d37fc609d06a580aa89a6c10cdf0314b85b"
+  },
+  {
+    "id": "01a04398-77b8-7640-9634-0207b5c16ff6",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-audit-bug-page-builder-v2-4-01a04398-77b8-7640-9634-0207b5c16ff6.md",
+    "sha256": "a9cc8654e05b0ebf6e72d4f3b4ca24781b7995ed2fce06b0131331b82e3b2480"
+  },
+  {
+    "id": "01a04870-bc2c-7910-90e5-2b687b66efdf",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-rapikan-konversi-halaman-ke-canvas-01a04870-bc2c-7910-90e5-2b687b66efdf.md",
+    "sha256": "5e802f85822430aa148c45f5bed6b41e266dbea2809b3c8c00bb91d820c1f89b"
+  },
+  {
+    "id": "01a04dfc-2fb9-7720-a12d-78190e9405ad",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-analisis-bentrok-page-builder-v2-4-01a04dfc-2fb9-7720-a12d-78190e9405ad.md",
+    "sha256": "0657b09f38fe75ec69a2d99774560b32d31d1a1429e38dd373d0d315e3b32c72"
+  },
+  {
+    "id": "01a052e9-24f5-7153-8f03-b3d17c0b2cf1",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-push-ke-branch-non-main-01a052e9-24f5-7153-8f03-b3d17c0b2cf1.md",
+    "sha256": "154528d82685775e7f2b37a2c34474fc5442199fbe4da3e6a259cc699438551b"
+  },
+  {
+    "id": "01a05c6c-73c7-78e0-878d-dffecda1171b",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-perbaiki-hover-menu-list-01a05c6c-73c7-78e0-878d-dffecda1171b.md",
+    "sha256": "80d23a33fdad12521bf26e7f2127daab36ca11472a0ba9e1bfd1c2699a736dce"
+  },
+  {
+    "id": "01a06417-1908-7640-8758-ad563523a3b7",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-periksa-status-hover-menu-list-01a06417-1908-7640-8758-ad563523a3b7.md",
+    "sha256": "228cbe002fb46c7c8f1acc6b9d75e5f615c7358015970626a00bb7676a0c12b5"
+  },
+  {
+    "id": "01a065ff-23fb-7233-9ca0-07329632f2cb",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-matangkan-mobile-view-lucent-01a065ff-23fb-7233-9ca0-07329632f2cb.md",
+    "sha256": "afb7805a316dfe3c0717dd04338f09c4b1914838c3b943f56ed7087aef4b7e43"
+  },
+  {
+    "id": "01a06625-3f3e-7c02-8f9e-a9b58d9fc22d",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-perbaiki-width-sidebar-mobile-01a06625-3f3e-7c02-8f9e-a9b58d9fc22d.md",
+    "sha256": "15ae23f51add25351e27ae412c815da471a13c234293b740480f4459b3edb8fd"
+  },
+  {
+    "id": "01a06d8f-184a-7481-b8d2-ca3dc20f6a01",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-tinjau-pending-article-templates-01a06d8f-184a-7481-b8d2-ca3dc20f6a01.md",
+    "sha256": "a6ea2e3f092857faff90d8f47c8d3d7761dbefa118bd96bcc3463d168bd5e324"
+  },
+  {
+    "id": "01a06e7f-bcce-7ac2-b67b-a1f4ed03f669",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-revamp-ui-ux-manage-template-01a06e7f-bcce-7ac2-b67b-a1f4ed03f669.md",
+    "sha256": "7ab020616430a9352e0f8f0ce748b76b5a3d2669488f46c1fb437455616ba7aa"
+  },
+  {
+    "id": "01a0761e-da1a-7d80-ae9a-bd5a04c02938",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-template-article-01a0761e-da1a-7d80-ae9a-bd5a04c02938.md",
+    "sha256": "3885cceb9c898e758cdd7dfb775662fccd5ecd7b2c7d9307776f8aeccff76745"
+  },
+  {
+    "id": "01a08a31-5b43-7d33-bff4-e84ae39ff110",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-chatgpt-bisa-kamu-lihat-gambar-ss-saya-ini-saya-ingin-k-01a08a31-5b43-7d33-bff4-e84ae39ff110.md",
+    "sha256": "d5e50f553b1629353e2d20545363f748396934f3a9a9a24f2205db845fa58ca5"
+  },
+  {
+    "id": "01a0997a-0637-7e81-ad4b-a77f42821e51",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-lanjutkan-pengembangan-article-01a0997a-0637-7e81-ad4b-a77f42821e51.md",
+    "sha256": "958497a79f30278dde88a2ed61e8d865dec1d7f1de100f6e9372621c5f5d2455"
+  },
+  {
+    "id": "01a0c457-3b40-72e0-b0a3-3bf7dcbe7dfe",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-rapikan-ui-form-setting-01a0c457-3b40-72e0-b0a3-3bf7dcbe7dfe.md",
+    "sha256": "26794e3f21205220915308c231f9ef6ef22978a3adba651ba2335fe1a1ccc6b4"
+  },
+  {
+    "id": "01a0c772-571a-75f0-b010-569d91909935",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-analisis-template-artikel-mozaik-01a0c772-571a-75f0-b010-569d91909935.md",
+    "sha256": "d516ef83e99ce65449684653fe999ba02bb2f531c033eceb6b031b84361c0dbb"
+  },
+  {
+    "id": "01a1057d-cb49-79d2-a5fb-1d7fbeebfcaf",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-simpan-update-cms-ke-memori-01a1057d-cb49-79d2-a5fb-1d7fbeebfcaf.md",
+    "sha256": "45a97196cb6e5e729f4aef75db1952232b6186bfe088fbae8a4a78d485e20218"
+  },
+  {
+    "id": "01a109e2-b166-70b3-a5e5-d32a7886b03e",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261012-all-projects-tinjau-fitur-workflow-editor-01a109e2-b166-70b3-a5e5-d32a7886b03e.md",
+    "sha256": "8f55245d5e6fe691648cc9da9a9db6f545662ebbf11d82b73425b085a1e75890"
+  },
+  {
+    "id": "01a11f5a-7603-7833-b17d-e4b76e874b4f",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261020-delta-revamp-minimal-reading-list-01a11f5a-7603-7833-b17d-e4b76e874b4f.md",
+    "sha256": "0b7766494278aa0e2907fb8c3ec3a44ef129a2bbde36e4650f8122267e241676"
+  },
+  {
+    "id": "01a12e61-bd70-7d11-abab-1c563cc52528",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261020-delta-periksa-kendala-worker-file-manager-01a12e61-bd70-7d11-abab-1c563cc52528.md",
+    "sha256": "e15eb3064195530d00852e89291082dd4c628b60e608d57c20129f4f1c527ec1"
+  },
+  {
+    "id": "01a13d7b-be06-7ed0-84c9-61ca9b6b0bcc",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261020-delta-revamp-prototype-header-navigation-01a13d7b-be06-7ed0-84c9-61ca9b6b0bcc.md",
+    "sha256": "e5ee248e740625d35429dad64076c378317f467a4ac065a522850b0bc200913e"
+  },
+  {
+    "id": "01a143a5-ec0f-76e3-8d3b-bec51221cf21",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261020-delta-rapikan-revamp-ui-01a143a5-ec0f-76e3-8d3b-bec51221cf21.md",
+    "sha256": "f14dd92cac47c5e955f2ecd16389dfea282f20e5daa98bba1b3934398b7b4e1d"
+  },
+  {
+    "id": "01a14ef8-cc2f-78d3-b204-f92352ffbb78",
+    "project": "Laravel 13 Phoenix",
+    "name": "20261020-delta-revamp-focused-reader-01a14ef8-cc2f-78d3-b204-f92352ffbb78.md",
+    "sha256": "31a3eed0bf929ff6d289921c736556f7ab586bd9ce03f5de10b9047c76575c51"
+  },
+  {
+    "id": "019f0a9e-aa9a-73d3-8422-a32ad2a1275d",
+    "project": "New MG (chat tanpa project)",
+    "name": "20261012-all-projects-periksa-memori-audit-mg-motor-019f0a9e-aa9a-73d3-8422-a32ad2a1275d.md",
+    "sha256": "edc41a129e712e051c1a59b19bc86cdf0601f2f4d3f9e8cd4775b8047ed5f564"
+  },
+  {
+    "id": "019f0ae0-0a3e-7d13-89cc-bb43ae03aad6",
+    "project": "New MG [Laptop]",
+    "name": "20261012-all-projects-tambah-activity-log-mg-model-019f0ae0-0a3e-7d13-89cc-bb43ae03aad6.md",
+    "sha256": "2316cef4571c0aacc81beba7a459d979d40f18736a55f0ffc24fa002c6ea6bf9"
+  },
+  {
+    "id": "019fa905-bdcd-7f92-95e7-f13299d14a3d",
+    "project": "New MG [Laptop]",
+    "name": "20261012-all-projects-ekstrak-varian-mobil-mg-ke-excel-019fa905-bdcd-7f92-95e7-f13299d14a3d.md",
+    "sha256": "2c34138838638ddb483287b02de1f9bc479ee029193c1124098a0731e8563fdc"
+  },
+  {
+    "id": "01a0fa87-4086-7651-9446-b0bdb5d09b42",
+    "project": "New MG [Laptop]",
+    "name": "20261012-all-projects-periksa-blank-saat-update-menu-01a0fa87-4086-7651-9446-b0bdb5d09b42.md",
+    "sha256": "c1f6f9c8012b1d34741017214505bae72007c684cfebbc534e0643e1b126eff5"
+  },
+  {
+    "id": "01a13562-b6a4-7332-b010-91bfda6c01f8",
+    "project": "New MG [Laptop]",
+    "name": "20261020-delta-buat-preview-halaman-pre-book-01a13562-b6a4-7332-b010-91bfda6c01f8.md",
+    "sha256": "ced3b1a0cd67b035b017e79b7202447c46483868758e65ec52ff64451ceb2387"
+  },
+  {
+    "id": "01a13573-7e7e-7ff1-9372-0bc1f57bbaba",
+    "project": "New MG [Laptop]",
+    "name": "20261020-delta-lacak-snippet-yang-harus-dihapus-01a13573-7e7e-7ff1-9372-0bc1f57bbaba.md",
+    "sha256": "7e0cd25dc41fff9767a3900064bce03ad26dcf7ded8685a96deabbf82f72d58e"
+  },
+  {
+    "id": "01a13d63-a88a-78f0-9bb0-02bf3fa9a42c",
+    "project": "New MG [Laptop]",
+    "name": "20261020-delta-trace-penyebab-kegagalan-01a13d63-a88a-78f0-9bb0-02bf3fa9a42c.md",
+    "sha256": "238b09a7d516991af9dfd80d45ca573805bb8d3ede2ef131a87eb390a0f54e1a"
+  },
+  {
+    "id": "01a13d63-e985-7f81-aa3b-93db5947c3eb",
+    "project": "New MG [Laptop]",
+    "name": "20261020-delta-update-data-graphify-01a13d63-e985-7f81-aa3b-93db5947c3eb.md",
+    "sha256": "d13c8d34198dd5b2761409ee5a77b53a8867046583a8de8b4a19a76ebea87d2e"
+  },
+  {
+    "id": "01a1541b-03a0-7fa1-beee-21f89d4362ed",
+    "project": "New MG [Laptop]",
+    "name": "20261020-delta-audit-perbaikan-captcha-dan-seo-mg-01a1541b-03a0-7fa1-beee-21f89d4362ed.md",
+    "sha256": "62ff8c9a3254ff53be77e852ecf21f76dae4464b292f8c0c42a974384519a119"
+  },
+  {
+    "id": "019f0acc-7b94-7551-a8f5-790e9c6112a1",
+    "project": "New MG [SSD Portable]",
+    "name": "20261012-all-projects-trace-error-form-otp-sms-019f0acc-7b94-7551-a8f5-790e9c6112a1.md",
+    "sha256": "a05d093285170ec825ff5a161f15cdc7c01007e9cffe34723fdb260259e0f448"
+  },
+  {
+    "id": "019e9c48-f856-7910-9b7a-c650eea69a39",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-isi-form-verifikasi-019e9c48-f856-7910-9b7a-c650eea69a39.md",
+    "sha256": "7b3d93394c77c956c3444c07c0ae79e751e2fd50b5a86ee36832a83b26e0c24d"
+  },
+  {
+    "id": "019ea21e-0399-7d21-af69-ef3d5c88f3d5",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-cari-model-coding-gratis-setara-019ea21e-0399-7d21-af69-ef3d5c88f3d5.md",
+    "sha256": "ba077baead692b92e82cf7b0677ed9993d7e93d77a075cec8fb3bbe000e46522"
+  },
+  {
+    "id": "019ec0bc-f985-7ad3-a8e4-79561d6f9b6c",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-perbaiki-error-ssd-portable-019ec0bc-f985-7ad3-a8e4-79561d6f9b6c.md",
+    "sha256": "2420405b9aa138954d0448d4a902199a5847c78bcfb6fe7e55ba5a9009a149c5"
+  },
+  {
+    "id": "019f0851-636a-7c12-8e5e-f7be63b37f57",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-install-laravel-tanpa-terminal-019f0851-636a-7c12-8e5e-f7be63b37f57.md",
+    "sha256": "eba10fa31a9f9eb4860ecfea1abd756889b72cc11cbe3250ffad332552e3735b"
+  },
+  {
+    "id": "019f0aae-8170-7fd2-a8af-f040f01f251f",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-troubleshoot-error-push-gitlab-019f0aae-8170-7fd2-a8af-f040f01f251f.md",
+    "sha256": "46f732bea1f4afdb64ab1517c3ff508e19714e50b516704a4914839495b73ab9"
+  },
+  {
+    "id": "019f47e1-de0a-7f23-bdd9-b628c22ef403",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-perbaiki-ssd-portable-019f47e1-de0a-7f23-bdd9-b628c22ef403.md",
+    "sha256": "5802370b59b74d799d40902c683cc0704ca77cfffb00bd02a84c760a0659ea98"
+  },
+  {
+    "id": "019f51dd-8d0b-7ec0-bf81-ccc6146ddc18",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-troubleshoot-avast-block-019f51dd-8d0b-7ec0-bf81-ccc6146ddc18.md",
+    "sha256": "8e557302e315f4254a3c96ea941ce624b8b586e5a061f5603df6aac71eede557"
+  },
+  {
+    "id": "019f9a03-5997-7b30-bc35-000b3fe2d926",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-ping-response-019f9a03-5997-7b30-bc35-000b3fe2d926.md",
+    "sha256": "4c9e20f29201ff21d08664512c85489a0103b4be6d420ef3c16d208643e83b71"
+  },
+  {
+    "id": "01a0343e-8dc9-7073-9b42-573d9dbc2fe6",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-install-9-router-01a0343e-8dc9-7073-9b42-573d9dbc2fe6.md",
+    "sha256": "e39acd1c16db34a8845ccf1630613d7a9377bb0fb4d2f8619f8b4243a3c5c1ac"
+  },
+  {
+    "id": "01a04871-d969-75d0-b93e-363b60fd330a",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-install-ui-ux-pro-max-plugin-01a04871-d969-75d0-b93e-363b60fd330a.md",
+    "sha256": "842b478d8e0ee9f4c9439a8ea4c98e6d92c3e152918876d60c1004b807de79c1"
+  },
+  {
+    "id": "01a05c5e-4222-7793-ac7a-a624853c66d2",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-periksa-ukuran-folder-codex-01a05c5e-4222-7793-ac7a-a624853c66d2.md",
+    "sha256": "462a4268a80bee30e641616bd3af9011bc6c376e58e3e8295fbecd95cd4cf6db"
+  },
+  {
+    "id": "01a05c80-a301-7180-864b-009f8214fd09",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-perbaiki-warning-pojok-kanan-bawah-01a05c80-a301-7180-864b-009f8214fd09.md",
+    "sha256": "7bf71ef59330fdfcc09362165c04f6b6a242f1689a2797b723925295e40c11ea"
+  },
+  {
+    "id": "01a05c96-9d8e-7323-a786-c2e228baedb0",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-chatgpt-bantu-saya-untuk-mengubah-kalimat-yang-ada-disu-01a05c96-9d8e-7323-a786-c2e228baedb0.md",
+    "sha256": "c6b4580d1476d8c99781a1d845db2f9e0403539ab483dc02a6d059822d6620b5"
+  },
+  {
+    "id": "01a05d56-2cdd-7102-bc64-1df89e79b1c3",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-buat-tanda-tangan-transparan-01a05d56-2cdd-7102-bc64-1df89e79b1c3.md",
+    "sha256": "ea6649662f43d6640b3fad2ac55f99d78ad2d7bf6ac6f64c5e1e9043a8aab766"
+  },
+  {
+    "id": "01a066c5-7211-7b50-b9d1-e887afc18865",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-tambahkan-tanda-tangan-ke-pdf-01a066c5-7211-7b50-b9d1-e887afc18865.md",
+    "sha256": "a80a993ac6feba170e3396fead728c41013c0f2f7659fa9a07b1eb73ba82501f"
+  },
+  {
+    "id": "01a076dc-5819-7ea2-bb12-5dc171e9f824",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-edit-foto-background-merah-01a076dc-5819-7ea2-bb12-5dc171e9f824.md",
+    "sha256": "a2b381292bacdef0de8eed44a8a736767783d04d265cea456c6025f2d236107a"
+  },
+  {
+    "id": "01a09ab0-fa43-7090-9ada-18444888bab1",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-cari-penyebab-drive-c-dan-d-penuh-01a09ab0-fa43-7090-9ada-18444888bab1.md",
+    "sha256": "d1810904d2fdb5e9e78e81ef60097e28daf31e23c9fbfb32824854630ea61bb4"
+  },
+  {
+    "id": "01a09dbf-5c1d-7a31-95cd-f1fc0e65ea8a",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-edit-foto-ktp-jadi-jpg-hi-res-01a09dbf-5c1d-7a31-95cd-f1fc0e65ea8a.md",
+    "sha256": "b2c4e874b1c247519baabb26e1e2a0d1e43d2e5c8f65584dbf8f4b6fec69f050"
+  },
+  {
+    "id": "01a0bd61-5b26-72c1-8a94-7fd0b21b0c1c",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-bandingkan-taste-skill-dan-ui-ux-01a0bd61-5b26-72c1-8a94-7fd0b21b0c1c.md",
+    "sha256": "05eec4b7a8169104e6344705de3b496eaa11f18bf12a16290afb73ea9326dca4"
+  },
+  {
+    "id": "01a0c874-a6ba-73e0-a4c1-979c37b0db10",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-diagnose-reported-issue-01a0c874-a6ba-73e0-a4c1-979c37b0db10.md",
+    "sha256": "c9580eb033568fc52c6744d43ebf25998045a2c288004b9b73f8197a035ada8c"
+  },
+  {
+    "id": "01a0f512-0750-7a33-b0cb-944a8c46be4b",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-buat-ulang-tanda-tangan-farah-falest-01a0f512-0750-7a33-b0cb-944a8c46be4b.md",
+    "sha256": "56d4eff4cf595222f86077805babdb9e47234cdf1c3dcf593350ec098a5b6767"
+  },
+  {
+    "id": "01a0f556-a513-7380-81a7-4c9b8f6479ad",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-jelaskan-surat-berhenti-bekerja-bpjs-01a0f556-a513-7380-81a7-4c9b8f6479ad.md",
+    "sha256": "59f59f8ec58834e782430ca38da6d5ff7be60d028f924d764719850b40a4149a"
+  },
+  {
+    "id": "01a0fad4-6ee7-7113-b6ba-e5d0c729eb13",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-buat-ulang-slip-gaji-dalam-pdf-01a0fad4-6ee7-7113-b6ba-e5d0c729eb13.md",
+    "sha256": "9d0a73d598956d4953da296927028fc4dc63e08bf0bd5b29890da4e83cc04e4d"
+  },
+  {
+    "id": "01a10aff-aae8-7783-8650-f45b1fec1117",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-hapus-orang-berkacamata-01a10aff-aae8-7783-8650-f45b1fec1117.md",
+    "sha256": "f3875137d50d11ee323a0e76e5ba6bed58c96a2c89ed39a74c0eb5cad38e3cfc"
+  },
+  {
+    "id": "01a1159c-2bf1-7483-8977-21d8785f996f",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-buat-undangan-aqiqah-arunika-01a1159c-2bf1-7483-8977-21d8785f996f.md",
+    "sha256": "c31a8279501ffb68b72a4bfa6a6d49018b914129a0fd7b7d9bd8d5f8eed0d518"
+  },
+  {
+    "id": "01a115c0-2b47-78a0-91cb-f8dda864c387",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-hapus-background-dan-tangan-01a115c0-2b47-78a0-91cb-f8dda864c387.md",
+    "sha256": "2c0f5ff70eda490b68dacf12f888d75429738cc592d9ce5b54b7f58b34f5f5bc"
+  },
+  {
+    "id": "01a119a1-be6c-71e0-9074-743e0d14de10",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-tinjau-risiko-gestun-gopay-merchant-01a119a1-be6c-71e0-9074-743e0d14de10.md",
+    "sha256": "ac5285e439f949eaeac092e3b68a59d561524f2893ea245efdf254ec56f9604d"
+  },
+  {
+    "id": "01a11b52-501f-7622-bc51-15fa575c1deb",
+    "project": "Tanpa project",
+    "name": "20261012-all-projects-hilangkan-opsi-install-aapanel-01a11b52-501f-7622-bc51-15fa575c1deb.md",
+    "sha256": "55ef00489031500d606a59ded4f00feccbba0e568344fefa3e19e332b387b79f"
+  },
+  {
+    "id": "01a12dcb-7978-7970-8d53-0fd4bce07a76",
+    "project": "Tanpa project",
+    "name": "20261020-delta-simpan-chat-lama-ke-memori-01a12dcb-7978-7970-8d53-0fd4bce07a76.md",
+    "sha256": "cdb17c06310591c26c7d8cf91537deab9f87c23b6afe4be82bc8f095f82fca4b"
+  },
+  {
+    "id": "01a12df9-4bab-74b0-8126-5d843975a99a",
+    "project": "Tanpa project",
+    "name": "20261020-delta-buat-mod-townsmen-apk-01a12df9-4bab-74b0-8126-5d843975a99a.md",
+    "sha256": "0ac376571dfeb39137de2209deca980593599a608bc6d6a2adc8dd43e88655ff"
+  },
+  {
+    "id": "01a12e3f-32bc-7ae2-b47d-a3f96f3edad3",
+    "project": "Tanpa project",
+    "name": "20261020-delta-periksa-penggunaan-ruang-drive-e-01a12e3f-32bc-7ae2-b47d-a3f96f3edad3.md",
+    "sha256": "60f154a1bfc992b4bd3b32295e48dffbfc1df3970afb8f2875b7b671661c7948"
+  },
+  {
+    "id": "01a13496-a598-7b40-a808-06f1616f5351",
+    "project": "Tanpa project",
+    "name": "20261020-delta-install-graphify-di-codex-01a13496-a598-7b40-a808-06f1616f5351.md",
+    "sha256": "a2b17bc513323b54943fdc4e7f356844090db358e529fccba9c49e2363cdd3b7"
+  },
+  {
+    "id": "01a1349b-2d90-70f1-8f0f-a2d44ebb3599",
+    "project": "Tanpa project",
+    "name": "20261020-delta-periksa-custom-instruction-01a1349b-2d90-70f1-8f0f-a2d44ebb3599.md",
+    "sha256": "f332146dc97d376a556503fdb41903716eab1cf9ad90feab1c99fcfacdcb5361"
+  },
+  {
+    "id": "01a13e46-a032-7102-9986-d731e45b676a",
+    "project": "Tanpa project",
+    "name": "20261020-delta-simpan-percakapan-ke-drive-e-01a13e46-a032-7102-9986-d731e45b676a.md",
+    "sha256": "7fb3ab590b62051b876c1a37232da6cf0c8f60502edd232f1748576c950766b0"
+  },
+  {
+    "id": "01a14373-5206-7e03-a127-0a1534567bcc",
+    "project": "Tanpa project",
+    "name": "20261020-delta-periksa-notifikasi-ssd-portable-01a14373-5206-7e03-a127-0a1534567bcc.md",
+    "sha256": "f78e1f152fa6ccb8dcf7c548dc7e386476341edf82d49e7031cba4200d7755f0"
+  },
+  {
+    "id": "01a14f21-ecf3-77b3-9ed3-c8ddb01e3b7e",
+    "project": "Tanpa project",
+    "name": "20261020-delta-cari-daya-port-dc-asus-a1404va-01a14f21-ecf3-77b3-9ed3-c8ddb01e3b7e.md",
+    "sha256": "8fddcfbd937ced35bb28672b963907ec759afdaf2b16d1ed1c81f90eb4045508"
+  },
+  {
+    "id": "6acf562c-a158-83ec-b25e-b1606c37c936",
+    "project": "Tanpa project (cloud)",
+    "name": "20261020-delta-buat-stiker-lucu-6acf562c-a158-83ec-b25e-b1606c37c936.md",
+    "sha256": "bcd0804b318ae2e7d743f51695352c8538082b3826c4523e85dca613ba336e0f"
+  },
+  {
+    "id": "6acf5615-e198-83ec-bd42-31b8d07cbe59",
+    "project": "Tanpa project (cloud)",
+    "name": "20261020-delta-build-decision-board-6acf5615-e198-83ec-bd42-31b8d07cbe59.md",
+    "sha256": "723dc66fad396839e97a99a1b9f389b28eb6f4637110732697b45ad77d9ecf19"
+  },
+  {
+    "id": "01a139e8-7f77-7591-84f4-47269c253095",
+    "project": "Tanpa project (cloud)",
+    "name": "20261020-delta-01a139e8-7f77-7591-84f4-47269c253095-01a139e8-7f77-7591-84f4-47269c253095.md",
+    "sha256": "cfd0f959c49af2b1a8343a9534152a22bd3428bf5872697d003c8ead1a94dd67"
+  },
+  {
+    "id": "6ac839ed-35d0-83ec-b6fd-c2cb641e98c0",
+    "project": "Tanpa project (cloud)",
+    "name": "20261012-all-projects-ping-pong-response-6ac839ed-35d0-83ec-b6fd-c2cb641e98c0.md",
+    "sha256": "4e8c56cc1a89a5b1495447cfcd037af91715b5bcc49786162c4db4a53a7f43c7"
+  },
+  {
+    "id": "01a11e22-5cd6-7055-9c34-030b204d3089",
+    "project": "Tanpa project (cloud)",
+    "name": "20261012-all-projects-01a11e22-5cd6-7055-9c34-030b204d3089-01a11e22-5cd6-7055-9c34-030b204d3089.md",
+    "sha256": "0ed54d2ee6dda3bdfaeb6c6ff9ce4157a1ab677d356e70f6a8b855934a3a7a8b"
+  },
+  {
+    "id": "01a12ec1-5987-7351-aacb-6faeca0c2918",
+    "project": "Verdant Vale RPG",
+    "name": "20261020-delta-rancang-rpg-web-dengan-inventory-01a12ec1-5987-7351-aacb-6faeca0c2918.md",
+    "sha256": "b7226de53a98df98a813f7e59613ca7419d3c614b12f4337d05bf2309a5603c9"
+  },
+  {
+    "id": "01a07a94-d0c1-76d2-b0e9-cf8bc05fa116",
+    "project": "laravel-11-cms-bum",
+    "name": "20261012-all-projects-diagnose-composer-update-error-01a07a94-d0c1-76d2-b0e9-cf8bc05fa116.md",
+    "sha256": "75527772baa12ec16c32754b993fa4d0a1e43e6b7fe04d90f09f2db7f3532326"
+  },
+  {
+    "id": "01a07b03-542b-7862-a55a-2f8310f851de",
+    "project": "laravel-11-cms-bum",
+    "name": "20261012-all-projects-diagnose-database-import-timeout-01a07b03-542b-7862-a55a-2f8310f851de.md",
+    "sha256": "5e1547e47fa0bf4478e778a2b6eeee64d2583060d80a28bf145757cb03b7aacb"
+  },
+  {
+    "id": "019e5518-8a5f-7361-b98d-d28fc31eb25b",
+    "project": "laravel-12-phoenix",
+    "name": "20261012-all-projects-unduh-memori-sampai-kemarin-019e5518-8a5f-7361-b98d-d28fc31eb25b.md",
+    "sha256": "33077008c1e9c8bb1ad7e219b777472a39cdbf4d38192d8e9bc8d0f72ea4cbf7"
+  },
+  {
+    "id": "019e5579-efe3-7701-8133-066b51671797",
+    "project": "laravel-12-phoenix",
+    "name": "20261012-all-projects-check-claude-memories-019e5579-efe3-7701-8133-066b51671797.md",
+    "sha256": "2b46071422c895f71ced62ad74455284fd66fca48446aa74d0e049eaefaf8385"
+  },
+  {
+    "id": "019e5591-9469-7753-b0ab-1907d7a288b3",
+    "project": "laravel-12-phoenix",
+    "name": "20261012-all-projects-lanjutkan-page-builder-019e5591-9469-7753-b0ab-1907d7a288b3.md",
+    "sha256": "ae36ce36fcb5c21ae2c6f85ee127f1af32a9cdf3f653b35ac8df4c70d92b1d6d"
+  },
+  {
+    "id": "019e562e-ff67-7740-b31e-9d6a80b36356",
+    "project": "laravel-12-phoenix",
+    "name": "20261012-all-projects-lanjutkan-page-builder-elementor-019e562e-ff67-7740-b31e-9d6a80b36356.md",
+    "sha256": "068796608c5505284da8b6784ab3e3fbde2916daf2e929fc894aa05ff1480b34"
+  },
+  {
+    "id": "019e5a4b-7cf2-7e00-9e0a-5743786aad59",
+    "project": "laravel-12-phoenix",
+    "name": "20261012-all-projects-lanjutkan-layout-container-grid-019e5a4b-7cf2-7e00-9e0a-5743786aad59.md",
+    "sha256": "a614dfbf33e6cd71750c512643a7cb2aaf56f0b06c04d275f3827f802c1b1609"
+  },
+  {
+    "id": "019e64ca-df63-7ec2-a4a8-d33a1e0b0313",
+    "project": "laravel-12-phoenix",
+    "name": "20261012-all-projects-tarik-memori-terbaru-dari-drive-019e64ca-df63-7ec2-a4a8-d33a1e0b0313.md",
+    "sha256": "f6ac092f68b6b56cc0c6c75cd23204d3513ee24e0d170c3ca2d1c0204121306b"
+  },
+  {
+    "id": "019e64e4-898c-7c03-af95-54987eb11d10",
+    "project": "laravel-12-phoenix",
+    "name": "20261012-all-projects-tinjau-memori-page-builder-019e64e4-898c-7c03-af95-54987eb11d10.md",
+    "sha256": "e7ab79ab3c670d9312a61a3d6a4dd0406f1e582be1ca123c7665e990345f12d8"
+  },
+  {
+    "id": "019e6775-c543-7392-ac7f-b25fbdc2cb8c",
+    "project": "laravel-12-phoenix",
+    "name": "20261012-all-projects-rapikan-file-backup-page-builder-019e6775-c543-7392-ac7f-b25fbdc2cb8c.md",
+    "sha256": "2c6f63ee204169f6ccc70d4dca48f103d3b869e64079a43255e43381e9045611"
+  },
+  {
+    "id": "019e67f1-b9f9-7643-a388-42c15b3cc597",
+    "project": "laravel-12-phoenix",
+    "name": "20261012-all-projects-baca-page-builder-baru-019e67f1-b9f9-7643-a388-42c15b3cc597.md",
+    "sha256": "1329ee7b32773dfe7da70d17d24e43eade40b966d0cc9bf1c019e21761b164bf"
+  },
+  {
+    "id": "019e7731-ec09-7e90-bce2-6b6f6762c133",
+    "project": "laravel-12-phoenix",
+    "name": "20261012-all-projects-update-custom-instruction-019e7731-ec09-7e90-bce2-6b6f6762c133.md",
+    "sha256": "1edc7e9802f14fdc3bb7b1fce02d8f37d8bc04a096f99666d3da700d29a756ef"
+  },
+  {
+    "id": "019e78d4-fabc-7551-84eb-d6655a69c039",
+    "project": "laravel-12-phoenix",
+    "name": "20261012-all-projects-lanjutkan-page-builder-019e78d4-fabc-7551-84eb-d6655a69c039.md",
+    "sha256": "569760c12384a826d49e605a8c8102966b8163e39dc9b2571002fcaf50c648c3"
+  }
+]

@@ -1,0 +1,148 @@
+/* Content styles from the installed CKEditor 5 build (38.1), scoped to article content.
+ * Re-export when that build changes; editor UI styles are excluded.
+ * CKSource license: /assets/plugins/ckeditor5/LICENSE.md. */
+.article-rich-content {
+  --ck-highlight-marker-yellow: #fdfd77;
+  --ck-highlight-marker-green: #62f962;
+  --ck-highlight-marker-pink: #fc7899;
+  --ck-highlight-marker-blue: #72ccfd;
+  --ck-highlight-pen-red: #e71313;
+  --ck-highlight-pen-green: #128a00;
+  --ck-color-image-caption-background: #f7f7f7;
+  --ck-color-image-caption-text: #333;
+  --ck-color-table-caption-background: #f7f7f7;
+  --ck-color-table-caption-text: #333;
+  --ck-image-style-spacing: 1.5em;
+  --ck-inline-image-style-spacing: calc(1.5em/2);
+  --ck-todo-list-checkmark-size: 16px;
+}
+.article-rich-content code { background-color: rgba(199, 199, 199, 0.3); border-radius: 2px; padding: 0.15em; }
+.article-rich-content pre { background: rgba(199, 199, 199, 0.3); border: 1px solid rgb(196, 196, 196); border-radius: 2px; color: rgb(53, 53, 53); direction: ltr; font-style: normal; min-width: 200px; padding: 1em; tab-size: 4; text-align: left; white-space: pre-wrap; }
+.article-rich-content pre code { background: unset; border-radius: 0px; padding: 0px; }
+.article-rich-content .text-tiny { font-size: 0.7em; }
+.article-rich-content .text-small { font-size: 0.85em; }
+.article-rich-content .text-big { font-size: 1.4em; }
+.article-rich-content .text-huge { font-size: 1.8em; }
+.article-rich-content .marker-yellow { background-color: var(--ck-highlight-marker-yellow); }
+.article-rich-content .marker-green { background-color: var(--ck-highlight-marker-green); }
+.article-rich-content .marker-pink { background-color: var(--ck-highlight-marker-pink); }
+.article-rich-content .marker-blue { background-color: var(--ck-highlight-marker-blue); }
+.article-rich-content .pen-red { background-color: transparent; color: var(--ck-highlight-pen-red); }
+.article-rich-content .pen-green { background-color: transparent; color: var(--ck-highlight-pen-green); }
+.article-rich-content hr { background: rgb(222, 222, 222); border: 0px; height: 4px; margin: 15px 0px; }
+.article-rich-content .image { clear: both; display: table; margin: 0.9em auto; min-width: 50px; text-align: center; }
+.article-rich-content .image img { display: block; margin: 0px auto; max-width: 100%; min-width: 100%; }
+.article-rich-content .image-inline { align-items: flex-start; display: inline-flex; max-width: 100%; }
+.article-rich-content .image-inline picture { display: flex; }
+.article-rich-content .image-inline img, .article-rich-content .image-inline picture { flex-grow: 1; flex-shrink: 1; max-width: 100%; }
+.article-rich-content .image > figcaption { background-color: var(--ck-color-image-caption-background); caption-side: bottom; color: var(--ck-color-image-caption-text); display: table-caption; font-size: 0.75em; outline-offset: -1px; padding: 0.6em; word-break: break-word; }
+.article-rich-content .image.image_resized { box-sizing: border-box; display: block; max-width: 100%; }
+.article-rich-content .image.image_resized img { width: 100%; }
+.article-rich-content .image.image_resized > figcaption { display: block; }
+.article-rich-content .image-style-block-align-left, .article-rich-content .image-style-block-align-right { max-width: calc(100% - var(--ck-image-style-spacing)); }
+.article-rich-content .image-style-align-left, .article-rich-content .image-style-align-right { clear: none; }
+.article-rich-content .image-style-side { float: right; margin-left: var(--ck-image-style-spacing); max-width: 50%; }
+.article-rich-content .image-style-align-left { float: left; margin-right: var(--ck-image-style-spacing); }
+.article-rich-content .image-style-align-center { margin-left: auto; margin-right: auto; }
+.article-rich-content .image-style-align-right { float: right; margin-left: var(--ck-image-style-spacing); }
+.article-rich-content .image-style-block-align-right { margin-left: auto; margin-right: 0px; }
+.article-rich-content .image-style-block-align-left { margin-left: 0px; margin-right: auto; }
+.article-rich-content p + .image-style-align-left, .article-rich-content p + .image-style-align-right, .article-rich-content p + .image-style-side { margin-top: 0px; }
+.article-rich-content .image-inline.image-style-align-left, .article-rich-content .image-inline.image-style-align-right { margin-bottom: var(--ck-inline-image-style-spacing); margin-top: var(--ck-inline-image-style-spacing); }
+.article-rich-content .image-inline.image-style-align-left { margin-right: var(--ck-inline-image-style-spacing); }
+.article-rich-content .image-inline.image-style-align-right { margin-left: var(--ck-inline-image-style-spacing); }
+.article-rich-content ol { list-style-type: decimal; }
+.article-rich-content ol ol { list-style-type: lower-latin; }
+.article-rich-content ol ol ol { list-style-type: lower-roman; }
+.article-rich-content ol ol ol ol { list-style-type: upper-latin; }
+.article-rich-content ol ol ol ol ol { list-style-type: upper-roman; }
+.article-rich-content ul { list-style-type: disc; }
+.article-rich-content ul ul { list-style-type: circle; }
+.article-rich-content ul ul ul, .article-rich-content ul ul ul ul { list-style-type: square; }
+.article-rich-content .media { clear: both; display: block; margin: 0.9em 0px; min-width: 15em; }
+.article-rich-content .page-break { align-items: center; clear: both; display: flex; justify-content: center; padding: 5px 0px; position: relative; }
+.article-rich-content .page-break::after { border-bottom: 2px dashed rgb(196, 196, 196); content: ""; position: absolute; width: 100%; }
+@media print {
+  .article-rich-content .page-break { padding: 0px; }
+  .article-rich-content .page-break::after { display: none; }
+}
+.article-rich-content .table { display: table; margin: 0.9em auto; }
+.article-rich-content .table table { border: 1px double rgb(179, 179, 179); border-collapse: collapse; border-spacing: 0px; height: 100%; width: 100%; }
+.article-rich-content .table table td, .article-rich-content .table table th { border: 1px solid rgb(191, 191, 191); min-width: 2em; padding: 0.4em; }
+.article-rich-content .table table th { background: rgba(0, 0, 0, 0.05); font-weight: 700; }
+.article-rich-content[dir="rtl"] .table th { text-align: right; }
+.article-rich-content[dir="ltr"] .table th { text-align: left; }
+.article-rich-content .table > figcaption { background-color: var(--ck-color-table-caption-background); caption-side: top; color: var(--ck-color-table-caption-text); display: table-caption; font-size: 0.75em; outline-offset: -1px; padding: 0.6em; text-align: center; word-break: break-word; }
+.article-rich-content .table table { overflow: hidden; }
+.article-rich-content .table td, .article-rich-content .table th { overflow-wrap: break-word; position: relative; }
+.article-rich-content .todo-list { list-style: none; }
+.article-rich-content .todo-list li { margin-bottom: 5px; }
+.article-rich-content .todo-list li .todo-list { margin-top: 5px; }
+.article-rich-content .todo-list .todo-list__label > input { appearance: none; border: 0px; display: inline-block; height: var(--ck-todo-list-checkmark-size); left: -25px; margin-left: 0px; margin-right: -15px; position: relative; right: 0px; vertical-align: middle; width: var(--ck-todo-list-checkmark-size); }
+.article-rich-content .todo-list .todo-list__label > input::before { border: 1px solid rgb(51, 51, 51); border-radius: 2px; box-sizing: border-box; content: ""; display: block; height: 100%; position: absolute; transition: box-shadow 0.25s ease-in-out, background 0.25s ease-in-out, border 0.25s ease-in-out; width: 100%; }
+.article-rich-content .todo-list .todo-list__label > input::after { border-color: transparent; border-style: solid; border-width: 0 calc(var(--ck-todo-list-checkmark-size)/8) calc(var(--ck-todo-list-checkmark-size)/8) 0; box-sizing: content-box; content: ""; display: block; height: calc(var(--ck-todo-list-checkmark-size)/2.6); left: calc(var(--ck-todo-list-checkmark-size)/3); pointer-events: none; position: absolute; top: calc(var(--ck-todo-list-checkmark-size)/5.3); transform: rotate(45deg); width: calc(var(--ck-todo-list-checkmark-size)/5.3); }
+.article-rich-content .todo-list .todo-list__label > input[checked]::before { background: rgb(38, 171, 51); border-color: rgb(38, 171, 51); }
+.article-rich-content .todo-list .todo-list__label > input[checked]::after { border-color: rgb(255, 255, 255); }
+.article-rich-content .todo-list .todo-list__label .todo-list__label__description { vertical-align: middle; }
+
+/* One content contract for the editable root and all three publishing templates. */
+.article-rich-content {
+    display: flow-root;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: #344054;
+    font-family: var(--ph-font-family, sans-serif);
+    font-size: var(--ph-adaptive-font-size, var(--ph-font-size, 1rem)) !important;
+    line-height: 1.8 !important;
+    text-align: left;
+}
+@media (max-width: 768px) {
+    .article-rich-content { font-size: var(--ph-mobile-content-font-size, var(--ph-adaptive-font-size, 1rem)) !important; }
+}
+.article-rich-content > :first-child { margin-top: 0 !important; }
+.article-rich-content > :last-child { margin-bottom: 0 !important; }
+.article-rich-content :is(p, ul, ol) { margin-top: 0; margin-bottom: 1.35em !important; }
+.article-rich-content p { font-size: 1em !important; line-height: inherit; }
+.article-rich-content :is(h1, h2, h3, h4, h5, h6) { font-family: inherit; color: #172033; font-weight: 700; line-height: 1.3 !important; letter-spacing: -.02em; margin: 1.5em 0 .6em !important; }
+.article-rich-content h1 { font-size: var(--ph-global-rfs-h1, 1.75rem) !important; }
+.article-rich-content h2 { font-size: var(--ph-global-rfs-h2, 1.5rem) !important; }
+.article-rich-content h3 { font-size: var(--ph-global-rfs-h3, 1.3rem) !important; }
+.article-rich-content h4 { font-size: var(--ph-global-rfs-h4, 1.2rem) !important; }
+.article-rich-content h5 { font-size: var(--ph-global-rfs-h5, 1.05rem) !important; }
+.article-rich-content h6 { font-size: var(--ph-global-rfs-h6, .95rem) !important; }
+/* CMS mobile shells use stronger heading selectors; content must match publishing. */
+body .article-rich-content.article-rich-content :is(h1, h2, h3, h4, h5, h6) { color: #172033 !important; }
+body .article-rich-content.article-rich-content h4 { font-size: var(--ph-global-rfs-h4, 1.2rem) !important; }
+.article-rich-content blockquote { margin: 1.5em 0 !important; padding: 2px 0 2px 1.5em !important; border: 0 !important; border-left: 3px solid var(--ph-theme-primary, #6542d7) !important; border-radius: 0 !important; background: transparent !important; color: inherit !important; font-style: normal !important; font-size: 1.125em !important; line-height: 1.55 !important; }
+.article-rich-content blockquote > :last-child { margin-bottom: 0 !important; }
+.article-rich-content a { color: var(--ph-theme-primary, #6542d7); text-decoration: underline; }
+.article-rich-content img { border-radius: 0 !important; }
+/* Keep authored layout while containing floats and wide content in every detail template. */
+.article-rich-content .image { max-width: 100%; margin: .9em auto !important; }
+.article-rich-content .image.image-style-side { max-width: 50%; }
+.article-rich-content .image.image-style-align-left { margin-left: 0 !important; margin-right: var(--ck-image-style-spacing) !important; }
+.article-rich-content .image.image-style-align-right,
+.article-rich-content .image.image-style-side { margin-right: 0 !important; margin-left: var(--ck-image-style-spacing) !important; }
+.article-rich-content .image.image-style-align-center { margin-inline: auto !important; }
+.article-rich-content .image.image-style-block-align-left { margin-left: 0 !important; margin-right: auto !important; }
+.article-rich-content .image.image-style-block-align-right { margin-left: auto !important; margin-right: 0 !important; }
+.article-rich-content .image > figcaption { margin: 0 !important; line-height: 1.5; border: 0 !important; }
+.article-rich-content .image-inline { margin: 0; vertical-align: middle; }
+.article-rich-content .table { display: block; max-width: 100%; overflow-x: auto; margin: .9em auto; margin-inline: auto !important; }
+.article-rich-content .table, .article-rich-content .table table { font-family: inherit; font-size: inherit; color: inherit; line-height: inherit; text-align: inherit; }
+.article-rich-content .table thead tr th { padding: .4em !important; }
+.article-rich-content .table > table { display: table !important; width: 100%; max-width: none; overflow: visible; }
+.article-rich-content .table .ck-table-resized { table-layout: fixed; }
+.article-rich-content .table > figcaption { display: block; }
+.article-rich-content .table td > :last-child,
+.article-rich-content .table th > :last-child { margin-bottom: 0; }
+.article-rich-content .todo-list { padding-left: 25px; }
+.article-rich-content .todo-list__label { font-size: inherit; }
+.article-rich-content .todo-list__label > input:disabled { opacity: 1; }
+.article-rich-content :is(img, video, iframe) { max-width: 100%; }
+.article-rich-content :is(img, video) { height: auto; }
+.article-rich-content pre { min-width: 0; max-width: 100%; overflow-x: auto; }
+.article-rich-content a { overflow-wrap: anywhere; }
+@media (max-width: 575.98px) {
+    .article-rich-content .image:is(.image-style-align-left, .image-style-align-right, .image-style-side) { float: none; clear: both; max-width: 100%; margin-inline: auto !important; }
+}

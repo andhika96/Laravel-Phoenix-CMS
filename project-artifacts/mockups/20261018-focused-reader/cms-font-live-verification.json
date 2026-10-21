@@ -1,0 +1,300 @@
+{
+  "previews": [
+    {
+      "surface": "detail",
+      "key": "focused-reader",
+      "width": 320,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "detail",
+      "key": "focused-reader",
+      "width": 390,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "detail",
+      "key": "focused-reader",
+      "width": 834,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "detail",
+      "key": "focused-reader",
+      "width": 1440,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "detail",
+      "key": "editorial-feature",
+      "width": 320,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "detail",
+      "key": "editorial-feature",
+      "width": 390,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "detail",
+      "key": "editorial-feature",
+      "width": 834,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "detail",
+      "key": "editorial-feature",
+      "width": 1440,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "detail",
+      "key": "knowledge-toc",
+      "width": 320,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "detail",
+      "key": "knowledge-toc",
+      "width": 390,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "detail",
+      "key": "knowledge-toc",
+      "width": 834,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "detail",
+      "key": "knowledge-toc",
+      "width": 1440,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "minimal-reading-list",
+      "width": 320,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "minimal-reading-list",
+      "width": 390,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "minimal-reading-list",
+      "width": 834,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "minimal-reading-list",
+      "width": 1440,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "editorial-journal",
+      "width": 320,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "editorial-journal",
+      "width": 390,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "editorial-journal",
+      "width": 834,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "editorial-journal",
+      "width": 1440,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "mosaic-magazine",
+      "width": 320,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "mosaic-magazine",
+      "width": 390,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "mosaic-magazine",
+      "width": 834,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "mosaic-magazine",
+      "width": 1440,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "mosaic-classic",
+      "width": 320,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "mosaic-classic",
+      "width": 390,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "mosaic-classic",
+      "width": 834,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "mosaic-classic",
+      "width": 1440,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "balanced-card-grid",
+      "width": 320,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "balanced-card-grid",
+      "width": 390,
+      "h1": "24px",
+      "expected": "24px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "balanced-card-grid",
+      "width": 834,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    },
+    {
+      "surface": "archive",
+      "key": "balanced-card-grid",
+      "width": 1440,
+      "h1": "28px",
+      "expected": "28px",
+      "overflow": false
+    }
+  ],
+  "publicPages": [
+    {
+      "url": "/article",
+      "width": 390,
+      "h1": "24px",
+      "overflow": false
+    },
+    {
+      "url": "/article",
+      "width": 834,
+      "h1": "28px",
+      "overflow": false
+    },
+    {
+      "url": "/article",
+      "width": 1440,
+      "h1": "28px",
+      "overflow": false
+    },
+    {
+      "url": "/article/load-test-20260825-00001",
+      "width": 390,
+      "h1": "24px",
+      "overflow": false
+    },
+    {
+      "url": "/article/load-test-20260825-00001",
+      "width": 834,
+      "h1": "28px",
+      "overflow": false
+    },
+    {
+      "url": "/article/load-test-20260825-00001",
+      "width": 1440,
+      "h1": "28px",
+      "overflow": false
+    }
+  ],
+  "frontendButton": "Actual new-tab click passed",
+  "settings": "CMS note visible; pixel font controls absent"
+}
