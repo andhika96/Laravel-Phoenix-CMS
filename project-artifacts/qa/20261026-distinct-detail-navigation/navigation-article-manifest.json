@@ -1,0 +1,58 @@
+[
+    {
+        "file": "qa-editorial-feature.html",
+        "template": "editorial-feature",
+        "article_id": 5059,
+        "neighbors": 1,
+        "hrefs": [
+            "https://laravel-13-phoenix.aruna/article/load-test-20260825-00001"
+        ]
+    },
+    {
+        "file": "qa-knowledge-toc.html",
+        "template": "knowledge-toc",
+        "article_id": 5059,
+        "neighbors": 1,
+        "hrefs": [
+            "https://laravel-13-phoenix.aruna/article/load-test-20260825-00001"
+        ]
+    },
+    {
+        "file": "middle-editorial-feature.html",
+        "template": "editorial-feature",
+        "article_id": 59,
+        "neighbors": 2,
+        "hrefs": [
+            "https://laravel-13-phoenix.aruna/article/load-test-20260825-00002",
+            "https://laravel-13-phoenix.aruna/article/qa-ckeditor-panduan-sistem-andal-uji-seluruh-format-konten"
+        ]
+    },
+    {
+        "file": "middle-knowledge-toc.html",
+        "template": "knowledge-toc",
+        "article_id": 59,
+        "neighbors": 2,
+        "hrefs": [
+            "https://laravel-13-phoenix.aruna/article/load-test-20260825-00002",
+            "https://laravel-13-phoenix.aruna/article/qa-ckeditor-panduan-sistem-andal-uji-seluruh-format-konten"
+        ]
+    },
+    {
+        "file": "first-editorial-feature.html",
+        "template": "editorial-feature",
+        "article_id": 5058,
+        "neighbors": 1,
+        "hrefs": [
+            "https://laravel-13-phoenix.aruna/article/load-test-20260825-04999"
+        ]
+    },
+    {
+        "file": "first-knowledge-toc.html",
+        "template": "knowledge-toc",
+        "article_id": 5058,
+        "neighbors": 1,
+        "hrefs": [
+            "https://laravel-13-phoenix.aruna/article/load-test-20260825-04999"
+        ]
+    }
+]

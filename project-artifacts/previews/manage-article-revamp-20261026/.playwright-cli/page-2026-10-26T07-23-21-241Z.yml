@@ -1,0 +1,106 @@
+- generic [ref=f2e2]:
+  - generic [ref=f2e3]:
+    - generic "Account" [ref=f2e4]:
+      - generic [ref=f2e5]:
+        - button "Account" [ref=f2e6] [cursor=pointer]:
+          - img "Current avatar image" [ref=f2e8]
+          - strong [ref=f2e10]: Administrator
+        - button "Open profile menu" [ref=f2e11] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f2e12]: 
+        - text:      
+      - button "Hide sidebar" [expanded] [ref=f2e13] [cursor=pointer]
+    - region "scrollable content" [ref=f2e21]:
+      - generic [ref=f2e23]:
+        - generic [ref=f2e24]:
+          - link " Dashboard" [ref=f2e25] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/dashboard
+            - generic [ref=f2e26]: 
+            - generic [ref=f2e28]: Dashboard
+          - link " View site" [ref=f2e29] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna
+            - generic [ref=f2e30]: 
+            - generic [ref=f2e32]: View site
+        - generic [ref=f2e33]:
+          - link " Manage Articles" [ref=f2e34] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/manage_article
+            - generic [ref=f2e35]: 
+            - generic [ref=f2e37]: Manage Articles
+          - link " Manage Cover Image" [ref=f2e38] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/manage_coverimage
+            - generic [ref=f2e39]: 
+            - generic [ref=f2e41]: Manage Cover Image
+          - link " Manage Event" [ref=f2e42] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/manage_event
+            - generic [ref=f2e43]: 
+            - generic [ref=f2e45]: Manage Event
+          - link " Workflow Editor" [ref=f2e46] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/workflow
+            - generic [ref=f2e47]: 
+            - generic [ref=f2e49]: Workflow Editor
+    - generic "Administration and settings" [ref=f2e50]:
+      - link "Awesome Admin" [ref=f2e51] [cursor=pointer]:
+        - /url: https://laravel-13-phoenix.aruna/awesome_admin
+        - generic [aria-hidden] [ref=f2e52]: 
+      - link "Settings" [ref=f2e54] [cursor=pointer]:
+        - /url: https://laravel-13-phoenix.aruna/account
+        - generic [aria-hidden] [ref=f2e55]: 
+      - text: 
+  - generic [ref=f2e57]:
+    - text:  
+    - generic [ref=f2e63]:
+      - generic [ref=f2e65]:
+        - heading "Manage Article" [level=4] [ref=f2e67]
+        - generic [ref=f2e69]:
+          - textbox "Search article by Title" [ref=f2e72]
+          - generic [ref=f2e73]:
+            - link " Add Post" [ref=f2e74] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/manage_article/add
+              - generic [ref=f2e75]: 
+              - text: Add Post
+            - link " Article Templates" [ref=f2e76] [cursor=pointer]:
+              - /url: https://laravel-13-phoenix.aruna/manage_article/templates
+              - generic [ref=f2e77]: 
+              - text: Article Templates
+            - link "Category List" [ref=f2e78] [cursor=pointer]:
+              - /url: javascript:void(0)
+      - generic [ref=f2e80]:
+        - generic [ref=f2e82]:
+          - generic [ref=f2e84]:
+            - generic [ref=f2e85]: Change Status
+            - combobox [ref=f2e86]:
+              - option "All" [selected]
+              - option "Publish"
+              - option "Draft"
+              - option "Pending"
+          - button "Submit" [ref=f2e88] [cursor=pointer]
+        - generic [ref=f2e89]:
+          - generic [ref=f2e90]: Filter By Status
+          - combobox [ref=f2e91]:
+            - option "All" [selected]
+            - option "Publish"
+            - option "Draft"
+            - option "Pending"
+        - generic [ref=f2e92]:
+          - generic [ref=f2e93]: Filter By Category
+          - combobox [ref=f2e94]:
+            - option "All" [selected]
+            - option "Uncategorized"
+            - option "Test 3 Edited"
+            - option "Test 4"
+            - option "Test 5"
+            - option "Load Test Technology"
+            - option "Load Test Business"
+            - option "Load Test Design"
+            - option "Load Test Science"
+            - option "Load Test Culture"
+            - option "Load Test Health"
+            - option "Load Test Travel"
+        - generic [ref=f2e95]:
+          - generic [ref=f2e96]: Filter By Scheduled
+          - combobox [ref=f2e97]:
+            - option "All" [selected]
+            - option "Scheduled"
+            - option "No Scheduled"
+      - generic [ref=f2e99]:
+        - status [ref=f2e100]
+        - generic [ref=f2e102]: Loading ...

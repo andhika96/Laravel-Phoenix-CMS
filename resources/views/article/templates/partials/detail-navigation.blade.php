@@ -1,5 +1,9 @@
 @if (data_get($templateOptions ?? [], 'display.navigation', true) && (($previousArticle ?? null) || ($nextArticle ?? null)))
-    @if ($readingCards ?? false)
+    @if (($navigationStyle ?? null) === 'story-spread')
+        @include('article.templates.partials.detail-story-spread')
+    @elseif (($navigationStyle ?? null) === 'knowledge-links')
+        @include('article.templates.partials.detail-knowledge-links')
+    @elseif ($readingCards ?? false)
         @include('article.templates.partials.detail-reading-cards')
     @else
     <nav class="article-detail-navigation" aria-label="{{ t('Article navigation') }}">

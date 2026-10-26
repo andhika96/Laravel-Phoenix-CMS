@@ -1,0 +1,135 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import path from 'node:path';
+import { chromium } from 'playwright-core';
+
+const qa = path.dirname(fileURLToPath(import.meta.url));
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
+const errors = [];
+page.on('pageerror', error => errors.push(error.message));
+await page.goto(pathToFileURL(path.join(qa, 'preview-inspection.html')).href);
+await page.frameLocator('iframe').locator('.ar-viewport').first().locator('tbody tr[data-row]').first().waitFor();
+await page.evaluate(() => { document.body.style.padding = '0'; });
+const frame = page.frames().find(frame => frame.parentFrame());
+const first = frame.locator('[data-concept="table"]');
+
+assert.equal(await first.locator('tbody tr[data-row]').count(), 5);
+assert.deepEqual(await first.locator('tbody tr[data-row]').first().evaluate(row => [...row.cells].slice(0,3).map(cell => cell.querySelector('[data-detail]') ? 'detail' : cell.querySelector('[data-select]') ? 'checkbox' : 'article')), ['detail','checkbox','article']);
+assert.equal(await first.locator('tr[id$="-detail-1"]').isVisible(), true);
+await first.locator('[data-detail="1"]').click();
+assert.equal(await first.locator('tr[id$="-detail-1"]').isVisible(), false);
+await first.locator('[data-select="1"]').check();
+assert.equal(await first.locator('tr[id$="-detail-1"]').isVisible(), false);
+await first.locator('[data-select="1"]').uncheck();
+await first.locator('[data-detail="1"]').focus();
+await page.keyboard.press('Enter');
+assert.equal(await first.locator('tr[id$="-detail-1"]').isVisible(), true);
+await page.keyboard.press('Space');
+assert.equal(await first.locator('tr[id$="-detail-1"]').isVisible(), false);
+await first.locator('[data-detail="2"]').click();
+assert.match(await first.locator('tr[id$="-detail-2"]').innerText(), /Status publikasi[\s\S]*Publish[\s\S]*Penjadwalan[\s\S]*Terjadwal/);
+await first.getByRole('searchbox').fill('kolaborasi');
+assert.equal(await first.locator('tbody tr[data-row]').count(), 2);
+await first.getByRole('searchbox').fill('tidak ada sama sekali');
+assert.equal(await first.locator('.ar-empty').isVisible(), true);
+await first.getByRole('button', { name: 'Hapus pencarian & filter' }).click();
+await first.getByRole('button', { name: 'Filter', exact: true }).click();
+await first.locator('[data-field="category"]').selectOption('Panduan');
+await first.locator('[data-field="scheduled"]').selectOption('yes');
+assert.equal(await first.locator('tbody tr[data-row]').count(), 1);
+assert.match(await first.locator('tbody').innerText(), /Menyusun kalender/);
+await first.getByRole('button', { name: 'Hapus filter', exact: true }).click();
+await first.locator('[data-field="sort"]').selectOption('title-asc');
+assert.match(await first.locator('tbody tr[data-row]').first().innerText(), /Catatan pengembangan/);
+await first.locator('[data-field="sort"]').selectOption('newest');
+await first.locator('tbody [data-select]').first().check();
+assert.equal(await first.locator('thead [data-all]').evaluate(input => input.indeterminate), true);
+assert.match(await first.locator('.ar-bulk-label').innerText(), /1 artikel/);
+await first.locator('[data-field="bulk"]').selectOption('draft');
+await first.getByRole('button', { name: 'Terapkan', exact: true }).click();
+assert.equal(await first.locator('.ar-confirm').isVisible(), true);
+await first.getByRole('button', { name: 'Ya, ubah', exact: true }).click();
+assert.match(await first.locator('.ar-feedback').innerText(), /status 1 artikel contoh diubah/);
+assert.match(await first.locator('tbody tr[data-row]').first().locator('.ar-col-status').innerText(), /Draft/);
+await first.locator('tbody [data-select]').first().check();
+await first.getByRole('button', { name: 'Halaman berikutnya' }).click();
+assert.equal(await first.locator('.ar-bulk').isVisible(), false);
+assert.equal(await first.locator('tbody tr[data-row]').count(), 5);
+await first.getByRole('button', { name: '3', exact: true }).click();
+assert.equal(await first.locator('tbody tr[data-row]').count(), 2);
+await first.locator('[data-field="size"]').selectOption('15');
+assert.equal(await first.locator('tbody tr[data-row]').count(), 12);
+await first.locator('[data-field="size"]').selectOption('5');
+await first.locator('tbody [data-detail]').first().click();
+assert.equal(await first.locator('tr[id$="-detail-1"]').isVisible(), true);
+assert.match(await first.locator('tr[id$="-detail-1"]').innerText(), /Status publikasi[\s\S]*Draft[\s\S]*Penjadwalan[\s\S]*Tanpa jadwal/);
+
+// Reload restores the example data before visual and responsive checks.
+await page.reload();
+await page.evaluate(() => { document.body.style.padding = '0'; });
+const currentFrame = page.frames().find(frame => frame.parentFrame());
+await currentFrame.locator('[data-concept="table"] tbody tr[data-row]').first().waitFor();
+const responsive = [];
+for (const scheme of ['light', 'dark']) {
+  await page.emulateMedia({ colorScheme: scheme });
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 1900 });
+    for (const concept of ['table']) {
+      const metrics = await currentFrame.locator(`[data-concept="${concept}"]`).evaluate(el => {
+        const bounds = el.getBoundingClientRect();
+        const bad = [...el.querySelectorAll('*')].filter(node => node.checkVisibility() && node.getBoundingClientRect().width > 0).map(node => ({node:node.tagName, class:node.className?.baseVal ?? node.className, rect:node.getBoundingClientRect()})).filter(item => item.rect.right > bounds.right+1 || item.rect.left < bounds.left-1).slice(0,6).map(item=>({node:item.node,class:item.class,left:item.rect.left,right:item.rect.right}));
+        const table=el.querySelector('table');
+        const cells=[...el.querySelector('tr[data-row]').cells].filter(cell=>getComputedStyle(cell).display!=='none');
+        const title=cells.find(cell=>cell.querySelector('.ar-title-button'));
+        return {stage:bounds.width,height:el.querySelector('.ar-app').getBoundingClientRect().height,overflow:el.scrollWidth>el.clientWidth+1,bad,background:getComputedStyle(el).backgroundColor,visibleColumns:cells.length,detailSpan:el.querySelector('.ar-detail-cell').colSpan,lastCellGap:Math.abs(cells.at(-1).getBoundingClientRect().right-table.getBoundingClientRect().right),titleWidth:title.getBoundingClientRect().width};
+      });
+      responsive.push({scheme,width,concept,...metrics});
+      assert.equal(metrics.overflow, false, JSON.stringify({scheme,width,concept,...metrics}));
+      assert.equal(metrics.bad.length, 0, JSON.stringify({scheme,width,concept,...metrics}));
+      assert.equal(metrics.detailSpan,metrics.visibleColumns);
+      assert.ok(metrics.lastCellGap<2,JSON.stringify(metrics));
+      assert.ok(metrics.titleWidth>100,JSON.stringify(metrics));
+      if ((width === 1024 || width === 390) && (scheme === 'light' || width === 390)) {
+        await currentFrame.locator(`[data-concept="${concept}"]`).screenshot({path:path.join(qa,`${concept}-${width}-${scheme}.png`)});
+      }
+    }
+  }
+}
+await page.setViewportSize({width:390,height:1900});
+const mobile=currentFrame.locator('[data-concept="table"]');
+await mobile.locator('[data-select="1"]').check();
+assert.equal(await mobile.locator('.ar-selected').count(),1);
+assert.equal(await mobile.locator('[data-detail="1"]').getAttribute('aria-expanded'),'true');
+assert.match(await mobile.locator('tr[id$="-detail-1"]').innerText(),/Status publikasi[\s\S]*Publish[\s\S]*Penjadwalan[\s\S]*Tanpa jadwal/);
+await mobile.locator('[data-detail="1"]').click();
+assert.equal(await mobile.locator('tr[id$="-detail-1"]').isVisible(),false);
+assert.equal(await mobile.locator('[data-select="1"]').isChecked(),true);
+await mobile.locator('[data-detail="1"]').click();
+await mobile.locator('[data-field="bulk"]').selectOption('pending');
+await mobile.getByRole('button',{name:'Terapkan',exact:true}).click();
+assert.equal(await mobile.locator('.ar-confirm').isVisible(),true);
+await mobile.locator('.ar-confirm').screenshot({path:path.join(qa,'mobile-confirm.png')});
+const touchPage=await browser.newPage({viewport:{width:320,height:1600},isMobile:true,hasTouch:true});
+touchPage.on('pageerror',error=>errors.push(error.message));
+await touchPage.goto(pathToFileURL(path.join(qa,'preview-inspection.html')).href);
+await touchPage.evaluate(()=>{document.body.style.padding='0';});
+const touchFrame=touchPage.frames().find(frame=>frame.parentFrame());
+const touch=touchFrame.locator('.ar-viewport');
+await touch.locator('[data-detail="1"]').waitFor();
+await touch.locator('[data-detail="1"]').tap();
+await touch.locator('[data-select="1"]').tap();
+assert.equal(await touch.locator('[data-select="1"]').isChecked(),true);
+assert.equal(await touch.locator('tr[id$="-detail-1"]').isVisible(),false);
+await touch.locator('[data-detail="1"]').tap();
+const touchMetrics=await touch.evaluate(el=>({overflow:el.scrollWidth>el.clientWidth+1,detail:el.querySelector('[data-detail]').getBoundingClientRect().toJSON(),checkbox:el.querySelector('.ar-check-target').getBoundingClientRect().toJSON()}));
+assert.equal(touchMetrics.overflow,false);
+assert.ok(touchMetrics.detail.width>=44&&touchMetrics.detail.height>=44);
+assert.ok(touchMetrics.checkbox.width>=44&&touchMetrics.checkbox.height>=44);
+await touch.screenshot({path:path.join(qa,'table-320-touch.png')});
+await touchPage.close();
+assert.deepEqual(errors,[]);
+await fs.writeFile(path.join(qa,'verification.json'),JSON.stringify({checkedAt:new Date().toISOString(),functional:'detail before checkbox, independent checkbox and expansion, keyboard Enter/Space, search, empty state, combined filters, sort, indeterminate selection, confirmed local bulk status, pagination, page size, accurate status and schedule labels, mobile selection/detail/confirmation, touch 44px detail and checkbox targets',responsive,touchMetrics,pageErrors:errors},null,2));
+console.log(JSON.stringify({functional:'passed',responsiveCases:responsive.length,pageErrors:errors,heights:responsive.filter(row=>row.scheme==='light').map(({width,concept,height})=>({width,concept,height}))},null,2));
+await browser.close();

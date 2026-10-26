@@ -49,124 +49,38 @@ function loadManageArticleOptions(documentStub)
 	return sandbox.__manageArticleOptions;
 }
 
-function makeHeader(index, priority)
-{
-	return {
-		getAttribute(name)
-		{
-			if (name === 'data-col-idx') return String(index);
-			if (name === 'data-col-priority') return String(priority);
-			return null;
-		},
-	};
-}
-
 test('usable table width excludes the browser scrollbar gutter', () =>
 {
-	const wrapper = { clientWidth: 1753, offsetWidth: 1768 };
-	const options = loadManageArticleOptions({
-		getElementById(id)
-		{
-			return id === 'ph-article-table-wrapper' ? wrapper : null;
-		},
-	});
-
-	assert.equal(options.methods.getTableWidth(), 1753);
+    const options = loadManageArticleOptions({getElementById:()=>({clientWidth:1753,offsetWidth:1768})});
+    assert.equal(options.methods.getTableWidth(),1753);
 });
 
-test('column measurement preserves fractional layout widths', async () =>
+test('narrow containers move metadata while keeping primary controls visible', () =>
 {
-	const headers = [
-		{ offsetWidth: 95, getBoundingClientRect: () => ({ width: 95.328125 }) },
-		{ offsetWidth: 250, getBoundingClientRect: () => ({ width: 250.265625 }) },
-	];
-	const options = loadManageArticleOptions({
-		querySelector(selector)
-		{
-			if (selector !== '#ph-article-table-wrapper table') return null;
-
-			return {
-				querySelectorAll: () => headers,
-			};
-		},
-	});
-	const state = { responsiveHiddenCols: [] };
-
-	await new Promise((resolve) =>
-	{
-		options.methods.measureColWidths.call(state, resolve);
-	});
-
-	assert.deepEqual(
-		[...Object.values(state._colNaturalWidths)],
-		[95.328125, 250.265625],
-	);
+    const options = loadManageArticleOptions({});
+    for (const [width, expected] of [[1200,[]],[940,[2]],[740,[2,5]],[600,[2,5,4]],[320,[2,5,4]]]) {
+        const state={getTableWidth:()=>width,responsiveHiddenCols:[],responsiveExpandedRows:{19:true}};
+        options.methods.recalcResponsive.call(state);
+        assert.deepEqual([...state.responsiveHiddenCols],expected);
+        for (const column of [7,0,1,6]) assert.equal(state.responsiveHiddenCols.includes(column),false);
+        assert.equal(state.responsiveExpandedRows[19],true);
+        assert.equal(options.computed.responsiveVisibleColCount.call(state),7-expected.length);
+    }
 });
 
-test('a one pixel rounding difference does not hide Options', () =>
+test('resizing back to desktop restores columns without collapsing open details', () =>
 {
-	const headers = [
-		makeHeader(0, 0),
-		makeHeader(1, 'all'),
-		makeHeader(2, 2),
-		makeHeader(3, 3),
-		makeHeader(4, 4),
-		makeHeader(5, 5),
-		makeHeader(6, 6),
-	];
-	const options = loadManageArticleOptions({
-		querySelectorAll: () => headers,
-	});
-	const state = {
-		_colNaturalWidths: {
-			0: 106,
-			1: 279,
-			2: 331,
-			3: 235,
-			4: 176,
-			5: 343,
-			6: 284,
-		},
-		getTableWidth: () => 1753,
-		responsiveExpandedRows: { 4: true },
-		responsiveHiddenCols: [],
-	};
-
-	options.methods.recalcResponsive.call(state);
-
-	assert.deepEqual([...state.responsiveHiddenCols], []);
+    const options = loadManageArticleOptions({});
+    const state={getTableWidth:()=>1200,responsiveHiddenCols:[2,5,4],responsiveExpandedRows:{4:true}};
+    options.methods.recalcResponsive.call(state);
+    assert.deepEqual([...state.responsiveHiddenCols],[]);
+    assert.equal(state.responsiveExpandedRows[4],true);
 });
 
-test('a material width shortage still hides Options', () =>
+test('temporarily hidden wrappers do not change the current column state', () =>
 {
-	const headers = [
-		makeHeader(0, 0),
-		makeHeader(1, 'all'),
-		makeHeader(2, 2),
-		makeHeader(3, 3),
-		makeHeader(4, 4),
-		makeHeader(5, 5),
-		makeHeader(6, 6),
-	];
-	const options = loadManageArticleOptions({
-		querySelectorAll: () => headers,
-	});
-	const state = {
-		_colNaturalWidths: {
-			0: 106,
-			1: 279,
-			2: 331,
-			3: 235,
-			4: 176,
-			5: 343,
-			6: 284,
-		},
-		getTableWidth: () => 1700,
-		responsiveExpandedRows: {},
-		responsiveHiddenCols: [],
-	};
-
-	options.methods.recalcResponsive.call(state);
-
-	assert.deepEqual([...state.responsiveHiddenCols], [6]);
+    const options = loadManageArticleOptions({});
+    const state={getTableWidth:()=>0,responsiveHiddenCols:[2,5,4]};
+    options.methods.recalcResponsive.call(state);
+    assert.deepEqual([...state.responsiveHiddenCols],[2,5,4]);
 });

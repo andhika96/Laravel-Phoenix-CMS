@@ -20,7 +20,7 @@
             </header>
             <img src="{{ $coverUrl }}" alt="{{ $article->title }}" class="article-detail__cover article-media-frame" fetchpriority="high">
             <div class="article-rich-content">{!! $outlinedContent !!}</div>
-            @include('article.templates.partials.detail-navigation', ['previousArticle' => $previousArticle ?? null, 'nextArticle' => $nextArticle ?? null, 'readingCards' => true])
+            @include('article.templates.partials.detail-navigation', ['previousArticle' => $previousArticle ?? null, 'nextArticle' => $nextArticle ?? null, 'navigationStyle' => 'knowledge-links'])
         </div>
         @if (count($outline))
             <aside class="article-toc" aria-label="{{ t('Table of contents') }}">

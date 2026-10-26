@@ -1,0 +1,278 @@
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Article\ArticleFrontendRouteTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguest can open archive detail and vue listdata while only eligible articles are exposed[39m[90m                     [39m [90m2.14s[39m  
+  [32;1m✓[39;22m[90m [39m[90mprivate and password protected articles use access gates without leaking content[39m[90m                            [39m [90m0.56s[39m  
+  [32;1m✓[39;22m[90m [39m[90mvue listdata pagination keeps the canonical article archive url[39m[90m                                             [39m [90m0.14s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Article\ArticleLoadTestSeederTest[39m
+  [32;1m✓[39;22m[90m [39m[90mit keeps the explicit 5000 article and seven category load test contract prefix aware[39m[90m                       [39m [90m0.16s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit creates complete idempotent article load test data with category thumbnail assets[39m[90m                        [39m [90m0.23s[39m  
+
+  [39;41;1m FAIL [39;49;22m[39m Tests\Feature\Article\ArticleMinimalReadingListFilterTest[39m
+  [31;1m⨯[39;22m[90m [39m[90mcategory mode select and button list are mutually exclusive[39m[90m                                                 [39m [90m0.29s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpost list spacing and sidebar positions use normalized defaults and overrides[39m[90m                               [39m [90m0.07s[39m  
+
+  [39;41;1m FAIL [39;49;22m[39m Tests\Feature\Article\ArticleMinimalReadingListHeaderRenderTest[39m
+  [31;1m⨯[39;22m[90m [39m[90menabled header content renders above the search toolbar[39m[90m                                                     [39m [90m0.13s[39m  
+  [31;1m⨯[39;22m[90m [39m[90msearch model gap icon and color overrides reach the archive header[39m[90m                                          [39m [90m0.11s[39m  
+
+  [39;41;1m FAIL [39;49;22m[39m Tests\Feature\Article\ArticleMinimalReadingListRenderTest[39m
+  [31;1m⨯[39;22m[90m [39m[90msidebar options control panels without removing the archive pagination[39m[90m                                      [39m [90m0.10s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Article\ArticlePasswordStorageMigrationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mpassword storage migration hashes legacy protected passwords without touching other values[39m[90m                  [39m [90m0.24s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Article\ArticleTemplateCatalogTest[39m
+  [32;1m✓[39;22m[90m [39m[90mcatalog exposes the approved archive and detail templates[39m[90m                                                   [39m [90m0.10s[39m  
+  [32;1m✓[39;22m[90m [39m[90mtemplate settings are singleton and start from catalog defaults[39m[90m                                             [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpublic article query only returns currently published public articles[39m[90m                                       [39m [90m0.10s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Article\ArticleTemplateOptionsTest[39m
+  [32;1m✓[39;22m[90m [39m[90mrevamped pagination starts without a frame but respects explicit frame settings[39m[90m                             [39m [90m0.10s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit provides safe per template defaults and normalizes custom options[39m[90m                                        [39m [90m0.10s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit normalizes archive styling and dimension units without custom css[39m[90m                                        [39m [90m0.10s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit normalizes named pagination models and device ranges[39m[90m                                                     [39m [90m0.10s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit normalizes search models visual overrides and fontawesome icon allowlist[39m[90m                                 [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit normalizes border radius as a page builder style four value group[39m[90m                                        [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit normalizes editorial journal options and keeps the new thumbnail default template scoped[39m[90m                 [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit rejects unsafe styling values and keeps detail shell options[39m[90m                                             [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mit keeps strictly valid coloris color formats without accepting raw css[39m[90m                                     [39m [90m0.08s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Article\ArticleTemplatePreviewControllerTest[39m
+  [32;1m✓[39;22m[90m [39m[90mpreview uses curated fixture for archive and detail without article database queries[39m[90m                        [39m [90m0.13s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpreview device selects the requested pagination range and model[39m[90m                                             [39m [90m0.12s[39m  
+  [32;1m✓[39;22m[90m [39m[90meditorial journal preview carries normalized template options into the blade renderer[39m[90m                       [39m [90m0.52s[39m  
+  [32;1m✓[39;22m[90m [39m[90mminimal reading list options reach both preview and public renderers[39m[90m                                        [39m [90m0.30s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Article\ArticleTemplatePreviewFixtureTest[39m
+  [32;1m✓[39;22m[90m [39m[90mit provides deterministic editorial preview content without persisting articles[39m[90m                             [39m [90m0.11s[39m  
+
+  [39;41;1m FAIL [39;49;22m[39m Tests\Feature\Article\ArticleTemplateRenderTest[39m
+  [32;1m✓[39;22m[90m [39m[90mevery registered article template has a blade view[39m[90m                                                          [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90marchive templates use accessible article links and numbered pagination contract[39m[90m                             [39m [90m0.22s[39m  
+  [31;1m⨯[39;22m[90m [39m[90mmosaic classic renders a placeholder when an article has no thumbnail[39m[90m                                       [39m [90m0.71s[39m  
+  [31;1m⨯[39;22m[90m [39m[90mevery archive renderer places stable vue slots inside the shell before server pagination[39m[90m                    [39m [90m0.11s[39m  
+  [31;1m⨯[39;22m[90m [39m[90mpublic pagination uses the cms visual contract with result context[39m[90m                                          [39m [90m0.19s[39m  
+  [31;1m⨯[39;22m[90m [39m[90mpagination model visual overrides and fontawesome arrows reach ssr markup[39m[90m                                   [39m [90m0.11s[39m  
+  [32;1m✓[39;22m[90m [39m[90mshared archive fragments render safe heading media and shell variables[39m[90m                                      [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mthumbnail modes render distinct background and asset markup with background height[39m[90m                          [39m [90m0.10s[39m  
+  [31;1m⨯[39;22m[90m [39m[90meditorial journal renders template specific card and read more options[39m[90m                                      [39m [90m0.10s[39m  
+  [31;1m⨯[39;22m[90m [39m[90meditorial journal keeps existing featured link when optional read more is disabled[39m[90m                          [39m [90m0.11s[39m  
+  [31;1m⨯[39;22m[90m [39m[90mevery archive and detail renderer receives normalized structured template styles[39m[90m                            [39m [90m0.12s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Article\ManageArticleTemplateTest[39m
+  [32;1m✓[39;22m[90m [39m[90madministrator can save only allowlisted global article templates[39m[90m                                            [39m [90m0.24s[39m  
+  [32;1m✓[39;22m[90m [39m[90madministrator save persists only normalized structured style options[39m[90m                                        [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90madministrator save persists normalized editorial journal options[39m[90m                                            [39m [90m0.08s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Article\PublicArticleCategoryOptionsTest[39m
+  [32;1m✓[39;22m[90m [39m[90mit only returns active categories with eligible public articles in name order[39m[90m                               [39m [90m0.06s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Article\DistinctNavigationTest[39m
+  [32;1m✓[39;22m[90m [39m[90madministrator can save only allowlisted global article templates[39m[90m                                            [39m [90m0.10s[39m  
+  [32;1m✓[39;22m[90m [39m[90madministrator save persists only normalized structured style options[39m[90m                                        [39m [90m0.11s[39m  
+  [32;1m✓[39;22m[90m [39m[90madministrator save persists normalized editorial journal options[39m[90m                                            [39m [90m0.10s[39m  
+  [32;1m✓[39;22m[90m [39m[90meach detail template renders its own navigation and real neighbor links[39m[90m                                     [39m [90m0.92s[39m  
+  [32;1m✓[39;22m[90m [39m[90mnew navigation escapes titles handles missing media and uses actual read time[39m[90m                               [39m [90m0.26s[39m  
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\ArticleMinimalReadingListFilterTest[22m [90m>[39m category mode select and butto… [41;1m ViewException [49;22m  
+[39;1m  SQLSTATE[HY000]: General error: 1 no such table: language (Connection: sqlite, Database: :memory:, SQL: select * from "language" where "lang_from" = Journal and "lang" = english limit 1) (View: D:\Laragon\www\laravel-13-phoenix\resources\views\article\templates\archive\minimal-reading-list.blade.php)[39;22m
+
+  at [32mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m857[39m
+    853▕             $exceptionType = ($isUniqueConstraintError = $this->isUniqueConstraintError($e))
+    854▕                 ? UniqueConstraintViolationException::class
+    855▕                 : QueryException::class;
+    856▕ 
+  ➜ 857▕             $exception = new $exceptionType(
+    858▕                 $this->getNameWithReadWriteType(),
+    859▕                 $query,
+    860▕                 $this->prepareBindings($bindings),
+    861▕                 $e,
+
+  [33m1   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m857[39;22m
+  [33m2   [39m[39;1mvendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php[39;22m:[39;1m59[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\ArticleMinimalReadingListHeaderRenderTest[22m [90m>[39m enabled header content r… [41;1m ViewException [49;22m  
+[39;1m  SQLSTATE[HY000]: General error: 1 no such table: language (Connection: sqlite, Database: :memory:, SQL: select * from "language" where "lang_from" = Journal and "lang" = english limit 1) (View: D:\Laragon\www\laravel-13-phoenix\resources\views\article\templates\archive\minimal-reading-list.blade.php)[39;22m
+
+  at [32mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m857[39m
+    853▕             $exceptionType = ($isUniqueConstraintError = $this->isUniqueConstraintError($e))
+    854▕                 ? UniqueConstraintViolationException::class
+    855▕                 : QueryException::class;
+    856▕ 
+  ➜ 857▕             $exception = new $exceptionType(
+    858▕                 $this->getNameWithReadWriteType(),
+    859▕                 $query,
+    860▕                 $this->prepareBindings($bindings),
+    861▕                 $e,
+
+  [33m1   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m857[39;22m
+  [33m2   [39m[39;1mvendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php[39;22m:[39;1m59[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\ArticleMinimalReadingListHeaderRenderTest[22m [90m>[39m search model gap icon an… [41;1m ViewException [49;22m  
+[39;1m  SQLSTATE[HY000]: General error: 1 no such table: language (Connection: sqlite, Database: :memory:, SQL: select * from "language" where "lang_from" = Journal and "lang" = english limit 1) (View: D:\Laragon\www\laravel-13-phoenix\resources\views\article\templates\archive\minimal-reading-list.blade.php)[39;22m
+
+  at [32mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m857[39m
+    853▕             $exceptionType = ($isUniqueConstraintError = $this->isUniqueConstraintError($e))
+    854▕                 ? UniqueConstraintViolationException::class
+    855▕                 : QueryException::class;
+    856▕ 
+  ➜ 857▕             $exception = new $exceptionType(
+    858▕                 $this->getNameWithReadWriteType(),
+    859▕                 $query,
+    860▕                 $this->prepareBindings($bindings),
+    861▕                 $e,
+
+  [33m1   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m857[39;22m
+  [33m2   [39m[39;1mvendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php[39;22m:[39;1m59[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\ArticleMinimalReadingListRenderTest[22m [90m>[39m sidebar options control panels… [41;1m ViewException [49;22m  
+[39;1m  SQLSTATE[HY000]: General error: 1 no such table: language (Connection: sqlite, Database: :memory:, SQL: select * from "language" where "lang_from" = Journal and "lang" = english limit 1) (View: D:\Laragon\www\laravel-13-phoenix\resources\views\article\templates\archive\minimal-reading-list.blade.php)[39;22m
+
+  at [32mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m857[39m
+    853▕             $exceptionType = ($isUniqueConstraintError = $this->isUniqueConstraintError($e))
+    854▕                 ? UniqueConstraintViolationException::class
+    855▕                 : QueryException::class;
+    856▕ 
+  ➜ 857▕             $exception = new $exceptionType(
+    858▕                 $this->getNameWithReadWriteType(),
+    859▕                 $query,
+    860▕                 $this->prepareBindings($bindings),
+    861▕                 $e,
+
+  [33m1   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m857[39;22m
+  [33m2   [39m[39;1mvendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php[39;22m:[39;1m59[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\ArticleTemplateRenderTest[22m [90m>[39m mosaic classic renders a placeholder whe… [41;1m ViewException [49;22m  
+[39;1m  SQLSTATE[HY000]: General error: 1 no such table: language (Connection: sqlite, Database: :memory:, SQL: select * from "language" where "lang_from" = Journal and "lang" = english limit 1) (View: D:\Laragon\www\laravel-13-phoenix\resources\views\article\templates\archive\mosaic-classic.blade.php)[39;22m
+
+  at [32mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m857[39m
+    853▕             $exceptionType = ($isUniqueConstraintError = $this->isUniqueConstraintError($e))
+    854▕                 ? UniqueConstraintViolationException::class
+    855▕                 : QueryException::class;
+    856▕ 
+  ➜ 857▕             $exception = new $exceptionType(
+    858▕                 $this->getNameWithReadWriteType(),
+    859▕                 $query,
+    860▕                 $this->prepareBindings($bindings),
+    861▕                 $e,
+
+  [33m1   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m857[39;22m
+  [33m2   [39m[39;1mvendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php[39;22m:[39;1m59[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\ArticleTemplateRenderTest[22m [90m>[39m every archive renderer places stable vue… [41;1m ViewException [49;22m  
+[39;1m  SQLSTATE[HY000]: General error: 1 no such table: language (Connection: sqlite, Database: :memory:, SQL: select * from "language" where "lang_from" = Journal and "lang" = english limit 1) (View: D:\Laragon\www\laravel-13-phoenix\resources\views\article\templates\archive\minimal-reading-list.blade.php)[39;22m
+
+  at [32mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m857[39m
+    853▕             $exceptionType = ($isUniqueConstraintError = $this->isUniqueConstraintError($e))
+    854▕                 ? UniqueConstraintViolationException::class
+    855▕                 : QueryException::class;
+    856▕ 
+  ➜ 857▕             $exception = new $exceptionType(
+    858▕                 $this->getNameWithReadWriteType(),
+    859▕                 $query,
+    860▕                 $this->prepareBindings($bindings),
+    861▕                 $e,
+
+  [33m1   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m857[39;22m
+  [33m2   [39m[39;1mvendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php[39;22m:[39;1m59[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\ArticleTemplateRenderTest[22m [90m>[39m public pagination uses the cms visual co… [41;1m ViewException [49;22m  
+[39;1m  SQLSTATE[HY000]: General error: 1 no such table: language (Connection: sqlite, Database: :memory:, SQL: select * from "language" where "lang_from" = Article pagination and "lang" = english limit 1) (View: D:\Laragon\www\laravel-13-phoenix\resources\views\article\templates\partials\pagination.blade.php)[39;22m
+
+  at [32mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m857[39m
+    853▕             $exceptionType = ($isUniqueConstraintError = $this->isUniqueConstraintError($e))
+    854▕                 ? UniqueConstraintViolationException::class
+    855▕                 : QueryException::class;
+    856▕ 
+  ➜ 857▕             $exception = new $exceptionType(
+    858▕                 $this->getNameWithReadWriteType(),
+    859▕                 $query,
+    860▕                 $this->prepareBindings($bindings),
+    861▕                 $e,
+
+  [33m1   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m857[39;22m
+  [33m2   [39m[39;1mvendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php[39;22m:[39;1m59[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\ArticleTemplateRenderTest[22m [90m>[39m pagination model visual overrides and fo… [41;1m ViewException [49;22m  
+[39;1m  SQLSTATE[HY000]: General error: 1 no such table: language (Connection: sqlite, Database: :memory:, SQL: select * from "language" where "lang_from" = Article pagination and "lang" = english limit 1) (View: D:\Laragon\www\laravel-13-phoenix\resources\views\article\templates\partials\pagination.blade.php)[39;22m
+
+  at [32mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m857[39m
+    853▕             $exceptionType = ($isUniqueConstraintError = $this->isUniqueConstraintError($e))
+    854▕                 ? UniqueConstraintViolationException::class
+    855▕                 : QueryException::class;
+    856▕ 
+  ➜ 857▕             $exception = new $exceptionType(
+    858▕                 $this->getNameWithReadWriteType(),
+    859▕                 $query,
+    860▕                 $this->prepareBindings($bindings),
+    861▕                 $e,
+
+  [33m1   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m857[39;22m
+  [33m2   [39m[39;1mvendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php[39;22m:[39;1m59[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\ArticleTemplateRenderTest[22m [90m>[39m editorial journal renders template speci… [41;1m ViewException [49;22m  
+[39;1m  SQLSTATE[HY000]: General error: 1 no such table: language (Connection: sqlite, Database: :memory:, SQL: select * from "language" where "lang_from" = Stories and "lang" = english limit 1) (View: D:\Laragon\www\laravel-13-phoenix\resources\views\article\templates\archive\editorial-journal.blade.php)[39;22m
+
+  at [32mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m857[39m
+    853▕             $exceptionType = ($isUniqueConstraintError = $this->isUniqueConstraintError($e))
+    854▕                 ? UniqueConstraintViolationException::class
+    855▕                 : QueryException::class;
+    856▕ 
+  ➜ 857▕             $exception = new $exceptionType(
+    858▕                 $this->getNameWithReadWriteType(),
+    859▕                 $query,
+    860▕                 $this->prepareBindings($bindings),
+    861▕                 $e,
+
+  [33m1   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m857[39;22m
+  [33m2   [39m[39;1mvendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php[39;22m:[39;1m59[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\ArticleTemplateRenderTest[22m [90m>[39m editorial journal keeps existing feature… [41;1m ViewException [49;22m  
+[39;1m  SQLSTATE[HY000]: General error: 1 no such table: language (Connection: sqlite, Database: :memory:, SQL: select * from "language" where "lang_from" = Stories and "lang" = english limit 1) (View: D:\Laragon\www\laravel-13-phoenix\resources\views\article\templates\archive\editorial-journal.blade.php)[39;22m
+
+  at [32mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m857[39m
+    853▕             $exceptionType = ($isUniqueConstraintError = $this->isUniqueConstraintError($e))
+    854▕                 ? UniqueConstraintViolationException::class
+    855▕                 : QueryException::class;
+    856▕ 
+  ➜ 857▕             $exception = new $exceptionType(
+    858▕                 $this->getNameWithReadWriteType(),
+    859▕                 $query,
+    860▕                 $this->prepareBindings($bindings),
+    861▕                 $e,
+
+  [33m1   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m857[39;22m
+  [33m2   [39m[39;1mvendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php[39;22m:[39;1m59[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\ArticleTemplateRenderTest[22m [90m>[39m every archive and detail renderer receiv… [41;1m ViewException [49;22m  
+[39;1m  SQLSTATE[HY000]: General error: 1 no such table: language (Connection: sqlite, Database: :memory:, SQL: select * from "language" where "lang_from" = Journal and "lang" = english limit 1) (View: D:\Laragon\www\laravel-13-phoenix\resources\views\article\templates\archive\minimal-reading-list.blade.php)[39;22m
+
+  at [32mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m857[39m
+    853▕             $exceptionType = ($isUniqueConstraintError = $this->isUniqueConstraintError($e))
+    854▕                 ? UniqueConstraintViolationException::class
+    855▕                 : QueryException::class;
+    856▕ 
+  ➜ 857▕             $exception = new $exceptionType(
+    858▕                 $this->getNameWithReadWriteType(),
+    859▕                 $query,
+    860▕                 $this->prepareBindings($bindings),
+    861▕                 $e,
+
+  [33m1   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m857[39;22m
+  [33m2   [39m[39;1mvendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php[39;22m:[39;1m59[39;22m
+
+
+  [90mTests:[39m    [31;1m11 failed[39;22m[90m,[39m[39m [39m[32;1m37 passed[39;22m[90m (617 assertions)[39m
+  [90mDuration:[39m [39m11.78s[39m
+

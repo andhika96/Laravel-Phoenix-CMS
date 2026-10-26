@@ -1,0 +1,60 @@
+{
+  "restoredFromUnchangedIndex": [
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-business-large.svg",
+      "sha256": "7f82d2e7097224301a887e1c2e95f373bf27c237091a06e11cb73e756f5dc8ef"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-business-small.svg",
+      "sha256": "6b57d42eb3de72b1ae027611f279b42596ec9bf9cd06f3f061d7b0bd0f5b1c77"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-culture-large.svg",
+      "sha256": "dc01704e873e1e681eeaaaf7e5d985005163492867b9da4f1032fc4cbcd0ce1b"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-culture-small.svg",
+      "sha256": "9a7205fc70d55ad4479433c56886e1e59447add7dacb3e8070da7e1b1ecc7471"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-design-large.svg",
+      "sha256": "ad6b5562a66514405701caa9d1f6bdb4d2a021534db688c14d1c697a48ea0bd3"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-design-small.svg",
+      "sha256": "a7902d11d74598fb8c8601222bc2582baac4de7afb97369f6e732f7662f8ff23"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-health-large.svg",
+      "sha256": "ed49e57b8b0ffbf302dec661f41cacdb6b178446d82cf6ec0ebdde4060d4c77a"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-health-small.svg",
+      "sha256": "d1d048a485aaef14b8b5d8200df235e097e88b32ea820acef1ecdbdca95ff85c"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-science-large.svg",
+      "sha256": "d925bdb5d776c531f39537e4d93427a92b77d5a1202bfa0e669627ae03e54674"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-science-small.svg",
+      "sha256": "717423e8f86759d125762a1eaa1b2e64d11012a263f48c978c6eba1667d7775f"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-tech-large.svg",
+      "sha256": "891651a118db62ffce953956b1f753d24f534b0066926ea7d1db17c30acee1eb"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-tech-small.svg",
+      "sha256": "c52254f7ef378e7350204c3da4af50bcd7de27b76537a1fcdfb04cb8e4acf2db"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-travel-large.svg",
+      "sha256": "96c84b515016030211244af0d7de0a9dfbb34a6bde537e875706d40f22c60669"
+    },
+    {
+      "path": "storage/framework/testing/disks/public/articles/load-test/test-load-articles/load-test-travel-small.svg",
+      "sha256": "c98870d0e179747fed03132035af02a8cd980e6087f37629c6d074d3c4d2a7a3"
+    }
+  ]
+}

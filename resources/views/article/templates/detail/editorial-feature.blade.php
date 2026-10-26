@@ -9,6 +9,6 @@
     </header>
     <div class="article-detail__shell" @include('article.templates.partials.template-shell-attributes', ['templateOptions' => $templateOptions ?? []])>
         <div class="article-rich-content article-rich-content--feature">{!! $article->content !!}</div>
-        @include('article.templates.partials.detail-navigation', ['previousArticle' => $previousArticle ?? null, 'nextArticle' => $nextArticle ?? null, 'readingCards' => true])
+        @include('article.templates.partials.detail-navigation', ['previousArticle' => $previousArticle ?? null, 'nextArticle' => $nextArticle ?? null, 'navigationStyle' => 'story-spread'])
     </div>
 </article>

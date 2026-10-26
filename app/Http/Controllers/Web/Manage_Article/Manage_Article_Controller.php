@@ -553,99 +553,32 @@ class Manage_Article_Controller extends Controller
 
 	public function bulk_update(Request $request)
 	{
-		// We use DB transaction for safety
-		DB::beginTransaction();
-
-		try 
-		{
-			if ($request->input('mode') == 'bulk_update')
-			{
-				if ($request->input('changeStatus') == '')
-				{
-					if ($request->wantsJson()) 
-					{
-						$response = response()->json(
-						[
-							'success'	=> false,
-							'status' 	=> 'failed',
-							'message'	=> t("You haven't selected the options yet")
-						]);
-					} 
-					else 
-					{
-						$response = redirect()
-							->back()
-							->with('failed', t("You haven't selected the options yet"));
-					}
-				}
-				else
-				{
-					if (is_array($request->input('getSelected')))
-					{
-						foreach ($request->input('getSelected') as $key) 
-						{
-							if ($request->input('changeStatus') != '')
-							{
-								$getDetailArticle = Article::find($key);
-								$getDetailArticle->fill(['status' => $request->input('changeStatus')]);
-
-								if ($getDetailArticle->save())
-								{
-									// DB Commit if data successfully saved
-									DB::commit();
-								}
-
-								// DB Rollback to get data back if fail to saving
-								DB::rollBack();
-							}
-						}
-					}
-
-					if ($request->wantsJson()) 
-					{
-						$response = response()->json(
-						[
-							'success'	=> true,
-							'status' 	=> 'success',
-							'message'	=> t('Article successfully updated')
-						]);
-					} 
-					else 
-					{
-						$response = redirect()
-							->back()
-							->with('success', t('Article successfully updated'));
-					}
-				}
-			}
-		} 
-		catch (\Throwable $th) 
-		{
-			if ($request->wantsJson()) 
-			{
-				$response = response()->json(
-				[
-					'success' 	=> false,
-					'status'	=> 'failed',
-					'message' 	=> $th->getMessage(),
-
-				], 500);
-			} 
-			else 
-			{
-				$response = redirect()
-					->back()
-					->withInput()
-					->with('error', $th->getMessage());
-			}
-
-			// DB Rollback to get data back if fail to saving
-			DB::rollBack();
-		} 
-		finally 
-		{
-			return $response;
-		}
+        $input = $request->validate([
+            'mode' => ['required', 'in:bulk_update'],
+            'changeStatus' => ['required', 'string', 'max:64'],
+            'getSelected' => ['required', 'array', 'min:1', 'max:50'],
+            'getSelected.*' => ['required', 'integer', 'distinct', 'exists:articles,id'],
+        ]);
+        $status = Article_Status::where('is_active', 0)->where(function ($query) use ($input) {
+            $query->where('code_name', $input['changeStatus']);
+            if (ctype_digit($input['changeStatus'])) $query->orWhere('id', (int) $input['changeStatus']);
+        })->first();
+        if (!$status) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['changeStatus' => t('Status artikel tidak valid.')]);
+        }
+        DB::transaction(function () use ($input, $status) {
+            $articles = Article::whereIn('id', $input['getSelected'])->lockForUpdate()->get();
+            if ($articles->count() !== count($input['getSelected'])) {
+                throw \Illuminate\Validation\ValidationException::withMessages(['getSelected' => t('Pilihan artikel sudah berubah. Muat ulang daftar.')]);
+            }
+            foreach ($articles as $article) {
+                $article->fill(['status' => $status->code_name])->saveOrFail();
+            }
+        });
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'status' => 'success', 'message' => t('Article successfully updated')]);
+        }
+        return redirect()->back()->with('success', t('Article successfully updated'));
 	}
 
 	/**
@@ -1043,22 +976,41 @@ class Manage_Article_Controller extends Controller
 
 	public function listData(Request $request)
 	{
-		$api = new Base_API_Rev_Controller();
-		$result = Article::with(['getStatus'])->whereLike('title', '%'.$request->input('search').'%')
-											->where(function($query) use($request) 
-											{ 													
-												$query->whereLike('status', '%'.$request->input('filter_by_status').'%');
-												$query->whereLike('scheduled', '%'.$request->input('filter_by_scheduled').'%');
-												$query->WhereLike('category_id', '%'.$request->input('filter_by_category').'%'); 
+        $input = $request->validate([
+            'search' => ['nullable', 'string', 'max:255'],
+            'filter_by_status' => ['nullable', 'string', 'max:64'],
+            'filter_by_category' => ['nullable', 'integer', 'exists:article_categories,id'],
+            'filter_by_scheduled' => ['nullable', 'in:true,false'],
+            'sort' => ['nullable', 'in:newest,oldest,title_asc,title_desc'],
+            'per_page' => ['nullable', 'integer', 'in:5,10,15,25,50'],
+            'page' => ['nullable', 'integer', 'min:1'],
+        ]);
+        $query = Article::query();
+        if (filled($input['search'] ?? null)) $query->whereLike('title', '%'.$input['search'].'%');
+        if (filled($input['filter_by_category'] ?? null)) $query->where('category_id', $input['filter_by_category']);
+        if (filled($input['filter_by_scheduled'] ?? null)) $query->where('scheduled', $input['filter_by_scheduled']);
 
-											})->paginate(15);
-
-		$formattedResponse = $api->paginateResponse($result, ManageArticleListResource::class);
-
-		$response = $api->setStatusMsg($formattedResponse['total'] ? 'success' : 'failed')
-						->respondOK($formattedResponse, $formattedResponse['total'] ? 'Data found' : 'No data found');
-
-		return $response;
+        $statuses = Article_Status::where('is_active', 0)->get();
+        $totals = (clone $query)->selectRaw('status, COUNT(*) as aggregate')->groupBy('status')->pluck('aggregate', 'status');
+        $counts = ['all' => (int) $totals->sum()];
+        foreach ($statuses as $status) {
+            $counts[$status->code_name] = (int) $totals->get($status->code_name, 0) + (int) $totals->get((string) $status->id, 0);
+        }
+        if (filled($input['filter_by_status'] ?? null)) {
+            $status = $statuses->firstWhere('code_name', $input['filter_by_status']);
+            $query->whereIn('status', $status ? [$status->code_name, (string) $status->id] : [$input['filter_by_status']]);
+        }
+        [$column, $direction] = match ($input['sort'] ?? 'newest') {
+            'oldest' => ['created_at', 'asc'],
+            'title_asc' => ['title', 'asc'],
+            'title_desc' => ['title', 'desc'],
+            default => ['created_at', 'desc'],
+        };
+        $result = $query->with(['getStatus', 'category', 'author'])->orderBy($column, $direction)->orderBy('id', $direction)->paginate($input['per_page'] ?? 15);
+        $api = new Base_API_Rev_Controller();
+        $formatted = $api->paginateResponse($result, ManageArticleListResource::class);
+        $formatted['status_counts'] = $counts;
+        return $api->setStatusMsg($formatted['total'] ? 'success' : 'failed')->respondOK($formatted, $formatted['total'] ? 'Data found' : 'No data found');
 	}
 
 	public function listCategories(Request $request)

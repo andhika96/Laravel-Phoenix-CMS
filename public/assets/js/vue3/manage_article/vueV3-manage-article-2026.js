@@ -22,12 +22,12 @@ const ManageArticleVue3 = createApp(
 			responseStatusAfterSubmit: '',
 			getQueryStringInURL: '',
 			getQuerySearchUser: '',
-			getTotalData: '',
+			getTotalData: 0,
 			getPage: 1,
-			getCurrentPage: '',
+			getCurrentPage: 1,
 			getTotalChecked: 0,
-			loading: '',
-			loadingNextPage: '',
+			loading: true,
+			loadingNextPage: false,
 			loadingDataModal: true,
 			pageUrl: '',
 			pageCount: '',
@@ -95,46 +95,34 @@ const ManageArticleVue3 = createApp(
 			},
 			responsiveHiddenCols: [],
 			responsiveExpandedRows: {},
-			responsiveColDefs: [],
+			selectedArticleIds: [],
+            articleStatuses: [],
+            statusCounts: {},
+            articlePageSize: 15,
+            articleSort: 'newest',
+            showArticleFilters: false,
+            listError: '',
+            bulkStatus: '',
+            bulkSubmitting: false,
+            bulkNotice: '',
+            bulkFailed: false,
 		}
 	},
-	watch:
-	{
-		responseData: function()
-		{
-			this.$nextTick(() =>
-			{
-				if (this._colNaturalWidths)
-				{
-					// Width masih valid (ukuran layar tidak berubah saat pindah halaman/search/filter)
-					// Langsung recalc saja — tidak perlu measure ulang
-					this.recalcResponsive();
-				}
-				else
-				{
-					// Belum pernah diukur (load pertama) — hiddenCols pasti masih []
-					// sehingga guard di measureColWidths akan terlewati
-					this.measureColWidths(() =>
-					{
-						this.recalcResponsive();
-					});
-				}
-			});
-		}
-	},
-	computed:
-	{
-		/**
-		 * Total kolom yang saat ini visible — dipakai untuk colspan child row.
-		 * Dihitung dari DOM (th[data-col-idx]) agar otomatis saat kolom ditambah.
-		 */
-		responsiveVisibleColCount: function()
-		{
-			const ths = document.querySelectorAll('#ph-article-table-wrapper thead tr th[data-col-idx]');
-			const total = ths.length || 7;
-			return total - this.responsiveHiddenCols.length;
-		}
-	},
+    computed:
+    {
+        responsiveVisibleColCount() { return 7 - this.responsiveHiddenCols.length; },
+        allArticlesSelected() { return this.responseData.length > 0 && this.responseData.every(info => this.selectedArticleIds.includes(info.id)); },
+        someArticlesSelected() { return this.selectedArticleIds.length > 0 && !this.allArticlesSelected; },
+        activeArticleFilterCount() { return Number(this.getfilterByCategory !== '') + Number(this.getfilterByScheduled !== ''); },
+        articleRangeStart() { return this.getTotalData ? (this.getCurrentPage - 1) * this.articlePageSize + 1 : 0; },
+        articleRangeEnd() { return Math.min(this.getCurrentPage * this.articlePageSize, this.getTotalData); },
+        bulkStatusLabel() { return this.articleStatuses.find(status => status.code_name === this.bulkStatus)?.name || ''; },
+        articleCategoryLabel()
+        {
+            const select = document.getElementById('ph-article-category');
+            return select ? [...select.options].find(option => option.value === String(this.getfilterByCategory))?.textContent || '' : '';
+        },
+    },
 	components:
 	{
 		paginate: VuejsPaginateNext
@@ -733,69 +721,54 @@ const ManageArticleVue3 = createApp(
 
 			// console.log(this.responseStatusToast);
 		},
-		listData: async function()
-		{
-			if (document.querySelector(".ph-fetch-listdata-article") !== null &&
-				document.querySelector(".ph-fetch-listdata-article").getAttribute("data-url") !== null) 
-			{
-				const url = document.querySelector(".ph-fetch-listdata-article").getAttribute("data-url");
+        listData: async function()
+        {
+            const source = document.querySelector('.ph-fetch-listdata-article');
+            if (!source) return;
+            const requestId = this._articleRequestId = (this._articleRequestId || 0) + 1;
+            const params = new URLSearchParams({ page: this.getPage, per_page: this.articlePageSize, sort: this.articleSort });
+            for (const [key, value] of Object.entries({ search: this.getQuerySearchUser.trim(), filter_by_status: this.getfilterByStatus, filter_by_category: this.getfilterByCategory, filter_by_scheduled: this.getfilterByScheduled }))
+            {
+                if (value !== '') params.set(key, value);
+            }
+            this.loading = !this._articleListLoaded;
+            this.loadingNextPage = true;
+            this.listError = '';
+            this.selectedArticleIds = [];
+            this.responsiveExpandedRows = {};
+            try
+            {
+                const response = await axios.get(source.getAttribute('data-url'), { params });
+                if (requestId !== this._articleRequestId) return;
+                const data = response.data;
+                if (!Array.isArray(data.data)) throw new Error('Invalid article list response');
+                const lastPage = Math.max(1, Number(data.total_page) || 1);
+                if (this.getPage > lastPage)
+                {
+                    this.getPage = lastPage;
+                    return this.listData();
+                }
+                this.responseData = data.data;
+                this.getTotalData = Number(data.total) || 0;
+                this.getCurrentPage = Number(data.current_page) || 1;
+                this.getPage = this.getCurrentPage;
+                this.pageCount = lastPage;
+                this.statusCounts = data.status_counts || { all: this.getTotalData };
+                this.responseStatus = data.status;
+                this.responseMessage = data.message;
+                this._articleListLoaded = true;
+            }
+            catch (error)
+            {
+                if (requestId !== this._articleRequestId) return;
+                this.listError = error.response?.data?.message || 'Daftar artikel gagal dimuat. Silakan coba lagi.';
+            }
+            finally
+            {
+                if (requestId === this._articleRequestId) this.loadDataComplete();
+            }
+        },
 
-				this.loading = true;
-
-				let params = (new URL(url)).searchParams;
-
-				if (this.getQuerySearchUser !== '')
-				{
-					params.set('title', this.getQuerySearchUser);
-				}
-
-				if (params.toString() !== '')
-				{
-					if (this.getPage == 1)
-					{
-						this.pageUrl = '?'+params.toString();
-					}
-					else
-					{
-						this.pageUrl = '?'+params.toString()+'&page='+this.getPage;
-					}
-				}
-				else
-				{
-					if (this.getPage == 1)
-					{
-						this.pageUrl = '';
-					}
-					else
-					{
-						this.pageUrl = '?page='+this.getPage;
-					}
-				}					
-				
-				await axios.get(url+this.pageUrl)
-				.then(response => 
-				{
-					this.responseData 		= response.data.data;
-					this.getTotalData 		= response.data.total;
-					this.pageCount			= response.data.total_page;
-					this.pageRange			= response.data.limit;
-					
-					this.responseStatus 	= response.data.status;
-					this.responseMessage 	= response.data.message;
-				})
-				.catch(function (error) 
-				{
-					this.responseStatus = response.data.status;
-					this.responseMessage = response.data.message;
-
-					// console.log(error.response);
-				})
-				.finally(() => 
-				{
-					this.loadDataComplete();
-				});
-			}
-		},
 		listDataModal: async function(modalId, dataId)
 		{
 			if (document.querySelector(".ph-fetch-listdata-article-"+modalId+"-"+dataId) !== null &&
@@ -1292,308 +1265,67 @@ const ManageArticleVue3 = createApp(
 				}.bind(this), 4000);
 			}
 		},
-		searchData: _.debounce(function() 
-		{
-			const getQuerySearchUser = this.getQuerySearchUser.trim();
+        searchData: _.debounce(function()
+        {
+            this.refreshArticleList();
+        }, 300),
+        refreshArticleList: function()
+        {
+            if (this.bulkSubmitting) return;
+            this.getPage = 1;
+            this.getCurrentPage = 1;
+            return this.listData();
+        },
+        filterByStatus: function(value)
+        {
+            if (this.bulkSubmitting) return;
+            this.getfilterByStatus = typeof value === 'string' ? value : value.target.value;
+            return this.refreshArticleList();
+        },
+        resetArticleFilters: function()
+        {
+            if (this.bulkSubmitting) return;
+            this.getQuerySearchUser = '';
+            this.getfilterByStatus = '';
+            this.getfilterByCategory = '';
+            this.getfilterByScheduled = '';
+            return this.refreshArticleList();
+        },
+        sortArticles: function(column)
+        {
+            if (this.bulkSubmitting) return;
+            this.articleSort = column === 'title'
+                ? (this.articleSort === 'title_asc' ? 'title_desc' : 'title_asc')
+                : (this.articleSort === 'newest' ? 'oldest' : 'newest');
+            return this.refreshArticleList();
+        },
+        loadDataComplete: function()
+        {
+            this.loading = false;
+            this.loadingNextPage = false;
+            this.$nextTick(() =>
+            {
+                const wrapper = document.getElementById('ph-article-table-wrapper');
+                if (!wrapper) return;
+                if (this._responsiveWrapper !== wrapper)
+                {
+                    this._resizeObserver?.disconnect();
+                    this._responsiveWrapper = wrapper;
+                    if (typeof ResizeObserver !== 'undefined')
+                    {
+                        this._resizeObserver = new ResizeObserver(() => this.recalcResponsive());
+                        this._resizeObserver.observe(wrapper);
+                    }
+                    else if (!this._responsiveResizeHandler)
+                    {
+                        this._responsiveResizeHandler = () => this.recalcResponsive();
+                        window.addEventListener('resize', this._responsiveResizeHandler);
+                    }
+                }
+                this.recalcResponsive();
+            });
+        },
 
-			if (document.querySelector(".ph-fetch-listdata-article") !== null &&
-				document.querySelector(".ph-fetch-listdata-article").getAttribute("data-url") !== null) 
-			{
-				this.loadingNextPage = true;
-				
-				if (this.getQuerySearchUser !== '')
-				{
-					this.showButtonRemoveQuerySearch = true;
-				}
-				else
-				{
-					this.showButtonRemoveQuerySearch = false;
-				}
-
-				const url = document.querySelector(".ph-fetch-listdata-article").getAttribute("data-url");
-
-				axios.get(url+'?search='+getQuerySearchUser)
-				.then(response => 
-				{
-					this.responseData 		= response.data.data;
-					this.getTotalData 		= response.data.total;
-					this.getCurrentPage		= response.data.current_page;
-					this.pageCount 			= response.data.total_page;
-					this.pageRange 			= response.data.limit;
-					this.responseStatus 	= response.data.status;
-					this.responseMessage 	= response.data.message;
-
-					// console.log(this.responseStatus);
-				})
-				.catch(function (error) 
-				{
-					this.responseStatus = error.data.status;
-					this.responseMessage = error.data.message;
-				})
-				.finally(() => 
-				{
-					this.loadDataComplete();
-				});
-			}
-
-		}, 500),
-		filterByStatus: async function(event) 
-		{
-			if (document.querySelector(".ph-fetch-listdata-article") !== null &&
-				document.querySelector(".ph-fetch-listdata-article").getAttribute("data-url") !== null) 
-			{
-				this.loadingNextPage = true;
-				this.getfilterByStatus = event.target.value;
-
-				const url = document.querySelector(".ph-fetch-listdata-article").getAttribute("data-url");
-
-				let params = (new URL(url)).searchParams;
-
-				if (this.getfilterByCategory !== '')
-				{
-					params.set('filter_by_category', this.getfilterByCategory);
-				}
-
-				if (this.getfilterByScheduled !== '')
-				{
-					params.set('filter_by_scheduled', this.getfilterByScheduled);
-				}
-
-				if (params.toString() !== '')
-				{
-					this.pageUrl = '?'+params.toString()+'&filter_by_status='+event.target.value;
-				}
-				else
-				{
-					this.pageUrl = '?filter_by_status='+event.target.value;
-				}
-
-				await axios.get(url+this.pageUrl)
-				.then(response => 
-				{
-					this.responseData 		= response.data.data;
-					this.getTotalData 		= response.data.total;
-					this.getCurrentPage		= response.data.current_page;
-					this.pageCount 			= response.data.total_page;
-					this.pageRange 			= response.data.limit;
-					this.responseStatus 	= response.data.status;
-					this.responseMessage 	= response.data.message;
-
-					// console.log(this.responseStatus);
-				})
-				.catch(function (error) 
-				{
-					this.responseStatus = error.data.status;
-					this.responseMessage = error.data.message;
-				})
-				.finally(() => 
-				{
-					this.loadDataComplete();
-				});
-			}
-		},
-		filterByCategory: async function(event) 
-		{
-			if (document.querySelector(".ph-fetch-listdata-article") !== null &&
-				document.querySelector(".ph-fetch-listdata-article").getAttribute("data-url") !== null) 
-			{
-				this.loadingNextPage = true;
-				this.getfilterByCategory = event.target.value;
-
-				const url = document.querySelector(".ph-fetch-listdata-article").getAttribute("data-url");
-
-				let params = (new URL(url)).searchParams;
-
-				if (this.getfilterByStatus !== '')
-				{
-					params.set('filter_by_status', this.getfilterByStatus);
-				}
-
-				if (this.getfilterByScheduled !== '')
-				{
-					params.set('filter_by_scheduled', this.getfilterByScheduled);
-				}
-
-				if (params.toString() !== '')
-				{
-					this.pageUrl = '?'+params.toString()+'&filter_by_category='+event.target.value;
-				}
-				else
-				{
-					this.pageUrl = '?filter_by_category='+event.target.value;
-				}
-
-				await axios.get(url+this.pageUrl)
-				.then(response => 
-				{
-					this.responseData 		= response.data.data;
-					this.getTotalData 		= response.data.total;
-					this.getCurrentPage		= response.data.current_page;
-					this.pageCount 			= response.data.total_page;
-					this.pageRange 			= response.data.limit;
-					this.responseStatus 	= response.data.status;
-					this.responseMessage 	= response.data.message;
-
-					// console.log(this.responseStatus);
-				})
-				.catch(function (error) 
-				{
-					this.responseStatus = error.data.status;
-					this.responseMessage = error.data.message;
-				})
-				.finally(() => 
-				{
-					this.loadDataComplete();
-				});
-			}
-		},
-		filterByScheduled: async function(event) 
-		{
-			if (document.querySelector(".ph-fetch-listdata-article") !== null &&
-				document.querySelector(".ph-fetch-listdata-article").getAttribute("data-url") !== null) 
-			{
-				this.loadingNextPage = true;
-				this.getfilterByScheduled = event.target.value;
-
-				const url = document.querySelector(".ph-fetch-listdata-article").getAttribute("data-url");
-
-				let params = (new URL(url)).searchParams;
-
-				if (this.getfilterByStatus !== '')
-				{
-					params.set('filter_by_status', this.getfilterByStatus);
-				}
-
-				if (this.getfilterByCategory !== '')
-				{
-					params.set('filter_by_category', this.getfilterByCategory);
-				}
-
-				if (params.toString() !== '')
-				{
-					this.pageUrl = '?'+params.toString()+'&filter_by_scheduled='+event.target.value;
-				}
-				else
-				{
-					this.pageUrl = '?filter_by_scheduled='+event.target.value;
-				}
-
-				await axios.get(url+this.pageUrl)
-				.then(response => 
-				{
-					this.responseData 		= response.data.data;
-					this.getTotalData 		= response.data.total;
-					this.getCurrentPage		= response.data.current_page;
-					this.pageCount 			= response.data.total_page;
-					this.pageRange 			= response.data.limit;
-					this.responseStatus 	= response.data.status;
-					this.responseMessage 	= response.data.message;
-
-					// console.log(this.responseStatus);
-				})
-				.catch(function (error) 
-				{
-					this.responseStatus = error.data.status;
-					this.responseMessage = error.data.message;
-				})
-				.finally(() => 
-				{
-					this.loadDataComplete();
-				});
-			}
-		},
-		loadDataComplete: function() 
-		{
-			this.loading = false;
-			this.loadingNextPage = false;
-
-			if (document.querySelector(".ph-data-load-status") !== null) 
-			{
-				if (getComputedStyle(document.querySelector('.ph-data-load-status'), null).display == 'none') 
-				{
-					document.querySelector(".ph-data-load-status").style.display = 'block';
-				}
-			}
-
-			if (document.querySelector(".ph-data-load-content") !== null) 
-			{
-				if (getComputedStyle(document.querySelector('.ph-data-load-content'), null).display == 'none') 
-				{
-					document.querySelector(".ph-data-load-content").style.display = 'block';
-				}
-			}
-
-			// Reset expanded rows when data reloads
-			this.responsiveExpandedRows = {};
-
-			// Build colDefs dari DOM — hanya sekali, saat loading selesai pertama kali
-			// dan DOM thead sudah visible (tidak terhalang v-if/v-cloak loading state).
-			if ( ! this._colDefsBuilt)
-			{
-				this._colDefsBuilt = true;
-				this.$nextTick(() =>
-				{
-					this.buildColDefs();
-				});
-			}
-
-			// ============================================================
-			// Responsive Table: gunakan ResizeObserver pada wrapper element.
-			// ResizeObserver fire SETELAH browser selesai layout element di ukuran baru,
-			// sehingga measureColWidths selalu baca ukuran yang sudah akurat.
-			// Tidak perlu setTimeout atau $nextTick berlapis seperti pada window.resize.
-			// ============================================================
-			const wrapper = document.getElementById('ph-article-table-wrapper');
-
-			if (wrapper && typeof ResizeObserver !== 'undefined')
-			{
-				let resizeTimer = null;
-
-				this._resizeObserver = new ResizeObserver(() =>
-				{
-					// Debounce: batalkan timer sebelumnya, set ulang
-					// Hanya eksekusi setelah resize berhenti 100ms
-					clearTimeout(resizeTimer);
-					resizeTimer = setTimeout(() =>
-					{
-						this.responsiveHiddenCols = [];
-						this._colNaturalWidths    = null;
-
-						this.$nextTick(() =>
-						{
-							this.measureColWidths(() =>
-							{
-								this.recalcResponsive();
-							});
-						});
-					}, 1);
-				});
-
-				this._resizeObserver.observe(wrapper);
-			}
-			else
-			{
-				// Fallback untuk browser lama yang tidak support ResizeObserver
-				this._responsiveResizeHandler = () =>
-				{
-					this.responsiveHiddenCols = [];
-					this._colNaturalWidths    = null;
-
-					this.$nextTick(() =>
-					{
-						setTimeout(() =>
-						{
-							this.measureColWidths(() =>
-							{
-								this.recalcResponsive();
-							});
-						}, 50);
-					});
-				};
-
-				window.addEventListener('resize', this._responsiveResizeHandler);
-			}
-		},
 		loadToastComplete: function()
 		{
 			// We detect element HTML with class ph-notice in page if there is form with Toast notice
@@ -1612,157 +1344,55 @@ const ManageArticleVue3 = createApp(
 				}
 			}, 1);
 		},
-		clickSelectAll: function()
-		{
-			const getSelectAll = document.querySelector("#clickSelectAll");
+        clickSelectAll: function(event)
+        {
+            this.selectedArticleIds = event.target.checked ? this.responseData.map(info => info.id) : [];
+        },
+        clickPaginate: function(page)
+        {
+            if (this.bulkSubmitting) return;
+            this.getPage = page;
+            return this.listData();
+        },
+        isArticleScheduled: function(info)
+        {
+            return info.scheduled === true || info.scheduled === 'true' || info.scheduled === 1 || info.scheduled === '1';
+        },
+        openBulkConfirmation: function()
+        {
+            if (!this.selectedArticleIds.length || !this.bulkStatus || this.bulkSubmitting || this.loadingNextPage) return;
+            this.bulkNotice = '';
+            this.bulkFailed = false;
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('ph-article-bulk-confirm')).show();
+        },
+        submitArticleBulk: async function()
+        {
+            if (!this.selectedArticleIds.length || !this.bulkStatus || this.bulkSubmitting) return;
+            this.bulkSubmitting = true;
+            this.bulkNotice = '';
+            this.bulkFailed = false;
+            const form = new FormData(this.$refs.formHTML);
+            form.set('mode', 'bulk_update');
+            try
+            {
+                const response = await axios.post(this.$refs.formHTML.action, form, { headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' } });
+                if (response.data.status !== 'success') throw new Error(response.data.message || 'Perubahan status gagal.');
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('ph-article-bulk-confirm')).hide();
+                this.bulkNotice = response.data.message;
+                this.bulkStatus = '';
+                await this.listData();
+            }
+            catch (error)
+            {
+                this.bulkFailed = true;
+                this.bulkNotice = error.response?.data?.message || error.message || 'Perubahan status gagal. Silakan coba lagi.';
+            }
+            finally
+            {
+                this.bulkSubmitting = false;
+            }
+        },
 
-			if (getSelectAll.checked == true) 
-			{
-				const checkbox = document.querySelectorAll(".checkids");
-
-				for (i = 0; i < checkbox.length; i++)
-				{
-					if (checkbox[i].checked == false)
-					{
-						checkbox[i].checked = true;
-
-						this.getTotalChecked += 1;
-					}
-				}
-
-				// if (document.querySelector(".ph-change-user-options") !== null) 
-				// {
-				// 	if (getComputedStyle(document.querySelector('.ph-change-user-options'), null).display == 'none') 
-				// 	{
-				// 		document.querySelector(".ph-change-user-options").style.display = 'block';
-				// 	}
-				// }
-			} 
-			else 
-			{
-				const checkbox = document.querySelectorAll(".checkids");
-
-				for (i = 0; i < checkbox.length; i++)
-				{
-					if (checkbox[i].checked == true)
-					{
-						checkbox[i].checked = false;
-
-						this.getTotalChecked -= 1;
-					}
-				}
-
-				if (document.querySelector(".ph-data-options") !== null) 
-				{
-					if (getComputedStyle(document.querySelector('.ph-data-options'), null).display == 'block') 
-					{
-						document.querySelector(".ph-data-options").style.display = 'none';
-					}
-				}
-			}
-		},
-		clickCheckbox: function(id, event)
-		{
-			const selectAll = document.querySelector("#clickSelectAll");
-			const selectPerEach = document.querySelectorAll(".checkids");
-
-			if (selectAll.checked == true)
-			{
-				selectAll.checked = false;
-			}
-
-			if (document.querySelector(".ph-data-options") !== null) 
-			{
-				if (event.target.checked == true)
-				{
-					this.getTotalChecked += 1;
-				}
-				else if (event.target.checked == false)
-				{
-					this.getTotalChecked -= 1;
-				}
-			}
-		},
-		clickPaginate: async function (page) 
-		{
-			if (document.querySelector(".ph-fetch-listdata-article") !== null &&
-				document.querySelector(".ph-fetch-listdata-article").getAttribute("data-url") !== null) 
-			{
-				const url = document.querySelector(".ph-fetch-listdata-article").getAttribute("data-url");
-
-				let params = (new URL(url)).searchParams;
-
-				if (this.getQuerySearchUser !== '')
-				{
-					params.set('search', this.getQuerySearchUser);
-				}
-
-				if (this.getfilterByStatus !== '')
-				{
-					params.set('filter_by_status', this.getfilterByStatus);
-				}
-
-				if (this.getfilterByCategory !== '')
-				{
-					params.set('filter_by_category', this.getfilterByCategory);
-				}
-
-				if (this.getfilterByScheduled !== '')
-				{
-					params.set('filter_by_scheduled', this.getfilterByScheduled);
-				}
-
-				if (params.toString() !== '')
-				{
-					if (page == 1)
-					{
-						this.pageUrl = '?'+params.toString();
-					}
-					else
-					{
-						this.pageUrl = '?'+params.toString()+'&page='+page;
-					}
-				}
-				else
-				{
-					if (page == 1)
-					{
-						this.pageUrl = '';
-					}
-					else
-					{
-						this.pageUrl = '?page='+page;
-					}
-				}
-
-				this.page = page;
-				this.loadingNextPage = true;
-
-				await axios.get(url+this.pageUrl)
-				.then(response => 
-				{
-					if (this.currentPage >= this.pageCount) 
-					{
-						this.currentPage = '';
-					}
-
-					this.responseData 	= response.data.data;
-					this.totalData 		= response.data.total;
-					this.pageCount 		= response.data.total_page;
-					this.pageRange 		= response.data.limit;
-
-				})
-				.catch(function (error) 
-				{
-					this.responseMessage = error;
-				})
-				.finally(() => 
-				{
-					this.loadingData = false;
-					this.loadingNextPage = false;
-				});
-			}
-		},
 		ckeditor5: function()
 		{
 			if (typeof ClassicEditor !== 'undefined')
@@ -2269,266 +1899,34 @@ const ManageArticleVue3 = createApp(
 				// console.log('Blured');	
 			}
 		},
-		// ============================================================
-		// Responsive Table
-		// ============================================================
-
-		/**
-		 * Returns the usable pixel width for the table.
-		 */
-		getTableWidth: function()
-		{
-			const wrapper = document.getElementById('ph-article-table-wrapper');
-
-			if (wrapper)
-			{
-				// clientWidth adalah area yang benar-benar tersedia untuk isi tabel.
-				// offsetWidth ikut menghitung border / scrollbar gutter dan hasilnya
-				// berbeda antar-browser (Chrome vs Firefox).
-				const usableWidth = wrapper.clientWidth || wrapper.offsetWidth;
-
-				if (usableWidth > 0) return usableWidth;
-			}
-
-			return window.innerWidth;
-		},
-
-		/**
-		 * Ukur lebar natural setiap kolom dari DOM.
-		 * HANYA diukur saat semua kolom visible — karena Title column akan stretch
-		 * mengisi ruang kosong saat kolom lain hidden, memberikan nilai yang salah.
-		 * Guard ini memastikan width yang diukur adalah width natural sebenarnya.
-		 */
-		measureColWidths: function(callback)
-		{
-			requestAnimationFrame(() =>
-			{
-				const table = document.querySelector('#ph-article-table-wrapper table');
-
-				if (!table) { if (callback) callback(); return; }
-
-				const ths = table.querySelectorAll('thead tr th[data-col-idx]');
-
-				if (!ths.length) { if (callback) callback(); return; }
-
-				// Guard: hanya ukur saat semua kolom visible
-				// Saat ada kolom hidden, Title stretch dan width-nya tidak akurat
-				if (this.responsiveHiddenCols.length > 0) { if (callback) callback(); return; }
-
-				const widths = {};
-				ths.forEach((th, i) =>
-				{
-					// Simpan nilai pecahan agar pembulatan offsetWidth per kolom tidak
-					// terakumulasi menjadi false overflow pada kolom terakhir.
-					const rectWidth = typeof th.getBoundingClientRect === 'function'
-						? th.getBoundingClientRect().width
-						: 0;
-
-					widths[i] = rectWidth || th.offsetWidth || 80;
-				});
-
-				this._colNaturalWidths = widths;
-				if (callback) callback();
-			});
-		},
-
-		/**
-		 * Recalculate kolom mana yang harus di-hide.
-		 */
-		recalcResponsive: function()
-		{
-			if (!this._colNaturalWidths)
-			{
-				this.measureColWidths(() => { this.recalcResponsive(); });
-				return;
-			}
-
-			const ths = document.querySelectorAll('#ph-article-table-wrapper thead tr th[data-col-idx]');
-			if (!ths.length) return;
-
-			const nw   = this._colNaturalWidths;
-			const COLS = [];
-
-			ths.forEach((th, domPos) =>
-			{
-				const idx      = parseInt(th.getAttribute('data-col-idx'));
-				const priAttr  = th.getAttribute('data-col-priority');
-				const priority = priAttr === 'all' ? 'all' : parseInt(priAttr);
-				const minWidth = nw[domPos] || 80;
-				COLS.push({ idx, priority, minWidth });
-			});
-
-			const containerWidth = this.getTableWidth();
-			let remaining = containerWidth;
-
-			COLS.forEach((col) => { if (col.priority === 'all') remaining -= col.minWidth; });
-
-			const flexCols = COLS
-				.filter(c => c.priority !== 'all')
-				.sort((a, b) => a.priority - b.priority);
-
-			const hidden = [];
-			let bail = false;
-			const widthTolerance = 1;
-
-			flexCols.forEach((col) =>
-			{
-				// Abaikan selisih sub-pixel maksimal 1px. Tanpa toleransi ini,
-				// perbedaan rounding browser dapat menyembunyikan satu kolom penuh.
-				if (bail || remaining - col.minWidth < -widthTolerance)
-				{
-					hidden.push(col.idx);
-					bail = true;
-				}
-				else
-				{
-					remaining -= col.minWidth;
-				}
-			});
-
-			this.responsiveHiddenCols = hidden;
-			if (hidden.length === 0) this.responsiveExpandedRows = {};
-		},
-
-		/**
-		 * Build responsiveColDefs dari DOM.
-		 * Scan semua th[data-col-idx], skip idx 0 (Checkbox) dan idx 1 (Title).
-		 * - Idx 2-6: render dari data API via renderMap
-		 * - Idx 7+: render dari innerHTML td[data-col-idx] di DOM
-		 *
-		 * Dipanggil dari loadDataComplete().$nextTick — saat loading=false
-		 * dan DOM tabel (thead) sudah benar-benar visible dan bisa di-query.
-		 */
-		buildColDefs: function()
-		{
-			const vm = this;
-
-			const renderMap = {
-				2: (info) => info.author || '-',
-
-				3: (info) =>
-				{
-					if (info.status !== null && info.status_formatted)
-					{
-						return info.status_formatted;
-					}
-					return '<span class="badge text-bg-danger">Unknown</span>';
-				},
-
-				4: (info) =>
-				{
-					if (info.scheduled == 'true')
-					{
-						return '<span class="badge text-bg-warning">Scheduled</span>';
-					}
-					return '<span class="badge text-bg-secondary">No Scheduled</span>';
-				},
-
-				5: (info) =>
-				{
-					return `${info.created_at_readable || ''}<span class="form-text d-block">(${info.created_at_readforhuman || ''})</span>`;
-				},
-
-				6: (info) =>
-				{
-					const baseUrl = (document.querySelector('.ph-fetch-listdata-article')
-						? document.querySelector('.ph-fetch-listdata-article').getAttribute('data-url')
-						: '').replace('/listdata', '');
-
-					const editUrl = baseUrl + '/edit/' + info.id;
-
-					return `<a href="${editUrl}" class="btn btn-sm ph-btn-theme-outline py-2 px-3 me-2" style="font-size:.64rem!important"><i class="fas fa-pencil-alt fa-fw"></i></a>
-						<button type="button" class="btn btn-sm btn-outline-danger py-2 px-3" style="font-size:.64rem!important"
-							onclick="(function(el){if(el)el.click()})(document.querySelector('.ar-fetch-detail-data-article-modalDelete-${info.id}'))">
-							<i class="fas fa-trash fa-fw"></i>
-						</button>`;
-				},
-			};
-
-			vm.responsiveColDefs = [];
-
-			const allThs = document.querySelectorAll('#ph-article-table-wrapper thead tr th[data-col-idx]');
-
-			allThs.forEach((th) =>
-			{
-				const idxAttr = th.getAttribute('data-col-idx');
-				if (idxAttr === null) return;
-
-				const idx      = parseInt(idxAttr);
-				const priority = th.getAttribute('data-col-priority');
-
-				// Skip Checkbox (idx=0) dan Title (priority=all)
-				if (priority === 'all' || idx === 0) return;
-
-				const label = th.textContent.trim() || ('Col ' + idx);
-
-				if (renderMap[idx])
-				{
-					vm.responsiveColDefs.push({
-						idx,
-						label,
-						render: renderMap[idx]
-					});
-				}
-				else
-				{
-					const capturedIdx = idx;
-
-					vm.responsiveColDefs.push({
-						idx,
-						label,
-						render: function(info)
-						{
-							const trs = document.querySelectorAll(
-								'#ph-article-table-wrapper tbody tr:not(.ph-dtr-child-row)'
-							);
-
-							for (const tr of trs)
-							{
-								const cb = tr.querySelector('input.checkids');
-								if (cb && cb.value == info.id)
-								{
-									const td = tr.querySelector('td[data-col-idx="' + capturedIdx + '"]');
-									return td ? td.innerHTML : '';
-								}
-							}
-
-							return '';
-						}
-					});
-				}
-			});
-		},
-
-		/**
-		 * Toggle child detail row.
-		 */
-		toggleExpandRow: function(id)
-		{
-			const now = Date.now();
-
-			if (this._lastToggleTime && (now - this._lastToggleTime) < 80)
-			{
-				return;
-			}
-
-			this._lastToggleTime = now;
-
-			const next = Object.assign({}, this.responsiveExpandedRows);
-			next[id] = !next[id];
-			this.responsiveExpandedRows = next;
-		},
-
-		/**
-		 * Returns true when the column at idx should be hidden.
-		 */
-		isColHidden: function(idx)
-		{
-			return this.responsiveHiddenCols.includes(idx);
-		},
+        getTableWidth: function()
+        {
+            const wrapper = document.getElementById('ph-article-table-wrapper');
+            return wrapper ? wrapper.clientWidth : 0;
+        },
+        recalcResponsive: function()
+        {
+            const width = this.getTableWidth();
+            if (!width) return;
+            this.responsiveHiddenCols = [
+                ...(width <= 940 ? [2] : []),
+                ...(width <= 740 ? [5] : []),
+                ...(width <= 600 ? [4] : []),
+            ];
+        },
+        toggleExpandRow: function(id)
+        {
+            this.responsiveExpandedRows = { ...this.responsiveExpandedRows, [id]: !this.responsiveExpandedRows[id] };
+        },
+        isColHidden: function(idx)
+        {
+            return this.responsiveHiddenCols.includes(idx);
+        },
 	},
 	mounted()
 	{
+        const manager = document.getElementById('ph-app-manage-article');
+        this.articleStatuses = JSON.parse(manager?.getAttribute('data-statuses') || '[]');
 		this.listData();
 
 		this.detailData();

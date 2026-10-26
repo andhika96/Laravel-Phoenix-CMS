@@ -1,0 +1,46 @@
+
+  [39;41;1m FAIL [39;49;22m[39m Tests\Feature\Article\DistinctNavigationTest[39m
+  [32;1m✓[39;22m[90m [39m[90madministrator can save only allowlisted global article templates[39m[90m                                            [39m [90m0.56s[39m  
+  [32;1m✓[39;22m[90m [39m[90madministrator save persists only normalized structured style options[39m[90m                                        [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90madministrator save persists normalized editorial journal options[39m[90m                                            [39m [90m0.07s[39m  
+  [31;1m⨯[39;22m[90m [39m[90meach detail template renders its own navigation and real neighbor links[39m[90m                                     [39m [90m0.24s[39m  
+  [31;1m⨯[39;22m[90m [39m[90mnew navigation escapes titles handles missing media and uses actual read time[39m[90m                               [39m [90m0.10s[39m  
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\DistinctNavigationTest[22m [90m>[39m each detail template renders its own navigation and real n…   
+[39;1m  editorial-feature
+Failed asserting that actual size 0 matches expected size 1.[39;22m
+
+  at [32mproject-artifacts\qa\20261026-distinct-detail-navigation\DistinctNavigationTest.php[39m:[32m22[39m
+     18▕                 $html = view('article.templates.detail.'.$key, ['article' => $fixture->detailArticle(), 'templateOptions' => app(ArticleTemplateOptions::class)->detail($key), 'previousArticle' => $previous ? $neighbors['previous'] : null, 'nextArticle' => $next ? $neighbors['next'] : null])->render();
+     19▕                 $dom = new \DOMDocument();
+     20▕                 @$dom->loadHTML($html);
+     21▕                 $xpath = new \DOMXPath($dom);
+  ➜  22▕                 $this->assertCount((int) ($previous || $next), $xpath->query('//nav[@class="'.$style.'"]'), $key);
+     23▕                 $links = $xpath->query('//nav//a');
+     24▕                 $this->assertCount((int) $previous + (int) $next, $links);
+     25▕                 $expected = [];
+     26▕                 if ($previous) $expected[] = route('cms.core.article.detail', $neighbors['previous']->uri);
+
+  [33m1   [39m[39;1mproject-artifacts\qa\20261026-distinct-detail-navigation\DistinctNavigationTest.php[39;22m:[39;1m22[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Article\DistinctNavigationTest[22m [90m>[39m new navigation escapes titles handles missing media and us…   
+[39;1m  Failed asserting that '/storage/small-cover.jpg' ends with "large-cover.jpg".[39;22m
+
+  at [32mproject-artifacts\qa\20261026-distinct-detail-navigation\DistinctNavigationTest.php[39m:[32m66[39m
+     62▕             $this->assertStringContainsString('1 min read', $nav->textContent);
+     63▕             if ($key === 'editorial-feature') {
+     64▕                 $images = $xpath->query('//nav//img');
+     65▕                 $this->assertCount(2, $images);
+  ➜  66▕                 $this->assertStringEndsWith('large-cover.jpg', $images->item(0)->getAttribute('src'));
+     67▕                 $this->assertStringEndsWith('small-cover.jpg', $images->item(1)->getAttribute('src'));
+     68▕             }
+     69▕         }
+     70▕         $neighbors['next']->thumb_s = null;
+
+  [33m1   [39m[39;1mproject-artifacts\qa\20261026-distinct-detail-navigation\DistinctNavigationTest.php[39;22m:[39;1m66[39;22m
+
+
+  [90mTests:[39m    [31;1m2 failed[39;22m[90m,[39m[39m [39m[32;1m3 passed[39;22m[90m (67 assertions)[39m
+  [90mDuration:[39m [39m1.76s[39m
+

@@ -1,0 +1,150 @@
+{
+  "cases": [
+    {
+      "file": "qa-editorial-feature.html",
+      "template": "editorial-feature",
+      "width": 390,
+      "neighbors": 1,
+      "overflow": false,
+      "links": [
+        "https://laravel-13-phoenix.aruna/article/load-test-20260825-00001"
+      ]
+    },
+    {
+      "file": "qa-editorial-feature.html",
+      "template": "editorial-feature",
+      "width": 1440,
+      "neighbors": 1,
+      "overflow": false,
+      "links": [
+        "https://laravel-13-phoenix.aruna/article/load-test-20260825-00001"
+      ]
+    },
+    {
+      "file": "qa-knowledge-toc.html",
+      "template": "knowledge-toc",
+      "width": 390,
+      "neighbors": 1,
+      "overflow": false,
+      "links": [
+        "https://laravel-13-phoenix.aruna/article/load-test-20260825-00001"
+      ]
+    },
+    {
+      "file": "qa-knowledge-toc.html",
+      "template": "knowledge-toc",
+      "width": 1440,
+      "neighbors": 1,
+      "overflow": false,
+      "links": [
+        "https://laravel-13-phoenix.aruna/article/load-test-20260825-00001"
+      ]
+    },
+    {
+      "file": "middle-editorial-feature.html",
+      "template": "editorial-feature",
+      "width": 390,
+      "neighbors": 2,
+      "overflow": false,
+      "links": [
+        "https://laravel-13-phoenix.aruna/article/load-test-20260825-00002",
+        "https://laravel-13-phoenix.aruna/article/qa-ckeditor-panduan-sistem-andal-uji-seluruh-format-konten"
+      ]
+    },
+    {
+      "file": "middle-editorial-feature.html",
+      "template": "editorial-feature",
+      "width": 1440,
+      "neighbors": 2,
+      "overflow": false,
+      "links": [
+        "https://laravel-13-phoenix.aruna/article/load-test-20260825-00002",
+        "https://laravel-13-phoenix.aruna/article/qa-ckeditor-panduan-sistem-andal-uji-seluruh-format-konten"
+      ]
+    },
+    {
+      "file": "middle-knowledge-toc.html",
+      "template": "knowledge-toc",
+      "width": 390,
+      "neighbors": 2,
+      "overflow": false,
+      "links": [
+        "https://laravel-13-phoenix.aruna/article/load-test-20260825-00002",
+        "https://laravel-13-phoenix.aruna/article/qa-ckeditor-panduan-sistem-andal-uji-seluruh-format-konten"
+      ]
+    },
+    {
+      "file": "middle-knowledge-toc.html",
+      "template": "knowledge-toc",
+      "width": 1440,
+      "neighbors": 2,
+      "overflow": false,
+      "links": [
+        "https://laravel-13-phoenix.aruna/article/load-test-20260825-00002",
+        "https://laravel-13-phoenix.aruna/article/qa-ckeditor-panduan-sistem-andal-uji-seluruh-format-konten"
+      ]
+    },
+    {
+      "file": "first-editorial-feature.html",
+      "template": "editorial-feature",
+      "width": 390,
+      "neighbors": 1,
+      "overflow": false,
+      "links": [
+        "https://laravel-13-phoenix.aruna/article/load-test-20260825-04999"
+      ]
+    },
+    {
+      "file": "first-editorial-feature.html",
+      "template": "editorial-feature",
+      "width": 1440,
+      "neighbors": 1,
+      "overflow": false,
+      "links": [
+        "https://laravel-13-phoenix.aruna/article/load-test-20260825-04999"
+      ]
+    },
+    {
+      "file": "first-knowledge-toc.html",
+      "template": "knowledge-toc",
+      "width": 390,
+      "neighbors": 1,
+      "overflow": false,
+      "links": [
+        "https://laravel-13-phoenix.aruna/article/load-test-20260825-04999"
+      ]
+    },
+    {
+      "file": "first-knowledge-toc.html",
+      "template": "knowledge-toc",
+      "width": 1440,
+      "neighbors": 1,
+      "overflow": false,
+      "links": [
+        "https://laravel-13-phoenix.aruna/article/load-test-20260825-04999"
+      ]
+    }
+  ],
+  "destinations": [
+    {
+      "url": "https://laravel-13-phoenix.aruna/article/load-test-20260825-00001",
+      "status": 200,
+      "title": "Load Test Technology Performance Insight #00001"
+    },
+    {
+      "url": "https://laravel-13-phoenix.aruna/article/load-test-20260825-00002",
+      "status": 200,
+      "title": "Load Test Business Performance Insight #00002"
+    },
+    {
+      "url": "https://laravel-13-phoenix.aruna/article/qa-ckeditor-panduan-sistem-andal-uji-seluruh-format-konten",
+      "status": 200,
+      "title": "[QA CKEditor] Panduan Sistem Andal — Uji Seluruh Format Konten"
+    },
+    {
+      "url": "https://laravel-13-phoenix.aruna/article/load-test-20260825-04999",
+      "status": 200,
+      "title": "Load Test Technology Performance Insight #04999"
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "cases": [
+    {
+      "name": "Editorial Feature · Story Spread",
+      "width": 320,
+      "overflow": false,
+      "pageWidth": 288,
+      "links": 2,
+      "images": 2,
+      "columns": 1
+    },
+    {
+      "name": "Knowledge & TOC · Knowledge Links",
+      "width": 320,
+      "overflow": false,
+      "pageWidth": 288,
+      "links": 2,
+      "images": 0,
+      "columns": 1
+    },
+    {
+      "name": "Focused Reader · Reading Cards",
+      "width": 320,
+      "overflow": false,
+      "pageWidth": 288,
+      "links": 2,
+      "images": 2,
+      "columns": 1
+    },
+    {
+      "name": "Editorial Feature · Story Spread",
+      "width": 390,
+      "overflow": false,
+      "pageWidth": 358,
+      "links": 2,
+      "images": 2,
+      "columns": 1
+    },
+    {
+      "name": "Knowledge & TOC · Knowledge Links",
+      "width": 390,
+      "overflow": false,
+      "pageWidth": 358,
+      "links": 2,
+      "images": 0,
+      "columns": 1
+    },
+    {
+      "name": "Focused Reader · Reading Cards",
+      "width": 390,
+      "overflow": false,
+      "pageWidth": 358,
+      "links": 2,
+      "images": 2,
+      "columns": 1
+    },
+    {
+      "name": "Editorial Feature · Story Spread",
+      "width": 736,
+      "overflow": false,
+      "pageWidth": 684,
+      "links": 2,
+      "images": 2,
+      "columns": 2
+    },
+    {
+      "name": "Knowledge & TOC · Knowledge Links",
+      "width": 736,
+      "overflow": false,
+      "pageWidth": 684,
+      "links": 2,
+      "images": 0,
+      "columns": 1
+    },
+    {
+      "name": "Focused Reader · Reading Cards",
+      "width": 736,
+      "overflow": false,
+      "pageWidth": 684,
+      "links": 2,
+      "images": 2,
+      "columns": 2
+    },
+    {
+      "name": "Editorial Feature · Story Spread",
+      "width": 1024,
+      "overflow": false,
+      "pageWidth": 880,
+      "links": 2,
+      "images": 2,
+      "columns": 2
+    },
+    {
+      "name": "Knowledge & TOC · Knowledge Links",
+      "width": 1024,
+      "overflow": false,
+      "pageWidth": 880,
+      "links": 2,
+      "images": 0,
+      "columns": 1
+    },
+    {
+      "name": "Focused Reader · Reading Cards",
+      "width": 1024,
+      "overflow": false,
+      "pageWidth": 880,
+      "links": 2,
+      "images": 2,
+      "columns": 2
+    }
+  ],
+  "interactions": [
+    {
+      "name": "Editorial Feature · Story Spread",
+      "hover": true,
+      "keyboardFocus": true,
+      "reducedMotion": true,
+      "localClick": true,
+      "singleNeighbor": true
+    },
+    {
+      "name": "Knowledge & TOC · Knowledge Links",
+      "hover": true,
+      "keyboardFocus": true,
+      "reducedMotion": true,
+      "localClick": true,
+      "singleNeighbor": true
+    },
+    {
+      "name": "Focused Reader · Reading Cards",
+      "hover": true,
+      "keyboardFocus": true,
+      "reducedMotion": true,
+      "localClick": true,
+      "singleNeighbor": true
+    }
+  ],
+  "devices": [
+    {
+      "device": "desktop",
+      "width": 880
+    },
+    {
+      "device": "tablet",
+      "width": 650
+    },
+    {
+      "device": "mobile",
+      "width": 390
+    }
+  ],
+  "hoverControl": true,
+  "errors": [],
+  "sourceAppUnchanged": true
+}

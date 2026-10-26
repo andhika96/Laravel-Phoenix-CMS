@@ -1,0 +1,406 @@
+<div id="ar-article-preview" aria-label="Preview Manage Article Phoenix">
+  <div class="ar-viewport" data-concept="table" aria-label="Tabel artikel dengan detail per baris"></div>
+</div>
+
+<style>
+#ar-article-preview { width: 100%; }
+#ar-article-preview [hidden] { display: none !important; }
+#ar-article-preview .ar-viewport {
+  --ar-bg: light-dark(#f8faf9, #121917);
+  --ar-surface: light-dark(#ffffff, #1a2420);
+  --ar-soft: light-dark(#f3f6f4, #222f29);
+  --ar-ink: light-dark(#1d3028, #e7f1eb);
+  --ar-muted: light-dark(#586b61, #b1c1b7);
+  --ar-border: light-dark(#dfe7e2, #3c4d43);
+  --ar-accent: light-dark(#087c58, #6bdbab);
+  --ar-on-accent: light-dark(#ffffff, #10271c);
+  --ar-tint: light-dark(#e6f4ed, #203b2d);
+  --ar-green: light-dark(#176443, #8ae0b3);
+  --ar-green-bg: light-dark(#e7f6ed, #1e3b2a);
+  --ar-amber: light-dark(#805800, #f3d78a);
+  --ar-amber-bg: light-dark(#fff4d8, #3a321e);
+  --ar-danger: light-dark(#b32336, #ffacb4);
+  --ar-pad: 16px;
+  container: article-stage / inline-size;
+  color: var(--ar-ink);
+  background: var(--ar-surface);
+  font: 14px/1.5 "Noto Sans", "Segoe UI", Arial, sans-serif;
+  color-scheme: inherit;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+#ar-article-preview .ar-viewport *, #ar-article-preview .ar-viewport *::before, #ar-article-preview .ar-viewport *::after { box-sizing: border-box; }
+#ar-article-preview .ar-app { display: grid; grid-template-columns: 174px minmax(0,1fr); min-height: 820px; border: 1px solid var(--ar-border); border-radius: 14px; background: var(--ar-bg); }
+#ar-article-preview .ar-sidebar { padding: 22px 12px; border-right: 1px solid var(--ar-border); display: flex; flex-direction: column; gap: 28px; min-width: 0; background: var(--ar-soft); border-radius: 14px 0 0 14px; }
+#ar-article-preview .ar-identity { display: flex; gap: 10px; align-items: center; padding: 0 7px; }
+#ar-article-preview .ar-avatar { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--ar-tint); color: var(--ar-accent); font-size: 11px; font-weight: 650; flex-shrink: 0; }
+#ar-article-preview .ar-brand { font-weight: 650; font-size: 12px; }
+#ar-article-preview .ar-sidebar small { display: block; color: var(--ar-muted); font-size: 11px; font-weight: 400; }
+#ar-article-preview .ar-nav { display: grid; gap: 6px; }
+#ar-article-preview .ar-nav-item { display: flex; align-items: center; gap: 10px; min-height: 42px; padding: 10px; color: var(--ar-muted); font-size: 12px; border-radius: 8px; }
+#ar-article-preview .ar-nav-item[aria-current] { color: var(--ar-accent); background: var(--ar-tint); font-weight: 650; }
+#ar-article-preview .ar-nav-bottom { margin-top: auto; }
+#ar-article-preview .ar-main { min-width: 0; padding: 26px 22px 20px; }
+#ar-article-preview .ar-mobile-top { display: none; }
+#ar-article-preview .ar-pagehead { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; }
+#ar-article-preview .ar-heading h2 { margin: 0 0 5px; font-size: 23px; line-height: 1.25; font-weight: 650; letter-spacing: -.6px; }
+#ar-article-preview .ar-heading p { color: var(--ar-muted); margin: 0; font-size: 12px; }
+#ar-article-preview .ar-head-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+#ar-article-preview .ar-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--ar-border); background: var(--ar-surface); color: var(--ar-ink); font: inherit; font-size: 12px; font-weight: 550; min-height: 38px; white-space: nowrap; text-decoration: none; }
+#ar-article-preview .ar-button:hover { background: var(--ar-soft); }
+#ar-article-preview .ar-button:disabled { opacity: .5; cursor: default; }
+#ar-article-preview .ar-button-primary { color: var(--ar-on-accent); border-color: var(--ar-accent); background: var(--ar-accent); }
+#ar-article-preview .ar-button-primary:hover { background: var(--ar-accent); filter: brightness(.95); }
+#ar-article-preview .ar-icon-button { padding: 8px; min-width: 38px; }
+#ar-article-preview .ar-button-quiet { border-color: transparent; background: transparent; color: var(--ar-muted); }
+#ar-article-preview .ar-button-danger { color: var(--ar-danger); }
+#ar-article-preview .ar-button:focus-visible, #ar-article-preview .ar-field:focus-visible, #ar-article-preview .ar-tab:focus-visible, #ar-article-preview summary:focus-visible, #ar-article-preview .ar-title-button:focus-visible { outline: 2px solid var(--ar-accent); outline-offset: 3px; }
+#ar-article-preview i[data-lucide], #ar-article-preview .ar-viewport svg { width: 16px; height: 16px; flex-shrink: 0; }
+#ar-article-preview .ar-demo-label { display: inline-flex; align-items: center; gap: 6px; color: var(--ar-muted); font-size: 11px; padding-bottom: 12px; }
+#ar-article-preview .ar-board { background: var(--ar-surface); border: 1px solid var(--ar-border); border-radius: 12px; min-width: 0; }
+#ar-article-preview .ar-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 12px 14px 0; border-bottom: 1px solid var(--ar-border); }
+#ar-article-preview .ar-tab { border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--ar-muted); font: inherit; font-size: 12px; display: inline-flex; align-items: center; gap: 7px; padding: 10px 10px 12px; white-space: nowrap; }
+#ar-article-preview .ar-tab[aria-pressed="true"] { color: var(--ar-accent); border-bottom-color: var(--ar-accent); font-weight: 650; }
+#ar-article-preview .ar-count { background: var(--ar-soft); color: var(--ar-muted); padding: 0 6px; border-radius: 5px; font-size: 11px; font-variant-numeric: tabular-nums; }
+#ar-article-preview .ar-tab[aria-pressed="true"] .ar-count { background: var(--ar-tint); color: var(--ar-accent); }
+#ar-article-preview .ar-toolbar { display: flex; align-items: center; gap: 8px; padding: 16px; }
+#ar-article-preview .ar-search { position: relative; display: flex; align-items: center; flex: 1; min-width: 130px; }
+#ar-article-preview .ar-search > svg, #ar-article-preview .ar-search > i { position: absolute; left: 12px; color: var(--ar-muted); }
+#ar-article-preview .ar-field { border: 1px solid var(--ar-border); border-radius: 8px; background: var(--ar-surface); color: var(--ar-ink); font: inherit; font-size: 12px; padding: 9px 10px; min-height: 38px; min-width: 0; max-width: 100%; }
+#ar-article-preview .ar-field::placeholder { color: var(--ar-muted); opacity: 1; }
+#ar-article-preview .ar-search .ar-field { padding-left: 36px; width: 100%; }
+#ar-article-preview .ar-filter-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr) auto; gap: 12px; padding: 0 16px 16px; align-items: end; }
+#ar-article-preview .ar-label { display: grid; gap: 5px; font-size: 11px; color: var(--ar-muted); min-width: 0; }
+#ar-article-preview .ar-filter-chips { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 0 16px 14px; }
+#ar-article-preview .ar-filter-chips .ar-button { font-size: 11px; min-height: 30px; padding: 4px 8px; background: var(--ar-soft); }
+#ar-article-preview .ar-bulk { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 16px; background: var(--ar-tint); border-top: 1px solid var(--ar-border); border-bottom: 1px solid var(--ar-border); }
+#ar-article-preview .ar-bulk-label { color: var(--ar-accent); font-size: 12px; font-weight: 600; margin-right: auto; }
+#ar-article-preview .ar-confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--ar-border); background: var(--ar-soft); font-size: 12px; }
+#ar-article-preview .ar-confirm p { flex: 1; margin: 0; min-width: 180px; }
+#ar-article-preview .ar-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 12px; }
+#ar-article-preview .ar-table th { text-align: left; font-weight: 500; background: var(--ar-soft); color: var(--ar-muted); padding: 10px 12px; border-bottom: 1px solid var(--ar-border); }
+#ar-article-preview .ar-table td { padding: var(--ar-pad) 12px; border-bottom: 1px solid var(--ar-border); vertical-align: middle; overflow-wrap: anywhere; }
+#ar-article-preview .ar-table tr:last-child td { border-bottom: 0; }
+#ar-article-preview .ar-table .ar-selected td { background: var(--ar-tint); }
+#ar-article-preview .ar-table .ar-col-check { width: 40px; padding-left: 8px; padding-right: 4px; }
+#ar-article-preview .ar-table .ar-col-author { width: 110px; }
+#ar-article-preview .ar-table .ar-col-status { width: 110px; }
+#ar-article-preview .ar-table .ar-col-date { width: 112px; }
+#ar-article-preview .ar-table .ar-col-actions { width: 104px; text-align: right; padding-right: 14px; }
+#ar-article-preview .ar-sort-button { color: inherit; font: inherit; display: inline-flex; gap: 6px; align-items: center; border: 0; padding: 0; background: transparent; }
+#ar-article-preview .ar-sort-control .ar-field { width: 100%; }
+#ar-article-preview .ar-table .ar-col-expand { width: 52px; padding-right: 16px; padding-left: 8px; }
+#ar-article-preview .ar-expand-button { min-width: 28px; min-height: 32px; padding: 5px; color: var(--ar-muted); border: 0; background: transparent; border-radius: 6px; }
+#ar-article-preview .ar-expand-button[aria-expanded="true"] { color: var(--ar-ink); background: var(--ar-border); }
+#ar-article-preview .ar-table .ar-expanded-row > td { background: var(--ar-soft); }
+#ar-article-preview .ar-check { width: 16px; height: 16px; accent-color: var(--ar-accent); margin: 0; vertical-align: middle; }
+#ar-article-preview .ar-check-target { display: inline-flex; align-items: center; min-height: 28px; }
+#ar-article-preview .ar-title-button { color: var(--ar-ink); padding: 0; border: 0; background: transparent; font: inherit; font-weight: 600; line-height: 1.5; text-align: left; overflow-wrap: anywhere; }
+#ar-article-preview .ar-title-button:hover { color: var(--ar-accent); text-decoration: underline; text-underline-offset: 3px; }
+#ar-article-preview .ar-subline { color: var(--ar-muted); font-size: 11px; margin-top: 5px; overflow-wrap: anywhere; }
+#ar-article-preview .ar-author-inline { display: none; }
+#ar-article-preview .ar-status { display: inline-flex; align-items: center; gap: 5px; border-radius: 6px; padding: 3px 7px; font-size: 11px; font-weight: 550; background: var(--ar-soft); color: var(--ar-muted); white-space: nowrap; }
+#ar-article-preview .ar-status[data-status="publish"] { background: var(--ar-green-bg); color: var(--ar-green); }
+#ar-article-preview .ar-status[data-status="pending"] { background: var(--ar-amber-bg); color: var(--ar-amber); }
+#ar-article-preview .ar-schedule { display: inline-flex; gap: 4px; align-items: center; color: var(--ar-muted); font-size: 11px; margin-top: 6px; }
+#ar-article-preview .ar-schedule svg { width: 12px; height: 12px; }
+#ar-article-preview .ar-row-actions { display: flex; justify-content: flex-end; gap: 3px; align-items: center; }
+#ar-article-preview .ar-row-actions .ar-button { min-height: 32px; padding: 5px 8px; font-size: 11px; }
+#ar-article-preview .ar-row-actions .ar-icon-button { min-width: 30px; padding: 5px; }
+#ar-article-preview .ar-overflow { position: relative; }
+#ar-article-preview .ar-overflow summary { list-style: none; }
+#ar-article-preview .ar-overflow summary::-webkit-details-marker { display: none; }
+#ar-article-preview .ar-menu { position: absolute; right: 0; top: calc(100% + 6px); width: 178px; z-index: 20; background: var(--ar-surface); color: var(--ar-ink); border: 1px solid var(--ar-border); border-radius: 9px; box-shadow: 0 8px 24px light-dark(#1d30281a,#00000050); padding: 5px; }
+#ar-article-preview .ar-menu .ar-button { display: flex; width: 100%; justify-content: flex-start; border: 0; min-height: 38px; white-space: normal; text-align: left; }
+#ar-article-preview .ar-mobile-meta { display: none; }
+#ar-article-preview .ar-detail-cell { background: var(--ar-soft); padding: 18px 20px 22px !important; }
+#ar-article-preview .ar-detail-cell .ar-expanded { padding-left: 84px; }
+#ar-article-preview .ar-detail-heading { display: flex; align-items: center; gap: 12px; margin: 0 0 16px; font-size: 12px; color: var(--ar-muted); }
+#ar-article-preview .ar-detail-heading span { margin-left: auto; font-size: 11px; }
+#ar-article-preview .ar-detail-body { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: 28px; }
+#ar-article-preview .ar-summary { min-width: 0; overflow-wrap: anywhere; font-size: 12px; }
+#ar-article-preview .ar-summary h3 { margin: 0 0 5px; font-size: 11px; color: var(--ar-muted); font-weight: 500; }
+#ar-article-preview .ar-summary p { margin: 0 0 18px; }
+#ar-article-preview .ar-summary .ar-slug { color: var(--ar-muted); font-size: 11px; }
+#ar-article-preview .ar-detail-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px 24px; margin: 0; font-size: 12px; }
+#ar-article-preview .ar-detail-list > div { min-width: 0; overflow-wrap: anywhere; }
+#ar-article-preview .ar-detail-list dt { color: var(--ar-muted); font-size: 11px; margin-bottom: 3px; }
+#ar-article-preview .ar-detail-list dd { margin: 0; }
+#ar-article-preview .ar-detail-list .ar-detail-wide { grid-column: 1 / -1; }
+#ar-article-preview .ar-empty { text-align: center; padding: 42px 16px; color: var(--ar-muted); }
+#ar-article-preview .ar-empty h3 { color: var(--ar-ink); font-size: 15px; margin: 0 0 6px; }
+#ar-article-preview .ar-empty p { font-size: 12px; margin: 0 0 16px; }
+#ar-article-preview .ar-footer { padding: 16px; border-top: 1px solid var(--ar-border); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 11px; color: var(--ar-muted); }
+#ar-article-preview .ar-page-size { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+#ar-article-preview .ar-page-size .ar-field { min-height: 32px; padding: 5px 6px; font-size: 11px; }
+#ar-article-preview .ar-pagination { display: flex; gap: 4px; align-items: center; }
+#ar-article-preview .ar-pagination .ar-button { padding: 5px; min-width: 30px; min-height: 30px; font-variant-numeric: tabular-nums; }
+#ar-article-preview .ar-pagination [aria-current="page"] { border-color: var(--ar-accent); color: var(--ar-on-accent); background: var(--ar-accent); }
+#ar-article-preview .ar-feedback { margin-top: 12px; padding: 10px 12px; background: var(--ar-tint); color: var(--ar-accent); font-size: 12px; border-radius: 8px; overflow-wrap: anywhere; }
+#ar-article-preview .ar-visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@container article-stage (max-width: 930px) {
+  #ar-article-preview .ar-app { grid-template-columns: 56px minmax(0,1fr); }
+  #ar-article-preview .ar-sidebar { padding: 20px 7px; }
+  #ar-article-preview .ar-sidebar .ar-nav-text, #ar-article-preview .ar-brand { display: none; }
+  #ar-article-preview .ar-identity { padding: 0 4px; }
+  #ar-article-preview .ar-nav-item { justify-content: center; padding: 10px 4px; }
+  #ar-article-preview .ar-main { padding: 24px 18px 18px; }
+  #ar-article-preview .ar-table .ar-col-author { display: none; }
+  #ar-article-preview .ar-author-inline { display: inline; }
+}
+@container article-stage (max-width: 740px) {
+  #ar-article-preview .ar-table .ar-col-date { display: none; }
+  #ar-article-preview .ar-table .ar-col-status { width: 100px; }
+  #ar-article-preview .ar-pagehead { gap: 10px; align-items: flex-start; }
+  #ar-article-preview .ar-heading h2 { font-size: 21px; }
+  #ar-article-preview .ar-heading p { max-width: 235px; }
+  #ar-article-preview .ar-page-size { gap: 6px; }
+  #ar-article-preview .ar-sort-control { width: 130px; }
+}
+@container article-stage (max-width: 600px) {
+  #ar-article-preview .ar-app { grid-template-columns: minmax(0,1fr); min-height: 820px; }
+  #ar-article-preview .ar-sidebar { display: none; }
+  #ar-article-preview .ar-main { padding: 0 12px 18px; }
+  #ar-article-preview .ar-mobile-top { display: flex; justify-content: space-between; align-items: center; margin: 0 -12px 20px; padding: 10px 12px; border-bottom: 1px solid var(--ar-border); border-radius: 14px 14px 0 0; background: var(--ar-surface); font-size: 12px; }
+  #ar-article-preview .ar-mobile-top > span:not(.ar-avatar) { margin-right: auto; margin-left: 10px; font-weight: 600; }
+  #ar-article-preview .ar-pagehead { flex-wrap: wrap; margin-bottom: 18px; }
+  #ar-article-preview .ar-heading { flex: 1; min-width: 160px; }
+  #ar-article-preview .ar-heading h2 { font-size: 22px; }
+  #ar-article-preview .ar-heading p { max-width: none; font-size: 11px; }
+  #ar-article-preview .ar-head-actions { width: 100%; }
+  #ar-article-preview .ar-head-actions > .ar-button-primary { flex: 1; }
+  #ar-article-preview .ar-demo-label { font-size: 11px; padding-bottom: 10px; }
+  #ar-article-preview .ar-tabs { gap: 0; padding: 6px 7px 0; justify-content: space-between; }
+  #ar-article-preview .ar-tab { gap: 5px; padding: 10px 7px 11px; font-size: 11px; }
+  #ar-article-preview .ar-count { padding: 0 4px; }
+  #ar-article-preview .ar-toolbar { flex-wrap: wrap; padding: 12px; }
+  #ar-article-preview .ar-search { flex: 1 0 100%; }
+  #ar-article-preview .ar-search .ar-field { font-size: 16px; }
+  #ar-article-preview .ar-toolbar > .ar-button { flex: 1; }
+  #ar-article-preview .ar-sort-control { flex: 1; width: auto; }
+  #ar-article-preview .ar-filter-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr); padding: 0 12px 12px; }
+  #ar-article-preview .ar-filter-grid > .ar-button { grid-column: 1/-1; }
+  #ar-article-preview .ar-bulk { padding: 12px; }
+  #ar-article-preview .ar-bulk-label { flex: 1 0 calc(100% - 58px); }
+  #ar-article-preview .ar-bulk .ar-field { flex: 1; }
+  #ar-article-preview .ar-table .ar-col-status { display: none; }
+  #ar-article-preview .ar-mobile-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+  #ar-article-preview .ar-table .ar-col-expand { width: 48px; padding-left: 4px; padding-right: 16px; }
+  #ar-article-preview .ar-table .ar-col-check { width: 36px; padding-left: 8px; padding-right: 4px; }
+  #ar-article-preview .ar-table .ar-col-actions { width: 72px; padding-right: 8px; padding-left: 0; }
+  #ar-article-preview .ar-table td, #ar-article-preview .ar-table th { padding-left: 8px; padding-right: 8px; }
+  #ar-article-preview .ar-row-actions { flex-direction: column; gap: 4px; }
+  #ar-article-preview .ar-table .ar-row-actions .ar-button { min-width: 52px; }
+  #ar-article-preview .ar-detail-list { grid-template-columns: minmax(0,1fr); }
+  #ar-article-preview .ar-detail-list > div { display: grid; grid-template-columns: minmax(0,88px) minmax(0,1fr); gap: 8px; }
+  #ar-article-preview .ar-detail-list dt { margin-bottom: 0; }
+  #ar-article-preview .ar-detail-cell { padding: 16px 12px 20px !important; }
+  #ar-article-preview .ar-detail-cell .ar-expanded { padding-left: 80px; }
+  #ar-article-preview .ar-detail-body { grid-template-columns: minmax(0,1fr); gap: 6px; }
+  #ar-article-preview .ar-footer { padding: 12px; justify-content: center; }
+  #ar-article-preview .ar-page-size { justify-content: space-between; width: 100%; }
+  #ar-article-preview .ar-pagination { justify-content: center; }
+}
+@media (pointer: coarse) {
+  #ar-article-preview .ar-button, #ar-article-preview .ar-row-actions .ar-button, #ar-article-preview .ar-pagination .ar-button { min-height: 44px; }
+  #ar-article-preview .ar-icon-button, #ar-article-preview .ar-row-actions .ar-icon-button, #ar-article-preview .ar-pagination .ar-button { min-width: 44px; }
+  #ar-article-preview .ar-check-target { min-width: 28px; min-height: 44px; }
+  #ar-article-preview .ar-field { min-height: 44px; font-size: 16px; }
+  #ar-article-preview .ar-tab { min-height: 44px; }
+  #ar-article-preview .ar-expand-button { min-width: 44px; min-height: 44px; }
+  #ar-article-preview .ar-check-target { min-width: 44px; }
+  #ar-article-preview .ar-table .ar-col-expand { width: 64px; padding-left: 4px; padding-right: 16px; }
+  #ar-article-preview .ar-table .ar-col-check { width: 56px; padding-left: 8px; padding-right: 4px; }
+}
+</style>
+
+<script>
+(() => {
+  const root = document.getElementById('ar-article-preview');
+  const icon = name => `<i data-lucide="${name}" aria-hidden="true"></i>`;
+  const safe = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const statusNames = { publish: 'Publish', draft: 'Draft', pending: 'Pending' };
+  const seed = [
+    [1,'Ruang kerja digital yang tumbuh bersama tim','Teknologi','Administrator','publish',false,'2026-10-26T08:30:00','Membangun alur kerja yang lebih sederhana dan terhubung untuk seluruh tim.'],
+    [2,'Identitas baru, semangat kolaborasi yang sama','Berita','Nadia Putri','publish',true,'2026-10-25T14:20:00','Catatan perubahan identitas dan arah pengembangan produk berikutnya.'],
+    [3,'Panduan menulis artikel pertama di Phoenix CMS','Panduan','Administrator','draft',false,'2026-10-24T09:15:00','Dari ide, penyusunan konten, hingga pemeriksaan sebelum artikel dipublikasikan.'],
+    [4,'Membuat pengalaman mobile yang lebih nyaman','Desain','Raka Pratama','pending',false,'2026-10-23T11:00:00','Prinsip desain yang membantu pembaca mengakses konten dari layar kecil.'],
+    [5,'Di balik pembaruan pengelolaan konten Oktober','Berita','Nadia Putri','publish',true,'2026-10-22T16:45:00','Rangkuman pembaruan pengelolaan konten untuk kebutuhan editorial sehari-hari.'],
+    [6,'Checklist sebelum menerbitkan konten','Panduan','Administrator','draft',false,'2026-10-21T10:00:00','Langkah pemeriksaan judul, kategori, media, dan status publikasi.'],
+    [7,'Menjaga konsistensi desain di setiap halaman','Desain','Raka Pratama','publish',false,'2026-10-20T13:20:00','Menyatukan tipografi dan komponen tanpa menghilangkan karakter halaman.'],
+    [8,'Kolaborasi lintas tim, dari ide menjadi cerita','Berita','Nadia Putri','pending',false,'2026-10-19T08:00:00','Bagaimana tim merangkum pekerjaan menjadi cerita yang mudah dipahami.'],
+    [9,'Mengenal pengaturan kategori artikel','Panduan','Administrator','publish',false,'2026-10-18T15:30:00','Gunakan kategori untuk membuat susunan konten yang jelas.'],
+    [10,'Catatan pengembangan fitur berikutnya','Teknologi','Raka Pratama','draft',true,'2026-10-17T11:10:00','Catatan editorial untuk pembaruan fitur yang sedang dipersiapkan.'],
+    [11,'Desain yang membantu pekerjaan terasa ringan','Desain','Nadia Putri','publish',false,'2026-10-16T09:00:00','Pilihan desain kecil yang mempermudah pekerjaan sehari-hari.'],
+    [12,'Menyusun kalender konten yang realistis','Panduan','Administrator','pending',true,'2026-10-15T14:30:00','Merencanakan jadwal penerbitan bersama tim editorial.']
+  ].map(([id,title,category,author,status,scheduled,date,excerpt]) => ({id,title,category,author,status,scheduled,date,excerpt}));
+  const formatDate = value => new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Jakarta'}).format(new Date(value+'+07:00'));
+  const formatTime = value => value.slice(11,16).replace(':','.');
+  const slug = row => row.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const preview = { device: 'Tablet', density: 'Nyaman' };
+  const instances = [];
+  const saved = window.openai?.widgetState;
+  const restored = saved?.privateContent || saved?.modelContent || {};
+  if (['Otomatis','Tablet','Ponsel'].includes(restored.device)) preview.device = restored.device;
+  if (['Nyaman','Rapat'].includes(restored.density)) preview.density = restored.density;
+
+  function save() {
+    const views=instances.map(({state})=>({search:state.search,status:state.status,category:state.category,scheduled:state.scheduled,sort:state.sort,page:state.page,size:state.size}));
+    const modelContent = { device: preview.device, density: preview.density, konsep: 'Tabel detail adaptif', filter: views[0] || null };
+    window.openai?.setWidgetState?.({modelContent,privateContent:{...preview,views}})?.catch(() => {});
+  }
+  function appearance(persist = false) {
+    root.querySelectorAll('.ar-viewport').forEach(el => {
+      el.style.maxWidth = preview.device === 'Ponsel' ? '390px' : preview.device === 'Tablet' ? '768px' : '100%';
+      el.style.setProperty('--ar-pad', preview.density === 'Rapat' ? '10px' : '16px');
+    });
+    if (persist) save();
+  }
+  const statusBadge = row => `<span class="ar-status" data-status="${row.status}">${icon(row.status === 'publish' ? 'circle-check' : row.status === 'pending' ? 'clock-3' : 'file-pen-line')}${statusNames[row.status]}</span>`;
+  const scheduleBadge = row => row.scheduled ? `<span class="ar-schedule">${icon('calendar-clock')}Terjadwal</span>` : '';
+  function details(row) {
+    return `<section class="ar-expanded" aria-label="Detail artikel ${safe(row.title)}"><p class="ar-detail-heading">Detail artikel<span>#${String(row.id).padStart(4,'0')}</span></p><div class="ar-detail-body"><div class="ar-summary"><h3>Ringkasan</h3><p>${safe(row.excerpt)}</p><h3>Alamat artikel</h3><p class="ar-slug">/${safe(slug(row))}</p></div><dl class="ar-detail-list"><div><dt>Status publikasi</dt><dd>${statusBadge(row)}</dd></div><div><dt>Penjadwalan</dt><dd>${row.scheduled ? 'Terjadwal' : 'Tanpa jadwal'}</dd></div><div><dt>Penulis</dt><dd>${safe(row.author)}</dd></div><div><dt>Kategori</dt><dd>${safe(row.category)}</dd></div><div class="ar-detail-wide"><dt>Tanggal dibuat</dt><dd>${formatDate(row.date)}, ${formatTime(row.date)} WIB</dd></div></dl></div></section>`;
+  }
+
+  for (const [index, el] of [...root.querySelectorAll('.ar-viewport')].entries()) {
+    const id = `ar-concept-${index}`;
+    const state = { rows: seed.map(row=>({...row})), search:'', status:'all', category:'all', scheduled:'all', sort:'newest', page:1, size:5, selected:new Set(), expanded:new Set([1]), bulk:'', confirm:false };
+    const priorView=restored.views?.[index];
+    if(priorView){
+      if(typeof priorView.search==='string')state.search=priorView.search.slice(0,200);
+      if(['all','publish','draft','pending'].includes(priorView.status))state.status=priorView.status;
+      if(['all','Berita','Desain','Panduan','Teknologi'].includes(priorView.category))state.category=priorView.category;
+      if(['all','yes','no'].includes(priorView.scheduled))state.scheduled=priorView.scheduled;
+      if(['newest','oldest','title-asc','title-desc'].includes(priorView.sort))state.sort=priorView.sort;
+      if([5,10,15].includes(priorView.size))state.size=priorView.size;
+      if(Number.isInteger(priorView.page)&&priorView.page>0)state.page=priorView.page;
+    }
+    el.innerHTML = `
+      <div class="ar-app">
+        <aside class="ar-sidebar" aria-label="Navigasi CMS">
+          <div class="ar-identity"><span class="ar-avatar">AA</span><span class="ar-brand">Administrator<small>Phoenix CMS</small></span></div>
+          <nav class="ar-nav"><span class="ar-nav-item">${icon('layout-dashboard')}<span class="ar-nav-text">Dashboard</span></span><span class="ar-nav-item">${icon('external-link')}<span class="ar-nav-text">View site</span></span><span class="ar-nav-item" aria-current="page">${icon('newspaper')}<span class="ar-nav-text">Manage Articles</span></span><span class="ar-nav-item">${icon('image')}<span class="ar-nav-text">Cover Image</span></span><span class="ar-nav-item">${icon('calendar-days')}<span class="ar-nav-text">Manage Event</span></span></nav>
+          <div class="ar-nav ar-nav-bottom"><span class="ar-nav-item">${icon('shield-user')}<span class="ar-nav-text">Awesome Admin</span></span><span class="ar-nav-item">${icon('settings-2')}<span class="ar-nav-text">Settings</span></span></div>
+        </aside>
+        <main class="ar-main">
+          <div class="ar-mobile-top"><button type="button" class="ar-button ar-icon-button ar-button-quiet cursor-interaction" data-demo="Navigasi CMS" aria-label="Buka navigasi">${icon('panel-left')}</button><span>Phoenix CMS</span><span class="ar-avatar">AA</span></div>
+          <header class="ar-pagehead"><div class="ar-heading"><h2>Manage Article</h2><p>Ruang kerja untuk cerita dan ide tim Anda.</p></div><div class="ar-head-actions"><button type="button" class="ar-button ar-button-primary cursor-interaction" data-demo="Add Post">${icon('plus')}Add Post</button><details class="ar-overflow"><summary class="ar-button ar-icon-button cursor-interaction" aria-label="Menu pengelolaan artikel">${icon('ellipsis')}</summary><div class="ar-menu"><button type="button" class="ar-button cursor-interaction" data-demo="Article Templates">${icon('layers')}Article Templates</button><button type="button" class="ar-button cursor-interaction" data-demo="Category List">${icon('folder-open')}Category List</button></div></details></div></header>
+          <span class="ar-demo-label">${icon('flask-conical')}Preview desain · 12 artikel contoh</span>
+          <section class="ar-board" aria-label="Daftar artikel">
+            <div class="ar-tabs" role="group" aria-label="Filter status publikasi"></div>
+            <div class="ar-toolbar"><label class="ar-search">${icon('search')}<span class="ar-visually-hidden">Cari judul artikel</span><input type="search" class="ar-field" data-field="search" placeholder="Cari judul artikel..." autocomplete="off"></label><button type="button" class="ar-button cursor-interaction" data-action="filters" aria-expanded="false" aria-controls="${id}-filters">${icon('sliders-horizontal')}Filter<span data-filter-count></span></button><label class="ar-sort-control"><span class="ar-visually-hidden">Urutkan artikel</span><select class="ar-field" data-field="sort" aria-label="Urutkan artikel"><option value="newest">Terbaru dahulu</option><option value="oldest">Terlama dahulu</option><option value="title-asc">Judul A–Z</option><option value="title-desc">Judul Z–A</option></select></label></div>
+            <div class="ar-filter-grid" id="${id}-filters" hidden><label class="ar-label">Kategori<select class="ar-field" data-field="category"><option value="all">Semua kategori</option><option>Berita</option><option>Desain</option><option>Panduan</option><option>Teknologi</option></select></label><label class="ar-label">Penjadwalan<select class="ar-field" data-field="scheduled"><option value="all">Semua jadwal</option><option value="yes">Terjadwal</option><option value="no">Tanpa jadwal</option></select></label><button type="button" class="ar-button ar-button-quiet cursor-interaction" data-action="reset">Hapus filter</button></div>
+            <div class="ar-filter-chips" hidden></div>
+            <div class="ar-bulk" hidden><span class="ar-bulk-label"></span><button type="button" class="ar-button ar-button-quiet cursor-interaction" data-action="clear-selection" aria-label="Batalkan pilihan artikel">Batal</button><label><span class="ar-visually-hidden">Ubah status artikel terpilih</span><select class="ar-field" data-field="bulk"><option value="">Ubah status...</option><option value="publish">Publish</option><option value="draft">Draft</option><option value="pending">Pending</option></select></label><button type="button" class="ar-button ar-button-primary cursor-interaction" data-action="apply" disabled>Terapkan</button></div>
+            <div class="ar-confirm" hidden role="group" aria-label="Konfirmasi perubahan status contoh"><p></p><button type="button" class="ar-button cursor-interaction" data-action="cancel-confirm">Batal</button><button type="button" class="ar-button ar-button-primary cursor-interaction" data-action="confirm">Ya, ubah</button></div>
+            <div class="ar-table-region"><table class="ar-table"><caption class="ar-visually-hidden">Artikel contoh. Kolom pertama membuka detail, kolom kedua memilih artikel.</caption><thead><tr><th class="ar-col-expand" scope="col"><span class="ar-visually-hidden">Detail</span></th><th class="ar-col-check" scope="col"><label class="ar-check-target"><input class="ar-check" type="checkbox" data-all aria-label="Pilih semua artikel di halaman ini"></label></th><th scope="col" data-title-sort aria-sort="none"><button type="button" class="ar-sort-button cursor-interaction" data-action="sort-title">Artikel ${icon('arrow-down-up')}</button></th><th class="ar-col-author" scope="col">Penulis</th><th class="ar-col-status" scope="col">Status</th><th class="ar-col-date" scope="col" data-date-sort aria-sort="descending"><button type="button" class="ar-sort-button cursor-interaction" data-action="sort-date">Tanggal ${icon('arrow-down')}</button></th><th class="ar-col-actions" scope="col">Aksi</th></tr></thead><tbody></tbody></table></div>
+            <div class="ar-empty" hidden><h3>Artikel tidak ditemukan</h3><p>Coba kata kunci lain atau hapus filter aktif.</p><button type="button" class="ar-button cursor-interaction" data-action="reset">Hapus pencarian & filter</button></div>
+            <footer class="ar-footer"><label class="ar-page-size"><span data-range></span><span><select class="ar-field" data-field="size" aria-label="Artikel per halaman"><option value="5">5</option><option value="10">10</option><option value="15">15</option></select> / halaman</span></label><nav class="ar-pagination" aria-label="Halaman artikel"></nav></footer>
+          </section>
+          <div class="ar-feedback" role="status" aria-live="polite" hidden></div>
+          <span class="ar-visually-hidden" data-live role="status" aria-live="polite" aria-atomic="true"></span>
+        </main>
+      </div>`;
+    function filtered() {
+      return state.rows.filter(row => (state.status==='all'||row.status===state.status) && (state.category==='all'||row.category===state.category) && (state.scheduled==='all'||row.scheduled===(state.scheduled==='yes')) && row.title.toLocaleLowerCase('id').includes(state.search.toLocaleLowerCase('id'))).sort((a,b) => state.sort.startsWith('title') ? (state.sort==='title-asc'?1:-1)*a.title.localeCompare(b.title,'id') : (state.sort==='newest'?-1:1)*a.date.localeCompare(b.date));
+    }
+    function pageRows() { return filtered().slice((state.page-1)*state.size,state.page*state.size); }
+    function notice(text) { const box=el.querySelector('.ar-feedback'); box.textContent=text; box.hidden=false; }
+    function selection() {
+      const rows=pageRows();
+      el.querySelectorAll('[data-all]').forEach(input => { input.checked=rows.length>0&&rows.every(row=>state.selected.has(row.id)); input.indeterminate=rows.some(row=>state.selected.has(row.id))&&!input.checked; input.disabled=rows.length===0; });
+      el.querySelectorAll('[data-select]').forEach(input=>input.checked=state.selected.has(Number(input.dataset.select)));
+      el.querySelectorAll('[data-row]').forEach(row=>row.classList.toggle('ar-selected',state.selected.has(Number(row.dataset.row))));
+      el.querySelector('.ar-bulk').hidden=state.selected.size===0;
+      el.querySelector('.ar-bulk-label').textContent=`${state.selected.size} artikel dipilih · halaman ini`;
+      el.querySelector('[data-action="apply"]').disabled=!state.bulk||!state.selected.size;
+      el.querySelector('.ar-confirm').hidden=!state.confirm;
+      el.querySelector('.ar-confirm p').textContent=`Ubah ${state.selected.size} artikel contoh menjadi ${statusNames[state.bulk]||''}?`;
+    }
+    function syncColumns() {
+      const visible=[...el.querySelectorAll('thead th')].filter(th=>getComputedStyle(th).display!=='none').length;
+      el.querySelectorAll('.ar-detail-cell').forEach(cell=>{cell.colSpan=visible;});
+    }
+    function render(announce=true) {
+      const items=filtered();
+      const pages=Math.max(1,Math.ceil(items.length/state.size));
+      state.page=Math.min(state.page,pages);
+      el.querySelector('.ar-tabs').innerHTML=[['all','Semua'],...Object.entries(statusNames)].map(([key,label])=>`<button type="button" class="ar-tab cursor-interaction" data-status="${key}" aria-pressed="${state.status===key}">${label}<span class="ar-count">${key==='all'?state.rows.length:state.rows.filter(row=>row.status===key).length}</span></button>`).join('');
+      const rows=pageRows();
+      el.querySelector('tbody').innerHTML=rows.map(row=>`<tr data-row="${row.id}" class="${state.expanded.has(row.id)?'ar-expanded-row':''}"><td class="ar-col-expand"><button type="button" class="ar-button ar-expand-button cursor-interaction" data-detail="${row.id}" aria-label="${state.expanded.has(row.id)?'Tutup':'Buka'} detail ${safe(row.title)}" aria-expanded="${state.expanded.has(row.id)}" aria-controls="${id}-detail-${row.id}">${icon(state.expanded.has(row.id)?'chevron-down':'chevron-right')}</button></td><td class="ar-col-check"><label class="ar-check-target"><input type="checkbox" class="ar-check" data-select="${row.id}" aria-label="Pilih ${safe(row.title)}"></label></td><td><button type="button" class="ar-title-button cursor-interaction" data-edit="${row.id}">${safe(row.title)}</button><div class="ar-subline">${safe(row.category)}<span class="ar-author-inline"> · ${safe(row.author)}</span></div><div class="ar-mobile-meta">${statusBadge(row)}${scheduleBadge(row)}</div></td><td class="ar-col-author">${safe(row.author)}</td><td class="ar-col-status">${statusBadge(row)}${scheduleBadge(row)}</td><td class="ar-col-date">${formatDate(row.date)}<div class="ar-subline">${formatTime(row.date)} WIB</div></td><td class="ar-col-actions"><div class="ar-row-actions"><button type="button" class="ar-button ar-button-quiet cursor-interaction" data-edit="${row.id}">Edit</button><details class="ar-overflow"><summary class="ar-button ar-icon-button ar-button-quiet cursor-interaction" aria-label="Aksi untuk ${safe(row.title)}">${icon('ellipsis')}</summary><div class="ar-menu"><button type="button" class="ar-button cursor-interaction" data-demo="Lihat artikel: ${safe(row.title)}">${icon('external-link')}Lihat artikel</button><button type="button" class="ar-button ar-button-danger cursor-interaction" data-delete="${row.id}">${icon('trash-2')}Hapus artikel</button></div></details></div></td></tr><tr id="${id}-detail-${row.id}" ${state.expanded.has(row.id)?'':'hidden'}><td colspan="7" class="ar-detail-cell">${details(row)}</td></tr>`).join('');
+      const empty=!items.length;
+      el.querySelector('.ar-empty').hidden=!empty;
+      el.querySelector('.ar-table').hidden=empty;
+      el.querySelector('[data-range]').textContent=empty?'0 artikel':`${(state.page-1)*state.size+1}–${Math.min(state.page*state.size,items.length)} dari ${items.length} artikel`;
+      el.querySelector('.ar-pagination').innerHTML=`<button type="button" class="ar-button cursor-interaction" data-page="${state.page-1}" aria-label="Halaman sebelumnya" ${state.page===1?'disabled':''}>${icon('chevron-left')}</button>${Array.from({length:pages},(_,i)=>`<button type="button" class="ar-button cursor-interaction" data-page="${i+1}" ${state.page===i+1?'aria-current="page"':''}>${i+1}</button>`).join('')}<button type="button" class="ar-button cursor-interaction" data-page="${state.page+1}" aria-label="Halaman berikutnya" ${state.page===pages?'disabled':''}>${icon('chevron-right')}</button>`;
+      el.querySelector('[data-title-sort]').setAttribute('aria-sort',state.sort==='title-asc'?'ascending':state.sort==='title-desc'?'descending':'none');
+      el.querySelector('[data-date-sort]').setAttribute('aria-sort',state.sort==='newest'?'descending':state.sort==='oldest'?'ascending':'none');
+      el.querySelector('[data-field="sort"]').value=state.sort;
+      const chips=[];
+      if(state.category!=='all')chips.push([state.category,'category']);
+      if(state.scheduled!=='all')chips.push([state.scheduled==='yes'?'Terjadwal':'Tanpa jadwal','scheduled']);
+      const chipBox=el.querySelector('.ar-filter-chips');
+      chipBox.hidden=!chips.length;
+      chipBox.innerHTML=chips.map(([label,key])=>`<button type="button" class="ar-button cursor-interaction" data-clear="${key}" aria-label="Hapus filter ${safe(label)}">${safe(label)} ${icon('x')}</button>`).join('');
+      el.querySelector('[data-filter-count]').textContent=chips.length?`(${chips.length})`:'';
+      syncColumns();
+      selection();
+      if(announce) { el.querySelector('[data-live]').textContent=`${items.length} artikel contoh, halaman ${state.page} dari ${pages}.`; save(); }
+      globalThis.lucide?.createIcons({attrs:{width:16,height:16}});
+    }
+    function resetScope() { state.page=1; state.selected.clear(); state.expanded.clear(); state.confirm=false; }
+    el.addEventListener('input', event => {
+      if(event.target.dataset.field!=='search')return;
+      state.search=event.target.value.trim(); resetScope(); render();
+    });
+    el.addEventListener('change',event=>{
+      const field=event.target.dataset.field;
+      if(field==='bulk'){state.bulk=event.target.value;state.confirm=false;selection();return;}
+      if(['category','scheduled','sort','size'].includes(field)) {state[field]=field==='size'?Number(event.target.value):event.target.value;resetScope();render();return;}
+      if(event.target.matches('[data-all]')) {state.selected=new Set(event.target.checked?pageRows().map(row=>row.id):[]);state.confirm=false;selection();el.querySelector('[data-live]').textContent=`${state.selected.size} artikel dipilih.`;}
+      if(event.target.dataset.select) {const n=Number(event.target.dataset.select);event.target.checked?state.selected.add(n):state.selected.delete(n);state.confirm=false;selection();el.querySelector('[data-live]').textContent=`${state.selected.size} artikel dipilih.`;}
+    });
+    el.addEventListener('click',event=>{
+      const button=event.target.closest('button');
+      if(!button)return;
+      if(button.dataset.demo){notice(`Simulasi ${button.dataset.demo}. Preview ini tidak terhubung ke CMS.`);button.closest('details')?.removeAttribute('open');return;}
+      if(button.dataset.status){state.status=button.dataset.status;resetScope();render();el.querySelector(`[data-status="${state.status}"]`)?.focus({preventScroll:true});return;}
+      if(button.dataset.detail){const n=Number(button.dataset.detail);state.expanded.has(n)?state.expanded.delete(n):state.expanded.add(n);render(false);el.querySelector(`button[data-detail="${n}"]`)?.focus({preventScroll:true});el.querySelector('[data-live]').textContent=`Detail artikel ${state.expanded.has(n)?'dibuka':'ditutup'}.`;return;}
+      if(button.dataset.edit){const row=state.rows.find(row=>row.id===Number(button.dataset.edit));notice(`Simulasi edit: ${row.title}. Belum ada perubahan pada CMS.`);return;}
+      if(button.dataset.delete){notice('Hapus artikel akan membuka konfirmasi penghapusan di CMS. Penghapusan tidak dijalankan dalam preview desain.');button.closest('details')?.removeAttribute('open');return;}
+      if(button.dataset.page){state.page=Number(button.dataset.page);state.selected.clear();state.expanded.clear();state.confirm=false;render();el.querySelector('.ar-pagination [aria-current]')?.focus({preventScroll:true});return;}
+      if(button.dataset.clear){state[button.dataset.clear]='all';el.querySelector(`[data-field="${button.dataset.clear}"]`).value='all';resetScope();render();el.querySelector('[data-action="filters"]').focus({preventScroll:true});return;}
+      switch(button.dataset.action){
+        case 'filters': {const panel=el.querySelector('.ar-filter-grid');panel.hidden=!panel.hidden;button.setAttribute('aria-expanded',String(!panel.hidden));break;}
+        case 'reset': state.search='';state.status='all';state.category='all';state.scheduled='all';['search','category','scheduled'].forEach(key=>el.querySelector(`[data-field="${key}"]`).value=state[key]);resetScope();render();el.querySelector('[data-field="search"]').focus({preventScroll:true});break;
+        case 'sort-title':state.sort=state.sort==='title-asc'?'title-desc':'title-asc';resetScope();render();break;
+        case 'sort-date':state.sort=state.sort==='newest'?'oldest':'newest';resetScope();render();break;
+        case 'clear-selection':state.selected.clear();state.confirm=false;selection();el.querySelector('[data-live]').textContent='Pilihan artikel dibatalkan.';el.querySelector('[data-field="search"]').focus({preventScroll:true});break;
+        case 'apply':if(state.selected.size&&state.bulk){state.confirm=true;selection();el.querySelector('[data-action="confirm"]').focus({preventScroll:true});}break;
+        case 'cancel-confirm':state.confirm=false;selection();el.querySelector('[data-action="apply"]').focus({preventScroll:true});break;
+        case 'confirm':if(state.confirm&&state.selected.size&&state.bulk){const total=state.selected.size;state.rows.forEach(row=>{if(state.selected.has(row.id))row.status=state.bulk;});state.selected.clear();state.confirm=false;state.bulk='';el.querySelector('[data-field="bulk"]').value='';render();notice(`Simulasi selesai: status ${total} artikel contoh diubah. Data CMS tetap utuh.`);el.querySelector('[data-field="search"]').focus({preventScroll:true});}break;
+      }
+    });
+    el.addEventListener('keydown',event=>{if(event.key==='Escape'){el.querySelectorAll('details[open]').forEach(menu=>{menu.open=false;menu.querySelector('summary')?.focus({preventScroll:true});});}});
+    render(false);
+    ['search','category','scheduled','size'].forEach(key=>{el.querySelector(`[data-field="${key}"]`).value=state[key];});
+    instances.push({el,state,render});
+    new ResizeObserver(syncColumns).observe(el);
+  }
+  appearance();
+  window.addEventListener('openai:set_globals',event=>{
+    const incoming=event.detail?.globals?.widgetState;
+    if(!incoming)return;
+    const data=incoming.privateContent||incoming.modelContent||{};
+    if(['Otomatis','Tablet','Ponsel'].includes(data.device))preview.device=data.device;
+    if(['Nyaman','Rapat'].includes(data.density))preview.density=data.density;
+    appearance();
+  });
+  if(globalThis.Tweak){
+    const tweak=new Tweak({container:root,onChange:()=>appearance(true)});
+    tweak.addSelect(preview,'device',{label:'Perangkat',options:['Otomatis','Tablet','Ponsel']});
+    tweak.addSelect(preview,'density',{label:'Kepadatan baris',options:['Nyaman','Rapat']});
+  }
+})();
+</script>

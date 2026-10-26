@@ -1,0 +1,221 @@
+- generic [ref=f2e57]:
+  - generic [ref=f2e103]:
+    - button "Open navigation" [ref=f2e104] [cursor=pointer]
+    - text:  
+    - link "Open profile" [ref=f2e108] [cursor=pointer]:
+      - /url: https://laravel-13-phoenix.aruna/profile
+      - img "Current avatar image" [ref=f2e109]
+  - generic [ref=f2e63]:
+    - generic [ref=f2e65]:
+      - heading "Manage Article" [level=4] [ref=f2e67]
+      - generic [ref=f2e69]:
+        - textbox "Search article by Title" [ref=f2e72]
+        - generic [ref=f2e73]:
+          - link " Add Post" [ref=f2e74] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/manage_article/add
+            - generic [ref=f2e75]: 
+            - text: Add Post
+          - link " Article Templates" [ref=f2e76] [cursor=pointer]:
+            - /url: https://laravel-13-phoenix.aruna/manage_article/templates
+            - generic [ref=f2e77]: 
+            - text: Article Templates
+          - link "Category List" [ref=f2e78] [cursor=pointer]:
+            - /url: javascript:void(0)
+    - generic [ref=f2e80]:
+      - generic [ref=f2e82]:
+        - generic [ref=f2e84]:
+          - generic [ref=f2e85]: Change Status
+          - combobox [ref=f2e86]:
+            - option "All" [selected]
+            - option "Publish"
+            - option "Draft"
+            - option "Pending"
+        - button "Submit" [ref=f2e88] [cursor=pointer]
+      - generic [ref=f2e89]:
+        - generic [ref=f2e90]: Filter By Status
+        - combobox [ref=f2e91]:
+          - option "All" [selected]
+          - option "Publish"
+          - option "Draft"
+          - option "Pending"
+      - generic [ref=f2e92]:
+        - generic [ref=f2e93]: Filter By Category
+        - combobox [ref=f2e94]:
+          - option "All" [selected]
+          - option "Uncategorized"
+          - option "Test 3 Edited"
+          - option "Test 4"
+          - option "Test 5"
+          - option "Load Test Technology"
+          - option "Load Test Business"
+          - option "Load Test Design"
+          - option "Load Test Science"
+          - option "Load Test Culture"
+          - option "Load Test Health"
+          - option "Load Test Travel"
+      - generic [ref=f2e95]:
+        - generic [ref=f2e96]: Filter By Scheduled
+        - combobox [ref=f2e97]:
+          - option "All" [selected]
+          - option "Scheduled"
+          - option "No Scheduled"
+    - generic [ref=f2e110]:
+      - table [ref=f2e113]:
+        - rowgroup [ref=f2e114]:
+          - row [ref=f2e115]:
+            - columnheader [ref=f2e116]:
+              - checkbox [ref=f2e119]
+            - columnheader "Title" [ref=f2e120]
+            - columnheader "Author" [ref=f2e121]
+        - rowgroup [ref=f2e122]:
+          - row [ref=f2e123]:
+            - cell [ref=f2e124]:
+              - checkbox [ref=f2e127]
+            - cell "Testing" [ref=f2e128] [cursor=pointer]
+            - cell "testing_account101" [ref=f2e132]
+            - text:  
+          - row [ref=f2e315]:
+            - cell "Scheduled Publish Status Scheduled Date 2025-08-10 00:00:00 (1 tahun yang lalu) Options  " [ref=f2e316]:
+              - list [ref=f2e317]:
+                - listitem [ref=f2e318]:
+                  - generic [ref=f2e319]: Scheduled
+                  - generic [ref=f2e320]: Publish
+                - listitem [ref=f2e322]:
+                  - generic [ref=f2e323]: Status
+                  - generic [ref=f2e324]: Scheduled
+                - listitem [ref=f2e326]:
+                  - generic [ref=f2e327]: Date
+                  - generic [ref=f2e328]:
+                    - text: 2025-08-10 00:00:00
+                    - generic [ref=f2e329]: (1 tahun yang lalu)
+                - listitem [ref=f2e330]:
+                  - generic [ref=f2e331]: Options
+                  - generic [ref=f2e332]:
+                    - link "" [ref=f2e333] [cursor=pointer]:
+                      - /url: https://laravel-13-phoenix.aruna/manage_article/edit/4
+                    - button "" [ref=f2e335] [cursor=pointer]
+          - row [ref=f2e133]:
+            - cell [ref=f2e134]:
+              - checkbox [ref=f2e137]
+            - cell "Testing 2" [ref=f2e138] [cursor=pointer]
+            - cell "testing_account101" [ref=f2e142]
+            - text:  
+          - row [ref=f2e143]:
+            - cell [ref=f2e144]:
+              - checkbox [ref=f2e147]
+            - cell "Testing 2" [ref=f2e148] [cursor=pointer]
+            - cell "testing_account101" [ref=f2e152]
+            - text:  
+          - row [ref=f2e153]:
+            - cell [ref=f2e154]:
+              - checkbox [ref=f2e157]
+            - cell "Testing 3" [ref=f2e158] [cursor=pointer]
+            - cell "testing_account101" [ref=f2e162]
+            - text:  
+          - row [ref=f2e163]:
+            - cell [ref=f2e164]:
+              - checkbox [ref=f2e167]
+            - cell "Testing 4" [ref=f2e168] [cursor=pointer]
+            - cell "Administrator" [ref=f2e172]
+            - text:  
+          - row [ref=f2e173]:
+            - cell [ref=f2e174]:
+              - checkbox [ref=f2e177]
+            - cell "Testing 4" [ref=f2e178] [cursor=pointer]
+            - cell "Administrator" [ref=f2e182]
+            - text:  
+          - row [ref=f2e183]:
+            - cell [ref=f2e184]:
+              - checkbox [ref=f2e187]
+            - cell "Testing 4" [ref=f2e188] [cursor=pointer]
+            - cell "Administrator" [ref=f2e192]
+            - text:  
+          - row [ref=f2e193]:
+            - cell [ref=f2e194]:
+              - checkbox [ref=f2e197]
+            - cell "Testing 4" [ref=f2e198] [cursor=pointer]
+            - cell "Administrator" [ref=f2e202]
+            - text:  
+          - row [ref=f2e203]:
+            - cell [ref=f2e204]:
+              - checkbox [ref=f2e207]
+            - cell "Testing Testing" [ref=f2e208] [cursor=pointer]
+            - cell "Administrator" [ref=f2e212]
+            - text:  
+          - row [ref=f2e213]:
+            - cell [ref=f2e214]:
+              - checkbox [ref=f2e217]
+            - cell "Testing Testing" [ref=f2e218] [cursor=pointer]
+            - cell "Administrator" [ref=f2e222]
+            - text:  
+          - row [ref=f2e223]:
+            - cell [ref=f2e224]:
+              - checkbox [ref=f2e227]
+            - cell "Testing Testing" [ref=f2e228] [cursor=pointer]
+            - cell "Administrator" [ref=f2e232]
+            - text:  
+          - row [ref=f2e233]:
+            - cell [ref=f2e234]:
+              - checkbox [ref=f2e237]
+            - cell "Testing Testing" [ref=f2e238] [cursor=pointer]
+            - cell "Administrator" [ref=f2e242]
+            - text:  
+          - row [ref=f2e243]:
+            - cell [ref=f2e244]:
+              - checkbox [ref=f2e247]
+            - cell "AWDAWD" [ref=f2e248] [cursor=pointer]
+            - cell "Administrator" [ref=f2e252]
+            - text:  
+          - row [ref=f2e253]:
+            - cell [ref=f2e254]:
+              - checkbox [ref=f2e257]
+            - cell "AWDASDAWDW" [ref=f2e258] [cursor=pointer]
+            - cell "Administrator" [ref=f2e262]
+            - text:  
+          - row [ref=f2e263]:
+            - cell [ref=f2e264]:
+              - checkbox [ref=f2e267]
+            - cell "AWDASDAWDW" [ref=f2e268] [cursor=pointer]
+            - cell "Administrator" [ref=f2e272]
+            - text:  
+      - generic [ref=f2e274]:
+        - generic [ref=f2e275]: "Total Data: 5,041"
+        - list [ref=f2e277]:
+          - listitem [ref=f2e278]:
+            - generic: 
+          - listitem [ref=f2e279]:
+            - generic [ref=f2e280] [cursor=pointer]: "1"
+          - listitem [ref=f2e281]:
+            - generic [ref=f2e282] [cursor=pointer]: "2"
+          - listitem [ref=f2e283]:
+            - generic [ref=f2e284] [cursor=pointer]: "3"
+          - listitem [ref=f2e285]:
+            - generic [ref=f2e286] [cursor=pointer]: "4"
+          - listitem [ref=f2e287]:
+            - generic [ref=f2e288] [cursor=pointer]: "5"
+          - listitem [ref=f2e289]:
+            - generic [ref=f2e290] [cursor=pointer]: "6"
+          - listitem [ref=f2e291]:
+            - generic [ref=f2e292] [cursor=pointer]: "7"
+          - listitem [ref=f2e293]:
+            - generic [ref=f2e294] [cursor=pointer]: "8"
+          - listitem [ref=f2e295]:
+            - generic [ref=f2e296] [cursor=pointer]: "9"
+          - listitem [ref=f2e297]:
+            - generic [ref=f2e298] [cursor=pointer]: "10"
+          - listitem [ref=f2e299]:
+            - generic [ref=f2e300] [cursor=pointer]: "11"
+          - listitem [ref=f2e301]:
+            - generic [ref=f2e302] [cursor=pointer]: "12"
+          - listitem [ref=f2e303]:
+            - generic [ref=f2e304] [cursor=pointer]: "13"
+          - listitem [ref=f2e305]:
+            - generic [ref=f2e306] [cursor=pointer]: "14"
+          - listitem [ref=f2e307]:
+            - generic [ref=f2e308] [cursor=pointer]: "15"
+          - listitem [ref=f2e309]:
+            - generic: …
+          - listitem [ref=f2e310]:
+            - generic [ref=f2e311] [cursor=pointer]: "337"
+          - listitem [ref=f2e312]:
+            - generic [ref=f2e313] [cursor=pointer]: 

@@ -1,0 +1,94 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import path from 'node:path';
+import { chromium } from 'playwright-core';
+
+const qa = path.dirname(fileURLToPath(import.meta.url));
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
+const errors = [];
+page.on('pageerror', error => errors.push(error.message));
+await page.goto(pathToFileURL(path.join(qa, 'preview-inspection.html')).href);
+await page.frameLocator('iframe').locator('.ar-viewport').first().locator('tbody tr[data-row]').first().waitFor();
+await page.evaluate(() => { document.body.style.padding = '0'; });
+const frame = page.frames().find(frame => frame.parentFrame());
+const first = frame.locator('[data-concept="editorial"]');
+
+assert.equal(await first.locator('tbody tr[data-row]').count(), 5);
+await first.getByRole('searchbox').fill('kolaborasi');
+assert.equal(await first.locator('tbody tr[data-row]').count(), 2);
+await first.getByRole('searchbox').fill('tidak ada sama sekali');
+assert.equal(await first.locator('.ar-empty').isVisible(), true);
+await first.getByRole('button', { name: 'Hapus pencarian & filter' }).click();
+await first.getByRole('button', { name: 'Filter', exact: true }).click();
+await first.locator('[data-field="category"]').selectOption('Panduan');
+await first.locator('[data-field="scheduled"]').selectOption('yes');
+assert.equal(await first.locator('tbody tr[data-row]').count(), 1);
+assert.match(await first.locator('tbody').innerText(), /Menyusun kalender/);
+await first.getByRole('button', { name: 'Hapus filter', exact: true }).click();
+await first.locator('[data-field="sort"]').selectOption('title-asc');
+assert.match(await first.locator('tbody tr[data-row]').first().innerText(), /Catatan pengembangan/);
+await first.locator('[data-field="sort"]').selectOption('newest');
+await first.locator('tbody [data-select]').first().check();
+assert.equal(await first.locator('thead [data-all]').evaluate(input => input.indeterminate), true);
+assert.match(await first.locator('.ar-bulk-label').innerText(), /1 artikel/);
+await first.locator('[data-field="bulk"]').selectOption('draft');
+await first.getByRole('button', { name: 'Terapkan', exact: true }).click();
+assert.equal(await first.locator('.ar-confirm').isVisible(), true);
+await first.getByRole('button', { name: 'Ya, ubah', exact: true }).click();
+assert.match(await first.locator('.ar-feedback').innerText(), /status 1 artikel contoh diubah/);
+assert.match(await first.locator('tbody tr[data-row]').first().locator('.ar-col-status').innerText(), /Draft/);
+await first.locator('tbody [data-select]').first().check();
+await first.getByRole('button', { name: 'Halaman berikutnya' }).click();
+assert.equal(await first.locator('.ar-bulk').isVisible(), false);
+assert.equal(await first.locator('tbody tr[data-row]').count(), 5);
+await first.getByRole('button', { name: '3', exact: true }).click();
+assert.equal(await first.locator('tbody tr[data-row]').count(), 2);
+await first.locator('[data-field="size"]').selectOption('15');
+assert.equal(await first.locator('tbody tr[data-row]').count(), 12);
+await first.locator('[data-field="size"]').selectOption('5');
+await first.locator('tbody [data-detail]').first().click();
+assert.equal(await first.locator('[id$="-detail-1"]').isVisible(), true);
+assert.match(await first.locator('[id$="-detail-1"]').innerText(), /Status publikasi[\s\S]*Draft[\s\S]*Penjadwalan[\s\S]*Tanpa jadwal/);
+
+// Reload restores the example data before visual and responsive checks.
+await page.reload();
+await page.evaluate(() => { document.body.style.padding = '0'; });
+const currentFrame = page.frames().find(frame => frame.parentFrame());
+await currentFrame.locator('[data-concept="editorial"] tbody tr[data-row]').first().waitFor();
+const responsive = [];
+for (const scheme of ['light', 'dark']) {
+  await page.emulateMedia({ colorScheme: scheme });
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 1900 });
+    for (const concept of ['editorial', 'table']) {
+      await currentFrame.evaluate(concept => {
+        document.querySelectorAll('[data-variant]').forEach(section => { section.hidden = section.querySelector('[data-concept]').dataset.concept !== concept; });
+      }, concept);
+      const metrics = await currentFrame.locator(`[data-concept="${concept}"]`).evaluate(el => {
+        const bounds = el.getBoundingClientRect();
+        const bad = [...el.querySelectorAll('*')].filter(node => node.checkVisibility() && node.getBoundingClientRect().width > 0).map(node => ({node:node.tagName, class:node.className?.baseVal ?? node.className, rect:node.getBoundingClientRect()})).filter(item => item.rect.right > bounds.right+1 || item.rect.left < bounds.left-1).slice(0,6).map(item=>({node:item.node,class:item.class,left:item.rect.left,right:item.rect.right}));
+        return {stage:bounds.width,height:el.querySelector('.ar-app').getBoundingClientRect().height,overflow:el.scrollWidth>el.clientWidth+1,bad,background:getComputedStyle(el).backgroundColor};
+      });
+      responsive.push({scheme,width,concept,...metrics});
+      assert.equal(metrics.overflow, false, JSON.stringify({scheme,width,concept,...metrics}));
+      assert.equal(metrics.bad.length, 0, JSON.stringify({scheme,width,concept,...metrics}));
+      if ((width === 1024 || width === 390) && (scheme === 'light' || width === 390)) {
+        await currentFrame.locator(`[data-concept="${concept}"]`).screenshot({path:path.join(qa,`${concept}-${width}-${scheme}.png`)});
+      }
+    }
+  }
+}
+await currentFrame.evaluate(() => { document.querySelectorAll('[data-variant]').forEach((section,index) => {section.hidden=index!==0;}); });
+await page.setViewportSize({width:390,height:1900});
+const mobile=currentFrame.locator('[data-concept="editorial"]');
+await mobile.locator('.ar-card-list [data-select]').first().check();
+assert.equal(await mobile.locator('.ar-card-list .ar-selected').count(),1);
+await mobile.locator('.ar-card-list [data-detail]').first().click();
+assert.equal(await mobile.locator('[id$="-card-detail-1"]').isVisible(),true);
+assert.match(await mobile.locator('[id$="-card-detail-1"]').innerText(),/Status publikasi[\s\S]*Publish[\s\S]*Penjadwalan[\s\S]*Tanpa jadwal/);
+assert.deepEqual(errors,[]);
+await fs.writeFile(path.join(qa,'verification.json'),JSON.stringify({checkedAt:new Date().toISOString(),functional:'search, empty state, combined filters, sort, indeterminate selection, confirmed local bulk status, pagination, page size, detail mapping, mobile selection and detail',responsive,pageErrors:errors},null,2));
+console.log(JSON.stringify({functional:'passed',responsiveCases:responsive.length,pageErrors:errors,heights:responsive.filter(row=>row.scheme==='light').map(({width,concept,height})=>({width,concept,height}))},null,2));
+await browser.close();

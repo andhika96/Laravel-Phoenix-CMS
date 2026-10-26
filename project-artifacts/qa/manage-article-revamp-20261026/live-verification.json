@@ -1,0 +1,144 @@
+{
+  "checkedAt": "2026-10-26T08:50:37.079Z",
+  "initialTotal": 5041,
+  "initialStatusCounts": {
+    "all": 5041,
+    "publish": 5035,
+    "draft": 0,
+    "pending": 6
+  },
+  "measurements": [
+    {
+      "theme": "light",
+      "width": 320,
+      "viewport": 320,
+      "bodyOverflow": false,
+      "boardWidth": 292,
+      "gap": 24,
+      "visibleColumns": 4,
+      "detailSpan": 4,
+      "actionFits": true,
+      "unrendered": false
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "viewport": 390,
+      "bodyOverflow": false,
+      "boardWidth": 362,
+      "gap": 24,
+      "visibleColumns": 4,
+      "detailSpan": 4,
+      "actionFits": true,
+      "unrendered": false
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "viewport": 768,
+      "bodyOverflow": false,
+      "boardWidth": 740,
+      "gap": 24,
+      "visibleColumns": 5,
+      "detailSpan": 5,
+      "actionFits": true,
+      "unrendered": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "viewport": 1024,
+      "bodyOverflow": false,
+      "boardWidth": 904,
+      "gap": 24,
+      "visibleColumns": 6,
+      "detailSpan": 6,
+      "actionFits": true,
+      "unrendered": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "viewport": 1440,
+      "bodyOverflow": false,
+      "boardWidth": 1108,
+      "gap": 24,
+      "visibleColumns": 7,
+      "detailSpan": 7,
+      "actionFits": true,
+      "unrendered": false
+    },
+    {
+      "theme": "dark",
+      "width": 320,
+      "viewport": 320,
+      "bodyOverflow": false,
+      "boardWidth": 292,
+      "gap": 24,
+      "visibleColumns": 4,
+      "detailSpan": 4,
+      "actionFits": true,
+      "unrendered": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "viewport": 390,
+      "bodyOverflow": false,
+      "boardWidth": 362,
+      "gap": 24,
+      "visibleColumns": 4,
+      "detailSpan": 4,
+      "actionFits": true,
+      "unrendered": false
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "viewport": 768,
+      "bodyOverflow": false,
+      "boardWidth": 740,
+      "gap": 24,
+      "visibleColumns": 5,
+      "detailSpan": 5,
+      "actionFits": true,
+      "unrendered": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "viewport": 1024,
+      "bodyOverflow": false,
+      "boardWidth": 904,
+      "gap": 24,
+      "visibleColumns": 6,
+      "detailSpan": 6,
+      "actionFits": true,
+      "unrendered": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "viewport": 1440,
+      "bodyOverflow": false,
+      "boardWidth": 1108,
+      "gap": 24,
+      "visibleColumns": 7,
+      "detailSpan": 7,
+      "actionFits": true,
+      "unrendered": false
+    }
+  ],
+  "touchMetrics": {
+    "gap": 24,
+    "detailWidth": 44,
+    "detailHeight": 44,
+    "checkboxWidth": 44,
+    "checkboxHeight": 44,
+    "bodyOverflow": false
+  },
+  "runtimeErrors": [],
+  "vueWarnings": [],
+  "writes": [],
+  "functional": "detail/checkbox/keyboard, cancel bulk confirmation, empty search, combined search/category/schedule/sort/pagination/page size, cancel delete, category modal, add/edit form smoke, retry after simulated network failure, touch 44px controls and 24px gap"
+}
