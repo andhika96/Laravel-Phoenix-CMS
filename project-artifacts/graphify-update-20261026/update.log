@@ -1,0 +1,7 @@
+laravel-13-phoenix: backup verified (15 files); extracting 19 changed code files
+  warning: 6 code file(s) yielded no symbols (0.01 MB) � a data file, or source this extractor models no symbols for: resources/views/article/templates/partials/detail-knowledge-links.blade.php, resources/views/article/templates/partials/detail-reading-cards.blade.php, resources/views/article/templates/partials/detail-story-spread.blade.php, resources/views/manage_article/partials/list-status.blade.php, resources/views/manage_article/templates/partials/options-focused-reader.blade.php (+1 more)
+[graphify] Replaced 104 node(s) from re-extracted source file(s).
+Graph has 21093 nodes (above 5000 limit). Building aggregated community view...
+graph.html written (aggregated: 1628 community nodes, 1137 cross-community edges)
+Tip: run with --obsidian for full node-level detail.
+{"root": "D:\\Laragon\\www\\laravel-13-phoenix", "mode": "incremental-local-AST", "changed_code_files": 19, "pruned_sources": 0, "ast_corpus_files": 1623, "metadata_files": 81, "changed_metadata_files": 3, "empty_ast_files_as_metadata": [], "nodes": 21093, "edges": 37187, "communities": 1628, "duplicate_ids": 0, "dangling_edges": 0, "source_hash_mismatch": 0, "unaffected_nodes_lost": 0, "production_git_status_unchanged": true, "confidence": {"EXTRACTED": 35930, "INFERRED": 1257}, "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261026\\backup_20261026_160235\\graphify-out", "graph_sha256": "451346ea95638bde501ed62adb52fe1566bf6fc339356d07a19bf7a5002e278e"}

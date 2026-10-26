@@ -1,0 +1,27 @@
+{
+  "verifiedSourceFiles": [
+    "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+    "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+    "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+    "resources/views/manage_article/manage_article.blade.php",
+    "resources/views/manage_article/partials/list-status.blade.php",
+    "public/assets/css/article/manage-article-2026.css",
+    "tests/manage-article-responsive-width.test.mjs"
+  ],
+  "viewToStylesheet": [
+    {
+      "source": "resources_views_manage_article_manage_article_blade",
+      "target": "local_metadata_public_assets_css_article_manage_article_2026_css",
+      "relation": "references_stylesheet",
+      "_origin": "local_metadata",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "evidence": "literal reference in current source; file metadata only; not runtime verification",
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": "L8",
+      "weight": 1.0
+    }
+  ],
+  "graphSha256": "4536513453e22db601dfab2bb899d5cba69ff3c611c35f4fd9dea4d5801c3275",
+  "passed": true
+}

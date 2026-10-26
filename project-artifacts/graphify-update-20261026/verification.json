@@ -1,0 +1,33 @@
+{
+  "root": "D:\\Laragon\\www\\laravel-13-phoenix",
+  "mode": "incremental-local-AST",
+  "changed_code_files": 19,
+  "pruned_sources": 0,
+  "ast_corpus_files": 1623,
+  "metadata_files": 81,
+  "changed_metadata_files": 3,
+  "empty_ast_files_as_metadata": [
+    "resources/views/article/templates/partials/detail-knowledge-links.blade.php",
+    "resources/views/article/templates/partials/detail-reading-cards.blade.php",
+    "resources/views/article/templates/partials/detail-story-spread.blade.php",
+    "resources/views/manage_article/partials/list-status.blade.php",
+    "resources/views/manage_article/templates/partials/options-focused-reader.blade.php",
+    "resources/views/manage_article/templates/preview.blade.php"
+  ],
+  "nodes": 21093,
+  "edges": 37187,
+  "communities": 1628,
+  "duplicate_ids": 0,
+  "dangling_edges": 0,
+  "source_hash_mismatch": 0,
+  "unaffected_nodes_lost": 0,
+  "production_git_status_unchanged": true,
+  "confidence": {
+    "EXTRACTED": 35928,
+    "AMBIGUOUS": 2,
+    "INFERRED": 1257
+  },
+  "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261026\\backup_20261026_160235\\graphify-out",
+  "graph_sha256": "4536513453e22db601dfab2bb899d5cba69ff3c611c35f4fd9dea4d5801c3275",
+  "receiver_bindings_marked_ambiguous": 2
+}
