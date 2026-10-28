@@ -1,0 +1,18 @@
+{
+  "metadata_only": [],
+  "ambiguous_receiver_bindings": [
+    {
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L620",
+      "label": "delete",
+      "evidence": "$getDetailArticle->delete();"
+    },
+    {
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L89",
+      "label": "archive",
+      "evidence": "$definition = $this->catalog->archive()[$template] ?? $this->catalog->archive()['minimal-reading-list'];"
+    }
+  ],
+  "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261028\\backup_20261028_162822_before_quality_annotations"
+}

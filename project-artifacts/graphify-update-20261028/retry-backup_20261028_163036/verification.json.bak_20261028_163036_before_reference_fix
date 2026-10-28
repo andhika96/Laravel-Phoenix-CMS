@@ -1,0 +1,26 @@
+{
+  "root": "D:\\Laragon\\www\\laravel-13-phoenix",
+  "mode": "incremental-local-AST",
+  "changed_code_files": 8,
+  "pruned_sources": 0,
+  "ast_corpus_files": 1623,
+  "metadata_files": 82,
+  "changed_metadata_files": 2,
+  "empty_ast_files_as_metadata": [],
+  "nodes": 21094,
+  "edges": 37187,
+  "communities": 1621,
+  "duplicate_ids": 0,
+  "dangling_edges": 0,
+  "source_hash_mismatch": 0,
+  "unaffected_nodes_lost": 0,
+  "production_git_status_unchanged": true,
+  "confidence": {
+    "AMBIGUOUS": 2,
+    "EXTRACTED": 35928,
+    "INFERRED": 1257
+  },
+  "backup": "D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\graphify-update-20261028\\backup_20261028_162711\\graphify-out",
+  "graph_sha256": "51fce5c2718c75b7018d4d9f17a420276d64923798ad7b37abd8e65919da08b5",
+  "receiver_bindings_marked_ambiguous": 2
+}

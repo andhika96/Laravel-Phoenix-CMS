@@ -1,0 +1,354 @@
+{
+  "nodes": [
+    {
+      "id": "public_assets_js_vue3_manage_article_vuev3_manage_article_2026",
+      "label": "vueV3-manage-article-2026.js",
+      "file_type": "code",
+      "source_file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_assets_js_vue3_manage_article_vuev3_manage_article_2026_managearticlevue3",
+      "label": "ManageArticleVue3",
+      "file_type": "code",
+      "source_file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_manage_article_manage_article_blade",
+      "label": "manage_article.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "themes",
+      "label": "themes.",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "manage_article_partials_list_status",
+      "label": "manage_article.partials.list-status",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_themes_arunika_aurora_cms_cms_layout_blade",
+      "label": "cms_layout.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "themes_arunika_aurora_components_menu",
+      "label": "themes.arunika_aurora.components.menu",
+      "file_type": "code",
+      "source_file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_themes_arunika_aurora_cms_cms_layout_blade_php_components_cms_realtime_notification",
+      "label": "components.cms-realtime-notification",
+      "file_type": "code",
+      "source_file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_themes_arunika_equinox_cms_cms_layout_blade",
+      "label": "cms_layout.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "themes_arunika_equinox_components_menu",
+      "label": "themes.arunika_equinox.components.menu",
+      "file_type": "code",
+      "source_file": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_themes_arunika_equinox_cms_cms_layout_blade_php_components_cms_realtime_notification",
+      "label": "components.cms-realtime-notification",
+      "file_type": "code",
+      "source_file": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_themes_arunika_lucent_cms_cms_layout_blade",
+      "label": "cms_layout.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "themes_arunika_lucent_components_menu",
+      "label": "themes.arunika_lucent.components.menu",
+      "file_type": "code",
+      "source_file": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_themes_arunika_prism_cms_cms_layout_blade",
+      "label": "cms_layout.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "themes_arunika_prism_components_menu",
+      "label": "themes.arunika_prism.components.menu",
+      "file_type": "code",
+      "source_file": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_themes_arunika_prism_cms_cms_layout_blade_php_components_cms_realtime_notification",
+      "label": "components.cms-realtime-notification",
+      "file_type": "code",
+      "source_file": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_themes_calm_green_cms_cms_layout_blade",
+      "label": "cms_layout.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "themes_calm_green_components_menu",
+      "label": "themes.calm_green.components.menu",
+      "file_type": "code",
+      "source_file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_themes_default_cms_cms_layout_blade",
+      "label": "cms_layout.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "themes_default_components_menu",
+      "label": "themes.default.components.menu",
+      "file_type": "code",
+      "source_file": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "local_metadata_public_assets_css_article_manage_article_2026_css",
+      "label": "public/assets/css/article/manage-article-2026.css",
+      "source_file": "public/assets/css/article/manage-article-2026.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "8fba6790a515b2065e57e25da8c8aeff8a9742cc0db69c076ab544cd728a25ac",
+      "bytes": 16814
+    },
+    {
+      "id": "local_metadata_public_assets_css_cms_bootstrap_theme_css",
+      "label": "public/assets/css/cms-bootstrap-theme.css",
+      "source_file": "public/assets/css/cms-bootstrap-theme.css",
+      "source_location": "L1",
+      "file_type": "file",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "19af32e8a98f3cc422c6c46bd18157c386a3658df9fef7748ba4d4a1e55c2a15",
+      "bytes": 9082
+    }
+  ],
+  "edges": [
+    {
+      "source": "public_assets_js_vue3_manage_article_vuev3_manage_article_2026",
+      "target": "public_assets_js_vue3_manage_article_vuev3_manage_article_2026_managearticlevue3",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_manage_article_manage_article_blade",
+      "target": "themes",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_manage_article_manage_article_blade",
+      "target": "manage_article_partials_list_status",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_manage_article_manage_article_blade",
+      "target": "manage_article_partials_list_status",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_manage_article_manage_article_blade",
+      "target": "manage_article_partials_list_status",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_themes_arunika_aurora_cms_cms_layout_blade",
+      "target": "themes_arunika_aurora_components_menu",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_themes_arunika_aurora_cms_cms_layout_blade",
+      "target": "resources_views_themes_arunika_aurora_cms_cms_layout_blade_php_components_cms_realtime_notification",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_themes_arunika_equinox_cms_cms_layout_blade",
+      "target": "themes_arunika_equinox_components_menu",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_themes_arunika_equinox_cms_cms_layout_blade",
+      "target": "resources_views_themes_arunika_equinox_cms_cms_layout_blade_php_components_cms_realtime_notification",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_themes_arunika_lucent_cms_cms_layout_blade",
+      "target": "themes_arunika_lucent_components_menu",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_themes_arunika_prism_cms_cms_layout_blade",
+      "target": "themes_arunika_prism_components_menu",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_themes_arunika_prism_cms_cms_layout_blade",
+      "target": "resources_views_themes_arunika_prism_cms_cms_layout_blade_php_components_cms_realtime_notification",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_themes_calm_green_cms_cms_layout_blade",
+      "target": "themes_calm_green_components_menu",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_themes_default_cms_cms_layout_blade",
+      "target": "themes_default_components_menu",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "failed_sources": [],
+  "extracted_sources": [
+    "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\js\\vue3\\manage_article\\vueV3-manage-article-2026.js",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\manage_article\\manage_article.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\themes\\arunika_aurora\\cms\\cms_layout.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\themes\\arunika_equinox\\cms\\cms_layout.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\themes\\arunika_lucent\\cms\\cms_layout.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\themes\\arunika_prism\\cms\\cms_layout.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\themes\\calm_green\\cms\\cms_layout.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\themes\\default\\cms\\cms_layout.blade.php"
+  ]
+}

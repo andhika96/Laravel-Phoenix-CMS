@@ -1,0 +1,46 @@
+{
+  "ok": true,
+  "changed_sources_verified": 10,
+  "cms_layout_references_verified": 6,
+  "references": [
+    {
+      "source_file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "source_location": "L52",
+      "target": "public/assets/css/cms-bootstrap-theme.css",
+      "confidence": "EXTRACTED"
+    },
+    {
+      "source_file": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "source_location": "L52",
+      "target": "public/assets/css/cms-bootstrap-theme.css",
+      "confidence": "EXTRACTED"
+    },
+    {
+      "source_file": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "source_location": "L40",
+      "target": "public/assets/css/cms-bootstrap-theme.css",
+      "confidence": "EXTRACTED"
+    },
+    {
+      "source_file": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "source_location": "L52",
+      "target": "public/assets/css/cms-bootstrap-theme.css",
+      "confidence": "EXTRACTED"
+    },
+    {
+      "source_file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "source_location": "L46",
+      "target": "public/assets/css/cms-bootstrap-theme.css",
+      "confidence": "EXTRACTED"
+    },
+    {
+      "source_file": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "source_location": "L44",
+      "target": "public/assets/css/cms-bootstrap-theme.css",
+      "confidence": "EXTRACTED"
+    }
+  ],
+  "article_view_stylesheet_verified": true,
+  "graph_mirror_matches": true,
+  "graph_sha256": "58ceeebe380f15055a864a9828a94072d03c67e72fe4d80e0fc53ae0d11a426d"
+}

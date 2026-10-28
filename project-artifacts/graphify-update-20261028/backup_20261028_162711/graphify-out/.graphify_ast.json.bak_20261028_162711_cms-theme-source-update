@@ -1,0 +1,4776 @@
+{
+  "nodes": [
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller",
+      "label": "Manage_Article_Controller.php",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "label": "Manage_Article_Controller",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L45",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_construct",
+      "label": ".__construct()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L47",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_index",
+      "label": ".index()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L56",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "where",
+            "receiver_type": "Article_Status",
+            "lang": "php",
+            "line": "L58"
+          },
+          {
+            "callee": "get",
+            "receiver_type": "Article_Categories",
+            "lang": "php",
+            "line": "L58"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_add",
+      "label": ".add()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L64",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "get",
+            "receiver_type": "Article_Categories",
+            "lang": "php",
+            "line": "L68"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_store",
+      "label": ".store()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L74",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "beginTransaction",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L78"
+          },
+          {
+            "callee": "create",
+            "receiver_type": "Article",
+            "lang": "php",
+            "line": "L117"
+          },
+          {
+            "callee": "find",
+            "receiver_type": "Article",
+            "lang": "php",
+            "line": "L126"
+          },
+          {
+            "callee": "commit",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L135"
+          },
+          {
+            "callee": "find",
+            "receiver_type": "Article_Categories",
+            "lang": "php",
+            "line": "L138"
+          },
+          {
+            "callee": "now",
+            "receiver_type": "Carbon",
+            "lang": "php",
+            "line": "L145"
+          },
+          {
+            "callee": "rollBack",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L150"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_storecategory",
+      "label": ".storeCategory()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L201",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "beginTransaction",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L205"
+          },
+          {
+            "callee": "create",
+            "receiver_type": "Article_Categories",
+            "lang": "php",
+            "line": "L218"
+          },
+          {
+            "callee": "commit",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L222"
+          },
+          {
+            "callee": "rollBack",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L226"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_edit",
+      "label": ".edit()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L277",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "with",
+            "receiver_type": "Article",
+            "lang": "php",
+            "line": "L281"
+          },
+          {
+            "callee": "get",
+            "receiver_type": "Article_Categories",
+            "lang": "php",
+            "line": "L292"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_update",
+      "label": ".update()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L301",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "find",
+            "receiver_type": "Article",
+            "lang": "php",
+            "line": "L303"
+          },
+          {
+            "callee": "beginTransaction",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L309"
+          },
+          {
+            "callee": "now",
+            "receiver_type": "Carbon",
+            "lang": "php",
+            "line": "L354"
+          },
+          {
+            "callee": "disk",
+            "receiver_type": "Storage",
+            "lang": "php",
+            "line": "L362"
+          },
+          {
+            "callee": "commit",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L400"
+          },
+          {
+            "callee": "find",
+            "receiver_type": "Article_Categories",
+            "lang": "php",
+            "line": "L403"
+          },
+          {
+            "callee": "rollBack",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L415"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_updatecategory",
+      "label": ".updateCategory()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L469",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "find",
+            "receiver_type": "Article_Categories",
+            "lang": "php",
+            "line": "L472"
+          },
+          {
+            "callee": "beginTransaction",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L478"
+          },
+          {
+            "callee": "commit",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L495"
+          },
+          {
+            "callee": "rollBack",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L499"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_bulk_update",
+      "label": ".bulk_update()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L554",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "where",
+            "receiver_type": "Article_Status",
+            "lang": "php",
+            "line": "L562"
+          },
+          {
+            "callee": "withMessages",
+            "receiver_type": "\\Illuminate\\Validation\\ValidationException",
+            "lang": "php",
+            "line": "L567"
+          },
+          {
+            "callee": "transaction",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L569"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_closure_1",
+      "label": "{closure#1}()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L562",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_closure_2",
+      "label": "{closure#2}()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L569",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "whereIn",
+            "receiver_type": "Article",
+            "lang": "php",
+            "line": "L570"
+          },
+          {
+            "callee": "withMessages",
+            "receiver_type": "\\Illuminate\\Validation\\ValidationException",
+            "lang": "php",
+            "line": "L572"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_delete",
+      "label": ".delete()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L587",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "where",
+            "receiver_type": "Article",
+            "lang": "php",
+            "line": "L591"
+          },
+          {
+            "callee": "beginTransaction",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L600"
+          },
+          {
+            "callee": "disk",
+            "receiver_type": "Storage",
+            "lang": "php",
+            "line": "L606"
+          },
+          {
+            "callee": "commit",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L622"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_deletecategory",
+      "label": ".deleteCategory()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L672",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "where",
+            "receiver_type": "Article_Categories",
+            "lang": "php",
+            "line": "L674"
+          },
+          {
+            "callee": "beginTransaction",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L678"
+          },
+          {
+            "callee": "rollback",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L684"
+          },
+          {
+            "callee": "where",
+            "receiver_type": "Article",
+            "lang": "php",
+            "line": "L706"
+          },
+          {
+            "callee": "commit",
+            "receiver_type": "DB",
+            "lang": "php",
+            "line": "L718"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_detaildata",
+      "label": ".detailData()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L814",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "with",
+            "receiver_type": "Article",
+            "lang": "php",
+            "line": "L818"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_detaildatacategory",
+      "label": ".detailDataCategory()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L860",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "where",
+            "receiver_type": "Article_Categories",
+            "lang": "php",
+            "line": "L862"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_checkdatacategory",
+      "label": ".checkDataCategory()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L899",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "where",
+            "receiver_type": "Article_Categories",
+            "lang": "php",
+            "line": "L901"
+          },
+          {
+            "callee": "where",
+            "receiver_type": "Article",
+            "lang": "php",
+            "line": "L907"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_listdata",
+      "label": ".listData()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L977",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "query",
+            "receiver_type": "Article",
+            "lang": "php",
+            "line": "L988"
+          },
+          {
+            "callee": "where",
+            "receiver_type": "Article_Status",
+            "lang": "php",
+            "line": "L993"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_listcategories",
+      "label": ".listCategories()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1016",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "whereLike",
+            "receiver_type": "Article_Categories",
+            "lang": "php",
+            "line": "L1019"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadthumbnail",
+      "label": ".uploadThumbnail()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1029",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadthumbnailsmall",
+      "label": ".uploadThumbnailSmall()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1094",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_storeckfinderthumbnail",
+      "label": ".storeCkfinderThumbnail()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1159",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "disk",
+            "receiver_type": "Storage",
+            "lang": "php",
+            "line": "L1175"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadfile",
+      "label": ".uploadFile()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1195",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadfilesmall",
+      "label": ".uploadFileSmall()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1211",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_deletefile",
+      "label": ".deleteFile()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1235",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "disk",
+            "receiver_type": "Storage",
+            "lang": "php",
+            "line": "L1239"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_getimageurl",
+      "label": ".getImageURL()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1245",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "disk",
+            "receiver_type": "Storage",
+            "lang": "php",
+            "line": "L1247"
+          },
+          {
+            "callee": "url",
+            "receiver_type": "Storage",
+            "lang": "php",
+            "line": "L1249"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_isvalidimage",
+      "label": ".isValidImage()",
+      "file_type": "code",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1255",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_resources_manage_article_managearticlelistresource",
+      "label": "ManageArticleListResource.php",
+      "file_type": "code",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_resources_manage_article_managearticlelistresource_managearticlelistresource",
+      "label": "ManageArticleListResource",
+      "file_type": "code",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L10",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_resources_manage_article_managearticlelistresource_managearticlelistresource_toarray",
+      "label": ".toArray()",
+      "file_type": "code",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L17",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "limit",
+            "receiver_type": "Str",
+            "lang": "php",
+            "line": "L23"
+          },
+          {
+            "callee": "where",
+            "receiver_type": "Article_Status",
+            "lang": "php",
+            "line": "L25"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_resources_manage_article_managearticlelistresource_closure_1",
+      "label": "{closure#1}()",
+      "file_type": "code",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L37",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_resources_manage_article_managearticlelistresource_managearticlelistresource_getimageurl",
+      "label": ".getImageURL()",
+      "file_type": "code",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L60",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "disk",
+            "receiver_type": "Storage",
+            "lang": "php",
+            "line": "L62"
+          },
+          {
+            "callee": "url",
+            "receiver_type": "Storage",
+            "lang": "php",
+            "line": "L64"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions",
+      "label": "ArticleTemplateOptions.php",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "label": "ArticleTemplateOptions",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L7",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_construct",
+      "label": ".__construct()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L79",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "articletemplatecatalog",
+      "label": "ArticleTemplateCatalog",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "label": ".archive()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L83",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "has",
+            "receiver_type": "\\Illuminate\\Support\\Arr",
+            "lang": "php",
+            "line": "L87"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_displayoptions",
+      "label": ".displayOptions()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L159",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "label": ".storyLayout()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L168",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "label": ".detail()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L212",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_focusedreader",
+      "label": ".focusedReader()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L229",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_closure_1",
+      "label": "{closure#1}()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L231",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_archives",
+      "label": ".archives()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L260",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_details",
+      "label": ".details()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L271",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_copyoption",
+      "label": ".copyOption()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L282",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_detailcopyoption",
+      "label": ".detailCopyOption()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L290",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_toolbaroption",
+      "label": ".toolbarOption()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L302",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "label": ".searchOption()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L312",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_searchtype",
+      "label": ".searchType()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L331",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_searchicon",
+      "label": ".searchIcon()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L338",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_paginationarrowicon",
+      "label": ".paginationArrowIcon()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L343",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_categorymode",
+      "label": ".categoryMode()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L348",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_column",
+      "label": ".column()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L355",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_thumbnail",
+      "label": ".thumbnail()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L360",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "label": ".editorialJournal()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L380",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "label": ".pagination()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L432",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_paginationtype",
+      "label": ".paginationType()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L459",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrange",
+      "label": ".paginationRange()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L467",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrangevalue",
+      "label": ".paginationRangeValue()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L481",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_sidebar",
+      "label": ".sidebar()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L490",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_sidebarposition",
+      "label": ".sidebarPosition()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L505",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_shell",
+      "label": ".shell()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L512",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "label": ".frame()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L521",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "label": ".radius()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L532",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_responsivebox",
+      "label": ".responsiveBox()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L562",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_box",
+      "label": ".box()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L575",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_headingtag",
+      "label": ".headingTag()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L587",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_color",
+      "label": ".color()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L594",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_optionalcolor",
+      "label": ".optionalColor()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L629",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_optionalmediaurl",
+      "label": ".optionalMediaUrl()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L640",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "label": ".dimension()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L659",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_parsedimension",
+      "label": ".parseDimension()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L680",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_formatdimension",
+      "label": ".formatDimension()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L700",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "label": ".boolean()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L708",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_text",
+      "label": ".text()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L717",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "limit",
+            "receiver_type": "Str",
+            "lang": "php",
+            "line": "L723"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "label": ".array()",
+      "file_type": "code",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L726",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "public_assets_js_vue3_manage_article_vuev3_manage_article_2026",
+      "label": "vueV3-manage-article-2026.js",
+      "file_type": "code",
+      "source_file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_assets_js_vue3_manage_article_vuev3_manage_article_2026_managearticlevue3",
+      "label": "ManageArticleVue3",
+      "file_type": "code",
+      "source_file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_detail_blade",
+      "label": "detail.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/article/detail.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_detail_blade_php_themes",
+      "label": "themes.",
+      "file_type": "code",
+      "source_file": "resources/views/article/detail.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_detail_editorial_feature_blade",
+      "label": "editorial-feature.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/detail/editorial-feature.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_detail_editorial_feature_blade_php_article_templates_partials_detail_header_copy",
+      "label": "article.templates.partials.detail-header-copy",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/detail/editorial-feature.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_detail_editorial_feature_blade_php_article_templates_partials_template_shell_attributes",
+      "label": "article.templates.partials.template-shell-attributes",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/detail/editorial-feature.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_detail_editorial_feature_blade_php_article_templates_partials_detail_navigation",
+      "label": "article.templates.partials.detail-navigation",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/detail/editorial-feature.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_detail_focused_reader_blade",
+      "label": "focused-reader.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/detail/focused-reader.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_detail_focused_reader_blade_php_article_templates_partials_template_shell_attributes",
+      "label": "article.templates.partials.template-shell-attributes",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/detail/focused-reader.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_detail_focused_reader_blade_php_article_templates_partials_detail_header_copy",
+      "label": "article.templates.partials.detail-header-copy",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/detail/focused-reader.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_detail_focused_reader_blade_php_article_templates_partials_detail_navigation",
+      "label": "article.templates.partials.detail-navigation",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/detail/focused-reader.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_detail_knowledge_toc_blade",
+      "label": "knowledge-toc.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/detail/knowledge-toc.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_detail_knowledge_toc_blade_php_article_templates_partials_template_shell_attributes",
+      "label": "article.templates.partials.template-shell-attributes",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/detail/knowledge-toc.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_detail_knowledge_toc_blade_php_article_templates_partials_detail_header_copy",
+      "label": "article.templates.partials.detail-header-copy",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/detail/knowledge-toc.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_detail_knowledge_toc_blade_php_article_templates_partials_detail_navigation",
+      "label": "article.templates.partials.detail-navigation",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/detail/knowledge-toc.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_partials_detail_knowledge_links_blade",
+      "label": "detail-knowledge-links.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/partials/detail-knowledge-links.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_partials_detail_navigation_blade",
+      "label": "detail-navigation.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/partials/detail-navigation.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "article_templates_partials_detail_story_spread",
+      "label": "article.templates.partials.detail-story-spread",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/partials/detail-navigation.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "article_templates_partials_detail_knowledge_links",
+      "label": "article.templates.partials.detail-knowledge-links",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/partials/detail-navigation.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "article_templates_partials_detail_reading_cards",
+      "label": "article.templates.partials.detail-reading-cards",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/partials/detail-navigation.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_partials_detail_reading_cards_blade",
+      "label": "detail-reading-cards.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/partials/detail-reading-cards.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_article_templates_partials_detail_story_spread_blade",
+      "label": "detail-story-spread.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/article/templates/partials/detail-story-spread.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_manage_article_manage_article_blade",
+      "label": "manage_article.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_manage_article_manage_article_blade_php_themes",
+      "label": "themes.",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "manage_article_partials_list_status",
+      "label": "manage_article.partials.list-status",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_manage_article_manage_article_add_blade",
+      "label": "manage_article_add.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/manage_article_add.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_manage_article_manage_article_add_blade_php_themes",
+      "label": "themes.",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/manage_article_add.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_manage_article_manage_article_add_blade_php_manage_article_partials_thumbnail",
+      "label": "manage_article.partials.thumbnail",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/manage_article_add.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_manage_article_manage_article_edit_blade",
+      "label": "manage_article_edit.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/manage_article_edit.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_manage_article_manage_article_edit_blade_php_themes",
+      "label": "themes.",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/manage_article_edit.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_manage_article_manage_article_edit_blade_php_manage_article_partials_thumbnail",
+      "label": "manage_article.partials.thumbnail",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/manage_article_edit.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_manage_article_partials_list_status_blade",
+      "label": "list-status.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/partials/list-status.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_manage_article_templates_partials_options_focused_reader_blade",
+      "label": "options-focused-reader.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/templates/partials/options-focused-reader.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "resources_views_manage_article_templates_preview_blade",
+      "label": "preview.blade.php",
+      "file_type": "code",
+      "source_file": "resources/views/manage_article/templates/preview.blade.php",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_manage_article_responsive_width_test",
+      "label": "manage-article-responsive-width.test.mjs",
+      "file_type": "code",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_manage_article_responsive_width_test_sourcepath",
+      "label": "sourcePath",
+      "file_type": "code",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_manage_article_responsive_width_test_source",
+      "label": "source",
+      "file_type": "code",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "tests_manage_article_responsive_width_test_loadmanagearticleoptions",
+      "label": "loadManageArticleOptions()",
+      "file_type": "code",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L13",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_controller",
+      "label": "App\\Http\\Controllers\\Controller",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_controllers_api_base_api_rev_controller",
+      "label": "App\\Http\\Controllers\\Api\\Base_API_Rev_Controller",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_resources_manage_article_categoryresource",
+      "label": "App\\Http\\Resources\\Manage_Article\\CategoryResource",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_resources_manage_article_detailcategoryresource",
+      "label": "App\\Http\\Resources\\Manage_Article\\DetailCategoryResource",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_resources_manage_article_managearticleeditresource",
+      "label": "App\\Http\\Resources\\Manage_Article\\ManageArticleEditResource",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_models_awesome_admin_account",
+      "label": "App\\Models\\Awesome_Admin\\Account",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_models_article_article",
+      "label": "App\\Models\\Article\\Article",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_models_article_article_categories",
+      "label": "App\\Models\\Article\\Article_Categories",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_models_article_article_subcategories",
+      "label": "App\\Models\\Article\\Article_Subcategories",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_models_article_article_status",
+      "label": "App\\Models\\Article\\Article_Status",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "illuminate_http_request",
+      "label": "Illuminate\\Http\\Request",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "illuminate_http_uploadedfile",
+      "label": "Illuminate\\Http\\UploadedFile",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "illuminate_http_resources_json_jsonresource",
+      "label": "Illuminate\\Http\\Resources\\Json\\JsonResource",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "illuminate_support_str",
+      "label": "Illuminate\\Support\\Str",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "illuminate_support_helper",
+      "label": "Illuminate\\Support\\Helper",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "illuminate_support_facades_db",
+      "label": "Illuminate\\Support\\Facades\\DB",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "illuminate_support_facades_storage",
+      "label": "Illuminate\\Support\\Facades\\Storage",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_requests_article_addcategoryrequest",
+      "label": "App\\Http\\Requests\\Article\\AddCategoryRequest",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_requests_article_editcategoryrequest",
+      "label": "App\\Http\\Requests\\Article\\EditCategoryRequest",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_requests_article_addarticlerequest",
+      "label": "App\\Http\\Requests\\Article\\AddArticleRequest",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_http_requests_article_editarticlerequest",
+      "label": "App\\Http\\Requests\\Article\\EditArticleRequest",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "carbon_carbon",
+      "label": "Carbon\\Carbon",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "intervention_image_imagemanager",
+      "label": "Intervention\\Image\\ImageManager",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "intervention_image_drivers_gd_driver",
+      "label": "Intervention\\Image\\Drivers\\Gd\\Driver",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "intervention_image_imagemanagerstatic",
+      "label": "Intervention\\Image\\ImageManagerStatic",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_events_cms_articlecreated",
+      "label": "App\\Events\\CMS\\ArticleCreated",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_events_cms_articleupdated",
+      "label": "App\\Events\\CMS\\ArticleUpdated",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_article_articlepasswordaccess",
+      "label": "App\\Support\\Article\\ArticlePasswordAccess",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_support_ckfindersessionbridge",
+      "label": "App\\Support\\CkfinderSessionBridge",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "local_metadata_public_assets_css_article_article_editor_content_css",
+      "label": "public/assets/css/article/article-editor-content.css",
+      "source_file": "public/assets/css/article/article-editor-content.css",
+      "source_location": "L1",
+      "file_type": "concept",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "6afb1ae03f2884482dd37a387895f5d1bdeeba3b7cd6798232ef2a00368646b1",
+      "bytes": 13658
+    },
+    {
+      "id": "local_metadata_public_assets_css_article_article_frontend_2026_css",
+      "label": "public/assets/css/article/article-frontend-2026.css",
+      "source_file": "public/assets/css/article/article-frontend-2026.css",
+      "source_location": "L1",
+      "file_type": "concept",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "1184687649111f8c9967c0c3841e345b97da87117a4a00168c44c8b7b67a1e4e",
+      "bytes": 141681
+    },
+    {
+      "id": "local_metadata_public_assets_css_article_manage_article_2026_css",
+      "label": "public/assets/css/article/manage-article-2026.css",
+      "source_file": "public/assets/css/article/manage-article-2026.css",
+      "source_location": "L1",
+      "file_type": "concept",
+      "representation": "file_metadata_only",
+      "_origin": "local_metadata",
+      "content_sha256": "7571710acf1c5aed9676f5ad3f04174ac0f1a87d4d5f3fceebcb7cd965afb5eb",
+      "bytes": 12749
+    }
+  ],
+  "edges": [
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_controllers_controller",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_controllers_api_base_api_rev_controller",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_resources_manage_article_categoryresource",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_resources_manage_article_detailcategoryresource",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_resources_manage_article_managearticlelistresource_managearticlelistresource",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_resources_manage_article_managearticleeditresource",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_models_awesome_admin_account",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_models_article_article",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_models_article_article_categories",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_models_article_article_subcategories",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_models_article_article_status",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "illuminate_http_request",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "illuminate_http_uploadedfile",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "illuminate_http_resources_json_jsonresource",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "illuminate_support_str",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L24",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "illuminate_support_helper",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "illuminate_support_facades_db",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "illuminate_support_facades_storage",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_requests_article_addcategoryrequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_requests_article_editcategoryrequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_requests_article_addarticlerequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L32",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_requests_article_editarticlerequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "carbon_carbon",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "intervention_image_imagemanager",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L36",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "intervention_image_drivers_gd_driver",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "intervention_image_imagemanagerstatic",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_events_cms_articlecreated",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_events_cms_articleupdated",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L41",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_support_article_articlepasswordaccess",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L42",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_support_ckfindersessionbridge",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L43",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L45",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_controller",
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L45",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_construct",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_construct",
+      "target": "app_support_article_articlepasswordaccess",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L47",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_support_article_articlepasswordaccess",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L47",
+      "weight": 1.0,
+      "context": "field",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_index",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L56",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_add",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_add",
+      "target": "illuminate_http_request",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L64",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_store",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L74",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_store",
+      "target": "app_http_requests_article_addarticlerequest",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L74",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_storecategory",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L201",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_storecategory",
+      "target": "app_http_requests_article_addcategoryrequest",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L201",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_edit",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L277",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_edit",
+      "target": "app_models_awesome_admin_account",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L277",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_edit",
+      "target": "illuminate_http_request",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L277",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_update",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L301",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_update",
+      "target": "app_http_requests_article_editarticlerequest",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L301",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_updatecategory",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L469",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_updatecategory",
+      "target": "app_http_requests_article_editcategoryrequest",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L469",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_bulk_update",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L554",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_bulk_update",
+      "target": "illuminate_http_request",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L554",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_closure_1",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L562",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_closure_2",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L569",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_delete",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L587",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_delete",
+      "target": "app_models_awesome_admin_account",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L587",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_delete",
+      "target": "illuminate_http_request",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L587",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_deletecategory",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L672",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_deletecategory",
+      "target": "illuminate_http_request",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L672",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_detaildata",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L814",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_detaildata",
+      "target": "app_models_awesome_admin_account",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L814",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_detaildatacategory",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L860",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_checkdatacategory",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L899",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_checkdatacategory",
+      "target": "illuminate_http_request",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L899",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_listdata",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L977",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_listdata",
+      "target": "illuminate_http_request",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L977",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_listcategories",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1016",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_listcategories",
+      "target": "illuminate_http_request",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1016",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadthumbnail",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1029",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadthumbnailsmall",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1094",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_storeckfinderthumbnail",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1159",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadfile",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1195",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadfilesmall",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1211",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_deletefile",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1235",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_getimageurl",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1245",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_isvalidimage",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1255",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_store",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadthumbnail",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L123",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_store",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadthumbnailsmall",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L124",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_store",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_storeckfinderthumbnail",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L130",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_update",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_deletefile",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L364",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_update",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadthumbnail",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L368",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_update",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadthumbnailsmall",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L379",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_update",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_storeckfinderthumbnail",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L381",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_delete",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_deletefile",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L608",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_delete",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_delete",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L620",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_deletecategory",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_update",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L714",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_deletecategory",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_delete",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L716",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadthumbnail",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_isvalidimage",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1051",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadthumbnail",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadfile",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1082",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadthumbnailsmall",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_isvalidimage",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1116",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadthumbnailsmall",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadfilesmall",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1147",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_deletefile",
+      "target": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_delete",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1239",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_resources_manage_article_managearticlelistresource",
+      "target": "illuminate_http_request",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_resources_manage_article_managearticlelistresource",
+      "target": "illuminate_http_resources_json_jsonresource",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_resources_manage_article_managearticlelistresource",
+      "target": "app_models_article_article_status",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_resources_manage_article_managearticlelistresource",
+      "target": "illuminate_support_str",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_resources_manage_article_managearticlelistresource",
+      "target": "app_http_resources_manage_article_managearticlelistresource_managearticlelistresource",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_resources_manage_article_managearticlelistresource_managearticlelistresource",
+      "target": "illuminate_http_resources_json_jsonresource",
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_resources_manage_article_managearticlelistresource_managearticlelistresource",
+      "target": "app_http_resources_manage_article_managearticlelistresource_managearticlelistresource_toarray",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_resources_manage_article_managearticlelistresource_managearticlelistresource_toarray",
+      "target": "illuminate_http_request",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L17",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_resources_manage_article_managearticlelistresource",
+      "target": "app_http_resources_manage_article_managearticlelistresource_closure_1",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_resources_manage_article_managearticlelistresource_managearticlelistresource",
+      "target": "app_http_resources_manage_article_managearticlelistresource_managearticlelistresource_getimageurl",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L60",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions",
+      "target": "illuminate_support_str",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_construct",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L79",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_construct",
+      "target": "articletemplatecatalog",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L79",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "articletemplatecatalog",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L79",
+      "weight": 1.0,
+      "context": "field",
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L83",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_displayoptions",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L159",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L168",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L212",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_focusedreader",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L229",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_closure_1",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L231",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_archives",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L260",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_details",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L271",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_copyoption",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L282",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_detailcopyoption",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L290",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_toolbaroption",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L302",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L312",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_searchtype",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L331",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_searchicon",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L338",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationarrowicon",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L343",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_categorymode",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L348",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_column",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L355",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_thumbnail",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L360",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L380",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L432",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationtype",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L459",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrange",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L467",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrangevalue",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L481",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_sidebar",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L490",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_sidebarposition",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L505",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_shell",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L512",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L521",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L532",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_responsivebox",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L562",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_box",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L575",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_headingtag",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L587",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_color",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L594",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_optionalcolor",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L629",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_optionalmediaurl",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L640",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L659",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_parsedimension",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L680",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_formatdimension",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L700",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L708",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_text",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L717",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L726",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L89",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_displayoptions",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L98",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_copyoption",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L100",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L105",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_toolbaroption",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L106",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_thumbnail",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L108",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L109",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_headingtag",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L111",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_shell",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L113",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_categorymode",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L117",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L119",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_sidebar",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L121",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_column",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L126",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L133",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L137",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L141",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L153",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_displayoptions",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L163",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L172",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L175",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_column",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L190",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_storylayout",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_text",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L194",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_displayoptions",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L215",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_detailcopyoption",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L217",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L218",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_shell",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L221",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_focusedreader",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L224",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L224",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_focusedreader",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L251",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_focusedreader",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_text",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L256",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archives",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_archive",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L264",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_archives",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L265",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_details",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_detail",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L275",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_details",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L276",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_copyoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L285",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_copyoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_text",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L286",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detailcopyoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L296",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_detailcopyoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_text",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L298",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_toolbaroption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L307",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_toolbaroption",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L314",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_searchtype",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L315",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L316",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L317",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_searchicon",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L318",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_searchoption",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_optionalcolor",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L319",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_thumbnail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L374",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_thumbnail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_color",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L375",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_thumbnail",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L376",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L394",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L397",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_color",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L409",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L410",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_editorialjournal",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_optionalmediaurl",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L415",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationtype",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L437",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrange",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L438",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L439",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L440",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_optionalcolor",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L442",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationarrowicon",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L449",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L451",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L453",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_pagination",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_responsivebox",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L454",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrange",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_paginationrangevalue",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L472",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_sidebar",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L493",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_sidebar",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_sidebarposition",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L496",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_shell",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_responsivebox",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L515",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_shell",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L517",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L524",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_color",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L525",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L526",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_frame",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L527",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_parsedimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L534",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_radius",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_formatdimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L541",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_responsivebox",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_boolean",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L565",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_responsivebox",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_box",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L569",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_box",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_array",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L577",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_box",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L581",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_optionalcolor",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_color",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L635",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_parsedimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L661",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_support_article_articletemplateoptions_articletemplateoptions_dimension",
+      "target": "app_support_article_articletemplateoptions_articletemplateoptions_formatdimension",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L668",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "public_assets_js_vue3_manage_article_vuev3_manage_article_2026",
+      "target": "public_assets_js_vue3_manage_article_vuev3_manage_article_2026_managearticlevue3",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_detail_blade",
+      "target": "resources_views_article_detail_blade_php_themes",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/detail.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_detail_editorial_feature_blade",
+      "target": "resources_views_article_templates_detail_editorial_feature_blade_php_article_templates_partials_detail_header_copy",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/detail/editorial-feature.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_detail_editorial_feature_blade",
+      "target": "resources_views_article_templates_detail_editorial_feature_blade_php_article_templates_partials_template_shell_attributes",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/detail/editorial-feature.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_detail_editorial_feature_blade",
+      "target": "resources_views_article_templates_detail_editorial_feature_blade_php_article_templates_partials_detail_navigation",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/detail/editorial-feature.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_detail_focused_reader_blade",
+      "target": "resources_views_article_templates_detail_focused_reader_blade_php_article_templates_partials_template_shell_attributes",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/detail/focused-reader.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_detail_focused_reader_blade",
+      "target": "resources_views_article_templates_detail_focused_reader_blade_php_article_templates_partials_detail_header_copy",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/detail/focused-reader.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_detail_focused_reader_blade",
+      "target": "resources_views_article_templates_detail_focused_reader_blade_php_article_templates_partials_detail_navigation",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/detail/focused-reader.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_detail_knowledge_toc_blade",
+      "target": "resources_views_article_templates_detail_knowledge_toc_blade_php_article_templates_partials_template_shell_attributes",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/detail/knowledge-toc.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_detail_knowledge_toc_blade",
+      "target": "resources_views_article_templates_detail_knowledge_toc_blade_php_article_templates_partials_detail_header_copy",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/detail/knowledge-toc.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_detail_knowledge_toc_blade",
+      "target": "resources_views_article_templates_detail_knowledge_toc_blade_php_article_templates_partials_detail_navigation",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/detail/knowledge-toc.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_partials_detail_navigation_blade",
+      "target": "article_templates_partials_detail_story_spread",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/partials/detail-navigation.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_partials_detail_navigation_blade",
+      "target": "article_templates_partials_detail_knowledge_links",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/partials/detail-navigation.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_article_templates_partials_detail_navigation_blade",
+      "target": "article_templates_partials_detail_reading_cards",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/article/templates/partials/detail-navigation.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_manage_article_manage_article_blade",
+      "target": "resources_views_manage_article_manage_article_blade_php_themes",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_manage_article_manage_article_blade",
+      "target": "manage_article_partials_list_status",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_manage_article_manage_article_blade",
+      "target": "manage_article_partials_list_status",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_manage_article_manage_article_blade",
+      "target": "manage_article_partials_list_status",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/manage_article/manage_article.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_manage_article_manage_article_add_blade",
+      "target": "resources_views_manage_article_manage_article_add_blade_php_themes",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/manage_article/manage_article_add.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_manage_article_manage_article_add_blade",
+      "target": "resources_views_manage_article_manage_article_add_blade_php_manage_article_partials_thumbnail",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/manage_article/manage_article_add.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_manage_article_manage_article_edit_blade",
+      "target": "resources_views_manage_article_manage_article_edit_blade_php_themes",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/manage_article/manage_article_edit.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "resources_views_manage_article_manage_article_edit_blade",
+      "target": "resources_views_manage_article_manage_article_edit_blade_php_manage_article_partials_thumbnail",
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/views/manage_article/manage_article_edit.blade.php",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_manage_article_responsive_width_test",
+      "target": "ref_node_assert",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_manage_article_responsive_width_test",
+      "target": "ref_node_fs",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_manage_article_responsive_width_test",
+      "target": "ref_node_path",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_manage_article_responsive_width_test",
+      "target": "ref_node_test",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_manage_article_responsive_width_test",
+      "target": "ref_node_vm",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_manage_article_responsive_width_test",
+      "target": "tests_manage_article_responsive_width_test_sourcepath",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_manage_article_responsive_width_test",
+      "target": "tests_manage_article_responsive_width_test_source",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_manage_article_responsive_width_test",
+      "target": "tests_manage_article_responsive_width_test_loadmanagearticleoptions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_manage_article_responsive_width_test",
+      "target": "tests_manage_article_responsive_width_test_loadmanagearticleoptions",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L54",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_index",
+      "target": "app_support_article_articletemplatecatalog_articletemplatecatalog_view",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L58",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_add",
+      "target": "app_support_article_articletemplatecatalog_articletemplatecatalog_view",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_store",
+      "target": "app_models_event_eventoccurrence_eventoccurrence_event",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L139",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_store",
+      "target": "app_events_cms_articlecreated_articlecreated",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L139",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_store",
+      "target": "app_helper_common_t",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L159",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_storecategory",
+      "target": "app_helper_common_t",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L235",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_edit",
+      "target": "app_support_article_articletemplatecatalog_articletemplatecatalog_view",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L292",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_update",
+      "target": "app_models_event_eventoccurrence_eventoccurrence_event",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L404",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_update",
+      "target": "app_events_cms_articleupdated_articleupdated",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L404",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_update",
+      "target": "app_helper_common_t",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L424",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_updatecategory",
+      "target": "app_helper_common_t",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L508",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_bulk_update",
+      "target": "app_helper_common_t",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L567",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_closure_2",
+      "target": "app_helper_common_t",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L572",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_delete",
+      "target": "app_helper_common_t",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L630",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_deletecategory",
+      "target": "app_helper_common_t",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L692",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_checkdatacategory",
+      "target": "app_helper_common_t",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L917",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_listdata",
+      "target": "app_http_controllers_api_base_api_rev_controller_base_api_rev_controller",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1010",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_listcategories",
+      "target": "app_http_controllers_api_base_api_rev_controller_base_api_rev_controller",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1018",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_storeckfinderthumbnail",
+      "target": "app_helper_common_random_string",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1182",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadfile",
+      "target": "app_helper_common_random_string",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1202",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_controllers_web_manage_article_manage_article_controller_manage_article_controller_uploadfilesmall",
+      "target": "app_helper_common_random_string",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L1218",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_http_resources_manage_article_managearticlelistresource_managearticlelistresource_toarray",
+      "target": "app_helper_common_get_user",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/Http/Resources/Manage_Article/ManageArticleListResource.php",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_manage_article_responsive_width_test_loadmanagearticleoptions",
+      "target": "tests_manage_article_template_manager_test_settimeout",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tests_manage_article_responsive_width_test_loadmanagearticleoptions",
+      "target": "tests_manage_article_template_manager_test_cleartimeout",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "tests/manage-article-responsive-width.test.mjs",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_origin": "ast"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "failed_sources": [],
+  "extracted_sources": [
+    "D:\\Laragon\\www\\laravel-13-phoenix\\app\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\app\\Http\\Resources\\Manage_Article\\ManageArticleListResource.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\app\\Support\\Article\\ArticleTemplateOptions.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\public\\assets\\js\\vue3\\manage_article\\vueV3-manage-article-2026.js",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\article\\detail.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\article\\templates\\detail\\editorial-feature.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\article\\templates\\detail\\focused-reader.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\article\\templates\\detail\\knowledge-toc.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\article\\templates\\partials\\detail-knowledge-links.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\article\\templates\\partials\\detail-navigation.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\article\\templates\\partials\\detail-reading-cards.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\article\\templates\\partials\\detail-story-spread.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\manage_article\\manage_article.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\manage_article\\manage_article_add.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\manage_article\\manage_article_edit.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\manage_article\\partials\\list-status.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\manage_article\\templates\\partials\\options-focused-reader.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\resources\\views\\manage_article\\templates\\preview.blade.php",
+    "D:\\Laragon\\www\\laravel-13-phoenix\\tests\\manage-article-responsive-width.test.mjs"
+  ]
+}

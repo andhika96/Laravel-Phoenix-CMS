@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "before_nodes": 21093,
+  "after_nodes": 21094,
+  "before_edges": 37187,
+  "after_edges": 37267,
+  "initial_backup_files_verified": 15,
+  "initial_unaffected_nodes_preserved": 20942,
+  "cms_layout_references_verified": 6,
+  "report_scope_counts_verified": true,
+  "word_count_remeasured": false,
+  "source_and_git_preserved": true,
+  "graph_sha256": "58ceeebe380f15055a864a9828a94072d03c67e72fe4d80e0fc53ae0d11a426d",
+  "runtime_retested": false,
+  "external_llm_tokens": 0
+}

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "D:\Laragon\www\laravel-13-phoenix\project-artifacts\graphify-update-20261028\scope-check.py", line 31, in <module>
+    assert len(matching) == 1, f'Missing/duplicate verified stylesheet reference: {source}:L{line}'
+           ^^^^^^^^^^^^^^^^^^
+AssertionError: Missing/duplicate verified stylesheet reference: resources/views/themes/arunika_aurora/cms/cms_layout.blade.php:L52

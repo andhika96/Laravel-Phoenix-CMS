@@ -1,0 +1,21 @@
+Graph has 21094 nodes (above 5000 limit). Building aggregated community view...
+graph.html written (aggregated: 1599 community nodes, 1178 cross-community edges)
+Tip: run with --obsidian for full node-level detail.
+{
+  "fileOnlyTemplates": 0,
+  "ambiguousReceiverBindings": [
+    {
+      "source_file": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+      "source_location": "L620",
+      "label": "delete",
+      "evidence": "$getDetailArticle->delete();"
+    },
+    {
+      "source_file": "app/Support/Article/ArticleTemplateOptions.php",
+      "source_location": "L89",
+      "label": "archive",
+      "evidence": "$definition = $this->catalog->archive()[$template] ?? $this->catalog->archive()['minimal-reading-list'];"
+    }
+  ],
+  "vocabularyTerms": 2136
+}
