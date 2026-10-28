@@ -49,6 +49,7 @@
 		<link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/themes/arunika_aurora/mobile-v2.css?v=').time() }}" rel="stylesheet">
 
+		<link href="{{ asset('assets/css/cms-bootstrap-theme.css') }}?v={{ filemtime(public_path('assets/css/cms-bootstrap-theme.css')) }}" rel="stylesheet">
 		@stack('css')
 
 		<title>@yield('title', site_config()->site_name) - {{ site_config()->site_name }}</title>

@@ -1,0 +1,68 @@
+{
+  "metrics": {
+    "ancestors": [
+      {
+        "tag": "UL",
+        "class": "dropdown-menu dropdown-menu-end font-size-inherit show",
+        "fontSize": "16px"
+      },
+      {
+        "tag": "DIV",
+        "class": "dropdown",
+        "fontSize": "14px"
+      },
+      {
+        "tag": "DIV",
+        "class": "ph-article-row-actions",
+        "fontSize": "14px"
+      },
+      {
+        "tag": "TD",
+        "class": "ph-article-actions-col",
+        "fontSize": "14px"
+      },
+      {
+        "tag": "TR",
+        "class": "",
+        "fontSize": "14px"
+      },
+      {
+        "tag": "TBODY",
+        "class": "",
+        "fontSize": "14px"
+      }
+    ],
+    "rootSize": "16px",
+    "bodySize": "14px",
+    "cellSize": "14px",
+    "menuSize": "16px",
+    "menuFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+    "bodyFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+    "items": [
+      {
+        "label": "View article",
+        "size": "16px",
+        "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "label": "Delete",
+        "size": "16px",
+        "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "lineHeight": "24px"
+      }
+    ],
+    "left": 1243.40625,
+    "right": 1403.40625,
+    "bottom": 384.65625,
+    "viewport": 1440
+  },
+  "fontRules": [
+    {
+      "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "selector": ".dropdown-menu",
+      "fontSize": "var(--bs-dropdown-font-size)",
+      "important": ""
+    }
+  ]
+}

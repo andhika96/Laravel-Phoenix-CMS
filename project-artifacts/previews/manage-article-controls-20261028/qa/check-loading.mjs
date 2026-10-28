@@ -1,0 +1,78 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+import path from 'node:path';
+import {chromium} from 'playwright-core';
+
+const out=path.dirname(fileURLToPath(import.meta.url));
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const errors=[],checks=[];
+try {
+  const page=await browser.newPage({viewport:{width:1440,height:1100}});
+  page.on('pageerror',error=>errors.push(error.message));
+  await page.goto(pathToFileURL(path.join(out,'loading-inspection.html')).href);
+  const frame=page.frames().find(f=>f.parentFrame());
+  await frame.locator('.ma-stage').first().waitFor();
+  assert.equal(await frame.locator('[data-layout="toolbar"] .ma-loading').count(),1,'The preview needs a shared loading indicator in the list body.');
+  await frame.locator('[data-layout="toolbar"] .ma-loading').waitFor({state:'hidden'});
+  const clockTime=new Date();
+  await page.clock.install({time:clockTime});
+  await page.clock.pauseAt(clockTime);
+  for(const layout of ['toolbar','rail']) {
+    await frame.evaluate(layout=>document.querySelectorAll('[data-variant]').forEach(s=>s.hidden=s.querySelector('.ma-stage').dataset.layout!==layout),layout);
+    const stage=frame.locator(`[data-layout="${layout}"]`);
+    await stage.locator('.ma-loading').waitFor({state:'hidden'});
+    const waitLoading=async (name,action,screenshot=false)=>{
+      const inputBefore=await stage.getByRole('searchbox').inputValue();
+      await action();
+      assert.equal(await stage.locator('.ma-data-region').getAttribute('aria-busy'),'true',JSON.stringify({layout,trigger:name,width:page.viewportSize().width,inputBefore,inputAfter:await stage.getByRole('searchbox').inputValue(),last:checks.at(-1)}));
+      const metrics=await stage.evaluate(stage=>{
+        const region=stage.querySelector('.ma-data-region'),loading=stage.querySelector('.ma-loading'),head=stage.querySelector('thead');
+        const r=region.getBoundingClientRect(),l=loading.getBoundingClientRect(),h=head.getBoundingClientRect();
+        const bodyTop=h.height?h.bottom:r.top;
+        return {width:stage.clientWidth,centerX:Math.abs(l.x+l.width/2-(r.x+r.width/2)),centerY:Math.abs(l.y+l.height/2-(bodyTop+(r.bottom-bodyTop)/2)),belowHeader:l.top>=bodyTop-1,busy:region.getAttribute('aria-busy'),visibleRows:[...stage.querySelectorAll('tr[data-row]')].some(row=>row.checkVisibility()),overflow:stage.scrollWidth>stage.clientWidth+1};
+      });
+      assert.ok(metrics.centerX<1,JSON.stringify(metrics));
+      assert.ok(metrics.centerY<1,JSON.stringify(metrics));
+      assert.equal(metrics.belowHeader,true);assert.equal(metrics.busy,'true');assert.equal(metrics.visibleRows,false);assert.equal(metrics.overflow,false);
+      checks.push({layout,trigger:name,...metrics});
+      if(screenshot) await stage.screenshot({path:path.join(out,`loading-${layout}-${metrics.width}.png`)});
+      await page.clock.runFor(700);
+      await stage.locator('.ma-loading').waitFor({state:'hidden'});
+      assert.equal(await stage.locator('.ma-data-region').getAttribute('aria-busy'),'false');
+    };
+    await waitLoading('next page',()=>stage.getByRole('button',{name:'Halaman berikutnya',exact:true}).click(),true);
+    assert.equal(await stage.locator('tr[data-row]').count(),1);
+    await waitLoading('previous page',()=>stage.getByRole('button',{name:'Halaman sebelumnya',exact:true}).click());
+    await waitLoading('search',()=>stage.getByRole('searchbox').fill('Science'));
+    assert.equal(await stage.locator('tr[data-row]').count(),1);
+    await waitLoading('clear search',()=>stage.getByRole('searchbox').fill(''));
+    await waitLoading('title header',()=>stage.getByRole('button',{name:'Urutkan berdasarkan judul',exact:true}).click());
+    await waitLoading('date header',()=>stage.getByRole('button',{name:'Urutkan berdasarkan tanggal',exact:true}).click());
+    await waitLoading('sort dropdown',()=>stage.locator('[data-sort]').selectOption('newest'));
+    if(layout==='toolbar') await stage.locator('[data-status-menu]').click();
+    await waitLoading('status',()=>stage.locator('[data-status-choice="pending"]').click());
+    if(layout==='toolbar') await stage.locator('[data-status-menu]').click();
+    await waitLoading('all status',()=>stage.locator('[data-status-choice="all"]').click());
+    await stage.locator('[data-filter-toggle]').click();
+    await waitLoading('category',()=>stage.locator('[data-category]').selectOption('Panduan'));
+    await waitLoading('schedule',()=>stage.locator('[data-schedule]').selectOption('true'));
+    await waitLoading('reset filter',()=>stage.getByRole('button',{name:'Reset',exact:true}).click());
+    await stage.locator('[data-filter-toggle]').click();
+    for(const width of [768,390,320]) {
+      await page.setViewportSize({width,height:1800});
+      await page.emulateMedia({colorScheme:width===390?'dark':'light'});
+      await waitLoading('responsive search',()=>stage.getByRole('searchbox').fill('Load'),width===390);
+      await waitLoading('responsive clear',()=>stage.getByRole('searchbox').fill(''));
+    }
+    await page.setViewportSize({width:1440,height:1100});
+    await page.emulateMedia({colorScheme:'light'});
+  }
+  const before=JSON.parse(await fs.readFile(path.join(out,'before-state.json'),'utf8'));
+  for(const item of before.source) assert.equal(createHash('sha256').update(await fs.readFile(item.path)).digest('hex'),item.sha256);
+  assert.equal(createHash('sha256').update(await fs.readFile('graphify-out/graph.json')).digest('hex').toUpperCase(),before.graph_sha256);
+  assert.deepEqual(errors,[]);
+  await fs.writeFile(path.join(out,'loading-verification.json'),JSON.stringify({ok:true,checks:checks.length,runtimeErrors:errors,sourceUnchanged:true,graphUnchanged:true,cases:checks},null,2));
+  console.log(JSON.stringify({ok:true,checks:checks.length,runtimeErrors:errors,sourceUnchanged:true,graphUnchanged:true}));
+} finally {await browser.close();}

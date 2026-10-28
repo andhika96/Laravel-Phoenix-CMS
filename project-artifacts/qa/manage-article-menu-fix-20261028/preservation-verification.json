@@ -1,0 +1,16 @@
+{
+  "backups_verified": 2,
+  "protected_verified": 3,
+  "graph_unchanged": true,
+  "head_and_index_unchanged": true,
+  "source": [
+    {
+      "path": "resources/views/manage_article/manage_article.blade.php",
+      "sha256": "3EB7E049420CABFB447B1B48ABF509A20D9EDA1962ADE5E000EE388051309662"
+    },
+    {
+      "path": "public/assets/css/article/manage-article-2026.css",
+      "sha256": "EAB97637D8FC84F6D298C61282932E7F920D81EC94AECCF67E7FDA1634BAAB27"
+    }
+  ]
+}

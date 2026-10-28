@@ -116,6 +116,7 @@ const ManageArticleVue3 = createApp(
         activeArticleFilterCount() { return Number(this.getfilterByCategory !== '') + Number(this.getfilterByScheduled !== ''); },
         articleRangeStart() { return this.getTotalData ? (this.getCurrentPage - 1) * this.articlePageSize + 1 : 0; },
         articleRangeEnd() { return Math.min(this.getCurrentPage * this.articlePageSize, this.getTotalData); },
+        articleStatusLabel() { return this.articleStatuses.find(status => status.code_name === this.getfilterByStatus)?.name || 'All'; },
         bulkStatusLabel() { return this.articleStatuses.find(status => status.code_name === this.bulkStatus)?.name || ''; },
         articleCategoryLabel()
         {

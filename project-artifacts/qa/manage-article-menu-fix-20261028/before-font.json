@@ -1,0 +1,26 @@
+{
+  "rootSize": "16px",
+  "bodySize": "14px",
+  "cellSize": "14px",
+  "menuSize": "16px",
+  "menuFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+  "bodyFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+  "items": [
+    {
+      "label": "View article",
+      "size": "16px",
+      "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "lineHeight": "24px"
+    },
+    {
+      "label": "Delete",
+      "size": "16px",
+      "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "lineHeight": "24px"
+    }
+  ],
+  "left": 1243.40625,
+  "right": 1403.40625,
+  "bottom": 384.65625,
+  "viewport": 1440
+}

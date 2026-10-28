@@ -1,0 +1,109 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {fileURLToPath, pathToFileURL} from 'node:url';
+import path from 'node:path';
+import {chromium} from 'playwright-core';
+
+const out=path.dirname(fileURLToPath(import.meta.url));
+const preview=path.join(out,'..','manage-article-controls.html');
+const source=await fs.readFile(preview,'utf8');
+assert.ok(!/<!doctype|<html[ >]|<head[ >]|<body[ >]/i.test(source));
+assert.ok(!/fetch\(|XMLHttpRequest|WebSocket|https?:\/\//.test(source));
+assert.ok(!source.includes('\\"'));
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const errors=[];
+const responsive=[];
+try {
+  for(const touch of [false,true]) {
+    const context=await browser.newContext({viewport:{width:1440,height:1100},isMobile:touch,hasTouch:touch});
+    const page=await context.newPage();
+    page.on('pageerror',error=>errors.push(error.message));
+    await page.goto(pathToFileURL(path.join(out,'preview-inspection.html')).href);
+    await page.frameLocator('iframe').locator('[data-layout="toolbar"] tr[data-row]').first().waitFor();
+    await page.evaluate(()=>document.body.style.padding='0');
+    const frame=page.frames().find(f=>f.parentFrame());
+    for(const scheme of ['light','dark']) {
+      await page.emulateMedia({colorScheme:scheme});
+      for(const width of (touch?[320,390,768]:[320,390,768,1024,1440])) {
+        await page.setViewportSize({width,height:1800});
+        for(const layout of ['toolbar','rail']) {
+          await frame.evaluate(layout=>document.querySelectorAll('[data-variant]').forEach(section=>section.hidden=section.querySelector('.ma-stage').dataset.layout!==layout),layout);
+          const stage=frame.locator(`[data-layout="${layout}"]`);
+          await stage.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+          const metrics=await stage.evaluate(stage=>{
+            const rect=el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom};};
+            const row=stage.querySelector('tr[data-row]'),button=row.querySelector('.ma-detail-button'),check=row.querySelector('.ma-check-target'),title=row.querySelector('.ma-article-title');
+            const b=rect(button),c=rect(check),t=rect(title),r=rect(stage);
+            const bad=[...stage.querySelectorAll('*')].filter(el=>el.checkVisibility()&&el.getBoundingClientRect().width>0).filter(el=>{const b=el.getBoundingClientRect();return b.right>r.right+1||b.left<r.x-1;}).map(el=>el.className?.baseVal??el.className).slice(0,6);
+            const styles=getComputedStyle(title);
+            const mobile=getComputedStyle(row).display==='grid';
+            return {stageWidth:r.width,boardWidth:stage.querySelector('.ma-board').clientWidth,mobile,overflow:stage.scrollWidth>stage.clientWidth+1,bad,gap:c.x-b.right,button:b,check:c,title:t,centerDifference:Math.abs(b.y+b.height/2-(t.y+parseFloat(styles.lineHeight)/2)),sameControlRow:Math.abs(b.y-c.y)<1,visibleColumns:[...row.cells].filter(el=>el.checkVisibility()).length,background:getComputedStyle(stage).backgroundColor};
+          });
+          responsive.push({touch,scheme,width,layout,...metrics});
+          assert.equal(metrics.overflow,false,JSON.stringify(responsive.at(-1)));
+          assert.deepEqual(metrics.bad,[],JSON.stringify(responsive.at(-1)));
+          assert.ok(Math.abs(metrics.gap-24)<1,JSON.stringify(responsive.at(-1)));
+          assert.equal(metrics.sameControlRow,true);
+          if(!metrics.mobile) assert.ok(metrics.centerDifference<1,JSON.stringify(responsive.at(-1)));
+          else assert.ok(metrics.title.y>=metrics.button.bottom,JSON.stringify(responsive.at(-1)));
+          if(touch||metrics.mobile) {assert.ok(metrics.button.width>=44);assert.ok(metrics.check.width>=44);}
+          if(!touch&&((width===1440&&scheme==='light')||(width===390)||(width===768&&scheme==='light'))) await stage.screenshot({path:path.join(out,`${layout}-${width}-${scheme}.png`)});
+        }
+      }
+    }
+    if(!touch) {
+      await page.setViewportSize({width:1024,height:1500});
+      await frame.evaluate(()=>document.querySelectorAll('[data-variant]').forEach((s,i)=>s.hidden=i!==0));
+      const stage=frame.locator('[data-layout="toolbar"]');
+      const detail=stage.locator('.ma-detail-button').first();
+      assert.equal(await detail.getAttribute('aria-expanded'),'true');
+      await detail.focus();await page.keyboard.press('Space');
+      assert.equal(await detail.getAttribute('aria-expanded'),'false');
+      await stage.locator('[data-check="1"]').check();
+      assert.equal(await detail.getAttribute('aria-expanded'),'false');
+      assert.equal(await stage.locator('thead [data-all]').evaluate(el=>el.indeterminate),true);
+      await detail.focus();await page.keyboard.press('Enter');
+      assert.equal(await detail.getAttribute('aria-expanded'),'true');
+      assert.equal(await stage.locator('[data-check="1"]').isChecked(),true);
+      await stage.locator('[data-status-menu]').click();
+      await stage.locator('[data-status-choice="pending"]').click();
+      assert.equal(await stage.locator('tr[data-row]').count(),2);
+      assert.equal(await stage.locator('.ma-bulk').isVisible(),false);
+      await stage.locator('[data-status-menu]').click();
+      await stage.locator('[data-status-choice="draft"]').click();
+      assert.equal(await stage.locator('.ma-empty').isVisible(),true);
+      await stage.getByRole('button',{name:'Reset filter',exact:true}).click();
+      await stage.getByRole('searchbox').fill('tidak-ada-artikel-contoh');
+      assert.equal(await stage.locator('.ma-empty').isVisible(),true);
+      await stage.getByRole('button',{name:'Reset filter',exact:true}).click();
+      await stage.locator('[data-filter-toggle]').click();
+      await stage.locator('[data-category]').selectOption('Panduan');
+      await stage.locator('[data-schedule]').selectOption('true');
+      assert.equal(await stage.locator('tr[data-row]').count(),1);
+      await stage.getByRole('button',{name:'Reset',exact:true}).click();
+      await stage.locator('[data-filter-toggle]').click();
+      await stage.locator('[data-page="2"]').click();
+      assert.equal(await stage.locator('tr[data-row]').count(),1);
+      await stage.locator('[data-page="1"]').click();
+      await stage.locator('[data-status-menu]').click();
+      await page.keyboard.press('Escape');
+      assert.equal(await stage.locator('.ma-status-menu').isVisible(),false);
+      await frame.evaluate(()=>document.querySelectorAll('[data-variant]').forEach((s,i)=>s.hidden=i!==1));
+      const rail=frame.locator('[data-layout="rail"]');
+      await rail.locator('[data-status-choice="pending"]').click();
+      assert.equal(await rail.locator('tr[data-row]').count(),2);
+      await rail.locator('[data-status-choice="all"]').click();
+      await page.setViewportSize({width:390,height:1700});
+      await rail.locator('[data-status-choice="draft"]').click();
+      assert.equal(await rail.locator('.ma-empty').isVisible(),true);
+    }
+    await context.close();
+  }
+  assert.deepEqual(errors,[]);
+  const before=JSON.parse(await fs.readFile(path.join(out,'before-state.json'),'utf8'));
+  for(const item of before.source) assert.equal(createHash('sha256').update(await fs.readFile(item.path)).digest('hex'),item.sha256);
+  assert.equal(createHash('sha256').update(await fs.readFile('graphify-out/graph.json')).digest('hex').toUpperCase(),before.graph_sha256);
+  await fs.writeFile(path.join(out,'verification.json'),JSON.stringify({ok:true,responsiveCases:responsive.length,runtimeErrors:errors,sourceUnchanged:true,graphUnchanged:true,interactiveChecks:['disclosure keyboard Enter and Space','independent checkbox selection','select all indeterminate','status dropdown and status rail','draft empty state','search empty state and reset','category and schedule','pagination','Escape menu dismissal'],responsive},null,2));
+  console.log(JSON.stringify({ok:true,responsiveCases:responsive.length,runtimeErrors:errors,sourceUnchanged:true,graphUnchanged:true}));
+} finally {await browser.close();}

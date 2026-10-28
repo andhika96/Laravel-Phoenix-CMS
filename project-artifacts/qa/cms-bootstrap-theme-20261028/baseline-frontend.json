@@ -1,0 +1,7 @@
+{
+  "source_current": "dd0f2e5a71c790c138ba156407972b1c80a58e8f",
+  "source_head": "dd0f2e5a71c790c138ba156407972b1c80a58e8f",
+  "test_current": "0527819befecbdb2189769dbcf96482785806fe9",
+  "test_head": "0527819befecbdb2189769dbcf96482785806fe9",
+  "result": "existing failure in the unchanged static frontend assertion for #344054"
+}

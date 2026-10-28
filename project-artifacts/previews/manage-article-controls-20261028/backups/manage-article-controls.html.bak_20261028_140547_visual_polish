@@ -1,0 +1,346 @@
+<div id="ma-controls-preview" aria-label="Ukuran layar preview Manage Article">
+  <div class="viz-carousel" aria-label="Pilihan penempatan status artikel" data-previous-label="Sebelumnya" data-next-label="Berikutnya">
+    <section data-variant="Status di toolbar" aria-label="Status di toolbar">
+      <div class="ma-stage" data-layout="toolbar" aria-label="Manage Article dengan status di toolbar"></div>
+    </section>
+    <section data-variant="Navigasi status" aria-label="Navigasi status" hidden>
+      <div class="ma-stage" data-layout="rail" aria-label="Manage Article dengan navigasi status di samping"></div>
+    </section>
+  </div>
+</div>
+
+<style>
+#ma-controls-preview { width:100%; }
+#ma-controls-preview [hidden] { display:none !important; }
+#ma-controls-preview [data-variant] { min-height:1000px; }
+#ma-controls-preview .ma-stage {
+  --ma-bg:light-dark(#fafbfc,#141b1a); --ma-panel:light-dark(#fff,#1c2523);
+  --ma-soft:light-dark(#f6f8fa,#26312e); --ma-ink:light-dark(#192f2b,#e8efec);
+  --ma-muted:light-dark(#5c6c68,#acbcb5); --ma-line:light-dark(#dfe5e3,#3d4c46);
+  --ma-green:light-dark(#117c57,#7ddab1); --ma-solid:light-dark(#16825d,#83ddb7);
+  --ma-on:light-dark(#fff,#103023); --ma-tint:light-dark(#e7f4ee,#253f33);
+  --ma-amber:light-dark(#80540a,#f0cd88); --ma-amber-bg:light-dark(#fff4dc,#3c3322);
+  container:ma-stage / inline-size; width:100%; max-width:100%; margin-inline:auto;
+  color:var(--ma-ink); background:var(--ma-bg); font:14px/1.5 "Noto Sans","Segoe UI",Arial,sans-serif;
+  color-scheme:inherit;
+}
+#ma-controls-preview .ma-stage *, #ma-controls-preview .ma-stage *::before, #ma-controls-preview .ma-stage *::after { box-sizing:border-box; }
+#ma-controls-preview .ma-stage button, #ma-controls-preview .ma-stage input, #ma-controls-preview .ma-stage select { font:inherit; }
+#ma-controls-preview .ma-stage button, #ma-controls-preview .ma-stage select { color:inherit; }
+#ma-controls-preview .ma-app { display:grid; grid-template-columns:168px minmax(0,1fr); min-height:980px; background:var(--ma-panel); border:1px solid var(--ma-line); border-radius:12px; }
+#ma-controls-preview .ma-nav { display:flex; flex-direction:column; padding:24px 12px; gap:28px; background:var(--ma-soft); border-right:1px solid var(--ma-line); border-radius:12px 0 0 12px; }
+#ma-controls-preview .ma-identity { display:flex; align-items:center; gap:10px; padding-inline:4px; font-size:12px; font-weight:600; }
+#ma-controls-preview .ma-logo { width:30px; height:30px; border-radius:50%; display:grid; place-items:center; background:var(--ma-panel); border:1px solid var(--ma-line); color:var(--ma-green); }
+#ma-controls-preview .ma-nav-list { display:grid; gap:6px; }
+#ma-controls-preview .ma-nav-item { display:flex; align-items:center; gap:9px; padding:11px 9px; font-size:12px; color:var(--ma-muted); border-radius:7px; }
+#ma-controls-preview .ma-nav-item[aria-current] { background:var(--ma-tint); color:var(--ma-ink); font-weight:600; }
+#ma-controls-preview .ma-nav-end { margin-top:auto; }
+#ma-controls-preview .ma-page { container:ma-page / inline-size; min-width:0; padding:28px 24px; }
+#ma-controls-preview .ma-mobile-chrome { display:none; }
+#ma-controls-preview .ma-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:25px; }
+#ma-controls-preview .ma-heading h2 { font:650 20px/1.3 "Noto Sans","Segoe UI",Arial,sans-serif; letter-spacing:-.3px; margin:0 0 6px; }
+#ma-controls-preview .ma-heading p { color:var(--ma-muted); margin:0; font-size:12px; }
+#ma-controls-preview .ma-header-actions { display:flex; gap:8px; align-items:center; flex-shrink:0; }
+#ma-controls-preview .ma-button { display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:38px; padding:8px 12px; border:1px solid var(--ma-line); border-radius:7px; background:var(--ma-panel); white-space:nowrap; text-decoration:none; }
+#ma-controls-preview .ma-button:hover { background:var(--ma-soft); }
+#ma-controls-preview .ma-primary { background:var(--ma-solid); border-color:var(--ma-solid); color:var(--ma-on) !important; font-weight:600; }
+#ma-controls-preview .ma-primary:hover { background:var(--ma-solid); filter:brightness(.96); }
+#ma-controls-preview .ma-icon-button { min-width:38px; padding-inline:8px; }
+#ma-controls-preview .ma-layout { display:grid; grid-template-columns:minmax(0,1fr); gap:20px; align-items:start; }
+#ma-controls-preview [data-layout="rail"] .ma-layout { grid-template-columns:132px minmax(0,1fr); gap:16px; }
+#ma-controls-preview .ma-status-rail { display:grid; gap:5px; min-width:0; padding-block:8px; }
+#ma-controls-preview .ma-rail-label { color:var(--ma-muted); font-size:11px; font-weight:600; letter-spacing:.05em; padding:3px 10px 9px; text-transform:uppercase; }
+#ma-controls-preview .ma-status-rail button { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px; border:0; border-radius:7px; min-height:44px; background:transparent; text-align:left; }
+#ma-controls-preview .ma-status-rail button:hover { background:var(--ma-soft); }
+#ma-controls-preview .ma-status-rail button[aria-pressed="true"] { background:var(--ma-tint); color:var(--ma-green); font-weight:600; }
+#ma-controls-preview .ma-count { display:inline-block; font-variant-numeric:tabular-nums; font-size:12px; font-weight:500; color:var(--ma-muted); }
+#ma-controls-preview .ma-board { container:ma-board / inline-size; border:1px solid var(--ma-line); border-radius:10px; background:var(--ma-panel); min-width:0; }
+#ma-controls-preview .ma-toolbar { display:flex; align-items:center; gap:8px; padding:14px; }
+#ma-controls-preview .ma-status-wrap { position:relative; flex-shrink:0; }
+#ma-controls-preview .ma-status-trigger { min-width:144px; justify-content:space-between; gap:12px; }
+#ma-controls-preview .ma-status-name { display:flex; align-items:center; gap:8px; }
+#ma-controls-preview .ma-status-menu { position:absolute; left:0; top:calc(100% + 7px); min-width:218px; max-width:calc(100vw - 48px); padding:6px; z-index:30; border:1px solid var(--ma-line); background:var(--ma-panel); border-radius:9px; box-shadow:0 10px 30px light-dark(#142e241f,#00000050); }
+#ma-controls-preview .ma-menu-heading { color:var(--ma-muted); font-size:11px; padding:7px 9px; }
+#ma-controls-preview .ma-status-option { display:flex; align-items:center; gap:8px; min-height:44px; width:100%; padding:9px; border:0; border-radius:5px; background:transparent; text-align:left; }
+#ma-controls-preview .ma-status-option .ma-count { margin-left:auto; }
+#ma-controls-preview .ma-status-option[aria-pressed="true"] { background:var(--ma-tint); color:var(--ma-green); }
+#ma-controls-preview .ma-option-check { width:16px; display:flex; }
+#ma-controls-preview .ma-search { display:flex; align-items:center; gap:8px; min-width:80px; flex:1; min-height:38px; padding:0 11px; border:1px solid var(--ma-line); border-radius:7px; background:var(--ma-panel); color:var(--ma-muted); }
+#ma-controls-preview .ma-search input { width:100%; min-width:0; background:transparent; border:0; padding:8px 0; color:var(--ma-ink); outline-offset:3px; }
+#ma-controls-preview .ma-search input::placeholder { color:var(--ma-muted); opacity:1; }
+#ma-controls-preview .ma-sort { min-height:38px; max-width:155px; padding:8px 27px 8px 10px; border:1px solid var(--ma-line); border-radius:7px; background:var(--ma-panel); }
+#ma-controls-preview .ma-results { display:flex; gap:12px; align-items:center; justify-content:space-between; padding:0 15px 13px; color:var(--ma-muted); font-size:12px; }
+#ma-controls-preview .ma-result-label { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+#ma-controls-preview .ma-result-label strong { color:var(--ma-ink); font-weight:500; }
+#ma-controls-preview .ma-select-all-mobile { display:none; }
+#ma-controls-preview .ma-filters { display:flex; flex-wrap:wrap; gap:12px; align-items:end; padding:0 14px 14px; }
+#ma-controls-preview .ma-field { display:grid; gap:5px; min-width:0; flex:1; font-size:12px; color:var(--ma-muted); }
+#ma-controls-preview .ma-field select { width:100%; min-height:38px; padding:7px 9px; background:var(--ma-panel); border:1px solid var(--ma-line); border-radius:6px; }
+#ma-controls-preview .ma-bulk { display:flex; align-items:center; gap:12px; justify-content:space-between; padding:10px 14px; background:var(--ma-tint); border-top:1px solid var(--ma-line); font-size:12px; }
+#ma-controls-preview .ma-link-button { border:0; padding:4px 0; color:var(--ma-green) !important; background:transparent; }
+#ma-controls-preview .ma-table { table-layout:fixed; border-collapse:collapse; width:100%; font-size:13px; }
+#ma-controls-preview .ma-table th { text-align:left; background:var(--ma-soft); color:var(--ma-muted); font-weight:500; padding:12px; border-block:1px solid var(--ma-line); }
+#ma-controls-preview .ma-table td { padding:16px 12px; vertical-align:top; border-bottom:1px solid var(--ma-line); overflow-wrap:anywhere; }
+#ma-controls-preview .ma-table th.ma-detail-col, #ma-controls-preview .ma-table td.ma-detail-col { width:68px; padding:9px 20px 9px 12px; }
+#ma-controls-preview .ma-table th.ma-check-col, #ma-controls-preview .ma-table td.ma-check-col { width:52px; padding:9px 12px 9px 4px; }
+#ma-controls-preview .ma-table .ma-author-col { width:114px; }
+#ma-controls-preview .ma-table .ma-state-col { width:98px; }
+#ma-controls-preview .ma-table .ma-date-col { width:112px; }
+#ma-controls-preview .ma-table .ma-action-col { width:72px; text-align:right; padding-top:9px; }
+#ma-controls-preview .ma-detail-button, #ma-controls-preview .ma-check-target, #ma-controls-preview .ma-row-menu { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; padding:0; border:0; border-radius:7px; background:transparent; flex-shrink:0; }
+#ma-controls-preview .ma-detail-button { color:var(--ma-muted) !important; }
+#ma-controls-preview .ma-detail-button[aria-expanded="true"] { background:var(--ma-tint); color:var(--ma-green) !important; }
+#ma-controls-preview .ma-detail-button:hover, #ma-controls-preview .ma-row-menu:hover { background:var(--ma-soft); }
+#ma-controls-preview .ma-check-target { margin:0; }
+#ma-controls-preview input[type="checkbox"] { appearance:auto; accent-color:var(--ma-solid); width:16px; height:16px; margin:0; flex-shrink:0; }
+#ma-controls-preview .ma-stage .ma-article-title { display:block; color:var(--ma-ink) !important; font:600 13px/22px "Noto Sans","Segoe UI",Arial,sans-serif; text-align:left; border:0; padding:0; background:transparent; width:100%; }
+#ma-controls-preview .ma-article-title:hover { text-decoration:underline; }
+#ma-controls-preview .ma-meta { display:block; font-size:11px; line-height:18px; color:var(--ma-muted); margin-top:4px; }
+#ma-controls-preview .ma-author-inline { display:none; }
+#ma-controls-preview .ma-status { display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:3px 7px; border-radius:5px; background:var(--ma-soft); color:var(--ma-muted); white-space:nowrap; }
+#ma-controls-preview .ma-status[data-status="publish"] { background:var(--ma-tint); color:var(--ma-green); }
+#ma-controls-preview .ma-status[data-status="pending"] { background:var(--ma-amber-bg); color:var(--ma-amber); }
+#ma-controls-preview .ma-status svg { width:12px; height:12px; }
+#ma-controls-preview .ma-schedule { display:flex; align-items:center; gap:5px; color:var(--ma-muted); font-size:11px; margin-top:5px; }
+#ma-controls-preview .ma-inline-state { display:none; flex-wrap:wrap; align-items:center; gap:8px; margin-top:9px; }
+#ma-controls-preview .ma-inline-state .ma-schedule { margin:0; }
+#ma-controls-preview .ma-row-actions { display:flex; align-items:center; justify-content:flex-end; gap:0; position:relative; }
+#ma-controls-preview .ma-edit { display:none; }
+#ma-controls-preview tr.ma-expanded > td { background:var(--ma-soft); }
+#ma-controls-preview tr.ma-selected > td { background:var(--ma-tint); }
+#ma-controls-preview .ma-detail-row > td { padding:0 16px 22px 132px; background:var(--ma-soft); }
+#ma-controls-preview .ma-detail { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:24px; padding-top:8px; }
+#ma-controls-preview .ma-detail-label { display:block; color:var(--ma-muted); font-size:11px; margin-bottom:5px; }
+#ma-controls-preview .ma-detail p { font-size:12px; margin:0 0 14px; }
+#ma-controls-preview .ma-detail dl { display:grid; grid-template-columns:1fr 1fr; gap:13px; margin:0; }
+#ma-controls-preview .ma-detail dt { color:var(--ma-muted); font-size:11px; font-weight:400; margin-bottom:3px; }
+#ma-controls-preview .ma-detail dd { font-size:12px; margin:0; overflow-wrap:anywhere; }
+#ma-controls-preview .ma-detail-url { color:var(--ma-green); overflow-wrap:anywhere; }
+#ma-controls-preview .ma-footer { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:14px; color:var(--ma-muted); font-size:11px; }
+#ma-controls-preview .ma-pagination { display:flex; align-items:center; gap:4px; }
+#ma-controls-preview .ma-pagination button { min-width:32px; min-height:32px; border:0; border-radius:6px; padding:6px 9px; background:transparent; }
+#ma-controls-preview .ma-pagination button[aria-current] { background:var(--ma-tint); color:var(--ma-green); }
+#ma-controls-preview .ma-empty { padding:40px 16px; text-align:center; }
+#ma-controls-preview .ma-empty p { color:var(--ma-muted); font-size:12px; }
+#ma-controls-preview .ma-notice { padding:10px 14px; color:var(--ma-green); background:var(--ma-tint); font-size:12px; }
+#ma-controls-preview .ma-popover { position:absolute; right:0; top:40px; width:150px; z-index:25; border:1px solid var(--ma-line); border-radius:7px; background:var(--ma-panel); padding:6px; box-shadow:0 8px 20px light-dark(#142e241a,#00000044); }
+#ma-controls-preview .ma-popover button { display:block; width:100%; padding:9px; border:0; background:transparent; text-align:left; border-radius:4px; }
+#ma-controls-preview .ma-popover button:hover { background:var(--ma-soft); }
+#ma-controls-preview .ma-sr { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+@container ma-stage (max-width:899px) {
+  #ma-controls-preview .ma-app { grid-template-columns:minmax(0,1fr); }
+  #ma-controls-preview .ma-nav { display:none; }
+  #ma-controls-preview .ma-page { padding:20px; }
+  #ma-controls-preview .ma-mobile-chrome { display:flex; align-items:center; gap:10px; margin-bottom:26px; font-size:12px; font-weight:600; color:var(--ma-muted); }
+  #ma-controls-preview .ma-mobile-chrome .ma-user { margin-left:auto; color:var(--ma-green); }
+}
+@container ma-board (max-width:850px) {
+  #ma-controls-preview .ma-author-col { display:none; }
+  #ma-controls-preview .ma-author-inline { display:inline; }
+}
+@container ma-board (max-width:690px) {
+  #ma-controls-preview .ma-date-col { display:none; }
+  #ma-controls-preview .ma-toolbar { flex-wrap:wrap; }
+  #ma-controls-preview .ma-search { flex:1 0 100%; order:-1; }
+  #ma-controls-preview .ma-status-wrap { flex:1; }
+  #ma-controls-preview .ma-status-trigger { width:100%; }
+  #ma-controls-preview .ma-sort { flex:1; max-width:none; min-width:0; }
+  #ma-controls-preview .ma-detail { grid-template-columns:minmax(0,1fr); gap:5px; }
+}
+@container ma-page (max-width:680px) {
+  #ma-controls-preview [data-layout="rail"] .ma-layout { grid-template-columns:minmax(0,1fr); gap:14px; }
+  #ma-controls-preview .ma-status-rail { grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; padding:0; }
+  #ma-controls-preview .ma-rail-label { display:none; }
+  #ma-controls-preview .ma-status-rail button { flex-direction:column; align-items:flex-start; gap:3px; padding:9px 10px; border:1px solid var(--ma-line); background:var(--ma-panel); }
+  #ma-controls-preview .ma-status-rail button[aria-pressed="true"] { background:var(--ma-tint); border-color:var(--ma-green); }
+}
+@container ma-board (max-width:520px) {
+  #ma-controls-preview .ma-table, #ma-controls-preview .ma-table tbody { display:block; }
+  #ma-controls-preview .ma-table thead { display:none; }
+  #ma-controls-preview .ma-table tr[data-row] { display:grid; grid-template-columns:44px 44px minmax(0,1fr) 44px; column-gap:24px; row-gap:8px; padding:12px; border-top:1px solid var(--ma-line); }
+  #ma-controls-preview .ma-table tr[data-row] > td { display:block; width:auto; padding:0; border:0; }
+  #ma-controls-preview .ma-table tr[data-row] > .ma-detail-col { grid-column:1; grid-row:1; }
+  #ma-controls-preview .ma-table tr[data-row] > .ma-check-col { grid-column:2; grid-row:1; }
+  #ma-controls-preview .ma-table tr[data-row] > .ma-title-col { grid-column:1/-1; grid-row:2; }
+  #ma-controls-preview .ma-table tr[data-row] > .ma-action-col { grid-column:4; grid-row:1; }
+  #ma-controls-preview .ma-table tr[data-row] > .ma-author-col, #ma-controls-preview .ma-table tr[data-row] > .ma-state-col, #ma-controls-preview .ma-table tr[data-row] > .ma-date-col { display:none; }
+  #ma-controls-preview .ma-detail-button, #ma-controls-preview .ma-check-target, #ma-controls-preview .ma-row-menu { width:44px; height:44px; }
+  #ma-controls-preview .ma-detail-button { background:var(--ma-soft); }
+  #ma-controls-preview .ma-detail-button[aria-expanded="true"] { background:var(--ma-tint); }
+  #ma-controls-preview .ma-stage .ma-article-title { font-size:14px; line-height:22px; }
+  #ma-controls-preview .ma-meta { font-size:12px; line-height:19px; }
+  #ma-controls-preview .ma-inline-state { display:flex; }
+  #ma-controls-preview .ma-detail-row, #ma-controls-preview .ma-detail-row > td { display:block; width:100%; }
+  #ma-controls-preview .ma-detail-row > td { padding:6px 12px 20px; }
+  #ma-controls-preview .ma-detail dl { gap:14px; }
+  #ma-controls-preview .ma-select-all-mobile { display:inline-flex; gap:8px; align-items:center; min-height:44px; }
+  #ma-controls-preview .ma-results { padding-bottom:0; }
+  #ma-controls-preview .ma-sort { width:78px; padding-inline:8px; }
+  #ma-controls-preview .ma-toolbar { padding:12px; }
+  #ma-controls-preview .ma-filter-label { display:none; }
+  #ma-controls-preview .ma-filters { flex-direction:column; align-items:stretch; }
+  #ma-controls-preview .ma-footer { justify-content:center; gap:10px; }
+  #ma-controls-preview .ma-footer > span { flex-basis:100%; text-align:center; }
+  #ma-controls-preview .ma-button, #ma-controls-preview .ma-sort { min-height:44px; }
+  #ma-controls-preview .ma-search { min-height:44px; }
+  #ma-controls-preview .ma-search input { font-size:16px; }
+  #ma-controls-preview .ma-filter-button { min-width:44px; padding-inline:10px; }
+}
+@container ma-stage (max-width:520px) {
+  #ma-controls-preview .ma-page { padding:14px 12px 24px; }
+  #ma-controls-preview .ma-heading { flex-wrap:wrap; margin-bottom:18px; gap:14px; }
+  #ma-controls-preview .ma-heading h2 { font-size:21px; }
+  #ma-controls-preview .ma-header-actions { width:100%; }
+  #ma-controls-preview .ma-header-actions > .ma-primary { flex:1; }
+  #ma-controls-preview .ma-mobile-chrome { margin-bottom:22px; }
+}
+@media (pointer:coarse) {
+  #ma-controls-preview .ma-detail-button, #ma-controls-preview .ma-check-target, #ma-controls-preview .ma-row-menu { width:44px; height:44px; }
+  #ma-controls-preview .ma-table th.ma-detail-col, #ma-controls-preview .ma-table td.ma-detail-col { width:76px; padding-top:5px; }
+  #ma-controls-preview .ma-table th.ma-check-col, #ma-controls-preview .ma-table td.ma-check-col { width:60px; padding-top:5px; }
+  #ma-controls-preview .ma-table td.ma-action-col { padding-top:5px; }
+  #ma-controls-preview .ma-button, #ma-controls-preview .ma-sort, #ma-controls-preview .ma-pagination button { min-height:44px; }
+}
+</style>
+
+<script>
+(() => {
+  const root = document.getElementById('ma-controls-preview');
+  const counts = {all:5041,publish:5035,draft:0,pending:6};
+  const labels = {all:'All',publish:'Publish',draft:'Draft',pending:'Pending'};
+  const articles = [
+    {id:1,title:'Load Test Science Performance Insight #00004',category:'Load Test Science',status:'publish',date:'24 Agt 2026',scheduled:false,excerpt:'Catatan riset, pengujian, dan perkembangan sains. Detail artikel tetap terbuka tepat di bawah baris yang sedang dibaca.'},
+    {id:2,title:'Load Test Technology Performance Insight #00001',category:'Load Test Technology',status:'publish',date:'24 Agt 2026',scheduled:false,excerpt:'Rangkuman perkembangan teknologi dan hasil pengujian terbaru untuk tim editorial.'},
+    {id:3,title:'Panduan menyiapkan artikel untuk publikasi berikutnya',category:'Panduan',status:'pending',date:'23 Agt 2026',scheduled:true,excerpt:'Artikel sedang menunggu peninjauan editor sebelum dipublikasikan sesuai jadwal.'},
+    {id:4,title:'Load Test Design Performance Insight #00003',category:'Load Test Design',status:'publish',date:'24 Agt 2026',scheduled:false,excerpt:'Kumpulan catatan desain dan pengalaman pengguna dari tim konten.'},
+    {id:5,title:'Catatan kolaborasi dan agenda tim editorial',category:'Editorial',status:'pending',date:'22 Agt 2026',scheduled:false,excerpt:'Catatan untuk koordinasi penulisan dan peninjauan konten sebelum publikasi.'},
+    {id:6,title:'Load Test Business Performance Insight #00002',category:'Load Test Business',status:'publish',date:'24 Agt 2026',scheduled:false,excerpt:'Ringkasan perkembangan bisnis dan analisis untuk pembaca.'}
+  ];
+  const design = {device:'Desktop'};
+  const states = new Map();
+  const icon = name => `<i data-lucide="${name}" aria-hidden="true"></i>`;
+  const esc = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const num = value => Number(value).toLocaleString('id-ID');
+  const statusBadge = article => `<span class="ma-status" data-status="${article.status}">${icon(article.status==='publish'?'circle-check':'clock-3')}${labels[article.status]}</span>`;
+  const schedule = article => article.scheduled ? `<span class="ma-schedule">${icon('calendar-clock')}Terjadwal</span>` : '';
+  const refreshIcons = () => { if (globalThis.lucide) lucide.createIcons({attrs:{width:16,height:16}}); };
+
+  function save() {
+    if (!window.openai?.setWidgetState) return;
+    const entries = [...states].map(([layout,state])=>({layout,status:state.status,search:state.search,sort:state.sort,expanded:[...state.expanded],selected:[...state.selected]}));
+    window.openai.setWidgetState({modelContent:{device:design.device,status:Object.fromEntries(entries.map(item=>[item.layout,item.status]))},privateContent:{entries}}).catch(()=>{});
+  }
+  function applySaved(snapshot) {
+    const model = snapshot?.modelContent || snapshot || {};
+    if (['Desktop','Tablet','Mobile'].includes(model.device)) design.device=model.device;
+    for (const entry of snapshot?.privateContent?.entries || []) {
+      const state=states.get(entry.layout);
+      if (!state) continue;
+      if (labels[entry.status]) state.status=entry.status;
+      state.search=typeof entry.search==='string'?entry.search:'';
+      state.sort=['newest','title'].includes(entry.sort)?entry.sort:'newest';
+      state.expanded=new Set((entry.expanded||[]).filter(id=>articles.some(a=>a.id===id)));
+      state.selected=new Set((entry.selected||[]).filter(id=>articles.some(a=>a.id===id)));
+    }
+  }
+  function renderDevice() {
+    for (const stage of states.keys()) {
+      const element=root.querySelector(`[data-layout="${stage}"]`);
+      element.style.maxWidth=design.device==='Mobile'?'390px':design.device==='Tablet'?'780px':'100%';
+      element.dataset.device=design.device;
+    }
+  }
+  function visibleArticles(state) {
+    const rows=articles.filter(a=>(state.status==='all'||a.status===state.status)&&a.title.toLocaleLowerCase('id-ID').includes(state.search.toLocaleLowerCase('id-ID'))&&(!state.category||a.category===state.category)&&(!state.scheduled||String(a.scheduled)===state.scheduled));
+    return state.sort==='title'?rows.sort((a,b)=>a.title.localeCompare(b.title)):rows;
+  }
+  function statusOptions(state) {
+    return Object.keys(labels).map(code=>`<button type="button" class="ma-status-option cursor-interaction" data-status-choice="${code}" aria-pressed="${state.status===code}"><span class="ma-option-check">${state.status===code?icon('check'):''}</span><span>${labels[code]}</span><span class="ma-count">${num(counts[code])}</span></button>`).join('');
+  }
+  function makeRow(article,state,layout) {
+    const expanded=state.expanded.has(article.id), selected=state.selected.has(article.id), detailId=`ma-${layout}-detail-${article.id}`;
+    return `<tr data-row="${article.id}" class="${expanded?'ma-expanded':''} ${selected?'ma-selected':''}">
+      <td class="ma-detail-col"><button type="button" class="ma-detail-button cursor-interaction" data-detail="${article.id}" aria-expanded="${expanded}" aria-controls="${detailId}" aria-label="${expanded?'Tutup':'Buka'} detail ${esc(article.title)}">${icon(expanded?'chevron-down':'chevron-right')}</button></td>
+      <td class="ma-check-col"><label class="ma-check-target cursor-interaction"><input type="checkbox" data-check="${article.id}" ${selected?'checked':''} aria-label="Pilih ${esc(article.title)}"></label></td>
+      <td class="ma-title-col"><button type="button" class="ma-article-title cursor-interaction" data-detail="${article.id}">${esc(article.title)}</button><span class="ma-meta">${esc(article.category)}<span class="ma-author-inline"> · Administrator</span></span><div class="ma-inline-state">${statusBadge(article)}${schedule(article)}<span class="ma-meta">${article.date}</span></div></td>
+      <td class="ma-author-col">Administrator</td><td class="ma-state-col">${statusBadge(article)}${schedule(article)}</td>
+      <td class="ma-date-col">${article.date}<span class="ma-meta">15:42 WIB</span></td>
+      <td class="ma-action-col"><div class="ma-row-actions"><button type="button" class="ma-row-menu cursor-interaction" data-options="${article.id}" aria-expanded="false" aria-label="Opsi ${esc(article.title)}">${icon('ellipsis')}</button><div class="ma-popover" data-row-popover="${article.id}" hidden><button type="button" class="cursor-interaction" data-demo="Edit artikel">Edit artikel</button><button type="button" class="cursor-interaction" data-demo="Lihat artikel">Lihat artikel</button></div></div></td>
+    </tr><tr class="ma-detail-row" id="${detailId}" ${expanded?'':'hidden'}><td colspan="7"><section class="ma-detail" aria-label="Detail ${esc(article.title)}"><div><span class="ma-detail-label">Ringkasan artikel</span><p>${esc(article.excerpt)}</p><span class="ma-detail-label">Alamat artikel</span><span class="ma-detail-url">/article/${article.id===1?'load-test-science-performance-insight-00004':`artikel-contoh-${article.id}`}</span></div><dl><div><dt>Status publikasi</dt><dd>${statusBadge(article)}</dd></div><div><dt>Penjadwalan</dt><dd>${article.scheduled?'Terjadwal':'Tanpa jadwal'}</dd></div><div><dt>Author</dt><dd>Administrator</dd></div><div><dt>Category</dt><dd>${esc(article.category)}</dd></div></dl></section></td></tr>`;
+  }
+  function build(stage) {
+    const layout=stage.dataset.layout, state=states.get(layout);
+    stage.innerHTML=`<div class="ma-app">
+      <aside class="ma-nav" aria-label="Navigasi CMS"><div class="ma-identity"><span class="ma-logo">${icon('flame')}</span>Administrator</div><div class="ma-nav-list"><span class="ma-nav-item">${icon('house')}Dashboard</span><span class="ma-nav-item">${icon('external-link')}View site</span><span class="ma-nav-item" aria-current="page">${icon('newspaper')}Manage Articles</span><span class="ma-nav-item">${icon('image')}Cover Image</span><span class="ma-nav-item">${icon('calendar-days')}Manage Event</span></div><div class="ma-nav-list ma-nav-end"><span class="ma-nav-item">${icon('shield-check')}Awesome Admin</span><span class="ma-nav-item">${icon('settings')}Settings</span></div></aside>
+      <main class="ma-page"><div class="ma-mobile-chrome">${icon('panel-left')}Phoenix CMS<span class="ma-user">Administrator</span></div><header class="ma-heading"><div><h2>Manage Article</h2><p>Ruang kerja untuk cerita dan ide tim Anda.</p></div><div class="ma-header-actions"><button type="button" class="ma-button ma-primary cursor-interaction" data-demo="Add Post">${icon('plus')}Add Post</button><button type="button" class="ma-button ma-icon-button cursor-interaction" aria-label="Menu pengelolaan artikel" data-demo="Pengelolaan kategori dan template">${icon('ellipsis')}</button></div></header>
+        <div class="ma-layout">${layout==='rail'?`<aside class="ma-status-rail" aria-label="Filter status artikel"><span class="ma-rail-label">Publikasi</span>${Object.keys(labels).map(code=>`<button type="button" class="cursor-interaction" data-status-choice="${code}" aria-pressed="${state.status===code}"><span>${labels[code]}</span><span class="ma-count">${num(counts[code])}</span></button>`).join('')}</aside>`:''}
+          <section class="ma-board" aria-label="Daftar artikel"><div class="ma-toolbar">${layout==='toolbar'?`<div class="ma-status-wrap"><button type="button" class="ma-button ma-status-trigger cursor-interaction" data-status-menu aria-expanded="false" aria-controls="ma-${layout}-status-menu"><span class="ma-status-name"><span data-active-status>${labels[state.status]}</span><span class="ma-count" data-active-count>${num(counts[state.status])}</span></span>${icon('chevron-down')}</button><div id="ma-${layout}-status-menu" class="ma-status-menu" hidden><div class="ma-menu-heading">Status publikasi</div><div data-status-options>${statusOptions(state)}</div></div></div>`:''}
+            <label class="ma-search">${icon('search')}<span class="ma-sr">Cari judul artikel</span><input type="search" placeholder="Cari judul artikel…" data-search></label><button type="button" class="ma-button ma-filter-button cursor-interaction" data-filter-toggle aria-expanded="false" aria-controls="ma-${layout}-filters" aria-label="Filter kategori dan jadwal">${icon('sliders-horizontal')}<span class="ma-filter-label">Filter</span></button><select class="ma-sort cursor-interaction" data-sort aria-label="Urutkan artikel"><option value="newest">Terbaru</option><option value="title">Judul A–Z</option></select>
+          </div><div class="ma-filters" id="ma-${layout}-filters" hidden><label class="ma-field">Kategori<select data-category><option value="">Semua kategori</option>${[...new Set(articles.map(a=>a.category))].map(c=>`<option>${esc(c)}</option>`).join('')}</select></label><label class="ma-field">Penjadwalan<select data-schedule><option value="">Semua jadwal</option><option value="true">Terjadwal</option><option value="false">Tanpa jadwal</option></select></label><button type="button" class="ma-button cursor-interaction" data-reset>Reset</button></div>
+          <div class="ma-results"><span class="ma-result-label"><strong data-result-status>${labels[state.status]==='All'?'Semua artikel':labels[state.status]}</strong><span data-result-total>${num(counts[state.status])} artikel</span></span><label class="ma-select-all-mobile cursor-interaction"><input type="checkbox" data-all aria-label="Pilih semua artikel contoh"><span>Pilih semua</span></label></div><div class="ma-bulk" hidden><span data-selected-count aria-live="polite"></span><button type="button" class="ma-link-button cursor-interaction" data-clear-selection>Batalkan pilihan</button></div><div class="ma-notice" role="status" hidden></div>
+          <table class="ma-table"><caption class="ma-sr">Buka detail, pilih artikel, lalu judul artikel.</caption><thead><tr><th class="ma-detail-col"><span class="ma-sr">Detail</span></th><th class="ma-check-col"><label class="ma-check-target cursor-interaction"><input type="checkbox" data-all aria-label="Pilih semua artikel contoh"></label></th><th>Title</th><th class="ma-author-col">Author</th><th class="ma-state-col">Status</th><th class="ma-date-col">Date</th><th class="ma-action-col"><span class="ma-sr">Opsi</span></th></tr></thead><tbody></tbody></table><div class="ma-empty" hidden><strong>Artikel tidak ditemukan</strong><p>Ubah pencarian atau pilih status lain.</p><button type="button" class="ma-button cursor-interaction" data-reset>Reset filter</button></div><footer class="ma-footer"><span data-footer-count></span><div class="ma-pagination" aria-label="Halaman artikel contoh"><button type="button" class="cursor-interaction" data-page="1" aria-label="Halaman contoh 1" aria-current="page">1</button><button type="button" class="cursor-interaction" data-page="2" aria-label="Halaman contoh 2">2</button></div></footer>
+        </section></div></main></div>`;
+    stage.querySelector('[data-search]').value=state.search;
+    stage.querySelector('[data-sort]').value=state.sort;
+    updateRows(stage);
+    stage.addEventListener('click',event=>handleClick(event,stage));
+    stage.addEventListener('input',event=>{if(event.target.matches('[data-search]')){state.search=event.target.value;state.page=1;state.selected.clear();updateRows(stage);save();}});
+    stage.addEventListener('change',event=>{
+      const target=event.target;
+      if(target.matches('[data-check]')) {const id=Number(target.dataset.check);target.checked?state.selected.add(id):state.selected.delete(id);updateSelection(stage);save();}
+      if(target.matches('[data-all]')) {const current=visibleArticles(state).slice((state.page-1)*5,state.page*5);current.forEach(a=>target.checked?state.selected.add(a.id):state.selected.delete(a.id));updateSelection(stage);save();}
+      if(target.matches('[data-sort],[data-category],[data-schedule]')) {state.sort=stage.querySelector('[data-sort]').value;state.category=stage.querySelector('[data-category]').value;state.scheduled=stage.querySelector('[data-schedule]').value;state.page=1;state.selected.clear();updateRows(stage);save();}
+    });
+    stage.addEventListener('keydown',event=>{if(event.key==='Escape'){stage.querySelector('.ma-status-menu')?.setAttribute('hidden','');stage.querySelector('[data-status-menu]')?.setAttribute('aria-expanded','false');stage.querySelectorAll('[data-row-popover]').forEach(el=>el.hidden=true);stage.querySelectorAll('[data-options]').forEach(el=>el.setAttribute('aria-expanded','false'));}});
+  }
+  function updateRows(stage) {
+    const layout=stage.dataset.layout,state=states.get(layout),all=visibleArticles(state),rows=all.slice((state.page-1)*5,state.page*5);
+    stage.querySelector('tbody').innerHTML=rows.map(a=>makeRow(a,state,layout)).join('');
+    stage.querySelector('.ma-table').hidden=!rows.length;
+    stage.querySelector('.ma-empty').hidden=!!rows.length;
+    stage.querySelector('[data-footer-count]').textContent=rows.length?`${(state.page-1)*5+1}–${(state.page-1)*5+rows.length} dari ${all.length} artikel contoh`:'0 artikel contoh';
+    stage.querySelectorAll('[data-page]').forEach(button=>{const page=Number(button.dataset.page);button.hidden=page>Math.ceil(all.length/5);state.page===page?button.setAttribute('aria-current','page'):button.removeAttribute('aria-current');});
+    stage.querySelector('[data-active-status]')?.replaceChildren(labels[state.status]);
+    stage.querySelector('[data-active-count]')?.replaceChildren(num(counts[state.status]));
+    if(stage.querySelector('[data-status-options]')) stage.querySelector('[data-status-options]').innerHTML=statusOptions(state);
+    stage.querySelectorAll('.ma-status-rail [data-status-choice]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.statusChoice===state.status)));
+    stage.querySelector('[data-result-status]').textContent=state.status==='all'?'Semua artikel':labels[state.status];
+    stage.querySelector('[data-result-total]').textContent=`${num(counts[state.status])} artikel`;
+    updateSelection(stage);syncColumns(stage);refreshIcons();
+  }
+  function syncColumns(stage) {
+    const row=stage.querySelector('tr[data-row]');
+    if (!row) return;
+    const count=[...row.cells].filter(cell=>getComputedStyle(cell).display!=='none').length;
+    stage.querySelectorAll('.ma-detail-row > td').forEach(cell=>cell.colSpan=count);
+  }
+  function updateSelection(stage) {
+    const state=states.get(stage.dataset.layout),current=visibleArticles(state).slice((state.page-1)*5,state.page*5),selected=current.filter(a=>state.selected.has(a.id)).length;
+    stage.querySelectorAll('[data-all]').forEach(input=>{input.checked=!!current.length&&selected===current.length;input.indeterminate=selected>0&&selected<current.length;});
+    stage.querySelectorAll('tr[data-row]').forEach(row=>{const checked=state.selected.has(Number(row.dataset.row));row.classList.toggle('ma-selected',checked);row.querySelector('[data-check]').checked=checked;});
+    stage.querySelector('.ma-bulk').hidden=!selected;
+    stage.querySelector('[data-selected-count]').textContent=`${selected} artikel dipilih`;
+  }
+  function handleClick(event,stage) {
+    const state=states.get(stage.dataset.layout),button=event.target.closest('button');
+    if(!button) return;
+    if(button.hasAttribute('data-status-menu')) {const menu=stage.querySelector('.ma-status-menu');menu.hidden=!menu.hidden;button.setAttribute('aria-expanded',String(!menu.hidden));}
+    if(button.dataset.statusChoice) {state.status=button.dataset.statusChoice;state.page=1;state.selected.clear();stage.querySelector('.ma-status-menu')?.setAttribute('hidden','');stage.querySelector('[data-status-menu]')?.setAttribute('aria-expanded','false');updateRows(stage);stage.querySelector('[data-status-menu]')?.focus();save();}
+    if(button.dataset.detail) {const id=Number(button.dataset.detail),expanded=!state.expanded.has(id);expanded?state.expanded.add(id):state.expanded.delete(id);stage.querySelector(`tr[data-row="${id}"]`).classList.toggle('ma-expanded',expanded);const trigger=stage.querySelector(`tr[data-row="${id}"] .ma-detail-button`);trigger.setAttribute('aria-expanded',String(expanded));trigger.setAttribute('aria-label',`${expanded?'Tutup':'Buka'} detail ${articles.find(a=>a.id===id).title}`);trigger.innerHTML=icon(expanded?'chevron-down':'chevron-right');stage.querySelector(`#ma-${stage.dataset.layout}-detail-${id}`).hidden=!expanded;refreshIcons();save();}
+    if(button.hasAttribute('data-filter-toggle')) {const panel=stage.querySelector('.ma-filters');panel.hidden=!panel.hidden;button.setAttribute('aria-expanded',String(!panel.hidden));}
+    if(button.hasAttribute('data-reset')) {Object.assign(state,{status:'all',search:'',category:'',scheduled:'',page:1});state.selected.clear();stage.querySelector('[data-search]').value='';stage.querySelector('[data-category]').value='';stage.querySelector('[data-schedule]').value='';updateRows(stage);save();}
+    if(button.hasAttribute('data-clear-selection')) {state.selected.clear();updateSelection(stage);save();}
+    if(button.dataset.page) {state.page=Number(button.dataset.page);state.selected.clear();updateRows(stage);save();}
+    if(button.dataset.options) {const popover=stage.querySelector(`[data-row-popover="${button.dataset.options}"]`);popover.hidden=!popover.hidden;button.setAttribute('aria-expanded',String(!popover.hidden));}
+    if(button.dataset.demo) {const notice=stage.querySelector('.ma-notice');notice.hidden=false;notice.textContent=`${button.dataset.demo} · hanya simulasi preview`;stage.querySelectorAll('[data-row-popover]').forEach(el=>el.hidden=true);stage.querySelectorAll('[data-options]').forEach(el=>el.setAttribute('aria-expanded','false'));}
+  }
+  root.querySelectorAll('.ma-stage').forEach(stage=>states.set(stage.dataset.layout,{status:'all',search:'',sort:'newest',category:'',scheduled:'',page:1,expanded:new Set([1]),selected:new Set()}));
+  applySaved(window.openai?.widgetState);
+  root.querySelectorAll('.ma-stage').forEach(build);
+  const resize=new ResizeObserver(entries=>entries.forEach(entry=>syncColumns(entry.target.closest('.ma-stage'))));
+  root.querySelectorAll('.ma-board').forEach(board=>resize.observe(board));
+  renderDevice();refreshIcons();
+  if(globalThis.Tweak) {const tweak=new Tweak({container:root,onChange:()=>{renderDevice();save();}});tweak.addSelect(design,'device',{label:'Perangkat',options:['Desktop','Tablet','Mobile']});}
+  window.addEventListener('openai:set_globals',event=>{if(event.detail?.globals?.widgetState){applySaved(event.detail.globals.widgetState);renderDevice();root.querySelectorAll('.ma-stage').forEach(stage=>{const state=states.get(stage.dataset.layout);stage.querySelector('[data-search]').value=state.search;stage.querySelector('[data-sort]').value=state.sort;updateRows(stage);});}});
+})();
+</script>

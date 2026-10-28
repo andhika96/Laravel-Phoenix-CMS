@@ -1,0 +1,5311 @@
+{
+  "ok": true,
+  "cases": 24,
+  "errors": [],
+  "results": [
+    {
+      "theme": "arunika_lucent",
+      "mode": "light",
+      "accent": "native",
+      "values": {
+        "primary": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "soft": [
+          228,
+          244,
+          238,
+          255
+        ],
+        "ink": [
+          32,
+          38,
+          36,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          228,
+          244,
+          238,
+          255
+        ],
+        "menuText": [
+          32,
+          38,
+          36,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "outline": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "pills": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "pagination": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "list": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "radio": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "progress": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "accordion": [
+          228,
+          244,
+          238,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          228,
+          244,
+          238,
+          255
+        ],
+        "text": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "badge": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          32,
+          165,
+          118,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "expected": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.894588 0.958118 0.935059)",
+        "color": "rgb(32, 38, 36)",
+        "outline": "solid"
+      },
+      "invalid": "rgb(150, 206, 185)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(31, 166, 117) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(31, 166, 117)"
+      }
+    },
+    {
+      "theme": "arunika_lucent",
+      "mode": "light",
+      "accent": "#9D00FF",
+      "values": {
+        "primary": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "soft": [
+          243,
+          224,
+          255,
+          255
+        ],
+        "ink": [
+          32,
+          38,
+          36,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          243,
+          224,
+          255,
+          255
+        ],
+        "menuText": [
+          32,
+          38,
+          36,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "outline": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pills": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pagination": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "list": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "radio": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "progress": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "accordion": [
+          243,
+          224,
+          255,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          243,
+          224,
+          255,
+          255
+        ],
+        "text": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "badge": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          157,
+          0,
+          255,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "expected": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.953882 0.88 1)",
+        "color": "rgb(32, 38, 36)",
+        "outline": "solid"
+      },
+      "invalid": "rgb(223, 209, 234)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(157, 0, 255) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(157, 0, 255)"
+      }
+    },
+    {
+      "theme": "arunika_lucent",
+      "mode": "dark",
+      "accent": "native",
+      "values": {
+        "primary": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "soft": [
+          48,
+          54,
+          50,
+          255
+        ],
+        "ink": [
+          240,
+          250,
+          245,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          48,
+          54,
+          50,
+          255
+        ],
+        "menuText": [
+          240,
+          250,
+          245,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "outline": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "pills": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "pagination": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "list": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "radio": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "progress": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "accordion": [
+          48,
+          54,
+          50,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          48,
+          54,
+          50,
+          255
+        ],
+        "text": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "badge": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          32,
+          165,
+          118,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "expected": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "rgb(48, 54, 50)",
+        "color": "rgb(240, 250, 245)",
+        "outline": "solid"
+      },
+      "invalid": "rgb(52, 69, 61)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(31, 166, 117) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(31, 166, 117)"
+      }
+    },
+    {
+      "theme": "arunika_lucent",
+      "mode": "dark",
+      "accent": "#9D00FF",
+      "values": {
+        "primary": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "soft": [
+          48,
+          54,
+          50,
+          255
+        ],
+        "ink": [
+          240,
+          250,
+          245,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          48,
+          54,
+          50,
+          255
+        ],
+        "menuText": [
+          240,
+          250,
+          245,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "outline": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pills": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pagination": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "list": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "radio": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "progress": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "accordion": [
+          48,
+          54,
+          50,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          48,
+          54,
+          50,
+          255
+        ],
+        "text": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "badge": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          157,
+          0,
+          255,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "expected": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "rgb(48, 54, 50)",
+        "color": "rgb(240, 250, 245)",
+        "outline": "solid"
+      },
+      "invalid": "rgb(54, 58, 55)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(157, 0, 255) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(157, 0, 255)"
+      }
+    },
+    {
+      "theme": "arunika_prism",
+      "mode": "light",
+      "accent": "native",
+      "values": {
+        "primary": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "soft": [
+          240,
+          236,
+          251,
+          255
+        ],
+        "ink": [
+          23,
+          21,
+          26,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          240,
+          236,
+          251,
+          255
+        ],
+        "menuText": [
+          23,
+          21,
+          26,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "outline": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "pills": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "pagination": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "list": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "radio": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "progress": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "accordion": [
+          240,
+          236,
+          251,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          240,
+          236,
+          251,
+          255
+        ],
+        "text": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "badge": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          102,
+          66,
+          215,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "expected": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.939608 0.925882 0.984314)",
+        "color": "rgb(23, 21, 26)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(220, 53, 69)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(101, 66, 215) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(101, 66, 215)"
+      }
+    },
+    {
+      "theme": "arunika_prism",
+      "mode": "light",
+      "accent": "#9D00FF",
+      "values": {
+        "primary": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "soft": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "ink": [
+          23,
+          21,
+          26,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "menuText": [
+          23,
+          21,
+          26,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "outline": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pills": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pagination": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "list": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "radio": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "progress": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "accordion": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "text": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "badge": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          157,
+          0,
+          255,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "expected": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.961569 0.9 1)",
+        "color": "rgb(23, 21, 26)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(220, 53, 69)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(157, 0, 255) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(157, 0, 255)"
+      }
+    },
+    {
+      "theme": "arunika_prism",
+      "mode": "dark",
+      "accent": "native",
+      "values": {
+        "primary": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "soft": [
+          100,
+          67,
+          216,
+          46
+        ],
+        "ink": [
+          247,
+          246,
+          248,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          100,
+          67,
+          216,
+          46
+        ],
+        "menuText": [
+          247,
+          246,
+          248,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "outline": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "pills": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "pagination": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "list": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "radio": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "progress": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "accordion": [
+          100,
+          67,
+          216,
+          46
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          100,
+          67,
+          216,
+          46
+        ],
+        "text": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "badge": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          102,
+          66,
+          215,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "expected": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.396078 0.258824 0.843137 / 0.18)",
+        "color": "rgb(247, 246, 248)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(234, 134, 143)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(101, 66, 215) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(101, 66, 215)"
+      }
+    },
+    {
+      "theme": "arunika_prism",
+      "mode": "dark",
+      "accent": "#9D00FF",
+      "values": {
+        "primary": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "soft": [
+          155,
+          0,
+          255,
+          46
+        ],
+        "ink": [
+          247,
+          246,
+          248,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          155,
+          0,
+          255,
+          46
+        ],
+        "menuText": [
+          247,
+          246,
+          248,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "outline": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pills": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pagination": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "list": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "radio": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "progress": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "accordion": [
+          155,
+          0,
+          255,
+          46
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          155,
+          0,
+          255,
+          46
+        ],
+        "text": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "badge": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          157,
+          0,
+          255,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "expected": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.615686 0 1 / 0.18)",
+        "color": "rgb(247, 246, 248)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(234, 134, 143)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(157, 0, 255) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(157, 0, 255)"
+      }
+    },
+    {
+      "theme": "arunika_equinox",
+      "mode": "light",
+      "accent": "native",
+      "values": {
+        "primary": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "soft": [
+          240,
+          236,
+          251,
+          255
+        ],
+        "ink": [
+          23,
+          51,
+          47,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          240,
+          236,
+          251,
+          255
+        ],
+        "menuText": [
+          23,
+          51,
+          47,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "outline": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "pills": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "pagination": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "list": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "radio": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "progress": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "accordion": [
+          240,
+          236,
+          251,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          240,
+          236,
+          251,
+          255
+        ],
+        "text": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "badge": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          102,
+          66,
+          215,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "expected": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.939608 0.925882 0.984314)",
+        "color": "rgb(23, 51, 47)",
+        "outline": "auto"
+      },
+      "invalid": "oklab(0.886699 -0.00536802 -0.0133623)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(101, 66, 215) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(101, 66, 215)"
+      }
+    },
+    {
+      "theme": "arunika_equinox",
+      "mode": "light",
+      "accent": "#9D00FF",
+      "values": {
+        "primary": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "soft": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "ink": [
+          23,
+          51,
+          47,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "menuText": [
+          23,
+          51,
+          47,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "outline": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pills": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pagination": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "list": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "radio": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "progress": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "accordion": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "text": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "badge": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          157,
+          0,
+          255,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "expected": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.961569 0.9 1)",
+        "color": "rgb(23, 51, 47)",
+        "outline": "auto"
+      },
+      "invalid": "oklab(0.880579 0.00789094 -0.0214325)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(157, 0, 255) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(157, 0, 255)"
+      }
+    },
+    {
+      "theme": "arunika_equinox",
+      "mode": "dark",
+      "accent": "native",
+      "values": {
+        "primary": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "soft": [
+          100,
+          67,
+          216,
+          46
+        ],
+        "ink": [
+          245,
+          255,
+          252,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          100,
+          67,
+          216,
+          46
+        ],
+        "menuText": [
+          245,
+          255,
+          252,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "outline": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "pills": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "pagination": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "list": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "radio": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "progress": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "accordion": [
+          100,
+          67,
+          216,
+          46
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          100,
+          67,
+          216,
+          46
+        ],
+        "text": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "badge": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          102,
+          66,
+          215,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "expected": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.396078 0.258824 0.843137 / 0.18)",
+        "color": "rgb(245, 255, 252)",
+        "outline": "auto"
+      },
+      "invalid": "rgba(144, 219, 204, 0.18)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(101, 66, 215) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(101, 66, 215)"
+      }
+    },
+    {
+      "theme": "arunika_equinox",
+      "mode": "dark",
+      "accent": "#9D00FF",
+      "values": {
+        "primary": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "soft": [
+          155,
+          0,
+          255,
+          46
+        ],
+        "ink": [
+          245,
+          255,
+          252,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          155,
+          0,
+          255,
+          46
+        ],
+        "menuText": [
+          245,
+          255,
+          252,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "outline": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pills": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pagination": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "list": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "radio": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "progress": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "accordion": [
+          155,
+          0,
+          255,
+          46
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          155,
+          0,
+          255,
+          46
+        ],
+        "text": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "badge": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          157,
+          0,
+          255,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "expected": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.615686 0 1 / 0.18)",
+        "color": "rgb(245, 255, 252)",
+        "outline": "auto"
+      },
+      "invalid": "rgba(104, 208, 191, 0.22)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(157, 0, 255) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(157, 0, 255)"
+      }
+    },
+    {
+      "theme": "arunika_aurora",
+      "mode": "light",
+      "accent": "native",
+      "values": {
+        "primary": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "soft": [
+          240,
+          236,
+          251,
+          255
+        ],
+        "ink": [
+          23,
+          21,
+          26,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          240,
+          236,
+          251,
+          255
+        ],
+        "menuText": [
+          23,
+          21,
+          26,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "outline": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "pills": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "pagination": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "list": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "radio": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "progress": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "accordion": [
+          240,
+          236,
+          251,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          240,
+          236,
+          251,
+          255
+        ],
+        "text": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "badge": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          102,
+          66,
+          215,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "expected": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.939608 0.925882 0.984314)",
+        "color": "rgb(23, 21, 26)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(220, 53, 69)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(101, 66, 215) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(101, 66, 215)"
+      }
+    },
+    {
+      "theme": "arunika_aurora",
+      "mode": "light",
+      "accent": "#9D00FF",
+      "values": {
+        "primary": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "soft": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "ink": [
+          23,
+          21,
+          26,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "menuText": [
+          23,
+          21,
+          26,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "outline": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pills": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pagination": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "list": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "radio": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "progress": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "accordion": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "text": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "badge": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          157,
+          0,
+          255,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "expected": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.961569 0.9 1)",
+        "color": "rgb(23, 21, 26)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(220, 53, 69)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(157, 0, 255) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(157, 0, 255)"
+      }
+    },
+    {
+      "theme": "arunika_aurora",
+      "mode": "dark",
+      "accent": "native",
+      "values": {
+        "primary": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "soft": [
+          100,
+          67,
+          216,
+          46
+        ],
+        "ink": [
+          247,
+          246,
+          248,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          100,
+          67,
+          216,
+          46
+        ],
+        "menuText": [
+          247,
+          246,
+          248,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "outline": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "pills": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "pagination": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "list": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "radio": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "progress": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "accordion": [
+          100,
+          67,
+          216,
+          46
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          100,
+          67,
+          216,
+          46
+        ],
+        "text": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "badge": [
+          101,
+          66,
+          215,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          102,
+          66,
+          215,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "expected": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.396078 0.258824 0.843137 / 0.18)",
+        "color": "rgb(247, 246, 248)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(234, 134, 143)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(101, 66, 215) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(101, 66, 215)"
+      }
+    },
+    {
+      "theme": "arunika_aurora",
+      "mode": "dark",
+      "accent": "#9D00FF",
+      "values": {
+        "primary": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "soft": [
+          155,
+          0,
+          255,
+          46
+        ],
+        "ink": [
+          247,
+          246,
+          248,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          155,
+          0,
+          255,
+          46
+        ],
+        "menuText": [
+          247,
+          246,
+          248,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "outline": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pills": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pagination": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "list": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "radio": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "progress": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "accordion": [
+          155,
+          0,
+          255,
+          46
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          155,
+          0,
+          255,
+          46
+        ],
+        "text": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "badge": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          157,
+          0,
+          255,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "expected": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.615686 0 1 / 0.18)",
+        "color": "rgb(247, 246, 248)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(234, 134, 143)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(157, 0, 255) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(157, 0, 255)"
+      }
+    },
+    {
+      "theme": "default",
+      "mode": "light",
+      "accent": "native",
+      "values": {
+        "primary": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "soft": [
+          252,
+          232,
+          233,
+          255
+        ],
+        "ink": [
+          33,
+          37,
+          41,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          252,
+          232,
+          233,
+          255
+        ],
+        "menuText": [
+          33,
+          37,
+          41,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "outline": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "pills": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "pagination": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "list": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "radio": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "progress": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "accordion": [
+          252,
+          232,
+          233,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          252,
+          232,
+          233,
+          255
+        ],
+        "text": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "badge": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          223,
+          30,
+          36,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "expected": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.987843 0.911373 0.914118)",
+        "color": "rgb(33, 37, 41)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(220, 53, 69)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(224, 29, 36) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(224, 29, 36)"
+      }
+    },
+    {
+      "theme": "default",
+      "mode": "light",
+      "accent": "#9D00FF",
+      "values": {
+        "primary": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "soft": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "ink": [
+          33,
+          37,
+          41,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "menuText": [
+          33,
+          37,
+          41,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "outline": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pills": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pagination": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "list": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "radio": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "progress": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "accordion": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "text": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "badge": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          157,
+          0,
+          255,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "expected": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.961569 0.9 1)",
+        "color": "rgb(33, 37, 41)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(220, 53, 69)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(157, 0, 255) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(157, 0, 255)"
+      }
+    },
+    {
+      "theme": "default",
+      "mode": "dark",
+      "accent": "native",
+      "values": {
+        "primary": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "soft": [
+          71,
+          54,
+          59,
+          255
+        ],
+        "ink": [
+          222,
+          226,
+          230,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          71,
+          54,
+          59,
+          255
+        ],
+        "menuText": [
+          222,
+          226,
+          230,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "outline": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "pills": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "pagination": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "list": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "radio": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "progress": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "accordion": [
+          71,
+          54,
+          59,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          71,
+          54,
+          59,
+          255
+        ],
+        "text": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "badge": [
+          224,
+          29,
+          36,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          223,
+          30,
+          36,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "expected": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.278431 0.212549 0.229412)",
+        "color": "rgb(222, 226, 230)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(234, 134, 143)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(224, 29, 36) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(224, 29, 36)"
+      }
+    },
+    {
+      "theme": "default",
+      "mode": "dark",
+      "accent": "#9D00FF",
+      "values": {
+        "primary": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "soft": [
+          64,
+          51,
+          80,
+          255
+        ],
+        "ink": [
+          222,
+          226,
+          230,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          64,
+          51,
+          80,
+          255
+        ],
+        "menuText": [
+          222,
+          226,
+          230,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "outline": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pills": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pagination": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "list": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "radio": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "progress": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "accordion": [
+          64,
+          51,
+          80,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          64,
+          51,
+          80,
+          255
+        ],
+        "text": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "badge": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          157,
+          0,
+          255,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "expected": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.252157 0.201176 0.315294)",
+        "color": "rgb(222, 226, 230)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(234, 134, 143)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(157, 0, 255) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(157, 0, 255)"
+      }
+    },
+    {
+      "theme": "calm_green",
+      "mode": "light",
+      "accent": "native",
+      "values": {
+        "primary": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "soft": [
+          233,
+          246,
+          241,
+          255
+        ],
+        "ink": [
+          33,
+          37,
+          41,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          233,
+          246,
+          241,
+          255
+        ],
+        "menuText": [
+          33,
+          37,
+          41,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "outline": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "pills": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "pagination": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "list": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "radio": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "progress": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "accordion": [
+          233,
+          246,
+          241,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          233,
+          246,
+          241,
+          255
+        ],
+        "text": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "badge": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          32,
+          165,
+          118,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "expected": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.912157 0.965098 0.945882)",
+        "color": "rgb(33, 37, 41)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(220, 53, 69)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(31, 166, 117) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(31, 166, 117)"
+      }
+    },
+    {
+      "theme": "calm_green",
+      "mode": "light",
+      "accent": "#9D00FF",
+      "values": {
+        "primary": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "soft": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "ink": [
+          33,
+          37,
+          41,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "menuText": [
+          33,
+          37,
+          41,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "outline": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pills": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pagination": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "list": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "radio": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "progress": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "accordion": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          245,
+          230,
+          255,
+          255
+        ],
+        "text": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "badge": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          157,
+          0,
+          255,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "expected": [
+            34,
+            38,
+            42,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.961569 0.9 1)",
+        "color": "rgb(33, 37, 41)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(220, 53, 69)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(157, 0, 255) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(157, 0, 255)"
+      }
+    },
+    {
+      "theme": "calm_green",
+      "mode": "dark",
+      "accent": "native",
+      "values": {
+        "primary": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "soft": [
+          52,
+          68,
+          67,
+          255
+        ],
+        "ink": [
+          222,
+          226,
+          230,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          52,
+          68,
+          67,
+          255
+        ],
+        "menuText": [
+          222,
+          226,
+          230,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "outline": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "pills": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "pagination": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "list": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "radio": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "progress": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "accordion": [
+          52,
+          68,
+          67,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          52,
+          68,
+          67,
+          255
+        ],
+        "text": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "badge": [
+          31,
+          166,
+          117,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          32,
+          165,
+          118,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "expected": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.202745 0.266275 0.261176)",
+        "color": "rgb(222, 226, 230)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(234, 134, 143)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(31, 166, 117) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(31, 166, 117)"
+      }
+    },
+    {
+      "theme": "calm_green",
+      "mode": "dark",
+      "accent": "#9D00FF",
+      "values": {
+        "primary": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "soft": [
+          64,
+          51,
+          80,
+          255
+        ],
+        "ink": [
+          222,
+          226,
+          230,
+          255
+        ],
+        "danger": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "menu": [
+          64,
+          51,
+          80,
+          255
+        ],
+        "menuText": [
+          222,
+          226,
+          230,
+          255
+        ],
+        "deleteText": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "primaryButton": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "outline": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pills": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "pagination": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "list": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "listText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "pillsText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "paginationText": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "check": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "radio": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "progress": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "accordion": [
+          64,
+          51,
+          80,
+          255
+        ],
+        "accordionIcon": "none",
+        "alert": [
+          64,
+          51,
+          80,
+          255
+        ],
+        "text": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "badge": [
+          157,
+          0,
+          255,
+          255
+        ],
+        "dangerButton": [
+          220,
+          53,
+          69,
+          255
+        ],
+        "semantic": {
+          "success": {
+            "actual": [
+              25,
+              135,
+              84,
+              255
+            ],
+            "expected": [
+              25,
+              135,
+              84,
+              255
+            ]
+          },
+          "warning": {
+            "actual": [
+              255,
+              193,
+              7,
+              255
+            ],
+            "expected": [
+              255,
+              193,
+              7,
+              255
+            ]
+          },
+          "info": {
+            "actual": [
+              13,
+              202,
+              240,
+              255
+            ],
+            "expected": [
+              13,
+              202,
+              240,
+              255
+            ]
+          }
+        },
+        "opacity": [
+          157,
+          0,
+          255,
+          128
+        ],
+        "disabled": {
+          "actual": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "expected": [
+            221,
+            225,
+            229,
+            128
+          ],
+          "pointer": "none"
+        }
+      },
+      "focus": {
+        "background": "color(srgb 0.252157 0.201176 0.315294)",
+        "color": "rgb(222, 226, 230)",
+        "outline": "auto"
+      },
+      "invalid": "rgb(234, 134, 143)",
+      "switchFocus": {
+        "image": "radial-gradient(circle closest-side, rgb(157, 0, 255) 75%, rgba(0, 0, 0, 0) 80%)",
+        "primary": "rgb(157, 0, 255)"
+      }
+    }
+  ]
+}

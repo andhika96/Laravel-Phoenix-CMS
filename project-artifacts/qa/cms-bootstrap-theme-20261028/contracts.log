@@ -1,0 +1,47 @@
+✔ every CMS layout loads the theme bridge after its theme and before page overrides (7.5701ms)
+✔ frontend and auth layouts do not load the CMS component bridge (2.458ms)
+✔ places the Arunika Aurora color palette immediately before the theme mode toggle (3.8844ms)
+✔ keeps the Arunika Aurora picker limited to colors and reuses existing persistence (0.9015ms)
+✔ derives light mode shell gradients from the selected surface color and keeps interactive hover separate (2.0396ms)
+✔ derives dark mode sidebar and header gradients from the selected surface color (0.569ms)
+✔ Arunika Equinox owns an isolated runtime theme and preview (6.4993ms)
+✔ Arunika Equinox V2 preserves dynamic CMS content with a reference-aligned header profile (14.7856ms)
+✔ Arunika Equinox exposes the admin shortcut and a persistent interactive profile palette (2.6799ms)
+✔ Arunika Equinox V2 defines the approved mint light and deep teal dark systems (3.5659ms)
+✔ Arunika Equinox V2 recreates the edge-to-edge reference shell (9.074ms)
+✔ Arunika Equinox Teal Mist uses compact dashboard hierarchy and clear states (2.904ms)
+✔ Arunika Equinox renders the approved mountain landscape only on the expanded sidebar (1.1653ms)
+✔ Theme Manager, seeder, and migration register Arunika Equinox (6.3189ms)
+Arunika Lucent mobile semantic contract loaded.
+✔ Lucent mobile shell keeps the sidebar profile row, mobile topbar and logout footer (12.9401ms)
+✔ Lucent mobile overlay owns the sidebar profile row, full drawer and scrim layering (4.5938ms)
+✔ Lucent semantic buttons isolate primary accent from Bootstrap variants (2.0914ms)
+✔ Lucent dashboard exposes mobile-only title and subtitle seams (0.4814ms)
+✔ mobile navigation controller exposes the notification bell only when mobile header is active (0.3687ms)
+✔ Arunika Lucent owns an isolated runtime theme and preview (4.2637ms)
+✔ Arunika Lucent layout keeps dynamic CMS content and only Lucent assets (5.0107ms)
+✔ Arunika Lucent keeps auth buttons and notices styled without a data theme attribute (1.8162ms)
+✔ Arunika Lucent uses a neutral Swiss shell with existing green semantic actions (10.0507ms)
+✔ Arunika Lucent JS keeps the shared palette and responsive sidebar behavior (0.9592ms)
+✔ Theme Manager and seed data register Arunika Lucent (5.7595ms)
+✔ Arunika Prism has an isolated theme shell and preview asset (2.598ms)
+✔ Arunika Prism layout keeps dynamic content and uses only Prism theme assets (14.4279ms)
+✔ Arunika Prism stylesheet contains the approved dashboard-shell tokens (2.0003ms)
+✔ Theme Manager and seed data register Arunika Prism (7.899ms)
+✔ every active CMS theme loads the shared responsive typography asset (6.2796ms)
+✔ the shared asset preserves the File Manager V2 RFS curves in content and overlays (1.1606ms)
+✔ wide, short viewports use compact heading caps without overriding theme-owned title styles (0.9269ms)
+✔ compact desktop derives operational and sidebar text from Site Config (2.5992ms)
+✔ operational controls inherit the computed Site Config size for px, em, and rem (1.3694ms)
+✔ mobile content typography derives from the adaptive Site Config scale (1.1201ms)
+✔ input groups bypass Bootstrap one-rem text and honor font-size-normal (2.3051ms)
+✔ profile dropdown uses the compact Site Config scale while preserving its hierarchy (1.2307ms)
+✔ global typography matrix covers mobile tablet and compact laptop ranges (1.6583ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 406.112

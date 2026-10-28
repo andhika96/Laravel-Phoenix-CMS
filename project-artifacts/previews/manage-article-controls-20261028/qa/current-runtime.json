@@ -1,0 +1,92 @@
+[
+  {
+    "width": 1440,
+    "font": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+    "fontSize": "14px",
+    "accent": "#1FA675",
+    "detail": {
+      "x": 319,
+      "y": 301.390625,
+      "width": 28,
+      "height": 32
+    },
+    "check": {
+      "x": 371,
+      "y": 301.390625,
+      "width": 14,
+      "height": 32
+    },
+    "title": {
+      "x": 416.59375,
+      "y": 295.171875,
+      "width": 450.859375,
+      "height": 21
+    },
+    "statusLabels": [
+      "All5041",
+      "Publish5035",
+      "Draft0",
+      "Pending6"
+    ]
+  },
+  {
+    "width": 768,
+    "font": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+    "fontSize": "14px",
+    "accent": "#1FA675",
+    "detail": {
+      "x": 23,
+      "y": 367.96875,
+      "width": 28,
+      "height": 32
+    },
+    "check": {
+      "x": 75,
+      "y": 367.96875,
+      "width": 14,
+      "height": 32
+    },
+    "title": {
+      "x": 120.59375,
+      "y": 351.25,
+      "width": 384.8125,
+      "height": 42
+    },
+    "statusLabels": [
+      "All5041",
+      "Publish5035",
+      "Draft0",
+      "Pending6"
+    ]
+  },
+  {
+    "width": 390,
+    "font": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+    "fontSize": "13.45px",
+    "accent": "#1FA675",
+    "detail": {
+      "x": 19,
+      "y": 500.453125,
+      "width": 28,
+      "height": 32
+    },
+    "check": {
+      "x": 71,
+      "y": 500.453125,
+      "width": 13.4375,
+      "height": 32
+    },
+    "title": {
+      "x": 103,
+      "y": 459.0625,
+      "width": 216,
+      "height": 60.515625
+    },
+    "statusLabels": [
+      "All5041",
+      "Publish5035",
+      "Draft0",
+      "Pending6"
+    ]
+  }
+]

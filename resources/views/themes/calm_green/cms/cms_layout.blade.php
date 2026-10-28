@@ -43,6 +43,7 @@
 			<link href="{{ asset('assets/css/themes/calm_green/aruna-admin-v7-calm-green.css?v=').time() }}" rel="stylesheet">
 			<link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
 
+			<link href="{{ asset('assets/css/cms-bootstrap-theme.css') }}?v={{ filemtime(public_path('assets/css/cms-bootstrap-theme.css')) }}" rel="stylesheet">
 			@stack('css')
 
 			<title>{{ site_config()->site_name }} | @yield('title')</title>

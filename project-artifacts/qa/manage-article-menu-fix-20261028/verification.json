@@ -1,0 +1,1082 @@
+{
+  "ok": true,
+  "cases": [
+    {
+      "theme": "light",
+      "width": 1440,
+      "geometry": {
+        "actions": [
+          {
+            "label": "Add Post",
+            "x": 996.734375,
+            "y": 28.640625,
+            "right": 1103.671875,
+            "bottom": 63.640625,
+            "width": 106.9375,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Article Templates",
+            "x": 1111.671875,
+            "y": 28.640625,
+            "right": 1274.59375,
+            "bottom": 63.640625,
+            "width": 162.921875,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Category List",
+            "x": 1282.59375,
+            "y": 28.640625,
+            "right": 1418,
+            "bottom": 63.640625,
+            "width": 135.40625,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          }
+        ],
+        "overlaps": false,
+        "overflow": false,
+        "width": 1440
+      },
+      "menu": {
+        "ancestors": [
+          {
+            "tag": "UL",
+            "class": "dropdown-menu dropdown-menu-end show",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "DIV",
+            "class": "dropdown",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "DIV",
+            "class": "ph-article-row-actions",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TD",
+            "class": "ph-article-actions-col",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TR",
+            "class": "",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TBODY",
+            "class": "",
+            "fontSize": "14px"
+          }
+        ],
+        "rootSize": "16px",
+        "bodySize": "14px",
+        "cellSize": "14px",
+        "menuSize": "14px",
+        "menuFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "bodyFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "items": [
+          {
+            "label": "View article",
+            "size": "14px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "21px"
+          },
+          {
+            "label": "Delete",
+            "size": "14px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "21px"
+          }
+        ],
+        "left": 1243.40625,
+        "right": 1403.40625,
+        "bottom": 376.734375,
+        "viewport": 1440
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "geometry": {
+        "actions": [
+          {
+            "label": "Add Post",
+            "x": 580.734375,
+            "y": 29.59375,
+            "right": 687.671875,
+            "bottom": 64.59375,
+            "width": 106.9375,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Article Templates",
+            "x": 695.671875,
+            "y": 29.59375,
+            "right": 858.59375,
+            "bottom": 64.59375,
+            "width": 162.921875,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Category List",
+            "x": 866.59375,
+            "y": 29.59375,
+            "right": 1002,
+            "bottom": 64.59375,
+            "width": 135.40625,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          }
+        ],
+        "overlaps": false,
+        "overflow": false,
+        "width": 1024
+      },
+      "menu": {
+        "ancestors": [
+          {
+            "tag": "UL",
+            "class": "dropdown-menu dropdown-menu-end show",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "DIV",
+            "class": "dropdown",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "DIV",
+            "class": "ph-article-row-actions",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TD",
+            "class": "ph-article-actions-col",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TR",
+            "class": "",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TBODY",
+            "class": "",
+            "fontSize": "14px"
+          }
+        ],
+        "rootSize": "16px",
+        "bodySize": "14px",
+        "cellSize": "14px",
+        "menuSize": "14px",
+        "menuFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "bodyFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "items": [
+          {
+            "label": "View article",
+            "size": "14px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "21px"
+          },
+          {
+            "label": "Delete",
+            "size": "14px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "21px"
+          }
+        ],
+        "left": 827.40625,
+        "right": 987.40625,
+        "bottom": 423.25,
+        "viewport": 1024
+      }
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "geometry": {
+        "actions": [
+          {
+            "label": "Add Post",
+            "x": 332.734375,
+            "y": 86.640625,
+            "right": 439.671875,
+            "bottom": 121.640625,
+            "width": 106.9375,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Article Templates",
+            "x": 447.671875,
+            "y": 86.640625,
+            "right": 610.59375,
+            "bottom": 121.640625,
+            "width": 162.921875,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Category List",
+            "x": 618.59375,
+            "y": 86.640625,
+            "right": 754,
+            "bottom": 121.640625,
+            "width": 135.40625,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          }
+        ],
+        "overlaps": false,
+        "overflow": false,
+        "width": 768
+      },
+      "menu": {
+        "ancestors": [
+          {
+            "tag": "UL",
+            "class": "dropdown-menu dropdown-menu-end show",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "DIV",
+            "class": "dropdown",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "DIV",
+            "class": "ph-article-row-actions",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TD",
+            "class": "ph-article-actions-col",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TR",
+            "class": "",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TBODY",
+            "class": "",
+            "fontSize": "14px"
+          }
+        ],
+        "rootSize": "16px",
+        "bodySize": "14px",
+        "cellSize": "14px",
+        "menuSize": "14px",
+        "menuFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "bodyFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "items": [
+          {
+            "label": "View article",
+            "size": "14px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "21px"
+          },
+          {
+            "label": "Delete",
+            "size": "14px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "21px"
+          }
+        ],
+        "left": 579.40625,
+        "right": 739.40625,
+        "bottom": 479.328125,
+        "viewport": 768
+      }
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "geometry": {
+        "actions": [
+          {
+            "label": "Add Post",
+            "x": 14,
+            "y": 140.5,
+            "right": 376,
+            "bottom": 184.5,
+            "width": 362,
+            "height": 44,
+            "fontSize": "13.45px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Article Templates",
+            "x": 14,
+            "y": 192.5,
+            "right": 191,
+            "bottom": 236.5,
+            "width": 177,
+            "height": 44,
+            "fontSize": "13.45px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Category List",
+            "x": 199,
+            "y": 192.5,
+            "right": 376,
+            "bottom": 236.5,
+            "width": 177,
+            "height": 44,
+            "fontSize": "13.45px",
+            "visible": true,
+            "clipped": false
+          }
+        ],
+        "overlaps": false,
+        "overflow": false,
+        "width": 390
+      },
+      "menu": {
+        "ancestors": [
+          {
+            "tag": "UL",
+            "class": "dropdown-menu dropdown-menu-end show",
+            "fontSize": "13.45px"
+          },
+          {
+            "tag": "DIV",
+            "class": "dropdown",
+            "fontSize": "13.45px"
+          },
+          {
+            "tag": "DIV",
+            "class": "ph-article-row-actions",
+            "fontSize": "13.45px"
+          },
+          {
+            "tag": "TD",
+            "class": "ph-article-actions-col",
+            "fontSize": "13.45px"
+          },
+          {
+            "tag": "TR",
+            "class": "",
+            "fontSize": "13.45px"
+          },
+          {
+            "tag": "TBODY",
+            "class": "",
+            "fontSize": "13.45px"
+          }
+        ],
+        "rootSize": "16px",
+        "bodySize": "14px",
+        "cellSize": "13.45px",
+        "menuSize": "13.45px",
+        "menuFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "bodyFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "items": [
+          {
+            "label": "Edit",
+            "size": "13.45px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "20.175px"
+          },
+          {
+            "label": "View article",
+            "size": "13.45px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "20.175px"
+          },
+          {
+            "label": "Delete",
+            "size": "13.45px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "20.175px"
+          }
+        ],
+        "left": 203,
+        "right": 363,
+        "bottom": 577.1875,
+        "viewport": 390
+      }
+    },
+    {
+      "theme": "light",
+      "width": 320,
+      "geometry": {
+        "actions": [
+          {
+            "label": "Add Post",
+            "x": 14,
+            "y": 139.375,
+            "right": 306,
+            "bottom": 183.375,
+            "width": 292,
+            "height": 44,
+            "fontSize": "13.1px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Article Templates",
+            "x": 14,
+            "y": 191.375,
+            "right": 156,
+            "bottom": 244.65625,
+            "width": 142,
+            "height": 53.28125,
+            "fontSize": "13.1px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Category List",
+            "x": 164,
+            "y": 196.015625,
+            "right": 306,
+            "bottom": 240.015625,
+            "width": 142,
+            "height": 44,
+            "fontSize": "13.1px",
+            "visible": true,
+            "clipped": false
+          }
+        ],
+        "overlaps": false,
+        "overflow": false,
+        "width": 320
+      },
+      "menu": {
+        "ancestors": [
+          {
+            "tag": "UL",
+            "class": "dropdown-menu dropdown-menu-end show",
+            "fontSize": "13.1px"
+          },
+          {
+            "tag": "DIV",
+            "class": "dropdown",
+            "fontSize": "13.1px"
+          },
+          {
+            "tag": "DIV",
+            "class": "ph-article-row-actions",
+            "fontSize": "13.1px"
+          },
+          {
+            "tag": "TD",
+            "class": "ph-article-actions-col",
+            "fontSize": "13.1px"
+          },
+          {
+            "tag": "TR",
+            "class": "",
+            "fontSize": "13.1px"
+          },
+          {
+            "tag": "TBODY",
+            "class": "",
+            "fontSize": "13.1px"
+          }
+        ],
+        "rootSize": "16px",
+        "bodySize": "14px",
+        "cellSize": "13.1px",
+        "menuSize": "13.1px",
+        "menuFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "bodyFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "items": [
+          {
+            "label": "Edit",
+            "size": "13.1px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "19.65px"
+          },
+          {
+            "label": "View article",
+            "size": "13.1px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "19.65px"
+          },
+          {
+            "label": "Delete",
+            "size": "13.1px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "19.65px"
+          }
+        ],
+        "left": 133,
+        "right": 293,
+        "bottom": 598.890625,
+        "viewport": 320
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "geometry": {
+        "actions": [
+          {
+            "label": "Add Post",
+            "x": 996.734375,
+            "y": 28.640625,
+            "right": 1103.671875,
+            "bottom": 63.640625,
+            "width": 106.9375,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Article Templates",
+            "x": 1111.671875,
+            "y": 28.640625,
+            "right": 1274.59375,
+            "bottom": 63.640625,
+            "width": 162.921875,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Category List",
+            "x": 1282.59375,
+            "y": 28.640625,
+            "right": 1418,
+            "bottom": 63.640625,
+            "width": 135.40625,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          }
+        ],
+        "overlaps": false,
+        "overflow": false,
+        "width": 1440
+      },
+      "menu": {
+        "ancestors": [
+          {
+            "tag": "UL",
+            "class": "dropdown-menu dropdown-menu-end show",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "DIV",
+            "class": "dropdown",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "DIV",
+            "class": "ph-article-row-actions",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TD",
+            "class": "ph-article-actions-col",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TR",
+            "class": "",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TBODY",
+            "class": "",
+            "fontSize": "14px"
+          }
+        ],
+        "rootSize": "16px",
+        "bodySize": "14px",
+        "cellSize": "14px",
+        "menuSize": "14px",
+        "menuFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "bodyFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "items": [
+          {
+            "label": "View article",
+            "size": "14px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "21px"
+          },
+          {
+            "label": "Delete",
+            "size": "14px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "21px"
+          }
+        ],
+        "left": 1243.40625,
+        "right": 1403.40625,
+        "bottom": 376.734375,
+        "viewport": 1440
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "geometry": {
+        "actions": [
+          {
+            "label": "Add Post",
+            "x": 580.734375,
+            "y": 29.59375,
+            "right": 687.671875,
+            "bottom": 64.59375,
+            "width": 106.9375,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Article Templates",
+            "x": 695.671875,
+            "y": 29.59375,
+            "right": 858.59375,
+            "bottom": 64.59375,
+            "width": 162.921875,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Category List",
+            "x": 866.59375,
+            "y": 29.59375,
+            "right": 1002,
+            "bottom": 64.59375,
+            "width": 135.40625,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          }
+        ],
+        "overlaps": false,
+        "overflow": false,
+        "width": 1024
+      },
+      "menu": {
+        "ancestors": [
+          {
+            "tag": "UL",
+            "class": "dropdown-menu dropdown-menu-end show",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "DIV",
+            "class": "dropdown",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "DIV",
+            "class": "ph-article-row-actions",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TD",
+            "class": "ph-article-actions-col",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TR",
+            "class": "",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TBODY",
+            "class": "",
+            "fontSize": "14px"
+          }
+        ],
+        "rootSize": "16px",
+        "bodySize": "14px",
+        "cellSize": "14px",
+        "menuSize": "14px",
+        "menuFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "bodyFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "items": [
+          {
+            "label": "View article",
+            "size": "14px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "21px"
+          },
+          {
+            "label": "Delete",
+            "size": "14px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "21px"
+          }
+        ],
+        "left": 827.40625,
+        "right": 987.40625,
+        "bottom": 423.25,
+        "viewport": 1024
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "geometry": {
+        "actions": [
+          {
+            "label": "Add Post",
+            "x": 332.734375,
+            "y": 86.640625,
+            "right": 439.671875,
+            "bottom": 121.640625,
+            "width": 106.9375,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Article Templates",
+            "x": 447.671875,
+            "y": 86.640625,
+            "right": 610.59375,
+            "bottom": 121.640625,
+            "width": 162.921875,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Category List",
+            "x": 618.59375,
+            "y": 86.640625,
+            "right": 754,
+            "bottom": 121.640625,
+            "width": 135.40625,
+            "height": 35,
+            "fontSize": "14px",
+            "visible": true,
+            "clipped": false
+          }
+        ],
+        "overlaps": false,
+        "overflow": false,
+        "width": 768
+      },
+      "menu": {
+        "ancestors": [
+          {
+            "tag": "UL",
+            "class": "dropdown-menu dropdown-menu-end show",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "DIV",
+            "class": "dropdown",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "DIV",
+            "class": "ph-article-row-actions",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TD",
+            "class": "ph-article-actions-col",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TR",
+            "class": "",
+            "fontSize": "14px"
+          },
+          {
+            "tag": "TBODY",
+            "class": "",
+            "fontSize": "14px"
+          }
+        ],
+        "rootSize": "16px",
+        "bodySize": "14px",
+        "cellSize": "14px",
+        "menuSize": "14px",
+        "menuFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "bodyFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "items": [
+          {
+            "label": "View article",
+            "size": "14px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "21px"
+          },
+          {
+            "label": "Delete",
+            "size": "14px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "21px"
+          }
+        ],
+        "left": 579.40625,
+        "right": 739.40625,
+        "bottom": 479.328125,
+        "viewport": 768
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "geometry": {
+        "actions": [
+          {
+            "label": "Add Post",
+            "x": 14,
+            "y": 140.5,
+            "right": 376,
+            "bottom": 184.5,
+            "width": 362,
+            "height": 44,
+            "fontSize": "13.45px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Article Templates",
+            "x": 14,
+            "y": 192.5,
+            "right": 191,
+            "bottom": 236.5,
+            "width": 177,
+            "height": 44,
+            "fontSize": "13.45px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Category List",
+            "x": 199,
+            "y": 192.5,
+            "right": 376,
+            "bottom": 236.5,
+            "width": 177,
+            "height": 44,
+            "fontSize": "13.45px",
+            "visible": true,
+            "clipped": false
+          }
+        ],
+        "overlaps": false,
+        "overflow": false,
+        "width": 390
+      },
+      "menu": {
+        "ancestors": [
+          {
+            "tag": "UL",
+            "class": "dropdown-menu dropdown-menu-end show",
+            "fontSize": "13.45px"
+          },
+          {
+            "tag": "DIV",
+            "class": "dropdown",
+            "fontSize": "13.45px"
+          },
+          {
+            "tag": "DIV",
+            "class": "ph-article-row-actions",
+            "fontSize": "13.45px"
+          },
+          {
+            "tag": "TD",
+            "class": "ph-article-actions-col",
+            "fontSize": "13.45px"
+          },
+          {
+            "tag": "TR",
+            "class": "",
+            "fontSize": "13.45px"
+          },
+          {
+            "tag": "TBODY",
+            "class": "",
+            "fontSize": "13.45px"
+          }
+        ],
+        "rootSize": "16px",
+        "bodySize": "14px",
+        "cellSize": "13.45px",
+        "menuSize": "13.45px",
+        "menuFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "bodyFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "items": [
+          {
+            "label": "Edit",
+            "size": "13.45px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "20.175px"
+          },
+          {
+            "label": "View article",
+            "size": "13.45px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "20.175px"
+          },
+          {
+            "label": "Delete",
+            "size": "13.45px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "20.175px"
+          }
+        ],
+        "left": 203,
+        "right": 363,
+        "bottom": 577.1875,
+        "viewport": 390
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 320,
+      "geometry": {
+        "actions": [
+          {
+            "label": "Add Post",
+            "x": 14,
+            "y": 139.375,
+            "right": 306,
+            "bottom": 183.375,
+            "width": 292,
+            "height": 44,
+            "fontSize": "13.1px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Article Templates",
+            "x": 14,
+            "y": 191.375,
+            "right": 156,
+            "bottom": 244.65625,
+            "width": 142,
+            "height": 53.28125,
+            "fontSize": "13.1px",
+            "visible": true,
+            "clipped": false
+          },
+          {
+            "label": "Category List",
+            "x": 164,
+            "y": 196.015625,
+            "right": 306,
+            "bottom": 240.015625,
+            "width": 142,
+            "height": 44,
+            "fontSize": "13.1px",
+            "visible": true,
+            "clipped": false
+          }
+        ],
+        "overlaps": false,
+        "overflow": false,
+        "width": 320
+      },
+      "menu": {
+        "ancestors": [
+          {
+            "tag": "UL",
+            "class": "dropdown-menu dropdown-menu-end show",
+            "fontSize": "13.1px"
+          },
+          {
+            "tag": "DIV",
+            "class": "dropdown",
+            "fontSize": "13.1px"
+          },
+          {
+            "tag": "DIV",
+            "class": "ph-article-row-actions",
+            "fontSize": "13.1px"
+          },
+          {
+            "tag": "TD",
+            "class": "ph-article-actions-col",
+            "fontSize": "13.1px"
+          },
+          {
+            "tag": "TR",
+            "class": "",
+            "fontSize": "13.1px"
+          },
+          {
+            "tag": "TBODY",
+            "class": "",
+            "fontSize": "13.1px"
+          }
+        ],
+        "rootSize": "16px",
+        "bodySize": "14px",
+        "cellSize": "13.1px",
+        "menuSize": "13.1px",
+        "menuFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "bodyFamily": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "items": [
+          {
+            "label": "Edit",
+            "size": "13.1px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "19.65px"
+          },
+          {
+            "label": "View article",
+            "size": "13.1px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "19.65px"
+          },
+          {
+            "label": "Delete",
+            "size": "13.1px",
+            "family": "\"Noto Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+            "lineHeight": "19.65px"
+          }
+        ],
+        "left": 133,
+        "right": 293,
+        "bottom": 598.890625,
+        "viewport": 320
+      }
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "writes": []
+}

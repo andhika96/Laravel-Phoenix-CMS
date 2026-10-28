@@ -1,0 +1,22 @@
+{
+  "backups": [
+    {
+      "source": "resources/views/manage_article/manage_article.blade.php",
+      "backup_verified": true,
+      "current_sha256": "4BD19BAD7F0FD5441796E8BC42E840FF95AEFC993521330A1A8FD771D91E8C2E"
+    },
+    {
+      "source": "public/assets/css/article/manage-article-2026.css",
+      "backup_verified": true,
+      "current_sha256": "5B2D38B390E4B223E977FC7676BACF2D3A5C58ECFA81187F481A1815B7B9CB9F"
+    },
+    {
+      "source": "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+      "backup_verified": true,
+      "current_sha256": "270959F0D5086F91CDA6E13E590651B7D0A6A434153C04079925C8354A66E08A"
+    }
+  ],
+  "protected_files_verified": 5,
+  "graph_unchanged": true,
+  "head_and_index_unchanged": true
+}

@@ -1,0 +1,37 @@
+{
+  "original_backups_verified": 7,
+  "preserved_sources_verified": 15,
+  "head_index_preserved": true,
+  "graph_preserved": true,
+  "bridge_sha256": "19AF32E8A98F3CC422C6C46BD18157C386A3658DF9FEF7748BA4D4A1E55C2A15",
+  "sources": [
+    {
+      "path": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "sha256": "AF5851E6BFE85AF60E09F5A7132089796DC839980E51E1E17FB6BA49E8EBE884"
+    },
+    {
+      "path": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "sha256": "0E6978184D32E7E61F9B88B90E98B0CE8438C8DED72C102918F80CE66BDE2733"
+    },
+    {
+      "path": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "sha256": "7CBFAB01ECD29016033B906DDE22E76B6C41B610705227CF507BD7E32A4CDB38"
+    },
+    {
+      "path": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "sha256": "9470073A1AC01BE5AFECCC6ADF228DA9CD185D40EF825566BAC7F91BF307B868"
+    },
+    {
+      "path": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "sha256": "2BA916B00F8EBEAECBE68ECBE421464D4E0699C9CBDF473FD8FD389B44DB4FA0"
+    },
+    {
+      "path": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "sha256": "E510C971D85DA819EEB612E3F5550424C21F826F2AFFB221DC321C877A00CB87"
+    },
+    {
+      "path": "public/assets/css/article/manage-article-2026.css",
+      "sha256": "8FBA6790A515B2065E57E25DA8C8AEFF8A9742CC0DB69C076AB544CD728A25AC"
+    }
+  ]
+}
