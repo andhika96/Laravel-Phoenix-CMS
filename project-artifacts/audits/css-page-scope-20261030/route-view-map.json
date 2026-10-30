@@ -1,0 +1,1498 @@
+[
+    {
+        "uri": "arunika",
+        "name": "cms.core.arunika_themes",
+        "action": "App\\Http\\Controllers\\Web\\Themes\\Themes_Controller@index",
+        "source": "app/Http/Controllers/Web/Themes/Themes_Controller.php",
+        "line": 10,
+        "literal_views": [
+            {
+                "view": "arunika_themes.arunika_mosaic",
+                "file": "resources/views/arunika_themes/arunika_mosaic.blade.php",
+                "exists": false
+            }
+        ]
+    },
+    {
+        "uri": "arunika/v1",
+        "name": "cms.core.arunika_themes.v1",
+        "action": "App\\Http\\Controllers\\Web\\Themes\\Themes_Controller@index",
+        "source": "app/Http/Controllers/Web/Themes/Themes_Controller.php",
+        "line": 10,
+        "literal_views": [
+            {
+                "view": "arunika_themes.arunika_mosaic",
+                "file": "resources/views/arunika_themes/arunika_mosaic.blade.php",
+                "exists": false
+            }
+        ]
+    },
+    {
+        "uri": "arunika/v1/gemini",
+        "name": "cms.core.arunika_themes.v1.gemini",
+        "action": "App\\Http\\Controllers\\Web\\Themes\\Themes_Controller@gemini",
+        "source": "app/Http/Controllers/Web/Themes/Themes_Controller.php",
+        "line": 15,
+        "literal_views": [
+            {
+                "view": "arunika_themes.arunika_mosaic_gemini_extends",
+                "file": "resources/views/arunika_themes/arunika_mosaic_gemini_extends.blade.php",
+                "exists": false
+            }
+        ]
+    },
+    {
+        "uri": "setup",
+        "name": "cms.core.setup",
+        "action": "App\\Http\\Controllers\\Web\\Setup\\Setup_Controller@index",
+        "source": "app/Http/Controllers/Web/Setup/Setup_Controller.php",
+        "line": 19,
+        "literal_views": [
+            {
+                "view": "setup.setup",
+                "file": "resources/views/setup/setup.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "setup/success",
+        "name": "cms.core.setup_success",
+        "action": "App\\Http\\Controllers\\Web\\Setup\\Setup_Controller@setup_success",
+        "controller_missing": true
+    },
+    {
+        "uri": "testing/benchmark-db",
+        "name": "cms.core.testing.benchmark",
+        "action": "App\\Http\\Controllers\\Web\\Testing\\Testing_Controller@benchmark",
+        "source": "app/Http/Controllers/Web/Testing/Testing_Controller.php",
+        "line": 82,
+        "literal_views": []
+    },
+    {
+        "uri": "home",
+        "name": "cms.core.homepage",
+        "action": "App\\Http\\Controllers\\Web\\Homepage\\Homepage_Controller@index",
+        "source": "app/Http/Controllers/Web/Homepage/Homepage_Controller.php",
+        "line": 28,
+        "literal_views": [
+            {
+                "view": "homepage.homepage",
+                "file": "resources/views/homepage/homepage.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "home/listdata",
+        "name": "cms.core.homepage.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Homepage\\Homepage_Controller@listData",
+        "source": "app/Http/Controllers/Web/Homepage/Homepage_Controller.php",
+        "line": 33,
+        "literal_views": []
+    },
+    {
+        "uri": "article",
+        "name": "cms.core.article",
+        "action": "App\\Http\\Controllers\\Web\\Article\\ArticleFrontendController@index",
+        "source": "app/Http/Controllers/Web/Article/ArticleFrontendController.php",
+        "line": 30,
+        "literal_views": [
+            {
+                "view": "article.archive",
+                "file": "resources/views/article/archive.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "article/listdata",
+        "name": "cms.core.article.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Article\\ArticleFrontendController@listData",
+        "source": "app/Http/Controllers/Web/Article/ArticleFrontendController.php",
+        "line": 35,
+        "literal_views": []
+    },
+    {
+        "uri": "article/{idOrSlug}",
+        "name": "cms.core.article.detail",
+        "action": "App\\Http\\Controllers\\Web\\Article\\ArticleFrontendController@detail",
+        "source": "app/Http/Controllers/Web/Article/ArticleFrontendController.php",
+        "line": 54,
+        "literal_views": [
+            {
+                "view": "article.private",
+                "file": "resources/views/article/private.blade.php",
+                "exists": true
+            },
+            {
+                "view": "article.password-protected",
+                "file": "resources/views/article/password-protected.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "/",
+        "name": "cms.core.auth",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@login",
+        "source": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 50,
+        "literal_views": []
+    },
+    {
+        "uri": "auth/login",
+        "name": "cms.core.auth.login",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@login",
+        "source": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 50,
+        "literal_views": []
+    },
+    {
+        "uri": "auth/signup",
+        "name": "cms.core.auth.signup",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@signup",
+        "source": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 180,
+        "literal_views": []
+    },
+    {
+        "uri": "auth/logout",
+        "name": "cms.core.auth.logout",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@logout",
+        "source": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 316,
+        "literal_views": []
+    },
+    {
+        "uri": "auth/logout_sso",
+        "name": "cms.core.auth.logout.sso",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@logoutSSO",
+        "source": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 329,
+        "literal_views": []
+    },
+    {
+        "uri": "auth/forgotpassword",
+        "name": "cms.core.auth.forgotpassword",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@forgotpassword",
+        "source": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 342,
+        "literal_views": []
+    },
+    {
+        "uri": "auth/recoveryaccount",
+        "name": "cms.core.auth.resetpassword",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@resetpassword",
+        "source": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 508,
+        "literal_views": []
+    },
+    {
+        "uri": "auth/checkdata",
+        "name": "cms.core.auth.user.checkdata",
+        "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@checkUserData",
+        "source": "app/Http/Controllers/Web/Auth/Auth_Controller.php",
+        "line": 660,
+        "literal_views": []
+    },
+    {
+        "uri": "dashboard",
+        "name": "cms.core.dashboard",
+        "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@index",
+        "source": "app/Http/Controllers/Web/Dashboard/Dashboard_Controller.php",
+        "line": 22,
+        "literal_views": [
+            {
+                "view": "dashboard.dashboard",
+                "file": "resources/views/dashboard/dashboard.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "dashboard/menu",
+        "name": "cms.core.dashboard.menu",
+        "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@menu",
+        "controller_missing": true
+    },
+    {
+        "uri": "dashboard/setverticalsidebarmenu",
+        "name": "cms.core.dashboard.setVerticalSidebarMenuCollapse",
+        "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@setVerticalSidebarMenuCollapse",
+        "source": "app/Http/Controllers/Web/Dashboard/Dashboard_Controller.php",
+        "line": 27,
+        "literal_views": []
+    },
+    {
+        "uri": "dashboard/removeverticalsidebarmenu",
+        "name": "cms.core.dashboard.removeVerticalSidebarMenuCollapse",
+        "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@removeVerticalSidebarMenuCollapse",
+        "source": "app/Http/Controllers/Web/Dashboard/Dashboard_Controller.php",
+        "line": 77,
+        "literal_views": []
+    },
+    {
+        "uri": "dashboard/getisverticalsidebarmenuCollapse",
+        "name": "cms.core.dashboard.getIsVerticalSidebarMenuCollapse",
+        "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@getIsVerticalSidebarMenuCollapse",
+        "source": "app/Http/Controllers/Web/Dashboard/Dashboard_Controller.php",
+        "line": 127,
+        "literal_views": []
+    },
+    {
+        "uri": "account",
+        "name": "cms.core.account",
+        "action": "App\\Http\\Controllers\\Web\\Account\\Account_Controller@index",
+        "source": "app/Http/Controllers/Web/Account/Account_Controller.php",
+        "line": 29,
+        "literal_views": [
+            {
+                "view": "account.account",
+                "file": "resources/views/account/account.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "account/general",
+        "name": "cms.core.account.general",
+        "action": "App\\Http\\Controllers\\Web\\Account\\Account_Controller@general",
+        "source": "app/Http/Controllers/Web/Account/Account_Controller.php",
+        "line": 38,
+        "literal_views": [
+            {
+                "view": "account.account",
+                "file": "resources/views/account/account.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "account/profilepicture",
+        "name": "cms.core.account.profilePicture",
+        "action": "App\\Http\\Controllers\\Web\\Account\\Account_Controller@profilePicture",
+        "source": "app/Http/Controllers/Web/Account/Account_Controller.php",
+        "line": 47,
+        "literal_views": [
+            {
+                "view": "account.account_profile_picture",
+                "file": "resources/views/account/account_profile_picture.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "profile",
+        "name": "cms.core.profile",
+        "action": "App\\Http\\Controllers\\Web\\Profile\\Profile_Controller@index",
+        "source": "app/Http/Controllers/Web/Profile/Profile_Controller.php",
+        "line": 21,
+        "literal_views": [
+            {
+                "view": "profile.profile",
+                "file": "resources/views/profile/profile.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "manage_article",
+        "name": "cms.core.manage_article",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@index",
+        "source": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 56,
+        "literal_views": [
+            {
+                "view": "manage_article.manage_article",
+                "file": "resources/views/manage_article/manage_article.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "manage_article/templates",
+        "name": "cms.core.manage_article.templates",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\ManageArticleTemplateController@index",
+        "source": "app/Http/Controllers/Web/Manage_Article/ManageArticleTemplateController.php",
+        "line": 28,
+        "literal_views": [
+            {
+                "view": "manage_article.templates.index",
+                "file": "resources/views/manage_article/templates/index.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "manage_article/templates/preview/{surface}/{template}",
+        "name": "cms.core.manage_article.templates.preview",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\ManageArticleTemplateController@preview",
+        "source": "app/Http/Controllers/Web/Manage_Article/ManageArticleTemplateController.php",
+        "line": 75,
+        "literal_views": [
+            {
+                "view": "manage_article.templates.preview",
+                "file": "resources/views/manage_article/templates/preview.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "manage_article/add",
+        "name": "cms.core.manage_article.add",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@add",
+        "source": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 64,
+        "literal_views": [
+            {
+                "view": "manage_article.manage_article_add",
+                "file": "resources/views/manage_article/manage_article_add.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "manage_article/edit/{idOrSlug}",
+        "name": "cms.core.manage_article.edit",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@edit",
+        "source": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 277,
+        "literal_views": [
+            {
+                "view": "manage_article.manage_article_edit",
+                "file": "resources/views/manage_article/manage_article_edit.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "manage_article/detaildata/{idOrSlug}",
+        "name": "cms.core.manage_article.detaildata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@detailData",
+        "source": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 814,
+        "literal_views": []
+    },
+    {
+        "uri": "manage_article/detaildata/category/{idOrSlug}",
+        "name": "cms.core.manage_article.detaildata.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@detailDataCategory",
+        "source": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 860,
+        "literal_views": []
+    },
+    {
+        "uri": "manage_article/checkdata/category/{idOrSlug}",
+        "name": "cms.core.manage_article.checkdata.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@checkDataCategory",
+        "source": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 899,
+        "literal_views": []
+    },
+    {
+        "uri": "manage_article/listdata",
+        "name": "cms.core.manage_article.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@listData",
+        "source": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 977,
+        "literal_views": []
+    },
+    {
+        "uri": "manage_article/listdata/category",
+        "name": "cms.core.manage_article.listdata.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@listCategories",
+        "source": "app/Http/Controllers/Web/Manage_Article/Manage_Article_Controller.php",
+        "line": 1016,
+        "literal_views": []
+    },
+    {
+        "uri": "manage_coverimage",
+        "name": "cms.core.manage_coverimage",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@index",
+        "source": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 43,
+        "literal_views": [
+            {
+                "view": "manage_coverimage.manage_coverimage",
+                "file": "resources/views/manage_coverimage/manage_coverimage.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "manage_coverimage/add",
+        "name": "cms.core.manage_coverimage.add",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@add",
+        "source": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 51,
+        "literal_views": [
+            {
+                "view": "manage_coverimage.manage_coverimage_add",
+                "file": "resources/views/manage_coverimage/manage_coverimage_add.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "manage_coverimage/edit/{idOrSlug}",
+        "name": "cms.core.manage_coverimage.edit",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@edit",
+        "source": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 206,
+        "literal_views": [
+            {
+                "view": "manage_coverimage.manage_coverimage_edit",
+                "file": "resources/views/manage_coverimage/manage_coverimage_edit.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "manage_coverimage/delete_single_data/{idOrSlug}",
+        "name": "cms.core.manage_coverimage.delete.singledata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@deleteSingleCoverImageData",
+        "source": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 503,
+        "literal_views": []
+    },
+    {
+        "uri": "manage_coverimage/detaildata/{idOrSlug}",
+        "name": "cms.core.manage_coverimage.detaildata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@detailData",
+        "source": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 604,
+        "literal_views": []
+    },
+    {
+        "uri": "manage_coverimage/listdata",
+        "name": "cms.core.manage_coverimage.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@listData",
+        "source": "app/Http/Controllers/Web/Manage_CoverImage/Manage_CoverImage_Controller.php",
+        "line": 650,
+        "literal_views": []
+    },
+    {
+        "uri": "manage_event",
+        "name": "cms.core.manage_event",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@index",
+        "source": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 38,
+        "literal_views": [
+            {
+                "view": "manage_event.manage_event",
+                "file": "resources/views/manage_event/manage_event.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "manage_event/add",
+        "name": "cms.core.manage_event.add",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@add",
+        "source": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 45,
+        "literal_views": [
+            {
+                "view": "manage_event.manage_event_add",
+                "file": "resources/views/manage_event/manage_event_add.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "manage_event/edit/{idOrSlug}",
+        "name": "cms.core.manage_event.edit",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@edit",
+        "source": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 54,
+        "literal_views": [
+            {
+                "view": "manage_event.manage_event_edit",
+                "file": "resources/views/manage_event/manage_event_edit.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "manage_event/detaildata/{idOrSlug}",
+        "name": "cms.core.manage_event.detaildata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@detailData",
+        "source": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 191,
+        "literal_views": []
+    },
+    {
+        "uri": "manage_event/listdata",
+        "name": "cms.core.manage_event.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@listData",
+        "source": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 207,
+        "literal_views": []
+    },
+    {
+        "uri": "manage_event/listdata/category",
+        "name": "cms.core.manage_event.listdata.category",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@listCategories",
+        "source": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 225,
+        "literal_views": []
+    },
+    {
+        "uri": "manage_event/occurrences/{idOrSlug}",
+        "name": "cms.core.manage_event.occurrences",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@listOccurrences",
+        "source": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 275,
+        "literal_views": []
+    },
+    {
+        "uri": "manage_event/registrations/{idOrSlug}",
+        "name": "cms.core.manage_event.registrations",
+        "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@registrations",
+        "source": "app/Http/Controllers/Web/Manage_Event/Manage_Event_Controller.php",
+        "line": 344,
+        "literal_views": []
+    },
+    {
+        "uri": "event",
+        "name": "cms.core.event",
+        "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@index",
+        "source": "app/Http/Controllers/Web/Event/Event_Controller.php",
+        "line": 25,
+        "literal_views": [
+            {
+                "view": "event.event",
+                "file": "resources/views/event/event.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "event/listdata",
+        "name": "cms.core.event.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@listData",
+        "source": "app/Http/Controllers/Web/Event/Event_Controller.php",
+        "line": 38,
+        "literal_views": []
+    },
+    {
+        "uri": "event/registrations",
+        "name": "cms.core.event.registrations",
+        "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@registrations",
+        "source": "app/Http/Controllers/Web/Event/Event_Controller.php",
+        "line": 70,
+        "literal_views": []
+    },
+    {
+        "uri": "event/occurrence/{occurrenceId}",
+        "name": "cms.core.event.occurrence",
+        "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@occurrence",
+        "source": "app/Http/Controllers/Web/Event/Event_Controller.php",
+        "line": 55,
+        "literal_views": []
+    },
+    {
+        "uri": "event/{idOrSlug}",
+        "name": "cms.core.event.detail",
+        "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@detail",
+        "source": "app/Http/Controllers/Web/Event/Event_Controller.php",
+        "line": 30,
+        "literal_views": [
+            {
+                "view": "event.event_detail",
+                "file": "resources/views/event/event_detail.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "notification",
+        "name": "cms.core.notification",
+        "action": "App\\Http\\Controllers\\Web\\Notification\\Notification_Controller@index",
+        "source": "app/Http/Controllers/Web/Notification/Notification_Controller.php",
+        "line": 26,
+        "literal_views": [
+            {
+                "view": "notification.notification",
+                "file": "resources/views/notification/notification.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "notification/empty",
+        "name": "cms.core.notification.empty",
+        "action": "App\\Http\\Controllers\\Web\\Notification\\Notification_Controller@emptyNotification",
+        "source": "app/Http/Controllers/Web/Notification/Notification_Controller.php",
+        "line": 37,
+        "literal_views": [
+            {
+                "view": "notification.notification_empty",
+                "file": "resources/views/notification/notification_empty.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "notification/filled",
+        "name": "cms.core.notification.filled",
+        "action": "App\\Http\\Controllers\\Web\\Notification\\Notification_Controller@filledNotification",
+        "source": "app/Http/Controllers/Web/Notification/Notification_Controller.php",
+        "line": 46,
+        "literal_views": [
+            {
+                "view": "notification.notification_filled",
+                "file": "resources/views/notification/notification_filled.blade.php",
+                "exists": false
+            }
+        ]
+    },
+    {
+        "uri": "notification/testing",
+        "name": "cms.core.notification.testing_page",
+        "action": "App\\Http\\Controllers\\Web\\Notification\\Notification_Controller@notificationTestingPage",
+        "source": "app/Http/Controllers/Web/Notification/Notification_Controller.php",
+        "line": 60,
+        "literal_views": [
+            {
+                "view": "notification.notification_testing",
+                "file": "resources/views/notification/notification_testing.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin",
+        "name": "cms.admin.awesome_admin",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Controller.php",
+        "line": 23,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin",
+                "file": "resources/views/awesome_admin/awesome_admin.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/header-navigation",
+        "name": "cms.admin.awesome_admin.header_navigation",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Header_Navigation_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Header_Navigation_Controller.php",
+        "line": 27,
+        "literal_views": [
+            {
+                "view": "awesome_admin.header_navigation.awesome_admin_header_navigation",
+                "file": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/header-navigation/preview-data",
+        "name": "cms.admin.awesome_admin.header_navigation.preview_data",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Header_Navigation_Controller@previewData",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Header_Navigation_Controller.php",
+        "line": 42,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/config",
+        "name": "cms.admin.awesome_admin.config",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 30,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_config",
+                "file": "resources/views/awesome_admin/awesome_admin_config.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/config/logo/{fileName}",
+        "name": "cms.admin.awesome_admin.config.logo",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@siteLogo",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 245,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/config/listdata",
+        "name": "cms.admin.awesome_admin.config.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listData",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 238,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/config/listdata/fonts",
+        "name": "cms.admin.awesome_admin.config.listdata.fonts",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listDataFonts",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 254,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/config/listdata/filefonts",
+        "name": "cms.admin.awesome_admin.config.listdata.filefonts",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listDataFileFonts",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 279,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/config/listdata/filefonts/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.config.listdata.filefontsbyslug",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listDataFileFontsBySlug",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 302,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/config/listdata/filefontpreview/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.config.listdata.filefontpreview",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listDataFileFontForPreview",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 318,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/config/testurl",
+        "name": "cms.admin.awesome_admin.config.testurl",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@testURL",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+        "line": 416,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu",
+        "name": "cms.admin.awesome_admin.menu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_Controller.php",
+        "line": 49,
+        "literal_views": [
+            {
+                "view": "awesome_admin.menu.awesome_admin_menu",
+                "file": "resources/views/awesome_admin/menu/awesome_admin_menu.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/menu/be",
+        "name": "cms.admin.awesome_admin.menu.be",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 45,
+        "literal_views": [
+            {
+                "view": "awesome_admin.menu.backend.awesome_admin_menu_be",
+                "file": "resources/views/awesome_admin/menu/backend/awesome_admin_menu_be.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/menu/be/submenu",
+        "name": "cms.admin.awesome_admin.menu.be.submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@submenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 140,
+        "literal_views": [
+            {
+                "view": "awesome_admin.menu.backend.awesome_admin_menu_submenu_be",
+                "file": "resources/views/awesome_admin/menu/backend/awesome_admin_menu_submenu_be.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/menu/be/submenu/detail/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.be.submenu.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@submenu_detail",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 145,
+        "literal_views": [
+            {
+                "view": "awesome_admin.menu.backend.awesome_admin_menu_submenu_detail_be",
+                "file": "resources/views/awesome_admin/menu/backend/awesome_admin_menu_submenu_detail_be.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/menu/be/categorymenu",
+        "name": "cms.admin.awesome_admin.menu.be.category_menu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@categorymenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 180,
+        "literal_views": [
+            {
+                "view": "awesome_admin.menu.backend.awesome_admin_category_menu_be",
+                "file": "resources/views/awesome_admin/menu/backend/awesome_admin_category_menu_be.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/menu/be/parentmenu",
+        "name": "cms.admin.awesome_admin.menu.be.parent_menu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@parentmenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 162,
+        "literal_views": [
+            {
+                "view": "awesome_admin.menu.backend.awesome_admin_parent_menu_be",
+                "file": "resources/views/awesome_admin/menu/backend/awesome_admin_parent_menu_be.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/menu/be/listdata/roles",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.roles",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataRoles",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 899,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/be/listdata/categorymenu",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.categorymenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataCategoryMenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 929,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/be/listdata/parentmenu",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.parentmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataParentMenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 960,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/be/listdata/parentmenuforsubmenu",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.parentmenuforsubmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataParentMenuForSubmenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1001,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/be/listdata/categorymenuforparentmenu",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.categorymenuforparentmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataCategoryMenuForParentMenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1049,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/be/listdata/submenu",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataSubmenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1083,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/be/listdata/submenu/detail/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.submenu.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataSubmenuDetail",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1105,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/be/listdata/routes",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.routelist",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataRoutes",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1146,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/be/listdata/permissions",
+        "name": "cms.admin.awesome_admin.menu.be.listdata.permissionlist",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataPermissions",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 914,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/be/getversionmenu",
+        "name": "cms.admin.awesome_admin.menu.be.getVersionMenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@getVersionMenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_BE_Controller.php",
+        "line": 1326,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/fe",
+        "name": "cms.admin.awesome_admin.menu.fe",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 47,
+        "literal_views": [
+            {
+                "view": "awesome_admin.menu.frontend.awesome_admin_menu_fe",
+                "file": "resources/views/awesome_admin/menu/frontend/awesome_admin_menu_fe.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/menu/fe/submenu",
+        "name": "cms.admin.awesome_admin.menu.fe.submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@submenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 142,
+        "literal_views": [
+            {
+                "view": "awesome_admin.menu.frontend.awesome_admin_menu_submenu_fe",
+                "file": "resources/views/awesome_admin/menu/frontend/awesome_admin_menu_submenu_fe.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/menu/fe/submenu/detail/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.fe.submenu.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@submenu_detail",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 147,
+        "literal_views": [
+            {
+                "view": "awesome_admin.menu.frontend.awesome_admin_menu_submenu_detail_fe",
+                "file": "resources/views/awesome_admin/menu/frontend/awesome_admin_menu_submenu_detail_fe.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/menu/fe/categorymenu",
+        "name": "cms.admin.awesome_admin.menu.fe.category_menu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@categorymenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 182,
+        "literal_views": [
+            {
+                "view": "awesome_admin.menu.frontend.awesome_admin_category_menu_fe",
+                "file": "resources/views/awesome_admin/menu/frontend/awesome_admin_category_menu_fe.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/menu/fe/parentmenu",
+        "name": "cms.admin.awesome_admin.menu.fe.parent_menu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@parentmenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 164,
+        "literal_views": [
+            {
+                "view": "awesome_admin.menu.frontend.awesome_admin_parent_menu_fe",
+                "file": "resources/views/awesome_admin/menu/frontend/awesome_admin_parent_menu_fe.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/menu/fe/listdata/roles",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.roles",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataRoles",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 907,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/fe/listdata/categorymenu",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.categorymenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataCategoryMenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 937,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/fe/listdata/parentmenu",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.parentmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataParentMenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 968,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/fe/listdata/parentmenu/dropdown/{parentCode}",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.parentmenu.dropdown",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataParentMenuDropdown",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1017,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/fe/listdata/parentmenuforsubmenu",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.parentmenuforsubmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataParentMenuForSubmenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1291,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/fe/listdata/categorymenuforparentmenu",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.categorymenuforparentmenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataCategoryMenuForParentMenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1339,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/fe/listdata/submenu",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.submenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataSubmenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1373,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/fe/listdata/submenu/detail/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.submenu.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataSubmenuDetail",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1395,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/fe/listdata/routes",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.routelist",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataRoutes",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1441,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/fe/listdata/permissions",
+        "name": "cms.admin.awesome_admin.menu.fe.listdata.permissionlist",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataPermissions",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 922,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/menu/fe/getversionmenu",
+        "name": "cms.admin.awesome_admin.menu.fe.getVersionMenu",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@getVersionMenu",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Menu_FE_Controller.php",
+        "line": 1621,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/role",
+        "name": "cms.admin.awesome_admin.role",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 34,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_role",
+                "file": "resources/views/awesome_admin/awesome_admin_role.blade.php",
+                "exists": true
+            },
+            {
+                "view": "awesome_admin.awesome_admin_role_v2",
+                "file": "resources/views/awesome_admin/awesome_admin_role_v2.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/role/create/v2",
+        "name": "cms.admin.awesome_admin.role.createV2",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@createV2",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 57,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_role_create_v2",
+                "file": "resources/views/awesome_admin/awesome_admin_role_create_v2.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/role/edit/v2/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.role.editV2",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@editV2",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 242,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_role_edit_v2",
+                "file": "resources/views/awesome_admin/awesome_admin_role_edit_v2.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/role/listdata",
+        "name": "cms.admin.awesome_admin.role.list",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@listData",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 646,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/role/listdatapermission",
+        "name": "cms.admin.awesome_admin.role.listpermission",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@listDataPermission",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 672,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/role/listdatapermissionv2",
+        "name": "cms.admin.awesome_admin.role.listpermissionv2",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@listDataPermissionV2",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 689,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/role/detaildata/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.role.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@detailData",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Role_Controller.php",
+        "line": 738,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/role/test",
+        "name": "cms.admin.awesome_admin.role.test",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@test",
+        "controller_missing": true
+    },
+    {
+        "uri": "awesome_admin/permission",
+        "name": "cms.admin.awesome_admin.permission",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Permission_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Permission_Controller.php",
+        "line": 31,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_permission",
+                "file": "resources/views/awesome_admin/awesome_admin_permission.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/permission/listdata",
+        "name": "cms.admin.awesome_admin.permission.list",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Permission_Controller@listData",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Permission_Controller.php",
+        "line": 290,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/permission/detaildata/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.permission.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Permission_Controller@detailData",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Permission_Controller.php",
+        "line": 302,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/user",
+        "name": "cms.admin.awesome_admin.user",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 47,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_user",
+                "file": "resources/views/awesome_admin/awesome_admin_user.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/user/edit/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.user.edit",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@edit",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 202,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_user_edit",
+                "file": "resources/views/awesome_admin/awesome_admin_user_edit.blade.php",
+                "exists": false
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/user/listdata",
+        "name": "cms.admin.awesome_admin.user.list",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@listData",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 694,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/user/detaildata/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.user.detail",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@detailData",
+        "controller_missing": true
+    },
+    {
+        "uri": "awesome_admin/user/getdata",
+        "name": "cms.admin.awesome_admin.user.getdata",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@getUserData",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 682,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/user/checkdata",
+        "name": "cms.admin.awesome_admin.user.checkdata",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@checkUserData",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 475,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/user/checkdataforupdate",
+        "name": "cms.admin.awesome_admin.user.checkdataforupdate",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@checkUserDataForUpdate",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_User_Controller.php",
+        "line": 565,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/smtp",
+        "name": "cms.admin.awesome_admin.smtp",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 33,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_smtp",
+                "file": "resources/views/awesome_admin/awesome_admin_smtp.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/smtp/edit/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.smtp.edit",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@edit",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 122,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/smtp/listdata",
+        "name": "cms.admin.awesome_admin.smtp.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@listData",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 285,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/smtp/detaildata/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.smtp.detaildata",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@detaildata",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 381,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/smtp/detailsetdata",
+        "name": "cms.admin.awesome_admin.smtp.detaildata.setservice",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@detailDataSetService",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_SMTP_Controller.php",
+        "line": 393,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/smtp/testing",
+        "name": "cms.admin.awesome_admin.smtp.testing",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@testing",
+        "controller_missing": true
+    },
+    {
+        "uri": "awesome_admin/language",
+        "name": "cms.admin.awesome_admin.language",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 34,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_language",
+                "file": "resources/views/awesome_admin/awesome_admin_language.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/language/untranslated",
+        "name": "cms.admin.awesome_admin.language.untranslated",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@untranslated",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 50,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_language_untranslated",
+                "file": "resources/views/awesome_admin/awesome_admin_language_untranslated.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/language/translated",
+        "name": "cms.admin.awesome_admin.language.translated",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@translated",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 60,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_language_translated",
+                "file": "resources/views/awesome_admin/awesome_admin_language_translated.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/language/listdata",
+        "name": "cms.admin.awesome_admin.language.listdata",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@listData",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 330,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/language/listdata/untranslated",
+        "name": "cms.admin.awesome_admin.language.listdata.untranslated",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@listDataUntranslated",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 343,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/language/listdata/translated",
+        "name": "cms.admin.awesome_admin.language.listdata.translated",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@listDataTranslated",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 356,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/language/setlanguage/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.language.setlanguage",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@setLanguage",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 416,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/language/getlanguage",
+        "name": "cms.admin.awesome_admin.language.getlanguage",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@getLanguage",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Language_Controller.php",
+        "line": 402,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/appearance",
+        "name": "cms.admin.awesome_admin.appearance",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php",
+        "line": 38,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_appearance",
+                "file": "resources/views/awesome_admin/awesome_admin_appearance.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "awesome_admin/appearance/pagethemesetting/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.appearance.listdata.pagethemesetting",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller@getPageThemeSettingJson",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php",
+        "line": 206,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/appearance/listdata/pagetheme/{idOrSlug}",
+        "name": "cms.admin.awesome_admin.appearance.listdata.pagetheme",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller@listDataPageTheme",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Appearance_Controller.php",
+        "line": 218,
+        "literal_views": []
+    },
+    {
+        "uri": "awesome_admin/themes",
+        "name": "cms.admin.awesome_admin.themes",
+        "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Themes_Controller@index",
+        "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Themes_Controller.php",
+        "line": 32,
+        "literal_views": [
+            {
+                "view": "awesome_admin.awesome_admin_themes",
+                "file": "resources/views/awesome_admin/awesome_admin_themes.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "workflow",
+        "name": "cms.core.workflow.index",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@index",
+        "source": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 17,
+        "literal_views": [
+            {
+                "view": "workflow.index",
+                "file": "resources/views/workflow/index.blade.php",
+                "exists": true
+            }
+        ]
+    },
+    {
+        "uri": "workflow/data",
+        "name": "cms.core.workflow.data",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@data",
+        "source": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 48,
+        "literal_views": []
+    },
+    {
+        "uri": "workflow/create",
+        "name": "cms.core.workflow.create",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@create",
+        "source": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 25,
+        "literal_views": []
+    },
+    {
+        "uri": "workflow/{workflow}/edit",
+        "name": "cms.core.workflow.edit",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@edit",
+        "source": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 30,
+        "literal_views": []
+    },
+    {
+        "uri": "workflow/{workflow}/runs",
+        "name": "cms.core.workflow.runs",
+        "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@runs",
+        "source": "app/Http/Controllers/Web/Workflow/WorkflowController.php",
+        "line": 147,
+        "literal_views": []
+    }
+]

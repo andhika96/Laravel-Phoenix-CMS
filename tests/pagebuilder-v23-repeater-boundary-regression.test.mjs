@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (relative) => fs.readFileSync(path.join(root, relative), 'utf8');
 
-const css = read('public/assets/css/pagebuilder_elementor_v23.css');
+const css = read('public/assets/css/pagebuilder/elementor-v23/pagebuilder_elementor_v23.css');
 const iconList = read('public/js/pagebuilder_elementor_v23/widgets/general/icon-list/Settings.vue');
 const socialIcons = read('public/js/pagebuilder_elementor_v23/widgets/general/social-icons/Settings.vue');
 const productColors = read('public/js/pagebuilder_elementor_v23/widgets/pro/product-color-selector/Settings.vue');

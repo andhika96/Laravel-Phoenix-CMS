@@ -15,10 +15,10 @@
 		<!-- Custom CSS -->
 		<link href="{{ asset('storage/fonts/nunito/fonts.css?v=').time() }}" rel="stylesheet">	
 
-		<link href="{{ asset('assets/css/extending-css-bootstrap-5.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/shared/extending-css-bootstrap-5.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/themes/calm_green/phoenix-cms-calm-green.css?v=').time() }}" rel="stylesheet">
-		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">	
-		<link href="{{ asset('assets/css/frontend-menu-dropdown.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/shared/phoenix-cms.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/frontend/frontend-menu-dropdown.css?v=').time() }}" rel="stylesheet">
 
 		@stack('css')
 

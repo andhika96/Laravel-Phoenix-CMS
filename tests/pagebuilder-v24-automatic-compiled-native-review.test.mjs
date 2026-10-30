@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 const app = readFileSync('public/js/pagebuilder_elementor_v24/app.js', 'utf8');
-const css = readFileSync('public/assets/css/pagebuilder_elementor_v24.css', 'utf8');
+const css = readFileSync('public/assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css', 'utf8');
 const shell = readFileSync('resources/views/pagebuilder_elementor_v24/editor_shell.blade.php', 'utf8');
 
 test('automatic compiled native review exposes evidence and explicit correction state', () => {

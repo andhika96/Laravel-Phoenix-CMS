@@ -1,0 +1,183 @@
+/* CMS-only Bootstrap tokens; theme palettes and semantic variants remain the source of truth. */
+:root,
+[data-bs-theme],
+body
+{
+    --cms-bs-primary: var(--ph-theme-primary, var(--ph-primary));
+    --cms-bs-primary-hover: var(--ph-theme-primary-hover, var(--ph-primary-hover-bg, var(--cms-bs-primary)));
+    --cms-bs-on-primary: var(--ph-primary-active-text, #fff);
+    --cms-bs-surface: var(--ph-bg-popover, var(--ph-content-bg, var(--bs-body-bg)));
+    --cms-bs-ink: var(--ph-text-main, var(--bs-body-color));
+    --cms-bs-emphasis: var(--ph-theme-text-accessible, var(--cms-bs-ink));
+    --cms-bs-soft: var(--ph-theme-primary-subtle, color-mix(in srgb, var(--cms-bs-primary) 10%, var(--cms-bs-surface)));
+    --cms-bs-focus: color-mix(in srgb, var(--cms-bs-primary) 25%, transparent);
+
+    --bs-primary: var(--cms-bs-primary);
+    --bs-primary-text-emphasis: var(--cms-bs-emphasis);
+    --bs-primary-bg-subtle: var(--cms-bs-soft);
+    --bs-primary-border-subtle: color-mix(in srgb, var(--cms-bs-primary) 30%, var(--cms-bs-surface));
+    --bs-link-color: var(--cms-bs-primary);
+    --bs-link-hover-color: var(--cms-bs-primary-hover);
+    --bs-focus-ring-color: var(--cms-bs-focus);
+}
+
+.dropdown-menu
+{
+    font-size: inherit;
+    --bs-dropdown-bg: var(--cms-bs-surface);
+    --bs-dropdown-color: var(--cms-bs-ink);
+    --bs-dropdown-border-color: var(--ph-border-color, var(--bs-border-color));
+    --bs-dropdown-divider-bg: var(--ph-border-color, var(--bs-border-color));
+    --bs-dropdown-link-color: var(--cms-bs-ink);
+    --bs-dropdown-link-hover-color: var(--cms-bs-emphasis);
+    --bs-dropdown-link-hover-bg: var(--cms-bs-soft);
+    --bs-dropdown-link-active-color: var(--cms-bs-emphasis);
+    --bs-dropdown-link-active-bg: var(--cms-bs-soft);
+}
+
+/* Theme link rules use !important; component state text must still follow its background. */
+.dropdown-menu .dropdown-item:is(:hover, :focus):not([class*="text-"])
+{
+    color: var(--bs-dropdown-link-hover-color) !important;
+}
+
+.dropdown-menu .dropdown-item:is(:active, .active, [aria-selected="true"], [aria-pressed="true"]):not([class*="text-"])
+{
+    color: var(--bs-dropdown-link-active-color) !important;
+    background-color: var(--bs-dropdown-link-active-bg);
+}
+
+.dropdown-menu .dropdown-item:is(.disabled, :disabled):not([class*="text-"])
+{
+    color: var(--bs-dropdown-link-disabled-color) !important;
+    background-color: transparent;
+}
+
+.btn-primary
+{
+    --bs-btn-color: var(--cms-bs-on-primary);
+    --bs-btn-bg: var(--cms-bs-primary);
+    --bs-btn-border-color: var(--cms-bs-primary);
+    --bs-btn-hover-color: var(--cms-bs-on-primary);
+    --bs-btn-hover-bg: var(--cms-bs-primary-hover);
+    --bs-btn-hover-border-color: var(--cms-bs-primary-hover);
+    --bs-btn-active-color: var(--cms-bs-on-primary);
+    --bs-btn-active-bg: var(--ph-primary-active-bg, var(--cms-bs-primary));
+    --bs-btn-active-border-color: var(--ph-primary-active-border, var(--cms-bs-primary));
+    --bs-btn-disabled-color: var(--cms-bs-on-primary);
+    --bs-btn-disabled-bg: var(--cms-bs-primary);
+    --bs-btn-disabled-border-color: var(--cms-bs-primary);
+    --bs-btn-focus-box-shadow: 0 0 0 .25rem var(--cms-bs-focus);
+}
+
+.btn-outline-primary
+{
+    --bs-btn-color: var(--cms-bs-primary);
+    --bs-btn-border-color: var(--cms-bs-primary);
+    --bs-btn-hover-color: var(--cms-bs-on-primary);
+    --bs-btn-hover-bg: var(--cms-bs-primary);
+    --bs-btn-hover-border-color: var(--cms-bs-primary);
+    --bs-btn-active-color: var(--cms-bs-on-primary);
+    --bs-btn-active-bg: var(--cms-bs-primary);
+    --bs-btn-active-border-color: var(--cms-bs-primary);
+    --bs-btn-disabled-color: var(--cms-bs-primary);
+    --bs-btn-disabled-border-color: var(--cms-bs-primary);
+    --bs-btn-focus-box-shadow: 0 0 0 .25rem var(--cms-bs-focus);
+}
+
+a.btn-primary,
+a.btn-outline-primary { color: var(--bs-btn-color) !important; }
+a.btn-outline-primary:is(:hover, :focus) { color: var(--bs-btn-hover-color) !important; }
+a.btn-outline-primary:is(:active, .active) { color: var(--bs-btn-active-color) !important; }
+
+.btn-link
+{
+    --bs-btn-color: var(--cms-bs-primary);
+    --bs-btn-hover-color: var(--cms-bs-primary-hover);
+    --bs-btn-active-color: var(--cms-bs-primary-hover);
+    --bs-btn-focus-box-shadow: 0 0 0 .25rem var(--cms-bs-focus);
+}
+.btn-close { --bs-btn-close-focus-shadow: 0 0 0 .25rem var(--cms-bs-focus); }
+.focus-ring-primary { --bs-focus-ring-color: var(--cms-bs-focus); }
+
+.nav { --bs-nav-link-color: var(--cms-bs-primary); --bs-nav-link-hover-color: var(--cms-bs-primary-hover); }
+.nav-pills { --bs-nav-pills-link-active-bg: var(--cms-bs-primary); --bs-nav-pills-link-active-color: var(--cms-bs-on-primary); }
+.nav-pills .nav-link.active { color: var(--bs-nav-pills-link-active-color) !important; }
+
+.pagination
+{
+    --bs-pagination-color: var(--cms-bs-primary);
+    --bs-pagination-hover-color: var(--cms-bs-primary-hover);
+    --bs-pagination-hover-bg: var(--cms-bs-soft);
+    --bs-pagination-focus-color: var(--cms-bs-primary-hover);
+    --bs-pagination-focus-bg: var(--cms-bs-soft);
+    --bs-pagination-focus-box-shadow: 0 0 0 .25rem var(--cms-bs-focus);
+    --bs-pagination-active-bg: var(--cms-bs-primary);
+    --bs-pagination-active-border-color: var(--cms-bs-primary);
+    --bs-pagination-active-color: var(--cms-bs-on-primary);
+}
+.pagination:not(.ph-pagination) :is(.active > .page-link, .page-link.active) { color: var(--bs-pagination-active-color) !important; }
+
+.list-group
+{
+    --bs-list-group-active-bg: var(--cms-bs-primary);
+    --bs-list-group-active-border-color: var(--cms-bs-primary);
+    --bs-list-group-active-color: var(--cms-bs-on-primary);
+    --bs-list-group-action-hover-bg: var(--cms-bs-soft);
+    --bs-list-group-action-active-bg: var(--cms-bs-soft);
+}
+.list-group .list-group-item.active { color: var(--bs-list-group-active-color) !important; }
+.progress { --bs-progress-bar-bg: var(--cms-bs-primary); }
+
+.accordion
+{
+    --bs-accordion-active-bg: var(--cms-bs-soft);
+    --bs-accordion-active-color: var(--cms-bs-emphasis);
+    --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem var(--cms-bs-focus);
+}
+.accordion-button::after,
+.accordion-button:not(.collapsed)::after
+{
+    background-color: currentColor;
+    background-image: none;
+    -webkit-mask: var(--bs-accordion-btn-icon) center / contain no-repeat;
+    mask: var(--bs-accordion-btn-icon) center / contain no-repeat;
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus
+{
+    border-color: var(--cms-bs-primary);
+    box-shadow: 0 0 0 .25rem var(--cms-bs-focus);
+}
+.form-check-input:checked,
+.form-check-input[type="checkbox"]:indeterminate { background-color: var(--cms-bs-primary); border-color: var(--cms-bs-primary); }
+.form-switch .form-check-input:focus:not(:checked)
+{
+    --bs-form-switch-bg: radial-gradient(circle closest-side, var(--cms-bs-primary) 75%, transparent 80%);
+    background-size: 50% 100%;
+}
+.form-range::-webkit-slider-thumb { background-color: var(--cms-bs-primary); }
+.form-range::-moz-range-thumb { background-color: var(--cms-bs-primary); }
+.form-range::-webkit-slider-thumb:active { background-color: var(--cms-bs-primary-hover); }
+.form-range::-moz-range-thumb:active { background-color: var(--cms-bs-primary-hover); }
+.form-range:focus::-webkit-slider-thumb { box-shadow: 0 0 0 .25rem var(--cms-bs-focus); }
+.form-range:focus::-moz-range-thumb { box-shadow: 0 0 0 .25rem var(--cms-bs-focus); }
+
+.text-primary,
+.link-primary { color: color-mix(in srgb, var(--cms-bs-primary) calc(100% * var(--bs-text-opacity, 1)), transparent) !important; }
+.link-primary:is(:hover, :focus) { color: var(--cms-bs-primary-hover) !important; }
+.link-primary,
+.link-underline-primary { text-decoration-color: color-mix(in srgb, var(--cms-bs-primary) calc(100% * var(--bs-link-underline-opacity, 1)), transparent) !important; }
+.link-primary:is(:hover, :focus) { text-decoration-color: var(--cms-bs-primary-hover) !important; }
+.bg-primary,
+.text-bg-primary { background-color: color-mix(in srgb, var(--cms-bs-primary) calc(100% * var(--bs-bg-opacity, 1)), transparent) !important; }
+.text-bg-primary { color: var(--cms-bs-on-primary) !important; }
+.border-primary { border-color: color-mix(in srgb, var(--cms-bs-primary) calc(100% * var(--bs-border-opacity, 1)), transparent) !important; }
+
+.card { --bs-card-bg: var(--ph-bg-card, var(--ph-content-bg, var(--bs-body-bg))); --bs-card-border-color: var(--ph-border-color, var(--bs-border-color)); }
+.modal { --bs-modal-bg: var(--cms-bs-surface); --bs-modal-color: var(--cms-bs-ink); --bs-modal-border-color: var(--ph-border-color, var(--bs-border-color)); }
+.offcanvas { --bs-offcanvas-bg: var(--cms-bs-surface); --bs-offcanvas-color: var(--cms-bs-ink); --bs-offcanvas-border-color: var(--ph-border-color, var(--bs-border-color)); }
+.popover { --bs-popover-bg: var(--cms-bs-surface); --bs-popover-body-color: var(--cms-bs-ink); --bs-popover-border-color: var(--ph-border-color, var(--bs-border-color)); }
+.toast { --bs-toast-bg: var(--cms-bs-surface); --bs-toast-color: var(--cms-bs-ink); --bs-toast-border-color: var(--ph-border-color, var(--bs-border-color)); }

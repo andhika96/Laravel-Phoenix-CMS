@@ -1,0 +1,145 @@
+ M public/assets/css/article/manage-article-2026.css
+ D public/assets/css/aruna-v4.css
+ D public/assets/css/awesome-admin-header-navigation-fullscreen.css
+ D public/assets/css/awesome-admin-header-navigation.css
+ D public/assets/css/base_color.txt
+ D public/assets/css/base_color_from_heroui_theme.txt
+ D public/assets/css/cms-bootstrap-theme.css
+ D public/assets/css/extending-css-bootstrap-5.css
+ D public/assets/css/frontend-menu-dropdown.css
+ D public/assets/css/frontend_elementor.css
+ D public/assets/css/frontend_elementor_v23.css
+ D public/assets/css/frontend_elementor_v24.css
+ D public/assets/css/frontend_elementor_v24.css.bak_20260826_1600_full_bleed_spacing
+ D public/assets/css/pagebuilder.css
+ D public/assets/css/pagebuilder_elementor.css
+ D public/assets/css/pagebuilder_elementor_v23.css
+ D public/assets/css/pagebuilder_elementor_v24.css
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260826_1600_full_bleed_spacing
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_020000_custom_javascript_editor
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_031500_compiled_native
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_040949_computed_base_url_control
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_114800_compiled_topbar_controls_task5
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_220500_task7_guided_wizard
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_231234_fix_preview_target_dead_button
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_234500_task9_errors_report
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_automatic_compiled_native_task7_review
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_manual_widget_mapping_canvas_flow
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_manual_widget_mapping_flow
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_manual_widget_mapping_task2_target_flow
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260830_000825_normalized_mapping_tree_ui
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260830_001019_normalized_mapping_tree_media_order
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260830_004625_normalized_mapping_suggestion_evidence
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260830_014216_mapping_card_layout_audit
+ D public/assets/css/pagebuilder_elementor_v24.css.bak_20260830_114701_partial_asset_apply
+ D public/assets/css/phoenix-cms.css
+ D public/assets/css/theme-responsive-typography.css
+ D public/assets/css/workflow-editor.css
+ M public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js
+ M resources/views/article/archive.blade.php
+ M resources/views/article/detail.blade.php
+ M resources/views/article/password-protected.blade.php
+ M resources/views/article/private.blade.php
+ M resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php
+ M resources/views/awesome_admin/menu/frontend/awesome_admin_parent_menu_fe.blade.php
+ M resources/views/manage_article/manage_article.blade.php
+ M resources/views/manage_article/templates/preview.blade.php
+ M resources/views/pagebuilder/pagebuilder.blade.php
+ M resources/views/pagebuilder_elementor/editor_shell.blade.php
+ M resources/views/pagebuilder_elementor/frontend_renderer.blade.php
+ M resources/views/pagebuilder_elementor_v23/editor_shell.blade.php
+ M resources/views/pagebuilder_elementor_v23/frontend_renderer.blade.php
+ M resources/views/pagebuilder_elementor_v24/editor_shell.blade.php
+ M resources/views/pagebuilder_elementor_v24/frontend_renderer.blade.php
+ M resources/views/setup/setup.blade.php
+ M resources/views/themes/arunika_aurora/auth/auth_layout.blade.php
+ M resources/views/themes/arunika_aurora/cms/cms_layout.blade.php
+ M resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php
+ M resources/views/themes/arunika_equinox/auth/auth_layout.blade.php
+ M resources/views/themes/arunika_equinox/cms/cms_layout.blade.php
+ M resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php
+ M resources/views/themes/arunika_lucent/auth/auth_layout.blade.php
+ M resources/views/themes/arunika_lucent/cms/cms_layout.blade.php
+ M resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php
+ M resources/views/themes/arunika_prism/auth/auth_layout.blade.php
+ M resources/views/themes/arunika_prism/cms/cms_layout.blade.php
+ M resources/views/themes/arunika_prism/frontend/frontend_layout.blade.php
+ M resources/views/themes/calm_green/auth/auth_layout.blade.php
+ M resources/views/themes/calm_green/cms/cms_layout.blade.php
+ M resources/views/themes/calm_green/frontend/frontend_layout.blade.php
+ M resources/views/themes/default/auth/auth_layout.blade.php
+ M resources/views/themes/default/cms/cms_layout.blade.php
+ M resources/views/themes/default/frontend/frontend_layout.blade.php
+ M resources/views/workflow/editor.blade.php
+ M resources/views/workflow/index.blade.php
+ M tests/Feature/HeaderNavigationSettingsTest.php
+ M tests/Feature/PageBuilderElementorAccordionWidgetParityTest.php
+ M tests/Feature/PageBuilderElementorBasicGalleryWidgetParityTest.php
+ M tests/Feature/PageBuilderElementorBasicWidgetStyleParityTest.php
+ M tests/Feature/PageBuilderElementorContainerGridLabelAlignmentTest.php
+ M tests/Feature/PageBuilderElementorContainerWidgetModulesTest.php
+ M tests/Feature/PageBuilderElementorGeneralWidgetsTest.php
+ M tests/Feature/PageBuilderElementorIconBoxWidgetParityTest.php
+ M tests/Feature/PageBuilderElementorImageBoxWidgetParityTest.php
+ M tests/Feature/PageBuilderElementorImageCarouselWidgetParityTest.php
+ M tests/Feature/PageBuilderElementorMultiviewCoverageTest.php
+ M tests/Feature/PageBuilderElementorResponsiveBorderRadiusParityTest.php
+ M tests/Feature/PageBuilderElementorResponsiveDimensionParityTest.php
+ M tests/Feature/PageBuilderElementorTabsStyleAndStartupParityTest.php
+ M tests/Feature/PageBuilderElementorTabsWidgetParityTest.php
+ M tests/Feature/PageBuilderElementorV23AssetIsolationTest.php
+ M tests/Feature/PageBuilderElementorV23FrontendRenderingTest.php
+ M tests/Feature/PageBuilderElementorV23RoutesAndPersistenceTest.php
+ M tests/Feature/PageBuilderElementorV23ShellTest.php
+ M tests/Feature/PageBuilderElementorV24AssetIsolationTest.php
+ M tests/Feature/PageBuilderElementorV24BaselineIsolationTest.php
+ M tests/Feature/PageBuilderElementorV24RoutesAndPersistenceTest.php
+ M tests/Feature/PageBuilderElementorV24ShellTest.php
+ M tests/Feature/PageBuilderElementorWidgetAdvancedParityTest.php
+ M tests/helpers/pagebuilder-v24-module-source.mjs
+ M tests/pagebuilder-basic-gallery-canvas-runtime.test.mjs
+ M tests/pagebuilder-editor-v23-production-static.test.mjs
+ M tests/pagebuilder-icon-list-canvas-runtime.test.mjs
+ M tests/pagebuilder-image-carousel-canvas-runtime.test.mjs
+ M tests/pagebuilder-unit-control-layout.test.mjs
+ M tests/pagebuilder-v23-child-container-strict-parity.test.mjs
+ M tests/pagebuilder-v23-context-menu.test.mjs
+ M tests/pagebuilder-v23-frontend-canvas-css-parity.test.mjs
+ M tests/pagebuilder-v23-grid-column-parity.test.mjs
+ M tests/pagebuilder-v23-hero-banner-widget-parity.test.mjs
+ M tests/pagebuilder-v23-hero-slider-widget-parity.test.mjs
+ M tests/pagebuilder-v23-properties-density-regression.test.mjs
+ M tests/pagebuilder-v23-properties-toolbar-regression.test.mjs
+ M tests/pagebuilder-v23-repeater-boundary-regression.test.mjs
+ M tests/pagebuilder-v23-repeater-standardization.test.mjs
+ M tests/pagebuilder-v23-selected-ui-updates.test.mjs
+ M tests/pagebuilder-v23-tabs-navigation-border.test.mjs
+ M tests/pagebuilder-v23-widget-settings-loading-state.test.mjs
+ M tests/pagebuilder-v24-automatic-compiled-native-canvas-flow.test.mjs
+ M tests/pagebuilder-v24-automatic-compiled-native-review.test.mjs
+ M tests/pagebuilder-v24-context-menu.test.mjs
+ M tests/pagebuilder-v24-full-bleed-spacing.test.mjs
+ M tests/pagebuilder-v24-full-modularity.test.mjs
+ M tests/pagebuilder-v24-grid-column-parity.test.mjs
+ M tests/pagebuilder-v24-hero-banner-widget-parity.test.mjs
+ M tests/pagebuilder-v24-hero-slider-widget-parity.test.mjs
+ M tests/pagebuilder-v24-widget-settings-loading-state.test.mjs
+ M tests/theme-responsive-typography-static.test.mjs
+?? project-artifacts/audits/css-inventory-20261030/
+?? project-artifacts/audits/css-page-scope-20261030/
+?? project-artifacts/css-organization-20261030/
+?? project-artifacts/public-build-mockups-relocation-20261030/
+?? project-artifacts/qa/manage-article-control-spacing-20261029/
+?? project-artifacts/qa/manage-article-reference-alignment-20261029/
+?? project-artifacts/qa/manage-article-row-disclosure-20261029/
+?? project-artifacts/references/css-color-notes-20261030/
+?? project-artifacts/tests/manage-article-control-spacing-20261029/
+?? project-artifacts/tests/manage-article-reference-alignment-20261029/
+?? project-artifacts/tests/manage-article-row-disclosure-20261029/
+?? public/assets/css/cms/
+?? public/assets/css/frontend/
+?? public/assets/css/header-navigation/
+?? public/assets/css/pagebuilder/
+?? public/assets/css/setup/
+?? public/assets/css/shared/
+?? public/assets/css/workflow/

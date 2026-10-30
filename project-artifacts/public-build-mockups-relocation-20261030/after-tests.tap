@@ -1,0 +1,154 @@
+TAP version 13
+# Arunika Aurora balanced General Settings mockup regression passed.
+# Subtest: tests\\arunika-aurora-balanced-general-settings-mockup-static.test.mjs
+ok 1 - tests\\arunika-aurora-balanced-general-settings-mockup-static.test.mjs
+  ---
+  duration_ms: 157.5628
+  type: 'test'
+  ...
+# Subtest: tests\\arunika-aurora-sidebar-mockup-static.test.mjs
+ok 2 - tests\\arunika-aurora-sidebar-mockup-static.test.mjs
+  ---
+  duration_ms: 146.6044
+  type: 'test'
+  ...
+# Arunika Aurora Site Logo upload mockup regression passed.
+# Subtest: tests\\arunika-aurora-site-logo-upload-mockup-static.test.mjs
+ok 3 - tests\\arunika-aurora-site-logo-upload-mockup-static.test.mjs
+  ---
+  duration_ms: 146.7051
+  type: 'test'
+  ...
+# Arunika Aurora typography preview mockup regression passed.
+# Subtest: tests\\arunika-aurora-typography-preview-mockup-static.test.mjs
+ok 4 - tests\\arunika-aurora-typography-preview-mockup-static.test.mjs
+  ---
+  duration_ms: 146.7297
+  type: 'test'
+  ...
+# Subtest: concept-based Arunika runtime entry points exist
+ok 5 - concept-based Arunika runtime entry points exist
+  ---
+  duration_ms: 10.5868
+  type: 'test'
+  ...
+# Subtest: Theme Manager and seeders use concept identities
+ok 6 - Theme Manager and seeders use concept identities
+  ---
+  duration_ms: 1.7793
+  type: 'test'
+  ...
+# Subtest: the database identity migration is reversible and collision-safe
+ok 7 - the database identity migration is reversible and collision-safe
+  ---
+  duration_ms: 1.0226
+  type: 'test'
+  ...
+# Subtest: active implementation no longer exposes version-based Arunika identities
+ok 8 - active implementation no longer exposes version-based Arunika identities
+  ---
+  duration_ms: 227.2144
+  type: 'test'
+  ...
+# Subtest: Page Builder editor redesign v2.3 only exposes tools supported by production
+ok 9 - Page Builder editor redesign v2.3 only exposes tools supported by production
+  ---
+  duration_ms: 6.6001
+  type: 'test'
+  ...
+# Subtest: Page Builder editor redesign v2.3 uses one contextual sidebar
+ok 10 - Page Builder editor redesign v2.3 uses one contextual sidebar
+  ---
+  duration_ms: 1.5796
+  type: 'test'
+  ...
+# Subtest: Page Builder editor redesign v2.3 switches the left sidebar between Elements and selected settings
+ok 11 - Page Builder editor redesign v2.3 switches the left sidebar between Elements and selected settings
+  ---
+  duration_ms: 6.3027
+  type: 'test'
+  ...
+# Subtest: Page Builder editor redesign v2.2 remains unchanged as the historical baseline
+ok 12 - Page Builder editor redesign v2.2 remains unchanged as the historical baseline
+  ---
+  duration_ms: 3.799
+  type: 'test'
+  ...
+# Subtest: Page Builder editor redesign v2.4 only exposes tools supported by production
+ok 13 - Page Builder editor redesign v2.4 only exposes tools supported by production
+  ---
+  duration_ms: 6.8907
+  type: 'test'
+  ...
+# Subtest: Page Builder editor redesign v2.4 uses one contextual sidebar
+ok 14 - Page Builder editor redesign v2.4 uses one contextual sidebar
+  ---
+  duration_ms: 1.7613
+  type: 'test'
+  ...
+# Subtest: Page Builder editor redesign v2.4 switches the left sidebar between Elements and selected settings
+ok 15 - Page Builder editor redesign v2.4 switches the left sidebar between Elements and selected settings
+  ---
+  duration_ms: 6.269
+  type: 'test'
+  ...
+# Subtest: Page Builder editor redesign v2.2 remains unchanged as the historical baseline
+ok 16 - Page Builder editor redesign v2.2 remains unchanged as the historical baseline
+  ---
+  duration_ms: 5.0637
+  type: 'test'
+  ...
+# pagebuilder v2.3 hero banner widget parity test passed
+# Subtest: tests\\pagebuilder-v23-hero-banner-widget-parity.test.mjs
+ok 8 - tests\\pagebuilder-v23-hero-banner-widget-parity.test.mjs
+  ---
+  duration_ms: 175.1647
+  type: 'test'
+  ...
+# pagebuilder v2.4 hero banner widget parity test passed
+# Subtest: tests\\pagebuilder-v24-hero-banner-widget-parity.test.mjs
+ok 9 - tests\\pagebuilder-v24-hero-banner-widget-parity.test.mjs
+  ---
+  duration_ms: 198.4346
+  type: 'test'
+  ...
+# Subtest: theme manager mockup exposes the approved theme selection contract
+ok 19 - theme manager mockup exposes the approved theme selection contract
+  ---
+  duration_ms: 1.5832
+  type: 'test'
+  ...
+# Subtest: theme manager preview assets exist
+ok 20 - theme manager preview assets exist
+  ---
+  duration_ms: 1.876
+  type: 'test'
+  ...
+# Subtest: production theme manager keeps the approved interactive contract
+ok 21 - production theme manager keeps the approved interactive contract
+  ---
+  duration_ms: 2.1208
+  type: 'test'
+  ...
+# Subtest: Awesome Admin menu and temporary production previews are present
+ok 22 - Awesome Admin menu and temporary production previews are present
+  ---
+  duration_ms: 2.0685
+  type: 'test'
+  ...
+# Subtest: production theme previews use the compact Manage Appearance sizing contract
+ok 23 - production theme previews use the compact Manage Appearance sizing contract
+  ---
+  duration_ms: 0.7306
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 437.1221
+

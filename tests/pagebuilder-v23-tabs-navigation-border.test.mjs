@@ -10,7 +10,7 @@ const app = read('public/js/pagebuilder_elementor_v23/app.js');
 const settings = read('public/js/pagebuilder_elementor_v23/widgets/general/tabs/Settings.vue');
 const canvas = read('public/js/pagebuilder_elementor_v23/widgets/general/tabs/Canvas.vue');
 const blade = read('resources/views/pagebuilder_elementor_v23/widgets/general/tabs.blade.php');
-const css = read('public/assets/css/frontend_elementor_v23.css');
+const css = read('public/assets/css/pagebuilder/elementor-v23/frontend_elementor_v23.css');
 
 assert.match(app, /tabsNavBorderType:\s*'none'/);
 assert.match(app, /tabsNavBorderWidth:\s*'0px'/);

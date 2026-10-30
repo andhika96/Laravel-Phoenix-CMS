@@ -1,0 +1,49 @@
+> HISTORIS: konfigurasi 8px dan alignment baris pertama pada catatan ini telah digantikan oleh referensi terbaru pengguna. Lihat ../manage-article-reference-alignment-20261029/completion.md untuk source dan hasil final.
+
+# Manage Article — posisi kontrol dan padding, 29 Oktober 2026
+
+## Hasil
+
+Koreksi diterapkan hanya pada `public/assets/css/article/manage-article-2026.css`. Inset kiri tombol kini 8px, dua kolom kontrol memiliki lebar yang sama, jarak antartarget tetap 24px, dan detail terbuka sejajar dengan judul. Target mobile/touch tetap 44 × 44px. Vue, Blade, backend, serta data artikel tidak diubah.
+
+## Penyebab yang diverifikasi
+
+- Sebelum perubahan, kolom detail memakai `9px 20px 9px 12px` dengan lebar 68px; checkbox memakai `9px 12px 9px 4px` dengan lebar 52px pada pointer biasa. Browser mengukur inset tombol 12px dan jarak antartarget 24px.
+- Aturan umum pada `public/assets/css/phoenix-cms.css:1697` dan `:1702` memakai `padding: .85rem !important`. Aturan ini menimpa padding sel biasa serta panel detail yang sebelumnya tidak memiliki prioritas cukup. Di mobile, panel detail terukur bergeser 5,59px terhadap judul setelah inset kontrol dipersempit.
+- Padding atas berbasis tinggi kontrol diperlukan agar pusat tombol dan checkbox tetap sejajar dengan baris pertama judul. Alignment ini dipertahankan untuk judul satu atau beberapa baris.
+
+## Perubahan
+
+- Inset kiri 12 → 8px pada desktop, tablet, dan mobile.
+- Dua kolom kontrol sama lebar: 56px pada kontrol 36px, atau 64px pada kontrol touch 44px. Pembagian gap bagian dalam menjadi 12px + 12px; padding luar pasangan kontrol masing-masing 8px.
+- Prioritas padding header, sel, dan baris detail diperbaiki khusus dalam `#ph-app-manage-article`, sehingga aturan tabel umum tidak menimpanya.
+- Offset panel detail mengikuti total lebar kolom baru. Pada mobile, padding horizontal baris dan panel detail sama-sama 8px.
+- Urutan detail → checkbox → judul, status toolbar, header actions, pilihan artikel, serta tampilan loading dipertahankan.
+
+## Source dan konteks yang dibaca
+
+- Memori utama `E:/AI/Memories` tidak tersedia. Registry C `MEMORY.md:150–198` dan recap `2026-10-26T07-16-37-IIeG-phoenix_cms_bootstrap_theme_and_graphify_refresh.md` digunakan untuk konteks urutan kontrol, QA tanpa mutasi, dan update Graphify manual.
+- Graphify query awal kemudian `explain public/assets/css/article/manage-article-2026.css` menunjuk metadata stylesheet dan satu relasi `references_stylesheet [EXTRACTED]` dari Blade Manage Article pada L8. Source aktual dan cascade runtime tetap menjadi bukti utama.
+- Source aktif: CSS Manage Article, Blade Manage Article, responsive methods Vue, core CSS, dan CSS/mobile/typography Lucent yang relevan. Tidak ada node atau relasi INFERRED/AMBIGUOUS yang dijadikan dasar perbaikan ini.
+- Pola UI dipertahankan sesuai UI UX Pro Max dan protokol audit/preserve Design Taste; diagnosis dan verifikasi mengikuti Superpowers serta perubahan sempit Ponytail.
+
+## Backup dan preservasi
+
+Backup awal dan snapshot sebelum koreksi lanjutan ada di `project-artifacts/backups/manage-article-control-spacing-20261029`; lihat `manifest.json`. Hash backup awal cocok dengan source sebelum perubahan.
+
+`preservation-verification.json` memastikan hanya satu source CSS yang berubah. Hash Vue, Blade, dan graph tetap sama; HEAD serta index dipertahankan. Tidak ada stage, commit, atau push. Browser penguji Firefox disimpan lokal dalam `project-artifacts/tools/playwright-browsers` dan diabaikan Git; tidak mengubah instalasi browser pengguna atau dependency aplikasi.
+
+## Pengujian dan bukti
+
+- Reproduksi sebelum perbaikan: `before-check.log` gagal pada inset 12px ketika ekspektasi koreksi 8px. `before.json` serta screenshot merekam cascade dan posisi awal.
+- Browser Chrome: 17 skenario lulus. Browser Firefox: 17 skenario lulus. Mencakup viewport 1440/1024/768/601/600/390/320, terang/gelap, dan touch 320/768/1024. Breakpoint mengikuti lebar container; viewport 601 dengan container lebih kecil dapat memakai grid mobile secara benar.
+- Semua 34 skenario mengukur inset tepat 8px dan gap tepat 24px; kolom kontrol sama lebar; checkbox header sejajar dengan checkbox baris; panel detail sejajar dengan judul; tidak ada overflow. Buka/tutup detail serta pilih/batal pilih tetap bekerja.
+- Regresi toolbar/loading di Chrome: 24 skenario loading, 10 responsive, dan 2 touch lulus. Mencakup initial/next/previous/search/sort/status/filter/page-size/empty/retry/reduced-motion, loading tetap di tengah area body tabel, keyboard, select-all, pembatalan modal bulk/delete, dan navigasi add/edit tanpa submit.
+- 42 Node contract tests lulus; `git diff --check` lulus.
+- Tidak ditemukan error JavaScript, warning Vue, atau request mutasi data artikel pada pengujian. Runtime Vue terkonfirmasi 3.5.21 pada suite regresi.
+
+Hasil terstruktur: `verification-chrome.json`, `verification-firefox.json`, `loading-regression/live-verification.json`, `preservation-verification.json`, dan log Node. Screenshot akhir tersedia untuk Chrome/Firefox pada desktop, tablet, dan mobile dalam mode terang/gelap.
+
+## Batas
+
+Safari, perangkat fisik, dan full suite repository tidak diuji. Firefox yang diuji merupakan browser pengujian Playwright, bukan profil Firefox pribadi pengguna. Graphify tidak diperbarui pada perbaikan CSS ini dan menunggu instruksi manual berikutnya.

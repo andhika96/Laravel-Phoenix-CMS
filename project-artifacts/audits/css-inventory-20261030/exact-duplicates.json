@@ -1,0 +1,22 @@
+[
+  [
+    "public/assets/plugins/simplebar/6.2.7/css/simplebar.css",
+    "public/assets/plugins/simplebar/6.3.1/css/simplebar.css"
+  ],
+  [
+    "public/assets/plugins/spectrum/dist/spectrum.css",
+    "public/assets/plugins/spectrum/src/spectrum.css"
+  ],
+  [
+    "public/assets/vendor/coloris/coloris.min.css",
+    "public/assets/vendor/pb-picker/picker.min.css"
+  ],
+  [
+    "resources/pagebuilder_elementor_v24/modules/layout/container/styles.css",
+    "resources/pagebuilder_elementor_v24/modules/layout/container-fluid/styles.css"
+  ],
+  [
+    "resources/pagebuilder_elementor_v24/modules/layout/grid/styles.css",
+    "resources/pagebuilder_elementor_v24/modules/layout/row-grid/styles.css"
+  ]
+]

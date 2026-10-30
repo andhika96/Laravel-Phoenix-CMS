@@ -1,0 +1,1559 @@
+TAP version 13
+# Subtest: Basic Gallery Vue components compile as JavaScript
+ok 1 - Basic Gallery Vue components compile as JavaScript
+  ---
+  duration_ms: 4.5842
+  type: 'test'
+  ...
+# Subtest: all Basic Gallery visual settings resolve to responsive canvas styles
+ok 2 - all Basic Gallery visual settings resolve to responsive canvas styles
+  ---
+  duration_ms: 2.53
+  type: 'test'
+  ...
+# Subtest: content controls drive gallery order, captions, links, and lightbox state on canvas
+ok 3 - content controls drive gallery order, captions, links, and lightbox state on canvas
+  ---
+  duration_ms: 28.1647
+  type: 'test'
+  ...
+# Subtest: Image Resolution replaces stale rendition URLs immediately and requests the selected rendition
+ok 4 - Image Resolution replaces stale rendition URLs immediately and requests the selected rendition
+  ---
+  duration_ms: 4.6521
+  type: 'test'
+  ...
+# Subtest: custom resolution validates both dimensions before it calls the rendition endpoint
+ok 5 - custom resolution validates both dimensions before it calls the rendition endpoint
+  ---
+  duration_ms: 1.8164
+  type: 'test'
+  ...
+# Subtest: resolution settings update the canvas synchronously and keep field-level validation
+ok 6 - resolution settings update the canvas synchronously and keep field-level validation
+  ---
+  duration_ms: 4.6527
+  type: 'test'
+  ...
+# Subtest: Basic Gallery sides control has the same compact five-cell layout as Icon Box
+ok 7 - Basic Gallery sides control has the same compact five-cell layout as Icon Box
+  ---
+  duration_ms: 1.3845
+  type: 'test'
+  ...
+# Subtest: Basic Gallery panel keeps its rhythm, responsive controls, and gallery actions compact
+ok 8 - Basic Gallery panel keeps its rhythm, responsive controls, and gallery actions compact
+  ---
+  duration_ms: 2.1506
+  type: 'test'
+  ...
+# Subtest: production v2.3 uses the approved single-sidebar shell
+ok 9 - production v2.3 uses the approved single-sidebar shell
+  ---
+  duration_ms: 6.2142
+  type: 'test'
+  ...
+# Subtest: production v2.3 owns the approved shell state without changing the toolbox registry
+ok 10 - production v2.3 owns the approved shell state without changing the toolbox registry
+  ---
+  duration_ms: 4.0052
+  type: 'test'
+  ...
+# Subtest: production v2.3 keeps production canvas and editor contracts inside the new shell
+ok 11 - production v2.3 keeps production canvas and editor contracts inside the new shell
+  ---
+  duration_ms: 3.3566
+  type: 'test'
+  ...
+# Subtest: production v2.3 ports the approved tokens and shell geometry
+ok 12 - production v2.3 ports the approved tokens and shell geometry
+  ---
+  duration_ms: 2.6344
+  type: 'test'
+  ...
+# Subtest: collapsed sidebar and horizontal canvas scrolling keep the canvas toolbar readable
+ok 13 - collapsed sidebar and horizontal canvas scrolling keep the canvas toolbar readable
+  ---
+  duration_ms: 0.6939
+  type: 'test'
+  ...
+# Subtest: production v2.3 properties shell follows the approved compact hierarchy
+ok 14 - production v2.3 properties shell follows the approved compact hierarchy
+  ---
+  duration_ms: 2.1539
+  type: 'test'
+  ...
+# Subtest: production v2.3 canvas uses the approved selection chrome and instant device resize
+ok 15 - production v2.3 canvas uses the approved selection chrome and instant device resize
+  ---
+  duration_ms: 5.3997
+  type: 'test'
+  ...
+# Subtest: production v2.3 persists the left sidebar per browser without preview overwriting it
+ok 16 - production v2.3 persists the left sidebar per browser without preview overwriting it
+  ---
+  duration_ms: 1.0761
+  type: 'test'
+  ...
+# Subtest: production shell loads Bootstrap Icons for shell chrome and keeps Font Awesome for widgets
+ok 17 - production shell loads Bootstrap Icons for shell chrome and keeps Font Awesome for widgets
+  ---
+  duration_ms: 0.7055
+  type: 'test'
+  ...
+# Subtest: production v2.3 anchors page settings to the existing page-name control
+ok 18 - production v2.3 anchors page settings to the existing page-name control
+  ---
+  duration_ms: 2.1615
+  type: 'test'
+  ...
+# Subtest: production v2.4 uses the approved single-sidebar shell
+ok 19 - production v2.4 uses the approved single-sidebar shell
+  ---
+  duration_ms: 6.6199
+  type: 'test'
+  ...
+# Subtest: production v2.4 owns the approved shell state without changing the toolbox registry
+ok 20 - production v2.4 owns the approved shell state without changing the toolbox registry
+  ---
+  duration_ms: 2.2603
+  type: 'test'
+  ...
+# Subtest: production v2.4 keeps production canvas and editor contracts inside the new shell
+ok 21 - production v2.4 keeps production canvas and editor contracts inside the new shell
+  ---
+  duration_ms: 3.0681
+  type: 'test'
+  ...
+# Subtest: production v2.4 ports the approved tokens and shell geometry
+ok 22 - production v2.4 ports the approved tokens and shell geometry
+  ---
+  duration_ms: 2.0466
+  type: 'test'
+  ...
+# Subtest: collapsed sidebar and horizontal canvas scrolling keep the canvas toolbar readable
+ok 23 - collapsed sidebar and horizontal canvas scrolling keep the canvas toolbar readable
+  ---
+  duration_ms: 0.5835
+  type: 'test'
+  ...
+# Subtest: production v2.4 properties shell follows the approved compact hierarchy
+ok 24 - production v2.4 properties shell follows the approved compact hierarchy
+  ---
+  duration_ms: 2.5278
+  type: 'test'
+  ...
+# Subtest: production v2.4 canvas uses the approved selection chrome and instant device resize
+ok 25 - production v2.4 canvas uses the approved selection chrome and instant device resize
+  ---
+  duration_ms: 9.7959
+  type: 'test'
+  ...
+# Subtest: production v2.4 persists the left sidebar per browser without preview overwriting it
+ok 26 - production v2.4 persists the left sidebar per browser without preview overwriting it
+  ---
+  duration_ms: 1.3019
+  type: 'test'
+  ...
+# Subtest: production shell loads Bootstrap Icons for shell chrome and keeps Font Awesome for widgets
+ok 27 - production shell loads Bootstrap Icons for shell chrome and keeps Font Awesome for widgets
+  ---
+  duration_ms: 0.6279
+  type: 'test'
+  ...
+# Subtest: production v2.4 anchors page settings to the existing page-name control
+ok 28 - production v2.4 anchors page settings to the existing page-name control
+  ---
+  duration_ms: 1.7002
+  type: 'test'
+  ...
+# Subtest: Icon List Vue components compile as JavaScript
+ok 29 - Icon List Vue components compile as JavaScript
+  ---
+  duration_ms: 4.5259
+  type: 'test'
+  ...
+# Subtest: canvas resolves responsive values and mapped style controls
+ok 30 - canvas resolves responsive values and mapped style controls
+  ---
+  duration_ms: 3.2426
+  type: 'test'
+  ...
+# Subtest: canvas sanitizes links, rel values, and custom attributes
+ok 31 - canvas sanitizes links, rel values, and custom attributes
+  ---
+  duration_ms: 1.0761
+  type: 'test'
+  ...
+# Subtest: Icon List panel keeps its rhythm, responsive controls, and repeater actions compact
+ok 32 - Icon List panel keeps its rhythm, responsive controls, and repeater actions compact
+  ---
+  duration_ms: 3.0574
+  type: 'test'
+  ...
+# Subtest: Image Carousel Vue components compile as JavaScript
+ok 33 - Image Carousel Vue components compile as JavaScript
+  ---
+  duration_ms: 7.0995
+  type: 'test'
+  ...
+# Subtest: Image Carousel arrow controls match the Elementor icon picker and compact canvas rhythm
+ok 34 - Image Carousel arrow controls match the Elementor icon picker and compact canvas rhythm
+  ---
+  duration_ms: 8.5427
+  type: 'test'
+  ...
+# Subtest: all visual canvas settings resolve to live responsive styles
+ok 35 - all visual canvas settings resolve to live responsive styles
+  ---
+  duration_ms: 6.9945
+  type: 'test'
+  ...
+# Subtest: Image Resolution projects the next dimensions before the rendition request completes
+ok 36 - Image Resolution projects the next dimensions before the rendition request completes
+  ---
+  duration_ms: 3.4658
+  type: 'test'
+  ...
+# Subtest: content, links, captions, navigation, and non-loop boundaries react on canvas
+ok 37 - content, links, captions, navigation, and non-loop boundaries react on canvas
+  ---
+  duration_ms: 1.8184
+  type: 'test'
+  ...
+# Subtest: image track supports horizontal pointer dragging without triggering native image drag
+ok 38 - image track supports horizontal pointer dragging without triggering native image drag
+  ---
+  duration_ms: 3.1745
+  type: 'test'
+  ...
+# Subtest: autoplay, pause controls, direction, infinite loop, and rendition controls execute on canvas
+ok 39 - autoplay, pause controls, direction, infinite loop, and rendition controls execute on canvas
+  ---
+  duration_ms: 1.4551
+  type: 'test'
+  ...
+# Subtest: outside arrows are rendered outside the clipped viewport and canvas exposes boundary state
+ok 40 - outside arrows are rendered outside the clipped viewport and canvas exposes boundary state
+  ---
+  duration_ms: 1.2621
+  type: 'test'
+  ...
+# Subtest: editor canvas explicitly enables carousel arrow and pagination click targets
+ok 41 - editor canvas explicitly enables carousel arrow and pagination click targets
+  ---
+  duration_ms: 2.2902
+  type: 'test'
+  ...
+# Subtest: responsive side-control unit selects align to the trailing edge of the label row
+ok 42 - responsive side-control unit selects align to the trailing edge of the label row
+  ---
+  duration_ms: 5.4243
+  type: 'test'
+  ...
+# Subtest: all widget side controls use the shared label-tools/unit-select structure
+ok 43 - all widget side controls use the shared label-tools/unit-select structure
+  ---
+  duration_ms: 2.9611
+  type: 'test'
+  ...
+# Subtest: a two-column preset creates child Containers and never columns
+ok 44 - a two-column preset creates child Containers and never columns
+  ---
+  duration_ms: 9.9054
+  type: 'test'
+  ...
+# Subtest: Add Container appends one selectable canonical child
+ok 45 - Add Container appends one selectable canonical child
+  ---
+  duration_ms: 2.8894
+  type: 'test'
+  ...
+# Subtest: layout content detection only requires confirmation when nested content exists
+ok 46 - layout content detection only requires confirmation when nested content exists
+  ---
+  duration_ms: 2.0867
+  type: 'test'
+  ...
+# Subtest: Flexbox Child Containers sidebar exposes selectable rows with a delete action
+ok 47 - Flexbox Child Containers sidebar exposes selectable rows with a delete action
+  ---
+  duration_ms: 1.9835
+  type: 'test'
+  ...
+# Subtest: Grid track growth materializes conceptual columns without deleting existing content
+ok 48 - Grid track growth materializes conceptual columns without deleting existing content
+  ---
+  duration_ms: 5.2233
+  type: 'test'
+  ...
+# Subtest: Flexbox child Containers unwrap one level into conceptual Grid cells
+ok 49 - Flexbox child Containers unwrap one level into conceptual Grid cells
+  ---
+  duration_ms: 2.2161
+  type: 'test'
+  ...
+# Subtest: Grid to Flexbox restores the unwrapped child Container identities and settings
+ok 50 - Grid to Flexbox restores the unwrapped child Container identities and settings
+  ---
+  duration_ms: 3.4601
+  type: 'test'
+  ...
+# Subtest: Grid columns unlock sequentially as the previous empty slot is filled
+ok 51 - Grid columns unlock sequentially as the previous empty slot is filled
+  ---
+  duration_ms: 2.7031
+  type: 'test'
+  ...
+# Subtest: canonical Grid snapshots and track controls reconcile conceptual columns
+ok 52 - canonical Grid snapshots and track controls reconcile conceptual columns
+  ---
+  duration_ms: 7.7036
+  type: 'test'
+  ...
+# Subtest: legacy columns become real child Containers without losing nested widgets
+ok 53 - legacy columns become real child Containers without losing nested widgets
+  ---
+  duration_ms: 9.207
+  type: 'test'
+  ...
+# Subtest: duplicate or malformed legacy column ids are repaired deterministically
+ok 54 - duplicate or malformed legacy column ids are repaired deterministically
+  ---
+  duration_ms: 4.9213
+  type: 'test'
+  ...
+# Subtest: unknown node types remain untouched by the Container adapter
+ok 55 - unknown node types remain untouched by the Container adapter
+  ---
+  duration_ms: 2.7218
+  type: 'test'
+  ...
+# Subtest: generated child Container ids never steal an existing node id
+ok 56 - generated child Container ids never steal an existing node id
+  ---
+  duration_ms: 2.0575
+  type: 'test'
+  ...
+# Subtest: canonical node IDs stay stable when a legacy snapshot is normalized twice
+ok 57 - canonical node IDs stay stable when a legacy snapshot is normalized twice
+  ---
+  duration_ms: 3.9969
+  type: 'test'
+  ...
+# Subtest: a Container cannot be dropped into itself or its descendant
+ok 58 - a Container cannot be dropped into itself or its descendant
+  ---
+  duration_ms: 1.8288
+  type: 'test'
+  ...
+# Subtest: responsive width inherits from the nearest larger device
+ok 59 - responsive width inherits from the nearest larger device
+  ---
+  duration_ms: 1.6039
+  type: 'test'
+  ...
+# Subtest: edge resize writes only the active device and preserves the pair total
+ok 60 - edge resize writes only the active device and preserves the pair total
+  ---
+  duration_ms: 2.2005
+  type: 'test'
+  ...
+# Subtest: edge resize clamps a Container to the pair minimum width
+ok 61 - edge resize clamps a Container to the pair minimum width
+  ---
+  duration_ms: 2.7685
+  type: 'test'
+  ...
+# Subtest: child Container edge resizing uses its responsive pair and one history snapshot
+ok 62 - child Container edge resizing uses its responsive pair and one history snapshot
+  ---
+  duration_ms: 1.19
+  type: 'test'
+  ...
+# Subtest: Container edge resizer uses the dedicated child Container selector
+ok 63 - Container edge resizer uses the dedicated child Container selector
+  ---
+  duration_ms: 2.1186
+  type: 'test'
+  ...
+# Subtest: Grid uses conceptual columns while Flexbox retains canonical child Containers
+ok 64 - Grid uses conceptual columns while Flexbox retains canonical child Containers
+  ---
+  duration_ms: 3.0055
+  type: 'test'
+  ...
+# Subtest: save serialization strips Flex columns but preserves Grid columns through nested collections
+ok 65 - save serialization strips Flex columns but preserves Grid columns through nested collections
+  ---
+  duration_ms: 3.8943
+  type: 'test'
+  ...
+# Subtest: save serialization accepts a Proxy root without mutating it
+ok 66 - save serialization accepts a Proxy root without mutating it
+  ---
+  duration_ms: 1.8476
+  type: 'test'
+  ...
+# Subtest: savePage posts a canonical clone and clears migration state only after success
+ok 67 - savePage posts a canonical clone and clears migration state only after success
+  ---
+  duration_ms: 3.2843
+  type: 'test'
+  ...
+# Subtest: toolbox and existing widgets can enter canonical child Container dropzones
+ok 68 - toolbox and existing widgets can enter canonical child Container dropzones
+  ---
+  duration_ms: 3.3649
+  type: 'test'
+  ...
+# Subtest: default Advanced widget width fills its Container while explicit widths stay configurable
+ok 69 - default Advanced widget width fills its Container while explicit widths stay configurable
+  ---
+  duration_ms: 0.8547
+  type: 'test'
+  ...
+# Subtest: empty child hints and nested layout toolbars remain centered and collision-free
+ok 70 - empty child hints and nested layout toolbars remain centered and collision-free
+  ---
+  duration_ms: 4.2261
+  type: 'test'
+  ...
+# Subtest: context menu keeps per-target definitions behind one shared shell
+ok 71 - context menu keeps per-target definitions behind one shared shell
+  ---
+  duration_ms: 5.8002
+  type: 'test'
+  ...
+# Subtest: context menu closes from capture-phase clicks outside the shared popup
+ok 72 - context menu closes from capture-phase clicks outside the shared popup
+  ---
+  duration_ms: 3.1831
+  type: 'test'
+  ...
+# Subtest: context menu resolves the deepest Form field without changing outer widget targets
+ok 73 - context menu resolves the deepest Form field without changing outer widget targets
+  ---
+  duration_ms: 7.3764
+  type: 'test'
+  ...
+# Subtest: Inspect element is available for every context target and exposes the exact DOM reference
+ok 74 - Inspect element is available for every context target and exposes the exact DOM reference
+  ---
+  duration_ms: 1.6892
+  type: 'test'
+  ...
+# Subtest: external clipboard accepts only versioned Phoenix v2.3 node payloads
+ok 75 - external clipboard accepts only versioned Phoenix v2.3 node payloads
+  ---
+  duration_ms: 2.3628
+  type: 'test'
+  ...
+# Subtest: context menu uses the light Phoenix surface and stays accessible
+ok 76 - context menu uses the light Phoenix surface and stays accessible
+  ---
+  duration_ms: 1.9483
+  type: 'test'
+  ...
+# Subtest: v2.3 frontend CSS adapts Canvas structure without copying scoped component styles globally
+ok 77 - v2.3 frontend CSS adapts Canvas structure without copying scoped component styles globally
+  ---
+  duration_ms: 13.0284
+  type: 'test'
+  ...
+# Subtest: Grid spacing controls use the established connected responsive four-side form
+ok 78 - Grid spacing controls use the established connected responsive four-side form
+  ---
+  duration_ms: 3.9814
+  type: 'test'
+  ...
+# Subtest: Grid Columns and Rows create conceptual slots without creating child Containers
+ok 79 - Grid Columns and Rows create conceptual slots without creating child Containers
+  ---
+  duration_ms: 6.4738
+  type: 'test'
+  ...
+# Subtest: Grid slot reduction preserves overflow content in the final remaining slot
+ok 80 - Grid slot reduction preserves overflow content in the final remaining slot
+  ---
+  duration_ms: 4.0233
+  type: 'test'
+  ...
+# Subtest: deleting a Grid column track removes the matching cell from every row
+ok 81 - deleting a Grid column track removes the matching cell from every row
+  ---
+  duration_ms: 3.3081
+  type: 'test'
+  ...
+# Subtest: Grid column deletion updates Container Grid settings and protects the final track
+ok 82 - Grid column deletion updates Container Grid settings and protects the final track
+  ---
+  duration_ms: 1.9011
+  type: 'test'
+  ...
+# Subtest: only the first/current empty Grid column is unlocked
+ok 83 - only the first/current empty Grid column is unlocked
+  ---
+  duration_ms: 2.1452
+  type: 'test'
+  ...
+# Subtest: Grid column Sortable accepts Widget, Container, and Grid sources but rejects a locked target
+ok 84 - Grid column Sortable accepts Widget, Container, and Grid sources but rejects a locked target
+  ---
+  duration_ms: 1.0108
+  type: 'test'
+  ...
+# Subtest: an existing Grid item can move into its next empty unlocked column
+ok 85 - an existing Grid item can move into its next empty unlocked column
+  ---
+  duration_ms: 7.0102
+  type: 'test'
+  ...
+# Subtest: Grid columns persist on save while Flexbox legacy columns are removed
+ok 86 - Grid columns persist on save while Flexbox legacy columns are removed
+  ---
+  duration_ms: 2.5692
+  type: 'test'
+  ...
+# Subtest: Container settings expose Add Container only for Flexbox
+ok 87 - Container settings expose Add Container only for Flexbox
+  ---
+  duration_ms: 0.6021
+  type: 'test'
+  ...
+# Subtest: Container Grid and standalone Grid settings expose guarded column deletion
+ok 88 - Container Grid and standalone Grid settings expose guarded column deletion
+  ---
+  duration_ms: 1.2928
+  type: 'test'
+  ...
+# Subtest: Grid column rows stay read-only during Vue render
+ok 89 - Grid column rows stay read-only during Vue render
+  ---
+  duration_ms: 0.4287
+  type: 'test'
+  ...
+# Subtest: Container Grid and legacy Grid render column dropzones while Flexbox keeps child Containers
+ok 90 - Container Grid and legacy Grid render column dropzones while Flexbox keeps child Containers
+  ---
+  duration_ms: 0.8604
+  type: 'test'
+  ...
+# Subtest: restored Grid cells preserve original alignment and single Heading preview behavior
+ok 91 - restored Grid cells preserve original alignment and single Heading preview behavior
+  ---
+  duration_ms: 9.9439
+  type: 'test'
+  ...
+# Subtest: empty Grid cell hint and Sortable ghost stay inside the target cell
+ok 92 - empty Grid cell hint and Sortable ghost stay inside the target cell
+  ---
+  duration_ms: 1.28
+  type: 'test'
+  ...
+# pagebuilder v2.3 hero banner widget parity test passed
+# Subtest: tests\\pagebuilder-v23-hero-banner-widget-parity.test.mjs
+ok 11 - tests\\pagebuilder-v23-hero-banner-widget-parity.test.mjs
+  ---
+  duration_ms: 203.2328
+  type: 'test'
+  ...
+# pagebuilder v2.3 hero slider widget parity test passed
+# Subtest: tests\\pagebuilder-v23-hero-slider-widget-parity.test.mjs
+ok 12 - tests\\pagebuilder-v23-hero-slider-widget-parity.test.mjs
+  ---
+  duration_ms: 802.4608
+  type: 'test'
+  ...
+# Subtest: property tabs reset the shared sidebar scroll position
+ok 95 - property tabs reset the shared sidebar scroll position
+  ---
+  duration_ms: 5.5741
+  type: 'test'
+  ...
+# Subtest: the v2.3 properties panel matches the approved prototype density contract
+ok 96 - the v2.3 properties panel matches the approved prototype density contract
+  ---
+  duration_ms: 2.8373
+  type: 'test'
+  ...
+# Subtest: shared buttons and compound fields inherit the prototype proportions
+ok 97 - shared buttons and compound fields inherit the prototype proportions
+  ---
+  duration_ms: 1.3866
+  type: 'test'
+  ...
+# Subtest: Accordion item fields, responsive tools, and standalone color swatches keep compact visual alignment
+ok 98 - Accordion item fields, responsive tools, and standalone color swatches keep compact visual alignment
+  ---
+  duration_ms: 2.9862
+  type: 'test'
+  ...
+# Subtest: every unit-bearing slider groups its numeric input and unit beside the range
+ok 99 - every unit-bearing slider groups its numeric input and unit beside the range
+  ---
+  duration_ms: 2.2012
+  type: 'test'
+  ...
+# Subtest: shared numeric and compound controls stay compact across every v2.3 widget
+ok 100 - shared numeric and compound controls stay compact across every v2.3 widget
+  ---
+  duration_ms: 2.3711
+  type: 'test'
+  ...
+# Subtest: the shared density contract covers every active four-side and three-cell range shape
+ok 101 - the shared density contract covers every active four-side and three-cell range shape
+  ---
+  duration_ms: 13.3468
+  type: 'test'
+  ...
+# Subtest: every responsive spacing side uses a numeric input with native steppers
+ok 102 - every responsive spacing side uses a numeric input with native steppers
+  ---
+  duration_ms: 5.4581
+  type: 'test'
+  ...
+# Subtest: every registered Layout and Widget exposes exactly the tabs implemented by its settings module
+ok 103 - every registered Layout and Widget exposes exactly the tabs implemented by its settings module
+  ---
+  duration_ms: 65.5098
+  type: 'test'
+  ...
+# Subtest: a selected canvas node keeps its toolbar while the pointer crosses another node
+ok 104 - a selected canvas node keeps its toolbar while the pointer crosses another node
+  ---
+  duration_ms: 0.6694
+  type: 'test'
+  ...
+# Subtest: a selected layout toolbar yields while its descendant widget is hovered
+ok 105 - a selected layout toolbar yields while its descendant widget is hovered
+  ---
+  duration_ms: 1.8279
+  type: 'test'
+  ...
+# Subtest: widget label and action hit areas bridge the visual gap above the node
+ok 106 - widget label and action hit areas bridge the visual gap above the node
+  ---
+  duration_ms: 0.9306
+  type: 'test'
+  ...
+# Subtest: collapsed sidebar toggle aligns with the canvas metadata row
+ok 107 - collapsed sidebar toggle aligns with the canvas metadata row
+  ---
+  duration_ms: 0.6873
+  type: 'test'
+  ...
+# Subtest: page root reaches the frame edge without clipping node toolbars
+ok 108 - page root reaches the frame edge without clipping node toolbars
+  ---
+  duration_ms: 0.8978
+  type: 'test'
+  ...
+# Subtest: widget labels expose an enlarged hit target at the default 100 percent zoom
+ok 109 - widget labels expose an enlarged hit target at the default 100 percent zoom
+  ---
+  duration_ms: 0.5919
+  type: 'test'
+  ...
+# Subtest: clicking a canvas node label reveals the collapsed properties panel
+ok 110 - clicking a canvas node label reveals the collapsed properties panel
+  ---
+  duration_ms: 0.9058
+  type: 'test'
+  ...
+# Subtest: Container Layout exposes selectable Child Containers and Add Container only for Flexbox
+ok 111 - Container Layout exposes selectable Child Containers and Add Container only for Flexbox
+  ---
+  duration_ms: 3.8885
+  type: 'test'
+  ...
+# Subtest: Grid canvas uses conceptual column dropzones without selectable Column settings
+ok 112 - Grid canvas uses conceptual column dropzones without selectable Column settings
+  ---
+  duration_ms: 3.355
+  type: 'test'
+  ...
+# pagebuilder v2.3 repeater boundary regression test passed
+# Subtest: tests\\pagebuilder-v23-repeater-boundary-regression.test.mjs
+ok 15 - tests\\pagebuilder-v23-repeater-boundary-regression.test.mjs
+  ---
+  duration_ms: 142.8225
+  type: 'test'
+  ...
+# pagebuilder v2.3 repeater standardization test passed
+# Subtest: tests\\pagebuilder-v23-repeater-standardization.test.mjs
+ok 16 - tests\\pagebuilder-v23-repeater-standardization.test.mjs
+  ---
+  duration_ms: 186.5701
+  type: 'test'
+  ...
+# Subtest: new containers start with linked 1rem padding visible in the settings state
+ok 115 - new containers start with linked 1rem padding visible in the settings state
+  ---
+  duration_ms: 5.4367
+  type: 'test'
+  ...
+# Subtest: desktop canvas starts and resets at 100 percent zoom
+ok 116 - desktop canvas starts and resets at 100 percent zoom
+  ---
+  duration_ms: 0.8493
+  type: 'test'
+  ...
+# Subtest: Text Editor keeps the complete Article toolbar while allowing narrow-sidebar overflow grouping
+ok 117 - Text Editor keeps the complete Article toolbar while allowing narrow-sidebar overflow grouping
+  ---
+  duration_ms: 4.6705
+  type: 'test'
+  ...
+# Subtest: widget label and opposite action buttons use the approved slightly larger geometry
+ok 118 - widget label and opposite action buttons use the approved slightly larger geometry
+  ---
+  duration_ms: 1.7858
+  type: 'test'
+  ...
+# Subtest: approved root insertion rail is a native button that opens the root toolbox
+ok 119 - approved root insertion rail is a native button that opens the root toolbox
+  ---
+  duration_ms: 2.59
+  type: 'test'
+  ...
+# Subtest: toolbox clone stays a readable 40px card inside canvas dropzones
+ok 120 - toolbox clone stays a readable 40px card inside canvas dropzones
+  ---
+  duration_ms: 86.0012
+  type: 'test'
+  ...
+# Subtest: horizontal Flexbox lets the in-canvas toolbox clone shrink inside the row
+ok 121 - horizontal Flexbox lets the in-canvas toolbox clone shrink inside the row
+  ---
+  duration_ms: 11.2247
+  type: 'test'
+  ...
+# Subtest: active toolbox uses a visible compact card for the native drag image
+ok 122 - active toolbox uses a visible compact card for the native drag image
+  ---
+  duration_ms: 6.5103
+  type: 'test'
+  ...
+# Subtest: drag feedback restores the original root and nested dropzone states
+ok 123 - drag feedback restores the original root and nested dropzone states
+  ---
+  duration_ms: 50.6063
+  type: 'test'
+  ...
+# Subtest: toast notice wrapper cannot create an extra builder grid row above the workspace
+ok 124 - toast notice wrapper cannot create an extra builder grid row above the workspace
+  ---
+  duration_ms: 20.3715
+  type: 'test'
+  ...
+# pagebuilder v2.3 tabs navigation border parity test passed
+# Subtest: tests\\pagebuilder-v23-tabs-navigation-border.test.mjs
+ok 18 - tests\\pagebuilder-v23-tabs-navigation-border.test.mjs
+  ---
+  duration_ms: 186.1806
+  type: 'test'
+  ...
+# Subtest: shared settings loader exposes loading and error states
+ok 126 - shared settings loader exposes loading and error states
+  ---
+  duration_ms: 2.5252
+  type: 'test'
+  ...
+# Automatic Compiled Native Canvas flow contract passed.
+# Subtest: automatic flow binds review to the layout blueprint and exposes manual source-block mapping
+ok 127 - automatic flow binds review to the layout blueprint and exposes manual source-block mapping
+  ---
+  duration_ms: 19.9358
+  type: 'test'
+  ...
+# Subtest: automatic flow builds target nodes and only applies them through an explicit Canvas action
+ok 128 - automatic flow builds target nodes and only applies them through an explicit Canvas action
+  ---
+  duration_ms: 2.4828
+  type: 'test'
+  ...
+# Subtest: automatic flow keeps target preview and mapping surfaces responsive without horizontal overflow
+ok 129 - automatic flow keeps target preview and mapping surfaces responsive without horizontal overflow
+  ---
+  duration_ms: 1.9603
+  type: 'test'
+  ...
+# Subtest: automatic mapping preselects the top registered candidate at or above 60 percent
+ok 130 - automatic mapping preselects the top registered candidate at or above 60 percent
+  ---
+  duration_ms: 0.7156
+  type: 'test'
+  ...
+# Subtest: automatic mapping cards keep copy, widget selection and raw details readable
+ok 131 - automatic mapping cards keep copy, widget selection and raw details readable
+  ---
+  duration_ms: 1.3215
+  type: 'test'
+  ...
+# Subtest: automatic target validation distinguishes review notes from blocking errors
+ok 132 - automatic target validation distinguishes review notes from blocking errors
+  ---
+  duration_ms: 1.3155
+  type: 'test'
+  ...
+# Subtest: automatic target maps measured positioned layers to existing Advanced settings
+ok 133 - automatic target maps measured positioned layers to existing Advanced settings
+  ---
+  duration_ms: 0.7343
+  type: 'test'
+  ...
+# Subtest: automatic target requires explicit asset URL mapping for local package images
+ok 134 - automatic target requires explicit asset URL mapping for local package images
+  ---
+  duration_ms: 0.8067
+  type: 'test'
+  ...
+# Subtest: automatic target permits partial apply while retaining unresolved image asset warnings
+ok 135 - automatic target permits partial apply while retaining unresolved image asset warnings
+  ---
+  duration_ms: 1.8833
+  type: 'test'
+  ...
+# Subtest: automatic validation preserves scoped residual CSS patches as review notes
+ok 136 - automatic validation preserves scoped residual CSS patches as review notes
+  ---
+  duration_ms: 1.8062
+  type: 'test'
+  ...
+# Subtest: automatic native root template compiles after JavaScript template-literal evaluation
+ok 137 - automatic native root template compiles after JavaScript template-literal evaluation
+  ---
+  duration_ms: 200.1493
+  type: 'test'
+  ...
+# Subtest: automatic native target filters stay outside Vue directive expressions
+ok 138 - automatic native target filters stay outside Vue directive expressions
+  ---
+  duration_ms: 2.2699
+  type: 'test'
+  ...
+# Automatic Compiled Native review UI contract passed.
+# Subtest: automatic compiled native review exposes evidence and explicit correction state
+ok 139 - automatic compiled native review exposes evidence and explicit correction state
+  ---
+  duration_ms: 3.1919
+  type: 'test'
+  ...
+# Subtest: automatic compiled native review does not expose a recommendation selector or exact visual fallback
+ok 140 - automatic compiled native review does not expose a recommendation selector or exact visual fallback
+  ---
+  duration_ms: 1.4953
+  type: 'test'
+  ...
+# Subtest: automatic compiled native review has responsive no-horizontal-overflow surfaces
+ok 141 - automatic compiled native review has responsive no-horizontal-overflow surfaces
+  ---
+  duration_ms: 0.8898
+  type: 'test'
+  ...
+# Subtest: v24 owns an isolated core plus complete manifest-discovered module tree
+ok 142 - v24 owns an isolated core plus complete manifest-discovered module tree
+  ---
+  duration_ms: 67.7478
+  type: 'test'
+  ...
+# Subtest: v24 JavaScript and Vue files contain no internal v23 marker
+ok 143 - v24 JavaScript and Vue files contain no internal v23 marker
+  ---
+  duration_ms: 13.393
+  type: 'test'
+  ...
+# Subtest: a two-column preset creates child Containers and never columns
+ok 144 - a two-column preset creates child Containers and never columns
+  ---
+  duration_ms: 20.7789
+  type: 'test'
+  ...
+# Subtest: Add Container appends one selectable canonical child
+ok 145 - Add Container appends one selectable canonical child
+  ---
+  duration_ms: 4.6497
+  type: 'test'
+  ...
+# Subtest: layout content detection only requires confirmation when nested content exists
+ok 146 - layout content detection only requires confirmation when nested content exists
+  ---
+  duration_ms: 2.6825
+  type: 'test'
+  ...
+# Subtest: Flexbox Child Containers sidebar exposes selectable rows with a delete action
+ok 147 - Flexbox Child Containers sidebar exposes selectable rows with a delete action
+  ---
+  duration_ms: 0.7043
+  type: 'test'
+  ...
+# Subtest: Grid track growth materializes conceptual columns without deleting existing content
+ok 148 - Grid track growth materializes conceptual columns without deleting existing content
+  ---
+  duration_ms: 4.1153
+  type: 'test'
+  ...
+# Subtest: Flexbox child Containers unwrap one level into conceptual Grid cells
+ok 149 - Flexbox child Containers unwrap one level into conceptual Grid cells
+  ---
+  duration_ms: 2.5358
+  type: 'test'
+  ...
+# Subtest: Grid to Flexbox restores the unwrapped child Container identities and settings
+ok 150 - Grid to Flexbox restores the unwrapped child Container identities and settings
+  ---
+  duration_ms: 2.1393
+  type: 'test'
+  ...
+# Subtest: Grid columns unlock sequentially as the previous empty slot is filled
+ok 151 - Grid columns unlock sequentially as the previous empty slot is filled
+  ---
+  duration_ms: 2.5246
+  type: 'test'
+  ...
+# Subtest: canonical Grid snapshots and track controls reconcile conceptual columns
+ok 152 - canonical Grid snapshots and track controls reconcile conceptual columns
+  ---
+  duration_ms: 13.0098
+  type: 'test'
+  ...
+# Subtest: legacy columns become real child Containers without losing nested widgets
+ok 153 - legacy columns become real child Containers without losing nested widgets
+  ---
+  duration_ms: 8.5834
+  type: 'test'
+  ...
+# Subtest: duplicate or malformed legacy column ids are repaired deterministically
+ok 154 - duplicate or malformed legacy column ids are repaired deterministically
+  ---
+  duration_ms: 7.8426
+  type: 'test'
+  ...
+# Subtest: unknown node types remain untouched by the Container adapter
+ok 155 - unknown node types remain untouched by the Container adapter
+  ---
+  duration_ms: 2.2881
+  type: 'test'
+  ...
+# Subtest: generated child Container ids never steal an existing node id
+ok 156 - generated child Container ids never steal an existing node id
+  ---
+  duration_ms: 2.0886
+  type: 'test'
+  ...
+# Subtest: canonical node IDs stay stable when a legacy snapshot is normalized twice
+ok 157 - canonical node IDs stay stable when a legacy snapshot is normalized twice
+  ---
+  duration_ms: 3.4624
+  type: 'test'
+  ...
+# Subtest: a Container cannot be dropped into itself or its descendant
+ok 158 - a Container cannot be dropped into itself or its descendant
+  ---
+  duration_ms: 2.8784
+  type: 'test'
+  ...
+# Subtest: cycle prevention traverses Tabs and Accordion nested item trees
+ok 159 - cycle prevention traverses Tabs and Accordion nested item trees
+  ---
+  duration_ms: 3.9377
+  type: 'test'
+  ...
+# Subtest: nested Tabs and Accordion drags do not get captured by an ancestor while the pointer is inside their owner
+ok 160 - nested Tabs and Accordion drags do not get captured by an ancestor while the pointer is inside their owner
+  ---
+  duration_ms: 1.8943
+  type: 'test'
+  ...
+# Subtest: responsive width inherits from the nearest larger device
+ok 161 - responsive width inherits from the nearest larger device
+  ---
+  duration_ms: 1.8569
+  type: 'test'
+  ...
+# Subtest: edge resize writes only the active device and preserves the pair total
+ok 162 - edge resize writes only the active device and preserves the pair total
+  ---
+  duration_ms: 4.1967
+  type: 'test'
+  ...
+# Subtest: edge resize clamps a Container to the pair minimum width
+ok 163 - edge resize clamps a Container to the pair minimum width
+  ---
+  duration_ms: 3.587
+  type: 'test'
+  ...
+# Subtest: child Container edge resizing uses its responsive pair and one history snapshot
+ok 164 - child Container edge resizing uses its responsive pair and one history snapshot
+  ---
+  duration_ms: 1.3068
+  type: 'test'
+  ...
+# Subtest: Container edge resizer uses the dedicated child Container selector
+ok 165 - Container edge resizer uses the dedicated child Container selector
+  ---
+  duration_ms: 27.6346
+  type: 'test'
+  ...
+# Subtest: Grid uses conceptual columns while Flexbox retains canonical child Containers
+ok 166 - Grid uses conceptual columns while Flexbox retains canonical child Containers
+  ---
+  duration_ms: 3.2827
+  type: 'test'
+  ...
+# Subtest: save serialization strips Flex columns but preserves Grid columns through nested collections
+ok 167 - save serialization strips Flex columns but preserves Grid columns through nested collections
+  ---
+  duration_ms: 17.8699
+  type: 'test'
+  ...
+# Subtest: save serialization accepts a Proxy root without mutating it
+ok 168 - save serialization accepts a Proxy root without mutating it
+  ---
+  duration_ms: 2.2123
+  type: 'test'
+  ...
+# Subtest: savePage posts a canonical clone and clears migration state only after success
+ok 169 - savePage posts a canonical clone and clears migration state only after success
+  ---
+  duration_ms: 0.8846
+  type: 'test'
+  ...
+# Subtest: toolbox and existing widgets can enter canonical child Container dropzones
+ok 170 - toolbox and existing widgets can enter canonical child Container dropzones
+  ---
+  duration_ms: 2.0744
+  type: 'test'
+  ...
+# Subtest: nested Tabs and Accordion nodes restore native drag only while Sortable chooses them
+ok 171 - nested Tabs and Accordion nodes restore native drag only while Sortable chooses them
+  ---
+  duration_ms: 26.5557
+  type: 'test'
+  ...
+# Subtest: default Advanced widget width fills its Container while explicit widths stay configurable
+ok 172 - default Advanced widget width fills its Container while explicit widths stay configurable
+  ---
+  duration_ms: 0.4871
+  type: 'test'
+  ...
+# Subtest: empty child hints and nested layout toolbars remain centered and collision-free
+ok 173 - empty child hints and nested layout toolbars remain centered and collision-free
+  ---
+  duration_ms: 20.9884
+  type: 'test'
+  ...
+# Subtest: context menu keeps per-target definitions behind one shared shell
+ok 174 - context menu keeps per-target definitions behind one shared shell
+  ---
+  duration_ms: 18.3452
+  type: 'test'
+  ...
+# Subtest: context menu closes from capture-phase clicks outside the shared popup
+ok 175 - context menu closes from capture-phase clicks outside the shared popup
+  ---
+  duration_ms: 3.1667
+  type: 'test'
+  ...
+# Subtest: context menu resolves the deepest Form field without changing outer widget targets
+ok 176 - context menu resolves the deepest Form field without changing outer widget targets
+  ---
+  duration_ms: 52.6127
+  type: 'test'
+  ...
+# Subtest: Inspect element is available for every context target and exposes the exact DOM reference
+ok 177 - Inspect element is available for every context target and exposes the exact DOM reference
+  ---
+  duration_ms: 1.6826
+  type: 'test'
+  ...
+# Subtest: external clipboard accepts only versioned Phoenix v2.4 node payloads
+ok 178 - external clipboard accepts only versioned Phoenix v2.4 node payloads
+  ---
+  duration_ms: 2.4885
+  type: 'test'
+  ...
+# Subtest: context menu uses the light Phoenix surface and stays accessible
+ok 179 - context menu uses the light Phoenix surface and stays accessible
+  ---
+  duration_ms: 1.3611
+  type: 'test'
+  ...
+# Subtest: v2.4 frontend CSS adapts Canvas structure without copying scoped component styles globally
+ok 180 - v2.4 frontend CSS adapts Canvas structure without copying scoped component styles globally
+  ---
+  duration_ms: 45.541
+  type: 'test'
+  ...
+# Subtest: v2.4 shared Advanced defaults expose responsive Full Bleed without changing legacy defaults
+ok 181 - v2.4 shared Advanced defaults expose responsive Full Bleed without changing legacy defaults
+  ---
+  duration_ms: 8.0822
+  type: 'test'
+  ...
+# Subtest: v2.4 Advanced spacing keeps the shared form and accepts screen plus print units
+ok 182 - v2.4 Advanced spacing keeps the shared form and accepts screen plus print units
+  ---
+  duration_ms: 1.2411
+  type: 'test'
+  ...
+# Subtest: v2.4 Canvas makes the editor gutter responsive instead of hard-coding it per widget
+ok 183 - v2.4 Canvas makes the editor gutter responsive instead of hard-coding it per widget
+  ---
+  duration_ms: 4.3595
+  type: 'test'
+  ...
+# Subtest: every v2.4 widget renderer uses the shared Advanced resolver at its own root
+ok 184 - every v2.4 widget renderer uses the shared Advanced resolver at its own root
+  ---
+  duration_ms: 37.2166
+  type: 'test'
+  ...
+# Subtest: all module definitions rely on manifest metadata and no legacy host runtime
+ok 185 - all module definitions rely on manifest metadata and no legacy host runtime
+  ---
+  duration_ms: 13.0629
+  type: 'test'
+  ...
+# Subtest: optional module runtimes own their initializers instead of delegating to core type functions
+ok 186 - optional module runtimes own their initializers instead of delegating to core type functions
+  ---
+  duration_ms: 7.0776
+  type: 'test'
+  ...
+# Subtest: module-specific selectors live in module styles rather than global stylesheets
+ok 187 - module-specific selectors live in module styles rather than global stylesheets
+  ---
+  duration_ms: 1.1942
+  type: 'test'
+  ...
+# Subtest: editor shell inlines optional styles and runtimes from active module folders
+ok 188 - editor shell inlines optional styles and runtimes from active module folders
+  ---
+  duration_ms: 0.3793
+  type: 'test'
+  ...
+# Subtest: Grid spacing controls use the established connected responsive four-side form
+ok 189 - Grid spacing controls use the established connected responsive four-side form
+  ---
+  duration_ms: 6.1823
+  type: 'test'
+  ...
+# Subtest: Grid Columns and Rows create conceptual slots without creating child Containers
+ok 190 - Grid Columns and Rows create conceptual slots without creating child Containers
+  ---
+  duration_ms: 18.104
+  type: 'test'
+  ...
+# Subtest: Grid slot reduction preserves overflow content in the final remaining slot
+ok 191 - Grid slot reduction preserves overflow content in the final remaining slot
+  ---
+  duration_ms: 62.3848
+  type: 'test'
+  ...
+# Subtest: deleting a Grid column track removes the matching cell from every row
+ok 192 - deleting a Grid column track removes the matching cell from every row
+  ---
+  duration_ms: 15.0463
+  type: 'test'
+  ...
+# Subtest: Grid column deletion updates Container Grid settings and protects the final track
+ok 193 - Grid column deletion updates Container Grid settings and protects the final track
+  ---
+  duration_ms: 31.215
+  type: 'test'
+  ...
+# Subtest: only the first/current empty Grid column is unlocked
+ok 194 - only the first/current empty Grid column is unlocked
+  ---
+  duration_ms: 21.5457
+  type: 'test'
+  ...
+# Subtest: Grid column Sortable accepts Widget, Container, and Grid sources but rejects a locked target
+ok 195 - Grid column Sortable accepts Widget, Container, and Grid sources but rejects a locked target
+  ---
+  duration_ms: 2.2977
+  type: 'test'
+  ...
+# Subtest: an existing Grid item can move into its next empty unlocked column
+ok 196 - an existing Grid item can move into its next empty unlocked column
+  ---
+  duration_ms: 3.2683
+  type: 'test'
+  ...
+# Subtest: Grid columns persist on save while Flexbox legacy columns are removed
+ok 197 - Grid columns persist on save while Flexbox legacy columns are removed
+  ---
+  duration_ms: 14.2811
+  type: 'test'
+  ...
+# Subtest: Container settings expose Add Container only for Flexbox
+ok 198 - Container settings expose Add Container only for Flexbox
+  ---
+  duration_ms: 0.5594
+  type: 'test'
+  ...
+# Subtest: Container Grid and standalone Grid settings expose guarded column deletion
+ok 199 - Container Grid and standalone Grid settings expose guarded column deletion
+  ---
+  duration_ms: 1.5297
+  type: 'test'
+  ...
+# Subtest: Grid column rows stay read-only during Vue render
+ok 200 - Grid column rows stay read-only during Vue render
+  ---
+  duration_ms: 0.4941
+  type: 'test'
+  ...
+# Subtest: Container Grid and legacy Grid render column dropzones while Flexbox keeps child Containers
+ok 201 - Container Grid and legacy Grid render column dropzones while Flexbox keeps child Containers
+  ---
+  duration_ms: 0.7708
+  type: 'test'
+  ...
+# Subtest: restored Grid cells preserve original alignment and single Heading preview behavior
+ok 202 - restored Grid cells preserve original alignment and single Heading preview behavior
+  ---
+  duration_ms: 1.0081
+  type: 'test'
+  ...
+# Subtest: empty Grid cell hint and Sortable ghost stay inside the target cell
+ok 203 - empty Grid cell hint and Sortable ghost stay inside the target cell
+  ---
+  duration_ms: 0.7235
+  type: 'test'
+  ...
+# Subtest: Grid column style defaults are sparse-safe and include the approved normal controls
+ok 204 - Grid column style defaults are sparse-safe and include the approved normal controls
+  ---
+  duration_ms: 47.9473
+  type: 'test'
+  ...
+# Subtest: Grid column styles reconcile by visual track count without changing cell content
+ok 205 - Grid column styles reconcile by visual track count without changing cell content
+  ---
+  duration_ms: 27.2548
+  type: 'test'
+  ...
+# Subtest: Cell overrides inherit per field and per responsive device from the track style
+ok 206 - Cell overrides inherit per field and per responsive device from the track style
+  ---
+  duration_ms: 24.7434
+  type: 'test'
+  ...
+# Subtest: Resetting a cell style removes only the sparse override object
+ok 207 - Resetting a cell style removes only the sparse override object
+  ---
+  duration_ms: 12.15
+  type: 'test'
+  ...
+# Subtest: Deleting a Grid track removes its matching default style and preserves remaining cell overrides
+ok 208 - Deleting a Grid track removes its matching default style and preserves remaining cell overrides
+  ---
+  duration_ms: 28.2073
+  type: 'test'
+  ...
+# Subtest: Grid settings expose expandable track and cell style targets for both Grid surfaces
+ok 209 - Grid settings expose expandable track and cell style targets for both Grid surfaces
+  ---
+  duration_ms: 1.383
+  type: 'test'
+  ...
+# Subtest: Grid cell renderers expose track and cell metadata and apply the effective style
+ok 210 - Grid cell renderers expose track and cell metadata and apply the effective style
+  ---
+  duration_ms: 0.6949
+  type: 'test'
+  ...
+# pagebuilder v2.4 hero banner widget parity test passed
+# Subtest: tests\\pagebuilder-v24-hero-banner-widget-parity.test.mjs
+ok 30 - tests\\pagebuilder-v24-hero-banner-widget-parity.test.mjs
+  ---
+  duration_ms: 334.6313
+  type: 'test'
+  ...
+# pagebuilder v2.4 hero slider widget parity test passed
+# Subtest: tests\\pagebuilder-v24-hero-slider-widget-parity.test.mjs
+ok 31 - tests\\pagebuilder-v24-hero-slider-widget-parity.test.mjs
+  ---
+  duration_ms: 763.057
+  type: 'test'
+  ...
+# Subtest: legacy Grid and Row Grid keep conceptual columns with stable content order
+ok 213 - legacy Grid and Row Grid keep conceptual columns with stable content order
+  ---
+  duration_ms: 56.4939
+  type: 'test'
+  ...
+# Subtest: Grid track reconciliation changes cells without changing existing content identity or order
+ok 214 - Grid track reconciliation changes cells without changing existing content identity or order
+  ---
+  duration_ms: 21.519
+  type: 'test'
+  ...
+# Subtest: legacy Grid repairs duplicate or malformed cell IDs without colliding with node IDs
+ok 215 - legacy Grid repairs duplicate or malformed cell IDs without colliding with node IDs
+  ---
+  duration_ms: 19.9168
+  type: 'test'
+  ...
+# Subtest: property tabs reset the shared sidebar scroll position
+ok 216 - property tabs reset the shared sidebar scroll position
+  ---
+  duration_ms: 22.1866
+  type: 'test'
+  ...
+# Subtest: the v2.4 properties panel matches the approved prototype density contract
+ok 217 - the v2.4 properties panel matches the approved prototype density contract
+  ---
+  duration_ms: 5.2372
+  type: 'test'
+  ...
+# Subtest: shared buttons and compound fields inherit the prototype proportions
+ok 218 - shared buttons and compound fields inherit the prototype proportions
+  ---
+  duration_ms: 2.4081
+  type: 'test'
+  ...
+# Subtest: Accordion item fields, responsive tools, and standalone color swatches keep compact visual alignment
+ok 219 - Accordion item fields, responsive tools, and standalone color swatches keep compact visual alignment
+  ---
+  duration_ms: 1.3053
+  type: 'test'
+  ...
+# Subtest: every unit-bearing slider groups its numeric input and unit beside the range
+ok 220 - every unit-bearing slider groups its numeric input and unit beside the range
+  ---
+  duration_ms: 2.3949
+  type: 'test'
+  ...
+# Subtest: shared numeric and compound controls stay compact across every v2.4 widget
+ok 221 - shared numeric and compound controls stay compact across every v2.4 widget
+  ---
+  duration_ms: 6.1605
+  type: 'test'
+  ...
+# Subtest: the shared density contract covers every active four-side and three-cell range shape
+ok 222 - the shared density contract covers every active four-side and three-cell range shape
+  ---
+  duration_ms: 20.3183
+  type: 'test'
+  ...
+# Subtest: every responsive spacing side uses a numeric input with native steppers
+ok 223 - every responsive spacing side uses a numeric input with native steppers
+  ---
+  duration_ms: 17.7742
+  type: 'test'
+  ...
+# Subtest: every registered Layout and Widget exposes exactly the tabs implemented by its settings module
+ok 224 - every registered Layout and Widget exposes exactly the tabs implemented by its settings module
+  ---
+  duration_ms: 74.0637
+  type: 'test'
+  ...
+# Subtest: a selected canvas node keeps its toolbar while the pointer crosses another node
+ok 225 - a selected canvas node keeps its toolbar while the pointer crosses another node
+  ---
+  duration_ms: 0.6131
+  type: 'test'
+  ...
+# Subtest: a selected layout toolbar yields while its descendant widget is hovered
+ok 226 - a selected layout toolbar yields while its descendant widget is hovered
+  ---
+  duration_ms: 0.7274
+  type: 'test'
+  ...
+# Subtest: widget label and action hit areas bridge the visual gap above the node
+ok 227 - widget label and action hit areas bridge the visual gap above the node
+  ---
+  duration_ms: 0.5115
+  type: 'test'
+  ...
+# Subtest: collapsed sidebar toggle aligns with the canvas metadata row
+ok 228 - collapsed sidebar toggle aligns with the canvas metadata row
+  ---
+  duration_ms: 0.5096
+  type: 'test'
+  ...
+# Subtest: page root reaches the frame edge without clipping node toolbars
+ok 229 - page root reaches the frame edge without clipping node toolbars
+  ---
+  duration_ms: 0.6455
+  type: 'test'
+  ...
+# Subtest: widget labels expose an enlarged hit target at the default 100 percent zoom
+ok 230 - widget labels expose an enlarged hit target at the default 100 percent zoom
+  ---
+  duration_ms: 0.714
+  type: 'test'
+  ...
+# Subtest: clicking a canvas node label reveals the collapsed properties panel
+ok 231 - clicking a canvas node label reveals the collapsed properties panel
+  ---
+  duration_ms: 1.229
+  type: 'test'
+  ...
+# Subtest: Container Layout exposes selectable Child Containers and Add Container only for Flexbox
+ok 232 - Container Layout exposes selectable Child Containers and Add Container only for Flexbox
+  ---
+  duration_ms: 2.5975
+  type: 'test'
+  ...
+# Subtest: Grid canvas uses conceptual column dropzones without selectable Column settings
+ok 233 - Grid canvas uses conceptual column dropzones without selectable Column settings
+  ---
+  duration_ms: 3.1914
+  type: 'test'
+  ...
+# pagebuilder v2.4 repeater boundary regression test passed
+# Subtest: tests\\pagebuilder-v24-repeater-boundary-regression.test.mjs
+ok 35 - tests\\pagebuilder-v24-repeater-boundary-regression.test.mjs
+  ---
+  duration_ms: 236.7396
+  type: 'test'
+  ...
+# pagebuilder v2.4 repeater standardization test passed
+# Subtest: tests\\pagebuilder-v24-repeater-standardization.test.mjs
+ok 36 - tests\\pagebuilder-v24-repeater-standardization.test.mjs
+  ---
+  duration_ms: 245.949
+  type: 'test'
+  ...
+# Subtest: new containers start with linked 1rem padding visible in the settings state
+ok 236 - new containers start with linked 1rem padding visible in the settings state
+  ---
+  duration_ms: 3.3138
+  type: 'test'
+  ...
+# Subtest: desktop canvas starts and resets at 100 percent zoom
+ok 237 - desktop canvas starts and resets at 100 percent zoom
+  ---
+  duration_ms: 1.1359
+  type: 'test'
+  ...
+# Subtest: Text Editor keeps the complete Article toolbar while allowing narrow-sidebar overflow grouping
+ok 238 - Text Editor keeps the complete Article toolbar while allowing narrow-sidebar overflow grouping
+  ---
+  duration_ms: 2.7663
+  type: 'test'
+  ...
+# Subtest: widget label and opposite action buttons use the approved slightly larger geometry
+ok 239 - widget label and opposite action buttons use the approved slightly larger geometry
+  ---
+  duration_ms: 0.6519
+  type: 'test'
+  ...
+# Subtest: approved root insertion rail is a native button that opens the root toolbox
+ok 240 - approved root insertion rail is a native button that opens the root toolbox
+  ---
+  duration_ms: 1.2956
+  type: 'test'
+  ...
+# Subtest: toolbox clone stays a readable 40px card inside canvas dropzones
+ok 241 - toolbox clone stays a readable 40px card inside canvas dropzones
+  ---
+  duration_ms: 90.3435
+  type: 'test'
+  ...
+# Subtest: horizontal Flexbox lets the in-canvas toolbox clone shrink inside the row
+ok 242 - horizontal Flexbox lets the in-canvas toolbox clone shrink inside the row
+  ---
+  duration_ms: 25.0869
+  type: 'test'
+  ...
+# Subtest: active toolbox uses a visible compact card for the native drag image
+ok 243 - active toolbox uses a visible compact card for the native drag image
+  ---
+  duration_ms: 9.3993
+  type: 'test'
+  ...
+# Subtest: drag feedback restores the original root and nested dropzone states
+ok 244 - drag feedback restores the original root and nested dropzone states
+  ---
+  duration_ms: 26.5255
+  type: 'test'
+  ...
+# Subtest: toast notice wrapper cannot create an extra builder grid row above the workspace
+ok 245 - toast notice wrapper cannot create an extra builder grid row above the workspace
+  ---
+  duration_ms: 0.8972
+  type: 'test'
+  ...
+# pagebuilder v2.4 tabs navigation border parity test passed
+# Subtest: tests\\pagebuilder-v24-tabs-navigation-border.test.mjs
+ok 38 - tests\\pagebuilder-v24-tabs-navigation-border.test.mjs
+  ---
+  duration_ms: 223.4854
+  type: 'test'
+  ...
+# Subtest: shared settings loader exposes loading and error states
+ok 247 - shared settings loader exposes loading and error states
+  ---
+  duration_ms: 2.1423
+  type: 'test'
+  ...
+# Subtest: every active CMS theme loads the shared responsive typography asset
+ok 248 - every active CMS theme loads the shared responsive typography asset
+  ---
+  duration_ms: 5.8448
+  type: 'test'
+  ...
+# Subtest: the shared asset preserves the File Manager V2 RFS curves in content and overlays
+ok 249 - the shared asset preserves the File Manager V2 RFS curves in content and overlays
+  ---
+  duration_ms: 0.8282
+  type: 'test'
+  ...
+# Subtest: wide, short viewports use compact heading caps without overriding theme-owned title styles
+ok 250 - wide, short viewports use compact heading caps without overriding theme-owned title styles
+  ---
+  duration_ms: 0.5174
+  type: 'test'
+  ...
+# Subtest: compact desktop derives operational and sidebar text from Site Config
+ok 251 - compact desktop derives operational and sidebar text from Site Config
+  ---
+  duration_ms: 1.0409
+  type: 'test'
+  ...
+# Subtest: operational controls inherit the computed Site Config size for px, em, and rem
+ok 252 - operational controls inherit the computed Site Config size for px, em, and rem
+  ---
+  duration_ms: 0.6084
+  type: 'test'
+  ...
+# Subtest: mobile content typography derives from the adaptive Site Config scale
+ok 253 - mobile content typography derives from the adaptive Site Config scale
+  ---
+  duration_ms: 0.7429
+  type: 'test'
+  ...
+# Subtest: input groups bypass Bootstrap one-rem text and honor font-size-normal
+ok 254 - input groups bypass Bootstrap one-rem text and honor font-size-normal
+  ---
+  duration_ms: 0.4541
+  type: 'test'
+  ...
+# Subtest: profile dropdown uses the compact Site Config scale while preserving its hierarchy
+ok 255 - profile dropdown uses the compact Site Config scale while preserving its hierarchy
+  ---
+  duration_ms: 0.5183
+  type: 'test'
+  ...
+# Subtest: global typography matrix covers mobile tablet and compact laptop ranges
+ok 256 - global typography matrix covers mobile tablet and compact laptop ranges
+  ---
+  duration_ms: 0.6844
+  type: 'test'
+  ...
+1..256
+# tests 256
+# suites 0
+# pass 256
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1496.0557
+

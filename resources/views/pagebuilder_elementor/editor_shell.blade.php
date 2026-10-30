@@ -44,8 +44,8 @@
 	<link href="{{ $font['stylesheet'] }}" rel="stylesheet">
 	@endforeach
 	<link href="{{ asset('assets/vendor/pb-picker/picker.min.css') }}?v={{ @filemtime(public_path('assets/vendor/pb-picker/picker.min.css')) }}" rel="stylesheet">
-	<link href="{{ asset('assets/css/frontend_elementor.css') }}?v={{ @filemtime(public_path('assets/css/frontend_elementor.css')) }}" rel="stylesheet">
-	<link href="{{ asset('assets/css/pagebuilder_elementor.css') }}?v={{ @filemtime(public_path('assets/css/pagebuilder_elementor.css')) }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/pagebuilder/elementor/frontend_elementor.css') }}?v={{ @filemtime(public_path('assets/css/pagebuilder/elementor/frontend_elementor.css')) }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/pagebuilder/elementor/pagebuilder_elementor.css') }}?v={{ @filemtime(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css')) }}" rel="stylesheet">
 </head>
 <body>
 	<div id="pbElementorApp" v-cloak></div>

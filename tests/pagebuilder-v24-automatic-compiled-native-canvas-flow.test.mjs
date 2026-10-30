@@ -4,7 +4,7 @@ import test from 'node:test';
 import { compile } from '@vue/compiler-dom';
 
 const app = readFileSync('public/js/pagebuilder_elementor_v24/app.js', 'utf8');
-const css = readFileSync('public/assets/css/pagebuilder_elementor_v24.css', 'utf8');
+const css = readFileSync('public/assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css', 'utf8');
 
 function appTemplateAtRuntime() {
     const marker = 'template: `';

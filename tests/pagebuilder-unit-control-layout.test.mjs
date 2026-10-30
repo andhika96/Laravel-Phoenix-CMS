@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import test from 'node:test';
 
-const cssPath = new URL('../public/assets/css/pagebuilder_elementor.css', import.meta.url);
+const cssPath = new URL('../public/assets/css/pagebuilder/elementor/pagebuilder_elementor.css', import.meta.url);
 const sidesControlPaths = [
 	new URL('../public/js/pagebuilder_elementor/widgets/general/icon-box/Settings.vue', import.meta.url),
 	new URL('../public/js/pagebuilder_elementor/widgets/general/basic-gallery/Settings.vue', import.meta.url),

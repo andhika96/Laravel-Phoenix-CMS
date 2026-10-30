@@ -121,7 +121,7 @@ class PageBuilderElementorGeneralWidgetsTest extends TestCase
         $this->assertStringContainsString('@click.stop="dismissed = true"', $alertCanvas);
         $this->assertStringContainsString(':global(.pb-node-alert .pb-preview) { pointer-events: auto; }', $alertCanvas);
 
-        $panelCss = File::get(public_path('assets/css/pagebuilder_elementor.css'));
+        $panelCss = File::get(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
         $this->assertStringContainsString('.pb-widget-settings--general-new .pb-label-row.pb-label-row-device', $panelCss);
         $this->assertStringContainsString('.pb-widget-settings--general-new .pb-compact-choice .pb-seg-btn', $panelCss);
         $this->assertStringContainsString('height: 30px !important;', $panelCss);

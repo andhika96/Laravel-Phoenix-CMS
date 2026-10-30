@@ -1,0 +1,185 @@
+{
+  "ok": true,
+  "engine": "firefox",
+  "cases": [
+    {
+      "width": 1440,
+      "name": "row-padding"
+    },
+    {
+      "width": 1440,
+      "name": "title"
+    },
+    {
+      "width": 1440,
+      "name": "category"
+    },
+    {
+      "width": 1440,
+      "name": "author"
+    },
+    {
+      "width": 1440,
+      "name": "status"
+    },
+    {
+      "width": 1440,
+      "name": "date"
+    },
+    {
+      "width": 1440,
+      "name": "chevron-single-toggle"
+    },
+    {
+      "width": 1440,
+      "name": "title-keyboard"
+    },
+    {
+      "width": 1440,
+      "name": "checkbox-and-detail-do-not-toggle"
+    },
+    {
+      "width": 1440,
+      "name": "copy-text-selection"
+    },
+    {
+      "width": 1440,
+      "name": "menu-excluded-and-title-closes-menu"
+    },
+    {
+      "width": 1440,
+      "name": "delete-modal-cancel-no-row-toggle"
+    },
+    {
+      "width": 768,
+      "name": "row-padding"
+    },
+    {
+      "width": 768,
+      "name": "title"
+    },
+    {
+      "width": 768,
+      "name": "category"
+    },
+    {
+      "width": 768,
+      "name": "status"
+    },
+    {
+      "width": 768,
+      "name": "chevron-single-toggle"
+    },
+    {
+      "width": 768,
+      "name": "title-keyboard"
+    },
+    {
+      "width": 768,
+      "name": "checkbox-and-detail-do-not-toggle"
+    },
+    {
+      "width": 768,
+      "name": "copy-text-selection"
+    },
+    {
+      "width": 768,
+      "name": "menu-excluded-and-title-closes-menu"
+    },
+    {
+      "width": 768,
+      "name": "delete-modal-cancel-no-row-toggle"
+    },
+    {
+      "width": 390,
+      "name": "row-padding"
+    },
+    {
+      "width": 390,
+      "name": "title"
+    },
+    {
+      "width": 390,
+      "name": "category"
+    },
+    {
+      "width": 390,
+      "name": "chevron-single-toggle"
+    },
+    {
+      "width": 390,
+      "name": "title-keyboard"
+    },
+    {
+      "width": 390,
+      "name": "checkbox-and-detail-do-not-toggle"
+    },
+    {
+      "width": 390,
+      "name": "copy-text-selection"
+    },
+    {
+      "width": 390,
+      "name": "menu-excluded-and-title-closes-menu"
+    },
+    {
+      "width": 390,
+      "name": "delete-modal-cancel-no-row-toggle"
+    },
+    {
+      "width": 320,
+      "name": "row-padding"
+    },
+    {
+      "width": 320,
+      "name": "title"
+    },
+    {
+      "width": 320,
+      "name": "category"
+    },
+    {
+      "width": 320,
+      "name": "chevron-single-toggle"
+    },
+    {
+      "width": 320,
+      "name": "title-keyboard"
+    },
+    {
+      "width": 320,
+      "name": "checkbox-and-detail-do-not-toggle"
+    },
+    {
+      "width": 320,
+      "name": "copy-text-selection"
+    },
+    {
+      "width": 320,
+      "name": "menu-excluded-and-title-closes-menu"
+    },
+    {
+      "width": 320,
+      "name": "delete-modal-cancel-no-row-toggle"
+    },
+    {
+      "width": 1440,
+      "name": "dark-mode-row"
+    },
+    {
+      "width": 390,
+      "name": "touch-row-and-checkbox"
+    },
+    {
+      "width": 768,
+      "name": "touch-row-and-checkbox"
+    },
+    {
+      "width": 1440,
+      "name": "edit-navigation-retained"
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "writes": []
+}

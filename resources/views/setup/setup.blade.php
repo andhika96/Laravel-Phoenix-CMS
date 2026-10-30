@@ -15,9 +15,9 @@
 		<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"> -->
 
 		<!-- Custom CSS -->
-		<link href="{{ asset('assets/css/extending-css-bootstrap-5.css?v=').time() }}" rel="stylesheet">
-		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">	
-		<link href="{{ asset('assets/css/aruna-v4.css?v=').time() }}" rel="stylesheet">	
+		<link href="{{ asset('assets/css/shared/extending-css-bootstrap-5.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/shared/phoenix-cms.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/setup/aruna-v4.css?v=').time() }}" rel="stylesheet">
 
 		<title>LaraPhoenix CMS</title>
 

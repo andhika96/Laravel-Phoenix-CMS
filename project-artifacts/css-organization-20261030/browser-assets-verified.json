@@ -1,0 +1,4 @@
+{
+  "isError": true,
+  "error": "Error: page.evaluate: TypeError: response.status is not a function\n    at eval (eval at evaluate (:368:30), <anonymous>:6:40)\n    at async Promise.all (index 0)\n    at async <anonymous>:394:30"
+}

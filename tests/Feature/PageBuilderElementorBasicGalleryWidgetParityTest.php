@@ -124,7 +124,7 @@ class PageBuilderElementorBasicGalleryWidgetParityTest extends TestCase
     {
         $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/basic-gallery/Canvas.vue'));
         $runtime = file_get_contents(public_path('js/pagebuilder_elementor/frontend-runtime.js'));
-        $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
+        $frontendCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/frontend_elementor.css'));
 
         foreach ([
             "name: 'GeneralBasicGallery'",
@@ -162,7 +162,7 @@ class PageBuilderElementorBasicGalleryWidgetParityTest extends TestCase
     public function test_image_resolution_keeps_intrinsic_rendition_dimensions_visible_in_canvas_and_frontend(): void
     {
         $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/basic-gallery/Canvas.vue'));
-        $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
+        $frontendCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/frontend_elementor.css'));
 
         $expectedImageRule = '.pb-basic-gallery__item img{display:block;width:auto;height:auto;max-width:100%;margin-inline:auto}';
 

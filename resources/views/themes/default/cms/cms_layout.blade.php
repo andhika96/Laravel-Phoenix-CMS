@@ -35,13 +35,13 @@
 			<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" crossorigin="" />
 
 			<!-- Custom CSS -->
-			<link href="{{ asset('assets/css/extending-css-bootstrap-5.css?v=').time() }}" rel="stylesheet">
+			<link href="{{ asset('assets/css/shared/extending-css-bootstrap-5.css?v=').time() }}" rel="stylesheet">
 			<link href="{{ asset('assets/css/themes/default/phoenix-cms-default.css?v=').time() }}" rel="stylesheet">
-			<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">
+			<link href="{{ asset('assets/css/shared/phoenix-cms.css?v=').time() }}" rel="stylesheet">
 			<link href="{{ asset('assets/css/themes/default/aruna-admin-v7-default.css?v=').time() }}" rel="stylesheet">
-			<link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
+			<link href="{{ asset('assets/css/shared/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
 
-			<link href="{{ asset('assets/css/cms-bootstrap-theme.css') }}?v={{ filemtime(public_path('assets/css/cms-bootstrap-theme.css')) }}" rel="stylesheet">
+			<link href="{{ asset('assets/css/cms/cms-bootstrap-theme.css') }}?v={{ filemtime(public_path('assets/css/cms/cms-bootstrap-theme.css')) }}" rel="stylesheet">
 			@stack('css')
 
 			<title>{{ site_config()->site_name }} | @yield('title')</title>

@@ -1,0 +1,179 @@
+{
+  "stylesheets": 25,
+  "parsed": 21,
+  "failed": 4,
+  "files": [
+    {
+      "path": "public/assets/css/aruna-v4.css",
+      "parsed": false,
+      "error": {
+        "line": 325,
+        "column": 42,
+        "reason": "Unknown word !important"
+      },
+      "misplacedImportant": [
+        325,
+        331
+      ]
+    },
+    {
+      "path": "public/assets/css/awesome-admin-header-navigation-fullscreen.css",
+      "parsed": true,
+      "rules": 212,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/awesome-admin-header-navigation.css",
+      "parsed": true,
+      "rules": 538,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/cms-bootstrap-theme.css",
+      "parsed": true,
+      "rules": 44,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/extending-css-bootstrap-5.css",
+      "parsed": true,
+      "rules": 1212,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/frontend-menu-dropdown.css",
+      "parsed": true,
+      "rules": 147,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/phoenix-cms.css",
+      "parsed": false,
+      "error": {
+        "line": 1682,
+        "column": 42,
+        "reason": "Unknown word !important"
+      },
+      "misplacedImportant": [
+        1682,
+        1688
+      ]
+    },
+    {
+      "path": "public/assets/css/theme-responsive-typography.css",
+      "parsed": true,
+      "rules": 38,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/workflow-editor.css",
+      "parsed": true,
+      "rules": 254,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/article/article-editor-content.css",
+      "parsed": true,
+      "rules": 110,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/article/article-frontend-2026.css",
+      "parsed": true,
+      "rules": 865,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/article/article-template-manager-2026.css",
+      "parsed": true,
+      "rules": 481,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/article/manage-article-2026.css",
+      "parsed": true,
+      "rules": 141,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/themes/arunika_aurora/arunika_aurora.css",
+      "parsed": true,
+      "rules": 319,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/themes/arunika_aurora/mobile-v2.css",
+      "parsed": true,
+      "rules": 96,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/themes/arunika_equinox/arunika_equinox.css",
+      "parsed": true,
+      "rules": 578,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/themes/arunika_equinox/mobile-v2.css",
+      "parsed": true,
+      "rules": 45,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/themes/arunika_lucent/arunika_lucent.css",
+      "parsed": true,
+      "rules": 563,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/themes/arunika_lucent/mobile-v2.css",
+      "parsed": true,
+      "rules": 89,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/themes/arunika_prism/arunika_prism.css",
+      "parsed": true,
+      "rules": 424,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/themes/arunika_prism/mobile-v2.css",
+      "parsed": true,
+      "rules": 75,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/themes/calm_green/aruna-admin-v7-calm-green.css",
+      "parsed": false,
+      "error": {
+        "line": 128,
+        "column": 2,
+        "reason": "Unknown word position-relative"
+      },
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "parsed": true,
+      "rules": 2,
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/themes/default/aruna-admin-v7-default.css",
+      "parsed": false,
+      "error": {
+        "line": 122,
+        "column": 2,
+        "reason": "Unknown word position-relative"
+      },
+      "misplacedImportant": []
+    },
+    {
+      "path": "public/assets/css/themes/default/phoenix-cms-default.css",
+      "parsed": true,
+      "rules": 2,
+      "misplacedImportant": []
+    }
+  ]
+}

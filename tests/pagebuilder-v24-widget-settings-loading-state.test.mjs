@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const app = readFileSync(`${root}/public/js/pagebuilder_elementor_v24/app.js`, 'utf8');
-const css = readFileSync(`${root}/public/assets/css/pagebuilder_elementor_v24.css`, 'utf8');
+const css = readFileSync(`${root}/public/assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css`, 'utf8');
 
 test('shared settings loader exposes loading and error states', () => {
   assert.match(app, /const WidgetSettingsLoading\s*=\s*\{/);

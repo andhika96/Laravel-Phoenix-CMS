@@ -24,7 +24,7 @@ class PageBuilderElementorV24ShellTest extends TestCase
         $this->assertStringContainsString('id="pbElementorV24App"', $html);
         $this->assertStringContainsString('PAGE_BUILDER_ELEMENTOR_V24_CONTEXT', $html);
         $this->assertStringContainsString("editorVersion: '2.4'", $html);
-        $this->assertStringContainsString('assets/css/pagebuilder_elementor_v24.css', $html);
+        $this->assertStringContainsString('assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css', $html);
         $this->assertStringContainsString('js/pagebuilder_elementor_v24/frontend-runtime.js', $html);
         $this->assertStringContainsString('js/pagebuilder_elementor_v24/widget-registry.js', $html);
         $this->assertStringContainsString('js/pagebuilder_elementor_v24/app.js', $html);

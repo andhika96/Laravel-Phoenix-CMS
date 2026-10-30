@@ -1,0 +1,355 @@
+{
+  "total_css": 173,
+  "source_files_read": 3277,
+  "groups": {
+    "beta": 1,
+    "custom_public": 32,
+    "plugin_distribution": 86,
+    "plugin_example_test": 11,
+    "build_output": 1,
+    "build_source": 2,
+    "pagebuilder_module_source": 28,
+    "dynamic_font": 12
+  },
+  "statuses": {
+    "NO_RESOLVED_APPLICATION_REFERENCE": 76,
+    "REFERENCED_APPLICATION": 72,
+    "PLUGIN_EXAMPLE_TEST": 11,
+    "REFERENCED_PLUGIN_INTERNAL": 2,
+    "DYNAMIC_FONT_OPTION": 12
+  },
+  "external_urls": 10,
+  "exact_duplicate_groups": 5,
+  "custom_css": [
+    {
+      "path": "public/assets/beta_css/new.css",
+      "group": "beta",
+      "status": "NO_RESOLVED_APPLICATION_REFERENCE",
+      "bytes": 17375,
+      "sha256": "887a8af15dcf49f852e49d793d867ade0a0d385c69e98b22c5345497ba884a0c",
+      "application_refs": 0,
+      "plugin_refs": 0,
+      "evidence": ""
+    },
+    {
+      "path": "public/assets/css/article/article-editor-content.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 13658,
+      "sha256": "6afb1ae03f2884482dd37a387895f5d1bdeeba3b7cd6798232ef2a00368646b1",
+      "application_refs": 8,
+      "plugin_refs": 0,
+      "evidence": "resources/views/article/detail.blade.php:20; resources/views/article/detail.blade.php:20; resources/views/manage_article/manage_article_add.blade.php:267; resources/views/manage_article/manage_article_add.blade.php:267; resources/views/manage_article/manage_article_edit.blade.php:267; resources/views/manage_article/manage_article_edit.blade.php:267; resources/views/manage_article/templates/preview.blade.php:13; resources/views/manage_article/templates/preview.blade.php:13"
+    },
+    {
+      "path": "public/assets/css/article/article-frontend-2026.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 141681,
+      "sha256": "1184687649111f8c9967c0c3841e345b97da87117a4a00168c44c8b7b67a1e4e",
+      "application_refs": 5,
+      "plugin_refs": 0,
+      "evidence": "resources/views/article/archive.blade.php:36; resources/views/article/detail.blade.php:19; resources/views/article/password-protected.blade.php:41; resources/views/article/private.blade.php:27; resources/views/manage_article/templates/preview.blade.php:12"
+    },
+    {
+      "path": "public/assets/css/article/article-template-manager-2026.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 80410,
+      "sha256": "090793c26fa9ca2c06c028d70ad0f6936cbde29bcb4b6388eddf20cb0fbd80d0",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/manage_article/templates/index.blade.php:197"
+    },
+    {
+      "path": "public/assets/css/article/manage-article-2026.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 17422,
+      "sha256": "82d99e4ca15997b7093ae99956de4b3a1b8afc2c042c0907c9867413ba90f774",
+      "application_refs": 2,
+      "plugin_refs": 0,
+      "evidence": "resources/views/manage_article/manage_article.blade.php:8; resources/views/manage_article/manage_article.blade.php:8"
+    },
+    {
+      "path": "public/assets/css/aruna-v4.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 13738,
+      "sha256": "8b2c0afa4d89302f94b868d0a7bdffe7793e87e4d595d0715855a12ade5e73bb",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/setup/setup.blade.php:20"
+    },
+    {
+      "path": "public/assets/css/awesome-admin-header-navigation-fullscreen.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 36123,
+      "sha256": "b1a459ca63298db28abb991b70e0e0387654dcda4d3194b4065af2bfb6563763",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php:10"
+    },
+    {
+      "path": "public/assets/css/awesome-admin-header-navigation.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 83384,
+      "sha256": "fe97d9dcafa31ea3b06260205262ec70de75c11020abdc43e9ad6d74107036ae",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php:9"
+    },
+    {
+      "path": "public/assets/css/cms-bootstrap-theme.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 9082,
+      "sha256": "19af32e8a98f3cc422c6c46bd18157c386a3658df9fef7748ba4d4a1e55c2a15",
+      "application_refs": 12,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php:52; resources/views/themes/arunika_aurora/cms/cms_layout.blade.php:52; resources/views/themes/arunika_equinox/cms/cms_layout.blade.php:52; resources/views/themes/arunika_equinox/cms/cms_layout.blade.php:52; resources/views/themes/arunika_lucent/cms/cms_layout.blade.php:40; resources/views/themes/arunika_lucent/cms/cms_layout.blade.php:40; resources/views/themes/arunika_prism/cms/cms_layout.blade.php:52; resources/views/themes/arunika_prism/cms/cms_layout.blade.php:52"
+    },
+    {
+      "path": "public/assets/css/extending-css-bootstrap-5.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 69805,
+      "sha256": "847cafb5d3c3847869502ea84109639804b514067bc2ad35e9dadd1c0a4217a8",
+      "application_refs": 8,
+      "plugin_refs": 0,
+      "evidence": "resources/views/setup/setup.blade.php:18; resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php:18; resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php:18; resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php:22; resources/views/themes/arunika_prism/frontend/frontend_layout.blade.php:18; resources/views/themes/calm_green/cms/cms_layout.blade.php:40; resources/views/themes/calm_green/frontend/frontend_layout.blade.php:18; resources/views/themes/default/cms/cms_layout.blade.php:38"
+    },
+    {
+      "path": "public/assets/css/frontend-menu-dropdown.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 22147,
+      "sha256": "4504e22ba1974d42dae3c1661f804dd2524b3d8cd1080909baa68502dbb38e19",
+      "application_refs": 7,
+      "plugin_refs": 0,
+      "evidence": "resources/views/awesome_admin/menu/frontend/awesome_admin_parent_menu_fe.blade.php:829; resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php:21; resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php:21; resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php:26; resources/views/themes/arunika_prism/frontend/frontend_layout.blade.php:21; resources/views/themes/calm_green/frontend/frontend_layout.blade.php:21; resources/views/themes/default/frontend/frontend_layout.blade.php:20"
+    },
+    {
+      "path": "public/assets/css/frontend_elementor.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 53606,
+      "sha256": "b429128a5fa47cb65f1448933b99e08269921e4a68fdf218b67f822ef6737b60",
+      "application_refs": 4,
+      "plugin_refs": 0,
+      "evidence": "resources/views/pagebuilder_elementor/editor_shell.blade.php:47; resources/views/pagebuilder_elementor/editor_shell.blade.php:47; resources/views/pagebuilder_elementor/frontend_renderer.blade.php:27; resources/views/pagebuilder_elementor/frontend_renderer.blade.php:27"
+    },
+    {
+      "path": "public/assets/css/frontend_elementor_v23.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 58823,
+      "sha256": "371dd504831a81d4585f337226bfbab92d262594d8905c1414a959d32788cfb6",
+      "application_refs": 4,
+      "plugin_refs": 0,
+      "evidence": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php:48; resources/views/pagebuilder_elementor_v23/editor_shell.blade.php:48; resources/views/pagebuilder_elementor_v23/frontend_renderer.blade.php:27; resources/views/pagebuilder_elementor_v23/frontend_renderer.blade.php:27"
+    },
+    {
+      "path": "public/assets/css/frontend_elementor_v24.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 7216,
+      "sha256": "7daf7a9dec9b915e0706e6a6e7496b66c43ff0ba037e89c5e0e439c72aebfc0e",
+      "application_refs": 4,
+      "plugin_refs": 0,
+      "evidence": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php:48; resources/views/pagebuilder_elementor_v24/editor_shell.blade.php:48; resources/views/pagebuilder_elementor_v24/frontend_renderer.blade.php:49; resources/views/pagebuilder_elementor_v24/frontend_renderer.blade.php:49"
+    },
+    {
+      "path": "public/assets/css/pagebuilder.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 42262,
+      "sha256": "abba586a5aa7414acfe68680a2e037f45d71d69dc5f2d446dec9c79e98a95726",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/pagebuilder/pagebuilder.blade.php:17"
+    },
+    {
+      "path": "public/assets/css/pagebuilder_elementor.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 219812,
+      "sha256": "d617a48eed17a56409e65e0e67528b2483ea651635d66fee22b325bde88cc713",
+      "application_refs": 2,
+      "plugin_refs": 0,
+      "evidence": "resources/views/pagebuilder_elementor/editor_shell.blade.php:48; resources/views/pagebuilder_elementor/editor_shell.blade.php:48"
+    },
+    {
+      "path": "public/assets/css/pagebuilder_elementor_v23.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 286083,
+      "sha256": "3dd2141dbdb9fd1760c55bf8d0674b3ee3e1f6c7f69f31b69eb9adc6712eddff",
+      "application_refs": 2,
+      "plugin_refs": 0,
+      "evidence": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php:49; resources/views/pagebuilder_elementor_v23/editor_shell.blade.php:49"
+    },
+    {
+      "path": "public/assets/css/pagebuilder_elementor_v24.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 181675,
+      "sha256": "757ed1e38ca1f777ce4984d282062c708e1f104e555401a3c3901278a276c1d6",
+      "application_refs": 2,
+      "plugin_refs": 0,
+      "evidence": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php:49; resources/views/pagebuilder_elementor_v24/editor_shell.blade.php:49"
+    },
+    {
+      "path": "public/assets/css/phoenix-cms.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 41006,
+      "sha256": "34a73439e91486257b1b1dbb62731577207a6e4c67a874aade0725fd037c9bad",
+      "application_refs": 19,
+      "plugin_refs": 0,
+      "evidence": "resources/views/setup/setup.blade.php:19; resources/views/themes/arunika_aurora/auth/auth_layout.blade.php:26; resources/views/themes/arunika_aurora/cms/cms_layout.blade.php:47; resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php:20; resources/views/themes/arunika_equinox/auth/auth_layout.blade.php:26; resources/views/themes/arunika_equinox/cms/cms_layout.blade.php:47; resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php:20; resources/views/themes/arunika_lucent/auth/auth_layout.blade.php:29"
+    },
+    {
+      "path": "public/assets/css/theme-responsive-typography.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 8607,
+      "sha256": "618872e9da8c2e38a9257b86f885c3d70bccfa99258c3607ef8595b5824e3d91",
+      "application_refs": 13,
+      "plugin_refs": 0,
+      "evidence": "resources/views/article/archive.blade.php:34; resources/views/article/detail.blade.php:17; resources/views/article/password-protected.blade.php:39; resources/views/article/private.blade.php:25; resources/views/manage_article/templates/preview.blade.php:10; resources/views/themes/arunika_aurora/cms/cms_layout.blade.php:49; resources/views/themes/arunika_equinox/cms/cms_layout.blade.php:49; resources/views/themes/arunika_lucent/auth/auth_layout.blade.php:31"
+    },
+    {
+      "path": "public/assets/css/themes/arunika_aurora/arunika_aurora.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 58632,
+      "sha256": "39bafad756dffe9c428e9ea9fba60f02b43aeb3660d3c49396aba05b44e226fa",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php:48"
+    },
+    {
+      "path": "public/assets/css/themes/arunika_aurora/mobile-v2.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 21116,
+      "sha256": "ef9eaf1cf8e897848399ceed0d84944567b7328dc18b74e56602e2d852ee827f",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php:50"
+    },
+    {
+      "path": "public/assets/css/themes/arunika_equinox/arunika_equinox.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 111718,
+      "sha256": "78ead3f9beb115ca6e17dafb3aa5bbaf27b610bffaaa4a910dd15db3b77ce671",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php:48"
+    },
+    {
+      "path": "public/assets/css/themes/arunika_equinox/mobile-v2.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 10772,
+      "sha256": "d0c5ab15bdf255c0ed82a74ebf57852e17db4d7786cc34af15f5d13a6376c558",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php:50"
+    },
+    {
+      "path": "public/assets/css/themes/arunika_lucent/arunika_lucent.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 108484,
+      "sha256": "8333e794c506d431fda371c2dea979b818d74d387c91746a7e159ae3373ed1ee",
+      "application_refs": 3,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/arunika_lucent/auth/auth_layout.blade.php:30; resources/views/themes/arunika_lucent/cms/cms_layout.blade.php:36; resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php:24"
+    },
+    {
+      "path": "public/assets/css/themes/arunika_lucent/mobile-v2.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 21007,
+      "sha256": "ff9849fd60cebf8bf1c10c66e8e32e6aca0ef5c5d3d0f59d242450d341554873",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php:38"
+    },
+    {
+      "path": "public/assets/css/themes/arunika_prism/arunika_prism.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 76163,
+      "sha256": "44ebad46e39f2c0160703e1f006518620d32f77dc4b84dc6e0637bb4a57735cb",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php:48"
+    },
+    {
+      "path": "public/assets/css/themes/arunika_prism/mobile-v2.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 15435,
+      "sha256": "d18ed9463156668b67586e5e231ec9164b880a773f9f5cc23c0bbe2385d9c8d8",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php:50"
+    },
+    {
+      "path": "public/assets/css/themes/calm_green/aruna-admin-v7-calm-green.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 23118,
+      "sha256": "7cd54758a58cbe92a4e2b33fa4c99d9af9fd8ba0f354952f59eb2b5f375e8071",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/calm_green/cms/cms_layout.blade.php:43"
+    },
+    {
+      "path": "public/assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 7444,
+      "sha256": "4bdb9ea4fd4d9a408326b0f97b70fdbc4423ec414abf2699c0a88edc3056c921",
+      "application_refs": 9,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/arunika_aurora/auth/auth_layout.blade.php:25; resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php:19; resources/views/themes/arunika_equinox/auth/auth_layout.blade.php:25; resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php:19; resources/views/themes/arunika_prism/auth/auth_layout.blade.php:25; resources/views/themes/arunika_prism/frontend/frontend_layout.blade.php:19; resources/views/themes/calm_green/auth/auth_layout.blade.php:25; resources/views/themes/calm_green/cms/cms_layout.blade.php:41"
+    },
+    {
+      "path": "public/assets/css/themes/default/aruna-admin-v7-default.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 22118,
+      "sha256": "d2bad3e9661c970383162514eb305028e46c968e4c09acc4a1e02d307b24bedb",
+      "application_refs": 1,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/default/cms/cms_layout.blade.php:41"
+    },
+    {
+      "path": "public/assets/css/themes/default/phoenix-cms-default.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 6504,
+      "sha256": "04bafb1a9056323acea37e8e7b6455987cc5ec85615c5e39a23483cc29b334ac",
+      "application_refs": 3,
+      "plugin_refs": 0,
+      "evidence": "resources/views/themes/default/auth/auth_layout.blade.php:23; resources/views/themes/default/cms/cms_layout.blade.php:39; resources/views/themes/default/frontend/frontend_layout.blade.php:18"
+    },
+    {
+      "path": "public/assets/css/workflow-editor.css",
+      "group": "custom_public",
+      "status": "REFERENCED_APPLICATION",
+      "bytes": 36355,
+      "sha256": "d571d5af9b74ecd4329505f0ef4a3708f059a1d0633e0af25b44d36c09bb2857",
+      "application_refs": 2,
+      "plugin_refs": 0,
+      "evidence": "resources/views/workflow/editor.blade.php:189; resources/views/workflow/index.blade.php:116"
+    }
+  ]
+}

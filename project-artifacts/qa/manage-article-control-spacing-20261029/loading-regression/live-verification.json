@@ -1,0 +1,638 @@
+{
+  "checkedAt": "2026-10-29T03:01:11.115Z",
+  "vueVersion": "3.5.21",
+  "initialTotal": 5041,
+  "statusCounts": {
+    "all": 5041,
+    "publish": 5035,
+    "draft": 0,
+    "pending": 6
+  },
+  "loadingCases": 24,
+  "responsiveCases": 10,
+  "loadings": [
+    {
+      "name": "initial",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "newest"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "next",
+      "params": {
+        "page": "2",
+        "per_page": "15",
+        "sort": "newest"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "previous",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "newest"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "search",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "newest",
+        "search": "Load Test"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "clear-search",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "newest"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "title-header",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "title_asc"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "date-header",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "newest"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "sort-select",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "title_desc"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "status-pending",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "title_desc",
+        "filter_by_status": "pending"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "status-draft",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "title_desc",
+        "filter_by_status": "draft"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "empty-reset",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "title_desc"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "category",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "title_desc",
+        "filter_by_category": "11"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "schedule",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "title_desc",
+        "filter_by_category": "11",
+        "filter_by_scheduled": "false"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "combined-search",
+      "params": {
+        "page": "1",
+        "per_page": "15",
+        "sort": "title_desc",
+        "search": "Load Test",
+        "filter_by_category": "11",
+        "filter_by_scheduled": "false"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "page-size",
+      "params": {
+        "page": "1",
+        "per_page": "5",
+        "sort": "title_desc",
+        "search": "Load Test",
+        "filter_by_category": "11",
+        "filter_by_scheduled": "false"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "filter-reset",
+      "params": {
+        "page": "1",
+        "per_page": "5",
+        "sort": "title_desc"
+      },
+      "width": 1440,
+      "centerX": 0,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "responsive-search-768",
+      "params": {
+        "page": "1",
+        "per_page": "5",
+        "sort": "title_desc",
+        "search": "Science"
+      },
+      "width": 768,
+      "centerX": 0.0078125,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "responsive-clear-768",
+      "params": {
+        "page": "1",
+        "per_page": "5",
+        "sort": "title_desc"
+      },
+      "width": 768,
+      "centerX": 0.0078125,
+      "centerY": 0,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "responsive-search-390",
+      "params": {
+        "page": "1",
+        "per_page": "5",
+        "sort": "title_desc",
+        "search": "Science"
+      },
+      "width": 390,
+      "centerX": 0,
+      "centerY": 0.0078125,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "responsive-clear-390",
+      "params": {
+        "page": "1",
+        "per_page": "5",
+        "sort": "title_desc"
+      },
+      "width": 390,
+      "centerX": 0,
+      "centerY": 0.0078125,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "responsive-search-320",
+      "params": {
+        "page": "1",
+        "per_page": "5",
+        "sort": "title_desc",
+        "search": "Science"
+      },
+      "width": 320,
+      "centerX": 0,
+      "centerY": 0.0078125,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "responsive-clear-320",
+      "params": {
+        "page": "1",
+        "per_page": "5",
+        "sort": "title_desc"
+      },
+      "width": 320,
+      "centerX": 0,
+      "centerY": 0.0078125,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "retry",
+      "params": {
+        "page": "1",
+        "per_page": "5",
+        "sort": "oldest"
+      },
+      "width": 390,
+      "centerX": 0,
+      "centerY": 0.0078125,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": false,
+      "spinnerAnimation": "spinner-border"
+    },
+    {
+      "name": "reduced-motion",
+      "params": {
+        "page": "1",
+        "per_page": "5",
+        "sort": "oldest",
+        "search": "Science"
+      },
+      "width": 390,
+      "centerX": 0,
+      "centerY": 0.0078125,
+      "height": 320,
+      "belowHeader": true,
+      "visibleRows": false,
+      "overflow": false,
+      "reducedMotion": true,
+      "spinnerAnimation": "none"
+    }
+  ],
+  "responsive": [
+    {
+      "theme": "light",
+      "width": 1440,
+      "mobile": false,
+      "overflow": false,
+      "bad": [],
+      "gap": 24,
+      "sameRow": true,
+      "alignment": 0,
+      "titleBelow": false,
+      "detailWidth": 36,
+      "detailHeight": 36,
+      "checkWidth": 36,
+      "checkHeight": 36,
+      "visibleColumns": 7,
+      "detailSpan": 7
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "mobile": false,
+      "overflow": false,
+      "bad": [],
+      "gap": 24,
+      "sameRow": true,
+      "alignment": 0,
+      "titleBelow": false,
+      "detailWidth": 36,
+      "detailHeight": 36,
+      "checkWidth": 36,
+      "checkHeight": 36,
+      "visibleColumns": 5,
+      "detailSpan": 5
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "mobile": false,
+      "overflow": false,
+      "bad": [],
+      "gap": 24,
+      "sameRow": true,
+      "alignment": 0,
+      "titleBelow": false,
+      "detailWidth": 36,
+      "detailHeight": 36,
+      "checkWidth": 36,
+      "checkHeight": 36,
+      "visibleColumns": 5,
+      "detailSpan": 5
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "mobile": true,
+      "overflow": false,
+      "bad": [],
+      "gap": 24,
+      "sameRow": true,
+      "alignment": 41,
+      "titleBelow": true,
+      "detailWidth": 44,
+      "detailHeight": 44,
+      "checkWidth": 44,
+      "checkHeight": 44,
+      "visibleColumns": 4,
+      "detailSpan": 4
+    },
+    {
+      "theme": "light",
+      "width": 320,
+      "mobile": true,
+      "overflow": false,
+      "bad": [],
+      "gap": 24,
+      "sameRow": true,
+      "alignment": 41,
+      "titleBelow": true,
+      "detailWidth": 44,
+      "detailHeight": 44,
+      "checkWidth": 44,
+      "checkHeight": 44,
+      "visibleColumns": 4,
+      "detailSpan": 4
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "mobile": false,
+      "overflow": false,
+      "bad": [],
+      "gap": 24,
+      "sameRow": true,
+      "alignment": 0,
+      "titleBelow": false,
+      "detailWidth": 36,
+      "detailHeight": 36,
+      "checkWidth": 36,
+      "checkHeight": 36,
+      "visibleColumns": 7,
+      "detailSpan": 7
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "mobile": false,
+      "overflow": false,
+      "bad": [],
+      "gap": 24,
+      "sameRow": true,
+      "alignment": 0,
+      "titleBelow": false,
+      "detailWidth": 36,
+      "detailHeight": 36,
+      "checkWidth": 36,
+      "checkHeight": 36,
+      "visibleColumns": 5,
+      "detailSpan": 5
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "mobile": false,
+      "overflow": false,
+      "bad": [],
+      "gap": 24,
+      "sameRow": true,
+      "alignment": 0,
+      "titleBelow": false,
+      "detailWidth": 36,
+      "detailHeight": 36,
+      "checkWidth": 36,
+      "checkHeight": 36,
+      "visibleColumns": 5,
+      "detailSpan": 5
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "mobile": true,
+      "overflow": false,
+      "bad": [],
+      "gap": 24,
+      "sameRow": true,
+      "alignment": 41,
+      "titleBelow": true,
+      "detailWidth": 44,
+      "detailHeight": 44,
+      "checkWidth": 44,
+      "checkHeight": 44,
+      "visibleColumns": 4,
+      "detailSpan": 4
+    },
+    {
+      "theme": "dark",
+      "width": 320,
+      "mobile": true,
+      "overflow": false,
+      "bad": [],
+      "gap": 24,
+      "sameRow": true,
+      "alignment": 41,
+      "titleBelow": true,
+      "detailWidth": 44,
+      "detailHeight": 44,
+      "checkWidth": 44,
+      "checkHeight": 44,
+      "visibleColumns": 4,
+      "detailSpan": 4
+    }
+  ],
+  "touchMetrics": [
+    {
+      "width": 320,
+      "gap": 24,
+      "detailWidth": 44,
+      "detailHeight": 44,
+      "checkWidth": 44,
+      "checkHeight": 44,
+      "mobile": true,
+      "alignment": 41,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "gap": 24,
+      "detailWidth": 44,
+      "detailHeight": 44,
+      "checkWidth": 44,
+      "checkHeight": 44,
+      "mobile": false,
+      "alignment": 0,
+      "overflow": false
+    }
+  ],
+  "runtimeErrors": [],
+  "vueWarnings": [],
+  "writes": []
+}

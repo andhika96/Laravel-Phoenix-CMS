@@ -1,0 +1,18 @@
+# CSS folder organization — 30 Oktober 2026
+
+Tujuan: menata 16 stylesheet yang masih berada di root public/assets/css berdasarkan tanggung jawab, memperbarui consumer aktif, dan menjaga tampilan serta isi CSS.
+
+Struktur: shared (3), cms (1), header-navigation (2), frontend (1), workflow (1), setup (1), pagebuilder/legacy (1), pagebuilder/elementor (2), pagebuilder/elementor-v23 (2), pagebuilder/elementor-v24 (2). Folder article dan themes tetap. Dua catatan warna dipindah ke project-artifacts/references; 18 backup lama ke folder historis task ini.
+
+Ruling: permintaan terbaru menata file yang tampak pada screenshot, termasuk CSS Page Builder di root. Ini hanya relokasi dan pembaruan URL, tanpa perubahan fitur Page Builder/File Manager atau pemisahan aturan CSS.
+
+Ruling: bekerja pada folder aktif D:/Laragon/www/laravel-13-phoenix yang diminta pengguna. Tidak membuat checkout, stage, commit, atau memindahkan perubahan lama. Backup file saat ini dan manifest hash menjadi recovery path.
+
+- [x] Periksa memori, Graphify, source aktif, referensi, URL aset relatif, dan database baca-saja.
+- [x] Catat kondisi awal dan hasil tes terarah sebelum perubahan.
+- [x] Backup setiap file yang akan direlokasi/diperbarui; verifikasi hash.
+- [x] Pindahkan file dan perbarui path consumer aktif serta fixture/test yang terkait.
+- [x] Verifikasi isi CSS identik, tidak ada referensi aktif ke path lama, hasil tes tidak mengalami regresi, dan browser memuat path baru.
+- [x] Laporkan struktur akhir, bukti, backup, dan batas verifikasi. Graphify menunggu perintah manual.
+
+Perubahan isi selector, koreksi sintaks yang ditemukan pada audit sebelumnya, pemisahan bundle auth/CMS, dan pengubahan cache versioning adalah pekerjaan terpisah; relokasi ini mempertahankan perilaku aktif.

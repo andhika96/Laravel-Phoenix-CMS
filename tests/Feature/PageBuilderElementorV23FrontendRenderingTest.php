@@ -307,7 +307,7 @@ class PageBuilderElementorV23FrontendRenderingTest extends TestCase
         $this->assertStringContainsString('el-widget-tabs__accordion-title', $html);
         $this->assertStringNotContainsString('<script>(function(){const root=document.getElementById(', $html);
 
-        $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor_v23.css'));
+        $frontendCss = file_get_contents(public_path('assets/css/pagebuilder/elementor-v23/frontend_elementor_v23.css'));
         $this->assertIsString($frontendCss);
         $this->assertStringContainsString('.el-widget-tabs.is-breakpoint-mobile .el-widget-tabs__pane--accordion {', $frontendCss);
         $this->assertStringContainsString('padding: 0;', substr($frontendCss, strpos($frontendCss, '.el-widget-tabs.is-breakpoint-mobile .el-widget-tabs__pane--accordion {')));

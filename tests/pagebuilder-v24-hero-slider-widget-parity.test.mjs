@@ -22,7 +22,7 @@ const canvas = read('resources/pagebuilder_elementor_v24/modules/widgets/pro/her
 const blade = read('resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-slider/frontend.blade.php');
 const manifest = JSON.parse(read('resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-slider/module.json'));
 const runtime = read('resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-slider/runtime.js');
-const frontendCss = read('public/assets/css/frontend_elementor.css');
+const frontendCss = read('public/assets/css/pagebuilder/elementor/frontend_elementor.css');
 const frontendV24Css = readPageBuilderV24FrontendStyles(root);
 const editorCss = readPageBuilderV24EditorStyles(root);
 

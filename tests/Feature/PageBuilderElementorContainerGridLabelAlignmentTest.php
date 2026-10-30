@@ -15,7 +15,7 @@ class PageBuilderElementorContainerGridLabelAlignmentTest extends TestCase
         string $unit
     ): void {
         $settings = file_get_contents(public_path($settingsPath));
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $toolsSelector = '.pb-panel.left .pb-layout-settings .pb-label-row.pb-label-row-device > .pb-label-tools';
         $unitSelector = $toolsSelector . ' .pb-control-unit-wrap';

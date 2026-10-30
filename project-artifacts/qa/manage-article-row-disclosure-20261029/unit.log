@@ -1,0 +1,12 @@
+✔ clicking row content toggles only the intended article (2.4575ms)
+✔ interactive descendants do not toggle the row (0.659ms)
+✔ prevented and secondary-button clicks do not toggle the row (0.7463ms)
+✔ selecting text for copying does not toggle details (1.4255ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 117.801

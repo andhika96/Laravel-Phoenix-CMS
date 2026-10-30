@@ -108,7 +108,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_editor_uses_awesome_admin_outer_spacing_without_mock_shell_styles(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertStringNotContainsString('.mock-shell', $styles);
 		$this->assertStringNotContainsString('--mock-body-bg', $styles);
@@ -118,7 +118,7 @@ class HeaderNavigationSettingsTest extends TestCase
 	public function test_setting_categories_match_the_manage_dropdown_accordion_contract(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertSame(7, substr_count($view, '<details class="header-setting-group'));
 		$this->assertSame(2, substr_count($view, '<details class="header-setting-group" open>'));
@@ -131,7 +131,7 @@ class HeaderNavigationSettingsTest extends TestCase
 	public function test_setting_forms_use_consistent_comfortable_spacing(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertStringContainsString('class="col-12 color-state-start link-color-state-group"', $view);
 		$this->assertMatchesRegularExpression('/\.header-setting-panel\s*>\s*\.row:not\(\.gy-lg-4\)\s*\{[^}]*--bs-gutter-x:\s*12px;[^}]*--bs-gutter-y:\s*16px;/s', $styles);
@@ -147,7 +147,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_desktop_preview_reserves_clear_space_between_menu_and_action(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertMatchesRegularExpression('/\.header-inner\s*\{[^}]*gap:\s*clamp\(28px, 2\.2vw, 36px\);/s', $styles);
 		$this->assertMatchesRegularExpression('/\.layout-left\s*\{[^}]*grid-template-columns:\s*auto minmax\(0, 1fr\) auto;/s', $styles);
@@ -157,7 +157,7 @@ class HeaderNavigationSettingsTest extends TestCase
 	public function test_editorial_option_two_shell_exposes_preview_inspector_and_timeline_contract(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 		$script = file_get_contents(public_path('assets/js/awesome-admin-header-navigation.js'));
 
 		$this->assertStringContainsString('header-editor-topbar', $view);
@@ -237,7 +237,7 @@ class HeaderNavigationSettingsTest extends TestCase
 	public function test_approved_hybrid_inspector_uses_inline_simple_settings_and_compound_value_groups(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 		$document = new \DOMDocument();
 		$previousLibxmlErrors = libxml_use_internal_errors(true);
 		$document->loadHTML($view);
@@ -271,7 +271,7 @@ class HeaderNavigationSettingsTest extends TestCase
 	public function test_link_color_states_use_one_compact_inline_group_without_repeated_headings(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 		$document = new \DOMDocument();
 		$previousLibxmlErrors = libxml_use_internal_errors(true);
 		$document->loadHTML($view);
@@ -309,7 +309,7 @@ class HeaderNavigationSettingsTest extends TestCase
 	public function test_effects_shadow_control_uses_an_inline_header_and_full_width_compound_values(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 		$document = new \DOMDocument();
 		$previousLibxmlErrors = libxml_use_internal_errors(true);
 		$document->loadHTML($view);
@@ -333,7 +333,7 @@ class HeaderNavigationSettingsTest extends TestCase
 	public function test_all_inspector_options_use_a_consistent_vertical_rhythm_without_stacked_row_gaps(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertStringContainsString('class="row g-3 gy-lg-4"', $view);
 		$this->assertMatchesRegularExpression(
@@ -421,7 +421,7 @@ class HeaderNavigationSettingsTest extends TestCase
 	public function test_inspector_starts_with_tabs_and_keeps_native_select_and_number_controls_visible(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 		$document = new \DOMDocument();
 		$previousLibxmlErrors = libxml_use_internal_errors(true);
 		$document->loadHTML($view);
@@ -439,7 +439,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_editorial_option_two_css_uses_a_consistent_inspector_control_scale(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-tabs\s*\{[^}]*height:\s*42px;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two\s+\.inspector-tab-panel\s*\{[^}]*padding:\s*16px;/s', $styles);
@@ -458,7 +458,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_inspector_uses_one_typography_scale_through_tabs_and_controls(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertStringContainsString('--inspector-ui-font-size: 12px;', $styles);
 		$this->assertStringContainsString('--inspector-meta-font-size: 10px;', $styles);
@@ -470,7 +470,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_editorial_option_two_uses_cms_typography_and_keeps_preview_density_compact(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertStringContainsString('font-family: var(--ph-font-family, inherit);', $styles);
 		$this->assertStringContainsString('--mock-control-font-size: var(--ph-adaptive-font-size, var(--ph-font-size, 1rem));', $styles);
@@ -483,7 +483,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_editorial_option_two_uses_cms_sized_sidebar_controls(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertStringContainsString('--header-editor-font-size: clamp(10px, var(--ph-adaptive-font-size, var(--ph-font-size, 1rem)), 12px);', $styles);
 		$this->assertStringContainsString('--mock-control-height: 30px;', $styles);
@@ -497,7 +497,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_editorial_option_two_keeps_color_values_spaced_and_preview_frame_open(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertStringContainsString('padding: 4px 8px 4px 40px;', $styles);
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 30px;', $styles);
@@ -511,7 +511,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_editorial_option_two_gives_the_inspector_and_preview_a_usable_desktop_frame(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertStringContainsString('--mock-sidebar-min: 400px;', $styles);
 		$this->assertStringContainsString('--mock-sidebar-width: 420px;', $styles);
@@ -523,7 +523,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_live_preview_page_band_and_timeline_use_the_full_scrollable_range(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 		$script = file_get_contents(public_path('assets/js/awesome-admin-header-navigation.js'));
 
 		$this->assertMatchesRegularExpression('/\.page-band\s*\{[^}]*min-height:\s*1024px;/s', $styles);
@@ -535,7 +535,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_editorial_option_two_scales_controls_and_spacing_from_inspector_width(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertStringContainsString('container: header-inspector / inline-size;', $styles);
 		$this->assertStringContainsString('--header-editor-font-size: min(var(--ph-adaptive-font-size, var(--ph-font-size, 1rem)), clamp(11px, 3cqi, 13px));', $styles);
@@ -547,7 +547,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_editorial_option_two_places_inspector_tabs_above_wide_content_and_spaces_preview_header(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertMatchesRegularExpression('/\.editorial-option-two \.inspector-layout\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.editorial-option-two \.inspector-nav\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*repeat\(6, minmax\(0, 1fr\)\);[^}]*border-bottom:\s*1px solid #edf0f2;/s', $styles);
@@ -558,7 +558,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_editorial_option_two_gives_the_preview_timeline_breathing_room(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertMatchesRegularExpression('/\.editorial-option-two \.preview-timeline\s*\{[^}]*gap:\s*20px;[^}]*min-height:\s*76px;[^}]*padding:\s*14px 20px 16px;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.editorial-option-two \.preview-timeline-head\s*\{[^}]*gap:\s*12px;[^}]*min-width:\s*176px;/s', $styles);
@@ -568,7 +568,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_editorial_option_two_gives_sizing_controls_and_timeline_stable_intrinsic_columns(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-control-header\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) auto auto;/s', $styles);
 		$this->assertMatchesRegularExpression('/\.header-navigation-editor\.editorial-option-two \.inspector-content \.box-control-header \.box-unit-select\s*\{[^}]*flex:\s*0 0 72px;[^}]*min-width:\s*72px;[^}]*width:\s*72px;/s', $styles);
@@ -580,7 +580,7 @@ class HeaderNavigationSettingsTest extends TestCase
 	public function test_desktop_preview_fits_the_frame_width_without_a_right_letterbox(): void
 	{
 		$view = file_get_contents(resource_path('views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php'));
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 		$script = file_get_contents(public_path('assets/js/awesome-admin-header-navigation.js'));
 
 		$this->assertStringContainsString('id="previewScaleStatus"', $view);
@@ -605,7 +605,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_preview_scrollbar_does_not_reserve_a_gap_beside_header_and_page_content(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 		$script = file_get_contents(public_path('assets/js/awesome-admin-header-navigation.js'));
 
 		$this->assertMatchesRegularExpression('/\.device-stage\s*\{[^}]*overflow:\s*auto;[^}]*scrollbar-width:\s*none;/s', $styles);
@@ -615,7 +615,7 @@ class HeaderNavigationSettingsTest extends TestCase
 
 	public function test_tablet_and_mobile_preview_do_not_reserve_edge_borders_beside_content(): void
 	{
-		$styles = file_get_contents(public_path('assets/css/awesome-admin-header-navigation.css'));
+		$styles = file_get_contents(public_path('assets/css/header-navigation/awesome-admin-header-navigation.css'));
 
 		$this->assertMatchesRegularExpression('/\.device-stage\.mobile-mode,\s*\.device-stage\.tablet-mode\s*\{[^}]*border:\s*0;/s', $styles);
 		$this->assertDoesNotMatchRegularExpression('/\.device-stage\.(?:mobile|tablet)-mode\s*\{[^}]*border-(?:left|right):\s*1px;/s', $styles);

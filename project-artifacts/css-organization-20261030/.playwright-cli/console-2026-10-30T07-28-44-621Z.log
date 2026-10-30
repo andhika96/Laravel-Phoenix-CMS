@@ -1,0 +1,2 @@
+[     550ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0
+[  144852ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0

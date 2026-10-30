@@ -388,7 +388,7 @@ test('child Container edge resizing uses its responsive pair and one history sna
 });
 
 test('Container edge resizer uses the dedicated child Container selector', () => {
-    const css = fs.readFileSync(path.resolve('public/assets/css/pagebuilder_elementor_v23.css'), 'utf8');
+    const css = fs.readFileSync(path.resolve('public/assets/css/pagebuilder/elementor-v23/pagebuilder_elementor_v23.css'), 'utf8');
 
     assert.match(css, /\.pb-container-edge-resizer\s*\{/);
     assert.match(css, /cursor:\s*col-resize/);
@@ -522,7 +522,7 @@ test('default Advanced widget width fills its Container while explicit widths st
 });
 
 test('empty child hints and nested layout toolbars remain centered and collision-free', () => {
-    const css = fs.readFileSync(path.resolve('public/assets/css/pagebuilder_elementor_v23.css'), 'utf8');
+    const css = fs.readFileSync(path.resolve('public/assets/css/pagebuilder/elementor-v23/pagebuilder_elementor_v23.css'), 'utf8');
     assert.doesNotMatch(app, /style\.minHeight = 'inherit';/, 'inline inheritance must not collapse an empty child dropzone below its 68px CSS minimum');
     const emptyHintRule = css.match(/\.pb-dropzone-container-children\s*>\s*\.pb-container-empty-hint\s*\{([\s\S]*?)\}/)?.[1];
     assert.ok(emptyHintRule, 'child Container empty hint should have a scoped stretch rule');

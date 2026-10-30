@@ -76,7 +76,7 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
     public function test_shared_advanced_dimension_controls_are_numeric_unit_aware_and_two_state_tabs_fill_the_row(): void
     {
         $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertSourceContains('pb-state-tabs pb-state-tabs--two', $component);
         $this->assertSourceContains('<DimensionControl', $component);
@@ -358,7 +358,7 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
         $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
         $imageBoxSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertSourceContains('ResponsiveDeviceControl', $component);
         $this->assertSourceContains("this.\$emit('responsive-device'", $component);
@@ -375,7 +375,7 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
         $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/shared/AdvancedControls.vue'));
         $resolver = file_get_contents(app_path('Support/PageBuilderElementor/WidgetAdvancedStyleResolver.php'));
-		$css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+		$css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         foreach ([
             "responsiveStateKey('transformRotate', transformState)",
@@ -499,7 +499,7 @@ class PageBuilderElementorWidgetAdvancedParityTest extends TestCase
 
 	public function test_runtime_box_shadow_and_general_widget_forms_use_the_compact_live_panel_baseline(): void
 	{
-		$css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+		$css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
 		foreach ([
 			'.pb-widget-settings--icon-list',

@@ -34,7 +34,7 @@ class PageBuilderElementorBasicWidgetStyleParityTest extends TestCase
 
     public function test_basic_style_panels_follow_general_compact_control_density(): void
     {
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
         $this->assertIsString($css);
 
         foreach ([
@@ -97,7 +97,7 @@ class PageBuilderElementorBasicWidgetStyleParityTest extends TestCase
 	public function test_button_icon_sources_and_frontend_output_follow_elementor_contract(): void
 	{
 		$settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/basic/button/Settings.vue'));
-		$css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+		$css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 		$this->assertIsString($settings);
 		$this->assertIsString($css);
 		foreach (['Remove icon', 'Upload SVG', 'Icon Library', 'Icon Position', 'Icon Spacing', 'aria-label="Remove icon"'] as $marker) {

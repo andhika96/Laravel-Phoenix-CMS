@@ -111,7 +111,7 @@ class PageBuilderElementorIconBoxWidgetParityTest extends TestCase
     public function test_box_side_controls_use_compact_linkable_four_column_layout(): void
     {
         $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/icon-box/Settings.vue'));
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         foreach (['pb-icon-box-sides-control', 'pb-four-sides pb-four-sides-with-link', 'pb-side-link-cell', 'pb-link-btn', 'pb-mini-unit'] as $marker) {
             $this->assertStringContainsString($marker, $settings);

@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-30",
+  "excluded": [
+    "all Page Builder pages/assets",
+    "new File Manager pages/build sources"
+  ],
+  "static_blade_views": 127,
+  "static_get_actions": 145,
+  "custom_stylesheets_checked": 25,
+  "custom_runtime": 15,
+  "custom_alternative_theme_source_only": 10,
+  "browser_paths": 51,
+  "browser_viewports": [
+    1440,
+    390
+  ],
+  "browser_cases": 102,
+  "http_counts": {
+    "200": 98,
+    "500": 4
+  },
+  "failed_paths": [
+    "/awesome_admin/user/edit/1",
+    "/notification/filled"
+  ],
+  "unique_css_urls_without_query": 37,
+  "vue_select_loaded_without_component": [
+    "/account",
+    "/account/general",
+    "/account/profilepicture",
+    "/awesome_admin",
+    "/awesome_admin/appearance",
+    "/awesome_admin/header-navigation",
+    "/awesome_admin/language",
+    "/awesome_admin/language/translated",
+    "/awesome_admin/language/untranslated",
+    "/awesome_admin/menu",
+    "/awesome_admin/menu/be",
+    "/awesome_admin/menu/be/parentmenu",
+    "/awesome_admin/menu/be/submenu",
+    "/awesome_admin/menu/fe",
+    "/awesome_admin/menu/fe/parentmenu",
+    "/awesome_admin/menu/fe/submenu",
+    "/awesome_admin/permission",
+    "/awesome_admin/role",
+    "/awesome_admin/role/create/v2",
+    "/awesome_admin/role/edit/v2/1",
+    "/awesome_admin/smtp",
+    "/awesome_admin/themes",
+    "/awesome_admin/user",
+    "/dashboard",
+    "/event",
+    "/manage_article",
+    "/manage_article/add",
+    "/manage_article/edit/5059",
+    "/manage_article/templates",
+    "/manage_coverimage",
+    "/manage_coverimage/add",
+    "/manage_coverimage/edit/1",
+    "/manage_event",
+    "/manage_event/add",
+    "/notification",
+    "/notification/empty",
+    "/profile",
+    "/workflow",
+    "/workflow/create"
+  ],
+  "vue_select_component_present": [
+    "/awesome_admin/config",
+    "/awesome_admin/menu/be/categorymenu",
+    "/awesome_admin/menu/fe/categorymenu"
+  ],
+  "parse_passed": 21,
+  "parse_failed": 4,
+  "changed_cache_urls": [
+    "/assets/css/theme-responsive-typography.css",
+    "/assets/css/themes/arunika_lucent/arunika_lucent.css",
+    "/assets/css/phoenix-cms.css",
+    "/assets/css/themes/arunika_lucent/mobile-v2.css"
+  ],
+  "source_css_hashes_unchanged": 173,
+  "view_hashes_unchanged": 127,
+  "login_css_restored": true,
+  "active_theme": {
+    "auth": "arunika_lucent.auth.auth_layout",
+    "cms": "arunika_lucent.cms.cms_layout",
+    "frontend": "arunika_lucent.frontend.frontend_layout",
+    "login_template": "default"
+  },
+  "source_modified": false,
+  "graph_updated": false
+}

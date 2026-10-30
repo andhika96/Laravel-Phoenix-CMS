@@ -1,0 +1,68 @@
+✖ clicking row content toggles only the intended article (5.17ms)
+✖ interactive descendants do not toggle the row (1.0511ms)
+✖ prevented and secondary-button clicks do not toggle the row (0.9973ms)
+✖ selecting text for copying does not toggle details (1.6684ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 158.7545
+
+✖ failing tests:
+
+test at project-artifacts\tests\manage-article-row-disclosure-20261029\row-disclosure.test.mjs:14:1
+✖ clicking row content toggles only the intended article (5.17ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/tests/manage-article-row-disclosure-20261029/row-disclosure.test.mjs:16:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at project-artifacts\tests\manage-article-row-disclosure-20261029\row-disclosure.test.mjs:21:1
+✖ interactive descendants do not toggle the row (1.0511ms)
+  TypeError: Cannot read properties of undefined (reading 'call')
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/tests/manage-article-row-disclosure-20261029/row-disclosure.test.mjs:23:29)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at project-artifacts\tests\manage-article-row-disclosure-20261029\row-disclosure.test.mjs:25:1
+✖ prevented and secondary-button clicks do not toggle the row (0.9973ms)
+  TypeError: Cannot read properties of undefined (reading 'call')
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/tests/manage-article-row-disclosure-20261029/row-disclosure.test.mjs:27:29)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at project-artifacts\tests\manage-article-row-disclosure-20261029\row-disclosure.test.mjs:30:1
+✖ selecting text for copying does not toggle details (1.6684ms)
+  TypeError: Cannot read properties of undefined (reading 'call')
+      at TestContext.<anonymous> (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/tests/manage-article-row-disclosure-20261029/row-disclosure.test.mjs:32:29)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

@@ -1,0 +1,1102 @@
+{
+  "ok": true,
+  "engine": "firefox",
+  "cases": [
+    {
+      "theme": "light",
+      "width": 1440,
+      "mobile": false,
+      "button": {
+        "left": 319,
+        "right": 355,
+        "top": 260.066650390625,
+        "bottom": 296.066650390625,
+        "width": 36,
+        "height": 36
+      },
+      "check": {
+        "left": 379,
+        "right": 415,
+        "top": 260.066650390625,
+        "bottom": 296.066650390625,
+        "width": 36,
+        "height": 36
+      },
+      "title": {
+        "left": 435,
+        "right": 876,
+        "top": 267.066650390625,
+        "bottom": 311.066650390625,
+        "width": 441,
+        "height": 44
+      },
+      "row": {
+        "left": 311,
+        "right": 1417,
+        "top": 250.56666564941406,
+        "bottom": 351.01666259765625,
+        "width": 1106,
+        "height": 100.44999694824219
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": 0,
+      "headerCheck": {
+        "left": 379,
+        "right": 415,
+        "top": 205.06666564941406,
+        "bottom": 241.06666564941406,
+        "width": 36,
+        "height": 36
+      },
+      "expandCell": {
+        "left": 311,
+        "right": 367,
+        "top": 250.56666564941406,
+        "bottom": 351.01666259765625,
+        "width": 56,
+        "height": 100.44999694824219,
+        "padding": "9px 12px 9px 8px"
+      },
+      "checkCell": {
+        "left": 367,
+        "right": 423,
+        "top": 250.56666564941406,
+        "bottom": 351.01666259765625,
+        "width": 56,
+        "height": 100.44999694824219,
+        "padding": "9px 8px 9px 12px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "mobile": false,
+      "button": {
+        "left": 281,
+        "right": 317,
+        "top": 304.66668701171875,
+        "bottom": 340.66668701171875,
+        "width": 36,
+        "height": 36
+      },
+      "check": {
+        "left": 341,
+        "right": 377,
+        "top": 304.66668701171875,
+        "bottom": 340.66668701171875,
+        "width": 36,
+        "height": 36
+      },
+      "title": {
+        "left": 397,
+        "right": 755,
+        "top": 311.66668701171875,
+        "bottom": 355.66668701171875,
+        "width": 358,
+        "height": 44
+      },
+      "row": {
+        "left": 273,
+        "right": 1001,
+        "top": 295.16668701171875,
+        "bottom": 395.61668395996094,
+        "width": 728,
+        "height": 100.44999694824219
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": 0,
+      "headerCheck": {
+        "left": 341,
+        "right": 377,
+        "top": 249.6666717529297,
+        "bottom": 285.6666717529297,
+        "width": 36,
+        "height": 36
+      },
+      "expandCell": {
+        "left": 273,
+        "right": 329,
+        "top": 295.16668701171875,
+        "bottom": 395.61668395996094,
+        "width": 56,
+        "height": 100.44999694824219,
+        "padding": "9px 12px 9px 8px"
+      },
+      "checkCell": {
+        "left": 329,
+        "right": 385,
+        "top": 295.16668701171875,
+        "bottom": 395.61668395996094,
+        "width": 56,
+        "height": 100.44999694824219,
+        "padding": "9px 8px 9px 12px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "mobile": false,
+      "button": {
+        "left": 23,
+        "right": 59,
+        "top": 360.75,
+        "bottom": 396.75,
+        "width": 36,
+        "height": 36
+      },
+      "check": {
+        "left": 83,
+        "right": 119,
+        "top": 360.75,
+        "bottom": 396.75,
+        "width": 36,
+        "height": 36
+      },
+      "title": {
+        "left": 139,
+        "right": 507,
+        "top": 367.75,
+        "bottom": 411.75,
+        "width": 368,
+        "height": 44
+      },
+      "row": {
+        "left": 15,
+        "right": 753,
+        "top": 351.25,
+        "bottom": 451.6999969482422,
+        "width": 738,
+        "height": 100.44999694824219
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": 0,
+      "headerCheck": {
+        "left": 83,
+        "right": 119,
+        "top": 305.75,
+        "bottom": 341.75,
+        "width": 36,
+        "height": 36
+      },
+      "expandCell": {
+        "left": 15,
+        "right": 71,
+        "top": 351.25,
+        "bottom": 451.6999969482422,
+        "width": 56,
+        "height": 100.44999694824219,
+        "padding": "9px 12px 9px 8px"
+      },
+      "checkCell": {
+        "left": 71,
+        "right": 127,
+        "top": 351.25,
+        "bottom": 451.6999969482422,
+        "width": 56,
+        "height": 100.44999694824219,
+        "padding": "9px 8px 9px 12px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 601,
+      "mobile": true,
+      "button": {
+        "left": 23,
+        "right": 67,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44
+      },
+      "check": {
+        "left": 91,
+        "right": 135,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44
+      },
+      "title": {
+        "left": 23,
+        "right": 473.75,
+        "top": 483.29998779296875,
+        "bottom": 505.29998779296875,
+        "width": 450.75,
+        "height": 22
+      },
+      "row": {
+        "left": 15,
+        "right": 586,
+        "top": 418.29998779296875,
+        "bottom": 572.9999847412109,
+        "width": 571,
+        "height": 154.6999969482422
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": -41,
+      "headerCheck": null,
+      "expandCell": {
+        "left": 23,
+        "right": 67,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "checkCell": {
+        "left": 91,
+        "right": 135,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 600,
+      "mobile": true,
+      "button": {
+        "left": 23,
+        "right": 67,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44
+      },
+      "check": {
+        "left": 91,
+        "right": 135,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44
+      },
+      "title": {
+        "left": 23,
+        "right": 473.75,
+        "top": 483.29998779296875,
+        "bottom": 505.29998779296875,
+        "width": 450.75,
+        "height": 22
+      },
+      "row": {
+        "left": 15,
+        "right": 585,
+        "top": 418.29998779296875,
+        "bottom": 572.9999847412109,
+        "width": 570,
+        "height": 154.6999969482422
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": -41,
+      "headerCheck": null,
+      "expandCell": {
+        "left": 23,
+        "right": 67,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "checkCell": {
+        "left": 91,
+        "right": 135,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "mobile": true,
+      "button": {
+        "left": 23,
+        "right": 67,
+        "top": 428.70001220703125,
+        "bottom": 472.70001220703125,
+        "width": 44,
+        "height": 44
+      },
+      "check": {
+        "left": 91,
+        "right": 135,
+        "top": 428.70001220703125,
+        "bottom": 472.70001220703125,
+        "width": 44,
+        "height": 44
+      },
+      "title": {
+        "left": 23,
+        "right": 367,
+        "top": 480.70001220703125,
+        "bottom": 524.7000122070312,
+        "width": 344,
+        "height": 44
+      },
+      "row": {
+        "left": 15,
+        "right": 375,
+        "top": 415.70001220703125,
+        "bottom": 591.0000152587891,
+        "width": 360,
+        "height": 175.3000030517578
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": -41,
+      "headerCheck": null,
+      "expandCell": {
+        "left": 23,
+        "right": 67,
+        "top": 428.70001220703125,
+        "bottom": 472.70001220703125,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "checkCell": {
+        "left": 91,
+        "right": 135,
+        "top": 428.70001220703125,
+        "bottom": 472.70001220703125,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 320,
+      "mobile": true,
+      "button": {
+        "left": 23,
+        "right": 67,
+        "top": 452.0333251953125,
+        "bottom": 496.0333251953125,
+        "width": 44,
+        "height": 44
+      },
+      "check": {
+        "left": 91,
+        "right": 135,
+        "top": 452.0333251953125,
+        "bottom": 496.0333251953125,
+        "width": 44,
+        "height": 44
+      },
+      "title": {
+        "left": 23,
+        "right": 297,
+        "top": 504.0333251953125,
+        "bottom": 548.0333251953125,
+        "width": 274,
+        "height": 44
+      },
+      "row": {
+        "left": 15,
+        "right": 305,
+        "top": 439.0333251953125,
+        "bottom": 613.4333190917969,
+        "width": 290,
+        "height": 174.39999389648438
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": -41,
+      "headerCheck": null,
+      "expandCell": {
+        "left": 23,
+        "right": 67,
+        "top": 452.0333251953125,
+        "bottom": 496.0333251953125,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "checkCell": {
+        "left": 91,
+        "right": 135,
+        "top": 452.0333251953125,
+        "bottom": 496.0333251953125,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "mobile": false,
+      "button": {
+        "left": 107,
+        "right": 143,
+        "top": 260.066650390625,
+        "bottom": 296.066650390625,
+        "width": 36,
+        "height": 36
+      },
+      "check": {
+        "left": 167,
+        "right": 203,
+        "top": 260.066650390625,
+        "bottom": 296.066650390625,
+        "width": 36,
+        "height": 36
+      },
+      "title": {
+        "left": 223,
+        "right": 673.75,
+        "top": 267.066650390625,
+        "bottom": 289.066650390625,
+        "width": 450.75,
+        "height": 22
+      },
+      "row": {
+        "left": 99,
+        "right": 1417,
+        "top": 250.56666564941406,
+        "bottom": 329.01666259765625,
+        "width": 1318,
+        "height": 78.44999694824219
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": 0,
+      "headerCheck": {
+        "left": 167,
+        "right": 203,
+        "top": 205.06666564941406,
+        "bottom": 241.06666564941406,
+        "width": 36,
+        "height": 36
+      },
+      "expandCell": {
+        "left": 99,
+        "right": 155,
+        "top": 250.56666564941406,
+        "bottom": 329.01666259765625,
+        "width": 56,
+        "height": 78.44999694824219,
+        "padding": "9px 12px 9px 8px"
+      },
+      "checkCell": {
+        "left": 155,
+        "right": 211,
+        "top": 250.56666564941406,
+        "bottom": 329.01666259765625,
+        "width": 56,
+        "height": 78.44999694824219,
+        "padding": "9px 8px 9px 12px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "mobile": false,
+      "button": {
+        "left": 281,
+        "right": 317,
+        "top": 304.66668701171875,
+        "bottom": 340.66668701171875,
+        "width": 36,
+        "height": 36
+      },
+      "check": {
+        "left": 341,
+        "right": 377,
+        "top": 304.66668701171875,
+        "bottom": 340.66668701171875,
+        "width": 36,
+        "height": 36
+      },
+      "title": {
+        "left": 397,
+        "right": 755,
+        "top": 311.66668701171875,
+        "bottom": 355.66668701171875,
+        "width": 358,
+        "height": 44
+      },
+      "row": {
+        "left": 273,
+        "right": 1001,
+        "top": 295.16668701171875,
+        "bottom": 395.61668395996094,
+        "width": 728,
+        "height": 100.44999694824219
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": 0,
+      "headerCheck": {
+        "left": 341,
+        "right": 377,
+        "top": 249.6666717529297,
+        "bottom": 285.6666717529297,
+        "width": 36,
+        "height": 36
+      },
+      "expandCell": {
+        "left": 273,
+        "right": 329,
+        "top": 295.16668701171875,
+        "bottom": 395.61668395996094,
+        "width": 56,
+        "height": 100.44999694824219,
+        "padding": "9px 12px 9px 8px"
+      },
+      "checkCell": {
+        "left": 329,
+        "right": 385,
+        "top": 295.16668701171875,
+        "bottom": 395.61668395996094,
+        "width": 56,
+        "height": 100.44999694824219,
+        "padding": "9px 8px 9px 12px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "mobile": false,
+      "button": {
+        "left": 23,
+        "right": 59,
+        "top": 360.75,
+        "bottom": 396.75,
+        "width": 36,
+        "height": 36
+      },
+      "check": {
+        "left": 83,
+        "right": 119,
+        "top": 360.75,
+        "bottom": 396.75,
+        "width": 36,
+        "height": 36
+      },
+      "title": {
+        "left": 139,
+        "right": 507,
+        "top": 367.75,
+        "bottom": 411.75,
+        "width": 368,
+        "height": 44
+      },
+      "row": {
+        "left": 15,
+        "right": 753,
+        "top": 351.25,
+        "bottom": 451.6999969482422,
+        "width": 738,
+        "height": 100.44999694824219
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": 0,
+      "headerCheck": {
+        "left": 83,
+        "right": 119,
+        "top": 305.75,
+        "bottom": 341.75,
+        "width": 36,
+        "height": 36
+      },
+      "expandCell": {
+        "left": 15,
+        "right": 71,
+        "top": 351.25,
+        "bottom": 451.6999969482422,
+        "width": 56,
+        "height": 100.44999694824219,
+        "padding": "9px 12px 9px 8px"
+      },
+      "checkCell": {
+        "left": 71,
+        "right": 127,
+        "top": 351.25,
+        "bottom": 451.6999969482422,
+        "width": 56,
+        "height": 100.44999694824219,
+        "padding": "9px 8px 9px 12px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 601,
+      "mobile": true,
+      "button": {
+        "left": 23,
+        "right": 67,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44
+      },
+      "check": {
+        "left": 91,
+        "right": 135,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44
+      },
+      "title": {
+        "left": 23,
+        "right": 473.75,
+        "top": 483.29998779296875,
+        "bottom": 505.29998779296875,
+        "width": 450.75,
+        "height": 22
+      },
+      "row": {
+        "left": 15,
+        "right": 586,
+        "top": 418.29998779296875,
+        "bottom": 572.9999847412109,
+        "width": 571,
+        "height": 154.6999969482422
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": -41,
+      "headerCheck": null,
+      "expandCell": {
+        "left": 23,
+        "right": 67,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "checkCell": {
+        "left": 91,
+        "right": 135,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 600,
+      "mobile": true,
+      "button": {
+        "left": 23,
+        "right": 67,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44
+      },
+      "check": {
+        "left": 91,
+        "right": 135,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44
+      },
+      "title": {
+        "left": 23,
+        "right": 473.75,
+        "top": 483.29998779296875,
+        "bottom": 505.29998779296875,
+        "width": 450.75,
+        "height": 22
+      },
+      "row": {
+        "left": 15,
+        "right": 585,
+        "top": 418.29998779296875,
+        "bottom": 572.9999847412109,
+        "width": 570,
+        "height": 154.6999969482422
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": -41,
+      "headerCheck": null,
+      "expandCell": {
+        "left": 23,
+        "right": 67,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "checkCell": {
+        "left": 91,
+        "right": 135,
+        "top": 431.29998779296875,
+        "bottom": 475.29998779296875,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "mobile": true,
+      "button": {
+        "left": 23,
+        "right": 67,
+        "top": 428.70001220703125,
+        "bottom": 472.70001220703125,
+        "width": 44,
+        "height": 44
+      },
+      "check": {
+        "left": 91,
+        "right": 135,
+        "top": 428.70001220703125,
+        "bottom": 472.70001220703125,
+        "width": 44,
+        "height": 44
+      },
+      "title": {
+        "left": 23,
+        "right": 367,
+        "top": 480.70001220703125,
+        "bottom": 524.7000122070312,
+        "width": 344,
+        "height": 44
+      },
+      "row": {
+        "left": 15,
+        "right": 375,
+        "top": 415.70001220703125,
+        "bottom": 591.0000152587891,
+        "width": 360,
+        "height": 175.3000030517578
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": -41,
+      "headerCheck": null,
+      "expandCell": {
+        "left": 23,
+        "right": 67,
+        "top": 428.70001220703125,
+        "bottom": 472.70001220703125,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "checkCell": {
+        "left": 91,
+        "right": 135,
+        "top": 428.70001220703125,
+        "bottom": 472.70001220703125,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 320,
+      "mobile": true,
+      "button": {
+        "left": 23,
+        "right": 67,
+        "top": 452.0333251953125,
+        "bottom": 496.0333251953125,
+        "width": 44,
+        "height": 44
+      },
+      "check": {
+        "left": 91,
+        "right": 135,
+        "top": 452.0333251953125,
+        "bottom": 496.0333251953125,
+        "width": 44,
+        "height": 44
+      },
+      "title": {
+        "left": 23,
+        "right": 297,
+        "top": 504.0333251953125,
+        "bottom": 548.0333251953125,
+        "width": 274,
+        "height": 44
+      },
+      "row": {
+        "left": 15,
+        "right": 305,
+        "top": 439.0333251953125,
+        "bottom": 613.4333190917969,
+        "width": 290,
+        "height": 174.39999389648438
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": -41,
+      "headerCheck": null,
+      "expandCell": {
+        "left": 23,
+        "right": 67,
+        "top": 452.0333251953125,
+        "bottom": 496.0333251953125,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "checkCell": {
+        "left": 91,
+        "right": 135,
+        "top": 452.0333251953125,
+        "bottom": 496.0333251953125,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "touch": true,
+      "width": 320,
+      "mobile": true,
+      "button": {
+        "left": 23,
+        "right": 67,
+        "top": 452.0333251953125,
+        "bottom": 496.0333251953125,
+        "width": 44,
+        "height": 44
+      },
+      "check": {
+        "left": 91,
+        "right": 135,
+        "top": 452.0333251953125,
+        "bottom": 496.0333251953125,
+        "width": 44,
+        "height": 44
+      },
+      "title": {
+        "left": 23,
+        "right": 297,
+        "top": 504.0333251953125,
+        "bottom": 548.0333251953125,
+        "width": 274,
+        "height": 44
+      },
+      "row": {
+        "left": 15,
+        "right": 305,
+        "top": 439.0333251953125,
+        "bottom": 613.4333190917969,
+        "width": 290,
+        "height": 174.39999389648438
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": -41,
+      "headerCheck": null,
+      "expandCell": {
+        "left": 23,
+        "right": 67,
+        "top": 452.0333251953125,
+        "bottom": 496.0333251953125,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "checkCell": {
+        "left": 91,
+        "right": 135,
+        "top": 452.0333251953125,
+        "bottom": 496.0333251953125,
+        "width": 44,
+        "height": 44,
+        "padding": "0px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "touch": true,
+      "width": 768,
+      "mobile": false,
+      "button": {
+        "left": 23,
+        "right": 67,
+        "top": 369.75,
+        "bottom": 413.75,
+        "width": 44,
+        "height": 44
+      },
+      "check": {
+        "left": 91,
+        "right": 135,
+        "top": 369.75,
+        "bottom": 413.75,
+        "width": 44,
+        "height": 44
+      },
+      "title": {
+        "left": 155,
+        "right": 507,
+        "top": 380.75,
+        "bottom": 424.75,
+        "width": 352,
+        "height": 44
+      },
+      "row": {
+        "left": 15,
+        "right": 753,
+        "top": 364.25,
+        "bottom": 464.6999969482422,
+        "width": 738,
+        "height": 100.44999694824219
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": 0,
+      "headerCheck": {
+        "left": 91,
+        "right": 135,
+        "top": 310.75,
+        "bottom": 354.75,
+        "width": 44,
+        "height": 44
+      },
+      "expandCell": {
+        "left": 15,
+        "right": 79,
+        "top": 364.25,
+        "bottom": 464.6999969482422,
+        "width": 64,
+        "height": 100.44999694824219,
+        "padding": "5px 12px 9px 8px"
+      },
+      "checkCell": {
+        "left": 79,
+        "right": 143,
+        "top": 364.25,
+        "bottom": 464.6999969482422,
+        "width": 64,
+        "height": 100.44999694824219,
+        "padding": "5px 8px 9px 12px"
+      },
+      "detail": null,
+      "overflow": false
+    },
+    {
+      "touch": true,
+      "width": 1024,
+      "mobile": false,
+      "button": {
+        "left": 281,
+        "right": 325,
+        "top": 313.66668701171875,
+        "bottom": 357.66668701171875,
+        "width": 44,
+        "height": 44
+      },
+      "check": {
+        "left": 349,
+        "right": 393,
+        "top": 313.66668701171875,
+        "bottom": 357.66668701171875,
+        "width": 44,
+        "height": 44
+      },
+      "title": {
+        "left": 413,
+        "right": 755,
+        "top": 324.66668701171875,
+        "bottom": 368.66668701171875,
+        "width": 342,
+        "height": 44
+      },
+      "row": {
+        "left": 273,
+        "right": 1001,
+        "top": 308.16668701171875,
+        "bottom": 408.61668395996094,
+        "width": 728,
+        "height": 100.44999694824219
+      },
+      "gap": 24,
+      "inset": 8,
+      "centerDelta": 0,
+      "headerCheck": {
+        "left": 349,
+        "right": 393,
+        "top": 254.6666717529297,
+        "bottom": 298.6666717529297,
+        "width": 44,
+        "height": 44
+      },
+      "expandCell": {
+        "left": 273,
+        "right": 337,
+        "top": 308.16668701171875,
+        "bottom": 408.61668395996094,
+        "width": 64,
+        "height": 100.44999694824219,
+        "padding": "5px 12px 9px 8px"
+      },
+      "checkCell": {
+        "left": 337,
+        "right": 401,
+        "top": 308.16668701171875,
+        "bottom": 408.61668395996094,
+        "width": 64,
+        "height": 100.44999694824219,
+        "padding": "5px 8px 9px 12px"
+      },
+      "detail": null,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "writes": []
+}

@@ -1,0 +1,275 @@
+/*
+ * Shared CMS typography contract.
+ *
+ * This mirrors the Bootstrap RFS output imported by File Manager V2
+ * (`bootstrap/scss/vendor/rfs`). Values at and below the RFS 1.25rem
+ * threshold remain stable; only display-level headings scale fluidly.
+ */
+
+:root
+{
+	--ph-fmv2-rfs-h1: calc(1.375rem + 1.5vw);
+	--ph-fmv2-rfs-h2: calc(1.325rem + .9vw);
+	--ph-fmv2-rfs-h3: calc(1.3rem + .6vw);
+	--ph-fmv2-rfs-h4: calc(1.275rem + .3vw);
+	--ph-adaptive-font-size: var(--ph-font-size, 1rem);
+	--ph-mobile-content-font-size: clamp(max(8px, calc(var(--ph-adaptive-font-size) - 1px)), calc(var(--ph-adaptive-font-size) - 2.5px + 0.5vw), var(--ph-adaptive-font-size));
+	--ph-mobile-content-heading-size: clamp(calc(var(--ph-adaptive-font-size) + 2px), calc(var(--ph-adaptive-font-size) - 0.4px + 0.8vw), calc(var(--ph-adaptive-font-size) + 3.6px));
+}
+
+@media (min-width: 1200px)
+{
+	:root
+	{
+		--ph-fmv2-rfs-h1: 2.5rem;
+		--ph-fmv2-rfs-h2: 2rem;
+		--ph-fmv2-rfs-h3: 1.75rem;
+		--ph-fmv2-rfs-h4: 1.5rem;
+	}
+}
+/*
+ * Physical display size is not exposed to web pages. Compact density follows
+ * available browser space and recalculates automatically on resize and zoom.
+ */
+@media (min-width: 1200px) and (max-height: 1000px)
+{
+	:root
+	{
+		--ph-fmv2-rfs-h1: clamp(1.75rem, calc(1.375rem + 1.25vw), 2rem);
+		--ph-fmv2-rfs-h2: clamp(1.5rem, calc(1.325rem + .75vw), 1.75rem);
+		--ph-fmv2-rfs-h3: clamp(1.375rem, calc(1.3rem + .5vw), 1.5rem);
+		--ph-fmv2-rfs-h4: clamp(1.25rem, calc(1.2rem + .25vw), 1.375rem);
+		/* Never enlarge a smaller value explicitly chosen in Site Config. */
+		--ph-adaptive-font-size: min(var(--ph-font-size, 1rem), max(13px, calc(var(--ph-font-size, 1rem) - 1.5px)));
+	}
+}
+/* Site Config is the canonical size; compact density only changes its effective value. */
+body
+{
+	font-size: var(--ph-adaptive-font-size);
+	font-family: var(--ph-font-family);
+}
+
+@media (max-width: 768px)
+{
+	body :where(.ph-scrollable-content)
+	{
+		font-size: var(--ph-mobile-content-font-size);
+	}
+
+	body :where(.ph-scrollable-content) :where(.form-control, .form-select, .form-label, .btn, .table, .breadcrumb, .dropdown-item, .input-group-text, .page-link, .form-check-label)
+	{
+		font-size: var(--ph-mobile-content-font-size) !important;
+	}
+
+	body :where(.ph-scrollable-content) :where(h4, .h4)
+	{
+		font-size: var(--ph-mobile-content-heading-size) !important;
+	}
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(.form-control, .form-select, .btn, .dropdown-item, .table, .form-label, .page-link, .input-group-text, .form-check-label, .form-check-input)
+{
+	font-size: inherit !important;
+}
+
+/* Bootstrap gives input-group text 1rem; keep this utility bound to Site Config. */
+body .font-size-normal
+{
+	font-size: var(--ph-adaptive-font-size) !important;
+}
+
+/* Keep profile-menu hierarchy compact when Prism-level pixel values are present. */
+body .ph-header-profile-menu
+{
+	--ph-profile-menu-font-size: min(13px, max(11px, calc(var(--ph-adaptive-font-size) - 1px)));
+}
+
+body .ph-header-profile-menu .dropdown-item
+{
+	font-size: var(--ph-profile-menu-font-size) !important;
+}
+
+body .ph-header-profile-menu .ph-profile-menu-identity strong
+{
+	font-size: min(13px, calc(var(--ph-profile-menu-font-size) + 1px)) !important;
+}
+
+body .ph-header-profile-menu :where(.ph-profile-menu-identity span, .ph-profile-color-label)
+{
+	font-size: min(11px, max(10px, calc(var(--ph-profile-menu-font-size) - 1px))) !important;
+}
+
+body :where(.ph-sidebar, .arv7-sidebar) :where(.list-group-item, .ph-nav-text, .arv7-parent-menu-name, .arv7-menu-name)
+{
+	font-size: min(13px, var(--ph-adaptive-font-size)) !important;
+}
+
+body :where(.ph-sidebar, .arv7-sidebar) :where(.ph-sidebar-user-meta strong, .ph-sidebar-user-meta span)
+{
+	font-size: min(1em, max(10px, calc(1em - 1.5px))) !important;
+}
+
+body :where(.ph-sidebar, .arv7-sidebar) :where(.ph-nav-category, .arv7-title)
+{
+	font-size: min(1em, max(10px, calc(1em - 2.5px))) !important;
+}
+
+body :where(.ph-sidebar, .arv7-sidebar) :where(.ph-app-logo-text, .arv7-brand-text-description)
+{
+	font-size: min(18px, calc(1em + 2px)) !important;
+}
+
+
+/* Main shells plus overlays that Bootstrap may attach directly under body. */
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h1, .h1)
+{
+	font-size: var(--ph-fmv2-rfs-h1);
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h2, .h2)
+{
+	font-size: var(--ph-fmv2-rfs-h2);
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h3, .h3)
+{
+	font-size: var(--ph-fmv2-rfs-h3);
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h4, .h4)
+{
+	font-size: var(--ph-fmv2-rfs-h4);
+}
+
+/* Global responsive type matrix. Theme layouts own the shell; this shared
+ * contract owns readable text density across all Arunika themes. */
+:root
+{
+	--ph-global-rfs-h1: 1.5rem;
+	--ph-global-rfs-h2: 1.35rem;
+	--ph-global-rfs-h3: 1.2rem;
+	--ph-global-rfs-h4: 1.1rem;
+	--ph-global-rfs-h5: 1rem;
+	--ph-global-rfs-h6: 0.95rem;
+}
+
+body :where(p)
+{
+	font-size: 1em;
+}
+
+body :where(small)
+{
+	font-size: 0.875em;
+}
+
+body :where(label, .form-label, button, input, select, textarea)
+{
+	font-size: inherit !important;
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h1, .h1)
+{
+	font-size: var(--ph-global-rfs-h1);
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h2, .h2)
+{
+	font-size: var(--ph-global-rfs-h2);
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h3, .h3)
+{
+	font-size: var(--ph-global-rfs-h3);
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h4, .h4)
+{
+	font-size: var(--ph-global-rfs-h4);
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h5, .h5)
+{
+	font-size: var(--ph-global-rfs-h5);
+}
+
+body :where(.ph-content, .ph-scrollable-content, .arv7-main-side, .arv7-main-content, .arv7-content, main, .modal, .dropdown-menu, .collapse, .collapsing, .accordion) :where(h6, .h6)
+{
+	font-size: var(--ph-global-rfs-h6);
+}
+
+body :where(.ph-sidebar, .arv7-sidebar) :where(.list-group-item, .ph-nav-text, .arv7-parent-menu-name, .arv7-menu-name)
+{
+	font-size: min(13px, var(--ph-adaptive-font-size)) !important;
+}
+
+body :where(.ph-sidebar, .arv7-sidebar) :where(.ph-sidebar-footer a, .ph-lucent-sidebar-utilities a)
+{
+	font-size: min(13px, var(--ph-adaptive-font-size)) !important;
+}
+
+@media (max-width: 575px)
+{
+	:root
+	{
+		--ph-global-rfs-h1: 1.5rem;
+		--ph-global-rfs-h2: 1.35rem;
+		--ph-global-rfs-h3: 1.2rem;
+		--ph-global-rfs-h4: 1.1rem;
+		--ph-global-rfs-h5: 1rem;
+		--ph-global-rfs-h6: 0.95rem;
+	}
+}
+
+@media (min-width: 576px) and (max-width: 767px)
+{
+	:root
+	{
+		--ph-global-rfs-h1: 1.6rem;
+		--ph-global-rfs-h2: 1.4rem;
+		--ph-global-rfs-h3: 1.25rem;
+		--ph-global-rfs-h4: 1.125rem;
+		--ph-global-rfs-h5: 1rem;
+		--ph-global-rfs-h6: 0.95rem;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 991px)
+{
+	:root
+	{
+		--ph-global-rfs-h1: 1.75rem;
+		--ph-global-rfs-h2: 1.5rem;
+		--ph-global-rfs-h3: 1.3rem;
+		--ph-global-rfs-h4: 1.15rem;
+		--ph-global-rfs-h5: 1.05rem;
+		--ph-global-rfs-h6: 0.95rem;
+	}
+}
+
+@media (min-width: 992px) and (max-width: 1199px)
+{
+	:root
+	{
+		--ph-global-rfs-h1: 1.875rem;
+		--ph-global-rfs-h2: 1.6rem;
+		--ph-global-rfs-h3: 1.4rem;
+		--ph-global-rfs-h4: 1.2rem;
+		--ph-global-rfs-h5: 1.05rem;
+		--ph-global-rfs-h6: 0.95rem;
+	}
+}
+
+@media (min-width: 1200px) and (max-height: 1100px)
+{
+	:root
+	{
+		--ph-global-rfs-h1: 1.75rem;
+		--ph-global-rfs-h2: 1.5rem;
+		--ph-global-rfs-h3: 1.3rem;
+		--ph-global-rfs-h4: 1.2rem;
+		--ph-global-rfs-h5: 1.05rem;
+		--ph-global-rfs-h6: 0.95rem;
+	}
+}

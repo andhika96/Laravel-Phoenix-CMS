@@ -1,0 +1,3981 @@
+{
+  "public/assets/plugins/ckeditor5/sample/styles.css": [
+    {
+      "source": "public/assets/plugins/ckeditor5/sample/index.html",
+      "line": 12,
+      "token": "styles.css",
+      "kind": "example_or_test"
+    }
+  ],
+  "public/assets/plugins/ckfinder/samples/css/sample.css": [
+    {
+      "source": "public/assets/plugins/ckfinder/samples/ckeditor.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/full-page.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/index.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/localization.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/modals.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/other-custom-configuration.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/other-read-only.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/plugin-examples.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/popups.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/skins-jquery-mobile.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/skins-moono.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/skins-neko.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/user-interface-compact.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/user-interface-default.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/user-interface-listview.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/user-interface-mobile.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/ckfinder/samples/widget.html",
+      "line": 14,
+      "token": "css/sample.css",
+      "kind": "example_or_test"
+    }
+  ],
+  "public/assets/plugins/echarts/5.5.1/test/lib/reset.css": [
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/-cases.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/appendData.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/area-large.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/area-origin.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/area-smooth.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/area-stack.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axes.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-align-lastLabel.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-align-ticks-random.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-align-ticks.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-arrow.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-boundaryGap.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-containLabel.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-containLabel2.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-customTicks.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-extrema.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-filter-extent.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-filter-extent2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-interval.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-interval2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-lastLabel.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-minorTick.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-multiple.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-splitArea.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axis-style.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axisLabel.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/axisPosition.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-background.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-large.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-log.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-markArea.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-others.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-overflow-time-plot.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-polar-animation.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-polar-borderRadius.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-race.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-race2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-stack.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-start.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-startValue.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-stream-large.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-stream-large1.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-tooltip-performance.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-width.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar2.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/boxplot.html",
+      "line": 25,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/browser-esm-partial.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/browser-esm-partial2.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/browser-esm.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/browser-esm2.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/brush.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/brush2.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/brush3.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-converter.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-effectScater.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-graph.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-heatmap.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-month.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-more.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-orient.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-range.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-scatter.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-simple.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-size.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-split.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-timezone.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-type.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-vertical.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-week.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar-year.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/calendar.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/candlestick-case.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/candlestick-doji.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/candlestick-large.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/candlestick-large2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/candlestick-large3.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/canvas-replay.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/clip-large1.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/clip-line-cap.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/clip.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/clip2.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/coarse-pointer.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/color-mix-aqi.html",
+      "line": 26,
+      "token": "./lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/colorBy.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/connect-dynamic.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/connect-manually.html",
+      "line": 25,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/connect2.html",
+      "line": 27,
+      "token": "./lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/covid-america.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-animation.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-bmap-grid.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-children-remove.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-feature.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-hexbin.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-large.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-shape-morphing2.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-shape-morphing3.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-text-content.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-transition-ecStat.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-transition.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-transition2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom-update.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/custom.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/data-transform-aggregate.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/data-transform-ecStat.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/data-transform.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataSelect.html",
+      "line": 34,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataset-case.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataset-category.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataset-charts.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataset-guess.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataset-layout.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataset-performance.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataset-pivot.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataset-source-two-typed-array.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataZoom-action.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataZoom-clip.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataZoom-dynamic.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataZoom-extreme.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataZoom-feature.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataZoom-geo.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataZoom-rainfall-inside.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataZoom-scroll.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataZoom-sync.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataZoom-toolbox.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dataZoomHighPrecision.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/decal.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/drag-out.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dynamic-splitNumber.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/dynamicData3.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/ec-event.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/effectScatter2.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/emphasis-disabled.html",
+      "line": 34,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/emphasis-inherit.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/emphasis-self.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/encode.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/finished.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/force-case.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/gauge-case.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/gauge-distance.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/gauge-group-title-detail.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/gauge-pointer.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/gauge-progress.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/gauge-simple.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/geo-layout.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/geo-lines.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/geo-map-features.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/geo-svg-demo.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/geo-svg.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/geo-update.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/geojson-test.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/getOption.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/graph-case.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/graph-circular.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/graph-draggable.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/graph-grid-life.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/graph-simple.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/graphic-animation-wave.html",
+      "line": 34,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/graphic-animation.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/graphic-cases.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/graphic-draggable.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/graphic-transition.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/graphicOption.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/graphicRemove.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/heatmap-borderRadius.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/heatmap-geo.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/heatmap.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/hoverFocus.html",
+      "line": 34,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/hoverFocus2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/hoverStyle.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/hoverStyle2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/ie-svg-export.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/ie11.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/label-animation.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/label-ellipsis.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/label-formatter.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/label-layout.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/label-position.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/lang.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/largeScatterWithEmpty.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/lazyUpdate.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/legend-borderColor.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/legend-feature.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/legend-scroll2plain.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/legend-style.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/legend-visualMapColor.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/legend.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/line-animation-update.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/line-animation.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/line-boldWhenHover.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/line-case.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/line-crash.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/line-large.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/line-sampling.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/line-step.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/line-style.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/line-visual.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/line-visual2.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/lines-grid.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/lines-mergeOption.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/lines-stream-large.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/lines-symbolSize-update.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/manual-svg-color-bug-202311.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/map-china.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/map-default.html",
+      "line": 34,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/map-grid.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/map-labels.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/map-locate.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/map-nested.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/map-parallel.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/map-projection-animation.html",
+      "line": 37,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/map-projection-d3.html",
+      "line": 36,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/map-projection.html",
+      "line": 35,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/map-province.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/map.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/markArea.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/marker-case.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/markPoint.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/media-dataZoom.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/media-finance.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/media-pie.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/min-max-function.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/option-replaceMerge.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/option-replaceMerge2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/parallel-aqi.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/parallel-feature.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/parallel-large.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/parallel-lineStyle.html",
+      "line": 26,
+      "token": "./lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/parallel-nutrients.html",
+      "line": 34,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pictorial-repeat.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pictorial-single.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pictorial-zero-value-offset.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pictorial-zero-value.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-case.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-clipPath.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-coordinate-system.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-cornerRadius.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-dataView.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-endAngle.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-label-alignTo-adjust.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-label-alignTo.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-label-extreme.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-label-mobile.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-label.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-pad-angle.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-percent.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-richText.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie-visual.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/pie.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/polar-rounded.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/radar-axis.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/resize-animation.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/richText.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/roseExtreme.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/sankey-borderRadius.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/sankey-vertical.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/sankey.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/scatter-single-axis.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/scatter-stream-large.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/scatter-stream-not-large.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/scatter-stream-visual.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/scatter-weibo.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/scatterMatrix.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/setOption.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/shape-custom.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/singleAxisScales.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/smooth.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/splitLine.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/ssr-animaiton-wave.html",
+      "line": 34,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/ssr.html",
+      "line": 34,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/stackBar-dataZoom.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/stream-basic1.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/stream-basic2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/stream-filter2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/sunburst-label-align.html",
+      "line": 34,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/sunburst-label-rotate.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/sunburst-label.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/svg-ssr.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/symbol.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/symbol2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/symbol3.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/themeRiver.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/themeRiver2.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/themeRiver3.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/timeline-case.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/timeline-dynamic-series.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/timeline-event.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/timeline-life.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/timeScale-formatter.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/timeZone.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tmp-base.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/toolbox-custom.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/toolbox-textStyle.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/toolbox-title.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-action.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-alwaysShowContent.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-appendTo.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-appendToBody.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-axisPointer.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-axisPointer2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-cascade.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-component.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-domnode.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-event.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-lag-glitch.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-link.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-multiple.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-setOption.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-textStyle.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-touch.html",
+      "line": 28,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-valueFormatter.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip-windowResize.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tooltip.html",
+      "line": 27,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/touch-candlestick.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/touch-test.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tree-addNode.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tree-image2.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tree-polyline.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tree-radial.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tree-recurrentRemoveNode.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/tree-removeNode.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/treemap-action.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/treemap-scaleLimit.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/treemap-simple.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/treemap-simple2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/treemap-visual.html",
+      "line": 29,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/universalTransition-multiLevelDrillDown.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/universalTransition.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/universalTransition2.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/universalTransition3.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/visualMap-categories.html",
+      "line": 27,
+      "token": "./lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/visualMap-continuous.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/visualMap-large.html",
+      "line": 31,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/visualMap-layout.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/visualMap-multi-continuous.html",
+      "line": 33,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/visualMap-on-data.html",
+      "line": 32,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/visualMap-opacity.html",
+      "line": 26,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/visualMap-pieces.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/visualMap-special-case.html",
+      "line": 30,
+      "token": "lib/reset.css",
+      "kind": "example_or_test"
+    }
+  ],
+  "public/assets/plugins/echarts/5.5.1/test/lib/caseFrame.css": [
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/-cases.html",
+      "line": 31,
+      "token": "lib/caseFrame.css",
+      "kind": "example_or_test"
+    }
+  ],
+  "public/assets/plugins/echarts/5.5.1/test/stream-basic.css": [
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/bar-stream-large.html",
+      "line": 31,
+      "token": "./stream-basic.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/stream-basic1.html",
+      "line": 33,
+      "token": "./stream-basic.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/stream-basic2.html",
+      "line": 33,
+      "token": "./stream-basic.css",
+      "kind": "example_or_test"
+    }
+  ],
+  "public/assets/plugins/echarts/5.5.1/test/runTest/client/client.css": [
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/runTest/client/index.html",
+      "line": 344,
+      "token": "client.css",
+      "kind": "example_or_test"
+    }
+  ],
+  "public/assets/plugins/echarts/5.5.1/test/runTest/recorder/recorder.css": [
+    {
+      "source": "public/assets/plugins/echarts/5.5.1/test/runTest/recorder/index.html",
+      "line": 106,
+      "token": "recorder.css",
+      "kind": "example_or_test"
+    }
+  ],
+  "public/assets/plugins/spectrum/dist/spectrum.min.css": [
+    {
+      "source": "public/assets/plugins/spectrum/bower.json",
+      "line": 4,
+      "token": "dist/spectrum.min.css",
+      "kind": "plugin_internal"
+    },
+    {
+      "source": "resources/views/manage_coverimage/manage_coverimage_add.blade.php",
+      "line": 9,
+      "token": "assets/plugins/spectrum/dist/spectrum.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_coverimage/manage_coverimage_edit.blade.php",
+      "line": 9,
+      "token": "assets/plugins/spectrum/dist/spectrum.min.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/plugins/spectrum/src/spectrum.css": [
+    {
+      "source": "public/assets/plugins/spectrum/Gruntfile.js",
+      "line": 45,
+      "token": "src/spectrum.css",
+      "kind": "plugin_internal"
+    },
+    {
+      "source": "public/assets/plugins/spectrum/Gruntfile.js",
+      "line": 49,
+      "token": "src/spectrum.css",
+      "kind": "plugin_internal"
+    },
+    {
+      "source": "public/assets/plugins/spectrum/test/index.html",
+      "line": 7,
+      "token": "../src/spectrum.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/spectrum/test/loaders.html",
+      "line": 7,
+      "token": "../src/spectrum.css",
+      "kind": "example_or_test"
+    }
+  ],
+  "public/assets/plugins/spectrum/dist/spectrum.css": [
+    {
+      "source": "public/assets/plugins/spectrum/Gruntfile.js",
+      "line": 46,
+      "token": "dist/spectrum.css",
+      "kind": "plugin_internal"
+    },
+    {
+      "source": "public/assets/plugins/spectrum/Gruntfile.js",
+      "line": 68,
+      "token": "dist/spectrum.css",
+      "kind": "plugin_internal"
+    },
+    {
+      "source": "public/assets/plugins/spectrum/index.html",
+      "line": 10,
+      "token": "dist/spectrum.css",
+      "kind": "plugin_internal"
+    }
+  ],
+  "public/assets/plugins/spectrum/docs/docs.css": [
+    {
+      "source": "public/assets/plugins/spectrum/index.html",
+      "line": 11,
+      "token": "docs/docs.css",
+      "kind": "plugin_internal"
+    }
+  ],
+  "public/assets/plugins/spectrum/docs/highlight/styles/default.css": [
+    {
+      "source": "public/assets/plugins/spectrum/index.html",
+      "line": 12,
+      "token": "docs/highlight/styles/default.css",
+      "kind": "plugin_internal"
+    }
+  ],
+  "public/assets/plugins/spectrum/docs/highlight/styles/monokai-sublime.css": [
+    {
+      "source": "public/assets/plugins/spectrum/index.html",
+      "line": 13,
+      "token": "docs/highlight/styles/monokai-sublime.css",
+      "kind": "plugin_internal"
+    }
+  ],
+  "public/assets/plugins/spectrum/test/qunit.css": [
+    {
+      "source": "public/assets/plugins/spectrum/test/index.html",
+      "line": 6,
+      "token": "qunit.css",
+      "kind": "example_or_test"
+    },
+    {
+      "source": "public/assets/plugins/spectrum/test/loaders.html",
+      "line": 6,
+      "token": "qunit.css",
+      "kind": "example_or_test"
+    }
+  ],
+  "resources/css/app.css": [
+    {
+      "source": "public/build/manifest.json",
+      "line": 2,
+      "token": "resources/css/app.css",
+      "kind": "build_metadata"
+    },
+    {
+      "source": "public/build/manifest.json",
+      "line": 5,
+      "token": "resources/css/app.css",
+      "kind": "build_metadata"
+    },
+    {
+      "source": "vite.config.js",
+      "line": 7,
+      "token": "resources/css/app.css",
+      "kind": "application"
+    }
+  ],
+  "resources/js/filemanager_v2/styles.css": [
+    {
+      "source": "resources/js/filemanager_v2/main.js",
+      "line": 9,
+      "token": "./styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/layout/container/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/layout/container/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/layout/container-fluid/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/layout/container-fluid/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/layout/grid/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/layout/grid/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/layout/row-grid/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/layout/row-grid/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/basic/button/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/basic/button/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/basic/divider/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/basic/divider/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/basic/heading/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/basic/heading/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/basic/icon/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/basic/icon/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/basic/image/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/basic/image/module.json",
+      "line": 15,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/basic/spacer/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/basic/spacer/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/basic/text-editor/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/basic/text-editor/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/basic/video/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/basic/video/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/general/accordion/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/general/accordion/module.json",
+      "line": 15,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/general/alert/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/general/alert/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/general/basic-gallery/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/general/basic-gallery/module.json",
+      "line": 15,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/general/counter/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/general/counter/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/general/icon-box/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/general/icon-box/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/general/icon-list/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/general/icon-list/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/general/image-box/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/general/image-box/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/general/image-carousel/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/general/image-carousel/module.json",
+      "line": 15,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/general/progress-bar/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/general/progress-bar/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/general/social-icons/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/general/social-icons/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/general/tabs/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/general/tabs/module.json",
+      "line": 15,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/general/testimonial/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/general/testimonial/module.json",
+      "line": 14,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/pro/form/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/pro/form/module.json",
+      "line": 15,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-banner/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-banner/module.json",
+      "line": 15,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-slider/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-slider/module.json",
+      "line": 15,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "resources/pagebuilder_elementor_v24/modules/widgets/pro/product-lead-form/styles.css": [
+    {
+      "source": "resources/pagebuilder_elementor_v24/modules/widgets/pro/product-lead-form/module.json",
+      "line": 15,
+      "token": "styles.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/theme-responsive-typography.css": [
+    {
+      "source": "resources/views/article/archive.blade.php",
+      "line": 34,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/article/detail.blade.php",
+      "line": 17,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/article/password-protected.blade.php",
+      "line": 39,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/article/private.blade.php",
+      "line": 25,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_article/templates/preview.blade.php",
+      "line": 10,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "line": 49,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "line": 49,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/auth/auth_layout.blade.php",
+      "line": 31,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "line": 37,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php",
+      "line": 25,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "line": 49,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "line": 44,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "line": 42,
+      "token": "assets/css/theme-responsive-typography.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/article/article-frontend-2026.css": [
+    {
+      "source": "resources/views/article/archive.blade.php",
+      "line": 36,
+      "token": "assets/css/article/article-frontend-2026.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/article/detail.blade.php",
+      "line": 19,
+      "token": "assets/css/article/article-frontend-2026.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/article/password-protected.blade.php",
+      "line": 41,
+      "token": "assets/css/article/article-frontend-2026.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/article/private.blade.php",
+      "line": 27,
+      "token": "assets/css/article/article-frontend-2026.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_article/templates/preview.blade.php",
+      "line": 12,
+      "token": "assets/css/article/article-frontend-2026.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/article/article-editor-content.css": [
+    {
+      "source": "resources/views/article/detail.blade.php",
+      "line": 20,
+      "token": "assets/css/article/article-editor-content.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/article/detail.blade.php",
+      "line": 20,
+      "token": "assets/css/article/article-editor-content.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_article/manage_article_add.blade.php",
+      "line": 267,
+      "token": "assets/css/article/article-editor-content.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_article/manage_article_add.blade.php",
+      "line": 267,
+      "token": "assets/css/article/article-editor-content.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_article/manage_article_edit.blade.php",
+      "line": 267,
+      "token": "assets/css/article/article-editor-content.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_article/manage_article_edit.blade.php",
+      "line": 267,
+      "token": "assets/css/article/article-editor-content.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_article/templates/preview.blade.php",
+      "line": 13,
+      "token": "assets/css/article/article-editor-content.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_article/templates/preview.blade.php",
+      "line": 13,
+      "token": "assets/css/article/article-editor-content.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/vendor/coloris/coloris.min.css": [
+    {
+      "source": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php",
+      "line": 8,
+      "token": "assets/vendor/coloris/coloris.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_article/templates/index.blade.php",
+      "line": 196,
+      "token": "assets/vendor/coloris/coloris.min.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/awesome-admin-header-navigation.css": [
+    {
+      "source": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php",
+      "line": 9,
+      "token": "assets/css/awesome-admin-header-navigation.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/awesome-admin-header-navigation-fullscreen.css": [
+    {
+      "source": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php",
+      "line": 10,
+      "token": "assets/css/awesome-admin-header-navigation-fullscreen.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/frontend-menu-dropdown.css": [
+    {
+      "source": "resources/views/awesome_admin/menu/frontend/awesome_admin_parent_menu_fe.blade.php",
+      "line": 829,
+      "token": "assets/css/frontend-menu-dropdown.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php",
+      "line": 21,
+      "token": "assets/css/frontend-menu-dropdown.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php",
+      "line": 21,
+      "token": "assets/css/frontend-menu-dropdown.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php",
+      "line": 26,
+      "token": "assets/css/frontend-menu-dropdown.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/frontend/frontend_layout.blade.php",
+      "line": 21,
+      "token": "assets/css/frontend-menu-dropdown.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/frontend/frontend_layout.blade.php",
+      "line": 21,
+      "token": "assets/css/frontend-menu-dropdown.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/frontend/frontend_layout.blade.php",
+      "line": 20,
+      "token": "assets/css/frontend-menu-dropdown.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/plugins/filemanager_v2/filemanager-v2.css": [
+    {
+      "source": "resources/views/filemanager_v2/index.blade.php",
+      "line": 12,
+      "token": "assets/plugins/filemanager_v2/filemanager-v2.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/article/manage-article-2026.css": [
+    {
+      "source": "resources/views/manage_article/manage_article.blade.php",
+      "line": 8,
+      "token": "assets/css/article/manage-article-2026.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_article/manage_article.blade.php",
+      "line": 8,
+      "token": "assets/css/article/manage-article-2026.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/article/article-template-manager-2026.css": [
+    {
+      "source": "resources/views/manage_article/templates/index.blade.php",
+      "line": 197,
+      "token": "assets/css/article/article-template-manager-2026.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css": [
+    {
+      "source": "resources/views/manage_article/templates/preview.blade.php",
+      "line": 7,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/setup/setup.blade.php",
+      "line": 9,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/auth/auth_layout.blade.php",
+      "line": 14,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "line": 32,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php",
+      "line": 13,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/auth/auth_layout.blade.php",
+      "line": 14,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "line": 32,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php",
+      "line": 13,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/auth/auth_layout.blade.php",
+      "line": 18,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "line": 20,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php",
+      "line": 17,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/auth/auth_layout.blade.php",
+      "line": 14,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "line": 32,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/frontend/frontend_layout.blade.php",
+      "line": 13,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/auth/auth_layout.blade.php",
+      "line": 14,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "line": 16,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/frontend/frontend_layout.blade.php",
+      "line": 13,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/auth/auth_layout.blade.php",
+      "line": 14,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "line": 16,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/frontend/frontend_layout.blade.php",
+      "line": 12,
+      "token": "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/plugins/fontawesome/5.15.3/css/all.min.css": [
+    {
+      "source": "resources/views/manage_article/templates/preview.blade.php",
+      "line": 8,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_article/templates/preview.blade.php",
+      "line": 8,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor/editor_shell.blade.php",
+      "line": 41,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor/editor_shell.blade.php",
+      "line": 41,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor/frontend_renderer.blade.php",
+      "line": 25,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor/frontend_renderer.blade.php",
+      "line": 25,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php",
+      "line": 42,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php",
+      "line": 42,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v23/frontend_renderer.blade.php",
+      "line": 25,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v23/frontend_renderer.blade.php",
+      "line": 25,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php",
+      "line": 42,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php",
+      "line": 42,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v24/frontend_renderer.blade.php",
+      "line": 47,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v24/frontend_renderer.blade.php",
+      "line": 47,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/setup/setup.blade.php",
+      "line": 12,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/auth/auth_layout.blade.php",
+      "line": 17,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "line": 35,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/auth/auth_layout.blade.php",
+      "line": 17,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "line": 35,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/auth/auth_layout.blade.php",
+      "line": 21,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "line": 23,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/auth/auth_layout.blade.php",
+      "line": 17,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "line": 35,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/auth/auth_layout.blade.php",
+      "line": 17,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "line": 19,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/auth/auth_layout.blade.php",
+      "line": 17,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "line": 19,
+      "token": "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css": [
+    {
+      "source": "resources/views/manage_coverimage/manage_coverimage.blade.php",
+      "line": 9,
+      "token": "assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_coverimage/manage_coverimage_add.blade.php",
+      "line": 12,
+      "token": "assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_coverimage/manage_coverimage_edit.blade.php",
+      "line": 12,
+      "token": "assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_event/manage_event_add.blade.php",
+      "line": 14,
+      "token": "assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/manage_event/manage_event_edit.blade.php",
+      "line": 14,
+      "token": "assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/plugins/fontawesome/6.5.1/css/all.min.css": [
+    {
+      "source": "resources/views/pagebuilder/pagebuilder.blade.php",
+      "line": 11,
+      "token": "assets/plugins/fontawesome/6.5.1/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder/pagebuilder.blade.php",
+      "line": 11,
+      "token": "assets/plugins/fontawesome/6.5.1/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder/pagebuilder_add.blade.php",
+      "line": 11,
+      "token": "assets/plugins/fontawesome/6.5.1/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder/pagebuilder_add.blade.php",
+      "line": 11,
+      "token": "assets/plugins/fontawesome/6.5.1/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder/pagebuilder_edit.blade.php",
+      "line": 11,
+      "token": "assets/plugins/fontawesome/6.5.1/css/all.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder/pagebuilder_edit.blade.php",
+      "line": 11,
+      "token": "assets/plugins/fontawesome/6.5.1/css/all.min.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/pagebuilder.css": [
+    {
+      "source": "resources/views/pagebuilder/pagebuilder.blade.php",
+      "line": 17,
+      "token": "assets/css/pagebuilder.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/vendor/pb-picker/picker.min.css": [
+    {
+      "source": "resources/views/pagebuilder_elementor/editor_shell.blade.php",
+      "line": 46,
+      "token": "assets/vendor/pb-picker/picker.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor/editor_shell.blade.php",
+      "line": 46,
+      "token": "assets/vendor/pb-picker/picker.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php",
+      "line": 47,
+      "token": "assets/vendor/pb-picker/picker.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php",
+      "line": 47,
+      "token": "assets/vendor/pb-picker/picker.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php",
+      "line": 47,
+      "token": "assets/vendor/pb-picker/picker.min.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php",
+      "line": 47,
+      "token": "assets/vendor/pb-picker/picker.min.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/frontend_elementor.css": [
+    {
+      "source": "resources/views/pagebuilder_elementor/editor_shell.blade.php",
+      "line": 47,
+      "token": "assets/css/frontend_elementor.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor/editor_shell.blade.php",
+      "line": 47,
+      "token": "assets/css/frontend_elementor.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor/frontend_renderer.blade.php",
+      "line": 27,
+      "token": "assets/css/frontend_elementor.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor/frontend_renderer.blade.php",
+      "line": 27,
+      "token": "assets/css/frontend_elementor.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/pagebuilder_elementor.css": [
+    {
+      "source": "resources/views/pagebuilder_elementor/editor_shell.blade.php",
+      "line": 48,
+      "token": "assets/css/pagebuilder_elementor.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor/editor_shell.blade.php",
+      "line": 48,
+      "token": "assets/css/pagebuilder_elementor.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/frontend_elementor_v23.css": [
+    {
+      "source": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php",
+      "line": 48,
+      "token": "assets/css/frontend_elementor_v23.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php",
+      "line": 48,
+      "token": "assets/css/frontend_elementor_v23.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v23/frontend_renderer.blade.php",
+      "line": 27,
+      "token": "assets/css/frontend_elementor_v23.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v23/frontend_renderer.blade.php",
+      "line": 27,
+      "token": "assets/css/frontend_elementor_v23.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/pagebuilder_elementor_v23.css": [
+    {
+      "source": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php",
+      "line": 49,
+      "token": "assets/css/pagebuilder_elementor_v23.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php",
+      "line": 49,
+      "token": "assets/css/pagebuilder_elementor_v23.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/frontend_elementor_v24.css": [
+    {
+      "source": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php",
+      "line": 48,
+      "token": "assets/css/frontend_elementor_v24.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php",
+      "line": 48,
+      "token": "assets/css/frontend_elementor_v24.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v24/frontend_renderer.blade.php",
+      "line": 49,
+      "token": "assets/css/frontend_elementor_v24.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v24/frontend_renderer.blade.php",
+      "line": 49,
+      "token": "assets/css/frontend_elementor_v24.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/pagebuilder_elementor_v24.css": [
+    {
+      "source": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php",
+      "line": 49,
+      "token": "assets/css/pagebuilder_elementor_v24.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php",
+      "line": 49,
+      "token": "assets/css/pagebuilder_elementor_v24.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/extending-css-bootstrap-5.css": [
+    {
+      "source": "resources/views/setup/setup.blade.php",
+      "line": 18,
+      "token": "assets/css/extending-css-bootstrap-5.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php",
+      "line": 18,
+      "token": "assets/css/extending-css-bootstrap-5.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php",
+      "line": 18,
+      "token": "assets/css/extending-css-bootstrap-5.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php",
+      "line": 22,
+      "token": "assets/css/extending-css-bootstrap-5.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/frontend/frontend_layout.blade.php",
+      "line": 18,
+      "token": "assets/css/extending-css-bootstrap-5.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "line": 40,
+      "token": "assets/css/extending-css-bootstrap-5.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/frontend/frontend_layout.blade.php",
+      "line": 18,
+      "token": "assets/css/extending-css-bootstrap-5.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "line": 38,
+      "token": "assets/css/extending-css-bootstrap-5.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/phoenix-cms.css": [
+    {
+      "source": "resources/views/setup/setup.blade.php",
+      "line": 19,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/auth/auth_layout.blade.php",
+      "line": 26,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "line": 47,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php",
+      "line": 20,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/auth/auth_layout.blade.php",
+      "line": 26,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "line": 47,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php",
+      "line": 20,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/auth/auth_layout.blade.php",
+      "line": 29,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "line": 35,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php",
+      "line": 23,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/auth/auth_layout.blade.php",
+      "line": 26,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "line": 47,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/frontend/frontend_layout.blade.php",
+      "line": 20,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/auth/auth_layout.blade.php",
+      "line": 26,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "line": 42,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/frontend/frontend_layout.blade.php",
+      "line": 20,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/auth/auth_layout.blade.php",
+      "line": 24,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "line": 40,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/frontend/frontend_layout.blade.php",
+      "line": 19,
+      "token": "assets/css/phoenix-cms.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/aruna-v4.css": [
+    {
+      "source": "resources/views/setup/setup.blade.php",
+      "line": 20,
+      "token": "assets/css/aruna-v4.css",
+      "kind": "application"
+    }
+  ],
+  "storage/app/public/fonts/nunito/fonts.css": [
+    {
+      "source": "resources/views/themes/arunika_aurora/auth/auth_layout.blade.php",
+      "line": 23,
+      "token": "storage/fonts/nunito/fonts.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php",
+      "line": 16,
+      "token": "storage/fonts/nunito/fonts.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/auth/auth_layout.blade.php",
+      "line": 23,
+      "token": "storage/fonts/nunito/fonts.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php",
+      "line": 16,
+      "token": "storage/fonts/nunito/fonts.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/auth/auth_layout.blade.php",
+      "line": 23,
+      "token": "storage/fonts/nunito/fonts.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/frontend/frontend_layout.blade.php",
+      "line": 16,
+      "token": "storage/fonts/nunito/fonts.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/auth/auth_layout.blade.php",
+      "line": 23,
+      "token": "storage/fonts/nunito/fonts.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "line": 38,
+      "token": "storage/fonts/nunito/fonts.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/frontend/frontend_layout.blade.php",
+      "line": 16,
+      "token": "storage/fonts/nunito/fonts.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/themes/calm_green/phoenix-cms-calm-green.css": [
+    {
+      "source": "resources/views/themes/arunika_aurora/auth/auth_layout.blade.php",
+      "line": 25,
+      "token": "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php",
+      "line": 19,
+      "token": "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/auth/auth_layout.blade.php",
+      "line": 25,
+      "token": "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php",
+      "line": 19,
+      "token": "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/auth/auth_layout.blade.php",
+      "line": 25,
+      "token": "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/frontend/frontend_layout.blade.php",
+      "line": 19,
+      "token": "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/auth/auth_layout.blade.php",
+      "line": 25,
+      "token": "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "line": 41,
+      "token": "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/frontend/frontend_layout.blade.php",
+      "line": 19,
+      "token": "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css": [
+    {
+      "source": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "line": 41,
+      "token": "assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "line": 41,
+      "token": "assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "line": 29,
+      "token": "assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "line": 41,
+      "token": "assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "line": 28,
+      "token": "assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "line": 28,
+      "token": "assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/plugins/simplebar/6.3.1/css/simplebar.css": [
+    {
+      "source": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "line": 44,
+      "token": "assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "line": 44,
+      "token": "assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "line": 32,
+      "token": "assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "line": 44,
+      "token": "assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "line": 25,
+      "token": "assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "line": 25,
+      "token": "assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/themes/arunika_aurora/arunika_aurora.css": [
+    {
+      "source": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "line": 48,
+      "token": "assets/css/themes/arunika_aurora/arunika_aurora.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/themes/arunika_aurora/mobile-v2.css": [
+    {
+      "source": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "line": 50,
+      "token": "assets/css/themes/arunika_aurora/mobile-v2.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/cms-bootstrap-theme.css": [
+    {
+      "source": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "line": 52,
+      "token": "assets/css/cms-bootstrap-theme.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "line": 52,
+      "token": "assets/css/cms-bootstrap-theme.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "line": 52,
+      "token": "assets/css/cms-bootstrap-theme.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "line": 52,
+      "token": "assets/css/cms-bootstrap-theme.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "line": 40,
+      "token": "assets/css/cms-bootstrap-theme.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "line": 40,
+      "token": "assets/css/cms-bootstrap-theme.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "line": 52,
+      "token": "assets/css/cms-bootstrap-theme.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "line": 52,
+      "token": "assets/css/cms-bootstrap-theme.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "line": 46,
+      "token": "assets/css/cms-bootstrap-theme.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "line": 46,
+      "token": "assets/css/cms-bootstrap-theme.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "line": 44,
+      "token": "assets/css/cms-bootstrap-theme.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "line": 44,
+      "token": "assets/css/cms-bootstrap-theme.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/themes/arunika_equinox/arunika_equinox.css": [
+    {
+      "source": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "line": 48,
+      "token": "assets/css/themes/arunika_equinox/arunika_equinox.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/themes/arunika_equinox/mobile-v2.css": [
+    {
+      "source": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "line": 50,
+      "token": "assets/css/themes/arunika_equinox/mobile-v2.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/themes/arunika_lucent/arunika_lucent.css": [
+    {
+      "source": "resources/views/themes/arunika_lucent/auth/auth_layout.blade.php",
+      "line": 30,
+      "token": "assets/css/themes/arunika_lucent/arunika_lucent.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "line": 36,
+      "token": "assets/css/themes/arunika_lucent/arunika_lucent.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php",
+      "line": 24,
+      "token": "assets/css/themes/arunika_lucent/arunika_lucent.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/themes/arunika_lucent/mobile-v2.css": [
+    {
+      "source": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "line": 38,
+      "token": "assets/css/themes/arunika_lucent/mobile-v2.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/themes/arunika_prism/arunika_prism.css": [
+    {
+      "source": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "line": 48,
+      "token": "assets/css/themes/arunika_prism/arunika_prism.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/themes/arunika_prism/mobile-v2.css": [
+    {
+      "source": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "line": 50,
+      "token": "assets/css/themes/arunika_prism/mobile-v2.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/themes/calm_green/aruna-admin-v7-calm-green.css": [
+    {
+      "source": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "line": 43,
+      "token": "assets/css/themes/calm_green/aruna-admin-v7-calm-green.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/themes/default/phoenix-cms-default.css": [
+    {
+      "source": "resources/views/themes/default/auth/auth_layout.blade.php",
+      "line": 23,
+      "token": "assets/css/themes/default/phoenix-cms-default.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "line": 39,
+      "token": "assets/css/themes/default/phoenix-cms-default.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/themes/default/frontend/frontend_layout.blade.php",
+      "line": 18,
+      "token": "assets/css/themes/default/phoenix-cms-default.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/themes/default/aruna-admin-v7-default.css": [
+    {
+      "source": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "line": 41,
+      "token": "assets/css/themes/default/aruna-admin-v7-default.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/css/workflow-editor.css": [
+    {
+      "source": "resources/views/workflow/editor.blade.php",
+      "line": 189,
+      "token": "assets/css/workflow-editor.css",
+      "kind": "application"
+    },
+    {
+      "source": "resources/views/workflow/index.blade.php",
+      "line": 116,
+      "token": "assets/css/workflow-editor.css",
+      "kind": "application"
+    }
+  ],
+  "public/assets/beta_css/new.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap-grid.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap-grid.min.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap-grid.rtl.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap-grid.rtl.min.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap-reboot.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap-reboot.min.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap-reboot.rtl.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap-reboot.rtl.min.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap-utilities.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap-utilities.min.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap-utilities.rtl.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap-utilities.rtl.min.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap.min.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap.rtl.css": [],
+  "public/assets/plugins/bootstrap/5.3.6/css/bootstrap.rtl.min.css": [],
+  "public/assets/plugins/bootstrap/5.3.6_custom/bootstrap.css": [],
+  "public/assets/plugins/ckfinder/libs/jquery.mobile.icons.css": [],
+  "public/assets/plugins/ckfinder/libs/jquery.mobile.structure.css": [],
+  "public/assets/plugins/ckfinder/libs/jquery.mobile.theme.css": [],
+  "public/assets/plugins/ckfinder/skins/core/ckfinder.css": [],
+  "public/assets/plugins/ckfinder/skins/jquery-mobile/icons.css": [],
+  "public/assets/plugins/ckfinder/skins/moono/ckfinder.css": [],
+  "public/assets/plugins/ckfinder/skins/moono/icons.css": [],
+  "public/assets/plugins/ckfinder/skins/neko/ckfinder.css": [],
+  "public/assets/plugins/ckfinder/skins/neko/icons.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/all.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/brands.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/brands.min.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/duotone.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/duotone.min.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/fontawesome.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/fontawesome.min.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/light.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/light.min.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/regular.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/regular.min.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/solid.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/solid.min.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/svg-with-js.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/svg-with-js.min.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/v4-shims.css": [],
+  "public/assets/plugins/fontawesome/5.15.3/css/v4-shims.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/all.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/brands.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/brands.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/duotone.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/duotone.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/fontawesome.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/fontawesome.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/light.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/light.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/regular.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/regular.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/sharp-light.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/sharp-light.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/sharp-regular.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/sharp-regular.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/sharp-solid.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/sharp-solid.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/sharp-thin.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/sharp-thin.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/solid.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/solid.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/svg-with-js.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/svg-with-js.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/thin.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/thin.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/v4-font-face.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/v4-font-face.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/v4-shims.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/v4-shims.min.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/v5-font-face.css": [],
+  "public/assets/plugins/fontawesome/6.5.1/css/v5-font-face.min.css": [],
+  "public/assets/plugins/simplebar/6.2.7/css/simplebar.css": [],
+  "storage/app/public/fonts/andika/fonts.css": [],
+  "storage/app/public/fonts/fira_sans/fonts.css": [],
+  "storage/app/public/fonts/lato/fonts.css": [],
+  "storage/app/public/fonts/lobster_two/fonts.css": [],
+  "storage/app/public/fonts/montserrat/fonts.css": [],
+  "storage/app/public/fonts/noto_sans/fonts.css": [],
+  "storage/app/public/fonts/open_sans/fonts.css": [],
+  "storage/app/public/fonts/plus_jakarta_sans/fonts.css": [],
+  "storage/app/public/fonts/poppins/fonts.css": [],
+  "storage/app/public/fonts/roboto/fonts.css": [],
+  "storage/app/public/fonts/source_code_pro/fonts.css": []
+}

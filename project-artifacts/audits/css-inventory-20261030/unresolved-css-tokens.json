@@ -1,0 +1,206 @@
+[
+  {
+    "source": "public/assets/js/vue3/manage_config/vueV3-manage-config-2026.js",
+    "line": 470,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/js/filemanager_v2/main.js",
+    "line": 2,
+    "token": "bootstrap/dist/css/bootstrap.min.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/js/filemanager_v2/main.js",
+    "line": 3,
+    "token": "bootstrap-icons/font/bootstrap-icons.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/js/filemanager_v2/main.js",
+    "line": 5,
+    "token": "@fontsource/nunito/400.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/js/filemanager_v2/main.js",
+    "line": 6,
+    "token": "@fontsource/nunito/500.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/js/filemanager_v2/main.js",
+    "line": 7,
+    "token": "@fontsource/nunito/600.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/js/filemanager_v2/main.js",
+    "line": 8,
+    "token": "@fontsource/nunito/700.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/js/filemanager_v2/components/FilePondUploadEngine.vue",
+    "line": 5,
+    "token": "filepond/dist/filepond.min.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/article/archive.blade.php",
+    "line": 33,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/article/detail.blade.php",
+    "line": 16,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/article/password-protected.blade.php",
+    "line": 38,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/article/private.blade.php",
+    "line": 24,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/manage_article/templates/preview.blade.php",
+    "line": 9,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/pagebuilder_elementor/editor_shell.blade.php",
+    "line": 8,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/pagebuilder_elementor/editor_shell.blade.php",
+    "line": 20,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/pagebuilder_elementor/frontend_renderer.blade.php",
+    "line": 8,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/pagebuilder_elementor/frontend_renderer.blade.php",
+    "line": 10,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php",
+    "line": 8,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php",
+    "line": 20,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/pagebuilder_elementor_v23/frontend_renderer.blade.php",
+    "line": 8,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/pagebuilder_elementor_v23/frontend_renderer.blade.php",
+    "line": 10,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php",
+    "line": 8,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php",
+    "line": 20,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/pagebuilder_elementor_v24/frontend_renderer.blade.php",
+    "line": 8,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/pagebuilder_elementor_v24/frontend_renderer.blade.php",
+    "line": 10,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+    "line": 38,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+    "line": 38,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/themes/arunika_lucent/auth/auth_layout.blade.php",
+    "line": 27,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+    "line": 26,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php",
+    "line": 20,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+    "line": 38,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "app/Http/Controllers/Web/Awesome_Admin/Awesome_Admin_Config_Controller.php",
+    "line": 81,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "app/Support/SiteTypography.php",
+    "line": 16,
+    "token": "/fonts.css",
+    "kind": "application"
+  },
+  {
+    "source": "app/Support/PageBuilderElementorV24/CompiledNative/AutomaticCompiledNativeFrameworkLoader.php",
+    "line": 272,
+    "token": "node_modules/bootstrap/dist/css/bootstrap.min.css",
+    "kind": "application"
+  }
+]

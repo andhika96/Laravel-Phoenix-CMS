@@ -24,7 +24,7 @@
 	@endforeach
 	<link href="{{ asset('assets/plugins/fontawesome/5.15.3/css/all.min.css') }}?v={{ @filemtime(public_path('assets/plugins/fontawesome/5.15.3/css/all.min.css')) }}" rel="stylesheet">
 	{{-- SAMA PERSIS dengan canvas builder — WYSIWYG terjamin --}}
-	<link href="{{ asset('assets/css/frontend_elementor_v23.css') }}?v={{ @filemtime(public_path('assets/css/frontend_elementor_v23.css')) }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/pagebuilder/elementor-v23/frontend_elementor_v23.css') }}?v={{ @filemtime(public_path('assets/css/pagebuilder/elementor-v23/frontend_elementor_v23.css')) }}" rel="stylesheet">
 
 	@if(!empty($pageData->custom_css))
 	<style>

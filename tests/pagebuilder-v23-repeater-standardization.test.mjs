@@ -9,7 +9,7 @@ const read = (relative) => fs.readFileSync(path.join(root, relative), 'utf8');
 const shared = read('public/js/pagebuilder_elementor_v23/widgets/pro/shared/Settings.vue');
 const heroSlider = read('public/js/pagebuilder_elementor_v23/widgets/pro/hero-slider/Settings.vue');
 const productColors = read('public/js/pagebuilder_elementor_v23/widgets/pro/product-color-selector/Settings.vue');
-const pageBuilderStyles = read('public/assets/css/pagebuilder_elementor_v23.css');
+const pageBuilderStyles = read('public/assets/css/pagebuilder/elementor-v23/pagebuilder_elementor_v23.css');
 const heroBanner = read('public/js/pagebuilder_elementor_v23/widgets/pro/hero-banner/Settings.vue');
 const tabs = read('public/js/pagebuilder_elementor_v23/widgets/general/tabs/Settings.vue');
 const accordion = read('public/js/pagebuilder_elementor_v23/widgets/advanced/accordion/Settings.vue');

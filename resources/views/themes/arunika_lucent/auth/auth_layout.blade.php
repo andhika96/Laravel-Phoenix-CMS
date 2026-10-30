@@ -26,9 +26,9 @@
 			<!-- Custom CSS -->
 			<link href="{{ asset('storage/fonts/'.$siteTypography['fontFamilyCode'].'/fonts.css?v=').time() }}" rel="stylesheet">	
 
-			<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">	
+			<link href="{{ asset('assets/css/shared/phoenix-cms.css?v=').time() }}" rel="stylesheet">
 			<link href="{{ asset('assets/css/themes/arunika_lucent/arunika_lucent.css?v=').time() }}" rel="stylesheet">
-			<link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
+			<link href="{{ asset('assets/css/shared/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
 
 			@stack('css')
 

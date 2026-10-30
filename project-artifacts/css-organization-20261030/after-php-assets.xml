@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="CLI Arguments" tests="5" assertions="8619" errors="0" failures="0" skipped="0" time="0.806360">
+    <testsuite name="Tests\Feature\PageBuilderElementorV24AssetIsolationTest" file="D:\Laragon\www\laravel-13-phoenix\tests\Feature\PageBuilderElementorV24AssetIsolationTest.php" tests="1" assertions="8544" errors="0" failures="0" skipped="0" time="0.528858">
+      <testcase name="test_v24_owns_a_thin_core_and_manifest_discovered_modules_without_v23_references" file="D:\Laragon\www\laravel-13-phoenix\tests\Feature\PageBuilderElementorV24AssetIsolationTest.php" line="13" class="Tests\Feature\PageBuilderElementorV24AssetIsolationTest" classname="Tests.Feature.PageBuilderElementorV24AssetIsolationTest" assertions="8544" time="0.528858"/>
+    </testsuite>
+    <testsuite name="Tests\Feature\PageBuilderElementorV24BaselineIsolationTest" file="D:\Laragon\www\laravel-13-phoenix\tests\Feature\PageBuilderElementorV24BaselineIsolationTest.php" tests="4" assertions="75" errors="0" failures="0" skipped="0" time="0.277501">
+      <testcase name="test_v24_version_contract_and_route_family_are_registered_separately" file="D:\Laragon\www\laravel-13-phoenix\tests\Feature\PageBuilderElementorV24BaselineIsolationTest.php" line="13" class="Tests\Feature\PageBuilderElementorV24BaselineIsolationTest" classname="Tests.Feature.PageBuilderElementorV24BaselineIsolationTest" assertions="41" time="0.021226"/>
+      <testcase name="test_v24_has_its_own_active_source_boundaries" file="D:\Laragon\www\laravel-13-phoenix\tests\Feature\PageBuilderElementorV24BaselineIsolationTest.php" line="42" class="Tests\Feature\PageBuilderElementorV24BaselineIsolationTest" classname="Tests.Feature.PageBuilderElementorV24BaselineIsolationTest" assertions="23" time="0.050392"/>
+      <testcase name="test_public_page_route_uses_the_version_neutral_dispatcher" file="D:\Laragon\www\laravel-13-phoenix\tests\Feature\PageBuilderElementorV24BaselineIsolationTest.php" line="74" class="Tests\Feature\PageBuilderElementorV24BaselineIsolationTest" classname="Tests.Feature.PageBuilderElementorV24BaselineIsolationTest" assertions="3" time="0.024013"/>
+      <testcase name="test_authenticated_v23_and_v24_shells_load_only_their_own_assets" file="D:\Laragon\www\laravel-13-phoenix\tests\Feature\PageBuilderElementorV24BaselineIsolationTest.php" line="83" class="Tests\Feature\PageBuilderElementorV24BaselineIsolationTest" classname="Tests.Feature.PageBuilderElementorV24BaselineIsolationTest" assertions="8" time="0.181870"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

@@ -5,7 +5,7 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const frontendCssPath = path.join(root, 'public/assets/css/frontend_elementor_v23.css');
+const frontendCssPath = path.join(root, 'public/assets/css/pagebuilder/elementor-v23/frontend_elementor_v23.css');
 
 test('v2.3 frontend CSS adapts Canvas structure without copying scoped component styles globally', async () => {
     const css = await readFile(frontendCssPath, 'utf8');

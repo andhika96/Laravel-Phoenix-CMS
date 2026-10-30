@@ -6,8 +6,8 @@ const canvasPath = new URL('../public/js/pagebuilder_elementor/widgets/general/i
 const settingsPath = new URL('../public/js/pagebuilder_elementor/widgets/general/image-carousel/Settings.vue', import.meta.url);
 const appPath = new URL('../public/js/pagebuilder_elementor/app.js', import.meta.url);
 const frontendBladePath = new URL('../resources/views/pagebuilder_elementor/partials/render_image_carousel.blade.php', import.meta.url);
-const editorCssPath = new URL('../public/assets/css/pagebuilder_elementor.css', import.meta.url);
-const frontendCssPath = new URL('../public/assets/css/frontend_elementor.css', import.meta.url);
+const editorCssPath = new URL('../public/assets/css/pagebuilder/elementor/pagebuilder_elementor.css', import.meta.url);
+const frontendCssPath = new URL('../public/assets/css/pagebuilder/elementor/frontend_elementor.css', import.meta.url);
 
 function componentFromVueFile(path) {
 	const source = fs.readFileSync(path, 'utf8');

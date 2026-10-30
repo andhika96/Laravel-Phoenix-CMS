@@ -1,0 +1,33 @@
+async (page) => {
+    const targets = await page.evaluate(() => window.__cssOrganizationPaths);
+    if (!Array.isArray(targets) || !targets.length) throw new Error('Explicit paths required');
+    const results = [];
+    const checked = new Map();
+    for (const { path, width } of targets) {
+        await page.setViewportSize({ width, height: 900 });
+        const response = await page.goto('https://laravel-13-phoenix.aruna' + path, { waitUntil: 'domcontentloaded', timeout: 25000 });
+        await page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => {});
+        const css = await page.evaluate(() => [...document.querySelectorAll('link[rel=stylesheet]')].map(s => s.href));
+        const local = [];
+        for (const href of css) {
+            const url = new URL(href);
+            if (url.hostname !== 'laravel-13-phoenix.aruna') continue;
+            if (/^\/assets\/css\/[^/]+\.css$/.test(url.pathname)) throw new Error('Old flat CSS URL: ' + href);
+            const key = url.origin + url.pathname;
+            if (!checked.has(key)) {
+                const asset = await page.request.get(href);
+                checked.set(key, { path: url.pathname, status: asset.status(), type: asset.headers()['content-type'] });
+            }
+            const asset = checked.get(key);
+            if (asset.status !== 200 || !asset.type.includes('text/css')) throw new Error('CSS failed: ' + JSON.stringify(asset));
+            local.push(asset);
+        }
+        if (response.status() !== 200) throw new Error('Page failed ' + path + ': ' + response.status());
+        if (['/auth/login','/dashboard','/pagebuilder-elementor/v2.4/create'].includes(path)) {
+            const name = path.replaceAll('/', '_') + '-' + width;
+            await page.screenshot({ path: 'D:/Laragon/www/laravel-13-phoenix/project-artifacts/css-organization-20261030/page' + name + '.png', fullPage: true });
+        }
+        results.push({ path, width, status: response.status(), css: local });
+    }
+    return results;
+}

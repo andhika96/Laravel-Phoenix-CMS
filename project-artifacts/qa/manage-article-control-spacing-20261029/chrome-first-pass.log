@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expanded detail must align with title: {"width":601,"mobile":true,"button":{"left":23,"right":67,"top":431.28125,"bottom":475.28125,"width":44,"height":44},"check":{"left":91,"right":135,"top":431.28125,"bottom":475.28125,"width":44,"height":44},"title":{"left":23,"right":473.859375,"top":483.28125,"bottom":505.28125,"width":450.859375,"height":22},"row":{"left":15,"right":586,"top":418.28125,"bottom":572.96875,"width":571,"height":154.6875},"gap":24,"inset":8,"centerDelta":-41,"headerCheck":null,"expandCell":{"left":23,"right":67,"top":431.28125,"bottom":475.28125,"width":44,"height":44,"padding":"0px"},"checkCell":{"left":91,"right":135,"top":431.28125,"bottom":475.28125,"width":44,"height":44,"padding":"0px"},"detail":{"left":28.59375,"right":572.40625,"top":586.5625,"bottom":957.59375,"width":543.8125,"height":371.03125},"overflow":false}
+    at verify (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/tests/manage-article-control-spacing-20261029/browser-qa.mjs:44:24)
+    at file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/tests/manage-article-control-spacing-20261029/browser-qa.mjs:54:5 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

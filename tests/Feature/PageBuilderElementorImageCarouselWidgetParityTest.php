@@ -163,7 +163,7 @@ class PageBuilderElementorImageCarouselWidgetParityTest extends TestCase
     {
         $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-carousel/Canvas.vue'));
         $runtime = file_get_contents(public_path('js/pagebuilder_elementor/frontend-runtime.js'));
-        $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
+        $frontendCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/frontend_elementor.css'));
 
         foreach ([
             "name: 'GeneralImageCarousel'",

@@ -117,7 +117,7 @@ class PageBuilderElementorResponsiveBorderRadiusParityTest extends TestCase
 
     public function test_layout_radius_header_keeps_its_responsive_controls_on_the_trailing_edge(): void
     {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($builderCss);
         $this->assertStringContainsString('.pb-label-row.pb-radius-control-header', $builderCss);
@@ -130,7 +130,7 @@ class PageBuilderElementorResponsiveBorderRadiusParityTest extends TestCase
 
     public function test_widget_responsive_label_rows_keep_device_controls_on_the_trailing_edge(): void
     {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $widgetSelector = '.pb-panel.left :is(.pb-widget-settings--basic, .pb-widget-settings--icon-box) .pb-label-row.pb-label-row-device';
         $deviceWrapSelector = $widgetSelector . ' > .pb-control-device-wrap';
@@ -148,7 +148,7 @@ class PageBuilderElementorResponsiveBorderRadiusParityTest extends TestCase
 
     public function test_layout_responsive_label_rows_keep_direct_device_controls_on_the_trailing_edge(): void
     {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $layoutSelector = '.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-label-row.pb-label-row-device';
         $deviceWrapSelector = $layoutSelector . ' > .pb-control-device-wrap';
@@ -170,7 +170,7 @@ class PageBuilderElementorResponsiveBorderRadiusParityTest extends TestCase
         string $controlKey
     ): void {
         $settings = file_get_contents(public_path($settingsPath));
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($settings);
         $this->assertIsString($builderCss);

@@ -73,8 +73,8 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
     public function test_tabs_breakpoint_controls_switch_editor_and_frontend_to_vertical_layout(): void
     {
         $tabsVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Canvas.vue'));
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
-        $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
+        $frontendCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/frontend_elementor.css'));
 
         $this->assertIsString($tabsVue);
         $this->assertIsString($builderCss);
@@ -129,7 +129,7 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
     {
         $appJs = $this->editorSource();
         $tabsVue = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Canvas.vue'));
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($appJs);
         $this->assertIsString($tabsVue);
@@ -146,7 +146,7 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
     public function test_tabs_canvas_preview_defers_nested_layout_dropzones_to_child_grid_columns(): void
     {
         $appJs = $this->editorSource();
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($appJs);
         $this->assertIsString($builderCss);
@@ -277,7 +277,7 @@ class PageBuilderElementorTabsWidgetParityTest extends TestCase
     public function test_tabs_targeted_insert_mechanisms_and_glowing_pulse_highlights(): void
     {
         $appJs = $this->editorSource();
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($appJs);
         $this->assertIsString($builderCss);

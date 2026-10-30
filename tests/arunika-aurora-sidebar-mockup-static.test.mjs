@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 
-const mockupPath = 'public/mockups/arunika-aurora-sidebar-interactive-mockup.html';
+const mockupPath = 'project-artifacts/mockups/legacy-public-mockups-20261030/arunika-aurora-sidebar-interactive-mockup.html';
 
 assert.equal(existsSync(mockupPath), true, 'interactive sidebar mockup should exist');
 

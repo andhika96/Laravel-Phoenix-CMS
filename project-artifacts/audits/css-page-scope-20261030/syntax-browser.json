@@ -1,0 +1,3 @@
+{
+  "result": "[\n  {\n    \"selector\": \".button-collapsed\",\n    \"value\": \"var(--ph-content-bg)\",\n    \"priority\": \"\"\n  },\n  {\n    \"selector\": \".list-group-item\",\n    \"value\": \"var(--ph-content-bg)\",\n    \"priority\": \"\"\n  }\n]"
+}

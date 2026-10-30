@@ -13,7 +13,7 @@ class PageBuilderElementorV23ShellTest extends TestCase
         $this->assertStringContainsString('id="pbElementorV23App"', $html);
         $this->assertStringContainsString('PAGE_BUILDER_ELEMENTOR_V23_CONTEXT', $html);
         $this->assertStringContainsString("editorVersion: '2.3'", $html);
-        $this->assertStringContainsString('assets/css/pagebuilder_elementor_v23.css', $html);
+        $this->assertStringContainsString('assets/css/pagebuilder/elementor-v23/pagebuilder_elementor_v23.css', $html);
         $this->assertStringContainsString('js/pagebuilder_elementor_v23/frontend-runtime.js', $html);
         $this->assertStringContainsString('js/pagebuilder_elementor_v23/widget-registry.js', $html);
         $this->assertStringContainsString('js/pagebuilder_elementor_v23/app.js', $html);

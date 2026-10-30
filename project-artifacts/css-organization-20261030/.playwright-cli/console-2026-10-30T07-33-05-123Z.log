@@ -1,0 +1,10 @@
+[     236ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0
+[   75119ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://laravel-13-phoenix.aruna/assets/js/vueV3-setup.js?v=1793345660:0
+[   75148ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/setup:0
+[   76561ms] [INFO] You are running a development build of Vue.
+Make sure to use the production build (*.prod.js) when deploying for production. @ https://unpkg.com/vue@3/dist/vue.global.js:13244
+[   76742ms] [WARNING] [Vue warn]: A plugin must either be a function or an object with an "install" function. @ https://unpkg.com/vue@3/dist/vue.global.js:2473
+[   78692ms] [LOG] [PB] app.js loaded v3-refactor - 2026-10-30T07:34:23.807Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor/app.js?v=1786167649:2
+[   79913ms] [LOG] [PB] app.js loaded v3-refactor - 2026-10-30T07:34:25.024Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor_v23/app.js?v=1787400273:2
+[   81668ms] [LOG] [PB] app.js loaded v3-refactor - 2026-10-30T07:34:26.778Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor_v24/app.js?v=1788098143:2
+[   82988ms] [LOG] [PB] app.js loaded v3-refactor - 2026-10-30T07:34:28.110Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor_v24/app.js?v=1788098143:2

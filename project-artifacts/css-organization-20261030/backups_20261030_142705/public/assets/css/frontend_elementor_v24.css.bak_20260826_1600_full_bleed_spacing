@@ -1,0 +1,294 @@
+/* =============================================================================
+   FRONTEND ELEMENTOR CSS
+   Sinkron dengan struktur render frontend pagebuilder_elementor.
+   ============================================================================= */
+
+.el-page-wrapper,
+.el-page-wrapper *,
+.el-page-wrapper *::before,
+.el-page-wrapper *::after {
+	box-sizing: border-box;
+}
+
+.el-page-wrapper {
+	width: 100%;
+	font-family: Inter, sans-serif;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+
+/* Layout: Container */
+
+.el-cont-columns {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* Layout: Grid */
+
+/* Widgets */
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 767px) {
+}
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 767px) {
+}
+
+.el-flex-row-justify-item {
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+}
+
+.el-flex-row-justify-item > * {
+	max-width: 100%;
+	min-width: 0;
+}
+
+/* Advanced: responsive visibility + motion */
+@media (min-width: 1025px) {
+	.pb-hide-desktop {
+		display: none !important;
+	}
+	.pb-scroll-off-desktop.pb-motion-scroll {
+		will-change: auto;
+		transform: none !important;
+	}
+	.pb-mouse-off-desktop.pb-motion-mouse {
+		transition: none;
+		transform: none !important;
+		box-shadow: none !important;
+	}
+	.pb-sticky-off-desktop {
+		position: relative !important;
+		top: auto !important;
+		bottom: auto !important;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+	.pb-hide-tablet {
+		display: none !important;
+	}
+	.pb-scroll-off-tablet.pb-motion-scroll {
+		will-change: auto;
+		transform: none !important;
+	}
+	.pb-mouse-off-tablet.pb-motion-mouse {
+		transition: none;
+		transform: none !important;
+		box-shadow: none !important;
+	}
+	.pb-sticky-off-tablet {
+		position: relative !important;
+		top: auto !important;
+		bottom: auto !important;
+	}
+}
+
+@media (max-width: 767px) {
+	.pb-hide-mobile {
+		display: none !important;
+	}
+	.pb-scroll-off-mobile.pb-motion-scroll {
+		will-change: auto;
+		transform: none !important;
+	}
+	.pb-mouse-off-mobile.pb-motion-mouse {
+		transition: none;
+		transform: none !important;
+		box-shadow: none !important;
+	}
+	.pb-sticky-off-mobile {
+		position: relative !important;
+		top: auto !important;
+		bottom: auto !important;
+	}
+}
+
+.pb-motion-mouse {
+	transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.pb-motion-mouse:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 10px 28px rgba(23, 35, 61, 0.16);
+}
+
+.pb-motion-scroll {
+	will-change: transform, opacity;
+}
+
+.pb-entrance-anim {
+	animation-duration: 0.7s;
+	animation-fill-mode: both;
+}
+
+.pb-anim-fadeIn { animation-name: pbFadeIn; }
+.pb-anim-fadeInUp { animation-name: pbFadeInUp; }
+.pb-anim-fadeInDown { animation-name: pbFadeInDown; }
+.pb-anim-fadeInLeft { animation-name: pbFadeInLeft; }
+.pb-anim-fadeInRight { animation-name: pbFadeInRight; }
+.pb-anim-zoomIn { animation-name: pbZoomIn; }
+.pb-anim-slideInUp { animation-name: pbSlideInUp; }
+.pb-anim-slideInDown { animation-name: pbSlideInDown; }
+.pb-anim-slideInLeft { animation-name: pbSlideInLeft; }
+.pb-anim-slideInRight { animation-name: pbSlideInRight; }
+.pb-anim-bounceIn { animation-name: pbBounceIn; }
+
+@keyframes pbFadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes pbFadeInUp {
+	from { opacity: 0; transform: translate3d(0, 20px, 0); }
+	to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes pbFadeInDown {
+	from { opacity: 0; transform: translate3d(0, -20px, 0); }
+	to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes pbFadeInLeft {
+	from { opacity: 0; transform: translate3d(-20px, 0, 0); }
+	to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes pbFadeInRight {
+	from { opacity: 0; transform: translate3d(20px, 0, 0); }
+	to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes pbZoomIn {
+	from { opacity: 0; transform: scale3d(0.96, 0.96, 1); }
+	to { opacity: 1; transform: scale3d(1, 1, 1); }
+}
+
+@keyframes pbSlideInUp {
+	from { transform: translate3d(0, 28px, 0); visibility: visible; }
+	to { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes pbSlideInDown {
+	from { transform: translate3d(0, -28px, 0); visibility: visible; }
+	to { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes pbSlideInLeft {
+	from { transform: translate3d(-28px, 0, 0); visibility: visible; }
+	to { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes pbSlideInRight {
+	from { transform: translate3d(28px, 0, 0); visibility: visible; }
+	to { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes pbBounceIn {
+	from,
+20%,
+40%,
+60%,
+80%,
+to {
+		animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+	}
+	0% {
+		opacity: 0;
+		transform: scale3d(.9, .9, .9);
+	}
+	20% { transform: scale3d(1.05, 1.05, 1.05); }
+	40% { transform: scale3d(.98, .98, .98); }
+	60% {
+		opacity: 1;
+		transform: scale3d(1.02, 1.02, 1.02);
+	}
+	80% { transform: scale3d(.995, .995, .995); }
+	to {
+		opacity: 1;
+		transform: scale3d(1, 1, 1);
+	}
+}
+
+/* Advanced Accordion widget */
+.pb-advanced-widget {
+	transform: var(--pb-advanced-transform, none) var(--pb-motion-transform, translate3d(0, 0, 0)) var(--pb-mouse-transform, translate3d(0, 0, 0));
+	will-change: transform, opacity, filter;
+}
+
+.pb-advanced-entrance {
+	opacity: 0;
+	animation-play-state: paused;
+}
+
+.pb-advanced-entrance.is-visible {
+	opacity: 1;
+	animation-play-state: running;
+	animation-duration: .8s;
+	animation-fill-mode: both;
+}
+
+.pb-advanced-entrance[data-entrance-duration="slow"] { animation-duration: 1.2s; }
+.pb-advanced-entrance[data-entrance-duration="fast"] { animation-duration: .45s; }
+
+@media (prefers-reduced-motion: reduce) {
+}
+
+/* Elementor-style Image Box widget */
+
+@media (prefers-reduced-motion: reduce) {
+}
+
+/* Elementor-style Icon Box widget */
+@keyframes pb-icon-box-pulse { 50% { transform:scale(1.12); } }
+@keyframes pb-icon-box-push { 50% { transform:scale(.82); } 100% { transform:scale(1); } }
+@keyframes pb-icon-box-pop { 50% { transform:scale(1.2); } 100% { transform:scale(1); } }
+@media (prefers-reduced-motion: reduce) { }
+/* Image Carousel widget */
+@media (prefers-reduced-motion:reduce){}
+
+/* Basic Gallery widget */
+@media(max-width:1024px){}
+@media(max-width:767px){}
+
+/* General > Icon List */
+/* General widgets: Counter, Progress Bar, Testimonial, Social Icons, and Alert. */
+@keyframes pb-social-icons-pulse { 50% { transform: scale(1.08); } }
+@media (max-width: 767px) {
+}
+@media (prefers-reduced-motion: reduce) {
+}
+
+/* Pro: Hero Banner (adapted from the scoped Canvas styles for Blade markup) */
+
+@media (prefers-reduced-motion: reduce) {
+}
+
+@media (min-width: 1025px) {
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+}
+
+@media (max-width: 767px) {
+}
+
+/* Hero Slider v2.4 base styles. Keep this copy local to the active v2.4 renderer. */
+@media (prefers-reduced-motion: reduce) {
+}
+
+/* Form Custom Messages */
+@media (max-width: 767px) {
+}

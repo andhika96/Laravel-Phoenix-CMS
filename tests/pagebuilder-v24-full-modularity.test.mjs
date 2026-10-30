@@ -8,8 +8,8 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const moduleRoot = resolve(root, 'resources/pagebuilder_elementor_v24/modules');
 const app = readFileSync(resolve(root, 'public/js/pagebuilder_elementor_v24/app.js'), 'utf8');
 const coreRuntime = readFileSync(resolve(root, 'public/js/pagebuilder_elementor_v24/frontend-runtime.js'), 'utf8');
-const editorCss = readFileSync(resolve(root, 'public/assets/css/pagebuilder_elementor_v24.css'), 'utf8');
-const frontendCss = readFileSync(resolve(root, 'public/assets/css/frontend_elementor_v24.css'), 'utf8');
+const editorCss = readFileSync(resolve(root, 'public/assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css'), 'utf8');
+const frontendCss = readFileSync(resolve(root, 'public/assets/css/pagebuilder/elementor-v24/frontend_elementor_v24.css'), 'utf8');
 const shell = readFileSync(resolve(root, 'resources/views/pagebuilder_elementor_v24/editor_shell.blade.php'), 'utf8');
 const renderNode = readFileSync(resolve(root, 'resources/views/pagebuilder_elementor_v24/partials/render_node.blade.php'), 'utf8');
 

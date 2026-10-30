@@ -4,7 +4,7 @@ import path from 'node:path';
 import test from 'node:test';
 
 const root = process.cwd();
-const typographyPath = path.join(root, 'public/assets/css/theme-responsive-typography.css');
+const typographyPath = path.join(root, 'public/assets/css/shared/theme-responsive-typography.css');
 const themeLayouts = [
     'resources/views/themes/default/cms/cms_layout.blade.php',
     'resources/views/themes/calm_green/cms/cms_layout.blade.php',
@@ -27,7 +27,7 @@ test('every active CMS theme loads the shared responsive typography asset', () =
         assert.equal(existsSync(layoutPath), true, `Missing ${path.relative(root, layoutPath)}`);
         assert.match(
             read(layoutPath),
-            /assets\/css\/theme-responsive-typography\.css/,
+            /assets\/css\/shared\/theme-responsive-typography\.css/,
             `${path.relative(root, layoutPath)} must load the shared responsive typography stylesheet.`,
         );
     }

@@ -1,0 +1,62 @@
+- generic [ref=f22e3]:
+  - generic [ref=f22e4]:
+    - button "Open navigation" [ref=f22e5] [cursor=pointer]
+    - text:  
+    - link "Open profile" [ref=f22e9] [cursor=pointer]:
+      - /url: https://laravel-13-phoenix.aruna/profile
+      - img "Current avatar image" [ref=f22e10]
+  - generic [ref=f22e13]:
+    - generic [ref=f22e14]:
+      - heading "Dashboard" [level=4] [ref=f22e15]:  􏏽 Dashboard
+      - generic [ref=f22e16]: Ringkasan bisnis Anda
+    - generic [ref=f22e17]:
+      - generic [ref=f22e18]:
+        - generic [ref=f22e20]:
+          - generic [ref=f22e22]:
+            - generic [ref=f22e24]:  􏃀
+            - heading "Customers" [level=6] [ref=f22e25]
+            - heading "36,123" [level=4] [ref=f22e26]
+            - paragraph [ref=f22e27]:
+              - generic [ref=f22e28]:
+                - generic [ref=f22e29]:  􏍗
+                - text: 5,27%
+              - text: Since last month
+          - generic [ref=f22e31]:
+            - generic [ref=f22e33]:  􏁺
+            - heading "Orders" [level=6] [ref=f22e34]
+            - heading "5,212" [level=4] [ref=f22e35]
+            - paragraph [ref=f22e36]:
+              - generic [ref=f22e37]:
+                - generic [ref=f22e38]:  􏍔
+                - text: 1,27%
+              - text: Since last month
+          - generic [ref=f22e40]:
+            - generic [ref=f22e42]:  􏕕
+            - heading "Revenue" [level=6] [ref=f22e43]
+            - heading "Rp. 500,341" [level=4] [ref=f22e44]
+            - paragraph [ref=f22e45]:
+              - generic [ref=f22e46]:
+                - generic [ref=f22e47]:  􏍔
+                - text: 6,00%
+              - text: Since last month
+          - generic [ref=f22e49]:
+            - generic [ref=f22e51]:  􏈁
+            - heading "Growth" [level=6] [ref=f22e52]
+            - heading "+ 30.56%" [level=4] [ref=f22e53]
+            - paragraph [ref=f22e54]:
+              - generic [ref=f22e55]:
+                - generic [ref=f22e56]:  􏍗
+                - text: 5,27%
+              - text: Since last month
+        - heading "Projections Vs Actuals" [level=6] [ref=f22e59]
+      - heading "Revenue per Month" [level=6] [ref=f22e64]
+      - generic [ref=f22e68]:
+        - generic [ref=f22e70]:
+          - heading "Total Orders" [level=6] [ref=f22e71]
+          - generic [ref=f22e72]: Last 7 days
+        - generic [ref=f22e77]:
+          - heading "Total Sales" [level=6] [ref=f22e78]
+          - generic [ref=f22e79]: Last 7 days
+        - generic [ref=f22e84]:
+          - heading "User Access by Location" [level=6] [ref=f22e85]
+          - generic [ref=f22e86]: Last 7 days

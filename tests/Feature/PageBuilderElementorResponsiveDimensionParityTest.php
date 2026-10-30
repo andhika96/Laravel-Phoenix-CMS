@@ -35,7 +35,7 @@ class PageBuilderElementorResponsiveDimensionParityTest extends TestCase
     {
         $appJs = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
         $containerSettings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/layout/container/Settings.vue'));
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($appJs);
         $this->assertIsString($containerSettings);
@@ -62,7 +62,7 @@ class PageBuilderElementorResponsiveDimensionParityTest extends TestCase
 
     public function test_editor_centers_sidebar_tab_icon_labels(): void
     {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($builderCss);
         $this->assertStringContainsString('.pb-panel.left .pb-tab-btn.pb-tab-btn-icon', $builderCss);
@@ -75,7 +75,7 @@ class PageBuilderElementorResponsiveDimensionParityTest extends TestCase
 
     public function test_editor_adds_breathing_room_between_sidebar_tabs_and_first_group_label(): void
     {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($builderCss);
         $this->assertMatchesRegularExpression(
@@ -86,7 +86,7 @@ class PageBuilderElementorResponsiveDimensionParityTest extends TestCase
 
     public function test_editor_centers_layout_accordion_labels_and_open_content_spacing(): void
     {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($builderCss);
         $this->assertStringContainsString('.pb-panel.left .pb-layout-settings .pb-collapsible summary', $builderCss);
@@ -100,7 +100,7 @@ class PageBuilderElementorResponsiveDimensionParityTest extends TestCase
 
     public function test_editor_bolds_control_names_without_bolding_existing_headings_or_small_captions(): void
     {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($builderCss);
         $marker = 'Control-name emphasis: preserve existing bold headings and regular-weight captions.';

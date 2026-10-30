@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected 8px left inset: {"width":1440,"mobile":false,"button":{"left":323,"right":359,"top":260.0625,"bottom":296.0625,"width":36,"height":36},"check":{"left":383,"right":419,"top":260.0625,"bottom":296.0625,"width":36,"height":36},"title":{"left":444.59375,"right":874.40625,"top":267.0625,"bottom":311.0625,"width":429.8125,"height":44},"row":{"left":311,"right":1417,"top":250.5625,"bottom":348.609375,"width":1106,"height":98.046875},"gap":24,"inset":12,"centerDelta":0,"headerCheck":{"left":383,"right":419,"top":205.0625,"bottom":241.0625,"width":36,"height":36},"expandCell":{"left":311,"right":379,"top":250.5625,"bottom":348.609375,"width":68,"height":98.046875,"padding":"9px 20px 9px 12px"},"checkCell":{"left":379,"right":431,"top":250.5625,"bottom":348.609375,"width":52,"height":98.046875,"padding":"9px 12px 9px 4px"},"detail":null,"overflow":false}
+    at verify (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/tests/manage-article-control-spacing-20261029/browser-qa.mjs:34:12)
+    at file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/tests/manage-article-control-spacing-20261029/browser-qa.mjs:50:33 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

@@ -1,0 +1,189 @@
+{
+  "folders": {
+    "public/build": "project-artifacts/builds/legacy-public-build-20261030",
+    "public/mockups": "project-artifacts/mockups/legacy-public-mockups-20261030"
+  },
+  "files": [
+    {
+      "old": "public/build/manifest.json",
+      "new": "project-artifacts/builds/legacy-public-build-20261030/manifest.json",
+      "sha256": "418c6bc0792c2dc56133ca47687628012e0d42ea7f35543bb17fa7bfa4b4e132"
+    },
+    {
+      "old": "public/build/assets/app-B-qvmLQ3.js",
+      "new": "project-artifacts/builds/legacy-public-build-20261030/assets/app-B-qvmLQ3.js",
+      "sha256": "1b55c0cf24fa065e28dce0cafd95ee0892ffcc0805f61edb0145dd09d4f59329"
+    },
+    {
+      "old": "public/build/assets/app-l0sNRNKZ.js",
+      "new": "project-artifacts/builds/legacy-public-build-20261030/assets/app-l0sNRNKZ.js",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "old": "public/mockups/arunika-aurora-sidebar-interactive-mockup.html",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/arunika-aurora-sidebar-interactive-mockup.html",
+      "sha256": "974679a44cf3fd76781f3a40234f672f0181f8e09e21be7ccaae2aa821f2aea0"
+    },
+    {
+      "old": "public/mockups/arunika-dashboard-theme-mockup.html",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/arunika-dashboard-theme-mockup.html",
+      "sha256": "b7596f3dc3bbdf7b64b7ae80cacab3ead01162b5db18ddde55fb857e6495ae84"
+    },
+    {
+      "old": "public/mockups/frontend-menu-dropdown-modal-mockup.html",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/frontend-menu-dropdown-modal-mockup.html",
+      "sha256": "1df35240381e3043eb480625eb5c56d4c3a87d4ac3f1a1129f244178fafb6b85"
+    },
+    {
+      "old": "public/mockups/header-navigation-ui-mockup.html",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/header-navigation-ui-mockup.html",
+      "sha256": "9925e36282f79ef41285602cb94f8c9968fb269b857b542c9c49e38bc29c9df5"
+    },
+    {
+      "old": "public/mockups/pagebuilder-editor-redesign-prototype-v2.3.html",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/pagebuilder-editor-redesign-prototype-v2.3.html",
+      "sha256": "dcebdbee6f7304e3ce6a627942093d4b7a2a2b9ffc073fe46924d6873370d423"
+    },
+    {
+      "old": "public/mockups/pagebuilder-editor-redesign-prototype-v2.4.html",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/pagebuilder-editor-redesign-prototype-v2.4.html",
+      "sha256": "c33c322f3784badbd7c47a4bafdca8b432480b638a1d03819e66f63e4497928e"
+    },
+    {
+      "old": "public/mockups/pagebuilder-editor-redesign-prototype.html",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/pagebuilder-editor-redesign-prototype.html",
+      "sha256": "02a6727409a1b34cd1fed198da61da67d84739d65b8189237a69418521d04682"
+    },
+    {
+      "old": "public/mockups/site-general-settings-balanced-layout-mockup.html",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/site-general-settings-balanced-layout-mockup.html",
+      "sha256": "0e0f035eabfbdbde56eb57ec8990bb9187147a6bc8c19de297b0eba6fd3fb287"
+    },
+    {
+      "old": "public/mockups/site-logo-upload-config-mockup.html",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/site-logo-upload-config-mockup.html",
+      "sha256": "e7101d5451c10b34f0e417ae8bea462b8b24d40264c9c6a8680837d46a923adf"
+    },
+    {
+      "old": "public/mockups/site-typography-preview-config-mockup.html",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/site-typography-preview-config-mockup.html",
+      "sha256": "ecac50b8449837b370da872faf61480d6386f7f2e48c0ee3fe73cb347a8684b7"
+    },
+    {
+      "old": "public/mockups/theme-manager-interactive-mockup.html",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/theme-manager-interactive-mockup.html",
+      "sha256": "09391b2543742fc029cc4c5e815a35e88d13ad4290b4d674c1c95fe8cf4b9b9d"
+    },
+    {
+      "old": "public/mockups/assets/references/arunika-new-theme-dashboard-reference-clean.png",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/assets/references/arunika-new-theme-dashboard-reference-clean.png",
+      "sha256": "c7d1e9faa33218bd7efd0d2574b817e03a850f451c24073d3b80447fb7acdc10"
+    },
+    {
+      "old": "public/mockups/assets/references/arunika-new-theme-dashboard-reference-light.png",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/assets/references/arunika-new-theme-dashboard-reference-light.png",
+      "sha256": "96df7c1f849875d94650ef43c4b69abbdfe4d125d8bcdb75bc6d06b9ab1d24be"
+    },
+    {
+      "old": "public/mockups/assets/theme-manager/arunika-aurora-theme-preview.png",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/assets/theme-manager/arunika-aurora-theme-preview.png",
+      "sha256": "6c02ac579c09ce7bd8324421c576ec9199e8cdfcc987f072b88e4386dd192b1c"
+    },
+    {
+      "old": "public/mockups/assets/theme-manager/arunika-mosaic-theme-preview.png",
+      "new": "project-artifacts/mockups/legacy-public-mockups-20261030/assets/theme-manager/arunika-mosaic-theme-preview.png",
+      "sha256": "e6acc48543268ffb7743cafe6e4601c0e9e0023c2bb53a6693f512029a9a26de"
+    }
+  ],
+  "consumers": [
+    {
+      "path": "tests/arunika-aurora-balanced-general-settings-mockup-static.test.mjs",
+      "before_sha256": "9e3aacb2839572ca65249cbc55d693fb7423191a1d2b3bb4a2dfe4e0ed81fd4d",
+      "after_sha256": "26e13ff992900cabc39f4dc2fddf9c5d9d736d58fedb1744061c3f3108bbe1f9"
+    },
+    {
+      "path": "tests/arunika-aurora-sidebar-mockup-static.test.mjs",
+      "before_sha256": "24821188774b031d6530a510063f7ac44c216427039ff1c488856c21d096f237",
+      "after_sha256": "7da702f0c9d0d2b77023f274dab0c7a9e1efbf59f4723d5a5cb214c7d0fa0776"
+    },
+    {
+      "path": "tests/arunika-aurora-site-logo-upload-mockup-static.test.mjs",
+      "before_sha256": "abd0a7d67555c2d5cb8d8dd357f44d2f1dfd3d6b23322019aa90d3bc00e1ef22",
+      "after_sha256": "7a94cc0bda0140e03e5b934da0af8f8ca64e79658a5779d2fb427c3996f89b71"
+    },
+    {
+      "path": "tests/arunika-aurora-typography-preview-mockup-static.test.mjs",
+      "before_sha256": "44d4adb8e4623eb4dd0d966a72ec0fef0a0ea67bb8fcd591c0d3deee6963280e",
+      "after_sha256": "cf88b72ef34e306e2615a880c9375965756ba337b93be636a57373ebe48eb10c"
+    },
+    {
+      "path": "tests/arunika-concept-theme-rename-static.test.mjs",
+      "before_sha256": "62c3a08129df95a25aba366e25d10bb9d057532e6443ea737dad8e92a2da1a4e",
+      "after_sha256": "8c2c326b02fc9dd492691b436a9908e071d2ecc5c8e678628d32bf88bc1130b8"
+    },
+    {
+      "path": "tests/pagebuilder-editor-redesign-v23-static.test.mjs",
+      "before_sha256": "8728312d6691ae4735ae87ad0f0697f51f8067ae53b0577aa1b8ec31ccde6202",
+      "after_sha256": "68dbbc3d541efe83072bd441e4b835de49bbd4803dd988450da0fa60479a1f2e"
+    },
+    {
+      "path": "tests/pagebuilder-editor-redesign-v24-static.test.mjs",
+      "before_sha256": "fbc18ac853d6de9a13fc7b38bb4bf11cb4b1a3d59c69da1088a7e3577173d115",
+      "after_sha256": "79eacbe72b158ded400bb47a79668902bbc7011d3414cd5ccd1f4f4037c51f5a"
+    },
+    {
+      "path": "tests/pagebuilder-v23-hero-banner-widget-parity.test.mjs",
+      "before_sha256": "7d6e5f1885df72ae5abef8f0be088420484d8c3f4621f1c6f9a093f2a5245375",
+      "after_sha256": "6859c9b2cfa66498c95339e0c1e0f9156943438f38339e5c6071302d991bc206"
+    },
+    {
+      "path": "tests/pagebuilder-v24-hero-banner-widget-parity.test.mjs",
+      "before_sha256": "f63d76a7114fa2d7f58b03a85b69306a0c74fee90768bb880036a56ec9af8d84",
+      "after_sha256": "490eed80716214528612510aadd1cc0be6a33b8b5348001c0949d69fb2198f67"
+    },
+    {
+      "path": "tests/theme-manager-mockup-static.test.mjs",
+      "before_sha256": "24b0bd1a074098a1d5ac6f9d9aa79eb80ca99c4c4ff7becbdabedc8096028d15",
+      "after_sha256": "9d1d0d7dbe99cff0f43df32eb258ac19266dfdf17a6ebdd705b94e1f998295af"
+    },
+    {
+      "path": "tests/theme-manager-production-static.test.mjs",
+      "before_sha256": "3a990f404c8fdd86c0f9b542ed39bc3b5ccfc89b1dd839680194031499402f7c",
+      "after_sha256": "97752fc43dea0bf6b4dde91c922f242d0b95c58fbfd816aa54de5c819a0e2e4b"
+    }
+  ],
+  "protected": {
+    "public/assets/css/article/article-editor-content.css": "6afb1ae03f2884482dd37a387895f5d1bdeeba3b7cd6798232ef2a00368646b1",
+    "public/assets/css/article/article-frontend-2026.css": "1184687649111f8c9967c0c3841e345b97da87117a4a00168c44c8b7b67a1e4e",
+    "public/assets/css/article/article-template-manager-2026.css": "090793c26fa9ca2c06c028d70ad0f6936cbde29bcb4b6388eddf20cb0fbd80d0",
+    "public/assets/css/article/manage-article-2026.css": "82d99e4ca15997b7093ae99956de4b3a1b8afc2c042c0907c9867413ba90f774",
+    "public/assets/css/cms/cms-bootstrap-theme.css": "19af32e8a98f3cc422c6c46bd18157c386a3658df9fef7748ba4d4a1e55c2a15",
+    "public/assets/css/frontend/frontend-menu-dropdown.css": "4504e22ba1974d42dae3c1661f804dd2524b3d8cd1080909baa68502dbb38e19",
+    "public/assets/css/header-navigation/awesome-admin-header-navigation-fullscreen.css": "b1a459ca63298db28abb991b70e0e0387654dcda4d3194b4065af2bfb6563763",
+    "public/assets/css/header-navigation/awesome-admin-header-navigation.css": "fe97d9dcafa31ea3b06260205262ec70de75c11020abdc43e9ad6d74107036ae",
+    "public/assets/css/pagebuilder/elementor/frontend_elementor.css": "b429128a5fa47cb65f1448933b99e08269921e4a68fdf218b67f822ef6737b60",
+    "public/assets/css/pagebuilder/elementor/pagebuilder_elementor.css": "d617a48eed17a56409e65e0e67528b2483ea651635d66fee22b325bde88cc713",
+    "public/assets/css/pagebuilder/elementor-v23/frontend_elementor_v23.css": "371dd504831a81d4585f337226bfbab92d262594d8905c1414a959d32788cfb6",
+    "public/assets/css/pagebuilder/elementor-v23/pagebuilder_elementor_v23.css": "3dd2141dbdb9fd1760c55bf8d0674b3ee3e1f6c7f69f31b69eb9adc6712eddff",
+    "public/assets/css/pagebuilder/elementor-v24/frontend_elementor_v24.css": "7daf7a9dec9b915e0706e6a6e7496b66c43ff0ba037e89c5e0e439c72aebfc0e",
+    "public/assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css": "757ed1e38ca1f777ce4984d282062c708e1f104e555401a3c3901278a276c1d6",
+    "public/assets/css/pagebuilder/legacy/pagebuilder.css": "abba586a5aa7414acfe68680a2e037f45d71d69dc5f2d446dec9c79e98a95726",
+    "public/assets/css/setup/aruna-v4.css": "8b2c0afa4d89302f94b868d0a7bdffe7793e87e4d595d0715855a12ade5e73bb",
+    "public/assets/css/shared/extending-css-bootstrap-5.css": "847cafb5d3c3847869502ea84109639804b514067bc2ad35e9dadd1c0a4217a8",
+    "public/assets/css/shared/phoenix-cms.css": "34a73439e91486257b1b1dbb62731577207a6e4c67a874aade0725fd037c9bad",
+    "public/assets/css/shared/theme-responsive-typography.css": "618872e9da8c2e38a9257b86f885c3d70bccfa99258c3607ef8595b5824e3d91",
+    "public/assets/css/themes/arunika_aurora/arunika_aurora.css": "39bafad756dffe9c428e9ea9fba60f02b43aeb3660d3c49396aba05b44e226fa",
+    "public/assets/css/themes/arunika_aurora/mobile-v2.css": "ef9eaf1cf8e897848399ceed0d84944567b7328dc18b74e56602e2d852ee827f",
+    "public/assets/css/themes/arunika_equinox/arunika_equinox.css": "78ead3f9beb115ca6e17dafb3aa5bbaf27b610bffaaa4a910dd15db3b77ce671",
+    "public/assets/css/themes/arunika_equinox/mobile-v2.css": "d0c5ab15bdf255c0ed82a74ebf57852e17db4d7786cc34af15f5d13a6376c558",
+    "public/assets/css/themes/arunika_lucent/arunika_lucent.css": "8333e794c506d431fda371c2dea979b818d74d387c91746a7e159ae3373ed1ee",
+    "public/assets/css/themes/arunika_lucent/mobile-v2.css": "ff9849fd60cebf8bf1c10c66e8e32e6aca0ef5c5d3d0f59d242450d341554873",
+    "public/assets/css/themes/arunika_prism/arunika_prism.css": "44ebad46e39f2c0160703e1f006518620d32f77dc4b84dc6e0637bb4a57735cb",
+    "public/assets/css/themes/arunika_prism/mobile-v2.css": "d18ed9463156668b67586e5e231ec9164b880a773f9f5cc23c0bbe2385d9c8d8",
+    "public/assets/css/themes/calm_green/aruna-admin-v7-calm-green.css": "7cd54758a58cbe92a4e2b33fa4c99d9af9fd8ba0f354952f59eb2b5f375e8071",
+    "public/assets/css/themes/calm_green/phoenix-cms-calm-green.css": "4bdb9ea4fd4d9a408326b0f97b70fdbc4423ec414abf2699c0a88edc3056c921",
+    "public/assets/css/themes/default/aruna-admin-v7-default.css": "d2bad3e9661c970383162514eb305028e46c968e4c09acc4a1e02d307b24bedb",
+    "public/assets/css/themes/default/phoenix-cms-default.css": "04bafb1a9056323acea37e8e7b6455987cc5ec85615c5e39a23483cc29b334ac",
+    "public/assets/css/workflow/workflow-editor.css": "d571d5af9b74ecd4329505f0ef4a3708f059a1d0633e0af25b44d36c09bb2857"
+  }
+}

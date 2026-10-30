@@ -1,0 +1,4 @@
+{
+  "isError": true,
+  "error": "Error: ENOENT: no such file or directory, open 'D:\\Laragon\\www\\laravel-13-phoenix\\project-artifacts\\css-organization-20261030\\verify-assets.js'"
+}

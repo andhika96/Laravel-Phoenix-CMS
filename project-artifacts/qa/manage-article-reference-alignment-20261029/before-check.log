@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected 20px left inset: {"width":1440,"mobile":false,"button":{"left":319,"right":355,"top":260.0625,"bottom":296.0625,"width":36,"height":36},"check":{"left":379,"right":415,"top":260.0625,"bottom":296.0625,"width":36,"height":36},"checkInput":{"left":390,"right":404,"top":271.0625,"bottom":285.0625,"width":14,"height":14},"visibleGap":35,"title":{"left":435,"right":876,"top":267.0625,"bottom":311.0625,"width":441,"height":44},"row":{"left":311,"right":1417,"top":250.5625,"bottom":351.015625,"width":1106,"height":100.453125},"gap":24,"inset":8,"centerDelta":-22.7265625,"headerCheck":{"left":379,"right":415,"top":205.0625,"bottom":241.0625,"width":36,"height":36},"expandCell":{"left":311,"right":367,"top":250.5625,"bottom":351.015625,"width":56,"height":100.453125,"padding":"9px 12px 9px 8px"},"checkCell":{"left":367,"right":423,"top":250.5625,"bottom":351.015625,"width":56,"height":100.453125,"padding":"9px 8px 9px 12px"},"detail":null,"overflow":false}
+    at verify (file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/tests/manage-article-reference-alignment-20261029/browser-qa.mjs:34:12)
+    at file:///D:/Laragon/www/laravel-13-phoenix/project-artifacts/tests/manage-article-reference-alignment-20261029/browser-qa.mjs:50:33 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

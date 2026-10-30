@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-30",
+  "total_local_css": 173,
+  "reviewed_counts": {
+    "KANDIDAT_TIDAK_TERPAKAI_SOURCE_DB_0_HIT": 1,
+    "TERPAKAI_RUNTIME_HTTP_200": 43,
+    "TERPAKAI_KONDISIONAL_SOURCE": 11,
+    "KANDIDAT_VARIAN_PLUGIN_TANPA_PEMANGGIL_APLIKASI": 66,
+    "CONTOH_DOKUMENTASI_TEST_PLUGIN": 11,
+    "DEPENDENSI_SKIN_DINAMIS_CKFINDER_PERTAHANKAN": 9,
+    "SOURCE_DISTRIBUSI_SPECTRUM": 2,
+    "INPUT_VITE_KOSONG_TANPA_CONSUMER_VIEW": 1,
+    "SOURCE_BUILD_TERPAKAI": 1,
+    "TERPAKAI_RUNTIME_STYLE_INLINE": 28
+  },
+  "browser_pages": 15,
+  "unique_local_css_http_200": 43,
+  "inline_module_styles": 28,
+  "custom_css_runtime": 21,
+  "custom_css_conditional": 11,
+  "css_hashes_unchanged": 173,
+  "npm_direct_css_imports": [
+    "bootstrap/dist/css/bootstrap.min.css",
+    "bootstrap-icons/font/bootstrap-icons.css",
+    "@fontsource/nunito/400.css",
+    "@fontsource/nunito/500.css",
+    "@fontsource/nunito/600.css",
+    "@fontsource/nunito/700.css",
+    "filepond/dist/filepond.min.css"
+  ],
+  "stale_graph_css": [
+    "public/assets/css/article/manage-article-2026.css"
+  ]
+}

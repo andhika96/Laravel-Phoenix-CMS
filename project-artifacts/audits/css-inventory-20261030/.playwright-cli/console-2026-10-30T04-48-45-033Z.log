@@ -1,0 +1,8 @@
+[    2170ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0
+[  175119ms] [LOG] [PB] app.js loaded v3-refactor - 2026-10-30T04:51:40.138Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor_v24/app.js?v=1788098143:2
+[  249254ms] [LOG] [PB] app.js loaded v3-refactor - 2026-10-30T04:52:54.286Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor_v24/app.js?v=1788098143:2
+[  337081ms] [INFO] You are running a development build of Vue.
+Make sure to use the production build (*.prod.js) when deploying for production. @ https://unpkg.com/vue@3/dist/vue.global.js:13244
+[  337199ms] [WARNING] [Vue warn]: A plugin must either be a function or an object with an "install" function. @ https://unpkg.com/vue@3/dist/vue.global.js:2473
+[  338706ms] [LOG] [PB] app.js loaded v3-refactor - 2026-10-30T04:54:23.733Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor/app.js?v=1786167649:2
+[  339276ms] [LOG] [PB] app.js loaded v3-refactor - 2026-10-30T04:54:24.300Z @ https://laravel-13-phoenix.aruna/js/pagebuilder_elementor_v23/app.js?v=1787400273:2

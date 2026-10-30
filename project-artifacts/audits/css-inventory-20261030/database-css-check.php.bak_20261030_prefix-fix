@@ -1,0 +1,26 @@
+<?php
+// Read-only candidate lookup; record counts, never database content or credentials.
+$root = dirname(__DIR__, 3);
+require $root.'/vendor/autoload.php';
+$app = require $root.'/bootstrap/app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+$db = Illuminate\Support\Facades\DB::connection();
+$db->statement('START TRANSACTION READ ONLY');
+try {
+    $columns = $db->table('information_schema.columns')
+        ->where('table_schema', $db->getDatabaseName())
+        ->whereIn('data_type', ['char', 'varchar', 'tinytext', 'text', 'mediumtext', 'longtext', 'json'])
+        ->get(['table_name', 'column_name']);
+    $hits = [];
+    foreach ($columns as $column) {
+        $count = $db->table($column->table_name)->where($column->column_name, 'like', '%new.css%')->count();
+        if ($count > 0) {
+            $hits[] = ['table' => $column->table_name, 'column' => $column->column_name, 'count' => $count];
+        }
+    }
+    $result = ['candidate' => 'public/assets/beta_css/new.css', 'mode' => 'READ ONLY transaction', 'text_json_columns_checked' => count($columns), 'hits' => $hits];
+    file_put_contents(__DIR__.'/database-css-check.json', json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL;
+} finally {
+    $db->rollBack();
+}

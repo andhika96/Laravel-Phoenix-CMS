@@ -1,0 +1,781 @@
+@extends('themes.'.custom_theme('cms'))
+
+@section('title')
+	Header Navigation
+@endsection
+
+@push('css')
+	<link href="{{ asset('assets/vendor/coloris/coloris.min.css?v=').time() }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/awesome-admin-header-navigation.css?v=').time() }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/awesome-admin-header-navigation-fullscreen.css?v=').time() }}" rel="stylesheet">
+@endpush
+
+@section('content')
+	<div class="mb-3">
+		{{ Breadcrumbs::render('awesome_admin.header_navigation') }}
+	</div>
+
+<div id="headerNavigationEditor" class="header-navigation-editor editorial-option-two header-navigation-fullscreen">
+	<main>
+		<div class="ph-content rounded p-3 mb-3 header-editor-topbar">
+				<div class="mock-topbar">
+					<a href="{{ route('cms.admin.awesome_admin') }}" class="header-editor-back" data-header-editor-exit><i class="fas fa-arrow-left" aria-hidden="true"></i><span>Back to CMS</span></a>
+					<div class="mock-topbar-copy">
+						<div class="editor-eyebrow">Site Navigation</div>
+						<h1 class="mock-title">Header Navigation</h1>
+						<p class="mock-subtitle">Configure the frontend header layout, colors, responsive sizing, and scroll behavior with live preview.</p>
+					</div>
+
+					<div class="mock-topbar-actions">
+						<label class="form-check form-switch mock-active-control" for="headerNavigationActive">
+							<input id="headerNavigationActive" class="form-check-input" type="checkbox" role="switch" @checked($is_active)>
+							<span class="form-check-label">Active on frontend</span>
+						</label>
+
+						<div id="headerNavigationSaveStatus" class="mock-status"><i class="fas fa-database"></i> Ready</div>
+
+						<a href="{{ route('cms.admin.awesome_admin') }}" class="btn btn-outline-secondary btn-sm" data-header-editor-exit>Cancel</a>
+						<button id="saveHeaderNavigation" type="button" class="btn btn-primary btn-sm save-header-navigation">
+							<i class="fas fa-save me-1"></i> Save changes
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="mock-workspace-grid">
+			<div class="mock-control-pane">
+				<div class="ph-content rounded p-3 control-scroll inspector-shell">
+					<div class="inspector-layout">
+						<div class="inspector-tabs" role="tablist" aria-label="Header navigation settings">
+							<button id="headerNavigationLayoutTab" type="button" class="inspector-tab is-active" data-inspector-tab="layout" role="tab" aria-controls="headerNavigationLayoutPanel" aria-selected="true">Layout</button>
+							<button id="headerNavigationStyleTab" type="button" class="inspector-tab" data-inspector-tab="style" role="tab" aria-controls="headerNavigationStylePanel" aria-selected="false">Appearance</button>
+							<button id="headerNavigationAdvancedTab" type="button" class="inspector-tab" data-inspector-tab="advanced" role="tab" aria-controls="headerNavigationAdvancedPanel" aria-selected="false">Behavior</button>
+						</div>
+						<div class="inspector-content">
+							<section id="headerNavigationLayoutPanel" class="inspector-tab-panel is-active" data-inspector-panel="layout" role="tabpanel" aria-labelledby="headerNavigationLayoutTab">
+								<div class="inspector-selection-summary">
+									<strong>Header Navigation</strong>
+									<span>Frontend header</span>
+								</div>
+								<div class="header-settings-accordion">
+<details class="header-setting-group" open>
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-eye fa-fw" aria-hidden="true"></i>
+									<span>Preview</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+						<div class="row g-2">
+							<div class="col-12">
+								<label class="form-label" for="deviceMode">Device</label>
+								<select id="deviceMode" class="form-select form-select-sm">
+									<option value="desktop">Desktop</option>
+									<option value="tablet">Tablet</option>
+									<option value="mobile">Mobile</option>
+									</select>
+								</div>
+								</div>
+							</div>
+					</details>
+
+<details class="header-setting-group">
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-columns fa-fw" aria-hidden="true"></i>
+									<span>Layout</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+						<div class="mb-3">
+							<label class="form-label">Logo position</label>
+							<div class="segmented" data-control="logoPosition">
+								<button type="button" data-value="left" class="is-active">Left</button>
+								<button type="button" data-value="center">Center</button>
+								<button type="button" data-value="right">Right</button>
+							</div>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Menu position</label>
+							<div class="segmented" data-control="menuPosition">
+								<button type="button" data-value="left" class="is-active">Left</button>
+								<button type="button" data-value="center">Center</button>
+								<button type="button" data-value="right">Right</button>
+							</div>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Header width</label>
+							<div class="segmented two" data-control="containerMode">
+								<button type="button" data-value="container" class="is-active">Container</button>
+								<button type="button" data-value="fluid">Fluid</button>
+							</div>
+						</div>
+						<div class="form-check form-switch mb-2">
+							<input id="innerBg" class="form-check-input" type="checkbox">
+							<label class="form-check-label" for="innerBg">Background follows container</label>
+						</div>
+							</div>
+						</details>
+
+<details class="header-setting-group">
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-ruler-combined fa-fw" aria-hidden="true"></i>
+									<span>Sizing</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+						<div class="row g-3 gy-lg-4">
+							<div class="col-12 inspector-inline-setting">
+								<label class="form-label" for="headerHeight">Height</label>
+								<div class="unit-control">
+									<div class="number-stepper">
+										<button type="button" class="stepper-btn" data-stepper-target="headerHeight" data-stepper-delta="-1" aria-label="Decrease height"><i class="fas fa-minus"></i></button>
+										<input id="headerHeight" type="number" value="76" step="1" class="form-control form-control-sm" inputmode="decimal">
+										<button type="button" class="stepper-btn" data-stepper-target="headerHeight" data-stepper-delta="1" aria-label="Increase height"><i class="fas fa-plus"></i></button>
+									</div>
+									<select id="headerHeightUnit" class="form-select form-select-sm">
+										<option value="px" selected>px</option>
+										<option value="em">em</option>
+										<option value="rem">rem</option>
+										<option value="pt">pt</option>
+										<option value="%">%</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-12">
+								<div class="box-control" data-box-control="headerRadius">
+									<div class="box-control-header">
+										<label class="form-label">Header radius</label>
+										<div class="responsive-mode-control" data-responsive-control="headerRadius">
+											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
+											<div class="responsive-mode-menu" role="listbox" hidden>
+												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
+											</div>
+										</div>
+										<select id="headerRadiusUnit" class="form-select form-select-sm box-unit-select">
+											<option value="px" selected>px</option>
+											<option value="%">%</option>
+											<option value="em">em</option>
+											<option value="rem">rem</option>
+											<option value="pt">pt</option>
+										</select>
+									</div>
+									<div class="box-control-row">
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusTop" data-box-stepper-delta="-1" aria-label="Decrease header radius top"><i class="fas fa-minus"></i></button>
+												<input id="headerRadiusTop" type="number" value="18" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusTop" data-box-stepper-delta="1" aria-label="Increase header radius top"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerRadiusTop">Top</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusRight" data-box-stepper-delta="-1" aria-label="Decrease header radius right"><i class="fas fa-minus"></i></button>
+												<input id="headerRadiusRight" type="number" value="18" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusRight" data-box-stepper-delta="1" aria-label="Increase header radius right"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerRadiusRight">Right</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusBottom" data-box-stepper-delta="-1" aria-label="Decrease header radius bottom"><i class="fas fa-minus"></i></button>
+												<input id="headerRadiusBottom" type="number" value="18" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusBottom" data-box-stepper-delta="1" aria-label="Increase header radius bottom"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerRadiusBottom">Bottom</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusLeft" data-box-stepper-delta="-1" aria-label="Decrease header radius left"><i class="fas fa-minus"></i></button>
+												<input id="headerRadiusLeft" type="number" value="18" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerRadiusLeft" data-box-stepper-delta="1" aria-label="Increase header radius left"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerRadiusLeft">Left</label>
+										</div>
+										<button id="headerRadiusLinked" type="button" class="box-link-toggle is-active" aria-label="Link header radius values" aria-pressed="true"><i class="fas fa-link"></i></button>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="col-12">
+								<div class="box-control" data-box-control="headerPadding">
+									<div class="box-control-header">
+										<label class="form-label">Header padding</label>
+										<div class="responsive-mode-control" data-responsive-control="headerPadding">
+											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
+										<div class="responsive-mode-menu" role="listbox" hidden>
+												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
+											</div>
+										</div>
+										<select id="headerPaddingUnit" class="form-select form-select-sm box-unit-select">
+											<option value="px" selected>px</option>
+											<option value="%">%</option>
+											<option value="em">em</option>
+											<option value="rem">rem</option>
+											<option value="pt">pt</option>
+										</select>
+									</div>
+									<div class="box-control-row">
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingTop" data-box-stepper-delta="-1" aria-label="Decrease header padding top"><i class="fas fa-minus"></i></button>
+												<input id="headerPaddingTop" type="number" value="10" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingTop" data-box-stepper-delta="1" aria-label="Increase header padding top"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerPaddingTop">Top</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingRight" data-box-stepper-delta="-1" aria-label="Decrease header padding right"><i class="fas fa-minus"></i></button>
+												<input id="headerPaddingRight" type="number" value="24" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingRight" data-box-stepper-delta="1" aria-label="Increase header padding right"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerPaddingRight">Right</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingBottom" data-box-stepper-delta="-1" aria-label="Decrease header padding bottom"><i class="fas fa-minus"></i></button>
+												<input id="headerPaddingBottom" type="number" value="10" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingBottom" data-box-stepper-delta="1" aria-label="Increase header padding bottom"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerPaddingBottom">Bottom</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingLeft" data-box-stepper-delta="-1" aria-label="Decrease header padding left"><i class="fas fa-minus"></i></button>
+												<input id="headerPaddingLeft" type="number" value="24" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="headerPaddingLeft" data-box-stepper-delta="1" aria-label="Increase header padding left"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="headerPaddingLeft">Left</label>
+										</div>
+										<button id="headerPaddingLinked" type="button" class="box-link-toggle" aria-label="Link header padding values" aria-pressed="false"><i class="fas fa-link"></i></button>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-12 inspector-inline-setting">
+								<label class="form-label">Link shape</label>
+								<div class="segmented two" data-control="linkShape">
+									<button type="button" data-value="default" class="is-active">Default</button>
+									<button type="button" data-value="leaf">Leaf</button>
+								</div>
+							</div>
+
+							<div id="leafDirectionControl" class="col-12 inspector-inline-setting" hidden>
+								<label class="form-label">Leaf direction</label>
+								<div class="segmented two" data-control="leafDirection">
+									<button type="button" data-value="forward" class="is-active">Forward</button>
+									<button type="button" data-value="reverse">Reverse</button>
+								</div>
+							</div>
+
+							<div class="col-12">
+								<div class="box-control" data-box-control="navRadius">
+									<div class="box-control-header">
+										<label class="form-label">Link radius</label>
+										<div class="responsive-mode-control" data-responsive-control="navRadius">
+											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
+											<div class="responsive-mode-menu" role="listbox" hidden>
+												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
+											</div>
+										</div>
+										<select id="navRadiusUnit" class="form-select form-select-sm box-unit-select">
+											<option value="px" selected>px</option>
+											<option value="%">%</option>
+											<option value="em">em</option>
+											<option value="rem">rem</option>
+											<option value="pt">pt</option>
+										</select>
+									</div>
+									<div class="box-control-row">
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusTop" data-box-stepper-delta="-1" aria-label="Decrease link radius top left"><i class="fas fa-minus"></i></button>
+												<input id="navRadiusTop" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusTop" data-box-stepper-delta="1" aria-label="Increase link radius top left"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="navRadiusTop">Top Left</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusRight" data-box-stepper-delta="-1" aria-label="Decrease link radius top right"><i class="fas fa-minus"></i></button>
+												<input id="navRadiusRight" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusRight" data-box-stepper-delta="1" aria-label="Increase link radius top right"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="navRadiusRight">Top Right</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusBottom" data-box-stepper-delta="-1" aria-label="Decrease link radius bottom right"><i class="fas fa-minus"></i></button>
+												<input id="navRadiusBottom" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusBottom" data-box-stepper-delta="1" aria-label="Increase link radius bottom right"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="navRadiusBottom">Bottom Right</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusLeft" data-box-stepper-delta="-1" aria-label="Decrease link radius bottom left"><i class="fas fa-minus"></i></button>
+												<input id="navRadiusLeft" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="navRadiusLeft" data-box-stepper-delta="1" aria-label="Increase link radius bottom left"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="navRadiusLeft">Bottom Left</label>
+										</div>
+										<button id="navRadiusLinked" type="button" class="box-link-toggle is-active" aria-label="Link nav radius values" aria-pressed="true"><i class="fas fa-link"></i></button>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-12">
+								<div class="box-control" data-box-control="containerMargin">
+									<div class="box-control-header">
+										<label class="form-label">Container margin</label>
+										<div class="responsive-mode-control" data-responsive-control="containerMargin">
+											<button type="button" class="responsive-mode-trigger" data-responsive-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="Responsive device: Desktop" title="Responsive: Desktop"><i class="fas fa-desktop"></i></button>
+											<div class="responsive-mode-menu" role="listbox" hidden>
+												<button type="button" class="responsive-mode-option is-active" data-responsive-mode="desktop" role="option" aria-selected="true"><i class="fas fa-desktop"></i><span>Desktop</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="tablet" role="option" aria-selected="false"><i class="fas fa-tablet-alt"></i><span>Tablet Portrait</span></button>
+												<button type="button" class="responsive-mode-option" data-responsive-mode="mobile" role="option" aria-selected="false"><i class="fas fa-mobile-alt"></i><span>Mobile Portrait</span></button>
+											</div>
+										</div>
+										<select id="containerMarginUnit" class="form-select form-select-sm box-unit-select">
+											<option value="px" selected>px</option>
+											<option value="%">%</option>
+											<option value="em">em</option>
+											<option value="rem">rem</option>
+											<option value="pt">pt</option>
+										</select>
+									</div>
+									<div class="box-control-row">
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginTop" data-box-stepper-delta="-1" aria-label="Decrease container margin top"><i class="fas fa-minus"></i></button>
+												<input id="containerMarginTop" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginTop" data-box-stepper-delta="1" aria-label="Increase container margin top"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="containerMarginTop">Top</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginRight" data-box-stepper-delta="-1" aria-label="Decrease container margin right"><i class="fas fa-minus"></i></button>
+												<input id="containerMarginRight" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginRight" data-box-stepper-delta="1" aria-label="Increase container margin right"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="containerMarginRight">Right</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginBottom" data-box-stepper-delta="-1" aria-label="Decrease container margin bottom"><i class="fas fa-minus"></i></button>
+												<input id="containerMarginBottom" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginBottom" data-box-stepper-delta="1" aria-label="Increase container margin bottom"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="containerMarginBottom">Bottom</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginLeft" data-box-stepper-delta="-1" aria-label="Decrease container margin left"><i class="fas fa-minus"></i></button>
+												<input id="containerMarginLeft" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="containerMarginLeft" data-box-stepper-delta="1" aria-label="Increase container margin left"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="containerMarginLeft">Left</label>
+										</div>
+										<button id="containerMarginLinked" type="button" class="box-link-toggle is-active" aria-label="Link container margin values" aria-pressed="true"><i class="fas fa-link"></i></button>
+									</div>
+								</div>
+							</div>
+							</div>
+							</div>
+					</details>
+						</div>
+							</section>
+							<section id="headerNavigationStylePanel" class="inspector-tab-panel" data-inspector-panel="style" role="tabpanel" aria-labelledby="headerNavigationStyleTab" hidden>
+								<div class="header-settings-accordion">
+<details class="header-setting-group" open>
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-palette fa-fw" aria-hidden="true"></i>
+									<span>Colors</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+						<div class="row g-2">
+							<div class="col-6">
+								<label class="form-label" for="headerBg">Header background</label>
+								<div class="coloris-control">
+									<input id="headerBg" data-coloris value="#ffffff" class="form-control form-control-sm coloris-field">
+								</div>
+							</div>
+							<div class="col-6">
+								<label class="form-label" for="scrolledBg">Scrolled background</label>
+								<div class="coloris-control">
+									<input id="scrolledBg" data-coloris value="#ffffff" class="form-control form-control-sm coloris-field">
+								</div>
+							</div>
+							<div class="col-6">
+								<label class="form-label" for="headerText">Header text</label>
+								<div class="coloris-control">
+									<input id="headerText" data-coloris value="#101828" class="form-control form-control-sm coloris-field">
+								</div>
+							</div>
+							<div class="col-6">
+								<label class="form-label" for="linkColor">Link</label>
+								<div class="coloris-control">
+									<input id="linkColor" data-coloris value="#273142" class="form-control form-control-sm coloris-field">
+								</div>
+							</div>
+							<div class="col-12 color-state-start link-color-state-group">
+								<div class="link-color-state-title">Link states</div>
+								<div class="link-color-state-header" aria-hidden="true">
+									<span>Link</span>
+									<span>Border</span>
+								</div>
+								<div class="link-color-state-list">
+									<div class="link-color-state-row" data-link-color-state="active">
+										<span class="link-color-state-name">Active</span>
+										<div class="link-color-control">
+											<div class="link-color-field">
+												<label class="visually-hidden" for="linkActive">Active link color</label>
+												<div class="coloris-control">
+													<input id="linkActive" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+												</div>
+											</div>
+											<div class="link-color-field">
+												<label class="visually-hidden" for="linkActiveBorder">Active border color</label>
+												<div class="coloris-control">
+													<input id="linkActiveBorder" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+												</div>
+											</div>
+											<button id="linkActiveBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="active" aria-label="Unlink active border color from active link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+										</div>
+									</div>
+									<div class="link-color-state-row" data-link-color-state="hover">
+										<span class="link-color-state-name">Hover</span>
+										<div class="link-color-control">
+											<div class="link-color-field">
+												<label class="visually-hidden" for="linkHover">Hover link color</label>
+												<div class="coloris-control">
+													<input id="linkHover" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+												</div>
+											</div>
+											<div class="link-color-field">
+												<label class="visually-hidden" for="linkHoverBorder">Hover border color</label>
+												<div class="coloris-control">
+													<input id="linkHoverBorder" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+												</div>
+											</div>
+											<button id="linkHoverBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="hover" aria-label="Unlink hover border color from hover link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+										</div>
+									</div>
+									<div class="link-color-state-row" data-link-color-state="focus">
+										<span class="link-color-state-name">Focus</span>
+										<div class="link-color-control">
+											<div class="link-color-field">
+												<label class="visually-hidden" for="linkFocus">Focus link color</label>
+												<div class="coloris-control">
+													<input id="linkFocus" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
+												</div>
+											</div>
+											<div class="link-color-field">
+												<label class="visually-hidden" for="linkFocusBorder">Focus border color</label>
+												<div class="coloris-control">
+													<input id="linkFocusBorder" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
+												</div>
+											</div>
+											<button id="linkFocusBorderLinked" type="button" class="box-link-toggle is-active" data-linked-color="focus" aria-label="Unlink focus border color from focus link color" aria-pressed="true"><i class="fas fa-link"></i></button>
+										</div>
+									</div>
+								</div>
+							</div>
+							</div>
+							</div>
+						</details>
+
+						<details class="header-setting-group" data-inspector-anchor="effects">
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-sparkles fa-fw" aria-hidden="true"></i>
+									<span>Link shadow</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+								<div class="row g-2">
+									<div class="col-12">
+								<div class="shadow-control">
+									<div class="shadow-control-header">
+										<div class="form-check form-switch mb-0">
+											<input id="linkShadowEnabled" class="form-check-input" type="checkbox">
+											<label class="form-check-label" for="linkShadowEnabled">Link shadow</label>
+										</div>
+										<select id="linkShadowUnit" class="form-select form-select-sm box-unit-select">
+											<option value="px" selected>px</option>
+											<option value="em">em</option>
+											<option value="rem">rem</option>
+											<option value="pt">pt</option>
+										</select>
+									</div>
+									<div class="box-control-row shadow-control-row">
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowX" data-box-stepper-delta="-1" aria-label="Decrease link shadow x"><i class="fas fa-minus"></i></button>
+												<input id="linkShadowX" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowX" data-box-stepper-delta="1" aria-label="Increase link shadow x"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="linkShadowX">X</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowY" data-box-stepper-delta="-1" aria-label="Decrease link shadow y"><i class="fas fa-minus"></i></button>
+												<input id="linkShadowY" type="number" value="8" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowY" data-box-stepper-delta="1" aria-label="Increase link shadow y"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="linkShadowY">Y</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowBlur" data-box-stepper-delta="-1" aria-label="Decrease link shadow blur"><i class="fas fa-minus"></i></button>
+												<input id="linkShadowBlur" type="number" value="18" min="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowBlur" data-box-stepper-delta="1" aria-label="Increase link shadow blur"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="linkShadowBlur">Blur</label>
+										</div>
+										<div class="box-side">
+											<div class="box-side-stepper">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowSpread" data-box-stepper-delta="-1" aria-label="Decrease link shadow spread"><i class="fas fa-minus"></i></button>
+												<input id="linkShadowSpread" type="number" value="0" step="1" inputmode="decimal">
+												<button type="button" class="box-stepper-btn" data-box-stepper-target="linkShadowSpread" data-box-stepper-delta="1" aria-label="Increase link shadow spread"><i class="fas fa-plus"></i></button>
+											</div>
+											<label class="box-side-label" for="linkShadowSpread">Spread</label>
+										</div>
+									</div>
+									<div class="shadow-control-meta">
+										<div>
+											<label class="form-label" for="linkShadowColor">Shadow color</label>
+											<div class="coloris-control">
+												<input id="linkShadowColor" data-coloris value="#e01d242e" class="form-control form-control-sm coloris-field">
+											</div>
+										</div>
+										<div class="form-check form-switch shadow-inset-check">
+											<input id="linkShadowInset" class="form-check-input" type="checkbox">
+											<label class="form-check-label" for="linkShadowInset">Inset</label>
+										</div>
+									</div>
+								</div>
+							</div>
+								</div>
+							</div>
+						</details>
+								</div>
+							</section>
+							<section id="headerNavigationAdvancedPanel" class="inspector-tab-panel" data-inspector-panel="advanced" role="tabpanel" aria-labelledby="headerNavigationAdvancedTab" hidden>
+								<div class="header-settings-accordion">
+<details class="header-setting-group">
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-magic fa-fw" aria-hidden="true"></i>
+									<span>Behavior</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+						<div class="mb-3">
+							<label class="form-label">Scroll behavior</label>
+							<div class="segmented" data-control="headerBehavior">
+								<button type="button" data-value="fixed">Fixed</button>
+								<button type="button" data-value="sticky">Sticky</button>
+								<button type="button" data-value="stay" class="is-active">Stay</button>
+							</div>
+						</div>
+						<div class="form-check form-switch mb-2">
+							<input id="transparentStart" class="form-check-input" type="checkbox">
+							<label class="form-check-label" for="transparentStart">Transparent before scrolling</label>
+						</div>
+						<div id="transparentColorPanel" class="transparent-color-panel" hidden>
+							<div>
+								<label class="form-label">Transparent color mode</label>
+								<div class="segmented two" data-control="transparentColorMode">
+									<button type="button" data-value="auto" class="is-active">Auto</button>
+									<button type="button" data-value="custom">Custom</button>
+								</div>
+							</div>
+							<div id="transparentCustomFields" class="transparent-custom-fields" hidden>
+								<div class="row g-2">
+									<div class="col-6">
+										<label class="form-label" for="transparentText">Text/link</label>
+										<div class="coloris-control">
+											<input id="transparentText" data-coloris value="#ffffff" class="form-control form-control-sm coloris-field">
+										</div>
+									</div>
+									<div class="col-6">
+										<label class="form-label" for="transparentHover">Hover</label>
+										<div class="coloris-control">
+											<input id="transparentHover" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+										</div>
+									</div>
+									<div class="col-6">
+										<label class="form-label" for="transparentFocus">Focus</label>
+										<div class="coloris-control">
+											<input id="transparentFocus" data-coloris value="#c4121a" class="form-control form-control-sm coloris-field">
+										</div>
+									</div>
+									<div class="col-6">
+										<label class="form-label" for="transparentActive">Active</label>
+										<div class="coloris-control">
+											<input id="transparentActive" data-coloris value="#e01d24" class="form-control form-control-sm coloris-field">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-check form-switch mb-3">
+							<input id="animateScroll" class="form-check-input" type="checkbox">
+							<label class="form-check-label" for="animateScroll">Animate on scroll</label>
+						</div>
+							</div>
+						</details>
+
+<details class="header-setting-group">
+							<summary class="header-setting-summary">
+								<span class="header-setting-summary-title">
+									<i class="fad fa-code fa-fw" aria-hidden="true"></i>
+									<span>Configuration</span>
+								</span>
+								<i class="fal fa-angle-down header-setting-summary-chevron" aria-hidden="true"></i>
+							</summary>
+
+							<div class="header-setting-panel">
+								<pre id="jsonOutput" class="json-output mb-0"></pre>
+							</div>
+						</details>
+								</div>
+							</section>
+						</div>
+			</div>
+			</div>
+			</div>
+
+			<div class="mock-preview-pane">
+				<div class="ph-content rounded preview-card">
+					<div class="preview-toolbar">
+						<div class="preview-toolbar-copy">
+							<div class="preview-toolbar-title"><span class="preview-live-dot" aria-hidden="true"></span><strong>Preview</strong></div>
+							<div class="preview-toolbar-hint">Scroll the artboard or choose a scroll state to see the header adapt.</div>
+							<div id="previewScaleStatus" class="preview-scale-status" aria-live="polite">Desktop 1440×900px · Fit 100%</div>
+						</div>
+						<div class="preview-toolbar-actions">
+							<div class="preview-device-switcher" role="group" aria-label="Preview device">
+								<button type="button" class="preview-device-button is-active" data-preview-device="desktop" aria-pressed="true"><i class="fas fa-desktop" aria-hidden="true"></i><span>Desktop</span></button>
+								<button type="button" class="preview-device-button" data-preview-device="tablet" aria-pressed="false"><i class="fas fa-tablet-alt" aria-hidden="true"></i><span>Tablet</span></button>
+								<button type="button" class="preview-device-button" data-preview-device="mobile" aria-pressed="false"><i class="fas fa-mobile-alt" aria-hidden="true"></i><span>Mobile</span></button>
+							</div>
+							<button id="resetPreview" type="button" class="btn btn-sm btn-outline-secondary"><i class="fas fa-undo-alt me-1"></i> Reset</button>
+						</div>
+					</div>
+					<div id="previewFrame" class="preview-frame">
+						<div id="previewViewport" class="preview-viewport">
+							<div id="deviceStage" class="device-stage">
+								<header id="siteHeader" class="site-header is-stay full-bg">
+									<div id="headerContainer" class="header-container">
+										<div id="headerInner" class="header-inner layout-left"></div>
+									</div>
+								</header>
+								<section class="hero-copy">
+									<h2>Room for bigger ideas.</h2>
+									<p>Clear navigation helps visitors find what they need. Preview your header changes on this sample page.</p>
+								</section>
+								<section class="page-band">
+									<div class="preview-journal">
+										<div class="preview-journal-intro">
+											<span class="preview-kicker">The journal</span>
+											<h2>A little space for inspiration.</h2>
+											<p>Thoughtful ideas, fresh perspectives, and small details that make a difference.</p>
+										</div>
+										<article class="preview-feature">
+											<div>
+												<span class="preview-kicker">Featured story · 5 min read</span>
+												<h3>Good ideas need room to grow.</h3>
+												<p>A quieter pace can bring a clearer perspective. Sometimes the best place to begin is with a little less noise and a little more curiosity.</p>
+												<p>Take a moment to notice what matters. Leave space for the next possibility.</p>
+											</div>
+											<img src="{{ asset('assets/images/trees-on-forest-at-daytime-1083515.jpg') }}" alt="Sunlight filtering through a quiet green forest" width="560" height="240" loading="lazy">
+										</article>
+										<section class="preview-notes" aria-labelledby="previewNotesHeading">
+											<h3 id="previewNotesHeading">Latest notes</h3>
+											<article class="preview-note"><span class="preview-note-number" aria-hidden="true">01</span><div><h4>The beauty of keeping things simple</h4><p>Find clarity by giving the essentials a little more room.</p></div><span class="preview-note-meta">Design · 3 min read</span></article>
+											<article class="preview-note"><span class="preview-note-number" aria-hidden="true">02</span><div><h4>Small details, lasting impressions</h4><p>A considered detail can make an everyday experience feel special.</p></div><span class="preview-note-meta">Perspective · 4 min read</span></article>
+											<article class="preview-note"><span class="preview-note-number" aria-hidden="true">03</span><div><h4>A fresh perspective starts here</h4><p>Stay curious about familiar places and the possibilities ahead.</p></div><span class="preview-note-meta">Inspiration · 3 min read</span></article>
+										</section>
+										<footer class="preview-journal-footer"><strong>Phoenix CMS</strong><span>Made for ideas worth sharing.</span><small>Sample preview content</small></footer>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+					<div id="previewTimeline" class="preview-timeline" aria-label="Scroll state timeline">
+						<div class="preview-timeline-head">
+							<div>
+								<strong>Scroll state timeline</strong>
+								<span>Preview how your header adapts as users scroll.</span>
+							</div>
+							<span id="scrollTimelineValue" class="preview-timeline-value">Top &middot; 0%</span>
+						</div>
+						<div class="preview-timeline-track" role="group" aria-label="Scroll state presets">
+							<span class="preview-timeline-line" aria-hidden="true"></span>
+							<button type="button" class="preview-timeline-point is-active" data-scroll-preset="0" aria-pressed="true"><span>Top</span><small>0%</small></button>
+							<button type="button" class="preview-timeline-point" data-scroll-preset="25" aria-pressed="false"><span>Scrolled</span><small>25%</small></button>
+							<button type="button" class="preview-timeline-point" data-scroll-preset="50" aria-pressed="false"><span>Mid</span><small>50%</small></button>
+							<button type="button" class="preview-timeline-point" data-scroll-preset="75" aria-pressed="false"><span>Near bottom</span><small>75%</small></button>
+							<button type="button" class="preview-timeline-point" data-scroll-preset="100" aria-pressed="false"><span>Bottom</span><small>100%</small></button>
+						</div>
+						<div class="preview-timeline-range">
+							<input id="scrollSim" type="range" min="0" max="100" value="0" class="form-range" aria-label="Simulate scroll">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<dialog id="headerEditorExitDialog" aria-labelledby="headerEditorExitTitle" aria-describedby="headerEditorExitDescription">
+		<h2 id="headerEditorExitTitle">Leave without saving?</h2>
+		<p id="headerEditorExitDescription">Your unsaved header navigation changes will be lost.</p>
+		<div class="header-editor-dialog-actions">
+			<button type="button" class="btn btn-outline-secondary" id="headerEditorKeepEditing" autofocus>Keep editing</button>
+			<button type="button" class="btn btn-danger" id="headerEditorDiscard">Leave without saving</button>
+		</div>
+	</dialog>
+</div>
+@endsection
+
+@push('js')
+	<script>
+		window.headerNavigationEditorOptions = {
+			config: {{ Illuminate\Support\Js::from($config) }},
+			isActive: {{ $is_active ? 'true' : 'false' }},
+			previewUrl: {{ Illuminate\Support\Js::from(route('cms.admin.awesome_admin.header_navigation.preview_data', [], false)) }},
+			updateUrl: {{ Illuminate\Support\Js::from(route('cms.admin.awesome_admin.header_navigation.update')) }},
+			csrfToken: {{ Illuminate\Support\Js::from(csrf_token()) }}
+		};
+	</script>
+	<script src="{{ asset('assets/vendor/coloris/coloris.min.js?v=').time() }}"></script>
+	<script src="{{ asset('assets/js/awesome-admin-header-navigation.js?v=').time() }}"></script>
+	<script src="{{ asset('assets/js/awesome-admin-header-navigation-fullscreen.js?v=').time() }}"></script>
+@endpush

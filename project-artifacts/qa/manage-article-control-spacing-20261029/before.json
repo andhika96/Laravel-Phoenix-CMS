@@ -1,0 +1,1242 @@
+[
+  {
+    "width": 1440,
+    "rootSize": "16px",
+    "bodySize": "14px",
+    "manager": {
+      "x": 310,
+      "y": 24,
+      "width": 1108,
+      "height": 1452.625,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "block",
+      "align": "baseline",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "row": {
+      "x": 311,
+      "y": 250.5625,
+      "width": 1106,
+      "height": 98.046875,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "table-row",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "expandCell": {
+      "x": 311,
+      "y": 250.5625,
+      "width": 68,
+      "height": 98.046875,
+      "padding": "9px 20px 9px 12px",
+      "paddingLeft": "12px",
+      "paddingRight": "20px",
+      "paddingTop": "9px",
+      "paddingBottom": "9px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "table-cell",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "button": {
+      "x": 323,
+      "y": 260.0625,
+      "width": 36,
+      "height": 36,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "center",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "checkCell": {
+      "x": 379,
+      "y": 250.5625,
+      "width": 52,
+      "height": 98.046875,
+      "padding": "9px 12px 9px 4px",
+      "paddingLeft": "4px",
+      "paddingRight": "12px",
+      "paddingTop": "9px",
+      "paddingBottom": "9px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "table-cell",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "check": {
+      "x": 383,
+      "y": 260.0625,
+      "width": 36,
+      "height": 36,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "title": {
+      "x": 444.59375,
+      "y": 267.0625,
+      "width": 429.8125,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "22px",
+      "display": "inline-block",
+      "align": "baseline",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "headerCheck": {
+      "x": 383,
+      "y": 205.0625,
+      "width": 36,
+      "height": 36,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "left",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "gap": 24,
+    "leftInset": 12,
+    "centerDelta": 0,
+    "overflow": false,
+    "rules": [
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "*, ::before, ::after",
+        "style": "box-sizing: border-box;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "thead, tbody, tfoot, tr, td, th",
+        "style": "border-color: inherit; border-style: solid; border-width: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button",
+        "style": "border-radius: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "input, button, select, optgroup, textarea",
+        "style": "margin: 0px; font-family: inherit; font-size: inherit; line-height: inherit;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button, select",
+        "style": "text-transform: none;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button, [type=\"button\"], [type=\"reset\"], [type=\"submit\"]",
+        "style": "appearance: button;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button:not(:disabled), [type=\"button\"]:not(:disabled), [type=\"reset\"]:not(:disabled), [type=\"submit\"]:not(:disabled)",
+        "style": "cursor: pointer;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": ".table > :not(caption) > * > *",
+        "style": "padding: 0.5rem; color: var(--bs-table-color-state, var(--bs-table-color-type, var(--bs-table-color))); background-color: var(--bs-table-bg); border-bottom-width: var(--bs-border-width); box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)));"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793242328",
+        "selector": ".table > :not(caption) > * > *",
+        "style": "padding: 0.85rem !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793242328",
+        "selector": "body :where(label, .form-label, button, input, select, textarea)",
+        "style": "font-size: inherit !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-table td",
+        "style": "padding: 16px 12px; vertical-align: top; overflow-wrap: anywhere; border-color: var(--article-line);"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": "#ph-app-manage-article .ph-article-table .ph-article-expand-col",
+        "style": "width: calc(var(--article-control-size) + 32px); padding: calc(27px - var(--article-control-size) / 2) 20px 9px 12px !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-expand",
+        "style": "display: inline-flex; align-items: center; justify-content: center; vertical-align: top; width: var(--article-control-size); min-width: var(--article-control-size); height: var(--article-control-size); padding: 0px; border: 0px; border-radius: 0.4rem; background: transparent; color: var(--article-muted);"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": "#ph-app-manage-article .ph-article-table tr[data-article-id] > td",
+        "style": "display: block; width: auto; border: 0px; background: transparent; box-shadow: none; padding: 0px !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-table .ph-article-expand-col",
+        "style": "grid-area: 1 / 1;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-expand",
+        "style": "background: var(--article-soft);"
+      }
+    ]
+  },
+  {
+    "width": 1024,
+    "rootSize": "16px",
+    "bodySize": "14px",
+    "manager": {
+      "x": 273.296875,
+      "y": 24,
+      "width": 728.703125,
+      "height": 1497.21875,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "block",
+      "align": "baseline",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "row": {
+      "x": 274.296875,
+      "y": 295.15625,
+      "width": 726.703125,
+      "height": 98.046875,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "table-row",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "expandCell": {
+      "x": 274.296875,
+      "y": 295.15625,
+      "width": 68,
+      "height": 98.046875,
+      "padding": "9px 20px 9px 12px",
+      "paddingLeft": "12px",
+      "paddingRight": "20px",
+      "paddingTop": "9px",
+      "paddingBottom": "9px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "table-cell",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "button": {
+      "x": 286.296875,
+      "y": 304.65625,
+      "width": 36,
+      "height": 36,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "center",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "checkCell": {
+      "x": 342.296875,
+      "y": 295.15625,
+      "width": 52,
+      "height": 98.046875,
+      "padding": "9px 12px 9px 4px",
+      "paddingLeft": "4px",
+      "paddingRight": "12px",
+      "paddingTop": "9px",
+      "paddingBottom": "9px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "table-cell",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "check": {
+      "x": 346.296875,
+      "y": 304.65625,
+      "width": 36,
+      "height": 36,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "title": {
+      "x": 407.890625,
+      "y": 311.65625,
+      "width": 345.515625,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "22px",
+      "display": "inline-block",
+      "align": "baseline",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "headerCheck": {
+      "x": 346.296875,
+      "y": 249.65625,
+      "width": 36,
+      "height": 36,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "left",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "gap": 24,
+    "leftInset": 12,
+    "centerDelta": 0,
+    "overflow": false,
+    "rules": [
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "*, ::before, ::after",
+        "style": "box-sizing: border-box;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "thead, tbody, tfoot, tr, td, th",
+        "style": "border-color: inherit; border-style: solid; border-width: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button",
+        "style": "border-radius: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button:focus:not(:focus-visible)",
+        "style": "outline: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "input, button, select, optgroup, textarea",
+        "style": "margin: 0px; font-family: inherit; font-size: inherit; line-height: inherit;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button, select",
+        "style": "text-transform: none;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button, [type=\"button\"], [type=\"reset\"], [type=\"submit\"]",
+        "style": "appearance: button;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button:not(:disabled), [type=\"button\"]:not(:disabled), [type=\"reset\"]:not(:disabled), [type=\"submit\"]:not(:disabled)",
+        "style": "cursor: pointer;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": ".table > :not(caption) > * > *",
+        "style": "padding: 0.5rem; color: var(--bs-table-color-state, var(--bs-table-color-type, var(--bs-table-color))); background-color: var(--bs-table-bg); border-bottom-width: var(--bs-border-width); box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)));"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793242328",
+        "selector": ".table > :not(caption) > * > *",
+        "style": "padding: 0.85rem !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793242328",
+        "selector": "body :where(label, .form-label, button, input, select, textarea)",
+        "style": "font-size: inherit !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-table td",
+        "style": "padding: 16px 12px; vertical-align: top; overflow-wrap: anywhere; border-color: var(--article-line);"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": "#ph-app-manage-article .ph-article-table .ph-article-expand-col",
+        "style": "width: calc(var(--article-control-size) + 32px); padding: calc(27px - var(--article-control-size) / 2) 20px 9px 12px !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-expand",
+        "style": "display: inline-flex; align-items: center; justify-content: center; vertical-align: top; width: var(--article-control-size); min-width: var(--article-control-size); height: var(--article-control-size); padding: 0px; border: 0px; border-radius: 0.4rem; background: transparent; color: var(--article-muted);"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": "#ph-app-manage-article .ph-article-table tr[data-article-id] > td",
+        "style": "display: block; width: auto; border: 0px; background: transparent; box-shadow: none; padding: 0px !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-table .ph-article-expand-col",
+        "style": "grid-area: 1 / 1;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-expand",
+        "style": "background: var(--article-soft);"
+      }
+    ]
+  },
+  {
+    "width": 768,
+    "rootSize": "16px",
+    "bodySize": "14px",
+    "manager": {
+      "x": 14,
+      "y": 82,
+      "width": 740,
+      "height": 1498.4375,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "block",
+      "align": "baseline",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "row": {
+      "x": 15,
+      "y": 351.234375,
+      "width": 738,
+      "height": 98.046875,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "table-row",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "expandCell": {
+      "x": 15,
+      "y": 351.234375,
+      "width": 68,
+      "height": 98.046875,
+      "padding": "9px 20px 9px 12px",
+      "paddingLeft": "12px",
+      "paddingRight": "20px",
+      "paddingTop": "9px",
+      "paddingBottom": "9px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "table-cell",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "button": {
+      "x": 27,
+      "y": 360.734375,
+      "width": 36,
+      "height": 36,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "center",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "checkCell": {
+      "x": 83,
+      "y": 351.234375,
+      "width": 52,
+      "height": 98.046875,
+      "padding": "9px 12px 9px 4px",
+      "paddingLeft": "4px",
+      "paddingRight": "12px",
+      "paddingTop": "9px",
+      "paddingBottom": "9px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "table-cell",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "check": {
+      "x": 87,
+      "y": 360.734375,
+      "width": 36,
+      "height": 36,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "title": {
+      "x": 148.59375,
+      "y": 367.734375,
+      "width": 356.8125,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "22px",
+      "display": "inline-block",
+      "align": "baseline",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "headerCheck": {
+      "x": 87,
+      "y": 305.734375,
+      "width": 36,
+      "height": 36,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "left",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "gap": 24,
+    "leftInset": 12,
+    "centerDelta": 0,
+    "overflow": false,
+    "rules": [
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "*, ::before, ::after",
+        "style": "box-sizing: border-box;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "thead, tbody, tfoot, tr, td, th",
+        "style": "border-color: inherit; border-style: solid; border-width: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button",
+        "style": "border-radius: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button:focus:not(:focus-visible)",
+        "style": "outline: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "input, button, select, optgroup, textarea",
+        "style": "margin: 0px; font-family: inherit; font-size: inherit; line-height: inherit;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button, select",
+        "style": "text-transform: none;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button, [type=\"button\"], [type=\"reset\"], [type=\"submit\"]",
+        "style": "appearance: button;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button:not(:disabled), [type=\"button\"]:not(:disabled), [type=\"reset\"]:not(:disabled), [type=\"submit\"]:not(:disabled)",
+        "style": "cursor: pointer;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": ".table > :not(caption) > * > *",
+        "style": "padding: 0.5rem; color: var(--bs-table-color-state, var(--bs-table-color-type, var(--bs-table-color))); background-color: var(--bs-table-bg); border-bottom-width: var(--bs-border-width); box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)));"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793242328",
+        "selector": ".table > :not(caption) > * > *",
+        "style": "padding: 0.85rem !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793242328",
+        "selector": "body :where(label, .form-label, button, input, select, textarea)",
+        "style": "font-size: inherit !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-table td",
+        "style": "padding: 16px 12px; vertical-align: top; overflow-wrap: anywhere; border-color: var(--article-line);"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": "#ph-app-manage-article .ph-article-table .ph-article-expand-col",
+        "style": "width: calc(var(--article-control-size) + 32px); padding: calc(27px - var(--article-control-size) / 2) 20px 9px 12px !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-expand",
+        "style": "display: inline-flex; align-items: center; justify-content: center; vertical-align: top; width: var(--article-control-size); min-width: var(--article-control-size); height: var(--article-control-size); padding: 0px; border: 0px; border-radius: 0.4rem; background: transparent; color: var(--article-muted);"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": "#ph-app-manage-article .ph-article-table tr[data-article-id] > td",
+        "style": "display: block; width: auto; border: 0px; background: transparent; box-shadow: none; padding: 0px !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-table .ph-article-expand-col",
+        "style": "grid-area: 1 / 1;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-expand",
+        "style": "background: var(--article-soft);"
+      }
+    ]
+  },
+  {
+    "width": 390,
+    "rootSize": "16px",
+    "bodySize": "14px",
+    "manager": {
+      "x": 14,
+      "y": 82,
+      "width": 362,
+      "height": 2759.234375,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.45px",
+      "lineHeight": "20.175px",
+      "display": "block",
+      "align": "baseline",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "row": {
+      "x": 15,
+      "y": 415.671875,
+      "width": 360,
+      "height": 175.28125,
+      "padding": "12px",
+      "paddingLeft": "12px",
+      "paddingRight": "12px",
+      "paddingTop": "12px",
+      "paddingBottom": "12px",
+      "fontSize": "13.45px",
+      "lineHeight": "20.175px",
+      "display": "grid",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "expandCell": {
+      "x": 27,
+      "y": 428.671875,
+      "width": 44,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.45px",
+      "lineHeight": "20.175px",
+      "display": "block",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "button": {
+      "x": 27,
+      "y": 428.671875,
+      "width": 44,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.45px",
+      "lineHeight": "20.175px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "center",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "checkCell": {
+      "x": 95,
+      "y": 428.671875,
+      "width": 44,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.45px",
+      "lineHeight": "20.175px",
+      "display": "block",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "check": {
+      "x": 95,
+      "y": 428.671875,
+      "width": 44,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.45px",
+      "lineHeight": "20.175px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "title": {
+      "x": 27,
+      "y": 480.671875,
+      "width": 336,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.45px",
+      "lineHeight": "22px",
+      "display": "inline-block",
+      "align": "baseline",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "headerCheck": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.45px",
+      "lineHeight": "20.175px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "left",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": false
+    },
+    "gap": 24,
+    "leftInset": 12,
+    "centerDelta": -41,
+    "overflow": false,
+    "rules": [
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "*, ::before, ::after",
+        "style": "box-sizing: border-box;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "thead, tbody, tfoot, tr, td, th",
+        "style": "border-color: inherit; border-style: solid; border-width: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button",
+        "style": "border-radius: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button:focus:not(:focus-visible)",
+        "style": "outline: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "input, button, select, optgroup, textarea",
+        "style": "margin: 0px; font-family: inherit; font-size: inherit; line-height: inherit;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button, select",
+        "style": "text-transform: none;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button, [type=\"button\"], [type=\"reset\"], [type=\"submit\"]",
+        "style": "appearance: button;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button:not(:disabled), [type=\"button\"]:not(:disabled), [type=\"reset\"]:not(:disabled), [type=\"submit\"]:not(:disabled)",
+        "style": "cursor: pointer;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": ".table > :not(caption) > * > *",
+        "style": "padding: 0.5rem; color: var(--bs-table-color-state, var(--bs-table-color-type, var(--bs-table-color))); background-color: var(--bs-table-bg); border-bottom-width: var(--bs-border-width); box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)));"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793242328",
+        "selector": ".table > :not(caption) > * > *",
+        "style": "padding: 0.85rem !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793242328",
+        "selector": "body :where(label, .form-label, button, input, select, textarea)",
+        "style": "font-size: inherit !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-table td",
+        "style": "padding: 16px 12px; vertical-align: top; overflow-wrap: anywhere; border-color: var(--article-line);"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": "#ph-app-manage-article .ph-article-table .ph-article-expand-col",
+        "style": "width: calc(var(--article-control-size) + 32px); padding: calc(27px - var(--article-control-size) / 2) 20px 9px 12px !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-expand",
+        "style": "display: inline-flex; align-items: center; justify-content: center; vertical-align: top; width: var(--article-control-size); min-width: var(--article-control-size); height: var(--article-control-size); padding: 0px; border: 0px; border-radius: 0.4rem; background: transparent; color: var(--article-muted);"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": "#ph-app-manage-article .ph-article-table tr[data-article-id] > td",
+        "style": "display: block; width: auto; border: 0px; background: transparent; box-shadow: none; padding: 0px !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-table .ph-article-expand-col",
+        "style": "grid-area: 1 / 1;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-expand",
+        "style": "background: var(--article-soft);"
+      }
+    ]
+  },
+  {
+    "width": 320,
+    "rootSize": "16px",
+    "bodySize": "14px",
+    "manager": {
+      "x": 14,
+      "y": 82,
+      "width": 292,
+      "height": 3076.53125,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.1px",
+      "lineHeight": "19.65px",
+      "display": "block",
+      "align": "baseline",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "row": {
+      "x": 15,
+      "y": 439.625,
+      "width": 290,
+      "height": 174.375,
+      "padding": "12px",
+      "paddingLeft": "12px",
+      "paddingRight": "12px",
+      "paddingTop": "12px",
+      "paddingBottom": "12px",
+      "fontSize": "13.1px",
+      "lineHeight": "19.65px",
+      "display": "grid",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "expandCell": {
+      "x": 27,
+      "y": 452.625,
+      "width": 44,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.1px",
+      "lineHeight": "19.65px",
+      "display": "block",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "button": {
+      "x": 27,
+      "y": 452.625,
+      "width": 44,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.1px",
+      "lineHeight": "19.65px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "center",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "checkCell": {
+      "x": 95,
+      "y": 452.625,
+      "width": 44,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.1px",
+      "lineHeight": "19.65px",
+      "display": "block",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "check": {
+      "x": 95,
+      "y": 452.625,
+      "width": 44,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.1px",
+      "lineHeight": "19.65px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "title": {
+      "x": 27,
+      "y": 504.625,
+      "width": 266,
+      "height": 44,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.1px",
+      "lineHeight": "22px",
+      "display": "inline-block",
+      "align": "baseline",
+      "textAlign": "start",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": true
+    },
+    "headerCheck": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0,
+      "padding": "0px",
+      "paddingLeft": "0px",
+      "paddingRight": "0px",
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "fontSize": "13.1px",
+      "lineHeight": "19.65px",
+      "display": "inline-flex",
+      "align": "top",
+      "textAlign": "left",
+      "boxSizing": "border-box",
+      "zoom": "1",
+      "visible": false
+    },
+    "gap": 24,
+    "leftInset": 12,
+    "centerDelta": -41,
+    "overflow": false,
+    "rules": [
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "*, ::before, ::after",
+        "style": "box-sizing: border-box;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "thead, tbody, tfoot, tr, td, th",
+        "style": "border-color: inherit; border-style: solid; border-width: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button",
+        "style": "border-radius: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button:focus:not(:focus-visible)",
+        "style": "outline: 0px;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "input, button, select, optgroup, textarea",
+        "style": "margin: 0px; font-family: inherit; font-size: inherit; line-height: inherit;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button, select",
+        "style": "text-transform: none;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button, [type=\"button\"], [type=\"reset\"], [type=\"submit\"]",
+        "style": "appearance: button;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": "button:not(:disabled), [type=\"button\"]:not(:disabled), [type=\"reset\"]:not(:disabled), [type=\"submit\"]:not(:disabled)",
+        "style": "cursor: pointer;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": ".table > :not(caption) > * > *",
+        "style": "padding: 0.5rem; color: var(--bs-table-color-state, var(--bs-table-color-type, var(--bs-table-color))); background-color: var(--bs-table-bg); border-bottom-width: var(--bs-border-width); box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)));"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "selector": ".table-hover > tbody > tr:hover > *",
+        "style": "--bs-table-color-state: var(--bs-table-hover-color); --bs-table-bg-state: var(--bs-table-hover-bg);"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793242328",
+        "selector": ".table > :not(caption) > * > *",
+        "style": "padding: 0.85rem !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793242328",
+        "selector": "body :where(label, .form-label, button, input, select, textarea)",
+        "style": "font-size: inherit !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-table td",
+        "style": "padding: 16px 12px; vertical-align: top; overflow-wrap: anywhere; border-color: var(--article-line);"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": "#ph-app-manage-article .ph-article-table .ph-article-expand-col",
+        "style": "width: calc(var(--article-control-size) + 32px); padding: calc(27px - var(--article-control-size) / 2) 20px 9px 12px !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-expand",
+        "style": "display: inline-flex; align-items: center; justify-content: center; vertical-align: top; width: var(--article-control-size); min-width: var(--article-control-size); height: var(--article-control-size); padding: 0px; border: 0px; border-radius: 0.4rem; background: transparent; color: var(--article-muted);"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": "#ph-app-manage-article .ph-article-table tr[data-article-id] > td",
+        "style": "display: block; width: auto; border: 0px; background: transparent; box-shadow: none; padding: 0px !important;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-table .ph-article-expand-col",
+        "style": "grid-area: 1 / 1;"
+      },
+      {
+        "sheet": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793178780",
+        "selector": ".ph-article-manager .ph-article-expand",
+        "style": "background: var(--article-soft);"
+      }
+    ]
+  }
+]

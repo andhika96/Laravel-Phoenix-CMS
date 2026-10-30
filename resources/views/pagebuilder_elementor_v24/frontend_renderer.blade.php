@@ -46,7 +46,7 @@
 	@endforeach
 	<link href="{{ asset('assets/plugins/fontawesome/5.15.3/css/all.min.css') }}?v={{ @filemtime(public_path('assets/plugins/fontawesome/5.15.3/css/all.min.css')) }}" rel="stylesheet">
 	{{-- SAMA PERSIS dengan canvas builder — WYSIWYG terjamin --}}
-	<link href="{{ asset('assets/css/frontend_elementor_v24.css') }}?v={{ @filemtime(public_path('assets/css/frontend_elementor_v24.css')) }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/pagebuilder/elementor-v24/frontend_elementor_v24.css') }}?v={{ @filemtime(public_path('assets/css/pagebuilder/elementor-v24/frontend_elementor_v24.css')) }}" rel="stylesheet">
 	@foreach($pbUsedModuleAssets as $pbUsedModuleType => $pbUsedAssets)
 	@if(isset($pbUsedAssets['styles']) && is_file($pbUsedAssets['styles']))
 	<style data-pb-module-style="{{ $pbUsedModuleType }}">{!! file_get_contents($pbUsedAssets['styles']) !!}</style>

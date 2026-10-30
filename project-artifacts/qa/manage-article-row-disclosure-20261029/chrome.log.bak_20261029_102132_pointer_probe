@@ -1,0 +1,120 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('#ph-app-manage-article').locator('tr[data-article-id]').first().locator('.ph-article-title')
+    - locator resolved to <button type="button" aria-expanded="false" class="ph-article-title" aria-controls="ph-article-detail-5059">[QA CKEditor] Panduan Sistem Andal — Uji Seluruh …</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    6 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-reference-hidden="" data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-reference-hidden="" data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-reference-hidden="" data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - <ul data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+  3 × retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-reference-hidden="" data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+  6 × retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-reference-hidden="" data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-reference-hidden="" data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+  2 × retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <ul data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+  - retrying click action
+    - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - <ul data-popper-reference-hidden="" data-popper-placement="bottom-end" class="dropdown-menu dropdown-menu-end show">…</ul> from <td class="ph-article-actions-col">…</td> subtree intercepts pointer events
+  - retrying click action
+    - waiting 500ms
+
+    at D:\Laragon\www\laravel-13-phoenix\project-artifacts\tests\manage-article-row-disclosure-20261029\browser-qa.mjs:67:17 {
+  name: 'TimeoutError'
+}
+
+Node.js v24.21.0

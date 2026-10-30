@@ -826,7 +826,7 @@
 @endsection
 
 @pushonce('css')
-	<link href="{{ asset('assets/css/frontend-menu-dropdown.css?v=').time() }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/frontend/frontend-menu-dropdown.css?v=').time() }}" rel="stylesheet">
 @endpushonce
 
 @pushonce('js')

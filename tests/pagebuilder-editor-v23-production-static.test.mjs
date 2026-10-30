@@ -7,7 +7,7 @@ import { dirname, resolve } from 'node:path';
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
 const app = readFileSync(resolve(root, 'public/js/pagebuilder_elementor_v23/app.js'), 'utf8');
-const css = readFileSync(resolve(root, 'public/assets/css/pagebuilder_elementor_v23.css'), 'utf8');
+const css = readFileSync(resolve(root, 'public/assets/css/pagebuilder/elementor-v23/pagebuilder_elementor_v23.css'), 'utf8');
 const shell = readFileSync(resolve(root, 'resources/views/pagebuilder_elementor_v23/editor_shell.blade.php'), 'utf8');
 
 test('production v2.3 uses the approved single-sidebar shell', () => {

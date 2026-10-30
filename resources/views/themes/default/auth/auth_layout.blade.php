@@ -21,7 +21,7 @@
 
 			<!-- Custom CSS -->
 			<link href="{{ asset('assets/css/themes/default/phoenix-cms-default.css?v=').time() }}" rel="stylesheet">
-			<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">	
+			<link href="{{ asset('assets/css/shared/phoenix-cms.css?v=').time() }}" rel="stylesheet">
 
 			@stack('css')
 

@@ -358,7 +358,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
     {
         $appJs = $this->editorSource();
         $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Settings.vue'));
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($settings);
         $this->assertStringNotContainsString('@click.prevent="node.settings[editor.activeResponsiveKey(', $settings);
@@ -426,7 +426,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
     public function test_image_box_settings_reuse_compact_segmented_controls_and_layout_spacing(): void
     {
         $appJs = $this->editorSource();
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         foreach ([
             'pb-form-group pb-image-box-choice-row',
@@ -455,7 +455,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
     {
         $component = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/image-box/Canvas.vue'));
         $partial = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_image_box.blade.php'));
-        $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
+        $frontendCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/frontend_elementor.css'));
 
         $this->assertSourceContains("'--pb-image-box-media-justify': this.position === 'top' ? this.flexAlignment(this.alignment) : 'center'", $component);
         $this->assertSourceContains('justify-content: var(--pb-image-box-media-justify, center);', $component);
@@ -482,7 +482,7 @@ class PageBuilderElementorImageBoxWidgetParityTest extends TestCase
         $renderNode = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_node.blade.php'));
         $module = config('pagebuilder_elementor_widgets.image_box');
         $partialPath = resource_path('views/pagebuilder_elementor/partials/render_image_box.blade.php');
-        $frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
+        $frontendCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/frontend_elementor.css'));
 
         $this->assertFileExists($partialPath);
         $partial = file_get_contents($partialPath);

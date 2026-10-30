@@ -7,8 +7,8 @@ import vm from 'node:vm';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
-const v22Path = resolve(root, 'public/mockups/pagebuilder-editor-redesign-prototype.html');
-const v24Path = resolve(root, 'public/mockups/pagebuilder-editor-redesign-prototype-v2.4.html');
+const v22Path = resolve(root, 'project-artifacts/mockups/legacy-public-mockups-20261030/pagebuilder-editor-redesign-prototype.html');
+const v24Path = resolve(root, 'project-artifacts/mockups/legacy-public-mockups-20261030/pagebuilder-editor-redesign-prototype-v2.4.html');
 
 function readRailTools(html) {
     const match = html.match(/const railTools = (\[[\s\S]*?\n\s*\]);/);

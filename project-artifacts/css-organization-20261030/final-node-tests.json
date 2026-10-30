@@ -1,0 +1,10 @@
+{
+  "exit_code": 0,
+  "stats": {
+    "tests": 256,
+    "pass": 256,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  }
+}

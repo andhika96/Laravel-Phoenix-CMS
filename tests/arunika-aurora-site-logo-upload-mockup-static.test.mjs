@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 
-const mockupPath = 'public/mockups/site-logo-upload-config-mockup.html';
+const mockupPath = 'project-artifacts/mockups/legacy-public-mockups-20261030/site-logo-upload-config-mockup.html';
 
 assert.ok(existsSync(mockupPath), 'the standalone Site Logo upload mockup should exist');
 

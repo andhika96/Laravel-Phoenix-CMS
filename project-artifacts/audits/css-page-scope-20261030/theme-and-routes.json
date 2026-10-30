@@ -1,0 +1,735 @@
+{
+    "theme": {
+        "auth": "arunika_lucent.auth.auth_layout",
+        "cms": "arunika_lucent.cms.cms_layout",
+        "frontend": "arunika_lucent.frontend.frontend_layout",
+        "login_template": "default"
+    },
+    "routes": [
+        {
+            "uri": "arunika",
+            "name": "cms.core.arunika_themes",
+            "action": "App\\Http\\Controllers\\Web\\Themes\\Themes_Controller@index"
+        },
+        {
+            "uri": "arunika/v1",
+            "name": "cms.core.arunika_themes.v1",
+            "action": "App\\Http\\Controllers\\Web\\Themes\\Themes_Controller@index"
+        },
+        {
+            "uri": "arunika/v1/gemini",
+            "name": "cms.core.arunika_themes.v1.gemini",
+            "action": "App\\Http\\Controllers\\Web\\Themes\\Themes_Controller@gemini"
+        },
+        {
+            "uri": "setup",
+            "name": "cms.core.setup",
+            "action": "App\\Http\\Controllers\\Web\\Setup\\Setup_Controller@index"
+        },
+        {
+            "uri": "setup/success",
+            "name": "cms.core.setup_success",
+            "action": "App\\Http\\Controllers\\Web\\Setup\\Setup_Controller@setup_success"
+        },
+        {
+            "uri": "testing/benchmark-db",
+            "name": "cms.core.testing.benchmark",
+            "action": "App\\Http\\Controllers\\Web\\Testing\\Testing_Controller@benchmark"
+        },
+        {
+            "uri": "home",
+            "name": "cms.core.homepage",
+            "action": "App\\Http\\Controllers\\Web\\Homepage\\Homepage_Controller@index"
+        },
+        {
+            "uri": "home/listdata",
+            "name": "cms.core.homepage.listdata",
+            "action": "App\\Http\\Controllers\\Web\\Homepage\\Homepage_Controller@listData"
+        },
+        {
+            "uri": "article",
+            "name": "cms.core.article",
+            "action": "App\\Http\\Controllers\\Web\\Article\\ArticleFrontendController@index"
+        },
+        {
+            "uri": "article/listdata",
+            "name": "cms.core.article.listdata",
+            "action": "App\\Http\\Controllers\\Web\\Article\\ArticleFrontendController@listData"
+        },
+        {
+            "uri": "article/{idOrSlug}",
+            "name": "cms.core.article.detail",
+            "action": "App\\Http\\Controllers\\Web\\Article\\ArticleFrontendController@detail"
+        },
+        {
+            "uri": "/",
+            "name": "cms.core.auth",
+            "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@login"
+        },
+        {
+            "uri": "auth/login",
+            "name": "cms.core.auth.login",
+            "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@login"
+        },
+        {
+            "uri": "auth/signup",
+            "name": "cms.core.auth.signup",
+            "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@signup"
+        },
+        {
+            "uri": "auth/logout",
+            "name": "cms.core.auth.logout",
+            "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@logout"
+        },
+        {
+            "uri": "auth/logout_sso",
+            "name": "cms.core.auth.logout.sso",
+            "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@logoutSSO"
+        },
+        {
+            "uri": "auth/forgotpassword",
+            "name": "cms.core.auth.forgotpassword",
+            "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@forgotpassword"
+        },
+        {
+            "uri": "auth/recoveryaccount",
+            "name": "cms.core.auth.resetpassword",
+            "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@resetpassword"
+        },
+        {
+            "uri": "auth/checkdata",
+            "name": "cms.core.auth.user.checkdata",
+            "action": "App\\Http\\Controllers\\Web\\Auth\\Auth_Controller@checkUserData"
+        },
+        {
+            "uri": "dashboard",
+            "name": "cms.core.dashboard",
+            "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@index"
+        },
+        {
+            "uri": "dashboard/menu",
+            "name": "cms.core.dashboard.menu",
+            "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@menu"
+        },
+        {
+            "uri": "dashboard/setverticalsidebarmenu",
+            "name": "cms.core.dashboard.setVerticalSidebarMenuCollapse",
+            "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@setVerticalSidebarMenuCollapse"
+        },
+        {
+            "uri": "dashboard/removeverticalsidebarmenu",
+            "name": "cms.core.dashboard.removeVerticalSidebarMenuCollapse",
+            "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@removeVerticalSidebarMenuCollapse"
+        },
+        {
+            "uri": "dashboard/getisverticalsidebarmenuCollapse",
+            "name": "cms.core.dashboard.getIsVerticalSidebarMenuCollapse",
+            "action": "App\\Http\\Controllers\\Web\\Dashboard\\Dashboard_Controller@getIsVerticalSidebarMenuCollapse"
+        },
+        {
+            "uri": "account",
+            "name": "cms.core.account",
+            "action": "App\\Http\\Controllers\\Web\\Account\\Account_Controller@index"
+        },
+        {
+            "uri": "account/general",
+            "name": "cms.core.account.general",
+            "action": "App\\Http\\Controllers\\Web\\Account\\Account_Controller@general"
+        },
+        {
+            "uri": "account/profilepicture",
+            "name": "cms.core.account.profilePicture",
+            "action": "App\\Http\\Controllers\\Web\\Account\\Account_Controller@profilePicture"
+        },
+        {
+            "uri": "profile",
+            "name": "cms.core.profile",
+            "action": "App\\Http\\Controllers\\Web\\Profile\\Profile_Controller@index"
+        },
+        {
+            "uri": "manage_article",
+            "name": "cms.core.manage_article",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@index"
+        },
+        {
+            "uri": "manage_article/templates",
+            "name": "cms.core.manage_article.templates",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Article\\ManageArticleTemplateController@index"
+        },
+        {
+            "uri": "manage_article/templates/preview/{surface}/{template}",
+            "name": "cms.core.manage_article.templates.preview",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Article\\ManageArticleTemplateController@preview"
+        },
+        {
+            "uri": "manage_article/add",
+            "name": "cms.core.manage_article.add",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@add"
+        },
+        {
+            "uri": "manage_article/edit/{idOrSlug}",
+            "name": "cms.core.manage_article.edit",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@edit"
+        },
+        {
+            "uri": "manage_article/detaildata/{idOrSlug}",
+            "name": "cms.core.manage_article.detaildata",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@detailData"
+        },
+        {
+            "uri": "manage_article/detaildata/category/{idOrSlug}",
+            "name": "cms.core.manage_article.detaildata.category",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@detailDataCategory"
+        },
+        {
+            "uri": "manage_article/checkdata/category/{idOrSlug}",
+            "name": "cms.core.manage_article.checkdata.category",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@checkDataCategory"
+        },
+        {
+            "uri": "manage_article/listdata",
+            "name": "cms.core.manage_article.listdata",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@listData"
+        },
+        {
+            "uri": "manage_article/listdata/category",
+            "name": "cms.core.manage_article.listdata.category",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Article\\Manage_Article_Controller@listCategories"
+        },
+        {
+            "uri": "manage_coverimage",
+            "name": "cms.core.manage_coverimage",
+            "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@index"
+        },
+        {
+            "uri": "manage_coverimage/add",
+            "name": "cms.core.manage_coverimage.add",
+            "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@add"
+        },
+        {
+            "uri": "manage_coverimage/edit/{idOrSlug}",
+            "name": "cms.core.manage_coverimage.edit",
+            "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@edit"
+        },
+        {
+            "uri": "manage_coverimage/delete_single_data/{idOrSlug}",
+            "name": "cms.core.manage_coverimage.delete.singledata",
+            "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@deleteSingleCoverImageData"
+        },
+        {
+            "uri": "manage_coverimage/detaildata/{idOrSlug}",
+            "name": "cms.core.manage_coverimage.detaildata",
+            "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@detailData"
+        },
+        {
+            "uri": "manage_coverimage/listdata",
+            "name": "cms.core.manage_coverimage.listdata",
+            "action": "App\\Http\\Controllers\\Web\\Manage_CoverImage\\Manage_CoverImage_Controller@listData"
+        },
+        {
+            "uri": "manage_event",
+            "name": "cms.core.manage_event",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@index"
+        },
+        {
+            "uri": "manage_event/add",
+            "name": "cms.core.manage_event.add",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@add"
+        },
+        {
+            "uri": "manage_event/edit/{idOrSlug}",
+            "name": "cms.core.manage_event.edit",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@edit"
+        },
+        {
+            "uri": "manage_event/detaildata/{idOrSlug}",
+            "name": "cms.core.manage_event.detaildata",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@detailData"
+        },
+        {
+            "uri": "manage_event/listdata",
+            "name": "cms.core.manage_event.listdata",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@listData"
+        },
+        {
+            "uri": "manage_event/listdata/category",
+            "name": "cms.core.manage_event.listdata.category",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@listCategories"
+        },
+        {
+            "uri": "manage_event/occurrences/{idOrSlug}",
+            "name": "cms.core.manage_event.occurrences",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@listOccurrences"
+        },
+        {
+            "uri": "manage_event/registrations/{idOrSlug}",
+            "name": "cms.core.manage_event.registrations",
+            "action": "App\\Http\\Controllers\\Web\\Manage_Event\\Manage_Event_Controller@registrations"
+        },
+        {
+            "uri": "event",
+            "name": "cms.core.event",
+            "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@index"
+        },
+        {
+            "uri": "event/listdata",
+            "name": "cms.core.event.listdata",
+            "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@listData"
+        },
+        {
+            "uri": "event/registrations",
+            "name": "cms.core.event.registrations",
+            "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@registrations"
+        },
+        {
+            "uri": "event/occurrence/{occurrenceId}",
+            "name": "cms.core.event.occurrence",
+            "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@occurrence"
+        },
+        {
+            "uri": "event/{idOrSlug}",
+            "name": "cms.core.event.detail",
+            "action": "App\\Http\\Controllers\\Web\\Event\\Event_Controller@detail"
+        },
+        {
+            "uri": "notification",
+            "name": "cms.core.notification",
+            "action": "App\\Http\\Controllers\\Web\\Notification\\Notification_Controller@index"
+        },
+        {
+            "uri": "notification/empty",
+            "name": "cms.core.notification.empty",
+            "action": "App\\Http\\Controllers\\Web\\Notification\\Notification_Controller@emptyNotification"
+        },
+        {
+            "uri": "notification/filled",
+            "name": "cms.core.notification.filled",
+            "action": "App\\Http\\Controllers\\Web\\Notification\\Notification_Controller@filledNotification"
+        },
+        {
+            "uri": "notification/testing",
+            "name": "cms.core.notification.testing_page",
+            "action": "App\\Http\\Controllers\\Web\\Notification\\Notification_Controller@notificationTestingPage"
+        },
+        {
+            "uri": "awesome_admin",
+            "name": "cms.admin.awesome_admin",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Controller@index"
+        },
+        {
+            "uri": "awesome_admin/header-navigation",
+            "name": "cms.admin.awesome_admin.header_navigation",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Header_Navigation_Controller@index"
+        },
+        {
+            "uri": "awesome_admin/header-navigation/preview-data",
+            "name": "cms.admin.awesome_admin.header_navigation.preview_data",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Header_Navigation_Controller@previewData"
+        },
+        {
+            "uri": "awesome_admin/config",
+            "name": "cms.admin.awesome_admin.config",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@index"
+        },
+        {
+            "uri": "awesome_admin/config/logo/{fileName}",
+            "name": "cms.admin.awesome_admin.config.logo",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@siteLogo"
+        },
+        {
+            "uri": "awesome_admin/config/listdata",
+            "name": "cms.admin.awesome_admin.config.listdata",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listData"
+        },
+        {
+            "uri": "awesome_admin/config/listdata/fonts",
+            "name": "cms.admin.awesome_admin.config.listdata.fonts",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listDataFonts"
+        },
+        {
+            "uri": "awesome_admin/config/listdata/filefonts",
+            "name": "cms.admin.awesome_admin.config.listdata.filefonts",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listDataFileFonts"
+        },
+        {
+            "uri": "awesome_admin/config/listdata/filefonts/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.config.listdata.filefontsbyslug",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listDataFileFontsBySlug"
+        },
+        {
+            "uri": "awesome_admin/config/listdata/filefontpreview/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.config.listdata.filefontpreview",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@listDataFileFontForPreview"
+        },
+        {
+            "uri": "awesome_admin/config/testurl",
+            "name": "cms.admin.awesome_admin.config.testurl",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Config_Controller@testURL"
+        },
+        {
+            "uri": "awesome_admin/menu",
+            "name": "cms.admin.awesome_admin.menu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_Controller@index"
+        },
+        {
+            "uri": "awesome_admin/menu/be",
+            "name": "cms.admin.awesome_admin.menu.be",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@index"
+        },
+        {
+            "uri": "awesome_admin/menu/be/submenu",
+            "name": "cms.admin.awesome_admin.menu.be.submenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@submenu"
+        },
+        {
+            "uri": "awesome_admin/menu/be/submenu/detail/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.menu.be.submenu.detail",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@submenu_detail"
+        },
+        {
+            "uri": "awesome_admin/menu/be/categorymenu",
+            "name": "cms.admin.awesome_admin.menu.be.category_menu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@categorymenu"
+        },
+        {
+            "uri": "awesome_admin/menu/be/parentmenu",
+            "name": "cms.admin.awesome_admin.menu.be.parent_menu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@parentmenu"
+        },
+        {
+            "uri": "awesome_admin/menu/be/listdata/roles",
+            "name": "cms.admin.awesome_admin.menu.be.listdata.roles",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataRoles"
+        },
+        {
+            "uri": "awesome_admin/menu/be/listdata/categorymenu",
+            "name": "cms.admin.awesome_admin.menu.be.listdata.categorymenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataCategoryMenu"
+        },
+        {
+            "uri": "awesome_admin/menu/be/listdata/parentmenu",
+            "name": "cms.admin.awesome_admin.menu.be.listdata.parentmenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataParentMenu"
+        },
+        {
+            "uri": "awesome_admin/menu/be/listdata/parentmenuforsubmenu",
+            "name": "cms.admin.awesome_admin.menu.be.listdata.parentmenuforsubmenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataParentMenuForSubmenu"
+        },
+        {
+            "uri": "awesome_admin/menu/be/listdata/categorymenuforparentmenu",
+            "name": "cms.admin.awesome_admin.menu.be.listdata.categorymenuforparentmenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataCategoryMenuForParentMenu"
+        },
+        {
+            "uri": "awesome_admin/menu/be/listdata/submenu",
+            "name": "cms.admin.awesome_admin.menu.be.listdata.submenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataSubmenu"
+        },
+        {
+            "uri": "awesome_admin/menu/be/listdata/submenu/detail/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.menu.be.listdata.submenu.detail",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataSubmenuDetail"
+        },
+        {
+            "uri": "awesome_admin/menu/be/listdata/routes",
+            "name": "cms.admin.awesome_admin.menu.be.listdata.routelist",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataRoutes"
+        },
+        {
+            "uri": "awesome_admin/menu/be/listdata/permissions",
+            "name": "cms.admin.awesome_admin.menu.be.listdata.permissionlist",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@listDataPermissions"
+        },
+        {
+            "uri": "awesome_admin/menu/be/getversionmenu",
+            "name": "cms.admin.awesome_admin.menu.be.getVersionMenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_BE_Controller@getVersionMenu"
+        },
+        {
+            "uri": "awesome_admin/menu/fe",
+            "name": "cms.admin.awesome_admin.menu.fe",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@index"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/submenu",
+            "name": "cms.admin.awesome_admin.menu.fe.submenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@submenu"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/submenu/detail/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.menu.fe.submenu.detail",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@submenu_detail"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/categorymenu",
+            "name": "cms.admin.awesome_admin.menu.fe.category_menu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@categorymenu"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/parentmenu",
+            "name": "cms.admin.awesome_admin.menu.fe.parent_menu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@parentmenu"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/listdata/roles",
+            "name": "cms.admin.awesome_admin.menu.fe.listdata.roles",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataRoles"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/listdata/categorymenu",
+            "name": "cms.admin.awesome_admin.menu.fe.listdata.categorymenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataCategoryMenu"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/listdata/parentmenu",
+            "name": "cms.admin.awesome_admin.menu.fe.listdata.parentmenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataParentMenu"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/listdata/parentmenu/dropdown/{parentCode}",
+            "name": "cms.admin.awesome_admin.menu.fe.listdata.parentmenu.dropdown",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataParentMenuDropdown"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/listdata/parentmenuforsubmenu",
+            "name": "cms.admin.awesome_admin.menu.fe.listdata.parentmenuforsubmenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataParentMenuForSubmenu"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/listdata/categorymenuforparentmenu",
+            "name": "cms.admin.awesome_admin.menu.fe.listdata.categorymenuforparentmenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataCategoryMenuForParentMenu"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/listdata/submenu",
+            "name": "cms.admin.awesome_admin.menu.fe.listdata.submenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataSubmenu"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/listdata/submenu/detail/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.menu.fe.listdata.submenu.detail",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataSubmenuDetail"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/listdata/routes",
+            "name": "cms.admin.awesome_admin.menu.fe.listdata.routelist",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataRoutes"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/listdata/permissions",
+            "name": "cms.admin.awesome_admin.menu.fe.listdata.permissionlist",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@listDataPermissions"
+        },
+        {
+            "uri": "awesome_admin/menu/fe/getversionmenu",
+            "name": "cms.admin.awesome_admin.menu.fe.getVersionMenu",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Menu_FE_Controller@getVersionMenu"
+        },
+        {
+            "uri": "awesome_admin/role",
+            "name": "cms.admin.awesome_admin.role",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@index"
+        },
+        {
+            "uri": "awesome_admin/role/create/v2",
+            "name": "cms.admin.awesome_admin.role.createV2",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@createV2"
+        },
+        {
+            "uri": "awesome_admin/role/edit/v2/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.role.editV2",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@editV2"
+        },
+        {
+            "uri": "awesome_admin/role/listdata",
+            "name": "cms.admin.awesome_admin.role.list",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@listData"
+        },
+        {
+            "uri": "awesome_admin/role/listdatapermission",
+            "name": "cms.admin.awesome_admin.role.listpermission",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@listDataPermission"
+        },
+        {
+            "uri": "awesome_admin/role/listdatapermissionv2",
+            "name": "cms.admin.awesome_admin.role.listpermissionv2",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@listDataPermissionV2"
+        },
+        {
+            "uri": "awesome_admin/role/detaildata/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.role.detail",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@detailData"
+        },
+        {
+            "uri": "awesome_admin/role/test",
+            "name": "cms.admin.awesome_admin.role.test",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Role_Controller@test"
+        },
+        {
+            "uri": "awesome_admin/permission",
+            "name": "cms.admin.awesome_admin.permission",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Permission_Controller@index"
+        },
+        {
+            "uri": "awesome_admin/permission/listdata",
+            "name": "cms.admin.awesome_admin.permission.list",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Permission_Controller@listData"
+        },
+        {
+            "uri": "awesome_admin/permission/detaildata/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.permission.detail",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Permission_Controller@detailData"
+        },
+        {
+            "uri": "awesome_admin/user",
+            "name": "cms.admin.awesome_admin.user",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@index"
+        },
+        {
+            "uri": "awesome_admin/user/edit/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.user.edit",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@edit"
+        },
+        {
+            "uri": "awesome_admin/user/listdata",
+            "name": "cms.admin.awesome_admin.user.list",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@listData"
+        },
+        {
+            "uri": "awesome_admin/user/detaildata/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.user.detail",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@detailData"
+        },
+        {
+            "uri": "awesome_admin/user/getdata",
+            "name": "cms.admin.awesome_admin.user.getdata",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@getUserData"
+        },
+        {
+            "uri": "awesome_admin/user/checkdata",
+            "name": "cms.admin.awesome_admin.user.checkdata",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@checkUserData"
+        },
+        {
+            "uri": "awesome_admin/user/checkdataforupdate",
+            "name": "cms.admin.awesome_admin.user.checkdataforupdate",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_User_Controller@checkUserDataForUpdate"
+        },
+        {
+            "uri": "awesome_admin/smtp",
+            "name": "cms.admin.awesome_admin.smtp",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@index"
+        },
+        {
+            "uri": "awesome_admin/smtp/edit/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.smtp.edit",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@edit"
+        },
+        {
+            "uri": "awesome_admin/smtp/listdata",
+            "name": "cms.admin.awesome_admin.smtp.listdata",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@listData"
+        },
+        {
+            "uri": "awesome_admin/smtp/detaildata/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.smtp.detaildata",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@detaildata"
+        },
+        {
+            "uri": "awesome_admin/smtp/detailsetdata",
+            "name": "cms.admin.awesome_admin.smtp.detaildata.setservice",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@detailDataSetService"
+        },
+        {
+            "uri": "awesome_admin/smtp/testing",
+            "name": "cms.admin.awesome_admin.smtp.testing",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_SMTP_Controller@testing"
+        },
+        {
+            "uri": "awesome_admin/language",
+            "name": "cms.admin.awesome_admin.language",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@index"
+        },
+        {
+            "uri": "awesome_admin/language/untranslated",
+            "name": "cms.admin.awesome_admin.language.untranslated",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@untranslated"
+        },
+        {
+            "uri": "awesome_admin/language/translated",
+            "name": "cms.admin.awesome_admin.language.translated",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@translated"
+        },
+        {
+            "uri": "awesome_admin/language/listdata",
+            "name": "cms.admin.awesome_admin.language.listdata",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@listData"
+        },
+        {
+            "uri": "awesome_admin/language/listdata/untranslated",
+            "name": "cms.admin.awesome_admin.language.listdata.untranslated",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@listDataUntranslated"
+        },
+        {
+            "uri": "awesome_admin/language/listdata/translated",
+            "name": "cms.admin.awesome_admin.language.listdata.translated",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@listDataTranslated"
+        },
+        {
+            "uri": "awesome_admin/language/setlanguage/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.language.setlanguage",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@setLanguage"
+        },
+        {
+            "uri": "awesome_admin/language/getlanguage",
+            "name": "cms.admin.awesome_admin.language.getlanguage",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Language_Controller@getLanguage"
+        },
+        {
+            "uri": "awesome_admin/appearance",
+            "name": "cms.admin.awesome_admin.appearance",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller@index"
+        },
+        {
+            "uri": "awesome_admin/appearance/pagethemesetting/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.appearance.listdata.pagethemesetting",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller@getPageThemeSettingJson"
+        },
+        {
+            "uri": "awesome_admin/appearance/listdata/pagetheme/{idOrSlug}",
+            "name": "cms.admin.awesome_admin.appearance.listdata.pagetheme",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Appearance_Controller@listDataPageTheme"
+        },
+        {
+            "uri": "awesome_admin/themes",
+            "name": "cms.admin.awesome_admin.themes",
+            "action": "App\\Http\\Controllers\\Web\\Awesome_Admin\\Awesome_Admin_Themes_Controller@index"
+        },
+        {
+            "uri": "workflow",
+            "name": "cms.core.workflow.index",
+            "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@index"
+        },
+        {
+            "uri": "workflow/data",
+            "name": "cms.core.workflow.data",
+            "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@data"
+        },
+        {
+            "uri": "workflow/create",
+            "name": "cms.core.workflow.create",
+            "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@create"
+        },
+        {
+            "uri": "workflow/{workflow}/edit",
+            "name": "cms.core.workflow.edit",
+            "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@edit"
+        },
+        {
+            "uri": "workflow/{workflow}/runs",
+            "name": "cms.core.workflow.runs",
+            "action": "App\\Http\\Controllers\\Web\\Workflow\\WorkflowController@runs"
+        }
+    ]
+}

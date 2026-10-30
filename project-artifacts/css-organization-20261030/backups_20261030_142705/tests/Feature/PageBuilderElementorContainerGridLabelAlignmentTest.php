@@ -1,0 +1,73 @@
+<?php
+
+namespace Tests\Feature;
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\TestCase;
+
+class PageBuilderElementorContainerGridLabelAlignmentTest extends TestCase
+{
+    #[DataProvider('containerGridControlProvider')]
+    public function test_container_grid_header_keeps_its_device_icon_and_unit_together_on_the_trailing_edge(
+        string $settingsPath,
+        string $label,
+        string $controlKey,
+        string $unit
+    ): void {
+        $settings = file_get_contents(public_path($settingsPath));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+
+        $toolsSelector = '.pb-panel.left .pb-layout-settings .pb-label-row.pb-label-row-device > .pb-label-tools';
+        $unitSelector = $toolsSelector . ' .pb-control-unit-wrap';
+        $menuSelector = '.pb-panel.left :is(.pb-layout-settings, .pb-grid-settings) .pb-control-device-menu';
+
+        $this->assertIsString($settings);
+        $this->assertIsString($builderCss);
+        $this->assertMatchesRegularExpression(
+            '/<label class="pb-form-label mb-0">' . preg_quote($label, '/') . '<\\/label>\\s*<div class="pb-label-tools">\\s*<div class="pb-control-device-wrap">.*?editor\\.openControlResponsiveMenu\\(\'' . preg_quote($controlKey, '/') . '\'\\).*?<div class="pb-control-unit-wrap">' . preg_quote($unit, '/') . '<\\/div>/s',
+            $settings
+        );
+        $this->assertMatchesRegularExpression(
+            '/' . preg_quote($toolsSelector, '/') . '\\s*\\{[^}]*flex:\\s*0 0 auto;[^}]*margin-left:\\s*auto;[^}]*justify-content:\\s*flex-end;/s',
+            $builderCss
+        );
+        $this->assertMatchesRegularExpression(
+            '/' . preg_quote($unitSelector, '/') . '\\s*\\{[^}]*margin-left:\\s*0;/s',
+            $builderCss
+        );
+        $this->assertMatchesRegularExpression(
+            '/' . preg_quote($menuSelector, '/') . '\\s*\\{[^}]*left:\\s*auto;[^}]*right:\\s*0;/s',
+            $builderCss
+        );
+    }
+
+    public static function containerGridControlProvider(): array
+    {
+        return [
+            'container-columns' => [
+                'js/pagebuilder_elementor/widgets/layout/container/Settings.vue',
+                'Columns',
+                'container-grid-columns',
+                'fr',
+            ],
+            'container-rows' => [
+                'js/pagebuilder_elementor/widgets/layout/container/Settings.vue',
+                'Rows',
+                'container-grid-rows',
+                'rows',
+            ],
+            'container-fluid-columns' => [
+                'js/pagebuilder_elementor/widgets/layout/container-fluid/Settings.vue',
+                'Columns',
+                'container-grid-columns',
+                'fr',
+            ],
+            'container-fluid-rows' => [
+                'js/pagebuilder_elementor/widgets/layout/container-fluid/Settings.vue',
+                'Rows',
+                'container-grid-rows',
+                'rows',
+            ],
+        ];
+    }
+}

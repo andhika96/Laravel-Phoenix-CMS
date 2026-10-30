@@ -1,0 +1,254 @@
+[
+  {
+    "path": "resources/css/app.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/themes/arunika_equinox/mobile-v2.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/themes/arunika_lucent/arunika_lucent.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/themes/arunika_equinox/arunika_equinox.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/basic/text-editor/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/article/article-editor-content.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/aruna-v4.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/article/article-frontend-2026.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/layout/container-fluid/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/layout/container/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/general/testimonial/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/themes/arunika_prism/mobile-v2.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/article/manage-article-2026.css",
+    "graph_hash_matches_current_source": false
+  },
+  {
+    "path": "public/assets/beta_css/new.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/pagebuilder_elementor_v24.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/basic/icon/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/themes/arunika_lucent/mobile-v2.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/themes/arunika_aurora/mobile-v2.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/general/alert/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/basic/button/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/pagebuilder_elementor.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/themes/default/aruna-admin-v7-default.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/frontend-menu-dropdown.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/themes/calm_green/aruna-admin-v7-calm-green.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/layout/grid/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/layout/row-grid/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-slider/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/basic/divider/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/pagebuilder_elementor_v23.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/general/counter/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/general/social-icons/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/awesome-admin-header-navigation-fullscreen.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/pro/form/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/workflow-editor.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/general/icon-list/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/general/accordion/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/pro/hero-banner/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/phoenix-cms.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/pagebuilder.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/basic/spacer/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/basic/heading/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/general/tabs/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/basic/video/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/general/image-box/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/js/filemanager_v2/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/frontend_elementor.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/pro/product-lead-form/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/basic/image/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/themes/arunika_aurora/arunika_aurora.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/frontend_elementor_v23.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/themes/default/phoenix-cms-default.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/extending-css-bootstrap-5.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/frontend_elementor_v24.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/general/basic-gallery/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/themes/arunika_prism/arunika_prism.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/general/progress-bar/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/article/article-template-manager-2026.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/general/icon-box/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/awesome-admin-header-navigation.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "resources/pagebuilder_elementor_v24/modules/widgets/general/image-carousel/styles.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/theme-responsive-typography.css",
+    "graph_hash_matches_current_source": true
+  },
+  {
+    "path": "public/assets/css/cms-bootstrap-theme.css",
+    "graph_hash_matches_current_source": true
+  }
+]

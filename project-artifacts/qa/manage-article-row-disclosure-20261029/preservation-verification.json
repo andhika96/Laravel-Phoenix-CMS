@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "backup_files_verified": 3,
+  "head_preserved": true,
+  "index_preserved": true,
+  "graph_unchanged": true,
+  "modified_source": [
+    "public/assets/css/article/manage-article-2026.css",
+    "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js",
+    "resources/views/manage_article/manage_article.blade.php"
+  ]
+}

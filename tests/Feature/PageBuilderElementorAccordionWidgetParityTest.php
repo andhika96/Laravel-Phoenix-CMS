@@ -25,7 +25,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 
     public function test_sidebar_categories_and_color_fields_use_polished_global_spacing(): void
     {
-        $builderCss = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $builderCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertSourceContains('.pb-panel.left .pb-tab-content > .pb-collapsible[open] > .pb-collapsible-body', $builderCss);
         $this->assertSourceContains('padding-bottom: 18px;', $builderCss);
@@ -224,7 +224,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 	public function test_accordion_settings_follow_the_approved_compact_elementor_control_geometry(): void
 	{
 		$settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Settings.vue'));
-		$css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+		$css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
 		foreach ([
 			'class="pb-accordion-item-header"',
@@ -271,7 +271,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
 		$app = $this->editorSource();
 		$canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/advanced/accordion/Canvas.vue'));
 		$renderer = file_get_contents(resource_path('views/pagebuilder_elementor/partials/render_accordion.blade.php'));
-		$frontendCss = file_get_contents(public_path('assets/css/frontend_elementor.css'));
+		$frontendCss = file_get_contents(public_path('assets/css/pagebuilder/elementor/frontend_elementor.css'));
 
 		foreach ([
 			"['accordionBoxShadowEnabled' + suffix]: false",
@@ -363,7 +363,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
         $this->assertSourceContains("querySelectorAll('[data-accordion-root]')", $runtime);
         $this->assertSourceContains("case 'ArrowDown'", $runtime);
         $this->assertSourceContains("case 'Home'", $runtime);
-        $this->assertSourceContains('prefers-reduced-motion: reduce', file_get_contents(public_path('assets/css/frontend_elementor.css')));
+        $this->assertSourceContains('prefers-reduced-motion: reduce', file_get_contents(public_path('assets/css/pagebuilder/elementor/frontend_elementor.css')));
         $this->assertSourceContains('frontend-runtime.js', $editorShell);
         $this->assertSourceContains('frontend-runtime.js', $frontendShell);
     }
@@ -442,7 +442,7 @@ class PageBuilderElementorAccordionWidgetParityTest extends TestCase
     public function test_accordion_uses_per_control_responsive_popovers_and_spaced_actions(): void
     {
         $appJs = $this->editorSource();
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertFalse(str_contains($appJs, "'accordion-content-'+device.value"));
         $this->assertFalse(str_contains($appJs, "'accordion-style-'+device.value"));

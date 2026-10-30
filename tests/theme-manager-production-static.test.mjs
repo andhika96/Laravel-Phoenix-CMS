@@ -4,7 +4,7 @@ import test from 'node:test';
 
 const viewPath = 'resources/views/awesome_admin/awesome_admin_themes.blade.php';
 const scriptPath = 'public/assets/js/vue3/manage_themes/vueV3-manage-themes-2026.js';
-const mockupPath = 'public/mockups/theme-manager-interactive-mockup.html';
+const mockupPath = 'project-artifacts/mockups/legacy-public-mockups-20261030/theme-manager-interactive-mockup.html';
 
 test('production theme manager keeps the approved interactive contract', () => {
     assert.equal(existsSync(viewPath), true, 'Theme Manager Blade view must exist');

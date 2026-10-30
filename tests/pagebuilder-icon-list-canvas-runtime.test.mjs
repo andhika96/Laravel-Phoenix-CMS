@@ -4,7 +4,7 @@ import test from 'node:test';
 
 const canvasPath = new URL('../public/js/pagebuilder_elementor/widgets/general/icon-list/Canvas.vue', import.meta.url);
 const settingsPath = new URL('../public/js/pagebuilder_elementor/widgets/general/icon-list/Settings.vue', import.meta.url);
-const editorCssPath = new URL('../public/assets/css/pagebuilder_elementor.css', import.meta.url);
+const editorCssPath = new URL('../public/assets/css/pagebuilder/elementor/pagebuilder_elementor.css', import.meta.url);
 
 function componentFromVueFile(path) {
 	const source = fs.readFileSync(path, 'utf8');

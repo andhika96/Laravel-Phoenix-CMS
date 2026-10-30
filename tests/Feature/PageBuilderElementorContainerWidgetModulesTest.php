@@ -110,7 +110,7 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
             $this->assertStringNotContainsString('pb-container-gap-control"><input class="pb-range"', $settings);
         }
 
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($css);
         $this->assertStringContainsString('.pb-gap-row.pb-container-gap-control__values {', $css);
@@ -139,7 +139,7 @@ class PageBuilderElementorContainerWidgetModulesTest extends TestCase
         $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/layout/container/Settings.vue'));
         $canvas = file_get_contents(public_path('js/pagebuilder_elementor/widgets/layout/container/Canvas.vue'));
         $renderer = file_get_contents(resource_path('views/pagebuilder_elementor/widgets/layout/container.blade.php'));
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         foreach ([
             "bgVideoLink: ''",

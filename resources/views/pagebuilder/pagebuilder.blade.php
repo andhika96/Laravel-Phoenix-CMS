@@ -14,7 +14,7 @@
 	<link href="https://cdn.plyr.io/3.7.8/plyr.css" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
 
-	<link href="{{ asset('assets/css/pagebuilder.css') }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/pagebuilder/legacy/pagebuilder.css') }}" rel="stylesheet">
 </head>
 
 <body>

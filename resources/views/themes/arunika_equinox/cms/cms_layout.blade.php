@@ -44,12 +44,12 @@
 		<link href="{{ url('assets/plugins/simplebar/6.3.1/css/simplebar.css') }}" rel="stylesheet">
 
 		<!-- Custom CSS -->
-		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/shared/phoenix-cms.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/themes/arunika_equinox/arunika_equinox.css?v=').time() }}" rel="stylesheet">
-		<link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/shared/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/themes/arunika_equinox/mobile-v2.css?v=').time() }}" rel="stylesheet">
 
-		<link href="{{ asset('assets/css/cms-bootstrap-theme.css') }}?v={{ filemtime(public_path('assets/css/cms-bootstrap-theme.css')) }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/cms/cms-bootstrap-theme.css') }}?v={{ filemtime(public_path('assets/css/cms/cms-bootstrap-theme.css')) }}" rel="stylesheet">
 		@stack('css')
 
 		<title>@yield('title', site_config()->site_name) - {{ site_config()->site_name }}</title>

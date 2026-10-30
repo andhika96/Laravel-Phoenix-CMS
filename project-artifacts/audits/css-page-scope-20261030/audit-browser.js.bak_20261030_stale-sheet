@@ -1,0 +1,88 @@
+async (page) => {
+    const config = await page.evaluate(() => window.__cssAuditConfig);
+    if (!config || !config.paths.length) throw new Error('Explicit audit paths required');
+    if (config.paths.some(p => /pagebuilder|file-manager|filemanager/i.test(p))) throw new Error('Excluded page requested');
+    const results = [];
+    const artifactRoot = 'D:/Laragon/www/laravel-13-phoenix/project-artifacts/audits/css-page-scope-20261030/';
+    for (const path of config.paths) {
+        for (const width of config.widths) {
+            const cdp = await page.context().newCDPSession(page);
+            const headers = new Map();
+            cdp.on('CSS.styleSheetAdded', ({ header }) => headers.set(header.styleSheetId, header));
+            try {
+                await page.setViewportSize({ width, height: 900 });
+                await cdp.send('DOM.enable');
+                await cdp.send('CSS.enable');
+                await cdp.send('CSS.startRuleUsageTracking');
+                const response = await page.goto('https://laravel-13-phoenix.aruna' + path, { waitUntil: 'domcontentloaded', timeout: 25000 });
+                await page.waitForLoadState('networkidle', { timeout: 3500 }).catch(() => {});
+                const dom = await page.evaluate(() => ({
+                    url: location.href, bodyClass: document.body.className,
+                    css: [...document.querySelectorAll('link[rel=stylesheet]')].map(s => s.href),
+                    inlineStyleBlocks: document.querySelectorAll('style').length,
+                    components: {
+                        vueSelect: document.querySelectorAll('.v-select').length,
+                        datepicker: document.querySelectorAll('.dp__main,.dp__input_wrap').length,
+                        simplebar: document.querySelectorAll('[data-simplebar],.simplebar-wrapper').length,
+                        coloris: document.querySelectorAll('[data-coloris],.clr-field').length,
+                        spectrum: document.querySelectorAll('.sp-replacer,.sp-container').length,
+                    },
+                    links: [...document.querySelectorAll('a[href]')].map(a => a.href).filter(h => h.startsWith(location.origin) && /\/(edit|registrations|templates\/preview)\//.test(h)),
+                }));
+                // Include the mobile drawer state without saving application settings.
+                const trigger = page.locator('.ph-mobile-sidebar-trigger').first();
+                if (width <= 768 && await trigger.isVisible().catch(() => false)) {
+                    await trigger.click({ timeout: 1000 }).catch(() => {});
+                }
+                const usage = (await cdp.send('CSS.stopRuleUsageTracking')).ruleUsage;
+                const sheets = [];
+                for (const url of dom.css) {
+                    const candidates = [...headers.values()].filter(h => h.sourceURL === url);
+                    let total = 0, used = 0, usedRules = 0, trackedRules = 0;
+                    for (const header of candidates) {
+                        const { text } = await cdp.send('CSS.getStyleSheetText', { styleSheetId: header.styleSheetId });
+                        total += text.length;
+                        const rules = usage.filter(r => r.styleSheetId === header.styleSheetId);
+                        trackedRules += rules.length;
+                        const ranges = rules.filter(r => r.used).map(r => [r.startOffset, r.endOffset]).sort((a,b) => a[0]-b[0]);
+                        usedRules += ranges.length;
+                        let end = -1;
+                        for (const [a,b] of ranges) { used += Math.max(0,b-Math.max(a,end)); end = Math.max(end,b); }
+                    }
+                    sheets.push({ url, chars: total, usedChars: used, usedRules, trackedRules, tracked: candidates.length > 0 });
+                }
+                const result = { path, width, status: response.status(), ...dom, sheets };
+                if (config.authExperiment && path === '/auth/login') {
+                    const sample = async () => page.evaluate(() => {
+                        const selectors = ['html','body','.page-header','.page-header-image','.ph-form','h4','input','.input-group-text','.btn-primary','a'];
+                        const properties = ['backgroundColor','backgroundImage','color','borderColor','boxShadow','fontFamily','fontSize','display','position','height','borderRadius'];
+                        return Object.fromEntries(selectors.map(selector => {
+                            const el = document.querySelector(selector);
+                            if (!el) return [selector,null];
+                            const s = getComputedStyle(el);
+                            return [selector,Object.fromEntries(properties.map(p => [p,s[p]]))];
+                        }));
+                    });
+                    result.loginBefore = await sample();
+                    await page.screenshot({ path: artifactRoot + 'login-with-lucent-' + width + '.png', fullPage: true });
+                    await page.evaluate(() => {
+                        const sheet = [...document.styleSheets].find(s => s.href && s.href.includes('/themes/arunika_lucent/arunika_lucent.css'));
+                        if (!sheet) throw new Error('Lucent stylesheet missing');
+                        sheet.disabled = true;
+                    });
+                    result.loginWithoutLucent = await sample();
+                    await page.screenshot({ path: artifactRoot + 'login-without-lucent-' + width + '.png', fullPage: true });
+                    await page.evaluate(() => { [...document.styleSheets].find(s => s.href && s.href.includes('/themes/arunika_lucent/arunika_lucent.css')).disabled = false; });
+                    result.loginRestored = await sample();
+                    if (JSON.stringify(result.loginBefore) !== JSON.stringify(result.loginRestored)) throw new Error('Login CSS restoration mismatch');
+                }
+                results.push(result);
+            } catch (error) {
+                results.push({ path, width, error: error.message });
+            } finally {
+                await cdp.detach();
+            }
+        }
+    }
+    return results;
+}

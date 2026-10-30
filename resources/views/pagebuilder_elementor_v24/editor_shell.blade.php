@@ -45,8 +45,8 @@
 	<link href="{{ $font['stylesheet'] }}" rel="stylesheet">
 	@endforeach
 	<link href="{{ asset('assets/vendor/pb-picker/picker.min.css') }}?v={{ @filemtime(public_path('assets/vendor/pb-picker/picker.min.css')) }}" rel="stylesheet">
-	<link href="{{ asset('assets/css/frontend_elementor_v24.css') }}?v={{ @filemtime(public_path('assets/css/frontend_elementor_v24.css')) }}" rel="stylesheet">
-	<link href="{{ asset('assets/css/pagebuilder_elementor_v24.css') }}?v={{ @filemtime(public_path('assets/css/pagebuilder_elementor_v24.css')) }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/pagebuilder/elementor-v24/frontend_elementor_v24.css') }}?v={{ @filemtime(public_path('assets/css/pagebuilder/elementor-v24/frontend_elementor_v24.css')) }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css') }}?v={{ @filemtime(public_path('assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css')) }}" rel="stylesheet">
 	@foreach(($moduleSources ?? []) as $pbElementorModule)
 	@if(isset($pbElementorModule['assets']['styles']))
 	<style data-pb-module-style="{{ $pbElementorModule['type'] }}">{!! file_get_contents($pbElementorModule['assets']['styles']) !!}</style>

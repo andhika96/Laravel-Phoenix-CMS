@@ -49,7 +49,7 @@ test('v2.4 Advanced spacing keeps the shared form and accepts screen plus print 
 
 test('v2.4 Canvas makes the editor gutter responsive instead of hard-coding it per widget', () => {
     const app = read('public/js/pagebuilder_elementor_v24/app.js');
-    const css = read('public/assets/css/pagebuilder_elementor_v24.css');
+    const css = read('public/assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css');
     assert.match(app, /function isFullBleedValue\(value\)/);
     assert.match(app, /widgetPreviewShellStyle\(\)/);
     assert.match(app, /class="pb-preview"[^>]*:style="widgetPreviewShellStyle"/);

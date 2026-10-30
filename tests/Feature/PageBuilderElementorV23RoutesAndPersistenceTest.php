@@ -142,9 +142,9 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
             ->assertOk()
             ->getContent();
 
-        $this->assertStringContainsString('assets/css/frontend_elementor_v23.css', $html);
+        $this->assertStringContainsString('assets/css/pagebuilder/elementor-v23/frontend_elementor_v23.css', $html);
         $this->assertStringContainsString('js/pagebuilder_elementor_v23/frontend-runtime.js', $html);
-        $this->assertStringNotContainsString('assets/css/frontend_elementor.css', $html);
+        $this->assertStringNotContainsString('assets/css/pagebuilder/elementor/frontend_elementor.css', $html);
         $this->assertStringNotContainsString('js/pagebuilder_elementor/frontend-runtime.js', $html);
     }
 
@@ -161,7 +161,7 @@ class PageBuilderElementorV23RoutesAndPersistenceTest extends TestCase
 
         $this->assertStringContainsString('<title>Public V23 Page</title>', $html);
         $this->assertStringContainsString('Public V23 Content', $html);
-        $this->assertStringContainsString('assets/css/frontend_elementor_v23.css', $html);
+        $this->assertStringContainsString('assets/css/pagebuilder/elementor-v23/frontend_elementor_v23.css', $html);
         $this->assertStringContainsString('js/pagebuilder_elementor_v23/frontend-runtime.js', $html);
         $this->get('/pages/draft-v23-page')->assertNotFound();
         $this->get('/pages/v20-page')->assertNotFound();

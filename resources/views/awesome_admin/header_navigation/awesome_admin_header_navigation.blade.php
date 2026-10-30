@@ -6,8 +6,8 @@
 
 @push('css')
 	<link href="{{ asset('assets/vendor/coloris/coloris.min.css?v=').time() }}" rel="stylesheet">
-	<link href="{{ asset('assets/css/awesome-admin-header-navigation.css?v=').time() }}" rel="stylesheet">
-	<link href="{{ asset('assets/css/awesome-admin-header-navigation-fullscreen.css?v=').time() }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/header-navigation/awesome-admin-header-navigation.css?v=').time() }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/header-navigation/awesome-admin-header-navigation-fullscreen.css?v=').time() }}" rel="stylesheet">
 @endpush
 
 @section('content')

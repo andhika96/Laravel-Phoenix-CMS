@@ -8,7 +8,7 @@ import vm from 'node:vm';
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
 const app = readFileSync(resolve(root, 'public/js/pagebuilder_elementor_v23/app.js'), 'utf8');
-const css = readFileSync(resolve(root, 'public/assets/css/pagebuilder_elementor_v23.css'), 'utf8');
+const css = readFileSync(resolve(root, 'public/assets/css/pagebuilder/elementor-v23/pagebuilder_elementor_v23.css'), 'utf8');
 
 function collectFiles(directory, suffix) {
     return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {

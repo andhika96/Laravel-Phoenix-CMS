@@ -31,7 +31,7 @@ class PageBuilderElementorTabsStyleAndStartupParityTest extends TestCase
 
     public function test_editor_uses_one_borderless_compact_multiview_button_treatment(): void
     {
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($css);
         $this->assertStringContainsString('.pb-panel.left .pb-control-device-btn {', $css);
@@ -42,7 +42,7 @@ class PageBuilderElementorTabsStyleAndStartupParityTest extends TestCase
 
     public function test_multiview_button_has_a_comfortable_hit_area_and_its_menu_opens_inward(): void
     {
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($css);
         $this->assertMatchesRegularExpression(
@@ -96,7 +96,7 @@ class PageBuilderElementorTabsStyleAndStartupParityTest extends TestCase
     {
         $settings = file_get_contents(public_path('js/pagebuilder_elementor/widgets/general/tabs/Settings.vue'));
         $editor = file_get_contents(public_path('js/pagebuilder_elementor/app.js'));
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($settings);
         $this->assertIsString($editor);
@@ -182,7 +182,7 @@ class PageBuilderElementorTabsStyleAndStartupParityTest extends TestCase
 
     public function test_tabs_style_box_shadow_uses_the_same_vertical_field_hierarchy_as_advanced(): void
     {
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $this->assertIsString($css);
         $this->assertMatchesRegularExpression(

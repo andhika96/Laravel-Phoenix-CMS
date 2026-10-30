@@ -1,0 +1,14 @@
+{
+  "inset": 20,
+  "visibleGap": 24,
+  "buttonCenter": 289.7833251953125,
+  "checkboxCenter": 289.7833251953125,
+  "rowCenter": 289.79166412353516,
+  "titleHeight": 22,
+  "clip": {
+    "x": 315,
+    "y": 181.06666564941406,
+    "width": 650,
+    "height": 328.9499969482422
+  }
+}

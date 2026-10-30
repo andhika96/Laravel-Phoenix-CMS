@@ -1915,6 +1915,13 @@ const ManageArticleVue3 = createApp(
                 ...(width <= 600 ? [4] : []),
             ];
         },
+        onArticleRowClick: function(id, event)
+        {
+            if (event.defaultPrevented || event.button !== 0) return;
+            if (event.target.closest('a, button, input, label, select, textarea, [contenteditable], [role="button"], .ph-article-check-col, .ph-article-actions-col')) return;
+            if (window.getSelection()?.toString().trim()) return;
+            this.toggleExpandRow(id);
+        },
         toggleExpandRow: function(id)
         {
             this.responsiveExpandedRows = { ...this.responsiveExpandedRows, [id]: !this.responsiveExpandedRows[id] };

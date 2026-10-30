@@ -23,7 +23,7 @@
 			<link href="{{ asset('storage/fonts/nunito/fonts.css?v=').time() }}" rel="stylesheet">	
 
 			<link href="{{ asset('assets/css/themes/calm_green/phoenix-cms-calm-green.css?v=').time() }}" rel="stylesheet">
-			<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">	
+			<link href="{{ asset('assets/css/shared/phoenix-cms.css?v=').time() }}" rel="stylesheet">
 
 			@stack('css')
 

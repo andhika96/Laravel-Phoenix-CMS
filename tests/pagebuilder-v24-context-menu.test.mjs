@@ -8,7 +8,7 @@ import { pageBuilderV24CapabilityPrelude } from './helpers/pagebuilder-v24-modul
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const app = readFileSync(`${root}/public/js/pagebuilder_elementor_v24/app.js`, 'utf8');
-const css = readFileSync(`${root}/public/assets/css/pagebuilder_elementor_v24.css`, 'utf8');
+const css = readFileSync(`${root}/public/assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css`, 'utf8');
 
 test('context menu keeps per-target definitions behind one shared shell', () => {
   assert.match(app, /const contextMenuDefinitions\s*=\s*Object\.freeze\(/);

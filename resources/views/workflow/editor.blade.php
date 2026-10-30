@@ -186,7 +186,7 @@
 @endsection
 
 @push('css')
-    <link rel="stylesheet" href="{{ url('assets/css/workflow-editor.css?v=').time() }}">
+    <link rel="stylesheet" href="{{ url('assets/css/workflow/workflow-editor.css?v=').time() }}">
 @endpush
 
 @push('js')

@@ -7,7 +7,7 @@
     <link href="{{ url('assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/plugins/fontawesome/5.15.3/css/all.min.css') }}?v={{ @filemtime(public_path('assets/plugins/fontawesome/5.15.3/css/all.min.css')) }}" rel="stylesheet">
     <link href="{{ asset('storage/fonts/'.$articleTypography['fontFamilyCode'].'/fonts.css?v=').time() }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/shared/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
     <script src="{{ url('assets/js/article/article-theme-color-sync-2026.js?v=').time() }}"></script>
     <link href="{{ url('assets/css/article/article-frontend-2026.css?v=').time() }}" rel="stylesheet">
     <link href="{{ asset('assets/css/article/article-editor-content.css?v=').filemtime(public_path('assets/css/article/article-editor-content.css')) }}" rel="stylesheet">

@@ -33,7 +33,7 @@ const activeRoots = [
     'public/assets/css/themes',
     'public/assets/images/themes/previews',
     'public/assets/js/themes',
-    'public/mockups',
+    'project-artifacts/mockups/legacy-public-mockups-20261030',
     'resources/views',
     'tests',
 ];

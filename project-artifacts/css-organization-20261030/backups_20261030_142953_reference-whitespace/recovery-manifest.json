@@ -1,0 +1,712 @@
+{
+  "root": "D:\\Laragon\\www\\laravel-13-phoenix",
+  "moves": [
+    {
+      "old": "public/assets/css/phoenix-cms.css",
+      "new": "public/assets/css/shared/phoenix-cms.css",
+      "kind": "stylesheet",
+      "sha256": "34a73439e91486257b1b1dbb62731577207a6e4c67a874aade0725fd037c9bad"
+    },
+    {
+      "old": "public/assets/css/extending-css-bootstrap-5.css",
+      "new": "public/assets/css/shared/extending-css-bootstrap-5.css",
+      "kind": "stylesheet",
+      "sha256": "847cafb5d3c3847869502ea84109639804b514067bc2ad35e9dadd1c0a4217a8"
+    },
+    {
+      "old": "public/assets/css/theme-responsive-typography.css",
+      "new": "public/assets/css/shared/theme-responsive-typography.css",
+      "kind": "stylesheet",
+      "sha256": "618872e9da8c2e38a9257b86f885c3d70bccfa99258c3607ef8595b5824e3d91"
+    },
+    {
+      "old": "public/assets/css/cms-bootstrap-theme.css",
+      "new": "public/assets/css/cms/cms-bootstrap-theme.css",
+      "kind": "stylesheet",
+      "sha256": "19af32e8a98f3cc422c6c46bd18157c386a3658df9fef7748ba4d4a1e55c2a15"
+    },
+    {
+      "old": "public/assets/css/awesome-admin-header-navigation.css",
+      "new": "public/assets/css/header-navigation/awesome-admin-header-navigation.css",
+      "kind": "stylesheet",
+      "sha256": "fe97d9dcafa31ea3b06260205262ec70de75c11020abdc43e9ad6d74107036ae"
+    },
+    {
+      "old": "public/assets/css/awesome-admin-header-navigation-fullscreen.css",
+      "new": "public/assets/css/header-navigation/awesome-admin-header-navigation-fullscreen.css",
+      "kind": "stylesheet",
+      "sha256": "b1a459ca63298db28abb991b70e0e0387654dcda4d3194b4065af2bfb6563763"
+    },
+    {
+      "old": "public/assets/css/frontend-menu-dropdown.css",
+      "new": "public/assets/css/frontend/frontend-menu-dropdown.css",
+      "kind": "stylesheet",
+      "sha256": "4504e22ba1974d42dae3c1661f804dd2524b3d8cd1080909baa68502dbb38e19"
+    },
+    {
+      "old": "public/assets/css/workflow-editor.css",
+      "new": "public/assets/css/workflow/workflow-editor.css",
+      "kind": "stylesheet",
+      "sha256": "d571d5af9b74ecd4329505f0ef4a3708f059a1d0633e0af25b44d36c09bb2857"
+    },
+    {
+      "old": "public/assets/css/aruna-v4.css",
+      "new": "public/assets/css/setup/aruna-v4.css",
+      "kind": "stylesheet",
+      "sha256": "8b2c0afa4d89302f94b868d0a7bdffe7793e87e4d595d0715855a12ade5e73bb"
+    },
+    {
+      "old": "public/assets/css/pagebuilder.css",
+      "new": "public/assets/css/pagebuilder/legacy/pagebuilder.css",
+      "kind": "stylesheet",
+      "sha256": "abba586a5aa7414acfe68680a2e037f45d71d69dc5f2d446dec9c79e98a95726"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor.css",
+      "new": "public/assets/css/pagebuilder/elementor/pagebuilder_elementor.css",
+      "kind": "stylesheet",
+      "sha256": "d617a48eed17a56409e65e0e67528b2483ea651635d66fee22b325bde88cc713"
+    },
+    {
+      "old": "public/assets/css/frontend_elementor.css",
+      "new": "public/assets/css/pagebuilder/elementor/frontend_elementor.css",
+      "kind": "stylesheet",
+      "sha256": "b429128a5fa47cb65f1448933b99e08269921e4a68fdf218b67f822ef6737b60"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v23.css",
+      "new": "public/assets/css/pagebuilder/elementor-v23/pagebuilder_elementor_v23.css",
+      "kind": "stylesheet",
+      "sha256": "3dd2141dbdb9fd1760c55bf8d0674b3ee3e1f6c7f69f31b69eb9adc6712eddff"
+    },
+    {
+      "old": "public/assets/css/frontend_elementor_v23.css",
+      "new": "public/assets/css/pagebuilder/elementor-v23/frontend_elementor_v23.css",
+      "kind": "stylesheet",
+      "sha256": "371dd504831a81d4585f337226bfbab92d262594d8905c1414a959d32788cfb6"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css",
+      "new": "public/assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css",
+      "kind": "stylesheet",
+      "sha256": "757ed1e38ca1f777ce4984d282062c708e1f104e555401a3c3901278a276c1d6"
+    },
+    {
+      "old": "public/assets/css/frontend_elementor_v24.css",
+      "new": "public/assets/css/pagebuilder/elementor-v24/frontend_elementor_v24.css",
+      "kind": "stylesheet",
+      "sha256": "7daf7a9dec9b915e0706e6a6e7496b66c43ff0ba037e89c5e0e439c72aebfc0e"
+    },
+    {
+      "old": "public/assets/css/base_color.txt",
+      "new": "project-artifacts/references/css-color-notes-20261030/base_color.txt",
+      "kind": "color_reference",
+      "sha256": "ba0a7df50fcef4fc41e6ec844796aec563dcf75842e64d1f9292e579ef139132"
+    },
+    {
+      "old": "public/assets/css/base_color_from_heroui_theme.txt",
+      "new": "project-artifacts/references/css-color-notes-20261030/base_color_from_heroui_theme.txt",
+      "kind": "color_reference",
+      "sha256": "38d0f1b6bc57e6ec1e3341bca25c35519ace56887e3acb9941d6131df49f7162"
+    },
+    {
+      "old": "public/assets/css/frontend_elementor_v24.css.bak_20260826_1600_full_bleed_spacing",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/frontend_elementor_v24.css.bak_20260826_1600_full_bleed_spacing",
+      "kind": "historical_backup",
+      "sha256": "e0fcd5883f0ede781b8045e2c7d2ff3deb8ed30ee8e2cecf2d83e1215369143c"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260826_1600_full_bleed_spacing",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260826_1600_full_bleed_spacing",
+      "kind": "historical_backup",
+      "sha256": "9060c2b7db623db5b61a3a63349118165a2d78503fbe97cae3a4b60f3dc38e49"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_020000_custom_javascript_editor",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260829_020000_custom_javascript_editor",
+      "kind": "historical_backup",
+      "sha256": "9bded789446da42e1c6b5cf3c30c61087db28b3d726daa062e271ee340de1d36"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_031500_compiled_native",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260829_031500_compiled_native",
+      "kind": "historical_backup",
+      "sha256": "9bded789446da42e1c6b5cf3c30c61087db28b3d726daa062e271ee340de1d36"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_040949_computed_base_url_control",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260829_040949_computed_base_url_control",
+      "kind": "historical_backup",
+      "sha256": "85d82311c29eaf54f411ffb3940e8fcf45184fade6845c2963f313bd7e34450e"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_114800_compiled_topbar_controls_task5",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260829_114800_compiled_topbar_controls_task5",
+      "kind": "historical_backup",
+      "sha256": "ad442b0fd479b4efcf297e01cf7c25b540fc4c3aa6162690ebebbf37c7786ea5"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_220500_task7_guided_wizard",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260829_220500_task7_guided_wizard",
+      "kind": "historical_backup",
+      "sha256": "a43894cef106fbb979ca4362febf5d2f1ba926690620be4cdbf3d94bedac22e8"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_231234_fix_preview_target_dead_button",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260829_231234_fix_preview_target_dead_button",
+      "kind": "historical_backup",
+      "sha256": "b335ec98e89001c5f58da7881966231ffa115db098a64daab6fe47947fc170d2"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_234500_task9_errors_report",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260829_234500_task9_errors_report",
+      "kind": "historical_backup",
+      "sha256": "190d417deacf8e0aef51e35c0c1bcc838dbfbe7e019d5187be48905023039f89"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_automatic_compiled_native_task7_review",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260829_automatic_compiled_native_task7_review",
+      "kind": "historical_backup",
+      "sha256": "8b72a582f346f80e4edb8592aa5f514d3ec1469c999b785d0f4ceb1ac3d4d290"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_manual_widget_mapping_canvas_flow",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260829_manual_widget_mapping_canvas_flow",
+      "kind": "historical_backup",
+      "sha256": "5f7765c2311a0df5e315ddb45026a4748ffaaa3153cf258d8d96b305321aa26e"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_manual_widget_mapping_flow",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260829_manual_widget_mapping_flow",
+      "kind": "historical_backup",
+      "sha256": "5f7765c2311a0df5e315ddb45026a4748ffaaa3153cf258d8d96b305321aa26e"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260829_manual_widget_mapping_task2_target_flow",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260829_manual_widget_mapping_task2_target_flow",
+      "kind": "historical_backup",
+      "sha256": "583e9e8498ecd3af352abb45d0305c7f413ab0c6940236ccdb300b619f4c4542"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260830_000825_normalized_mapping_tree_ui",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260830_000825_normalized_mapping_tree_ui",
+      "kind": "historical_backup",
+      "sha256": "fbe8e81043172e2ca4c2476ea7111efccc18a1153ee480d8e4d4d8cdb80281a0"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260830_001019_normalized_mapping_tree_media_order",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260830_001019_normalized_mapping_tree_media_order",
+      "kind": "historical_backup",
+      "sha256": "fadf9fb3d701e39019970a4ec3dc88e81fb3db3534953c5a40e61f7b55407233"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260830_004625_normalized_mapping_suggestion_evidence",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260830_004625_normalized_mapping_suggestion_evidence",
+      "kind": "historical_backup",
+      "sha256": "09013828964d42294fddb83eb8a749bb311a87a082ce30601953c5442a6d01b8"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260830_014216_mapping_card_layout_audit",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260830_014216_mapping_card_layout_audit",
+      "kind": "historical_backup",
+      "sha256": "da019664684b93ba5ce5291826e6029322786ade1cce9ebd818ed4b16624c825"
+    },
+    {
+      "old": "public/assets/css/pagebuilder_elementor_v24.css.bak_20260830_114701_partial_asset_apply",
+      "new": "project-artifacts/css-organization-20261030/historical-css-backups/pagebuilder_elementor_v24.css.bak_20260830_114701_partial_asset_apply",
+      "kind": "historical_backup",
+      "sha256": "f05c6b1fb04cc7be013f0201c7cee963d0c4b5be23973676770c6085fce1ebf7"
+    }
+  ],
+  "references": [
+    {
+      "path": "resources/views/workflow/index.blade.php",
+      "before_sha256": "9fd4274cc0fdadbf048a6413cbeb24aed21b756765150ace0cbb682747e35a5c",
+      "after_sha256": "744e0ee363ec59276858afe6c7bd6b2fdd9454230186ffdcebcab9722a0aaa57"
+    },
+    {
+      "path": "resources/views/workflow/editor.blade.php",
+      "before_sha256": "8114bf8ff99a7b929b28a933631cebf144cab40f1294004fe9659031b57f2f60",
+      "after_sha256": "cec353d540c31266cebabef7b017a2ed0d2089217f87c7cc23dbda99e64f20ad"
+    },
+    {
+      "path": "resources/views/themes/default/frontend/frontend_layout.blade.php",
+      "before_sha256": "75e58bf7b319cc9d898b7ae1dfcd70ad9509d3fd4527e42e6af40c4b3d2da787",
+      "after_sha256": "430127890c55235738724e3a64059db4889fe20845ff0f9bd1baf77c8fbe0560"
+    },
+    {
+      "path": "resources/views/themes/default/cms/cms_layout.blade.php",
+      "before_sha256": "af5851e6bfe85af60e09f5a7132089796dc839980e51e1e17fb6ba49e8ebe884",
+      "after_sha256": "c8ec611717480dd159ff4f581c22485388679818f043450a87c37011f13621a4"
+    },
+    {
+      "path": "resources/views/themes/default/auth/auth_layout.blade.php",
+      "before_sha256": "7061193dd12390cbba6950b8435e7c35df3a66f95dfe3b436923eafa595e6064",
+      "after_sha256": "791568f0f630c383210df562bf98bac2dc740bec7fd7afc27581a28af9533c3a"
+    },
+    {
+      "path": "resources/views/themes/calm_green/frontend/frontend_layout.blade.php",
+      "before_sha256": "3679cc5f0faa54dab20bf5751f613a40e8f75eec8742567c946fc7982280d18d",
+      "after_sha256": "d559f577ce2ba23895f79155f758beedd7612f19e1e5eb2b1c9ca6f817149b23"
+    },
+    {
+      "path": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+      "before_sha256": "0e6978184d32e7e61f9b88b90e98b0ce8438c8ded72c102918f80ce66bde2733",
+      "after_sha256": "0a25b8624e8c48423be2cdc174e3502f68ee3be6916f27e7946aba2ce8c48a3e"
+    },
+    {
+      "path": "resources/views/themes/calm_green/auth/auth_layout.blade.php",
+      "before_sha256": "56af54fa90231f2e9154771155f650d7a223177d26dcfab809519957d14150d4",
+      "after_sha256": "03b98bac014ec48a4f3e39d2c211dbe56f4b00ebddf9a37d08920b9491e31831"
+    },
+    {
+      "path": "resources/views/themes/arunika_prism/frontend/frontend_layout.blade.php",
+      "before_sha256": "3679cc5f0faa54dab20bf5751f613a40e8f75eec8742567c946fc7982280d18d",
+      "after_sha256": "d559f577ce2ba23895f79155f758beedd7612f19e1e5eb2b1c9ca6f817149b23"
+    },
+    {
+      "path": "resources/views/awesome_admin/menu/frontend/awesome_admin_parent_menu_fe.blade.php",
+      "before_sha256": "70e330b3f1abb6c897073e800eec8d6679617c546c5fef74e1865c1853b88746",
+      "after_sha256": "b43e92b9d04b3ddb62c1b4c381862ece6f036ca002ba7acadcc3dae772eb8dfe"
+    },
+    {
+      "path": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+      "before_sha256": "9470073a1ac01be5afeccc6adf228da9cd185d40ef825566bac7f91bf307b868",
+      "after_sha256": "380bbad40500eb098a5774d6da3865076978c2d6acc92687c693f502e2066d04"
+    },
+    {
+      "path": "resources/views/themes/arunika_prism/auth/auth_layout.blade.php",
+      "before_sha256": "cdf54befa19f7485c3d47905d61e1b6467afdd98af049191418729b12da44535",
+      "after_sha256": "bf8072a71e00350d2252869f66b022f392af4a5106f046ea94298e4f96723581"
+    },
+    {
+      "path": "resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php",
+      "before_sha256": "c976c74031154318da65bb9a6540121faba50c63493a69b6ceb63a0343a7473a",
+      "after_sha256": "a47d241ea692ae6625543d5d2ae730848add969bf46d64a271410eb5f5aeb106"
+    },
+    {
+      "path": "tests/pagebuilder-editor-v23-production-static.test.mjs",
+      "before_sha256": "5455c1c5f62874c4bcaa1bfe3b0e32b889b5717b8821c354670ed5bfa8783402",
+      "after_sha256": "4f9317fb3a282dc7a2409b4c3a4fa1f03d57b737923a7ee5fb6ad4968294f515"
+    },
+    {
+      "path": "tests/pagebuilder-basic-gallery-canvas-runtime.test.mjs",
+      "before_sha256": "7a6759d367f0138553202e92cf7ba260ca6aededc218cc2544c977335d4184a9",
+      "after_sha256": "54e5aec87252cbe4a39e98205902a7620f9d6e710e5878ad72c2e07b90d1f825"
+    },
+    {
+      "path": "tests/helpers/pagebuilder-v24-module-source.mjs",
+      "before_sha256": "ce7696d80ef606b51289cfc8cee0cf41b590d2a65a5ef70bf368d531c87f11c9",
+      "after_sha256": "72d625b832c98db49d366f38dc4ef15d30d5dd914ece79a65dc41641dbdbd2d4"
+    },
+    {
+      "path": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php",
+      "before_sha256": "62e45c0b609bbb2921f8b17debb2add076ee264ddccc88e44ce96e74ae6b608b",
+      "after_sha256": "eb71e3eb13622029cafa1680f7579324637cae49a48e6a905c8440e936e4cc3d"
+    },
+    {
+      "path": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+      "before_sha256": "e510c971d85da819eeb612e3f5550424c21f826f2affb221dc321c877a00cb87",
+      "after_sha256": "16ff91a2265ebad2a630c0a1a8d944c02e73eaff8e3e2b1efc5598c83fb4e973"
+    },
+    {
+      "path": "resources/views/themes/arunika_lucent/auth/auth_layout.blade.php",
+      "before_sha256": "5df527cd34badd14b683b69bd14d90f89ea9951f7712156aa12ba52dd298796a",
+      "after_sha256": "620863b09ee25a0c9ecf656917f264d2bb6aa5938add1d7c4d16e7790a7ddce9"
+    },
+    {
+      "path": "resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php",
+      "before_sha256": "3679cc5f0faa54dab20bf5751f613a40e8f75eec8742567c946fc7982280d18d",
+      "after_sha256": "d559f577ce2ba23895f79155f758beedd7612f19e1e5eb2b1c9ca6f817149b23"
+    },
+    {
+      "path": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+      "before_sha256": "2ba916b00f8ebeaecbe68ecbe421464d4e0699c9cbdf473fd8fd389b44db4fa0",
+      "after_sha256": "f4c4a2ea09138ca19602b691e273041aa35f39b1aae456dd07f57e7ee6bac56d"
+    },
+    {
+      "path": "tests/pagebuilder-v23-hero-banner-widget-parity.test.mjs",
+      "before_sha256": "211ab2fea41b32af544b0e749487b23d5680ab7fe5322466e4e0247179c6a3c0",
+      "after_sha256": "7d6e5f1885df72ae5abef8f0be088420484d8c3f4621f1c6f9a093f2a5245375"
+    },
+    {
+      "path": "tests/pagebuilder-v23-grid-column-parity.test.mjs",
+      "before_sha256": "7256c9340c93c27e03ca945708acc21e7e5de89b9776309375c2b1590dab11bb",
+      "after_sha256": "b11f62f68df2eb952f8d28e886bfcffb122a1b50be7a6f906da0184b13172983"
+    },
+    {
+      "path": "tests/pagebuilder-v23-frontend-canvas-css-parity.test.mjs",
+      "before_sha256": "afe01a88ec026db0429877b07423cf0f6cbe23d5c3602250bb32407ef5b48be4",
+      "after_sha256": "c1202c1dadf858c86615e304da92664022d0e3859548a485165538cccf5051d1"
+    },
+    {
+      "path": "tests/pagebuilder-v23-context-menu.test.mjs",
+      "before_sha256": "b62e7f676d9134e9306a7ace019f53c6a26003cf53e9e08cc7ab4b3a0753372b",
+      "after_sha256": "cdd1f5b9f9c1e03715297b4c00c9fe6c9cdc4700f149ce63509b38b03ccf499b"
+    },
+    {
+      "path": "tests/pagebuilder-v23-child-container-strict-parity.test.mjs",
+      "before_sha256": "def72bd9025246337fe560203fde6c439a5be7b790b23f040417c58cc226e79e",
+      "after_sha256": "a1ed35d9934e83e2c3432062017264f5d241f169b2022c4654ad632fc66d9865"
+    },
+    {
+      "path": "tests/pagebuilder-unit-control-layout.test.mjs",
+      "before_sha256": "2e9875767d5643bcb23e7a6363807355f64af4f2cacda34ab771ee173a018ff7",
+      "after_sha256": "fab050be9eb86f808b6b498e3c879b0ec3a2c8740c600b2011506369363e969d"
+    },
+    {
+      "path": "tests/pagebuilder-image-carousel-canvas-runtime.test.mjs",
+      "before_sha256": "8b5ec63eb84bd41f2bd7a983ea805d8167c84b027ebc040693e2be6c54afccee",
+      "after_sha256": "e4646f7d9fd888d836e0b5193d7d83f828990cf8a4f1adbaa1cb6f03f2de4cd7"
+    },
+    {
+      "path": "tests/pagebuilder-icon-list-canvas-runtime.test.mjs",
+      "before_sha256": "afdfd6020cd32300a14f3c430a25f4197a02fa499ba9e4ebe9e862067f1e035f",
+      "after_sha256": "db854ca5db81e5a52bf5b46edac718640334617aa5a6c1b7c9033790ae83dfb3"
+    },
+    {
+      "path": "tests/pagebuilder-v24-automatic-compiled-native-review.test.mjs",
+      "before_sha256": "ee07a636c74aaed6c659a273e0c2902e089cd9020251dfbd7f17b09321a81bc2",
+      "after_sha256": "746af6b45c6b4a173b26162a56805a256ae6de5ebcbc6a8af5de55a808926b51"
+    },
+    {
+      "path": "tests/pagebuilder-v24-automatic-compiled-native-canvas-flow.test.mjs",
+      "before_sha256": "5ae16156ec0c99a7c61e01bd307297a4b5d81467d2b085b222135803bc9c3d3b",
+      "after_sha256": "4d3101357438090a62f6f481905c7c60f439f94a87df3e7ea8b50df77a76095d"
+    },
+    {
+      "path": "tests/pagebuilder-v23-widget-settings-loading-state.test.mjs",
+      "before_sha256": "8c46237e37020c182889019706fa1a55f1bf6bc3578c3db338c3c30dbe408594",
+      "after_sha256": "d4c68fc98e8a0cfb6f3806d7c935245620355fec8f7aa3ac4a8e400130ee8ac3"
+    },
+    {
+      "path": "tests/pagebuilder-v23-tabs-navigation-border.test.mjs",
+      "before_sha256": "a2c1b23fb7231edbcdcfbd8e64293ce3383ed4b460ef9393635077da9d37f9cb",
+      "after_sha256": "c2585d64e2407c55e61c0bf6627ad2d3290fd7dda659cf8b67c278d68706e2a5"
+    },
+    {
+      "path": "tests/pagebuilder-v23-selected-ui-updates.test.mjs",
+      "before_sha256": "87794551ae692b41b14b6b355e010638b1441d6ebbd75c8ca8368c97bd063319",
+      "after_sha256": "35f70b7c42490493e452f464d97d94deb34996ff9cf496aab116923a15744122"
+    },
+    {
+      "path": "tests/pagebuilder-v23-repeater-standardization.test.mjs",
+      "before_sha256": "54135bdcb9c4f18b29d00a0509a01a428e915c2d7bea9692716f9299ed6d5c3c",
+      "after_sha256": "62fb9e2d077f0641a5b46ef6c7f1743770e6cb10facddc9aa8c9bc2a3071c1ca"
+    },
+    {
+      "path": "tests/pagebuilder-v23-repeater-boundary-regression.test.mjs",
+      "before_sha256": "28a054e341777fdad6f81e2a57e3595c33b33483620e88b65a2739a70d8aaf91",
+      "after_sha256": "b258a34df39cd120de8b7fa20810c6027dd52312b05d21533762329cc3399ab1"
+    },
+    {
+      "path": "tests/pagebuilder-v23-properties-toolbar-regression.test.mjs",
+      "before_sha256": "6ce3389aa2102f873e9243b5ec61d70c47828ec91eb6b1dc5875541603a68b90",
+      "after_sha256": "461199c9dc900e9423288277f6e2f2900df404894161568efbf3dfa286eab643"
+    },
+    {
+      "path": "tests/pagebuilder-v23-properties-density-regression.test.mjs",
+      "before_sha256": "9126287b57b0cd9ebefa2077915e83e5c81e6a4e1a185c1666f6065dccb5d8a3",
+      "after_sha256": "a291d64886d072132b5fe006e1350f75a1746db5cee70a1938185749361bc149"
+    },
+    {
+      "path": "tests/pagebuilder-v23-hero-slider-widget-parity.test.mjs",
+      "before_sha256": "12a65d9474296424697c65dc72145fbd2a7a3ea9d19eb080e908a190496d39f7",
+      "after_sha256": "9f8abe16e09aef23ffa5d1cab450c4c4bbe85641669ccd36cb88dfc6442c415a"
+    },
+    {
+      "path": "tests/pagebuilder-v24-hero-slider-widget-parity.test.mjs",
+      "before_sha256": "01da887036f56e6dd675555134cb09e28918b6c533ebb1e7c0d33c0ea00f44da",
+      "after_sha256": "1c903cf98ec84593bc3087a2f2e76f78f171213ebd3e932d7e0a8782c1250833"
+    },
+    {
+      "path": "tests/pagebuilder-v24-hero-banner-widget-parity.test.mjs",
+      "before_sha256": "3bbdf9db44b805844bec31625ce038ffa61d9a26f3256c5f7d50720ca3966295",
+      "after_sha256": "f63d76a7114fa2d7f58b03a85b69306a0c74fee90768bb880036a56ec9af8d84"
+    },
+    {
+      "path": "tests/pagebuilder-v24-grid-column-parity.test.mjs",
+      "before_sha256": "b52f0a9d0feba87a45fb9176b94d90af2c44da24f665dc55274626b3761e902c",
+      "after_sha256": "3ed2a0a5698be0720ded4d4d1530ceeb063ed37502fbd6c9ff23be53f474386e"
+    },
+    {
+      "path": "tests/pagebuilder-v24-full-modularity.test.mjs",
+      "before_sha256": "ed76b874fc785fd81963b19572ca3c06302ff010c8f5ede45ed5a2cb43e7443f",
+      "after_sha256": "6b1fd90d3087e372827a31aacafe215804cf4eac058f04a3f13d3ed0de58507a"
+    },
+    {
+      "path": "tests/pagebuilder-v24-full-bleed-spacing.test.mjs",
+      "before_sha256": "3542a3d3a74217f1e30fdca33ef5a3431584eae05cfba426dde2c4b6833e4d86",
+      "after_sha256": "6125a40300e569c1e2db833324e842b7f6c23daf7ae1376d051966cdeba13f10"
+    },
+    {
+      "path": "tests/pagebuilder-v24-context-menu.test.mjs",
+      "before_sha256": "32c2df6e2c0aeb259819ba62701ca09997601d20f1cd7688e64e76782edf3421",
+      "after_sha256": "d2736b5a2cbae3256bb6a65324de91e93d286be3778d924a999ead364af4d29a"
+    },
+    {
+      "path": "tests/pagebuilder-v24-widget-settings-loading-state.test.mjs",
+      "before_sha256": "0c48102d40fa25df9c2033e87f571179ceba7e36f84ae1d13d8dc99a193c2c7e",
+      "after_sha256": "d0f57c9c08d455b28c8cbb0d98070eec5920a5859005042f3bd80929a655bede"
+    },
+    {
+      "path": "tests/theme-responsive-typography-static.test.mjs",
+      "before_sha256": "cb537d130553522c5ef13164aa2e0e017c2fc1f4189a43be0f998734abf9bdc5",
+      "after_sha256": "88227a40a5775a1eea2b00ae485b0cb662f5d347960c16458d0313be3cb1570a"
+    },
+    {
+      "path": "resources/views/themes/arunika_equinox/auth/auth_layout.blade.php",
+      "before_sha256": "cdf54befa19f7485c3d47905d61e1b6467afdd98af049191418729b12da44535",
+      "after_sha256": "bf8072a71e00350d2252869f66b022f392af4a5106f046ea94298e4f96723581"
+    },
+    {
+      "path": "resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php",
+      "before_sha256": "3679cc5f0faa54dab20bf5751f613a40e8f75eec8742567c946fc7982280d18d",
+      "after_sha256": "d559f577ce2ba23895f79155f758beedd7612f19e1e5eb2b1c9ca6f817149b23"
+    },
+    {
+      "path": "resources/views/article/detail.blade.php",
+      "before_sha256": "4549fd62c9a84a0ab5aa03bbdde7c9badc497315ed838f2aa5565b0db781a0fd",
+      "after_sha256": "259a1bbd690c52039f7bbdd71c5718264ee5a0a0bcf5e2626271fafa6901e77d"
+    },
+    {
+      "path": "resources/views/article/archive.blade.php",
+      "before_sha256": "800ea950b74d8474f37a45f0b6d9ca6382c8fc506ebcdfc141cfca9840e515ad",
+      "after_sha256": "736af102ce0332e5e0f64824eb1fc4d69582365c99a6dfc310223893bdb81379"
+    },
+    {
+      "path": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+      "before_sha256": "7cbfab01ecd29016033b906dde22e76b6c41b610705227cf507bd7e32a4cdb38",
+      "after_sha256": "a9135f6db15a34b1fef2ef80c3d6c351eb22ac78251ceae7fc9dd493d4a708f3"
+    },
+    {
+      "path": "resources/views/themes/arunika_aurora/auth/auth_layout.blade.php",
+      "before_sha256": "cdf54befa19f7485c3d47905d61e1b6467afdd98af049191418729b12da44535",
+      "after_sha256": "bf8072a71e00350d2252869f66b022f392af4a5106f046ea94298e4f96723581"
+    },
+    {
+      "path": "resources/views/setup/setup.blade.php",
+      "before_sha256": "91b1b9bff8cf0a2fc96eae3f533228a4b38ede9f417a99975077919970ca67f2",
+      "after_sha256": "1c52074720c2294f52c0e9b7a55b3b771a752df576e26e0ea072706ad6f40fc9"
+    },
+    {
+      "path": "resources/views/article/private.blade.php",
+      "before_sha256": "706c3513efce24f057b0e8021ded7b85062865ee5d52b6a702d5383e22dad4a3",
+      "after_sha256": "78cf8ccabc83cf31847ef95da9d409642d9458d3a827106e568a2d3aa14e853f"
+    },
+    {
+      "path": "resources/views/article/password-protected.blade.php",
+      "before_sha256": "57761cdef848bed0267c50d39924e4db6bdba3c72480fd51d402639876a6898d",
+      "after_sha256": "8729928207f0c6004daa7a655a3693e5d1a9e807f77f9a521fd2c2240987b828"
+    },
+    {
+      "path": "resources/views/pagebuilder_elementor_v24/frontend_renderer.blade.php",
+      "before_sha256": "74b79a16d661ba270ea0f3e5db5f5dd3c73b5843de6a68efacf36892ec05bd89",
+      "after_sha256": "11c9353e3f85a38c327a66bd31bbf1945a762f4876d4a002730e9e00c2619b5f"
+    },
+    {
+      "path": "resources/views/pagebuilder_elementor_v24/editor_shell.blade.php",
+      "before_sha256": "5d7e09334bc520c4fea10051752a6a9ae4c942778acbb6809f1bd0bffd253ba7",
+      "after_sha256": "ea0f198dd1c193010110f6281eead966c15bcce94b726f7728ba9fdb7c378cca"
+    },
+    {
+      "path": "resources/views/pagebuilder_elementor_v23/frontend_renderer.blade.php",
+      "before_sha256": "0737fa28c92987358c7c4028e1fad970b33008893491130e2f9186a3a2195e1f",
+      "after_sha256": "61aa4298d5f38235624dad0dc18639b5bd0a75084a0d1dc4e70e85951abdef50"
+    },
+    {
+      "path": "resources/views/pagebuilder_elementor_v23/editor_shell.blade.php",
+      "before_sha256": "de30a26f74440a1cb73c41633d6d02b63b20bb1ead2a2e42529cbcdb8d1ad367",
+      "after_sha256": "859b334b2906ded549c60d69365e295bea2eaaef4c050a4cfe429588b6b6c887"
+    },
+    {
+      "path": "resources/views/pagebuilder_elementor/frontend_renderer.blade.php",
+      "before_sha256": "c5da16c4b2ebc507b1280b8d5fc3ca87236a8c382886bcd141e29436183c0326",
+      "after_sha256": "de62fa2429ea68d2da6fbdac7329af3e136f888de12d937d5a031204f1fd6814"
+    },
+    {
+      "path": "resources/views/pagebuilder_elementor/editor_shell.blade.php",
+      "before_sha256": "74eb2bab602357aaf92bacb694201f3deb758c6a06aa041b6ee6efb70ab6bcc0",
+      "after_sha256": "65ae2bc2ebbf902a3e5e8423967d7863d92e8134a9afc9444cfbff417b9d1895"
+    },
+    {
+      "path": "resources/views/pagebuilder/pagebuilder.blade.php",
+      "before_sha256": "286bf5c50bb161f34d5c0308752ddae47f7756916e7f9c8d2df542c3a5ef8ed3",
+      "after_sha256": "23bcb9b2e293c1860e8f2cb8b4e1583e5c5b68aab825d0feb9f4b38b56c0bf2d"
+    },
+    {
+      "path": "resources/views/manage_article/templates/preview.blade.php",
+      "before_sha256": "2474c900395d3ffdb9df8ef76d06e13137e8ff0bd685f6bfee57d7bfedd3314b",
+      "after_sha256": "c8ceb31f0ad8d9e6a9f532cf847e488c9375390038d0ae9e72d858f5f4793df8"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorAccordionWidgetParityTest.php",
+      "before_sha256": "33512624845a8e86a7600abb0f3b462a00e6fd721962538ca19d9792010eaf1a",
+      "after_sha256": "6a4ce71c080eeaa75fdc52fe79a3c920073e1a38d54d6ddf589011d80a1165d5"
+    },
+    {
+      "path": "tests/Feature/HeaderNavigationSettingsTest.php",
+      "before_sha256": "2c7a7079e296daca91110aa51ca5b9207518242ad408c4bfc231bb2674565932",
+      "after_sha256": "dc90b6197635ae3158c7f2c591975b0f51dc37ecb75a1b214d766d67b2530b12"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorImageBoxWidgetParityTest.php",
+      "before_sha256": "ee6157ce6ddfc4ca7be4e489813f3004d12da7b962e28294398388ece85578db",
+      "after_sha256": "00224912ea2ced3b73bb8ba59f2b9a5ee20dda5b46cafc8e89a789c0db8fcd72"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorIconBoxWidgetParityTest.php",
+      "before_sha256": "a8a01d3f2ccfa620dc8a4fc4dcb7d78b84a145e2070625ca2fdb2dfd7e6d4f0f",
+      "after_sha256": "6e9e191536ab02807c50e633d7179a22b3c799332bb3733191a1f62795a95214"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorGeneralWidgetsTest.php",
+      "before_sha256": "40a36cdd10564e41c6e07b897d1a303ae0a10b0dec7fcd7b0331efc87114620e",
+      "after_sha256": "a86582a5117424a3f55aaaf2978baf94f879f79dc61d7311e00a3fbe16e3b4bd"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorContainerWidgetModulesTest.php",
+      "before_sha256": "56b58321d3f2e010c37d9d5ba3ce405b1f0873a67565eda6e1ba6b3e6878dedf",
+      "after_sha256": "11618308f09200351e17ed80a84d51aa0d71185e6c60eaeddece02328bb36684"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorContainerGridLabelAlignmentTest.php",
+      "before_sha256": "27d36fec55e3e7a185cb09cc372c71720fa992ea5d3ef13cb3ee9a1fb9a7381a",
+      "after_sha256": "a63a71a20362a7340c8a65b50bd3720fb4bff4334d3aa4f80b336918c12a7153"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorBasicWidgetStyleParityTest.php",
+      "before_sha256": "5ad47ec2f37c1ffea4919b70d97b183028ee030c7b8bcb4b9dd898862b5d5bac",
+      "after_sha256": "0b543867d48600a8970efc4ad4cfcbcf5f61a3a71d9f44cd37c28fea194fd5a5"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorBasicGalleryWidgetParityTest.php",
+      "before_sha256": "b7e50c549b308e538ffb3e5c9b9577ee4ed3e3549b3e94a437408c382b83064d",
+      "after_sha256": "e9357322f87ba27e4d89a0c18d9ca1ca8b09724e297682c6810e683ea509d8d9"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorResponsiveDimensionParityTest.php",
+      "before_sha256": "066ef6956a4e865883ac7c6fbd3efe9a7e9da22ba7e10dd3686f0e161aa46a66",
+      "after_sha256": "0feef8e8fbdca01795d9bd113cb236693c010ae03c248df52a64784fc476d6b0"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorResponsiveBorderRadiusParityTest.php",
+      "before_sha256": "ed19be46304c9e7ccc20e87f4b492ca6b2c0993fb39efd7d021ed4636a4c1519",
+      "after_sha256": "ca2b14029823dfc7369aea9886c461331bf6a45b5496cb9c5a31d00801669d78"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorMultiviewCoverageTest.php",
+      "before_sha256": "242fcdbfcc8b862dfd4b16cfb6731ae494c6f85b1f100a0652fda09553cb320c",
+      "after_sha256": "88812bfa4fb0d6e9e9bd4ae0fffe165b60528bfafab1af5d8b916e2d3f325be0"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorImageCarouselWidgetParityTest.php",
+      "before_sha256": "a46619d16fa244f1a0785c50f2910061271262ba77f9569082dfd64acd3148a3",
+      "after_sha256": "c8c838a709f72963f54c8152bc10a02f25509926527f5879e35f50bdd8cc097e"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorTabsWidgetParityTest.php",
+      "before_sha256": "ca33891cb69c2ba911f0ad0019c5287d3a692f067df40b67b97413b6e7abc82d",
+      "after_sha256": "e33214dd71c7dc6d68b422e6364ef768946043b49131aa4ed5cf825669305272"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorTabsStyleAndStartupParityTest.php",
+      "before_sha256": "6e15e67cc617a3ef03957346e597c7eaa7ac00d5f72cc75d6b45879d2f16567f",
+      "after_sha256": "dd2ef05ce98efa37bfcf1f4c13da13901ddc6ef8c601b954308e255ff20e15a2"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorV23AssetIsolationTest.php",
+      "before_sha256": "776bf8b114115ac5e3ccd13c2e9b94b7762db61c06492ac087fe2654ebe9e79e",
+      "after_sha256": "75df89432faacaacbc0b234e2faefae4e47292c0ec68a73081a4aa2ca357b690"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorV23ShellTest.php",
+      "before_sha256": "497c80724d7ef548003538d5d85b50f7dbd4ae359952f6a5550dd3ba37777a15",
+      "after_sha256": "d75435e6717b9778a174ef00a4c5ea7908ddfe02c011e12f91cda938995467cb"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorV23RoutesAndPersistenceTest.php",
+      "before_sha256": "7676a9501b4027e4331d021add815b6ef66c6c48818e8430384450970a6bd799",
+      "after_sha256": "b16f3f41c5a7b80d62f2f2fcd5b3ce5a9aeb44f2c1f0e47dff4146431e884d1c"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorV23FrontendRenderingTest.php",
+      "before_sha256": "64d8fe045e5a4ceffae280d9de7ba34b1764dd5885325463a5d3d008e8b9c1bc",
+      "after_sha256": "328cdaf68835b4d33b5717d12d0e4025844abd7721725813defa310b4909d02f"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorV24BaselineIsolationTest.php",
+      "before_sha256": "10a74c545bb86e7fa2753ce87269a4ea4ba4d658b636a2e72d86e62c52735eea",
+      "after_sha256": "a430c7d07aee936b46b7318967de5ec728fe15b378c5d743249a19801a195518"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorV24AssetIsolationTest.php",
+      "before_sha256": "a9cd99fcdeb92bb87a288fa0e36a43c06bf9d60a0c12f3c01a95359123627c7a",
+      "after_sha256": "2713c0d07d70b245e25a7d7fb5268a412a99c38fa7e3b985f032f6cc3afdf244"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorWidgetAdvancedParityTest.php",
+      "before_sha256": "246b35ecc86fd7f9893614bcb004fa3d720f4821e346c5ecc5324427e64d7239",
+      "after_sha256": "884d0c1d30f7b9586fcdc6410edb9a862ade8142dc9af641670703a233812f88"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorV24ShellTest.php",
+      "before_sha256": "ea9218d3b3f7a5b390b7335d126fdca5fba30c1985877d3950e927618aa437e1",
+      "after_sha256": "7009960549ba63f19a56f51fd74090edf33d1b2d40640865167b3dbd0f270c6b"
+    },
+    {
+      "path": "tests/Feature/PageBuilderElementorV24RoutesAndPersistenceTest.php",
+      "before_sha256": "52ad06193ed9d5480b6024c2ca3e7a47834194e2e032bbf3d210a2283b47ef6d",
+      "after_sha256": "94fbeef97a5628e2dd2ee734e5d6a8f70a932c34d524cf43a19d08895b57ab69"
+    }
+  ],
+  "node_tests": [
+    "tests/pagebuilder-basic-gallery-canvas-runtime.test.mjs",
+    "tests/pagebuilder-editor-v23-production-static.test.mjs",
+    "tests/pagebuilder-editor-v24-production-static.test.mjs",
+    "tests/pagebuilder-icon-list-canvas-runtime.test.mjs",
+    "tests/pagebuilder-image-carousel-canvas-runtime.test.mjs",
+    "tests/pagebuilder-unit-control-layout.test.mjs",
+    "tests/pagebuilder-v23-child-container-strict-parity.test.mjs",
+    "tests/pagebuilder-v23-context-menu.test.mjs",
+    "tests/pagebuilder-v23-frontend-canvas-css-parity.test.mjs",
+    "tests/pagebuilder-v23-grid-column-parity.test.mjs",
+    "tests/pagebuilder-v23-hero-banner-widget-parity.test.mjs",
+    "tests/pagebuilder-v23-hero-slider-widget-parity.test.mjs",
+    "tests/pagebuilder-v23-properties-density-regression.test.mjs",
+    "tests/pagebuilder-v23-properties-toolbar-regression.test.mjs",
+    "tests/pagebuilder-v23-repeater-boundary-regression.test.mjs",
+    "tests/pagebuilder-v23-repeater-standardization.test.mjs",
+    "tests/pagebuilder-v23-selected-ui-updates.test.mjs",
+    "tests/pagebuilder-v23-tabs-navigation-border.test.mjs",
+    "tests/pagebuilder-v23-widget-settings-loading-state.test.mjs",
+    "tests/pagebuilder-v24-automatic-compiled-native-canvas-flow.test.mjs",
+    "tests/pagebuilder-v24-automatic-compiled-native-review.test.mjs",
+    "tests/pagebuilder-v24-baseline-isolation.test.mjs",
+    "tests/pagebuilder-v24-child-container-strict-parity.test.mjs",
+    "tests/pagebuilder-v24-context-menu.test.mjs",
+    "tests/pagebuilder-v24-frontend-canvas-css-parity.test.mjs",
+    "tests/pagebuilder-v24-full-bleed-spacing.test.mjs",
+    "tests/pagebuilder-v24-full-modularity.test.mjs",
+    "tests/pagebuilder-v24-grid-column-parity.test.mjs",
+    "tests/pagebuilder-v24-grid-column-style.test.mjs",
+    "tests/pagebuilder-v24-hero-banner-widget-parity.test.mjs",
+    "tests/pagebuilder-v24-hero-slider-widget-parity.test.mjs",
+    "tests/pagebuilder-v24-legacy-grid-adapter.test.mjs",
+    "tests/pagebuilder-v24-properties-density-regression.test.mjs",
+    "tests/pagebuilder-v24-properties-toolbar-regression.test.mjs",
+    "tests/pagebuilder-v24-repeater-boundary-regression.test.mjs",
+    "tests/pagebuilder-v24-repeater-standardization.test.mjs",
+    "tests/pagebuilder-v24-selected-ui-updates.test.mjs",
+    "tests/pagebuilder-v24-tabs-navigation-border.test.mjs",
+    "tests/pagebuilder-v24-widget-settings-loading-state.test.mjs",
+    "tests/theme-responsive-typography-static.test.mjs"
+  ],
+  "git_status_before": " M public/assets/css/article/manage-article-2026.css\n M public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js\n M resources/views/manage_article/manage_article.blade.php\n?? project-artifacts/audits/css-inventory-20261030/\n?? project-artifacts/audits/css-page-scope-20261030/\n?? project-artifacts/css-organization-20261030/\n?? project-artifacts/qa/manage-article-control-spacing-20261029/\n?? project-artifacts/qa/manage-article-reference-alignment-20261029/\n?? project-artifacts/qa/manage-article-row-disclosure-20261029/\n?? project-artifacts/tests/manage-article-control-spacing-20261029/\n?? project-artifacts/tests/manage-article-reference-alignment-20261029/\n?? project-artifacts/tests/manage-article-row-disclosure-20261029/\n",
+  "protected": {
+    "public/assets/css/article/manage-article-2026.css": "82d99e4ca15997b7093ae99956de4b3a1b8afc2c042c0907c9867413ba90f774",
+    "public/assets/js/vue3/manage_article/vueV3-manage-article-2026.js": "f16f79ff39dc1dd87eee88b4f5ed9a079e0b89327619d2e8e1ed58f293131348",
+    "resources/views/manage_article/manage_article.blade.php": "62cfe9ac6c9992b3bfab2306544289da22293ed115a1074c52999149e95db7e1"
+  },
+  "backup": "project-artifacts/css-organization-20261030/backups_20261030_142705"
+}

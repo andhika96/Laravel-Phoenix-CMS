@@ -8,7 +8,7 @@ class PageBuilderElementorMultiviewCoverageTest extends TestCase
 {
     public function test_image_box_and_accordion_keep_direct_responsive_triggers_on_the_trailing_edge(): void
     {
-        $css = file_get_contents(public_path('assets/css/pagebuilder_elementor.css'));
+        $css = file_get_contents(public_path('assets/css/pagebuilder/elementor/pagebuilder_elementor.css'));
 
         $selector = '.pb-panel.left :is(.pb-widget-settings--image-box, .pb-widget-settings--accordion) .pb-label-row.pb-label-row-device';
 

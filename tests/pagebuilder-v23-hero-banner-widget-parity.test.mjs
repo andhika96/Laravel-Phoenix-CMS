@@ -15,11 +15,11 @@ const blade = read('resources/views/pagebuilder_elementor_v23/widgets/pro/hero-b
 const config = read('config/pagebuilder_elementor_v23_widgets.php');
 const app = read('public/js/pagebuilder_elementor_v23/app.js');
 const runtime = read('public/js/pagebuilder_elementor_v23/frontend-runtime.js');
-const frontendCss = read('public/assets/css/frontend_elementor.css');
-const frontendV23Css = read('public/assets/css/frontend_elementor_v23.css');
-const editorCss = read('public/assets/css/pagebuilder_elementor_v23.css');
+const frontendCss = read('public/assets/css/pagebuilder/elementor/frontend_elementor.css');
+const frontendV23Css = read('public/assets/css/pagebuilder/elementor-v23/frontend_elementor_v23.css');
+const editorCss = read('public/assets/css/pagebuilder/elementor-v23/pagebuilder_elementor_v23.css');
 const prototypeCss = read('project-artifacts/mockups/pagebuilder-v23-responsive-hero-prototype/src/styles.css');
-const prototype = read('public/mockups/pagebuilder-editor-redesign-prototype-v2.3.html');
+const prototype = read('project-artifacts/mockups/legacy-public-mockups-20261030/pagebuilder-editor-redesign-prototype-v2.3.html');
 
 assert.ok(definition, 'Hero Banner definition must exist');
 assert.match(definition, /type:\s*['"]hero_banner['"]/);

@@ -32,8 +32,8 @@ class PageBuilderElementorV24AssetIsolationTest extends TestCase
             ...$this->absoluteFiles(resource_path('pagebuilder_elementor_v24/shared')),
             ...$this->absoluteFiles(resource_path('views/pagebuilder_elementor_v24')),
             app_path('Mail/PageBuilderElementorV24FormMail.php'),
-            public_path('assets/css/pagebuilder_elementor_v24.css'),
-            public_path('assets/css/frontend_elementor_v24.css'),
+            public_path('assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css'),
+            public_path('assets/css/pagebuilder/elementor-v24/frontend_elementor_v24.css'),
             resource_path('data/pagebuilder_elementor_v24_shapes.json'),
             resource_path('views/emails/pagebuilder-elementor-v24-form-text.blade.php'),
             base_path('routes/pagebuilder_elementor_v24.php'),
@@ -47,8 +47,8 @@ class PageBuilderElementorV24AssetIsolationTest extends TestCase
 
             foreach ([
                 '/js/pagebuilder_elementor_v23/',
-                'assets/css/pagebuilder_elementor_v23.css',
-                'assets/css/frontend_elementor_v23.css',
+                'assets/css/pagebuilder/elementor-v23/pagebuilder_elementor_v23.css',
+                'assets/css/pagebuilder/elementor-v23/frontend_elementor_v23.css',
                 "config('pagebuilder_elementor_v23_widgets",
                 "view('pagebuilder_elementor_v23.",
                 "@include('pagebuilder_elementor_v23.",

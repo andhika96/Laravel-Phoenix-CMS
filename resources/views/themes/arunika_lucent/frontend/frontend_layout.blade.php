@@ -19,11 +19,11 @@
 		<!-- Custom CSS -->
 		<link href="{{ asset('storage/fonts/'.$siteTypography['fontFamilyCode'].'/fonts.css?v=').time() }}" rel="stylesheet">	
 
-		<link href="{{ asset('assets/css/extending-css-bootstrap-5.css?v=').time() }}" rel="stylesheet">
-		<link href="{{ asset('assets/css/phoenix-cms.css?v=').time() }}" rel="stylesheet">	
+		<link href="{{ asset('assets/css/shared/extending-css-bootstrap-5.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/shared/phoenix-cms.css?v=').time() }}" rel="stylesheet">
 		<link href="{{ asset('assets/css/themes/arunika_lucent/arunika_lucent.css?v=').time() }}" rel="stylesheet">
-		<link href="{{ asset('assets/css/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
-		<link href="{{ asset('assets/css/frontend-menu-dropdown.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/shared/theme-responsive-typography.css?v=').time() }}" rel="stylesheet">
+		<link href="{{ asset('assets/css/frontend/frontend-menu-dropdown.css?v=').time() }}" rel="stylesheet">
 
 		@stack('css')
 

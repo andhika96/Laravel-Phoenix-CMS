@@ -1,0 +1,1032 @@
+[
+  {
+    "path": "/dashboard",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/dashboard",
+    "css": [
+      "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335963",
+      "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335963",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335963",
+      "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335963",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335963",
+      "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780"
+    ],
+    "resources": [
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335963",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335963",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335963",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335963",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335963",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/manage_article",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/manage_article",
+    "css": [
+      "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335963",
+      "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335963",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335963",
+      "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335963",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335963",
+      "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+      "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793243818"
+    ],
+    "resources": [
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335963",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335963",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335963",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335963",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335963",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/article/manage-article-2026.css?v=1793243818",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/manage_article/add",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/manage_article/add",
+    "css": [
+      "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335964",
+      "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335964",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335964",
+      "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335964",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335964",
+      "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+      "https://laravel-13-phoenix.aruna/assets/css/article/article-editor-content.css?v=1792551703"
+    ],
+    "resources": [
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335964",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335964",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335964",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335964",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335964",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/article/article-editor-content.css?v=1792551703",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/manage_article/templates",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/manage_article/templates",
+    "css": [
+      "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335965",
+      "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335965",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335965",
+      "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335965",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335965",
+      "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+      "https://laravel-13-phoenix.aruna/assets/vendor/coloris/coloris.min.css?v=1793335965",
+      "https://laravel-13-phoenix.aruna/assets/css/article/article-template-manager-2026.css?v=1793335965"
+    ],
+    "resources": [
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335965",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335965",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335965",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335965",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335965",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/vendor/coloris/coloris.min.css?v=1793335965",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/article/article-template-manager-2026.css?v=1793335965",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/awesome_admin/header-navigation",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/awesome_admin/header-navigation",
+    "css": [
+      "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335966",
+      "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335966",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335966",
+      "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335966",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335966",
+      "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+      "https://laravel-13-phoenix.aruna/assets/vendor/coloris/coloris.min.css?v=1793335966",
+      "https://laravel-13-phoenix.aruna/assets/css/awesome-admin-header-navigation.css?v=1793335966",
+      "https://laravel-13-phoenix.aruna/assets/css/awesome-admin-header-navigation-fullscreen.css?v=1793335966"
+    ],
+    "resources": [
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335966",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335966",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335966",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335966",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335966",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/vendor/coloris/coloris.min.css?v=1793335966",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/awesome-admin-header-navigation.css?v=1793335966",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/awesome-admin-header-navigation-fullscreen.css?v=1793335966",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/admin/file-manager-v2",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/admin/file-manager-v2?fm_storage=local&fm_collection=all",
+    "css": [
+      "https://laravel-13-phoenix.aruna/assets/plugins/filemanager_v2/filemanager-v2.css?v=1791786688"
+    ],
+    "resources": [
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/filemanager_v2/filemanager-v2.css?v=1791786688",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/workflow",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/workflow?page=1",
+    "css": [
+      "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335972",
+      "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335972",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335972",
+      "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335972",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335972",
+      "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+      "https://laravel-13-phoenix.aruna/assets/css/workflow-editor.css?v=1793335972"
+    ],
+    "resources": [
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335972",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335972",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335972",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335972",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335972",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/workflow-editor.css?v=1793335972",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/workflow/create",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/workflow/create",
+    "css": [
+      "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335973",
+      "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335973",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335973",
+      "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335973",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335973",
+      "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+      "https://laravel-13-phoenix.aruna/assets/css/workflow-editor.css?v=1793335973"
+    ],
+    "resources": [
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793335973",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793335973",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793335973",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793335973",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793335973",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/workflow-editor.css?v=1793335973",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/pagebuilder-elementor/v2.4/create",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.4/create",
+    "css": [
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
+      "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css?v=1615882514",
+      "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      "https://laravel-13-phoenix.aruna/storage/fonts/andika/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/fira_sans/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/lato/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/lobster_two/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/montserrat/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/nunito/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/open_sans/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/plus_jakarta_sans/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/poppins/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/roboto/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/source_code_pro/fonts.css",
+      "https://laravel-13-phoenix.aruna/assets/vendor/pb-picker/picker.min.css?v=1782527134",
+      "https://laravel-13-phoenix.aruna/assets/css/frontend_elementor_v24.css?v=1787837823",
+      "https://laravel-13-phoenix.aruna/assets/css/pagebuilder_elementor_v24.css?v=1788098143"
+    ],
+    "resources": [
+      {
+        "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
+        "status": 0
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css",
+        "status": 0
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css?v=1615882514",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/andika/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/fira_sans/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/lato/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/lobster_two/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/montserrat/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/nunito/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/open_sans/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/plus_jakarta_sans/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/poppins/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/roboto/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/source_code_pro/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/vendor/pb-picker/picker.min.css?v=1782527134",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/frontend_elementor_v24.css?v=1787837823",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/pagebuilder_elementor_v24.css?v=1788098143",
+        "status": 200
+      }
+    ],
+    "moduleStyles": [
+      "container",
+      "container_fluid",
+      "grid",
+      "row_grid",
+      "heading",
+      "video",
+      "text_editor",
+      "image",
+      "button",
+      "divider",
+      "spacer",
+      "icon",
+      "image_box",
+      "icon_box",
+      "image_carousel",
+      "basic_gallery",
+      "icon_list",
+      "tabs",
+      "accordion",
+      "counter",
+      "progress_bar",
+      "testimonial",
+      "social_icons",
+      "alert",
+      "form",
+      "product_lead_form",
+      "hero_banner",
+      "hero_slider"
+    ]
+  },
+  {
+    "path": "/article",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/article",
+    "css": [
+      "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793336057",
+      "https://laravel-13-phoenix.aruna/assets/css/extending-css-bootstrap-5.css?v=1793336057",
+      "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793336057",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793336057",
+      "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793336057",
+      "https://laravel-13-phoenix.aruna/assets/css/frontend-menu-dropdown.css?v=1793336057",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793336057",
+      "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793336057",
+      "https://laravel-13-phoenix.aruna/assets/css/article/article-frontend-2026.css?v=1793336057"
+    ],
+    "resources": [
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793336057",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/extending-css-bootstrap-5.css?v=1793336057",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793336057",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793336057",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793336057",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/frontend-menu-dropdown.css?v=1793336057",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/article/article-frontend-2026.css?v=1793336057",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/manage_event/add",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/manage_event/add",
+    "css": [
+      "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793336058",
+      "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793336058",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793336058",
+      "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793336058",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793336058",
+      "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+      "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css"
+    ],
+    "resources": [
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793336058",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793336058",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793336058",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793336058",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793336058",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/manage_coverimage/add",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/manage_coverimage/add",
+    "css": [
+      "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793336060",
+      "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793336060",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793336060",
+      "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793336060",
+      "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793336060",
+      "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+      "https://laravel-13-phoenix.aruna/assets/plugins/spectrum/dist/spectrum.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css"
+    ],
+    "resources": [
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css?v=1793336060",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/simplebar/6.3.1/css/simplebar.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/phoenix-cms.css?v=1793336060",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/arunika_lucent.css?v=1793336060",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/theme-responsive-typography.css?v=1793336060",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/themes/arunika_lucent/mobile-v2.css?v=1793336060",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/cms-bootstrap-theme.css?v=1793178780",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/spectrum/dist/spectrum.min.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/pagebuilder",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/pagebuilder",
+    "css": [
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/6.5.1/css/all.min.css?v=1701771179",
+      "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap",
+      "https://cdn.plyr.io/3.7.8/plyr.css",
+      "https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css",
+      "https://laravel-13-phoenix.aruna/assets/css/pagebuilder.css"
+    ],
+    "resources": [
+      {
+        "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
+        "status": 0
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/6.5.1/css/all.min.css?v=1701771179",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/pagebuilder.css",
+        "status": 200
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css",
+        "status": 0
+      },
+      {
+        "url": "https://cdn.plyr.io/3.7.8/plyr.css",
+        "status": 0
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/pagebuilder-elementor/create",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/pagebuilder-elementor/create",
+    "css": [
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css?v=1615882514",
+      "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      "https://laravel-13-phoenix.aruna/storage/fonts/andika/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/fira_sans/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/lato/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/lobster_two/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/montserrat/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/nunito/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/open_sans/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/plus_jakarta_sans/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/poppins/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/roboto/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/source_code_pro/fonts.css",
+      "https://laravel-13-phoenix.aruna/assets/vendor/pb-picker/picker.min.css?v=1782527134",
+      "https://laravel-13-phoenix.aruna/assets/css/frontend_elementor.css?v=1786780998",
+      "https://laravel-13-phoenix.aruna/assets/css/pagebuilder_elementor.css?v=1786116157"
+    ],
+    "resources": [
+      {
+        "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
+        "status": 0
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css?v=1615882514",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/andika/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/fira_sans/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/lato/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/lobster_two/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/montserrat/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/nunito/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/open_sans/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/plus_jakarta_sans/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/poppins/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/roboto/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/source_code_pro/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/vendor/pb-picker/picker.min.css?v=1782527134",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/frontend_elementor.css?v=1786780998",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/pagebuilder_elementor.css?v=1786116157",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  },
+  {
+    "path": "/pagebuilder-elementor/v2.3/create",
+    "status": 200,
+    "url": "https://laravel-13-phoenix.aruna/pagebuilder-elementor/v2.3/create",
+    "css": [
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
+      "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css",
+      "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css?v=1615882514",
+      "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      "https://laravel-13-phoenix.aruna/storage/fonts/andika/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/fira_sans/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/lato/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/lobster_two/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/montserrat/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/nunito/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/open_sans/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/plus_jakarta_sans/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/poppins/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/roboto/fonts.css",
+      "https://laravel-13-phoenix.aruna/storage/fonts/source_code_pro/fonts.css",
+      "https://laravel-13-phoenix.aruna/assets/vendor/pb-picker/picker.min.css?v=1782527134",
+      "https://laravel-13-phoenix.aruna/assets/css/frontend_elementor_v23.css?v=1787394509",
+      "https://laravel-13-phoenix.aruna/assets/css/pagebuilder_elementor_v23.css?v=1787378879"
+    ],
+    "resources": [
+      {
+        "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
+        "status": 0
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css",
+        "status": 0
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/plugins/fontawesome/5.15.3/css/all.min.css?v=1615882514",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/andika/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/fira_sans/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/lato/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/lobster_two/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/montserrat/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/noto_sans/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/nunito/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/open_sans/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/plus_jakarta_sans/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/poppins/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/roboto/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/storage/fonts/source_code_pro/fonts.css",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/vendor/pb-picker/picker.min.css?v=1782527134",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/frontend_elementor_v23.css?v=1787394509",
+        "status": 200
+      },
+      {
+        "url": "https://laravel-13-phoenix.aruna/assets/css/pagebuilder_elementor_v23.css?v=1787378879",
+        "status": 200
+      }
+    ],
+    "moduleStyles": []
+  }
+]

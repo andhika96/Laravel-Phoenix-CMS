@@ -1,0 +1,29 @@
+[     573ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0
+[  100544ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0
+[  101368ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0
+[  102202ms] ReferenceError: grecaptcha is not defined
+    at https://laravel-13-phoenix.aruna/auth/signup:231:3
+[  102979ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/signup:0
+[  104220ms] ReferenceError: grecaptcha is not defined
+    at https://laravel-13-phoenix.aruna/auth/signup:231:3
+[  104444ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/signup:0
+[  107568ms] [ERROR] Failed to load resource: the server responded with a status of 419 (unknown status) @ https://laravel-13-phoenix.aruna/auth/recoveryaccount:0
+[  108190ms] [ERROR] Failed to load resource: the server responded with a status of 419 (unknown status) @ https://laravel-13-phoenix.aruna/auth/recoveryaccount:0
+[  108338ms] [ERROR] Failed to load resource: the server responded with a status of 419 (unknown status) @ https://laravel-13-phoenix.aruna/auth/recoveryaccount:0
+[  220185ms] [ERROR] Failed to load resource: the server responded with a status of 419 (unknown status) @ https://laravel-13-phoenix.aruna/auth/recoveryaccount:0
+[  220401ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0
+[  222357ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0
+[  223150ms] ReferenceError: grecaptcha is not defined
+    at https://laravel-13-phoenix.aruna/auth/signup:231:3
+[  223317ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/signup:0
+[  224088ms] ReferenceError: grecaptcha is not defined
+    at https://laravel-13-phoenix.aruna/auth/signup:231:3
+[  224684ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/signup:0
+[  339728ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0
+[  343020ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0
+[  345606ms] ReferenceError: grecaptcha is not defined
+    at https://laravel-13-phoenix.aruna/auth/signup:231:3
+[  345744ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/signup:0
+[  346494ms] ReferenceError: grecaptcha is not defined
+    at https://laravel-13-phoenix.aruna/auth/signup:231:3
+[  346983ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/signup:0

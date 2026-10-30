@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 
-const mockupPath = new URL('../public/mockups/site-general-settings-balanced-layout-mockup.html', import.meta.url);
+const mockupPath = new URL('../project-artifacts/mockups/legacy-public-mockups-20261030/site-general-settings-balanced-layout-mockup.html', import.meta.url);
 
 assert.equal(existsSync(mockupPath), true, 'balanced General Settings mockup must exist');
 

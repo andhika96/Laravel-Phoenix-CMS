@@ -6,7 +6,7 @@ import { dirname, resolve } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
-const mockupPath = resolve(root, 'public/mockups/theme-manager-interactive-mockup.html');
+const mockupPath = resolve(root, 'project-artifacts/mockups/legacy-public-mockups-20261030/theme-manager-interactive-mockup.html');
 
 test('theme manager mockup exposes the approved theme selection contract', () => {
     assert.equal(existsSync(mockupPath), true, 'theme manager mockup file should exist');
@@ -30,8 +30,8 @@ test('theme manager mockup exposes the approved theme selection contract', () =>
 
 test('theme manager preview assets exist', () => {
     const assets = [
-        'public/mockups/assets/theme-manager/arunika-mosaic-theme-preview.png',
-        'public/mockups/assets/theme-manager/arunika-aurora-theme-preview.png',
+        'project-artifacts/mockups/legacy-public-mockups-20261030/assets/theme-manager/arunika-mosaic-theme-preview.png',
+        'project-artifacts/mockups/legacy-public-mockups-20261030/assets/theme-manager/arunika-aurora-theme-preview.png',
     ];
 
     for (const asset of assets) {

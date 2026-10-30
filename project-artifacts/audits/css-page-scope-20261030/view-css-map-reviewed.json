@@ -1,0 +1,1221 @@
+[
+  {
+    "file": "resources/views/account/account.blade.php",
+    "sha256": "21daf752dc44ad1971d5b1336bccdf63b13df2d2a33ffb2550cdafbfdaa3b8e0",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/account/account_profile_picture.blade.php",
+    "sha256": "8f40d6d959f2c584d249e3e4980921d2da37180d57e9383beb7c4795f8c8de67",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/article/archive.blade.php",
+    "sha256": "800ea950b74d8474f37a45f0b6d9ca6382c8fc506ebcdfc141cfca9840e515ad",
+    "theme_keys": [
+      "frontend"
+    ],
+    "css": [
+      "assets/css/article/article-frontend-2026.css",
+      "assets/css/theme-responsive-typography.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/article/detail.blade.php",
+    "sha256": "4549fd62c9a84a0ab5aa03bbdde7c9badc497315ed838f2aa5565b0db781a0fd",
+    "theme_keys": [
+      "frontend"
+    ],
+    "css": [
+      "assets/css/article/article-editor-content.css",
+      "assets/css/article/article-frontend-2026.css",
+      "assets/css/theme-responsive-typography.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/article/password-protected.blade.php",
+    "sha256": "57761cdef848bed0267c50d39924e4db6bdba3c72480fd51d402639876a6898d",
+    "theme_keys": [
+      "frontend"
+    ],
+    "css": [
+      "assets/css/article/article-frontend-2026.css",
+      "assets/css/theme-responsive-typography.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/article/private.blade.php",
+    "sha256": "706c3513efce24f057b0e8021ded7b85062865ee5d52b6a702d5383e22dad4a3",
+    "theme_keys": [
+      "frontend"
+    ],
+    "css": [
+      "assets/css/article/article-frontend-2026.css",
+      "assets/css/theme-responsive-typography.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/article/templates/archive/balanced-card-grid.blade.php",
+    "sha256": "d86f37a6cffb38059f7479fc619721e8cb1cb0396dbafb519aaec59afb2325be",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/archive/editorial-journal.blade.php",
+    "sha256": "0a6d72f7c48a69759b3e61d780061ca133215187b286a2a5ef185cab4c8e35b5",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/archive/minimal-reading-list.blade.php",
+    "sha256": "7e04775a375594025e3f31e097e23b4c3a94155714917353ddba4253b59cc238",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/archive/mosaic-classic.blade.php",
+    "sha256": "0ceb3a2babf2919a496b659889166929f4394402129323486e8f232830555013",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/archive/mosaic-magazine.blade.php",
+    "sha256": "471be9d8d77137a47ec91e930a0c31684f291876426ce97dff76c8b00a79640d",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/detail/editorial-feature.blade.php",
+    "sha256": "fa8ceadd036106c5d8c2196ec90c718f8440d28346f59cc029c3cb6a50b02719",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/detail/focused-reader.blade.php",
+    "sha256": "ecab089944a347d4c4f5851507ba4e4e5d2231ce5f0fc278c810ff7910c4f251",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/detail/knowledge-toc.blade.php",
+    "sha256": "aa35f5985d545ac331943aec5021381feb995b0d551a9f134ea7fbc997936004",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/partials/archive-header.blade.php",
+    "sha256": "b319720d3812f5d7ceaaed47bbea7ea8cdbdaaafa358462343f366171e6510e0",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/partials/archive-title.blade.php",
+    "sha256": "5f4a1c3693b8238aeb9a1f85ae1d61ee80523500637d27486a079d4db59cf5a8",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/partials/classic-meta.blade.php",
+    "sha256": "545efc0d535141a33842ee7739a1d1dad1545068e007912b930311675080e5dc",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/partials/detail-header-copy.blade.php",
+    "sha256": "0860ad2fc81ffc3fb8cc73a1b5c0d0ba35b2b4a4b586e42dbf39b9a46656ecb8",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/partials/detail-knowledge-links.blade.php",
+    "sha256": "d02fb0fca0c9de71d9237a29339a57657cde4d2e20148deb27af5deb176a176e",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/partials/detail-navigation.blade.php",
+    "sha256": "15e2f470be374992753b2972c0d1d7bb9da454213bbf38be499addefdf689456",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/partials/detail-reading-cards.blade.php",
+    "sha256": "975b418a1bbd728f64e5ce230c6ed5ffd136d1d6dd1cf367b1c3dfc1b340e40f",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/partials/detail-story-spread.blade.php",
+    "sha256": "e668fd888c1e9c133790259f8e9ad97fbc75486d26104a3de0b82774e4448942",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/partials/media-link.blade.php",
+    "sha256": "27cb421591177513056b87b789891a2527fdcf2cd7d50bfb075171d6faa3d3e4",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/partials/pagination.blade.php",
+    "sha256": "140fda61591ff8599859ee14a0bd1977c83529a7ee56aa04f01d7910933a7c6f",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/article/templates/partials/template-shell-attributes.blade.php",
+    "sha256": "9136bbed2a0c2052e345a8679c190e0433bd4a2d439c55dd4b2c06d11618bcb2",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/auth/card/forgotpassword.blade.php",
+    "sha256": "4932bf9f05f154db4ad8ee814493821f4b99772bf33792918f113ce433f9b09e",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/card/login.blade.php",
+    "sha256": "760ae2abcaf23e2ff5eadcad1db60c4fca894c46ff6b9a448348a279d8b3366e",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/card/resetpassword.blade.php",
+    "sha256": "3d826245e959ad97dde283ca68e7f01c70dc8a1eed1e02148ad9385d78bb4f36",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/card/signup.blade.php",
+    "sha256": "8a217f7bdb6136d977f712fa55032145c49c39885228c33d61b8e33dc9e7d42a",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/default/forgotpassword.blade.php",
+    "sha256": "ab5c3f0977f17bebc0c445c61287ad93297aeb133f467bbe8f7fe08359792162",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/default/login.blade.php",
+    "sha256": "f71eb20857586dec472ce87c591d80ca9407ca085f596158aa77c2d74ecfaf1c",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/default/resetpassword.blade.php",
+    "sha256": "606b0999dacf6d898c69f6e4c14c7fdd2c62eb3abd03542c46195d97631031ca",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/default/signup.blade.php",
+    "sha256": "6311834344a54472d7c9efe332b54b5f1a11ac7b3df4231e8825357f02d7bd56",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/split_left/forgotpassword.blade.php",
+    "sha256": "eb84cebcc23026042f91b5889e53b5c2f054391c7bd0fcd8364061e1179d2cf0",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/split_left/login.blade.php",
+    "sha256": "a923d4b6f2fd66f9b9b4afbd74200b16c728e4f3e0935ba5164dfccd21629f2b",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/split_left/resetpassword.blade.php",
+    "sha256": "e02707a935fa1ba265aa97a726096569885cc24188157633be48f211d61838df",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/split_left/signup.blade.php",
+    "sha256": "e7651a2ee3841afbfaef15f520efe7af991b97be37df28fa55accca349f93667",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/split_right/forgotpassword.blade.php",
+    "sha256": "95b58240c3e97795e063b43fc915b7cacc033a2086d276a39bcb0a1ec2bdee9f",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/split_right/login.blade.php",
+    "sha256": "8827d7e5e89291059f1f7973997fc78e93281bcd36e7c820f58ebc82416c209d",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/split_right/resetpassword.blade.php",
+    "sha256": "aa325b7d53c5eb1b645ce9c20a526207e82b4b721d1c502da26c4de6df2a2a77",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/auth/split_right/signup.blade.php",
+    "sha256": "a0962d406d81be50e6788c036a18c3faeb00c058e05121c845cfc240bb74c8c9",
+    "theme_keys": [
+      "auth"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin.blade.php",
+    "sha256": "07143b6796e4c2c8b15e1c6be7dec92c7adb33c545aadd19a7aa4adf20f6b005",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_appearance.blade.php",
+    "sha256": "25550b126d0290d6dcf531fd4dae466270b08310bd16fc860a81586bc43c3903",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_config.blade.php",
+    "sha256": "955c3ea4976425e0f6f89a9cfd77bd8d0fc91e9508bbbd13463c289b8280dad2",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_language.blade.php",
+    "sha256": "b05c8df4781c378239323615022b0b33ca8cb8ae82cc4abf38909240f6daa7fb",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_language_translated.blade.php",
+    "sha256": "a57688b7166167d439b015058c26047fee942dd21a33a2f2ae4914b6c1cd9780",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_language_untranslated.blade.php",
+    "sha256": "2a1c1c96a57e21fb8a0449d97d78ded41526a65a32237a440f279f3d416ce72e",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_permission.blade.php",
+    "sha256": "43f450842e7afdcbf70a01be48692ff6d555fb57273eb20125d2c62c0eead503",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_role.blade.php",
+    "sha256": "c9f16ef5143875e32cc6a44ddc292148b34d2bd31b66d27b1584a495fee32d01",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_role_create_v2.blade.php",
+    "sha256": "c817ea7427ffb47b722b60554806314364fe1348b95a8dbcc1bfe3ceebd40118",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_role_edit_v2.blade.php",
+    "sha256": "195c5a850181e54155a33d73ff53787fddb76c7f3534c58aa7309f45afdeecbc",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_role_v2.blade.php",
+    "sha256": "341de09994b477432a3854eacad971d31589440c9d481a88d7938dcb4f95f479",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_smtp.blade.php",
+    "sha256": "e6b271a3d099a6621e2d3f9c6d3e08fe42cd984f06f04c76972ff87575af7698",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_themes.blade.php",
+    "sha256": "d35fb54a71f00a84109fc7ea4fcf1f79e34b8983a2919e608038e9730585b2fa",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/awesome_admin/awesome_admin_user.blade.php",
+    "sha256": "4914d2f1fc872e4273077b1a49d801f407037b9e1f8cdabfec677ebd0eafea86",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/awesome_admin/header_navigation/awesome_admin_header_navigation.blade.php",
+    "sha256": "62e45c0b609bbb2921f8b17debb2add076ee264ddccc88e44ce96e74ae6b608b",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/css/awesome-admin-header-navigation-fullscreen.css",
+      "assets/css/awesome-admin-header-navigation.css",
+      "assets/vendor/coloris/coloris.min.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/menu/awesome_admin_menu.blade.php",
+    "sha256": "57d623d715fd9bd43887eab7a8e70e0a3d2fe513265e30e6c3126cc1200495eb",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/menu/backend/awesome_admin_category_menu_be.blade.php",
+    "sha256": "02d5a041fc520f9f9f45d1d9b7fd57230e6441867e5614f61bb5e2171c561f9d",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/menu/backend/awesome_admin_menu_be.blade.php",
+    "sha256": "4d76496c632d4f4b08c6ed865e3b8e1ab5ae4b63839c53d0084e95337fbc1a5e",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/menu/backend/awesome_admin_menu_submenu_be.blade.php",
+    "sha256": "b51caedb862a20b3f14b29694cd1512de69d5203e579f80ce0aa18ab848be2d4",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/menu/backend/awesome_admin_menu_submenu_detail_be.blade.php",
+    "sha256": "9208f0f74237f13e44bc3214e7e0302366e478d1d20546d922c3c70f2dfbdb24",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/menu/backend/awesome_admin_parent_menu_be.blade.php",
+    "sha256": "8277ff3b8f05c9e427d7912724188b54def1740eba8255e64b803c2e38133133",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/menu/frontend/awesome_admin_category_menu_fe.blade.php",
+    "sha256": "1fe3d4047bec7fab511975cce4b11c07b2c5dd0fe6583fc86aa182cf520c60d0",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/menu/frontend/awesome_admin_menu_fe.blade.php",
+    "sha256": "1a125cd23b73830c0b8f81caaedd40557eb4efdda06d88edb65bc1372c2a34d0",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/menu/frontend/awesome_admin_menu_submenu_detail_fe.blade.php",
+    "sha256": "e089604477386809cfe3ee3e03c2f79116692aa21c167ad2b050e616da5a3602",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/menu/frontend/awesome_admin_menu_submenu_fe.blade.php",
+    "sha256": "3b907326f990f37d2c17cd040cf13acbaa31905b770711abbba7df5257308a92",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/awesome_admin/menu/frontend/awesome_admin_parent_menu_fe.blade.php",
+    "sha256": "70e330b3f1abb6c897073e800eec8d6679617c546c5fef74e1865c1853b88746",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/css/frontend-menu-dropdown.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/components/cms-realtime-notification.blade.php",
+    "sha256": "c1ee39237fdb07093588c3f663c9aae279b7d0c54ec3f197beabf923f828bdb3",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/components/slider/desktop/phoenix-slider-horizontal-desktop.blade.php",
+    "sha256": "9dffe2d5901498fae063b59eb53093e26475c5689313cdf8fdcb319cb45fe68f",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/components/slider/desktop/phoenix-slider-vertical-desktop.blade.php",
+    "sha256": "56b39e269f1116d6341064ff8e860d3ac5bf7b6016e6715d2568c961c8a29b32",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/components/slider/mobile/phoenix-slider-horizontal-mobile.blade.php",
+    "sha256": "9c64f8ee23408d01e4a9ad06c5c7391c02dc58cd05815290ccbce94e790d28d3",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/components/slider/mobile/phoenix-slider-vertical-mobile.blade.php",
+    "sha256": "71d43d735a44b739f6e39baf73f36c1079169d1d133acc00397ca533b403000e",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/dashboard/dashboard.blade.php",
+    "sha256": "ea52ce48a226371b82f5bfefa9868a081af72d0129ed2fa411e99a92482b1cbc",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/event/event.blade.php",
+    "sha256": "26a846194aecf963ce32446e640f774d2f98cc28e1ed5119bc6c88b37f88b63e",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/event/event_detail.blade.php",
+    "sha256": "e76cd95a0d96e64e293895bfdbf82566e5acead3858b01ad061949f7fd030cd9",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/homepage/homepage.blade.php",
+    "sha256": "80394cd1d673349978a4b4d6e522507eecb55862d6a1b1e17ed9931cef5fd904",
+    "theme_keys": [
+      "frontend"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_article/manage_article.blade.php",
+    "sha256": "62cfe9ac6c9992b3bfab2306544289da22293ed115a1074c52999149e95db7e1",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/css/article/manage-article-2026.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_article/manage_article_add.blade.php",
+    "sha256": "d36e1747e831426ebaf0a9d747e15d78f00147684436c68055e660d9ea2cc16b",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/css/article/article-editor-content.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_article/manage_article_edit.blade.php",
+    "sha256": "37427cecf14405b43d9197dcf54fda4f56de880ef2385f770fcbc0772bf3aa40",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/css/article/article-editor-content.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_article/partials/list-status.blade.php",
+    "sha256": "fd5229fcfe397268237a71d03f43ea56fafee28556183517cae5c12cbb2f4f39",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_article/partials/thumbnail.blade.php",
+    "sha256": "fbd5cc430da5b887196f6bbc872623dfa283081afd7ab14e401e9cfda2ac3666",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_article/templates/index.blade.php",
+    "sha256": "bdca2c5fac71429470abf9ac440444f4e63d49772dbd2b125fa3260f862357f3",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/css/article/article-template-manager-2026.css",
+      "assets/vendor/coloris/coloris.min.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_article/templates/partials/options-classic-balanced.blade.php",
+    "sha256": "6a2699f5a07a23259b1cf8a69b5d48380079762e817c84e0a6cd787b22de077b",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_article/templates/partials/options-focused-reader.blade.php",
+    "sha256": "368fe8d93ddbd21999990d245c219525cc6e5c437f8d9ebf8c447a4e29d9f568",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_article/templates/partials/options-mosaic-magazine.blade.php",
+    "sha256": "6b19cb940789a2d8ed85fe6bad9bc5ff872da443dd35404b972601664e042264",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_article/templates/partials/options-styling.blade.php",
+    "sha256": "9b724ba5cc9ff2d0d9c12c6ef37b62a360753502663dbf8f63e226e9bab45d39",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_article/templates/preview.blade.php",
+    "sha256": "2474c900395d3ffdb9df8ef76d06e13137e8ff0bd685f6bfee57d7bfedd3314b",
+    "theme_keys": [],
+    "css": [
+      "assets/css/article/article-editor-content.css",
+      "assets/css/article/article-frontend-2026.css",
+      "assets/css/theme-responsive-typography.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/manage_coverimage/manage_coverimage.blade.php",
+    "sha256": "9baac849eac3dbb64ea1b692e616d4c1164a22d844a2c08a767a78545cd4c358",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_coverimage/manage_coverimage_add.blade.php",
+    "sha256": "7642b450ca8918148af5b146890bdf56a9eddf6877c1daa59340291f22239928",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/plugins/spectrum/dist/spectrum.min.css",
+      "assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/manage_coverimage/manage_coverimage_edit.blade.php",
+    "sha256": "b220a4f805603a028a18e633ead0136704b8e5e59ec5693f893db8a603474e95",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/plugins/spectrum/dist/spectrum.min.css",
+      "assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/manage_event/manage_event.blade.php",
+    "sha256": "1a6d830ab1a782e16e5632e29a0bb59406481eb0084945e0aafb8846f84bc323",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_event/manage_event_add.blade.php",
+    "sha256": "4b8dc73cab79dfdc03f36f1ea63152524fac4fe12dc80f5a585c5cdbf58871de",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_event/manage_event_edit.blade.php",
+    "sha256": "8e3b5c21d72ed29f5a5d6db6eea4fcbf160729043fd69f9202d9a321ad940468",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/plugins/vue/plugins/vue-datepicker/css/vue-datepicker-11.0.3.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/manage_event/partials/form.blade.php",
+    "sha256": "ba6cda8dbeec57197c1dfa76ec3252f8f5c2fa9cc58e9c1541724bf416b712d5",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/notification/notification.blade.php",
+    "sha256": "dede85476059cbb0f03b7c649159466a5694ca76c06d1d744ce18062a4a7d22e",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/notification/notification_empty.blade.php",
+    "sha256": "56dd5983c946bddd0565fa55ab70f20a2c7b23c95a04b1e74d360882588ddec0",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/notification/notification_testing.blade.php",
+    "sha256": "8c8ec0ae45e0349f249fb85084aad6ab87ef303d0e90c0198081fb2798ae087f",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/profile/profile.blade.php",
+    "sha256": "24228f6d5f00b27da7e774cf407a17074b9c2180949bde4eeb90f539d767563e",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/setup/setup.blade.php",
+    "sha256": "91b1b9bff8cf0a2fc96eae3f533228a4b38ede9f417a99975077919970ca67f2",
+    "theme_keys": [],
+    "css": [
+      "assets/css/aruna-v4.css",
+      "assets/css/extending-css-bootstrap-5.css",
+      "assets/css/phoenix-cms.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/arunika_aurora/auth/auth_layout.blade.php",
+    "sha256": "cdf54befa19f7485c3d47905d61e1b6467afdd98af049191418729b12da44535",
+    "theme_keys": [],
+    "css": [
+      "assets/css/phoenix-cms.css",
+      "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "storage/fonts/nunito/fonts.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/arunika_aurora/cms/cms_layout.blade.php",
+    "sha256": "7cbfab01ecd29016033b906dde22e76b6c41b610705227cf507bd7e32a4cdb38",
+    "theme_keys": [],
+    "css": [
+      "assets/css/cms-bootstrap-theme.css",
+      "assets/css/phoenix-cms.css",
+      "assets/css/theme-responsive-typography.css",
+      "assets/css/themes/arunika_aurora/arunika_aurora.css",
+      "assets/css/themes/arunika_aurora/mobile-v2.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/themes/arunika_aurora/components/menu.blade.php",
+    "sha256": "929752b5975a78fdde5d1ffb19132b29cd4ac06364a1260411d243e0d2f159db",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/themes/arunika_aurora/frontend/frontend_layout.blade.php",
+    "sha256": "3679cc5f0faa54dab20bf5751f613a40e8f75eec8742567c946fc7982280d18d",
+    "theme_keys": [],
+    "css": [
+      "assets/css/extending-css-bootstrap-5.css",
+      "assets/css/frontend-menu-dropdown.css",
+      "assets/css/phoenix-cms.css",
+      "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "storage/fonts/nunito/fonts.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/arunika_equinox/auth/auth_layout.blade.php",
+    "sha256": "cdf54befa19f7485c3d47905d61e1b6467afdd98af049191418729b12da44535",
+    "theme_keys": [],
+    "css": [
+      "assets/css/phoenix-cms.css",
+      "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "storage/fonts/nunito/fonts.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/arunika_equinox/cms/cms_layout.blade.php",
+    "sha256": "2ba916b00f8ebeaecbe68ecbe421464d4e0699c9cbdf473fd8fd389b44db4fa0",
+    "theme_keys": [],
+    "css": [
+      "assets/css/cms-bootstrap-theme.css",
+      "assets/css/phoenix-cms.css",
+      "assets/css/theme-responsive-typography.css",
+      "assets/css/themes/arunika_equinox/arunika_equinox.css",
+      "assets/css/themes/arunika_equinox/mobile-v2.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/themes/arunika_equinox/components/menu.blade.php",
+    "sha256": "929752b5975a78fdde5d1ffb19132b29cd4ac06364a1260411d243e0d2f159db",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/themes/arunika_equinox/frontend/frontend_layout.blade.php",
+    "sha256": "3679cc5f0faa54dab20bf5751f613a40e8f75eec8742567c946fc7982280d18d",
+    "theme_keys": [],
+    "css": [
+      "assets/css/extending-css-bootstrap-5.css",
+      "assets/css/frontend-menu-dropdown.css",
+      "assets/css/phoenix-cms.css",
+      "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "storage/fonts/nunito/fonts.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/arunika_lucent/auth/auth_layout.blade.php",
+    "sha256": "5df527cd34badd14b683b69bd14d90f89ea9951f7712156aa12ba52dd298796a",
+    "theme_keys": [],
+    "css": [
+      "assets/css/phoenix-cms.css",
+      "assets/css/theme-responsive-typography.css",
+      "assets/css/themes/arunika_lucent/arunika_lucent.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/arunika_lucent/cms/cms_layout.blade.php",
+    "sha256": "e510c971d85da819eeb612e3f5550424c21f826f2affb221dc321c877a00cb87",
+    "theme_keys": [],
+    "css": [
+      "assets/css/cms-bootstrap-theme.css",
+      "assets/css/phoenix-cms.css",
+      "assets/css/theme-responsive-typography.css",
+      "assets/css/themes/arunika_lucent/arunika_lucent.css",
+      "assets/css/themes/arunika_lucent/mobile-v2.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/themes/arunika_lucent/components/menu.blade.php",
+    "sha256": "0ed4a8038fbffec1a0444b6eb278bdab2440f4226c61f910ccda286664deba0d",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/themes/arunika_lucent/frontend/frontend_layout.blade.php",
+    "sha256": "c976c74031154318da65bb9a6540121faba50c63493a69b6ceb63a0343a7473a",
+    "theme_keys": [],
+    "css": [
+      "assets/css/extending-css-bootstrap-5.css",
+      "assets/css/frontend-menu-dropdown.css",
+      "assets/css/phoenix-cms.css",
+      "assets/css/theme-responsive-typography.css",
+      "assets/css/themes/arunika_lucent/arunika_lucent.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/arunika_prism/auth/auth_layout.blade.php",
+    "sha256": "cdf54befa19f7485c3d47905d61e1b6467afdd98af049191418729b12da44535",
+    "theme_keys": [],
+    "css": [
+      "assets/css/phoenix-cms.css",
+      "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "storage/fonts/nunito/fonts.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/arunika_prism/cms/cms_layout.blade.php",
+    "sha256": "9470073a1ac01be5afeccc6adf228da9cd185d40ef825566bac7f91bf307b868",
+    "theme_keys": [],
+    "css": [
+      "assets/css/cms-bootstrap-theme.css",
+      "assets/css/phoenix-cms.css",
+      "assets/css/theme-responsive-typography.css",
+      "assets/css/themes/arunika_prism/arunika_prism.css",
+      "assets/css/themes/arunika_prism/mobile-v2.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/themes/arunika_prism/components/menu.blade.php",
+    "sha256": "929752b5975a78fdde5d1ffb19132b29cd4ac06364a1260411d243e0d2f159db",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/themes/arunika_prism/frontend/frontend_layout.blade.php",
+    "sha256": "3679cc5f0faa54dab20bf5751f613a40e8f75eec8742567c946fc7982280d18d",
+    "theme_keys": [],
+    "css": [
+      "assets/css/extending-css-bootstrap-5.css",
+      "assets/css/frontend-menu-dropdown.css",
+      "assets/css/phoenix-cms.css",
+      "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "storage/fonts/nunito/fonts.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/calm_green/auth/auth_layout.blade.php",
+    "sha256": "56af54fa90231f2e9154771155f650d7a223177d26dcfab809519957d14150d4",
+    "theme_keys": [],
+    "css": [
+      "assets/css/phoenix-cms.css",
+      "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "storage/fonts/nunito/fonts.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/calm_green/cms/cms_layout.blade.php",
+    "sha256": "0e6978184d32e7e61f9b88b90e98b0ce8438c8ded72c102918f80ce66bde2733",
+    "theme_keys": [],
+    "css": [
+      "assets/css/cms-bootstrap-theme.css",
+      "assets/css/extending-css-bootstrap-5.css",
+      "assets/css/phoenix-cms.css",
+      "assets/css/theme-responsive-typography.css",
+      "assets/css/themes/calm_green/aruna-admin-v7-calm-green.css",
+      "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css",
+      "storage/fonts/nunito/fonts.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/calm_green/components/menu.blade.php",
+    "sha256": "0ef2249fec9c7a6b8adb3d1b75fb5e821485f5a0d859fa97bc08e2cbbaa8ebee",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/themes/calm_green/frontend/frontend_layout.blade.php",
+    "sha256": "3679cc5f0faa54dab20bf5751f613a40e8f75eec8742567c946fc7982280d18d",
+    "theme_keys": [],
+    "css": [
+      "assets/css/extending-css-bootstrap-5.css",
+      "assets/css/frontend-menu-dropdown.css",
+      "assets/css/phoenix-cms.css",
+      "assets/css/themes/calm_green/phoenix-cms-calm-green.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "storage/fonts/nunito/fonts.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/default/auth/auth_layout.blade.php",
+    "sha256": "7061193dd12390cbba6950b8435e7c35df3a66f95dfe3b436923eafa595e6064",
+    "theme_keys": [],
+    "css": [
+      "assets/css/phoenix-cms.css",
+      "assets/css/themes/default/phoenix-cms-default.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/default/cms/cms_layout.blade.php",
+    "sha256": "af5851e6bfe85af60e09f5a7132089796dc839980e51e1e17fb6ba49e8ebe884",
+    "theme_keys": [],
+    "css": [
+      "assets/css/cms-bootstrap-theme.css",
+      "assets/css/extending-css-bootstrap-5.css",
+      "assets/css/phoenix-cms.css",
+      "assets/css/theme-responsive-typography.css",
+      "assets/css/themes/default/aruna-admin-v7-default.css",
+      "assets/css/themes/default/phoenix-cms-default.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css",
+      "assets/plugins/fontawesome/5.15.3/css/all.min.css",
+      "assets/plugins/simplebar/6.3.1/css/simplebar.css",
+      "assets/plugins/vue/plugins/vue-select/css/vue-select.3.20.3.css"
+    ],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/default/components/menu.blade.php",
+    "sha256": "0ef2249fec9c7a6b8adb3d1b75fb5e821485f5a0d859fa97bc08e2cbbaa8ebee",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/themes/default/frontend/frontend_layout.blade.php",
+    "sha256": "75e58bf7b319cc9d898b7ae1dfcd70ad9509d3fd4527e42e6af40c4b3d2da787",
+    "theme_keys": [],
+    "css": [
+      "assets/css/frontend-menu-dropdown.css",
+      "assets/css/phoenix-cms.css",
+      "assets/css/themes/default/phoenix-cms-default.css",
+      "assets/plugins/bootstrap/5.3.6_custom/bootstrap.min.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/themes/partials/frontend_menu_dropdown.blade.php",
+    "sha256": "1427fdaa6948e2b1004d9a5180480e05b5a6f12d3340504b8ffbc3608115b611",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 1
+  },
+  {
+    "file": "resources/views/themes/partials/frontend_menu_icon.blade.php",
+    "sha256": "0a4098a6a4b98478568f88a1c15db37b68a7c223a8c98c78e13a6bf7a15a4458",
+    "theme_keys": [],
+    "css": [],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/workflow/editor.blade.php",
+    "sha256": "8114bf8ff99a7b929b28a933631cebf144cab40f1294004fe9659031b57f2f60",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/css/workflow-editor.css"
+    ],
+    "inline_style_blocks": 0
+  },
+  {
+    "file": "resources/views/workflow/index.blade.php",
+    "sha256": "9fd4274cc0fdadbf048a6413cbeb24aed21b756765150ace0cbb682747e35a5c",
+    "theme_keys": [
+      "cms"
+    ],
+    "css": [
+      "assets/css/workflow-editor.css"
+    ],
+    "inline_style_blocks": 0
+  }
+]

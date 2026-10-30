@@ -47,14 +47,14 @@ export function readPageBuilderV24ModuleStyles(root = pageBuilderV24Root) {
 
 export function readPageBuilderV24EditorStyles(root = pageBuilderV24Root) {
   return [
-    readFileSync(resolve(root, 'public/assets/css/pagebuilder_elementor_v24.css'), 'utf8'),
+    readFileSync(resolve(root, 'public/assets/css/pagebuilder/elementor-v24/pagebuilder_elementor_v24.css'), 'utf8'),
     readPageBuilderV24ModuleStyles(root),
   ].join('\n');
 }
 
 export function readPageBuilderV24FrontendStyles(root = pageBuilderV24Root) {
   return [
-    readFileSync(resolve(root, 'public/assets/css/frontend_elementor_v24.css'), 'utf8'),
+    readFileSync(resolve(root, 'public/assets/css/pagebuilder/elementor-v24/frontend_elementor_v24.css'), 'utf8'),
     readPageBuilderV24ModuleStyles(root),
   ].join('\n');
 }

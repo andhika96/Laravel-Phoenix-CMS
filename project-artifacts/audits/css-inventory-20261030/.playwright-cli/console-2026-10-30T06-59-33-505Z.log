@@ -1,0 +1,48 @@
+[     174ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/auth/login:0
+[   61075ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://laravel-13-phoenix.aruna/assets/js/account/vue3/vueV3-account-2026.js?v=1793343634:0
+[   63031ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://laravel-13-phoenix.aruna/assets/js/account/vue3/vueV3-account-2026.js?v=1793343636:0
+[  174214ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://laravel-13-phoenix.aruna/assets/js/vueV3-notification-2025.js?v=1793343747:0
+[  176454ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://laravel-13-phoenix.aruna/assets/js/vueV3-notification-2025.js?v=1793343749:0
+[  178614ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://laravel-13-phoenix.aruna/assets/js/vueV3-notification-2025.js?v=1793343751:0
+[  180360ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://laravel-13-phoenix.aruna/assets/js/vueV3-notification-2025.js?v=1793343753:0
+[  182865ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ https://laravel-13-phoenix.aruna/notification/filled:0
+[  183001ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ https://laravel-13-phoenix.aruna/notification/filled:169
+[  183039ms] [LOG] {report: Object, shareableReport: Object, config: Object, solutions: Array(1), updateConfigEndpoint: /_ignition/update-config} {frames: Array(57), context_items: Object, custom_context_items: Array(0), type: web, entry_point: https://laravel-13-phoenix.aruna/notification/filled} @ https://laravel-13-phoenix.aruna/notification/filled:174
+[  184962ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ https://laravel-13-phoenix.aruna/notification/filled:0
+[  187379ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ https://laravel-13-phoenix.aruna/notification/filled:0
+[  187427ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ https://laravel-13-phoenix.aruna/notification/filled:169
+[  187439ms] [LOG] {report: Object, shareableReport: Object, config: Object, solutions: Array(1), updateConfigEndpoint: /_ignition/update-config} {frames: Array(57), context_items: Object, custom_context_items: Array(0), type: web, entry_point: https://laravel-13-phoenix.aruna/notification/filled} @ https://laravel-13-phoenix.aruna/notification/filled:174
+[  188405ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ https://laravel-13-phoenix.aruna/notification/filled:0
+[  207812ms] [LOG] 1 @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_config/vueV3-manage-config-2026.js?v=1793343779:253
+[  213661ms] [LOG] 1 @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_config/vueV3-manage-config-2026.js?v=1793343785:253
+[  254461ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://laravel-13-phoenix.aruna/awesome_admin/menu/getversionmenu:0
+[  254462ms] [LOG] {data: Object, status: 404, statusText: Not Found, headers: r, config: Object} @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js?v=1793343827:576
+[  256601ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://laravel-13-phoenix.aruna/awesome_admin/menu/getversionmenu:0
+[  256602ms] [LOG] {data: Object, status: 404, statusText: Not Found, headers: r, config: Object} @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_menu/be/vueV3-manage-backend-parent-menu-2026.js?v=1793343829:576
+[  273828ms] [INFO] ID ph-submit-data-role-modalRead doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793343846:804
+[  273828ms] [INFO] ID ph-submit-data-role-modalUpdate doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793343846:818
+[  276068ms] [INFO] ID ph-submit-data-role-modalRead doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793343848:804
+[  276069ms] [INFO] ID ph-submit-data-role-modalUpdate doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793343848:818
+[  324748ms] [INFO] ID ph-submit-data-role-modalRead doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793343897:804
+[  324748ms] [INFO] ID ph-submit-data-role-modalUpdate doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793343897:818
+[  324748ms] [INFO] ID ph-submit-data-role-modalDelete doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793343897:832
+[  326524ms] [INFO] ID ph-submit-data-role-modalRead doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793343899:804
+[  326525ms] [INFO] ID ph-submit-data-role-modalUpdate doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793343899:818
+[  326525ms] [INFO] ID ph-submit-data-role-modalDelete doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793343899:832
+[  378868ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://laravel-13-phoenix.aruna/assets/js/vueV3-setup.js?v=1793343952:0
+[  378896ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/setup:0
+[  379673ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://laravel-13-phoenix.aruna/assets/js/vueV3-setup.js?v=1793343953:0
+[  379700ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://laravel-13-phoenix.aruna/setup:0
+[  540866ms] [INFO] ID ph-submit-data-role-modalRead doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793344113:804
+[  540866ms] [INFO] ID ph-submit-data-role-modalUpdate doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793344113:818
+[  540866ms] [INFO] ID ph-submit-data-role-modalDelete doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793344113:832
+[  542415ms] [INFO] ID ph-submit-data-role-modalRead doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793344115:804
+[  542416ms] [INFO] ID ph-submit-data-role-modalUpdate doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793344115:818
+[  542416ms] [INFO] ID ph-submit-data-role-modalDelete doesn't exist @ https://laravel-13-phoenix.aruna/assets/js/vue3/manage_role/vueV3-manage-role-2026.js?v=1793344115:832
+[  544237ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ https://laravel-13-phoenix.aruna/awesome_admin/user/edit/1:0
+[  544323ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ https://laravel-13-phoenix.aruna/awesome_admin/user/edit/1:169
+[  544341ms] [LOG] {report: Object, shareableReport: Object, config: Object, solutions: Array(1), updateConfigEndpoint: /_ignition/update-config} {frames: Array(57), context_items: Object, custom_context_items: Array(0), type: web, entry_point: https://laravel-13-phoenix.aruna/awesome_admin/user/edit/1} @ https://laravel-13-phoenix.aruna/awesome_admin/user/edit/1:174
+[  545678ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ https://laravel-13-phoenix.aruna/awesome_admin/user/edit/1:0
+[  546391ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ https://laravel-13-phoenix.aruna/awesome_admin/user/edit/1:0
+[  546426ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ https://laravel-13-phoenix.aruna/awesome_admin/user/edit/1:169
+[  546435ms] [LOG] {report: Object, shareableReport: Object, config: Object, solutions: Array(1), updateConfigEndpoint: /_ignition/update-config} {frames: Array(57), context_items: Object, custom_context_items: Array(0), type: web, entry_point: https://laravel-13-phoenix.aruna/awesome_admin/user/edit/1} @ https://laravel-13-phoenix.aruna/awesome_admin/user/edit/1:174
